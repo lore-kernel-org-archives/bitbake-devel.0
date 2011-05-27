@@ -1,25 +1,45 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mail-qw0-f47.google.com ([209.85.216.47])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1QQ4AD-0007AV-VC
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 27 May 2011 23:01:46 +0200
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 27 May 2011 13:57:34 -0700
-X-ExtLoop1: 1
-Received: from vorpal.jf.intel.com (HELO [10.7.199.68]) ([10.7.199.68])
-	by orsmga002.jf.intel.com with ESMTP; 27 May 2011 13:57:34 -0700
-From: Joshua Lock <josh@linux.intel.com>
-To: openembedded-core@lists.openembedded.org
-Date: Fri, 27 May 2011 14:01:05 -0700
-In-Reply-To: <1306526949.1747.8.camel@vorpal>
+	(envelope-from <raj.khem@gmail.com>)
+	id 1QQ4CZ-0007DN-5L; Fri, 27 May 2011 23:04:11 +0200
+Received: by qwh5 with SMTP id 5so1124123qwh.6
+	for <multiple recipients>; Fri, 27 May 2011 14:01:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=domainkey-signature:references:in-reply-to:mime-version
+	:content-transfer-encoding:content-type:message-id:cc:x-mailer:from
+	:subject:date:to;
+	bh=7KPHx8Sjj7xl2oafWmU8TmkyYaF2HzCFRXronzCIens=;
+	b=ZF/2x46N0bgiLC2T+nKJ4p72oiv/geMyerAITd6Ydder4dxD2Z/lwYnuRfSY66DK21
+	8zGwidFEaak7ciwdiULh2+GYcrb2BILuEBTKNPlAUDOSgybgUz+cf+ywYBArecABB79v
+	xzPIUNmb7uXakFb74RYp+ihQ6aUmF+KIgJVxA=
+DomainKey-Signature: a=rsa-sha1; c=nofws; d=gmail.com; s=gamma;
+	h=references:in-reply-to:mime-version:content-transfer-encoding
+	:content-type:message-id:cc:x-mailer:from:subject:date:to;
+	b=xYEAA8Eg8D8UzQzcodKEIX1ZDch6VLZU2R1DiAx5H4FF0Akn+BiKVzqcbgo67iDqiw
+	rc7rpkTBclWMBJQUI8qwRNFllYc3nafhwZxueg8196Hr4xHQ4wUvxzm12lHIa0dPnFpI
+	BSoclz9jAkQoqPukoRrmz3GCxJEZyGFQdOUQA=
+Received: by 10.229.26.203 with SMTP id f11mr1969572qcc.16.1306530065202;
+	Fri, 27 May 2011 14:01:05 -0700 (PDT)
+Received: from [192.168.22.104] (ns-visitor-nsrp.juniper.net [208.223.208.242])
+	by mx.google.com with ESMTPS id t28sm1301500qcs.5.2011.05.27.14.01.03
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Fri, 27 May 2011 14:01:04 -0700 (PDT)
 References: <cover.1306477652.git.lianhao.lu@intel.com>
 	<1306515635.27470.284.camel@rex>
 	<7DC6724C-BF20-4EA1-A87D-32FBEEECDA3B@dominion.thruhere.net>
-	<1306526949.1747.8.camel@vorpal>
-X-Mailer: Evolution 3.0.1 (3.0.1-1.fc15) 
-Message-ID: <1306530065.1747.14.camel@vorpal>
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
+	<1306526949.1747.8.camel@vorpal> <1306530057.1747.11.camel@vorpal>
+In-Reply-To: <1306530057.1747.11.camel@vorpal>
+Mime-Version: 1.0 (iPad Mail 8J2)
+Message-Id: <03D2A4C3-146E-4611-B730-8199ED9984DD@gmail.com>
+X-Mailer: iPad Mail (8J2)
+From: Khem Raj <raj.khem@gmail.com>
+Date: Fri, 27 May 2011 14:01:40 -0700
+To: Patches and discussions about the oe-core layer
+	<openembedded-core@lists.openembedded.org>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>,
+	"openembedded-core@lists.openembedded.org"
+	<openembedded-core@lists.openembedded.org>
 Subject: Re: [OE-core] [PATCH 00/11] Add PR service and integrate PKGV/PKGR from OE
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
@@ -32,64 +52,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 27 May 2011 21:01:46 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-
-From 1618318f0a30847b08c158e7ac82f9043126144e Mon Sep 17 00:00:00 2001
-From: Joshua Lock <josh@linux.intel.com>
-Date: Fri, 27 May 2011 13:04:44 -0700
-Subject: [PATCH 2/2] uievent: fix queueing of events for xmlrpc before
-UI has
- loaded
-
-The change to Queue up events before the UI is spawned broke the xmlrpc
-server because the uievent implementation of BBUIEventQueue expects
-pickled
-strings for its queue_event() method.
-This is because the RPC exposed event.send() method must accept pickled
-strings, but for xmlrpc event.send() is just mapped to queue_event().
-Work
-around this by adding a send_event method which unpickles strings and
-hands
-them off to queue_event() which can then be used for the remapping.
-
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
----
- lib/bb/ui/uievent.py |    7 +++++--
- 1 files changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/lib/bb/ui/uievent.py b/lib/bb/ui/uievent.py
-index b404805..2fef4e4 100644
---- a/lib/bb/ui/uievent.py
-+++ b/lib/bb/ui/uievent.py
-@@ -63,17 +63,20 @@ class BBUIEventQueue:
- 
-     def queue_event(self, event):
-         self.eventQueueLock.acquire()
--        self.eventQueue.append(pickle.loads(event))
-+        self.eventQueue.append(event)
-         self.eventQueueNotify.set()
-         self.eventQueueLock.release()
- 
-+    def send_event(self, event):
-+        self.queue_event(pickle.loads(event))
-+
-     def startCallbackHandler(self):
- 
-         server = UIXMLRPCServer()
-         self.host, self.port = server.socket.getsockname()
- 
-         server.register_function( self.system_quit, "event.quit" )
--        server.register_function( self.queue_event, "event.send" )
-+        server.register_function( self.send_event, "event.send" )
-         server.socket.settimeout(1)
- 
-         self.EventHandle =
-self.BBServer.registerEventHandler(self.host, self.port)
--- 
-1.7.5.1
+X-List-Received-Date: Fri, 27 May 2011 21:04:11 -0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
 
+
+On May 27, 2011, at 2:00 PM, Joshua Lock <josh@linux.intel.com> wrote:
+
+> On Fri, 2011-05-27 at 13:09 -0700, Joshua Lock wrote:
+>> Upstream BitBake still has the xmlrpc server removed. The version in
+>> Poky's BitBake is functional (I use it daily).
+>>=20
+>> Attached are two patches against BitBake master to add back the xmlrpc
+>> server (copied from Poky's tree) and fix the uievent.
+>=20
+> Something in the pipeline is eating patches.
+>=20
+> I'll send them as replies to this message.
+
+I think it's the mailing list setup. When I attach a patch it never goes thr=
+ough
+Inlining the patch does go through
+>=20
+> Joshua
+> --=20
+> Joshua Lock
+>        Yocto Project Build Monkey
+>        Intel Open Source Technology Centre
+>=20
+>=20
+> _______________________________________________
+> Openembedded-core mailing list
+> Openembedded-core@lists.openembedded.org
+> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/openembedded-core
 
 
