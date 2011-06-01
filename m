@@ -1,38 +1,20 @@
-Received: from mail-vw0-f47.google.com ([209.85.212.47])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1QRnlC-0001hb-DX
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1QRpFv-0003oi-OU
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 01 Jun 2011 17:55:06 +0200
-Received: by vws2 with SMTP id 2so4719864vws.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 01 Jun 2011 08:51:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
-	h=domainkey-signature:mime-version:sender:in-reply-to:references:from
-	:date:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	bh=F2qni5QJEFu5ENhcG6RAj3tNVU68S3+EpRjccOxAO/M=;
-	b=rSNUnKgprKJ27I7SPybeiO+HRE2DXqJPW9B6zMDDa5xQyWw4a1Tj3mIfT/n3zvnR4U
-	BRlXdoufSREgkVXzRB+bOuVRKE+CmR8KW+XKTZhXmwyKuxR5NeP9VsYkQqKvetvxRzwZ
-	py0zG7e3Ep2ryVSWh5C02mKQrbwGDQqBq5Ei8=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=gmail.com; s=gamma;
-	h=mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	b=aUa4U34t0Pz+YgMx9cLqLNpPlT9sBE77JkaoL0DelJUbeBrvb2HJAxPsm127Ba3VLA
-	TNghYdNgZg/ABVK8tTQ/fbZTv5ahh2NJELl45byQB2qNMdLu1oqMtwy+7iVTlNYQLoUI
-	MZpGeZmSgkizs6IKxGXf5MIP86mupdo3QmR0o=
-Received: by 10.52.111.131 with SMTP id ii3mr2321727vdb.235.1306943514092;
-	Wed, 01 Jun 2011 08:51:54 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.52.101.134 with HTTP; Wed, 1 Jun 2011 08:51:34 -0700 (PDT)
-In-Reply-To: <1306940377.27470.429.camel@rex>
-References: <1306882804.27470.402.camel@rex> <1306940377.27470.429.camel@rex>
-From: Chris Larson <clarson@kergoth.com>
-Date: Wed, 1 Jun 2011 08:51:34 -0700
-X-Google-Sender-Auth: uj9vj2mEu3SgPjGYTksXGjyMlW8
-Message-ID: <BANLkTintk+iHqO=dGZyDnke=1P3WwZ2iYQ@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: RFC: Override expansion - changing the behaviour
+	Wed, 01 Jun 2011 19:30:55 +0200
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga102.fm.intel.com with ESMTP; 01 Jun 2011 10:26:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.65,304,1304319600"; d="scan'208";a="10449759"
+Received: from unknown (HELO helios.amr.corp.intel.com) ([10.255.13.133])
+	by fmsmga002.fm.intel.com with ESMTP; 01 Jun 2011 10:26:32 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  1 Jun 2011 18:26:28 +0100
+Message-Id: <cover.1306947210.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.7.4.1
+Subject: [RFC PATCH 0/2] skipped recipe handling
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -44,42 +26,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 01 Jun 2011 15:55:06 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Wed, 01 Jun 2011 17:30:56 -0000
 
-On Wed, Jun 1, 2011 at 7:59 AM, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
-> To follow up on this, what kind of cleanup would this and some other
-> tweaks to bitbake allow?
->
-> This is my proof of concept:
->
-> http://git.yoctoproject.org/cgit.cgi/poky-contrib/commit/?h=rpurdie/temp3&id=1ed909e8b9bac6ed88ffbbe6a100a42c4289f498
->
-> which cleans up native.bbclass and nativesdk.bbclass to be much cleaner
-> code with less strange side effects and hoops to jump through.
->
-> The main changes to bitbake after the original patch I posted were:
->
-> a) Add handlers before any data finalisation
-> b) Add a new "pre finalise" event
->
+I noticed bitbake-layers did not handle bbappends for skipped recipes
+properly (e.g. in Poky it complained that uclibc_git.bbappend did not
+match any recipe). Thus I added a mechanism to bitbake within cooker that
+lists skipped recipes and extended bitbake-layers to use it.
 
-This looks quite sane in general. The "if len(override) > 0" isn't
-pythonic, however. That should be "if override:". Of course,
-_seen_overrides would be better as a defaultdict(set), but that's
-minor. I'd also have taken the time to fix the formatting of
-"self._seen_overrides[override].add( var )". Those spaces around the
-argument aren't consistent with the code style of the rest of bitbake.
-Regarding the metadata comparison, there's emit_data.bbclass in OE
-which does essentially the same thing, dumps and compares. I support
-the overrides change going into bitbake, as long as we can ensure it
-breaks neither oe-core/poky or upstream OE.
+This (or something similar) will also be needed for improving the
+NoProvider error handling - ideally we should be reporting if the target
+being requested has been skipped and why. To this end the SkippedPackage
+class includes the reason and DEPENDS/RDEPENDS info (although at the
+moment RDEPENDS does not get populated). Some may prefer I remove the 
+DEPENDS/RDEPENDS bits until the future patch where they are used, if
+so I wouldn't object to removing them.
+
+I also considered adding to skiplist for BBMASKed-out recipes but on
+reflection I elected not to do so since I assumed we ought to be
+completely ignoring recipes that are masked out in this way.
+
+Patch summary (these are against Poky but they apply cleanly with -p2
+against bitbake master):
+
+Paul Eggleton (2):
+  bitbake: track skipped packages
+  bitbake-layers: handle skipped recipes
+
+ bitbake/bin/bitbake-layers  |   24 +++++++++++++++++++-----
+ bitbake/lib/bb/cache.py     |   12 +++++++++---
+ bitbake/lib/bb/cooker.py    |   16 ++++++++++++++++
+ bitbake/lib/bb/parse/ast.py |   12 ++++++------
+ 4 files changed, 50 insertions(+), 14 deletions(-)
+
 -- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+1.7.4.1
 
 
