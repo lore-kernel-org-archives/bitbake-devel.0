@@ -1,24 +1,24 @@
 Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1QRpFw-0003oi-F8
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1QRpFy-0003ok-L9
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 01 Jun 2011 19:30:57 +0200
+	Wed, 01 Jun 2011 19:30:59 +0200
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 01 Jun 2011 10:26:33 -0700
+	by fmsmga102.fm.intel.com with ESMTP; 01 Jun 2011 10:26:34 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.65,304,1304319600"; d="scan'208";a="10449761"
+X-IronPort-AV: E=Sophos;i="4.65,304,1304319600"; d="scan'208";a="10449763"
 Received: from unknown (HELO helios.amr.corp.intel.com) ([10.255.13.133])
-	by fmsmga002.fm.intel.com with ESMTP; 01 Jun 2011 10:26:33 -0700
+	by fmsmga002.fm.intel.com with ESMTP; 01 Jun 2011 10:26:34 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  1 Jun 2011 18:26:29 +0100
-Message-Id: <1cd9d0b284c1cd1966b0c2c1ea9fbad15c5ed5fc.1306947210.git.paul.eggleton@linux.intel.com>
+Date: Wed,  1 Jun 2011 18:26:30 +0100
+Message-Id: <6dda84cc0d5c63c7b09df0631d9082cbbcd2bd2f.1306947210.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1306947210.git.paul.eggleton@linux.intel.com>
 References: <cover.1306947210.git.paul.eggleton@linux.intel.com>
 In-Reply-To: <cover.1306947210.git.paul.eggleton@linux.intel.com>
 References: <cover.1306947210.git.paul.eggleton@linux.intel.com>
-Subject: [RFC PATCH 1/2] bitbake: track skipped packages
+Subject: [RFC PATCH 2/2] bitbake-layers: handle skipped recipes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,144 +30,71 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 01 Jun 2011 17:30:57 -0000
+X-List-Received-Date: Wed, 01 Jun 2011 17:31:00 -0000
 
-Add skiplist to cooker that allows access to the list of packages skipped
-via SkipPackage (this includes COMPATIBLE_MACHINE, INCOMPATIBLE_LICENSE,
-etc.) This can be used to enhance error reporting.
+Report bbappends correctly for skipped recipes instead of reporting the
+bbappends as not having any matching recipe.
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- bitbake/lib/bb/cache.py     |   12 +++++++++---
- bitbake/lib/bb/cooker.py    |   16 ++++++++++++++++
- bitbake/lib/bb/parse/ast.py |   12 ++++++------
- 3 files changed, 31 insertions(+), 9 deletions(-)
+ bitbake/bin/bitbake-layers |   24 +++++++++++++++++++-----
+ 1 files changed, 19 insertions(+), 5 deletions(-)
 
-diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
-index d083c51..076262b 100644
---- a/bitbake/lib/bb/cache.py
-+++ b/bitbake/lib/bb/cache.py
-@@ -59,6 +59,7 @@ recipe_fields = (
-     'broken',
-     'not_world',
-     'skipped',
-+    'skipreason',
-     'timestamp',
-     'packages',
-     'packages_dynamic',
-@@ -128,11 +129,15 @@ class RecipeInfo(namedtuple('RecipeInfo', recipe_fields)):
+diff --git a/bitbake/bin/bitbake-layers b/bitbake/bin/bitbake-layers
+index b6106cd..c58aee3 100755
+--- a/bitbake/bin/bitbake-layers
++++ b/bitbake/bin/bitbake-layers
+@@ -81,6 +81,8 @@ class Commands(cmd.Cmd):
+         for pn in self.cooker_data.pkg_pn:
+             self.show_appends_for_pn(pn)
  
-     @classmethod
-     def from_metadata(cls, filename, metadata):
--        if cls.getvar('__SKIPPED', metadata):
-+        skipval = cls.getvar('__SKIPPED', metadata)
-+        if skipval:
-             return cls.make_optional(skipped=True,
-+                                     skipreason=skipval,
-                                      file_depends=metadata.getVar('__depends', False),
-                                      timestamp=bb.parse.cached_mtime(filename),
--                                     variants=cls.listvar('__VARIANTS', metadata) + [''])
-+                                     variants=cls.listvar('__VARIANTS', metadata) + [''],
-+                                     provides=cls.depvar('PROVIDES', metadata),
-+                                     rprovides=cls.depvar('RPROVIDES', metadata))
- 
-         tasks = metadata.getVar('__BBTASKS', False)
- 
-@@ -152,6 +157,7 @@ class RecipeInfo(namedtuple('RecipeInfo', recipe_fields)):
-             variants         = cls.listvar('__VARIANTS', metadata) + [''],
- 
-             skipped          = False,
-+            skipreason       = None,
-             timestamp        = bb.parse.cached_mtime(filename),
-             packages         = cls.listvar('PACKAGES', metadata),
-             pn               = pn,
-@@ -348,7 +354,7 @@ class Cache(object):
-         cached, infos = self.load(fn, appends, cfgData)
-         for virtualfn, info in infos:
-             if info.skipped:
--                logger.debug(1, "Skipping %s", virtualfn)
-+                logger.debug(1, "Skipping %s: %s", (virtualfn, info.skipreason) )
-                 skipped += 1
-             else:
-                 self.add_info(virtualfn, info, cacheData, not cached)
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 0b52f18..9b12e0d 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -55,6 +55,20 @@ class NothingToBuild(Exception):
- class state:
-     initial, parsing, running, shutdown, stop = range(5)
- 
++        self.show_appends_for_skipped()
 +
-+class SkippedPackage:
-+    def __init__(self, info = None, reason = None):
-+        self.skipreason = None
-+        self.provides = None
-+        self.rprovides = None
+         self.show_appends_with_no_recipes()
+ 
+     def show_appends_for_pn(self, pn):
+@@ -92,17 +94,27 @@ class Commands(cmd.Cmd):
+                                              self.cooker_data.pkg_pn)
+         best_filename = os.path.basename(best[3])
+ 
++        self.show_appends_output(filenames, best_filename)
 +
-+        if info:
-+            self.skipreason = info.skipreason
-+            self.provides = info.provides
-+            self.rprovides = info.rprovides
-+        elif reason:
-+            self.skipreason = reason
++    def show_appends_for_skipped(self):
++        filenames = [os.path.basename(f)
++                    for f in self.cooker.skiplist.iterkeys()]
++        self.show_appends_output(filenames, None, " (skipped)")
 +
- #============================================================================#
- # BBCooker
- #============================================================================#
-@@ -66,6 +80,7 @@ class BBCooker:
-     def __init__(self, configuration, server):
-         self.status = None
-         self.appendlist = {}
-+        self.skiplist = {}
++    def show_appends_output(self, filenames, best_filename, name_suffix = ''):
+         appended, missing = self.get_appends_for_files(filenames)
+         if appended:
+             for basename, appends in appended:
+-                logger.info('%s:', basename)
++                logger.info('%s%s:', basename, name_suffix)
+                 for append in appends:
+                     logger.info('  %s', append)
  
-         if server:
-             self.server = server.BitBakeServer(self)
-@@ -1198,6 +1213,7 @@ class CookerParser(object):
-         for virtualfn, info in result:
-             if info.skipped:
-                 self.skipped += 1
-+                self.cooker.skiplist[virtualfn] = SkippedPackage(info)
-             self.bb_cache.add_info(virtualfn, info, self.cooker.status,
-                                         parsed=parsed)
-         return True
-diff --git a/bitbake/lib/bb/parse/ast.py b/bitbake/lib/bb/parse/ast.py
-index 375dc61..18e491c 100644
---- a/bitbake/lib/bb/parse/ast.py
-+++ b/bitbake/lib/bb/parse/ast.py
-@@ -376,8 +376,8 @@ def multi_finalize(fn, d):
-     try:
-         if not onlyfinalise or "default" in onlyfinalise:
-             finalize(fn, d)
--    except bb.parse.SkipPackage:
--        bb.data.setVar("__SKIPPED", True, d)
-+    except bb.parse.SkipPackage as e:
-+        bb.data.setVar("__SKIPPED", e.args[0], d)
-     datastores = {"": safe_d}
+-            if best_filename in missing:
+-                logger.warn('%s: missing append for preferred version',
+-                            best_filename)
+-                self.returncode |= 1
++            if best_filename:
++                if best_filename in missing:
++                    logger.warn('%s: missing append for preferred version',
++                                best_filename)
++                    self.returncode |= 1
++
  
-     versions = (d.getVar("BBVERSIONS", True) or "").split()
-@@ -419,8 +419,8 @@ def multi_finalize(fn, d):
-             verfunc(pv, d, safe_d)
-             try:
-                 finalize(fn, d)
--            except bb.parse.SkipPackage:
--                bb.data.setVar("__SKIPPED", True, d)
-+            except bb.parse.SkipPackage as e:
-+                bb.data.setVar("__SKIPPED", e.args[0], d)
- 
-         _create_variants(datastores, versions, verfunc)
- 
-@@ -439,8 +439,8 @@ def multi_finalize(fn, d):
-             try:
-                 if not onlyfinalise or variant in onlyfinalise:
-                     finalize(fn, variant_d, variant)
--            except bb.parse.SkipPackage:
--                bb.data.setVar("__SKIPPED", True, variant_d)
-+            except bb.parse.SkipPackage as e:
-+                bb.data.setVar("__SKIPPED", e.args[0], variant_d)
- 
-     if len(datastores) > 1:
-         variants = filter(None, datastores.iterkeys())
+     def get_appends_for_files(self, filenames):
+         appended, notappended = set(), set()
+@@ -122,6 +134,8 @@ class Commands(cmd.Cmd):
+     def show_appends_with_no_recipes(self):
+         recipes = set(os.path.basename(f)
+                       for f in self.cooker_data.pkg_fn.iterkeys())
++        recipes |= set(os.path.basename(f)
++                      for f in self.cooker.skiplist.iterkeys())
+         appended_recipes = self.cooker_data.appends.iterkeys()
+         appends_without_recipes = [self.cooker_data.appends[recipe]
+                                    for recipe in appended_recipes
 -- 
 1.7.4.1
 
