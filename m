@@ -1,25 +1,26 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <liping.ke@intel.com>) id 1QSJ6p-0000sV-Gl
+	(envelope-from <dvhart@linux.intel.com>) id 1QSMw0-00009P-BH
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 03 Jun 2011 03:23:32 +0200
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 02 Jun 2011 18:19:14 -0700
+	Fri, 03 Jun 2011 07:28:37 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 02 Jun 2011 22:24:08 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.65,312,1304319600"; d="scan'208";a="11177247"
-Received: from lke-nhm.sh.intel.com (HELO localhost) ([10.239.36.48])
-	by fmsmga002.fm.intel.com with ESMTP; 02 Jun 2011 18:19:13 -0700
-From: Ke Liping <liping.ke@intel.com>
-To: poky@yoctoproject.org,
-	bitbake-devel@lists.openembedded.org
-Date: Fri,  3 Jun 2011 09:06:04 +0800
-Message-Id: <98c7028eaf685418080016b7f37b817e5f7561ce.1307062861.git.liping.ke@intel.com>
-X-Mailer: git-send-email 1.7.0.4
-In-Reply-To: <cover.1307062861.git.liping.ke@intel.com>
-References: <cover.1307062861.git.liping.ke@intel.com>
-In-Reply-To: <cover.1307062861.git.liping.ke@intel.com>
-References: <cover.1307062861.git.liping.ke@intel.com>
-Subject: [PATCH 4/4][Image Creator]Implement multiple extra cache fields request support
+X-IronPort-AV: E=Sophos;i="4.65,313,1304319600"; 
+   d="scan'208";a="6376562"
+Received: from unknown (HELO [10.255.13.71]) ([10.255.13.71])
+	by azsmga001.ch.intel.com with ESMTP; 02 Jun 2011 22:24:07 -0700
+Message-ID: <4DE86FF7.30009@linux.intel.com>
+Date: Thu, 02 Jun 2011 22:24:07 -0700
+From: Darren Hart <dvhart@linux.intel.com>
+User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; en-US;
+	rv:1.9.2.17) Gecko/20110424 Lightning/1.0b2 Thunderbird/3.1.10
+MIME-Version: 1.0
+To: Joshua Lock <josh@linux.intel.com>
+References: <1306973125.2240.18.camel@scimitar>
+In-Reply-To: <1306973125.2240.18.camel@scimitar>
+Cc: poky <poky@yoctoproject.org>, bitbake-devel@lists.openembedded.org
+Subject: Re: [poky] [RFC] BitBake GUI work, the state of things
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,378 +32,163 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 03 Jun 2011 01:23:32 -0000
+X-List-Received-Date: Fri, 03 Jun 2011 05:28:37 -0000
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
-From: Liping Ke <liping.ke@intel.com>
 
-This patch is to support extra cache. If user needs to request
-extra cache fields besides CoreRecipeInfo fields, just add a new
-XXXRecipeInfo class definition as Hob Does.
-Currently supported Extra RecipeInfo name is an array. We can
-support multiple extra cache fields at the same time besides
-CoreRecipeInfo which is needed by all clients.
 
-Signed-off-by: Liping Ke <liping.ke@intel.com>
----
- bitbake/lib/bb/cache.py  |  177 +++++++++++++++++++++++++++++++---------------
- bitbake/lib/bb/cooker.py |   16 ++--
- 2 files changed, 127 insertions(+), 66 deletions(-)
+On 06/01/2011 05:05 PM, Joshua Lock wrote:
+> Hi all,
+> 
+> I've been plugging away at a GUI to pilot BitBake with and think that
+> now would be a reasonable time to solicit some feedback on the 'design'.
+> 
+> (There's a copy of this emails contents with inline screenshots at:
+> https://wiki.yoctoproject.org/wiki/BitBake/GUI/CurrentState)
+> 
+> The purpose of the tool is to allow the user to create and build a
+> custom image as well as enabling parameters of the build to be
+> configured.
+> 
+> Here's a screenshot:
+> 
+> https://wiki.yoctoproject.org/wiki/File:Screenshot-yHob-240511.png
 
-diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
-index 0620621..5b8e3ee 100644
---- a/bitbake/lib/bb/cache.py
-+++ b/bitbake/lib/bb/cache.py
-@@ -43,8 +43,10 @@ except ImportError:
-     logger.info("Importing cPickle failed. "
-                 "Falling back to a very slow implementation.")
- 
--__cache_version__ = "138"
-+__cache_version__ = "139"
- 
-+def getCacheFile(path, filename):
-+    return os.path.join(path, filename)
- 
- # RecipeInfoCommon defines common data retrieving methods
- # from meta data for caches. CoreRecipeInfo as well as other
-@@ -86,12 +88,9 @@ class RecipeInfoCommon(object):
- class CoreRecipeInfo(RecipeInfoCommon):
-     __slots__ = ()
- 
--    def __init__(self, filename, metadata):
--        self.name = "base"
--        # please override this member with the correct data cache file
--        # such as (bb_cache.dat, bb_extracache_hob.dat) 
--        self.cachefile = "bb_cache.dat"        
-+    cachefile = "bb_cache.dat"   
- 
-+    def __init__(self, filename, metadata):      
-         self.file_depends = metadata.getVar('__depends', False)
-         self.timestamp = bb.parse.cached_mtime(filename)
-         self.variants = self.listvar('__VARIANTS', metadata) + ['']
-@@ -265,7 +264,7 @@ class Cache(object):
-             return
- 
-         self.has_cache = True
--        self.cachefile = os.path.join(self.cachedir, "bb_cache.dat")
-+        self.cachefile = getCacheFile(self.cachedir, "bb_cache.dat")
- 
-         logger.debug(1, "Using cache in '%s'", self.cachedir)
-         bb.utils.mkdirhier(self.cachedir)
-@@ -279,12 +278,21 @@ class Cache(object):
-         old_mtimes.append(newest_mtime)
-         newest_mtime = max(old_mtimes)
- 
--        if bb.parse.cached_mtime_noerror(self.cachefile) >= newest_mtime:
-+        bNeedUpdate = True
-+        if self.caches_array:
-+            for cache_class in self.caches_array:
-+                if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
-+                    cachefile = getCacheFile(self.cachedir, cache_class.cachefile)
-+                    bNeedUpdate = bNeedUpdate and (bb.parse.cached_mtime_noerror(cachefile) >= newest_mtime)
-+                    cache_class.init_cacheData(self)
-+        if bNeedUpdate:
-             self.load_cachefile()
-         elif os.path.isfile(self.cachefile):
-             logger.info("Out of date cache found, rebuilding...")
- 
-     def load_cachefile(self):
-+        # Firstly, using core cache file information for
-+        # valid checking
-         with open(self.cachefile, "rb") as cachefile:
-             pickled = pickle.Unpickler(cachefile)
-             try:
-@@ -301,31 +309,52 @@ class Cache(object):
-                 logger.info('Bitbake version mismatch, rebuilding...')
-                 return
- 
--            cachesize = os.fstat(cachefile.fileno()).st_size
--            bb.event.fire(bb.event.CacheLoadStarted(cachesize), self.data)
- 
--            previous_percent = 0
--            while cachefile:
--                try:
--                    key = pickled.load()
--                    value = pickled.load()
--                except Exception:
--                    break
-+        cachesize = 0
-+        previous_progress = 0
-+        previous_percent = 0
- 
--                self.depends_cache[key] = value
--
--                # only fire events on even percentage boundaries
--                current_progress = cachefile.tell()
--                current_percent = 100 * current_progress / cachesize
--                if current_percent > previous_percent:
--                    previous_percent = current_percent
--                    bb.event.fire(bb.event.CacheLoadProgress(current_progress),
--                                  self.data)
--
--            bb.event.fire(bb.event.CacheLoadCompleted(cachesize,
--                                                      len(self.depends_cache)),
--                          self.data)
-+        # Calculate the correct cachesize of all those cache files
-+        for cache_class in self.caches_array:
-+            if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
-+                cachefile = getCacheFile(self.cachedir, cache_class.cachefile)
-+                with open(cachefile, "rb") as cachefile:
-+                    cachesize += os.fstat(cachefile.fileno()).st_size
- 
-+        bb.event.fire(bb.event.CacheLoadStarted(cachesize), self.data)
-+        
-+        for cache_class in self.caches_array:
-+            if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
-+                cachefile = getCacheFile(self.cachedir, cache_class.cachefile)
-+                with open(cachefile, "rb") as cachefile:
-+                    pickled = pickle.Unpickler(cachefile)                    
-+                    while cachefile:
-+                        try:
-+                            key = pickled.load()
-+                            value = pickled.load()
-+                        except Exception:
-+                            break
-+                        if self.depends_cache.has_key(key):
-+                            self.depends_cache[key].append(value)
-+                        else:
-+                            self.depends_cache[key] = [value]
-+                        # only fire events on even percentage boundaries
-+                        current_progress = cachefile.tell() + previous_progress
-+                        current_percent = 100 * current_progress / cachesize
-+                        if current_percent > previous_percent:
-+                            previous_percent = current_percent
-+                            bb.event.fire(bb.event.CacheLoadProgress(current_progress),
-+                                          self.data)
-+
-+                    previous_progress += current_progress
-+
-+        # Note: depends cache number is corresponding to the parsing file numbers.
-+        # The same file has several caches, still regarded as one item in the cache
-+        bb.event.fire(bb.event.CacheLoadCompleted(cachesize,
-+                                                  len(self.depends_cache)),
-+                      self.data)
-+
-+    
-     @staticmethod
-     def virtualfn2realfn(virtualfn):
-         """
-@@ -376,8 +405,14 @@ class Cache(object):
-             depends |= (data.getVar("__depends", False) or set())
-             if depends and not variant:
-                 data.setVar("__depends", depends)
--            info = CoreRecipeInfo(filename, data)
--            infos.append((virtualfn, info))
-+
-+            info_array = []
-+            for cache_class in caches_array:
-+                if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
-+                    info = cache_class(filename, data)
-+                    info_array.append(info)
-+            infos.append((virtualfn, info_array))
-+
-         return infos
- 
-     def load(self, filename, appends, configdata):
-@@ -391,8 +426,9 @@ class Cache(object):
-         cached = self.cacheValid(filename)
-         if cached:
-             infos = []
--            info = self.depends_cache[filename]
--            for variant in info.variants:
-+            # info_array item is a list of [CoreRecipeInfo, XXXRecipeInfo]
-+            info_array = self.depends_cache[filename]
-+            for variant in info_array[0].variants:
-                 virtualfn = self.realfn2virtual(filename, variant)
-                 infos.append((virtualfn, self.depends_cache[virtualfn]))
-         else:
-@@ -408,12 +444,12 @@ class Cache(object):
-         skipped, virtuals = 0, 0
- 
-         cached, infos = self.load(fn, appends, cfgData)
--        for virtualfn, info in infos:
--            if info.skipped:
-+        for virtualfn, info_array in infos:
-+            if info_array[0].skipped:
-                 logger.debug(1, "Skipping %s", virtualfn)
-                 skipped += 1
-             else:
--                self.add_info(virtualfn, info, cacheData, not cached)
-+                self.add_info(virtualfn, info_array, cacheData, not cached)
-                 virtuals += 1
- 
-         return cached, skipped, virtuals
-@@ -457,15 +493,15 @@ class Cache(object):
-             self.remove(fn)
-             return False
- 
--        info = self.depends_cache[fn]
-+        info_array = self.depends_cache[fn]
-         # Check the file's timestamp
--        if mtime != info.timestamp:
-+        if mtime != info_array[0].timestamp:
-             logger.debug(2, "Cache: %s changed", fn)
-             self.remove(fn)
-             return False
- 
-         # Check dependencies are still valid
--        depends = info.file_depends
-+        depends = info_array[0].file_depends
-         if depends:
-             for f, old_mtime in depends:
-                 fmtime = bb.parse.cached_mtime_noerror(f)
-@@ -483,7 +519,7 @@ class Cache(object):
-                     return False
- 
-         invalid = False
--        for cls in info.variants:
-+        for cls in info_array[0].variants:
-             virtualfn = self.realfn2virtual(fn, cls)
-             self.clean.add(virtualfn)
-             if virtualfn not in self.depends_cache:
-@@ -530,13 +566,30 @@ class Cache(object):
-             logger.debug(2, "Cache is clean, not saving.")
-             return
- 
--        with open(self.cachefile, "wb") as cachefile:
--            pickler = pickle.Pickler(cachefile, pickle.HIGHEST_PROTOCOL)
--            pickler.dump(__cache_version__)
--            pickler.dump(bb.__version__)
--            for key, value in self.depends_cache.iteritems():
--                pickler.dump(key)
--                pickler.dump(value)
-+        file_dict = {}
-+        pickler_dict = {}
-+        for cache_class in self.caches_array:
-+            if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
-+                cache_class_name = cache_class.__name__
-+                cachefile = getCacheFile(self.cachedir, cache_class.cachefile)
-+                file_dict[cache_class_name] = open(cachefile, "wb")
-+                pickler_dict[cache_class_name] =  pickle.Pickler(file_dict[cache_class_name], pickle.HIGHEST_PROTOCOL)
-+                   
-+        pickler_dict['CoreRecipeInfo'].dump(__cache_version__)
-+        pickler_dict['CoreRecipeInfo'].dump(bb.__version__)
-+
-+        try:
-+            for key, info_array in self.depends_cache.iteritems():
-+                for info in info_array:
-+                    if isinstance(info, RecipeInfoCommon):
-+                        cache_class_name = info.__class__.__name__
-+                        pickler_dict[cache_class_name].dump(key)
-+                        pickler_dict[cache_class_name].dump(info)
-+        finally:
-+            for cache_class in self.caches_array:
-+                if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
-+                    cache_class_name = cache_class.__name__
-+                    file_dict[cache_class_name].close()
- 
-         del self.depends_cache
- 
-@@ -544,17 +597,17 @@ class Cache(object):
-     def mtime(cachefile):
-         return bb.parse.cached_mtime_noerror(cachefile)
- 
--    def add_info(self, filename, info, cacheData, parsed=None):
--        if not info.skipped:
--            cacheData.add_from_recipeinfo(filename, info)
-+    def add_info(self, filename, info_array, cacheData, parsed=None):
-+        if isinstance(info_array[0], CoreRecipeInfo) and (not info_array[0].skipped):
-+            cacheData.add_from_recipeinfo(filename, info_array)
- 
-         if not self.has_cache:
-             return
- 
--        if (info.skipped or 'SRCREVINACTION' not in info.pv) and not info.nocache:
-+        if (info_array[0].skipped or 'SRCREVINACTION' not in info_array[0].pv) and not info_array[0].nocache:
-             if parsed:
-                 self.cacheclean = False
--            self.depends_cache[filename] = info
-+            self.depends_cache[filename] = info_array
- 
-     def add(self, file_name, data, cacheData, parsed=None):
-         """
-@@ -562,8 +615,12 @@ class Cache(object):
-         """
- 
-         realfn = self.virtualfn2realfn(file_name)[0]
--        info = CoreRecipeInfo(realfn, data)
--        self.add_info(file_name, info, cacheData, parsed)
-+
-+        info_array = []
-+        for cache_class in self.caches_array:
-+            if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
-+                info_array.append(cache_class(realfn, data))
-+        self.add_info(file_name, info_array, cacheData, parsed)
- 
-     @staticmethod
-     def load_bbfile(bbfile, appends, config):
-@@ -629,7 +686,10 @@ class CacheData(object):
- 
-     def __init__(self, caches_array):
-         self.caches_array = caches_array
--        CoreRecipeInfo.init_cacheData(self)
-+        for cache_class in self.caches_array:
-+            if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
-+                cache_class.init_cacheData(self)        
-+
-         # Direct cache variables
-         self.task_queues = {}
-         self.preferred = {}
-@@ -640,7 +700,8 @@ class CacheData(object):
-         self.bbfile_priority = {}
-         self.bbfile_config_priorities = []
- 
--    def add_from_recipeinfo(self, fn, info):
--        info.add_cacheData(self, fn)
-+    def add_from_recipeinfo(self, fn, info_array):
-+        for info in info_array:
-+            info.add_cacheData(self, fn)
- 
-         
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 89da7e9..8379d0c 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -773,13 +773,13 @@ class BBCooker:
- 
-         fn = bb.cache.Cache.realfn2virtual(fn, cls)
-         try:
--            maininfo = infos[fn]
-+            info_array = infos[fn]
-         except KeyError:
-             bb.fatal("%s does not exist" % fn)
--        self.status.add_from_recipeinfo(fn, maininfo)
-+        self.status.add_from_recipeinfo(fn, info_array)
- 
-         # Tweak some variables
--        item = maininfo.pn
-+        item = info_array[0].pn
-         self.status.ignored_dependencies = set()
-         self.status.bbfile_priority[fn] = 1
- 
-@@ -1231,10 +1231,10 @@ class CookerParser(object):
-         else:
-             self.cached += 1
- 
--        for virtualfn, info in result:
--            if info.skipped:
-+        for virtualfn, info_array in result:
-+            if info_array[0].skipped:
-                 self.skipped += 1
--            self.bb_cache.add_info(virtualfn, info, self.cooker.status,
-+            self.bb_cache.add_info(virtualfn, info_array, self.cooker.status,
-                                         parsed=parsed)
-         return True
- 
-@@ -1242,5 +1242,5 @@ class CookerParser(object):
-         infos = self.bb_cache.parse(filename,
-                                     self.cooker.get_file_appends(filename),
-                                     self.cfgdata, self.cooker.caches_array)
--        for vfn, info in infos:
--            self.cooker.status.add_from_recipeinfo(vfn, info)
-+        for vfn, info_array in infos:
-+            self.cooker.status.add_from_recipeinfo(vfn, info_array)
+
+Does it harvest all known machines from the configured layers? Assuming
+so, but thought I'd check as it hadn't come up in our previous discussions.
+
+
+> 
+> I've tried to apply the principle of least surprise and tried to make
+> the app fit in on a Gnome desktop by following their HIG. One possibly
+> unexpected outcome of this is that you modify Preferences which equate
+> to values in local.conf
+
+
+It seems to me this might be less surprising if the tools was presented
+as an image "configurator" as opposed to an image builder. I'm not
+arguing for a name change here, but something to consider about how the
+tool is perceived. The assisted configuration is where this tool is the
+most valuable in my opinion, the building part is mostly just eye candy.
+
+
+> 
+> https://wiki.yoctoproject.org/wiki/File:Screenshot-Preferences.png
+
+
+Is "Exclude GPLv3 packages" the only license related option of significance?
+
+
+> 
+> There are several issues with the GUI as is that I will be working on
+> next, as well as some extra features that I am intending to implement in
+> the coming weeks.
+> 
+> Issues:
+> * I wanted to allow users to store recipes for their newly created
+> images on disk and buildFile didn't seem to work as expected (only
+> building the rootfs of the image and complaining when packages where
+> missing, rather than building all dependencies then the rootfs) so I
+> hacked a temporary alternative entry point to the program
+> bitbake-commander (I know we have a program using this name already,
+> which is fine because I don't want this entry point to last).
+> 
+> I want to remove this entry point but first need to figure out a way to
+> be able to modify layers and re-parse with the new layers' contents.
+> Hacking in this entry point enabled me to remain focused on the actual
+> GUI whilst I worked out interaction models.
+> 
+> This entry points shows a "workspace selector" dialog (like Eclipse's)
+> and once the user selects/creates a workspace layer it is added to the
+> bblayers.conf file and BitBake is then started.
+> 
+> https://wiki.yoctoproject.org/wiki/File:Hob-workspace-selector.png
+> 
+
+
+In my workflow, the build area is also a key part of my "workspace". I
+keep one for each permutation of
+(bernard|master)*(n450|beagleboard|qemux86|...). I find I run into fewer
+issues this way. I share downloads and may eventually share sstate as I
+learn how to work with it and not just periodically delete it ;-)
+
+The point being that if the concept of "Workspace" also included the
+build directory, then the changes to local.conf and bblayers.conf
+wouldn't be any surprise to the user at all. Having a configurable build
+directory is pretty important for performance reasons as well where you
+may have a RAID0 array for your build partition and don't want to use
+./build.
+
+It's certainly usable as is, but it could reach a broader audience if
+the concept of workspace were to include the build dir.
+
+
+> * In a similar vein I implemented a layer editor which helps the user
+> set up bblayers.conf, however the layer parsing and setting of BBPATH,
+> etc is done really early in the cooker initialisation. I need to work
+> out a clean way to allow modifying the bblayers.conf and having those
+> changes reflected in the UI without having to restart the GUI (i.e:
+> triggering a re-parse of the metadata).
+> 
+> https://wiki.yoctoproject.org/wiki/File:Screenshot-Layers.png
+> 
+
+
+I really like this bit. It just occurred to me though that it would be
+nice to be able to adjust the priority of these layers, and then resort
+the rows accordingly. Unfortunatley, that really involves changing the
+layer config file, which should probably be off limits to this tool for
+layers it isn't creating... maybe... hrm. Something to consider anyway.
+
+
+> * I was hoping I'd just be able to create files and use the buildFile
+> command to build the image rather than having the workspace layer but as
+> mentioned above calling the buildFile command didn't seem to handle
+> building the images contents, instead the build would just go straight
+> to rootfs generation and bail with missing packages.
+> Furthermore I think using buildTargets is the right solution so that the
+> user can build a cross toolchain and rootfs from the same GUI.
+> 
+> I'm aware that the coding style is all over, I had started out carryin
+> on with the gtk+ coding style of the other files in lib/bb/ui/crumbs but
+> I think I will end up switching the coding style of everything in
+> lib/bb/ui to be consistent with the rest of BitBake.
+> 
+> Feedback, particularly on the areas above marked as issues, is extremely
+> welcome.
+> 
+> I'm trying to keep an up-to-date To Do list at:
+> https://wiki.yoctoproject.org/wiki/BitBake/GUI/PostOneOh
+> 
+> I've also started to track possible future GUI work:
+> https://wiki.yoctoproject.org/wiki/BitBake/GUI/Future
+> 
+> The current state of the code is in my josh/hob branch on poky-contrib:
+> http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=josh/hob
+> (
+> Being more explicit the patch with HACK HACK HACK as the subject is one
+> I'm not at all happy with and the patch with WIP WIP WIP as the subject
+> is one which certainly needs more work.)
+> 
+> There's even a Yocto bugzilla component for the 'image creator':
+> http://bugzilla.yoctoproject.org/buglist.cgi?product=Build%
+> 20System&component=image%20creator&resolution=---
+> 
+> The GUI is probably not yet useful enough for day-to-day use, there's a
+> particularly irritating bug I've introduced whereby clicking to remove
+> something form the images contents removes *everything* - this is high
+> on my list of things to work on.
+> 
+> Regards,
+> Joshua
+
+Really coming along and looking great.
+
 -- 
-1.7.0.4
-
+Darren Hart
+Intel Open Source Technology Center
+Yocto Project - Linux Kernel
 
 
