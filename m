@@ -1,31 +1,23 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1QU4Ir-0003eH-Kn for bitbake-devel@lists.openembedded.org;
-	Tue, 07 Jun 2011 23:59:13 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p57Lttdf024254;
-	Tue, 7 Jun 2011 22:55:55 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 24092-03; Tue,  7 Jun 2011 22:55:51 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p57Ltovp024244
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Tue, 7 Jun 2011 22:55:51 +0100
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Brandon Stafford <brandon@pingswept.org>
-In-Reply-To: <BANLkTi=RWRFGQ1ujgCY8Gk8jhr62HMo_vw@mail.gmail.com>
-References: <AANLkTikY20mQoKfNaY6xsokcVabDnnaQKrvAmumBvv77@mail.gmail.com>
-	<BANLkTi=RWRFGQ1ujgCY8Gk8jhr62HMo_vw@mail.gmail.com>
-Date: Tue, 07 Jun 2011 22:55:45 +0100
-Message-ID: <1307483745.15712.80.camel@rex>
+Received: from mga11.intel.com ([192.55.52.93])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <josh@linux.intel.com>) id 1QU4WX-0004Bn-CD
+	for bitbake-devel@lists.openembedded.org;
+	Wed, 08 Jun 2011 00:13:21 +0200
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 07 Jun 2011 15:10:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.65,334,1304319600"; d="scan'208";a="15205154"
+Received: from scimitar.ch.intel.com (HELO [10.34.75.130]) ([10.34.75.130])
+	by fmsmga001.fm.intel.com with ESMTP; 07 Jun 2011 15:10:02 -0700
+From: Joshua Lock <josh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 07 Jun 2011 15:10:03 -0700
+In-Reply-To: <1306882804.27470.402.camel@rex>
+References: <1306882804.27470.402.camel@rex>
+X-Mailer: Evolution 3.0.2 (3.0.2-1.fc15) 
+Message-ID: <1307484603.15327.16.camel@scimitar>
 Mime-Version: 1.0
-X-Mailer: Evolution 2.32.2 
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] Fix some punctuation, wording, and caps in manual
+Subject: Re: RFC: Override expansion - changing the behaviour
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,38 +29,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 07 Jun 2011 21:59:13 -0000
+X-List-Received-Date: Tue, 07 Jun 2011 22:13:21 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-Hi Brandon,
-
-On Fri, 2011-06-03 at 12:14 -0400, Brandon Stafford wrote:
-> This patch contains what I hope are non-controversial improvements to
-> the manual. Most of the changes are single characters, but the
-> line-by-line diff makes the patch look large.
+On Wed, 2011-06-01 at 00:00 +0100, Richard Purdie wrote:
+> Currently if you do:
 > 
-> This is my first patch to Bitbake, so please don't kill me
-> immediately. (I originally sent this message, minus this sentence,
-> around 2011-03-10, but the bitbake-dev list appeared to be silently
-> dropping messages from 2011-03-07 until 2011-03-24. I resent it again
-> on 2011-03-27. I'm now sending it to the post-migration bitbake-devel
-> list on 2011-06-03.)
->
-> Signed-off-by: Brandon Stafford <brandon@pingswept.org>
+> OVERRIDES = "z"
+> DEPENDS_prepend = "a "
+> DEPENDS = "b"
+> DEPENDS_z = "c"
+> 
+> d.update_data()
+> d.getVar("DEPENDS") gives "a c"
+> d.update_data()
+> d.getVar("DEPENDS") gives "c"
+> 
+> I'm proposing we should change the bitbake behaviour such that at the
+> time bitbake expands the DEPENDS_z override, it removes "DEPENDS_z" from
+> the data store.
 
-I tried to get this to apply but the patch appears corrupt and I can't
-convince the patch tools to accept it. It looks like you sent html email
-and that your mailer line wrapped the text in some way too.
-
-Perhaps you could resend the patch as an attachment to the email or
-alternatively don't send html emails and try and address the line
-wrapping problem.
+FWIW I think this change is absolutely the right thing to do. The
+current behaviour always catches me out (and I hope I'm not alone) and
+changing it as suggested makes the behaviour much less surprising.
 
 Cheers,
-
-Richard
-
+Joshua
+-- 
+Joshua Lock
+        Yocto Build System Monkey
+        Intel Open Source Technology Centre
 
 
 
