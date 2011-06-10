@@ -1,28 +1,38 @@
-Received: from masterfoo.zenlinux.com ([207.192.74.254])
+Received: from mail-pz0-f47.google.com ([209.85.210.47])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <scott.a.garman@intel.com>) id 1QV59f-0000mC-EM
+	(envelope-from <raj.khem@gmail.com>) id 1QVAnH-0002Cp-N6
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 10 Jun 2011 19:05:55 +0200
-Received: from localhost.localdomain (c-76-115-40-57.hsd1.or.comcast.net
-	[76.115.40.57])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by masterfoo.zenlinux.com (Postfix) with ESMTP id 8C7C12FF37;
-	Fri, 10 Jun 2011 12:34:25 -0400 (EDT)
-From: Scott Garman <scott.a.garman@intel.com>
+	Sat, 11 Jun 2011 01:07:11 +0200
+Received: by pzk36 with SMTP id 36so1528768pzk.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 10 Jun 2011 16:03:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=domainkey-signature:date:from:to:subject:message-id:mime-version
+	:content-type:content-disposition:user-agent;
+	bh=vmaJrMHrZ7MDxEixrlCZhx7v3YKlK543iigcacPYnCw=;
+	b=hp+UcRnO5j1AUeIct4bMCINfZGPsZKm6+jTYipYdICSIb9SVAA6HvxiQ0Uy3y1osKL
+	3pWoE4pRTNpGFpuG+S+OFIT9VJMC1bTfSqsaO7HQjJ8kLnvty+NgNtEg7+Tp5JFYU3Pt
+	QIv/nbpGEpLytWJkR3vUIfmvEASarkSWAVyL0=
+DomainKey-Signature: a=rsa-sha1; c=nofws; d=gmail.com; s=gamma;
+	h=date:from:to:subject:message-id:mime-version:content-type
+	:content-disposition:user-agent;
+	b=Clj56xAzlxd6FhyR17gMuJXfdK2b3TLZtgcHt9vpjuRqeqvqRq1iZBilQLgUk5HwdL
+	nWMhtvYJKdS7ZVMdGy3XlAKbuGg4FtV4iBXHJapwdSMU5kEP61RBfqMd0VywWk3eGSgW
+	We8jsmDERR7JR34om3n4vtpsbWNrlS92yJv4U=
+Received: by 10.142.63.25 with SMTP id l25mr37678wfa.276.1307747029674;
+	Fri, 10 Jun 2011 16:03:49 -0700 (PDT)
+Received: from sakrah.homelinux.org
+	(99-57-141-118.lightspeed.sntcca.sbcglobal.net [99.57.141.118])
+	by mx.google.com with ESMTPS id f3sm2667597pbj.32.2011.06.10.16.03.48
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Fri, 10 Jun 2011 16:03:48 -0700 (PDT)
+Date: Fri, 10 Jun 2011 16:03:26 -0700
+From: Khem Raj <raj.khem@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 10 Jun 2011 09:34:20 -0700
-Message-Id: <1307723660-8406-1-git-send-email-scott.a.garman@intel.com>
-X-Mailer: git-send-email 1.7.1
-X-MasterFoo-MailScanner-Information: Please contact the ISP for more
-	information
-X-MailScanner-ID: 8C7C12FF37.9F669
-X-MasterFoo-MailScanner: Found to be clean
-X-MasterFoo-MailScanner-SpamCheck: not spam
-X-MasterFoo-MailScanner-From: scott.a.garman@intel.com
-X-Spam-Status: No
-Cc: Scott Garman <scott.a.garman@intel.com>
-Subject: [PATCH] cooker.py: fix bitbake -b
+Message-ID: <20110610230326.GA20047@sakrah.homelinux.org>
+MIME-Version: 1.0
+User-Agent: Mutt/1.5.20 (2009-06-14)
+Subject: bitbake quitting without parsing or doing anything
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -34,36 +44,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 10 Jun 2011 17:05:55 -0000
+X-List-Received-Date: Fri, 10 Jun 2011 23:07:11 -0000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This avoids a null reference when bitbake -b is invoked, fixing
-the following error:
+Hi
 
-AttributeError: 'NoneType' object has no attribute 'bbfile_config_priorities'
+I started to experience this error on my machine when I updated bitbake
+in my setup today. bitbake console-image simply quits without doing anything
+and it dies pretty early. Same setup worked fine last week I did not change
+anything
 
-Signed-off-by: Scott Garman <scott.a.garman@intel.com>
----
- lib/bb/cooker.py |    5 +++--
- 1 files changed, 3 insertions(+), 2 deletions(-)
+I could trace it go until
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index c23e3d4..cc5d939 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -990,8 +990,9 @@ class BBCooker:
-         files = (data.getVar( "BBFILES", self.configuration.data, 1 ) or "").split()
-         data.setVar("BBFILES", " ".join(files), self.configuration.data)
- 
--        # Sort files by priority
--        files.sort( key=lambda fileitem: self.calc_bbfile_priority(fileitem) )
-+        if self.status:
-+            # Sort files by priority
-+            files.sort( key=lambda fileitem: self.calc_bbfile_priority(fileitem) )
- 
-         if not len(files):
-             files = self.get_bbfiles()
+bb.event.fire(bb.event.ConfigParsed(), data) line 693 in lib/bb/cooker.py
+and silently quit after that
+
+Bisecting resulting in this commit being bad for me.
+
+Let me know if I more information is needed
+
+
+d21d5954d0c08b1c80b72c5f37becc2e58ec916a is the first bad commit
+commit d21d5954d0c08b1c80b72c5f37becc2e58ec916a
+Author: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date:   Wed Jun 8 13:08:52 2011 +0100
+
+    bitbake/server: Move server specific code into the server backend and create a server API
+    
+    Move the server implementation specific code into the server backend where
+    it belongs and replace this with a set of object method calls which
+    establish the server, detach it and then connect to it using appropriate
+    IPC.
+    
+    Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
 -- 
-1.7.1
-
+-Khem
 
 
