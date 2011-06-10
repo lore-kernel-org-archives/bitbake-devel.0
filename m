@@ -1,22 +1,22 @@
 Received: from masterfoo.zenlinux.com ([207.192.74.254])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <scott.a.garman@intel.com>) id 1QV52Q-0000Kq-2M
+	(envelope-from <scott.a.garman@intel.com>) id 1QV59f-0000mC-EM
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 10 Jun 2011 18:58:26 +0200
+	Fri, 10 Jun 2011 19:05:55 +0200
 Received: from localhost.localdomain (c-76-115-40-57.hsd1.or.comcast.net
 	[76.115.40.57])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by masterfoo.zenlinux.com (Postfix) with ESMTP id CD5052FF37;
-	Fri, 10 Jun 2011 12:54:55 -0400 (EDT)
+	by masterfoo.zenlinux.com (Postfix) with ESMTP id 8C7C12FF37;
+	Fri, 10 Jun 2011 12:34:25 -0400 (EDT)
 From: Scott Garman <scott.a.garman@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 10 Jun 2011 09:54:45 -0700
-Message-Id: <1307724885-8950-1-git-send-email-scott.a.garman@intel.com>
+Date: Fri, 10 Jun 2011 09:34:20 -0700
+Message-Id: <1307723660-8406-1-git-send-email-scott.a.garman@intel.com>
 X-Mailer: git-send-email 1.7.1
 X-MasterFoo-MailScanner-Information: Please contact the ISP for more
 	information
-X-MailScanner-ID: CD5052FF37.A780C
+X-MailScanner-ID: 8C7C12FF37.9F669
 X-MasterFoo-MailScanner: Found to be clean
 X-MasterFoo-MailScanner-SpamCheck: not spam
 X-MasterFoo-MailScanner-From: scott.a.garman@intel.com
@@ -34,7 +34,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 10 Jun 2011 16:58:26 -0000
+X-List-Received-Date: Fri, 10 Jun 2011 17:05:55 -0000
 
 This avoids a null reference when bitbake -b is invoked, fixing
 the following error:
