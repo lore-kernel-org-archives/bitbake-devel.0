@@ -1,41 +1,22 @@
-Received: from mail-vw0-f47.google.com ([209.85.212.47])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1QWVym-000532-GJ
+	(envelope-from <scott.a.garman@intel.com>) id 1QWdKz-0006Ck-2B
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 14 Jun 2011 17:56:36 +0200
-Received: by vws2 with SMTP id 2so5113498vws.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Jun 2011 08:53:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
-	h=domainkey-signature:mime-version:sender:in-reply-to:references:from
-	:date:x-google-sender-auth:message-id:subject:to:cc:content-type
-	:content-transfer-encoding;
-	bh=h1WmEkomzg9XMEw6RWr5QAk6ZoZldHFWEnbeOf6yml8=;
-	b=pNqhgKdGkSN9HmlR7sHyYvxvYoULXGmCvIJYvDFkpH7r3gMpZvNlJDAcX4Ywhm0Ebv
-	63nvMROF3lncgioHIpmT7EVx5RUzZ7edP0go29vaaHJuuGGFnO2Kzr7wpGG1NWwqP4Wn
-	UpGT42ZsJ62hlVAJWOnWrY+XFldDsBlXMBVss=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=gmail.com; s=gamma;
-	h=mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type
-	:content-transfer-encoding;
-	b=TJc1rCf5DgcTfJZRm4ResnbaZ2C7zwOh1xqAMPHaKAmOHSV/AzhI0+jMo80WavUQkU
-	NIhY+X3x+qAczvInLjA/ZICwAS/m3MwZ93sMIOXHsU5bzgRMnAPTgigiDEufLy9oXL1p
-	V9rK7Yp/U2bIG9JaDkyvBKRjn5dU0UHDaYkfE=
-Received: by 10.52.111.71 with SMTP id ig7mr18046vdb.209.1308065995085; Tue,
-	14 Jun 2011 08:39:55 -0700 (PDT)
+	Wed, 15 Jun 2011 01:48:01 +0200
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 14 Jun 2011 16:44:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.65,367,1304319600"; d="scan'208";a="13577463"
+Received: from miles.jf.intel.com (HELO [10.7.199.94]) ([10.7.199.94])
+	by orsmga002.jf.intel.com with ESMTP; 14 Jun 2011 16:44:34 -0700
+Message-ID: <4DF7F261.6020007@intel.com>
+Date: Tue, 14 Jun 2011 16:44:33 -0700
+From: Scott Garman <scott.a.garman@intel.com>
+User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; en-US;
+	rv:1.9.2.17) Gecko/20110424 Lightning/1.0b2 Thunderbird/3.1.10
 MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.52.181.2 with HTTP; Tue, 14 Jun 2011 08:39:35 -0700 (PDT)
-In-Reply-To: <BANLkTik1j9_BR7qPF1hH-X6t=GXE3v4pmw@mail.gmail.com>
-References: <20110610230326.GA20047@sakrah.homelinux.org>
-	<BANLkTik1j9_BR7qPF1hH-X6t=GXE3v4pmw@mail.gmail.com>
-From: Chris Larson <clarson@kergoth.com>
-Date: Tue, 14 Jun 2011 08:39:35 -0700
-X-Google-Sender-Auth: ryfg_qnuMFz-YrMr6DYi71dtk7A
-Message-ID: <BANLkTi=YyOez5MjdYSWPYfNFcPsxaTG+gw@mail.gmail.com>
-To: Khem Raj <raj.khem@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: bitbake quitting without parsing or doing anything
+To: bitbake-devel@lists.openembedded.org
+Subject: Bitbake exception handling syntax.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -47,61 +28,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 14 Jun 2011 15:56:36 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 14 Jun 2011 23:48:01 -0000
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 10, 2011 at 4:51 PM, Khem Raj <raj.khem@gmail.com> wrote:
-> On Fri, Jun 10, 2011 at 4:03 PM, Khem Raj <raj.khem@gmail.com> wrote:
->> Hi
->>
->> I started to experience this error on my machine when I updated bitbake
->> in my setup today. bitbake console-image simply quits without doing anyt=
-hing
->> and it dies pretty early. Same setup worked fine last week I did not cha=
-nge
->> anything
->>
->> I could trace it go until
->>
->> bb.event.fire(bb.event.ConfigParsed(), data) line 693 in lib/bb/cooker.p=
-y
->> and silently quit after that
->>
->> Bisecting resulting in this commit being bad for me.
->>
->> Let me know if I more information is needed
->>
->>
->> d21d5954d0c08b1c80b72c5f37becc2e58ec916a is the first bad commit
->> commit d21d5954d0c08b1c80b72c5f37becc2e58ec916a
->> Author: Richard Purdie <richard.purdie@linuxfoundation.org>
->> Date: =C2=A0 Wed Jun 8 13:08:52 2011 +0100
->>
->> =C2=A0 =C2=A0bitbake/server: Move server specific code into the server b=
-ackend and create a server API
->>
->> =C2=A0 =C2=A0Move the server implementation specific code into the serve=
-r backend where
->> =C2=A0 =C2=A0it belongs and replace this with a set of object method cal=
-ls which
->> =C2=A0 =C2=A0establish the server, detach it and then connect to it usin=
-g appropriate
->> =C2=A0 =C2=A0IPC.
->>
->> =C2=A0 =C2=A0Signed-off-by: Richard Purdie <richard.purdie@linuxfoundati=
-on.org>
->>
->
-> strangely recloning it works fine again. Dont know why
+In a failed attempt to make bitbake pass the parsing stage with python 
+v3, I noticed that the syntax we use for exception handling is 
+inconsistent.
 
-I just ran into this one. bitbake exists silently, no useful output,
--DDD doesn't result in anything useful.
---=20
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+The old way is to do: except ExcType, localvar
+The new way is: except ExcType as localvar
+
+We're using the new syntax (which is python v3.x compatible) throughout 
+most of the code, so the patch I'm about to submit cleans up the 
+remaining cases using the old syntax.
+
+Scott
+
+-- 
+Scott Garman
+Embedded Linux Engineer - Yocto Project
+Intel Open Source Technology Center
 
 
