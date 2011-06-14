@@ -1,35 +1,20 @@
-Received: from mail-wy0-f175.google.com ([74.125.82.175])
+Received: from mga01.intel.com ([192.55.52.88])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <raj.khem@gmail.com>) id 1QVBY1-00031R-CJ
+	(envelope-from <lianhao.lu@intel.com>) id 1QWNje-0000Dv-My
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 11 Jun 2011 01:55:29 +0200
-Received: by wye20 with SMTP id 20so2479606wye.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 10 Jun 2011 16:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
-	h=domainkey-signature:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:content-type:content-transfer-encoding;
-	bh=zml59b1+xmXMXwJEftgvTCwK4Hy4uATPW0WVcaS/k9Q=;
-	b=dWzfGzxWoj4oVuxQxrtJumdMd9M9w0jf1h4ewMYPuxnda+2A0YZZd5yFMXayofmQBB
-	Urqqf/Dnr6xK/jsu7ObLhYHGVmq6SkNv1NlvTJvAD2oXzdorT8c+BHVNKElkY67Vbu7b
-	Pa9KpyGnBOT7q/wvSOtq5YKdtTeYZk00Stvqg=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=gmail.com; s=gamma;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:content-type:content-transfer-encoding;
-	b=UV/EG1vFnAVK4BVGPADGfuRqksJEuzYuainUH6Qg0LgDUrkj7+2sYaELXy4e4tdtLa
-	VicqwYpxL5/ra2Wr5vSYqvU9BWndBTR8B9YEyNVyDHgJygL6ybKi/4rkFYnVG/z1sgme
-	N1+/a6OA6t9xYMT0EOnMRampHBFU/hbHQNRpE=
-Received: by 10.216.253.215 with SMTP id f65mr2635133wes.14.1307749928134;
-	Fri, 10 Jun 2011 16:52:08 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.216.28.19 with HTTP; Fri, 10 Jun 2011 16:51:38 -0700 (PDT)
-In-Reply-To: <20110610230326.GA20047@sakrah.homelinux.org>
-References: <20110610230326.GA20047@sakrah.homelinux.org>
-From: Khem Raj <raj.khem@gmail.com>
-Date: Fri, 10 Jun 2011 16:51:38 -0700
-Message-ID: <BANLkTik1j9_BR7qPF1hH-X6t=GXE3v4pmw@mail.gmail.com>
+	Tue, 14 Jun 2011 09:08:26 +0200
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 14 Jun 2011 00:03:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.65,363,1304319600"; d="scan'208";a="15935959"
+Received: from llu-piketon.sh.intel.com (HELO localhost) ([10.239.36.87])
+	by fmsmga002.fm.intel.com with ESMTP; 14 Jun 2011 00:03:55 -0700
+From: Lianhao Lu <lianhao.lu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: Re: bitbake quitting without parsing or doing anything
+Date: Tue, 14 Jun 2011 15:12:04 +0800
+Message-Id: <cover.1308034271.git.lianhao.lu@intel.com>
+X-Mailer: git-send-email 1.7.0.4
+Subject: [RFC PATCH 0/1] process cmd line parsing result by individual UI
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -41,54 +26,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 10 Jun 2011 23:55:29 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 14 Jun 2011 07:08:26 -0000
 
-On Fri, Jun 10, 2011 at 4:03 PM, Khem Raj <raj.khem@gmail.com> wrote:
-> Hi
->
-> I started to experience this error on my machine when I updated bitbake
-> in my setup today. bitbake console-image simply quits without doing anyth=
-ing
-> and it dies pretty early. Same setup worked fine last week I did not chan=
-ge
-> anything
->
-> I could trace it go until
->
-> bb.event.fire(bb.event.ConfigParsed(), data) line 693 in lib/bb/cooker.py
-> and silently quit after that
->
-> Bisecting resulting in this commit being bad for me.
->
-> Let me know if I more information is needed
->
->
-> d21d5954d0c08b1c80b72c5f37becc2e58ec916a is the first bad commit
-> commit d21d5954d0c08b1c80b72c5f37becc2e58ec916a
-> Author: Richard Purdie <richard.purdie@linuxfoundation.org>
-> Date: =C2=A0 Wed Jun 8 13:08:52 2011 +0100
->
-> =C2=A0 =C2=A0bitbake/server: Move server specific code into the server ba=
-ckend and create a server API
->
-> =C2=A0 =C2=A0Move the server implementation specific code into the server=
- backend where
-> =C2=A0 =C2=A0it belongs and replace this with a set of object method call=
-s which
-> =C2=A0 =C2=A0establish the server, detach it and then connect to it using=
- appropriate
-> =C2=A0 =C2=A0IPC.
->
-> =C2=A0 =C2=A0Signed-off-by: Richard Purdie <richard.purdie@linuxfoundatio=
-n.org>
->
+This patch tries to allow the individual UI to decide whether it should display the cmd line parsing result.
 
-strangely recloning it works fine again. Dont know why
+The command "getCmdLineAction" now returns either None or a dictionary with the key of {'action', 'msg'}. 
 
-> --
-> -Khem
->
+If it returns None, it means no command line action parameters are provided. 
+
+If it returns a dictionary, the entry of the key 'action' stores the list which should be used with server.runCommand(); the entry of the key 'msg' stores the error message from the cmd line parsing result (in which case the 'action' entry is None). 
+
+It is up to the individual UI to decide whether and how to display those parsing result.
+
+Please review the following changes for suitability for inclusion. If you have
+any objections or suggestions for improvement, please respond to the patches. If
+you agree with the changes, please provide your Acked-by.
+
+The following changes since commit a27fbe5e25a5aee956d2a43a2e2bf671c6d985f2:
+  Scott Rifenbark (1):
+        documentation/yocto-project-qs/yocto-project-qs.xml: removed 5.0 references
+
+are available in the git repository at:
+
+  git://git.pokylinux.org/poky-contrib llu/cmdLineParsing
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=llu/cmdLineParsing
+
+Lianhao Lu (1):
+  bitbake cooker/ui: handle cmd line parsing result by individual UI.
+
+ bitbake/lib/bb/cooker.py     |   34 ++++++++++++++++------------------
+ bitbake/lib/bb/ui/depexp.py  |    7 +++++--
+ bitbake/lib/bb/ui/goggle.py  |    6 +++++-
+ bitbake/lib/bb/ui/knotty.py  |    6 +++++-
+ bitbake/lib/bb/ui/ncurses.py |    6 +++++-
+ 5 files changed, 36 insertions(+), 23 deletions(-)
+
 
 
