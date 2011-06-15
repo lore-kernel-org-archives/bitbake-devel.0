@@ -1,38 +1,30 @@
-Received: from mail-vx0-f175.google.com ([209.85.220.175])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1QWdoE-00072y-5P
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 15 Jun 2011 02:18:14 +0200
-Received: by vxd7 with SMTP id 7so5524066vxd.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Jun 2011 17:14:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
-	h=domainkey-signature:mime-version:sender:in-reply-to:references:from
-	:date:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	bh=x5nlhsxQEXK65OJ4XZQBgfHu1A/5fZ2pLOVZtLBQagA=;
-	b=xfmqSLQ56Iyz84Uqi8Ll87hBHz48iXCylnjcN96zJaFuMTJtetLcVWZU5IHnlaQWuF
-	HJR3mc2YXnigzjKlOkhWqtaWtrzYZdk9sJlJuQtAs51j+cFRgvJJYbG6xfi4smvE88S0
-	X+eALBeaVT42d7SGguhFs9ECCDUr0zbKn4KfY=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=gmail.com; s=gamma;
-	h=mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	b=fEoCJK8Vr6kDngopwlNV9v4o9Ech3W9GyWItDOxI6Xs1m6+/4Zok0MLQkXVc9ANAxv
-	cl2/evBhB6+EVL4fRTBVOpySQr93/B4Dy39Z8NxQs5OtkyoysmhTSdWVbPE5UBj1JE92
-	3IldQR3bsyxC0S3yjzwixxSneE64pQddPSfp4=
-Received: by 10.52.111.71 with SMTP id ig7mr660717vdb.209.1308096505077; Tue,
-	14 Jun 2011 17:08:25 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.52.181.2 with HTTP; Tue, 14 Jun 2011 17:08:05 -0700 (PDT)
-In-Reply-To: <4DF7F261.6020007@intel.com>
-References: <4DF7F261.6020007@intel.com>
-From: Chris Larson <clarson@kergoth.com>
-Date: Tue, 14 Jun 2011 17:08:05 -0700
-X-Google-Sender-Auth: aggC2v1nhI0o0_11SyWVceOxdpc
-Message-ID: <BANLkTin50uRUyWWQ6oAtFQ9RC2r=E7_pug@mail.gmail.com>
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1QWn63-0000wM-Pm for bitbake-devel@lists.openembedded.org;
+	Wed, 15 Jun 2011 12:13:16 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p5FA9mNA025297;
+	Wed, 15 Jun 2011 11:09:48 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 25229-02; Wed, 15 Jun 2011 11:09:44 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p5FA9dhx025291
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Wed, 15 Jun 2011 11:09:40 +0100
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: Scott Garman <scott.a.garman@intel.com>
+In-Reply-To: <1308095098-8929-1-git-send-email-scott.a.garman@intel.com>
+References: <1308095098-8929-1-git-send-email-scott.a.garman@intel.com>
+Date: Wed, 15 Jun 2011 11:09:37 +0100
+Message-ID: <1308132577.15712.388.camel@rex>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.32.2 
+X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: Bitbake exception handling syntax.
+Subject: Re: [PATCH] make exception handling syntax consistent
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -44,27 +36,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 15 Jun 2011 00:18:14 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Wed, 15 Jun 2011 10:13:16 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 14, 2011 at 4:44 PM, Scott Garman <scott.a.garman@intel.com> wrote:
-> In a failed attempt to make bitbake pass the parsing stage with python v3, I
-> noticed that the syntax we use for exception handling is inconsistent.
->
-> The old way is to do: except ExcType, localvar
-> The new way is: except ExcType as localvar
->
-> We're using the new syntax (which is python v3.x compatible) throughout most
-> of the code, so the patch I'm about to submit cleans up the remaining cases
-> using the old syntax.
+On Tue, 2011-06-14 at 16:44 -0700, Scott Garman wrote:
+> Update exception handling syntax to use the modern style:
+> except ExcType as localvar
+> 
+> Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+> ---
+>  bin/bitbake               |    2 +-
+>  lib/bb/cooker.py          |   10 +++++-----
+>  lib/bb/data.py            |    2 +-
+>  lib/bb/fetch2/__init__.py |    4 ++--
+>  lib/bb/process.py         |    2 +-
+>  lib/bb/pysh/builtin.py    |   10 +++++-----
+>  lib/bb/pysh/interp.py     |   14 +++++++-------
+>  lib/bb/runqueue.py        |    2 +-
+>  lib/bb/server/process.py  |    4 ++--
+>  lib/prserv/serv.py        |    6 +++---
+>  10 files changed, 28 insertions(+), 28 deletions(-)
 
-That sounds good to me. I converted all of them at one point, but the
-code has changed since then :)
--- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+Applied, thanks Scott.
+
+Cheers,
+
+Richard
+
 
 
