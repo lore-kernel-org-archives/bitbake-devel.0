@@ -1,36 +1,28 @@
-Received: from mail-pz0-f47.google.com ([209.85.210.47])
+Received: from masterfoo.zenlinux.com ([207.192.74.254])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <raj.khem@gmail.com>) id 1QXOPO-0001WI-F5
+	(envelope-from <scott.a.garman@intel.com>) id 1QYRGs-0006ms-QK
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 17 Jun 2011 04:03:42 +0200
-Received: by pzk36 with SMTP id 36so1596670pzk.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 16 Jun 2011 19:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
-	h=domainkey-signature:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-type;
-	bh=AXLU3P5GGuL4MvnOqavJykIeG1SjJeIcIWbySdtwTmI=;
-	b=btW5lKeOmoZgpjoAJGHeOJ3P646lZB9rYA4ogIT8fgK46K2ZKbxM8FjAMtZ3pIR8/p
-	4I7K/KrGrcVLsFSu4kDdmoNrWK0uOIXd/+HoU+4Rw01lIu8lOTLChMBAq49Br0ehsOVr
-	ZAqoFHzOiOpAMbnQ45zx0Vuq6jlvdPF4DKhmU=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=gmail.com; s=gamma;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-type;
-	b=DS3BOSHba5wX40LEQRmcGVC1o8es/XimU7fPtmt/asXG49d8J62mDJdnbMi39RuaVA
-	FM1AIyHxVxhuKteFUAtoJ0aFtylqqUk6EzzPkVf7ZTB7C4Fo1o+R3U2BtFVZg1J5x2/x
-	K0xI+94U9fO0azntK0hmiYJKF9MJ9gNeexQkg=
-Received: by 10.68.51.2 with SMTP id g2mr885873pbo.495.1308276013359; Thu, 16
-	Jun 2011 19:00:13 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.68.55.195 with HTTP; Thu, 16 Jun 2011 18:59:43 -0700 (PDT)
-In-Reply-To: <1308232450.15712.436.camel@rex>
-References: <1308232450.15712.436.camel@rex>
-From: Khem Raj <raj.khem@gmail.com>
-Date: Thu, 16 Jun 2011 18:59:43 -0700
-Message-ID: <BANLkTi=E3enTWWdqH8v12Zf4v4HcymtKwA@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: Couple of nasty bitbake issues
+	Mon, 20 Jun 2011 01:19:15 +0200
+Received: from localhost.localdomain (c-98-246-160-194.hsd1.or.comcast.net
+	[98.246.160.194])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by masterfoo.zenlinux.com (Postfix) with ESMTP id 01B8D2FDA0;
+	Sun, 19 Jun 2011 19:15:39 -0400 (EDT)
+From: Scott Garman <scott.a.garman@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Sun, 19 Jun 2011 16:15:25 -0700
+Message-Id: <1308525325-5432-1-git-send-email-scott.a.garman@intel.com>
+X-Mailer: git-send-email 1.7.1
+X-MasterFoo-MailScanner-Information: Please contact the ISP for more
+	information
+X-MailScanner-ID: 01B8D2FDA0.8F456
+X-MasterFoo-MailScanner: Found to be clean
+X-MasterFoo-MailScanner-SpamCheck: not spam
+X-MasterFoo-MailScanner-From: scott.a.garman@intel.com
+X-Spam-Status: No
+Cc: Scott Garman <scott.a.garman@intel.com>
+Subject: [PATCH] fetch2/git.py: improve error reporting when an invalid protocol is used
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -42,28 +34,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 17 Jun 2011 02:03:42 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Sun, 19 Jun 2011 23:19:15 -0000
 
-On Thu, Jun 16, 2011 at 6:54 AM, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
->
-> I like the none server as its simple to debug. At present its looking
-> like it might be too ugly to fix this though. My hacks are:
->
-> http://git.yoctoproject.org/cgit.cgi/poky-contrib/commit/?h=rpurdie/ml&id=a3a130b3c6ca760066ca830eb46fa472ecb84c88
->
+When an invalid 'protocol' parameter is used in a git SRC_URI,
+the error reported was not helpful:
 
-FWIW I was seeing a weird behaviour on one of my machines that  Iwas
-discussing on IRC today where bitbake was freezing my system and that
-issue seems
-to be gone with this patch too now I can bitbake can happily run two
-jobs simultaneously
+ERROR: Function 'Fetcher failure for URL: 'None'.
+<environment dump>
+fatal: Could not make temporary directory: No such file or directory
 
+So instead check that ud.proto is set to something valid, and if not
+raise a meaningful ParameterError which explains that the protocol
+type is the source of the problem.
 
-> Cheers,
->
-> Richard
->
+This fixes bug [YOCTO #1142]
+
+Signed-off-by: Scott Garman <scott.a.garman@intel.com>
+---
+ lib/bb/fetch2/git.py |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 6979bea..f3bc793 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -88,6 +88,9 @@ class Git(FetchMethod):
+         else:
+             ud.proto = "git"
+ 
++        if not ud.proto in ('git', 'file', 'ssh', 'http', 'https'):
++            raise bb.fetch2.ParameterError("Invalid protocol type", ud.url)
++
+         ud.nocheckout = ud.parm.get("nocheckout","0") == "1"
+ 
+         ud.rebaseable = ud.parm.get("rebaseable","0") == "1"
+-- 
+1.7.1
+
 
 
