@@ -1,43 +1,24 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dexuan.cui@intel.com>) id 1QYW8V-0007i7-6o
+	(envelope-from <dexuan.cui@intel.com>) id 1QYWGU-0000oP-5n
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 20 Jun 2011 06:30:55 +0200
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 19 Jun 2011 21:27:22 -0700
+	Mon, 20 Jun 2011 06:39:10 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 19 Jun 2011 21:34:32 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.65,391,1304319600"; d="scan'208";a="18225021"
-Received: from pgsmsx602.gar.corp.intel.com ([10.221.43.81])
-	by fmsmga002.fm.intel.com with ESMTP; 19 Jun 2011 21:27:21 -0700
-Received: from pgsmsx509.gar.corp.intel.com (172.30.13.17) by
-	pgsmsx602.gar.corp.intel.com (10.221.43.81) with Microsoft SMTP Server
-	(TLS) id 8.2.255.0; Mon, 20 Jun 2011 12:26:50 +0800
-Received: from shsmsx602.ccr.corp.intel.com (10.239.4.104) by
-	PGSMSX509.gar.corp.intel.com (172.30.13.17) with Microsoft SMTP Server
-	(TLS) id 8.2.255.0; Mon, 20 Jun 2011 12:26:50 +0800
-Received: from shsmsx502.ccr.corp.intel.com ([10.239.4.96]) by
-	SHSMSX602.ccr.corp.intel.com ([10.239.4.104]) with mapi;
-	Mon, 20 Jun 2011 12:26:50 +0800
-From: "Cui, Dexuan" <dexuan.cui@intel.com>
-To: 'Paul Eggleton' <paul.eggleton@linux.intel.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Date: Mon, 20 Jun 2011 12:26:48 +0800
-Thread-Topic: [bitbake-devel] [PATCH 1/1] bitbake-layers: stop the warning
-	"not been run using the bitbake wrapper..."
-Thread-Index: AcwnbEC8dl8NRDalS+2327vqc6C1/QHjX4mg
-Message-ID: <1865303E0DED764181A9D882DEF65FB6997B5E7671@shsmsx502.ccr.corp.intel.com>
-References: <cover.1307693771.git.dexuan.cui@intel.com>
-	<6439f6f95ef1157063276692bcf2adfebb7597eb.1307693771.git.dexuan.cui@intel.com>
-	<1307708964.15712.210.camel@rex>
-	<201106101345.11050.paul.eggleton@linux.intel.com>
-In-Reply-To: <201106101345.11050.paul.eggleton@linux.intel.com>
-Accept-Language: zh-CN, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-acceptlanguage: zh-CN, en-US
-MIME-Version: 1.0
-Subject: Re: [PATCH 1/1] bitbake-layers: stop the warning "not been run using the bitbake wrapper..."
+X-IronPort-AV: E=Sophos;i="4.65,391,1304319600"; d="scan'208";a="15365166"
+Received: from dcui-desktop.sh.intel.com (HELO localhost) ([10.239.13.51])
+	by azsmga001.ch.intel.com with ESMTP; 19 Jun 2011 21:34:31 -0700
+From: Dexuan Cui <dexuan.cui@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 20 Jun 2011 12:34:15 +0800
+Message-Id: <f9c4e4502da0fbb1376f987ae8a81073567143f5.1308544082.git.dexuan.cui@intel.com>
+X-Mailer: git-send-email 1.7.2
+In-Reply-To: <cover.1308544082.git.dexuan.cui@intel.com>
+References: <cover.1308544082.git.dexuan.cui@intel.com>
+In-Reply-To: <cover.1308544082.git.dexuan.cui@intel.com>
+References: <cover.1308544082.git.dexuan.cui@intel.com>
+Subject: [PATCH 1/1] die if a .bbappend file matches no existing .bb recipe
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -49,26 +30,90 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 20 Jun 2011 04:30:55 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Mon, 20 Jun 2011 04:39:11 -0000
 
-Paul Eggleton wrote:
-> On Friday 10 June 2011 13:29:24 Richard Purdie wrote:
->> We can't add implementation specific information to bitbake I'm
->> afraid so we'll need to find a different way to handle this...
->=20
-> Perhaps we could just change sanity.bbclass to check argv[0] somehow
-> (or some equivalent way to get the current process name) and skip the
-> check if it isn't "bitbake"? This would have the added bonus of
-> solving the problem for future tools that use bitbake code in a
-> similar way to bitbake-layers.=20
-(sorry for the late reply!)=20
-Thanks a lot for Paul's good suggestion!
-I sent the new patch to oe-core mailing list just now.
+This patch moves the logic of show_appends_with_no_recipes from bitbake-layers
+into bitbake, and makes the script die with a fatal error message printed.
 
-Thanks,
--- Dexuan=
+Signed-off-by: Dexuan Cui <dexuan.cui@intel.com>
+---
+ bitbake/bin/bitbake-layers |   19 -------------------
+ bitbake/lib/bb/cooker.py   |   16 ++++++++++++++++
+ 2 files changed, 16 insertions(+), 19 deletions(-)
+
+diff --git a/bitbake/bin/bitbake-layers b/bitbake/bin/bitbake-layers
+index 6b5ad5a..6178513 100755
+--- a/bitbake/bin/bitbake-layers
++++ b/bitbake/bin/bitbake-layers
+@@ -85,8 +85,6 @@ class Commands(cmd.Cmd):
+ 
+         self.show_appends_for_skipped()
+ 
+-        self.show_appends_with_no_recipes()
+-
+     def show_appends_for_pn(self, pn):
+         filenames = self.cooker_data.pkg_pn[pn]
+ 
+@@ -133,23 +131,6 @@ class Commands(cmd.Cmd):
+                 notappended.add(basename)
+         return appended, notappended
+ 
+-    def show_appends_with_no_recipes(self):
+-        recipes = set(os.path.basename(f)
+-                      for f in self.cooker_data.pkg_fn.iterkeys())
+-        recipes |= set(os.path.basename(f)
+-                      for f in self.cooker.skiplist.iterkeys())
+-        appended_recipes = self.cooker_data.appends.iterkeys()
+-        appends_without_recipes = [self.cooker_data.appends[recipe]
+-                                   for recipe in appended_recipes
+-                                   if recipe not in recipes]
+-        if appends_without_recipes:
+-            appendlines = ('  %s' % append
+-                           for appends in appends_without_recipes
+-                           for append in appends)
+-            logger.warn('No recipes available for:\n%s',
+-                        '\n'.join(appendlines))
+-            self.returncode |= 4
+-
+     def do_EOF(self, line):
+         return True
+ 
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index ebf963d..5a70ba7 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -471,6 +471,21 @@ class BBCooker:
+                 return pri
+         return 0
+ 
++    def die_if_any_appends_with_no_recipes( self ):
++        recipes = set(os.path.basename(f)
++                      for f in self.status.pkg_fn.iterkeys())
++        recipes |= set(os.path.basename(f)
++                      for f in self.skiplist.iterkeys())
++        appended_recipes = self.appendlist.iterkeys()
++        appends_without_recipes = [self.appendlist[recipe]
++                                   for recipe in appended_recipes
++                                   if recipe not in recipes]
++        if appends_without_recipes:
++            appendlines = ('  %s' % append
++                           for appends in appends_without_recipes
++                           for append in appends)
++            bb.fatal('No recipes available for:\n%s' % '\n'.join(appendlines))
++
+     def buildDepgraph( self ):
+         all_depends = self.status.all_depends
+         pn_provides = self.status.pn_provides
+@@ -940,6 +955,7 @@ class BBCooker:
+ 
+         if not self.parser.parse_next():
+             collectlog.debug(1, "parsing complete")
++            self.die_if_any_appends_with_no_recipes()
+             self.buildDepgraph()
+             self.state = state.running
+             return None
+-- 
+1.7.1
+
 
 
