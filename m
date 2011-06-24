@@ -1,28 +1,39 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mail-vx0-f175.google.com ([209.85.220.175])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <mark.hatle@windriver.com>) id 1QZv0M-0002WQ-Ao
+	(envelope-from <kergoth@gmail.com>) id 1QaBBJ-00084n-Kd
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 24 Jun 2011 03:16:18 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id p5O1AeDd011325
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	Fri, 24 Jun 2011 20:32:41 +0200
+Received: by vxa37 with SMTP id 37so2446092vxa.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 23 Jun 2011 18:12:40 -0700 (PDT)
-Received: from Macintosh-5.local (172.25.36.227) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Thu, 23 Jun 2011 18:11:40 -0700
-Message-ID: <4E03E44C.9040506@windriver.com>
-Date: Thu, 23 Jun 2011 20:11:40 -0500
-From: Mark Hatle <mark.hatle@windriver.com>
-Organization: Wind River Systems
-User-Agent: Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US;
-	rv:1.9.2.17) Gecko/20110414 Thunderbird/3.1.10
+	Fri, 24 Jun 2011 11:29:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=domainkey-signature:mime-version:sender:in-reply-to:references:from
+	:date:x-google-sender-auth:message-id:subject:to:cc:content-type;
+	bh=Cu16rMljjqJlIhovgO5yh9TQxeGbCrKoQ292WUfO0l4=;
+	b=EPJ/o/jjfcUbA357Jg29lC+DCddfjc4HskgaBEW/aqnk8ilupEGFpAzxNoR9//AscK
+	FoyYTLb/Nifog695dDtomIMLehKSSPHTNfnN6o3U6NjNp8rsCjs1QMB4tXXuE+9HEk8C
+	+q1SjVSapTJ7CJel9QZMDZQV/XIjklEg2dC58=
+DomainKey-Signature: a=rsa-sha1; c=nofws; d=gmail.com; s=gamma;
+	h=mime-version:sender:in-reply-to:references:from:date
+	:x-google-sender-auth:message-id:subject:to:cc:content-type;
+	b=ogQq0674X8gX93c15BUkjjBVGG2WHxl7vqlBAEmTJ6/8gpY5jOlikY1isqzgb0E/8q
+	Go6sZdjWfaKduWVeDTBeNoEKov+3rrfAs+d2CgnAn2i3y45sjyn/vfn4W0NRacoI8K4o
+	ypHl0pruVK1AVj8+ldNyoMIwe7bwgrWsGlYKc=
+Received: by 10.52.111.71 with SMTP id ig7mr5070355vdb.209.1308939341086; Fri,
+	24 Jun 2011 11:15:41 -0700 (PDT)
 MIME-Version: 1.0
-To: <bitbake-devel@lists.openembedded.org>
-References: <cover.1308765394.git.mark.hatle@windriver.com>	<69acceaeb4816d1f62db445909936324a3adba9c.1308765394.git.mark.hatle@windriver.com>
-	<4E03CAB7.6030602@gmail.com>
-In-Reply-To: <4E03CAB7.6030602@gmail.com>
-Subject: Re: [PATCH 1/1] runqueue.py: Add umask task control
+Sender: kergoth@gmail.com
+Received: by 10.52.181.2 with HTTP; Fri, 24 Jun 2011 11:15:21 -0700 (PDT)
+In-Reply-To: <f7f26e0dff68d4c3146caeccc653fb3c020e662a.1308749155.git.paul.eggleton@linux.intel.com>
+References: <cover.1308749155.git.paul.eggleton@linux.intel.com>
+	<f7f26e0dff68d4c3146caeccc653fb3c020e662a.1308749155.git.paul.eggleton@linux.intel.com>
+From: Chris Larson <clarson@kergoth.com>
+Date: Fri, 24 Jun 2011 11:15:21 -0700
+X-Google-Sender-Auth: zhQvij9EpJ9lEIb3DVfvmBtfuJ0
+Message-ID: <BANLkTin1XfH_vNQwTfab4B6THm0PRSXAkg@mail.gmail.com>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [RFC PATCH 1/3] bitbake: track 'overlayed' recipes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -34,82 +45,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 24 Jun 2011 01:16:18 -0000
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 24 Jun 2011 18:32:41 -0000
+Content-Type: text/plain; charset=UTF-8
 
-On 6/23/11 6:22 PM, Khem Raj wrote:
-> On 06/22/2011 10:57 AM, Mark Hatle wrote:
->> The umask for a task can now be set as:
->>
->> task[umask] = 022
->> task[umask] = '022'
->>
->> If specified as a text string, it must be octal.  (This is due to
->> recipe parsing where it's always set to a string.)
->>
->> Signed-off-by: Mark Hatle<mark.hatle@windriver.com>
->> ---
->>   lib/bb/build.py    |    1 +
->>   lib/bb/runqueue.py |   12 ++++++++++++
->>   2 files changed, 13 insertions(+), 0 deletions(-)
->>
->> diff --git a/lib/bb/build.py b/lib/bb/build.py
->> index 15ba956..4bbf10f 100644
->> --- a/lib/bb/build.py
->> +++ b/lib/bb/build.py
->> @@ -465,6 +465,7 @@ def add_tasks(tasklist, d):
->>           getTask('nostamp')
->>           getTask('fakeroot')
->>           getTask('noexec')
->> +        getTask('umask')
->>           task_deps['parents'][task] = []
->>           for dep in flags['deps']:
->>               dep = data.expand(dep, d)
->> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
->> index 1f3b54c..e455893 100644
->> --- a/lib/bb/runqueue.py
->> +++ b/lib/bb/runqueue.py
->> @@ -1063,8 +1063,17 @@ class RunQueueExecute:
->>           # a fork() or exec*() activates PSEUDO...
->>
->>           envbackup = {}
->> +        umask = -1
->>
->>           taskdep = self.rqdata.dataCache.task_deps[fn]
->> +        if 'umask' in taskdep and taskname in taskdep['umask']:
->> +            # umask might come in as a number or text string..
->> +            try:
->> +                 umask = int(taskdep['umask'][taskname],8)
->> +            except TypeError:
->> +                 umask = taskdep['umask'][taskname]
->> +            logger.warning("Using umask 0%o %s, %s" % (umask, fn, taskname))
->> +
-> 
-> this will be annoying. It should be made part of verbose messages though
+On Wed, Jun 22, 2011 at 6:28 AM, Paul Eggleton
+<paul.eggleton@linux.intel.com> wrote:
+> Recipes that have been 'overlayed' (where there is a recipe in another
+> layer where that layer has a higher priority) are now listed within
+> cooker.overlayedlist for use in bitbake-layers. This is a dict with
+> keys of the topmost (highest priority) recipe file.
+>
+> Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 
-That was a mistake, debugging message that ended up in the pull request.
-
-> 
->>           if 'fakeroot' in taskdep and taskname in taskdep['fakeroot']:
->>               envvars = (self.rqdata.dataCache.fakerootenv[fn] or "").split()
->>               for key, value in (var.split('=') for var in envvars):
->> @@ -1103,6 +1112,9 @@ class RunQueueExecute:
->>               newsi = os.open(os.devnull, os.O_RDWR)
->>               os.dup2(newsi, sys.stdin.fileno())
->>
->> +            if umask != -1:
->> +                os.umask(umask)
->> +
->>               bb.data.setVar("BB_WORKERCONTEXT", "1", self.cooker.configuration.data)
->>               bb.data.setVar("__RUNQUEUE_DO_NOT_USE_EXTERNALLY", self, self.cooker.configuration.data)
->>               bb.data.setVar("__RUNQUEUE_DO_NOT_USE_EXTERNALLY2", fn, self.cooker.configuration.data)
-> 
-> 
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
-
+Seems sane conceptually, but can we name this something else?
+overlayedlist is pretty weak, particularly being it's not a list at
+all :) I'd say just overlayed, or overlayed_recipes, or similar.
+-- 
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
 
