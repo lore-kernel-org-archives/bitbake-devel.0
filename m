@@ -1,24 +1,24 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga01.intel.com ([192.55.52.88])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1Qbzhf-0000gm-Gn
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1Qbzhk-0000hX-4A
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 29 Jun 2011 20:41:36 +0200
+	Wed, 29 Jun 2011 20:41:40 +0200
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 29 Jun 2011 11:37:52 -0700
+	by fmsmga101.fm.intel.com with ESMTP; 29 Jun 2011 11:37:50 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.65,444,1304319600"; d="scan'208";a="24396435"
+X-IronPort-AV: E=Sophos;i="4.65,444,1304319600"; d="scan'208";a="24396445"
 Received: from unknown (HELO helios.ger.corp.intel.com) ([10.255.17.126])
-	by fmsmga001.fm.intel.com with ESMTP; 29 Jun 2011 11:37:49 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 29 Jun 2011 11:37:50 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 29 Jun 2011 19:37:39 +0100
-Message-Id: <23a601ad81abf80c10297ff8722a2fbc204b900d.1309372176.git.paul.eggleton@linux.intel.com>
+Date: Wed, 29 Jun 2011 19:37:40 +0100
+Message-Id: <8ed35a3b5ced76ef30eb6f9a98561ec445dda02c.1309372176.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1309372176.git.paul.eggleton@linux.intel.com>
 References: <cover.1309372176.git.paul.eggleton@linux.intel.com>
 In-Reply-To: <cover.1309372176.git.paul.eggleton@linux.intel.com>
 References: <cover.1309372176.git.paul.eggleton@linux.intel.com>
-Subject: [RFC PATCH 3/5] bitbake/cooker: implement layer dependencies, make priority optional
+Subject: [RFC PATCH 4/5] bitbake-layers: add command to flatten layers into one
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,130 +30,101 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 29 Jun 2011 18:41:36 -0000
+X-List-Received-Date: Wed, 29 Jun 2011 18:41:40 -0000
 
-Implement (optionally versioned) dependencies between layers, and if layer
-priorities are not specified using BBFILE_PRIORITY_layername (now
-optional) then work out the layer priority based on dependencies.
+Takes the current layer configuration and builds a "flattened" directory
+containing the contents of all layers, with any overlayed recipes removed
+and bbappends appended to the corresponding recipes. Note that some manual
+cleanup may still be necessary afterwards, in particular:
 
-Define LAYERDEPENDS_layername in layer.conf to specify the dependencies
-of a layer (list of layer names, split with spaces in the usual way);
-LAYERVERSION_layername can be defined for each layer allowing specific
-version dependencies to be specified via depname:version in the list of
-dependencies. An error will be produced if any dependency is missing or
-the version numbers do not match exactly (if specified).
-
-Note: default priority if unspecified for a layer with no dependencies is
-lowest defined priority + 1 (or 1 if no priorities are defined).
-
-Addresses [YOCTO #790].
+ * where non-recipe files (such as patches) are overwritten (the flatten
+   command will show a warning for these)
+ * where anything beyond the normal layer setup has been added to
+   layer.conf (only the lowest priority layer's layer.conf is used)
+ * Overridden/appended items from bbappends will need to be tidied up
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- bitbake/lib/bb/cooker.py |   79 ++++++++++++++++++++++++++++++++++++++++-----
- 1 files changed, 70 insertions(+), 9 deletions(-)
+ bitbake/bin/bitbake-layers |   59 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 59 insertions(+), 0 deletions(-)
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 5fc2baa..59519f8 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -702,26 +702,87 @@ class BBCooker:
-         """Handle collections"""
-         self.status.bbfile_config_priorities = []
-         if collections:
-+            collection_priorities = {}
-+            collection_depends = {}
-             collection_list = collections.split()
-+            min_prio = 0
-             for c in collection_list:
-+                # Get collection priority if defined explicitly
-+                priority = bb.data.getVar("BBFILE_PRIORITY_%s" % c, self.configuration.data, 1)
-+                if priority:
-+                    try:
-+                        prio = int(priority)
-+                    except ValueError:
-+                        parselog.error("invalid value for BBFILE_PRIORITY_%s: \"%s\"", c, priority)
-+                    if min_prio == 0 or prio < min_prio:
-+                        min_prio = prio
-+                    collection_priorities[c] = prio
-+                else:
-+                    collection_priorities[c] = None
-+
-+                # Check dependencies and store information for priority calculation
-+                deps = bb.data.getVar("LAYERDEPENDS_%s" % c, self.configuration.data, 1)
-+                if deps:
-+                    depnamelist = []
-+                    deplist = deps.split()
-+                    for dep in deplist:
-+                        depsplit = dep.split(':')
-+                        if len(depsplit) > 1:
-+                            try:
-+                                depver = int(depsplit[1])
-+                            except ValueError:
-+                                parselog.error("invalid version value in LAYERDEPENDS_%s: \"%s\"", c, dep)
-+                                continue
-+                        else:
-+                            depver = None
-+                        dep = depsplit[0]
-+                        depnamelist.append(dep)
-+
-+                        if dep in collection_list:
-+                            if depver:
-+                                layerver = bb.data.getVar("LAYERVERSION_%s" % dep, self.configuration.data, 1)
-+                                if layerver:
-+                                    try:
-+                                        lver = int(layerver)
-+                                    except ValueError:
-+                                        parselog.error("invalid value for LAYERVERSION_%s: \"%s\"", c, layerver)
-+                                        continue
-+                                    if lver <> depver:
-+                                        parselog.error("Layer dependency %s of layer %s is at version %d, expected %d", dep, c, lver, depver)
-+                                else:
-+                                    parselog.error("Layer dependency %s of layer %s has no version, expected %d", dep, c, depver)
-+                        else:
-+                            parselog.error("Layer dependency %s of layer %s not found", dep, c)
-+                    collection_depends[c] = depnamelist
-+                else:
-+                    collection_depends[c] = []
-+
-+            # Recursively work out collection priorities based on dependencies
-+            def calc_layer_priority(collection):
-+                if not collection_priorities[collection]:
-+                    max_depprio = min_prio
-+                    for dep in collection_depends[collection]:
-+                        calc_layer_priority(dep)
-+                        depprio = collection_priorities[dep]
-+                        if depprio > max_depprio:
-+                            max_depprio = depprio
-+                    max_depprio += 1
-+                    parselog.debug(1, "Calculated priority of layer %s as %d", collection, max_depprio)
-+                    collection_priorities[collection] = max_depprio
-+
-+            # Calculate all layer priorities using calc_layer_priority and store in bbfile_config_priorities
-+            for c in collection_list:
-+                calc_layer_priority(c)
-                 regex = bb.data.getVar("BBFILE_PATTERN_%s" % c, self.configuration.data, 1)
-                 if regex == None:
-                     parselog.error("BBFILE_PATTERN_%s not defined" % c)
-                     continue
--                priority = bb.data.getVar("BBFILE_PRIORITY_%s" % c, self.configuration.data, 1)
--                if priority == None:
--                    parselog.error("BBFILE_PRIORITY_%s not defined" % c)
--                    continue
-                 try:
-                     cre = re.compile(regex)
-                 except re.error:
-                     parselog.error("BBFILE_PATTERN_%s \"%s\" is not a valid regular expression", c, regex)
-                     continue
--                try:
--                    pri = int(priority)
--                    self.status.bbfile_config_priorities.append((c, regex, cre, pri))
--                except ValueError:
--                    parselog.error("invalid value for BBFILE_PRIORITY_%s: \"%s\"", c, priority)
-+                self.status.bbfile_config_priorities.append((c, regex, cre, collection_priorities[c]))
+diff --git a/bitbake/bin/bitbake-layers b/bitbake/bin/bitbake-layers
+index fced88e..110e3c8 100755
+--- a/bitbake/bin/bitbake-layers
++++ b/bitbake/bin/bitbake-layers
+@@ -18,6 +18,7 @@ sys.path[0:0] = [os.path.join(topdir, 'lib')]
+ import bb.cache
+ import bb.cooker
+ import bb.providers
++import bb.utils
+ from bb.cooker import state
  
-     def buildSetVars(self):
-         """
+ 
+@@ -83,6 +84,64 @@ class Commands(cmd.Cmd):
+         else:
+             logger.info('No overlayed recipes found')
+ 
++    def do_flatten(self, args):
++        arglist = args.split()
++        if len(arglist) != 1:
++            logger.error('syntax: flatten <outputdir>')
++            return
++
++        if os.path.exists(arglist[0]) and os.listdir(arglist[0]):
++            logger.error('Directory %s exists and is non-empty, please clear it out first' % arglist[0])
++            return
++
++        layers = (self.config_data.getVar('BBLAYERS', True) or "").split()
++        for layer in layers:
++            overlayed = []
++            for f in self.cooker.overlayed.iterkeys():
++                for of in self.cooker.overlayed[f]:
++                    if of.startswith(layer):
++                        overlayed.append(of)
++
++            logger.info('Copying files from %s...' % layer )
++            for root, dirs, files in os.walk(layer):
++                for f1 in files:
++                    f1full = os.sep.join([root, f1])
++                    if f1full in overlayed:
++                        logger.info('  Skipping overlayed file %s' % f1full )
++                    else:
++                        ext = os.path.splitext(f1)[1]
++                        if ext != '.bbappend':
++                            fdest = f1full[len(layer):]
++                            fdest = os.path.normpath(os.sep.join([arglist[0],fdest]))
++                            bb.utils.mkdirhier(os.path.dirname(fdest))
++                            if os.path.exists(fdest):
++                                if f1 == 'layer.conf' and root.endswith('/conf'):
++                                    logger.info('  Skipping layer config file %s' % f1full )
++                                    continue
++                                else:
++                                    logger.warn('Overwriting file %s', fdest)
++                            bb.utils.copyfile(f1full, fdest)
++                            if ext == '.bb':
++                                if f1 in self.cooker_data.appends:
++                                    appends = self.cooker_data.appends[f1]
++                                    if appends:
++                                        logger.info('  Applying appends to %s' % fdest )
++                                        for appendname in appends:
++                                            self.apply_append(appendname, fdest)
++
++    def get_append_layer(self, appendname):
++        for layer, _, regex, _ in self.cooker.status.bbfile_config_priorities:
++            if regex.match(appendname):
++                return layer
++        return "?"
++
++    def apply_append(self, appendname, recipename):
++        appendfile = open(appendname, 'r')
++        recipefile = open(recipename, 'a')
++        recipefile.write('\n')
++        recipefile.write('##### bbappended from %s #####\n' % self.get_append_layer(appendname))
++        recipefile.writelines(appendfile.readlines())
++
+     def do_show_appends(self, args):
+         if not self.cooker_data.appends:
+             logger.info('No append files found')
 -- 
 1.7.4.1
 
