@@ -1,34 +1,20 @@
-Received: from vms173003pub.verizon.net ([206.46.173.3])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <denis@denix.org>) id 1QbyzU-0007zO-8f
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1Qbzhd-0000gm-Ll
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 29 Jun 2011 19:55:56 +0200
-Received: from gandalf.denix.org ([unknown] [108.18.140.4])
-	by vms173003.mailsrvcs.net
-	(Sun Java(tm) System Messaging Server 7u2-7.02 32bit (built Apr 16
-	2009)) with ESMTPA id <0LNK000DM9I3RYU5@vms173003.mailsrvcs.net> for
-	bitbake-devel@lists.openembedded.org;
-	Wed, 29 Jun 2011 11:51:52 -0500 (CDT)
-Received: by gandalf.denix.org (Postfix, from userid 1000)	id 5AED714AF5D; Wed,
-	29 Jun 2011 12:51:39 -0400 (EDT)
-Date: Wed, 29 Jun 2011 12:51:39 -0400
-From: Denys Dmytriyenko <denis@denix.org>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Message-id: <20110629165139.GA8160@denix.org>
-References: <cover.1308544082.git.dexuan.cui@intel.com>
-	<BANLkTinCB95DBHinewz+A1a7BHiZJzV1Mg@mail.gmail.com>
-	<1865303E0DED764181A9D882DEF65FB6997B5E7675@shsmsx502.ccr.corp.intel.com>
-	<201106271406.45596.paul.eggleton@linux.intel.com>
-	<1309264777.20015.280.camel@rex>
-	<1865303E0DED764181A9D882DEF65FB6A167F0C723@shsmsx502.ccr.corp.intel.com>
-	<1309364097.20015.414.camel@rex>
-MIME-version: 1.0
-In-reply-to: <1309364097.20015.414.camel@rex>
-User-Agent: Mutt/1.5.16 (2007-06-09)
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>,
-	'Martin Jansa' <martin.jansa@gmail.com>
-Subject: Re: [PATCH 1/1] die if a .bbappend file matches no	existing .bb recipe
+	Wed, 29 Jun 2011 20:41:33 +0200
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 29 Jun 2011 11:37:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.65,444,1304319600"; d="scan'208";a="24396400"
+Received: from unknown (HELO helios.ger.corp.intel.com) ([10.255.17.126])
+	by fmsmga001.fm.intel.com with ESMTP; 29 Jun 2011 11:37:43 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 29 Jun 2011 19:37:36 +0100
+Message-Id: <cover.1309372176.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.7.4.1
+Subject: [RFC PATCH 0/5] Layer tooling improvements v2
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -40,35 +26,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 29 Jun 2011 17:55:56 -0000
-Content-type: text/plain; charset=us-ascii
-Content-disposition: inline
+X-List-Received-Date: Wed, 29 Jun 2011 18:41:33 -0000
 
-On Wed, Jun 29, 2011 at 05:14:57PM +0100, Richard Purdie wrote:
-> On Thu, 2011-06-30 at 00:03 +0800, Cui, Dexuan wrote:
-> > Sorry -- what's the conclusion?
-> > Keeping the v2 patch
-> > (http://git.pokylinux.org/cgit/cgit.cgi/poky-contrib/commit/?h=dcui/bb-v2&id=2a520959f71ec2cd80ed2088bfcf082631161a1a)
-> > , or changing bb.error() to bb.warn()?
-> 
-> Where you have:
-> 
->   bb.error('No recipes available for:\n%s' % '\n'.join(appendlines))
-> 
-> this would become something like:
-> 
->   msg = 'No recipes available for:\n%s' % '\n'.join(appendlines)
->   if d.getVar("BB_DANGLINGAPPENDS_WARNONLY", False):
->      bb.warn(msg)
->   else:
->      bb.fatal(msg)
-> 
-> which means we can have a strong default but advanced
-> users/distros/whoever can avoid this.
+The following patches add dependencies between layers, and add the ability
+to query "overlayed" recipes.
 
-Thanks! That's a nice compromise.
+Since v1, two more patches were added: the first to add the ability to
+flatten multi-layer configurations into a single layer, and the second is
+a fix for the way that bitbake-layers' show_appends action sorts its
+output. The other patches are unchanged aside from renaming "overlayedlist"
+to "overlayed" within the first two patches.
+
+The changes are available (against Poky, but apply cleanly against bitbake
+master with -p2) at:
+  git://git.pokylinux.org/poky-contrib paule/layertooling-2
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=paule/layertooling-2
+
+Paul Eggleton (5):
+  bitbake: track 'overlayed' recipes
+  bitbake-layers: add show_overlayed action
+  bitbake/cooker: implement layer dependencies, make priority optional
+  bitbake-layers: add command to flatten layers into one
+  bitbake-layers: fix sorting of show_appends output
+
+ bitbake/bin/bitbake-layers |   79 +++++++++++++++++++++++++++++++++++--
+ bitbake/lib/bb/cooker.py   |   92 +++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 158 insertions(+), 13 deletions(-)
 
 -- 
-Denys
+1.7.4.1
+
 
 
