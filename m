@@ -1,25 +1,31 @@
-Received: from mga03.intel.com ([143.182.124.21])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1Qcg5c-0008R0-H3
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 01 Jul 2011 17:57:08 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 01 Jul 2011 08:53:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.65,459,1304319600"; d="scan'208";a="21559319"
-Received: from unknown (HELO [10.255.13.137]) ([10.255.13.137])
-	by azsmga001.ch.intel.com with ESMTP; 01 Jul 2011 08:53:11 -0700
-From: Joshua Lock <josh@linux.intel.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date: Fri, 01 Jul 2011 08:53:05 -0700
-In-Reply-To: <1309535267.20015.523.camel@rex>
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1Qcg8l-0000WA-KH for bitbake-devel@lists.openembedded.org;
+	Fri, 01 Jul 2011 18:00:24 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p61FucA8012490;
+	Fri, 1 Jul 2011 16:56:38 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 12248-06; Fri,  1 Jul 2011 16:56:34 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p61FuXVX012484
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Fri, 1 Jul 2011 16:56:34 +0100
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Joshua Lock <josh@linux.intel.com>
+In-Reply-To: <dadace9c070cb585eff83df44147afbfa0c83628.1309499227.git.josh@linux.intel.com>
 References: <cover.1309499227.git.josh@linux.intel.com>
-	<1309535267.20015.523.camel@rex>
-X-Mailer: Evolution 3.0.2 (3.0.2-2.fc15) 
-Message-ID: <1309535591.2177.1.camel@scimitar>
+	<dadace9c070cb585eff83df44147afbfa0c83628.1309499227.git.josh@linux.intel.com>
+Date: Fri, 01 Jul 2011 16:56:11 +0100
+Message-ID: <1309535771.20015.526.camel@rex>
 Mime-Version: 1.0
+X-Mailer: Evolution 2.32.2 
+X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 00/10] Hob - BitBake GUI
+Subject: Re: [PATCH 01/10] ui/hob: Fixed the "build again" hang.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,45 +37,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Jul 2011 15:57:08 -0000
+X-List-Received-Date: Fri, 01 Jul 2011 16:00:24 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Fri, 2011-07-01 at 16:47 +0100, Richard Purdie wrote:
-> On Thu, 2011-06-30 at 23:02 -0700, Joshua Lock wrote:
-> > Of course, before sending this pull request I ran some final tests and
-> > encountered a significant problem with the implementation approach.
-> > Images are built by first using the buildTargets command to build all of the
-> > target dependencies then creating a recipe file and using the buildFile
-> > command to handle the build.
-> > The problem is that if you have a clean build directory, perfectly reasonable
-> > with such a tool, the buildFile command does not handle the native
-> > dependencies added by the image class.
-> > 
-> > The alternative I have is to save the image files somewhere within BBPATH,
-> > and perhaps suggest the user create a "workspace" layer, and build them with
-> > buildTargets. I didn't do this because I'd rather not pollute the users file
-> > system without good cause. It may be the only tenable approach though.
-> > 
-> > Any suggestions here?
+On Thu, 2011-06-30 at 23:02 -0700, Joshua Lock wrote:
+> From: Lianhao Lu <lianhao.lu@intel.com>
 > 
-> I think you should be able to modify the base configuration data and
-> just add a local directory that the image creator uses to BBPATH
-> yourself?
+> Using gobject.threads_init() instead of gtk.gdk.threads_init(). These
+> two modes are conflict to each other. Using gobject.threads_init()
+> allows only the main thread to touch GUI(gtk) part.
 > 
-> That way you should always be able to use buildTargets...
+> Signed-off-by: Lianhao Lu <lianhao.lu@intel.com>
+> Signed-off-by: Joshua Lock <josh@linux.intel.com>
+> ---
+>  lib/bb/ui/hob.py |    3 +--
+>  1 files changed, 1 insertions(+), 2 deletions(-)
 
-Right. I had some code like this but I hadn't achieved it in a way which
-was both a) non-invasive and b) didn't result in parsing a bunch of
-stuff then throwing that away and parsing again. I'll look into this
-approach some more.
+Merged to master, thanks.
 
-Thanks for the feedback,
-Joshua
--- 
-Joshua Lock
-        Yocto Project "Johannes factotum"
-        Intel Open Source Technology Centre
+Richard
 
 
 
