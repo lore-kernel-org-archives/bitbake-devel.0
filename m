@@ -1,24 +1,25 @@
 Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1QcWtT-0007r2-CS
+	(envelope-from <josh@linux.intel.com>) id 1Qcg5c-0008R0-H3
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 01 Jul 2011 08:07:59 +0200
+	Fri, 01 Jul 2011 17:57:08 +0200
 Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 30 Jun 2011 23:03:08 -0700
+	by azsmga101.ch.intel.com with ESMTP; 01 Jul 2011 08:53:11 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.65,456,1304319600"; d="scan'208";a="21321724"
-Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.13.228])
-	by azsmga001.ch.intel.com with ESMTP; 30 Jun 2011 23:03:08 -0700
+X-IronPort-AV: E=Sophos;i="4.65,459,1304319600"; d="scan'208";a="21559319"
+Received: from unknown (HELO [10.255.13.137]) ([10.255.13.137])
+	by azsmga001.ch.intel.com with ESMTP; 01 Jul 2011 08:53:11 -0700
 From: Joshua Lock <josh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 30 Jun 2011 23:02:55 -0700
-Message-Id: <34bac6c42501b0834fafe72a340eaef5ad80a340.1309499228.git.josh@linux.intel.com>
-X-Mailer: git-send-email 1.7.5.4
-In-Reply-To: <cover.1309499227.git.josh@linux.intel.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Fri, 01 Jul 2011 08:53:05 -0700
+In-Reply-To: <1309535267.20015.523.camel@rex>
 References: <cover.1309499227.git.josh@linux.intel.com>
-In-Reply-To: <cover.1309499227.git.josh@linux.intel.com>
-References: <cover.1309499227.git.josh@linux.intel.com>
-Subject: [PATCH 09/10] cooker: remove code duplication in non trivial functions
+	<1309535267.20015.523.camel@rex>
+X-Mailer: Evolution 3.0.2 (3.0.2-2.fc15) 
+Message-ID: <1309535591.2177.1.camel@scimitar>
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 00/10] Hob - BitBake GUI
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,116 +31,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Jul 2011 06:07:59 -0000
+X-List-Received-Date: Fri, 01 Jul 2011 15:57:08 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-The generateTargetsTreeData() and generateDepTreeData() functions perform
-are essentially the same function only creating slightly different data
-structures. Instead of duplicating non-trivial code drop
-generateTargetsTreeData and instead have an optional boolean argument which
-defaults to False for generateDepTreeData() which has it include the extra
-fields required for the targets tree.
+On Fri, 2011-07-01 at 16:47 +0100, Richard Purdie wrote:
+> On Thu, 2011-06-30 at 23:02 -0700, Joshua Lock wrote:
+> > Of course, before sending this pull request I ran some final tests and
+> > encountered a significant problem with the implementation approach.
+> > Images are built by first using the buildTargets command to build all of the
+> > target dependencies then creating a recipe file and using the buildFile
+> > command to handle the build.
+> > The problem is that if you have a clean build directory, perfectly reasonable
+> > with such a tool, the buildFile command does not handle the native
+> > dependencies added by the image class.
+> > 
+> > The alternative I have is to save the image files somewhere within BBPATH,
+> > and perhaps suggest the user create a "workspace" layer, and build them with
+> > buildTargets. I didn't do this because I'd rather not pollute the users file
+> > system without good cause. It may be the only tenable approach though.
+> > 
+> > Any suggestions here?
+> 
+> I think you should be able to modify the base configuration data and
+> just add a local directory that the image creator uses to BBPATH
+> yourself?
+> 
+> That way you should always be able to use buildTargets...
 
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
----
- lib/bb/cooker.py |   56 +++++++++++------------------------------------------
- 1 files changed, 12 insertions(+), 44 deletions(-)
+Right. I had some code like this but I hadn't achieved it in a way which
+was both a) non-invasive and b) didn't result in parsing a bunch of
+stuff then throwing that away and parsing again. I'll look into this
+approach some more.
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 6682551..3f6edc4 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -325,9 +325,11 @@ class BBCooker:
- 
-         return taskdata, rq
- 
--    def generateDepTreeData(self, pkgs_to_build, task):
-+    def generateDepTreeData(self, pkgs_to_build, task, more_meta=False):
-         """
-         Create a dependency tree of pkgs_to_build, returning the data.
-+        When more_meta is set to True include summary, license and group
-+        information in the returned tree.
-         """
-         taskdata, rq = self.prepareTreeData(pkgs_to_build, task)
- 
-@@ -347,10 +349,18 @@ class BBCooker:
-             fn = taskdata.fn_index[fnid]
-             pn = self.status.pkg_fn[fn]
-             version  = "%s:%s-%s" % self.status.pkg_pepvpr[fn]
-+            if more_meta:
-+                summary = self.status.summary[fn]
-+                lic = self.status.license[fn]
-+                section = self.status.section[fn]
-             if pn not in depend_tree["pn"]:
-                 depend_tree["pn"][pn] = {}
-                 depend_tree["pn"][pn]["filename"] = fn
-                 depend_tree["pn"][pn]["version"] = version
-+                if more_meta:
-+                    depend_tree["pn"][pn]["summary"] = summary
-+                    depend_tree["pn"][pn]["license"] = lic
-+                    depend_tree["pn"][pn]["section"] = section
-             for dep in rq.rqdata.runq_depends[task]:
-                 depfn = taskdata.fn_index[rq.rqdata.runq_fnid[dep]]
-                 deppn = self.status.pkg_fn[depfn]
-@@ -577,48 +587,6 @@ class BBCooker:
- 
-         return pkg_list
- 
--    def generateTargetsTreeData(self, pkgs_to_build, task):
--        """
--        Create a tree of pkgs_to_build metadata, returning the data.
--        """
--        taskdata, rq = self.prepareTreeData(pkgs_to_build, task)
--
--        seen_fnids = []
--        target_tree = {}
--        target_tree["depends"] = {}
--        target_tree["pn"] = {}
--        target_tree["rdepends-pn"] = {}
--
--        for task in xrange(len(rq.rqdata.runq_fnid)):
--            taskname = rq.rqdata.runq_task[task]
--            fnid = rq.rqdata.runq_fnid[task]
--            fn = taskdata.fn_index[fnid]
--            pn = self.status.pkg_fn[fn]
--            version  = "%s:%s-%s" % self.status.pkg_pepvpr[fn]
--            summary = self.status.summary[fn]
--            license = self.status.license[fn]
--            section = self.status.section[fn]
--            if pn not in target_tree["pn"]:
--                target_tree["pn"][pn] = {}
--                target_tree["pn"][pn]["filename"] = fn
--                target_tree["pn"][pn]["version"] = version
--                target_tree["pn"][pn]["summary"] = summary
--                target_tree["pn"][pn]["license"] = license
--                target_tree["pn"][pn]["section"] = section
--            if fnid not in seen_fnids:
--                seen_fnids.append(fnid)
--                packages = []
--
--                target_tree["depends"][pn] = []
--                for dep in taskdata.depids[fnid]:
--                    target_tree["depends"][pn].append(taskdata.build_names_index[dep])
--
--                target_tree["rdepends-pn"][pn] = []
--                for rdep in taskdata.rdepids[fnid]:
--                    target_tree["rdepends-pn"][pn].append(taskdata.run_names_index[rdep])
--
--        return target_tree
--
-     def generateTargetsTree(self, klass=None, pkgs=[]):
-         """
-         Generate a dependency tree of buildable targets
-@@ -634,7 +602,7 @@ class BBCooker:
-             pkgs = pkgs + extra_pkgs
- 
-         # generate a dependency tree for all our packages
--        tree = self.generateTargetsTreeData(pkgs, 'build')
-+        tree = self.generateDepTreeData(pkgs, 'build', more_meta=True)
-         bb.event.fire(bb.event.TargetsTreeGenerated(tree), self.configuration.data)
- 
-     def buildWorldTargetList(self):
+Thanks for the feedback,
+Joshua
 -- 
-1.7.5.4
+Joshua Lock
+        Yocto Project "Johannes factotum"
+        Intel Open Source Technology Centre
 
 
 
