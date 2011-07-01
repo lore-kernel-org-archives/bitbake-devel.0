@@ -1,25 +1,25 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1QcgGS-0000bh-31 for bitbake-devel@lists.openembedded.org;
-	Fri, 01 Jul 2011 18:08:20 +0200
+	id 1Qcgsk-00017a-GZ for bitbake-devel@lists.openembedded.org;
+	Fri, 01 Jul 2011 18:47:54 +0200
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p61G4XK1012535;
-	Fri, 1 Jul 2011 17:04:33 +0100
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p61FmHmk012409;
+	Fri, 1 Jul 2011 16:48:17 +0100
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 12248-07; Fri,  1 Jul 2011 17:04:29 +0100 (BST)
+	id 12158-05; Fri,  1 Jul 2011 16:48:13 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p61G4O3h012529
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p61Fm9Lw012403
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Fri, 1 Jul 2011 17:04:25 +0100
+	Fri, 1 Jul 2011 16:48:10 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: Joshua Lock <josh@linux.intel.com>
 In-Reply-To: <cover.1309499227.git.josh@linux.intel.com>
 References: <cover.1309499227.git.josh@linux.intel.com>
-Date: Fri, 01 Jul 2011 17:04:03 +0100
-Message-ID: <1309536243.20015.527.camel@rex>
+Date: Fri, 01 Jul 2011 16:47:47 +0100
+Message-ID: <1309535267.20015.523.camel@rex>
 Mime-Version: 1.0
 X-Mailer: Evolution 2.32.2 
 X-Virus-Scanned: amavisd-new at rpsys.net
@@ -36,21 +36,11 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Jul 2011 16:08:20 -0000
+X-List-Received-Date: Fri, 01 Jul 2011 16:47:54 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
 On Thu, 2011-06-30 at 23:02 -0700, Joshua Lock wrote:
-> All,
-> 
-> This series are the current state of the image creator project I have been
-> working on for the past few months.
-> It's by no means perfect but I'd love to get some review and preferably move
-> development into master, rather than a less public branch.
-> 
-> The first 7 patches are changes to BitBake to be used by the GUI whilst the
-> final patch is a squashed patch of my image creator development tree[1].
-> 
 > Of course, before sending this pull request I ran some final tests and
 > encountered a significant problem with the implementation approach.
 > Images are built by first using the buildTargets command to build all of the
@@ -66,39 +56,12 @@ On Thu, 2011-06-30 at 23:02 -0700, Joshua Lock wrote:
 > system without good cause. It may be the only tenable approach though.
 > 
 > Any suggestions here?
-> 
-> Regards,
-> Joshua
-> 
-> 1. https://github.com/incandescant/bitbake/commits/hob-full
-> 
-> The following changes since commit 5d41720d1550c04aac76275614ca15110c1c7f52:
-> 
->   Update version to 1.13.2 (2011-06-28 15:27:14 +0100)
-> 
-> are available in the git repository at:
->   git://github.com/incandescant/bitbake hob
->   https://github.com/incandescant/bitbake/tree/hob
-> 
-> Joshua Lock (8):
->   command|cooker: allow generating targets tree for specified pkgs
->   cooker: add generic method to locate configuration files
->   command|cooker|event: add findConfigFilePath command
->   cooker|command|event: add new command findFilesMatchingInDir
->   bitbake: add -R option for loading configuration files after
->     bitbake.conf
->   cooker: switch to new universe target rather than world
->   cooker: remove code duplication in non trivial functions
->   hob: re-designed interaction and implementation
-> 
-> Lianhao Lu (1):
->   ui/hob: Fixed the "build again" hang.
-> 
-> Liping Ke (1):
->   bitbake: Make bitbake server type configurable.
 
-I merged in the first 9 of these as they looked ok. I've not had a
-chance to look through the hob patch yet though.
+I think you should be able to modify the base configuration data and
+just add a local directory that the image creator uses to BBPATH
+yourself?
+
+That way you should always be able to use buildTargets...
 
 Cheers,
 
