@@ -1,24 +1,24 @@
 Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1QcWtS-0007r2-H4
+	(envelope-from <josh@linux.intel.com>) id 1QcWtS-0007rE-HG
 	for bitbake-devel@lists.openembedded.org;
 	Fri, 01 Jul 2011 08:07:58 +0200
 Received: from azsmga001.ch.intel.com ([10.2.17.19])
 	by azsmga101.ch.intel.com with ESMTP; 30 Jun 2011 23:03:07 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.65,456,1304319600"; d="scan'208";a="21321716"
+X-IronPort-AV: E=Sophos;i="4.65,456,1304319600"; d="scan'208";a="21321719"
 Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.13.228])
-	by azsmga001.ch.intel.com with ESMTP; 30 Jun 2011 23:03:06 -0700
+	by azsmga001.ch.intel.com with ESMTP; 30 Jun 2011 23:03:07 -0700
 From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 30 Jun 2011 23:02:52 -0700
-Message-Id: <64c39c65483cd6f78e2b6a04c46616ffc8bac09b.1309499228.git.josh@linux.intel.com>
+Date: Thu, 30 Jun 2011 23:02:53 -0700
+Message-Id: <841eee6d27a54335e9435b1d6f2b4b63b5ddf6d7.1309499228.git.josh@linux.intel.com>
 X-Mailer: git-send-email 1.7.5.4
 In-Reply-To: <cover.1309499227.git.josh@linux.intel.com>
 References: <cover.1309499227.git.josh@linux.intel.com>
 In-Reply-To: <cover.1309499227.git.josh@linux.intel.com>
 References: <cover.1309499227.git.josh@linux.intel.com>
-Subject: [PATCH 06/10] cooker|command|event: add new command findFilesMatchingInDir
+Subject: [PATCH 07/10] bitbake: add -R option for loading configuration files after bitbake.conf
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,98 +32,71 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 01 Jul 2011 06:07:58 -0000
 
-This command can be used to search each BBPATH for files in the passed
-directory which have a filename matching the supplied pattern.
-
-This is implemented for use from the GUI (to determine the available
-PACKAGE_CLASSES) but has been written so as to be generically useful and
-reusable.
+Useful if you want to load a configuration file that sets values which may
+also be set in bitbake.conf or one of the files it includes.
 
 Signed-off-by: Joshua Lock <josh@linux.intel.com>
 ---
- lib/bb/command.py |   12 ++++++++++++
- lib/bb/cooker.py  |   23 +++++++++++++++++++++++
- lib/bb/event.py   |   10 ++++++++++
- 3 files changed, 45 insertions(+), 0 deletions(-)
+ bin/bitbake      |    5 ++++-
+ lib/bb/cooker.py |   13 ++++++++++---
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index 2f37938..a902da2 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -251,6 +251,18 @@ class CommandsAsync:
-         command.finishAsyncCommand()
-     findConfigFiles.needcache = True
+diff --git a/bin/bitbake b/bin/bitbake
+index d577e05..206d97b 100755
+--- a/bin/bitbake
++++ b/bin/bitbake
+@@ -118,7 +118,10 @@ Default BBFILES are the .bb files in the current directory.""")
+                action = "store", dest = "cmd")
  
-+    def findFilesMatchingInDir(self, command, params):
-+        """
-+        Find implementation files matching the specified pattern
-+        in the requested subdirectory of a BBPATH
-+        """
-+        pattern = params[0]
-+        directory = params[1]
+     parser.add_option("-r", "--read", help = "read the specified file before bitbake.conf",
+-               action = "append", dest = "file", default = [])
++               action = "append", dest = "prefile", default = [])
 +
-+        command.cooker.findFilesMatchingInDir(pattern, directory)
-+        command.finishAsyncCommand()
-+    findFilesMatchingInDir.needcache = True
-+
-     def findConfigFilePath(self, command, params):
-         """
-         Find the path of the requested configuration file
++    parser.add_option("-R", "--postread", help = "read the specified file after bitbake.conf",
++                      action = "append", dest = "postfile", default = [])
+ 
+     parser.add_option("-v", "--verbose", help = "output more chit-chat to the terminal",
+                action = "store_true", dest = "verbose", default = False)
 diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 48c9e24..f0c94fa 100644
+index f0c94fa..13e898e 100644
 --- a/lib/bb/cooker.py
 +++ b/lib/bb/cooker.py
-@@ -517,6 +517,29 @@ class BBCooker:
-         path = self._findConfigFile(configfile)
-         bb.event.fire(bb.event.ConfigFilePathFound(path), self.configuration.data)
+@@ -126,7 +126,8 @@ class BBCooker:
+         bb.data.inheritFromOS(self.configuration.data)
  
-+    def findFilesMatchingInDir(self, filepattern, directory):
-+        """
-+        Searches for files matching the regex 'pattern' which are children of
-+        'directory' in each BBPATH. i.e. to find all rootfs package classes available
-+        to BitBake one could call findFilesMatchingInDir(self, 'rootfs_', 'classes')
-+        or to find all machine configuration files on could call
-+        findFilesMatchingInDir(self, 'conf/machines', 'conf')
-+        """
-+        import re
-+
-+        matches = []
-+        p = re.compile(re.escape(filepattern))
-+        bbpaths = bb.data.getVar('BBPATH', self.configuration.data, True).split(':')
-+        for path in bbpaths:
-+            dirpath = os.path.join(path, directory)
-+            if os.path.exists(dirpath):
-+                for root, dirs, files in os.walk(dirpath):
-+                    for f in files:
-+                        if p.search(f):
-+                            matches.append(f)
-+
-+        bb.event.fire(bb.event.FilesMatchingFound(filepattern, matches), self.configuration.data)
-+
-     def findConfigFiles(self, varname):
-         """
-         Find config files which are appropriate values for varname.
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index 7c49d46..c7252dd 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -390,6 +390,16 @@ class TargetsTreeGenerated(Event):
-         Event.__init__(self)
-         self._model = model
+         try:
+-            self.parseConfigurationFiles(self.configuration.file)
++            self.parseConfigurationFiles(self.configuration.prefile,
++                                         self.configuration.postfile)
+         except SyntaxError:
+             sys.exit(1)
+         except Exception:
+@@ -682,10 +683,12 @@ class BBCooker:
+     def _findLayerConf(self):
+         return self._findConfigFile("bblayers.conf")
  
-+class FilesMatchingFound(Event):
-+    """
-+    Event when a list of files matching the supplied pattern has
-+    been generated
-+    """
-+    def __init__(self, pattern, matches):
-+        Event.__init__(self)
-+        self._pattern = pattern
-+        self._matches = matches
+-    def parseConfigurationFiles(self, files):
++    def parseConfigurationFiles(self, prefiles, postfiles):
+         data = self.configuration.data
+         bb.parse.init_parser(data)
+-        for f in files:
 +
- class ConfigFilesFound(Event):
-     """
-     Event when a list of appropriate config files has been generated
++        # Parse files for loading *before* bitbake.conf and any includes
++        for f in prefiles:
+             data = _parse(f, data)
+ 
+         layerconf = self._findLayerConf()
+@@ -709,6 +712,10 @@ class BBCooker:
+ 
+         data = _parse(os.path.join("conf", "bitbake.conf"), data)
+ 
++        # Parse files for loading *after* bitbake.conf and any includes
++        for p in postfiles:
++            data = _parse(p, data)
++
+         # Handle any INHERITs and inherit the base class
+         bbclasses  = ["base"] + (data.getVar('INHERIT', True) or "").split()
+         for bbclass in bbclasses:
 -- 
 1.7.5.4
 
