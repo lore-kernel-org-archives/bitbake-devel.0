@@ -1,24 +1,24 @@
 Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1QcWtR-0007r3-TE
+	(envelope-from <josh@linux.intel.com>) id 1QcWtS-0007r2-H4
 	for bitbake-devel@lists.openembedded.org;
 	Fri, 01 Jul 2011 08:07:58 +0200
 Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 30 Jun 2011 23:03:06 -0700
+	by azsmga101.ch.intel.com with ESMTP; 30 Jun 2011 23:03:07 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.65,456,1304319600"; d="scan'208";a="21321711"
+X-IronPort-AV: E=Sophos;i="4.65,456,1304319600"; d="scan'208";a="21321716"
 Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.13.228])
 	by azsmga001.ch.intel.com with ESMTP; 30 Jun 2011 23:03:06 -0700
 From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 30 Jun 2011 23:02:51 -0700
-Message-Id: <be2102d7d766004b7413c7472d16bfd3ca827d4a.1309499228.git.josh@linux.intel.com>
+Date: Thu, 30 Jun 2011 23:02:52 -0700
+Message-Id: <64c39c65483cd6f78e2b6a04c46616ffc8bac09b.1309499228.git.josh@linux.intel.com>
 X-Mailer: git-send-email 1.7.5.4
 In-Reply-To: <cover.1309499227.git.josh@linux.intel.com>
 References: <cover.1309499227.git.josh@linux.intel.com>
 In-Reply-To: <cover.1309499227.git.josh@linux.intel.com>
 References: <cover.1309499227.git.josh@linux.intel.com>
-Subject: [PATCH 05/10] command|cooker|event: add findConfigFilePath command
+Subject: [PATCH 06/10] cooker|command|event: add new command findFilesMatchingInDir
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,70 +32,98 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 01 Jul 2011 06:07:58 -0000
 
-This takes the name of a .conf file and returns the full path to it
+This command can be used to search each BBPATH for files in the passed
+directory which have a filename matching the supplied pattern.
+
+This is implemented for use from the GUI (to determine the available
+PACKAGE_CLASSES) but has been written so as to be generically useful and
+reusable.
 
 Signed-off-by: Joshua Lock <josh@linux.intel.com>
 ---
- lib/bb/command.py |   10 ++++++++++
- lib/bb/cooker.py  |    4 ++++
- lib/bb/event.py   |    8 ++++++++
- 3 files changed, 22 insertions(+), 0 deletions(-)
+ lib/bb/command.py |   12 ++++++++++++
+ lib/bb/cooker.py  |   23 +++++++++++++++++++++++
+ lib/bb/event.py   |   10 ++++++++++
+ 3 files changed, 45 insertions(+), 0 deletions(-)
 
 diff --git a/lib/bb/command.py b/lib/bb/command.py
-index d597d1d..2f37938 100644
+index 2f37938..a902da2 100644
 --- a/lib/bb/command.py
 +++ b/lib/bb/command.py
-@@ -251,6 +251,16 @@ class CommandsAsync:
+@@ -251,6 +251,18 @@ class CommandsAsync:
          command.finishAsyncCommand()
      findConfigFiles.needcache = True
  
-+    def findConfigFilePath(self, command, params):
++    def findFilesMatchingInDir(self, command, params):
 +        """
-+        Find the path of the requested configuration file
++        Find implementation files matching the specified pattern
++        in the requested subdirectory of a BBPATH
 +        """
-+        configfile = params[0]
++        pattern = params[0]
++        directory = params[1]
 +
-+        command.cooker.findConfigFilePath(configfile)
++        command.cooker.findFilesMatchingInDir(pattern, directory)
 +        command.finishAsyncCommand()
-+    findConfigFilePath.needcache = False
++    findFilesMatchingInDir.needcache = True
 +
-     def showVersions(self, command, params):
+     def findConfigFilePath(self, command, params):
          """
-         Show the currently selected versions
+         Find the path of the requested configuration file
 diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 94acce6..48c9e24 100644
+index 48c9e24..f0c94fa 100644
 --- a/lib/bb/cooker.py
 +++ b/lib/bb/cooker.py
-@@ -513,6 +513,10 @@ class BBCooker:
-             if regex in unmatched:
-                 collectlog.warn("No bb files matched BBFILE_PATTERN_%s '%s'" % (collection, pattern))
+@@ -517,6 +517,29 @@ class BBCooker:
+         path = self._findConfigFile(configfile)
+         bb.event.fire(bb.event.ConfigFilePathFound(path), self.configuration.data)
  
-+    def findConfigFilePath(self, configfile):
-+        path = self._findConfigFile(configfile)
-+        bb.event.fire(bb.event.ConfigFilePathFound(path), self.configuration.data)
++    def findFilesMatchingInDir(self, filepattern, directory):
++        """
++        Searches for files matching the regex 'pattern' which are children of
++        'directory' in each BBPATH. i.e. to find all rootfs package classes available
++        to BitBake one could call findFilesMatchingInDir(self, 'rootfs_', 'classes')
++        or to find all machine configuration files on could call
++        findFilesMatchingInDir(self, 'conf/machines', 'conf')
++        """
++        import re
++
++        matches = []
++        p = re.compile(re.escape(filepattern))
++        bbpaths = bb.data.getVar('BBPATH', self.configuration.data, True).split(':')
++        for path in bbpaths:
++            dirpath = os.path.join(path, directory)
++            if os.path.exists(dirpath):
++                for root, dirs, files in os.walk(dirpath):
++                    for f in files:
++                        if p.search(f):
++                            matches.append(f)
++
++        bb.event.fire(bb.event.FilesMatchingFound(filepattern, matches), self.configuration.data)
 +
      def findConfigFiles(self, varname):
          """
          Find config files which are appropriate values for varname.
 diff --git a/lib/bb/event.py b/lib/bb/event.py
-index 7d47edb..7c49d46 100644
+index 7c49d46..c7252dd 100644
 --- a/lib/bb/event.py
 +++ b/lib/bb/event.py
-@@ -399,6 +399,14 @@ class ConfigFilesFound(Event):
-         self._variable = variable
-         self._values = values
+@@ -390,6 +390,16 @@ class TargetsTreeGenerated(Event):
+         Event.__init__(self)
+         self._model = model
  
-+class ConfigFilePathFound(Event):
++class FilesMatchingFound(Event):
 +    """
-+    Event when a path for a config file has been found
++    Event when a list of files matching the supplied pattern has
++    been generated
 +    """
-+    def __init__(self, path):
++    def __init__(self, pattern, matches):
 +        Event.__init__(self)
-+        self._path = path
++        self._pattern = pattern
++        self._matches = matches
 +
- class MsgBase(Event):
-     """Base class for messages"""
- 
+ class ConfigFilesFound(Event):
+     """
+     Event when a list of appropriate config files has been generated
 -- 
 1.7.5.4
 
