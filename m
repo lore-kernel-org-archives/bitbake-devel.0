@@ -1,24 +1,24 @@
 Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1QcWtQ-0007r2-Pt
+	(envelope-from <josh@linux.intel.com>) id 1QcWtR-0007r3-22
 	for bitbake-devel@lists.openembedded.org;
 	Fri, 01 Jul 2011 08:07:57 +0200
 Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 30 Jun 2011 23:03:05 -0700
+	by azsmga101.ch.intel.com with ESMTP; 30 Jun 2011 23:03:06 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.65,456,1304319600"; d="scan'208";a="21321700"
+X-IronPort-AV: E=Sophos;i="4.65,456,1304319600"; d="scan'208";a="21321701"
 Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.13.228])
 	by azsmga001.ch.intel.com with ESMTP; 30 Jun 2011 23:03:05 -0700
 From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 30 Jun 2011 23:02:48 -0700
-Message-Id: <9546bf5db63701d8bb372bca47b6495650766a31.1309499228.git.josh@linux.intel.com>
+Date: Thu, 30 Jun 2011 23:02:49 -0700
+Message-Id: <97327993e80e0120705f014c0c5db52ed44a06d6.1309499228.git.josh@linux.intel.com>
 X-Mailer: git-send-email 1.7.5.4
 In-Reply-To: <cover.1309499227.git.josh@linux.intel.com>
 References: <cover.1309499227.git.josh@linux.intel.com>
 In-Reply-To: <cover.1309499227.git.josh@linux.intel.com>
 References: <cover.1309499227.git.josh@linux.intel.com>
-Subject: [PATCH 02/10] bitbake: Make bitbake server type configurable.
+Subject: [PATCH 03/10] command|cooker: allow generating targets tree for specified pkgs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,78 +32,63 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 01 Jul 2011 06:07:57 -0000
 
-From: Liping Ke <liping.ke@intel.com>
+Modify the generateTargetsTree command to allow a list of packages to be
+supplied by the caller, in this case we will only generate a target tree
+for user requested targets rather than building a tree for the world list.
 
-Add -t options in bitbake for configuring server type.
-
-Signed-off-by: Liping Ke <liping.ke@intel.com>
 Signed-off-by: Joshua Lock <josh@linux.intel.com>
 ---
- bin/bitbake |   25 ++++++++++++++++++-------
- 1 files changed, 18 insertions(+), 7 deletions(-)
+ lib/bb/command.py |   12 ++++++++++--
+ lib/bb/cooker.py  |    6 ++++--
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/bin/bitbake b/bin/bitbake
-index 5835ffc..d577e05 100755
---- a/bin/bitbake
-+++ b/bin/bitbake
-@@ -39,15 +39,11 @@ import bb.msg
- from bb import cooker
- from bb import ui
- from bb import server
--#from bb.server import none
--from bb.server import process
--#from bb.server import xmlrpc
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index 9841e68..d597d1d 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -224,11 +224,19 @@ class CommandsAsync:
  
- __version__ = "1.13.2"
- logger = logging.getLogger("BitBake")
+     def generateTargetsTree(self, command, params):
+         """
+-        Generate a tree of all buildable targets.
++        Generate a tree of buildable targets.
++        If klass is provided ensure all recipes that inherit the class are
++        included in the package list.
++        If pkg_list provided use that list (plus any extras brought in by
++        klass) rather than generating a tree for all packages.
+         """
+         klass = params[0]
++        if len(params) > 1:
++            pkg_list = params[1]
++        else:
++            pkg_list = []
  
+-        command.cooker.generateTargetsTree(klass)
++        command.cooker.generateTargetsTree(klass, pkg_list)
+         command.finishAsyncCommand()
+     generateTargetsTree.needcache = True
  
--
- class BBConfiguration(object):
-     """
-     Manages build options and configurations for one run
-@@ -160,6 +156,9 @@ Default BBFILES are the .bb files in the current directory.""")
-     parser.add_option("-u", "--ui", help = "userinterface to use",
-                action = "store", dest = "ui")
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 990d17b..4ad1536 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -591,12 +591,14 @@ class BBCooker:
  
-+    parser.add_option("-t", "--servertype", help = "Choose which server to use, none, process or xmlrpc",
-+               action = "store", dest = "servertype")
-+
-     parser.add_option("", "--revisions-changed", help = "Set the exit code depending on whether upstream floating revisions have changed or not",
-                action = "store_true", dest = "revisions_changed", default = False)
+         return target_tree
  
-@@ -170,6 +169,20 @@ Default BBFILES are the .bb files in the current directory.""")
- 
-     ui_main = get_ui(configuration)
- 
-+    # Server type could be xmlrpc or none currently, if nothing is specified,
-+    # default server would be none
-+    if configuration.servertype:
-+        server_type = configuration.servertype
-+    else:
-+        server_type = 'process'
-+
-+    try:
-+        module = __import__("bb.server", fromlist = [server_type])
-+        server = getattr(module, server_type)
-+    except AttributeError:
-+        sys.exit("FATAL: Invalid server type '%s' specified.\n"
-+                 "Valid interfaces: xmlrpc, process, none [default]." % servertype)
-+
-     # Save a logfile for cooker into the current working directory. When the
-     # server is daemonized this logfile will be truncated.
-     cooker_logfile = os.path.join(os.getcwd(), "cooker.log")
-@@ -186,9 +199,7 @@ Default BBFILES are the .bb files in the current directory.""")
-     # of the UIs (e.g. for DISPLAY, etc.)
-     bb.utils.clean_environment()
- 
--    #server = bb.server.none.BitBakeServer()    
--    server = bb.server.process.BitBakeServer()
--    #server = bb.server.xmlrpc.BitBakeServer()
-+    server = server.BitBakeServer()
- 
-     server.initServer()
-     idle = server.getServerIdleCB()
+-    def generateTargetsTree(self, klass):
++    def generateTargetsTree(self, klass=None, pkgs=[]):
+         """
+         Generate a dependency tree of buildable targets
+         Generate an event with the result
+         """
+-        pkgs = ['world']
++        # if the caller hasn't specified a pkgs list default to world
++        if not len(pkgs):
++            pkgs = ['world']
+         # if inherited_class passed ensure all recipes which inherit the
+         # specified class are included in pkgs
+         if klass:
 -- 
 1.7.5.4
 
