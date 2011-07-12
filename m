@@ -1,30 +1,31 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1QfEA2-0003fB-2c for bitbake-devel@lists.openembedded.org;
-	Fri, 08 Jul 2011 18:44:14 +0200
+	id 1QgasH-0003iK-Ag for bitbake-devel@lists.openembedded.org;
+	Tue, 12 Jul 2011 13:11:33 +0200
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p68GeHGT021944;
-	Fri, 8 Jul 2011 17:40:17 +0100
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6CB7XlF019367;
+	Tue, 12 Jul 2011 12:07:33 +0100
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 21380-10; Fri,  8 Jul 2011 17:40:13 +0100 (BST)
+	id 18595-03; Tue, 12 Jul 2011 12:07:29 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p68GeAf5021938
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6CB7PtF019361
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Fri, 8 Jul 2011 17:40:11 +0100
+	Tue, 12 Jul 2011 12:07:27 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Lianhao Lu <lianhao.lu@intel.com>
-In-Reply-To: <cover.1308034271.git.lianhao.lu@intel.com>
-References: <cover.1308034271.git.lianhao.lu@intel.com>
-Date: Fri, 08 Jul 2011 17:39:31 +0100
-Message-ID: <1310143171.20015.908.camel@rex>
+To: Yu Ke <ke.yu@intel.com>
+In-Reply-To: <2deaf320be6e019b2f2dad10463fb1bd77f98bbf.1309870780.git.ke.yu@intel.com>
+References: <cover.1309870780.git.ke.yu@intel.com>
+	<2deaf320be6e019b2f2dad10463fb1bd77f98bbf.1309870780.git.ke.yu@intel.com>
+Date: Tue, 12 Jul 2011 10:41:00 +0100
+Message-ID: <1310463660.20015.1030.camel@rex>
 Mime-Version: 1.0
 X-Mailer: Evolution 2.32.2 
 X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [RFC PATCH 0/1] process cmd line parsing result by individual UI
+Subject: Re: [PATCH 1/1] fetcher2: retry mirror if upstream checksum mismatch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,38 +37,95 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 08 Jul 2011 16:44:14 -0000
+X-List-Received-Date: Tue, 12 Jul 2011 11:11:33 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2011-06-14 at 15:12 +0800, Lianhao Lu wrote:
-> This patch tries to allow the individual UI to decide whether it should display the cmd line parsing result.
+On Tue, 2011-07-05 at 21:11 +0800, Yu Ke wrote:
+> This patch is for [YOCTO #1085] fix.
 > 
-> The command "getCmdLineAction" now returns either None or a dictionary with the key of {'action', 'msg'}. 
+> If the upstream fails a checksum, retry from the MIRROR before giving up.
+> This will add more robust fetching if an upstream serves a bad file or webpage.
 > 
-> If it returns None, it means no command line action parameters are provided. 
+> fetching of distcc prior to the move from samba -> googlecode is a good example
+> of this.
 > 
-> If it returns a dictionary, the entry of the key 'action' stores the list which should be used with server.runCommand(); the entry of the key 'msg' stores the error message from the cmd line parsing result (in which case the 'action' entry is None). 
+> Signed-off-by: Yu Ke <ke.yu@intel.com>
+> ---
+>  bitbake/lib/bb/fetch2/__init__.py |   27 ++++++++++++++++-----------
+>  1 files changed, 16 insertions(+), 11 deletions(-)
 > 
-> It is up to the individual UI to decide whether and how to display those parsing result.
-> 
-> Please review the following changes for suitability for inclusion. If you have
-> any objections or suggestions for improvement, please respond to the patches. If
-> you agree with the changes, please provide your Acked-by.
-> 
-> The following changes since commit a27fbe5e25a5aee956d2a43a2e2bf671c6d985f2:
->   Scott Rifenbark (1):
->         documentation/yocto-project-qs/yocto-project-qs.xml: removed 5.0 references
-> 
-> are available in the git repository at:
-> 
->   git://git.pokylinux.org/poky-contrib llu/cmdLineParsing
->   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=llu/cmdLineParsing
+> diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+> index e9a64c5..bb9dbbe 100644
+> --- a/bitbake/lib/bb/fetch2/__init__.py
+> +++ b/bitbake/lib/bb/fetch2/__init__.py
+> @@ -278,6 +278,15 @@ def verify_checksum(u, ud, d):
+>      if BB_STRICT_CHECKSUM = "1" then return false as unmatched, otherwise return true as
+>      matched
+>      """
+> +    # Only check the checksums if we've not seen this item before
+> +    if os.path.exists(ud.donestamp):
+> +        # Touch the done stamp file to show active use of the download
+> +        try:
+> +            os.utime(ud.donestamp, None)
+> +        except:
+> +            # Errors aren't fatal here
+> +            pass
+> +        return
+>  
+>      if not ud.type in ["http", "https", "ftp", "ftps"]:
+>          return
+> @@ -300,6 +309,9 @@ def verify_checksum(u, ud, d):
+>      if ud.sha256_expected != sha256data:
+>          raise SHA256SumError(ud.localpath, ud.sha256_expected, sha256data, u)
+>  
+> +    # Create the stamp to avoid duplicate checking
+> +    open(ud.donestamp, 'w').close()
+> +
+>  def subprocess_setup():
+>      import signal
+>      # Python installs a SIGPIPE handler by default. This is usually not what
+> @@ -932,6 +944,9 @@ class Fetch(object):
+>                          if hasattr(m, "build_mirror_data"):
+>                              m.build_mirror_data(u, ud, self.d)
+>                          localpath = ud.localpath
+> +                        # early checksum verify, so that if checksum mismatched,
+> +                        # fetcher still have chance to fetch from mirror
+> +                        verify_checksum(u, ud, self.d)
+>  
+>                      except bb.fetch2.NetworkAccess:
+>                          raise
+> @@ -948,17 +963,7 @@ class Fetch(object):
+>                  if not localpath or ((not os.path.exists(localpath)) and localpath.find("*") == -1):
+>                      raise FetchError("Unable to fetch URL %s from any source." % u, u)
+>  
+> -                if os.path.exists(ud.donestamp):
+> -                    # Touch the done stamp file to show active use of the download
+> -                    try:
+> -                        os.utime(ud.donestamp, None)
+> -                    except:
+> -                        # Errors aren't fatal here
+> -                        pass
+> -                else:
+> -                    # Only check the checksums if we've not seen this item before, then create the stamp
+> -                    verify_checksum(u, ud, self.d)
+> -                    open(ud.donestamp, 'w').close()
+> +                verify_checksum(u, ud, self.d)
+>  
+>              finally:
+>                  bb.utils.unlockfile(lf)
 
-Merged to master, thanks.
+Hi Ke,
 
-In future please put the above info in the commit message instead of the
-pull request though! :)
+I find this patch a little confusing since you're altering what the
+verify_checksum() function does to including something else which is
+partly unrelated.
+
+I like the idea of moving that logic to a separate function but perhaps
+we need a new one which then calls verify_checksum() rather than having
+the two functionalities merged together?
+
+Perhaps an update_stamps() function would be a good name for this?
 
 Cheers,
 
