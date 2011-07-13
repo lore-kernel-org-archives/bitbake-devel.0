@@ -1,21 +1,31 @@
-Received: from mga03.intel.com ([143.182.124.21])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <ke.yu@intel.com>) id 1QgvXW-0006DK-A2
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 13 Jul 2011 11:15:30 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 13 Jul 2011 02:09:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.65,524,1304319600"; d="scan'208";a="26616539"
-Received: from kyu3-dev32.bj.intel.com (HELO localhost) ([10.238.153.187])
-	by azsmga001.ch.intel.com with ESMTP; 13 Jul 2011 02:09:52 -0700
-From: Yu Ke <ke.yu@intel.com>
-To: bitbake-devel@lists.openembedded.org,
-	richard.purdie@linuxfoundation.org
-Date: Wed, 13 Jul 2011 17:08:38 +0800
-Message-Id: <cover.1310547939.git.ke.yu@intel.com>
-X-Mailer: git-send-email 1.7.0.4
-Subject: [PATCH 0/1] fetcher2: retry mirror if upstream checksum mismatch V2
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1QgxRv-0002AD-56 for bitbake-devel@lists.openembedded.org;
+	Wed, 13 Jul 2011 13:17:51 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6DBDoIR028587;
+	Wed, 13 Jul 2011 12:13:50 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 28111-03; Wed, 13 Jul 2011 12:13:46 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6DBDg2n028581
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Wed, 13 Jul 2011 12:13:42 +0100
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Yu Ke <ke.yu@intel.com>
+In-Reply-To: <20229b88536b6696ff2d58ac702bbbd6b55a6ccf.1310547939.git.ke.yu@intel.com>
+References: <cover.1310547939.git.ke.yu@intel.com>
+	<20229b88536b6696ff2d58ac702bbbd6b55a6ccf.1310547939.git.ke.yu@intel.com>
+Date: Wed, 13 Jul 2011 12:13:41 +0100
+Message-ID: <1310555621.20015.1097.camel@rex>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.32.2 
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/1] fetcher2: retry mirror if upstream checksum mismatch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,27 +37,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 13 Jul 2011 09:15:30 -0000
+X-List-Received-Date: Wed, 13 Jul 2011 11:17:51 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-This is the V2 patch. the main change is introduce new function update_stamp
-per Richard's suggestion.
+On Wed, 2011-07-13 at 17:08 +0800, Yu Ke wrote:
+> This patch is for [YOCTO #1085] fix.
+> 
+> If the upstream fails a checksum, retry from the MIRROR before giving up.
+> This will add more robust fetching if an upstream serves a bad file or webpage.
+> 
+> fetching of distcc prior to the move from samba -> googlecode is a good example
+> of this.
+> 
+> Signed-off-by: Yu Ke <ke.yu@intel.com>
+> ---
+>  bitbake/lib/bb/fetch2/__init__.py |   31 ++++++++++++++++++++-----------
+>  1 files changed, 20 insertions(+), 11 deletions(-)
 
-CC: Richard Purdie <richard.purdie@linuxfoundation.org>
+Merged to master, thanks.
 
-The following changes since commit 7354fc9213f27aa1b643dbe88070437f1ee4c063:
-  Paul Eggleton (1):
-        insane.bbclass: skip rdepends QA checks for kernel / modules
-
-are available in the git repository at:
-
-  git://git.pokylinux.org/poky-contrib kyu3/verify-checksum
-  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=kyu3/verify-checksum
-
-Yu Ke (1):
-  fetcher2: retry mirror if upstream checksum mismatch
-
- bitbake/lib/bb/fetch2/__init__.py |   31 ++++++++++++++++++++-----------
- 1 files changed, 20 insertions(+), 11 deletions(-)
+Richard
 
 
 
