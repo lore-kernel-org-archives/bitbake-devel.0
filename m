@@ -1,24 +1,25 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1QgktB-0003ca-Ik
+	(envelope-from <ke.yu@intel.com>) id 1QgvVy-0006Bk-7t
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 12 Jul 2011 23:53:09 +0200
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 12 Jul 2011 14:49:09 -0700
+	Wed, 13 Jul 2011 11:13:54 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 13 Jul 2011 02:09:55 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.65,522,1304319600"; d="scan'208";a="27131400"
-Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.13.215])
-	by fmsmga002.fm.intel.com with ESMTP; 12 Jul 2011 14:49:08 -0700
-From: Joshua Lock <josh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 12 Jul 2011 14:49:00 -0700
-Message-Id: <7cb0ce38f4b80a2cace870bd0ab5af4f003b433c.1310507186.git.josh@linux.intel.com>
-X-Mailer: git-send-email 1.7.6
-In-Reply-To: <cover.1310507186.git.josh@linux.intel.com>
-References: <cover.1310507186.git.josh@linux.intel.com>
-In-Reply-To: <cover.1310507186.git.josh@linux.intel.com>
-References: <cover.1310507186.git.josh@linux.intel.com>
-Subject: [PATCH 3/3] cooker: only return *Found events if something was actually found
+X-IronPort-AV: E=Sophos;i="4.65,524,1304319600"; d="scan'208";a="27117807"
+Received: from kyu3-dev32.bj.intel.com (HELO localhost) ([10.238.153.187])
+	by orsmga001.jf.intel.com with ESMTP; 13 Jul 2011 02:09:54 -0700
+From: Yu Ke <ke.yu@intel.com>
+To: bitbake-devel@lists.openembedded.org,
+	richard.purdie@linuxfoundation.org
+Date: Wed, 13 Jul 2011 17:08:39 +0800
+Message-Id: <20229b88536b6696ff2d58ac702bbbd6b55a6ccf.1310547939.git.ke.yu@intel.com>
+X-Mailer: git-send-email 1.7.0.4
+In-Reply-To: <cover.1310547939.git.ke.yu@intel.com>
+References: <cover.1310547939.git.ke.yu@intel.com>
+In-Reply-To: <cover.1310547939.git.ke.yu@intel.com>
+References: <cover.1310547939.git.ke.yu@intel.com>
+Subject: [PATCH 1/1] fetcher2: retry mirror if upstream checksum mismatch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,71 +31,79 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 12 Jul 2011 21:53:09 -0000
+X-List-Received-Date: Wed, 13 Jul 2011 09:13:54 -0000
 
-The cooker methods which fire FooBarFound style events should only fire the
-event when an item was actually found, rather than each time the method
-is called.
+This patch is for [YOCTO #1085] fix.
 
-Fixes [YOCTO #1219]
+If the upstream fails a checksum, retry from the MIRROR before giving up.
+This will add more robust fetching if an upstream serves a bad file or webpage.
 
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
+fetching of distcc prior to the move from samba -> googlecode is a good example
+of this.
+
+Signed-off-by: Yu Ke <ke.yu@intel.com>
 ---
- lib/bb/cooker.py |   12 ++++++++----
- 1 files changed, 8 insertions(+), 4 deletions(-)
+ bitbake/lib/bb/fetch2/__init__.py |   31 ++++++++++++++++++++-----------
+ 1 files changed, 20 insertions(+), 11 deletions(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 7aa600f..8b6da1d 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -546,14 +546,15 @@ class BBCooker:
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index e9a64c5..d39f094 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -300,6 +300,22 @@ def verify_checksum(u, ud, d):
+     if ud.sha256_expected != sha256data:
+         raise SHA256SumError(ud.localpath, ud.sha256_expected, sha256data, u)
  
-     def findConfigFilePath(self, configfile):
-         path = self._findConfigFile(configfile)
--        bb.event.fire(bb.event.ConfigFilePathFound(path), self.configuration.data)
-+        if path:
-+            bb.event.fire(bb.event.ConfigFilePathFound(path), self.configuration.data)
++def update_stamp(u, ud, d):
++    """
++        donestamp is file stamp indicating the whole fetching is done
++        this function update the stamp after verifying the checksum
++    """
++    if os.path.exists(ud.donestamp):
++        # Touch the done stamp file to show active use of the download
++        try:
++            os.utime(ud.donestamp, None)
++        except:
++            # Errors aren't fatal here
++            pass
++    else:
++        verify_checksum(u, ud, d)
++        open(ud.donestamp, 'w').close()
++
+ def subprocess_setup():
+     import signal
+     # Python installs a SIGPIPE handler by default. This is usually not what
+@@ -932,6 +948,9 @@ class Fetch(object):
+                         if hasattr(m, "build_mirror_data"):
+                             m.build_mirror_data(u, ud, self.d)
+                         localpath = ud.localpath
++                        # early checksum verify, so that if checksum mismatched,
++                        # fetcher still have chance to fetch from mirror
++                        update_stamp(u, ud, self.d)
  
-     def findFilesMatchingInDir(self, filepattern, directory):
-         """
-         Searches for files matching the regex 'pattern' which are children of
-         'directory' in each BBPATH. i.e. to find all rootfs package classes available
-         to BitBake one could call findFilesMatchingInDir(self, 'rootfs_', 'classes')
--        or to find all machine configuration files on could call
-+        or to find all machine configuration files one could call:
-         findFilesMatchingInDir(self, 'conf/machines', 'conf')
-         """
-         import re
-@@ -569,7 +570,8 @@ class BBCooker:
-                         if p.search(f):
-                             matches.append(f)
+                     except bb.fetch2.NetworkAccess:
+                         raise
+@@ -948,17 +967,7 @@ class Fetch(object):
+                 if not localpath or ((not os.path.exists(localpath)) and localpath.find("*") == -1):
+                     raise FetchError("Unable to fetch URL %s from any source." % u, u)
  
--        bb.event.fire(bb.event.FilesMatchingFound(filepattern, matches), self.configuration.data)
-+        if len(matches):
-+            bb.event.fire(bb.event.FilesMatchingFound(filepattern, matches), self.configuration.data)
+-                if os.path.exists(ud.donestamp):
+-                    # Touch the done stamp file to show active use of the download
+-                    try:
+-                        os.utime(ud.donestamp, None)
+-                    except:
+-                        # Errors aren't fatal here
+-                        pass
+-                else:
+-                    # Only check the checksums if we've not seen this item before, then create the stamp
+-                    verify_checksum(u, ud, self.d)
+-                    open(ud.donestamp, 'w').close()
++                update_stamp(u, ud, self.d)
  
-     def findConfigFiles(self, varname):
-         """
-@@ -592,7 +594,8 @@ class BBCooker:
-                         if end == 'conf':
-                             possible.append(val)
- 
--        bb.event.fire(bb.event.ConfigFilesFound(var, possible), self.configuration.data)
-+        if len(possible):
-+            bb.event.fire(bb.event.ConfigFilesFound(var, possible), self.configuration.data)
- 
-     def findInheritsClass(self, klass):
-         """
-@@ -667,6 +670,7 @@ class BBCooker:
-                 return confpath
- 
-             path, _ = os.path.split(path)
-+        return None
- 
-     def _findLayerConf(self):
-         return self._findConfigFile("bblayers.conf")
+             finally:
+                 bb.utils.unlockfile(lf)
 -- 
-1.7.6
+1.7.0.4
 
 
 
