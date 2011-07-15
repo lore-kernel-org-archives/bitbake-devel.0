@@ -1,31 +1,20 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1QhMjB-0005py-4x for bitbake-devel@lists.openembedded.org;
-	Thu, 14 Jul 2011 16:17:21 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6EEDKsa008147;
-	Thu, 14 Jul 2011 15:13:20 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 07232-09; Thu, 14 Jul 2011 15:13:16 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6EEDDBn008141
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Thu, 14 Jul 2011 15:13:13 +0100
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Joshua Lock <josh@linux.intel.com>
-In-Reply-To: <85461785547744d0cdb9590532532ab6d53bd88a.1310573108.git.josh@linux.intel.com>
-References: <cover.1310573108.git.josh@linux.intel.com>
-	<85461785547744d0cdb9590532532ab6d53bd88a.1310573108.git.josh@linux.intel.com>
-Date: Thu, 14 Jul 2011 15:13:09 +0100
-Message-ID: <1310652789.20015.1160.camel@rex>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.32.2 
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] cooker: only return *Found events if something was actually found
+Received: from mga03.intel.com ([143.182.124.21])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <josh@linux.intel.com>) id 1Qhovz-00046x-V2
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 15 Jul 2011 22:24:28 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 15 Jul 2011 13:20:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,210,1309762800"; d="scan'208";a="27770691"
+Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.14.32])
+	by azsmga001.ch.intel.com with ESMTP; 15 Jul 2011 13:20:25 -0700
+From: Joshua Lock <josh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 15 Jul 2011 13:20:12 -0700
+Message-Id: <cover.1310761024.git.josh@linux.intel.com>
+X-Mailer: git-send-email 1.7.6
+Subject: [PATCH 0/6] Switch hob from buildFiles to buildTargets
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,25 +26,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 14 Jul 2011 14:17:21 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 15 Jul 2011 20:24:28 -0000
 
-On Wed, 2011-07-13 at 09:06 -0700, Joshua Lock wrote:
-> The cooker methods which fire FooBarFound style events should only fire the
-> event when an item was actually found, rather than each time the method
-> is called.
-> 
-> Fixes [YOCTO #1219]
-> 
-> Signed-off-by: Joshua Lock <josh@linux.intel.com>
-> ---
->  lib/bb/cooker.py |   12 ++++++++----
->  1 files changed, 8 insertions(+), 4 deletions(-)
+The initial hob merge came with the caveat that it used buildFiles and
+therefore a build in a new builddir wouldn't have the required native tools
+to actually generate the rootfs.
 
-Merged to master, thanks.
+The key patch in this series switches to using buildTargets by injecting the
+directory the generated image recipe is saved to into BBPATH and a BBFILES
+pattern then reparsing the files before building.
 
-Richard
+Further this series includes a bug fix or two and a patch that got lost in
+a branch somewhere.
+
+The following changes since commit 5c8eeefc79455f058dda8f04cf4c12dc5418e00f:
+
+  cooker: only return *Found events if something was actually found (2011-07-14 15:12:40 +0100)
+
+are available in the git repository at:
+  git://github.com/incandescant/bitbake hob
+  https://github.com/incandescant/bitbake/tree/hob
+
+Joshua Lock (6):
+  ui/hob: replace the ugly static command map
+  ui/crumbs/hobprefs: add missing import
+  command|cooker: Add reparseFiles command
+  ui/crumbs/hobeventhandler: reparse files before running other
+    commands
+  ui/crumbs/tasklistmodel: fix saving recipes
+  ui/hob: switch from buildFile to buildTargets for custom image builds
+
+ lib/bb/command.py                   |    8 ++
+ lib/bb/cooker.py                    |   54 ++++++++-----
+ lib/bb/ui/crumbs/configurator.py    |   18 ++++
+ lib/bb/ui/crumbs/hobeventhandler.py |  147 +++++++++++++++++++++--------------
+ lib/bb/ui/crumbs/hobprefs.py        |    1 +
+ lib/bb/ui/crumbs/tasklistmodel.py   |    3 +-
+ lib/bb/ui/hob.py                    |   26 +++----
+ 7 files changed, 161 insertions(+), 96 deletions(-)
+
+-- 
+1.7.6
 
 
 
