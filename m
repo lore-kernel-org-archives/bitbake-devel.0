@@ -1,24 +1,24 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mailrelay3.sunrise.ch ([194.158.229.31]
+	helo=smtp-be-01.be08.sunrise.ch)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1QiwN2-0000HH-Cq
+	(envelope-from <dv@vollmann.ch>) id 1Qj9Ei-0005Ni-5y
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 19 Jul 2011 00:33:00 +0200
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 18 Jul 2011 15:28:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,224,1309762800"; d="scan'208";a="29127439"
-Received: from vorpal.jf.intel.com ([10.7.199.64])
-	by orsmga001.jf.intel.com with ESMTP; 18 Jul 2011 15:28:53 -0700
-From: Joshua Lock <josh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 18 Jul 2011 15:33:17 -0700
-Message-Id: <ee08396be1b045e1cbe47dd841bdfd7416b7823f.1311028023.git.josh@linux.intel.com>
-X-Mailer: git-send-email 1.7.6
-In-Reply-To: <cover.1311028023.git.josh@linux.intel.com>
-References: <cover.1311028023.git.josh@linux.intel.com>
-In-Reply-To: <cover.1311028023.git.josh@linux.intel.com>
-References: <cover.1311028023.git.josh@linux.intel.com>
-Subject: [RFC PATCH 1/1] lib/bb: preserve a copy of the initial environment variables
+	Tue, 19 Jul 2011 14:17:16 +0200
+Received: from [192.168.26.14] (212-98-43-140.static.adslpremium.ch
+	[212.98.43.140])
+	by smtp-be-01.be08.sunrise.ch (8.13.1/8.12.10) with ESMTP id
+	p6JBQ4Pv012274; Tue, 19 Jul 2011 13:26:04 +0200
+Message-ID: <4E2569BD.4070300@vollmann.ch>
+Date: Tue, 19 Jul 2011 13:25:49 +0200
+From: Detlef Vollmann <dv@vollmann.ch>
+User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; en-US;
+	rv:1.9.2.18) Gecko/20110617 Thunderbird/3.1.11
+MIME-Version: 1.0
+CC: bitbake-dev <bitbake-devel@lists.openembedded.org>
+References: <4E248688.1030902@vollmann.ch>	<CABcZANnmZwTK147Vwgv8j9omd7xNQQK5EKT99_UEctC2itw3Jw@mail.gmail.com>	<4E253020.4050001@vollmann.ch>
+	<201107191053.35867.paul.eggleton@linux.intel.com>
+In-Reply-To: <201107191053.35867.paul.eggleton@linux.intel.com>
+Subject: Re: [oe] preferred version not available
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,35 +30,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 18 Jul 2011 22:33:00 -0000
+X-List-Received-Date: Tue, 19 Jul 2011 12:17:16 -0000
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-We are gradually introducing code which wants to be able to modify the
-initial environment of BitBake. The os.environ map is created on first
-import of the os module so create a copy early on and store it for future
-use.
+[Resend to bitbake-devel due to new list address]
+On 07/19/11 11:53, Paul Eggleton wrote:
+> On Tuesday 19 July 2011 08:20:00 Detlef Vollmann wrote:
+>> On 07/18/11 23:05, Chris Larson wrote:
+>>> All variables which are typically set by the filename can be
+>>> overridden. Those are simply defaults. See the definitions of PN, PV,
+>>> and PR in bitbake.conf.
+>>
+>> Yes, I knew that (I actually wrote the line changing the PV myself).
+>> What surprised me (though it makes sense) that PREFERRED_VERSION
+>> refers to PV, and not directly to a part of the filename.
+>> It's probably still too much of 'make' history in my brain...
+>
+> I wonder if it would make sense to add something to the error message that
+> also lists the available versions? Then it would be a little more obvious what
+> you need to set PREFERRED_VERSION to.
+That would be great.
+And while we are in wishlist mode ;-) :
+With a high enough debug level (I think 2), you'll get a list of
+providers for a specific target.
+To get also a list of versions for a specific package (PN), would
+be really helpful.
 
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
----
- lib/bb/__init__.py |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
-
-diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
-index d20267b..414e836 100644
---- a/lib/bb/__init__.py
-+++ b/lib/bb/__init__.py
-@@ -30,6 +30,10 @@ if sys.version_info < (2, 6, 0):
- import os
- import logging
- 
-+# The os.environ map of the environment is captured the first time the os
-+# module is imported. Take a copy so we can preserve the original environment
-+# for later use.
-+initial_environ = os.environ.copy()
- 
- class NullHandler(logging.Handler):
-     def emit(self, record):
--- 
-1.7.6
+   Detlef
 
 
 
