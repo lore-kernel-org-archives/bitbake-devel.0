@@ -1,30 +1,25 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1Qk0zf-00045x-Eo for bitbake-devel@lists.openembedded.org;
-	Thu, 21 Jul 2011 23:41:20 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6LLbBqK007545;
-	Thu, 21 Jul 2011 22:37:11 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 04336-07; Thu, 21 Jul 2011 22:37:07 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6LLb667007539
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Thu, 21 Jul 2011 22:37:06 +0100
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Joshua Lock <josh@linux.intel.com>
-In-Reply-To: <cover.1311275221.git.josh@linux.intel.com>
-References: <cover.1311275221.git.josh@linux.intel.com>
-Date: Thu, 21 Jul 2011 22:37:03 +0100
-Message-ID: <1311284223.2344.88.camel@rex>
+Received: from mga09.intel.com ([134.134.136.24])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <josh@linux.intel.com>) id 1Qk1T5-0002Yk-5G
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 22 Jul 2011 00:11:43 +0200
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 21 Jul 2011 15:07:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,244,1309762800"; d="scan'208";a="28727959"
+Received: from vorpal.jf.intel.com (HELO [10.7.199.57]) ([10.7.199.57])
+	by orsmga002.jf.intel.com with ESMTP; 21 Jul 2011 15:07:34 -0700
+From: Joshua Lock <josh@linux.intel.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Thu, 21 Jul 2011 15:12:02 -0700
+In-Reply-To: <1311283359.2344.87.camel@rex>
+References: <cover.1311028023.git.josh@linux.intel.com>
+	<1311283359.2344.87.camel@rex>
+X-Mailer: Evolution 3.0.2 (3.0.2-3.fc15) 
+Message-ID: <1311286322.2172.13.camel@vorpal.jf.intel.com>
 Mime-Version: 1.0
-X-Mailer: Evolution 2.32.2 
-X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/1] Remove unused target tree data for Hob
+Subject: Re: [RFC PATCH 0/1] Save the initial environment
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,28 +31,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jul 2011 21:41:20 -0000
+X-List-Received-Date: Thu, 21 Jul 2011 22:11:43 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Thu, 2011-07-21 at 12:08 -0700, Joshua Lock wrote:
-> Here's a copy of Liping's "Remove unused target tree data for Hob" with my
-> changes made per my review and my SoB added.
+On Thu, 2011-07-21 at 22:22 +0100, Richard Purdie wrote:
+> On Mon, 2011-07-18 at 15:33 -0700, Joshua Lock wrote:
+> > Both Chris' terminal work and my reparse command will benefit from a saved
+> > copy of the initial enviornment. The Python docs indicate that the os.environ
+> > map is captured when the os module is first imported
+> > http://docs.python.org/library/os.html#os.environ) so this patch adds a
+> > variable to the bb namespace (bb.initial_environ) that is an early copy of
+> > the environment.
+> > 
+> > I put the variable here so that a) it's easily accessible and b) we can take
+> > the copy pretty early on.
+> > 
+> > Any thoughts on this? Note the RFC prefix. :-)
 > 
-> The following changes since commit 09a9146262d58dfe4a2ea4270026b90ae33f6c91:
-> 
->   parse/ConfHandler: Fix multiline variable corruption (2011-07-21 11:08:19 +0100)
-> 
-> are available in the git repository at:
->   git://github.com/incandescant/bitbake lke-speed
->   https://github.com/incandescant/bitbake/tree/lke-speed
-> 
-> Liping Ke (1):
->   Remove unused target tree data for Hob
+> Sorry I didn't reply earlier.
 
-Merged to master, thanks.
+No problem.
 
-Richard
+> I'd really this the environment storage to be something we do explicitly
+> in bin/bitbake alongside:
+> 
+>     # Clear away any spurious environment variables. But don't wipe the
+>     # environment totally. This is necessary to ensure the correct operation
+>     # of the UIs (e.g. for DISPLAY, etc.)
+>     bb.utils.clean_environment()
+> 
+> I'd suggest we create a copy there, then pass it into cooker and its
+> cooker which actually stores the copy for future reference. We may then
+> need to find a way to get to that at the metadata level and from the UIs
+> but what shouldn't be too difficult.
+
+Ah yes, that feels much nicer than doing it implicitly in the library.
+Expect a v2 RFC shortly (probably in your inbox tomorrow morning ;-))
+
+Thanks,
+Joshua
+-- 
+Joshua Lock
+        Yocto Project "Johannes Factotum"
+        Intel Open Source Technology Centre
 
 
 
