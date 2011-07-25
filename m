@@ -1,30 +1,24 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1QlPpF-0005aN-6D for bitbake-devel@lists.openembedded.org;
-	Mon, 25 Jul 2011 20:24:21 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6PIK9nJ031485
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 25 Jul 2011 19:20:09 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 28985-03 for <bitbake-devel@lists.openembedded.org>;
-	Mon, 25 Jul 2011 19:20:04 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6PIK0Mo031458
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 25 Jul 2011 19:20:00 +0100
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 25 Jul 2011 19:19:54 +0100
-Message-ID: <1311617994.2344.194.camel@rex>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.32.2 
-X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: [PATCH] bitbake/utils: 'Fix' bb.utils.contains() behaviour
+Received: from mga02.intel.com ([134.134.136.20])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <josh@linux.intel.com>) id 1QlQJp-0005y1-S2
+	for bitbake-devel@lists.openembedded.org;
+	Mon, 25 Jul 2011 20:55:58 +0200
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 25 Jul 2011 11:51:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,264,1309762800"; d="scan'208";a="29903199"
+Received: from vorpal.jf.intel.com ([10.7.199.57])
+	by orsmga002.jf.intel.com with ESMTP; 25 Jul 2011 11:51:41 -0700
+From: Joshua Lock <josh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 25 Jul 2011 11:56:10 -0700
+Message-Id: <2ef4e2ace742eceab7b04062140c18ec6401f4cc.1311620081.git.josh@linux.intel.com>
+X-Mailer: git-send-email 1.7.6
+In-Reply-To: <cover.1311620081.git.josh@linux.intel.com>
+References: <cover.1311620081.git.josh@linux.intel.com>
+In-Reply-To: <cover.1311620081.git.josh@linux.intel.com>
+References: <cover.1311620081.git.josh@linux.intel.com>
+Subject: [PATCH 2/4] bitbake-layers: adapt to cooker change for saved environment
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,47 +30,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 25 Jul 2011 18:24:21 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 25 Jul 2011 18:55:58 -0000
 
-Currently bb.utils.contains(X, "A", true, false) will return true for substring matches,
-e.g. if X = "ABC". This is not what most users expect from the function.
+The Cooker requires a copy of the environment mapping, modify
+bitbake-layers to take one and pass it to the cooker.
 
-In the common OE use of this function there is the case of "touchscreen" and "screen" being
-used as independent variables. Whilst it could be argued there isn't a problem in that
-specific case (touchscreens are usually on screens), there is no substring usage of this
-function is OE-Core so this patch changes the behaviour to match only full strings.
-
-It also fixes a bug where duplicate entries would confuse multiple matches, e.g.
-contains(X, ["A", "B"], ...) would match X = "A A" which is clearly wrong.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Joshua Lock <josh@linux.intel.com>
 ---
-diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
-index 075ca88..4eac285 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -861,12 +861,11 @@ def contains(variable, checkvalues, truevalue, falsevalue, d):
-     val = d.getVar(variable, True)
-     if not val:
-         return falsevalue
--    matches = 0
--    if type(checkvalues).__name__ == "str":
--        checkvalues = [checkvalues]
--    for value in checkvalues:
--        if val.find(value) != -1:
--            matches = matches + 1
--    if matches == len(checkvalues):
-+    val = set(val.split())
-+    if isinstance(checkvalues, basestring):
-+        checkvalues = set(checkvalues.split())
-+    else:
-+        checkvalues = set(checkvalues)
-+    if checkvalues.issubset(val): 
-         return truevalue
-     return falsevalue
+ bin/bitbake-layers |    7 ++++---
+ 1 files changed, 4 insertions(+), 3 deletions(-)
 
+diff --git a/bin/bitbake-layers b/bin/bitbake-layers
+index 3d563b5..d9f95d1 100755
+--- a/bin/bitbake-layers
++++ b/bin/bitbake-layers
+@@ -8,7 +8,7 @@
+ 
+ import cmd
+ import logging
+-import os.path
++import os
+ import sys
+ 
+ bindir = os.path.dirname(__file__)
+@@ -41,11 +41,12 @@ def main(args):
+ class Commands(cmd.Cmd):
+     def __init__(self):
+         cmd.Cmd.__init__(self)
+-
++        initialenv = os.environ.copy()
+         self.returncode = 0
+         self.config = Config(parse_only=True)
+         self.cooker = bb.cooker.BBCooker(self.config,
+-                                         self.register_idle_function)
++                                         self.register_idle_function,
++                                         initialenv)
+         self.config_data = self.cooker.configuration.data
+         bb.providers.logger.setLevel(logging.ERROR)
+         self.cooker_data = None
+-- 
+1.7.6
 
 
 
