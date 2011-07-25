@@ -1,30 +1,20 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1QlK7C-0005Td-7P for bitbake-devel@lists.openembedded.org;
-	Mon, 25 Jul 2011 14:18:30 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6PBovAL017509;
-	Mon, 25 Jul 2011 12:50:57 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 16301-07; Mon, 25 Jul 2011 12:50:53 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6PBonor017503
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Mon, 25 Jul 2011 12:50:50 +0100
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Joshua Lock <josh@linux.intel.com>
-In-Reply-To: <cover.1311355172.git.josh@linux.intel.com>
-References: <cover.1311355172.git.josh@linux.intel.com>
-Date: Mon, 25 Jul 2011 12:50:43 +0100
-Message-ID: <1311594643.2344.178.camel@rex>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.32.2 
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/1] Store a data object containing the initial environment v2
+Received: from mga11.intel.com ([192.55.52.93])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1QlLgX-0001bS-K8
+	for bitbake-devel@lists.openembedded.org;
+	Mon, 25 Jul 2011 15:59:07 +0200
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 25 Jul 2011 06:54:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,261,1309762800"; d="scan'208";a="34207811"
+Received: from unknown (HELO helios.ger.corp.intel.com) ([10.255.17.240])
+	by fmsmga001.fm.intel.com with ESMTP; 25 Jul 2011 06:54:51 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 25 Jul 2011 14:54:40 +0100
+Message-Id: <cover.1311601628.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.7.4.1
+Subject: [PATCH 0/3] Some error message improvements
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,33 +26,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 25 Jul 2011 12:18:30 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 25 Jul 2011 13:59:07 -0000
 
-On Fri, 2011-07-22 at 10:20 -0700, Joshua Lock wrote:
-> Take a copy of the environment in the bitbake entry point and pass it to the
-> cooker for saving in a data store.
-> 
-> Tested with bitbake and bitbake-layers.
-> 
-> Sanity prevails thanks to diligent code review.
-> 
-> The following changes since commit abc67ed6921c98ed581f101ec1acc589fd9ce7e9:
-> 
->   bitbake/utils: Add contains helper function from lib.oe.utils (2011-07-22 12:11:01 +0100)
-> 
-> are available in the git repository at:
->   git://github.com/incandescant/bitbake initialenv
->   https://github.com/incandescant/bitbake/tree/initialenv
-> 
-> Joshua Lock (1):
->   bitbake|cooker: save a copy of the environment when BitBake is
->     started
+These changes add some more information to unavailable PREFERRED_VERSION
+and "nothing PROVIDES" error output for skipped recipes. I also found and
+fixed one bug in taskdata.py in the process.
 
-Merged to master, thanks.
+The changes (against poky, apply cleanly against bitbake with -p2) are
+available in the git repository at:
+  git://git.pokylinux.org/poky-contrib paule/error-messages
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=paule/error-messages
 
-Richard
+Paul Eggleton (3):
+  bitbake: show more information for NoProvider errors
+  bitbake/taskdata: fix incorrect usage of rdependees instead of
+    dependees
+  bitbake/providers: list PREFERRED_VERSION candidates when unavailable
+
+ bitbake/lib/bb/cache.py     |    3 ++-
+ bitbake/lib/bb/cooker.py    |    6 ++++--
+ bitbake/lib/bb/event.py     |    3 ++-
+ bitbake/lib/bb/providers.py |   12 ++++++++++++
+ bitbake/lib/bb/taskdata.py  |   28 +++++++++++++++++++++++-----
+ bitbake/lib/bb/ui/knotty.py |    3 +++
+ 6 files changed, 46 insertions(+), 9 deletions(-)
+
+-- 
+1.7.4.1
 
 
 
