@@ -1,23 +1,30 @@
-Received: from mga14.intel.com ([143.182.124.37])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1QlYGM-0002pv-LX
-	for bitbake-devel@lists.openembedded.org;
-	Tue, 26 Jul 2011 05:24:54 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga102.ch.intel.com with ESMTP; 25 Jul 2011 20:20:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,266,1309762800"; d="scan'208";a="31414634"
-Received: from unknown (HELO [10.255.14.158]) ([10.255.14.158])
-	by azsmga001.ch.intel.com with ESMTP; 25 Jul 2011 20:20:40 -0700
-From: Joshua Lock <josh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 25 Jul 2011 20:20:35 -0700
-In-Reply-To: <1311617994.2344.194.camel@rex>
-References: <1311617994.2344.194.camel@rex>
-X-Mailer: Evolution 3.0.2 (3.0.2-3.fc15) 
-Message-ID: <1311650440.2260.12.camel@scimitar>
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1QlhAF-0003Xv-N1 for bitbake-devel@lists.openembedded.org;
+	Tue, 26 Jul 2011 14:55:11 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6QCou5W021594;
+	Tue, 26 Jul 2011 13:50:56 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 21143-03; Tue, 26 Jul 2011 13:50:52 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6QComWv021583
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Tue, 26 Jul 2011 13:50:49 +0100
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Joshua Lock <josh@linux.intel.com>
+In-Reply-To: <cover.1311620081.git.josh@linux.intel.com>
+References: <cover.1311620081.git.josh@linux.intel.com>
+Date: Tue, 26 Jul 2011 13:50:40 +0100
+Message-ID: <1311684640.2344.234.camel@rex>
 Mime-Version: 1.0
-Subject: Re: [PATCH] bitbake/utils: 'Fix' bb.utils.contains() behaviour
+X-Mailer: Evolution 2.32.2 
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 0/4] Add reparseFile command and adopt the saved environment
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -29,62 +36,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 26 Jul 2011 03:24:55 -0000
+X-List-Received-Date: Tue, 26 Jul 2011 12:55:11 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Mon, 2011-07-25 at 19:19 +0100, Richard Purdie wrote:
-> Currently bb.utils.contains(X, "A", true, false) will return true for substring matches,
-> e.g. if X = "ABC". This is not what most users expect from the function.
+On Mon, 2011-07-25 at 11:56 -0700, Joshua Lock wrote:
+> This series adapts the cooker to use the saved OS environment instead of the
+> current os.environ and adds the reparseFiles command which triggered the
+> changes.
 > 
-> In the common OE use of this function there is the case of "touchscreen" and "screen" being
-> used as independent variables. Whilst it could be argued there isn't a problem in that
-> specific case (touchscreens are usually on screens), there is no substring usage of this
-> function is OE-Core so this patch changes the behaviour to match only full strings.
+> The following changes since commit f0b5d16426b983a67c51c47f3542162108bd4156:
 > 
-> It also fixes a bug where duplicate entries would confuse multiple matches, e.g.
-> contains(X, ["A", "B"], ...) would match X = "A A" which is clearly wrong.
+>   Update version to 1.13.3 (2011-07-25 13:50:38 +0100)
 > 
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> are available in the git repository at:
+>   git://github.com/incandescant/bitbake hob
+>   https://github.com/incandescant/bitbake/tree/hob
+> 
+> Joshua Lock (4):
+>   data|cooker: use saved environment variables when calling
+>     inheritFromOS
+>   bitbake-layers: adapt to cooker change for saved environment
+>   command|cooker: Add reparseFiles command
+>   cooker: only append files once
 
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
+Merged to master, thanks.
 
-> ---
-> diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
-> index 075ca88..4eac285 100644
-> --- a/lib/bb/utils.py
-> +++ b/lib/bb/utils.py
-> @@ -861,12 +861,11 @@ def contains(variable, checkvalues, truevalue, falsevalue, d):
->      val = d.getVar(variable, True)
->      if not val:
->          return falsevalue
-> -    matches = 0
-> -    if type(checkvalues).__name__ == "str":
-> -        checkvalues = [checkvalues]
-> -    for value in checkvalues:
-> -        if val.find(value) != -1:
-> -            matches = matches + 1
-> -    if matches == len(checkvalues):
-> +    val = set(val.split())
-> +    if isinstance(checkvalues, basestring):
-> +        checkvalues = set(checkvalues.split())
-> +    else:
-> +        checkvalues = set(checkvalues)
-> +    if checkvalues.issubset(val): 
->          return truevalue
->      return falsevalue
-> 
-> 
-> 
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
-
--- 
-Joshua Lock
-        Yocto Project "Johannes factotum"
-        Intel Open Source Technology Centre
+Richard
 
 
 
