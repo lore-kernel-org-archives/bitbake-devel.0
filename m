@@ -1,24 +1,20 @@
 Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1Qlmip-0003hd-Nh
+	(envelope-from <josh@linux.intel.com>) id 1Qlmip-0003i5-Om
 	for bitbake-devel@lists.openembedded.org;
 	Tue, 26 Jul 2011 20:51:15 +0200
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
 	by orsmga101.jf.intel.com with ESMTP; 26 Jul 2011 11:46:58 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,270,1309762800"; d="scan'208";a="30353976"
+X-IronPort-AV: E=Sophos;i="4.67,270,1309762800"; d="scan'208";a="30353969"
 Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.14.155])
-	by orsmga002.jf.intel.com with ESMTP; 26 Jul 2011 11:46:52 -0700
+	by orsmga002.jf.intel.com with ESMTP; 26 Jul 2011 11:46:51 -0700
 From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 26 Jul 2011 11:46:38 -0700
-Message-Id: <d947f9880c2205be66fbd61cf7d3728275979a56.1311705833.git.josh@linux.intel.com>
+Date: Tue, 26 Jul 2011 11:46:34 -0700
+Message-Id: <cover.1311705833.git.josh@linux.intel.com>
 X-Mailer: git-send-email 1.7.6
-In-Reply-To: <cover.1311705833.git.josh@linux.intel.com>
-References: <cover.1311705833.git.josh@linux.intel.com>
-In-Reply-To: <cover.1311705833.git.josh@linux.intel.com>
-References: <cover.1311705833.git.josh@linux.intel.com>
-Subject: [PATCH 04/10] ui/hob: don't offer to show built output if build fails
+Subject: [PATCH 00/10] Latest round of hob UI improvements
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,57 +28,41 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 26 Jul 2011 18:51:16 -0000
 
-The link to open the deploy directory should only be shown if the build
-completed succesfully.
+Highlights are using buildTargets rather than buildFiles to build the custom
+image and enabling building an image without a 'Base image' set.
+Plus a slew of more minor fixes.
 
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
----
- lib/bb/ui/hob.py |   10 +++++++---
- 1 files changed, 7 insertions(+), 3 deletions(-)
+The following changes since commit d11f9dd33cdcc97a4a937e8bf7e97558d813cadd:
 
-diff --git a/lib/bb/ui/hob.py b/lib/bb/ui/hob.py
-index 654d2df..e0380dd 100644
---- a/lib/bb/ui/hob.py
-+++ b/lib/bb/ui/hob.py
-@@ -57,6 +57,7 @@ class MainWindow (gtk.Window):
-         self.layers = layers
-         self.save_path = None
-         self.dirty = False
-+        self.build_succeeded = False
- 
-         self.connect("delete-event", self.destroy_window)
-         self.set_title("Image Creator")
-@@ -65,6 +66,7 @@ class MainWindow (gtk.Window):
- 
-         self.build = RunningBuild()
-         self.build.connect("build-failed", self.running_build_failed_cb)
-+        self.build.connect("build-succeeded", self.running_build_succeeded_cb)
-         self.build.connect("build-started", self.build_started_cb)
-         self.build.connect("build-complete", self.build_complete_cb)
- 
-@@ -113,9 +115,11 @@ class MainWindow (gtk.Window):
-     def scroll_tv_cb(self, model, path, it, view):
-         view.scroll_to_cell(path)
- 
-+    def running_build_succeeded_cb(self, running_build):
-+        self.build_succeeded = True
-+
-     def running_build_failed_cb(self, running_build):
--        # FIXME: handle this
--        print("Build failed")
-+        self.build_succeeded = False
- 
-     def image_changed_string_cb(self, model, new_image):
-         cnt = 0
-@@ -408,7 +412,7 @@ class MainWindow (gtk.Window):
-             os.remove(f)
- 
-         lbl = "<b>Build completed</b>\n\nClick 'Edit Image' to start another build or 'View Log' to view the build log."
--        if self.handler.building == "image":
-+        if self.handler.building == "image" and self.build_succeeded:
-             deploy = self.handler.get_image_deploy_dir()
-             lbl = lbl + "\n<a href=\"file://%s\" title=\"%s\">Browse folder of built images</a>." % (deploy, deploy)
- 
+  cooker: only append files once (2011-07-26 13:45:31 +0100)
+
+are available in the git repository at:
+  git://github.com/incandescant/bitbake hob
+  https://github.com/incandescant/bitbake/tree/hob
+
+Jessica Zhang (1):
+  ui/crumbs/tasklistmodel: fix loading a saved recipe
+
+Joshua Lock (9):
+  ui/hob: replace the ugly static command map
+  ui/crumbs/hobeventhandler: reparse files before running other
+    commands
+  ui/hob: switch from buildFile to buildTargets for custom image builds
+  ui/hob: don't offer to show built output if build fails
+  ui/hob: change wording in build complete dialog
+  ui/hob: Force the 'Base image combo' to be drawn correctly
+  ui/hob: enable building an image with minimal contents
+  ui/crumbs/tasklistmodel: handle items added in by base image being
+    removed
+  ui/crumbs/tasklistmodel: don't iterate whole model in
+    find_alt_dependency()
+
+ lib/bb/ui/crumbs/configurator.py    |   18 +++++
+ lib/bb/ui/crumbs/hobeventhandler.py |  127 +++++++++++++++++++++++------------
+ lib/bb/ui/crumbs/tasklistmodel.py   |   51 ++++++++++----
+ lib/bb/ui/hob.py                    |   63 +++++++++++------
+ 4 files changed, 179 insertions(+), 80 deletions(-)
+
 -- 
 1.7.6
 
