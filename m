@@ -1,24 +1,24 @@
 Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1QlvJd-0007hu-Px
+	(envelope-from <josh@linux.intel.com>) id 1QlvJe-0007hu-Er
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 27 Jul 2011 06:01:49 +0200
+	Wed, 27 Jul 2011 06:01:50 +0200
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
 	by fmsmga102.fm.intel.com with ESMTP; 26 Jul 2011 20:57:34 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,273,1309762800"; d="scan'208";a="34904868"
+X-IronPort-AV: E=Sophos;i="4.67,273,1309762800"; d="scan'208";a="34904869"
 Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.14.163])
 	by fmsmga001.fm.intel.com with ESMTP; 26 Jul 2011 20:57:34 -0700
 From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 26 Jul 2011 20:57:24 -0700
-Message-Id: <1e1055262450de994202fc3e5943b8b19f628681.1311738866.git.josh@linux.intel.com>
+Date: Tue, 26 Jul 2011 20:57:25 -0700
+Message-Id: <58036a79cb79d1dff307e2cfed0e684493178507.1311738866.git.josh@linux.intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <cover.1311738866.git.josh@linux.intel.com>
 References: <cover.1311738866.git.josh@linux.intel.com>
 In-Reply-To: <cover.1311738866.git.josh@linux.intel.com>
 References: <cover.1311738866.git.josh@linux.intel.com>
-Subject: [PATCH 1/4] ui/crumbs/tasklistmodel: work around overly aggressive package removal
+Subject: [PATCH 2/4] hob: fix loading customised image recipe
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,83 +32,56 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 27 Jul 2011 04:01:50 -0000
 
-The mark() method, which removes dependent and rdependent items, is overly
-aggressive removing items which are actually required by user selected
-items and then causing a removal of those items. Because the data
-structures used are not fine grained enough to do more intelligent
-dependency tracking the simplest "fix" is to track removals which are
-marked as "User Selected" and re-add those (and therefore their
-dependencies) once the aggressive removal is completed.
+The signal handler of the 'Base image' combo was still connected during load
+such that updating the UI to reflect the loaded base image triggered a change
+of the model. Fix this by disconnecting the signal handler when updating the
+displayed 'Base image'.
 
-Because the aggressive removal already ignores images and tasks this should
-make the removal behave as expected though certainly leaves area for
-improvement in future.
-
-Fixes [YOCTO #1280].
+Fixes [YOCTO #1282]
 
 Signed-off-by: Joshua Lock <josh@linux.intel.com>
 ---
- lib/bb/ui/crumbs/tasklistmodel.py |   25 ++++++++++++++++++++++---
- 1 files changed, 22 insertions(+), 3 deletions(-)
+ lib/bb/ui/crumbs/tasklistmodel.py |    2 +-
+ lib/bb/ui/hob.py                  |    6 ++++++
+ 2 files changed, 7 insertions(+), 1 deletions(-)
 
 diff --git a/lib/bb/ui/crumbs/tasklistmodel.py b/lib/bb/ui/crumbs/tasklistmodel.py
-index ee6ebf8..d7dff3c 100644
+index d7dff3c..e190f96 100644
 --- a/lib/bb/ui/crumbs/tasklistmodel.py
 +++ b/lib/bb/ui/crumbs/tasklistmodel.py
-@@ -306,11 +306,15 @@ class TaskListModel(gtk.ListStore):
-         self[path][self.COL_INC] = False
+@@ -281,7 +281,7 @@ class TaskListModel(gtk.ListStore):
+             path = self.get_path(it)
+             name = self[path][self.COL_NAME]
+             if name in packages:
+-                self.include_item(path)
++                self.include_item(path, binb="User Selected")
+                 packages.remove(name)
+             it = self.iter_next(it)
  
-     """
--    recursively called to mark the item at opath and any package which
--    depends on it for removal
-+    Recursively called to mark the item at opath and any package which
-+    depends on it for removal.
-+    NOTE: This method dumbly removes user selected packages and since we don't
-+    do significant reverse dependency tracking it's easier and simpler to save
-+    the items marked as user selected and re-add them once the removal sweep is
-+    complete.
-     """
-     def mark(self, opath):
--        removals = []
-+        usersel = {}
-         it = self.get_iter_first()
-         name = self[opath][self.COL_NAME]
+diff --git a/lib/bb/ui/hob.py b/lib/bb/ui/hob.py
+index d3442c5..90d5c5a 100644
+--- a/lib/bb/ui/hob.py
++++ b/lib/bb/ui/hob.py
+@@ -122,6 +122,10 @@ class MainWindow (gtk.Window):
+         self.build_succeeded = False
  
-@@ -325,19 +329,34 @@ class TaskListModel(gtk.ListStore):
-             deps = self[path][self.COL_DEPS]
-             binb = self[path][self.COL_BINB]
-             itype = self[path][self.COL_TYPE]
-+            iname = self[path][self.COL_NAME]
+     def image_changed_string_cb(self, model, new_image):
++        # disconnect the image combo's signal handler
++        if self.image_combo_id:
++            self.image_combo.disconnect(self.image_combo_id)
++            self.image_combo_id = None
+         cnt = 0
+         it = self.model.images.get_iter_first()
+         while it:
+@@ -131,6 +135,8 @@ class MainWindow (gtk.Window):
+                 break
+             it = self.model.images.iter_next(it)
+             cnt = cnt + 1
++        # Reconnect the signal handler
++        self.image_combo_id = self.image_combo.connect("changed", self.image_changed_cb)
  
-             # We ignore anything that isn't a package
-             if not itype == "package":
-                 continue
- 
-+            # If the user added this item and it's not the item we're removing
-+            # we should keep it and its dependencies, the easiest way to do so
-+            # is to save its name and re-mark it for inclusion once dependency
-+            # processing is complete
-+            if binb == "User Selected":
-+                usersel[iname] = self[path][self.COL_IMG]
-+
-             # FIXME: need to ensure partial name matching doesn't happen
-             if inc and deps.count(name):
-                 # found a dependency, remove it
-                 self.mark(path)
-+
-             if inc and binb.count(name):
-                 bib = self.find_alt_dependency(name)
-                 self[path][self.COL_BINB] = bib
- 
-+        # Re-add any removed user selected items
-+        for u in usersel:
-+            npath = self.find_path_for_item(u)
-+            self.include_item(item_path=npath,
-+                              binb="User Selected",
-+                              image_contents=usersel[u])
-     """
-     Remove items from contents if the have an empty COL_BINB (brought in by)
-     caused by all packages they are a dependency of being removed.
+     def image_changed_cb(self, combo):
+         model = self.image_combo.get_model()
 -- 
 1.7.6
 
