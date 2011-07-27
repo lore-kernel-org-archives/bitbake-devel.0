@@ -1,30 +1,20 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1QlnAZ-0004TJ-3K for bitbake-devel@lists.openembedded.org;
-	Tue, 26 Jul 2011 21:19:55 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6QJFe9t024186;
-	Tue, 26 Jul 2011 20:15:40 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 23068-09; Tue, 26 Jul 2011 20:15:36 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6QJFZoN024180
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Tue, 26 Jul 2011 20:15:36 +0100
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Joshua Lock <josh@linux.intel.com>
-In-Reply-To: <cover.1311705833.git.josh@linux.intel.com>
-References: <cover.1311705833.git.josh@linux.intel.com>
-Date: Tue, 26 Jul 2011 20:15:26 +0100
-Message-ID: <1311707726.2344.301.camel@rex>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.32.2 
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 00/10] Latest round of hob UI improvements
+Received: from mga11.intel.com ([192.55.52.93])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <josh@linux.intel.com>) id 1QlvJd-0007hu-2u
+	for bitbake-devel@lists.openembedded.org;
+	Wed, 27 Jul 2011 06:01:49 +0200
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 26 Jul 2011 20:57:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,273,1309762800"; d="scan'208";a="34904867"
+Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.14.163])
+	by fmsmga001.fm.intel.com with ESMTP; 26 Jul 2011 20:57:34 -0700
+From: Joshua Lock <josh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 26 Jul 2011 20:57:23 -0700
+Message-Id: <cover.1311738866.git.josh@linux.intel.com>
+X-Mailer: git-send-email 1.7.6
+Subject: [PATCH 0/4] Hob bug fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,43 +26,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 26 Jul 2011 19:19:55 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 27 Jul 2011 04:01:49 -0000
 
-On Tue, 2011-07-26 at 11:46 -0700, Joshua Lock wrote:
-> Highlights are using buildTargets rather than buildFiles to build the custom
-> image and enabling building an image without a 'Base image' set.
-> Plus a slew of more minor fixes.
-> 
-> The following changes since commit d11f9dd33cdcc97a4a937e8bf7e97558d813cadd:
-> 
->   cooker: only append files once (2011-07-26 13:45:31 +0100)
-> 
-> are available in the git repository at:
->   git://github.com/incandescant/bitbake hob
->   https://github.com/incandescant/bitbake/tree/hob
-> 
-> Jessica Zhang (1):
->   ui/crumbs/tasklistmodel: fix loading a saved recipe
-> 
-> Joshua Lock (9):
->   ui/hob: replace the ugly static command map
->   ui/crumbs/hobeventhandler: reparse files before running other
->     commands
->   ui/hob: switch from buildFile to buildTargets for custom image builds
->   ui/hob: don't offer to show built output if build fails
->   ui/hob: change wording in build complete dialog
->   ui/hob: Force the 'Base image combo' to be drawn correctly
->   ui/hob: enable building an image with minimal contents
->   ui/crumbs/tasklistmodel: handle items added in by base image being
->     removed
->   ui/crumbs/tasklistmodel: don't iterate whole model in
->     find_alt_dependency()
+All,
 
-Merged to master, thanks.
+Some more bug fixes for the hob UI hoping to make it in before we freeze Poky
+for Yocto 1.1M3.
 
-Richard
+Thanks,
+Joshua
+
+The following changes since commit 2650be190afc05f9472aca8b11af99205a342838:
+
+  ui/crumbs/tasklistmodel: fix loading a saved recipe (2011-07-26 09:42:28 -0700)
+
+are available in the git repository at:
+  git://github.com/incandescant/bitbake hob
+  https://github.com/incandescant/bitbake/tree/hob
+
+Jessica Zhang (1):
+  ui/crumbs/hobprefs: trigger reparse when package format changed
+
+Joshua Lock (3):
+  ui/crumbs/tasklistmodel: work around overly aggressive package
+    removal
+  hob: fix loading customised image recipe
+  cooker: populate rdepends-pkg in generatePkgDepTreeData
+
+ lib/bb/cooker.py                  |    3 +++
+ lib/bb/ui/crumbs/hobprefs.py      |    1 +
+ lib/bb/ui/crumbs/tasklistmodel.py |   27 +++++++++++++++++++++++----
+ lib/bb/ui/hob.py                  |    6 ++++++
+ 4 files changed, 33 insertions(+), 4 deletions(-)
+
+-- 
+1.7.6
 
 
 
