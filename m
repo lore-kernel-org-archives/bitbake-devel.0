@@ -1,24 +1,30 @@
-Received: from mga02.intel.com ([134.134.136.20])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1Qlw4p-0004Bm-Ko
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 27 Jul 2011 06:50:35 +0200
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 26 Jul 2011 21:46:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,273,1309762800"; d="scan'208";a="30529120"
-Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.14.163])
-	by orsmga002.jf.intel.com with ESMTP; 26 Jul 2011 21:46:19 -0700
-From: Joshua Lock <josh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 26 Jul 2011 21:46:11 -0700
-Message-Id: <ed06102ba830afe3bc6e608781fc11a7aa8f81dd.1311741742.git.josh@linux.intel.com>
-X-Mailer: git-send-email 1.7.6
-In-Reply-To: <cover.1311741742.git.josh@linux.intel.com>
-References: <cover.1311741742.git.josh@linux.intel.com>
-In-Reply-To: <cover.1311741742.git.josh@linux.intel.com>
-References: <cover.1311741742.git.josh@linux.intel.com>
-Subject: [RFC PATCH 3/3] ui/crumbs/[hobeventhandler|configurator]: don't use unparsed files
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1Qm6QO-0004Bj-5C for bitbake-devel@lists.openembedded.org;
+	Wed, 27 Jul 2011 17:53:32 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6RFnGhT031066;
+	Wed, 27 Jul 2011 16:49:16 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 30946-03; Wed, 27 Jul 2011 16:49:12 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p6RFnBQZ031060
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Wed, 27 Jul 2011 16:49:11 +0100
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Joshua Lock <josh@linux.intel.com>
+In-Reply-To: <cover.1311738866.git.josh@linux.intel.com>
+References: <cover.1311738866.git.josh@linux.intel.com>
+Date: Wed, 27 Jul 2011 16:49:00 +0100
+Message-ID: <1311781740.2344.404.camel@rex>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.32.2 
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 0/4] Hob bug fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,72 +36,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Jul 2011 04:50:35 -0000
+X-List-Received-Date: Wed, 27 Jul 2011 15:53:32 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Use the new field in the ConfigFilePathFound event to track whether the
-hob.local.conf file was parsed when BitBake was launched.
+On Tue, 2011-07-26 at 20:57 -0700, Joshua Lock wrote:
+> All,
+> 
+> Some more bug fixes for the hob UI hoping to make it in before we freeze Poky
+> for Yocto 1.1M3.
+> 
+> Thanks,
+> Joshua
+> 
+> The following changes since commit 2650be190afc05f9472aca8b11af99205a342838:
+> 
+>   ui/crumbs/tasklistmodel: fix loading a saved recipe (2011-07-26 09:42:28 -0700)
+> 
+> are available in the git repository at:
+>   git://github.com/incandescant/bitbake hob
+>   https://github.com/incandescant/bitbake/tree/hob
+> 
+> Jessica Zhang (1):
+>   ui/crumbs/hobprefs: trigger reparse when package format changed
+> 
+> Joshua Lock (3):
+>   ui/crumbs/tasklistmodel: work around overly aggressive package
+>     removal
+>   hob: fix loading customised image recipe
+>   cooker: populate rdepends-pkg in generatePkgDepTreeData
 
-Fixes [YOCTO #1246]
+Merged to master, thanks.
 
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
----
- lib/bb/ui/crumbs/configurator.py    |    8 ++++----
- lib/bb/ui/crumbs/hobeventhandler.py |    6 ++++--
- 2 files changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/lib/bb/ui/crumbs/configurator.py b/lib/bb/ui/crumbs/configurator.py
-index ec48a4f..f5eae28 100644
---- a/lib/bb/ui/crumbs/configurator.py
-+++ b/lib/bb/ui/crumbs/configurator.py
-@@ -115,9 +115,9 @@ class Configurator(gobject.GObject):
-         self.enabled_layers = copy.deepcopy(self.loaded_layers)
-         self.emit("layers-loaded")
- 
--    def _addConfigFile(self, path):
-+    def _addConfigFile(self, path, additional):
-         pref, sep, filename = path.rpartition("/")
--        if filename == "local.conf" or filename == "hob.local.conf":
-+        if filename == "local.conf" or (filename == "hob.local.conf" and additional):
-             self._loadLocalConf(path)
-         elif filename == "bblayers.conf":
-             self._loadLayerConf(path)
-@@ -293,8 +293,8 @@ class Configurator(gobject.GObject):
- 
-         self.emit("layers-changed")
- 
--    def configFound(self, handler, path):
--        self._addConfigFile(path)
-+    def configFound(self, handler, path, additional):
-+        self._addConfigFile(path, additional)
- 
-     def loadConfig(self, path):
-         self._addConfigFile(path)
-diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
-index 4897bcc..9cfa7c2 100644
---- a/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -42,7 +42,8 @@ class HobHandler(gobject.GObject):
-                                   (gobject.TYPE_PYOBJECT,)),
-          "config-found"        : (gobject.SIGNAL_RUN_LAST,
-                                   gobject.TYPE_NONE,
--                                  (gobject.TYPE_STRING,)),
-+                                  (gobject.TYPE_STRING,
-+                                   gobject.TYPE_BOOLEAN)),
-          "generating-data"     : (gobject.SIGNAL_RUN_LAST,
-                                   gobject.TYPE_NONE,
-                                   ()),
-@@ -150,7 +151,8 @@ class HobHandler(gobject.GObject):
-                 self.emit("sdk-machines-updated", sdk_machines)
-         elif isinstance(event, bb.event.ConfigFilePathFound):
-             path = event._path
--            self.emit("config-found", path)
-+            extraconf = event._extraconf
-+            self.emit("config-found", path, extraconf)
-         elif isinstance(event, bb.event.FilesMatchingFound):
-             # FIXME: hard coding, should at least be a variable shared between
-             # here and the caller
--- 
-1.7.6
+Richard
 
 
 
