@@ -1,24 +1,20 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1QlvJg-0007hu-0Z
+	(envelope-from <josh@linux.intel.com>) id 1Qlw4n-0004Bm-9W
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 27 Jul 2011 06:01:52 +0200
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 26 Jul 2011 20:57:35 -0700
+	Wed, 27 Jul 2011 06:50:33 +0200
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 26 Jul 2011 21:46:18 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,273,1309762800"; d="scan'208";a="34904876"
+X-IronPort-AV: E=Sophos;i="4.67,273,1309762800"; d="scan'208";a="30529114"
 Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.14.163])
-	by fmsmga001.fm.intel.com with ESMTP; 26 Jul 2011 20:57:35 -0700
+	by orsmga002.jf.intel.com with ESMTP; 26 Jul 2011 21:46:18 -0700
 From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 26 Jul 2011 20:57:27 -0700
-Message-Id: <fb47c7452455f3f8d943b21dd61300ec55eea141.1311738866.git.josh@linux.intel.com>
+Date: Tue, 26 Jul 2011 21:46:08 -0700
+Message-Id: <cover.1311741742.git.josh@linux.intel.com>
 X-Mailer: git-send-email 1.7.6
-In-Reply-To: <cover.1311738866.git.josh@linux.intel.com>
-References: <cover.1311738866.git.josh@linux.intel.com>
-In-Reply-To: <cover.1311738866.git.josh@linux.intel.com>
-References: <cover.1311738866.git.josh@linux.intel.com>
-Subject: [PATCH 4/4] ui/crumbs/hobprefs: trigger reparse when package format changed
+Subject: [RFC PATCH 0/3] Tracking parsed configuration files
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,33 +26,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Jul 2011 04:01:53 -0000
+X-List-Received-Date: Wed, 27 Jul 2011 04:50:33 -0000
 
-From: Jessica Zhang <jessica.zhang@intel.com>
+All,
 
-reload_data after package format change to make the change take effects in
-next build.
+This series attempts to address Yocto bug 1246: "Configuration changes could
+be saved to a file the cooker isn't using".
 
-Fixes [YOCTO #1287].
+It's an ugly series and the issue will only present itself if users run the
+UI trough alternative ways. My main issue is that we can't easily track all
+loaded conf files at parseConfigurationFiles time so it feels a little
+brittle.
 
-Signed-off-by: Jessica Zhang <jessica.zhang@intel.com>
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
----
- lib/bb/ui/crumbs/hobprefs.py |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+Thoughts? Comments?
 
-diff --git a/lib/bb/ui/crumbs/hobprefs.py b/lib/bb/ui/crumbs/hobprefs.py
-index 1e6c78b..0f9bda2 100644
---- a/lib/bb/ui/crumbs/hobprefs.py
-+++ b/lib/bb/ui/crumbs/hobprefs.py
-@@ -93,6 +93,7 @@ class HobPrefs(gtk.Dialog):
-             self.curr_package_format = package_format
-             self.configurator.setLocalConfVar('PACKAGE_CLASSES', 'package_%s' % package_format)
-             handler.set_package_format(package_format)
-+            self.reload_required = True
- 
-     def update_package_formats(self, handler, formats):
-         active = 0
+Regards,
+Joshua
+
+Please review the following changes for suitability for inclusion. If you have
+any objections or suggestions for improvement, please respond to the patches. If
+you agree with the changes, please provide your Acked-by.
+
+The following changes since commit 2650be190afc05f9472aca8b11af99205a342838:
+
+  ui/crumbs/tasklistmodel: fix loading a saved recipe (2011-07-26 09:42:28 -0700)
+
+are available in the git repository at:
+  git://github.com/incandescant/bitbake configfiles
+  https://github.com/incandescant/bitbake/tree/configfiles
+
+Joshua Lock (3):
+  cooker: track conf files parsed outside of the usual bitbake.conf
+    inclusion
+  cooker|event: notify if pre/post file in ConfigFilePathFound event
+  ui/crumbs/[hobeventhandler|configurator]: don't use unparsed files
+
+ lib/bb/cooker.py                    |   10 +++++++++-
+ lib/bb/event.py                     |    3 ++-
+ lib/bb/ui/crumbs/configurator.py    |    8 ++++----
+ lib/bb/ui/crumbs/hobeventhandler.py |    6 ++++--
+ 4 files changed, 19 insertions(+), 8 deletions(-)
+
 -- 
 1.7.6
 
