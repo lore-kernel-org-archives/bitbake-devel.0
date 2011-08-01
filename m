@@ -1,24 +1,24 @@
 Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1QnxG9-0001pn-Mw
+	(envelope-from <josh@linux.intel.com>) id 1QnxGA-0001pg-9m
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 01 Aug 2011 20:30:37 +0200
+	Mon, 01 Aug 2011 20:30:38 +0200
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
 	by orsmga101.jf.intel.com with ESMTP; 01 Aug 2011 11:26:12 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,301,1309762800"; d="scan'208";a="34344109"
+X-IronPort-AV: E=Sophos;i="4.67,301,1309762800"; d="scan'208";a="34344111"
 Received: from vorpal.jf.intel.com ([10.7.199.75])
 	by orsmga001.jf.intel.com with ESMTP; 01 Aug 2011 11:26:12 -0700
 From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  1 Aug 2011 11:30:49 -0700
-Message-Id: <2f7eadfdd710f84a299d6fc7be67ddb089f03ecc.1312216779.git.josh@linux.intel.com>
+Date: Mon,  1 Aug 2011 11:30:50 -0700
+Message-Id: <1009ca570a750a00b0e60afcc30ead070c7b310a.1312216779.git.josh@linux.intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <cover.1312216779.git.josh@linux.intel.com>
 References: <cover.1312216779.git.josh@linux.intel.com>
 In-Reply-To: <cover.1312216779.git.josh@linux.intel.com>
 References: <cover.1312216779.git.josh@linux.intel.com>
-Subject: [PATCH 7/8] ui/crumbs/layereditor: if layer adding fails show an explanatory dialog
+Subject: [PATCH 8/8] hob: remove temporary directory on program shutdown
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,60 +32,133 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Mon, 01 Aug 2011 18:30:38 -0000
 
-When adding a layer fails try to explain why to the user.
+Move temp directory handling into the HobEventHandler and clean up the
+temporary files on program close.
+
+Fixes [YOCTO #1307]
 
 Signed-off-by: Joshua Lock <josh@linux.intel.com>
 ---
- lib/bb/ui/crumbs/layereditor.py |   20 ++++++++++++++++++--
- 1 files changed, 18 insertions(+), 2 deletions(-)
+ lib/bb/ui/crumbs/hobeventhandler.py |   26 +++++++++++++++++++++-----
+ lib/bb/ui/hob.py                    |   15 +++++++--------
+ 2 files changed, 28 insertions(+), 13 deletions(-)
 
-diff --git a/lib/bb/ui/crumbs/layereditor.py b/lib/bb/ui/crumbs/layereditor.py
-index 7c581d6..f5394a5 100644
---- a/lib/bb/ui/crumbs/layereditor.py
-+++ b/lib/bb/ui/crumbs/layereditor.py
-@@ -21,6 +21,7 @@
+diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
+index 0b5b318..e8265f1 100644
+--- a/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -20,6 +20,8 @@
+ 
  import gobject
- import gtk
- from bb.ui.crumbs.configurator import Configurator
-+from bb.ui.crumbs.hig import CrumbsDialog
+ import logging
++import tempfile
++import datetime
  
- class LayerEditor(gtk.Dialog):
-     """
-@@ -117,6 +118,12 @@ class LayerEditor(gtk.Dialog):
-         self.find_layer(self)
+ progress_total = 0
  
-     def find_layer(self, parent):
-+        def conf_error(parent, lbl):
-+            dialog = CrumbsDialog(parent, lbl)
-+            dialog.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
-+            response = dialog.run()
-+            dialog.destroy()
+@@ -75,6 +77,7 @@ class HobHandler(gobject.GObject):
+         self.generating = False
+         self.build_queue = []
+         self.current_phase = None
++        self.image_dir = None
+ 
+         self.model = taskmodel
+         self.server = server
+@@ -237,7 +240,7 @@ class HobHandler(gobject.GObject):
+         pmake = "-j %s" % threads
+         self.server.runCommand(["setVariable", "BB_NUMBER_THREADS", pmake])
+ 
+-    def build_image(self, image, image_path, configurator):
++    def build_image(self, image, configurator):
+         targets = []
+         targets.append(image)
+         if self.build_toolchain and self.build_toolchain_headers:
+@@ -248,24 +251,24 @@ class HobHandler(gobject.GObject):
+ 
+         bbpath_ok = False
+         bbpath = self.server.runCommand(["getVariable", "BBPATH"])
+-        if image_path in bbpath.split(":"):
++        if self.image_dir in bbpath.split(":"):
+             bbpath_ok = True
+ 
+         bbfiles_ok = False
+         bbfiles = self.server.runCommand(["getVariable", "BBFILES"]).split(" ")
+         for files in bbfiles:
+             import re
+-            pattern = "%s/\*.bb" % image_path
++            pattern = "%s/\*.bb" % self.image_dir
+             if re.match(pattern, files):
+                 bbfiles_ok = True
+ 
+         if not bbpath_ok:
+-            nbbp = image_path
++            nbbp = self.image_dir
+         else:
+             nbbp = None
+ 
+         if not bbfiles_ok:
+-            nbbf = "%s/*.bb" % image_path
++            nbbf = "%s/*.bb" % self.image_dir
+         else:
+             nbbf = None
+ 
+@@ -319,3 +322,16 @@ class HobHandler(gobject.GObject):
+ 
+     def get_image_deploy_dir(self):
+         return self.server.runCommand(["getVariable", "DEPLOY_DIR_IMAGE"])
 +
-         dialog = gtk.FileChooserDialog("Add new layer", parent,
-                                        gtk.FILE_CHOOSER_ACTION_OPEN,
-                                        (gtk.STOCK_CANCEL, gtk.RESPONSE_NO,
-@@ -128,10 +135,19 @@ class LayerEditor(gtk.Dialog):
-         path = dialog.get_filename()
-         dialog.destroy()
++    def make_temp_dir(self):
++        self.image_dir = os.path.join(tempfile.gettempdir(), 'hob-images')
++        bb.utils.mkdirhier(self.image_dir)
++
++    def remove_temp_dir(self):
++        bb.utils.remove(self.image_dir, True)
++
++    def get_temp_recipe_path(self, name):
++        timestamp = datetime.date.today().isoformat()
++        image_file = "hob-%s-variant-%s.bb" % (name, timestamp)
++        recipepath =  os.path.join(self.image_dir, image_file)
++        return recipepath
+diff --git a/lib/bb/ui/hob.py b/lib/bb/ui/hob.py
+index 919c06e..b5c2342 100644
+--- a/lib/bb/ui/hob.py
++++ b/lib/bb/ui/hob.py
+@@ -114,6 +114,8 @@ class MainWindow (gtk.Window):
+         # whilst the busy cursor is set
+         self.set_busy_cursor(False)
  
-+        lbl = "<b>Error</b>\nUnable to load layer <i>%s</i> because " % path
-         if response == gtk.RESPONSE_YES:
-             # FIXME: verify we've actually got a layer conf?
--            if path.endswith(".conf"):
-+            if path.endswith("layer.conf"):
-                 name, layerpath = self.configurator.addLayerConf(path)
--                if name:
-+                if name and layerpath:
-                     self.newly_added[name] = layerpath
-                     self.layer_store.append([name, layerpath, True])
-+                    return
-+                elif name:
-+                    return
-+                else:
-+                    lbl += "there was a problem parsing the layer.conf."
-+            else:
-+                lbl += "it is not a layer.conf file."
-+            conf_error(parent, lbl)
++        self.handler.remove_temp_dir()
++
+         gtk.main_quit()
+ 
+     """
+@@ -418,13 +420,10 @@ class MainWindow (gtk.Window):
+                 rep.base_image = "empty"
+ 
+         if build_image:
+-            import tempfile, datetime
+-
+-            image_name = "hob-%s-variant-%s" % (rep.base_image, datetime.date.today().isoformat())
+-            image_file = "%s.bb" % (image_name)
+-            image_dir = os.path.join(tempfile.gettempdir(), 'hob-images')
+-            bb.utils.mkdirhier(image_dir)
+-            recipepath =  os.path.join(image_dir, image_file)
++            self.handler.make_temp_dir()
++            recipepath =  self.handler.get_temp_recipe_path(rep.base_image)
++            image_name = recipepath.rstrip(".bb")
++            path, sep, image_name = image_name.rpartition("/")
+ 
+             rep.writeRecipe(recipepath, self.model)
+             # In the case where we saved the file for the purpose of building
+@@ -433,7 +432,7 @@ class MainWindow (gtk.Window):
+             if not self.save_path:
+                 self.files_to_clean.append(recipepath)
+ 
+-            self.handler.build_image(image_name, image_dir, self.configurator)
++            self.handler.build_image(image_name, self.configurator)
+         else:
+             self.handler.build_packages(rep.allpkgs.split(" "))
+ 
 -- 
 1.7.6
 
