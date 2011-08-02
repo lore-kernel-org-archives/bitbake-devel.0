@@ -1,24 +1,22 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1Qo1oV-0004Up-82
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1QoDCd-0004Rq-AV
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 02 Aug 2011 01:22:23 +0200
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 01 Aug 2011 16:18:01 -0700
+	Tue, 02 Aug 2011 13:32:03 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga102.ch.intel.com with ESMTP; 02 Aug 2011 04:26:36 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,303,1309762800"; d="scan'208";a="34428704"
-Received: from vorpal.jf.intel.com ([10.7.199.75])
-	by orsmga001.jf.intel.com with ESMTP; 01 Aug 2011 16:18:00 -0700
-From: Joshua Lock <josh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon,  1 Aug 2011 16:22:38 -0700
-Message-Id: <a727b7256bcab11fb35c712a5920c1b8ed6f9425.1312240827.git.josh@linux.intel.com>
-X-Mailer: git-send-email 1.7.6
-In-Reply-To: <cover.1312240827.git.josh@linux.intel.com>
-References: <cover.1312240827.git.josh@linux.intel.com>
-In-Reply-To: <cover.1312240827.git.josh@linux.intel.com>
-References: <cover.1312240827.git.josh@linux.intel.com>
-Subject: [RFC PATCH 1/1] cooker: store a list of parsed configuration files
+X-IronPort-AV: E=Sophos;i="4.67,305,1309762800"; d="scan'208";a="34217675"
+Received: from unknown (HELO helios.localnet) ([10.255.18.59])
+	by azsmga001.ch.intel.com with ESMTP; 02 Aug 2011 04:26:35 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: openembedded-core@lists.openembedded.org
+Date: Tue, 2 Aug 2011 12:26:34 +0100
+User-Agent: KMail/1.13.6 (Linux/2.6.38-8-generic-pae; KDE/4.6.2; i686; ; )
+MIME-Version: 1.0
+Message-Id: <201108021226.34560.paul.eggleton@linux.intel.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Layer priorities influencing default version selection
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,44 +28,64 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 01 Aug 2011 23:22:23 -0000
+X-List-Received-Date: Tue, 02 Aug 2011 11:32:03 -0000
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
----
- lib/bb/cooker.py                     |    3 +++
- lib/bb/parse/parse_py/ConfHandler.py |    3 +++
- 2 files changed, 6 insertions(+), 0 deletions(-)
+Hi all,
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 025dfe4..c7142e1 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -772,6 +772,9 @@ class BBCooker:
-         for p in postfiles:
-             data = _parse(p, data)
- 
-+        self.configuration.parsed_configuration = (bb.data.getVar('PARSED_CONF', data) or '').split(':')
-+        bb.data.delVar('PARSED_CONF', data)
-+
-         # Handle any INHERITs and inherit the base class
-         bbclasses  = ["base"] + (data.getVar('INHERIT', True) or "").split()
-         for bbclass in bbclasses:
-diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
-index 102c0e9..22686b7 100644
---- a/lib/bb/parse/parse_py/ConfHandler.py
-+++ b/lib/bb/parse/parse_py/ConfHandler.py
-@@ -103,6 +103,9 @@ def handle(fn, data, include):
- 
-     # DONE WITH PARSING... time to evaluate
-     bb.data.setVar('FILE', fn, data)
-+    conf_files = bb.data.getVar('PARSED_CONF', data) or ''
-+    bb.data.setVar('PARSED_CONF', "%s:%s" % (conf_files, abs_fn), data)
-+
-     statements.eval(data)
-     if oldfile:
-         bb.data.setVar('FILE', oldfile, data)
+Andrea pointed out a situation where he has seen the layer priority overriding 
+version selection, and I've been able to confirm it.
+
+Basically, if you have a recipe with a lower version in a layer with a higher 
+priority it selects the lower version. What's more after digging further I 
+found there were some rather anomalous interactions with the version logic and 
+BBCLASSEXTEND. Here's an example using Poky:
+
+1. Firstly, copy meta/recipes-support/curl to meta-yocto/recipes-support, then 
+rename the version in meta-yocto so that its version is 7.20.0. At this point 
+both meta/ and meta-yocto/ have the same layer priority of 5.
+
+2.  "bitbake -s | grep ^curl" reports:
+curl                                               :7.21.7-r0                          
+curl-native                                        :7.21.7-r0                          
+curl-nativesdk                                     :7.21.7-r0                          
+
+3. Now increase the layer priority in meta-yocto/conf/layer.conf to 6, and run  
+"bitbake -s | grep ^curl" again:
+curl                                               :7.20.0-r0                          
+curl-native                                        :7.21.7-r0                          
+curl-nativesdk                                     :7.21.7-r0                          
+
+So the latest version here is a lie, this is not the latest version available. 
+Furthermore it seems not to have affected the BBCLASSEXTENDs.
+
+4. Now add PREFERRED_VERSION_curl = "7.21.7" to conf/layer.conf and run 
+"bitbake -s | grep ^curl" again:
+curl                                 :7.20.0-r0                :7.21.7-r0
+curl-native                    :7.21.7-r0                          
+curl-nativesdk               :7.21.7-r0                          
+
+So it can clearly see the other recipe, it just doesn't acknowledge it until 
+you force the matter.
+
+This is all rather undesirable behaviour IMHO - even if the BBCLASSEXTEND and 
+reported "latest version available" issues were corrected, I think the policy 
+of "latest version wins unless DEFAULT_PREFERENCE or PREFERRED_VERSION says 
+otherwise" should not be affected by layer priority.
+
+Thoughts?
+
+Cheers,
+Paul
+
+(PS: this is not unique to Poky, Andrea and I first reproduced this with 
+Angstrom using bitbake master.)
+
 -- 
-1.7.6
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
 
