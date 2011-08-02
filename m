@@ -1,30 +1,38 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mail-pz0-f43.google.com ([209.85.210.43])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <mark.hatle@windriver.com>) id 1QoGS9-0004SY-0U
-	for bitbake-devel@lists.openembedded.org;
-	Tue, 02 Aug 2011 17:00:17 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id p72Ets1i018101
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 2 Aug 2011 07:55:55 -0700 (PDT)
-Received: from Macintosh-5.local (172.25.36.226) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Tue, 2 Aug 2011 07:55:54 -0700
-Message-ID: <4E380FF9.7090106@windriver.com>
-Date: Tue, 2 Aug 2011 09:55:53 -0500
-From: Mark Hatle <mark.hatle@windriver.com>
-Organization: Wind River Systems
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6;
-	rv:5.0) Gecko/20110624 Thunderbird/5.0
-MIME-Version: 1.0
-To: <bitbake-devel@lists.openembedded.org>
+	(envelope-from <raj.khem@gmail.com>)
+	id 1QoH36-0005E3-1v; Tue, 02 Aug 2011 17:38:28 +0200
+Received: by pzk1 with SMTP id 1so13454023pzk.16
+	for <multiple recipients>; Tue, 02 Aug 2011 08:34:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=references:in-reply-to:mime-version:content-transfer-encoding
+	:content-type:message-id:cc:x-mailer:from:subject:date:to;
+	bh=fao9qAe9ytPiequxomyPqWmDp4xPKvsOCnbKqWHD9sI=;
+	b=ajYkIiVZiDHtAHT9ex1wXsWIDLki9HI2qh1JYQWU1dYQbjPBm7FKivYQj2kjqT5dkh
+	uM/+amGC3lIIuPikwx4iiLICLXU7pyxeLO7mKqnkmcwWAkzRMtJl1Z4rjNDGrhRWyzx+
+	53t0CbCQLdR45iEURJ0WY6WbnlUBeHm4Tbn7s=
+Received: by 10.68.25.162 with SMTP id d2mr329565pbg.372.1312299245741;
+	Tue, 02 Aug 2011 08:34:05 -0700 (PDT)
+Received: from [192.168.1.81] (99-57-141-118.lightspeed.sntcca.sbcglobal.net
+	[99.57.141.118])
+	by mx.google.com with ESMTPS id d1sm6869346pbj.72.2011.08.02.08.34.03
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Tue, 02 Aug 2011 08:34:04 -0700 (PDT)
 References: <201108021226.34560.paul.eggleton@linux.intel.com>
+	<1312292735.2344.597.camel@rex>
 	<1312293167.4325.38.camel@phil-desktop>
 	<CABcZAN=rG0acoqcV6s-gNvvziM0ON97BzNwtZkESu+wz7vQO-g@mail.gmail.com>
-	<201108021521.38404.paul.eggleton@linux.intel.com>
-	<CABcZANmfd=HbE-wLQ6y-6s_DNYOhDQ7uYPuJ=Yebb6cpVpnykA@mail.gmail.com>
-In-Reply-To: <CABcZANmfd=HbE-wLQ6y-6s_DNYOhDQ7uYPuJ=Yebb6cpVpnykA@mail.gmail.com>
+In-Reply-To: <CABcZAN=rG0acoqcV6s-gNvvziM0ON97BzNwtZkESu+wz7vQO-g@mail.gmail.com>
+Mime-Version: 1.0 (iPad Mail 8J2)
+Message-Id: <A3E3935F-5D98-4208-A45F-DC409F1C97CF@gmail.com>
+X-Mailer: iPad Mail (8J2)
+From: Khem Raj <raj.khem@gmail.com>
+Date: Tue, 2 Aug 2011 08:35:12 -0700
+To: Chris Larson <clarson@kergoth.com>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>,
+	Patches and discussions about the oe-core layer
+	<openembedded-core@lists.openembedded.org>
 Subject: Re: [OE-core] Layer priorities influencing default version selection
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
@@ -37,44 +45,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 02 Aug 2011 15:00:17 -0000
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 02 Aug 2011 15:38:28 -0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-At Wind River, in our non bitbake based build system, the way layers work is
-based on ordering.
 
-The last layer listed has the highest priority.  So whatever is specified in
-that layer (lower or higher versions) wins.  All of the priority information is
-selected based on the equivalent of the order of entries in the BBLAYERS.
-However, unlike bitbake -- in the WR build system we can only have one version
-of a package available at any time.
 
-(There is a second level of ordering for configuration files.  For instance if
-you are looking for foo.conf, it will search the highest priority layer first
-and work it's way down.  If foo.conf includes itself, foo.conf, it will
-automatically search starting with the next lower priority layer.  If you
-include a differently named configuration file it starts back at the highest
-priority layer.  This is what allows a layer to provide snippets of
-configuration files. -- I'm not sure this is relevant to this conversation
-though... but I thought I'd point out a characteristic of the ordering.)
+On Aug 2, 2011, at 7:14 AM, Chris Larson <clarson@kergoth.com> wrote:
 
---Mark
+> On Tue, Aug 2, 2011 at 6:52 AM, Phil Blundell <philb@gnu.org> wrote:
+>> Actually, to some extent I consider it a bit of a misfeature that the
+>> layer priority is specified by the layer rather than by the user in
+>> bblayers.conf, since this makes it harder to vary the stack-up order
+>> without local hackery to the layer files.  For example, meta-oe
+>> currently sets itself to a higher priority than oe-core, but I've found
+>> that it generally seems to suit me better if meta-oe is actually the
+>> lower-priority layer.
+>=20
+> Agreed. It also means that the priority knowledge is split between
+> layer.conf and bblayers.conf today, as config/class priority is
+> determined by order of entries in BBLAYERS, whereas recipe priority is
+> determined by layer.conf.
 
-On 8/2/11 9:27 AM, Chris Larson wrote:
-> On Tue, Aug 2, 2011 at 7:21 AM, Paul Eggleton
-> <paul.eggleton@linux.intel.com> wrote:
->> On Tuesday 02 August 2011 15:14:41 Chris Larson wrote:
->>> as config/class priority is
->>> determined by order of entries in BBLAYERS, whereas recipe priority is
->>> determined by layer.conf.
->>
->> Is that a good thing though? At the moment I'm not convinced that it is.
-> 
-> I probably could have worded my reply better. I was pointing out the
-> fact that the order is determined in two places right now as being one
-> reason why I agreed with his statement that ordering determined by the
-> layer isn't ideal.
 
+In my opinion the layer priority for all kind of meta data should be consist=
+ent and selected using bblayers.conf=20
+
+
+> --=20
+> Christopher Larson
+> clarson at kergoth dot com
+> Founder - BitBake, OpenEmbedded, OpenZaurus
+> Maintainer - Tslib
+> Senior Software Engineer, Mentor Graphics
+>=20
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
 
 
