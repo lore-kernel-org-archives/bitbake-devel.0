@@ -1,25 +1,44 @@
-Received: from mail.pbcl.net ([88.198.119.4] helo=hetzner.pbcl.net)
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <philb@gnu.org>) id 1QoFkJ-0002zE-9R
+	(envelope-from <lianhao.lu@intel.com>) id 1QouBI-0002id-0z
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 02 Aug 2011 16:14:59 +0200
-Received: from cambridge.roku.com ([81.142.160.137] helo=[172.30.1.145])
-	by hetzner.pbcl.net with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:32)
-	(Exim 4.72) (envelope-from <philb@gnu.org>)
-	id 1QoFOp-0002SM-7U; Tue, 02 Aug 2011 15:52:47 +0200
-From: Phil Blundell <philb@gnu.org>
-To: Patches and discussions about the oe-core layer
-	<openembedded-core@lists.openembedded.org>
-Date: Tue, 02 Aug 2011 14:52:46 +0100
-In-Reply-To: <1312292735.2344.597.camel@rex>
-References: <201108021226.34560.paul.eggleton@linux.intel.com>
-	<1312292735.2344.597.camel@rex>
-X-Mailer: Evolution 3.0.2- 
-Message-ID: <1312293167.4325.38.camel@phil-desktop>
-Mime-Version: 1.0
-X-Mailman-Approved-At: Thu, 04 Aug 2011 09:38:37 +0200
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [OE-core] Layer priorities influencing default version selection
+	Thu, 04 Aug 2011 11:25:32 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 04 Aug 2011 02:20:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,315,1309762800"; d="scan'208";a="35037411"
+Received: from pgsmsx602.gar.corp.intel.com ([10.221.43.81])
+	by azsmga001.ch.intel.com with ESMTP; 04 Aug 2011 02:20:02 -0700
+Received: from pgsmsx103.gar.corp.intel.com (10.221.44.82) by
+	pgsmsx602.gar.corp.intel.com (10.221.43.81) with Microsoft SMTP Server
+	(TLS) id 8.2.255.0; Thu, 4 Aug 2011 17:19:19 +0800
+Received: from shsmsx601.ccr.corp.intel.com (10.239.4.112) by
+	PGSMSX103.gar.corp.intel.com (10.221.44.82) with Microsoft SMTP Server
+	(TLS) id 14.1.289.1; Thu, 4 Aug 2011 17:19:19 +0800
+Received: from shsmsx502.ccr.corp.intel.com ([10.239.4.96]) by
+	shsmsx601.ccr.corp.intel.com ([10.239.4.112]) with mapi; Thu, 4 Aug 2011
+	17:19:16 +0800
+From: "Lu, Lianhao" <lianhao.lu@intel.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Date: Thu, 4 Aug 2011 17:19:13 +0800
+Thread-Topic: when does ${XX}  in variable names get expanded?
+Thread-Index: AcxSh5Nf7jWXOjwbRlWzF/2wIOKQ7w==
+Message-ID: <C10D3FB0CD45994C8A51FEC1227CE22F2CE2E480D0@shsmsx502.ccr.corp.intel.com>
+Accept-Language: zh-CN, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-cr-hashedpuzzle: sCA= AUNg Ah+O BQr+ BoGh B9Ee CbzI EtSX EwKz FDJm GsHO
+	H6gm IUE0 I6yP JPgZ K0Y9; 1;
+	YgBpAHQAYgBhAGsAZQAtAGQAZQB2AGUAbABAAGwAaQBzAHQAcwAuAG8AcABlAG4AZQBtAGIAZQBkAGQAZQBkAC4AbwByAGcA;
+	Sosha1_v1; 7; {CBB00368-56E2-4050-97B5-FABEC8D40CD1};
+	bABpAGEAbgBoAGEAbwAuAGwAdQBAAGkAbgB0AGUAbAAuAGMAbwBtAA==; Thu,
+	04 Aug 2011 09:19:13 GMT;
+	dwBoAGUAbgAgAGQAbwBlAHMAIAAkAHsAWABYAH0AIAAgAGkAbgAgAHYAYQByAGkAYQBiAGwAZQAgAG4AYQBtAGUAcwAgAGcAZQB0ACAAZQB4AHAAYQBuAGQAZQBkAD8A
+x-cr-puzzleid: {CBB00368-56E2-4050-97B5-FABEC8D40CD1}
+acceptlanguage: zh-CN, en-US
+MIME-Version: 1.0
+Subject: when does ${XX} in variable names get expanded?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,38 +50,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 02 Aug 2011 14:14:59 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 04 Aug 2011 09:25:32 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2011-08-02 at 14:45 +0100, Richard Purdie wrote:
-> We could do with clearly documenting this in the bitbake manual. I
-> suspect users would expect the highest version to win and we probably
-> should change the behaviour but I'm open to other opinions.
+Hi guys,
 
-The original intent with BBFILE_COLLECTIONS was that the recipe from the
-highest-priority collection would win even if it was an older version.
-(The rationale for this was that the one in the higher priority
-collection was the most likely to have local customisations, and you
-wouldn't want those to suddenly be negated if a newer version popped up
-in some upstream collection.)
+For the following variable definition in bitbake,
 
-I suspect the same logic probably does apply to layers to some extent
-for the same reason.  If there is a situation where you are just trying
-to aggregate the recipes together from a bunch of layers and you just
-want the highest version from that set then my first reaction would be
-that the layers should probably all have the same priority.  
+VVV =3D "llu"
+A_${VVV} =3D "VVV"
+A_llu =3D "llu"
 
-Actually, to some extent I consider it a bit of a misfeature that the
-layer priority is specified by the layer rather than by the user in
-bblayers.conf, since this makes it harder to vary the stack-up order
-without local hackery to the layer files.  For example, meta-oe
-currently sets itself to a higher priority than oe-core, but I've found
-that it generally seems to suit me better if meta-oe is actually the
-lower-priority layer.
+B =3D "${@bb.data.getVar('A_llu', d, True)}"
+C :=3D "${@bb.data.getVar('A_llu', d, True)}"
 
-p.
+Why B is "VVV" and C is "llu" in final? I'm wondering when is the ${VVV} in=
+ the variable name of A_${VVV} expanded.
 
-
+Best Regards,
+-Lianhao Lu
 
 
