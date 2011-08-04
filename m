@@ -1,31 +1,30 @@
 Received: from [93.97.173.237] (helo=tim.rpsys.net)
 	by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1Qouce-00038H-Qw for bitbake-devel@lists.openembedded.org;
-	Thu, 04 Aug 2011 11:53:49 +0200
+	id 1Qoyh4-0002g6-KB for bitbake-devel@lists.openembedded.org;
+	Thu, 04 Aug 2011 16:14:38 +0200
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p749nNuf000606;
-	Thu, 4 Aug 2011 10:49:23 +0100
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p74EADXx002472;
+	Thu, 4 Aug 2011 15:10:13 +0100
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 30999-10; Thu,  4 Aug 2011 10:49:19 +0100 (BST)
+	id 01749-07; Thu,  4 Aug 2011 15:10:09 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p749nDqU000600
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p74EA6No002460
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Thu, 4 Aug 2011 10:49:15 +0100
+	Thu, 4 Aug 2011 15:10:06 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Lu, Lianhao" <lianhao.lu@intel.com>
-In-Reply-To: <C10D3FB0CD45994C8A51FEC1227CE22F2CE2E480D0@shsmsx502.ccr.corp.intel.com>
-References: <C10D3FB0CD45994C8A51FEC1227CE22F2CE2E480D0@shsmsx502.ccr.corp.intel.com>
-Date: Thu, 04 Aug 2011 10:48:53 +0100
-Message-ID: <1312451333.2344.723.camel@rex>
+To: Joshua Lock <josh@linux.intel.com>
+In-Reply-To: <cover.1312420894.git.josh@linux.intel.com>
+References: <cover.1312420894.git.josh@linux.intel.com>
+Date: Thu, 04 Aug 2011 15:09:46 +0100
+Message-ID: <1312466986.2344.745.camel@rex>
 Mime-Version: 1.0
 X-Mailer: Evolution 2.32.2 
 X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: when does ${XX} in variable names get expanded?
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 0/6] Bug fixes for hob
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,31 +36,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 04 Aug 2011 09:53:49 -0000
+X-List-Received-Date: Thu, 04 Aug 2011 14:14:38 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Thu, 2011-08-04 at 17:19 +0800, Lu, Lianhao wrote:
-> For the following variable definition in bitbake,
+On Wed, 2011-08-03 at 18:23 -0700, Joshua Lock wrote:
+> A fairly small series of bug fixes for the hob UI, please review.
 > 
-> VVV = "llu"
-> A_${VVV} = "VVV"
-> A_llu = "llu"
+> The following changes since commit 25ec13075855f7e321a9763682a8cd4ca09203cd:
 > 
-> B = "${@bb.data.getVar('A_llu', d, True)}"
-> C := "${@bb.data.getVar('A_llu', d, True)}"
+>   bb/ui/crumbs/runningbuild: emit signal when command fails with exit signal (2011-08-02 18:12:46 -0700)
 > 
-> Why B is "VVV" and C is "llu" in final? I'm wondering when is the ${VVV} in the variable name of A_${VVV} expanded.
+> are available in the git repository at:
+>   git://github.com/incandescant/bitbake hob
+>   https://github.com/incandescant/bitbake/tree/hob
+> 
+> Joshua Lock (6):
+>   bb/ui/hob: fix detection of whether GPLv3 is disabled
+>   bb/ui/crumbs/tasklistmodel: fix regex used for loading image recipes
+>   bb/ui/hob: prevent label on progress bar from changing rapidly when
+>     loading
+>   bb/ui/crumbs/hobeventhandler: use generic loading message once cache
+>     loaded
+>   bb/ui/hob: only connect to the changed signal of image_combo once
+>   bb/ui/hob: be clear that the image contents are an estimate
+> 
 
-During finalise() there is a call to d.expandKeys(). That call will
-cause A_${VVV} to overwrite A_llu. If you look at the variable before
-that you will get one value, if you look at it after that you will see
-the other.
-
-In your example above := is the immediate assignment/expansion operator,
-"immediate" being the key part so finalise() hasn't happened yet.
-
-Cheers,
+Merged to master, thanks.
 
 Richard
 
