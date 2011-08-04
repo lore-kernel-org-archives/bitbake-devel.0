@@ -1,44 +1,31 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from [93.97.173.237] (helo=tim.rpsys.net)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <lianhao.lu@intel.com>) id 1QouBI-0002id-0z
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 04 Aug 2011 11:25:32 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 04 Aug 2011 02:20:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,315,1309762800"; d="scan'208";a="35037411"
-Received: from pgsmsx602.gar.corp.intel.com ([10.221.43.81])
-	by azsmga001.ch.intel.com with ESMTP; 04 Aug 2011 02:20:02 -0700
-Received: from pgsmsx103.gar.corp.intel.com (10.221.44.82) by
-	pgsmsx602.gar.corp.intel.com (10.221.43.81) with Microsoft SMTP Server
-	(TLS) id 8.2.255.0; Thu, 4 Aug 2011 17:19:19 +0800
-Received: from shsmsx601.ccr.corp.intel.com (10.239.4.112) by
-	PGSMSX103.gar.corp.intel.com (10.221.44.82) with Microsoft SMTP Server
-	(TLS) id 14.1.289.1; Thu, 4 Aug 2011 17:19:19 +0800
-Received: from shsmsx502.ccr.corp.intel.com ([10.239.4.96]) by
-	shsmsx601.ccr.corp.intel.com ([10.239.4.112]) with mapi; Thu, 4 Aug 2011
-	17:19:16 +0800
-From: "Lu, Lianhao" <lianhao.lu@intel.com>
-To: "bitbake-devel@lists.openembedded.org"
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1Qouce-00038H-Qw for bitbake-devel@lists.openembedded.org;
+	Thu, 04 Aug 2011 11:53:49 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p749nNuf000606;
+	Thu, 4 Aug 2011 10:49:23 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 30999-10; Thu,  4 Aug 2011 10:49:19 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p749nDqU000600
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Thu, 4 Aug 2011 10:49:15 +0100
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: "Lu, Lianhao" <lianhao.lu@intel.com>
+In-Reply-To: <C10D3FB0CD45994C8A51FEC1227CE22F2CE2E480D0@shsmsx502.ccr.corp.intel.com>
+References: <C10D3FB0CD45994C8A51FEC1227CE22F2CE2E480D0@shsmsx502.ccr.corp.intel.com>
+Date: Thu, 04 Aug 2011 10:48:53 +0100
+Message-ID: <1312451333.2344.723.camel@rex>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.32.2 
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
-Date: Thu, 4 Aug 2011 17:19:13 +0800
-Thread-Topic: when does ${XX}  in variable names get expanded?
-Thread-Index: AcxSh5Nf7jWXOjwbRlWzF/2wIOKQ7w==
-Message-ID: <C10D3FB0CD45994C8A51FEC1227CE22F2CE2E480D0@shsmsx502.ccr.corp.intel.com>
-Accept-Language: zh-CN, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-cr-hashedpuzzle: sCA= AUNg Ah+O BQr+ BoGh B9Ee CbzI EtSX EwKz FDJm GsHO
-	H6gm IUE0 I6yP JPgZ K0Y9; 1;
-	YgBpAHQAYgBhAGsAZQAtAGQAZQB2AGUAbABAAGwAaQBzAHQAcwAuAG8AcABlAG4AZQBtAGIAZQBkAGQAZQBkAC4AbwByAGcA;
-	Sosha1_v1; 7; {CBB00368-56E2-4050-97B5-FABEC8D40CD1};
-	bABpAGEAbgBoAGEAbwAuAGwAdQBAAGkAbgB0AGUAbAAuAGMAbwBtAA==; Thu,
-	04 Aug 2011 09:19:13 GMT;
-	dwBoAGUAbgAgAGQAbwBlAHMAIAAkAHsAWABYAH0AIAAgAGkAbgAgAHYAYQByAGkAYQBiAGwAZQAgAG4AYQBtAGUAcwAgAGcAZQB0ACAAZQB4AHAAYQBuAGQAZQBkAD8A
-x-cr-puzzleid: {CBB00368-56E2-4050-97B5-FABEC8D40CD1}
-acceptlanguage: zh-CN, en-US
-MIME-Version: 1.0
-Subject: when does ${XX} in variable names get expanded?
+Subject: Re: when does ${XX} in variable names get expanded?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -50,26 +37,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 04 Aug 2011 09:25:32 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Thu, 04 Aug 2011 09:53:49 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hi guys,
+On Thu, 2011-08-04 at 17:19 +0800, Lu, Lianhao wrote:
+> For the following variable definition in bitbake,
+> 
+> VVV = "llu"
+> A_${VVV} = "VVV"
+> A_llu = "llu"
+> 
+> B = "${@bb.data.getVar('A_llu', d, True)}"
+> C := "${@bb.data.getVar('A_llu', d, True)}"
+> 
+> Why B is "VVV" and C is "llu" in final? I'm wondering when is the ${VVV} in the variable name of A_${VVV} expanded.
 
-For the following variable definition in bitbake,
+During finalise() there is a call to d.expandKeys(). That call will
+cause A_${VVV} to overwrite A_llu. If you look at the variable before
+that you will get one value, if you look at it after that you will see
+the other.
 
-VVV =3D "llu"
-A_${VVV} =3D "VVV"
-A_llu =3D "llu"
+In your example above := is the immediate assignment/expansion operator,
+"immediate" being the key part so finalise() hasn't happened yet.
 
-B =3D "${@bb.data.getVar('A_llu', d, True)}"
-C :=3D "${@bb.data.getVar('A_llu', d, True)}"
+Cheers,
 
-Why B is "VVV" and C is "llu" in final? I'm wondering when is the ${VVV} in=
- the variable name of A_${VVV} expanded.
+Richard
 
-Best Regards,
--Lianhao Lu
 
 
