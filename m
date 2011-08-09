@@ -1,24 +1,21 @@
-Received: from mga14.intel.com ([143.182.124.37])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1Qqb2W-0003xC-0y
+	(envelope-from <ke.yu@intel.com>) id 1QqiNa-0007on-Sz
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 09 Aug 2011 03:23:28 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga102.ch.intel.com with ESMTP; 08 Aug 2011 18:18:43 -0700
+	Tue, 09 Aug 2011 11:13:43 +0200
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 09 Aug 2011 02:09:13 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,340,1309762800"; d="scan'208";a="36498565"
-Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.14.247])
-	by azsmga001.ch.intel.com with ESMTP; 08 Aug 2011 18:18:42 -0700
-From: Joshua Lock <josh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon,  8 Aug 2011 18:18:31 -0700
-Message-Id: <8a2ba309cf990ecb239a188f0e059dac8e55661f.1312852599.git.josh@linux.intel.com>
-X-Mailer: git-send-email 1.7.6
-In-Reply-To: <cover.1312852599.git.josh@linux.intel.com>
-References: <cover.1312852599.git.josh@linux.intel.com>
-In-Reply-To: <cover.1312852599.git.josh@linux.intel.com>
-References: <cover.1312852599.git.josh@linux.intel.com>
-Subject: [PATCH 4/4] bb/ui/hob: Restore toolchain relevant preference settings for build
+X-IronPort-AV: E=Sophos;i="4.67,342,1309762800"; d="scan'208";a="39572011"
+Received: from kyu3-dev32.bj.intel.com (HELO localhost) ([10.238.153.157])
+	by fmsmga001.fm.intel.com with ESMTP; 09 Aug 2011 02:09:12 -0700
+From: Yu Ke <ke.yu@intel.com>
+To: bitbake-devel@lists.openembedded.org,
+	richard.purdie@linuxfoundation.org
+Date: Tue,  9 Aug 2011 17:16:59 +0800
+Message-Id: <cover.1312881309.git.ke.yu@intel.com>
+X-Mailer: git-send-email 1.7.0.4
+Subject: [PATCH 0/1] fetcher2 debug message fix for Yocto bug 1256
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,34 +27,22 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 09 Aug 2011 01:23:28 -0000
+X-List-Received-Date: Tue, 09 Aug 2011 09:13:43 -0000
 
-From: Jessica Zhang <jessica.zhang@intel.com>
+The following changes since commit 5cacdc4f1641eda1b5707c96f7c40924a9db6174:
+  Joshua Lock (1):
+        bb/cooker: mark parsed conf files as potential cache invalidators
 
-Fixes [#YOCTO 1354]
+are available in the git repository at:
 
-Signed-off-by: Jessica Zhang <jessica.zhang@intel.com>
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
----
- lib/bb/ui/hob.py |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+  git://git.pokylinux.org/poky-contrib kyu3/bug-1256
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=kyu3/bug-1256
 
-diff --git a/lib/bb/ui/hob.py b/lib/bb/ui/hob.py
-index e042765..b0a98cb 100644
---- a/lib/bb/ui/hob.py
-+++ b/lib/bb/ui/hob.py
-@@ -980,7 +980,9 @@ def main (server, eventHandler):
-         gplv3disabled = True
- 
-     build_toolchain = bool(server.runCommand(["getVariable", "HOB_BUILD_TOOLCHAIN"]))
-+    handler.toggle_toolchain(build_toolchain)
-     build_headers = bool(server.runCommand(["getVariable", "HOB_BUILD_TOOLCHAIN_HEADERS"]))
-+    handler.toggle_toolchain_headers(build_headers)
- 
-     prefs = HobPrefs(configurator, handler, sdk_mach, distro, pclass, cpu_cnt,
-                      pmake, bbthread, selected_image_types, all_image_types,
--- 
-1.7.6
+Yu Ke (1):
+  fetcher2: show warning message when checksum is mismatch
+
+ lib/bb/fetch2/__init__.py |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
 
 
