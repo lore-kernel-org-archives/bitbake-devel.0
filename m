@@ -1,25 +1,20 @@
-Received: from vms173013pub.verizon.net ([206.46.173.13])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <denis@denix.org>) id 1QrFs2-0007aj-1k
+	(envelope-from <josh@linux.intel.com>) id 1QrK0Y-0004cS-Vi
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 10 Aug 2011 22:59:22 +0200
-Received: from gandalf.denix.org ([unknown] [108.18.140.4])
-	by vms173013.mailsrvcs.net
-	(Sun Java(tm) System Messaging Server 7u2-7.02 32bit (built Apr 16
-	2009)) with ESMTPA id <0LPQ00FUD9YHRN20@vms173013.mailsrvcs.net> for
-	bitbake-devel@lists.openembedded.org;
-	Wed, 10 Aug 2011 14:54:31 -0500 (CDT)
-Received: by gandalf.denix.org (Postfix, from userid 1000)	id 44A8A14AF5D; Wed,
-	10 Aug 2011 15:54:17 -0400 (EDT)
-Date: Wed, 10 Aug 2011 15:54:17 -0400
-From: Denys Dmytriyenko <denis@denix.org>
+	Thu, 11 Aug 2011 03:24:27 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 10 Aug 2011 18:19:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="37334307"
+Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.14.222])
+	by orsmga001.jf.intel.com with ESMTP; 10 Aug 2011 18:19:54 -0700
+From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Message-id: <20110810195417.GC18490@denix.org>
-References: <1312989126.14274.386.camel@rex> <4E42A174.1010907@windriver.com>
-MIME-version: 1.0
-In-reply-to: <4E42A174.1010907@windriver.com>
-User-Agent: Mutt/1.5.16 (2007-06-09)
-Subject: Re: [PATCH] bitbake/usermanual: Update to be more	in sync with bitbake codebase
+Date: Wed, 10 Aug 2011 18:19:44 -0700
+Message-Id: <cover.1313025215.git.josh@linux.intel.com>
+X-Mailer: git-send-email 1.7.6
+Subject: [PATCH 0/4] Bug fixing and code clarity
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,62 +26,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 10 Aug 2011 20:59:22 -0000
-Content-type: text/plain; charset=us-ascii
-Content-disposition: inline
+X-List-Received-Date: Thu, 11 Aug 2011 01:24:27 -0000
 
-On Wed, Aug 10, 2011 at 10:19:16AM -0500, Mark Hatle wrote:
-> Found a typo...
-> 
-> On 8/10/11 10:12 AM, Richard Purdie wrote:
-> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > ---
-> > @@ -53,10 +54,18 @@ between multiple projects using BitBake for their
-> >  builds.</para></listitem>
-> >  		<listitem><para>Should provide an inheritance mechanism to
-> >  share common metadata between many packages.</para></listitem>
-> > -                <listitem><para>Et cetera...</para></listitem>
-> >              </itemizedlist>
-> >          </para>
-> > -        <para>BitBake satisfies all these and many more.  Flexibility and power have always been the priorities.  It is highly extensible, supporting embedded Python code and execution of any arbitrary tasks.</para>
-> > +        <para>Over time it has become apparent that some further requirements were necessary:
-> > +            <itemizedlist>
-> > +                <listitem><para>Handle variants of a base recipe (native, sdk, mutliblib).</para></listitem>
-> 
-> "multilib"  ;)
+The following series addresses some thinko/typo's I'd introduced to hob, by
+using variable names which are too similar, as well as adding some changes
+to increase clarity in various places.
 
-I think Richard did it on purpose - it's much funnier with multiblib! :)
+Regards,
 
-Also, there was a typo in -e/-b options patch - expection...
+Joshua
 
-> > +                <listitem><para>Able to split metadata into layers and allow layers to override each other.</para></listitem>
-> > +                <listitem><para>Allow representation of a given set of input variables to a task as a checksum.</para></listitem>
-> > +                <listitem><para>based on that checksum, allow acceleration of builds with prebuilt components.</para></listitem>
-> > +            </itemizedlist>
-> > +        </para>
-> > +
-> > +        <para>BitBake satisfies all the original requirements and many more with extensions being made to the basic functionality to reflect the additionl requirements.  Flexibility and power have always been the priorities.  It is highly extensible, supporting embedded Python code and execution of any arbitrary tasks.</para>
-> >          </section>
-> >      </chapter>
-> >      <chapter>
-> 
-> > @@ -299,13 +366,35 @@ SRC_URI_append_1.0.7+ = "file://some_patch_which_the_new_versions_need.patch;pat
-> >          <title>File download support</title>
-> >          <section>
-> >              <title>Overview</title>
-> > -            <para>BitBake provides support to download files this procedure is called fetching. The SRC_URI is normally used to tell BitBake which files to fetch. The next sections will describe the available fetchers and their options. Each fetcher honors a set of variables and per URI parameters separated by a <quote>;</quote> consisting of a key and a value. The semantics of the variables and parameters are defined by the fetcher. BitBake tries to have consistent semantics between the different fetchers.
-> > +            <para>BitBake provides support to download files this procedure is called fetching and it handled by the fetch and fetch2 modules. At this point the original fetch code is considered to be replaced by fetch2 and this manual only related to the fetch2 codebase.</para>
-> > +
-> > +            <para>The SRC_URI is normally used to tell BitBake which files to fetch. The next sections will describe the available fetchers and their options. Each fetcher honors a set of variables and per URI parameters separated by a <quote>;</quote> consisting of a key and a value. The semantics of the variables and parameters are defined by the fetcher. BitBake tries to have consistent semantics between the different fetchers.
-> >              </para>
-> > +
-> > +            <para>The overall fetch process is that first, fetches are attempted from PREMIRRORS. If those don't work, the original SRC_URI is attempted and if that fails, bitbake will fall back to MIRRORS. Cross urls are supported, so its possible to mirror a git repostory on an http server as a tarball for example. Some example commonly used mirror defintions are:</para>
-> 
-> Should it be "BitBake" instead of bitbake?
+The following changes since commit 705d14d1e1108e0544c7eab827f1242f0839add9:
 
-I always thought BitBake was the project's name and bitbake was binary name...
+  bb/cooker: only emit ConfigFilePathFound for files which were parsed (2011-08-10 13:38:11 +0100)
+
+are available in the git repository at:
+  git://github.com/incandescant/bitbake hob
+  https://github.com/incandescant/bitbake/tree/hob
+
+Joshua Lock (4):
+  bb/ui/crumbs/tasklistmodel: fix some typos and add comments to mark()
+  bb/ui/crumbs/tasklistmodel: correctly uniquify dependency list
+  bb/ui/crumbs/tasklistmodel: don't include an item in its own depends
+  bb/cache: rename confusing variable
+
+ lib/bb/cache.py                   |    6 +++---
+ lib/bb/ui/crumbs/tasklistmodel.py |   28 ++++++++++++++++++++--------
+ 2 files changed, 23 insertions(+), 11 deletions(-)
 
 -- 
-Denys
+1.7.6
+
 
 
