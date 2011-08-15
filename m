@@ -1,30 +1,30 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1Qssee-0007Aw-U5 for bitbake-devel@lists.openembedded.org;
-	Mon, 15 Aug 2011 10:36:17 +0200
+	id 1Qssga-0007Di-4z for bitbake-devel@lists.openembedded.org;
+	Mon, 15 Aug 2011 10:38:16 +0200
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p7F8VdFB015110;
-	Mon, 15 Aug 2011 09:31:39 +0100
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p7F8XdCX015119;
+	Mon, 15 Aug 2011 09:33:39 +0100
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 15017-01; Mon, 15 Aug 2011 09:31:35 +0100 (BST)
+	id 14922-03; Mon, 15 Aug 2011 09:33:35 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p7F8VY0u015093
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p7F8XWAB015113
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Mon, 15 Aug 2011 09:31:34 +0100
+	Mon, 15 Aug 2011 09:33:33 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1313165343.git.paul.eggleton@linux.intel.com>
-References: <cover.1313165343.git.paul.eggleton@linux.intel.com>
-Date: Mon, 15 Aug 2011 09:31:31 +0100
-Message-ID: <1313397091.14274.542.camel@rex>
+To: Joshua Lock <josh@linux.intel.com>
+In-Reply-To: <cover.1313197700.git.josh@linux.intel.com>
+References: <cover.1313197700.git.josh@linux.intel.com>
+Date: Mon, 15 Aug 2011 09:33:30 +0100
+Message-ID: <1313397210.14274.543.camel@rex>
 Mime-Version: 1.0
 X-Mailer: Evolution 2.32.2 
 X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/4] bitbake-layers minor improvements
+Subject: Re: [PATCH 0/5] Switch from recipe-level to package-level data in hob
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,28 +36,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 15 Aug 2011 08:36:17 -0000
+X-List-Received-Date: Mon, 15 Aug 2011 08:38:16 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Fri, 2011-08-12 at 17:13 +0100, Paul Eggleton wrote:
-> Several improvements to the help and show_layers function in
-> bitbake-layers.
+On Fri, 2011-08-12 at 18:10 -0700, Joshua Lock wrote:
+> We currently store recipe-level data in the tasklistmodel (include the
+> contents of foo recipe) whereas in reality we're likely want to do
+> package-level operations, as required by EXTRA_IMAGE_INSTALL.
 > 
-> The changes are available (against Poky, but apply cleanly against bitbake
-> master with -p2) at:
->   git://git.pokylinux.org/poky-contrib paule/bitbake-layers-3
->   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=paule/bitbake-layers-3
+> This series enables package-level data in the model and optimises a few
+> methods to cope with the increased model size.
 > 
-> Paul Eggleton (4):
->   bitbake-layers: improve default command help
->   bitbake-layers: show help with no command specified
->   bitbake-layers: use logger.plain instead of info
->   bitbake-layers: extend show_layers
+> Regards,
+> Joshua
+> 
+> The following changes since commit b3ad7acebfad3063c3364f4492f53b25bf53cf81:
+> 
+>   lib/bb/ui/crumbs/hobprefs: fix erroneous save/reparse (2011-08-12 17:48:13 +0100)
+> 
+> are available in the git repository at:
+>   git://github.com/incandescant/bitbake hob
+>   https://github.com/incandescant/bitbake/tree/hob
+> 
+> Joshua Lock (5):
+>   bb/crumbs/tasklistmodel: filter nativesdk packages out of views
+>   bb/ui/crumbs/tasklistmodel: include package level information
+>   bb/ui/crumbs/tasklistmodel: optimise find_path_for_item
+>   bb/ui/crumbs/tasklistmodel: make package_model_filter a little safer
+>   bb/ui/crumbs/tasklistmodel: simplify conditional in include_item
 
-Merged to master, thanks (with the log change issue handled).
-
-Cheers,
+Merged to master, thanks.
 
 Richard
 
