@@ -1,24 +1,30 @@
-Received: from mga14.intel.com ([143.182.124.37])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1Qs2pS-0000c3-7n
-	for bitbake-devel@lists.openembedded.org;
-	Sat, 13 Aug 2011 03:15:58 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga102.ch.intel.com with ESMTP; 12 Aug 2011 18:11:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,365,1309762800"; d="scan'208";a="38018971"
-Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.15.3])
-	by azsmga001.ch.intel.com with ESMTP; 12 Aug 2011 18:11:04 -0700
-From: Joshua Lock <josh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 12 Aug 2011 18:10:55 -0700
-Message-Id: <f69b184998c7ee6a462fc0c35e3aed9328ca885d.1313197700.git.josh@linux.intel.com>
-X-Mailer: git-send-email 1.7.6
-In-Reply-To: <cover.1313197700.git.josh@linux.intel.com>
-References: <cover.1313197700.git.josh@linux.intel.com>
-In-Reply-To: <cover.1313197700.git.josh@linux.intel.com>
-References: <cover.1313197700.git.josh@linux.intel.com>
-Subject: [PATCH 5/5] bb/ui/crumbs/tasklistmodel: simplify conditional in include_item
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1QssMG-0006qr-Mj for bitbake-devel@lists.openembedded.org;
+	Mon, 15 Aug 2011 10:17:16 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p7F8Ccu6015014;
+	Mon, 15 Aug 2011 09:12:38 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 14300-04; Mon, 15 Aug 2011 09:12:34 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p7F8CRUj014994
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Mon, 15 Aug 2011 09:12:29 +0100
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Denys Dmytriyenko <denis@denix.org>
+In-Reply-To: <1313179034-23154-1-git-send-email-denis@denix.org>
+References: <1313179034-23154-1-git-send-email-denis@denix.org>
+Date: Mon, 15 Aug 2011 09:12:24 +0100
+Message-ID: <1313395944.14274.541.camel@rex>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.32.2 
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org, Denys Dmytriyenko <denys@ti.com>
+Subject: Re: [PATCH] lib/bb/providers: make "checking PREFERRED_PROVIDER_%s" a debug message
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,36 +36,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 13 Aug 2011 01:15:58 -0000
+X-List-Received-Date: Mon, 15 Aug 2011 08:17:17 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-No need to check if the name ends with -native or -cross as path will be
-None in this instance.
+On Fri, 2011-08-12 at 15:57 -0400, Denys Dmytriyenko wrote:
+> From: Denys Dmytriyenko <denys@ti.com>
+> 
+> In verbose mode there are hundreds of these "checking PREFERRED_PROVIDER_%s"
+> messages, cluttering the output and obscuring the more important resulting
+> "selecting %s to satisfy runtime %s due to %s" messages. Individual "checking"
+> lines are more suited for debug mode, similar to "sorted providers for %s
+> are: %s", hence convert logger.verbose() to logger.debug().
+> 
+> Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+> ---
+>  lib/bb/providers.py |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-) 
 
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
----
- lib/bb/ui/crumbs/tasklistmodel.py |    7 ++-----
- 1 files changed, 2 insertions(+), 5 deletions(-)
+Merged to master, thanks.
 
-diff --git a/lib/bb/ui/crumbs/tasklistmodel.py b/lib/bb/ui/crumbs/tasklistmodel.py
-index 4da3e1e..203b628 100644
---- a/lib/bb/ui/crumbs/tasklistmodel.py
-+++ b/lib/bb/ui/crumbs/tasklistmodel.py
-@@ -457,11 +457,8 @@ class TaskListModel(gtk.ListStore):
-                 # resultant image, so filter cross and native recipes
-                 dep_included = self.contents_includes_name(dep)
-                 path = self.find_path_for_item(dep)
--                if not dep_included and not dep.endswith("-native") and not dep.endswith("-cross"):
--                    if path:
--                        self.include_item(path, name, image_contents)
--                    else:
--                        pass
-+                if not dep_included and path:
-+                    self.include_item(path, name, image_contents)
-                 # Set brought in by for any no longer orphan packages
-                 elif dep_included and path:
-                     if not self[path][self.COL_BINB]:
--- 
-1.7.6
+Richard
 
 
 
