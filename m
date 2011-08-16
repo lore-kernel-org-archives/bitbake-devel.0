@@ -1,30 +1,26 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1Qssq6-0007eQ-EW for bitbake-devel@lists.openembedded.org;
-	Mon, 15 Aug 2011 10:48:06 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p7F8hPLp015173;
-	Mon, 15 Aug 2011 09:43:25 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 14922-04; Mon, 15 Aug 2011 09:43:21 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p7F8hJGL015167
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Mon, 15 Aug 2011 09:43:19 +0100
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: James Limbouris <james.limbouris@gmail.com>
-In-Reply-To: <CAJzOQw3V_tsUh1CW7JDTswYkcvrUPGHfd6vhHQnd3Lrp1enJOw@mail.gmail.com>
-References: <CAJzOQw3V_tsUh1CW7JDTswYkcvrUPGHfd6vhHQnd3Lrp1enJOw@mail.gmail.com>
-Date: Mon, 15 Aug 2011 09:43:16 +0100
-Message-ID: <1313397796.14274.546.camel@rex>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.32.2 
-X-Virus-Scanned: amavisd-new at rpsys.net
+Received: from mail.windriver.com ([147.11.1.11])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <Liezhi.Yang@windriver.com>) id 1QtF4G-0001Zj-Cu
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 16 Aug 2011 10:32:12 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id p7G8R3ik026737
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Tue, 16 Aug 2011 01:27:03 -0700 (PDT)
+Received: from [128.224.162.219] (128.224.162.219) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
+	Tue, 16 Aug 2011 01:27:03 -0700
+Message-ID: <4E4A29D5.4000801@windriver.com>
+Date: Tue, 16 Aug 2011 16:27:01 +0800
+From: Robert Yang <liezhi.yang@windriver.com>
+User-Agent: Mozilla/5.0 (X11; U; Linux i686; en-US;
+	rv:1.9.2.18) Gecko/20110617 Lightning/1.0b2 Thunderbird/3.1.11
+MIME-Version: 1.0
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <4E40FDFD.3060809@windriver.com> <1313090662.14274.466.camel@rex>
+In-Reply-To: <1313090662.14274.466.camel@rex>
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: Conditional assignment broken
+Subject: Re: About bitbake-runtask
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,37 +32,55 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 15 Aug 2011 08:48:06 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Tue, 16 Aug 2011 08:32:12 -0000
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi James,
+Hi experts,
 
-On Sat, 2011-08-13 at 06:50 +0800, James Limbouris wrote:
->  Commit 21c21fcc5871e81d8d497b6baed605cdd74c4571 breaks conditional assignment
->  in all conf files. Previously, the environment was copied from a
-> cleaned up os environment.
->  After the commit, a pristine environment is available in
-> data['_data'], and will be copied to
->  data[] on conditional assignment, defying BB_ENV_EXTRAWHITE.
-> Variables not conditionally
->  assigned will still be available from data['_data'], also in defiance
-> of BB_ENV_EXTRAWHITE.
-> 
->  To verify, simply:
-> 
->  export RANDOMENV=42
->  bitbake -e | grep RANDOMENV
+I'm trying to fix it, but it seems it's not easy for me to finish it
+by Aug. 24th, it would be great if anyone can help me.
 
-Thanks for finding this. Is this related to the pseudo issue you
-mentioned on the OE-Core list? I'm guessing this would explain that.
+The bug is:
 
-I've merged Joshua's fix into master so hopefully we've got the
-environment issues fixed at least.
+Bug 1229 - bitbake-runtask doesn't work in both 1.0.1 and 1.1
 
-Cheers,
+Thank you very much!
 
-Richard
+// Robert
 
+On 08/12/2011 03:24 AM, Richard Purdie wrote:
+> On Tue, 2011-08-09 at 17:29 +0800, Robert Yang wrote:
+>> Hi Richard,
+>>
+>> The bitbake-runtask doesn't work currently, it seems that we have decommissioned it:
+>>
+>> commit 1f3e313fd5cc5ae8ea838bf8fcdedace3cb72584
+>> Author: Richard Purdie<rpurdie@linux.intel.com>
+>> Date:   Wed Dec 8 00:08:04 2010 +0000
+>>
+>>       bitbake Revert bitbake exec() and go back to fork() for performace wins
+>> (first draft)
+>>
+>> But it is still in bitbake/bin/bitbake-runtask. There is a bug for tracking
+>> this, what shall we do for it? Remove the bitbake-runtask or fix it and make
+>> it work?
+>>
+>> Bug 1229 - bitbake-runtask doesn't work in both 1.0.1 and 1.1
+>
+> Since I know that script has user and a valid use case we need to:
+>
+> a) Fix this to work after the fork() changes
+> b) Include it in bitbake upstream
+>
+> b) never happened due to a).
+>
+> Cheers,
+>
+> Richard
+>
+>
+>
+>
 
 
