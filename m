@@ -1,24 +1,24 @@
 Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1QuDeG-0005CB-1K
+	(envelope-from <josh@linux.intel.com>) id 1QuDeG-0005Bu-4D
 	for bitbake-devel@lists.openembedded.org;
 	Fri, 19 Aug 2011 03:13:24 +0200
 Received: from azsmga001.ch.intel.com ([10.2.17.19])
 	by azsmga102.ch.intel.com with ESMTP; 18 Aug 2011 18:08:40 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.68,248,1312182000"; d="scan'208";a="40058939"
+X-IronPort-AV: E=Sophos;i="4.68,248,1312182000"; d="scan'208";a="40058942"
 Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.14.250])
 	by azsmga001.ch.intel.com with ESMTP; 18 Aug 2011 18:08:40 -0700
 From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 18 Aug 2011 18:08:21 -0700
-Message-Id: <6ac94ffba9cd7dcec74a64b9cc0e66ce924e364d.1313715804.git.josh@linux.intel.com>
+Date: Thu, 18 Aug 2011 18:08:22 -0700
+Message-Id: <3d78e62d03cb920d1cb6fe8d666a79e6e2e2ad6a.1313715804.git.josh@linux.intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <cover.1313715804.git.josh@linux.intel.com>
 References: <cover.1313715804.git.josh@linux.intel.com>
 In-Reply-To: <cover.1313715804.git.josh@linux.intel.com>
 References: <cover.1313715804.git.josh@linux.intel.com>
-Subject: [PATCH 07/11] bb/ui/crumbs/tasklistmodel: track the PN for each entry in the model
+Subject: [PATCH 08/11] bb/ui/hob: fix package only build
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,68 +32,38 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 19 Aug 2011 01:13:24 -0000
 
-Now that we've switched to packages in the model, rather than PN, it makes
-sense to add an extra field to store the PN of the package.
+Use the models new get_selected_pn method to return a list of PN's for the
+selected items and pass that for a package only build, rather than passing
+a list of package names (which buildTargets can't handle).
 
-This patch includes a convenience method to retrieve a list of selected PN's.
+Fixes [YOCTO #1385]
 
 Signed-off-by: Joshua Lock <josh@linux.intel.com>
 ---
- lib/bb/ui/crumbs/tasklistmodel.py |   20 ++++++++++++++++++--
- 1 files changed, 18 insertions(+), 2 deletions(-)
+ lib/bb/ui/hob.py |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
 
-diff --git a/lib/bb/ui/crumbs/tasklistmodel.py b/lib/bb/ui/crumbs/tasklistmodel.py
-index d2f49d1..3921581 100644
---- a/lib/bb/ui/crumbs/tasklistmodel.py
-+++ b/lib/bb/ui/crumbs/tasklistmodel.py
-@@ -89,7 +89,7 @@ class TaskListModel(gtk.ListStore):
-     providing convenience functions to access gtk.TreeModel subclasses which
-     provide filtered views of the data.
-     """
--    (COL_NAME, COL_DESC, COL_LIC, COL_GROUP, COL_DEPS, COL_BINB, COL_TYPE, COL_INC, COL_IMG, COL_PATH) = range(10)
-+    (COL_NAME, COL_DESC, COL_LIC, COL_GROUP, COL_DEPS, COL_BINB, COL_TYPE, COL_INC, COL_IMG, COL_PATH, COL_PN) = range(11)
+diff --git a/lib/bb/ui/hob.py b/lib/bb/ui/hob.py
+index 0230dda..e02f48c 100644
+--- a/lib/bb/ui/hob.py
++++ b/lib/bb/ui/hob.py
+@@ -174,6 +174,7 @@ class MainWindow (gtk.Window):
+             self.toggle_package(path, model, image=True)
+             if len(userp):
+                 self.model.set_selected_packages(userp)
++            self.selected_image = model[path][self.model.COL_NAME]
  
-     __gsignals__ = {
-         "tasklist-populated" : (gobject.SIGNAL_RUN_LAST,
-@@ -122,6 +122,7 @@ class TaskListModel(gtk.ListStore):
-                                 gobject.TYPE_STRING,
-                                 gobject.TYPE_BOOLEAN,
-                                 gobject.TYPE_BOOLEAN,
-+                                gobject.TYPE_STRING,
-                                 gobject.TYPE_STRING)
+     def reload_triggered_cb(self, handler, image, packages):
+         if image:
+@@ -451,7 +452,7 @@ class MainWindow (gtk.Window):
  
-     """
-@@ -265,7 +266,8 @@ class TaskListModel(gtk.ListStore):
-                          self.COL_LIC, lic, self.COL_GROUP, group,
-                          self.COL_DEPS, " ".join(packages[p]), self.COL_BINB, "",
-                          self.COL_TYPE, atype, self.COL_INC, False,
--                         self.COL_IMG, False, self.COL_PATH, filename)
-+                         self.COL_IMG, False, self.COL_PATH, filename,
-+                         self.COL_PN, item)
+             self.handler.build_image(image_name, self.configurator)
+         else:
+-            self.handler.build_packages(rep.allpkgs.split(" "))
++            self.handler.build_packages(self.model.get_selected_pn())
  
- 	self.emit("tasklist-populated")
+         self.nb.set_current_page(1)
  
-@@ -527,6 +529,20 @@ class TaskListModel(gtk.ListStore):
-             it = self.contents.iter_next(it)
-         return userpkgs, allpkgs
- 
-+    """
-+    Return a squished (uniquified) list of the PN's of all selected items
-+    """
-+    def get_selected_pn(self):
-+        pns = []
-+
-+        it = self.contents.get_iter_first()
-+        while it:
-+            if self.contents.get_value(it, self.COL_BINB):
-+                pns.append(self.contents.get_value(it, self.COL_PN))
-+            it = self.contents.iter_next(it)
-+
-+        return self.squish(pns)
-+
-     def image_contents_removed(self):
-         it = self.get_iter_first()
-         while it:
 -- 
 1.7.6
 
