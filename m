@@ -1,30 +1,22 @@
-Received: from astoria.ccjclearline.com ([64.235.106.9])
+Received: from gandharva.secretlabs.de ([78.46.147.237])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <rpjday@crashcourse.ca>) id 1QuTVN-000453-D8
+	(envelope-from <holger+bitbake@freyther.de>) id 1QundR-0008ET-5c
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 19 Aug 2011 20:09:17 +0200
-Received: from [216.123.155.199] (helo=crashcourse.ca)
-	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.69) (envelope-from <rpjday@crashcourse.ca>)
-	id 1QuSbr-0006GN-OU for bitbake-devel@lists.openembedded.org;
-	Fri, 19 Aug 2011 13:11:55 -0400
-Date: Fri, 19 Aug 2011 13:11:48 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@localhost6.localdomain6
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Message-ID: <alpine.DEB.2.02.1108191305430.5421@localhost6.localdomain6>
-User-Agent: Alpine 2.02 (DEB 1266 2009-07-14)
+	Sat, 20 Aug 2011 17:38:57 +0200
+Received: from [192.168.0.101] (91-64-80-26-dynip.superkabel.de [91.64.80.26])
+	by gandharva.secretlabs.de (Postfix) with ESMTPSA id DB1331B10C11
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 20 Aug 2011 15:25:55 +0000 (UTC)
+Message-ID: <4E4FD267.6050304@freyther.de>
+Date: Sat, 20 Aug 2011 17:27:35 +0200
+From: Holger Freyther <holger+bitbake@freyther.de>
+User-Agent: Mozilla/5.0 (X11; U; Linux i686; en-US;
+	rv:1.9.2.18) Gecko/20110617 Lightning/1.0b2 Thunderbird/3.1.11
 MIME-Version: 1.0
-X-AntiAbuse: This header was added to track abuse,
-	please include it with any abuse report
-X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Subject: docs on git fetcher don't match actual code
+To: bitbake-devel@lists.openembedded.org
+References: <alpine.DEB.2.02.1108191305430.5421@localhost6.localdomain6>
+In-Reply-To: <alpine.DEB.2.02.1108191305430.5421@localhost6.localdomain6>
+Subject: Re: docs on git fetcher don't match actual code
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,52 +28,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 19 Aug 2011 18:09:17 -0000
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323328-790297736-1313773915=:5421"
+X-List-Received-Date: Sat, 20 Aug 2011 15:38:57 -0000
+Content-Type: text/plain; charset=ISO-8859-7
+Content-Transfer-Encoding: 7bit
 
---8323328-790297736-1313773915=:5421
-Content-Type: TEXT/PLAIN; charset=ISO-8859-7
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On 08/19/2011 07:11 PM, Robert P. J. Day wrote:
+> 
+
+> 
+> which says nothing about "rsync" but lists "https" as a valid protocol
+> that's not mentioned higher up.  someone way higher up the food chain
+> is welcome to decide what should be clarified here.
+
+Hi Robert,
+
+I would update the manual to mention that 'git' is the default and remove
+rsync from it. The reasoning is that rsync is mostly historic and there is no
+good reason to use it.
+
+holger
 
 
-  perusing the bitbake user manual earlier and the section on the git
-fetch module doesn't sync up with the code.  from the user manual:
-
-"The parameters are tag, protocol and scmdata. tag is a Git tag, the
-default is =A1master=A2. protocol is the Git protocol to use and defaults
-to =A1rsync=A2."
-
-  however, in fetch2/git.py, one reads:
-
-- protocol
-   The method to use to access the repository. Common options are
-   "git", "http", "file" and "rsync". The default is "git"
-
-
-  and, finally, further down, there's the actual check for a valid
-protocol:
-
-    if not ud.proto in ('git', 'file', 'ssh', 'http', 'https'):
-        raise bb.fetch2.ParameterError("Invalid protocol type", ud.url)
-
-which says nothing about "rsync" but lists "https" as a valid protocol
-that's not mentioned higher up.  someone way higher up the food chain
-is welcome to decide what should be clarified here.
-
-rday
-
---=20
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
---8323328-790297736-1313773915=:5421--
