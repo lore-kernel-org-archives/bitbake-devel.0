@@ -1,29 +1,23 @@
-Received: from mail-pz0-f47.google.com ([209.85.210.47])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <raj.khem@gmail.com>)
-	id 1QwcNH-0005ZG-BS; Thu, 25 Aug 2011 18:01:47 +0200
-Received: by pzk2 with SMTP id 2so3892783pzk.34
-	for <multiple recipients>; Thu, 25 Aug 2011 08:56:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-type;
-	bh=uAYwl2fo+h9fXqXzAZwWei3lq07jWegIJtL5X2/RrAM=;
-	b=XdPNYXiCXpGLKDU2X7mLzg/HBwTljluqwOExgsUvcN2ZxfELJUoU/NeSbDW5e9u+SB
-	VbGtpsPeRZPHDQiyAeSDqvhuMeN+8lN7uhtGSiv0eo+yn/EUj7mu9Ib+NN8GPJrgHFZW
-	eMWmRA3v9iIxwZZFVQ5TxyzKr91sJZiec1ngE=
-Received: by 10.142.239.2 with SMTP id m2mr3318309wfh.169.1314287818675; Thu,
-	25 Aug 2011 08:56:58 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.68.40.168 with HTTP; Thu, 25 Aug 2011 08:56:28 -0700 (PDT)
-In-Reply-To: <201108251150.01236.paul.eggleton@linux.intel.com>
+	(envelope-from <paul.eggleton@linux.intel.com>)
+	id 1QwdL1-0000xq-Ll; Thu, 25 Aug 2011 19:03:32 +0200
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga102.ch.intel.com with ESMTP; 25 Aug 2011 09:58:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.68,281,1312182000"; d="scan'208";a="11052283"
+Received: from unknown (HELO helios.localnet) ([10.255.18.129])
+	by AZSMGA002.ch.intel.com with ESMTP; 25 Aug 2011 09:58:24 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Khem Raj <raj.khem@gmail.com>
+Date: Thu, 25 Aug 2011 17:58:23 +0100
+User-Agent: KMail/1.13.6 (Linux/2.6.38-10-generic-pae; KDE/4.6.2; i686; ; )
 References: <201108021226.34560.paul.eggleton@linux.intel.com>
-	<CABcZAN=rG0acoqcV6s-gNvvziM0ON97BzNwtZkESu+wz7vQO-g@mail.gmail.com>
-	<A3E3935F-5D98-4208-A45F-DC409F1C97CF@gmail.com>
 	<201108251150.01236.paul.eggleton@linux.intel.com>
-From: Khem Raj <raj.khem@gmail.com>
-Date: Thu, 25 Aug 2011 08:56:28 -0700
-Message-ID: <CAMKF1spSE=nuQ1LGOmub3XaH-z+6oJT+n5hC7LdKvdKeScLWNw@mail.gmail.com>
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
+	<CAMKF1spSE=nuQ1LGOmub3XaH-z+6oJT+n5hC7LdKvdKeScLWNw@mail.gmail.com>
+In-Reply-To: <CAMKF1spSE=nuQ1LGOmub3XaH-z+6oJT+n5hC7LdKvdKeScLWNw@mail.gmail.com>
+MIME-Version: 1.0
+Message-Id: <201108251758.23451.paul.eggleton@linux.intel.com>
 Cc: bitbake-devel@lists.openembedded.org,
 	Patches and discussions about the oe-core layer
 	<openembedded-core@lists.openembedded.org>
@@ -39,48 +33,67 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 25 Aug 2011 16:01:47 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Thu, 25 Aug 2011 17:03:32 -0000
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Aug 25, 2011 at 3:50 AM, Paul Eggleton
-<paul.eggleton@linux.intel.com> wrote:
->>
->> In my opinion the layer priority for all kind of meta data should be
->> consistent and selected using bblayers.conf
->
-> So I've thought about this more, and I don't think it is a good idea, for two
-> reasons:
->
-> 1) It increases the complexity by a huge amount. New users will have to
-> understand how to set the priorities, and if someone reports a problem, we now
-> not only need to know what layers they are using, we also need to know what
-> mangling of the priorities they might have done. We'd just be introducing more
-> potentially untested configurations (as if we don't have enough already.)
+On Thursday 25 August 2011 16:56:28 you wrote:
+> with layers we dont control policies of all the layers that may be used on
+> top so fixing meta-oe does not solve problem completely and we can not ask
+> for exclusive  recipes. People would want to override the recipes from other
+> layers.
 
-with layers we dont control policies of all the layers that may be used on top
-so fixing meta-oe does not solve problem completely and we can not ask
-for exclusive
-recipes. People would want to override the recipes from other layers.
+Generally, the less duplication we have across layers the better; if a 
+maintainer is duplicating a recipe they should have a very good reason to do 
+so. We can avoid some of this duplication by making it easier to figure out 
+where the right place for recipes is and doing everything we can encourage 
+people to get stuff merged there. I'm not convinced we are doing very well on 
+either count yet, but I expect this will improve over time.
 
-bitbake could report the layer the recipe comes from which can make it evident
-or may be special command to inform the layer priorities. This will guide the
-users to diagnose the problems quickly and help developers to identify
-the issues
-faster. There could be a complete bill of recipes printed for a given
-target as well
-so if someone wants to check all the recipes that were built.
+> bitbake could report the layer the recipe comes from which can make it
+> evident or may be special command to inform the layer priorities. This will
+> guide the users to diagnose the problems quickly and help developers to
+> identify the issues faster. There could be a complete bill of recipes
+> printed for a given target as well so if someone wants to check all
+> the recipes that were built.
 
->
-> 2) It just papers over real problems in meta-oe or any other layer you might
-> choose to use on top. As I said, if meta-oe has stuff in it that is not
-> working, it should be fixed or removed. Let's fix problems instead of finding
-> ways of ignoring them.
->
+I had not considered BitBake itself reporting these, that might be useful 
+especially in the case of errors (although the full path to the recipe is 
+already reported during the build, so you should be able to tell in most cases 
+from that if you need to). Outputting a specific report of parsed recipes and 
+bbappends as part of the build also might be useful.
 
-In any case I agree that problems should be fixed. However this does
-not scale to all
-layers and we can not police all the layers and we should not. We
-should try to make it possible
-for people to glue layers together without  issues.
+FYI, bitbake-layers exists as a separate utility to answer a lot of these 
+kinds of questions, and recently has become a lot more powerful - I would 
+strongly recommend everyone check it out and if it's not able to report what 
+you want then please tell me and I'll try to make it do so. I already have a 
+few ideas for future improvements there which I will hopefully get time to 
+look into in the Yocto 1.2 cycle.
+
+> In any case I agree that problems should be fixed. However this does
+> not scale to all layers and we can not police all the layers and we should
+> not. We should try to make it possible for people to glue layers together
+> without  issues.
+
+How does merely being able to alter the priorities help here though? I could 
+begin to understand if you were asking for some way to blacklist individual 
+recipes in individual layers, but moving the priority of an entire layer is 
+likely to have much more of an effect than just obscuring a few errant recipes 
+that you don't want.
+
+We can't "police" all the layers, no. But if those who maintain that layer 
+can't respond to and resolve problems then they shouldn't be maintainers or 
+those layers can't be considered well-maintained. When you add a layer to your 
+build you are placing some trust in the maintainer of that layer; it is up to 
+the maintainer to make sure they don't abuse that trust.
+
+Cheers,
+Paul
+
+-- 
+
+Paul Eggleton
+Intel Open Source Technology Centre
 
 
