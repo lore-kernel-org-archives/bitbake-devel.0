@@ -1,24 +1,24 @@
 Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1Qx85s-0005Lx-Um
+	(envelope-from <josh@linux.intel.com>) id 1Qx85t-0005Lx-LT
 	for bitbake-devel@lists.openembedded.org;
 	Sat, 27 Aug 2011 03:53:57 +0200
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 26 Aug 2011 18:49:05 -0700
+	by fmsmga102.fm.intel.com with ESMTP; 26 Aug 2011 18:49:06 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.68,288,1312182000"; d="scan'208";a="45524223"
+X-IronPort-AV: E=Sophos;i="4.68,288,1312182000"; d="scan'208";a="45524224"
 Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.13.247])
-	by fmsmga001.fm.intel.com with ESMTP; 26 Aug 2011 18:49:05 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 26 Aug 2011 18:49:06 -0700
 From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 26 Aug 2011 18:48:58 -0700
-Message-Id: <5e95098be1c1f92c2d72fb371c94bab31c46cf83.1314409608.git.josh@linux.intel.com>
+Date: Fri, 26 Aug 2011 18:48:59 -0700
+Message-Id: <419b52e832f506504778d4d5957d1e77477bb513.1314409608.git.josh@linux.intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <cover.1314409608.git.josh@linux.intel.com>
 References: <cover.1314409608.git.josh@linux.intel.com>
 In-Reply-To: <cover.1314409608.git.josh@linux.intel.com>
 References: <cover.1314409608.git.josh@linux.intel.com>
-Subject: [PATCH 1/2] ui/crumbs/tasklistmodel: don't add same item to binb column more than once
+Subject: [PATCH 2/2] ui/crumbs/runningbuild: add a 'Copy' item to the messages right-click menu
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,27 +32,77 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Sat, 27 Aug 2011 01:53:57 -0000
 
+Add another item to the right-click menu enabled for log messages to copy
+the message to the clipboard.
+
 Signed-off-by: Joshua Lock <josh@linux.intel.com>
 ---
- lib/bb/ui/crumbs/tasklistmodel.py |    5 +++--
- 1 files changed, 3 insertions(+), 2 deletions(-)
+ lib/bb/ui/crumbs/runningbuild.py |   36 +++++++++++++++++++++++++++---------
+ 1 files changed, 27 insertions(+), 9 deletions(-)
 
-diff --git a/lib/bb/ui/crumbs/tasklistmodel.py b/lib/bb/ui/crumbs/tasklistmodel.py
-index 5ff1f5a..cf9fc59 100644
---- a/lib/bb/ui/crumbs/tasklistmodel.py
-+++ b/lib/bb/ui/crumbs/tasklistmodel.py
-@@ -441,8 +441,9 @@ class TaskListModel(gtk.ListStore):
-             self[item_path][self.COL_INC] = True
+diff --git a/lib/bb/ui/crumbs/runningbuild.py b/lib/bb/ui/crumbs/runningbuild.py
+index d9e9f26..97d1ebd 100644
+--- a/lib/bb/ui/crumbs/runningbuild.py
++++ b/lib/bb/ui/crumbs/runningbuild.py
+@@ -306,31 +306,49 @@ class RunningBuildTreeView (gtk.TreeView):
  
-         bin = self[item_path][self.COL_BINB].split(', ')
--        bin.append(binb)
--        self[item_path][self.COL_BINB] = ', '.join(bin).lstrip(', ')
-+        if not binb in bin:
-+            bin.append(binb)
-+            self[item_path][self.COL_BINB] = ', '.join(bin).lstrip(', ')
+         if event.button == 3:
+             selection = super(RunningBuildTreeView, self).get_selection()
+-            (model, iter) = selection.get_selected()
+-            if iter is not None:
+-                can_paste = model.get(iter, model.COL_LOG)[0]
++            (model, it) = selection.get_selected()
++            if it is not None:
++                can_paste = model.get(it, model.COL_LOG)[0]
+                 if can_paste == 'pastebin':
+                     # build a simple menu with a pastebin option
+                     menu = gtk.Menu()
++                    menuitem = gtk.MenuItem("Copy")
++                    menu.append(menuitem)
++                    menuitem.connect("activate", self.copy_handler, (model, it))
++                    menuitem.show()
+                     menuitem = gtk.MenuItem("Send log to pastebin")
+                     menu.append(menuitem)
+-                    menuitem.connect("activate", self.pastebin_handler, (model, iter))
++                    menuitem.connect("activate", self.pastebin_handler, (model, it))
+                     menuitem.show()
+                     menu.show()
+                     menu.popup(None, None, None, event.button, event.time)
  
-         # We want to do some magic with things which are brought in by the
-         # base image so tag them as so
++    def _add_to_clipboard(self, clipping):
++        """
++        Add the contents of clipping to the system clipboard.
++        """
++        clipboard = gtk.clipboard_get()
++        clipboard.set_text(clipping)
++        clipboard.store()
++
+     def pastebin_handler(self, widget, data):
+         """
+         Send the log data to pastebin, then add the new paste url to the
+         clipboard.
+         """
+-        (model, iter) = data
+-        paste_url = do_pastebin(model.get(iter, model.COL_MESSAGE)[0])
++        (model, it) = data
++        paste_url = do_pastebin(model.get(it, model.COL_MESSAGE)[0])
+ 
+         # @todo Provide visual feedback to the user that it is done and that
+         # it worked.
+         print paste_url
+ 
+-        clipboard = gtk.clipboard_get()
+-        clipboard.set_text(paste_url)
+-        clipboard.store()
++        self._add_to_clipboard(paste_url)
++
++    def clipboard_handler(self, widget, data):
++        """
++        """
++        (model, it) = data
++        message = model.get(it, model.COL_MESSAGE)[0]
++
++        self._add_to_clipboard(message)
 -- 
 1.7.6
 
