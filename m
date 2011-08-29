@@ -1,24 +1,20 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1Qx85t-0005Lx-LT
+	(envelope-from <dongxiao.xu@intel.com>) id 1QxwPC-00019s-1b
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 27 Aug 2011 03:53:57 +0200
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 26 Aug 2011 18:49:06 -0700
+	Mon, 29 Aug 2011 09:37:14 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 29 Aug 2011 00:31:16 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.68,288,1312182000"; d="scan'208";a="45524224"
-Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.13.247])
-	by fmsmga001.fm.intel.com with ESMTP; 26 Aug 2011 18:49:06 -0700
-From: Joshua Lock <josh@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="43176192"
+Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.52])
+	by orsmga001.jf.intel.com with ESMTP; 29 Aug 2011 00:31:15 -0700
+From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 26 Aug 2011 18:48:59 -0700
-Message-Id: <419b52e832f506504778d4d5957d1e77477bb513.1314409608.git.josh@linux.intel.com>
-X-Mailer: git-send-email 1.7.6
-In-Reply-To: <cover.1314409608.git.josh@linux.intel.com>
-References: <cover.1314409608.git.josh@linux.intel.com>
-In-Reply-To: <cover.1314409608.git.josh@linux.intel.com>
-References: <cover.1314409608.git.josh@linux.intel.com>
-Subject: [PATCH 2/2] ui/crumbs/runningbuild: add a 'Copy' item to the messages right-click menu
+Date: Mon, 29 Aug 2011 15:33:57 +0800
+Message-Id: <cover.1314603042.git.dongxiao.xu@intel.com>
+X-Mailer: git-send-email 1.7.1
+Subject: [PATCH 0/1][PULL] bitbake: parsing time improvement
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,81 +26,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 27 Aug 2011 01:53:57 -0000
+X-List-Received-Date: Mon, 29 Aug 2011 07:37:14 -0000
 
-Add another item to the right-click menu enabled for log messages to copy
-the message to the clipboard.
+Hi Richard,
 
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
----
- lib/bb/ui/crumbs/runningbuild.py |   36 +++++++++++++++++++++++++++---------
- 1 files changed, 27 insertions(+), 9 deletions(-)
+This pull request is to improve parsing time by getting use of the
+expand cache, please help to review and pull.
 
-diff --git a/lib/bb/ui/crumbs/runningbuild.py b/lib/bb/ui/crumbs/runningbuild.py
-index d9e9f26..97d1ebd 100644
---- a/lib/bb/ui/crumbs/runningbuild.py
-+++ b/lib/bb/ui/crumbs/runningbuild.py
-@@ -306,31 +306,49 @@ class RunningBuildTreeView (gtk.TreeView):
- 
-         if event.button == 3:
-             selection = super(RunningBuildTreeView, self).get_selection()
--            (model, iter) = selection.get_selected()
--            if iter is not None:
--                can_paste = model.get(iter, model.COL_LOG)[0]
-+            (model, it) = selection.get_selected()
-+            if it is not None:
-+                can_paste = model.get(it, model.COL_LOG)[0]
-                 if can_paste == 'pastebin':
-                     # build a simple menu with a pastebin option
-                     menu = gtk.Menu()
-+                    menuitem = gtk.MenuItem("Copy")
-+                    menu.append(menuitem)
-+                    menuitem.connect("activate", self.copy_handler, (model, it))
-+                    menuitem.show()
-                     menuitem = gtk.MenuItem("Send log to pastebin")
-                     menu.append(menuitem)
--                    menuitem.connect("activate", self.pastebin_handler, (model, iter))
-+                    menuitem.connect("activate", self.pastebin_handler, (model, it))
-                     menuitem.show()
-                     menu.show()
-                     menu.popup(None, None, None, event.button, event.time)
- 
-+    def _add_to_clipboard(self, clipping):
-+        """
-+        Add the contents of clipping to the system clipboard.
-+        """
-+        clipboard = gtk.clipboard_get()
-+        clipboard.set_text(clipping)
-+        clipboard.store()
-+
-     def pastebin_handler(self, widget, data):
-         """
-         Send the log data to pastebin, then add the new paste url to the
-         clipboard.
-         """
--        (model, iter) = data
--        paste_url = do_pastebin(model.get(iter, model.COL_MESSAGE)[0])
-+        (model, it) = data
-+        paste_url = do_pastebin(model.get(it, model.COL_MESSAGE)[0])
- 
-         # @todo Provide visual feedback to the user that it is done and that
-         # it worked.
-         print paste_url
- 
--        clipboard = gtk.clipboard_get()
--        clipboard.set_text(paste_url)
--        clipboard.store()
-+        self._add_to_clipboard(paste_url)
-+
-+    def clipboard_handler(self, widget, data):
-+        """
-+        """
-+        (model, it) = data
-+        message = model.get(it, model.COL_MESSAGE)[0]
-+
-+        self._add_to_clipboard(message)
--- 
-1.7.6
+Thanks,
+Dongxiao
+
+The following changes since commit 0423587db09f6f28cf9d801f5657a84157f42dbe:
+
+  hob: disable some menu entries whilst build is in progress (2011-08-24 19:32:42 -0700)
+
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib dxu4/parse
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/parse
+
+Dongxiao Xu (1):
+  data_smart.py: make use of expand cache in getVar()
+
+ lib/bb/data_smart.py |    7 ++++++-
+ 1 files changed, 6 insertions(+), 1 deletions(-)
 
 
 
