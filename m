@@ -1,24 +1,30 @@
-Received: from mga03.intel.com ([143.182.124.21])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1QxwPD-00019t-AD
-	for bitbake-devel@lists.openembedded.org;
-	Mon, 29 Aug 2011 09:37:15 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 29 Aug 2011 00:31:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.68,295,1312182000"; d="scan'208";a="43427786"
-Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.52])
-	by azsmga001.ch.intel.com with ESMTP; 29 Aug 2011 00:31:17 -0700
-From: Dongxiao Xu <dongxiao.xu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 29 Aug 2011 15:33:58 +0800
-Message-Id: <a27f9fa325927a2b0c2204f648f762463c62a8f0.1314603042.git.dongxiao.xu@intel.com>
-X-Mailer: git-send-email 1.7.1
-In-Reply-To: <cover.1314603042.git.dongxiao.xu@intel.com>
-References: <cover.1314603042.git.dongxiao.xu@intel.com>
-In-Reply-To: <cover.1314603042.git.dongxiao.xu@intel.com>
-References: <cover.1314603042.git.dongxiao.xu@intel.com>
-Subject: [PATCH 1/1] data_smart.py: make use of expand cache in getVar()
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1Qy1N4-0000NR-Fc for bitbake-devel@lists.openembedded.org;
+	Mon, 29 Aug 2011 14:55:22 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p7TCoSja002981;
+	Mon, 29 Aug 2011 13:50:28 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 17826-08; Mon, 29 Aug 2011 13:50:24 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p7TCoMxJ002975
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Mon, 29 Aug 2011 13:50:23 +0100
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Joshua Lock <josh@linux.intel.com>
+In-Reply-To: <cover.1314409608.git.josh@linux.intel.com>
+References: <cover.1314409608.git.josh@linux.intel.com>
+Date: Mon, 29 Aug 2011 13:50:14 +0100
+Message-ID: <1314622214.5939.284.camel@rex>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.32.2 
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 0/2] Small UI patches
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,41 +36,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 29 Aug 2011 07:37:15 -0000
+X-List-Received-Date: Mon, 29 Aug 2011 12:55:22 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Currently if passing expand=True to getVar() function, it will pass the
-handling to getVarFlag(), which doesn't get any benefit from the expand
-cache.
+On Fri, 2011-08-26 at 18:48 -0700, Joshua Lock wrote:
+> Most interesting is the second patch to add a Copy item to the right-click
+> menu for logs in RunningBuildTreeView.
+> 
+> This means users of hob and goggle can copy/paste the log contents right from
+> the GUI as well as submitting the log contents to pastebin.
+> 
+> The following changes since commit 0423587db09f6f28cf9d801f5657a84157f42dbe:
+> 
+>   hob: disable some menu entries whilst build is in progress (2011-08-24 19:32:42 -0700)
+> 
+> are available in the git repository at:
+>   git://github.com/incandescant/bitbake hob
+>   https://github.com/incandescant/bitbake/tree/hob
+> 
+> Joshua Lock (2):
+>   ui/crumbs/tasklistmodel: don't add same item to binb column more than
+>     once
+>   ui/crumbs/runningbuild: add a 'Copy' item to the messages right-click
+>     menu
 
-Call the expand() function separately in getVar() to make use of the
-expand cache, which can decrease the parsing time by 40%.
-(from current 49s to 27s)
+Merged to master, thanks.
 
-Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
----
- lib/bb/data_smart.py |    7 ++++++-
- 1 files changed, 6 insertions(+), 1 deletions(-)
-
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 301f9e3..d8ba24f 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -268,7 +268,12 @@ class DataSmart(MutableMapping):
-         self.dict[var]["content"] = value
- 
-     def getVar(self, var, expand=False, noweakdefault=False):
--        return self.getVarFlag(var, "content", expand, noweakdefault)
-+        value = self.getVarFlag(var, "content", False, noweakdefault)
-+
-+        # Call expand() separately to make use of the expand cache
-+        if expand and value:
-+            return self.expand(value, var)
-+        return value
- 
-     def renameVar(self, key, newkey):
-         """
--- 
-1.7.1
+Richard
 
 
 
