@@ -1,20 +1,24 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1QxwPC-00019s-1b
+	(envelope-from <dongxiao.xu@intel.com>) id 1QxwPD-00019t-AD
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 29 Aug 2011 09:37:14 +0200
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 29 Aug 2011 00:31:16 -0700
+	Mon, 29 Aug 2011 09:37:15 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 29 Aug 2011 00:31:17 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="43176192"
+X-IronPort-AV: E=Sophos;i="4.68,295,1312182000"; d="scan'208";a="43427786"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.52])
-	by orsmga001.jf.intel.com with ESMTP; 29 Aug 2011 00:31:15 -0700
+	by azsmga001.ch.intel.com with ESMTP; 29 Aug 2011 00:31:17 -0700
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 29 Aug 2011 15:33:57 +0800
-Message-Id: <cover.1314603042.git.dongxiao.xu@intel.com>
+Date: Mon, 29 Aug 2011 15:33:58 +0800
+Message-Id: <a27f9fa325927a2b0c2204f648f762463c62a8f0.1314603042.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.1
-Subject: [PATCH 0/1][PULL] bitbake: parsing time improvement
+In-Reply-To: <cover.1314603042.git.dongxiao.xu@intel.com>
+References: <cover.1314603042.git.dongxiao.xu@intel.com>
+In-Reply-To: <cover.1314603042.git.dongxiao.xu@intel.com>
+References: <cover.1314603042.git.dongxiao.xu@intel.com>
+Subject: [PATCH 1/1] data_smart.py: make use of expand cache in getVar()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,29 +30,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 29 Aug 2011 07:37:14 -0000
+X-List-Received-Date: Mon, 29 Aug 2011 07:37:15 -0000
 
-Hi Richard,
+Currently if passing expand=True to getVar() function, it will pass the
+handling to getVarFlag(), which doesn't get any benefit from the expand
+cache.
 
-This pull request is to improve parsing time by getting use of the
-expand cache, please help to review and pull.
+Call the expand() function separately in getVar() to make use of the
+expand cache, which can decrease the parsing time by 40%.
+(from current 49s to 27s)
 
-Thanks,
-Dongxiao
-
-The following changes since commit 0423587db09f6f28cf9d801f5657a84157f42dbe:
-
-  hob: disable some menu entries whilst build is in progress (2011-08-24 19:32:42 -0700)
-
-are available in the git repository at:
-  git://git.pokylinux.org/poky-contrib dxu4/parse
-  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/parse
-
-Dongxiao Xu (1):
-  data_smart.py: make use of expand cache in getVar()
-
+Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+---
  lib/bb/data_smart.py |    7 ++++++-
  1 files changed, 6 insertions(+), 1 deletions(-)
+
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index 301f9e3..d8ba24f 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -268,7 +268,12 @@ class DataSmart(MutableMapping):
+         self.dict[var]["content"] = value
+ 
+     def getVar(self, var, expand=False, noweakdefault=False):
+-        return self.getVarFlag(var, "content", expand, noweakdefault)
++        value = self.getVarFlag(var, "content", False, noweakdefault)
++
++        # Call expand() separately to make use of the expand cache
++        if expand and value:
++            return self.expand(value, var)
++        return value
+ 
+     def renameVar(self, key, newkey):
+         """
+-- 
+1.7.1
 
 
 
