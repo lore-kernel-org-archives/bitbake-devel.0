@@ -1,30 +1,20 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1QyRb2-0003sW-1G for bitbake-devel@lists.openembedded.org;
-	Tue, 30 Aug 2011 18:55:32 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p7UGodmJ020212
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 30 Aug 2011 17:50:39 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 19937-03 for <bitbake-devel@lists.openembedded.org>;
-	Tue, 30 Aug 2011 17:50:34 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p7UGoTMN020206
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 30 Aug 2011 17:50:30 +0100
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Tue, 30 Aug 2011 17:50:18 +0100
-Message-ID: <1314723018.5939.368.camel@rex>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.32.2 
-X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: bitbake/parse: Correctly handle multiline comments including whitespace
+Received: from mga03.intel.com ([143.182.124.21])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <josh@linux.intel.com>) id 1QySo9-00068A-EO
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 30 Aug 2011 20:13:09 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 30 Aug 2011 11:08:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.68,303,1312182000"; d="scan'208";a="43987472"
+Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.14.52])
+	by azsmga001.ch.intel.com with ESMTP; 30 Aug 2011 11:08:13 -0700
+From: Joshua Lock <josh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 30 Aug 2011 11:08:00 -0700
+Message-Id: <cover.1314727299.git.josh@linux.intel.com>
+X-Mailer: git-send-email 1.7.6
+Subject: [PATCH 0/6] Bug fixes and optimisations for hob
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,58 +26,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 30 Aug 2011 16:55:32 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 30 Aug 2011 18:13:09 -0000
 
-If metadata contains:
+This series includes two bug fixes and a brace of patches to speed up some
+operations on the gtk.ListStore that became apparent as I was reviewing the
+code for the bug fixes.
 
-"""
+Regards,
+Joshua
 
-FOO = "bar"
-"""
+The following changes since commit 6555a77c199f41bf35460138764e03e30c56d29f:
 
-The variable FOO should get set to "bar" but doesn't due to the empty lines
-be swallowed by the parser and FOO becomming part of the multiline comment.
-This patch corrects that behaviour so FOO is set as expected.
+  data_smart.py: make use of expand cache in getVar() (2011-08-29 14:13:25 +0100)
 
-[YOCTO #1377]
+are available in the git repository at:
+  git://github.com/incandescant/bitbake hob
+  https://github.com/incandescant/bitbake/tree/hob
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/parse/parse_py/BBHandler.py b/bitbake/lib/bb/parse/parse_py/BBHandler.py
-index 402cd07..c59b468 100644
---- a/bitbake/lib/bb/parse/parse_py/BBHandler.py
-+++ b/bitbake/lib/bb/parse/parse_py/BBHandler.py
-@@ -194,21 +194,21 @@ def feeder(lineno, s, fn, root, statements):
-                 return
- 
- 
--    # Skip empty lines
--    if s == '':
--        return          
--
--    if s[0] == '#':
-+    if s and s[0] == '#':
-         if len(__residue__) != 0 and __residue__[0][0] != "#":
-             bb.error("There is a comment on line %s of file %s (%s) which is in the middle of a multiline expression.\nBitbake used to ignore these but no longer does so, please fix your metadata as errors are likely as a result of this change." % (lineno, fn, s))
- 
--    if s[-1] == '\\':
-+    if s and s[-1] == '\\':
-         __residue__.append(s[:-1])
-         return
- 
-     s = "".join(__residue__) + s
-     __residue__ = []
- 
-+    # Skip empty lines
-+    if s == '':
-+        return   
-+
-     # Skip comments
-     if s[0] == '#':
-         return
+Joshua Lock (6):
+  ui/crumbs/tasklistmodel: don't add same item to binb column more than
+    once
+  ui/crumbs/tasklistmodel: prevent packages depending on each other
+  ui/crumbs/tasklistmodel: optimise find_path_for_item()
+  ui/crumbs/tasklistmodel: remove unnecessary check
+  ui/crumbs/tasklistmodel: loop optimisation in include_item()
+  ui/crumbs/tasklistmodel: don't add empty entries to COL_BINB
 
+ lib/bb/ui/crumbs/tasklistmodel.py |   68 +++++++++++++++++--------------------
+ 1 files changed, 31 insertions(+), 37 deletions(-)
+
+-- 
+1.7.6
 
 
 
