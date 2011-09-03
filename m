@@ -1,24 +1,24 @@
 Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1Qze0Z-0008Rq-2H
+	(envelope-from <josh@linux.intel.com>) id 1Qze0Z-0008Rw-BD
 	for bitbake-devel@lists.openembedded.org;
 	Sat, 03 Sep 2011 02:22:51 +0200
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
 	by fmsmga102.fm.intel.com with ESMTP; 02 Sep 2011 17:17:50 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.68,321,1312182000"; d="scan'208";a="47755009"
+X-IronPort-AV: E=Sophos;i="4.68,321,1312182000"; d="scan'208";a="47755010"
 Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.14.9])
 	by fmsmga001.fm.intel.com with ESMTP; 02 Sep 2011 17:17:50 -0700
 From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  2 Sep 2011 17:17:40 -0700
-Message-Id: <f563355b43ffd64df3bf0f396945659c5f319d77.1315008498.git.josh@linux.intel.com>
+Date: Fri,  2 Sep 2011 17:17:41 -0700
+Message-Id: <fc08d8802c0d41f7f146deb2a1025414dfc02a9c.1315008498.git.josh@linux.intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <cover.1315008498.git.josh@linux.intel.com>
 References: <cover.1315008498.git.josh@linux.intel.com>
 In-Reply-To: <cover.1315008498.git.josh@linux.intel.com>
 References: <cover.1315008498.git.josh@linux.intel.com>
-Subject: [PATCH 5/6] ui/crumbs/runningbuild: mask run_buildstats failure
+Subject: [PATCH 6/6] hob: disable removal of packages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,36 +32,81 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Sat, 03 Sep 2011 00:22:51 -0000
 
-The buildstats handler causes an exception with: "'NoneType' object has no
-attribute 'startswith'" early a build via hob, leaving a glaring red row
-which means nothing to the user.
-Mask this error until such a time as we have opportunity to correctly
-diagnose and fix the root problem.
+It's felt that the stability of package deselection is not sufficient for
+the upcoming release and thus package removal should be disabled.
 
-Workaround fix for [YOCTO #1433]
+I'd actually like to see this patch, or its effects, reverted as soon as
+the release bits have been frozen so that this issue can continue to be
+worked on.
 
 Signed-off-by: Joshua Lock <josh@linux.intel.com>
 ---
- lib/bb/ui/crumbs/runningbuild.py |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+ lib/bb/ui/hob.py |   42 ++++++++++++++++++++++++------------------
+ 1 files changed, 24 insertions(+), 18 deletions(-)
 
-diff --git a/lib/bb/ui/crumbs/runningbuild.py b/lib/bb/ui/crumbs/runningbuild.py
-index 97d1ebd..247ed5d 100644
---- a/lib/bb/ui/crumbs/runningbuild.py
-+++ b/lib/bb/ui/crumbs/runningbuild.py
-@@ -91,6 +91,12 @@ class RunningBuild (gobject.GObject):
-             parent = self.tasks_to_iter[(package, task)]
+diff --git a/lib/bb/ui/hob.py b/lib/bb/ui/hob.py
+index 3b0cacc..76b03cd 100644
+--- a/lib/bb/ui/hob.py
++++ b/lib/bb/ui/hob.py
+@@ -544,14 +544,17 @@ class MainWindow (gtk.Window):
+         """
+         # Whether the item is currently included
+         inc = self.model[opath][self.model.COL_INC]
++        # FIXME: due to inpredictability of the removal of packages we are
++        # temporarily disabling this feature
+         # If the item is already included, mark it for removal then
+         # the sweep_up() method finds affected items and marks them
+         # appropriately
+-        if inc:
+-            self.model.mark(opath)
+-            self.model.sweep_up()
+-        # If the item isn't included, mark it for inclusion
+-        else:
++        # if inc:
++        #     self.model.mark(opath)
++        #     self.model.sweep_up()
++        # # If the item isn't included, mark it for inclusion
++        # else:
++        if not inc:
+             self.model.include_item(item_path=opath,
+                                     binb="User Selected",
+                                     image_contents=image)
+@@ -563,19 +566,22 @@ class MainWindow (gtk.Window):
+         inc = model[path][self.model.COL_INC]
+         # Warn user before removing included packages
+         if inc:
+-            pn = model[path][self.model.COL_NAME]
+-            revdeps = self.model.find_reverse_depends(pn)
+-            if len(revdeps):
+-                lbl = "<b>Remove %s?</b>\n\nThis action cannot be undone and all packages which depend on this will be removed\nPackages which depend on %s include %s." % (pn, pn, ", ".join(revdeps).rstrip(","))
+-            else:
+-                lbl = "<b>Remove %s?</b>\n\nThis action cannot be undone." % pn
+-            dialog = CrumbsDialog(self, lbl, gtk.STOCK_DIALOG_WARNING)
+-            dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
+-            dialog.add_button("Remove", gtk.RESPONSE_OK)
+-            response = dialog.run()
+-            dialog.destroy()
+-            if response == gtk.RESPONSE_CANCEL:
+-                return
++            # FIXME: due to inpredictability of the removal of packages we are
++            # temporarily disabling this feature
++            return
++            # pn = model[path][self.model.COL_NAME]
++            # revdeps = self.model.find_reverse_depends(pn)
++            # if len(revdeps):
++            #     lbl = "<b>Remove %s?</b>\n\nThis action cannot be undone and all packages which depend on this will be removed\nPackages which depend on %s include %s." % (pn, pn, ", ".join(revdeps).rstrip(","))
++            # else:
++            #     lbl = "<b>Remove %s?</b>\n\nThis action cannot be undone." % pn
++            # dialog = CrumbsDialog(self, lbl, gtk.STOCK_DIALOG_WARNING)
++            # dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
++            # dialog.add_button("Remove", gtk.RESPONSE_OK)
++            # response = dialog.run()
++            # dialog.destroy()
++            # if response == gtk.RESPONSE_CANCEL:
++            #     return
  
-         if(isinstance(event, logging.LogRecord)):
-+            # FIXME: this is a hack! More info in Yocto #1433
-+            # http://bugzilla.pokylinux.org/show_bug.cgi?id=1433, temporarily
-+            # mask the error message as it's not informative for the user.
-+            if event.msg.startswith("Execution of event handler 'run_buildstats' failed"):
-+                return
-+
-             if (event.levelno < logging.INFO or
-                 event.msg.startswith("Running task")):
-                 return # don't add these to the list
+         self.set_busy_cursor()
+         # Convert path to path in original model
 -- 
 1.7.6
 
