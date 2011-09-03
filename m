@@ -1,24 +1,24 @@
 Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1Qze0Y-0008Rw-LV
+	(envelope-from <josh@linux.intel.com>) id 1Qze0Z-0008Rq-2H
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 03 Sep 2011 02:22:50 +0200
+	Sat, 03 Sep 2011 02:22:51 +0200
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
 	by fmsmga102.fm.intel.com with ESMTP; 02 Sep 2011 17:17:50 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.68,321,1312182000"; d="scan'208";a="47755007"
+X-IronPort-AV: E=Sophos;i="4.68,321,1312182000"; d="scan'208";a="47755009"
 Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.14.9])
-	by fmsmga001.fm.intel.com with ESMTP; 02 Sep 2011 17:17:49 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 02 Sep 2011 17:17:50 -0700
 From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  2 Sep 2011 17:17:39 -0700
-Message-Id: <fb825827b875eaad828555396591ad266d1f13f8.1315008498.git.josh@linux.intel.com>
+Date: Fri,  2 Sep 2011 17:17:40 -0700
+Message-Id: <f563355b43ffd64df3bf0f396945659c5f319d77.1315008498.git.josh@linux.intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <cover.1315008498.git.josh@linux.intel.com>
 References: <cover.1315008498.git.josh@linux.intel.com>
 In-Reply-To: <cover.1315008498.git.josh@linux.intel.com>
 References: <cover.1315008498.git.josh@linux.intel.com>
-Subject: [PATCH 4/6] ui/crumbs/hobprefs: disable 'build toolchain with headers'
+Subject: [PATCH 5/6] ui/crumbs/runningbuild: mask run_buildstats failure
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,41 +30,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 03 Sep 2011 00:22:50 -0000
+X-List-Received-Date: Sat, 03 Sep 2011 00:22:51 -0000
 
-The generic meta-toolchain-sdk we are currently building when this option
-is enabled is likely unsuitable for the majority of images built with hob.
-Remove this option from the Preferences UI until such a time as we can
-correctly implement this feature to include the library headers for the
-selected packages.
+The buildstats handler causes an exception with: "'NoneType' object has no
+attribute 'startswith'" early a build via hob, leaving a glaring red row
+which means nothing to the user.
+Mask this error until such a time as we have opportunity to correctly
+diagnose and fix the root problem.
 
-Addresses [YOCTO #1302]
+Workaround fix for [YOCTO #1433]
 
 Signed-off-by: Joshua Lock <josh@linux.intel.com>
 ---
- lib/bb/ui/crumbs/hobprefs.py |   12 ++++++------
- 1 files changed, 6 insertions(+), 6 deletions(-)
+ lib/bb/ui/crumbs/runningbuild.py |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
 
-diff --git a/lib/bb/ui/crumbs/hobprefs.py b/lib/bb/ui/crumbs/hobprefs.py
-index 14d6bc7..8d148cd 100644
---- a/lib/bb/ui/crumbs/hobprefs.py
-+++ b/lib/bb/ui/crumbs/hobprefs.py
-@@ -326,9 +326,9 @@ class HobPrefs(gtk.Dialog):
-         self.sdk_machine_combo.set_tooltip_text("Select the host architecture of the external machine")
-         self.sdk_machine_combo.show()
-         hbox.pack_start(self.sdk_machine_combo, expand=False, fill=False, padding=6)
--        headerscheck = gtk.CheckButton("Include development headers with toolchain")
--        headerscheck.show()
--        headerscheck.set_active(self.build_toolchain_headers)
--        headerscheck.connect("toggled", self.toggle_headers_cb)
--        hbox.pack_start(headerscheck, expand=False, fill=False, padding=6)
--        self.connect("response", self.prefs_response_cb)
-+        # headerscheck = gtk.CheckButton("Include development headers with toolchain")
-+        # headerscheck.show()
-+        # headerscheck.set_active(self.build_toolchain_headers)
-+        # headerscheck.connect("toggled", self.toggle_headers_cb)
-+        # hbox.pack_start(headerscheck, expand=False, fill=False, padding=6)
-+        # self.connect("response", self.prefs_response_cb)
+diff --git a/lib/bb/ui/crumbs/runningbuild.py b/lib/bb/ui/crumbs/runningbuild.py
+index 97d1ebd..247ed5d 100644
+--- a/lib/bb/ui/crumbs/runningbuild.py
++++ b/lib/bb/ui/crumbs/runningbuild.py
+@@ -91,6 +91,12 @@ class RunningBuild (gobject.GObject):
+             parent = self.tasks_to_iter[(package, task)]
+ 
+         if(isinstance(event, logging.LogRecord)):
++            # FIXME: this is a hack! More info in Yocto #1433
++            # http://bugzilla.pokylinux.org/show_bug.cgi?id=1433, temporarily
++            # mask the error message as it's not informative for the user.
++            if event.msg.startswith("Execution of event handler 'run_buildstats' failed"):
++                return
++
+             if (event.levelno < logging.INFO or
+                 event.msg.startswith("Running task")):
+                 return # don't add these to the list
 -- 
 1.7.6
 
