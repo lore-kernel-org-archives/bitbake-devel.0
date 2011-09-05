@@ -1,24 +1,24 @@
 Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1R0cHp-0007Mp-3o
+	(envelope-from <josh@linux.intel.com>) id 1R0cHp-0007Mp-Sb
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 05 Sep 2011 18:44:41 +0200
+	Mon, 05 Sep 2011 18:44:42 +0200
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
 	by orsmga101.jf.intel.com with ESMTP; 05 Sep 2011 09:39:40 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="45230619"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="45230622"
 Received: from unknown (HELO [10.255.14.132]) ([10.255.14.132])
-	by orsmga002.jf.intel.com with ESMTP; 05 Sep 2011 09:39:39 -0700
+	by orsmga002.jf.intel.com with ESMTP; 05 Sep 2011 09:39:40 -0700
 From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 05 Sep 2011 09:39:34 -0700
-In-Reply-To: <dec09dbc681527fc7cd67f9c3db1f5090fe2a8d4.1315225427.git.paul.eggleton@linux.intel.com>
+Date: Mon, 05 Sep 2011 09:39:38 -0700
+In-Reply-To: <def7176ad3376131b7ef8404f3f223d9708f5a6d.1315225427.git.paul.eggleton@linux.intel.com>
 References: <cover.1315225427.git.paul.eggleton@linux.intel.com>
-	<dec09dbc681527fc7cd67f9c3db1f5090fe2a8d4.1315225427.git.paul.eggleton@linux.intel.com>
+	<def7176ad3376131b7ef8404f3f223d9708f5a6d.1315225427.git.paul.eggleton@linux.intel.com>
 X-Mailer: Evolution 3.0.2 (3.0.2-3.fc15) 
-Message-ID: <1315240779.2198.2.camel@scimitar>
+Message-ID: <1315240780.2198.3.camel@scimitar>
 Mime-Version: 1.0
-Subject: Re: [PATCH 1/2] hob: clear out temporary file list after deleting
+Subject: Re: [PATCH 2/2] hob: fix segfault on second build
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,34 +30,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 05 Sep 2011 16:44:41 -0000
+X-List-Received-Date: Mon, 05 Sep 2011 16:44:42 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
 On Mon, 2011-09-05 at 13:30 +0100, Paul Eggleton wrote:
-> If you don't clear out files_to_clean after the files get deleted and
-> then you run a second build, it will try to delete the files from the
-> first build and you will get a "No such file or directory" error.
+> Some internal lists were not being cleared, resulting in incorrect
+> program flow on the second build, causing a structure to be accessed
+> incorrectly which resulted in a segfault.
+> 
+> Fixes [YOCTO #1332]
 > 
 > Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 Signed-off-by: Joshua Lock <josh@linux.intel.com>
 
+Excellent find Paul!
+
 > ---
->  bitbake/lib/bb/ui/hob.py |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
+>  bitbake/lib/bb/ui/crumbs/runningbuild.py |    5 +++++
+>  bitbake/lib/bb/ui/hob.py                 |    2 +-
+>  2 files changed, 6 insertions(+), 1 deletions(-)
 > 
+> diff --git a/bitbake/lib/bb/ui/crumbs/runningbuild.py b/bitbake/lib/bb/ui/crumbs/runningbuild.py
+> index 97d1ebd..c18bd87 100644
+> --- a/bitbake/lib/bb/ui/crumbs/runningbuild.py
+> +++ b/bitbake/lib/bb/ui/crumbs/runningbuild.py
+> @@ -68,6 +68,11 @@ class RunningBuild (gobject.GObject):
+>          self.model = RunningBuildModel()
+>          self.sequential = sequential
+>  
+> +    def reset (self):
+> +        self.pids_to_task.clear()
+> +        self.tasks_to_iter.clear()
+> +        self.model.clear()
+> +
+>      def handle_event (self, event, pbar=None):
+>          # Handle an event from the event queue, this may result in updating
+>          # the model and thus the UI. Or it may be to tell us that the build
 > diff --git a/bitbake/lib/bb/ui/hob.py b/bitbake/lib/bb/ui/hob.py
-> index c2acada..f2a9ee5 100644
+> index f2a9ee5..76e9237 100644
 > --- a/bitbake/lib/bb/ui/hob.py
 > +++ b/bitbake/lib/bb/ui/hob.py
-> @@ -496,6 +496,7 @@ class MainWindow (gtk.Window):
->          self.cancel.set_sensitive(False)
->          for f in self.files_to_clean:
->              os.remove(f)
-> +        self.files_to_clean = []
+> @@ -484,7 +484,7 @@ class MainWindow (gtk.Window):
 >  
->          lbl = "<b>Build completed</b>\n\nClick 'Edit Image' to start another build or 'View Messages' to view the messages output during the build."
->          if self.handler.building == "image" and self.build_succeeded:
+>      def toggle_createview(self):
+>          self.set_menus_sensitive(True)
+> -        self.build.model.clear()
+> +        self.build.reset()
+>          self.nb.set_current_page(0)
+>  
+>      def build_complete_cb(self, running_build):
 
 -- 
 Joshua Lock
