@@ -1,31 +1,29 @@
-Received: from mail-vw0-f41.google.com ([209.85.212.41])
+Received: from dan.rpsys.net ([93.97.175.187])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1R1N6a-000379-3f
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 07 Sep 2011 20:44:12 +0200
-Received: by vwm42 with SMTP id 42so6477895vwm.28
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 07 Sep 2011 11:39:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
-	h=mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type
-	:content-transfer-encoding;
-	bh=UKkK7MfuJJHgSAydDwf/Te6FyoZBf1BcajCah/ixmbk=;
-	b=n/Bg79oE3TxPy6dDF8F/OQv7r2otnZP8BRSiPTqvElWoCDPRmedKEsx5r+BVh48vq0
-	Sq9m0kep+Rc+1Dx/dNqCEvVcWJhQNROrq2PToQqFT7/HETl6dyKz+TRsrljTxAHQgP6I
-	T0cLpJFpFyOcgfd4DhQyeSFJTugm7oCdf6PT0=
-Received: by 10.52.22.237 with SMTP id h13mr3131091vdf.228.1315420749093; Wed,
-	07 Sep 2011 11:39:09 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.52.107.134 with HTTP; Wed, 7 Sep 2011 11:38:49 -0700 (PDT)
-In-Reply-To: <1315417400.13021.20.camel@ted>
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1R1PU9-0000Yr-Oo for bitbake-devel@lists.openembedded.org;
+	Wed, 07 Sep 2011 23:16:41 +0200
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.2/8.14.2/Debian-2build1) with ESMTP id
+	p87LHSov027483; Wed, 7 Sep 2011 22:17:29 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id uIGhQQMmg9hI; Wed,  7 Sep 2011 22:17:28 +0100 (BST)
+Received: from [192.168.1.40] (tim [93.97.173.237]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.2/8.14.2/Debian-2build1) with ESMTP id
+	p87LHMAs027468
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+	Wed, 7 Sep 2011 22:17:25 +0100
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Chris Larson <clarson@kergoth.com>
+In-Reply-To: <CABcZANkp2JLJJ4G1J1dcRkNSqiEqWqnv5Qav-5F=EAzD0UxJ3w@mail.gmail.com>
 References: <1315417400.13021.20.camel@ted>
-From: Chris Larson <clarson@kergoth.com>
-Date: Wed, 7 Sep 2011 11:38:49 -0700
-X-Google-Sender-Auth: 4zy837AlHVHFnXgWrL7ZMGnXPWY
-Message-ID: <CABcZANkp2JLJJ4G1J1dcRkNSqiEqWqnv5Qav-5F=EAzD0UxJ3w@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
+	<CABcZANkp2JLJJ4G1J1dcRkNSqiEqWqnv5Qav-5F=EAzD0UxJ3w@mail.gmail.com>
+Date: Wed, 07 Sep 2011 22:11:19 +0100
+Message-ID: <1315429879.13021.23.camel@ted>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.32.2 
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: runqueue: Ensure task environment is correct
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -39,59 +37,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 07 Sep 2011 18:44:12 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Wed, 07 Sep 2011 21:16:42 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 7, 2011 at 10:43 AM, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
-> This fixes two problems:
->
-> a) Variables which were in the parent environment but not set as "export"
-> =C2=A0 variables in the datastore could end up in the task environment
->
-> b) oe.environ.update() can't cope with the generator returned by
-> =C2=A0 bb.data.exported_vars()
->
-> Whilst the updated code isn't as neat, it does do the expected thing,
-> sets the environment correctly and stops unwanted values leaking into
-> the task environment.
->
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
->
-> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-> index 5a4321f..72e6845 100644
-> --- a/bitbake/lib/bb/runqueue.py
-> +++ b/bitbake/lib/bb/runqueue.py
-> @@ -1136,7 +1136,12 @@ class RunQueueExecute:
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 for h in self.rqd=
-ata.hash_deps:
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 the=
-_data.setVar("BBHASHDEPS_%s" % h, self.rqdata.hash_deps[h])
->
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0os.environ.updat=
-e(bb.data.exported_vars(the_data))
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# exported_vars(=
-) returns a generator which *cannot* be passed to os.environ.update()
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# successfully. =
-We also need to unset anything from the environment which shouldn't be ther=
-e
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0exports =3D bb.d=
-ata.exported_vars(the_data)
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.utils.empty_e=
-nvironment()
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0for e, v in expo=
-rts:
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0os=
-.environ[e] =3D v
+On Wed, 2011-09-07 at 11:38 -0700, Chris Larson wrote:
+> On Wed, Sep 7, 2011 at 10:43 AM, Richard Purdie
+> <richard.purdie@linuxfoundation.org> wrote:
+> > This fixes two problems:
+> >
+> > a) Variables which were in the parent environment but not set as "export"
+> >   variables in the datastore could end up in the task environment
+> >
+> > b) oe.environ.update() can't cope with the generator returned by
+> >   bb.data.exported_vars()
+> >
+> > Whilst the updated code isn't as neat, it does do the expected thing,
+> > sets the environment correctly and stops unwanted values leaking into
+> > the task environment.
+> >
+> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> >
+> > diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+> > index 5a4321f..72e6845 100644
+> > --- a/bitbake/lib/bb/runqueue.py
+> > +++ b/bitbake/lib/bb/runqueue.py
+> > @@ -1136,7 +1136,12 @@ class RunQueueExecute:
+> >                 for h in self.rqdata.hash_deps:
+> >                     the_data.setVar("BBHASHDEPS_%s" % h, self.rqdata.hash_deps[h])
+> >
+> > -                os.environ.update(bb.data.exported_vars(the_data))
+> > +                # exported_vars() returns a generator which *cannot* be passed to os.environ.update()
+> > +                # successfully. We also need to unset anything from the environment which shouldn't be there
+> > +                exports = bb.data.exported_vars(the_data)
+> > +                bb.utils.empty_environment()
+> > +                for e, v in exports:
+> > +                    os.environ[e] = v
+> 
+> os.environ.clear()
+> os.environ.update(bb.data.exported_vars(the_data))
 
-os.environ.clear()
-os.environ.update(bb.data.exported_vars(the_data))
---=20
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+I tried this when testing and when I read os.environ back, it was not
+correct. There is something odd occurring if you pass the generator into
+update() directly.
+
+Cheers,
+
+Richard
+
 
 
