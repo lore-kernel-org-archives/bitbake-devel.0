@@ -1,24 +1,35 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mail-ww0-f43.google.com ([74.125.82.43])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1R1Pj9-0000hA-Jb
+	(envelope-from <kergoth@gmail.com>) id 1R1Pyq-0000yp-Pn
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 07 Sep 2011 23:32:11 +0200
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 07 Sep 2011 14:27:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.68,347,1312182000"; d="scan'208";a="49049539"
-Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.14.159])
-	by fmsmga001.fm.intel.com with ESMTP; 07 Sep 2011 14:27:07 -0700
-From: Joshua Lock <josh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  7 Sep 2011 14:27:01 -0700
-Message-Id: <0238d6b802f0620dcda8c8997a1b2988b71408dc.1315406971.git.josh@linux.intel.com>
-X-Mailer: git-send-email 1.7.6
-In-Reply-To: <cover.1315406971.git.josh@linux.intel.com>
-References: <cover.1315406971.git.josh@linux.intel.com>
-In-Reply-To: <cover.1315406971.git.josh@linux.intel.com>
-References: <cover.1315406971.git.josh@linux.intel.com>
-Subject: [PATCH 1/1] cache|cooker|parse: switch __depends from a set to a dict
+	Wed, 07 Sep 2011 23:48:24 +0200
+Received: by wwe32 with SMTP id 32so91668wwe.24
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 07 Sep 2011 14:43:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=mime-version:sender:in-reply-to:references:from:date
+	:x-google-sender-auth:message-id:subject:to:cc:content-type
+	:content-transfer-encoding;
+	bh=lehYslHDfMjwRHdJQ3qOYWNzs5GREin5vY4wlkFZh2k=;
+	b=sOZozpP1NCvuNyjfowXZb48AtpCj0hdsUXvhTL9CMioltTVE4lHRYN3OjGv9vlp2zF
+	1HdiKHL3/tod+3Yw4npHjW5FKu+IBEZvhtUzY5FK8fRH6ATDz21Rz7PMxzTPRmvi8H0L
+	Dr6sOUgiOmtBwXiaGgIFd224HbxCcv7HgLS60=
+Received: by 10.216.1.200 with SMTP id 50mr1982419wed.33.1315431802165; Wed,
+	07 Sep 2011 14:43:22 -0700 (PDT)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.216.93.70 with HTTP; Wed, 7 Sep 2011 14:43:02 -0700 (PDT)
+In-Reply-To: <1315429879.13021.23.camel@ted>
+References: <1315417400.13021.20.camel@ted>
+	<CABcZANkp2JLJJ4G1J1dcRkNSqiEqWqnv5Qav-5F=EAzD0UxJ3w@mail.gmail.com>
+	<1315429879.13021.23.camel@ted>
+From: Chris Larson <clarson@kergoth.com>
+Date: Wed, 7 Sep 2011 14:43:02 -0700
+X-Google-Sender-Auth: wZPsKx-2fgaaATgpiZDAk42TB2A
+Message-ID: <CABcZANk18Pf6ZR5Pe3rAK7Lo=87__8gPU2n9yCv3JdO_XeznVw@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: runqueue: Ensure task environment is correct
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,130 +41,72 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 07 Sep 2011 21:32:11 -0000
+X-List-Received-Date: Wed, 07 Sep 2011 21:48:24 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The set container cannot be marshalled by Python's xmlrpclib meaning that
-we cannot interact with the __depends variable via the [get|set]Variable
-command API.
+On Wed, Sep 7, 2011 at 2:11 PM, Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+> On Wed, 2011-09-07 at 11:38 -0700, Chris Larson wrote:
+>> On Wed, Sep 7, 2011 at 10:43 AM, Richard Purdie
+>> <richard.purdie@linuxfoundation.org> wrote:
+>> > This fixes two problems:
+>> >
+>> > a) Variables which were in the parent environment but not set as "expo=
+rt"
+>> > =C2=A0 variables in the datastore could end up in the task environment
+>> >
+>> > b) oe.environ.update() can't cope with the generator returned by
+>> > =C2=A0 bb.data.exported_vars()
+>> >
+>> > Whilst the updated code isn't as neat, it does do the expected thing,
+>> > sets the environment correctly and stops unwanted values leaking into
+>> > the task environment.
+>> >
+>> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+>> >
+>> > diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+>> > index 5a4321f..72e6845 100644
+>> > --- a/bitbake/lib/bb/runqueue.py
+>> > +++ b/bitbake/lib/bb/runqueue.py
+>> > @@ -1136,7 +1136,12 @@ class RunQueueExecute:
+>> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 for h in self.=
+rqdata.hash_deps:
+>> > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+the_data.setVar("BBHASHDEPS_%s" % h, self.rqdata.hash_deps[h])
+>> >
+>> > - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0os.environ.up=
+date(bb.data.exported_vars(the_data))
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# exported_va=
+rs() returns a generator which *cannot* be passed to os.environ.update()
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# successfull=
+y. We also need to unset anything from the environment which shouldn't be t=
+here
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0exports =3D b=
+b.data.exported_vars(the_data)
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bb.utils.empt=
+y_environment()
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0for e, v in e=
+xports:
+>> > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0os.environ[e] =3D v
+>>
+>> os.environ.clear()
+>> os.environ.update(bb.data.exported_vars(the_data))
+>
+> I tried this when testing and when I read os.environ back, it was not
+> correct. There is something odd occurring if you pass the generator into
+> update() directly.
 
-This patch changes the code to use a dict instead of a set to store the
-__depends mapping of filename to mtime.
-
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
----
- lib/bb/cache.py          |   11 ++++++-----
- lib/bb/cooker.py         |    8 ++++----
- lib/bb/parse/__init__.py |    4 ++--
- lib/bb/ui/hob.py         |    8 ++++----
- 4 files changed, 16 insertions(+), 15 deletions(-)
-
-diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-index d495f9e..ba77f50 100644
---- a/lib/bb/cache.py
-+++ b/lib/bb/cache.py
-@@ -43,7 +43,7 @@ except ImportError:
-     logger.info("Importing cPickle failed. "
-                 "Falling back to a very slow implementation.")
- 
--__cache_version__ = "142"
-+__cache_version__ = "143"
- 
- def getCacheFile(path, filename):
-     return os.path.join(path, filename)
-@@ -282,7 +282,7 @@ class Cache(object):
-         newest_mtime = 0
-         deps = bb.data.getVar("__base_depends", data)
- 
--        old_mtimes = [old_mtime for _, old_mtime in deps]
-+        old_mtimes = deps.values()
-         old_mtimes.append(newest_mtime)
-         newest_mtime = max(old_mtimes)
- 
-@@ -406,12 +406,12 @@ class Cache(object):
-         """Parse the specified filename, returning the recipe information"""
-         infos = []
-         datastores = cls.load_bbfile(filename, appends, configdata)
--        depends = set()
-+        depends = {}
-         for variant, data in sorted(datastores.iteritems(),
-                                     key=lambda i: i[0],
-                                     reverse=True):
-             virtualfn = cls.realfn2virtual(filename, variant)
--            depends |= (data.getVar("__depends", False) or set())
-+            depends.update(data.getVar("__depends", False) or {})
-             if depends and not variant:
-                 data.setVar("__depends", depends)
- 
-@@ -512,8 +512,9 @@ class Cache(object):
-         # Check dependencies are still valid
-         depends = info_array[0].file_depends
-         if depends:
--            for f, old_mtime in depends:
-+            for f in depends:
-                 fmtime = bb.parse.cached_mtime_noerror(f)
-+                old_mtime = depends[f]
-                 # Check if file still exists
-                 if old_mtime != 0 and fmtime == 0:
-                     logger.debug(2, "Cache: %s's dependency %s was removed",
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index a0fcc15..e2bbb48 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -627,12 +627,12 @@ class BBCooker:
-         # Generate a list of parsed configuration files by searching the files
-         # listed in the __depends and __base_depends variables with a .conf suffix.
-         conffiles = []
--        dep_files = bb.data.getVar('__depends', self.configuration.data) or set()
--        dep_files.union(bb.data.getVar('__base_depends', self.configuration.data) or set())
-+        dep_files = bb.data.getVar('__depends', self.configuration.data) or {}
-+        dep_files.update(bb.data.getVar('__base_depends', self.configuration.data) or {})
- 
-         for f in dep_files:
--            if f[0].endswith(".conf"):
--                conffiles.append(f[0])
-+            if f.endswith(".conf"):
-+                conffiles.append(f)
- 
-         _, conf, conffile = path.rpartition("conf/")
-         match = os.path.join(conf, conffile)
-diff --git a/lib/bb/parse/__init__.py b/lib/bb/parse/__init__.py
-index eee8d9c..31a35f9 100644
---- a/lib/bb/parse/__init__.py
-+++ b/lib/bb/parse/__init__.py
-@@ -62,8 +62,8 @@ def update_mtime(f):
- def mark_dependency(d, f):
-     if f.startswith('./'):
-         f = "%s/%s" % (os.getcwd(), f[2:])
--    deps = bb.data.getVar('__depends', d) or set()
--    deps.update([(f, cached_mtime(f))])
-+    deps = bb.data.getVar('__depends', d) or {}
-+    deps[f] =  cached_mtime(f)
-     bb.data.setVar('__depends', deps, d)
- 
- def supports(fn, data):
-diff --git a/lib/bb/ui/hob.py b/lib/bb/ui/hob.py
-index 84df37d..39731fa 100644
---- a/lib/bb/ui/hob.py
-+++ b/lib/bb/ui/hob.py
-@@ -994,12 +994,12 @@ def main (server, eventHandler):
-     # We hope to adjust this long term as tracked in Yocto Bugzilla #1441
-     # http://bugzilla.pokylinux.org/show_bug.cgi?id=1441
-     reqfiles = 0
--    dep_files = server.runCommand(["getVariable", "__depends"]) or set()
--    dep_files.union(server.runCommand(["getVariable", "__base_depends"]) or set())
-+    dep_files = server.runCommand(["getVariable", "__depends"]) or {}
-+    dep_files.update(server.runCommand(["getVariable", "__base_depends"]) or {})
-     for f in dep_files:
--        if f[0].endswith("hob-pre.conf"):
-+        if f.endswith("hob-pre.conf"):
-             reqfiles = reqfiles + 1
--        elif f[0].endswith("hob-post.conf"):
-+        elif f.endswith("hob-post.conf"):
-             reqfiles = reqfiles + 1
-         if reqfiles == 2:
-             break
--- 
-1.7.6
-
+Odd. It works fine in my local testing. Maybe there's a python bug
+lurking -- I can't imagine it's supposed to work this way. Guess we
+have to do it this way, but I really think you should consider
+isolating the problem and reporting it upstream to the python project.
+--=20
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
 
