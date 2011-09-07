@@ -1,31 +1,30 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+Received: from dan.rpsys.net ([93.97.175.187])
+	by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1R0ek4-0001yt-Lc for bitbake-devel@lists.openembedded.org;
-	Mon, 05 Sep 2011 21:22:01 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p85JGwCN000902;
-	Mon, 5 Sep 2011 20:16:58 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 29956-10; Mon,  5 Sep 2011 20:16:54 +0100 (BST)
-Received: from [192.168.1.40] (dynamic10.rpnet.com [192.168.1.40])
-	(authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id p85JGsg3000896
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Mon, 5 Sep 2011 20:16:54 +0100
+	id 1R1MLB-00021E-O9 for bitbake-devel@lists.openembedded.org;
+	Wed, 07 Sep 2011 19:55:13 +0200
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.2/8.14.2/Debian-2build1) with ESMTP id
+	p87HnRhU018593 for <bitbake-devel@lists.openembedded.org>;
+	Wed, 7 Sep 2011 18:49:28 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id vuHT39Hwm7Ih for <bitbake-devel@lists.openembedded.org>;
+	Wed,  7 Sep 2011 18:49:27 +0100 (BST)
+Received: from [192.168.1.40] (tim [93.97.173.237]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.2/8.14.2/Debian-2build1) with ESMTP id
+	p87HnNVg018584
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 7 Sep 2011 18:49:24 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Joshua Lock <josh@linux.intel.com>
-In-Reply-To: <cover.1315008498.git.josh@linux.intel.com>
-References: <cover.1315008498.git.josh@linux.intel.com>
-Date: Mon, 05 Sep 2011 20:16:54 +0100
-Message-ID: <1315250214.1243.4.camel@ted>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Wed, 07 Sep 2011 18:43:20 +0100
+Message-ID: <1315417400.13021.20.camel@ted>
 Mime-Version: 1.0
 X-Mailer: Evolution 2.32.2 
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/6] hob changes for Yocto 1.1
+Subject: runqueue: Ensure task environment is correct
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,41 +36,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 05 Sep 2011 19:22:01 -0000
+X-List-Received-Date: Wed, 07 Sep 2011 17:55:13 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Fri, 2011-09-02 at 17:17 -0700, Joshua Lock wrote:
-> This series addresses issues for the looming Yocto 1.1 code freeze. This
-> means that the series contains a 3 genuine patches followed by 3
-> hide my shame patches to disable features which either a) weren't implmented
-> in time or b) weren't deemed to be stable enough for inclusion in the 1.1
-> release.
-> 
-> Regards,
-> Joshua
-> 
-> The following changes since commit 639db8c766cada7180f9447f51303f9b30d7e817:
-> 
->   fetch2/git: Allow to specify the name of the checkout directory (2011-09-02 14:23:43 +0100)
-> 
-> are available in the git repository at:
->   git://github.com/incandescant/bitbake hob
->   https://github.com/incandescant/bitbake/tree/hob
-> 
-> Joshua Lock (6):
->   hob: use both pre and post files for hob configuration
->   hob: reflect defaultsetup being default distro
->   hob: add a test to ensure hob is run with the required pre and post
->     files
->   ui/crumbs/hobprefs: disable 'build toolchain with headers'
->   ui/crumbs/runningbuild: mask run_buildstats failure
->   hob: disable removal of packages
+This fixes two problems:
 
-Merged to master, thanks.
+a) Variables which were in the parent environment but not set as "export"
+   variables in the datastore could end up in the task environment
 
-Richard
+b) oe.environ.update() can't cope with the generator returned by 
+   bb.data.exported_vars()
 
+Whilst the updated code isn't as neat, it does do the expected thing,
+sets the environment correctly and stops unwanted values leaking into
+the task environment.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 5a4321f..72e6845 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1136,7 +1136,12 @@ class RunQueueExecute:
+                 for h in self.rqdata.hash_deps:
+                     the_data.setVar("BBHASHDEPS_%s" % h, self.rqdata.hash_deps[h])
+ 
+-                os.environ.update(bb.data.exported_vars(the_data))
++                # exported_vars() returns a generator which *cannot* be passed to os.environ.update() 
++                # successfully. We also need to unset anything from the environment which shouldn't be there 
++                exports = bb.data.exported_vars(the_data)
++                bb.utils.empty_environment()
++                for e, v in exports:
++                    os.environ[e] = v
+ 
+                 if quieterrors:
+                     the_data.setVarFlag(taskname, "quieterrors", "1")
 
 
 
