@@ -1,32 +1,20 @@
-Received: from mail-wy0-f175.google.com ([74.125.82.175])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <julian.pidancet@gmail.com>) id 1R6Acj-0007ZK-Pp
+	(envelope-from <josh@linux.intel.com>) id 1R6BSf-0000IM-5r
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 21 Sep 2011 02:25:13 +0200
-Received: by wyh5 with SMTP id 5so1401921wyh.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Sep 2011 17:19:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
-	h=from:to:cc:subject:date:message-id:x-mailer:to;
-	bh=Hwctr0yzozr2+JCr3aoxSDBbTL9PvE1Sy+a2x97JjfQ=;
-	b=Ze83FtGGz1GJoMUesh1EsLdRDagsbh3xkF9XoBan5CHaxCUeAcR7nMOb/N7GYuMD70
-	N8EMAPZfeDChQPbsxf6h2dWMllbgMLppH+7P8qlv6lRUKBYOHH8T6SslYkLndl1eUd/m
-	8DNdr3+0wl2deNFG/BNuJ3xX0VV/9oXM+PIDk=
-Received: by 10.216.230.105 with SMTP id i83mr103799weq.50.1316564395785;
-	Tue, 20 Sep 2011 17:19:55 -0700 (PDT)
-Received: from localhost.localdomain (188-223-88-44.zone14.bethere.co.uk.
-	[188.223.88.44])
-	by mx.google.com with ESMTPS id j18sm4664206wbo.6.2011.09.20.17.19.52
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Tue, 20 Sep 2011 17:19:55 -0700 (PDT)
-From: Julian Pidancet <julian.pidancet@gmail.com>
+	Wed, 21 Sep 2011 03:18:53 +0200
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 20 Sep 2011 18:13:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.68,414,1312182000"; d="scan'208";a="53811750"
+Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.14.183])
+	by fmsmga001.fm.intel.com with ESMTP; 20 Sep 2011 18:13:33 -0700
+From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 21 Sep 2011 02:14:54 +0100
-Message-Id: <1316567694-22600-1-git-send-email-julian.pidancet@gmail.com>
-X-Mailer: git-send-email 1.7.3.4
-To: bitbake-devel@lists.openembedded.org
-Cc: Julian Pidancet <julian.pidancet@gmail.com>
-Subject: [PATCH] Fix mercurial fetcher in fetch2
+Date: Tue, 20 Sep 2011 18:13:25 -0700
+Message-Id: <cover.1316567365.git.josh@linux.intel.com>
+X-Mailer: git-send-email 1.7.6.2
+Subject: [PATCH 0/2] Hob fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -38,32 +26,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 21 Sep 2011 00:25:13 -0000
+X-List-Received-Date: Wed, 21 Sep 2011 01:18:53 -0000
 
-The _build_revision method in Hg class gets called with the wrong number
-of arguments. This tiny patch adds a 5th argument to the method
-declaration to prevent python from throwing an exception.
+The first patch is another case of my submitting patches with a dumb typo in,
+apologies folks, it re-enables the right-click menu for the log messages of
+failed tasks.
 
-Signed-off-by: Julian Pidancet <julian.pidancet@gmail.com>
----
- lib/bb/fetch2/hg.py |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+The second patch fixes the consistency and the URI of the 'Browse folder of
+built images" label.
 
-diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py
-index 793831a..ad6e85d 100644
---- a/lib/bb/fetch2/hg.py
-+++ b/lib/bb/fetch2/hg.py
-@@ -166,7 +166,7 @@ class Hg(FetchMethod):
-         output = runfetchcmd(self._buildhgcommand(ud, d, "info"), d)
-         return output.strip()
- 
--    def _build_revision(self, url, ud, d):
-+    def _build_revision(self, url, ud, d, name):
-         return ud.revision
- 
-     def _revision_key(self, url, ud, d, name):
+Richard, please consider these for Yocto 1.1 as well as master.
+
+Regards,
+Joshua
+
+The following changes since commit 705156e2812afb288632f01416fcbbf9add26bee:
+
+  hob: enable package only builds even if an image has been built (2011-09-19 15:28:09 -0700)
+
+are available in the git repository at:
+  git://github.com/incandescant/bitbake hob
+  https://github.com/incandescant/bitbake/tree/hob
+
+Joshua Lock (2):
+  ui/crumbs/runningbuild: fix log messages right-click menu
+  hob: fix opening of image output dir on image build completion
+
+ lib/bb/ui/crumbs/hobeventhandler.py |    5 ++++-
+ lib/bb/ui/crumbs/runningbuild.py    |    8 ++++----
+ 2 files changed, 8 insertions(+), 5 deletions(-)
+
 -- 
-1.7.3.4
+1.7.6.2
 
 
 
