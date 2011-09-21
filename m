@@ -1,24 +1,32 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mail-wy0-f175.google.com ([74.125.82.175])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1R6AYW-0007Ti-Mb
+	(envelope-from <julian.pidancet@gmail.com>) id 1R6Acj-0007ZK-Pp
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 21 Sep 2011 02:20:52 +0200
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 20 Sep 2011 17:15:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.68,413,1312182000"; d="scan'208";a="19001151"
-Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.14.183])
-	by AZSMGA002.ch.intel.com with ESMTP; 20 Sep 2011 17:15:32 -0700
-From: Joshua Lock <josh@linux.intel.com>
+	Wed, 21 Sep 2011 02:25:13 +0200
+Received: by wyh5 with SMTP id 5so1401921wyh.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 20 Sep 2011 17:19:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=from:to:cc:subject:date:message-id:x-mailer:to;
+	bh=Hwctr0yzozr2+JCr3aoxSDBbTL9PvE1Sy+a2x97JjfQ=;
+	b=Ze83FtGGz1GJoMUesh1EsLdRDagsbh3xkF9XoBan5CHaxCUeAcR7nMOb/N7GYuMD70
+	N8EMAPZfeDChQPbsxf6h2dWMllbgMLppH+7P8qlv6lRUKBYOHH8T6SslYkLndl1eUd/m
+	8DNdr3+0wl2deNFG/BNuJ3xX0VV/9oXM+PIDk=
+Received: by 10.216.230.105 with SMTP id i83mr103799weq.50.1316564395785;
+	Tue, 20 Sep 2011 17:19:55 -0700 (PDT)
+Received: from localhost.localdomain (188-223-88-44.zone14.bethere.co.uk.
+	[188.223.88.44])
+	by mx.google.com with ESMTPS id j18sm4664206wbo.6.2011.09.20.17.19.52
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Tue, 20 Sep 2011 17:19:55 -0700 (PDT)
+From: Julian Pidancet <julian.pidancet@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 20 Sep 2011 17:15:26 -0700
-Message-Id: <d2b9167a7b0eb3fcb31d64f915beef41aac659a5.1316564030.git.josh@linux.intel.com>
-X-Mailer: git-send-email 1.7.6.2
-In-Reply-To: <cover.1316564030.git.josh@linux.intel.com>
-References: <cover.1316564030.git.josh@linux.intel.com>
-In-Reply-To: <cover.1316564030.git.josh@linux.intel.com>
-References: <cover.1316564030.git.josh@linux.intel.com>
-Subject: [PATCH 1/1] ui/crumbs/runningbuild: fix log messages right-click menu
+Date: Wed, 21 Sep 2011 02:14:54 +0100
+Message-Id: <1316567694-22600-1-git-send-email-julian.pidancet@gmail.com>
+X-Mailer: git-send-email 1.7.3.4
+To: bitbake-devel@lists.openembedded.org
+Cc: Julian Pidancet <julian.pidancet@gmail.com>
+Subject: [PATCH] Fix mercurial fetcher in fetch2
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,30 +38,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 21 Sep 2011 00:20:52 -0000
+X-List-Received-Date: Wed, 21 Sep 2011 00:25:13 -0000
 
-Pass the correct callback name to the connect method.
+The _build_revision method in Hg class gets called with the wrong number
+of arguments. This tiny patch adds a 5th argument to the method
+declaration to prevent python from throwing an exception.
 
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
+Signed-off-by: Julian Pidancet <julian.pidancet@gmail.com>
 ---
- lib/bb/ui/crumbs/runningbuild.py |    2 +-
+ lib/bb/fetch2/hg.py |    2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/lib/bb/ui/crumbs/runningbuild.py b/lib/bb/ui/crumbs/runningbuild.py
-index e429715..bd0cbf0 100644
---- a/lib/bb/ui/crumbs/runningbuild.py
-+++ b/lib/bb/ui/crumbs/runningbuild.py
-@@ -325,7 +325,7 @@ class RunningBuildTreeView (gtk.TreeView):
-                     menu = gtk.Menu()
-                     menuitem = gtk.MenuItem("Copy")
-                     menu.append(menuitem)
--                    menuitem.connect("activate", self.copy_handler, (model, it))
-+                    menuitem.connect("activate", self.clipboard_handler, (model, it))
-                     menuitem.show()
-                     menuitem = gtk.MenuItem("Send log to pastebin")
-                     menu.append(menuitem)
+diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py
+index 793831a..ad6e85d 100644
+--- a/lib/bb/fetch2/hg.py
++++ b/lib/bb/fetch2/hg.py
+@@ -166,7 +166,7 @@ class Hg(FetchMethod):
+         output = runfetchcmd(self._buildhgcommand(ud, d, "info"), d)
+         return output.strip()
+ 
+-    def _build_revision(self, url, ud, d):
++    def _build_revision(self, url, ud, d, name):
+         return ud.revision
+ 
+     def _revision_key(self, url, ud, d, name):
 -- 
-1.7.6.2
+1.7.3.4
 
 
 
