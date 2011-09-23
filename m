@@ -1,24 +1,20 @@
 Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1R78KY-0001sZ-PW
+	(envelope-from <josh@linux.intel.com>) id 1R7CXS-0007fl-CV
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 23 Sep 2011 18:10:27 +0200
+	Fri, 23 Sep 2011 22:40:02 +0200
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 23 Sep 2011 09:05:03 -0700
+	by fmsmga102.fm.intel.com with ESMTP; 23 Sep 2011 13:34:40 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.68,431,1312182000"; d="scan'208";a="66634830"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.120.136])
-	by fmsmga001.fm.intel.com with ESMTP; 23 Sep 2011 09:05:03 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="4.68,432,1312182000"; d="scan'208";a="66944248"
+Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.15.15])
+	by fmsmga001.fm.intel.com with ESMTP; 23 Sep 2011 13:34:40 -0700
+From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 23 Sep 2011 17:05:00 +0100
-Message-Id: <8e4d22e7d6339849c7efb9460cafdfddb5ece76f.1316793495.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.7.4.1
-In-Reply-To: <cover.1316793495.git.paul.eggleton@linux.intel.com>
-References: <cover.1316793495.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1316793495.git.paul.eggleton@linux.intel.com>
-References: <cover.1316793495.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 1/1] bitbake/lib/bb/msg.py: fix setting debug and verbosity levels
+Date: Fri, 23 Sep 2011 13:34:30 -0700
+Message-Id: <cover.1316809959.git.josh@linux.intel.com>
+X-Mailer: git-send-email 1.7.6.2
+Subject: [PATCH 0/3] Hob bug fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,60 +26,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 23 Sep 2011 16:10:27 -0000
+X-List-Received-Date: Fri, 23 Sep 2011 20:40:02 -0000
 
-The debug and verbosity levels (as set by the -D and -v command line
-options respectively)  were not being passed through within msg.py since
-bitbake revision 45aad2f9647df14bcfa5e755b57e1ddab377939a due to
-incorrect variable names.
+This series includes a few fixes found whilst debugging and fixing
+Yocto bug #1521
+http://bugzilla.yoctoproject.org/show_bug.cgi?id=1521
 
-Fixes [YOCTO #1513].
+Richard, please consider these for Yocto 1.1
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- bitbake/lib/bb/build.py |    4 ++--
- bitbake/lib/bb/msg.py   |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Regards,
+Joshua
 
-diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-index 00304b4..8937f08 100644
---- a/bitbake/lib/bb/build.py
-+++ b/bitbake/lib/bb/build.py
-@@ -223,7 +223,7 @@ def exec_func_shell(function, d, runfile, cwd=None):
- 
-     with open(runfile, 'w') as script:
-         script.write('#!/bin/sh -e\n')
--        if bb.msg.loggerVerbose:
-+        if bb.msg.loggerDefaultVerbose:
-             script.write("set -x\n")
-         data.emit_func(function, script, d)
-         if cwd:
-@@ -234,7 +234,7 @@ def exec_func_shell(function, d, runfile, cwd=None):
- 
-     cmd = runfile
- 
--    if bb.msg.loggerVerbose:
-+    if bb.msg.loggerDefaultVerbose:
-         logfile = LogTee(logger, sys.stdout)
-     else:
-         logfile = sys.stdout
-diff --git a/bitbake/lib/bb/msg.py b/bitbake/lib/bb/msg.py
-index b7ae761..20d9bdd 100644
---- a/bitbake/lib/bb/msg.py
-+++ b/bitbake/lib/bb/msg.py
-@@ -106,8 +106,8 @@ def init_msgconfig(verbose, debug, debug_domains = []):
-     """
-     Set default verbosity and debug levels config the logger
-     """
--    bb.msg.loggerDebugLevel = debug
--    bb.msg.loggerVerbose = verbose
-+    bb.msg.loggerDefaultDebugLevel = debug
-+    bb.msg.loggerDefaultVerbose = verbose
-     bb.msg.loggerDefaultDomains = debug_domains
- 
- def addDefaultlogFilter(handler):
+The following changes since commit 623e9c7f7a9cf12b8c81c26cc608990682a601dd:
+
+  Fix mercurial fetcher in fetch2 (2011-09-21 14:07:14 +0100)
+
+are available in the git repository at:
+  git://github.com/incandescant/bitbake hob
+  https://github.com/incandescant/bitbake/tree/hob
+
+Joshua Lock (3):
+  ui/crumbs/hobeventhandler: move remaining getVariable calls to init
+  ui/crumbs/hobeventhandler: fix variable name typo
+  hob: fix building with current selections after reparse
+
+ lib/bb/ui/crumbs/hobeventhandler.py |   11 ++++++-----
+ lib/bb/ui/hob.py                    |    2 --
+ 2 files changed, 6 insertions(+), 7 deletions(-)
+
 -- 
-1.7.4.1
+1.7.6.2
 
 
 
