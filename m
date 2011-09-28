@@ -1,23 +1,23 @@
 Received: from mail-ww0-f43.google.com ([74.125.82.43])
 	by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <dbaryshkov@gmail.com>)
-	id 1R8xuy-0002Fw-B1; Wed, 28 Sep 2011 19:27:36 +0200
-Received: by wwf27 with SMTP id 27so7464766wwf.24
-	for <multiple recipients>; Wed, 28 Sep 2011 10:22:09 -0700 (PDT)
+	id 1R8zP6-00041H-Lo; Wed, 28 Sep 2011 21:02:48 +0200
+Received: by wwf27 with SMTP id 27so7564326wwf.24
+	for <multiple recipients>; Wed, 28 Sep 2011 11:57:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
 	h=message-id:date:from:user-agent:mime-version:to:cc:subject
 	:references:in-reply-to:content-type:content-transfer-encoding;
-	bh=qP/ZN5t/BOZZlaG65+4D7lBBtjBG0etPuhGIvkSnuL4=;
-	b=mh8CRKZMTREyCXTsdrenlvr+phiPALNDGPmGKRH93janT6NkFHC8UEERyaR2oYx2er
-	sXRCmzyz1oeqkj0ZQOuKqoBbzVw5nTIUxUS7TPQLz0vRr/691JZCtKPFtPn0eOwGBJEA
-	cX1R4cG7M59UnXxgZVoHvniSeytChaAK+q108=
-Received: by 10.227.203.193 with SMTP id fj1mr8488446wbb.42.1317230529714;
-	Wed, 28 Sep 2011 10:22:09 -0700 (PDT)
+	bh=aN9mWWln0YxRyRATYrfgYbkHYzBmm06gwUq+G9vnZvQ=;
+	b=aUHDJpk+l36W8yWjz5XrFKX4D2xHW2YqV1cHs6juYANwPM99rq0vaT34ouD7iBbmXi
+	hRAlOufzXF0ETviVgsv6v0OB7kP/cyaH7Tn7awFRgE/LmpkBlDKD+bpBjjiSim94zmgT
+	pIQbdcYoQhtxXSUHD/XtJIVfUJaxjTsFtgRro=
+Received: by 10.227.61.142 with SMTP id t14mr6163870wbh.68.1317236238213;
+	Wed, 28 Sep 2011 11:57:18 -0700 (PDT)
 Received: from [137.202.140.192] (nat-rup.mentorg.com. [139.181.168.34])
-	by mx.google.com with ESMTPS id k26sm38401657wbo.16.2011.09.28.10.22.08
-	(version=SSLv3 cipher=OTHER); Wed, 28 Sep 2011 10:22:08 -0700 (PDT)
-Message-ID: <4E835785.9090705@gmail.com>
-Date: Wed, 28 Sep 2011 21:21:09 +0400
+	by mx.google.com with ESMTPS id l40sm27210899wbm.10.2011.09.28.11.57.16
+	(version=SSLv3 cipher=OTHER); Wed, 28 Sep 2011 11:57:17 -0700 (PDT)
+Message-ID: <4E836DD1.5010600@gmail.com>
+Date: Wed, 28 Sep 2011 22:56:17 +0400
 From: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
 User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; en-US;
 	rv:1.9.2.21) Gecko/20110831 Iceowl/1.0b2 Icedove/3.1.13
@@ -42,7 +42,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 28 Sep 2011 17:27:36 -0000
+X-List-Received-Date: Wed, 28 Sep 2011 19:02:48 -0000
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 
@@ -56,12 +56,14 @@ On 09/28/2011 05:32 PM, Paul Eggleton wrote:
 > if metadata can influence it to behave this way. If we can produce a simplified
 > test case I think it will be easier to fix.
 
-In my test setup I could no longer reproduce this. I'll try reproducing 
-this on my main builder.
+I was too early to say that it works. Got the same issues again on my 
+main builder. I'll run some more tests. E.g. main builder has my 
+meta-micro FEED_ARCH patch commited. That might be one of the problems.
 
--- 
-With best wishes
-Dmitry
+>
+> Cheers,
+> Paul
+>
 
 
 
