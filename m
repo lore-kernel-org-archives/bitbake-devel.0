@@ -1,36 +1,23 @@
-Received: from mail-ww0-f43.google.com ([74.125.82.43])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dbaryshkov@gmail.com>)
-	id 1R8zP6-00041H-Lo; Wed, 28 Sep 2011 21:02:48 +0200
-Received: by wwf27 with SMTP id 27so7564326wwf.24
-	for <multiple recipients>; Wed, 28 Sep 2011 11:57:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
-	h=message-id:date:from:user-agent:mime-version:to:cc:subject
-	:references:in-reply-to:content-type:content-transfer-encoding;
-	bh=aN9mWWln0YxRyRATYrfgYbkHYzBmm06gwUq+G9vnZvQ=;
-	b=aUHDJpk+l36W8yWjz5XrFKX4D2xHW2YqV1cHs6juYANwPM99rq0vaT34ouD7iBbmXi
-	hRAlOufzXF0ETviVgsv6v0OB7kP/cyaH7Tn7awFRgE/LmpkBlDKD+bpBjjiSim94zmgT
-	pIQbdcYoQhtxXSUHD/XtJIVfUJaxjTsFtgRro=
-Received: by 10.227.61.142 with SMTP id t14mr6163870wbh.68.1317236238213;
-	Wed, 28 Sep 2011 11:57:18 -0700 (PDT)
-Received: from [137.202.140.192] (nat-rup.mentorg.com. [139.181.168.34])
-	by mx.google.com with ESMTPS id l40sm27210899wbm.10.2011.09.28.11.57.16
-	(version=SSLv3 cipher=OTHER); Wed, 28 Sep 2011 11:57:17 -0700 (PDT)
-Message-ID: <4E836DD1.5010600@gmail.com>
-Date: Wed, 28 Sep 2011 22:56:17 +0400
-From: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
-User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; en-US;
-	rv:1.9.2.21) Gecko/20110831 Iceowl/1.0b2 Icedove/3.1.13
+	(envelope-from <ke.yu@intel.com>)
+	id 1R9eHi-0002iM-TS; Fri, 30 Sep 2011 16:41:55 +0200
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 30 Sep 2011 07:36:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.68,467,1312182000"; d="scan'208";a="69056075"
+Received: from kyu3-desk.ccr.corp.intel.com (HELO [10.238.154.176])
+	([10.238.154.176])
+	by fmsmga001.fm.intel.com with ESMTP; 30 Sep 2011 07:36:16 -0700
+Message-ID: <4E85D3E0.7070807@intel.com>
+Date: Fri, 30 Sep 2011 22:36:16 +0800
+From: Yu Ke <ke.yu@intel.com>
+User-Agent: Mozilla/5.0 (Windows NT 5.1; rv:7.0) Gecko/20110922 Thunderbird/7.0
 MIME-Version: 1.0
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
-References: <CALT56yN5hXMLBhHVLKyHbNb=7WDb3pZUB0Q+HNKc-2t+g6M58A@mail.gmail.com>
-	<201109281116.00890.paul.eggleton@linux.intel.com>
-	<4E831868.4090603@gmail.com>
-	<201109281432.57331.paul.eggleton@linux.intel.com>
-In-Reply-To: <201109281432.57331.paul.eggleton@linux.intel.com>
-Cc: bitbake-devel@lists.openembedded.org,
-	openembedded-core@lists.openembedded.org
-Subject: Re: [OE-core] meta-micro problems
+To: bitbake-devel@lists.openembedded.org, 
+	openembedded-core <openembedded-core@lists.openembedded.org>,
+	Lock, Joshua <joshua.lock@intel.com>
+Subject: Feedback on HOB (new image creator GUI)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -42,28 +29,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 28 Sep 2011 19:02:48 -0000
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+X-List-Received-Date: Fri, 30 Sep 2011 14:41:55 -0000
+Content-Type: text/plain; charset=GB18030; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 09/28/2011 05:32 PM, Paul Eggleton wrote:
-> On Wednesday 28 September 2011 13:51:52 Dmitry Eremin-Solenikov wrote:
->> If you wish, I can retry this with smaller layer set. But if the bug
->> will still arise, I simply have no knowledge/time to look deeper into bb
->> without additional input/pointers from bb gurus.
->
-> That's OK, I can spend time looking into it. It sounds like a bug in bitbake
-> if metadata can influence it to behave this way. If we can produce a simplified
-> test case I think it will be easier to fix.
+Hi,
 
-I was too early to say that it works. Got the same issues again on my 
-main builder. I'll run some more tests. E.g. main builder has my 
-meta-micro FEED_ARCH patch commited. That might be one of the problems.
+As you may already know, a new GUI has been added to bitbake recently, 
+i.e. HOB (Human Oriented Builder). It is a graphical image creator that 
+allows user to freely choose which packages to be built in the image. 
+The wiki https://wiki.yoctoproject.org/wiki/BitBake/GUI/Hob  has more 
+detail.
 
->
-> Cheers,
-> Paul
->
+This email is to collect your feedback on the HOB. Current HOB is our 
+first version, and it surely has many place to improve. We has the plan 
+to enhance it in Yocto 1.2. So we really hope that you can use it and 
+provide your valuable feedback . We do think user's feedback/requirement 
+is the right way to go. Looking forward your valuable input.
 
+Best Regards
+Ke
+
+Ps. The simple way to run hob is:
+# touch conf/hob-pre.conf conf/hob-post.conf
+# bitbake -u hob -r conf/hob-pre.conf -R conf/hob-post.conf
+
+Where conf/hob-pre.conf conf/hob-post.conf is the configuration file, 
+which can be empty in above case.
 
 
