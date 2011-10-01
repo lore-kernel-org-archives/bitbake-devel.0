@@ -1,56 +1,40 @@
-Received: from am1ehsobe001.messaging.microsoft.com ([213.199.154.204]
-	helo=AM1EHSOBE001.bigfish.com)
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <B29882@freescale.com>) id 1R9g9e-0006HN-Bn
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 30 Sep 2011 18:41:43 +0200
-Received: from mail19-am1-R.bigfish.com (10.3.201.247) by
-	AM1EHSOBE001.bigfish.com (10.3.204.21) with Microsoft SMTP Server id
-	14.1.225.22; Fri, 30 Sep 2011 16:21:04 +0000
-Received: from mail19-am1 (localhost.localdomain [127.0.0.1])	by
-	mail19-am1-R.bigfish.com (Postfix) with ESMTP id 402642F04B8;
-	Fri, 30 Sep 2011 16:21:04 +0000 (UTC)
-X-SpamScore: -17
-X-BigFish: VS-17(zz9371K1803M1432N98dKzz1202hzz8275bh8275dhz2dh2a8h668h839h8e2h8e3h)
-X-Forefront-Antispam-Report: CIP:70.37.183.190; KIP:(null); UIP:(null);
-	IPVD:NLI; H:mail.freescale.net; RD:none; EFVD:NLI
-X-FB-SS: 0,
-Received: from mail19-am1 (localhost.localdomain [127.0.0.1]) by mail19-am1
-	(MessageSwitch) id 1317399639661688_25021;
-	Fri, 30 Sep 2011 16:20:39 +0000 (UTC)
-Received: from AM1EHSMHS001.bigfish.com (unknown [10.3.201.252])	by
-	mail19-am1.bigfish.com (Postfix) with ESMTP id 97A3313B0062;
-	Fri, 30 Sep 2011 16:20:39 +0000 (UTC)
-Received: from mail.freescale.net (70.37.183.190) by AM1EHSMHS001.bigfish.com
-	(10.3.207.101) with Microsoft SMTP Server (TLS) id 14.1.225.22;
-	Fri, 30 Sep 2011 16:20:38 +0000
-Received: from 039-SN1MPN1-003.039d.mgd.msft.net ([169.254.3.230]) by
-	039-SN1MMR1-003.039d.mgd.msft.net ([10.84.1.16]) with mapi id
-	14.01.0323.007; Fri, 30 Sep 2011 11:20:37 -0500
-From: McClintock Matthew-B29882 <B29882@freescale.com>
-To: Yu Ke <ke.yu@intel.com>
-Thread-Topic: [bitbake-devel] Feedback on HOB (new image creator GUI)
-Thread-Index: AQHMf4ziodQj6EIfBk2AFipaRDmOxg==
-Date: Fri, 30 Sep 2011 16:20:36 +0000
-Message-ID: <CAEsOVNdwudRO7V2DQhpESC=xCqDtJqxJ72+e_hYDLq7bE=z+cg@mail.gmail.com>
-References: <4E85D3E0.7070807@intel.com>
-In-Reply-To: <4E85D3E0.7070807@intel.com>
+	(envelope-from <ke.yu@intel.com>)
+	id 1R9nSd-0007Pa-NM; Sat, 01 Oct 2011 02:29:47 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 30 Sep 2011 17:23:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="57894048"
+Received: from pgsmsx603.gar.corp.intel.com ([10.221.43.87])
+	by orsmga001.jf.intel.com with ESMTP; 30 Sep 2011 17:23:11 -0700
+Received: from shsmsx601.ccr.corp.intel.com (10.239.4.112) by
+	pgsmsx603.gar.corp.intel.com (10.221.43.87) with Microsoft SMTP Server
+	(TLS) id 8.2.255.0; Sat, 1 Oct 2011 08:23:10 +0800
+Received: from shsmsx501.ccr.corp.intel.com ([10.239.4.141]) by
+	shsmsx601.ccr.corp.intel.com ([10.239.4.112]) with mapi; Sat, 1 Oct 2011
+	08:23:10 +0800
+From: "Yu, Ke" <ke.yu@intel.com>
+To: Gary Thomas <gary@mlbassoc.com>, Patches and discussions about the oe-core
+	layer <openembedded-core@lists.openembedded.org>
+Date: Sat, 1 Oct 2011 08:23:07 +0800
+Thread-Topic: [OE-core] Feedback on HOB (new image creator GUI)
+Thread-Index: Acx/u7wCyDF/D/FDSdqSuqcGLy6/hAAEdL/Q
+Message-ID: <33AB447FBD802F4E932063B962385B3512DAF448FB@shsmsx501.ccr.corp.intel.com>
+References: <4E85D3E0.7070807@intel.com> <4E863AE8.7020901@mlbassoc.com>
+In-Reply-To: <4E863AE8.7020901@mlbassoc.com>
 Accept-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [99.47.177.27]
+acceptlanguage: en-US
 MIME-Version: 1.0
-X-OriginatorOrg: freescale.com
-X-Mailman-Approved-At: Fri, 30 Sep 2011 23:43:27 +0200
-Cc: "joshua.lock@intel.com" <joshua.lock@intel.com>,
+Cc: "Lock, Joshua" <joshua.lock@intel.com>,
 	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>,
-	openembedded-core <openembedded-core@lists.openembedded.org>
-Subject: Re: Feedback on HOB (new image creator GUI)
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [OE-core] Feedback on HOB (new image creator GUI)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
-Reply-To: McClintock Matthew-B29882 <B29882@freescale.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 List-Unsubscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/options/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=unsubscribe>
@@ -59,47 +43,80 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 30 Sep 2011 16:41:43 -0000
+X-List-Received-Date: Sat, 01 Oct 2011 00:29:48 -0000
 Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <EB1F4B4F878AAE43B6BFB62D25A48CA0@freescale.net>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 30, 2011 at 9:36 AM, Yu Ke <ke.yu@intel.com> wrote:
-> Hi,
->
-> As you may already know, a new GUI has been added to bitbake recently, i.=
-e.
-> HOB (Human Oriented Builder). It is a graphical image creator that allows
+> -----Original Message-----
+> From: Gary Thomas [mailto:gary@mlbassoc.com]
+> Sent: Saturday, October 01, 2011 5:56 AM
+> To: Patches and discussions about the oe-core layer
+> Cc: Yu, Ke; bitbake-devel@lists.openembedded.org; Lock, Joshua
+> Subject: Re: [OE-core] Feedback on HOB (new image creator GUI)
+>=20
+> On 2011-09-30 08:36, Yu Ke wrote:
+> > Hi,
+> >
+> > As you may already know, a new GUI has been added to bitbake recently,
+> > i.e. HOB (Human Oriented Builder). It is a graphical image creator that=
+ allows
 > user to freely choose which packages to be built in the image. The wiki
-> https://wiki.yoctoproject.org/wiki/BitBake/GUI/Hob =A0has more detail.
->
-> This email is to collect your feedback on the HOB. Current HOB is our fir=
-st
-> version, and it surely has many place to improve. We has the plan to enha=
-nce
-> it in Yocto 1.2. So we really hope that you can use it and provide your
+> https://wiki.yoctoproject.org/wiki/BitBake/GUI/Hob has more detail.
+> >
+> > This email is to collect your feedback on the HOB. Current HOB is our
+> > first version, and it surely has many place to improve. We has the plan=
+ to
+> enhance it in Yocto 1.2. So we really hope that you can use it and provid=
+e your
 > valuable feedback . We do think user's feedback/requirement is the right =
-way
-> to go. Looking forward your valuable input.
->
-> Best Regards
-> Ke
->
-> Ps. The simple way to run hob is:
-> # touch conf/hob-pre.conf conf/hob-post.conf
-> # bitbake -u hob -r conf/hob-pre.conf -R conf/hob-post.conf
->
-> Where conf/hob-pre.conf conf/hob-post.conf is the configuration file, whi=
-ch
+way to
+> go. Looking forward your valuable input.
+> >
+> > Best Regards
+> > Ke
+> >
+> > Ps. The simple way to run hob is:
+> > # touch conf/hob-pre.conf conf/hob-post.conf # bitbake -u hob -r
+> > conf/hob-pre.conf -R conf/hob-post.conf
+> >
+> > Where conf/hob-pre.conf conf/hob-post.conf is the configuration file, w=
+hich
 > can be empty in above case.
+>=20
+> I build images which are not based on any of the core-XXX images listed b=
+y HOB.
+> How can I get them into the drop-down base list?
+> Is there a way I can filter out some of the base images?  tasks?
 
-Has any discussion gone into making some sort of plugin or extensions?
-I'd like for it to be as easy as possible for someone new to make hob
-be able to some things like: configure runtime services, configure
-networking settings, add users, and I'm sure there are other things.
+Gary, thanks for trying and giving out the input. It is helpful.
 
--M=
+For the base image list, HOB generate it by searching all the task whose na=
+me containing "image", and we plan to improve it in Yocto 1.2 by searching =
+task who inherits image.bbclass. =20
 
+So currently, if you name your own image with XXX-image, HOB should be able=
+ to automatically add it in the drop-down list.
+
+And yes, it is helpful to allow user adding item into base image list. it c=
+an be done by adding one item in "Edit"->"Preference". I will add this requ=
+irement to my plan. For base image filtering, I am not sure if it is necess=
+ary, since base image list is not that long. How do you think?
+
+Regards
+Ke
+
+>=20
+> I ask these questions because in particular, I use a lot of the recipes i=
+n meta and
+> meta-yocto, but none of the images or tasks (because they don't really ad=
+dress
+> my needs, don't take offense, I just want more control than they offer)
+>=20
+> --
+> ------------------------------------------------------------
+> Gary Thomas                 |  Consulting for the
+> MLB Associates              |    Embedded world
+> ------------------------------------------------------------
 
 
