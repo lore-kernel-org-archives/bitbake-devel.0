@@ -1,30 +1,35 @@
-Received: from hermes.mlbassoc.com ([64.234.241.98] helo=mail.chez-thomas.org)
+Received: from mail-bw0-f47.google.com ([209.85.214.47])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <gary@mlbassoc.com>) id 1R9lFR-0005LI-6x
-	for bitbake-devel@lists.openembedded.org;
-	Sat, 01 Oct 2011 00:08:01 +0200
-Received: by mail.chez-thomas.org (Postfix, from userid 999)
-	id 4694C16601DB; Fri, 30 Sep 2011 15:55:53 -0600 (MDT)
-X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
-	hermes.chez-thomas.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=4.0 tests=ALL_TRUSTED,BAYES_00
-	autolearn=unavailable version=3.3.2
-Received: from hermes.chez-thomas.org (localhost.localdomain [127.0.0.1])
-	by mail.chez-thomas.org (Postfix) with ESMTP id 7659316601AC;
-	Fri, 30 Sep 2011 15:55:52 -0600 (MDT)
-Message-ID: <4E863AE8.7020901@mlbassoc.com>
-Date: Fri, 30 Sep 2011 15:55:52 -0600
-From: Gary Thomas <gary@mlbassoc.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
-	rv:6.0.2) Gecko/20110906 Thunderbird/6.0.2
+	(envelope-from <otavio.salvador@gmail.com>)
+	id 1RA3j9-0005aN-UM; Sat, 01 Oct 2011 19:51:56 +0200
+Received: by bke11 with SMTP id 11so3247230bke.6
+	for <multiple recipients>; Sat, 01 Oct 2011 10:46:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=mime-version:sender:in-reply-to:references:date
+	:x-google-sender-auth:message-id:subject:from:to:cc:content-type
+	:content-transfer-encoding;
+	bh=IXEzEABLbE3F1ZisndxeVS1TeJcoSC7qgWaDBeA2ncg=;
+	b=Sn+ZYafk8xgjPTSypSdIkohNDpSNQx+sAZgsmkjPjdmQHnQK/q4o2xjeF4sAC6Aibb
+	I5bqCMWROY4etMwYH2o3hfK3HQNnGhk1g+bwN7w6xVDZsMCZ7PEs1Ov5EsFL0Uju84zX
+	9+gC4n4IJiSH5GE3D4QNgE4oD7FtgTTi/soHY=
 MIME-Version: 1.0
+Received: by 10.204.138.193 with SMTP id b1mr8677023bku.114.1317491185270;
+	Sat, 01 Oct 2011 10:46:25 -0700 (PDT)
+Sender: otavio.salvador@gmail.com
+Received: by 10.204.35.198 with HTTP; Sat, 1 Oct 2011 10:46:25 -0700 (PDT)
+In-Reply-To: <33AB447FBD802F4E932063B962385B3512DAF448FB@shsmsx501.ccr.corp.intel.com>
+References: <4E85D3E0.7070807@intel.com> <4E863AE8.7020901@mlbassoc.com>
+	<33AB447FBD802F4E932063B962385B3512DAF448FB@shsmsx501.ccr.corp.intel.com>
+Date: Sat, 1 Oct 2011 14:46:25 -0300
+X-Google-Sender-Auth: IAxt3DBdb_HeusFjC7hyPJiPKWs
+Message-ID: <CAP9ODKpnvcCJWCYDMbyL5n_HDjxb+6cwy54BWTaXqM2eH5=G_w@mail.gmail.com>
+From: Otavio Salvador <otavio@ossystems.com.br>
 To: Patches and discussions about the oe-core layer
 	<openembedded-core@lists.openembedded.org>
-References: <4E85D3E0.7070807@intel.com>
-In-Reply-To: <4E85D3E0.7070807@intel.com>
 X-Mailman-Approved-At: Wed, 05 Oct 2011 15:27:42 +0200
-Cc: Joshua <joshua.lock@intel.com>, bitbake-devel@lists.openembedded.org
+Cc: "Lock, Joshua" <joshua.lock@intel.com>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>, Gary Thomas <gary@mlbassoc.com>
 Subject: Re: [OE-core] Feedback on HOB (new image creator GUI)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
@@ -37,40 +42,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 30 Sep 2011 22:08:01 -0000
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sat, 01 Oct 2011 17:51:56 -0000
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On 2011-09-30 08:36, Yu Ke wrote:
-> Hi,
+On Fri, Sep 30, 2011 at 21:23, Yu, Ke <ke.yu@intel.com> wrote:
+...
+> So currently, if you name your own image with XXX-image, HOB should be ab=
+le to automatically add it in the drop-down list.
 >
-> As you may already know, a new GUI has been added to bitbake recently, i.e. HOB (Human Oriented Builder). It is a graphical image creator that allows user to freely choose which
-> packages to be built in the image. The wiki https://wiki.yoctoproject.org/wiki/BitBake/GUI/Hob has more detail.
->
-> This email is to collect your feedback on the HOB. Current HOB is our first version, and it surely has many place to improve. We has the plan to enhance it in Yocto 1.2. So we
-> really hope that you can use it and provide your valuable feedback . We do think user's feedback/requirement is the right way to go. Looking forward your valuable input.
->
-> Best Regards
-> Ke
->
-> Ps. The simple way to run hob is:
-> # touch conf/hob-pre.conf conf/hob-post.conf
-> # bitbake -u hob -r conf/hob-pre.conf -R conf/hob-post.conf
->
-> Where conf/hob-pre.conf conf/hob-post.conf is the configuration file, which can be empty in above case.
+> And yes, it is helpful to allow user adding item into base image list. it=
+ can be done by adding one item in "Edit"->"Preference". I will add this re=
+quirement to my plan. For base image filtering, I am not sure if it is nece=
+ssary, since base image list is not that long. How do you think?
+...
 
-I build images which are not based on any of the core-XXX images listed by HOB.
-How can I get them into the drop-down base list?
-Is there a way I can filter out some of the base images?  tasks?
+It would be nice to have a way to filter out images too. In case we're
+customizing oe-core to a customer we might want to reduce the options
+to avoid unsupported images to be built.
 
-I ask these questions because in particular, I use a lot of the recipes in meta
-and meta-yocto, but none of the images or tasks (because they don't really address
-my needs, don't take offense, I just want more control than they offer)
-
--- 
-------------------------------------------------------------
-Gary Thomas                 |  Consulting for the
-MLB Associates              |    Embedded world
-------------------------------------------------------------
+--=20
+Otavio Salvador=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0O=
+.S. Systems
+E-mail: otavio@ossystems.com.br=A0 http://www.ossystems.com.br
+Mobile: +55 53 9981-7854=A0 =A0 =A0 =A0=A0 =A0 =A0 =A0http://projetos.ossys=
+tems.com.br
 
 
