@@ -1,36 +1,27 @@
-Received: from mail-iy0-f175.google.com ([209.85.210.175])
+Received: from mail-yx0-f175.google.com ([209.85.213.175])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dbaryshkov@gmail.com>)
-	id 1RA3xR-0006Bw-80; Sat, 01 Oct 2011 20:06:41 +0200
-Received: by iadx2 with SMTP id x2so3287754iad.6
-	for <multiple recipients>; Sat, 01 Oct 2011 11:01:09 -0700 (PDT)
+	(envelope-from <cliff.brake@gmail.com>) id 1RAfJI-00089p-Q6
+	for bitbake-devel@lists.openembedded.org;
+	Mon, 03 Oct 2011 11:59:44 +0200
+Received: by yxj17 with SMTP id 17so3234369yxj.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 03 Oct 2011 02:54:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
-	h=message-id:date:from:user-agent:mime-version:to:cc:subject
-	:references:in-reply-to:content-type:content-transfer-encoding;
-	bh=EBTWn2CNZaZIjg+hgF7xnSDKWV/jJfq/p1/clUa1+gU=;
-	b=UHVKYasgZeITirUfVBmySOW92iIN6FQfXUFcnm5oIMG24Vz4lIsszEUSZKQRPDE7nm
-	U291BcNz8t9I9BSUogt1gIxiOSPljCOzxqEtuBzuhvD5tkGL4KFhGOapwd3NOqA8Gspp
-	P+p6kt2Kvxz1q77FuJwTjMSk+JbOvO1RQ+mhg=
-Received: by 10.68.42.6 with SMTP id j6mr62543629pbl.41.1317492069597;
-	Sat, 01 Oct 2011 11:01:09 -0700 (PDT)
-Received: from [137.202.140.192] (nat-rup.mentorg.com. [139.181.168.34])
-	by mx.google.com with ESMTPS id d1sm11081821pbm.3.2011.10.01.11.01.07
-	(version=SSLv3 cipher=OTHER); Sat, 01 Oct 2011 11:01:08 -0700 (PDT)
-Message-ID: <4E875521.3000809@gmail.com>
-Date: Sat, 01 Oct 2011 22:00:01 +0400
-From: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
-User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; en-US;
-	rv:1.9.2.21) Gecko/20110831 Iceowl/1.0b2 Icedove/3.1.13
+	h=mime-version:date:message-id:subject:from:to:content-type
+	:content-transfer-encoding;
+	bh=tDZDfKd3Tqoz2Vn69Vnnj6ln4pFueSF4XuqGmfK1UaI=;
+	b=Vk90CbBtYGNndTeEfGc7RPg8WRk23cpysGIJi2HL7o/tgFF/T9mutb9uuW+nxFH6kY
+	+CT15TCAsSOp5t+LzNnUcpRRduyUJTOGwcE2hAgf1a4F+9K1f+4tzZvdiRfYwjjfe5cg
+	DwSAoOxKr6AwHhhKOy5F4PkeVJAGjPjhhS18c=
 MIME-Version: 1.0
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
-References: <CALT56yN5hXMLBhHVLKyHbNb=7WDb3pZUB0Q+HNKc-2t+g6M58A@mail.gmail.com>
-	<201109281116.00890.paul.eggleton@linux.intel.com>
-	<4E831868.4090603@gmail.com>
-	<201109281432.57331.paul.eggleton@linux.intel.com>
-In-Reply-To: <201109281432.57331.paul.eggleton@linux.intel.com>
-Cc: bitbake-devel@lists.openembedded.org,
-	openembedded-core@lists.openembedded.org
-Subject: Re: [OE-core] meta-micro problems
+Received: by 10.236.77.233 with SMTP id d69mr84895661yhe.84.1317635651874;
+	Mon, 03 Oct 2011 02:54:11 -0700 (PDT)
+Received: by 10.236.209.97 with HTTP; Mon, 3 Oct 2011 02:54:11 -0700 (PDT)
+Date: Mon, 3 Oct 2011 05:54:11 -0400
+Message-ID: <CAOd_LFywLRNDRAbWLJvV1Z1qE4Swot0SQT2RpNz-CBWPc9Jdmg@mail.gmail.com>
+From: Cliff Brake <cliff.brake@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: fetcher hangs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -42,34 +33,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 01 Oct 2011 18:06:41 -0000
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 03 Oct 2011 09:59:45 -0000
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On 09/28/2011 05:32 PM, Paul Eggleton wrote:
-> On Wednesday 28 September 2011 13:51:52 Dmitry Eremin-Solenikov wrote:
->> If you wish, I can retry this with smaller layer set. But if the bug
->> will still arise, I simply have no knowledge/time to look deeper into bb
->> without additional input/pointers from bb gurus.
->
-> That's OK, I can spend time looking into it. It sounds like a bug in bitbake
-> if metadata can influence it to behave this way. If we can produce a simplified
-> test case I think it will be easier to fix.
+One thing I've been noticing is that bitbake seems to hang when its
+trying to fetch a dead URI:
 
-I have rechecked things on my test box, meta-micro still causes fails 
-for me on rebuild. Setup:
+NOTE: package linux-3.0-r4: task do_fetch: Started
+WARNING: Fetcher failure for URL: 'None'. Fetch command export
+HOME=3D"/home/cbrake"; export SSH_AGENT_PID=3D"2994"; export
+SSH_AUTH_SOCK=3D"/tmp/keyring-ptLxSd/ssh"; export
+GIT_CONFIG=3D"/scratch/pp/pp-oe-2011/build/tmp-angstrom_2010_x-eglibc/sysro=
+ots/x86_64-linux/usr/etc/gitconfig";
+export PATH=3D"/scratch/pp/pp-oe-2011/build/tmp-angstrom_2010_x-eglibc/sysr=
+oots/x86_64-linux/usr/bin/armv5te-angstrom-linux-gnueabi:/scratch/pp/pp-oe-=
+2011/build/tmp-angstrom_2010_x-eglibc/sysroots/cm-x270/usr/bin/crossscripts=
+:/scratch/pp/pp-oe-2011/build/tmp-angstrom_2010_x-eglibc/sysroots/x86_64-li=
+nux/usr/sbin:/scratch/pp/pp-oe-2011/build/tmp-angstrom_2010_x-eglibc/sysroo=
+ts/x86_64-linux/usr/bin:/scratch/pp/pp-oe-2011/build/tmp-angstrom_2010_x-eg=
+libc/sysroots/x86_64-linux/sbin:/scratch/pp/pp-oe-2011/build/tmp-angstrom_2=
+010_x-eglibc/sysroots/x86_64-linux//bin:/scratch/pp/pp-oe-2011/build/tmp-an=
+gstrom_2010_x-eglibc/sysroots/x86_64-linux/usr/bin/armv5te-angstrom-linux-g=
+nueabi:/scratch/pp/pp-oe-2011/build/tmp-angstrom_2010_x-eglibc/sysroots/x86=
+_64-linux/usr/bin:/scratch/pp/pp-oe-2011/sources/openembedded-core/scripts:=
+/scratch/pp/pp-oe-2011/sources/bitbake/bin:/home/cbrake/bin:/usr/local/sbin=
+:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/scratch/pp/pp-oe-=
+2011/sources/openembedded-core/scripts";
+/usr/bin/env wget -t 5 -q --passive-ftp --no-check-certificate -P
+/scratch/pp/pp-oe-2011/sources/downloads
+'http://kernel.org/pub/linux/kernel/v3.0/linux-3.0.tar.bz2' failed
+with signal 8, output:
+(bitbake hangs here)
 
-I use setup-scripts from angstrom, change bblayers.conf to contain only 
-oe-core and meta-micro, switched DISTRO to "micro", changed 
-PARALLEL_MAKE to -j 4, BB_NUMBER_THREADS to 4, machine is qemuarm
+Is this expected behavior?
 
-Then:
-1) bitbake pseudo-native succeeds
-2) next bitbake pseudo-native fails. Usually in rm_work of any of the 
-packages (automake-native,openssl-native,python-native are few to name).
+Thanks,
+Cliff
 
--- 
-With best wishes
-Dmitry
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+http://bec-systems.com
 
 
