@@ -1,30 +1,45 @@
-Received: from dan.rpsys.net ([93.97.175.187])
+Received: from va3ehsobe001.messaging.microsoft.com ([216.32.180.11]
+	helo=VA3EHSOBE008.bigfish.com)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1RAgoV-0001gX-9x for bitbake-devel@lists.openembedded.org;
-	Mon, 03 Oct 2011 13:36:03 +0200
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.2/8.14.2/Debian-2build1) with ESMTP id
-	p93BauNi010401; Mon, 3 Oct 2011 12:36:56 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id LH16XPl+5mlN; Mon,  3 Oct 2011 12:36:56 +0100 (BST)
-Received: from [192.168.1.40] (tim [93.97.173.237]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.2/8.14.2/Debian-2build1) with ESMTP id
-	p93BaoMJ010395
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-	Mon, 3 Oct 2011 12:36:52 +0100
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Cliff Brake <cliff.brake@gmail.com>
-Date: Mon, 03 Oct 2011 12:30:21 +0100
-In-Reply-To: <CAOd_LFywLRNDRAbWLJvV1Z1qE4Swot0SQT2RpNz-CBWPc9Jdmg@mail.gmail.com>
-References: <CAOd_LFywLRNDRAbWLJvV1Z1qE4Swot0SQT2RpNz-CBWPc9Jdmg@mail.gmail.com>
-X-Mailer: Evolution 3.1.91- 
-Message-ID: <1317641429.4454.74.camel@ted>
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: fetcher hangs
+	(envelope-from <B29882@freescale.com>) id 1RBAgB-0003Hm-48
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 04 Oct 2011 21:29:27 +0200
+Received: from mail136-va3-R.bigfish.com (10.7.14.251) by
+	VA3EHSOBE008.bigfish.com (10.7.40.28) with Microsoft SMTP Server id
+	14.1.225.22; Tue, 4 Oct 2011 19:08:44 +0000
+Received: from mail136-va3 (localhost.localdomain [127.0.0.1])	by
+	mail136-va3-R.bigfish.com (Postfix) with ESMTP id 56833F381EE	for
+	<bitbake-devel@lists.openembedded.org>;
+	Tue,  4 Oct 2011 19:08:44 +0000 (UTC)
+X-SpamScore: 3
+X-BigFish: VS3(zzzz1202h1082kzz8275bhz2dh2a8h668h839h)
+X-Forefront-Antispam-Report: CIP:70.37.183.190; KIP:(null); UIP:(null);
+	IPVD:NLI; H:mail.freescale.net; RD:none; EFVD:NLI
+Received: from mail136-va3 (localhost.localdomain [127.0.0.1]) by mail136-va3
+	(MessageSwitch) id 1317755324114120_25230;
+	Tue,  4 Oct 2011 19:08:44 +0000 (UTC)
+Received: from VA3EHSMHS030.bigfish.com (unknown [10.7.14.240])	by
+	mail136-va3.bigfish.com (Postfix) with ESMTP id 1330F3F0050	for
+	<bitbake-devel@lists.openembedded.org>;
+	Tue,  4 Oct 2011 19:08:44 +0000 (UTC)
+Received: from mail.freescale.net (70.37.183.190) by VA3EHSMHS030.bigfish.com
+	(10.7.99.40) with Microsoft SMTP Server (TLS) id 14.1.225.22;
+	Tue, 4 Oct 2011 19:08:40 +0000
+Received: from az33smr01.freescale.net (10.64.34.199) by
+	039-SN1MMR1-003.039d.mgd.msft.net (10.84.1.16) with Microsoft SMTP
+	Server id 14.1.323.7; Tue, 4 Oct 2011 14:08:38 -0500
+Received: from right.am.freescale.net (right.am.freescale.net [10.82.193.13])
+	by az33smr01.freescale.net (8.13.1/8.13.0) with ESMTP id
+	p94J8bjh021139	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 4 Oct 2011 14:08:37 -0500 (CDT)
+From: Matthew McClintock <msm@freescale.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Tue, 4 Oct 2011 14:08:37 -0500
+Message-ID: <1317755317-14911-1-git-send-email-msm@freescale.com>
+X-Mailer: git-send-email 1.7.6.1
+MIME-Version: 1.0
+X-OriginatorOrg: freescale.com
+Subject: [PATCH] Export additional variables to the fetchers
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,42 +51,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 03 Oct 2011 11:36:04 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 04 Oct 2011 19:29:27 -0000
+Content-Type: text/plain
 
-On Mon, 2011-10-03 at 05:54 -0400, Cliff Brake wrote:
-> One thing I've been noticing is that bitbake seems to hang when its
-> trying to fetch a dead URI:
-> 
-> NOTE: package linux-3.0-r4: task do_fetch: Started
-> WARNING: Fetcher failure for URL: 'None'. Fetch command export
-> HOME="/home/cbrake"; export SSH_AGENT_PID="2994"; export
-> SSH_AUTH_SOCK="/tmp/keyring-ptLxSd/ssh"; export
-> GIT_CONFIG="/scratch/pp/pp-oe-2011/build/tmp-angstrom_2010_x-eglibc/sysroots/x86_64-linux/usr/etc/gitconfig";
-> export PATH="/scratch/pp/pp-oe-2011/build/tmp-angstrom_2010_x-eglibc/sysroots/x86_64-linux/usr/bin/armv5te-angstrom-linux-gnueabi:/scratch/pp/pp-oe-2011/build/tmp-angstrom_2010_x-eglibc/sysroots/cm-x270/usr/bin/crossscripts:/scratch/pp/pp-oe-2011/build/tmp-angstrom_2010_x-eglibc/sysroots/x86_64-linux/usr/sbin:/scratch/pp/pp-oe-2011/build/tmp-angstrom_2010_x-eglibc/sysroots/x86_64-linux/usr/bin:/scratch/pp/pp-oe-2011/build/tmp-angstrom_2010_x-eglibc/sysroots/x86_64-linux/sbin:/scratch/pp/pp-oe-2011/build/tmp-angstrom_2010_x-eglibc/sysroots/x86_64-linux//bin:/scratch/pp/pp-oe-2011/build/tmp-angstrom_2010_x-eglibc/sysroots/x86_64-linux/usr/bin/armv5te-angstrom-linux-gnueabi:/scratch/pp/pp-oe-2011/build/tmp-angstrom_2010_x-eglibc/sysroots/x86_64-linux/usr/bin:/scratch/pp/pp-oe-2011/sources/openembedded-core/scripts:/scratch/pp/pp-oe-2011/sources/bitbake/bin:/home/cbrake/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/scratch/pp/pp-oe-2011/sources/o!
- pen
->  embedded-core/scripts";
-> /usr/bin/env wget -t 5 -q --passive-ftp --no-check-certificate -P
-> /scratch/pp/pp-oe-2011/sources/downloads
-> 'http://kernel.org/pub/linux/kernel/v3.0/linux-3.0.tar.bz2' failed
-> with signal 8, output:
-> (bitbake hangs here)
-> 
-> Is this expected behavior?
+git could need these environment variables when working behind
+a proxy
 
-No. I tried an experiment here where I added a linux "3.0" headers
-recipe and tried fetching it. It rapidly failed and came back to the
-console.
+Signed-off-by: Matthew McClintock <msm@freescale.com>
+---
+ lib/bb/fetch2/__init__.py |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
 
-What do you have PREMIRORS and MIRRORS set to? Does bitbake -DDD help
-show what bitbake is doing? What about the fetch log files for the
-recipe in question?
-
-Cheers,
-
-Richard
-
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index f6fa46c..fb6138b 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -385,7 +385,8 @@ def runfetchcmd(cmd, d, quiet = False, cleanup = []):
+     exportvars = ['PATH', 'GIT_PROXY_COMMAND', 'GIT_PROXY_HOST',
+                   'GIT_PROXY_PORT', 'GIT_CONFIG', 'http_proxy', 'ftp_proxy',
+                   'https_proxy', 'no_proxy', 'ALL_PROXY', 'all_proxy',
+-                  'SSH_AUTH_SOCK', 'SSH_AGENT_PID', 'HOME']
++                  'SSH_AUTH_SOCK', 'SSH_AGENT_PID', 'HOME',
++                  'GIT_PROXY_IGNORE', 'SOCKS5_USER', 'SOCKS5_PASSWD']
+ 
+     for var in exportvars:
+         val = bb.data.getVar(var, d, True)
+-- 
+1.7.6.1
 
 
 
