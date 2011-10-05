@@ -1,30 +1,30 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from dan.rpsys.net ([93.97.175.187])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <joshua.lock@intel.com>)
-	id 1RAqrj-0003B0-V6; Tue, 04 Oct 2011 00:20:05 +0200
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 03 Oct 2011 15:13:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="58622113"
-Received: from scimitar.jf.intel.com (HELO [10.7.199.170]) ([10.7.199.170])
-	by orsmga001.jf.intel.com with ESMTP; 03 Oct 2011 15:13:23 -0700
-From: Joshua Lock <joshua.lock@intel.com>
-To: Koen Kooi <koen@dominion.thruhere.net>
-Date: Mon, 03 Oct 2011 15:13:22 -0700
-In-Reply-To: <EE88C9B7-2646-4305-A8A8-4BD2BA031C27@dominion.thruhere.net>
-References: <4E85D3E0.7070807@intel.com> <4E863AE8.7020901@mlbassoc.com>
-	<33AB447FBD802F4E932063B962385B3512DAF448FB@shsmsx501.ccr.corp.intel.com>
-	<CAP9ODKpnvcCJWCYDMbyL5n_HDjxb+6cwy54BWTaXqM2eH5=G_w@mail.gmail.com>
-	<EE88C9B7-2646-4305-A8A8-4BD2BA031C27@dominion.thruhere.net>
-X-Mailer: Evolution 3.0.3 (3.0.3-1.fc15) 
-Message-ID: <1317680002.14372.15.camel@scimitar>
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1RBRXb-0006BM-9v for bitbake-devel@lists.openembedded.org;
+	Wed, 05 Oct 2011 15:29:43 +0200
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.2/8.14.2/Debian-2build1) with ESMTP id
+	p95DUZ34022217; Wed, 5 Oct 2011 14:30:36 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id aBuCrNEluI0z; Wed,  5 Oct 2011 14:30:35 +0100 (BST)
+Received: from [192.168.1.40] (tim [93.97.173.237]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.2/8.14.2/Debian-2build1) with ESMTP id
+	p95DUSH4022197
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+	Wed, 5 Oct 2011 14:30:30 +0100
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Matthew McClintock <msm@freescale.com>
+Date: Wed, 05 Oct 2011 14:23:58 +0100
+In-Reply-To: <1317755317-14911-1-git-send-email-msm@freescale.com>
+References: <1317755317-14911-1-git-send-email-msm@freescale.com>
+X-Mailer: Evolution 3.1.91- 
+Message-ID: <1317821046.14671.151.camel@ted>
 Mime-Version: 1.0
-X-Mailman-Approved-At: Wed, 05 Oct 2011 15:27:42 +0200
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>,
-	Patches and discussions about the oe-core layer
-	<openembedded-core@lists.openembedded.org>
-Subject: Re: [OE-core] Feedback on HOB (new image creator GUI)
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] Export additional variables to the fetchers
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,36 +36,22 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 03 Oct 2011 22:20:05 -0000
+X-List-Received-Date: Wed, 05 Oct 2011 13:29:43 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Sat, 2011-10-01 at 11:51 -0600, Koen Kooi wrote:
+On Tue, 2011-10-04 at 14:08 -0500, Matthew McClintock wrote:
+> git could need these environment variables when working behind
+> a proxy
 > 
-> Op 1 okt. 2011 om 12:46 heeft Otavio Salvador <otavio@ossystems.com.br> het volgende geschreven:
-> 
-> > On Fri, Sep 30, 2011 at 21:23, Yu, Ke <ke.yu@intel.com> wrote:
-> > ...
-> >> So currently, if you name your own image with XXX-image, HOB should be able to automatically add it in the drop-down list.
-> >> 
-> >> And yes, it is helpful to allow user adding item into base image list. it can be done by adding one item in "Edit"->"Preference". I will add this requirement to my plan. For base image filtering, I am not sure if it is necessary, since base image list is not that long. How do you think?
-> > ...
-> > 
-> > It would be nice to have a way to filter out images too. In case we're
-> > customizing oe-core to a customer we might want to reduce the options
-> > to avoid unsupported images to be built.
-> 
-> Like a whitelist regexp on hob.conf
+> Signed-off-by: Matthew McClintock <msm@freescale.com>
+> ---
+>  lib/bb/fetch2/__init__.py |    3 ++-
+>  1 files changed, 2 insertions(+), 1 deletions(-)
 
-Filed as Yocto #1581
+Merged to master, thanks.
 
-http://bugzilla.pokylinux.org/show_bug.cgi?id=1581
-
-Joshua
--- 
-Joshua Lock
-        Yocto Project "Johannes factotum"
-        Intel Open Source Technology Centre
+Richard
 
 
 
