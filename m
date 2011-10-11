@@ -1,20 +1,24 @@
 Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1RDg6D-0007C3-W2
+	(envelope-from <josh@linux.intel.com>) id 1RDg6G-0007C3-8J
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 11 Oct 2011 19:26:42 +0200
+	Tue, 11 Oct 2011 19:26:45 +0200
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
 	by fmsmga102.fm.intel.com with ESMTP; 11 Oct 2011 10:20:56 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.68,524,1312182000"; d="scan'208";a="72439800"
+X-IronPort-AV: E=Sophos;i="4.68,524,1312182000"; d="scan'208";a="72439801"
 Received: from unknown (HELO scimitar.amr.corp.intel.com) ([10.255.15.64])
 	by fmsmga001.fm.intel.com with ESMTP; 11 Oct 2011 10:20:56 -0700
 From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 11 Oct 2011 10:20:49 -0700
-Message-Id: <cover.1318353511.git.josh@linux.intel.com>
+Date: Tue, 11 Oct 2011 10:20:50 -0700
+Message-Id: <db59297aa1861614ffaea4295b9b054baa8a12b9.1318353511.git.josh@linux.intel.com>
 X-Mailer: git-send-email 1.7.6.4
-Subject: [PATCH 0/1] Fix a silly hob bug
+In-Reply-To: <cover.1318353511.git.josh@linux.intel.com>
+References: <cover.1318353511.git.josh@linux.intel.com>
+In-Reply-To: <cover.1318353511.git.josh@linux.intel.com>
+References: <cover.1318353511.git.josh@linux.intel.com>
+Subject: [PATCH 1/1] hob: fix backtrace when dismissing open dialog
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,29 +30,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 11 Oct 2011 17:26:42 -0000
+X-List-Received-Date: Tue, 11 Oct 2011 17:26:46 -0000
 
-Dismissing the open file dialog in hob results in a backtrace, this is due
-to a stupid logic/indentation error on my part - the following patch
-rectifies this.
+Clearly a logic/indentation error - we should only try and load the recipe
+should the file-chooser return OK.
 
-Regards,
-Joshua
+Fixes [YOCTO #1668]
 
-The following changes since commit dca46cc2e1c75b6add2c4801e2994a4812745f5b:
-
-  fetch2: Export additional variables to the fetchers (2011-10-05 14:23:16 +0100)
-
-are available in the git repository at:
-  git://github.com/incandescant/bitbake hob
-  https://github.com/incandescant/bitbake/tree/hob
-
-Joshua Lock (1):
-  hob: fix backtrace when dismissing open dialog
-
+Signed-off-by: Joshua Lock <josh@linux.intel.com>
+---
  lib/bb/ui/hob.py |    4 ++--
  1 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/lib/bb/ui/hob.py b/lib/bb/ui/hob.py
+index 71ea88a..0fcaad5 100644
+--- a/lib/bb/ui/hob.py
++++ b/lib/bb/ui/hob.py
+@@ -400,9 +400,9 @@ class MainWindow (gtk.Window):
+         if response == gtk.RESPONSE_OK:
+             rep.loadRecipe(recipe)
+             self.save_path = recipe
++            self.model.load_image_rep(rep)
++            self.dirty = False
+         chooser.destroy()
+-        self.model.load_image_rep(rep)
+-        self.dirty = False
+ 
+     def bake_clicked_cb(self, button):
+         build_image = True
 -- 
 1.7.6.4
 
