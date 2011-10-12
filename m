@@ -1,25 +1,33 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mail-ww0-f41.google.com ([74.125.82.41])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1RDiv9-0003es-CJ
+	(envelope-from <kergoth@gmail.com>) id 1RE4Xb-0002GW-14
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 11 Oct 2011 22:27:27 +0200
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 11 Oct 2011 13:21:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="62252829"
-Received: from unknown (HELO [10.255.15.64]) ([10.255.15.64])
-	by orsmga002.jf.intel.com with ESMTP; 11 Oct 2011 13:21:44 -0700
-From: Joshua Lock <josh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 11 Oct 2011 13:21:39 -0700
-In-Reply-To: <CAMKF1srRT6hOkzntfOWyTnEm4mBhx6sQu1UwZk74ESe8gayyxg@mail.gmail.com>
+	Wed, 12 Oct 2011 21:32:35 +0200
+Received: by wwf10 with SMTP id 10so6767542wwf.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 12 Oct 2011 12:26:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=mime-version:sender:in-reply-to:references:from:date
+	:x-google-sender-auth:message-id:subject:to:cc:content-type;
+	bh=LPHL8tkJDOPSQxUYsTosdeIBUeiDMUOV5UcvKPDu08E=;
+	b=XflFUf+M+MpSk/pBISZwBv0W87ynYQ/kbZC4IVU0nRAFy+nllCcHvYrquX2L0XIBR9
+	mtiaJ2hUxF4Gf2olBOyp4tWaFmaEdFUWjvhY8TsOhA6z3PGXKTus7AAZf9sglkJTaOQM
+	82USjxNama/P8x9xOnQ8yt71JlDKCnLtm/quc=
+Received: by 10.216.72.72 with SMTP id s50mr146865wed.39.1318447322114; Wed,
+	12 Oct 2011 12:22:02 -0700 (PDT)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.216.160.80 with HTTP; Wed, 12 Oct 2011 12:21:42 -0700 (PDT)
+In-Reply-To: <63dc9197eb483863e1cec5e58f036b7493850787.1318352470.git.josh@linux.intel.com>
 References: <cover.1318352470.git.josh@linux.intel.com>
-	<74d583f1aeecf8d112a2b24d4c4a234fbadf8470.1318352470.git.josh@linux.intel.com>
-	<CAMKF1srRT6hOkzntfOWyTnEm4mBhx6sQu1UwZk74ESe8gayyxg@mail.gmail.com>
-X-Mailer: Evolution 3.0.3 (3.0.3-1.fc15) 
-Message-ID: <1318364504.2277.5.camel@scimitar>
-Mime-Version: 1.0
-Subject: Re: [PATCH 2/2] fetch2: enable checksum definition as SRC_URI parameter
+	<63dc9197eb483863e1cec5e58f036b7493850787.1318352470.git.josh@linux.intel.com>
+From: Chris Larson <clarson@kergoth.com>
+Date: Wed, 12 Oct 2011 12:21:42 -0700
+X-Google-Sender-Auth: BYF3mmKs-KPE6DbNJ6NahimDjV0
+Message-ID: <CABcZANksOeUAVw0EmcTBVK61NE8GoE8Xq=4yCZdkuihVB7FqUQ@mail.gmail.com>
+To: Joshua Lock <josh@linux.intel.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/2] fetch2: improve usability of checksums
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,30 +39,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 11 Oct 2011 20:27:27 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 12 Oct 2011 19:32:35 -0000
+Content-Type: text/plain; charset=UTF-8
 
-On Tue, 2011-10-11 at 11:05 -0700, Khem Raj wrote:
-> On Tue, Oct 11, 2011 at 10:07 AM, Joshua Lock <josh@linux.intel.com> wrote:
-> > URI parameters should be able to be defined as a parameter of the SRC_URI,
-> > this patch enables thus for checksums.
-> >
-> > An example;
-> >
-> > SRC_URI = "http://pkgconfig.freedesktop.org/releases/pkg-config-${PV}.tar.gz;md5sum=a3270bab3f4b69b7dc6dbdacbcae9745;sha256sum=3ba691ee2431f32ccb8efa131e59bf23e37f122dc66791309023ca6dcefcd10e"
-> 
-> this should go into manual/documentation as well.
+On Tue, Oct 11, 2011 at 10:07 AM, Joshua Lock <josh@linux.intel.com> wrote:
+> This patch improves the usability of checksums by only requiring one checksum
+> be defined.
+>
+> Further, checksum verification will provide as much information as possible
+> at, rather than a bit at a time. No longer will you need to run fetch, see an
+> md5sum mismatch, fix it, run fetch, seen an sha256sum mismatch, fix it and
+> fetch again. If neither checksum is defined we now report both missing sums
+> at once - rather than one after the other.
+> Finally, if both sums are incorrect, we'll report both incorrect sums at the
+> same time.
+>
+> Fixes part of [YOCTO #1399]
 
-Good point, I pushed an extra patch onto the branch for the manual:
-https://github.com/incandescant/bitbake/commit/fcf17a39ce89b5911ffd9f89ff13505a7a7633fd
-
-Regards,
-Joshua
+Nicely done, the fetch/mismatch cycle was quite an annoying one :)
 -- 
-Joshua Lock
-        Yocto Project "Johannes factotum"
-        Intel Open Source Technology Centre
-
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
 
