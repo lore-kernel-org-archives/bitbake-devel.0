@@ -1,24 +1,16 @@
-Received: from gandharva.secretlabs.de ([78.46.147.237])
+Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <holger+bitbake@freyther.de>) id 1RK3AE-0001wa-SH
+	(envelope-from <git@git.openembedded.org>) id 1RJ27p-00077p-Oh
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 29 Oct 2011 09:17:10 +0200
-Received: from [192.168.1.250] (91-65-246-230-dynip.superkabel.de
-	[91.65.246.230])
-	by gandharva.secretlabs.de (Postfix) with ESMTPSA id 6BC411B10C03
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 29 Oct 2011 07:02:16 +0000 (UTC)
-Message-ID: <4EABA59F.5040204@freyther.de>
-Date: Sat, 29 Oct 2011 09:05:03 +0200
-From: Holger Freyther <holger+bitbake@freyther.de>
-User-Agent: Mozilla/5.0 (X11; U; Linux i686; en-US;
-	rv:1.9.2.23) Gecko/20111010 Iceowl/1.0b2 Icedove/3.1.15
-MIME-Version: 1.0
+	Wed, 26 Oct 2011 13:58:30 +0200
+Received: by opal (Postfix, from userid 111)
+	id EE35510328; Wed, 26 Oct 2011 11:57:52 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-References: <1319853466-10277-1-git-send-email-kergoth@gmail.com>
-	<CABcZANm4C9_xcYCcjZHXx2PKTQy12cH=3c0ukgCjcRFji_3+jQ@mail.gmail.com>
-In-Reply-To: <CABcZANm4C9_xcYCcjZHXx2PKTQy12cH=3c0ukgCjcRFji_3+jQ@mail.gmail.com>
-Subject: Re: [PATCH] codeparser: accept a name for better messages
+Message-Id: <20111026115752.EE35510328@opal>
+Date: Wed, 26 Oct 2011 11:57:52 +0000 (UTC)
+From: git@git.openembedded.org
+X-Mailman-Approved-At: Tue, 01 Nov 2011 08:48:59 +0100
+Subject: Cliff Brake : Linefeed to test commits
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,18 +22,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 29 Oct 2011 07:17:10 -0000
+X-List-Received-Date: Wed, 26 Oct 2011 11:58:30 -0000
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 10/29/2011 04:00 AM, Chris Larson wrote:
+Module: bitbake.git
+Branch: master
+Commit: 69634847f41916220aaa74e57929a36c6802e7e0
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=69634847f41916220aaa74e57929a36c6802e7e0
 
-> 
-> Note: applies on top of the previous series. Does this message wording
-> seem sane to people, or would you prefer it remain more like the
-> previous one? I rather like the new sentence form. Also, 'Warning'
-> could unnecessarily scare users looking back at logs.
+Author: Cliff Brake <cbrake@bec-systems.com>
+Date:   Wed Oct 26 07:48:53 2011 -0400
 
-looks sane.
+Linefeed to test commits
+
+---
+
+ TODO |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/TODO b/TODO
+index cfc9ee9..54d091f 100644
+--- a/TODO
++++ b/TODO
+@@ -59,3 +59,4 @@ Uncertain:
+       module?
+     - Do we want to leverage the abstract base classes in collections?
+     - Aside: Set methods now accept multiple iterables
++
+
 
 
