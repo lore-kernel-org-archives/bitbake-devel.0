@@ -1,16 +1,16 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RJK65-0007ku-B5
+	(envelope-from <git@git.openembedded.org>) id 1RJK67-0007oE-Nj
 	for bitbake-devel@lists.openembedded.org;
 	Thu, 27 Oct 2011 09:09:57 +0200
 Received: by opal (Postfix, from userid 111)
-	id D837710328; Thu, 27 Oct 2011 07:09:21 +0000 (UTC)
+	id 356F91032E; Thu, 27 Oct 2011 07:09:22 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20111027070921.D837710328@opal>
-Date: Thu, 27 Oct 2011 07:09:21 +0000 (UTC)
+Message-Id: <20111027070922.356F91032E@opal>
+Date: Thu, 27 Oct 2011 07:09:22 +0000 (UTC)
 From: git@git.openembedded.org
 X-Mailman-Approved-At: Tue, 01 Nov 2011 08:48:59 +0100
-Subject: Joshua Lock : hob: fix backtrace when dismissing open dialog
+Subject: Joshua Lock : doc: update manual for checksum changes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,42 +27,36 @@ Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: db59297aa1861614ffaea4295b9b054baa8a12b9
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=db59297aa1861614ffaea4295b9b054baa8a12b9
+Commit: 0a6443f9e1d07865c9fd1dfc0b4622eb1c4c3f3a
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=0a6443f9e1d07865c9fd1dfc0b4622eb1c4c3f3a
 
 Author: Joshua Lock <josh@linux.intel.com>
-Date:   Tue Oct 11 10:16:02 2011 -0700
+Date:   Tue Oct 11 13:15:15 2011 -0700
 
-hob: fix backtrace when dismissing open dialog
+doc: update manual for checksum changes
 
-Clearly a logic/indentation error - we should only try and load the recipe
-should the file-chooser return OK.
-
-Fixes [YOCTO #1668]
+Document the ability to use SRC_URI parameters for checksums
 
 Signed-off-by: Joshua Lock <josh@linux.intel.com>
 
 ---
 
- lib/bb/ui/hob.py |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ doc/manual/usermanual.xml |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/lib/bb/ui/hob.py b/lib/bb/ui/hob.py
-index 71ea88a..0fcaad5 100644
---- a/lib/bb/ui/hob.py
-+++ b/lib/bb/ui/hob.py
-@@ -400,9 +400,9 @@ class MainWindow (gtk.Window):
-         if response == gtk.RESPONSE_OK:
-             rep.loadRecipe(recipe)
-             self.save_path = recipe
-+            self.model.load_image_rep(rep)
-+            self.dirty = False
-         chooser.destroy()
--        self.model.load_image_rep(rep)
--        self.dirty = False
+diff --git a/doc/manual/usermanual.xml b/doc/manual/usermanual.xml
+index 3a3af6d..687503b 100644
+--- a/doc/manual/usermanual.xml
++++ b/doc/manual/usermanual.xml
+@@ -388,7 +388,7 @@ ftp://.*/.*      http://somemirror.org/sources/ \n \
+ http://.*/.*     http://somemirror.org/sources/ \n \
+ https://.*/.*    http://somemirror.org/sources/ \n"</screen></para>
  
-     def bake_clicked_cb(self, button):
-         build_image = True
+-            <para>Non-local downloaded output is placed into the directory specified by the <varname>DL_DIR</varname>. For non local downloads the code can check checksums for the download to ensure the file has been downloaded correctly. These are specified in the form <varname>SRC_URI[md5sum]</varname> for the md5 checksum and <varname>SRC_URI[sha256sum]</varname> for the sha256 checksum. If <varname>BB_STRICT_CHECKSUM</varname> is set, any download without a checksum will trigger an error message. In cases where multiple files are listed in SRC_URI, the name parameter is used assign names to the urls and these are then specified in the checksums in the form SRC_URI[name.sha256sum].</para>
++            <para>Non-local downloaded output is placed into the directory specified by the <varname>DL_DIR</varname>. For non local archive downloads the code can verify sha256 and md5 checksums for the download to ensure the file has been downloaded correctly. These may be specified either in the form <varname>SRC_URI[md5sum]</varname> for the md5 checksum and <varname>SRC_URI[sha256sum]</varname> for the sha256 checksum or as parameters on the SRC_URI such as SRC_URI="http://example.com/foobar.tar.bz2;md5sum=4a8e0f237e961fd7785d19d07fdb994d". If <varname>BB_STRICT_CHECKSUM</varname> is set, any download without a checksum will trigger an error message. In cases where multiple files are listed in SRC_URI, the name parameter is used assign names to the urls and these are then specified in the checksums in the form SRC_URI[name.sha256sum].</para>
+ 
+         </section>
+ 
 
 
 
