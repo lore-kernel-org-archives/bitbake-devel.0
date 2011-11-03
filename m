@@ -1,13 +1,13 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RM6Go-000446-BT
+	(envelope-from <git@git.openembedded.org>) id 1RM6Gx-00045f-Vm
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 04 Nov 2011 00:00:27 +0100
+	Fri, 04 Nov 2011 00:00:36 +0100
 Received: by opal (Postfix, from userid 111)
-	id 2EBED1032D; Thu,  3 Nov 2011 22:54:18 +0000 (UTC)
+	id 49DBD1032D; Thu,  3 Nov 2011 22:54:28 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20111103225418.2EBED1032D@opal>
-Date: Thu,  3 Nov 2011 22:54:18 +0000 (UTC)
+Message-Id: <20111103225428.49DBD1032D@opal>
+Date: Thu,  3 Nov 2011 22:54:28 +0000 (UTC)
 From: git@git.openembedded.org
 Subject: Richard Purdie : Release 1.14.0
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -21,11 +21,11 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 03 Nov 2011 23:00:27 -0000
+X-List-Received-Date: Thu, 03 Nov 2011 23:00:36 -0000
 Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
-Branch: master
+Branch: 1.14
 Commit: 8df3f86bbc0edc40349362aa4a72672142ce6dbd
 URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=8df3f86bbc0edc40349362aa4a72672142ce6dbd
 
