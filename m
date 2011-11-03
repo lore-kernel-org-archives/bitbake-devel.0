@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RM6Go-000445-BK
+	(envelope-from <git@git.openembedded.org>) id 1RM6Go-000446-BT
 	for bitbake-devel@lists.openembedded.org;
 	Fri, 04 Nov 2011 00:00:27 +0100
 Received: by opal (Postfix, from userid 111)
-	id 431761032F; Thu,  3 Nov 2011 22:54:18 +0000 (UTC)
+	id 2EBED1032D; Thu,  3 Nov 2011 22:54:18 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20111103225418.431761032F@opal>
+Message-Id: <20111103225418.2EBED1032D@opal>
 Date: Thu,  3 Nov 2011 22:54:18 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Richard Purdie : Increment version post release
+Subject: Richard Purdie : Release 1.14.0
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,15 +26,13 @@ Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: 9c097704b4309dbe67fc360c8377edbedc354d00
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=9c097704b4309dbe67fc360c8377edbedc354d00
+Commit: 8df3f86bbc0edc40349362aa4a72672142ce6dbd
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=8df3f86bbc0edc40349362aa4a72672142ce6dbd
 
 Author: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date:   Thu Nov  3 17:13:34 2011 +0000
+Date:   Thu Nov  3 17:12:36 2011 +0000
 
-Increment version post release
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Release 1.14.0
 
 ---
 
@@ -43,28 +41,28 @@ Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/bin/bitbake b/bin/bitbake
-index fcf85ce..9eb558b 100755
+index 56f39f8..fcf85ce 100755
 --- a/bin/bitbake
 +++ b/bin/bitbake
 @@ -40,7 +40,7 @@ from bb import cooker
  from bb import ui
  from bb import server
  
--__version__ = "1.14.0"
-+__version__ = "1.15.0"
+-__version__ = "1.13.3"
++__version__ = "1.14.0"
  logger = logging.getLogger("BitBake")
  
  
 diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
-index 53abe1a..5dc959c 100644
+index 4981daa..53abe1a 100644
 --- a/lib/bb/__init__.py
 +++ b/lib/bb/__init__.py
 @@ -21,7 +21,7 @@
  # with this program; if not, write to the Free Software Foundation, Inc.,
  # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  
--__version__ = "1.14.0"
-+__version__ = "1.15.0"
+-__version__ = "1.13.3"
++__version__ = "1.14.0"
  
  import sys
  if sys.version_info < (2, 6, 0):
