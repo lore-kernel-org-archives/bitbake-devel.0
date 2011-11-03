@@ -1,27 +1,15 @@
-Received: from vms173001pub.verizon.net ([206.46.173.1])
+Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <denis@denix.org>) id 1RLmFT-0006sS-TR
+	(envelope-from <git@git.openembedded.org>) id 1RM6Go-000445-BK
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 03 Nov 2011 02:37:44 +0100
-Received: from gandalf.denix.org ([unknown] [96.240.135.93])
-	by vms173001.mailsrvcs.net
-	(Sun Java(tm) System Messaging Server 7u2-7.02 32bit (built Apr 16
-	2009)) with ESMTPA id <0LU200JN66RFNUZ0@vms173001.mailsrvcs.net> for
-	bitbake-devel@lists.openembedded.org;
-	Wed, 02 Nov 2011 19:30:56 -0500 (CDT)
-Received: by gandalf.denix.org (Postfix, from userid 1000)	id DEF7414AF5D; Wed,
-	02 Nov 2011 20:30:50 -0400 (EDT)
-Date: Wed, 02 Nov 2011 20:30:50 -0400
-From: Denys Dmytriyenko <denis@denix.org>
-To: Daniel Lazzari <dlazzari@leapfrog.com>
-Message-id: <20111103003050.GZ15391@denix.org>
-References: <E7A9054A5ACABE48B0E540E46E862B0F042412CE@NAEMMAIL01.na.leapfrog.com>
-MIME-version: 1.0
-In-reply-to: <E7A9054A5ACABE48B0E540E46E862B0F042412CE@NAEMMAIL01.na.leapfrog.com>
-User-Agent: Mutt/1.5.16 (2007-06-09)
-Cc: "'bitbake-devel@lists.openembedded.org'"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: Bug with task variable overrides
+	Fri, 04 Nov 2011 00:00:27 +0100
+Received: by opal (Postfix, from userid 111)
+	id 431761032F; Thu,  3 Nov 2011 22:54:18 +0000 (UTC)
+To: bitbake-devel@lists.openembedded.org
+Message-Id: <20111103225418.431761032F@opal>
+Date: Thu,  3 Nov 2011 22:54:18 +0000 (UTC)
+From: git@git.openembedded.org
+Subject: Richard Purdie : Increment version post release
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,45 +21,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 03 Nov 2011 01:37:44 -0000
-Content-type: text/plain; charset=us-ascii
-Content-disposition: inline
+X-List-Received-Date: Thu, 03 Nov 2011 23:00:27 -0000
+Content-Type: text/plain; charset=UTF-8
 
-On Wed, Nov 02, 2011 at 10:54:31PM +0000, Daniel Lazzari wrote:
-> I recently tried to use per task overrides for several variables and ran 
-> into a bug. If the task name has an underscore in it, the overrides won't 
-> work properly. Here's a quick test case I did using Angstrom oe-core:
-> 
-> MYVAR = "apples"
-> MYVAR_task-my_task = "oranges"
-> 
-> LICENSE = ""
-> 
-> do_my_task() {
->                 echo ${MYVAR}
-> }
-> 
-> addtask my_task before do_fetch
-> 
-> After running the task, the log for the task shows "apples" when it should 
-> show "oranges". My work around so far is not to use underscores in my task 
-> name, but that makes the task name look pretty unreadable. I tried to see if 
-> I could figure out a quick fix but the data_smart stuff looks pretty 
-> complicated and I don't have a lot of time to spend on this. If there's a 
-> place where you want me to file a proper bug report, just let me know.
+Module: bitbake.git
+Branch: master
+Commit: 9c097704b4309dbe67fc360c8377edbedc354d00
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=9c097704b4309dbe67fc360c8377edbedc354d00
 
-Daniel,
+Author: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date:   Thu Nov  3 17:13:34 2011 +0000
 
-As far as I know, it's a known limitation and was there for many years. It's 
-not straightforward to parse override names with underscores, as you can 
-combine multiple overrides, plus there are additional keywords like append and 
-prepend, that are used the same way. E.g. MYVAR_append_distro_arch_soc_mach_pn.
-It's recommended to use dashes instead of underscores for variable values, 
-such as DISTRO="angstrom-2010.x", MACHINE="am37x-evm", PN="linux-libc-headers" 
-etc., so they are safe to use as overrides. Not with task/function names, 
-though.
+Increment version post release
 
--- 
-Denys
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+---
+
+ bin/bitbake        |    2 +-
+ lib/bb/__init__.py |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/bin/bitbake b/bin/bitbake
+index fcf85ce..9eb558b 100755
+--- a/bin/bitbake
++++ b/bin/bitbake
+@@ -40,7 +40,7 @@ from bb import cooker
+ from bb import ui
+ from bb import server
+ 
+-__version__ = "1.14.0"
++__version__ = "1.15.0"
+ logger = logging.getLogger("BitBake")
+ 
+ 
+diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
+index 53abe1a..5dc959c 100644
+--- a/lib/bb/__init__.py
++++ b/lib/bb/__init__.py
+@@ -21,7 +21,7 @@
+ # with this program; if not, write to the Free Software Foundation, Inc.,
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+-__version__ = "1.14.0"
++__version__ = "1.15.0"
+ 
+ import sys
+ if sys.version_info < (2, 6, 0):
+
 
 
