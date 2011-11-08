@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RNphy-0006FO-0A
+	(envelope-from <git@git.openembedded.org>) id 1RNphy-0006FN-ES
 	for bitbake-devel@lists.openembedded.org;
 	Tue, 08 Nov 2011 18:43:38 +0100
 Received: by opal (Postfix, from userid 111)
-	id 28F6110330; Tue,  8 Nov 2011 17:37:54 +0000 (UTC)
+	id 8F8F510336; Tue,  8 Nov 2011 17:37:54 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20111108173754.28F6110330@opal>
+Message-Id: <20111108173754.8F8F510336@opal>
 Date: Tue,  8 Nov 2011 17:37:54 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Christopher Larson : codeparser: simplify how we compare the called node names
+Subject: Christopher Larson : codeparser: silence non-literal warnings for vardeps
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,133 +26,183 @@ Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: 84e535b5165c7e936c5b1486bdf4626ed3649f5f
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=84e535b5165c7e936c5b1486bdf4626ed3649f5f
+Commit: e724b9f417d1baf898f5afc6376c73c1a2ad8db9
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=e724b9f417d1baf898f5afc6376c73c1a2ad8db9
 
-Author: Christopher Larson <kergoth@gmail.com>
-Date:   Thu Oct 27 22:37:11 2011 -0700
+Author: Christopher Larson <chris_larson@mentor.com>
+Date:   Fri Nov  4 14:59:46 2011 -0400
 
-codeparser: simplify how we compare the called node names
+codeparser: silence non-literal warnings for vardeps
 
-With the previous method, using the compare_name methods, we split the
-requested match name by '.', reversed it, then compared them piecemeal
-during the node traversal. The new method walks the nodes and hands back
-the name of what's being called, and then we check that. This also
-consolidates the two different implementations of traversal of the
-attribute/name nodes (one in compare_name, one for the execs).
+If the vardeps flag is not None, we now silence the warnings about
+non-literal usage for that variable.
 
-Signed-off-by: Christopher Larson <kergoth@gmail.com>
+Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 
 ---
 
- lib/bb/codeparser.py |   72 ++++++++++++++------------------------------------
- 1 files changed, 20 insertions(+), 52 deletions(-)
+ lib/bb/codeparser.py |   28 +++++++++++++++++++++++-----
+ lib/bb/data.py       |   14 +++++++++-----
+ lib/bb/data_smart.py |    8 +++++++-
+ 3 files changed, 39 insertions(+), 11 deletions(-)
 
 diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
-index 0f3d646..7715613 100644
+index 615fb7d..d425514 100644
 --- a/lib/bb/codeparser.py
 +++ b/lib/bb/codeparser.py
-@@ -156,40 +156,6 @@ class PythonParser():
-     execfuncs = ("bb.build.exec_func", "bb.build.exec_task")
+@@ -150,6 +150,22 @@ def parser_cache_savemerge(d):
+     bb.utils.unlockfile(glf)
  
-     @classmethod
--    def _compare_name(cls, strparts, node):
--        """Given a sequence of strings representing a python name,
--        where the last component is the actual Name and the prior
--        elements are Attribute nodes, determine if the supplied node
--        matches.
--        """
--
--        if not strparts:
--            return True
--
--        current, rest = strparts[0], strparts[1:]
--        if isinstance(node, ast.Attribute):
--            if current == node.attr:
--                return cls._compare_name(rest, node.value)
--        elif isinstance(node, ast.Name):
--            if current == node.id:
--                return True
--        return False
--
--    @classmethod
--    def compare_name(cls, value, node):
--        """Convenience function for the _compare_node method, which
--        can accept a string (which is split by '.' for you), or an
--        iterable of strings, in which case it checks to see if any of
--        them match, similar to isinstance.
--        """
--
--        if isinstance(value, basestring):
--            return cls._compare_name(tuple(reversed(value.split("."))),
--                                        node)
--        else:
--            return any(cls.compare_name(item, node) for item in value)
--
--    @classmethod
-     def warn(cls, func, arg):
-         """Warn about calls of bitbake APIs which pass a non-literal
-         argument for the variable name, as we're not able to track such
-@@ -206,39 +172,41 @@ class PythonParser():
-                             "not a literal", funcstr, argstr)
+ 
++Logger = logging.getLoggerClass()
++class BufferedLogger(Logger):
++    def __init__(self, name, level=0, target=None):
++        Logger.__init__(self, name)
++        self.setLevel(level)
++        self.buffer = []
++        self.target = target
++
++    def handle(self, record):
++        self.buffer.append(record)
++
++    def flush(self):
++        for record in self.buffer:
++            self.target.handle(record)
++        self.buffer = []
++
+ class PythonParser():
+     getvars = ("d.getVar", "bb.data.getVar", "data.getVar")
+     execfuncs = ("bb.build.exec_func", "bb.build.exec_task")
+@@ -164,9 +180,9 @@ class PythonParser():
+             funcstr = codegen.to_source(func)
+             argstr = codegen.to_source(arg)
+         except TypeError:
+-            logger.debug(2, 'Failed to convert function and argument to source form')
++            self.log.debug(2, 'Failed to convert function and argument to source form')
+         else:
+-            logger.debug(1, self.unhandled_message % (funcstr, argstr))
++            self.log.debug(1, self.unhandled_message % (funcstr, argstr))
  
      def visit_Call(self, node):
--        if self.compare_name(self.getvars, node.func):
-+        name = self.called_node_name(node.func)
-+        if name in self.getvars:
-             if isinstance(node.args[0], ast.Str):
-                 self.var_references.add(node.args[0].s)
+         name = self.called_node_name(node.func)
+@@ -196,11 +212,12 @@ class PythonParser():
              else:
-                 self.warn(node.func, node.args[0])
--        elif self.compare_name(self.expands, node.func):
-+        elif name in self.expands:
-             if isinstance(node.args[0], ast.Str):
-                 self.warn(node.func, node.args[0])
-                 self.var_expands.add(node.args[0].s)
-             elif isinstance(node.args[0], ast.Call) and \
--                    self.compare_name(self.getvars, node.args[0].func):
-+                 self.called_node_name(node.args[0].func) in self.getvars:
-                 pass
-             else:
-                 self.warn(node.func, node.args[0])
--        elif self.compare_name(self.execfuncs, node.func):
-+        elif name in self.execfuncs:
-             if isinstance(node.args[0], ast.Str):
-                 self.var_execs.add(node.args[0].s)
-             else:
-                 self.warn(node.func, node.args[0])
--        elif isinstance(node.func, ast.Name):
--            self.execs.add(node.func.id)
--        elif isinstance(node.func, ast.Attribute):
--            # We must have a qualified name.  Therefore we need
--            # to walk the chain of 'Attribute' nodes to determine
--            # the qualification.
--            attr_node = node.func.value
--            identifier = node.func.attr
--            while isinstance(attr_node, ast.Attribute):
--                identifier = attr_node.attr + "." + identifier
--                attr_node = attr_node.value
--            if isinstance(attr_node, ast.Name):
--                identifier = attr_node.id + "." + identifier
--            self.execs.add(identifier)
-+        elif name and isinstance(node.func, (ast.Name, ast.Attribute)):
-+            self.execs.add(name)
-+
-+    def called_node_name(self, node):
-+        """Given a called node, return its original string form"""
-+        components = []
-+        while node:
-+            if isinstance(node, ast.Attribute):
-+                components.append(node.attr)
-+                node = node.value
-+            elif isinstance(node, ast.Name):
-+                components.append(node.id)
-+                return '.'.join(reversed(components))
-+            else:
-+                break
+                 break
  
-     def __init__(self):
+-    def __init__(self, name):
++    def __init__(self, name, log):
          self.var_references = set()
+         self.var_execs = set()
+         self.execs = set()
+         self.references = set()
++        self.log = BufferedLogger('BitBake.Data.%s' % name, logging.DEBUG, log)
+ 
+         self.unhandled_message = "in call of %s, argument '%s' is not a string literal"
+         self.unhandled_message = "while parsing %s, %s" % (name, self.unhandled_message)
+@@ -228,10 +245,11 @@ class PythonParser():
+         pythonparsecache[h]["execs"] = self.execs
+ 
+ class ShellParser():
+-    def __init__(self, name):
++    def __init__(self, name, log):
+         self.funcdefs = set()
+         self.allexecs = set()
+         self.execs = set()
++        self.log = BufferedLogger('BitBake.Data.%s' % name, logging.DEBUG, log)
+         self.unhandled_template = "unable to handle non-literal command '%s'"
+         self.unhandled_template = "while parsing %s, %s" % (name, self.unhandled_template)
+ 
+@@ -348,7 +366,7 @@ class ShellParser():
+ 
+                 cmd = word[1]
+                 if cmd.startswith("$"):
+-                    logger.debug(1, self.unhandled_template % cmd)
++                    self.log.debug(1, self.unhandled_template % cmd)
+                 elif cmd == "eval":
+                     command = " ".join(word for _, word in words[1:])
+                     self.parse_shell(command)
+diff --git a/lib/bb/data.py b/lib/bb/data.py
+index bcb8b05..10188f3 100644
+--- a/lib/bb/data.py
++++ b/lib/bb/data.py
+@@ -49,6 +49,7 @@ from bb import data_smart
+ from bb import codeparser
+ import bb
+ 
++logger = data_smart.logger
+ _dict_type = data_smart.DataSmart
+ 
+ def init():
+@@ -258,7 +259,7 @@ def emit_func(func, o=sys.__stdout__, d = init()):
+         emit_var(key, o, d, False) and o.write('\n')
+ 
+     emit_var(func, o, d, False) and o.write('\n')
+-    newdeps = bb.codeparser.ShellParser(func).parse_shell(d.getVar(func, True))
++    newdeps = bb.codeparser.ShellParser(func, logger).parse_shell(d.getVar(func, True))
+     seen = set()
+     while newdeps:
+         deps = newdeps
+@@ -267,7 +268,7 @@ def emit_func(func, o=sys.__stdout__, d = init()):
+         for dep in deps:
+             if bb.data.getVarFlag(dep, "func", d):
+                emit_var(dep, o, d, False) and o.write('\n')
+-               newdeps |=  bb.codeparser.ShellParser(dep).parse_shell(d.getVar(dep, True))
++               newdeps |=  bb.codeparser.ShellParser(dep, logger).parse_shell(d.getVar(dep, True))
+         newdeps -= seen
+ 
+ def update_data(d):
+@@ -276,25 +277,28 @@ def update_data(d):
+ 
+ def build_dependencies(key, keys, shelldeps, d):
+     deps = set()
++    vardeps = d.getVarFlag(key, "vardeps", True)
+     try:
+         if d.getVarFlag(key, "func"):
+             if d.getVarFlag(key, "python"):
+                 parsedvar = d.expandWithRefs(d.getVar(key, False), key)
+-                parser = bb.codeparser.PythonParser(key)
++                parser = bb.codeparser.PythonParser(key, logger)
+                 parser.parse_python(parsedvar.value)
+                 deps = deps | parser.references
+             else:
+                 parsedvar = d.expandWithRefs(d.getVar(key, False), key)
+-                parser = bb.codeparser.ShellParser(key)
++                parser = bb.codeparser.ShellParser(key, logger)
+                 parser.parse_shell(parsedvar.value)
+                 deps = deps | shelldeps
++            if vardeps is None:
++                parser.log.flush()
+             deps = deps | parsedvar.references
+             deps = deps | (keys & parser.execs) | (keys & parsedvar.execs)
+         else:
+             parser = d.expandWithRefs(d.getVar(key, False), key)
+             deps |= parser.references
+             deps = deps | (keys & parser.execs)
+-        deps |= set((d.getVarFlag(key, "vardeps", True) or "").split())
++        deps |= set((vardeps or "").split())
+         deps -= set((d.getVarFlag(key, "vardepsexclude", True) or "").split())
+     except:
+         bb.note("Error expanding variable %s" % key)
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index 44369ed..072f403 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -68,8 +68,14 @@ class VariableParse:
+             code = match.group()[3:-1]
+             codeobj = compile(code.strip(), self.varname or "<expansion>", "eval")
+ 
+-            parser = bb.codeparser.PythonParser(self.varname)
++            parser = bb.codeparser.PythonParser(self.varname, logger)
+             parser.parse_python(code)
++            if self.varname:
++                vardeps = self.d.getVarFlag(self.varname, "vardeps", True)
++                if vardeps is None:
++                    parser.log.flush()
++            else:
++                parser.log.flush()
+             self.references |= parser.references
+             self.execs |= parser.execs
+ 
 
 
 
