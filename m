@@ -1,26 +1,15 @@
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1RNmKD-0005HT-Py
+	(envelope-from <git@git.openembedded.org>) id 1RNphy-0006FO-0A
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 08 Nov 2011 15:06:54 +0100
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 08 Nov 2011 06:00:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.69,477,1315206000"; d="scan'208";a="82425405"
-Received: from unknown (HELO helios.localnet) ([10.252.121.141])
-	by fmsmga001.fm.intel.com with ESMTP; 08 Nov 2011 06:00:37 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: "George C. Huntington, III" <george.huntingtoniii@gmail.com>
-Date: Tue, 08 Nov 2011 14:00:36 +0000
-Message-ID: <1589523.33nZoy7sRG@helios>
-Organization: Intel Corporation
-User-Agent: KMail/4.7.2 (Linux/3.0.0-12-generic-pae; KDE/4.7.2; i686; ; )
-In-Reply-To: <CAFu+nvG9gLNyCOEcE9ZdCwCe8wtzn=4vxdd3fGz2mP_zBtAM_Q@mail.gmail.com>
-References: <1320361692.20107.103.camel@ted>
-	<CAFu+nvG9gLNyCOEcE9ZdCwCe8wtzn=4vxdd3fGz2mP_zBtAM_Q@mail.gmail.com>
-MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [OE-core] Bitbake 1.14.0 released!
+	Tue, 08 Nov 2011 18:43:38 +0100
+Received: by opal (Postfix, from userid 111)
+	id 28F6110330; Tue,  8 Nov 2011 17:37:54 +0000 (UTC)
+To: bitbake-devel@lists.openembedded.org
+Message-Id: <20111108173754.28F6110330@opal>
+Date: Tue,  8 Nov 2011 17:37:54 +0000 (UTC)
+From: git@git.openembedded.org
+Subject: Christopher Larson : codeparser: simplify how we compare the called node names
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,17 +21,138 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 08 Nov 2011 14:06:54 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Tue, 08 Nov 2011 17:43:38 -0000
+Content-Type: text/plain; charset=UTF-8
 
-On Friday 04 November 2011 10:05:57 George C. Huntington, III wrote:
-> can the new bitbake be used on oe-classic, 2011.03-maintenance branch?
+Module: bitbake.git
+Branch: master
+Commit: 84e535b5165c7e936c5b1486bdf4626ed3649f5f
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=84e535b5165c7e936c5b1486bdf4626ed3649f5f
 
-I think, as you pointed out, someone will need to go through the metadata and 
-fix the comments in the middle of multi-line statements before it will work.
+Author: Christopher Larson <kergoth@gmail.com>
+Date:   Thu Oct 27 22:37:11 2011 -0700
 
-Cheers,
-Paul
+codeparser: simplify how we compare the called node names
+
+With the previous method, using the compare_name methods, we split the
+requested match name by '.', reversed it, then compared them piecemeal
+during the node traversal. The new method walks the nodes and hands back
+the name of what's being called, and then we check that. This also
+consolidates the two different implementations of traversal of the
+attribute/name nodes (one in compare_name, one for the execs).
+
+Signed-off-by: Christopher Larson <kergoth@gmail.com>
+
+---
+
+ lib/bb/codeparser.py |   72 ++++++++++++++------------------------------------
+ 1 files changed, 20 insertions(+), 52 deletions(-)
+
+diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
+index 0f3d646..7715613 100644
+--- a/lib/bb/codeparser.py
++++ b/lib/bb/codeparser.py
+@@ -156,40 +156,6 @@ class PythonParser():
+     execfuncs = ("bb.build.exec_func", "bb.build.exec_task")
+ 
+     @classmethod
+-    def _compare_name(cls, strparts, node):
+-        """Given a sequence of strings representing a python name,
+-        where the last component is the actual Name and the prior
+-        elements are Attribute nodes, determine if the supplied node
+-        matches.
+-        """
+-
+-        if not strparts:
+-            return True
+-
+-        current, rest = strparts[0], strparts[1:]
+-        if isinstance(node, ast.Attribute):
+-            if current == node.attr:
+-                return cls._compare_name(rest, node.value)
+-        elif isinstance(node, ast.Name):
+-            if current == node.id:
+-                return True
+-        return False
+-
+-    @classmethod
+-    def compare_name(cls, value, node):
+-        """Convenience function for the _compare_node method, which
+-        can accept a string (which is split by '.' for you), or an
+-        iterable of strings, in which case it checks to see if any of
+-        them match, similar to isinstance.
+-        """
+-
+-        if isinstance(value, basestring):
+-            return cls._compare_name(tuple(reversed(value.split("."))),
+-                                        node)
+-        else:
+-            return any(cls.compare_name(item, node) for item in value)
+-
+-    @classmethod
+     def warn(cls, func, arg):
+         """Warn about calls of bitbake APIs which pass a non-literal
+         argument for the variable name, as we're not able to track such
+@@ -206,39 +172,41 @@ class PythonParser():
+                             "not a literal", funcstr, argstr)
+ 
+     def visit_Call(self, node):
+-        if self.compare_name(self.getvars, node.func):
++        name = self.called_node_name(node.func)
++        if name in self.getvars:
+             if isinstance(node.args[0], ast.Str):
+                 self.var_references.add(node.args[0].s)
+             else:
+                 self.warn(node.func, node.args[0])
+-        elif self.compare_name(self.expands, node.func):
++        elif name in self.expands:
+             if isinstance(node.args[0], ast.Str):
+                 self.warn(node.func, node.args[0])
+                 self.var_expands.add(node.args[0].s)
+             elif isinstance(node.args[0], ast.Call) and \
+-                    self.compare_name(self.getvars, node.args[0].func):
++                 self.called_node_name(node.args[0].func) in self.getvars:
+                 pass
+             else:
+                 self.warn(node.func, node.args[0])
+-        elif self.compare_name(self.execfuncs, node.func):
++        elif name in self.execfuncs:
+             if isinstance(node.args[0], ast.Str):
+                 self.var_execs.add(node.args[0].s)
+             else:
+                 self.warn(node.func, node.args[0])
+-        elif isinstance(node.func, ast.Name):
+-            self.execs.add(node.func.id)
+-        elif isinstance(node.func, ast.Attribute):
+-            # We must have a qualified name.  Therefore we need
+-            # to walk the chain of 'Attribute' nodes to determine
+-            # the qualification.
+-            attr_node = node.func.value
+-            identifier = node.func.attr
+-            while isinstance(attr_node, ast.Attribute):
+-                identifier = attr_node.attr + "." + identifier
+-                attr_node = attr_node.value
+-            if isinstance(attr_node, ast.Name):
+-                identifier = attr_node.id + "." + identifier
+-            self.execs.add(identifier)
++        elif name and isinstance(node.func, (ast.Name, ast.Attribute)):
++            self.execs.add(name)
++
++    def called_node_name(self, node):
++        """Given a called node, return its original string form"""
++        components = []
++        while node:
++            if isinstance(node, ast.Attribute):
++                components.append(node.attr)
++                node = node.value
++            elif isinstance(node, ast.Name):
++                components.append(node.id)
++                return '.'.join(reversed(components))
++            else:
++                break
+ 
+     def __init__(self):
+         self.var_references = set()
+
 
 
