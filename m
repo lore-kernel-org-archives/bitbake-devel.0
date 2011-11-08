@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RNphy-0006FN-ES
+	(envelope-from <git@git.openembedded.org>) id 1RNphy-0006FV-NL
 	for bitbake-devel@lists.openembedded.org;
 	Tue, 08 Nov 2011 18:43:38 +0100
 Received: by opal (Postfix, from userid 111)
-	id 8F8F510336; Tue,  8 Nov 2011 17:37:54 +0000 (UTC)
+	id 6A34B10334; Tue,  8 Nov 2011 17:37:54 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20111108173754.8F8F510336@opal>
+Message-Id: <20111108173754.6A34B10334@opal>
 Date: Tue,  8 Nov 2011 17:37:54 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Christopher Larson : codeparser: silence non-literal warnings for vardeps
+Subject: Christopher Larson : codeparser: drop expand tracking
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,183 +26,72 @@ Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: e724b9f417d1baf898f5afc6376c73c1a2ad8db9
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=e724b9f417d1baf898f5afc6376c73c1a2ad8db9
+Commit: 405dfe69e6a608826e599ebf2f83ef8cf5083b96
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=405dfe69e6a608826e599ebf2f83ef8cf5083b96
 
 Author: Christopher Larson <chris_larson@mentor.com>
-Date:   Fri Nov  4 14:59:46 2011 -0400
+Date:   Fri Oct 28 23:06:18 2011 -0400
 
-codeparser: silence non-literal warnings for vardeps
+codeparser: drop expand tracking
 
-If the vardeps flag is not None, we now silence the warnings about
-non-literal usage for that variable.
+There are two usual cases involving bb.data.expand:
+
+- Calling it with a string literal -- "bb.data.expand('${FOO}/${BAZ}/bleh', d)".
+- Calling it on getVar results (legacy) -- "bb.data.expand(bb.data.getVar('FOO', d), d)"
+
+Nothing in any of the usual layers uses it in any other way, and I'm
+having trouble coming up with any real use cases beyond this. The first
+of the above cases is already tracked, via the expandWithRefs called
+on the python code string. The second didn't emit a warning anyway,
+since the getVar was already handled.
+
+Given this, I see no reason for us to maintain explicit expansion
+tracking. Further, we weren't using its results anyway (the var_expands
+member).
 
 Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 
 ---
 
- lib/bb/codeparser.py |   28 +++++++++++++++++++++++-----
- lib/bb/data.py       |   14 +++++++++-----
- lib/bb/data_smart.py |    8 +++++++-
- 3 files changed, 39 insertions(+), 11 deletions(-)
+ lib/bb/codeparser.py |   11 -----------
+ 1 files changed, 0 insertions(+), 11 deletions(-)
 
 diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
-index 615fb7d..d425514 100644
+index 9a692a0..615fb7d 100644
 --- a/lib/bb/codeparser.py
 +++ b/lib/bb/codeparser.py
-@@ -150,6 +150,22 @@ def parser_cache_savemerge(d):
-     bb.utils.unlockfile(glf)
+@@ -152,7 +152,6 @@ def parser_cache_savemerge(d):
  
- 
-+Logger = logging.getLoggerClass()
-+class BufferedLogger(Logger):
-+    def __init__(self, name, level=0, target=None):
-+        Logger.__init__(self, name)
-+        self.setLevel(level)
-+        self.buffer = []
-+        self.target = target
-+
-+    def handle(self, record):
-+        self.buffer.append(record)
-+
-+    def flush(self):
-+        for record in self.buffer:
-+            self.target.handle(record)
-+        self.buffer = []
-+
  class PythonParser():
      getvars = ("d.getVar", "bb.data.getVar", "data.getVar")
+-    expands = ("d.expand", "bb.data.expand", "data.expand")
      execfuncs = ("bb.build.exec_func", "bb.build.exec_task")
-@@ -164,9 +180,9 @@ class PythonParser():
-             funcstr = codegen.to_source(func)
-             argstr = codegen.to_source(arg)
-         except TypeError:
--            logger.debug(2, 'Failed to convert function and argument to source form')
-+            self.log.debug(2, 'Failed to convert function and argument to source form')
-         else:
--            logger.debug(1, self.unhandled_message % (funcstr, argstr))
-+            self.log.debug(1, self.unhandled_message % (funcstr, argstr))
  
-     def visit_Call(self, node):
-         name = self.called_node_name(node.func)
-@@ -196,11 +212,12 @@ class PythonParser():
+     def warn(self, func, arg):
+@@ -176,15 +175,6 @@ class PythonParser():
+                 self.var_references.add(node.args[0].s)
              else:
-                 break
- 
--    def __init__(self, name):
-+    def __init__(self, name, log):
+                 self.warn(node.func, node.args[0])
+-        elif name in self.expands:
+-            if isinstance(node.args[0], ast.Str):
+-                self.warn(node.func, node.args[0])
+-                self.var_expands.add(node.args[0].s)
+-            elif isinstance(node.args[0], ast.Call) and \
+-                 self.called_node_name(node.args[0].func) in self.getvars:
+-                pass
+-            else:
+-                self.warn(node.func, node.args[0])
+         elif name in self.execfuncs:
+             if isinstance(node.args[0], ast.Str):
+                 self.var_execs.add(node.args[0].s)
+@@ -210,7 +200,6 @@ class PythonParser():
          self.var_references = set()
          self.var_execs = set()
          self.execs = set()
+-        self.var_expands = set()
          self.references = set()
-+        self.log = BufferedLogger('BitBake.Data.%s' % name, logging.DEBUG, log)
  
          self.unhandled_message = "in call of %s, argument '%s' is not a string literal"
-         self.unhandled_message = "while parsing %s, %s" % (name, self.unhandled_message)
-@@ -228,10 +245,11 @@ class PythonParser():
-         pythonparsecache[h]["execs"] = self.execs
- 
- class ShellParser():
--    def __init__(self, name):
-+    def __init__(self, name, log):
-         self.funcdefs = set()
-         self.allexecs = set()
-         self.execs = set()
-+        self.log = BufferedLogger('BitBake.Data.%s' % name, logging.DEBUG, log)
-         self.unhandled_template = "unable to handle non-literal command '%s'"
-         self.unhandled_template = "while parsing %s, %s" % (name, self.unhandled_template)
- 
-@@ -348,7 +366,7 @@ class ShellParser():
- 
-                 cmd = word[1]
-                 if cmd.startswith("$"):
--                    logger.debug(1, self.unhandled_template % cmd)
-+                    self.log.debug(1, self.unhandled_template % cmd)
-                 elif cmd == "eval":
-                     command = " ".join(word for _, word in words[1:])
-                     self.parse_shell(command)
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index bcb8b05..10188f3 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -49,6 +49,7 @@ from bb import data_smart
- from bb import codeparser
- import bb
- 
-+logger = data_smart.logger
- _dict_type = data_smart.DataSmart
- 
- def init():
-@@ -258,7 +259,7 @@ def emit_func(func, o=sys.__stdout__, d = init()):
-         emit_var(key, o, d, False) and o.write('\n')
- 
-     emit_var(func, o, d, False) and o.write('\n')
--    newdeps = bb.codeparser.ShellParser(func).parse_shell(d.getVar(func, True))
-+    newdeps = bb.codeparser.ShellParser(func, logger).parse_shell(d.getVar(func, True))
-     seen = set()
-     while newdeps:
-         deps = newdeps
-@@ -267,7 +268,7 @@ def emit_func(func, o=sys.__stdout__, d = init()):
-         for dep in deps:
-             if bb.data.getVarFlag(dep, "func", d):
-                emit_var(dep, o, d, False) and o.write('\n')
--               newdeps |=  bb.codeparser.ShellParser(dep).parse_shell(d.getVar(dep, True))
-+               newdeps |=  bb.codeparser.ShellParser(dep, logger).parse_shell(d.getVar(dep, True))
-         newdeps -= seen
- 
- def update_data(d):
-@@ -276,25 +277,28 @@ def update_data(d):
- 
- def build_dependencies(key, keys, shelldeps, d):
-     deps = set()
-+    vardeps = d.getVarFlag(key, "vardeps", True)
-     try:
-         if d.getVarFlag(key, "func"):
-             if d.getVarFlag(key, "python"):
-                 parsedvar = d.expandWithRefs(d.getVar(key, False), key)
--                parser = bb.codeparser.PythonParser(key)
-+                parser = bb.codeparser.PythonParser(key, logger)
-                 parser.parse_python(parsedvar.value)
-                 deps = deps | parser.references
-             else:
-                 parsedvar = d.expandWithRefs(d.getVar(key, False), key)
--                parser = bb.codeparser.ShellParser(key)
-+                parser = bb.codeparser.ShellParser(key, logger)
-                 parser.parse_shell(parsedvar.value)
-                 deps = deps | shelldeps
-+            if vardeps is None:
-+                parser.log.flush()
-             deps = deps | parsedvar.references
-             deps = deps | (keys & parser.execs) | (keys & parsedvar.execs)
-         else:
-             parser = d.expandWithRefs(d.getVar(key, False), key)
-             deps |= parser.references
-             deps = deps | (keys & parser.execs)
--        deps |= set((d.getVarFlag(key, "vardeps", True) or "").split())
-+        deps |= set((vardeps or "").split())
-         deps -= set((d.getVarFlag(key, "vardepsexclude", True) or "").split())
-     except:
-         bb.note("Error expanding variable %s" % key)
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 44369ed..072f403 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -68,8 +68,14 @@ class VariableParse:
-             code = match.group()[3:-1]
-             codeobj = compile(code.strip(), self.varname or "<expansion>", "eval")
- 
--            parser = bb.codeparser.PythonParser(self.varname)
-+            parser = bb.codeparser.PythonParser(self.varname, logger)
-             parser.parse_python(code)
-+            if self.varname:
-+                vardeps = self.d.getVarFlag(self.varname, "vardeps", True)
-+                if vardeps is None:
-+                    parser.log.flush()
-+            else:
-+                parser.log.flush()
-             self.references |= parser.references
-             self.execs |= parser.execs
- 
 
 
 
