@@ -1,29 +1,15 @@
-Received: from mga06.intel.com ([134.134.136.21] helo=orsmga101.jf.intel.com)
+Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <scott.a.garman@intel.com>) id 1RNuAz-0003lZ-W5
+	(envelope-from <git@git.openembedded.org>) id 1ROT59-0002R3-5q
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 08 Nov 2011 23:29:54 +0100
-Received: from mail-pz0-f44.google.com ([209.85.210.44])
-	by mga02.intel.com with ESMTP/TLS/RC4-SHA; 08 Nov 2011 14:22:28 -0800
-Received: by pzk32 with SMTP id 32so4627010pzk.3
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 08 Nov 2011 14:22:28 -0800 (PST)
-Received: by 10.68.25.170 with SMTP id d10mr201315pbg.7.1320790948469;
-	Tue, 08 Nov 2011 14:22:28 -0800 (PST)
-Received: from [192.168.1.12] (c-98-246-160-155.hsd1.or.comcast.net.
-	[98.246.160.155])
-	by mx.google.com with ESMTPS id jm5sm7532197pbc.1.2011.11.08.14.22.26
-	(version=SSLv3 cipher=OTHER); Tue, 08 Nov 2011 14:22:27 -0800 (PST)
-Message-ID: <4EB9ABAE.4040600@intel.com>
-Date: Tue, 08 Nov 2011 14:22:38 -0800
-From: Scott Garman <scott.a.garman@intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:7.0.1) Gecko/20110929 Thunderbird/7.0.1
-MIME-Version: 1.0
+	Thu, 10 Nov 2011 12:46:11 +0100
+Received: by opal (Postfix, from userid 111)
+	id B6BF31032E; Thu, 10 Nov 2011 11:40:38 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-References: <1320775335.10843.104.camel@ted>
-In-Reply-To: <1320775335.10843.104.camel@ted>
-Subject: Re: [PATCH RFC] data_smart: Add appendVar/prependVar functions
+Message-Id: <20111110114038.B6BF31032E@opal>
+Date: Thu, 10 Nov 2011 11:40:38 +0000 (UTC)
+From: git@git.openembedded.org
+Subject: Richard Purdie : utils.py: Fix lockfile retry handling
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -35,22 +21,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 08 Nov 2011 22:29:54 -0000
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 10 Nov 2011 11:46:11 -0000
+Content-Type: text/plain; charset=UTF-8
 
-On 11/08/2011 10:02 AM, Richard Purdie wrote:
-> This patch adds appendVar and prependVar functions to the data store
-> meaning python code would no longer have to do the getVar, append and
-> the setVar dance that much of the current python code does.
+Module: bitbake.git
+Branch: master
+Commit: f421ef819f00ac659504d9af41bcc8323422ff8c
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=f421ef819f00ac659504d9af41bcc8323422ff8c
 
-So useful! Thanks for this.
+Author: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date:   Tue Nov  8 17:49:32 2011 +0000
 
-Scott
+utils.py: Fix lockfile retry handling
 
--- 
-Scott Garman
-Embedded Linux Engineer - Yocto Project
-Intel Open Source Technology Center
+The lockfile retry parameter is expected to return immediately after
+attempting to take the lock. There was a bug in the logic which this
+patch fixed to ensure it does that.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+---
+
+ lib/bb/utils.py |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 1f55407..f905702 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -443,7 +443,7 @@ def lockfile(name, shared=False, retry=True):
+                     return lf
+             lf.close()
+         except Exception:
+-            continue
++            pass
+         if not retry:
+             return None
+ 
+
 
 
