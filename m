@@ -1,33 +1,52 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1RR2eb-0003Ps-Tu for bitbake-devel@lists.openembedded.org;
-	Thu, 17 Nov 2011 15:09:26 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pAHE2xH7017449
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 17 Nov 2011 14:02:59 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 16264-08 for <bitbake-devel@lists.openembedded.org>;
-	Thu, 17 Nov 2011 14:02:55 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pAHE2ofi017443
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 17 Nov 2011 14:02:51 GMT
-Message-ID: <1321538575.27449.2.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Thu, 17 Nov 2011 14:02:55 +0000
-X-Mailer: Evolution 3.2.1- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: [Fwd: [OE-core] [PATCH] siggen.py: Include list of variables in hashes]
+Received: from mail-va3.bigfish.com ([216.32.180.10]
+	helo=VA3EHSOBE009.bigfish.com)
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <B29882@freescale.com>) id 1RR52Z-0002uc-9z
+	for bitbake-devel@lists.openembedded.org;
+	Thu, 17 Nov 2011 17:42:19 +0100
+Received: from mail137-va3-R.bigfish.com (10.7.14.243) by
+	VA3EHSOBE009.bigfish.com (10.7.40.29) with Microsoft SMTP Server id
+	14.1.225.22; Thu, 17 Nov 2011 16:35:10 +0000
+Received: from mail137-va3 (localhost [127.0.0.1])	by
+	mail137-va3-R.bigfish.com (Postfix) with ESMTP id 96ADA480427;
+	Thu, 17 Nov 2011 16:35:36 +0000 (UTC)
+X-SpamScore: -12
+X-BigFish: VS-12(zz9371K1432N98dKzz1202hzz8275dhz2dh2a8h668h839h8e2h8e3h)
+X-Forefront-Antispam-Report: CIP:70.37.183.190; KIP:(null); UIP:(null); IPV:NLI;
+	H:mail.freescale.net; RD:none; EFVD:NLI
+Received: from mail137-va3 (localhost.localdomain [127.0.0.1]) by mail137-va3
+	(MessageSwitch) id 1321547736257575_5167;
+	Thu, 17 Nov 2011 16:35:36 +0000 (UTC)
+Received: from VA3EHSMHS011.bigfish.com (unknown [10.7.14.235])	by
+	mail137-va3.bigfish.com (Postfix) with ESMTP id 369E740044;
+	Thu, 17 Nov 2011 16:35:36 +0000 (UTC)
+Received: from mail.freescale.net (70.37.183.190) by VA3EHSMHS011.bigfish.com
+	(10.7.99.21) with Microsoft SMTP Server (TLS) id 14.1.225.22;
+	Thu, 17 Nov 2011 16:35:08 +0000
+Received: from 039-SN1MPN1-002.039d.mgd.msft.net ([169.254.2.83]) by
+	039-SN1MMR1-001.039d.mgd.msft.net ([10.84.1.13]) with mapi id
+	14.01.0339.002; Thu, 17 Nov 2011 10:35:41 -0600
+From: McClintock Matthew-B29882 <B29882@freescale.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Thread-Topic: [bitbake-devel] [PATCH] siggen.py: Fix diffsigs output for
+	filename comparisions
+Thread-Index: AQHMpUbxLAfBQ4brhEyh3mARFfWPqw==
+Date: Thu, 17 Nov 2011 16:35:41 +0000
+Message-ID: <CAEsOVNf9gq7zmy2BmuT+PkBdZ7RnnYbCv5S1-2Eu7N9XoyGNSQ@mail.gmail.com>
+References: <1321538526.27449.1.camel@ted>
+In-Reply-To: <1321538526.27449.1.camel@ted>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [99.47.177.27]
+MIME-Version: 1.0
+X-OriginatorOrg: freescale.com
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] siggen.py: Fix diffsigs output for filename comparisions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
+Reply-To: McClintock Matthew-B29882 <B29882@freescale.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 List-Unsubscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/options/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=unsubscribe>
@@ -36,139 +55,120 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 17 Nov 2011 14:09:26 -0000
-X-Groupsio-MsgNum: 626
-Content-Type: multipart/mixed; boundary="=-dB8BVIkd7T5pcwQHpFC1"
+X-List-Received-Date: Thu, 17 Nov 2011 16:42:19 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <74A37730B1FFBE4389D42D9FE184ECE6@freescale.net>
+Content-Transfer-Encoding: quoted-printable
 
---=-dB8BVIkd7T5pcwQHpFC1
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+On Thu, Nov 17, 2011 at 8:02 AM, Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+> diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
+> index 4ccfc7d..217f29b 100644
+> --- a/bitbake/lib/bb/siggen.py
+> +++ b/bitbake/lib/bb/siggen.py
+> @@ -236,6 +236,16 @@ def compare_sigfiles(a, b):
+> =A0 =A0 =A0 =A0 removed =3D sb - sa
+> =A0 =A0 =A0 =A0 return changed, added, removed
+>
+> + =A0 =A0def clean_basepaths(a):
+> + =A0 =A0 =A0 =A0b =3D {}
+> + =A0 =A0 =A0 =A0for x in a:
+> + =A0 =A0 =A0 =A0 =A0 =A0if x.startswith("virtual:"):
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0y =3D x.rsplit(":", 1)[0] + x.rsplit("/"=
+, 1)[1]
+> + =A0 =A0 =A0 =A0 =A0 =A0else:
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0y =3D x.rsplit("/", 1)[1]
+> + =A0 =A0 =A0 =A0 =A0 =A0b[y] =3D a[x]
+> + =A0 =A0 =A0 =A0return b
+> +
 
+So you are stripping off the full path leading up to the recipe name?
+I added some stuff to strip off COREBASE at some point. Does this work
+with layers in any location? I would think so.
 
+> =A0 =A0 if 'basewhitelist' in a_data and a_data['basewhitelist'] !=3D b_d=
+ata['basewhitelist']:
+> =A0 =A0 =A0 =A0 print "basewhitelist changed from %s to %s" % (a_data['ba=
+sewhitelist'], b_data['basewhitelist'])
+>
+> @@ -243,7 +253,7 @@ def compare_sigfiles(a, b):
+> =A0 =A0 =A0 =A0 print "taskwhitelist changed from %s to %s" % (a_data['ta=
+skwhitelist'], b_data['taskwhitelist'])
+>
+> =A0 =A0 if a_data['taskdeps'] !=3D b_data['taskdeps']:
+> - =A0 =A0 =A0 =A0print "Task dependencies changed from %s to %s" % (sorte=
+d(a_data['taskdeps']), sorted(b_data['taskdeps']))
+> + =A0 =A0 =A0 =A0print "Task dependencies changed from:\n%s\nto:\n%s" % (=
+sorted(a_data['taskdeps']), sorted(b_data['taskdeps']))
+>
+> =A0 =A0 if a_data['basehash'] !=3D b_data['basehash']:
+> =A0 =A0 =A0 =A0 print "basehash changed from %s to %s" % (a_data['basehas=
+h'], b_data['basehash'])
+> @@ -266,7 +276,9 @@ def compare_sigfiles(a, b):
+> =A0 =A0 =A0 =A0 =A0 =A0 print "Variable %s value changed from %s to %s" %=
+ (dep, a_data['varvals'][dep], b_data['varvals'][dep])
+>
+> =A0 =A0 if 'runtaskhashes' in a_data and 'runtaskhashes' in b_data:
+> - =A0 =A0 =A0 =A0changed, added, removed =3D dict_diff(a_data['runtaskhas=
+hes'], b_data['runtaskhashes'])
+> + =A0 =A0 =A0 =A0a =3D clean_basepaths(a_data['runtaskhashes'])
+> + =A0 =A0 =A0 =A0b =3D clean_basepaths(b_data['runtaskhashes'])
+> + =A0 =A0 =A0 =A0changed, added, removed =3D dict_diff(a, b)
+> =A0 =A0 =A0 =A0 if added:
+> =A0 =A0 =A0 =A0 =A0 =A0 for dep in added:
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 print "Dependency on task %s was added" %=
+ (dep)
+> @@ -275,7 +287,7 @@ def compare_sigfiles(a, b):
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 print "Dependency on task %s was removed"=
+ % (dep)
+> =A0 =A0 =A0 =A0 if changed:
+> =A0 =A0 =A0 =A0 =A0 =A0 for dep in changed:
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0print "Hash for dependent task %s change=
+d from %s to %s" % (dep, a_data['runtaskhashes'][dep], b_data['runtaskhashe=
+s'][dep])
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0print "Hash for dependent task %s change=
+d from %s to %s" % (dep, a[dep], b[dep])
+> =A0 =A0 elif 'runtaskdeps' in a_data and 'runtaskdeps' in b_data and sort=
+ed(a_data['runtaskdeps']) !=3D sorted(b_data['runtaskdeps']):
+> =A0 =A0 =A0 =A0 print "Tasks this task depends on changed from %s to %s" =
+% (sorted(a_data['runtaskdeps']), sorted(b_data['runtaskdeps']))
+>
 
---=-dB8BVIkd7T5pcwQHpFC1
-Content-Disposition: inline
-Content-Description: Forwarded message =?UTF-8?Q?=E2=80=94?= [OE-core]
- [PATCH] siggen.py: Include list of variables in hashes
-Content-Type: message/rfc822
+So now we get shown the tashhash is different even when the
+paths/filenames are different? This is helpful for sure - took me a
+bit to get to this realization.
 
-Return-Path: <openembedded-core-bounces@lists.openembedded.org>
-X-Spam-Checker-Version: SpamAssassin 3.2.5 (2008-06-10) on tim.rpsys.net
-X-Spam-Level: *
-X-Spam-Status: No, score=1.1 required=5.0
- tests=AWL,BAYES_00,FH_DATE_PAST_20XX, RDNS_NONE autolearn=no version=3.2.5
-Received: from localhost (localhost [127.0.0.1]) by tim.rpsys.net
- (8.13.6/8.13.8) with ESMTP id pAHE1iJ5017403 for <richard@[127.0.0.1]>;
- Thu, 17 Nov 2011 14:01:44 GMT
-Received: from tim.rpsys.net ([127.0.0.1]) by localhost (tim.rpsys.net
- [127.0.0.1]) (amavisd-new, port 10024) with LMTP id 16264-07 for
- <richard@[127.0.0.1]>; Thu, 17 Nov 2011 14:01:40 +0000 (GMT)
-Received: from tim.rpsys.net (IDENT:1000@localhost [127.0.0.1]) by
- tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pAHE1bMs017396 for
- <richard@localhost>; Thu, 17 Nov 2011 14:01:37 GMT
-MIME-Version: 1.0
-Received: from 192.168.3.10 [192.168.3.10] by tim.rpsys.net with IMAP
- (fetchmail-6.3.2) for <richard@localhost> (single-drop); Thu, 17 Nov 2011
- 14:01:37 +0000 (GMT)
-Received: from orsmsx602.amr.corp.intel.com (10.22.226.211) by
- irsmsx151.ger.corp.intel.com (163.33.192.59) with Microsoft SMTP Server
- (TLS) id 14.1.355.2; Thu, 17 Nov 2011 14:01:27 +0000
-Received: from orsmga001.jf.intel.com (10.7.209.18) by
- orsmsx602-1.jf.intel.com (10.22.226.211) with Microsoft SMTP Server id
- 8.2.255.0; Thu, 17 Nov 2011 06:01:25 -0800
-Received: from orsmga101.jf.intel.com ([10.7.208.22])  by
- orsmga001-1.jf.intel.com with ESMTP; 17 Nov 2011 06:01:25 -0800
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: 
- Aj4BAMUSxU6M06kMmWdsb2JhbABCqX4iAQEBAQEICwsHFCWBdAYBATcMCh4OAwECBgJABAQIAwEjATUTBYd/BrU9g1mGPgSSFodajEE
-X-IronPort-AV: E=Sophos;i="4.69,527,1315206000";  d="scan'208";a="423907864"
-Received: from mail.linuxfoundation.org ([140.211.169.12])  by
- mga02.intel.com with ESMTP; 17 Nov 2011 06:01:25 -0800
-Received: from smtp2.linuxfoundation.org (smtp2.linux-foundation.org
- [172.17.192.36])	by mail.linuxfoundation.org (Postfix) with ESMTP id
- 46FB042B for <richard.purdie@linuxfoundation.org>; Thu, 17 Nov 2011
- 13:59:52 +0000 (UTC)
-X-Greylist: domain auto-whitelisted by SQLgrey-1.7.6
-Received: from linuxtogo.org (linuxtogo.org [188.40.83.200])	by
- smtp2.linuxfoundation.org (Postfix) with ESMTPS id 602091DADD	for
- <richard.purdie@linuxfoundation.org>; Thu, 17 Nov 2011 13:59:51 +0000 (UTC)
-Received: from localhost ([127.0.0.1])	by linuxtogo.org with esmtp (Exim
- 4.72) (envelope-from <openembedded-core-bounces@lists.openembedded.org>)	id
- 1RR2cq-0003L0-H8; Thu, 17 Nov 2011 15:07:36 +0100
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
- helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)	(envelope-from
- <richard.purdie@linuxfoundation.org>)	id 1RR2co-0003Kn-Cl for
- openembedded-core@lists.openembedded.org;	Thu, 17 Nov 2011 15:07:34 +0100
-Received: from localhost (localhost [127.0.0.1])	by tim.rpsys.net
- (8.13.6/8.13.8) with ESMTP id pAHE1977017389	for
- <openembedded-core@lists.openembedded.org>;	Thu, 17 Nov 2011 14:01:09 GMT
-Received: from tim.rpsys.net ([127.0.0.1])	by localhost (tim.rpsys.net
- [127.0.0.1]) (amavisd-new,	port 10024) with LMTP	id 15957-08 for
- <openembedded-core@lists.openembedded.org>;	Thu, 17 Nov 2011 14:01:03 +0000
- (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)	by
- tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pAHE11Bg017383
- (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)	for
- <openembedded-core@lists.openembedded.org>;	Thu, 17 Nov 2011 14:01:02 GMT
-Message-ID: <1321538466.27449.0.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: openembedded-core <openembedded-core@lists.openembedded.org>
-Date: Thu, 17 Nov 2011 14:01:06 +0000
-X-Mailer: Evolution 3.2.1- 
-Subject: [OE-core] [PATCH] siggen.py: Include list of variables in hashes
-X-BeenThere: openembedded-core@lists.openembedded.org
-X-Mailman-Version: 2.1.11
-Precedence: list
-Reply-To: Patches and discussions about the oe-core layer <openembedded-core@lists.openembedded.org>
-List-Id: Patches and discussions about the oe-core layer
- <openembedded-core.lists.openembedded.org>
-List-Unsubscribe: 
- <http://lists.linuxtogo.org/cgi-bin/mailman/options/openembedded-core>,
- <mailto:openembedded-core-request@lists.openembedded.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxtogo.org/pipermail/openembedded-core>
-List-Post: <mailto:openembedded-core@lists.openembedded.org>
-List-Help: 
- <mailto:openembedded-core-request@lists.openembedded.org?subject=help>
-List-Subscribe: 
- <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/openembedded-core>,
- <mailto:openembedded-core-request@lists.openembedded.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Sender: <openembedded-core-bounces@lists.openembedded.org>
-Errors-To: openembedded-core-bounces@lists.openembedded.org
-X-MS-Exchange-Organization-AVStamp-Mailbox: NAI;54066478;0;novirus
-X-MS-Exchange-Organization-AuthSource: orsmsx602.amr.corp.intel.com
-X-MS-Exchange-Organization-AuthAs: Anonymous
-X-Virus-Scanned: amavisd-new at rpsys.net
-Content-Transfer-Encoding: 7bit
+Some other bitbake-diffsig improvements/comments:
 
-Ensure that the list of dependencies is included in the hash
-as well as their contents
+1) For showing the difference between two sets, it would be helpful to
+also show the symmetrical_difference to help see what is different
+more easily.
 
-Prior to this, adding or removing dependencies with values
-of "None" would not change the hash, despite diffsigs reporting
-this difference.
+2) For taskdeps, if the task depends is part of the same recipe, it
+would be helpful to show that. For example if strace.bb.do_package
+depends on strace.bb.do_install, can't we just show that instead?
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
-index 1225791..4ccfc7d 100644
---- a/bitbake/lib/bb/siggen.py
-+++ b/bitbake/lib/bb/siggen.py
-@@ -101,6 +101,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-             alldeps = seen - self.basewhitelist
- 
-             for dep in sorted(alldeps):
-+                data = data + dep
-                 if dep in lookupcache:
-                     var = lookupcache[dep]
-                 else:
+3) Continuing on #2 it would be nice to import all sigs from a folder
+and traverse down the task dependencies, and then even show whats
+difference between two sets of sstate-cache. For example:
+
+strace.bb.do_package -> strace.bb.do_install -> eglibc.bb.do_install
+=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0|-> foo.bb.do_install
+=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0|-> bar.bb.do_install
+
+Showing the hash above as well. Then somehow do a diff between the two
+trees... but even just showing this tree is a good first step. Maybe
+there is a way to dump this without even involving sstate-cache but
+just via bitbake?
+
+Maybe there are easy ways to do these things already? Feedback welcome =3D)
+
+-M=
 
 
 
-_______________________________________________
-Openembedded-core mailing list
-Openembedded-core@lists.openembedded.org
-http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/openembedded-core
-
-
---=-dB8BVIkd7T5pcwQHpFC1--
