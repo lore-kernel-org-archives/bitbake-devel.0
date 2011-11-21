@@ -1,15 +1,30 @@
-Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RRPR5-0002P1-HY
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 18 Nov 2011 15:29:01 +0100
-Received: by opal (Postfix, from userid 111)
-	id A94781032F; Fri, 18 Nov 2011 14:24:15 +0000 (UTC)
-To: bitbake-devel@lists.openembedded.org
-Message-Id: <20111118142415.A94781032F@opal>
-Date: Fri, 18 Nov 2011 14:24:15 +0000 (UTC)
-From: git@git.openembedded.org
-Subject: Richard Purdie : parse_py: Use absolute paths for FILE
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1RSXAy-00008L-0k for bitbake-devel@lists.openembedded.org;
+	Mon, 21 Nov 2011 17:57:00 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pALGoVsu009097
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 21 Nov 2011 16:50:31 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 08308-08 for <bitbake-devel@lists.openembedded.org>;
+	Mon, 21 Nov 2011 16:50:28 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pALGoNWn009091
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 21 Nov 2011 16:50:24 GMT
+Message-ID: <1321894228.18926.35.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Mon, 21 Nov 2011 16:50:28 +0000
+X-Mailer: Evolution 3.2.1- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: bitbake/runqueue.py: Ensure we fully process the covered list
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -21,59 +36,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 18 Nov 2011 14:29:01 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Mon, 21 Nov 2011 16:57:00 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Module: bitbake.git
-Branch: master
-Commit: 658d7daa70e46c2b20973b90ee53f0bbadc8bf5d
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=658d7daa70e46c2b20973b90ee53f0bbadc8bf5d
+The existing looping code can mask an existing "found = True"
+by forcing it to False each time. This can lead to dependency
+lists not being fully searched and results in dependency errors.
 
-Author: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date:   Fri Nov 18 14:21:15 2011 +0000
-
-parse_py: Use absolute paths for FILE
-
-Its possible for relative paths to creep into FILE. These confuse the
-build system no end as its not clear where they might be releative to.
-
-This patch ensures we always use resolved absolute paths for FILE
-so that things behave in a deterministic way.
+An exmaple of this was the autobuilder building linux-yocto from
+sstate but then rebuilding some of the recipe's tasks for no
+apparent reason. Separating the logic into two variables solves this
+problem since any "found = True" value is now always preserved.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-
 ---
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 98124af..54b1c86 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1211,12 +1211,13 @@ class RunQueueExecuteTasks(RunQueueExecute):
+                 if task in self.rq.scenequeue_covered:
+                     continue
+                 if len(self.rqdata.runq_revdeps[task]) > 0 and self.rqdata.runq_revdeps[task].issubset(self.rq.scenequeue_covered):
+-                    found = True
++                    ok = True
+                     for revdep in self.rqdata.runq_revdeps[task]:
+                         if self.rqdata.runq_fnid[task] != self.rqdata.runq_fnid[revdep]:
+-                            found = False
++                            ok = False
+                             break
+-                    if found:
++                    if ok:
++                        found = True
+                         self.rq.scenequeue_covered.add(task)
+ 
+         # Detect when the real task needs to be run anyway by looking to see
 
- lib/bb/parse/parse_py/BBHandler.py   |    2 +-
- lib/bb/parse/parse_py/ConfHandler.py |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/lib/bb/parse/parse_py/BBHandler.py b/lib/bb/parse/parse_py/BBHandler.py
-index 851a7e6..8c1bd60 100644
---- a/lib/bb/parse/parse_py/BBHandler.py
-+++ b/lib/bb/parse/parse_py/BBHandler.py
-@@ -148,7 +148,7 @@ def handle(fn, d, include):
- 
-     # DONE WITH PARSING... time to evaluate
-     if ext != ".bbclass":
--        data.setVar('FILE', fn, d)
-+        data.setVar('FILE', abs_fn, d)
- 
-     statements.eval(d)
- 
-diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
-index 102c0e9..e168d24 100644
---- a/lib/bb/parse/parse_py/ConfHandler.py
-+++ b/lib/bb/parse/parse_py/ConfHandler.py
-@@ -102,7 +102,7 @@ def handle(fn, data, include):
-         feeder(lineno, s, fn, statements)
- 
-     # DONE WITH PARSING... time to evaluate
--    bb.data.setVar('FILE', fn, data)
-+    bb.data.setVar('FILE', abs_fn, data)
-     statements.eval(data)
-     if oldfile:
-         bb.data.setVar('FILE', oldfile, data)
 
 
 
