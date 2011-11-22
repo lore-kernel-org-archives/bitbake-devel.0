@@ -1,30 +1,15 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1RSXBd-0000A2-Jo for bitbake-devel@lists.openembedded.org;
-	Mon, 21 Nov 2011 17:57:41 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pALGpDgk009107
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Nov 2011 16:51:13 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 08521-06 for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Nov 2011 16:51:08 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pALGp5UN009101
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Nov 2011 16:51:05 GMT
-Message-ID: <1321894270.18926.36.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 21 Nov 2011 16:51:10 +0000
-X-Mailer: Evolution 3.2.1- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: bitbake/runqueue.py: Add BB_SETSCENE_VERIFY_FUNCTION hook
+Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <git@git.openembedded.org>) id 1RSsRS-0004VF-LR
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 22 Nov 2011 16:39:27 +0100
+Received: by opal (Postfix, from userid 111)
+	id A542510334; Tue, 22 Nov 2011 13:08:39 +0000 (UTC)
+To: bitbake-devel@lists.openembedded.org
+Message-Id: <20111122130839.A542510334@opal>
+Date: Tue, 22 Nov 2011 13:08:39 +0000 (UTC)
+From: git@git.openembedded.org
+Subject: Richard Purdie : bitbake/runqueue.py: Add BB_SETSCENE_VERIFY_FUNCTION hook
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,9 +21,18 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 21 Nov 2011 16:57:41 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 22 Nov 2011 15:39:27 -0000
+Content-Type: text/plain; charset=UTF-8
+
+Module: bitbake.git
+Branch: master
+Commit: 2f6d987d9957a5d713ce119c24c2e87540611f53
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=2f6d987d9957a5d713ce119c24c2e87540611f53
+
+Author: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date:   Mon Nov 21 14:34:23 2011 +0000
+
+bitbake/runqueue.py: Add BB_SETSCENE_VERIFY_FUNCTION hook
 
 The OE metadata has cases where it needs to prevent some setscene
 functions from running. An example of this is where we know a task
@@ -52,11 +46,16 @@ It removes the existing code which attempted to do this in a generic
 way but failed.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
 ---
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 54b1c86..de2cfb9 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
+
+ lib/bb/runqueue.py |   20 +++++++++-----------
+ 1 files changed, 9 insertions(+), 11 deletions(-)
+
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 6cc6ab2..62b62dd 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
 @@ -767,6 +767,7 @@ class RunQueue:
  
          self.stamppolicy = bb.data.getVar("BB_STAMP_POLICY", cfgData, True) or "perfile"
@@ -65,8 +64,8 @@ index 54b1c86..de2cfb9 100644
  
          self.state = runQueuePrepare
  
-@@ -1220,23 +1221,20 @@ class RunQueueExecuteTasks(RunQueueExecute):
-                         found = True
+@@ -1216,23 +1217,20 @@ class RunQueueExecuteTasks(RunQueueExecute):
+                     if found:
                          self.rq.scenequeue_covered.add(task)
  
 -        # Detect when the real task needs to be run anyway by looking to see
@@ -97,7 +96,6 @@ index 54b1c86..de2cfb9 100644
              self.rq.scenequeue_covered.remove(task)
  
          logger.debug(1, 'Full skip list %s', self.rq.scenequeue_covered)
-
 
 
 
