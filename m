@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RTCIq-0000Ll-GF
+	(envelope-from <git@git.openembedded.org>) id 1RTFJw-0006Li-1R
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 23 Nov 2011 13:51:53 +0100
+	Wed, 23 Nov 2011 17:05:12 +0100
 Received: by opal (Postfix, from userid 111)
-	id 661C31032F; Wed, 23 Nov 2011 12:47:41 +0000 (UTC)
+	id 686E91032F; Wed, 23 Nov 2011 16:00:59 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20111123124741.661C31032F@opal>
-Date: Wed, 23 Nov 2011 12:47:41 +0000 (UTC)
+Message-Id: <20111123160059.686E91032F@opal>
+Date: Wed, 23 Nov 2011 16:00:59 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Richard Purdie : runqueue.py: Ensure setscene tasks don' t break dependency order
+Subject: Richard Purdie : runqueue.py: Ensure we fully process the covered list
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -21,65 +21,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 23 Nov 2011 12:51:53 -0000
+X-List-Received-Date: Wed, 23 Nov 2011 16:05:12 -0000
 Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: b7114d8e5d9b0720339bd5d24d243c0f2a7c1f3b
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=b7114d8e5d9b0720339bd5d24d243c0f2a7c1f3b
+Commit: 61017fc5d30b7a13308d038872ec92efc1a84cef
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=61017fc5d30b7a13308d038872ec92efc1a84cef
 
 Author: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date:   Wed Nov 23 12:38:44 2011 +0000
+Date:   Mon Nov 21 14:02:00 2011 +0000
 
-runqueue.py: Ensure setscene tasks don't break dependency order
+runqueue.py: Ensure we fully process the covered list
 
-If A depends upon B which depends upon C and the setscene for B
-succeeds but C is going to get rebuilt, we should wait for C to
-try and build A but currently we don't.
+The existing looping code can mask an existing "found = True"
+by forcing it to False each time. This can lead to dependency
+lists not being fully searched and results in dependency errors.
 
-This is due to the timing of when we run the task_skip() as this
-triggers other tasks to become buildable. This patch moves the timing
-of that call to a more appropriate place allowing dependencies to
-behave as expected.
+An exmaple of this was the autobuilder building linux-yocto from
+sstate but then rebuilding some of the recipe's tasks for no
+apparent reason. Separating the logic into two variables solves this
+problem since any "found = True" value is now always preserved.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 ---
 
- lib/bb/runqueue.py |   11 +++++++----
- 1 files changed, 7 insertions(+), 4 deletions(-)
+ lib/bb/runqueue.py |    7 ++++---
+ 1 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 62b62dd..bea6f9c 100644
+index bea6f9c..f5598ca 100644
 --- a/lib/bb/runqueue.py
 +++ b/lib/bb/runqueue.py
-@@ -1235,9 +1235,6 @@ class RunQueueExecuteTasks(RunQueueExecute):
+@@ -1209,12 +1209,13 @@ class RunQueueExecuteTasks(RunQueueExecute):
+                 if task in self.rq.scenequeue_covered:
+                     continue
+                 if len(self.rqdata.runq_revdeps[task]) > 0 and self.rqdata.runq_revdeps[task].issubset(self.rq.scenequeue_covered):
+-                    found = True
++                    ok = True
+                     for revdep in self.rqdata.runq_revdeps[task]:
+                         if self.rqdata.runq_fnid[task] != self.rqdata.runq_fnid[revdep]:
+-                            found = False
++                            ok = False
+                             break
+-                    if found:
++                    if ok:
++                        found = True
+                         self.rq.scenequeue_covered.add(task)
  
-         logger.debug(1, 'Full skip list %s', self.rq.scenequeue_covered)
- 
--        for task in self.rq.scenequeue_covered:
--            self.task_skip(task)
--
-         event.fire(bb.event.StampUpdate(self.rqdata.target_pairs, self.rqdata.dataCache.stamp), self.cfgData)
- 
-         schedulers = self.get_schedulers()
-@@ -1331,8 +1328,14 @@ class RunQueueExecuteTasks(RunQueueExecute):
-         task = self.sched.next()
-         if task is not None:
-             fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[task]]
--
-             taskname = self.rqdata.runq_task[task]
-+
-+            if task in self.rq.scenequeue_covered:
-+                logger.debug(2, "Setscene covered task %s (%s)", task,
-+                                self.rqdata.get_user_idstring(task))
-+                self.task_skip(task)
-+                return True
-+
-             if self.rq.check_stamp_task(task, taskname):
-                 logger.debug(2, "Stamp current task %s (%s)", task,
-                                 self.rqdata.get_user_idstring(task))
+         logger.debug(1, 'Skip list (pre setsceneverify) %s', sorted(self.rq.scenequeue_covered))
 
 
 
