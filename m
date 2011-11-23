@@ -1,42 +1,30 @@
-Received: from ch1ehsobe001.messaging.microsoft.com ([216.32.181.181]
-	helo=ch1outboundpool.messaging.microsoft.com)
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <B29882@freescale.com>) id 1RT8ce-0005Io-HB
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 23 Nov 2011 09:56:05 +0100
-Received: from mail54-ch1-R.bigfish.com (10.43.68.249) by
-	CH1EHSOBE018.bigfish.com (10.43.70.68) with Microsoft SMTP Server id
-	14.1.225.22; Wed, 23 Nov 2011 08:03:30 +0000
-Received: from mail54-ch1 (localhost [127.0.0.1])	by mail54-ch1-R.bigfish.com
-	(Postfix) with ESMTP id 1FA423403B4;
-	Wed, 23 Nov 2011 08:04:22 +0000 (UTC)
-X-SpamScore: 3
-X-BigFish: VS3(zzzz1202h1082kzz8275bhz2dh2a8h668h839h)
-X-Forefront-Antispam-Report: CIP:70.37.183.190; KIP:(null); UIP:(null); IPV:NLI;
-	H:mail.freescale.net; RD:none; EFVD:NLI
-Received: from mail54-ch1 (localhost.localdomain [127.0.0.1]) by mail54-ch1
-	(MessageSwitch) id 1322035459987331_18359;
-	Wed, 23 Nov 2011 08:04:19 +0000 (UTC)
-Received: from CH1EHSMHS030.bigfish.com (snatpool1.int.messaging.microsoft.com
-	[10.43.68.246])	by mail54-ch1.bigfish.com (Postfix) with ESMTP id
-	EBF54580046;	Wed, 23 Nov 2011 08:04:19 +0000 (UTC)
-Received: from mail.freescale.net (70.37.183.190) by CH1EHSMHS030.bigfish.com
-	(10.43.70.30) with Microsoft SMTP Server (TLS) id 14.1.225.22;
-	Wed, 23 Nov 2011 08:03:23 +0000
-Received: from az33smr02.freescale.net (10.64.34.200) by
-	039-SN1MMR1-001.039d.mgd.msft.net (10.84.1.13) with Microsoft SMTP
-	Server id 14.1.339.2; Wed, 23 Nov 2011 02:04:01 -0600
-Received: from right.am.freescale.net (right.am.freescale.net [10.82.193.13])
-	by az33smr02.freescale.net (8.13.1/8.13.0) with ESMTP id
-	pAN840wK013282; Wed, 23 Nov 2011 02:04:00 -0600 (CST)
-From: Matthew McClintock <msm@freescale.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 23 Nov 2011 02:04:00 -0600
-Message-ID: <1322035440-8480-1-git-send-email-msm@freescale.com>
-X-Mailer: git-send-email 1.7.6.1
-MIME-Version: 1.0
-X-OriginatorOrg: freescale.com
-Subject: [PATCH] siggen.py: sort task hash depedencies with basepath
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1RTCGx-0000Fc-4K for bitbake-devel@lists.openembedded.org;
+	Wed, 23 Nov 2011 13:49:55 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pANChNcV012407
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 23 Nov 2011 12:43:23 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 32443-09 for <bitbake-devel@lists.openembedded.org>;
+	Wed, 23 Nov 2011 12:43:18 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pANChEo1012401
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 23 Nov 2011 12:43:15 GMT
+Message-ID: <1322052201.18926.77.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Wed, 23 Nov 2011 12:43:21 +0000
+X-Mailer: Evolution 3.2.1- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: [PATCH] runqueue.py: Ensure setscene tasks don't break dependency order
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -48,74 +36,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 23 Nov 2011 08:56:05 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 23 Nov 2011 12:49:55 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Without this patch the tash hash dependencies can be in a order
-that is dependent upon directory/filesystem layout. With this
-change the data is sorted the same regardless.
+If A depends upon B which depends upon C and the setscene for B
+succeeds but C is going to get rebuilt, we should wait for C to
+try and build A but currently we don't.
 
-Without this the dependent hashes could be in different orders
-on different systems and consequently final md5 hash would differ
-as well even though nothing else changed.
+This is due to the timing of when we run the task_skip() as this
+triggers other tasks to become buildable. This patch moves the timing
+of that call to a more appropriate place allowing dependencies to
+behave as expected.
 
-Signed-off-by: Matthew McClintock <msm@freescale.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/siggen.py |   25 ++++++++++++++-----------
- 1 files changed, 14 insertions(+), 11 deletions(-)
-
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 217f29b..9b73c4c 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -136,7 +136,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         k = fn + "." + task
-         data = dataCache.basetaskhash[k]
-         self.runtaskdeps[k] = []
--        for dep in sorted(deps):
-+        for dep in sorted(deps, key=clean_basepath):
-             # We only manipulate the dependencies for packages not in the whitelist
-             if self.twl and not self.twl.search(dataCache.pkg_fn[fn]):
-                 # then process the actual dependencies
-@@ -218,6 +218,19 @@ def dump_this_task(outfile, d):
-     task = "do_" + d.getVar("BB_CURRENTTASK", True)
-     bb.parse.siggen.dump_sigtask(fn, task, outfile, "customfile")
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index e00a299..acea8f2 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1243,9 +1243,6 @@ class RunQueueExecuteTasks(RunQueueExecute):
  
-+def clean_basepath(a):
-+    if a.startswith("virtual:"):
-+        b = a.rsplit(":", 1)[0] + a.rsplit("/", 1)[1]
-+    else:
-+        b = a.rsplit("/", 1)[1]
-+    return b
-+
-+def clean_basepaths(a):
-+    b = {}
-+    for x in a:
-+        b[clean_basepath(x)] = a[x]
-+    return b
-+
- def compare_sigfiles(a, b):
-     p1 = pickle.Unpickler(file(a, "rb"))
-     a_data = p1.load()
-@@ -236,16 +249,6 @@ def compare_sigfiles(a, b):
-         removed = sb - sa
-         return changed, added, removed
+         logger.debug(1, 'Full skip list %s', self.rq.scenequeue_covered)
  
--    def clean_basepaths(a):
--        b = {}
--        for x in a:
--            if x.startswith("virtual:"):
--                y = x.rsplit(":", 1)[0] + x.rsplit("/", 1)[1]
--            else:
--                y = x.rsplit("/", 1)[1]
--            b[y] = a[x]
--        return b
+-        for task in self.rq.scenequeue_covered:
+-            self.task_skip(task)
 -
-     if 'basewhitelist' in a_data and a_data['basewhitelist'] != b_data['basewhitelist']:
-         print "basewhitelist changed from %s to %s" % (a_data['basewhitelist'], b_data['basewhitelist'])
+         event.fire(bb.event.StampUpdate(self.rqdata.target_pairs, self.rqdata.dataCache.stamp), self.cfgData)
  
--- 
-1.7.6.1
+         schedulers = self.get_schedulers()
+@@ -1339,8 +1336,14 @@ class RunQueueExecuteTasks(RunQueueExecute):
+         task = self.sched.next()
+         if task is not None:
+             fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[task]]
+-
+             taskname = self.rqdata.runq_task[task]
++
++            if task in self.rq.scenequeue_covered:
++                logger.debug(2, "Setscene covered task %s (%s)", task,
++                                self.rqdata.get_user_idstring(task))
++                self.task_skip(task)
++                return True
++
+             if self.rq.check_stamp_task(task, taskname):
+                 logger.debug(2, "Stamp current task %s (%s)", task,
+                                 self.rqdata.get_user_idstring(task))
 
 
 
