@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RTFJw-0006Li-1R
+	(envelope-from <git@git.openembedded.org>) id 1RTH38-0002GG-EI
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 23 Nov 2011 17:05:12 +0100
+	Wed, 23 Nov 2011 18:55:58 +0100
 Received: by opal (Postfix, from userid 111)
-	id 686E91032F; Wed, 23 Nov 2011 16:00:59 +0000 (UTC)
+	id 01A9A10331; Wed, 23 Nov 2011 17:51:49 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20111123160059.686E91032F@opal>
-Date: Wed, 23 Nov 2011 16:00:59 +0000 (UTC)
+Message-Id: <20111123175149.01A9A10331@opal>
+Date: Wed, 23 Nov 2011 17:51:49 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Richard Purdie : runqueue.py: Ensure we fully process the covered list
+Subject: Matthew McClintock : siggen.py: sort task hash depedencies with basepath
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -21,56 +21,85 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 23 Nov 2011 16:05:12 -0000
+X-List-Received-Date: Wed, 23 Nov 2011 17:55:58 -0000
 Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: 61017fc5d30b7a13308d038872ec92efc1a84cef
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=61017fc5d30b7a13308d038872ec92efc1a84cef
+Commit: 9a2029899c946ce9aa8adbc85f2cfe7a85b92182
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=9a2029899c946ce9aa8adbc85f2cfe7a85b92182
 
-Author: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date:   Mon Nov 21 14:02:00 2011 +0000
+Author: Matthew McClintock <msm@freescale.com>
+Date:   Wed Nov 23 02:04:00 2011 -0600
 
-runqueue.py: Ensure we fully process the covered list
+siggen.py: sort task hash depedencies with basepath
 
-The existing looping code can mask an existing "found = True"
-by forcing it to False each time. This can lead to dependency
-lists not being fully searched and results in dependency errors.
+Without this patch the tash hash dependencies can be in a order
+that is dependent upon directory/filesystem layout. With this
+change the data is sorted the same regardless.
 
-An exmaple of this was the autobuilder building linux-yocto from
-sstate but then rebuilding some of the recipe's tasks for no
-apparent reason. Separating the logic into two variables solves this
-problem since any "found = True" value is now always preserved.
+Without this the dependent hashes could be in different orders
+on different systems and consequently final md5 hash would differ
+as well even though nothing else changed.
 
+Signed-off-by: Matthew McClintock <msm@freescale.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 ---
 
- lib/bb/runqueue.py |    7 ++++---
- 1 files changed, 4 insertions(+), 3 deletions(-)
+ lib/bb/siggen.py |   25 ++++++++++++++-----------
+ 1 files changed, 14 insertions(+), 11 deletions(-)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index bea6f9c..f5598ca 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1209,12 +1209,13 @@ class RunQueueExecuteTasks(RunQueueExecute):
-                 if task in self.rq.scenequeue_covered:
-                     continue
-                 if len(self.rqdata.runq_revdeps[task]) > 0 and self.rqdata.runq_revdeps[task].issubset(self.rq.scenequeue_covered):
--                    found = True
-+                    ok = True
-                     for revdep in self.rqdata.runq_revdeps[task]:
-                         if self.rqdata.runq_fnid[task] != self.rqdata.runq_fnid[revdep]:
--                            found = False
-+                            ok = False
-                             break
--                    if found:
-+                    if ok:
-+                        found = True
-                         self.rq.scenequeue_covered.add(task)
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index 3eed664..9231291 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -136,7 +136,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
+         k = fn + "." + task
+         data = dataCache.basetaskhash[k]
+         self.runtaskdeps[k] = []
+-        for dep in sorted(deps):
++        for dep in sorted(deps, key=clean_basepath):
+             # We only manipulate the dependencies for packages not in the whitelist
+             if self.twl and not self.twl.search(dataCache.pkg_fn[fn]):
+                 # then process the actual dependencies
+@@ -218,6 +218,19 @@ def dump_this_task(outfile, d):
+     task = "do_" + d.getVar("BB_CURRENTTASK", True)
+     bb.parse.siggen.dump_sigtask(fn, task, outfile, "customfile")
  
-         logger.debug(1, 'Skip list (pre setsceneverify) %s', sorted(self.rq.scenequeue_covered))
++def clean_basepath(a):
++    if a.startswith("virtual:"):
++        b = a.rsplit(":", 1)[0] + a.rsplit("/", 1)[1]
++    else:
++        b = a.rsplit("/", 1)[1]
++    return b
++
++def clean_basepaths(a):
++    b = {}
++    for x in a:
++        b[clean_basepath(x)] = a[x]
++    return b
++
+ def compare_sigfiles(a, b):
+     p1 = pickle.Unpickler(file(a, "rb"))
+     a_data = p1.load()
+@@ -236,16 +249,6 @@ def compare_sigfiles(a, b):
+         removed = sb - sa
+         return changed, added, removed
+ 
+-    def clean_basepaths(a):
+-        b = {}
+-        for x in a:
+-            if x.startswith("virtual:"):
+-                y = x.rsplit(":", 1)[0] + x.rsplit("/", 1)[1]
+-            else:
+-                y = x.rsplit("/", 1)[1]
+-            b[y] = a[x]
+-        return b
+-
+     if 'basewhitelist' in a_data and a_data['basewhitelist'] != b_data['basewhitelist']:
+         print "basewhitelist changed from %s to %s" % (a_data['basewhitelist'], b_data['basewhitelist'])
+         print "changed items: %s" % a_data['basewhitelist'].symmetric_difference(b_data['basewhitelist'])
 
 
 
