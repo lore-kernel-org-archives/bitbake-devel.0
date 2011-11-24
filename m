@@ -1,30 +1,46 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1RTH3z-0002LW-C2 for bitbake-devel@lists.openembedded.org;
-	Wed, 23 Nov 2011 18:57:00 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pANHo9Uu015344;
-	Wed, 23 Nov 2011 17:50:09 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 14626-09; Wed, 23 Nov 2011 17:50:05 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pANHnonT015329
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Wed, 23 Nov 2011 17:49:59 GMT
-Message-ID: <1322070594.15626.19.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Matthew McClintock <msm@freescale.com>
-Date: Wed, 23 Nov 2011 17:49:54 +0000
-In-Reply-To: <1322035730-17641-1-git-send-email-msm@freescale.com>
-References: <1322035730-17641-1-git-send-email-msm@freescale.com>
-X-Mailer: Evolution 3.2.1- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] bitbake: print out symmetric difference when comparing sigs
+Received: from db3ehsobe002.messaging.microsoft.com ([213.199.154.140]
+	helo=DB3EHSOBE002.bigfish.com)
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <B29882@freescale.com>) id 1RTOBa-0001Kw-2o
+	for bitbake-devel@lists.openembedded.org;
+	Thu, 24 Nov 2011 02:33:10 +0100
+Received: from mail89-db3-R.bigfish.com (10.3.81.247) by
+	DB3EHSOBE002.bigfish.com (10.3.84.22) with Microsoft SMTP Server id
+	14.1.225.22; Thu, 24 Nov 2011 01:10:52 +0000
+Received: from mail89-db3 (localhost [127.0.0.1])	by mail89-db3-R.bigfish.com
+	(Postfix) with ESMTP id E2FA1260304	for
+	<bitbake-devel@lists.openembedded.org>;
+	Thu, 24 Nov 2011 01:11:29 +0000 (UTC)
+X-SpamScore: 3
+X-BigFish: VS3(zzzz1202h1082kzz8275bhz2dh2a8h668h839h)
+X-Forefront-Antispam-Report: CIP:70.37.183.190; KIP:(null); UIP:(null); IPV:NLI;
+	H:mail.freescale.net; RD:none; EFVD:NLI
+X-FB-SS: 13,
+Received: from mail89-db3 (localhost.localdomain [127.0.0.1]) by mail89-db3
+	(MessageSwitch) id 1322097089856859_3897;
+	Thu, 24 Nov 2011 01:11:29 +0000 (UTC)
+Received: from DB3EHSMHS001.bigfish.com (unknown [10.3.81.246])	by
+	mail89-db3.bigfish.com (Postfix) with ESMTP id C339180046	for
+	<bitbake-devel@lists.openembedded.org>;
+	Thu, 24 Nov 2011 01:11:29 +0000 (UTC)
+Received: from mail.freescale.net (70.37.183.190) by DB3EHSMHS001.bigfish.com
+	(10.3.87.101) with Microsoft SMTP Server (TLS) id 14.1.225.22;
+	Thu, 24 Nov 2011 01:10:52 +0000
+Received: from az33smr02.freescale.net (10.64.34.200) by
+	039-SN1MMR1-003.039d.mgd.msft.net (10.84.1.16) with Microsoft SMTP
+	Server id 14.1.339.2; Wed, 23 Nov 2011 19:11:29 -0600
+Received: from right.am.freescale.net (right.am.freescale.net [10.82.193.13])
+	by az33smr02.freescale.net (8.13.1/8.13.0) with ESMTP id
+	pAO1BSGn013883	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 23 Nov 2011 19:11:29 -0600 (CST)
+From: Matthew McClintock <msm@freescale.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Wed, 23 Nov 2011 19:11:27 -0600
+Message-ID: <1322097087-26935-1-git-send-email-msm@freescale.com>
+X-Mailer: git-send-email 1.7.6.1
+MIME-Version: 1.0
+X-OriginatorOrg: freescale.com
+Subject: [PATCH] Nothing uses USERNAME, remove it - can cause sstate-cache conflicts
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,22 +52,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 23 Nov 2011 17:57:00 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 24 Nov 2011 01:33:10 -0000
+Content-Type: text/plain
 
-On Wed, 2011-11-23 at 02:08 -0600, Matthew McClintock wrote:
-> This is useful for really longs lists to pinpoint what has
-> actually changed
-> 
-> Signed-off-by: Matthew McClintock <msm@freescale.com>
-> ---
->  lib/bb/siggen.py |    4 ++++
->  1 files changed, 4 insertions(+), 0 deletions(-)
+USER is the correct variable to use, also this can affect sstate
+cache as well.
 
-Merged to master, thanks!
+Signed-off-by: Matthew McClintock <msm@freescale.com>
+---
+ lib/bb/utils.py |    1 -
+ 1 files changed, 0 insertions(+), 1 deletions(-)
 
-Richard
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index f905702..521a068 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -505,7 +505,6 @@ def preserved_envvars_exported():
+         'SHELL',
+         'TERM',
+         'USER',
+-        'USERNAME',
+     ]
+ 
+ def preserved_envvars_exported_interactive():
+-- 
+1.7.6.1
+
 
 
 
