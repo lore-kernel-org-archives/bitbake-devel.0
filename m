@@ -1,30 +1,15 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1RTdbJ-0006c9-Tg for bitbake-devel@lists.openembedded.org;
-	Thu, 24 Nov 2011 19:00:46 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pAOHsDH8027879
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Nov 2011 17:54:13 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 27700-02 for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Nov 2011 17:54:08 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pAOHs5cQ027873
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Nov 2011 17:54:06 GMT
-Message-ID: <1322157252.10928.13.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Thu, 24 Nov 2011 17:54:12 +0000
-X-Mailer: Evolution 3.2.1- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: [PATCH] bitbake.conf: We only care about the absolute value of baselib
+Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <git@git.openembedded.org>) id 1RThYL-0002Ai-8S
+	for bitbake-devel@lists.openembedded.org;
+	Thu, 24 Nov 2011 23:13:57 +0100
+Received: by opal (Postfix, from userid 111)
+	id 4E87E10331; Thu, 24 Nov 2011 22:09:55 +0000 (UTC)
+To: bitbake-devel@lists.openembedded.org
+Message-Id: <20111124220955.4E87E10331@opal>
+Date: Thu, 24 Nov 2011 22:09:55 +0000 (UTC)
+From: git@git.openembedded.org
+Subject: Richard Purdie : runqueue.py: Fix debug message to reference the correct task
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,33 +21,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 24 Nov 2011 18:00:46 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 24 Nov 2011 22:13:57 -0000
+Content-Type: text/plain; charset=UTF-8
 
-The value of baselib can be constructed in several different ways
-and from a sstate perspective we don't care how it was made up,
-we only care what the final value is. This uses the new functionality
-in bitbake to ensure we only include the value of baselib and not
-any intermediate dependencies.
+Module: bitbake.git
+Branch: master
+Commit: 035c673c463ca450245acf824e7b7e8f889bdc89
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=035c673c463ca450245acf824e7b7e8f889bdc89
 
-[YOCTO #1583]
+Author: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date:   Thu Nov 24 14:14:55 2011 +0000
+
+runqueue.py: Fix debug message to reference the correct task
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/meta/conf/bitbake.conf b/meta/conf/bitbake.conf
-index 01f064c..43d973d 100644
---- a/meta/conf/bitbake.conf
-+++ b/meta/conf/bitbake.conf
-@@ -8,6 +8,7 @@
- 
- # Used by multilib code to change the library paths
- baselib = "${BASELIB}"
-+baselib[vardepvalue] = "${baselib}"
- BASELIB = "lib"
- BASELIB_powerpc64 = "lib64"
- 
 
+---
+
+ lib/bb/runqueue.py |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index f5598ca..1800634 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1524,8 +1524,9 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+ 
+             for task in xrange(len(self.sq_revdeps)):
+                 if task not in valid_new and task not in noexec:
++                    realtask = self.rqdata.runq_setscene[task]
+                     logger.debug(2, 'No package found, so skipping setscene task %s',
+-                                 self.rqdata.get_user_idstring(task))
++                                 self.rqdata.get_user_idstring(realtask))
+                     self.task_failoutright(task)
+ 
+         logger.info('Executing SetScene Tasks')
 
 
 
