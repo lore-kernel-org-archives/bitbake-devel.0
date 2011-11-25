@@ -1,15 +1,30 @@
-Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RTjlb-0007r0-GB
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 25 Nov 2011 01:35:47 +0100
-Received: by opal (Postfix, from userid 111)
-	id DBF441032F; Fri, 25 Nov 2011 00:31:45 +0000 (UTC)
-To: bitbake-devel@lists.openembedded.org
-Message-Id: <20111125003145.DBF441032F@opal>
-Date: Fri, 25 Nov 2011 00:31:45 +0000 (UTC)
-From: git@git.openembedded.org
-Subject: Matthew McClintock : Nothing uses USERNAME, remove it - can cause sstate-cache conflicts
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1RTjm2-0007ry-CW for bitbake-devel@lists.openembedded.org;
+	Fri, 25 Nov 2011 01:36:14 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pAP0Te3d000443;
+	Fri, 25 Nov 2011 00:29:40 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 32555-06; Fri, 25 Nov 2011 00:29:35 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pAP0TYl0000437
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Fri, 25 Nov 2011 00:29:35 GMT
+Message-ID: <1322180980.10928.56.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Matthew McClintock <msm@freescale.com>
+Date: Fri, 25 Nov 2011 00:29:40 +0000
+In-Reply-To: <1322097087-26935-1-git-send-email-msm@freescale.com>
+References: <1322097087-26935-1-git-send-email-msm@freescale.com>
+X-Mailer: Evolution 3.2.1- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] Nothing uses USERNAME, remove it - can cause sstate-cache conflicts
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -21,42 +36,22 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 25 Nov 2011 00:35:47 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Fri, 25 Nov 2011 00:36:14 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Module: bitbake.git
-Branch: master
-Commit: d7f9edda65dae2e046871afa275c5a51dff48fc4
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=d7f9edda65dae2e046871afa275c5a51dff48fc4
+On Wed, 2011-11-23 at 19:11 -0600, Matthew McClintock wrote:
+> USER is the correct variable to use, also this can affect sstate
+> cache as well.
+> 
+> Signed-off-by: Matthew McClintock <msm@freescale.com>
+> ---
+>  lib/bb/utils.py |    1 -
+>  1 files changed, 0 insertions(+), 1 deletions(-)
 
-Author: Matthew McClintock <msm@freescale.com>
-Date:   Wed Nov 23 19:11:27 2011 -0600
+Merged to master, thanks.
 
-Nothing uses USERNAME, remove it - can cause sstate-cache conflicts
-
-USER is the correct variable to use, also this can affect sstate
-cache as well.
-
-Signed-off-by: Matthew McClintock <msm@freescale.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-
----
-
- lib/bb/utils.py |    1 -
- 1 files changed, 0 insertions(+), 1 deletions(-)
-
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index f905702..521a068 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -505,7 +505,6 @@ def preserved_envvars_exported():
-         'SHELL',
-         'TERM',
-         'USER',
--        'USERNAME',
-     ]
- 
- def preserved_envvars_exported_interactive():
+Richard
 
 
 
