@@ -1,25 +1,25 @@
 Received: from mail.windriver.com ([147.11.1.11])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Liezhi.Yang@windriver.com>) id 1RVgVc-0005Dj-RX
+	(envelope-from <Liezhi.Yang@windriver.com>) id 1RVgVe-0005Dr-0N
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 30 Nov 2011 10:31:21 +0100
+	Wed, 30 Nov 2011 10:31:22 +0100
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id pAU9Oel9004839
+	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id pAU9OfI2004844
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 30 Nov 2011 01:24:40 -0800 (PST)
+	Wed, 30 Nov 2011 01:24:41 -0800 (PST)
 Received: from build-PowerEdge-T100.corp.ad.wrs.com (128.224.163.66) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.1.255.0; Wed, 30 Nov 2011 01:24:40 -0800
+	14.1.255.0; Wed, 30 Nov 2011 01:24:41 -0800
 From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 30 Nov 2011 17:23:50 +0800
-Message-ID: <443f574322e598e3d1df230a7a8c6b10c03291b3.1322644797.git.liezhi.yang@windriver.com>
+Date: Wed, 30 Nov 2011 17:23:51 +0800
+Message-ID: <f448aa3aefe207b4b250c56b1244bbb1c8019a5f.1322644797.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1322644797.git.liezhi.yang@windriver.com>
 References: <cover.1322644797.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 1/2] Remove the duplicated assignments of self.configuration.cmd
+Subject: [PATCH 2/2] Remove the async_cmds and sync_cmds from command.py
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,41 +31,67 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 30 Nov 2011 09:31:21 -0000
+X-List-Received-Date: Wed, 30 Nov 2011 09:31:22 -0000
 Content-Type: text/plain
 
-The assignments of self.configuration.cmd in BBCooker seems duplicated,
-have the followings in both BBCooker::__init__ and
-BBCooker::loadConfigurationData:
+In bitbake/lib/bb/command.py::Command::__init__, we have the following
+lines:
 
-if not self.configuration.cmd:
-    self.configuration.cmd = self.configuration.data.getVar("BB_DEFAULT_TASK", True) or "build"
+for attr in CommandsSync.__dict__:
+    command = attr[:].lower()
+    method = getattr(CommandsSync, attr)
+    sync_cmds[command] = (method)
 
-The __init__ invokes the loadConfigurationData, and it would make sure
-that self.configuration.cmd has been assigned a proper value, so we can
-remove the one in __init__.
+for attr in CommandsAsync.__dict__:
+    command = attr[:].lower()
+    method = getattr(CommandsAsync, attr)
+    async_cmds[command] = (method)
+
+The sync_cmds and async_cmds are defined as global dictionaries, but it
+seems that we've never used them (I did a "grep -r async_cmds bitbake/",
+, there is no result except the ones that I have removed), and I can't
+find the history of it from "git log -p", I guess that they have been
+replaced by the self.cmds_sync and self.cmds_async.
 
 [YOCTO #1791]
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- bitbake/lib/bb/cooker.py |    3 ---
- 1 files changed, 0 insertions(+), 3 deletions(-)
+ bitbake/lib/bb/command.py |   14 --------------
+ 1 files changed, 0 insertions(+), 14 deletions(-)
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 5bbabfc..212c434 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -135,9 +135,6 @@ class BBCooker:
-         self.configuration.data = None
-         self.loadConfigurationData()
+diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
+index 1808f0c..83907f6 100644
+--- a/bitbake/lib/bb/command.py
++++ b/bitbake/lib/bb/command.py
+@@ -31,10 +31,6 @@ Commands are queued in a CommandQueue
+ import bb.event
+ import bb.cooker
  
--        if not self.configuration.cmd:
--            self.configuration.cmd = self.configuration.data.getVar("BB_DEFAULT_TASK", True) or "build"
+-async_cmds = {}
+-sync_cmds = {}
 -
-         # Take a lock so only one copy of bitbake can run against a given build
-         # directory at a time
-         lockfile = self.configuration.data.expand("${TOPDIR}/bitbake.lock")
+-
+ class CommandCompleted(bb.event.Event):
+     pass
+ 
+@@ -60,16 +56,6 @@ class Command:
+         # FIXME Add lock for this
+         self.currentAsyncCommand = None
+ 
+-        for attr in CommandsSync.__dict__:
+-            command = attr[:].lower()
+-            method = getattr(CommandsSync, attr)
+-            sync_cmds[command] = (method)
+-
+-        for attr in CommandsAsync.__dict__:
+-            command = attr[:].lower()
+-            method = getattr(CommandsAsync, attr)
+-            async_cmds[command] = (method)
+-
+     def runCommand(self, commandline):
+         try:
+             command = commandline.pop(0)
 -- 
 1.7.4.1
 
