@@ -1,45 +1,28 @@
-Received: from ch1ehsobe002.messaging.microsoft.com ([216.32.181.182]
-	helo=ch1outboundpool.messaging.microsoft.com)
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <B29882@freescale.com>) id 1RVoiF-0007Jg-JI
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 30 Nov 2011 19:16:55 +0100
-Received: from mail152-ch1-R.bigfish.com (10.43.68.246) by
-	CH1EHSOBE012.bigfish.com (10.43.70.62) with Microsoft SMTP Server id
-	14.1.225.22; Wed, 30 Nov 2011 17:24:57 +0000
-Received: from mail152-ch1 (localhost [127.0.0.1])	by
-	mail152-ch1-R.bigfish.com (Postfix) with ESMTP id 822C8100190	for
-	<bitbake-devel@lists.openembedded.org>;
-	Wed, 30 Nov 2011 17:24:57 +0000 (UTC)
-X-SpamScore: 16
-X-BigFish: VS16(z2e28uzzz1202h1082kzz8275bhz2dh2a8h668h839h)
-X-Forefront-Antispam-Report: CIP:70.37.183.190; KIP:(null); UIP:(null); IPV:NLI;
-	H:mail.freescale.net; RD:none; EFVD:NLI
-Received: from mail152-ch1 (localhost.localdomain [127.0.0.1]) by mail152-ch1
-	(MessageSwitch) id 1322673897222370_13295;
-	Wed, 30 Nov 2011 17:24:57 +0000 (UTC)
-Received: from CH1EHSMHS004.bigfish.com (snatpool1.int.messaging.microsoft.com
-	[10.43.68.244])	by mail152-ch1.bigfish.com (Postfix) with ESMTP id
-	238553C0045	for <bitbake-devel@lists.openembedded.org>; Wed, 30 Nov 2011
-	17:24:57 +0000 (UTC)
-Received: from mail.freescale.net (70.37.183.190) by CH1EHSMHS004.bigfish.com
-	(10.43.70.4) with Microsoft SMTP Server (TLS) id 14.1.225.22;
-	Wed, 30 Nov 2011 17:24:56 +0000
-Received: from az33smr02.freescale.net (10.64.34.200) by
-	039-SN1MMR1-001.039d.mgd.msft.net (10.84.1.13) with Microsoft SMTP
-	Server id 14.1.339.2; Wed, 30 Nov 2011 11:24:55 -0600
-Received: from right.am.freescale.net (right.am.freescale.net [10.82.193.13])
-	by az33smr02.freescale.net (8.13.1/8.13.0) with ESMTP id
-	pAUHOtaw024628	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 30 Nov 2011 11:24:55 -0600 (CST)
-From: Matthew McClintock <msm@freescale.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 30 Nov 2011 11:24:55 -0600
-Message-ID: <1322673895-25682-1-git-send-email-msm@freescale.com>
-X-Mailer: git-send-email 1.7.6.1
-MIME-Version: 1.0
-X-OriginatorOrg: freescale.com
-Subject: [PATCH] siggen.py: If both sigs have a variable in it's whitelist then don't say it's changed
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1RW5SV-00041D-SL for bitbake-devel@lists.openembedded.org;
+	Thu, 01 Dec 2011 13:09:48 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pB1C36Wf014422
+	for <bitbake-devel@lists.openembedded.org>; Thu, 1 Dec 2011 12:03:06 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 14034-04 for <bitbake-devel@lists.openembedded.org>;
+	Thu,  1 Dec 2011 12:03:02 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pB1C2v1c014416
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>; Thu, 1 Dec 2011 12:02:59 GMT
+Message-ID: <1322740987.17484.112.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 01 Dec 2011 12:03:07 +0000
+X-Mailer: Evolution 3.2.1- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: [PATCH] build.py: Be determistic about a function's cwd
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -51,54 +34,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 30 Nov 2011 18:16:55 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 01 Dec 2011 12:09:48 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Some BB_HASHBASE_WHITELIST variables are in the lists of variable
-dependencies for signatures. Ignore those differences in lists
-since this difference does not matter
+There is a subtle but nasty problem that a function's cwd can vary
+depending on whether ${B} (often ${S}) exists before the funciton is
+called or not. Most functions in the system can cope with this but
+its bad practise and I've just witnessed build failures resulting
+from this during image generation from bootimg.bbclass. I also
+suspect this could explain some odd fetcher behaviour witnessed in
+the past.
 
-Signed-off-by: Matthew McClintock <msm@freescale.com>
+This change ensures we always call funcitons with a specific build
+directory making things deterministic.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
-I'm seeing variables in BB_HASHBASE_WHITELIST make it
-to the signature. Not sure if they are used to calculate
-the hash but assuming they are not we don't need to print
-out that they are different
-
- lib/bb/siggen.py |    6 +++---
- 1 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 9231291..bb909ba 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -237,13 +237,13 @@ def compare_sigfiles(a, b):
-     p2 = pickle.Unpickler(file(b, "rb"))
-     b_data = p2.load()
+diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+index ae4a962..9ad1e50 100644
+--- a/bitbake/lib/bb/build.py
++++ b/bitbake/lib/bb/build.py
+@@ -149,8 +149,7 @@ def exec_func(func, d, dirs = None):
+         adir = dirs[-1]
+     else:
+         adir = data.getVar('B', d, 1)
+-        if not os.path.exists(adir):
+-            adir = None
++        bb.utils.mkdirhier(adir)
  
--    def dict_diff(a, b):
-+    def dict_diff(a, b, whitelist=set()):
-         sa = set(a.keys())
-         sb = set(b.keys())
-         common = sa & sb
-         changed = set()
-         for i in common:
--            if a[i] != b[i]:
-+            if a[i] != b[i] and i not in whitelist:
-                 changed.add(i)
-         added = sa - sb
-         removed = sb - sa
-@@ -263,7 +263,7 @@ def compare_sigfiles(a, b):
-     if a_data['basehash'] != b_data['basehash']:
-         print "basehash changed from %s to %s" % (a_data['basehash'], b_data['basehash'])
- 
--    changed, added, removed = dict_diff(a_data['gendeps'], b_data['gendeps'])
-+    changed, added, removed = dict_diff(a_data['gendeps'], b_data['gendeps'], a_data['basewhitelist'] & b_data['basewhitelist'])
-     if changed:
-         for dep in changed:
-             print "List of dependencies for variable %s changed from %s to %s" % (dep, a_data['gendeps'][dep], b_data['gendeps'][dep])
--- 
-1.7.6.1
+     ispython = flags.get('python')
+     if flags.get('fakeroot') and not flags.get('task'):
 
 
 
