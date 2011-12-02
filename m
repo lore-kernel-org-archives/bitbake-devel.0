@@ -1,15 +1,20 @@
-Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RWFvL-0004sm-TE
+	(envelope-from <josh@linux.intel.com>) id 1RWYQX-0003ox-BE
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 02 Dec 2011 00:20:16 +0100
-Received: by opal (Postfix, from userid 111)
-	id 4A4AC1032F; Thu,  1 Dec 2011 23:16:54 +0000 (UTC)
+	Fri, 02 Dec 2011 20:05:41 +0100
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga102.ch.intel.com with ESMTP; 02 Dec 2011 10:58:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,285,1320652800"; d="scan'208";a="43374408"
+Received: from unknown (HELO shamshir.amr.corp.intel.com) ([10.255.12.18])
+	by AZSMGA002.ch.intel.com with ESMTP; 02 Dec 2011 10:58:56 -0800
+From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20111201231654.4A4AC1032F@opal>
-Date: Thu,  1 Dec 2011 23:16:54 +0000 (UTC)
-From: git@git.openembedded.org
-Subject: Richard Purdie : cooker.py: Allow the -e option to work with virtual classes and -b
+Date: Fri,  2 Dec 2011 10:58:35 -0800
+Message-Id: <1322852315-7036-1-git-send-email-josh@linux.intel.com>
+X-Mailer: git-send-email 1.7.7.3
+Subject: [PATCH] fetch2: fix Exception parameters when BB_STRICT_CHECKSUM enabled
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -21,48 +26,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 01 Dec 2011 23:20:16 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Fri, 02 Dec 2011 19:05:41 -0000
 
-Module: bitbake.git
-Branch: master
-Commit: bd5a727c8447bcb747c1d2463b7de2ab6d21a7de
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=bd5a727c8447bcb747c1d2463b7de2ab6d21a7de
+BB_STRICT_CHECKSUM caused a backtrace as the FetchError parameters are
+incorrectly specified such that FetchError is being passed 8 params
+when it's expecting 3. This fixes the parameters so we're passing a
+formatted string and the url.
 
-Author: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date:   Thu Dec  1 23:11:24 2011 +0000
-
-cooker.py: Allow the -e option to work with virtual classes and -b
-
-Using bitbake -e -b virtual:xxxx:/path/to/the.bb would result in
-zero matches since the virtual:xxxx piece wasn't being processed.
-
-This adds in the necessary functionality to handle it correctly.
-
-[YOCTO #1793]
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-
+Signed-off-by: Joshua Lock <josh@linux.intel.com>
 ---
+ lib/bb/fetch2/__init__.py |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
 
- lib/bb/cooker.py |    4 +++-
- 1 files changed, 3 insertions(+), 1 deletions(-)
-
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index f484b68..cbe0d71 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -289,7 +289,9 @@ class BBCooker:
-             self.status = bb.cache.CacheData(self.caches_array)
-             self.handleCollections( self.configuration.data.getVar("BBFILE_COLLECTIONS", 1) )
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 19a79fd..3af56e5 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -274,9 +274,9 @@ def verify_checksum(u, ud, d):
+     strict = d.getVar("BB_STRICT_CHECKSUM", True) or None
+     if (strict and ud.md5_expected == None and ud.sha256_expected == None):
+         raise FetchError('No checksum specified for %s, please add at least one to the recipe:\n'
+-                         'SRC_URI[%s] = "%s"\nSRC_URI[%s] = "%s"', u,
+-                         ud.localpath, ud.md5_name, md5data,
+-                         ud.sha256_name, sha256data)
++                         'SRC_URI[%s] = "%s"\nSRC_URI[%s] = "%s"' %
++                         (ud.localpath, ud.md5_name, md5data,
++                         ud.sha256_name, sha256data), u)
  
--            fn = self.matchFile(buildfile)
-+            fn, cls = bb.cache.Cache.virtualfn2realfn(buildfile)
-+            fn = self.matchFile(fn)
-+            fn = bb.cache.Cache.realfn2virtual(fn, cls)
-         elif len(pkgs_to_build) == 1:
-             self.updateCache()
- 
+     # Log missing sums so user can more easily add them
+     if ud.md5_expected == None:
+-- 
+1.7.7.3
 
 
 
