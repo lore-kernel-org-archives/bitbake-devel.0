@@ -1,20 +1,24 @@
-Received: from mga14.intel.com ([143.182.124.37])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1Rb5cx-0001FQ-Li
+	(envelope-from <dongxiao.xu@intel.com>) id 1Rb5cy-0001FS-Ij
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 15 Dec 2011 08:21:15 +0100
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga102.ch.intel.com with ESMTP; 14 Dec 2011 23:14:17 -0800
+	Thu, 15 Dec 2011 08:21:16 +0100
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 14 Dec 2011 23:14:18 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="47436135"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="87545426"
 Received: from dongxiao-desktop.sh.intel.com (HELO localhost) ([10.239.36.108])
-	by AZSMGA002.ch.intel.com with ESMTP; 14 Dec 2011 23:14:16 -0800
+	by orsmga002.jf.intel.com with ESMTP; 14 Dec 2011 23:14:17 -0800
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 15 Dec 2011 15:14:51 +0800
-Message-Id: <cover.1323933009.git.dongxiao.xu@intel.com>
+Date: Thu, 15 Dec 2011 15:14:52 +0800
+Message-Id: <83005167bdc0b5b030428ce7e87021b2d86c7510.1323933009.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.0.4
-Subject: [PATCH 00/10 v2] Hob2 related bitbake changes
+In-Reply-To: <cover.1323933009.git.dongxiao.xu@intel.com>
+References: <cover.1323933009.git.dongxiao.xu@intel.com>
+In-Reply-To: <cover.1323933009.git.dongxiao.xu@intel.com>
+References: <cover.1323933009.git.dongxiao.xu@intel.com>
+Subject: [PATCH 01/10] command.py: Modify needcache value for certain functions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,48 +30,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 15 Dec 2011 07:21:15 -0000
+X-List-Received-Date: Thu, 15 Dec 2011 07:21:16 -0000
 
-Hi Richard,
+for findConfigFiels() and findFilesMatchingInDir() functions, they
+don't need to parse all the bb files, thus setting the needcache
+value to be False.
 
-This pull request is the second version that introduces several hob2 related bitbake changes.
-Please help to review and pull.
+Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+---
+ lib/bb/command.py |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-Changes from v1:
-Add "resolve" option in generateTargetsTree() instead of adding a new generateTargetsTreePro function. Thanks for Josh's suggestions.
-
-Thanks,
-Dongxiao
-
-The following changes since commit 71b53a3f0766ca464560a1f6a449f9424fbdf7ae:
-  Matthew McClintock (1):
-        siggen.py: If both sigs have a variable in it's whitelist then don't say it's changed
-
-are available in the git repository at:
-
-  git://git.pokylinux.org/poky-contrib dxu4/hob2-bitbake-change-v2
-  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob2-bitbake-change-v2
-
-Dongxiao Xu (10):
-  command.py: Modify needcache value for certain functions
-  cache: Use configuration's hash value to validate cache
-  cooker: user bb.configuration.data to inject events
-  command.py: add initCooker API
-  command.py: add parseConfigurationFiles API
-  command.py: add resolve option for generateTargetsTree API
-  event.py: Add a new event PackageInfo
-  xmlrpc: Change BitbakeServerInfo init function
-  cooker: remove command import in cooker.py
-  bitbake: add a new option "--server-only"
-
- bin/bitbake             |   23 +++++++++++++------
- lib/bb/cache.py         |   32 ++++++++++-----------------
- lib/bb/command.py       |   31 +++++++++++++++++++++++---
- lib/bb/cooker.py        |   55 ++++++++++++++++++++++++++++++++++++++--------
- lib/bb/data_smart.py    |   17 ++++++++++++++
- lib/bb/event.py         |    9 +++++++
- lib/bb/server/xmlrpc.py |    8 +++---
- 7 files changed, 130 insertions(+), 45 deletions(-)
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index 83907f6..5dec6a9 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -241,7 +241,7 @@ class CommandsAsync:
+ 
+         command.cooker.findConfigFiles(varname)
+         command.finishAsyncCommand()
+-    findConfigFiles.needcache = True
++    findConfigFiles.needcache = False
+ 
+     def findFilesMatchingInDir(self, command, params):
+         """
+@@ -253,7 +253,7 @@ class CommandsAsync:
+ 
+         command.cooker.findFilesMatchingInDir(pattern, directory)
+         command.finishAsyncCommand()
+-    findFilesMatchingInDir.needcache = True
++    findFilesMatchingInDir.needcache = False
+ 
+     def findConfigFilePath(self, command, params):
+         """
+-- 
+1.7.0.4
 
 
 
