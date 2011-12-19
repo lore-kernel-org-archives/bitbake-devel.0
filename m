@@ -1,28 +1,39 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Liezhi.Yang@windriver.com>) id 1RbOXI-0005zm-Gj
+	(envelope-from <dongxiao.xu@intel.com>) id 1Rcb4f-0004Hy-RQ
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 16 Dec 2011 04:32:40 +0100
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id pBG3Perh014344
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 15 Dec 2011 19:25:40 -0800 (PST)
-Received: from [128.224.162.196] (128.224.162.196) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Thu, 15 Dec 2011 19:25:40 -0800
-Message-ID: <4EEABA32.8040802@windriver.com>
-Date: Fri, 16 Dec 2011 11:25:38 +0800
-From: Robert Yang <liezhi.yang@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
-	rv:8.0) Gecko/20111124 Thunderbird/8.0
+	Mon, 19 Dec 2011 12:08:06 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga102.ch.intel.com with ESMTP; 19 Dec 2011 03:01:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="87197766"
+Received: from pgsmsx601.gar.corp.intel.com ([10.221.43.69])
+	by azsmga001.ch.intel.com with ESMTP; 19 Dec 2011 03:01:01 -0800
+Received: from pgsmsx104.gar.corp.intel.com (10.221.44.91) by
+	pgsmsx601.gar.corp.intel.com (10.221.43.69) with Microsoft SMTP Server
+	(TLS) id 8.2.255.0; Mon, 19 Dec 2011 19:01:00 +0800
+Received: from shsmsx602.ccr.corp.intel.com (10.239.4.104) by
+	PGSMSX104.gar.corp.intel.com (10.221.44.91) with Microsoft SMTP Server
+	(TLS) id 14.1.355.2; Mon, 19 Dec 2011 19:00:59 +0800
+Received: from shsmsx501.ccr.corp.intel.com ([10.239.4.141]) by
+	SHSMSX602.ccr.corp.intel.com ([10.239.4.104]) with mapi;
+	Mon, 19 Dec 2011 19:00:59 +0800
+From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
+To: "Xu, Dongxiao" <dongxiao.xu@intel.com>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Date: Mon, 19 Dec 2011 19:00:58 +0800
+Thread-Topic: [bitbake-devel] [PATCH 00/10 v2] Hob2 related bitbake changes
+Thread-Index: Acy6+TIS+R4DTnXdR9S0wyQQ/5OIrwDRDSGw
+Message-ID: <D5AB6E638E5A3E4B8F4406B113A5A19A12ED44B5F8@shsmsx501.ccr.corp.intel.com>
+References: <cover.1323933009.git.dongxiao.xu@intel.com>
+In-Reply-To: <cover.1323933009.git.dongxiao.xu@intel.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+acceptlanguage: en-US
 MIME-Version: 1.0
-To: Mark Hatle <mark.hatle@windriver.com>
-References: <cover.1323944674.git.liezhi.yang@windriver.com>
-	<4EEA194E.9060406@windriver.com>
-In-Reply-To: <4EEA194E.9060406@windriver.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/2] Disk space monitoring
+Subject: Re: [PATCH 00/10 v2] Hob2 related bitbake changes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -34,96 +45,83 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Dec 2011 03:32:40 -0000
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 19 Dec 2011 11:08:06 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Richard,
 
-Hi Mark,
+Could you hold this patchset for a moment? I have some new version for it a=
+nd will send out soon.
+Sorry for inconvenience.
 
-Thanks for your replying, Richard suggested we add this to bitbake itself,
-here is his reply in 8 months ago:
+Thanks,
+Dongxiao
 
-As for disk monitoring, I'd suggest we just add this to bitbake itself
-as it doesn't really fit the task model. It can be controlled via some
-variables like:
-
-# Set the directories to monitor for disk usage
-BB_DISKMON_DIRS = "${TMPDIR} ${DL_DIR}"
-# Set the minimum amount of disk space to exit on
-BB_DISKMON_MINSPACE = "1GB"
-# Set the monitor frequency
-BB_DISKMON_INTERVAL = "60s"
-
-and if the variables are not set, it doesn't get activated.
-
-
-// Robert
-
-
-On 12/15/2011 11:59 PM, Mark Hatle wrote:
-> Is the disk space monitoring implemented in the correct place in the system?
->
-> I would have expected this to have been implemented in the meta/class files,
-> both in the initial sanity checking and also in something that can watch the
-> events and doing the repetition/rechecking as necessary.
->
-> (BTW the code looks fine to me as implemented, I'm just not sure if it belongs
-> in bitbake itself.)
->
-> --Mark
->
-> On 12/15/11 4:44 AM, Robert Yang wrote:
->> Here are the test info:
->> 1) set the following variables in conf/local.conf for testing:
->> BB_DISKMON_DIRS = "${TMPDIR} ${DL_DIR} ${SSTATE_DIR} /home/lyang1"
->> BB_DISKMON_MINSPACE = "200G"
->> BB_DISKMON_MININODES = "20M"
->> BB_DISKMON_INTERVAL = "30s"
->>
->> The TMPDIR, DL_DIR and SSTATE_DIR are in the same disk(/dev/sdb4) in
->> my build, so I added another direcotory /home/lyang1 to test the
->> ability of monitoring multi mount points.
->>
->> 2) bitbake core-image-sato
->> WARNING: The free space of /dev/sdb5 is running low (25.915GB left)
->> WARNING: The free inode of /dev/sdb5 is running low (1788.202K left)
->> WARNING: The free space of /dev/sdb4 is running low (189.309GB left)
->> WARNING: The free inode of /dev/sdb4 is running low (18005.443K left)
->>
->> 3) Aalso have tested about the following items:
->> a) Use ctrl-c to stop the monitor
->> b) The monitor should stop when the build stops
->> c) Test the space unit G, B, K(case in-sensitive) and the time unit
->> h, m, s(case-sensitive)
->>
->> // Robert
->>
->>
->> The following changes since commit 9d136b2db8f906c562cbdb23a9b238f0e237074b:
->>
->> gdk-pixbuf: Ensure the binaries can be relocated (2011-12-13 18:00:25 +0000)
->>
->> are available in the git repository at:
->> git://git.pokylinux.org/poky-contrib robert/disk-space-monitor
->> http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/disk-space-monitor
->>
->> Robert Yang (2):
->> Disk space monitoring
->> Add config sample for disk space monitoring
->>
->> bitbake/bin/bitbake | 12 +++
->> bitbake/lib/bb/monitordisk.py | 153 +++++++++++++++++++++++++++++++++++++
->> meta-yocto/conf/local.conf.sample | 28 +++++++
->> 3 files changed, 193 insertions(+), 0 deletions(-)
->> create mode 100644 bitbake/lib/bb/monitordisk.py
->>
->
->
+> -----Original Message-----
+> From: bitbake-devel-bounces@lists.openembedded.org
+> [mailto:bitbake-devel-bounces@lists.openembedded.org] On Behalf Of
+> Dongxiao Xu
+> Sent: Thursday, December 15, 2011 3:15 PM
+> To: bitbake-devel@lists.openembedded.org
+> Subject: [bitbake-devel] [PATCH 00/10 v2] Hob2 related bitbake changes
+>=20
+> Hi Richard,
+>=20
+> This pull request is the second version that introduces several hob2 rela=
+ted
+> bitbake changes.
+> Please help to review and pull.
+>=20
+> Changes from v1:
+> Add "resolve" option in generateTargetsTree() instead of adding a new
+> generateTargetsTreePro function. Thanks for Josh's suggestions.
+>=20
+> Thanks,
+> Dongxiao
+>=20
+> The following changes since commit
+> 71b53a3f0766ca464560a1f6a449f9424fbdf7ae:
+>   Matthew McClintock (1):
+>         siggen.py: If both sigs have a variable in it's whitelist then do=
+n't say it's
+> changed
+>=20
+> are available in the git repository at:
+>=20
+>   git://git.pokylinux.org/poky-contrib dxu4/hob2-bitbake-change-v2
+>=20
+> http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=3Ddxu4/hob2-bitbake=
+-chang
+> e-v2
+>=20
+> Dongxiao Xu (10):
+>   command.py: Modify needcache value for certain functions
+>   cache: Use configuration's hash value to validate cache
+>   cooker: user bb.configuration.data to inject events
+>   command.py: add initCooker API
+>   command.py: add parseConfigurationFiles API
+>   command.py: add resolve option for generateTargetsTree API
+>   event.py: Add a new event PackageInfo
+>   xmlrpc: Change BitbakeServerInfo init function
+>   cooker: remove command import in cooker.py
+>   bitbake: add a new option "--server-only"
+>=20
+>  bin/bitbake             |   23 +++++++++++++------
+>  lib/bb/cache.py         |   32 ++++++++++-----------------
+>  lib/bb/command.py       |   31 +++++++++++++++++++++++---
+>  lib/bb/cooker.py        |   55
+> ++++++++++++++++++++++++++++++++++++++--------
+>  lib/bb/data_smart.py    |   17 ++++++++++++++
+>  lib/bb/event.py         |    9 +++++++
+>  lib/bb/server/xmlrpc.py |    8 +++---
+>  7 files changed, 130 insertions(+), 45 deletions(-)
+>=20
+>=20
 > _______________________________________________
 > bitbake-devel mailing list
 > bitbake-devel@lists.openembedded.org
 > http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
->
 
 
