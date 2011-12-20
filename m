@@ -1,30 +1,15 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1RczeN-0002Wt-SM for bitbake-devel@lists.openembedded.org;
-	Tue, 20 Dec 2011 14:22:43 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pBKDFTWF029344;
-	Tue, 20 Dec 2011 13:15:29 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 28456-05; Tue, 20 Dec 2011 13:15:24 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id pBKDFHNc029333
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Tue, 20 Dec 2011 13:15:21 GMT
-Message-ID: <1324386919.28872.16.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Khem Raj <raj.khem@gmail.com>
-Date: Tue, 20 Dec 2011 13:15:19 +0000
-In-Reply-To: <1323541557-6681-1-git-send-email-raj.khem@gmail.com>
-References: <1323541557-6681-1-git-send-email-raj.khem@gmail.com>
-X-Mailer: Evolution 3.2.1- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] vim/syntax: Recognize ?? operator
+Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <git@git.openembedded.org>) id 1Rczed-0002YA-Vo
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 20 Dec 2011 14:22:52 +0100
+Received: by opal (Postfix, from userid 111)
+	id 2D35B10331; Tue, 20 Dec 2011 13:21:28 +0000 (UTC)
+To: bitbake-devel@lists.openembedded.org
+Message-Id: <20111220132128.2D35B10331@opal>
+Date: Tue, 20 Dec 2011 13:21:28 +0000 (UTC)
+From: git@git.openembedded.org
+Subject: Khem Raj : vim/syntax: Recognize ?? operator
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,19 +21,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Dec 2011 13:22:43 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 20 Dec 2011 13:22:52 -0000
+Content-Type: text/plain; charset=UTF-8
 
-On Sat, 2011-12-10 at 10:25 -0800, Khem Raj wrote:
-> Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ---
->  contrib/vim/syntax/bitbake.vim |    4 ++--
->  1 files changed, 2 insertions(+), 2 deletions(-)
+Module: bitbake.git
+Branch: master
+Commit: 5337ed86820ab0a2cbb3fd82eb11edb807c47f54
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=5337ed86820ab0a2cbb3fd82eb11edb807c47f54
 
-Merged to master, thanks.
+Author: Khem Raj <raj.khem@gmail.com>
+Date:   Sat Dec 10 10:25:57 2011 -0800
 
-Richard
+vim/syntax: Recognize ?? operator
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+---
+
+ contrib/vim/syntax/bitbake.vim |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/contrib/vim/syntax/bitbake.vim b/contrib/vim/syntax/bitbake.vim
+index a06dd9e..336e6bb 100644
+--- a/contrib/vim/syntax/bitbake.vim
++++ b/contrib/vim/syntax/bitbake.vim
+@@ -52,8 +52,8 @@ syn match bbExport            "^export" nextgroup=bbIdentifier skipwhite
+ syn keyword bbExportFlag        export contained nextgroup=bbIdentifier skipwhite
+ syn match bbIdentifier          "[a-zA-Z0-9\-_\.\/\+]\+" display contained
+ syn match bbVarDeref            "${[a-zA-Z0-9\-_\.\/\+]\+}" contained
+-syn match bbVarEq               "\(:=\|+=\|=+\|\.=\|=\.\|?=\|=\)" contained nextgroup=bbVarValue
+-syn match bbVarDef              "^\(export\s*\)\?\([a-zA-Z0-9\-_\.\/\+]\+\(_[${}a-zA-Z0-9\-_\.\/\+]\+\)\?\)\s*\(:=\|+=\|=+\|\.=\|=\.\|?=\|=\)\@=" contains=bbExportFlag,bbIdentifier,bbVarDeref nextgroup=bbVarEq
++syn match bbVarEq               "\(:=\|+=\|=+\|\.=\|=\.\|?=\|??=\|=\)" contained nextgroup=bbVarValue
++syn match bbVarDef              "^\(export\s*\)\?\([a-zA-Z0-9\-_\.\/\+]\+\(_[${}a-zA-Z0-9\-_\.\/\+]\+\)\?\)\s*\(:=\|+=\|=+\|\.=\|=\.\|?=\|??=\|=\)\@=" contains=bbExportFlag,bbIdentifier,bbVarDeref nextgroup=bbVarEq
+ syn match bbVarValue            ".*$" contained contains=bbString,bbVarDeref,bbVarPyValue
+ syn region bbVarPyValue         start=+${@+ skip=+\\$+ excludenl end=+}+ contained contains=@python
+ 
 
 
 
