@@ -1,24 +1,20 @@
-Received: from ecbiz66.inmotionhosting.com ([69.174.114.20])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <juraj.hercek@jhksoftware.com>) id 1RdoLf-0000aG-Lm
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1RgHBk-0003pu-8K
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 22 Dec 2011 20:30:39 +0100
-Received: from mail.hck.sk ([87.197.106.197]:64952 helo=localhost.localdomain)
-	by ecbiz66.inmotionhosting.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.69) (envelope-from <juraj.hercek@jhksoftware.com>)
-	id 1RdjWm-00083W-JX; Thu, 22 Dec 2011 09:21:48 -0500
-From: Juraj Hercek <juraj.hercek@jhksoftware.com>
-To: Bitbake Devel <bitbake-devel@lists.openembedded.org>
-Date: Thu, 22 Dec 2011 15:21:11 +0100
-Message-Id: <1324563672-26403-1-git-send-email-juraj.hercek@jhksoftware.com>
-X-Mailer: git-send-email 1.7.2.5
-X-AntiAbuse: This header was added to track abuse,
-	please include it with any abuse report
-X-AntiAbuse: Primary Hostname - ecbiz66.inmotionhosting.com
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - jhksoftware.com
-Subject: [PATCH] Fix for git fetcher when using ssh URL with port specification
+	Thu, 29 Dec 2011 15:42:36 +0100
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 29 Dec 2011 06:34:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="92602243"
+Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.122.61])
+	by orsmga002.jf.intel.com with ESMTP; 29 Dec 2011 06:34:14 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 29 Dec 2011 14:34:12 +0000
+Message-Id: <1325169252-7588-1-git-send-email-paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.7.5.4
+Subject: [PATCH] bitbake-layers: fix Python error during parse
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,25 +26,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 22 Dec 2011 19:30:39 -0000
+X-List-Received-Date: Thu, 29 Dec 2011 14:42:36 -0000
 
-Hello,
+If "bitbake-layers show_layers" was run when the cache was dirty forcing
+a parse, it failed with the following error:
 
-bitbake failed to build a package which uses git fetcher to fetch repository
-from ssh URL which contains also port specification. The patch in following
-email fixes this issue.
+ERROR: Failure expanding variable SRCPV, expression was
+${@bb.fetch2.get_srcrev(d)} which triggered exception AttributeError:
+'module' object has no attribute 'fetch2'
 
-Cheers,
-Juraj
+A simple import of bb.fetch2 in bitbake-layers fixes this.
 
-Juraj Hercek (1):
-  fetch2/git: change colon to dot in ud.host
+Fixes [YOCTO #1855].
 
- lib/bb/fetch2/git.py |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+---
+ bin/bitbake-layers |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
+diff --git a/bin/bitbake-layers b/bin/bitbake-layers
+index 119b15c..b2781bb 100755
+--- a/bin/bitbake-layers
++++ b/bin/bitbake-layers
+@@ -18,6 +18,7 @@ import bb.cooker
+ import bb.providers
+ import bb.utils
+ from bb.cooker import state
++import bb.fetch2
+ 
+ 
+ logger = logging.getLogger('BitBake')
 -- 
-1.7.2.5
+1.7.5.4
 
 
 
