@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RinFl-0001yQ-48
+	(envelope-from <git@git.openembedded.org>) id 1RinFl-0001yR-66
 	for bitbake-devel@lists.openembedded.org;
 	Thu, 05 Jan 2012 14:21:09 +0100
 Received: by opal (Postfix, from userid 111)
-	id A245E10331; Thu,  5 Jan 2012 13:21:29 +0000 (UTC)
+	id AF85110332; Thu,  5 Jan 2012 13:21:29 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20120105132129.A245E10331@opal>
+Message-Id: <20120105132129.AF85110332@opal>
 Date: Thu,  5 Jan 2012 13:21:29 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Richard Purdie : build.py: Only use set -x when debug is enabled
+Subject: Richard Purdie : runqueue.py: Add notification of setscene tasks ( should be in knotty)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,37 +26,35 @@ Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master-poky
-Commit: ebaa9dc62246635efa634b7330d97606c6c02eb4
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=ebaa9dc62246635efa634b7330d97606c6c02eb4
+Commit: bca343b94a8ce555f3f697e610b735704486f421
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=bca343b94a8ce555f3f697e610b735704486f421
 
 Author: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date:   Wed Jun  8 20:28:31 2011 +0100
+Date:   Wed Jun  8 20:30:46 2011 +0100
 
-build.py: Only use set -x when debug is enabled
+runqueue.py: Add notification of setscene tasks (should be in knotty)
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 ---
 
- lib/bb/build.py |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ lib/bb/runqueue.py |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 1a47fc5..aabc1b6 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -222,9 +222,9 @@ def exec_func_shell(function, d, runfile, cwd=None):
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 15d3d00..86744fb 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1614,6 +1614,9 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                 self.task_skip(task)
+                 return True
  
-     with open(runfile, 'w') as script:
-         script.write('#!/bin/sh -e\n')
-+        if bb.msg.loggerDefaultVerbose:
-+            script.write("set -x\n")
-         data.emit_func(function, script, d)
--
--        script.write("set -x\n")
-         if cwd:
-             script.write("cd %s\n" % cwd)
-         script.write("%s\n" % function)
++            logger.info("Running setscene task %d of %d (%s:%s)" % (self.stats.completed + self.stats.active + self.stats.failed + 1,
++                                                                         self.stats.total, fn, taskname))
++
+             pid, pipein, pipeout = self.fork_off_task(fn, realtask, taskname)
+ 
+             self.build_pids[pid] = task
 
 
 
