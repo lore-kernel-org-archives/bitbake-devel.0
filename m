@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1Rin6T-0001ho-EA
+	(envelope-from <git@git.openembedded.org>) id 1Rin6T-0001hp-D0
 	for bitbake-devel@lists.openembedded.org;
 	Thu, 05 Jan 2012 14:11:33 +0100
 Received: by opal (Postfix, from userid 111)
-	id D15BB10331; Thu,  5 Jan 2012 13:11:52 +0000 (UTC)
+	id EA21A10333; Thu,  5 Jan 2012 13:11:52 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20120105131152.D15BB10331@opal>
+Message-Id: <20120105131152.EA21A10333@opal>
 Date: Thu,  5 Jan 2012 13:11:52 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Richard Purdie : cooker.py: Convert a bb.data. expand refernce to the updated syntax
+Subject: Richard Purdie : bitbake/runqueue: Improve the setscene logging
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,34 +26,43 @@ Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: 4483dc4bc4711cd8e144078090727348beb24879
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=4483dc4bc4711cd8e144078090727348beb24879
+Commit: cff2c258b77fde01d530a5923e553e6111b15eb5
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=cff2c258b77fde01d530a5923e553e6111b15eb5
 
 Author: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date:   Thu Jan  5 12:57:12 2012 +0000
+Date:   Mon Nov 21 14:40:37 2011 +0000
 
-cooker.py: Convert a bb.data.expand refernce to the updated syntax
+bitbake/runqueue: Improve the setscene logging
+
+When debugging setscene problems it was found that some extra debug messages were useful.
+This patch adds them.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 ---
 
- lib/bb/cooker.py |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ lib/bb/runqueue.py |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index cbe0d71..27abca0 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -137,7 +137,7 @@ class BBCooker:
- 
-         # Take a lock so only one copy of bitbake can run against a given build
-         # directory at a time
--        lockfile = bb.data.expand("${TOPDIR}/bitbake.lock", self.configuration.data)
-+        lockfile = self.configuration.data.expand("${TOPDIR}/bitbake.lock")
-         self.lock = bb.utils.lockfile(lockfile, False, False)
-         if not self.lock:
-             bb.fatal("Only one copy of bitbake should be run against a build directory")
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index f7e7ace..0e83d05 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1208,10 +1208,14 @@ class RunQueueExecuteTasks(RunQueueExecute):
+             for task in xrange(self.stats.total):
+                 if task in self.rq.scenequeue_covered:
+                     continue
++                logger.debug(1, 'Considering %s (%s): %s' % (task, self.rqdata.get_user_idstring(task), str(self.rqdata.runq_revdeps[task])))
++
+                 if len(self.rqdata.runq_revdeps[task]) > 0 and self.rqdata.runq_revdeps[task].issubset(self.rq.scenequeue_covered):
+                     ok = True
+                     for revdep in self.rqdata.runq_revdeps[task]:
+                         if self.rqdata.runq_fnid[task] != self.rqdata.runq_fnid[revdep]:
++                            logger.debug(1, 'Found "bad" dep %s (%s) for %s (%s)' % (revdep, self.rqdata.get_user_idstring(revdep), task, self.rqdata.get_user_idstring(task)))
++
+                             ok = False
+                             break
+                     if ok:
 
 
 
