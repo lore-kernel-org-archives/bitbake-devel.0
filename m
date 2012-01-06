@@ -1,24 +1,20 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1Rj5me-0007Xl-BK
+	(envelope-from <dongxiao.xu@intel.com>) id 1Rj64l-0008Gm-1P
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 06 Jan 2012 10:08:20 +0100
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 06 Jan 2012 01:00:55 -0800
+	Fri, 06 Jan 2012 10:27:03 +0100
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 06 Jan 2012 01:19:38 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="53852738"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="95124078"
 Received: from dongxiao-desktop.sh.intel.com (HELO localhost) ([10.239.36.108])
-	by AZSMGA002.ch.intel.com with ESMTP; 06 Jan 2012 01:00:54 -0800
+	by orsmga002.jf.intel.com with ESMTP; 06 Jan 2012 01:19:37 -0800
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  6 Jan 2012 17:02:34 +0800
-Message-Id: <c9c075648019ee0f55b2ed916b40567307cd5674.1325840050.git.dongxiao.xu@intel.com>
+Date: Fri,  6 Jan 2012 17:21:37 +0800
+Message-Id: <cover.1325841596.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.0.4
-In-Reply-To: <cover.1325840050.git.dongxiao.xu@intel.com>
-References: <cover.1325840050.git.dongxiao.xu@intel.com>
-In-Reply-To: <cover.1325840050.git.dongxiao.xu@intel.com>
-References: <cover.1325840050.git.dongxiao.xu@intel.com>
-Subject: [PATCH 16/16] runqueue: fire sceneQueueTaskStarted event when a setscene queue starts
+Subject: [PATCH 0/1][PULL] hob: A new implementation for Human Oriented Builder
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,60 +26,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 06 Jan 2012 09:08:20 -0000
+X-List-Received-Date: Fri, 06 Jan 2012 09:27:03 -0000
 
-Fire a sceneQueueTaskStarted event to notify the setscene tasks progress.
+Hi Richard,
 
-Signed-off-by: Shane Wang <shane.wang@intel.com>
-Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
----
- lib/bb/event.py    |    2 +-
- lib/bb/runqueue.py |   10 ++++++++++
- 2 files changed, 11 insertions(+), 1 deletions(-)
+This pull request is a new implementation for hob.
+Please help to review and pull.
 
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index ffd4213..10de984 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -223,7 +223,7 @@ class OperationProgress(Event):
-         Event.__init__(self)
-         self.current = current
-         self.total = total
--        self.msg = msg + ": %s/%s (%.0f%%)" % (current, total, (current*1.0/total)*100);
-+        self.msg = msg + ": %s/%s" % (current, total);
- 
- class ConfigParsed(Event):
-     """Configuration Parsing Complete"""
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 0e83d05..0ba414f 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1619,6 +1619,9 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-                 self.task_skip(task)
-                 return True
- 
-+            startevent = sceneQueueTaskStarted(task, self.stats, self.rq)
-+            bb.event.fire(startevent, self.cfgData)
-+
-             pid, pipein, pipeout = self.fork_off_task(fn, realtask, taskname)
- 
-             self.build_pids[pid] = task
-@@ -1686,6 +1689,13 @@ class runQueueTaskStarted(runQueueEvent):
-         runQueueEvent.__init__(self, task, stats, rq)
-         self.noexec = noexec
- 
-+class sceneQueueTaskStarted(runQueueTaskStarted):
-+    """
-+    Event notifing a setscene task was started
-+    """
-+    def __init__(self, task, stats, rq, noexec=False):
-+        runQueueTaskStarted.__init__(self, task, stats, rq, noexec)
-+
- class runQueueTaskFailed(runQueueEvent):
-     """
-     Event notifing a task failed
--- 
-1.7.0.4
+Note that this change has dependency on hob-bitbake-changes and hob-oecore-changes.
+
+Thanks,
+Dongxiao
+
+The following changes since commit c9c075648019ee0f55b2ed916b40567307cd5674:
+  Dongxiao Xu (1):
+        runqueue: fire sceneQueueTaskStarted event when a setscene queue starts
+
+are available in the git repository at:
+
+  git://git.pokylinux.org/poky-contrib dxu4/hob
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob
+
+Dongxiao Xu (1):
+  Hob2: A new implemetation for Human Oriented Builder
+
+ bitbake/lib/bb/ui/crumbs/advancedsetting.py  |  246 ++++
+ bitbake/lib/bb/ui/crumbs/hobwidget.py        |  524 ++++++++
+ bitbake/lib/bb/ui/crumbs/layerselection.py   |  107 ++
+ bitbake/lib/bb/ui/crumbs/packagelistmodel.py |  552 ++++++++
+ bitbake/lib/bb/ui/crumbs/progressbar.py      |  184 +++
+ bitbake/lib/bb/ui/crumbs/recipelistmodel.py  |  860 +++++++++++++
+ bitbake/lib/bb/ui/crumbs/template.py         |  189 +++
+ lib/bb/ui/crumbs/configurator.py             |  346 -----
+ lib/bb/ui/crumbs/hobeventhandler.py          |  392 +++---
+ lib/bb/ui/crumbs/hobprefs.py                 |  335 -----
+ lib/bb/ui/crumbs/layereditor.py              |  153 ---
+ lib/bb/ui/crumbs/progress.py                 |   20 -
+ lib/bb/ui/crumbs/runningbuild.py             |   15 +-
+ lib/bb/ui/crumbs/tasklistmodel.py            |  620 ---------
+ lib/bb/ui/hob.py                             | 1736 ++++++++++++--------------
+ lib/bb/ui/uihelper.py                        |   42 +
+ 16 files changed, 3716 insertions(+), 2605 deletions(-)
+ create mode 100644 bitbake/lib/bb/ui/crumbs/advancedsetting.py
+ create mode 100644 bitbake/lib/bb/ui/crumbs/hobwidget.py
+ create mode 100644 bitbake/lib/bb/ui/crumbs/layerselection.py
+ create mode 100644 bitbake/lib/bb/ui/crumbs/packagelistmodel.py
+ create mode 100644 bitbake/lib/bb/ui/crumbs/progressbar.py
+ create mode 100644 bitbake/lib/bb/ui/crumbs/recipelistmodel.py
+ create mode 100644 bitbake/lib/bb/ui/crumbs/template.py
+ delete mode 100644 lib/bb/ui/crumbs/configurator.py
+ delete mode 100644 lib/bb/ui/crumbs/hobprefs.py
+ delete mode 100644 lib/bb/ui/crumbs/layereditor.py
+ delete mode 100644 lib/bb/ui/crumbs/progress.py
+ delete mode 100644 lib/bb/ui/crumbs/tasklistmodel.py
+ mode change 100644 => 100755 lib/bb/ui/hob.py
 
 
 
