@@ -1,31 +1,15 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1RjCBU-0000o2-R4 for bitbake-devel@lists.openembedded.org;
-	Fri, 06 Jan 2012 16:58:25 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q06Fp074022664;
-	Fri, 6 Jan 2012 15:51:00 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 22389-03; Fri,  6 Jan 2012 15:50:56 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q06FooVA022658
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Fri, 6 Jan 2012 15:50:50 GMT
-Message-ID: <1325865050.20759.132.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Dongxiao Xu <dongxiao.xu@intel.com>
-Date: Fri, 06 Jan 2012 15:50:50 +0000
-In-Reply-To: <15703ec8d9b0560b0db97069426c1916e3896a63.1325840050.git.dongxiao.xu@intel.com>
-References: <cover.1325840050.git.dongxiao.xu@intel.com>
-	<15703ec8d9b0560b0db97069426c1916e3896a63.1325840050.git.dongxiao.xu@intel.com>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 12/16] bitbake: add -B option to bind with interface
+Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <git@git.openembedded.org>) id 1RjCFS-0001In-Fs
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 06 Jan 2012 17:02:30 +0100
+Received: by opal (Postfix, from userid 111)
+	id EB46B10331; Fri,  6 Jan 2012 16:02:56 +0000 (UTC)
+To: bitbake-devel@lists.openembedded.org
+Message-Id: <20120106160256.EB46B10331@opal>
+Date: Fri,  6 Jan 2012 16:02:56 +0000 (UTC)
+From: git@git.openembedded.org
+Subject: Dongxiao Xu : cooker: user bb.configuration.data to inject events
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,72 +21,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 06 Jan 2012 15:58:25 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 06 Jan 2012 16:02:30 -0000
+Content-Type: text/plain; charset=UTF-8
 
-On Fri, 2012-01-06 at 17:02 +0800, Dongxiao Xu wrote:
-> When start bitbake as a server only process, we need to assign certain
-> interface to it.
-> 
-> Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
-> ---
->  bin/bitbake             |   17 ++++++++++++-----
->  lib/bb/server/xmlrpc.py |    6 +++---
->  2 files changed, 15 insertions(+), 8 deletions(-)
-> 
-> diff --git a/bin/bitbake b/bin/bitbake
-> index c2e6822..4bf1335 100755
-> --- a/bin/bitbake
-> +++ b/bin/bitbake
-> @@ -168,6 +168,8 @@ Default BBFILES are the .bb files in the current directory.""")
->      parser.add_option("", "--server-only", help = "Run bitbake without UI,  the frontend can connect with bitbake server itself",
->                 action = "store_true", dest = "server_only", default = False)
->  
-> +    parser.add_option("-B", "--bind", help = "Bind bitbake server with certain address",
+Module: bitbake.git
+Branch: master
+Commit: 487a124942fd5cd9de71413b79a4049a6d26f1e8
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=487a124942fd5cd9de71413b79a4049a6d26f1e8
 
-I find these help messages confusing. How about "The name/address for
-the bitbake server to bind to"?
+Author: Dongxiao Xu <dongxiao.xu@intel.com>
+Date:   Fri Jan  6 17:02:21 2012 +0800
 
-> +               action = "store", dest = "bind", default = False)
->      options, args = parser.parse_args(sys.argv)
->  
->      configuration = BBConfiguration(options)
-> @@ -189,9 +191,6 @@ Default BBFILES are the .bb files in the current directory.""")
->          sys.exit("FATAL: Invalid server type '%s' specified.\n"
->                   "Valid interfaces: xmlrpc, process [default], none." % servertype)
->  
-> -    if configuration.server_only and configuration.servertype != "xmlrpc":
-> -        sys.exit("FATAL: If '--server-only' is defined, we must set the servertype as 'xmlrpc'.\n")
-> -
->      # Save a logfile for cooker into the current working directory. When the
->      # server is daemonized this logfile will be truncated.
->      cooker_logfile = os.path.join(os.getcwd(), "cooker.log")
-> @@ -211,9 +210,17 @@ Default BBFILES are the .bb files in the current directory.""")
->      # of the UIs (e.g. for DISPLAY, etc.)
->      bb.utils.clean_environment()
->  
-> -    server = server.BitBakeServer()
-> +    if configuration.server_only:
-> +        if configuration.servertype != "xmlrpc":
-> +            sys.exit("FATAL: If '--server-only' is defined, we must set the servertype as 'xmlrpc'.\n")
-> +        if not configuration.bind:
-> +            sys.exit("FATAL: If '--server-only' is defined, we need to bind the server with certain address'.\n")
+cooker: user bb.configuration.data to inject events
 
-How about "FATAL: The '--server-only' option requires a name/address to
-bind to with the --bind option"?
+For buildTargets function, we use bb.configuration.data as parameter
+to inject events, since in hob environment, some variables are
+modified dynamically and bb.configuration.event_data may out of date.
 
-To be honest, I'd also expect --bind to work without --server-only,
-defaulting to "localhost" if it wasn't set but using the address/name
-specified if it was. The usecase would be to attach a secondary UI to
-the bitbake server during the build process for monitoring/control
-purposes.
+Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Cheers,
+---
 
-Richard
+ lib/bb/cooker.py |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 15243f2..6473839 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1088,7 +1088,7 @@ class BBCooker:
+                 return False
+ 
+             if not retval:
+-                bb.event.fire(bb.event.BuildCompleted(buildname, targets, failures), self.configuration.event_data)
++                bb.event.fire(bb.event.BuildCompleted(buildname, targets, failures), self.configuration.data)
+                 self.command.finishAsyncCommand()
+                 return False
+             if retval is True:
+@@ -1098,7 +1098,7 @@ class BBCooker:
+         self.buildSetVars()
+ 
+         buildname = self.configuration.data.getVar("BUILDNAME")
+-        bb.event.fire(bb.event.BuildStarted(buildname, targets), self.configuration.event_data)
++        bb.event.fire(bb.event.BuildStarted(buildname, targets), self.configuration.data)
+ 
+         localdata = data.createCopy(self.configuration.data)
+         bb.data.update_data(localdata)
 
 
 
