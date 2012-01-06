@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RjCFS-0001In-Fs
+	(envelope-from <git@git.openembedded.org>) id 1RjCFS-0001Io-Fs
 	for bitbake-devel@lists.openembedded.org;
 	Fri, 06 Jan 2012 17:02:30 +0100
 Received: by opal (Postfix, from userid 111)
-	id EB46B10331; Fri,  6 Jan 2012 16:02:56 +0000 (UTC)
+	id 20DB810333; Fri,  6 Jan 2012 16:02:57 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20120106160256.EB46B10331@opal>
-Date: Fri,  6 Jan 2012 16:02:56 +0000 (UTC)
+Message-Id: <20120106160257.20DB810333@opal>
+Date: Fri,  6 Jan 2012 16:02:57 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Dongxiao Xu : cooker: user bb.configuration.data to inject events
+Subject: Dongxiao Xu : command.py: add initCooker API
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,48 +26,74 @@ Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: 487a124942fd5cd9de71413b79a4049a6d26f1e8
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=487a124942fd5cd9de71413b79a4049a6d26f1e8
+Commit: 8ee9c6cc47938604268242d90bd3007218f9a36e
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=8ee9c6cc47938604268242d90bd3007218f9a36e
 
 Author: Dongxiao Xu <dongxiao.xu@intel.com>
-Date:   Fri Jan  6 17:02:21 2012 +0800
+Date:   Fri Jan  6 17:02:22 2012 +0800
 
-cooker: user bb.configuration.data to inject events
+command.py: add initCooker API
 
-For buildTargets function, we use bb.configuration.data as parameter
-to inject events, since in hob environment, some variables are
-modified dynamically and bb.configuration.event_data may out of date.
+initCooker is to set the cooker to the initial state with nothing
+parsed.
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 ---
 
- lib/bb/cooker.py |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ lib/bb/command.py |    6 ++++++
+ lib/bb/cooker.py  |   13 +++++++++++++
+ 2 files changed, 19 insertions(+), 0 deletions(-)
 
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index 5dec6a9..701b286 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -157,6 +157,12 @@ class CommandsSync:
+         value = params[1]
+         command.cooker.configuration.data.setVar(varname, value)
+ 
++    def initCooker(self, command, params):
++        """
++        Init the cooker to initial state with nothing parsed
++        """
++        command.cooker.initialize()
++
+     def resetCooker(self, command, params):
+         """
+         Reset the cooker to its initial state, thus forcing a reparse for
 diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 15243f2..6473839 100644
+index 6473839..1faf821 100644
 --- a/lib/bb/cooker.py
 +++ b/lib/bb/cooker.py
-@@ -1088,7 +1088,7 @@ class BBCooker:
-                 return False
+@@ -167,6 +167,15 @@ class BBCooker:
  
-             if not retval:
--                bb.event.fire(bb.event.BuildCompleted(buildname, targets, failures), self.configuration.event_data)
-+                bb.event.fire(bb.event.BuildCompleted(buildname, targets, failures), self.configuration.data)
-                 self.command.finishAsyncCommand()
-                 return False
-             if retval is True:
-@@ -1098,7 +1098,7 @@ class BBCooker:
-         self.buildSetVars()
+         self.parser = None
  
-         buildname = self.configuration.data.getVar("BUILDNAME")
--        bb.event.fire(bb.event.BuildStarted(buildname, targets), self.configuration.event_data)
-+        bb.event.fire(bb.event.BuildStarted(buildname, targets), self.configuration.data)
++    def initConfigurationData(self):
++        self.configuration.data = bb.data.init()
++
++        if not self.server_registration_cb:
++            bb.data.setVar("BB_WORKERCONTEXT", "1", self.configuration.data)
++
++        filtered_keys = bb.utils.approved_variables()
++        bb.data.inheritFromOS(self.configuration.data, self.savedenv, filtered_keys)
++
+     def loadConfigurationData(self):
+         self.configuration.data = bb.data.init()
  
-         localdata = data.createCopy(self.configuration.data)
-         bb.data.update_data(localdata)
+@@ -1304,6 +1313,10 @@ class BBCooker:
+     def reparseFiles(self):
+         return
+ 
++    def initialize(self):
++        self.state = state.initial
++        self.initConfigurationData()
++
+     def reset(self):
+         self.state = state.initial
+         self.loadConfigurationData()
 
 
 
