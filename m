@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RjCFT-0001J4-J8
+	(envelope-from <git@git.openembedded.org>) id 1RjCFT-0001Im-IZ
 	for bitbake-devel@lists.openembedded.org;
 	Fri, 06 Jan 2012 17:02:32 +0100
 Received: by opal (Postfix, from userid 111)
-	id 99AB810339; Fri,  6 Jan 2012 16:02:57 +0000 (UTC)
+	id CCFF51032F; Fri,  6 Jan 2012 16:02:56 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20120106160257.99AB810339@opal>
-Date: Fri,  6 Jan 2012 16:02:57 +0000 (UTC)
+Message-Id: <20120106160256.CCFF51032F@opal>
+Date: Fri,  6 Jan 2012 16:02:56 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Dongxiao Xu : bitbake: add a new option "--server-only"
+Subject: Dongxiao Xu : command.py: Modify needcache value for certain functions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,79 +26,48 @@ Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: 2677254cf9792cee083605267570d93b425cc2db
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=2677254cf9792cee083605267570d93b425cc2db
+Commit: 3ef73dee8b08ccfd15a4901cce315a99b22e71d7
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=3ef73dee8b08ccfd15a4901cce315a99b22e71d7
 
 Author: Dongxiao Xu <dongxiao.xu@intel.com>
-Date:   Fri Jan  6 17:02:29 2012 +0800
+Date:   Fri Jan  6 17:02:19 2012 +0800
 
-bitbake: add a new option "--server-only"
+command.py: Modify needcache value for certain functions
 
-Create a new option "--server-only" for bitbake command, which allows
-bitbake runs as a server, and let frontend connect the server itself.
-
-"--server-only" should work with "-t xmlrpc", or bitbake will exit.
-
-bitbake --server-only -t xmlrpc will print out the server address and
-port information.
+for findConfigFiels() and findFilesMatchingInDir() functions, they
+don't need to parse all the bb files, thus setting the needcache
+value to be False.
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 ---
 
- bin/bitbake |   23 ++++++++++++++++-------
- 1 files changed, 16 insertions(+), 7 deletions(-)
+ lib/bb/command.py |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/bin/bitbake b/bin/bitbake
-index 9eb558b..c2e6822 100755
---- a/bin/bitbake
-+++ b/bin/bitbake
-@@ -165,6 +165,9 @@ Default BBFILES are the .bb files in the current directory.""")
-     parser.add_option("", "--revisions-changed", help = "Set the exit code depending on whether upstream floating revisions have changed or not",
-                action = "store_true", dest = "revisions_changed", default = False)
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index 83907f6..5dec6a9 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -241,7 +241,7 @@ class CommandsAsync:
  
-+    parser.add_option("", "--server-only", help = "Run bitbake without UI,  the frontend can connect with bitbake server itself",
-+               action = "store_true", dest = "server_only", default = False)
-+
-     options, args = parser.parse_args(sys.argv)
+         command.cooker.findConfigFiles(varname)
+         command.finishAsyncCommand()
+-    findConfigFiles.needcache = True
++    findConfigFiles.needcache = False
  
-     configuration = BBConfiguration(options)
-@@ -186,6 +189,9 @@ Default BBFILES are the .bb files in the current directory.""")
-         sys.exit("FATAL: Invalid server type '%s' specified.\n"
-                  "Valid interfaces: xmlrpc, process [default], none." % servertype)
+     def findFilesMatchingInDir(self, command, params):
+         """
+@@ -253,7 +253,7 @@ class CommandsAsync:
  
-+    if configuration.server_only and configuration.servertype != "xmlrpc":
-+        sys.exit("FATAL: If '--server-only' is defined, we must set the servertype as 'xmlrpc'.\n")
-+
-     # Save a logfile for cooker into the current working directory. When the
-     # server is daemonized this logfile will be truncated.
-     cooker_logfile = os.path.join(os.getcwd(), "cooker.log")
-@@ -222,14 +228,17 @@ Default BBFILES are the .bb files in the current directory.""")
+         command.cooker.findFilesMatchingInDir(pattern, directory)
+         command.finishAsyncCommand()
+-    findFilesMatchingInDir.needcache = True
++    findFilesMatchingInDir.needcache = False
  
-     logger.removeHandler(handler)
- 
--    # Setup a connection to the server (cooker)
--    server_connection = server.establishConnection()
-+    if not configuration.server_only:
-+        # Setup a connection to the server (cooker)
-+        server_connection = server.establishConnection()
- 
--    try:
--        return server.launchUI(ui_main, server_connection.connection, server_connection.events)
--    finally:
--        bb.event.ui_queue = []
--        server_connection.terminate()
-+        try:
-+            return server.launchUI(ui_main, server_connection.connection, server_connection.events)
-+        finally:
-+            bb.event.ui_queue = []
-+            server_connection.terminate()
-+    else:
-+        print("server address: %s, server port: %s" % (server.serverinfo.host, server.serverinfo.port))
- 
-     return 1
- 
+     def findConfigFilePath(self, command, params):
+         """
 
 
 
