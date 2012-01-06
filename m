@@ -1,24 +1,24 @@
 Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1Rj5mP-0007OA-Ca
+	(envelope-from <dongxiao.xu@intel.com>) id 1Rj5mQ-0007OA-6b
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 06 Jan 2012 10:08:05 +0100
+	Fri, 06 Jan 2012 10:08:06 +0100
 Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga102.ch.intel.com with ESMTP; 06 Jan 2012 01:00:40 -0800
+	by azsmga102.ch.intel.com with ESMTP; 06 Jan 2012 01:00:43 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="93020147"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="93020170"
 Received: from dongxiao-desktop.sh.intel.com (HELO localhost) ([10.239.36.108])
-	by azsmga001.ch.intel.com with ESMTP; 06 Jan 2012 01:00:40 -0800
+	by azsmga001.ch.intel.com with ESMTP; 06 Jan 2012 01:00:43 -0800
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  6 Jan 2012 17:02:23 +0800
-Message-Id: <c2d2e963b28bddc1caecd4ef9a7f805c5ee91817.1325840050.git.dongxiao.xu@intel.com>
+Date: Fri,  6 Jan 2012 17:02:25 +0800
+Message-Id: <1731e995b122ecad7ade0c259cfa4aaad6291135.1325840050.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.0.4
 In-Reply-To: <cover.1325840050.git.dongxiao.xu@intel.com>
 References: <cover.1325840050.git.dongxiao.xu@intel.com>
 In-Reply-To: <cover.1325840050.git.dongxiao.xu@intel.com>
 References: <cover.1325840050.git.dongxiao.xu@intel.com>
-Subject: [PATCH 05/16] command.py: add parseConfigurationFiles API
+Subject: [PATCH 07/16] event.py: Add a new event PackageInfo
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,34 +30,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 06 Jan 2012 09:08:05 -0000
+X-List-Received-Date: Fri, 06 Jan 2012 09:08:06 -0000
 
-The parseConfigurationFiles API calls the related function in
-cooker.py to parse config files.
+This event is to pass package information.
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 ---
- lib/bb/command.py |   10 ++++++++++
- 1 files changed, 10 insertions(+), 0 deletions(-)
+ lib/bb/event.py |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
 
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index 701b286..6b4a598 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -326,3 +326,13 @@ class CommandsAsync:
-         else:
-             command.finishAsyncCommand()
-     compareRevisions.needcache = True
+diff --git a/lib/bb/event.py b/lib/bb/event.py
+index 088cd7c..67543e7 100644
+--- a/lib/bb/event.py
++++ b/lib/bb/event.py
+@@ -459,3 +459,12 @@ class LogHandler(logging.Handler):
+     def filter(self, record):
+         record.taskpid = worker_pid
+         return True
 +
-+    def parseConfigurationFiles(self, command, params):
-+        """
-+        Parse the configuration files
-+        """
-+        prefiles = params[0]
-+        postfiles = params[1]
-+        command.cooker.parseConfigurationFiles(prefiles, postfiles)
-+        command.finishAsyncCommand()
-+    parseConfigurationFiles.needcache = False
++class PackageInfo(Event):
++    """
++    Package information for GUI
++    """
++    def __init__(self, recipe, pkginfolist):
++        Event.__init__(self)
++        self._recipe = recipe
++        self._pkginfolist = pkginfolist
 -- 
 1.7.0.4
 
