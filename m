@@ -1,24 +1,24 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1Rj5mY-0007SG-No
+	(envelope-from <dongxiao.xu@intel.com>) id 1Rj5ma-0007Rb-66
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 06 Jan 2012 10:08:14 +0100
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 06 Jan 2012 01:00:52 -0800
+	Fri, 06 Jan 2012 10:08:16 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga102.ch.intel.com with ESMTP; 06 Jan 2012 01:00:54 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="93581647"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="93020265"
 Received: from dongxiao-desktop.sh.intel.com (HELO localhost) ([10.239.36.108])
-	by orsmga001.jf.intel.com with ESMTP; 06 Jan 2012 01:00:52 -0800
+	by azsmga001.ch.intel.com with ESMTP; 06 Jan 2012 01:00:53 -0800
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  6 Jan 2012 17:02:32 +0800
-Message-Id: <efb093371394fc61e1a639c8e93b245d64058d72.1325840050.git.dongxiao.xu@intel.com>
+Date: Fri,  6 Jan 2012 17:02:33 +0800
+Message-Id: <2ce89adf04f57d34f90b5dcc4d14aa6eaa903121.1325840050.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.0.4
 In-Reply-To: <cover.1325840050.git.dongxiao.xu@intel.com>
 References: <cover.1325840050.git.dongxiao.xu@intel.com>
 In-Reply-To: <cover.1325840050.git.dongxiao.xu@intel.com>
 References: <cover.1325840050.git.dongxiao.xu@intel.com>
-Subject: [PATCH 14/16] command.py: add a new API findCoreBaseFiles
+Subject: [PATCH 15/16] command.py: add new command to get the CPU info
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,81 +30,94 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 06 Jan 2012 09:08:15 -0000
+X-List-Received-Date: Fri, 06 Jan 2012 09:08:16 -0000
 
-This new API is to find the available layers in server side.
+Add new API in command.py to get the CPU core and threads information
+in order to set the appropriate BB_NUMBER_THREADS and PARALLEL_MAKE
+variables.
 
-Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- lib/bb/command.py |   11 +++++++++++
- lib/bb/cooker.py  |   12 ++++++++++++
- lib/bb/event.py   |    8 ++++++++
- 3 files changed, 31 insertions(+), 0 deletions(-)
+ bitbake/lib/bb/helper.py |   39 +++++++++++++++++++++++++++++++++++++++
+ lib/bb/command.py        |   12 ++++++++++++
+ 2 files changed, 51 insertions(+), 0 deletions(-)
+ create mode 100644 bitbake/lib/bb/helper.py
 
+diff --git a/bitbake/lib/bb/helper.py b/bitbake/lib/bb/helper.py
+new file mode 100644
+index 0000000..291158b
+--- /dev/null
++++ b/bitbake/lib/bb/helper.py
+@@ -0,0 +1,39 @@
++#
++# Helper for BitBake Graphical GTK User Interface
++#
++# Copyright (C) 2011        Intel Corporation
++#
++# Authored by Shane Wang <shane.wang@intel.com>
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License version 2 as
++# published by the Free Software Foundation.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License along
++# with this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++
++import os
++
++class CpuInfo(object):
++
++    coefficient = 4
++
++    @classmethod
++    def getNumOfCpus(cls):
++        pfile = os.popen('cat /proc/cpuinfo | grep cpu\ cores')
++        num = len(pfile.readlines())
++        return num
++
++    @classmethod
++    def getNumOfCpuCores(cls):
++        pfile = os.popen('cat /proc/cpuinfo | grep cpu\ cores | cut -d: -f2')
++        contents = pfile.readlines()
++        num = int(contents[0])
++        return num
++
 diff --git a/lib/bb/command.py b/lib/bb/command.py
-index e52041d..141b51e 100644
+index 141b51e..ba7c753 100644
 --- a/lib/bb/command.py
 +++ b/lib/bb/command.py
-@@ -245,6 +245,17 @@ class CommandsAsync:
-         command.finishAsyncCommand()
-     generateTargetsTree.needcache = True
+@@ -30,6 +30,7 @@ Commands are queued in a CommandQueue
  
-+    def findCoreBaseFiles(self, command, params):
-+        """
-+        Find certain files in COREBASE directory. i.e. Layers
-+        """
-+        subdir = params[0]
-+        filename = params[1]
-+
-+        command.cooker.findCoreBaseFiles(subdir, filename)
-+        command.finishAsyncCommand()
-+    findCoreBaseFiles.needcache = False
-+
-     def findConfigFiles(self, command, params):
+ import bb.event
+ import bb.cooker
++import bb.helper
+ 
+ class CommandCompleted(bb.event.Event):
+     pass
+@@ -170,6 +171,17 @@ class CommandsSync:
          """
-         Find config files which provide appropriate values
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index bfd61a9..b02fdd7 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -681,6 +681,18 @@ class BBCooker:
-             if regex in unmatched:
-                 collectlog.warn("No bb files matched BBFILE_PATTERN_%s '%s'" % (collection, pattern))
+         command.cooker.reset()
  
-+    def findCoreBaseFiles(self, subdir, configfile):
-+        corebase = self.configuration.data.getVar('COREBASE', True) or ""
-+        paths = []
-+        for root, dirs, files in os.walk(corebase + '/' + subdir):
-+            for d in dirs:
-+                configfilepath = os.path.join(root, d, configfile)
-+                if os.path.exists(configfilepath):
-+                    paths.append(os.path.join(root, d))
++    def getDefaultNumOfThreads(self, command, params):
++        """
++        Get the default number of threads on the server = number of CPUs
++        """
++        return bb.helper.CpuInfo.getNumOfCpus()
 +
-+        if paths:
-+            bb.event.fire(bb.event.CoreBaseFilesFound(paths), self.configuration.data)
-+
-     def findConfigFilePath(self, configfile):
-         """
-         Find the location on disk of configfile and if it exists and was parsed by BitBake
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index d120ba5..ffd4213 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -439,6 +439,14 @@ class FilesMatchingFound(Event):
-         self._pattern = pattern
-         self._matches = matches
++    def getMaxNumOfThreads(self, command, params):
++        """
++        Get the max number of threads that the server can tolerate
++        """
++        return bb.helper.CpuInfo.getNumOfCpus() * bb.helper.CpuInfo.coefficient
  
-+class CoreBaseFilesFound(Event):
-+    """
-+    Event when a list of appropriate config files has been generated
-+    """
-+    def __init__(self, paths):
-+        Event.__init__(self)
-+        self._paths = paths
-+
- class ConfigFilesFound(Event):
+ class CommandsAsync:
      """
-     Event when a list of appropriate config files has been generated
 -- 
 1.7.0.4
 
