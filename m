@@ -1,28 +1,28 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1RkIhy-0006aW-BG for bitbake-devel@lists.openembedded.org;
-	Mon, 09 Jan 2012 18:08:30 +0100
+	id 1RkIiq-0006cm-A1 for bitbake-devel@lists.openembedded.org;
+	Mon, 09 Jan 2012 18:09:25 +0100
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q09H10Kt030927
-	for <bitbake-devel@lists.openembedded.org>; Mon, 9 Jan 2012 17:01:00 GMT
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q09H1uqw030938
+	for <bitbake-devel@lists.openembedded.org>; Mon, 9 Jan 2012 17:01:56 GMT
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 30593-02 for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 Jan 2012 17:00:54 +0000 (GMT)
+	id 30055-06 for <bitbake-devel@lists.openembedded.org>;
+	Mon,  9 Jan 2012 17:01:52 +0000 (GMT)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q09H0oMQ030920
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q09H1mZ9030932
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>; Mon, 9 Jan 2012 17:00:51 GMT
-Message-ID: <1326128453.9278.23.camel@ted>
+	for <bitbake-devel@lists.openembedded.org>; Mon, 9 Jan 2012 17:01:49 GMT
+Message-ID: <1326128511.9278.24.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 09 Jan 2012 17:00:53 +0000
+Date: Mon, 09 Jan 2012 17:01:51 +0000
 X-Mailer: Evolution 3.2.2- 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: [PATCH] bitbake/knotty: Show summary of warning/error messages shown
+Subject: [PATCH] bitbake: Add BBHandledException exception class
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -34,65 +34,88 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Jan 2012 17:08:31 -0000
+X-List-Received-Date: Mon, 09 Jan 2012 17:09:25 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-Show a summary count of warning/errors messages shown to the user during the
-build and make it clear when an error exit code is being set.
+We have a problem knowing when to show the user debug information and
+when not to since the code has already shown the user suitable information
+about why a failure is occurring.
 
-[YOCTO #1540]
+This patch adds a bb.BBHandledException exception class which can be used
+to identify those exceptions which don't need further explanation to
+the user.
+
+This patch uses this class for the bb.providers exceptions and ensures the
+command handling code correctly filters the exceptions meaning that
+
+"bitbake invalid"
+
+now shows an simple error message and not a python traceback.
+
+[YOCTO #1141 partial]
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index 38acb47..0340619 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -105,6 +105,8 @@ def main(server, eventHandler):
-     cacheprogress = None
-     shutdown = 0
-     return_value = 0
-+    errors = 0
-+    warnings = 0
-     while True:
-         try:
-             event = eventHandler.waitEvent(0.25)
-@@ -123,13 +125,15 @@ def main(server, eventHandler):
+diff --git a/bitbake/lib/bb/__init__.py b/bitbake/lib/bb/__init__.py
+index 5dc959c..e410eea 100644
+--- a/bitbake/lib/bb/__init__.py
++++ b/bitbake/lib/bb/__init__.py
+@@ -27,6 +27,18 @@ import sys
+ if sys.version_info < (2, 6, 0):
+     raise RuntimeError("Sorry, python 2.6.0 or later is required for this version of bitbake")
  
-             if isinstance(event, logging.LogRecord):
-                 if event.levelno >= format.ERROR:
-+                    errors = errors + 1
-                     return_value = 1
-+                if event.levelno >= format.WARNING:
-+                    warnings = warnings + 1
-                 # For "normal" logging conditions, don't show note logs from tasks
-                 # but do show them if the user has changed the default log level to 
-                 # include verbose/debug messages
--                #if logger.getEffectiveLevel() > format.VERBOSE:
-                 if event.taskpid != 0 and event.levelno <= format.NOTE:
--                        continue
-+                    continue
-                 logger.handle(event)
-                 continue
++
++class BBHandledException(Exception):
++    """
++    The big dillema for generic bitbake code is what information to give the user
++    when an exception occurs. Any exception inheriting this base exception class
++    has already provided information to the user via some 'fired' message type such as
++    an explicitly fired event using bb.fire, or a bb.error message. If bitbake 
++    encounters an expception derived from this class, no backtrace or other information 
++    will be given to the user, its assumed the earlier event provided the relavent information.
++    """
++    pass
++
+ import os
+ import logging
  
-@@ -208,6 +212,7 @@ def main(server, eventHandler):
-                 continue
-             if isinstance(event, bb.event.NoProvider):
-                 return_value = 1
-+                errors = errors + 1
-                 if event._runtime:
-                     r = "R"
-                 else:
-@@ -267,4 +272,8 @@ def main(server, eventHandler):
-                 server.runCommand(["stateShutdown"])
-             shutdown = shutdown + 1
-             pass
-+    if warnings:
-+        print("Summary: There were %s WARNING messages shown.\n" % warnings)
-+    if return_value:
-+        print("Summary: There were %s ERROR messages shown, returning a non-zero exit code.\n" % errors)
-     return return_value
+diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
+index f236dac..2a3a3af 100644
+--- a/bitbake/lib/bb/command.py
++++ b/bitbake/lib/bb/command.py
+@@ -98,9 +98,12 @@ class Command:
+             else:
+                 self.finishAsyncCommand("Exited with %s" % arg)
+             return False
+-        except Exception:
++        except Exception as exc:
+             import traceback
+-            self.finishAsyncCommand(traceback.format_exc())
++            if isinstance(exc, bb.BBHandledException):
++                self.finishAsyncCommand("")
++            else:
++                self.finishAsyncCommand(traceback.format_exc())
+             return False
+ 
+     def finishAsyncCommand(self, msg=None, code=None):
+diff --git a/bitbake/lib/bb/providers.py b/bitbake/lib/bb/providers.py
+index 4543447..398c8ea 100644
+--- a/bitbake/lib/bb/providers.py
++++ b/bitbake/lib/bb/providers.py
+@@ -28,10 +28,10 @@ import bb
+ 
+ logger = logging.getLogger("BitBake.Provider")
+ 
+-class NoProvider(Exception):
++class NoProvider(bb.BBHandledException):
+     """Exception raised when no provider of a build dependency can be found"""
+ 
+-class NoRProvider(Exception):
++class NoRProvider(bb.BBHandledException):
+     """Exception raised when no provider of a runtime dependency can be found"""
+ 
+ 
 
 
 
