@@ -1,15 +1,33 @@
-Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
+Received: from mail-qw0-f54.google.com ([209.85.216.54])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1Rkfny-0005Ts-Jm
+	(envelope-from <kergoth@gmail.com>) id 1RkfpN-0005bj-Dw
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 10 Jan 2012 18:48:14 +0100
-Received: by opal (Postfix, from userid 111)
-	id 92C9D10331; Tue, 10 Jan 2012 17:49:03 +0000 (UTC)
-To: bitbake-devel@lists.openembedded.org
-Message-Id: <20120110174903.92C9D10331@opal>
-Date: Tue, 10 Jan 2012 17:49:03 +0000 (UTC)
-From: git@git.openembedded.org
-Subject: Paul Eggleton : bitbake-layers: flatten: warn the user if output structure is incorrect
+	Tue, 10 Jan 2012 18:49:41 +0100
+Received: by qabj40 with SMTP id j40so239973qab.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 10 Jan 2012 09:42:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=mime-version:sender:in-reply-to:references:from:date
+	:x-google-sender-auth:message-id:subject:to:cc:content-type
+	:content-transfer-encoding;
+	bh=h8q6zLNvZ4ooiQWscQilofkW0PNKum1dFIpiY2sQC/Y=;
+	b=XWFleE9XzG+CvHqwTgSE2wlceDlEzONULfB4l/omuM2YLob4TG9GWy8wmCzHNz3A5Y
+	bqqLuDVFlkkxvLKCr46WuI0Drw7UNdp/Z8zscP2hbU7F6KX0InMUFpQd1Bqll8PRcZW9
+	/z+PxLLC+UrBpNeRl4Q0lzJ2RPlNpP2tRTf4c=
+Received: by 10.224.175.2 with SMTP id v2mr26055136qaz.69.1326217332055; Tue,
+	10 Jan 2012 09:42:12 -0800 (PST)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.229.187.141 with HTTP; Tue, 10 Jan 2012 09:41:49 -0800 (PST)
+In-Reply-To: <20120110174903.AB19510333@opal>
+References: <20120110174903.AB19510333@opal>
+From: Chris Larson <clarson@kergoth.com>
+Date: Tue, 10 Jan 2012 10:41:49 -0700
+X-Google-Sender-Auth: FUAMQZHIgTnrIZm3trbrUjLMM24
+Message-ID: <CABcZANkVEUfLCTUTMrkN8J-VWoDaV=-dh4HRokeD-Qpu6i93cg@mail.gmail.com>
+To: git@git.openembedded.org
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: Paul Eggleton : bitbake-layers: close files in apply_append()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -21,108 +39,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Jan 2012 17:48:15 -0000
+X-List-Received-Date: Tue, 10 Jan 2012 17:49:41 -0000
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Module: bitbake.git
-Branch: master
-Commit: 8e4dc97614f2022855143b49d18795ca0352b237
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=8e4dc97614f2022855143b49d18795ca0352b237
+On Tue, Jan 10, 2012 at 10:49 AM,  <git@git.openembedded.org> wrote:
+> Module: bitbake.git
+> Branch: master
+> Commit: 470a160813ce6cf04f83258d46ded5c2ab8bc520
+> URL: =C2=A0 =C2=A0http://git.openembedded.org/?p=3Dbitbake.git&a=3Dcommit=
+;h=3D470a160813ce6cf04f83258d46ded5c2ab8bc520
+>
+> Author: Paul Eggleton <paul.eggleton@linux.intel.com>
+> Date: =C2=A0 Sun Jan =C2=A08 12:06:51 2012 +0000
+>
+> bitbake-layers: close files in apply_append()
+>
+> It's recommended practice to close files when finished with them and the
+> code in this function was not doing this.
+>
+> Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Author: Paul Eggleton <paul.eggleton@linux.intel.com>
-Date:   Sun Jan  8 12:06:50 2012 +0000
-
-bitbake-layers: flatten: warn the user if output structure is incorrect
-
-If you flatten layers that have different directory structures you may
-not end up with a usable layer in the output directory - some files
-won't be picked up by BitBake.
-
-To try to avoid this problem, once flattening has completed, get the
-BBFILES entries that correspond to the layer from which the output
-layer's conf/layer.conf came from, and check through all of the
-.bb/.bbappend files in the output directory to see if any will not be
-referred to by BBFILES in the output layer. If any are found, show a
-warning to the user.
-
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-
----
-
- bin/bitbake-layers |   38 ++++++++++++++++++++++++++++++++++++++
- 1 files changed, 38 insertions(+), 0 deletions(-)
-
-diff --git a/bin/bitbake-layers b/bin/bitbake-layers
-index 572487d..b4c4127 100755
---- a/bin/bitbake-layers
-+++ b/bin/bitbake-layers
-@@ -8,6 +8,7 @@ import cmd
- import logging
- import os
- import sys
-+import fnmatch
- 
- bindir = os.path.dirname(__file__)
- topdir = os.path.dirname(bindir)
-@@ -152,6 +153,8 @@ cleanup may still be necessary afterwards, in particular:
- * where anything beyond the normal layer setup has been added to
-   layer.conf (only the lowest priority number layer's layer.conf is used)
- * overridden/appended items from bbappends will need to be tidied up
-+* when the flattened layers do not have the same directory structure (the
-+  flatten command should show a warning when this will cause a problem)
- 
- Warning: if you flatten several layers where another layer is intended to
- be used "inbetween" them (in layer priority order) such that recipes /
-@@ -194,6 +197,8 @@ build results (as the layer priority order has effectively changed).
-                     logger.error('Unable to find layer %s in current configuration, please run "%s show_layers" to list configured layers' % (layername, os.path.basename(sys.argv[0])))
-                     return
-             layers = found_layerdirs
-+        else:
-+            layernames = []
- 
-         # Ensure a specified path matches our list of layers
-         def layer_path_match(path):
-@@ -256,6 +261,39 @@ build results (as the layer priority order has effectively changed).
-                             bb.utils.copyfile(appendname, fdest)
-                             first_append = fdest
- 
-+        # Get the regex for the first layer in our list (which is where the conf/layer.conf file will
-+        # have come from)
-+        first_regex = None
-+        layerdir = layers[0]
-+        for layername, pattern, regex, _ in self.cooker.status.bbfile_config_priorities:
-+            if (not layernames) or layername in layernames:
-+                if regex.match(os.path.join(layerdir, 'test')):
-+                    first_regex = regex
-+                    break
-+
-+        if first_regex:
-+            # Find the BBFILES entries that match (which will have come from this conf/layer.conf file)
-+            bbfiles = str(self.config_data.getVar('BBFILES', True)).split()
-+            bbfiles_layer = []
-+            for item in bbfiles:
-+                if first_regex.match(item):
-+                    newpath = os.path.join(outputdir, item[len(layerdir)+1:])
-+                    bbfiles_layer.append(newpath)
-+
-+            if bbfiles_layer:
-+                # Check that all important layer files match BBFILES
-+                for root, dirs, files in os.walk(outputdir):
-+                    for f1 in files:
-+                        ext = os.path.splitext(f1)[1]
-+                        if ext in ['.bb', '.bbappend']:
-+                            f1full = os.sep.join([root, f1])
-+                            entry_found = False
-+                            for item in bbfiles_layer:
-+                                if fnmatch.fnmatch(f1full, item):
-+                                    entry_found = True
-+                                    break
-+                            if not entry_found:
-+                                logger.warning("File %s does not match the flattened layer's BBFILES setting, you may need to edit conf/layer.conf or move the file elsewhere" % f1full)
- 
-     def get_append_layer(self, appendname):
-         for layer, _, regex, _ in self.cooker.status.bbfile_config_priorities:
-
+Given we require 2.6, fyi, you could use the context manager.
+--=20
+Christopher Larson
 
 
