@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1Rkfnx-0005Tc-0X
+	(envelope-from <git@git.openembedded.org>) id 1Rkfny-0005Tt-3s
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 10 Jan 2012 18:48:13 +0100
+	Tue, 10 Jan 2012 18:48:14 +0100
 Received: by opal (Postfix, from userid 111)
-	id 7B5541032F; Tue, 10 Jan 2012 17:49:03 +0000 (UTC)
+	id DE1A110337; Tue, 10 Jan 2012 17:49:03 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20120110174903.7B5541032F@opal>
+Message-Id: <20120110174903.DE1A110337@opal>
 Date: Tue, 10 Jan 2012 17:49:03 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Paul Eggleton : bitbake-layers: flatten: allow specifying layers to flatten
+Subject: Richard Purdie : bitbake: Add BBHandledException exception class
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -21,157 +21,104 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Jan 2012 17:48:13 -0000
+X-List-Received-Date: Tue, 10 Jan 2012 17:48:14 -0000
 Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: 379b12107ec921b4458eda320078374a509164c1
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=379b12107ec921b4458eda320078374a509164c1
+Commit: eac9249b40ae1e3aa21e016010c862664e59a8d4
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=eac9249b40ae1e3aa21e016010c862664e59a8d4
 
-Author: Paul Eggleton <paul.eggleton@linux.intel.com>
-Date:   Sun Jan  8 12:06:49 2012 +0000
+Author: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date:   Mon Jan  9 17:01:51 2012 +0000
 
-bitbake-layers: flatten: allow specifying layers to flatten
+bitbake: Add BBHandledException exception class
 
-You can now optionally specify two or more layers to flatten into the
-output, rather than flattening all of the layers in the current
-configuration (but this is still the default behaviour if no layers are
-specified). Note that this means the output layer may still contain
-bbappends where the corresponding recipes are not present in the list of
-layers to flatten. There is also a caveat when a layer not being
-flattened would be "inbetween" the flattened layers (see the command
-help for details.)
+We have a problem knowing when to show the user debug information and
+when not to since the code has already shown the user suitable information
+about why a failure is occurring.
 
-Implements feature request in [YOCTO #1564].
+This patch adds a bb.BBHandledException exception class which can be used
+to identify those exceptions which don't need further explanation to
+the user.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+This patch uses this class for the bb.providers exceptions and ensures the
+command handling code correctly filters the exceptions meaning that
+
+"bitbake invalid"
+
+now shows an simple error message and not a python traceback.
+
+[YOCTO #1141 partial]
+
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 ---
 
- bin/bitbake-layers |   75 ++++++++++++++++++++++++++++++++++++++++++++++-----
- 1 files changed, 67 insertions(+), 8 deletions(-)
+ lib/bb/__init__.py  |   12 ++++++++++++
+ lib/bb/command.py   |    7 +++++--
+ lib/bb/providers.py |    4 ++--
+ 3 files changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/bin/bitbake-layers b/bin/bitbake-layers
-index b2781bb..572487d 100755
---- a/bin/bitbake-layers
-+++ b/bin/bitbake-layers
-@@ -139,9 +139,10 @@ Highest priority recipes are listed with the recipes they overlay as subitems.
-     def do_flatten(self, args):
-         """flattens layer configuration into a separate output directory.
+diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
+index 5dc959c..81f83c8 100644
+--- a/lib/bb/__init__.py
++++ b/lib/bb/__init__.py
+@@ -27,6 +27,18 @@ import sys
+ if sys.version_info < (2, 6, 0):
+     raise RuntimeError("Sorry, python 2.6.0 or later is required for this version of bitbake")
  
--usage: flatten <outputdir>
-+usage: flatten [layer1 layer2 [layer3]...] <outputdir>
++
++class BBHandledException(Exception):
++    """
++    The big dilemma for generic bitbake code is what information to give the user
++    when an exception occurs. Any exception inheriting this base exception class
++    has already provided information to the user via some 'fired' message type such as
++    an explicitly fired event using bb.fire, or a bb.error message. If bitbake 
++    encounters an exception derived from this class, no backtrace or other information 
++    will be given to the user, its assumed the earlier event provided the relevant information.
++    """
++    pass
++
+ import os
+ import logging
  
--Takes the current layer configuration and builds a "flattened" directory
-+Takes the specified layers (or all layers in the current layer
-+configuration if none are specified) and builds a "flattened" directory
- containing the contents of all layers, with any overlayed recipes removed
- and bbappends appended to the corresponding recipes. Note that some manual
- cleanup may still be necessary afterwards, in particular:
-@@ -149,21 +150,59 @@ cleanup may still be necessary afterwards, in particular:
- * where non-recipe files (such as patches) are overwritten (the flatten
-   command will show a warning for these)
- * where anything beyond the normal layer setup has been added to
--  layer.conf (only the lowest priority layer's layer.conf is used)
-+  layer.conf (only the lowest priority number layer's layer.conf is used)
- * overridden/appended items from bbappends will need to be tidied up
-+
-+Warning: if you flatten several layers where another layer is intended to
-+be used "inbetween" them (in layer priority order) such that recipes /
-+bbappends in the layers interact, and then attempt to use the new output
-+layer together with that other layer, you may no longer get the same
-+build results (as the layer priority order has effectively changed).
- """
-         arglist = args.split()
--        if len(arglist) != 1:
-+        if len(arglist) < 1:
-             logger.error('Please specify an output directory')
-             self.do_help('flatten')
-             return
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index f236dac..2a3a3af 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -98,9 +98,12 @@ class Command:
+             else:
+                 self.finishAsyncCommand("Exited with %s" % arg)
+             return False
+-        except Exception:
++        except Exception as exc:
+             import traceback
+-            self.finishAsyncCommand(traceback.format_exc())
++            if isinstance(exc, bb.BBHandledException):
++                self.finishAsyncCommand("")
++            else:
++                self.finishAsyncCommand(traceback.format_exc())
+             return False
  
--        if os.path.exists(arglist[0]) and os.listdir(arglist[0]):
--            logger.error('Directory %s exists and is non-empty, please clear it out first' % arglist[0])
-+        if len(arglist) == 2:
-+            logger.error('If you specify layers to flatten you must specify at least two')
-+            self.do_help('flatten')
-+            return
-+
-+        outputdir = arglist[-1]
-+        if os.path.exists(outputdir) and os.listdir(outputdir):
-+            logger.error('Directory %s exists and is non-empty, please clear it out first' % outputdir)
-             return
+     def finishAsyncCommand(self, msg=None, code=None):
+diff --git a/lib/bb/providers.py b/lib/bb/providers.py
+index 4543447..398c8ea 100644
+--- a/lib/bb/providers.py
++++ b/lib/bb/providers.py
+@@ -28,10 +28,10 @@ import bb
  
-         self.check_prepare_cooker()
-         layers = (self.config_data.getVar('BBLAYERS', True) or "").split()
-+        if len(arglist) > 2:
-+            layernames = arglist[:-1]
-+            found_layernames = []
-+            found_layerdirs = []
-+            for layerdir in layers:
-+                for layername, _, regex, _ in self.cooker.status.bbfile_config_priorities:
-+                    if layername in layernames:
-+                        if regex.match(os.path.join(layerdir, 'test')):
-+                            found_layerdirs.append(layerdir)
-+                            found_layernames.append(layername)
-+                            break
-+
-+            for layername in layernames:
-+                if not layername in found_layernames:
-+                    logger.error('Unable to find layer %s in current configuration, please run "%s show_layers" to list configured layers' % (layername, os.path.basename(sys.argv[0])))
-+                    return
-+            layers = found_layerdirs
-+
-+        # Ensure a specified path matches our list of layers
-+        def layer_path_match(path):
-+            for layerdir in layers:
-+                if path.startswith(os.path.join(layerdir, '')):
-+                    return layerdir
-+            return None
-+
-+        appended_recipes = []
-         for layer in layers:
-             overlayed = []
-             for f in self.cooker.overlayed.iterkeys():
-@@ -181,7 +220,7 @@ cleanup may still be necessary afterwards, in particular:
-                         ext = os.path.splitext(f1)[1]
-                         if ext != '.bbappend':
-                             fdest = f1full[len(layer):]
--                            fdest = os.path.normpath(os.sep.join([arglist[0],fdest]))
-+                            fdest = os.path.normpath(os.sep.join([outputdir,fdest]))
-                             bb.utils.mkdirhier(os.path.dirname(fdest))
-                             if os.path.exists(fdest):
-                                 if f1 == 'layer.conf' and root.endswith('/conf'):
-@@ -196,7 +235,27 @@ cleanup may still be necessary afterwards, in particular:
-                                     if appends:
-                                         logger.plain('  Applying appends to %s' % fdest )
-                                         for appendname in appends:
--                                            self.apply_append(appendname, fdest)
-+                                            if layer_path_match(appendname):
-+                                                self.apply_append(appendname, fdest)
-+                                    appended_recipes.append(f1)
-+
-+        # Take care of when some layers are excluded and yet we have included bbappends for those recipes
-+        for recipename in self.cooker_data.appends.iterkeys():
-+            if recipename not in appended_recipes:
-+                appends = self.cooker_data.appends[recipename]
-+                first_append = None
-+                for appendname in appends:
-+                    layer = layer_path_match(appendname)
-+                    if layer:
-+                        if first_append:
-+                            self.apply_append(appendname, first_append)
-+                        else:
-+                            fdest = appendname[len(layer):]
-+                            fdest = os.path.normpath(os.sep.join([outputdir,fdest]))
-+                            bb.utils.mkdirhier(os.path.dirname(fdest))
-+                            bb.utils.copyfile(appendname, fdest)
-+                            first_append = fdest
-+
+ logger = logging.getLogger("BitBake.Provider")
  
-     def get_append_layer(self, appendname):
-         for layer, _, regex, _ in self.cooker.status.bbfile_config_priorities:
+-class NoProvider(Exception):
++class NoProvider(bb.BBHandledException):
+     """Exception raised when no provider of a build dependency can be found"""
+ 
+-class NoRProvider(Exception):
++class NoRProvider(bb.BBHandledException):
+     """Exception raised when no provider of a runtime dependency can be found"""
+ 
+ 
 
 
 
