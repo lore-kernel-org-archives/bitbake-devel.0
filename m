@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1Rkfny-0005Tt-3s
+	(envelope-from <git@git.openembedded.org>) id 1Rkfny-0005Ts-Jm
 	for bitbake-devel@lists.openembedded.org;
 	Tue, 10 Jan 2012 18:48:14 +0100
 Received: by opal (Postfix, from userid 111)
-	id DE1A110337; Tue, 10 Jan 2012 17:49:03 +0000 (UTC)
+	id 92C9D10331; Tue, 10 Jan 2012 17:49:03 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20120110174903.DE1A110337@opal>
+Message-Id: <20120110174903.92C9D10331@opal>
 Date: Tue, 10 Jan 2012 17:49:03 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Richard Purdie : bitbake: Add BBHandledException exception class
+Subject: Paul Eggleton : bitbake-layers: flatten: warn the user if output structure is incorrect
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -21,104 +21,108 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Jan 2012 17:48:14 -0000
+X-List-Received-Date: Tue, 10 Jan 2012 17:48:15 -0000
 Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: eac9249b40ae1e3aa21e016010c862664e59a8d4
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=eac9249b40ae1e3aa21e016010c862664e59a8d4
+Commit: 8e4dc97614f2022855143b49d18795ca0352b237
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=8e4dc97614f2022855143b49d18795ca0352b237
 
-Author: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date:   Mon Jan  9 17:01:51 2012 +0000
+Author: Paul Eggleton <paul.eggleton@linux.intel.com>
+Date:   Sun Jan  8 12:06:50 2012 +0000
 
-bitbake: Add BBHandledException exception class
+bitbake-layers: flatten: warn the user if output structure is incorrect
 
-We have a problem knowing when to show the user debug information and
-when not to since the code has already shown the user suitable information
-about why a failure is occurring.
+If you flatten layers that have different directory structures you may
+not end up with a usable layer in the output directory - some files
+won't be picked up by BitBake.
 
-This patch adds a bb.BBHandledException exception class which can be used
-to identify those exceptions which don't need further explanation to
-the user.
+To try to avoid this problem, once flattening has completed, get the
+BBFILES entries that correspond to the layer from which the output
+layer's conf/layer.conf came from, and check through all of the
+.bb/.bbappend files in the output directory to see if any will not be
+referred to by BBFILES in the output layer. If any are found, show a
+warning to the user.
 
-This patch uses this class for the bb.providers exceptions and ensures the
-command handling code correctly filters the exceptions meaning that
-
-"bitbake invalid"
-
-now shows an simple error message and not a python traceback.
-
-[YOCTO #1141 partial]
-
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 ---
 
- lib/bb/__init__.py  |   12 ++++++++++++
- lib/bb/command.py   |    7 +++++--
- lib/bb/providers.py |    4 ++--
- 3 files changed, 19 insertions(+), 4 deletions(-)
+ bin/bitbake-layers |   38 ++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 38 insertions(+), 0 deletions(-)
 
-diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
-index 5dc959c..81f83c8 100644
---- a/lib/bb/__init__.py
-+++ b/lib/bb/__init__.py
-@@ -27,6 +27,18 @@ import sys
- if sys.version_info < (2, 6, 0):
-     raise RuntimeError("Sorry, python 2.6.0 or later is required for this version of bitbake")
- 
-+
-+class BBHandledException(Exception):
-+    """
-+    The big dilemma for generic bitbake code is what information to give the user
-+    when an exception occurs. Any exception inheriting this base exception class
-+    has already provided information to the user via some 'fired' message type such as
-+    an explicitly fired event using bb.fire, or a bb.error message. If bitbake 
-+    encounters an exception derived from this class, no backtrace or other information 
-+    will be given to the user, its assumed the earlier event provided the relevant information.
-+    """
-+    pass
-+
- import os
+diff --git a/bin/bitbake-layers b/bin/bitbake-layers
+index 572487d..b4c4127 100755
+--- a/bin/bitbake-layers
++++ b/bin/bitbake-layers
+@@ -8,6 +8,7 @@ import cmd
  import logging
+ import os
+ import sys
++import fnmatch
  
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index f236dac..2a3a3af 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -98,9 +98,12 @@ class Command:
-             else:
-                 self.finishAsyncCommand("Exited with %s" % arg)
-             return False
--        except Exception:
-+        except Exception as exc:
-             import traceback
--            self.finishAsyncCommand(traceback.format_exc())
-+            if isinstance(exc, bb.BBHandledException):
-+                self.finishAsyncCommand("")
-+            else:
-+                self.finishAsyncCommand(traceback.format_exc())
-             return False
+ bindir = os.path.dirname(__file__)
+ topdir = os.path.dirname(bindir)
+@@ -152,6 +153,8 @@ cleanup may still be necessary afterwards, in particular:
+ * where anything beyond the normal layer setup has been added to
+   layer.conf (only the lowest priority number layer's layer.conf is used)
+ * overridden/appended items from bbappends will need to be tidied up
++* when the flattened layers do not have the same directory structure (the
++  flatten command should show a warning when this will cause a problem)
  
-     def finishAsyncCommand(self, msg=None, code=None):
-diff --git a/lib/bb/providers.py b/lib/bb/providers.py
-index 4543447..398c8ea 100644
---- a/lib/bb/providers.py
-+++ b/lib/bb/providers.py
-@@ -28,10 +28,10 @@ import bb
+ Warning: if you flatten several layers where another layer is intended to
+ be used "inbetween" them (in layer priority order) such that recipes /
+@@ -194,6 +197,8 @@ build results (as the layer priority order has effectively changed).
+                     logger.error('Unable to find layer %s in current configuration, please run "%s show_layers" to list configured layers' % (layername, os.path.basename(sys.argv[0])))
+                     return
+             layers = found_layerdirs
++        else:
++            layernames = []
  
- logger = logging.getLogger("BitBake.Provider")
+         # Ensure a specified path matches our list of layers
+         def layer_path_match(path):
+@@ -256,6 +261,39 @@ build results (as the layer priority order has effectively changed).
+                             bb.utils.copyfile(appendname, fdest)
+                             first_append = fdest
  
--class NoProvider(Exception):
-+class NoProvider(bb.BBHandledException):
-     """Exception raised when no provider of a build dependency can be found"""
++        # Get the regex for the first layer in our list (which is where the conf/layer.conf file will
++        # have come from)
++        first_regex = None
++        layerdir = layers[0]
++        for layername, pattern, regex, _ in self.cooker.status.bbfile_config_priorities:
++            if (not layernames) or layername in layernames:
++                if regex.match(os.path.join(layerdir, 'test')):
++                    first_regex = regex
++                    break
++
++        if first_regex:
++            # Find the BBFILES entries that match (which will have come from this conf/layer.conf file)
++            bbfiles = str(self.config_data.getVar('BBFILES', True)).split()
++            bbfiles_layer = []
++            for item in bbfiles:
++                if first_regex.match(item):
++                    newpath = os.path.join(outputdir, item[len(layerdir)+1:])
++                    bbfiles_layer.append(newpath)
++
++            if bbfiles_layer:
++                # Check that all important layer files match BBFILES
++                for root, dirs, files in os.walk(outputdir):
++                    for f1 in files:
++                        ext = os.path.splitext(f1)[1]
++                        if ext in ['.bb', '.bbappend']:
++                            f1full = os.sep.join([root, f1])
++                            entry_found = False
++                            for item in bbfiles_layer:
++                                if fnmatch.fnmatch(f1full, item):
++                                    entry_found = True
++                                    break
++                            if not entry_found:
++                                logger.warning("File %s does not match the flattened layer's BBFILES setting, you may need to edit conf/layer.conf or move the file elsewhere" % f1full)
  
--class NoRProvider(Exception):
-+class NoRProvider(bb.BBHandledException):
-     """Exception raised when no provider of a runtime dependency can be found"""
- 
- 
+     def get_append_layer(self, appendname):
+         for layer, _, regex, _ in self.cooker.status.bbfile_config_priorities:
 
 
 
