@@ -1,24 +1,24 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1RkoYS-0005XF-LQ
+	(envelope-from <dongxiao.xu@intel.com>) id 1RkoYS-0005Xd-VK
 	for bitbake-devel@lists.openembedded.org;
 	Wed, 11 Jan 2012 04:08:51 +0100
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 10 Jan 2012 19:01:21 -0800
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 10 Jan 2012 19:01:18 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="105789907"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="96814239"
 Received: from dongxiao-desktop.sh.intel.com (HELO localhost) ([10.239.36.108])
-	by fmsmga001.fm.intel.com with ESMTP; 10 Jan 2012 19:01:21 -0800
+	by orsmga002.jf.intel.com with ESMTP; 10 Jan 2012 19:01:18 -0800
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 11 Jan 2012 11:03:26 +0800
-Message-Id: <d628d53679aa12f5803d0bbf30aa21ed3bc4779d.1326249301.git.dongxiao.xu@intel.com>
+Date: Wed, 11 Jan 2012 11:03:24 +0800
+Message-Id: <2b70816adeae4c278747d52654f3184f5e5a15a3.1326249301.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.0.4
 In-Reply-To: <cover.1326249301.git.dongxiao.xu@intel.com>
 References: <cover.1326249301.git.dongxiao.xu@intel.com>
 In-Reply-To: <cover.1326249301.git.dongxiao.xu@intel.com>
 References: <cover.1326249301.git.dongxiao.xu@intel.com>
-Subject: [PATCH 7/8] command.py: add new command to get the CPU info
+Subject: [PATCH 5/8] bitbake: add -B option to bind with interface
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,92 +32,80 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 11 Jan 2012 03:08:52 -0000
 
-Add new API in command.py to get the CPU core and threads information
-in order to set the appropriate BB_NUMBER_THREADS and PARALLEL_MAKE
-variables.
+When start bitbake as a server only process, we need to assign certain
+interface to it.
 
-Signed-off-by: Shane Wang <shane.wang@intel.com>
+Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 ---
- bitbake/lib/bb/helper.py |   39 +++++++++++++++++++++++++++++++++++++++
- lib/bb/command.py        |   12 ++++++++++++
- 2 files changed, 51 insertions(+), 0 deletions(-)
- create mode 100644 bitbake/lib/bb/helper.py
+ bin/bitbake             |   15 ++++++++++-----
+ lib/bb/server/xmlrpc.py |    6 +++---
+ 2 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/bitbake/lib/bb/helper.py b/bitbake/lib/bb/helper.py
-new file mode 100644
-index 0000000..291158b
---- /dev/null
-+++ b/bitbake/lib/bb/helper.py
-@@ -0,0 +1,39 @@
-+#
-+# Helper for BitBake Graphical GTK User Interface
-+#
-+# Copyright (C) 2011        Intel Corporation
-+#
-+# Authored by Shane Wang <shane.wang@intel.com>
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+# GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License along
-+# with this program; if not, write to the Free Software Foundation, Inc.,
-+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+
-+import os
-+
-+class CpuInfo(object):
-+
-+    coefficient = 4
-+
-+    @classmethod
-+    def getNumOfCpus(cls):
-+        pfile = os.popen('cat /proc/cpuinfo | grep cpu\ cores')
-+        num = len(pfile.readlines())
-+        return num
-+
-+    @classmethod
-+    def getNumOfCpuCores(cls):
-+        pfile = os.popen('cat /proc/cpuinfo | grep cpu\ cores | cut -d: -f2')
-+        contents = pfile.readlines()
-+        num = int(contents[0])
-+        return num
-+
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index 05555c5..eaf8236 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -30,6 +30,7 @@ Commands are queued in a CommandQueue
+diff --git a/bin/bitbake b/bin/bitbake
+index c2e6822..6e661ce 100755
+--- a/bin/bitbake
++++ b/bin/bitbake
+@@ -168,6 +168,8 @@ Default BBFILES are the .bb files in the current directory.""")
+     parser.add_option("", "--server-only", help = "Run bitbake without UI,  the frontend can connect with bitbake server itself",
+                action = "store_true", dest = "server_only", default = False)
  
- import bb.event
- import bb.cooker
-+import bb.helper
++    parser.add_option("-B", "--bind", help = "The name/address for the bitbake server to bind to",
++               action = "store", dest = "bind", default = False)
+     options, args = parser.parse_args(sys.argv)
  
- class CommandCompleted(bb.event.Event):
-     pass
-@@ -173,6 +174,17 @@ class CommandsSync:
+     configuration = BBConfiguration(options)
+@@ -189,9 +191,6 @@ Default BBFILES are the .bb files in the current directory.""")
+         sys.exit("FATAL: Invalid server type '%s' specified.\n"
+                  "Valid interfaces: xmlrpc, process [default], none." % servertype)
+ 
+-    if configuration.server_only and configuration.servertype != "xmlrpc":
+-        sys.exit("FATAL: If '--server-only' is defined, we must set the servertype as 'xmlrpc'.\n")
+-
+     # Save a logfile for cooker into the current working directory. When the
+     # server is daemonized this logfile will be truncated.
+     cooker_logfile = os.path.join(os.getcwd(), "cooker.log")
+@@ -211,9 +210,15 @@ Default BBFILES are the .bb files in the current directory.""")
+     # of the UIs (e.g. for DISPLAY, etc.)
+     bb.utils.clean_environment()
+ 
+-    server = server.BitBakeServer()
++    if configuration.server_only:
++        if configuration.servertype != "xmlrpc":
++            sys.exit("FATAL: If '--server-only' is defined, we must set the servertype as 'xmlrpc'.\n")
++        server = server.BitBakeServer()
++        server.initServer((configuration.bind, 0))
++    else:
++        server = server.BitBakeServer()
++        server.initServer()
+ 
+-    server.initServer()
+     idle = server.getServerIdleCB()
+ 
+     cooker = bb.cooker.BBCooker(configuration, idle, initialenv)
+diff --git a/lib/bb/server/xmlrpc.py b/lib/bb/server/xmlrpc.py
+index b5980c6..c53cee4 100644
+--- a/lib/bb/server/xmlrpc.py
++++ b/lib/bb/server/xmlrpc.py
+@@ -163,7 +163,7 @@ class BitBakeXMLRPCServer(SimpleXMLRPCServer):
+     # remove this when you're done with debugging
+     # allow_reuse_address = True
+ 
+-    def __init__(self, interface = ("localhost", 0)):
++    def __init__(self, interface):
          """
-         command.cooker.reset()
+         Constructor
+         """
+@@ -267,8 +267,8 @@ class BitBakeServerConnection():
+             pass
  
-+    def getDefaultNumOfThreads(self, command, params):
-+        """
-+        Get the default number of threads on the server = number of CPUs
-+        """
-+        return bb.helper.CpuInfo.getNumOfCpus()
-+
-+    def getMaxNumOfThreads(self, command, params):
-+        """
-+        Get the max number of threads that the server can tolerate
-+        """
-+        return bb.helper.CpuInfo.getNumOfCpus() * bb.helper.CpuInfo.coefficient
+ class BitBakeServer(object):
+-    def initServer(self):
+-        self.server = BitBakeXMLRPCServer()
++    def initServer(self, interface = ("localhost", 0)):
++        self.server = BitBakeXMLRPCServer(interface)
  
- class CommandsAsync:
-     """
+     def addcooker(self, cooker):
+         self.cooker = cooker
 -- 
 1.7.0.4
 
