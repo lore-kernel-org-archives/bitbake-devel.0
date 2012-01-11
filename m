@@ -1,39 +1,31 @@
-Received: from mga09.intel.com ([134.134.136.24])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1RkyOY-0000I8-Iy
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 11 Jan 2012 14:39:15 +0100
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 11 Jan 2012 05:31:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="96992148"
-Received: from pgsmsx603.gar.corp.intel.com ([10.221.43.87])
-	by orsmga002.jf.intel.com with ESMTP; 11 Jan 2012 05:31:43 -0800
-Received: from pgsmsx102.gar.corp.intel.com (10.221.44.80) by
-	pgsmsx603.gar.corp.intel.com (10.221.43.87) with Microsoft SMTP Server
-	(TLS) id 8.2.255.0; Wed, 11 Jan 2012 21:30:23 +0800
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
-	PGSMSX102.gar.corp.intel.com (10.221.44.80) with Microsoft SMTP Server
-	(TLS) id 14.1.355.2; Wed, 11 Jan 2012 21:30:22 +0800
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.88]) by
-	SHSMSX101.ccr.corp.intel.com ([169.254.1.60]) with mapi id
-	14.01.0355.002; Wed, 11 Jan 2012 21:30:22 +0800
-From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Thread-Topic: [bitbake-devel] [PATCH 5/8] bitbake: add -B option to bind
-	with interface
-Thread-Index: AQHM0FWDjUdLK5T0f0KGQKgWLEc+F5YHDTnA
-Date: Wed, 11 Jan 2012 13:30:21 +0000
-Message-ID: <40776A41FC278F40B59438AD47D147A90FCA1A78@SHSMSX102.ccr.corp.intel.com>
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1RkzIK-00011v-7k for bitbake-devel@lists.openembedded.org;
+	Wed, 11 Jan 2012 15:36:52 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0BETLYQ024932;
+	Wed, 11 Jan 2012 14:29:21 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 24317-04; Wed, 11 Jan 2012 14:29:17 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0BETAiY024926
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Wed, 11 Jan 2012 14:29:12 GMT
+Message-ID: <1326292152.23315.51.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: "Xu, Dongxiao" <dongxiao.xu@intel.com>
+Date: Wed, 11 Jan 2012 14:29:12 +0000
+In-Reply-To: <40776A41FC278F40B59438AD47D147A90FCA1A78@SHSMSX102.ccr.corp.intel.com>
 References: <cover.1326249301.git.dongxiao.xu@intel.com>
 	<2b70816adeae4c278747d52654f3184f5e5a15a3.1326249301.git.dongxiao.xu@intel.com>
 	<1326281886.23315.23.camel@ted>
-In-Reply-To: <1326281886.23315.23.camel@ted>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.239.127.40]
-MIME-Version: 1.0
+	<40776A41FC278F40B59438AD47D147A90FCA1A78@SHSMSX102.ccr.corp.intel.com>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH 5/8] bitbake: add -B option to bind with interface
@@ -48,100 +40,71 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 11 Jan 2012 13:39:15 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Wed, 11 Jan 2012 14:36:52 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-SGkgUmljaGFyZCwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaWNo
-YXJkIFB1cmRpZSBbbWFpbHRvOnJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5vcmddDQo+
-IFNlbnQ6IFdlZG5lc2RheSwgSmFudWFyeSAxMSwgMjAxMiA3OjM4IFBNDQo+IFRvOiBYdSwgRG9u
-Z3hpYW8NCj4gQ2M6IGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KPiBTdWJq
-ZWN0OiBSZTogW2JpdGJha2UtZGV2ZWxdIFtQQVRDSCA1LzhdIGJpdGJha2U6IGFkZCAtQiBvcHRp
-b24gdG8gYmluZCB3aXRoDQo+IGludGVyZmFjZQ0KPiANCj4gT24gV2VkLCAyMDEyLTAxLTExIGF0
-IDExOjAzICswODAwLCBEb25neGlhbyBYdSB3cm90ZToNCj4gPiBXaGVuIHN0YXJ0IGJpdGJha2Ug
-YXMgYSBzZXJ2ZXIgb25seSBwcm9jZXNzLCB3ZSBuZWVkIHRvIGFzc2lnbiBjZXJ0YWluDQo+ID4g
-aW50ZXJmYWNlIHRvIGl0Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogRG9uZ3hpYW8gWHUgPGRv
-bmd4aWFvLnh1QGludGVsLmNvbT4NCj4gPiAtLS0NCj4gPiAgYmluL2JpdGJha2UgICAgICAgICAg
-ICAgfCAgIDE1ICsrKysrKysrKystLS0tLQ0KPiA+ICBsaWIvYmIvc2VydmVyL3htbHJwYy5weSB8
-ICAgIDYgKysrLS0tDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKSwgOCBk
-ZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9iaW4vYml0YmFrZSBiL2Jpbi9iaXRi
-YWtlIGluZGV4IGMyZTY4MjIuLjZlNjYxY2UgMTAwNzU1DQo+ID4gLS0tIGEvYmluL2JpdGJha2UN
-Cj4gPiArKysgYi9iaW4vYml0YmFrZQ0KPiA+IEBAIC0xNjgsNiArMTY4LDggQEAgRGVmYXVsdCBC
-QkZJTEVTIGFyZSB0aGUgLmJiIGZpbGVzIGluIHRoZSBjdXJyZW50DQo+IGRpcmVjdG9yeS4iIiIp
-DQo+ID4gICAgICBwYXJzZXIuYWRkX29wdGlvbigiIiwgIi0tc2VydmVyLW9ubHkiLCBoZWxwID0g
-IlJ1biBiaXRiYWtlIHdpdGhvdXQgVUksDQo+IHRoZSBmcm9udGVuZCBjYW4gY29ubmVjdCB3aXRo
-IGJpdGJha2Ugc2VydmVyIGl0c2VsZiIsDQo+ID4gICAgICAgICAgICAgICAgIGFjdGlvbiA9ICJz
-dG9yZV90cnVlIiwgZGVzdCA9ICJzZXJ2ZXJfb25seSIsIGRlZmF1bHQgPQ0KPiA+IEZhbHNlKQ0K
-PiA+DQo+ID4gKyAgICBwYXJzZXIuYWRkX29wdGlvbigiLUIiLCAiLS1iaW5kIiwgaGVscCA9ICJU
-aGUgbmFtZS9hZGRyZXNzIGZvciB0aGUNCj4gYml0YmFrZSBzZXJ2ZXIgdG8gYmluZCB0byIsDQo+
-ID4gKyAgICAgICAgICAgICAgIGFjdGlvbiA9ICJzdG9yZSIsIGRlc3QgPSAiYmluZCIsIGRlZmF1
-bHQgPSBGYWxzZSkNCj4gPiAgICAgIG9wdGlvbnMsIGFyZ3MgPSBwYXJzZXIucGFyc2VfYXJncyhz
-eXMuYXJndikNCj4gPg0KPiA+ICAgICAgY29uZmlndXJhdGlvbiA9IEJCQ29uZmlndXJhdGlvbihv
-cHRpb25zKSBAQCAtMTg5LDkgKzE5MSw2IEBADQo+ID4gRGVmYXVsdCBCQkZJTEVTIGFyZSB0aGUg
-LmJiIGZpbGVzIGluIHRoZSBjdXJyZW50IGRpcmVjdG9yeS4iIiIpDQo+ID4gICAgICAgICAgc3lz
-LmV4aXQoIkZBVEFMOiBJbnZhbGlkIHNlcnZlciB0eXBlICclcycgc3BlY2lmaWVkLlxuIg0KPiA+
-ICAgICAgICAgICAgICAgICAgICJWYWxpZCBpbnRlcmZhY2VzOiB4bWxycGMsIHByb2Nlc3MgW2Rl
-ZmF1bHRdLCBub25lLiINCj4gPiAlIHNlcnZlcnR5cGUpDQo+ID4NCj4gPiAtICAgIGlmIGNvbmZp
-Z3VyYXRpb24uc2VydmVyX29ubHkgYW5kIGNvbmZpZ3VyYXRpb24uc2VydmVydHlwZSAhPSAieG1s
-cnBjIjoNCj4gPiAtICAgICAgICBzeXMuZXhpdCgiRkFUQUw6IElmICctLXNlcnZlci1vbmx5JyBp
-cyBkZWZpbmVkLCB3ZSBtdXN0IHNldCB0aGUNCj4gc2VydmVydHlwZSBhcyAneG1scnBjJy5cbiIp
-DQo+ID4gLQ0KPiA+ICAgICAgIyBTYXZlIGEgbG9nZmlsZSBmb3IgY29va2VyIGludG8gdGhlIGN1
-cnJlbnQgd29ya2luZyBkaXJlY3RvcnkuIFdoZW4gdGhlDQo+ID4gICAgICAjIHNlcnZlciBpcyBk
-YWVtb25pemVkIHRoaXMgbG9nZmlsZSB3aWxsIGJlIHRydW5jYXRlZC4NCj4gPiAgICAgIGNvb2tl
-cl9sb2dmaWxlID0gb3MucGF0aC5qb2luKG9zLmdldGN3ZCgpLCAiY29va2VyLmxvZyIpIEBADQo+
-ID4gLTIxMSw5ICsyMTAsMTUgQEAgRGVmYXVsdCBCQkZJTEVTIGFyZSB0aGUgLmJiIGZpbGVzIGlu
-IHRoZSBjdXJyZW50DQo+IGRpcmVjdG9yeS4iIiIpDQo+ID4gICAgICAjIG9mIHRoZSBVSXMgKGUu
-Zy4gZm9yIERJU1BMQVksIGV0Yy4pDQo+ID4gICAgICBiYi51dGlscy5jbGVhbl9lbnZpcm9ubWVu
-dCgpDQo+ID4NCj4gPiAtICAgIHNlcnZlciA9IHNlcnZlci5CaXRCYWtlU2VydmVyKCkNCj4gPiAr
-ICAgIGlmIGNvbmZpZ3VyYXRpb24uc2VydmVyX29ubHk6DQo+ID4gKyAgICAgICAgaWYgY29uZmln
-dXJhdGlvbi5zZXJ2ZXJ0eXBlICE9ICJ4bWxycGMiOg0KPiA+ICsgICAgICAgICAgICBzeXMuZXhp
-dCgiRkFUQUw6IElmICctLXNlcnZlci1vbmx5JyBpcyBkZWZpbmVkLCB3ZSBtdXN0IHNldCB0aGUN
-Cj4gc2VydmVydHlwZSBhcyAneG1scnBjJy5cbiIpDQo+ID4gKyAgICAgICAgc2VydmVyID0gc2Vy
-dmVyLkJpdEJha2VTZXJ2ZXIoKQ0KPiA+ICsgICAgICAgIHNlcnZlci5pbml0U2VydmVyKChjb25m
-aWd1cmF0aW9uLmJpbmQsIDApKQ0KPiA+ICsgICAgZWxzZToNCj4gPiArICAgICAgICBzZXJ2ZXIg
-PSBzZXJ2ZXIuQml0QmFrZVNlcnZlcigpDQo+ID4gKyAgICAgICAgc2VydmVyLmluaXRTZXJ2ZXIo
-KQ0KPiANCj4gVGhpcyBsb29rcyBsaWtlIGl0IHdpbGwgc2lsZW50bHkgaWdub3JlIGNvbmZpZ3Vy
-YXRpb24uYmluZCBpbiB0aGUgbm9uIHNlcnZlci1vbmx5IGNhc2UuDQo+IERvbid0IHlvdSBuZWVk
-IHNvbWV0aGluZyBsaWtlOg0KPiANCj4gDQo+ICsgICAgaWYgY29uZmlndXJhdGlvbi5zZXJ2ZXJf
-b25seToNCj4gKyAgICAgICAgaWYgY29uZmlndXJhdGlvbi5zZXJ2ZXJ0eXBlICE9ICJ4bWxycGMi
-Og0KPiArICAgICAgICAgICAgc3lzLmV4aXQoIkZBVEFMOiBJZiAnLS1zZXJ2ZXItb25seScgaXMg
-ZGVmaW5lZCwgd2UgbXVzdCBzZXQgdGhlDQo+IHNlcnZlcnR5cGUgYXMgJ3htbHJwYycuXG4iKQ0K
-PiArICAgICAgICBzZXJ2ZXIgPSBzZXJ2ZXIuQml0QmFrZVNlcnZlcigpDQo+ICsgICAgICAgIHNl
-cnZlci5pbml0U2VydmVyKChjb25maWd1cmF0aW9uLmJpbmQsIDApKQ0KPiArICAgIGVsaWYgY29u
-ZmlndXJhdGlvbi5iaW5kOg0KPiArICAgICAgICBzZXJ2ZXIgPSBzZXJ2ZXIuQml0QmFrZVNlcnZl
-cigpDQo+ICsgICAgICAgIHNlcnZlci5pbml0U2VydmVyKChjb25maWd1cmF0aW9uLmJpbmQsIDAp
-KQ0KPiArICAgIGVsc2U6DQo+ICsgICAgICAgIHNlcnZlciA9IHNlcnZlci5CaXRCYWtlU2VydmVy
-KCkNCj4gKyAgICAgICAgc2VydmVyLmluaXRTZXJ2ZXIoKQ0KPiANCj4gPw0KDQpJIGhhZCBhIHRo
-b3VnaHQgb2YgdGhpcyBjb2RlIHBpZWNlLCB3ZSBtYXkgbmVlZCB0aGUgZm9sbG93aW5nIGNvZGUu
-IEZvciAtLXNlcnZlci1vbmx5IG9wdGlvbiwgaXQgcmVxdWlyZXMgLS1iaW5kLCB3aGlsZSBub3Qg
-dmljZSB2ZXJzYS4NCg0KQEAgLTE4OSw4ICsxOTEsMTQgQEAgRGVmYXVsdCBCQkZJTEVTIGFyZSB0
-aGUgLmJiIGZpbGVzIGluIHRoZSBjdXJyZW50IGRpcmVjdG9yeS4iIiIpDQogICAgICAgICBzeXMu
-ZXhpdCgiRkFUQUw6IEludmFsaWQgc2VydmVyIHR5cGUgJyVzJyBzcGVjaWZpZWQuXG4iDQogICAg
-ICAgICAgICAgICAgICAiVmFsaWQgaW50ZXJmYWNlczogeG1scnBjLCBwcm9jZXNzIFtkZWZhdWx0
-XSwgbm9uZS4iICUgc2VydmVydHlwZSkNCg0KLSAgICBpZiBjb25maWd1cmF0aW9uLnNlcnZlcl9v
-bmx5IGFuZCBjb25maWd1cmF0aW9uLnNlcnZlcnR5cGUgIT0gInhtbHJwYyI6DQotICAgICAgICBz
-eXMuZXhpdCgiRkFUQUw6IElmICctLXNlcnZlci1vbmx5JyBpcyBkZWZpbmVkLCB3ZSBtdXN0IHNl
-dCB0aGUgc2VydmVydHlwZSBhcyAneG1scnBjJy5cbiIpDQorICAgIGlmIGNvbmZpZ3VyYXRpb24u
-c2VydmVyX29ubHk6DQorICAgICAgICBpZiBjb25maWd1cmF0aW9uLnNlcnZlcnR5cGUgIT0gInht
-bHJwYyI6DQorICAgICAgICAgICAgc3lzLmV4aXQoIkZBVEFMOiBJZiAnLS1zZXJ2ZXItb25seScg
-aXMgZGVmaW5lZCwgd2UgbXVzdCBzZXQgdGhlIHNlcnZlcnR5cGUgYXMgJ3htbHJwYycuXG4iKQ0K
-KyAgICAgICAgaWYgbm90IGNvbmZpZ3VyYXRpb24uYmluZDoNCisgICAgICAgICAgICBzeXMuZXhp
-dCgiRkFUQUw6IFRoZSAnLS1zZXJ2ZXItb25seScgb3B0aW9uIHJlcXVpcmVzIGEgbmFtZS9hZGRy
-ZXNzIHRvIGJpbmQgdG8gd2l0aCB0aGUgLUIgb3B0aW9uLlxuIikNCisNCisgICAgaWYgY29uZmln
-dXJhdGlvbi5iaW5kIGFuZCBjb25maWd1cmF0aW9uLnNlcnZlcnR5cGUgIT0gInhtbHJwYyI6DQor
-ICAgICAgICBzeXMuZXhpdCgiRkFUQUw6IElmICctQicgb3IgJy0tYmluZCcgaXMgZGVmaW5lZCwg
-d2UgbXVzdCBzZXQgdGhlIHNlcnZlcnR5cGUgYXMgJ3htbHJwYycuXG4iKQ0KDQogICAgICMgU2F2
-ZSBhIGxvZ2ZpbGUgZm9yIGNvb2tlciBpbnRvIHRoZSBjdXJyZW50IHdvcmtpbmcgZGlyZWN0b3J5
-LiBXaGVuIHRoZQ0KICAgICAjIHNlcnZlciBpcyBkYWVtb25pemVkIHRoaXMgbG9nZmlsZSB3aWxs
-IGJlIHRydW5jYXRlZC4NCkBAIC0yMTIsOCArMjIwLDExIEBAIERlZmF1bHQgQkJGSUxFUyBhcmUg
-dGhlIC5iYiBmaWxlcyBpbiB0aGUgY3VycmVudCBkaXJlY3RvcnkuIiIiKQ0KICAgICBiYi51dGls
-cy5jbGVhbl9lbnZpcm9ubWVudCgpDQoNCiAgICAgc2VydmVyID0gc2VydmVyLkJpdEJha2VTZXJ2
-ZXIoKQ0KKyAgICBpZiBjb25maWd1cmF0aW9uLmJpbmQ6DQorICAgICAgICBzZXJ2ZXIuaW5pdFNl
-cnZlcigoY29uZmlndXJhdGlvbi5iaW5kLCAwKSkNCisgICAgZWxzZToNCisgICAgICAgIHNlcnZl
-ci5pbml0U2VydmVyKCkNCg0KLSAgICBzZXJ2ZXIuaW5pdFNlcnZlcigpDQogICAgIGlkbGUgPSBz
-ZXJ2ZXIuZ2V0U2VydmVySWRsZUNCKCkNCg0KICAgICBjb29rZXIgPSBiYi5jb29rZXIuQkJDb29r
-ZXIoY29uZmlndXJhdGlvbiwgaWRsZSwgaW5pdGlhbGVudikNCg0KPiANCj4gQ2hlZXJzLA0KPiAN
-Cj4gUmljaGFyZA0KPiANCg0K
+On Wed, 2012-01-11 at 13:30 +0000, Xu, Dongxiao wrote:
+> > >      # Save a logfile for cooker into the current working directory. When the
+> > >      # server is daemonized this logfile will be truncated.
+> > >      cooker_logfile = os.path.join(os.getcwd(), "cooker.log") @@
+> > > -211,9 +210,15 @@ Default BBFILES are the .bb files in the current
+> > directory.""")
+> > >      # of the UIs (e.g. for DISPLAY, etc.)
+> > >      bb.utils.clean_environment()
+> > >
+> > > -    server = server.BitBakeServer()
+> > > +    if configuration.server_only:
+> > > +        if configuration.servertype != "xmlrpc":
+> > > +            sys.exit("FATAL: If '--server-only' is defined, we must set the
+> > servertype as 'xmlrpc'.\n")
+> > > +        server = server.BitBakeServer()
+> > > +        server.initServer((configuration.bind, 0))
+> > > +    else:
+> > > +        server = server.BitBakeServer()
+> > > +        server.initServer()
+> > 
+> > This looks like it will silently ignore configuration.bind in the non server-only case.
+> > Don't you need something like:
+> > 
+> > 
+> > +    if configuration.server_only:
+> > +        if configuration.servertype != "xmlrpc":
+> > +            sys.exit("FATAL: If '--server-only' is defined, we must set the
+> > servertype as 'xmlrpc'.\n")
+> > +        server = server.BitBakeServer()
+> > +        server.initServer((configuration.bind, 0))
+> > +    elif configuration.bind:
+> > +        server = server.BitBakeServer()
+> > +        server.initServer((configuration.bind, 0))
+> > +    else:
+> > +        server = server.BitBakeServer()
+> > +        server.initServer()
+> > 
+> > ?
+> 
+> I had a thought of this code piece, we may need the following code. For --server-only option, it requires --bind, while not vice versa.
+> 
+> @@ -189,8 +191,14 @@ Default BBFILES are the .bb files in the current directory.""")
+>          sys.exit("FATAL: Invalid server type '%s' specified.\n"
+>                   "Valid interfaces: xmlrpc, process [default], none." % servertype)
+> 
+> -    if configuration.server_only and configuration.servertype != "xmlrpc":
+> -        sys.exit("FATAL: If '--server-only' is defined, we must set the servertype as 'xmlrpc'.\n")
+> +    if configuration.server_only:
+> +        if configuration.servertype != "xmlrpc":
+> +            sys.exit("FATAL: If '--server-only' is defined, we must set the servertype as 'xmlrpc'.\n")
+> +        if not configuration.bind:
+> +            sys.exit("FATAL: The '--server-only' option requires a name/address to bind to with the -B option.\n")
+> +
+> +    if configuration.bind and configuration.servertype != "xmlrpc":
+> +        sys.exit("FATAL: If '-B' or '--bind' is defined, we must set the servertype as 'xmlrpc'.\n")
+
+That looks reasonable to me.
+
+Cheers,
+
+Richard
+
 
 
