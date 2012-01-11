@@ -1,34 +1,24 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1RkzIK-00011v-7k for bitbake-devel@lists.openembedded.org;
-	Wed, 11 Jan 2012 15:36:52 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0BETLYQ024932;
-	Wed, 11 Jan 2012 14:29:21 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 24317-04; Wed, 11 Jan 2012 14:29:17 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0BETAiY024926
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Wed, 11 Jan 2012 14:29:12 GMT
-Message-ID: <1326292152.23315.51.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Xu, Dongxiao" <dongxiao.xu@intel.com>
-Date: Wed, 11 Jan 2012 14:29:12 +0000
-In-Reply-To: <40776A41FC278F40B59438AD47D147A90FCA1A78@SHSMSX102.ccr.corp.intel.com>
-References: <cover.1326249301.git.dongxiao.xu@intel.com>
-	<2b70816adeae4c278747d52654f3184f5e5a15a3.1326249301.git.dongxiao.xu@intel.com>
-	<1326281886.23315.23.camel@ted>
-	<40776A41FC278F40B59438AD47D147A90FCA1A78@SHSMSX102.ccr.corp.intel.com>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 5/8] bitbake: add -B option to bind with interface
+Received: from mga03.intel.com ([143.182.124.21])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1Rl3Ve-0005TC-Lq
+	for bitbake-devel@lists.openembedded.org;
+	Wed, 11 Jan 2012 20:06:54 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 11 Jan 2012 10:30:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="94833017"
+Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.122.95])
+	by azsmga001.ch.intel.com with ESMTP; 11 Jan 2012 10:30:58 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 11 Jan 2012 18:30:51 +0000
+Message-Id: <382b63ffa704ca53d59115cd6777ae90574d141d.1326306561.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.7.5.4
+In-Reply-To: <cover.1326306561.git.paul.eggleton@linux.intel.com>
+References: <cover.1326306561.git.paul.eggleton@linux.intel.com>
+In-Reply-To: <cover.1326306561.git.paul.eggleton@linux.intel.com>
+References: <cover.1326306561.git.paul.eggleton@linux.intel.com>
+Subject: [PATCH 4/4] bitbake/runqueue: avoid "failed" in task summary if nothing did
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -40,71 +30,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 11 Jan 2012 14:36:52 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 11 Jan 2012 19:06:54 -0000
 
-On Wed, 2012-01-11 at 13:30 +0000, Xu, Dongxiao wrote:
-> > >      # Save a logfile for cooker into the current working directory. When the
-> > >      # server is daemonized this logfile will be truncated.
-> > >      cooker_logfile = os.path.join(os.getcwd(), "cooker.log") @@
-> > > -211,9 +210,15 @@ Default BBFILES are the .bb files in the current
-> > directory.""")
-> > >      # of the UIs (e.g. for DISPLAY, etc.)
-> > >      bb.utils.clean_environment()
-> > >
-> > > -    server = server.BitBakeServer()
-> > > +    if configuration.server_only:
-> > > +        if configuration.servertype != "xmlrpc":
-> > > +            sys.exit("FATAL: If '--server-only' is defined, we must set the
-> > servertype as 'xmlrpc'.\n")
-> > > +        server = server.BitBakeServer()
-> > > +        server.initServer((configuration.bind, 0))
-> > > +    else:
-> > > +        server = server.BitBakeServer()
-> > > +        server.initServer()
-> > 
-> > This looks like it will silently ignore configuration.bind in the non server-only case.
-> > Don't you need something like:
-> > 
-> > 
-> > +    if configuration.server_only:
-> > +        if configuration.servertype != "xmlrpc":
-> > +            sys.exit("FATAL: If '--server-only' is defined, we must set the
-> > servertype as 'xmlrpc'.\n")
-> > +        server = server.BitBakeServer()
-> > +        server.initServer((configuration.bind, 0))
-> > +    elif configuration.bind:
-> > +        server = server.BitBakeServer()
-> > +        server.initServer((configuration.bind, 0))
-> > +    else:
-> > +        server = server.BitBakeServer()
-> > +        server.initServer()
-> > 
-> > ?
-> 
-> I had a thought of this code piece, we may need the following code. For --server-only option, it requires --bind, while not vice versa.
-> 
-> @@ -189,8 +191,14 @@ Default BBFILES are the .bb files in the current directory.""")
->          sys.exit("FATAL: Invalid server type '%s' specified.\n"
->                   "Valid interfaces: xmlrpc, process [default], none." % servertype)
-> 
-> -    if configuration.server_only and configuration.servertype != "xmlrpc":
-> -        sys.exit("FATAL: If '--server-only' is defined, we must set the servertype as 'xmlrpc'.\n")
-> +    if configuration.server_only:
-> +        if configuration.servertype != "xmlrpc":
-> +            sys.exit("FATAL: If '--server-only' is defined, we must set the servertype as 'xmlrpc'.\n")
-> +        if not configuration.bind:
-> +            sys.exit("FATAL: The '--server-only' option requires a name/address to bind to with the -B option.\n")
-> +
-> +    if configuration.bind and configuration.servertype != "xmlrpc":
-> +        sys.exit("FATAL: If '-B' or '--bind' is defined, we must set the servertype as 'xmlrpc'.\n")
+Seeing the word "failed" alone without reading the whole context has
+occasionally triggered an automatic assumption on the part of some users
+(myself included) that something has gone wrong, even when this message
+is telling you that "0 [tasks] failed". To avoid this let's just say
+"all succeeded" in this case instead.
 
-That looks reasonable to me.
+As a bonus this means you can now search the output for "fail" and not
+find anything if all went well.
 
-Cheers,
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+---
+ bitbake/lib/bb/runqueue.py |    6 +++++-
+ 1 files changed, 5 insertions(+), 1 deletions(-)
 
-Richard
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 86744fb..054d36c 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -968,7 +968,11 @@ class RunQueue:
+ 
+         if self.state is runQueueComplete:
+             # All done
+-            logger.info("Tasks Summary: Attempted %d tasks of which %d didn't need to be rerun and %d failed.", self.rqexe.stats.completed, self.rqexe.stats.skipped, self.rqexe.stats.failed)
++            if self.rqexe.stats.failed:
++                logger.info("Tasks Summary: Attempted %d tasks of which %d didn't need to be rerun and %d failed.", self.rqexe.stats.completed, self.rqexe.stats.skipped, self.rqexe.stats.failed)
++            else:
++                # Let's avoid the word "failed" if nothing actually did
++                logger.info("Tasks Summary: Attempted %d tasks of which %d didn't need to be rerun and all succeeded.", self.rqexe.stats.completed, self.rqexe.stats.skipped)
+             return False
+ 
+         if self.state is runQueueChildProcess:
+-- 
+1.7.5.4
 
 
 
