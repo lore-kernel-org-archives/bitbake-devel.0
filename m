@@ -1,30 +1,31 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1Rkvgl-00044T-4l for bitbake-devel@lists.openembedded.org;
-	Wed, 11 Jan 2012 11:45:51 +0100
+	id 1RkwYk-0005Sg-Rv for bitbake-devel@lists.openembedded.org;
+	Wed, 11 Jan 2012 12:41:39 +0100
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0BAcKrc022800;
-	Wed, 11 Jan 2012 10:38:20 GMT
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0BBY84j023301;
+	Wed, 11 Jan 2012 11:34:08 GMT
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 21682-08; Wed, 11 Jan 2012 10:38:16 +0000 (GMT)
+	id 22821-03; Wed, 11 Jan 2012 11:34:04 +0000 (GMT)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0BAc9ox022794
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0BBY0Yt023294
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Wed, 11 Jan 2012 10:38:10 GMT
-Message-ID: <1326278291.23315.15.camel@ted>
+	Wed, 11 Jan 2012 11:34:01 GMT
+Message-ID: <1326281642.23315.21.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Lianhao Lu <lianhao.lu@intel.com>
-Date: Wed, 11 Jan 2012 10:38:11 +0000
-In-Reply-To: <cover.1326175837.git.lianhao.lu@intel.com>
-References: <cover.1326175837.git.lianhao.lu@intel.com>
+To: Dongxiao Xu <dongxiao.xu@intel.com>
+Date: Wed, 11 Jan 2012 11:34:02 +0000
+In-Reply-To: <d628d53679aa12f5803d0bbf30aa21ed3bc4779d.1326249301.git.dongxiao.xu@intel.com>
+References: <cover.1326249301.git.dongxiao.xu@intel.com>
+	<d628d53679aa12f5803d0bbf30aa21ed3bc4779d.1326249301.git.dongxiao.xu@intel.com>
 X-Mailer: Evolution 3.2.2- 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PRService/bitbake V2 0/2] new PRService features in bitbake
+Subject: Re: [PATCH 7/8] command.py: add new command to get the CPU info
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,50 +37,121 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 11 Jan 2012 10:45:51 -0000
+X-List-Received-Date: Wed, 11 Jan 2012 11:41:39 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2012-01-10 at 14:13 +0800, Lianhao Lu wrote:
-> V2: rebase to latest code
+On Wed, 2012-01-11 at 11:03 +0800, Dongxiao Xu wrote:
+> Add new API in command.py to get the CPU core and threads information
+> in order to set the appropriate BB_NUMBER_THREADS and PARALLEL_MAKE
+> variables.
 > 
-> NOTE: This set of patches added supporting for new features in bitbake.
-> It should work together with another branch of patches in meta layers.
->     git://git.pokylinux.org/poky-contrib llu/PRService_oecore
+> Signed-off-by: Shane Wang <shane.wang@intel.com>
+> ---
+>  bitbake/lib/bb/helper.py |   39 +++++++++++++++++++++++++++++++++++++++
+>  lib/bb/command.py        |   12 ++++++++++++
+>  2 files changed, 51 insertions(+), 0 deletions(-)
+>  create mode 100644 bitbake/lib/bb/helper.py
 > 
-> It added PRService's export/import support in bitbake and also added a 
-> no history mode as the default mode for PRSerivce. In this mode, the 
-> AUTOPR value(which will be included in the finale PKGR) returned by 
-> the PRService will never decrement. It also added PACKAGE_ARCH into 
-> the index to the DB table, so the packages for different architcture 
-> will have different AUTOPR values.
-> 
-> The PRService can be started in 2 ways. If the user wants share the 
-> PRService for multiple buildings, it can start the PRService in the old
-> way, by running "bitbake-prserv --start [options]", and set PRSERV_HOST 
-> and PRSERV_PORT in local.conf accordingly.
-> 
-> If the user only wants the PRService to be used by current build, a local
-> service may be started automatically by setting PRSERV_HOST to "localhost"
-> and PRSERV_PORT to "0". This automatically started local service will only
-> be effective to the builds running in the same build directory.
-> 
-> The following changes since commit 468998cddbe1a803096c9b357e1b5daa3b7e8c2e:
->   Dongxiao Xu (1):
->         command.py: add parseConfigurationFiles API
-> 
-> are available in the git repository at:
-> 
->   git://git.pokylinux.org/poky-contrib llu/PRService_bitbake
->   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=llu/PRService_bitbake
-> 
-> Lianhao Lu (2):
->   bitbake/PRservice: Added no_hist mode and export/import.
->   bitbake: Automatically start local PR service.
+> diff --git a/bitbake/lib/bb/helper.py b/bitbake/lib/bb/helper.py
+> new file mode 100644
+> index 0000000..291158b
+> --- /dev/null
+> +++ b/bitbake/lib/bb/helper.py
+> @@ -0,0 +1,39 @@
+> +#
+> +# Helper for BitBake Graphical GTK User Interface
+> +#
+> +# Copyright (C) 2011        Intel Corporation
+> +#
+> +# Authored by Shane Wang <shane.wang@intel.com>
+> +#
+> +# This program is free software; you can redistribute it and/or modify
+> +# it under the terms of the GNU General Public License version 2 as
+> +# published by the Free Software Foundation.
+> +#
+> +# This program is distributed in the hope that it will be useful,
+> +# but WITHOUT ANY WARRANTY; without even the implied warranty of
+> +# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> +# GNU General Public License for more details.
+> +#
+> +# You should have received a copy of the GNU General Public License along
+> +# with this program; if not, write to the Free Software Foundation, Inc.,
+> +# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+> +
+> +import os
+> +
+> +class CpuInfo(object):
+> +
+> +    coefficient = 4
 
-Merged to master, thanks.
+This is setting off alarm bells...
+
+> +    @classmethod
+> +    def getNumOfCpus(cls):
+> +        pfile = os.popen('cat /proc/cpuinfo | grep cpu\ cores')
+> +        num = len(pfile.readlines())
+> +        return num
+
+You can get this number with something like:
+
+import multiprocessing
+multiprocessing.cpu_count()
+
+> +    @classmethod
+> +    def getNumOfCpuCores(cls):
+> +        pfile = os.popen('cat /proc/cpuinfo | grep cpu\ cores | cut -d: -f2')
+> +        contents = pfile.readlines()
+> +        num = int(contents[0])
+> +        return num
+
+I'm curious what you're using the number of cores to do? It doesn't seem
+used by your code?
+
+
+> diff --git a/lib/bb/command.py b/lib/bb/command.py
+> index 05555c5..eaf8236 100644
+> --- a/lib/bb/command.py
+> +++ b/lib/bb/command.py
+> @@ -30,6 +30,7 @@ Commands are queued in a CommandQueue
+>  
+>  import bb.event
+>  import bb.cooker
+> +import bb.helper
+>  
+>  class CommandCompleted(bb.event.Event):
+>      pass
+> @@ -173,6 +174,17 @@ class CommandsSync:
+>          """
+>          command.cooker.reset()
+>  
+> +    def getDefaultNumOfThreads(self, command, params):
+> +        """
+> +        Get the default number of threads on the server = number of CPUs
+> +        """
+> +        return bb.helper.CpuInfo.getNumOfCpus()
+> +
+> +    def getMaxNumOfThreads(self, command, params):
+> +        """
+> +        Get the max number of threads that the server can tolerate
+> +        """
+> +        return bb.helper.CpuInfo.getNumOfCpus() * bb.helper.CpuInfo.coefficient
+>  
+
+I can understand needing to query the number of cpus but this last
+function seems rather arbitrary. If you want to do bounds checking, I'd
+suggest just adding the factor of 4 into the UI. I'm still not convinced
+we should be setting any value for this though, or doing any bounds
+checking on the value.
+
+
+My only other comment would be to use bb.utils instead of creating a
+bb.helper.
+
+Cheers,
 
 Richard
+
 
 
 
