@@ -1,35 +1,24 @@
-Received: from mail-qw0-f47.google.com ([209.85.216.47])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1Rkhtm-0001mf-KU
+	(envelope-from <dongxiao.xu@intel.com>) id 1RkoYO-0005XE-46
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 10 Jan 2012 21:02:22 +0100
-Received: by qadb17 with SMTP id b17so1974906qad.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Jan 2012 11:54:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
-	h=mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type
-	:content-transfer-encoding;
-	bh=/nvr6vPW+NXKNtJBbQRdPvvWOUTiL4hKWTkBS1KltSE=;
-	b=WC0WDp+JcWqVJ5a0oKLtz+cMgbGuYFL9IrUEsR94niL1VM0er5M6RYD/No29fR+mcq
-	XOt5IFGejnszspBHKjucy29nuUFLD9unW4B1ZRYLrZQ1jaAkxXnaEARn2tUb9u0Vp5yN
-	sOUsdOqgtq1v59NK3Kr6Bp5GeV62RI4Dbemk0=
-Received: by 10.224.175.2 with SMTP id v2mr26676353qaz.69.1326225293369; Tue,
-	10 Jan 2012 11:54:53 -0800 (PST)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.229.187.141 with HTTP; Tue, 10 Jan 2012 11:54:31 -0800 (PST)
-In-Reply-To: <1326217869.23315.5.camel@ted>
-References: <cover.1326199289.git.liezhi.yang@windriver.com>
-	<bb164b343a162cee39a0ba2f76a7ffb906bc5381.1326199289.git.liezhi.yang@windriver.com>
-	<1326217869.23315.5.camel@ted>
-From: Chris Larson <clarson@kergoth.com>
-Date: Tue, 10 Jan 2012 12:54:31 -0700
-X-Google-Sender-Auth: RKUrUil-TpLZvuZNhtSVcYxg67I
-Message-ID: <CABcZANk8VKTJai7XMKCf=xUh-Sbr_VJqZEK0zAvfNMP_8CdYbg@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/2] V2 Disk space monitoring
+	Wed, 11 Jan 2012 04:08:44 +0100
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 10 Jan 2012 19:01:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="96814220"
+Received: from dongxiao-desktop.sh.intel.com (HELO localhost) ([10.239.36.108])
+	by orsmga002.jf.intel.com with ESMTP; 10 Jan 2012 19:01:12 -0800
+From: Dongxiao Xu <dongxiao.xu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 11 Jan 2012 11:03:20 +0800
+Message-Id: <86f7ecf07932207f53d1dc09bf44f76c1b0e1ba7.1326249301.git.dongxiao.xu@intel.com>
+X-Mailer: git-send-email 1.7.0.4
+In-Reply-To: <cover.1326249301.git.dongxiao.xu@intel.com>
+References: <cover.1326249301.git.dongxiao.xu@intel.com>
+In-Reply-To: <cover.1326249301.git.dongxiao.xu@intel.com>
+References: <cover.1326249301.git.dongxiao.xu@intel.com>
+Subject: [PATCH 1/8] cache: Use configuration's hash value to validate cache
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -41,34 +30,191 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Jan 2012 20:02:22 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Wed, 11 Jan 2012 03:08:44 -0000
 
-On Tue, Jan 10, 2012 at 10:51 AM, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
-> On Tue, 2012-01-10 at 20:45 +0800, Robert Yang wrote:
->> * Problems:
->>
->> =C2=A0 1) The disk space monitor is running in a sub process of
->> =C2=A0 =C2=A0 =C2=A0bin/bitbake, so it can't use the same logger as bitb=
-ake(or I don't
->> =C2=A0 =C2=A0 =C2=A0know how to use it, I've tried to use the logger.war=
-n('some
->> =C2=A0 =C2=A0 =C2=A0information'), but it would print nothing in the sub=
-process),
->> =C2=A0 =C2=A0 =C2=A0another solution maybe use an independent logger in =
-the subprocess,
->> =C2=A0 =C2=A0 =C2=A0but it seems that it doesn't worth because of the tw=
-o reasons:
->> =C2=A0 =C2=A0 =C2=A0a) The logger of bin/bitbake can't control the monit=
-or's
->> =C2=A0 =C2=A0 =C2=A0 =C2=A0 independent logger
+Previously we use the file time stamp to judge if a cache is valid.
+Here this commit introduce a new method, which calculates the total
+hash value for a certain configuration's key/value paris, and tag
+it into cache filename, for example, bb_cache.dat.xxxyyyzzz.
 
-If the monitor spawns from the bitbake server process, then it can
-send log messages to the standard bitbake UI process, and it wouldn't
-need its own log handling.
---=20
-Christopher Larson
+This mechanism also ensures the cache's correctness if user
+dynamically setting variables from some frontend GUI, like HOB.
+
+Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+---
+ lib/bb/cache.py      |   32 ++++++++++++--------------------
+ lib/bb/cooker.py     |    4 +++-
+ lib/bb/data_smart.py |   21 +++++++++++++++++++++
+ 3 files changed, 36 insertions(+), 21 deletions(-)
+
+diff --git a/lib/bb/cache.py b/lib/bb/cache.py
+index 6b7fa6f..955b6df 100644
+--- a/lib/bb/cache.py
++++ b/lib/bb/cache.py
+@@ -42,10 +42,10 @@ except ImportError:
+     logger.info("Importing cPickle failed. "
+                 "Falling back to a very slow implementation.")
+ 
+-__cache_version__ = "142"
++__cache_version__ = "143"
+ 
+-def getCacheFile(path, filename):
+-    return os.path.join(path, filename)
++def getCacheFile(path, filename, data_hash):
++    return os.path.join(path, filename + "." + data_hash)
+ 
+ # RecipeInfoCommon defines common data retrieving methods
+ # from meta data for caches. CoreRecipeInfo as well as other
+@@ -254,7 +254,7 @@ class Cache(object):
+     BitBake Cache implementation
+     """
+ 
+-    def __init__(self, data, caches_array):
++    def __init__(self, data, data_hash, caches_array):
+         # Pass caches_array information into Cache Constructor
+         # It will be used in later for deciding whether we 
+         # need extra cache file dump/load support 
+@@ -266,6 +266,7 @@ class Cache(object):
+         self.data = None
+         self.data_fn = None
+         self.cacheclean = True
++        self.data_hash = data_hash
+ 
+         if self.cachedir in [None, '']:
+             self.has_cache = False
+@@ -274,26 +275,17 @@ class Cache(object):
+             return
+ 
+         self.has_cache = True
+-        self.cachefile = getCacheFile(self.cachedir, "bb_cache.dat")
++        self.cachefile = getCacheFile(self.cachedir, "bb_cache.dat", self.data_hash)
+ 
+         logger.debug(1, "Using cache in '%s'", self.cachedir)
+         bb.utils.mkdirhier(self.cachedir)
+ 
+-        # If any of configuration.data's dependencies are newer than the
+-        # cache there isn't even any point in loading it...
+-        newest_mtime = 0
+-        deps = data.getVar("__base_depends")
+-
+-        old_mtimes = [old_mtime for _, old_mtime in deps]
+-        old_mtimes.append(newest_mtime)
+-        newest_mtime = max(old_mtimes)
+-
+         cache_ok = True
+         if self.caches_array:
+             for cache_class in self.caches_array:
+                 if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
+-                    cachefile = getCacheFile(self.cachedir, cache_class.cachefile)
+-                    cache_ok = cache_ok and (bb.parse.cached_mtime_noerror(cachefile) >= newest_mtime)
++                    cachefile = getCacheFile(self.cachedir, cache_class.cachefile, self.data_hash)
++                    cache_ok = cache_ok and os.path.exists(cachefile)
+                     cache_class.init_cacheData(self)
+         if cache_ok:
+             self.load_cachefile()
+@@ -327,7 +319,7 @@ class Cache(object):
+         # Calculate the correct cachesize of all those cache files
+         for cache_class in self.caches_array:
+             if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
+-                cachefile = getCacheFile(self.cachedir, cache_class.cachefile)
++                cachefile = getCacheFile(self.cachedir, cache_class.cachefile, self.data_hash)
+                 with open(cachefile, "rb") as cachefile:
+                     cachesize += os.fstat(cachefile.fileno()).st_size
+ 
+@@ -335,7 +327,7 @@ class Cache(object):
+         
+         for cache_class in self.caches_array:
+             if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
+-                cachefile = getCacheFile(self.cachedir, cache_class.cachefile)
++                cachefile = getCacheFile(self.cachedir, cache_class.cachefile, self.data_hash)
+                 with open(cachefile, "rb") as cachefile:
+                     pickled = pickle.Unpickler(cachefile)                    
+                     while cachefile:
+@@ -588,7 +580,7 @@ class Cache(object):
+         for cache_class in self.caches_array:
+             if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
+                 cache_class_name = cache_class.__name__
+-                cachefile = getCacheFile(self.cachedir, cache_class.cachefile)
++                cachefile = getCacheFile(self.cachedir, cache_class.cachefile, self.data_hash)
+                 file_dict[cache_class_name] = open(cachefile, "wb")
+                 pickler_dict[cache_class_name] =  pickle.Pickler(file_dict[cache_class_name], pickle.HIGHEST_PROTOCOL)
+                    
+@@ -693,7 +685,7 @@ def init(cooker):
+     Files causing parsing errors are evicted from the cache.
+ 
+     """
+-    return Cache(cooker.configuration.data)
++    return Cache(cooker.configuration.data, cooker.configuration.data_hash)
+ 
+ 
+ class CacheData(object):
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 2032718..9f5db92 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -857,6 +857,7 @@ class BBCooker:
+         bb.parse.init_parser(data)
+         bb.event.fire(bb.event.ConfigParsed(), data)
+         self.configuration.data = data
++        self.configuration.data_hash = data.get_hash()
+ 
+     def handleCollections( self, collections ):
+         """Handle collections"""
+@@ -1428,6 +1429,7 @@ class CookerParser(object):
+         self.filelist = filelist
+         self.cooker = cooker
+         self.cfgdata = cooker.configuration.data
++        self.cfghash = cooker.configuration.data_hash
+ 
+         # Accounting statistics
+         self.parsed = 0
+@@ -1443,7 +1445,7 @@ class CookerParser(object):
+         self.num_processes = int(self.cfgdata.getVar("BB_NUMBER_PARSE_THREADS", True) or
+                                  multiprocessing.cpu_count())
+ 
+-        self.bb_cache = bb.cache.Cache(self.cfgdata, cooker.caches_array)
++        self.bb_cache = bb.cache.Cache(self.cfgdata, self.cfghash, cooker.caches_array)
+         self.fromcache = []
+         self.willparse = []
+         for filename in self.filelist:
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index ea13478..9864034 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -31,6 +31,7 @@ BitBake build tools.
+ import copy, re
+ from collections import MutableMapping
+ import logging
++import hashlib
+ import bb, bb.codeparser
+ from bb   import utils
+ from bb.COW  import COWDictBase
+@@ -459,3 +460,23 @@ class DataSmart(MutableMapping):
+ 
+     def __delitem__(self, var):
+         self.delVar(var)
++
++    def get_hash(self):
++        data = ""
++        keys = iter(self)
++        for key in keys:
++            if key == "TIME":
++                continue
++            if key == "__depends":
++                deps = list(self.getVar(key, False))
++                deps.sort()
++                value = [deps[i][0] for i in range(len(deps))]
++            elif key == "PATH":
++                path = list(set(self.getVar(key, False).split(':')))
++                path.sort()
++                value = " ".join(path)
++            else:
++                value = self.getVar(key, False) or ""
++            data = data + key + ': ' + str(value) + '\n'
++
++        return hashlib.md5(data).hexdigest()
+-- 
+1.7.0.4
+
 
 
