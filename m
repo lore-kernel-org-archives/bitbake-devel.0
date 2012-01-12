@@ -1,20 +1,24 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1Rl3Vi-0005TC-1x
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1RlMy4-0007ey-Ix
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 11 Jan 2012 20:06:58 +0100
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 11 Jan 2012 10:30:54 -0800
+	Thu, 12 Jan 2012 16:53:32 +0100
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 12 Jan 2012 07:45:36 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="94832993"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.122.95])
-	by azsmga001.ch.intel.com with ESMTP; 11 Jan 2012 10:30:54 -0800
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="95731261"
+Received: from unknown (HELO helios.localnet) ([10.252.122.120])
+	by orsmga001.jf.intel.com with ESMTP; 12 Jan 2012 07:45:35 -0800
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 11 Jan 2012 18:30:47 +0000
-Message-Id: <cover.1326306561.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.7.5.4
-Subject: [PATCH 0/4] Minor improvements to error messages
+Date: Thu, 12 Jan 2012 15:45:33 +0000
+Message-ID: <8672969.hHGhlV3Ib1@helios>
+Organization: Intel Corporation
+User-Agent: KMail/4.7.3 (Linux/3.0.0-14-generic-pae; KDE/4.7.4; i686; ; )
+In-Reply-To: <cover.1326306561.git.paul.eggleton@linux.intel.com>
+References: <cover.1326306561.git.paul.eggleton@linux.intel.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 0/4] Minor improvements to error messages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,30 +30,23 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 11 Jan 2012 19:06:58 -0000
+X-List-Received-Date: Thu, 12 Jan 2012 15:53:32 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-A few minor improvements to error output. I'm still working on some
-deeper improvements but these are ready to go in immediately.
+On Wednesday 11 January 2012 18:30:47 Paul Eggleton wrote:
+> A few minor improvements to error output. I'm still working on some
+> deeper improvements but these are ready to go in immediately.
 
-The patches (against Poky, but apply cleanly with -p2 against bitbake
-master) are available in the git repository at:
-  git://git.yoctoproject.org/poky-contrib paule/errorhandling1
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/errorhandling1
+Spoke a little too soon, I'd prefer to merge one of these patches into another 
+I've been working on so please ignore this series.
 
-Paul Eggleton (4):
-  bitbake/knotty: don't count errors as warnings
-  bitbake: improve error formatting for fetcher errors
-  bitbake: make warning for initial fetch failure one line
-  bitbake/runqueue: avoid "failed" in task summary if nothing did
-
- bitbake/lib/bb/build.py           |    2 +-
- bitbake/lib/bb/fetch2/__init__.py |   10 +++++++---
- bitbake/lib/bb/runqueue.py        |    6 +++++-
- bitbake/lib/bb/ui/knotty.py       |    2 +-
- 4 files changed, 14 insertions(+), 6 deletions(-)
+Thanks,
+Paul
 
 -- 
-1.7.5.4
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
 
