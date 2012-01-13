@@ -1,46 +1,20 @@
-Received: from ch1ehsobe005.messaging.microsoft.com ([216.32.181.185]
-	helo=ch1outboundpool.messaging.microsoft.com)
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <B29882@freescale.com>) id 1RlUvf-0001Km-4T
+	(envelope-from <dongxiao.xu@intel.com>) id 1Rlcc6-0002P7-3w
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 13 Jan 2012 01:23:35 +0100
-Received: from mail113-ch1-R.bigfish.com (10.43.68.243) by
-	CH1EHSOBE010.bigfish.com (10.43.70.60) with Microsoft SMTP Server id
-	14.1.225.23; Thu, 12 Jan 2012 23:09:03 +0000
-Received: from mail113-ch1 (localhost [127.0.0.1])	by
-	mail113-ch1-R.bigfish.com (Postfix) with ESMTP id BE88D62043D	for
-	<bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Jan 2012 23:09:03 +0000 (UTC)
-X-SpamScore: 3
-X-BigFish: VS3(zzzz1202h1082kzz8275bh8275dhz2dhc1ahc1bh2a8h668h839h)
-X-Forefront-Antispam-Report: CIP:70.37.183.190; KIP:(null); UIP:(null); IPV:NLI;
-	H:mail.freescale.net; RD:none; EFVD:NLI
-X-FB-SS: 13,
-Received: from mail113-ch1 (localhost.localdomain [127.0.0.1]) by mail113-ch1
-	(MessageSwitch) id 1326409743604715_13181;
-	Thu, 12 Jan 2012 23:09:03 +0000 (UTC)
-Received: from CH1EHSMHS001.bigfish.com (snatpool1.int.messaging.microsoft.com
-	[10.43.68.245])	by mail113-ch1.bigfish.com (Postfix) with ESMTP id
-	8558C240082	for <bitbake-devel@lists.openembedded.org>; Thu, 12 Jan 2012
-	23:09:03 +0000 (UTC)
-Received: from mail.freescale.net (70.37.183.190) by CH1EHSMHS001.bigfish.com
-	(10.43.70.1) with Microsoft SMTP Server (TLS) id 14.1.225.23;
-	Thu, 12 Jan 2012 23:09:03 +0000
-Received: from az33smr01.freescale.net (10.64.34.199) by
-	039-SN1MMR1-001.039d.mgd.msft.net (10.84.1.13) with Microsoft SMTP
-	Server id 14.1.355.3; Thu, 12 Jan 2012 17:09:02 -0600
-Received: from right.am.freescale.net (right.am.freescale.net [10.82.193.13])
-	by az33smr01.freescale.net (8.13.1/8.13.0) with ESMTP id
-	q0CN915a007275	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Jan 2012 17:09:01 -0600 (CST)
-From: Matthew McClintock <msm@freescale.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 12 Jan 2012 17:09:01 -0600
-Message-ID: <1326409741-17390-1-git-send-email-msm@freescale.com>
-X-Mailer: git-send-email 1.7.6.1
-MIME-Version: 1.0
-X-OriginatorOrg: freescale.com
-Subject: [PATCH] bitbake/fetch2: add support for wrapper command
+	Fri, 13 Jan 2012 09:35:54 +0100
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 13 Jan 2012 00:28:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="106715918"
+Received: from dongxiao-desktop.sh.intel.com (HELO localhost) ([10.239.36.108])
+	by fmsmga001.fm.intel.com with ESMTP; 13 Jan 2012 00:28:20 -0800
+From: Dongxiao Xu <dongxiao.xu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 13 Jan 2012 16:30:34 +0800
+Message-Id: <cover.1326442655.git.dongxiao.xu@intel.com>
+X-Mailer: git-send-email 1.7.0.4
+Subject: [PATCH 0/9 v3][PULL] Hob: bitbake related changes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -52,31 +26,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 13 Jan 2012 00:23:35 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 13 Jan 2012 08:35:54 -0000
 
-cc: bitbake-devel@lists.openembedded.org
-Signed-off-by: Matthew McClintock <msm@freescale.com>
----
- lib/bb/fetch2/__init__.py |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+Hi Richard,
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 3af56e5..1d7d5c7 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -389,6 +389,8 @@ def runfetchcmd(cmd, d, quiet = False, cleanup = []):
-     Optionally remove the files/directories listed in cleanup upon failure
-     """
- 
-+    cmd = "%s %s" % (bb.data.getVar("BB_FETCH_WRAPPER", d, True), cmd)
-+
-     # Need to export PATH as binary could be in metadata paths
-     # rather than host provided
-     # Also include some other variables.
--- 
-1.7.6.1
+This is the third pull request for Hob bitbake related changes.
 
+Please help to review and pull.
+
+Changes from v2:
+1. Fix parameter checking issue on --bind and --server-only.
+2. Add a new command triggerEvent(), which enables the client to request triggering specific event from bitbake server.
+3. Add a specific event 'RequestPackageInfo' to get available package information.
+4. Change the way to get the CPU information on server side.
+
+Thanks,
+Dongxiao
+
+The following changes since commit 9d8f45407c67ed0d3c4f820cf646de3c385067c7:
+  Lianhao Lu (1):
+        bitbake: Automatically start local PR service.
+
+are available in the git repository at:
+
+  git://git.pokylinux.org/poky-contrib dxu4/hob-bitbake-changes-v3
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob-bitbake-changes-v3
+
+Dongxiao Xu (7):
+  cache: Use configuration's hash value to validate cache
+  command.py: add resolve option for generateTargetsTree API
+  event.py: Add new events RequestPackageInfo and PackageInfo
+  bitbake: add -B option to bind with interface
+  bitbake: Add client socket info for BitBakeServerConnection
+  command.py: Add a new API triggerEvent()
+  runqueue: fire sceneQueueTaskStarted event when a setscene queue
+    starts
+
+Shane Wang (2):
+  bitbake: change for adding progress bar in Hob2.
+  command.py: add new API to get the cpu count on the server
+
+ bin/bitbake             |   17 +++++++-
+ lib/bb/cache.py         |   34 ++++++----------
+ lib/bb/command.py       |   23 ++++++++++-
+ lib/bb/cooker.py        |   74 ++++++++++++++++++++++++++++--------
+ lib/bb/data_smart.py    |   21 ++++++++++
+ lib/bb/event.py         |   96 +++++++++++++++++++++++++++++++++++-----------
+ lib/bb/runqueue.py      |   10 +++++
+ lib/bb/server/xmlrpc.py |   10 ++--
+ lib/bb/ui/knotty.py     |    5 ++-
+ lib/bb/ui/uievent.py    |    7 ++-
+ lib/bb/utils.py         |    4 ++
+ 11 files changed, 227 insertions(+), 74 deletions(-)
 
 
 
