@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RmN5w-00084t-TT
+	(envelope-from <git@git.openembedded.org>) id 1RmN5w-00084v-UO
 	for bitbake-devel@lists.openembedded.org;
 	Sun, 15 Jan 2012 11:13:49 +0100
 Received: by opal (Postfix, from userid 111)
-	id 151B41033F; Sun, 15 Jan 2012 10:15:11 +0000 (UTC)
+	id BC50E10339; Sun, 15 Jan 2012 10:15:10 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20120115101511.151B41033F@opal>
-Date: Sun, 15 Jan 2012 10:15:11 +0000 (UTC)
+Message-Id: <20120115101510.BC50E10339@opal>
+Date: Sun, 15 Jan 2012 10:15:10 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Paul Eggleton : bitbake/knotty: avoid printing full task log when error already printed
+Subject: Paul Eggleton : bitbake/fetch2: improve error formatting for fetcher errors
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,102 +26,82 @@ Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: b9746b7e4d7aa5c34eba15a61427bfc6949af123
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=b9746b7e4d7aa5c34eba15a61427bfc6949af123
+Commit: 86811bd85e2e453ee92a05fe60160d9b49ac69e8
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=86811bd85e2e453ee92a05fe60160d9b49ac69e8
 
 Author: Paul Eggleton <paul.eggleton@linux.intel.com>
-Date:   Fri Jan 13 17:01:49 2012 +0000
+Date:   Fri Jan 13 17:01:46 2012 +0000
 
-bitbake/knotty: avoid printing full task log when error already printed
+bitbake/fetch2: improve error formatting for fetcher errors
 
-If a task has logged an ERROR then don't print the contents of the
-task's log file in knotty (the default terminal UI).
-
-As a side-effect we now also respect BBINCLUDELOGS in knotty; if it is
-false we never print the log (but the pointer to the log file is always
-printed).
+* The "name" argument to FuncFailed is rarely used as a name in actual
+  usage within bitbake, so don't treat it as one in the output.
+* Don't print URL for FetchError if it was not specified (i.e. don't
+  output "Fetcher failure for URL 'None'")
+* Don't include URL in "unable to fetch from any source" message since
+  we supply it to FetchError and it will be printed anyway.
+* Don't include URL in "checksum failed" message for the same reason
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 ---
 
- lib/bb/build.py     |   18 +++++++++++++++---
- lib/bb/ui/knotty.py |    2 +-
- 2 files changed, 16 insertions(+), 4 deletions(-)
+ lib/bb/build.py           |    2 +-
+ lib/bb/fetch2/__init__.py |   11 +++++++----
+ 2 files changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 39f075d..e85d7c4 100644
+index a9ce14f..39f075d 100644
 --- a/lib/bb/build.py
 +++ b/lib/bb/build.py
-@@ -91,8 +91,9 @@ class TaskSucceeded(TaskBase):
- class TaskFailed(TaskBase):
-     """Task execution failed"""
- 
--    def __init__(self, task, logfile, metadata):
-+    def __init__(self, task, logfile, metadata, errprinted = False):
+@@ -53,7 +53,7 @@ class FuncFailed(Exception):
          self.logfile = logfile
-+        self.errprinted = errprinted
-         super(TaskFailed, self).__init__(task, metadata)
+         self.name = name
+         if name:
+-            self.msg = "Function '%s' failed" % name
++            self.msg = 'Function failed: %s' % name
+         else:
+             self.msg = "Function failed"
  
- class TaskInvalid(TaskBase):
-@@ -288,6 +289,13 @@ def _exec_task(fn, task, d, quieterr):
-     prefuncs = localdata.getVarFlag(task, 'prefuncs', expand=True)
-     postfuncs = localdata.getVarFlag(task, 'postfuncs', expand=True)
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 3af56e5..21abb13 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -55,7 +55,10 @@ class MalformedUrl(BBFetchException):
+ class FetchError(BBFetchException):
+     """General fetcher exception when something happens incorrectly"""
+     def __init__(self, message, url = None):
+-         msg = "Fetcher failure for URL: '%s'. %s" % (url, message)
++         if url:
++            msg = "Fetcher failure for URL: '%s'. %s" % (url, message)
++         else:
++            msg = "Fetcher failure: %s" % message
+          self.url = url
+          BBFetchException.__init__(self, msg)
+          self.args = (message, url)
+@@ -302,10 +305,10 @@ def verify_checksum(u, ud, d):
+     # it does not match.
+     msg = ""
+     if md5mismatch and ud.md5_expected:
+-        msg = msg + "\nFile: '%s' has %s checksum %s when %s was expected (from URL: '%s')" % (ud.localpath, 'md5', md5data, ud.md5_expected, u)
++        msg = msg + "\nFile: '%s' has %s checksum %s when %s was expected" % (ud.localpath, 'md5', md5data, ud.md5_expected)
  
-+    class ErrorCheckHandler(logging.Handler):
-+        def __init__(self):
-+            self.triggered = False
-+            logging.Handler.__init__(self, logging.ERROR)
-+        def emit(self, record):
-+            self.triggered = True
-+
-     # Handle logfiles
-     si = file('/dev/null', 'r')
-     try:
-@@ -313,6 +321,9 @@ def _exec_task(fn, task, d, quieterr):
-     handler.setLevel(logging.DEBUG - 2)
-     bblogger.addHandler(handler)
+     if sha256mismatch and ud.sha256_expected:
+-        msg = msg + "\nFile: '%s' has %s checksum %s when %s was expected (from URL: '%s')" % (ud.localpath, 'sha256', sha256data, ud.sha256_expected, u)
++        msg = msg + "\nFile: '%s' has %s checksum %s when %s was expected" % (ud.localpath, 'sha256', sha256data, ud.sha256_expected)
  
-+    errchk = ErrorCheckHandler()
-+    bblogger.addHandler(errchk)
-+
-     localdata.setVar('BB_LOGFILE', logfn)
+     if len(msg):
+         raise FetchError('Checksum mismatch!%s' % msg, u)
+@@ -983,7 +986,7 @@ class Fetch(object):
+                         localpath = try_mirrors (self.d, ud, mirrors)
  
-     event.fire(TaskStarted(task, localdata), localdata)
-@@ -324,8 +335,9 @@ def _exec_task(fn, task, d, quieterr):
-             exec_func(func, localdata)
-     except FuncFailed as exc:
-         if not quieterr:
-+            errprinted = errchk.triggered
-             logger.error(str(exc))
--            event.fire(TaskFailed(task, logfn, localdata), localdata)
-+            event.fire(TaskFailed(task, logfn, localdata, errprinted), localdata)
-         return 1
-     finally:
-         sys.stdout.flush()
-@@ -368,7 +380,7 @@ def exec_task(fn, task, d):
-         if not quieterr:
-             logger.error("Build of %s failed" % (task))
-             logger.error(format_exc())
--            failedevent = TaskFailed(task, None, d)
-+            failedevent = TaskFailed(task, None, d, True)
-             event.fire(failedevent, d)
-         return 1
+                 if not localpath or ((not os.path.exists(localpath)) and localpath.find("*") == -1):
+-                    raise FetchError("Unable to fetch URL %s from any source." % u, u)
++                    raise FetchError("Unable to fetch URL from any source.", u)
  
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 5366386..205a8d8 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -142,7 +142,7 @@ def main(server, eventHandler):
-                 logfile = event.logfile
-                 if logfile and os.path.exists(logfile):
-                     print("ERROR: Logfile of failure stored in: %s" % logfile)
--                    if 1 or includelogs:
-+                    if includelogs and not event.errprinted:
-                         print("Log data follows:")
-                         f = open(logfile, "r")
-                         lines = []
+                 update_stamp(u, ud, self.d)
+ 
 
 
 
