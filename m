@@ -1,30 +1,33 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1RmN77-0008CS-00 for bitbake-devel@lists.openembedded.org;
-	Sun, 15 Jan 2012 11:15:01 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0FA7Nuh007188;
-	Sun, 15 Jan 2012 10:07:23 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 05311-10; Sun, 15 Jan 2012 10:07:14 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0FA7B8f007159
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Sun, 15 Jan 2012 10:07:13 GMT
-Message-ID: <1326622036.18815.11.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
-Date: Sun, 15 Jan 2012 10:07:16 +0000
-In-Reply-To: <cover.1326473488.git.paul.eggleton@linux.intel.com>
-References: <cover.1326473488.git.paul.eggleton@linux.intel.com>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
+Received: from mail-qw0-f47.google.com ([209.85.216.47])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <kergoth@gmail.com>) id 1RmSeo-0000BA-PE
+	for bitbake-devel@lists.openembedded.org;
+	Sun, 15 Jan 2012 17:10:11 +0100
+Received: by qap15 with SMTP id 15so1747552qap.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Sun, 15 Jan 2012 08:02:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=mime-version:sender:in-reply-to:references:from:date
+	:x-google-sender-auth:message-id:subject:to:cc:content-type
+	:content-transfer-encoding;
+	bh=YL3EuVNxtuq6jiCgI9c2+ofdAuX8Wu/AzzaYYcjjQm4=;
+	b=THe3MkUc9A2MJMfSXBkglFGCPckwo4lyQwhUu8dOmBDI4TzGpMGhWzr2n3t5GqH73c
+	E92zof6+lo0dg9AX8dkTOKdXA+xh4g+hRxRBsRBi5HMRgrQup2t0sbwbRRRSTYo07AAf
+	S9rgsUMLKzHyvgW69dQicoxunUEbGq9cuLq8k=
+Received: by 10.224.175.2 with SMTP id v2mr10410026qaz.69.1326643355343; Sun,
+	15 Jan 2012 08:02:35 -0800 (PST)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.229.186.149 with HTTP; Sun, 15 Jan 2012 08:02:13 -0800 (PST)
+In-Reply-To: <20120115101510.A4BD610337@opal>
+References: <20120115101510.A4BD610337@opal>
+From: Chris Larson <clarson@kergoth.com>
+Date: Sun, 15 Jan 2012 09:02:13 -0700
+X-Google-Sender-Auth: BgR-WxA5ia04zkbmVhhh6nDAqyE
+Message-ID: <CABcZANm7mK5DHM5cc7AjWU3vOG=9wcnghmWRwe-NKyCdDTsR5g@mail.gmail.com>
+To: git@git.openembedded.org
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/8] Error message improvements
+Subject: Re: Paul Eggleton : bitbake/knotty: don't count errors as warnings in summary
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,38 +39,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 15 Jan 2012 10:15:01 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sun, 15 Jan 2012 16:10:11 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2012-01-13 at 17:01 +0000, Paul Eggleton wrote:
-> A number of fixes to improve the readability of error messages,
-> primarily for fetch errors, but will improve error output in other
-> situations as well.
-> 
-> (This supersedes the set of patches I sent a couple of days ago.)
-> 
-> The changes (against Poky, but apply cleanly with -p2 against bitbake
-> master) are available in the git repository at: 
->   git://git.yoctoproject.org/poky-contrib paule/errorhandling
->   http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/errorhandling
-> 
-> Paul Eggleton (8):
->   bitbake/knotty: don't count errors as warnings in summary
->   bitbake/fetch2: improve error formatting for fetcher errors
->   bitbake/runqueue: avoid "failed" in task summary if nothing did
->   bitbake/fetch2: correctly decode exit signal/status
->   bitbake/knotty: avoid printing full task log when error already
->     printed
->   bitbake/fetch2: reduce output for fetch failures
->   bitbake/cooker: avoid printing stack trace for -b match error
->   bitbake/knotty: print task failure summary
+On Sun, Jan 15, 2012 at 3:15 AM,  <git@git.openembedded.org> wrote:
+> diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+> index 0340619..5366386 100644
+> --- a/lib/bb/ui/knotty.py
+> +++ b/lib/bb/ui/knotty.py
+> @@ -127,7 +127,7 @@ def main(server, eventHandler):
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if event.levelno =
+>=3D format.ERROR:
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 err=
+ors =3D errors + 1
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ret=
+urn_value =3D 1
+> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if event.levelno=
+ >=3D format.WARNING:
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0elif event.level=
+no =3D=3D format.WARNING:
 
-Merged to master, thanks. Some good improvements in there.
-
-Cheers,
-
-Richard
-
+Just as an FYI, this could have remained as >=3D, given the elif fixes
+the error matching issue. It doesn't matter for us, as I don't think
+we have any message levels higher than warning but lower than error,
+but wanted to note it for future reference.
+--=20
+Christopher Larson
 
 
