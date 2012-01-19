@@ -1,26 +1,26 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1RnxtD-0000oV-5O for bitbake-devel@lists.openembedded.org;
-	Thu, 19 Jan 2012 20:43:15 +0100
+	id 1RnxvE-0000sC-Lf for bitbake-devel@lists.openembedded.org;
+	Thu, 19 Jan 2012 20:45:21 +0100
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0JJZZMZ010181
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0JJbebb010197
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Jan 2012 19:35:35 GMT
+	Thu, 19 Jan 2012 19:37:40 GMT
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 09626-05 for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Jan 2012 19:35:31 +0000 (GMT)
+	id 09956-02 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 19 Jan 2012 19:37:32 +0000 (GMT)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0JJZSbe010175
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0JJbTxc010186
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Jan 2012 19:35:30 GMT
-Message-ID: <1327001728.22057.35.camel@ted>
+	Thu, 19 Jan 2012 19:37:30 GMT
+Message-ID: <1327001849.23015.0.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Thu, 19 Jan 2012 19:35:28 +0000
+Date: Thu, 19 Jan 2012 19:37:29 +0000
 X-Mailer: Evolution 3.2.2- 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
@@ -36,13 +36,13 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 19 Jan 2012 19:43:15 -0000
+X-List-Received-Date: Thu, 19 Jan 2012 19:45:21 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-The actual task names are discounted for comparision of dependent tasks, only
-the actual hashes are used. This updates the comparision code to account for
-this change, attemping heuristic matching for more user friendly output but
+The actual task names are discounted for comparison of dependent tasks, only
+the actual hashes are used. This updates the comparison code to account for
+this change, attempting heuristic matching for more user friendly output but
 falling back to showing the changed hashes directly. This avoids some confusing
 output to users where it looked like tasks had changed when they had not and
 actually had the same hash but a different taskname.
