@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RoHko-00049Y-H3
+	(envelope-from <git@git.openembedded.org>) id 1RoHn5-0004Eb-1L
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 20 Jan 2012 17:55:54 +0100
+	Fri, 20 Jan 2012 17:58:16 +0100
 Received: by opal (Postfix, from userid 111)
-	id A6D951033A; Fri, 20 Jan 2012 16:57:48 +0000 (UTC)
+	id 7DF6510335; Fri, 20 Jan 2012 16:50:58 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20120120165748.A6D951033A@opal>
-Date: Fri, 20 Jan 2012 16:57:48 +0000 (UTC)
+Message-Id: <20120120165058.7DF6510335@opal>
+Date: Fri, 20 Jan 2012 16:50:58 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Martin Jansa : prserv: fix import of sqlite3
+Subject: Richard Purdie : siggen: Ensure correct runtask dependency output is shown for diffsigs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -21,56 +21,80 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 20 Jan 2012 16:55:54 -0000
+X-List-Received-Date: Fri, 20 Jan 2012 16:58:16 -0000
 Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: 9a57ec705cf5c932d8c2a35852db7a4627c57937
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=9a57ec705cf5c932d8c2a35852db7a4627c57937
+Commit: 7da7dff83ed765c9cde1d7f91ee1b65e49520481
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=7da7dff83ed765c9cde1d7f91ee1b65e49520481
 
-Author: Martin Jansa <martin.jansa@gmail.com>
-Date:   Sun Jan 15 22:03:53 2012 +0100
+Author: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date:   Thu Jan 19 19:37:29 2012 +0000
 
-prserv: fix import of sqlite3
+siggen: Ensure correct runtask dependency output is shown for diffsigs
 
-* this is used in all other bitbake parts where sqlite3 is used, don't
-  know why it wasn't used here, but it fails e.g. on Gentoo
-  Traceback (most recent call last):
-    File "bin/bitbake", line 39, in <module>
-      from bb import cooker
-    File "lib/bb/cooker.py", line 39, in <module>
-      import prserv.serv
-    File "lib/prserv/serv.py", line 4, in <module>
-      import xmlrpclib,sqlite3
-  ImportError: No module named sqlite3
+The actual task names are discounted for comparison of dependent tasks, only
+the actual hashes are used. This updates the comparison code to account for
+this change, attempting heuristic matching for more user friendly output but
+falling back to showing the changed hashes directly. This avoids some confusing
+output to users where it looked like tasks had changed when they had not and
+actually had the same hash but a different taskname.
 
-Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 ---
 
- lib/prserv/serv.py |    7 ++++++-
- 1 files changed, 6 insertions(+), 1 deletions(-)
+ lib/bb/siggen.py |   36 +++++++++++++++++++++---------------
+ 1 files changed, 21 insertions(+), 15 deletions(-)
 
-diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-index a759fa7..fa437f9 100644
---- a/lib/prserv/serv.py
-+++ b/lib/prserv/serv.py
-@@ -1,7 +1,12 @@
- import os,sys,logging
- import signal, time, atexit, threading
- from SimpleXMLRPCServer import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
--import xmlrpclib,sqlite3
-+import xmlrpclib
-+
-+try:
-+    import sqlite3
-+except ImportError:
-+    from pysqlite2 import dbapi2 as sqlite3
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index 22417b9..d9d0294 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -281,21 +281,27 @@ def compare_sigfiles(a, b):
+             print "Variable %s value changed from %s to %s" % (dep, a_data['varvals'][dep], b_data['varvals'][dep])
  
- import bb.server.xmlrpc
- import prserv
+     if 'runtaskhashes' in a_data and 'runtaskhashes' in b_data:
+-        a = clean_basepaths(a_data['runtaskhashes'])
+-        b = clean_basepaths(b_data['runtaskhashes'])
+-        changed, added, removed = dict_diff(a, b)
+-        if added:
+-            for dep in added:
+-                print "Dependency on task %s was added" % (dep)
+-        if removed:
+-            for dep in removed:
+-                print "Dependency on task %s was removed" % (dep)
+-        if changed:
+-            for dep in changed:
+-                print "Hash for dependent task %s changed from %s to %s" % (dep, a[dep], b[dep])
+-    elif 'runtaskdeps' in a_data and 'runtaskdeps' in b_data and sorted(a_data['runtaskdeps']) != sorted(b_data['runtaskdeps']):
+-        print "Tasks this task depends on changed from %s to %s" % (sorted(a_data['runtaskdeps']), sorted(b_data['runtaskdeps']))
+-        print "changed items: %s" % a_data['runtaskdeps'].symmetric_difference(b_data['runtaskdeps'])
++        if len(a_data['runtaskdeps']) != len(b_data['runtaskdeps']):
++            a = clean_basepaths(a_data['runtaskhashes'])
++            b = clean_basepaths(b_data['runtaskhashes'])
++            changed, added, removed = dict_diff(a, b)
++            if added:
++                for dep in added:
++                    print "Dependency on task %s was added" % (dep)
++            if removed:
++                for dep in removed:
++                    print "Dependency on task %s was removed" % (dep)
++            if changed:
++                for dep in changed:
++                    print "Hash for dependent task %s changed from %s to %s" % (dep, a[dep], b[dep])
++        else:
++            for i in range(len(a_data['runtaskdeps'])):
++                aent = a_data['runtaskdeps'][i]
++                bent = b_data['runtaskdeps'][i]
++                aname = clean_basepath(aent)
++                bname = clean_basepath(bent)
++                if a_data['runtaskhashes'][aent] != b_data['runtaskhashes'][bent]:
++                    print "Task dependency hash changed from %s to %s (for %s and %s)" % (a_data['runtaskhashes'][aent], b_data['runtaskhashes'][bent], aname, bname)
+ 
+ def dump_sigfile(a):
+     p1 = pickle.Unpickler(file(a, "rb"))
 
 
 
