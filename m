@@ -1,15 +1,36 @@
-Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
+Received: from mail-ee0-f47.google.com ([74.125.83.47])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RoHn5-0004Eb-1L
+	(envelope-from <martin.jansa@gmail.com>) id 1RoHxK-0004oZ-0x
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 20 Jan 2012 17:58:16 +0100
-Received: by opal (Postfix, from userid 111)
-	id 7DF6510335; Fri, 20 Jan 2012 16:50:58 +0000 (UTC)
-To: bitbake-devel@lists.openembedded.org
-Message-Id: <20120120165058.7DF6510335@opal>
-Date: Fri, 20 Jan 2012 16:50:58 +0000 (UTC)
-From: git@git.openembedded.org
-Subject: Richard Purdie : siggen: Ensure correct runtask dependency output is shown for diffsigs
+	Fri, 20 Jan 2012 18:08:50 +0100
+Received: by eekd41 with SMTP id d41so244471eek.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 20 Jan 2012 09:01:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-disposition:in-reply-to:user-agent;
+	bh=hB034kChRoyHMeRd8YQuuhhZPypNej5VArmTtAq/G3Y=;
+	b=a2MtDSUlAjEZLhPY8npxHwdISEZzu4vSULSE3n1GQUWXzUu1BSVC2VrV/HivhCUFtW
+	I+9OCnDF/PIIyxoNpZvlSB9PXOfzGmQLZVIUWfB3TIphZMx2lVtgdsEJy/ZXQomCo6Gr
+	vRmq+m2llhinRSHglwcG351ZNnZDO2w0VBhvE=
+Received: by 10.14.123.198 with SMTP id v46mr3603803eeh.79.1327078869003;
+	Fri, 20 Jan 2012 09:01:09 -0800 (PST)
+Received: from localhost ([94.230.152.246])
+	by mx.google.com with ESMTPS id r2sm13615678eef.7.2012.01.20.09.01.07
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Fri, 20 Jan 2012 09:01:07 -0800 (PST)
+Date: Fri, 20 Jan 2012 18:01:06 +0100
+From: Martin Jansa <martin.jansa@gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Message-ID: <20120120170106.GC3645@jama.jama.net>
+References: <1326661433-26379-1-git-send-email-Martin.Jansa@gmail.com>
+	<1326661433-26379-2-git-send-email-Martin.Jansa@gmail.com>
+	<1327077887.4268.18.camel@ted>
+MIME-Version: 1.0
+In-Reply-To: <1327077887.4268.18.camel@ted>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 2/2] prserv: fix import of sqlite3
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -21,80 +42,71 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 20 Jan 2012 16:58:16 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Fri, 20 Jan 2012 17:08:50 -0000
+X-Groupsio-MsgNum: 896
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Km1U/tdNT/EmXiR1"
+Content-Disposition: inline
 
-Module: bitbake.git
-Branch: master
-Commit: 7da7dff83ed765c9cde1d7f91ee1b65e49520481
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=7da7dff83ed765c9cde1d7f91ee1b65e49520481
+--Km1U/tdNT/EmXiR1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Author: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date:   Thu Jan 19 19:37:29 2012 +0000
+On Fri, Jan 20, 2012 at 04:44:47PM +0000, Richard Purdie wrote:
+> On Sun, 2012-01-15 at 22:03 +0100, Martin Jansa wrote:
+> > * this is used in all other bitbake parts where sqlite3 is used, don't
+> >   know why it wasn't used here, but it fails e.g. on Gentoo
+> >   Traceback (most recent call last):
+> >     File "bin/bitbake", line 39, in <module>
+> >       from bb import cooker
+> >     File "lib/bb/cooker.py", line 39, in <module>
+> >       import prserv.serv
+> >     File "lib/prserv/serv.py", line 4, in <module>
+> >       import xmlrpclib,sqlite3
+> >   ImportError: No module named sqlite3
+> >=20
+> > Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+> > ---
+> >  lib/prserv/serv.py |    7 ++++++-
+> >  1 files changed, 6 insertions(+), 1 deletions(-)
+>=20
+> Merged to master along with 1/2.
+>=20
+> Why this is needed I'm not sure since I thought sqlite3 was included in
+> python 2.6 onwards. Since you're running into it and it doesn't hurt
+> anything I've merged it though.
 
-siggen: Ensure correct runtask dependency output is shown for diffsigs
+In gentoo there is USE flag for sqlite support which is off by default,
+so it's easy to get even newer python like 2.7 or 3* without sqlite
+enabled by default and extra package dev-python/pysqlite providing
+alternative.
 
-The actual task names are discounted for comparison of dependent tasks, only
-the actual hashes are used. This updates the comparison code to account for
-this change, attempting heuristic matching for more user friendly output but
-falling back to showing the changed hashes directly. This avoids some confusing
-output to users where it looked like tasks had changed when they had not and
-actually had the same hash but a different taskname.
+I guess correct fix would be to change bitbake .ebuild to depend on
+python with sqlite USE flag enabled, but as it was catched and fixed in
+other places in bitbake code I've added it here too.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cheers,
 
----
+>=20
+> Cheers,
+>=20
+> Richard
+>=20
 
- lib/bb/siggen.py |   36 +++++++++++++++++++++---------------
- 1 files changed, 21 insertions(+), 15 deletions(-)
+--=20
+Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
 
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 22417b9..d9d0294 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -281,21 +281,27 @@ def compare_sigfiles(a, b):
-             print "Variable %s value changed from %s to %s" % (dep, a_data['varvals'][dep], b_data['varvals'][dep])
- 
-     if 'runtaskhashes' in a_data and 'runtaskhashes' in b_data:
--        a = clean_basepaths(a_data['runtaskhashes'])
--        b = clean_basepaths(b_data['runtaskhashes'])
--        changed, added, removed = dict_diff(a, b)
--        if added:
--            for dep in added:
--                print "Dependency on task %s was added" % (dep)
--        if removed:
--            for dep in removed:
--                print "Dependency on task %s was removed" % (dep)
--        if changed:
--            for dep in changed:
--                print "Hash for dependent task %s changed from %s to %s" % (dep, a[dep], b[dep])
--    elif 'runtaskdeps' in a_data and 'runtaskdeps' in b_data and sorted(a_data['runtaskdeps']) != sorted(b_data['runtaskdeps']):
--        print "Tasks this task depends on changed from %s to %s" % (sorted(a_data['runtaskdeps']), sorted(b_data['runtaskdeps']))
--        print "changed items: %s" % a_data['runtaskdeps'].symmetric_difference(b_data['runtaskdeps'])
-+        if len(a_data['runtaskdeps']) != len(b_data['runtaskdeps']):
-+            a = clean_basepaths(a_data['runtaskhashes'])
-+            b = clean_basepaths(b_data['runtaskhashes'])
-+            changed, added, removed = dict_diff(a, b)
-+            if added:
-+                for dep in added:
-+                    print "Dependency on task %s was added" % (dep)
-+            if removed:
-+                for dep in removed:
-+                    print "Dependency on task %s was removed" % (dep)
-+            if changed:
-+                for dep in changed:
-+                    print "Hash for dependent task %s changed from %s to %s" % (dep, a[dep], b[dep])
-+        else:
-+            for i in range(len(a_data['runtaskdeps'])):
-+                aent = a_data['runtaskdeps'][i]
-+                bent = b_data['runtaskdeps'][i]
-+                aname = clean_basepath(aent)
-+                bname = clean_basepath(bent)
-+                if a_data['runtaskhashes'][aent] != b_data['runtaskhashes'][bent]:
-+                    print "Task dependency hash changed from %s to %s (for %s and %s)" % (a_data['runtaskhashes'][aent], b_data['runtaskhashes'][bent], aname, bname)
- 
- def dump_sigfile(a):
-     p1 = pickle.Unpickler(file(a, "rb"))
+--Km1U/tdNT/EmXiR1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.18 (GNU/Linux)
 
+iEYEARECAAYFAk8ZndIACgkQN1Ujt2V2gBwN8ACfZBNjPWwRPElcUMCzDnuApL2p
+zEIAn2MvCbshtfVeNClkDaeGgvn3/q7z
+=tu7J
+-----END PGP SIGNATURE-----
 
+--Km1U/tdNT/EmXiR1--
