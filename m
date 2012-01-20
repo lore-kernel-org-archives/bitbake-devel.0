@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RoHkn-00049Z-Hb
+	(envelope-from <git@git.openembedded.org>) id 1RoHko-00049Y-H3
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 20 Jan 2012 17:55:53 +0100
+	Fri, 20 Jan 2012 17:55:54 +0100
 Received: by opal (Postfix, from userid 111)
-	id 6919E10337; Fri, 20 Jan 2012 16:57:48 +0000 (UTC)
+	id A6D951033A; Fri, 20 Jan 2012 16:57:48 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20120120165748.6919E10337@opal>
+Message-Id: <20120120165748.A6D951033A@opal>
 Date: Fri, 20 Jan 2012 16:57:48 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Martin Jansa : setup.py: install prserv too
+Subject: Martin Jansa : prserv: fix import of sqlite3
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -21,51 +21,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 20 Jan 2012 16:55:53 -0000
+X-List-Received-Date: Fri, 20 Jan 2012 16:55:54 -0000
 Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: b4a40c2139e0a8c089ef9aba0796b40470b38e6c
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=b4a40c2139e0a8c089ef9aba0796b40470b38e6c
+Commit: 9a57ec705cf5c932d8c2a35852db7a4627c57937
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=9a57ec705cf5c932d8c2a35852db7a4627c57937
 
 Author: Martin Jansa <martin.jansa@gmail.com>
-Date:   Sun Jan 15 22:03:52 2012 +0100
+Date:   Sun Jan 15 22:03:53 2012 +0100
 
-setup.py: install prserv too
+prserv: fix import of sqlite3
 
-* otherwise cooker fails:
+* this is used in all other bitbake parts where sqlite3 is used, don't
+  know why it wasn't used here, but it fails e.g. on Gentoo
   Traceback (most recent call last):
-    File /usr/bin/bitbake, line 39, in <module>
+    File "bin/bitbake", line 39, in <module>
       from bb import cooker
-    File /usr/lib64/python2.7/site-packages/bb/cooker.py, line 39, in <module>
+    File "lib/bb/cooker.py", line 39, in <module>
       import prserv.serv
-  ImportError: No module named prserv.serv
+    File "lib/prserv/serv.py", line 4, in <module>
+      import xmlrpclib,sqlite3
+  ImportError: No module named sqlite3
 
 Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 ---
 
- setup.py |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ lib/prserv/serv.py |    7 ++++++-
+ 1 files changed, 6 insertions(+), 1 deletions(-)
 
-diff --git a/setup.py b/setup.py
-index 581a24c..3f9899e 100755
---- a/setup.py
-+++ b/setup.py
-@@ -54,9 +54,9 @@ setup(name='bitbake',
-       requires = ["ply", "progressbar", "futures"],
-       package_dir = {"": "lib"},
-       packages = ["bb.server", "bb.parse.parse_py", "bb.parse", "bb.fetch",
--                  "bb.fetch2", "bb.ui.crumbs", "bb.ui", "bb.pysh", "bb"],
-+                  "bb.fetch2", "bb.ui.crumbs", "bb.ui", "bb.pysh", "bb", "prserv"],
-       py_modules = ["codegen"],
--      scripts = ["bin/bitbake", "bin/bitbake-layers", "bin/bitbake-diffsigs"],
-+      scripts = ["bin/bitbake", "bin/bitbake-layers", "bin/bitbake-diffsigs", "bin/bitbake-prserv"],
-       data_files = [("share/bitbake", glob("conf/*") + glob("classes/*")),
-                   ("share/doc/bitbake-%s/manual" % __version__, glob("doc/manual/html/*"))],
-       cmdclass = {
+diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
+index a759fa7..fa437f9 100644
+--- a/lib/prserv/serv.py
++++ b/lib/prserv/serv.py
+@@ -1,7 +1,12 @@
+ import os,sys,logging
+ import signal, time, atexit, threading
+ from SimpleXMLRPCServer import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
+-import xmlrpclib,sqlite3
++import xmlrpclib
++
++try:
++    import sqlite3
++except ImportError:
++    from pysqlite2 import dbapi2 as sqlite3
+ 
+ import bb.server.xmlrpc
+ import prserv
 
 
 
