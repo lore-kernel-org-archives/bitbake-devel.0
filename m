@@ -1,30 +1,15 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1RoHFu-0003D6-Di for bitbake-devel@lists.openembedded.org;
-	Fri, 20 Jan 2012 17:24:00 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0KGGGqC019773
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Jan 2012 16:16:16 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 18273-09 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Jan 2012 16:16:12 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0KGG8VW019767
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Jan 2012 16:16:09 GMT
-Message-ID: <1327076168.4268.3.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Fri, 20 Jan 2012 16:16:08 +0000
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: [PATCH] siggen.py: Abstract the runtime task dependency handling code in the generators
+Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <git@git.openembedded.org>) id 1RoHPd-0003U1-I6
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 20 Jan 2012 17:34:02 +0100
+Received: by opal (Postfix, from userid 111)
+	id 203AE10335; Fri, 20 Jan 2012 16:35:56 +0000 (UTC)
+To: bitbake-devel@lists.openembedded.org
+Message-Id: <20120120163556.203AE10335@opal>
+Date: Fri, 20 Jan 2012 16:35:56 +0000 (UTC)
+From: git@git.openembedded.org
+Subject: Christopher Larson : cooker: use futures rather than a multiprocessing pool
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,67 +21,97 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 20 Jan 2012 16:24:00 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 20 Jan 2012 16:34:02 -0000
+Content-Type: text/plain; charset=UTF-8
 
-This means that custom signature handlers can override specific parts
-of the code without having to reimplement whole functions allowing them
-more flexibility.
+Module: bitbake.git
+Branch: master
+Commit: d104f29871c04a5a36600a35b2568b49e5b21ca0
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=d104f29871c04a5a36600a35b2568b49e5b21ca0
 
+Author: Christopher Larson <chris_larson@mentor.com>
+Date:   Sun Jan  8 23:21:27 2012 -0600
+
+cooker: use futures rather than a multiprocessing pool
+
+This avoids some silent parser hangs we were seeing which were
+near impossible to debug as no user feedback was given.
+
+[RP: Tweak commit message]
+Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
-index d9d0294..f31d66a 100644
---- a/bitbake/lib/bb/siggen.py
-+++ b/bitbake/lib/bb/siggen.py
-@@ -62,9 +62,13 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         self.runtaskdeps = {}
-         self.gendeps = {}
-         self.lookupcache = {}
-+        self.pkgnameextract = re.compile("(?P<fn>.*)\..*")
-         self.basewhitelist = set((data.getVar("BB_HASHBASE_WHITELIST", True) or "").split())
--        self.taskwhitelist = data.getVar("BB_HASHTASK_WHITELIST", True) or None
-+        self.taskwhitelist = None
-+        self.init_rundepcheck(data)
- 
-+    def init_rundepcheck(self, data):
-+        self.taskwhitelist = data.getVar("BB_HASHTASK_WHITELIST", True) or None
-         if self.taskwhitelist:
-             self.twl = re.compile(self.taskwhitelist)
-         else:
-@@ -131,17 +135,24 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         for task in taskdeps:
-             d.setVar("BB_BASEHASH_task-%s" % task, self.basehash[fn + "." + task])
- 
-+    def rundep_check(self, fn, recipename, task, dep, depname):
-+        # Return True if we should keep the dependency, False to drop it
-+        # We only manipulate the dependencies for packages not in the whitelist
-+        if self.twl and not self.twl.search(recipename):
-+            # then process the actual dependencies
-+            if self.twl.search(depname):
-+                return False
-+        return True
-+
-     def get_taskhash(self, fn, task, deps, dataCache):
-         k = fn + "." + task
-         data = dataCache.basetaskhash[k]
-         self.runtaskdeps[k] = []
-+        recipename = dataCache.pkg_fn[fn]
-         for dep in sorted(deps, key=clean_basepath):
--            # We only manipulate the dependencies for packages not in the whitelist
--            if self.twl and not self.twl.search(dataCache.pkg_fn[fn]):
--                # then process the actual dependencies
--                dep_fn = re.search("(?P<fn>.*)\..*", dep).group('fn')
--                if self.twl.search(dataCache.pkg_fn[dep_fn]):
--                    continue
-+            depname = dataCache.pkg_fn[self.pkgnameextract.search(dep).group('fn')]
-+            if not self.rundep_check(fn, recipename, task, dep, depname):
-+                continue
-             if dep not in self.taskhash:
-                 bb.fatal("%s is not in taskhash, caller isn't calling in dependency order?", dep)
-             data = data + self.taskhash[dep]
 
+---
+
+ lib/bb/cooker.py |   29 ++++++++++++++++++-----------
+ 1 files changed, 18 insertions(+), 11 deletions(-)
+
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 4197a02..cbac1f7 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -32,6 +32,7 @@ import sre_constants
+ import threading
+ from cStringIO import StringIO
+ from contextlib import closing
++from concurrent import futures
+ from functools import wraps
+ from collections import defaultdict
+ import bb, bb.exceptions, bb.command
+@@ -1462,20 +1463,16 @@ class CookerParser(object):
+         self.start()
+ 
+     def start(self):
+-        def init(cfg):
+-            parse_file.cfg = cfg
+-            multiprocessing.util.Finalize(None, bb.codeparser.parser_cache_save, args=(self.cooker.configuration.data, ), exitpriority=1)
+-
+         self.results = self.load_cached()
+ 
+         if self.toparse:
+             bb.event.fire(bb.event.ParseStarted(self.toparse), self.cfgdata)
+ 
+-            self.pool = multiprocessing.Pool(self.num_processes, init, [self.cfgdata])
+-            parsed = self.pool.imap(parse_file, self.willparse)
+-            self.pool.close()
+-
+-            self.results = itertools.chain(self.results, parsed)
++            parse_file.cfg = self.cfgdata
++            multiprocessing.util.Finalize(None, bb.codeparser.parser_cache_save, args=(self.cfgdata,), exitpriority=1)
++            self.executor = futures.ProcessPoolExecutor(max_workers=self.num_processes)
++            self.futures = dict((self.executor.submit(parse_file, task), task) for task in self.willparse)
++            self.results = itertools.chain(self.results, self.parse_gen())
+ 
+     def shutdown(self, clean=True):
+         if not self.toparse:
+@@ -1488,8 +1485,9 @@ class CookerParser(object):
+                                             self.total)
+             bb.event.fire(event, self.cfgdata)
+         else:
+-            self.pool.terminate()
+-        self.pool.join()
++            for future in self.futures:
++                future.cancel()
++        self.executor.shutdown()
+ 
+         sync = threading.Thread(target=self.bb_cache.sync)
+         sync.start()
+@@ -1501,6 +1499,15 @@ class CookerParser(object):
+             cached, infos = self.bb_cache.load(filename, appends, self.cfgdata)
+             yield not cached, infos
+ 
++    def parse_gen(self):
++        for future in futures.as_completed(self.futures):
++            task = self.futures[future]
++            exc = future.exception()
++            if exc:
++                raise exc
++            else:
++                yield future.result()
++
+     def parse_next(self):
+         try:
+             parsed, result = self.results.next()
 
 
 
