@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RoIG8-0005LB-R7
+	(envelope-from <git@git.openembedded.org>) id 1RoJQh-00073L-4b
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 20 Jan 2012 18:28:17 +0100
+	Fri, 20 Jan 2012 19:43:15 +0100
 Received: by opal (Postfix, from userid 111)
-	id 953C510331; Fri, 20 Jan 2012 16:50:58 +0000 (UTC)
+	id 0F6FD10334; Fri, 20 Jan 2012 18:37:05 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20120120165058.953C510331@opal>
-Date: Fri, 20 Jan 2012 16:50:58 +0000 (UTC)
+Message-Id: <20120120183705.0F6FD10334@opal>
+Date: Fri, 20 Jan 2012 18:37:05 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Paul Eggleton : bitbake/runqueue: always log tasks summary
+Subject: Richard Purdie : Bump the version to 1.15.1
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -21,61 +21,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 20 Jan 2012 17:28:17 -0000
+X-List-Received-Date: Fri, 20 Jan 2012 18:43:15 -0000
 Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: e44d5be98fc5d2589cd929ce143638395936b936
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=e44d5be98fc5d2589cd929ce143638395936b936
+Commit: 65c2eb1c095fe7ba3259060aefd4ba0e20cae319
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=65c2eb1c095fe7ba3259060aefd4ba0e20cae319
 
-Author: Paul Eggleton <paul.eggleton@linux.intel.com>
-Date:   Thu Jan 19 14:36:03 2012 +0000
+Author: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date:   Fri Jan 20 18:26:36 2012 +0000
 
-bitbake/runqueue: always log tasks summary
+Bump the version to 1.15.1
 
-It's unclear from the history but at some point we stopped logging the
-"Tasks Summary" NOTE when tasks failed. Reinstate this for failure, and
-also make the count of attempted tasks include the failed task.
-
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 ---
 
- lib/bb/runqueue.py |   12 +++++++-----
- 1 files changed, 7 insertions(+), 5 deletions(-)
+ bin/bitbake        |    2 +-
+ lib/bb/__init__.py |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 12ebdf9..0db5377 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -959,6 +959,13 @@ class RunQueue:
-         if self.state is runQueueCleanUp:
-            self.rqexe.finish()
+diff --git a/bin/bitbake b/bin/bitbake
+index c2e6822..6da4980 100755
+--- a/bin/bitbake
++++ b/bin/bitbake
+@@ -40,7 +40,7 @@ from bb import cooker
+ from bb import ui
+ from bb import server
  
-+        if self.state is runQueueComplete or self.state is runQueueFailed:
-+            if self.rqexe.stats.failed:
-+                logger.info("Tasks Summary: Attempted %d tasks of which %d didn't need to be rerun and %d failed.", self.rqexe.stats.completed + self.rqexe.stats.failed, self.rqexe.stats.skipped, self.rqexe.stats.failed)
-+            else:
-+                # Let's avoid the word "failed" if nothing actually did
-+                logger.info("Tasks Summary: Attempted %d tasks of which %d didn't need to be rerun and all succeeded.", self.rqexe.stats.completed, self.rqexe.stats.skipped)
-+
-         if self.state is runQueueFailed:
-             if not self.rqdata.taskData.tryaltconfigs:
-                 raise bb.runqueue.TaskFailure(self.rqexe.failed_fnids)
-@@ -968,11 +975,6 @@ class RunQueue:
+-__version__ = "1.15.0"
++__version__ = "1.15.1"
+ logger = logging.getLogger("BitBake")
  
-         if self.state is runQueueComplete:
-             # All done
--            if self.rqexe.stats.failed:
--                logger.info("Tasks Summary: Attempted %d tasks of which %d didn't need to be rerun and %d failed.", self.rqexe.stats.completed, self.rqexe.stats.skipped, self.rqexe.stats.failed)
--            else:
--                # Let's avoid the word "failed" if nothing actually did
--                logger.info("Tasks Summary: Attempted %d tasks of which %d didn't need to be rerun and all succeeded.", self.rqexe.stats.completed, self.rqexe.stats.skipped)
-             return False
  
-         if self.state is runQueueChildProcess:
+diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
+index 81f83c8..dce5610 100644
+--- a/lib/bb/__init__.py
++++ b/lib/bb/__init__.py
+@@ -21,7 +21,7 @@
+ # with this program; if not, write to the Free Software Foundation, Inc.,
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+-__version__ = "1.15.0"
++__version__ = "1.15.1"
+ 
+ import sys
+ if sys.version_info < (2, 6, 0):
 
 
 
