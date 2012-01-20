@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RoHf7-0003xz-UM
+	(envelope-from <git@git.openembedded.org>) id 1RoHfE-0003yo-01
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 20 Jan 2012 17:50:02 +0100
+	Fri, 20 Jan 2012 17:50:09 +0100
 Received: by opal (Postfix, from userid 111)
-	id 83D6710337; Fri, 20 Jan 2012 16:51:57 +0000 (UTC)
+	id 9741910339; Fri, 20 Jan 2012 16:51:57 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20120120165157.83D6710337@opal>
+Message-Id: <20120120165157.9741910339@opal>
 Date: Fri, 20 Jan 2012 16:51:57 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Richard Purdie : cooker.py: Allow siggen classes to be added by the metadata
+Subject: Richard Purdie : siggen.py: Abstract the runtime task dependency handling code in the generators
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -21,44 +21,80 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 20 Jan 2012 16:50:02 -0000
+X-List-Received-Date: Fri, 20 Jan 2012 16:50:09 -0000
 Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: 69fd5ad4a8402fab5eb8348260966b337c5648ff
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=69fd5ad4a8402fab5eb8348260966b337c5648ff
+Commit: 164195c068a656733cfe7aa07369c5ed6ea62ca5
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=164195c068a656733cfe7aa07369c5ed6ea62ca5
 
 Author: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date:   Fri Jan 20 16:15:18 2012 +0000
+Date:   Fri Jan 20 16:16:08 2012 +0000
 
-cooker.py: Allow siggen classes to be added by the metadata
+siggen.py: Abstract the runtime task dependency handling code in the generators
 
-By calling init_parser which sets up the siggen code after the ConfigParsed
-event is fired, we can allow the metadata to add siggen classes which
-was always what the code intended.
+This means that custom signature handlers can override specific parts
+of the code without having to reimplement whole functions allowing them
+more flexibility.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 ---
 
- lib/bb/cooker.py |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ lib/bb/siggen.py |   25 ++++++++++++++++++-------
+ 1 files changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index cbac1f7..b6bd740 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -856,8 +856,8 @@ class BBCooker:
-         if data.getVar("BB_WORKERCONTEXT", False) is None:
-             bb.fetch.fetcher_init(data)
-         bb.codeparser.parser_cache_init(data)
--        bb.parse.init_parser(data)
-         bb.event.fire(bb.event.ConfigParsed(), data)
-+        bb.parse.init_parser(data)
-         self.configuration.data = data
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index d9d0294..f31d66a 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -62,9 +62,13 @@ class SignatureGeneratorBasic(SignatureGenerator):
+         self.runtaskdeps = {}
+         self.gendeps = {}
+         self.lookupcache = {}
++        self.pkgnameextract = re.compile("(?P<fn>.*)\..*")
+         self.basewhitelist = set((data.getVar("BB_HASHBASE_WHITELIST", True) or "").split())
+-        self.taskwhitelist = data.getVar("BB_HASHTASK_WHITELIST", True) or None
++        self.taskwhitelist = None
++        self.init_rundepcheck(data)
  
-     def handleCollections( self, collections ):
++    def init_rundepcheck(self, data):
++        self.taskwhitelist = data.getVar("BB_HASHTASK_WHITELIST", True) or None
+         if self.taskwhitelist:
+             self.twl = re.compile(self.taskwhitelist)
+         else:
+@@ -131,17 +135,24 @@ class SignatureGeneratorBasic(SignatureGenerator):
+         for task in taskdeps:
+             d.setVar("BB_BASEHASH_task-%s" % task, self.basehash[fn + "." + task])
+ 
++    def rundep_check(self, fn, recipename, task, dep, depname):
++        # Return True if we should keep the dependency, False to drop it
++        # We only manipulate the dependencies for packages not in the whitelist
++        if self.twl and not self.twl.search(recipename):
++            # then process the actual dependencies
++            if self.twl.search(depname):
++                return False
++        return True
++
+     def get_taskhash(self, fn, task, deps, dataCache):
+         k = fn + "." + task
+         data = dataCache.basetaskhash[k]
+         self.runtaskdeps[k] = []
++        recipename = dataCache.pkg_fn[fn]
+         for dep in sorted(deps, key=clean_basepath):
+-            # We only manipulate the dependencies for packages not in the whitelist
+-            if self.twl and not self.twl.search(dataCache.pkg_fn[fn]):
+-                # then process the actual dependencies
+-                dep_fn = re.search("(?P<fn>.*)\..*", dep).group('fn')
+-                if self.twl.search(dataCache.pkg_fn[dep_fn]):
+-                    continue
++            depname = dataCache.pkg_fn[self.pkgnameextract.search(dep).group('fn')]
++            if not self.rundep_check(fn, recipename, task, dep, depname):
++                continue
+             if dep not in self.taskhash:
+                 bb.fatal("%s is not in taskhash, caller isn't calling in dependency order?", dep)
+             data = data + self.taskhash[dep]
 
 
 
