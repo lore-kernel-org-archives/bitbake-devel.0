@@ -1,15 +1,31 @@
-Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RqiPa-00041d-Fe
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 27 Jan 2012 10:50:06 +0100
-Received: by opal (Postfix, from userid 111)
-	id 1D34510332; Fri, 27 Jan 2012 09:48:15 +0000 (UTC)
-To: bitbake-devel@lists.openembedded.org
-Message-Id: <20120127094815.1D34510332@opal>
-Date: Fri, 27 Jan 2012 09:48:15 +0000 (UTC)
-From: git@git.openembedded.org
-Subject: Richard Purdie : runqueue.py: Fix missing setscene dependencies
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1RqotZ-0000eC-TK for bitbake-devel@lists.openembedded.org;
+	Fri, 27 Jan 2012 17:43:26 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0RGZZX0011152;
+	Fri, 27 Jan 2012 16:35:35 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 10525-03; Fri, 27 Jan 2012 16:35:31 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0RGZQpS011140
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Fri, 27 Jan 2012 16:35:27 GMT
+Message-ID: <1327682128.19643.488.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Shane Wang <shane.wang@intel.com>
+Date: Fri, 27 Jan 2012 16:35:28 +0000
+In-Reply-To: <8895391158c0009ef8c76ae667df7c6bf5312661.1327059385.git.shane.wang@intel.com>
+References: <cover.1327059385.git.shane.wang@intel.com>
+	<8895391158c0009ef8c76ae667df7c6bf5312661.1327059385.git.shane.wang@intel.com>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/1] bitbake: add description cache into cache_extra
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -21,58 +37,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 27 Jan 2012 09:50:07 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Fri, 27 Jan 2012 16:43:26 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Module: bitbake.git
-Branch: master
-Commit: b9b5b5129d066e1ff7d3effda116afc3c6657beb
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=b9b5b5129d066e1ff7d3effda116afc3c6657beb
+On Fri, 2012-01-20 at 19:39 +0800, Shane Wang wrote:
+> enable bitbake to cache description into the extra cache file and Hob2 will get its value for core-image-foo.
+> 
+> Signed-off-by: Shane Wang <shane.wang@intel.com>
+> ---
+>  bitbake/lib/bb/cache_extra.py |   13 +++----------
+>  bitbake/lib/bb/cooker.py      |    2 ++
+>  2 files changed, 5 insertions(+), 10 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/cache_extra.py b/bitbake/lib/bb/cache_extra.py
+> index 4c8841f..723b97f 100644
+> --- a/bitbake/lib/bb/cache_extra.py
+> +++ b/bitbake/lib/bb/cache_extra.py
+> @@ -36,19 +36,12 @@ class HobRecipeInfo(RecipeInfoCommon):
+>      cachefile = "bb_extracache_" + classname +".dat"        
+>  
+>      def __init__(self, filename, metadata):
+> -
+> -        self.summary = self.getvar('SUMMARY', metadata)
+> -        self.license = self.getvar('LICENSE', metadata)
+> -        self.section = self.getvar('SECTION', metadata)
+> +        self.description = self.getvar('DESCRIPTION', metadata)
+>  
+>      @classmethod
+>      def init_cacheData(cls, cachedata):
+>          # CacheData in Hob RecipeInfo Class
+> -        cachedata.summary = {}
+> -        cachedata.license = {}
+> -        cachedata.section = {}
+> +        cachedata.description = {}
+>  
+>      def add_cacheData(self, cachedata, fn):
+> -        cachedata.summary[fn] = self.summary
+> -        cachedata.license[fn] = self.license
+> -        cachedata.section[fn] = self.section
+> +        cachedata.description[fn] = self.description
 
-Author: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date:   Thu Jan 26 12:53:21 2012 +0000
+I think rather than remove the summary/license/section fromhere, we
+should remove them from the main cache. There were added there as a
+temporary measure before we had multiple cache support and we should
+remove them now since they're only used by the hob UI, just like
+description.
 
-runqueue.py: Fix missing setscene dependencies
+Cheers,
 
-When constructing the setscene inter-dependencies, we need to account for all task,
-not just the last one found. This patch corrects this oversight and ensures all
-dependencies are added, not just the first one found.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-
----
-
- lib/bb/runqueue.py |    8 +++++---
- 1 files changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index defdd91..8256975 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -1440,18 +1440,20 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-             sq_revdeps.append(copy.copy(self.rqdata.runq_revdeps[task]))
-             sq_revdeps_new.append(set())
-             if (len(self.rqdata.runq_revdeps[task]) == 0) and task not in self.rqdata.runq_setscene:
--                endpoints[task] = None
-+                endpoints[task] = set()
- 
-         for task in self.rqdata.runq_setscene:
-             for dep in self.rqdata.runq_depends[task]:
--                    endpoints[dep] = task
-+                    if dep not in endpoints:
-+                        endpoints[dep] = set()
-+                    endpoints[dep].add(task)
- 
-         def process_endpoints(endpoints):
-             newendpoints = {}
-             for point, task in endpoints.items():
-                 tasks = set()
-                 if task:
--                    tasks.add(task)
-+                    tasks |= task
-                 if sq_revdeps_new[point]:
-                     tasks |= sq_revdeps_new[point]
-                 sq_revdeps_new[point] = set()
+Richard
 
 
 
