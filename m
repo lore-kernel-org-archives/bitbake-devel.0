@@ -1,24 +1,24 @@
 Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1RruB3-0000QF-7e
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1RruB3-0000QF-VV
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 30 Jan 2012 17:33:57 +0100
+	Mon, 30 Jan 2012 17:33:58 +0100
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
 	by orsmga102.jf.intel.com with ESMTP; 30 Jan 2012 08:26:02 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="104198221"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="104198230"
 Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.122.192])
-	by orsmga002.jf.intel.com with ESMTP; 30 Jan 2012 08:25:58 -0800
+	by orsmga002.jf.intel.com with ESMTP; 30 Jan 2012 08:26:00 -0800
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 30 Jan 2012 16:25:50 +0000
-Message-Id: <299c78edaeea942de068f7629676be023edbbc17.1327940413.git.paul.eggleton@linux.intel.com>
+Date: Mon, 30 Jan 2012 16:25:52 +0000
+Message-Id: <8d59cfdb68c0d475b83c8c76a06d3fdf6e94f21b.1327940413.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 1.7.5.4
 In-Reply-To: <cover.1327940413.git.paul.eggleton@linux.intel.com>
 References: <cover.1327940413.git.paul.eggleton@linux.intel.com>
 In-Reply-To: <cover.1327940413.git.paul.eggleton@linux.intel.com>
 References: <cover.1327940413.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 2/6] bitbake-layers: use dashes in subcommands
+Subject: [PATCH 4/6] bitbake-layers: improve show-overlayed output
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,74 +30,249 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 30 Jan 2012 16:33:57 -0000
+X-List-Received-Date: Mon, 30 Jan 2012 16:33:58 -0000
 
-Rather than the slightly awkward underscores, use dashes in subcommands
-e.g. show-layers instead of show_layers. (The old underscored forms
-continue to be accepted however.)
+Make the following improvements to the show-overlayed subcommand:
+
+* Show recipes that are overlayed when the version is higher or lower,
+  not just when it is the same. This gives a much better picture of the
+  influence each layer is having over the metadata used for building.
+  This can be disabled with the -s option if you just want to see
+  recipes with the same version as before.
+* Default to showing name (PN), layer and version rather than the full
+  path and filename. The old style formatting can be used by specifying
+  the -f option.
+* Mark skipped recipes as such in the output, and print them in the
+  correct sorted place in the list rather than at the end
+* Prefix/suffix title line with === so it can be filtered out easily in
+  shell scripts if desired
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- bitbake/bin/bitbake-layers |   12 +++++++-----
- 1 files changed, 7 insertions(+), 5 deletions(-)
+ bitbake/bin/bitbake-layers  |  116 ++++++++++++++++++++++++++++++++++++++----
+ bitbake/lib/bb/cooker.py    |   14 +-----
+ bitbake/lib/bb/providers.py |   36 +++++++++++++
+ 3 files changed, 142 insertions(+), 24 deletions(-)
 
 diff --git a/bitbake/bin/bitbake-layers b/bitbake/bin/bitbake-layers
-index 3007d51..041aa19 100755
+index 9d453ca..abcfb99 100755
 --- a/bitbake/bin/bitbake-layers
 +++ b/bitbake/bin/bitbake-layers
-@@ -41,6 +41,8 @@ def main(args):
+@@ -12,6 +12,7 @@ import logging
+ import os
+ import sys
+ import fnmatch
++from collections import defaultdict
  
-     cmds = Commands(initialenv)
-     if args:
-+        # Allow user to specify e.g. show-layers instead of show_layers
-+        args = [args[0].replace('-', '_')] + args[1:]
-         cmds.onecmd(' '.join(args))
-     else:
-         cmds.do_help('')
-@@ -93,14 +95,14 @@ class Commands(cmd.Cmd):
-         """display general help or help on a specified command"""
-         if topic:
-             sys.stdout.write('%s: ' % topic)
--            cmd.Cmd.do_help(self,topic)
-+            cmd.Cmd.do_help(self, topic.replace('-', '_'))
-         else:
-             sys.stdout.write("usage: bitbake-layers <command> [arguments]\n\n")
-             sys.stdout.write("Available commands:\n")
-             procnames = self.get_names()
-             for procname in procnames:
-                 if procname[:3] == 'do_':
--                    sys.stdout.write("  %s\n" % procname[3:])
-+                    sys.stdout.write("  %s\n" % procname[3:].replace('_', '-'))
-                     doc = getattr(self, procname).__doc__
-                     if doc:
-                         sys.stdout.write("    %s\n" % doc.splitlines()[0])
-@@ -126,7 +128,7 @@ class Commands(cmd.Cmd):
+ bindir = os.path.dirname(__file__)
+ topdir = os.path.dirname(bindir)
+@@ -124,22 +125,115 @@ class Commands(cmd.Cmd):
+ 
+             logger.plain("%s  %s  %d" % (layername.ljust(20), layerdir.ljust(40), layerpri))
+ 
++
++    def version_str(self, pe, pv, pr = None):
++        verstr = "%s" % pv
++        if pr:
++            verstr = "%s-%s" % (verstr, pr)
++        if pe:
++            verstr = "%s:%s" % (pe, verstr)
++        return verstr
++
++
      def do_show_overlayed(self, args):
-         """list overlayed recipes (where there is a recipe in another layer that has a higher layer priority)
+-        """list overlayed recipes (where there is a recipe in another layer that has a higher layer priority)
++        """list overlayed recipes (where the same recipe exists in another layer that has a higher layer priority)
++
++usage: show-overlayed [-f] [-s]
  
--usage: show_overlayed
-+usage: show-overlayed
+-usage: show-overlayed
++Lists the names of overlayed recipes and the available versions in each
++layer, with the preferred version first. Note that skipped recipes that
++are overlayed will also be listed, with a " (skipped)" suffix.
  
- Highest priority recipes are listed with the recipes they overlay as subitems.
+-Highest priority recipes are listed with the recipes they overlay as subitems.
++Options:
++  -f   instead of the default formatting, list filenames of higher priority
++       recipes with the ones they overlay indented underneath
++  -s   only list overlayed recipes where the version is the same
  """
-@@ -197,7 +199,7 @@ build results (as the layer priority order has effectively changed).
+         self.check_prepare_cooker()
+-        if self.cooker.overlayed:
+-            logger.plain('Overlayed recipes:')
+-            for f in self.cooker.overlayed.iterkeys():
+-                logger.plain('%s' % f)
+-                for of in self.cooker.overlayed[f]:
+-                    logger.plain('  %s' % of)
+-        else:
+-            logger.plain('No overlayed recipes found')
++
++        show_filenames = False
++        show_same_ver_only = False
++        for arg in args.split():
++            if arg == '-f':
++                show_filenames = True
++            elif arg == '-s':
++                show_same_ver_only = True
++            else:
++                sys.stderr.write("show-overlayed: invalid option %s\n" % arg)
++                self.do_help('')
++                return
++
++        pkg_pn = self.cooker.status.pkg_pn
++        (latest_versions, preferred_versions) = bb.providers.findProviders(self.cooker.configuration.data, self.cooker.status, pkg_pn)
++        allproviders = bb.providers.allProviders(self.cooker.status)
++
++        # Ensure we list skipped recipes
++        # We are largely guessing about PN, PV and the preferred version here,
++        # but we have no choice since skipped recipes are not fully parsed
++        skiplist = self.cooker.skiplist.keys()
++        skiplist.sort( key=lambda fileitem: self.cooker.calc_bbfile_priority(fileitem) )
++        skiplist.reverse()
++        for fn in skiplist:
++            recipe_parts = os.path.splitext(os.path.basename(fn))[0].split('_')
++            p = recipe_parts[0]
++            if len(recipe_parts) > 1:
++                ver = (None, recipe_parts[1], None)
++            else:
++                ver = (None, 'unknown', None)
++            allproviders[p].append((ver, fn))
++            if not p in pkg_pn:
++                pkg_pn[p] = 'dummy'
++                preferred_versions[p] = (ver, fn)
++
++        def print_item(f, pn, ver, layer, ispref):
++            if f in skiplist:
++                skipped = ' (skipped)'
++            else:
++                skipped = ''
++            if show_filenames:
++                if ispref:
++                    logger.plain("%s%s", f, skipped)
++                else:
++                    logger.plain("  %s%s", f, skipped)
++            else:
++                if ispref:
++                    logger.plain("%s:", pn)
++                logger.plain("  %s %s%s", layer.ljust(20), ver, skipped)
++
++        preffiles = []
++        items_listed = False
++        for p in sorted(pkg_pn):
++            if len(allproviders[p]) > 1:
++                pref = preferred_versions[p]
++                preffile = bb.cache.Cache.virtualfn2realfn(pref[1])[0]
++                if preffile not in preffiles:
++                    preflayer = self.get_file_layer(preffile)
++                    multilayer = False
++                    same_ver = True
++                    provs = []
++                    for prov in allproviders[p]:
++                        provfile = bb.cache.Cache.virtualfn2realfn(prov[1])[0]
++                        provlayer = self.get_file_layer(provfile)
++                        provs.append((provfile, provlayer, prov[0]))
++                        if provlayer != preflayer:
++                            multilayer = True
++                        if prov[0] != pref[0]:
++                            same_ver = False
++
++                    if multilayer and (same_ver or not show_same_ver_only):
++                        if not items_listed:
++                            logger.plain('=== Overlayed recipes ===')
++                            items_listed = True
++                        print_item(preffile, p, self.version_str(pref[0][0], pref[0][1]), preflayer, True)
++                        for (provfile, provlayer, provver) in provs:
++                            if provfile != preffile:
++                                print_item(provfile, p, self.version_str(provver[0], provver[1]), provlayer, False)
++                        # Ensure we don't show two entries for BBCLASSEXTENDed recipes
++                        preffiles.append(preffile)
++
++        if not items_listed:
++            logger.note('No overlayed files found')
++
  
-             for layername in layernames:
-                 if not layername in found_layernames:
--                    logger.error('Unable to find layer %s in current configuration, please run "%s show_layers" to list configured layers' % (layername, os.path.basename(sys.argv[0])))
-+                    logger.error('Unable to find layer %s in current configuration, please run "%s show-layers" to list configured layers' % (layername, os.path.basename(sys.argv[0])))
-                     return
-             layers = found_layerdirs
-         else:
-@@ -316,7 +318,7 @@ build results (as the layer priority order has effectively changed).
-     def do_show_appends(self, args):
-         """list bbappend files and recipe files they apply to
+     def do_flatten(self, args):
+         """flattens layer configuration into a separate output directory.
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index b6bd740..652cd5d 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -259,20 +259,8 @@ class BBCooker:
+         # Need files parsed
+         self.updateCache()
  
--usage: show_appends
-+usage: show-appends
+-        # Need to ensure data store is expanded
+-        localdata = data.createCopy(self.configuration.data)
+-        bb.data.update_data(localdata)
+-        bb.data.expandKeys(localdata)
+-
+         pkg_pn = self.status.pkg_pn
+-        preferred_versions = {}
+-        latest_versions = {}
+-
+-        # Sort by priority
+-        for pn in pkg_pn:
+-            (last_ver, last_file, pref_ver, pref_file) = bb.providers.findBestProvider(pn, localdata, self.status)
+-            preferred_versions[pn] = (pref_ver, pref_file)
+-            latest_versions[pn] = (last_ver, last_file)
++        (latest_versions, preferred_versions) = bb.providers.findProviders(self.configuration.data, self.status, pkg_pn)
  
- Recipes are listed with the bbappends that apply to them as subitems.
- """
+         logger.plain("%-35s %25s %25s", "Package Name", "Latest Version", "Preferred Version")
+         logger.plain("%-35s %25s %25s\n", "============", "==============", "=================")
+diff --git a/bitbake/lib/bb/providers.py b/bitbake/lib/bb/providers.py
+index 398c8ea..1dc6a8e 100644
+--- a/bitbake/lib/bb/providers.py
++++ b/bitbake/lib/bb/providers.py
+@@ -24,6 +24,7 @@
+ import re
+ import logging
+ from bb import data, utils
++from collections import defaultdict
+ import bb
+ 
+ logger = logging.getLogger("BitBake.Provider")
+@@ -35,6 +36,41 @@ class NoRProvider(bb.BBHandledException):
+     """Exception raised when no provider of a runtime dependency can be found"""
+ 
+ 
++def findProviders(cfgData, dataCache, pkg_pn = None):
++    """
++    Convenience function to get latest and preferred providers in pkg_pn
++    """
++
++    if not pkg_pn:
++        pkg_pn = dataCache.pkg_pn
++
++    # Need to ensure data store is expanded
++    localdata = data.createCopy(cfgData)
++    bb.data.update_data(localdata)
++    bb.data.expandKeys(localdata)
++
++    preferred_versions = {}
++    latest_versions = {}
++
++    for pn in pkg_pn:
++        (last_ver, last_file, pref_ver, pref_file) = findBestProvider(pn, localdata, dataCache, pkg_pn)
++        preferred_versions[pn] = (pref_ver, pref_file)
++        latest_versions[pn] = (last_ver, last_file)
++
++    return (latest_versions, preferred_versions)
++
++
++def allProviders(dataCache):
++    """
++    Find all providers for each pn
++    """
++    all_providers = defaultdict(list)
++    for (fn, pn) in dataCache.pkg_fn.items():
++        ver = dataCache.pkg_pepvpr[fn]
++        all_providers[pn].append((ver, fn))
++    return all_providers
++
++
+ def sortPriorities(pn, dataCache, pkg_pn = None):
+     """
+     Reorder pkg_pn by file priority and default preference
 -- 
 1.7.5.4
 
