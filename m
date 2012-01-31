@@ -1,29 +1,31 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1RsEfi-0004NO-BY for bitbake-devel@lists.openembedded.org;
-	Tue, 31 Jan 2012 15:26:59 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0VEJ2RA010048;
-	Tue, 31 Jan 2012 14:19:02 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 08817-06; Tue, 31 Jan 2012 14:18:59 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q0VEIqCW010042
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Tue, 31 Jan 2012 14:18:54 GMT
-Message-ID: <1328019536.13744.28.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Tue, 31 Jan 2012 14:18:56 +0000
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: "Ashfield, Bruce" <Bruce.Ashfield@windriver.com>, "Hart,
-	Darren" <darren.hart@intel.com>
-Subject: [PATCH] fetch2/git: Add workaround for clone using alternates problem
+Received: from mail-lpp01m020-f175.google.com ([209.85.217.175])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <raj.khem@gmail.com>) id 1RsFrd-0006O6-8j
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 31 Jan 2012 16:43:21 +0100
+Received: by lbol12 with SMTP id l12so13743lbo.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 31 Jan 2012 07:35:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc:content-type:content-transfer-encoding;
+	bh=ysg9HLx0sWh3HDVi4r/FZ+r47g0XZS9sgvGxBEGjf3Q=;
+	b=j4KVNHF1YAQdjvTGPcNXd+K5BfUYfRxLV/lAOiOQjoITXIFnybUcah1nTkCtz662S5
+	O7Pww0phSc71I/58I95jlkE3kBL/ryherftb2+o/7kddmLcTB+jSo1rs+jbS1nonm8ub
+	8O48kx5LfEE9skGiZV/DNTkkDOWen4KbovWQ4=
+Received: by 10.112.32.1 with SMTP id e1mr5849397lbi.3.1328024127317; Tue, 31
+	Jan 2012 07:35:27 -0800 (PST)
+MIME-Version: 1.0
+Received: by 10.152.5.201 with HTTP; Tue, 31 Jan 2012 07:34:57 -0800 (PST)
+In-Reply-To: <fe0512a8af642c0b23a9fbbb6aa82953b9e17313.1327990542.git.lianhao.lu@intel.com>
+References: <cover.1327990542.git.lianhao.lu@intel.com>
+	<fe0512a8af642c0b23a9fbbb6aa82953b9e17313.1327990542.git.lianhao.lu@intel.com>
+From: Khem Raj <raj.khem@gmail.com>
+Date: Tue, 31 Jan 2012 07:34:57 -0800
+Message-ID: <CAMKF1spcm_oavug_GV15uwnjGcc-saa=xeCxa1mocEMy4iBt9A@mail.gmail.com>
+To: Lianhao Lu <lianhao.lu@intel.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/1] prserv: Do not ping PRService if not required
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -35,84 +37,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 31 Jan 2012 14:26:59 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 31 Jan 2012 15:43:21 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-To quote my report of this to the git mailing list:
-"""
-    
-    I have a problem with git clone commands using alternates failing by
-    mixing up different repositories. I have a situation where I could end
-    up with both:
-    
-    /srv/mirrors/repo
-    /srv/mirrors/repo.git
-    
-    as bare clones.
-    
-    I then try cloning "repo" with alternates with the command:
-    
-    $ git clone -s -n /srv/mirrors/repo /tmp/foo
-    Cloning into /tmp/foo...
-    done.
-    
-    $ cat /tmp/foo/.git/objects/info/alternates
-    /srv/mirrors/repo.git/objects
-    
-    Note how I'm now referencing repo.git, not repo. This doesn't work as
-    expected giving some very bizarre results when actually using the
-    repository.
-    
-    I appreciate this is a rather bizarre corner case but its one that is
-    breaking the build system I work with. Ideally people would use a
-    consistent URL for the same repository but we have an example where they
-    haven't and this really shouldn't break like this.
-    
-    Looking at the code, the cause seems to be
-    
-    clone.c:get_repo_path():
-            static char *suffix[] = { "/.git", ".git", "" };
-    
-    since its looking in order for:
-     repo/.git (fails)
-     repo.git (suceeds, incorrect)
-     repo (never looked at)
-    
-    I'm not sure what would break if that order were to change, swapping the
-    last two options.
-    
-    I can "force" the issue by running:
-    
-    git clone -s -n /srv/mirrors/repo/ /tmp/foo
-    
-    but this results in the slightly odd looking:
-    
-    $ cat /tmp/foo/.git/objects/info/alternates
-    
-    /srv/mirrors/repo//objects
-    
-    which does at least work.
-"""
-    
-This patch adds the trailing slash to ensure the correct repository is
-referenced at the expense of some ugliness in the alternates file.
-    
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+On Mon, Jan 30, 2012 at 10:18 PM, Lianhao Lu <lianhao.lu@intel.com> wrote:
+> [YOCTO #1942]
+> Ping the PRService only if PRSERV_HOST and PRSERV_PORT are set.
+>
+> Signed-off-by: Lianhao Lu <lianhao.lu@intel.com>
+> ---
+> =C2=A0bitbake/lib/prserv/serv.py | =C2=A0 =C2=A02 +-
+> =C2=A01 files changed, 1 insertions(+), 1 deletions(-)
+>
+> diff --git a/bitbake/lib/prserv/serv.py b/bitbake/lib/prserv/serv.py
+> index fa437f9..5567c6f 100644
+> --- a/bitbake/lib/prserv/serv.py
+> +++ b/bitbake/lib/prserv/serv.py
+> @@ -268,7 +268,7 @@ def is_local_special(host, port):
+>
+> =C2=A0def auto_start(d):
+> =C2=A0 =C2=A0 global singleton
+> - =C2=A0 =C2=A0if d.getVar('USE_PR_SERV', True) =3D=3D '0':
+> + =C2=A0 =C2=A0if (not d.getVar('PRSERV_HOST', True)) or (not d.getVar('P=
+RSERV_PORT', True)):
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index d833714..fb0260a 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -220,7 +220,7 @@ class Git(FetchMethod):
-         if os.path.exists(destdir):
-             bb.utils.prunedir(destdir)
- 
--        runfetchcmd("git clone -s -n %s %s" % (ud.clonedir, destdir), d)
-+        runfetchcmd("git clone -s -n %s/ %s" % (ud.clonedir, destdir), d)
-         if not ud.nocheckout:
-             os.chdir(destdir)
-             if subdir != "":
 
+should it warn in case when USE_PR_SERV is set but one of PRSERV_HOST
+or PRSERV_PORT are unset
+
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 return True
+>
+> =C2=A0 =C2=A0 if is_local_special(d.getVar('PRSERV_HOST', True), int(d.ge=
+tVar('PRSERV_PORT', True))) and not singleton:
+> --
+> 1.7.0.4
+>
+>
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
 
 
