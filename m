@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RsbqC-000758-FR
+	(envelope-from <git@git.openembedded.org>) id 1RsbqC-000757-Cz
 	for bitbake-devel@lists.openembedded.org;
 	Wed, 01 Feb 2012 16:11:20 +0100
 Received: by opal (Postfix, from userid 111)
-	id 1CE2910334; Wed,  1 Feb 2012 15:03:46 +0000 (UTC)
+	id 3600F10336; Wed,  1 Feb 2012 15:03:46 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20120201150346.1CE2910334@opal>
+Message-Id: <20120201150346.3600F10336@opal>
 Date: Wed,  1 Feb 2012 15:03:46 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Paul Eggleton : bitbake-layers: use dashes in subcommands
+Subject: Paul Eggleton : bitbake-layers: use directory name as layer name
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,83 +26,127 @@ Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: 6d311ddc1be04ae5bd0a1ebee94b44968e8a3f27
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=6d311ddc1be04ae5bd0a1ebee94b44968e8a3f27
+Commit: 35d2c1c618826e961dbf4b9889b829f469346d74
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=35d2c1c618826e961dbf4b9889b829f469346d74
 
 Author: Paul Eggleton <paul.eggleton@linux.intel.com>
-Date:   Mon Jan 30 16:25:50 2012 +0000
+Date:   Mon Jan 30 16:25:51 2012 +0000
 
-bitbake-layers: use dashes in subcommands
+bitbake-layers: use directory name as layer name
 
-Rather than the slightly awkward underscores, use dashes in subcommands
-e.g. show-layers instead of show_layers. (The old underscored forms
-continue to be accepted however.)
+It turns out that using the collection name as specified within
+layer.conf (i.e. what gets added to BBFILE_COLLECTIONS) as a name to
+refer to the layer is not particularly useful, since layer creators
+aren't necessarily setting these to a meaningful value - e.g. OE-Core
+uses "normal", meta-oe uses "openembedded-layer", etc. In any case,
+BitBake uses the directory name in its list of configured layers in the
+system information presented upon starting a build, so let's just do the
+same here and avoid confusion.
+
+Also rename the get_append_layer function to get_file_layer since it is
+in no way specific to bbappends.
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 ---
 
- bin/bitbake-layers |   12 +++++++-----
- 1 files changed, 7 insertions(+), 5 deletions(-)
+ bin/bitbake-layers |   39 ++++++++++++++++++++-------------------
+ 1 files changed, 20 insertions(+), 19 deletions(-)
 
 diff --git a/bin/bitbake-layers b/bin/bitbake-layers
-index 3007d51..041aa19 100755
+index 041aa19..9d453ca 100755
 --- a/bin/bitbake-layers
 +++ b/bin/bitbake-layers
-@@ -41,6 +41,8 @@ def main(args):
+@@ -60,6 +60,7 @@ class Commands(cmd.Cmd):
+         self.config_data = self.cooker.configuration.data
+         bb.providers.logger.setLevel(logging.ERROR)
+         self.cooker_data = None
++        self.bblayers = (self.config_data.getVar('BBLAYERS', True) or "").split()
  
-     cmds = Commands(initialenv)
-     if args:
-+        # Allow user to specify e.g. show-layers instead of show_layers
-+        args = [args[0].replace('-', '_')] + args[1:]
-         cmds.onecmd(' '.join(args))
-     else:
-         cmds.do_help('')
-@@ -93,14 +95,14 @@ class Commands(cmd.Cmd):
-         """display general help or help on a specified command"""
-         if topic:
-             sys.stdout.write('%s: ' % topic)
--            cmd.Cmd.do_help(self,topic)
-+            cmd.Cmd.do_help(self, topic.replace('-', '_'))
-         else:
-             sys.stdout.write("usage: bitbake-layers <command> [arguments]\n\n")
-             sys.stdout.write("Available commands:\n")
-             procnames = self.get_names()
-             for procname in procnames:
-                 if procname[:3] == 'do_':
--                    sys.stdout.write("  %s\n" % procname[3:])
-+                    sys.stdout.write("  %s\n" % procname[3:].replace('_', '-'))
-                     doc = getattr(self, procname).__doc__
-                     if doc:
-                         sys.stdout.write("    %s\n" % doc.splitlines()[0])
-@@ -126,7 +128,7 @@ class Commands(cmd.Cmd):
-     def do_show_overlayed(self, args):
-         """list overlayed recipes (where there is a recipe in another layer that has a higher layer priority)
+     def register_idle_function(self, function, data):
+         pass
+@@ -113,13 +114,11 @@ class Commands(cmd.Cmd):
+         logger.plain('')
+         logger.plain("%s  %s  %s" % ("layer".ljust(20), "path".ljust(40), "priority"))
+         logger.plain('=' * 74)
+-        layerdirs = str(self.config_data.getVar('BBLAYERS', True)).split()
+-        for layerdir in layerdirs:
+-            layername = '?'
++        for layerdir in self.bblayers:
++            layername = self.get_layer_name(layerdir)
+             layerpri = 0
+             for layer, _, regex, pri in self.cooker.status.bbfile_config_priorities:
+                 if regex.match(os.path.join(layerdir, 'test')):
+-                    layername = layer
+                     layerpri = pri
+                     break
  
--usage: show_overlayed
-+usage: show-overlayed
+@@ -184,18 +183,16 @@ build results (as the layer priority order has effectively changed).
+             return
  
- Highest priority recipes are listed with the recipes they overlay as subitems.
- """
-@@ -197,7 +199,7 @@ build results (as the layer priority order has effectively changed).
+         self.check_prepare_cooker()
+-        layers = (self.config_data.getVar('BBLAYERS', True) or "").split()
++        layers = self.bblayers
+         if len(arglist) > 2:
+             layernames = arglist[:-1]
+             found_layernames = []
+             found_layerdirs = []
+             for layerdir in layers:
+-                for layername, _, regex, _ in self.cooker.status.bbfile_config_priorities:
+-                    if layername in layernames:
+-                        if regex.match(os.path.join(layerdir, 'test')):
+-                            found_layerdirs.append(layerdir)
+-                            found_layernames.append(layername)
+-                            break
++                layername = self.get_layer_name(layerdir)
++                if layername in layernames:
++                    found_layerdirs.append(layerdir)
++                    found_layernames.append(layername)
  
              for layername in layernames:
                  if not layername in found_layernames:
--                    logger.error('Unable to find layer %s in current configuration, please run "%s show_layers" to list configured layers' % (layername, os.path.basename(sys.argv[0])))
-+                    logger.error('Unable to find layer %s in current configuration, please run "%s show-layers" to list configured layers' % (layername, os.path.basename(sys.argv[0])))
-                     return
-             layers = found_layerdirs
-         else:
-@@ -316,7 +318,7 @@ build results (as the layer priority order has effectively changed).
-     def do_show_appends(self, args):
-         """list bbappend files and recipe files they apply to
+@@ -271,10 +268,9 @@ build results (as the layer priority order has effectively changed).
+         first_regex = None
+         layerdir = layers[0]
+         for layername, pattern, regex, _ in self.cooker.status.bbfile_config_priorities:
+-            if (not layernames) or layername in layernames:
+-                if regex.match(os.path.join(layerdir, 'test')):
+-                    first_regex = regex
+-                    break
++            if regex.match(os.path.join(layerdir, 'test')):
++                first_regex = regex
++                break
  
--usage: show_appends
-+usage: show-appends
+         if first_regex:
+             # Find the BBFILES entries that match (which will have come from this conf/layer.conf file)
+@@ -300,17 +296,22 @@ build results (as the layer priority order has effectively changed).
+                             if not entry_found:
+                                 logger.warning("File %s does not match the flattened layer's BBFILES setting, you may need to edit conf/layer.conf or move the file elsewhere" % f1full)
  
- Recipes are listed with the bbappends that apply to them as subitems.
- """
+-    def get_append_layer(self, appendname):
++    def get_file_layer(self, filename):
+         for layer, _, regex, _ in self.cooker.status.bbfile_config_priorities:
+-            if regex.match(appendname):
+-                return layer
++            if regex.match(filename):
++                for layerdir in self.bblayers:
++                    if regex.match(os.path.join(layerdir, 'test')):
++                        return self.get_layer_name(layerdir)
+         return "?"
+ 
++    def get_layer_name(self, layerdir):
++        return os.path.basename(layerdir.rstrip(os.sep))
++
+     def apply_append(self, appendname, recipename):
+         appendfile = open(appendname, 'r')
+         recipefile = open(recipename, 'a')
+         recipefile.write('\n')
+-        recipefile.write('##### bbappended from %s #####\n' % self.get_append_layer(appendname))
++        recipefile.write('##### bbappended from %s #####\n' % self.get_file_layer(appendname))
+         recipefile.writelines(appendfile.readlines())
+         recipefile.close()
+         appendfile.close()
 
 
 
