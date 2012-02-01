@@ -1,45 +1,38 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mail-bk0-f47.google.com ([209.85.214.47])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1RtB3Q-0006zu-2g
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 03 Feb 2012 05:47:20 +0100
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 02 Feb 2012 20:38:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="102745728"
-Received: from pgsmsx602.gar.corp.intel.com ([10.221.43.81])
-	by azsmga001.ch.intel.com with ESMTP; 02 Feb 2012 20:38:15 -0800
-Received: from pgsmsx103.gar.corp.intel.com (10.221.44.82) by
-	pgsmsx602.gar.corp.intel.com (10.221.43.81) with Microsoft SMTP Server
-	(TLS) id 8.2.255.0; Fri, 3 Feb 2012 12:38:13 +0800
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
-	PGSMSX103.gar.corp.intel.com (10.221.44.82) with Microsoft SMTP Server
-	(TLS) id 14.1.355.2; Fri, 3 Feb 2012 12:38:13 +0800
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.36]) by
-	SHSMSX101.ccr.corp.intel.com ([169.254.1.142]) with mapi id
-	14.01.0355.002; Fri, 3 Feb 2012 12:38:11 +0800
-From: "Wang, Shane" <shane.wang@intel.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Thread-Topic: [bitbake-devel] [PATCH 1/1] [V2] bitbake: add description
-	cache into cache_extra
-Thread-Index: AQHM4b9I3dxGL92ZZ0S/xEwYYMV1i5Yql65g
-Date: Fri, 3 Feb 2012 04:38:10 +0000
-Message-ID: <3AB6CE7F274E534CAFD089D127A8A1FC0FCEBE29@SHSMSX102.ccr.corp.intel.com>
-References: <cover.1328162622.git.shane.wang@intel.com>
-	<213886d7dc877c93686c896fe4584011bb4ce2ec.1328162622.git.shane.wang@intel.com>
-	<1328196487.13744.193.camel@ted>
-In-Reply-To: <1328196487.13744.193.camel@ted>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.239.127.40]
+	(envelope-from <aleh.arol@gmail.com>)
+	id 1RshEC-0005i6-Nz; Wed, 01 Feb 2012 21:56:28 +0100
+Received: by bke17 with SMTP id 17so1533301bke.6
+	for <multiple recipients>; Wed, 01 Feb 2012 12:48:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=message-id:date:from:reply-to:user-agent:mime-version:to:cc:subject
+	:references:in-reply-to:content-type:content-transfer-encoding;
+	bh=r4chNv2Pppbi83oyw8kcpmddNna21yvCgdCMX0x8m90=;
+	b=YWu8Yqp1MTlk9NwA5o/UOPu9zC+bqqyaTD0tNQi0hxxI6+ZZX2t34NkoDwrJRiDPlC
+	JncPdvPH+aC+QsvhflgQfvMvKv8BqE8+2EuCmJ+4bw4pQuOvA3yE6FsjXiovv5Jfj3bJ
+	xf1EEZHNtKBgNtNNpD1s0H27A17jxw6iKckFY=
+Received: by 10.204.145.210 with SMTP id e18mr55615bkv.61.1328129311489;
+	Wed, 01 Feb 2012 12:48:31 -0800 (PST)
+Received: from [192.168.0.102] ([87.252.227.5])
+	by mx.google.com with ESMTPS id cz3sm365068bkb.3.2012.02.01.12.48.29
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Wed, 01 Feb 2012 12:48:30 -0800 (PST)
+Message-ID: <4F29A51B.40407@gmail.com>
+Date: Wed, 01 Feb 2012 23:48:27 +0300
+From: Aleh Arol <aleh.arol@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:9.0) Gecko/20111229 Thunderbird/9.0
 MIME-Version: 1.0
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 1/1] [V2] bitbake: add description cache into cache_extra
+To: openembedded-devel@lists.openembedded.org, 
+	bitbake-devel@lists.openembedded.org
+References: <4F26B9D3.9010709@gmail.com> <2370505.PRl1Ey1z8e@helios>
+In-Reply-To: <2370505.PRl1Ey1z8e@helios>
+X-Mailman-Approved-At: Sat, 04 Feb 2012 12:12:01 +0100
+Subject: Re: source folder package dependency
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
+Reply-To: aleh.arol@gmail.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 List-Unsubscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/options/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=unsubscribe>
@@ -48,25 +41,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 03 Feb 2012 04:47:20 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Wed, 01 Feb 2012 20:56:28 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-T0ssIHRoYW5rcy4gU29ycnkgZm9yIHRoYXQsIHdpbGwga2VlcCBpbiBtaW5kLg0KDQotLQ0KU2hh
-bmUNCg0KUmljaGFyZCBQdXJkaWUgd3JvdGUgb27CoDIwMTItMDItMDI6DQoNCj4gT24gVGh1LCAy
-MDEyLTAyLTAyIGF0IDE0OjA1ICswODAwLCBTaGFuZSBXYW5nIHdyb3RlOg0KPj4gRW5hYmxlIGJp
-dGJha2UgdG8gY2FjaGUgZGVzY3JpcHRpb24gaW50byB0aGUgZXh0cmEgY2FjaGUgZmlsZSBhbmQg
-SG9iMg0KPj4gd2lsbCBnZXQgaXRzIHZhbHVlIGZvciBjb3JlLWltYWdlLWZvby4NCj4+IA0KPj4g
-U2lnbmVkLW9mZi1ieTogU2hhbmUgV2FuZyA8c2hhbmUud2FuZ0BpbnRlbC5jb20+DQo+PiAtLS0N
-Cj4+ICBiaXRiYWtlL2xpYi9iYi9jYWNoZS5weSAgICAgICB8ICAgIDkgLS0tLS0tLS0tDQo+PiAg
-Yml0YmFrZS9saWIvYmIvY2FjaGVfZXh0cmEucHkgfCAgICAzICsrKw0KPj4gIGJpdGJha2UvbGli
-L2JiL2Nvb2tlci5weSAgICAgIHwgICAgMiArKw0KPj4gIDMgZmlsZXMgY2hhbmdlZCwgNSBpbnNl
-cnRpb25zKCspLCA5IGRlbGV0aW9ucygtKQ0KPiANCj4gSSd2ZSBtZXJnZWQgdGhpcyBwYXRjaCB0
-aGFua3MuDQo+IA0KPiBJbiBmdXR1cmUgcGxlYXNlIHdvcmsgb24gYmV0dGVyIGNvbW1pdCBtZXNz
-YWdlcyBzaW5jZSB0aGlzIG9uZSBkb2Vzbid0DQo+IG1lbnRpb24gdGhlIHJlbW92YWwgb2YgdGhl
-IGR1cGxpY2F0ZSBjYWNoZSBlbnRyaWVzLiBXaGVuIEkgdG9vayB0aGUNCj4gcGF0Y2ggSSd2ZSB0
-d2Vha2VkIHRoZSBjb21taXQgbWVzc2FnZSBpbiB0aGlzIGNhc2UuDQo+IA0KPiBDaGVlcnMsDQo+
-IA0KPiBSaWNoYXJkDQoNCg0K
+Ср. 01 февр. 2012 18:37:08, Paul Eggleton писал:
+> On Monday 30 January 2012 18:40:03 Aleh Arol wrote:
+>> I have a question I don't know how to solve:
+>> I have a library, for example, boost, and a part of that
+>> library(packaged together I mean), like bjam is required to build it.
+>>
+>> So I have boost-X.Y.Z.bb recipe and src/boost-X.Y.Z folder(I have
+>> sources locally) and I need to create bjam recipe. I can make
+>> bjam-X.Y.Z.bb where I will refer to folder src/boost-${PV} as ${SRC_URI}
+>> and ${S} to find jam sources under. Then if I'll need to have 5
+>> different versions of boost I'll need to create 5 different versions of
+>> bjam recipe.... although I can use bjam.inc it will still be 5 bjam recipes.
+>>
+>> How can I avoid that? Any way to have a version agnostic bjam recipe? Or the
+>> right way of doing this.
+
+Thanks you for the answer first of all.
+>
+> (I presume this is in the context of OpenEmbedded.) 
+No, but that doesn't matter.
+What you describe is the
+> accepted way of doing things - you have a recipe for each version of the piece 
+> of software you're building and share the common things with a .inc file, using 
+> ${PV} to abstract away the version. Each individual recipe ends up quite small 
+> with the bulk of the definitions in the inc file.
+>
+> You could have a recipe which did not specify a version in the recipe filename, 
+> and set PV manually instead (possibly with a default); then you could set 
+> PV_pn-bjam = "1.1" in your distro or local configuration to pick the version. 
+> However I would describe that as unorthodox, and it will not work if you have 
+> to handle other differences between versions (e.g. renamed/moved files, 
+> additional configuration options, etc.) I will say however that this is more or 
+> less how we handle recipes built from a version control system (e.g. git); 
+> except in that case we set PV to something including SRCREV e.g. 
+> "1.0+gitr${SRCPV}" and then set SRCREV externally.
+Ok, that's more or less what I ended up with. Actually I'm ok with a
+"recipe per version" way - I just gave an example of boost/bjam -
+actually I have a python-ogre (if it says something to you - if not
+there are several packages under one folder) and I try to
+make a recipe per each incorporated package. So, I will end up twice as
+much recipes if I will add another python-ogre version.
+>
+> The question is will you really need 5 different versions? Or just 2-3?
+You are right, my question was theoretical. Just interested if there is
+a better way.
+>
+> Cheers,
+> Paul
+>
+
+Thanks again.
+-- 
+Best regards,
+Aleh Arol
 
 
