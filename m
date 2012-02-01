@@ -1,15 +1,15 @@
 Received: from opal.openembedded.org ([140.211.169.152] helo=opal)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <git@git.openembedded.org>) id 1RsbqC-000755-Cn
+	(envelope-from <git@git.openembedded.org>) id 1RsbqC-000758-FR
 	for bitbake-devel@lists.openembedded.org;
 	Wed, 01 Feb 2012 16:11:20 +0100
 Received: by opal (Postfix, from userid 111)
-	id E235A1032F; Wed,  1 Feb 2012 15:03:45 +0000 (UTC)
+	id 1CE2910334; Wed,  1 Feb 2012 15:03:46 +0000 (UTC)
 To: bitbake-devel@lists.openembedded.org
-Message-Id: <20120201150345.E235A1032F@opal>
-Date: Wed,  1 Feb 2012 15:03:45 +0000 (UTC)
+Message-Id: <20120201150346.1CE2910334@opal>
+Date: Wed,  1 Feb 2012 15:03:46 +0000 (UTC)
 From: git@git.openembedded.org
-Subject: Richard Purdie : fetch2/git: Add workaround for clone using alternates problem
+Subject: Paul Eggleton : bitbake-layers: use dashes in subcommands
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,93 +26,83 @@ Content-Type: text/plain; charset=UTF-8
 
 Module: bitbake.git
 Branch: master
-Commit: d978e7b35550e3785c7c567ffe4c40a3c3947450
-URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=d978e7b35550e3785c7c567ffe4c40a3c3947450
+Commit: 6d311ddc1be04ae5bd0a1ebee94b44968e8a3f27
+URL:    http://git.openembedded.org/?p=bitbake.git&a=commit;h=6d311ddc1be04ae5bd0a1ebee94b44968e8a3f27
 
-Author: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date:   Tue Jan 31 14:09:24 2012 +0000
+Author: Paul Eggleton <paul.eggleton@linux.intel.com>
+Date:   Mon Jan 30 16:25:50 2012 +0000
 
-fetch2/git: Add workaround for clone using alternates problem
+bitbake-layers: use dashes in subcommands
 
-To quote my report of this to the git mailing list:
-"""
+Rather than the slightly awkward underscores, use dashes in subcommands
+e.g. show-layers instead of show_layers. (The old underscored forms
+continue to be accepted however.)
 
-I have a problem with git clone commands using alternates failing by
-mixing up different repositories. I have a situation where I could end
-up with both:
-
-/srv/mirrors/repo
-/srv/mirrors/repo.git
-
-as bare clones.
-
-I then try cloning "repo" with alternates with the command:
-
-$ git clone -s -n /srv/mirrors/repo /tmp/foo
-Cloning into /tmp/foo...
-done.
-
-$ cat /tmp/foo/.git/objects/info/alternates
-/srv/mirrors/repo.git/objects
-
-Note how I'm now referencing repo.git, not repo. This doesn't work as
-expected giving some very bizarre results when actually using the
-repository.
-
-I appreciate this is a rather bizarre corner case but its one that is
-breaking the build system I work with. Ideally people would use a
-consistent URL for the same repository but we have an example where they
-haven't and this really shouldn't break like this.
-
-Looking at the code, the cause seems to be
-
-clone.c:get_repo_path():
-        static char *suffix[] = { "/.git", ".git", "" };
-
-since its looking in order for:
- repo/.git (fails)
- repo.git (suceeds, incorrect)
- repo (never looked at)
-
-I'm not sure what would break if that order were to change, swapping the
-last two options.
-
-I can "force" the issue by running:
-
-git clone -s -n /srv/mirrors/repo/ /tmp/foo
-
-but this results in the slightly odd looking:
-
-$ cat /tmp/foo/.git/objects/info/alternates
-
-/srv/mirrors/repo//objects
-
-which does at least work.
-"""
-
-This patch adds the trailing slash to ensure the correct repository is
-referenced at the expense of some ugliness in the alternates file.
-
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 ---
 
- lib/bb/fetch2/git.py |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ bin/bitbake-layers |   12 +++++++-----
+ 1 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index d833714..fb0260a 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -220,7 +220,7 @@ class Git(FetchMethod):
-         if os.path.exists(destdir):
-             bb.utils.prunedir(destdir)
+diff --git a/bin/bitbake-layers b/bin/bitbake-layers
+index 3007d51..041aa19 100755
+--- a/bin/bitbake-layers
++++ b/bin/bitbake-layers
+@@ -41,6 +41,8 @@ def main(args):
  
--        runfetchcmd("git clone -s -n %s %s" % (ud.clonedir, destdir), d)
-+        runfetchcmd("git clone -s -n %s/ %s" % (ud.clonedir, destdir), d)
-         if not ud.nocheckout:
-             os.chdir(destdir)
-             if subdir != "":
+     cmds = Commands(initialenv)
+     if args:
++        # Allow user to specify e.g. show-layers instead of show_layers
++        args = [args[0].replace('-', '_')] + args[1:]
+         cmds.onecmd(' '.join(args))
+     else:
+         cmds.do_help('')
+@@ -93,14 +95,14 @@ class Commands(cmd.Cmd):
+         """display general help or help on a specified command"""
+         if topic:
+             sys.stdout.write('%s: ' % topic)
+-            cmd.Cmd.do_help(self,topic)
++            cmd.Cmd.do_help(self, topic.replace('-', '_'))
+         else:
+             sys.stdout.write("usage: bitbake-layers <command> [arguments]\n\n")
+             sys.stdout.write("Available commands:\n")
+             procnames = self.get_names()
+             for procname in procnames:
+                 if procname[:3] == 'do_':
+-                    sys.stdout.write("  %s\n" % procname[3:])
++                    sys.stdout.write("  %s\n" % procname[3:].replace('_', '-'))
+                     doc = getattr(self, procname).__doc__
+                     if doc:
+                         sys.stdout.write("    %s\n" % doc.splitlines()[0])
+@@ -126,7 +128,7 @@ class Commands(cmd.Cmd):
+     def do_show_overlayed(self, args):
+         """list overlayed recipes (where there is a recipe in another layer that has a higher layer priority)
+ 
+-usage: show_overlayed
++usage: show-overlayed
+ 
+ Highest priority recipes are listed with the recipes they overlay as subitems.
+ """
+@@ -197,7 +199,7 @@ build results (as the layer priority order has effectively changed).
+ 
+             for layername in layernames:
+                 if not layername in found_layernames:
+-                    logger.error('Unable to find layer %s in current configuration, please run "%s show_layers" to list configured layers' % (layername, os.path.basename(sys.argv[0])))
++                    logger.error('Unable to find layer %s in current configuration, please run "%s show-layers" to list configured layers' % (layername, os.path.basename(sys.argv[0])))
+                     return
+             layers = found_layerdirs
+         else:
+@@ -316,7 +318,7 @@ build results (as the layer priority order has effectively changed).
+     def do_show_appends(self, args):
+         """list bbappend files and recipe files they apply to
+ 
+-usage: show_appends
++usage: show-appends
+ 
+ Recipes are listed with the bbappends that apply to them as subitems.
+ """
 
 
 
