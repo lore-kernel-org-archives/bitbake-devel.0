@@ -1,32 +1,39 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1Rzy8E-0002vz-FG; Tue, 21 Feb 2012 23:24:22 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q1LMG2p4020542;
-	Tue, 21 Feb 2012 22:16:02 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 20289-03; Tue, 21 Feb 2012 22:15:58 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q1LMFrps020535
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Tue, 21 Feb 2012 22:15:55 GMT
-Message-ID: <1329862553.20261.74.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Chris Larson <clarson@kergoth.com>
-Date: Tue, 21 Feb 2012 22:15:53 +0000
-In-Reply-To: <CABcZANmS1TK6p3VD-GQv34X=sPmMOQo8ik370CrnH6qa=rbNUA@mail.gmail.com>
-References: <1329608182.4436.48.camel@ted> <1329746700.22425.2.camel@lenny>
-	<CABcZANmS1TK6p3VD-GQv34X=sPmMOQo8ik370CrnH6qa=rbNUA@mail.gmail.com>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
-	Patches and discussions about the oe-core layer
-	<openembedded-core@lists.openembedded.org>
-Subject: Re: [OE-core] Bitbake Memory Usage
+Received: from mail-ee0-f47.google.com ([74.125.83.47])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <martin.jansa@gmail.com>) id 1S0Byn-0000Al-LZ
+	for bitbake-devel@lists.openembedded.org;
+	Wed, 22 Feb 2012 14:11:33 +0100
+Received: by eekd41 with SMTP id d41so2677379eek.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 22 Feb 2012 05:03:13 -0800 (PST)
+Received-SPF: pass (google.com: domain of martin.jansa@gmail.com designates
+	10.14.95.141 as permitted sender) client-ip=10.14.95.141; 
+Authentication-Results: mr.google.com;
+	spf=pass (google.com: domain of martin.jansa@gmail.com
+	designates 10.14.95.141 as permitted sender)
+	smtp.mail=martin.jansa@gmail.com;
+	dkim=pass header.i=martin.jansa@gmail.com
+Received: from mr.google.com ([10.14.95.141])
+	by 10.14.95.141 with SMTP id p13mr9715265eef.73.1329915793742 (num_hops
+	= 1); Wed, 22 Feb 2012 05:03:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=from:to:cc:subject:date:message-id:x-mailer;
+	bh=FYinVgSK4UH12osvDbAjPerk7agwwA6+2crrxwAiD8s=;
+	b=R8RyohSHdj7A1wonxZh0VfskIcBB0/HloFL6AJziAzkJBxvYnSq5E6vPeMQ+r2lHSl
+	etvisQ0+jBIrBDagittOHbiFoBCfZ/r88VVz43RD23rBUDybCplDBdGtFxNCkYn7mayY
+	hYCupmD31roM9OgJyP30ErLYdfxwQshHUD36M=
+Received: by 10.14.95.141 with SMTP id p13mr7712623eef.73.1329915793632;
+	Wed, 22 Feb 2012 05:03:13 -0800 (PST)
+Received: from localhost ([94.230.152.246])
+	by mx.google.com with ESMTPS id a58sm102405461eeb.8.2012.02.22.05.03.12
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Wed, 22 Feb 2012 05:03:12 -0800 (PST)
+From: Martin Jansa <martin.jansa@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 22 Feb 2012 14:03:04 +0100
+Message-Id: <1329915784-24760-1-git-send-email-Martin.Jansa@gmail.com>
+X-Mailer: git-send-email 1.7.8.4
+Subject: [PATCH] siggen: compare runtaskdeps dictionary even when they have the same size
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -38,50 +45,76 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 21 Feb 2012 22:24:22 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 22 Feb 2012 13:11:33 -0000
 
-On Mon, 2012-02-20 at 12:57 -0700, Chris Larson wrote:
-> On Mon, Feb 20, 2012 at 7:05 AM, Colin Walters <walters@verbum.org> wrote:
-> > On Sat, 2012-02-18 at 23:36 +0000, Richard Purdie wrote:
-> >> As soon as the child starts trying to remove
-> >> things from memory, we lose the benefits of CoW and USS and PSS rise.
-> >
-> > Note that even leaving out the garbage collector, the cPython VM
-> > incrementing/decrementing the refcount of objects will force the copy.
-> >
-> > The python multiprocessing module has some classes which allow
-> > explicitly sharing memory.  Certainly for various caches e.g. if
-> > they're just read-only after a certain point it might make sense
-> > to wrap them in e.g. a multiprocessing.Value.
-> 
-> Hmm, that's quite interesting, thanks for that tidbit. We should
-> consider looking into that.
+* otherwise it reports lots of changed checksums just because it compares different tasks
 
-Its interesting but my tests are suggesting the reference counting isn't
-hurting in at least our common "execute a shell task" use case. With the
-way CoW and the data store works, I can believe that.
+  notice linux-libc-headers_3.1.bb.do_package_write:
+  Task dependency hash changed from 42acced29debf54d598802474c5e9cbb to f438a54f995df77620d0727d6f4b4ce5 (for linux-libc-headers_3.1.bb.do_package_write and linux-gta04_git.bb.do_deploy)
+  Task dependency hash changed from 61f8babe1d10c6e7fb1423112bb04e1e to 1b3e21ff106ecfcb7ddf76a1e29537bb (for linux-nokia900-meego_git.bb.do_deploy and linux-gta04_git.bb.do_package_write)
+  Task dependency hash changed from 512f9d6686d760b318d8b11c8b589226 to 42acced29debf54d598802474c5e9cbb (for linux-nokia900-meego_git.bb.do_package_write and linux-libc-headers_3.1.bb.do_package_write)
+  Task dependency hash changed from 153e91dfd1d2053fda7b98cc08d4b802 to 92a293bdd8ed234932b87a66025038c5 (for systemd-serialgetty.bb.do_package_write and systemd-serialgetty.bb.do_package_write)
+  Task dependency hash changed from 730abebf9954794bb440c2f3239f79fe to 413eaebaff27a2fd16f5cf68c1f4ff17 (for systemd_git.bb.do_package_write and systemd_git.bb.do_package_write)
 
-On the other hand, the serialisation that multiprocessing puts around
-its variables looked potentially problematic (and slow) last time I
-looked. The manual page specifically says those structures are slow if I
-remember rightly.
+  with this patch:
+  Dependency on task linux-nokia900-meego_git.bb.do_package_write was added
+  Dependency on task linux-nokia900-meego_git.bb.do_deploy was added
+  Dependency on task linux-gta04_git.bb.do_deploy was removed
+  Dependency on task linux-gta04_git.bb.do_package_write was removed
+  Hash for dependent task systemd_git.bb.do_package_write changed from 730abebf9954794bb440c2f3239f79fe to 413eaebaff27a2fd16f5cf68c1f4ff17
+  Hash for dependent task systemd-serialgetty.bb.do_package_write changed from 153e91dfd1d2053fda7b98cc08d4b802 to 92a293bdd8ed234932b87a66025038c5
 
->  On a related note, I think we should sit
-> down and basically review every use of a cache anywhere in bitbake and
-> rethink their operation. We still have multiple caches stored as
-> globals with no expiration policy of any sort, they accrue
-> indefinitely, until process exit. As we review them, we could consider
-> this as well on a case-by-case basis.
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ lib/bb/siggen.py |   33 ++++++++++++---------------------
+ 1 files changed, 12 insertions(+), 21 deletions(-)
 
-I agree we need to resolve some of the life cycle issue and remove the
-globals. The ones I'm aware of do give significant speed benefits though
-and I'm not sure there will be much scope for removing them :/.
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index f31d66a..ffe85dd 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -292,27 +292,18 @@ def compare_sigfiles(a, b):
+             print "Variable %s value changed from %s to %s" % (dep, a_data['varvals'][dep], b_data['varvals'][dep])
+ 
+     if 'runtaskhashes' in a_data and 'runtaskhashes' in b_data:
+-        if len(a_data['runtaskdeps']) != len(b_data['runtaskdeps']):
+-            a = clean_basepaths(a_data['runtaskhashes'])
+-            b = clean_basepaths(b_data['runtaskhashes'])
+-            changed, added, removed = dict_diff(a, b)
+-            if added:
+-                for dep in added:
+-                    print "Dependency on task %s was added" % (dep)
+-            if removed:
+-                for dep in removed:
+-                    print "Dependency on task %s was removed" % (dep)
+-            if changed:
+-                for dep in changed:
+-                    print "Hash for dependent task %s changed from %s to %s" % (dep, a[dep], b[dep])
+-        else:
+-            for i in range(len(a_data['runtaskdeps'])):
+-                aent = a_data['runtaskdeps'][i]
+-                bent = b_data['runtaskdeps'][i]
+-                aname = clean_basepath(aent)
+-                bname = clean_basepath(bent)
+-                if a_data['runtaskhashes'][aent] != b_data['runtaskhashes'][bent]:
+-                    print "Task dependency hash changed from %s to %s (for %s and %s)" % (a_data['runtaskhashes'][aent], b_data['runtaskhashes'][bent], aname, bname)
++        a = clean_basepaths(a_data['runtaskhashes'])
++        b = clean_basepaths(b_data['runtaskhashes'])
++        changed, added, removed = dict_diff(a, b)
++        if added:
++            for dep in added:
++                print "Dependency on task %s was added" % (dep)
++        if removed:
++            for dep in removed:
++                print "Dependency on task %s was removed" % (dep)
++        if changed:
++            for dep in changed:
++                print "Hash for dependent task %s changed from %s to %s" % (dep, a[dep], b[dep])
+ 
+ def dump_sigfile(a):
+     p1 = pickle.Unpickler(file(a, "rb"))
+-- 
+1.7.8.4
 
 
 
