@@ -1,24 +1,24 @@
-Received: from mga14.intel.com ([143.182.124.37])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1S0ZAQ-0000bI-DY
+	(envelope-from <dongxiao.xu@intel.com>) id 1S0ZAQ-0000bH-QF
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 23 Feb 2012 14:57:06 +0100
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga102.ch.intel.com with ESMTP; 23 Feb 2012 05:48:44 -0800
+	Thu, 23 Feb 2012 14:57:07 +0100
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 23 Feb 2012 05:48:47 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="109911927"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="113991706"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by azsmga001.ch.intel.com with ESMTP; 23 Feb 2012 05:48:43 -0800
+	by orsmga002.jf.intel.com with ESMTP; 23 Feb 2012 05:48:46 -0800
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 23 Feb 2012 21:47:14 +0800
-Message-Id: <eb567a583a7dbf017e5ac114febb7584816a0265.1330003017.git.dongxiao.xu@intel.com>
+Date: Thu, 23 Feb 2012 21:47:16 +0800
+Message-Id: <dfe7557757ee722cc634265e71402060cbdaafd9.1330003017.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1330003017.git.dongxiao.xu@intel.com>
 References: <cover.1330003017.git.dongxiao.xu@intel.com>
 In-Reply-To: <cover.1330003017.git.dongxiao.xu@intel.com>
 References: <cover.1330003017.git.dongxiao.xu@intel.com>
-Subject: [PATCH 2/9] command.py: add resolve option for generateTargetsTree API
+Subject: [PATCH 4/9] bitbake: change for adding progress bar in Hob2.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,172 +30,246 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 23 Feb 2012 13:57:06 -0000
+X-List-Received-Date: Thu, 23 Feb 2012 13:57:07 -0000
 
-Currently we have generateTargetsTree API, which is used to get
-dependency information. However in that tree, there will be
-"virtual/xxx" in depends fields. Therefore we add the resolve option
-to replace it with its real providers.
+From: Shane Wang <shane.wang@intel.com>
 
-Besides, for packages that provided by multiple recipes, we will find
-their preverred provider.
+The changes include:
+- Clean some events in event.py
+- Fire essential events for Hob2 to handle with more information.
+- knotty changes
 
+Signed-off-by: Shane Wang <shane.wang@intel.com>
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 ---
- lib/bb/command.py |   11 ++++++++-
- lib/bb/cooker.py  |   58 ++++++++++++++++++++++++++++++++++++++++++----------
- 2 files changed, 56 insertions(+), 13 deletions(-)
+ lib/bb/cache.py     |    2 +-
+ lib/bb/cooker.py    |   12 +++++--
+ lib/bb/event.py     |   83 ++++++++++++++++++++++++++++++++++++--------------
+ lib/bb/ui/knotty.py |    5 ++-
+ 4 files changed, 73 insertions(+), 29 deletions(-)
 
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index 2a3a3af..05555c5 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -230,14 +230,21 @@ class CommandsAsync:
-         included in the package list.
-         If pkg_list provided use that list (plus any extras brought in by
-         klass) rather than generating a tree for all packages.
-+
-+        Add a new option "resolve" to indicate if we need to resolve the
-+        replacement for "virtual/xxx" like pn.
-         """
-         klass = params[0]
--        if len(params) > 1:
-+        resolve = False
-+        if len(params) > 2:
-+            pkg_list = params[1]
-+            resolve = params[2]
-+        elif len(params) > 1:
-             pkg_list = params[1]
-         else:
-             pkg_list = []
+diff --git a/lib/bb/cache.py b/lib/bb/cache.py
+index 3d89435..47e814b 100644
+--- a/lib/bb/cache.py
++++ b/lib/bb/cache.py
+@@ -336,7 +336,7 @@ class Cache(object):
+                         current_percent = 100 * current_progress / cachesize
+                         if current_percent > previous_percent:
+                             previous_percent = current_percent
+-                            bb.event.fire(bb.event.CacheLoadProgress(current_progress),
++                            bb.event.fire(bb.event.CacheLoadProgress(current_progress, cachesize),
+                                           self.data)
  
--        command.cooker.generateTargetsTree(klass, pkg_list)
-+        command.cooker.generateTargetsTree(klass, pkg_list, resolve)
-         command.finishAsyncCommand()
-     generateTargetsTree.needcache = True
- 
+                     previous_progress += current_progress
 diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index af91178..85e391b 100644
+index 85e391b..ebe95af 100644
 --- a/lib/bb/cooker.py
 +++ b/lib/bb/cooker.py
-@@ -429,7 +429,20 @@ class BBCooker:
+@@ -334,6 +334,7 @@ class BBCooker:
+         """
+         Prepare a runqueue and taskdata object for iteration over pkgs_to_build
+         """
++        bb.event.fire(bb.event.TreeDataPreparationStarted(), self.configuration.data)
+         # Need files parsed
+         self.updateCache()
+         # If we are told to do the None task then query the default task
+@@ -350,11 +351,14 @@ class BBCooker:
+         taskdata = bb.taskdata.TaskData(False, skiplist=self.skiplist)
  
-         return depend_tree
+         runlist = []
++        current = 0
+         for k in pkgs_to_build:
+             taskdata.add_provider(localdata, self.status, k)
+             runlist.append([k, "do_%s" % task])
++            current += 1
++            bb.event.fire(bb.event.TreeDataPreparationProgress(current, len(pkgs_to_build)), self.configuration.data)
+         taskdata.add_unresolved(localdata, self.status)
+-
++        bb.event.fire(bb.event.TreeDataPreparationCompleted(len(pkgs_to_build)), self.configuration.data)
+         return runlist, taskdata
  
--    def generatePkgDepTreeData(self, pkgs_to_build, task):
-+    def append_package(self, taskdata, depend_tree_package, package):
-+        if package not in depend_tree_package:
-+            targetid = taskdata.getrun_id(package)
-+            if targetid in taskdata.run_targets and taskdata.run_targets[targetid]:
-+                fnid = taskdata.run_targets[targetid][0]
-+                fn = taskdata.fn_index[fnid]
-+                pn = self.status.pkg_fn[fn]
-+                version  = "%s:%s-%s" % self.status.pkg_pepvpr[fn]
-+                depend_tree_package[package] = {}
-+                depend_tree_package[package]["pn"] = pn
-+                depend_tree_package[package]["filename"] = fn
-+                depend_tree_package[package]["version"] = version
+     def generateTaskDepTreeData(self, pkgs_to_build, task):
+@@ -1100,7 +1104,7 @@ class BBCooker:
+                 return False
+ 
+             if not retval:
+-                bb.event.fire(bb.event.BuildCompleted(buildname, item, failures), self.configuration.event_data)
++                bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runq_fnid), buildname, item, failures), self.configuration.event_data)
+                 self.command.finishAsyncCommand()
+                 return False
+             if retval is True:
+@@ -1140,7 +1144,7 @@ class BBCooker:
+                 return False
+ 
+             if not retval:
+-                bb.event.fire(bb.event.BuildCompleted(buildname, targets, failures), self.configuration.data)
++                bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runq_fnid), buildname, targets, failures), self.configuration.data)
+                 self.command.finishAsyncCommand()
+                 return False
+             if retval is True:
+@@ -1665,7 +1669,7 @@ class CookerParser(object):
+         if parsed:
+             self.parsed += 1
+             if self.parsed % self.progress_chunk == 0:
+-                bb.event.fire(bb.event.ParseProgress(self.parsed),
++                bb.event.fire(bb.event.ParseProgress(self.parsed, self.toparse),
+                               self.cfgdata)
+         else:
+             self.cached += 1
+diff --git a/lib/bb/event.py b/lib/bb/event.py
+index 10036c0..bbece58 100644
+--- a/lib/bb/event.py
++++ b/lib/bb/event.py
+@@ -204,6 +204,27 @@ def getName(e):
+     else:
+         return e.__name__
+ 
++class OperationStarted(Event):
++    """An operation has begun"""
++    def __init__(self, msg = "Operation Started"):
++        Event.__init__(self)
++        self.msg = msg
 +
-+    def generatePkgDepTreeData(self, pkgs_to_build, task, resolve=False):
-         """
-         Create a dependency tree of pkgs_to_build, returning the data.
-         """
-@@ -446,6 +459,7 @@ class BBCooker:
-         depend_tree["rdepends-pn"] = {}
-         depend_tree["packages"] = {}
-         depend_tree["rdepends-pkg"] = {}
-+        depend_tree["rrecs-pkg"] = {}
- 
-         for task in xrange(len(tasks_fnid)):
-             fnid = tasks_fnid[task]
-@@ -456,6 +470,8 @@ class BBCooker:
-             lic = self.status.license[fn]
-             section = self.status.section[fn]
-             description = self.status.description[fn]
-+            rdepends = self.status.rundeps[fn]
-+            rrecs = self.status.runrecs[fn]
-             if pn not in depend_tree["pn"]:
-                 depend_tree["pn"][pn] = {}
-                 depend_tree["pn"][pn]["filename"] = fn
-@@ -464,6 +480,7 @@ class BBCooker:
-                 depend_tree["pn"][pn]["license"] = lic
-                 depend_tree["pn"][pn]["section"] = section
-                 depend_tree["pn"][pn]["description"] = description
-+                depend_tree["pn"][pn]["packages"] = rdepends.keys()
- 
-             if fnid not in seen_fnids:
-                 seen_fnids.append(fnid)
-@@ -471,25 +488,44 @@ class BBCooker:
- 
-                 depend_tree["depends"][pn] = []
-                 for dep in taskdata.depids[fnid]:
--                    depend_tree["depends"][pn].append(taskdata.build_names_index[dep])
-+                    if resolve:
-+                        item = taskdata.build_names_index[dep]
-+                        pn_provider = ""
-+                        targetid = taskdata.getbuild_id(item)
-+                        if targetid in taskdata.build_targets and taskdata.build_targets[targetid]:
-+                            fnid = taskdata.build_targets[targetid][0]
-+                            fn_provider = taskdata.fn_index[fnid]
-+                            pn_provider = self.status.pkg_fn[fn_provider]
-+                        else:
-+                            pn_provider = item
-+                        depend_tree["depends"][pn].append(pn_provider)
-+                    else:
-+                        depend_tree["depends"][pn].append(taskdata.build_names_index[dep])
- 
-                 depend_tree["rdepends-pn"][pn] = []
-                 for rdep in taskdata.rdepids[fnid]:
-                     depend_tree["rdepends-pn"][pn].append(taskdata.run_names_index[rdep])
- 
--                rdepends = self.status.rundeps[fn]
-                 for package in rdepends:
-                     depend_tree["rdepends-pkg"][package] = []
-                     for rdepend in rdepends[package]:
-                         depend_tree["rdepends-pkg"][package].append(rdepend)
--                    packages.append(package)
-+                        if resolve:
-+                            self.append_package(taskdata, depend_tree["packages"], rdepend)
-+                    if not package in packages:
-+                        packages.append(package)
++class OperationCompleted(Event):
++    """An operation has completed"""
++    def __init__(self, total, msg = "Operation Completed"):
++        Event.__init__(self)
++        self.total = total
++        self.msg = msg
 +
-+                for package in rrecs:
-+                    depend_tree["rrecs-pkg"][package] = []
-+                    for rrec in rrecs[package]:
-+                        depend_tree["rrecs-pkg"][package].append(rrec)
-+                        if resolve:
-+                            self.append_package(taskdata, depend_tree["packages"], rrec)
-+                    if not package in packages:
-+                        packages.append(package)
++class OperationProgress(Event):
++    """An operation is in progress"""
++    def __init__(self, current, total, msg = "Operation in Progress"):
++        Event.__init__(self)
++        self.current = current
++        self.total = total
++        self.msg = msg + ": %s/%s" % (current, total);
++
+ class ConfigParsed(Event):
+     """Configuration Parsing Complete"""
  
-                 for package in packages:
--                    if package not in depend_tree["packages"]:
--                        depend_tree["packages"][package] = {}
--                        depend_tree["packages"][package]["pn"] = pn
--                        depend_tree["packages"][package]["filename"] = fn
--                        depend_tree["packages"][package]["version"] = version
-+                    self.append_package(taskdata, depend_tree["packages"], package)
+@@ -276,14 +297,20 @@ class BuildBase(Event):
  
-         return depend_tree
  
-@@ -735,7 +771,7 @@ class BBCooker:
  
-         return pkg_list
+-class BuildStarted(BuildBase):
++class BuildStarted(BuildBase, OperationStarted):
+     """bbmake build run started"""
++    def __init__(self, n, p, failures = 0):
++        OperationStarted.__init__(self, "Building Started")
++        BuildBase.__init__(self, n, p, failures)
  
--    def generateTargetsTree(self, klass=None, pkgs=[]):
-+    def generateTargetsTree(self, klass=None, pkgs=[], resolve=False):
+-
+-class BuildCompleted(BuildBase):
++class BuildCompleted(BuildBase, OperationCompleted):
+     """bbmake build run completed"""
+-
+-
++    def __init__(self, total, n, p, failures = 0):
++        if not failures:
++            OperationCompleted.__init__(self, total, "Building Succeeded")
++        else:
++            OperationCompleted.__init__(self, total, "Building Failed")
++        BuildBase.__init__(self, n, p, failures)
+ 
+ 
+ class NoProvider(Event):
+@@ -329,17 +356,16 @@ class MultipleProviders(Event):
          """
-         Generate a dependency tree of buildable targets
-         Generate an event with the result
-@@ -750,7 +786,7 @@ class BBCooker:
-             pkgs = pkgs + extra_pkgs
+         return self._candidates
  
-         # generate a dependency tree for all our packages
--        tree = self.generatePkgDepTreeData(pkgs, 'build')
-+        tree = self.generatePkgDepTreeData(pkgs, 'build', resolve)
-         bb.event.fire(bb.event.TargetsTreeGenerated(tree), self.configuration.data)
+-class ParseStarted(Event):
++class ParseStarted(OperationStarted):
+     """Recipe parsing for the runqueue has begun"""
+     def __init__(self, total):
+-        Event.__init__(self)
++        OperationStarted.__init__(self, "Recipe parsing Started")
+         self.total = total
  
-     def buildWorldTargetList(self):
+-class ParseCompleted(Event):
++class ParseCompleted(OperationCompleted):
+     """Recipe parsing for the runqueue has completed"""
+-
+     def __init__(self, cached, parsed, skipped, masked, virtuals, errors, total):
+-        Event.__init__(self)
++        OperationCompleted.__init__(self, total, "Recipe parsing Completed")
+         self.cached = cached
+         self.parsed = parsed
+         self.skipped = skipped
+@@ -347,33 +373,44 @@ class ParseCompleted(Event):
+         self.masked = masked
+         self.errors = errors
+         self.sofar = cached + parsed
+-        self.total = total
+ 
+-class ParseProgress(Event):
++class ParseProgress(OperationProgress):
+     """Recipe parsing progress"""
++    def __init__(self, current, total):
++        OperationProgress.__init__(self, current, total, "Recipe parsing")
+ 
+-    def __init__(self, current):
+-        self.current = current
+ 
+-class CacheLoadStarted(Event):
++class CacheLoadStarted(OperationStarted):
+     """Loading of the dependency cache has begun"""
+     def __init__(self, total):
+-        Event.__init__(self)
++        OperationStarted.__init__(self, "Loading cache Started")
+         self.total = total
+ 
+-class CacheLoadProgress(Event):
++class CacheLoadProgress(OperationProgress):
+     """Cache loading progress"""
+-    def __init__(self, current):
+-        Event.__init__(self)
+-        self.current = current
++    def __init__(self, current, total):
++        OperationProgress.__init__(self, current, total, "Loading cache")
+ 
+-class CacheLoadCompleted(Event):
++class CacheLoadCompleted(OperationCompleted):
+     """Cache loading is complete"""
+     def __init__(self, total, num_entries):
+-        Event.__init__(self)
+-        self.total = total
++        OperationCompleted.__init__(self, total, "Loading cache Completed")
+         self.num_entries = num_entries
+ 
++class TreeDataPreparationStarted(OperationStarted):
++    """Tree data preparation started"""
++    def __init__(self):
++        OperationStarted.__init__(self, "Preparing tree data Started")
++
++class TreeDataPreparationProgress(OperationProgress):
++    """Tree data preparation is in progress"""
++    def __init__(self, current, total):
++        OperationProgress.__init__(self, current, total, "Preparing tree data")
++
++class TreeDataPreparationCompleted(OperationCompleted):
++    """Tree data preparation completed"""
++    def __init__(self, total):
++        OperationCompleted.__init__(self, total, "Preparing tree data Completed")
+ 
+ class DepTreeGenerated(Event):
+     """
+diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+index 158a132..e2e6ac3 100644
+--- a/lib/bb/ui/knotty.py
++++ b/lib/bb/ui/knotty.py
+@@ -263,7 +263,10 @@ def main(server, eventHandler):
+                                   bb.event.RecipeParsed,
+                                   bb.event.RecipePreFinalise,
+                                   bb.runqueue.runQueueEvent,
+-                                  bb.runqueue.runQueueExitWait)):
++                                  bb.runqueue.runQueueExitWait,
++                                  bb.event.OperationStarted,
++                                  bb.event.OperationCompleted,
++                                  bb.event.OperationProgress)):
+                 continue
+ 
+             logger.error("Unknown event: %s", event)
 -- 
 1.7.4.1
 
