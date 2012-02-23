@@ -1,30 +1,20 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1S0L8o-0002la-PV for bitbake-devel@lists.openembedded.org;
-	Wed, 22 Feb 2012 23:58:30 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q1MMoAkh002669
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 22 Feb 2012 22:50:10 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 01958-03 for <bitbake-devel@lists.openembedded.org>;
-	Wed, 22 Feb 2012 22:50:05 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q1MMo2xA002655
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 22 Feb 2012 22:50:03 GMT
-Message-ID: <1329951002.32110.31.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Wed, 22 Feb 2012 22:50:02 +0000
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: [PATCH] siggen.py: Pass the datacache to signature generator classes
+Received: from mga09.intel.com ([134.134.136.24])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <lianhao.lu@intel.com>) id 1S0UVQ-0002qm-2Z
+	for bitbake-devel@lists.openembedded.org;
+	Thu, 23 Feb 2012 09:58:28 +0100
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 23 Feb 2012 00:50:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="113857063"
+Received: from llu-piketon.sh.intel.com (HELO localhost) ([10.239.36.62])
+	by orsmga002.jf.intel.com with ESMTP; 23 Feb 2012 00:50:05 -0800
+From: Lianhao Lu <lianhao.lu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 23 Feb 2012 16:49:23 +0800
+Message-Id: <cover.1329986451.git.lianhao.lu@intel.com>
+X-Mailer: git-send-email 1.7.0.4
+Subject: [PATCH 0/1] Add new option --environment-more
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,45 +26,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 22 Feb 2012 22:58:31 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 23 Feb 2012 08:58:28 -0000
 
-The dataCache exposes much useful information to the singature generation code
-for example its possible to figure out whether kernel dependencies are
-important or not based on the RRECOMMENDS values.
+This patch adds a new option --environment-more to bitbake to display 
+additional file dependency information. This kind of information can be used 
+by other recipe editors, e.g. the Eclipse bitbake commander plugin, to decide 
+when to reparse the recipes.
 
-We therefore pass this information to the handler and trust it to handle
-any API changes in the dataCache structure.
+The following changes since commit d8b3718303c3d56394c722059f1a73bd79131d0a:
+  Zhai Edwin (1):
+        texi2html: Fix for multilib
 
-For backwards compatibility, OE-Core is already updated to handle
-the extra argument when it appears.
+are available in the git repository at:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
-index 3a9e132..975ae41 100644
---- a/bitbake/lib/bb/siggen.py
-+++ b/bitbake/lib/bb/siggen.py
-@@ -135,7 +135,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         for task in taskdeps:
-             d.setVar("BB_BASEHASH_task-%s" % task, self.basehash[fn + "." + task])
- 
--    def rundep_check(self, fn, recipename, task, dep, depname):
-+    def rundep_check(self, fn, recipename, task, dep, depname, dataCache):
-         # Return True if we should keep the dependency, False to drop it
-         # We only manipulate the dependencies for packages not in the whitelist
-         if self.twl and not self.twl.search(recipename):
-@@ -151,7 +151,7 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         recipename = dataCache.pkg_fn[fn]
-         for dep in sorted(deps, key=clean_basepath):
-             depname = dataCache.pkg_fn[self.pkgnameextract.search(dep).group('fn')]
--            if not self.rundep_check(fn, recipename, task, dep, depname):
-+            if not self.rundep_check(fn, recipename, task, dep, depname, dataCache):
-                 continue
-             if dep not in self.taskhash:
-                 bb.fatal("%s is not in taskhash, caller isn't calling in dependency order?", dep)
+  git://git.pokylinux.org/poky-contrib llu/bitbake_showmore
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=llu/bitbake_showmore
 
+Lianhao Lu (1):
+  bitbake: Add new otpion --environment-more
+
+ bitbake/bin/bitbake       |    3 +++
+ bitbake/lib/bb/command.py |    6 ++++--
+ bitbake/lib/bb/cooker.py  |   22 ++++++++++++++++++----
+ scripts/bitbake           |    2 +-
+ 4 files changed, 26 insertions(+), 7 deletions(-)
 
 
 
