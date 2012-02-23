@@ -1,24 +1,44 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mail-qw0-f47.google.com ([209.85.216.47])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1S0ax0-0003j2-Me
+	(envelope-from <kergoth@gmail.com>) id 1S0bRa-0006B2-9n
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 23 Feb 2012 16:51:22 +0100
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 23 Feb 2012 07:43:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="111228897"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.123.61])
-	by orsmga001.jf.intel.com with ESMTP; 23 Feb 2012 07:43:00 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 23 Feb 2012 15:42:53 +0000
-Message-Id: <3499ba1a8f0682f8747db5472807507ed26b29c6.1330011581.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.7.5.4
-In-Reply-To: <cover.1330011581.git.paul.eggleton@linux.intel.com>
+	Thu, 23 Feb 2012 17:22:58 +0100
+Received: by qadz30 with SMTP id z30so7825322qad.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 23 Feb 2012 08:14:36 -0800 (PST)
+Received-SPF: pass (google.com: domain of kergoth@gmail.com designates
+	10.229.77.15 as permitted sender) client-ip=10.229.77.15; 
+Authentication-Results: mr.google.com;
+	spf=pass (google.com: domain of kergoth@gmail.com
+	designates 10.229.77.15 as permitted sender)
+	smtp.mail=kergoth@gmail.com;
+	dkim=pass header.i=kergoth@gmail.com
+Received: from mr.google.com ([10.229.77.15])
+	by 10.229.77.15 with SMTP id e15mr1525067qck.66.1330013676529 (num_hops
+	= 1); Thu, 23 Feb 2012 08:14:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=mime-version:sender:in-reply-to:references:from:date
+	:x-google-sender-auth:message-id:subject:to:cc:content-type
+	:content-transfer-encoding;
+	bh=ygx0+ainf6MSgCHQFYoBIxnfmZhbhG/9VWeow+x//Jw=;
+	b=DAIcR3Y/umV1REhabOcVnl3HNqaC6omSMqWbOivtMGrNMe1GVYrZ4sfNS82pAehAZT
+	k7yOcR5FjISbkZPUgi2IRa0XDKOBK/BTzIu03u9Wd9rHFXSziTSOd5zXwnLr7Cr3hTYS
+	d5jUc5MLUdHbcf1iMySQC2Z2fCE04M/yKPuec=
+Received: by 10.229.77.15 with SMTP id e15mr1295224qck.66.1330013676419; Thu,
+	23 Feb 2012 08:14:36 -0800 (PST)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.229.224.145 with HTTP; Thu, 23 Feb 2012 08:14:16 -0800 (PST)
+In-Reply-To: <e22cf3ce86bd3e323c67f0b905b2211efdd334a2.1330011581.git.paul.eggleton@linux.intel.com>
 References: <cover.1330011581.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1330011581.git.paul.eggleton@linux.intel.com>
-References: <cover.1330011581.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 2/2] bitbake: add file and line number to ParseError
+	<e22cf3ce86bd3e323c67f0b905b2211efdd334a2.1330011581.git.paul.eggleton@linux.intel.com>
+From: Chris Larson <clarson@kergoth.com>
+Date: Thu, 23 Feb 2012 09:14:16 -0700
+X-Google-Sender-Auth: Roukb_rthKLJYzlQrWwVsfbjNbU
+Message-ID: <CABcZAN=Q2TqdGABOxHGD1=wfR5Z03-bFjiZJ9EbAhimj8tqV7A@mail.gmail.com>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/2] bitbake: fix parse errors not being reported
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,172 +50,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 23 Feb 2012 15:51:22 -0000
+X-List-Received-Date: Thu, 23 Feb 2012 16:22:58 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Ensure that a file and line number are reported for ParseError where
-possible. This helps particularly in the case of inherit and require
-which previously did not report either of these upon failure.
+On Thu, Feb 23, 2012 at 8:42 AM, Paul Eggleton
+<paul.eggleton@linux.intel.com> wrote:
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 except Exception as exc:
+> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0etype, value, tb =3D sys.exc_i=
+nfo()
+> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0logger.error('Unable to parse =
+%s', value.recipe,
+> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 exc_info=3D(etype, value, exc.traceback))
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0logger.error('Error during par=
+sing %s: %s\n%s' % (exc.recipe, str(exc), ''.join(bb.exceptions.format_extr=
+acted(exc.traceback, limit=3D5))))
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- bitbake/lib/bb/cooker.py                     |    2 +-
- bitbake/lib/bb/parse/__init__.py             |   15 +++++++++++++--
- bitbake/lib/bb/parse/ast.py                  |    8 ++++----
- bitbake/lib/bb/parse/parse_py/BBHandler.py   |    6 ++----
- bitbake/lib/bb/parse/parse_py/ConfHandler.py |   11 ++++++-----
- 5 files changed, 26 insertions(+), 16 deletions(-)
-
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 5653874..8e30cea 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1398,7 +1398,7 @@ def _parse(fn, data, include=True):
- 
- @catch_parse_error
- def _inherit(bbclass, data):
--    bb.parse.BBHandler.inherit([bbclass], data)
-+    bb.parse.BBHandler.inherit([bbclass], "configuration INHERITs", 0, data)
-     return data
- 
- class ParsingFailure(Exception):
-diff --git a/bitbake/lib/bb/parse/__init__.py b/bitbake/lib/bb/parse/__init__.py
-index c5005ae..8b7ec73 100644
---- a/bitbake/lib/bb/parse/__init__.py
-+++ b/bitbake/lib/bb/parse/__init__.py
-@@ -37,6 +37,17 @@ logger = logging.getLogger("BitBake.Parsing")
- 
- class ParseError(Exception):
-     """Exception raised when parsing fails"""
-+    def __init__(self, msg, filename, lineno=0):
-+        self.msg = msg
-+        self.filename = filename
-+        self.lineno = lineno
-+        Exception.__init__(self, msg, filename, lineno)
-+
-+    def __str__(self):
-+        if self.lineno:
-+            return "ParseError at %s:%d: %s" % (self.filename, self.lineno, self.msg)
-+        else:
-+            return "ParseError in %s: %s" % (self.filename, self.msg)
- 
- class SkipPackage(Exception):
-     """Exception raised to skip this package"""
-@@ -78,7 +89,7 @@ def handle(fn, data, include = 0):
-     for h in handlers:
-         if h['supports'](fn, data):
-             return h['handle'](fn, data, include)
--    raise ParseError("%s is not a BitBake file" % fn)
-+    raise ParseError("not a BitBake file", fn)
- 
- def init(fn, data):
-     for h in handlers:
-@@ -111,7 +122,7 @@ def vars_from_file(mypkg, d):
-     parts = myfile[0].split('_')
-     __pkgsplit_cache__[mypkg] = parts
-     if len(parts) > 3:
--        raise ParseError("Unable to generate default variables from the filename: %s (too many underscores)" % mypkg)
-+        raise ParseError("Unable to generate default variables from filename (too many underscores)", mypkg)
-     exp = 3 - len(parts)
-     tmplist = []
-     while exp != 0:
-diff --git a/bitbake/lib/bb/parse/ast.py b/bitbake/lib/bb/parse/ast.py
-index 31c930d..94fa175 100644
---- a/bitbake/lib/bb/parse/ast.py
-+++ b/bitbake/lib/bb/parse/ast.py
-@@ -59,9 +59,9 @@ class IncludeNode(AstNode):
- 
-         # TODO: Cache those includes... maybe not here though
-         if self.force:
--            bb.parse.ConfHandler.include(self.filename, s, data, "include required")
-+            bb.parse.ConfHandler.include(self.filename, s, self.lineno, data, "include required")
-         else:
--            bb.parse.ConfHandler.include(self.filename, s, data, False)
-+            bb.parse.ConfHandler.include(self.filename, s, self.lineno, data, False)
- 
- class ExportNode(AstNode):
-     def __init__(self, filename, lineno, var):
-@@ -267,7 +267,7 @@ class InheritNode(AstNode):
-         self.classes = classes
- 
-     def eval(self, data):
--        bb.parse.BBHandler.inherit(self.classes, data)
-+        bb.parse.BBHandler.inherit(self.classes, self.filename, self.lineno, data)
- 
- def handleInclude(statements, filename, lineno, m, force):
-     statements.append(IncludeNode(filename, lineno, m.group(1), force))
-@@ -450,7 +450,7 @@ def multi_finalize(fn, d):
-                 d.setVar("BBEXTENDVARIANT", variantmap[name])
-             else:
-                 d.setVar("PN", "%s-%s" % (pn, name))
--            bb.parse.BBHandler.inherit([extendedmap[name]], d)
-+            bb.parse.BBHandler.inherit([extendedmap[name]], fn, 0, d)
- 
-         safe_d.setVar("BBCLASSEXTEND", extended)
-         _create_variants(datastores, extendedmap.keys(), extendfunc)
-diff --git a/bitbake/lib/bb/parse/parse_py/BBHandler.py b/bitbake/lib/bb/parse/parse_py/BBHandler.py
-index 2d6e331..125f458 100644
---- a/bitbake/lib/bb/parse/parse_py/BBHandler.py
-+++ b/bitbake/lib/bb/parse/parse_py/BBHandler.py
-@@ -68,10 +68,8 @@ def supports(fn, d):
-     """Return True if fn has a supported extension"""
-     return os.path.splitext(fn)[-1] in [".bb", ".bbclass", ".inc"]
- 
--def inherit(files, d):
-+def inherit(files, fn, lineno, d):
-     __inherit_cache = data.getVar('__inherit_cache', d) or []
--    fn = ""
--    lineno = 0
-     for file in files:
-         file = data.expand(file, d)
-         if not os.path.isabs(file) and not file.endswith(".bbclass"):
-@@ -81,7 +79,7 @@ def inherit(files, d):
-             logger.log(logging.DEBUG -1, "BB %s:%d: inheriting %s", fn, lineno, file)
-             __inherit_cache.append( file )
-             data.setVar('__inherit_cache', __inherit_cache, d)
--            include(fn, file, d, "inherit")
-+            include(fn, file, lineno, d, "inherit")
-             __inherit_cache = data.getVar('__inherit_cache', d) or []
- 
- def get_statements(filename, absolute_filename, base_name):
-diff --git a/bitbake/lib/bb/parse/parse_py/ConfHandler.py b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-index 6ae9d97..9242632 100644
---- a/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-+++ b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-@@ -44,10 +44,11 @@ def init(data):
- def supports(fn, d):
-     return fn[-5:] == ".conf"
- 
--def include(oldfn, fn, data, error_out):
-+def include(oldfn, fn, lineno, data, error_out):
-     """
--    error_out If True a ParseError will be raised if the to be included
--    config-files could not be included.
-+    error_out: A string indicating the verb (e.g. "include", "inherit") to be
-+    used in a ParseError that will be raised if the file to be included could
-+    not be included. Specify False to avoid raising an error in this case.
-     """
-     if oldfn == fn: # prevent infinite recursion
-         return None
-@@ -68,7 +69,7 @@ def include(oldfn, fn, data, error_out):
-         ret = handle(fn, data, True)
-     except IOError:
-         if error_out:
--            raise ParseError("Could not %(error_out)s file %(fn)s" % vars() )
-+            raise ParseError("Could not %(error_out)s file %(fn)s" % vars(), oldfn, lineno)
-         logger.debug(2, "CONF file '%s' not found", fn)
- 
- def handle(fn, data, include):
-@@ -131,7 +132,7 @@ def feeder(lineno, s, fn, statements):
-         ast.handleExport(statements, fn, lineno, m)
-         return
- 
--    raise ParseError("%s:%d: unparsed line: '%s'" % (fn, lineno, s));
-+    raise ParseError("unparsed line: '%s'" % s, fn, lineno);
- 
- # Add us to the handlers list
- from bb.parse import handlers
--- 
-1.7.5.4
-
+This seems odd to me. Is the UI not displaying the traceback when sent
+to it via the exc_info? Half the point of coming up with the new
+traceback format which is pickleable was to allow us to do exception
+formatting in the UI.
+--=20
+Christopher Larson
 
 
