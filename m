@@ -1,24 +1,24 @@
 Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1S0ZAP-0000bI-48
+	(envelope-from <dongxiao.xu@intel.com>) id 1S0ZAQ-0000bI-DY
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 23 Feb 2012 14:57:05 +0100
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga102.ch.intel.com with ESMTP; 23 Feb 2012 05:48:42 -0800
+	Thu, 23 Feb 2012 14:57:06 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga102.ch.intel.com with ESMTP; 23 Feb 2012 05:48:44 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="69497509"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="109911927"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by AZSMGA002.ch.intel.com with ESMTP; 23 Feb 2012 05:48:42 -0800
+	by azsmga001.ch.intel.com with ESMTP; 23 Feb 2012 05:48:43 -0800
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 23 Feb 2012 21:47:13 +0800
-Message-Id: <b3f25e2bde001abac9a13737105b03874667c6c8.1330003017.git.dongxiao.xu@intel.com>
+Date: Thu, 23 Feb 2012 21:47:14 +0800
+Message-Id: <eb567a583a7dbf017e5ac114febb7584816a0265.1330003017.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1330003017.git.dongxiao.xu@intel.com>
 References: <cover.1330003017.git.dongxiao.xu@intel.com>
 In-Reply-To: <cover.1330003017.git.dongxiao.xu@intel.com>
 References: <cover.1330003017.git.dongxiao.xu@intel.com>
-Subject: [PATCH 1/9] cache: Use configuration's hash value to validate cache
+Subject: [PATCH 2/9] command.py: add resolve option for generateTargetsTree API
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,189 +30,172 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 23 Feb 2012 13:57:05 -0000
+X-List-Received-Date: Thu, 23 Feb 2012 13:57:06 -0000
 
-Previously we use the file time stamp to judge if a cache is valid.
-Here this commit introduce a new method, which calculates the total
-hash value for a certain configuration's key/value paris, and tag
-it into cache filename, for example, bb_cache.dat.xxxyyyzzz.
+Currently we have generateTargetsTree API, which is used to get
+dependency information. However in that tree, there will be
+"virtual/xxx" in depends fields. Therefore we add the resolve option
+to replace it with its real providers.
 
-This mechanism also ensures the cache's correctness if user
-dynamically setting variables from some frontend GUI, like HOB.
+Besides, for packages that provided by multiple recipes, we will find
+their preverred provider.
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 ---
- lib/bb/cache.py      |   32 ++++++++++++--------------------
- lib/bb/cooker.py     |    4 +++-
- lib/bb/data_smart.py |   21 +++++++++++++++++++++
- 3 files changed, 36 insertions(+), 21 deletions(-)
+ lib/bb/command.py |   11 ++++++++-
+ lib/bb/cooker.py  |   58 ++++++++++++++++++++++++++++++++++++++++++----------
+ 2 files changed, 56 insertions(+), 13 deletions(-)
 
-diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-index 99e0f34..3d89435 100644
---- a/lib/bb/cache.py
-+++ b/lib/bb/cache.py
-@@ -42,10 +42,10 @@ except ImportError:
-     logger.info("Importing cPickle failed. "
-                 "Falling back to a very slow implementation.")
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index 2a3a3af..05555c5 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -230,14 +230,21 @@ class CommandsAsync:
+         included in the package list.
+         If pkg_list provided use that list (plus any extras brought in by
+         klass) rather than generating a tree for all packages.
++
++        Add a new option "resolve" to indicate if we need to resolve the
++        replacement for "virtual/xxx" like pn.
+         """
+         klass = params[0]
+-        if len(params) > 1:
++        resolve = False
++        if len(params) > 2:
++            pkg_list = params[1]
++            resolve = params[2]
++        elif len(params) > 1:
+             pkg_list = params[1]
+         else:
+             pkg_list = []
  
--__cache_version__ = "142"
-+__cache_version__ = "143"
+-        command.cooker.generateTargetsTree(klass, pkg_list)
++        command.cooker.generateTargetsTree(klass, pkg_list, resolve)
+         command.finishAsyncCommand()
+     generateTargetsTree.needcache = True
  
--def getCacheFile(path, filename):
--    return os.path.join(path, filename)
-+def getCacheFile(path, filename, data_hash):
-+    return os.path.join(path, filename + "." + data_hash)
- 
- # RecipeInfoCommon defines common data retrieving methods
- # from meta data for caches. CoreRecipeInfo as well as other
-@@ -245,7 +245,7 @@ class Cache(object):
-     BitBake Cache implementation
-     """
- 
--    def __init__(self, data, caches_array):
-+    def __init__(self, data, data_hash, caches_array):
-         # Pass caches_array information into Cache Constructor
-         # It will be used in later for deciding whether we 
-         # need extra cache file dump/load support 
-@@ -257,6 +257,7 @@ class Cache(object):
-         self.data = None
-         self.data_fn = None
-         self.cacheclean = True
-+        self.data_hash = data_hash
- 
-         if self.cachedir in [None, '']:
-             self.has_cache = False
-@@ -265,26 +266,17 @@ class Cache(object):
-             return
- 
-         self.has_cache = True
--        self.cachefile = getCacheFile(self.cachedir, "bb_cache.dat")
-+        self.cachefile = getCacheFile(self.cachedir, "bb_cache.dat", self.data_hash)
- 
-         logger.debug(1, "Using cache in '%s'", self.cachedir)
-         bb.utils.mkdirhier(self.cachedir)
- 
--        # If any of configuration.data's dependencies are newer than the
--        # cache there isn't even any point in loading it...
--        newest_mtime = 0
--        deps = data.getVar("__base_depends")
--
--        old_mtimes = [old_mtime for _, old_mtime in deps]
--        old_mtimes.append(newest_mtime)
--        newest_mtime = max(old_mtimes)
--
-         cache_ok = True
-         if self.caches_array:
-             for cache_class in self.caches_array:
-                 if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
--                    cachefile = getCacheFile(self.cachedir, cache_class.cachefile)
--                    cache_ok = cache_ok and (bb.parse.cached_mtime_noerror(cachefile) >= newest_mtime)
-+                    cachefile = getCacheFile(self.cachedir, cache_class.cachefile, self.data_hash)
-+                    cache_ok = cache_ok and os.path.exists(cachefile)
-                     cache_class.init_cacheData(self)
-         if cache_ok:
-             self.load_cachefile()
-@@ -318,7 +310,7 @@ class Cache(object):
-         # Calculate the correct cachesize of all those cache files
-         for cache_class in self.caches_array:
-             if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
--                cachefile = getCacheFile(self.cachedir, cache_class.cachefile)
-+                cachefile = getCacheFile(self.cachedir, cache_class.cachefile, self.data_hash)
-                 with open(cachefile, "rb") as cachefile:
-                     cachesize += os.fstat(cachefile.fileno()).st_size
- 
-@@ -326,7 +318,7 @@ class Cache(object):
-         
-         for cache_class in self.caches_array:
-             if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
--                cachefile = getCacheFile(self.cachedir, cache_class.cachefile)
-+                cachefile = getCacheFile(self.cachedir, cache_class.cachefile, self.data_hash)
-                 with open(cachefile, "rb") as cachefile:
-                     pickled = pickle.Unpickler(cachefile)                    
-                     while cachefile:
-@@ -579,7 +571,7 @@ class Cache(object):
-         for cache_class in self.caches_array:
-             if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
-                 cache_class_name = cache_class.__name__
--                cachefile = getCacheFile(self.cachedir, cache_class.cachefile)
-+                cachefile = getCacheFile(self.cachedir, cache_class.cachefile, self.data_hash)
-                 file_dict[cache_class_name] = open(cachefile, "wb")
-                 pickler_dict[cache_class_name] =  pickle.Pickler(file_dict[cache_class_name], pickle.HIGHEST_PROTOCOL)
-                    
-@@ -684,7 +676,7 @@ def init(cooker):
-     Files causing parsing errors are evicted from the cache.
- 
-     """
--    return Cache(cooker.configuration.data)
-+    return Cache(cooker.configuration.data, cooker.configuration.data_hash)
- 
- 
- class CacheData(object):
 diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index f0778e5..af91178 100644
+index af91178..85e391b 100644
 --- a/lib/bb/cooker.py
 +++ b/lib/bb/cooker.py
-@@ -849,6 +849,7 @@ class BBCooker:
-         bb.event.fire(bb.event.ConfigParsed(), data)
-         bb.parse.init_parser(data)
-         self.configuration.data = data
-+        self.configuration.data_hash = data.get_hash()
+@@ -429,7 +429,20 @@ class BBCooker:
  
-     def handleCollections( self, collections ):
-         """Handle collections"""
-@@ -1494,6 +1495,7 @@ class CookerParser(object):
-         self.filelist = filelist
-         self.cooker = cooker
-         self.cfgdata = cooker.configuration.data
-+        self.cfghash = cooker.configuration.data_hash
+         return depend_tree
  
-         # Accounting statistics
-         self.parsed = 0
-@@ -1509,7 +1511,7 @@ class CookerParser(object):
-         self.num_processes = int(self.cfgdata.getVar("BB_NUMBER_PARSE_THREADS", True) or
-                                  multiprocessing.cpu_count())
- 
--        self.bb_cache = bb.cache.Cache(self.cfgdata, cooker.caches_array)
-+        self.bb_cache = bb.cache.Cache(self.cfgdata, self.cfghash, cooker.caches_array)
-         self.fromcache = []
-         self.willparse = []
-         for filename in self.filelist:
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index ea13478..24c7a8f 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -31,6 +31,7 @@ BitBake build tools.
- import copy, re
- from collections import MutableMapping
- import logging
-+import hashlib
- import bb, bb.codeparser
- from bb   import utils
- from bb.COW  import COWDictBase
-@@ -459,3 +460,23 @@ class DataSmart(MutableMapping):
- 
-     def __delitem__(self, var):
-         self.delVar(var)
+-    def generatePkgDepTreeData(self, pkgs_to_build, task):
++    def append_package(self, taskdata, depend_tree_package, package):
++        if package not in depend_tree_package:
++            targetid = taskdata.getrun_id(package)
++            if targetid in taskdata.run_targets and taskdata.run_targets[targetid]:
++                fnid = taskdata.run_targets[targetid][0]
++                fn = taskdata.fn_index[fnid]
++                pn = self.status.pkg_fn[fn]
++                version  = "%s:%s-%s" % self.status.pkg_pepvpr[fn]
++                depend_tree_package[package] = {}
++                depend_tree_package[package]["pn"] = pn
++                depend_tree_package[package]["filename"] = fn
++                depend_tree_package[package]["version"] = version
 +
-+    def get_hash(self):
-+        data = ""
-+        keys = iter(self)
-+        for key in keys:
-+            if key in ["TIME", "DATE"]:
-+                continue
-+            if key == "__depends":
-+                deps = list(self.getVar(key, False))
-+                deps.sort()
-+                value = [deps[i][0] for i in range(len(deps))]
-+            elif key == "PATH":
-+                path = list(set(self.getVar(key, False).split(':')))
-+                path.sort()
-+                value = " ".join(path)
-+            else:
-+                value = self.getVar(key, False) or ""
-+            data = data + key + ': ' + str(value) + '\n'
++    def generatePkgDepTreeData(self, pkgs_to_build, task, resolve=False):
+         """
+         Create a dependency tree of pkgs_to_build, returning the data.
+         """
+@@ -446,6 +459,7 @@ class BBCooker:
+         depend_tree["rdepends-pn"] = {}
+         depend_tree["packages"] = {}
+         depend_tree["rdepends-pkg"] = {}
++        depend_tree["rrecs-pkg"] = {}
+ 
+         for task in xrange(len(tasks_fnid)):
+             fnid = tasks_fnid[task]
+@@ -456,6 +470,8 @@ class BBCooker:
+             lic = self.status.license[fn]
+             section = self.status.section[fn]
+             description = self.status.description[fn]
++            rdepends = self.status.rundeps[fn]
++            rrecs = self.status.runrecs[fn]
+             if pn not in depend_tree["pn"]:
+                 depend_tree["pn"][pn] = {}
+                 depend_tree["pn"][pn]["filename"] = fn
+@@ -464,6 +480,7 @@ class BBCooker:
+                 depend_tree["pn"][pn]["license"] = lic
+                 depend_tree["pn"][pn]["section"] = section
+                 depend_tree["pn"][pn]["description"] = description
++                depend_tree["pn"][pn]["packages"] = rdepends.keys()
+ 
+             if fnid not in seen_fnids:
+                 seen_fnids.append(fnid)
+@@ -471,25 +488,44 @@ class BBCooker:
+ 
+                 depend_tree["depends"][pn] = []
+                 for dep in taskdata.depids[fnid]:
+-                    depend_tree["depends"][pn].append(taskdata.build_names_index[dep])
++                    if resolve:
++                        item = taskdata.build_names_index[dep]
++                        pn_provider = ""
++                        targetid = taskdata.getbuild_id(item)
++                        if targetid in taskdata.build_targets and taskdata.build_targets[targetid]:
++                            fnid = taskdata.build_targets[targetid][0]
++                            fn_provider = taskdata.fn_index[fnid]
++                            pn_provider = self.status.pkg_fn[fn_provider]
++                        else:
++                            pn_provider = item
++                        depend_tree["depends"][pn].append(pn_provider)
++                    else:
++                        depend_tree["depends"][pn].append(taskdata.build_names_index[dep])
+ 
+                 depend_tree["rdepends-pn"][pn] = []
+                 for rdep in taskdata.rdepids[fnid]:
+                     depend_tree["rdepends-pn"][pn].append(taskdata.run_names_index[rdep])
+ 
+-                rdepends = self.status.rundeps[fn]
+                 for package in rdepends:
+                     depend_tree["rdepends-pkg"][package] = []
+                     for rdepend in rdepends[package]:
+                         depend_tree["rdepends-pkg"][package].append(rdepend)
+-                    packages.append(package)
++                        if resolve:
++                            self.append_package(taskdata, depend_tree["packages"], rdepend)
++                    if not package in packages:
++                        packages.append(package)
 +
-+        return hashlib.md5(data).hexdigest()
++                for package in rrecs:
++                    depend_tree["rrecs-pkg"][package] = []
++                    for rrec in rrecs[package]:
++                        depend_tree["rrecs-pkg"][package].append(rrec)
++                        if resolve:
++                            self.append_package(taskdata, depend_tree["packages"], rrec)
++                    if not package in packages:
++                        packages.append(package)
+ 
+                 for package in packages:
+-                    if package not in depend_tree["packages"]:
+-                        depend_tree["packages"][package] = {}
+-                        depend_tree["packages"][package]["pn"] = pn
+-                        depend_tree["packages"][package]["filename"] = fn
+-                        depend_tree["packages"][package]["version"] = version
++                    self.append_package(taskdata, depend_tree["packages"], package)
+ 
+         return depend_tree
+ 
+@@ -735,7 +771,7 @@ class BBCooker:
+ 
+         return pkg_list
+ 
+-    def generateTargetsTree(self, klass=None, pkgs=[]):
++    def generateTargetsTree(self, klass=None, pkgs=[], resolve=False):
+         """
+         Generate a dependency tree of buildable targets
+         Generate an event with the result
+@@ -750,7 +786,7 @@ class BBCooker:
+             pkgs = pkgs + extra_pkgs
+ 
+         # generate a dependency tree for all our packages
+-        tree = self.generatePkgDepTreeData(pkgs, 'build')
++        tree = self.generatePkgDepTreeData(pkgs, 'build', resolve)
+         bb.event.fire(bb.event.TargetsTreeGenerated(tree), self.configuration.data)
+ 
+     def buildWorldTargetList(self):
 -- 
 1.7.4.1
 
