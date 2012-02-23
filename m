@@ -1,30 +1,20 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1S0aEe-00037b-Oi for bitbake-devel@lists.openembedded.org;
-	Thu, 23 Feb 2012 16:05:32 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q1NEvADI012945;
-	Thu, 23 Feb 2012 14:57:10 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 12845-01; Thu, 23 Feb 2012 14:57:05 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q1NEv2iP012939
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Thu, 23 Feb 2012 14:57:04 GMT
-Message-ID: <1330009022.32110.61.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Lianhao Lu <lianhao.lu@intel.com>
-Date: Thu, 23 Feb 2012 14:57:02 +0000
-In-Reply-To: <cover.1329986451.git.lianhao.lu@intel.com>
-References: <cover.1329986451.git.lianhao.lu@intel.com>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/1] Add new option --environment-more
+Received: from mga02.intel.com ([134.134.136.20])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1S0awz-0003j2-9w
+	for bitbake-devel@lists.openembedded.org;
+	Thu, 23 Feb 2012 16:51:21 +0100
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 23 Feb 2012 07:42:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="111228884"
+Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.123.61])
+	by orsmga001.jf.intel.com with ESMTP; 23 Feb 2012 07:42:58 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 23 Feb 2012 15:42:51 +0000
+Message-Id: <cover.1330011581.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.7.5.4
+Subject: [PATCH 0/2] A couple of fixes to error handling
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,40 +26,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 23 Feb 2012 15:05:32 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 23 Feb 2012 15:51:21 -0000
 
-On Thu, 2012-02-23 at 16:49 +0800, Lianhao Lu wrote:
-> This patch adds a new option --environment-more to bitbake to display 
-> additional file dependency information. This kind of information can be used 
-> by other recipe editors, e.g. the Eclipse bitbake commander plugin, to decide 
-> when to reparse the recipes.
-> 
-> The following changes since commit d8b3718303c3d56394c722059f1a73bd79131d0a:
->   Zhai Edwin (1):
->         texi2html: Fix for multilib
-> 
-> are available in the git repository at:
-> 
->   git://git.pokylinux.org/poky-contrib llu/bitbake_showmore
->   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=llu/bitbake_showmore
-> 
-> Lianhao Lu (1):
->   bitbake: Add new otpion --environment-more
+A couple of patches to fix/improve error handling during parsing.
 
-Rather than add a new option specifically for this, I'm tempted just to
-add the variables to the -e output...
+The patches (against poky, but apply cleanly with -p2 against bitbake
+master) are available at:
+  git://git.yoctoproject.org/poky-contrib paule/bitbake-errors2
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bitbake-errors2
 
-The trouble is that variables starting "__" are considered internal use
-by bitbake. Would it work if we merge __base_depends and __depends and
-print this as some specific variable like BBINCLUDES ? I can imagine
-that being useful elsewhere too and we don't expose the internal split
-of the variable that way...
+Paul Eggleton (2):
+  bitbake: fix parse errors not being reported
+  bitbake: add file and line number to ParseError
 
-Cheers,
+ bitbake/lib/bb/cooker.py                     |   16 ++++++----------
+ bitbake/lib/bb/parse/__init__.py             |   15 +++++++++++++--
+ bitbake/lib/bb/parse/ast.py                  |    8 ++++----
+ bitbake/lib/bb/parse/parse_py/BBHandler.py   |    6 ++----
+ bitbake/lib/bb/parse/parse_py/ConfHandler.py |   11 ++++++-----
+ 5 files changed, 31 insertions(+), 25 deletions(-)
 
-Richard
+-- 
+1.7.5.4
 
 
 
