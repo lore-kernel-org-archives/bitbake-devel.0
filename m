@@ -1,31 +1,30 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1S0hdP-000673-IB for bitbake-devel@lists.openembedded.org;
-	Thu, 23 Feb 2012 23:59:35 +0100
+	id 1S0hhH-0006XG-Sd for bitbake-devel@lists.openembedded.org;
+	Fri, 24 Feb 2012 00:03:36 +0100
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q1NMpCp8030145;
-	Thu, 23 Feb 2012 22:51:12 GMT
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q1NMtDX6030199;
+	Thu, 23 Feb 2012 22:55:13 GMT
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 26703-07; Thu, 23 Feb 2012 22:51:09 +0000 (GMT)
+	id 26190-10; Thu, 23 Feb 2012 22:55:09 +0000 (GMT)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q1NMp3BM030137
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q1NMt5LY030188
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Thu, 23 Feb 2012 22:51:04 GMT
-Message-ID: <1330037463.22167.5.camel@ted>
+	Thu, 23 Feb 2012 22:55:06 GMT
+Message-ID: <1330037705.22167.8.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: Dongxiao Xu <dongxiao.xu@intel.com>
-Date: Thu, 23 Feb 2012 22:51:03 +0000
-In-Reply-To: <cec8b6e6c33582be660dd35c6050efc3f28e6baa.1330003017.git.dongxiao.xu@intel.com>
+Date: Thu, 23 Feb 2012 22:55:05 +0000
+In-Reply-To: <cover.1330003017.git.dongxiao.xu@intel.com>
 References: <cover.1330003017.git.dongxiao.xu@intel.com>
-	<cec8b6e6c33582be660dd35c6050efc3f28e6baa.1330003017.git.dongxiao.xu@intel.com>
 X-Mailer: Evolution 3.2.2- 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 9/9] runqueue: fire sceneQueueTaskStarted event when a setscene queue starts
+Subject: Re: [PATCH 0/9][PULL] Hob2: bitbake related changes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,55 +36,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 23 Feb 2012 22:59:35 -0000
+X-List-Received-Date: Thu, 23 Feb 2012 23:03:36 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
 On Thu, 2012-02-23 at 21:47 +0800, Dongxiao Xu wrote:
-> The current code prints a log when a setscene task starts, therefore
-> the progressbar in hob will not receive it. Use a sceneQueueTaskStarted
-> event instead.
+> Hi Richard,
 > 
-> Signed-off-by: Shane Wang <shane.wang@intel.com>
-> Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
-> ---
->  lib/bb/runqueue.py |   10 ++++++++++
->  1 files changed, 10 insertions(+), 0 deletions(-)
+> This is the hob2 related bitbake changes. Please help to review and pull.
 > 
-> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-> index d1d9ad9..ef28415 100644
-> --- a/lib/bb/runqueue.py
-> +++ b/lib/bb/runqueue.py
-> @@ -1653,6 +1653,9 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
->                  self.task_skip(task)
->                  return True
->  
-> +            startevent = sceneQueueTaskStarted(task, self.stats, self.rq)
-> +            bb.event.fire(startevent, self.cfgData)
-> +
->              pid, pipein, pipeout = self.fork_off_task(fn, realtask, taskname)
->  
->              self.build_pids[pid] = task
-> @@ -1720,6 +1723,13 @@ class runQueueTaskStarted(runQueueEvent):
->          runQueueEvent.__init__(self, task, stats, rq)
->          self.noexec = noexec
->  
-> +class sceneQueueTaskStarted(runQueueTaskStarted):
-> +    """
-> +    Event notifing a setscene task was started
-> +    """
-> +    def __init__(self, task, stats, rq, noexec=False):
-> +        runQueueTaskStarted.__init__(self, task, stats, rq, noexec)
-> +
+> Compared with previous version:
+>  - cache.py: remove the DATE field and value in calculating self.configuration's hash value,
+>    which causes the cache invalid after one day.
+> 
+> Thanks,
+> Dongxiao
+> 
+> The following changes since commit 95a599067650902727ecb4a39d6dd003c5cfedf3:
+> 
+>   bitbake/ui/knotty: fix incorrect exit code (2012-02-22 21:30:18 +0000)
+> 
+> are available in the git repository at:
+>   git://git.pokylinux.org/poky-contrib dxu4/hob2-bitbake-changes
+>   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob2-bitbake-changes
+> 
+> Dongxiao Xu (7):
+>   cache: Use configuration's hash value to validate cache
+>   command.py: add resolve option for generateTargetsTree API
+>   event.py: Add new events RequestPackageInfo and PackageInfo
+>   bitbake: add -B option to bind with interface
+>   bitbake: Add client socket info for BitBakeServerConnection
+>   command.py: Add a new API triggerEvent()
+>   runqueue: fire sceneQueueTaskStarted event when a setscene queue
+>     starts
+> 
+> Shane Wang (2):
+>   bitbake: change for adding progress bar in Hob2.
+>   command.py: add new API to get the cpu count on the server
 
-This one has me a little worried since it inherits runQueueTaskStarted
-and a UI might confuse this with real runQueueTaskStarted() events. Is
-there something else we can inherit here?
+The series had things split into good logical chunks which really helped
+making review easier, thanks! Most of these changes have been on the
+list before so I've merged these with the exception of the
+sceneQueueTaskStarted which might need a small change.
 
 Cheers,
 
 Richard
-
 
 
 
