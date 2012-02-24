@@ -1,24 +1,41 @@
-Received: from mga14.intel.com ([143.182.124.37])
+Received: from mail-ey0-f175.google.com ([209.85.215.175])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1S108j-00085F-VO
+	(envelope-from <martin.jansa@gmail.com>) id 1S12g0-0002jO-NG
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 24 Feb 2012 19:45:10 +0100
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga102.ch.intel.com with ESMTP; 24 Feb 2012 10:36:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="70019969"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.123.71])
-	by AZSMGA002.ch.intel.com with ESMTP; 24 Feb 2012 10:36:45 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+	Fri, 24 Feb 2012 22:27:40 +0100
+Received: by eaal10 with SMTP id l10so1331822eaa.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 24 Feb 2012 13:19:17 -0800 (PST)
+Received-SPF: pass (google.com: domain of martin.jansa@gmail.com designates
+	10.14.32.205 as permitted sender) client-ip=10.14.32.205; 
+Authentication-Results: mr.google.com;
+	spf=pass (google.com: domain of martin.jansa@gmail.com
+	designates 10.14.32.205 as permitted sender)
+	smtp.mail=martin.jansa@gmail.com;
+	dkim=pass header.i=martin.jansa@gmail.com
+Received: from mr.google.com ([10.14.32.205])
+	by 10.14.32.205 with SMTP id o53mr2475331eea.47.1330118357770 (num_hops
+	= 1); Fri, 24 Feb 2012 13:19:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=date:from:to:subject:message-id:mime-version:content-type
+	:content-disposition:user-agent;
+	bh=Ts3Ffm8SLT8lHelmlcQo8w+lRy+3M5s99wnQd+t7Btc=;
+	b=bl11TSdTkJfkf1WZXJPeSuly6y38S3NrhTHFPSKRJ0dUvF5dBiTekKZ/4/ds/uGEzR
+	tGQX3rslv0hvHau5WiU9PSM0gnhjSFYtoVjxFFDXWg99UcnqnTv6XkpEIXFp1Cmzfyhf
+	nl8znFHK7ZKjYswgL2SypYhMnfzrqfpLRXZug=
+Received: by 10.14.32.205 with SMTP id o53mr1844198eea.47.1330118357594;
+	Fri, 24 Feb 2012 13:19:17 -0800 (PST)
+Received: from localhost ([94.230.152.246])
+	by mx.google.com with ESMTPS id n52sm22601782eea.5.2012.02.24.13.19.16
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Fri, 24 Feb 2012 13:19:16 -0800 (PST)
+Date: Fri, 24 Feb 2012 22:19:14 +0100
+From: Martin Jansa <martin.jansa@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 24 Feb 2012 18:36:42 +0000
-Message-Id: <5cf92eae9327e2f345888f87faea2e10aa1a672e.1330108168.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.7.5.4
-In-Reply-To: <cover.1330108168.git.paul.eggleton@linux.intel.com>
-References: <cover.1330108168.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1330108168.git.paul.eggleton@linux.intel.com>
-References: <cover.1330108168.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 1/1] bitbake/cooker: terminate when errors found in layer configuration
+Message-ID: <20120224211914.GN3769@jama.jama.net>
+MIME-Version: 1.0
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Subject: KeyError in siggen.py
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,96 +47,61 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 24 Feb 2012 18:45:10 -0000
+X-List-Received-Date: Fri, 24 Feb 2012 21:27:40 -0000
+X-Groupsio-MsgNum: 1033
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="9HASspBA3mgrZm7c"
+Content-Disposition: inline
 
-If we find an error in the layer configuration (such as an unsatisfied
-item in LAYERDEPENDS) then exit by raising an exception at the end of
-handleCollections() (without producing a backtrace).
+--9HASspBA3mgrZm7c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- bitbake/lib/bb/cooker.py |   17 +++++++++++++++++
- 1 files changed, 17 insertions(+), 0 deletions(-)
+Any idea what could cause this?
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index d645454..12b526b 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -55,6 +55,11 @@ class NothingToBuild(Exception):
-     Exception raised when there is nothing to build
-     """
- 
-+class CollectionError(bb.BBHandledException):
-+    """
-+    Exception raised when layer configuration is incorrect
-+    """
-+
- class state:
-     initial, parsing, running, shutdown, stop = range(5)
- 
-@@ -893,6 +898,7 @@ class BBCooker:
- 
-     def handleCollections( self, collections ):
-         """Handle collections"""
-+        errors = False
-         self.status.bbfile_config_priorities = []
-         if collections:
-             collection_priorities = {}
-@@ -907,6 +913,7 @@ class BBCooker:
-                         prio = int(priority)
-                     except ValueError:
-                         parselog.error("invalid value for BBFILE_PRIORITY_%s: \"%s\"", c, priority)
-+                        errors = True
-                     if min_prio == 0 or prio < min_prio:
-                         min_prio = prio
-                     collection_priorities[c] = prio
-@@ -925,6 +932,7 @@ class BBCooker:
-                                 depver = int(depsplit[1])
-                             except ValueError:
-                                 parselog.error("invalid version value in LAYERDEPENDS_%s: \"%s\"", c, dep)
-+                                errors = True
-                                 continue
-                         else:
-                             depver = None
-@@ -939,13 +947,17 @@ class BBCooker:
-                                         lver = int(layerver)
-                                     except ValueError:
-                                         parselog.error("invalid value for LAYERVERSION_%s: \"%s\"", c, layerver)
-+                                        errors = True
-                                         continue
-                                     if lver <> depver:
-                                         parselog.error("Layer dependency %s of layer %s is at version %d, expected %d", dep, c, lver, depver)
-+                                        errors = True
-                                 else:
-                                     parselog.error("Layer dependency %s of layer %s has no version, expected %d", dep, c, depver)
-+                                    errors = True
-                         else:
-                             parselog.error("Layer dependency %s of layer %s not found", dep, c)
-+                            errors = True
-                     collection_depends[c] = depnamelist
-                 else:
-                     collection_depends[c] = []
-@@ -969,13 +981,18 @@ class BBCooker:
-                 regex = self.configuration.data.getVar("BBFILE_PATTERN_%s" % c, 1)
-                 if regex == None:
-                     parselog.error("BBFILE_PATTERN_%s not defined" % c)
-+                    errors = True
-                     continue
-                 try:
-                     cre = re.compile(regex)
-                 except re.error:
-                     parselog.error("BBFILE_PATTERN_%s \"%s\" is not a valid regular expression", c, regex)
-+                    errors = True
-                     continue
-                 self.status.bbfile_config_priorities.append((c, regex, cre, collection_priorities[c]))
-+        if errors:
-+            # We've already printed the actual error(s)
-+            raise CollectionError("Errors during parsing layer configuration")
- 
-     def buildSetVars(self):
-         """
--- 
-1.7.5.4
+OE qemux86-64@ ~/oe-core $ bitbake -c configure -b /OE/oe-core/openembedded=
+-core/meta/recipes-devtools/gcc/gcc-cross-initial_4.6.bb -f
+WARNING: Buildfile specified, dependencies will not be handled. If this is =
+not what you want, do not use -b / --buildfile.
+ERROR: Command execution failed: Traceback (most recent call last):
+  File "/usr/lib64/python2.7/site-packages/bb/command.py", line 87, in runA=
+syncCommand
+    commandmethod(self.cmds_async, self, options)
+  File "/usr/lib64/python2.7/site-packages/bb/command.py", line 203, in bui=
+ldFile
+    command.cooker.buildFile(bfile, task)
+  File "/usr/lib64/python2.7/site-packages/bb/cooker.py", line 1076, in bui=
+ldFile
+    bb.build.del_stamp('do_%s' % task, self.status, fn)
+  File "/usr/lib64/python2.7/site-packages/bb/build.py", line 441, in del_s=
+tamp
+    stamp =3D stamp_internal(task, d, file_name)
+  File "/usr/lib64/python2.7/site-packages/bb/build.py", line 411, in stamp=
+_internal
+    stamp =3D bb.parse.siggen.stampfile(stamp, file_name, taskname, extrain=
+fo)
+  File "/usr/lib64/python2.7/site-packages/bb/siggen.py", line 222, in stam=
+pfile
+    h =3D self.taskhash[k]
+KeyError: '/OE/oe-core/openembedded-core/meta/recipes-devtools/gcc/gcc-cros=
+s-initial_4.6.bb.do_configure'
 
+Cheers,
 
+--=20
+Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
 
+--9HASspBA3mgrZm7c
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.18 (GNU/Linux)
+
+iEYEARECAAYFAk9H/tIACgkQN1Ujt2V2gBxzDQCfYw98BaGcvDK/SnCkOXMOSoWu
+oGYAn3g1j4H7eFAlc36wTkUdaUOIxTPw
+=aLkq
+-----END PGP SIGNATURE-----
+
+--9HASspBA3mgrZm7c--
