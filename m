@@ -1,30 +1,30 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1S14US-00054C-0R for bitbake-devel@lists.openembedded.org;
-	Sat, 25 Feb 2012 00:23:52 +0100
+Received: from mail.dream-property.net ([82.149.226.172])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <obi@opendreambox.org>) id 1S157v-000671-Vl
+	for bitbake-devel@lists.openembedded.org;
+	Sat, 25 Feb 2012 01:04:39 +0100
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q1ONFTBq014830;
-	Fri, 24 Feb 2012 23:15:29 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 13974-08; Fri, 24 Feb 2012 23:15:25 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q1ONFJoH014824
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Fri, 24 Feb 2012 23:15:20 GMT
-Message-ID: <1330125319.9617.14.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Martin Jansa <martin.jansa@gmail.com>
-Date: Fri, 24 Feb 2012 23:15:19 +0000
-In-Reply-To: <20120224211914.GN3769@jama.jama.net>
-References: <20120224211914.GN3769@jama.jama.net>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: KeyError in siggen.py
+	by mail.dream-property.net (Postfix) with ESMTP id 3AA3E3159551;
+	Sat, 25 Feb 2012 00:47:19 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at mail.dream-property.net
+Received: from mail.dream-property.net ([127.0.0.1])
+	by localhost (mail.dream-property.net [127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id xMfaqDtQWY3x; Sat, 25 Feb 2012 00:47:12 +0100 (CET)
+Received: from [172.22.22.61] (drms-590cf87f.pool.mediaWays.net
+	[89.12.248.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mail.dream-property.net (Postfix) with ESMTPSA id 738CD3159550;
+	Sat, 25 Feb 2012 00:47:12 +0100 (CET)
+Message-ID: <4F48217F.6040406@opendreambox.org>
+Date: Sat, 25 Feb 2012 00:47:11 +0100
+From: Andreas Oberritter <obi@opendreambox.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:10.0.2) Gecko/20120216 Thunderbird/10.0.2
+MIME-Version: 1.0
+To: bitbake-devel@lists.openembedded.org
+Subject: cache broken in master
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,38 +36,18 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 24 Feb 2012 23:23:52 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Sat, 25 Feb 2012 00:04:40 -0000
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 
-On Fri, 2012-02-24 at 22:19 +0100, Martin Jansa wrote:
-> Any idea what could cause this?
-> 
-> OE qemux86-64@ ~/oe-core $ bitbake -c configure -b /OE/oe-core/openembedded-core/meta/recipes-devtools/gcc/gcc-cross-initial_4.6.bb -f
-> WARNING: Buildfile specified, dependencies will not be handled. If this is not what you want, do not use -b / --buildfile.
-> ERROR: Command execution failed: Traceback (most recent call last):
->   File "/usr/lib64/python2.7/site-packages/bb/command.py", line 87, in runAsyncCommand
->     commandmethod(self.cmds_async, self, options)
->   File "/usr/lib64/python2.7/site-packages/bb/command.py", line 203, in buildFile
->     command.cooker.buildFile(bfile, task)
->   File "/usr/lib64/python2.7/site-packages/bb/cooker.py", line 1076, in buildFile
->     bb.build.del_stamp('do_%s' % task, self.status, fn)
->   File "/usr/lib64/python2.7/site-packages/bb/build.py", line 441, in del_stamp
->     stamp = stamp_internal(task, d, file_name)
->   File "/usr/lib64/python2.7/site-packages/bb/build.py", line 411, in stamp_internal
->     stamp = bb.parse.siggen.stampfile(stamp, file_name, taskname, extrainfo)
->   File "/usr/lib64/python2.7/site-packages/bb/siggen.py", line 222, in stampfile
->     h = self.taskhash[k]
-> KeyError: '/OE/oe-core/openembedded-core/meta/recipes-devtools/gcc/gcc-cross-initial_4.6.bb.do_configure'
+Hi,
 
-The -f triggers a del_stamp so I'm looking at that with suspicion...
+commit 1c1df03a6c4717bfd5faab144c4f8bbfcbae0b57 broke bitbake's
+dependency cache for me, i.e. it parses all recipes on every invocation
+and always displays "(0 cached, 1269 parsed)". Deleting tmp/cache didn't
+help. Reverting this commit restores the functionality.
 
-No fix but I suspect its where we need to look. I can reproduce with -b
-and -f combined.
-
-Cheers,
-
-Richard
-
+Regards,
+Andreas
 
 
