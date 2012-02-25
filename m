@@ -1,25 +1,28 @@
-Received: from mga14.intel.com ([143.182.124.37])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1S1Bio-00009i-Fa
+	(envelope-from <Liezhi.Yang@windriver.com>) id 1S1FcM-00042A-T0
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 25 Feb 2012 08:07:10 +0100
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga102.ch.intel.com with ESMTP; 24 Feb 2012 22:58:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="70177515"
-Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
-	([10.239.36.11])
-	by AZSMGA002.ch.intel.com with ESMTP; 24 Feb 2012 22:58:45 -0800
-From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
-To: Andreas Oberritter <obi@opendreambox.org>
-In-Reply-To: <4F48217F.6040406@opendreambox.org>
-References: <4F48217F.6040406@opendreambox.org>
-Date: Sat, 25 Feb 2012 14:56:46 +0800
-Message-ID: <1330153006.1957.10.camel@dongxiao-osel>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.32.2 
+	Sat, 25 Feb 2012 12:16:47 +0100
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q1PB8Kfe028561
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Sat, 25 Feb 2012 03:08:20 -0800 (PST)
+Received: from [128.224.162.196] (128.224.162.196) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
+	Sat, 25 Feb 2012 03:08:19 -0800
+Message-ID: <4F48C122.1030200@windriver.com>
+Date: Sat, 25 Feb 2012 19:08:18 +0800
+From: Robert Yang <liezhi.yang@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux i686;
+	rv:9.0) Gecko/20111229 Thunderbird/9.0
+MIME-Version: 1.0
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <cover.1329727465.git.liezhi.yang@windriver.com>
+	<3f1562cf1c51f28221093dd13516206aa0287f6e.1329727465.git.liezhi.yang@windriver.com>
+	<1329931725.20261.197.camel@ted>
+In-Reply-To: <1329931725.20261.197.camel@ted>
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: cache broken in master
+Subject: Re: [PATCH 1/2] V4 Disk space monitoring
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,108 +34,158 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 25 Feb 2012 07:07:10 -0000
-X-Groupsio-MsgNum: 1045
-Content-Type: multipart/mixed; boundary="=-5eNi4eqze4WOQbWVvuQM"
-
---=-5eNi4eqze4WOQbWVvuQM
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Sat, 25 Feb 2012 11:16:47 -0000
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Sat, 2012-02-25 at 00:47 +0100, Andreas Oberritter wrote:
-> Hi,
-> 
-> commit 1c1df03a6c4717bfd5faab144c4f8bbfcbae0b57 broke bitbake's
-> dependency cache for me, i.e. it parses all recipes on every invocation
-> and always displays "(0 cached, 1269 parsed)". Deleting tmp/cache didn't
-> help. Reverting this commit restores the functionality.
 
-Hi Andreas,
+Hi Richard,
 
-Sorry for the inconvenience that this commit brought to you.
+Thank you very much for your detailed review, I've fixed most of
+them as you suggested except the following ones, and please see my
+comments below.
 
-Could you help to try the following and send me your "/tmp/1.log
-and /tmp/2.log"?
+On 02/23/2012 01:28 AM, Richard Purdie wrote:
+> Hi Robert,
+>
+>>     # Set disk space and inode interval, the unit can be G, M, or K, but do
+>>     # NOT use the GB, MB or KB (B is not needed), the format is:
+>>     # "disk space interval, disk inode interval",  the default value is
+>>     # "10M, 50" which means that it would warn when the free space is
+>>     # lower than the minimum space(or inode), and would repeat the action
+>>     # when the disk space reduces 10M (or the amount of inode reduces 50)
+>>     # again.
+>>     #BB_DISKMON_INTERVAL = "10M,10K"
+>
+> I'm wondering how useful this interval is? Surely once we've warned,
+> aborted or stopped starting new tasks, running the action again isn't
+> much use? This is particularly true with the change I'm proposing above.
+>
 
-1) apply the attached "cache_debug.patch"
-2) remove tmp/cache
-3) bitbake -p &> /tmp/1.log
-4) bitbake -p &> /tmp/2.log
+I think there are 3 actions we can do: WARN, STOPTASKS or ABORT, this is
+only useful for "WARN", when the action is "WARN", there would be too many
+WARNINGS without the interval value.
 
-Besides, you can have a try of the attached cache_whitelist.patch to see
-if it fixes your problem.
+>> +def errRet(info):
+>> +    logger.error("%s" % info)
+>> +    logger.error("Disk space monitor will NOT be enabled")
+>> +    return None
+>> +
+>> +def errRetTwo(info):
+>> +    logger.error("%s" % info)
+>> +    logger.error("Disk space monitor will NOT be enabled")
+>> +    return None, None
+>
+> These should be one multiline logger.error() call (using \n for
+> newlines).
+>
 
-Thanks,
-Dongxiao
+Yes, I've fixed this, also combine errRet and errRetTwo into one
+function printERR.
 
-> 
-> Regards,
-> Andreas
+>> +        for dev in devDict:
+>> +            st = os.statvfs(devDict[dev][0])
+>> +            # The free space, float point number
+>> +            freeSpace = st.f_bavail * st.f_frsize
+>> +            if devDict[dev][1] is not None and freeSpace<  devDict[dev][1]:
+>> +                # Always show warning, and this is the default "WARN" action
+>> +                if self.preFreeSpace[dev] == 0 or self.preFreeSpace[dev] - freeSpace>  self.dm.spaceInterval:
+>> +                    logger.warn("The free space of %s is running low (%.3fGB left)" % (dev, freeSpace / 1024 / 1024 / 1024.0))
+>> +                    self.preFreeSpace[dev] = freeSpace
+>> +                if self.dm.action == "NO_NEW_TASK":
+>> +                    logger.warn("No new tasks can be excuted since BB_DISKMON_ACTION = \"NO_NEW_TASK\"!")
+>> +                    return 1
+>> +                elif self.dm.action == "ABORT":
+>> +                    logger.error("Immediately abort since BB_DISKMON_ACTION = \"ABORT\"!")
+>> +                    sys.exit(1)
+>
+> Please don't do this. There is a way to immediately abort the runqueue
+> by calling rq.finish_runqueue(True) (see cooker.py which does this).
+>
+> The return one could probably also be a finish_runqueue(False) call.
+
+The finish_runqueue(False) works, but finish_runqueue(True) doesn't work
+if there is no running task running(for example, when we use the
+finish_runqueue(True) at the very beginning of the build), this is because
+if there is no running taks, the function would do nothing. So I use:
+
+rq.finish_runqueue(True)
+return False
+
+Then the build would always stop whether there is running tasks or not.
+
+>>       def execute_runqueue(self):
+>>           """
+>>           Run the tasks in a queue prepared by rqdata.prepare()
+>> @@ -946,7 +993,14 @@ class RunQueue:
+>>                   self.rqexe = RunQueueExecuteScenequeue(self)
+>>
+>>           if self.state is runQueueSceneRun:
+>> -            retval = self.rqexe.execute()
+>> +            if self.dm and self.dm.enableMonitor:
+>> +                dm_action = self.disk_monitor_action(self.dm.devDict)
+>> +                if dm_action == 1:
+>> +                    self.rqexe.finish()
+>> +                else:
+>> +                    retval = self.rqexe.execute()
+>> +            else:
+>> +                retval = self.rqexe.execute()
+>>
+>>           if self.state is runQueueRunInit:
+>>               logger.info("Executing RunQueue Tasks")
+>> @@ -954,10 +1008,17 @@ class RunQueue:
+>>               self.state = runQueueRunning
+>>
+>>           if self.state is runQueueRunning:
+>> -            retval = self.rqexe.execute()
+>> +            if self.dm and self.dm.enableMonitor:
+>> +                dm_action = self.disk_monitor_action(self.dm.devDict)
+>> +                if dm_action == 1:
+>> +                    self.rqexe.finish()
+>> +                else:
+>> +                    retval = self.rqexe.execute()
+>> +            else:
+>> +                retval = self.rqexe.execute()
+>>
+>>           if self.state is runQueueCleanUp:
+>> -           self.rqexe.finish()
+>> +            self.rqexe.finish()
+>>
+>>           if self.state is runQueueComplete or self.state is runQueueFailed:
+>>               if self.rqexe.stats.failed:
+>
+>
+> With the above changes, you can probably just put something like:
+>
+>         if self.state in [runQueueSceneRun, runQueueRunning, runQueueCleanUp]:
+>              self.dm.check(self)
+>
+
+This would make the code more clearer, I have moved most of the code to
+lib/bb/monitordisk.py as you suggested, but since the rq.finish_runqueue(True)
+doesn't work when there is no running task, I still need check the return
+status of the monitor, now the code is:
+
+         if self.state in [runQueueSceneRun, runQueueRunning, runQueueCleanUp]:
+             if self.dm.enableMonitor:
+                 dm_ret = self.dm.dm_action()
+                 if dm_ret == 1:
+                     self.finish_runqueue(False)
+                 elif dm_ret == 2:
+                     self.finish_runqueue(True)
+                     return False
+
+// Robert
+
+> in above if self.state is runQueueCleanUp in execute_runqueue() since
+> calling the finish_runqueue() would change self.state
+>
+> Cheers,
+>
+> Richard
+>
+>
+>
+>
 
 
---=-5eNi4eqze4WOQbWVvuQM
-Content-Disposition: attachment; filename="cache_debug.patch"
-Content-Type: text/x-patch; name="cache_debug.patch"; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-
-diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
-index 24c7a8f..29af5e5 100644
---- a/bitbake/lib/bb/data_smart.py
-+++ b/bitbake/lib/bb/data_smart.py
-@@ -478,5 +478,6 @@ class DataSmart(MutableMapping):
-             else:
-                 value = self.getVar(key, False) or ""
-             data = data + key + ': ' + str(value) + '\n'
-+        print("The data for hash is: %s" % data)
- 
-         return hashlib.md5(data).hexdigest()
-
---=-5eNi4eqze4WOQbWVvuQM
-Content-Disposition: attachment; filename="cache_whitelist.patch"
-Content-Type: text/x-patch; name="cache_whitelist.patch"; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-
-diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
-index 24c7a8f..dbf2002 100644
---- a/bitbake/lib/bb/data_smart.py
-+++ b/bitbake/lib/bb/data_smart.py
-@@ -463,20 +463,12 @@ class DataSmart(MutableMapping):
- 
-     def get_hash(self):
-         data = ""
--        keys = iter(self)
-+        basewhitelist = set((self.getVar("BB_HASHBASE_WHITELIST", True) or "").split())
-+        keys = set(key for key in iter(self) if not key.startswith("__"))
-         for key in keys:
--            if key in ["TIME", "DATE"]:
-+            if key in basewhitelist:
-                 continue
--            if key == "__depends":
--                deps = list(self.getVar(key, False))
--                deps.sort()
--                value = [deps[i][0] for i in range(len(deps))]
--            elif key == "PATH":
--                path = list(set(self.getVar(key, False).split(':')))
--                path.sort()
--                value = " ".join(path)
--            else:
--                value = self.getVar(key, False) or ""
-+            value = self.getVar(key, False) or ""
-             data = data + key + ': ' + str(value) + '\n'
- 
-         return hashlib.md5(data).hexdigest()
-diff --git a/meta/conf/bitbake.conf b/meta/conf/bitbake.conf
-index 90e5f7a..133a957 100644
---- a/meta/conf/bitbake.conf
-+++ b/meta/conf/bitbake.conf
-@@ -727,7 +727,7 @@ BB_CONSOLELOG = "${TMPDIR}/cooker.log.${DATETIME}"
- 
- # Setup our default hash policy
- BB_SIGNATURE_HANDLER ?= "OEBasic"
--BB_HASHBASE_WHITELIST ?= "TMPDIR FILE PATH PWD BB_TASKHASH BBPATH DL_DIR SSTATE_DIR THISDIR FILESEXTRAPATHS FILE_DIRNAME HOME LOGNAME SHELL TERM USER FILESPATH STAGING_DIR_HOST STAGING_DIR_TARGET COREBASE PRSERV_HOST PRSERV_PORT PRSERV_DUMPDIR PRSERV_DUMPFILE PRSERV_LOCKDOWN"
-+BB_HASHBASE_WHITELIST ?= "TMPDIR FILE PATH PWD BB_TASKHASH BBPATH DL_DIR SSTATE_DIR THISDIR FILESEXTRAPATHS FILE_DIRNAME HOME LOGNAME SHELL TERM USER FILESPATH STAGING_DIR_HOST STAGING_DIR_TARGET COREBASE PRSERV_HOST PRSERV_PORT PRSERV_DUMPDIR PRSERV_DUMPFILE PRSERV_LOCKDOWN DATE TIME"
- 
- MLPREFIX ??= ""
- MULTILIB_VARIANTS ??= ""
-
---=-5eNi4eqze4WOQbWVvuQM--
