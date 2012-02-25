@@ -1,24 +1,20 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1S16gK-0007vM-Lh
+	(envelope-from <josh@linux.intel.com>) id 1S1AhB-0007bw-KY
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 25 Feb 2012 02:44:16 +0100
+	Sat, 25 Feb 2012 07:01:25 +0100
 Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 24 Feb 2012 17:34:47 -0800
+	by azsmga102.ch.intel.com with ESMTP; 24 Feb 2012 21:53:00 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="110607572"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="110641959"
 Received: from unknown (HELO shamshir.amr.corp.intel.com) ([10.255.15.27])
-	by azsmga001.ch.intel.com with ESMTP; 24 Feb 2012 17:34:47 -0800
+	by azsmga001.ch.intel.com with ESMTP; 24 Feb 2012 21:53:00 -0800
 From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 24 Feb 2012 17:34:43 -0800
-Message-Id: <2f12aba7bb8438c9dd976972f79524dc143dbe7a.1330133412.git.josh@linux.intel.com>
+Date: Fri, 24 Feb 2012 21:52:57 -0800
+Message-Id: <cover.1330149082.git.josh@linux.intel.com>
 X-Mailer: git-send-email 1.7.7.6
-In-Reply-To: <03fda55b89fdc2ddb45a7bc08015989fc0eccb91.1330133412.git.josh@linux.intel.com>
-References: <03fda55b89fdc2ddb45a7bc08015989fc0eccb91.1330133412.git.josh@linux.intel.com>
-In-Reply-To: <cover.1330133412.git.josh@linux.intel.com>
-References: <cover.1330133412.git.josh@linux.intel.com>
-Subject: [PATCH 6/6] crumbs/hig: tweak UI and layout of LayerSelectionDialog
+Subject: [PATCH 0/1] Fix depexp
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,55 +26,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 25 Feb 2012 01:44:16 -0000
+X-List-Received-Date: Sat, 25 Feb 2012 06:01:25 -0000
 
-Several minor tweaks for appearance:
-* Try to rework the labels so that the English flows better
-* Fix spacing
-* Remove the separator - it's not needed
+Per the patch and Yocto bug #2027 the recent BitBake patch
+to implement the new Hob UI deleted the file which implements
+thge progress bar used by depexp. The following patch adds
+back that file.
 
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
----
- lib/bb/ui/crumbs/hig.py |   18 +++++-------------
- 1 files changed, 5 insertions(+), 13 deletions(-)
+Cheers,
+Joshua
 
-diff --git a/lib/bb/ui/crumbs/hig.py b/lib/bb/ui/crumbs/hig.py
-index abc4a55..bd611bc 100644
---- a/lib/bb/ui/crumbs/hig.py
-+++ b/lib/bb/ui/crumbs/hig.py
-@@ -518,9 +518,9 @@ class LayerSelectionDialog (CrumbsDialog):
-         self.vbox.pack_start(hbox_top, expand=False, fill=False)
- 
-         if self.split_model:
--            label = HobWidget.gen_label_widget("<span weight=\"bold\" font_desc='12'>Select Layers:</span>\n(Available layers under '${COREBASE}/layers/' directory)")
-+            label = HobWidget.gen_label_widget("<b>Select Layers:</b>\n(Available layers under '${COREBASE}/layers/' directory)")
-         else:
--            label = HobWidget.gen_label_widget("<span weight=\"bold\" font_desc='12'>Select Layers:</span>")
-+            label = HobWidget.gen_label_widget("<b>Select Layers:</b>")
-         hbox_top.pack_start(label, expand=False, fill=False)
- 
-         tooltip = "Layer is a collection of bb files and conf files"
-@@ -534,17 +534,9 @@ class LayerSelectionDialog (CrumbsDialog):
- 
-         self.vbox.pack_start(layer_widget, expand=True, fill=True)
- 
--        separator = gtk.HSeparator()
--        self.vbox.pack_start(separator, False, True, 5)
--        separator.show()
--
--        hbox_button = gtk.HBox()
--        self.vbox.pack_end(hbox_button, expand=False, fill=False)
--        hbox_button.show()
--
--        label = HobWidget.gen_label_widget("<i>'meta' is Core layer for Yocto images</i>\n"
--        "<span weight=\"bold\">Please do not remove it</span>")
--        hbox_button.pack_start(label, expand=False, fill=False)
-+        label = HobWidget.gen_label_widget("<b>Note:</b> '<i>meta</i>' is the Core layer for Yocto images please do not remove it.")
-+        label.show()
-+        self.vbox.pack_end(label, expand=False, fill=False)
- 
-         self.show_all()
- 
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=2027
+
+The following changes since commit c7486a09310fe63b1aa1b7b0bb9450f306b6093b:
+
+  bitbake/cooker: terminate when errors found in layer configuration (2012-02-24 23:30:16 +0000)
+
+are available in the git repository at:
+  git://github.com/incandescant/bitbake josh/depexp
+  https://github.com/incandescant/bitbake/tree/josh/depexp
+
+Joshua Lock (1):
+  crumbs: add back progress implementation for depexp
+
+ lib/bb/ui/crumbs/progress.py |   20 ++++++++++++++++++++
+ 1 files changed, 20 insertions(+), 0 deletions(-)
+ create mode 100644 lib/bb/ui/crumbs/progress.py
+
 -- 
 1.7.7.6
 
