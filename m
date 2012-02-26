@@ -1,31 +1,49 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1S1n68-0005xh-6c; Mon, 27 Feb 2012 00:01:44 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q1QMrEEi019141;
-	Sun, 26 Feb 2012 22:53:14 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 16773-07; Sun, 26 Feb 2012 22:53:08 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q1QMr6VY019104
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Sun, 26 Feb 2012 22:53:07 GMT
-Message-ID: <1330296788.31855.20.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Martin Jansa <martin.jansa@gmail.com>
-Date: Sun, 26 Feb 2012 22:53:08 +0000
-In-Reply-To: <20120226212631.GA3859@jama.jama.net>
-References: <1330261465.31855.4.camel@ted>
-	<20120226212631.GA3859@jama.jama.net>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
-	openembedded-core <openembedded-core@lists.openembedded.org>
-Subject: Re: [PATCH] bitbake/ConfHandler: Be more strict about variable quoting
+Received: from mail-ey0-f175.google.com ([209.85.215.175])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <martin.jansa@gmail.com>) id 1S1nNg-0006Mq-51
+	for bitbake-devel@lists.openembedded.org;
+	Mon, 27 Feb 2012 00:19:52 +0100
+Received: by eaae1 with SMTP id e1so353055eaa.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Sun, 26 Feb 2012 15:11:23 -0800 (PST)
+Received-SPF: pass (google.com: domain of martin.jansa@gmail.com designates
+	10.213.31.134 as permitted sender) client-ip=10.213.31.134; 
+Authentication-Results: mr.google.com;
+	spf=pass (google.com: domain of martin.jansa@gmail.com
+	designates 10.213.31.134 as permitted sender)
+	smtp.mail=martin.jansa@gmail.com;
+	dkim=pass header.i=martin.jansa@gmail.com
+Received: from mr.google.com ([10.213.31.134])
+	by 10.213.31.134 with SMTP id y6mr3317958ebc.1.1330297883975 (num_hops
+	= 1); Sun, 26 Feb 2012 15:11:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=gamma;
+	h=resent-from:resent-date:resent-message-id:resent-to:mime-version
+	:in-reply-to:references:date:delivered-to:message-id:subject:from:to
+	:content-type; bh=YmFrJ9y23PawQ9Z/S2EnzyfwAvbPILbUBubQxqWxQFo=;
+	b=nxDoYJQq9OSQ714iHuYWVC8x2DtkG8h44xlcx0Al/nI7AzBDGq8o+p7rCw1YFavDEh
+	/R2NaApJFK2lggggdZ8ryu/Fp++Ta0THeNM8TUwwaLpvzGWfH+33G++3y/3VwKLcLL0g
+	AFabEsoewa1LZ+82aAjzfQTwHWu/JUeQWxUrU=
+Received: by 10.213.31.134 with SMTP id y6mr2497876ebc.1.1330297883861;
+	Sun, 26 Feb 2012 15:11:23 -0800 (PST)
+Received: from localhost ([94.230.152.246])
+	by mx.google.com with ESMTPS id w60sm50702537eeb.4.2012.02.26.15.11.22
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Sun, 26 Feb 2012 15:11:23 -0800 (PST)
+Resent-From: Martin Jansa <Martin.Jansa@gmail.com>
+Resent-Date: Mon, 27 Feb 2012 00:11:21 +0100
+Resent-Message-ID: <20120226231121.GB3859@jama.jama.net>
+Resent-To: bitbake-devel@lists.openembedded.org
+MIME-Version: 1.0
+Received: by 10.236.63.180 with HTTP; Sun, 26 Feb 2012 15:05:37 -0800 (PST)
+In-Reply-To: <4F4A7A46.9060104@opendreambox.org>
+References: <4F48217F.6040406@opendreambox.org>
+	<1330153006.1957.10.camel@dongxiao-osel>
+	<4F4A7A46.9060104@opendreambox.org>
+Date: Mon, 27 Feb 2012 00:05:37 +0100
+Message-ID: <CA+chaQc0Oh1LL_P5ynnt-E6QSe9OBa-DT9UgxUeyj0SGooHpXA@mail.gmail.com>
+From: Martin Jansa <martin.jansa@gmail.com>
+To: Andreas Oberritter <obi@opendreambox.org>
+Subject: Re: cache broken in master
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,41 +55,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 26 Feb 2012 23:01:44 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sun, 26 Feb 2012 23:19:52 -0000
+Content-Type: text/plain; charset=UTF-8
 
-On Sun, 2012-02-26 at 22:26 +0100, Martin Jansa wrote:
-> On Sun, Feb 26, 2012 at 01:04:25PM +0000, Richard Purdie wrote:
-> > [cross posted to OE-Core since this is a major change in behaviour but
-> > in my opinion, probably a good one]
-> 
-> Agreed, missing quotes are hard to notice and easy to fix in existing
-> recipes with resonable error message provided by this.
->  
-> > Currently, bitbake will accept variables in the forms:
-> > 
-> > X = 1
-> > X = '1 \
-> > 
-> > X = "1"
-> > X = '1'
-> > 
-> > which will all set X=1. This patch removes the first two possibilities
-> > and makes quoting mandatory. There is little metadata out there which
-> > doesn't quote properly and bitbake will exit with an error about the
-> > exact line number and file with any problem so users can easily identify
-> > and fix issues. OE-Core has already been checked/fixed.
-> 
-> Not completly true about OE-Core, but I'll send another patch fixing the
-> rest and also meta-oe and meta-smartphone layers..
+On Sun, Feb 26, 2012 at 7:30 PM, Andreas Oberritter
+<obi@opendreambox.org> wrote:
+> Hello Dongxiao,
+>
+> On 25.02.2012 07:56, Xu, Dongxiao wrote:
+>> On Sat, 2012-02-25 at 00:47 +0100, Andreas Oberritter wrote:
+>>> Hi,
+>>>
+>>> commit 1c1df03a6c4717bfd5faab144c4f8bbfcbae0b57 broke bitbake's
+>>> dependency cache for me, i.e. it parses all recipes on every invocation
+>>> and always displays "(0 cached, 1269 parsed)". Deleting tmp/cache didn't
+>>> help. Reverting this commit restores the functionality.
+>>
+>> Hi Andreas,
+>>
+>> Sorry for the inconvenience that this commit brought to you.
+>>
+>> Could you help to try the following and send me your "/tmp/1.log
+>> and /tmp/2.log"?
+>>
+>> 1) apply the attached "cache_debug.patch"
+>> 2) remove tmp/cache
+>> 3) bitbake -p &> /tmp/1.log
+>> 4) bitbake -p &> /tmp/2.log
+>>
+>> Besides, you can have a try of the attached cache_whitelist.patch to see
+>> if it fixes your problem.
 
-Right, it looks like I didn't trigger a full reparse. Thanks for the
-patches, I've applied the OE-Core one.
+I see the same change in behavior here.
 
-Cheers,
+> your patch cache_whitelist.patch fixes the problem. Thanks!
 
-Richard
+unfortunately doesn't seem to fix it here.
 
+I'll send requested debug info tomorrow, unless someone beats me to it
+
+>
+> Regards,
+> Andreas
+>
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
 
 
