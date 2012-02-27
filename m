@@ -1,54 +1,31 @@
-Received: from tx2ehsobe001.messaging.microsoft.com ([65.55.88.11]
-	helo=TX2EHSOBE002.bigfish.com)
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <B29882@freescale.com>) id 1S26Pt-0002ne-4b
+	(envelope-from <josh@linux.intel.com>) id 1S29xK-0007wq-1m
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 27 Feb 2012 20:39:25 +0100
-Received: from mail140-tx2-R.bigfish.com (10.9.14.247) by
-	TX2EHSOBE002.bigfish.com (10.9.40.22) with Microsoft SMTP Server id
-	14.1.225.23; Mon, 27 Feb 2012 19:15:51 +0000
-Received: from mail140-tx2 (localhost [127.0.0.1])	by
-	mail140-tx2-R.bigfish.com (Postfix) with ESMTP id 03690C0451;
-	Mon, 27 Feb 2012 19:15:51 +0000 (UTC)
-X-SpamScore: -1
-X-BigFish: VS-1(zz9371I98dKzz1202hzz8275bhz2dh2a8h668h839h8e2h8e3hbe9k)
-X-Forefront-Antispam-Report: CIP:70.37.183.190; KIP:(null); UIP:(null); IPV:NLI;
-	H:mail.freescale.net; RD:none; EFVD:NLI
-Received: from mail140-tx2 (localhost.localdomain [127.0.0.1]) by mail140-tx2
-	(MessageSwitch) id 1330370149161639_9795;
-	Mon, 27 Feb 2012 19:15:49 +0000 (UTC)
-Received: from TX2EHSMHS020.bigfish.com (unknown [10.9.14.246])	by
-	mail140-tx2.bigfish.com (Postfix) with ESMTP id 22AB31A004A;
-	Mon, 27 Feb 2012 19:15:49 +0000 (UTC)
-Received: from mail.freescale.net (70.37.183.190) by TX2EHSMHS020.bigfish.com
-	(10.9.99.120) with Microsoft SMTP Server (TLS) id 14.1.225.23;
-	Mon, 27 Feb 2012 19:15:46 +0000
-Received: from 039-SN1MPN1-001.039d.mgd.msft.net ([169.254.1.244]) by
-	039-SN1MMR1-003.039d.mgd.msft.net ([10.84.1.16]) with mapi id
-	14.01.0355.003; Mon, 27 Feb 2012 13:15:46 -0600
-From: McClintock Matthew-B29882 <B29882@freescale.com>
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
-Thread-Topic: [bitbake-devel] [PATCH 1/2] bitbake: fix setscene task
-	start/failure handling
-Thread-Index: AQHM9YQ113qTCnYFEk+/Pa8IM5XjnA==
-Date: Mon, 27 Feb 2012 19:15:46 +0000
-Message-ID: <CAEsOVNdC8Xh4E32Lep8g0BjNXFQHJzGVZ3s3gTied6UYqNnCYA@mail.gmail.com>
-References: <cover.1330368761.git.paul.eggleton@linux.intel.com>
-	<67b6b60673a682f1d76aa224e0e47e1ca83f5bc9.1330368761.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <67b6b60673a682f1d76aa224e0e47e1ca83f5bc9.1330368761.git.paul.eggleton@linux.intel.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [99.47.177.27]
+	Tue, 28 Feb 2012 00:26:10 +0100
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 27 Feb 2012 15:16:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="112412533"
+Received: from unknown (HELO [10.7.198.148]) ([10.7.198.148])
+	by orsmga001.jf.intel.com with ESMTP; 27 Feb 2012 15:15:37 -0800
+Message-ID: <4F4C0E99.3000706@linux.intel.com>
+Date: Mon, 27 Feb 2012 15:15:37 -0800
+From: Joshua Lock <josh@linux.intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:10.0.1) Gecko/20120216 Thunderbird/10.0.1
 MIME-Version: 1.0
-X-OriginatorOrg: freescale.com
+To: "Wang, Shane" <shane.wang@intel.com>
+References: <cover.1330004101.git.dongxiao.xu@intel.com>
+	<4F46F915.5010705@linux.intel.com>
+	<3AB6CE7F274E534CAFD089D127A8A1FC23ACFDFE@SHSMSX101.ccr.corp.intel.com>
+In-Reply-To: <3AB6CE7F274E534CAFD089D127A8A1FC23ACFDFE@SHSMSX101.ccr.corp.intel.com>
 Cc: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 1/2] bitbake: fix setscene task start/failure handling
+Subject: Re: [PATCH 0/1][PULL] Hob2: A new implementation for Human Oriented Builder
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
-Reply-To: McClintock Matthew-B29882 <B29882@freescale.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 List-Unsubscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/options/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=unsubscribe>
@@ -57,24 +34,120 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 27 Feb 2012 19:39:25 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <D65C2CC43285DF4DAC53FCDCAB039CA1@mgd.freescale.com>
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Mon, 27 Feb 2012 23:26:10 -0000
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 27, 2012 at 12:54 PM, Paul Eggleton
-<paul.eggleton@linux.intel.com> wrote:
-> + =A0 =A0 =A0 =A0 =A0 =A0if isinstance(event, bb.runqueue.sceneQueueTaskF=
-ailed):
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0logger.warn("Setscene task %s (%s) faile=
-d with exit code '%s' - real task will be run instead",
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 event.taskid, e=
-vent.taskstring, event.exitcode)
 
-This removes the "ERROR:" message, right?
 
--M=
+On 27/02/12 04:26, Wang, Shane wrote:
+> Joshua Lock wrote on 2012-02-24:
+>
+>>
+>>
+>> On 23/02/12 05:48, Dongxiao Xu wrote:
+>>> Hi Richard,
+>>>
+>>> This pull request is a new implementation for Human Oriented Builder,
+>> please help to review and pull.
+>>
+>> Please, let's not call it the Human Oriented Builder. It was always just
+>> Hob, not HOB - are we changing that now?
+>>
+>>> Changes from previous pull requests:
+>>>    - Re-implemented a lot of code according to Belen's new GUI design.
+>>
+>> This is really hard to review as a several thousand line patch... It's
+>> difficult to know where what seems like an odd decision in the code was
+>> made for a sane reason without any git history or code comments to
+>> follow the logic of the development.
+>>
+>> The fact that the patch was rejected by the mailing list is a good
+>> indication that we need to separate into smaller logical commits.
+>>
+>> I could review coding style, but that is probably pretty useless at this
+>> point and so  offer somewhat superficial comments below regarding UI
+>> implementation with Gtk+.
+> Sorry for that, it convinces me that a design document is useful.
+> The problem is because the UI was changed a lot in a short time, even though we compared with our previous version in Jan.
+> So, next time we will pay more attention to submit incremental patches.
 
+Great.
+<snip>
+
+>> It's also worth noting that the visual style 'leaks' in the Settings
+>> dialogue and I see standard Gtk light-bulb info icons rather than the
+>> steely i displayed on the main page.
+> In the settings dialog, we didn't make any specific icon for tool tip.
+> On Ubuntu, it is a "i". On Fedora 16, it becomes a light-bulb. I am thinking how to make it?
+
+That's because Ubuntu and Fedora use different stock themes. I think it 
+makes sense to use the i graphic from the visual design wherever you're 
+currently using gtk.STOCK_INFO.
+
+>> Further, there are still hard-coded colour values. Are these issues on
+>> the "to fix later" list?
+> Do you mean the green progress bar and others? For the progress bar, Jessica has a comment that she doesn't want see orange bar which is the default on Ubuntu but want to see a green one which is consistent with the running color in the build details.
+> For some buttons like "Just bake", we try to make it look the same as Belen's video.
+> Are you suggesting to set them default?
+
+I am, but I guess the design team needs to have the final say here. I 
+think Belen agreed with me in principle that we should use the colours 
+from the users theme to start and iterate from there. On my Fedora 
+machine green progress bars and orange buttons look rather out of place 
+in a software ecosystem which has a fairly consistent look and feel 
+between applications. However I care less about the colours than I do 
+about the button order, per my submitted patches.
+
+> If not the above, the hard-coded color values should be fixed, we hope to include all color values in hobcolor.py
+>
+>
+>>
+>> I'm not suggesting these hold up merging - just asking the question. I
+>> can play HIG zealot and write a patch once this is merged? I think it's
+>> important we present a professional GUI which matches the visuals of the
+>> host OS.
+>>
+>> The buttons that act like tabs for changing between notebook pages (i.e.
+>> on the 'Package Selection' view) took me a long time to figure out as
+>> they look like they are depressed (mid-click) buttons for the inactive
+>> tabs and ready to click buttons for the active tabs - confusing visual.
+> I have the patches to fix it, and am cleaning them up for submission.
+
+Excellent!
+
+>>
+>> There's at least one instance of commented out code (a signal handler
+>> connection in builder.py) - we can probably drop those, right?
+> Do you mean to drop the handler instance in builder.py?
+> If so, how could the builder call the handler's functions?
+
+There's a commented out line which would connect to a signal handler 
+where it not commented out at line 201 of builder.py:
+http://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/bitbake/lib/bb/ui/crumbs/builder.py#n201
+
+We can probably delete that, right?
+
+>>
+>> Setting the size and position of windows on each launch (as in
+>> builder.py) is generally considered to be hostile to users - it should
+>> be sufficient to start with a sane default size and then as the UI
+>> allows the user to resize it we should remember the size for the next
+>> launch.
+> OK. But sometimes we should consider the screen dimension. For instance the builder, the main window, I bet on a smaller screen (say, 800X600) the visual components will look ugly. How can I address the problem? For the position of the window, I agree.
+
+I don't think that telling people their resolution is too low is 
+especially helpful here. They can probably see that the GUI doesn't fit.
+
+I don't know anyone that runs their system with a lower than supported 
+resolution, so telling them about something they can't fix doesn't help 
+them. It just adds insult to injury, so to speak.
+
+Cheers,
+Joshua
+-- 
+Joshua Lock
+         Yocto Project "Johannes factotum"
+         Intel Open Source Technology Centre
 
 
