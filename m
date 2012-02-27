@@ -1,30 +1,26 @@
-Received: from mail-tul01m020-f175.google.com ([209.85.214.175])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <oren@ephemeron-labs.com>) id 1S1o0X-0006gr-MY
+	(envelope-from <dongxiao.xu@intel.com>) id 1S1p1O-0007uB-4Z
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 27 Feb 2012 01:00:02 +0100
-Received: by obhx4 with SMTP id x4so4993291obh.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 26 Feb 2012 15:51:35 -0800 (PST)
-Received-SPF: pass (google.com: domain of oren@ephemeron-labs.com designates
-	10.60.20.6 as permitted sender) client-ip=10.60.20.6; 
-Authentication-Results: mr.google.com; spf=pass (google.com: domain of
-	oren@ephemeron-labs.com designates 10.60.20.6 as permitted
-	sender) smtp.mail=oren@ephemeron-labs.com
-Received: from mr.google.com ([10.60.20.6])
-	by 10.60.20.6 with SMTP id j6mr4065087oee.17.1330300295690 (num_hops =
-	1); Sun, 26 Feb 2012 15:51:35 -0800 (PST)
-MIME-Version: 1.0
-Received: by 10.60.20.6 with SMTP id j6mr3625843oee.17.1330300295583; Sun, 26
-	Feb 2012 15:51:35 -0800 (PST)
-Received: by 10.182.14.231 with HTTP; Sun, 26 Feb 2012 15:51:35 -0800 (PST)
-X-Originating-IP: [76.99.59.229]
-Date: Sun, 26 Feb 2012 18:51:35 -0500
-Message-ID: <CALvD2LjQx6M222rdd754cTZtx+fohvxC57+Efx3d=PF9YoNGXw@mail.gmail.com>
-From: Oren Leaffer <oren@ephemeron-labs.com>
-To: bitbake-devel@lists.openembedded.org
-X-Gm-Message-State: ALoCoQntODaE9vg+mBFCiHxxSkO82H2zgNup/wKtfswle+GWtsCvaPYg+Q+m4FuorBKGfGdikyGW
-Subject: getting started (well, trying to)
+	Mon, 27 Feb 2012 02:04:58 +0100
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 26 Feb 2012 16:56:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="115096583"
+Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
+	([10.239.36.11])
+	by orsmga002.jf.intel.com with ESMTP; 26 Feb 2012 16:56:31 -0800
+From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+In-Reply-To: <1330107431.9617.6.camel@ted>
+References: <cover.1330004101.git.dongxiao.xu@intel.com>
+	<1330107431.9617.6.camel@ted>
+Date: Mon, 27 Feb 2012 08:54:46 +0800
+Message-ID: <1330304086.7571.15.camel@dongxiao-osel>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.32.2 
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 0/1][PULL] Hob2: A new implementation for Human Oriented Builder
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,117 +32,76 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 27 Feb 2012 00:00:02 -0000
-Content-Type: multipart/alternative; boundary=e89a8fb2070c90168804b9e6acc4
+X-List-Received-Date: Mon, 27 Feb 2012 01:04:58 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---e89a8fb2070c90168804b9e6acc4
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Fri, 2012-02-24 at 18:17 +0000, Richard Purdie wrote:
+> On Thu, 2012-02-23 at 21:48 +0800, Dongxiao Xu wrote:
+> > Hi Richard,
+> > 
+> > This pull request is a new implementation for Human Oriented Builder, please help to review and pull.
+> > 
+> > Changes from previous pull requests:
+> >  - Re-implemented a lot of code according to Belen's new GUI design.
+> > 
+> > Note that this pull request depends on the following pull requests:
+> >  - hob2-bitbake-changes
+> >  - hob2-oecore-changes
+> > 
+> > Thanks,
+> > Dongxiao
+> > 
+> > 
+> > The following changes since commit cec8b6e6c33582be660dd35c6050efc3f28e6baa:
+> > 
+> >   runqueue: fire sceneQueueTaskStarted event when a setscene queue starts (2012-02-23 21:04:49 +0800)
+> > 
+> > are available in the git repository at:
+> >   git://git.pokylinux.org/poky-contrib dxu4/hob2
+> >   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob2
+> > 
+> > Dongxiao Xu (1):
+> >   Hob: A new implemetation for Human Oriented Builder
+> 
+> I just merged this branch however there are some things I need to make
+> clear, particularly why I've done it and why this should never happen
+> again.
+> 
+> Having everything as one huge monster patch effectively means its
+> impossible to review. I've taken it since it would probably take weeks
+> to split into changesets and I'm not sure that would be productive work.
+> At least if its in master, people can test it out and send
+> patches/incremental improvements from now on so I have taken it on this
+> basis. I want to make it clear this is a one time exception and isn't
+> going to be acceptable in future.
+> 
+> Secondly, I merged the patch but didn't realise it was corrupt, some
+> files had the prefix "bitbake/" and some did not. I've corrected this
+> but it caused me quite a bit of confusion.
+> 
+> Joshua's reply in this thread also has some valid questions I'd like to
+> see answered. 
+> 
+> I'd also like to stress the Human Oriented Builder name needs to die
+> (sorry Dave), I removed it from the commit message.
+> 
+> All the above isn't to say I don't love the progress we're making with
+> the UI btw, we just also need to keep an eye on the housekeeping stuff
+> too.
 
-Hi,
-
-I'm sorry if this is the wrong list to direct this question, but I'm having
-a hard time getting bitbake/openembedded building anything.
-
-Right now, "bitbake nano" fails with the error "ERROR: Unable to parse
-/home/ol/openem/openembedded/recipes/wmiconfig/wmiconfig_svn.bb " and then
-gives some more details that are at the end of this message.
-
-What branch of bitbake and openembedded should I be on? I've been trying
-this all day and I can find several sets of mutually contradictory
-instructions, is there an authoritative one?
-
-
+Thanks Richard, we will pay more attention to it.
 
 Thanks,
+Dongxiao
+
+> 
+> Cheers,
+> 
+> Richard
+> 
+> 
 
 
-Oren
 
 
-~/openem/build$ bitbake nano
-Pseudo is not present but is required, building this first before the main
-build
-ERROR: Unable to parse /home/ol/openem/openembedded/recipes/wmiconfig/
-wmiconfig_svn.bb                            | ETA:  --:--:--
-Traceback (most recent call last):
-  File "/home/ol/setup-scripts/sources/bitbake/lib/bb/utils.py", line 387,
-in
-simple_exec(code=3D'__anon_185__home_ol_openem_openembedded_classes_staging=
-_bbclass(d)\n__anon_90__home_ol_openem_openembedded_classes_packaged_stagin=
-g_bbclass(d)\n__anon_419__home_ol_openem_openembedded_classes_base_bbclass(=
-d)\n__anon_38__home_ol_openem_openembedded_classes_src_distribute_local_bbc=
-lass(d)\n__anon_19__home_ol_openem_openembedded_classes_angstrom_blacklist_=
-bbclass(d)\n__anon_148__home_ol_openem_openembedded_classes_package_bbclass=
-(d)\n__anon_311__home_ol_openem_openembedded_classes_package_ipk_bbclass(d)=
-',
-context=3D{'d': <bb.data_smart.DataSmart object at 0x21d29d0>}):
-     def simple_exec(code, context):
-    >    exec(code, _context, context)
-
-  File "<string>", line 3, in <module>
-  File "__anon_419__home_ol_openem_openembedded_classes_base_bbclass", line
-76, in
-__anon_419__home_ol_openem_openembedded_classes_base_bbclass(d=3D<bb.data_s=
-mart.DataSmart
-object at 0x21d29d0>)
-  File "base.bbclass", line 11, in
-set_multimach_arch(d=3D<bb.data_smart.DataSmart object at 0x21d29d0>)
-  File "utils.bbclass", line 4, in
-is_machine_specific(d=3D<bb.data_smart.DataSmart object at 0x21d29d0>)
-AttributeError: 'module' object has no attribute 'init'
-
-ERROR: Command execution failed: Exited with 1
-
-Summary: There was 1 ERROR message shown, returning a non-zero exit code.
-
---e89a8fb2070c90168804b9e6acc4
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-Hi,<div><br></div><div>I&#39;m sorry if this is the wrong list to direct th=
-is question, but I&#39;m having a hard time getting bitbake/openembedded bu=
-ilding anything.</div><div><br></div><div>Right now, &quot;bitbake nano&quo=
-t; fails with the error &quot;ERROR: Unable to parse /home/ol/openem/openem=
-bedded/recipes/wmiconfig/<a href=3D"http://wmiconfig_svn.bb">wmiconfig_svn.=
-bb</a> &quot; and then gives some more details that are at the end of this =
-message.</div>
-<div><br></div><div>What branch of bitbake and openembedded should I be on?=
- I&#39;ve been trying this all day and I can find several sets of mutually =
-contradictory instructions, is there an=A0authoritative=A0one?</div><div><b=
-r>
-</div><div><br></div><div><br></div><div>Thanks,</div><div><br></div><div><=
-br></div><div>Oren</div><div><br></div><div><br></div><div><div>~/openem/bu=
-ild$ bitbake nano</div><div>Pseudo is not present but is required, building=
- this first before the main build</div>
-<div>ERROR: Unable to parse /home/ol/openem/openembedded/recipes/wmiconfig/=
-<a href=3D"http://wmiconfig_svn.bb">wmiconfig_svn.bb</a> =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| ETA: =A0--:--:--</div><div>Traceba=
-ck (most recent call last):</div>
-<div>=A0 File &quot;/home/ol/setup-scripts/sources/bitbake/lib/bb/utils.py&=
-quot;, line 387, in simple_exec(code=3D&#39;__anon_185__home_ol_openem_open=
-embedded_classes_staging_bbclass(d)\n__anon_90__home_ol_openem_openembedded=
-_classes_packaged_staging_bbclass(d)\n__anon_419__home_ol_openem_openembedd=
-ed_classes_base_bbclass(d)\n__anon_38__home_ol_openem_openembedded_classes_=
-src_distribute_local_bbclass(d)\n__anon_19__home_ol_openem_openembedded_cla=
-sses_angstrom_blacklist_bbclass(d)\n__anon_148__home_ol_openem_openembedded=
-_classes_package_bbclass(d)\n__anon_311__home_ol_openem_openembedded_classe=
-s_package_ipk_bbclass(d)&#39;, context=3D{&#39;d&#39;: &lt;bb.data_smart.Da=
-taSmart object at 0x21d29d0&gt;}):</div>
-<div>=A0 =A0 =A0def simple_exec(code, context):</div><div>=A0 =A0 &gt; =A0 =
-=A0exec(code, _context, context)</div><div>=A0 =A0 =A0</div><div>=A0 File &=
-quot;&lt;string&gt;&quot;, line 3, in &lt;module&gt;</div><div>=A0 File &qu=
-ot;__anon_419__home_ol_openem_openembedded_classes_base_bbclass&quot;, line=
- 76, in __anon_419__home_ol_openem_openembedded_classes_base_bbclass(d=3D&l=
-t;bb.data_smart.DataSmart object at 0x21d29d0&gt;)</div>
-<div>=A0 File &quot;base.bbclass&quot;, line 11, in set_multimach_arch(d=3D=
-&lt;bb.data_smart.DataSmart object at 0x21d29d0&gt;)</div><div>=A0 File &qu=
-ot;utils.bbclass&quot;, line 4, in is_machine_specific(d=3D&lt;bb.data_smar=
-t.DataSmart object at 0x21d29d0&gt;)</div>
-<div>AttributeError: &#39;module&#39; object has no attribute &#39;init&#39=
-;</div><div><br></div><div>ERROR: Command execution failed: Exited with 1</=
-div><div><br></div><div>Summary: There was 1 ERROR message shown, returning=
- a non-zero exit code.</div>
-</div><div><br></div>
-
---e89a8fb2070c90168804b9e6acc4--
