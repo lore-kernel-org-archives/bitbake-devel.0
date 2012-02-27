@@ -1,24 +1,20 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1S21R9-0002ae-Ot
+	(envelope-from <dongxiao.xu@intel.com>) id 1S21rJ-00036O-Mc
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 27 Feb 2012 15:20:23 +0100
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 27 Feb 2012 06:11:56 -0800
+	Mon, 27 Feb 2012 15:47:25 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 27 Feb 2012 06:38:58 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="112237823"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.123.30])
-	by orsmga001.jf.intel.com with ESMTP; 27 Feb 2012 06:11:56 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="111271886"
+Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
+	by azsmga001.ch.intel.com with ESMTP; 27 Feb 2012 06:38:57 -0800
+From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 27 Feb 2012 14:11:53 +0000
-Message-Id: <f3c3d4bb21940b9f96a604145c76cfaef7b25943.1330351817.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.7.5.4
-In-Reply-To: <cover.1330351817.git.paul.eggleton@linux.intel.com>
-References: <cover.1330351817.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1330351817.git.paul.eggleton@linux.intel.com>
-References: <cover.1330351817.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 1/1] bitbake: implement BB_VERBOSE_LOGS
+Date: Mon, 27 Feb 2012 22:37:31 +0800
+Message-Id: <cover.1330353017.git.dongxiao.xu@intel.com>
+X-Mailer: git-send-email 1.7.4.1
+Subject: [PATCH 0/1 v2][PULL] data_smart.py: use BB_HASH_WHITELIST as variable filter
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,72 +26,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 27 Feb 2012 14:20:24 -0000
+X-List-Received-Date: Mon, 27 Feb 2012 14:47:25 -0000
 
-Enable configuring whether "set +x" is added to all shell tasks rather
-than forcing it; this is enabled by setting BB_VERBOSE_LOGS to 1.
+Hi Richard,
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- bitbake/lib/bb/build.py  |    3 ++-
- bitbake/lib/bb/cooker.py |    4 ++++
- bitbake/lib/bb/msg.py    |    3 +++
- 3 files changed, 9 insertions(+), 1 deletions(-)
+This pull request changes the cache hash calculation method that uses BB_HASHCONFIG_WHITELIST as variable filter.
 
-diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-index e85d7c4..37686f8 100644
---- a/bitbake/lib/bb/build.py
-+++ b/bitbake/lib/bb/build.py
-@@ -221,9 +221,10 @@ def exec_func_shell(function, d, runfile, cwd=None):
- 
-     with open(runfile, 'w') as script:
-         script.write('#!/bin/sh -e\n')
-+        if bb.msg.loggerVerboseLogs:
-+            script.write("set -x\n")
-         data.emit_func(function, script, d)
- 
--        script.write("set -x\n")
-         if cwd:
-             script.write("cd %s\n" % cwd)
-         script.write("%s\n" % function)
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 12b526b..d3bdd17 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -206,6 +206,10 @@ class BBCooker:
- 
-     def parseConfiguration(self):
- 
-+        # Set log file verbosity
-+        verboselogs = bb.utils.to_boolean(self.configuration.data.getVar("BB_VERBOSE_LOGS", "0"))
-+        if verboselogs:
-+            bb.msg.loggerVerboseLogs = True
- 
-         # Change nice level if we're asked to
-         nice = self.configuration.data.getVar("BB_NICE_LEVEL", True)
-diff --git a/bitbake/lib/bb/msg.py b/bitbake/lib/bb/msg.py
-index 20d9bdd..9b39325 100644
---- a/bitbake/lib/bb/msg.py
-+++ b/bitbake/lib/bb/msg.py
-@@ -100,6 +100,7 @@ class BBLogFilter(object):
- 
- loggerDefaultDebugLevel = 0
- loggerDefaultVerbose = False
-+loggerVerboseLogs = False
- loggerDefaultDomains = []
- 
- def init_msgconfig(verbose, debug, debug_domains = []):
-@@ -108,6 +109,8 @@ def init_msgconfig(verbose, debug, debug_domains = []):
-     """
-     bb.msg.loggerDefaultDebugLevel = debug
-     bb.msg.loggerDefaultVerbose = verbose
-+    if verbose:
-+        bb.msg.loggerVerboseLogs = True
-     bb.msg.loggerDefaultDomains = debug_domains
- 
- def addDefaultlogFilter(handler):
+Please help to review and pull.
+
+Changes from v1:
+Use another variable named BB_HASHCONFIG_WHITELIST as the filter instead of BB_HASHBASE_WHITELIST
+
+Thanks,
+Dongxiao
+
+The following changes since commit 4d173d441d2beb8e6492b6b1842682f8cf32e6cc:
+
+  V5 Disk space monitoring (2012-02-26 11:03:50 +0000)
+
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib dxu4/bitbake-bugfix
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/bitbake-bugfix
+
+Dongxiao Xu (1):
+  data_smart.py: Uses BB_HASHCONFIG_WHITELIST to filter unnecessary
+    variables
+
+ lib/bb/data_smart.py |   16 ++++------------
+ 1 files changed, 4 insertions(+), 12 deletions(-)
+
 -- 
-1.7.5.4
+1.7.4.1
 
 
 
