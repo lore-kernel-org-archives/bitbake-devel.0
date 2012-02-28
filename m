@@ -1,30 +1,26 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1S2LuH-000647-6e for bitbake-devel@lists.openembedded.org;
-	Tue, 28 Feb 2012 13:11:49 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q1SC3LTB016721;
-	Tue, 28 Feb 2012 12:03:21 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 15714-08; Tue, 28 Feb 2012 12:03:17 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q1SC3Cuc016715
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Tue, 28 Feb 2012 12:03:13 GMT
-Message-ID: <1330430595.9185.109.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Andreas Oberritter <obi@opendreambox.org>
-Date: Tue, 28 Feb 2012 12:03:15 +0000
-In-Reply-To: <4F4CC00F.10608@opendreambox.org>
-References: <4F4CC00F.10608@opendreambox.org>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: Git, AUTOREV and SSH
+Received: from mga01.intel.com ([192.55.52.88])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1S2NFX-0000Br-QZ
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 28 Feb 2012 14:37:52 +0100
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga101.fm.intel.com with ESMTP; 28 Feb 2012 05:29:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="122511499"
+Received: from unknown (HELO helios.localnet) ([10.252.123.68])
+	by fmsmga001.fm.intel.com with ESMTP; 28 Feb 2012 05:29:23 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 28 Feb 2012 13:29:22 +0000
+Message-ID: <3580154.xKMjJO2Syk@helios>
+Organization: Intel Corporation
+User-Agent: KMail/4.8.0 (Linux/3.0.0-16-generic-pae; KDE/4.8.0; i686; ; )
+In-Reply-To: <1330358657.4593.24.camel@ted>
+References: <cover.1330351817.git.paul.eggleton@linux.intel.com>
+	<f3c3d4bb21940b9f96a604145c76cfaef7b25943.1330351817.git.paul.eggleton@linux.intel.com>
+	<1330358657.4593.24.camel@ted>
+MIME-Version: 1.0
+Subject: Re: [PATCH 1/1] bitbake: implement BB_VERBOSE_LOGS
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,37 +32,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 28 Feb 2012 12:11:49 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 28 Feb 2012 13:37:52 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, 2012-02-28 at 12:52 +0100, Andreas Oberritter wrote:
-> Hi,
+On Monday 27 February 2012 16:04:17 Richard Purdie wrote:
+> On Mon, 2012-02-27 at 14:11 +0000, Paul Eggleton wrote:
+> > diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+> > index e85d7c4..37686f8 100644
+> > --- a/bitbake/lib/bb/build.py
+> > +++ b/bitbake/lib/bb/build.py
+> > 
+> > @@ -221,9 +221,10 @@ def exec_func_shell(function, d, runfile, cwd=None):
+> >      with open(runfile, 'w') as script:
+> >          script.write('#!/bin/sh -e\n')
+> > 
+> > +        if bb.msg.loggerVerboseLogs:
+> > +            script.write("set -x\n")
+> > 
+> >          data.emit_func(function, script, d)
+> > 
+> > -        script.write("set -x\n")
+> > 
+> >          if cwd:
+> >              script.write("cd %s\n" % cwd)
 > 
-> there's a problem with the Git fetcher when used with AUTOREV, at least
-> with SSH URIs. "git ls-remote" may output warnings on stderr, e.g.:
+> Looks good to me but could I suggest one small tweak - position the set
+> -x after data.emit_func()?
 > 
-> X11 forwarding request failed on channel 0
-> 
-> When this happens, "X11" becomes the SRCREV and the fetcher subsequently
-> fails. Certainly, other warnings by Git, SSH or a different SCM or
-> transport could appear under other circumstances. Even localized strings
-> may appear. Fetch2 merges stderr into stdout on purpose [1], so I'm not
-> sure a proper fix should look like.
-> 
-> Regards,
-> Andreas
-> 
-> [1] See runfetchcmd() in lib/bb/fetch2/__init__.py
+> The reason being that having lines of output for each line in the run.*
+> file is generally painful and it makes more sense to start tracing only
+> when we start executing the function we care about.
 
-Would the change in
-http://lists.linuxtogo.org/pipermail/bitbake-devel/2012-January/001771.html help?
-
-I've still not had a chance to rebase and apply that patch :(
+OK, will send a v2 shortly.
 
 Cheers,
+Paul
 
-Richard
+-- 
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
 
