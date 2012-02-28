@@ -1,24 +1,32 @@
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from mail.dream-property.net ([82.149.226.172])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1S2NNd-0000SB-Ae
+	(envelope-from <obi@opendreambox.org>) id 1S2Q78-0006iF-1G
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 28 Feb 2012 14:46:13 +0100
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 28 Feb 2012 05:37:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="130368927"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.123.68])
-	by fmsmga002.fm.intel.com with ESMTP; 28 Feb 2012 05:37:44 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 28 Feb 2012 13:37:41 +0000
-Message-Id: <476f2f92fd747eb947a71f3bf6100909c645b567.1330435914.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.7.5.4
-In-Reply-To: <cover.1330435914.git.paul.eggleton@linux.intel.com>
-References: <cover.1330435914.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1330435914.git.paul.eggleton@linux.intel.com>
-References: <cover.1330435914.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 1/1] bitbake: implement BB_VERBOSE_LOGS
+	Tue, 28 Feb 2012 17:41:22 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by mail.dream-property.net (Postfix) with ESMTP id 6B46731597F7;
+	Tue, 28 Feb 2012 17:32:53 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at mail.dream-property.net
+Received: from mail.dream-property.net ([127.0.0.1])
+	by localhost (mail.dream-property.net [127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id fgJhNV1fHfa2; Tue, 28 Feb 2012 17:32:42 +0100 (CET)
+Received: from [172.22.22.61] (drms-590c5704.pool.mediaWays.net [89.12.87.4])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mail.dream-property.net (Postfix) with ESMTPSA id 3DA2C31597F1;
+	Tue, 28 Feb 2012 17:32:42 +0100 (CET)
+Message-ID: <4F4D01A9.1010303@opendreambox.org>
+Date: Tue, 28 Feb 2012 17:32:41 +0100
+From: Andreas Oberritter <obi@opendreambox.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:10.0.2) Gecko/20120216 Thunderbird/10.0.2
+MIME-Version: 1.0
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <4F4CC00F.10608@opendreambox.org> <1330430595.9185.109.camel@ted>
+In-Reply-To: <1330430595.9185.109.camel@ted>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: Git, AUTOREV and SSH
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,70 +38,104 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 28 Feb 2012 13:46:13 -0000
+X-List-Received-Date: Tue, 28 Feb 2012 16:41:22 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Enable configuring whether "set +x" is added to all shell tasks rather
-than forcing it; this is enabled by setting BB_VERBOSE_LOGS to 1.
+On 28.02.2012 13:03, Richard Purdie wrote:
+> On Tue, 2012-02-28 at 12:52 +0100, Andreas Oberritter wrote:
+>> Hi,
+>>
+>> there's a problem with the Git fetcher when used with AUTOREV, at least
+>> with SSH URIs. "git ls-remote" may output warnings on stderr, e.g.:
+>>
+>> X11 forwarding request failed on channel 0
+>>
+>> When this happens, "X11" becomes the SRCREV and the fetcher subsequently
+>> fails. Certainly, other warnings by Git, SSH or a different SCM or
+>> transport could appear under other circumstances. Even localized strings
+>> may appear. Fetch2 merges stderr into stdout on purpose [1], so I'm not
+>> sure a proper fix should look like.
+>>
+>> Regards,
+>> Andreas
+>>
+>> [1] See runfetchcmd() in lib/bb/fetch2/__init__.py
+> 
+> Would the change in
+> http://lists.linuxtogo.org/pipermail/bitbake-devel/2012-January/001771.html help?
+> 
+> I've still not had a chance to rebase and apply that patch :(
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- bitbake/lib/bb/build.py  |    3 ++-
- bitbake/lib/bb/cooker.py |    4 ++++
- bitbake/lib/bb/msg.py    |    3 +++
- 3 files changed, 9 insertions(+), 1 deletions(-)
+Yes, this patch did help. See below for a rebased version. Thanks!
 
-diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-index e85d7c4..d9079b2 100644
---- a/bitbake/lib/bb/build.py
-+++ b/bitbake/lib/bb/build.py
-@@ -223,7 +223,8 @@ def exec_func_shell(function, d, runfile, cwd=None):
-         script.write('#!/bin/sh -e\n')
-         data.emit_func(function, script, d)
- 
--        script.write("set -x\n")
-+        if bb.msg.loggerVerboseLogs:
-+            script.write("set -x\n")
-         if cwd:
-             script.write("cd %s\n" % cwd)
-         script.write("%s\n" % function)
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 12b526b..d3bdd17 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -206,6 +206,10 @@ class BBCooker:
- 
-     def parseConfiguration(self):
- 
-+        # Set log file verbosity
-+        verboselogs = bb.utils.to_boolean(self.configuration.data.getVar("BB_VERBOSE_LOGS", "0"))
-+        if verboselogs:
-+            bb.msg.loggerVerboseLogs = True
- 
-         # Change nice level if we're asked to
-         nice = self.configuration.data.getVar("BB_NICE_LEVEL", True)
-diff --git a/bitbake/lib/bb/msg.py b/bitbake/lib/bb/msg.py
-index 20d9bdd..9b39325 100644
---- a/bitbake/lib/bb/msg.py
-+++ b/bitbake/lib/bb/msg.py
-@@ -100,6 +100,7 @@ class BBLogFilter(object):
- 
- loggerDefaultDebugLevel = 0
- loggerDefaultVerbose = False
-+loggerVerboseLogs = False
- loggerDefaultDomains = []
- 
- def init_msgconfig(verbose, debug, debug_domains = []):
-@@ -108,6 +109,8 @@ def init_msgconfig(verbose, debug, debug_domains = []):
+Regards,
+Andreas
+
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 07aac4c..42fef69 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -392,6 +392,9 @@ def runfetchcmd(cmd, d, quiet = False, cleanup = []):
+     Optionally remove the files/directories listed in cleanup upon failure
      """
-     bb.msg.loggerDefaultDebugLevel = debug
-     bb.msg.loggerDefaultVerbose = verbose
-+    if verbose:
-+        bb.msg.loggerVerboseLogs = True
-     bb.msg.loggerDefaultDomains = debug_domains
  
- def addDefaultlogFilter(handler):
--- 
-1.7.5.4
-
++    import bb.process
++    import subprocess
++
+     # Need to export PATH as binary could be in metadata paths
+     # rather than host provided
+     # Also include some other variables.
+@@ -409,36 +412,27 @@ def runfetchcmd(cmd, d, quiet = False, cleanup = []):
+ 
+     logger.debug(1, "Running %s", cmd)
+ 
+-    # redirect stderr to stdout
+-    stdout_handle = os.popen(cmd + " 2>&1", "r")
+-    output = ""
+-
+-    while True:
+-        line = stdout_handle.readline()
+-        if not line:
+-            break
+-        if not quiet:
+-            print(line, end=' ')
+-        output += line
+-
+-    status = stdout_handle.close() or 0
+-    signal = os.WTERMSIG(status)
+-    if os.WIFEXITED(status):
+-        exitstatus = os.WEXITSTATUS(status)
+-    else:
+-        exitstatus = 0
++    success = False
++    error_message = ""
++
++    try:
++        (output, errors) = bb.process.run(cmd, shell=True, stderr=subprocess.PIPE)
++        success = True
++    except bb.process.NotFoundError as e:
++        error_message = "Fetch command %s" % (e.command)
++    except bb.process.CmdError as e:
++        error_message = "Fetch command %s could not be run:\n%s" % (e.command, e.msg)
++    except bb.process.ExecutionError as e:
++        error_message = "Fetch command %s failed with exit code %s, output:\n%s" % (e.command, e.exitcode, e.stderr)
+ 
+-    if (signal or status != 0):
++    if not success:
+         for f in cleanup:
+             try:
+                 bb.utils.remove(f, True)
+             except OSError:
+                 pass
+ 
+-        if signal:
+-            raise FetchError("Fetch command %s failed with signal %s, output:\n%s" % (cmd, signal, output))
+-        elif exitstatus:
+-            raise FetchError("Fetch command %s failed with exit code %s, output:\n%s" % (cmd, exitstatus, output))
++        raise FetchError(error_message)
+ 
+     return output
+ 
 
 
