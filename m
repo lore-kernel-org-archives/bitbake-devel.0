@@ -1,21 +1,24 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1S2k7X-00055v-53
+	(envelope-from <shane.wang@intel.com>) id 1S2k7w-00056u-4h
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 29 Feb 2012 15:03:07 +0100
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 29 Feb 2012 05:54:37 -0800
+	Wed, 29 Feb 2012 15:03:32 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 29 Feb 2012 05:55:02 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="116101405"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="112764320"
 Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by orsmga002.jf.intel.com with ESMTP; 29 Feb 2012 05:54:36 -0800
+	by azsmga001.ch.intel.com with ESMTP; 29 Feb 2012 05:55:02 -0800
 From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 29 Feb 2012 22:11:49 +0800
-Message-Id: <cover.1330523904.git.shane.wang@intel.com>
+Date: Wed, 29 Feb 2012 22:14:59 +0800
+Message-Id: <1f142038e9be9490df21a5cd4c14c579ca63a896.1330523904.git.shane.wang@intel.com>
 X-Mailer: git-send-email 1.7.6
-Cc: Liming An <limingx.l.an@intel.com>
-Subject: [PATCH 00/32] Hob related fixes
+In-Reply-To: <439e7e3c5dd2534950c63d9df57963f1a3d35944.1330523904.git.shane.wang@intel.com>
+References: <439e7e3c5dd2534950c63d9df57963f1a3d35944.1330523904.git.shane.wang@intel.com>
+In-Reply-To: <cover.1330523904.git.shane.wang@intel.com>
+References: <cover.1330523904.git.shane.wang@intel.com>
+Subject: [PATCH 02/32] Hob: avoid the image selection dialog to walk through all directories and its sub-directories, when users click "My images".
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,86 +30,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 29 Feb 2012 14:03:07 -0000
+X-List-Received-Date: Wed, 29 Feb 2012 14:03:32 -0000
 
-The following patches are going to fix the following problems:
+The current implementation of the image selection dialog walks through all directories and its sub-directories, when users click "My images" to choose a directory. If the directory is /, the system becomes slow. This patch is to avoid walking through all directories but the child directories only, given a directory.
 
-* Enable HobNotebook to make notebook more like the design video;
-* Improve and enhance the GUI;
-* Rebase the patches Josh has sent out before with the title "Hob tweaks";
-* Address some tricky issues we found in the bitbake;
-* Revise Hob according to the comments on the previous patch set;
-* Fix some bugs we found when testing Hob;
-* and some temporary walkarounds we have to find a way to solve in Hob or in the bitbake later.
+Signed-off-by: Shane Wang <shane.wang@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/hig.py |   12 ++++++++----
+ 1 files changed, 8 insertions(+), 4 deletions(-)
 
-The following changes since commit 927bec5f72230be4f2452d9ef5a747b2c00cb781:
-
-  bitbake.conf: Create a new filter variable BB_HASHCONFIG_WHITELIST (2012-02-27 20:10:41 +0000)
-
-are available in the git repository at:
-  git://git.pokylinux.org/poky-contrib shane/hob2-v0.68
-  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=shane/hob2-v0.68
-
-Dongxiao Xu (10):
-  command.py: remove the resolve parameter in generateTargetsTree
-  cooker.py: Fix a bug due to variable name
-  cooker: fix calculating of depends and rdepends
-  Hob(crumbs/hoblistmodel.py): Fix recipe's populate() function
-  Hob(crumbs/hoblistmodel.py): Add mapping for rprovides and pkg
-  Hob: Add an extra 50M space if zypper is selected
-  Hob: add "OK" button to "BinbDialog"
-  Hob: Fix pressing "stop" build
-  runqueue.py: initialize rqexe at RunQueue's init function
-  Hob: Disable the handling of "NoProvider" event
-
-Shane Wang (22):
-  Hob: make HobViewTable more general in hob and make the image
-    selection dialog and the image details page reuse it.
-  Hob: avoid the image selection dialog to walk through all directories
-    and its sub-directories, when users click "My images".
-  Hob: cleanup those class methods in HobWidget
-  Hob: fixed the issue in the brought-in-by dialog.
-  Hob: include hddimg and iso into image types.
-  Hob: implement a self-defined notebook visual component for Hob
-  Hob: use HobNotebook to enable a notebook in build details page
-  Hob: image configuration page doesn't need dialogs any more
-  Hob: fix a bug in builder.configuration.curr_mach
-  Hob: add ignore_all_errors to avoid showing error dialog multiple
-    times
-  Hob: make the image configuration page not to flash the progress bar
-  Hob: enable indicators on the "Included" tab in the recipe selection
-    page and the package selection page
-  crumbs: Factor common dialogue configuration out
-  crumbs/builder: use the name Hob consistently
-  crumbs: move towards more standard dialogue spacing
-  crumbs: fix button order in several dialogues
-  hig: try to avoid setting explicit dialogue sizes
-  crumbs/hig: tweak UI and layout of LayerSelectionDialog
-  Hob(crumbs/builder.py): remove the code commented out in the
-    builder.py
-  Hob: fix a bug that the image size is shown incorrectly in the image
-    details page.
-  Hob: allow users to setup the proxy
-  Hob(crumbs/builder.py): adjust the main window's position and ignore
-    the case lower than 1024x768.
-
- bitbake/lib/bb/command.py                          |   14 +-
- bitbake/lib/bb/cooker.py                           |   74 +-
- bitbake/lib/bb/runqueue.py                         |    5 +
- bitbake/lib/bb/ui/crumbs/builddetailspage.py       |   40 +-
- bitbake/lib/bb/ui/crumbs/builder.py                |  138 ++-
- bitbake/lib/bb/ui/crumbs/hig.py                    |  672 ++++++++++--
- bitbake/lib/bb/ui/crumbs/hobcolor.py               |    1 +
- bitbake/lib/bb/ui/crumbs/hobeventhandler.py        |   48 +-
- bitbake/lib/bb/ui/crumbs/hoblistmodel.py           |   60 +-
- bitbake/lib/bb/ui/crumbs/hobwidget.py              | 1135 ++++++++------------
- bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |   34 +-
- bitbake/lib/bb/ui/crumbs/imagedetailspage.py       |   93 ++-
- bitbake/lib/bb/ui/crumbs/packageselectionpage.py   |   56 +-
- bitbake/lib/bb/ui/crumbs/recipeselectionpage.py    |   55 +-
- bitbake/lib/bb/ui/crumbs/runningbuild.py           |   69 ++
- 15 files changed, 1457 insertions(+), 1037 deletions(-)
-
+diff --git a/bitbake/lib/bb/ui/crumbs/hig.py b/bitbake/lib/bb/ui/crumbs/hig.py
+index 8f4f7cd..9aa6fdf 100644
+--- a/bitbake/lib/bb/ui/crumbs/hig.py
++++ b/bitbake/lib/bb/ui/crumbs/hig.py
+@@ -582,6 +582,7 @@ class ImageSelectionDialog (gtk.Dialog):
+ 
+         self.image_folder = image_folder
+         self.image_types  = image_types
++        self.image_list = []
+         self.image_names = []
+ 
+         # create visual elements on the dialog
+@@ -645,13 +646,17 @@ class ImageSelectionDialog (gtk.Dialog):
+         dialog.destroy()
+ 
+     def fill_image_store(self):
++        self.image_list = []
+         self.image_store.clear()
+         imageset = set()
+         for root, dirs, files in os.walk(self.image_folder):
++            # ignore the sub directories
++            dirs[:] = []
+             for f in files:
+                 for image_type in self.image_types:
+                     if f.endswith('.' + image_type):
+                         imageset.add(f.rsplit('.' + image_type)[0])
++                        self.image_list.append(f)
+         
+         for image in imageset:
+             self.image_store.set(self.image_store.append(), 0, image, 1, False)
+@@ -665,9 +670,8 @@ class ImageSelectionDialog (gtk.Dialog):
+             while iter:
+                 path = self.image_store.get_path(iter)
+                 if self.image_store[path][1]:
+-                    for root, dirs, files in os.walk(self.image_folder):
+-                        for f in files:
+-                            if f.startswith(self.image_store[path][0] + '.'):
+-                                self.image_names.append(f)
++                    for f in self.image_list:
++                        if f.startswith(self.image_store[path][0] + '.'):
++                            self.image_names.append(f)
+                     break            
+                 iter = self.image_store.iter_next(iter)
 -- 
 1.7.6
 
