@@ -1,40 +1,21 @@
 Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1S2Z6x-00050f-D4
+	(envelope-from <shane.wang@intel.com>) id 1S2k7X-00055v-53
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 29 Feb 2012 03:17:47 +0100
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 28 Feb 2012 18:05:54 -0800
+	Wed, 29 Feb 2012 15:03:07 +0100
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 29 Feb 2012 05:54:37 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="112871740"
-Received: from pgsmsx509.gar.corp.intel.com ([172.30.13.17])
-	by orsmga001.jf.intel.com with ESMTP; 28 Feb 2012 18:05:47 -0800
-Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
-	PGSMSX509.gar.corp.intel.com (172.30.13.17) with Microsoft SMTP Server
-	(TLS) id 8.2.255.0; Wed, 29 Feb 2012 10:04:54 +0800
-Received: from shsmsx101.ccr.corp.intel.com ([169.254.1.142]) by
-	SHSMSX151.ccr.corp.intel.com ([169.254.3.91]) with mapi id
-	14.01.0355.002; Wed, 29 Feb 2012 10:04:52 +0800
-From: "Wang, Shane" <shane.wang@intel.com>
-To: Joshua Lock <josh@linux.intel.com>
-Thread-Topic: [bitbake-devel] [PATCH 0/1][PULL] Hob2: A new implementation
-	for Human Oriented Builder
-Thread-Index: AQHM9aW4loqlh5XeRU6xGA6MAaFRHJZTIB9g
-Date: Wed, 29 Feb 2012 02:04:51 +0000
-Message-ID: <3AB6CE7F274E534CAFD089D127A8A1FC23AD27D6@SHSMSX101.ccr.corp.intel.com>
-References: <cover.1330004101.git.dongxiao.xu@intel.com>
-	<4F46F915.5010705@linux.intel.com>
-	<3AB6CE7F274E534CAFD089D127A8A1FC23ACFDFE@SHSMSX101.ccr.corp.intel.com>
-	<4F4C0E99.3000706@linux.intel.com>
-In-Reply-To: <4F4C0E99.3000706@linux.intel.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.239.127.40]
-MIME-Version: 1.0
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 0/1][PULL] Hob2: A new implementation for Human Oriented Builder
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="116101405"
+Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
+	by orsmga002.jf.intel.com with ESMTP; 29 Feb 2012 05:54:36 -0800
+From: Shane Wang <shane.wang@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 29 Feb 2012 22:11:49 +0800
+Message-Id: <cover.1330523904.git.shane.wang@intel.com>
+X-Mailer: git-send-email 1.7.6
+Cc: Liming An <limingx.l.an@intel.com>
+Subject: [PATCH 00/32] Hob related fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -46,82 +27,88 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 29 Feb 2012 02:17:47 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Wed, 29 Feb 2012 14:03:07 -0000
 
-Joshua Lock wrote on=A02012-02-28:
+The following patches are going to fix the following problems:
 
->=20
->=20
->>> It's also worth noting that the visual style 'leaks' in the Settings
->>> dialogue and I see standard Gtk light-bulb info icons rather than the
->>> steely i displayed on the main page.
->> In the settings dialog, we didn't make any specific icon for tool tip.
->> On Ubuntu, it is a "i". On Fedora 16, it becomes a light-bulb. I am thin=
-king
-> how to make it?
->=20
-> That's because Ubuntu and Fedora use different stock themes. I think it
-> makes sense to use the i graphic from the visual design wherever you're
-> currently using gtk.STOCK_INFO.
-OK, will have a try.
+* Enable HobNotebook to make notebook more like the design video;
+* Improve and enhance the GUI;
+* Rebase the patches Josh has sent out before with the title "Hob tweaks";
+* Address some tricky issues we found in the bitbake;
+* Revise Hob according to the comments on the previous patch set;
+* Fix some bugs we found when testing Hob;
+* and some temporary walkarounds we have to find a way to solve in Hob or in the bitbake later.
 
->=20
->>> Further, there are still hard-coded colour values. Are these issues on
->>> the "to fix later" list?
->> Do you mean the green progress bar and others? For the progress bar,
-> Jessica has a comment that she doesn't want see orange bar which is the
-> default on Ubuntu but want to see a green one which is consistent with th=
-e
-> running color in the build details.
->> For some buttons like "Just bake", we try to make it look the same as
->> Belen's video. Are you suggesting to set them default?
->=20
-> I am, but I guess the design team needs to have the final say here. I
-> think Belen agreed with me in principle that we should use the colours
-> from the users theme to start and iterate from there. On my Fedora
-> machine green progress bars and orange buttons look rather out of place
-> in a software ecosystem which has a fairly consistent look and feel
-> between applications. However I care less about the colours than I do
-> about the button order, per my submitted patches.
-I also agree to use the default colors set by the OS.
+The following changes since commit 927bec5f72230be4f2452d9ef5a747b2c00cb781:
 
->>> There's at least one instance of commented out code (a signal handler
->>> connection in builder.py) - we can probably drop those, right?
->> Do you mean to drop the handler instance in builder.py?
->> If so, how could the builder call the handler's functions?
->=20
-> There's a commented out line which would connect to a signal handler
-> where it not commented out at line 201 of builder.py:
-> http://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/bitbake/lib/bb/ui/cru
-> mbs/b uilder.py#n201
->=20
-> We can probably delete that, right?
-My fault, my fault, when did it come there;-)
+  bitbake.conf: Create a new filter variable BB_HASHCONFIG_WHITELIST (2012-02-27 20:10:41 +0000)
 
->>> Setting the size and position of windows on each launch (as in
->>> builder.py) is generally considered to be hostile to users - it should
->>> be sufficient to start with a sane default size and then as the UI
->>> allows the user to resize it we should remember the size for the next
->>> launch.
->> OK. But sometimes we should consider the screen dimension. For instance
-> the builder, the main window, I bet on a smaller screen (say, 800X600) th=
-e
-> visual components will look ugly. How can I address the problem? For the
-> position of the window, I agree.
->=20
-> I don't think that telling people their resolution is too low is
-> especially helpful here. They can probably see that the GUI doesn't fit.
->=20
-> I don't know anyone that runs their system with a lower than supported
-> resolution, so telling them about something they can't fix doesn't help
-> them. It just adds insult to injury, so to speak.
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib shane/hob2-v0.68
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=shane/hob2-v0.68
 
-Understand.
+Dongxiao Xu (10):
+  command.py: remove the resolve parameter in generateTargetsTree
+  cooker.py: Fix a bug due to variable name
+  cooker: fix calculating of depends and rdepends
+  Hob(crumbs/hoblistmodel.py): Fix recipe's populate() function
+  Hob(crumbs/hoblistmodel.py): Add mapping for rprovides and pkg
+  Hob: Add an extra 50M space if zypper is selected
+  Hob: add "OK" button to "BinbDialog"
+  Hob: Fix pressing "stop" build
+  runqueue.py: initialize rqexe at RunQueue's init function
+  Hob: Disable the handling of "NoProvider" event
 
---
-Shane
+Shane Wang (22):
+  Hob: make HobViewTable more general in hob and make the image
+    selection dialog and the image details page reuse it.
+  Hob: avoid the image selection dialog to walk through all directories
+    and its sub-directories, when users click "My images".
+  Hob: cleanup those class methods in HobWidget
+  Hob: fixed the issue in the brought-in-by dialog.
+  Hob: include hddimg and iso into image types.
+  Hob: implement a self-defined notebook visual component for Hob
+  Hob: use HobNotebook to enable a notebook in build details page
+  Hob: image configuration page doesn't need dialogs any more
+  Hob: fix a bug in builder.configuration.curr_mach
+  Hob: add ignore_all_errors to avoid showing error dialog multiple
+    times
+  Hob: make the image configuration page not to flash the progress bar
+  Hob: enable indicators on the "Included" tab in the recipe selection
+    page and the package selection page
+  crumbs: Factor common dialogue configuration out
+  crumbs/builder: use the name Hob consistently
+  crumbs: move towards more standard dialogue spacing
+  crumbs: fix button order in several dialogues
+  hig: try to avoid setting explicit dialogue sizes
+  crumbs/hig: tweak UI and layout of LayerSelectionDialog
+  Hob(crumbs/builder.py): remove the code commented out in the
+    builder.py
+  Hob: fix a bug that the image size is shown incorrectly in the image
+    details page.
+  Hob: allow users to setup the proxy
+  Hob(crumbs/builder.py): adjust the main window's position and ignore
+    the case lower than 1024x768.
+
+ bitbake/lib/bb/command.py                          |   14 +-
+ bitbake/lib/bb/cooker.py                           |   74 +-
+ bitbake/lib/bb/runqueue.py                         |    5 +
+ bitbake/lib/bb/ui/crumbs/builddetailspage.py       |   40 +-
+ bitbake/lib/bb/ui/crumbs/builder.py                |  138 ++-
+ bitbake/lib/bb/ui/crumbs/hig.py                    |  672 ++++++++++--
+ bitbake/lib/bb/ui/crumbs/hobcolor.py               |    1 +
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py        |   48 +-
+ bitbake/lib/bb/ui/crumbs/hoblistmodel.py           |   60 +-
+ bitbake/lib/bb/ui/crumbs/hobwidget.py              | 1135 ++++++++------------
+ bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |   34 +-
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py       |   93 ++-
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py   |   56 +-
+ bitbake/lib/bb/ui/crumbs/recipeselectionpage.py    |   55 +-
+ bitbake/lib/bb/ui/crumbs/runningbuild.py           |   69 ++
+ 15 files changed, 1457 insertions(+), 1037 deletions(-)
+
+-- 
+1.7.6
+
 
 
