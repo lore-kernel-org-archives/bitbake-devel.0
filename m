@@ -1,24 +1,24 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1S2kNp-0005ci-GN
+	(envelope-from <shane.wang@intel.com>) id 1S2kNr-0005cn-Bs
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 29 Feb 2012 15:19:57 +0100
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 29 Feb 2012 06:11:15 -0800
+	Wed, 29 Feb 2012 15:19:59 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 29 Feb 2012 06:11:20 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="116106428"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="112770993"
 Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by orsmga002.jf.intel.com with ESMTP; 29 Feb 2012 06:11:14 -0800
+	by azsmga001.ch.intel.com with ESMTP; 29 Feb 2012 06:11:17 -0800
 From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 29 Feb 2012 22:15:18 +0800
-Message-Id: <83dbb646ca0fd8e565633e06c477e19c498c7f8d.1330523904.git.shane.wang@intel.com>
+Date: Wed, 29 Feb 2012 22:15:20 +0800
+Message-Id: <38d3055dcefb5c50789b9cc87c86bf9688e72868.1330523904.git.shane.wang@intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <439e7e3c5dd2534950c63d9df57963f1a3d35944.1330523904.git.shane.wang@intel.com>
 References: <439e7e3c5dd2534950c63d9df57963f1a3d35944.1330523904.git.shane.wang@intel.com>
 In-Reply-To: <cover.1330523904.git.shane.wang@intel.com>
 References: <cover.1330523904.git.shane.wang@intel.com>
-Subject: [PATCH 21/32] cooker.py: Fix a bug due to variable name
+Subject: [PATCH 23/32] Hob(crumbs/hoblistmodel.py): Fix recipe's populate() function
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,33 +30,94 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 29 Feb 2012 14:19:57 -0000
+X-List-Received-Date: Wed, 29 Feb 2012 14:19:59 -0000
 
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 
-fnid is an outer variable and shouldn't be overrided, change the inner variable
-name from 'fnid' to 'id'.
+According to the cooker's change, this commit fixes the way to getting
+recipe's build dependency.
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 ---
- bitbake/lib/bb/cooker.py |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hoblistmodel.py |   42 +++--------------------------
+ 1 files changed, 5 insertions(+), 37 deletions(-)
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 2e4a1ba..b23b569 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -501,8 +501,8 @@ class BBCooker:
-                     pn_provider = ""
-                     targetid = taskdata.getbuild_id(item)
-                     if targetid in taskdata.build_targets and taskdata.build_targets[targetid]:
--                        fnid = taskdata.build_targets[targetid][0]
--                        fn_provider = taskdata.fn_index[fnid]
-+                        id = taskdata.build_targets[targetid][0]
-+                        fn_provider = taskdata.fn_index[id]
-                         pn_provider = self.status.pkg_fn[fn_provider]
-                     else:
-                         pn_provider = item
+diff --git a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+index 227ae4b..e440979 100644
+--- a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
++++ b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+@@ -512,27 +512,6 @@ class RecipeListModel(gtk.ListStore):
+             it = view_model.iter_next(it)
+         return None
+ 
+-    def map_runtime(self, event_model, runtime, rdep_type, name):
+-        if rdep_type not in ['pkg', 'pn'] or runtime not in ['rdepends', 'rrecs']:
+-            return
+-        package_depends = event_model["%s-%s" % (runtime, rdep_type)].get(name, [])
+-        pn_depends = []
+-        for package_depend in package_depends:
+-            if 'task-' not in package_depend and package_depend in event_model["packages"].keys():
+-                pn_depends.append(event_model["packages"][package_depend]["pn"])
+-            else:
+-                pn_depends.append(package_depend)
+-        return list(set(pn_depends))
+-
+-    def subpkg_populate(self, event_model, pkg, desc, lic, group, atype, pn):
+-        pn_depends = self.map_runtime(event_model, "rdepends", "pkg", pkg)
+-        pn_depends += self.map_runtime(event_model, "rrecs", "pkg", pkg)
+-        self.set(self.append(), self.COL_NAME, pkg, self.COL_DESC, desc,
+-                 self.COL_LIC, lic, self.COL_GROUP, group,
+-                 self.COL_DEPS, " ".join(pn_depends), self.COL_BINB, "",
+-                 self.COL_TYPE, atype, self.COL_INC, False,
+-                 self.COL_IMG, False, self.COL_INSTALL, "", self.COL_PN, pn)
+-
+     """
+     The populate() function takes as input the data from a
+     bb.event.TargetsTreeGenerated event and populates the RecipeList.
+@@ -558,38 +537,27 @@ class RecipeListModel(gtk.ListStore):
+             group = event_model["pn"][item]["section"]
+             install = []
+ 
++            depends = event_model["depends"].get(item, [])
++            rdepends = event_model["rdepends-pn"].get(item, [])
++            depends = depends + rdepends
++
+             if ('task-' in name):
+                 if ('lib32-' in name or 'lib64-' in name):
+                     atype = 'mltask'
+                 else:
+                     atype = 'task'
+-                for pkg in event_model["pn"][name]["packages"]:
+-                    self.subpkg_populate(event_model, pkg, desc, lic, group, atype, name)
+-                continue
+-
+             elif ('-image-' in name):
+                 atype = 'image'
+-                depends = event_model["depends"].get(item, [])
+-                rdepends = self.map_runtime(event_model, 'rdepends', 'pn', name)
+-                depends = depends + rdepends
+-                install = event_model["rdepends-pn"].get(item, [])
+-
++                install = rdepends
+             elif ('meta-' in name):
+                 atype = 'toolchain'
+-
+             elif (name == 'dummy-image' or name == 'dummy-toolchain'):
+                 atype = 'dummy'
+-
+             else:
+                 if ('lib32-' in name or 'lib64-' in name):
+                     atype = 'mlrecipe'
+                 else:
+                     atype = 'recipe'
+-                depends = event_model["depends"].get(item, [])
+-                depends += self.map_runtime(event_model, 'rdepends', 'pn', item)
+-                for pkg in event_model["pn"][name]["packages"]:
+-                    depends += self.map_runtime(event_model, 'rdepends', 'pkg', item)
+-                    depends += self.map_runtime(event_model, 'rrecs', 'pkg', item)
+ 
+             self.set(self.append(), self.COL_NAME, item, self.COL_DESC, desc,
+                      self.COL_LIC, lic, self.COL_GROUP, group,
 -- 
 1.7.6
 
