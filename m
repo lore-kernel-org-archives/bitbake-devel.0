@@ -1,24 +1,24 @@
 Received: from mga01.intel.com ([192.55.52.88])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1S2kQo-0005q7-Ot
+	(envelope-from <shane.wang@intel.com>) id 1S2kQp-0005q7-Da
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 29 Feb 2012 15:23:02 +0100
+	Wed, 29 Feb 2012 15:23:03 +0100
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 29 Feb 2012 06:14:33 -0800
+	by fmsmga101.fm.intel.com with ESMTP; 29 Feb 2012 06:14:35 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="130973485"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="130973493"
 Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by fmsmga002.fm.intel.com with ESMTP; 29 Feb 2012 06:14:33 -0800
+	by fmsmga002.fm.intel.com with ESMTP; 29 Feb 2012 06:14:35 -0800
 From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 29 Feb 2012 22:15:24 +0800
-Message-Id: <79c20962f88a34c41344c8480aea6368f62c3241.1330523904.git.shane.wang@intel.com>
+Date: Wed, 29 Feb 2012 22:15:26 +0800
+Message-Id: <d676659c5d1004ab527f343bc0d757ed61bd6c3f.1330523904.git.shane.wang@intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <439e7e3c5dd2534950c63d9df57963f1a3d35944.1330523904.git.shane.wang@intel.com>
 References: <439e7e3c5dd2534950c63d9df57963f1a3d35944.1330523904.git.shane.wang@intel.com>
 In-Reply-To: <cover.1330523904.git.shane.wang@intel.com>
 References: <cover.1330523904.git.shane.wang@intel.com>
-Subject: [PATCH 27/32] Hob: add "OK" button to "BinbDialog"
+Subject: [PATCH 29/32] Hob(crumbs/builder.py): adjust the main window's position and ignore the case lower than 1024x768.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,39 +32,39 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 29 Feb 2012 14:23:03 -0000
 
-From: Dongxiao Xu <dongxiao.xu@intel.com>
+* don't set the position of the main window to the center always
+* don't show the message to users if their screen dimensions are lower than 1024x768
 
-For certain distributions, like FC16, it doesn't have close button in
-sub-windows or dialogs. Therefore we need to add an "OK" button to
-"BinbDialog" to close the dialog.
-
-Besides, let BinbDialog inherits the CrumbsDialog instead of gtk.Dialog
-
-Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/hig.py |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/ui/crumbs/builder.py |    8 --------
+ 1 files changed, 0 insertions(+), 8 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/hig.py b/bitbake/lib/bb/ui/crumbs/hig.py
-index c5bd27a..20585b7 100644
---- a/bitbake/lib/bb/ui/crumbs/hig.py
-+++ b/bitbake/lib/bb/ui/crumbs/hig.py
-@@ -90,13 +90,13 @@ class CrumbsMessageDialog(CrumbsDialog):
- #
- # Brought-in-by Dialog
- #
--class BinbDialog(gtk.Dialog):
-+class BinbDialog(CrumbsDialog):
-     """
-     A dialog widget to show "brought in by" info when a recipe/package is clicked.
-     """
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index e9853f2..f41b6a4 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -229,20 +229,12 @@ class Builder(gtk.Window):
+     def create_visual_elements(self):
+         self.set_title("Hob - Image Creator")
+         self.set_icon_name("applications-development")
+-        self.set_position(gtk.WIN_POS_CENTER_ALWAYS)
+         self.set_resizable(True)
+         window_width = self.get_screen().get_width()
+         window_height = self.get_screen().get_height()
+         if window_width >= hwc.MAIN_WIN_WIDTH:
+             window_width = hwc.MAIN_WIN_WIDTH
+             window_height = hwc.MAIN_WIN_HEIGHT
+-        else:
+-            lbl = "<b>Screen dimension mismatched</b>\nfor better usability and visual effects,"
+-            lbl = lbl + " the screen dimension should be 1024x768 or above."
+-            dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
+-            dialog.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
+-            dialog.run()
+-            dialog.destroy()
+         self.set_size_request(window_width, window_height)
  
-     def __init__(self, title, content, parent=None):
--        super(BinbDialog, self).__init__(title, parent, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, None)
-+        super(BinbDialog, self).__init__(title, parent, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, ("OK", gtk.RESPONSE_OK))
- 
-         self.set_position(gtk.WIN_POS_MOUSE)
-         self.set_resizable(False)
+         self.vbox = gtk.VBox(False, 0)
 -- 
 1.7.6
 
