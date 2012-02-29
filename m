@@ -1,24 +1,24 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1S2kEG-0005Is-G0
+	(envelope-from <shane.wang@intel.com>) id 1S2kEX-0005Ko-KR
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 29 Feb 2012 15:10:05 +0100
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 29 Feb 2012 06:01:35 -0800
+	Wed, 29 Feb 2012 15:10:21 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga102.ch.intel.com with ESMTP; 29 Feb 2012 06:01:34 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="113065934"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="112766594"
 Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by orsmga001.jf.intel.com with ESMTP; 29 Feb 2012 06:01:34 -0800
+	by azsmga001.ch.intel.com with ESMTP; 29 Feb 2012 06:01:33 -0800
 From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 29 Feb 2012 22:15:09 +0800
-Message-Id: <6caf36f36f6f49c49b1e26d51fe58d377a9e45bf.1330523904.git.shane.wang@intel.com>
+Date: Wed, 29 Feb 2012 22:15:08 +0800
+Message-Id: <01a2bab8db48a197f25682f9a5673a399e20be7d.1330523904.git.shane.wang@intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <439e7e3c5dd2534950c63d9df57963f1a3d35944.1330523904.git.shane.wang@intel.com>
 References: <439e7e3c5dd2534950c63d9df57963f1a3d35944.1330523904.git.shane.wang@intel.com>
 In-Reply-To: <cover.1330523904.git.shane.wang@intel.com>
 References: <cover.1330523904.git.shane.wang@intel.com>
-Subject: [PATCH 12/32] Hob: enable indicators on the "Included" tab in the recipe selection page and the package selection page
+Subject: [PATCH 11/32] Hob: make the image configuration page not to flash the progress bar
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,38 +30,88 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 29 Feb 2012 14:10:05 -0000
+X-List-Received-Date: Wed, 29 Feb 2012 14:10:21 -0000
+
+Sometimes the image configuration page flashes the progress bar, that is because we show_all() and then hide() the progress bar. For this case, the patch doesn't add the progress bar onto the gtable. Then, it will not be flashed any more.
 
 Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    1 +
- bitbake/lib/bb/ui/crumbs/recipeselectionpage.py  |    1 +
- 2 files changed, 2 insertions(+), 0 deletions(-)
+ bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |   30 +++++++++----------
+ 1 files changed, 14 insertions(+), 16 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-index dab90ec..5459743 100755
---- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-@@ -186,6 +186,7 @@ class PackageSelectionPage (HobPage):
+diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+index cd86606..db54d79 100644
+--- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
++++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+@@ -84,21 +84,20 @@ class ImageConfigurationPage (HobPage):
+         for child in children:
+             self.remove(child)
  
-         self.label.set_text("Packages included: %s\nSelected packages size: %s\nTotal image size: %s" %
-                             (selected_packages_num, selected_packages_size_str, image_total_size_str))
-+        self.ins.show_indicator_icon("Included", selected_packages_num)
+-    def _pack_components(self):
++    def _pack_components(self, pack_config_build_button = False):
+         self._remove_all_widget()
+         self.pack_start(self.config_top_button, expand=False, fill=False)
+         self.pack_start(self.group_align, expand=True, fill=True)
  
-     """
-     Helper function to convert the package size to string format.
-diff --git a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-index 416c613..8423714 100755
---- a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-@@ -190,6 +190,7 @@ class RecipeSelectionPage (HobPage):
-         self.builder.configuration.selected_image = self.recipe_model.get_selected_image()
-         _, self.builder.configuration.selected_recipes = self.recipe_model.get_selected_recipes()
-         self.label.set_text("Recipes included: %s" % len(self.builder.configuration.selected_recipes))
-+        self.ins.show_indicator_icon("Included", len(self.builder.configuration.selected_recipes))
+         self.box_group_area.pack_start(self.gtable, expand=True, fill=True)
+-        self.box_group_area.pack_end(self.config_build_button, expand=False, fill=False)
++        if pack_config_build_button == True:
++            self.box_group_area.pack_end(self.config_build_button, expand=False, fill=False)
  
-     # Callback functions
-     def reset_clicked_cb(self, button):
+     def show_machine(self):
+-        self._pack_components()
+-        self.set_config_machine_layout()
+-        self.show_all()
+         self.progress_bar.reset()
+-        self.progress_bar.hide()
+-        self.config_build_button.hide_all()
++        self._pack_components(pack_config_build_button = False)
++        self.set_config_machine_layout(show_progress_bar = False)
++        self.show_all()
+ 
+     def update_progress_bar(self, title, fraction, status=True):
+         self.progress_bar.update(fraction)
+@@ -106,18 +105,16 @@ class ImageConfigurationPage (HobPage):
+         self.progress_bar.set_rcstyle(status)
+ 
+     def show_info_populating(self):
+-        self._pack_components()
+-        self.set_config_machine_layout()
++        self._pack_components(pack_config_build_button = False)
++        self.set_config_machine_layout(show_progress_bar = True)
+         self.show_all()
+-        self.config_build_button.hide_all()
+ 
+     def show_info_populated(self):
+-        self._pack_components()
+-        self.set_config_machine_layout()
++        self.progress_bar.reset()
++        self._pack_components(pack_config_build_button = True)
++        self.set_config_machine_layout(show_progress_bar = False)
+         self.set_config_baseimg_layout()
+         self.show_all()
+-        self.progress_bar.reset()
+-        self.progress_bar.hide()
+ 
+     def create_config_machine(self):
+         self.machine_title = gtk.Label()
+@@ -154,13 +151,14 @@ class ImageConfigurationPage (HobPage):
+         self.progress_bar = HobProgressBar()
+         self.machine_separator = gtk.HSeparator()
+ 
+-    def set_config_machine_layout(self):
++    def set_config_machine_layout(self, show_progress_bar = False):
+         self.gtable.attach(self.machine_title, 0, 40, 0, 4)
+         self.gtable.attach(self.machine_title_desc, 0, 40, 4, 6)
+         self.gtable.attach(self.machine_combo, 0, 12, 6, 9)
+         self.gtable.attach(self.layer_button, 12, 36, 6, 10)
+         self.gtable.attach(self.layer_info_icon, 36, 40, 6, 9)
+-        self.gtable.attach(self.progress_bar, 0, 40, 13, 17)
++        if show_progress_bar == True:
++            self.gtable.attach(self.progress_bar, 0, 40, 13, 17)
+         self.gtable.attach(self.machine_separator, 0, 40, 12, 13)
+ 
+     def create_config_baseimg(self):
 -- 
 1.7.6
 
