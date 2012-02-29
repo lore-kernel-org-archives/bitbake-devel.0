@@ -1,25 +1,25 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1S2rEP-0003UM-0s
+	(envelope-from <josh@linux.intel.com>) id 1S2rGv-0003Zf-By
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 29 Feb 2012 22:38:41 +0100
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 29 Feb 2012 13:30:13 -0800
+	Wed, 29 Feb 2012 22:41:18 +0100
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 29 Feb 2012 13:32:47 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="112980239"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="116252178"
 Received: from unknown (HELO [10.255.15.102]) ([10.255.15.102])
-	by azsmga001.ch.intel.com with ESMTP; 29 Feb 2012 13:30:13 -0800
-Message-ID: <4F4E98E5.6060705@linux.intel.com>
-Date: Wed, 29 Feb 2012 13:30:13 -0800
+	by orsmga002.jf.intel.com with ESMTP; 29 Feb 2012 13:32:47 -0800
+Message-ID: <4F4E997E.4000403@linux.intel.com>
+Date: Wed, 29 Feb 2012 13:32:46 -0800
 From: Joshua Lock <josh@linux.intel.com>
 User-Agent: Mozilla/5.0 (X11; Linux x86_64;
 	rv:10.0.1) Gecko/20120216 Thunderbird/10.0.1
 MIME-Version: 1.0
 To: bitbake-devel@lists.openembedded.org
 References: <439e7e3c5dd2534950c63d9df57963f1a3d35944.1330523904.git.shane.wang@intel.com>
-	<1f142038e9be9490df21a5cd4c14c579ca63a896.1330523904.git.shane.wang@intel.com>
-In-Reply-To: <1f142038e9be9490df21a5cd4c14c579ca63a896.1330523904.git.shane.wang@intel.com>
-Subject: Re: [PATCH 02/32] Hob: avoid the image selection dialog to walk through all directories and its sub-directories, when users click "My images".
+	<1239984c43d315bad4de8834690222e06c951977.1330523904.git.shane.wang@intel.com>
+In-Reply-To: <1239984c43d315bad4de8834690222e06c951977.1330523904.git.shane.wang@intel.com>
+Subject: Re: [PATCH 07/32] Hob: use HobNotebook to enable a notebook in build details page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,65 +31,273 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 29 Feb 2012 21:38:41 -0000
+X-List-Received-Date: Wed, 29 Feb 2012 21:41:18 -0000
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 29/02/12 06:14, Shane Wang wrote:
-> The current implementation of the image selection dialog walks through all directories and its sub-directories, when users click "My images" to choose a directory. If the directory is /, the system becomes slow. This patch is to avoid walking through all directories but the child directories only, given a directory.
->
-> Signed-off-by: Shane Wang<shane.wang@intel.com>
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
+On 29/02/12 06:15, Shane Wang wrote:
+> This patch is to use HobNotebook we defined to implement the notebook in the build details page.
+> And more the "build configuration" tab and the "issues" tab use more tree views which we implemented in runningbuild.py.
 
+This should probably be two patches? I've raised concerns about the 
+HobNoteBook in the patch introducing it.
+
+Cheers,
+Joshua
+
+>
+> Signed-off-by: Liming An<limingx.l.an@intel.com>
+> Signed-off-by: Shane Wang<shane.wang@intel.com>
 > ---
->   bitbake/lib/bb/ui/crumbs/hig.py |   12 ++++++++----
->   1 files changed, 8 insertions(+), 4 deletions(-)
+>   bitbake/lib/bb/ui/crumbs/builddetailspage.py |   40 +++++++++++++--
+>   bitbake/lib/bb/ui/crumbs/builder.py          |    5 ++
+>   bitbake/lib/bb/ui/crumbs/hobwidget.py        |   14 +++++
+>   bitbake/lib/bb/ui/crumbs/runningbuild.py     |   69 ++++++++++++++++++++++++++
+>   4 files changed, 123 insertions(+), 5 deletions(-)
 >
-> diff --git a/bitbake/lib/bb/ui/crumbs/hig.py b/bitbake/lib/bb/ui/crumbs/hig.py
-> index 8f4f7cd..9aa6fdf 100644
-> --- a/bitbake/lib/bb/ui/crumbs/hig.py
-> +++ b/bitbake/lib/bb/ui/crumbs/hig.py
-> @@ -582,6 +582,7 @@ class ImageSelectionDialog (gtk.Dialog):
+> diff --git a/bitbake/lib/bb/ui/crumbs/builddetailspage.py b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
+> index 941f1e3..4a9f658 100755
+> --- a/bitbake/lib/bb/ui/crumbs/builddetailspage.py
+> +++ b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
+> @@ -22,8 +22,10 @@
 >
->           self.image_folder = image_folder
->           self.image_types  = image_types
-> +        self.image_list = []
->           self.image_names = []
+>   import gtk
+>   from bb.ui.crumbs.progressbar import HobProgressBar
+> -from bb.ui.crumbs.hobwidget import hic
+> +from bb.ui.crumbs.hobwidget import hic, HobNotebook
+>   from bb.ui.crumbs.runningbuild import RunningBuildTreeView
+> +from bb.ui.crumbs.runningbuild import BuildConfigurationTreeView
+> +from bb.ui.crumbs.runningbuild import BuildFailureTreeView
+>   from bb.ui.crumbs.hobpages import HobPage
 >
->           # create visual elements on the dialog
-> @@ -645,13 +646,17 @@ class ImageSelectionDialog (gtk.Dialog):
->           dialog.destroy()
+>   #
+> @@ -35,6 +37,8 @@ class BuildDetailsPage (HobPage):
+>       def __init__(self, builder):
+>           super(BuildDetailsPage, self).__init__(builder, "Building ...")
 >
->       def fill_image_store(self):
-> +        self.image_list = []
->           self.image_store.clear()
->           imageset = set()
->           for root, dirs, files in os.walk(self.image_folder):
-> +            # ignore the sub directories
-> +            dirs[:] = []
->               for f in files:
->                   for image_type in self.image_types:
->                       if f.endswith('.' + image_type):
->                           imageset.add(f.rsplit('.' + image_type)[0])
-> +                        self.image_list.append(f)
+> +        self.num_of_issues = 0
+> +
+>           # create visual elements
+>           self.create_visual_elements()
 >
->           for image in imageset:
->               self.image_store.set(self.image_store.append(), 0, image, 1, False)
-> @@ -665,9 +670,8 @@ class ImageSelectionDialog (gtk.Dialog):
->               while iter:
->                   path = self.image_store.get_path(iter)
->                   if self.image_store[path][1]:
-> -                    for root, dirs, files in os.walk(self.image_folder):
-> -                        for f in files:
-> -                            if f.startswith(self.image_store[path][0] + '.'):
-> -                                self.image_names.append(f)
-> +                    for f in self.image_list:
-> +                        if f.startswith(self.image_store[path][0] + '.'):
-> +                            self.image_names.append(f)
->                       break
->                   iter = self.image_store.iter_next(iter)
+> @@ -49,17 +53,43 @@ class BuildDetailsPage (HobPage):
+>           self.stop_button.connect("clicked", self.stop_button_clicked_cb)
+>           self.progress_box.pack_end(self.stop_button, expand=False, fill=False)
+>
+> +        self.notebook = HobNotebook()
+> +        self.config_tv = BuildConfigurationTreeView()
+> +        self.config_model = self.builder.handler.build.model.config_model()
+> +        self.config_tv.set_model(self.config_model)
+> +        self.scrolled_view_config = gtk.ScrolledWindow ()
+> +        self.scrolled_view_config.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+> +        self.scrolled_view_config.add(self.config_tv)
+> +        self.notebook.append_page(self.scrolled_view_config, gtk.Label("Build Configuration"))
+> +
+> +        self.failure_tv = BuildFailureTreeView()
+> +        self.failure_model = self.builder.handler.build.model.failure_model()
+> +        self.failure_tv.set_model(self.failure_model)
+> +        self.scrolled_view_failure = gtk.ScrolledWindow ()
+> +        self.scrolled_view_failure.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+> +        self.scrolled_view_failure.add(self.failure_tv)
+> +        self.notebook.append_page(self.scrolled_view_failure, gtk.Label("Issues"))
+> +
+>           self.build_tv = RunningBuildTreeView(readonly=True)
+>           self.build_tv.set_model(self.builder.handler.build.model)
+> -        self.scrolled_view = gtk.ScrolledWindow ()
+> -        self.scrolled_view.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+> -        self.scrolled_view.add(self.build_tv)
+> +        self.scrolled_view_build = gtk.ScrolledWindow ()
+> +        self.scrolled_view_build.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+> +        self.scrolled_view_build.add(self.build_tv)
+> +        self.notebook.append_page(self.scrolled_view_build, gtk.Label("Log"))
+>
+>           self.button_box = gtk.HBox(False, 5)
+>           self.back_button = gtk.LinkButton("Go back to Image Configuration screen", "<<  Back to image configuration")
+>           self.back_button.connect("clicked", self.back_button_clicked_cb)
+>           self.button_box.pack_start(self.back_button, expand=False, fill=False)
+>
+> +    def show_issues(self):
+> +        self.num_of_issues += 1
+> +        self.notebook.show_indicator_icon("Issues", self.num_of_issues)
+> +
+> +    def reset_issues(self):
+> +        self.num_of_issues = 0
+> +        self.notebook.hide_indicator_icon("Issues")
+> +
+>       def _remove_all_widget(self):
+>           children = self.vbox.get_children() or []
+>           for child in children:
+> @@ -86,7 +116,7 @@ class BuildDetailsPage (HobPage):
+>           self.progress_bar.reset()
+>           self.vbox.pack_start(self.progress_box, expand=False, fill=False)
+>
+> -        self.vbox.pack_start(self.scrolled_view, expand=True, fill=True)
+> +        self.vbox.pack_start(self.notebook, expand=True, fill=True)
+>
+>           self.box_group_area.pack_end(self.button_box, expand=False, fill=False)
+>           self.show_all()
+> diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+> index eb38819..819b79f 100755
+> --- a/bitbake/lib/bb/ui/crumbs/builder.py
+> +++ b/bitbake/lib/bb/ui/crumbs/builder.py
+> @@ -214,6 +214,7 @@ class Builder(gtk.Window):
+>           self.handler.build.connect("build-succeeded",    self.handler_build_succeeded_cb)
+>           self.handler.build.connect("build-failed",       self.handler_build_failed_cb)
+>           self.handler.build.connect("task-started",       self.handler_task_started_cb)
+> +        self.handler.build.connect("log-error",          self.handler_build_failure_cb)
+>           self.handler.connect("generating-data",          self.handler_generating_data_cb)
+>           self.handler.connect("data-generated",           self.handler_data_generated_cb)
+>           self.handler.connect("command-succeeded",        self.handler_command_succeeded_cb)
+> @@ -528,6 +529,7 @@ class Builder(gtk.Window):
+>           elif self.current_step == self.PACKAGE_GENERATING:
+>               fraction = 0
+>           self.build_details_page.update_progress_bar("Build Started: ", fraction)
+> +        self.build_details_page.reset_issues()
+>
+>       def handler_build_succeeded_cb(self, running_build):
+>           self.build_succeeded = True
+> @@ -586,6 +588,9 @@ class Builder(gtk.Window):
+>                   fraction = 0.2 + 0.8 * fraction
+>           self.build_details_page.update_progress_bar(title + ": ", fraction)
+>
+> +    def handler_build_failure_cb(self, running_build):
+> +        self.build_details_page.show_issues()
+> +
+>       def destroy_window_cb(self, widget, event):
+>           lbl = "<b>Do you really want to exit the Hob image creator?</b>"
+>           dialog = CrumbsDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
+> diff --git a/bitbake/lib/bb/ui/crumbs/hobwidget.py b/bitbake/lib/bb/ui/crumbs/hobwidget.py
+> index a2d99a2..c4a0513 100644
+> --- a/bitbake/lib/bb/ui/crumbs/hobwidget.py
+> +++ b/bitbake/lib/bb/ui/crumbs/hobwidget.py
+> @@ -569,6 +569,20 @@ class HobNotebook(gtk.VBox):
+>
+>           self.tb.show()
+>
+> +    def show_indicator_icon(self, title, number):
+> +        for i in range(len(self.tabbar.children)):
+> +            if self.tabbar.children[i]["toggled_page"] == -1:
+> +                continue
+> +            if self.tabbar.children[i]["title"] == title:
+> +                self.tabbar.show_indicator_icon(i, number)
+> +
+> +    def hide_indicator_icon(self, title):
+> +        for i in range(len(self.tabbar.children)):
+> +            if self.tabbar.children[i]["toggled_page"] == -1:
+> +                continue
+> +            if self.tabbar.children[i]["title"] == title:
+> +                self.tabbar.hide_indicator_icon(i)
+> +
+>       def tab_switched_cb(self, widget, page):
+>           self.notebook.set_current_page(page)
+>
+> diff --git a/bitbake/lib/bb/ui/crumbs/runningbuild.py b/bitbake/lib/bb/ui/crumbs/runningbuild.py
+> index 718f692..ddac232 100644
+> --- a/bitbake/lib/bb/ui/crumbs/runningbuild.py
+> +++ b/bitbake/lib/bb/ui/crumbs/runningbuild.py
+> @@ -25,6 +25,7 @@ import logging
+>   import time
+>   import urllib
+>   import urllib2
+> +import pango
+>   from bb.ui.crumbs.hobcolor import HobColors
+>
+>   class RunningBuildModel (gtk.TreeStore):
+> @@ -40,6 +41,32 @@ class RunningBuildModel (gtk.TreeStore):
+>                                   gobject.TYPE_STRING,
+>                                   gobject.TYPE_INT)
+>
+> +    def config_model_filter(self, model, it):
+> +        msg = model.get(it, self.COL_MESSAGE)[0]
+> +        if msg == None or type(msg) != str:
+> +            return False
+> +        if msg.startswith("\nOE Build Configuration:\n"):
+> +            return True
+> +        return False
+> +
+> +    def failure_model_filter(self, model, it):
+> +        color = model.get(it, self.COL_COLOR)[0]
+> +        if color == None:
+> +            return False
+> +        if color == HobColors.ERROR:
+> +            return True
+> +        return False
+> +
+> +    def config_model(self):
+> +        model = self.filter_new()
+> +        model.set_visible_func(self.config_model_filter)
+> +        return model
+> +
+> +    def failure_model(self):
+> +        model = self.filter_new()
+> +        model.set_visible_func(self.failure_model_filter)
+> +        return model
+> +
+>   class RunningBuild (gobject.GObject):
+>       __gsignals__ = {
+>             'build-started' : (gobject.SIGNAL_RUN_LAST,
+> @@ -57,6 +84,9 @@ class RunningBuild (gobject.GObject):
+>             'task-started'   : (gobject.SIGNAL_RUN_LAST,
+>                                 gobject.TYPE_NONE,
+>                                 (gobject.TYPE_PYOBJECT,)),
+> +          'log-error'      : (gobject.SIGNAL_RUN_LAST,
+> +                              gobject.TYPE_NONE,
+> +                              ()),
+>             }
+>       pids_to_task = {}
+>       tasks_to_iter = {}
+> @@ -107,6 +137,7 @@ class RunningBuild (gobject.GObject):
+>               if event.levelno>= logging.ERROR:
+>                   icon = "dialog-error"
+>                   color = HobColors.ERROR
+> +                self.emit("log-error")
+>               elif event.levelno>= logging.WARNING:
+>                   icon = "dialog-warning"
+>                   color = HobColors.WARNING
+> @@ -376,3 +407,41 @@ class RunningBuildTreeView (gtk.TreeView):
+>           message = model.get(it, model.COL_MESSAGE)[0]
+>
+>           self._add_to_clipboard(message)
+> +
+> +
+> +class BuildConfigurationTreeView(gtk.TreeView):
+> +
+> +    def __init__ (self):
+> +        gtk.TreeView.__init__(self)
+> +        self.set_rules_hint(False)
+> +        self.set_headers_visible(False)
+> +        self.set_property("hover-expand", True)
+> +        self.get_selection().set_mode(gtk.SELECTION_SINGLE)
+> +
+> +        # The message of the build.
+> +        self.message_renderer = gtk.CellRendererText ()
+> +        self.message_column = gtk.TreeViewColumn ("Message", self.message_renderer, text=RunningBuildModel.COL_MESSAGE, background=RunningBuildModel.COL_COLOR)
+> +        font = self.get_style().font_desc
+> +        font.set_size(pango.SCALE * 13)
+> +        self.message_renderer.set_property('font-desc', font)
+> +        self.append_column (self.message_column)
+> +
+> +
+> +class BuildFailureTreeView(gtk.TreeView):
+> +
+> +    def __init__ (self):
+> +        gtk.TreeView.__init__(self)
+> +        self.set_rules_hint(False)
+> +        self.set_headers_visible(False)
+> +        self.get_selection().set_mode(gtk.SELECTION_SINGLE)
+> +
+> +        # The icon that indicates whether we're building or failed.
+> +        renderer = gtk.CellRendererPixbuf ()
+> +        col = gtk.TreeViewColumn ("Status", renderer)
+> +        col.add_attribute (renderer, "icon-name", RunningBuildModel.COL_ICON)
+> +        self.append_column (col)
+> +
+> +        # The message of the build.
+> +        self.message_renderer = gtk.CellRendererText ()
+> +        self.message_column = gtk.TreeViewColumn ("Message", self.message_renderer, text=RunningBuildModel.COL_MESSAGE, background=RunningBuildModel.COL_COLOR)
+> +        self.append_column (self.message_column)
 
 -- 
 Joshua Lock
