@@ -1,27 +1,20 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga01.intel.com ([192.55.52.88])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1S2xfL-0008PT-0u
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1S37a7-0007re-CJ
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 01 Mar 2012 05:30:55 +0100
+	Thu, 01 Mar 2012 16:06:11 +0100
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 29 Feb 2012 20:22:24 -0800
+	by fmsmga101.fm.intel.com with ESMTP; 01 Mar 2012 06:57:40 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="123518862"
-Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
-	([10.239.36.11])
-	by fmsmga001.fm.intel.com with ESMTP; 29 Feb 2012 20:22:24 -0800
-From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
-To: Joshua Lock <josh@linux.intel.com>
-In-Reply-To: <4F4E98CC.8010707@linux.intel.com>
-References: <439e7e3c5dd2534950c63d9df57963f1a3d35944.1330523904.git.shane.wang@intel.com>
-	<79c20962f88a34c41344c8480aea6368f62c3241.1330523904.git.shane.wang@intel.com>
-	<4F4E98CC.8010707@linux.intel.com>
-Date: Thu, 01 Mar 2012 12:20:55 +0800
-Message-ID: <1330575655.1785.59.camel@dongxiao-osel>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.32.2 
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 27/32] Hob: add "OK" button to "BinbDialog"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="123711547"
+Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.123.90])
+	by fmsmga001.fm.intel.com with ESMTP; 01 Mar 2012 06:57:40 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu,  1 Mar 2012 14:57:34 +0000
+Message-Id: <cover.1330613733.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.7.5.4
+Subject: [PATCH 0/3] Fixes for scenequeue task failure
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,59 +26,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 01 Mar 2012 04:30:55 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 01 Mar 2012 15:06:11 -0000
 
-On Wed, 2012-02-29 at 13:29 -0800, Joshua Lock wrote:
-> On 29/02/12 06:15, Shane Wang wrote:
-> > From: Dongxiao Xu<dongxiao.xu@intel.com>
-> >
-> > For certain distributions, like FC16, it doesn't have close button in
-> > sub-windows or dialogs. Therefore we need to add an "OK" button to
-> > "BinbDialog" to close the dialog.
-> 
-> If it exists for closing the dialogue it should be a 'Close' button.
+After some more extensive testing, fix some regressions in scenequeue
+task failure handling caused by one of my earlier commits.
 
-Thanks, it makes sense to use "close" button.
+The following changes since commit 8f07bdc0a42dd7a7c3acf5d1b13220dbc98c8017:
 
-Thanks,
-Dongxiao
+  image_types_uboot: Update to work after recent image_types changes (2012-02-29 18:25:03 +0000)
 
-> 
-> Cheers,
-> Joshua
-> 
-> >
-> > Besides, let BinbDialog inherits the CrumbsDialog instead of gtk.Dialog
-> >
-> > Signed-off-by: Dongxiao Xu<dongxiao.xu@intel.com>
-> > ---
-> >   bitbake/lib/bb/ui/crumbs/hig.py |    4 ++--
-> >   1 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/bitbake/lib/bb/ui/crumbs/hig.py b/bitbake/lib/bb/ui/crumbs/hig.py
-> > index c5bd27a..20585b7 100644
-> > --- a/bitbake/lib/bb/ui/crumbs/hig.py
-> > +++ b/bitbake/lib/bb/ui/crumbs/hig.py
-> > @@ -90,13 +90,13 @@ class CrumbsMessageDialog(CrumbsDialog):
-> >   #
-> >   # Brought-in-by Dialog
-> >   #
-> > -class BinbDialog(gtk.Dialog):
-> > +class BinbDialog(CrumbsDialog):
-> >       """
-> >       A dialog widget to show "brought in by" info when a recipe/package is clicked.
-> >       """
-> >
-> >       def __init__(self, title, content, parent=None):
-> > -        super(BinbDialog, self).__init__(title, parent, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, None)
-> > +        super(BinbDialog, self).__init__(title, parent, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, ("OK", gtk.RESPONSE_OK))
-> >
-> >           self.set_position(gtk.WIN_POS_MOUSE)
-> >           self.set_resizable(False)
-> 
+are available in the git repository at:
+  git://git.yoctoproject.org/poky-contrib paule/bb-sceneqtaskfail
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-sceneqtaskfail
 
+Paul Eggleton (3):
+  bitbake/runqueue: fix python error on scenequeue task failure
+  bitbake/uihelper: restore line to record failed normal tasks
+  bitbake/build: report TaskFailedSilent events as "Failed"
+
+ bitbake/lib/bb/build.py       |    9 ++++++++-
+ bitbake/lib/bb/runqueue.py    |    3 +--
+ bitbake/lib/bb/ui/uihelper.py |    7 ++++++-
+ 3 files changed, 15 insertions(+), 4 deletions(-)
+
+-- 
+1.7.5.4
 
 
 
