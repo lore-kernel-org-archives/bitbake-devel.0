@@ -1,24 +1,31 @@
-Received: from mga01.intel.com ([192.55.52.88])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1S37aA-0007ri-2I
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 01 Mar 2012 16:06:14 +0100
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 01 Mar 2012 06:57:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="123711566"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.123.90])
-	by fmsmga001.fm.intel.com with ESMTP; 01 Mar 2012 06:57:42 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu,  1 Mar 2012 14:57:37 +0000
-Message-Id: <f5b6668030bf41a2c49de845dcda3bf91d66eae0.1330613733.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.7.5.4
-In-Reply-To: <cover.1330613733.git.paul.eggleton@linux.intel.com>
-References: <cover.1330613733.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1330613733.git.paul.eggleton@linux.intel.com>
-References: <cover.1330613733.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 3/3] bitbake/build: report TaskFailedSilent events as "Failed"
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1S37zO-0001CR-Ns for bitbake-devel@lists.openembedded.org;
+	Thu, 01 Mar 2012 16:32:18 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q21FNlOU017972;
+	Thu, 1 Mar 2012 15:23:47 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 17710-03; Thu,  1 Mar 2012 15:23:43 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q21FNck3017965
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Thu, 1 Mar 2012 15:23:39 GMT
+Message-ID: <1330615422.31767.13.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Shane Wang <shane.wang@intel.com>
+Date: Thu, 01 Mar 2012 15:23:42 +0000
+In-Reply-To: <93713faf8701668260d1822f9be8c8e6deaafc03.1330523904.git.shane.wang@intel.com>
+References: <cover.1330523904.git.shane.wang@intel.com>
+	<93713faf8701668260d1822f9be8c8e6deaafc03.1330523904.git.shane.wang@intel.com>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 32/32] Hob: Disable the handling of "NoProvider" event
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,54 +37,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 01 Mar 2012 15:06:14 -0000
+X-List-Received-Date: Thu, 01 Mar 2012 15:32:18 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-The change for setscene events to fire a TaskFailedSilent event instead
-of TaskFailed resulted in "FailedSilent" being reported in the task
-finish note log entry, which is not really desirable, so change it back
-to reporting "Failed" again.
+On Wed, 2012-02-29 at 22:15 +0800, Shane Wang wrote:
+> From: Dongxiao Xu <dongxiao.xu@intel.com>
+> 
+> Currently for non-x86 architecture, there are un-resolved dependency
+> issue when generate universe dependency tree. Therefore disable the
+> handling of "NoProvider" event in Hob to enable the build for non-x86
+> architectures. After we resolved the dependency for universe, we still
+> need to handle this event in Hob.
+> 
+> Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+> ---
+>  bitbake/lib/bb/ui/crumbs/hobeventhandler.py |   37 ++++++++++++++------------
+>  1 files changed, 20 insertions(+), 17 deletions(-)
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- bitbake/lib/bb/build.py |    9 ++++++++-
- 1 files changed, 8 insertions(+), 1 deletions(-)
+Shouldn't you be using world and not universe for this?
 
-diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-index e390bec..a9b40e7 100644
---- a/bitbake/lib/bb/build.py
-+++ b/bitbake/lib/bb/build.py
-@@ -72,7 +72,7 @@ class TaskBase(event.Event):
-         self._task = t
-         self._package = d.getVar("PF", 1)
-         event.Event.__init__(self)
--        self._message = "package %s: task %s: %s" % (d.getVar("PF", 1), t, bb.event.getName(self)[4:])
-+        self._message = "package %s: task %s: %s" % (d.getVar("PF", 1), t, self.getDisplayName())
- 
-     def getTask(self):
-         return self._task
-@@ -80,6 +80,9 @@ class TaskBase(event.Event):
-     def setTask(self, task):
-         self._task = task
- 
-+    def getDisplayName(self):
-+        return bb.event.getName(self)[4:]
-+
-     task = property(getTask, setTask, None, "task property")
- 
- class TaskStarted(TaskBase):
-@@ -102,6 +105,10 @@ class TaskFailedSilent(TaskBase):
-         self.logfile = logfile
-         super(TaskFailedSilent, self).__init__(task, metadata)
- 
-+    def getDisplayName(self):
-+        # Don't need to tell the user it was silent
-+        return "Failed"
-+
- class TaskInvalid(TaskBase):
- 
-     def __init__(self, task, metadata):
--- 
-1.7.5.4
+I suspect world shouldn't show the NoProvider issues?
+
+Cheers,
+
+Richard
 
 
 
