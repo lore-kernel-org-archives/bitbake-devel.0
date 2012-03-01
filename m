@@ -1,30 +1,30 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1S3829-0001EX-OI for bitbake-devel@lists.openembedded.org;
-	Thu, 01 Mar 2012 16:35:09 +0100
+	id 1S38An-0001NI-90 for bitbake-devel@lists.openembedded.org;
+	Thu, 01 Mar 2012 16:44:05 +0100
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q21FQb47018018;
-	Thu, 1 Mar 2012 15:26:37 GMT
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q21FZXu8018183;
+	Thu, 1 Mar 2012 15:35:33 GMT
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 17710-04; Thu,  1 Mar 2012 15:26:33 +0000 (GMT)
+	id 17436-08; Thu,  1 Mar 2012 15:35:29 +0000 (GMT)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q21FQTI8018012
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q21FZQ6h018177
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Thu, 1 Mar 2012 15:26:30 GMT
-Message-ID: <1330615593.31767.14.camel@ted>
+	Thu, 1 Mar 2012 15:35:27 GMT
+Message-ID: <1330616130.31767.21.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
-Date: Thu, 01 Mar 2012 15:26:33 +0000
-In-Reply-To: <cover.1330613733.git.paul.eggleton@linux.intel.com>
-References: <cover.1330613733.git.paul.eggleton@linux.intel.com>
+To: Shane Wang <shane.wang@intel.com>
+Date: Thu, 01 Mar 2012 15:35:30 +0000
+In-Reply-To: <cover.1330523904.git.shane.wang@intel.com>
+References: <cover.1330523904.git.shane.wang@intel.com>
 X-Mailer: Evolution 3.2.2- 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/3] Fixes for scenequeue task failure
+Cc: Liming An <limingx.l.an@intel.com>, bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 00/32] Hob related fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,28 +36,82 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 01 Mar 2012 15:35:09 -0000
+X-List-Received-Date: Thu, 01 Mar 2012 15:44:05 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Thu, 2012-03-01 at 14:57 +0000, Paul Eggleton wrote:
-> After some more extensive testing, fix some regressions in scenequeue
-> task failure handling caused by one of my earlier commits.
+On Wed, 2012-02-29 at 22:11 +0800, Shane Wang wrote:
+> The following patches are going to fix the following problems:
 > 
-> The following changes since commit 8f07bdc0a42dd7a7c3acf5d1b13220dbc98c8017:
+> * Enable HobNotebook to make notebook more like the design video;
+> * Improve and enhance the GUI;
+> * Rebase the patches Josh has sent out before with the title "Hob tweaks";
+> * Address some tricky issues we found in the bitbake;
+> * Revise Hob according to the comments on the previous patch set;
+> * Fix some bugs we found when testing Hob;
+> * and some temporary walkarounds we have to find a way to solve in Hob or in the bitbake later.
 > 
->   image_types_uboot: Update to work after recent image_types changes (2012-02-29 18:25:03 +0000)
+> The following changes since commit 927bec5f72230be4f2452d9ef5a747b2c00cb781:
+> 
+>   bitbake.conf: Create a new filter variable BB_HASHCONFIG_WHITELIST (2012-02-27 20:10:41 +0000)
 > 
 > are available in the git repository at:
->   git://git.yoctoproject.org/poky-contrib paule/bb-sceneqtaskfail
->   http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-sceneqtaskfail
+>   git://git.pokylinux.org/poky-contrib shane/hob2-v0.68
+>   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=shane/hob2-v0.68
 > 
-> Paul Eggleton (3):
->   bitbake/runqueue: fix python error on scenequeue task failure
->   bitbake/uihelper: restore line to record failed normal tasks
->   bitbake/build: report TaskFailedSilent events as "Failed"
+> Dongxiao Xu (10):
+>   command.py: remove the resolve parameter in generateTargetsTree
+>   cooker.py: Fix a bug due to variable name
+>   cooker: fix calculating of depends and rdepends
+>   Hob(crumbs/hoblistmodel.py): Fix recipe's populate() function
+>   Hob(crumbs/hoblistmodel.py): Add mapping for rprovides and pkg
+>   Hob: Add an extra 50M space if zypper is selected
+>   Hob: add "OK" button to "BinbDialog"
+>   Hob: Fix pressing "stop" build
+>   runqueue.py: initialize rqexe at RunQueue's init function
+>   Hob: Disable the handling of "NoProvider" event
+> 
+> Shane Wang (22):
+>   Hob: make HobViewTable more general in hob and make the image
+>     selection dialog and the image details page reuse it.
+>   Hob: avoid the image selection dialog to walk through all directories
+>     and its sub-directories, when users click "My images".
+>   Hob: cleanup those class methods in HobWidget
+>   Hob: fixed the issue in the brought-in-by dialog.
+>   Hob: include hddimg and iso into image types.
+>   Hob: implement a self-defined notebook visual component for Hob
+>   Hob: use HobNotebook to enable a notebook in build details page
+>   Hob: image configuration page doesn't need dialogs any more
+>   Hob: fix a bug in builder.configuration.curr_mach
+>   Hob: add ignore_all_errors to avoid showing error dialog multiple
+>     times
+>   Hob: make the image configuration page not to flash the progress bar
+>   Hob: enable indicators on the "Included" tab in the recipe selection
+>     page and the package selection page
+>   crumbs: Factor common dialogue configuration out
+>   crumbs/builder: use the name Hob consistently
+>   crumbs: move towards more standard dialogue spacing
+>   crumbs: fix button order in several dialogues
+>   hig: try to avoid setting explicit dialogue sizes
+>   crumbs/hig: tweak UI and layout of LayerSelectionDialog
+>   Hob(crumbs/builder.py): remove the code commented out in the
+>     builder.py
+>   Hob: fix a bug that the image size is shown incorrectly in the image
+>     details page.
+>   Hob: allow users to setup the proxy
+>   Hob(crumbs/builder.py): adjust the main window's position and ignore
+>     the case lower than 1024x768.
 
-Merged to master, thanks.
+I also just realised some of these patches were authored by Joshua.
+Please ensure there is a:
+
+From: XXX <xxx>
+
+at the head of such patches so the author information gets correctly
+recorded. Unfortunately I realised to late with this push to be able to
+correct it :(
+
+Cheers,
 
 Richard
 
