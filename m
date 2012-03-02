@@ -1,31 +1,32 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1S3VPF-0000BM-6y for bitbake-devel@lists.openembedded.org;
-	Fri, 02 Mar 2012 17:32:33 +0100
+	id 1S3VbO-0000nF-CY for bitbake-devel@lists.openembedded.org;
+	Fri, 02 Mar 2012 17:45:07 +0100
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q22GO2E7002954;
-	Fri, 2 Mar 2012 16:24:02 GMT
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q22GaYhG003184;
+	Fri, 2 Mar 2012 16:36:34 GMT
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 02309-05; Fri,  2 Mar 2012 16:23:58 +0000 (GMT)
+	id 02151-10; Fri,  2 Mar 2012 16:36:30 +0000 (GMT)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q22GNpX0002948
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q22GaOm6003177
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Fri, 2 Mar 2012 16:23:52 GMT
-Message-ID: <1330705434.309.12.camel@ted>
+	Fri, 2 Mar 2012 16:36:25 GMT
+Message-ID: <1330706188.309.15.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Andreas Oberritter <obi@opendreambox.org>
-Date: Fri, 02 Mar 2012 16:23:54 +0000
-In-Reply-To: <4F4D01A9.1010303@opendreambox.org>
-References: <4F4CC00F.10608@opendreambox.org>
-	<1330430595.9185.109.camel@ted> <4F4D01A9.1010303@opendreambox.org>
+To: Chris Larson <clarson@kergoth.com>
+Date: Fri, 02 Mar 2012 16:36:28 +0000
+In-Reply-To: <CABcZANmgbf_fDAxsqOkzzNX2t81u2tkeGsgibgo3nDyQzA1vng@mail.gmail.com>
+References: <cover.1330674604.git.kai.kang@windriver.com>
+	<bbac4fa41e627a8673202459461c10e0c1426b61.1330674604.git.kai.kang@windriver.com>
+	<CABcZANmgbf_fDAxsqOkzzNX2t81u2tkeGsgibgo3nDyQzA1vng@mail.gmail.com>
 X-Mailer: Evolution 3.2.2- 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: Git, AUTOREV and SSH
+Subject: Re: [PATCH 1/1] bitbake: enable cleanup of WORKDIR
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,39 +38,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 02 Mar 2012 16:32:33 -0000
+X-List-Received-Date: Fri, 02 Mar 2012 16:45:07 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2012-02-28 at 17:32 +0100, Andreas Oberritter wrote:
-> On 28.02.2012 13:03, Richard Purdie wrote:
-> > On Tue, 2012-02-28 at 12:52 +0100, Andreas Oberritter wrote:
-> >> Hi,
-> >>
-> >> there's a problem with the Git fetcher when used with AUTOREV, at least
-> >> with SSH URIs. "git ls-remote" may output warnings on stderr, e.g.:
-> >>
-> >> X11 forwarding request failed on channel 0
-> >>
-> >> When this happens, "X11" becomes the SRCREV and the fetcher subsequently
-> >> fails. Certainly, other warnings by Git, SSH or a different SCM or
-> >> transport could appear under other circumstances. Even localized strings
-> >> may appear. Fetch2 merges stderr into stdout on purpose [1], so I'm not
-> >> sure a proper fix should look like.
-> >>
-> >> Regards,
-> >> Andreas
-> >>
-> >> [1] See runfetchcmd() in lib/bb/fetch2/__init__.py
-> > 
-> > Would the change in
-> > http://lists.linuxtogo.org/pipermail/bitbake-devel/2012-January/001771.html help?
-> > 
-> > I've still not had a chance to rebase and apply that patch :(
+On Fri, 2012-03-02 at 08:33 -0700, Chris Larson wrote:
+> On Fri, Mar 2, 2012 at 12:54 AM, Kang Kai <kai.kang@windriver.com> wrote:
+> > [Yocto 1561]
+> > Add a command line option for bitbake to enable cleanup of WORKDIR.
+> > It checks every package build directories under WORKDIR then parse
+> > the directory name to get package name and version. If the version
+> > is not the package prefer version then delete the directory.
+> >
+> > Signed-off-by: Kang Kai <kai.kang@windriver.com>
+> > ---
+> >  bitbake/bin/bitbake       |    4 +++
+> >  bitbake/lib/bb/command.py |    5 +++
+> >  bitbake/lib/bb/cooker.py  |   63 +++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 72 insertions(+), 0 deletions(-)
 > 
-> Yes, this patch did help. See below for a rebased version. Thanks!
+> This is wrong on multiple levels. bitbake (other than some hacky stuff
+> in the fetcher that needs to die) has *zero* knowledge of the use of
+> WORKDIR today, that's entirely metadata implementation.
 
-Thanks very much, I applied this.
+Totally agreed. I saw a comment earlier today in the bugzilla about this
+and made the same comment even before I saw this patch...
 
 Cheers,
 
