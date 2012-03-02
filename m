@@ -1,47 +1,29 @@
-Received: from mail-bk0-f47.google.com ([209.85.214.47])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <sledz@dresearch-fe.de>) id 1S3Pzn-00058M-IY
+	(envelope-from <josh@linux.intel.com>) id 1S3WwZ-0004aO-UA
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 02 Mar 2012 11:45:55 +0100
-Received: by bkcjg15 with SMTP id jg15so1408225bkc.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 02 Mar 2012 02:37:24 -0800 (PST)
-Received-SPF: pass (google.com: domain of sledz@dresearch-fe.de designates
-	10.204.136.197 as permitted sender) client-ip=10.204.136.197; 
-Authentication-Results: mr.google.com;
-	spf=pass (google.com: domain of sledz@dresearch-fe.de
-	designates 10.204.136.197 as permitted sender)
-	smtp.mail=sledz@dresearch-fe.de
-Received: from mr.google.com ([10.204.136.197])
-	by 10.204.136.197 with SMTP id s5mr4953006bkt.9.1330684644841 (num_hops
-	= 1); Fri, 02 Mar 2012 02:37:24 -0800 (PST)
-Received: by 10.204.136.197 with SMTP id s5mr3971395bkt.9.1330684644590;
-	Fri, 02 Mar 2012 02:37:24 -0800 (PST)
-Received: from fensuse.internal.dresearch-fe.de
-	(pd95cb174.dip0.t-ipconnect.de. [217.92.177.116])
-	by mx.google.com with ESMTPS id d5sm8652259bkb.3.2012.03.02.02.37.24
-	(version=SSLv3 cipher=OTHER); Fri, 02 Mar 2012 02:37:24 -0800 (PST)
-Resent-From: Steffen Sledz <sledz@dresearch-fe.de>
-Resent-To: bitbake-devel@lists.openembedded.org
-Resent-Date: Fri, 2 Mar 2012 11:37:23 +0100
-Resent-Message-Id: <4F50A2E3.4010706@dresearch-fe.de>
-Resent-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:10.0) Gecko/20120129 Thunderbird/10.0
-Received: from fensuse.internal.dresearch-fe.de
-	(pd95cb174.dip0.t-ipconnect.de. [217.92.177.116])
-	by mx.google.com with ESMTPS id ew15sm3657881bkc.10.2012.03.01.05.46.05
-	(version=SSLv3 cipher=OTHER); Thu, 01 Mar 2012 05:46:05 -0800 (PST)
-Message-ID: <4F4F7D9C.8070300@dresearch-fe.de>
-Date: Thu, 01 Mar 2012 14:46:04 +0100
-From: Steffen Sledz <sledz@dresearch-fe.de>
+	Fri, 02 Mar 2012 19:11:04 +0100
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 02 Mar 2012 10:02:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="113897728"
+Received: from unknown (HELO [10.255.15.107]) ([10.255.15.107])
+	by orsmga001.jf.intel.com with ESMTP; 02 Mar 2012 10:02:31 -0800
+Message-ID: <4F510B37.4040108@linux.intel.com>
+Date: Fri, 02 Mar 2012 10:02:31 -0800
+From: Joshua Lock <josh@linux.intel.com>
 User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:10.0) Gecko/20120129 Thunderbird/10.0
+	rv:10.0.1) Gecko/20120216 Thunderbird/10.0.1
 MIME-Version: 1.0
-To: openembedded-devel <openembedded-devel@lists.openembedded.org>
-X-Enigmail-Version: 1.3.5
-X-Gm-Message-State: ALoCoQnZ9IsZY4EPvXEv7K4ENsUPLsTtsOa6PgHD1IJKD+fmNDuLc8xAvCXAxgu5gCYR2JclZZM1
-X-Mailman-Approved-At: Fri, 02 Mar 2012 17:51:52 +0100
-Subject: bitbake dependency cache problem
+To: "Wang, Shane" <shane.wang@intel.com>
+References: <439e7e3c5dd2534950c63d9df57963f1a3d35944.1330523904.git.shane.wang@intel.com>
+	<660576fe6e84608bbf4d7237f5804cfd244029cd.1330523904.git.shane.wang@intel.com>
+	<4F4E9885.6090705@linux.intel.com>
+	<3AB6CE7F274E534CAFD089D127A8A1FC23ADFD13@SHSMSX102.ccr.corp.intel.com>
+In-Reply-To: <3AB6CE7F274E534CAFD089D127A8A1FC23ADFD13@SHSMSX102.ccr.corp.intel.com>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH 04/32] Hob: fixed the issue in the brought-in-by dialog.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -53,59 +35,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 02 Mar 2012 10:45:55 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Fri, 02 Mar 2012 18:11:04 -0000
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-I'm working with oe-classic and BitBake Build Tool Core version 1.12.0, bitbake version 1.12.0.
+On 01/03/12 23:22, Wang, Shane wrote:
+> Joshua Lock wrote on 2012-03-01:
+>> On 29/02/12 06:15, Shane Wang wrote:
+>>> When typing any thing in the search entry, the brough-in-by dialog will be
+>> shown. That is because we call back "selection-changed" signal to pop up the
+>> dialog, which is not correct.
+>>> This patch is to fix the problem by using "row-activated" signal.
+>>>
+>>> Signed-off-by: Liming An<limingx.l.an@intel.com>
+>>> Signed-off-by: Shane Wang<shane.wang@intel.com>
+>>
+>> I point out some incorrect padding below but other than that:
+>> Signed-off-by: Joshua Lock<josh@linux.intel.com>
+>
+> OK, Got it. May I know why padding=6 only conforms to hig?
 
-Because of some special development requirements we like to generate the Package Version from the SVN Revision (not the Last Changed Rev!) of the bitbake recipe in the local workspace.
+Of course, but you should really read it though rather than asking me to 
+quote it for you.
 
-Therefor the recipe contains this:
+"As a basic rule of thumb, leave space between user interface components 
+in increments of 6 pixels, going up as the relationship between related 
+elements becomes more distant."
 
----------------->snip<-----------------
-PR = "r8"
-PV = "svnr${@svn_revision(d)}"
+http://developer.gnome.org/hig-book/3.0/design-window.html.en#window-layout-spacing
 
-inherit svn-helper
----------------->snip<-----------------
+I've volunteered to work through Hob and make it more HIG conformant but 
+the HIG for a platform really is a document you should at least be aware 
+of when developing for it.
 
-The svn-helper.bbclass contains a little helper function to determine the needed value:
-
----------------->snip<-----------------
-def svn_revision(d):
-     import subprocess
-     bbpath = os.path.dirname(bb.data.getVar('FILE',d,1))
-     return subprocess.check_output(["svn", "info", bbpath]).partition("Revision: ")[2].splitlines()[0]
----------------->snip<-----------------
-
-After this changes i make a first build and everything works fine. Assuming the SVN Revsion is 42 a package called foo-svnr42-r8.ipk is generated.
-
-Now i make an "svn update" inside the workspace and the SVN Revision increases to 66.
-
-A call of "bitbake foo" now results in an "Tasks Summary: Attempted 1182 tasks of which 1182 didn't need to be rerun and 0 failed." an no new ipg is generated. :(
-
-The log generated by "bitbake -DDDDDvvvvv foo" contains
-
----------------->snip<-----------------
-DEBUG: providers for foo are: ['foo']
-NOTE: checking PREFERRED_PROVIDER_foo
-NOTE: checking PREFERRED_PROVIDER_foo-svnr42
-NOTE: checking PREFERRED_PROVIDER_foo-svnr42-r8
----------------->snip<-----------------
-
-Why does bitbake not respects the new PV and generates a foo-svnr66-r8.ipk here???
-
-Regards,
-Steffen
-
+Cheers,
+Joshua
 -- 
-DResearch Fahrzeugelektronik GmbH
-Otto-Schmirgal-Str. 3, 10319 Berlin, Germany
-Tel: +49 30 515932-237 mailto:sledz@dresearch-fe.de
-Fax: +49 30 515932-299
-Geschäftsführer: Dr. Michael Weber, Werner Mögle;
-Amtsgericht Berlin Charlottenburg; HRB 130120 B;
-Ust.-IDNr. DE273952058
+Joshua Lock
+         Yocto Project "Johannes factotum"
+         Intel Open Source Technology Centre
 
 
