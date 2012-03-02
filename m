@@ -1,27 +1,42 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1S3HOf-0000tv-0G
+	(envelope-from <shane.wang@intel.com>) id 1S3HPu-0000vL-Ko
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 02 Mar 2012 02:35:01 +0100
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 01 Mar 2012 17:26:29 -0800
+	Fri, 02 Mar 2012 02:36:18 +0100
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 01 Mar 2012 17:27:41 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="123959550"
-Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
-	([10.239.36.11])
-	by fmsmga001.fm.intel.com with ESMTP; 01 Mar 2012 17:26:28 -0800
-From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-In-Reply-To: <1330615422.31767.13.camel@ted>
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="116763639"
+Received: from pgsmsx102.gar.corp.intel.com ([10.221.44.80])
+	by orsmga002.jf.intel.com with ESMTP; 01 Mar 2012 17:26:40 -0800
+Received: from pgsmsx151.gar.corp.intel.com (172.30.236.41) by
+	PGSMSX102.gar.corp.intel.com (10.221.44.80) with Microsoft SMTP Server
+	(TLS) id 14.1.355.2; Fri, 2 Mar 2012 09:24:11 +0800
+Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
+	PGSMSX151.gar.corp.intel.com (172.30.236.41) with Microsoft SMTP Server
+	(TLS) id 14.1.355.2; Fri, 2 Mar 2012 09:24:10 +0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.36]) by
+	SHSMSX101.ccr.corp.intel.com ([169.254.1.142]) with mapi id
+	14.01.0355.002; Fri, 2 Mar 2012 09:23:51 +0800
+From: "Wang, Shane" <shane.wang@intel.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>, Joshua Lock
+	<josh@linux.intel.com>
+Thread-Topic: [bitbake-devel] [PATCH 00/32] Hob related fixes
+Thread-Index: AQHM98EXZ4A4x4BI3E6ONxntEbkMapZWMl/A
+Date: Fri, 2 Mar 2012 01:23:51 +0000
+Message-ID: <3AB6CE7F274E534CAFD089D127A8A1FC23ADF616@SHSMSX102.ccr.corp.intel.com>
 References: <cover.1330523904.git.shane.wang@intel.com>
-	<93713faf8701668260d1822f9be8c8e6deaafc03.1330523904.git.shane.wang@intel.com>
-	<1330615422.31767.13.camel@ted>
-Date: Fri, 02 Mar 2012 09:24:58 +0800
-Message-ID: <1330651498.5426.5.camel@dongxiao-osel>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.32.2 
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 32/32] Hob: Disable the handling of "NoProvider" event
+	<1330616130.31767.21.camel@ted>
+In-Reply-To: <1330616130.31767.21.camel@ted>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.239.127.40]
+MIME-Version: 1.0
+Cc: "An, LimingX L" <limingx.l.an@intel.com>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH 00/32] Hob related fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,47 +48,23 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 02 Mar 2012 01:35:01 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 02 Mar 2012 01:36:18 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Thu, 2012-03-01 at 15:23 +0000, Richard Purdie wrote:
-> On Wed, 2012-02-29 at 22:15 +0800, Shane Wang wrote:
-> > From: Dongxiao Xu <dongxiao.xu@intel.com>
-> > 
-> > Currently for non-x86 architecture, there are un-resolved dependency
-> > issue when generate universe dependency tree. Therefore disable the
-> > handling of "NoProvider" event in Hob to enable the build for non-x86
-> > architectures. After we resolved the dependency for universe, we still
-> > need to handle this event in Hob.
-> > 
-> > Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
-> > ---
-> >  bitbake/lib/bb/ui/crumbs/hobeventhandler.py |   37 ++++++++++++++------------
-> >  1 files changed, 20 insertions(+), 17 deletions(-)
-> 
-> Shouldn't you be using world and not universe for this?
-> 
-> I suspect world shouldn't show the NoProvider issues?
-
-Unluckily world also has the same issue, since
-core-image-minimal-initramfs and initramfs-live-install recipes are all
-contained in world area.
-
-Thanks,
-Dongxiao
-
-> 
-> Cheers,
-> 
-> Richard
-> 
-> 
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
-
-
+Sm9zaCwgSSBhbSBzb3JyeSBmb3IgbWlzc2luZyB0byBhZGQgRnJvbTogWFhYPHh4eD4gaW4geW91
+ciBzaXggcGF0Y2hlcy4NCkkgb3JpZ2luYWxseSB0aGluayAiU2lnbmVkLW9mZi1ieTogSm9zaCIg
+aXMgZW5vdWdoLg0KDQpCZWNhdXNlIEkgaGF2ZSBzb21lIGNsZWFudXBzIHRvIHJlbW92ZSBjbGFz
+cyBtZXRob2RzIGZvciBIb2JXaWRnZXQgZm9yIGNsZWFuIE9iamVjdCBPcmllbnRlZCBkZXNpZ24s
+IHdoaWNoIGNoYW5nZWQgdGhlIGNvZGUgYSBsb3QuDQpTbywgc29tZSBvZiBteSBwYXRjaGVzIGp1
+bXBlZCB0aGUgcXVldWUgdG8gc2F2ZSBtZXJnaW5nIGFuZCByZWJhc2luZyBlZmZvcnRzLg0KDQpT
+b3JyeSBmb3IgdGhhdC4NCi0tDQpTaGFuZQ0KDQpSaWNoYXJkIFB1cmRpZSB3cm90ZSBvbsKgMjAx
+Mi0wMy0wMToNCj4gDQo+IEkgYWxzbyBqdXN0IHJlYWxpc2VkIHNvbWUgb2YgdGhlc2UgcGF0Y2hl
+cyB3ZXJlIGF1dGhvcmVkIGJ5IEpvc2h1YS4NCj4gUGxlYXNlIGVuc3VyZSB0aGVyZSBpcyBhOg0K
+PiANCj4gRnJvbTogWFhYIDx4eHg+DQo+IA0KPiBhdCB0aGUgaGVhZCBvZiBzdWNoIHBhdGNoZXMg
+c28gdGhlIGF1dGhvciBpbmZvcm1hdGlvbiBnZXRzIGNvcnJlY3RseQ0KPiByZWNvcmRlZC4gVW5m
+b3J0dW5hdGVseSBJIHJlYWxpc2VkIHRvIGxhdGUgd2l0aCB0aGlzIHB1c2ggdG8gYmUgYWJsZSB0
+bw0KPiBjb3JyZWN0IGl0IDooDQo+IA0KPiBDaGVlcnMsDQo+IA0KPiBSaWNoYXJkDQoNCg0K
 
 
