@@ -1,37 +1,28 @@
-Received: from mail-tul01m020-f175.google.com ([209.85.214.175])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <oren@ephemeron-labs.com>) id 1S3g7M-0000aV-VG
-	for bitbake-devel@lists.openembedded.org;
-	Sat, 03 Mar 2012 04:58:49 +0100
-Received: by obqv19 with SMTP id v19so2994262obq.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 02 Mar 2012 19:50:16 -0800 (PST)
-Received-SPF: pass (google.com: domain of oren@ephemeron-labs.com designates
-	10.182.109.106 as permitted sender) client-ip=10.182.109.106; 
-Authentication-Results: mr.google.com; spf=pass (google.com: domain of
-	oren@ephemeron-labs.com designates 10.182.109.106 as permitted
-	sender) smtp.mail=oren@ephemeron-labs.com
-Received: from mr.google.com ([10.182.109.106])
-	by 10.182.109.106 with SMTP id hr10mr5166985obb.27.1330746616695
-	(num_hops = 1); Fri, 02 Mar 2012 19:50:16 -0800 (PST)
-MIME-Version: 1.0
-Received: by 10.182.109.106 with SMTP id hr10mr4446858obb.27.1330746616595;
-	Fri, 02 Mar 2012 19:50:16 -0800 (PST)
-Received: by 10.182.19.7 with HTTP; Fri, 2 Mar 2012 19:50:16 -0800 (PST)
-X-Originating-IP: [76.99.59.229]
-In-Reply-To: <3AB6CE7F274E534CAFD089D127A8A1FC23ADFC53@SHSMSX102.ccr.corp.intel.com>
-References: <cover.1330523904.git.shane.wang@intel.com>
-	<4F4E9837.7080602@linux.intel.com>
-	<3AB6CE7F274E534CAFD089D127A8A1FC23ADFC53@SHSMSX102.ccr.corp.intel.com>
-Date: Fri, 2 Mar 2012 22:50:16 -0500
-Message-ID: <CALvD2LjJS-6eN23b_SbCWjZX8gzyv6yfsEa4JEKBXaB6S7JDHA@mail.gmail.com>
-From: Oren Leaffer <oren@ephemeron-labs.com>
-To: "Wang, Shane" <shane.wang@intel.com>
-X-Gm-Message-State: ALoCoQllYEsqGwxjpmtjz7U2hyuR1NWMKrxloctrhhGeBPW68QwRgsdkE2oQG/IRfBma/ctJArm+
-Cc: "An, LimingX L" <limingx.l.an@intel.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 00/32] Hob related fixes
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1S42ix-0004ob-I6 for bitbake-devel@lists.openembedded.org;
+	Sun, 04 Mar 2012 05:07:07 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q243wZd4020047
+	for <bitbake-devel@lists.openembedded.org>; Sun, 4 Mar 2012 03:58:35 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 19635-08 for <bitbake-devel@lists.openembedded.org>;
+	Sun,  4 Mar 2012 03:58:31 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q243wP1T019992
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>; Sun, 4 Mar 2012 03:58:28 GMT
+Message-ID: <1330833508.3949.0.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Sat, 03 Mar 2012 19:58:28 -0800
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: [PATCH] conf/classes: Catch up with bb.data -> direct object access conversion
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -43,61 +34,85 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 03 Mar 2012 03:58:49 -0000
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Sun, 04 Mar 2012 04:07:07 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Shane,
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ classes/base.bbclass |    6 +++---
+ conf/bitbake.conf    |   10 +++++-----
+ lib/bb/cooker.py     |    2 +-
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-As I understand it, if you need keep track of indices as you go
-through a list, then enumerate() is the python way to do it.
-http://docs.python.org/library/functions.html#enumerate
+diff --git a/classes/base.bbclass b/classes/base.bbclass
+index c6693ce..444b830 100644
+--- a/classes/base.bbclass
++++ b/classes/base.bbclass
+@@ -43,8 +43,8 @@ python do_showdata() {
+ 	bb.data.emit_env(sys.__stdout__, d, True)
+ 	# emit the metadata which isnt valid shell
+ 	for e in bb.data.keys(d):
+-		if bb.data.getVarFlag(e, 'python', d):
+-			sys.__stdout__.write("\npython %s () {\n%s}\n" % (e, bb.data.getVar(e, d, 1)))
++		if d.getVarFlag(e, 'python'):
++			sys.__stdout__.write("\npython %s () {\n%s}\n" % (e, d.getVar(e, 1)))
+ }
+ 
+ addtask listtasks
+@@ -52,7 +52,7 @@ do_listtasks[nostamp] = "1"
+ python do_listtasks() {
+ 	import sys
+ 	for e in bb.data.keys(d):
+-		if bb.data.getVarFlag(e, 'task', d):
++		if d.getVarFlag(e, 'task'):
+ 			sys.__stdout__.write("%s\n" % e)
+ }
+ 
+diff --git a/conf/bitbake.conf b/conf/bitbake.conf
+index b0c06a8..1ee4dc5 100644
+--- a/conf/bitbake.conf
++++ b/conf/bitbake.conf
+@@ -28,9 +28,9 @@ FETCHCOMMAND = ""
+ FETCHCOMMAND_cvs = "/usr/bin/env cvs -d${CVSROOT} co ${CVSCOOPTS} ${CVSMODULE}"
+ FETCHCOMMAND_svn = "/usr/bin/env svn co ${SVNCOOPTS} ${SVNROOT} ${SVNMODULE}"
+ FETCHCOMMAND_wget = "/usr/bin/env wget -t 5 --passive-ftp -P ${DL_DIR} ${URI}"
+-FILESDIR = "${@bb.utils.which(bb.data.getVar('FILESPATH', d, 1), '.')}"
++FILESDIR = "${@bb.utils.which(d.getVar('FILESPATH', 1), '.')}"
+ FILESPATH = "${FILE_DIRNAME}/${PF}:${FILE_DIRNAME}/${P}:${FILE_DIRNAME}/${PN}:${FILE_DIRNAME}/files:${FILE_DIRNAME}"
+-FILE_DIRNAME = "${@os.path.dirname(bb.data.getVar('FILE', d))}"
++FILE_DIRNAME = "${@os.path.dirname(d.getVar('FILE'))}"
+ GITDIR = "${DL_DIR}/git"
+ IMAGE_CMD = "_NO_DEFINED_IMAGE_TYPES_"
+ IMAGE_ROOTFS = "${TMPDIR}/rootfs"
+@@ -40,10 +40,10 @@ OVERRIDES = "local:${MACHINE}:${TARGET_OS}:${TARGET_ARCH}"
+ P = "${PN}-${PV}"
+ PERSISTENT_DIR = "${TMPDIR}/cache"
+ PF = "${PN}-${PV}-${PR}"
+-PN = "${@bb.parse.BBHandler.vars_from_file(bb.data.getVar('FILE',d),d)[0] or 'defaultpkgname'}"
+-PR = "${@bb.parse.BBHandler.vars_from_file(bb.data.getVar('FILE',d),d)[2] or 'r0'}"
++PN = "${@bb.parse.BBHandler.vars_from_file(d.getVar('FILE'),d)[0] or 'defaultpkgname'}"
++PR = "${@bb.parse.BBHandler.vars_from_file(d.getVar('FILE'),d)[2] or 'r0'}"
+ PROVIDES = ""
+-PV = "${@bb.parse.BBHandler.vars_from_file(bb.data.getVar('FILE',d),d)[1] or '1.0'}"
++PV = "${@bb.parse.BBHandler.vars_from_file(d.getVar('FILE'),d)[1] or '1.0'}"
+ RESUMECOMMAND = ""
+ RESUMECOMMAND_wget = "/usr/bin/env wget -c -t 5 --passive-ftp -P ${DL_DIR} ${URI}"
+ S = "${WORKDIR}/${P}"
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 558eadd..bf8389a 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -178,7 +178,7 @@ class BBCooker:
+         self.configuration.data = bb.data.init()
+ 
+         if not self.server_registration_cb:
+-            bb.data.setVar("BB_WORKERCONTEXT", "1", self.configuration.data)
++            self.configuration.data.setVar("BB_WORKERCONTEXT", "1")
+ 
+         filtered_keys = bb.utils.approved_variables()
+         bb.data.inheritFromOS(self.configuration.data, self.savedenv, filtered_keys)
 
-So you would have:
 
-for i, item in enumerate(list):
-   ... etc
-
-
-Best regards,
-
-
-Oren
-
-On Fri, Mar 2, 2012 at 1:48 AM, Wang, Shane <shane.wang@intel.com> wrote:
-> Joshua Lock wrote on=A02012-03-01:
->> One thing I did notice whilst reviewing this series is that there's a
->> lot of this anti-pattern in the hob 2 code:
->> =A0 =A0 =A0 for i in range(len(mylist)):
->> rather than:
->> =A0 =A0 =A0 for item in list:
->>
->> Can we make an effort to tidy those up?
-> I will check those later. I went through them quickly.
-> Some of them are because the code refers to the index i.
->
-> Otherwise, we would have the code.
-> i =3D 0
-> for item in list:
-> =A0XXXXX
-> =A0XXX =3D i
-> =A0i +=3D 1
->
-> which also looks not perfect. But anyway, I will check all of them later =
-and send another patch for improvement.
-> If there is no reference to the index, I will replace with your style.
->
-> --
-> Shane
->
->>
->> Cheers,
->> Joshua
->
->
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
 
 
