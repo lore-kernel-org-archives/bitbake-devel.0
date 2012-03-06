@@ -1,37 +1,23 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1S4gih-0008Is-T6
+	(envelope-from <Liezhi.Yang@windriver.com>) id 1S4neF-000370-00
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 05 Mar 2012 23:49:32 +0100
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 05 Mar 2012 14:40:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="125345666"
-Received: from pgsmsx102.gar.corp.intel.com ([10.221.44.80])
-	by fmsmga001.fm.intel.com with ESMTP; 05 Mar 2012 14:40:51 -0800
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
-	PGSMSX102.gar.corp.intel.com (10.221.44.80) with Microsoft SMTP Server
-	(TLS) id 14.1.355.2; Tue, 6 Mar 2012 06:39:36 +0800
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.36]) by
-	SHSMSX101.ccr.corp.intel.com ([169.254.1.142]) with mapi id
-	14.01.0355.002; Tue, 6 Mar 2012 06:39:36 +0800
-From: "Wang, Shane" <shane.wang@intel.com>
-To: Joshua Lock <josh@linux.intel.com>, "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH 6/6] ui/crumbs/hig: special case stock
-	info	icons in CrumbsMesssageDialog
-Thread-Index: AQHM+NYjbkdIkQgOO0aPAy6MCrYK3JZcT2/Q
-Date: Mon, 5 Mar 2012 22:39:35 +0000
-Message-ID: <3AB6CE7F274E534CAFD089D127A8A1FC23AE1BB9@SHSMSX102.ccr.corp.intel.com>
-References: <cover.1330734444.git.josh@linux.intel.com>
-	<0aa653ca441811e220bbf70de4eb32781e41c9c5.1330734444.git.josh@linux.intel.com>
-In-Reply-To: <0aa653ca441811e220bbf70de4eb32781e41c9c5.1330734444.git.josh@linux.intel.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.239.127.40]
+	Tue, 06 Mar 2012 07:13:23 +0100
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q2664kiW005515
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 5 Mar 2012 22:04:46 -0800 (PST)
+Received: from build-PowerEdge-T100.corp.ad.wrs.com (128.224.163.66) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+	14.1.255.0; Mon, 5 Mar 2012 22:04:46 -0800
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Tue, 6 Mar 2012 14:04:35 +0800
+Message-ID: <cover.1331012089.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 1.7.4.1
 MIME-Version: 1.0
-Subject: Re: [PATCH 6/6] ui/crumbs/hig: special case stock info	icons in CrumbsMesssageDialog
+Subject: [PATCH 0/1] siggen.py: Use basehash if no taskhash
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -43,22 +29,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 05 Mar 2012 22:49:32 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 06 Mar 2012 06:13:23 -0000
+Content-Type: text/plain
 
-Joshua Lock wrote on=A02012-03-02:
+The following changes since commit a439d32dd843d10a9f65cc858b02422fac7deb50:
 
-> The Hob visual design includes an info icon which should be used
-> consistently throught the GUI. This change detects use of the stock info
-> icon in CrumbsMessageDialog and uses the Hob info icon instead.
->=20
-> Signed-off-by: Joshua Lock <josh@linux.intel.com>
+  soc-family.inc: to be included in machine.conf to add SOC_FAMILY to MACHINEOVERRIDE (2012-03-04 05:41:11 -0800)
 
-ACK
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib robert/basehash
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/basehash
 
---
-Shane
+Robert Yang (1):
+  siggen.py: Use basehash if no taskhash
+
+ bitbake/lib/bb/siggen.py |    6 +++++-
+ 1 files changed, 5 insertions(+), 1 deletions(-)
+
+-- 
+1.7.4.1
+
 
 
