@@ -1,24 +1,33 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mail.dream-property.net ([82.149.226.172])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1S545I-0003YO-Vy
+	(envelope-from <obi@opendreambox.org>) id 1S5KaV-0007pb-LC
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 07 Mar 2012 00:46:25 +0100
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 06 Mar 2012 15:37:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="118399675"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.123.109])
-	by orsmga002.jf.intel.com with ESMTP; 06 Mar 2012 15:37:47 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+	Wed, 07 Mar 2012 18:23:43 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by mail.dream-property.net (Postfix) with ESMTP id B602E3159DD9
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed,  7 Mar 2012 18:15:08 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at mail.dream-property.net
+Received: from mail.dream-property.net ([127.0.0.1])
+	by localhost (mail.dream-property.net [127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id ZOPwvDsqUhTl for <bitbake-devel@lists.openembedded.org>;
+	Wed,  7 Mar 2012 18:14:58 +0100 (CET)
+Received: from [172.22.22.61] (drms-590ec29b.pool.mediaWays.net
+	[89.14.194.155])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mail.dream-property.net (Postfix) with ESMTPSA id D6C233159D98
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed,  7 Mar 2012 18:14:57 +0100 (CET)
+Message-ID: <4F579790.7020806@opendreambox.org>
+Date: Wed, 07 Mar 2012 18:14:56 +0100
+From: Andreas Oberritter <obi@opendreambox.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:10.0.2) Gecko/20120216 Thunderbird/10.0.2
+MIME-Version: 1.0
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  6 Mar 2012 23:37:35 +0000
-Message-Id: <789e78d1de4f36657addeb3a7264a6fabfa697e2.1331076902.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.7.5.4
-In-Reply-To: <cover.1331076902.git.paul.eggleton@linux.intel.com>
-References: <cover.1331076902.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1331076902.git.paul.eggleton@linux.intel.com>
-References: <cover.1331076902.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 1/1] bitbake/siggen: output filename on error in finalise
+Subject: bitbake multi-processing semaphore in linux-vserver
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,38 +39,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 06 Mar 2012 23:46:25 -0000
+X-List-Received-Date: Wed, 07 Mar 2012 17:23:43 -0000
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
-If an error occurs during finalise() (when for example we might get an
-expansion error in SRCPV), log a note which mentions which recipe was
-being finalised.
+Hello,
 
-Fixes [YOCTO #1782]
+I tried to run today's BitBake master on Debian Squeeze,
+running inside a Linux-Vserver. I ran into the problem below:
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- bitbake/lib/bb/siggen.py |    6 +++++-
- 1 files changed, 5 insertions(+), 1 deletions(-)
+Traceback (most recent call last):
+  File ".../bitbake/bin/bitbake", line 258, in <module>
+    ret = main()
+  File ".../bitbake/bin/bitbake", line 226, in main
+    server.initServer()
+  File ".../bitbake/lib/bb/server/process.py", line 245, in initServer
+    self.event_queue = ProcessEventQueue(0)
+  File "/usr/lib/python2.6/multiprocessing/queues.py", line 37, in __init__
+    self._rlock = Lock()
+  File "/usr/lib/python2.6/multiprocessing/synchronize.py", line 117, in __init__
+    SemLock.__init__(self, SEMAPHORE, 1, 1)
+OSError: [Errno 38] Function not implemented
 
-diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
-index 975ae41..eaef4a8 100644
---- a/bitbake/lib/bb/siggen.py
-+++ b/bitbake/lib/bb/siggen.py
-@@ -126,7 +126,11 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         if variant:
-             fn = "virtual:" + variant + ":" + fn
- 
--        taskdeps = self._build_data(fn, d)
-+        try:
-+            taskdeps = self._build_data(fn, d)
-+        except:
-+            bb.note("Error during finalise of %s" % fn)
-+            raise
- 
-         #Slow but can be useful for debugging mismatched basehashes
-         #for task in self.taskdeps[fn]:
--- 
-1.7.5.4
+Has anybody else seen this? Is it likely to be caused by limitations
+of Linux-Vserver? Are there any workarounds or patches available to
+address this?
 
+Regards,
+Andreas
 
 
