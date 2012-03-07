@@ -1,52 +1,44 @@
-Received: from am1ehsobe006.messaging.microsoft.com ([213.199.154.209]
-	helo=am1outboundpool.messaging.microsoft.com)
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <B29882@freescale.com>) id 1S5PxV-0000q8-7U
+	(envelope-from <shane.wang@intel.com>) id 1S5QJM-00011O-Te
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 08 Mar 2012 00:07:49 +0100
-Received: from mail45-am1-R.bigfish.com (10.3.201.235) by
-	AM1EHSOBE003.bigfish.com (10.3.204.23) with Microsoft SMTP Server id
-	14.1.225.23; Wed, 7 Mar 2012 22:14:03 +0000
-Received: from mail45-am1 (localhost [127.0.0.1])	by mail45-am1-R.bigfish.com
-	(Postfix) with ESMTP id DC315E0484;
-	Wed,  7 Mar 2012 22:14:03 +0000 (UTC)
-X-SpamScore: -7
-X-BigFish: VS-7(zz9371I1432N98dKzz1202hzz8275dhz2dh2a8h668h839h8e2h8e3hbe9k)
-X-Forefront-Antispam-Report: CIP:70.37.183.190; KIP:(null); UIP:(null); IPV:NLI;
-	H:mail.freescale.net; RD:none; EFVD:NLI
-Received: from mail45-am1 (localhost.localdomain [127.0.0.1]) by mail45-am1
-	(MessageSwitch) id 1331158442352880_32415;
-	Wed,  7 Mar 2012 22:14:02 +0000 (UTC)
-Received: from AM1EHSMHS006.bigfish.com (unknown [10.3.201.234])	by
-	mail45-am1.bigfish.com (Postfix) with ESMTP id 484A88009C;
-	Wed,  7 Mar 2012 22:14:02 +0000 (UTC)
-Received: from mail.freescale.net (70.37.183.190) by AM1EHSMHS006.bigfish.com
-	(10.3.207.106) with Microsoft SMTP Server (TLS) id 14.1.225.23;
-	Wed, 7 Mar 2012 22:14:01 +0000
-Received: from 039-SN1MPN1-001.039d.mgd.msft.net ([169.254.1.244]) by
-	039-SN1MMR1-003.039d.mgd.msft.net ([10.84.1.16]) with mapi id
-	14.01.0355.003; Wed, 7 Mar 2012 16:14:00 -0600
-From: McClintock Matthew-B29882 <B29882@freescale.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Thread-Topic: [bitbake-devel] [PATCH] parse/ast: Expand inherit statements
-	before splitting them
-Thread-Index: AQHM/K+YPJc8FOYhHE64hYsnlHL1UA==
-Date: Wed, 7 Mar 2012 22:13:58 +0000
-Message-ID: <CAEsOVNfV1iy1Npks-3fuT0g+sLXenNMc8+n_mAV-t9RX6AtcSQ@mail.gmail.com>
-References: <1330834637.3949.8.camel@ted>
-In-Reply-To: <1330834637.3949.8.camel@ted>
+	Thu, 08 Mar 2012 00:30:25 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 07 Mar 2012 15:21:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="116121923"
+Received: from pgsmsx101.gar.corp.intel.com ([10.221.44.78])
+	by azsmga001.ch.intel.com with ESMTP; 07 Mar 2012 15:21:45 -0800
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+	PGSMSX101.gar.corp.intel.com (10.221.44.78) with Microsoft SMTP Server
+	(TLS) id 14.1.355.2; Thu, 8 Mar 2012 07:21:17 +0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.36]) by
+	SHSMSX151.ccr.corp.intel.com ([169.254.3.91]) with mapi id
+	14.01.0355.002; Thu, 8 Mar 2012 07:21:17 +0800
+From: "Wang, Shane" <shane.wang@intel.com>
+To: Joshua Lock <josh@linux.intel.com>
+Thread-Topic: [bitbake-devel] [PATCH 04/32] Hob: fixed the issue in the
+	brought-in-by dialog.
+Thread-Index: AQHM+J6k2OfwoE2tPEa2YCgcBsb8LpZffFDQ
+Date: Wed, 7 Mar 2012 23:21:17 +0000
+Message-ID: <3AB6CE7F274E534CAFD089D127A8A1FC23AE4B16@SHSMSX102.ccr.corp.intel.com>
+References: <439e7e3c5dd2534950c63d9df57963f1a3d35944.1330523904.git.shane.wang@intel.com>
+	<660576fe6e84608bbf4d7237f5804cfd244029cd.1330523904.git.shane.wang@intel.com>
+	<4F4E9885.6090705@linux.intel.com>
+	<3AB6CE7F274E534CAFD089D127A8A1FC23ADFD13@SHSMSX102.ccr.corp.intel.com>
+	<4F510B37.4040108@linux.intel.com>
+In-Reply-To: <4F510B37.4040108@linux.intel.com>
 Accept-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [99.47.177.27]
+x-originating-ip: [10.239.127.40]
 MIME-Version: 1.0
-X-OriginatorOrg: freescale.com
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] parse/ast: Expand inherit statements before splitting them
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH 04/32] Hob: fixed the issue in the brought-in-by dialog.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
-Reply-To: McClintock Matthew-B29882 <B29882@freescale.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 List-Unsubscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/options/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=unsubscribe>
@@ -55,31 +47,62 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 07 Mar 2012 23:07:49 -0000
+X-List-Received-Date: Wed, 07 Mar 2012 23:30:25 -0000
 Content-Language: en-US
 Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <4884DFFF129B4E4FACD5657790A9ECB2@mgd.freescale.com>
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 3, 2012 at 10:17 PM, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
-> This means that statements that expand to more then one entry
-> such as:
->
-> CLASSES =3D "a b"
-> inherit ${CLASSES}
->
-> work correctly instead of trying to inherit a class called "a b".
+Joshua Lock wrote on=A02012-03-02:
 
-Does this effect:
+> On 01/03/12 23:22, Wang, Shane wrote:
+>> Joshua Lock wrote on 2012-03-01:
+>>> On 29/02/12 06:15, Shane Wang wrote:
+>>>> When typing any thing in the search entry, the brough-in-by dialog wil=
+l
+> be
+>>> shown. That is because we call back "selection-changed" signal to pop
+>>> up the dialog, which is not correct.
+>>>> This patch is to fix the problem by using "row-activated" signal.
+>>>>=20
+>>>> Signed-off-by: Liming An<limingx.l.an@intel.com>
+>>>> Signed-off-by: Shane Wang<shane.wang@intel.com>
+>>>=20
+>>> I point out some incorrect padding below but other than that:
+>>> Signed-off-by: Joshua Lock<josh@linux.intel.com>
+>>=20
+>> OK, Got it. May I know why padding=3D6 only conforms to hig?
+>=20
+> Of course, but you should really read it though rather than asking me to
+> quote it for you.
+>=20
+> "As a basic rule of thumb, leave space between user interface components
+> in increments of 6 pixels, going up as the relationship between related
+> elements becomes more distant."
+>=20
+> http://developer.gnome.org/hig-book/3.0/design-window.html.en#window-la
+> yout-spacing
+>=20
+> I've volunteered to work through Hob and make it more HIG conformant but
+> the HIG for a platform really is a document you should at least be aware
+> of when developing for it.
 
-CLASSES =3D ""
+Thank you for pointing out why 6, and volunteering to make the spacing 6.
+We all just follow and are going to follow the design in the video.
+And as well, make the build process go correctly and UI be friendly.
 
-inherit a ${CLASSES}
+Again, there is no requirement to follow Hig at the beginning. There are a =
+lot of hig specs
+http://en.wikipedia.org/wiki/Human_interface_guidelines#Examples_of_HIG.
 
-?
+But regarding you raise the Gnome hig issue, I agree with you to make them =
+conformant.
 
--M=
+--
+Shane
+
+>=20
+> Cheers,
+> Joshua
 
 
 
