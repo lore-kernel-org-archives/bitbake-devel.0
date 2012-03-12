@@ -1,30 +1,30 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1S6k1j-0008Dr-Gc for bitbake-devel@lists.openembedded.org;
-	Sun, 11 Mar 2012 15:45:41 +0100
+	id 1S6uxN-0003se-Pl for bitbake-devel@lists.openembedded.org;
+	Mon, 12 Mar 2012 03:25:53 +0100
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2BEawqG003395
-	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 11 Mar 2012 14:36:58 GMT
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2C2H9iv009680;
+	Mon, 12 Mar 2012 02:17:09 GMT
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 03246-02 for <bitbake-devel@lists.openembedded.org>;
-	Sun, 11 Mar 2012 14:36:50 +0000 (GMT)
+	id 06332-10; Mon, 12 Mar 2012 02:17:05 +0000 (GMT)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2BEaiSL003371
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 11 Mar 2012 14:36:45 GMT
-Message-ID: <1331476604.15192.2.camel@ted>
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2C2H21X009674
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Mon, 12 Mar 2012 02:17:03 GMT
+Message-ID: <1331518622.15192.10.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Sun, 11 Mar 2012 14:36:44 +0000
+To: Joshua Lock <josh@linux.intel.com>
+Date: Mon, 12 Mar 2012 02:17:02 +0000
+In-Reply-To: <cover.1330734444.git.josh@linux.intel.com>
+References: <cover.1330734444.git.josh@linux.intel.com>
 X-Mailer: Evolution 3.2.2- 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: [PATCH] codeparser: Call intern over the set contents for better cache performance
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 0/6] Hob GUI add persistent tooltips and use custom info icon consistently
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,57 +36,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 11 Mar 2012 14:45:41 -0000
+X-List-Received-Date: Mon, 12 Mar 2012 02:25:54 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-See the comment in the code in the commit for more information.
+On Fri, 2012-03-02 at 16:39 -0800, Joshua Lock wrote:
+> asldlasjd
+> 
+> The following changes since commit 4a480a052f450c4ee061ab0e60a495a45f140cf9:
+> 
+>   stderr would previously be appended to stdout, corrupting the result when something was outputed to stderr but exit code was still 0 (non-fatal warning messages). This commit makes the code parse only stdout, but output stderr if an error happened. (2012-03-02 16:17:43 +0000)
+> 
+> are available in the git repository at:
+>   git://github.com/incandescant/bitbake josh/hob
+>   https://github.com/incandescant/bitbake/tree/josh/hob
+> 
+> and as a poky repository at:
+>   git://git.yoctoproject.org/poky-contrib josh/hob
+>   http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=josh/hob
+> 
+> Joshua Lock (6):
+>   crumbs/persistenttooltip: a new Gtk+ widget for use in Hob
+>   ui/icons: crop the info icons
+>   ui/crumbs/hobwidget: implement HobInfoButton per Hob interaction
+>     design
+>   ui/crumbs/imageconfigurationpage: make use of the HobInfoButton
+>   ui/crumbs/hig: use HobInfoButton in place of gtk.Image with tooltip
+>   ui/crumbs/hig: special case stock info icons in CrumbsMesssageDialog
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/codeparser.py |   21 +++++++++++++++++++++
- 1 files changed, 21 insertions(+), 0 deletions(-)
+Merged to master, thanks.
 
-diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
-index 04a34f9..af2e194 100644
---- a/lib/bb/codeparser.py
-+++ b/lib/bb/codeparser.py
-@@ -98,6 +98,12 @@ def parser_cache_save(d):
-     bb.utils.unlockfile(lf)
-     bb.utils.unlockfile(glf)
- 
-+def internSet(items):
-+    new = set()
-+    for i in items:
-+        new.add(intern(i))
-+    return new
-+
- def parser_cache_savemerge(d):
-     cachefile = parser_cachefile(d)
-     if not cachefile:
-@@ -133,6 +139,21 @@ def parser_cache_savemerge(d):
-                 data[1][h] = extradata[1][h]
-         os.unlink(f)
- 
-+    # When the dicts are originally created, python calls intern() on the set keys
-+    # which significantly improves memory usage. Sadly the pickle/unpickle process 
-+    # doesn't call intern() on the keys and results in the same strings being duplicated
-+    # in memory. This also means pickle will save the same string multiple times in 
-+    # the cache file. By interning the data here, the cache file shrinks dramatically
-+    # meaning faster load times and the reloaded cache files also consume much less 
-+    # memory. This is worth any performance hit from this loops and the use of the 
-+    # intern() data storage.
-+    # Python 3.x may behave better in this area
-+    for h in data[0]:
-+        data[0][h]["refs"] = internSet(data[0][h]["refs"])
-+        data[0][h]["execs"] = internSet(data[0][h]["execs"])
-+    for h in data[1]:
-+        data[1][h]["execs"] = internSet(data[1][h]["execs"])
-+
-     p = pickle.Pickler(file(cachefile, "wb"), -1)
-     p.dump([data, PARSERCACHE_VERSION])
- 
-
+Richard
 
 
 
