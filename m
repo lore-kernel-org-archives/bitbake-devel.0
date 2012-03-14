@@ -1,24 +1,24 @@
 Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1S7kf7-0008KU-Ov
+	(envelope-from <dongxiao.xu@intel.com>) id 1S7kf8-0008KU-GU
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 14 Mar 2012 10:38:29 +0100
+	Wed, 14 Mar 2012 10:38:30 +0100
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
 	by orsmga102.jf.intel.com with ESMTP; 14 Mar 2012 02:29:44 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="120863220"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="120863255"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by orsmga002.jf.intel.com with ESMTP; 14 Mar 2012 02:28:43 -0700
+	by orsmga002.jf.intel.com with ESMTP; 14 Mar 2012 02:28:51 -0700
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 14 Mar 2012 17:26:36 +0800
-Message-Id: <c86fa48517606d647dea901f803d3b22ff334c9f.1331716896.git.dongxiao.xu@intel.com>
+Date: Wed, 14 Mar 2012 17:26:42 +0800
+Message-Id: <b2f277bf2d1de5aff3f9ef5be9cd3a9c81897852.1331716896.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1331716896.git.dongxiao.xu@intel.com>
 References: <cover.1331716896.git.dongxiao.xu@intel.com>
 In-Reply-To: <cover.1331716896.git.dongxiao.xu@intel.com>
 References: <cover.1331716896.git.dongxiao.xu@intel.com>
-Subject: [PATCH 05/11] Hob: Remove the reset button in recipe/package selection page
+Subject: [PATCH 11/11] Hob: improve recipe/package selection performance
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,86 +32,106 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 14 Mar 2012 09:38:30 -0000
 
+Originally we will send selection chagned notification in each
+include_item and exclude_item, which is time cost since these are
+recursive functions and we may select hundreds of recipes/packages.
+
+The improvement is to move the notification from include_item and
+exclude_item to the place where the two functions are called.
+This could greatly improve the selection/deselection speed for recipe
+and package lists.
+
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 ---
- lib/bb/ui/crumbs/builder.py              |    6 ------
- lib/bb/ui/crumbs/packageselectionpage.py |   11 -----------
- lib/bb/ui/crumbs/recipeselectionpage.py  |    9 ---------
- 3 files changed, 0 insertions(+), 26 deletions(-)
+ lib/bb/ui/crumbs/hoblistmodel.py         |   10 +++-------
+ lib/bb/ui/crumbs/packageselectionpage.py |    1 +
+ lib/bb/ui/crumbs/recipeselectionpage.py  |    1 +
+ 3 files changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
-index a905030..f9844de 100755
---- a/lib/bb/ui/crumbs/builder.py
-+++ b/lib/bb/ui/crumbs/builder.py
-@@ -361,12 +361,6 @@ class Builder(gtk.Window):
-         self.handler.set_extra_config(self.configuration.extra_setting)
-         self.handler.set_extra_inherit("packageinfo")
+diff --git a/lib/bb/ui/crumbs/hoblistmodel.py b/lib/bb/ui/crumbs/hoblistmodel.py
+index edd61b5..caf31bc 100644
+--- a/lib/bb/ui/crumbs/hoblistmodel.py
++++ b/lib/bb/ui/crumbs/hoblistmodel.py
+@@ -216,8 +216,6 @@ class PackageListModel(gtk.TreeStore):
  
--    def reset_recipe_model(self):
--        self.recipe_model.reset()
+         self[item_path][self.COL_INC] = True
+ 
+-        self.selection_change_notification()
 -
--    def reset_package_model(self):
--        self.package_model.reset()
+         it = self.get_iter(item_path)
+ 
+         # If user explicitly selects a recipe, all its providing packages are selected.
+@@ -276,8 +274,6 @@ class PackageListModel(gtk.TreeStore):
+ 
+         self[item_path][self.COL_INC] = False
+ 
+-        self.selection_change_notification()
 -
-     def update_recipe_model(self, selected_image, selected_recipes):
-         self.recipe_model.set_selected_image(selected_image)
-         self.recipe_model.set_selected_recipes(selected_recipes)
+         item_name = self[item_path][self.COL_NAME]
+         item_rdep = self[item_path][self.COL_RDEP]
+         it = self.get_iter(item_path)
+@@ -343,6 +339,7 @@ class PackageListModel(gtk.TreeStore):
+             else:
+                 left.append(pn)
+ 
++        self.selection_change_notification()
+         return left
+ 
+     def get_selected_packages(self):
+@@ -604,7 +601,6 @@ class RecipeListModel(gtk.ListStore):
+         item_deps = self[item_path][self.COL_DEPS]
+ 
+         self[item_path][self.COL_INC] = True
+-        self.selection_change_notification()
+ 
+         item_bin = self[item_path][self.COL_BINB].split(', ')
+         if binb and not binb in item_bin:
+@@ -642,8 +638,6 @@ class RecipeListModel(gtk.ListStore):
+ 
+         self[item_path][self.COL_INC] = False
+ 
+-        self.selection_change_notification()
+-
+         item_name = self[item_path][self.COL_NAME]
+         item_deps = self[item_path][self.COL_DEPS]
+         if item_deps:
+@@ -703,6 +697,7 @@ class RecipeListModel(gtk.ListStore):
+                 path = self.pn_path[pn]
+                 self.include_item(item_path=path,
+                                   binb="User Selected")
++        self.selection_change_notification()
+ 
+     def get_selected_image(self):
+         it = self.get_iter_first()
+@@ -724,3 +719,4 @@ class RecipeListModel(gtk.ListStore):
+         self.include_item(item_path=path,
+                           binb="User Selected",
+                           image_contents=True)
++        self.selection_change_notification()
 diff --git a/lib/bb/ui/crumbs/packageselectionpage.py b/lib/bb/ui/crumbs/packageselectionpage.py
-index a8628ac..0427fe2 100755
+index 0427fe2..4fb199e 100755
 --- a/lib/bb/ui/crumbs/packageselectionpage.py
 +++ b/lib/bb/ui/crumbs/packageselectionpage.py
-@@ -118,12 +118,6 @@ class PackageSelectionPage (HobPage):
-             if self.pages[i]['name'] == "Included":
-                 tab.connect("row-activated", self.tree_row_activated_cb)
+@@ -206,6 +206,7 @@ class PackageSelectionPage (HobPage):
+         else:
+             self.package_model.exclude_item(item_path=path)
  
--            reset_button = gtk.Button("Reset")
--            reset_button.connect("clicked", self.reset_clicked_cb)
--            hbox = gtk.HBox(False, 5)
--            hbox.pack_end(reset_button, expand=False, fill=False)
--            tab.pack_start(hbox, expand=False, fill=False)
--
-             label = gtk.Label(self.pages[i]['name'])
-             self.ins.append_page(tab, label)
-             self.tables.append(tab)
-@@ -206,11 +200,6 @@ class PackageSelectionPage (HobPage):
-             size_str = str(size) + ' KB'
-         return size_str
++        self.refresh_selection()
+         self.builder.window_sensitive(True)
  
--    # Callback functions
--    def reset_clicked_cb(self, button):
--        self.package_model.reset()
--        self.builder.reset_package_model()
--
-     def toggle_item_idle_cb(self, path):
-         if not self.package_model.path_included(path):
-             self.package_model.include_item(item_path=path, binb="User Selected")
+     def table_toggled_cb(self, table, cell, view_path, toggled_columnid, view_tree):
 diff --git a/lib/bb/ui/crumbs/recipeselectionpage.py b/lib/bb/ui/crumbs/recipeselectionpage.py
-index aea9c0c..234734c 100755
+index 234734c..50d4363 100755
 --- a/lib/bb/ui/crumbs/recipeselectionpage.py
 +++ b/lib/bb/ui/crumbs/recipeselectionpage.py
-@@ -141,11 +141,6 @@ class RecipeSelectionPage (HobPage):
-             tab.connect("toggled", self.table_toggled_cb)
-             if self.pages[i]['name'] == "Included":
-                 tab.connect("row-activated", self.tree_row_activated_cb)
--            reset_button = gtk.Button("Reset")
--            reset_button.connect("clicked", self.reset_clicked_cb)
--            hbox = gtk.HBox(False, 5)
--            hbox.pack_end(reset_button, expand=False, fill=False)
--            tab.pack_start(hbox, expand=False, fill=False)
+@@ -202,6 +202,7 @@ class RecipeSelectionPage (HobPage):
+         else:
+             self.recipe_model.exclude_item(item_path=path)
  
-             label = gtk.Label(self.pages[i]['name'])
-             self.ins.append_page(tab, label)
-@@ -201,10 +196,6 @@ class RecipeSelectionPage (HobPage):
-         self.label.set_text("Recipes included: %s" % len(self.builder.configuration.selected_recipes))
-         self.ins.show_indicator_icon("Included", len(self.builder.configuration.selected_recipes))
++        self.refresh_selection()
+         self.builder.window_sensitive(True)
  
--    # Callback functions
--    def reset_clicked_cb(self, button):
--        self.builder.reset_recipe_model()
--
-     def toggle_item_idle_cb(self, path):
-         if not self.recipe_model.path_included(path):
-             self.recipe_model.include_item(item_path=path, binb="User Selected", image_contents=False)
+     def table_toggled_cb(self, table, cell, view_path, toggled_columnid, view_tree):
 -- 
 1.7.4.1
 
