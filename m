@@ -1,24 +1,24 @@
 Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1S7keB-0008EB-HH
+	(envelope-from <dongxiao.xu@intel.com>) id 1S7keC-0008EB-A8
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 14 Mar 2012 10:37:31 +0100
+	Wed, 14 Mar 2012 10:37:32 +0100
 Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga102.ch.intel.com with ESMTP; 14 Mar 2012 02:28:45 -0700
+	by azsmga102.ch.intel.com with ESMTP; 14 Mar 2012 02:28:46 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="77334512"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="77334517"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by AZSMGA002.ch.intel.com with ESMTP; 14 Mar 2012 02:28:44 -0700
+	by AZSMGA002.ch.intel.com with ESMTP; 14 Mar 2012 02:28:46 -0700
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 14 Mar 2012 17:26:37 +0800
-Message-Id: <e01f5d85b03194c9338c1689c7cf0b5d054a42db.1331716896.git.dongxiao.xu@intel.com>
+Date: Wed, 14 Mar 2012 17:26:38 +0800
+Message-Id: <c5a2b26da70c94f26bfd2e2297cc7b69139ec78c.1331716896.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1331716896.git.dongxiao.xu@intel.com>
 References: <cover.1331716896.git.dongxiao.xu@intel.com>
 In-Reply-To: <cover.1331716896.git.dongxiao.xu@intel.com>
 References: <cover.1331716896.git.dongxiao.xu@intel.com>
-Subject: [PATCH 06/11] Hob: Remove the indication in machine/base image combobox
+Subject: [PATCH 07/11] Hob: Remove the recipe/package populated signal
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,90 +30,138 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 14 Mar 2012 09:37:31 -0000
+X-List-Received-Date: Wed, 14 Mar 2012 09:37:32 -0000
 
-Remove the "--select a machine--" prompt in machine selection.
-Also change "--select a base image--" to "Start from scratch" for
-base image selection.
+Handle the recipe and package list update in
+handler_command_succeeded_cb(), which could avoid potential race
+condition when doing recipe/package list updating and page switching.
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 ---
- lib/bb/ui/crumbs/hoblistmodel.py           |    2 +-
- lib/bb/ui/crumbs/imageconfigurationpage.py |   20 +++++++-------------
- 2 files changed, 8 insertions(+), 14 deletions(-)
+ lib/bb/ui/crumbs/builder.py      |   18 ++++++++----------
+ lib/bb/ui/crumbs/hoblistmodel.py |   14 --------------
+ 2 files changed, 8 insertions(+), 24 deletions(-)
 
+diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
+index f9844de..c6b1a3d 100755
+--- a/lib/bb/ui/crumbs/builder.py
++++ b/lib/bb/ui/crumbs/builder.py
+@@ -200,8 +200,6 @@ class Builder(gtk.Window):
+         self.connect("delete-event", self.destroy_window_cb)
+         self.recipe_model.connect ("recipe-selection-changed",  self.recipelist_changed_cb)
+         self.package_model.connect("package-selection-changed", self.packagelist_changed_cb)
+-        self.recipe_model.connect ("recipelist-populated",      self.recipelist_populated_cb)
+-        self.package_model.connect("packagelist-populated",     self.packagelist_populated_cb)
+         self.handler.connect("config-updated",           self.handler_config_updated_cb)
+         self.handler.connect("package-formats-updated",  self.handler_package_formats_updated_cb)
+         self.handler.connect("layers-updated",           self.handler_layers_updated_cb)
+@@ -413,10 +411,14 @@ class Builder(gtk.Window):
+                          self.handler.GENERATE_IMAGE]:
+             self.handler.request_package_info_async()
+         elif initcmd == self.handler.POPULATE_PACKAGEINFO:
++            if self.current_step == self.RCPPKGINFO_POPULATING:
++                self.switch_page(self.RCPPKGINFO_POPULATED)
++                self.rcppkglist_populated()
++                return
++
++            self.rcppkglist_populated()
+             if self.current_step == self.FAST_IMAGE_GENERATING:
+                 self.switch_page(self.IMAGE_GENERATING)
+-            elif self.current_step == self.RCPPKGINFO_POPULATING:
+-                self.switch_page(self.RCPPKGINFO_POPULATED)
+             elif self.current_step == self.PACKAGE_GENERATING:
+                 self.switch_page(self.PACKAGE_GENERATED)
+             elif self.current_step == self.IMAGE_GENERATING:
+@@ -448,7 +450,7 @@ class Builder(gtk.Window):
+     def handler_data_generated_cb(self, handler):
+         self.window_sensitive(True)
+ 
+-    def recipelist_populated_cb(self, recipe_model):
++    def rcppkglist_populated(self):
+         selected_image = self.configuration.selected_image
+         selected_recipes = self.configuration.selected_recipes[:]
+         selected_packages = self.configuration.selected_packages[:]
+@@ -458,11 +460,7 @@ class Builder(gtk.Window):
+                                             " ".join(selected_packages))
+ 
+         self.image_configuration_page.update_image_combo(self.recipe_model, selected_image)
+-
+         self.update_recipe_model(selected_image, selected_recipes)
+-
+-    def packagelist_populated_cb(self, package_model):
+-        selected_packages = self.configuration.selected_packages[:]
+         self.update_package_model(selected_packages)
+ 
+     def recipelist_changed_cb(self, recipe_model):
+@@ -825,7 +823,7 @@ class Builder(gtk.Window):
+         self.switch_page(self.RECIPE_SELECTION)
+ 
+     def initiate_new_build(self):
+-	self.configuration.curr_mach = ""
++        self.configuration.curr_mach = ""
+         self.image_configuration_page.switch_machine_combo()
+         self.switch_page(self.MACHINE_SELECTION)
+ 
 diff --git a/lib/bb/ui/crumbs/hoblistmodel.py b/lib/bb/ui/crumbs/hoblistmodel.py
-index 0378828..c19aaa8 100644
+index c19aaa8..edd61b5 100644
 --- a/lib/bb/ui/crumbs/hoblistmodel.py
 +++ b/lib/bb/ui/crumbs/hoblistmodel.py
-@@ -422,7 +422,7 @@ class RecipeListModel(gtk.ListStore):
-     """
-     (COL_NAME, COL_DESC, COL_LIC, COL_GROUP, COL_DEPS, COL_BINB, COL_TYPE, COL_INC, COL_IMG, COL_INSTALL, COL_PN) = range(11)
- 
--    __dummy_image__ = "--select a base image--"
-+    __dummy_image__ = "Start from scratch"
+@@ -36,9 +36,6 @@ class PackageListModel(gtk.TreeStore):
+     (COL_NAME, COL_VER, COL_REV, COL_RNM, COL_SEC, COL_SUM, COL_RDEP, COL_RPROV, COL_SIZE, COL_BINB, COL_INC) = range(11)
  
      __gsignals__ = {
-         "recipelist-populated" : (gobject.SIGNAL_RUN_LAST,
-diff --git a/lib/bb/ui/crumbs/imageconfigurationpage.py b/lib/bb/ui/crumbs/imageconfigurationpage.py
-index f029bf8..3b1201e 100644
---- a/lib/bb/ui/crumbs/imageconfigurationpage.py
-+++ b/lib/bb/ui/crumbs/imageconfigurationpage.py
-@@ -33,8 +33,6 @@ from bb.ui.crumbs.hobpages import HobPage
- #
- class ImageConfigurationPage (HobPage):
+-        "packagelist-populated" : (gobject.SIGNAL_RUN_LAST,
+-                                gobject.TYPE_NONE,
+-                                ()),
+         "package-selection-changed" : (gobject.SIGNAL_RUN_LAST,
+                                 gobject.TYPE_NONE,
+                                 ()),
+@@ -135,8 +132,6 @@ class PackageListModel(gtk.TreeStore):
+     """
+     The populate() function takes as input the data from a
+     bb.event.PackageInfo event and populates the package list.
+-    Once the population is done it emits gsignal packagelist-populated
+-    to notify any listeners that the model is ready
+     """
+     def populate(self, pkginfolist):
+         self.clear()
+@@ -194,8 +189,6 @@ class PackageListModel(gtk.TreeStore):
+                      self.COL_RPROV, rprov, self.COL_SIZE, size,
+                      self.COL_BINB, "", self.COL_INC, False)
  
--    __dummy_machine__ = "--select a machine--"
+-        self.emit("packagelist-populated")
 -
-     def __init__(self, builder):
-         super(ImageConfigurationPage, self).__init__(builder, "Image configuration")
+     """
+     Check whether the item at item_path is included or not
+     """
+@@ -425,9 +418,6 @@ class RecipeListModel(gtk.ListStore):
+     __dummy_image__ = "Start from scratch"
  
-@@ -236,22 +234,18 @@ class ImageConfigurationPage (HobPage):
+     __gsignals__ = {
+-        "recipelist-populated" : (gobject.SIGNAL_RUN_LAST,
+-                                gobject.TYPE_NONE,
+-                                ()),
+         "recipe-selection-changed" : (gobject.SIGNAL_RUN_LAST,
+                                   gobject.TYPE_NONE,
+                                  ()),
+@@ -524,8 +514,6 @@ class RecipeListModel(gtk.ListStore):
+     """
+     The populate() function takes as input the data from a
+     bb.event.TargetsTreeGenerated event and populates the RecipeList.
+-    Once the population is done it emits gsignal recipelist-populated
+-    to notify any listeners that the model is ready
+     """
+     def populate(self, event_model):
+         # First clear the model, in case repopulating
+@@ -580,8 +568,6 @@ class RecipeListModel(gtk.ListStore):
+             self.pn_path[pn] = path
+             it = self.iter_next(it)
  
-     def machine_combo_changed_cb(self, machine_combo):
-         combo_item = machine_combo.get_active_text()
--        if not combo_item or combo_item == self.__dummy_machine__:
--            self.builder.configuration.curr_mach = ""
--            self.builder.switch_page(self.builder.MACHINE_SELECTION)
--        else:
--            self.builder.configuration.curr_mach = combo_item
--            # Do reparse recipes
--            self.builder.switch_page(self.builder.RCPPKGINFO_POPULATING)
-+        self.builder.configuration.curr_mach = combo_item
-+        # Do reparse recipes
-+        self.builder.switch_page(self.builder.RCPPKGINFO_POPULATING)
- 
-     def update_machine_combo(self):
--        all_machines = [self.__dummy_machine__] + self.builder.parameters.all_machines
-+        all_machines = self.builder.parameters.all_machines
- 
-         model = self.machine_combo.get_model()
-         model.clear()
-         for machine in all_machines:
-             self.machine_combo.append_text(machine)
--        self.machine_combo.set_active(0)
-+        self.machine_combo.set_active(-1)
- 
-     def switch_machine_combo(self):
-         model = self.machine_combo.get_model()
-@@ -261,7 +255,7 @@ class ImageConfigurationPage (HobPage):
-                 self.machine_combo.set_active(active)
-                 return
-             active += 1
--        self.machine_combo.set_active(0)
-+        self.machine_combo.set_active(-1)
- 
-     def image_combo_changed_idle_cb(self, selected_image, selected_recipes, selected_packages):
-         self.builder.update_recipe_model(selected_image, selected_recipes)
-@@ -302,7 +296,7 @@ class ImageConfigurationPage (HobPage):
-         # populate image combo
-         filter = {RecipeListModel.COL_TYPE : ['image']}
-         image_model = recipe_model.tree_model(filter)
--        active = 0
-+        active = -1
-         cnt = 0
- 
-         it = image_model.get_iter_first()
+-        self.emit("recipelist-populated")
+-
+     """
+     Update the model, send out the notification.
+     """
 -- 
 1.7.4.1
 
