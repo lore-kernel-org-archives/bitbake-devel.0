@@ -1,34 +1,27 @@
-Received: from mail.dream-property.net ([82.149.226.172])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <obi@opendreambox.org>) id 1S7y97-0000pK-Sg
+	(envelope-from <dongxiao.xu@intel.com>) id 1S7yBp-0000so-PD
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 15 Mar 2012 01:02:21 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by mail.dream-property.net (Postfix) with ESMTP id 4539D315A189;
-	Thu, 15 Mar 2012 00:53:38 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at mail.dream-property.net
-Received: from mail.dream-property.net ([127.0.0.1])
-	by localhost (mail.dream-property.net [127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id uo3m37MBGF0G; Thu, 15 Mar 2012 00:53:28 +0100 (CET)
-Received: from [172.22.22.61] (drms-590ecefe.pool.mediaWays.net
-	[89.14.206.254])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mail.dream-property.net (Postfix) with ESMTPSA id 5D449315A180;
-	Thu, 15 Mar 2012 00:53:28 +0100 (CET)
-Message-ID: <4F612F77.5040303@opendreambox.org>
-Date: Thu, 15 Mar 2012 00:53:27 +0100
-From: Andreas Oberritter <obi@opendreambox.org>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:10.0.2) Gecko/20120216 Thunderbird/10.0.2
-MIME-Version: 1.0
-To: Martin Jansa <martin.jansa@gmail.com>
-References: <4F610F03.1070201@opendreambox.org>
-	<20120314225418.GB3823@jama.jama.net>
-In-Reply-To: <20120314225418.GB3823@jama.jama.net>
+	Thu, 15 Mar 2012 01:05:10 +0100
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 14 Mar 2012 16:56:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="117778730"
+Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
+	([10.239.36.11])
+	by orsmga001.jf.intel.com with ESMTP; 14 Mar 2012 16:56:22 -0700
+From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
+To: Joshua Lock <josh@linux.intel.com>
+In-Reply-To: <4F60F378.6070206@linux.intel.com>
+References: <cover.1331716896.git.dongxiao.xu@intel.com>
+	<b2f277bf2d1de5aff3f9ef5be9cd3a9c81897852.1331716896.git.dongxiao.xu@intel.com>
+	<4F60F378.6070206@linux.intel.com>
+Date: Thu, 15 Mar 2012 07:54:27 +0800
+Message-ID: <1331769267.1855.1.camel@dongxiao-osel>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.32.2 
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: PREFERRED_VERSION and wildcards
+Subject: Re: [PATCH 11/11] Hob: improve recipe/package selection performance
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -40,60 +33,130 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 15 Mar 2012 00:02:21 -0000
-Content-Type: text/plain; charset=ISO-8859-1
+X-List-Received-Date: Thu, 15 Mar 2012 00:05:10 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On 14.03.2012 23:54, Martin Jansa wrote:
-> On Wed, Mar 14, 2012 at 10:34:59PM +0100, Andreas Oberritter wrote:
->> Hi,
->>
->> I just tried using wildcards, like it's done for gcc, e.g.:
->>
->> PREFERRED_VERSION_foo = "1.2%"
->>
->> Now, if I have two foo recipes, foo_1.2.1.bb and foo_1.2.3.bb, in the
->> same directory, then Bitbake always chooses 1.2.1 instead of the one
->> with the higher version number. Does bitbake always choose the first
->> matching version it can find? Is this a general limitation of wildcards,
->> or is this a problem that can get corrected? I'd expect it to choose the
->> highest matching version.
+On Wed, 2012-03-14 at 12:37 -0700, Joshua Lock wrote:
 > 
-> If you want highest then why do you specify P_V at all? or are those
-> 1.2% foo with e.g. negative D_P? or is there 1.3 you don't want?
-
-Yes, I'd like to prefer 1.2.x over higher versions, say 1.3.x, which
-coexist in the same directory, i.e. prefer stable over development versions.
-
-> It will use first provider which matches (in highest usable prio/D_P group).
+> On 14/03/12 02:26, Dongxiao Xu wrote:
+> > Originally we will send selection chagned notification in each
+> > include_item and exclude_item, which is time cost since these are
+> > recursive functions and we may select hundreds of recipes/packages.
+> >
+> > The improvement is to move the notification from include_item and
+> > exclude_item to the place where the two functions are called.
+> > This could greatly improve the selection/deselection speed for recipe
+> > and package lists.
 > 
->     sortpkg_pn = sortPriorities(pn, dataCache, pkg_pn)
->     # Find the highest priority provider with a PREFERRED_VERSION set
->     (preferred_ver, preferred_file) = findPreferredProvider(pn, cfgData, dataCache, sortpkg_pn, item)
->     # Find the latest version of the highest priority provider
->     (latest, latest_f) = findLatestProvider(pn, cfgData, dataCache, sortpkg_pn[0])
+> Awesome! So instead of sending the change notification for each 
+> included/excluded item with this change the signal will be sent once 
+> when a set of changes are made. Right?
+
+Yes, you are right. Now the signal only emits once where a bunch of
+changes happen.
+
+Thanks,
+Dongxiao
+
 > 
->     if preferred_file is None:
->         preferred_file = latest_f
->         preferred_ver = latest
+> >
+> > Signed-off-by: Dongxiao Xu<dongxiao.xu@intel.com>
 > 
-> It was added mostly to cover use case with e.g. 1.2+svnr1337 or 1.2+gitrCAFEBABE where 
-> you don't care about exact revision, but you know that you want 1.2 from scm (and there
-> is just one which matches).
+> Signed-off-by: Joshua Lock <josh@linux.intel.com>
+> 
+> > ---
+> >   lib/bb/ui/crumbs/hoblistmodel.py         |   10 +++-------
+> >   lib/bb/ui/crumbs/packageselectionpage.py |    1 +
+> >   lib/bb/ui/crumbs/recipeselectionpage.py  |    1 +
+> >   3 files changed, 5 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/lib/bb/ui/crumbs/hoblistmodel.py b/lib/bb/ui/crumbs/hoblistmodel.py
+> > index edd61b5..caf31bc 100644
+> > --- a/lib/bb/ui/crumbs/hoblistmodel.py
+> > +++ b/lib/bb/ui/crumbs/hoblistmodel.py
+> > @@ -216,8 +216,6 @@ class PackageListModel(gtk.TreeStore):
+> >
+> >           self[item_path][self.COL_INC] = True
+> >
+> > -        self.selection_change_notification()
+> > -
+> >           it = self.get_iter(item_path)
+> >
+> >           # If user explicitly selects a recipe, all its providing packages are selected.
+> > @@ -276,8 +274,6 @@ class PackageListModel(gtk.TreeStore):
+> >
+> >           self[item_path][self.COL_INC] = False
+> >
+> > -        self.selection_change_notification()
+> > -
+> >           item_name = self[item_path][self.COL_NAME]
+> >           item_rdep = self[item_path][self.COL_RDEP]
+> >           it = self.get_iter(item_path)
+> > @@ -343,6 +339,7 @@ class PackageListModel(gtk.TreeStore):
+> >               else:
+> >                   left.append(pn)
+> >
+> > +        self.selection_change_notification()
+> >           return left
+> >
+> >       def get_selected_packages(self):
+> > @@ -604,7 +601,6 @@ class RecipeListModel(gtk.ListStore):
+> >           item_deps = self[item_path][self.COL_DEPS]
+> >
+> >           self[item_path][self.COL_INC] = True
+> > -        self.selection_change_notification()
+> >
+> >           item_bin = self[item_path][self.COL_BINB].split(', ')
+> >           if binb and not binb in item_bin:
+> > @@ -642,8 +638,6 @@ class RecipeListModel(gtk.ListStore):
+> >
+> >           self[item_path][self.COL_INC] = False
+> >
+> > -        self.selection_change_notification()
+> > -
+> >           item_name = self[item_path][self.COL_NAME]
+> >           item_deps = self[item_path][self.COL_DEPS]
+> >           if item_deps:
+> > @@ -703,6 +697,7 @@ class RecipeListModel(gtk.ListStore):
+> >                   path = self.pn_path[pn]
+> >                   self.include_item(item_path=path,
+> >                                     binb="User Selected")
+> > +        self.selection_change_notification()
+> >
+> >       def get_selected_image(self):
+> >           it = self.get_iter_first()
+> > @@ -724,3 +719,4 @@ class RecipeListModel(gtk.ListStore):
+> >           self.include_item(item_path=path,
+> >                             binb="User Selected",
+> >                             image_contents=True)
+> > +        self.selection_change_notification()
+> > diff --git a/lib/bb/ui/crumbs/packageselectionpage.py b/lib/bb/ui/crumbs/packageselectionpage.py
+> > index 0427fe2..4fb199e 100755
+> > --- a/lib/bb/ui/crumbs/packageselectionpage.py
+> > +++ b/lib/bb/ui/crumbs/packageselectionpage.py
+> > @@ -206,6 +206,7 @@ class PackageSelectionPage (HobPage):
+> >           else:
+> >               self.package_model.exclude_item(item_path=path)
+> >
+> > +        self.refresh_selection()
+> >           self.builder.window_sensitive(True)
+> >
+> >       def table_toggled_cb(self, table, cell, view_path, toggled_columnid, view_tree):
+> > diff --git a/lib/bb/ui/crumbs/recipeselectionpage.py b/lib/bb/ui/crumbs/recipeselectionpage.py
+> > index 234734c..50d4363 100755
+> > --- a/lib/bb/ui/crumbs/recipeselectionpage.py
+> > +++ b/lib/bb/ui/crumbs/recipeselectionpage.py
+> > @@ -202,6 +202,7 @@ class RecipeSelectionPage (HobPage):
+> >           else:
+> >               self.recipe_model.exclude_item(item_path=path)
+> >
+> > +        self.refresh_selection()
+> >           self.builder.window_sensitive(True)
+> >
+> >       def table_toggled_cb(self, table, cell, view_path, toggled_columnid, view_tree):
+> 
 
-I see. I must admit that I don't really understand how the code quoted
-above works.
 
-> See this thread for details:
-> http://lists.linuxtogo.org/pipermail/bitbake-devel/2009-September/000458.html
-
-OK, Now I understand the original intention, but its behaviour doesn't
-seem to be what you'd intuitively expect. Well, at least not what I'd
-expect. Would it be hard to extend the code to find the highest matching
-version instead of the first one? This wouldn't have negative effects on
-your use case.
-
-Regards,
-Andreas
 
 
