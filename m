@@ -1,28 +1,25 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1S7XSX-0001Di-Gk
+	(envelope-from <Kai.Kang@windriver.com>) id 1S7kEF-00060y-Bu
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 13 Mar 2012 20:32:37 +0100
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 13 Mar 2012 12:23:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="128575524"
-Received: from unknown (HELO [10.255.15.212]) ([10.255.15.212])
-	by fmsmga001.fm.intel.com with ESMTP; 13 Mar 2012 12:23:52 -0700
-Message-ID: <4F5F9EC7.3040006@linux.intel.com>
-Date: Tue, 13 Mar 2012 12:23:51 -0700
-From: Joshua Lock <josh@linux.intel.com>
+	Wed, 14 Mar 2012 10:10:43 +0100
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q2E91vME011730
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Wed, 14 Mar 2012 02:01:57 -0700 (PDT)
+Received: from [128.224.162.241] (128.224.162.241) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.1.255.0;
+	Wed, 14 Mar 2012 02:01:57 -0700
+Message-ID: <4F605E85.7070904@windriver.com>
+Date: Wed, 14 Mar 2012 17:01:57 +0800
+From: Kang Kai <Kai.Kang@windriver.com>
 User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:10.0.1) Gecko/20120216 Thunderbird/10.0.1
+	rv:10.0.2) Gecko/20120216 Thunderbird/10.0.2
 MIME-Version: 1.0
-To: Oren Leaffer <oren@ephemeron-labs.com>
-References: <cover.1331558220.git.shane.wang@intel.com>
-	<a5a40bda286914ab82e99d22da1e39e63ccace31.1331558221.git.shane.wang@intel.com>
-	<4F5F8D0F.4010607@linux.intel.com>
-	<CALvD2LhvZB_ESbLp9s6Xa0w0WcEJWUG4v1gkh5sSYbfKBYBGEA@mail.gmail.com>
-In-Reply-To: <CALvD2LhvZB_ESbLp9s6Xa0w0WcEJWUG4v1gkh5sSYbfKBYBGEA@mail.gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/3] Hob: implement a self-defined notebook visual component for Hob
+To: <bitbake-devel@lists.openembedded.org>
+X-Originating-IP: [128.224.162.241]
+Cc: Richard Purdie <richard.purdie@intel.com>
+Subject: How to identify WORKDIR?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -34,37 +31,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 13 Mar 2012 19:32:37 -0000
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Wed, 14 Mar 2012 09:10:43 -0000
+Content-Type: multipart/alternative;
+	boundary="------------030604020608070404070009"
+
+--------------030604020608070404070009
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+
+Hi All,
+
+I write a script to clean up WORKDIR that remove the obsoleted packages' 
+build directories.
+The script accept a argument as BUILDDIR and I use this clause to 
+identify the WORKDIR:
+
+      workdir = os.path.join(builddir, 'tmp/work')
+
+Then validate the workdir exists or not. It works for me but hardcode 
+here as Richard point out.
+So is there  a better way to get the WORKDIR here? Thanks.
+
+Regards,
+Kai
 
 
+--------------030604020608070404070009
+Content-Type: text/html; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 
-On 13/03/12 12:08, Oren Leaffer wrote:
->> 1) We're doing the range dance rather than just doing the Pythonic thing and
->> iterating over the sequence with "for x in y".
->> http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html#use-in-where-possible-1
->>
->> I understand its desirable to have the index in some places, but where it
->> isn't we should use the standard pattern. This is good coding practice.
->
-> I think I pointed it out before, but it was on a Friday, so I might as
-> well repeat -
->
-> If you need the index you can replace something like this:
->    for i in range(len(self.children)): # ugly
-> With:
->    for i,child in enumerate(self.children): # less ugly!
+<html>
+  <head>
 
-Indeed, I'd be happy to see more of that.
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    Hi All,<br>
+    <br>
+    I write a script to clean up WORKDIR that remove the obsoleted
+    packages' build directories. <br>
+    The script accept a argument as BUILDDIR and I use this clause to
+    identify the WORKDIR:<br>
+    <br>
+    <big>&nbsp;&nbsp;&nbsp;&nbsp; workdir = os.path.join(builddir, 'tmp/work')<br>
+      <br>
+      <small>Then validate the workdir exists or not. It works for me
+        but</small> </big>hardcode here as Richard point out. <br>
+    So is there&nbsp; a better way to get the WORKDIR here? Thanks.<br>
+    <br>
+    Regards,<br>
+    Kai<br>
+    <br>
+  </body>
+</html>
 
-Thanks for pointing that out Oren!
-
-Cheers,
-Joshua
--- 
-Joshua '贾詡' Lock
-         Yocto Project "Johannes factotum"
-         Intel Open Source Technology Centre
-
-
+--------------030604020608070404070009--
