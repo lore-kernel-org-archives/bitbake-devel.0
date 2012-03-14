@@ -1,25 +1,25 @@
 Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1S7uAL-0003eY-Bw
+	(envelope-from <josh@linux.intel.com>) id 1S7uAL-0003eB-HK
 	for bitbake-devel@lists.openembedded.org;
 	Wed, 14 Mar 2012 20:47:21 +0100
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
 	by orsmga102.jf.intel.com with ESMTP; 14 Mar 2012 12:38:30 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="121044758"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="121044769"
 Received: from unknown (HELO [10.7.198.50]) ([10.7.198.50])
-	by orsmga002.jf.intel.com with ESMTP; 14 Mar 2012 12:37:59 -0700
-Message-ID: <4F60F395.9080502@linux.intel.com>
-Date: Wed, 14 Mar 2012 12:37:57 -0700
+	by orsmga002.jf.intel.com with ESMTP; 14 Mar 2012 12:38:03 -0700
+Message-ID: <4F60F39A.5030304@linux.intel.com>
+Date: Wed, 14 Mar 2012 12:38:02 -0700
 From: Joshua Lock <josh@linux.intel.com>
 User-Agent: Mozilla/5.0 (X11; Linux x86_64;
 	rv:10.0.1) Gecko/20120216 Thunderbird/10.0.1
 MIME-Version: 1.0
 To: bitbake-devel@lists.openembedded.org
 References: <cover.1331716896.git.dongxiao.xu@intel.com>
-	<42a098d7aa3f119f3f6735be07da727591ef8118.1331716896.git.dongxiao.xu@intel.com>
-In-Reply-To: <42a098d7aa3f119f3f6735be07da727591ef8118.1331716896.git.dongxiao.xu@intel.com>
-Subject: Re: [PATCH 02/11] Hob: Disable the handling of "NoProvider" event
+	<479f95f339a42d2d63d652e96f6e1e9d63e9f60d.1331716896.git.dongxiao.xu@intel.com>
+In-Reply-To: <479f95f339a42d2d63d652e96f6e1e9d63e9f60d.1331716896.git.dongxiao.xu@intel.com>
+Subject: Re: [PATCH 01/11] Hob: add "Close" button to "BinbDialog"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -38,75 +38,43 @@ Content-Transfer-Encoding: 8bit
 
 
 On 14/03/12 02:26, Dongxiao Xu wrote:
-> Currently for non-x86 architecture, there are un-resolved dependency
-> issue when generate universe dependency tree. Therefore disable the
-> handling of "NoProvider" event in Hob to enable the build for non-x86
-> architectures. After we resolved the dependency for universe, we still
-> need to handle this event in Hob.
-
-I'm not sure we'll ever be able to strongly guarantee that NoProvider 
-issues won't creep in. Would we better off coming up with a more tenable 
-long term solution?
-
+> For certain distributions, like FC16, it doesn't have close button in
+> sub-windows or dialogs. Therefore we need to add an "Close" button to
+> "BinbDialog" to close the dialog.
+>
+> Besides, let BinbDialog inherits the CrumbsDialog instead of gtk.Dialog
 >
 > Signed-off-by: Dongxiao Xu<dongxiao.xu@intel.com>
 
-This is a reasonable short-term solution
+I think we want to switch to persistent tooltips for this functionality 
+but until that change is ready this is a good patch.
 
 Signed-off-by: Joshua Lock <josh@linux.intel.com>
 
 > ---
->   lib/bb/ui/crumbs/hobeventhandler.py |   37 ++++++++++++++++++----------------
->   1 files changed, 20 insertions(+), 17 deletions(-)
+>   lib/bb/ui/crumbs/hig.py |    4 ++--
+>   1 files changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
-> index 6c109fc..9c82bfe 100644
-> --- a/lib/bb/ui/crumbs/hobeventhandler.py
-> +++ b/lib/bb/ui/crumbs/hobeventhandler.py
-> @@ -215,23 +215,26 @@ class HobHandler(gobject.GObject):
->           elif isinstance(event, bb.command.CommandCompleted):
->               self.current_phase = None
->               self.run_next_command()
-> -
-> -        elif isinstance(event, bb.event.NoProvider):
-> -            if event._runtime:
-> -                r = "R"
-> -            else:
-> -                r = ""
-> -            if event._dependees:
-> -                self.error_msg += " Nothing %sPROVIDES '%s' (but %s %sDEPENDS on or otherwise requires it)" % (r, event._item, ", ".join(event._dependees), r)
-> -            else:
-> -                self.error_msg += " Nothing %sPROVIDES '%s'" % (r, event._item)
-> -            if event._reasons:
-> -                for reason in event._reasons:
-> -                    self.error_msg += " %s" % reason
-> -
-> -            self.commands_async = []
-> -            self.emit("command-failed", self.error_msg)
-> -            self.error_msg = ""
-> +        # TODO: Currently there are NoProvider issues when generate
-> +        # universe tree dependency for non-x86 architecture.
-> +        # Comment the follow code to enable the build of non-x86
-> +        # architectures in Hob.
-> +        #elif isinstance(event, bb.event.NoProvider):
-> +        #    if event._runtime:
-> +        #        r = "R"
-> +        #    else:
-> +        #        r = ""
-> +        #    if event._dependees:
-> +        #        self.error_msg += " Nothing %sPROVIDES '%s' (but %s %sDEPENDS on or otherwise requires it)" % (r, event._item, ", ".join(event._dependees), r)
-> +        #    else:
-> +        #        self.error_msg += " Nothing %sPROVIDES '%s'" % (r, event._item)
-> +        #    if event._reasons:
-> +        #        for reason in event._reasons:
-> +        #            self.error_msg += " %s" % reason
-> +
-> +        #    self.commands_async = []
-> +        #    self.emit("command-failed", self.error_msg)
-> +        #    self.error_msg = ""
+> diff --git a/lib/bb/ui/crumbs/hig.py b/lib/bb/ui/crumbs/hig.py
+> index e175a2a..28b7eef 100644
+> --- a/lib/bb/ui/crumbs/hig.py
+> +++ b/lib/bb/ui/crumbs/hig.py
+> @@ -94,13 +94,13 @@ class CrumbsMessageDialog(CrumbsDialog):
+>   #
+>   # Brought-in-by Dialog
+>   #
+> -class BinbDialog(gtk.Dialog):
+> +class BinbDialog(CrumbsDialog):
+>       """
+>       A dialog widget to show "brought in by" info when a recipe/package is clicked.
+>       """
 >
->           elif isinstance(event, bb.command.CommandFailed):
->               self.commands_async = []
+>       def __init__(self, title, content, parent=None):
+> -        super(BinbDialog, self).__init__(title, parent, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, None)
+> +        super(BinbDialog, self).__init__(title, parent, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, ("Close", gtk.RESPONSE_CLOSE))
+>
+>           self.set_position(gtk.WIN_POS_MOUSE)
+>           self.set_resizable(False)
 
 -- 
 Joshua '贾詡' Lock
