@@ -1,27 +1,27 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1S7yy9-0001UR-9V
+	(envelope-from <dongxiao.xu@intel.com>) id 1S83vf-0002wy-BG
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 15 Mar 2012 01:55:05 +0100
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 14 Mar 2012 17:46:18 -0700
+	Thu, 15 Mar 2012 07:12:51 +0100
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga101.ch.intel.com with ESMTP; 14 Mar 2012 23:04:04 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="129137409"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="77767376"
 Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
 	([10.239.36.11])
-	by fmsmga001.fm.intel.com with ESMTP; 14 Mar 2012 17:46:17 -0700
+	by AZSMGA002.ch.intel.com with ESMTP; 14 Mar 2012 23:04:03 -0700
 From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
 To: Joshua Lock <josh@linux.intel.com>
-In-Reply-To: <4F60F37B.3080602@linux.intel.com>
+In-Reply-To: <4F60F38B.40506@linux.intel.com>
 References: <cover.1331716896.git.dongxiao.xu@intel.com>
-	<b336abc11268177d4030f526384819717b43d2ce.1331716896.git.dongxiao.xu@intel.com>
-	<4F60F37B.3080602@linux.intel.com>
-Date: Thu, 15 Mar 2012 08:44:23 +0800
-Message-ID: <1331772263.1855.9.camel@dongxiao-osel>
+	<c30b412003be68dd9c060e2d227f85232e4492ff.1331716896.git.dongxiao.xu@intel.com>
+	<4F60F38B.40506@linux.intel.com>
+Date: Thu, 15 Mar 2012 14:02:08 +0800
+Message-ID: <1331791328.1855.21.camel@dongxiao-osel>
 Mime-Version: 1.0
 X-Mailer: Evolution 2.32.2 
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 10/11] Hob: Add stop button for parsing progress
+Subject: Re: [PATCH 04/11] Hob: Fix the image installation dependency
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,142 +33,64 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 15 Mar 2012 00:55:05 -0000
+X-List-Received-Date: Thu, 15 Mar 2012 06:12:51 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
 On Wed, 2012-03-14 at 12:37 -0700, Joshua Lock wrote:
 > 
 > On 14/03/12 02:26, Dongxiao Xu wrote:
-> > Add a Stop button to allow user to quit the parsing process.
+> > Get the image installation content from rdepends and rrecommends
+> > variables.
 > >
 > > Signed-off-by: Dongxiao Xu<dongxiao.xu@intel.com>
+> > ---
+> >   lib/bb/ui/crumbs/hoblistmodel.py |    6 ++----
+> >   1 files changed, 2 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/lib/bb/ui/crumbs/hoblistmodel.py b/lib/bb/ui/crumbs/hoblistmodel.py
+> > index 0b7c0cb..0378828 100644
+> > --- a/lib/bb/ui/crumbs/hoblistmodel.py
+> > +++ b/lib/bb/ui/crumbs/hoblistmodel.py
+> > @@ -546,9 +546,7 @@ class RecipeListModel(gtk.ListStore):
+> >               group = event_model["pn"][item]["section"]
+> >               install = []
+> >
+> > -            depends = event_model["depends"].get(item, [])
+> > -            rdepends = event_model["rdepends-pn"].get(item, [])
+> > -            depends = depends + rdepends
+> > +            depends = event_model["depends"].get(item, []) + event_model["rdepends-pn"].get(item, [])
+> >
+> >               if ('task-' in name):
+> >                   if ('lib32-' in name or 'lib64-' in name):
+> > @@ -557,7 +555,7 @@ class RecipeListModel(gtk.ListStore):
+> >                       atype = 'task'
+> >               elif ('-image-' in name):
+> >                   atype = 'image'
+> > -                install = rdepends
+> > +                install = event_model["rdepends-pkg"].get(item, []) + event_model["rrecs-pkg"].get(item, [])
 > 
-> I'm upset to see using 5 for padding after having raised the issue so 
-> many times... I don't think it's a good enough reason to bounce this 
-> functionality when the padding is all over app-wide though.
+> rrecs should be recommendations, not requirements - are we making the 
+> conscious decision to include all recommended packages when building 
+> with Hob?
 
-Sorry for this change...
-I just simply copied another piece of code in builddetailspage and
-didn't care the padding value.
+Per my understanding, RRECOMMENDS means that if the recommended package
+do exists, then install it. Else if it doesn't, system will not report
+error as missing dependency. (Correct me if it is wrong)
 
-I will modify both of these values to 6.
+Here in Hob code, we will try to install both RDEPENDS and RRECOMMENDS
+packages. But note that here the "install" variable is only used to make
+selections in "Package Selection" page. Therefore if a recommended
+package doesn't exists, it will not be included in the installation
+list.
 
 Thanks,
 Dongxiao
 
 > 
-> Signed-off-by: Joshua Lock <josh@linux.intel.com>
-> 
-> > ---
-> >   lib/bb/ui/crumbs/builder.py                |   22 +++++++++++++++++++++-
-> >   lib/bb/ui/crumbs/hobeventhandler.py        |    3 +++
-> >   lib/bb/ui/crumbs/imageconfigurationpage.py |   14 +++++++++++++-
-> >   3 files changed, 37 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
-> > index 1363475..1d255ac 100755
-> > --- a/lib/bb/ui/crumbs/builder.py
-> > +++ b/lib/bb/ui/crumbs/builder.py
-> > @@ -443,7 +443,20 @@ class Builder(gtk.Window):
-> >           self.switch_page(self.MACHINE_SELECTION)
-> >
-> >       def window_sensitive(self, sensitive):
-> > -        self.set_sensitive(sensitive)
-> > +        self.image_configuration_page.machine_combo.set_sensitive(sensitive)
-> > +        self.image_configuration_page.image_combo.set_sensitive(sensitive)
-> > +        self.image_configuration_page.layer_button.set_sensitive(sensitive)
-> > +        self.image_configuration_page.layer_info_icon.set_sensitive(sensitive)
-> > +        self.image_configuration_page.toolbar.set_sensitive(sensitive)
-> > +        self.image_configuration_page.view_recipes_button.set_sensitive(sensitive)
-> > +        self.image_configuration_page.view_packages_button.set_sensitive(sensitive)
-> > +        self.image_configuration_page.config_build_button.set_sensitive(sensitive)
-> > +
-> > +        self.recipe_details_page.set_sensitive(sensitive)
-> > +        self.package_details_page.set_sensitive(sensitive)
-> > +        self.build_details_page.set_sensitive(sensitive)
-> > +        self.image_details_page.set_sensitive(sensitive)
-> > +
-> >           if sensitive:
-> >               self.get_root_window().set_cursor(gtk.gdk.Cursor(gtk.gdk.LEFT_PTR))
-> >           else:
-> > @@ -482,6 +495,10 @@ class Builder(gtk.Window):
-> >           fraction = 0
-> >           if message["eventname"] == "TreeDataPreparationStarted":
-> >               fraction = 0.6 + fraction
-> > +            self.image_configuration_page.stop_button.set_sensitive(False)
-> > +        else:
-> > +            self.image_configuration_page.stop_button.set_sensitive(True)
-> > +
-> >           self.image_configuration_page.update_progress_bar(message["title"], fraction)
-> >
-> >       def handler_parsing_cb(self, handler, message):
-> > @@ -836,6 +853,9 @@ class Builder(gtk.Window):
-> >       def show_configuration(self):
-> >           self.switch_page(self.BASEIMG_SELECTED)
-> >
-> > +    def stop_parse(self):
-> > +        self.handler.cancel_parse()
-> > +
-> >       def stop_build(self):
-> >           if self.stopping:
-> >               lbl = "<b>Force Stop build?</b>\nYou've already selected Stop once,"
-> > diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
-> > index cd25754..790e2ef 100644
-> > --- a/lib/bb/ui/crumbs/hobeventhandler.py
-> > +++ b/lib/bb/ui/crumbs/hobeventhandler.py
-> > @@ -371,6 +371,9 @@ class HobHandler(gobject.GObject):
-> >           self.commands_async = []
-> >           self.building = False
-> >
-> > +    def cancel_parse(self):
-> > +        self.server.runCommand(["stateStop"])
-> > +
-> >       def cancel_build(self, force=False):
-> >           if force:
-> >               # Force the cooker to stop as quickly as possible
-> > diff --git a/lib/bb/ui/crumbs/imageconfigurationpage.py b/lib/bb/ui/crumbs/imageconfigurationpage.py
-> > index f386281..2af9054 100644
-> > --- a/lib/bb/ui/crumbs/imageconfigurationpage.py
-> > +++ b/lib/bb/ui/crumbs/imageconfigurationpage.py
-> > @@ -150,7 +150,13 @@ class ImageConfigurationPage (HobPage):
-> >           markup += "poky-ref-manual.html#usingpoky-changes-layers\">reference manual</a>."
-> >           self.layer_info_icon = HobInfoButton(markup, self.get_parent())
-> >
-> > +        self.progress_box = gtk.HBox(False, 5)
-> >           self.progress_bar = HobProgressBar()
-> > +        self.progress_box.pack_start(self.progress_bar, expand=True, fill=True)
-> > +        self.stop_button = gtk.LinkButton("Stop the parsing process", "Stop")
-> > +        self.stop_button.connect("clicked", self.stop_button_clicked_cb)
-> > +        self.progress_box.pack_end(self.stop_button, expand=False, fill=False)
-> > +
-> >           self.machine_separator = gtk.HSeparator()
-> >
-> >       def set_config_machine_layout(self, show_progress_bar = False):
-> > @@ -160,7 +166,7 @@ class ImageConfigurationPage (HobPage):
-> >           self.gtable.attach(self.layer_button, 12, 36, 6, 10)
-> >           self.gtable.attach(self.layer_info_icon, 36, 40, 6, 9)
-> >           if show_progress_bar == True:
-> > -            self.gtable.attach(self.progress_bar, 0, 40, 13, 17)
-> > +            self.gtable.attach(self.progress_box, 0, 40, 13, 17)
-> >           self.gtable.attach(self.machine_separator, 0, 40, 12, 13)
-> >
-> >       def create_config_baseimg(self):
-> > @@ -242,8 +248,14 @@ class ImageConfigurationPage (HobPage):
-> >
-> >           return button_box
-> >
-> > +    def stop_button_clicked_cb(self, button):
-> > +        self.builder.stop_parse()
-> > +
-> >       def machine_combo_changed_cb(self, machine_combo):
-> >           combo_item = machine_combo.get_active_text()
-> > +        if not combo_item:
-> > +            return
-> > +
-> >           self.builder.configuration.curr_mach = combo_item
-> >           # Do reparse recipes
-> >           self.builder.switch_page(self.builder.RCPPKGINFO_POPULATING)
+> >               elif ('meta-' in name):
+> >                   atype = 'toolchain'
+> >               elif (name == 'dummy-image' or name == 'dummy-toolchain'):
 > 
 
 
