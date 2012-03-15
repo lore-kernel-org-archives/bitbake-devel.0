@@ -1,38 +1,24 @@
-Received: from mail-wi0-f177.google.com ([209.85.212.177])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <martin.jansa@gmail.com>) id 1S85mx-0005Nv-3m
+	(envelope-from <dongxiao.xu@intel.com>) id 1S86En-00067I-GH
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 15 Mar 2012 09:11:59 +0100
-Received: by wibhj13 with SMTP id hj13so3359167wib.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 15 Mar 2012 01:03:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:content-disposition:in-reply-to:user-agent;
-	bh=tbtiMYeMNNCODy4Fyvv16pm9Rs0hIlR0M6rNQ/zZ1tk=;
-	b=e45LsPIGx6/ozHCqHZsO1R7b2291fU90v6MSDbAayhOHQuqKoPegjHzmYYjHxJ8KWa
-	SyeX+E3EnVb9CdKLNetUeH41HVpKQpvpx+oyv0A5WAiA3gSHC53N7kLjLdZpnz/WV/TT
-	wtY+DSYSvMjWkkERhw8Jt1IPByR+McycGQzKaidYK0gNOgl/mI2+6zA5e5+Y6mlqgHLU
-	hMlFZksVWPLXtl97Cym8YiACi1w73u5WGJk6gN0LHDhW1eoW1NaisUcmwUUCjLeHcwDH
-	M0QRg5OR27X/KGsajlwmFtQcmIZYT9kG9jyNuVsq5hCO7QP7jzWhdxYDyVs3ICsYRmm+
-	tumA==
-Received: by 10.180.79.231 with SMTP id m7mr13237661wix.11.1331798593066;
-	Thu, 15 Mar 2012 01:03:13 -0700 (PDT)
-Received: from localhost ([94.230.152.246])
-	by mx.google.com with ESMTPS id ff9sm3200335wib.2.2012.03.15.01.03.11
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Thu, 15 Mar 2012 01:03:12 -0700 (PDT)
-Date: Thu, 15 Mar 2012 09:03:10 +0100
-From: Martin Jansa <martin.jansa@gmail.com>
-To: Kang Kai <Kai.Kang@windriver.com>
-Message-ID: <20120315080310.GC4973@jama.jama.net>
-References: <4F605E85.7070904@windriver.com> <1331718176.18586.15.camel@ted>
-	<4F61926D.1060709@windriver.com> <4F619CD4.4090103@windriver.com>
-MIME-Version: 1.0
-In-Reply-To: <4F619CD4.4090103@windriver.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: How to identify WORKDIR?
+	Thu, 15 Mar 2012 09:40:45 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga102.ch.intel.com with ESMTP; 15 Mar 2012 01:31:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="119200555"
+Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
+	by azsmga001.ch.intel.com with ESMTP; 15 Mar 2012 01:31:57 -0700
+From: Dongxiao Xu <dongxiao.xu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 15 Mar 2012 16:29:49 +0800
+Message-Id: <5d33c355001bec91f4e4c3860db8d7ac2b449782.1331796806.git.dongxiao.xu@intel.com>
+X-Mailer: git-send-email 1.7.4.1
+In-Reply-To: <cover.1331796806.git.dongxiao.xu@intel.com>
+References: <cover.1331796806.git.dongxiao.xu@intel.com>
+In-Reply-To: <cover.1331796806.git.dongxiao.xu@intel.com>
+References: <cover.1331796806.git.dongxiao.xu@intel.com>
+Subject: [PATCH 01/12] Hob: add "Close" button to "BinbDialog"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -44,90 +30,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 15 Mar 2012 08:11:59 -0000
-X-Groupsio-MsgNum: 1278
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Izn7cH1Com+I3R9J"
-Content-Disposition: inline
+X-List-Received-Date: Thu, 15 Mar 2012 08:40:45 -0000
 
---Izn7cH1Com+I3R9J
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For certain distributions, like FC16, it doesn't have close button in
+sub-windows or dialogs. Therefore we need to add an "Close" button to
+"BinbDialog" to close the dialog.
 
-On Thu, Mar 15, 2012 at 03:40:04PM +0800, Kang Kai wrote:
-> On 2012=E5=B9=B403=E6=9C=8815=E6=97=A5 14:55, Kang Kai wrote:
-> > On 2012=E5=B9=B403=E6=9C=8814=E6=97=A5 17:42, Richard Purdie wrote:
-> >> On Wed, 2012-03-14 at 17:01 +0800, Kang Kai wrote:
-> >>> Hi All,
-> >>>
-> >>> I write a script to clean up WORKDIR that remove the obsoleted
-> >>> packages' build directories.
-> >>> The script accept a argument as BUILDDIR and I use this clause to
-> >>> identify the WORKDIR:
-> >>>
-> >>>       workdir =3D os.path.join(builddir, 'tmp/work')
-> >>>
-> >>> Then validate the workdir exists or not. It works for me but hardcode
-> >>> here as Richard point out.
-> >>> So is there  a better way to get the WORKDIR here? Thanks.
-> >> I was thinking of something like:
-> >>
-> >> bitbake -e | grep ^WORKDIR
-> And the result is something like that:
-> WORKDIR=3D"/mnt/sda10/poky-all-platform/build-qemux86_64/tmp/work/x86_64-=
-poky-linux/bblayers-1.0-r0"
->=20
-> Is it ok to remove 2 items seperated by slash at the end of string?=20
-> Right now is:
-> "/mnt/sda10/poky-all-platform/build-qemux86_64/tmp/work/"
+Besides, let BinbDialog inherits the CrumbsDialog instead of gtk.Dialog
 
-Aren't you looking for ^TMPDIR ?
+Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+---
+ lib/bb/ui/crumbs/hig.py |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
->=20
-> Regards,
-> Kai
->=20
-> >
-> > If get WORKDIR in this way, I'll update the script with no argument=20
-> > because the argument is useless to identify the WORKDIR.
-> >
-> > Regards,
-> > Kai
-> >>
-> >> since you already call into bitbake in the script in question.
-> >>
-> >> Cheers,
-> >>
-> >> Richard
-> >>
-> >>
-> >
-> >
-> > _______________________________________________
-> > bitbake-devel mailing list
-> > bitbake-devel@lists.openembedded.org
-> > http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
->=20
->=20
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
+diff --git a/lib/bb/ui/crumbs/hig.py b/lib/bb/ui/crumbs/hig.py
+index e175a2a..28b7eef 100644
+--- a/lib/bb/ui/crumbs/hig.py
++++ b/lib/bb/ui/crumbs/hig.py
+@@ -94,13 +94,13 @@ class CrumbsMessageDialog(CrumbsDialog):
+ #
+ # Brought-in-by Dialog
+ #
+-class BinbDialog(gtk.Dialog):
++class BinbDialog(CrumbsDialog):
+     """
+     A dialog widget to show "brought in by" info when a recipe/package is clicked.
+     """
+ 
+     def __init__(self, title, content, parent=None):
+-        super(BinbDialog, self).__init__(title, parent, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, None)
++        super(BinbDialog, self).__init__(title, parent, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, ("Close", gtk.RESPONSE_CLOSE))
+ 
+         self.set_position(gtk.WIN_POS_MOUSE)
+         self.set_resizable(False)
+-- 
+1.7.4.1
 
---=20
-Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
 
---Izn7cH1Com+I3R9J
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.18 (GNU/Linux)
-
-iEYEARECAAYFAk9hoj4ACgkQN1Ujt2V2gBwSjwCgrv3GCxeSau6Qg7jDcqdVLbLl
-fV0An1Bwfuv5EW2ba7VxW5YnJ6G8gDaF
-=rKvW
------END PGP SIGNATURE-----
-
---Izn7cH1Com+I3R9J--
