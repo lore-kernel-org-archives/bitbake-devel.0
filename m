@@ -1,39 +1,27 @@
-Received: from mail-wi0-f177.google.com ([209.85.212.177])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <martin.jansa@gmail.com>) id 1S7yHV-0000wM-Nm
+	(envelope-from <dongxiao.xu@intel.com>) id 1S7yy9-0001UR-9V
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 15 Mar 2012 01:11:01 +0100
-Received: by wibhj13 with SMTP id hj13so3029504wib.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Mar 2012 17:02:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:content-disposition:in-reply-to:user-agent;
-	bh=cV/jjEFOo56aK3nrA6mmQUUtuwHBX8wXYrlM8N5PolI=;
-	b=oumxgBj/1wwmgUL6Fjccs8dGXCEtuIGy3/tqMRUV0zvpsiclMBO5WO/NsD4Hz8fpA3
-	kSBmdOiKu5hY5z+2giQ/GKZ1tRYW4Fc7u5i6D3/fhoPP4S58Ag/iYlErbGD/Tw/r1q22
-	ZoqBC6wQ2IReKNQZvnFX0FoAyzFcWL6/ZJh0pgi/6OC5JZMYTxgE4xNx6Wd4OZP0Vke3
-	2ghd1wgLzjLF7CBSCdrgwgzyM9V86BfeSukyU1G2X3DfbaWASjxVEhHEKlQaqWBKesoM
-	teZiKlFIJivZojC8/Z7sX9O48XEAkRAdyesvCFlPh5rl1SG/47JpQTVQ4o9pKA42oFx/
-	z5Dw==
-Received: by 10.180.104.137 with SMTP id ge9mr10544616wib.20.1331769736020;
-	Wed, 14 Mar 2012 17:02:16 -0700 (PDT)
-Received: from localhost ([94.230.152.246])
-	by mx.google.com with ESMTPS id w10sm795080wiy.3.2012.03.14.17.02.14
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Wed, 14 Mar 2012 17:02:15 -0700 (PDT)
-Date: Thu, 15 Mar 2012 01:02:13 +0100
-From: Martin Jansa <martin.jansa@gmail.com>
-To: Andreas Oberritter <obi@opendreambox.org>
-Message-ID: <20120315000213.GA4973@jama.jama.net>
-References: <4F610F03.1070201@opendreambox.org>
-	<20120314225418.GB3823@jama.jama.net>
-	<4F612F77.5040303@opendreambox.org>
-MIME-Version: 1.0
-In-Reply-To: <4F612F77.5040303@opendreambox.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+	Thu, 15 Mar 2012 01:55:05 +0100
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 14 Mar 2012 17:46:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="129137409"
+Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
+	([10.239.36.11])
+	by fmsmga001.fm.intel.com with ESMTP; 14 Mar 2012 17:46:17 -0700
+From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
+To: Joshua Lock <josh@linux.intel.com>
+In-Reply-To: <4F60F37B.3080602@linux.intel.com>
+References: <cover.1331716896.git.dongxiao.xu@intel.com>
+	<b336abc11268177d4030f526384819717b43d2ce.1331716896.git.dongxiao.xu@intel.com>
+	<4F60F37B.3080602@linux.intel.com>
+Date: Thu, 15 Mar 2012 08:44:23 +0800
+Message-ID: <1331772263.1855.9.camel@dongxiao-osel>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.32.2 
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: PREFERRED_VERSION and wildcards
+Subject: Re: [PATCH 10/11] Hob: Add stop button for parsing progress
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -45,101 +33,144 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 15 Mar 2012 00:11:01 -0000
-X-Groupsio-MsgNum: 1273
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
-Content-Disposition: inline
+X-List-Received-Date: Thu, 15 Mar 2012 00:55:05 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---6TrnltStXW4iwmi0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 2012-03-14 at 12:37 -0700, Joshua Lock wrote:
+> 
+> On 14/03/12 02:26, Dongxiao Xu wrote:
+> > Add a Stop button to allow user to quit the parsing process.
+> >
+> > Signed-off-by: Dongxiao Xu<dongxiao.xu@intel.com>
+> 
+> I'm upset to see using 5 for padding after having raised the issue so 
+> many times... I don't think it's a good enough reason to bounce this 
+> functionality when the padding is all over app-wide though.
 
-On Thu, Mar 15, 2012 at 12:53:27AM +0100, Andreas Oberritter wrote:
-> On 14.03.2012 23:54, Martin Jansa wrote:
-> > On Wed, Mar 14, 2012 at 10:34:59PM +0100, Andreas Oberritter wrote:
-> >> Hi,
-> >>
-> >> I just tried using wildcards, like it's done for gcc, e.g.:
-> >>
-> >> PREFERRED_VERSION_foo =3D "1.2%"
-> >>
-> >> Now, if I have two foo recipes, foo_1.2.1.bb and foo_1.2.3.bb, in the
-> >> same directory, then Bitbake always chooses 1.2.1 instead of the one
-> >> with the higher version number. Does bitbake always choose the first
-> >> matching version it can find? Is this a general limitation of wildcard=
-s,
-> >> or is this a problem that can get corrected? I'd expect it to choose t=
-he
-> >> highest matching version.
-> >=20
-> > If you want highest then why do you specify P_V at all? or are those
-> > 1.2% foo with e.g. negative D_P? or is there 1.3 you don't want?
->=20
-> Yes, I'd like to prefer 1.2.x over higher versions, say 1.3.x, which
-> coexist in the same directory, i.e. prefer stable over development versio=
-ns.
+Sorry for this change...
+I just simply copied another piece of code in builddetailspage and
+didn't care the padding value.
 
-Ah, OK.
-=20
-> > It will use first provider which matches (in highest usable prio/D_P gr=
-oup).
-> >=20
-> >     sortpkg_pn =3D sortPriorities(pn, dataCache, pkg_pn)
-> >     # Find the highest priority provider with a PREFERRED_VERSION set
-> >     (preferred_ver, preferred_file) =3D findPreferredProvider(pn, cfgDa=
-ta, dataCache, sortpkg_pn, item)
-> >     # Find the latest version of the highest priority provider
-> >     (latest, latest_f) =3D findLatestProvider(pn, cfgData, dataCache, s=
-ortpkg_pn[0])
-> >=20
-> >     if preferred_file is None:
-> >         preferred_file =3D latest_f
-> >         preferred_ver =3D latest
-> >=20
-> > It was added mostly to cover use case with e.g. 1.2+svnr1337 or 1.2+git=
-rCAFEBABE where=20
-> > you don't care about exact revision, but you know that you want 1.2 fro=
-m scm (and there
-> > is just one which matches).
->=20
-> I see. I must admit that I don't really understand how the code quoted
-> above works.
->=20
-> > See this thread for details:
-> > http://lists.linuxtogo.org/pipermail/bitbake-devel/2009-September/00045=
-8.html
->=20
-> OK, Now I understand the original intention, but its behaviour doesn't
-> seem to be what you'd intuitively expect. Well, at least not what I'd
-> expect. Would it be hard to extend the code to find the highest matching
-> version instead of the first one? This wouldn't have negative effects on
-> your use case.
+I will modify both of these values to 6.
 
-Agreed, but if someone starts working on it, then we should discuss
-first how to properly fix D_P across multiple layers, because I belive
-that it's also in those 5 quoted lines.
+Thanks,
+Dongxiao
 
-Cheers,
+> 
+> Signed-off-by: Joshua Lock <josh@linux.intel.com>
+> 
+> > ---
+> >   lib/bb/ui/crumbs/builder.py                |   22 +++++++++++++++++++++-
+> >   lib/bb/ui/crumbs/hobeventhandler.py        |    3 +++
+> >   lib/bb/ui/crumbs/imageconfigurationpage.py |   14 +++++++++++++-
+> >   3 files changed, 37 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
+> > index 1363475..1d255ac 100755
+> > --- a/lib/bb/ui/crumbs/builder.py
+> > +++ b/lib/bb/ui/crumbs/builder.py
+> > @@ -443,7 +443,20 @@ class Builder(gtk.Window):
+> >           self.switch_page(self.MACHINE_SELECTION)
+> >
+> >       def window_sensitive(self, sensitive):
+> > -        self.set_sensitive(sensitive)
+> > +        self.image_configuration_page.machine_combo.set_sensitive(sensitive)
+> > +        self.image_configuration_page.image_combo.set_sensitive(sensitive)
+> > +        self.image_configuration_page.layer_button.set_sensitive(sensitive)
+> > +        self.image_configuration_page.layer_info_icon.set_sensitive(sensitive)
+> > +        self.image_configuration_page.toolbar.set_sensitive(sensitive)
+> > +        self.image_configuration_page.view_recipes_button.set_sensitive(sensitive)
+> > +        self.image_configuration_page.view_packages_button.set_sensitive(sensitive)
+> > +        self.image_configuration_page.config_build_button.set_sensitive(sensitive)
+> > +
+> > +        self.recipe_details_page.set_sensitive(sensitive)
+> > +        self.package_details_page.set_sensitive(sensitive)
+> > +        self.build_details_page.set_sensitive(sensitive)
+> > +        self.image_details_page.set_sensitive(sensitive)
+> > +
+> >           if sensitive:
+> >               self.get_root_window().set_cursor(gtk.gdk.Cursor(gtk.gdk.LEFT_PTR))
+> >           else:
+> > @@ -482,6 +495,10 @@ class Builder(gtk.Window):
+> >           fraction = 0
+> >           if message["eventname"] == "TreeDataPreparationStarted":
+> >               fraction = 0.6 + fraction
+> > +            self.image_configuration_page.stop_button.set_sensitive(False)
+> > +        else:
+> > +            self.image_configuration_page.stop_button.set_sensitive(True)
+> > +
+> >           self.image_configuration_page.update_progress_bar(message["title"], fraction)
+> >
+> >       def handler_parsing_cb(self, handler, message):
+> > @@ -836,6 +853,9 @@ class Builder(gtk.Window):
+> >       def show_configuration(self):
+> >           self.switch_page(self.BASEIMG_SELECTED)
+> >
+> > +    def stop_parse(self):
+> > +        self.handler.cancel_parse()
+> > +
+> >       def stop_build(self):
+> >           if self.stopping:
+> >               lbl = "<b>Force Stop build?</b>\nYou've already selected Stop once,"
+> > diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
+> > index cd25754..790e2ef 100644
+> > --- a/lib/bb/ui/crumbs/hobeventhandler.py
+> > +++ b/lib/bb/ui/crumbs/hobeventhandler.py
+> > @@ -371,6 +371,9 @@ class HobHandler(gobject.GObject):
+> >           self.commands_async = []
+> >           self.building = False
+> >
+> > +    def cancel_parse(self):
+> > +        self.server.runCommand(["stateStop"])
+> > +
+> >       def cancel_build(self, force=False):
+> >           if force:
+> >               # Force the cooker to stop as quickly as possible
+> > diff --git a/lib/bb/ui/crumbs/imageconfigurationpage.py b/lib/bb/ui/crumbs/imageconfigurationpage.py
+> > index f386281..2af9054 100644
+> > --- a/lib/bb/ui/crumbs/imageconfigurationpage.py
+> > +++ b/lib/bb/ui/crumbs/imageconfigurationpage.py
+> > @@ -150,7 +150,13 @@ class ImageConfigurationPage (HobPage):
+> >           markup += "poky-ref-manual.html#usingpoky-changes-layers\">reference manual</a>."
+> >           self.layer_info_icon = HobInfoButton(markup, self.get_parent())
+> >
+> > +        self.progress_box = gtk.HBox(False, 5)
+> >           self.progress_bar = HobProgressBar()
+> > +        self.progress_box.pack_start(self.progress_bar, expand=True, fill=True)
+> > +        self.stop_button = gtk.LinkButton("Stop the parsing process", "Stop")
+> > +        self.stop_button.connect("clicked", self.stop_button_clicked_cb)
+> > +        self.progress_box.pack_end(self.stop_button, expand=False, fill=False)
+> > +
+> >           self.machine_separator = gtk.HSeparator()
+> >
+> >       def set_config_machine_layout(self, show_progress_bar = False):
+> > @@ -160,7 +166,7 @@ class ImageConfigurationPage (HobPage):
+> >           self.gtable.attach(self.layer_button, 12, 36, 6, 10)
+> >           self.gtable.attach(self.layer_info_icon, 36, 40, 6, 9)
+> >           if show_progress_bar == True:
+> > -            self.gtable.attach(self.progress_bar, 0, 40, 13, 17)
+> > +            self.gtable.attach(self.progress_box, 0, 40, 13, 17)
+> >           self.gtable.attach(self.machine_separator, 0, 40, 12, 13)
+> >
+> >       def create_config_baseimg(self):
+> > @@ -242,8 +248,14 @@ class ImageConfigurationPage (HobPage):
+> >
+> >           return button_box
+> >
+> > +    def stop_button_clicked_cb(self, button):
+> > +        self.builder.stop_parse()
+> > +
+> >       def machine_combo_changed_cb(self, machine_combo):
+> >           combo_item = machine_combo.get_active_text()
+> > +        if not combo_item:
+> > +            return
+> > +
+> >           self.builder.configuration.curr_mach = combo_item
+> >           # Do reparse recipes
+> >           self.builder.switch_page(self.builder.RCPPKGINFO_POPULATING)
+> 
 
->=20
-> Regards,
-> Andreas
 
---=20
-Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
 
---6TrnltStXW4iwmi0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.18 (GNU/Linux)
-
-iEYEARECAAYFAk9hMYUACgkQN1Ujt2V2gByRcwCfV3pPCeC+N6mpfaug/+LP83QX
-+NAAn2+3m3/QDCBxx589k72txgfqnxkE
-=K2+y
------END PGP SIGNATURE-----
-
---6TrnltStXW4iwmi0--
