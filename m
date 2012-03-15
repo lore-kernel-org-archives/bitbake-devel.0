@@ -1,24 +1,24 @@
-Received: from mga14.intel.com ([143.182.124.37])
+Received: from mga01.intel.com ([192.55.52.88])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1S86Ez-0006BC-3o
+	(envelope-from <dongxiao.xu@intel.com>) id 1S86F0-0006Bn-GT
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 15 Mar 2012 09:40:57 +0100
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga102.ch.intel.com with ESMTP; 15 Mar 2012 01:32:10 -0700
+	Thu, 15 Mar 2012 09:40:58 +0100
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga101.fm.intel.com with ESMTP; 15 Mar 2012 01:32:11 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="77811021"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="129245772"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by AZSMGA002.ch.intel.com with ESMTP; 15 Mar 2012 01:32:09 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 15 Mar 2012 01:32:11 -0700
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 15 Mar 2012 16:29:58 +0800
-Message-Id: <a1936ff544f21cde0765f24dc9b0af126ca98752.1331796806.git.dongxiao.xu@intel.com>
+Date: Thu, 15 Mar 2012 16:29:59 +0800
+Message-Id: <5ad7c54f4b8739b9ae097c68978093a53f950ed7.1331796806.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1331796806.git.dongxiao.xu@intel.com>
 References: <cover.1331796806.git.dongxiao.xu@intel.com>
 In-Reply-To: <cover.1331796806.git.dongxiao.xu@intel.com>
 References: <cover.1331796806.git.dongxiao.xu@intel.com>
-Subject: [PATCH 10/12] Hob: Add stop button for parsing progress
+Subject: [PATCH 11/12] Hob: improve recipe/package selection performance
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,120 +30,108 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 15 Mar 2012 08:40:57 -0000
+X-List-Received-Date: Thu, 15 Mar 2012 08:40:58 -0000
 
-Add a Stop button to allow user to quit the parsing process.
+Originally we will send selection chagned notification in each
+include_item and exclude_item, which is time cost since these are
+recursive functions and we may select hundreds of recipes/packages.
+
+The improvement is to move the notification from include_item and
+exclude_item to the place where the two functions are called.
+This could greatly improve the selection/deselection speed for recipe
+and package lists.
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 ---
- lib/bb/ui/crumbs/builder.py                |   22 +++++++++++++++++++++-
- lib/bb/ui/crumbs/hobeventhandler.py        |    3 +++
- lib/bb/ui/crumbs/imageconfigurationpage.py |   14 +++++++++++++-
- 3 files changed, 37 insertions(+), 2 deletions(-)
+ lib/bb/ui/crumbs/hoblistmodel.py         |   10 +++-------
+ lib/bb/ui/crumbs/packageselectionpage.py |    1 +
+ lib/bb/ui/crumbs/recipeselectionpage.py  |    1 +
+ 3 files changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
-index 1363475..1d255ac 100755
---- a/lib/bb/ui/crumbs/builder.py
-+++ b/lib/bb/ui/crumbs/builder.py
-@@ -443,7 +443,20 @@ class Builder(gtk.Window):
-         self.switch_page(self.MACHINE_SELECTION)
+diff --git a/lib/bb/ui/crumbs/hoblistmodel.py b/lib/bb/ui/crumbs/hoblistmodel.py
+index edd61b5..caf31bc 100644
+--- a/lib/bb/ui/crumbs/hoblistmodel.py
++++ b/lib/bb/ui/crumbs/hoblistmodel.py
+@@ -216,8 +216,6 @@ class PackageListModel(gtk.TreeStore):
  
-     def window_sensitive(self, sensitive):
--        self.set_sensitive(sensitive)
-+        self.image_configuration_page.machine_combo.set_sensitive(sensitive)
-+        self.image_configuration_page.image_combo.set_sensitive(sensitive)
-+        self.image_configuration_page.layer_button.set_sensitive(sensitive)
-+        self.image_configuration_page.layer_info_icon.set_sensitive(sensitive)
-+        self.image_configuration_page.toolbar.set_sensitive(sensitive)
-+        self.image_configuration_page.view_recipes_button.set_sensitive(sensitive)
-+        self.image_configuration_page.view_packages_button.set_sensitive(sensitive)
-+        self.image_configuration_page.config_build_button.set_sensitive(sensitive)
-+
-+        self.recipe_details_page.set_sensitive(sensitive)
-+        self.package_details_page.set_sensitive(sensitive)
-+        self.build_details_page.set_sensitive(sensitive)
-+        self.image_details_page.set_sensitive(sensitive)
-+
-         if sensitive:
-             self.get_root_window().set_cursor(gtk.gdk.Cursor(gtk.gdk.LEFT_PTR))
+         self[item_path][self.COL_INC] = True
+ 
+-        self.selection_change_notification()
+-
+         it = self.get_iter(item_path)
+ 
+         # If user explicitly selects a recipe, all its providing packages are selected.
+@@ -276,8 +274,6 @@ class PackageListModel(gtk.TreeStore):
+ 
+         self[item_path][self.COL_INC] = False
+ 
+-        self.selection_change_notification()
+-
+         item_name = self[item_path][self.COL_NAME]
+         item_rdep = self[item_path][self.COL_RDEP]
+         it = self.get_iter(item_path)
+@@ -343,6 +339,7 @@ class PackageListModel(gtk.TreeStore):
+             else:
+                 left.append(pn)
+ 
++        self.selection_change_notification()
+         return left
+ 
+     def get_selected_packages(self):
+@@ -604,7 +601,6 @@ class RecipeListModel(gtk.ListStore):
+         item_deps = self[item_path][self.COL_DEPS]
+ 
+         self[item_path][self.COL_INC] = True
+-        self.selection_change_notification()
+ 
+         item_bin = self[item_path][self.COL_BINB].split(', ')
+         if binb and not binb in item_bin:
+@@ -642,8 +638,6 @@ class RecipeListModel(gtk.ListStore):
+ 
+         self[item_path][self.COL_INC] = False
+ 
+-        self.selection_change_notification()
+-
+         item_name = self[item_path][self.COL_NAME]
+         item_deps = self[item_path][self.COL_DEPS]
+         if item_deps:
+@@ -703,6 +697,7 @@ class RecipeListModel(gtk.ListStore):
+                 path = self.pn_path[pn]
+                 self.include_item(item_path=path,
+                                   binb="User Selected")
++        self.selection_change_notification()
+ 
+     def get_selected_image(self):
+         it = self.get_iter_first()
+@@ -724,3 +719,4 @@ class RecipeListModel(gtk.ListStore):
+         self.include_item(item_path=path,
+                           binb="User Selected",
+                           image_contents=True)
++        self.selection_change_notification()
+diff --git a/lib/bb/ui/crumbs/packageselectionpage.py b/lib/bb/ui/crumbs/packageselectionpage.py
+index 0427fe2..4fb199e 100755
+--- a/lib/bb/ui/crumbs/packageselectionpage.py
++++ b/lib/bb/ui/crumbs/packageselectionpage.py
+@@ -206,6 +206,7 @@ class PackageSelectionPage (HobPage):
          else:
-@@ -482,6 +495,10 @@ class Builder(gtk.Window):
-         fraction = 0
-         if message["eventname"] == "TreeDataPreparationStarted":
-             fraction = 0.6 + fraction
-+            self.image_configuration_page.stop_button.set_sensitive(False)
-+        else:
-+            self.image_configuration_page.stop_button.set_sensitive(True)
-+
-         self.image_configuration_page.update_progress_bar(message["title"], fraction)
+             self.package_model.exclude_item(item_path=path)
  
-     def handler_parsing_cb(self, handler, message):
-@@ -836,6 +853,9 @@ class Builder(gtk.Window):
-     def show_configuration(self):
-         self.switch_page(self.BASEIMG_SELECTED)
++        self.refresh_selection()
+         self.builder.window_sensitive(True)
  
-+    def stop_parse(self):
-+        self.handler.cancel_parse()
-+
-     def stop_build(self):
-         if self.stopping:
-             lbl = "<b>Force Stop build?</b>\nYou've already selected Stop once,"
-diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
-index cd25754..790e2ef 100644
---- a/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -371,6 +371,9 @@ class HobHandler(gobject.GObject):
-         self.commands_async = []
-         self.building = False
+     def table_toggled_cb(self, table, cell, view_path, toggled_columnid, view_tree):
+diff --git a/lib/bb/ui/crumbs/recipeselectionpage.py b/lib/bb/ui/crumbs/recipeselectionpage.py
+index 234734c..50d4363 100755
+--- a/lib/bb/ui/crumbs/recipeselectionpage.py
++++ b/lib/bb/ui/crumbs/recipeselectionpage.py
+@@ -202,6 +202,7 @@ class RecipeSelectionPage (HobPage):
+         else:
+             self.recipe_model.exclude_item(item_path=path)
  
-+    def cancel_parse(self):
-+        self.server.runCommand(["stateStop"])
-+
-     def cancel_build(self, force=False):
-         if force:
-             # Force the cooker to stop as quickly as possible
-diff --git a/lib/bb/ui/crumbs/imageconfigurationpage.py b/lib/bb/ui/crumbs/imageconfigurationpage.py
-index f386281..a73eab1 100644
---- a/lib/bb/ui/crumbs/imageconfigurationpage.py
-+++ b/lib/bb/ui/crumbs/imageconfigurationpage.py
-@@ -150,7 +150,13 @@ class ImageConfigurationPage (HobPage):
-         markup += "poky-ref-manual.html#usingpoky-changes-layers\">reference manual</a>."
-         self.layer_info_icon = HobInfoButton(markup, self.get_parent())
++        self.refresh_selection()
+         self.builder.window_sensitive(True)
  
-+        self.progress_box = gtk.HBox(False, 6)
-         self.progress_bar = HobProgressBar()
-+        self.progress_box.pack_start(self.progress_bar, expand=True, fill=True)
-+        self.stop_button = gtk.LinkButton("Stop the parsing process", "Stop")
-+        self.stop_button.connect("clicked", self.stop_button_clicked_cb)
-+        self.progress_box.pack_end(self.stop_button, expand=False, fill=False)
-+
-         self.machine_separator = gtk.HSeparator()
- 
-     def set_config_machine_layout(self, show_progress_bar = False):
-@@ -160,7 +166,7 @@ class ImageConfigurationPage (HobPage):
-         self.gtable.attach(self.layer_button, 12, 36, 6, 10)
-         self.gtable.attach(self.layer_info_icon, 36, 40, 6, 9)
-         if show_progress_bar == True:
--            self.gtable.attach(self.progress_bar, 0, 40, 13, 17)
-+            self.gtable.attach(self.progress_box, 0, 40, 13, 17)
-         self.gtable.attach(self.machine_separator, 0, 40, 12, 13)
- 
-     def create_config_baseimg(self):
-@@ -242,8 +248,14 @@ class ImageConfigurationPage (HobPage):
- 
-         return button_box
- 
-+    def stop_button_clicked_cb(self, button):
-+        self.builder.stop_parse()
-+
-     def machine_combo_changed_cb(self, machine_combo):
-         combo_item = machine_combo.get_active_text()
-+        if not combo_item:
-+            return
-+
-         self.builder.configuration.curr_mach = combo_item
-         # Do reparse recipes
-         self.builder.switch_page(self.builder.RCPPKGINFO_POPULATING)
+     def table_toggled_cb(self, table, cell, view_path, toggled_columnid, view_tree):
 -- 
 1.7.4.1
 
