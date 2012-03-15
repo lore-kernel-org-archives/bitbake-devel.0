@@ -1,27 +1,39 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mail-wi0-f177.google.com ([209.85.212.177])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1S7yBp-0000so-PD
+	(envelope-from <martin.jansa@gmail.com>) id 1S7yHV-0000wM-Nm
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 15 Mar 2012 01:05:10 +0100
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 14 Mar 2012 16:56:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="117778730"
-Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
-	([10.239.36.11])
-	by orsmga001.jf.intel.com with ESMTP; 14 Mar 2012 16:56:22 -0700
-From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
-To: Joshua Lock <josh@linux.intel.com>
-In-Reply-To: <4F60F378.6070206@linux.intel.com>
-References: <cover.1331716896.git.dongxiao.xu@intel.com>
-	<b2f277bf2d1de5aff3f9ef5be9cd3a9c81897852.1331716896.git.dongxiao.xu@intel.com>
-	<4F60F378.6070206@linux.intel.com>
-Date: Thu, 15 Mar 2012 07:54:27 +0800
-Message-ID: <1331769267.1855.1.camel@dongxiao-osel>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.32.2 
+	Thu, 15 Mar 2012 01:11:01 +0100
+Received: by wibhj13 with SMTP id hj13so3029504wib.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 14 Mar 2012 17:02:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-disposition:in-reply-to:user-agent;
+	bh=cV/jjEFOo56aK3nrA6mmQUUtuwHBX8wXYrlM8N5PolI=;
+	b=oumxgBj/1wwmgUL6Fjccs8dGXCEtuIGy3/tqMRUV0zvpsiclMBO5WO/NsD4Hz8fpA3
+	kSBmdOiKu5hY5z+2giQ/GKZ1tRYW4Fc7u5i6D3/fhoPP4S58Ag/iYlErbGD/Tw/r1q22
+	ZoqBC6wQ2IReKNQZvnFX0FoAyzFcWL6/ZJh0pgi/6OC5JZMYTxgE4xNx6Wd4OZP0Vke3
+	2ghd1wgLzjLF7CBSCdrgwgzyM9V86BfeSukyU1G2X3DfbaWASjxVEhHEKlQaqWBKesoM
+	teZiKlFIJivZojC8/Z7sX9O48XEAkRAdyesvCFlPh5rl1SG/47JpQTVQ4o9pKA42oFx/
+	z5Dw==
+Received: by 10.180.104.137 with SMTP id ge9mr10544616wib.20.1331769736020;
+	Wed, 14 Mar 2012 17:02:16 -0700 (PDT)
+Received: from localhost ([94.230.152.246])
+	by mx.google.com with ESMTPS id w10sm795080wiy.3.2012.03.14.17.02.14
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Wed, 14 Mar 2012 17:02:15 -0700 (PDT)
+Date: Thu, 15 Mar 2012 01:02:13 +0100
+From: Martin Jansa <martin.jansa@gmail.com>
+To: Andreas Oberritter <obi@opendreambox.org>
+Message-ID: <20120315000213.GA4973@jama.jama.net>
+References: <4F610F03.1070201@opendreambox.org>
+	<20120314225418.GB3823@jama.jama.net>
+	<4F612F77.5040303@opendreambox.org>
+MIME-Version: 1.0
+In-Reply-To: <4F612F77.5040303@opendreambox.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 11/11] Hob: improve recipe/package selection performance
+Subject: Re: PREFERRED_VERSION and wildcards
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,130 +45,101 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 15 Mar 2012 00:05:10 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 15 Mar 2012 00:11:01 -0000
+X-Groupsio-MsgNum: 1273
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
+Content-Disposition: inline
 
-On Wed, 2012-03-14 at 12:37 -0700, Joshua Lock wrote:
-> 
-> On 14/03/12 02:26, Dongxiao Xu wrote:
-> > Originally we will send selection chagned notification in each
-> > include_item and exclude_item, which is time cost since these are
-> > recursive functions and we may select hundreds of recipes/packages.
-> >
-> > The improvement is to move the notification from include_item and
-> > exclude_item to the place where the two functions are called.
-> > This could greatly improve the selection/deselection speed for recipe
-> > and package lists.
-> 
-> Awesome! So instead of sending the change notification for each 
-> included/excluded item with this change the signal will be sent once 
-> when a set of changes are made. Right?
+--6TrnltStXW4iwmi0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, you are right. Now the signal only emits once where a bunch of
-changes happen.
+On Thu, Mar 15, 2012 at 12:53:27AM +0100, Andreas Oberritter wrote:
+> On 14.03.2012 23:54, Martin Jansa wrote:
+> > On Wed, Mar 14, 2012 at 10:34:59PM +0100, Andreas Oberritter wrote:
+> >> Hi,
+> >>
+> >> I just tried using wildcards, like it's done for gcc, e.g.:
+> >>
+> >> PREFERRED_VERSION_foo =3D "1.2%"
+> >>
+> >> Now, if I have two foo recipes, foo_1.2.1.bb and foo_1.2.3.bb, in the
+> >> same directory, then Bitbake always chooses 1.2.1 instead of the one
+> >> with the higher version number. Does bitbake always choose the first
+> >> matching version it can find? Is this a general limitation of wildcard=
+s,
+> >> or is this a problem that can get corrected? I'd expect it to choose t=
+he
+> >> highest matching version.
+> >=20
+> > If you want highest then why do you specify P_V at all? or are those
+> > 1.2% foo with e.g. negative D_P? or is there 1.3 you don't want?
+>=20
+> Yes, I'd like to prefer 1.2.x over higher versions, say 1.3.x, which
+> coexist in the same directory, i.e. prefer stable over development versio=
+ns.
 
-Thanks,
-Dongxiao
+Ah, OK.
+=20
+> > It will use first provider which matches (in highest usable prio/D_P gr=
+oup).
+> >=20
+> >     sortpkg_pn =3D sortPriorities(pn, dataCache, pkg_pn)
+> >     # Find the highest priority provider with a PREFERRED_VERSION set
+> >     (preferred_ver, preferred_file) =3D findPreferredProvider(pn, cfgDa=
+ta, dataCache, sortpkg_pn, item)
+> >     # Find the latest version of the highest priority provider
+> >     (latest, latest_f) =3D findLatestProvider(pn, cfgData, dataCache, s=
+ortpkg_pn[0])
+> >=20
+> >     if preferred_file is None:
+> >         preferred_file =3D latest_f
+> >         preferred_ver =3D latest
+> >=20
+> > It was added mostly to cover use case with e.g. 1.2+svnr1337 or 1.2+git=
+rCAFEBABE where=20
+> > you don't care about exact revision, but you know that you want 1.2 fro=
+m scm (and there
+> > is just one which matches).
+>=20
+> I see. I must admit that I don't really understand how the code quoted
+> above works.
+>=20
+> > See this thread for details:
+> > http://lists.linuxtogo.org/pipermail/bitbake-devel/2009-September/00045=
+8.html
+>=20
+> OK, Now I understand the original intention, but its behaviour doesn't
+> seem to be what you'd intuitively expect. Well, at least not what I'd
+> expect. Would it be hard to extend the code to find the highest matching
+> version instead of the first one? This wouldn't have negative effects on
+> your use case.
 
-> 
-> >
-> > Signed-off-by: Dongxiao Xu<dongxiao.xu@intel.com>
-> 
-> Signed-off-by: Joshua Lock <josh@linux.intel.com>
-> 
-> > ---
-> >   lib/bb/ui/crumbs/hoblistmodel.py         |   10 +++-------
-> >   lib/bb/ui/crumbs/packageselectionpage.py |    1 +
-> >   lib/bb/ui/crumbs/recipeselectionpage.py  |    1 +
-> >   3 files changed, 5 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/lib/bb/ui/crumbs/hoblistmodel.py b/lib/bb/ui/crumbs/hoblistmodel.py
-> > index edd61b5..caf31bc 100644
-> > --- a/lib/bb/ui/crumbs/hoblistmodel.py
-> > +++ b/lib/bb/ui/crumbs/hoblistmodel.py
-> > @@ -216,8 +216,6 @@ class PackageListModel(gtk.TreeStore):
-> >
-> >           self[item_path][self.COL_INC] = True
-> >
-> > -        self.selection_change_notification()
-> > -
-> >           it = self.get_iter(item_path)
-> >
-> >           # If user explicitly selects a recipe, all its providing packages are selected.
-> > @@ -276,8 +274,6 @@ class PackageListModel(gtk.TreeStore):
-> >
-> >           self[item_path][self.COL_INC] = False
-> >
-> > -        self.selection_change_notification()
-> > -
-> >           item_name = self[item_path][self.COL_NAME]
-> >           item_rdep = self[item_path][self.COL_RDEP]
-> >           it = self.get_iter(item_path)
-> > @@ -343,6 +339,7 @@ class PackageListModel(gtk.TreeStore):
-> >               else:
-> >                   left.append(pn)
-> >
-> > +        self.selection_change_notification()
-> >           return left
-> >
-> >       def get_selected_packages(self):
-> > @@ -604,7 +601,6 @@ class RecipeListModel(gtk.ListStore):
-> >           item_deps = self[item_path][self.COL_DEPS]
-> >
-> >           self[item_path][self.COL_INC] = True
-> > -        self.selection_change_notification()
-> >
-> >           item_bin = self[item_path][self.COL_BINB].split(', ')
-> >           if binb and not binb in item_bin:
-> > @@ -642,8 +638,6 @@ class RecipeListModel(gtk.ListStore):
-> >
-> >           self[item_path][self.COL_INC] = False
-> >
-> > -        self.selection_change_notification()
-> > -
-> >           item_name = self[item_path][self.COL_NAME]
-> >           item_deps = self[item_path][self.COL_DEPS]
-> >           if item_deps:
-> > @@ -703,6 +697,7 @@ class RecipeListModel(gtk.ListStore):
-> >                   path = self.pn_path[pn]
-> >                   self.include_item(item_path=path,
-> >                                     binb="User Selected")
-> > +        self.selection_change_notification()
-> >
-> >       def get_selected_image(self):
-> >           it = self.get_iter_first()
-> > @@ -724,3 +719,4 @@ class RecipeListModel(gtk.ListStore):
-> >           self.include_item(item_path=path,
-> >                             binb="User Selected",
-> >                             image_contents=True)
-> > +        self.selection_change_notification()
-> > diff --git a/lib/bb/ui/crumbs/packageselectionpage.py b/lib/bb/ui/crumbs/packageselectionpage.py
-> > index 0427fe2..4fb199e 100755
-> > --- a/lib/bb/ui/crumbs/packageselectionpage.py
-> > +++ b/lib/bb/ui/crumbs/packageselectionpage.py
-> > @@ -206,6 +206,7 @@ class PackageSelectionPage (HobPage):
-> >           else:
-> >               self.package_model.exclude_item(item_path=path)
-> >
-> > +        self.refresh_selection()
-> >           self.builder.window_sensitive(True)
-> >
-> >       def table_toggled_cb(self, table, cell, view_path, toggled_columnid, view_tree):
-> > diff --git a/lib/bb/ui/crumbs/recipeselectionpage.py b/lib/bb/ui/crumbs/recipeselectionpage.py
-> > index 234734c..50d4363 100755
-> > --- a/lib/bb/ui/crumbs/recipeselectionpage.py
-> > +++ b/lib/bb/ui/crumbs/recipeselectionpage.py
-> > @@ -202,6 +202,7 @@ class RecipeSelectionPage (HobPage):
-> >           else:
-> >               self.recipe_model.exclude_item(item_path=path)
-> >
-> > +        self.refresh_selection()
-> >           self.builder.window_sensitive(True)
-> >
-> >       def table_toggled_cb(self, table, cell, view_path, toggled_columnid, view_tree):
-> 
+Agreed, but if someone starts working on it, then we should discuss
+first how to properly fix D_P across multiple layers, because I belive
+that it's also in those 5 quoted lines.
 
+Cheers,
 
+>=20
+> Regards,
+> Andreas
 
+--=20
+Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
 
+--6TrnltStXW4iwmi0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.18 (GNU/Linux)
+
+iEYEARECAAYFAk9hMYUACgkQN1Ujt2V2gByRcwCfV3pPCeC+N6mpfaug/+LP83QX
++NAAn2+3m3/QDCBxx589k72txgfqnxkE
+=K2+y
+-----END PGP SIGNATURE-----
+
+--6TrnltStXW4iwmi0--
