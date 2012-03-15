@@ -1,30 +1,28 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1S88Dw-0000Ia-1W for bitbake-devel@lists.openembedded.org;
-	Thu, 15 Mar 2012 11:48:00 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2FAa3ZQ020022;
-	Thu, 15 Mar 2012 10:36:03 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 18276-06; Thu, 15 Mar 2012 10:35:59 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2FAZu0C020016
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Thu, 15 Mar 2012 10:35:57 GMT
-Message-ID: <1331807755.18586.71.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Dongxiao Xu <dongxiao.xu@intel.com>
-Date: Thu, 15 Mar 2012 10:35:55 +0000
-In-Reply-To: <cover.1331796806.git.dongxiao.xu@intel.com>
-References: <cover.1331796806.git.dongxiao.xu@intel.com>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
+Received: from mga09.intel.com ([134.134.136.24])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <josh@linux.intel.com>) id 1S8Ev2-0001Qa-HB
+	for bitbake-devel@lists.openembedded.org;
+	Thu, 15 Mar 2012 18:56:56 +0100
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 15 Mar 2012 10:48:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="118024335"
+Received: from unknown (HELO [10.255.15.198]) ([10.255.15.198])
+	by orsmga001.jf.intel.com with ESMTP; 15 Mar 2012 10:47:07 -0700
+Message-ID: <4F622B1B.9050505@linux.intel.com>
+Date: Thu, 15 Mar 2012 10:47:07 -0700
+From: Joshua Lock <josh@linux.intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:10.0.1) Gecko/20120216 Thunderbird/10.0.1
+MIME-Version: 1.0
+To: "Xu, Dongxiao" <dongxiao.xu@intel.com>
+References: <cover.1331716896.git.dongxiao.xu@intel.com>
+	<c30b412003be68dd9c060e2d227f85232e4492ff.1331716896.git.dongxiao.xu@intel.com>
+	<4F60F38B.40506@linux.intel.com>
+	<1331791328.1855.21.camel@dongxiao-osel>
+In-Reply-To: <1331791328.1855.21.camel@dongxiao-osel>
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 00/12 v2][PULL] Hob: Functionality and GUI Fixes
+Subject: Re: [PATCH 04/11] Hob: Fix the image installation dependency
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,47 +34,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 15 Mar 2012 10:48:00 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 15 Mar 2012 17:56:56 -0000
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2012-03-15 at 16:29 +0800, Dongxiao Xu wrote:
-> Hi Richard,
-> 
-> This is the second pull request for Hob functionality and GUI fixes, please help to review and pull.
-> 
-> Changes from v1:
-> 1) Modify the Box padding according to Josh's comments.
-> 2) Add a new patch which fixes all Box's padding values in Hob code.
-> 
-> Thanks,
-> Dongxiao
-> 
-> The following changes since commit 2d56dc7b1f0d186e14c4c8a949b280b6b3fc31de:
-> 
->   codeparser: Call intern over the set contents for better cache performance (2012-03-12 02:22:34 +0000)
-> 
-> are available in the git repository at:
->   git://git.pokylinux.org/poky-contrib dxu4/hob-bugfix
->   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob-bugfix
-> 
-> Dongxiao Xu (12):
->   Hob: add "Close" button to "BinbDialog"
->   Hob: Disable the handling of "NoProvider" event
->   cooker: add package rdepends and rrecommends info
->   Hob: Fix the image installation dependency
->   Hob: Remove the reset button in recipe/package selection page
->   Hob: Remove the indication in machine/base image combobox
->   Hob: Remove the recipe/package populated signal
->   Hob: Show recipe/package editing button after base image is selected
->   Hob: Emit command-failed signal even if error msg is None
->   Hob: Add stop button for parsing progress
->   Hob: improve recipe/package selection performance
->   Hob: Change Box's padding value
 
-These look good to me, merged to master, thanks.
 
-Richard
+On 14/03/12 23:02, Xu, Dongxiao wrote:
+> On Wed, 2012-03-14 at 12:37 -0700, Joshua Lock wrote:
+>>
+>> On 14/03/12 02:26, Dongxiao Xu wrote:
+>>> Get the image installation content from rdepends and rrecommends
+>>> variables.
+>>>
+>>> Signed-off-by: Dongxiao Xu<dongxiao.xu@intel.com>
+>>> ---
+>>>    lib/bb/ui/crumbs/hoblistmodel.py |    6 ++----
+>>>    1 files changed, 2 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/lib/bb/ui/crumbs/hoblistmodel.py b/lib/bb/ui/crumbs/hoblistmodel.py
+>>> index 0b7c0cb..0378828 100644
+>>> --- a/lib/bb/ui/crumbs/hoblistmodel.py
+>>> +++ b/lib/bb/ui/crumbs/hoblistmodel.py
+>>> @@ -546,9 +546,7 @@ class RecipeListModel(gtk.ListStore):
+>>>                group = event_model["pn"][item]["section"]
+>>>                install = []
+>>>
+>>> -            depends = event_model["depends"].get(item, [])
+>>> -            rdepends = event_model["rdepends-pn"].get(item, [])
+>>> -            depends = depends + rdepends
+>>> +            depends = event_model["depends"].get(item, []) + event_model["rdepends-pn"].get(item, [])
+>>>
+>>>                if ('task-' in name):
+>>>                    if ('lib32-' in name or 'lib64-' in name):
+>>> @@ -557,7 +555,7 @@ class RecipeListModel(gtk.ListStore):
+>>>                        atype = 'task'
+>>>                elif ('-image-' in name):
+>>>                    atype = 'image'
+>>> -                install = rdepends
+>>> +                install = event_model["rdepends-pkg"].get(item, []) + event_model["rrecs-pkg"].get(item, [])
+>>
+>> rrecs should be recommendations, not requirements - are we making the
+>> conscious decision to include all recommended packages when building
+>> with Hob?
+>
+> Per my understanding, RRECOMMENDS means that if the recommended package
+> do exists, then install it. Else if it doesn't, system will not report
+> error as missing dependency. (Correct me if it is wrong)
 
+I thought that the behaviour was dependant on which package backend you 
+use (RPM, etc.) but the Yocto documentation agrees with your assertion 
+so this  behaviour seems reasonable.
+
+Cheers,
+Joshua
+-- 
+Joshua '贾詡' Lock
+         Yocto Project "Johannes factotum"
+         Intel Open Source Technology Centre
 
 
