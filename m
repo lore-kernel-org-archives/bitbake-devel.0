@@ -1,24 +1,40 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mail-we0-f175.google.com ([74.125.82.175])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1S8T03-0005q2-FO
+	(envelope-from <martin.jansa@gmail.com>) id 1S8T3y-0006Mz-Fg
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 16 Mar 2012 09:59:03 +0100
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 16 Mar 2012 01:50:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="129677034"
-Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2012 01:50:15 -0700
-From: Dongxiao Xu <dongxiao.xu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 16 Mar 2012 16:48:13 +0800
-Message-Id: <c26e0c87c427dd8f602dbe925c40dc7f49a62873.1331887394.git.dongxiao.xu@intel.com>
-X-Mailer: git-send-email 1.7.4.1
-In-Reply-To: <cover.1331887394.git.dongxiao.xu@intel.com>
-References: <cover.1331887394.git.dongxiao.xu@intel.com>
-In-Reply-To: <cover.1331887394.git.dongxiao.xu@intel.com>
-References: <cover.1331887394.git.dongxiao.xu@intel.com>
-Subject: [PATCH 3/3] Hob: save CONF_VERSION and LCONF_VERSION into template
+	Fri, 16 Mar 2012 10:03:07 +0100
+Received: by wera1 with SMTP id a1so3713952wer.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 16 Mar 2012 01:54:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-disposition:in-reply-to:user-agent;
+	bh=+Doo/q86v3onVaqMWe7c88I7XKDLGlXdPk0AwIvLVH8=;
+	b=z9PRWWlr8jljXiHrJcgBnhEEIyI6wg3gM+mac/oORSj2BkimpaJbo57s7i+ixRzBeR
+	p9RDBoBcJhRCWGH6XfZOIqqlrRcLyOOIZcfFJ0xg+DXVlpQrwvtzm658/ithCHotCX7r
+	lKEHxj0YFv8S1TMQZFiXvQt0dhCudBTy4Vb08QtcYEYhQ6RcRTvUBEVI2vwYLOTFPd0O
+	2TmR8qE9maQYc/8JJO6N5+lA57ObDhVsveDlYDI0zsMFO1YrKe3YBfYZcvcikp0ltmdq
+	n/OTdQGiUUbNFpyk9v+0+xJ1WMvd6/WMkyZ6ncPdszRFaxZt+syKc8GtbnFTkgI9V/+S
+	XNXQ==
+Received: by 10.216.132.202 with SMTP id o52mr991480wei.106.1331888059203;
+	Fri, 16 Mar 2012 01:54:19 -0700 (PDT)
+Received: from localhost ([94.230.152.246])
+	by mx.google.com with ESMTPS id fw5sm12124085wib.0.2012.03.16.01.54.17
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Fri, 16 Mar 2012 01:54:18 -0700 (PDT)
+Date: Fri, 16 Mar 2012 09:54:16 +0100
+From: Martin Jansa <martin.jansa@gmail.com>
+To: "Xu, Dongxiao" <dongxiao.xu@intel.com>
+Message-ID: <20120316085416.GC3855@jama.jama.net>
+References: <4F48217F.6040406@opendreambox.org>
+	<1330153006.1957.10.camel@dongxiao-osel>
+	<CA+chaQc2o276Mxh8_3fnLTdqkUEZdb2476WEt7pY2=mitj1S1w@mail.gmail.com>
+	<1331886496.1977.8.camel@dongxiao-osel>
+MIME-Version: 1.0
+In-Reply-To: <1331886496.1977.8.camel@dongxiao-osel>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: cache broken in master
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,103 +46,235 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Mar 2012 08:59:03 -0000
+X-List-Received-Date: Fri, 16 Mar 2012 09:03:07 -0000
+X-Groupsio-MsgNum: 1308
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gr/z0/N6AeWAPJVB"
+Content-Disposition: inline
 
-To pass the sanity check, we need to define CONF_VERSION and
-LCONF_VERSION in local.conf and bblayers.conf.
+--gr/z0/N6AeWAPJVB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[YOCTO #2119]
+On Fri, Mar 16, 2012 at 04:28:16PM +0800, Xu, Dongxiao wrote:
+> On Sat, 2012-03-10 at 08:44 +0100, Martin Jansa wrote:
+> > On Sat, Feb 25, 2012 at 7:56 AM, Xu, Dongxiao <dongxiao.xu@intel.com> w=
+rote:
+> > > On Sat, 2012-02-25 at 00:47 +0100, Andreas Oberritter wrote:
+> > >> Hi,
+> > >>
+> > >> commit 1c1df03a6c4717bfd5faab144c4f8bbfcbae0b57 broke bitbake's
+> > >> dependency cache for me, i.e. it parses all recipes on every invocat=
+ion
+> > >> and always displays "(0 cached, 1269 parsed)". Deleting tmp/cache di=
+dn't
+> > >> help. Reverting this commit restores the functionality.
+> > >
+> > > Hi Andreas,
+> > >
+> > > Sorry for the inconvenience that this commit brought to you.
+> > >
+> > > Could you help to try the following and send me your "/tmp/1.log
+> > > and /tmp/2.log"?
+> > >
+> > > 1) apply the attached "cache_debug.patch"
+> > > 2) remove tmp/cache
+> > > 3) bitbake -p &> /tmp/1.log
+> > > 4) bitbake -p &> /tmp/2.log
+> > >
+> > > Besides, you can have a try of the attached cache_whitelist.patch to =
+see
+> > > if it fixes your problem.
+> >=20
+> > Today I noticed another cache rebuild, here is diff from parse output:
+>=20
+> Hi Martin,
+>=20
+> Could this issue be reproduced stably in your environment? Or it happens
+> occasionally?
 
-Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
----
- lib/bb/ui/crumbs/builder.py         |    6 ++++++
- lib/bb/ui/crumbs/hobeventhandler.py |    3 +++
- lib/bb/ui/crumbs/template.py        |   10 +++++-----
- 3 files changed, 14 insertions(+), 5 deletions(-)
+I can reproduce XAUTHORITY change very easily, will try to reproduce
+BBINCLUDED ordering change.
 
-diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
-index 1d255ac..d1b0b52 100755
---- a/lib/bb/ui/crumbs/builder.py
-+++ b/lib/bb/ui/crumbs/builder.py
-@@ -55,6 +55,8 @@ class Configuration:
-         self.image_overhead_factor = params['image_overhead_factor']
-         self.incompat_license = params["incompat_license"]
-         self.curr_sdk_machine = params["sdk_machine"]
-+        self.conf_version = params["conf_version"]
-+        self.lconf_version = params["lconf_version"]
-         self.extra_setting = {}
-         self.toolchain_build = False
-         self.image_fstypes = params["image_fstypes"].split()
-@@ -79,6 +81,8 @@ class Configuration:
-         # image_overhead_factor is read-only.
-         self.incompat_license = template.getVar("INCOMPATIBLE_LICENSE")
-         self.curr_sdk_machine = template.getVar("SDKMACHINE")
-+        self.conf_version = template.getVar("CONF_VERSION")
-+        self.lconf_version = template.getVar("LCONF_VERSION")
-         self.extra_setting = eval(template.getVar("EXTRA_SETTING"))
-         self.toolchain_build = eval(template.getVar("TOOLCHAIN_BUILD"))
-         self.image_fstypes = template.getVar("IMAGE_FSTYPES").split()
-@@ -105,6 +109,8 @@ class Configuration:
-         template.setVar("IMAGE_EXTRA_SPACE", self.image_extra_size)
-         template.setVar("INCOMPATIBLE_LICENSE", self.incompat_license)
-         template.setVar("SDKMACHINE", self.curr_sdk_machine)
-+        template.setVar("CONF_VERSION", self.conf_version)
-+        template.setVar("LCONF_VERSION", self.lconf_version)
-         template.setVar("EXTRA_SETTING", self.extra_setting)
-         template.setVar("TOOLCHAIN_BUILD", self.toolchain_build)
-         template.setVar("IMAGE_FSTYPES", " ".join(self.image_fstypes).lstrip(" "))
-diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
-index 790e2ef..e24c340 100644
---- a/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -460,4 +460,7 @@ class HobHandler(gobject.GObject):
- 
-         # walkaround
-         params["image_types"] = " ".join(hcc.SUPPORTED_IMAGE_TYPES.keys()).lstrip(" ")
-+
-+        params["conf_version"] = self.server.runCommand(["getVariable", "CONF_VERSION"]) or ""
-+        params["lconf_version"] = self.server.runCommand(["getVariable", "LCONF_VERSION"]) or ""
-         return params
-diff --git a/lib/bb/ui/crumbs/template.py b/lib/bb/ui/crumbs/template.py
-index d028354..a03063c 100644
---- a/lib/bb/ui/crumbs/template.py
-+++ b/lib/bb/ui/crumbs/template.py
-@@ -65,7 +65,7 @@ class ConfigFile(File):
-         if header:
-             self.header = header
-         else:
--            self.header = "# Config generated by the HOB\n\n"
-+            self.header = "# Config generated by Hob\n\n"
-         self.dictionary = {}
- 
-     def setVar(self, var, val):
-@@ -94,7 +94,7 @@ class HobTemplateFile(ConfigFile):
-     This object does save or load hob specific file.
-     """
-     def __init__(self, pathfilename):
--        ConfigFile.__init__(self, pathfilename, ".hob", "# Hob Template generated by the HOB\n\n")
-+        ConfigFile.__init__(self, pathfilename, ".hob", "# Hob Template generated by Hob\n\n")
- 
-     def getVar(self, var):
-         if var in self.dictionary: 
-@@ -121,12 +121,12 @@ class RecipeFile(ConfigFile):
-     This object is for image bb file.
-     """
-     def __init__(self, pathfilename):
--        ConfigFile.__init__(self, pathfilename, ".bb", "# Recipe generated by the HOB\n\ninherit core-image\n")
-+        ConfigFile.__init__(self, pathfilename, ".bb", "# Recipe generated by Hob\n\ninherit core-image\n")
- 
- class TemplateMgr(gobject.GObject):
- 
--    __gLocalVars__ = ["MACHINE", "PACKAGE_CLASSES", "DISTRO", "DL_DIR", "SSTATE_DIR", "SSTATE_MIRROR", "PARALLEL_MAKE", "BB_NUMBER_THREAD"]
--    __gBBLayersVars__ = ["BBLAYERS"]
-+    __gLocalVars__ = ["MACHINE", "PACKAGE_CLASSES", "DISTRO", "DL_DIR", "SSTATE_DIR", "SSTATE_MIRROR", "PARALLEL_MAKE", "BB_NUMBER_THREAD", "CONF_VERSION"]
-+    __gBBLayersVars__ = ["BBLAYERS", "LCONF_VERSION"]
-     __gRecipeVars__ = ["DEPENDS", "IMAGE_INSTALL"]
- 
-     def __init__(self):
--- 
-1.7.4.1
+Cheers,
 
+> It seems that this kind of order change in variable values will also
+> impact the siggen result. Richard, do you have any comment on this one?
+>=20
+> Thanks,
+> Dongxiao
+>=20
+> >=20
+> > 3286c3286
+> > < XAUTHORITY: /root/.xauthljqB8X
+> > ---
+> > > XAUTHORITY: /root/.xauth1of3YX
+> > 3532c3532
+> > < PSEUDO_BUILD: 2
+> > ---
+> > > PSEUDO_BUILD: 0
+> > 5223c5222
+> > < _: /OE/shr-core/tmp-eglibc/sysroots/x86_64-linux/usr/bin/pseudo
+> > ---
+> > > _: /usr/bin/bitbake
+> >=20
+> > and long one BBINCLUDED where only order of some items was changed:
+> > @@ -21,13 +21,14 @@
+> >  /OE/shr-core/meta-smartphone/meta-shr/classes/shr-mirrors.bbclass
+> >  /OE/shr-core/openembedded-core/meta/conf/machine/include/tune-arm920t.=
+inc
+> >  /OE/shr-core/meta-smartphone/meta-openmoko/conf/machine/om-gta02.conf
+> > -/OE/shr-core/openembedded-core/meta/conf/bitbake.conf
+> >  /OE/shr-core/openembedded-core/meta/classes/package.bbclass
+> >  /OE/shr-core/openembedded-core/meta/conf/abi_version.conf
+> >  /OE/shr-core/meta-handheld/conf/layer.conf
+> >  /OE/shr-core/openembedded-core/meta/classes/license.bbclass
+> >  /OE/shr-core/meta-smartphone/meta-shr/conf/distro/include/preferred-sh=
+r-versions.inc
+> > +/OE/shr-core/meta-smartphone/meta-shr/conf/distro/shr.conf
+> >  /OE/shr-core/openembedded-core/meta/conf/distro/include/default-versio=
+ns.inc
+> > +/OE/shr-core/openembedded-core/meta/conf/bitbake.conf
+> >  /OE/shr-core/openembedded-core/meta/conf/distro/include/tcmode-default=
+=2Einc
+> >  /OE/shr-core/openembedded-core/meta/conf/machine/include/arm/arch-armv=
+4.inc
+> >  /OE/shr-core/meta-smartphone/meta-samsung/conf/layer.conf
+> > @@ -37,7 +38,6 @@
+> >  /OE/shr-core/openembedded-core/meta/conf/distro/defaultsetup.conf
+> >  /OE/shr-core/meta-jama/conf/layer.conf
+> >  /OE/shr-core/meta-openembedded/meta-gnome/conf/layer.conf
+> > -/OE/shr-core/meta-smartphone/meta-shr/conf/distro/shr.conf
+> >  /OE/shr-core/meta-smartphone/meta-aurora/conf/layer.conf
+> >  /OE/shr-core/openembedded-core/meta/classes/debian.bbclass
+> >  /OE/shr-core/openembedded-core/meta/conf/layer.conf
+> >=20
+> > 391c391
+> > < BBINCLUDED: /OE/shr-core/conf/local.conf
+> > /OE/shr-core/conf/local-builds.inc
+> > /OE/shr-core/openembedded-core/meta/classes/patch.bbclass
+> > /OE/shr-core/openembedded-core/meta/conf/machine-sdk/x86_64.conf
+> > /OE/shr-core/meta-smartphone/meta-palm/conf/layer.conf
+> > /OE/shr-core/openembedded-core/meta/conf/documentation.conf
+> > /OE/shr-core/meta-openembedded/meta-oe/conf/layer.conf
+> > /OE/shr-core/openembedded-core/meta/conf/distro/include/tclibc-eglibc.i=
+nc
+> > /OE/shr-core/openembedded-core/meta/classes/packagedata.bbclass
+> > /OE/shr-core/openembedded-core/meta/conf/distro/include/default-provide=
+rs.inc
+> > /OE/shr-core/openembedded-core/meta/classes/package_ipk.bbclass
+> > /OE/shr-core/openembedded-core/meta/classes/logging.bbclass
+> > /OE/shr-core/openembedded-core/meta/classes/devshell.bbclass
+> > /OE/shr-core/openembedded-core/meta/classes/insane.bbclass
+> > /OE/shr-core/openembedded-core/meta/classes/sstate.bbclass
+> > /OE/shr-core/openembedded-core/meta/conf/distro/include/as-needed.inc
+> > /OE/shr-core/meta-openembedded/meta-gpe/conf/layer.conf
+> > /OE/shr-core/meta-smartphone/meta-htc/conf/layer.conf
+> > /OE/shr-core/meta-smartphone/meta-openmoko/conf/layer.conf
+> > /OE/shr-core/conf/bblayers.conf
+> > /OE/shr-core/meta-smartphone/meta-shr/classes/shr-mirrors.bbclass
+> > /OE/shr-core/openembedded-core/meta/conf/machine/include/tune-arm920t.i=
+nc
+> > /OE/shr-core/meta-smartphone/meta-openmoko/conf/machine/om-gta02.conf
+> > /OE/shr-core/openembedded-core/meta/conf/bitbake.conf
+> > /OE/shr-core/openembedded-core/meta/classes/package.bbclass
+> > /OE/shr-core/openembedded-core/meta/conf/abi_version.conf
+> > /OE/shr-core/meta-handheld/conf/layer.conf
+> > /OE/shr-core/openembedded-core/meta/classes/license.bbclass
+> > /OE/shr-core/meta-smartphone/meta-shr/conf/distro/include/preferred-shr=
+-versions.inc
+> > /OE/shr-core/openembedded-core/meta/conf/distro/include/default-version=
+s.inc
+> > /OE/shr-core/openembedded-core/meta/conf/distro/include/tcmode-default.=
+inc
+> > /OE/shr-core/openembedded-core/meta/conf/machine/include/arm/arch-armv4=
+=2Einc
+> > /OE/shr-core/meta-smartphone/meta-samsung/conf/layer.conf
+> > /OE/shr-core/conf/auto.conf
+> > /OE/shr-core/meta-smartphone/meta-fso/conf/layer.conf
+> > /OE/shr-core/openembedded-core/meta/classes/staging.bbclass
+> > /OE/shr-core/openembedded-core/meta/conf/distro/defaultsetup.conf
+> > /OE/shr-core/meta-jama/conf/layer.conf
+> > /OE/shr-core/meta-openembedded/meta-gnome/conf/layer.conf
+> > /OE/shr-core/meta-smartphone/meta-shr/conf/distro/shr.conf
+> > /OE/shr-core/meta-smartphone/meta-aurora/conf/layer.conf
+> > /OE/shr-core/openembedded-core/meta/classes/debian.bbclass
+> > /OE/shr-core/openembedded-core/meta/conf/layer.conf
+> > /OE/shr-core/openembedded-core/meta/conf/distro/include/world-broken.inc
+> > /OE/shr-core/meta-openembedded/meta-initramfs/conf/layer.conf
+> > /OE/shr-core/openembedded-core/meta/classes/prserv.bbclass
+> > /OE/shr-core/openembedded-core/meta/classes/rm_work.bbclass
+> > /OE/shr-core/openembedded-core/meta/conf/machine/include/arm/arch-arm.i=
+nc
+> > /OE/shr-core/openembedded-core/meta/classes/utility-tasks.bbclass
+> > /OE/shr-core/meta-openembedded/meta-efl/conf/distro/include/efl-from-sv=
+n.inc
+> > /OE/shr-core/openembedded-core/meta/conf/sanity.conf
+> > /OE/shr-core/openembedded-core/meta/classes/metadata_scm.bbclass
+> > /OE/shr-core/openembedded-core/meta/classes/utils.bbclass
+> > /OE/shr-core/openembedded-core/meta/classes/buildhistory.bbclass
+> > /OE/shr-core/openembedded-core/meta/conf/distro/include/default-distrov=
+ars.inc
+> > /OE/shr-core/openembedded-core/meta/classes/terminal.bbclass
+> > /OE/shr-core/openembedded-core/meta/classes/sanity.bbclass
+> > /OE/shr-core/conf/site.conf
+> > /OE/shr-core/openembedded-core/meta/classes/mirrors.bbclass
+> > /OE/shr-core/meta-smartphone/meta-nokia/conf/layer.conf
+> > /OE/shr-core/meta-openembedded/meta-oe/classes/blacklist.bbclass
+> > /OE/shr-core/meta-openembedded/meta-efl/conf/layer.conf
+> > /OE/shr-core/openembedded-core/meta/classes/base.bbclass
+> > /OE/shr-core/meta-mozilla/conf/layer.conf
+> > /OE/shr-core/openembedded-core/meta/conf/machine/include/arm/feature-ar=
+m-thumb.inc
+> > /OE/shr-core/meta-smartphone/meta-shr/conf/layer.conf
+> > ---
+> > > BBINCLUDED: /OE/shr-core/conf/local.conf /OE/shr-core/conf/local-buil=
+ds.inc /OE/shr-core/openembedded-core/meta/classes/patch.bbclass /OE/shr-co=
+re/openembedded-core/meta/conf/machine-sdk/x86_64.conf /OE/shr-core/meta-sm=
+artphone/meta-palm/conf/layer.conf /OE/shr-core/openembedded-core/meta/conf=
+/documentation.conf /OE/shr-core/meta-openembedded/meta-oe/conf/layer.conf =
+/OE/shr-core/openembedded-core/meta/conf/distro/include/tclibc-eglibc.inc /=
+OE/shr-core/openembedded-core/meta/classes/packagedata.bbclass /OE/shr-core=
+/openembedded-core/meta/conf/distro/include/default-providers.inc /OE/shr-c=
+ore/openembedded-core/meta/classes/package_ipk.bbclass /OE/shr-core/openemb=
+edded-core/meta/classes/logging.bbclass /OE/shr-core/openembedded-core/meta=
+/classes/devshell.bbclass /OE/shr-core/openembedded-core/meta/classes/insan=
+e.bbclass /OE/shr-core/openembedded-core/meta/classes/sstate.bbclass /OE/sh=
+r-core/openembedded-core/meta/conf/distro/include/as-needed.inc /OE/shr-cor=
+e/meta-openembedded/meta-gpe/conf/layer.conf /OE/shr-core/meta-smartphone/m=
+eta-htc/conf/layer.conf /OE/shr-core/meta-smartphone/meta-openmoko/conf/lay=
+er.conf /OE/shr-core/conf/bblayers.conf /OE/shr-core/meta-smartphone/meta-s=
+hr/classes/shr-mirrors.bbclass /OE/shr-core/openembedded-core/meta/conf/mac=
+hine/include/tune-arm920t.inc /OE/shr-core/meta-smartphone/meta-openmoko/co=
+nf/machine/om-gta02.conf /OE/shr-core/openembedded-core/meta/classes/packag=
+e.bbclass /OE/shr-core/openembedded-core/meta/conf/abi_version.conf /OE/shr=
+-core/meta-handheld/conf/layer.conf /OE/shr-core/openembedded-core/meta/cla=
+sses/license.bbclass /OE/shr-core/meta-smartphone/meta-shr/conf/distro/incl=
+ude/preferred-shr-versions.inc /OE/shr-core/meta-smartphone/meta-shr/conf/d=
+istro/shr.conf /OE/shr-core/openembedded-core/meta/conf/distro/include/defa=
+ult-versions.inc /OE/shr-core/openembedded-core/meta/conf/bitbake.conf /OE/=
+shr-core/openembedded-core/meta/conf/distro/include/tcmode-default.inc /OE/=
+shr-core/openembedded-core/meta/conf/machine/include/arm/arch-armv4.inc /OE=
+/shr-core/meta-smartph
+> >=20
+> > Cheers,
+>=20
+>=20
 
+--=20
+Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
 
+--gr/z0/N6AeWAPJVB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.18 (GNU/Linux)
+
+iEYEARECAAYFAk9i/7gACgkQN1Ujt2V2gBxvKQCeOniRp0BN2uquXLc1m51XhQeN
+fOAAmwdZDsGHwaMs8U2RdKbgxqK19tFT
+=20sH
+-----END PGP SIGNATURE-----
+
+--gr/z0/N6AeWAPJVB--
