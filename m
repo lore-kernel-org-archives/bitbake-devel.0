@@ -1,27 +1,42 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1S8Jj8-0007Qu-5j; Fri, 16 Mar 2012 00:04:58 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2FMuB05029135;
-	Thu, 15 Mar 2012 22:56:11 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 28249-08; Thu, 15 Mar 2012 22:56:07 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2FMu4dv029129
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Thu, 15 Mar 2012 22:56:05 GMT
-Message-ID: <1331852164.18586.166.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>, openembedded-core
-	<openembedded-core@lists.openembedded.org>
-Date: Thu, 15 Mar 2012 22:56:04 +0000
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: [PATCH] ui/knotty: Add a footer to the build output for interactive terminals
+Received: from mail-wg0-f43.google.com ([74.125.82.43])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <martin.jansa@gmail.com>) id 1S8Qzq-0003tV-US
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 16 Mar 2012 07:50:43 +0100
+Received: by wgbdr12 with SMTP id dr12so119819wgb.24
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 15 Mar 2012 23:41:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-disposition:in-reply-to:user-agent;
+	bh=g3EhnC2xheyEpwZmAaCHjahnum/7irjr9lF2hjGZENw=;
+	b=eMZS9o7+icCxnmExnd3mA7ab5SFUKXoW3nemYzC5eFBY+5tFOKC8B2W3FEbc2LAf5g
+	A6glpaum7H1bljiZSUV8/ovvKbKEk8N+qZZMFhIC62hRTVZi1CA44x5r77vbiuP60tfb
+	/3LQv9YWDNFtiCTOaAM7gA7r5YorktekQVjgbVE99V+pA9zStKMOTsR4VqXmlS9Fzqha
+	EICmVW6yezOuDNkaBjvtzg//0BGRarmVeDIfoyum7RSxRqkmob73ROtY8Nb8p0Vm+UwR
+	JHhZvi0u9a3QtuD2OH2njNlosl26txOG12huiIKM2oyViwWB5JGSbufv7UFeqzA6/zA1
+	dqUg==
+Received: by 10.180.87.8 with SMTP id t8mr32709122wiz.15.1331880115587;
+	Thu, 15 Mar 2012 23:41:55 -0700 (PDT)
+Received: from localhost ([94.230.152.246])
+	by mx.google.com with ESMTPS id ez18sm1076332wid.4.2012.03.15.23.41.53
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Thu, 15 Mar 2012 23:41:54 -0700 (PDT)
+Date: Fri, 16 Mar 2012 07:41:52 +0100
+From: Martin Jansa <martin.jansa@gmail.com>
+To: Denys Dmytriyenko <denis@denix.org>
+Message-ID: <20120316064152.GA3855@jama.jama.net>
+References: <4F605E85.7070904@windriver.com> <1331718176.18586.15.camel@ted>
+	<4F61926D.1060709@windriver.com> <4F619CD4.4090103@windriver.com>
+	<20120315080310.GC4973@jama.jama.net>
+	<4F61B1D0.2080306@windriver.com>
+	<20120315092122.GE4973@jama.jama.net>
+	<20120315181844.GE30363@denix.org>
+MIME-Version: 1.0
+In-Reply-To: <20120315181844.GE30363@denix.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Cc: Kang Kai <Kai.Kang@windriver.com>, bitbake-devel@lists.openembedded.org
+Subject: Re: How to identify WORKDIR?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,205 +48,152 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 15 Mar 2012 23:04:58 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 16 Mar 2012 06:50:43 -0000
+X-Groupsio-MsgNum: 1301
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Content-Disposition: inline
 
-I've sent this before, this is an updated version with several bugfixes
-and improvements. Its a major change but one I think people will like
-overall as I hear a lot of complaints about the verbose console
-messages. v0 never got complaints so I will merge this fairly quickly
-unless there are objections.
+--SLDf9lqlvOQaIe6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
----
-On terminals which support it, add summary information to the end of the
-build output about the number of tasks currently running and how many tasks
-we've run so far.
+On Thu, Mar 15, 2012 at 02:18:44PM -0400, Denys Dmytriyenko wrote:
+> On Thu, Mar 15, 2012 at 10:21:22AM +0100, Martin Jansa wrote:
+> > On Thu, Mar 15, 2012 at 05:09:36PM +0800, Kang Kai wrote:
+> > > On 2012???03???15??? 16:03, Martin Jansa wrote:
+> > > > On Thu, Mar 15, 2012 at 03:40:04PM +0800, Kang Kai wrote:
+> > > >> On 2012???03???15??? 14:55, Kang Kai wrote:
+> > > >>> On 2012???03???14??? 17:42, Richard Purdie wrote:
+> > > >>>> On Wed, 2012-03-14 at 17:01 +0800, Kang Kai wrote:
+> > > >>>>> Hi All,
+> > > >>>>>
+> > > >>>>> I write a script to clean up WORKDIR that remove the obsoleted
+> > > >>>>> packages' build directories.
+> > > >>>>> The script accept a argument as BUILDDIR and I use this clause =
+to
+> > > >>>>> identify the WORKDIR:
+> > > >>>>>
+> > > >>>>>        workdir =3D os.path.join(builddir, 'tmp/work')
+> > > >>>>>
+> > > >>>>> Then validate the workdir exists or not. It works for me but ha=
+rdcode
+> > > >>>>> here as Richard point out.
+> > > >>>>> So is there  a better way to get the WORKDIR here? Thanks.
+> > > >>>> I was thinking of something like:
+> > > >>>>
+> > > >>>> bitbake -e | grep ^WORKDIR
+> > > >> And the result is something like that:
+> > > >> WORKDIR=3D"/mnt/sda10/poky-all-platform/build-qemux86_64/tmp/work/=
+x86_64-poky-linux/bblayers-1.0-r0"
+> > > >>
+> > > >> Is it ok to remove 2 items seperated by slash at the end of string?
+> > > >> Right now is:
+> > > >> "/mnt/sda10/poky-all-platform/build-qemux86_64/tmp/work/"
+> > > > Aren't you looking for ^TMPDIR ?
+> > >=20
+> > > If use WORKDIR =3D TMPDIR/"work", it is still hard coding.
+> >=20
+> > Assuming 2 items at the end won't work for people using rm_old_work:
+> > http://git.openembedded.org/meta-micro/commit/?id=3Dfcf525654915edb9650=
+f1a6c2852f336366f8b2f
+> > or slightly different version:
+> > http://git.shr-project.org/git/?p=3Dmeta-smartphone.git;a=3Dblob;f=3Dme=
+ta-shr/classes/rm_old_work.bbclass
+>=20
+> Martin,
+>=20
+> Can you please point me to more details about this class - any background=
+ or=20
+> discussions... Thanks.
 
-This provides a summary at a glace of what the current state of the build is
-and what the build is currently doing which is lacking in the current UI.
+Hi,
 
-Also disable echo of characters on stdin since this corrupts the disable,
-particularly Crtl+C.
+Well it works better then rm_work with sstate and the original class is
+=66rom meta-micro (so maybe ask pb if you want more details, but the class
+is quite simple). I've just replaced last directory name because of this
+issue:
 
-The "waiting for X tasks" code can be merged into this code too since
-that is only useful on interactive terminals and this improves the
-readability of that output too.
+http://git.shr-project.org/git/?p=3Dmeta-smartphone.git;a=3Dcommit;h=3D0d4c=
+17de1ba7343d82bb10c311754e29d573c485
 
-Improvements since v0:
+Cheers,
 
-* The tasks are ordered in execution order.
-* The display is only updated when the list of tasks changes or there
-  is output above the footer.
-* Errors early in the init process don't corrupt the terminal
-* Running task x of y and package messages are suppressed from the console
+>=20
+> --=20
+> Denys
+>=20
+>=20
+> > And I think more people have different "tmp/" part e.g. default would be
+> > "tmp-eglibc/" (thanks to TCLIBCAPPEND
+> > meta/conf/distro/defaultsetup.conf:TMPDIR .=3D "${TCLIBCAPPEND}"), but =
+"work" is=20
+> > quite common.
+> >=20
+> > meta/conf/bitbake.conf:
+> > WORKDIR =3D "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PF}"
+> > meta-shr/classes/rm_old_work.bbclass:
+> > WORKDIR =3D "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${PF}"
+> > meta-micro/classes/rm_old_work.bbclass:
+> > WORKDIR =3D "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${=
+PV}-${PR}"
+> >=20
+> > Cheers,
+> >=20
+> > >=20
+> > > >> Regards,
+> > > >> Kai
+> > > >>
+> > > >>> If get WORKDIR in this way, I'll update the script with no argume=
+nt
+> > > >>> because the argument is useless to identify the WORKDIR.
+> > > >>>
+> > > >>> Regards,
+> > > >>> Kai
+> > > >>>> since you already call into bitbake in the script in question.
+> > > >>>>
+> > > >>>> Cheers,
+> > > >>>>
+> > > >>>> Richard
+> > > >>>>
+> > > >>>>
+> > > >>>
+> > > >>> _______________________________________________
+> > > >>> bitbake-devel mailing list
+> > > >>> bitbake-devel@lists.openembedded.org
+> > > >>> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
+> > > >>
+> > > >> _______________________________________________
+> > > >> bitbake-devel mailing list
+> > > >> bitbake-devel@lists.openembedded.org
+> > > >> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
+> > >=20
+> >=20
+> > --=20
+> > Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
+>=20
+>=20
+>=20
+> > _______________________________________________
+> > bitbake-devel mailing list
+> > bitbake-devel@lists.openembedded.org
+> > http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
+>=20
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index 14989d4..4a7e6b9 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -72,6 +72,26 @@ def pluralise(singular, plural, qty):
- 
- def main(server, eventHandler):
- 
-+    cuu = None
-+    stdinbackup = None
-+
-+    if interactive:
-+        import curses
-+        import termios
-+        import copy
-+        try:
-+            fd = sys.stdin.fileno()
-+            stdinbackup = termios.tcgetattr(fd)
-+            new = copy.deepcopy(stdinbackup)
-+            new[3] = new[3] & ~termios.ECHO
-+            termios.tcsetattr(fd, termios.TCSADRAIN, new)
-+            curses.setupterm()
-+            ed = curses.tigetstr("ed")
-+            if ed:
-+                cuu = curses.tigetstr("cuu")
-+        except:
-+            cuu = None
-+
-     # Get values of variables which control our output
-     includelogs = server.runCommand(["getVariable", "BBINCLUDELOGS"])
-     loglines = server.runCommand(["getVariable", "BBINCLUDELOGS_LINES"])
-@@ -115,8 +135,56 @@ def main(server, eventHandler):
-     errors = 0
-     warnings = 0
-     taskfailures = []
-+    main.footer_present = False
-+    main.lastpids = []
-+
-+    def updateFooter():
-+        if not cuu:
-+            return
-+        activetasks = helper.running_tasks
-+        failedtasks = helper.failed_tasks
-+        runningpids = helper.running_pids
-+        if main.footer_present and (main.lastpids == runningpids):
-+            return
-+        if main.footer_present:
-+            clearFooter()
-+        if not activetasks:
-+            return
-+        lines = 1
-+        tasks = []
-+        for t in runningpids:
-+            tasks.append("%s (pid %s)" % (activetasks[t]["title"], t))
-+
-+        if shutdown:
-+            print("Waiting for %s running tasks to finish:" % len(activetasks))
-+        else:
-+            print("Currently %s running tasks (%s of %s):" % (len(activetasks), helper.tasknumber_current, helper.tasknumber_total))
-+        for tasknum, task in enumerate(tasks):
-+            print("%s: %s" % (tasknum, task))
-+            lines = lines + 1
-+        main.footer_present = lines
-+        main.lastpids = runningpids[:]
-+
-+    def clearFooter():
-+        if main.footer_present:
-+            lines = main.footer_present
-+            sys.stdout.write(curses.tparm(cuu, lines))
-+            sys.stdout.write(curses.tparm(ed))
-+        main.footer_present = False
-+
-+    class InteractConsoleLogFilter(logging.Filter):
-+        def filter(self, record):
-+            if record.levelno == format.NOTE and (record.msg.startswith("Running") or record.msg.startswith("package ")):
-+                return False
-+            clearFooter()
-+            return True
-+
-+    if interactive:
-+        console.addFilter(InteractConsoleLogFilter())
-+
-     while True:
-         try:
-+            updateFooter()
-             event = eventHandler.waitEvent(0.25)
-             if event is None:
-                 if shutdown > 1:
-@@ -126,12 +194,6 @@ def main(server, eventHandler):
-             if isinstance(event, bb.runqueue.runQueueExitWait):
-                 if not shutdown:
-                     shutdown = 1
--            if shutdown and helper.needUpdate:
--                activetasks, failedtasks = helper.getTasks()
--                if activetasks:
--                    print("Waiting for %s active tasks to finish:" % len(activetasks))
--                    for tasknum, task in enumerate(activetasks):
--                        print("%s: %s (pid %s)" % (tasknum, activetasks[task]["title"], task))
- 
-             if isinstance(event, logging.LogRecord):
-                 if event.levelno >= format.ERROR:
-@@ -151,6 +213,7 @@ def main(server, eventHandler):
-                 return_value = 1
-                 logfile = event.logfile
-                 if logfile and os.path.exists(logfile):
-+                    clearFooter()
-                     print("ERROR: Logfile of failure stored in: %s" % logfile)
-                     if includelogs and not event.errprinted:
-                         print("Log data follows:")
-@@ -281,10 +344,12 @@ def main(server, eventHandler):
-             logger.error("Unknown event: %s", event)
- 
-         except EnvironmentError as ioerror:
-+            clearFooter()
-             # ignore interrupted io
-             if ioerror.args[0] == 4:
-                 pass
-         except KeyboardInterrupt:
-+            clearFooter()
-             if shutdown == 1:
-                 print("\nSecond Keyboard Interrupt, stopping...\n")
-                 server.runCommand(["stateStop"])
-@@ -315,4 +380,6 @@ def main(server, eventHandler):
-         if return_value == 0:
-             return_value = 1
- 
-+    if stdinbackup:
-+        termios.tcsetattr(fd, termios.TCSADRAIN, stdinbackup)
-     return return_value
-diff --git a/bitbake/lib/bb/ui/uihelper.py b/bitbake/lib/bb/ui/uihelper.py
-index c96f381..2c78695 100644
---- a/bitbake/lib/bb/ui/uihelper.py
-+++ b/bitbake/lib/bb/ui/uihelper.py
-@@ -23,6 +23,8 @@ class BBUIHelper:
-     def __init__(self):
-         self.needUpdate = False
-         self.running_tasks = {}
-+        # Running PIDs preserves the order tasks were executed in
-+        self.running_pids = []
-         self.failed_tasks = []
-         self.tasknumber_current = 0
-         self.tasknumber_total = 0
-@@ -30,16 +32,20 @@ class BBUIHelper:
-     def eventHandler(self, event):
-         if isinstance(event, bb.build.TaskStarted):
-             self.running_tasks[event.pid] = { 'title' : "%s %s" % (event._package, event._task) }
-+            self.running_pids.append(event.pid)
-             self.needUpdate = True
-         if isinstance(event, bb.build.TaskSucceeded):
-             del self.running_tasks[event.pid]
-+            self.running_pids.remove(event.pid)
-             self.needUpdate = True
-         if isinstance(event, bb.build.TaskFailedSilent):
-             del self.running_tasks[event.pid]
-+            self.running_pids.remove(event.pid)
-             # Don't add to the failed tasks list since this is e.g. a setscene task failure
-             self.needUpdate = True
-         if isinstance(event, bb.build.TaskFailed):
-             del self.running_tasks[event.pid]
-+            self.running_pids.remove(event.pid)
-             self.failed_tasks.append( { 'title' : "%s %s" % (event._package, event._task)})
-             self.needUpdate = True
-         if isinstance(event, bb.runqueue.runQueueTaskStarted):
+--=20
+Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
 
+--SLDf9lqlvOQaIe6s
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.18 (GNU/Linux)
 
+iEYEARECAAYFAk9i4LAACgkQN1Ujt2V2gBxcQQCbB83XOInJhiNBlaRBrSk5esP8
+frEAoJE+FBY5AakKBQ4d6x9B0/LaiHJB
+=jwcv
+-----END PGP SIGNATURE-----
 
+--SLDf9lqlvOQaIe6s--
