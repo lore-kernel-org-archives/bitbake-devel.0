@@ -1,24 +1,24 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1S8Yo7-0006wZ-EB
+	(envelope-from <shane.wang@intel.com>) id 1S8Yo8-0006wd-HC
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 16 Mar 2012 16:11:07 +0100
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 16 Mar 2012 08:02:19 -0700
+	Fri, 16 Mar 2012 16:11:09 +0100
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 16 Mar 2012 08:02:20 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="121681027"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="129774833"
 Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by orsmga002.jf.intel.com with ESMTP; 16 Mar 2012 08:02:18 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 16 Mar 2012 08:02:19 -0700
 From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 16 Mar 2012 23:10:16 +0800
-Message-Id: <acd17e9087460e8e37930d98fc446fde2809e699.1331910234.git.shane.wang@intel.com>
+Date: Fri, 16 Mar 2012 23:10:17 +0800
+Message-Id: <a3da790ea2d0b8119ecccc394c9817ddc68c68b8.1331910235.git.shane.wang@intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <8dafade95596191e9998acc05dcf7c34737d70c1.1331910234.git.shane.wang@intel.com>
 References: <8dafade95596191e9998acc05dcf7c34737d70c1.1331910234.git.shane.wang@intel.com>
 In-Reply-To: <cover.1331910234.git.shane.wang@intel.com>
 References: <cover.1331910234.git.shane.wang@intel.com>
-Subject: [PATCH 11/12] Hob: change HobNoteBook tab edge color from green to gray
+Subject: [PATCH 12/12] Hob: per UI design add refresh icon for building log
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,61 +30,311 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Mar 2012 15:11:07 -0000
+X-List-Received-Date: Fri, 16 Mar 2012 15:11:09 -0000
 
 From: Liming An <limingx.l.an@intel.com>
 
-To change the notebook tab pressed edge color from green to gray.
+To add the HobCellRendererPixbuf object which has the same feather as the gtk.CellRendererPixbuf and added the task-refresh stock icon which is an animation icon function.
 
 Signed-off-by: Liming An <limingx.l.an@intel.com>
 Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/hobcolor.py  |    2 ++
- bitbake/lib/bb/ui/crumbs/hobwidget.py |   13 ++++++++-----
- 2 files changed, 10 insertions(+), 5 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hobwidget.py    |  193 ++++++++++++++++++++++++++++++
+ bitbake/lib/bb/ui/crumbs/runningbuild.py |   20 +++-
+ 2 files changed, 208 insertions(+), 5 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/hobcolor.py b/bitbake/lib/bb/ui/crumbs/hobcolor.py
-index 402f022..f767d22 100644
---- a/bitbake/lib/bb/ui/crumbs/hobcolor.py
-+++ b/bitbake/lib/bb/ui/crumbs/hobcolor.py
-@@ -25,6 +25,8 @@ class HobColors:
-     PALE_RED     = "#ffaaaa"
-     GRAY         = "#aaaaaa"
-     LIGHT_GRAY   = "#dddddd"
-+    DEEP_GRAY    = "#7c7c77"
-+    SLIGHT_DARK  = "#5f5f5f"
-     DARK         = "#3c3b37"
-     BLACK        = "#000000"
-     LIGHT_ORANGE = "#f7a787"
 diff --git a/bitbake/lib/bb/ui/crumbs/hobwidget.py b/bitbake/lib/bb/ui/crumbs/hobwidget.py
-index dc0480a..d4ee94e 100644
+index d4ee94e..fee9935 100644
 --- a/bitbake/lib/bb/ui/crumbs/hobwidget.py
 +++ b/bitbake/lib/bb/ui/crumbs/hobwidget.py
-@@ -496,16 +496,19 @@ class HobTabBar(gtk.DrawingArea):
+@@ -53,6 +53,7 @@ class hic:
+     ICON_INFO_HOVER_FILE          = os.path.join(HOB_ICON_BASE_DIR, ('info/info_hover.png'))
+     ICON_INDI_CONFIRM_FILE        = os.path.join(HOB_ICON_BASE_DIR, ('indicators/confirmation.png'))
+     ICON_INDI_ERROR_FILE          = os.path.join(HOB_ICON_BASE_DIR, ('indicators/error.png'))
++    ICON_INDI_REFERENCE_FILE      = os.path.join(HOB_ICON_BASE_DIR, ('indicators/refresh.png'))
  
-         r = height / 10
-         if self.tab_pressed == True:
--            for xoff, yoff in [(1, 0), (2, 0)]:
--                cr.set_source_color(gtk.gdk.color_parse(HobColors.PALE_GREEN))
-+            for xoff, yoff, c1, c2 in [(1, 0, HobColors.SLIGHT_DARK, HobColors.DARK), (2, 0, HobColors.GRAY, HobColors.LIGHT_GRAY)]:
-+                cr.set_source_color(gtk.gdk.color_parse(c1))
-+                cr.move_to(x + xoff, y + height + yoff)
-+                cr.line_to(x + xoff, r + yoff)
-+                cr.arc(x + r + xoff, y + r + yoff, r, math.pi, 1.5*math.pi)
-                 cr.move_to(x + r + xoff, y + yoff)
-                 cr.line_to(x + width - r + xoff, y + yoff)
--                cr.arc(x + width - r+ xoff, y + r + yoff, r, 1.5*math.pi, 2*math.pi)
-+                cr.arc(x + width - r + xoff, y + r + yoff, r, 1.5*math.pi, 2*math.pi)
-+                cr.stroke()
-+                cr.set_source_color(gtk.gdk.color_parse(c2))
-                 cr.move_to(x + width + xoff, r + yoff)
-                 cr.line_to(x + width + xoff, y + height + yoff)
-                 cr.line_to(x + xoff, y + height + yoff)
--                cr.line_to(x + xoff, r + yoff)
--                cr.arc(x + r + xoff, y + r + yoff, r, math.pi, 1.5*math.pi)
-                 cr.stroke()
-             x = x + 2
-             y = y + 2
+ class hcc:
+ 
+@@ -687,3 +688,195 @@ class HobNotebook(gtk.VBox):
+         search.set_style(style)
+         search.set_text(self.search_name)
+         search.set_editable(False)
++
++class RefreshRuningController(gobject.GObject):
++    __gsignals__ = {
++            # emit when it completed a cycle
++            "refresh-cycle-completed":(gobject.SIGNAL_RUN_LAST, 
++                                    gobject.TYPE_NONE,
++                                    ()),
++    }
++    def __init__(self, widget=None, iter=None):
++        gobject.GObject.__init__(self)
++        self.timeout_id = None
++        self.current_angle_pos = 0.0
++        self.step_angle = 0.0
++        self.alpha = 1.0
++        self.tree_headers_height = 0
++        self.running_cell_areas = []
++
++    def is_active(self):
++        if self.timeout_id:
++            return True
++        else:
++            return False        
++
++    def reset(self):
++        self.force_stop(True)
++        self.current_angle_pos = 0.0
++        self.timeout_id = None
++        self.step_angle = 0.0 
++
++    ''' time_iterval: (1~1000)ms, which will be as the basic interval count for timer 
++        init_usrdata: the current data which related the progress-bar will be at
++        min_usrdata: the range of min of user data
++        max_usrdata: the range of max of user data
++        step: each step which you want to progress
++        Note: the init_usrdata should in the range of from min to max, and max should > min
++             step should < (max - min)
++    '''        
++    def start_run(self, time_iterval, init_usrdata, min_usrdata, max_usrdata, step, tree):
++        if (not time_iterval) or (not max_usrdata):
++            return
++        usr_range = (max_usrdata - min_usrdata) * 1.0
++        self.current_angle_pos = (init_usrdata * 1.0) / usr_range
++        self.step_angle = (step * 1) / usr_range
++        self.timeout_id = gobject.timeout_add(int(time_iterval),        
++        self.make_image_on_progressing_cb, tree)
++        self.tree_headers_height = self.get_treeview_headers_height(tree)
++
++    def force_stop(self, after_hide_or_not=False):
++        if self.timeout_id:
++            gobject.source_remove(self.timeout_id)
++            self.timeout_id = None
++        if self.running_cell_areas:
++            self.running_cell_areas = []
++
++    def on_draw_cb(self, pixbuf, cr, x, y, img_width, img_height, do_refresh=True):
++        if pixbuf:
++            r = max(img_width/2, img_height/2)
++            cr.translate(x + r, y + r)
++            if do_refresh:
++                cr.rotate(2 * math.pi * self.current_angle_pos)
++                cr.set_source_pixbuf(pixbuf, -img_width/2, -img_height/2)
++                # you can use the cr.paint() to replace cr.paint_with_alpha() when no need alpha
++                # we needed to change the alpha with the speed of running,              
++                if self.current_angle_pos < 0.3:
++                    self.alpha = 1.0 - self.step_angle
++                else:
++                    self.alpha = self.current_angle_pos
++                cr.paint_with_alpha(self.alpha)
++            else:
++                cr.set_source_pixbuf(pixbuf, -img_width/2, -img_height/2)
++                cr.paint()
++  
++    def get_treeview_headers_height(self, tree):
++        if tree and (tree.get_property("headers-visible") == True):
++            height = tree.get_allocation().height - tree.get_bin_window().get_size()[1]
++            return height
++        
++        return 0
++
++    def make_image_on_progressing_cb(self, tree):
++        self.current_angle_pos += self.step_angle
++        if (self.current_angle_pos >= 1):
++            self.current_angle_pos = self.step_angle
++            self.emit("refresh-cycle-completed")
++
++        for rect in self.running_cell_areas:
++            tree.queue_draw_area(rect.x, rect.y + self.tree_headers_height, rect.width, rect.height)
++
++        return True
++
++    def append_running_cell_area(self, cell_area):
++        if cell_area and (cell_area not in self.running_cell_areas):
++            self.running_cell_areas.append(cell_area)
++
++    def remove_running_cell_area(self, cell_area):
++        if cell_area in self.running_cell_areas:
++            self.running_cell_areas.remove(cell_area)
++        if not self.running_cell_areas:
++            self.reset()
++
++gobject.type_register(RefreshRuningController)
++
++class HobCellRendererPixbuf(gtk.GenericCellRenderer):
++    __gproperties__ = {
++       "icon-name": (gobject.TYPE_STRING, "setPixbufByStockName",
++      "set icon by specified stock name, and add the refresh animation icon 'task-refresh'", "", gobject.PARAM_READWRITE),
++       "stock-size": (gobject.TYPE_STRING, "setTheStockSize",
++      "set ICON_SIZE as 'DIALOG','BUTTON', 'MENU', 'DND', 'LARGE_TOOLBAR','SMALL_TOOL_BAR'", "", gobject.PARAM_READWRITE),
++    }
++    def __init__(self):
++        gtk.GenericCellRenderer.__init__(self)
++        self.control = RefreshRuningController()
++        self.cell_attr = {"icon-name":"", "stock-size":gtk.ICON_SIZE_DND}
++        # create default refrensh stock icon
++        self.set_pixbuf_to_stock_icon(self.create_default_pixbuf())
++
++    '''set property for exactly cell
++    '''
++    def do_set_property(self, pspec, value):
++        self.cell_attr[pspec.name] = value
++        if (pspec.name == "stock-size") and (value in [gtk.ICON_SIZE_BUTTON, gtk.ICON_SIZE_DND, \
++                                                       gtk.ICON_SIZE_DIALOG, gtk.ICON_SIZE_LARGE_TOOLBAR, \
++                                                       gtk.ICON_SIZE_MENU, gtk.ICON_SIZE_SMALL_TOOLBAR]):
++            self.cell_attr["stock-size"] = value
++
++    def do_get_property(self, pspec):
++        return self.cell_attr[pspec.name]
++
++    def reset(self):
++        pass
++
++    def create_default_pixbuf(self):
++        try:
++            pixbuf = gtk.gdk.pixbuf_new_from_file(
++                hic.ICON_INDI_REFERENCE_FILE
++            )    
++        except Exception, e:
++            print e.message
++            self.reset()
++            return None
++        return pixbuf
++
++    def set_pixbuf_to_stock_icon(self, pixbuf=None, stock_id="task-refresh"):
++        if pixbuf and stock_id and (gtk.icon_factory_lookup_default(stock_id) == None):
++            icon_factory = gtk.IconFactory()
++            icon_factory.add_default()
++            icon_factory.add('task-refresh',gtk.IconSet(pixbuf))
++            gtk.stock_add([('task-refresh', '_label', 0, 0, '')])
++
++            return icon_factory.lookup(stock_id)
++
++        return None
++
++    def get_pixbuf_from_stock_icon(self, widget, stock_id="", size=gtk.ICON_SIZE_DIALOG):
++        if widget and stock_id and gtk.icon_factory_lookup_default(stock_id):
++            return widget.render_icon(stock_id, size)
++
++        return None
++
++    ''' render cell exactly, "icon-name" is priority
++        if use the 'task-refresh' will make the pix animation
++        if 'pix' will change the pixbuf for it from the pixbuf or image.
++    '''
++    def on_render(self, window, tree, background_area,cell_area, expose_area, flags):
++        if (not self.control) or (not tree):
++            return
++        x, y, w, h = self.on_get_size(tree, cell_area)
++        x += cell_area.x 
++        y += cell_area.y 
++        w -= 2 * self.get_property("xpad")
++        h -= 2 * self.get_property("ypad")
++
++        cairo_context = window.cairo_create()
++        
++        stock_id = self.cell_attr["icon-name"]
++        pix = self.get_pixbuf_from_stock_icon(tree, stock_id, self.cell_attr["stock-size"])
++        if stock_id == 'task-refresh':
++            self.control.append_running_cell_area(cell_area)
++            if self.control.is_active():
++                self.control.on_draw_cb(pix, cairo_context, x, y, w, h, True)
++            else:
++                self.control.start_run(100, 0, 0, 1000, 80, tree)
++        else:
++            self.control.remove_running_cell_area(cell_area)
++            self.control.on_draw_cb(pix, cairo_context, x, y, w, h, False)
++
++    def on_get_size(self, widget, cell_area):
++        if self.cell_attr["icon-name"]:
++            w, h = gtk.icon_size_lookup(self.cell_attr["stock-size"])
++            return 0, 0, w, h
++
++        return 0, 0, 0, 0
+diff --git a/bitbake/lib/bb/ui/crumbs/runningbuild.py b/bitbake/lib/bb/ui/crumbs/runningbuild.py
+index d8af55c..534f30a 100644
+--- a/bitbake/lib/bb/ui/crumbs/runningbuild.py
++++ b/bitbake/lib/bb/ui/crumbs/runningbuild.py
+@@ -1,4 +1,3 @@
+-
+ #
+ # BitBake Graphical GTK User Interface
+ #
+@@ -27,6 +26,7 @@ import urllib
+ import urllib2
+ import pango
+ from bb.ui.crumbs.hobcolor import HobColors
++from bb.ui.crumbs.hobwidget import HobCellRendererPixbuf
+ 
+ class RunningBuildModel (gtk.TreeStore):
+     (COL_LOG, COL_PACKAGE, COL_TASK, COL_MESSAGE, COL_ICON, COL_COLOR, COL_NUM_ACTIVE) = range(7)
+@@ -67,6 +67,13 @@ class RunningBuildModel (gtk.TreeStore):
+         model.set_visible_func(self.failure_model_filter)
+         return model
+ 
++    def foreach_cell_func(self, model, path, iter, usr_data=None):
++        if model.get_value(iter, self.COL_ICON) == "task-refresh":
++            model.set(iter, self.COL_ICON, "")            
++        
++    def close_task_refresh(self):
++        self.foreach(self.foreach_cell_func, None)
++
+ class RunningBuild (gobject.GObject):
+     __gsignals__ = {
+           'build-started' : (gobject.SIGNAL_RUN_LAST,
+@@ -188,7 +195,7 @@ class RunningBuild (gobject.GObject):
+             # Because this parent package now has an active child mark it as
+             # such.
+             # @todo if parent is already in error, don't mark it green
+-            self.model.set(parent, self.model.COL_ICON, "gtk-execute",
++            self.model.set(parent, self.model.COL_ICON, "task-refresh",
+                            self.model.COL_COLOR, HobColors.RUNNING)
+ 
+             # Add an entry in the model for this task
+@@ -196,7 +203,7 @@ class RunningBuild (gobject.GObject):
+                                             package,
+                                             task,
+                                             "Task: %s" % (task),
+-                                            "gtk-execute",
++                                            "task-refresh",
+                                             HobColors.RUNNING,
+                                             0))
+ 
+@@ -283,6 +290,8 @@ class RunningBuild (gobject.GObject):
+             # Emit a generic "build-complete" signal for things wishing to
+             # handle when the build is finished
+             self.emit("build-complete")
++            # reset the all cell's icon indicator
++            self.model.close_task_refresh()
+             if pbar:
+                 pbar.set_text(event.msg)
+ 
+@@ -291,6 +300,8 @@ class RunningBuild (gobject.GObject):
+                 # If the command fails with an exit code we're done, emit the
+                 # generic signal for the UI to notify the user
+                 self.emit("build-complete")
++                # reset the all cell's icon indicator
++                self.model.close_task_refresh()
+ 
+         elif isinstance(event, bb.event.CacheLoadStarted) and pbar:
+             pbar.set_title("Loading cache")
+@@ -344,7 +355,7 @@ class RunningBuildTreeView (gtk.TreeView):
+         self.readonly = readonly
+ 
+         # The icon that indicates whether we're building or failed.
+-        renderer = gtk.CellRendererPixbuf ()
++        renderer = HobCellRendererPixbuf ()
+         col = gtk.TreeViewColumn ("Status", renderer)
+         col.add_attribute (renderer, "icon-name", 4)
+         self.append_column (col)
+@@ -426,7 +437,6 @@ class BuildConfigurationTreeView(gtk.TreeView):
+         self.message_renderer.set_property('font-desc', font)
+         self.append_column (self.message_column)
+ 
+-
+ class BuildFailureTreeView(gtk.TreeView):
+ 
+     def __init__ (self):
 -- 
 1.7.6
 
