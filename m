@@ -1,24 +1,24 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1S8Yhv-0006nM-Bv
+	(envelope-from <shane.wang@intel.com>) id 1S8Yhw-0006nO-Rw
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 16 Mar 2012 16:04:43 +0100
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 16 Mar 2012 07:55:55 -0700
+	Fri, 16 Mar 2012 16:04:45 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga102.ch.intel.com with ESMTP; 16 Mar 2012 07:55:56 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="121678354"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="119803227"
 Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by orsmga002.jf.intel.com with ESMTP; 16 Mar 2012 07:55:54 -0700
+	by azsmga001.ch.intel.com with ESMTP; 16 Mar 2012 07:55:55 -0700
 From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 16 Mar 2012 23:10:12 +0800
-Message-Id: <b22b81f849a14cf8f01c796bfaf7bfca1e0f2462.1331910234.git.shane.wang@intel.com>
+Date: Fri, 16 Mar 2012 23:10:13 +0800
+Message-Id: <c8c378f53c7322440b3fb96c5c676bf66b668193.1331910234.git.shane.wang@intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <8dafade95596191e9998acc05dcf7c34737d70c1.1331910234.git.shane.wang@intel.com>
 References: <8dafade95596191e9998acc05dcf7c34737d70c1.1331910234.git.shane.wang@intel.com>
 In-Reply-To: <cover.1331910234.git.shane.wang@intel.com>
 References: <cover.1331910234.git.shane.wang@intel.com>
-Subject: [PATCH 07/12] Hob: remove the invalid code in hobwidget.py
+Subject: [PATCH 08/12] Hob: change the range dance in hobwidget make it like a pythonista
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,38 +30,192 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Mar 2012 15:04:43 -0000
+X-List-Received-Date: Fri, 16 Mar 2012 15:04:45 -0000
 
 From: Liming An <limingx.l.an@intel.com>
 
-To delete some code which is not used
+To fix the for..in.. range dance code, and make it like pythonista, as the required.
 
 Signed-off-by: Liming An <limingx.l.an@intel.com>
 Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/hobwidget.py |    2 --
- 1 files changed, 0 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hobwidget.py |   67 +++++++++++++++++---------------
+ 1 files changed, 36 insertions(+), 31 deletions(-)
 
 diff --git a/bitbake/lib/bb/ui/crumbs/hobwidget.py b/bitbake/lib/bb/ui/crumbs/hobwidget.py
-index f0d9cbc..71f0629 100644
+index 71f0629..2afa975 100644
 --- a/bitbake/lib/bb/ui/crumbs/hobwidget.py
 +++ b/bitbake/lib/bb/ui/crumbs/hobwidget.py
-@@ -516,7 +516,6 @@ class HobTabBar(gtk.DrawingArea):
+@@ -309,7 +309,7 @@ class HobTabBar(gtk.DrawingArea):
+         self.tab_h_ratio = 52 * 1.0/53
+         self.set_size_request(self.width, self.height)
+ 
+-        self.current_child = 0
++        self.current_child = None
+         self.font = self.get_style().font_desc
+         self.font.set_size(pango.SCALE * 13) 
+         self.update_children_text_layout_and_bg_color()
+@@ -339,10 +339,10 @@ class HobTabBar(gtk.DrawingArea):
+         if self.is_focus() or event.type == gtk.gdk.BUTTON_PRESS:
+             x, y = event.get_coords()
+             # check which tab be clicked
+-            for i, child in enumerate(self.children):
++            for child in self.children:
+                if      (child["x"] < x) and (x < child["x"] + self.tab_width) \
+                    and (child["y"] < y) and (y < child["y"] + self.tab_height):
+-                   self.current_child = i
++                   self.current_child = child
+                    result = True
+                    break
+ 
+@@ -353,7 +353,7 @@ class HobTabBar(gtk.DrawingArea):
+                    self.grab_focus()
+ 
+         if result == True:
+-            page = self.children[self.current_child]["toggled_page"]
++            page = self.current_child["toggled_page"]
+             self.emit("tab-switched", page)
+             self.tab_pressed = True
+             self.queue_draw()
+@@ -366,7 +366,7 @@ class HobTabBar(gtk.DrawingArea):
+             child["x"] = self.tab_x + i * self.tab_width
+             child["y"] = self.tab_y
+ 
+-        if self.blank_rectangle:
++        if self.blank_rectangle != None:
+             self.resize_blank_rectangle()
+ 
+     def resize_blank_rectangle(self):
+@@ -383,16 +383,16 @@ class HobTabBar(gtk.DrawingArea):
+             pangolayout = self.create_pango_layout(child["title"])
+             pangolayout.set_font_description(self.font)
+             child["title_layout"] = pangolayout
+-            child[i]["r"] = color.red
+-            child[i]["g"] = color.green
+-            child[i]["b"] = color.blue
++            child["r"] = color.red
++            child["g"] = color.green
++            child["b"] = color.blue
+ 
+     def append_tab_child(self, title, page):
+         num = len(self.children) + 1
+         self.tab_width = self.tab_width * len(self.children) / num
+ 
+         i = 0
+-        for child in self.children:
++        for i, child in enumerate(self.children):
+             child["x"] = self.tab_x + i * self.tab_width
+             i += 1
+ 
+@@ -414,6 +414,9 @@ class HobTabBar(gtk.DrawingArea):
+             "indicator_number" : 0,
+         }
+         self.children.append(new_one)
++        # set the default current child
++        if not self.current_child:
++            self.current_child = new_one
+ 
+     def on_draw(self, widget, event):
+         cr = widget.window.cairo_create()
+@@ -425,11 +428,12 @@ class HobTabBar(gtk.DrawingArea):
+ 
+         self.draw_background(cr)
+         self.draw_toggled_tab(cr)
+-        self.draw_tab_text(cr)
+ 
+-        for i, child in enumerate(self.children):
++        for child in self.children:
+             if child["indicator_show"] == True:
+-                self.draw_indicator(cr, i)
++                self.draw_indicator(cr, child)
++
++        self.draw_tab_text(cr)
+ 
+     def draw_background(self, cr):
+         style = self.get_style()
+@@ -476,14 +480,15 @@ class HobTabBar(gtk.DrawingArea):
+                 # center pos
+                 off_x = (self.tab_width - fontw) / 2
+                 off_y = (self.tab_height - fonth) / 2
+-                x = child[i]["x"] + off_x
+-                y = child[i]["y"] + off_y
++                x = child["x"] + off_x
++                y = child["y"] + off_y
+                 self.window.draw_layout(self.style.fg_gc[gtk.STATE_NORMAL], int(x), int(y), pangolayout)
+ 
+     def draw_toggled_tab(self, cr):
+-        i = self.current_child
+-        x = self.children[i]["x"]
+-        y = self.children[i]["y"]
++        if not self.current_child:
++            return
++        x = self.current_child["x"]
++        y = self.current_child["y"]
+         width = self.tab_width
+         height = self.tab_height
+         style = self.get_style()
+@@ -515,10 +520,10 @@ class HobTabBar(gtk.DrawingArea):
+         cr.arc(x + r, y + r, r, math.pi, 1.5*math.pi)
          cr.fill()
  
-     def draw_indicator(self, cr, i):
--        style = self.get_style()
-         tab_x = self.children[i]["x"]
-         tab_y = self.children[i]["y"]
-         number = self.children[i]["indicator_number"]
-@@ -528,7 +527,6 @@ class HobTabBar(gtk.DrawingArea):
-         # x position is offset(tab_width*3/4 - icon_width/2) + start_pos(tab_x)
-         x = tab_x + self.tab_width * 3/4 - dest_w/2
-         y = tab_y + self.tab_height/2 - dest_h/2
--        cr.move_to(tab_x, tab_y)
-         r = min(dest_w, dest_h)/2
-         color = cr.set_source_color(gtk.gdk.color_parse(HobColors.ORANGE))
-         cr.arc(x + r, y + r, r, 0, 2*math.pi)
+-    def draw_indicator(self, cr, i):
+-        tab_x = self.children[i]["x"]
+-        tab_y = self.children[i]["y"]
+-        number = self.children[i]["indicator_number"]
++    def draw_indicator(self, cr, child):
++        tab_x = child["x"]
++        tab_y = child["y"]
++        number = child["indicator_number"]
+         dest_w = int(32 * self.tab_w_ratio)
+         dest_h = int(32 * self.tab_h_ratio)
+         if dest_h < self.tab_height:
+@@ -541,17 +546,17 @@ class HobTabBar(gtk.DrawingArea):
+         cr.move_to(x, y)
+         self.window.draw_layout(self.style.fg_gc[gtk.STATE_NORMAL], int(x), int(y), layout)
+ 
+-    def show_indicator_icon(self, i, number):
+-        self.children[i]["indicator_show"] = True
+-        self.children[i]["indicator_number"] = number
++    def show_indicator_icon(self, child, number):
++        child["indicator_show"] = True
++        child["indicator_number"] = number
+         self.queue_draw()
+ 
+-    def hide_indicator_icon(self, i):
+-        self.children[i]["indicator_show"] = False
++    def hide_indicator_icon(self, child):
++        child["indicator_show"] = False
+         self.queue_draw()
+ 
+     def set_blank_size(self, x, y, w, h):
+-        if not self.blank_rectangle or self.blank_rectangle.x != x or self.blank_rectangle.width != w:
++        if self.blank_rectangle == None or self.blank_rectangle.x != x or self.blank_rectangle.width != w:
+             self.emit("blank-area-changed", x, y, w, h)
+ 
+         return gtk.gdk.Rectangle(x, y, w, h)
+@@ -618,18 +623,18 @@ class HobNotebook(gtk.VBox):
+         self.tb.show()
+ 
+     def show_indicator_icon(self, title, number):
+-        for i, child in enumerate(self.tabbar.children):
++        for child in self.tabbar.children:
+             if child["toggled_page"] == -1:
+                 continue
+             if child["title"] == title:
+-                self.tabbar.show_indicator_icon(i, number)
++                self.tabbar.show_indicator_icon(child, number)
+ 
+     def hide_indicator_icon(self, title):
+-        for i, child in enumerate(self.tabbar.children):
++        for child in self.tabbar.children:
+             if child["toggled_page"] == -1:
+                 continue
+             if child["title"] == title:
+-                self.tabbar.hide_indicator_icon(i)
++                self.tabbar.hide_indicator_icon(child)
+ 
+     def tab_switched_cb(self, widget, page):
+         self.notebook.set_current_page(page)
 -- 
 1.7.6
 
