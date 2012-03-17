@@ -1,41 +1,35 @@
-Received: from mail-pz0-f47.google.com ([209.85.210.47])
+Received: from mail-wi0-f177.google.com ([209.85.212.177])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jpuhlman@mvista.com>) id 1S8ex1-0007iG-Qq
+	(envelope-from <martin.jansa@gmail.com>) id 1S8pr0-0005fZ-BY
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 16 Mar 2012 22:44:44 +0100
-Received: by dado14 with SMTP id o14so7073502dad.6
+	Sat, 17 Mar 2012 10:23:14 +0100
+Received: by wibhj13 with SMTP id hj13so1631909wib.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Mar 2012 14:35:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=google.com; s=20120113;
-	h=message-id:date:from:user-agent:mime-version:to:cc:subject
-	:references:in-reply-to:x-enigmail-version:content-type
-	:content-transfer-encoding:x-gm-message-state;
-	bh=tMU/92ojFbnghvNNJ/cOTgA3qskcOawkMA4Y/R/28o4=;
-	b=cHG0gKCuqoEdH5TaAnzw7GKNdQzj3fotNKY8Rt8mAn8hPs2qI6CkSYDPwjSK2D/gek
-	O9p8e3HEQubRkiRIKBZn+zyte+XOLboLNg5FC3dbWv+FW85fKjws3cBJrhqqwkBvDKQV
-	jJG9xIFGxDVvbeHzqIew/a7TzUIg6aDzFezYF6B2DjjJQnytzxGF58nmfAowY3h5LE5w
-	XqVgVCgZeE6Sf9oJLFf4w+hw+xzCIIL1QkH4tznIuKMyQYbU7bo4JPr2mI8X4nkYAQmv
-	EV1d6+ACpBn6bD6mUs/2k6YDlCSLkGKOvePde2oVR7Quc/l5unYgbH6vxM0TXbBZ9I6w
-	A/ew==
-Received: by 10.68.201.135 with SMTP id ka7mr18027671pbc.145.1331933754688;
-	Fri, 16 Mar 2012 14:35:54 -0700 (PDT)
-Received: from [192.168.1.4] (c-76-20-107-156.hsd1.ca.comcast.net.
-	[76.20.107.156])
-	by mx.google.com with ESMTPS id o2sm5091589pbb.45.2012.03.16.14.35.52
+	Sat, 17 Mar 2012 02:14:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-disposition:in-reply-to:user-agent;
+	bh=VmiO7XDWIkmGLVMyJraFIL7I7LAsh2UYFknF2US2JbQ=;
+	b=kLTa40azsn1mILpPS1fhHrYxy7CELmQD1kN5b0dcdsth30i5gA7n9sSkTU+sVry7PE
+	qquSAwCO2A4WO1uL3ablqngu9nL0LqX8z0PYkfZx1nklZPzsZnBzfHwrI2psMhODj8B3
+	E6aJPj2BA5CSo2LmSw+zqAdgp/00C3kX9de3VjkkY7XJtlwXHt7vGs4q+UiQIzTFybKA
+	a62TZRyIn5xGu9ZaGYAhgBmK0ye1DUht0i5MexIQ9wnJu72dxOKzVCVijr8pPHX2fymq
+	+FxE9Xs4KaqUQLORRtBF+wrppkSTRyduMGmOQKmHwbgm1tecZnjMdr+ROZBwQKDv5RGO
+	Ee1w==
+Received: by 10.180.80.70 with SMTP id p6mr4961683wix.21.1331975665578;
+	Sat, 17 Mar 2012 02:14:25 -0700 (PDT)
+Received: from localhost ([94.230.152.246])
+	by mx.google.com with ESMTPS id o2sm9741100wiv.11.2012.03.17.02.14.23
 	(version=TLSv1/SSLv3 cipher=OTHER);
-	Fri, 16 Mar 2012 14:35:53 -0700 (PDT)
-Message-ID: <4F63B22A.3000005@mvista.com>
-Date: Fri, 16 Mar 2012 14:35:38 -0700
-From: Jeremy Puhlman <jpuhlman@mvista.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64;
-	rv:10.0.2) Gecko/20120216 Thunderbird/10.0.2
+	Sat, 17 Mar 2012 02:14:24 -0700 (PDT)
+Date: Sat, 17 Mar 2012 10:14:22 +0100
+From: Martin Jansa <martin.jansa@gmail.com>
+To: Jeremy Puhlman <jpuhlman@mvista.com>
+Message-ID: <20120317091422.GE3855@jama.jama.net>
+References: <4F6373BE.3040209@mvista.com>
 MIME-Version: 1.0
-To: Denys Dmytriyenko <denis@denix.org>
-References: <4F6373BE.3040209@mvista.com> <20120316190831.GA21763@denix.org>
-In-Reply-To: <20120316190831.GA21763@denix.org>
-X-Enigmail-Version: 1.4
-X-Gm-Message-State: ALoCoQnRVetj8F/Ie3qEs8On8TXzWtkN8PfoVoXmiYfIKYpyCJPRRnlmNGKV4G/XTPkb2x2Ib7fa
+In-Reply-To: <4F6373BE.3040209@mvista.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: Conflict between BBCLASSEXTEND and named recipes.
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -49,22 +43,68 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Mar 2012 21:44:44 -0000
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sat, 17 Mar 2012 09:23:14 -0000
+X-Groupsio-MsgNum: 1327
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="u5E4XgoOPWr4PD9E"
+Content-Disposition: inline
 
+--u5E4XgoOPWr4PD9E
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> I don't have a solution, but I can confirm that this was a known issue all the 
-> way back when BBCLASSEXTEND got introduced in Classic OE. The workaround was 
-> to remove or mask the actual *-native.bb recipes.
-> 
+On Fri, Mar 16, 2012 at 10:09:18AM -0700, Jeremy Puhlman wrote:
+> There seems to be a bug with available providers when a recipe file
+> provides the same name as an extended recipe. The extended version of
+> the recipe does not seem to be available at all.
+>=20
+> Example:
+>=20
+> If zlib_1.2.6.bb exists in a layer, with BBCLASSEXTEND=3D"native
+> zlib-nativesdk" defined, and zlib-native_1.2.5.bb exists, the version
+> 1.2.6 of zlib-native is not selectable at all.
+>=20
+>=20
+> bitbake -s | grep zlib
+> zlib                                                :1.2.6-r0
+> zlib-native                                         :1.2.5-r0
+> zlib-nativesdk                                      :1.2.6-r0
+>=20
+> Even with PREFERRED_PROVIDER_zlib-naitve =3D 1.2.6 the results are the
+> same. I have been poking around the parser, but really haven't made any
+> progress, figured I would poke the list.
 
-Thanks. I though I searched the archives, but apparently not well
-enough. My first suggestion was BBMASK and that seemed to work as well.
+I though that setting PREFERRED_VERSION should be enough in this case.
 
--- 
-Jeremy Puhlman
-Montavista Software, LLC.
+notice that it's not PREFERRED_PROVIDER and you have "naitve"/"native"
+typo there. Can you retest with correct form if you haven't already?
 
+Cheers,
+>=20
+>=20
+> --=20
+> Jeremy Puhlman
+> Montavista Software, LLC.
+>=20
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
 
+--=20
+Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
+
+--u5E4XgoOPWr4PD9E
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.18 (GNU/Linux)
+
+iEYEARECAAYFAk9kVe4ACgkQN1Ujt2V2gBw/DgCeKo6/BoRMY79Vv3z6VwHmE22n
+0G0AoI9r8iRwCDJAuxendTd4WgofxXbi
+=Nw4L
+-----END PGP SIGNATURE-----
+
+--u5E4XgoOPWr4PD9E--
