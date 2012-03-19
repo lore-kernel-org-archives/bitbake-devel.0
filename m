@@ -1,23 +1,31 @@
-Received: from smtpfb1-g21.free.fr ([212.27.42.9])
+Received: from astoria.ccjclearline.com ([64.235.106.9])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <eric@eukrea.com>) id 1S9bTd-0006dZ-81
+	(envelope-from <rpjday@crashcourse.ca>) id 1S9bUe-0006et-U6
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 19 Mar 2012 13:14:17 +0100
-Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
-	by smtpfb1-g21.free.fr (Postfix) with ESMTP id 84D6A2CBF0
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 19 Mar 2012 12:56:25 +0100 (CET)
-Received: from localhost.localdomain (unknown [82.240.38.71])
-	by smtp2-g21.free.fr (Postfix) with ESMTP id D2E9E4B0085
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 19 Mar 2012 12:56:20 +0100 (CET)
-From: =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 19 Mar 2012 12:56:19 +0100
-Message-Id: <1332158179-2776-1-git-send-email-eric@eukrea.com>
-X-Mailer: git-send-email 1.7.7.6
+	Mon, 19 Mar 2012 13:15:21 +0100
+Received: from cpec03f0ed08c7f-cm001ac318e826.cpe.net.cable.rogers.com
+	([99.241.91.63] helo=crashcourse.ca)
+	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES256-SHA:256)
+	(Exim 4.69) (envelope-from <rpjday@crashcourse.ca>)
+	id 1S9bM7-0002XF-BK for bitbake-devel@lists.openembedded.org;
+	Mon, 19 Mar 2012 08:06:31 -0400
+Date: Mon, 19 Mar 2012 08:06:21 -0400 (EDT)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+X-X-Sender: rpjday@oneiric
+To: BitBake developer list <bitbake-devel@lists.openembedded.org>
+Message-ID: <alpine.DEB.2.02.1203190752550.23022@oneiric>
+User-Agent: Alpine 2.02 (DEB 1266 2009-07-14)
 MIME-Version: 1.0
-Subject: [PATCH] runningbuild.py: fix goggle ui
+X-AntiAbuse: This header was added to track abuse,
+	please include it with any abuse report
+X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+Subject: first observations about current bitbake manual
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -29,43 +37,68 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 19 Mar 2012 12:14:17 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Mon, 19 Mar 2012 12:15:21 -0000
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 
-* goggle ui actually fails with :
-Traceback (most recent call last):
-  File ".../bitbake/lib/bb/ui/goggle.py", line 35, in event_handle_idle_f=
-unc
-    build.handle_event (event, pbar)
-  File ".../bitbake/lib/bb/ui/crumbs/runningbuild.py", line 234, in handl=
-e_event
-    pbar.update(0, None, bb.event.getName(event))
-TypeError: update() takes exactly 3 arguments (4 given)
 
-Signed-off-by: Eric B=C3=A9nard <eric@eukrea.com>
----
- lib/bb/ui/crumbs/runningbuild.py |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+  in ch 2, the explanation about different types of assignment seems
+to be deficient.  there's a definition of what is a "weak" default
+value, but this isn't contrasted with what is commonly referred to as
+"hard" assignment.  i think that needs to be explained, especially
+since i've seen recipe files that explicitly discuss why weak
+assignment won't work and "hard" assignment must be used, but the poor
+reader will probably not understand what's going on. frankly, i think
+that whole section on the varieties of assignment could be cleaned up.
 
-diff --git a/lib/bb/ui/crumbs/runningbuild.py b/lib/bb/ui/crumbs/runningb=
-uild.py
-index 718f692..10ca394 100644
---- a/lib/bb/ui/crumbs/runningbuild.py
-+++ b/lib/bb/ui/crumbs/runningbuild.py
-@@ -231,8 +231,8 @@ class RunningBuild (gobject.GObject):
-                                       HobColors.OK,
-                                       0))
-             if pbar:
--                pbar.update(0, None, bb.event.getName(event))
--                pbar.set_title()
-+                pbar.update(0, self.progress_total)
-+                pbar.set_title(bb.event.getName(event))
-=20
-         elif isinstance(event, bb.event.BuildCompleted):
-             failures =3D int (event._failures)
---=20
-1.7.7.6
+  next, i don't see any mention of useful utilities like
+bitbake-layers.  are those meant to be used by the normal OE user?  if
+so, they really should be mentioned and their use demonstrated.
 
+  finally (at least for now), it would be more informative if generic
+examples using things like "foo" were replaced by actual snippets from
+oe-core.  consider the explanations of conditional metadata, with
+examples like:
+
+OVERRIDES = "foo"
+A = "X"
+A_append_foo = "Y"
+
+but that doesn't help the new user much since it totally lacks any
+meaningful context.  a simple grep shows:
+
+$ grep -r "append_arm" *
+meta/recipes-multimedia/libmad/libmad_0.15.1b.bb:EXTRA_OECONF_append_arm = " --enable-fpm=arm"
+meta/recipes-devtools/python/python_2.7.2.bb:TARGET_CC_ARCH_append_armv6 = " -D__SOFTFP__"
+meta/recipes-devtools/python/python_2.7.2.bb:TARGET_CC_ARCH_append_armv7a = " -D__SOFTFP__"
+meta/recipes-core/initscripts/initscripts_1.0.bb:SRC_URI_append_arm = " file://alignment.sh"
+meta/recipes-qt/qt4/qt4-embedded_4.7.4.bb:QT_CONFIG_FLAGS_append_armv6 = " -no-neon "
+meta/recipes-qt/qt4/qt4-x11-free_4.8.0.bb:QT_CONFIG_FLAGS_append_armv6 = " -no-neon "
+meta/recipes-qt/qt4/qt4-embedded_4.8.0.bb:QT_CONFIG_FLAGS_append_armv6 = " -no-neon "
+meta/recipes-qt/qt4/qt4-x11-free_4.7.4.bb:QT_CONFIG_FLAGS_append_armv6 = " -no-neon "
+... snip ...
+$
+
+  now *that's* useful -- it's *immediately* obvious what's going on in
+the above.  and throwing in another example for contrast:
+
+$ grep -r "append_mips" *
+meta/recipes-kernel/sysprof/sysprof_git.bb:SRC_URI_append_mips = " file://rmb-mips.patch"
+meta/recipes-extended/libzypp/libzypp_git.bb:SRC_URI_append_mips = " file://mips-workaround-gcc-tribool-error.patch"
+$
+
+  in short, don't use generic examples when actual ones exist.  more
+later.
+
+rday
+
+-- 
+
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                        http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
 
 
