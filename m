@@ -1,19 +1,21 @@
 Received: from astoria.ccjclearline.com ([64.235.106.9])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <rpjday@crashcourse.ca>) id 1S9bUe-0006et-U6
+	(envelope-from <rpjday@crashcourse.ca>) id 1S9bdZ-0001Xo-Qu
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 19 Mar 2012 13:15:21 +0100
+	Mon, 19 Mar 2012 13:24:34 +0100
 Received: from cpec03f0ed08c7f-cm001ac318e826.cpe.net.cable.rogers.com
 	([99.241.91.63] helo=crashcourse.ca)
 	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES256-SHA:256)
 	(Exim 4.69) (envelope-from <rpjday@crashcourse.ca>)
-	id 1S9bM7-0002XF-BK for bitbake-devel@lists.openembedded.org;
-	Mon, 19 Mar 2012 08:06:31 -0400
-Date: Mon, 19 Mar 2012 08:06:21 -0400 (EDT)
+	id 1S9bV1-0003Rx-9L; Mon, 19 Mar 2012 08:15:43 -0400
+Date: Mon, 19 Mar 2012 08:15:32 -0400 (EDT)
 From: "Robert P. J. Day" <rpjday@crashcourse.ca>
 X-X-Sender: rpjday@oneiric
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Message-ID: <alpine.DEB.2.02.1203190752550.23022@oneiric>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+In-Reply-To: <1927112.bGsHOkriYo@helios>
+Message-ID: <alpine.DEB.2.02.1203190809400.23861@oneiric>
+References: <alpine.DEB.2.02.1203190741220.22293@oneiric>
+	<1927112.bGsHOkriYo@helios>
 User-Agent: Alpine 2.02 (DEB 1266 2009-07-14)
 MIME-Version: 1.0
 X-AntiAbuse: This header was added to track abuse,
@@ -25,7 +27,8 @@ X-AntiAbuse: Sender Address Domain - crashcourse.ca
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-Subject: first observations about current bitbake manual
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: some preliminary questions about bitbake manual
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,57 +40,67 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 19 Mar 2012 12:15:21 -0000
+X-List-Received-Date: Mon, 19 Mar 2012 12:24:34 -0000
 Content-Type: TEXT/PLAIN; charset=US-ASCII
 
+On Mon, 19 Mar 2012, Paul Eggleton wrote:
 
-  in ch 2, the explanation about different types of assignment seems
-to be deficient.  there's a definition of what is a "weak" default
-value, but this isn't contrasted with what is commonly referred to as
-"hard" assignment.  i think that needs to be explained, especially
-since i've seen recipe files that explicitly discuss why weak
-assignment won't work and "hard" assignment must be used, but the poor
-reader will probably not understand what's going on. frankly, i think
-that whole section on the varieties of assignment could be cleaned up.
+> On Monday 19 March 2012 07:49:59 Robert P. J. Day wrote:
+> >   i'm about to write some tutorials on OE/bitbake/poky/yocto (from a
+> > position of moderate ignorance, hoping that will change), so a couple
+> > questions/observations before i get started.
+> >
+> >   at risk of repetition, i already noted that if you google on
+> > "bitbake user manual", you end up here:
+> >
+> >   http://bitbake.berlios.de/manual/
+> >
+> > which is *way* out of date, so perhaps a link to something newer would
+> > be useful.
+>
+> Yes, we acknowledge it is quite out of date. The problem with the
+> BitBake manual is it must cover only BitBake generically, and not
+> OE. Of course there's a lot that could be added to it, but having
+> complete documentation there is less important than documenting OE.
+> That's not to say we won't welcome patches though ;)
 
-  next, i don't see any mention of useful utilities like
-bitbake-layers.  are those meant to be used by the normal OE user?  if
-so, they really should be mentioned and their use demonstrated.
+  yes, i can see the problem.  but rather than try to be a purist, why
+not just accept that the best way to document bitbake is to do it
+within the context of oe-core?  that's the approach i'm going to take
+with what i'm writing.
 
-  finally (at least for now), it would be more informative if generic
-examples using things like "foo" were replaced by actual snippets from
-oe-core.  consider the explanations of conditional metadata, with
-examples like:
+> >   finally (for now), over at yocto, here's a quick tutorial on getting
+> > started with oe-core:
+> >
+> >   https://wiki.yoctoproject.org/wiki/OpenEmbedded-Core
+> >
+> > it all looks reasonable but what you end up with in the oe-core
+> > directory is two "bitbake.conf" files:
+> >
+> > $ find . -name bitbake.conf
+> > ./meta/conf/bitbake.conf
+> > ./bitbake/conf/bitbake.conf
+> > $
+> >
+> >   i'm assuming that's by design and there are no weird conflicts
+> > between the two files, right?
+>
+> Sort of - the last one is actually an example config and since it
+> never ends up in BBPATH it will never be used. Now that you mention
+> it, Richard mentioned to me recently that it should probably be
+> renamed to bitbake.conf.sample to avoid confusion.
 
-OVERRIDES = "foo"
-A = "X"
-A_append_foo = "Y"
+  ah, i should have noticed that.  yes, it would be helpful if it were
+renamed to ".sample" to make that more obvious.  what would also be
+useful is to point out that the "OVERRIDES =" directive doesn't occur
+all that frequently.
 
-but that doesn't help the new user much since it totally lacks any
-meaningful context.  a simple grep shows:
-
-$ grep -r "append_arm" *
-meta/recipes-multimedia/libmad/libmad_0.15.1b.bb:EXTRA_OECONF_append_arm = " --enable-fpm=arm"
-meta/recipes-devtools/python/python_2.7.2.bb:TARGET_CC_ARCH_append_armv6 = " -D__SOFTFP__"
-meta/recipes-devtools/python/python_2.7.2.bb:TARGET_CC_ARCH_append_armv7a = " -D__SOFTFP__"
-meta/recipes-core/initscripts/initscripts_1.0.bb:SRC_URI_append_arm = " file://alignment.sh"
-meta/recipes-qt/qt4/qt4-embedded_4.7.4.bb:QT_CONFIG_FLAGS_append_armv6 = " -no-neon "
-meta/recipes-qt/qt4/qt4-x11-free_4.8.0.bb:QT_CONFIG_FLAGS_append_armv6 = " -no-neon "
-meta/recipes-qt/qt4/qt4-embedded_4.8.0.bb:QT_CONFIG_FLAGS_append_armv6 = " -no-neon "
-meta/recipes-qt/qt4/qt4-x11-free_4.7.4.bb:QT_CONFIG_FLAGS_append_armv6 = " -no-neon "
-... snip ...
-$
-
-  now *that's* useful -- it's *immediately* obvious what's going on in
-the above.  and throwing in another example for contrast:
-
-$ grep -r "append_mips" *
-meta/recipes-kernel/sysprof/sysprof_git.bb:SRC_URI_append_mips = " file://rmb-mips.patch"
-meta/recipes-extended/libzypp/libzypp_git.bb:SRC_URI_append_mips = " file://mips-workaround-gcc-tribool-error.patch"
-$
-
-  in short, don't use generic examples when actual ones exist.  more
-later.
+  personally, when i'm reading docs, i like to have the source tree at
+hand so i can search for examples of whatever i'm reading about, and
+what i notice is that "OVERRIDES =" appears only in a .conf file.  a
+reader might want to know that sort of thing to know that he/she needs
+to examine only a single .conf file to see all of the current
+OVERRIDES settings.
 
 rday
 
