@@ -1,42 +1,31 @@
-Received: from mail-wi0-f171.google.com ([209.85.212.171])
+Received: from astoria.ccjclearline.com ([64.235.106.9])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <koen@dominion.thruhere.net>) id 1S9bCr-0005x8-Kz
+	(envelope-from <rpjday@crashcourse.ca>) id 1S9bEo-00060l-Ai
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 19 Mar 2012 12:56:57 +0100
-Received: by wibhj13 with SMTP id hj13so3149206wib.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 19 Mar 2012 04:48:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=google.com; s=20120113;
-	h=subject:mime-version:content-type:from:in-reply-to:date:cc
-	:content-transfer-encoding:message-id:references:to:x-mailer
-	:x-gm-message-state;
-	bh=SY6aJf84waVY/GC/waHTnsiq16M4dTggvOZi25if/ms=;
-	b=QgjXGkY8KDsU7UBKyGq+FtNvwsIuLQx9MVuJ1+nUKcSNO2cJDMPdM65WeRhpsyUC6x
-	RKuEoI791WXeG60VjHxyDe5CvnpBv/87SDfmeyU/Yfm/sqTJuSq3M2rpVl2IuVaqmUUy
-	7Ujgo1ZoN4KeELekph/Jc/3hmsWmZUF6/0GIPgzqVAz+9vM11bDS4RZXJPgrwVqO9Nht
-	97ViXpo4GNf8IBLTyRSryruYjGR5TG6iG/jvCWawMgk2VVMYK3Cxfm2mfmb4YU16gwVz
-	lHQrPB8hZhtNwzN7w5CjKSOSCJPaqaoInuER2z6OANHCchnR+HG5Gq0EuadsdibetJNb
-	jY8w==
-Received: by 10.216.139.229 with SMTP id c79mr8294349wej.16.1332157686298;
-	Mon, 19 Mar 2012 04:48:06 -0700 (PDT)
-Received: from [172.20.0.96] (ip545070eb.adsl-surfen.hetnet.nl.
-	[84.80.112.235])
-	by mx.google.com with ESMTPS id d7sm40369260wiz.6.2012.03.19.04.48.04
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Mon, 19 Mar 2012 04:48:05 -0700 (PDT)
-Mime-Version: 1.0 (Apple Message framework v1257)
-From: Koen Kooi <koen@dominion.thruhere.net>
-In-Reply-To: <1331852164.18586.166.camel@ted>
-Date: Mon, 19 Mar 2012 12:48:02 +0100
-Message-Id: <A1BEDA1D-66A7-4740-98FF-6FC0FBE9967C@dominion.thruhere.net>
-References: <1331852164.18586.166.camel@ted>
-To: Patches and discussions about the oe-core layer
-	<openembedded-core@lists.openembedded.org>
-X-Mailer: Apple Mail (2.1257)
-X-Gm-Message-State: ALoCoQlQSZLnQg0gGb7iqMQkr71vFlKiynpUZRgQmkND5JkvyOwIssVz73cIaWiMhjXz/3thdDob
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [OE-core] [PATCH] ui/knotty: Add a footer to the build output for interactive terminals
+	Mon, 19 Mar 2012 12:58:58 +0100
+Received: from cpec03f0ed08c7f-cm001ac318e826.cpe.net.cable.rogers.com
+	([99.241.91.63] helo=crashcourse.ca)
+	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES256-SHA:256)
+	(Exim 4.69) (envelope-from <rpjday@crashcourse.ca>)
+	id 1S9b6G-0001fW-Hx for bitbake-devel@lists.openembedded.org;
+	Mon, 19 Mar 2012 07:50:08 -0400
+Date: Mon, 19 Mar 2012 07:49:59 -0400 (EDT)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+X-X-Sender: rpjday@oneiric
+To: BitBake developer list <bitbake-devel@lists.openembedded.org>
+Message-ID: <alpine.DEB.2.02.1203190741220.22293@oneiric>
+User-Agent: Alpine 2.02 (DEB 1266 2009-07-14)
+MIME-Version: 1.0
+X-AntiAbuse: This header was added to track abuse,
+	please include it with any abuse report
+X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+Subject: some preliminary questions about bitbake manual
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -48,53 +37,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 19 Mar 2012 11:56:57 -0000
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Mon, 19 Mar 2012 11:58:58 -0000
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 
 
-Op 15 mrt. 2012, om 23:56 heeft Richard Purdie het volgende geschreven:
+  i'm about to write some tutorials on OE/bitbake/poky/yocto (from a
+position of moderate ignorance, hoping that will change), so a couple
+questions/observations before i get started.
 
-> I've sent this before, this is an updated version with several =
-bugfixes
-> and improvements. Its a major change but one I think people will like
-> overall as I hear a lot of complaints about the verbose console
-> messages. v0 never got complaints so I will merge this fairly quickly
-> unless there are objections.
->=20
-> ---
-> On terminals which support it, add summary information to the end of =
-the
-> build output about the number of tasks currently running and how many =
-tasks
-> we've run so far.
->=20
-> This provides a summary at a glace of what the current state of the =
-build is
-> and what the build is currently doing which is lacking in the current =
-UI.
->=20
-> Also disable echo of characters on stdin since this corrupts the =
-disable,
-> particularly Crtl+C.
->=20
-> The "waiting for X tasks" code can be merged into this code too since
-> that is only useful on interactive terminals and this improves the
-> readability of that output too.
->=20
-> Improvements since v0:
->=20
-> * The tasks are ordered in execution order.
-> * The display is only updated when the list of tasks changes or there
->  is output above the footer.
-> * Errors early in the init process don't corrupt the terminal
-> * Running task x of y and package messages are suppressed from the =
-console
->=20
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
-> diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
+  at risk of repetition, i already noted that if you google on
+"bitbake user manual", you end up here:
 
-This doesn't apply for obvious reasons.=
+  http://bitbake.berlios.de/manual/
+
+which is *way* out of date, so perhaps a link to something newer would
+be useful.
+
+  next, is it fair to say that the current version of the bitbake
+manual is the one that's part of bitbake itself, in the doc/
+directory?  so if i want to submit some patches, i'd post them to this
+list and those patches would always be relative to my current "git
+pull" of bitbake?
+
+  finally (for now), over at yocto, here's a quick tutorial on getting
+started with oe-core:
+
+  https://wiki.yoctoproject.org/wiki/OpenEmbedded-Core
+
+it all looks reasonable but what you end up with in the oe-core
+directory is two "bitbake.conf" files:
+
+$ find . -name bitbake.conf
+./meta/conf/bitbake.conf
+./bitbake/conf/bitbake.conf
+$
+
+  i'm assuming that's by design and there are no weird conflicts
+between the two files, right?
+
+  more soon.  real soon.
+
+rday
+
+-- 
+
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                        http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
 
 
