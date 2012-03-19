@@ -1,25 +1,23 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from smtpfb1-g21.free.fr ([212.27.42.9])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1S9bPp-0006Yb-6i
+	(envelope-from <eric@eukrea.com>) id 1S9bTd-0006dZ-81
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 19 Mar 2012 13:10:21 +0100
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 19 Mar 2012 05:01:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="141146782"
-Received: from unknown (HELO helios.localnet) ([10.252.123.198])
-	by fmsmga002.fm.intel.com with ESMTP; 19 Mar 2012 05:01:28 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>
-Date: Mon, 19 Mar 2012 12:01:27 +0000
-Message-ID: <1927112.bGsHOkriYo@helios>
-Organization: Intel Corporation
-User-Agent: KMail/4.8.0 (Linux/3.0.0-16-generic-pae; KDE/4.8.1; i686; ; )
-In-Reply-To: <alpine.DEB.2.02.1203190741220.22293@oneiric>
-References: <alpine.DEB.2.02.1203190741220.22293@oneiric>
+	Mon, 19 Mar 2012 13:14:17 +0100
+Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
+	by smtpfb1-g21.free.fr (Postfix) with ESMTP id 84D6A2CBF0
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 19 Mar 2012 12:56:25 +0100 (CET)
+Received: from localhost.localdomain (unknown [82.240.38.71])
+	by smtp2-g21.free.fr (Postfix) with ESMTP id D2E9E4B0085
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 19 Mar 2012 12:56:20 +0100 (CET)
+From: =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 19 Mar 2012 12:56:19 +0100
+Message-Id: <1332158179-2776-1-git-send-email-eric@eukrea.com>
+X-Mailer: git-send-email 1.7.7.6
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: some preliminary questions about bitbake manual
+Subject: [PATCH] runningbuild.py: fix goggle ui
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,64 +29,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 19 Mar 2012 12:10:21 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Mon, 19 Mar 2012 12:14:17 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Monday 19 March 2012 07:49:59 Robert P. J. Day wrote:
->   i'm about to write some tutorials on OE/bitbake/poky/yocto (from a
-> position of moderate ignorance, hoping that will change), so a couple
-> questions/observations before i get started.
-> 
->   at risk of repetition, i already noted that if you google on
-> "bitbake user manual", you end up here:
-> 
->   http://bitbake.berlios.de/manual/
-> 
-> which is *way* out of date, so perhaps a link to something newer would
-> be useful.
+* goggle ui actually fails with :
+Traceback (most recent call last):
+  File ".../bitbake/lib/bb/ui/goggle.py", line 35, in event_handle_idle_f=
+unc
+    build.handle_event (event, pbar)
+  File ".../bitbake/lib/bb/ui/crumbs/runningbuild.py", line 234, in handl=
+e_event
+    pbar.update(0, None, bb.event.getName(event))
+TypeError: update() takes exactly 3 arguments (4 given)
 
-Yes, we acknowledge it is quite out of date. The problem with the BitBake 
-manual is it must cover only BitBake generically, and not OE. Of course 
-there's a lot that could be added to it, but having complete documentation 
-there is less important than documenting OE. That's not to say we won't 
-welcome patches though ;)
+Signed-off-by: Eric B=C3=A9nard <eric@eukrea.com>
+---
+ lib/bb/ui/crumbs/runningbuild.py |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
->   next, is it fair to say that the current version of the bitbake
-> manual is the one that's part of bitbake itself, in the doc/
-> directory?  so if i want to submit some patches, i'd post them to this
-> list and those patches would always be relative to my current "git
-> pull" of bitbake?
+diff --git a/lib/bb/ui/crumbs/runningbuild.py b/lib/bb/ui/crumbs/runningb=
+uild.py
+index 718f692..10ca394 100644
+--- a/lib/bb/ui/crumbs/runningbuild.py
++++ b/lib/bb/ui/crumbs/runningbuild.py
+@@ -231,8 +231,8 @@ class RunningBuild (gobject.GObject):
+                                       HobColors.OK,
+                                       0))
+             if pbar:
+-                pbar.update(0, None, bb.event.getName(event))
+-                pbar.set_title()
++                pbar.update(0, self.progress_total)
++                pbar.set_title(bb.event.getName(event))
+=20
+         elif isinstance(event, bb.event.BuildCompleted):
+             failures =3D int (event._failures)
+--=20
+1.7.7.6
 
-Yes, that's correct.
- 
->   finally (for now), over at yocto, here's a quick tutorial on getting
-> started with oe-core:
-> 
->   https://wiki.yoctoproject.org/wiki/OpenEmbedded-Core
-> 
-> it all looks reasonable but what you end up with in the oe-core
-> directory is two "bitbake.conf" files:
-> 
-> $ find . -name bitbake.conf
-> ./meta/conf/bitbake.conf
-> ./bitbake/conf/bitbake.conf
-> $
-> 
->   i'm assuming that's by design and there are no weird conflicts
-> between the two files, right?
-
-Sort of - the last one is actually an example config and since it never ends up 
-in BBPATH it will never be used. Now that you mention it, Richard mentioned to 
-me recently that it should probably be renamed to bitbake.conf.sample to avoid 
-confusion.
-
-Cheers,
-Paul
-
--- 
-
-Paul Eggleton
-Intel Open Source Technology Centre
 
 
