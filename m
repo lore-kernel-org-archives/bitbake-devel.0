@@ -1,25 +1,25 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1S9mSz-0007Gb-0p
+	(envelope-from <josh@linux.intel.com>) id 1S9mTK-0007HY-TY
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 20 Mar 2012 00:58:21 +0100
+	Tue, 20 Mar 2012 00:58:43 +0100
 Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 19 Mar 2012 16:49:28 -0700
+	by azsmga102.ch.intel.com with ESMTP; 19 Mar 2012 16:49:50 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="120837672"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="120837795"
 Received: from unknown (HELO [10.255.15.181]) ([10.255.15.181])
-	by azsmga001.ch.intel.com with ESMTP; 19 Mar 2012 16:49:28 -0700
-Message-ID: <4F67C607.50806@linux.intel.com>
-Date: Mon, 19 Mar 2012 16:49:27 -0700
+	by azsmga001.ch.intel.com with ESMTP; 19 Mar 2012 16:49:50 -0700
+Message-ID: <4F67C61D.9060903@linux.intel.com>
+Date: Mon, 19 Mar 2012 16:49:49 -0700
 From: Joshua Lock <josh@linux.intel.com>
 User-Agent: Mozilla/5.0 (X11; Linux x86_64;
 	rv:10.0.1) Gecko/20120216 Thunderbird/10.0.1
 MIME-Version: 1.0
 To: bitbake-devel@lists.openembedded.org
 References: <8dafade95596191e9998acc05dcf7c34737d70c1.1331910234.git.shane.wang@intel.com>
-	<8565670d713978a93a57a96c55b4815a144af3e5.1331910234.git.shane.wang@intel.com>
-In-Reply-To: <8565670d713978a93a57a96c55b4815a144af3e5.1331910234.git.shane.wang@intel.com>
-Subject: Re: [PATCH 02/12] Hob: use HobNotebook to implement a notebook in build details page
+	<8432d919ec2154295bd60cf608f83843ca030b1b.1331910234.git.shane.wang@intel.com>
+In-Reply-To: <8432d919ec2154295bd60cf608f83843ca030b1b.1331910234.git.shane.wang@intel.com>
+Subject: Re: [PATCH 03/12] Hob: show indicators on the tabs of the Hob notebook
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,113 +31,132 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 19 Mar 2012 23:58:21 -0000
+X-List-Received-Date: Mon, 19 Mar 2012 23:58:43 -0000
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+
+
 On 16/03/12 08:10, Shane Wang wrote:
-> This patch is to use HobNotebook we defined to implement the notebook in the build details page.
+> This patch is to show the indicators (e.g., the number of the issues) in the build details page to highlight.
 >
 > Signed-off-by: Liming An<limingx.l.an@intel.com>
 > Signed-off-by: Shane Wang<shane.wang@intel.com>
+Signed-off-by: Joshua Lock <josh@linux.intel.com>
+
 > ---
->   bitbake/lib/bb/ui/crumbs/builddetailspage.py |   30 ++++++++++--
->   bitbake/lib/bb/ui/crumbs/runningbuild.py     |   65 ++++++++++++++++++++++++++
->   2 files changed, 90 insertions(+), 5 deletions(-)
+>   bitbake/lib/bb/ui/crumbs/builddetailspage.py |   10 ++++++++++
+>   bitbake/lib/bb/ui/crumbs/builder.py          |    5 +++++
+>   bitbake/lib/bb/ui/crumbs/hobwidget.py        |   14 ++++++++++++++
+>   bitbake/lib/bb/ui/crumbs/runningbuild.py     |    4 ++++
+>   4 files changed, 33 insertions(+), 0 deletions(-)
 >
 > diff --git a/bitbake/lib/bb/ui/crumbs/builddetailspage.py b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-> index 8b75ca0..63d2c7b 100755
+> index 63d2c7b..7a5cfe6 100755
 > --- a/bitbake/lib/bb/ui/crumbs/builddetailspage.py
 > +++ b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-> @@ -22,8 +22,10 @@
+> @@ -37,6 +37,8 @@ class BuildDetailsPage (HobPage):
+>       def __init__(self, builder):
+>           super(BuildDetailsPage, self).__init__(builder, "Building ...")
 >
->   import gtk
->   from bb.ui.crumbs.progressbar import HobProgressBar
-> -from bb.ui.crumbs.hobwidget import hic
-> +from bb.ui.crumbs.hobwidget import hic, HobNotebook
->   from bb.ui.crumbs.runningbuild import RunningBuildTreeView
-> +from bb.ui.crumbs.runningbuild import BuildConfigurationTreeView
-> +from bb.ui.crumbs.runningbuild import BuildFailureTreeView
->   from bb.ui.crumbs.hobpages import HobPage
->
->   #
-> @@ -49,11 +51,29 @@ class BuildDetailsPage (HobPage):
->           self.stop_button.connect("clicked", self.stop_button_clicked_cb)
->           self.progress_box.pack_end(self.stop_button, expand=False, fill=False)
->
-> +        self.notebook = HobNotebook()
-> +        self.config_tv = BuildConfigurationTreeView()
-> +        self.config_model = self.builder.handler.build.model.config_model()
-> +        self.config_tv.set_model(self.config_model)
-> +        self.scrolled_view_config = gtk.ScrolledWindow ()
-> +        self.scrolled_view_config.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-> +        self.scrolled_view_config.add(self.config_tv)
-> +        self.notebook.append_page(self.scrolled_view_config, gtk.Label("Build Configuration"))
+> +        self.num_of_issues = 0
 > +
-> +        self.failure_tv = BuildFailureTreeView()
-> +        self.failure_model = self.builder.handler.build.model.failure_model()
-> +        self.failure_tv.set_model(self.failure_model)
-> +        self.scrolled_view_failure = gtk.ScrolledWindow ()
-> +        self.scrolled_view_failure.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-> +        self.scrolled_view_failure.add(self.failure_tv)
-> +        self.notebook.append_page(self.scrolled_view_failure, gtk.Label("Issues"))
+>           # create visual elements
+>           self.create_visual_elements()
+>
+> @@ -80,6 +82,14 @@ class BuildDetailsPage (HobPage):
+>           self.back_button.connect("clicked", self.back_button_clicked_cb)
+>           self.button_box.pack_start(self.back_button, expand=False, fill=False)
+>
+> +    def show_issues(self):
+> +        self.num_of_issues += 1
+> +        self.notebook.show_indicator_icon("Issues", self.num_of_issues)
 > +
->           self.build_tv = RunningBuildTreeView(readonly=True)
->           self.build_tv.set_model(self.builder.handler.build.model)
-> -        self.scrolled_view = gtk.ScrolledWindow ()
-> -        self.scrolled_view.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-> -        self.scrolled_view.add(self.build_tv)
-> +        self.scrolled_view_build = gtk.ScrolledWindow ()
-> +        self.scrolled_view_build.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-> +        self.scrolled_view_build.add(self.build_tv)
-> +        self.notebook.append_page(self.scrolled_view_build, gtk.Label("Log"))
+> +    def reset_issues(self):
+> +        self.num_of_issues = 0
+> +        self.notebook.hide_indicator_icon("Issues")
+> +
+>       def _remove_all_widget(self):
+>           children = self.vbox.get_children() or []
+>           for child in children:
+> diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+> index 1d255ac..318bcbf 100755
+> --- a/bitbake/lib/bb/ui/crumbs/builder.py
+> +++ b/bitbake/lib/bb/ui/crumbs/builder.py
+> @@ -212,6 +212,7 @@ class Builder(gtk.Window):
+>           self.handler.build.connect("build-succeeded",    self.handler_build_succeeded_cb)
+>           self.handler.build.connect("build-failed",       self.handler_build_failed_cb)
+>           self.handler.build.connect("task-started",       self.handler_task_started_cb)
+> +        self.handler.build.connect("log-error",          self.handler_build_failure_cb)
+>           self.handler.connect("generating-data",          self.handler_generating_data_cb)
+>           self.handler.connect("data-generated",           self.handler_data_generated_cb)
+>           self.handler.connect("command-succeeded",        self.handler_command_succeeded_cb)
+> @@ -533,6 +534,7 @@ class Builder(gtk.Window):
+>           elif self.current_step == self.PACKAGE_GENERATING:
+>               fraction = 0
+>           self.build_details_page.update_progress_bar("Build Started: ", fraction)
+> +        self.build_details_page.reset_issues()
 >
->           self.button_box = gtk.HBox(False, 6)
->           self.back_button = gtk.LinkButton("Go back to Image Configuration screen", "<<  Back to image configuration")
-> @@ -86,7 +106,7 @@ class BuildDetailsPage (HobPage):
->           self.progress_bar.reset()
->           self.vbox.pack_start(self.progress_box, expand=False, fill=False)
+>       def build_succeeded(self):
+>           if self.current_step == self.FAST_IMAGE_GENERATING:
+> @@ -600,6 +602,9 @@ class Builder(gtk.Window):
+>                   fraction = 0.2 + 0.8 * fraction
+>           self.build_details_page.update_progress_bar(title + ": ", fraction)
 >
-> -        self.vbox.pack_start(self.scrolled_view, expand=True, fill=True)
-> +        self.vbox.pack_start(self.notebook, expand=True, fill=True)
+> +    def handler_build_failure_cb(self, running_build):
+> +        self.build_details_page.show_issues()
+> +
+>       def destroy_window_cb(self, widget, event):
+>           lbl = "<b>Do you really want to exit the Hob image creator?</b>"
+>           dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
+> diff --git a/bitbake/lib/bb/ui/crumbs/hobwidget.py b/bitbake/lib/bb/ui/crumbs/hobwidget.py
+> index 8fa663c..2c3d831 100644
+> --- a/bitbake/lib/bb/ui/crumbs/hobwidget.py
+> +++ b/bitbake/lib/bb/ui/crumbs/hobwidget.py
+> @@ -619,6 +619,20 @@ class HobNotebook(gtk.VBox):
 >
->           self.box_group_area.pack_end(self.button_box, expand=False, fill=False)
->           self.show_all()
+>           self.tb.show()
+>
+> +    def show_indicator_icon(self, title, number):
+> +        for i, child in enumerate(self.tabbar.children):
+> +            if child["toggled_page"] == -1:
+> +                continue
+> +            if child["title"] == title:
+> +                self.tabbar.show_indicator_icon(i, number)
+> +
+> +    def hide_indicator_icon(self, title):
+> +        for i, child in enumerate(self.tabbar.children):
+> +            if child["toggled_page"] == -1:
+> +                continue
+> +            if child["title"] == title:
+> +                self.tabbar.hide_indicator_icon(i)
+> +
+>       def tab_switched_cb(self, widget, page):
+>           self.notebook.set_current_page(page)
+>
 > diff --git a/bitbake/lib/bb/ui/crumbs/runningbuild.py b/bitbake/lib/bb/ui/crumbs/runningbuild.py
-> index 718f692..eedd8d9 100644
+> index eedd8d9..ddac232 100644
 > --- a/bitbake/lib/bb/ui/crumbs/runningbuild.py
 > +++ b/bitbake/lib/bb/ui/crumbs/runningbuild.py
-> @@ -25,6 +25,7 @@ import logging
->   import time
->   import urllib
->   import urllib2
-> +import pango
->   from bb.ui.crumbs.hobcolor import HobColors
->
->   class RunningBuildModel (gtk.TreeStore):
-> @@ -40,6 +41,32 @@ class RunningBuildModel (gtk.TreeStore):
->                                   gobject.TYPE_STRING,
->                                   gobject.TYPE_INT)
->
-> +    def config_model_filter(self, model, it):
-> +        msg = model.get(it, self.COL_MESSAGE)[0]
-> +        if msg == None or type(msg) != str:
-> +            return False
-> +        if msg.startswith("\nOE Build Configuration:\n"):
-> +            return True
-> +        return False
+> @@ -84,6 +84,9 @@ class RunningBuild (gobject.GObject):
+>             'task-started'   : (gobject.SIGNAL_RUN_LAST,
+>                                 gobject.TYPE_NONE,
+>                                 (gobject.TYPE_PYOBJECT,)),
+> +          'log-error'      : (gobject.SIGNAL_RUN_LAST,
+> +                              gobject.TYPE_NONE,
+> +                              ()),
+>             }
+>       pids_to_task = {}
+>       tasks_to_iter = {}
+> @@ -134,6 +137,7 @@ class RunningBuild (gobject.GObject):
+>               if event.levelno>= logging.ERROR:
+>                   icon = "dialog-error"
+>                   color = HobColors.ERROR
+> +                self.emit("log-error")
+>               elif event.levelno>= logging.WARNING:
+>                   icon = "dialog-warning"
+>                   color = HobColors.WARNING
 
-I think I commented on this before, this seems like a heavy way to 
-achieve this functionality. Is there not another way we can display the 
-Build Configuration to the user without having to filter every message 
-emitted?
-
-Further, if we're going to display this information in a separate page 
-of the notebook would it not make sense to not show it in the build log 
-page?
-
-Cheers,
-Joshua
 -- 
 Joshua '贾詡' Lock
          Yocto Project "Johannes factotum"
