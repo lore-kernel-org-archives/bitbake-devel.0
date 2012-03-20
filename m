@@ -1,24 +1,24 @@
 Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SA03C-0000qs-Rt
+	(envelope-from <shane.wang@intel.com>) id 1SA03I-0000qs-Cu
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 20 Mar 2012 15:28:39 +0100
+	Tue, 20 Mar 2012 15:28:45 +0100
 Received: from azsmga001.ch.intel.com ([10.2.17.19])
 	by azsmga101.ch.intel.com with ESMTP; 20 Mar 2012 07:19:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="121097506"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="121097500"
 Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by azsmga001.ch.intel.com with ESMTP; 20 Mar 2012 07:19:38 -0700
+	by azsmga001.ch.intel.com with ESMTP; 20 Mar 2012 07:19:36 -0700
 From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 20 Mar 2012 22:41:07 +0800
-Message-Id: <a8f5a72d36e9a55ec7a2296e1c9623e177a95a74.1332254194.git.shane.wang@intel.com>
+Date: Tue, 20 Mar 2012 22:41:06 +0800
+Message-Id: <d771343b1726f166ed8d75543ba68bd2a20aee7b.1332254194.git.shane.wang@intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <e4ebac226cc5e4589bcecd8bada9fde462e925cc.1332254194.git.shane.wang@intel.com>
 References: <e4ebac226cc5e4589bcecd8bada9fde462e925cc.1332254194.git.shane.wang@intel.com>
 In-Reply-To: <cover.1332254194.git.shane.wang@intel.com>
 References: <cover.1332254194.git.shane.wang@intel.com>
-Subject: [PATCH 06/11] Hob: remove the invalid code in hobwidget.py
+Subject: [PATCH 05/11] Hob: fix '!= None' and '== None' in the code
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,38 +30,172 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Mar 2012 14:28:39 -0000
+X-List-Received-Date: Tue, 20 Mar 2012 14:28:45 -0000
 
-From: Liming An <limingx.l.an@intel.com>
+This patch is to fix the following:
 
-To delete some code which is not used
+if foo != None -----> if foo
+if foo == None -----> if not foo
 
-Signed-off-by: Liming An <limingx.l.an@intel.com>
 Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/hobwidget.py |    2 --
- 1 files changed, 0 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py  |    4 ++--
+ bitbake/lib/bb/ui/crumbs/hoblistmodel.py     |    2 +-
+ bitbake/lib/bb/ui/crumbs/hobpages.py         |    4 ++--
+ bitbake/lib/bb/ui/crumbs/hobwidget.py        |    6 +++---
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py |   12 ++++++------
+ bitbake/lib/bb/ui/crumbs/runningbuild.py     |    4 ++--
+ 6 files changed, 16 insertions(+), 16 deletions(-)
 
+diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+index 790e2ef..1e1151e 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -119,7 +119,7 @@ class HobHandler(gobject.GObject):
+             self.generating = False
+ 
+     def run_next_command(self, initcmd=None):
+-        if initcmd != None:
++        if initcmd:
+             self.initcmd = initcmd
+ 
+         if self.commands_async:
+@@ -127,7 +127,7 @@ class HobHandler(gobject.GObject):
+             next_command = self.commands_async.pop(0)
+         else:
+             self.clear_busy()
+-            if self.initcmd != None:
++            if self.initcmd:
+                 self.emit("command-succeeded", self.initcmd)
+             return
+ 
+diff --git a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+index caf31bc..69e13cf 100644
+--- a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
++++ b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+@@ -713,7 +713,7 @@ class RecipeListModel(gtk.ListStore):
+         return None
+ 
+     def set_selected_image(self, img):
+-        if img == None:
++        if not img:
+             return
+         path = self.find_path_for_item(img)
+         self.include_item(item_path=path,
+diff --git a/bitbake/lib/bb/ui/crumbs/hobpages.py b/bitbake/lib/bb/ui/crumbs/hobpages.py
+index bd4b292..63ee3dd 100755
+--- a/bitbake/lib/bb/ui/crumbs/hobpages.py
++++ b/bitbake/lib/bb/ui/crumbs/hobpages.py
+@@ -34,7 +34,7 @@ class HobPage (gtk.VBox):
+         self.builder = builder
+         self.builder_width, self.builder_height = self.builder.size_request()
+ 
+-        if title == None:
++        if not title:
+             self.title = "HOB -- Image Creator"
+         else:
+             self.title = title
+@@ -62,7 +62,7 @@ class HobPage (gtk.VBox):
+         label.set_markup("<span font_desc=\'14\'>%s</span>" % self.title)
+         hbox.pack_start(label, expand=False, fill=False, padding=20)
+ 
+-        if widget != None:
++        if widget:
+             # add the widget in the event box
+             hbox.pack_end(widget, expand=False, fill=False, padding=padding)
+         eventbox.add(hbox)
 diff --git a/bitbake/lib/bb/ui/crumbs/hobwidget.py b/bitbake/lib/bb/ui/crumbs/hobwidget.py
-index f0d9cbc..71f0629 100644
+index 247bbd1..f0d9cbc 100644
 --- a/bitbake/lib/bb/ui/crumbs/hobwidget.py
 +++ b/bitbake/lib/bb/ui/crumbs/hobwidget.py
-@@ -516,7 +516,6 @@ class HobTabBar(gtk.DrawingArea):
-         cr.fill()
+@@ -366,7 +366,7 @@ class HobTabBar(gtk.DrawingArea):
+             child["x"] = self.tab_x + i * self.tab_width
+             child["y"] = self.tab_y
  
-     def draw_indicator(self, cr, i):
--        style = self.get_style()
-         tab_x = self.children[i]["x"]
-         tab_y = self.children[i]["y"]
-         number = self.children[i]["indicator_number"]
-@@ -528,7 +527,6 @@ class HobTabBar(gtk.DrawingArea):
-         # x position is offset(tab_width*3/4 - icon_width/2) + start_pos(tab_x)
-         x = tab_x + self.tab_width * 3/4 - dest_w/2
-         y = tab_y + self.tab_height/2 - dest_h/2
--        cr.move_to(tab_x, tab_y)
-         r = min(dest_w, dest_h)/2
-         color = cr.set_source_color(gtk.gdk.color_parse(HobColors.ORANGE))
-         cr.arc(x + r, y + r, r, 0, 2*math.pi)
+-        if self.blank_rectangle != None:
++        if self.blank_rectangle:
+             self.resize_blank_rectangle()
+ 
+     def resize_blank_rectangle(self):
+@@ -553,7 +553,7 @@ class HobTabBar(gtk.DrawingArea):
+         self.queue_draw()
+ 
+     def set_blank_size(self, x, y, w, h):
+-        if self.blank_rectangle == None or self.blank_rectangle.x != x or self.blank_rectangle.width != w:
++        if not self.blank_rectangle or self.blank_rectangle.x != x or self.blank_rectangle.width != w:
+             self.emit("blank-area-changed", x, y, w, h)
+ 
+         return gtk.gdk.Rectangle(x, y, w, h)
+@@ -640,7 +640,7 @@ class HobNotebook(gtk.VBox):
+         if not notebook:
+             return
+         title = notebook.get_tab_label_text(notebook_child)
+-        if title == None:
++        if not title:
+             return
+         for child in self.tabbar.children:
+             if child["title"] == title:
+diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+index c063d74..30c25aa 100755
+--- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
++++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+@@ -64,9 +64,9 @@ class ImageDetailsPage (HobPage):
+             self.hbox.set_border_width(15)
+             self.add(self.hbox)
+ 
+-            if widget != None:
++            if widget:
+                 row = 1
+-            elif varlist != None and vallist != None:
++            elif varlist and vallist:
+                 # pack the icon and the text on the left
+                 row = len(varlist)
+             self.table = gtk.Table(row, 20, True)
+@@ -75,18 +75,18 @@ class ImageDetailsPage (HobPage):
+ 
+             colid = 0
+             self.line_widgets = {}
+-            if icon != None:
++            if icon:
+                 self.table.attach(icon, colid, colid + 2, 0, 1)
+                 colid = colid + 2
+-            if widget != None:
++            if widget:
+                 self.table.attach(widget, colid, 20, 0, 1)
+-            elif varlist != None and vallist != None:
++            elif varlist and vallist:
+                 for line in range(0, row):
+                     self.line_widgets[varlist[line]] = self.text2label(varlist[line], vallist[line])
+                     self.table.attach(self.line_widgets[varlist[line]], colid, 20, line, line + 1)
+ 
+             # pack the button on the right
+-            if button != None:
++            if button:
+                 self.hbox.pack_end(button, expand=False, fill=False)
+ 
+         def update_line_widgets(self, variable, value):
+diff --git a/bitbake/lib/bb/ui/crumbs/runningbuild.py b/bitbake/lib/bb/ui/crumbs/runningbuild.py
+index ddac232..d8af55c 100644
+--- a/bitbake/lib/bb/ui/crumbs/runningbuild.py
++++ b/bitbake/lib/bb/ui/crumbs/runningbuild.py
+@@ -43,7 +43,7 @@ class RunningBuildModel (gtk.TreeStore):
+ 
+     def config_model_filter(self, model, it):
+         msg = model.get(it, self.COL_MESSAGE)[0]
+-        if msg == None or type(msg) != str:
++        if not msg or type(msg) != str:
+             return False
+         if msg.startswith("\nOE Build Configuration:\n"):
+             return True
+@@ -51,7 +51,7 @@ class RunningBuildModel (gtk.TreeStore):
+ 
+     def failure_model_filter(self, model, it):
+         color = model.get(it, self.COL_COLOR)[0]
+-        if color == None:
++        if not color:
+             return False
+         if color == HobColors.ERROR:
+             return True
 -- 
 1.7.6
 
