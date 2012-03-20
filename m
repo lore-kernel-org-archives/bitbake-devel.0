@@ -1,27 +1,41 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1S9sQ8-0000hh-OC
+	(envelope-from <limingx.l.an@intel.com>) id 1S9y99-0006Ze-Rp
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 20 Mar 2012 07:19:49 +0100
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 19 Mar 2012 23:10:55 -0700
+	Tue, 20 Mar 2012 13:26:40 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga102.ch.intel.com with ESMTP; 20 Mar 2012 05:16:42 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="141682797"
-Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
-	([10.239.36.11])
-	by fmsmga002.fm.intel.com with ESMTP; 19 Mar 2012 23:10:54 -0700
-From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
-To: Joshua Lock <josh@linux.intel.com>, "Barros Pena, Belen"
-	<belen.barros.pena@intel.com>, Giulia Piu <giulia@closertag.com>
-In-Reply-To: <c9435773fd1a5d0cb612522ce4984052b36901d6.1332202341.git.josh@linux.intel.com>
-References: <cover.1332202341.git.josh@linux.intel.com>
-	<c9435773fd1a5d0cb612522ce4984052b36901d6.1332202341.git.josh@linux.intel.com>
-Date: Tue, 20 Mar 2012 14:08:51 +0800
-Message-ID: <1332223731.1848.22.camel@dongxiao-osel>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.32.2 
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 6/6] ui/crumbs/hig: make the layer selection dialogue more closely match design
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="121059342"
+Received: from azsmsx603.amr.corp.intel.com ([10.2.161.23])
+	by azsmga001.ch.intel.com with ESMTP; 20 Mar 2012 05:16:42 -0700
+Received: from azsmsx604.amr.corp.intel.com (10.2.161.34) by
+	azsmsx603.amr.corp.intel.com (10.2.161.23) with Microsoft SMTP Server
+	(TLS) id 8.2.255.0; Tue, 20 Mar 2012 05:16:41 -0700
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+	azsmsx604.amr.corp.intel.com (10.2.161.34) with Microsoft SMTP Server
+	(TLS) id 8.2.255.0; Tue, 20 Mar 2012 05:16:41 -0700
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.36]) by
+	SHSMSX151.ccr.corp.intel.com ([169.254.3.91]) with mapi id
+	14.01.0355.002; Tue, 20 Mar 2012 20:16:39 +0800
+From: "An, LimingX L" <limingx.l.an@intel.com>
+To: Joshua Lock <josh@linux.intel.com>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] [PATCH 08/12] Hob: change the range dance in
+	hobwidget make it like a pythonista
+Thread-Index: AQHNBiwgW5r0b+7tLES+JaSeJIhYfJZzGUYQ
+Date: Tue, 20 Mar 2012 12:16:38 +0000
+Message-ID: <E5BAA81A5E0FB344B2B234D4FBAC45DC0FC9AAB0@SHSMSX102.ccr.corp.intel.com>
+References: <8dafade95596191e9998acc05dcf7c34737d70c1.1331910234.git.shane.wang@intel.com>
+	<c8c378f53c7322440b3fb96c5c676bf66b668193.1331910234.git.shane.wang@intel.com>
+	<4F67C7FC.7070806@linux.intel.com>
+In-Reply-To: <4F67C7FC.7070806@linux.intel.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.239.127.40]
+MIME-Version: 1.0
+Subject: Re: [PATCH 08/12] Hob: change the range dance in hobwidget make it like a pythonista
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,188 +47,164 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Mar 2012 06:19:49 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 20 Mar 2012 12:26:40 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Mon, 2012-03-19 at 17:18 -0700, Joshua Lock wrote:
-> The layer dialogue design includes in-line remove/delete widgets next to
-> the layer path in the tree view for all layers other than the meta layer as
-> well as an in-line notice that the meta layer cannot be removed.
-> 
-> This is achieved  in this patch through the use of custom cell_data_func's
-> for the treeview to render the meta layer differently and a custom
-> CellRenderer implementation, CellRendererPixbufActivatable, which renders a
-> pixbuf and emits a clicked signal when the user clicks on it.
-> 
-> Signed-off-by: Joshua Lock <josh@linux.intel.com>
-> ---
->  lib/bb/ui/crumbs/hig.py |   96 ++++++++++++++++++++++++++++++++++++-----------
->  1 files changed, 74 insertions(+), 22 deletions(-)
-> 
-> diff --git a/lib/bb/ui/crumbs/hig.py b/lib/bb/ui/crumbs/hig.py
-> index 849d7c9..5b0cfc9 100644
-> --- a/lib/bb/ui/crumbs/hig.py
-> +++ b/lib/bb/ui/crumbs/hig.py
-> @@ -789,6 +789,26 @@ class DeployImageDialog (CrumbsDialog):
->          os.close(f_from)
->          os.close(f_to)
->          self.progress_bar.hide()
-> +
-> +class CellRendererPixbufActivatable(gtk.CellRendererPixbuf):
-> +    """
-> +    A custom CellRenderer implementation which is activatable
-> +    so that we can handle user clicks
-> +    """
-> +    __gsignals__    = { 'clicked' : (gobject.SIGNAL_RUN_LAST,
-> +                                     gobject.TYPE_NONE,
-> +                                     (gobject.TYPE_STRING,)), }
-> +
-> +    def __init__(self):
-> +        gtk.CellRendererPixbuf.__init__(self)
-> +        self.set_property('mode', gtk.CELL_RENDERER_MODE_ACTIVATABLE)
-> +
-> +    """
-> +    Respond to a user click on a cell
-> +    """
-> +    def do_activate(self, even, widget, path, background_area, cell_area, flags):
-> +        self.emit('clicked', path)
-> +
->  #
->  # LayerSelectionDialog
->  #
-> @@ -855,13 +875,13 @@ class LayerSelectionDialog (CrumbsDialog):
->          layer_tv.set_rules_hint(True)
->          layer_tv.set_headers_visible(False)
->          tree_selection = layer_tv.get_selection()
-> -        tree_selection.set_mode(gtk.SELECTION_SINGLE)
-> +        tree_selection.set_mode(gtk.SELECTION_NONE)
->  
->          col0= gtk.TreeViewColumn('Path')
->          cell0 = gtk.CellRendererText()
->          cell0.set_padding(5,2)
->          col0.pack_start(cell0, True)
-> -        col0.set_attributes(cell0, text=0)
-> +        col0.set_cell_data_func(cell0, self.draw_layer_path_cb)
->          layer_tv.append_column(col0)
->  
->          scroll = gtk.ScrolledWindow()
-> @@ -897,18 +917,19 @@ class LayerSelectionDialog (CrumbsDialog):
->              for layer in layers:
->                  layer_store.set(layer_store.append(), 0, layer)
->  
-> -            image = gtk.Image()
-> -            image.set_from_stock(gtk.STOCK_ADD,gtk.ICON_SIZE_MENU)
-> +            col1 = gtk.TreeViewColumn('Enabled')
-> +            layer_tv.append_column(col1)
-> +
-> +            cell1 = CellRendererPixbufActivatable()
-> +            cell1.connect("clicked", self.del_cell_clicked_cb, layer_store)
-> +            col1.pack_start(cell1, True)
-> +            col1.set_cell_data_func(cell1, self.draw_delete_button_cb, layer_tv)
-> +
->              add_button = gtk.Button()
-> -            add_button.set_image(image)
-> +            add_button.set_label("_Add layer")
-> +            add_button.set_use_underline(True)
->              add_button.connect("clicked", self.layer_widget_add_clicked_cb, layer_store, window)
-> -            table_layer.attach(add_button, 0, 5, 1, 2, gtk.EXPAND | gtk.FILL, 0, 0, 6)
-> -            image = gtk.Image()
-> -            image.set_from_stock(gtk.STOCK_REMOVE,gtk.ICON_SIZE_MENU)
-> -            del_button = gtk.Button()
-> -            del_button.set_image(image)
-> -            del_button.connect("clicked", self.layer_widget_del_clicked_cb, tree_selection, layer_store)
-> -            table_layer.attach(del_button, 5, 10, 1, 2, gtk.EXPAND | gtk.FILL, 0, 0, 6)
-> +            table_layer.attach(add_button, 0, 10, 1, 2, gtk.EXPAND | gtk.FILL, 0, 0, 6)
->          layer_tv.set_model(layer_store)
->  
->          hbox.show_all()
-> @@ -936,24 +957,16 @@ class LayerSelectionDialog (CrumbsDialog):
->          hbox_top = gtk.HBox()
->          self.vbox.pack_start(hbox_top, expand=False, fill=False)
->  
-> -        if self.split_model:
-> -            label = self.gen_label_widget("<b>Select Layers:</b>\n(Available layers under '${COREBASE}/layers/' directory)")
-> -        else:
-> -            label = self.gen_label_widget("<b>Select Layers:</b>")
-> +        label = self.gen_label_widget("<b>Select Layers:</b>")
->          hbox_top.pack_start(label, expand=False, fill=False)
-> -
->          tooltip = "Layer is a collection of bb files and conf files"
->          info = HobInfoButton(tooltip, self)
->          hbox_top.pack_end(info, expand=False, fill=False)
->  
->          layer_widget, self.layer_store = self.gen_layer_widget(self.split_model, self.layers, self.all_layers, self, None)
-> -        layer_widget.set_size_request(-1, 180)
-> +        layer_widget.set_size_request(450, 250)
->          self.vbox.pack_start(layer_widget, expand=True, fill=True)
->  
-> -        label = self.gen_label_widget("<b>Note:</b> '<i>meta</i>' is the Core layer for Yocto images please do not remove it.")
-> -        label.show()
-> -        self.vbox.pack_end(label, expand=False, fill=False)
-> -
->          self.show_all()
->  
->      def response_cb(self, dialog, response_id):
-> @@ -972,6 +985,45 @@ class LayerSelectionDialog (CrumbsDialog):
->          self.layers_changed = (self.layers != layers)
->          self.layers = layers
->  
-> +    """
-> +    A custom cell_data_func to draw a delete 'button' in the TreeView for layers
-> +    other than the meta layer. The deletion of which is prevented so that the
-> +    user can't shoot themselves in the foot too badly.
-> +    """
-> +    def draw_delete_button_cb(self, col, cell, model, it, tv):
-> +        path =  model.get_value(it, 0)
-> +        # Trailing slashes are uncommon in bblayers.conf but confuse os.path.basename
-> +        path.rstrip('/')
-> +        name = os.path.basename(path)
-> +        if name == "meta":
-> +            cell.set_sensitive(False)
-> +            cell.set_property('pixbuf', None)
-> +            cell.set_property('mode', gtk.CELL_RENDERER_MODE_INERT)
-> +        else:
-> +            pix = tv.render_icon(gtk.STOCK_DELETE, gtk.ICON_SIZE_DND, None)
-
-Could Belen and Giulia provide an designed icon for this delete button?
-Since the default gtk.STOCK_DELETE may appear different from OS
-distributions.
-
-Besides, I think it is better if this button can have the effect of
-hover/un-hover, because from first eye on the button, users may not know
-it is click-able.
-
-Thanks,
-Dongxiao
-
-> +            cell.set_property('pixbuf', pix)
-> +            cell.set_sensitive(True)
-> +            cell.set_property('mode', gtk.CELL_RENDERER_MODE_ACTIVATABLE)
-> +
-> +        return True
-> +
-> +    """
-> +    A custom cell_data_func to write an extra message into the layer path cell
-> +    for the meta layer. We should inform the user that they can't remove it for
-> +    their own safety.
-> +    """
-> +    def draw_layer_path_cb(self, col, cell, model, it):
-> +        path = model.get_value(it, 0)
-> +        name = os.path.basename(path)
-> +        if name == "meta":
-> +            cell.set_property('markup', "<b>Core layer, it cannot be removed</b>\n%s" % path)
-> +        else:
-> +            cell.set_property('text', path)
-> +
-> +    def del_cell_clicked_cb(self, cell, path, model):
-> +        it = model.get_iter_from_string(path)
-> +        model.remove(it)
-> +
->  class ImageSelectionDialog (CrumbsDialog):
->  
->      __columns__ = [{
-
-
+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IGJpdGJha2UtZGV2ZWwtYm91bmNlc0Bs
+aXN0cy5vcGVuZW1iZWRkZWQub3JnIFttYWlsdG86Yml0YmFrZS1kZXZlbC1ib3VuY2VzQGxpc3Rz
+Lm9wZW5lbWJlZGRlZC5vcmddIE9uIEJlaGFsZiBPZiBKb3NodWEgTG9jaw0KU2VudDogVHVlc2Rh
+eSwgTWFyY2ggMjAsIDIwMTIgNzo1OCBBTQ0KVG86IGJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVt
+YmVkZGVkLm9yZw0KU3ViamVjdDogUmU6IFtiaXRiYWtlLWRldmVsXSBbUEFUQ0ggMDgvMTJdIEhv
+YjogY2hhbmdlIHRoZSByYW5nZSBkYW5jZSBpbiBob2J3aWRnZXQgbWFrZSBpdCBsaWtlIGEgcHl0
+aG9uaXN0YQ0KDQpPbiAxNi8wMy8xMiAwODoxMCwgU2hhbmUgV2FuZyB3cm90ZToNCj4gRnJvbTog
+TGltaW5nIEFuPGxpbWluZ3gubC5hbkBpbnRlbC5jb20+DQo+DQo+IFRvIGZpeCB0aGUgZm9yLi5p
+bi4uIHJhbmdlIGRhbmNlIGNvZGUsIGFuZCBtYWtlIGl0IGxpa2UgcHl0aG9uaXN0YSwgYXMgdGhl
+IHJlcXVpcmVkLg0KDQpUaGlzIGNvbW1pdCBtZXNzYWdlIGRvZXNuJ3QgbWF0Y2ggdGhlIHBhdGNo
+IGNvbnRlbnRzLg0KDQo+DQo+IFNpZ25lZC1vZmYtYnk6IExpbWluZyBBbjxsaW1pbmd4LmwuYW5A
+aW50ZWwuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBTaGFuZSBXYW5nPHNoYW5lLndhbmdAaW50ZWwu
+Y29tPg0KPiAtLS0NCj4gICBiaXRiYWtlL2xpYi9iYi91aS9jcnVtYnMvaG9id2lkZ2V0LnB5IHwg
+ICA2NyArKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLQ0KPiAgIDEgZmlsZXMgY2hhbmdl
+ZCwgMzYgaW5zZXJ0aW9ucygrKSwgMzEgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9i
+aXRiYWtlL2xpYi9iYi91aS9jcnVtYnMvaG9id2lkZ2V0LnB5IA0KPiBiL2JpdGJha2UvbGliL2Ji
+L3VpL2NydW1icy9ob2J3aWRnZXQucHkNCj4gaW5kZXggNzFmMDYyOS4uMmFmYTk3NSAxMDA2NDQN
+Cj4gLS0tIGEvYml0YmFrZS9saWIvYmIvdWkvY3J1bWJzL2hvYndpZGdldC5weQ0KPiArKysgYi9i
+aXRiYWtlL2xpYi9iYi91aS9jcnVtYnMvaG9id2lkZ2V0LnB5DQo+IEBAIC0zMDksNyArMzA5LDcg
+QEAgY2xhc3MgSG9iVGFiQmFyKGd0ay5EcmF3aW5nQXJlYSk6DQo+ICAgICAgICAgICBzZWxmLnRh
+Yl9oX3JhdGlvID0gNTIgKiAxLjAvNTMNCj4gICAgICAgICAgIHNlbGYuc2V0X3NpemVfcmVxdWVz
+dChzZWxmLndpZHRoLCBzZWxmLmhlaWdodCkNCj4NCj4gLSAgICAgICAgc2VsZi5jdXJyZW50X2No
+aWxkID0gMA0KPiArICAgICAgICBzZWxmLmN1cnJlbnRfY2hpbGQgPSBOb25lDQo+ICAgICAgICAg
+ICBzZWxmLmZvbnQgPSBzZWxmLmdldF9zdHlsZSgpLmZvbnRfZGVzYw0KPiAgICAgICAgICAgc2Vs
+Zi5mb250LnNldF9zaXplKHBhbmdvLlNDQUxFICogMTMpDQo+ICAgICAgICAgICBzZWxmLnVwZGF0
+ZV9jaGlsZHJlbl90ZXh0X2xheW91dF9hbmRfYmdfY29sb3IoKQ0KPiBAQCAtMzM5LDEwICszMzks
+MTAgQEAgY2xhc3MgSG9iVGFiQmFyKGd0ay5EcmF3aW5nQXJlYSk6DQo+ICAgICAgICAgICBpZiBz
+ZWxmLmlzX2ZvY3VzKCkgb3IgZXZlbnQudHlwZSA9PSBndGsuZ2RrLkJVVFRPTl9QUkVTUzoNCj4g
+ICAgICAgICAgICAgICB4LCB5ID0gZXZlbnQuZ2V0X2Nvb3JkcygpDQo+ICAgICAgICAgICAgICAg
+IyBjaGVjayB3aGljaCB0YWIgYmUgY2xpY2tlZA0KPiAtICAgICAgICAgICAgZm9yIGksIGNoaWxk
+IGluIGVudW1lcmF0ZShzZWxmLmNoaWxkcmVuKToNCj4gKyAgICAgICAgICAgIGZvciBjaGlsZCBp
+biBzZWxmLmNoaWxkcmVuOg0KPiAgICAgICAgICAgICAgICAgIGlmICAgICAgKGNoaWxkWyJ4Il08
+ICB4KSBhbmQgKHg8ICBjaGlsZFsieCJdICsgc2VsZi50YWJfd2lkdGgpIFwNCj4gICAgICAgICAg
+ICAgICAgICAgICAgYW5kIChjaGlsZFsieSJdPCAgeSkgYW5kICh5PCAgY2hpbGRbInkiXSArIHNl
+bGYudGFiX2hlaWdodCk6DQo+IC0gICAgICAgICAgICAgICAgICAgc2VsZi5jdXJyZW50X2NoaWxk
+ID0gaQ0KPiArICAgICAgICAgICAgICAgICAgIHNlbGYuY3VycmVudF9jaGlsZCA9IGNoaWxkDQo+
+ICAgICAgICAgICAgICAgICAgICAgIHJlc3VsdCA9IFRydWUNCj4gICAgICAgICAgICAgICAgICAg
+ICAgYnJlYWsNCj4NCj4gQEAgLTM1Myw3ICszNTMsNyBAQCBjbGFzcyBIb2JUYWJCYXIoZ3RrLkRy
+YXdpbmdBcmVhKToNCj4gICAgICAgICAgICAgICAgICAgICAgc2VsZi5ncmFiX2ZvY3VzKCkNCj4N
+Cj4gICAgICAgICAgIGlmIHJlc3VsdCA9PSBUcnVlOg0KPiAtICAgICAgICAgICAgcGFnZSA9IHNl
+bGYuY2hpbGRyZW5bc2VsZi5jdXJyZW50X2NoaWxkXVsidG9nZ2xlZF9wYWdlIl0NCj4gKyAgICAg
+ICAgICAgIHBhZ2UgPSBzZWxmLmN1cnJlbnRfY2hpbGRbInRvZ2dsZWRfcGFnZSJdDQo+ICAgICAg
+ICAgICAgICAgc2VsZi5lbWl0KCJ0YWItc3dpdGNoZWQiLCBwYWdlKQ0KPiAgICAgICAgICAgICAg
+IHNlbGYudGFiX3ByZXNzZWQgPSBUcnVlDQo+ICAgICAgICAgICAgICAgc2VsZi5xdWV1ZV9kcmF3
+KCkNCj4gQEAgLTM2Niw3ICszNjYsNyBAQCBjbGFzcyBIb2JUYWJCYXIoZ3RrLkRyYXdpbmdBcmVh
+KToNCj4gICAgICAgICAgICAgICBjaGlsZFsieCJdID0gc2VsZi50YWJfeCArIGkgKiBzZWxmLnRh
+Yl93aWR0aA0KPiAgICAgICAgICAgICAgIGNoaWxkWyJ5Il0gPSBzZWxmLnRhYl95DQo+DQo+IC0g
+ICAgICAgIGlmIHNlbGYuYmxhbmtfcmVjdGFuZ2xlOg0KPiArICAgICAgICBpZiBzZWxmLmJsYW5r
+X3JlY3RhbmdsZSAhPSBOb25lOg0KDQpUaGlzIHNlZW1zIHJlZHVuZGFudD8NCg0KPiAgICAgICAg
+ICAgICAgIHNlbGYucmVzaXplX2JsYW5rX3JlY3RhbmdsZSgpDQo+DQo+ICAgICAgIGRlZiByZXNp
+emVfYmxhbmtfcmVjdGFuZ2xlKHNlbGYpOg0KPiBAQCAtMzgzLDE2ICszODMsMTYgQEAgY2xhc3Mg
+SG9iVGFiQmFyKGd0ay5EcmF3aW5nQXJlYSk6DQo+ICAgICAgICAgICAgICAgcGFuZ29sYXlvdXQg
+PSBzZWxmLmNyZWF0ZV9wYW5nb19sYXlvdXQoY2hpbGRbInRpdGxlIl0pDQo+ICAgICAgICAgICAg
+ICAgcGFuZ29sYXlvdXQuc2V0X2ZvbnRfZGVzY3JpcHRpb24oc2VsZi5mb250KQ0KPiAgICAgICAg
+ICAgICAgIGNoaWxkWyJ0aXRsZV9sYXlvdXQiXSA9IHBhbmdvbGF5b3V0DQo+IC0gICAgICAgICAg
+ICBjaGlsZFtpXVsiciJdID0gY29sb3IucmVkDQo+IC0gICAgICAgICAgICBjaGlsZFtpXVsiZyJd
+ID0gY29sb3IuZ3JlZW4NCj4gLSAgICAgICAgICAgIGNoaWxkW2ldWyJiIl0gPSBjb2xvci5ibHVl
+DQo+ICsgICAgICAgICAgICBjaGlsZFsiciJdID0gY29sb3IucmVkDQo+ICsgICAgICAgICAgICBj
+aGlsZFsiZyJdID0gY29sb3IuZ3JlZW4NCj4gKyAgICAgICAgICAgIGNoaWxkWyJiIl0gPSBjb2xv
+ci5ibHVlDQo+DQo+ICAgICAgIGRlZiBhcHBlbmRfdGFiX2NoaWxkKHNlbGYsIHRpdGxlLCBwYWdl
+KToNCj4gICAgICAgICAgIG51bSA9IGxlbihzZWxmLmNoaWxkcmVuKSArIDENCj4gICAgICAgICAg
+IHNlbGYudGFiX3dpZHRoID0gc2VsZi50YWJfd2lkdGggKiBsZW4oc2VsZi5jaGlsZHJlbikgLyBu
+dW0NCj4NCj4gICAgICAgICAgIGkgPSAwDQo+IC0gICAgICAgIGZvciBjaGlsZCBpbiBzZWxmLmNo
+aWxkcmVuOg0KPiArICAgICAgICBmb3IgaSwgY2hpbGQgaW4gZW51bWVyYXRlKHNlbGYuY2hpbGRy
+ZW4pOg0KPiAgICAgICAgICAgICAgIGNoaWxkWyJ4Il0gPSBzZWxmLnRhYl94ICsgaSAqIHNlbGYu
+dGFiX3dpZHRoDQo+ICAgICAgICAgICAgICAgaSArPSAxDQo+DQo+IEBAIC00MTQsNiArNDE0LDkg
+QEAgY2xhc3MgSG9iVGFiQmFyKGd0ay5EcmF3aW5nQXJlYSk6DQo+ICAgICAgICAgICAgICAgImlu
+ZGljYXRvcl9udW1iZXIiIDogMCwNCj4gICAgICAgICAgIH0NCj4gICAgICAgICAgIHNlbGYuY2hp
+bGRyZW4uYXBwZW5kKG5ld19vbmUpDQo+ICsgICAgICAgICMgc2V0IHRoZSBkZWZhdWx0IGN1cnJl
+bnQgY2hpbGQNCj4gKyAgICAgICAgaWYgbm90IHNlbGYuY3VycmVudF9jaGlsZDoNCj4gKyAgICAg
+ICAgICAgIHNlbGYuY3VycmVudF9jaGlsZCA9IG5ld19vbmUNCj4NCj4gICAgICAgZGVmIG9uX2Ry
+YXcoc2VsZiwgd2lkZ2V0LCBldmVudCk6DQo+ICAgICAgICAgICBjciA9IHdpZGdldC53aW5kb3cu
+Y2Fpcm9fY3JlYXRlKCkgQEAgLTQyNSwxMSArNDI4LDEyIEBAIA0KPiBjbGFzcyBIb2JUYWJCYXIo
+Z3RrLkRyYXdpbmdBcmVhKToNCj4NCj4gICAgICAgICAgIHNlbGYuZHJhd19iYWNrZ3JvdW5kKGNy
+KQ0KPiAgICAgICAgICAgc2VsZi5kcmF3X3RvZ2dsZWRfdGFiKGNyKQ0KPiAtICAgICAgICBzZWxm
+LmRyYXdfdGFiX3RleHQoY3IpDQo+DQo+IC0gICAgICAgIGZvciBpLCBjaGlsZCBpbiBlbnVtZXJh
+dGUoc2VsZi5jaGlsZHJlbik6DQo+ICsgICAgICAgIGZvciBjaGlsZCBpbiBzZWxmLmNoaWxkcmVu
+Og0KPiAgICAgICAgICAgICAgIGlmIGNoaWxkWyJpbmRpY2F0b3Jfc2hvdyJdID09IFRydWU6DQo+
+IC0gICAgICAgICAgICAgICAgc2VsZi5kcmF3X2luZGljYXRvcihjciwgaSkNCj4gKyAgICAgICAg
+ICAgICAgICBzZWxmLmRyYXdfaW5kaWNhdG9yKGNyLCBjaGlsZCkNCj4gKw0KPiArICAgICAgICBz
+ZWxmLmRyYXdfdGFiX3RleHQoY3IpDQo+DQo+ICAgICAgIGRlZiBkcmF3X2JhY2tncm91bmQoc2Vs
+ZiwgY3IpOg0KPiAgICAgICAgICAgc3R5bGUgPSBzZWxmLmdldF9zdHlsZSgpDQo+IEBAIC00NzYs
+MTQgKzQ4MCwxNSBAQCBjbGFzcyBIb2JUYWJCYXIoZ3RrLkRyYXdpbmdBcmVhKToNCj4gICAgICAg
+ICAgICAgICAgICAgIyBjZW50ZXIgcG9zDQo+ICAgICAgICAgICAgICAgICAgIG9mZl94ID0gKHNl
+bGYudGFiX3dpZHRoIC0gZm9udHcpIC8gMg0KPiAgICAgICAgICAgICAgICAgICBvZmZfeSA9IChz
+ZWxmLnRhYl9oZWlnaHQgLSBmb250aCkgLyAyDQo+IC0gICAgICAgICAgICAgICAgeCA9IGNoaWxk
+W2ldWyJ4Il0gKyBvZmZfeA0KPiAtICAgICAgICAgICAgICAgIHkgPSBjaGlsZFtpXVsieSJdICsg
+b2ZmX3kNCj4gKyAgICAgICAgICAgICAgICB4ID0gY2hpbGRbIngiXSArIG9mZl94DQo+ICsgICAg
+ICAgICAgICAgICAgeSA9IGNoaWxkWyJ5Il0gKyBvZmZfeQ0KPiAgICAgICAgICAgICAgICAgICAN
+Cj4gc2VsZi53aW5kb3cuZHJhd19sYXlvdXQoc2VsZi5zdHlsZS5mZ19nY1tndGsuU1RBVEVfTk9S
+TUFMXSwgaW50KHgpLCANCj4gaW50KHkpLCBwYW5nb2xheW91dCkNCj4NCj4gICAgICAgZGVmIGRy
+YXdfdG9nZ2xlZF90YWIoc2VsZiwgY3IpOg0KPiAtICAgICAgICBpID0gc2VsZi5jdXJyZW50X2No
+aWxkDQo+IC0gICAgICAgIHggPSBzZWxmLmNoaWxkcmVuW2ldWyJ4Il0NCj4gLSAgICAgICAgeSA9
+IHNlbGYuY2hpbGRyZW5baV1bInkiXQ0KPiArICAgICAgICBpZiBub3Qgc2VsZi5jdXJyZW50X2No
+aWxkOg0KPiArICAgICAgICAgICAgcmV0dXJuDQo+ICsgICAgICAgIHggPSBzZWxmLmN1cnJlbnRf
+Y2hpbGRbIngiXQ0KPiArICAgICAgICB5ID0gc2VsZi5jdXJyZW50X2NoaWxkWyJ5Il0NCj4gICAg
+ICAgICAgIHdpZHRoID0gc2VsZi50YWJfd2lkdGgNCj4gICAgICAgICAgIGhlaWdodCA9IHNlbGYu
+dGFiX2hlaWdodA0KPiAgICAgICAgICAgc3R5bGUgPSBzZWxmLmdldF9zdHlsZSgpDQo+IEBAIC01
+MTUsMTAgKzUyMCwxMCBAQCBjbGFzcyBIb2JUYWJCYXIoZ3RrLkRyYXdpbmdBcmVhKToNCj4gICAg
+ICAgICAgIGNyLmFyYyh4ICsgciwgeSArIHIsIHIsIG1hdGgucGksIDEuNSptYXRoLnBpKQ0KPiAg
+ICAgICAgICAgY3IuZmlsbCgpDQo+DQo+IC0gICAgZGVmIGRyYXdfaW5kaWNhdG9yKHNlbGYsIGNy
+LCBpKToNCj4gLSAgICAgICAgdGFiX3ggPSBzZWxmLmNoaWxkcmVuW2ldWyJ4Il0NCj4gLSAgICAg
+ICAgdGFiX3kgPSBzZWxmLmNoaWxkcmVuW2ldWyJ5Il0NCj4gLSAgICAgICAgbnVtYmVyID0gc2Vs
+Zi5jaGlsZHJlbltpXVsiaW5kaWNhdG9yX251bWJlciJdDQo+ICsgICAgZGVmIGRyYXdfaW5kaWNh
+dG9yKHNlbGYsIGNyLCBjaGlsZCk6DQo+ICsgICAgICAgIHRhYl94ID0gY2hpbGRbIngiXQ0KPiAr
+ICAgICAgICB0YWJfeSA9IGNoaWxkWyJ5Il0NCj4gKyAgICAgICAgbnVtYmVyID0gY2hpbGRbImlu
+ZGljYXRvcl9udW1iZXIiXQ0KPiAgICAgICAgICAgZGVzdF93ID0gaW50KDMyICogc2VsZi50YWJf
+d19yYXRpbykNCj4gICAgICAgICAgIGRlc3RfaCA9IGludCgzMiAqIHNlbGYudGFiX2hfcmF0aW8p
+DQo+ICAgICAgICAgICBpZiBkZXN0X2g8ICBzZWxmLnRhYl9oZWlnaHQ6DQo+IEBAIC01NDEsMTcg
+KzU0NiwxNyBAQCBjbGFzcyBIb2JUYWJCYXIoZ3RrLkRyYXdpbmdBcmVhKToNCj4gICAgICAgICAg
+IGNyLm1vdmVfdG8oeCwgeSkNCj4gICAgICAgICAgIHNlbGYud2luZG93LmRyYXdfbGF5b3V0KHNl
+bGYuc3R5bGUuZmdfZ2NbZ3RrLlNUQVRFX05PUk1BTF0sIA0KPiBpbnQoeCksIGludCh5KSwgbGF5
+b3V0KQ0KPg0KPiAtICAgIGRlZiBzaG93X2luZGljYXRvcl9pY29uKHNlbGYsIGksIG51bWJlcik6
+DQo+IC0gICAgICAgIHNlbGYuY2hpbGRyZW5baV1bImluZGljYXRvcl9zaG93Il0gPSBUcnVlDQo+
+IC0gICAgICAgIHNlbGYuY2hpbGRyZW5baV1bImluZGljYXRvcl9udW1iZXIiXSA9IG51bWJlcg0K
+PiArICAgIGRlZiBzaG93X2luZGljYXRvcl9pY29uKHNlbGYsIGNoaWxkLCBudW1iZXIpOg0KPiAr
+ICAgICAgICBjaGlsZFsiaW5kaWNhdG9yX3Nob3ciXSA9IFRydWUNCj4gKyAgICAgICAgY2hpbGRb
+ImluZGljYXRvcl9udW1iZXIiXSA9IG51bWJlcg0KPiAgICAgICAgICAgc2VsZi5xdWV1ZV9kcmF3
+KCkNCj4NCj4gLSAgICBkZWYgaGlkZV9pbmRpY2F0b3JfaWNvbihzZWxmLCBpKToNCj4gLSAgICAg
+ICAgc2VsZi5jaGlsZHJlbltpXVsiaW5kaWNhdG9yX3Nob3ciXSA9IEZhbHNlDQo+ICsgICAgZGVm
+IGhpZGVfaW5kaWNhdG9yX2ljb24oc2VsZiwgY2hpbGQpOg0KPiArICAgICAgICBjaGlsZFsiaW5k
+aWNhdG9yX3Nob3ciXSA9IEZhbHNlDQo+ICAgICAgICAgICBzZWxmLnF1ZXVlX2RyYXcoKQ0KPg0K
+PiAgICAgICBkZWYgc2V0X2JsYW5rX3NpemUoc2VsZiwgeCwgeSwgdywgaCk6DQo+IC0gICAgICAg
+IGlmIG5vdCBzZWxmLmJsYW5rX3JlY3RhbmdsZSBvciBzZWxmLmJsYW5rX3JlY3RhbmdsZS54ICE9
+IHggb3Igc2VsZi5ibGFua19yZWN0YW5nbGUud2lkdGggIT0gdzoNCj4gKyAgICAgICAgaWYgc2Vs
+Zi5ibGFua19yZWN0YW5nbGUgPT0gTm9uZSBvciBzZWxmLmJsYW5rX3JlY3RhbmdsZS54ICE9IHgg
+b3Igc2VsZi5ibGFua19yZWN0YW5nbGUud2lkdGggIT0gdzoNCg0KVGhpcyBjaGFuZ2Ugc2VlbXMg
+cmVkdW5kYW50Lg0KDQo+ICAgICAgICAgICAgICAgc2VsZi5lbWl0KCJibGFuay1hcmVhLWNoYW5n
+ZWQiLCB4LCB5LCB3LCBoKQ0KPg0KPiAgICAgICAgICAgcmV0dXJuIGd0ay5nZGsuUmVjdGFuZ2xl
+KHgsIHksIHcsIGgpIEBAIC02MTgsMTggKzYyMywxOCBAQCANCj4gY2xhc3MgSG9iTm90ZWJvb2so
+Z3RrLlZCb3gpOg0KPiAgICAgICAgICAgc2VsZi50Yi5zaG93KCkNCj4NCj4gICAgICAgZGVmIHNo
+b3dfaW5kaWNhdG9yX2ljb24oc2VsZiwgdGl0bGUsIG51bWJlcik6DQo+IC0gICAgICAgIGZvciBp
+LCBjaGlsZCBpbiBlbnVtZXJhdGUoc2VsZi50YWJiYXIuY2hpbGRyZW4pOg0KPiArICAgICAgICBm
+b3IgY2hpbGQgaW4gc2VsZi50YWJiYXIuY2hpbGRyZW46DQo+ICAgICAgICAgICAgICAgaWYgY2hp
+bGRbInRvZ2dsZWRfcGFnZSJdID09IC0xOg0KPiAgICAgICAgICAgICAgICAgICBjb250aW51ZQ0K
+PiAgICAgICAgICAgICAgIGlmIGNoaWxkWyJ0aXRsZSJdID09IHRpdGxlOg0KPiAtICAgICAgICAg
+ICAgICAgIHNlbGYudGFiYmFyLnNob3dfaW5kaWNhdG9yX2ljb24oaSwgbnVtYmVyKQ0KPiArICAg
+ICAgICAgICAgICAgIHNlbGYudGFiYmFyLnNob3dfaW5kaWNhdG9yX2ljb24oY2hpbGQsIG51bWJl
+cikNCj4NCj4gICAgICAgZGVmIGhpZGVfaW5kaWNhdG9yX2ljb24oc2VsZiwgdGl0bGUpOg0KPiAt
+ICAgICAgICBmb3IgaSwgY2hpbGQgaW4gZW51bWVyYXRlKHNlbGYudGFiYmFyLmNoaWxkcmVuKToN
+Cj4gKyAgICAgICAgZm9yIGNoaWxkIGluIHNlbGYudGFiYmFyLmNoaWxkcmVuOg0KPiAgICAgICAg
+ICAgICAgIGlmIGNoaWxkWyJ0b2dnbGVkX3BhZ2UiXSA9PSAtMToNCj4gICAgICAgICAgICAgICAg
+ICAgY29udGludWUNCj4gICAgICAgICAgICAgICBpZiBjaGlsZFsidGl0bGUiXSA9PSB0aXRsZToN
+Cj4gLSAgICAgICAgICAgICAgICBzZWxmLnRhYmJhci5oaWRlX2luZGljYXRvcl9pY29uKGkpDQo+
+ICsgICAgICAgICAgICAgICAgc2VsZi50YWJiYXIuaGlkZV9pbmRpY2F0b3JfaWNvbihjaGlsZCkN
+Cj4NCj4gICAgICAgZGVmIHRhYl9zd2l0Y2hlZF9jYihzZWxmLCB3aWRnZXQsIHBhZ2UpOg0KPiAg
+ICAgICAgICAgc2VsZi5ub3RlYm9vay5zZXRfY3VycmVudF9wYWdlKHBhZ2UpDQoNCi0tDQpKb3No
+dWEgJ+i0vuipoScgTG9jaw0KICAgICAgICAgWW9jdG8gUHJvamVjdCAiSm9oYW5uZXMgZmFjdG90
+dW0iDQogICAgICAgICBJbnRlbCBPcGVuIFNvdXJjZSBUZWNobm9sb2d5IENlbnRyZQ0KDQpIaSBK
+b3NoLA0KVGhpcyBjb21tZW5kIGlzIGJlIGZpeGVkIHBsZWFzZSB0byByZXZpZXcgaW4gbGlteC9o
+b2IyLXYwLjY5LCBUaGFua3MhDQotLQ0KUmVnYXJkcw0KTGltaW5nDQpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KYml0YmFrZS1kZXZlbCBtYWlsaW5nIGxp
+c3QNCmJpdGJha2UtZGV2ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KaHR0cDovL2xpc3RzLmxp
+bnV4dG9nby5vcmcvY2dpLWJpbi9tYWlsbWFuL2xpc3RpbmZvL2JpdGJha2UtZGV2ZWwNCg==
 
 
