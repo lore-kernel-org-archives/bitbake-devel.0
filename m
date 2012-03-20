@@ -1,38 +1,41 @@
 Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1S9zFm-0007qy-Lb
+	(envelope-from <shane.wang@intel.com>) id 1S9zWA-0008B8-FQ
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 20 Mar 2012 14:37:34 +0100
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 20 Mar 2012 06:28:41 -0700
+	Tue, 20 Mar 2012 14:54:30 +0100
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga101.ch.intel.com with ESMTP; 20 Mar 2012 06:45:36 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="121081536"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="79584023"
 Received: from azsmsx601.amr.corp.intel.com ([10.2.121.193])
-	by azsmga001.ch.intel.com with ESMTP; 20 Mar 2012 06:27:41 -0700
-Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+	by AZSMGA002.ch.intel.com with ESMTP; 20 Mar 2012 06:44:36 -0700
+Received: from azsmsx604.amr.corp.intel.com (10.2.161.34) by
 	azsmsx601.amr.corp.intel.com (10.2.121.193) with Microsoft SMTP Server
-	(TLS) id 8.2.255.0; Tue, 20 Mar 2012 06:27:40 -0700
+	(TLS) id 8.2.255.0; Tue, 20 Mar 2012 06:44:35 -0700
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+	azsmsx604.amr.corp.intel.com (10.2.161.34) with Microsoft SMTP Server
+	(TLS) id 8.2.255.0; Tue, 20 Mar 2012 06:44:36 -0700
 Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.36]) by
 	SHSMSX151.ccr.corp.intel.com ([169.254.3.91]) with mapi id
-	14.01.0355.002; Tue, 20 Mar 2012 21:27:39 +0800
+	14.01.0355.002; Tue, 20 Mar 2012 21:44:34 +0800
 From: "Wang, Shane" <shane.wang@intel.com>
 To: Joshua Lock <josh@linux.intel.com>, "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH 06/12] Hob: allow users to setup the
-	proxies
-Thread-Index: AQHNBitCFdGss/LFP0WCg3dTPEFYBZZzLa6g
-Date: Tue, 20 Mar 2012 13:27:39 +0000
-Message-ID: <3AB6CE7F274E534CAFD089D127A8A1FC23AF253A@SHSMSX102.ccr.corp.intel.com>
+Thread-Topic: [bitbake-devel] [PATCH 02/12] Hob: use HobNotebook to
+	implement a notebook in build details page
+Thread-Index: AQHNBir3u8y5qha/XESlHAi9eK2hx5ZzMbdw
+Date: Tue, 20 Mar 2012 13:44:33 +0000
+Message-ID: <3AB6CE7F274E534CAFD089D127A8A1FC23AF259F@SHSMSX102.ccr.corp.intel.com>
 References: <8dafade95596191e9998acc05dcf7c34737d70c1.1331910234.git.shane.wang@intel.com>
-	<1a7d9a990627f74a94712aa2ca9f4bece2ed6511.1331910234.git.shane.wang@intel.com>
-	<4F67C68A.7010802@linux.intel.com>
-In-Reply-To: <4F67C68A.7010802@linux.intel.com>
+	<8565670d713978a93a57a96c55b4815a144af3e5.1331910234.git.shane.wang@intel.com>
+	<4F67C607.50806@linux.intel.com>
+In-Reply-To: <4F67C607.50806@linux.intel.com>
 Accept-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-originating-ip: [10.239.127.40]
 MIME-Version: 1.0
-Subject: Re: [PATCH 06/12] Hob: allow users to setup the	proxies
+Subject: Re: [PATCH 02/12] Hob: use HobNotebook to implement a notebook in build details page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -44,24 +47,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Mar 2012 13:37:34 -0000
+X-List-Received-Date: Tue, 20 Mar 2012 13:54:30 -0000
 Content-Language: en-US
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 
-Sm9zaHVhIExvY2sgd3JvdGUgb27CoDIwMTItMDMtMjA6DQoNCj4gDQo+IA0KPiBPbiAxNi8wMy8x
-MiAwODoxMCwgU2hhbmUgV2FuZyB3cm90ZToNCj4+IFRoaXMgcGF0Y2ggaXMgdG8gc2V0IG9zLmVu
-dmlyb24gdG8gYWxsb3cgdXNlcnMgdG8gc2V0IHRoZSBlbnZpcm9ubWVudA0KPiB2YXJpYWJsZXMg
-Zm9yIGh0dHBfcHJveHksIGh0dHBzX3Byb3h5IGFuZCBmdHBfcHJveHkuDQo+IA0KPiBJIHRoaW5r
-IHdlIG5lZWQgdG8gYmUgY2FyZWZ1bCBhYm91dCBpbXBsZW1lbnRpbmcgdGhpcyBmdW5jdGlvbmFs
-aXR5LCBzbw0KPiBJIGhhdmUgdHdvIHN1Z2dlc3Rpb25zDQo+IDEpIEFzIGZhciBhcyBJIGNhbiB0
-ZWxsIHRoZSBwcm94eSBzZXR0aW5ncyB3aWxsIG5vdCBiZSByZW1lbWJlcmVkDQo+IGJldHdlZW4g
-cnVucyBvZiB0aGUgSG9iLCBJIHRoaW5rIHRoZXkgcHJvYmFibHkgc2hvdWxkIGJlLg0KWWVzLg0K
-DQo+IDIpIElmIHRoZSB1c2VyIGFscmVhZHkgaGFzIHNvbWUgb3IgYWxsIG9mIHRoZSBwcm94eSBz
-ZXR0aW5ncyBzZXQgaW4NCj4gdGhlaXIgZW52aXJvbm1lbnQgd2Ugc2hvdWxkIHByb2JhYmx5IGRl
-dGVjdCB0aG9zZSBhbmQgZGlzcGxheSB0aGVtDQo+IGFwcHJvcHJpYXRlbHkgaW4gdGhlIEdVSS4N
-Ck9LLCB3aWxsIGludmVzdGlnYXRlIGFuZCBoYXZlIGEgdHJ5Lg0KDQo+IA0KPiBBcmUgdGhlaXIg
-YW55IGRlc2lnbiBkb2N1bWVudHMgZm9yIHRoaXMgZGlhbG9ndWU/DQpOby4NCg0KPiANCj4gQ2hl
-ZXJzLA0KPiBKb3NodWENCg==
+Sm9zaHVhIExvY2sgd3JvdGUgb27CoDIwMTItMDMtMjA6DQoNCj4gT24gMTYvMDMvMTIgMDg6MTAs
+IFNoYW5lIFdhbmcgd3JvdGU6DQo+PiAgIGNsYXNzIFJ1bm5pbmdCdWlsZE1vZGVsIChndGsuVHJl
+ZVN0b3JlKToNCj4+IEBAIC00MCw2ICs0MSwzMiBAQCBjbGFzcyBSdW5uaW5nQnVpbGRNb2RlbCAo
+Z3RrLlRyZWVTdG9yZSk6DQo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ29i
+amVjdC5UWVBFX1NUUklORywNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBn
+b2JqZWN0LlRZUEVfSU5UKQ0KPj4gKyAgICBkZWYgY29uZmlnX21vZGVsX2ZpbHRlcihzZWxmLCBt
+b2RlbCwgaXQpOg0KPj4gKyAgICAgICAgbXNnID0gbW9kZWwuZ2V0KGl0LCBzZWxmLkNPTF9NRVNT
+QUdFKVswXQ0KPj4gKyAgICAgICAgaWYgbXNnID09IE5vbmUgb3IgdHlwZShtc2cpICE9IHN0cjoN
+Cj4+ICsgICAgICAgICAgICByZXR1cm4gRmFsc2UNCj4+ICsgICAgICAgIGlmIG1zZy5zdGFydHN3
+aXRoKCJcbk9FIEJ1aWxkIENvbmZpZ3VyYXRpb246XG4iKToNCj4+ICsgICAgICAgICAgICByZXR1
+cm4gVHJ1ZQ0KPj4gKyAgICAgICAgcmV0dXJuIEZhbHNlDQo+IA0KPiBJIHRoaW5rIEkgY29tbWVu
+dGVkIG9uIHRoaXMgYmVmb3JlLCB0aGlzIHNlZW1zIGxpa2UgYSBoZWF2eSB3YXkgdG8NCj4gYWNo
+aWV2ZSB0aGlzIGZ1bmN0aW9uYWxpdHkuIElzIHRoZXJlIG5vdCBhbm90aGVyIHdheSB3ZSBjYW4g
+ZGlzcGxheSB0aGUNCj4gQnVpbGQgQ29uZmlndXJhdGlvbiB0byB0aGUgdXNlciB3aXRob3V0IGhh
+dmluZyB0byBmaWx0ZXIgZXZlcnkgbWVzc2FnZQ0KPiBlbWl0dGVkPw0KSSBhbSBnb2luZyB0byBz
+dWJtaXQgYSBidWcgaW4gYnVnemlsbGEgdG8gYWRkcmVzcyBpdCBsYXRlciwgc2luY2UgdGhlIHNl
+cmllcyBvZiBwYXRjaGVzIGJsb2NrIGEgbG90IG9mIHBhdGNoIHN1Ym1pc3Npb25zLg0KDQo+IA0K
+PiBGdXJ0aGVyLCBpZiB3ZSdyZSBnb2luZyB0byBkaXNwbGF5IHRoaXMgaW5mb3JtYXRpb24gaW4g
+YSBzZXBhcmF0ZSBwYWdlDQo+IG9mIHRoZSBub3RlYm9vayB3b3VsZCBpdCBub3QgbWFrZSBzZW5z
+ZSB0byBub3Qgc2hvdyBpdCBpbiB0aGUgYnVpbGQgbG9nDQo+IHBhZ2U/DQpPSywgaWYgeW91IHdh
+bnQgSSBjYW4gcmVtb3ZlIGl0LiBCdXQgSSBzdWdnZXN0IHRvIGtlZXAgaXQgYmVjYXVzZSBvZiB5
+b3VyIGFib3ZlIGNvbW1lbnQuDQpUaGF0IGlzIHRoZSBjb25maWd1cmF0aW9uIGluZm9ybWF0aW9u
+IGluIENvbmZpZ3VyYXRpb24gVGFiIGNvbWVzIGZyb20gZGlmZmVyZW50IHNvdXJjZXMuDQoNCi0t
+DQpTaGFuZQ0KDQo+IA0KPiBDaGVlcnMsDQo+IEpvc2h1YQ0KDQoNCg==
 
 
