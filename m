@@ -1,32 +1,41 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1S9zza-0000cd-IY for bitbake-devel@lists.openembedded.org;
-	Tue, 20 Mar 2012 15:24:54 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2KEDU7B010725;
-	Tue, 20 Mar 2012 14:13:30 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 09853-05; Tue, 20 Mar 2012 14:13:26 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2KEDKtD010718
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Tue, 20 Mar 2012 14:13:21 GMT
-Message-ID: <1332252802.9740.89.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Eric =?ISO-8859-1?Q?B=E9nard?= <eric@eukrea.com>
-Date: Tue, 20 Mar 2012 14:13:22 +0000
-In-Reply-To: <1332158179-2776-1-git-send-email-eric@eukrea.com>
-References: <1332158179-2776-1-git-send-email-eric@eukrea.com>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-X-MIME-Autoconverted: from 8bit to quoted-printable by tim.rpsys.net id
-	q2KEDU7B010725
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] runningbuild.py: fix goggle ui
+Received: from mga03.intel.com ([143.182.124.21])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <shane.wang@intel.com>) id 1SA02U-0000nT-HC
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 20 Mar 2012 15:27:55 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 20 Mar 2012 07:18:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="121096854"
+Received: from azsmsx601.amr.corp.intel.com ([10.2.121.193])
+	by azsmga001.ch.intel.com with ESMTP; 20 Mar 2012 07:17:48 -0700
+Received: from azsmsx604.amr.corp.intel.com (10.2.161.34) by
+	azsmsx601.amr.corp.intel.com (10.2.121.193) with Microsoft SMTP Server
+	(TLS) id 8.2.255.0; Tue, 20 Mar 2012 07:17:47 -0700
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+	azsmsx604.amr.corp.intel.com (10.2.161.34) with Microsoft SMTP Server
+	(TLS) id 8.2.255.0; Tue, 20 Mar 2012 07:17:48 -0700
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.36]) by
+	SHSMSX151.ccr.corp.intel.com ([169.254.3.91]) with mapi id
+	14.01.0355.002; Tue, 20 Mar 2012 22:17:45 +0800
+From: "Wang, Shane" <shane.wang@intel.com>
+To: "Wang, Shane" <shane.wang@intel.com>, Joshua Lock <josh@linux.intel.com>, 
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] [PATCH 02/12] Hob: use HobNotebook to
+	implement a notebook in build details page
+Thread-Index: AQHNBir3u8y5qha/XESlHAi9eK2hx5ZzMbdwgAAKSmA=
+Date: Tue, 20 Mar 2012 14:17:45 +0000
+Message-ID: <3AB6CE7F274E534CAFD089D127A8A1FC23AF2652@SHSMSX102.ccr.corp.intel.com>
+References: <8dafade95596191e9998acc05dcf7c34737d70c1.1331910234.git.shane.wang@intel.com>
+	<8565670d713978a93a57a96c55b4815a144af3e5.1331910234.git.shane.wang@intel.com>
+	<4F67C607.50806@linux.intel.com> 
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.239.127.40]
+MIME-Version: 1.0
+Subject: Re: [PATCH 02/12] Hob: use HobNotebook to implement a notebook in build details page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -38,26 +47,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Mar 2012 14:24:54 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 20 Mar 2012 14:27:55 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Mon, 2012-03-19 at 12:56 +0100, Eric B=C3=A9nard wrote:
-> * goggle ui actually fails with :
-> Traceback (most recent call last):
->   File ".../bitbake/lib/bb/ui/goggle.py", line 35, in event_handle_idle=
-_func
->     build.handle_event (event, pbar)
->   File ".../bitbake/lib/bb/ui/crumbs/runningbuild.py", line 234, in han=
-dle_event
->     pbar.update(0, None, bb.event.getName(event))
-> TypeError: update() takes exactly 3 arguments (4 given)
->=20
-> Signed-off-by: Eric B=C3=A9nard <eric@eukrea.com>
-
-Merged to master, thanks.
-
-Richard
-
+aHR0cHM6Ly9idWd6aWxsYS55b2N0b3Byb2plY3Qub3JnL3Nob3dfYnVnLmNnaT9pZD0yMTQ0DQpm
+b3IgdGhpcy4NCg0KLS0NClNoYW5lDQoNCldhbmcsIFNoYW5lIHdyb3RlIG9uwqAyMDEyLTAzLTIw
+Og0KDQo+IEpvc2h1YSBMb2NrIHdyb3RlIG9uwqAyMDEyLTAzLTIwOg0KPiANCj4+IE9uIDE2LzAz
+LzEyIDA4OjEwLCBTaGFuZSBXYW5nIHdyb3RlOg0KPj4+ICAgY2xhc3MgUnVubmluZ0J1aWxkTW9k
+ZWwgKGd0ay5UcmVlU3RvcmUpOg0KPj4+IEBAIC00MCw2ICs0MSwzMiBAQCBjbGFzcyBSdW5uaW5n
+QnVpbGRNb2RlbCAoZ3RrLlRyZWVTdG9yZSk6DQo+Pj4gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIGdvYmplY3QuVFlQRV9TVFJJTkcsDQo+Pj4gICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIGdvYmplY3QuVFlQRV9JTlQpDQo+Pj4gKyAgICBkZWYgY29uZmlnX21vZGVs
+X2ZpbHRlcihzZWxmLCBtb2RlbCwgaXQpOg0KPj4+ICsgICAgICAgIG1zZyA9IG1vZGVsLmdldChp
+dCwgc2VsZi5DT0xfTUVTU0FHRSlbMF0NCj4+PiArICAgICAgICBpZiBtc2cgPT0gTm9uZSBvciB0
+eXBlKG1zZykgIT0gc3RyOg0KPj4+ICsgICAgICAgICAgICByZXR1cm4gRmFsc2UNCj4+PiArICAg
+ICAgICBpZiBtc2cuc3RhcnRzd2l0aCgiXG5PRSBCdWlsZCBDb25maWd1cmF0aW9uOlxuIik6DQo+
+Pj4gKyAgICAgICAgICAgIHJldHVybiBUcnVlDQo+Pj4gKyAgICAgICAgcmV0dXJuIEZhbHNlDQo+
+PiANCj4+IEkgdGhpbmsgSSBjb21tZW50ZWQgb24gdGhpcyBiZWZvcmUsIHRoaXMgc2VlbXMgbGlr
+ZSBhIGhlYXZ5IHdheSB0bw0KPj4gYWNoaWV2ZSB0aGlzIGZ1bmN0aW9uYWxpdHkuIElzIHRoZXJl
+IG5vdCBhbm90aGVyIHdheSB3ZSBjYW4gZGlzcGxheSB0aGUNCj4+IEJ1aWxkIENvbmZpZ3VyYXRp
+b24gdG8gdGhlIHVzZXIgd2l0aG91dCBoYXZpbmcgdG8gZmlsdGVyIGV2ZXJ5IG1lc3NhZ2UNCj4+
+IGVtaXR0ZWQ/DQo+IEkgYW0gZ29pbmcgdG8gc3VibWl0IGEgYnVnIGluIGJ1Z3ppbGxhIHRvIGFk
+ZHJlc3MgaXQgbGF0ZXIsIHNpbmNlIHRoZSBzZXJpZXMgb2YNCj4gcGF0Y2hlcyBibG9jayBhIGxv
+dCBvZiBwYXRjaCBzdWJtaXNzaW9ucy4NCj4gDQo+PiANCj4+IEZ1cnRoZXIsIGlmIHdlJ3JlIGdv
+aW5nIHRvIGRpc3BsYXkgdGhpcyBpbmZvcm1hdGlvbiBpbiBhIHNlcGFyYXRlIHBhZ2UNCj4+IG9m
+IHRoZSBub3RlYm9vayB3b3VsZCBpdCBub3QgbWFrZSBzZW5zZSB0byBub3Qgc2hvdyBpdCBpbiB0
+aGUgYnVpbGQgbG9nDQo+PiBwYWdlPw0KPiBPSywgaWYgeW91IHdhbnQgSSBjYW4gcmVtb3ZlIGl0
+LiBCdXQgSSBzdWdnZXN0IHRvIGtlZXAgaXQgYmVjYXVzZSBvZiB5b3VyDQo+IGFib3ZlIGNvbW1l
+bnQuDQo+IFRoYXQgaXMgdGhlIGNvbmZpZ3VyYXRpb24gaW5mb3JtYXRpb24gaW4gQ29uZmlndXJh
+dGlvbiBUYWIgY29tZXMgZnJvbQ0KPiBkaWZmZXJlbnQgc291cmNlcy4NCj4NCg0KDQo=
 
 
