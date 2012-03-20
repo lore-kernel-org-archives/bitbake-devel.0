@@ -1,26 +1,27 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1S9sGl-0000ZN-Nj
+	(envelope-from <dongxiao.xu@intel.com>) id 1S9sLc-0000fA-Md
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 20 Mar 2012 07:10:07 +0100
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 19 Mar 2012 23:01:14 -0700
+	Tue, 20 Mar 2012 07:15:08 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga102.ch.intel.com with ESMTP; 19 Mar 2012 23:06:15 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="119384047"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="120934932"
 Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
 	([10.239.36.11])
-	by orsmga001.jf.intel.com with ESMTP; 19 Mar 2012 23:01:14 -0700
+	by azsmga001.ch.intel.com with ESMTP; 19 Mar 2012 23:06:14 -0700
 From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
-To: Joshua Lock <josh@linux.intel.com>
-In-Reply-To: <82586a6a712fb5413e3f8698f6e0794c45676144.1332202341.git.josh@linux.intel.com>
+To: Joshua Lock <josh@linux.intel.com>, "Barros Pena, Belen"
+	<belen.barros.pena@intel.com>, Giulia Piu <giulia@closertag.com>
+In-Reply-To: <4efa2980aa09953bf53ab4da08a0ad50000d4da0.1332202341.git.josh@linux.intel.com>
 References: <cover.1332202341.git.josh@linux.intel.com>
-	<82586a6a712fb5413e3f8698f6e0794c45676144.1332202341.git.josh@linux.intel.com>
-Date: Tue, 20 Mar 2012 13:59:09 +0800
-Message-ID: <1332223149.1848.16.camel@dongxiao-osel>
+	<4efa2980aa09953bf53ab4da08a0ad50000d4da0.1332202341.git.josh@linux.intel.com>
+Date: Tue, 20 Mar 2012 14:04:10 +0800
+Message-ID: <1332223450.1848.19.camel@dongxiao-osel>
 Mime-Version: 1.0
 X-Mailer: Evolution 2.32.2 
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 4/6] ui/crumbs/persistenttooltip: try to reflect WM close button position
+Subject: Re: [PATCH 5/6] ui/crumbs/builder: remove OK/Cancel buttons on Layer dialog. Use Close.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,75 +33,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Mar 2012 06:10:08 -0000
+X-List-Received-Date: Tue, 20 Mar 2012 06:15:09 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
 On Mon, 2012-03-19 at 17:18 -0700, Joshua Lock wrote:
-> When the user is running a desktop where the close button is on the left we
-> try to detect that and position the tooltip close button appropriately.
-> Where we can't easily determine this we default to placing the close button
-> on the right.
-> 
-> Tested on Ubuntu/Unity and Fedora/Gnome Shell.
-> 
 > Signed-off-by: Joshua Lock <josh@linux.intel.com>
-
-Acked-by: Dongxiao Xu <dongxiao.xu@intel.com>
-
 > ---
->  lib/bb/ui/crumbs/persistenttooltip.py |   24 +++++++++++++++++++++++-
->  1 files changed, 23 insertions(+), 1 deletions(-)
+>  lib/bb/ui/crumbs/builder.py |    3 +--
+>  1 files changed, 1 insertions(+), 2 deletions(-)
 > 
-> diff --git a/lib/bb/ui/crumbs/persistenttooltip.py b/lib/bb/ui/crumbs/persistenttooltip.py
-> index 0167363..bae697e 100644
-> --- a/lib/bb/ui/crumbs/persistenttooltip.py
-> +++ b/lib/bb/ui/crumbs/persistenttooltip.py
-> @@ -20,6 +20,10 @@
->  
->  import gobject
->  import gtk
-> +try:
-> +    import gconf
-> +except:
-> +    pass
->  
->  class PersistentTooltip(gtk.Window):
->  	"""
-> @@ -34,6 +38,21 @@ class PersistentTooltip(gtk.Window):
->  	def __init__(self, markup):
->  		gtk.Window.__init__(self, gtk.WINDOW_POPUP)
->  
-> +		# The placement of the close button on the tip should reflect how the
-> +		# window manager of the users system places close buttons. Try to read
-> +		# the metacity gconf key to determine whether the close button is on the
-> +		# left or the right.
-> +		# In the case that we can't determine the users configuration we default
-> +		# to close buttons being on the right.
-> +		__button_right = True
-> +		try:
-> +		    client = gconf.client_get_default()
-> +		    order = client.get_string("/apps/metacity/general/button_layout")
-> +		    if order and order.endswith(":"):
-> +		        __button_right = False
-> +		except NameError:
-> +			pass
-> +
->  		# We need to ensure we're only shown once
->  		self.shown = False
->  
-> @@ -65,7 +84,10 @@ class PersistentTooltip(gtk.Window):
->  		self.button.set_can_default(True)
->  		self.button.grab_focus()
->  		self.button.show()
-> -		hbox.pack_end(self.button, False, False, 0)
-> +		if __button_right:
-> +		    hbox.pack_end(self.button, False, False, 0)
-> +		else:
-> +		    hbox.pack_start(self.button, False, False, 0)
->  
->  		self.set_default(self.button)
->  
+> diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
+> index 1d255ac..9e85e72 100755
+> --- a/lib/bb/ui/crumbs/builder.py
+> +++ b/lib/bb/ui/crumbs/builder.py
+> @@ -668,8 +668,7 @@ class Builder(gtk.Window):
+>                       flags = gtk.DIALOG_MODAL
+>                           | gtk.DIALOG_DESTROY_WITH_PARENT
+>                           | gtk.DIALOG_NO_SEPARATOR,
+> -                     buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_NO,
+> -                                gtk.STOCK_OK, gtk.RESPONSE_YES))
+> +                     buttons = (gtk.STOCK_CLOSE, gtk.RESPONSE_YES))
+
+If users did some trial operations, for example deleted some layers, is
+it better that we provide a "cancel" button for users to ignore their
+changes?
+
+Need comments from Belen and Giulia.
+
+Thanks,
+Dongxiao
+
+>          response = dialog.run()
+>          if response == gtk.RESPONSE_YES:
+>              self.configuration.layers = dialog.layers
 
 
 
