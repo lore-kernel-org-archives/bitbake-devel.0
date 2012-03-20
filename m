@@ -1,30 +1,27 @@
-Received: from hermes.mlbassoc.com ([64.234.241.98] helo=mail.chez-thomas.org)
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <gary@mlbassoc.com>) id 1SA1p7-00076u-A8
+	(envelope-from <josh@linux.intel.com>) id 1SA31v-0000Ot-NM
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 20 Mar 2012 17:22:13 +0100
-Received: by mail.chez-thomas.org (Postfix, from userid 1998)
-	id AC1EEF811F1; Tue, 20 Mar 2012 10:13:21 -0600 (MDT)
-X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
-	hermes.chez-thomas.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=4.0 tests=ALL_TRUSTED,BAYES_00
-	autolearn=unavailable version=3.3.2
-Received: from hermes.chez-thomas.org (localhost.localdomain [127.0.0.1])
-	by mail.chez-thomas.org (Postfix) with ESMTP id 53194F811E4;
-	Tue, 20 Mar 2012 10:13:20 -0600 (MDT)
-Message-ID: <4F68ACA0.8040409@mlbassoc.com>
-Date: Tue, 20 Mar 2012 10:13:20 -0600
-From: Gary Thomas <gary@mlbassoc.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
+	Tue, 20 Mar 2012 18:39:31 +0100
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga101.ch.intel.com with ESMTP; 20 Mar 2012 10:30:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="79657548"
+Received: from unknown (HELO [10.255.15.207]) ([10.255.15.207])
+	by AZSMGA002.ch.intel.com with ESMTP; 20 Mar 2012 10:29:25 -0700
+Message-ID: <4F68BE75.7080404@linux.intel.com>
+Date: Tue, 20 Mar 2012 10:29:25 -0700
+From: Joshua Lock <josh@linux.intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
 	rv:10.0.1) Gecko/20120216 Thunderbird/10.0.1
 MIME-Version: 1.0
-To: Chris Larson <clarson@kergoth.com>
-References: <4F6882EE.5080704@mlbassoc.com>
-	<CABcZANmcjghvLZy+gu6i5iqBfLg13CJg8+FyOABFq633q_Mi4Q@mail.gmail.com>
-In-Reply-To: <CABcZANmcjghvLZy+gu6i5iqBfLg13CJg8+FyOABFq633q_Mi4Q@mail.gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: BBMASK doesn't work on .bbappend?
+To: "Xu, Dongxiao" <dongxiao.xu@intel.com>
+References: <cover.1332202341.git.josh@linux.intel.com>
+	<4efa2980aa09953bf53ab4da08a0ad50000d4da0.1332202341.git.josh@linux.intel.com>
+	<1332223450.1848.19.camel@dongxiao-osel>
+In-Reply-To: <1332223450.1848.19.camel@dongxiao-osel>
+Cc: bitbake-devel@lists.openembedded.org, Giulia Piu <giulia@closertag.com>
+Subject: Re: [PATCH 5/6] ui/crumbs/builder: remove OK/Cancel buttons on Layer dialog. Use Close.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,39 +33,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Mar 2012 16:22:13 -0000
+X-List-Received-Date: Tue, 20 Mar 2012 17:39:31 -0000
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2012-03-20 08:26, Chris Larson wrote:
-> On Tue, Mar 20, 2012 at 6:15 AM, Gary Thomas<gary@mlbassoc.com>  wrote:
->> I'm trying to include only part of the meta-ti layer into my mix,
->> so I have this in local.conf:
->>   BBMASK = ".*/meta-ti/recipes-misc/:.*/meta-ti/recipes-bsp/"
+
+
+On 19/03/12 23:04, Xu, Dongxiao wrote:
+> On Mon, 2012-03-19 at 17:18 -0700, Joshua Lock wrote:
+>> Signed-off-by: Joshua Lock<josh@linux.intel.com>
+>> ---
+>>   lib/bb/ui/crumbs/builder.py |    3 +--
+>>   1 files changed, 1 insertions(+), 2 deletions(-)
 >>
->> Both my layer and meta-ti layer have a file formfactor_0.0.bbappend,
->> but it seems that the meta-ti/recipes-bsp/formfactor/formfactor_0.0.bbappend
->> is being processed as well as my own (and breaks my .bbappend file).
->>
->> How can I keep this file from being used?  I need other things in the
->> meta-ti layer so I'd like to come up with a "soft" solution, e.g. using
->> BBMASK (which works great for the .bb files)
+>> diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
+>> index 1d255ac..9e85e72 100755
+>> --- a/lib/bb/ui/crumbs/builder.py
+>> +++ b/lib/bb/ui/crumbs/builder.py
+>> @@ -668,8 +668,7 @@ class Builder(gtk.Window):
+>>                        flags = gtk.DIALOG_MODAL
+>>                            | gtk.DIALOG_DESTROY_WITH_PARENT
+>>                            | gtk.DIALOG_NO_SEPARATOR,
+>> -                     buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_NO,
+>> -                                gtk.STOCK_OK, gtk.RESPONSE_YES))
+>> +                     buttons = (gtk.STOCK_CLOSE, gtk.RESPONSE_YES))
 >
-> I'm using BBMASK to mask out a few bbappends from meta-oe -- we can't
-> use it otherwise at this point. Also, BBMASK is a single regex. that :
-> you have in yours looks questionable, unless you actually have a colon
-> in your path. More likely you wanted | there.
+> If users did some trial operations, for example deleted some layers, is
+> it better that we provide a "cancel" button for users to ignore their
+> changes?
+>
+> Need comments from Belen and Giulia.
 
-I changed the BBMASK to be ".*/meta-ti/recipes-misc/|.*/meta-ti/recipes-bsp/"
-and it's still processing the .bbappend file :-(  I also tried
-   BBMASK = ".*/meta-ti/recipes-(misc|bsp)/"
-Do either of these look correct to ignore everything below meta-ti/recipes-misc
-and meta-ti/recipes-bsp ?
+Fair point, I'll wait for input from the design team for this one.
 
+Cheers,
+Joshua
 -- 
-------------------------------------------------------------
-Gary Thomas                 |  Consulting for the
-MLB Associates              |    Embedded world
-------------------------------------------------------------
+Joshua '贾詡' Lock
+         Yocto Project "Johannes factotum"
+         Intel Open Source Technology Centre
 
 
