@@ -1,24 +1,24 @@
 Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SA032-0000oR-90
+	(envelope-from <shane.wang@intel.com>) id 1SA033-0000oR-6k
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 20 Mar 2012 15:28:28 +0100
+	Tue, 20 Mar 2012 15:28:29 +0100
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 20 Mar 2012 07:19:34 -0700
+	by orsmga102.jf.intel.com with ESMTP; 20 Mar 2012 07:19:36 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="119556451"
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="119556459"
 Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by orsmga001.jf.intel.com with ESMTP; 20 Mar 2012 07:19:34 -0700
+	by orsmga001.jf.intel.com with ESMTP; 20 Mar 2012 07:19:35 -0700
 From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 20 Mar 2012 22:41:04 +0800
-Message-Id: <2e08a8e6818b8f1df7eaac499ebc3a5854efe7be.1332254194.git.shane.wang@intel.com>
+Date: Tue, 20 Mar 2012 22:41:05 +0800
+Message-Id: <33c21bc60bd1542f81d33c328f116dec424728cd.1332254194.git.shane.wang@intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <e4ebac226cc5e4589bcecd8bada9fde462e925cc.1332254194.git.shane.wang@intel.com>
 References: <e4ebac226cc5e4589bcecd8bada9fde462e925cc.1332254194.git.shane.wang@intel.com>
 In-Reply-To: <cover.1332254194.git.shane.wang@intel.com>
 References: <cover.1332254194.git.shane.wang@intel.com>
-Subject: [PATCH 03/11] Hob: show indicators on the tabs of the Hob notebook
+Subject: [PATCH 04/11] Hob: change the code style to enumerate a list in a for-loop
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,124 +30,136 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Mar 2012 14:28:28 -0000
+X-List-Received-Date: Tue, 20 Mar 2012 14:28:29 -0000
 
-This patch is to show the indicators (e.g., the number of the issues) in the build details page to highlight.
+We use the more common style to enumerate a list in a for-loop
+(http://docs.python.org/library/functions.html#enumerate), that is:
 
-Signed-off-by: Liming An <limingx.l.an@intel.com>
+try to use
+for item in mylist,
+
+and try to use
+for i, item in enumerate(list)
+rather than
+for i in range(len(mylist))
+
 Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/builddetailspage.py |   10 ++++++++++
- bitbake/lib/bb/ui/crumbs/builder.py          |    5 +++++
- bitbake/lib/bb/ui/crumbs/hobwidget.py        |   14 ++++++++++++++
- bitbake/lib/bb/ui/crumbs/runningbuild.py     |    4 ++++
- 4 files changed, 33 insertions(+), 0 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hobwidget.py            |   30 +++++++++++-----------
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py |   10 +++---
+ bitbake/lib/bb/ui/crumbs/recipeselectionpage.py  |   10 +++---
+ 3 files changed, 25 insertions(+), 25 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builddetailspage.py b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-index 63d2c7b..7a5cfe6 100755
---- a/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-+++ b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-@@ -37,6 +37,8 @@ class BuildDetailsPage (HobPage):
-     def __init__(self, builder):
-         super(BuildDetailsPage, self).__init__(builder, "Building ...")
- 
-+        self.num_of_issues = 0
-+
-         # create visual elements
-         self.create_visual_elements()
- 
-@@ -80,6 +82,14 @@ class BuildDetailsPage (HobPage):
-         self.back_button.connect("clicked", self.back_button_clicked_cb)
-         self.button_box.pack_start(self.back_button, expand=False, fill=False)
- 
-+    def show_issues(self):
-+        self.num_of_issues += 1
-+        self.notebook.show_indicator_icon("Issues", self.num_of_issues)
-+
-+    def reset_issues(self):
-+        self.num_of_issues = 0
-+        self.notebook.hide_indicator_icon("Issues")
-+
-     def _remove_all_widget(self):
-         children = self.vbox.get_children() or []
-         for child in children:
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index 1d255ac..318bcbf 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -212,6 +212,7 @@ class Builder(gtk.Window):
-         self.handler.build.connect("build-succeeded",    self.handler_build_succeeded_cb)
-         self.handler.build.connect("build-failed",       self.handler_build_failed_cb)
-         self.handler.build.connect("task-started",       self.handler_task_started_cb)
-+        self.handler.build.connect("log-error",          self.handler_build_failure_cb)
-         self.handler.connect("generating-data",          self.handler_generating_data_cb)
-         self.handler.connect("data-generated",           self.handler_data_generated_cb)
-         self.handler.connect("command-succeeded",        self.handler_command_succeeded_cb)
-@@ -533,6 +534,7 @@ class Builder(gtk.Window):
-         elif self.current_step == self.PACKAGE_GENERATING:
-             fraction = 0
-         self.build_details_page.update_progress_bar("Build Started: ", fraction)
-+        self.build_details_page.reset_issues()
- 
-     def build_succeeded(self):
-         if self.current_step == self.FAST_IMAGE_GENERATING:
-@@ -600,6 +602,9 @@ class Builder(gtk.Window):
-                 fraction = 0.2 + 0.8 * fraction
-         self.build_details_page.update_progress_bar(title + ": ", fraction)
- 
-+    def handler_build_failure_cb(self, running_build):
-+        self.build_details_page.show_issues()
-+
-     def destroy_window_cb(self, widget, event):
-         lbl = "<b>Do you really want to exit the Hob image creator?</b>"
-         dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
 diff --git a/bitbake/lib/bb/ui/crumbs/hobwidget.py b/bitbake/lib/bb/ui/crumbs/hobwidget.py
-index 8fa663c..2c3d831 100644
+index 2c3d831..247bbd1 100644
 --- a/bitbake/lib/bb/ui/crumbs/hobwidget.py
 +++ b/bitbake/lib/bb/ui/crumbs/hobwidget.py
-@@ -619,6 +619,20 @@ class HobNotebook(gtk.VBox):
-  
-         self.tb.show()
+@@ -109,38 +109,38 @@ class HobViewTable (gtk.VBox):
+         self.toggle_columns = []
+         self.table_tree.connect("row-activated", self.row_activated_cb)
  
-+    def show_indicator_icon(self, title, number):
-+        for i, child in enumerate(self.tabbar.children):
-+            if child["toggled_page"] == -1:
-+                continue
-+            if child["title"] == title:
-+                self.tabbar.show_indicator_icon(i, number)
-+
-+    def hide_indicator_icon(self, title):
-+        for i, child in enumerate(self.tabbar.children):
-+            if child["toggled_page"] == -1:
-+                continue
-+            if child["title"] == title:
-+                self.tabbar.hide_indicator_icon(i)
-+
-     def tab_switched_cb(self, widget, page):
-         self.notebook.set_current_page(page)
+-        for i in range(len(columns)):
+-            col = gtk.TreeViewColumn(columns[i]['col_name'])
++        for i, column in enumerate(columns):
++            col = gtk.TreeViewColumn(column['col_name'])
+             col.set_clickable(True)
+             col.set_resizable(True)
+-            col.set_sort_column_id(columns[i]['col_id'])
+-            if 'col_min' in columns[i].keys():
+-                col.set_min_width(columns[i]['col_min'])
+-            if 'col_max' in columns[i].keys():
+-                col.set_max_width(columns[i]['col_max'])
++            col.set_sort_column_id(column['col_id'])
++            if 'col_min' in column.keys():
++                col.set_min_width(column['col_min'])
++            if 'col_max' in column.keys():
++                col.set_max_width(column['col_max'])
+             self.table_tree.append_column(col)
  
-diff --git a/bitbake/lib/bb/ui/crumbs/runningbuild.py b/bitbake/lib/bb/ui/crumbs/runningbuild.py
-index eedd8d9..ddac232 100644
---- a/bitbake/lib/bb/ui/crumbs/runningbuild.py
-+++ b/bitbake/lib/bb/ui/crumbs/runningbuild.py
-@@ -84,6 +84,9 @@ class RunningBuild (gobject.GObject):
-           'task-started'   : (gobject.SIGNAL_RUN_LAST,
-                               gobject.TYPE_NONE,
-                               (gobject.TYPE_PYOBJECT,)),
-+          'log-error'      : (gobject.SIGNAL_RUN_LAST,
-+                              gobject.TYPE_NONE,
-+                              ()),
-           }
-     pids_to_task = {}
-     tasks_to_iter = {}
-@@ -134,6 +137,7 @@ class RunningBuild (gobject.GObject):
-             if event.levelno >= logging.ERROR:
-                 icon = "dialog-error"
-                 color = HobColors.ERROR
-+                self.emit("log-error")
-             elif event.levelno >= logging.WARNING:
-                 icon = "dialog-warning"
-                 color = HobColors.WARNING
+-            if (not 'col_style' in columns[i].keys()) or columns[i]['col_style'] == 'text':
++            if (not 'col_style' in column.keys()) or column['col_style'] == 'text':
+                 cell = gtk.CellRendererText()
+                 col.pack_start(cell, True)
+-                col.set_attributes(cell, text=columns[i]['col_id'])
+-            elif columns[i]['col_style'] == 'check toggle':
++                col.set_attributes(cell, text=column['col_id'])
++            elif column['col_style'] == 'check toggle':
+                 cell = gtk.CellRendererToggle()
+                 cell.set_property('activatable', True)
+                 cell.connect("toggled", self.toggled_cb, i, self.table_tree)
+                 self.toggle_id = i
+                 col.pack_end(cell, True)
+-                col.set_attributes(cell, active=columns[i]['col_id'])
+-                self.toggle_columns.append(columns[i]['col_name'])
+-            elif columns[i]['col_style'] == 'radio toggle':
++                col.set_attributes(cell, active=column['col_id'])
++                self.toggle_columns.append(column['col_name'])
++            elif column['col_style'] == 'radio toggle':
+                 cell = gtk.CellRendererToggle()
+                 cell.set_property('activatable', True)
+                 cell.set_radio(True)
+                 cell.connect("toggled", self.toggled_cb, i, self.table_tree)
+                 self.toggle_id = i
+                 col.pack_end(cell, True)
+-                col.set_attributes(cell, active=columns[i]['col_id'])
+-                self.toggle_columns.append(columns[i]['col_name'])
++                col.set_attributes(cell, active=column['col_id'])
++                self.toggle_columns.append(column['col_name'])
+ 
+         scroll = gtk.ScrolledWindow()
+         scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_ALWAYS)
+diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+index 3cd1c5e..23e460c 100755
+--- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
++++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+@@ -105,16 +105,16 @@ class PackageSelectionPage (HobPage):
+         self.ins = HobNotebook()
+         self.tables = [] # we need to modify table when the dialog is shown
+         # append the tab
+-        for i in range(len(self.pages)):
+-            columns = self.pages[i]['columns']
++        for page in self.pages:
++            columns = page['columns']
+             tab = HobViewTable(columns)
+-            filter = self.pages[i]['filter']
++            filter = page['filter']
+             tab.set_model(self.package_model.tree_model(filter))
+             tab.connect("toggled", self.table_toggled_cb)
+-            if self.pages[i]['name'] == "Included":
++            if page['name'] == "Included":
+                 tab.connect("row-activated", self.tree_row_activated_cb)
+ 
+-            label = gtk.Label(self.pages[i]['name'])
++            label = gtk.Label(page['name'])
+             self.ins.append_page(tab, label)
+             self.tables.append(tab)
+ 
+diff --git a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
+index db873b6..6dd7c1e 100755
+--- a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
++++ b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
+@@ -127,16 +127,16 @@ class RecipeSelectionPage (HobPage):
+         self.ins = HobNotebook()
+         self.tables = [] # we need modify table when the dialog is shown
+         # append the tabs in order
+-        for i in range(len(self.pages)):
+-            columns = self.pages[i]['columns']
++        for page in self.pages:
++            columns = page['columns']
+             tab = HobViewTable(columns)
+-            filter = self.pages[i]['filter']
++            filter = page['filter']
+             tab.set_model(self.recipe_model.tree_model(filter))
+             tab.connect("toggled", self.table_toggled_cb)
+-            if self.pages[i]['name'] == "Included":
++            if page['name'] == "Included":
+                 tab.connect("row-activated", self.tree_row_activated_cb)
+ 
+-            label = gtk.Label(self.pages[i]['name'])
++            label = gtk.Label(page['name'])
+             self.ins.append_page(tab, label)
+             self.tables.append(tab)
+ 
 -- 
 1.7.6
 
