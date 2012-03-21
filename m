@@ -1,40 +1,26 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SAChd-0002y2-JO
+	(envelope-from <dongxiao.xu@intel.com>) id 1SAClX-0003M0-AR
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 21 Mar 2012 04:59:13 +0100
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 20 Mar 2012 20:50:19 -0700
+	Wed, 21 Mar 2012 05:03:15 +0100
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 20 Mar 2012 20:54:21 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="121361733"
-Received: from azsmsx601.amr.corp.intel.com ([10.2.121.193])
-	by azsmga001.ch.intel.com with ESMTP; 20 Mar 2012 20:49:19 -0700
-Received: from azsmsx604.amr.corp.intel.com (10.2.161.34) by
-	azsmsx601.amr.corp.intel.com (10.2.121.193) with Microsoft SMTP Server
-	(TLS) id 8.2.255.0; Tue, 20 Mar 2012 20:49:19 -0700
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
-	azsmsx604.amr.corp.intel.com (10.2.161.34) with Microsoft SMTP Server
-	(TLS) id 8.2.255.0; Tue, 20 Mar 2012 20:49:19 -0700
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.36]) by
-	SHSMSX101.ccr.corp.intel.com ([169.254.1.142]) with mapi id
-	14.01.0355.002; Wed, 21 Mar 2012 11:49:17 +0800
-From: "Wang, Shane" <shane.wang@intel.com>
-To: Joshua Lock <josh@linux.intel.com>, "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH 5/5] ui/crumbs/persistenttooltip: fix
-	whitespace
-Thread-Index: AQHNBvgwoN5wnjwnckWIrQwRWvLq3pZ0HQMQ
-Date: Wed, 21 Mar 2012 03:49:16 +0000
-Message-ID: <3AB6CE7F274E534CAFD089D127A8A1FC23AF3482@SHSMSX102.ccr.corp.intel.com>
-References: <cover.1332288516.git.josh@linux.intel.com>
-	<f7d9682327566ed5ad589ef450ef9bfdbe876bdd.1332288516.git.josh@linux.intel.com>
-In-Reply-To: <f7d9682327566ed5ad589ef450ef9bfdbe876bdd.1332288516.git.josh@linux.intel.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.239.127.40]
-MIME-Version: 1.0
-Subject: Re: [PATCH 5/5] ui/crumbs/persistenttooltip: fix	whitespace
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="119837795"
+Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
+	([10.239.36.11])
+	by orsmga001.jf.intel.com with ESMTP; 20 Mar 2012 20:54:20 -0700
+From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
+To: Shane Wang <shane.wang@intel.com>, Richard Purdie
+	<richard.purdie@linuxfoundation.org>
+In-Reply-To: <cover.1332302662.git.shane.wang@intel.com>
+References: <cover.1332302662.git.shane.wang@intel.com>
+Date: Wed, 21 Mar 2012 11:52:14 +0800
+Message-ID: <1332301934.10433.2.camel@dongxiao-osel>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.32.2 
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 0/5] Some small fixes for Hob
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -46,20 +32,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 21 Mar 2012 03:59:13 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Wed, 21 Mar 2012 04:03:15 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Joshua Lock wrote on=A02012-03-21:
+Hi Richard,
 
-> We use 4 spaces, not a tab, in BitBake
->=20
-> Signed-off-by: Joshua Lock <josh@linux.intel.com>
+Could you hold this change for a moment?
+I also have some changes which may have patching conflict with this one.
 
-What's wrong with persistenttooltip.py?
+I will merge Shane's change together and send them out in all.
 
---
-Shane
+Thanks,
+Dongxiao
+
+On Wed, 2012-03-21 at 12:05 +0800, Shane Wang wrote:
+> These are small fixes for Hob. Please review.
+> 
+> The following changes since commit 224ff370b4636cdd33c47c1e6341ef43a67e0227:
+> 
+>   xserver-kdrive: compile xserver without dtrace support (2012-03-20 15:21:39 +0000)
+> 
+> are available in the git repository at:
+>   git://git.pokylinux.org/poky-contrib shane/hob2-v0.71
+>   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=shane/hob2-v0.71
+> 
+> Shane Wang (5):
+>   Hob: Change window title from HOB to Hob
+>   Hob: Change "View Packages" description
+>   Hob: In the recipe view, change the headings
+>   Hob: In the package view, change the headings
+>   Hob: Change the titles for recipe view and package view
+> 
+>  bitbake/lib/bb/ui/crumbs/builder.py                |    2 +-
+>  bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    6 +++---
+>  bitbake/lib/bb/ui/crumbs/packageselectionpage.py   |   12 ++++++------
+>  bitbake/lib/bb/ui/crumbs/recipeselectionpage.py    |    8 ++++----
+>  4 files changed, 14 insertions(+), 14 deletions(-)
+> 
+
+
 
 
