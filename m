@@ -1,24 +1,24 @@
 Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SALFI-0003SV-To
+	(envelope-from <dongxiao.xu@intel.com>) id 1SALFJ-0003SX-1B
 	for bitbake-devel@lists.openembedded.org;
 	Wed, 21 Mar 2012 14:06:33 +0100
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 21 Mar 2012 05:57:31 -0700
+	by orsmga102.jf.intel.com with ESMTP; 21 Mar 2012 05:57:34 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="123374972"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="123374997"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by orsmga002.jf.intel.com with ESMTP; 21 Mar 2012 05:57:31 -0700
+	by orsmga002.jf.intel.com with ESMTP; 21 Mar 2012 05:57:33 -0700
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 21 Mar 2012 20:55:06 +0800
-Message-Id: <518205d808dcba09901e514f8175f8ca43cbc0b2.1332334068.git.dongxiao.xu@intel.com>
+Date: Wed, 21 Mar 2012 20:55:08 +0800
+Message-Id: <6951f66b1e0d9ed4624b68a7c9bf469a7429b271.1332334068.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1332334068.git.dongxiao.xu@intel.com>
 References: <cover.1332334068.git.dongxiao.xu@intel.com>
 In-Reply-To: <cover.1332334068.git.dongxiao.xu@intel.com>
 References: <cover.1332334068.git.dongxiao.xu@intel.com>
-Subject: [PATCH 02/17] Hob: Remove split model in GTK Hob
+Subject: [PATCH 04/17] Hob: change package classes selection GUI
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,348 +32,241 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 21 Mar 2012 13:06:33 -0000
 
-Since the GTK Hob will not use the server/client split model, thus
-remove it from current Hob code. But we still keep the core mechanism
-in bitbake server.
+This commit change the GUI for package classes selection in advanced
+setting dialog, which conforms with UI team's design.
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 ---
- lib/bb/ui/crumbs/builder.py         |   13 +----
- lib/bb/ui/crumbs/hig.py             |  103 ++++++++++++-----------------------
- lib/bb/ui/crumbs/hobeventhandler.py |   21 +------
- lib/bb/ui/hob.py                    |   11 +----
- 4 files changed, 41 insertions(+), 107 deletions(-)
+ lib/bb/ui/crumbs/hig.py |  183 ++++++++++++-----------------------------------
+ 1 files changed, 46 insertions(+), 137 deletions(-)
 
-diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
-index b1aad54..d3b13c9 100755
---- a/lib/bb/ui/crumbs/builder.py
-+++ b/lib/bb/ui/crumbs/builder.py
-@@ -260,21 +260,14 @@ class Builder(gtk.Window):
-         self.show_all()
-         self.nb.set_current_page(0)
- 
--    def get_split_model(self):
--        return self.handler.split_model
--
-     def load_template(self, path):
-         self.template = TemplateMgr()
-         self.template.load(path)
-         self.configuration.load(self.template)
- 
--        if self.get_split_model():
--            if not set(self.configuration.layers) <= set(self.parameters.all_layers):
-+        for layer in self.configuration.layers:
-+            if not os.path.exists(layer+'/conf/layer.conf'):
-                 return False
--        else:
--            for layer in self.configuration.layers:
--                if not os.path.exists(layer+'/conf/layer.conf'):
--                    return False
- 
-         self.switch_page(self.LAYER_CHANGED)
- 
-@@ -674,7 +667,6 @@ class Builder(gtk.Window):
-         dialog = LayerSelectionDialog(title = "Layer Selection",
-                      layers = copy.deepcopy(self.configuration.layers),
-                      all_layers = self.parameters.all_layers,
--                     split_model = self.get_split_model(),
-                      parent = self,
-                      flags = gtk.DIALOG_MODAL
-                          | gtk.DIALOG_DESTROY_WITH_PARENT
-@@ -748,7 +740,6 @@ class Builder(gtk.Window):
-             all_distros = self.parameters.all_distros,
-             all_sdk_machines = self.parameters.all_sdk_machines,
-             max_threads = self.parameters.max_threads,
--            split_model = self.get_split_model(),
-             parent = self,
-             flags = gtk.DIALOG_MODAL
-                     | gtk.DIALOG_DESTROY_WITH_PARENT
 diff --git a/lib/bb/ui/crumbs/hig.py b/lib/bb/ui/crumbs/hig.py
-index baad7b8..bd27375 100644
+index bd27375..e675f39 100644
 --- a/lib/bb/ui/crumbs/hig.py
 +++ b/lib/bb/ui/crumbs/hig.py
-@@ -170,23 +170,20 @@ class AdvancedSettingDialog (CrumbsDialog):
- 
-         dialog.destroy()
- 
--    def gen_entry_widget(self, split_model, content, parent, tooltip=""):
-+    def gen_entry_widget(self, content, parent, tooltip=""):
-         hbox = gtk.HBox(False, 12)
-         entry = gtk.Entry()
-         entry.set_text(content)
- 
--        if split_model:
--            hbox.pack_start(entry, expand=True, fill=True)
--        else:
--            table = gtk.Table(1, 10, True)
--            hbox.pack_start(table, expand=True, fill=True)
--            table.attach(entry, 0, 9, 0, 1)
--            image = gtk.Image()
--            image.set_from_stock(gtk.STOCK_OPEN,gtk.ICON_SIZE_BUTTON)
--            open_button = gtk.Button()
--            open_button.set_image(image)
--            open_button.connect("clicked", self.entry_widget_select_path_cb, parent, entry)
--            table.attach(open_button, 9, 10, 0, 1)
-+        table = gtk.Table(1, 10, True)
-+        hbox.pack_start(table, expand=True, fill=True)
-+        table.attach(entry, 0, 9, 0, 1)
-+        image = gtk.Image()
-+        image.set_from_stock(gtk.STOCK_OPEN,gtk.ICON_SIZE_BUTTON)
-+        open_button = gtk.Button()
-+        open_button.set_image(image)
-+        open_button.connect("clicked", self.entry_widget_select_path_cb, parent, entry)
-+        table.attach(open_button, 9, 10, 0, 1)
- 
-         info = HobInfoButton(tooltip, self)
-         hbox.pack_start(info, expand=False, fill=False)
-@@ -421,7 +418,7 @@ class AdvancedSettingDialog (CrumbsDialog):
- 
-     def __init__(self, title, configuration, all_image_types,
-             all_package_formats, all_distros, all_sdk_machines,
--            max_threads, split_model, parent, flags, buttons):
-+            max_threads, parent, flags, buttons):
-         super(AdvancedSettingDialog, self).__init__(title, parent, flags, buttons)
- 
-         # class members from other objects
-@@ -432,7 +429,6 @@ class AdvancedSettingDialog (CrumbsDialog):
-         self.all_distros = all_distros
-         self.all_sdk_machines = all_sdk_machines
-         self.max_threads = max_threads
--        self.split_model = split_model 
- 
-         # class members for internal use
-         self.pkgfmt_store = None
-@@ -586,7 +582,7 @@ class AdvancedSettingDialog (CrumbsDialog):
-         advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
-         label = self.gen_label_widget("<span weight=\"bold\">Set Download Directory:</span>")
-         tooltip = "Select a folder that caches the upstream project source code"
--        dldir_widget, self.dldir_text = self.gen_entry_widget(self.split_model, self.configuration.dldir, self, tooltip)
-+        dldir_widget, self.dldir_text = self.gen_entry_widget(self.configuration.dldir, self, tooltip)
-         sub_vbox.pack_start(label, expand=False, fill=False)
-         sub_vbox.pack_start(dldir_widget, expand=False, fill=False)
- 
-@@ -594,7 +590,7 @@ class AdvancedSettingDialog (CrumbsDialog):
-         advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
-         label = self.gen_label_widget("<span weight=\"bold\">Select SSTATE Directory:</span>")
-         tooltip = "Select a folder that caches your prebuilt results"
--        sstatedir_widget, self.sstatedir_text = self.gen_entry_widget(self.split_model, self.configuration.sstatedir, self, tooltip)
-+        sstatedir_widget, self.sstatedir_text = self.gen_entry_widget(self.configuration.sstatedir, self, tooltip)
-         sub_vbox.pack_start(label, expand=False, fill=False)
-         sub_vbox.pack_start(sstatedir_widget, expand=False, fill=False)
- 
-@@ -602,7 +598,7 @@ class AdvancedSettingDialog (CrumbsDialog):
-         advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
-         label = self.gen_label_widget("<span weight=\"bold\">Select SSTATE Mirror:</span>")
-         tooltip = "Select the prebuilt mirror that will fasten your build speed"
--        sstatemirror_widget, self.sstatemirror_text = self.gen_entry_widget(self.split_model, self.configuration.sstatemirror, self, tooltip)
-+        sstatemirror_widget, self.sstatemirror_text = self.gen_entry_widget(self.configuration.sstatemirror, self, tooltip)
-         sub_vbox.pack_start(label, expand=False, fill=False)
-         sub_vbox.pack_start(sstatemirror_widget, expand=False, fill=False)
- 
-@@ -850,7 +846,7 @@ class LayerSelectionDialog (CrumbsDialog):
-             layer_store.remove(iter)
- 
- 
--    def gen_layer_widget(self, split_model, layers, layers_avail, window, tooltip=""):
-+    def gen_layer_widget(self, layers, layers_avail, window, tooltip=""):
-         hbox = gtk.HBox(False, 6)
- 
-         layer_tv = gtk.TreeView()
-@@ -874,57 +870,36 @@ class LayerSelectionDialog (CrumbsDialog):
-         table_layer = gtk.Table(2, 10, False)
-         hbox.pack_start(table_layer, expand=True, fill=True)
- 
--        if split_model:
--            table_layer.attach(scroll, 0, 10, 0, 2)
-+        table_layer.attach(scroll, 0, 10, 0, 1)
- 
--            layer_store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_BOOLEAN)
--            for layer in layers:
--                layer_store.set(layer_store.append(), 0, layer, 1, True)
--            for layer in layers_avail:
--                if layer not in layers:
--                    layer_store.set(layer_store.append(), 0, layer, 1, False)
-+        layer_store = gtk.ListStore(gobject.TYPE_STRING)
-+        for layer in layers:
-+            layer_store.set(layer_store.append(), 0, layer)
- 
--            col1 = gtk.TreeViewColumn('Included')
--            layer_tv.append_column(col1)
--
--            cell1 = gtk.CellRendererToggle()
--            cell1.connect("toggled", self.layer_widget_toggled_cb, layer_store)
--            col1.pack_start(cell1, True)
--            col1.set_attributes(cell1, active=1)
--
--        else:
--            table_layer.attach(scroll, 0, 10, 0, 1)
--
--            layer_store = gtk.ListStore(gobject.TYPE_STRING)
--            for layer in layers:
--                layer_store.set(layer_store.append(), 0, layer)
--
--            image = gtk.Image()
--            image.set_from_stock(gtk.STOCK_ADD,gtk.ICON_SIZE_MENU)
--            add_button = gtk.Button()
--            add_button.set_image(image)
--            add_button.connect("clicked", self.layer_widget_add_clicked_cb, layer_store, window)
--            table_layer.attach(add_button, 0, 5, 1, 2, gtk.EXPAND | gtk.FILL, 0, 0, 6)
--            image = gtk.Image()
--            image.set_from_stock(gtk.STOCK_REMOVE,gtk.ICON_SIZE_MENU)
--            del_button = gtk.Button()
--            del_button.set_image(image)
--            del_button.connect("clicked", self.layer_widget_del_clicked_cb, tree_selection, layer_store)
--            table_layer.attach(del_button, 5, 10, 1, 2, gtk.EXPAND | gtk.FILL, 0, 0, 6)
-+        image = gtk.Image()
-+        image.set_from_stock(gtk.STOCK_ADD,gtk.ICON_SIZE_MENU)
-+        add_button = gtk.Button()
-+        add_button.set_image(image)
-+        add_button.connect("clicked", self.layer_widget_add_clicked_cb, layer_store, window)
-+        table_layer.attach(add_button, 0, 5, 1, 2, gtk.EXPAND | gtk.FILL, 0, 0, 6)
-+        image = gtk.Image()
-+        image.set_from_stock(gtk.STOCK_REMOVE,gtk.ICON_SIZE_MENU)
-+        del_button = gtk.Button()
-+        del_button.set_image(image)
-+        del_button.connect("clicked", self.layer_widget_del_clicked_cb, tree_selection, layer_store)
-+        table_layer.attach(del_button, 5, 10, 1, 2, gtk.EXPAND | gtk.FILL, 0, 0, 6)
-         layer_tv.set_model(layer_store)
- 
+@@ -191,146 +191,58 @@ class AdvancedSettingDialog (CrumbsDialog):
          hbox.show_all()
+         return hbox, entry
  
-         return hbox, layer_store
+-    def pkgfmt_widget_sort_func(self, model, iter1, iter2, data):
+-        val1 = model.get_value(iter1, 0)
+-        val2 = model.get_value(iter2, 0)
+-        inc1 = model.get_value(iter1, 2)
+-        inc2 = model.get_value(iter2, 2)
+-        if inc1 != inc2:
+-            return inc2 - inc1
+-        else:
+-            return val1 - val2
+-
+-    def pkgfmt_widget_tree_selection_changed_cb(self, tree_selection, button1, button2):
+-        (model, it) = tree_selection.get_selected()
+-        inc = model.get_value(it, 2)
+-        if inc:
+-            button1.set_sensitive(True)
+-            button2.set_sensitive(True)
+-        else:
+-            button1.set_sensitive(False)
+-            button2.set_sensitive(False)
+-
+-    def pkgfmt_widget_up_clicked_cb(self, button, tree_selection):
+-        (model, it) = tree_selection.get_selected()
+-        if not it:
+-            return
+-        path = model.get_path(it)
+-        if path[0] <= 0:
+-            return
+-
+-        pre_it = model.get_iter_first()
+-        if not pre_it:
+-            return
+-        else:
+-            while model.iter_next(pre_it) :
+-                if model.get_value(model.iter_next(pre_it), 1) != model.get_value(it, 1):
+-                    pre_it = model.iter_next(pre_it)
+-                else:
+-                    break
+-
+-            cur_index = model.get_value(it, 0)
+-            pre_index = cur_index
+-            if pre_it:
+-                model.set(pre_it, 0, pre_index)
+-            cur_index = cur_index - 1
+-            model.set(it, 0, cur_index)
+-
+-    def pkgfmt_widget_down_clicked_cb(self, button, tree_selection):
+-        (model, it) = tree_selection.get_selected()
+-        if not it:
+-            return
+-        next_it = model.iter_next(it)
+-        if not next_it:
+-            return
+-        cur_index = model.get_value(it, 0)
+-        next_index = cur_index
+-        model.set(next_it, 0, next_index)
+-        cur_index = cur_index + 1
+-        model.set(it, 0, cur_index)
+-
+-    def pkgfmt_widget_toggle_cb(self, cell, path, model, column):
+-        it = model.get_iter(path)
+-        val = model.get_value(it, column)
+-        val = not val
+-        model.set(it, column, val)
++    def rootfs_combo_changed_cb(self, rootfs_combo, all_package_format, check_hbox):
++        combo_item = self.rootfs_combo.get_active_text()
++        for child in check_hbox.get_children():
++            if isinstance(child, gtk.CheckButton):
++                check_hbox.remove(child)
++        for format in all_package_format:
++            if format != combo_item:
++                check_button = gtk.CheckButton(format)
++                check_hbox.pack_start(check_button, expand=False, fill=False)
++        check_hbox.show_all()
  
--    def __init__(self, title, layers, all_layers, split_model,
--            parent, flags, buttons):
-+    def __init__(self, title, layers, all_layers, parent, flags, buttons):
-         super(LayerSelectionDialog, self).__init__(title, parent, flags, buttons)
+     def gen_pkgfmt_widget(self, curr_package_format, all_package_format, tooltip=""):
+-        pkgfmt_hbox = gtk.HBox(False, 12)
++        pkgfmt_hbox = gtk.HBox(False, 24)
  
-         # class members from other objects
-         self.layers = layers
-         self.all_layers = all_layers
--        self.split_model = split_model
-         self.layers_changed = False
+-        pkgfmt_store = gtk.ListStore(int, str, gobject.TYPE_BOOLEAN)
+-        for format in curr_package_format.split():
+-            pkgfmt_store.set(pkgfmt_store.append(), 1, format, 2, True)
+-        for format in all_package_format:
+-            if format not in curr_package_format:
+-                pkgfmt_store.set(pkgfmt_store.append(), 1, format, 2, False)
+-        pkgfmt_tree = gtk.TreeView(pkgfmt_store)
+-        pkgfmt_tree.set_headers_clickable(True)
+-        pkgfmt_tree.set_headers_visible(False)
+-        tree_selection = pkgfmt_tree.get_selection()
+-        tree_selection.set_mode(gtk.SELECTION_SINGLE)
++        rootfs_vbox = gtk.VBox(False, 6)
++        pkgfmt_hbox.pack_start(rootfs_vbox, expand=False, fill=False)
+ 
+-        col = gtk.TreeViewColumn('NO')
+-        col.set_sort_column_id(0)
+-        col.set_sort_order(gtk.SORT_ASCENDING)
+-        col.set_clickable(False)
+-        col1 = gtk.TreeViewColumn('TYPE')
+-        col1.set_min_width(130)
+-        col1.set_max_width(140)
+-        col2 = gtk.TreeViewColumn('INCLUDED')
+-        col2.set_min_width(60)
+-        col2.set_max_width(70)
+-        pkgfmt_tree.append_column(col1)
+-        pkgfmt_tree.append_column(col2)
+-        cell = gtk.CellRendererText()
+-        cell1 = gtk.CellRendererText()
+-        cell1.set_property('width-chars', 10)
+-        cell2 = gtk.CellRendererToggle()
+-        cell2.set_property('activatable', True)
+-        cell2.connect("toggled", self.pkgfmt_widget_toggle_cb, pkgfmt_store, 2)
+-        col.pack_start(cell, True)
+-        col1.pack_start(cell1, True)
+-        col2.pack_end(cell2, True)
+-        col.set_attributes(cell, text=0)
+-        col1.set_attributes(cell1, text=1)
+-        col2.set_attributes(cell2, active=2)
++        label = self.gen_label_widget("Root file system package format")
++        rootfs_vbox.pack_start(label, expand=False, fill=False)
+ 
+-        pkgfmt_store.set_sort_func(0, self.pkgfmt_widget_sort_func, None)
+-        pkgfmt_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
++        rootfs_format = ""
++        if curr_package_format:
++            rootfs_format = curr_package_format.split()[0]
+ 
+-        scroll = gtk.ScrolledWindow()
+-        scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+-        scroll.set_shadow_type(gtk.SHADOW_IN)
+-        scroll.add(pkgfmt_tree)
+-        scroll.set_size_request(200,60)
+-        pkgfmt_hbox.pack_start(scroll, False, False, 0)
++        tooltip = "Package format that is used to generate rootfs"
++        rootfs_format_widget, rootfs_combo = self.gen_combo_widget(rootfs_format, all_package_format, tooltip)
++        rootfs_vbox.pack_start(rootfs_format_widget, expand=False, fill=False)
+ 
+-        vbox = gtk.VBox(False, 6)
+-        pkgfmt_hbox.pack_start(vbox, False, False, 15)
++        extra_vbox = gtk.VBox(False, 6)
++        pkgfmt_hbox.pack_start(extra_vbox, expand=False, fill=False)
+ 
+-        up = gtk.Button()
+-        image = gtk.Image()
+-        image.set_from_stock(gtk.STOCK_GO_UP, gtk.ICON_SIZE_MENU)
+-        up.set_image(image)
+-        up.set_size_request(50,30)
+-        up.connect("clicked", self.pkgfmt_widget_up_clicked_cb, tree_selection)
+-        vbox.pack_start(up, False, False, 5)
++        label = self.gen_label_widget("Additional package formats")
++        extra_vbox.pack_start(label, expand=False, fill=False)
+ 
+-        down = gtk.Button()
+-        image = gtk.Image()
+-        image.set_from_stock(gtk.STOCK_GO_DOWN, gtk.ICON_SIZE_MENU)
+-        down.set_image(image)
+-        down.set_size_request(50,30)
+-        down.connect("clicked", self.pkgfmt_widget_down_clicked_cb, tree_selection)
+-        vbox.pack_start(down, False, False, 5)
+-        tree_selection.connect("changed", self.pkgfmt_widget_tree_selection_changed_cb, up, down)
++        check_hbox = gtk.HBox(False, 12)
++        extra_vbox.pack_start(check_hbox, expand=False, fill=False)
++        for format in all_package_format:
++            if format != rootfs_format:
++                check_button = gtk.CheckButton(format)
++                is_active = (format in curr_package_format.split())
++                check_button.set_active(is_active)
++                check_hbox.pack_start(check_button, expand=False, fill=False)
+ 
++        tooltip = "Extra package formats to build"
+         info = HobInfoButton(tooltip, self)
+-        pkgfmt_hbox.pack_start(info, expand=False, fill=False)
++        check_hbox.pack_end(info, expand=False, fill=False)
++
++        rootfs_combo.connect("changed", self.rootfs_combo_changed_cb, all_package_format, check_hbox)
+ 
+         pkgfmt_hbox.show_all()
+ 
+-        return pkgfmt_hbox, pkgfmt_store
++        return pkgfmt_hbox, rootfs_combo, check_hbox
+ 
+     def editable_settings_cell_edited(self, cell, path_string, new_text, model):
+         it = model.get_iter_from_string(path_string)
+@@ -431,7 +343,6 @@ class AdvancedSettingDialog (CrumbsDialog):
+         self.max_threads = max_threads
  
          # class members for internal use
-@@ -938,17 +913,14 @@ class LayerSelectionDialog (CrumbsDialog):
-         hbox_top = gtk.HBox()
-         self.vbox.pack_start(hbox_top, expand=False, fill=False)
+-        self.pkgfmt_store = None
+         self.distro_combo = None
+         self.dldir_text = None
+         self.sstatedir_text = None
+@@ -509,7 +420,7 @@ class AdvancedSettingDialog (CrumbsDialog):
+         label = self.gen_label_widget("<span weight=\"bold\">Packaging Format:</span>")
+         tooltip = "Select package formats that will be used. "
+         tooltip += "The first format will be used for final image"
+-        pkgfmt_widget, self.pkgfmt_store = self.gen_pkgfmt_widget(self.configuration.curr_package_format, self.all_package_formats, tooltip)
++        pkgfmt_widget, self.rootfs_combo, self.check_hbox = self.gen_pkgfmt_widget(self.configuration.curr_package_format, self.all_package_formats, tooltip)
+         sub_vbox.pack_start(label, expand=False, fill=False)
+         sub_vbox.pack_start(pkgfmt_widget, expand=False, fill=False)
  
--        if self.split_model:
--            label = self.gen_label_widget("<b>Select Layers:</b>\n(Available layers under '${COREBASE}/layers/' directory)")
--        else:
--            label = self.gen_label_widget("<b>Select Layers:</b>")
-+        label = self.gen_label_widget("<b>Select Layers:</b>")
-         hbox_top.pack_start(label, expand=False, fill=False)
+@@ -621,14 +532,12 @@ class AdvancedSettingDialog (CrumbsDialog):
+     def response_cb(self, dialog, response_id):
+         self.variables = {}
  
-         tooltip = "Layer is a collection of bb files and conf files"
-         info = HobInfoButton(tooltip, self)
-         hbox_top.pack_end(info, expand=False, fill=False)
+-        self.configuration.curr_package_format = ""
+-        it = self.pkgfmt_store.get_iter_first()
+-        while it:
+-            value = self.pkgfmt_store.get_value(it, 2)
+-            if value:
+-                self.configuration.curr_package_format += (self.pkgfmt_store.get_value(it, 1) + " ")
+-            it = self.pkgfmt_store.iter_next(it)
+-        self.configuration.curr_package_format = self.configuration.curr_package_format.strip()
++        package_format = []
++        package_format.append(self.rootfs_combo.get_active_text())
++        for child in self.check_hbox:
++            if isinstance(child, gtk.CheckButton) and child.get_active():
++                package_format.append(child.get_label())
++        self.configuration.curr_package_format = " ".join(package_format)
+         self.variables["PACKAGE_FORMAT"] = self.configuration.curr_package_format
  
--        layer_widget, self.layer_store = self.gen_layer_widget(self.split_model, self.layers, self.all_layers, self, None)
-+        layer_widget, self.layer_store = self.gen_layer_widget(self.layers, self.all_layers, self, None)
-         layer_widget.set_size_request(-1, 180)
-         self.vbox.pack_start(layer_widget, expand=True, fill=True)
- 
-@@ -963,12 +935,7 @@ class LayerSelectionDialog (CrumbsDialog):
-         it = model.get_iter_first()
-         layers = []
-         while it:
--            if self.split_model:
--                inc = model.get_value(it, 1)
--                if inc:
--                    layers.append(model.get_value(it, 0))
--            else:
--                layers.append(model.get_value(it, 0))
-+            layers.append(model.get_value(it, 0))
-             it = model.iter_next(it)
- 
-         self.layers_changed = (self.layers != layers)
-diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
-index e24c340..07cc039 100644
---- a/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -65,7 +65,7 @@ class HobHandler(gobject.GObject):
-     (CFG_AVAIL_LAYERS, CFG_PATH_LAYERS, CFG_FILES_DISTRO, CFG_FILES_MACH, CFG_FILES_SDKMACH, FILES_MATCH_CLASS, PARSE_CONFIG, PARSE_BBFILES, GENERATE_TGTS, GENERATE_PACKAGEINFO, BUILD_TARGET_RECIPES, BUILD_TARGET_IMAGE, CMD_END) = range(13)
-     (LAYERS_REFRESH, GENERATE_RECIPES, GENERATE_PACKAGES, GENERATE_IMAGE, POPULATE_PACKAGEINFO) = range(5)
- 
--    def __init__(self, server, server_addr, client_addr, recipe_model, package_model):
-+    def __init__(self, server, recipe_model, package_model):
-         super(HobHandler, self).__init__()
- 
-         self.build = RunningBuild(sequential=True)
-@@ -84,20 +84,11 @@ class HobHandler(gobject.GObject):
-         self.error_msg = ""
-         self.initcmd = None
- 
--        self.split_model = False
--        if server_addr and client_addr:
--            self.split_model = (server_addr != client_addr)
--            self.reset_server() # reset server if server was found just now
--        self.server_addr = server_addr
--
-     def kick(self):
-         import xmlrpclib
-         try:
-             # kick the while thing off
--            if self.split_model:
--                self.commands_async.append(self.CFG_AVAIL_LAYERS)
--            else:
--                self.commands_async.append(self.CFG_PATH_LAYERS)
-+            self.commands_async.append(self.CFG_PATH_LAYERS)
-             self.commands_async.append(self.CFG_FILES_DISTRO)
-             self.commands_async.append(self.CFG_FILES_MACH)
-             self.commands_async.append(self.CFG_FILES_SDKMACH)
-@@ -383,9 +374,6 @@ class HobHandler(gobject.GObject):
-             # leave the workdir in a usable state
-             self.server.runCommand(["stateShutdown"])
- 
--    def reset_server(self):
--        self.server.runCommand(["resetCooker"])
--
-     def reset_build(self):
-         self.build.reset()
- 
-@@ -427,10 +415,7 @@ class HobHandler(gobject.GObject):
-             pmake = int(pmake.lstrip("-j "))
-         params["pmake"] = pmake
- 
--        image_addr = self.server.runCommand(["getVariable", "DEPLOY_DIR_IMAGE"]) or ""
--        if self.server_addr:
--            image_addr = "http://" + self.server_addr + ":" + image_addr
--        params["image_addr"] = image_addr
-+        params["image_addr"] = self.server.runCommand(["getVariable", "DEPLOY_DIR_IMAGE"]) or ""
- 
-         image_extra_size = self.server.runCommand(["getVariable", "IMAGE_ROOTFS_EXTRA_SPACE"])
-         if not image_extra_size:
-diff --git a/lib/bb/ui/hob.py b/lib/bb/ui/hob.py
-index 429bb75..daa708b 100755
---- a/lib/bb/ui/hob.py
-+++ b/lib/bb/ui/hob.py
-@@ -47,15 +47,6 @@ def event_handle_idle_func(eventHandler, hobHandler):
-     return True
- 
- def main (server = None, eventHandler = None):
--    bitbake_server = None
--    client_addr = None
--    server_addr = None
--
--    if not eventHandler:
--        helper = uihelper.BBUIHelper()
--        server, eventHandler, server_addr, client_addr = helper.findServerDetails()
--    bitbake_server = server
--
-     gobject.threads_init()
- 
-     # That indicates whether the Hob and the bitbake server are
-@@ -64,7 +55,7 @@ def main (server = None, eventHandler = None):
-     recipe_model = RecipeListModel()
-     package_model = PackageListModel()
- 
--    hobHandler = HobHandler(bitbake_server, server_addr, client_addr, recipe_model, package_model)
-+    hobHandler = HobHandler(server, recipe_model, package_model)
-     if hobHandler.kick() == False:
-         return 1
-     builder = Builder(hobHandler, recipe_model, package_model)
+         self.configuration.curr_distro = self.distro_combo.get_active_text()
 -- 
 1.7.4.1
 
