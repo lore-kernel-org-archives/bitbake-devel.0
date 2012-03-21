@@ -1,24 +1,24 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SALFM-0003Qs-Ue
+	(envelope-from <dongxiao.xu@intel.com>) id 1SALFN-0003UK-52
 	for bitbake-devel@lists.openembedded.org;
 	Wed, 21 Mar 2012 14:06:37 +0100
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 21 Mar 2012 05:57:45 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 21 Mar 2012 05:57:42 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="121495254"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="131476480"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by azsmga001.ch.intel.com with ESMTP; 21 Mar 2012 05:57:44 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 21 Mar 2012 05:57:42 -0700
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 21 Mar 2012 20:55:16 +0800
-Message-Id: <933fba7835d0fe5fa3b76bc62327d6b09b44240e.1332334068.git.dongxiao.xu@intel.com>
+Date: Wed, 21 Mar 2012 20:55:14 +0800
+Message-Id: <d2a65ad0fca7a89f273057872aadbd372a9f9c4b.1332334068.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1332334068.git.dongxiao.xu@intel.com>
 References: <cover.1332334068.git.dongxiao.xu@intel.com>
 In-Reply-To: <cover.1332334068.git.dongxiao.xu@intel.com>
 References: <cover.1332334068.git.dongxiao.xu@intel.com>
-Subject: [PATCH 12/17] Hob: Move "Create your own image" to the bottom of image list
+Subject: [PATCH 10/17] Hob: Change recipe selection tab order
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,59 +32,114 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 21 Mar 2012 13:06:37 -0000
 
-Move "Create your own image" item to the bottom of base image list.
-Besides, remove an un-used hob list entry.
+In the recipe screen, change the tab order to be:
+"Included", "All recipes", and "Tasks".
 
-This fixes [YOCTO #2104]
+Also change some description name in tab.
+
+This fixes [YOCTO #2110]
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- lib/bb/ui/crumbs/hoblistmodel.py           |    3 +--
- lib/bb/ui/crumbs/imageconfigurationpage.py |    5 ++++-
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ lib/bb/ui/crumbs/recipeselectionpage.py |   48 +++++++++++++++---------------
+ 1 files changed, 24 insertions(+), 24 deletions(-)
 
-diff --git a/lib/bb/ui/crumbs/hoblistmodel.py b/lib/bb/ui/crumbs/hoblistmodel.py
-index 74b2a17..61f2911 100644
---- a/lib/bb/ui/crumbs/hoblistmodel.py
-+++ b/lib/bb/ui/crumbs/hoblistmodel.py
-@@ -412,7 +412,7 @@ class RecipeListModel(gtk.ListStore):
-     """
-     (COL_NAME, COL_DESC, COL_LIC, COL_GROUP, COL_DEPS, COL_BINB, COL_TYPE, COL_INC, COL_IMG, COL_INSTALL, COL_PN) = range(11)
- 
--    __dummy_image__ = "Start from scratch"
-+    __dummy_image__ = "Create your own image"
- 
-     __gsignals__ = {
-         "recipe-selection-changed" : (gobject.SIGNAL_RUN_LAST,
-@@ -434,7 +434,6 @@ class RecipeListModel(gtk.ListStore):
-                                 gobject.TYPE_BOOLEAN,
-                                 gobject.TYPE_BOOLEAN,
-                                 gobject.TYPE_STRING,
--                                gobject.TYPE_STRING,
-                                 gobject.TYPE_STRING)
- 
-     """
-diff --git a/lib/bb/ui/crumbs/imageconfigurationpage.py b/lib/bb/ui/crumbs/imageconfigurationpage.py
-index 076b2c0..b0f0213 100644
---- a/lib/bb/ui/crumbs/imageconfigurationpage.py
-+++ b/lib/bb/ui/crumbs/imageconfigurationpage.py
-@@ -330,12 +330,15 @@ class ImageConfigurationPage (HobPage):
-         # append and set active
-         while it:
-             path = image_model.get_path(it)
-+            it = image_model.iter_next(it)
-             image_name = image_model[path][recipe_model.COL_NAME]
-+            if image_name == self.builder.recipe_model.__dummy_image__:
-+                continue
-             self.image_combo.append_text(image_name)
-             if image_name == selected_image:
-                 active = cnt
--            it = image_model.iter_next(it)
-             cnt = cnt + 1
-+        self.image_combo.append_text(self.builder.recipe_model.__dummy_image__)
-         self._image_combo_connect_signal()
- 
-         self.image_combo.set_active(-1)
+diff --git a/lib/bb/ui/crumbs/recipeselectionpage.py b/lib/bb/ui/crumbs/recipeselectionpage.py
+index 6dd7c1e..ceaf5f5 100755
+--- a/lib/bb/ui/crumbs/recipeselectionpage.py
++++ b/lib/bb/ui/crumbs/recipeselectionpage.py
+@@ -33,26 +33,21 @@ from bb.ui.crumbs.hobpages import HobPage
+ class RecipeSelectionPage (HobPage):
+     pages = [
+         {
+-         'name'    : 'Recipe',
+-         'filter'  : { RecipeListModel.COL_TYPE : ['recipe'] },
++         'name'    : 'Included',
++         'filter'  : { RecipeListModel.COL_INC  : [True],
++                       RecipeListModel.COL_TYPE : ['recipe', 'task'] },
+          'columns' : [{
+-                       'col_name' : 'Recipe',
++                       'col_name' : 'Recipe Name',
+                        'col_id'   : RecipeListModel.COL_NAME,
+                        'col_style': 'text',
+                        'col_min'  : 100,
+                        'col_max'  : 400
+                       }, {
+-                       'col_name' : 'License',
+-                       'col_id'   : RecipeListModel.COL_LIC,
+-                       'col_style': 'text',
+-                       'col_min'  : 100,
+-                       'col_max'  : 400
+-                      }, {
+-                       'col_name' : 'Group',
+-                       'col_id'   : RecipeListModel.COL_GROUP,
++                       'col_name' : 'Brought in by',
++                       'col_id'   : RecipeListModel.COL_BINB,
+                        'col_style': 'text',
+                        'col_min'  : 100,
+-                       'col_max'  : 400
++                       'col_max'  : 500
+                       }, {
+                        'col_name' : 'Included',
+                        'col_id'   : RecipeListModel.COL_INC,
+@@ -61,17 +56,23 @@ class RecipeSelectionPage (HobPage):
+                        'col_max'  : 50
+                       }]
+         }, {
+-         'name'    : 'Recipe Collection',
+-         'filter'  : { RecipeListModel.COL_TYPE : ['task'] },
++         'name'    : 'All recipes',
++         'filter'  : { RecipeListModel.COL_TYPE : ['recipe'] },
+          'columns' : [{
+-                       'col_name' : 'Recipe Collection',
++                       'col_name' : 'Recipe Name',
+                        'col_id'   : RecipeListModel.COL_NAME,
+                        'col_style': 'text',
+                        'col_min'  : 100,
+                        'col_max'  : 400
+                       }, {
+-                       'col_name' : 'Description',
+-                       'col_id'   : RecipeListModel.COL_DESC,
++                       'col_name' : 'License',
++                       'col_id'   : RecipeListModel.COL_LIC,
++                       'col_style': 'text',
++                       'col_min'  : 100,
++                       'col_max'  : 400
++                      }, {
++                       'col_name' : 'Group',
++                       'col_id'   : RecipeListModel.COL_GROUP,
+                        'col_style': 'text',
+                        'col_min'  : 100,
+                        'col_max'  : 400
+@@ -83,21 +84,20 @@ class RecipeSelectionPage (HobPage):
+                        'col_max'  : 50
+                       }]
+         }, {
+-         'name'    : 'Included',
+-         'filter'  : { RecipeListModel.COL_INC  : [True],
+-                       RecipeListModel.COL_TYPE : ['recipe', 'task'] },
++         'name'    : 'Tasks',
++         'filter'  : { RecipeListModel.COL_TYPE : ['task'] },
+          'columns' : [{
+-                       'col_name' : 'Recipe',
++                       'col_name' : 'Task Name',
+                        'col_id'   : RecipeListModel.COL_NAME,
+                        'col_style': 'text',
+                        'col_min'  : 100,
+                        'col_max'  : 400
+                       }, {
+-                       'col_name' : 'Brought by',
+-                       'col_id'   : RecipeListModel.COL_BINB,
++                       'col_name' : 'Description',
++                       'col_id'   : RecipeListModel.COL_DESC,
+                        'col_style': 'text',
+                        'col_min'  : 100,
+-                       'col_max'  : 500
++                       'col_max'  : 400
+                       }, {
+                        'col_name' : 'Included',
+                        'col_id'   : RecipeListModel.COL_INC,
 -- 
 1.7.4.1
 
