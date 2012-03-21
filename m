@@ -1,24 +1,24 @@
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SALFA-0003Qq-Rz
+	(envelope-from <dongxiao.xu@intel.com>) id 1SALFD-0003Qs-NE
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 21 Mar 2012 14:06:25 +0100
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 21 Mar 2012 05:57:30 -0700
+	Wed, 21 Mar 2012 14:06:27 +0100
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga101.ch.intel.com with ESMTP; 21 Mar 2012 05:57:33 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="131476394"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="79954176"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by fmsmga001.fm.intel.com with ESMTP; 21 Mar 2012 05:57:29 -0700
+	by AZSMGA002.ch.intel.com with ESMTP; 21 Mar 2012 05:57:32 -0700
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 21 Mar 2012 20:55:05 +0800
-Message-Id: <450bb9ebc7674fc22a5d92268a4c3049c9ec2c11.1332334068.git.dongxiao.xu@intel.com>
+Date: Wed, 21 Mar 2012 20:55:07 +0800
+Message-Id: <570fcedf96848b38ae13ff68e90d9a7987bfced7.1332334068.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1332334068.git.dongxiao.xu@intel.com>
 References: <cover.1332334068.git.dongxiao.xu@intel.com>
 In-Reply-To: <cover.1332334068.git.dongxiao.xu@intel.com>
 References: <cover.1332334068.git.dongxiao.xu@intel.com>
-Subject: [PATCH 01/17] Hob: Still use initcmd != None as the if judgement
+Subject: [PATCH 03/17] cooker: terminate each process when quitting recipe parsing
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,39 +30,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 21 Mar 2012 13:06:25 -0000
+X-List-Received-Date: Wed, 21 Mar 2012 13:06:27 -0000
 
-This commit reverts part of change in 491c87d1, since initcmd has a
-possible value of 0, therefore we must explicitly compare the initcmd
-with None in if judgement.
+In some cases (e.x., Hob), users may quit the GUI when bitbake server
+is doing the recipe parsing. In this case, we will see the Hob
+command line hang and could not return to shell (Ctrl+C doesn't work).
+
+The fix is to terminate the process when exiting the parsing.
+
+This fixes [YOCTO #2142]
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 ---
- lib/bb/ui/crumbs/hobeventhandler.py |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ lib/bb/cooker.py |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
-index 71df81c..e24c340 100644
---- a/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -119,7 +119,7 @@ class HobHandler(gobject.GObject):
-             self.generating = False
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 1fd2c13..a000f72 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1603,6 +1603,7 @@ class CookerParser(object):
  
-     def run_next_command(self, initcmd=None):
--        if initcmd:
-+        if initcmd != None:
-             self.initcmd = initcmd
+             self.parser_quit.cancel_join_thread()
+             for process in self.processes:
++                process.terminate()
+                 self.parser_quit.put(None)
  
-         if self.commands_async:
-@@ -127,7 +127,7 @@ class HobHandler(gobject.GObject):
-             next_command = self.commands_async.pop(0)
-         else:
-             self.clear_busy()
--            if self.initcmd:
-+            if self.initcmd != None:
-                 self.emit("command-succeeded", self.initcmd)
-             return
- 
+             self.jobs.cancel_join_thread()
 -- 
 1.7.4.1
 
