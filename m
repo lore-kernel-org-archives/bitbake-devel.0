@@ -1,24 +1,23 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from smtpfb1-g21.free.fr ([212.27.42.9])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SALGT-0003wh-Uz
+	(envelope-from <eric@eukrea.com>) id 1SANrD-0002hw-48
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 21 Mar 2012 14:07:46 +0100
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 21 Mar 2012 05:58:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="121495267"
-Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by azsmga001.ch.intel.com with ESMTP; 21 Mar 2012 05:57:50 -0700
-From: Dongxiao Xu <dongxiao.xu@intel.com>
+	Wed, 21 Mar 2012 16:53:51 +0100
+Received: from smtp3-g21.free.fr (smtp3-g21.free.fr [212.27.42.3])
+	by smtpfb1-g21.free.fr (Postfix) with ESMTP id 378252D95E
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 21 Mar 2012 16:44:58 +0100 (CET)
+Received: from localhost.localdomain (unknown [82.233.81.124])
+	by smtp3-g21.free.fr (Postfix) with ESMTP id D53D7A611A
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 21 Mar 2012 16:44:53 +0100 (CET)
+From: =?UTF-8?q?Eric=20B=C3=A9nard?= <eric@eukrea.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 21 Mar 2012 20:55:21 +0800
-Message-Id: <99d30da5610bbe83fa7e1bc7bcbdb02740c0f91f.1332334068.git.dongxiao.xu@intel.com>
-X-Mailer: git-send-email 1.7.4.1
-In-Reply-To: <cover.1332334068.git.dongxiao.xu@intel.com>
-References: <cover.1332334068.git.dongxiao.xu@intel.com>
-In-Reply-To: <cover.1332334068.git.dongxiao.xu@intel.com>
-References: <cover.1332334068.git.dongxiao.xu@intel.com>
-Subject: [PATCH 17/17] Hob: Use inherit information to judge if a recipe is image type
+Date: Wed, 21 Mar 2012 16:44:51 +0100
+Message-Id: <1332344691-24973-1-git-send-email-eric@eukrea.com>
+X-Mailer: git-send-email 1.7.7.6
+MIME-Version: 1.0
+Subject: [PATCH] runningbuild.py: fix goggle ui
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,46 +29,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 21 Mar 2012 13:07:46 -0000
+X-List-Received-Date: Wed, 21 Mar 2012 15:53:51 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Previously we use pattern "-image-" to match recipe name to judge if
-it is image type. This will ignore some images whose name doesn't
-match the pattern. The new method is to use the inherit information,
-that is, if a recipe inherits image.bbclass, we treat it as an image.
+without this fix I get the following error once the build is finished :
+Traceback (most recent call last):
+  File ".../bitbake/lib/bb/ui/goggle.py", line 35, in event_handle_idle_f=
+unc
+    build.handle_event (event, pbar)
+  File ".../bitbake/lib/bb/ui/crumbs/runningbuild.py", line 287, in handl=
+e_event
+    pbar.set_text(event.msg)
+AttributeError: 'ProgressBar' object has no attribute 'set_text'
 
-Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+Signed-off-by: Eric B=C3=A9nard <eric@eukrea.com>
 ---
- lib/bb/ui/crumbs/hoblistmodel.py |    8 +++++---
- 1 files changed, 5 insertions(+), 3 deletions(-)
+ lib/bb/ui/crumbs/runningbuild.py |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/lib/bb/ui/crumbs/hoblistmodel.py b/lib/bb/ui/crumbs/hoblistmodel.py
-index 61f2911..bfd49bd 100644
---- a/lib/bb/ui/crumbs/hoblistmodel.py
-+++ b/lib/bb/ui/crumbs/hoblistmodel.py
-@@ -528,6 +528,7 @@ class RecipeListModel(gtk.ListStore):
-             desc = event_model["pn"][item]["description"]
-             lic = event_model["pn"][item]["license"]
-             group = event_model["pn"][item]["section"]
-+            inherits = event_model["pn"][item]["inherits"]
-             install = []
- 
-             depends = event_model["depends"].get(item, []) + event_model["rdepends-pn"].get(item, [])
-@@ -537,9 +538,10 @@ class RecipeListModel(gtk.ListStore):
-                     atype = 'mltask'
-                 else:
-                     atype = 'task'
--            elif ('-image-' in name):
--                atype = 'image'
--                install = event_model["rdepends-pkg"].get(item, []) + event_model["rrecs-pkg"].get(item, [])
-+            elif ('image.bbclass' in " ".join(inherits)):
-+                if name != "hob-image":
-+                    atype = 'image'
-+                    install = event_model["rdepends-pkg"].get(item, []) + event_model["rrecs-pkg"].get(item, [])
-             elif ('meta-' in name):
-                 atype = 'toolchain'
-             elif (name == 'dummy-image' or name == 'dummy-toolchain'):
--- 
-1.7.4.1
+diff --git a/lib/bb/ui/crumbs/runningbuild.py b/lib/bb/ui/crumbs/runningb=
+uild.py
+index 4c3fe2c..343eac9 100644
+--- a/lib/bb/ui/crumbs/runningbuild.py
++++ b/lib/bb/ui/crumbs/runningbuild.py
+@@ -284,7 +284,7 @@ class RunningBuild (gobject.GObject):
+             # handle when the build is finished
+             self.emit("build-complete")
+             if pbar:
+-                pbar.set_text(event.msg)
++                pbar.set_title(event.msg)
+=20
+         elif isinstance(event, bb.command.CommandFailed):
+             if event.error.startswith("Exited with"):
+--=20
+1.7.7.6
 
 
 
