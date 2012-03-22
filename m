@@ -1,33 +1,31 @@
-Received: from mail-lpp01m010-f47.google.com ([209.85.215.47])
+Received: from astoria.ccjclearline.com ([64.235.106.9])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <raj.khem@gmail.com>) id 1SAoA2-0005dC-Ps
+	(envelope-from <rpjday@crashcourse.ca>) id 1SAoET-00065y-KI
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 22 Mar 2012 20:59:02 +0100
-Received: by lagw12 with SMTP id w12so1937704lag.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 22 Mar 2012 12:50:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-type:content-transfer-encoding;
-	bh=CvK+V874kE6nLJqNVwyBPzt4ikCQWt4oSh5RHrz3ukQ=;
-	b=FRoUJ30cJ9cVGZX4qcV1cFREaF/TXy8m6yagepzYpvStQ8+BqkKu+wLQJZm50H+9Z+
-	NCr3RUbiF1PxG9C+OSJdB2N0xGb3mOw3i6lZBfyVZvU0Cyr9PHoq7ioz6/7xPDefWZFT
-	4LSfqvjaiDhGReVv85fU0jNoZ+VaJsvL0tPxxoX1R14qUzD2abN/3/rHrs1T9jnNzKPf
-	EbP3dmUxepEsNbICpnlrqVz5pAnqJHv9qs/Vl45GHfq8OO1TVIv5g2wM0kzcYMmhcxeM
-	QhlS+uUNJyCnn/uYafAV6L+0UgAth/jwXLpx+pZHrsTdplX9aSeALA4C0QYd+3oUrdjQ
-	zb0Q==
-Received: by 10.152.102.145 with SMTP id fo17mr6805715lab.2.1332445807505;
-	Thu, 22 Mar 2012 12:50:07 -0700 (PDT)
+	Thu, 22 Mar 2012 21:03:37 +0100
+Received: from cpec03f0ed08c7f-cm001ac318e826.cpe.net.cable.rogers.com
+	([99.241.91.63] helo=crashcourse.ca)
+	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES256-SHA:256)
+	(Exim 4.69) (envelope-from <rpjday@crashcourse.ca>)
+	id 1SAo5r-0005OA-ON for bitbake-devel@lists.openembedded.org;
+	Thu, 22 Mar 2012 15:54:43 -0400
+Date: Thu, 22 Mar 2012 15:54:37 -0400 (EDT)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+X-X-Sender: rpjday@oneiric
+To: BitBake developer list <bitbake-devel@lists.openembedded.org>
+Message-ID: <alpine.DEB.2.02.1203221552180.21491@oneiric>
+User-Agent: Alpine 2.02 (DEB 1266 2009-07-14)
 MIME-Version: 1.0
-Received: by 10.152.2.71 with HTTP; Thu, 22 Mar 2012 12:49:37 -0700 (PDT)
-In-Reply-To: <alpine.DEB.2.02.1203221528190.20343@oneiric>
-References: <alpine.DEB.2.02.1203221528190.20343@oneiric>
-From: Khem Raj <raj.khem@gmail.com>
-Date: Thu, 22 Mar 2012 12:49:37 -0700
-Message-ID: <CAMKF1spQnc3+x31Uxz4gkwy39tbSkL_MNoSjYGka1kN6iq8p3g@mail.gmail.com>
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>
-Cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Subject: Re: is "BB_NUMBER_THREAD" a typo?
+X-AntiAbuse: This header was added to track abuse,
+	please include it with any abuse report
+X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+Subject: [PATCH] Fix typo: BB_NUMBER_THREAD -> BB_NUMBER_THREADS
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -39,17 +37,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 22 Mar 2012 19:59:02 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Thu, 22 Mar 2012 20:03:37 -0000
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 
-On Thu, Mar 22, 2012 at 12:29 PM, Robert P. J. Day
-<rpjday@crashcourse.ca> wrote:
->
-> =C2=A0is there really a separate BB_NUMBER_THREAD variable, or should tha=
-t
-> be BB_NUMBER_THREADS?
 
-seems a typo from looks of it. Submit a bug or patch whatever you prefer.
+Correct some apparent misspellings of BB_NUMBER_THREADS.
+
+Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
+
+---
+
+diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
+index 5a292e7..619f1d4 100755
+--- a/lib/bb/ui/crumbs/builder.py
++++ b/lib/bb/ui/crumbs/builder.py
+@@ -75,7 +75,7 @@ class Configuration:
+         self.sstatedir = template.getVar("SSTATE_DIR")
+         self.sstatemirror = template.getVar("SSTATE_MIRROR")
+         self.pmake = int(template.getVar("PARALLEL_MAKE").split()[1])
+-        self.bbthread = int(template.getVar("BB_NUMBER_THREAD"))
++        self.bbthread = int(template.getVar("BB_NUMBER_THREADS"))
+         self.image_rootfs_size = int(template.getVar("IMAGE_ROOTFS_SIZE"))
+         self.image_extra_size = int(template.getVar("IMAGE_EXTRA_SPACE"))
+         # image_overhead_factor is read-only.
+@@ -103,7 +103,7 @@ class Configuration:
+         template.setVar("SSTATE_DIR", self.sstatedir)
+         template.setVar("SSTATE_MIRROR", self.sstatemirror)
+         template.setVar("PARALLEL_MAKE", "-j %s" % self.pmake)
+-        template.setVar("BB_NUMBER_THREAD", self.bbthread)
++        template.setVar("BB_NUMBER_THREADS", self.bbthread)
+         template.setVar("PACKAGE_CLASSES", " ".join(["package_" + i for i in self.curr_package_format.split()]))
+         template.setVar("IMAGE_ROOTFS_SIZE", self.image_rootfs_size)
+         template.setVar("IMAGE_EXTRA_SPACE", self.image_extra_size)
+diff --git a/lib/bb/ui/crumbs/template.py b/lib/bb/ui/crumbs/template.py
+index a03063c..5679c18 100644
+--- a/lib/bb/ui/crumbs/template.py
++++ b/lib/bb/ui/crumbs/template.py
+@@ -125,7 +125,7 @@ class RecipeFile(ConfigFile):
+
+ class TemplateMgr(gobject.GObject):
+
+-    __gLocalVars__ = ["MACHINE", "PACKAGE_CLASSES", "DISTRO", "DL_DIR", "SSTATE_DIR", "SSTATE_MIRROR", "PARALLEL_MAKE", "BB_NUMBER_THREAD", "CONF_VERSION"]
++    __gLocalVars__ = ["MACHINE", "PACKAGE_CLASSES", "DISTRO", "DL_DIR", "SSTATE_DIR", "SSTATE_MIRROR", "PARALLEL_MAKE", "BB_NUMBER_THREADS", "CONF_VERSION"]
+     __gBBLayersVars__ = ["BBLAYERS", "LCONF_VERSION"]
+     __gRecipeVars__ = ["DEPENDS", "IMAGE_INSTALL"]
+
+
+-- 
+
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                        http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
 
 
