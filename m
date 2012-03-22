@@ -1,24 +1,27 @@
 Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1SAWVU-0007Yc-QF
+	(envelope-from <josh@linux.intel.com>) id 1SAWWN-0007Zh-BS
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 22 Mar 2012 02:08:01 +0100
+	Thu, 22 Mar 2012 02:08:55 +0100
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 21 Mar 2012 17:59:03 -0700
+	by fmsmga102.fm.intel.com with ESMTP; 21 Mar 2012 18:00:00 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="142880203"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="142880475"
 Received: from unknown (HELO [10.255.15.222]) ([10.255.15.222])
-	by fmsmga002.fm.intel.com with ESMTP; 21 Mar 2012 17:59:02 -0700
-Message-ID: <4F6A7956.1040400@linux.intel.com>
-Date: Wed, 21 Mar 2012 17:59:02 -0700
+	by fmsmga002.fm.intel.com with ESMTP; 21 Mar 2012 18:00:00 -0700
+Message-ID: <4F6A7990.6060902@linux.intel.com>
+Date: Wed, 21 Mar 2012 18:00:00 -0700
 From: Joshua Lock <josh@linux.intel.com>
 User-Agent: Mozilla/5.0 (X11; Linux x86_64;
 	rv:10.0.1) Gecko/20120216 Thunderbird/10.0.1
 MIME-Version: 1.0
-To: bitbake-devel@lists.openembedded.org
-References: <cover.1332334068.git.dongxiao.xu@intel.com>
-In-Reply-To: <cover.1332334068.git.dongxiao.xu@intel.com>
-Subject: Re: [PATCH 00/17][PULL] Hob: Bunch of bug fixes
+To: "Xu, Dongxiao" <dongxiao.xu@intel.com>
+References: <cover.1332288516.git.josh@linux.intel.com>
+	<76678d0e7b33939ea902c26dd68a1279e293d3d7.1332288516.git.josh@linux.intel.com>
+	<1332375865.1849.1.camel@dongxiao-osel>
+In-Reply-To: <1332375865.1849.1.camel@dongxiao-osel>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/5] ui/crumbs/hig: make the layer selection dialogue more closely match design
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,58 +33,23 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 22 Mar 2012 01:08:01 -0000
+X-List-Received-Date: Thu, 22 Mar 2012 01:08:55 -0000
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-
-
-On 21/03/12 05:55, Dongxiao Xu wrote:
-> Hi Richard,
+On 21/03/12 17:24, Xu, Dongxiao wrote:
+> On Tue, 2012-03-20 at 17:15 -0700, Joshua Lock wrote:
+>> The layer dialogue design includes in-line remove/delete widgets next to
+>> the layer path in the tree view for all layers other than the meta layer as
+>> well as an in-line notice that the meta layer cannot be removed.
 >
-> This pull request is Hob related bug fixes. Please help to review and pull.
+> Hi Josh,
 >
-> Thanks,
-> Dongxiao
->
-> The following changes since commit d595960fea0988df9004d927bc2ec3439540dd9c:
->
->    Hob: save CONF_VERSION and LCONF_VERSION into template (2012-03-20 14:39:45 +0000)
->
-> are available in the git repository at:
->    git://git.pokylinux.org/poky-contrib dxu4/hob-bugfix
->    http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob-bugfix
->
-> Dongxiao Xu (14):
->    Hob: Still use initcmd != None as the if judgement
->    Hob: Remove split model in GTK Hob
->    cooker: terminate each process when quitting recipe parsing
->    Hob: change package classes selection GUI
->    Hob: Change template button name from "Template" to "Templates"
+> One thing just came to my mind is that, the meta-hob layer also could
+> not be removed since Hob GUI will use that.
 
-These all look fine.
-
->    command.py: Change parseConfigurationFiles API from async to sync
->    process.py: Increase the timeout value for polling commands
->    Hob: Change parseConfigurationFiles API usage
-
-Can you explain some of the reasoning behind this set of changes? If the 
-command truly belongs as an asynchronous one I'm not sure why we need to 
-increase the timeout duration specifically for it.
-
->    Hob: Fix the workaround to get image types
->    Hob: Change recipe selection tab order
->    Hob: Change package selection tab order
->    Hob: Move "Create your own image" to the bottom of image list
->    cooker: add inherit information when generating package tree
->    Hob: Use inherit information to judge if a recipe is image type
->
-> Shane Wang (3):
->    Hob: Change window title from HOB to Hob
->    Hob: Change "View Packages" description
->    Hob: Change the titles for recipe view and package view
-
-These also look OK to me.
+Will Hob not work without the Hob layer? If that's the case I guess we 
+should disable removal of that also.
 
 Cheers,
 Joshua
