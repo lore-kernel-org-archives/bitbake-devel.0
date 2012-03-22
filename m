@@ -1,24 +1,33 @@
-Received: from mga09.intel.com ([134.134.136.24])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1SArcA-0001yz-Id
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 23 Mar 2012 00:40:18 +0100
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 22 Mar 2012 16:31:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="124076812"
-Received: from unknown (HELO shamshir.jf.intel.com) ([10.7.198.147])
-	by orsmga002.jf.intel.com with ESMTP; 22 Mar 2012 16:31:16 -0700
-From: Joshua Lock <josh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 22 Mar 2012 16:31:13 -0700
-Message-Id: <e3d36acdee68f37cfd19cc6bb260434c6dc7597a.1332458487.git.josh@linux.intel.com>
-X-Mailer: git-send-email 1.7.7.6
-In-Reply-To: <cover.1332458487.git.josh@linux.intel.com>
-References: <cover.1332458487.git.josh@linux.intel.com>
-In-Reply-To: <cover.1332458487.git.josh@linux.intel.com>
-References: <cover.1332458487.git.josh@linux.intel.com>
-Subject: [PATCH 8/9] lib/bb/ui/crumbs: make use of HobButton for existing primary action buttons
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1SAreD-00027l-61 for bitbake-devel@lists.openembedded.org;
+	Fri, 23 Mar 2012 00:42:25 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2MNXQqp021551;
+	Thu, 22 Mar 2012 23:33:26 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 20955-06; Thu, 22 Mar 2012 23:33:22 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2MNXG6N021541
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Thu, 22 Mar 2012 23:33:17 GMT
+Message-ID: <1332459199.9740.374.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Joshua Lock <josh@linux.intel.com>
+Date: Thu, 22 Mar 2012 23:33:19 +0000
+In-Reply-To: <4F6BA888.5090608@linux.intel.com>
+References: <cover.1332334068.git.dongxiao.xu@intel.com>
+	<4F6A7956.1040400@linux.intel.com>
+	<1332379299.1849.14.camel@dongxiao-osel>
+	<4F6BA888.5090608@linux.intel.com>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 00/17][PULL] Hob: Bunch of bug fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,136 +39,108 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 22 Mar 2012 23:40:18 -0000
+X-List-Received-Date: Thu, 22 Mar 2012 23:42:25 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Replace all gtk.Button instances that have the orange style applied with
-HobButton.
+On Thu, 2012-03-22 at 15:32 -0700, Joshua Lock wrote:
+> On 21/03/12 18:21, Xu, Dongxiao wrote:
+> > On Wed, 2012-03-21 at 17:59 -0700, Joshua Lock wrote:
+> >>
+> >> On 21/03/12 05:55, Dongxiao Xu wrote:
+> >>> Hi Richard,
+> >>>
+> >>> This pull request is Hob related bug fixes. Please help to review and pull.
+> >>>
+> >>> Thanks,
+> >>> Dongxiao
+> >>>
+> >>> The following changes since commit d595960fea0988df9004d927bc2ec3439540dd9c:
+> >>>
+> >>>     Hob: save CONF_VERSION and LCONF_VERSION into template (2012-03-20 14:39:45 +0000)
+> >>>
+> >>> are available in the git repository at:
+> >>>     git://git.pokylinux.org/poky-contrib dxu4/hob-bugfix
+> >>>     http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob-bugfix
+> >>>
+> >>> Dongxiao Xu (14):
+> >>>     Hob: Still use initcmd != None as the if judgement
+> >>>     Hob: Remove split model in GTK Hob
+> >>>     cooker: terminate each process when quitting recipe parsing
+> >>>     Hob: change package classes selection GUI
+> >>>     Hob: Change template button name from "Template" to "Templates"
+> >>
+> >> These all look fine.
+> >>
+> >>>     command.py: Change parseConfigurationFiles API from async to sync
+> >>>     process.py: Increase the timeout value for polling commands
+> >>>     Hob: Change parseConfigurationFiles API usage
+> >>
+> >> Can you explain some of the reasoning behind this set of changes? If the
+> >> command truly belongs as an asynchronous one I'm not sure why we need to
+> >> increase the timeout duration specifically for it.
+> >>
+> >>>     Hob: Fix the workaround to get image types
+> >
+> > Hi Josh,
+> >
+> > Actually the above three patches are preparations for this commit: "Hob:
+> > Fix the workaround to get image types".
+> >
+> > The background is that, we need to add extra inherits of
+> > image_types.bbclass before parsing configuration files and getting
+> > variables values. Therefore the modified code piece is something like:
+> >
+> > def get_parameters(self):
+> >      self.init_cooker()
+> >      self.set_extra_inherits("image_types")
+> >      self.parse_config()
+> >
+> >      self.server.runCommand(["getVariable", "MACHINE"])
+> >      ...
+> >
+> > We can see from above code is that, the parse_config locates between two
+> > SYNC commands (set_extra_inherits and getVariable). Therefore we also
+> > need the parse_config to be a SYNC command.
+> >
+> > As far as I know the parseConfigurationFiles API doesn't cost too much
+> > time (should less than 1s), so that's the reason why I change it to SYNC
+> > mode.
+> >
+> > The increase of time duration for parseConfigurationFiles is that, the
+> > process server use pipe mode to pass object (function) from one to
+> > another. The original 0.5 second timeout isn't enough for transferring
+> > "parseConfigurationFiles" object, the phenomenon is that on certain
+> > machines, the runCommand result is messed up with wrong values. This
+> > issue doesn't exist with xmlrpc server.
+> 
+> OK, I understand what you're trying to achieve. I'm afraid I'm not 
+> convinced that we need to make such an invasive change though. Any 
+> reason we can't re-order the initialisation so that everything is done 
+> after the async parseConfigurationFiles?
+> 
+> I'm nervous of us pushing the 0.5s->1s change this late in the cycle. 
+> Have you any indication of whether it affects builds using knotty?
+> 
+> Just to be clear I think Richard needs to ack/nack this change to core 
+> BitBake. The Hob changes related to it are fine by me.
 
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
----
- lib/bb/ui/crumbs/imageconfigurationpage.py |   12 +-----------
- lib/bb/ui/crumbs/imagedetailspage.py       |   11 ++---------
- lib/bb/ui/crumbs/packageselectionpage.py   |   11 ++---------
- lib/bb/ui/crumbs/recipeselectionpage.py    |   11 ++---------
- 4 files changed, 7 insertions(+), 38 deletions(-)
+Having a sync command blocking the system for over 1 second isn't right.
+Sync commands are meant to be fast (say 0.01s max) and this obviously
+isn't.
 
-diff --git a/lib/bb/ui/crumbs/imageconfigurationpage.py b/lib/bb/ui/crumbs/imageconfigurationpage.py
-index 836bd0a..da758a3 100644
---- a/lib/bb/ui/crumbs/imageconfigurationpage.py
-+++ b/lib/bb/ui/crumbs/imageconfigurationpage.py
-@@ -223,19 +223,9 @@ class ImageConfigurationPage (HobPage):
-         button_box = gtk.HBox(False, 6)
- 
-         # create button "Just bake"
--        just_bake_button = gtk.Button()
--        label = gtk.Label()
--        mark = "<span %s>Just bake</span>" % self.span_tag('24px', 'bold')
--        label.set_markup(mark)
--
--        just_bake_button.set_image(label)
-+        just_bake_button = HobButton("Just bake")
-         just_bake_button.set_size_request(205, 49)
--        just_bake_button.modify_bg(gtk.STATE_NORMAL, gtk.gdk.Color(HobColors.ORANGE))
--        just_bake_button.modify_bg(gtk.STATE_PRELIGHT, gtk.gdk.Color(HobColors.ORANGE))
--        just_bake_button.modify_bg(gtk.STATE_SELECTED, gtk.gdk.Color(HobColors.ORANGE))
-         just_bake_button.set_tooltip_text("Build image to get your target image")
--        just_bake_button.set_flags(gtk.CAN_DEFAULT)
--        just_bake_button.grab_default()
-         just_bake_button.connect("clicked", self.just_bake_button_clicked_cb)
-         button_box.pack_end(just_bake_button, expand=False, fill=False)
- 
-diff --git a/lib/bb/ui/crumbs/imagedetailspage.py b/lib/bb/ui/crumbs/imagedetailspage.py
-index 9213255..07a6eb0 100755
---- a/lib/bb/ui/crumbs/imagedetailspage.py
-+++ b/lib/bb/ui/crumbs/imagedetailspage.py
-@@ -23,7 +23,7 @@
- import gobject
- import gtk
- from bb.ui.crumbs.hobcolor import HobColors
--from bb.ui.crumbs.hobwidget import hic, HobViewTable, HobAltButton
-+from bb.ui.crumbs.hobwidget import hic, HobViewTable, HobAltButton, HobButton
- from bb.ui.crumbs.hobpages import HobPage
- 
- #
-@@ -264,15 +264,8 @@ class ImageDetailsPage (HobPage):
-         # create button "Deploy image"
-         name = "Deploy image"
-         if name in buttonlist:
--            deploy_button = gtk.Button()
--            label = gtk.Label()
--            mark = "<span %s>Deploy image</span>" % self.span_tag('24px', 'bold')
--            label.set_markup(mark)
--            deploy_button.set_image(label)
-+            deploy_button = HobButton('Deploy image')
-             deploy_button.set_size_request(205, 49)
--            deploy_button.modify_bg(gtk.STATE_NORMAL, gtk.gdk.Color(HobColors.ORANGE))
--            deploy_button.modify_bg(gtk.STATE_PRELIGHT, gtk.gdk.Color(HobColors.ORANGE))
--            deploy_button.modify_bg(gtk.STATE_SELECTED, gtk.gdk.Color(HobColors.ORANGE))
-             deploy_button.set_tooltip_text("Deploy image to get your target board")
-             deploy_button.set_flags(gtk.CAN_DEFAULT)
-             deploy_button.grab_default()
-diff --git a/lib/bb/ui/crumbs/packageselectionpage.py b/lib/bb/ui/crumbs/packageselectionpage.py
-index cfec6d4..67ae5d1 100755
---- a/lib/bb/ui/crumbs/packageselectionpage.py
-+++ b/lib/bb/ui/crumbs/packageselectionpage.py
-@@ -23,7 +23,7 @@
- import gtk
- import glib
- from bb.ui.crumbs.hobcolor import HobColors
--from bb.ui.crumbs.hobwidget import HobViewTable, HobNotebook, HobAltButton
-+from bb.ui.crumbs.hobwidget import HobViewTable, HobNotebook, HobAltButton, HobButton
- from bb.ui.crumbs.hoblistmodel import PackageListModel
- from bb.ui.crumbs.hobpages import HobPage
- 
-@@ -129,15 +129,8 @@ class PackageSelectionPage (HobPage):
-         button_box = gtk.HBox(False, 6)
-         self.box_group_area.pack_start(button_box, expand=False, fill=False)
- 
--        self.build_image_button = gtk.Button()
--        label = gtk.Label()
--        mark = "<span %s>Build image</span>" % self.span_tag('24px', 'bold')
--        label.set_markup(mark)
--        self.build_image_button.set_image(label)
-+        self.build_image_button = HobButton('Build image')
-         self.build_image_button.set_size_request(205, 49)
--        self.build_image_button.modify_bg(gtk.STATE_NORMAL, gtk.gdk.Color(HobColors.ORANGE))
--        self.build_image_button.modify_bg(gtk.STATE_PRELIGHT, gtk.gdk.Color(HobColors.ORANGE))
--        self.build_image_button.modify_bg(gtk.STATE_SELECTED, gtk.gdk.Color(HobColors.ORANGE))
-         self.build_image_button.set_tooltip_text("Build image to get your target image")
-         self.build_image_button.set_flags(gtk.CAN_DEFAULT)
-         self.build_image_button.grab_default()
-diff --git a/lib/bb/ui/crumbs/recipeselectionpage.py b/lib/bb/ui/crumbs/recipeselectionpage.py
-index 348dfec..881b2ec 100755
---- a/lib/bb/ui/crumbs/recipeselectionpage.py
-+++ b/lib/bb/ui/crumbs/recipeselectionpage.py
-@@ -23,7 +23,7 @@
- import gtk
- import glib
- from bb.ui.crumbs.hobcolor import HobColors
--from bb.ui.crumbs.hobwidget import HobViewTable, HobNotebook, HobAltButton
-+from bb.ui.crumbs.hobwidget import HobViewTable, HobNotebook, HobAltButton, HobButton
- from bb.ui.crumbs.hoblistmodel import RecipeListModel
- from bb.ui.crumbs.hobpages import HobPage
- 
-@@ -151,15 +151,8 @@ class RecipeSelectionPage (HobPage):
-         button_box = gtk.HBox(False, 6)
-         self.box_group_area.pack_end(button_box, expand=False, fill=False)
- 
--        self.build_packages_button = gtk.Button()
--        label = gtk.Label()
--        mark = "<span %s>Build packages</span>" % self.span_tag('24px', 'bold')
--        label.set_markup(mark)
--        self.build_packages_button.set_image(label)
-+        self.build_packages_button = HobButton('Build packages')
-         self.build_packages_button.set_size_request(205, 49)
--        self.build_packages_button.modify_bg(gtk.STATE_NORMAL, gtk.gdk.Color(HobColors.ORANGE))
--        self.build_packages_button.modify_bg(gtk.STATE_PRELIGHT, gtk.gdk.Color(HobColors.ORANGE))
--        self.build_packages_button.modify_bg(gtk.STATE_SELECTED, gtk.gdk.Color(HobColors.ORANGE))
-         self.build_packages_button.set_tooltip_text("Build packages for customization")
-         self.build_packages_button.set_flags(gtk.CAN_DEFAULT)
-         self.build_packages_button.grab_default()
--- 
-1.7.7.6
+I'm rather concerned about this and it suggests something is wrong with
+hob's init/state code to be honest.
+
+My suggestion would be to add an extra parameter to self.parse_config()
+so you can set other classes to inherit (and variables to set). You will
+still have to then read MACHINE later but I think that is reasonable.
+
+Cheers,
+
+Richard
+
+
 
 
 
