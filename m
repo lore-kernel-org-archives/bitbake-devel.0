@@ -1,24 +1,20 @@
-Received: from smtp2-g21.free.fr ([212.27.42.2])
+Received: from mga01.intel.com ([192.55.52.88])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <eric@eukrea.com>) id 1SB3Di-0000Og-DU
+	(envelope-from <dongxiao.xu@intel.com>) id 1SB6Gd-0005x7-D4
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 23 Mar 2012 13:03:50 +0100
-Received: from eb-e6520 (unknown [82.240.38.71])
-	by smtp2-g21.free.fr (Postfix) with ESMTP id 01AC84B0090;
-	Fri, 23 Mar 2012 12:54:51 +0100 (CET)
-Date: Fri, 23 Mar 2012 12:54:50 +0100
-From: Eric =?ISO-8859-1?B?QuluYXJk?= <eric@eukrea.com>
-To: "Xu, Dongxiao" <dongxiao.xu@intel.com>
-Message-ID: <20120323125450.16ff9d90@eb-e6520>
-In-Reply-To: <1332503125.1849.0.camel@dongxiao-osel>
-References: <20120322122219.0df320be@eb-e6520>
-	<20120323091314.5b5d00a0@eb-e6520>
-	<1332503125.1849.0.camel@dongxiao-osel>
-Organization: =?ISO-8859-1?B?RXVrculh?= Electromatique
-X-Mailer: Claws Mail 3.8.0 (GTK+ 2.24.8; x86_64-redhat-linux-gnu)
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: Hob : IndexError: list index out of range
+	Fri, 23 Mar 2012 16:19:03 +0100
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 23 Mar 2012 08:10:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="144030812"
+Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
+	by fmsmga002.fm.intel.com with ESMTP; 23 Mar 2012 08:10:06 -0700
+From: Dongxiao Xu <dongxiao.xu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 23 Mar 2012 23:07:48 +0800
+Message-Id: <cover.1332514895.git.dongxiao.xu@intel.com>
+X-Mailer: git-send-email 1.7.4.1
+Subject: [PATCH 0/7][PULL] Hob: Bug fixes: image_types, runqemu/deploy filter
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,42 +26,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 23 Mar 2012 12:03:50 -0000
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Fri, 23 Mar 2012 15:19:03 -0000
 
-Hi Dongxiao,
+Hi Richard,
 
-Le Fri, 23 Mar 2012 19:45:24 +0800,
-"Xu, Dongxiao" <dongxiao.xu@intel.com> a =E9crit :
+This pull request is for Hob related bug fixes, please help to review and pull.
 
-> On Fri, 2012-03-23 at 09:13 +0100, Eric B=E9nard wrote:
-> > Le Thu, 22 Mar 2012 12:22:19 +0100,
-> > Eric B=E9nard <eric@eukrea.com> a =E9crit :
-> > > while testing HOB, once the image appears to finish to build, got thi=
-s error :
-> > >=20
-> > > Traceback (most recent call last):
-> > >   File "/home/ebenard/openembedded-core/bitbake/lib/bb/ui/crumbs/buil=
-der.py", line 431, in handler_command_succeeded_cb
-> > >     self.switch_page(self.IMAGE_GENERATED)
-> > >   File "/home/ebenard/openembedded-core/bitbake/lib/bb/ui/crumbs/buil=
-der.py", line 339, in switch_page
-> > >     self.image_details_page.show_page(next_step)
-> > >   File "/home/ebenard/openembedded-core/bitbake/lib/bb/ui/crumbs/imag=
-edetailspage.py", line 187, in show_page
-> > >     image_size =3D self._size_to_string(os.stat(os.path.join(image_ad=
-dr, image_names[0])).st_size)
-> > > IndexError: list index out of range
-> > >=20
-> > is there anyone reproducing this or is this a local issue ?
->=20
-> Could you tell me your configuration to reproduce this issue?
->=20
-plain oe-core + qemuarm machine
-I chose clutter image, then bake it and once that seems to finish I get
-this error (and the user interface gets frozen IIRC.
+Thanks,
+Dongxiao
 
-Eric
+The following changes since commit 1119495cbfe2bd1ed0da630dc63f5860c1be73d4:
+
+  lib/bb/ui/crumbs/builder: change dialogue title to Layers (2012-03-23 22:54:00 +0800)
+
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib dxu4/hob-bugfix
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob-bugfix
+
+Dongxiao Xu (7):
+  Hob: Remove unnecessary PARSE_BBFILES command
+  Hob: Cleanup for hobeventhandler.py
+  Hob: Initial an empty label in recipeselectionpage.py
+  Hob: Change the Hob initialization process
+  Hob: Fix the workaround to get image types
+  Hob: Add a supported image type "vmdk"
+  Hob: runqemu and deployment functionality filter
+
+ lib/bb/ui/crumbs/builder.py             |   20 +++++--
+ lib/bb/ui/crumbs/hobeventhandler.py     |   90 ++++++++++++++-----------------
+ lib/bb/ui/crumbs/hobwidget.py           |    1 +
+ lib/bb/ui/crumbs/imagedetailspage.py    |   44 +++++++++++----
+ lib/bb/ui/crumbs/recipeselectionpage.py |    2 +-
+ lib/bb/ui/hob.py                        |    2 -
+ 6 files changed, 89 insertions(+), 70 deletions(-)
+
+-- 
+1.7.4.1
+
 
 
