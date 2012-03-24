@@ -1,25 +1,20 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SBElL-0001EY-6m
+	(envelope-from <josh@linux.intel.com>) id 1SBEtq-0001JU-BC
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 24 Mar 2012 01:23:19 +0100
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 23 Mar 2012 17:14:11 -0700
+	Sat, 24 Mar 2012 01:32:06 +0100
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 23 Mar 2012 17:23:08 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="144382460"
-Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
-	([10.239.36.11])
-	by fmsmga002.fm.intel.com with ESMTP; 23 Mar 2012 17:14:10 -0700
-From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>
-In-Reply-To: <alpine.DEB.2.02.1203221552180.21491@oneiric>
-References: <alpine.DEB.2.02.1203221552180.21491@oneiric>
-Date: Sat, 24 Mar 2012 08:11:59 +0800
-Message-ID: <1332547919.1849.3.camel@dongxiao-osel>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.32.2 
-Cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] Fix typo: BB_NUMBER_THREAD -> BB_NUMBER_THREADS
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="121096254"
+Received: from unknown (HELO shamshir.amr.corp.intel.com) ([10.255.12.82])
+	by orsmga001.jf.intel.com with ESMTP; 23 Mar 2012 17:23:08 -0700
+From: Joshua Lock <josh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 23 Mar 2012 17:22:58 -0700
+Message-Id: <cover.1332545580.git.josh@linux.intel.com>
+X-Mailer: git-send-email 1.7.7.6
+Subject: [PATCH 0/9] Hob visual refinements to more closely match design
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,61 +26,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 24 Mar 2012 00:23:19 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sat, 24 Mar 2012 00:32:06 -0000
 
-On Thu, 2012-03-22 at 15:54 -0400, Robert P. J. Day wrote:
-> Correct some apparent misspellings of BB_NUMBER_THREADS.
-> 
-> Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
+All,
 
-Actually these are Hob self-defined variables in its template, and it
-will not impact the functionality. But definitely we missed the 's' in
-BB_NUMBER_THREADS. Thanks for finding that.
+This series of patches is developed to make the Hob GUI look more like the proposed
+visual design.
 
-Acked-by: Dongxiao Xu <dongxiao.xu@intel.com>
+The series includes two significant changes:
 
-> 
-> ---
-> 
-> diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
-> index 5a292e7..619f1d4 100755
-> --- a/lib/bb/ui/crumbs/builder.py
-> +++ b/lib/bb/ui/crumbs/builder.py
-> @@ -75,7 +75,7 @@ class Configuration:
->          self.sstatedir = template.getVar("SSTATE_DIR")
->          self.sstatemirror = template.getVar("SSTATE_MIRROR")
->          self.pmake = int(template.getVar("PARALLEL_MAKE").split()[1])
-> -        self.bbthread = int(template.getVar("BB_NUMBER_THREAD"))
-> +        self.bbthread = int(template.getVar("BB_NUMBER_THREADS"))
->          self.image_rootfs_size = int(template.getVar("IMAGE_ROOTFS_SIZE"))
->          self.image_extra_size = int(template.getVar("IMAGE_EXTRA_SPACE"))
->          # image_overhead_factor is read-only.
-> @@ -103,7 +103,7 @@ class Configuration:
->          template.setVar("SSTATE_DIR", self.sstatedir)
->          template.setVar("SSTATE_MIRROR", self.sstatemirror)
->          template.setVar("PARALLEL_MAKE", "-j %s" % self.pmake)
-> -        template.setVar("BB_NUMBER_THREAD", self.bbthread)
-> +        template.setVar("BB_NUMBER_THREADS", self.bbthread)
->          template.setVar("PACKAGE_CLASSES", " ".join(["package_" + i for i in self.curr_package_format.split()]))
->          template.setVar("IMAGE_ROOTFS_SIZE", self.image_rootfs_size)
->          template.setVar("IMAGE_EXTRA_SPACE", self.image_extra_size)
-> diff --git a/lib/bb/ui/crumbs/template.py b/lib/bb/ui/crumbs/template.py
-> index a03063c..5679c18 100644
-> --- a/lib/bb/ui/crumbs/template.py
-> +++ b/lib/bb/ui/crumbs/template.py
-> @@ -125,7 +125,7 @@ class RecipeFile(ConfigFile):
-> 
->  class TemplateMgr(gobject.GObject):
-> 
-> -    __gLocalVars__ = ["MACHINE", "PACKAGE_CLASSES", "DISTRO", "DL_DIR", "SSTATE_DIR", "SSTATE_MIRROR", "PARALLEL_MAKE", "BB_NUMBER_THREAD", "CONF_VERSION"]
-> +    __gLocalVars__ = ["MACHINE", "PACKAGE_CLASSES", "DISTRO", "DL_DIR", "SSTATE_DIR", "SSTATE_MIRROR", "PARALLEL_MAKE", "BB_NUMBER_THREADS", "CONF_VERSION"]
->      __gBBLayersVars__ = ["BBLAYERS", "LCONF_VERSION"]
->      __gRecipeVars__ = ["DEPENDS", "IMAGE_INSTALL"]
-> 
-> 
+* a set of changes to change all dialogue buttons to the primary/secondary action
+styling (big orange buttons that draw users in for the primary action help the
+user feel guided through the GUI, blue subtle link-like buttons for secondary
+actions).
 
+* using the PersistentTooltip widget for the 'Brought in by' dialogues to more
+closely match the design.
+
+These can both be seen in the screenshot here:
+https://wiki.yoctoproject.org/wiki/File:Hob2-visual-preview-230312.png
+
+Cheers,
+
+Joshua
+
+The following changes since commit 0348ef08db9ac425d83126d2e6eb465adc28b110:
+
+  Hob: Change the descriptions for view_recipe_button and view_package_button (2012-03-23 16:09:35 +0000)
+
+are available in the git repository at:
+  git://github.com/incandescant/bitbake josh/hob
+  https://github.com/incandescant/bitbake/tree/josh/hob
+
+Joshua Lock (9):
+  lib/bb/ui/crumbs/hig: sort layers in Layer Selection dialogue
+  lib/bb/ui/crumbs/hobwidget: HobAltButton different visual when
+    insensitive
+  lib/bb/ui/crumbs/recipeselectionpage: add 'Build image' button per
+    design
+  lib/bb/ui/crumbs/builddetailspage: fix label on 'Back' button
+  lib/bb/ui/crumbs/hobwidget: convert button styling logic to static
+    methods
+  lib/bb/ui/crumbs/persistenttooltip: layout tweaks
+  lib/bb/ui/crumbs/persistenttooltip: ensure a reasonable minimum size
+  lib/bb/ui/crumbs: use a PersistentTooltip for the Brought in by
+    information
+  lib/bb/ui/crumbs: apply primary/secondary dialogue button styling
+
+ lib/bb/ui/crumbs/builddetailspage.py    |    2 +-
+ lib/bb/ui/crumbs/builder.py             |  118 +++++++++++++++++++------------
+ lib/bb/ui/crumbs/hig.py                 |   65 +++++++----------
+ lib/bb/ui/crumbs/hobwidget.py           |   58 ++++++++++++---
+ lib/bb/ui/crumbs/persistenttooltip.py   |   27 ++++---
+ lib/bb/ui/crumbs/recipeselectionpage.py |   18 ++++--
+ 6 files changed, 177 insertions(+), 111 deletions(-)
+
+-- 
+1.7.7.6
 
 
 
