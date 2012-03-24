@@ -1,26 +1,26 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SBFXI-0002Cd-GD
+	(envelope-from <dongxiao.xu@intel.com>) id 1SBFYt-0002H4-4x
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 24 Mar 2012 02:12:52 +0100
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 23 Mar 2012 18:03:55 -0700
+	Sat, 24 Mar 2012 02:14:31 +0100
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 23 Mar 2012 18:05:33 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="121105807"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="132600630"
 Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
 	([10.239.36.11])
-	by orsmga001.jf.intel.com with ESMTP; 23 Mar 2012 18:03:54 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 23 Mar 2012 18:05:33 -0700
 From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
 To: Joshua Lock <josh@linux.intel.com>
-In-Reply-To: <6343e1553553426bf83318b8d74ecb0e1de39349.1332545580.git.josh@linux.intel.com>
+In-Reply-To: <1610b4255cfc036137dfe731499105569399156c.1332545580.git.josh@linux.intel.com>
 References: <cover.1332545580.git.josh@linux.intel.com>
-	<6343e1553553426bf83318b8d74ecb0e1de39349.1332545580.git.josh@linux.intel.com>
-Date: Sat, 24 Mar 2012 09:01:43 +0800
-Message-ID: <1332550903.1849.17.camel@dongxiao-osel>
+	<1610b4255cfc036137dfe731499105569399156c.1332545580.git.josh@linux.intel.com>
+Date: Sat, 24 Mar 2012 09:03:22 +0800
+Message-ID: <1332551002.1849.18.camel@dongxiao-osel>
 Mime-Version: 1.0
 X-Mailer: Evolution 2.32.2 
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 5/9] lib/bb/ui/crumbs/hobwidget: convert button styling logic to static methods
+Subject: Re: [PATCH 6/9] lib/bb/ui/crumbs/persistenttooltip: layout tweaks
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,120 +32,80 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 24 Mar 2012 01:12:52 -0000
+X-List-Received-Date: Sat, 24 Mar 2012 01:14:31 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
 On Fri, 2012-03-23 at 17:23 -0700, Joshua Lock wrote:
-> The design calls for all buttons to match the style of either the HobButton
-> or HobAltButton classes, therefore implement the styling logic as static
-> methods of the implementing classes so that we can more easily set styles
-> for the buttons created by a gtk.Dialog (or subclass) without having to
-> modify too much of the dialog instantiation code.
+> The design documents have the close button vertically aligned with the
+> tooltip contents - reorganise the interal widget layout to achieve this.
 > 
 > Signed-off-by: Joshua Lock <josh@linux.intel.com>
 
 Acked-by: Dongxiao Xu <dongxiao.xu@intel.com>
 
 > ---
->  lib/bb/ui/crumbs/hobwidget.py |   53 +++++++++++++++++++++++++---------------
->  1 files changed, 33 insertions(+), 20 deletions(-)
+>  lib/bb/ui/crumbs/persistenttooltip.py |   24 ++++++++++++------------
+>  1 files changed, 12 insertions(+), 12 deletions(-)
 > 
-> diff --git a/lib/bb/ui/crumbs/hobwidget.py b/lib/bb/ui/crumbs/hobwidget.py
-> index 6b8fc1b..d6ed260 100644
-> --- a/lib/bb/ui/crumbs/hobwidget.py
-> +++ b/lib/bb/ui/crumbs/hobwidget.py
-> @@ -204,49 +204,62 @@ class HobButton(gtk.Button):
->      label: the text to display as the button's label
->      """
->      def __init__(self, label):
-> -        gtk.Button.__init__(self, "<span size='x-large'><b>%s</b></span>" % gobject.markup_escape_text(label))
-> -        self.child.set_use_markup(True)
-> +        gtk.Button.__init__(self, label)
-> +        HobButton.style_button(self)
+> diff --git a/lib/bb/ui/crumbs/persistenttooltip.py b/lib/bb/ui/crumbs/persistenttooltip.py
+> index 8ba0043..e184062 100644
+> --- a/lib/bb/ui/crumbs/persistenttooltip.py
+> +++ b/lib/bb/ui/crumbs/persistenttooltip.py
+> @@ -76,9 +76,7 @@ class PersistentTooltip(gtk.Window):
+>          # Draw our label and close buttons
+>          hbox = gtk.HBox(False, 0)
+>          hbox.show()
+> -        vbox = gtk.VBox(False, 0)
+> -        vbox.show()
+> -        vbox.pack_start(hbox, True, True, 0)
+> +        self.add(hbox)
 >  
-> -        style = self.get_style()
-> +    @staticmethod
-> +    def style_button(button):
-> +        style = button.get_style()
->          button_color = gtk.gdk.Color(HobColors.ORANGE)
-> -        self.modify_bg(gtk.STATE_NORMAL, button_color)
-> -        self.modify_bg(gtk.STATE_PRELIGHT, button_color)
-> -        self.modify_bg(gtk.STATE_SELECTED, button_color)
-> +        button.modify_bg(gtk.STATE_NORMAL, button_color)
-> +        button.modify_bg(gtk.STATE_PRELIGHT, button_color)
-> +        button.modify_bg(gtk.STATE_SELECTED, button_color)
-> +
-> +        button.set_flags(gtk.CAN_DEFAULT)
-> +        button.grab_default()
->  
-> -        self.set_flags(gtk.CAN_DEFAULT)
-> -        self.grab_default()
-> +        label = "<span size='x-large'><b>%s</b></span>" % gobject.markup_escape_text(button.get_label())
-> +        button.set_label(label)
-> +        button.child.set_use_markup(True)
->  
->  class HobAltButton(gtk.Button):
->      """
->      A gtk.Button subclass which has no relief, and so is more discrete
->      """
->      def __init__(self, label):
-> -        gtk.Button.__init__(self)
-> -        self.text = label
-> -        self.set_text()
-> -        self.set_relief(gtk.RELIEF_NONE)
-> -        self.connect("state-changed", self.desensitise_on_state_change_cb)
-> +        gtk.Button.__init__(self, label)
-> +        HobAltButton.style_button(self)
->  
->      """
->      A callback for the state-changed event to ensure the text is displayed
->      differently when the widget is not sensitive
->      """
-> -    def desensitise_on_state_change_cb(self, widget, state):
-> -        if widget.get_state() == gtk.STATE_INSENSITIVE:
-> -            self.set_text(False)
-> +    @staticmethod
-> +    def desensitise_on_state_change_cb(button, state):
-> +        if button.get_state() == gtk.STATE_INSENSITIVE:
-> +            HobAltButton.set_text(button, False)
+>          img = gtk.Image()
+>          img.set_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_BUTTON)
+> @@ -89,18 +87,21 @@ class PersistentTooltip(gtk.Window):
+>          self.button.set_can_default(True)
+>          self.button.grab_focus()
+>          self.button.show()
+> +        vbox = gtk.VBox(False, 0)
+> +        vbox.show()
+> +        vbox.pack_start(self.button, False, False, 0)
+>          if __button_right:
+> -            hbox.pack_end(self.button, False, False, 0)
+> +            hbox.pack_end(vbox, True, True, 0)
 >          else:
-> -            self.set_text(True)
-> +            HobAltButton.set_text(button, True)
+> -            hbox.pack_start(self.button, False, False, 0)
+> +            hbox.pack_start(vbox, True, True, 0)
 >  
->      """
->      Set the button label with an appropriate colour for the current widget state
->      """
-> -    def set_text(self, sensitive=True):
-> +    @staticmethod
-> +    def set_text(button, sensitive=True):
->          if sensitive:
->              colour = HobColors.PALE_BLUE
->          else:
->              colour = HobColors.LIGHT_GRAY
-> -        self.set_label("<span color='%s'><b>%s</b></span>" % (colour, gobject.markup_escape_text(self.text)))
-> -        self.child.set_use_markup(True)
-> +        button.set_label("<span color='%s'><b>%s</b></span>" % (colour, gobject.markup_escape_text(button.text)))
-> +        button.child.set_use_markup(True)
-> +
-> +    @staticmethod
-> +    def style_button(button):
-> +        button.text = button.get_label()
-> +        button.connect("state-changed", HobAltButton.desensitise_on_state_change_cb)
-> +        HobAltButton.set_text(button)
-> +        button.child.set_use_markup(True)
-> +        button.set_relief(gtk.RELIEF_NONE)
+>          self.set_default(self.button)
 >  
->  class HobImageButton(gtk.Button):
+> -        hbox = gtk.HBox(True, 6)
+> -        hbox.set_border_width(6)
+> -        hbox.show()
+> -        vbox.pack_end(hbox, True, True, 6)
+> +        bin = gtk.HBox(True, 6)
+> +        bin.set_border_width(6)
+> +        bin.show()
+>          self.label = gtk.Label()
+> +        self.label.set_line_wrap(True)
+>          # We want to match the colours of the normal tooltips, as dictated by
+>          # the users gtk+-2.0 theme, wherever possible - on some systems this
+>          # requires explicitly setting a fg_color for the label which matches the
+> @@ -119,12 +120,11 @@ class PersistentTooltip(gtk.Window):
+>                  break # we only care for the tooltip_fg_color
+>          self.label.set_markup(markup)
+>          self.label.show()
+> -        hbox.pack_end(self.label, True, True, 6)
+> +        bin.add(self.label)
+> +        hbox.pack_end(bin, True, True, 6)
+>  
+>          self.connect("key-press-event", self._catch_esc_cb)
+>  
+> -        self.add(vbox)
+> -
 >      """
-> -- 
-> 1.7.7.6
-> 
-> 
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
+>      Callback when the PersistentTooltip's close button is clicked.
+>      Hides the PersistentTooltip.
 
 
 
