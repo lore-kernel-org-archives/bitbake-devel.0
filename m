@@ -1,27 +1,26 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SBFWb-0002BY-D7
+	(envelope-from <dongxiao.xu@intel.com>) id 1SBFXI-0002Cd-GD
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 24 Mar 2012 02:12:10 +0100
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 23 Mar 2012 18:03:11 -0700
+	Sat, 24 Mar 2012 02:12:52 +0100
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 23 Mar 2012 18:03:55 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="122662358"
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="121105807"
 Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
 	([10.239.36.11])
-	by azsmga001.ch.intel.com with ESMTP; 23 Mar 2012 18:03:10 -0700
+	by orsmga001.jf.intel.com with ESMTP; 23 Mar 2012 18:03:54 -0700
 From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
-To: Joshua Lock <josh@linux.intel.com>, "Barros Pena, Belen"
-	<belen.barros.pena@intel.com>, Giulia Piu <giulia@closertag.com>
-In-Reply-To: <9b9c960eca1213d2f60f499278fba368e3e0e16d.1332545580.git.josh@linux.intel.com>
+To: Joshua Lock <josh@linux.intel.com>
+In-Reply-To: <6343e1553553426bf83318b8d74ecb0e1de39349.1332545580.git.josh@linux.intel.com>
 References: <cover.1332545580.git.josh@linux.intel.com>
-	<9b9c960eca1213d2f60f499278fba368e3e0e16d.1332545580.git.josh@linux.intel.com>
-Date: Sat, 24 Mar 2012 09:00:59 +0800
-Message-ID: <1332550859.1849.16.camel@dongxiao-osel>
+	<6343e1553553426bf83318b8d74ecb0e1de39349.1332545580.git.josh@linux.intel.com>
+Date: Sat, 24 Mar 2012 09:01:43 +0800
+Message-ID: <1332550903.1849.17.camel@dongxiao-osel>
 Mime-Version: 1.0
 X-Mailer: Evolution 2.32.2 
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 9/9] lib/bb/ui/crumbs: apply primary/secondary dialogue button styling
+Subject: Re: [PATCH 5/9] lib/bb/ui/crumbs/hobwidget: convert button styling logic to static methods
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,376 +32,120 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 24 Mar 2012 01:12:10 -0000
+X-List-Received-Date: Sat, 24 Mar 2012 01:12:52 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
 On Fri, 2012-03-23 at 17:23 -0700, Joshua Lock wrote:
-> The design calls for primary buttons which are orange and large and
-> secondary buttons which are subtle with pale blue text. This is so that the
-> user is drawn towards the primary action and their use of the application
-> is more guided.
-> 
-> This patch uses HobButton and HobAltButton classes to style all dialogue
-> buttons accordingly.
-> 
-> Fixes [YOCTO #2125]
+> The design calls for all buttons to match the style of either the HobButton
+> or HobAltButton classes, therefore implement the styling logic as static
+> methods of the implementing classes so that we can more easily set styles
+> for the buttons created by a gtk.Dialog (or subclass) without having to
+> modify too much of the dialog instantiation code.
 > 
 > Signed-off-by: Joshua Lock <josh@linux.intel.com>
+
+Acked-by: Dongxiao Xu <dongxiao.xu@intel.com>
+
 > ---
->  lib/bb/ui/crumbs/builder.py |  106 +++++++++++++++++++++++++++----------------
->  lib/bb/ui/crumbs/hig.py     |   34 ++++++++------
->  2 files changed, 87 insertions(+), 53 deletions(-)
+>  lib/bb/ui/crumbs/hobwidget.py |   53 +++++++++++++++++++++++++---------------
+>  1 files changed, 33 insertions(+), 20 deletions(-)
 > 
-> diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
-> index 4eb374c..e27a239 100755
-> --- a/lib/bb/ui/crumbs/builder.py
-> +++ b/lib/bb/ui/crumbs/builder.py
-> @@ -32,7 +32,7 @@ from bb.ui.crumbs.recipeselectionpage import RecipeSelectionPage
->  from bb.ui.crumbs.packageselectionpage import PackageSelectionPage
->  from bb.ui.crumbs.builddetailspage import BuildDetailsPage
->  from bb.ui.crumbs.imagedetailspage import ImageDetailsPage
-> -from bb.ui.crumbs.hobwidget import hwc
-> +from bb.ui.crumbs.hobwidget import hwc, HobButton, HobAltButton
->  from bb.ui.crumbs.hig import CrumbsMessageDialog, ImageSelectionDialog, \
->                               AdvancedSettingDialog, LayerSelectionDialog, \
->                               DeployImageDialog
-> @@ -435,7 +435,8 @@ class Builder(gtk.Window):
->              lbl = "<b>Error</b>\n"
->              lbl = lbl + "%s\n\n" % msg
->              dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_WARNING)
-> -            dialog.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
-> +            button = dialog.add_button("Close", gtk.RESPONSE_OK)
-> +            HobButton.style_button(button)
->              response = dialog.run()
->              dialog.destroy()
->          self.handler.clear_busy()
-> @@ -608,8 +609,10 @@ class Builder(gtk.Window):
->      def destroy_window_cb(self, widget, event):
->          lbl = "<b>Do you really want to exit the Hob image creator?</b>"
->          dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
-> -        dialog.add_button("Keep using Hob", gtk.RESPONSE_NO)
-> -        dialog.add_button("Exit Hob", gtk.RESPONSE_YES)
-> +        button = dialog.add_button("Cancel", gtk.RESPONSE_NO)
-> +        HobAltButton.style_button(button)
-> +        button = dialog.add_button("Exit Hob", gtk.RESPONSE_YES)
-> +        HobButton.style_button(button)
->          dialog.set_default_response(gtk.RESPONSE_YES)
->          response = dialog.run()
->          dialog.destroy()
-> @@ -625,7 +628,8 @@ class Builder(gtk.Window):
->              lbl = "<b>No selections made</b>\nYou have not made any selections"
->              lbl = lbl + " so there isn't anything to bake at this time."
->              dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
-> -            dialog.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
-> +            button = dialog.add_button("Close", gtk.RESPONSE_OK)
-> +            HobButton.style_button(button)
->              dialog.run()
->              dialog.destroy()
->              return
-> @@ -637,7 +641,8 @@ class Builder(gtk.Window):
->              lbl = "<b>No selections made</b>\nYou have not made any selections"
->              lbl = lbl + " so there isn't anything to bake at this time."
->              dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
-> -            dialog.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
-> +            button = dialog.add_button("Close", gtk.RESPONSE_OK)
-> +            HobButton.style_button(button)
->              dialog.run()
->              dialog.destroy()
->              return
-> @@ -652,7 +657,8 @@ class Builder(gtk.Window):
->              lbl = "<b>No selections made</b>\nYou have not made any selections"
->              lbl = lbl + " so there isn't anything to bake at this time."
->              dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
-> -            dialog.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
-> +            button = dialog.add_button("Close", gtk.RESPONSE_OK)
-> +            HobButton.style_button(button)
->              dialog.run()
->              dialog.destroy()
->              return
-> @@ -672,8 +678,9 @@ class Builder(gtk.Window):
->                       parent = self,
->                       flags = gtk.DIALOG_MODAL
->                           | gtk.DIALOG_DESTROY_WITH_PARENT
-> -                         | gtk.DIALOG_NO_SEPARATOR,
-> -                     buttons = (gtk.STOCK_CLOSE, gtk.RESPONSE_YES))
-> +                         | gtk.DIALOG_NO_SEPARATOR)
-> +        button = dialog.add_button("Close", gtk.RESPONSE_YES)
-> +        HobButton.style_button(button)
->          response = dialog.run()
->          if response == gtk.RESPONSE_YES:
->              self.configuration.layers = dialog.layers
-
-As my previous point, I still strongly suggest we keep the "cancel"
-button in the layer selection and advanced setting dialog to avoid
-user's wrong operation. Need Belen or Giulia's input.
-
-Thanks,
-Dongxiao
-
-> @@ -684,9 +691,11 @@ class Builder(gtk.Window):
+> diff --git a/lib/bb/ui/crumbs/hobwidget.py b/lib/bb/ui/crumbs/hobwidget.py
+> index 6b8fc1b..d6ed260 100644
+> --- a/lib/bb/ui/crumbs/hobwidget.py
+> +++ b/lib/bb/ui/crumbs/hobwidget.py
+> @@ -204,49 +204,62 @@ class HobButton(gtk.Button):
+>      label: the text to display as the button's label
+>      """
+>      def __init__(self, label):
+> -        gtk.Button.__init__(self, "<span size='x-large'><b>%s</b></span>" % gobject.markup_escape_text(label))
+> -        self.child.set_use_markup(True)
+> +        gtk.Button.__init__(self, label)
+> +        HobButton.style_button(self)
 >  
->      def show_load_template_dialog(self):
->          dialog = gtk.FileChooserDialog("Load Template Files", self,
-> -                                       gtk.FILE_CHOOSER_ACTION_OPEN,
-> -                                      (gtk.STOCK_CANCEL, gtk.RESPONSE_NO,
-> -                                       gtk.STOCK_OPEN, gtk.RESPONSE_YES))
-> +                                       gtk.FILE_CHOOSER_ACTION_OPEN)
-> +        button = dialog.add_button("Cancel", gtk.RESPONSE_NO)
-> +        HobAltButton.style_button(button)
-> +        button = dialog.add_button("Open", gtk.RESPONSE_YES)
-> +        HobButton.style_button(button)
->          filter = gtk.FileFilter()
->          filter.set_name("Hob Files")
->          filter.add_pattern("*.hob")
-> @@ -700,9 +709,11 @@ class Builder(gtk.Window):
+> -        style = self.get_style()
+> +    @staticmethod
+> +    def style_button(button):
+> +        style = button.get_style()
+>          button_color = gtk.gdk.Color(HobColors.ORANGE)
+> -        self.modify_bg(gtk.STATE_NORMAL, button_color)
+> -        self.modify_bg(gtk.STATE_PRELIGHT, button_color)
+> -        self.modify_bg(gtk.STATE_SELECTED, button_color)
+> +        button.modify_bg(gtk.STATE_NORMAL, button_color)
+> +        button.modify_bg(gtk.STATE_PRELIGHT, button_color)
+> +        button.modify_bg(gtk.STATE_SELECTED, button_color)
+> +
+> +        button.set_flags(gtk.CAN_DEFAULT)
+> +        button.grab_default()
 >  
->      def show_save_template_dialog(self):
->          dialog = gtk.FileChooserDialog("Save Template Files", self,
-> -                                       gtk.FILE_CHOOSER_ACTION_SAVE,
-> -                                      (gtk.STOCK_CANCEL, gtk.RESPONSE_NO,
-> -                                       gtk.STOCK_SAVE, gtk.RESPONSE_YES))
-> +                                       gtk.FILE_CHOOSER_ACTION_SAVE)
-> +        button = dialog.add_button("Cancel", gtk.RESPONSE_NO)
-> +        HobAltButton.style_button(button)
-> +        button = dialog.add_button("Save", gtk.RESPONSE_YES)
-> +        HobButton.style_button(button)
->          dialog.set_current_name("hob")
->          response = dialog.run()
->          if response == gtk.RESPONSE_YES:
-> @@ -713,15 +724,18 @@ class Builder(gtk.Window):
->      def show_load_my_images_dialog(self):
->          dialog = ImageSelectionDialog(self.parameters.image_addr, self.parameters.image_types,
->                                        "Open My Images", self,
-> -                                       gtk.FILE_CHOOSER_ACTION_SAVE,
-> -                                      (gtk.STOCK_CANCEL, gtk.RESPONSE_NO,
-> -                                       gtk.STOCK_OPEN, gtk.RESPONSE_YES))
-> +                                       gtk.FILE_CHOOSER_ACTION_SAVE)
-> +        button = dialog.add_button("Cancel", gtk.RESPONSE_NO)
-> +        HobAltButton.style_button(button)
-> +        button = dialog.add_button("Open", gtk.RESPONSE_YES)
-> +        HobButton.style_button(button)
->          response = dialog.run()
->          if response == gtk.RESPONSE_YES:
->              if not dialog.image_names:
->                  lbl = "<b>No selections made</b>\nYou have not made any selections"
->                  crumbs_dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
-> -                crumbs_dialog.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
-> +                button = crumbs_dialog.add_button("Close", gtk.RESPONSE_OK)
-> +                HobButton.style_button(button)
->                  crumbs_dialog.run()
->                  crumbs_dialog.destroy()
->                  dialog.destroy()
-> @@ -744,9 +758,9 @@ class Builder(gtk.Window):
->              parent = self,
->              flags = gtk.DIALOG_MODAL
->                      | gtk.DIALOG_DESTROY_WITH_PARENT
-> -                    | gtk.DIALOG_NO_SEPARATOR,
-> -            buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_NO,
-> -                       "Save", gtk.RESPONSE_YES))
-> +                    | gtk.DIALOG_NO_SEPARATOR)
-> +        button = dialog.add_button("Close", gtk.RESPONSE_YES)
-> +        HobButton.style_button(button)
->          response = dialog.run()
->          if response == gtk.RESPONSE_YES:
->              self.configuration = dialog.configuration
-> @@ -762,7 +776,8 @@ class Builder(gtk.Window):
->          if not image_name:
->              lbl = "<b>Please select an image to deploy.</b>"
->              dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
-> -            dialog.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
-> +            button = dialog.add_button("Close", gtk.RESPONSE_OK)
-> +            HobButton.style_button(button)
->              dialog.run()
->              dialog.destroy()
->              return
-> @@ -773,9 +788,11 @@ class Builder(gtk.Window):
->              parent = self,
->              flags = gtk.DIALOG_MODAL
->                      | gtk.DIALOG_DESTROY_WITH_PARENT
-> -                    | gtk.DIALOG_NO_SEPARATOR,
-> -            buttons = ("Close", gtk.RESPONSE_NO,
-> -                       "Make usb image", gtk.RESPONSE_YES))
-> +                    | gtk.DIALOG_NO_SEPARATOR)
-> +        button = dialog.add_button("Close", gtk.RESPONSE_NO)
-> +        HobAltButton.style_button(button)
-> +        button = dialog.add_button("Make usb image", gtk.RESPONSE_YES)
-> +        HobButton.style_button(button)
->          response = dialog.run()
->          dialog.destroy()
+> -        self.set_flags(gtk.CAN_DEFAULT)
+> -        self.grab_default()
+> +        label = "<span size='x-large'><b>%s</b></span>" % gobject.markup_escape_text(button.get_label())
+> +        button.set_label(label)
+> +        button.child.set_use_markup(True)
 >  
-> @@ -783,15 +800,18 @@ class Builder(gtk.Window):
->          if not image_name:
->              lbl = "<b>Please select an image to launch in QEMU.</b>"
->              dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
-> -            dialog.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
-> +            button = dialog.add_button("Close", gtk.RESPONSE_OK)
-> +            HobButton.style_button(button)
->              dialog.run()
->              dialog.destroy()
->              return
+>  class HobAltButton(gtk.Button):
+>      """
+>      A gtk.Button subclass which has no relief, and so is more discrete
+>      """
+>      def __init__(self, label):
+> -        gtk.Button.__init__(self)
+> -        self.text = label
+> -        self.set_text()
+> -        self.set_relief(gtk.RELIEF_NONE)
+> -        self.connect("state-changed", self.desensitise_on_state_change_cb)
+> +        gtk.Button.__init__(self, label)
+> +        HobAltButton.style_button(self)
 >  
->          dialog = gtk.FileChooserDialog("Load Kernel Files", self,
-> -                                       gtk.FILE_CHOOSER_ACTION_SAVE,
-> -                                      (gtk.STOCK_CANCEL, gtk.RESPONSE_NO,
-> -                                       gtk.STOCK_OPEN, gtk.RESPONSE_YES))
-> +                                       gtk.FILE_CHOOSER_ACTION_SAVE)
-> +        button = dialog.add_button("Cancel", gtk.RESPONSE_NO)
-> +        HobAltButton.style_button(button)
-> +        button = dialog.add_button("Open", gtk.RESPONSE_YES)
-> +        HobButton.style_button(button)
->          filter = gtk.FileFilter()
->          filter.set_name("Kernel Files")
->          filter.add_pattern("*.bin")
-> @@ -823,7 +843,8 @@ class Builder(gtk.Window):
->                  lbl = lbl + "source environment path:" + source_env_path + "\n"
->                  lbl = lbl + "tmp path: " + tmp_path + "."
->                  dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
-> -                dialog.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
-> +                button = dialog.add_button("Close", gtk.RESPONSE_OK)
-> +                HobButton.style_button(button)
->                  dialog.run()
->                  dialog.destroy()
->  
-> @@ -831,10 +852,12 @@ class Builder(gtk.Window):
->          _, selected_recipes = self.recipe_model.get_selected_recipes()
->          if selected_recipes and ask:
->              lbl = "<b>Package list may be incomplete!</b>\nDo you want to build selected recipes"
-> -            lbl = lbl + " to get a full list (Yes) or just view the existing packages (No)?"
-> +            lbl = lbl + " to get a full list or just view the existing packages?"
->              dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
-> -            dialog.add_button(gtk.STOCK_NO, gtk.RESPONSE_NO)
-> -            dialog.add_button(gtk.STOCK_YES, gtk.RESPONSE_YES)
-> +            button = dialog.add_button("View packages", gtk.RESPONSE_NO)
-> +            HobAltButton.style_button(button)
-> +            button = dialog.add_button("Build packages", gtk.RESPONSE_YES)
-> +            HobButton.style_button(button)
->              dialog.set_default_response(gtk.RESPONSE_YES)
->              response = dialog.run()
->              dialog.destroy()
-> @@ -867,8 +890,10 @@ class Builder(gtk.Window):
->              lbl = lbl + " well leave your build directory in an  unusable state"
->              lbl = lbl + " that requires manual steps to fix.\n"
->              dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_WARNING)
-> -            dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
-> -            dialog.add_button("Force Stop", gtk.RESPONSE_YES)
-> +            button = dialog.add_button("Cancel", gtk.RESPONSE_CANCEL)
-> +            HobAltButton.style_button(button)
-> +            button = dialog.add_button("Force Stop", gtk.RESPONSE_YES)
-> +            HobButton.style_button(button)
+>      """
+>      A callback for the state-changed event to ensure the text is displayed
+>      differently when the widget is not sensitive
+>      """
+> -    def desensitise_on_state_change_cb(self, widget, state):
+> -        if widget.get_state() == gtk.STATE_INSENSITIVE:
+> -            self.set_text(False)
+> +    @staticmethod
+> +    def desensitise_on_state_change_cb(button, state):
+> +        if button.get_state() == gtk.STATE_INSENSITIVE:
+> +            HobAltButton.set_text(button, False)
 >          else:
->              lbl = "<b>Stop build?</b>\n\nAre you sure you want to stop this"
->              lbl = lbl + " build?\n\n'Force Stop' will stop the build as quickly as"
-> @@ -879,9 +904,12 @@ class Builder(gtk.Window):
->              lbl = lbl + " lengthy compilation phase is in progress this may take"
->              lbl = lbl + " some time."
->              dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_WARNING)
-> -            dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
-> -            dialog.add_button("Stop", gtk.RESPONSE_OK)
-> -            dialog.add_button("Force Stop", gtk.RESPONSE_YES)
-> +            button = dialog.add_button("Cancel", gtk.RESPONSE_CANCEL)
-> +            HobAltButton.style_button(button)
-> +            button = dialog.add_button("Stop", gtk.RESPONSE_OK)
-> +            HobAltButton.style_button(button)
-> +            button = dialog.add_button("Force Stop", gtk.RESPONSE_YES)
-> +            HobButton.style_button(button)
->          response = dialog.run()
->          dialog.destroy()
->          if response != gtk.RESPONSE_CANCEL:
-> diff --git a/lib/bb/ui/crumbs/hig.py b/lib/bb/ui/crumbs/hig.py
-> index 6ae682b..a30e7d9 100644
-> --- a/lib/bb/ui/crumbs/hig.py
-> +++ b/lib/bb/ui/crumbs/hig.py
-> @@ -28,7 +28,7 @@ import re
->  import subprocess
->  import shlex
->  from bb.ui.crumbs.hobcolor import HobColors
-> -from bb.ui.crumbs.hobwidget import hcc, hic, HobViewTable, HobInfoButton
-> +from bb.ui.crumbs.hobwidget import hcc, hic, HobViewTable, HobInfoButton, HobButton, HobAltButton
->  from bb.ui.crumbs.progressbar import HobProgressBar
+> -            self.set_text(True)
+> +            HobAltButton.set_text(button, True)
 >  
->  """
-> @@ -137,9 +137,11 @@ class AdvancedSettingDialog (CrumbsDialog):
+>      """
+>      Set the button label with an appropriate colour for the current widget state
+>      """
+> -    def set_text(self, sensitive=True):
+> +    @staticmethod
+> +    def set_text(button, sensitive=True):
+>          if sensitive:
+>              colour = HobColors.PALE_BLUE
+>          else:
+>              colour = HobColors.LIGHT_GRAY
+> -        self.set_label("<span color='%s'><b>%s</b></span>" % (colour, gobject.markup_escape_text(self.text)))
+> -        self.child.set_use_markup(True)
+> +        button.set_label("<span color='%s'><b>%s</b></span>" % (colour, gobject.markup_escape_text(button.text)))
+> +        button.child.set_use_markup(True)
+> +
+> +    @staticmethod
+> +    def style_button(button):
+> +        button.text = button.get_label()
+> +        button.connect("state-changed", HobAltButton.desensitise_on_state_change_cb)
+> +        HobAltButton.set_text(button)
+> +        button.child.set_use_markup(True)
+> +        button.set_relief(gtk.RELIEF_NONE)
 >  
->      def entry_widget_select_path_cb(self, action, parent, entry):
->          dialog = gtk.FileChooserDialog("", parent,
-> -                                       gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
-> -                                       (gtk.STOCK_CANCEL, gtk.RESPONSE_NO,
-> -                                        gtk.STOCK_OPEN, gtk.RESPONSE_YES))
-> +                                       gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-> +        button = dialog.add_button("Cancel", gtk.RESPONSE_NO)
-> +        HobAltButton.style_button(button)
-> +        button = dialog.add_button("Open", gtk.RESPONSE_YES)
-> +        HobButton.style_button(button)
->          response = dialog.run()
->          if response == gtk.RESPONSE_YES:
->              path = dialog.get_filename()
-> @@ -307,7 +309,7 @@ class AdvancedSettingDialog (CrumbsDialog):
->  
->      def __init__(self, title, configuration, all_image_types,
->              all_package_formats, all_distros, all_sdk_machines,
-> -            max_threads, parent, flags, buttons):
-> +            max_threads, parent, flags, buttons=None):
->          super(AdvancedSettingDialog, self).__init__(title, parent, flags, buttons)
->  
->          # class members from other objects
-> @@ -563,7 +565,7 @@ class DeployImageDialog (CrumbsDialog):
->  
->      __dummy_usb__ = "--select a usb drive--"
->  
-> -    def __init__(self, title, image_path, parent, flags, buttons):
-> +    def __init__(self, title, image_path, parent, flags, buttons=None):
->          super(DeployImageDialog, self).__init__(title, parent, flags, buttons)
->  
->          self.image_path = image_path
-> @@ -713,9 +715,11 @@ class LayerSelectionDialog (CrumbsDialog):
->  
->      def layer_widget_add_clicked_cb(self, action, layer_store, parent):
->          dialog = gtk.FileChooserDialog("Add new layer", parent,
-> -                                       gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
-> -                                       (gtk.STOCK_CANCEL, gtk.RESPONSE_NO,
-> -                                        gtk.STOCK_OPEN, gtk.RESPONSE_YES))
-> +                                       gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-> +        button = dialog.add_button("Cancel", gtk.RESPONSE_NO)
-> +        HobAltButton.style_button(button)
-> +        button = dialog.add_button("Open", gtk.RESPONSE_YES)
-> +        HobButton.style_button(button)
->          label = gtk.Label("Select the layer you wish to add")
->          label.show()
->          dialog.set_extra_widget(label)
-> @@ -827,7 +831,7 @@ class LayerSelectionDialog (CrumbsDialog):
->      def add_leave_cb(self, button, event):
->          self.im.set_from_file(hic.ICON_INDI_ADD_FILE)
->  
-> -    def __init__(self, title, layers, all_layers, parent, flags, buttons):
-> +    def __init__(self, title, layers, all_layers, parent, flags, buttons=None):
->          super(LayerSelectionDialog, self).__init__(title, parent, flags, buttons)
->  
->          # class members from other objects
-> @@ -921,7 +925,7 @@ class ImageSelectionDialog (CrumbsDialog):
->      }]
->  
+>  class HobImageButton(gtk.Button):
+>      """
+> -- 
+> 1.7.7.6
 > 
-> -    def __init__(self, image_folder, image_types, title, parent, flags, buttons):
-> +    def __init__(self, image_folder, image_types, title, parent, flags, buttons=None):
->          super(ImageSelectionDialog, self).__init__(title, parent, flags, buttons)
->          self.connect("response", self.response_cb)
->  
-> @@ -975,9 +979,11 @@ class ImageSelectionDialog (CrumbsDialog):
->  
->      def select_path_cb(self, action, parent, entry):
->          dialog = gtk.FileChooserDialog("", parent,
-> -                                       gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
-> -                                       (gtk.STOCK_CANCEL, gtk.RESPONSE_NO,
-> -                                        gtk.STOCK_OPEN, gtk.RESPONSE_YES))
-> +                                       gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-> +        button = dialog.add_button("Cancel", gtk.RESPONSE_NO)
-> +        HobAltButton.style_button(button)
-> +        button = dialog.add_button("Open", gtk.RESPONSE_YES)
-> +        HobButton.style_button(button)
->          response = dialog.run()
->          if response == gtk.RESPONSE_YES:
->              path = dialog.get_filename()
+> 
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
 
 
 
