@@ -1,29 +1,31 @@
-Received: from mga02.intel.com ([134.134.136.20])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SBMV9-0007fz-C3
-	for bitbake-devel@lists.openembedded.org;
-	Sat, 24 Mar 2012 09:39:07 +0100
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 24 Mar 2012 01:30:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="124566373"
-Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
-	([10.239.36.11])
-	by orsmga002.jf.intel.com with ESMTP; 24 Mar 2012 01:30:08 -0700
-From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
-To: Eric =?ISO-8859-1?Q?B=E9nard?= <eric@eukrea.com>
-In-Reply-To: <20120324091905.0a64617b@eb-e6520>
-References: <20120322122219.0df320be@eb-e6520>
-	<20120323091314.5b5d00a0@eb-e6520>
-	<1332503125.1849.0.camel@dongxiao-osel>
-	<1332556685.1849.29.camel@dongxiao-osel>
-	<20120324091905.0a64617b@eb-e6520>
-Date: Sat, 24 Mar 2012 16:27:57 +0800
-Message-ID: <1332577677.1849.36.camel@dongxiao-osel>
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1SBOEW-0001MH-UE for bitbake-devel@lists.openembedded.org;
+	Sat, 24 Mar 2012 11:30:05 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2OAL5ju005125;
+	Sat, 24 Mar 2012 10:21:05 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 01784-08; Sat, 24 Mar 2012 10:21:01 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2OAKu0p005119
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Sat, 24 Mar 2012 10:20:57 GMT
+Message-ID: <1332584459.9740.508.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Dongxiao Xu <dongxiao.xu@intel.com>
+Date: Sat, 24 Mar 2012 10:20:59 +0000
+In-Reply-To: <a8df5fb9f370eb9024df8ff73b23f9c963c18377.1332567775.git.dongxiao.xu@intel.com>
+References: <cover.1332567775.git.dongxiao.xu@intel.com>
+	<a8df5fb9f370eb9024df8ff73b23f9c963c18377.1332567775.git.dongxiao.xu@intel.com>
+X-Mailer: Evolution 3.2.2- 
 Mime-Version: 1.0
-X-Mailer: Evolution 2.32.2 
+X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: Hob : IndexError: list index out of range
+Subject: Re: [PATCH 8/8] Hob: Set empty DISTRO if "defaultsetup" is selected
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -35,27 +37,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 24 Mar 2012 08:39:07 -0000
+X-List-Received-Date: Sat, 24 Mar 2012 10:30:05 -0000
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-I have send out a patch in my previous pull request [Patch 8/8] to
-address this issue. You can have a try of that after it is checked into
-master.
-
-Thanks,
-Dongxiao
-
-On Sat, 2012-03-24 at 09:19 +0100, Eric Bénard wrote:
-> Le Sat, 24 Mar 2012 10:38:05 +0800,
-> "Xu, Dongxiao" <dongxiao.xu@intel.com> a écrit :
+On Sat, 2012-03-24 at 13:47 +0800, Dongxiao Xu wrote:
+> In Hob advanced setting, if "defaultsetup" is selected, we need to set
+> empty to DISTRO variable in bitbake server.
 > 
-> > I can reproduce it locally, thanks for reporting it.
-> > 
-> reported here :
-> https://bugzilla.yoctoproject.org/show_bug.cgi?id=2169
+> Otherwise, defaultsetup.conf will be parsed twice, causing TMPDIR and
+> its related variables mess up.
 > 
-> Eric
+> Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+> ---
+>  lib/bb/ui/crumbs/hobeventhandler.py |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
+> 
+> diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
+> index 4b8aabc..a98a0bb 100644
+> --- a/lib/bb/ui/crumbs/hobeventhandler.py
+> +++ b/lib/bb/ui/crumbs/hobeventhandler.py
+> @@ -274,6 +274,8 @@ class HobHandler(gobject.GObject):
+>          self.server.runCommand(["setVariable", "IMAGE_FSTYPES", " ".join(image_fstypes).lstrip(" ")])
+>  
+>      def set_distro(self, distro):
+> +        if distro == "defaultsetup":
+> +            distro = ""
+>          self.server.runCommand(["setVariable", "DISTRO", distro])
+>  
+>      def set_package_format(self, format):
+
+This worries me a little since you're doing something different to what
+the usual case would be (DISTRO not set at all). Is there not a way we
+can not set DISTRO at all so we ensure we're consistent?
+
+What I'd like to avoid is a set of "hob-only" bugs caused by doing
+things slightly differently.
+
+Cheers,
+
+Richard
+
 
 
 
