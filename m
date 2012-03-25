@@ -1,30 +1,30 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SBlXl-0004zB-C9 for bitbake-devel@lists.openembedded.org;
-	Sun, 25 Mar 2012 13:23:29 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2PBEThi015415;
-	Sun, 25 Mar 2012 12:14:29 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 14767-04; Sun, 25 Mar 2012 12:14:25 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2PBEIqx015408
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Sun, 25 Mar 2012 12:14:19 +0100
-Message-ID: <1332674058.28414.77.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Shane Wang <shane.wang@intel.com>
-Date: Sun, 25 Mar 2012 12:14:18 +0100
-In-Reply-To: <cover.1332518429.git.shane.wang@intel.com>
-References: <cover.1332518429.git.shane.wang@intel.com>
-X-Mailer: Evolution 3.2.2- 
+Received: from smtpfb2-g21.free.fr ([212.27.42.10])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <eric@eukrea.com>) id 1SBsPc-000544-9B
+	for bitbake-devel@lists.openembedded.org;
+	Sun, 25 Mar 2012 20:43:32 +0200
+Received: from smtp3-g21.free.fr (smtp3-g21.free.fr [212.27.42.3])
+	by smtpfb2-g21.free.fr (Postfix) with ESMTP id 59081D1AFC0
+	for <bitbake-devel@lists.openembedded.org>;
+	Sun, 25 Mar 2012 20:34:34 +0200 (CEST)
+Received: from eb-e6520 (unknown [82.233.81.124])
+	by smtp3-g21.free.fr (Postfix) with ESMTP id DAFB8A6226;
+	Sun, 25 Mar 2012 20:34:28 +0200 (CEST)
+Date: Sun, 25 Mar 2012 20:34:27 +0200
+From: Eric =?ISO-8859-1?B?QuluYXJk?= <eric@eukrea.com>
+To: bitbake-devel@lists.openembedded.org
+Message-ID: <20120325203427.4e9189eb@eb-e6520>
+In-Reply-To: <1332577677.1849.36.camel@dongxiao-osel>
+References: <20120322122219.0df320be@eb-e6520>
+	<20120323091314.5b5d00a0@eb-e6520>
+	<1332503125.1849.0.camel@dongxiao-osel>
+	<1332556685.1849.29.camel@dongxiao-osel>
+	<20120324091905.0a64617b@eb-e6520>
+	<1332577677.1849.36.camel@dongxiao-osel>
+Organization: =?ISO-8859-1?B?RXVrculh?= Electromatique
+X-Mailer: Claws Mail 3.8.0 (GTK+ 2.24.8; x86_64-redhat-linux-gnu)
 Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/1] Hob: fix 2098
+Subject: Re: Hob : IndexError: list index out of range
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,28 +36,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 25 Mar 2012 11:23:29 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sun, 25 Mar 2012 18:43:32 -0000
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2012-03-24 at 00:01 +0800, Shane Wang wrote:
-> This patch is to fix bug 2098 to make the build progress clear.
-> 
-> The following changes since commit 8350c03eeca3f5d70984797ef784f29c71cbbb3b:
-> 
->   gst-plugins: remove obsolete orcc hack (2012-03-23 12:13:09 +0000)
-> 
-> are available in the git repository at:
->   git://git.pokylinux.org/poky-contrib shane/hob-fixes-1
->   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=shane/hob-fixes-1
-> 
-> Shane Wang (1):
->   Hob: add build status labels in the build details screen to make it
->     more close to the visual design
+Hi Dongxiao,
 
-Merged to master, thanks.
+Le Sat, 24 Mar 2012 16:27:57 +0800,
+"Xu, Dongxiao" <dongxiao.xu@intel.com> a =E9crit :
 
-Richard
+> I have send out a patch in my previous pull request [Patch 8/8] to
+> address this issue. You can have a try of that after it is checked into
+> master.
+>=20
+> Thanks,
+> Dongxiao
+>=20
+> On Sat, 2012-03-24 at 09:19 +0100, Eric B=E9nard wrote:
+> > Le Sat, 24 Mar 2012 10:38:05 +0800,  =20
+> > "Xu, Dongxiao" <dongxiao.xu@intel.com> a =E9crit :
+> >=20
+> > > I can reproduce it locally, thanks for reporting it.
+> > >=20
+> > reported here :
+> > https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D2169
+> >=20
+bug 2169 & bug 2167 are solved in actual bitbake
+( at 02d3451b2e0744204a1280f9effe9fd862bb4faf ) and thus can be closed
 
+Thanks !
+
+Eric
 
 
