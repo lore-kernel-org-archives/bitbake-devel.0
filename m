@@ -1,22 +1,24 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SCAiC-0008Fp-2D
+	(envelope-from <shane.wang@intel.com>) id 1SCAlJ-0008Iz-SK
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 26 Mar 2012 16:15:57 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 26 Mar 2012 07:06:58 -0700
+	Mon, 26 Mar 2012 16:19:10 +0200
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 26 Mar 2012 07:10:09 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="123336899"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="125200446"
 Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by azsmga001.ch.intel.com with ESMTP; 26 Mar 2012 07:06:57 -0700
+	by orsmga002.jf.intel.com with ESMTP; 26 Mar 2012 07:10:08 -0700
 From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 26 Mar 2012 22:33:05 +0800
-Message-Id: <eee2635181e81fe8774fb5e1f2122e83d972b3b9.1332772309.git.shane.wang@intel.com>
+Date: Mon, 26 Mar 2012 22:33:06 +0800
+Message-Id: <f906c534c2b3a4dd4f3cc88cff189a17cb132a2e.1332772309.git.shane.wang@intel.com>
 X-Mailer: git-send-email 1.7.6
+In-Reply-To: <eee2635181e81fe8774fb5e1f2122e83d972b3b9.1332772309.git.shane.wang@intel.com>
+References: <eee2635181e81fe8774fb5e1f2122e83d972b3b9.1332772309.git.shane.wang@intel.com>
 In-Reply-To: <cover.1332772309.git.shane.wang@intel.com>
 References: <cover.1332772309.git.shane.wang@intel.com>
-Subject: [PATCH 1/2] Hob: Set one of deployable images or runnable images as the default toggled item
+Subject: [PATCH 2/2] Hob: show (package, task) pair which is being executed on the build details screen
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -28,146 +30,123 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 26 Mar 2012 14:15:57 -0000
+X-List-Received-Date: Mon, 26 Mar 2012 14:19:10 -0000
 
-With this patch, even though there are a lot of images built out, a default image which is either deployable or runnable is toggled by default. So, for users, one more action to select an image before running qemu or deploying is not needed any more.
+This patch is still for bug 2098 to provide clear information about the task and the package in progress.
 
-Note: If there are more than one runnable or deployable images (such as ext2, ext3, jffs2 and btrfs), only the first image is toggled by default for run-qemu or deployment. If the user wants to run or deploy others, he/she needs to toggle them manually.
-
-[Yocto #2155]
+[Yocto #2098]
 
 Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/imagedetailspage.py |   72 ++++++++++++++++---------
- 1 files changed, 46 insertions(+), 26 deletions(-)
+ bitbake/lib/bb/ui/crumbs/builddetailspage.py |   23 ++++++++++++++++-------
+ bitbake/lib/bb/ui/crumbs/builder.py          |   12 +++++++++---
+ bitbake/lib/bb/ui/crumbs/runningbuild.py     |    7 +++++++
+ 3 files changed, 32 insertions(+), 10 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-index 5a5ec3f..ce39ab2 100755
---- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-@@ -176,14 +176,30 @@ class ImageDetailsPage (HobPage):
-             build_result = self.DetailBox(varlist=varlist, vallist=vallist, icon=icon, color=color)
-             self.box_group_area.pack_start(build_result, expand=False, fill=False)
+diff --git a/bitbake/lib/bb/ui/crumbs/builddetailspage.py b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
+index c2f980f..1031906 100755
+--- a/bitbake/lib/bb/ui/crumbs/builddetailspage.py
++++ b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
+@@ -47,9 +47,12 @@ class BuildDetailsPage (HobPage):
+         self.vbox = gtk.VBox(False, 12)
  
-+        # create the buttons at the bottom first because the buttons are used in apply_button_per_image()
-+        if build_succeeded:
-+            buttonlist = ["Build new image", "Save as template", "Run image", "Deploy image"]
-+        else: # get to this page from "My images"
-+            buttonlist = ["Build new image", "Run image", "Deploy image"]
-+        details_bottom_buttons = self.create_bottom_buttons(buttonlist)
+         self.progress_box = gtk.VBox(False, 12)
+-        self.task_status = gtk.Label()
+-        self.task_status.set_alignment(0.0, 0.5)
+-        self.progress_box.pack_start(self.task_status, expand=False, fill=False)
++        self.rq_status = gtk.Label()
++        self.rq_status.set_alignment(0.0, 0.5)
++        self.pt_status = gtk.Label()
++        self.pt_status.set_alignment(0.0, 0.5)
++        self.progress_box.pack_start(self.rq_status, expand=False, fill=False)
++        self.progress_box.pack_start(self.pt_status, expand=False, fill=False)
+         self.progress_hbox = gtk.HBox(False, 6)
+         self.progress_box.pack_end(self.progress_hbox, expand=True, fill=True)
+         self.progress_bar = HobProgressBar()
+@@ -89,11 +92,17 @@ class BuildDetailsPage (HobPage):
+         self.back_button.connect("clicked", self.back_button_clicked_cb)
+         self.button_box.pack_start(self.back_button, expand=False, fill=False)
+ 
+-    def update_build_status(self, tsk_msg):
+-        self.task_status.set_markup(tsk_msg)
++    def update_runqueue_status(self, msg):
++        self.rq_status.set_markup(msg)
+ 
+-    def reset_build_status(self):
+-        self.task_status.set_markup("")
++    def update_package_task_status(self, msg):
++        self.pt_status.set_markup(msg)
 +
-         # Name
-         self.image_store.clear()
-+        default_toggled = False
-+        default_image_size = 0
-         for image_name in image_names:
-             image_size = self._size_to_string(os.stat(os.path.join(image_addr, image_name)).st_size)
--            self.image_store.set(self.image_store.append(), 0, image_name, 1, image_size, 2, False)
-+            if not default_toggled:
-+                default_toggled = (self.test_type_runnable(image_name) and self.test_mach_runnable(image_name)) \
-+                    or self.test_deployable(image_name)
-+                self.image_store.set(self.image_store.append(), 0, image_name, 1, image_size, 2, default_toggled)
-+                if default_toggled:
-+                    default_image_size = image_size
-+                self.apply_buttons_per_image(image_name)
-+            else:
-+                self.image_store.set(self.image_store.append(), 0, image_name, 1, image_size, 2, False)
-         image_table = HobViewTable(self.__columns__)
-         image_table.set_model(self.image_store)
--        image_size = self._size_to_string(os.stat(os.path.join(image_addr, image_names[0])).st_size)
-         image_table.connect("toggled", self.toggled_cb)
-         view_files_button = gtk.LinkButton("file://%s" % image_addr, "View files")
-         self.box_group_area.pack_start(self.DetailBox(widget=image_table, button=view_files_button), expand=True, fill=True)
-@@ -221,7 +237,7 @@ class ImageDetailsPage (HobPage):
-         varlist = ["Packages included: ", "Total image size: "]
-         vallist = []
-         vallist.append(pkg_num)
--        vallist.append(image_size)
-+        vallist.append(default_image_size)
-         if build_succeeded:
-             edit_packages_button = HobAltButton("Edit packages")
-             edit_packages_button.connect("clicked", self.edit_packages_button_clicked_cb)
-@@ -230,11 +246,7 @@ class ImageDetailsPage (HobPage):
-         self.package_detail = self.DetailBox(varlist=varlist, vallist=vallist, button=edit_packages_button)
-         self.box_group_area.pack_start(self.package_detail, expand=False, fill=False)
- 
--        if build_succeeded:
--            buttonlist = ["Build new image", "Save as template", "Run image", "Deploy image"]
--        else: # get to this page from "My images"
--            buttonlist = ["Build new image", "Run image", "Deploy image"]
--        details_bottom_buttons = self.create_bottom_buttons(buttonlist)
-+        # pack the buttons at the bottom, at this time they are already created.
-         self.box_group_area.pack_end(details_bottom_buttons, expand=False, fill=False)
- 
-         self.show_all()
-@@ -242,41 +254,49 @@ class ImageDetailsPage (HobPage):
-     def refresh_package_detail_box(self, image_size):
-         self.package_detail.update_line_widgets("Total image size: ", image_size)
- 
--    def toggled_cb(self, table, cell, path, columnid, tree):
--        model = tree.get_model()
--        if not model:
--            return
--        iter = model.get_iter_first()
--        while iter:
--            rowpath = model.get_path(iter)
--            model[rowpath][columnid] = False
--            iter = model.iter_next(iter)
--
--        model[path][columnid] = True
--        self.refresh_package_detail_box(model[path][1])
--
-+    def test_type_runnable(self, image_name):
-         type_runnable = False
--        mach_runnable = False
--        image_name = model[path][0]
-         for t in self.builder.parameters.runnable_image_types:
-             if image_name.endswith(t):
-                 type_runnable = True
-                 break
-+        return type_runnable
- 
-+    def test_mach_runnable(self, image_name):
-+        mach_runnable = False
-         for t in self.builder.parameters.runnable_machine_patterns:
-             if t in image_name:
-                 mach_runnable = True
-                 break
-+        return mach_runnable
- 
--        self.run_button.set_sensitive(type_runnable and mach_runnable)
--
-+    def test_deployable(self, image_name):
-         deployable = False
-         for t in self.builder.parameters.deployable_image_types:
-             if image_name.endswith(t):
-                 deployable = True
-                 break
-+        return deployable
- 
--        self.deploy_button.set_sensitive(deployable)
-+    def apply_buttons_per_image(self, image_name):
-+        self.run_button.set_sensitive(self.test_type_runnable(image_name) and self.test_mach_runnable(image_name))
-+        self.deploy_button.set_sensitive(self.test_deployable(image_name))
++    def reset_runqueue_status(self):
++        self.rq_status.set_markup("")
 +
-+    def toggled_cb(self, table, cell, path, columnid, tree):
-+        model = tree.get_model()
-+        if not model:
-+            return
-+        iter = model.get_iter_first()
-+        while iter:
-+            rowpath = model.get_path(iter)
-+            model[rowpath][columnid] = False
-+            iter = model.iter_next(iter)
-+
-+        model[path][columnid] = True
-+        self.refresh_package_detail_box(model[path][1])
-+
-+        image_name = model[path][0]
-+        self.apply_buttons_per_image(image_name)
++    def reset_package_task_status(self):
++        self.pt_status.set_markup("")
  
-     def create_bottom_buttons(self, buttonlist):
-         # Create the buttons at the bottom
+     def show_issues(self):
+         self.num_of_issues += 1
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index f32a066..245a747 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -218,6 +218,7 @@ class Builder(gtk.Window):
+         self.handler.build.connect("build-succeeded",    self.handler_build_succeeded_cb)
+         self.handler.build.connect("build-failed",       self.handler_build_failed_cb)
+         self.handler.build.connect("task-started",       self.handler_task_started_cb)
++        self.handler.build.connect("task-executing",     self.handler_task_executing_cb)
+         self.handler.build.connect("log-error",          self.handler_build_failure_cb)
+         self.handler.connect("generating-data",          self.handler_generating_data_cb)
+         self.handler.connect("data-generated",           self.handler_data_generated_cb)
+@@ -543,7 +544,8 @@ class Builder(gtk.Window):
+         elif self.current_step == self.PACKAGE_GENERATING:
+             fraction = 0
+         self.build_details_page.update_progress_bar("Build Started: ", fraction)
+-        self.build_details_page.reset_build_status()
++        self.build_details_page.reset_runqueue_status()
++        self.build_details_page.reset_package_task_status()
+         self.build_details_page.reset_issues()
+ 
+     def build_succeeded(self):
+@@ -611,8 +613,12 @@ class Builder(gtk.Window):
+             elif message["eventname"] == "runQueueTaskStarted":
+                 fraction = 0.2 + 0.8 * fraction
+         self.build_details_page.update_progress_bar(title + ": ", fraction)
+-        self.build_details_page.update_build_status(
+-            "<span weight=\'bold\'>Running task %s of %s:</span> %s" % (message["current"], message["total"], message["task"]))
++        self.build_details_page.update_runqueue_status(
++            "<span weight=\'bold\'>Starting task %s of %s:</span> %s" % (message["current"], message["total"], message["task"]))
++
++    def handler_task_executing_cb(self, running_build, message):
++        self.build_details_page.update_package_task_status(
++            "<span weight=\'bold\'>Running task</span> %s <span weight=\'bold\'>on package</span> %s" % (message["task"], message["package"]))
+ 
+     def handler_build_failure_cb(self, running_build):
+         self.build_details_page.show_issues()
+diff --git a/bitbake/lib/bb/ui/crumbs/runningbuild.py b/bitbake/lib/bb/ui/crumbs/runningbuild.py
+index 0f58e4e..e9d8070 100644
+--- a/bitbake/lib/bb/ui/crumbs/runningbuild.py
++++ b/bitbake/lib/bb/ui/crumbs/runningbuild.py
+@@ -85,6 +85,9 @@ class RunningBuild (gobject.GObject):
+           'task-started'    :  (gobject.SIGNAL_RUN_LAST,
+                                 gobject.TYPE_NONE,
+                                (gobject.TYPE_PYOBJECT,)),
++          'task-executing'  :  (gobject.SIGNAL_RUN_LAST,
++                                gobject.TYPE_NONE,
++                               (gobject.TYPE_PYOBJECT,)),
+           'log-error'       :  (gobject.SIGNAL_RUN_LAST,
+                                 gobject.TYPE_NONE,
+                                ()),
+@@ -208,6 +211,10 @@ class RunningBuild (gobject.GObject):
+             # Save out the iter so that we can find it when we have a message
+             # that we need to attach to a task.
+             self.tasks_to_iter[(package, task)] = i
++            message = {}
++            message["task"] = task
++            message["package"] = package
++            self.emit("task-executing", message)
+ 
+         elif isinstance(event, bb.build.TaskBase):
+             current = self.tasks_to_iter[(package, task)]
 -- 
 1.7.6
 
