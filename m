@@ -1,41 +1,28 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SCKcy-0001WO-Pn
+	(envelope-from <dongxiao.xu@intel.com>) id 1SCKia-0001ZB-Fx
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 27 Mar 2012 02:51:13 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 26 Mar 2012 17:42:11 -0700
+	Tue, 27 Mar 2012 02:57:00 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 26 Mar 2012 17:47:52 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="123562159"
-Received: from azsmsx601.amr.corp.intel.com ([10.2.121.193])
-	by azsmga001.ch.intel.com with ESMTP; 26 Mar 2012 17:42:00 -0700
-Received: from azsmsx602.amr.corp.intel.com (10.2.121.201) by
-	azsmsx601.amr.corp.intel.com (10.2.121.193) with Microsoft SMTP Server
-	(TLS) id 8.2.255.0; Mon, 26 Mar 2012 17:41:58 -0700
-Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
-	azsmsx602.amr.corp.intel.com (10.2.121.201) with Microsoft SMTP Server
-	(TLS) id 8.2.255.0; Mon, 26 Mar 2012 17:41:55 -0700
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.36]) by
-	SHSMSX151.ccr.corp.intel.com ([169.254.3.91]) with mapi id
-	14.01.0355.002; Tue, 27 Mar 2012 08:41:53 +0800
-From: "Wang, Shane" <shane.wang@intel.com>
-To: "Wang, Shane" <shane.wang@intel.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH 2/2] Hob: show (package,	task) pair
-	which is being executed on the build details screen
-Thread-Index: AQHNC1oweKYF9IUkeEqYmsbtbsu/C5Z9Tbdw
-Date: Tue, 27 Mar 2012 00:41:53 +0000
-Message-ID: <3AB6CE7F274E534CAFD089D127A8A1FC23AFB1DE@SHSMSX102.ccr.corp.intel.com>
-References: <cover.1332772309.git.shane.wang@intel.com>
-	<f906c534c2b3a4dd4f3cc88cff189a17cb132a2e.1332772309.git.shane.wang@intel.com>
-In-Reply-To: <f906c534c2b3a4dd4f3cc88cff189a17cb132a2e.1332772309.git.shane.wang@intel.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.239.127.40]
-MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] Hob: show (package, task) pair which is being executed on the build details screen
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="121971371"
+Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
+	([10.239.36.11])
+	by orsmga001.jf.intel.com with ESMTP; 26 Mar 2012 17:47:51 -0700
+From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+In-Reply-To: <1332759424.28414.102.camel@ted>
+References: <cover.1332589589.git.dongxiao.xu@intel.com>
+	<1332673644.28414.74.camel@ted>
+	<1332729531.1849.67.camel@dongxiao-osel>
+	<1332759424.28414.102.camel@ted>
+Date: Tue, 27 Mar 2012 08:45:35 +0800
+Message-ID: <1332809135.1849.77.camel@dongxiao-osel>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.32.2 
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 0/9 v3][PULL] Hob: Bug fixes: image_types, runqemu/deploy functionality filter, and DISTRO setting
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -47,151 +34,84 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 27 Mar 2012 00:51:13 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 27 Mar 2012 00:57:00 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-I saw Josh had a patch pending to show (recipe, task) pair on http://git.yo=
-ctoproject.org/cgit/cgit.cgi/poky-contrib/commit/?h=3Djosh/hob&id=3D1840c40=
-a77038d3e181830d4aba84a59273eccd1, which hasn't been submitted.
-I am OK with his and skip my patch below.
+On Mon, 2012-03-26 at 11:57 +0100, Richard Purdie wrote:
+> On Mon, 2012-03-26 at 10:38 +0800, Xu, Dongxiao wrote:
+> > On Sun, 2012-03-25 at 12:07 +0100, Richard Purdie wrote:
+> > > On Sat, 2012-03-24 at 19:49 +0800, Dongxiao Xu wrote:
+> > > > Hi Richard,
+> > > > 
+> > > > This is the third pull request for Hob bug fixes, please help to review and pull.
+> > > > 
+> > > > Changes from v2:
+> > > > 1) Change the logic in set_distro(), that is, if defaultsetup is selected in Hob advanced setting dialog, we should leave DISTRO variable not set in bitbake server.
+> > > > 2) Add a new patch to avoid hardcode TMPDIR when executing runqemu.
+> > > > 
+> > > > Thanks,
+> > > > Dongxiao
+> > > > 
+> > > > The following changes since commit 0348ef08db9ac425d83126d2e6eb465adc28b110:
+> > > > 
+> > > >   Hob: Change the descriptions for view_recipe_button and view_package_button (2012-03-23 16:09:35 +0000)
+> > > > 
+> > > > are available in the git repository at:
+> > > >   git://git.pokylinux.org/poky-contrib dxu4/hob-bugfix
+> > > >   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob-bugfix
+> > > > 
+> > > > Dongxiao Xu (9):
+> > > >   Hob: Remove unnecessary PARSE_BBFILES command
+> > > >   Hob: Cleanup for hobeventhandler.py
+> > > >   Hob: Initial an empty label in recipeselectionpage.py
+> > > >   Hob: Change the Hob initialization process
+> > > >   Hob: Fix the workaround to get image types
+> > > >   Hob: Add a supported image type "vmdk"
+> > > >   Hob: runqemu and deployment functionality filter
+> > > >   Hob: Set empty DISTRO if "defaultsetup" is selected
+> > > >   Hob: Avoid getting TMPDIR in hardcode
+> > > 
+> > > Merged to master, thanks.
+> > > 
+> > > I do have some concerns around the "runqemu and deployment functionality
+> > > filter" in that I'd prefer it if we treated the
+> > > RUNNABLE_MACHINE_PATTERNS as a proper regexp and matched it against
+> > > MACHINE rather than the image name. I'd prefer to see if behave like
+> > > COMPATIBLE_MACHINE for example.
+> > 
+> > We can change the RUNNABLE_MACHINE_PATTERNS to be regexp style, but
+> > maybe we still need to match it with image name, since we will have two
+> > ways to access to the image details page:
+> > 1) Through a normal build, where we are able to get the MACHINE
+> > variable.
+> > 2) Through clicking "My images" button and load an already built image,
+> > from which we could not get the MACHINE variable but only image name.
+> 
+> Ok, that is a good point, thanks.
+> 
+> Can we reliably extract the machine name from the image name? I'm
+> thinking if regexps are involved they could use the start/end markers (^
+> $) which could get confusing if its matching the whole image name...
 
---
-Shane
+That makes sense, and it is also what I am going to change for the
+current code.
 
-Shane Wang wrote on=A02012-03-26:
 
-> This patch is still for bug 2098 to provide clear information about the t=
-ask
-> and the package in progress.
->=20
-> [Yocto #2098]
->=20
-> Signed-off-by: Shane Wang <shane.wang@intel.com>
-> ---
->  bitbake/lib/bb/ui/crumbs/builddetailspage.py |   23
->  ++++++++++++++++------- bitbake/lib/bb/ui/crumbs/builder.py          |=20
->   12 +++++++++--- bitbake/lib/bb/ui/crumbs/runningbuild.py     |    7
->  +++++++ 3 files changed, 32 insertions(+), 10 deletions(-)
-> diff --git a/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-> b/bitbake/lib/bb/ui/crumbs/builddetailspage.py index c2f980f..1031906
-> 100755 --- a/bitbake/lib/bb/ui/crumbs/builddetailspage.py +++
-> b/bitbake/lib/bb/ui/crumbs/builddetailspage.py @@ -47,9 +47,12 @@ class
-> BuildDetailsPage (HobPage):
->          self.vbox =3D gtk.VBox(False, 12)
->         =20
->          self.progress_box =3D gtk.VBox(False, 12)
-> -        self.task_status =3D gtk.Label() -      =20
-> self.task_status.set_alignment(0.0, 0.5) -      =20
-> self.progress_box.pack_start(self.task_status, expand=3DFalse, fill=3DFal=
-se)
-> +        self.rq_status =3D gtk.Label() +      =20
-> self.rq_status.set_alignment(0.0, 0.5) +        self.pt_status =3D
-> gtk.Label() +        self.pt_status.set_alignment(0.0, 0.5) +      =20
-> self.progress_box.pack_start(self.rq_status, expand=3DFalse, fill=3DFalse=
-) +
->        self.progress_box.pack_start(self.pt_status, expand=3DFalse,
-> fill=3DFalse)
->          self.progress_hbox =3D gtk.HBox(False, 6)
->          self.progress_box.pack_end(self.progress_hbox, expand=3DTrue,
->          fill=3DTrue) self.progress_bar =3D HobProgressBar() @@ -89,11
->          +92,17 @@ class BuildDetailsPage (HobPage):
->          self.back_button.connect("clicked",
->          self.back_button_clicked_cb)
->          self.button_box.pack_start(self.back_button, expand=3DFalse,
-> fill=3DFalse)
->=20
-> -    def update_build_status(self, tsk_msg):
-> -        self.task_status.set_markup(tsk_msg)
-> +    def update_runqueue_status(self, msg):
-> +        self.rq_status.set_markup(msg)
->=20
-> -    def reset_build_status(self):
-> -        self.task_status.set_markup("")
-> +    def update_package_task_status(self, msg):
-> +        self.pt_status.set_markup(msg)
-> +
-> +    def reset_runqueue_status(self):
-> +        self.rq_status.set_markup("")
-> +
-> +    def reset_package_task_status(self):
-> +        self.pt_status.set_markup("")
->=20
->      def show_issues(self):
->          self.num_of_issues +=3D 1
-> diff --git a/bitbake/lib/bb/ui/crumbs/builder.py
-> b/bitbake/lib/bb/ui/crumbs/builder.py index f32a066..245a747 100755 ---
-> a/bitbake/lib/bb/ui/crumbs/builder.py +++
-> b/bitbake/lib/bb/ui/crumbs/builder.py @@ -218,6 +218,7 @@ class
-> Builder(gtk.Window):
->          self.handler.build.connect("build-succeeded",
->          self.handler_build_succeeded_cb)
->          self.handler.build.connect("build-failed",
->          self.handler_build_failed_cb)
->          self.handler.build.connect("task-started",
-> self.handler_task_started_cb)
-> +        self.handler.build.connect("task-executing",
-> self.handler_task_executing_cb)
->          self.handler.build.connect("log-error",
->          self.handler_build_failure_cb)
->          self.handler.connect("generating-data",
->          self.handler_generating_data_cb)
->          self.handler.connect("data-generated",
-> self.handler_data_generated_cb)
-> @@ -543,7 +544,8 @@ class Builder(gtk.Window):
->          elif self.current_step =3D=3D self.PACKAGE_GENERATING:
->              fraction =3D 0
->          self.build_details_page.update_progress_bar("Build Started: ",
-> fraction)
-> -        self.build_details_page.reset_build_status()
-> +        self.build_details_page.reset_runqueue_status()
-> +        self.build_details_page.reset_package_task_status()
->          self.build_details_page.reset_issues()
->      def build_succeeded(self):
-> @@ -611,8 +613,12 @@ class Builder(gtk.Window):
->              elif message["eventname"] =3D=3D "runQueueTaskStarted":
->                  fraction =3D 0.2 + 0.8 * fraction
->          self.build_details_page.update_progress_bar(title + ": ", fracti=
-on)
-> -        self.build_details_page.update_build_status( -          =20
-> "<span weight=3D\'bold\'>Running task %s of %s:</span> %s" %
-> (message["current"], message["total"], message["task"])) +      =20
-> self.build_details_page.update_runqueue_status( +            "<span
-> weight=3D\'bold\'>Starting task %s of %s:</span> %s" %
-> (message["current"], message["total"], message["task"])) + +    def
-> handler_task_executing_cb(self, running_build, message): +      =20
-> self.build_details_page.update_package_task_status( +            "<span
-> weight=3D\'bold\'>Running task</span> %s <span weight=3D\'bold\'>on
-> package</span> %s" % (message["task"], message["package"]))
->=20
->      def handler_build_failure_cb(self, running_build):
->          self.build_details_page.show_issues()
-> diff --git a/bitbake/lib/bb/ui/crumbs/runningbuild.py
-> b/bitbake/lib/bb/ui/crumbs/runningbuild.py index 0f58e4e..e9d8070 100644
-> --- a/bitbake/lib/bb/ui/crumbs/runningbuild.py +++
-> b/bitbake/lib/bb/ui/crumbs/runningbuild.py @@ -85,6 +85,9 @@ class
-> RunningBuild (gobject.GObject):
->            'task-started'    :  (gobject.SIGNAL_RUN_LAST,
->                                  gobject.TYPE_NONE,
->                                 (gobject.TYPE_PYOBJECT,)),
-> +          'task-executing'  :  (gobject.SIGNAL_RUN_LAST,
-> +                                gobject.TYPE_NONE,
-> +                               (gobject.TYPE_PYOBJECT,)),
->            'log-error'       :  (gobject.SIGNAL_RUN_LAST,
->                                  gobject.TYPE_NONE,
->                                 ()),
-> @@ -208,6 +211,10 @@ class RunningBuild (gobject.GObject):
->              # Save out the iter so that we can find it when we have a
->              message # that we need to attach to a task.
->              self.tasks_to_iter[(package, task)] =3D i
-> +            message =3D {}
-> +            message["task"] =3D task
-> +            message["package"] =3D package
-> +            self.emit("task-executing", message)
->=20
->          elif isinstance(event, bb.build.TaskBase):
->              current =3D self.tasks_to_iter[(package, task)]
+> 
+> > BTW, to implement the filter functionality, we still have a pending
+> > patch for OE-Core that is not in master yet, see:
+> > 
+> > http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/commit/?h=dxu4/hob-bugfix-oecore&id=10968f8c0cf425011983ef7e0fe4c14b7da5ef74
+> 
+> That is on my to merge list, thanks.
+
+Thanks,
+Dongxiao
+> 
+> Richard
+> 
+
 
 
 
