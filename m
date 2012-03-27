@@ -1,24 +1,20 @@
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1SCNG7-0004Nk-3f
+	(envelope-from <shane.wang@intel.com>) id 1SCRrB-0001Be-5e
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 27 Mar 2012 05:39:47 +0200
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 26 Mar 2012 20:30:42 -0700
+	Tue, 27 Mar 2012 10:34:21 +0200
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 27 Mar 2012 01:25:19 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="145976527"
-Received: from unknown (HELO shamshir.amr.corp.intel.com) ([10.255.12.109])
-	by fmsmga002.fm.intel.com with ESMTP; 26 Mar 2012 20:30:42 -0700
-From: Joshua Lock <josh@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="125522606"
+Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
+	by orsmga002.jf.intel.com with ESMTP; 27 Mar 2012 01:25:18 -0700
+From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 26 Mar 2012 20:30:38 -0700
-Message-Id: <15d2ce9a832995d58e3ace666db791df5e147e06.1332818913.git.josh@linux.intel.com>
-X-Mailer: git-send-email 1.7.7.6
-In-Reply-To: <cover.1332818913.git.josh@linux.intel.com>
-References: <cover.1332818913.git.josh@linux.intel.com>
-In-Reply-To: <cover.1332818913.git.josh@linux.intel.com>
-References: <cover.1332818913.git.josh@linux.intel.com>
-Subject: [PATCH 4/4] lib/bb/ui/crumbs/imagedetails: use secondary button style for 'View files'
+Date: Tue, 27 Mar 2012 16:51:34 +0800
+Message-Id: <cover.1332838207.git.shane.wang@intel.com>
+X-Mailer: git-send-email 1.7.6
+Subject: [PATCH 0/1] Hob: add proxy support into Hob
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,44 +26,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 27 Mar 2012 03:39:47 -0000
+X-List-Received-Date: Tue, 27 Mar 2012 08:34:21 -0000
 
-Use HobAltButton, rather than gtk.LinkButton, for the 'View files'
-button.
+This patch is to add proxy support into Hob.
+So, with that, users can set up http_proxy, ftp_proxy, https_proxy, all_proxy, git proxy and cvs proxy for build.
 
-Use xdg-open to display the folders contents.
+The following changes since commit d3e0beed9eef53018158c9f999cd20b44629aa61:
 
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
----
- lib/bb/ui/crumbs/imagedetailspage.py |    6 +++++-
- 1 files changed, 5 insertions(+), 1 deletions(-)
+  guile: Deal with hardcoded path issues (2012-03-27 00:29:00 +0100)
 
-diff --git a/lib/bb/ui/crumbs/imagedetailspage.py b/lib/bb/ui/crumbs/imagedetailspage.py
-index 5a5ec3f..276281d 100755
---- a/lib/bb/ui/crumbs/imagedetailspage.py
-+++ b/lib/bb/ui/crumbs/imagedetailspage.py
-@@ -185,7 +185,8 @@ class ImageDetailsPage (HobPage):
-         image_table.set_model(self.image_store)
-         image_size = self._size_to_string(os.stat(os.path.join(image_addr, image_names[0])).st_size)
-         image_table.connect("toggled", self.toggled_cb)
--        view_files_button = gtk.LinkButton("file://%s" % image_addr, "View files")
-+        view_files_button = HobAltButton("View files")
-+        view_files_button.connect("clicked", self.view_files_clicked_cb, image_addr)
-         self.box_group_area.pack_start(self.DetailBox(widget=image_table, button=view_files_button), expand=True, fill=True)
- 
-         # Machine, Base image and Layers
-@@ -239,6 +240,9 @@ class ImageDetailsPage (HobPage):
- 
-         self.show_all()
- 
-+    def view_files_clicked_cb(self, button, image_addr):
-+        os.system("xdg-open /%s" % image_addr)
-+
-     def refresh_package_detail_box(self, image_size):
-         self.package_detail.update_line_widgets("Total image size: ", image_size)
- 
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib shane/proxy
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=shane/proxy
+
+Shane Wang (1):
+  Hob: allow users to setup the proxies
+
+ bitbake/lib/bb/ui/crumbs/builder.py         |   39 +++++++++
+ bitbake/lib/bb/ui/crumbs/hig.py             |  111 ++++++++++++++++++++++++---
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py |   32 ++++++++
+ 3 files changed, 171 insertions(+), 11 deletions(-)
+
 -- 
-1.7.7.6
+1.7.6
 
 
 
