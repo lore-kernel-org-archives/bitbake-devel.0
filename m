@@ -1,24 +1,24 @@
 Received: from mga01.intel.com ([192.55.52.88])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1SCNG6-0004Nd-Ng
+	(envelope-from <josh@linux.intel.com>) id 1SCNG7-0004Nk-3f
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 27 Mar 2012 05:39:46 +0200
+	Tue, 27 Mar 2012 05:39:47 +0200
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
 	by fmsmga101.fm.intel.com with ESMTP; 26 Mar 2012 20:30:42 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="145976526"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="145976527"
 Received: from unknown (HELO shamshir.amr.corp.intel.com) ([10.255.12.109])
 	by fmsmga002.fm.intel.com with ESMTP; 26 Mar 2012 20:30:42 -0700
 From: Joshua Lock <josh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 26 Mar 2012 20:30:37 -0700
-Message-Id: <a283ae54ee1981618f435d6018dd14b172cb5fa0.1332818913.git.josh@linux.intel.com>
+Date: Mon, 26 Mar 2012 20:30:38 -0700
+Message-Id: <15d2ce9a832995d58e3ace666db791df5e147e06.1332818913.git.josh@linux.intel.com>
 X-Mailer: git-send-email 1.7.7.6
 In-Reply-To: <cover.1332818913.git.josh@linux.intel.com>
 References: <cover.1332818913.git.josh@linux.intel.com>
 In-Reply-To: <cover.1332818913.git.josh@linux.intel.com>
 References: <cover.1332818913.git.josh@linux.intel.com>
-Subject: [PATCH 3/4] lib/bb/ui/crumbs/imageconfigurationpage: ensure widgets stay positioned
+Subject: [PATCH 4/4] lib/bb/ui/crumbs/imagedetails: use secondary button style for 'View files'
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,59 +30,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 27 Mar 2012 03:39:46 -0000
+X-List-Received-Date: Tue, 27 Mar 2012 03:39:47 -0000
 
-Tweak the table layout and insert some dummy widgets when the buttons
-aren't drawn such that when the buttons do get drawn the existing widgets
-don't all jump up.
+Use HobAltButton, rather than gtk.LinkButton, for the 'View files'
+button.
+
+Use xdg-open to display the folders contents.
 
 Signed-off-by: Joshua Lock <josh@linux.intel.com>
 ---
- lib/bb/ui/crumbs/imageconfigurationpage.py |   20 ++++++++++++++------
- 1 files changed, 14 insertions(+), 6 deletions(-)
+ lib/bb/ui/crumbs/imagedetailspage.py |    6 +++++-
+ 1 files changed, 5 insertions(+), 1 deletions(-)
 
-diff --git a/lib/bb/ui/crumbs/imageconfigurationpage.py b/lib/bb/ui/crumbs/imageconfigurationpage.py
-index 8e0e9fc..d7437a9 100644
---- a/lib/bb/ui/crumbs/imageconfigurationpage.py
-+++ b/lib/bb/ui/crumbs/imageconfigurationpage.py
-@@ -88,8 +88,16 @@ class ImageConfigurationPage (HobPage):
-         self.pack_start(self.group_align, expand=True, fill=True)
+diff --git a/lib/bb/ui/crumbs/imagedetailspage.py b/lib/bb/ui/crumbs/imagedetailspage.py
+index 5a5ec3f..276281d 100755
+--- a/lib/bb/ui/crumbs/imagedetailspage.py
++++ b/lib/bb/ui/crumbs/imagedetailspage.py
+@@ -185,7 +185,8 @@ class ImageDetailsPage (HobPage):
+         image_table.set_model(self.image_store)
+         image_size = self._size_to_string(os.stat(os.path.join(image_addr, image_names[0])).st_size)
+         image_table.connect("toggled", self.toggled_cb)
+-        view_files_button = gtk.LinkButton("file://%s" % image_addr, "View files")
++        view_files_button = HobAltButton("View files")
++        view_files_button.connect("clicked", self.view_files_clicked_cb, image_addr)
+         self.box_group_area.pack_start(self.DetailBox(widget=image_table, button=view_files_button), expand=True, fill=True)
  
-         self.box_group_area.pack_start(self.gtable, expand=True, fill=True)
--        if pack_config_build_button == True:
-+        if pack_config_build_button:
-             self.box_group_area.pack_end(self.config_build_button, expand=False, fill=False)
-+        else:
-+            box = gtk.HBox(False, 6)
-+            box.show()
-+            subbox = gtk.HBox(False, 0)
-+            subbox.set_size_request(205, 49)
-+            subbox.show()
-+            box.add(subbox)
-+            self.box_group_area.pack_end(box, False, False)
+         # Machine, Base image and Layers
+@@ -239,6 +240,9 @@ class ImageDetailsPage (HobPage):
  
-     def show_machine(self):
-         self.progress_bar.reset()
-@@ -209,14 +217,14 @@ class ImageConfigurationPage (HobPage):
+         self.show_all()
  
-     def set_config_baseimg_layout(self):
-         self.gtable.attach(self.image_title, 0, 40, 13, 17)
--        self.gtable.attach(self.image_title_desc, 0, 40, 17, 22)
--        self.gtable.attach(self.image_combo, 0, 12, 22, 25)
--        self.gtable.attach(self.image_desc, 14, 38, 22, 27)
-+        self.gtable.attach(self.image_title_desc, 0, 40, 18, 23)
-+        self.gtable.attach(self.image_combo, 0, 12, 24, 27)
-+        self.gtable.attach(self.image_desc, 14, 38, 24, 29)
-         self.gtable.attach(self.image_separator, 0, 40, 35, 36)
++    def view_files_clicked_cb(self, button, image_addr):
++        os.system("xdg-open /%s" % image_addr)
++
+     def refresh_package_detail_box(self, image_size):
+         self.package_detail.update_line_widgets("Total image size: ", image_size)
  
-     def set_rcppkg_layout(self):
--        self.gtable.attach(self.view_recipes_button, 0, 20, 27, 32)
--        self.gtable.attach(self.view_packages_button, 20, 40, 27, 32)
-+        self.gtable.attach(self.view_recipes_button, 0, 20, 30, 35)
-+        self.gtable.attach(self.view_packages_button, 20, 40, 30, 35)
- 
-     def create_config_build_button(self):
-         # Create the "Build packages" and "Just bake" buttons at the bottom
 -- 
 1.7.7.6
 
