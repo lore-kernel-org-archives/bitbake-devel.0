@@ -1,24 +1,24 @@
 Received: from mga01.intel.com ([192.55.52.88])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SCvan-0005xg-Re
+	(envelope-from <shane.wang@intel.com>) id 1SCvao-0005xg-Jy
 	for bitbake-devel@lists.openembedded.org;
 	Wed, 28 Mar 2012 18:19:26 +0200
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 28 Mar 2012 09:10:23 -0700
+	by fmsmga101.fm.intel.com with ESMTP; 28 Mar 2012 09:10:24 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="147020203"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="147020218"
 Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by fmsmga002.fm.intel.com with ESMTP; 28 Mar 2012 09:10:22 -0700
+	by fmsmga002.fm.intel.com with ESMTP; 28 Mar 2012 09:10:23 -0700
 From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 29 Mar 2012 00:36:55 +0800
-Message-Id: <8cfef83ce72c248c1d0f5d92d02de4f07376a32b.1332952559.git.shane.wang@intel.com>
+Date: Thu, 29 Mar 2012 00:36:56 +0800
+Message-Id: <d4802510e9752f110a5f44b7c1e1a0174e54bc64.1332952559.git.shane.wang@intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <ba0cac313670c2e9f5c77d04e1eb07ef3aec9352.1332952559.git.shane.wang@intel.com>
 References: <ba0cac313670c2e9f5c77d04e1eb07ef3aec9352.1332952559.git.shane.wang@intel.com>
 In-Reply-To: <cover.1332952559.git.shane.wang@intel.com>
 References: <cover.1332952559.git.shane.wang@intel.com>
-Subject: [PATCH 2/5] Hob: change some words for build configurations on build details screen
+Subject: [PATCH 3/5] Hob: change some words on image configuration screen to make them consistent
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,62 +30,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 28 Mar 2012 16:19:26 -0000
-
-This patch is to change some words of variables to make them consistent with the GUI.
+X-List-Received-Date: Wed, 28 Mar 2012 16:19:27 -0000
 
 Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/builddetailspage.py |   22 +++++++++++-----------
- 1 files changed, 11 insertions(+), 11 deletions(-)
+ bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builddetailspage.py b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-index e8dbad7..abbee4c 100755
---- a/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-+++ b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-@@ -83,15 +83,15 @@ class BuildConfigurationTreeView(gtk.TreeView):
+diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+index 9ad1ea4..f9a432f 100644
+--- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
++++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+@@ -200,7 +200,7 @@ class ImageConfigurationPage (HobPage):
+         # button to view recipes
+         icon_file = hic.ICON_RCIPE_DISPLAY_FILE
+         hover_file = hic.ICON_RCIPE_HOVER_FILE
+-        self.view_recipes_button = HobImageButton("View Recipes",
++        self.view_recipes_button = HobImageButton("View recipes",
+                                         "Add/remove recipes and tasks",
+                                         icon_file, hover_file)
+         self.view_recipes_button.connect("clicked", self.view_recipes_button_clicked_cb)
+@@ -208,7 +208,7 @@ class ImageConfigurationPage (HobPage):
+         # button to view packages
+         icon_file = hic.ICON_PACKAGES_DISPLAY_FILE
+         hover_file = hic.ICON_PACKAGES_HOVER_FILE
+-        self.view_packages_button = HobImageButton("View Packages",
++        self.view_packages_button = HobImageButton("View packages",
+                                         "Add/remove previously built packages",
+                                         icon_file, hover_file)
+         self.view_packages_button.connect("clicked", self.view_packages_button_clicked_cb)
+@@ -241,7 +241,7 @@ class ImageConfigurationPage (HobPage):
+         button_box.pack_end(label, expand=False, fill=False)
  
-     def show(self, src_config_info, src_params):
-         vars = []
--        vars.append(self.set_vars("BB VERSION:", src_params.bb_version))
--        vars.append(self.set_vars("TARGET_ARCH:", src_params.target_arch))
--        vars.append(self.set_vars("TARGET_OS:", src_params.target_os))
--        vars.append(self.set_vars("MACHINE:", src_config_info.curr_mach))
--        vars.append(self.set_vars("DISTRO:", src_config_info.curr_distro))
--        vars.append(self.set_vars("DISTRO_VERSION:", src_params.distro_version))
--        vars.append(self.set_vars("SDK_MACHINE:", src_config_info.curr_sdk_machine))
--        vars.append(self.set_vars("TUNE_FEATURE:", src_params.tune_pkgarch))
--        vars.append(self.set_vars("LAYERS:", src_config_info.layers))
-+        vars.append(self.set_vars("BB version:", src_params.bb_version))
-+        vars.append(self.set_vars("Target arch:", src_params.target_arch))
-+        vars.append(self.set_vars("Target OS:", src_params.target_os))
-+        vars.append(self.set_vars("Machine:", src_config_info.curr_mach))
-+        vars.append(self.set_vars("Distro:", src_config_info.curr_distro))
-+        vars.append(self.set_vars("Distro version:", src_params.distro_version))
-+        vars.append(self.set_vars("SDK machine:", src_config_info.curr_sdk_machine))
-+        vars.append(self.set_vars("Tune feature:", src_params.tune_pkgarch))
-+        vars.append(self.set_vars("Layers:", src_config_info.layers))
+         # create button "Build Packages"
+-        build_packages_button = HobAltButton("Build Packages")
++        build_packages_button = HobAltButton("Build packages")
+         build_packages_button.connect("clicked", self.build_packages_button_clicked_cb)
+         button_box.pack_end(build_packages_button, expand=False, fill=False)
  
-         for path in src_config_info.layers:
-             import os, os.path
-@@ -99,7 +99,7 @@ class BuildConfigurationTreeView(gtk.TreeView):
-                 f = os.popen('cd %s; git branch 2>&1 | grep "^* " | tr -d "* "' % path)
-                 if f:
-                     branch = f.readline().lstrip('\n').rstrip('\n')
--                    vars.append(self.set_vars("BRANCH:", branch))
-+                    vars.append(self.set_vars("Branch:", branch))
-                     f.close()
-                 break
- 
-@@ -140,7 +140,7 @@ class BuildDetailsPage (HobPage):
-         self.scrolled_view_config = gtk.ScrolledWindow ()
-         self.scrolled_view_config.set_policy(gtk.POLICY_NEVER, gtk.POLICY_ALWAYS)
-         self.scrolled_view_config.add(self.config_tv)
--        self.notebook.append_page(self.scrolled_view_config, gtk.Label("Build Configuration"))
-+        self.notebook.append_page(self.scrolled_view_config, gtk.Label("Build configuration"))
- 
-         self.failure_tv = BuildFailureTreeView()
-         self.failure_model = self.builder.handler.build.model.failure_model()
 -- 
 1.7.6
 
