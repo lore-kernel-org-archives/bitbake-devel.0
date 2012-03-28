@@ -1,31 +1,23 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SD0Yr-00057p-CH for bitbake-devel@lists.openembedded.org;
-	Wed, 28 Mar 2012 23:37:45 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2SLSfAl024253;
-	Wed, 28 Mar 2012 22:28:41 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 24067-04; Wed, 28 Mar 2012 22:28:37 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2SLSVYY024247
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Wed, 28 Mar 2012 22:28:32 +0100
-Message-ID: <1332970110.28414.209.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Christopher Larson <kergoth@gmail.com>
-Date: Wed, 28 Mar 2012 22:28:30 +0100
-In-Reply-To: <1332875243-16798-1-git-send-email-kergoth@gmail.com>
-References: <1332875243-16798-1-git-send-email-kergoth@gmail.com>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: Christopher Larson <chris_larson@mentor.com>,
-	bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] bb.build: use relative log links, not absolute
+Received: from smtp-relay2.palm.com ([64.28.152.243])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <prvs=427529a58=rich.pixley@palm.com>)
+	id 1SD1JO-0005u7-0X for bitbake-devel@lists.openembedded.org;
+	Thu, 29 Mar 2012 00:25:50 +0200
+X-IronPort-AV: E=Sophos;i="4.75,333,1330934400"; d="scan'208";a="12561190"
+Received: from unknown (HELO ushqusdns4.palm.com) ([148.92.223.164])
+	by smtp-relay2.palm.com with ESMTP; 28 Mar 2012 15:15:41 -0700
+Received: from fuji-land.noir.com ([10.100.2.7])
+	by ushqusdns4.palm.com (8.14.4/8.14.4) with ESMTP id q2SMFf8S001205;
+	Wed, 28 Mar 2012 15:15:41 -0700
+Message-ID: <4F738D8D.4010408@palm.com>
+Date: Wed, 28 Mar 2012 15:15:41 -0700
+From: Rich Pixley <rich.pixley@palm.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7;
+	rv:11.0) Gecko/20120327 Thunderbird/11.0.1
+MIME-Version: 1.0
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: chasing mirrors
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,28 +29,18 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 28 Mar 2012 21:37:45 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Wed, 28 Mar 2012 22:25:50 -0000
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2012-03-27 at 14:07 -0500, Christopher Larson wrote:
-> From: Christopher Larson <chris_larson@mentor.com>
-> 
-> Using symlinks to absolute paths isn't gaining us anything, and can cause
-> problems in situations such as automated build systems when they try to
-> resolve the link, depending on the mechanism used to pull the build artifacts
-> (e.g. nfs).
-> 
-> Signed-off-by: Christopher Larson <chris_larson@mentor.com>
-> ---
->  lib/bb/build.py |    5 +++--
->  1 files changed, 3 insertions(+), 2 deletions(-)
+How do I determine which mirror was/is being used to download a 
+particular component?
 
-Merged to master, thanks. That has been annoying me too...
+I'm expecting some info in a log, or from the output of "bitbake -D", 
+but I'm not finding it.  And from a glance at the code I don't see any 
+message statements around the mirror iterations although I could easily 
+be missing it.
 
-Cheers,
-
-Richard
-
+--rich
 
 
