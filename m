@@ -1,31 +1,30 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SDLim-0008N7-8b for bitbake-devel@lists.openembedded.org;
-	Thu, 29 Mar 2012 22:13:24 +0200
+	id 1SDM0D-00007Q-01 for bitbake-devel@lists.openembedded.org;
+	Thu, 29 Mar 2012 22:31:25 +0200
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2TK4Iqk004417;
-	Thu, 29 Mar 2012 21:04:18 +0100
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2TKMJmp004702;
+	Thu, 29 Mar 2012 21:22:19 +0100
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 03712-06; Thu, 29 Mar 2012 21:04:14 +0100 (BST)
+	id 04256-04; Thu, 29 Mar 2012 21:22:16 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2TK49si004411
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2TKM8hF004695
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Thu, 29 Mar 2012 21:04:11 +0100
-Message-ID: <1333051449.18082.10.camel@ted>
+	Thu, 29 Mar 2012 21:22:10 +0100
+Message-ID: <1333052527.18082.11.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Shane Wang <shane.wang@intel.com>
-Date: Thu, 29 Mar 2012 21:04:09 +0100
-In-Reply-To: <b0f25a4ae7b257c5e0631a3e5c1f90facf25aca6.1333025491.git.shane.wang@intel.com>
-References: <ae31cc41fb985bdc59e784dbf973c522b666553a.1333025490.git.shane.wang@intel.com>
-	<b0f25a4ae7b257c5e0631a3e5c1f90facf25aca6.1333025491.git.shane.wang@intel.com>
+To: Dongxiao Xu <dongxiao.xu@intel.com>
+Date: Thu, 29 Mar 2012 21:22:07 +0100
+In-Reply-To: <cover.1333022081.git.dongxiao.xu@intel.com>
+References: <cover.1333022081.git.dongxiao.xu@intel.com>
 X-Mailer: Evolution 3.2.2- 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 5/8] runqueue.py: check results[0] in keys of build_pids before being used to avoid exceptions
+Subject: Re: [PATCH 00/14][PULL] Hob: Bugfix and feature enhancement
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,41 +36,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 29 Mar 2012 20:13:24 -0000
+X-List-Received-Date: Thu, 29 Mar 2012 20:31:25 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Thu, 2012-03-29 at 20:54 +0800, Shane Wang wrote:
+On Thu, 2012-03-29 at 20:01 +0800, Dongxiao Xu wrote:
+> Hi Richard,
 > 
+> This pull request contains Hob related bug fixes and enhancement.
+> Please help to review and pull.
 > 
-> ne.wang@intel.com>
->                                To: 
-> bitbake-devel@lists.openembedded.org
->                           Subject: 
-> [bitbake-devel] [PATCH 5/8]
-> runqueue.py: check results[0] in
-> keys of build_pids before being
-> used to avoid exceptions
->                              Date: 
-> Thu, 29 Mar 2012 20:54:54 +0800
-> (29/03/12 13:54:54)
+> Thanks,
+> Dongxiao
 > 
+> The following changes since commit f9cf2671c0ecad153db11bca1aebe151213bfb42:
 > 
-> [Yocto #2186]
+>   bb.build: use relative log links, not absolute (2012-03-28 22:28:00 +0100)
 > 
-> Signed-off-by: Shane Wang <shane.wang@intel.com>
-> ---
->  bitbake/lib/bb/runqueue.py |   20 ++++++++++++--------
->  1 files changed, 12 insertions(+), 8 deletions(-)
+> are available in the git repository at:
+>   git://git.pokylinux.org/poky-contrib dxu4/hob-bugfix
+>   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob-bugfix
+> 
+> Dongxiao Xu (14):
+>   Hob: Remove un-used signal and functions
+>   Hob: Fix adding duplicated meta-hob layer
+>   Hob: Define a variable to store the image name and toolchain
+>   Hob: Improve the matching for runnable machine type
+>   command.py: Move triggerEvent to command async class
+>   Hob: Improve for init a new build
+>   Hob: Inherit image_types.bbclass in set_user_config()
+>   Hob: Update configuration after parsing
+>   Hob: Remember user settings when reparse config
+>   Hob: Change the format to store image_fstype variable
+>   Hob: Fix the setting hash calculation
+>   Hob: Replace "local.conf" in error message
 
-This kind of change sets off alarm bells. The big question is why are
-you seeing exceptions? I suspect you're forking off processes within hob
-which are then confusing the waitpid code. I'd have to ask why the UI is
-forking processes when a build is running and why we're suddenly started
-seeing this...
+I merged these, thanks.
 
-So can you please explain the problem further so we can fix the real
-problem? I did look at #2186 but that doesn't help me either :(
+>  Hob: Fix MACHINE setting
+>   Hob: Update the cache when setting changed
+
+These didn't apply so please send an updated patch against master.
 
 Cheers,
 
