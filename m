@@ -1,24 +1,24 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SDEDu-0007V7-5u
+	(envelope-from <dongxiao.xu@intel.com>) id 1SDEDw-0007Rt-Bc
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 29 Mar 2012 14:13:02 +0200
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 29 Mar 2012 05:03:58 -0700
+	Thu, 29 Mar 2012 14:13:04 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga102.ch.intel.com with ESMTP; 29 Mar 2012 05:04:02 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="135069049"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="124772137"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by fmsmga001.fm.intel.com with ESMTP; 29 Mar 2012 05:03:57 -0700
+	by azsmga001.ch.intel.com with ESMTP; 29 Mar 2012 05:03:58 -0700
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 29 Mar 2012 20:01:18 +0800
-Message-Id: <529791558c195ef7e4c2203d42d2ed4123154e6a.1333022081.git.dongxiao.xu@intel.com>
+Date: Thu, 29 Mar 2012 20:01:19 +0800
+Message-Id: <72d2bc578dbd5643bb0b70b1ec6f2e2dc35f5e58.1333022081.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1333022081.git.dongxiao.xu@intel.com>
 References: <cover.1333022081.git.dongxiao.xu@intel.com>
 In-Reply-To: <cover.1333022081.git.dongxiao.xu@intel.com>
 References: <cover.1333022081.git.dongxiao.xu@intel.com>
-Subject: [PATCH 12/14] Hob: Change the format to store image_fstype variable
+Subject: [PATCH 13/14] Hob: Fix the setting hash calculation
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,88 +30,107 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 29 Mar 2012 12:13:02 -0000
+X-List-Received-Date: Thu, 29 Mar 2012 12:13:05 -0000
 
-Use string format to store image_fstype instead of a list.
+Sometimes even setting are not changed, the hash values differs due to
+variable order issue. This commit fixes the issue.
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 ---
- lib/bb/ui/crumbs/builder.py         |    6 +++---
- lib/bb/ui/crumbs/hig.py             |    7 ++++---
- lib/bb/ui/crumbs/hobeventhandler.py |    2 +-
- 3 files changed, 8 insertions(+), 7 deletions(-)
+ lib/bb/ui/crumbs/hig.py |   33 +++++++++++++++++++--------------
+ 1 files changed, 19 insertions(+), 14 deletions(-)
 
-diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
-index fd61b31..b5a6919 100755
---- a/lib/bb/ui/crumbs/builder.py
-+++ b/lib/bb/ui/crumbs/builder.py
-@@ -93,7 +93,7 @@ class Configuration:
-         self.curr_sdk_machine = params["sdk_machine"]
-         self.conf_version = params["conf_version"]
-         self.lconf_version = params["lconf_version"]
--        self.image_fstypes = params["image_fstypes"].split()
-+        self.image_fstypes = params["image_fstypes"]
-         # bblayers.conf
-         self.layers = params["layer"].split()
- 
-@@ -115,7 +115,7 @@ class Configuration:
-         self.lconf_version = template.getVar("LCONF_VERSION")
-         self.extra_setting = eval(template.getVar("EXTRA_SETTING"))
-         self.toolchain_build = eval(template.getVar("TOOLCHAIN_BUILD"))
--        self.image_fstypes = template.getVar("IMAGE_FSTYPES").split()
-+        self.image_fstypes = template.getVar("IMAGE_FSTYPES")
-         # bblayers.conf
-         self.layers = template.getVar("BBLAYERS").split()
-         # image/recipes/packages
-@@ -152,7 +152,7 @@ class Configuration:
-         template.setVar("LCONF_VERSION", self.lconf_version)
-         template.setVar("EXTRA_SETTING", self.extra_setting)
-         template.setVar("TOOLCHAIN_BUILD", self.toolchain_build)
--        template.setVar("IMAGE_FSTYPES", " ".join(self.image_fstypes).lstrip(" "))
-+        template.setVar("IMAGE_FSTYPES", self.image_fstypes)
-         # image/recipes/packages
-         self.selected_image = filename
-         template.setVar("__SELECTED_IMAGE__", self.selected_image)
 diff --git a/lib/bb/ui/crumbs/hig.py b/lib/bb/ui/crumbs/hig.py
-index 4753c92..f5a7dd3 100644
+index f5a7dd3..ad02033 100644
 --- a/lib/bb/ui/crumbs/hig.py
 +++ b/lib/bb/ui/crumbs/hig.py
-@@ -384,7 +384,7 @@ class AdvancedSettingDialog (CrumbsDialog):
-             self.image_types_checkbuttons[image_type] = gtk.CheckButton(image_type)
-             self.image_types_checkbuttons[image_type].set_tooltip_text("Build an %s image" % image_type)
-             table.attach(self.image_types_checkbuttons[image_type], j, j + 4, i, i + 1)
--            if image_type in self.configuration.image_fstypes:
-+            if image_type in self.configuration.image_fstypes.split():
-                 self.image_types_checkbuttons[image_type].set_active(True)
-             i += 1
-             if i > rows:
-@@ -608,10 +608,11 @@ class AdvancedSettingDialog (CrumbsDialog):
-         self.configuration.image_rootfs_size = self.rootfs_size_spinner.get_value_as_int() * 1024
-         self.configuration.image_extra_size = self.extra_size_spinner.get_value_as_int() * 1024
+@@ -337,19 +337,30 @@ class AdvancedSettingDialog (CrumbsDialog):
+         self.setting_store = None
+         self.image_types_checkbuttons = {}
  
--        self.configuration.image_fstypes = []
-+        self.configuration.image_fstypes = ""
-         for image_type in self.image_types:
+-        self.variables = {}
+-        self.variables["PACKAGE_FORMAT"] = self.configuration.curr_package_format
+-        self.variables["INCOMPATIBLE_LICENSE"] = self.configuration.incompat_license
+-        self.variables["IMAGE_FSTYPES"] = self.configuration.image_fstypes
+-        for key in self.configuration.extra_setting.keys():
+-            self.variables[key] = self.configuration.extra_setting[key]
+-        self.md5 = hashlib.md5(str(sorted(self.variables.items()))).hexdigest()
++        self.md5 = self.config_md5()
+         self.settings_changed = False
+ 
+         # create visual elements on the dialog
+         self.create_visual_elements()
+         self.connect("response", self.response_cb)
+ 
++    def _get_sorted_value(self, var):
++        return " ".join(sorted(str(var).split())) + "\n"
++
++    def config_md5(self):
++        data = ""
++        data += ("PACKAGE_CLASSES: "      + self.configuration.curr_package_format + '\n')
++        data += ("DISTRO: "               + self._get_sorted_value(self.configuration.curr_distro))
++        data += ("IMAGE_ROOTFS_SIZE: "    + self._get_sorted_value(self.configuration.image_rootfs_size))
++        data += ("IMAGE_EXTRA_SIZE: "     + self._get_sorted_value(self.configuration.image_extra_size))
++        data += ("INCOMPATIBLE_LICENSE: " + self._get_sorted_value(self.configuration.incompat_license))
++        data += ("SDK_MACHINE: "          + self._get_sorted_value(self.configuration.curr_sdk_machine))
++        data += ("TOOLCHAIN_BUILD: "      + self._get_sorted_value(self.configuration.toolchain_build))
++        data += ("IMAGE_FSTYPES: "        + self._get_sorted_value(self.configuration.image_fstypes))
++        for key in self.configuration.extra_setting.keys():
++            data += (key + ": " + self._get_sorted_value(self.configuration.extra_setting[key]))
++        return hashlib.md5(data).hexdigest()
++
+     def create_visual_elements(self):
+         self.nb = gtk.Notebook()
+         self.nb.set_show_tabs(True)
+@@ -589,15 +600,12 @@ class AdvancedSettingDialog (CrumbsDialog):
+         self.cvs_proxy_text.set_sensitive(self.enable_proxy)
+ 
+     def response_cb(self, dialog, response_id):
+-        self.variables = {}
+-
+         package_format = []
+         package_format.append(self.rootfs_combo.get_active_text())
+         for child in self.check_hbox:
+             if isinstance(child, gtk.CheckButton) and child.get_active():
+                 package_format.append(child.get_label())
+         self.configuration.curr_package_format = " ".join(package_format)
+-        self.variables["PACKAGE_FORMAT"] = self.configuration.curr_package_format
+ 
+         self.configuration.curr_distro = self.distro_combo.get_active_text()
+         self.configuration.dldir = self.dldir_text.get_text()
+@@ -613,7 +621,6 @@ class AdvancedSettingDialog (CrumbsDialog):
              if self.image_types_checkbuttons[image_type].get_active():
--                self.configuration.image_fstypes.append(image_type)
-+                self.configuration.image_fstypes += (" " + image_type)
-+        self.configuration.image_fstypes.strip()
-         self.variables["IMAGE_FSTYPES"] = self.configuration.image_fstypes
+                 self.configuration.image_fstypes += (" " + image_type)
+         self.configuration.image_fstypes.strip()
+-        self.variables["IMAGE_FSTYPES"] = self.configuration.image_fstypes
  
          if self.gplv3_checkbox.get_active():
-diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
-index d1f36e62..9204e62 100644
---- a/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -263,7 +263,7 @@ class HobHandler(gobject.GObject):
-         self.server.runCommand(["setVariable", "SDKMACHINE", sdk_machine])
+             if "GPLv3" not in self.configuration.incompat_license.split():
+@@ -623,7 +630,6 @@ class AdvancedSettingDialog (CrumbsDialog):
+                 self.configuration.incompat_license = self.configuration.incompat_license.split().remove("GPLv3")
+                 self.configuration.incompat_license = " ".join(self.configuration.incompat_license or [])
+         self.configuration.incompat_license = self.configuration.incompat_license.strip()
+-        self.variables["INCOMPATIBLE_LICENSE"] = self.configuration.incompat_license
  
-     def set_image_fstypes(self, image_fstypes):
--        self.server.runCommand(["setVariable", "IMAGE_FSTYPES", " ".join(image_fstypes).lstrip(" ")])
-+        self.server.runCommand(["setVariable", "IMAGE_FSTYPES", image_fstypes])
+         self.configuration.toolchain_build = self.toolchain_checkbox.get_active()
  
-     def set_distro(self, distro):
-         if distro != "defaultsetup":
+@@ -633,7 +639,6 @@ class AdvancedSettingDialog (CrumbsDialog):
+             key = self.setting_store.get_value(it, 0)
+             value = self.setting_store.get_value(it, 1)
+             self.configuration.extra_setting[key] = value
+-            self.variables[key] = value
+             it = self.setting_store.iter_next(it)
+ 
+         self.configuration.all_proxy = self.all_proxy_text.get_text()
+@@ -643,7 +648,7 @@ class AdvancedSettingDialog (CrumbsDialog):
+         self.configuration.git_proxy_host, self.configuration.git_proxy_port = self.git_proxy_text.get_text().split(':')
+         self.configuration.cvs_proxy_host, self.configuration.cvs_proxy_port = self.cvs_proxy_text.get_text().split(':')
+ 
+-        md5 = hashlib.md5(str(sorted(self.variables.items()))).hexdigest()
++        md5 = self.config_md5()
+         self.settings_changed = (self.md5 != md5)
+ 
+ #
 -- 
 1.7.4.1
 
