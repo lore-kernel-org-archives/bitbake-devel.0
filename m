@@ -1,30 +1,20 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SDM4R-0000C6-Fq for bitbake-devel@lists.openembedded.org;
-	Thu, 29 Mar 2012 22:35:47 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2TKQgkR004780;
-	Thu, 29 Mar 2012 21:26:42 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 04256-06; Thu, 29 Mar 2012 21:26:37 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2TKQYwl004762
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Thu, 29 Mar 2012 21:26:35 +0100
-Message-ID: <1333052793.18082.14.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Shane Wang <shane.wang@intel.com>
-Date: Thu, 29 Mar 2012 21:26:33 +0100
-In-Reply-To: <cover.1333025490.git.shane.wang@intel.com>
-References: <cover.1333025490.git.shane.wang@intel.com>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/8] Hob: bug fixes
+Received: from mga09.intel.com ([134.134.136.24])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <josh@linux.intel.com>) id 1SDNy8-0002EZ-F2
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 30 Mar 2012 00:37:24 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 29 Mar 2012 15:28:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="123312763"
+Received: from unknown (HELO shamshir.jf.intel.com) ([10.7.198.148])
+	by orsmga001.jf.intel.com with ESMTP; 29 Mar 2012 15:28:13 -0700
+From: Joshua Lock <josh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 29 Mar 2012 15:28:07 -0700
+Message-Id: <cover.1333060005.git.josh@linux.intel.com>
+X-Mailer: git-send-email 1.7.7.6
+Subject: [PATCH 0/3] A few more Hob tweaks
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,46 +26,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 29 Mar 2012 20:35:47 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 29 Mar 2012 22:37:24 -0000
 
-On Thu, 2012-03-29 at 20:54 +0800, Shane Wang wrote:
-> This patchset includes the several Hob fixes:
->   - fix the icons to be consistent on the whole GUI
->   - fix the color style of the HobTabBar per visual design
->   - add more checks before being used to avoid bitbake exception
->   - fix the button label, etc.
-> 
-> The following changes since commit 0057d7fde8315694307637c4d23fd414a4a200f9:
-> 
->   lib/bb/ui/crumbs/hig: fix layers_changed test (2012-03-29 10:44:54 +0800)
-> 
-> are available in the git repository at:
->   git://git.pokylinux.org/poky-contrib shane/hob
->   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=shane/hob
-> 
-> Liming An (2):
->   Hob: fixed the 'error' icon source picture and adjusted corresponding
->     showed icon size
->   Hob: in build details page, change error icon to denied icon
-> 
-> Shane Wang (6):
->   Hob: clear the building state after a successful build, as a failed
->     build does
->   Hob: Change icon to error because parsing error is an error
->   Hob: Change "Just bake" to "Build image" as required
->   Hob: make ORANGE to be the same as the color on the dialog
->   runqueue.py: check results[0] in keys of build_pids before being used
->     to avoid exceptions
->   Hob: some color style changes to make HobTabBar more close to visual
->     design
+Here are a few more tweaks for Hob based on design team feedback.
 
-Merged to master apart from the runqueue change which I've commented on.
+Please review for inclusion.
 
-Cheers,
+Thanks,
+Joshua
 
-Richard
+The following changes since commit 8fed4fdf4bbbc9ef036ff96755c0bfe15c3a9dd0:
+
+  knotty: Add back getTasks() call to ensure we don't repeat messges (2012-03-29 21:38:25 +0100)
+
+are available in the git repository at:
+  git://github.com/incandescant/bitbake josh/hob
+  https://github.com/incandescant/bitbake/tree/josh/hob
+
+Joshua Lock (3):
+  Hob: tweak font sizes and layout
+  lib/bb/ui/crumbs/hobpages: change title from HOB to Hob
+  lib/bb/ui/crumbs/hoblistmodel: fix sorting of RecipeListModel
+
+ lib/bb/ui/crumbs/hoblistmodel.py           |    8 +----
+ lib/bb/ui/crumbs/hobpages.py               |    8 +++---
+ lib/bb/ui/crumbs/hobwidget.py              |    8 +++---
+ lib/bb/ui/crumbs/imageconfigurationpage.py |   36 ++++++++++++++--------------
+ 4 files changed, 28 insertions(+), 32 deletions(-)
+
+-- 
+1.7.7.6
 
 
 
