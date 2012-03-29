@@ -1,20 +1,24 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SDEDf-0007OZ-S0
+	(envelope-from <dongxiao.xu@intel.com>) id 1SDEDg-0007Oa-Tp
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 29 Mar 2012 14:12:48 +0200
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 29 Mar 2012 05:03:43 -0700
+	Thu, 29 Mar 2012 14:12:49 +0200
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 29 Mar 2012 05:03:44 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="83037915"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="126516852"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by AZSMGA002.ch.intel.com with ESMTP; 29 Mar 2012 05:03:42 -0700
+	by orsmga002.jf.intel.com with ESMTP; 29 Mar 2012 05:03:44 -0700
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 29 Mar 2012 20:01:06 +0800
-Message-Id: <cover.1333022081.git.dongxiao.xu@intel.com>
+Date: Thu, 29 Mar 2012 20:01:07 +0800
+Message-Id: <96009f44249a4257dd7f7cd422fabf43d7d3988d.1333022081.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.4.1
-Subject: [PATCH 00/14][PULL] Hob: Bugfix and feature enhancement
+In-Reply-To: <cover.1333022081.git.dongxiao.xu@intel.com>
+References: <cover.1333022081.git.dongxiao.xu@intel.com>
+In-Reply-To: <cover.1333022081.git.dongxiao.xu@intel.com>
+References: <cover.1333022081.git.dongxiao.xu@intel.com>
+Subject: [PATCH 01/14] Hob: Remove un-used signal and functions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,47 +30,70 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 29 Mar 2012 12:12:48 -0000
+X-List-Received-Date: Thu, 29 Mar 2012 12:12:49 -0000
 
-Hi Richard,
+Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+---
+ lib/bb/ui/crumbs/builder.py         |    4 ----
+ lib/bb/ui/crumbs/hobeventhandler.py |    9 +--------
+ 2 files changed, 1 insertions(+), 12 deletions(-)
 
-This pull request contains Hob related bug fixes and enhancement.
-Please help to review and pull.
-
-Thanks,
-Dongxiao
-
-The following changes since commit f9cf2671c0ecad153db11bca1aebe151213bfb42:
-
-  bb.build: use relative log links, not absolute (2012-03-28 22:28:00 +0100)
-
-are available in the git repository at:
-  git://git.pokylinux.org/poky-contrib dxu4/hob-bugfix
-  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob-bugfix
-
-Dongxiao Xu (14):
-  Hob: Remove un-used signal and functions
-  Hob: Fix adding duplicated meta-hob layer
-  Hob: Define a variable to store the image name and toolchain
-  Hob: Improve the matching for runnable machine type
-  command.py: Move triggerEvent to command async class
-  Hob: Improve for init a new build
-  Hob: Fix MACHINE setting
-  Hob: Inherit image_types.bbclass in set_user_config()
-  Hob: Update configuration after parsing
-  Hob: Remember user settings when reparse config
-  Hob: Update the cache when setting changed
-  Hob: Change the format to store image_fstype variable
-  Hob: Fix the setting hash calculation
-  Hob: Replace "local.conf" in error message
-
- lib/bb/command.py                    |   17 +++++----
- lib/bb/ui/crumbs/builder.py          |   65 ++++++++++++++++++++++++---------
- lib/bb/ui/crumbs/hig.py              |   40 ++++++++++++---------
- lib/bb/ui/crumbs/hobeventhandler.py  |   34 ++++++++----------
- lib/bb/ui/crumbs/imagedetailspage.py |    3 +-
- 5 files changed, 97 insertions(+), 62 deletions(-)
-
+diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
+index 2af14dc..6b16ac8 100755
+--- a/lib/bb/ui/crumbs/builder.py
++++ b/lib/bb/ui/crumbs/builder.py
+@@ -245,7 +245,6 @@ class Builder(gtk.Window):
+         self.package_model.connect("package-selection-changed", self.packagelist_changed_cb)
+         self.handler.connect("config-updated",           self.handler_config_updated_cb)
+         self.handler.connect("package-formats-updated",  self.handler_package_formats_updated_cb)
+-        self.handler.connect("layers-updated",           self.handler_layers_updated_cb)
+         self.handler.connect("parsing-started",          self.handler_parsing_started_cb)
+         self.handler.connect("parsing",                  self.handler_parsing_cb)
+         self.handler.connect("parsing-completed",        self.handler_parsing_completed_cb)
+@@ -452,9 +451,6 @@ class Builder(gtk.Window):
+     def handler_package_formats_updated_cb(self, handler, formats):
+         self.parameters.all_package_formats = formats
+ 
+-    def handler_layers_updated_cb(self, handler, layers):
+-        self.parameters.all_layers = layers
+-
+     def handler_command_succeeded_cb(self, handler, initcmd):
+         if initcmd == self.handler.PARSE_CONFIG:
+             # settings
+diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
+index 9c5dc77..f189553 100644
+--- a/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -30,9 +30,6 @@ class HobHandler(gobject.GObject):
+     This object does BitBake event handling for the hob gui.
+     """
+     __gsignals__ = {
+-         "layers-updated"          : (gobject.SIGNAL_RUN_LAST,
+-                                      gobject.TYPE_NONE,
+-                                     (gobject.TYPE_PYOBJECT,)),
+          "package-formats-updated" : (gobject.SIGNAL_RUN_LAST,
+                                       gobject.TYPE_NONE,
+                                      (gobject.TYPE_PYOBJECT,)),
+@@ -152,7 +149,7 @@ class HobHandler(gobject.GObject):
+             self.package_model.populate(event._pkginfolist)
+             self.run_next_command()
+ 
+-        elif(isinstance(event, logging.LogRecord)):
++        elif isinstance(event, logging.LogRecord):
+             if event.levelno >= logging.ERROR:
+                 self.error_msg += event.msg + '\n'
+ 
+@@ -160,10 +157,6 @@ class HobHandler(gobject.GObject):
+             self.current_phase = "data generation"
+             if event._model:
+                 self.recipe_model.populate(event._model)
+-        elif isinstance(event, bb.event.CoreBaseFilesFound):
+-            self.current_phase = "configuration lookup"
+-            paths = event._paths
+-            self.emit('layers-updated', paths)
+         elif isinstance(event, bb.event.ConfigFilesFound):
+             self.current_phase = "configuration lookup"
+             var = event._variable
 -- 
 1.7.4.1
 
