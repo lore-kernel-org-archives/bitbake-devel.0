@@ -1,24 +1,31 @@
-Received: from mga02.intel.com ([134.134.136.20])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SDEeW-00086H-Vi
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 29 Mar 2012 14:40:35 +0200
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 29 Mar 2012 05:31:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="126526706"
-Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by orsmga002.jf.intel.com with ESMTP; 29 Mar 2012 05:31:28 -0700
-From: Shane Wang <shane.wang@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 29 Mar 2012 20:54:57 +0800
-Message-Id: <c3a5d6a4e3a15c30a9e8514166d22c51f975c5dd.1333025491.git.shane.wang@intel.com>
-X-Mailer: git-send-email 1.7.6
-In-Reply-To: <ae31cc41fb985bdc59e784dbf973c522b666553a.1333025490.git.shane.wang@intel.com>
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1SDLim-0008N7-8b for bitbake-devel@lists.openembedded.org;
+	Thu, 29 Mar 2012 22:13:24 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2TK4Iqk004417;
+	Thu, 29 Mar 2012 21:04:18 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 03712-06; Thu, 29 Mar 2012 21:04:14 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q2TK49si004411
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Thu, 29 Mar 2012 21:04:11 +0100
+Message-ID: <1333051449.18082.10.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Shane Wang <shane.wang@intel.com>
+Date: Thu, 29 Mar 2012 21:04:09 +0100
+In-Reply-To: <b0f25a4ae7b257c5e0631a3e5c1f90facf25aca6.1333025491.git.shane.wang@intel.com>
 References: <ae31cc41fb985bdc59e784dbf973c522b666553a.1333025490.git.shane.wang@intel.com>
-In-Reply-To: <cover.1333025490.git.shane.wang@intel.com>
-References: <cover.1333025490.git.shane.wang@intel.com>
-Subject: [PATCH 8/8] Hob: in build details page, change error icon to denied icon
+	<b0f25a4ae7b257c5e0631a3e5c1f90facf25aca6.1333025491.git.shane.wang@intel.com>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 5/8] runqueue.py: check results[0] in keys of build_pids before being used to avoid exceptions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,34 +37,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 29 Mar 2012 12:40:35 -0000
+X-List-Received-Date: Thu, 29 Mar 2012 20:13:24 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Liming An <limingx.l.an@intel.com>
+On Thu, 2012-03-29 at 20:54 +0800, Shane Wang wrote:
+> 
+> 
+> ne.wang@intel.com>
+>                                To: 
+> bitbake-devel@lists.openembedded.org
+>                           Subject: 
+> [bitbake-devel] [PATCH 5/8]
+> runqueue.py: check results[0] in
+> keys of build_pids before being
+> used to avoid exceptions
+>                              Date: 
+> Thu, 29 Mar 2012 20:54:54 +0800
+> (29/03/12 13:54:54)
+> 
+> 
+> [Yocto #2186]
+> 
+> Signed-off-by: Shane Wang <shane.wang@intel.com>
+> ---
+>  bitbake/lib/bb/runqueue.py |   20 ++++++++++++--------
+>  1 files changed, 12 insertions(+), 8 deletions(-)
 
-For make icongraphy consistently to change the original gtk-icon to hob-icon
+This kind of change sets off alarm bells. The big question is why are
+you seeing exceptions? I suspect you're forking off processes within hob
+which are then confusing the waitpid code. I'd have to ask why the UI is
+forking processes when a build is running and why we're suddenly started
+seeing this...
 
-[YOCTO #2108]
+So can you please explain the problem further so we can fix the real
+problem? I did look at #2186 but that doesn't help me either :(
 
-Signed-off-by: Liming An <limingx.l.an@intel.com>
----
- bitbake/lib/bb/ui/crumbs/runningbuild.py |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+Cheers,
 
-diff --git a/bitbake/lib/bb/ui/crumbs/runningbuild.py b/bitbake/lib/bb/ui/crumbs/runningbuild.py
-index 8d1f4e1..042902e 100644
---- a/bitbake/lib/bb/ui/crumbs/runningbuild.py
-+++ b/bitbake/lib/bb/ui/crumbs/runningbuild.py
-@@ -425,7 +425,7 @@ class BuildFailureTreeView(gtk.TreeView):
-         self.get_selection().set_mode(gtk.SELECTION_SINGLE)
- 
-         # The icon that indicates whether we're building or failed.
--        renderer = gtk.CellRendererPixbuf ()
-+        renderer = HobCellRendererPixbuf ()
-         col = gtk.TreeViewColumn ("Status", renderer)
-         col.add_attribute (renderer, "icon-name", RunningBuildModel.COL_ICON)
-         self.append_column (col)
--- 
-1.7.6
+Richard
 
 
 
