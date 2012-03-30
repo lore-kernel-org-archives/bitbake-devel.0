@@ -1,20 +1,24 @@
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SDahF-00034F-Ow
+	(envelope-from <dongxiao.xu@intel.com>) id 1SDahF-00034E-OP
 	for bitbake-devel@lists.openembedded.org;
 	Fri, 30 Mar 2012 14:12:49 +0200
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 30 Mar 2012 05:03:42 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga102.fm.intel.com with ESMTP; 30 Mar 2012 05:03:43 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="135675564"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="147840911"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by fmsmga001.fm.intel.com with ESMTP; 30 Mar 2012 05:03:42 -0700
+	by fmsmga002.fm.intel.com with ESMTP; 30 Mar 2012 05:03:43 -0700
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 30 Mar 2012 20:01:12 +0800
-Message-Id: <cover.1333108781.git.dongxiao.xu@intel.com>
+Date: Fri, 30 Mar 2012 20:01:13 +0800
+Message-Id: <262158bb3e172a781bfa3083d787ba54f6652864.1333108781.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.4.1
-Subject: [PATCH 0/7][PULL] Hob: Bug fixes
+In-Reply-To: <cover.1333108781.git.dongxiao.xu@intel.com>
+References: <cover.1333108781.git.dongxiao.xu@intel.com>
+In-Reply-To: <cover.1333108781.git.dongxiao.xu@intel.com>
+References: <cover.1333108781.git.dongxiao.xu@intel.com>
+Subject: [PATCH 1/7] Hob: Fix MACHINE setting
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -28,37 +32,53 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 30 Mar 2012 12:12:50 -0000
 
-Hi Richard,
+Define the empty curr_mach to be "" instead of None.
+Fix the judgement for ' if self.curr_mach == "" ' to be
+' if self.curr_mach '.
+Also set machine to bitbake server when "MACHINE" is not empty.
 
-This pull request is some Hob related bug fixes, please help to review and pull.
+Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+---
+ lib/bb/ui/crumbs/builder.py         |    4 ++--
+ lib/bb/ui/crumbs/hobeventhandler.py |    3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-Thanks,
-Dongxiao
-
-The following changes since commit 8fed4fdf4bbbc9ef036ff96755c0bfe15c3a9dd0:
-
-  knotty: Add back getTasks() call to ensure we don't repeat messges (2012-03-29 21:38:25 +0100)
-
-are available in the git repository at:
-  git://git.pokylinux.org/poky-contrib dxu4/hob-bugfix
-  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob-bugfix
-
-Dongxiao Xu (7):
-  Hob: Fix MACHINE setting
-  Hob: Update the cache when setting changed
-  Hob: Make layers define in bblayers.conf as default
-  Revert "lib/bb/ui/crumbs/hig: fix layers_changed test"
-  Hob: Remove some calling of initiate_new_build()
-  Hob: Remove duplication for certain bitbake variables
-  Hob: Set stop button sensitive after task started
-
- lib/bb/ui/crumbs/builddetailspage.py |    2 ++
- lib/bb/ui/crumbs/builder.py          |   10 +++++-----
- lib/bb/ui/crumbs/hig.py              |   28 ++++++++++------------------
- lib/bb/ui/crumbs/hobeventhandler.py  |   22 +++++++++++++++-------
- lib/bb/ui/crumbs/imagedetailspage.py |    2 --
- 5 files changed, 32 insertions(+), 32 deletions(-)
-
+diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
+index c1a75bd..02c9a9c 100755
+--- a/lib/bb/ui/crumbs/builder.py
++++ b/lib/bb/ui/crumbs/builder.py
+@@ -519,7 +519,7 @@ class Builder(gtk.Window):
+             response = dialog.run()
+             dialog.destroy()
+         self.handler.clear_busy()
+-        self.configuration.curr_mach = None
++        self.configuration.curr_mach = ""
+         self.image_configuration_page.switch_machine_combo()
+         self.switch_page(self.MACHINE_SELECTION)
+ 
+@@ -868,7 +868,7 @@ class Builder(gtk.Window):
+ 
+     def reparse_post_adv_settings(self):
+         # DO reparse recipes
+-        if self.configuration.curr_mach == "":
++        if not self.configuration.curr_mach:
+             self.switch_page(self.MACHINE_SELECTION)
+         else:
+             self.switch_page(self.RCPPKGINFO_POPULATING)
+diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
+index a329380..3d5df9e 100644
+--- a/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -256,7 +256,8 @@ class HobHandler(gobject.GObject):
+         self.server.runCommand(["setVariable", "BBLAYERS", " ".join(bblayers)])
+ 
+     def set_machine(self, machine):
+-        self.server.runCommand(["setVariable", "MACHINE", machine])
++        if machine:
++            self.server.runCommand(["setVariable", "MACHINE", machine])
+ 
+     def set_sdk_machine(self, sdk_machine):
+         self.server.runCommand(["setVariable", "SDKMACHINE", sdk_machine])
 -- 
 1.7.4.1
 
