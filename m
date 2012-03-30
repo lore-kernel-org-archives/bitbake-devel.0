@@ -1,24 +1,24 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SDahL-00034s-S3
+	(envelope-from <dongxiao.xu@intel.com>) id 1SDahN-00035c-7w
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 30 Mar 2012 14:12:56 +0200
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 30 Mar 2012 05:03:50 -0700
+	Fri, 30 Mar 2012 14:12:57 +0200
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 30 Mar 2012 05:03:51 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="83492321"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="126948558"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by AZSMGA002.ch.intel.com with ESMTP; 30 Mar 2012 05:03:49 -0700
+	by orsmga002.jf.intel.com with ESMTP; 30 Mar 2012 05:03:51 -0700
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 30 Mar 2012 20:01:18 +0800
-Message-Id: <7b834219e675cbe02194aa1bbb76a3165ae82356.1333108781.git.dongxiao.xu@intel.com>
+Date: Fri, 30 Mar 2012 20:01:19 +0800
+Message-Id: <5c76a9d3a0087339045bab14794c7fb6eabfebfb.1333108781.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1333108781.git.dongxiao.xu@intel.com>
 References: <cover.1333108781.git.dongxiao.xu@intel.com>
 In-Reply-To: <cover.1333108781.git.dongxiao.xu@intel.com>
 References: <cover.1333108781.git.dongxiao.xu@intel.com>
-Subject: [PATCH 6/7] Hob: Remove duplication for certain bitbake variables
+Subject: [PATCH 7/7] Hob: Set stop button sensitive after task started
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,62 +30,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 30 Mar 2012 12:12:56 -0000
-
-Sometimes, certain variables have duplicated values inside, for example,
-IMAGE_FSTYPES = "tar.bz2 ext3 tar.bz2 ext3"
-
-We need to remove the redundancy for those values.
+X-List-Received-Date: Fri, 30 Mar 2012 12:12:57 -0000
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 ---
- lib/bb/ui/crumbs/hobeventhandler.py |   19 +++++++++++++------
- 1 files changed, 13 insertions(+), 6 deletions(-)
+ lib/bb/ui/crumbs/builddetailspage.py |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
-index 3d5df9e..74081dc 100644
---- a/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -382,6 +382,13 @@ class HobHandler(gobject.GObject):
-     def reset_build(self):
-         self.build.reset()
+diff --git a/lib/bb/ui/crumbs/builddetailspage.py b/lib/bb/ui/crumbs/builddetailspage.py
+index 1440039..84ab72a 100755
+--- a/lib/bb/ui/crumbs/builddetailspage.py
++++ b/lib/bb/ui/crumbs/builddetailspage.py
+@@ -133,6 +133,7 @@ class BuildDetailsPage (HobPage):
+         self.progress_hbox.pack_start(self.progress_bar, expand=True, fill=True)
+         self.stop_button = HobAltButton("Stop")
+         self.stop_button.connect("clicked", self.stop_button_clicked_cb)
++        self.stop_button.set_sensitive(False)
+         self.progress_hbox.pack_end(self.stop_button, expand=False, fill=False)
  
-+    def _remove_redundant(self, string):
-+        ret = []
-+        for i in string.split():
-+            if i not in ret:
-+                ret.append(i)
-+        return " ".join(ret)
-+
-     def get_parameters(self):
-         # retrieve the parameters from bitbake
-         params = {}
-@@ -445,19 +452,19 @@ class HobHandler(gobject.GObject):
-             image_overhead_factor = float(image_overhead_factor)
-         params['image_overhead_factor'] = image_overhead_factor
+         self.notebook = HobNotebook()
+@@ -169,6 +170,7 @@ class BuildDetailsPage (HobPage):
+         recipe = os.path.basename(recipe_path).rstrip(".bb")
+         tsk_msg = "<b>Running task %s of %s:</b> %s\n<b>Recipe:</b> %s" % (current, total, recipe_task, recipe)
+         self.task_status.set_markup(tsk_msg)
++        self.stop_button.set_sensitive(True)
  
--        params["incompat_license"] = self.server.runCommand(["getVariable", "INCOMPATIBLE_LICENSE"]) or ""
-+        params["incompat_license"] = self._remove_redundant(self.server.runCommand(["getVariable", "INCOMPATIBLE_LICENSE"]) or "")
-         params["sdk_machine"] = self.server.runCommand(["getVariable", "SDKMACHINE"]) or self.server.runCommand(["getVariable", "SDK_ARCH"]) or ""
- 
--        params["image_fstypes"] = self.server.runCommand(["getVariable", "IMAGE_FSTYPES"]) or ""
-+        params["image_fstypes"] = self._remove_redundant(self.server.runCommand(["getVariable", "IMAGE_FSTYPES"]) or "")
- 
--        params["image_types"] = self.server.runCommand(["getVariable", "IMAGE_TYPES"]) or ""
-+        params["image_types"] = self._remove_redundant(self.server.runCommand(["getVariable", "IMAGE_TYPES"]) or "")
- 
-         params["conf_version"] = self.server.runCommand(["getVariable", "CONF_VERSION"]) or ""
-         params["lconf_version"] = self.server.runCommand(["getVariable", "LCONF_VERSION"]) or ""
- 
--        params["runnable_image_types"] = self.server.runCommand(["getVariable", "RUNNABLE_IMAGE_TYPES"]) or ""
--        params["runnable_machine_patterns"] = self.server.runCommand(["getVariable", "RUNNABLE_MACHINE_PATTERNS"]) or ""
--        params["deployable_image_types"] = self.server.runCommand(["getVariable", "DEPLOYABLE_IMAGE_TYPES"]) or ""
-+        params["runnable_image_types"] = self._remove_redundant(self.server.runCommand(["getVariable", "RUNNABLE_IMAGE_TYPES"]) or "")
-+        params["runnable_machine_patterns"] = self._remove_redundant(self.server.runCommand(["getVariable", "RUNNABLE_MACHINE_PATTERNS"]) or "")
-+        params["deployable_image_types"] = self._remove_redundant(self.server.runCommand(["getVariable", "DEPLOYABLE_IMAGE_TYPES"]) or "")
-         params["tmpdir"] = self.server.runCommand(["getVariable", "TMPDIR"]) or ""
-         params["distro_version"] = self.server.runCommand(["getVariable", "DISTRO_VERSION"]) or ""
-         params["target_os"] = self.server.runCommand(["getVariable", "TARGET_OS"]) or ""
+     def reset_build_status(self):
+         self.task_status.set_markup("\n") # to ensure layout is correct
 -- 
 1.7.4.1
 
