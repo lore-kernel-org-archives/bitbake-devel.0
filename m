@@ -1,27 +1,20 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SDmQX-0004BU-V8
+	(envelope-from <josh@linux.intel.com>) id 1SDmts-0004o1-DK
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 31 Mar 2012 02:44:22 +0200
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 30 Mar 2012 17:35:16 -0700
+	Sat, 31 Mar 2012 03:14:40 +0200
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga102.fm.intel.com with ESMTP; 30 Mar 2012 18:05:34 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="127161799"
-Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
-	([10.239.36.11])
-	by orsmga002.jf.intel.com with ESMTP; 30 Mar 2012 17:35:15 -0700
-From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
-To: Joshua Lock <josh@linux.intel.com>
-In-Reply-To: <4F75DAEE.7040103@linux.intel.com>
-References: <cover.1333108781.git.dongxiao.xu@intel.com>
-	<28ccf8cd2d23a4cfc8e94fa1ad089dd68334bf35.1333108781.git.dongxiao.xu@intel.com>
-	<4F75DAEE.7040103@linux.intel.com>
-Date: Sat, 31 Mar 2012 08:32:52 +0800
-Message-ID: <1333153972.27459.6.camel@dongxiao-osel>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.32.2 
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 4/7] Revert "lib/bb/ui/crumbs/hig: fix layers_changed test"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="148061239"
+Received: from unknown (HELO shamshir.amr.corp.intel.com) ([10.255.15.226])
+	by fmsmga002.fm.intel.com with ESMTP; 30 Mar 2012 18:05:34 -0700
+From: Joshua Lock <josh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 30 Mar 2012 18:05:28 -0700
+Message-Id: <cover.1333155656.git.josh@linux.intel.com>
+X-Mailer: git-send-email 1.7.7.6
+Subject: [PATCH 0/1] Error gracefully on systems which don't support Hob
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,51 +26,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 31 Mar 2012 00:44:22 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sat, 31 Mar 2012 01:14:40 -0000
 
-On Fri, 2012-03-30 at 09:10 -0700, Joshua Lock wrote:
-> 
-> On 30/03/12 05:01, Dongxiao Xu wrote:
-> > We do not sort the layer list, therefore when response_cb, the ordering
-> > is also not needed.
-> >
-> > This reverts commit 71c1de347eef07a2059fc4544dc3cae090181f44.
-> 
-> This only makes sense if 3/7 is merged, correct?
+Hob requires pygtk 2.22 or later and systems without that will see a Python 
+backtrace. 
+This small change tests whether pygtk is installed and tests which version of it
+is available and prints an error if pytgtk is missing or too low a version.
 
-Yes, I should have made the comment more clear.
+Cheers,
+Joshua
 
-Thanks,
-Dongxiao
+The following changes since commit 035e146ff92236a3eda71ad71e8389737f91753b:
 
-> 
-> Cheers,
-> Joshua
-> 
-> > ---
-> >   lib/bb/ui/crumbs/hig.py |    5 +----
-> >   1 files changed, 1 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/lib/bb/ui/crumbs/hig.py b/lib/bb/ui/crumbs/hig.py
-> > index 9a38bc0..0ac4496 100644
-> > --- a/lib/bb/ui/crumbs/hig.py
-> > +++ b/lib/bb/ui/crumbs/hig.py
-> > @@ -958,10 +958,7 @@ class LayerSelectionDialog (CrumbsDialog):
-> >               layers.append(model.get_value(it, 0))
-> >               it = model.iter_next(it)
-> >
-> > -        orig_layers = sorted(self.layers)
-> > -        layers.sort()
-> > -
-> > -        self.layers_changed = (orig_layers != layers)
-> > +        self.layers_changed = (self.layers != layers)
-> >           self.layers = layers
-> >
-> >       """
-> 
+  Hob: In building log page, fixed the issue about 'endpath' not clear when next to start build (2012-03-30 17:19:35 +0100)
 
+are available in the git repository at:
+  git://github.com/incandescant/bitbake josh/hob
+  https://github.com/incandescant/bitbake/tree/josh/hob
+
+Joshua Lock (1):
+  lib/bb/ui/hob: exit cleanly if the required pygtk version isn't
+    available
+
+ lib/bb/ui/hob.py |   11 +++++++++--
+ 1 files changed, 9 insertions(+), 2 deletions(-)
+
+-- 
+1.7.7.6
 
 
 
