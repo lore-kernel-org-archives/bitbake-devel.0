@@ -1,24 +1,31 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from astoria.ccjclearline.com ([64.235.106.9])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SELQW-00062z-UT
+	(envelope-from <rpjday@crashcourse.ca>) id 1SEOwB-0002jP-82
 	for bitbake-devel@lists.openembedded.org;
-	Sun, 01 Apr 2012 16:06:41 +0200
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 01 Apr 2012 06:57:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="124208011"
-Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by orsmga001.jf.intel.com with ESMTP; 01 Apr 2012 06:57:33 -0700
-From: Shane Wang <shane.wang@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Sun,  1 Apr 2012 22:21:43 +0800
-Message-Id: <150bdce61d8ce5d8ddfa8e72d3f04dcc52b465a6.1333289684.git.shane.wang@intel.com>
-X-Mailer: git-send-email 1.7.6
-In-Reply-To: <0c8981e042d26a7b381f85256d918a059c866fed.1333289684.git.shane.wang@intel.com>
-References: <0c8981e042d26a7b381f85256d918a059c866fed.1333289684.git.shane.wang@intel.com>
-In-Reply-To: <cover.1333289684.git.shane.wang@intel.com>
-References: <cover.1333289684.git.shane.wang@intel.com>
-Subject: [PATCH 7/7] Hob: a minor fix on pmake
+	Sun, 01 Apr 2012 19:51:35 +0200
+Received: from cpec03f0ed08c7f-cm001ac318e826.cpe.net.cable.rogers.com
+	([99.241.91.63] helo=crashcourse.ca)
+	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES256-SHA:256)
+	(Exim 4.69) (envelope-from <rpjday@crashcourse.ca>)
+	id 1SEOnM-0005Gm-VG for bitbake-devel@lists.openembedded.org;
+	Sun, 01 Apr 2012 13:42:29 -0400
+Date: Sun, 1 Apr 2012 13:42:14 -0400 (EDT)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+X-X-Sender: rpjday@oneiric
+To: BitBake developer list <bitbake-devel@lists.openembedded.org>
+Message-ID: <alpine.DEB.2.02.1204011341180.28083@oneiric>
+User-Agent: Alpine 2.02 (DEB 1266 2009-07-14)
+MIME-Version: 1.0
+X-AntiAbuse: This header was added to track abuse,
+	please include it with any abuse report
+X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+Subject: [PATCH] Fix typo in user manual: "incarantion" -> "incarnation"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,59 +37,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 01 Apr 2012 14:06:41 -0000
+X-List-Received-Date: Sun, 01 Apr 2012 17:51:35 -0000
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 
-params["pmake"] should be in the format "-j int".
-When loading/saving "PARALLEL_MAKE" into templates, configuration.pmake will be
-converted into "-j int", as "PACKAGE_CLASSES" and "BBLAYERS" do.
 
-For "PACKAGE_CLASSES" and "BBLAYERS", params["pclass"] and params["layer"] are
-also strings rather than the types of configuration.curr_package_format and
-configuration.layers.
+Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
 
-Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/builder.py         |    4 ++--
- bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index 7a786a9..6587734 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -48,7 +48,7 @@ class Configuration:
-         self.dldir = params["dldir"]
-         self.sstatedir = params["sstatedir"]
-         self.sstatemirror = params["sstatemirror"]
--        self.pmake = params["pmake"]
-+        self.pmake = int(params["pmake"].split()[1])
-         self.bbthread = params["bbthread"]
-         self.curr_package_format = " ".join(params["pclass"].split("package_")).strip()
-         self.image_rootfs_size = params["image_rootfs_size"]
-@@ -83,7 +83,7 @@ class Configuration:
-         self.dldir = params["dldir"]
-         self.sstatedir = params["sstatedir"]
-         self.sstatemirror = params["sstatemirror"]
--        self.pmake = params["pmake"]
-+        self.pmake = int(params["pmake"].split()[1])
-         self.bbthread = params["bbthread"]
-         self.curr_package_format = " ".join(params["pclass"].split("package_")).strip()
-         self.image_rootfs_size = params["image_rootfs_size"]
-diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-index c1afa0b..61af131 100644
---- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -429,7 +429,7 @@ class HobHandler(gobject.GObject):
-                 pmake = int(pmake.lstrip("-j "))
-             except:
-                 pmake = num_threads
--        params["pmake"] = pmake
-+        params["pmake"] = "-j %s" % pmake
- 
-         params["image_addr"] = self.server.runCommand(["getVariable", "DEPLOY_DIR_IMAGE"]) or ""
- 
+diff --git a/doc/manual/usermanual.xml b/doc/manual/usermanual.xml
+index a677789..f894dfc 100644
+--- a/doc/manual/usermanual.xml
++++ b/doc/manual/usermanual.xml
+@@ -251,7 +251,7 @@ of the event and the content of the <varname>FILE</varname> variable.</para>
+             <section>
+                 <title>Variants</title>
+                 <para>Two BitBake features exist to facilitate the creation of multiple buildable incarnations from a single recipe file.</para>
+-                <para>The first is <varname>BBCLASSEXTEND</varname>.  This variable is a space separated list of classes used to "extend" the recipe for each variant.  As an example, setting <screen>BBCLASSEXTEND = "native"</screen> results in a second incarnation of the current recipe being available.  This second incarantion will have the "native" class inherited.</para>
++                <para>The first is <varname>BBCLASSEXTEND</varname>.  This variable is a space separated list of classes used to "extend" the recipe for each variant.  As an example, setting <screen>BBCLASSEXTEND = "native"</screen> results in a second incarnation of the current recipe being available.  This second incarnation will have the "native" class inherited.</para>
+                 <para>The second feature is <varname>BBVERSIONS</varname>.  This variable allows a single recipe to build multiple versions of a project from a single recipe file, and allows you to specify conditional metadata (using the <varname>OVERRIDES</varname> mechanism) for a single version, or an optionally named range of versions:</para>
+                 <para><screen>BBVERSIONS = "1.0 2.0 git"
+ SRC_URI_git = "git://someurl/somepath.git"</screen></para>
+
 -- 
-1.7.6
 
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                        http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
 
 
