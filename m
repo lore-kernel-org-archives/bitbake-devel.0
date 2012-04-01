@@ -1,24 +1,24 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SELNN-0005wV-CN
+	(envelope-from <shane.wang@intel.com>) id 1SELNN-0005wU-W3
 	for bitbake-devel@lists.openembedded.org;
-	Sun, 01 Apr 2012 16:03:25 +0200
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 01 Apr 2012 06:54:17 -0700
+	Sun, 01 Apr 2012 16:03:26 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 01 Apr 2012 06:54:20 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="136252609"
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="124207407"
 Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by fmsmga001.fm.intel.com with ESMTP; 01 Apr 2012 06:54:17 -0700
+	by orsmga001.jf.intel.com with ESMTP; 01 Apr 2012 06:54:19 -0700
 From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sun,  1 Apr 2012 22:21:38 +0800
-Message-Id: <cdb1e91988c26e79a8c38a2aa96de3d8b5cbfd4a.1333289684.git.shane.wang@intel.com>
+Date: Sun,  1 Apr 2012 22:21:40 +0800
+Message-Id: <af8af3250b7810c611b1b41bbe128221d95ac7a1.1333289684.git.shane.wang@intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <0c8981e042d26a7b381f85256d918a059c866fed.1333289684.git.shane.wang@intel.com>
 References: <0c8981e042d26a7b381f85256d918a059c866fed.1333289684.git.shane.wang@intel.com>
 In-Reply-To: <cover.1333289684.git.shane.wang@intel.com>
 References: <cover.1333289684.git.shane.wang@intel.com>
-Subject: [PATCH 2/7] Hob: handle exceptions when loading templates
+Subject: [PATCH 4/7] Hob: avoid the empty white space appearing on top of the gtk.ComboBox
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,46 +30,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 01 Apr 2012 14:03:25 -0000
+X-List-Received-Date: Sun, 01 Apr 2012 14:03:26 -0000
 
-Handle exceptions during type conversion to integers.
+Avoid the empty white space appearing on top of the machine selection combo
+box and the image selection combo box in the "Image configuration" screen
+
+[Yocto #2166]
 
 Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/builder.py |   20 ++++++++++++++++----
- 1 files changed, 16 insertions(+), 4 deletions(-)
+ bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index c1a75bd..151bec4 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -104,10 +104,22 @@ class Configuration:
-         self.dldir = template.getVar("DL_DIR")
-         self.sstatedir = template.getVar("SSTATE_DIR")
-         self.sstatemirror = template.getVar("SSTATE_MIRROR")
--        self.pmake = int(template.getVar("PARALLEL_MAKE").split()[1])
--        self.bbthread = int(template.getVar("BB_NUMBER_THREADS"))
--        self.image_rootfs_size = int(template.getVar("IMAGE_ROOTFS_SIZE"))
--        self.image_extra_size = int(template.getVar("IMAGE_EXTRA_SPACE"))
-+        try:
-+            self.pmake = int(template.getVar("PARALLEL_MAKE").split()[1])
-+        except:
-+            pass
-+        try:
-+            self.bbthread = int(template.getVar("BB_NUMBER_THREADS"))
-+        except:
-+            pass
-+        try:
-+            self.image_rootfs_size = int(template.getVar("IMAGE_ROOTFS_SIZE"))
-+        except:
-+            pass
-+        try:
-+            self.image_extra_size = int(template.getVar("IMAGE_EXTRA_SPACE"))
-+        except:
-+            pass
-         # image_overhead_factor is read-only.
-         self.incompat_license = template.getVar("INCOMPATIBLE_LICENSE")
-         self.curr_sdk_machine = template.getVar("SDKMACHINE")
+diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+index 30f8979..8e9452e 100644
+--- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
++++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+@@ -143,6 +143,7 @@ class ImageConfigurationPage (HobPage):
+         self.machine_title_desc.set_markup(mark)
+ 
+         self.machine_combo = gtk.combo_box_new_text()
++        self.machine_combo.set_wrap_width(1)
+         self.machine_combo.connect("changed", self.machine_combo_changed_cb)
+ 
+         icon_file = hic.ICON_LAYERS_DISPLAY_FILE
+@@ -191,6 +192,7 @@ class ImageConfigurationPage (HobPage):
+         self.image_title_desc.set_markup(mark)
+ 
+         self.image_combo = gtk.combo_box_new_text()
++        self.image_combo.set_wrap_width(1)
+         self.image_combo_id = self.image_combo.connect("changed", self.image_combo_changed_cb)
+ 
+         self.image_desc = gtk.Label()
 -- 
 1.7.6
 
