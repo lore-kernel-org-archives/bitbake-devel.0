@@ -1,24 +1,24 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SELNN-0005wU-W3
+	(envelope-from <shane.wang@intel.com>) id 1SELNR-0005yk-G0
 	for bitbake-devel@lists.openembedded.org;
-	Sun, 01 Apr 2012 16:03:26 +0200
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 01 Apr 2012 06:54:20 -0700
+	Sun, 01 Apr 2012 16:03:29 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 01 Apr 2012 06:54:21 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="124207407"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="125796057"
 Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by orsmga001.jf.intel.com with ESMTP; 01 Apr 2012 06:54:19 -0700
+	by azsmga001.ch.intel.com with ESMTP; 01 Apr 2012 06:54:20 -0700
 From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sun,  1 Apr 2012 22:21:40 +0800
-Message-Id: <af8af3250b7810c611b1b41bbe128221d95ac7a1.1333289684.git.shane.wang@intel.com>
+Date: Sun,  1 Apr 2012 22:21:41 +0800
+Message-Id: <b5bd8a01e7cdc03219fd8cabc62010283bc18fc2.1333289684.git.shane.wang@intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <0c8981e042d26a7b381f85256d918a059c866fed.1333289684.git.shane.wang@intel.com>
 References: <0c8981e042d26a7b381f85256d918a059c866fed.1333289684.git.shane.wang@intel.com>
 In-Reply-To: <cover.1333289684.git.shane.wang@intel.com>
 References: <cover.1333289684.git.shane.wang@intel.com>
-Subject: [PATCH 4/7] Hob: avoid the empty white space appearing on top of the gtk.ComboBox
+Subject: [PATCH 5/7] meta-yocto/local.conf.sample: change = to ?= for BB_NUMBER_THREADS and PARALLEL_MAKE
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,38 +30,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 01 Apr 2012 14:03:26 -0000
+X-List-Received-Date: Sun, 01 Apr 2012 14:03:29 -0000
 
-Avoid the empty white space appearing on top of the machine selection combo
-box and the image selection combo box in the "Image configuration" screen
+In the current local.conf, BB_NUMBER_THREADS and PARALLEL_MAKE are assigned
+by '=', which overwrites the values set from the Hob. To avoid that, use '?='
+instead.
 
-[Yocto #2166]
+[Yocto #2210]
 
 Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+ meta-yocto/conf/local.conf.sample |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-index 30f8979..8e9452e 100644
---- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-@@ -143,6 +143,7 @@ class ImageConfigurationPage (HobPage):
-         self.machine_title_desc.set_markup(mark)
- 
-         self.machine_combo = gtk.combo_box_new_text()
-+        self.machine_combo.set_wrap_width(1)
-         self.machine_combo.connect("changed", self.machine_combo_changed_cb)
- 
-         icon_file = hic.ICON_LAYERS_DISPLAY_FILE
-@@ -191,6 +192,7 @@ class ImageConfigurationPage (HobPage):
-         self.image_title_desc.set_markup(mark)
- 
-         self.image_combo = gtk.combo_box_new_text()
-+        self.image_combo.set_wrap_width(1)
-         self.image_combo_id = self.image_combo.connect("changed", self.image_combo_changed_cb)
- 
-         self.image_desc = gtk.Label()
+diff --git a/meta-yocto/conf/local.conf.sample b/meta-yocto/conf/local.conf.sample
+index 38507e3..a4a8192 100644
+--- a/meta-yocto/conf/local.conf.sample
++++ b/meta-yocto/conf/local.conf.sample
+@@ -17,12 +17,12 @@
+ # These two options control how much parallelism BitBake should use. The first 
+ # option determines how many tasks bitbake should run in parallel:
+ #
+-#BB_NUMBER_THREADS = "4"
++#BB_NUMBER_THREADS ?= "4"
+ # 
+ # The second option controls how many processes make should run in parallel when
+ # running compile tasks:
+ #
+-#PARALLEL_MAKE = "-j 4"
++#PARALLEL_MAKE ?= "-j 4"
+ #
+ # For a quad-core machine, BB_NUMBER_THREADS = "4", PARALLEL_MAKE = "-j 4" would
+ # be appropriate for example.
 -- 
 1.7.6
 
