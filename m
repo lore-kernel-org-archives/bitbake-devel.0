@@ -1,24 +1,22 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mga01.intel.com ([192.55.52.88])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SEing-0005fv-6Q
+	(envelope-from <shane.wang@intel.com>) id 1SEinh-0005fz-IQ
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 02 Apr 2012 17:04:08 +0200
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 02 Apr 2012 07:55:01 -0700
+	Mon, 02 Apr 2012 17:04:09 +0200
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 02 Apr 2012 07:55:00 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="124501496"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="148714247"
 Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by orsmga001.jf.intel.com with ESMTP; 02 Apr 2012 07:55:01 -0700
+	by fmsmga002.fm.intel.com with ESMTP; 02 Apr 2012 07:54:59 -0700
 From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  2 Apr 2012 23:22:38 +0800
-Message-Id: <1b154fde4b6b403c8cea5b473baa029f9f264281.1333379931.git.shane.wang@intel.com>
+Date: Mon,  2 Apr 2012 23:22:37 +0800
+Message-Id: <7ef65b5d1a00fe42d39be41ddd93fc75ade17308.1333379931.git.shane.wang@intel.com>
 X-Mailer: git-send-email 1.7.6
-In-Reply-To: <7ef65b5d1a00fe42d39be41ddd93fc75ade17308.1333379931.git.shane.wang@intel.com>
-References: <7ef65b5d1a00fe42d39be41ddd93fc75ade17308.1333379931.git.shane.wang@intel.com>
 In-Reply-To: <cover.1333379931.git.shane.wang@intel.com>
 References: <cover.1333379931.git.shane.wang@intel.com>
-Subject: [PATCH 2/4] Hob: log for Hob and allow users to show logs after successful build
+Subject: [PATCH 1/4] Hob: add the "info" indication icon for "information" in the dialogs.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,285 +28,109 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 02 Apr 2012 15:04:08 -0000
+X-List-Received-Date: Mon, 02 Apr 2012 15:04:09 -0000
 
-If users build images in Hob, record logs and allow users to retrieve the logs
-after successful build.
-
-The logs are generated if and only if:
-  - users do "just bake"
-  - users do "build image" after "build packages"
-
-Only "build packages" will not write logs because there is no chance for users
-to retrieve on the GUI.
-
-[Yocto #1991]
+Previously we reused the info display file which is for indication of tooltips.
+But it is too small, when it is shown on the dialog as the dialog indication icon,
+it becomes unclear after being stretched out. So, we replace it with a larger
+icon.
 
 Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/builder.py          |   36 +++++++++++++++--
- bitbake/lib/bb/ui/crumbs/hobeventhandler.py  |    3 +
- bitbake/lib/bb/ui/crumbs/imagedetailspage.py |   14 ++++++-
- bitbake/lib/bb/ui/crumbs/runningbuild.py     |   53 ++++++++++++++++++++++++++
- 4 files changed, 101 insertions(+), 5 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hobwidget.py       |    3 ++-
+ bitbake/lib/bb/ui/icons/indicators/info.png |  Bin 0 -> 3311 bytes
+ 2 files changed, 2 insertions(+), 1 deletions(-)
+ create mode 100644 bitbake/lib/bb/ui/icons/indicators/info.png
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index 6587734..de4fb29 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -26,6 +26,7 @@ import copy
- import os
- import subprocess
- import shlex
-+import logging
- from bb.ui.crumbs.template import TemplateMgr
- from bb.ui.crumbs.imageconfigurationpage import ImageConfigurationPage
- from bb.ui.crumbs.recipeselectionpage import RecipeSelectionPage
-@@ -260,6 +261,11 @@ class Builder(gtk.Window):
+diff --git a/bitbake/lib/bb/ui/crumbs/hobwidget.py b/bitbake/lib/bb/ui/crumbs/hobwidget.py
+index 9625c6d..edb85db 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobwidget.py
++++ b/bitbake/lib/bb/ui/crumbs/hobwidget.py
+@@ -60,6 +60,7 @@ class hic:
+     ICON_INDI_REFRESH_FILE        = os.path.join(HOB_ICON_BASE_DIR, ('indicators/refresh.png'))
+     ICON_INDI_ALERT_FILE          = os.path.join(HOB_ICON_BASE_DIR, ('indicators/alert.png'))
+     ICON_INDI_TICK_FILE           = os.path.join(HOB_ICON_BASE_DIR, ('indicators/tick.png'))
++    ICON_INDI_INFO_FILE           = os.path.join(HOB_ICON_BASE_DIR, ('indicators/info.png'))
  
-         self.template = None
+ class hcc:
  
-+        # logger
-+        self.logger = logging.getLogger("BitBake")
-+        self.consolelog = None
-+        self.current_logfile = None
-+
-         # build step
-         self.current_step = None
-         self.previous_step = None
-@@ -287,6 +293,7 @@ class Builder(gtk.Window):
-         self.handler.build.connect("build-failed",       self.handler_build_failed_cb)
-         self.handler.build.connect("task-started",       self.handler_task_started_cb)
-         self.handler.build.connect("log-error",          self.handler_build_failure_cb)
-+        self.handler.build.connect("log",                self.handler_build_log_cb)
-         self.handler.connect("generating-data",          self.handler_generating_data_cb)
-         self.handler.connect("data-generated",           self.handler_data_generated_cb)
-         self.handler.connect("command-succeeded",        self.handler_command_succeeded_cb)
-@@ -396,7 +403,7 @@ class Builder(gtk.Window):
-         elif next_step == self.PACKAGE_GENERATING or next_step == self.FAST_IMAGE_GENERATING:
-             # both PACKAGE_GENEATING and FAST_IMAGE_GENERATING share the same page
-             self.build_details_page.show_page(next_step)
--            self.generate_packages()
-+            self.generate_packages(next_step == self.FAST_IMAGE_GENERATING)
- 
-         elif next_step == self.PACKAGE_GENERATED:
-             pass
-@@ -405,7 +412,7 @@ class Builder(gtk.Window):
-             # after packages are generated, selected_packages need to
-             # be updated in package_model per selected_image in recipe_model
-             self.build_details_page.show_page(next_step)
--            self.generate_image()
-+            self.generate_image(self.current_step == self.FAST_IMAGE_GENERATING)
- 
-         elif next_step == self.IMAGE_GENERATED:
-             self.image_details_page.show_page(next_step)
-@@ -454,7 +461,10 @@ class Builder(gtk.Window):
-         left = self.package_model.set_selected_packages(selected_packages)
-         self.configuration.selected_packages += left
- 
--    def generate_packages(self):
-+    def generate_packages(self, log = False):
-+        if log:
-+            self.current_logfile = self.handler.get_logfile()
-+            self.do_log(self.current_logfile)
-         # Build packages
-         _, all_recipes = self.recipe_model.get_selected_recipes()
-         self.set_user_config()
-@@ -466,7 +476,10 @@ class Builder(gtk.Window):
-         self.set_user_config()
-         self.handler.generate_recipes()
- 
--    def generate_image(self):
-+    def generate_image(self, cont = False):
-+        if not cont:
-+            self.current_logfile = self.handler.get_logfile()
-+            self.do_log(self.current_logfile)
-         # Build image
-         self.set_user_config()
-         all_packages = self.package_model.get_selected_packages()
-@@ -708,6 +721,10 @@ class Builder(gtk.Window):
-     def handler_build_failure_cb(self, running_build):
-         self.build_details_page.show_issues()
- 
-+    def handler_build_log_cb(self, running_build, func, obj):
-+        if hasattr(self.logger, func):
-+            getattr(self.logger, func)(obj)
-+
-     def destroy_window_cb(self, widget, event):
-         lbl = "<b>Do you really want to exit the Hob image creator?</b>"
-         dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
-@@ -1033,3 +1050,14 @@ class Builder(gtk.Window):
-             self.handler.cancel_build()
-         elif response == gtk.RESPONSE_YES:
-             self.handler.cancel_build(True)
-+
-+    def do_log(self, consolelogfile = None):
-+        if consolelogfile:
-+            if self.consolelog:
-+                self.logger.removeHandler(self.consolelog)
-+                self.consolelog = None
-+            self.consolelog = logging.FileHandler(consolelogfile)
-+            bb.msg.addDefaultlogFilter(self.consolelog)
-+            format = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
-+            self.consolelog.setFormatter(format)
-+            self.logger.addHandler(self.consolelog)
-diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-index 61af131..de228d9 100644
---- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -381,6 +381,9 @@ class HobHandler(gobject.GObject):
-     def reset_build(self):
-         self.build.reset()
- 
-+    def get_logfile(self):
-+        return self.server.runCommand(["getVariable", "BB_CONSOLELOG"])
-+
-     def get_parameters(self):
-         # retrieve the parameters from bitbake
-         params = {}
-diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-index a5d0ad8..39ccfdc 100755
---- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-@@ -159,8 +159,10 @@ class ImageDetailsPage (HobPage):
-             machine = self.builder.configuration.curr_mach
-             base_image = self.builder.recipe_model.get_selected_image()
-             layers = self.builder.configuration.layers
-+            log_file = self.builder.current_logfile
-             pkg_num = "%s" % len(self.builder.package_model.get_selected_packages())
-         else:
-+            log_file = None
-             pkg_num = "N/A"
- 
-         self._remove_all_widget()
-@@ -204,9 +206,15 @@ class ImageDetailsPage (HobPage):
-         image_table = HobViewTable(self.__columns__)
-         image_table.set_model(self.image_store)
-         image_table.connect("toggled", self.toggled_cb)
-+        view_buttons = gtk.VBox(False, 6)
-         view_files_button = HobAltButton("View files")
-         view_files_button.connect("clicked", self.view_files_clicked_cb, image_addr)
--        self.box_group_area.pack_start(self.DetailBox(widget=image_table, button=view_files_button), expand=True, fill=True)
-+        view_buttons.pack_start(view_files_button, expand=True, fill=True)
-+        if log_file:
-+            view_logs_button = HobAltButton("View logs")
-+            view_logs_button.connect("clicked", self.view_logs_clicked_cb, log_file)
-+            view_buttons.pack_end(view_logs_button, expand=True, fill=True)
-+        self.box_group_area.pack_start(self.DetailBox(widget=image_table, button=view_buttons), expand=True, fill=True)
- 
-         # Machine, Base image and Layers
-         layer_num_limit = 15
-@@ -258,6 +266,10 @@ class ImageDetailsPage (HobPage):
-     def view_files_clicked_cb(self, button, image_addr):
-         os.system("xdg-open /%s" % image_addr)
- 
-+    def view_logs_clicked_cb(self, button, log_file):
-+        if log_file:
-+            os.system("xdg-open /%s" % log_file)
-+
-     def refresh_package_detail_box(self, image_size):
-         self.package_detail.update_line_widgets("Total image size: ", image_size)
- 
-diff --git a/bitbake/lib/bb/ui/crumbs/runningbuild.py b/bitbake/lib/bb/ui/crumbs/runningbuild.py
-index 042902e..b42f9c8 100644
---- a/bitbake/lib/bb/ui/crumbs/runningbuild.py
-+++ b/bitbake/lib/bb/ui/crumbs/runningbuild.py
-@@ -82,6 +82,9 @@ class RunningBuild (gobject.GObject):
-           'log-error'       :  (gobject.SIGNAL_RUN_LAST,
-                                 gobject.TYPE_NONE,
-                                ()),
-+          'log'             :  (gobject.SIGNAL_RUN_LAST,
-+                                gobject.TYPE_NONE,
-+                               (gobject.TYPE_STRING, gobject.TYPE_PYOBJECT,)),
-           }
-     pids_to_task = {}
-     tasks_to_iter = {}
-@@ -119,6 +122,8 @@ class RunningBuild (gobject.GObject):
-             parent = self.tasks_to_iter[(package, task)]
- 
-         if(isinstance(event, logging.LogRecord)):
-+            if event.taskpid == 0 or event.levelno > logging.INFO:
-+                self.emit("log", "handle", event)
-             # FIXME: this is a hack! More info in Yocto #1433
-             # http://bugzilla.pokylinux.org/show_bug.cgi?id=1433, temporarily
-             # mask the error message as it's not informative for the user.
-@@ -204,6 +209,7 @@ class RunningBuild (gobject.GObject):
-             self.tasks_to_iter[(package, task)] = i
- 
-         elif isinstance(event, bb.build.TaskBase):
-+            self.emit("log", "info", event._message)
-             current = self.tasks_to_iter[(package, task)]
-             parent = self.tasks_to_iter[(package, None)]
- 
-@@ -284,6 +290,7 @@ class RunningBuild (gobject.GObject):
-                 pbar.set_text(event.msg)
- 
-         elif isinstance(event, bb.command.CommandFailed):
-+            self.emit("log", "error", "Command execution failed: %s" % (event.error))
-             if event.error.startswith("Exited with"):
-                 # If the command fails with an exit code we're done, emit the
-                 # generic signal for the UI to notify the user
-@@ -311,7 +318,41 @@ class RunningBuild (gobject.GObject):
-         elif isinstance(event, bb.event.ParseCompleted) and pbar:
-             pbar.hide()
-         #using runqueue events as many as possible to update the progress bar
-+        elif isinstance(event, bb.event.MultipleProviders):
-+            self.emit("log", "info", "multiple providers are available for %s%s (%s)" \
-+                                     % (event._is_runtime and "runtime " or "", event._item, ", ".join(event._candidates)))
-+            self.emit("log", "info", "consider defining a PREFERRED_PROVIDER entry to match %s" % (event._item))
-+        elif isinstance(event, bb.event.NoProvider):
-+            if event._runtime:
-+                r = "R"
-+            else:
-+                r = ""
-+            if event._dependees:
-+                self.emit("log", "error", "Nothing %sPROVIDES '%s' (but %s %sDEPENDS on or otherwise requires it)" \
-+                                          % (r, event._item, ", ".join(event._dependees), r))
-+            else:
-+                self.emit("log", "error", "Nothing %sPROVIDES '%s'" % (r, event._item))
-+            if event._reasons:
-+                for reason in event._reasons:
-+                    self.emit("log", "error", "%s" % (reason))
-+        elif isinstance(event, bb.runqueue.runQueueTaskFailed):
-+            self.emit("log", "error", "Task %s (%s) failed with exit code '%s'" % (event.taskid, event.taskstring, event.exitcode))
-+        elif isinstance(event, bb.runqueue.sceneQueueTaskFailed):
-+            self.emit("log", "warn", "Setscene task %s (%s) failed with exit code '%s' - real task will be run instead" \
-+                                     % (event.taskid, event.taskstring, event.exitcode))
-         elif isinstance(event, (bb.runqueue.runQueueTaskStarted, bb.runqueue.sceneQueueTaskStarted)):
-+            if isinstance(event, bb.runqueue.sceneQueueTaskStarted):
-+                self.emit("log", "info", "Running setscene task %d of %d (%s)" % \
-+                                         (event.stats.completed + event.stats.active + event.stats.failed + 1,
-+                                          event.stats.total, event.taskstring))
-+            else:
-+                if event.noexec:
-+                    tasktype = 'noexec task'
-+                else:
-+                    tasktype = 'task'
-+                self.emit("log", "info", "Running %s %s of %s (ID: %s, %s)" % \
-+                                         (tasktype, event.stats.completed + event.stats.active + event.stats.failed + 1,
-+                                          event.stats.total, event.taskid, event.taskstring))
-             message = {}
-             message["eventname"] = bb.event.getName(event)
-             num_of_completed = event.stats.completed + event.stats.failed
-@@ -320,6 +361,18 @@ class RunningBuild (gobject.GObject):
-             message["title"] = ""
-             message["task"] = event.taskstring
-             self.emit("task-started", message)
-+        else:
-+            if not isinstance(event, (bb.event.BuildBase,
-+                                      bb.event.StampUpdate,
-+                                      bb.event.ConfigParsed,
-+                                      bb.event.RecipeParsed,
-+                                      bb.event.RecipePreFinalise,
-+                                      bb.runqueue.runQueueEvent,
-+                                      bb.runqueue.runQueueExitWait,
-+                                      bb.event.OperationStarted,
-+                                      bb.event.OperationCompleted,
-+                                      bb.event.OperationProgress)):
-+                self.emit("log", "error", "Unknown event: %s" % (error))
- 
-         return
- 
+@@ -826,7 +827,7 @@ class HobIconChecker(hic):
+     """
+     def check_stock_icon(self, stock_name=""):
+         HOB_CHECK_STOCK_NAME = {
+-            ('hic-dialog-info', 'gtk-dialog-info', 'dialog-info')           : self.ICON_INFO_DISPLAY_FILE,
++            ('hic-dialog-info', 'gtk-dialog-info', 'dialog-info')           : self.ICON_INDI_INFO_FILE,
+             ('hic-ok',          'gtk-ok',           'ok')                   : self.ICON_INDI_TICK_FILE,
+             ('hic-dialog-error', 'gtk-dialog-error', 'dialog-error')        : self.ICON_INDI_ERROR_FILE,
+             ('hic-dialog-warning', 'gtk-dialog-warning', 'dialog-warning')  : self.ICON_INDI_ALERT_FILE,
+diff --git a/bitbake/lib/bb/ui/icons/indicators/info.png b/bitbake/lib/bb/ui/icons/indicators/info.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..ee8e8d846251ab1a937902d7eb517da24ecb30f5
+GIT binary patch
+literal 3311
+zcmaJ^c|4SD7k*47OC)XDm?jA^n=xZ1%WNi0BOyseV`ea8HnU{UULt8BRFrj!ghVQ9
+z6WS;u?Rb+GTau8<H+t*+zCZfj=l6S_`@YY8uCrX{oIjpJPL7*3)K;ni0H9%SM|M`M
+z$k|s#S@G4ii7!(uD<rn=5*LAwB#<s*0R*PNn+3M#(S2FYEIKnd;10_Y0Ot6yUEL+_
+zv@JM>fCr_|>Og~dLIoNCENy~>bcR1m0`_M4viVk!ksEaoFq>%w*<ntD(}X0JAKNZO
+z#BvF7bY+D2Gq6mEjWyUZ2&XW>V@c@XARd=5#syhHe%i$;_OoIb1pHG);%^1{J1BRW
+z6PP3rvB2g~xG4jUMu5>MC;|n?qOc}lBpd;UA&@XQ#uNd^nPYHp1o+njQFs$EeQ?fX
+z$}eAvlNH2IA`#+Xu)x4TXrLKXAo7JFuvjb%j)WnRrV0&HaWG#(4>IM8*ZsCYW{DXh
+zwot+r@WHbd>D~gV#0sK_^zRgSLK^KK!+h~Cq7;<Dg6KjR0t$!mc(Zx^)D}yeS^o{=
+zkJ@6_U?B_U%n}QvB8H+KKI?vi72N&1qgh2oG`OuIwxTF>E?K~k@>qO{J=qGPxPda+
+zOdJtqizT5@6f7KxKwBUXL^J|Puq6>N=H?_@3$(>=8-K#uVk`(`Gzy79kZchMTLqSa
+zq>xE)gaw?8CXi6SvG#nigwAKMe*0xB{Qkls{uPTOiCA=rK;$YAaDR7zlb=8$5c>&)
+zV3LbD6al8u8EpQnWVS$m=SyaZ*!x&aib%i%|6~}){zC*5GKPXcU{G)j5<Z(b)(k}?
+zq6ug$))rxgCQu;1u*^TOhDB0P7z&DLLHR$d!4$#3X4~U`+U2)M(Sx(wf0|!$_-A}r
+ze8tR&6vGiYfA1y$P+enBCb$MY8}ta}E@@tIwnjEGwCTC;H;YxJbDEB%IBBV>J;6tI
+z1gtlyuOcX!YxCyjfhyj6Q8+W_QX(AkYxCR)u1Q4>jhttO+VRFj6i-NAx?T;<k2mIi
+z1AkdD9Tr$Sv8S&4MQcd-lTzPR(UAVn?8oId%EzW(bsx^(Vj!>8q&3$X45=P%E?%*0
+zQ&b~2WBjVVz1pEV+Zd}tRa5OmOI`deZz*ogh8n_1yZ!ZW$xFK{htCt0k3l}r@}1=!
+zb(_CWlc@%a*kzvg*kWW%gOlTDMoe32;#cR~1{M64k}k1OUk@7Pifb&LWJ2y7@6f(O
+zhDqy2yT@mKY@FxZ2lenlt=!b&Glqs7ijUf2usAmWVB*4;+2KyO;q|pumnAk{Uh*b9
+zzR5BC{mdud<kfa;`}ZXmmkk^PQKMQp709Bb+up4HXcH|heaK)ORX;V=&QkX+IOmw*
+z>8vcb_#e8-O*zxeP0dg%3Al0CTix`>sTLpq(&t0>dxh}RFPnfS?=m5f=Y9VihS}+`
+zp+zUe!>vR=%AVOkE?CFKS+)?fwbYekfRyZk#etNOGa-KX>PAmJrO8+zXg75EoTqE{
+zQ5XsO=NuDw=PlEo?aF_|);z!^A3F?ar!V+uZLu^gP{<T^9iOvy`=><{0__a-mvI+M
+zOOImDXhKz=%;OR@@I(8=r-57BX(u)3FV-x(P`~8#nRMof6DPPFPT};IheJu!{{7TM
+zD(w=nO9u3Qsmgdh<l`ti5d+UCcXp!Ug?rAsoMf5tJ%FVnQA$<HW<8^^uJ1G678w_{
+zYAn#KuGGihR<;I9MWG3n_g{~~WmIK4Dxf5`@r9h7lk`Bar82B&{gwv>A(tkWoEgCh
+z;?z{{7$M^O;SQAb%Z$W64H3;dhNruRdY}6)PtBP$4&QuR6Meo@m7>wAN>ZM<_Uhj7
+zQqK#QE<rmhONJKC&AA@#6}nCSNMmUJLfzF3R#jdJdUrzsSl&EUd4IjhXbo{|@5tSg
+zsn?d79J}0(blDmF6xNdozmVg|?BHy7zREPdlhbB6HWh~P@bIWrPmXOIeo;17L!GI*
+za__xx|B`eyt%Z__(g5gq-+g<7aj0wnhWgeXtxrS;oci237XV27w1JYZBn~L8VaQJZ
+z=GU)Zf0!Yx8=9J$o;-P{GdBHwu#pGzj0ugCfqGs{bhby;;6DjRj;gh3dc_H*q9apM
+zQdTbwAVxZgxlqu2rGjbB1V-K~d|Z4W+GMrbI?9z-*QM07BDZU?g8Cyp8m4X_Mj(*x
+zy4yJnDgc{r<aosU8;}R1qd~1}7cK1ntIy=paT!F_B$p*EU$BeH%o#YVwXSuJ;joRL
+zW;Vx(5qT_Tq`#WSoJx4J0iF%4tv)<?J8V=bcxkofGW>}3<`*+Mi84uKvigPog0V4k
+zJ4%*1!P)D^<;wBIneb6e3;wXdYY!6#vj6Dld^gTqo%-yA9&a9xS5R1JOjB~~>h6ZM
+zRX-&oyQfrC`olP#E;i@rLwGw`i%Qt-jE>dSUau$a#D2zE&3tS-lG`@){OU{^U!%Sc
+z>RDa&Wyq$M=T>yS0C}<=91-JR5PY`nqKCBT!{cCT&Cb-jF`*7nTcc31SR9QHix?|t
+z5j0e-eY$a``cu=Jdub8x^~R_`Kpo0pxylZNTK(rNT6viuh%ZOypM2=obMvj7vG(0I
+z&G9=0%h5G)bDi{KX-Tv?gS3_M@JRWXNB?$^LGi)eS3S$ghLasf-fh;2UN%VHwn{_0
+z0kmktfddDJg@6koONVF*_cGLRa60Y|>{3b_Gm>Rre(&mWqbn!nR^eQ$YnLCj$C91K
+z8yNw*n*imW`>JNJ2%`^Uk%pJ&^lDU`H`%}CuKc@m*5V~FKZK~Q%2=yetD-C@?=7Hw
+zGdlQ4>Zxr;#o{sFzUCe>YECw}ENy=A{Xrmqo{BL(a@(MBZo;c{v(&7$Nn>g)_0uT>
+zEYzy$qWPXRbJt|S;vN#sinR8$ZdEP_cFZX2qn(%{e|ccUYkg4@x+8j}pSi=aEEOZT
+z`3Q2SGga+Y`!jt=p}pV`=ID+~6_<Tj?wQ$~{?+$DT4&ByoLe#4w|-CWGs3vWc-JS;
+z<>6HWKTHLA>@O2)QICiq6LGR@N2M&TR9Wlp;L96<GnO!L3k);UF);4a!~Qhy=72;A
+zVzvvCQ0sq&3cXm>ysK`1cuGOAO?OCNOeSpTjB8r{sl(s)bMk9t+iGq-UW81l37z;M
+zCB$`RS%o_0;_erh>E*d`LNngv>v*N->D-{OZ~cYvv#Y*-{p&$>5HYwdgLF`HN{MXO
+zM_|Xk6TGV4`M_m$@WAFv%``bl?&ewIe^?Iy`BYX^NZTJ~#trA_8^u_)cXXuuC9PDJ
+zFUKn@D|77D>`x5R7x<;Mk0%|vqgr!&<rV#Nll{H&gBvV$AB;9;xo6t!|2Em}&*4<{
+zCdONOY0bU5O^%ltWm<46++QzAig86Ir_=gV?HU{Vzl2rPeRREjeBo*fEdiJNP1kDW
+z?$2$fpK|x-=jP@vgiwCyhkf1s9u2!_h`r?r{}5hSo}?+0^RGT#UuI?m8vH&80#|aM
+z9_I)IHl*Zzrf&@PP4)EjY~Fx#bUmD$Om*iD>z4GKKW~3jNqt(o0@J+#y~1}0-Fo)|
+zSR=t}*Hu2Pb}ARso!uM0@U=S~+xcp_W0vK$!jh7$X*UL}o0~k)QF(f<nhz3BTntSI
+z>tXkDXEshVhPwGPW*T(`Qo1_!UBlxyn=&&qVG^k{qx8v(HIq}?cD*$nx{ft^Zaa5o
+zVD}BWm)6$mZrCBy>uh^|p{=d0>p_;)!1a*vLS6NY0XxEdo38ZI#GD++<7dxS%Bse(
+z8g-7JdvmQ96dT}3k(HiR!iHBbU-I77b;9W4(AwARWB&9_l9p5EY|%&n@&o;P(#tO{
+z>U(bIY?Tglb(FtaRRerhZaabpm*&W1%@z-B&YeB7g-RlkcBk!qw<N>m-HsB^Og}$A
+zm9~%49GgX%(|40)8}Dw^X`DaowrJA&#*d7&1E=G&nyf9h6@N3-u3aUX=`DX?89Gn5
+uSa$X8sD*FD?q??=3WGs?Yb$2d;Q;ih!3EB=U&rh(h`p^N`4Vw&^nU;w6|waI
+
+literal 0
+HcmV?d00001
+
 -- 
 1.7.6
 
