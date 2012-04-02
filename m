@@ -1,24 +1,36 @@
-Received: from mga01.intel.com ([192.55.52.88])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SEcS5-0007jx-RG
-	for bitbake-devel@lists.openembedded.org;
-	Mon, 02 Apr 2012 10:17:26 +0200
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 02 Apr 2012 01:08:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="136472679"
-Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by fmsmga001.fm.intel.com with ESMTP; 02 Apr 2012 01:08:06 -0700
-From: Shane Wang <shane.wang@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon,  2 Apr 2012 16:29:19 +0800
-Message-Id: <0de2f23879389dfd3540dbdf9bc5f9740d3634ca.1333355236.git.shane.wang@intel.com>
-X-Mailer: git-send-email 1.7.6
-In-Reply-To: <0c8981e042d26a7b381f85256d918a059c866fed.1333355236.git.shane.wang@intel.com>
-References: <0c8981e042d26a7b381f85256d918a059c866fed.1333355236.git.shane.wang@intel.com>
-In-Reply-To: <cover.1333355236.git.shane.wang@intel.com>
-References: <cover.1333355236.git.shane.wang@intel.com>
-Subject: [PATCH 5/6] Hob: a minor fix on image_fstypes
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1SEgjB-00037R-FZ for bitbake-devel@lists.openembedded.org;
+	Mon, 02 Apr 2012 14:51:22 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q32CgBv3012360;
+	Mon, 2 Apr 2012 13:42:11 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 07587-05; Mon,  2 Apr 2012 13:42:07 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q32Cg1sU012354
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Mon, 2 Apr 2012 13:42:03 +0100
+Message-ID: <1333370521.647.33.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: "Xu, Dongxiao" <dongxiao.xu@intel.com>
+Date: Mon, 02 Apr 2012 13:42:01 +0100
+In-Reply-To: <1333258512.4073.14.camel@dongxiao-osel>
+References: <cover.1333108781.git.dongxiao.xu@intel.com>
+	<9135f6b93e4fe1665f3bdc56eba150d67582d8e1.1333108781.git.dongxiao.xu@intel.com>
+	<4F75DADC.7070909@linux.intel.com>
+	<1333153931.27459.5.camel@dongxiao-osel>
+	<1333171790.4073.9.camel@dongxiao-osel>
+	<1333209061.18082.245.camel@ted>
+	<1333258512.4073.14.camel@dongxiao-osel>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 3/7] Hob: Make layers define in bblayers.conf as default
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,32 +42,72 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 02 Apr 2012 08:17:26 -0000
+X-List-Received-Date: Mon, 02 Apr 2012 12:51:22 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-image_fstypes in the configuration has been changed into a string rather than
-a list. Here we correct it in __init__() of class Configuration. At other places,
-image_fstypes are all strings.
+On Sun, 2012-04-01 at 13:35 +0800, Xu, Dongxiao wrote:
+> On Sat, 2012-03-31 at 16:51 +0100, Richard Purdie wrote:
+> > I'd be happy if you change the above code to do:
+> > 
+> >         self.server.runCommand(["deleteVariable", "DISTRO"])
+> > 
+> > which is subtly different but consistent with what we really want. I
+> > have no idea if we have a deleteVariable command but if we don't, we
+> > should add one.
+> 
+> I ever tried this approach with the following patch, however it didn't
+> work. The setting of DISTRO ?= "poky" will still take effect.
+>
+> It seems that delVar(DISTRO) is different from setting DISTRO="".
 
-Signed-off-by: Shane Wang <shane.wang@intel.com>
----
- bitbake/lib/bb/ui/crumbs/builder.py |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+It is different but it is what setting up OE-Core without DISTRO set
+does and that is known to work.
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index 151bec4..7a786a9 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -60,7 +60,7 @@ class Configuration:
-         self.lconf_version = params["lconf_version"]
-         self.extra_setting = {}
-         self.toolchain_build = False
--        self.image_fstypes = params["image_fstypes"].split()
-+        self.image_fstypes = params["image_fstypes"]
-         # bblayers.conf
-         self.layers = params["layer"].split()
-         # image/recipes/packages
--- 
-1.7.6
+We need to understand why this isn't working as it should...
+
+Cheers,
+
+Richard
+
+
+> 
+> diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
+> index 73aaca0..a7b41ce 100644
+> --- a/bitbake/lib/bb/command.py
+> +++ b/bitbake/lib/bb/command.py
+> @@ -160,6 +160,13 @@ class CommandsSync:
+>          value = params[1]
+>          command.cooker.configuration.data.setVar(varname, value)
+> 
+> +    def delVariable(self, command, params):
+> +        """
+> +        Delete the variable in configuration.data
+> +        """
+> +        varname = params[0]
+> +        command.cooker.configuration.data.delVar(varname)
+> +
+>      def initCooker(self, command, params):
+>          """
+>          Init the cooker to initial state with nothing parsed
+> diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+> b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+> index 8909e01..d236a72 100644
+> --- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+> +++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+> @@ -265,7 +265,9 @@ class HobHandler(gobject.GObject):
+>          self.server.runCommand(["setVariable", "IMAGE_FSTYPES",
+> image_fstypes])
+> 
+>      def set_distro(self, distro):
+> -        if distro != "defaultsetup":
+> +        if distro == "defaultsetup":
+> +            self.server.runCommand(["delVariable", "DISTRO"])
+> +        else:
+>              self.server.runCommand(["setVariable", "DISTRO", distro])
+> 
+>      def set_package_format(self, format):
+
 
 
 
