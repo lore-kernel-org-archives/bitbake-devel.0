@@ -1,35 +1,35 @@
-Received: from mail-wi0-f177.google.com ([209.85.212.177])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <martin.jansa@gmail.com>) id 1SFgKf-0000Bl-J4
+	(envelope-from <lianhao.lu@intel.com>) id 1SFgY1-0000K0-AR
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 05 Apr 2012 08:38:09 +0200
-Received: by wibhj13 with SMTP id hj13so872480wib.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 04 Apr 2012 23:28:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:content-disposition:in-reply-to:user-agent;
-	bh=+rQhn6Gi+1sNNYnTQ+oeq1ZSsdCTvpaQuWz9Dka7wb4=;
-	b=bc9SApUYM6Xi0qCsErONw5Y8tIemCcV6HVkv+wTmH6WcFyBaWyBvBKONodAmqtoSIY
-	h4/Pk2UBnD/EUgDCjBIRylsYZhzFdMGgZPulFhL/e5OQ0EJeg2xzpaBuskwLrIcoe8xY
-	j6Sylwj6aB+H3P6ufrz6OPRx04LprhXKQktk6kda/fwfEbXgFVH5xOYNkY16bTDIcvF1
-	tYwTP4lB16cJDfiRGjDFt84SYAz/VhDWWlqboijqXIaaUDXFKlspZ2l0ymAGorsrkmR6
-	3f2XAXf1tJHQ0FSVusVt5eT4DYWW6v6VfQbWEfmWUL7W1YYum3eDcG0xehn93MJ0mQm+
-	gyeg==
-Received: by 10.180.79.135 with SMTP id j7mr9840818wix.19.1333607338324;
-	Wed, 04 Apr 2012 23:28:58 -0700 (PDT)
-Received: from localhost ([94.230.152.246])
-	by mx.google.com with ESMTPS id n15sm11024449wiw.6.2012.04.04.23.28.56
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Wed, 04 Apr 2012 23:28:57 -0700 (PDT)
-Date: Thu, 5 Apr 2012 08:28:57 +0200
-From: Martin Jansa <martin.jansa@gmail.com>
-To: "Lu, Lianhao" <lianhao.lu@intel.com>
-Message-ID: <20120405062857.GK4181@jama.jama.net>
+	Thu, 05 Apr 2012 08:51:57 +0200
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga101.ch.intel.com with ESMTP; 04 Apr 2012 23:42:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="85539357"
+Received: from azsmsx601.amr.corp.intel.com ([10.2.121.193])
+	by AZSMGA002.ch.intel.com with ESMTP; 04 Apr 2012 23:42:44 -0700
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+	azsmsx601.amr.corp.intel.com (10.2.121.193) with Microsoft SMTP Server
+	(TLS) id 8.2.255.0; Wed, 4 Apr 2012 23:42:43 -0700
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.125]) by
+	SHSMSX151.ccr.corp.intel.com ([169.254.3.91]) with mapi id
+	14.01.0355.002; Thu, 5 Apr 2012 14:42:40 +0800
+From: "Lu, Lianhao" <lianhao.lu@intel.com>
+To: Martin Jansa <martin.jansa@gmail.com>
+Thread-Topic: [bitbake-devel] bb.utils.vercmp() not consistent with debian
+	rules
+Thread-Index: Ac0S9GhCT6tSU6xnTdu2BdFPrMkC3P//e9WA//93ZrA=
+Date: Thu, 5 Apr 2012 06:42:40 +0000
+Message-ID: <857BE142E5399E46B20FD45B9DB8A7BC0FD2D07B@SHSMSX102.ccr.corp.intel.com>
 References: <857BE142E5399E46B20FD45B9DB8A7BC0FD2D040@SHSMSX102.ccr.corp.intel.com>
+	<20120405062857.GK4181@jama.jama.net>
+In-Reply-To: <20120405062857.GK4181@jama.jama.net>
+Accept-Language: zh-CN, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.239.127.40]
 MIME-Version: 1.0
-In-Reply-To: <857BE142E5399E46B20FD45B9DB8A7BC0FD2D040@SHSMSX102.ccr.corp.intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
 Cc: "'bitbake-devel@lists.openembedded.org'"
 	<bitbake-devel@lists.openembedded.org>
 Subject: Re: bb.utils.vercmp() not consistent with debian rules
@@ -44,67 +44,62 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 05 Apr 2012 06:38:09 -0000
-X-Groupsio-MsgNum: 1726
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PEfPc/DjvCj+JzNg"
-Content-Disposition: inline
-
---PEfPc/DjvCj+JzNg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-List-Received-Date: Thu, 05 Apr 2012 06:51:57 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 05, 2012 at 06:22:00AM +0000, Lu, Lianhao wrote:
-> Hi guys,
+
+Martin Jansa wrote on 2012-04-05:
+> On Thu, Apr 05, 2012 at 06:22:00AM +0000, Lu, Lianhao wrote:
+>> Hi guys,
+>>=20
+>> When I'm looking at the Yocto bug#2233, I find that the function
+>> bb.utils.vercmp() is not consistent with the debian packaging
+>> rules(http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-
+>> Version).
+>>=20
+>> According to debian rules, "r0" is earlier than "r0-dream", but the bb.u=
+tils.vercmp() thinks "r0" is later than "r0-dream".
 >=20
-> When I'm looking at the Yocto bug#2233, I find that the function bb.utils=
-=2Evercmp() is not consistent with the debian packaging rules(http://www.de=
-bian.org/doc/debian-policy/ch-controlfields.html#s-f-Version).=20
+> And what about something like this:
 >=20
-> According to debian rules, "r0" is earlier than "r0-dream", but the bb.ut=
-ils.vercmp() thinks "r0" is later than "r0-dream".
+> Version: 3.2-r10
+> is older then
+> Version: 3.2-r2-oe0
 
-And what about something like this:
+I think this is exactly what the debian rules wants, "3.2-r10">"3.2-r2-oe0"=
+. And opkg follows that rule.
 
-Version: 3.2-r10
-is older then
-Version: 3.2-r2-oe0
+The problem is that bb.utils.vercmp thinks "3.2-r2">"3.2-r2-oe0" while opkg=
+ thinks "3.2-r2"<"3.2-r2-oe0".
 
-At least that was what target opkg was doing for me and I had to bump PE
-http://git.shr-project.org/git/?p=3Dmeta-smartphone.git;a=3Dcommit;h=3Dcb11=
-9753a77208617936085100595e6343ade650
+-Lianhao
 
-Cheers,
-
+> At least that was what target opkg was doing for me and I had to bump PE
+> http://git.shr-project.org/git/?p=3Dmeta-smartphone.git;a=3Dcommit;h=3Dcb=
+119753
+> a77208617936085100595e6343ade650
 >=20
-> A pervious patch http://cgit.openembedded.org/bitbake/commit/?id=3D727ce6=
-ffe33a119cb17f7d91b173f11a055eea3c seems causing the bb.utils.vercmp to spe=
-cially handle the separators of "." and "-".=20
+> Cheers,
 >=20
-> Is it desired to behave differently from debian rules?
->=20
-> Best Regards,
-> -Lianhao
->=20
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
+>>=20
+>> A pervious patch
+>> http://cgit.openembedded.org/bitbake/commit/?id=3D727ce6ffe33a119cb17f7d=
+91
+>> b173f11a055eea3c seems causing the bb.utils.vercmp to specially handle
+>> the separators of "." and "-".
+>>=20
+>> Is it desired to behave differently from debian rules?
+>>=20
+>> Best Regards,
+>> -Lianhao
+>>=20
+>> _______________________________________________
+>> bitbake-devel mailing list
+>> bitbake-devel@lists.openembedded.org
+>> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
+>
 
---=20
-Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
 
---PEfPc/DjvCj+JzNg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEYEARECAAYFAk99O6kACgkQN1Ujt2V2gByD2gCfZ41pekiEmJVdsl7tyrosWwFF
-RBkAniqZ/fwqubyq8iyedgkK0VJ+ePER
-=BymT
------END PGP SIGNATURE-----
-
---PEfPc/DjvCj+JzNg--
