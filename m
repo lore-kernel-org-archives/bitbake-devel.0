@@ -1,35 +1,33 @@
-Received: from mail-qc0-f175.google.com ([209.85.216.175])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1SFTnb-0004K1-0h
+	(envelope-from <lianhao.lu@intel.com>) id 1SFgF2-00007O-IJ
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 04 Apr 2012 19:15:11 +0200
-Received: by qcso7 with SMTP id o7so298065qcs.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 04 Apr 2012 10:06:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-type;
-	bh=RQc1Z4co6+/shgGUuwmex45oAPo0UDHCmkPkx/T9OII=;
-	b=N28HVTjN7nfmliF19wMUt4X72WIKoJ0TwBg0wyaiUCmHUG9YijTHD1ZDefFA3d5DhP
-	e6J4bX+NeGCoyN4OgaHhWPOqanxpI4j9Ixvpb5A7CzATE8oyW90juCFEm+ngjU6bhtsx
-	l7ZDbUlthbcNh4HY4ahaPu0imtl1JXzDOeTtJocS3D6KXT/bs1ugHuJlySKE0L3NoCZ1
-	gBn1kVBHvuVwNIF76eleG1CY63hRD2phlAeNEA4esL9yLuyl1iCsCZ1+I65xyV3K2RuQ
-	gcZx1aVcfgIOhTLe7ooC2ZssplKCtukxbeOYyONUfwlgNK2HBbByIb1l3mhqhsZUrFAR
-	Zm9g==
-Received: by 10.224.180.1 with SMTP id bs1mr23866864qab.2.1333559159983; Wed,
-	04 Apr 2012 10:05:59 -0700 (PDT)
+	Thu, 05 Apr 2012 08:32:20 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 04 Apr 2012 23:22:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="127331170"
+Received: from azsmsx601.amr.corp.intel.com ([10.2.121.193])
+	by azsmga001.ch.intel.com with ESMTP; 04 Apr 2012 23:22:03 -0700
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+	azsmsx601.amr.corp.intel.com (10.2.121.193) with Microsoft SMTP Server
+	(TLS) id 8.2.255.0; Wed, 4 Apr 2012 23:22:02 -0700
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.125]) by
+	SHSMSX151.ccr.corp.intel.com ([169.254.3.91]) with mapi id
+	14.01.0355.002; Thu, 5 Apr 2012 14:22:01 +0800
+From: "Lu, Lianhao" <lianhao.lu@intel.com>
+To: "'bitbake-devel@lists.openembedded.org'"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: bb.utils.vercmp() not consistent with debian rules
+Thread-Index: Ac0S9GhCT6tSU6xnTdu2BdFPrMkC3A==
+Date: Thu, 5 Apr 2012 06:22:00 +0000
+Message-ID: <857BE142E5399E46B20FD45B9DB8A7BC0FD2D040@SHSMSX102.ccr.corp.intel.com>
+Accept-Language: zh-CN, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.239.127.40]
 MIME-Version: 1.0
-Received: by 10.229.79.79 with HTTP; Wed, 4 Apr 2012 10:05:39 -0700 (PDT)
-In-Reply-To: <CAEsOVNf_1-a62a8ZY=9WsVXg+YPSGZ8Afv7QiJKQq7Ayik9qBw@mail.gmail.com>
-References: <1333495429-17048-1-git-send-email-kergoth@gmail.com>
-	<CAEsOVNf_1-a62a8ZY=9WsVXg+YPSGZ8Afv7QiJKQq7Ayik9qBw@mail.gmail.com>
-From: Chris Larson <kergoth@gmail.com>
-Date: Wed, 4 Apr 2012 10:05:39 -0700
-Message-ID: <CABcZANkkaR3aTPq9eUjA4rQZ8GBgjQNCs6BPWTfJ5cUxhj9OnQ@mail.gmail.com>
-To: Matthew McClintock <msm-fsl@mcclintock.net>
-Cc: Christopher Larson <chris_larson@mentor.com>,
-	bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] Remove whitelisted vars from non-task deps
+Subject: bb.utils.vercmp() not consistent with debian rules
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -41,45 +39,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 04 Apr 2012 17:15:11 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Thu, 05 Apr 2012 06:32:20 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 4, 2012 at 10:02 AM, Matthew McClintock
-<msm-fsl@mcclintock.net> wrote:
-> On Tue, Apr 3, 2012 at 4:23 PM, Christopher Larson <kergoth@gmail.com> wrote:
->> From: Christopher Larson <chris_larson@mentor.com>
->>
->> Though the value of variables in the BB_BASEHASH_WHITELIST is kept out of the
->> checksums, dependency on them is not, at least for variables and non-task
->> functions. In the code, the whitelist is removed from the overall task dep
->> list, but not the individual variable deps. The result of this is that
->> functions like sysroot_stage_all and oe_runmake end up with whitelisted
->> variables like TERM listed in their dependencies, which means that doing
->> a 'unset TERM' before building will result in all checksums for tasks that
->> depend on those changing, and shared state reuse not behaving correctly.
->>
->> This is only really a potential issue for variables from the environment, as
->> it's the existance/removal of the variable that's an issue, not its value, and
->> the other whitelisted variables are set in our metadata. This which means in
->> practical terms the only cases where this is likely to be an issue are in
->> environments where one of the following are unset: TERM, LOGNAME, HOME, USER,
->> PWD, SHELL. This may seem like an unlikely circumstance, but is in fact a real
->> issue for those of us using autobuilders. Jenkins does not set TERM when
->> executing shell, which means shared state archives produced by your jenkins
->> server would not be fully reused by an actual user.
->>
->> Fixed by removing the whitelisted elements from the individual variable deps,
->> not just the accumulated result.
->
-> Which recipes/packages were you seeing this on? I've noticed the TERM
-> issue on several packages but not on all of them.
+Hi guys,
 
-One I know of off the top of my head was avahi. The sstate archives
-for it which came out of jenkins were not being used. As one example,
-the populate-sysroot archive wasn't being used due to the TERM
-dependency being added/removed to/from the dependency list for
-sysroot_stage_*.
--- 
-Christopher Larson
+When I'm looking at the Yocto bug#2233, I find that the function bb.utils.v=
+ercmp() is not consistent with the debian packaging rules(http://www.debian=
+.org/doc/debian-policy/ch-controlfields.html#s-f-Version).=20
+
+According to debian rules, "r0" is earlier than "r0-dream", but the bb.util=
+s.vercmp() thinks "r0" is later than "r0-dream".
+
+A pervious patch http://cgit.openembedded.org/bitbake/commit/?id=3D727ce6ff=
+e33a119cb17f7d91b173f11a055eea3c seems causing the bb.utils.vercmp to speci=
+ally handle the separators of "." and "-".=20
+
+Is it desired to behave differently from debian rules?
+
+Best Regards,
+-Lianhao
 
 
