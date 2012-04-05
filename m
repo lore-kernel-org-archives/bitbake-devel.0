@@ -1,35 +1,23 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SFmQr-0003n0-C4 for bitbake-devel@lists.openembedded.org;
-	Thu, 05 Apr 2012 15:08:57 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q35CxhcC025606;
-	Thu, 5 Apr 2012 13:59:43 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 24887-06; Thu,  5 Apr 2012 13:59:39 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q35CxWVq025599
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Thu, 5 Apr 2012 13:59:34 +0100
-Message-ID: <1333630771.6300.12.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Lu, Lianhao" <lianhao.lu@intel.com>
-Date: Thu, 05 Apr 2012 13:59:31 +0100
-In-Reply-To: <1333628280.6300.6.camel@ted>
-References: <857BE142E5399E46B20FD45B9DB8A7BC0FD2D040@SHSMSX102.ccr.corp.intel.com>
-	<20120405062857.GK4181@jama.jama.net>
-	<857BE142E5399E46B20FD45B9DB8A7BC0FD2D07B@SHSMSX102.ccr.corp.intel.com>
-	<1333628280.6300.6.camel@ted>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: "'bitbake-devel@lists.openembedded.org'"
-	<bitbake-devel@lists.openembedded.org>,
-	Martin Jansa <martin.jansa@gmail.com>
-Subject: Re: bb.utils.vercmp() not consistent with debian rules
+Received: from mail.windriver.com ([147.11.1.11])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <Liezhi.Yang@windriver.com>) id 1SFmRO-0003oV-8P
+	for bitbake-devel@lists.openembedded.org;
+	Thu, 05 Apr 2012 15:09:30 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q35D0Hj7014289
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 5 Apr 2012 06:00:17 -0700 (PDT)
+Received: from usp-ub10.corp.ad.wrs.com (128.224.163.69) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+	14.1.255.0; Thu, 5 Apr 2012 06:00:17 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Thu, 5 Apr 2012 20:58:56 +0800
+Message-ID: <cover.1333630624.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 1.7.1
+MIME-Version: 1.0
+Subject: [PATCH 0/1] diskspace monitor: assign a default value when only of the interval is set
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -41,59 +29,23 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 05 Apr 2012 13:08:57 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 05 Apr 2012 13:09:30 -0000
+Content-Type: text/plain
 
-On Thu, 2012-04-05 at 13:18 +0100, Richard Purdie wrote:
-> On Thu, 2012-04-05 at 06:42 +0000, Lu, Lianhao wrote:
-> > Martin Jansa wrote on 2012-04-05:
-> > > On Thu, Apr 05, 2012 at 06:22:00AM +0000, Lu, Lianhao wrote:
-> > >> Hi guys,
-> > >> 
-> > >> When I'm looking at the Yocto bug#2233, I find that the function
-> > >> bb.utils.vercmp() is not consistent with the debian packaging
-> > >> rules(http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-
-> > >> Version).
-> > >> 
-> > >> According to debian rules, "r0" is earlier than "r0-dream", but the bb.utils.vercmp() thinks "r0" is later than "r0-dream".
-> > > 
-> > > And what about something like this:
-> > > 
-> > > Version: 3.2-r10
-> > > is older then
-> > > Version: 3.2-r2-oe0
-> > 
-> > I think this is exactly what the debian rules wants, "3.2-r10">"3.2-r2-oe0". And opkg follows that rule.
-> > 
-> > The problem is that bb.utils.vercmp thinks "3.2-r2">"3.2-r2-oe0" while opkg thinks "3.2-r2"<"3.2-r2-oe0".
-> 
-> All the version comparisons are meant to function the same way and the
-> debian sorting is meant to be used as a guide. If that patch does break
-> things, we should consider removing "-" as the separator and only use
-> ".".
+The following changes since commit 5607729d9901c394b7cd4db6e38fe7fb19116f39:
 
-So just to be clear, we have various version sorting algorithms:
+  self-hosted-image: Increase space for build and allow builder user sudo access (2012-04-04 17:17:55 +0100)
 
-* opkg
-* opkg-compare-versions (which has a C version and a shell version!)
-* bb.utils.vercmp()
-* bb.utils.vercmp_string()
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib robert/monitor
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/monitor
 
-and all these functions *need* to be consistent. Consistent is defined
-in this case as following the Debian version policy. This is ignoring
-the other package backends. dpkg should "just work", rpm can be
-programmed to use any algorithm and is probably not consistent with this
-at this point but we should probably ignore that in the equation at this
-point.
+Robert Yang (1):
+  diskspace monitor: assign a default value when only of the interval
+    is set
 
-So the question is, which of the above are consistent or inconsistent
-with each other (and dpkg), and how they are inconsistent. We can then
-consider what to do about it.
-
-Cheers,
-
-Richard
+ bitbake/lib/bb/monitordisk.py |   11 +++++++++--
+ 1 files changed, 9 insertions(+), 2 deletions(-)
 
 
 
