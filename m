@@ -1,40 +1,25 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <lianhao.lu@intel.com>) id 1SFzYz-0006zA-IM
+	(envelope-from <dongxiao.xu@intel.com>) id 1SG0IT-0007gM-OD
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 06 Apr 2012 05:10:13 +0200
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 05 Apr 2012 20:00:45 -0700
+	Fri, 06 Apr 2012 05:57:13 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 05 Apr 2012 20:48:00 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="85931915"
-Received: from azsmsx601.amr.corp.intel.com ([10.2.121.193])
-	by AZSMGA002.ch.intel.com with ESMTP; 05 Apr 2012 20:00:45 -0700
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
-	azsmsx601.amr.corp.intel.com (10.2.121.193) with Microsoft SMTP Server
-	(TLS) id 8.2.255.0; Thu, 5 Apr 2012 20:00:45 -0700
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.125]) by
-	SHSMSX101.ccr.corp.intel.com ([169.254.1.142]) with mapi id
-	14.01.0355.002; Fri, 6 Apr 2012 11:00:43 +0800
-From: "Lu, Lianhao" <lianhao.lu@intel.com>
-To: "'bitbake-devel@lists.openembedded.org'"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] bb.utils.vercmp() not consistent with debian
-	rules
-Thread-Index: Ac0S9GhCT6tSU6xnTdu2BdFPrMkC3P//e9WA//93ZrCAAOogAIAAC5qA//9ttVD//f16EA==
-Date: Fri, 6 Apr 2012 03:00:43 +0000
-Message-ID: <857BE142E5399E46B20FD45B9DB8A7BC0FD2EEE6@SHSMSX102.ccr.corp.intel.com>
-References: <857BE142E5399E46B20FD45B9DB8A7BC0FD2D040@SHSMSX102.ccr.corp.intel.com>
-	<20120405062857.GK4181@jama.jama.net>
-	<857BE142E5399E46B20FD45B9DB8A7BC0FD2D07B@SHSMSX102.ccr.corp.intel.com>
-	<1333628280.6300.6.camel@ted> <1333630771.6300.12.camel@ted>
-	<857BE142E5399E46B20FD45B9DB8A7BC0FD2D363@SHSMSX102.ccr.corp.intel.com>
-In-Reply-To: <857BE142E5399E46B20FD45B9DB8A7BC0FD2D363@SHSMSX102.ccr.corp.intel.com>
-Accept-Language: zh-CN, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.239.127.40]
-MIME-Version: 1.0
-Subject: Re: bb.utils.vercmp() not consistent with debian rules
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="125885757"
+Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
+	([10.239.36.11])
+	by orsmga001.jf.intel.com with ESMTP; 05 Apr 2012 20:47:59 -0700
+From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
+To: "Barros Pena, Belen" <belen.barros.pena@intel.com>
+In-Reply-To: <CBA223C9.C4FB%belen.barros.pena@intel.com>
+References: <CBA223C9.C4FB%belen.barros.pena@intel.com>
+Date: Fri, 06 Apr 2012 11:45:24 +0800
+Message-ID: <1333683924.12347.4.camel@dongxiao-osel>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.32.2 
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH 09/10] Hob: Change base image to "Create your own image" if customized
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -46,74 +31,76 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 06 Apr 2012 03:10:13 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Fri, 06 Apr 2012 03:57:14 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Lu, Lianhao wrote on 2012-04-05:
->=20
-> Richard Purdie wrote on 2012-04-05:
->> On Thu, 2012-04-05 at 13:18 +0100, Richard Purdie wrote:
->>=20
->> So just to be clear, we have various version sorting algorithms:
->>=20
->> * opkg
->> * opkg-compare-versions (which has a C version and a shell version!)
->> * bb.utils.vercmp()
->> * bb.utils.vercmp_string()
->>=20
->> and all these functions *need* to be consistent. Consistent is defined
->> in this case as following the Debian version policy. This is ignoring
->> the other package backends. dpkg should "just work", rpm can be
->> programmed to use any algorithm and is probably not consistent with this
->> at this point but we should probably ignore that in the equation at this
->> point.
->>=20
->> So the question is, which of the above are consistent or inconsistent
->> with each other (and dpkg), and how they are inconsistent. We can then
->> consider what to do about it.
->>=20
->=20
-> The difference between those is how to treat "separators" in version comp=
-are.
-> Take 2 examples, v1=3D"3.2-r2-oe0", v1'=3D"3.2-r2"; v2=3D"4.4-r8-oe0", v2=
-'=3D"4.4-r8a"
->=20
-> The Debian version policy says, "...so that all the letters sort earlier =
-than all
-> the non-letters and so that a tilde sorts before anything, even the end o=
-f a part."
-> So v1>v1', v2>v2'.
->=20
-> The opkg follows the Debian rules, and reports v1>v1', v2>v2'. dpkg repor=
-ts the same.
->=20
-> The C version of opkg-compare-versions reports v1>v1', v2<v2'. (The shell=
- version do
-> NOT have the function of comparison).
-It turns out the opkg-compare-version is still using the source code from a=
- very opkg
-implementation. The opkg upstream has changed that in svn revision r40,=20
-http://code.google.com/p/opkg/source/detail?r=3D40&path=3D/trunk/libopkg/pk=
-g.c.=20
+On Wed, 2012-04-04 at 23:21 +0800, Barros Pena, Belen wrote:
+> Thanks for explaining, Shane. I now understand why you are doing it, but
+> people using Hob will not have the benefit of your explanation. They will
+> just see they selected a base image, made a small change to that base
+> image and when they go back to the Image configuration screen, Hob has
+> changed the base image they selected of its own accord.
 
->=20
-> The bb.utils.vercmp() reports v1<v1', v2<v2'. It treats all separators(i.=
-e. "." and "-") as tilde
-> in Debian rules. The bb.utils.vercmp is used both by bitbake internally a=
-nd bbclass.
->=20
-> The bb.utils.vercmp_string() does NOT accept version string containing se=
-gments starting with
-> non-digital character. bb.utils.vercmp_string seems never being actually =
-called.
->=20
-> Seems we have nothing consistent here. :-(
->=20
-> - Lianhao
->=20
->=20
+Though the base image is changed to "Create your own image", however all
+the contents in the base image (except those customized) are still
+there. If user changes recipes/packages, actually they are trying to
+create their own image not a base image.
+
+> 
+> Could the template have some "hidden" information indicating if a base
+> image has been customised and therefore the default contents of the base
+> image should be ignored and replaced with the remembered recipes and
+> packages? This way the template would still work, but Hob users will still
+> see their selected base image.
+
+Base image is also a recipe, so we could not ignore its related recipes,
+unless we switch to a new one whose dependency recipes/packages are
+None. Otherwise, it will change the core base of the Hob logic.
+
+Thanks,
+Dongxiao
+
+> 
+> Belen
+> 
+> On 04/04/2012 13:58, "Wang, Shane" <shane.wang@intel.com> wrote:
+> 
+> >Barros Pena, Belen wrote on 2012-04-03:
+> >
+> >> From the design side of things, I am not sure this is a good idea. I've
+> >> explicitly selected 'base image x'. If I then customise it, I still
+> >>think
+> >> I am working on 'base image x'. I might not understand why my selection
+> >>of
+> >> base image has been changed automatically. In general, it is not a good
+> >> idea to have software that changes things I do of its own accord. Such
+> >> behaviours undermine the sense of control users should have when
+> >> interacting with software.
+> >> 
+> >> Cheers
+> >> 
+> >> Belen
+> >> 
+> >
+> >What we want is to change the item in the base image combo. The target
+> >image is still based on the base image the user selected plus delta.
+> >We have the strict definition for the predefined base images. For
+> >instance, sato includes 300 recipes.
+> >An image including 299 recipes is not called sato but your own image
+> >(say, sato-minus)
+> >
+> >The reason why we do that is because for templates, we will remember the
+> >item in the image combo as the base image in some bb file, and we also
+> >remember what we selected for the recipes and the packages. However, the
+> >base image covers all of them by default and because of that, bitbake
+> >can't recognize the delta and will include all (300 recipes), which
+> >causes the wrong behavior.
+> >
+> >--
+> >Shane
+> 
+
 
 
 
