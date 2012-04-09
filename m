@@ -1,24 +1,24 @@
 Received: from mga01.intel.com ([192.55.52.88])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SHFFD-0008W6-Q5
+	(envelope-from <shane.wang@intel.com>) id 1SHFFE-0008W6-Lw
 	for bitbake-devel@lists.openembedded.org;
 	Mon, 09 Apr 2012 16:07:00 +0200
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 09 Apr 2012 06:57:42 -0700
+	by fmsmga101.fm.intel.com with ESMTP; 09 Apr 2012 06:57:43 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="151486404"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="151486408"
 Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by fmsmga002.fm.intel.com with ESMTP; 09 Apr 2012 06:57:42 -0700
+	by fmsmga002.fm.intel.com with ESMTP; 09 Apr 2012 06:57:43 -0700
 From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  9 Apr 2012 22:13:48 +0800
-Message-Id: <6127908cac48f40a31be765f02ed7893c275a1dc.1333980506.git.shane.wang@intel.com>
+Date: Mon,  9 Apr 2012 22:13:49 +0800
+Message-Id: <12ad7292573ede50af811f5c2d636f5a023125bd.1333980506.git.shane.wang@intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <0858ca0732e2d6a66b84e97150a750714ae806c9.1333980504.git.shane.wang@intel.com>
 References: <0858ca0732e2d6a66b84e97150a750714ae806c9.1333980504.git.shane.wang@intel.com>
 In-Reply-To: <cover.1333980504.git.shane.wang@intel.com>
 References: <cover.1333980504.git.shane.wang@intel.com>
-Subject: [PATCH 18/21] Hob: add tooltips into image details screen
+Subject: [PATCH 19/21] Hob: forget selected_recipes and selected_packages after users change the machine
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,98 +32,102 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Mon, 09 Apr 2012 14:07:00 -0000
 
-[Yocto #2243]
+The patch is to fix [Yocto #2255]. Now the logic is:
+
+- If users change the machine, the image combo is empty for users to select.
+- If users load the template, the image combo should set the value of
+  selected_image specified in the template.
+- After loading a template, if users change the machine, the selected_image
+  specified in the template should be removed from the image combo because
+  it is probably invalid for a new machine.
+- If users customize the recipe/package list, and change the settings which
+  causes reparsing, selected_recipes and selected_packages should be remembered.
+- If users add more layers, selected_recipes and selected_packages should be
+  remembered.
 
 Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/imagedetailspage.py |   16 +++++++++++-----
- 1 files changed, 11 insertions(+), 5 deletions(-)
+ bitbake/lib/bb/ui/crumbs/builder.py                |    1 +
+ bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |   26 +++++++++++++++++--
+ 2 files changed, 24 insertions(+), 3 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-index e550653..3eb6bcf 100755
---- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-@@ -126,19 +126,19 @@ class ImageDetailsPage (HobPage):
-             "Templates",
-             hic.ICON_TEMPLATES_DISPLAY_FILE,
-             hic.ICON_TEMPLATES_HOVER_FILE,
--            "Load a hob building template saved before",
-+            "Load a previously saved template",
-             self.template_button_clicked_cb)
-         my_images_button = self.append_toolbar_button(self.toolbar,
--            "My images",
-+            "Images",
-             hic.ICON_IMAGES_DISPLAY_FILE,
-             hic.ICON_IMAGES_HOVER_FILE,
--            "Open images built out previously for running or deployment",
-+            "Open previously built images",
-             self.my_images_button_clicked_cb)
-         settings_button = self.append_toolbar_button(self.toolbar,
-             "Settings",
-             hic.ICON_SETTINGS_DISPLAY_FILE,
-             hic.ICON_SETTINGS_HOVER_FILE,
--            "Other advanced settings for build",
-+            "View additional build settings",
-             self.settings_button_clicked_cb)
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index afd1d1b..9e2495a 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -598,6 +598,7 @@ class Builder(gtk.Window):
+                                             " ".join(selected_packages))
  
-         self.details_top_buttons = self.add_onto_top_bar(self.toolbar)
-@@ -206,6 +206,7 @@ class ImageDetailsPage (HobPage):
-         image_table.connect("toggled", self.toggled_cb)
-         view_files_button = HobAltButton("View files")
-         view_files_button.connect("clicked", self.view_files_clicked_cb, image_addr)
-+        view_files_button.set_tooltip_text("Open the directory containing the image files")
-         self.box_group_area.pack_start(self.DetailBox(widget=image_table, button=view_files_button), expand=True, fill=True)
+         self.image_configuration_page.update_image_combo(self.recipe_model, selected_image)
++        self.image_configuration_page.update_image_desc(selected_image)
+         self.update_recipe_model(selected_image, selected_recipes)
+         self.update_package_model(selected_packages)
  
-         # Machine, Base image and Layers
-@@ -233,6 +234,7 @@ class ImageDetailsPage (HobPage):
-                 i += 1
+diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+index c2e0f5f..2385eb8 100644
+--- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
++++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+@@ -37,6 +37,10 @@ class ImageConfigurationPage (HobPage):
+         super(ImageConfigurationPage, self).__init__(builder, "Image configuration")
  
-             edit_config_button = HobAltButton("Edit configuration")
-+            edit_config_button.set_tooltip_text("Edit machine, base image and recipes")
-             edit_config_button.connect("clicked", self.edit_config_button_clicked_cb)
-             setting_detail = self.DetailBox(varlist=varlist, vallist=vallist, button=edit_config_button)
-             self.box_group_area.pack_start(setting_detail, expand=False, fill=False)
-@@ -244,6 +246,7 @@ class ImageDetailsPage (HobPage):
-         vallist.append(default_image_size)
-         if build_succeeded:
-             edit_packages_button = HobAltButton("Edit packages")
-+            edit_packages_button.set_tooltip_text("Edit the packages included in your image")
-             edit_packages_button.connect("clicked", self.edit_packages_button_clicked_cb)
-         else: # get to this page from "My images"
-             edit_packages_button = None
-@@ -316,7 +319,7 @@ class ImageDetailsPage (HobPage):
-         if name in buttonlist:
-             self.deploy_button = HobButton('Deploy image')
-             self.deploy_button.set_size_request(205, 49)
--            self.deploy_button.set_tooltip_text("Deploy image to get your target board")
-+            self.deploy_button.set_tooltip_text("Burn a live image to a USB drive or flash memory")
-             self.deploy_button.set_flags(gtk.CAN_DEFAULT)
-             self.deploy_button.connect("clicked", self.deploy_button_clicked_cb)
-             bottom_buttons.pack_end(self.deploy_button, expand=False, fill=False)
-@@ -331,6 +334,7 @@ class ImageDetailsPage (HobPage):
+         self.image_combo_id = None
++        # we use machine_combo_changed_by_manual to identify the machine is changed by code
++        # or by manual. If by manual, all user's recipe selection and package selection are
++        # cleared.
++        self.machine_combo_changed_by_manual = True
+         self.create_visual_elements()
  
-             # create button "Run image"
-             self.run_button = HobAltButton("Run image")
-+            self.run_button.set_tooltip_text("Start up an image with qemu emulator")
-             self.run_button.connect("clicked", self.run_button_clicked_cb)
-             bottom_buttons.pack_end(self.run_button, expand=False, fill=False)
-             created = True
-@@ -344,6 +348,7 @@ class ImageDetailsPage (HobPage):
+     def create_visual_elements(self):
+@@ -258,6 +262,13 @@ class ImageConfigurationPage (HobPage):
+             return
  
-             # create button "Save as template"
-             save_button = HobAltButton("Save as template")
-+            save_button.set_tooltip_text("Save the image configuration for reuse")
-             save_button.connect("clicked", self.save_button_clicked_cb)
-             bottom_buttons.pack_end(save_button, expand=False, fill=False)
-             create = True
-@@ -352,6 +357,7 @@ class ImageDetailsPage (HobPage):
-         if name in buttonlist:
-             # create button "Build new image"
-             build_new_button = HobAltButton("Build new image")
-+            build_new_button.set_tooltip_text("Create a new image from scratch")
-             build_new_button.connect("clicked", self.build_new_button_clicked_cb)
-             bottom_buttons.pack_start(build_new_button, expand=False, fill=False)
+         self.builder.configuration.curr_mach = combo_item
++        if self.machine_combo_changed_by_manual:
++            self.builder.configuration.selected_image = None
++            self.builder.configuration.selected_recipes = []
++            self.builder.configuration.selected_packages = []
++        # reset machine_combo_changed_by_manual
++        self.machine_combo_changed_by_manual = True
++
+         # Do reparse recipes
+         self.builder.populate_recipe_package_info_async()
  
+@@ -271,6 +282,7 @@ class ImageConfigurationPage (HobPage):
+         self.machine_combo.set_active(-1)
+ 
+     def switch_machine_combo(self):
++        self.machine_combo_changed_by_manual = False
+         model = self.machine_combo.get_model()
+         active = 0
+         while active < len(model):
+@@ -280,6 +292,16 @@ class ImageConfigurationPage (HobPage):
+             active += 1
+         self.machine_combo.set_active(-1)
+ 
++    def update_image_desc(self, selected_image):
++        desc = ""
++        if selected_image and selected_image in self.builder.recipe_model.pn_path.keys():
++            image_path = self.builder.recipe_model.pn_path[selected_image]
++            image_iter = self.builder.recipe_model.get_iter(image_path)
++            desc = self.builder.recipe_model.get_value(image_iter, self.builder.recipe_model.COL_DESC)
++
++        mark = ("<span %s>%s</span>\n") % (self.span_tag('small'), desc)
++        self.image_desc.set_markup(mark)
++
+     def image_combo_changed_idle_cb(self, selected_image, selected_recipes, selected_packages):
+         self.builder.update_recipe_model(selected_image, selected_recipes)
+         self.builder.update_package_model(selected_packages)
+@@ -296,9 +318,7 @@ class ImageConfigurationPage (HobPage):
+         image_path = self.builder.recipe_model.pn_path[selected_image]
+         image_iter = self.builder.recipe_model.get_iter(image_path)
+         selected_packages = self.builder.recipe_model.get_value(image_iter, self.builder.recipe_model.COL_INSTALL).split()
+-
+-        mark = ("<span %s>%s</span>\n") % (self.span_tag('small'), self.builder.recipe_model.get_value(image_iter, self.builder.recipe_model.COL_DESC))
+-        self.image_desc.set_markup(mark)
++        self.update_image_desc(selected_image)
+ 
+         self.builder.recipe_model.reset()
+         self.builder.package_model.reset()
 -- 
 1.7.6
 
