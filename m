@@ -1,24 +1,24 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SHAMM-00076R-1J
+	(envelope-from <dongxiao.xu@intel.com>) id 1SHAMM-00076S-Cz
 	for bitbake-devel@lists.openembedded.org;
 	Mon, 09 Apr 2012 10:54:02 +0200
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 09 Apr 2012 01:44:46 -0700
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 09 Apr 2012 01:44:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="151415300"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="130225456"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by fmsmga002.fm.intel.com with ESMTP; 09 Apr 2012 01:44:45 -0700
+	by orsmga002.jf.intel.com with ESMTP; 09 Apr 2012 01:44:44 -0700
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  9 Apr 2012 16:41:58 +0800
-Message-Id: <ccb22c39f4aeb8e310f9a6f8e0f9c55c18ac6891.1333960654.git.dongxiao.xu@intel.com>
+Date: Mon,  9 Apr 2012 16:41:57 +0800
+Message-Id: <dd78b73c5af03552bc63a118f5a8b0e26709b321.1333960654.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1333960654.git.dongxiao.xu@intel.com>
 References: <cover.1333960654.git.dongxiao.xu@intel.com>
 In-Reply-To: <cover.1333960654.git.dongxiao.xu@intel.com>
 References: <cover.1333960654.git.dongxiao.xu@intel.com>
-Subject: [PATCH 2/6] data_smart: Improve the calculation of config hash
+Subject: [PATCH 1/6] Hob: Change base image to "Create your own image" if customized
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,48 +32,87 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Mon, 09 Apr 2012 08:54:02 -0000
 
-The order of keys are not sensitive for config hash, so we need to
-identify its order while calculating the md5 value.
+Once user did customization to his base image, we change the base image
+to be "Create your own image" to avoid some issues caused by the
+relationship between base image and its default recipes and packages.
 
-While for certain values, order is also not sensitive (for example,
-BBINCLUDED), we also need to identify its order while calculating md5
-value.
-
-This could fix the problem that Martin Jansa reported in the mailing
-list:
-
-http://lists.linuxtogo.org/pipermail/bitbake-devel/2012-March/002122.html
+This fixes [YOCTO #2211]
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 ---
- lib/bb/data_smart.py |   10 +++++++---
- 1 files changed, 7 insertions(+), 3 deletions(-)
+ lib/bb/ui/crumbs/builder.py                |    3 +++
+ lib/bb/ui/crumbs/imageconfigurationpage.py |    2 ++
+ lib/bb/ui/crumbs/packageselectionpage.py   |    6 ++++++
+ lib/bb/ui/crumbs/recipeselectionpage.py    |    5 +++++
+ 4 files changed, 16 insertions(+), 0 deletions(-)
 
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 2c200db..cc61a03 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -462,13 +462,17 @@ class DataSmart(MutableMapping):
-         self.delVar(var)
+diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
+index a3410d4..bc7e610 100755
+--- a/lib/bb/ui/crumbs/builder.py
++++ b/lib/bb/ui/crumbs/builder.py
+@@ -272,6 +272,9 @@ class Builder(gtk.Window):
+         self.recipe_model = recipe_model
+         self.package_model = package_model
  
-     def get_hash(self):
--        data = ""
-+        data = {}
-         config_whitelist = set((self.getVar("BB_HASHCONFIG_WHITELIST", True) or "").split())
-+        config_sort = set((self.getVar("BB_HASHCONFIG_SORT", True) or "").split())
-         keys = set(key for key in iter(self) if not key.startswith("__"))
-         for key in keys:
-             if key in config_whitelist:
-                 continue
-             value = self.getVar(key, False) or ""
--            data = data + key + ': ' + str(value) + '\n'
-+            if key in config_sort:
-+                value = " ".join(sorted(value.split()))
-+            data.update({key:value})
++        # Indicate whether user has customized the image
++        self.customized = False
++
+         # create visual elements
+         self.create_visual_elements()
  
--        return hashlib.md5(data).hexdigest()
-+        data_str = str([(k, data[k]) for k in sorted(data.keys())])
-+        return hashlib.md5(data_str).hexdigest()
+diff --git a/lib/bb/ui/crumbs/imageconfigurationpage.py b/lib/bb/ui/crumbs/imageconfigurationpage.py
+index d8cb752..5c2539d 100644
+--- a/lib/bb/ui/crumbs/imageconfigurationpage.py
++++ b/lib/bb/ui/crumbs/imageconfigurationpage.py
+@@ -291,6 +291,8 @@ class ImageConfigurationPage (HobPage):
+         if not selected_image:
+             return
+ 
++        self.builder.customized = False
++
+         selected_recipes = []
+ 
+         image_path = self.builder.recipe_model.pn_path[selected_image]
+diff --git a/lib/bb/ui/crumbs/packageselectionpage.py b/lib/bb/ui/crumbs/packageselectionpage.py
+index 7926636..dd0df25 100755
+--- a/lib/bb/ui/crumbs/packageselectionpage.py
++++ b/lib/bb/ui/crumbs/packageselectionpage.py
+@@ -90,6 +90,7 @@ class PackageSelectionPage (HobPage):
+         super(PackageSelectionPage, self).__init__(builder, "Packages")
+ 
+         # set invisiable members
++        self.recipe_model = self.builder.recipe_model
+         self.package_model = self.builder.package_model
+ 
+         # create visual elements
+@@ -183,6 +184,11 @@ class PackageSelectionPage (HobPage):
+             self.package_model.exclude_item(item_path=path)
+ 
+         self.refresh_selection()
++        if not self.builder.customized:
++            self.builder.customized = True
++            self.builder.configuration.selected_image = self.recipe_model.__dummy_image__
++            self.builder.rcppkglist_populated()
++
+         self.builder.window_sensitive(True)
+ 
+     def table_toggled_cb(self, table, cell, view_path, toggled_columnid, view_tree):
+diff --git a/lib/bb/ui/crumbs/recipeselectionpage.py b/lib/bb/ui/crumbs/recipeselectionpage.py
+index e4616a8..2d438d5 100755
+--- a/lib/bb/ui/crumbs/recipeselectionpage.py
++++ b/lib/bb/ui/crumbs/recipeselectionpage.py
+@@ -187,6 +187,11 @@ class RecipeSelectionPage (HobPage):
+             self.recipe_model.exclude_item(item_path=path)
+ 
+         self.refresh_selection()
++        if not self.builder.customized:
++            self.builder.customized = True
++            self.builder.configuration.selected_image = self.recipe_model.__dummy_image__
++            self.builder.rcppkglist_populated()
++
+         self.builder.window_sensitive(True)
+ 
+     def table_toggled_cb(self, table, cell, view_path, toggled_columnid, view_tree):
 -- 
 1.7.4.1
 
