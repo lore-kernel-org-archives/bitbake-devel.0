@@ -1,25 +1,33 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mail-lpp01m010-f47.google.com ([209.85.215.47])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1SHHtn-0004J8-8W
+	(envelope-from <raj.khem@gmail.com>) id 1SHJ9R-0003m2-HU
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 09 Apr 2012 18:57:03 +0200
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 09 Apr 2012 09:47:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="126927839"
-Received: from unknown (HELO [10.7.198.71]) ([10.7.198.71])
-	by orsmga001.jf.intel.com with ESMTP; 09 Apr 2012 09:47:45 -0700
-Message-ID: <4F8312B1.5050906@linux.intel.com>
-Date: Mon, 09 Apr 2012 09:47:45 -0700
-From: Joshua Lock <josh@linux.intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:11.0) Gecko/20120329 Thunderbird/11.0.1
+	Mon, 09 Apr 2012 20:17:17 +0200
+Received: by lagw12 with SMTP id w12so3407530lag.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 09 Apr 2012 11:08:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc:content-type:content-transfer-encoding;
+	bh=eTpurqm+mUTw5bNsONwqccJliC1V7CBagg0cnhxdCiU=;
+	b=dD8WAIVlA4t4qMPPDc0hHiq62G3tWgzDM1ZPOb8z1JIQGUfPjD8PonjidUkkSOQ/CD
+	5A7dioLX+WoNnjJE6vp71XC+tmEuh68bDHbuPOR3xggqwpuLx98o3JJwYM4BF7Z52COC
+	NsttSEsmGqBwpBCxnGigNbByNeDymbaLqhDdpkJUl4bUNsEfOWv7TuVNrBRwA4VH/Wcx
+	/ay3T35J2CRv/x+EWzZIgCx/lwJjeESC+I+ufpxIZwfMrSS3ShemMZaBj4YGtmTHo2uy
+	Bb2WulvdmIKgy6NZQhQ3EQjOY8RwyEfYN1K4bTcPZQpmAEIK7eBJIqc4QGKNX1Wp7mfY
+	0+Dw==
+Received: by 10.152.146.234 with SMTP id tf10mr12585453lab.31.1333994880585;
+	Mon, 09 Apr 2012 11:08:00 -0700 (PDT)
 MIME-Version: 1.0
-To: bitbake-devel@lists.openembedded.org
-References: <cover.1333980504.git.shane.wang@intel.com>
-	<0858ca0732e2d6a66b84e97150a750714ae806c9.1333980504.git.shane.wang@intel.com>
-In-Reply-To: <0858ca0732e2d6a66b84e97150a750714ae806c9.1333980504.git.shane.wang@intel.com>
-Subject: Re: [PATCH 01/21] Hob: fix version check - Hob can run on pygtk 2.21.0
+Received: by 10.152.129.134 with HTTP; Mon, 9 Apr 2012 11:07:30 -0700 (PDT)
+In-Reply-To: <4F82DE2E.30208@mlbassoc.com>
+References: <4F82DE2E.30208@mlbassoc.com>
+From: Khem Raj <raj.khem@gmail.com>
+Date: Mon, 9 Apr 2012 11:07:30 -0700
+Message-ID: <CAMKF1sr5t8DptrHBO6NdA0mh2URs6QVXgpfLSXMcFHW9ybX3jg@mail.gmail.com>
+To: Gary Thomas <gary@mlbassoc.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: bblayers.conf is required?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,38 +39,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Apr 2012 16:57:03 -0000
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Mon, 09 Apr 2012 18:17:17 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 09/04/12 07:13, Shane Wang wrote:
-> Signed-off-by: Shane Wang<shane.wang@intel.com>
-> ---
->   bitbake/lib/bb/ui/hob.py |    2 +-
->   1 files changed, 1 insertions(+), 1 deletions(-)
+On Mon, Apr 9, 2012 at 6:03 AM, Gary Thomas <gary@mlbassoc.com> wrote:
+> The config file conf/bblayers.conf seems to be required:
+> =C2=A0$ bitbake core-image-minimal
+> =C2=A0Unable to find conf/bblayers.conf
+> =C2=A0BitBake must be run from within your build directory: /home/local/p=
+60_poky
 >
-> diff --git a/bitbake/lib/bb/ui/hob.py b/bitbake/lib/bb/ui/hob.py
-> index 1321ebb..61df300 100755
-> --- a/bitbake/lib/bb/ui/hob.py
-> +++ b/bitbake/lib/bb/ui/hob.py
-> @@ -29,7 +29,7 @@ try:
->       import pygtk
->       pygtk.require('2.0') # to be certain we don't have gtk+ 1.x !?!
->       ver = gtk.pygtk_version
-> -    if ver<  (2, 22, 0):
-> +    if ver<  (2, 21, 0):
+> but the bitbake documentation says otherwise:
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0<para>BitBake will=
+ first search the current working directory
+> for an optional "conf/bblayers.conf" configuration file. This file is
+> expected to contain a BBLAYERS variable which is a space delimited list o=
+f
+> 'layer' directories. For each directory in this list, a "conf/layer.conf"
+> file will be searched for and parsed with the LAYERDIR variable being set=
+ to
+> the directory where the layer was found. The idea is these files will set=
+up
+> BBPATH and other variables correctly for a given build directory
+> automatically for the user.</para>
+>
+> Maybe the documentation should just read "required" instead of "optional"=
+?
 
-I've already sent a patch to lower this requirement.
-
->           sys.exit("%s (you have pygtk %s.%s.%s)." % (requirements, ver[0], ver[1], ver[2]))
->   except ImportError as exc:
->       sys.exit("%s (%s)." % (requirements, str(exc)))
-
-
-Joshua
--- 
-Joshua '贾詡' Lock
-         Yocto Project "Johannes factotum"
-         Intel Open Source Technology Centre
+I think yes. Next action is a patch or bug report.
 
 
