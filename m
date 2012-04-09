@@ -1,24 +1,24 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SHF5j-0007rg-RW
+	(envelope-from <shane.wang@intel.com>) id 1SHF5n-0007vg-U2
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 09 Apr 2012 15:57:12 +0200
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 09 Apr 2012 06:47:57 -0700
+	Mon, 09 Apr 2012 15:57:16 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 09 Apr 2012 06:47:58 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="126873924"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="128714269"
 Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by orsmga001.jf.intel.com with ESMTP; 09 Apr 2012 06:47:56 -0700
+	by azsmga001.ch.intel.com with ESMTP; 09 Apr 2012 06:47:57 -0700
 From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  9 Apr 2012 22:13:36 +0800
-Message-Id: <0dc83006e19fe1ada319ea3eec95fa31ff6c1ef6.1333980505.git.shane.wang@intel.com>
+Date: Mon,  9 Apr 2012 22:13:37 +0800
+Message-Id: <0c8edf4eec2e8fc6e8c81b56ccbfe521a9b3294f.1333980505.git.shane.wang@intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <0858ca0732e2d6a66b84e97150a750714ae806c9.1333980504.git.shane.wang@intel.com>
 References: <0858ca0732e2d6a66b84e97150a750714ae806c9.1333980504.git.shane.wang@intel.com>
 In-Reply-To: <cover.1333980504.git.shane.wang@intel.com>
 References: <cover.1333980504.git.shane.wang@intel.com>
-Subject: [PATCH 06/21] Hob: clean up and unify the steps for new build to call initiate_new_build_async()
+Subject: [PATCH 07/21] Hob: clean up and unify the steps for CONFIG_UPDATE to call update_config_async()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,77 +30,98 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Apr 2012 13:57:12 -0000
+X-List-Received-Date: Mon, 09 Apr 2012 13:57:16 -0000
 
-initiate_new_build() (changed the function name into initiate_new_build_async()
-to indicate it is an async function) or the similar sub-functions are called at
-different places.
-
-This patch is unify to call initiate_new_build_async().
+For the steps in CONFIG_UPDATE, the patch consolidates them into
+update_config_async() to call.
+consequently remove CONFIG_UPDATE since MACHINE_SELECTION covers it.
 
 Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/builder.py          |   19 +++++++------------
- bitbake/lib/bb/ui/crumbs/imagedetailspage.py |    2 +-
- 2 files changed, 8 insertions(+), 13 deletions(-)
+ bitbake/lib/bb/ui/crumbs/builder.py |   21 +++++++++------------
+ 1 files changed, 9 insertions(+), 12 deletions(-)
 
 diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index a3410d4..ef6f182 100755
+index ef6f182..6b8e9f3 100755
 --- a/bitbake/lib/bb/ui/crumbs/builder.py
 +++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -294,11 +294,7 @@ class Builder(gtk.Window):
-         self.handler.connect("command-succeeded",        self.handler_command_succeeded_cb)
-         self.handler.connect("command-failed",           self.handler_command_failed_cb)
+@@ -212,7 +212,6 @@ class Parameters:
+ class Builder(gtk.Window):
  
--        self.handler.init_cooker()
--        self.handler.set_extra_inherit("image_types")
--        self.handler.parse_config()
--
--        self.switch_page(self.MACHINE_SELECTION)
-+        self.initiate_new_build_async()
+     (MACHINE_SELECTION,
+-     CONFIG_UPDATED,
+      RCPPKGINFO_POPULATING,
+      RCPPKGINFO_POPULATED,
+      BASEIMG_SELECTED,
+@@ -225,7 +224,7 @@ class Builder(gtk.Window):
+      IMAGE_GENERATED,
+      MY_IMAGE_OPENED,
+      BACK,
+-     END_NOOP) = range(15)
++     END_NOOP) = range(14)
  
-     def create_visual_elements(self):
-         self.set_title("Hob")
-@@ -334,6 +330,12 @@ class Builder(gtk.Window):
-         self.show_all()
-         self.nb.set_current_page(0)
+     (IMAGE_CONFIGURATION,
+      RECIPE_DETAILS,
+@@ -236,7 +235,6 @@ class Builder(gtk.Window):
  
-+    def initiate_new_build_async(self):
+     __step2page__ = {
+         MACHINE_SELECTION     : IMAGE_CONFIGURATION,
+-        CONFIG_UPDATED        : IMAGE_CONFIGURATION,
+         RCPPKGINFO_POPULATING : IMAGE_CONFIGURATION,
+         RCPPKGINFO_POPULATED  : IMAGE_CONFIGURATION,
+         BASEIMG_SELECTED      : IMAGE_CONFIGURATION,
+@@ -336,6 +334,11 @@ class Builder(gtk.Window):
+         self.handler.set_extra_inherit("image_types")
+         self.handler.parse_config()
+ 
++    def update_config_async(self):
 +        self.switch_page(self.MACHINE_SELECTION)
-+        self.handler.init_cooker()
-+        self.handler.set_extra_inherit("image_types")
-+        self.handler.parse_config()
++        self.set_user_config()
++        self.handler.parse_generate_configuration()
 +
      def load_template(self, path):
          self.template = TemplateMgr()
          self.template.load(path)
-@@ -987,13 +989,6 @@ class Builder(gtk.Window):
-     def show_recipes(self):
-         self.switch_page(self.RECIPE_SELECTION)
+@@ -345,7 +348,7 @@ class Builder(gtk.Window):
+             if not os.path.exists(layer+'/conf/layer.conf'):
+                 return False
  
--    def initiate_new_build(self):
--        self.handler.init_cooker()
--        self.handler.set_extra_inherit("image_types")
--        self.handler.parse_config()
--        self.image_configuration_page.switch_machine_combo()
--        self.switch_page(self.MACHINE_SELECTION)
+-        self.switch_page(self.CONFIG_UPDATED)
++        self.update_config_async()
+ 
+         self.template.destroy()
+         self.template = None
+@@ -373,12 +376,6 @@ class Builder(gtk.Window):
+         if next_step == self.MACHINE_SELECTION: # init step
+             self.image_configuration_page.show_machine()
+ 
+-        elif next_step == self.CONFIG_UPDATED:
+-            # after layers is changd by users
+-            self.image_configuration_page.show_machine()
+-            self.set_user_config()
+-            self.handler.parse_generate_configuration()
 -
-     def show_configuration(self):
-         self.switch_page(self.BASEIMG_SELECTED)
+         elif next_step == self.RCPPKGINFO_POPULATING:
+             # MACHINE CHANGED action or SETTINGS CHANGED
+             # show the progress bar
+@@ -795,7 +792,7 @@ class Builder(gtk.Window):
+             self.configuration.layers = dialog.layers
+             # DO refresh layers
+             if dialog.layers_changed:
+-                self.switch_page(self.CONFIG_UPDATED)
++                self.update_config_async()
+         dialog.destroy()
  
-diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-index b685d11..e550653 100755
---- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-@@ -381,7 +381,7 @@ class ImageDetailsPage (HobPage):
-         self.builder.runqemu_image(image_name)
+     def show_load_template_dialog(self):
+@@ -886,7 +883,7 @@ class Builder(gtk.Window):
+     def reparse_post_adv_settings(self):
+         # DO reparse recipes
+         if not self.configuration.curr_mach:
+-            self.switch_page(self.CONFIG_UPDATED)
++            self.update_config_async()
+         else:
+             self.switch_page(self.RCPPKGINFO_POPULATING)
  
-     def build_new_button_clicked_cb(self, button):
--        self.builder.initiate_new_build()
-+        self.builder.initiate_new_build_async()
- 
-     def edit_config_button_clicked_cb(self, button):
-         self.builder.show_configuration()
 -- 
 1.7.6
 
