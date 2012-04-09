@@ -1,24 +1,24 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SHF5j-0007t8-I8
+	(envelope-from <shane.wang@intel.com>) id 1SHF5j-0007rg-RW
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 09 Apr 2012 15:57:11 +0200
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 09 Apr 2012 06:47:54 -0700
+	Mon, 09 Apr 2012 15:57:12 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 09 Apr 2012 06:47:57 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="151484391"
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="126873924"
 Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by fmsmga002.fm.intel.com with ESMTP; 09 Apr 2012 06:47:53 -0700
+	by orsmga001.jf.intel.com with ESMTP; 09 Apr 2012 06:47:56 -0700
 From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  9 Apr 2012 22:13:34 +0800
-Message-Id: <adf3209686753f3e963311b7febfbaffa97eaa36.1333980504.git.shane.wang@intel.com>
+Date: Mon,  9 Apr 2012 22:13:36 +0800
+Message-Id: <0dc83006e19fe1ada319ea3eec95fa31ff6c1ef6.1333980505.git.shane.wang@intel.com>
 X-Mailer: git-send-email 1.7.6
 In-Reply-To: <0858ca0732e2d6a66b84e97150a750714ae806c9.1333980504.git.shane.wang@intel.com>
 References: <0858ca0732e2d6a66b84e97150a750714ae806c9.1333980504.git.shane.wang@intel.com>
 In-Reply-To: <cover.1333980504.git.shane.wang@intel.com>
 References: <cover.1333980504.git.shane.wang@intel.com>
-Subject: [PATCH 04/21] Hob: Add the tooltips for recipe view page as request
+Subject: [PATCH 06/21] Hob: clean up and unify the steps for new build to call initiate_new_build_async()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,133 +30,77 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Apr 2012 13:57:11 -0000
+X-List-Received-Date: Mon, 09 Apr 2012 13:57:12 -0000
 
-From: Liming An <limingx.l.an@intel.com>
+initiate_new_build() (changed the function name into initiate_new_build_async()
+to indicate it is an async function) or the similar sub-functions are called at
+different places.
 
-[YOCTO #2229]
+This patch is unify to call initiate_new_build_async().
 
-Signed-off-by: Liming An <limingx.l.an@intel.com>
+Signed-off-by: Shane Wang <shane.wang@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/hobwidget.py           |   22 ++++++++++++++++++++--
- bitbake/lib/bb/ui/crumbs/recipeselectionpage.py |    8 ++++++++
- 2 files changed, 28 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/ui/crumbs/builder.py          |   19 +++++++------------
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py |    2 +-
+ 2 files changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/hobwidget.py b/bitbake/lib/bb/ui/crumbs/hobwidget.py
-index 21836f7..b79edce 100644
---- a/bitbake/lib/bb/ui/crumbs/hobwidget.py
-+++ b/bitbake/lib/bb/ui/crumbs/hobwidget.py
-@@ -410,6 +410,7 @@ class HobTabBar(gtk.DrawingArea):
-         self.connect("expose-event", self.on_draw)
-         self.connect("button-press-event", self.button_pressed_cb)
-         self.connect("button-release-event", self.button_released_cb)
-+        self.connect("query-tooltip", self.query_tooltip_cb)
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index a3410d4..ef6f182 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -294,11 +294,7 @@ class Builder(gtk.Window):
+         self.handler.connect("command-succeeded",        self.handler_command_succeeded_cb)
+         self.handler.connect("command-failed",           self.handler_command_failed_cb)
+ 
+-        self.handler.init_cooker()
+-        self.handler.set_extra_inherit("image_types")
+-        self.handler.parse_config()
+-
+-        self.switch_page(self.MACHINE_SELECTION)
++        self.initiate_new_build_async()
+ 
+     def create_visual_elements(self):
+         self.set_title("Hob")
+@@ -334,6 +330,12 @@ class Builder(gtk.Window):
          self.show_all()
+         self.nb.set_current_page(0)
  
-     def button_released_cb(self, widget, event):
-@@ -473,7 +474,7 @@ class HobTabBar(gtk.DrawingArea):
-             child["g"] = color.green
-             child["b"] = color.blue
- 
--    def append_tab_child(self, title, page):
-+    def append_tab_child(self, title, page, tooltip=""):
-         num = len(self.children) + 1
-         self.tab_width = self.tab_width * len(self.children) / num
- 
-@@ -498,8 +499,11 @@ class HobTabBar(gtk.DrawingArea):
-             "title"        : title,
-             "indicator_show"   : False,
-             "indicator_number" : 0,
-+            "tooltip_markup"   : tooltip,
-         }
-         self.children.append(new_one)
-+        if tooltip and (not self.props.has_tooltip):
-+            self.props.has_tooltip = True
-         # set the default current child
-         if not self.current_child:
-             self.current_child = new_one
-@@ -668,6 +672,18 @@ class HobTabBar(gtk.DrawingArea):
- 
-         return gtk.gdk.Rectangle(x, y, w, h)
- 
-+    def query_tooltip_cb(self, widget, x, y, keyboardtip, tooltip):
-+        if keyboardtip or (not tooltip):
-+            return False
-+        # check which tab be clicked
-+        for child in self.children:
-+           if      (child["x"] < x) and (x < child["x"] + self.tab_width) \
-+               and (child["y"] < y) and (y < child["y"] + self.tab_height):
-+               tooltip.set_markup(child["tooltip_markup"])
-+               return True
++    def initiate_new_build_async(self):
++        self.switch_page(self.MACHINE_SELECTION)
++        self.handler.init_cooker()
++        self.handler.set_extra_inherit("image_types")
++        self.handler.parse_config()
 +
-+        return False
-+
- class HobNotebook(gtk.VBox):
+     def load_template(self, path):
+         self.template = TemplateMgr()
+         self.template.load(path)
+@@ -987,13 +989,6 @@ class Builder(gtk.Window):
+     def show_recipes(self):
+         self.switch_page(self.RECIPE_SELECTION)
  
-     def __init__(self):
-@@ -752,13 +768,15 @@ class HobNotebook(gtk.VBox):
-         if not notebook:
-             return
-         title = notebook.get_tab_label_text(notebook_child)
-+        label = notebook.get_tab_label(notebook_child)
-+        tooltip_markup = label.get_tooltip_markup()
-         if not title:
-             return
-         for child in self.tabbar.children:
-             if child["title"] == title:
-                 child["toggled_page"] = page
-                 return
--        self.tabbar.append_tab_child(title, page)
-+        self.tabbar.append_tab_child(title, page, tooltip_markup)
+-    def initiate_new_build(self):
+-        self.handler.init_cooker()
+-        self.handler.set_extra_inherit("image_types")
+-        self.handler.parse_config()
+-        self.image_configuration_page.switch_machine_combo()
+-        self.switch_page(self.MACHINE_SELECTION)
+-
+     def show_configuration(self):
+         self.switch_page(self.BASEIMG_SELECTED)
  
-     def page_removed_cb(self, notebook, notebook_child, page, title=""):
-         for child in self.tabbar.children:
-diff --git a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-index a2f7982..ea32fb0 100755
---- a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-@@ -34,6 +34,7 @@ class RecipeSelectionPage (HobPage):
-     pages = [
-         {
-          'name'    : 'Included',
-+         'tooltip' : 'The recipes currently included for your image',
-          'filter'  : { RecipeListModel.COL_INC  : [True],
-                        RecipeListModel.COL_TYPE : ['recipe', 'task'] },
-          'columns' : [{
-@@ -57,6 +58,7 @@ class RecipeSelectionPage (HobPage):
-                       }]
-         }, {
-          'name'    : 'All recipes',
-+         'tooltip' : 'All recipes available in the Yocto Project',
-          'filter'  : { RecipeListModel.COL_TYPE : ['recipe'] },
-          'columns' : [{
-                        'col_name' : 'Recipe name',
-@@ -85,6 +87,7 @@ class RecipeSelectionPage (HobPage):
-                       }]
-         }, {
-          'name'    : 'Tasks',
-+         'tooltip' : 'All tasks availabel in the Yocto Project',
-          'filter'  : { RecipeListModel.COL_TYPE : ['task'] },
-          'columns' : [{
-                        'col_name' : 'Task name',
-@@ -137,12 +140,17 @@ class RecipeSelectionPage (HobPage):
-                 tab.connect("row-activated", self.tree_row_activated_cb)
-                 tab.connect("cell-fadeinout-stopped", self.after_fadeout_checkin_include)
-             label = gtk.Label(page['name'])
-+            label.set_selectable(False)
-+            label.set_tooltip_text(page['tooltip'])
-             self.ins.append_page(tab, label)
-             self.tables.append(tab)
+diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+index b685d11..e550653 100755
+--- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
++++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+@@ -381,7 +381,7 @@ class ImageDetailsPage (HobPage):
+         self.builder.runqemu_image(image_name)
  
-         self.ins.set_entry("Search recipes:")
-         # set the search entry for each table
-         for tab in self.tables:
-+            search_tip = "Enter a recipe's or task's name to find it"
-+            self.ins.search.set_tooltip_text(search_tip)
-+            self.ins.search.props.has_tooltip = True
-             tab.set_search_entry(0, self.ins.search)
+     def build_new_button_clicked_cb(self, button):
+-        self.builder.initiate_new_build()
++        self.builder.initiate_new_build_async()
  
-         # add all into the window
+     def edit_config_button_clicked_cb(self, button):
+         self.builder.show_configuration()
 -- 
 1.7.6
 
