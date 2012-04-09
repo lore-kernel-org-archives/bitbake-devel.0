@@ -1,26 +1,20 @@
-Received: from hermes.mlbassoc.com ([64.234.241.98] helo=mail.chez-thomas.org)
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <gary@mlbassoc.com>) id 1SHEOx-0007H8-90
+	(envelope-from <shane.wang@intel.com>) id 1SHF1t-0007ok-Rd
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 09 Apr 2012 15:12:59 +0200
-Received: by mail.chez-thomas.org (Postfix, from userid 1998)
-	id 9FF36F8124E; Mon,  9 Apr 2012 07:03:43 -0600 (MDT)
-X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
-	hermes.chez-thomas.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=4.0 tests=ALL_TRUSTED,BAYES_00
-	autolearn=ham version=3.3.2
-Received: from hermes.chez-thomas.org (localhost.localdomain [127.0.0.1])
-	by mail.chez-thomas.org (Postfix) with ESMTP id DAEEEF8123F;
-	Mon,  9 Apr 2012 07:03:42 -0600 (MDT)
-Message-ID: <4F82DE2E.30208@mlbassoc.com>
-Date: Mon, 09 Apr 2012 07:03:42 -0600
-From: Gary Thomas <gary@mlbassoc.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
-	rv:11.0) Gecko/20120329 Thunderbird/11.0.1
-MIME-Version: 1.0
+	Mon, 09 Apr 2012 15:53:14 +0200
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 09 Apr 2012 06:43:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="130290211"
+Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
+	by orsmga002.jf.intel.com with ESMTP; 09 Apr 2012 06:43:55 -0700
+From: Shane Wang <shane.wang@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: bblayers.conf is required?
+Date: Mon,  9 Apr 2012 22:09:54 +0800
+Message-Id: <cover.1333980504.git.shane.wang@intel.com>
+X-Mailer: git-send-email 1.7.6
+Subject: [PATCH 00/21] [Resend] Hob fixes and cleanups
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,27 +26,68 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Apr 2012 13:12:59 -0000
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 09 Apr 2012 13:53:14 -0000
 
-The config file conf/bblayers.conf seems to be required:
-   $ bitbake core-image-minimal
-   Unable to find conf/bblayers.conf
-   BitBake must be run from within your build directory: /home/local/p60_poky
+Those patches fix the following:
+  - the UI bug to fade out the entry in the "Included" page when it is removed
+  - add and correct tooltips reviewed by Scott
+  - clean up the code and maximize reusage, for exception handling
+  - misc
 
-but the bitbake documentation says otherwise:
-                 <para>BitBake will first search the current working directory for an optional "conf/bblayers.conf" configuration file. This file is expected to contain a BBLAYERS 
-variable which is a space delimited list of 'layer' directories. For each directory in this list, a "conf/layer.conf" file will be searched for and parsed with the LAYERDIR 
-variable being set to the directory where the layer was found. The idea is these files will setup BBPATH and other variables correctly for a given build directory automatically for 
-the user.</para>
+The following changes since commit 190f6d791d51aaa4cfb9f1cf932bc205ff674fb5:
 
-Maybe the documentation should just read "required" instead of "optional"?
+  runqemu-internal: Add console=tty for qemuppc and NFS (2012-04-06 01:12:47 +0100)
+
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib shane/hob-fixes-continue
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=shane/hob-fixes-continue
+
+Liming An (4):
+  Hob: add fadeout display effection for recipe view include page
+  Hob: add fadeout display effection for package view include page
+  Hob: Add the tooltips for recipe view page as request
+  Hob:Fixed some incorrect values of Build configuration tab
+
+Shane Wang (17):
+  Hob: fix version check - Hob can run on pygtk 2.21.0
+  Hob: correct indent
+  Hob: clean up and unify the steps for new build to call
+    initiate_new_build_async()
+  Hob: clean up and unify the steps for CONFIG_UPDATE to call
+    update_config_async()
+  Hob: clean up and unify the steps for RCPPKGINFO_POPULATING to call
+    populate_recipe_package_info_async()
+  Hob: clean up and unify the steps for PACKAGE_GENERATING and
+    FAST_IMAGE_GENERATING to call generate_packages_async() and
+    fast_generate_image_async()
+  Hob: clean up and unify the steps for IMAGE_GENERATING to call
+    generate_image_async()
+  Hob: clean up to call clear_busy() in hobeventhandler.py
+  Hob: clean up and unify get_parameters() to be get_parameters_sync()
+  Hob: clean up request_package_info_async()
+  Hob: clean up cancel_build()
+  Hob: clean up generate_configuration()
+  Hob: clean up and reword stop_parse()
+  Hob: tooltip change for "Build image" button
+  Hob: add tooltips into image details screen
+  Hob: forget selected_recipes and selected_packages after users change
+    the machine
+  Hob: show those appliable buttons on the image details page only
+
+ bitbake/lib/bb/ui/crumbs/builddetailspage.py       |   20 ++-
+ bitbake/lib/bb/ui/crumbs/builder.py                |  164 +++++++++++---------
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py        |    7 +-
+ bitbake/lib/bb/ui/crumbs/hoblistmodel.py           |   35 ++++-
+ bitbake/lib/bb/ui/crumbs/hobwidget.py              |  155 ++++++++++++++++---
+ bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |   30 +++-
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py       |  136 +++++++++++-----
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py   |   54 ++++++-
+ bitbake/lib/bb/ui/crumbs/recipeselectionpage.py    |   58 ++++++-
+ bitbake/lib/bb/ui/hob.py                           |    2 +-
+ 10 files changed, 482 insertions(+), 179 deletions(-)
 
 -- 
-------------------------------------------------------------
-Gary Thomas                 |  Consulting for the
-MLB Associates              |    Embedded world
-------------------------------------------------------------
+1.7.6
+
 
 
