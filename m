@@ -1,23 +1,23 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SHkaM-0001gU-CL for bitbake-devel@lists.openembedded.org;
-	Wed, 11 Apr 2012 01:34:54 +0200
+	id 1SHknd-00038M-A8 for bitbake-devel@lists.openembedded.org;
+	Wed, 11 Apr 2012 01:48:37 +0200
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3ANPXDJ001710;
-	Wed, 11 Apr 2012 00:25:33 +0100
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3ANdJpp001805;
+	Wed, 11 Apr 2012 00:39:19 +0100
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 01634-01; Wed, 11 Apr 2012 00:25:29 +0100 (BST)
+	id 01483-05; Wed, 11 Apr 2012 00:39:15 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3ANPPc7001704
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3ANdDVj001799
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Wed, 11 Apr 2012 00:25:26 +0100
-Message-ID: <1334100324.10826.97.camel@ted>
+	Wed, 11 Apr 2012 00:39:13 +0100
+Message-ID: <1334101151.10826.100.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: Paul Eggleton <paul.eggleton@linux.intel.com>
-Date: Wed, 11 Apr 2012 00:25:24 +0100
+Date: Wed, 11 Apr 2012 00:39:11 +0100
 In-Reply-To: <1333645638-9195-1-git-send-email-paul.eggleton@linux.intel.com>
 References: <1333645638-9195-1-git-send-email-paul.eggleton@linux.intel.com>
 X-Mailer: Evolution 3.2.2- 
@@ -36,7 +36,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Apr 2012 23:34:54 -0000
+X-List-Received-Date: Tue, 10 Apr 2012 23:48:37 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
@@ -50,33 +50,8 @@ On Thu, 2012-04-05 at 18:07 +0100, Paul Eggleton wrote:
 > ---
 >  lib/bb/fetch2/__init__.py |    7 ++++---
 >  1 files changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-> index e5c4b34..414cc2b 100644
-> --- a/lib/bb/fetch2/__init__.py
-> +++ b/lib/bb/fetch2/__init__.py
-> @@ -476,9 +476,10 @@ def try_mirrors(d, origud, mirrors, check = False):
->  
->              if not os.path.exists(ud.donestamp) or ud.method.need_update(newuri, ud, ld):
->                  ud.method.download(newuri, ud, ld)
-> -                open(ud.donestamp, 'w').close()
-> -                if hasattr(ud.method,"build_mirror_data"):
-> -                    ud.method.build_mirror_data(newuri, ud, ld)
-> +                if os.path.exists(ud.localpath):
-> +                    open(ud.donestamp, 'w').close()
-> +                    if hasattr(ud.method,"build_mirror_data"):
-> +                        ud.method.build_mirror_data(newuri, ud, ld)
->  
->              if not ud.localpath or not os.path.exists(ud.localpath):
->                  continue
 
-I messed up some commands and this ended up merged with the following
-commit I manipulated:
-
-http://git.openembedded.org/bitbake/commit/?id=c9eed04c6275ef2c694f89e047f85c7de76f89b6
-
-Since its pushed at this point I'm not sure what options I have to undo
-it. Sorry :(
+Merged to master, thanks.
 
 Richard
 
