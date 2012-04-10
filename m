@@ -1,30 +1,30 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SHk4G-0004Bs-Nr for bitbake-devel@lists.openembedded.org;
-	Wed, 11 Apr 2012 01:01:46 +0200
+	id 1SHk6b-00057f-SB for bitbake-devel@lists.openembedded.org;
+	Wed, 11 Apr 2012 01:04:10 +0200
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3AMqQ2q001480;
-	Tue, 10 Apr 2012 23:52:26 +0100
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3AMspv2001490;
+	Tue, 10 Apr 2012 23:54:51 +0100
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 00840-10; Tue, 10 Apr 2012 23:52:22 +0100 (BST)
+	id 01063-08; Tue, 10 Apr 2012 23:54:47 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3AMqGk8001474
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3AMshNL001484
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Tue, 10 Apr 2012 23:52:17 +0100
-Message-ID: <1334098335.10826.84.camel@ted>
+	Tue, 10 Apr 2012 23:54:44 +0100
+Message-ID: <1334098483.10826.86.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: Saul Wold <sgw@linux.intel.com>
-Date: Tue, 10 Apr 2012 23:52:15 +0100
-In-Reply-To: <1334096411-27965-1-git-send-email-sgw@linux.intel.com>
-References: <1334096411-27965-1-git-send-email-sgw@linux.intel.com>
+Date: Tue, 10 Apr 2012 23:54:43 +0100
+In-Reply-To: <1334096422-28007-1-git-send-email-sgw@linux.intel.com>
+References: <1334096422-28007-1-git-send-email-sgw@linux.intel.com>
 X-Mailer: Evolution 3.2.2- 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/2] ui/crumbs/utils.py: new file for choosing terminals
+Subject: Re: [PATCH 2/2] hig/builder: use the new which_terminal() function
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,76 +36,75 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Apr 2012 23:01:47 -0000
+X-List-Received-Date: Tue, 10 Apr 2012 23:04:11 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
 On Tue, 2012-04-10 at 15:20 -0700, Saul Wold wrote:
-> Adding this simple version of a terminal selector for use
-> hob since it's needed. Moving forward in the 1.3 release
-> the existing code in meta/lib/oe/termnial.py will be migrated
-> to core bitbake code and this will use that code.
-> 
 > Signed-off-by: Saul Wold <sgw@linux.intel.com>
 > ---
->  lib/bb/ui/crumbs/utils.py |   33 +++++++++++++++++++++++++++++++++
->  1 files changed, 33 insertions(+), 0 deletions(-)
->  create mode 100644 lib/bb/ui/crumbs/utils.py
+>  lib/bb/ui/crumbs/builder.py |    7 ++++---
+>  lib/bb/ui/crumbs/hig.py     |    3 ++-
+>  2 files changed, 6 insertions(+), 4 deletions(-)
 > 
-> diff --git a/lib/bb/ui/crumbs/utils.py b/lib/bb/ui/crumbs/utils.py
-> new file mode 100644
-> index 0000000..6526c15
-> --- /dev/null
-> +++ b/lib/bb/ui/crumbs/utils.py
-> @@ -0,0 +1,33 @@
-> +#
-> +# BitBake UI Utils 
-> +#
-> +# Copyright (C) 2012 Intel Corporation
-> +#
-> +# This program is free software; you can redistribute it and/or modify
-> +# it under the terms of the GNU General Public License version 2 as
-> +# published by the Free Software Foundation.
-> +#
-> +# This program is distributed in the hope that it will be useful,
-> +# but WITHOUT ANY WARRANTY; without even the implied warranty of
-> +# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> +# GNU General Public License for more details.
-> +#
-> +# You should have received a copy of the GNU General Public License along
-> +# with this program; if not, write to the Free Software Foundation, Inc.,
-> +# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-> +
-> +# This utility method looks for xterm or vte and return the 
-> +# frist to exist, currently we are keeping this simple, but 
-> +# we will likely move the oe.terminal implementation into 
-> +# bitbake which will allow more flexibility.
-> +
-> +import os
-> +
-> +def which_terminal():
-> +    term = bb.utils.which(os.environ["PATH"], "xterm")
-> +    if not term:
-> +        term = bb.utils.which(os.environ["PATH"], "vte")
-> +        return term + " -c " 
-> +    else:
-> +        return term + " -e "
+> diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
+> index a3410d4..e48afde 100755
+> --- a/lib/bb/ui/crumbs/builder.py
+> +++ b/lib/bb/ui/crumbs/builder.py
+> @@ -37,6 +37,7 @@ from bb.ui.crumbs.hig import CrumbsMessageDialog, ImageSelectionDialog, \
+>                               AdvancedSettingDialog, LayerSelectionDialog, \
+>                               DeployImageDialog
+>  from bb.ui.crumbs.persistenttooltip import PersistentTooltip
+> +import bb.ui.crumbs.utils
+>  
+>  class Configuration:
+>      '''Represents the data structure of configuration.'''
+> @@ -946,10 +947,10 @@ class Builder(gtk.Window):
+>              tmp_path = self.parameters.tmpdir
+>              if os.path.exists(image_path) and os.path.exists(kernel_path) \
+>                 and os.path.exists(source_env_path) and os.path.exists(tmp_path):
+> -                cmdline = "/usr/bin/xterm -e "
+> -                cmdline += "\" export OE_TMPDIR=" + tmp_path + "; "
+> +                cmdline = bb.ui.crumbs.utils.which_terminal()
+> +                cmdline += "\' bash -c \"export OE_TMPDIR=" + tmp_path + "; "
+>                  cmdline += "source " + source_env_path + " " + os.getcwd() + "; "
+> -                cmdline += "runqemu " + kernel_path + " " + image_path + "; bash\""
+> +                cmdline += "runqemu " + kernel_path + " " + image_path + "\"\'"
 
-What happens when this tries to execute None + "-c"?
+This appears to do a bit more than you describe in the change message?
+You also should check the return value of
+bb.ui.crumbs.utils.which_terminal().
 
-You want something like
- 
-    term = bb.utils.which(os.environ["PATH"], "xterm")
-    if term:
-        return term + " -e"
-    term = bb.utils.which(os.environ["PATH"], "vte")
-    if term:
-        return term + " -c " 
-    return None
+>                  subprocess.Popen(shlex.split(cmdline))
+>              else:
+>                  lbl = "<b>Path error</b>\nOne of your paths is wrong,"
+> diff --git a/lib/bb/ui/crumbs/hig.py b/lib/bb/ui/crumbs/hig.py
+> index 9adb281..508503c 100644
+> --- a/lib/bb/ui/crumbs/hig.py
+> +++ b/lib/bb/ui/crumbs/hig.py
+> @@ -30,6 +30,7 @@ import shlex
+>  from bb.ui.crumbs.hobcolor import HobColors
+>  from bb.ui.crumbs.hobwidget import hcc, hic, HobViewTable, HobInfoButton, HobButton, HobAltButton, HobIconChecker
+>  from bb.ui.crumbs.progressbar import HobProgressBar
+> +import bb.ui.crumbs.utils
+>  
+>  """
+>  The following are convenience classes for implementing GNOME HIG compliant
+> @@ -737,7 +738,7 @@ class DeployImageDialog (CrumbsDialog):
+>          if response_id == gtk.RESPONSE_YES:
+>              combo_item = self.usb_combo.get_active_text()
+>              if combo_item and combo_item != self.__dummy_usb__:
+> -                cmdline = "/usr/bin/xterm -e "
+> +                cmdline = bb.ui.crumbs.utils.which_terminal()
+>                  cmdline += "\"sudo dd if=" + self.image_path + " of=" + combo_item + "; bash\""
+>                  subprocess.Popen(args=shlex.split(cmdline))
+
+So you remove the bash above but not here?
 
 Cheers,
 
 Richard
+
 
 
 
