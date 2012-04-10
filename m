@@ -1,38 +1,44 @@
-Received: from mail-qc0-f175.google.com ([209.85.216.175])
+Received: from mail-pb0-f47.google.com ([209.85.160.47])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1SHc0B-00052v-Nz
+	(envelope-from <jpuhlman@mvista.com>) id 1SHdmW-0008CS-I8
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 10 Apr 2012 16:25:00 +0200
-Received: by qcso7 with SMTP id o7so2986040qcs.6
+	Tue, 10 Apr 2012 18:19:00 +0200
+Received: by pbcum15 with SMTP id um15so132553pbc.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Apr 2012 07:15:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type
-	:content-transfer-encoding;
-	bh=8avcxMA21FTUCP2YTdnEa3M7PX/zncKT3bKCdECV/IQ=;
-	b=gQr3mVolEPZ94Psbqh+9sPLgNrNBX6lrkR1Y/s2g0eHFp2Kn5FQXvI4gTq5EZh0t4P
-	2z6s4DX8VZozH32NciQCxJ7dkq7KYUwXAryfAOCvmxoHQgqyvKSdd7x1wRmsBoTSwi7p
-	//rVbBeTSrnv9nLQxgfyHOdRmJjIHYxVkP+G/3sialZLs0ea/oobpqU5EZ8+/BBHf41F
-	0Zef8S+x9cvaP7GsdpB8KbQNaZWgEPQtqA7CyvmIvdOW53iAzp0UH1Et/Ewzgt48ksgT
-	/YkXUUhllFnrIytfdt1XZNyligNWoW9YH48lP2NT8mBIPEbCuud2mDZP5lMlZQM/NmGd
-	FplQ==
-Received: by 10.224.111.5 with SMTP id q5mr14636801qap.41.1334067341732; Tue,
-	10 Apr 2012 07:15:41 -0700 (PDT)
+	Tue, 10 Apr 2012 09:09:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=google.com; s=20120113;
+	h=message-id:date:from:user-agent:mime-version:to:cc:subject
+	:references:in-reply-to:x-enigmail-version:content-type
+	:content-transfer-encoding:x-gm-message-state;
+	bh=LcQGRxjvnpht53VPn7BlKy88NXwvA09SCYNNzcp05nM=;
+	b=ap+ipzlxu/s30XmenW4r6mKZj0E673mrL/k8N8PC2Ry2RMCC15XFcSxoKxPrrtFmHd
+	mF5UpLltvYEVHfCm6d11haXzmQs2z8v/HkWxE/X5f9FDyS4cx2XF1bXGng3AEeLz4L+0
+	rbAgNy/hGXU5UE5X/R9+lRHHgHiDqBFFgnDx/D2j0TcfaqS7o8z2zV/KB+TJheaYER1Y
+	ZbR/IpElndVbW+AzXVoXCUg8PqNk+T0AziZlpdyp8jBubCY0/jrb/GGq2Sp7Hn1Im0FF
+	PTJzASUnFRBHlY5fMyPATyycSCS4XrZgC/Qv7mAE+lfZjrtF9E3s/db9DCaYsXYthsc2
+	HMBQ==
+Received: by 10.68.221.227 with SMTP id qh3mr29901797pbc.43.1334074181579;
+	Tue, 10 Apr 2012 09:09:41 -0700 (PDT)
+Received: from [192.168.1.4] (c-76-20-107-156.hsd1.ca.comcast.net.
+	[76.20.107.156])
+	by mx.google.com with ESMTPS id t5sm223644pbm.64.2012.04.10.09.09.38
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Tue, 10 Apr 2012 09:09:39 -0700 (PDT)
+Message-ID: <4F845B40.2040302@mvista.com>
+Date: Tue, 10 Apr 2012 09:09:36 -0700
+From: Jeremy Puhlman <jpuhlman@mvista.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64;
+	rv:11.0) Gecko/20120327 Thunderbird/11.0.1
 MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.229.79.79 with HTTP; Tue, 10 Apr 2012 07:15:21 -0700 (PDT)
-In-Reply-To: <4F843FC1.1080309@windriver.com>
-References: <4F83EE3C.8040904@windriver.com>
-	<CABcZANm628Wm0TYo45eSjLsVjzpseV=4__he=s=Lz_r1ekyJBw@mail.gmail.com>
-	<4F843FC1.1080309@windriver.com>
-From: Chris Larson <clarson@kergoth.com>
-Date: Tue, 10 Apr 2012 07:15:21 -0700
-X-Google-Sender-Auth: tmMu-5VhQoWvrUdK-SELsDcyLvQ
-Message-ID: <CABcZAN=LTh8GDhz5Zs0SsOkrfmsGK+-6t4+DsC23_Z-qHMk7xw@mail.gmail.com>
-To: Robert Yang <liezhi.yang@windriver.com>
+To: Khem Raj <raj.khem@gmail.com>
+References: <4F82DE2E.30208@mlbassoc.com>
+	<CAMKF1sr5t8DptrHBO6NdA0mh2URs6QVXgpfLSXMcFHW9ybX3jg@mail.gmail.com>
+In-Reply-To: <CAMKF1sr5t8DptrHBO6NdA0mh2URs6QVXgpfLSXMcFHW9ybX3jg@mail.gmail.com>
+X-Enigmail-Version: 1.4
+X-Gm-Message-State: ALoCoQn15WiqrxGl9Pq1iZGW/PU0JSYul/sAczJ4QuTIvZ3dYE2iDQ19yrmUn0Q6GwaKByWFGWjG
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: questions about bitbake world
+Subject: Re: bblayers.conf is required?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -44,60 +50,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Apr 2012 14:25:00 -0000
+X-List-Received-Date: Tue, 10 Apr 2012 16:19:00 -0000
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 10, 2012 at 7:12 AM, Robert Yang <liezhi.yang@windriver.com> wr=
-ote:
-> On 04/10/2012 09:58 PM, Chris Larson wrote:
+On 4/9/2012 11:07 AM, Khem Raj wrote:
+> On Mon, Apr 9, 2012 at 6:03 AM, Gary Thomas <gary@mlbassoc.com> wrote:
+>> The config file conf/bblayers.conf seems to be required:
+>>  $ bitbake core-image-minimal
+>>  Unable to find conf/bblayers.conf
+>>  BitBake must be run from within your build directory: /home/local/p60_poky
 >>
->> On Tue, Apr 10, 2012 at 1:24 AM, Robert Yang<liezhi.yang@windriver.com>
->> =C2=A0wrote:
->>>
->>> In the following code:
->>>
->>> def buildWorldTargetList(self):
->>> ...
->>> =C2=A0 =C2=A0 =C2=A0 =C2=A0for f in self.status.possible_world:
->>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0terminal =3D True
->>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pn =3D self.status.pkg_fn[f]
->>>
->>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0for p in pn_provides[pn]:
->>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if p.startswith(=
-'virtual/'):
->>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pa=
-rselog.debug(2, "World build skipping %s due to %s
->>> provider starting with virtual/", f, p)
->>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0te=
-rminal =3D False
->>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0br=
-eak
->>> ...
->>>
->>> Does it mean that if a recipe contains:
->>>
->>> PROVIDES =3D "virtual/something"
->>>
->>> Then it would not be built until a pkg depends on it? Why we design it =
-in
->>> this
->>> way, please?
+>> but the bitbake documentation says otherwise:
+>>                <para>BitBake will first search the current working directory
+>> for an optional "conf/bblayers.conf" configuration file. This file is
+>> expected to contain a BBLAYERS variable which is a space delimited list of
+>> 'layer' directories. For each directory in this list, a "conf/layer.conf"
+>> file will be searched for and parsed with the LAYERDIR variable being set to
+>> the directory where the layer was found. The idea is these files will setup
+>> BBPATH and other variables correctly for a given build directory
+>> automatically for the user.</para>
 >>
->>
->> The original intent with world was that when two recipes provided the
->> same thing, we'd still only want to build one of them, not both, as
->> building both can cause problems with stepping on one another in
->> sysroot, etc.
->
->
-> Thanks for your reply, but it seems that it builts none currently.
+>> Maybe the documentation should just read "required" instead of "optional"?
+> 
+> I think yes. Next action is a patch or bug report.
 
-Fair point, I think in certain cases we also only wanted to build
-things if they got pulled in via a dependency. For example, iirc
-native and cross both exclude themselves from world via a variable set
-in the classes. I don't recall if such was the case here, however.
---=20
-Christopher Larson
+Hmmm you used to be able to run bitbake by just setting the BBPATH
+variable in the environment, and not need a bblayers file. It is not the
+suggested use case anymore, but looking at cooker I don't see anything
+in there in the layer handling code that would preclude that use.
+
+Also that final error message comes from the content bitbake script not
+bitbake proper.
+
+-- 
+Jeremy Puhlman
+Montavista Software, LLC.
 
 
