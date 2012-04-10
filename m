@@ -1,30 +1,30 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SHkEK-0000d8-QN for bitbake-devel@lists.openembedded.org;
-	Wed, 11 Apr 2012 01:12:16 +0200
+	id 1SHkaM-0001gU-CL for bitbake-devel@lists.openembedded.org;
+	Wed, 11 Apr 2012 01:34:54 +0200
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3AN2q9k001544;
-	Wed, 11 Apr 2012 00:02:52 +0100
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3ANPXDJ001710;
+	Wed, 11 Apr 2012 00:25:33 +0100
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 01063-09; Wed, 11 Apr 2012 00:02:48 +0100 (BST)
+	id 01634-01; Wed, 11 Apr 2012 00:25:29 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3AN2g7v001538
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3ANPPc7001704
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Wed, 11 Apr 2012 00:02:43 +0100
-Message-ID: <1334098961.10826.90.camel@ted>
+	Wed, 11 Apr 2012 00:25:26 +0100
+Message-ID: <1334100324.10826.97.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Robert Yang <liezhi.yang@windriver.com>
-Date: Wed, 11 Apr 2012 00:02:41 +0100
-In-Reply-To: <cover.1333630624.git.liezhi.yang@windriver.com>
-References: <cover.1333630624.git.liezhi.yang@windriver.com>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+Date: Wed, 11 Apr 2012 00:25:24 +0100
+In-Reply-To: <1333645638-9195-1-git-send-email-paul.eggleton@linux.intel.com>
+References: <1333645638-9195-1-git-send-email-paul.eggleton@linux.intel.com>
 X-Mailer: Evolution 3.2.2- 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/1] diskspace monitor: assign a default value when only of the interval is set
+Subject: Re: [PATCH] lib/bb/fetch2: don't skip checksums when local mirror enabled
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,24 +36,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Apr 2012 23:12:18 -0000
+X-List-Received-Date: Tue, 10 Apr 2012 23:34:54 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Thu, 2012-04-05 at 20:58 +0800, Robert Yang wrote:
-> The following changes since commit 5607729d9901c394b7cd4db6e38fe7fb19116f39:
+On Thu, 2012-04-05 at 18:07 +0100, Paul Eggleton wrote:
+> If you have PREMIRRORS set up to point to a local directory, the local
+> download function does nothing and always succeeds and the mirror code
+> was writing a .done stamp regardless, thus the checksum verification was
+> being skipped even if the file wasn't actually copied from the mirror.
 > 
->   self-hosted-image: Increase space for build and allow builder user sudo access (2012-04-04 17:17:55 +0100)
+> Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+> ---
+>  lib/bb/fetch2/__init__.py |    7 ++++---
+>  1 files changed, 4 insertions(+), 3 deletions(-)
 > 
-> are available in the git repository at:
->   git://git.pokylinux.org/poky-contrib robert/monitor
->   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/monitor
-> 
-> Robert Yang (1):
->   diskspace monitor: assign a default value when only of the interval
->     is set
+> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+> index e5c4b34..414cc2b 100644
+> --- a/lib/bb/fetch2/__init__.py
+> +++ b/lib/bb/fetch2/__init__.py
+> @@ -476,9 +476,10 @@ def try_mirrors(d, origud, mirrors, check = False):
+>  
+>              if not os.path.exists(ud.donestamp) or ud.method.need_update(newuri, ud, ld):
+>                  ud.method.download(newuri, ud, ld)
+> -                open(ud.donestamp, 'w').close()
+> -                if hasattr(ud.method,"build_mirror_data"):
+> -                    ud.method.build_mirror_data(newuri, ud, ld)
+> +                if os.path.exists(ud.localpath):
+> +                    open(ud.donestamp, 'w').close()
+> +                    if hasattr(ud.method,"build_mirror_data"):
+> +                        ud.method.build_mirror_data(newuri, ud, ld)
+>  
+>              if not ud.localpath or not os.path.exists(ud.localpath):
+>                  continue
 
-Merged to master, thanks.
+I messed up some commands and this ended up merged with the following
+commit I manipulated:
+
+http://git.openembedded.org/bitbake/commit/?id=c9eed04c6275ef2c694f89e047f85c7de76f89b6
+
+Since its pushed at this point I'm not sure what options I have to undo
+it. Sorry :(
 
 Richard
 
