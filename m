@@ -1,36 +1,34 @@
-Received: from mail-qc0-f175.google.com ([209.85.216.175])
+Received: from mail-lpp01m010-f47.google.com ([209.85.215.47])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1SHe7w-0008UO-41
+	(envelope-from <raj.khem@gmail.com>) id 1SHeUc-0000fM-0m
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 10 Apr 2012 18:41:08 +0200
-Received: by qcso7 with SMTP id o7so3089162qcs.6
+	Tue, 10 Apr 2012 19:04:34 +0200
+Received: by lagw12 with SMTP id w12so17129lag.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Apr 2012 09:31:49 -0700 (PDT)
+	Tue, 10 Apr 2012 09:55:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type
-	:content-transfer-encoding;
-	bh=nXBWxV9I60imW7TWNPDApdDvPgSTGe3RJjt6PsI18uM=;
-	b=Z5oxyJuYKmeVmoRwPlu3Vf3g9ELOcgYKuMQweOhmiPRzN3lYZZa/yA3wt3P1cu/Fiy
-	wZf8jPaLh31WaPjDfhEFeEcKLIBhaS2MqOV+UZoG4AQBZdNZ9+OI//D+qhTDKJ1nAl4J
-	RBg2HPGOE01OMld94uvOXE31ruYLFglbtx7dUzfbFAg6NWElGATLLz3HEFN15IKFrwHS
-	I6X9Pw9vT+0KU2YvM6UnqK6ts98tEH0TuP+d/MHm7K4DVhDrWrel1lv0bzBc9GPUvsjR
-	UshGJhvI7ELFQ725sXu1aOZdGLfnmIOTYRrrlD6kxp7TNdISbUO9W+d2QmzPytWEo95l
-	CQ7Q==
-Received: by 10.224.173.194 with SMTP id q2mr10698897qaz.15.1334075509765;
-	Tue, 10 Apr 2012 09:31:49 -0700 (PDT)
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc:content-type;
+	bh=wVB7nrCLO9tiOyCis5GhmAT3SlFLNY7MrKY7PmOKKa0=;
+	b=p4A3lVVNhSVCLC8W+C5HVPvV0UFSFJnnNmbPczqfcTW0iAOKc1nz1jlV26lNPcnkwC
+	iOZXKt2a0VHrCxj9GVOFM4YlkbP/JuSQuh7eMOO/P6hrtyZKbEyPelt+YjUaWcfEf1u3
+	a9a4ud5kAHG1hPsjBKlHa4tc6SHNc24oz/vrxHWJxVHlEFvwUbjomtGjBXb7Nz8TQITO
+	hMVByKA/Th27d/0PAk/bqGxpNeHJi0qXXy3uq3JMItKih63Hn206LNYq5RCkpkLLA1jA
+	uRf5eYZVEJDaK2iay0+1RX9Fy5L/pmy85HfsmUt8cqulfwfPSF5yhRCcOvND2OBeDdVW
+	uzcw==
+Received: by 10.112.83.105 with SMTP id p9mr1543438lby.43.1334076915942; Tue,
+	10 Apr 2012 09:55:15 -0700 (PDT)
 MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.229.79.79 with HTTP; Tue, 10 Apr 2012 09:31:29 -0700 (PDT)
-In-Reply-To: <4F845B40.2040302@mvista.com>
+Received: by 10.152.129.134 with HTTP; Tue, 10 Apr 2012 09:54:45 -0700 (PDT)
+In-Reply-To: <CABcZAN=4SzW-7b75_ydFfT67uQhb_xq643v6o4AbvVbGxatJVA@mail.gmail.com>
 References: <4F82DE2E.30208@mlbassoc.com>
 	<CAMKF1sr5t8DptrHBO6NdA0mh2URs6QVXgpfLSXMcFHW9ybX3jg@mail.gmail.com>
 	<4F845B40.2040302@mvista.com>
-From: Chris Larson <clarson@kergoth.com>
-Date: Tue, 10 Apr 2012 09:31:29 -0700
-X-Google-Sender-Auth: Db9BW1ZtIzmG2BR6ZHFo1WmZ_TI
-Message-ID: <CABcZAN=4SzW-7b75_ydFfT67uQhb_xq643v6o4AbvVbGxatJVA@mail.gmail.com>
-To: Jeremy Puhlman <jpuhlman@mvista.com>
+	<CABcZAN=4SzW-7b75_ydFfT67uQhb_xq643v6o4AbvVbGxatJVA@mail.gmail.com>
+From: Khem Raj <raj.khem@gmail.com>
+Date: Tue, 10 Apr 2012 09:54:45 -0700
+Message-ID: <CAMKF1soNohu5iM9j3Sro+MeKPObUsObwzCyFFEsO30cZQ2qJyw@mail.gmail.com>
+To: Chris Larson <clarson@kergoth.com>
 Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: bblayers.conf is required?
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -44,53 +42,11 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Apr 2012 16:41:08 -0000
+X-List-Received-Date: Tue, 10 Apr 2012 17:04:34 -0000
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 10, 2012 at 9:09 AM, Jeremy Puhlman <jpuhlman@mvista.com> wrote=
-:
-> On 4/9/2012 11:07 AM, Khem Raj wrote:
->> On Mon, Apr 9, 2012 at 6:03 AM, Gary Thomas <gary@mlbassoc.com> wrote:
->>> The config file conf/bblayers.conf seems to be required:
->>> =C2=A0$ bitbake core-image-minimal
->>> =C2=A0Unable to find conf/bblayers.conf
->>> =C2=A0BitBake must be run from within your build directory: /home/local=
-/p60_poky
->>>
->>> but the bitbake documentation says otherwise:
->>> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0<para>BitBake wi=
-ll first search the current working directory
->>> for an optional "conf/bblayers.conf" configuration file. This file is
->>> expected to contain a BBLAYERS variable which is a space delimited list=
- of
->>> 'layer' directories. For each directory in this list, a "conf/layer.con=
-f"
->>> file will be searched for and parsed with the LAYERDIR variable being s=
-et to
->>> the directory where the layer was found. The idea is these files will s=
-etup
->>> BBPATH and other variables correctly for a given build directory
->>> automatically for the user.</para>
->>>
->>> Maybe the documentation should just read "required" instead of "optiona=
-l"?
->>
->> I think yes. Next action is a patch or bug report.
->
-> Hmmm you used to be able to run bitbake by just setting the BBPATH
-> variable in the environment, and not need a bblayers file. It is not the
-> suggested use case anymore, but looking at cooker I don't see anything
-> in there in the layer handling code that would preclude that use.
->
-> Also that final error message comes from the content bitbake script not
-> bitbake proper.
+> Yeah, bitbake itself doesn't require bblayers.conf.
 
-Yeah, bitbake itself doesn't require bblayers.conf. If we *were* to
-make the layer mechanism required by bitbake, then I'd say we should
-implement it properly, rather than being a light convenience wrapper
-around the use of BBPATH/BBFILES.
---=20
-Christopher Larson
+right. I forgot about bitbake's life without OE :)
 
 
