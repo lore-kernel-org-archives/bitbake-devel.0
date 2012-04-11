@@ -1,20 +1,26 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <sgw@linux.intel.com>) id 1SHm2B-0002Uj-5g
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1SHtjV-0007GE-71
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 11 Apr 2012 03:07:43 +0200
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 10 Apr 2012 17:57:08 -0700
+	Wed, 11 Apr 2012 11:20:57 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga102.ch.intel.com with ESMTP; 11 Apr 2012 02:11:37 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="87608457"
-Received: from unknown (HELO swold-mobl.bigsur.com) ([10.255.12.159])
-	by AZSMGA002.ch.intel.com with ESMTP; 10 Apr 2012 17:57:08 -0700
-From: Saul Wold <sgw@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 10 Apr 2012 17:57:08 -0700
-Message-Id: <1334105828-386-1-git-send-email-sgw@linux.intel.com>
-X-Mailer: git-send-email 1.7.7.6
-Subject: [PATCH 1/2] ui/crumbs/utils.py: new file for choosing terminals
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="129552560"
+Received: from unknown (HELO helios.localnet) ([10.252.120.50])
+	by azsmga001.ch.intel.com with ESMTP; 11 Apr 2012 02:11:36 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Wed, 11 Apr 2012 10:11:35 +0100
+Message-ID: <2184436.zSGmXoSkkF@helios>
+Organization: Intel Corporation
+User-Agent: KMail/4.8.2 (Linux/3.0.0-17-generic-pae; KDE/4.8.2; i686; ; )
+In-Reply-To: <1334100324.10826.97.camel@ted>
+References: <1333645638-9195-1-git-send-email-paul.eggleton@linux.intel.com>
+	<1334100324.10826.97.camel@ted>
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] lib/bb/fetch2: don't skip checksums when local mirror enabled
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,60 +32,62 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 11 Apr 2012 01:07:43 -0000
+X-List-Received-Date: Wed, 11 Apr 2012 09:20:57 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Adding this simple version of a terminal selector for use
-hob since it's needed. Moving forward in the 1.3 release
-the existing code in meta/lib/oe/termnial.py will be migrated
-to core bitbake code and this will use that code.
+On Wednesday 11 April 2012 00:25:24 Richard Purdie wrote:
+> On Thu, 2012-04-05 at 18:07 +0100, Paul Eggleton wrote:
+> > If you have PREMIRRORS set up to point to a local directory, the local
+> > download function does nothing and always succeeds and the mirror code
+> > was writing a .done stamp regardless, thus the checksum verification was
+> > being skipped even if the file wasn't actually copied from the mirror.
+> > 
+> > Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+> > ---
+> > 
+> >  lib/bb/fetch2/__init__.py |    7 ++++---
+> >  1 files changed, 4 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+> > index e5c4b34..414cc2b 100644
+> > --- a/lib/bb/fetch2/__init__.py
+> > +++ b/lib/bb/fetch2/__init__.py
+> > 
+> > @@ -476,9 +476,10 @@ def try_mirrors(d, origud, mirrors, check = False):
+> >              if not os.path.exists(ud.donestamp) or 
+ud.method.need_update(newuri, ud, ld):
+> >                  ud.method.download(newuri, ud, ld)
+> > 
+> > -                open(ud.donestamp, 'w').close()
+> > -                if hasattr(ud.method,"build_mirror_data"):
+> > -                    ud.method.build_mirror_data(newuri, ud, ld)
+> > +                if os.path.exists(ud.localpath):
+> > +                    open(ud.donestamp, 'w').close()
+> > +                    if hasattr(ud.method,"build_mirror_data"):
+> > +                        ud.method.build_mirror_data(newuri, ud, ld)
+> > 
+> >              if not ud.localpath or not os.path.exists(ud.localpath):
+> >                  continue
+> 
+> I messed up some commands and this ended up merged with the following
+> commit I manipulated:
+> 
+> http://git.openembedded.org/bitbake/commit/?id=c9eed04c6275ef2c694f89e047f85
+> c7de76f89b6
+> 
+> Since its pushed at this point I'm not sure what options I have to undo
+> it. Sorry :(
 
-Signed-off-by: Saul Wold <sgw@linux.intel.com>
----
- lib/bb/ui/crumbs/utils.py |   33 +++++++++++++++++++++++++++++++++
- 1 files changed, 33 insertions(+), 0 deletions(-)
- create mode 100644 lib/bb/ui/crumbs/utils.py
+No worries - but does this fix in any way help with the problem Gary was 
+seeing?
 
-diff --git a/lib/bb/ui/crumbs/utils.py b/lib/bb/ui/crumbs/utils.py
-new file mode 100644
-index 0000000..cd01a04
---- /dev/null
-+++ b/lib/bb/ui/crumbs/utils.py
-@@ -0,0 +1,33 @@
-+#
-+# BitBake UI Utils 
-+#
-+# Copyright (C) 2012 Intel Corporation
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+# GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License along
-+# with this program; if not, write to the Free Software Foundation, Inc.,
-+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+
-+# This utility method looks for xterm or vte and return the 
-+# frist to exist, currently we are keeping this simple, but 
-+# we will likely move the oe.terminal implementation into 
-+# bitbake which will allow more flexibility.
-+
-+import os
-+
-+def which_terminal():
-+    term = bb.utils.which(os.environ["PATH"], "xterm")
-+    if term:
-+        return term + " -e "
-+    term = bb.utils.which(os.environ["PATH"], "vte")
-+    if term:
-+        return term + " -c "
-+    return None
+Cheers,
+Paul
+
 -- 
-1.7.5.4
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
 
