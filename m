@@ -1,24 +1,20 @@
 Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1SIkAO-0006X7-Kq
+	(envelope-from <josh@linux.intel.com>) id 1SIpzl-0000YB-Oo
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 13 Apr 2012 19:20:12 +0200
+	Sat, 14 Apr 2012 01:33:37 +0200
 Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 13 Apr 2012 10:10:49 -0700
+	by azsmga101.ch.intel.com with ESMTP; 13 Apr 2012 16:24:13 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="130638862"
-Received: from unknown (HELO [10.255.12.191]) ([10.255.12.191])
-	by azsmga001.ch.intel.com with ESMTP; 13 Apr 2012 10:10:49 -0700
-Message-ID: <4F885E19.6050605@linux.intel.com>
-Date: Fri, 13 Apr 2012 10:10:49 -0700
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="130756356"
+Received: from unknown (HELO shamshir.amr.corp.intel.com) ([10.255.12.191])
+	by azsmga001.ch.intel.com with ESMTP; 13 Apr 2012 16:24:12 -0700
 From: Joshua Lock <josh@linux.intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:11.0) Gecko/20120329 Thunderbird/11.0.1
-MIME-Version: 1.0
 To: bitbake-devel@lists.openembedded.org
-References: <cover.1334275549.git.josh@linux.intel.com>
-In-Reply-To: <cover.1334275549.git.josh@linux.intel.com>
-Subject: Re: [RFC PATCH 0/3] Replace HobNotebook with gtk.Notebook
+Date: Fri, 13 Apr 2012 16:24:06 -0700
+Message-Id: <cover.1334359238.git.josh@linux.intel.com>
+X-Mailer: git-send-email 1.7.7.6
+Subject: [PATCH 0/4] Replace HobNotebook with gtk.Notebook, comments invited
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,54 +26,67 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 13 Apr 2012 17:20:12 -0000
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 13 Apr 2012 23:33:38 -0000
 
-I've figured out how to composite things so the artefact is gone. 
-Updated patchset shortly!
+*** This series prevents users of distros with old Gtk+ releases using Hob ***
 
-Thanks,
+This is a follow-on from my RFC of yesterday with a similar title. Sadly I 
+hadn't realised that one of the API calls I am using is not available in the
+version of gtk+ shipped with CentOS 6 (gtk.Notebook.set_action_widget).
+
+This change will prevent CentOS 6 users from being able to use Hob.
+
+I spent some time in Gtk+ internals trying to figure out if we can emulate the
+behaviour on older versions but the GtkNotebook widget internals were enhanced
+significantly to support the set_action_widget API.
+
+I've submitted the change as an RFC regardless, it's ready to merge if we're
+willing to make the sacrifice.
+
+The primary motivation for making this change, and making it so late in the
+cycle, is maintainability. The diffstat says it all - we're replacing an ~400LOC
+custom widget with a ~100LOC set of 3 widgets which subclass standard toolkit
+widgets.
+
+An added benefit is that standard toolkit widgets generally integrate better
+into the users OS thanks to inheriting their standard theme.
+
+Tested on: 
+Fedora 16 (x86_64) - PASS
+CentOS 6.2 (x86_64) - FAIL: Gtk+ version too old
+Ubuntu 10.04 (x86_64) - Fail: pygtk version too old
+Ubuntu 12.04 Beta (x86_64) - PASS
+
+Per the final patch in the series the changes here require gtk+-2.20 or newer
+and pygtk 2.22 or newer.
+
+Cheers,
 Joshua
 
-On 12/04/12 17:10, Joshua Lock wrote:
-> The important patch in this RFC is the first which replaces the fully custom
-> HobNotebook with a simpler gtk.Notebook subclass.
->
-> It's an RFC as there's currently what looks like a rendering glitch in how the
-> tabs are displayed. See the white boxes in the tabs of this screenshot:
-> https://bugzilla.yoctoproject.org/attachment.cgi?id=465
->
-> I'm researching how to remove this artifact but wanted to gather feedback on the
-> patch as it stands as we are close to the checkin deadline.
->
-> Thanks,
-> Joshua
->
-> The following changes since commit 3c2808b67384e92601cbd66877c36ca40df7c7ba:
->
->    Hob: fix the missing functions (2012-04-12 15:56:42 +0100)
->
-> are available in the git repository at:
->    git://github.com/incandescant/bitbake josh/hob
->    https://github.com/incandescant/bitbake/tree/josh/hob
->
-> Joshua Lock (3):
->    lib/bb/ui/crumbs/: replace custom HobNotebook
->    lib/bb/ui/crumbs/hobwidget: use light text in HobIndicator
->    lib/bb/ui/crumbs/imageconfiguration: fix combo boxes drop-down width
->
->   lib/bb/ui/crumbs/builddetailspage.py       |    4 +-
->   lib/bb/ui/crumbs/hobwidget.py              |  468 +++++-----------------------
->   lib/bb/ui/crumbs/imageconfigurationpage.py |    2 -
->   lib/bb/ui/crumbs/packageselectionpage.py   |    3 +-
->   lib/bb/ui/crumbs/recipeselectionpage.py    |    5 +-
->   5 files changed, 82 insertions(+), 400 deletions(-)
->
+The following changes since commit 434fdb3913cc78e2e9cdeede4c4fa7f1c8ef8892:
+
+  Hob: Added required packages for toolchain. (2012-04-13 12:00:12 +0100)
+
+are available in the git repository at:
+  git://github.com/incandescant/bitbake gtk2.20
+  https://github.com/incandescant/bitbake/tree/gtk2.20
+
+Joshua Lock (4):
+  lib/bb/ui/crumbs/: replace custom HobNotebook
+  lib/bb/ui/crumbs/hobwidget: use light text in HobIndicator
+  lib/bb/ui/crumbs/imageconfiguration: fix combo boxes drop-down width
+  hob: update required pygtk to 2.22.0 and gtk+ to 2.20.0
+
+ lib/bb/ui/crumbs/builddetailspage.py       |    6 +-
+ lib/bb/ui/crumbs/hobwidget.py              |  499 +++++++---------------------
+ lib/bb/ui/crumbs/imageconfigurationpage.py |    2 -
+ lib/bb/ui/crumbs/packageselectionpage.py   |    3 +-
+ lib/bb/ui/crumbs/recipeselectionpage.py    |    5 +-
+ lib/bb/ui/hob.py                           |    2 +-
+ 6 files changed, 120 insertions(+), 397 deletions(-)
 
 -- 
-Joshua Lock
-         Yocto Project
-         Intel Open Source Technology Centre
+1.7.7.6
+
 
 
