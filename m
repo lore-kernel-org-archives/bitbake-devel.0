@@ -1,22 +1,31 @@
-Received: from mga03.intel.com ([143.182.124.21])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <lianhao.lu@intel.com>) id 1SIcFe-0003aC-VN
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 13 Apr 2012 10:53:07 +0200
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 13 Apr 2012 01:43:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="88643278"
-Received: from llu-piketon.sh.intel.com (HELO localhost) ([10.239.36.110])
-	by AZSMGA002.ch.intel.com with ESMTP; 13 Apr 2012 01:43:43 -0700
-From: Lianhao Lu <lianhao.lu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 13 Apr 2012 16:37:18 +0800
-Message-Id: <ecf8c3991f8ec465f509b40146974dd52b153841.1334306019.git.lianhao.lu@intel.com>
-X-Mailer: git-send-email 1.7.0.4
-In-Reply-To: <cover.1334306019.git.lianhao.lu@intel.com>
-References: <cover.1334306019.git.lianhao.lu@intel.com>
-Subject: [PATCH 1/1] Hob: Added required packages for toolchain.
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1SIe8t-0006Dq-Nt for bitbake-devel@lists.openembedded.org;
+	Fri, 13 Apr 2012 12:54:15 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3DAipac001482;
+	Fri, 13 Apr 2012 11:44:51 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 00827-04; Fri, 13 Apr 2012 11:44:47 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3DAiZjg001472
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Fri, 13 Apr 2012 11:44:39 +0100
+Message-ID: <1334313873.7309.67.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Dongxiao Xu <dongxiao.xu@intel.com>
+Date: Fri, 13 Apr 2012 11:44:33 +0100
+In-Reply-To: <d64dca4f0fcdcea2641e4751bbd300b7d2aa49e1.1334245432.git.dongxiao.xu@intel.com>
+References: <cover.1334245432.git.dongxiao.xu@intel.com>
+	<d64dca4f0fcdcea2641e4751bbd300b7d2aa49e1.1334245432.git.dongxiao.xu@intel.com>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 3/3] Hob: A minor fix on tooltip
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -28,42 +37,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 13 Apr 2012 08:53:07 -0000
+X-List-Received-Date: Fri, 13 Apr 2012 10:54:16 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Added the requried packages task-core-standalone-sdk-target(-dbg) for
-building toolchain.
+On Thu, 2012-04-12 at 23:46 +0800, Dongxiao Xu wrote:
+> Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+> ---
+>  lib/bb/ui/crumbs/hig.py |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
+> 
+> diff --git a/lib/bb/ui/crumbs/hig.py b/lib/bb/ui/crumbs/hig.py
+> index 5cc8a59..b0cfcaf 100644
+> --- a/lib/bb/ui/crumbs/hig.py
+> +++ b/lib/bb/ui/crumbs/hig.py
+> @@ -392,7 +392,7 @@ class AdvancedSettingDialog (CrumbsDialog):
+>          j = 1
+>          for image_type in self.image_types:
+>              self.image_types_checkbuttons[image_type] = gtk.CheckButton(image_type)
+> -            self.image_types_checkbuttons[image_type].set_tooltip_text("Build an %s image" % image_type)
+> +            self.image_types_checkbuttons[image_type].set_tooltip_text("Build a(n) %s image" % image_type)
+>              table.attach(self.image_types_checkbuttons[image_type], j, j + 4, i, i + 1)
+>              if image_type in self.configuration.image_fstypes.split():
+>                  self.image_types_checkbuttons[image_type].set_active(True)
 
-Fixed bug [YOCTO #2274]
+This change looks rather ugly to me. Whilst we're getting into a
+minefield of localisation issues, I'd suggest doing:
 
-Signed-off-by: Lianhao Lu <lianhao.lu@intel.com>
----
- lib/bb/ui/crumbs/hoblistmodel.py |    4 +++-
- 1 files changed, 3 insertions(+), 1 deletions(-)
+article = ""
+if image_type.startswith(["a", "e", "i", "o", "h"]):
+    article = "n"
+self.image_types_checkbuttons[image_type].set_tooltip_text("Build a%s %s image" % (article, image_type))
 
-diff --git a/lib/bb/ui/crumbs/hoblistmodel.py b/lib/bb/ui/crumbs/hoblistmodel.py
-index f5e3740..dd93e2a 100644
---- a/lib/bb/ui/crumbs/hoblistmodel.py
-+++ b/lib/bb/ui/crumbs/hoblistmodel.py
-@@ -42,6 +42,8 @@ class PackageListModel(gtk.TreeStore):
-                                 ()),
-     }
- 
-+    __toolchain_required_packages__ = ["task-core-standalone-sdk-target", "task-core-standalone-sdk-target-dbg"]
-+
-     def __init__(self):
- 
-         self.contents = None
-@@ -389,7 +391,7 @@ class PackageListModel(gtk.TreeStore):
-                     child_it = self.iter_next(child_it)
-             it = self.iter_next(it)
- 
--        return packagelist
-+        return list(set(packagelist + self.__toolchain_required_packages__));
-     """
-     Return the selected package size, unit is B.
-     """
--- 
-1.7.0.4
+Whilst this isn't perfect, it should cover our common image types well
+enough.
+
+Cheers,
+
+Richard
+
 
 
 
