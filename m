@@ -1,36 +1,36 @@
-Received: from moutng.kundenserver.de ([212.227.126.171])
+Received: from moutng.kundenserver.de ([212.227.17.9])
 	by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <enrico.scholz@informatik.tu-chemnitz.de>)
-	id 1SIhf7-0002eu-PD for bitbake-devel@lists.openembedded.org;
-	Fri, 13 Apr 2012 16:39:45 +0200
+	id 1SIhf9-0002ev-LW for bitbake-devel@lists.openembedded.org;
+	Fri, 13 Apr 2012 16:39:47 +0200
 Received: from mail.bigo.ensc.de (p54ADE1CF.dip.t-dialin.net [84.173.225.207])
-	by mrelayeu.kundenserver.de (node=mrbap3) with ESMTP (Nemesis)
-	id 0M3SWO-1S1IkR2GIq-00r9Vp; Fri, 13 Apr 2012 16:06:23 +0200
+	by mrelayeu.kundenserver.de (node=mrbap0) with ESMTP (Nemesis)
+	id 0LlGmU-1RlHnV1yZa-00azYd; Fri, 13 Apr 2012 16:06:23 +0200
 Received: from sheridan.bigo.ensc.de (sheridan.bigo.ensc.de [192.168.46.11])
-	by mail.bigo.ensc.de (8.14.4/8.14.4) with ESMTP id q3DE6MKs007824;
+	by mail.bigo.ensc.de (8.14.4/8.14.4) with ESMTP id q3DE6MiA007823;
 	Fri, 13 Apr 2012 16:06:22 +0200
 Received: from ensc by sheridan.bigo.ensc.de with local (Exim 4.76)
 	(envelope-from <ensc@sheridan.bigo.ensc.de>)
-	id 1SIh8o-000479-1j; Fri, 13 Apr 2012 16:06:22 +0200
+	id 1SIh8n-000475-OR; Fri, 13 Apr 2012 16:06:21 +0200
 From: Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 13 Apr 2012 16:06:13 +0200
-Message-Id: <1334325973-15760-3-git-send-email-enrico.scholz@informatik.tu-chemnitz.de>
+Date: Fri, 13 Apr 2012 16:06:12 +0200
+Message-Id: <1334325973-15760-2-git-send-email-enrico.scholz@informatik.tu-chemnitz.de>
 X-Mailer: git-send-email 1.7.7.6
 In-Reply-To: <1334325973-15760-1-git-send-email-enrico.scholz@informatik.tu-chemnitz.de>
 References: <1334325973-15760-1-git-send-email-enrico.scholz@informatik.tu-chemnitz.de>
 Sender: Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
-X-Provags-ID: V02:K0:jVfjeP+EyfnTY9s5isnTjuVEh6yHrEzQKEtSzcoNCMS
-	NFwTnz/EUnMGK5XDZhMBJSI4wqYz6aIvow5jaB6EZmAFUlyT5k
-	MM9r1uE5JlkRMLl/84qtAdfUvusFA3rV0EQrHmne5jn8uFgwla
-	CIsH7hh2fEvpAaf9FV3FHHW2DBpbxUiefltgqtTkz17gS2vqJo
-	KebrIBFx5RDsEtjSrKz7rOoF9L/X+sKjW1zmwPr+vVuCWnkgsm
-	95rwiqj0mSWKnRhtxEwPqAQugDTUkO5oVxFMtNAC39uEpiQn8Z
-	yCWLgQbxnf7Cx/TvInaJ3rOYu/PaoCJhoAZopkwC4wGd1VX+R6
-	P6ZOH8W5jSLw74Bj21P0/pHQXSjCz6POJzQAnVqvCYXCxSr7Uk
-	Q8Ee1mu7Y1aJuXcFg4Q/jOY7uviLC/3s5K2C+8XQIwxcruwb1D Un1IS
+X-Provags-ID: V02:K0:KU99SCIwlJvQy9pPqafoqweAgnvH3zfzl92gTulX2wD
+	veMI31PS2vfQyuvQ4viLwoA8O/37jXqsvDt1P5APq1SmVDGln+
+	8JNIgO6rUNsUOhXe+nHhcKa5RJPJEj9+5+IiyUUOBnFSKSKwQE
+	ZgRBbDYgWlxxYEJOemQuSQ/dZ3uU0UxJBPSGeMVKGpTcJ1/QWi
+	7LTWTUi2rm1Nur/sYUNAZ43IWHObJ+gQmBVNj9ktNGp1PfcM8Y
+	yUcFKe2B4fxQFYfBH12JM8HYcr5UKC1oJtGn/cvWqkRpHrVoRf
+	Ecq2GLY+lvmRYcgLjYJm159r5bSnRspaRWjUib8/XDeeWKjrks
+	dXprpV6fUfdjnoqP8UFgOtCXTbScLsXRDbAN2+nH5mqfPY1ytX
+	jH/hCpQC1lSAAN+k/hwrq2I2I3h1YKjOfqzqxKLcBTAluUkmUo tQ4fu
 Cc: Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
-Subject: [PATCH 3/3] fetch2/git: quote arguments
+Subject: [PATCH 2/3] runfetchcmd(): allow to use a sequence as cmd
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -42,158 +42,91 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 13 Apr 2012 14:39:45 -0000
+X-List-Received-Date: Fri, 13 Apr 2012 14:39:47 -0000
 
-Patch makes sure that arguments given to 'git' are quoted properly.  It
-uses the newly added runfetchcmd2() function or quotes them manually
-when special shell functionality (pipes, io redirections) are used.
+Patch removes the explicit 'shell=True' from the bb.process.run() call
+and modifies the environment directly.  This allows to use a sequence as
+the cmd option which in turn, removes the need for quoting filenames
+manually.
+
+Unfortunately, modifying only runfetchmod() does not allow code like
+
+  runfetchcmd([ud.basecmd, 'remote', 'add', ..., repourl])
+
+because 'ud.basecmd' (expanded e.g. from ${FETCHCMD_git}) might contain
+a command plus shell escaped options.
+
+To cope with such situations, a runfetchcmd2() function was added
+which quotes the arguments but takes the cmd as-is.
+
+Having basecmd splitted off from cmdline string reduces information
+printed out by check_network_access().  To retain the old behavior, an
+optional argument was added which allows to specify the basecmd.
 
 Signed-off-by: Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
 ---
- lib/bb/fetch2/git.py |   53 +++++++++++++++++++++++++++----------------------
- 1 files changed, 29 insertions(+), 24 deletions(-)
+ lib/bb/fetch2/__init__.py |   26 +++++++++++++++++++++-----
+ 1 files changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 61fdc4b..52adb9a 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -65,8 +65,9 @@ import os
- import bb
- from   bb    import data
- from   bb.fetch2 import FetchMethod
--from   bb.fetch2 import runfetchcmd
-+from   bb.fetch2 import runfetchcmd, runfetchcmd2
- from   bb.fetch2 import logger
-+import pipes
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 9afbc4f..168efb5 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -407,10 +407,11 @@ def runfetchcmd(cmd, d, quiet = False, cleanup = []):
+                   'SSH_AUTH_SOCK', 'SSH_AGENT_PID', 'HOME',
+                   'GIT_PROXY_IGNORE', 'SOCKS5_USER', 'SOCKS5_PASSWD']
  
- class Git(FetchMethod):
-     """Class to fetch a module or modules from git repositories"""
-@@ -115,6 +116,7 @@ class Git(FetchMethod):
-             ud.branches[name] = branch
++    new_env = os.environ.copy()
+     for var in exportvars:
+         val = d.getVar(var, True)
+         if val:
+-            cmd = 'export ' + var + '=\"%s\"; %s' % (val, cmd)
++            new_env[var] = val
  
-         ud.basecmd = data.getVar("FETCHCMD_git", d, True) or "git"
-+        ud.runfetch = lambda args,d,**opts: runfetchcmd2(ud.basecmd, args, d, **opts)
+     logger.debug(1, "Running %s", cmd)
  
-         ud.write_tarballs = ((data.getVar("BB_GENERATE_MIRROR_TARBALLS", d, True) or "0") != "0") or ud.rebaseable
+@@ -418,7 +419,7 @@ def runfetchcmd(cmd, d, quiet = False, cleanup = []):
+     error_message = ""
  
-@@ -177,15 +179,15 @@ class Git(FetchMethod):
-         if not os.path.exists(ud.clonedir) and os.path.exists(ud.fullmirror):
-             bb.utils.mkdirhier(ud.clonedir)
-             os.chdir(ud.clonedir)
--            runfetchcmd("tar -xzf %s" % (ud.fullmirror), d)
-+            runfetchcmd(['tar', '-xzf', ud.fullmirror], d)
+     try:
+-        (output, errors) = bb.process.run(cmd, shell=True, stderr=subprocess.PIPE)
++        (output, errors) = bb.process.run(cmd, stderr=subprocess.PIPE, env=new_env)
+         success = True
+     except bb.process.NotFoundError as e:
+         error_message = "Fetch command %s" % (e.command)
+@@ -438,14 +439,29 @@ def runfetchcmd(cmd, d, quiet = False, cleanup = []):
  
-         repourl = "%s://%s%s%s" % (ud.proto, username, ud.host, ud.path)
+     return output
  
-         # If the repo still doesn't exist, fallback to cloning it
-         if not os.path.exists(ud.clonedir):
--            clone_cmd = "%s clone --bare --mirror %s %s" % (ud.basecmd, repourl, ud.clonedir)
--            bb.fetch2.check_network_access(d, clone_cmd)
--            runfetchcmd(clone_cmd, d)
-+            clone_cmd = ['clone', '--bare', '--mirror', repourl, ud.clonedir]
-+            bb.fetch2.check_network_access(d, clone_cmd, base_cmd = ud.basecmd, url = repourl)
-+            ud.runfetch(clone_cmd, d)
- 
-         os.chdir(ud.clonedir)
-         # Update the checkout if needed
-@@ -200,10 +202,10 @@ class Git(FetchMethod):
-             except bb.fetch2.FetchError:
-                 logger.debug(1, "No Origin")
- 
--            runfetchcmd("%s remote add --mirror=fetch origin %s" % (ud.basecmd, repourl), d)
--            fetch_cmd = "%s fetch -f --prune %s refs/*:refs/*" % (ud.basecmd, repourl)
--            bb.fetch2.check_network_access(d, fetch_cmd, ud.url)
--            runfetchcmd(fetch_cmd, d)
-+            ud.runfetch(['remote', 'add', '--mirror=fetch', 'origin', repourl], d)
-+            fetch_cmd = ['fetch', '-f', '--prune', repourl, 'refs/*:refs/*']
-+            bb.fetch2.check_network_access(d, fetch_cmd, base_cmd = ud.basecmd, url = ud.url)
-+            ud.runfetch(fetch_cmd, d)
-             runfetchcmd("%s prune-packed" % ud.basecmd, d)
-             runfetchcmd("%s pack-redundant --all | xargs -r rm" % ud.basecmd, d)
-             ud.repochanged = True
-@@ -213,8 +215,8 @@ class Git(FetchMethod):
-         if ud.write_tarballs and (ud.repochanged or not os.path.exists(ud.fullmirror)):
-             os.chdir(ud.clonedir)
-             logger.info("Creating tarball of git repository")
--            runfetchcmd("tar -czf %s %s" % (ud.fullmirror, os.path.join(".") ), d)
--            runfetchcmd("touch %s.done" % (ud.fullmirror), d)
-+            runfetchcmd(['tar', '-czf', ud.fullmirror, os.path.join(".")], d)
-+            runfetchcmd(['touch', ud.fullmirror + '.done'], d)
- 
-     def unpack(self, ud, destdir, d):
-         """ unpack the downloaded src to destdir"""
-@@ -232,18 +234,20 @@ class Git(FetchMethod):
-         if os.path.exists(destdir):
-             bb.utils.prunedir(destdir)
- 
--        cloneflags = "-s -n"
-+        cloneflags = ['clone', '-s', '-n']
-         if ud.bareclone:
--            cloneflags += " --mirror"
-+            cloneflags.append("--mirror")
+-def check_network_access(d, info = "", url = None):
++def runfetchcmd2(cmd, args, d, **opts):
++    cmd += ' '
++    cmd += ' '.join(map(lambda a: pipes.quote(a), args))
++    return runfetchcmd(cmd, d, **opts)
 +
-+        cloneflags.extend(["%s/" % ud.clonedir, destdir])
-+        ud.runfetch(cloneflags, d)
- 
--        runfetchcmd("git clone %s %s/ %s" % (cloneflags, ud.clonedir, destdir), d)
-         if not ud.nocheckout:
-             os.chdir(destdir)
-             if subdir != "":
--                runfetchcmd("%s read-tree %s%s" % (ud.basecmd, ud.revisions[ud.names[0]], readpathspec), d)
-+                ud.runfetch(['read-tree', '%s%s' % ud.revisions[ud.names[0]], readpathspec])
-                 runfetchcmd("%s checkout-index -q -f -a" % ud.basecmd, d)
-             else:
--                runfetchcmd("%s checkout %s" % (ud.basecmd, ud.revisions[ud.names[0]]), d)
-+                ud.runfetch(['checkout', ud.revisions[ud.names[0]]], d)
-         return True
- 
-     def clean(self, ud, d):
-@@ -257,7 +261,7 @@ class Git(FetchMethod):
- 
-     def _contains_ref(self, tag, d):
-         basecmd = data.getVar("FETCHCMD_git", d, True) or "git"
--        cmd = "%s log --pretty=oneline -n 1 %s -- 2> /dev/null | wc -l" % (basecmd, tag)
-+        cmd = "%s log --pretty=oneline -n 1 %s -- 2> /dev/null | wc -l" % (basecmd, pipes.quote(tag))
-         output = runfetchcmd(cmd, d, quiet=True)
-         if len(output.split()) > 1:
-             raise bb.fetch2.FetchError("The command '%s' gave output with more then 1 line unexpectedly, output: '%s'" % (cmd, output))
-@@ -279,10 +283,12 @@ class Git(FetchMethod):
-             username = ""
- 
-         basecmd = data.getVar("FETCHCMD_git", d, True) or "git"
--        cmd = "%s ls-remote %s://%s%s%s %s" % \
--              (basecmd, ud.proto, username, ud.host, ud.path, ud.branches[name])
--        bb.fetch2.check_network_access(d, cmd)
--        output = runfetchcmd(cmd, d, True)
-+        cmd = ['ls-remote',
-+               '%s://%s%s%s' % (ud.proto, username, ud.host, ud.path),
-+               ud.branches[name]]
++def check_network_access(d, info = "", url = None, base_cmd = None):
+     """
+     log remote network access, and error if BB_NO_NETWORK is set
+     """
++    if base_cmd:
++        info_str = base_cmd + ' '
++    else:
++        info_str = ''
 +
-+        bb.fetch2.check_network_access(d, cmd, base_cmd = ud.basecmd)
-+        output = ud.runfetch(cmd, d, quiet=True)
-         if not output:
-             raise bb.fetch2.FetchError("The command %s gave empty output unexpectedly" % cmd, url)
-         return output.split()[0]
-@@ -315,7 +321,7 @@ class Git(FetchMethod):
-         if not self._contains_ref(rev, d):
-             self.download(None, ud, d)
++    if isinstance(info, list) or isinstance(info, tuple):
++        info_str += ' '.join(map(lambda a: pipes.quote(a), info))
++    else:
++        info_str += '%s' % info
++
+     if d.getVar("BB_NO_NETWORK", True) == "1":
+-        raise NetworkAccess(url, info)
++        raise NetworkAccess(url, info_str)
+     else:
+-        logger.debug(1, "Fetcher accessed the network with the command %s" % info)
++        logger.debug(1, "Fetcher accessed the network with the command %s" % info_str)
  
--        output = runfetchcmd("%s rev-list %s -- 2> /dev/null | wc -l" % (ud.basecmd, rev), d, quiet=True)
-+        output = runfetchcmd("%s rev-list %s -- 2> /dev/null | wc -l" % (ud.basecmd, pipes.quote(rev)), d, quiet=True)
-         os.chdir(cwd)
- 
-         buildindex = "%s" % output.split()[0]
-@@ -323,9 +329,8 @@ class Git(FetchMethod):
-         return buildindex
- 
-     def checkstatus(self, uri, ud, d):
--        fetchcmd = "%s ls-remote %s" % (ud.basecmd, uri)
-         try:
--            runfetchcmd(fetchcmd, d, quiet=True)
-+            ud.runfetch(['ls-remote',  uri], d, quiet=True)
-             return True
-         except FetchError:
-             return False
+ def try_mirrors(d, origud, mirrors, check = False):
+     """
 -- 
 1.7.7.6
 
