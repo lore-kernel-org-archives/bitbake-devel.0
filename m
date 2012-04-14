@@ -1,26 +1,30 @@
-Received: from mga02.intel.com ([134.134.136.20])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1SJ923-000188-Hm
-	for bitbake-devel@lists.openembedded.org;
-	Sat, 14 Apr 2012 21:53:15 +0200
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 14 Apr 2012 12:43:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="132537666"
-Received: from unknown (HELO [10.255.12.41]) ([10.255.12.41])
-	by orsmga002.jf.intel.com with ESMTP; 14 Apr 2012 12:43:51 -0700
-Message-ID: <4F89D377.7010505@linux.intel.com>
-Date: Sat, 14 Apr 2012 12:43:51 -0700
-From: Joshua Lock <josh@linux.intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:11.0) Gecko/20120329 Thunderbird/11.0.1
-MIME-Version: 1.0
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-References: <cover.1334359238.git.josh@linux.intel.com>
-	<1334398981.7309.98.camel@ted>
-In-Reply-To: <1334398981.7309.98.camel@ted>
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1SJC5B-0004J4-Dg for bitbake-devel@lists.openembedded.org;
+	Sun, 15 Apr 2012 01:08:41 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3EMxISC017502;
+	Sat, 14 Apr 2012 23:59:18 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 16758-07; Sat, 14 Apr 2012 23:59:14 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3EMxA4w017496
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Sat, 14 Apr 2012 23:59:11 +0100
+Message-ID: <1334444350.8545.6.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Shane Wang <shane.wang@intel.com>
+Date: Sat, 14 Apr 2012 23:59:10 +0100
+In-Reply-To: <cover.1334429179.git.shane.wang@intel.com>
+References: <cover.1334429179.git.shane.wang@intel.com>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/4] Replace HobNotebook with gtk.Notebook, comments invited
+Subject: Re: [PATCH 0/2] Hob fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,55 +36,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 14 Apr 2012 19:53:15 -0000
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-List-Received-Date: Sat, 14 Apr 2012 23:08:41 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On 14/04/12 03:23, Richard Purdie wrote:
-> On Fri, 2012-04-13 at 16:24 -0700, Joshua Lock wrote:
->> *** This series prevents users of distros with old Gtk+ releases using Hob ***
->>
->> This is a follow-on from my RFC of yesterday with a similar title. Sadly I
->> hadn't realised that one of the API calls I am using is not available in the
->> version of gtk+ shipped with CentOS 6 (gtk.Notebook.set_action_widget).
->>
->> This change will prevent CentOS 6 users from being able to use Hob.
->>
->> I spent some time in Gtk+ internals trying to figure out if we can emulate the
->> behaviour on older versions but the GtkNotebook widget internals were enhanced
->> significantly to support the set_action_widget API.
->>
->> I've submitted the change as an RFC regardless, it's ready to merge if we're
->> willing to make the sacrifice.
->>
->> The primary motivation for making this change, and making it so late in the
->> cycle, is maintainability. The diffstat says it all - we're replacing an ~400LOC
->> custom widget with a ~100LOC set of 3 widgets which subclass standard toolkit
->> widgets.
->>
->> An added benefit is that standard toolkit widgets generally integrate better
->> into the users OS thanks to inheriting their standard theme.
->>
->> Tested on:
->> Fedora 16 (x86_64) - PASS
->> CentOS 6.2 (x86_64) - FAIL: Gtk+ version too old
->> Ubuntu 10.04 (x86_64) - Fail: pygtk version too old
->> Ubuntu 12.04 Beta (x86_64) - PASS
->>
->> Per the final patch in the series the changes here require gtk+-2.20 or newer
->> and pygtk 2.22 or newer.
->
-> Since we don't have a good external-python tarball solution in place
-> yet, I'm going to have to hold off these patches until after the current
-> release.
+On Sun, 2012-04-15 at 02:58 +0800, Shane Wang wrote:
+> The fixes include:
+>  - remember settings and layers between Hob sessions.
+>  - continue to fix another case to forget user selection when settings are changed.
+> 
+> The following changes since commit 276b86509ba29046828d283f15ae44ae0850d1d0:
+> 
+>   Hob: Use BB_DEFAULT_TASK as build task instead of hardcoded "build" (2012-04-14 14:43:24 +0100)
+> 
+> are available in the git repository at:
+>   git://git.pokylinux.org/poky-contrib shane/hob_0413
+>   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=shane/hob_0413
+> 
+> Shane Wang (2):
+>   Hob: remember layers and settings between Hob sessions
+>   Hob: reset user recipe selection and package selection after settings
+>     are changed
+> 
+>  bitbake/lib/bb/ui/crumbs/builddetailspage.py       |   16 +-
+>  bitbake/lib/bb/ui/crumbs/builder.py                |  170 ++++++++++++-------
+>  bitbake/lib/bb/ui/crumbs/hobeventhandler.py        |    1 -
+>  bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    4 +-
+>  bitbake/lib/bb/ui/crumbs/template.py               |   24 +++-
+>  5 files changed, 136 insertions(+), 79 deletions(-)
 
-This makes perfect sense and I agree with the decision.
+Merged to master, thanks.
 
-Thanks,
-Joshua
--- 
-Joshua Lock
-         Yocto Project
-         Intel Open Source Technology Centre
+Richard
+
 
 
