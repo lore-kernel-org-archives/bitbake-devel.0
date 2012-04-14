@@ -1,30 +1,20 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SJ3Pt-0003GE-7D for bitbake-devel@lists.openembedded.org;
-	Sat, 14 Apr 2012 15:53:29 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3EDi5lq013815;
-	Sat, 14 Apr 2012 14:44:05 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 13264-03; Sat, 14 Apr 2012 14:44:01 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3EDhvdo013809
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Sat, 14 Apr 2012 14:43:58 +0100
-Message-ID: <1334411039.7309.105.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Dongxiao Xu <dongxiao.xu@intel.com>
-Date: Sat, 14 Apr 2012 14:43:59 +0100
-In-Reply-To: <cover.1334402345.git.dongxiao.xu@intel.com>
-References: <cover.1334402345.git.dongxiao.xu@intel.com>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/4 v2][PULL] Hob: Bug fixes
+Received: from mga03.intel.com ([143.182.124.21])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <shane.wang@intel.com>) id 1SJ7rD-0008V4-Te
+	for bitbake-devel@lists.openembedded.org;
+	Sat, 14 Apr 2012 20:38:00 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 14 Apr 2012 11:28:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="130934694"
+Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
+	by azsmga001.ch.intel.com with ESMTP; 14 Apr 2012 11:28:35 -0700
+From: Shane Wang <shane.wang@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Sun, 15 Apr 2012 02:58:53 +0800
+Message-Id: <cover.1334429179.git.shane.wang@intel.com>
+X-Mailer: git-send-email 1.7.6
+Subject: [PATCH 0/2] Hob fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,42 +26,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 14 Apr 2012 13:53:29 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sat, 14 Apr 2012 18:38:00 -0000
 
-On Sat, 2012-04-14 at 19:23 +0800, Dongxiao Xu wrote:
-> Hi Richard,
-> 
-> This is the revised pull request contains several Hob related bug fixes, please help to review and pull.
-> 
-> Add some missed changes from v1:
-> 1) Change the commit author for "Hob: A minor fix on tooltip".
-> 2) Use BB_DEFAULT_TASK as parameter of generate_package().
-> 3) Remove un-used function image_list_append().
-> 
-> Thanks,
-> Dongxiao
-> 
-> The following changes since commit 434fdb3913cc78e2e9cdeede4c4fa7f1c8ef8892:
-> 
->   Hob: Added required packages for toolchain. (2012-04-13 12:00:12 +0100)
-> 
-> are available in the git repository at:
->   git://git.pokylinux.org/poky-contrib dxu4/hob-bugfix
->   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob-bugfix
-> 
-> Dongxiao Xu (3):
->   Hob: Save the original image name into template
->   Hob: Build selected image if not customized
->   Hob: Use BB_DEFAULT_TASK as build task instead of hardcoded "build"
-> 
-> Richard Purdie (1):
->   Hob: A minor fix on tooltip
+The fixes include:
+ - remember settings and layers between Hob sessions.
+ - continue to fix another case to forget user selection when settings are changed.
 
-Merged to master, thanks.
+The following changes since commit 276b86509ba29046828d283f15ae44ae0850d1d0:
 
-Richard
+  Hob: Use BB_DEFAULT_TASK as build task instead of hardcoded "build" (2012-04-14 14:43:24 +0100)
+
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib shane/hob_0413
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=shane/hob_0413
+
+Shane Wang (2):
+  Hob: remember layers and settings between Hob sessions
+  Hob: reset user recipe selection and package selection after settings
+    are changed
+
+ bitbake/lib/bb/ui/crumbs/builddetailspage.py       |   16 +-
+ bitbake/lib/bb/ui/crumbs/builder.py                |  170 ++++++++++++-------
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py        |    1 -
+ bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    4 +-
+ bitbake/lib/bb/ui/crumbs/template.py               |   24 +++-
+ 5 files changed, 136 insertions(+), 79 deletions(-)
+
+-- 
+1.7.6
 
 
 
