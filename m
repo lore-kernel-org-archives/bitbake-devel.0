@@ -1,24 +1,24 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SJ0cy-0008TT-8S
+	(envelope-from <dongxiao.xu@intel.com>) id 1SJ0cy-0008TR-CB
 	for bitbake-devel@lists.openembedded.org;
 	Sat, 14 Apr 2012 12:54:48 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 14 Apr 2012 03:45:25 -0700
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 14 Apr 2012 03:45:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="130858387"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="132447941"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by azsmga001.ch.intel.com with ESMTP; 14 Apr 2012 03:45:24 -0700
+	by orsmga002.jf.intel.com with ESMTP; 14 Apr 2012 03:45:27 -0700
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 14 Apr 2012 18:42:28 +0800
-Message-Id: <7b1ddfde60e26188b04e63fad95be111ef012da5.1334400003.git.dongxiao.xu@intel.com>
+Date: Sat, 14 Apr 2012 18:42:30 +0800
+Message-Id: <894696b559b781edba711ad75452e8a2942d122f.1334400003.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1334400003.git.dongxiao.xu@intel.com>
 References: <cover.1334400003.git.dongxiao.xu@intel.com>
 In-Reply-To: <cover.1334400003.git.dongxiao.xu@intel.com>
 References: <cover.1334400003.git.dongxiao.xu@intel.com>
-Subject: [PATCH 2/4] Hob: Save the original image name into template
+Subject: [PATCH 4/4] Hob: Use BB_DEFAULT_TASK as build task instead of hardcoded "build"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,55 +32,84 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Sat, 14 Apr 2012 10:54:48 -0000
 
-Previously we use the template file name as the image name. This commit
-changes to use the original selected image into template file.
+Originally we use hardcoded "build" as the default task. This commit
+fixes it by using BB_DEFAULT_TASK.
+
+This fixes [YOCTO #2283]
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 ---
- lib/bb/ui/crumbs/builder.py |    9 ++-------
- 1 files changed, 2 insertions(+), 7 deletions(-)
+ lib/bb/ui/crumbs/builder.py         |    6 +++++-
+ lib/bb/ui/crumbs/hobeventhandler.py |    7 +++++--
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
-index f414bc7..5e90219 100755
+index 3f26bac..03a7caa 100755
 --- a/lib/bb/ui/crumbs/builder.py
 +++ b/lib/bb/ui/crumbs/builder.py
-@@ -153,7 +153,7 @@ class Configuration:
-         self.cvs_proxy_host = template.getVar("CVS_PROXY_HOST")
-         self.cvs_proxy_port = template.getVar("CVS_PROXY_PORT")
+@@ -71,6 +71,8 @@ class Configuration:
  
--    def save(self, template, filename):
-+    def save(self, template):
+         self.user_selected_packages = []
+ 
++        self.default_task = params["default_task"]
++
+         # proxy settings
+         self.all_proxy = params["all_proxy"]
+         self.http_proxy = params["http_proxy"]
+@@ -105,6 +107,7 @@ class Configuration:
+         self.tune_pkgarch = params["tune_pkgarch"]
          # bblayers.conf
-         template.setVar("BBLAYERS", " ".join(self.layers))
-         # local.conf
-@@ -175,7 +175,6 @@ class Configuration:
-         template.setVar("TOOLCHAIN_BUILD", self.toolchain_build)
-         template.setVar("IMAGE_FSTYPES", self.image_fstypes)
-         # image/recipes/packages
--        self.selected_image = filename
-         template.setVar("__SELECTED_IMAGE__", self.selected_image)
-         template.setVar("DEPENDS", self.selected_recipes)
-         template.setVar("IMAGE_INSTALL", self.user_selected_packages)
-@@ -447,7 +446,7 @@ class Builder(gtk.Window):
+         self.layers = params["layer"].split()
++        self.default_task = params["default_task"]
  
-         self.template = TemplateMgr()
-         self.template.open(filename, path)
--        self.configuration.save(self.template, filename)
-+        self.configuration.save(self.template)
+     def load(self, template):
+         self.curr_mach = template.getVar("MACHINE")
+@@ -410,7 +413,8 @@ class Builder(gtk.Window):
+         self.handler.generate_image(image,
+                                     self.hob_toolchain,
+                                     packages,
+-                                    toolchain_packages)
++                                    toolchain_packages,
++                                    self.configuration.default_task)
  
-         self.template.save()
-         self.template.destroy()
-@@ -627,10 +626,6 @@ class Builder(gtk.Window):
-         selected_recipes = self.configuration.selected_recipes[:]
-         selected_packages = self.configuration.selected_packages[:]
+     def get_parameters_sync(self):
+         return self.handler.get_parameters()
+diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
+index c297863..a46d838 100644
+--- a/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -135,7 +135,7 @@ class HobHandler(gobject.GObject):
+             if self.toolchain_packages:
+                 self.server.runCommand(["setVariable", "TOOLCHAIN_TARGET_TASK", " ".join(self.toolchain_packages)])
+                 targets.append(self.toolchain)
+-            self.server.runCommand(["buildTargets", targets, "build"])
++            self.server.runCommand(["buildTargets", targets, self.default_task])
  
--        self.recipe_model.image_list_append(selected_image,
--                                            " ".join(selected_recipes),
--                                            " ".join(selected_packages))
--
-         self.image_configuration_page.update_image_combo(self.recipe_model, selected_image)
-         self.image_configuration_page.update_image_desc(selected_image)
-         self.update_recipe_model(selected_image, selected_recipes)
+     def handle_event(self, event):
+         if not event:
+@@ -353,11 +353,12 @@ class HobHandler(gobject.GObject):
+         self.commands_async.append(self.SUB_BUILD_RECIPES)
+         self.run_next_command(self.GENERATE_PACKAGES)
+ 
+-    def generate_image(self, image, toolchain, image_packages=[], toolchain_packages=[]):
++    def generate_image(self, image, toolchain, image_packages=[], toolchain_packages=[], default_task="build"):
+         self.image = image
+         self.toolchain = toolchain
+         self.package_queue = image_packages
+         self.toolchain_packages = toolchain_packages
++        self.default_task = default_task
+         self.commands_async.append(self.SUB_PARSE_CONFIG)
+         self.commands_async.append(self.SUB_BUILD_IMAGE)
+         self.run_next_command(self.GENERATE_IMAGE)
+@@ -495,6 +496,8 @@ class HobHandler(gobject.GObject):
+         params["bb_version"] = self.server.runCommand(["getVariable", "BB_MIN_VERSION"]) or ""
+         params["tune_arch"] = self.server.runCommand(["getVariable", "TUNE_ARCH"]) or ""
+ 
++        params["default_task"] = self.server.runCommand(["getVariable", "BB_DEFAULT_TASK"]) or "build"
++
+         params["git_proxy_host"] = self.server.runCommand(["getVariable", "GIT_PROXY_HOST"]) or ""
+         params["git_proxy_port"] = self.server.runCommand(["getVariable", "GIT_PROXY_PORT"]) or ""
+ 
 -- 
 1.7.4.1
 
