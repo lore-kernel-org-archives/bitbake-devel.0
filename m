@@ -1,38 +1,30 @@
-Received: from moutng.kundenserver.de ([212.227.17.9])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <enrico.scholz@informatik.tu-chemnitz.de>)
-	id 1SJ37v-0002yc-E8 for bitbake-devel@lists.openembedded.org;
-	Sat, 14 Apr 2012 15:34:55 +0200
-Received: from mail.bigo.ensc.de (p54ADDDDF.dip.t-dialin.net [84.173.221.223])
-	by mrelayeu.kundenserver.de (node=mrbap4) with ESMTP (Nemesis)
-	id 0MCqAt-1SS5SZ1w9L-009dUw; Sat, 14 Apr 2012 15:20:28 +0200
-Received: from sheridan.bigo.ensc.de (sheridan.bigo.ensc.de [192.168.46.11])
-	by mail.bigo.ensc.de (8.14.4/8.14.4) with ESMTP id q3EDKQXE006966;
-	Sat, 14 Apr 2012 15:20:26 +0200
-Received: from ensc by sheridan.bigo.ensc.de with local (Exim 4.76)
-	(envelope-from <ensc@sheridan.bigo.ensc.de>)
-	id 1SJ2tu-000730-Jv; Sat, 14 Apr 2012 15:20:26 +0200
-From: Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-References: <1334325973-15760-1-git-send-email-enrico.scholz@informatik.tu-chemnitz.de>
-	<1334398898.7309.97.camel@ted>
-Date: Sat, 14 Apr 2012 15:20:26 +0200
-In-Reply-To: <1334398898.7309.97.camel@ted> (Richard Purdie's message of "Sat, 
-	14 Apr 2012 11:21:38 +0100")
-Message-ID: <87k41ibgbp.fsf@sheridan.bigo.ensc.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.3 (gnu/linux)
-MIME-Version: 1.0
-Sender: Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
-X-Provags-ID: V02:K0:Awao1MyPukrYyYj6/xVtEsJ92G/ggwlcwsIYf+9Y7RY
-	4vLttBOqU1A3vaHhMnkSvAvSbUc78d0u6IdUR9NYchhdCbK8rx
-	J0in35rWGIF2ayxBxtZyZ9D/tGfpXHIl4JGOakRa2gdUSaDp/t
-	hhDNUzCcrykKsXJb8qslR4oUp+SFFiXPgQ8961BAtiipBALRxR
-	FhiUfQPhjfqgspIGGKQ5RztWruTfZ78md3zSheclijaG7pGAEY
-	Sdrdon6B8BdEEREFYuWBsmkjXlNktA//KwtKz9uxsJRjtVvmyK
-	MRvkKf8+1tSJAudDprkMiUHuE8X9dF8uEp6JtZDiBnQUd9diyF
-	CVAnUp++uLEtxV7IGUh082hTpYlJ76N0eF4UjMQes
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1SJ3Pt-0003GE-7D for bitbake-devel@lists.openembedded.org;
+	Sat, 14 Apr 2012 15:53:29 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3EDi5lq013815;
+	Sat, 14 Apr 2012 14:44:05 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 13264-03; Sat, 14 Apr 2012 14:44:01 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3EDhvdo013809
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Sat, 14 Apr 2012 14:43:58 +0100
+Message-ID: <1334411039.7309.105.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Dongxiao Xu <dongxiao.xu@intel.com>
+Date: Sat, 14 Apr 2012 14:43:59 +0100
+In-Reply-To: <cover.1334402345.git.dongxiao.xu@intel.com>
+References: <cover.1334402345.git.dongxiao.xu@intel.com>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/3] fetcher: quote filenames given in commands
+Subject: Re: [PATCH 0/4 v2][PULL] Hob: Bug fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -44,50 +36,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 14 Apr 2012 13:34:55 -0000
-Content-Type: text/plain; charset=us-ascii
+X-List-Received-Date: Sat, 14 Apr 2012 13:53:29 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Richard Purdie <richard.purdie@linuxfoundation.org> writes:
+On Sat, 2012-04-14 at 19:23 +0800, Dongxiao Xu wrote:
+> Hi Richard,
+> 
+> This is the revised pull request contains several Hob related bug fixes, please help to review and pull.
+> 
+> Add some missed changes from v1:
+> 1) Change the commit author for "Hob: A minor fix on tooltip".
+> 2) Use BB_DEFAULT_TASK as parameter of generate_package().
+> 3) Remove un-used function image_list_append().
+> 
+> Thanks,
+> Dongxiao
+> 
+> The following changes since commit 434fdb3913cc78e2e9cdeede4c4fa7f1c8ef8892:
+> 
+>   Hob: Added required packages for toolchain. (2012-04-13 12:00:12 +0100)
+> 
+> are available in the git repository at:
+>   git://git.pokylinux.org/poky-contrib dxu4/hob-bugfix
+>   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob-bugfix
+> 
+> Dongxiao Xu (3):
+>   Hob: Save the original image name into template
+>   Hob: Build selected image if not customized
+>   Hob: Use BB_DEFAULT_TASK as build task instead of hardcoded "build"
+> 
+> Richard Purdie (1):
+>   Hob: A minor fix on tooltip
 
->> Filenames were given as-is to shell commands. This causes problems
->> when names contain characters which have a special meaning. 
-> ...
-> Whilst I understand what you're trying to fix, I'm afraid I don't like
-> the patch. I'd prefer to have one way of building these commands, rather
-> than two different ones with the shell=isinstance(cmd, basestring)
-> check.
+Merged to master, thanks.
 
-ok; one way would be calling of 'pipes.quote()' on every variable
-substituting %s.  But that's boring, error prone and makes the code
-ugly.
+Richard
 
-Another way might be to declare every command as a sequence with special
-objects for shell operations; e.g.
-
-| class ShellOp:
-|     def __init__(self, op):
-|         self.op = op
-| 
-| cmd = ['bunzip2', '-d', file, ShellOp('|'), 'tar', 'xf', '-']
-
-In simple case (no ShellOp objects), sequence will be given directly to
-Popen() with shell=False. Else, pipes.quote() will be applied on every
-string element of the sequence while ShellOp() objects will be kept as
-as-is.
-
-
-> I'd like to find a cleaner approach that doesn't involve runfetchcmd2.
-
-As I wrote in the comment, runfetchcmd2() exists because ${FETCHCMD}
-might be defined as
-
-  git -c 'url.file://${WORKSPACE_DIR}/avrprog.insteadOf=git://git.somewhere/avrprog.git'
-
-There is no simple way to split it into a sequence (note: there might be
-quoted whitespaces in an option).
-
-
-
-Enrico
 
 
