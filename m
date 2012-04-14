@@ -1,24 +1,24 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga01.intel.com ([192.55.52.88])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SJ0cz-0008TT-1R
+	(envelope-from <dongxiao.xu@intel.com>) id 1SJ0uw-0000fh-4z
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 14 Apr 2012 12:54:49 +0200
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 14 Apr 2012 03:45:26 -0700
+	Sat, 14 Apr 2012 13:13:22 +0200
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga101.fm.intel.com with ESMTP; 14 Apr 2012 04:03:58 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="89010139"
-Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by AZSMGA002.ch.intel.com with ESMTP; 14 Apr 2012 03:45:25 -0700
-From: Dongxiao Xu <dongxiao.xu@intel.com>
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="141684055"
+Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
+	([10.239.36.11])
+	by fmsmga001.fm.intel.com with ESMTP; 14 Apr 2012 04:03:58 -0700
+From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 14 Apr 2012 18:42:29 +0800
-Message-Id: <204a976e3209815b2c22fb306bc4618f6d90a962.1334400003.git.dongxiao.xu@intel.com>
-X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1334400003.git.dongxiao.xu@intel.com>
 References: <cover.1334400003.git.dongxiao.xu@intel.com>
-In-Reply-To: <cover.1334400003.git.dongxiao.xu@intel.com>
-References: <cover.1334400003.git.dongxiao.xu@intel.com>
-Subject: [PATCH 3/4] Hob: Build selected image if not customized
+Date: Sat, 14 Apr 2012 19:01:08 +0800
+Message-ID: <1334401268.27917.39.camel@dongxiao-osel>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.32.2 
+Subject: Re: [PATCH 0/4][PULL] Hob: Bug fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,101 +30,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 14 Apr 2012 10:54:49 -0000
+X-List-Received-Date: Sat, 14 Apr 2012 11:13:22 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-If user selected a base image and didn't customize it, Hob will still
-build the selected image instead of hob-image.
+On Sat, 2012-04-14 at 18:42 +0800, Dongxiao Xu wrote:
+> Hi Richard,
+> 
+> This pull request contains some Hob related bug fixes, please help to review and pull.
 
-This fixes [YOCTO #2253]
+Please ignore this request because it missed some critical change, I
+will send an update one.
 
-Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
----
- lib/bb/ui/crumbs/builder.py         |   19 ++++++++++++++-----
- lib/bb/ui/crumbs/hobeventhandler.py |   17 +++++++++--------
- 2 files changed, 23 insertions(+), 13 deletions(-)
+Thanks,
+Dongxiao
 
-diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
-index 5e90219..3f26bac 100755
---- a/lib/bb/ui/crumbs/builder.py
-+++ b/lib/bb/ui/crumbs/builder.py
-@@ -395,16 +395,21 @@ class Builder(gtk.Window):
- 
-     def generate_image_async(self):
-         self.switch_page(self.IMAGE_GENERATING)
-+        self.handler.reset_build()
-         # Build image
-         self.set_user_config()
--        packages = self.package_model.get_selected_packages()
-         toolchain_packages = []
-         if self.configuration.toolchain_build:
-             toolchain_packages = self.package_model.get_selected_packages_toolchain()
--        self.handler.reset_build()
--        self.handler.generate_image(packages,
--                                    self.hob_image,
-+        if self.configuration.selected_image == self.recipe_model.__dummy_image__:
-+            packages = self.package_model.get_selected_packages()
-+            image = self.hob_image
-+        else:
-+            packages = []
-+            image = self.configuration.selected_image
-+        self.handler.generate_image(image,
-                                     self.hob_toolchain,
-+                                    packages,
-                                     toolchain_packages)
- 
-     def get_parameters_sync(self):
-@@ -690,7 +695,11 @@ class Builder(gtk.Window):
-         elif self.current_step == self.IMAGE_GENERATING:
-             fraction = 1.0
-             self.parameters.image_names = []
--            linkname = 'hob-image-' + self.configuration.curr_mach
-+            selected_image = self.recipe_model.get_selected_image()
-+            if selected_image == self.recipe_model.__dummy_image__:
-+                linkname = 'hob-image-' + self.configuration.curr_mach
-+            else:
-+                linkname = selected_image + '-' + self.configuration.curr_mach
-             for image_type in self.parameters.image_types:
-                 linkpath = self.parameters.image_addr + '/' + linkname + '.' + image_type
-                 if os.path.exists(linkpath):
-diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
-index 292d905..c297863 100644
---- a/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -128,12 +128,13 @@ class HobHandler(gobject.GObject):
-         elif next_command == self.SUB_BUILD_IMAGE:
-             self.clear_busy()
-             self.building = True
--            targets = [self.hob_image]
--            self.server.runCommand(["setVariable", "LINGUAS_INSTALL", ""])
--            self.server.runCommand(["setVariable", "PACKAGE_INSTALL", " ".join(self.package_queue)])
-+            targets = [self.image]
-+            if self.package_queue:
-+                self.server.runCommand(["setVariable", "LINGUAS_INSTALL", ""])
-+                self.server.runCommand(["setVariable", "PACKAGE_INSTALL", " ".join(self.package_queue)])
-             if self.toolchain_packages:
-                 self.server.runCommand(["setVariable", "TOOLCHAIN_TARGET_TASK", " ".join(self.toolchain_packages)])
--                targets.append(self.hob_toolchain)
-+                targets.append(self.toolchain)
-             self.server.runCommand(["buildTargets", targets, "build"])
- 
-     def handle_event(self, event):
-@@ -352,10 +353,10 @@ class HobHandler(gobject.GObject):
-         self.commands_async.append(self.SUB_BUILD_RECIPES)
-         self.run_next_command(self.GENERATE_PACKAGES)
- 
--    def generate_image(self, tgts, hob_image, hob_toolchain, toolchain_packages=[]):
--        self.package_queue = tgts
--        self.hob_image = hob_image
--        self.hob_toolchain = hob_toolchain
-+    def generate_image(self, image, toolchain, image_packages=[], toolchain_packages=[]):
-+        self.image = image
-+        self.toolchain = toolchain
-+        self.package_queue = image_packages
-         self.toolchain_packages = toolchain_packages
-         self.commands_async.append(self.SUB_PARSE_CONFIG)
-         self.commands_async.append(self.SUB_BUILD_IMAGE)
--- 
-1.7.4.1
+> 
+> Thanks,
+> Dongxiao
+> 
+> The following changes since commit 434fdb3913cc78e2e9cdeede4c4fa7f1c8ef8892:
+> 
+>   Hob: Added required packages for toolchain. (2012-04-13 12:00:12 +0100)
+> 
+> are available in the git repository at:
+>   git://git.pokylinux.org/poky-contrib dxu4/hob-bugfix
+>   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob-bugfix
+> 
+> Dongxiao Xu (4):
+>   Hob: A minor fix on tooltip
+>   Hob: Save the original image name into template
+>   Hob: Build selected image if not customized
+>   Hob: Use BB_DEFAULT_TASK as build task instead of hardcoded "build"
+> 
+>  lib/bb/ui/crumbs/builder.py         |   34 +++++++++++++++++++++-------------
+>  lib/bb/ui/crumbs/hig.py             |    5 ++++-
+>  lib/bb/ui/crumbs/hobeventhandler.py |   22 +++++++++++++---------
+>  3 files changed, 38 insertions(+), 23 deletions(-)
+> 
+
 
 
 
