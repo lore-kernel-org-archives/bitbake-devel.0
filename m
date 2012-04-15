@@ -1,30 +1,20 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SJC5B-0004J4-Dg for bitbake-devel@lists.openembedded.org;
-	Sun, 15 Apr 2012 01:08:41 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3EMxISC017502;
-	Sat, 14 Apr 2012 23:59:18 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 16758-07; Sat, 14 Apr 2012 23:59:14 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3EMxA4w017496
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Sat, 14 Apr 2012 23:59:11 +0100
-Message-ID: <1334444350.8545.6.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Shane Wang <shane.wang@intel.com>
-Date: Sat, 14 Apr 2012 23:59:10 +0100
-In-Reply-To: <cover.1334429179.git.shane.wang@intel.com>
-References: <cover.1334429179.git.shane.wang@intel.com>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/2] Hob fixes
+Received: from mga03.intel.com ([143.182.124.21])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <dongxiao.xu@intel.com>) id 1SJF8W-0007Ar-Az
+	for bitbake-devel@lists.openembedded.org;
+	Sun, 15 Apr 2012 04:24:20 +0200
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga101.ch.intel.com with ESMTP; 14 Apr 2012 19:14:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="89143489"
+Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
+	by AZSMGA002.ch.intel.com with ESMTP; 14 Apr 2012 19:14:55 -0700
+From: Dongxiao Xu <dongxiao.xu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Sun, 15 Apr 2012 10:12:00 +0800
+Message-Id: <cover.1334455811.git.dongxiao.xu@intel.com>
+X-Mailer: git-send-email 1.7.4.1
+Subject: [PATCH 0/1][PULL] Hob: Fix bug 2249
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,38 +26,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 14 Apr 2012 23:08:41 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sun, 15 Apr 2012 02:24:20 -0000
 
-On Sun, 2012-04-15 at 02:58 +0800, Shane Wang wrote:
-> The fixes include:
->  - remember settings and layers between Hob sessions.
->  - continue to fix another case to forget user selection when settings are changed.
-> 
-> The following changes since commit 276b86509ba29046828d283f15ae44ae0850d1d0:
-> 
->   Hob: Use BB_DEFAULT_TASK as build task instead of hardcoded "build" (2012-04-14 14:43:24 +0100)
-> 
-> are available in the git repository at:
->   git://git.pokylinux.org/poky-contrib shane/hob_0413
->   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=shane/hob_0413
-> 
-> Shane Wang (2):
->   Hob: remember layers and settings between Hob sessions
->   Hob: reset user recipe selection and package selection after settings
->     are changed
-> 
->  bitbake/lib/bb/ui/crumbs/builddetailspage.py       |   16 +-
->  bitbake/lib/bb/ui/crumbs/builder.py                |  170 ++++++++++++-------
->  bitbake/lib/bb/ui/crumbs/hobeventhandler.py        |    1 -
->  bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    4 +-
->  bitbake/lib/bb/ui/crumbs/template.py               |   24 +++-
->  5 files changed, 136 insertions(+), 79 deletions(-)
+Hi Richard,
 
-Merged to master, thanks.
+This pull request is to fix bug 2249, please help to review and pull.
 
-Richard
+Thanks,
+Dongxiao
+
+The following changes since commit 95f4e9dc351f67442844ff52f90fc154fa95ba95:
+
+  Hob: reset user recipe selection and package selection after settings are changed (2012-04-14 23:48:36 +0100)
+
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib dxu4/hob-bugfix
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob-bugfix
+
+Dongxiao Xu (1):
+  Hob: Handle NoProvider event in runningbuild module
+
+ lib/bb/ui/crumbs/builder.py         |   18 ++++++++++++++----
+ lib/bb/ui/crumbs/hobeventhandler.py |   21 ---------------------
+ lib/bb/ui/crumbs/runningbuild.py    |   17 +++++++++++++++++
+ 3 files changed, 31 insertions(+), 25 deletions(-)
+
+-- 
+1.7.4.1
 
 
 
