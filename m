@@ -1,24 +1,24 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SJF8X-0007As-IG
+	(envelope-from <dongxiao.xu@intel.com>) id 1SJK31-0002Ne-Db
 	for bitbake-devel@lists.openembedded.org;
-	Sun, 15 Apr 2012 04:24:21 +0200
+	Sun, 15 Apr 2012 09:39:01 +0200
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 14 Apr 2012 19:14:57 -0700
+	by orsmga101.jf.intel.com with ESMTP; 15 Apr 2012 00:29:33 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="132595031"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="132648481"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by orsmga002.jf.intel.com with ESMTP; 14 Apr 2012 19:14:56 -0700
+	by orsmga002.jf.intel.com with ESMTP; 15 Apr 2012 00:29:32 -0700
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sun, 15 Apr 2012 10:12:01 +0800
-Message-Id: <822bf8645855b205a142741f52fff954cba1c0d4.1334455811.git.dongxiao.xu@intel.com>
+Date: Sun, 15 Apr 2012 15:26:37 +0800
+Message-Id: <6ac9502d38a6aff87c6d256ceaa2366d7eada6cc.1334474635.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.4.1
-In-Reply-To: <cover.1334455811.git.dongxiao.xu@intel.com>
-References: <cover.1334455811.git.dongxiao.xu@intel.com>
-In-Reply-To: <cover.1334455811.git.dongxiao.xu@intel.com>
-References: <cover.1334455811.git.dongxiao.xu@intel.com>
-Subject: [PATCH 1/1] Hob: Handle NoProvider event in runningbuild module
+In-Reply-To: <cover.1334474635.git.dongxiao.xu@intel.com>
+References: <cover.1334474635.git.dongxiao.xu@intel.com>
+In-Reply-To: <cover.1334474635.git.dongxiao.xu@intel.com>
+References: <cover.1334474635.git.dongxiao.xu@intel.com>
+Subject: [PATCH 1/2] Hob: Handle NoProvider event in runningbuild module
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,7 +30,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 15 Apr 2012 02:24:22 -0000
+X-List-Received-Date: Sun, 15 Apr 2012 07:39:01 -0000
 
 If NoProvider event is received, we will handle it in runningbuild
 module and send notification to Hob instance, avoiding stepping into the
