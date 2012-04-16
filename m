@@ -1,24 +1,32 @@
-Received: from mga02.intel.com ([134.134.136.20])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SJhM7-0006C0-Ml
-	for bitbake-devel@lists.openembedded.org;
-	Mon, 16 Apr 2012 10:32:15 +0200
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 16 Apr 2012 01:22:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="130041059"
-Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by orsmga001.jf.intel.com with ESMTP; 16 Apr 2012 01:22:49 -0700
-From: Shane Wang <shane.wang@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 16 Apr 2012 16:53:28 +0800
-Message-Id: <9c0d9fb3aa4a2d2b7c1d69d87a3fd6d8538574a8.1334565351.git.shane.wang@intel.com>
-X-Mailer: git-send-email 1.7.6
-In-Reply-To: <395e04713e9714aeedb15553de9334a48403a495.1334565351.git.shane.wang@intel.com>
-References: <395e04713e9714aeedb15553de9334a48403a495.1334565351.git.shane.wang@intel.com>
-In-Reply-To: <cover.1334565351.git.shane.wang@intel.com>
-References: <cover.1334565351.git.shane.wang@intel.com>
-Subject: [PATCH 2/2] Hob: add the parent window to 'binb' popup window for managing it
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1SJhRQ-0006Ja-VS for bitbake-devel@lists.openembedded.org;
+	Mon, 16 Apr 2012 10:37:45 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3G8SJf5028809;
+	Mon, 16 Apr 2012 09:28:19 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 28589-02; Mon, 16 Apr 2012 09:28:15 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3G8SALM028802
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Mon, 16 Apr 2012 09:28:11 +0100
+Message-ID: <1334564893.16992.64.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: "Xu, Dongxiao" <dongxiao.xu@intel.com>
+Date: Mon, 16 Apr 2012 09:28:13 +0100
+In-Reply-To: <1334560504.4305.6.camel@dongxiao-osel>
+References: <cover.1333960654.git.dongxiao.xu@intel.com>
+	<ccb22c39f4aeb8e310f9a6f8e0f9c55c18ac6891.1333960654.git.dongxiao.xu@intel.com>
+	<1334098817.10826.89.camel@ted> <1334560504.4305.6.camel@dongxiao-osel>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 2/6] data_smart: Improve the calculation of config hash
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,58 +38,86 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 16 Apr 2012 08:32:16 -0000
+X-List-Received-Date: Mon, 16 Apr 2012 08:37:45 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Liming An <limingx.l.an@intel.com>
+On Mon, 2012-04-16 at 15:15 +0800, Xu, Dongxiao wrote:
+> On Wed, 2012-04-11 at 00:00 +0100, Richard Purdie wrote:
+> > On Mon, 2012-04-09 at 16:41 +0800, Dongxiao Xu wrote:
+> > > The order of keys are not sensitive for config hash, so we need to
+> > > identify its order while calculating the md5 value.
+> > > 
+> > > While for certain values, order is also not sensitive (for example,
+> > > BBINCLUDED), we also need to identify its order while calculating md5
+> > > value.
+> > > 
+> > > This could fix the problem that Martin Jansa reported in the mailing
+> > > list:
+> > > 
+> > > http://lists.linuxtogo.org/pipermail/bitbake-devel/2012-March/002122.html
+> > > 
+> > > Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+> > > ---
+> > >  lib/bb/data_smart.py |   10 +++++++---
+> > >  1 files changed, 7 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+> > > index 2c200db..cc61a03 100644
+> > > --- a/lib/bb/data_smart.py
+> > > +++ b/lib/bb/data_smart.py
+> > > @@ -462,13 +462,17 @@ class DataSmart(MutableMapping):
+> > >          self.delVar(var)
+> > >  
+> > >      def get_hash(self):
+> > > -        data = ""
+> > > +        data = {}
+> > >          config_whitelist = set((self.getVar("BB_HASHCONFIG_WHITELIST", True) or "").split())
+> > > +        config_sort = set((self.getVar("BB_HASHCONFIG_SORT", True) or "").split())
+> > >          keys = set(key for key in iter(self) if not key.startswith("__"))
+> > >          for key in keys:
+> > >              if key in config_whitelist:
+> > >                  continue
+> > >              value = self.getVar(key, False) or ""
+> > > -            data = data + key + ': ' + str(value) + '\n'
+> > > +            if key in config_sort:
+> > > +                value = " ".join(sorted(value.split()))
+> > > +            data.update({key:value})
+> > >  
+> > > -        return hashlib.md5(data).hexdigest()
+> > > +        data_str = str([(k, data[k]) for k in sorted(data.keys())])
+> > > +        return hashlib.md5(data_str).hexdigest()
+> > 
+> > 
+> > This and the corresponding change in bitbake.conf look rather worrying
+> > to me. The order in BBINCLUDED is significant and if it changes we
+> > should be reparsing.
+> 
+> Hi Richard,
+> 
+> Why do you say the order in BBINCLUDED is significant?
+> 
+> I saw the original code ignores the order when handling __depends and
+> __base_depends.
+> 
+> For example:
+> 
+> def mark_dependency(d, f):
+>     if f.startswith('./'):
+>         f = "%s/%s" % (os.getcwd(), f[2:]) 
+>     deps = d.getVar('__depends') or set() 
+>     deps.update([(f, cached_mtime(f))])
+>     d.setVar('__depends', deps)    
+> 
+> I think the get_file_depends(d) just follows the original logic.
+> 
+> Or do you mean the mark_dependency(d, f) is also buggy?
 
-The 'binb' popup window should be "set transient for" the main application
-window which they were spawned from.
+In that case I think the original code is also buggy.
 
-Signed-off-by: Liming An <limingx.l.an@intel.com>
----
- bitbake/lib/bb/ui/crumbs/builder.py           |    2 +-
- bitbake/lib/bb/ui/crumbs/persistenttooltip.py |    6 +++++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+Cheers,
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index bd45016..0f85cf5 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -898,7 +898,7 @@ class Builder(gtk.Window):
- 
-     def show_binb_dialog(self, binb):
-         markup = "<b>Brought in by:</b>\n%s" % binb
--        ptip = PersistentTooltip(markup)
-+        ptip = PersistentTooltip(markup, self)
- 
-         ptip.show()
- 
-diff --git a/bitbake/lib/bb/ui/crumbs/persistenttooltip.py b/bitbake/lib/bb/ui/crumbs/persistenttooltip.py
-index 4db3018..b43d297 100644
---- a/bitbake/lib/bb/ui/crumbs/persistenttooltip.py
-+++ b/bitbake/lib/bb/ui/crumbs/persistenttooltip.py
-@@ -35,7 +35,7 @@ class PersistentTooltip(gtk.Window):
- 
-     markup: some Pango text markup to display in the tooltip
-     """
--    def __init__(self, markup):
-+    def __init__(self, markup, parent_win=None):
-         gtk.Window.__init__(self, gtk.WINDOW_POPUP)
- 
-         # Inherit the system theme for a tooltip
-@@ -76,6 +76,10 @@ class PersistentTooltip(gtk.Window):
-         # Ensure a reasonable minimum size
-         self.set_geometry_hints(self, 100, 50)
- 
-+        # Set this window as a transient window for parent(main window)
-+        if parent_win:
-+            self.set_transient_for(parent_win)
-+            self.set_destroy_with_parent(True)
-         # Draw our label and close buttons
-         hbox = gtk.HBox(False, 0)
-         hbox.show()
--- 
-1.7.6
+Richard
 
 
 
