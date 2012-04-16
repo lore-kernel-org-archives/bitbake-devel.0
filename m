@@ -1,24 +1,25 @@
-Received: from mga14.intel.com ([143.182.124.37])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SJlzz-0005h1-Mu
+	(envelope-from <josh@linux.intel.com>) id 1SJopP-0000xx-4X
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 16 Apr 2012 15:29:43 +0200
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga102.ch.intel.com with ESMTP; 16 Apr 2012 06:20:17 -0700
+	Mon, 16 Apr 2012 18:30:59 +0200
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 16 Apr 2012 09:21:33 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="89550300"
-Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by AZSMGA002.ch.intel.com with ESMTP; 16 Apr 2012 06:20:17 -0700
-From: Dongxiao Xu <dongxiao.xu@intel.com>
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="133085070"
+Received: from unknown (HELO [10.7.198.151]) ([10.7.198.151])
+	by orsmga002.jf.intel.com with ESMTP; 16 Apr 2012 09:21:33 -0700
+Message-ID: <4F8C470C.9060409@linux.intel.com>
+Date: Mon, 16 Apr 2012 09:21:32 -0700
+From: Joshua Lock <josh@linux.intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:11.0) Gecko/20120329 Thunderbird/11.0.1
+MIME-Version: 1.0
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 16 Apr 2012 21:17:19 +0800
-Message-Id: <3880b5f056e6a522fee8a7589fb20d4c0da36c91.1334582048.git.dongxiao.xu@intel.com>
-X-Mailer: git-send-email 1.7.4.1
-In-Reply-To: <cover.1334582048.git.dongxiao.xu@intel.com>
-References: <cover.1334582048.git.dongxiao.xu@intel.com>
-In-Reply-To: <cover.1334582048.git.dongxiao.xu@intel.com>
-References: <cover.1334582048.git.dongxiao.xu@intel.com>
-Subject: [PATCH 2/2] data_smart: Improve the calculation of config hash
+References: <cover.1334570665.git.limingx.l.an@intel.com>
+	<cb025c92d54ad2f20abc15f81d89fb26bf7dd65c.1334570665.git.limingx.l.an@intel.com>
+In-Reply-To: <cb025c92d54ad2f20abc15f81d89fb26bf7dd65c.1334570665.git.limingx.l.an@intel.com>
+Subject: Re: [PATCH 1/1] Hob: fixed a little view issue about package selection page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,41 +31,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 16 Apr 2012 13:29:44 -0000
+X-List-Received-Date: Mon, 16 Apr 2012 16:30:59 -0000
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-For config hash, we put the keys in structure of "set()", which is not
-order sensitive. Therefore when calculating the md5 value for config
-hash, we need to identify the order of the keys.
 
-Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
----
- lib/bb/data_smart.py |    7 ++++---
- 1 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 2c200db..27fb7d9 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -462,13 +462,14 @@ class DataSmart(MutableMapping):
-         self.delVar(var)
- 
-     def get_hash(self):
--        data = ""
-+        data = {}
-         config_whitelist = set((self.getVar("BB_HASHCONFIG_WHITELIST", True) or "").split())
-         keys = set(key for key in iter(self) if not key.startswith("__"))
-         for key in keys:
-             if key in config_whitelist:
-                 continue
-             value = self.getVar(key, False) or ""
--            data = data + key + ': ' + str(value) + '\n'
-+            data.update({key:value})
- 
--        return hashlib.md5(data).hexdigest()
-+        data_str = str([(k, data[k]) for k in sorted(data.keys())])
-+        return hashlib.md5(data_str).hexdigest()
+On 16/04/12 03:09, Liming An wrote:
+> In package selection page, treeview cell data callback function not cover the 'else' case, so parent item will render the pervious value.
+>
+> Signed-off-by: Liming An<limingx.l.an@intel.com>
+
+Good catch, thanks!
+
+Signed-off-by: Joshua Lock<josh@linux.intel.com>
+
+> ---
+>   bitbake/lib/bb/ui/crumbs/hobwidget.py |    3 ++-
+>   1 files changed, 2 insertions(+), 1 deletions(-)
+>
+> diff --git a/bitbake/lib/bb/ui/crumbs/hobwidget.py b/bitbake/lib/bb/ui/crumbs/hobwidget.py
+> index a42cdec..8cbd6aa 100644
+> --- a/bitbake/lib/bb/ui/crumbs/hobwidget.py
+> +++ b/bitbake/lib/bb/ui/crumbs/hobwidget.py
+> @@ -175,7 +175,8 @@ class HobViewTable (gtk.VBox):
+>           if binb:
+>               bin = binb.split(', ')
+>               cell.set_property('text', bin[0])
+> -
+> +        else:
+> +            cell.set_property('text', "")
+>           return True
+>
+>       def set_model(self, tree_model):
+
 -- 
-1.7.4.1
-
+Joshua Lock
+         Yocto Project
+         Intel Open Source Technology Centre
 
 
