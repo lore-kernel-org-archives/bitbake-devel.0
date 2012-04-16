@@ -1,30 +1,26 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SJhRQ-0006Ja-VS for bitbake-devel@lists.openembedded.org;
-	Mon, 16 Apr 2012 10:37:45 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3G8SJf5028809;
-	Mon, 16 Apr 2012 09:28:19 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 28589-02; Mon, 16 Apr 2012 09:28:15 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3G8SALM028802
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Mon, 16 Apr 2012 09:28:11 +0100
-Message-ID: <1334564893.16992.64.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Xu, Dongxiao" <dongxiao.xu@intel.com>
-Date: Mon, 16 Apr 2012 09:28:13 +0100
-In-Reply-To: <1334560504.4305.6.camel@dongxiao-osel>
+Received: from mga11.intel.com ([192.55.52.93])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <dongxiao.xu@intel.com>) id 1SJhhK-0008Be-M9
+	for bitbake-devel@lists.openembedded.org;
+	Mon, 16 Apr 2012 10:54:10 +0200
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga102.fm.intel.com with ESMTP; 16 Apr 2012 01:44:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="154065972"
+Received: from dongxiao-osel.sh.intel.com (HELO [10.239.36.11])
+	([10.239.36.11])
+	by fmsmga002.fm.intel.com with ESMTP; 16 Apr 2012 01:44:44 -0700
+From: "Xu, Dongxiao" <dongxiao.xu@intel.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+In-Reply-To: <1334564893.16992.64.camel@ted>
 References: <cover.1333960654.git.dongxiao.xu@intel.com>
 	<ccb22c39f4aeb8e310f9a6f8e0f9c55c18ac6891.1333960654.git.dongxiao.xu@intel.com>
 	<1334098817.10826.89.camel@ted> <1334560504.4305.6.camel@dongxiao-osel>
-X-Mailer: Evolution 3.2.2- 
+	<1334564893.16992.64.camel@ted>
+Date: Mon, 16 Apr 2012 16:41:50 +0800
+Message-ID: <1334565710.26744.1.camel@dongxiao-osel>
 Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
+X-Mailer: Evolution 2.32.2 
 Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH 2/6] data_smart: Improve the calculation of config hash
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -38,86 +34,97 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 16 Apr 2012 08:37:45 -0000
+X-List-Received-Date: Mon, 16 Apr 2012 08:54:10 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Mon, 2012-04-16 at 15:15 +0800, Xu, Dongxiao wrote:
-> On Wed, 2012-04-11 at 00:00 +0100, Richard Purdie wrote:
-> > On Mon, 2012-04-09 at 16:41 +0800, Dongxiao Xu wrote:
-> > > The order of keys are not sensitive for config hash, so we need to
-> > > identify its order while calculating the md5 value.
+On Mon, 2012-04-16 at 09:28 +0100, Richard Purdie wrote:
+> On Mon, 2012-04-16 at 15:15 +0800, Xu, Dongxiao wrote:
+> > On Wed, 2012-04-11 at 00:00 +0100, Richard Purdie wrote:
+> > > On Mon, 2012-04-09 at 16:41 +0800, Dongxiao Xu wrote:
+> > > > The order of keys are not sensitive for config hash, so we need to
+> > > > identify its order while calculating the md5 value.
+> > > > 
+> > > > While for certain values, order is also not sensitive (for example,
+> > > > BBINCLUDED), we also need to identify its order while calculating md5
+> > > > value.
+> > > > 
+> > > > This could fix the problem that Martin Jansa reported in the mailing
+> > > > list:
+> > > > 
+> > > > http://lists.linuxtogo.org/pipermail/bitbake-devel/2012-March/002122.html
+> > > > 
+> > > > Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
+> > > > ---
+> > > >  lib/bb/data_smart.py |   10 +++++++---
+> > > >  1 files changed, 7 insertions(+), 3 deletions(-)
+> > > > 
+> > > > diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+> > > > index 2c200db..cc61a03 100644
+> > > > --- a/lib/bb/data_smart.py
+> > > > +++ b/lib/bb/data_smart.py
+> > > > @@ -462,13 +462,17 @@ class DataSmart(MutableMapping):
+> > > >          self.delVar(var)
+> > > >  
+> > > >      def get_hash(self):
+> > > > -        data = ""
+> > > > +        data = {}
+> > > >          config_whitelist = set((self.getVar("BB_HASHCONFIG_WHITELIST", True) or "").split())
+> > > > +        config_sort = set((self.getVar("BB_HASHCONFIG_SORT", True) or "").split())
+> > > >          keys = set(key for key in iter(self) if not key.startswith("__"))
+> > > >          for key in keys:
+> > > >              if key in config_whitelist:
+> > > >                  continue
+> > > >              value = self.getVar(key, False) or ""
+> > > > -            data = data + key + ': ' + str(value) + '\n'
+> > > > +            if key in config_sort:
+> > > > +                value = " ".join(sorted(value.split()))
+> > > > +            data.update({key:value})
+> > > >  
+> > > > -        return hashlib.md5(data).hexdigest()
+> > > > +        data_str = str([(k, data[k]) for k in sorted(data.keys())])
+> > > > +        return hashlib.md5(data_str).hexdigest()
 > > > 
-> > > While for certain values, order is also not sensitive (for example,
-> > > BBINCLUDED), we also need to identify its order while calculating md5
-> > > value.
 > > > 
-> > > This could fix the problem that Martin Jansa reported in the mailing
-> > > list:
-> > > 
-> > > http://lists.linuxtogo.org/pipermail/bitbake-devel/2012-March/002122.html
-> > > 
-> > > Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
-> > > ---
-> > >  lib/bb/data_smart.py |   10 +++++++---
-> > >  1 files changed, 7 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-> > > index 2c200db..cc61a03 100644
-> > > --- a/lib/bb/data_smart.py
-> > > +++ b/lib/bb/data_smart.py
-> > > @@ -462,13 +462,17 @@ class DataSmart(MutableMapping):
-> > >          self.delVar(var)
-> > >  
-> > >      def get_hash(self):
-> > > -        data = ""
-> > > +        data = {}
-> > >          config_whitelist = set((self.getVar("BB_HASHCONFIG_WHITELIST", True) or "").split())
-> > > +        config_sort = set((self.getVar("BB_HASHCONFIG_SORT", True) or "").split())
-> > >          keys = set(key for key in iter(self) if not key.startswith("__"))
-> > >          for key in keys:
-> > >              if key in config_whitelist:
-> > >                  continue
-> > >              value = self.getVar(key, False) or ""
-> > > -            data = data + key + ': ' + str(value) + '\n'
-> > > +            if key in config_sort:
-> > > +                value = " ".join(sorted(value.split()))
-> > > +            data.update({key:value})
-> > >  
-> > > -        return hashlib.md5(data).hexdigest()
-> > > +        data_str = str([(k, data[k]) for k in sorted(data.keys())])
-> > > +        return hashlib.md5(data_str).hexdigest()
+> > > This and the corresponding change in bitbake.conf look rather worrying
+> > > to me. The order in BBINCLUDED is significant and if it changes we
+> > > should be reparsing.
 > > 
+> > Hi Richard,
 > > 
-> > This and the corresponding change in bitbake.conf look rather worrying
-> > to me. The order in BBINCLUDED is significant and if it changes we
-> > should be reparsing.
+> > Why do you say the order in BBINCLUDED is significant?
+> > 
+> > I saw the original code ignores the order when handling __depends and
+> > __base_depends.
+> > 
+> > For example:
+> > 
+> > def mark_dependency(d, f):
+> >     if f.startswith('./'):
+> >         f = "%s/%s" % (os.getcwd(), f[2:]) 
+> >     deps = d.getVar('__depends') or set() 
+> >     deps.update([(f, cached_mtime(f))])
+> >     d.setVar('__depends', deps)    
+> > 
+> > I think the get_file_depends(d) just follows the original logic.
+> > 
+> > Or do you mean the mark_dependency(d, f) is also buggy?
 > 
-> Hi Richard,
-> 
-> Why do you say the order in BBINCLUDED is significant?
-> 
-> I saw the original code ignores the order when handling __depends and
-> __base_depends.
-> 
-> For example:
-> 
-> def mark_dependency(d, f):
->     if f.startswith('./'):
->         f = "%s/%s" % (os.getcwd(), f[2:]) 
->     deps = d.getVar('__depends') or set() 
->     deps.update([(f, cached_mtime(f))])
->     d.setVar('__depends', deps)    
-> 
-> I think the get_file_depends(d) just follows the original logic.
-> 
-> Or do you mean the mark_dependency(d, f) is also buggy?
+> In that case I think the original code is also buggy.
 
-In that case I think the original code is also buggy.
+Could you explain more why __depends should be ordered? I saw the
+variable's definition is set() type and there is no code depends on the
+order of "__depends".
 
-Cheers,
+Thanks,
+Dongxiao
 
-Richard
+> 
+> Cheers,
+> 
+> Richard
+> 
+
 
 
 
