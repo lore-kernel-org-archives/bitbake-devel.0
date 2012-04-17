@@ -1,24 +1,24 @@
 Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SK3rR-00057Y-4Q
+	(envelope-from <dongxiao.xu@intel.com>) id 1SK3rR-00057Y-VL
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 17 Apr 2012 10:34:05 +0200
+	Tue, 17 Apr 2012 10:34:06 +0200
 Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 17 Apr 2012 01:24:38 -0700
+	by azsmga101.ch.intel.com with ESMTP; 17 Apr 2012 01:24:41 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="131810597"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="131810607"
 Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by azsmga001.ch.intel.com with ESMTP; 17 Apr 2012 01:24:37 -0700
+	by azsmga001.ch.intel.com with ESMTP; 17 Apr 2012 01:24:40 -0700
 From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 17 Apr 2012 16:21:36 +0800
-Message-Id: <49da1e00e1a8a0b0b241942cc70cfc89be232a2a.1334650694.git.dongxiao.xu@intel.com>
+Date: Tue, 17 Apr 2012 16:21:38 +0800
+Message-Id: <8ff5c44cb638a4aa9e2fc5581e15863bc9fcb516.1334650694.git.dongxiao.xu@intel.com>
 X-Mailer: git-send-email 1.7.4.1
 In-Reply-To: <cover.1334650694.git.dongxiao.xu@intel.com>
 References: <cover.1334650694.git.dongxiao.xu@intel.com>
 In-Reply-To: <cover.1334650694.git.dongxiao.xu@intel.com>
 References: <cover.1334650694.git.dongxiao.xu@intel.com>
-Subject: [PATCH 1/4] bitbake: Retain order for __depends and __base_depends
+Subject: [PATCH 3/4] Hob: Enlarge the upper value of image size
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,86 +30,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 17 Apr 2012 08:34:05 -0000
+X-List-Received-Date: Tue, 17 Apr 2012 08:34:06 -0000
 
-Bitbake take seriously with variables order, therefore when setting
-values to __depends and __base_depends, we need to retain its order.
+Originally the upper value for image size and extra size is 1024M, which
+is relatively small. Enlarge it to 64GB.
+
+Besides, fix tooltip for toolchain build.
 
 Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
 ---
- lib/bb/cache.py          |    6 ++++--
- lib/bb/cooker.py         |    6 ++++--
- lib/bb/parse/__init__.py |   12 ++++++++----
- 3 files changed, 16 insertions(+), 8 deletions(-)
+ lib/bb/ui/crumbs/hig.py |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-index 47e814b..a114582 100644
---- a/lib/bb/cache.py
-+++ b/lib/bb/cache.py
-@@ -391,12 +391,14 @@ class Cache(object):
-         """Parse the specified filename, returning the recipe information"""
-         infos = []
-         datastores = cls.load_bbfile(filename, appends, configdata)
--        depends = set()
-+        depends = []
-         for variant, data in sorted(datastores.iteritems(),
-                                     key=lambda i: i[0],
-                                     reverse=True):
-             virtualfn = cls.realfn2virtual(filename, variant)
--            depends |= (data.getVar("__depends", False) or set())
-+            for dep in (data.getVar("__depends", False) or []):
-+                if dep not in depends:
-+                    depends.append(dep)
-             if depends and not variant:
-                 data.setVar("__depends", depends)
+diff --git a/lib/bb/ui/crumbs/hig.py b/lib/bb/ui/crumbs/hig.py
+index a85b478..93a4fbc 100644
+--- a/lib/bb/ui/crumbs/hig.py
++++ b/lib/bb/ui/crumbs/hig.py
+@@ -423,15 +423,15 @@ class AdvancedSettingDialog (CrumbsDialog):
+         advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
+         label = self.gen_label_widget("<span weight=\"bold\">Image rootfs size: (MB)</span>")
+         tooltip = "Sets the basic size of your target image.\nThis is the basic size of your target image unless your selected package size exceeds this value or you select \'Image Extra Size\'."
+-        rootfs_size_widget, self.rootfs_size_spinner = self.gen_spinner_widget(int(self.configuration.image_rootfs_size*1.0/1024), 0, 1024, tooltip)
++        rootfs_size_widget, self.rootfs_size_spinner = self.gen_spinner_widget(int(self.configuration.image_rootfs_size*1.0/1024), 0, 65536, tooltip)
+         sub_vbox.pack_start(label, expand=False, fill=False)
+         sub_vbox.pack_start(rootfs_size_widget, expand=False, fill=False)
  
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index dea0aad..51341fa 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -680,8 +680,10 @@ class BBCooker:
-         # Generate a list of parsed configuration files by searching the files
-         # listed in the __depends and __base_depends variables with a .conf suffix.
-         conffiles = []
--        dep_files = self.configuration.data.getVar('__depends') or set()
--        dep_files.union(self.configuration.data.getVar('__base_depends') or set())
-+        dep_files = self.configuration.data.getVar('__depends') or []
-+        for dep in (self.configuration.data.getVar('__base_depends') or []):
-+            if dep not in dep_files:
-+                dep_files.append(dep)
+         sub_vbox = gtk.VBox(False, 6)
+         advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
+         label = self.gen_label_widget("<span weight=\"bold\">Image extra size: (MB)</span>")
+-        tooltip = "Sets the extra free space of your target image.\nBy default, the system reserves 30% of your image size as free space. If your image contains zypper, it brings in 50MB more space. The maximum free space is 1024MB."
+-        extra_size_widget, self.extra_size_spinner = self.gen_spinner_widget(int(self.configuration.image_extra_size*1.0/1024), 0, 1024, tooltip)
++        tooltip = "Sets the extra free space of your target image.\nBy default, the system reserves 30% of your image size as free space. If your image contains zypper, it brings in 50MB more space. The maximum free space is 64GB."
++        extra_size_widget, self.extra_size_spinner = self.gen_spinner_widget(int(self.configuration.image_extra_size*1.0/1024), 0, 65536, tooltip)
+         sub_vbox.pack_start(label, expand=False, fill=False)
+         sub_vbox.pack_start(extra_size_widget, expand=False, fill=False)
  
-         for f in dep_files:
-             if f[0].endswith(".conf"):
-diff --git a/lib/bb/parse/__init__.py b/lib/bb/parse/__init__.py
-index 7b9c47e..f223ff9 100644
---- a/lib/bb/parse/__init__.py
-+++ b/lib/bb/parse/__init__.py
-@@ -73,8 +73,10 @@ def update_mtime(f):
- def mark_dependency(d, f):
-     if f.startswith('./'):
-         f = "%s/%s" % (os.getcwd(), f[2:])
--    deps = d.getVar('__depends') or set()
--    deps.update([(f, cached_mtime(f))])
-+    deps = d.getVar('__depends') or []
-+    t = cached_mtime(f)
-+    if (f, t) not in deps:
-+        deps.append((f, t))
-     d.setVar('__depends', deps)
+@@ -450,7 +450,7 @@ class AdvancedSettingDialog (CrumbsDialog):
+         self.toolchain_checkbox.set_active(self.configuration.toolchain_build)
+         sub_hbox.pack_start(self.toolchain_checkbox, expand=False, fill=False)
  
- def supports(fn, data):
-@@ -134,8 +136,10 @@ def vars_from_file(mypkg, d):
- def get_file_depends(d):
-     '''Return the dependent files'''
-     dep_files = []
--    depends = d.getVar('__depends', True) or set()
--    depends = depends.union(d.getVar('__base_depends', True) or set())
-+    depends = d.getVar('__depends', True) or []
-+    for dep in (d.getVar('__base_depends', True) or []):
-+        if dep not in depends:
-+            depends.append(dep)
-     for (fn, _) in depends:
-         dep_files.append(os.path.abspath(fn))
-     return " ".join(dep_files)
+-        tooltip = "Selects the Host platform for which you want to run the toolchain"
++        tooltip = "Selects the host platform for which you want to run the toolchain"
+         sdk_machine_widget, self.sdk_machine_combo = self.gen_combo_widget(self.configuration.curr_sdk_machine, self.all_sdk_machines, tooltip)
+         sub_hbox.pack_start(sdk_machine_widget, expand=False, fill=False)
+ 
 -- 
 1.7.4.1
 
