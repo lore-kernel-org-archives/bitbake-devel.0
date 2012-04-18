@@ -1,24 +1,37 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mx4.leapfrog.com ([63.114.26.254])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dongxiao.xu@intel.com>) id 1SKNuo-0004RD-TR
+	(envelope-from <dlazzari@leapfrog.com>) id 1SKck8-0004OA-7I
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 18 Apr 2012 07:58:55 +0200
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 17 Apr 2012 22:49:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="90344536"
-Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
-	by AZSMGA002.ch.intel.com with ESMTP; 17 Apr 2012 22:49:26 -0700
-From: Dongxiao Xu <dongxiao.xu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 18 Apr 2012 13:46:27 +0800
-Message-Id: <4298ae4a73ae722713ae1c21258d15c2829d7866.1334727847.git.dongxiao.xu@intel.com>
-X-Mailer: git-send-email 1.7.4.1
-In-Reply-To: <cover.1334727847.git.dongxiao.xu@intel.com>
-References: <cover.1334727847.git.dongxiao.xu@intel.com>
-In-Reply-To: <cover.1334727847.git.dongxiao.xu@intel.com>
-References: <cover.1334727847.git.dongxiao.xu@intel.com>
-Subject: [PATCH 1/1] bitbake: Retain order for __depends and __base_depends
+	Wed, 18 Apr 2012 23:48:52 +0200
+Received: from mx4.leapfrog.com (localhost [127.0.0.1])
+	by localhost.leapfrog.com (Postfix) with ESMTP id 4E7C15EB3
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 18 Apr 2012 14:21:41 -0700 (PDT)
+Received: from NAEXCHHT01.na.leapfrog.com (unknown [10.15.6.13])
+	by mx4.leapfrog.com (Postfix) with ESMTP id 35D885E73
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 18 Apr 2012 14:21:41 -0700 (PDT)
+Received: from NAEMCASHT01.na.leapfrog.com (10.16.4.161) by
+	NAEXCHHT01.na.leapfrog.com (10.15.6.13) with Microsoft SMTP Server
+	(TLS) id 8.2.254.0; Wed, 18 Apr 2012 14:21:55 -0700
+Received: from NAEMMAIL01.na.leapfrog.com ([fe80::252e:28a6:3d8f:6991]) by
+	NAEMCASHT01.na.leapfrog.com ([::1]) with mapi id 14.01.0355.002;
+	Wed, 18 Apr 2012 14:21:55 -0700
+From: Daniel Lazzari <dlazzari@leapfrog.com>
+To: "'bitbake-devel@lists.openembedded.org'
+	(bitbake-devel@lists.openembedded.org)"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: python function used in variable expansion called multiple
+	times per recipe
+Thread-Index: Ac0dqUJmIcsujxmfQlyaUhmEaDraqQ==
+Date: Wed, 18 Apr 2012 21:21:54 +0000
+Message-ID: <E7A9054A5ACABE48B0E540E46E862B0F0427C336@NAEMMAIL01.na.leapfrog.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.100.2.5]
+MIME-Version: 1.0
+Subject: python function used in variable expansion called multiple times per recipe
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,99 +43,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 18 Apr 2012 05:58:55 -0000
+X-List-Received-Date: Wed, 18 Apr 2012 21:48:52 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Bitbake take seriously with variables order, therefore when setting
-values to __depends and __base_depends, we need to retain its order.
+Hi everyone,
 
-Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
----
- lib/bb/cache.py          |   15 +++++++++++----
- lib/bb/cooker.py         |    4 ++--
- lib/bb/parse/__init__.py |    8 ++++----
- 3 files changed, 17 insertions(+), 10 deletions(-)
+I've been wrestling with this problem for over a day now so I figured it's =
+time to call in the cavalry.
+I have a class in our layer that needs to fill in a variable (EXTERNPV) wit=
+h information about svn externals in a project. This process can be very ti=
+me consuming and resource intensive so I would prefer that it only happen o=
+nce per run. Unfortunately, it seems to run 5 times for each recipe that in=
+herits the class. You can easily duplicate the behavior  I see with the fol=
+lowing:
 
-diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-index 47e814b..27d9be8 100644
---- a/lib/bb/cache.py
-+++ b/lib/bb/cache.py
-@@ -391,14 +391,21 @@ class Cache(object):
-         """Parse the specified filename, returning the recipe information"""
-         infos = []
-         datastores = cls.load_bbfile(filename, appends, configdata)
--        depends = set()
-+        depdict = {}
-         for variant, data in sorted(datastores.iteritems(),
-                                     key=lambda i: i[0],
-                                     reverse=True):
-             virtualfn = cls.realfn2virtual(filename, variant)
--            depends |= (data.getVar("__depends", False) or set())
--            if depends and not variant:
-+            if not variant:
-+                base = data.getVar("__depends", False) or []
-+                depends = base[:]
-+                for var in depdict.values():
-+                    for item in var:
-+                        if item not in base:
-+                            depends.append(item)
-                 data.setVar("__depends", depends)
-+            else:
-+                depdict[variant] = data.getVar("__depends", False) or []
- 
-             info_array = []
-             for cache_class in caches_array:
-@@ -497,7 +504,7 @@ class Cache(object):
-         # Check dependencies are still valid
-         depends = info_array[0].file_depends
-         if depends:
--            for f, old_mtime in depends:
-+            for f, old_mtime in set(depends):
-                 fmtime = bb.parse.cached_mtime_noerror(f)
-                 # Check if file still exists
-                 if old_mtime != 0 and fmtime == 0:
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index dea0aad..8c2b35d 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -680,8 +680,8 @@ class BBCooker:
-         # Generate a list of parsed configuration files by searching the files
-         # listed in the __depends and __base_depends variables with a .conf suffix.
-         conffiles = []
--        dep_files = self.configuration.data.getVar('__depends') or set()
--        dep_files.union(self.configuration.data.getVar('__base_depends') or set())
-+        dep_files = self.configuration.data.getVar('__base_depends') or []
-+        dep_files += (self.configuration.data.getVar('__depends') or [])
- 
-         for f in dep_files:
-             if f[0].endswith(".conf"):
-diff --git a/lib/bb/parse/__init__.py b/lib/bb/parse/__init__.py
-index 7b9c47e..30f6254 100644
---- a/lib/bb/parse/__init__.py
-+++ b/lib/bb/parse/__init__.py
-@@ -73,8 +73,8 @@ def update_mtime(f):
- def mark_dependency(d, f):
-     if f.startswith('./'):
-         f = "%s/%s" % (os.getcwd(), f[2:])
--    deps = d.getVar('__depends') or set()
--    deps.update([(f, cached_mtime(f))])
-+    deps = d.getVar('__depends') or []
-+    deps.append((f, cached_mtime(f)))
-     d.setVar('__depends', deps)
- 
- def supports(fn, data):
-@@ -134,8 +134,8 @@ def vars_from_file(mypkg, d):
- def get_file_depends(d):
-     '''Return the dependent files'''
-     dep_files = []
--    depends = d.getVar('__depends', True) or set()
--    depends = depends.union(d.getVar('__base_depends', True) or set())
-+    base_depends = d.getVar('__base_depends', True) or []
-+    depends = base_depends + (d.getVar('__depends', True) or [])
-     for (fn, _) in depends:
-         dep_files.append(os.path.abspath(fn))
-     return " ".join(dep_files)
--- 
-1.7.4.1
+def testFunc(bb, d):
+	print( bb.data.getVar("PN", d, True) )
+	return "e1"
+
+EXTERNPV =3D "${@testFunc(bb, d)}"
+
+Am I doing something wrong? Is there some assignment operator I can use to =
+ensure this only has to be done once? Or maybe a variable flag?
+
+As always, I very much appreciate the help.
+
+Dan Lazzari Jr.
+Firmware Engineer
+dlazzari@leapfrog.com
 
 
 
