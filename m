@@ -1,33 +1,37 @@
-Received: from mail-qa0-f41.google.com ([209.85.216.41])
+Received: from mx3.leapfrog.com ([63.114.26.253])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1SKeer-0006DS-3l
+	(envelope-from <dlazzari@leapfrog.com>) id 1SKeti-0006qx-BJ
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 19 Apr 2012 01:51:33 +0200
-Received: by qafl39 with SMTP id l39so1131550qaf.7
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Apr 2012 16:42:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-type:content-transfer-encoding;
-	bh=3FpuMncpaXOX//6l2a1TiC3+HZ8mYVbRUOxrUaziIG0=;
-	b=SqiwvK+F/hZl+jAvijXyk5vFCp9faU//u492dfL/2I0NPr2csRhknHYNSoCFgwFL9I
-	titA/Vxi0B0Tg5SAhgdRwApizGiRduWYKkbMhgvGV3R7pyuBLUDQgzEwIKILrda6eQnn
-	2Smx6ZVVtrIrwq8eJEjlmJs3NqQb8ZD+MH10NA1xT/0u8EyTDri2bO+w6ocpwOkBrMrx
-	surMG1r1jmsDGiEgANC5Eip5iMkAozQKEQxB7WaM7OA9aZV7ShKPSmDkUDU3d1cl0CwU
-	0+nqQwvyX23bfbaJGMWYqD0PTaybQxNcDurJJqYlHldoNIWHI25aBtH2fwgB/ynbO/AH
-	fanQ==
-Received: by 10.229.136.17 with SMTP id p17mr1736721qct.151.1334792524738;
-	Wed, 18 Apr 2012 16:42:04 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.229.79.79 with HTTP; Wed, 18 Apr 2012 16:41:44 -0700 (PDT)
-In-Reply-To: <E7A9054A5ACABE48B0E540E46E862B0F0427C5FA@NAEMMAIL01.na.leapfrog.com>
+	Thu, 19 Apr 2012 02:06:54 +0200
+Received: from mx3.leapfrog.com (localhost [127.0.0.1])
+	by localhost.leapfrog.com (Postfix) with ESMTP
+	id 2FDE85EE4; Wed, 18 Apr 2012 16:57:11 -0700 (PDT)
+Received: from NAEXCHHT01.na.leapfrog.com (unknown [10.15.6.13])
+	by mx3.leapfrog.com (Postfix) with ESMTP
+	id EEA685E83; Wed, 18 Apr 2012 16:57:10 -0700 (PDT)
+Received: from NAEMCASHT01.na.leapfrog.com (10.16.4.161) by
+	NAEXCHHT01.na.leapfrog.com (10.15.6.13) with Microsoft SMTP Server
+	(TLS) id 8.2.254.0; Wed, 18 Apr 2012 16:57:25 -0700
+Received: from NAEMMAIL01.na.leapfrog.com ([fe80::252e:28a6:3d8f:6991]) by
+	NAEMCASHT01.na.leapfrog.com ([::1]) with mapi id 14.01.0355.002;
+	Wed, 18 Apr 2012 16:57:25 -0700
+From: Daniel Lazzari <dlazzari@leapfrog.com>
+To: 'Chris Larson' <kergoth@gmail.com>
+Thread-Topic: [bitbake-devel] python function used in variable expansion
+	called multiple times per recipe
+Thread-Index: Ac0dqUJmIcsujxmfQlyaUhmEaDraqQASVj+AAA3ZuJD//5rzAIAAcVXg
+Date: Wed, 18 Apr 2012 23:57:24 +0000
+Message-ID: <E7A9054A5ACABE48B0E540E46E862B0F0427C619@NAEMMAIL01.na.leapfrog.com>
 References: <E7A9054A5ACABE48B0E540E46E862B0F0427C336@NAEMMAIL01.na.leapfrog.com>
 	<671D7BD596E04EE1961D6EA1C734C816@gmail.com>
 	<E7A9054A5ACABE48B0E540E46E862B0F0427C5FA@NAEMMAIL01.na.leapfrog.com>
-From: Chris Larson <kergoth@gmail.com>
-Date: Wed, 18 Apr 2012 16:41:44 -0700
-Message-ID: <CABcZANn_xWLbxJRPK68Eu9iLjp6jjxkefPhe61UAcxzu91ZHwA@mail.gmail.com>
-To: Daniel Lazzari <dlazzari@leapfrog.com>
+	<CABcZANn_xWLbxJRPK68Eu9iLjp6jjxkefPhe61UAcxzu91ZHwA@mail.gmail.com>
+In-Reply-To: <CABcZANn_xWLbxJRPK68Eu9iLjp6jjxkefPhe61UAcxzu91ZHwA@mail.gmail.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.100.2.5]
+MIME-Version: 1.0
 Cc: "'bitbake-devel@lists.openembedded.org'
 	\(bitbake-devel@lists.openembedded.org\)"
 	<bitbake-devel@lists.openembedded.org>
@@ -43,38 +47,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 18 Apr 2012 23:51:33 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Thu, 19 Apr 2012 00:06:54 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Wed, Apr 18, 2012 at 4:39 PM, Daniel Lazzari <dlazzari@leapfrog.com> wro=
-te:
-> I think immediate expansion is what I=E2=80=99ll need to use, thanks for =
-the tip.
-> That at least brings the invocation down to once per run. Unfortunately, =
-the
-> variable doesn=E2=80=99t seem to get filled in when I change to immediate=
- expansion.
->
-> def testFunc(bb, d):
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 print( bb.data.getVar("PN", d, True) )
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 return "e1"
->
-> EXTERNPV :=3D "${@testFunc(bb, d)}"
->
-> Now only prints the package name once, but using =E2=80=93e, I don=E2=80=
-=99t see the
-> variable EXTERNPV at all.
-
-Don't know what to tell you. It does work, so it's something wrong on
-your end. Either it's returning an empty string, which will result in
--e only showing the commented out definition, or it's raising an
-exception, or something else in your setup. Aside: you don't need to
-pass 'bb' in. That namespace is always accessible, even from def'd
-python functions.
---=20
-Christopher Larson
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQ2hyaXMgTGFyc29uIFttYWlsdG86
+a2VyZ290aEBnbWFpbC5jb21dDQo+U2VudDogV2VkbmVzZGF5LCBBcHJpbCAxOCwgMjAxMiA0OjQy
+IFBNDQo+VG86IERhbmllbCBMYXp6YXJpDQo+Q2M6ICdiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5l
+bWJlZGRlZC5vcmcnIChiaXRiYWtlLQ0KPmRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcpDQo+
+U3ViamVjdDogUmU6IFtiaXRiYWtlLWRldmVsXSBweXRob24gZnVuY3Rpb24gdXNlZCBpbiB2YXJp
+YWJsZSBleHBhbnNpb24gY2FsbGVkDQo+bXVsdGlwbGUgdGltZXMgcGVyIHJlY2lwZQ0KPg0KPk9u
+IFdlZCwgQXByIDE4LCAyMDEyIGF0IDQ6MzkgUE0sIERhbmllbCBMYXp6YXJpIDxkbGF6emFyaUBs
+ZWFwZnJvZy5jb20+DQo+d3JvdGU6DQo+PiBJIHRoaW5rIGltbWVkaWF0ZSBleHBhbnNpb24gaXMg
+d2hhdCBJ4oCZbGwgbmVlZCB0byB1c2UsIHRoYW5rcyBmb3IgdGhlIHRpcC4NCj4+IFRoYXQgYXQg
+bGVhc3QgYnJpbmdzIHRoZSBpbnZvY2F0aW9uIGRvd24gdG8gb25jZSBwZXIgcnVuLiBVbmZvcnR1
+bmF0ZWx5LCB0aGUNCj4+IHZhcmlhYmxlIGRvZXNu4oCZdCBzZWVtIHRvIGdldCBmaWxsZWQgaW4g
+d2hlbiBJIGNoYW5nZSB0byBpbW1lZGlhdGUNCj5leHBhbnNpb24uDQo+Pg0KPj4gZGVmIHRlc3RG
+dW5jKGJiLCBkKToNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwcmludCggYmIu
+ZGF0YS5nZXRWYXIoIlBOIiwgZCwgVHJ1ZSkgKQ0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIHJldHVybiAiZTEiDQo+Pg0KPj4gRVhURVJOUFYgOj0gIiR7QHRlc3RGdW5jKGJiLCBk
+KX0iDQo+Pg0KPj4gTm93IG9ubHkgcHJpbnRzIHRoZSBwYWNrYWdlIG5hbWUgb25jZSwgYnV0IHVz
+aW5nIOKAk2UsIEkgZG9u4oCZdCBzZWUgdGhlDQo+PiB2YXJpYWJsZSBFWFRFUk5QViBhdCBhbGwu
+DQo+DQo+RG9uJ3Qga25vdyB3aGF0IHRvIHRlbGwgeW91LiBJdCBkb2VzIHdvcmssIHNvIGl0J3Mg
+c29tZXRoaW5nIHdyb25nIG9uDQo+eW91ciBlbmQuIEVpdGhlciBpdCdzIHJldHVybmluZyBhbiBl
+bXB0eSBzdHJpbmcsIHdoaWNoIHdpbGwgcmVzdWx0IGluDQo+LWUgb25seSBzaG93aW5nIHRoZSBj
+b21tZW50ZWQgb3V0IGRlZmluaXRpb24sIG9yIGl0J3MgcmFpc2luZyBhbg0KPmV4Y2VwdGlvbiwg
+b3Igc29tZXRoaW5nIGVsc2UgaW4geW91ciBzZXR1cC4gQXNpZGU6IHlvdSBkb24ndCBuZWVkIHRv
+DQo+cGFzcyAnYmInIGluLiBUaGF0IG5hbWVzcGFjZSBpcyBhbHdheXMgYWNjZXNzaWJsZSwgZXZl
+biBmcm9tIGRlZidkDQo+cHl0aG9uIGZ1bmN0aW9ucy4NCj4tLQ0KPkNocmlzdG9waGVyIExhcnNv
+bg0KDQpBaCwgSSB3YXMgZG9pbmcgLWUgb24gdGhlIHdyb25nIHJlY2lwZS4uLiB0aW1lIHRvIGdl
+dCBzb21lIG1vcmUgY2FmZmVpbmUuIFRoZSB0ZXN0IGNhc2UgaXMgbm93IHdvcmtpbmcuIE15IGNv
+ZGUgaXMgbm90LCBidXQgSSBjYW4gZGVidWcgdGhhdCBwcmV0dHkgZWFzaWx5LiBUaGFua3MgZm9y
+IGFsbCBvZiB5b3VyIGhlbHAhDQo=
 
 
