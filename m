@@ -1,37 +1,34 @@
-Received: from mx4.leapfrog.com ([63.114.26.254])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dlazzari@leapfrog.com>) id 1SKyyy-0002Aj-8i
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 19 Apr 2012 23:33:40 +0200
-Received: from mx4.leapfrog.com (localhost [127.0.0.1])
-	by localhost.leapfrog.com (Postfix) with ESMTP
-	id A9A085EA9; Thu, 19 Apr 2012 14:23:54 -0700 (PDT)
-Received: from NAEXCHHT01.na.leapfrog.com (unknown [10.15.6.13])
-	by mx4.leapfrog.com (Postfix) with ESMTP
-	id 94ED65E99; Thu, 19 Apr 2012 14:23:54 -0700 (PDT)
-Received: from NAEMCASHT02.na.leapfrog.com (10.12.2.36) by
-	NAEXCHHT01.na.leapfrog.com (10.15.6.13) with Microsoft SMTP Server
-	(TLS) id 8.2.254.0; Thu, 19 Apr 2012 14:24:09 -0700
-Received: from NAEMMAIL01.na.leapfrog.com ([fe80::252e:28a6:3d8f:6991]) by
-	NAEMCASHT02.na.leapfrog.com ([::1]) with mapi id 14.01.0355.002;
-	Thu, 19 Apr 2012 14:24:08 -0700
-From: Daniel Lazzari <dlazzari@leapfrog.com>
-To: 'Chris Larson' <kergoth@gmail.com>
-Thread-Topic: [bitbake-devel] python function used in variable expansion
-	called multiple times per recipe
-Thread-Index: Ac0dqUJmIcsujxmfQlyaUhmEaDraqQASVj+AAA3ZuJD//5rzAP//C9LQ
-Date: Thu, 19 Apr 2012 21:24:08 +0000
-Message-ID: <E7A9054A5ACABE48B0E540E46E862B0F0427CB32@NAEMMAIL01.na.leapfrog.com>
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1SKzyr-0006h8-KS for bitbake-devel@lists.openembedded.org;
+	Fri, 20 Apr 2012 00:37:37 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3JMS7xu019295;
+	Thu, 19 Apr 2012 23:28:07 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 18528-07; Thu, 19 Apr 2012 23:28:03 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q3JMRvNF019289
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Thu, 19 Apr 2012 23:27:58 +0100
+Message-ID: <1334874480.3028.18.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Daniel Lazzari <dlazzari@leapfrog.com>
+Date: Thu, 19 Apr 2012 23:28:00 +0100
+In-Reply-To: <E7A9054A5ACABE48B0E540E46E862B0F0427CB32@NAEMMAIL01.na.leapfrog.com>
 References: <E7A9054A5ACABE48B0E540E46E862B0F0427C336@NAEMMAIL01.na.leapfrog.com>
 	<671D7BD596E04EE1961D6EA1C734C816@gmail.com>
 	<E7A9054A5ACABE48B0E540E46E862B0F0427C5FA@NAEMMAIL01.na.leapfrog.com>
 	<CABcZANn_xWLbxJRPK68Eu9iLjp6jjxkefPhe61UAcxzu91ZHwA@mail.gmail.com>
-In-Reply-To: <CABcZANn_xWLbxJRPK68Eu9iLjp6jjxkefPhe61UAcxzu91ZHwA@mail.gmail.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.100.2.5]
-MIME-Version: 1.0
+	<E7A9054A5ACABE48B0E540E46E862B0F0427CB32@NAEMMAIL01.na.leapfrog.com>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+X-MIME-Autoconverted: from 8bit to quoted-printable by tim.rpsys.net id
+	q3JMS7xu019295
 Cc: "'bitbake-devel@lists.openembedded.org'
 	\(bitbake-devel@lists.openembedded.org\)"
 	<bitbake-devel@lists.openembedded.org>
@@ -47,61 +44,59 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 19 Apr 2012 21:33:41 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Thu, 19 Apr 2012 22:37:37 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Pj4gSSB0aGluayBpbW1lZGlhdGUgZXhwYW5zaW9uIGlzIHdoYXQgSeKAmWxsIG5lZWQgdG8gdXNl
-LCB0aGFua3MgZm9yIHRoZSB0aXAuDQo+PiBUaGF0IGF0IGxlYXN0IGJyaW5ncyB0aGUgaW52b2Nh
-dGlvbiBkb3duIHRvIG9uY2UgcGVyIHJ1bi4gVW5mb3J0dW5hdGVseSwgdGhlDQo+PiB2YXJpYWJs
-ZSBkb2VzbuKAmXQgc2VlbSB0byBnZXQgZmlsbGVkIGluIHdoZW4gSSBjaGFuZ2UgdG8gaW1tZWRp
-YXRlDQo+ZXhwYW5zaW9uLg0KPj4NCj4+IGRlZiB0ZXN0RnVuYyhiYiwgZCk6DQo+PiDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcHJpbnQoIGJiLmRhdGEuZ2V0VmFyKCJQTiIsIGQsIFRy
-dWUpICkNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gImUxIg0KPj4N
-Cj4+IEVYVEVSTlBWIDo9ICIke0B0ZXN0RnVuYyhiYiwgZCl9Ig0KPj4NCj4+IE5vdyBvbmx5IHBy
-aW50cyB0aGUgcGFja2FnZSBuYW1lIG9uY2UsIGJ1dCB1c2luZyDigJNlLCBJIGRvbuKAmXQgc2Vl
-IHRoZQ0KPj4gdmFyaWFibGUgRVhURVJOUFYgYXQgYWxsLg0KPg0KPkRvbid0IGtub3cgd2hhdCB0
-byB0ZWxsIHlvdS4gSXQgZG9lcyB3b3JrLCBzbyBpdCdzIHNvbWV0aGluZyB3cm9uZyBvbg0KPnlv
-dXIgZW5kLiBFaXRoZXIgaXQncyByZXR1cm5pbmcgYW4gZW1wdHkgc3RyaW5nLCB3aGljaCB3aWxs
-IHJlc3VsdCBpbg0KPi1lIG9ubHkgc2hvd2luZyB0aGUgY29tbWVudGVkIG91dCBkZWZpbml0aW9u
-LCBvciBpdCdzIHJhaXNpbmcgYW4NCj5leGNlcHRpb24sIG9yIHNvbWV0aGluZyBlbHNlIGluIHlv
-dXIgc2V0dXAuIEFzaWRlOiB5b3UgZG9uJ3QgbmVlZCB0bw0KPnBhc3MgJ2JiJyBpbi4gVGhhdCBu
-YW1lc3BhY2UgaXMgYWx3YXlzIGFjY2Vzc2libGUsIGV2ZW4gZnJvbSBkZWYnZA0KPnB5dGhvbiBm
-dW5jdGlvbnMuDQo+LS0NCj5DaHJpc3RvcGhlciBMYXJzb24NCg0KSnVzdCB0aG91Z2h0IEknZCBw
-cm92aWRlIGFuIHVwZGF0ZSByZWFsIHF1aWNrIG9uIHRoaXMuIEkgZGlzY292ZXJlZCwgdG8gbXkg
-ZGlzbWF5LCB0aGF0IGV2ZW4gZG9pbmcgYW4gaW1tZWRpYXRlIGV4cGFuc2lvbiBzdGlsbCByYW4g
-dGhlIGNvZGUgYmVmb3JlIGV2ZXJ5IHRhc2sgZm9yIHRoYXQgcmVjaXBlLiBJIHN3aXRjaGVkIHRv
-IHVzaW5nIGFuIGV2ZW50IGhhbmRsZXIsIGJ1dCB0aGUgUmVjaXBlUGFyc2VkIGV2ZW50IG9jY3Vy
-cyBiZWZvcmUgZXZlcnkgdGFzayBmb3IgdGhhdCByZWNpcGUuIEV2ZW50dWFsbHkgSSBkaXNjb3Zl
-cmVkIHRoYXQgdGhlIHZhcmlhYmxlIEJCX1dPUktFUkNPTlRFWFQgaXMgc2V0IGZvciBSZWNpcGVQ
-YXJzZWQgZXZlbnRzIHdoZW4gdGhleSBhcmUgb2NjdXJyaW5nIGJlZm9yZSBhIHRhc2ssIGJ1dCBu
-b3QgZm9yIHRoZSBpbml0aWFsIHBhcnNlLiBBbHNvLCBJIGRpc2NvdmVyZWQgdGhhdCBzZXR0aW5n
-IGEgdmFyaWFibGUgaW4gdGhlIGV2ZW50IGhhbmRsZXIgd291bGQgbm90IG5lY2Vzc2FyaWx5IGtl
-ZXAgaXQgc2V0IHRocm91Z2ggYnVpbGRpbmcgdGhlIHJlY2lwZS4gVGh1cyBJIGRldmlzZWQgdGhl
-IGJlbG93IGNvZGUgdG8gcnVuIHRoZSB0aW1lIGludGVuc2l2ZSBjb2RlIGR1cmluZyBpbml0aWFs
-IHBhcnNlIGFuZCBjYWNoZSB0aGUgdmFsdWUgaW4gYSBmaWxlIHNvIGl0IGNhbiBiZSBwaWNrZWQg
-dXAgYWdhaW4gaW4gbGF0ZXIgZXZlbnRzLiBJJ20gbGVhdmluZyB0aGlzIGhlcmUgaW4gY2FzZSBp
-dCBoZWxwcyBzb21lb25lIGVsc2UuDQoNCmFkZGhhbmRsZXIgc3ZuX2V4dGVybl9ldmVudGhhbmRs
-ZXINCnB5dGhvbiBzdm5fZXh0ZXJuX2V2ZW50aGFuZGxlcigpIHsNCglmcm9tIGJiLmV2ZW50IGlt
-cG9ydCBnZXROYW1lDQoJZnJvbSBiYiBpbXBvcnQgZGF0YQ0KCQ0KCWlmIGdldE5hbWUoZSkgPT0g
-IlJlY2lwZVBhcnNlZCI6DQoJCWV4dGVybl9jYWNoZV9kaXIgPSBvcy5wYXRoLmpvaW4oIGRhdGEu
-Z2V0VmFyKCdUTVBESVInLCBlLmRhdGEsIFRydWUpLA0KCQkgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICdzdGFtcHMnLA0KCQkgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRhdGEuZ2V0
-VmFyKCdNVUxUSU1BQ0hfVEFSR0VUX1NZUycsIGUuZGF0YSwgVHJ1ZSkgKQ0KCQlleHRlcm5fY2Fj
-aGUgPSBvcy5wYXRoLmpvaW4oIGV4dGVybl9jYWNoZV9kaXIsDQoJCSAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgZGF0YS5nZXRWYXIoJ1BOJywgZS5kYXRhLCBUcnVlKSArICcuZXh0ZXJuX2Nh
-Y2hlJyApDQoJCSNJZiBCQl9XT1JLRVJDT05URVhUIGlzICIxIiwgdGhpcyBpcyBOT1QgdGhlIGlu
-aXRpYWwgcmVjaXBlIHBhcnNlDQoJCWlmIGRhdGEuZ2V0VmFyKCdCQl9XT1JLRVJDT05URVhUJywg
-ZS5kYXRhLCBUcnVlKSA9PSAiMSI6DQoJCQkjUHVsbCBjYWNoZWQgY29weQ0KCQkJdHJ5Og0KCQkJ
-CWNhY2hlX2ZpbGUgPSBvcGVuKGV4dGVybl9jYWNoZSwgJ3InKQ0KCQkJCWV4dGVybnB2ID0gY2Fj
-aGVfZmlsZS5yZWFkKCkNCgkJCQljYWNoZV9maWxlLmNsb3NlKCkNCgkJCWV4Y2VwdCBJT0Vycm9y
-Og0KCQkJCSNGYWlsZWQgdG8gZ2V0IGNhY2hlZCBjb3B5LCBkbyBpdCB0aGUgaGFyZCB3YXkNCgkJ
-CQlleHRlcm5wdiA9IGdldEV4dGVyblJldnMoZS5kYXRhKQ0KCQllbHNlOg0KCQkJZXh0ZXJucHYg
-PSBnZXRFeHRlcm5SZXZzKGUuZGF0YSkNCgkJCXRyeToNCgkJCQlvcy5tYWtlZGlycyhleHRlcm5f
-Y2FjaGVfZGlyKQ0KCQkJZXhjZXB0IE9TRXJyb3I6DQoJCQkJcGFzcw0KCQkJI0dlbmVyYXRlIHRo
-ZSBjYWNoZSBmb3IgbGF0ZXIgdXNlDQoJCQljYWNoZV9maWxlID0gb3BlbihleHRlcm5fY2FjaGUs
-ICd3JykNCgkJCWNhY2hlX2ZpbGUud3JpdGUoZXh0ZXJucHYpDQoJCQljYWNoZV9maWxlLmNsb3Nl
-KCkNCg0KCQlkYXRhLnNldFZhcignRVhURVJOUFYnLCBleHRlcm5wdiwgZS5kYXRhKQ0KfQ0KDQo=
+On Thu, 2012-04-19 at 21:24 +0000, Daniel Lazzari wrote:
+> >> I think immediate expansion is what I=E2=80=99ll need to use, thanks=
+ for the tip.
+> >> That at least brings the invocation down to once per run. Unfortunat=
+ely, the
+> >> variable doesn=E2=80=99t seem to get filled in when I change to imme=
+diate
+> >expansion.
+> >>
+> >> def testFunc(bb, d):
+> >>                 print( bb.data.getVar("PN", d, True) )
+> >>                 return "e1"
+> >>
+> >> EXTERNPV :=3D "${@testFunc(bb, d)}"
+> >>
+> >> Now only prints the package name once, but using =E2=80=93e, I don=E2=
+=80=99t see the
+> >> variable EXTERNPV at all.
+> >
+> >Don't know what to tell you. It does work, so it's something wrong on
+> >your end. Either it's returning an empty string, which will result in
+> >-e only showing the commented out definition, or it's raising an
+> >exception, or something else in your setup. Aside: you don't need to
+> >pass 'bb' in. That namespace is always accessible, even from def'd
+> >python functions.
+> >--
+> >Christopher Larson
+>=20
+> Just thought I'd provide an update real quick on this. I discovered,
+> to my dismay, that even doing an immediate expansion still ran the
+> code before every task for that recipe. I switched to using an event
+> handler, but the RecipeParsed event occurs before every task for that
+> recipe. Eventually I discovered that the variable BB_WORKERCONTEXT is
+> set for RecipeParsed events when they are occurring before a task, but
+> not for the initial parse. Also, I discovered that setting a variable
+> in the event handler would not necessarily keep it set through
+> building the recipe. Thus I devised the below code to run the time
+> intensive code during initial parse and cache the value in a file so
+> it can be picked up again in later events. I'm leaving this here in
+> case it helps someone else.
+
+Just as a note, we have the persist_data code in bitbake which was
+written for this kind of reason in relation to SRCREV and AUTOINC which
+uses a sqlite backend as the storage. There isn't anything wrong with
+what you're doing, I just thought I'd mention it.
+
+Cheers,
+
+Richard
+
 
 
