@@ -1,24 +1,20 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1SMR4T-0000Ho-Hh
+	(envelope-from <dongxiao.xu@intel.com>) id 1SMb7J-00059l-JO
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 23 Apr 2012 23:45:21 +0200
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 23 Apr 2012 14:35:46 -0700
+	Tue, 24 Apr 2012 10:28:57 +0200
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 24 Apr 2012 01:19:22 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="132995959"
-Received: from unknown (HELO shamshir.jf.intel.com) ([10.7.198.56])
-	by orsmga001.jf.intel.com with ESMTP; 23 Apr 2012 14:35:46 -0700
-From: Joshua Lock <josh@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="145178417"
+Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
+	by fmsmga001.fm.intel.com with ESMTP; 24 Apr 2012 01:19:21 -0700
+From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 23 Apr 2012 14:35:44 -0700
-Message-Id: <f547f934aea9c4aec5f84403cb27904bd4a4e6b9.1335216391.git.josh@linux.intel.com>
-X-Mailer: git-send-email 1.7.7.6
-In-Reply-To: <cover.1335216391.git.josh@linux.intel.com>
-References: <cover.1335216391.git.josh@linux.intel.com>
-In-Reply-To: <cover.1335216391.git.josh@linux.intel.com>
-References: <cover.1335216391.git.josh@linux.intel.com>
-Subject: [PATCH 1/1] hob: enable sanity checks after launch
+Date: Tue, 24 Apr 2012 16:16:09 +0800
+Message-Id: <cover.1335254750.git.dongxiao.xu@intel.com>
+X-Mailer: git-send-email 1.7.4.1
+Subject: [PATCH 0/3][PULL] Hob: Fix bug 2361
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,46 +26,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 23 Apr 2012 21:45:21 -0000
+X-List-Received-Date: Tue, 24 Apr 2012 08:28:57 -0000
 
-To ensure the users configuration is sanity tested enable the sanity
-checks after the GUI has started but before any parsing is done.
+Hi Richard,
 
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
----
- lib/bb/ui/crumbs/builder.py         |    2 ++
- lib/bb/ui/crumbs/hobeventhandler.py |    3 +++
- 2 files changed, 5 insertions(+), 0 deletions(-)
+This pull request is to fix bug 2361, please help to review and pull.
 
-diff --git a/lib/bb/ui/crumbs/builder.py b/lib/bb/ui/crumbs/builder.py
-index dd3ea95..cbcb3f1 100755
---- a/lib/bb/ui/crumbs/builder.py
-+++ b/lib/bb/ui/crumbs/builder.py
-@@ -557,6 +557,8 @@ class Builder(gtk.Window):
-         self.handler.init_cooker()
-         # set bb layers
-         self.handler.set_bblayers(self.configuration.layers)
-+        # Re-enable sanity checks
-+        self.handler.enable_sanity()
-         # set local configuration
-         self.handler.set_machine(self.configuration.curr_mach)
-         self.handler.set_package_format(self.configuration.curr_package_format)
-diff --git a/lib/bb/ui/crumbs/hobeventhandler.py b/lib/bb/ui/crumbs/hobeventhandler.py
-index ebfc388..c918aad 100644
---- a/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -233,6 +233,9 @@ class HobHandler(gobject.GObject):
-         inherits = inherits + " " + bbclass
-         self.runCommand(["setVariable", "INHERIT", inherits])
- 
-+    def enable_sanity(self):
-+        self.runCommand(["setVariable", "DISABLE_SANITY_CHECKS", "0"])
-+
-     def set_bblayers(self, bblayers):
-         self.runCommand(["setVariable", "BBLAYERS_HOB", " ".join(bblayers)])
- 
+Thanks,
+Dongxiao
+
+The following changes since commit 244ce2b900ae6cecbeeccfe2056e61c132476261:
+
+  hob: enable sanity checks after launch (2012-04-23 23:03:25 +0100)
+
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib dxu4/hob-bugfix
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob-bugfix
+
+Dongxiao Xu (3):
+  event.py: Add SanityCheck and SanityCheckPassed events
+  Hob: Add proxy setting into setting's md5
+  Hob: Issue sanity check after parse is completed
+
+ lib/bb/event.py                     |   10 ++++++++++
+ lib/bb/ui/crumbs/builder.py         |    7 +++++--
+ lib/bb/ui/crumbs/hig.py             |    9 +++++++++
+ lib/bb/ui/crumbs/hobeventhandler.py |   16 +++++++++++-----
+ 4 files changed, 35 insertions(+), 7 deletions(-)
+
 -- 
-1.7.7.6
+1.7.4.1
 
 
 
