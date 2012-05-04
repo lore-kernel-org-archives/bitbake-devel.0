@@ -1,25 +1,30 @@
-Received: from mail.windriver.com ([147.11.1.11])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jeff.polk@windriver.com>) id 1SQKCJ-0001Uc-Ma
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 04 May 2012 17:13:32 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q44E5Hnd010651
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 4 May 2012 07:05:17 -0700 (PDT)
-Received: from delos.DELOS.COM (172.25.35.98) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Fri, 4 May 2012 07:05:16 -0700
-From: Jeff Polk <jeff.polk@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 4 May 2012 08:05:15 -0600
-Message-ID: <1336140315-5171-2-git-send-email-jeff.polk@windriver.com>
-X-Mailer: git-send-email 1.7.5.4
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1SQKOo-0001nE-Mb for bitbake-devel@lists.openembedded.org;
+	Fri, 04 May 2012 17:26:26 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q44FGdBB015298;
+	Fri, 4 May 2012 16:16:39 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 14351-10; Fri,  4 May 2012 16:16:36 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q44FGVvh015292
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Fri, 4 May 2012 16:16:32 +0100
+Message-ID: <1336144595.23777.23.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Jeff Polk <jeff.polk@windriver.com>
+Date: Fri, 04 May 2012 16:16:35 +0100
 In-Reply-To: <1336140315-5171-1-git-send-email-jeff.polk@windriver.com>
 References: <1336140315-5171-1-git-send-email-jeff.polk@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 2/2] bitbake/fetch2: Fix spelling error in network access error message
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/2] fetch2/git: Allow file:// URLs without checking for network access
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,29 +36,22 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 04 May 2012 15:13:32 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 04 May 2012 15:26:27 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Jeff Polk <jeff.polk@windriver.com>
----
- lib/bb/fetch2/__init__.py |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+On Fri, 2012-05-04 at 08:05 -0600, Jeff Polk wrote:
+> Don't check for network access before grabbing the the current head,
+> cloning, or updating a clone when the protocol is 'file'.
+> 
+> Signed-off-by: Jeff Polk <jeff.polk@windriver.com>
+> ---
+>  lib/bb/fetch2/git.py |    9 ++++++---
+>  1 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 414cc2b..3391e6a 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -99,7 +99,7 @@ class ParameterError(BBFetchException):
- class NetworkAccess(BBFetchException):
-     """Exception raised when network access is disabled but it is required."""
-     def __init__(self, url, cmd):
--         msg = "Network access disabled through BB_NO_NETWORK but access rquested with command %s (for url %s)" % (cmd, url)
-+         msg = "Network access disabled through BB_NO_NETWORK but access requested with command %s (for url %s)" % (cmd, url)
-          self.url = url
-          self.cmd = cmd
-          BBFetchException.__init__(self, msg)
--- 
-1.7.5.4
+Merged to master (along with 2/2), thanks.
+
+Richard
 
 
 
