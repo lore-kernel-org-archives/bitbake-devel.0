@@ -1,27 +1,30 @@
-Received: from mail.windriver.com ([147.11.1.11])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Peter.Seebach@windriver.com>) id 1SQ5HA-00070R-3B
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 04 May 2012 01:17:32 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q43KTSRk017897
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1SQJGA-0008W0-Nh for bitbake-devel@lists.openembedded.org;
+	Fri, 04 May 2012 16:13:26 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q44E3dkn014872
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 3 May 2012 13:29:28 -0700 (PDT)
-Received: from wrlaptop (172.25.40.226) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Thu, 3 May 2012 13:29:28 -0700
-Date: Thu, 3 May 2012 15:29:00 -0500
-From: Peter Seebach <peter.seebach@windriver.com>
-To: Peter Seebach <peter.seebach@windriver.com>
-Message-ID: <20120503152900.36c330cc@wrlaptop>
-In-Reply-To: <20120503141535.4aae4df9@wrlaptop>
-References: <20120503132127.1cc1b29a@wrlaptop>
-	<20120503141535.4aae4df9@wrlaptop>
-X-Mailer: Claws Mail 3.7.8 (GTK+ 2.24.4; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: Bitbake patches: Track include history and variable modification history
+	Fri, 4 May 2012 15:03:39 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 14350-04 for <bitbake-devel@lists.openembedded.org>;
+	Fri,  4 May 2012 15:03:35 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q44E3TbH014866
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 4 May 2012 15:03:31 +0100
+Message-ID: <1336140213.23777.4.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Fri, 04 May 2012 15:03:33 +0100
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: bitbake/utils: Convert vercmp_string() to use vercmp internally
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,168 +36,161 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 03 May 2012 23:17:32 -0000
-Content-Type: text/plain; charset="US-ASCII"
+X-List-Received-Date: Fri, 04 May 2012 14:13:26 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Thu, 3 May 2012 14:15:35 -0500
-Peter Seebach <peter.seebach@windriver.com> wrote:
+Having two different version comparision algorithms in bitbake has never seemed
+like a sensible idea. Worryingly, they also return different results to each other.
 
-> On Thu, 3 May 2012 13:21:27 -0500
-> Peter Seebach <peter.seebach@windriver.com> wrote:
-> 
-> > Note that the include tracking is noticably incomplete; most
-> > obviously, in this example, it never finds layer.conf.  Haven't
-> > quite figured out why, still looking at it, but the basic
-> > principle should stay the same.
-> 
-> Mystery solved, for reference:  The tracking needs to happen
-> in bb.parse.handle, and that turns out to require making the
-> createCopy in the := assignment case suppress the history copy,
-> or maybe just making the history copy bug-tolerant.
+The vercmp_string API is relatively unused with no users in OE-Core or BitBake
+itself for example. This patch converts it to use vercmp internalls, bringing
+consitency to the comparisions which is easy now we have other recently added
+functions. Yes, this changes behaviour but in this case I'd prefer we were
+consistent than having two different comparisions.
 
-Here's the second part fixed up.  Handling is moved to
-bb.parse.handle, so it catches a lot more files, and createCopy
-now fails silently if it can't copy history.  Produces much more
-comprehensive output.
-
-commit d945f8c854c0b9eaff6d9c93b1c00c663b2858cf
-Author: Peter Seebach <peter.seebach@windriver.com>
-Date:   Wed May 2 12:11:08 2012 -0500
-
-    data_smart.py: Track configuration file inclusions
-    
-    This is a preliminary attempt to create a structured representation of
-    the processing of include files.  It ignores line numbers because they're
-    meaningless.  It could probably be updated to, say, distinguish between
-    includes and requires.  Output is added to bitbake -e.
-    
-    Signed-off-by: Peter Seebach <peter.seebach@windriver.com>
-
-diff --git a/bitbake/lib/bb/data.py b/bitbake/lib/bb/data.py
-index 74efc5d..5ad7862 100644
---- a/bitbake/lib/bb/data.py
-+++ b/bitbake/lib/bb/data.py
-@@ -246,10 +246,26 @@ def emit_env(o=sys.__stdout__, d = init(), all=False):
-     isfunc = lambda key: bool(d.getVarFlag(key, "func"))
-     keys = sorted((key for key in d.keys() if not key.startswith("__")), key=isfunc)
-     grouped = groupby(keys, isfunc)
-+    # Include history!
-+    if d.tracking():
-+        o.write('#\n# INCLUDE HISTORY:\n#\n')
-+        emit_history(o, d.getIncludeHistory())
-+        
-     for isfunc, keys in grouped:
-         for key in keys:
-             emit_var(key, o, d, all and not isfunc) and o.write('\n')
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+index 1d98bca..7a73419 100644
+--- a/bitbake/lib/bb/utils.py
++++ b/bitbake/lib/bb/utils.py
+@@ -108,130 +108,10 @@ def vercmp(ta, tb):
+         r = vercmp_part(ra, rb)
+     return r
  
-+def emit_history(o, h, depth = 0):
-+    if not h:
-+        return
-+    for event in h:
-+        o.write("# %*s%s" % (depth * 2, "", event[0]))
-+        if event[1]:
-+            o.write(" includes:\n")
-+            emit_history(o, event[1], depth + 1)
-+        else:
-+            o.write("\n")
-+
- def exported_keys(d):
-     return (key for key in d.keys() if not key.startswith('__') and
-                                       d.getVarFlag(key, 'export') and
-diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
-index 5a8917f..b68de05 100644
---- a/bitbake/lib/bb/data_smart.py
-+++ b/bitbake/lib/bb/data_smart.py
-@@ -29,6 +29,7 @@ BitBake build tools.
- # Based on functions from the base bb module, Copyright 2003 Holger Schurig
- 
- import copy, re
-+import sys
- from collections import MutableMapping
- import logging
- import hashlib
-@@ -112,6 +113,8 @@ class DataSmart(MutableMapping):
-     def __init__(self, special = COWDictBase.copy(), seen = COWDictBase.copy() ):
-         self.dict = {}
-         self.history = {}
-+        self.include_history = []
-+        self.include_stack = [(-1, self.include_history)]
- 
-         # cookie monster tribute
-         self._special_values = special
-@@ -120,6 +123,25 @@ class DataSmart(MutableMapping):
- 
-         self.expand_cache = {}
- 
-+    def includeLog(self, filename):
-+        """includeLog(included_file) shows that the file was included
-+        by the currently-processed file or context."""
-+        if self._tracking_enabled:
-+            event = (filename, [])
-+            position = (len(self.include_stack[-1][1]), event[1])
-+            self.include_stack[-1][1].append(event)
-+            self.include_stack.append(position)
-+
-+    def includeLogDone(self, filename):
-+        if self._tracking_enabled:
-+            if len(self.include_stack) > 1:
-+                self.include_stack.pop()
-+            else:
-+                bb.warn("Uh-oh:  includeLogDone(%s) tried to empty the stack." % filename)
-+
-+    def getIncludeHistory(self):
-+        return self.include_history
-+
-     def tracking(self):
-         return self._tracking_enabled
- 
-@@ -434,9 +456,22 @@ class DataSmart(MutableMapping):
-         # we really want this to be a DataSmart...
-         data = DataSmart(seen=self._seen_overrides.copy(), special=self._special_values.copy())
-         data.dict["_data"] = self.dict
--        data.history = self.history.copy()
--        data._tracking_enabled = self._tracking_enabled
+-_package_weights_ = {"pre":-2, "p":0, "alpha":-4, "beta":-3, "rc":-1}    # dicts are unordered
+-_package_ends_ = ["pre", "p", "alpha", "beta", "rc", "cvs", "bk", "HEAD" ]            # so we need ordered list
 -
-+        if self._tracking_enabled:
-+            data._tracking_enabled = self._tracking_enabled
-+            data.history = self.history.copy()
-+            data.include_history = copy.deepcopy(self.include_history)
-+            data.include_stack = []
-+            oldref = self.include_history
-+            newref = data.include_history
-+            # Create corresponding references, if we can
-+            try:
-+                for item in self.include_stack:
-+                    if item[0] >= 0:
-+                        newref = newref[item[0]]
-+                    newevent = (item[0], newref)
-+                    data.include_stack.append(newevent)
-+            except Exception:
-+                sys.exc_clear()
-         return data
+-def relparse(myver):
+-    """Parses the last elements of a version number into a triplet, that can
+-    later be compared.
+-    """
+-
+-    number = 0
+-    p1 = 0
+-    p2 = 0
+-    mynewver = myver.split('_')
+-    if len(mynewver) == 2:
+-        # an _package_weights_
+-        number = float(mynewver[0])
+-        match = 0
+-        for x in _package_ends_:
+-            elen = len(x)
+-            if mynewver[1][:elen] == x:
+-                match = 1
+-                p1 = _package_weights_[x]
+-                try:
+-                    p2 = float(mynewver[1][elen:])
+-                except:
+-                    p2 = 0
+-                break
+-        if not match:
+-            # normal number or number with letter at end
+-            divider = len(myver)-1
+-            if myver[divider:] not in "1234567890":
+-                # letter at end
+-                p1 = ord(myver[divider:])
+-                number = float(myver[0:divider])
+-            else:
+-                number = float(myver)
+-    else:
+-        # normal number or number with letter at end
+-        divider = len(myver)-1
+-        if myver[divider:] not in "1234567890":
+-            #letter at end
+-            p1 = ord(myver[divider:])
+-            number = float(myver[0:divider])
+-        else:
+-            number = float(myver)
+-    return [number, p1, p2]
+-
+-__vercmp_cache__ = {}
+-
+-def vercmp_string(val1, val2):
+-    """This takes two version strings and returns an integer to tell you whether
+-    the versions are the same, val1>val2 or val2>val1.
+-    """
+-
+-    # quick short-circuit
+-    if val1 == val2:
+-        return 0
+-    valkey = val1 + " " + val2
+-
+-    # cache lookup
+-    try:
+-        return __vercmp_cache__[valkey]
+-        try:
+-            return - __vercmp_cache__[val2 + " " + val1]
+-        except KeyError:
+-            pass
+-    except KeyError:
+-        pass
+-
+-    # consider 1_p2 vc 1.1
+-    # after expansion will become (1_p2,0) vc (1,1)
+-    # then 1_p2 is compared with 1 before 0 is compared with 1
+-    # to solve the bug we need to convert it to (1,0_p2)
+-    # by splitting _prepart part and adding it back _after_expansion
+-
+-    val1_prepart = val2_prepart = ''
+-    if val1.count('_'):
+-        val1, val1_prepart = val1.split('_', 1)
+-    if val2.count('_'):
+-        val2, val2_prepart = val2.split('_', 1)
+-
+-    # replace '-' by '.'
+-    # FIXME: Is it needed? can val1/2 contain '-'?
+-
+-    val1 = val1.split("-")
+-    if len(val1) == 2:
+-        val1[0] = val1[0] + "." + val1[1]
+-    val2 = val2.split("-")
+-    if len(val2) == 2:
+-        val2[0] = val2[0] + "." + val2[1]
+-
+-    val1 = val1[0].split('.')
+-    val2 = val2[0].split('.')
+-
+-    # add back decimal point so that .03 does not become "3" !
+-    for x in xrange(1, len(val1)):
+-        if val1[x][0] == '0' :
+-            val1[x] = '.' + val1[x]
+-    for x in xrange(1, len(val2)):
+-        if val2[x][0] == '0' :
+-            val2[x] = '.' + val2[x]
+-
+-    # extend varion numbers
+-    if len(val2) < len(val1):
+-        val2.extend(["0"]*(len(val1)-len(val2)))
+-    elif len(val1) < len(val2):
+-        val1.extend(["0"]*(len(val2)-len(val1)))
+-
+-    # add back _prepart tails
+-    if val1_prepart:
+-        val1[-1] += '_' + val1_prepart
+-    if val2_prepart:
+-        val2[-1] += '_' + val2_prepart
+-    # The above code will extend version numbers out so they
+-    # have the same number of digits.
+-    for x in xrange(0, len(val1)):
+-        cmp1 = relparse(val1[x])
+-        cmp2 = relparse(val2[x])
+-        for y in xrange(0, 3):
+-            myret = cmp1[y] - cmp2[y]
+-            if myret != 0:
+-                __vercmp_cache__[valkey] = myret
+-                return myret
+-    __vercmp_cache__[valkey] = 0
+-    return 0
++def vercmp_string(a, b):
++    ta = split_version(a)
++    tb = split_version(b)
++    return vercmp(ta, tb)
  
-     def expandVarref(self, variable, parents=False, filename = 'unknown', lineno = 'unknown'):
-diff --git a/bitbake/lib/bb/parse/__init__.py b/bitbake/lib/bb/parse/__init__.py
-index 3c3feee..26b501b 100644
---- a/bitbake/lib/bb/parse/__init__.py
-+++ b/bitbake/lib/bb/parse/__init__.py
-@@ -88,7 +88,11 @@ def handle(fn, data, include = 0):
-     """Call the handler that is appropriate for this file"""
-     for h in handlers:
-         if h['supports'](fn, data):
--            return h['handle'](fn, data, include)
-+            data.includeLog(fn)
-+            try:
-+                return h['handle'](fn, data, include)
-+            finally:
-+                data.includeLogDone(fn)
-     raise ParseError("not a BitBake file", fn)
- 
- def init(fn, data):
+ def explode_deps(s):
+     """
 
 
--- 
-Listen, get this.  Nobody with a good compiler needs to be justified.
 
 
