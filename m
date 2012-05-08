@@ -1,31 +1,20 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SRKvg-0004TR-1B for bitbake-devel@lists.openembedded.org;
-	Mon, 07 May 2012 12:12:32 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q47A2buN002383;
-	Mon, 7 May 2012 11:02:37 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 01723-05; Mon,  7 May 2012 11:02:33 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q47A2UcF002377
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Mon, 7 May 2012 11:02:32 +0100
-Message-ID: <1336384955.23777.72.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Dongxiao Xu <dongxiao.xu@intel.com>
-Date: Mon, 07 May 2012 11:02:35 +0100
-In-Reply-To: <61752e5eaa9cd19b7432dba1d7b2d61e4d961118.1336370732.git.dongxiao.xu@intel.com>
-References: <cover.1336370732.git.dongxiao.xu@intel.com>
-	<61752e5eaa9cd19b7432dba1d7b2d61e4d961118.1336370732.git.dongxiao.xu@intel.com>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] Hob: Clear the building status if command failed
+Received: from mga02.intel.com ([134.134.136.20])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <limingx.l.an@intel.com>) id 1SRj18-0005Nc-2t
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 08 May 2012 13:55:47 +0200
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 08 May 2012 04:45:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="141367968"
+Received: from hp.sh.intel.com ([10.239.47.6])
+	by orsmga002.jf.intel.com with ESMTP; 08 May 2012 04:45:52 -0700
+From: Liming An <limingx.l.an@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue,  8 May 2012 19:48:01 +0800
+Message-Id: <cover.1336477313.git.limingx.l.an@intel.com>
+X-Mailer: git-send-email 1.7.5.4
+Subject: [PATCH 0/4] Hob: bug-fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,24 +26,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 07 May 2012 10:12:32 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 08 May 2012 11:55:48 -0000
 
-On Mon, 2012-05-07 at 14:08 +0800, Dongxiao Xu wrote:
-> We may meet certain command failure during build time, for example,
-> out of memory. In this case, we need to clear the "building" status.
-> 
-> This fixes [YOCTO #2371]
-> 
-> Signed-off-by: Dongxiao Xu <dongxiao.xu@intel.com>
-> ---
->  lib/bb/ui/crumbs/hobeventhandler.py |    2 ++
->  1 files changed, 2 insertions(+), 0 deletions(-)
+The following changes since commit 38da655788361e949d605bebfab45cf5830df613:
 
-Merged to master, thanks.
+  glib-2.0: Fix issues with libelf dependency creeping in (2012-05-07 16:42:48 +0100)
 
-Richard
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib limx/hob-bug-fixes-continue
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=limx/hob-bug-fixes-continue
+
+Liming An (4):
+  Hob: change the refresh icon speed to make it view clear
+  Hob: add original url show function with the tooltip hyperlink for
+    user
+  Hob: add group number show and 'bold' visible effect for Package view
+  Hob: change the workflow about click 'Run Image' to run directly
+    after builded a qemu image
+
+ bitbake/lib/bb/ui/crumbs/builder.py              |   52 ++++++---
+ bitbake/lib/bb/ui/crumbs/hoblistmodel.py         |    7 +-
+ bitbake/lib/bb/ui/crumbs/hobwidget.py            |   41 ++++++-
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py     |  139 +++++++++++-----------
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py |   26 ++++
+ bitbake/lib/bb/ui/crumbs/persistenttooltip.py    |   19 +++
+ 6 files changed, 194 insertions(+), 90 deletions(-)
+
+-- 
+1.7.5.4
 
 
 
