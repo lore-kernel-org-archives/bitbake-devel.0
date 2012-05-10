@@ -1,30 +1,30 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SSOmm-0004ec-5g for bitbake-devel@lists.openembedded.org;
-	Thu, 10 May 2012 10:31:44 +0200
+	id 1SSOnR-0004fm-Co for bitbake-devel@lists.openembedded.org;
+	Thu, 10 May 2012 10:32:25 +0200
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4A8LoWV008138
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4A8MVlu008148
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 May 2012 09:21:50 +0100
+	Thu, 10 May 2012 09:22:31 +0100
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 25795-07 for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 May 2012 09:21:45 +0100 (BST)
+	id 25763-08 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 10 May 2012 09:22:27 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4A8LgtJ008131
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4A8MNUs008141
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 May 2012 09:21:43 +0100
-Message-ID: <1336638101.2494.120.camel@ted>
+	Thu, 10 May 2012 09:22:24 +0100
+Message-ID: <1336638142.2494.121.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Thu, 10 May 2012 09:21:41 +0100
+Date: Thu, 10 May 2012 09:22:22 +0100
 X-Mailer: Evolution 3.2.2- 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: bitbake/runqueue: Fix 'full' stamp checking to be more efficient and cache results
+Subject: [PATCH] bitbake/runqueue: Drop check_stamps function, it is obsolete and unused
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,104 +36,122 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 10 May 2012 08:31:44 -0000
+X-List-Received-Date: Thu, 10 May 2012 08:32:25 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-This should fix issues where bitbake would seemingly lock up when checking
-certain configurations of stampfiles.
-
-The cache is kept within the runqueue since that feels like the right
-place to associate this cache data.
+This was originally used to check the consistency of the stamps in one function
+call. This turns out to be inefficient, unnecessary and if it were necessary,
+check_stamp_task() could be called in a loop. The function has been unmodified
+for a while and likely contains bugs. Its best simply removed.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
 diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index b870caf..0eed9ee 100644
+index 0eed9ee..8d56331 100644
 --- a/bitbake/lib/bb/runqueue.py
 +++ b/bitbake/lib/bb/runqueue.py
-@@ -875,7 +875,7 @@ class RunQueue:
-             bb.msg.fatal("RunQueue", "check_stamps fatal internal error")
-         return current
+@@ -781,100 +781,6 @@ class RunQueue:
  
--    def check_stamp_task(self, task, taskname = None, recurse = False):
-+    def check_stamp_task(self, task, taskname = None, recurse = False, cache = None):
+         self.rqexe = None
+ 
+-    def check_stamps(self):
+-        unchecked = {}
+-        current = []
+-        notcurrent = []
+-        buildable = []
+-
+-        if self.stamppolicy == "perfile":
+-            fulldeptree = False
+-        else:
+-            fulldeptree = True
+-            stampwhitelist = []
+-            if self.stamppolicy == "whitelist":
+-                stampwhitelist = self.rqdata.stampfnwhitelist
+-
+-        for task in xrange(len(self.rqdata.runq_fnid)):
+-            unchecked[task] = ""
+-            if len(self.rqdata.runq_depends[task]) == 0:
+-                buildable.append(task)
+-
+-        def check_buildable(self, task, buildable):
+-            for revdep in self.rqdata.runq_revdeps[task]:
+-                alldeps = 1
+-                for dep in self.rqdata.runq_depends[revdep]:
+-                    if dep in unchecked:
+-                        alldeps = 0
+-                if alldeps == 1:
+-                    if revdep in unchecked:
+-                        buildable.append(revdep)
+-
+-        for task in xrange(len(self.rqdata.runq_fnid)):
+-            if task not in unchecked:
+-                continue
+-            fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[task]]
+-            taskname = self.rqdata.runq_task[task]
+-            stampfile = bb.build.stampfile(taskname, self.rqdata.dataCache, fn)
+-            # If the stamp is missing its not current
+-            if not os.access(stampfile, os.F_OK):
+-                del unchecked[task]
+-                notcurrent.append(task)
+-                check_buildable(self, task, buildable)
+-                continue
+-            # If its a 'nostamp' task, it's not current
+-            taskdep = self.rqdata.dataCache.task_deps[fn]
+-            if 'nostamp' in taskdep and task in taskdep['nostamp']:
+-                del unchecked[task]
+-                notcurrent.append(task)
+-                check_buildable(self, task, buildable)
+-                continue
+-
+-        while (len(buildable) > 0):
+-            nextbuildable = []
+-            for task in buildable:
+-                if task in unchecked:
+-                    fn = self.taskData.fn_index[self.rqdata.runq_fnid[task]]
+-                    taskname = self.rqdata.runq_task[task]
+-                    stampfile = bb.build.stampfile(taskname, self.rqdata.dataCache, fn)
+-                    iscurrent = True
+-
+-                    t1 = os.stat(stampfile)[stat.ST_MTIME]
+-                    for dep in self.rqdata.runq_depends[task]:
+-                        if iscurrent:
+-                            fn2 = self.taskData.fn_index[self.rqdata.runq_fnid[dep]]
+-                            taskname2 = self.rqdata.runq_task[dep]
+-                            stampfile2 = bb.build.stampfile(taskname2, self.rqdata.dataCache, fn2)
+-                            if fn == fn2 or (fulldeptree and fn2 not in stampwhitelist):
+-                                if dep in notcurrent:
+-                                    iscurrent = False
+-                                else:
+-                                    t2 = os.stat(stampfile2)[stat.ST_MTIME]
+-                                    if t1 < t2:
+-                                        iscurrent = False
+-                    del unchecked[task]
+-                    if iscurrent:
+-                        current.append(task)
+-                    else:
+-                        notcurrent.append(task)
+-
+-                check_buildable(self, task, nextbuildable)
+-
+-            buildable = nextbuildable
+-
+-        #for task in range(len(self.runq_fnid)):
+-        #    fn = self.taskData.fn_index[self.runq_fnid[task]]
+-        #    taskname = self.runq_task[task]
+-        #    print "%s %s.%s" % (task, taskname, fn)
+-
+-        #print "Unchecked: %s" % unchecked
+-        #print "Current: %s" % current
+-        #print "Not current: %s" % notcurrent
+-
+-        if len(unchecked) > 0:
+-            bb.msg.fatal("RunQueue", "check_stamps fatal internal error")
+-        return current
+-
+     def check_stamp_task(self, task, taskname = None, recurse = False, cache = None):
          def get_timestamp(f):
              try:
-                 if not os.access(f, os.F_OK):
-@@ -911,10 +911,16 @@ class RunQueue:
-         if taskname != "do_setscene" and taskname.endswith("_setscene"):
-             return True
- 
-+        if cache is None:
-+            cache = {}
-+
-         iscurrent = True
-         t1 = get_timestamp(stampfile)
-         for dep in self.rqdata.runq_depends[task]:
-             if iscurrent:
-+                if dep in cache:
-+                    iscurrent = cache[dep]
-+                    continue
-                 fn2 = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[dep]]
-                 taskname2 = self.rqdata.runq_task[dep]
-                 stampfile2 = bb.build.stampfile(taskname2, self.rqdata.dataCache, fn2)
-@@ -931,7 +937,9 @@ class RunQueue:
-                         logger.debug(2, 'Stampfile %s < %s', stampfile, stampfile2)
-                         iscurrent = False
-                     if recurse and iscurrent:
--                        iscurrent = self.check_stamp_task(dep, recurse=True)
-+                        iscurrent = self.check_stamp_task(dep, recurse=True, cache=cache)
-+                        cache[dep] = iscurrent
-+        cache[task] = iscurrent
-         return iscurrent
- 
-     def execute_runqueue(self):
-@@ -1041,6 +1049,8 @@ class RunQueueExecute:
-         self.build_stamps = {}
-         self.failed_fnids = []
- 
-+        self.stampcache = {}
-+
-     def runqueue_process_waitpid(self):
-         """
-         Return none is there are no processes awaiting result collection, otherwise
-@@ -1373,7 +1383,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
-                 self.task_skip(task)
-                 return True
- 
--            if self.rq.check_stamp_task(task, taskname):
-+            if self.rq.check_stamp_task(task, taskname, cache=self.stampcache):
-                 logger.debug(2, "Stamp current task %s (%s)", task,
-                                 self.rqdata.get_user_idstring(task))
-                 self.task_skip(task)
-@@ -1557,7 +1567,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-                     bb.build.make_stamp(taskname + "_setscene", self.rqdata.dataCache, fn)
-                     continue
- 
--                if self.rq.check_stamp_task(realtask, taskname + "_setscene"):
-+                if self.rq.check_stamp_task(realtask, taskname + "_setscene", cache=self.stampcache):
-                     logger.debug(2, 'Setscene stamp current for task %s(%s)', task, self.rqdata.get_user_idstring(realtask))
-                     stamppresent.append(task)
-                     self.task_skip(task)
-@@ -1650,7 +1660,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-             fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[realtask]]
- 
-             taskname = self.rqdata.runq_task[realtask] + "_setscene"
--            if self.rq.check_stamp_task(realtask, self.rqdata.runq_task[realtask], recurse = True):
-+            if self.rq.check_stamp_task(realtask, self.rqdata.runq_task[realtask], recurse = True, cache=self.stampcache):
-                 logger.debug(2, 'Stamp for underlying task %s(%s) is current, so skipping setscene variant',
-                              task, self.rqdata.get_user_idstring(realtask))
-                 self.task_failoutright(task)
-@@ -1662,7 +1672,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-                         self.task_failoutright(task)
-                         return True
- 
--            if self.rq.check_stamp_task(realtask, taskname):
-+            if self.rq.check_stamp_task(realtask, taskname, cache=self.stampcache):
-                 logger.debug(2, 'Setscene stamp current task %s(%s), so skip it and its dependencies',
-                              task, self.rqdata.get_user_idstring(realtask))
-                 self.task_skip(task)
 
 
 
