@@ -1,39 +1,30 @@
-Received: from mga03.intel.com ([143.182.124.21])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <limingx.l.an@intel.com>) id 1SSN3i-0000xl-Ux
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 10 May 2012 08:41:07 +0200
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 09 May 2012 23:31:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="98408356"
-Received: from azsmsx601.amr.corp.intel.com ([10.2.121.193])
-	by AZSMGA002.ch.intel.com with ESMTP; 09 May 2012 23:31:11 -0700
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
-	azsmsx601.amr.corp.intel.com (10.2.121.193) with Microsoft SMTP Server
-	(TLS) id 8.2.255.0; Wed, 9 May 2012 23:31:10 -0700
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.133]) by
-	SHSMSX101.ccr.corp.intel.com ([169.254.1.6]) with mapi id
-	14.01.0355.002; Thu, 10 May 2012 14:31:08 +0800
-From: "An, LimingX L" <limingx.l.an@intel.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>, Joshua Lock
-	<josh@linux.intel.com>
-Thread-Topic: [bitbake-devel] [PATCH 0/4] Replace HobNotebook with
-	gtk.Notebook, comments invited
-Thread-Index: AQHNGiieDH4Zp9q4ukSMxlrwZCgkepbCt2yw
-Date: Thu, 10 May 2012 06:31:07 +0000
-Message-ID: <E5BAA81A5E0FB344B2B234D4FBAC45DC0FCDC64D@SHSMSX102.ccr.corp.intel.com>
-References: <cover.1334359238.git.josh@linux.intel.com>
-	<1334398981.7309.98.camel@ted>
-In-Reply-To: <1334398981.7309.98.camel@ted>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.239.127.40]
-MIME-Version: 1.0
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 0/4] Replace HobNotebook with gtk.Notebook, comments invited
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1SSOmm-0004ec-5g for bitbake-devel@lists.openembedded.org;
+	Thu, 10 May 2012 10:31:44 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4A8LoWV008138
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 10 May 2012 09:21:50 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 25795-07 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 10 May 2012 09:21:45 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4A8LgtJ008131
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 10 May 2012 09:21:43 +0100
+Message-ID: <1336638101.2494.120.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 10 May 2012 09:21:41 +0100
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: bitbake/runqueue: Fix 'full' stamp checking to be more efficient and cache results
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -45,76 +36,105 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 10 May 2012 06:41:07 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Thu, 10 May 2012 08:31:44 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Richard,
+This should fix issues where bitbake would seemingly lock up when checking
+certain configurations of stampfiles.
 
-There are still some issues in these patches, but I think we can check in f=
-irst and I also have some fixes which depends on the check-in. I will submi=
-t the patches to fix them as long as they are pulled in.
+The cache is kept within the runqueue since that feels like the right
+place to associate this cache data.
 
-Please to review. Thanks!
---
-Liming
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index b870caf..0eed9ee 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -875,7 +875,7 @@ class RunQueue:
+             bb.msg.fatal("RunQueue", "check_stamps fatal internal error")
+         return current
+ 
+-    def check_stamp_task(self, task, taskname = None, recurse = False):
++    def check_stamp_task(self, task, taskname = None, recurse = False, cache = None):
+         def get_timestamp(f):
+             try:
+                 if not os.access(f, os.F_OK):
+@@ -911,10 +911,16 @@ class RunQueue:
+         if taskname != "do_setscene" and taskname.endswith("_setscene"):
+             return True
+ 
++        if cache is None:
++            cache = {}
++
+         iscurrent = True
+         t1 = get_timestamp(stampfile)
+         for dep in self.rqdata.runq_depends[task]:
+             if iscurrent:
++                if dep in cache:
++                    iscurrent = cache[dep]
++                    continue
+                 fn2 = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[dep]]
+                 taskname2 = self.rqdata.runq_task[dep]
+                 stampfile2 = bb.build.stampfile(taskname2, self.rqdata.dataCache, fn2)
+@@ -931,7 +937,9 @@ class RunQueue:
+                         logger.debug(2, 'Stampfile %s < %s', stampfile, stampfile2)
+                         iscurrent = False
+                     if recurse and iscurrent:
+-                        iscurrent = self.check_stamp_task(dep, recurse=True)
++                        iscurrent = self.check_stamp_task(dep, recurse=True, cache=cache)
++                        cache[dep] = iscurrent
++        cache[task] = iscurrent
+         return iscurrent
+ 
+     def execute_runqueue(self):
+@@ -1041,6 +1049,8 @@ class RunQueueExecute:
+         self.build_stamps = {}
+         self.failed_fnids = []
+ 
++        self.stampcache = {}
++
+     def runqueue_process_waitpid(self):
+         """
+         Return none is there are no processes awaiting result collection, otherwise
+@@ -1373,7 +1383,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
+                 self.task_skip(task)
+                 return True
+ 
+-            if self.rq.check_stamp_task(task, taskname):
++            if self.rq.check_stamp_task(task, taskname, cache=self.stampcache):
+                 logger.debug(2, "Stamp current task %s (%s)", task,
+                                 self.rqdata.get_user_idstring(task))
+                 self.task_skip(task)
+@@ -1557,7 +1567,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                     bb.build.make_stamp(taskname + "_setscene", self.rqdata.dataCache, fn)
+                     continue
+ 
+-                if self.rq.check_stamp_task(realtask, taskname + "_setscene"):
++                if self.rq.check_stamp_task(realtask, taskname + "_setscene", cache=self.stampcache):
+                     logger.debug(2, 'Setscene stamp current for task %s(%s)', task, self.rqdata.get_user_idstring(realtask))
+                     stamppresent.append(task)
+                     self.task_skip(task)
+@@ -1650,7 +1660,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+             fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[realtask]]
+ 
+             taskname = self.rqdata.runq_task[realtask] + "_setscene"
+-            if self.rq.check_stamp_task(realtask, self.rqdata.runq_task[realtask], recurse = True):
++            if self.rq.check_stamp_task(realtask, self.rqdata.runq_task[realtask], recurse = True, cache=self.stampcache):
+                 logger.debug(2, 'Stamp for underlying task %s(%s) is current, so skipping setscene variant',
+                              task, self.rqdata.get_user_idstring(realtask))
+                 self.task_failoutright(task)
+@@ -1662,7 +1672,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                         self.task_failoutright(task)
+                         return True
+ 
+-            if self.rq.check_stamp_task(realtask, taskname):
++            if self.rq.check_stamp_task(realtask, taskname, cache=self.stampcache):
+                 logger.debug(2, 'Setscene stamp current task %s(%s), so skip it and its dependencies',
+                              task, self.rqdata.get_user_idstring(realtask))
+                 self.task_skip(task)
 
------Original Message-----
-From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-devel-bo=
-unces@lists.openembedded.org] On Behalf Of Richard Purdie
-Sent: Saturday, April 14, 2012 6:23 PM
-To: Joshua Lock
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [bitbake-devel] [PATCH 0/4] Replace HobNotebook with gtk.Noteb=
-ook, comments invited
 
-On Fri, 2012-04-13 at 16:24 -0700, Joshua Lock wrote:
-> *** This series prevents users of distros with old Gtk+ releases using=20
-> Hob ***
->=20
-> This is a follow-on from my RFC of yesterday with a similar title.=20
-> Sadly I hadn't realised that one of the API calls I am using is not=20
-> available in the version of gtk+ shipped with CentOS 6 (gtk.Notebook.set_=
-action_widget).
->=20
-> This change will prevent CentOS 6 users from being able to use Hob.
->=20
-> I spent some time in Gtk+ internals trying to figure out if we can=20
-> emulate the behaviour on older versions but the GtkNotebook widget=20
-> internals were enhanced significantly to support the set_action_widget AP=
-I.
->=20
-> I've submitted the change as an RFC regardless, it's ready to merge if=20
-> we're willing to make the sacrifice.
->=20
-> The primary motivation for making this change, and making it so late=20
-> in the cycle, is maintainability. The diffstat says it all - we're=20
-> replacing an ~400LOC custom widget with a ~100LOC set of 3 widgets=20
-> which subclass standard toolkit widgets.
->=20
-> An added benefit is that standard toolkit widgets generally integrate=20
-> better into the users OS thanks to inheriting their standard theme.
->=20
-> Tested on:=20
-> Fedora 16 (x86_64) - PASS
-> CentOS 6.2 (x86_64) - FAIL: Gtk+ version too old Ubuntu 10.04 (x86_64)=20
-> - Fail: pygtk version too old Ubuntu 12.04 Beta (x86_64) - PASS
->=20
-> Per the final patch in the series the changes here require gtk+-2.20=20
-> or newer and pygtk 2.22 or newer.
-
-Since we don't have a good external-python tarball solution in place yet, I=
-'m going to have to hold off these patches until after the current release.
-
-Cheers,
-
-Richard
-
-
-_______________________________________________
-bitbake-devel mailing list
-bitbake-devel@lists.openembedded.org
-http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
 
 
