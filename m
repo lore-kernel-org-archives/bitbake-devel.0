@@ -1,20 +1,32 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mail-wi0-f177.google.com ([209.85.212.177])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1ST1BV-0004pa-0J
+	(envelope-from <martin.jansa@gmail.com>) id 1ST6Qe-00039w-5i
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 12 May 2012 03:31:49 +0200
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 11 May 2012 18:21:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="152021995"
-Received: from unknown (HELO shamshir.amr.corp.intel.com) ([10.255.13.40])
-	by fmsmga001.fm.intel.com with ESMTP; 11 May 2012 18:21:52 -0700
-From: Joshua Lock <josh@linux.intel.com>
+	Sat, 12 May 2012 09:07:48 +0200
+Received: by wibhm14 with SMTP id hm14so1725580wib.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 11 May 2012 23:57:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id:x-mailer;
+	bh=wmwLOelxeCmkNPejx2EcQgmnZ/kMystd7BpCDlnQ3qU=;
+	b=Bcr/e3KZNnM3BTZ9XRsMu+xPVtK6C6QEgq36JvRkkMm6RtN2rlxL9+MTtStVLrKa8l
+	2km36P2gAGg2SXTn74eJ0wP6ZgTdVxTPdUigbGd/UwQ1NNjVFoKE3FQZKTtvb1NZCWh0
+	WM3g2r3IxbUw/qxKPcR1iSdDZzbqhbS/6iU4iz3fE7J/a/7JoLLHL1k8YJ7D5NiO+bjg
+	yOicFrJRLuD685RWlvp17yxaUT2yHg8cEraPyLO1lzEi5ZaCVa+bmvxPIbB+7GuNCC3H
+	vAL5ffDfYMPOO0qycA/1te5C+Rx766oViHm2v1AzMKYTx24IWnBIpZwBZkjYadEpYH29
+	qNYw==
+Received: by 10.180.88.233 with SMTP id bj9mr2209728wib.1.1336805871232;
+	Fri, 11 May 2012 23:57:51 -0700 (PDT)
+Received: from localhost ([94.230.152.246])
+	by mx.google.com with ESMTPS id f19sm26150250wiw.11.2012.05.11.23.57.49
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Fri, 11 May 2012 23:57:49 -0700 (PDT)
+From: Martin Jansa <martin.jansa@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 11 May 2012 18:21:51 -0700
-Message-Id: <1336785711-13353-1-git-send-email-josh@linux.intel.com>
-X-Mailer: git-send-email 1.7.7.6
-Subject: [PATCH 2/2] lib/bb/siggen.py: ensure dumped signatures have group R/W
+Date: Sat, 12 May 2012 08:57:47 +0200
+Message-Id: <1336805867-25625-1-git-send-email-Martin.Jansa@gmail.com>
+X-Mailer: git-send-email 1.7.8.6
+Subject: [PATCH] setup.py: fix path for bitbake-selftest
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,35 +38,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 12 May 2012 01:31:49 -0000
+X-List-Received-Date: Sat, 12 May 2012 07:07:48 -0000
 
-We anticipate signatures being shared amongst peers in a group so ensure
-they have rw-rw-r-- permissions to facilitate this.
+* currently fails with:
+  running build_scripts
+  creating build/scripts-2.7
+  copying and adjusting bin/bitbake -> build/scripts-2.7
+  copying and adjusting bin/bitbake-layers -> build/scripts-2.7
+  copying and adjusting bin/bitbake-diffsigs -> build/scripts-2.7
+  copying and adjusting bin/bitbake-prserv -> build/scripts-2.7
+  error: file '/tmp/tmpfs/portage/dev-embedded/bitbake-9999/work/bitbake-9999/bitbake-selftest' does not exist
 
-Signed-off-by: Joshua Lock <josh@linux.intel.com>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
- lib/bb/siggen.py |    6 ++++--
- 1 files changed, 4 insertions(+), 2 deletions(-)
+ setup.py |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index ca26919..5a0b80e 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -201,8 +201,10 @@ class SignatureGeneratorBasic(SignatureGenerator):
-             for dep in data['runtaskdeps']:
-                 data['runtaskhashes'][dep] = self.taskhash[dep]
- 
--        p = pickle.Pickler(open(sigfile, "wb"), -1)
--        p.dump(data)
-+        with open(sigfile, "wb") as f:
-+            p = pickle.Pickler(f, -1)
-+            p.dump(data)
-+        os.chmod(sigfile, 0664)
- 
-     def dump_sigs(self, dataCache):
-         for fn in self.taskdeps:
+diff --git a/setup.py b/setup.py
+index 167692d..5f9e595 100755
+--- a/setup.py
++++ b/setup.py
+@@ -56,7 +56,7 @@ setup(name='bitbake',
+       packages = ["bb.server", "bb.parse.parse_py", "bb.parse", 
+                   "bb.fetch2", "bb.ui.crumbs", "bb.ui", "bb.pysh", "bb", "prserv", "bb.tests"],
+       py_modules = ["codegen"],
+-      scripts = ["bin/bitbake", "bin/bitbake-layers", "bin/bitbake-diffsigs", "bin/bitbake-prserv", "bitbake-selftest"],
++      scripts = ["bin/bitbake", "bin/bitbake-layers", "bin/bitbake-diffsigs", "bin/bitbake-prserv", "bin/bitbake-selftest"],
+       data_files = [("share/bitbake", glob("conf/*") + glob("classes/*")),
+                   ("share/doc/bitbake-%s/manual" % __version__, glob("doc/manual/html/*"))],
+       cmdclass = {
 -- 
-1.7.7.6
+1.7.8.6
 
 
 
