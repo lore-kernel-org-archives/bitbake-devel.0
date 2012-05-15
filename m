@@ -1,37 +1,20 @@
-Received: from mail-wg0-f43.google.com ([74.125.82.43])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1STvy3-0007GR-5J
+	(envelope-from <dongxiao.xu@intel.com>) id 1SUAtc-0002p7-B3
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 14 May 2012 16:09:43 +0200
-Received: by wgbdr1 with SMTP id dr1so4192599wgb.24
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 14 May 2012 06:59:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type
-	:content-transfer-encoding;
-	bh=YP+iLmyFik1QZK+NRNXkGb8PvirosZDghGa2yED8UNM=;
-	b=EpXRfz7z0oh+99f234ekEs14VH8dTf4PTerqN0KEcE09d3noTprT7gcPGffktviJJG
-	Dcj0LrVITZpawsGJ8gYsYm/ZLDKUuQWaeTnO2gQdFqtJ0agCrh4RWMfgNax+ZnckS+z2
-	N7TyRQyqijyme+jmNjljy57Ny1DHpsCM5Ta0RRBJe0yyAQXyGnJNG7PX6AwyWIQ5afJN
-	VRM5A+qlaki3kjM9+LEGBeqChgKQNiqz7OJpjqfPs84XoFzRSOB4zq0Vi961GEBeTDH3
-	us7X+dubG9J43IDNE1k6QUkOaU8u0gDKei+ORUQLPEQJkkJcKALj3JltkNyvk3QaiJYK
-	FgJA==
-Received: by 10.216.132.94 with SMTP id n72mr5143992wei.60.1337003984349; Mon,
-	14 May 2012 06:59:44 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.216.181.16 with HTTP; Mon, 14 May 2012 06:59:24 -0700 (PDT)
-In-Reply-To: <a072dd7795f44603322db6583ac748f0418684fd.1336974361.git.liezhi.yang@windriver.com>
-References: <cover.1336974361.git.liezhi.yang@windriver.com>
-	<a072dd7795f44603322db6583ac748f0418684fd.1336974361.git.liezhi.yang@windriver.com>
-From: Chris Larson <clarson@kergoth.com>
-Date: Mon, 14 May 2012 06:59:24 -0700
-X-Google-Sender-Auth: yqWalzzenJEf7bmuMespR3OSAXE
-Message-ID: <CABcZANnhObRGgJ0gzM+urLRE5gcWmsECFR59P+HpHYPqannh3w@mail.gmail.com>
-To: Robert Yang <liezhi.yang@windriver.com>
-Cc: bitbake-devel@lists.openembedded.org, Zhenfeng.Zhao@windriver.com
-Subject: Re: [PATCH 2/2] replace os.popen with subprocess.Popen
+	Tue, 15 May 2012 08:06:08 +0200
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 14 May 2012 22:56:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="153031553"
+Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
+	by fmsmga001.fm.intel.com with ESMTP; 14 May 2012 22:56:06 -0700
+From: Dongxiao Xu <dongxiao.xu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 15 May 2012 13:52:13 +0800
+Message-Id: <cover.1337060999.git.dongxiao.xu@intel.com>
+X-Mailer: git-send-email 1.7.4.1
+Subject: [PATCH 0/2][PULL] Hob: Add white/black pattern to filter images
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -43,22 +26,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 14 May 2012 14:09:43 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 15 May 2012 06:06:08 -0000
 
-On Mon, May 14, 2012 at 1:07 AM, Robert Yang <liezhi.yang@windriver.com> wr=
-ote:
-> =C2=A0 =C2=A0 def popen_read(self, cmd):
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0return os.popen("%s 2>/dev/null" % cmd).read=
-().strip()
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0return subprocess.Popen("%s 2>/dev/null" % c=
-md, shell=3DTrue, stdout=3Dsubprocess.PIPE).stdout.read().strip()
+Hi Richard,
 
-The 2>/dev/null is irrelevant when we're only inspecting the stdout
-anyway. Also, we already have wrappers around Popen for convenience in
-the bb.process python module.
---=20
-Christopher Larson
+This pull request adds white/black pattern to filter images listed in image combobox.
+
+Besides, it fixes a small issue on update_image_desc() function.
+
+Please help to review and pull.
+
+Thanks,
+Dongxiao
+
+The following changes since commit f8bf4499549f978ce7c93bc088a66f74cd751e2c:
+
+  setup.py: fix path for bitbake-selftest (2012-05-13 20:01:59 +0100)
+
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib dxu4/hob-bugfix
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob-bugfix
+
+Dongxiao Xu (2):
+  Hob: Add filter for images listed in image combo
+  Hob: Get image name internally when updating the image description
+
+ lib/bb/ui/crumbs/builder.py                |    6 +++-
+ lib/bb/ui/crumbs/hobeventhandler.py        |    2 +
+ lib/bb/ui/crumbs/imageconfigurationpage.py |   42 ++++++++++++++++++++++++----
+ 3 files changed, 43 insertions(+), 7 deletions(-)
+
+-- 
+1.7.4.1
+
 
 
