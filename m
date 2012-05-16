@@ -1,34 +1,36 @@
-Received: from mail-bk0-f47.google.com ([209.85.214.47])
+Received: from mail-wg0-f43.google.com ([74.125.82.43])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <gopikrishnans@pec.edu>) id 1SUanf-0004hE-TI
+	(envelope-from <kergoth@gmail.com>) id 1SUf9k-0008M1-EO
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 16 May 2012 11:45:44 +0200
-Received: by bkcjm2 with SMTP id jm2so424083bkc.6
+	Wed, 16 May 2012 16:24:48 +0200
+Received: by wgbdr1 with SMTP id dr1so668211wgb.24
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 16 May 2012 02:35:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=google.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:content-type:x-gm-message-state;
-	bh=ssS73AuMmqJ4mMDtIi8snRQsa+si8H33GvxgLUwHLsY=;
-	b=Bv4Py8ezx16joKWhIqV6mpoh1AzreIp2iLnJdsoFuGtPMSN4W5lxBBWZVVPpNh2zY1
-	kkWnNOgdB/t7sT4+wc3cv4oMuTmzSAGdQ17KD1m2oM6yv1wW3PCx13fqU4St/+pOH8UZ
-	YL8GSG2e3Td17VxbgESvW+xAmBaUIMr5ZpZnEUaMUrZcNJO1eePbqiUZ9StA6NdRw83P
-	squ9fOX/aP8jR+bkFzhCHG5347bb0oMs76MojFnaSgU6K1YoGHlwKGRdi2XgLi2/cqUa
-	EbgacS3IcqKjtEHKRsaxVelCJ8aPgrz1aoFxcnM6L4DGSMbcuPi7bzkFON4qBwUWueBB
-	WPnQ==
+	Wed, 16 May 2012 07:14:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date
+	:x-google-sender-auth:message-id:subject:to:cc:content-type
+	:content-transfer-encoding;
+	bh=vr+LNa1v/yPP2m3DO7Ql5txiLlVJwzKaydwBRu2nlbk=;
+	b=w4DFBGtMnO5zR2gSwUTQCbhiClarMivRszXqu6Ezmk7qGkAkjYLxEacnm8oYa80B+A
+	GCb5pMHyfuwEWQTzFF4lZVFpySlQA7anCbpgfsXb08ucdLg59qYunkSUMSwlTzllIxeS
+	A08GDhEW4J8twYUqDp2Ab01rdGlWYoDNjMDFyUDHuOKbohPj95myCu2CKgum1el8R5PG
+	5s58r0wJAu8JzYtI+3b2wtNqZv0fqs/HyOBLZAjTrIpF6tEbbiSIztJeovj3QvSZwjr5
+	RxPTkQ0lH/7EsMUpb0NR7ddd+GQlnRZ9KqT4hpH/LHAX3ZidKYuXSVnx1JUHTofP+1y2
+	VcbQ==
+Received: by 10.180.93.38 with SMTP id cr6mr8389329wib.16.1337177687112; Wed,
+	16 May 2012 07:14:47 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 10.204.157.23 with SMTP id z23mr885747bkw.71.1337160942602; Wed,
-	16 May 2012 02:35:42 -0700 (PDT)
-Received: by 10.204.233.80 with HTTP; Wed, 16 May 2012 02:35:42 -0700 (PDT)
+Sender: kergoth@gmail.com
+Received: by 10.216.181.16 with HTTP; Wed, 16 May 2012 07:14:26 -0700 (PDT)
 In-Reply-To: <e22ec7981521df200e2db535630b666ce6d2731f.1337147194.git.liezhi.yang@windriver.com>
 References: <cover.1337147194.git.liezhi.yang@windriver.com>
 	<e22ec7981521df200e2db535630b666ce6d2731f.1337147194.git.liezhi.yang@windriver.com>
-Date: Wed, 16 May 2012 15:05:42 +0530
-Message-ID: <CAOkC3Rb8vTSoSU9H=oboHhH2g6bxwbPQ3GiW2uu+0ZNA_-+Svg@mail.gmail.com>
-From: GOPIKRISHNAN S <gopikrishnans@pec.edu>
-To: bitbake-devel@lists.openembedded.org
-X-Gm-Message-State: ALoCoQns5leCr33em+RlH/J6qSDfFzdgPsRcyWMCIiiwcPuYLCk9d14TtX8Hb6SdFlNCGFkxJ376
+From: Chris Larson <clarson@kergoth.com>
+Date: Wed, 16 May 2012 07:14:26 -0700
+X-Google-Sender-Auth: KxTNSvWn76QcjTdaVJ4uB_mg_Fo
+Message-ID: <CABcZAN=Li=d73RueP18YRZSB-ExDMkW7EVw_gpF4j72Ch-j5Cg@mail.gmail.com>
+To: Robert Yang <liezhi.yang@windriver.com>
+Cc: bitbake-devel@lists.openembedded.org, Zhenfeng.Zhao@windriver.com
 Subject: Re: [PATCH 2/2] replace os.popen with subprocess.Popen
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
@@ -41,34 +43,80 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 16 May 2012 09:45:44 -0000
-Content-Type: multipart/alternative; boundary=0015175ca850fdc9bd04c0240a51
-
---0015175ca850fdc9bd04c0240a51
-Content-Type: text/plain; charset=ISO-8859-1
-
-Hi,
-
-    I am a newbie in bitbake. I am stuggling with customizing the recipe
-script. Whenever i customize
-                bindir, sbindir, libexecdir, libdir, datarootdir; My
-package build (BB -c build <pkg>) is successful. But when creating rootfs;
-(bb -c build devel-image) , I get error opkg can install <pkg>
-
-
-Reg,
-Gopi
-
---0015175ca850fdc9bd04c0240a51
-Content-Type: text/html; charset=ISO-8859-1
+X-List-Received-Date: Wed, 16 May 2012 14:24:48 -0000
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi,<br><br>=A0=A0=A0 I am a newbie in bitbake. I am stuggling with customiz=
-ing the recipe script. Whenever i customize=A0 <br>=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0 bindir, sbindir, libexecdir, libdir, datarootdir; My =
-package build (BB -c build &lt;pkg&gt;) is successful. But when creating ro=
-otfs; (bb -c build devel-image) , I get error opkg can install &lt;pkg&gt;<=
-br>
-<br><br>Reg,<br>Gopi<br>
+On Tue, May 15, 2012 at 10:55 PM, Robert Yang <liezhi.yang@windriver.com> w=
+rote:
+> Replace os.popen with subprocess.Popen since the older function would
+> fail (more or less) silently if the executed program cannot be found
+>
+> There is a bb.process.run() which will invoke the Popen to run command,
+> use it for simplify the code.
+>
+> More info:
+> http://docs.python.org/library/subprocess.html#subprocess-replacements
+>
+> [YOCTO #2075]
+>
+> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+> ---
+> =C2=A0bitbake/lib/bb/fetch2/perforce.py =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0| =C2=A0 =C2=A06 +++---
+> =C2=A0bitbake/lib/bb/fetch2/svk.py =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 | =C2=A0 =C2=A02 +-
+> =C2=A0bitbake/lib/bb/ui/crumbs/builddetailspage.py | =C2=A0 =C2=A03 ++-
+> =C2=A0bitbake/lib/bb/ui/crumbs/hig.py =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0| =C2=A0 =C2=A07 ++++---
+> =C2=A04 files changed, 10 insertions(+), 8 deletions(-)
+>
+> diff --git a/bitbake/lib/bb/fetch2/perforce.py b/bitbake/lib/bb/fetch2/pe=
+rforce.py
+> index 6abf15d..e07afdd 100644
+> --- a/bitbake/lib/bb/fetch2/perforce.py
+> +++ b/bitbake/lib/bb/fetch2/perforce.py
+> @@ -91,7 +91,7 @@ class Perforce(FetchMethod):
+>
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 p4cmd =3D data.getVar('FETCHCOMMAND_p4', d, T=
+rue)
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 logger.debug(1, "Running %s%s changes -m 1 %s=
+", p4cmd, p4opt, depot)
+> - =C2=A0 =C2=A0 =C2=A0 =C2=A0p4file =3D os.popen("%s%s changes -m 1 %s" %=
+ (p4cmd, p4opt, depot))
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0(p4file, errors) =3D bb.process.run("%s%s ch=
+anges -m 1 %s" % (p4cmd, p4opt, depot))
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 cset =3D p4file.readline().strip()
 
---0015175ca850fdc9bd04c0240a51--
+This is wrong, and will actually fail badly if you attempt to use
+this. run() returns the values from Popen.communicate(), which returns
+the data as strings, not pipes, so read() and readline() will not be
+available on that object, and aren't needed. Also, the parens aren't
+needed. "foo, bar =3D" is just as valid as "(foo, bar) =3D" (minor). This
+should do it:
+
+    output, errors =3D bb.process.run("%s%s changes -m 1 %s" % (p4cmd,
+p4opt, depot))
+    cset =3D output.strip()
+
+> @@ -755,7 +756,7 @@ class DeployImageDialog (CrumbsDialog):
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 cmdline =3D bb.ui=
+.crumbs.utils.which_terminal()
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if cmdline:
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 cmd=
+line +=3D "\"sudo dd if=3D" + self.image_path + " of=3D" + combo_item + "\"=
+"
+> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0su=
+bprocess.Popen(args=3Dshlex.split(cmdline))
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bb=
+.process.run(args=3Dshlex.split(cmdline))
+
+This is wrong, and will fail. run() has no 'args' named argument. Try
+not to get discouraged -- we do appreciate the work you're doing, but
+checking this in would break bitbake for a great number of people. I'd
+suggest actually testing bitbake with your changes before sending them
+to the list. Thanks.
+--=20
+Christopher Larson
+
+
