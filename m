@@ -1,41 +1,28 @@
-Received: from mail-pz0-f47.google.com ([209.85.210.47])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <gopikrishnans@pec.edu>) id 1SUhax-0008EK-0u
+	(envelope-from <Liezhi.Yang@windriver.com>) id 1SUq9j-0004aM-Po
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 16 May 2012 19:01:03 +0200
-Received: by dalh21 with SMTP id h21so1086441dal.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 16 May 2012 09:51:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=google.com; s=20120113;
-	h=message-id:date:from:user-agent:mime-version:to:cc:subject
-	:references:in-reply-to:content-type:content-transfer-encoding
-	:x-gm-message-state;
-	bh=7TvyIpD34/x8IFJ3LCgNkad27bePTbizQp1qf/NjAp8=;
-	b=Zz0S6fFDNEuU8dptgcP6vUzl09u4RKRLZr6bJZrh/+v9pOZspar80plh6AgomCQW1M
-	m3qTleIxFxEbFnDbyJnQbpiiFE0tUvdmOztQnGI3yw44TOqvAZMwr10Tsq1oF6f/bkho
-	SKwU9JECjl9Xmxz4LuYdFdZU5SQpKlAUfS8FJMByI+afU7cYVyYQwZwkAYFGT7znFmdX
-	29sQd8sFY3WEogK2+9wNzSeDSPgogUeD7JaCrfkKDdw8bORyvuxw74ZW1G6XqQQwgwMJ
-	NicNKDgWQq3ZcDd7JPYts6jBospHIpC3h6fCzrXzcPKJzfJj/UzzDrsuUm3bVToUGl3S
-	OIeA==
-Received: by 10.68.242.226 with SMTP id wt2mr376495pbc.89.1337187060746;
-	Wed, 16 May 2012 09:51:00 -0700 (PDT)
-Received: from [117.230.161.214] ([117.230.161.214])
-	by mx.google.com with ESMTPS id pd9sm6001420pbc.26.2012.05.16.09.50.54
-	(version=SSLv3 cipher=OTHER); Wed, 16 May 2012 09:50:57 -0700 (PDT)
-Message-ID: <4FB3DAF5.6020403@pec.edu>
-Date: Wed, 16 May 2012 22:21:01 +0530
-From: Gopi - College <gopikrishnans@pec.edu>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64;
-	rv:12.0) Gecko/20120428 Thunderbird/12.0.1
+	Thu, 17 May 2012 04:09:32 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q4H1xReN024940
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Wed, 16 May 2012 18:59:27 -0700 (PDT)
+Received: from [128.224.163.142] (128.224.163.142) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
+	Wed, 16 May 2012 18:59:26 -0700
+Message-ID: <4FB45B7C.2060904@windriver.com>
+Date: Thu, 17 May 2012 09:59:24 +0800
+From: Robert Yang <liezhi.yang@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux i686;
+	rv:12.0) Gecko/20120430 Thunderbird/12.0.1
 MIME-Version: 1.0
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-References: <CAOkC3RaOcShZzeUNU9UNwMjt+LHgOVw=FgosdqwZXh8F0s0A_Q@mail.gmail.com>
-	<1336935419.2711.20.camel@ted>
-In-Reply-To: <1336935419.2711.20.camel@ted>
-X-Gm-Message-State: ALoCoQnMT2Y81hsSELwkCm9PdEgLE6P6DZKwEXKzV9D7HozDY1JOPCxvNNUFmCLHtcrTZL4FDoAT
-Cc: bitbake-devel@lists.openembedded.org
-Subject: =?UTF-8?B?UmU6IEw0IEZpYXNjby5PQyDCtS1rZXJuZWwh?=
+To: Chris Larson <clarson@kergoth.com>
+References: <cover.1337147194.git.liezhi.yang@windriver.com>
+	<e22ec7981521df200e2db535630b666ce6d2731f.1337147194.git.liezhi.yang@windriver.com>
+	<CABcZAN=Li=d73RueP18YRZSB-ExDMkW7EVw_gpF4j72Ch-j5Cg@mail.gmail.com>
+In-Reply-To: <CABcZAN=Li=d73RueP18YRZSB-ExDMkW7EVw_gpF4j72Ch-j5Cg@mail.gmail.com>
+Cc: bitbake-devel@lists.openembedded.org, Zhenfeng.Zhao@windriver.com
+Subject: Re: [PATCH 2/2] replace os.popen with subprocess.Popen
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -47,34 +34,74 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 16 May 2012 17:01:03 -0000
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 17 May 2012 02:09:32 -0000
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-If it is possible to compile any kernel; But, the system builder @ 
-mentor-graphics currently have only patch freescale p2020 for linux 
-2.6.35, Not available for any other higher version of linux kernel, If 
-this is the case how it is possible to freeze a kernel, where p2020 
-patch that doesn't exist.
 
-Reg,
-Gopi
 
-On 5/14/2012 12:26 AM, Richard Purdie wrote:
-> On Sat, 2012-05-12 at 16:11 +0530, GOPIKRISHNAN S wrote:
->>       Using bitbake is it possible to compile and generate uImage for
->> "L4 Fiasco.OC µ-kernel!"; Anybody Tried it? Please guide,
+On 05/16/2012 10:14 PM, Chris Larson wrote:
+> On Tue, May 15, 2012 at 10:55 PM, Robert Yang<liezhi.yang@windriver.com>  wrote:
+>> Replace os.popen with subprocess.Popen since the older function would
+>> fail (more or less) silently if the executed program cannot be found
 >>
-> Most things are possible. You'd need the right metadata and I've not
-> tried that, nor do I know anyone who has. This mailing list is about the
-> tool itself, not the metadata it reads so you might have more success on
-> one of the OpenEmbedded lists.
+>> There is a bb.process.run() which will invoke the Popen to run command,
+>> use it for simplify the code.
+>>
+>> More info:
+>> http://docs.python.org/library/subprocess.html#subprocess-replacements
+>>
+>> [YOCTO #2075]
+>>
+>> Signed-off-by: Robert Yang<liezhi.yang@windriver.com>
+>> ---
+>>   bitbake/lib/bb/fetch2/perforce.py            |    6 +++---
+>>   bitbake/lib/bb/fetch2/svk.py                 |    2 +-
+>>   bitbake/lib/bb/ui/crumbs/builddetailspage.py |    3 ++-
+>>   bitbake/lib/bb/ui/crumbs/hig.py              |    7 ++++---
+>>   4 files changed, 10 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/bitbake/lib/bb/fetch2/perforce.py b/bitbake/lib/bb/fetch2/perforce.py
+>> index 6abf15d..e07afdd 100644
+>> --- a/bitbake/lib/bb/fetch2/perforce.py
+>> +++ b/bitbake/lib/bb/fetch2/perforce.py
+>> @@ -91,7 +91,7 @@ class Perforce(FetchMethod):
+>>
+>>          p4cmd = data.getVar('FETCHCOMMAND_p4', d, True)
+>>          logger.debug(1, "Running %s%s changes -m 1 %s", p4cmd, p4opt, depot)
+>> -        p4file = os.popen("%s%s changes -m 1 %s" % (p4cmd, p4opt, depot))
+>> +        (p4file, errors) = bb.process.run("%s%s changes -m 1 %s" % (p4cmd, p4opt, depot))
+>>          cset = p4file.readline().strip()
 >
-> Cheers,
+> This is wrong, and will actually fail badly if you attempt to use
+> this. run() returns the values from Popen.communicate(), which returns
+> the data as strings, not pipes, so read() and readline() will not be
+> available on that object, and aren't needed. Also, the parens aren't
+> needed. "foo, bar =" is just as valid as "(foo, bar) =" (minor). This
+> should do it:
 >
-> Richard
+>      output, errors = bb.process.run("%s%s changes -m 1 %s" % (p4cmd,
+> p4opt, depot))
+>      cset = output.strip()
 >
+>> @@ -755,7 +756,7 @@ class DeployImageDialog (CrumbsDialog):
+>>                  cmdline = bb.ui.crumbs.utils.which_terminal()
+>>                  if cmdline:
+>>                      cmdline += "\"sudo dd if=" + self.image_path + " of=" + combo_item + "\""
+>> -                    subprocess.Popen(args=shlex.split(cmdline))
+>> +                    bb.process.run(args=shlex.split(cmdline))
 >
+> This is wrong, and will fail. run() has no 'args' named argument. Try
+> not to get discouraged -- we do appreciate the work you're doing, but
+> checking this in would break bitbake for a great number of people. I'd
+> suggest actually testing bitbake with your changes before sending them
 
+Yes, I had tested the "bitbake core-image-sato" before sent the patch V3,
+
+that's fine, I will send the V4 tomorrow since I'm out of office today:-).
+
+// Robert
+
+> to the list. Thanks.
 
 
