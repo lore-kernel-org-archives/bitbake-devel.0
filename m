@@ -1,28 +1,23 @@
 Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Liezhi.Yang@windriver.com>) id 1SUq9j-0004aM-Po
+	(envelope-from <Peter.Seebach@windriver.com>) id 1SVR7a-0008UW-Rl
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 17 May 2012 04:09:32 +0200
+	Fri, 18 May 2012 19:37:47 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q4H1xReN024940
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Wed, 16 May 2012 18:59:27 -0700 (PDT)
-Received: from [128.224.163.142] (128.224.163.142) by ALA-HCA.corp.ad.wrs.com
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q4IHRf0a023821
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 18 May 2012 10:27:41 -0700 (PDT)
+Received: from localhost.localdomain (172.25.34.64) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Wed, 16 May 2012 18:59:26 -0700
-Message-ID: <4FB45B7C.2060904@windriver.com>
-Date: Thu, 17 May 2012 09:59:24 +0800
-From: Robert Yang <liezhi.yang@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
-	rv:12.0) Gecko/20120430 Thunderbird/12.0.1
+	Fri, 18 May 2012 10:27:40 -0700
+From: Peter Seebach <peter.seebach@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Fri, 18 May 2012 12:27:38 -0500
+Message-ID: <cover.1337361285.git.peter.seebach@windriver.com>
+X-Mailer: git-send-email 1.7.0.4
 MIME-Version: 1.0
-To: Chris Larson <clarson@kergoth.com>
-References: <cover.1337147194.git.liezhi.yang@windriver.com>
-	<e22ec7981521df200e2db535630b666ce6d2731f.1337147194.git.liezhi.yang@windriver.com>
-	<CABcZAN=Li=d73RueP18YRZSB-ExDMkW7EVw_gpF4j72Ch-j5Cg@mail.gmail.com>
-In-Reply-To: <CABcZAN=Li=d73RueP18YRZSB-ExDMkW7EVw_gpF4j72Ch-j5Cg@mail.gmail.com>
-Cc: bitbake-devel@lists.openembedded.org, Zhenfeng.Zhao@windriver.com
-Subject: Re: [PATCH 2/2] replace os.popen with subprocess.Popen
+Subject: [RFC PATCH 0/2] data_smart.py (mostly): Variable and include tracking!
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -34,74 +29,76 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 17 May 2012 02:09:32 -0000
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 18 May 2012 17:37:47 -0000
+Content-Type: text/plain
 
+This is a first pass at allowing us to answer that vexing question:
 
+Where the heck did that value come from?
 
-On 05/16/2012 10:14 PM, Chris Larson wrote:
-> On Tue, May 15, 2012 at 10:55 PM, Robert Yang<liezhi.yang@windriver.com>  wrote:
->> Replace os.popen with subprocess.Popen since the older function would
->> fail (more or less) silently if the executed program cannot be found
->>
->> There is a bb.process.run() which will invoke the Popen to run command,
->> use it for simplify the code.
->>
->> More info:
->> http://docs.python.org/library/subprocess.html#subprocess-replacements
->>
->> [YOCTO #2075]
->>
->> Signed-off-by: Robert Yang<liezhi.yang@windriver.com>
->> ---
->>   bitbake/lib/bb/fetch2/perforce.py            |    6 +++---
->>   bitbake/lib/bb/fetch2/svk.py                 |    2 +-
->>   bitbake/lib/bb/ui/crumbs/builddetailspage.py |    3 ++-
->>   bitbake/lib/bb/ui/crumbs/hig.py              |    7 ++++---
->>   4 files changed, 10 insertions(+), 8 deletions(-)
->>
->> diff --git a/bitbake/lib/bb/fetch2/perforce.py b/bitbake/lib/bb/fetch2/perforce.py
->> index 6abf15d..e07afdd 100644
->> --- a/bitbake/lib/bb/fetch2/perforce.py
->> +++ b/bitbake/lib/bb/fetch2/perforce.py
->> @@ -91,7 +91,7 @@ class Perforce(FetchMethod):
->>
->>          p4cmd = data.getVar('FETCHCOMMAND_p4', d, True)
->>          logger.debug(1, "Running %s%s changes -m 1 %s", p4cmd, p4opt, depot)
->> -        p4file = os.popen("%s%s changes -m 1 %s" % (p4cmd, p4opt, depot))
->> +        (p4file, errors) = bb.process.run("%s%s changes -m 1 %s" % (p4cmd, p4opt, depot))
->>          cset = p4file.readline().strip()
->
-> This is wrong, and will actually fail badly if you attempt to use
-> this. run() returns the values from Popen.communicate(), which returns
-> the data as strings, not pipes, so read() and readline() will not be
-> available on that object, and aren't needed. Also, the parens aren't
-> needed. "foo, bar =" is just as valid as "(foo, bar) =" (minor). This
-> should do it:
->
->      output, errors = bb.process.run("%s%s changes -m 1 %s" % (p4cmd,
-> p4opt, depot))
->      cset = output.strip()
->
->> @@ -755,7 +756,7 @@ class DeployImageDialog (CrumbsDialog):
->>                  cmdline = bb.ui.crumbs.utils.which_terminal()
->>                  if cmdline:
->>                      cmdline += "\"sudo dd if=" + self.image_path + " of=" + combo_item + "\""
->> -                    subprocess.Popen(args=shlex.split(cmdline))
->> +                    bb.process.run(args=shlex.split(cmdline))
->
-> This is wrong, and will fail. run() has no 'args' named argument. Try
-> not to get discouraged -- we do appreciate the work you're doing, but
-> checking this in would break bitbake for a great number of people. I'd
-> suggest actually testing bitbake with your changes before sending them
+The complexity of bitbake's variable assignment means that even if you
+had a complete list of the lines being processed in order, you might need
+a few tries to figure out why a variable is set to what it is.  When
+debugging, you might want to know what it would have been otherwise,
+too; knowing that a given ?= is processed after a +=, for instance,
+could save you a great deal of trouble.  To solve this, we add two pieces
+of functionality to "bitbake -e".
 
-Yes, I had tested the "bitbake core-image-sato" before sent the patch V3,
+The first is a list of the .conf/.inc files that were parsed, in order;
+the list shows included files indented under the thing that included
+them, making it easier to see not just what got processed, but why it got
+processed.
 
-that's fine, I will send the V4 tomorrow since I'm out of office today:-).
+The second is a list of all the operations performed on each value, in
+order, citing to the file and line number where they happened (whenever
+possible).  So, for instance, say I want to know how SSTATETASKS got its
+value.  The output of "bitbake -e" now says:
 
-// Robert
+# SSTATETASKS [4]
+#   append /home/seebs/poky/meta/classes/staging.bbclass:105:
+#     < do_populate_sysroot>
+#   append /home/seebs/poky/meta/classes/package.bbclass:1750:
+#     < do_populate_sysroot do_package>
+#   append /home/seebs/poky/meta/classes/package_rpm.bbclass:1112:
+#     < do_populate_sysroot do_package do_package_write_rpm>
+#   append /home/seebs/poky/meta/classes/license.bbclass:380:
+#     < do_populate_sysroot do_package do_package_write_rpm do_populate_lic>
+#
+# SSTATETASKS= do_populate_sysroot do_package do_package_write_rpm do_populate_lic
 
-> to the list. Thanks.
+Wait, staging.bbclass?  I don't remember asking for that.  Let's go look
+at the include history:
+
+# /home/seebs/poky/meta/classes/base.bbclass includes:
+#   /home/seebs/poky/meta/classes/patch.bbclass includes:
+#     /home/seebs/poky/meta/classes/terminal.bbclass
+#   /home/seebs/poky/meta/classes/staging.bbclass
+
+So this tells me that staging.bbclass was included from base.bbclass.  Yay!
+Mystery is solved.  Everything is working because it's doing what it is
+supposed to do.  :)
+
+The following changes since commit f8bf4499549f978ce7c93bc088a66f74cd751e2c:
+  Martin Jansa (1):
+        setup.py: fix path for bitbake-selftest
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib seebs/tracking
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=seebs/tracking
+
+Peter Seebach (2):
+  data_smart.py: Provide (optional) logging of variable modifications
+  data_smart.py: Track configuration file inclusions
+
+ lib/bb/cooker.py                   |    4 +-
+ lib/bb/data.py                     |   46 +++++++++++--
+ lib/bb/data_smart.py               |  128 +++++++++++++++++++++++++++--------
+ lib/bb/parse/__init__.py           |    8 ++-
+ lib/bb/parse/ast.py                |   89 +++++++++++++------------
+ lib/bb/parse/parse_py/BBHandler.py |    8 +-
+ lib/bb/siggen.py                   |    2 +-
+ 7 files changed, 198 insertions(+), 87 deletions(-)
+
 
 
