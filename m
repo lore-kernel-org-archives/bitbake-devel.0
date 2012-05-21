@@ -1,36 +1,33 @@
-Received: from mail-ob0-f175.google.com ([209.85.214.175])
+Received: from mail-pb0-f47.google.com ([209.85.160.47])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <francesco.brundu@gmail.com>) id 1SWZyU-0008G2-TE
+	(envelope-from <kergoth@gmail.com>) id 1SWcHh-0002x0-5i
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 21 May 2012 23:17:07 +0200
-Received: by obhx4 with SMTP id x4so9611909obh.6
+	Tue, 22 May 2012 01:45:05 +0200
+Received: by pbbrq2 with SMTP id rq2so6664392pbb.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 May 2012 14:06:58 -0700 (PDT)
+	Mon, 21 May 2012 16:34:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:cc:content-type:content-transfer-encoding;
-	bh=FoRfn+olnKWWGFzM/xLtU18nr3Aem56ND6bbsaX4Yhw=;
-	b=s6yO71fdnnCCXQYHCcxn17S1u8siqF6dfvWAJzAK1qX65otZ6IMe9cdq8SmXEfQE3a
-	1gYBnDmxuRKsnEs745YQUFKe9cvQL9UIVSIPcIye0MJY5SRWf0w5cQihrR5Zbm2ekGWy
-	3RbYwyC4V2XfmdH/HzRD3Jt9tMldR8PPcEdBTwH1i8kd/FEUe0aSgzoLMdjImKQdwZMq
-	RTCOhXr85pP4dSu7R++HpD4eBSIM4k2QJCmJko6BxcyeFHpwAyhtOfwCDvXvufcmyFlY
-	EVcMhu1HAtbNjrxSemRB4hlmRYbgrVIUbZQws9sant8NKsgtm0M7MdztVC7NXD668rVD
-	XoLQ==
-MIME-Version: 1.0
-Received: by 10.60.14.169 with SMTP id q9mr20796258oec.19.1337634418377; Mon,
-	21 May 2012 14:06:58 -0700 (PDT)
-Received: by 10.60.69.162 with HTTP; Mon, 21 May 2012 14:06:58 -0700 (PDT)
-In-Reply-To: <CABcZANkK9QjB4s5707eW9fEkLvL5QvfayhmhjorhwEhe0Q2N0Q@mail.gmail.com>
-References: <CAFc_i-FgKp-Gwr9GEs3ApjTE8vvwU=u7abOA1KwWRtEXpoV3cA@mail.gmail.com>
-	<CABcZAN=ur8sRo3FW3o9FUwdG1Ceu+=hsyQuEcLnF-8MgtU7-Rg@mail.gmail.com>
-	<CAFc_i-HzOPOde1=J0iXa5MoFJFhJjBn0JKV4meOgXfNkV=iV2g@mail.gmail.com>
-	<CABcZANkK9QjB4s5707eW9fEkLvL5QvfayhmhjorhwEhe0Q2N0Q@mail.gmail.com>
-Date: Mon, 21 May 2012 23:06:58 +0200
-Message-ID: <CAFc_i-HObE76u6KP_E-qxpmOtC6b986DCdNk0fiR8-U2LWBO1A@mail.gmail.com>
-From: "francesco.brundu@gmail.com" <francesco.brundu@gmail.com>
-To: Chris Larson <clarson@kergoth.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: Bitbake raises MultipleMatches exception while trying to build uclibc
+	h=from:to:subject:date:message-id:x-mailer;
+	bh=r2MP+gp+oxcShzuM6uNNIsdx1tb8VTaPhBCcX+Bo6Z8=;
+	b=boMWmigBF8uNn7vp5sP/ncXm+rztWFJqhhyXw5td9SYMHNnRAw4KGU4RdR4WLo1Myd
+	s7sozqAXqIIUa1GM0Mw1ZptxlNPNHTDx5hnl4S4ZmEcyPpj4hGr+xQo8Gigj35D+IPcn
+	Q3oUtW32HaPnshTmsMoXmFZSilrYQIwOBkjFXTGzJpnCEZdP+0zc0b6Hw/6bNvBFMCF2
+	yadt5/LYE5hmeeKP9gbHxl63ooAJtB6qMVozng6EmLHdyNufLhzt3O1gHRS3o1mmZtrK
+	C6oQX+ooeYRA7nOQR2Sp0l99Xfh3J+I2vbqSBOk5jkHkeZQpjcsvfRImJLGPLUnbyprw
+	UbZQ==
+Received: by 10.68.132.101 with SMTP id ot5mr9472977pbb.91.1337643296453;
+	Mon, 21 May 2012 16:34:56 -0700 (PDT)
+Received: from localhost.localdomain (ip68-110-79-242.ph.ph.cox.net.
+	[68.110.79.242])
+	by mx.google.com with ESMTPS id mt9sm24582499pbb.14.2012.05.21.16.34.54
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Mon, 21 May 2012 16:34:55 -0700 (PDT)
+From: Christopher Larson <kergoth@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 21 May 2012 16:34:49 -0700
+Message-Id: <1337643289-21368-1-git-send-email-kergoth@gmail.com>
+X-Mailer: git-send-email 1.7.10.2
+Subject: [PATCH] fetch2: quote/unquote url paths
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -42,60 +39,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 21 May 2012 21:17:07 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Mon, 21 May 2012 23:45:05 -0000
 
-Thanks for your time, I thought that uclibc had to be built
-separately. I somehow found correct variable name at
-http://www.openembedded.org/wiki/Uclibc_FAQ
-thanks to your hint. Just set ANGSTROMLIBC =3D "uclibc" in local.conf.
-Thanks again.
-Bye
+This ensures we can handle things like %-encoded characters in the path
+portion of urls.
 
-On 21 May 2012 20:19, Chris Larson <clarson@kergoth.com> wrote:
-> On Mon, May 21, 2012 at 11:15 AM, francesco.brundu@gmail.com
-> <francesco.brundu@gmail.com> wrote:
->> Ok thanks. Bitbake now gives me "No provider Error" for uclibc
->>
->> user@ubuntu:~/stuff$ bitbake uclibc
->> Loading cache: 100%
->> |#######################################################################=
-###########################################################################=
-############################################|
->> Time: 00:00:02
->> Loaded 7102 entries from dependency cache.
->> Parsing recipes: 100%
->> |#######################################################################=
-###########################################################################=
-##########################################|
->> Time: 00:00:04
->> Parsing of 7217 .bb files complete (6456 cached, 761 parsed). 7886
->> targets, 310 skipped, 0 masked, 0 errors.
->>
->> Build Configuration:
->> BB_VERSION =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D "1.12.0"
->> METADATA_BRANCH =C2=A0 =3D "master"
->> METADATA_REVISION =3D "1ff63aa"
->> TARGET_ARCH =C2=A0 =C2=A0 =C2=A0 =3D "arm"
->> TARGET_OS =C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D "linux-gnueabi"
->> MACHINE =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D "beagleboard"
->> DISTRO =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D "angstrom"
->> DISTRO_VERSION =C2=A0 =C2=A0=3D "v2012.05"
->> TARGET_FPU =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D "hard"
->>
->> ERROR: Nothing PROVIDES 'uclibc'
->
-> You didn't configure the metadata to use uclibc. Set TCLIBC to uclibc,
-> if I remember correctly. And there should never be a need to bitbake
-> it explicitly, the build automatically builds a C library when it
-> needs one.
-> --
-> Christopher Larson
+Signed-off-by: Christopher Larson <kergoth@gmail.com>
+---
+ lib/bb/fetch2/__init__.py |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index e3ac4d2..dba8797 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -28,6 +28,7 @@ from __future__ import absolute_import
+ from __future__ import print_function
+ import os, re
+ import logging
++import urllib
+ import bb.persist_data, bb.utils
+ from bb import data
+ 
+@@ -147,14 +148,14 @@ def decodeurl(url):
+             s1, s2 = s.split('=')
+             p[s1] = s2
+ 
+-    return (type, host, path, user, pswd, p)
++    return type, host, urllib.unquote(path), user, pswd, p
+ 
+ def encodeurl(decoded):
+     """Encodes a URL from tokens (scheme, network location, path,
+     user, password, parameters).
+     """
+ 
+-    (type, host, path, user, pswd, p) = decoded
++    type, host, path, user, pswd, p = decoded
+ 
+     if not path:
+         raise MissingParameterError('path', "encoded from the data %s" % str(decoded))
+@@ -168,7 +169,7 @@ def encodeurl(decoded):
+         url += "@"
+     if host and type != "file":
+         url += "%s" % host
+-    url += "%s" % path
++    url += "%s" % urllib.quote(path)
+     if p:
+         for parm in p:
+             url += ";%s=%s" % (parm, p[parm])
+-- 
+1.7.10.2
 
-
---=20
-Francesco Brundu
 
 
