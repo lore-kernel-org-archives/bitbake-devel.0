@@ -1,27 +1,20 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mga01.intel.com ([192.55.52.88])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Peter.Seebach@windriver.com>) id 1SWTX4-0004uH-QS
+	(envelope-from <limingx.l.an@intel.com>) id 1SWTup-0000Cp-SO
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 21 May 2012 16:24:23 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q4LEEBJT004921
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Mon, 21 May 2012 07:14:11 -0700 (PDT)
-Received: from wrlaptop (172.25.40.226) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Mon, 21 May 2012 07:14:10 -0700
-Date: Mon, 21 May 2012 09:13:55 -0500
-From: Peter Seebach <peter.seebach@windriver.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Message-ID: <20120521091355.7f1a2ea3@wrlaptop>
-In-Reply-To: <1337609243.22747.4.camel@ted>
-References: <1337527267-2196-1-git-send-email-enrico.scholz@sigma-chemnitz.de>
-	<1337609243.22747.4.camel@ted>
-X-Mailer: Claws Mail 3.7.8 (GTK+ 2.24.4; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Cc: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>,
-	bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] bitbake: added -j option
+	Mon, 21 May 2012 16:48:56 +0200
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 21 May 2012 07:38:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="169177369"
+Received: from hp.sh.intel.com ([10.239.47.6])
+	by fmsmga002.fm.intel.com with ESMTP; 21 May 2012 07:38:45 -0700
+From: Liming An <limingx.l.an@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 21 May 2012 22:41:16 +0800
+Message-Id: <cover.1337610738.git.limingx.l.an@intel.com>
+X-Mailer: git-send-email 1.7.5.4
+Subject: [PATCH 0/5] Hob: bug-fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,23 +26,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 21 May 2012 14:24:23 -0000
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 21 May 2012 14:48:56 -0000
 
-On Mon, 21 May 2012 15:07:23 +0100
-Richard Purdie <richard.purdie@linuxfoundation.org> wrote:
+The following changes since commit 2219caa312822cf756b88b07dd70a014404e9cb0:
 
-> I think in this case you may as well just whitelist BB_NUMBER_THREADS
-> from the environment and set that variable there. I'm not seeing a
-> huge need for the specific commandline option...
+  tune-mips64.inc: Add new tune file for mips64 big-endian (2012-05-21 09:59:04 +0100)
 
-Principle of least astonishment?  I expect things that can run stuff in
-parallel to specify that with -j.  Not strongly enough to have submitted
-such a patch, but I can see the appeal.
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib limx/hob-bug-fixes-continue
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=limx/hob-bug-fixes-continue
 
--s
+Liming An (5):
+  Hob: add '--select a machine--' and '--select a base image--' to GUI
+  Hob: change the build failure scenario as ui design
+  Hob: fixed the issue about bug 'running image' workflow and related
+    view
+  Hob: fixed the line width of base image description view
+  Hob: fixed the issue about the 'run image' page should have the
+    primary bug
+
+ bitbake/lib/bb/ui/crumbs/builddetailspage.py       |   99 +++++++++++++++++++-
+ bitbake/lib/bb/ui/crumbs/builder.py                |   14 ++-
+ bitbake/lib/bb/ui/crumbs/hoblistmodel.py           |    6 +-
+ bitbake/lib/bb/ui/crumbs/hobwidget.py              |    7 ++
+ bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |   45 +++++++---
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py       |   87 ++++++++++++------
+ bitbake/lib/bb/ui/crumbs/recipeselectionpage.py    |    2 +-
+ 7 files changed, 213 insertions(+), 47 deletions(-)
+
 -- 
-Listen, get this.  Nobody with a good compiler needs to be justified.
+1.7.5.4
+
 
 
