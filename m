@@ -1,24 +1,23 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mail.windriver.com ([147.11.1.11])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <limingx.l.an@intel.com>) id 1SWTv3-0000R9-0t
+	(envelope-from <Peter.Seebach@windriver.com>) id 1SWUPa-0001Jc-BI
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 21 May 2012 16:49:09 +0200
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 21 May 2012 07:39:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="146430796"
-Received: from hp.sh.intel.com ([10.239.47.6])
-	by orsmga002.jf.intel.com with ESMTP; 21 May 2012 07:39:01 -0700
-From: Liming An <limingx.l.an@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 21 May 2012 22:41:24 +0800
-Message-Id: <b57883e090aaf1ecc3b792f7deceb01c2a802177.1337610738.git.limingx.l.an@intel.com>
-X-Mailer: git-send-email 1.7.5.4
-In-Reply-To: <be9df903825ec31825cd12c0d5d20d0ca0e8d88a.1337610738.git.limingx.l.an@intel.com>
-References: <be9df903825ec31825cd12c0d5d20d0ca0e8d88a.1337610738.git.limingx.l.an@intel.com>
-In-Reply-To: <cover.1337610738.git.limingx.l.an@intel.com>
-References: <cover.1337610738.git.limingx.l.an@intel.com>
-Subject: [PATCH 5/5] Hob: fixed the issue about the 'run image' page should have the primary bug
+	Mon, 21 May 2012 17:20:42 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q4LFAXpY014884
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 21 May 2012 08:10:33 -0700 (PDT)
+Received: from localhost.localdomain (172.25.34.64) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
+	Mon, 21 May 2012 08:10:33 -0700
+From: Peter Seebach <peter.seebach@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Mon, 21 May 2012 10:10:30 -0500
+Message-ID: <cover.1337612802.git.peter.seebach@windriver.com>
+X-Mailer: git-send-email 1.7.0.4
+MIME-Version: 1.0
+Subject: v2 [PATCH 0/2] data_smart.py: Track inclusions and assignments
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,59 +29,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 21 May 2012 14:49:09 -0000
+X-List-Received-Date: Mon, 21 May 2012 15:20:42 -0000
+Content-Type: text/plain
 
-issues: when build a image for atom-pc, the output does not include live
-image, and 'Save as template' should become the primary action on the screen
+This revised patch now uses Python's traceback facility to assign
+meaningful locations (file and function, rather than line) to operations
+which weren't specified, and correspondingly does not specify file and
+line when the file name would have been the python code making the
+assignment; this makes the patch smaller and the output more meaningful.
 
-[YOCTO 2326]
+As before, this is a patch to add tracking showing when and how variables
+got their values, and which configuration files were included from which
+other configuration files.
 
-Signed-off-by: Liming An <limingx.l.an@intel.com>
----
- bitbake/lib/bb/ui/crumbs/imagedetailspage.py |   14 ++++++++------
- 1 files changed, 8 insertions(+), 6 deletions(-)
+The following changes since commit 39adb5741d9eee0879d3181be505400dffc60804:
+  Andrei Gherzan (1):
+        bb/fetch2/__init__.py: Don't try to compute checksums for directories
 
-diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-index f517544..1538376 100755
---- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-@@ -202,7 +202,7 @@ class ImageDetailsPage (HobPage):
- 
-         # Name
-         self.image_store.clear()
--        default_toggled = False
-+        default_toggled = ""
-         default_image_size = 0
-         num_toggled = 0
-         i = 0
-@@ -212,18 +212,20 @@ class ImageDetailsPage (HobPage):
-                 or self.test_deployable(image_name)
- 
-             if not default_toggled:
--                default_toggled = is_toggled
-                 if i == (len(image_names) - 1):
--                    default_toggled = True
--                self.image_store.set(self.image_store.append(), 0, image_name, 1, image_size, 2, default_toggled)
--                if default_toggled:
-+                    is_toggled = True
-+                self.image_store.set(self.image_store.append(), 0, image_name, 1, image_size, 2, is_toggled)
-+                if is_toggled:
-                     default_image_size = image_size
--                    self.create_bottom_buttons(self.buttonlist, image_name)
-+                    default_toggled = image_name
-+
-             else:
-                 self.image_store.set(self.image_store.append(), 0, image_name, 1, image_size, 2, False)
-             i = i + 1
-             num_toggled += is_toggled
- 
-+        self.create_bottom_buttons(self.buttonlist, default_toggled)
-+
-         if build_succeeded and (num_toggled < 2):
-             varlist = ["Name: ", "Directory: "]
-             vallist = []
--- 
-1.7.5.4
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib seebs/tracking
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=seebs/tracking
+
+Peter Seebach (2):
+  data_smart.py: Provide (optional) logging of variable modifications
+  data_smart.py: Track configuration file inclusions
+
+ lib/bb/cooker.py         |    2 +
+ lib/bb/data.py           |   65 +++++++++++++++++-----
+ lib/bb/data_smart.py     |  140 +++++++++++++++++++++++++++++++++++++--------
+ lib/bb/parse/__init__.py |    6 ++-
+ lib/bb/parse/ast.py      |   65 ++++++++++++----------
+ 5 files changed, 209 insertions(+), 69 deletions(-)
 
 
 
