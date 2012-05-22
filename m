@@ -1,33 +1,20 @@
-Received: from mail-pb0-f47.google.com ([209.85.160.47])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1SWcHh-0002x0-5i
+	(envelope-from <dongxiao.xu@intel.com>) id 1SWfgM-0007Pz-Nf
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 22 May 2012 01:45:05 +0200
-Received: by pbbrq2 with SMTP id rq2so6664392pbb.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 May 2012 16:34:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:subject:date:message-id:x-mailer;
-	bh=r2MP+gp+oxcShzuM6uNNIsdx1tb8VTaPhBCcX+Bo6Z8=;
-	b=boMWmigBF8uNn7vp5sP/ncXm+rztWFJqhhyXw5td9SYMHNnRAw4KGU4RdR4WLo1Myd
-	s7sozqAXqIIUa1GM0Mw1ZptxlNPNHTDx5hnl4S4ZmEcyPpj4hGr+xQo8Gigj35D+IPcn
-	Q3oUtW32HaPnshTmsMoXmFZSilrYQIwOBkjFXTGzJpnCEZdP+0zc0b6Hw/6bNvBFMCF2
-	yadt5/LYE5hmeeKP9gbHxl63ooAJtB6qMVozng6EmLHdyNufLhzt3O1gHRS3o1mmZtrK
-	C6oQX+ooeYRA7nOQR2Sp0l99Xfh3J+I2vbqSBOk5jkHkeZQpjcsvfRImJLGPLUnbyprw
-	UbZQ==
-Received: by 10.68.132.101 with SMTP id ot5mr9472977pbb.91.1337643296453;
-	Mon, 21 May 2012 16:34:56 -0700 (PDT)
-Received: from localhost.localdomain (ip68-110-79-242.ph.ph.cox.net.
-	[68.110.79.242])
-	by mx.google.com with ESMTPS id mt9sm24582499pbb.14.2012.05.21.16.34.54
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Mon, 21 May 2012 16:34:55 -0700 (PDT)
-From: Christopher Larson <kergoth@gmail.com>
+	Tue, 22 May 2012 05:22:46 +0200
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga102.fm.intel.com with ESMTP; 21 May 2012 20:12:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="169483151"
+Received: from dongxiao-osel.sh.intel.com (HELO localhost) ([10.239.36.11])
+	by fmsmga002.fm.intel.com with ESMTP; 21 May 2012 20:12:36 -0700
+From: Dongxiao Xu <dongxiao.xu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 21 May 2012 16:34:49 -0700
-Message-Id: <1337643289-21368-1-git-send-email-kergoth@gmail.com>
-X-Mailer: git-send-email 1.7.10.2
-Subject: [PATCH] fetch2: quote/unquote url paths
+Date: Tue, 22 May 2012 11:08:33 +0800
+Message-Id: <cover.1337655950.git.dongxiao.xu@intel.com>
+X-Mailer: git-send-email 1.7.4.1
+Subject: [PATCH 0/2 v2][PULL] Hob: Add white/black pattern to filter images
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -39,56 +26,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 21 May 2012 23:45:05 -0000
+X-List-Received-Date: Tue, 22 May 2012 03:22:46 -0000
 
-This ensures we can handle things like %-encoded characters in the path
-portion of urls.
+Hi Richard,
 
-Signed-off-by: Christopher Larson <kergoth@gmail.com>
----
- lib/bb/fetch2/__init__.py |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+This pull request adds white/black pattern to filter images listed in image combobox.
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index e3ac4d2..dba8797 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -28,6 +28,7 @@ from __future__ import absolute_import
- from __future__ import print_function
- import os, re
- import logging
-+import urllib
- import bb.persist_data, bb.utils
- from bb import data
- 
-@@ -147,14 +148,14 @@ def decodeurl(url):
-             s1, s2 = s.split('=')
-             p[s1] = s2
- 
--    return (type, host, path, user, pswd, p)
-+    return type, host, urllib.unquote(path), user, pswd, p
- 
- def encodeurl(decoded):
-     """Encodes a URL from tokens (scheme, network location, path,
-     user, password, parameters).
-     """
- 
--    (type, host, path, user, pswd, p) = decoded
-+    type, host, path, user, pswd, p = decoded
- 
-     if not path:
-         raise MissingParameterError('path', "encoded from the data %s" % str(decoded))
-@@ -168,7 +169,7 @@ def encodeurl(decoded):
-         url += "@"
-     if host and type != "file":
-         url += "%s" % host
--    url += "%s" % path
-+    url += "%s" % urllib.quote(path)
-     if p:
-         for parm in p:
-             url += ";%s=%s" % (parm, p[parm])
+Besides, it fixes a small issue on update_image_desc() function.
+
+Please help to review and pull.
+
+Changes from v1:
+ - Rename IMAGE_WHITE_PATTERN and IMAGE_BLACK_PATTERN to BBUI_IMAGE_WHITE_PATTERN
+and BBUI_IMAGE_BLACK_PATTERN.
+
+Thanks,
+Dongxiao
+
+The following changes since commit 39adb5741d9eee0879d3181be505400dffc60804:
+
+  bb/fetch2/__init__.py: Don't try to compute checksums for directories (2012-05-21 09:24:17 +0100)
+
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib dxu4/hob-bugfix
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=dxu4/hob-bugfix
+
+Dongxiao Xu (2):
+  Hob: Add filter for images listed in image combo
+  Hob: Get image name internally when updating the image description
+
+ lib/bb/ui/crumbs/builder.py                |    6 +++-
+ lib/bb/ui/crumbs/hobeventhandler.py        |    2 +
+ lib/bb/ui/crumbs/imageconfigurationpage.py |   42 ++++++++++++++++++++++++----
+ 3 files changed, 43 insertions(+), 7 deletions(-)
+
 -- 
-1.7.10.2
+1.7.4.1
 
 
 
