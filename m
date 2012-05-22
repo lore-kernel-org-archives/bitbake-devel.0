@@ -1,27 +1,20 @@
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Peter.Seebach@windriver.com>) id 1SWrt0-0003Bx-5d
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1SWyaH-0005N9-El
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 22 May 2012 18:24:38 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q4MGEQeV014846
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Tue, 22 May 2012 09:14:26 -0700 (PDT)
-Received: from wrlaptop (172.25.40.226) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Tue, 22 May 2012 09:14:25 -0700
-Date: Tue, 22 May 2012 11:13:59 -0500
-From: Peter Seebach <peter.seebach@windriver.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Message-ID: <20120522111359.54be2700@wrlaptop>
-In-Reply-To: <1337694219.8248.6.camel@ted>
-References: <cover.1337612802.git.peter.seebach@windriver.com>
-	<CABcZANkcJQsc2Up1umRX1ek3m+waB-Pq3cFYOCQb3A+4Uh0RNw@mail.gmail.com>
-	<1337694219.8248.6.camel@ted>
-X-Mailer: Claws Mail 3.7.8 (GTK+ 2.24.4; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Cc: Chris Larson <clarson@kergoth.com>, bitbake-devel@lists.openembedded.org
-Subject: Re: v2 [PATCH 0/2] data_smart.py: Track inclusions and assignments
+	Wed, 23 May 2012 01:33:45 +0200
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga102.ch.intel.com with ESMTP; 22 May 2012 16:23:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="103080364"
+Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.120.180])
+	by AZSMGA002.ch.intel.com with ESMTP; 22 May 2012 16:23:34 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 23 May 2012 00:23:30 +0100
+Message-Id: <cover.1337728949.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH 0/2] Implement file checksums
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,27 +26,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 22 May 2012 16:24:38 -0000
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 22 May 2012 23:33:45 -0000
 
-On Tue, 22 May 2012 14:43:39 +0100
-Richard Purdie <richard.purdie@linuxfoundation.org> wrote:
+This is 2/3 of the changes required to implement local file checksums;
+the other third is a patch to base.bbclass which will be sent to the
+OE-Core list.
 
-> So I want to take a closer look through the patches but I'm leaning
-> toward merging them. If we find ways to make things neater, great but
-> this is probably as good a start as we can hope for.
 
-They need one small bug fixed (there's a missing [1] in the mods to
-createCopy), but apart from that I'm using them without noticeable
-trouble.
+The following changes (against Poky, but apply cleanly against BitBake
+master with -p2) are available in the git repository at:
 
-If these get added to bitbake, there's a related change to oe-core
-that might be handy, to suppress sanity checks when using this feature
-so you can get an explanation of what went wrong.
+  git://git.yoctoproject.org/poky-contrib paule/file-checksum-bb
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/file-checksum-bb
 
--s
+Paul Eggleton (2):
+  bitbake: refactor out codeparser cache into a separate class
+  bitbake: implement checksums for local files in SRC_URI
+
+ bitbake/lib/bb/cache.py           |  129 ++++++++++++++++++++++++-
+ bitbake/lib/bb/checksum.py        |   90 +++++++++++++++++
+ bitbake/lib/bb/codeparser.py      |  191 +++++++++++--------------------------
+ bitbake/lib/bb/cooker.py          |    2 +
+ bitbake/lib/bb/fetch2/__init__.py |   85 +++++++++++++++++
+ bitbake/lib/bb/siggen.py          |   24 +++++
+ 6 files changed, 382 insertions(+), 139 deletions(-)
+ create mode 100644 bitbake/lib/bb/checksum.py
+
 -- 
-Listen, get this.  Nobody with a good compiler needs to be justified.
+1.7.9.5
+
 
 
