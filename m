@@ -1,20 +1,20 @@
 Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <mark.hatle@windriver.com>) id 1SX0l4-0000qc-NT
+	(envelope-from <mark.hatle@windriver.com>) id 1SX1xj-0002q1-Ob
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 23 May 2012 03:53:03 +0200
+	Wed, 23 May 2012 05:10:12 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q4N1grX0022303
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q4N035uD021300
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 22 May 2012 18:42:53 -0700 (PDT)
+	Tue, 22 May 2012 17:03:05 -0700 (PDT)
 Received: from localhost.localdomain (172.25.34.61) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.1.255.0;
-	Tue, 22 May 2012 18:42:52 -0700
+	Tue, 22 May 2012 17:03:04 -0700
 From: Mark Hatle <mark.hatle@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 22 May 2012 20:46:32 -0500
-Message-ID: <1337737597-5964-3-git-send-email-mark.hatle@windriver.com>
+Date: Tue, 22 May 2012 19:06:44 -0500
+Message-ID: <1337731609-5375-3-git-send-email-mark.hatle@windriver.com>
 X-Mailer: git-send-email 1.7.3.4
 In-Reply-To: <cover.1337714416.git.mark.hatle@windriver.com>
 References: <cover.1337714416.git.mark.hatle@windriver.com>
@@ -32,7 +32,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 23 May 2012 01:53:03 -0000
+X-List-Received-Date: Wed, 23 May 2012 03:10:12 -0000
 Content-Type: text/plain
 
 The format of the log file and run file are now selectable
