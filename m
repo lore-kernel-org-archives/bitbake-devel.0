@@ -1,27 +1,31 @@
-Received: from mail1.windriver.com ([147.11.146.13])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Kai.Kang@windriver.com>) id 1SXAOd-0004ke-SR
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 23 May 2012 14:10:32 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q4N9e5fx027464
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Wed, 23 May 2012 02:40:05 -0700 (PDT)
-Received: from localhost.localdomain (128.224.162.164) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server
-	(TLS) id 14.1.255.0; Wed, 23 May 2012 02:40:04 -0700
-From: Kang Kai <kai.kang@windriver.com>
-To: <richard.purdie@linuxfoundation.org>,
-	<bitbake-devel@lists.openembedded.org>
-Date: Wed, 23 May 2012 17:40:19 +0800
-Message-ID: <dac2367a09e77d0230e8c2e625484336533ea50e.1337764882.git.kai.kang@windriver.com>
-X-Mailer: git-send-email 1.7.5.4
-In-Reply-To: <cover.1337764882.git.kai.kang@windriver.com>
-References: <cover.1337764882.git.kai.kang@windriver.com>
-MIME-Version: 1.0
-X-Originating-IP: [128.224.162.164]
-Cc: Zhenfeng.Zhao@windriver.com
-Subject: [PATCH 1/1] cooker.py: terminate the Parser processes
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1SXC6u-0004df-F0 for bitbake-devel@lists.openembedded.org;
+	Wed, 23 May 2012 16:00:20 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4NDoB8g013108;
+	Wed, 23 May 2012 14:50:11 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 12644-05; Wed, 23 May 2012 14:50:07 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4NDo4E6013075
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Wed, 23 May 2012 14:50:06 +0100
+Message-ID: <1337781002.8248.75.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Mark Hatle <mark.hatle@windriver.com>
+Date: Wed, 23 May 2012 14:50:02 +0100
+In-Reply-To: <1337737597-5964-2-git-send-email-mark.hatle@windriver.com>
+References: <cover.1337714416.git.mark.hatle@windriver.com>
+	<1337737597-5964-2-git-send-email-mark.hatle@windriver.com>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 2/3] build.py: Add additional debug messages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,60 +37,57 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 23 May 2012 12:10:32 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 23 May 2012 14:00:20 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-[Yocto 2142]
+On Tue, 2012-05-22 at 20:46 -0500, Mark Hatle wrote:
+> We now add a debug message when entering and exiting a python or
+> shell function.  This makes it easier to inspect a log and figure
+> out the run order from the logs.
+> 
+> Also minor cleanup in th exec_func_shell to match the exec_func_python
+> variables.
+> 
+> Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+> ---
+>  lib/bb/build.py |   20 +++++++++++++++-----
+>  1 files changed, 15 insertions(+), 5 deletions(-)
+> 
+> diff --git a/lib/bb/build.py b/lib/bb/build.py
+> index 4f06b15..2fbe120 100644
+> --- a/lib/bb/build.py
+> +++ b/lib/bb/build.py
+> @@ -206,6 +206,8 @@ def exec_func_python(func, d, runfile, cwd=None):
+>              olddir = None
+>          os.chdir(cwd)
+>  
+> +    bb.debug(2, "Executing python function %s" % func)
+> +
+>      try:
+>          comp = utils.better_compile(code, func, bbfile)
+>          utils.better_exec(comp, {"d": d}, code, bbfile)
+> @@ -215,13 +217,15 @@ def exec_func_python(func, d, runfile, cwd=None):
+>  
+>          raise FuncFailed(func, None)
+>      finally:
+> +        bb.debug(2, "Python function %s finished" % func)
+> +
+>          if cwd and olddir:
+>              try:
+>                  os.chdir(olddir)
+>              except OSError:
+>                  pass
+>  
+> -def exec_func_shell(function, d, runfile, cwd=None):
+> +def exec_func_shell(func, d, runfile, cwd=None):
 
-Force to exit HOB when hob is parsing recipes, the bitbake doesn't stop.
-It hangs on function BitBakeServerConnection::terminate in file
-server/process.py:
-    else:
-        self.procserver.join()
-It is waiting for the children process quit.
+Mixing variable renames with other code changes isn't really a good idea
+and confuses this patch :/.
 
-In stage of parse recipes BBCooker spawns Parser processes as many as
-cpu numbers. When quit the Parser processes they make their internal
-Queue to call cancel_join_thread() to avoid block but don't work at
-this time.
-So force to terminate the Parser processes.
+Cheers,
 
-Signed-off-by: Kang Kai <kai.kang@windriver.com>
----
- bitbake/lib/bb/cooker.py |    9 ++++++---
- 1 files changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index dea0aad..4a4dc38 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1175,7 +1175,7 @@ class BBCooker:
-             return
- 
-         if self.state in (state.shutdown, state.stop):
--            self.parser.shutdown(clean=False)
-+            self.parser.shutdown(clean=False, force = True)
-             sys.exit(1)
- 
-         if self.state != state.parsing:
-@@ -1608,10 +1608,13 @@ class CookerParser(object):
-                 self.parser_quit.put(None)
- 
-             self.jobs.cancel_join_thread()
--            sys.exit(1)
- 
-         for process in self.processes:
--            process.join()
-+            if force:
-+                process.join(.1)
-+                process.terminate()
-+            else:
-+                process.join()
-         self.feeder.join()
- 
-         sync = threading.Thread(target=self.bb_cache.sync)
--- 
-1.7.5.4
+Richard
 
 
 
