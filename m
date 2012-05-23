@@ -1,22 +1,37 @@
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from mail-wg0-f43.google.com ([74.125.82.43])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1SXCu8-0005La-8a
+	(envelope-from <kergoth@gmail.com>) id 1SXDjz-0007qF-1u
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 23 May 2012 16:51:12 +0200
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 23 May 2012 07:41:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="170400228"
-Received: from yocto-build5.sh.intel.com (HELO localhost) ([10.239.48.3])
-	by fmsmga002.fm.intel.com with ESMTP; 23 May 2012 07:40:59 -0700
-From: Shane Wang <shane.wang@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 23 May 2012 23:19:44 +0800
-Message-Id: <13678628889560c06a747df22ae496772b27f604.1337786155.git.shane.wang@intel.com>
-X-Mailer: git-send-email 1.7.6
-In-Reply-To: <cover.1337786155.git.shane.wang@intel.com>
-References: <cover.1337786155.git.shane.wang@intel.com>
-Subject: [PATCH 1/1] Hob: Adjust the progress bar and set 100% only when all is done.
+	Wed, 23 May 2012 17:44:47 +0200
+Received: by wgbdr1 with SMTP id dr1so6506127wgb.24
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 23 May 2012 08:34:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date
+	:x-google-sender-auth:message-id:subject:to:cc:content-type
+	:content-transfer-encoding;
+	bh=6n0hDApDMcx+07Ro8Ci11s+CsrUSGBsyL6RPOQZ5xbQ=;
+	b=kTkjsErNUhqo8fGWvsHjFHVwWD1McK7c1f67IzOpNc+meTm9Ze9G+pNnP1F4O4fD0D
+	VIFFzqL+rzPwl5cbA2DihrLaOT3zp40I3YU6Zr10p8ZfSD3ERMr2uSOyFTXrlJ64oMjy
+	n54VET8dOPbaUU9klvmzpu9nvJ1v5N8j9VPt7NaMo4GHEiW3lEQFeJxpGWoPqGB67ZUa
+	vpzGtw4F94HQS2IHVjfJYWYOTFaGs1ZUENVmPt4F0q/uT39jJBC55wbMa3vrzV/BObTd
+	8QpGjhNrXbc+F6gPsewnJycS2xqObVK0StYLKm4alKuGg7my+9tfHZFwzukHUCpTkZPS
+	Yabw==
+Received: by 10.180.102.9 with SMTP id fk9mr62861419wib.1.1337787276873; Wed,
+	23 May 2012 08:34:36 -0700 (PDT)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.216.181.16 with HTTP; Wed, 23 May 2012 08:34:16 -0700 (PDT)
+In-Reply-To: <dac2367a09e77d0230e8c2e625484336533ea50e.1337764882.git.kai.kang@windriver.com>
+References: <cover.1337764882.git.kai.kang@windriver.com>
+	<dac2367a09e77d0230e8c2e625484336533ea50e.1337764882.git.kai.kang@windriver.com>
+From: Chris Larson <clarson@kergoth.com>
+Date: Wed, 23 May 2012 08:34:16 -0700
+X-Google-Sender-Auth: Wp3DdOZ5_3uqwyPrsN6BmjtjbN8
+Message-ID: <CABcZAN=Rs1HC6dTKOvU4r2cuO04m10f1-hoNtRfox_xgVhbsxg@mail.gmail.com>
+To: Kang Kai <kai.kang@windriver.com>
+Cc: bitbake-devel@lists.openembedded.org, Zhenfeng.Zhao@windriver.com
+Subject: Re: [PATCH 1/1] cooker.py: terminate the Parser processes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -28,102 +43,88 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 23 May 2012 14:51:12 -0000
+X-List-Received-Date: Wed, 23 May 2012 15:44:48 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-After parsing recipes, Hob will populate recipes and packages, which is probably
-time exhaused. So, this patch is to adjust the progress bar and ensure 100% is
-set if and only if all populations are done.
+terminate()'ing processes can corrupt any queues those processes have
+open, and thereby disrupt any pending log messages in the queues
+heading to the ui as a result. If that's not an issue here, so be it,
+but be aware of the issues -- we had to remove terminate() from the
+shutdown in the past due to this issue.
 
-The patch also fixes "weird 18 second delay when parsing recipes" on build appliance.
-Because Hob is doing something, but the progress bar shows 100% and wait there.
+On Wed, May 23, 2012 at 2:40 AM, Kang Kai <kai.kang@windriver.com> wrote:
+> [Yocto 2142]
+>
+> Force to exit HOB when hob is parsing recipes, the bitbake doesn't stop.
+> It hangs on function BitBakeServerConnection::terminate in file
+> server/process.py:
+> =C2=A0 =C2=A0else:
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0self.procserver.join()
+> It is waiting for the children process quit.
+>
+> In stage of parse recipes BBCooker spawns Parser processes as many as
+> cpu numbers. When quit the Parser processes they make their internal
+> Queue to call cancel_join_thread() to avoid block but don't work at
+> this time.
+> So force to terminate the Parser processes.
+>
+> Signed-off-by: Kang Kai <kai.kang@windriver.com>
+> ---
+> =C2=A0bitbake/lib/bb/cooker.py | =C2=A0 =C2=A09 ++++++---
+> =C2=A01 files changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+> index dea0aad..4a4dc38 100644
+> --- a/bitbake/lib/bb/cooker.py
+> +++ b/bitbake/lib/bb/cooker.py
+> @@ -1175,7 +1175,7 @@ class BBCooker:
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return
+>
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 if self.state in (state.shutdown, state.stop)=
+:
+> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.parser.shutdown(clean=3DF=
+alse)
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.parser.shutdown(clean=3DF=
+alse, force =3D True)
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 sys.exit(1)
+>
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 if self.state !=3D state.parsing:
+> @@ -1608,10 +1608,13 @@ class CookerParser(object):
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.parser_quit.=
+put(None)
+>
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.jobs.cancel_join_thread()
+> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0sys.exit(1)
+>
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 for process in self.processes:
+> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0process.join()
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if force:
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0process.join(.1)
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0process.terminat=
+e()
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0else:
+> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0process.join()
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.feeder.join()
+>
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0 sync =3D threading.Thread(target=3Dself.bb_ca=
+che.sync)
+> --
+> 1.7.5.4
+>
+>
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
 
-[Yocto #2341]
 
-Signed-off-by: Shane Wang <shane.wang@intel.com>
----
- bitbake/lib/bb/ui/crumbs/builder.py         |   12 ++++++++++--
- bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    8 ++++++++
- 2 files changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index 44d626c..c77272e 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -424,6 +424,8 @@ class Builder(gtk.Window):
-         self.handler.connect("data-generated",           self.handler_data_generated_cb)
-         self.handler.connect("command-succeeded",        self.handler_command_succeeded_cb)
-         self.handler.connect("command-failed",           self.handler_command_failed_cb)
-+        self.handler.connect("recipe-populated",         self.handler_recipe_populated_cb)
-+        self.handler.connect("package-populated",        self.handler_package_populated_cb)
- 
-         self.handler.set_config_filter(hob_conf_filter)
- 
-@@ -773,6 +775,12 @@ class Builder(gtk.Window):
-     def packagelist_changed_cb(self, package_model):
-         self.package_details_page.refresh_selection()
- 
-+    def handler_recipe_populated_cb(self, handler):
-+        self.image_configuration_page.update_progress_bar("Populated recipes", 0.99)
-+
-+    def handler_package_populated_cb(self, handler):
-+        self.image_configuration_page.update_progress_bar("Populated packages", 1.0)
-+
-     def handler_parsing_started_cb(self, handler, message):
-         if self.current_step != self.RCPPKGINFO_POPULATING:
-             return
-@@ -792,7 +800,7 @@ class Builder(gtk.Window):
- 
-         fraction = message["current"] * 1.0/message["total"]
-         if message["eventname"] == "TreeDataPreparationProgress":
--            fraction = 0.6 + 0.4 * fraction
-+            fraction = 0.6 + 0.38 * fraction
-         else:
-             fraction = 0.6 * fraction
-         self.image_configuration_page.update_progress_bar(message["title"], fraction)
-@@ -802,7 +810,7 @@ class Builder(gtk.Window):
-             return
- 
-         if message["eventname"] == "TreeDataPreparationCompleted":
--            fraction = 1.0
-+            fraction = 0.98
-         else:
-             fraction = 0.6
-         self.image_configuration_page.update_progress_bar(message["title"], fraction)
-diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-index 7303ff8..b34bdbe 100644
---- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -57,6 +57,12 @@ class HobHandler(gobject.GObject):
-          "parsing-completed"       : (gobject.SIGNAL_RUN_LAST,
-                                       gobject.TYPE_NONE,
-                                      (gobject.TYPE_PYOBJECT,)),
-+         "recipe-populated"        : (gobject.SIGNAL_RUN_LAST,
-+                                      gobject.TYPE_NONE,
-+                                     ()),
-+         "package-populated"       : (gobject.SIGNAL_RUN_LAST,
-+                                      gobject.TYPE_NONE,
-+                                     ()),
-     }
- 
-     (GENERATE_CONFIGURATION, GENERATE_RECIPES, GENERATE_PACKAGES, GENERATE_IMAGE, POPULATE_PACKAGEINFO, SANITY_CHECK) = range(6)
-@@ -158,6 +164,7 @@ class HobHandler(gobject.GObject):
- 
-         if isinstance(event, bb.event.PackageInfo):
-             self.package_model.populate(event._pkginfolist)
-+            self.emit("package-populated")
-             self.run_next_command()
- 
-         elif isinstance(event, bb.event.SanityCheckPassed):
-@@ -171,6 +178,7 @@ class HobHandler(gobject.GObject):
-             self.current_phase = "data generation"
-             if event._model:
-                 self.recipe_model.populate(event._model)
-+                self.emit("recipe-populated")
-         elif isinstance(event, bb.event.ConfigFilesFound):
-             self.current_phase = "configuration lookup"
-             var = event._variable
--- 
-1.7.6
-
+--=20
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
 
