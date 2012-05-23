@@ -1,26 +1,31 @@
-Received: from mail1.windriver.com ([147.11.146.13])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <mark.hatle@windriver.com>) id 1SXDqZ-0007vX-My
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 23 May 2012 17:51:36 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q4NFfPvE004525
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 23 May 2012 08:41:25 -0700 (PDT)
-Received: from localhost.localdomain (172.25.34.61) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.1.255.0;
-	Wed, 23 May 2012 08:41:24 -0700
-From: Mark Hatle <mark.hatle@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 23 May 2012 10:45:12 -0500
-Message-ID: <1337787916-591-4-git-send-email-mark.hatle@windriver.com>
-X-Mailer: git-send-email 1.7.3.4
-In-Reply-To: <cover.1337714416.git.mark.hatle@windriver.com>
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1SXFJy-0002es-RH for bitbake-devel@lists.openembedded.org;
+	Wed, 23 May 2012 19:26:03 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4NHFr1g014881;
+	Wed, 23 May 2012 18:15:53 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 13374-08; Wed, 23 May 2012 18:15:49 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4NHFiC0014875
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Wed, 23 May 2012 18:15:45 +0100
+Message-ID: <1337793343.8248.83.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Mark Hatle <mark.hatle@windriver.com>
+Date: Wed, 23 May 2012 18:15:43 +0100
+In-Reply-To: <1337787916-591-1-git-send-email-mark.hatle@windriver.com>
 References: <cover.1337714416.git.mark.hatle@windriver.com>
-MIME-Version: 1.0
-X-Originating-IP: [172.25.34.61]
-Subject: [PATCH 4/4] build.py: Add support for log and run filename changes
+	<1337787916-591-1-git-send-email-mark.hatle@windriver.com>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/4] build.py: Add a log to capture task execution order
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,84 +37,23 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 23 May 2012 15:51:36 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 23 May 2012 17:26:03 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-The format of the log file and run file are now selectable
-using BB_LOGFMT and BB_RUNFMT, respectively.
+On Wed, 2012-05-23 at 10:45 -0500, Mark Hatle wrote:
+> The new log.task_order contains an ordered list of the tasks as they
+> were executed in any given recipe.  The format of the lines is
+> <task> <pid>: <log file>
+> 
+> Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+> ---
+>  lib/bb/build.py |   16 +++++++++++++++-
+>  1 files changed, 15 insertions(+), 1 deletions(-)
 
-The following values may be used:
+Merged to master, thanks.
 
-{task} - task name
-{taskfunc} - task.func or func, if task==func
-{func} - function name, only available in BB_RUNFMT
-{pid} - pid
-
-The log/run files may be placed into a subdirectory that
-is relative to T.
-
-Default BB_LOGFMT is: log.{task}.{pid}
-Default BB_RUNFMT is: run.{func}.{pid}
-
-Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
----
- lib/bb/build.py |   20 +++++++++++++++++---
- 1 files changed, 17 insertions(+), 3 deletions(-)
-
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 363aced..a9ba02d 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -174,8 +174,19 @@ def exec_func(func, d, dirs = None):
-         lockfiles = None
- 
-     tempdir = data.getVar('T', d, 1)
--    bb.utils.mkdirhier(tempdir)
--    runfile = os.path.join(tempdir, 'run.{0}.{1}'.format(func, os.getpid()))
-+
-+    # or func allows items to be executed outside of the normal
-+    # task set, such as buildhistory
-+    task = data.getVar('BB_RUNTASK', d, 1) or func
-+    if task == func:
-+        taskfunc = task
-+    else:
-+        taskfunc = "%s.%s" % (task, func)
-+
-+    runfmt = data.getVar('BB_RUNFMT', d, 1) or "run.{func}.{pid}"
-+    runfn = runfmt.format(taskfunc=taskfunc, task=task, func=func, pid=os.getpid())
-+    runfile = os.path.join(tempdir, runfn)
-+    bb.utils.mkdirhier(os.path.dirname(runfile))
- 
-     with bb.utils.fileslocked(lockfiles):
-         if ispython:
-@@ -300,7 +311,8 @@ def _exec_task(fn, task, d, quieterr):
-     bb.utils.mkdirhier(tempdir)
- 
-     # Determine the logfile to generate
--    logbase = 'log.{0}.{1}'.format(task, os.getpid())
-+    logfmt = localdata.getVar('BB_LOGFMT', True) or 'log.{task}.{pid}'
-+    logbase = logfmt.format(task=task, pid=os.getpid())
- 
-     # Document the order of the tasks...
-     logorder = os.path.join(tempdir, 'log.task_order')
-@@ -336,6 +348,7 @@ def _exec_task(fn, task, d, quieterr):
-     # Handle logfiles
-     si = file('/dev/null', 'r')
-     try:
-+        bb.utils.mkdirhier(os.path.dirname(logfn))
-         logfile = file(logfn, 'w')
-     except OSError:
-         logger.exception("Opening log file '%s'", logfn)
-@@ -362,6 +375,7 @@ def _exec_task(fn, task, d, quieterr):
-     bblogger.addHandler(errchk)
- 
-     localdata.setVar('BB_LOGFILE', logfn)
-+    localdata.setVar('BB_RUNTASK', task)
- 
-     event.fire(TaskStarted(task, localdata), localdata)
-     try:
--- 
-1.7.3.4
+Richard
 
 
 
