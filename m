@@ -1,30 +1,30 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SXV1s-0004Bc-B7 for bitbake-devel@lists.openembedded.org;
-	Thu, 24 May 2012 12:12:24 +0200
+	id 1SXV3K-0004FN-Ja for bitbake-devel@lists.openembedded.org;
+	Thu, 24 May 2012 12:13:54 +0200
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4OA2Cw4022321
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4OA3iuB022342
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 May 2012 11:02:12 +0100
+	Thu, 24 May 2012 11:03:44 +0100
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 21875-02 for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 May 2012 11:02:08 +0100 (BST)
+	id 21875-03 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 24 May 2012 11:03:39 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4OA236u022315
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4OA3YFY022335
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 May 2012 11:02:04 +0100
-Message-ID: <1337853722.8248.105.camel@ted>
+	Thu, 24 May 2012 11:03:34 +0100
+Message-ID: <1337853813.8248.107.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Thu, 24 May 2012 11:02:02 +0100
+Date: Thu, 24 May 2012 11:03:33 +0100
 X-Mailer: Evolution 3.2.2- 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: [PATCH] bitbake/cooker: Ensure matchFile returns full pathnames
+Subject: [PATCH] BBHandler: Tweak some data store access methods to the preferred syntax
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,40 +36,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 24 May 2012 10:12:25 -0000
+X-List-Received-Date: Thu, 24 May 2012 10:13:54 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-We should always be passing full pathnames around within bitbake. If
-a file was referenced as a relative path to the current working
-directory, it might not get passed through the abspath call and
-hence the cwd would not get added as a prefix.
-
-This change attempts to put everything through abspath and ignores
-failures. Any failure cases would mean the file simply wouldn't exist
-and then would get covered by the catchall code below.
-
-[YOCTO #1465]
-
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 8ad4922..e036efb 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -985,9 +985,10 @@ class BBCooker:
-         """
-         Find the .bb files which match the expression in 'buildfile'.
-         """
--
--        if bf.startswith("/") or bf.startswith("../"):
-+        try:
-             bf = os.path.abspath(bf)
-+        except:
-+            pass
-         filelist, masked = self.collect_bbfiles()
-         try:
-             os.stat(bf)
+diff --git a/bitbake/lib/bb/parse/parse_py/BBHandler.py b/bitbake/lib/bb/parse/parse_py/BBHandler.py
+index 815bce1..625a2a2 100644
+--- a/bitbake/lib/bb/parse/parse_py/BBHandler.py
++++ b/bitbake/lib/bb/parse/parse_py/BBHandler.py
+@@ -69,7 +69,7 @@ def supports(fn, d):
+     return os.path.splitext(fn)[-1] in [".bb", ".bbclass", ".inc"]
+ 
+ def inherit(files, fn, lineno, d):
+-    __inherit_cache = data.getVar('__inherit_cache', d) or []
++    __inherit_cache = d.getVar('__inherit_cache') or []
+     files = d.expand(files).split()
+     for file in files:
+         if not os.path.isabs(file) and not file.endswith(".bbclass"):
+@@ -80,7 +80,7 @@ def inherit(files, fn, lineno, d):
+             __inherit_cache.append( file )
+             data.setVar('__inherit_cache', __inherit_cache, d)
+             include(fn, file, lineno, d, "inherit")
+-            __inherit_cache = data.getVar('__inherit_cache', d) or []
++            __inherit_cache = d.getVar('__inherit_cache') or []
+ 
+ def get_statements(filename, absolute_filename, base_name):
+     global cached_statements
+@@ -126,13 +126,13 @@ def handle(fn, d, include):
+     if ext == ".bbclass":
+         __classname__ = root
+         classes.append(__classname__)
+-        __inherit_cache = data.getVar('__inherit_cache', d) or []
++        __inherit_cache = d.getVar('__inherit_cache') or []
+         if not fn in __inherit_cache:
+             __inherit_cache.append(fn)
+             data.setVar('__inherit_cache', __inherit_cache, d)
+ 
+     if include != 0:
+-        oldfile = data.getVar('FILE', d)
++        oldfile = d.getVar('FILE')
+     else:
+         oldfile = None
+ 
 
 
 
