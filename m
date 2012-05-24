@@ -1,26 +1,26 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SXV18-0004AE-DX for bitbake-devel@lists.openembedded.org;
-	Thu, 24 May 2012 12:11:39 +0200
+	id 1SXV1s-0004Bc-B7 for bitbake-devel@lists.openembedded.org;
+	Thu, 24 May 2012 12:12:24 +0200
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4OA1RjU022311
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4OA2Cw4022321
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 May 2012 11:01:27 +0100
+	Thu, 24 May 2012 11:02:12 +0100
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 21227-08 for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 May 2012 11:01:22 +0100 (BST)
+	id 21875-02 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 24 May 2012 11:02:08 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4OA1GqN022301
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q4OA236u022315
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 May 2012 11:01:17 +0100
-Message-ID: <1337853676.8248.104.camel@ted>
+	Thu, 24 May 2012 11:02:04 +0100
+Message-ID: <1337853722.8248.105.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Thu, 24 May 2012 11:01:16 +0100
+Date: Thu, 24 May 2012 11:02:02 +0100
 X-Mailer: Evolution 3.2.2- 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
@@ -36,7 +36,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 24 May 2012 10:11:39 -0000
+X-List-Received-Date: Thu, 24 May 2012 10:12:25 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
