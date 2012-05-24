@@ -1,27 +1,31 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mail.windriver.com ([147.11.1.11])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <josh@linux.intel.com>) id 1SXFOj-0002hk-Et
+	(envelope-from <Kai.Kang@windriver.com>) id 1SXTZm-0006Y1-WA
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 23 May 2012 19:30:57 +0200
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 23 May 2012 10:20:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="156227171"
-Received: from unknown (HELO [10.255.12.49]) ([10.255.12.49])
-	by fmsmga001.fm.intel.com with ESMTP; 23 May 2012 10:20:46 -0700
-Message-ID: <4FBD1C6E.9030800@linux.intel.com>
-Date: Wed, 23 May 2012 10:20:46 -0700
-From: Joshua Lock <josh@linux.intel.com>
+	Thu, 24 May 2012 10:39:19 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q4O8T4QB001016
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Thu, 24 May 2012 01:29:04 -0700 (PDT)
+Received: from [128.224.162.164] (128.224.162.164) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.1.255.0;
+	Thu, 24 May 2012 01:29:03 -0700
+Message-ID: <4FBDF165.5060201@windriver.com>
+Date: Thu, 24 May 2012 16:29:25 +0800
+From: Kang Kai <Kai.Kang@windriver.com>
 User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:12.0) Gecko/20120430 Thunderbird/12.0.1
+	rv:10.0.2) Gecko/20120216 Thunderbird/10.0.2
 MIME-Version: 1.0
-To: "Wang, Shane" <shane.wang@intel.com>
-References: <cover.1334359238.git.josh@linux.intel.com>
-	<3AB6CE7F274E534CAFD089D127A8A1FC23BAD871@SHSMSX102.ccr.corp.intel.com>
-In-Reply-To: <3AB6CE7F274E534CAFD089D127A8A1FC23BAD871@SHSMSX102.ccr.corp.intel.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 0/4] Replace HobNotebook with gtk.Notebook, comments invited
+To: Chris Larson <clarson@kergoth.com>
+References: <cover.1337764882.git.kai.kang@windriver.com>
+	<dac2367a09e77d0230e8c2e625484336533ea50e.1337764882.git.kai.kang@windriver.com>
+	<CABcZAN=Rs1HC6dTKOvU4r2cuO04m10f1-hoNtRfox_xgVhbsxg@mail.gmail.com>
+In-Reply-To: <CABcZAN=Rs1HC6dTKOvU4r2cuO04m10f1-hoNtRfox_xgVhbsxg@mail.gmail.com>
+X-Originating-IP: [128.224.162.164]
+X-MIME-Autoconverted: from 8bit to quoted-printable by mail.windriver.com id
+	q4O8T4QB001016
+Cc: bitbake-devel@lists.openembedded.org, Zhenfeng.Zhao@windriver.com
+Subject: Re: [PATCH 1/1] cooker.py: terminate the Parser processes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,108 +37,93 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 23 May 2012 17:30:57 -0000
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 24 May 2012 08:39:19 -0000
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-Hi Shane,
+On 2012=E5=B9=B405=E6=9C=8823=E6=97=A5 23:34, Chris Larson wrote:
+> terminate()'ing processes can corrupt any queues those processes have
+> open, and thereby disrupt any pending log messages in the queues
+> heading to the ui as a result. If that's not an issue here, so be it,
+> but be aware of the issues -- we had to remove terminate() from the
+> shutdown in the past due to this issue.
+Hi Chris,
 
-On 22/05/12 18:35, Wang, Shane wrote:
-> Josh, I just found I can't run Hob on my Ubuntu 10.04 after I checked out the latest master.
+Call terminate() directly seems not be elegant. But I didn't figure out=20
+why after the queue belongs to Parse process
+calls  cancel_join_thread(), so ..
+Before the terminate() the every Parse process, it is waited for 0.1=20
+second to quit.
+If the process will not be blocked, I suppose that 0.1 second is enough=20
+for them to quit.
+
+What's your opinion?
+
+Thanks,
+Kai
 >
-> Since Ubuntu 10.04 is a long-term-support version, can we do something to make Hob compatible with that?
-
-The plan is to provide an external-python-tarball with a full Gtk+ & 
-PyGtk nativesdk stack built by OE-Core/Poky and installed into a 
-standalone sysroot on the users host.
-
-Whilst I have a branch based on some work by Richard to achieve this it 
-hasn't been submitted to upstream as I haven't figured out a clean way 
-to handle things on the SDK host which would usually require a 
-postinstall in the target rootfs.
-
-Aside: I really can't see a clean way around requiring postinst type 
-functionality for the SDK targets, particularly in the pagno case here. 
-I'm currently ruminating on supercharging the toolchain scripts to 
-handle this.
-
-> What kind of failure did you meet on Ubuntu 10.04?
-
-IIRC the set_action_widget() API I referred to in the original email 
-isn't available in the version of Gtk+ and PyGtk that was shipped with 
-Ubuntu 10.04.
-
-This is required to add the search entry to the gtk.Notebook.
-
-Cheers,
-Joshua
-
+> On Wed, May 23, 2012 at 2:40 AM, Kang Kai<kai.kang@windriver.com>  wrot=
+e:
+>> [Yocto 2142]
+>>
+>> Force to exit HOB when hob is parsing recipes, the bitbake doesn't sto=
+p.
+>> It hangs on function BitBakeServerConnection::terminate in file
+>> server/process.py:
+>>     else:
+>>         self.procserver.join()
+>> It is waiting for the children process quit.
+>>
+>> In stage of parse recipes BBCooker spawns Parser processes as many as
+>> cpu numbers. When quit the Parser processes they make their internal
+>> Queue to call cancel_join_thread() to avoid block but don't work at
+>> this time.
+>> So force to terminate the Parser processes.
+>>
+>> Signed-off-by: Kang Kai<kai.kang@windriver.com>
+>> ---
+>>   bitbake/lib/bb/cooker.py |    9 ++++++---
+>>   1 files changed, 6 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+>> index dea0aad..4a4dc38 100644
+>> --- a/bitbake/lib/bb/cooker.py
+>> +++ b/bitbake/lib/bb/cooker.py
+>> @@ -1175,7 +1175,7 @@ class BBCooker:
+>>              return
+>>
+>>          if self.state in (state.shutdown, state.stop):
+>> -            self.parser.shutdown(clean=3DFalse)
+>> +            self.parser.shutdown(clean=3DFalse, force =3D True)
+>>              sys.exit(1)
+>>
+>>          if self.state !=3D state.parsing:
+>> @@ -1608,10 +1608,13 @@ class CookerParser(object):
+>>                  self.parser_quit.put(None)
+>>
+>>              self.jobs.cancel_join_thread()
+>> -            sys.exit(1)
+>>
+>>          for process in self.processes:
+>> -            process.join()
+>> +            if force:
+>> +                process.join(.1)
+>> +                process.terminate()
+>> +            else:
+>> +                process.join()
+>>          self.feeder.join()
+>>
+>>          sync =3D threading.Thread(target=3Dself.bb_cache.sync)
+>> --
+>> 1.7.5.4
+>>
+>>
+>> _______________________________________________
+>> bitbake-devel mailing list
+>> bitbake-devel@lists.openembedded.org
+>> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
 >
-> --
-> Shane
->
-> Joshua Lock wrote on 2012-04-14:
->
->> *** This series prevents users of distros with old Gtk+ releases using Hob ***
->>
->> This is a follow-on from my RFC of yesterday with a similar title. Sadly I
->> hadn't realised that one of the API calls I am using is not available in the
->> version of gtk+ shipped with CentOS 6 (gtk.Notebook.set_action_widget).
->>
->> This change will prevent CentOS 6 users from being able to use Hob.
->>
->> I spent some time in Gtk+ internals trying to figure out if we can
->> emulate the behaviour on older versions but the GtkNotebook widget
->> internals were enhanced significantly to support the set_action_widget
->> API.
->>
->> I've submitted the change as an RFC regardless, it's ready to merge if we're
->> willing to make the sacrifice.
->>
->> The primary motivation for making this change, and making it so late in
->> the cycle, is maintainability. The diffstat says it all - we're
->> replacing an ~400LOC custom widget with a ~100LOC set of 3 widgets which
->> subclass standard toolkit widgets.
->>
->> An added benefit is that standard toolkit widgets generally integrate better
->> into the users OS thanks to inheriting their standard theme.
->>
->> Tested on:
->> Fedora 16 (x86_64) - PASS
->> CentOS 6.2 (x86_64) - FAIL: Gtk+ version too old
->> Ubuntu 10.04 (x86_64) - Fail: pygtk version too old
->> Ubuntu 12.04 Beta (x86_64) - PASS
->>
->> Per the final patch in the series the changes here require gtk+-2.20 or newer
->> and pygtk 2.22 or newer.
->>
->> Cheers,
->> Joshua
->>
->> The following changes since commit
->> 434fdb3913cc78e2e9cdeede4c4fa7f1c8ef8892:
->>
->>    Hob: Added required packages for toolchain. (2012-04-13 12:00:12 +0100)
->> are available in the git repository at:
->>    git://github.com/incandescant/bitbake gtk2.20
->>    https://github.com/incandescant/bitbake/tree/gtk2.20
->> Joshua Lock (4):
->>    lib/bb/ui/crumbs/: replace custom HobNotebook
->>    lib/bb/ui/crumbs/hobwidget: use light text in HobIndicator
->>    lib/bb/ui/crumbs/imageconfiguration: fix combo boxes drop-down width
->>    hob: update required pygtk to 2.22.0 and gtk+ to 2.20.0
->>   lib/bb/ui/crumbs/builddetailspage.py       |    6 +-
->>   lib/bb/ui/crumbs/hobwidget.py              |  499
->>   +++++++--------------------- lib/bb/ui/crumbs/imageconfigurationpage.py
->>   |    2 - lib/bb/ui/crumbs/packageselectionpage.py   |    3 +-
->>   lib/bb/ui/crumbs/recipeselectionpage.py    |    5 +- lib/bb/ui/hob.py
->>                           |    2 +- 6 files changed, 120 insertions(+),
->>   397 deletions(-)
 >
 
--- 
-Joshua Lock
-         Yocto Project
-         Intel Open Source Technology Centre
 
 
