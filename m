@@ -1,25 +1,25 @@
 Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1SZzWX-0004DX-A2
+	(envelope-from <jason.wessel@windriver.com>) id 1SZzWY-0004DX-5z
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 31 May 2012 09:10:21 +0200
+	Thu, 31 May 2012 09:10:22 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q4V5EIUD025391
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q4V5EBjo025385
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 30 May 2012 22:14:18 -0700 (PDT)
+	Wed, 30 May 2012 22:14:11 -0700 (PDT)
 Received: from ord-jrw.wrs.com (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Wed, 30 May 2012 22:14:17 -0700
+	Wed, 30 May 2012 22:14:10 -0700
 From: Jason Wessel <jason.wessel@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 31 May 2012 00:14:00 -0500
-Message-ID: <1338441241-32230-6-git-send-email-jason.wessel@windriver.com>
+Date: Thu, 31 May 2012 00:13:56 -0500
+Message-ID: <1338441241-32230-2-git-send-email-jason.wessel@windriver.com>
 X-Mailer: git-send-email 1.7.10
 In-Reply-To: <1338441241-32230-1-git-send-email-jason.wessel@windriver.com>
 References: <1338441241-32230-1-git-send-email-jason.wessel@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 5/6] knotty.py: Add the ability to spawn screen directly from knotty with OE_TERMINAL=screen_inline
+Subject: [PATCH 1/6] process.py: Fix log truncation problems
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,48 +31,91 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 31 May 2012 07:10:21 -0000
+X-List-Received-Date: Thu, 31 May 2012 07:10:22 -0000
 Content-Type: text/plain
 
-The oe-core has a change pending to add the screen_inline class.
-This change allows the simple use case of directly using a devshell
-from the controlling terminal that started bitbake which is a
-significant convience for some use cases.
+There are two problems with the _logged_communicate that are both
+caused as a result of buffering I/O, instead of flushing it out to the
+log files as it arrives.
 
-Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
+1) log truncation when python dumps
+   I have seen the task logs missing data that was not flushed when
+   bitbake crashes.
+
+2) While a bitbake task is running it is impossible to see what is
+   going on if it is only writing a small incremental log that is
+   smaller than the buffer, or you get only a partial log, up until
+   the task exists.  It is worse in the case that stderr and stdout
+   are separate file handles, because previous code blocks on the read
+   of stdout and then stderr, serially.
+
+The right approach is simply to use select() to determine if there is
+data available and then to flush the log buffers as they arrive.  This
+still makes use of buffering in the cases where there is more than 1
+byte of data, but the buffers are much more dynamic.
+
+
 ---
- lib/bb/ui/knotty.py |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ lib/bb/process.py |   29 +++++++++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 7a7a1b2..6eca0b5 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -174,6 +174,11 @@ def main(server, eventHandler, tf = TerminalFilter):
-     includelogs = server.runCommand(["getVariable", "BBINCLUDELOGS"])
-     loglines = server.runCommand(["getVariable", "BBINCLUDELOGS_LINES"])
-     consolelogfile = server.runCommand(["getVariable", "BB_CONSOLELOG"])
-+    oeterminal = server.runCommand(["getVariable", "OE_TERMINAL"])
-+    if oeterminal == "screen_inline" and sys.stdin.isatty() and sys.stdout.isatty():
-+        runscreen = True
-+    else:
-+        runscreen = False
+diff --git a/lib/bb/process.py b/lib/bb/process.py
+index b74cb18..9848fc3 100644
+--- a/lib/bb/process.py
++++ b/lib/bb/process.py
+@@ -1,6 +1,9 @@
+ import logging
+ import signal
+ import subprocess
++import fcntl
++import errno
++import select
  
-     # MultiTail affected varialbles
-     numthreads = server.runCommand(["getVariable", "BB_NUMBER_THREADS"])
-@@ -260,6 +265,12 @@ def main(server, eventHandler, tf = TerminalFilter):
-                     errors = errors + 1
-                     return_value = 1
-                 elif event.levelno == format.WARNING:
-+                    msg = event.getMessage()
-+                    if runscreen and msg.startswith("Screen Connect Command: "):
-+                        msg = msg[24:]
-+                        print "Starting terminal with: %s" % msg
-+                        os.system(msg)
-+                        continue
-                     warnings = warnings + 1
-                 # For "normal" logging conditions, don't show note logs from tasks
-                 # but do show them if the user has changed the default log level to 
+ logger = logging.getLogger('BitBake.Process')
+ 
+@@ -70,18 +73,40 @@ def _logged_communicate(pipe, log, input):
+ 
+     bufsize = 512
+     outdata, errdata = [], []
++    rin = []
++
++    if pipe.stdout is not None:
++        fd = pipe.stdout.fileno()
++        fl = fcntl.fcntl(fd, fcntl.F_GETFL)
++        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
++        rin.append(pipe.stdout)
++    if pipe.stderr is not None:
++        fd = pipe.stderr.fileno()
++        fl = fcntl.fcntl(fd, fcntl.F_GETFL)
++        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
++        rin.append(pipe.stderr)
++
+     while pipe.poll() is None:
+-        if pipe.stdout is not None:
++        rlist = rin
++        try:
++            r,w,e = select.select (rlist, [], [])
++        except OSError, e:
++            if e.errno != errno.EINTR:
++                raise
++
++        if pipe.stdout in r:
+             data = pipe.stdout.read(bufsize)
+             if data is not None:
+                 outdata.append(data)
+                 log.write(data)
++                log.flush()
+ 
+-        if pipe.stderr is not None:
++        if pipe.stderr in r:
+             data = pipe.stderr.read(bufsize)
+             if data is not None:
+                 errdata.append(data)
+                 log.write(data)
++                log.flush()
+     return ''.join(outdata), ''.join(errdata)
+ 
+ def run(cmd, input=None, log=None, **options):
 -- 
 1.7.10
 
