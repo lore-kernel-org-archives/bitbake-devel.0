@@ -1,23 +1,25 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1SaZP6-00022X-4j
+	(envelope-from <jason.wessel@windriver.com>) id 1SaZP7-00022Z-0M
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 01 Jun 2012 23:29:04 +0200
+	Fri, 01 Jun 2012 23:29:05 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q51LIfNu021583
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q51LIg6C027175
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 1 Jun 2012 14:18:41 -0700 (PDT)
+	Fri, 1 Jun 2012 14:18:42 -0700 (PDT)
 Received: from ord-jrw.wrs.com (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Fri, 1 Jun 2012 14:18:40 -0700
+	Fri, 1 Jun 2012 14:18:42 -0700
 From: Jason Wessel <jason.wessel@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 1 Jun 2012 16:18:30 -0500
-Message-ID: <1338585519-869-1-git-send-email-jason.wessel@windriver.com>
+Date: Fri, 1 Jun 2012 16:18:31 -0500
+Message-ID: <1338585519-869-2-git-send-email-jason.wessel@windriver.com>
 X-Mailer: git-send-email 1.7.10
+In-Reply-To: <1338585519-869-1-git-send-email-jason.wessel@windriver.com>
+References: <1338585519-869-1-git-send-email-jason.wessel@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH v2 0/9] Multiplexed task logs / bitbake fixes for fetch2
+Subject: [PATCH v2 1/9] process.py: Fix log truncation problems
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -29,39 +31,93 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Jun 2012 21:29:04 -0000
+X-List-Received-Date: Fri, 01 Jun 2012 21:29:05 -0000
 Content-Type: text/plain
 
-This is the second version of fixes and features for bit bake logging.
+There are two problems with the _logged_communicate that are both
+caused as a result of buffering I/O, instead of flushing it out to the
+log files as it arrives.
 
-New in this series:
-   Patch 5 - Change to the api for passing the screen connection
-   Patch 6 - Fix logging in fetch2
-   Patch 7 - Fix fetch2 failures to a read-only GITDIR
-   Patch 8/9 - OE Core specific changes related to screen as a reference
+1) log truncation when python dumps
+   I have seen the task logs missing data that was not flushed when
+   bitbake crashes.
 
--- Previous information from first patch set --
+2) While a bitbake task is running it is impossible to see what is
+   going on if it is only writing a small incremental log that is
+   smaller than the buffer, or you get only a partial log, up until
+   the task exists.  It is worse in the case that stderr and stdout
+   are separate file handles, because previous code blocks on the read
+   of stdout and then stderr, serially.
 
-This patch set is intended to provide a semi real time aspect to the
-logging to stdout.  Originally I was just interested in the output of
-the do_compile and I will still consider adding that capability, but I
-ended up using the logger generically.  It provides the ability to see
-all the task logs multiplexed to stdout by PID.
+The right approach is simply to use select() to determine if there is
+data available and then to flush the log buffers as they arrive.  This
+still makes use of buffering in the cases where there is more than 1
+byte of data, but the buffers are much more dynamic.
 
-More recently I decided I wanted to be able to toggle the logs on and
-off while bitbake was already running, so that was added into the
-series as well.  After seeing how that worked, I also decided I wanted
-to be able to run the dev shell in a single terminal window.  The last
-patch in the series is for the OE-Core, but since I made reference to
-this patch I included in this series for completeness.
+Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
+---
+ lib/bb/process.py |   29 +++++++++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
 
-As a foot note, I have actually been using a more primitive version of
-this patch set for the last 4 weeks that was controlled only by the
-local.conf setting and used it to diagnose quite a few different
-problems as well as to just understand what it is that bitbake is
-doing at times.
+diff --git a/lib/bb/process.py b/lib/bb/process.py
+index b74cb18..9848fc3 100644
+--- a/lib/bb/process.py
++++ b/lib/bb/process.py
+@@ -1,6 +1,9 @@
+ import logging
+ import signal
+ import subprocess
++import fcntl
++import errno
++import select
+ 
+ logger = logging.getLogger('BitBake.Process')
+ 
+@@ -70,18 +73,40 @@ def _logged_communicate(pipe, log, input):
+ 
+     bufsize = 512
+     outdata, errdata = [], []
++    rin = []
++
++    if pipe.stdout is not None:
++        fd = pipe.stdout.fileno()
++        fl = fcntl.fcntl(fd, fcntl.F_GETFL)
++        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
++        rin.append(pipe.stdout)
++    if pipe.stderr is not None:
++        fd = pipe.stderr.fileno()
++        fl = fcntl.fcntl(fd, fcntl.F_GETFL)
++        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
++        rin.append(pipe.stderr)
++
+     while pipe.poll() is None:
+-        if pipe.stdout is not None:
++        rlist = rin
++        try:
++            r,w,e = select.select (rlist, [], [])
++        except OSError, e:
++            if e.errno != errno.EINTR:
++                raise
++
++        if pipe.stdout in r:
+             data = pipe.stdout.read(bufsize)
+             if data is not None:
+                 outdata.append(data)
+                 log.write(data)
++                log.flush()
+ 
+-        if pipe.stderr is not None:
++        if pipe.stderr in r:
+             data = pipe.stderr.read(bufsize)
+             if data is not None:
+                 errdata.append(data)
+                 log.write(data)
++                log.flush()
+     return ''.join(outdata), ''.join(errdata)
+ 
+ def run(cmd, input=None, log=None, **options):
+-- 
+1.7.10
 
-Thanks,
-Jason.
 
 
