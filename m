@@ -1,24 +1,23 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mail.windriver.com ([147.11.1.11])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <limingx.l.an@intel.com>) id 1SaPPE-00063D-Hg
+	(envelope-from <jason.wessel@windriver.com>) id 1SaZP6-00022X-4j
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 01 Jun 2012 12:48:32 +0200
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 01 Jun 2012 03:38:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="159498972"
-Received: from hp.sh.intel.com ([10.239.47.6])
-	by fmsmga001.fm.intel.com with ESMTP; 01 Jun 2012 03:38:12 -0700
-From: Liming An <limingx.l.an@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri,  1 Jun 2012 18:40:59 +0800
-Message-Id: <650dc8df232d41ca930097ce389d432d23a1bbad.1338546445.git.limingx.l.an@intel.com>
-X-Mailer: git-send-email 1.7.5.4
-In-Reply-To: <57f497956749ad3a4c41051cb12f7a3b97f0254e.1338546445.git.limingx.l.an@intel.com>
-References: <57f497956749ad3a4c41051cb12f7a3b97f0254e.1338546445.git.limingx.l.an@intel.com>
-In-Reply-To: <cover.1338546445.git.limingx.l.an@intel.com>
-References: <cover.1338546445.git.limingx.l.an@intel.com>
-Subject: [PATCH 3/3] Hob: fixed a definition not match issue when click choose directflb in package page
+	Fri, 01 Jun 2012 23:29:04 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q51LIfNu021583
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 1 Jun 2012 14:18:41 -0700 (PDT)
+Received: from ord-jrw.wrs.com (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
+	Fri, 1 Jun 2012 14:18:40 -0700
+From: Jason Wessel <jason.wessel@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Fri, 1 Jun 2012 16:18:30 -0500
+Message-ID: <1338585519-869-1-git-send-email-jason.wessel@windriver.com>
+X-Mailer: git-send-email 1.7.10
+MIME-Version: 1.0
+Subject: [PATCH v2 0/9] Multiplexed task logs / bitbake fixes for fetch2
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,30 +29,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Jun 2012 10:48:32 -0000
+X-List-Received-Date: Fri, 01 Jun 2012 21:29:04 -0000
+Content-Type: text/plain
 
-[YOCTO #2526]
+This is the second version of fixes and features for bit bake logging.
 
-Signed-off-by: Liming An <limingx.l.an@intel.com>
----
- bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+New in this series:
+   Patch 5 - Change to the api for passing the screen connection
+   Patch 6 - Fix logging in fetch2
+   Patch 7 - Fix fetch2 failures to a read-only GITDIR
+   Patch 8/9 - OE Core specific changes related to screen as a reference
 
-diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-index d2c7325..9895835 100755
---- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-@@ -215,7 +215,7 @@ class PackageSelectionPage (HobPage):
-         self.refresh_selection()
-         if not self.builder.customized:
-             self.builder.customized = True
--            self.builder.configuration.selected_image = self.recipe_model.__dummy_image__
-+            self.builder.configuration.selected_image = self.recipe_model.__custom_image__
-             self.builder.rcppkglist_populated()
- 
-         self.builder.window_sensitive(True)
--- 
-1.7.5.4
+-- Previous information from first patch set --
 
+This patch set is intended to provide a semi real time aspect to the
+logging to stdout.  Originally I was just interested in the output of
+the do_compile and I will still consider adding that capability, but I
+ended up using the logger generically.  It provides the ability to see
+all the task logs multiplexed to stdout by PID.
+
+More recently I decided I wanted to be able to toggle the logs on and
+off while bitbake was already running, so that was added into the
+series as well.  After seeing how that worked, I also decided I wanted
+to be able to run the dev shell in a single terminal window.  The last
+patch in the series is for the OE-Core, but since I made reference to
+this patch I included in this series for completeness.
+
+As a foot note, I have actually been using a more primitive version of
+this patch set for the last 4 weeks that was controlled only by the
+local.conf setting and used it to diagnose quite a few different
+problems as well as to just understand what it is that bitbake is
+doing at times.
+
+Thanks,
+Jason.
 
 
