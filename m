@@ -1,26 +1,20 @@
-Received: from mailout2.ltindia.com ([125.18.18.171])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Girija.B@lnties.com>) id 1SaKKl-0003Av-Sj
+	(envelope-from <limingx.l.an@intel.com>) id 1SaPL7-0005xW-Po
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 01 Jun 2012 07:23:36 +0200
-Received: from unknown (HELO POCITMSEXHUB02.LntUniverse.com) ([10.2.1.59])
-	by mailout2.ltindia.com with ESMTP; 01 Jun 2012 10:41:49 +0530
-Received: from POCITMSEXMB03.LntUniverse.com ([fe80::f495:7e6e:4c34:a3a9]) by
-	POCITMSEXHUB02.LntUniverse.com ([::1]) with mapi id 14.02.0247.003;
-	Fri, 1 Jun 2012 10:41:48 +0530
-From: Girija B <Girija.B@lnties.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: Error when Setting up Open Embedded Environment 
-Thread-Index: Ac0/tQrOt/tP+vfhR0m0jSsGlCrV6Q==
-Date: Fri, 1 Jun 2012 05:11:48 +0000
-Message-ID: <098684E1B7B2F54491C5DA349D2EF443098C4884@POCITMSEXMB03.LntUniverse.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.7.240.181]
-MIME-Version: 1.0
-Subject: Error when Setting up Open Embedded Environment
+	Fri, 01 Jun 2012 12:44:18 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 01 Jun 2012 03:33:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="150344427"
+Received: from hp.sh.intel.com ([10.239.47.6])
+	by azsmga001.ch.intel.com with ESMTP; 01 Jun 2012 03:33:47 -0700
+From: Liming An <limingx.l.an@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri,  1 Jun 2012 18:36:39 +0800
+Message-Id: <cover.1338546445.git.limingx.l.an@intel.com>
+X-Mailer: git-send-email 1.7.5.4
+Subject: [PATCH 0/3] Hob: bug fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,147 +26,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Jun 2012 05:23:36 -0000
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_098684E1B7B2F54491C5DA349D2EF443098C4884POCITMSEXMB03Ln_"
+X-List-Received-Date: Fri, 01 Jun 2012 10:44:18 -0000
 
---_000_098684E1B7B2F54491C5DA349D2EF443098C4884POCITMSEXMB03Ln_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+The following changes since commit de4cdfd6bc1280ac7ac0559b87734d26294ef773:
 
-Hello,
+  documentation/kernel-manual/kernel-how-to.xml: Updated to kernel 3.4 (2012-05-31 21:16:55 +0100)
 
-I had installed Bitbake and open embedded as described in the OE User Manua=
-l , when I tried to Build using : bitbake build command , am getting the fo=
-llowing Error ,
-Please help in solving this .
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib limx/hob-bug-fixes-continue
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=limx/hob-bug-fixes-continue
 
-solar@ubuntu:~/Downloads/test/build$ bitbake build
-Traceback (most recent call last):
-  File "/usr/local/bin/bitbake", line 143, in <module>
-    main()
-  File "/usr/local/bin/bitbake", line 123, in main
-    cooker.parseConfiguration()
-  File "/usr/local/lib/python2.6/dist-packages/bb/cooker.py", line 68, in p=
-arseConfiguration
-    self.parseConfigurationFile( os.path.join( "conf", "bitbake.conf" ) )
-  File "/usr/local/lib/python2.6/dist-packages/bb/cooker.py", line 404, in =
-parseConfigurationFile
-    bb.event.fire(bb.event.ConfigParsed(self.configuration.data))
-  File "/usr/local/lib/python2.6/dist-packages/bb/event.py", line 67, in fi=
-re
-    if tmpHandler(event) =3D=3D Handled:
-  File "tmpHandler(e)", line 3, in tmpHandler
-  File "<bb>", line 14, in oe_import
-ImportError: No module named oe.data
+Liming An (3):
+  Hob: clear the repeated function get_kernel_file_name
+  Hob: fix entry of recipe page can't be edited in case after clicked
+    clear button
+  Hob: fixed a definition not match issue when click choose directflb
+    in package page
 
+ bitbake/lib/bb/ui/crumbs/builder.py              |    5 +++--
+ bitbake/lib/bb/ui/crumbs/hobwidget.py            |   10 ++--------
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py     |   19 +------------------
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    2 +-
+ 4 files changed, 7 insertions(+), 29 deletions(-)
 
-Thanks,
-Girija. B
+-- 
+1.7.5.4
 
 
 
-Larsen & Toubro Limited
-
-www.larsentoubro.com
-
-This Email may contain confidential or privileged information for the inten=
-ded recipient (s). If you are not the intended recipient, please do not use=
- or disseminate the information, notify the sender and delete it from your =
-system.
-
- Earth Day. Every Day.
-
---_000_098684E1B7B2F54491C5DA349D2EF443098C4884POCITMSEXMB03Ln_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-<style>
-<!--
-@font-face
-	{font-family:Calibri}
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0in;
-	margin-bottom:.0001pt;
-	font-size:11.0pt;
-	font-family:"Calibri","sans-serif"}
-a:link, span.MsoHyperlink
-	{color:blue;
-	text-decoration:underline}
-a:visited, span.MsoHyperlinkFollowed
-	{color:purple;
-	text-decoration:underline}
-span.EmailStyle17
-	{font-family:"Calibri","sans-serif";
-	color:windowtext}
-.MsoChpDefault
-	{font-family:"Calibri","sans-serif"}
-@page WordSection1
-	{margin:1.0in 1.0in 1.0in 1.0in}
-div.WordSection1
-	{}
--->
-</style>
-</head>
-<body lang=3D"EN-US" link=3D"blue" vlink=3D"purple">
-<div class=3D"WordSection1">
-<p class=3D"MsoNormal">Hello,</p>
-<p class=3D"MsoNormal">&nbsp;</p>
-<p class=3D"MsoNormal">I had installed Bitbake and open embedded as describ=
-ed in the OE User Manual , when I tried to Build using : bitbake build comm=
-and , am getting the following Error ,</p>
-<p class=3D"MsoNormal">Please help in solving this .</p>
-<p class=3D"MsoNormal">&nbsp;</p>
-<p class=3D"MsoNormal">solar@ubuntu:~/Downloads/test/build$ bitbake build</=
-p>
-<p class=3D"MsoNormal">Traceback (most recent call last):</p>
-<p class=3D"MsoNormal">&nbsp; File &quot;/usr/local/bin/bitbake&quot;, line=
- 143, in &lt;module&gt;</p>
-<p class=3D"MsoNormal">&nbsp;&nbsp;&nbsp; main()</p>
-<p class=3D"MsoNormal">&nbsp; File &quot;/usr/local/bin/bitbake&quot;, line=
- 123, in main</p>
-<p class=3D"MsoNormal">&nbsp;&nbsp;&nbsp; cooker.parseConfiguration()</p>
-<p class=3D"MsoNormal">&nbsp; File &quot;/usr/local/lib/python2.6/dist-pack=
-ages/bb/cooker.py&quot;, line 68, in parseConfiguration</p>
-<p class=3D"MsoNormal">&nbsp;&nbsp;&nbsp; self.parseConfigurationFile( os.p=
-ath.join( &quot;conf&quot;, &quot;bitbake.conf&quot; ) )</p>
-<p class=3D"MsoNormal">&nbsp; File &quot;/usr/local/lib/python2.6/dist-pack=
-ages/bb/cooker.py&quot;, line 404, in parseConfigurationFile</p>
-<p class=3D"MsoNormal">&nbsp;&nbsp;&nbsp; bb.event.fire(bb.event.ConfigPars=
-ed(self.configuration.data))</p>
-<p class=3D"MsoNormal">&nbsp; File &quot;/usr/local/lib/python2.6/dist-pack=
-ages/bb/event.py&quot;, line 67, in fire</p>
-<p class=3D"MsoNormal">&nbsp;&nbsp;&nbsp; if tmpHandler(event) =3D=3D Handl=
-ed:</p>
-<p class=3D"MsoNormal">&nbsp; File &quot;tmpHandler(e)&quot;, line 3, in tm=
-pHandler</p>
-<p class=3D"MsoNormal">&nbsp; File &quot;&lt;bb&gt;&quot;, line 14, in oe_i=
-mport</p>
-<p class=3D"MsoNormal">ImportError: No module named oe.data</p>
-<p class=3D"MsoNormal">&nbsp;</p>
-<p class=3D"MsoNormal">&nbsp;</p>
-<p class=3D"MsoNormal">Thanks,</p>
-<p class=3D"MsoNormal">Girija. B</p>
-<p class=3D"MsoNormal">&nbsp;</p>
-<p class=3D"MsoNormal">&nbsp;</p>
-</div>
-<p><span style=3D"color:#008000"><strong>Larsen &amp; Toubro Limited </stro=
-ng></span><br>
-<br>
-<strong><a href=3D"www.larsentoubro.com" target=3D"_blank">www.larsentoubro=
-.com</a></strong></p>
-<p><span style=3D"color:#008000">This Email may contain confidential or pri=
-vileged information for the intended recipient (s). If you are not the inte=
-nded recipient, please do not use or disseminate the information, notify th=
-e sender and delete it from your system.</span></p>
-<p><strong><span style=3D"color:#008000">&nbsp;Earth Day. Every Day.</span>=
-</strong></p>
-</body>
-</html>
-
---_000_098684E1B7B2F54491C5DA349D2EF443098C4884POCITMSEXMB03Ln_--
