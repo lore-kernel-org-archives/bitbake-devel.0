@@ -1,26 +1,27 @@
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from mailout2.ltindia.com ([125.18.18.171])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Kai.Kang@windriver.com>) id 1ScD4t-0002pp-Rw
+	(envelope-from <Girija.B@lnties.com>) id 1SaKAx-000328-N0
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 06 Jun 2012 12:03:00 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q569qVnv002839
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Wed, 6 Jun 2012 02:52:31 -0700 (PDT)
-Received: from localhost.localdomain (128.224.162.164) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server
-	(TLS) id 14.1.255.0; Wed, 6 Jun 2012 02:52:30 -0700
-From: Kang Kai <kai.kang@windriver.com>
-To: <dvhart@linux.intel.com>
-Date: Wed, 6 Jun 2012 17:52:28 +0800
-Message-ID: <d9ee1c96083aa60e2251e1fca5f8fa7f46ff2b76.1338976258.git.kai.kang@windriver.com>
-X-Mailer: git-send-email 1.7.5.4
-In-Reply-To: <cover.1338976258.git.kai.kang@windriver.com>
-References: <cover.1338976258.git.kai.kang@windriver.com>
+	Fri, 01 Jun 2012 07:13:28 +0200
+Received: from unknown (HELO POCITMSEXHUB03.LntUniverse.com) ([10.2.1.60])
+	by mailout2.ltindia.com with ESMTP; 01 Jun 2012 10:31:58 +0530
+Received: from POCITMSEXMB03.LntUniverse.com ([fe80::f495:7e6e:4c34:a3a9]) by
+	POCITMSEXHUB03.LntUniverse.com ([::1]) with mapi id 14.02.0247.003;
+	Fri, 1 Jun 2012 10:31:56 +0530
+From: Girija B <Girija.B@lnties.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: Error when Setting up Open Embedded Environment 
+Thread-Index: Ac0/s3VzJ6xqgAztRJSoVcnWGVohaw==
+Date: Fri, 1 Jun 2012 05:01:56 +0000
+Message-ID: <098684E1B7B2F54491C5DA349D2EF443098C4837@POCITMSEXMB03.LntUniverse.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.7.240.181]
 MIME-Version: 1.0
-X-Originating-IP: [128.224.162.164]
-Cc: bitbake-devel@lists.openembedded.org, zhenfeng.zhao@windriver.com
-Subject: [PATCH 6/6] hob2: create a standalone deploy image tool
+X-Mailman-Approved-At: Wed, 06 Jun 2012 18:33:24 +0200
+Subject: Error when Setting up Open Embedded Environment
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,151 +33,145 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Jun 2012 10:03:00 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 01 Jun 2012 05:13:28 -0000
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_098684E1B7B2F54491C5DA349D2EF443098C4837POCITMSEXMB03Ln_"
 
-[Yocto 2388]
+--_000_098684E1B7B2F54491C5DA349D2EF443098C4837POCITMSEXMB03Ln_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Create a deploy image tool using the existing dialog including
-DeployImageDialog and ImageSelectionDialog.
+Hello,
 
-This tool writes bootable images to USB devices, and it can be run
-directly without hob.
+I had installed Bitbake and open embedded as described in the OE User Manua=
+l , when I tried to Build using : bitbake build command , am getting the fo=
+llowing Error ,
+Please help in solving this .
 
-Signed-off-by: Kang Kai <kai.kang@windriver.com>
----
- bitbake/bin/image-writer |  120 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 120 insertions(+), 0 deletions(-)
- create mode 100755 bitbake/bin/image-writer
-
-diff --git a/bitbake/bin/image-writer b/bitbake/bin/image-writer
-new file mode 100755
-index 0000000..3f9f5c1
---- /dev/null
-+++ b/bitbake/bin/image-writer
-@@ -0,0 +1,120 @@
-+#!/usr/bin/env python
-+
-+# Copyright (c) 2012 Wind River Systems, Inc.
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-+# See the GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License
-+# along with this program; if not, write to the Free Software
-+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-+
-+import os
-+import sys
-+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname( \
-+                                    os.path.abspath(__file__))), 'lib'))
-+try:
-+    import bb
-+except RuntimeError as exc:
-+    sys.exit(str(exc))
-+
-+import gtk
-+import optparse
-+import pygtk
-+
-+from bb.ui.crumbs.hig import DeployImageDialog, ImageSelectionDialog, CrumbsMessageDialog
-+from bb.ui.crumbs.hobwidget import HobAltButton, HobButton
-+
-+# I put all the fs bitbake supported here. Need more test.
-+DEPLOYABLE_IMAGE_TYPES = ["jffs2", "cramfs", "ext2", "ext3", "btrfs", "squashfs", "ubi", "vmdk"]
-+Title = "USB Image Maker"
-+
-+class DeployWindow(gtk.Window):
-+    def __init__(self, image_path=''):
-+        super(DeployWindow, self).__init__()
-+
-+        if len(image_path) > 0:
-+            valid = True
-+            if not os.path.exists(image_path):
-+                valid = False
-+                lbl = "<b>Invalid image file path: %s.</b>\nPress <b>Select Image</b> button to select an image." % image_path
-+            else:
-+                image_path = os.path.abspath(image_path)
-+                extend_name = os.path.splitext(image_path)[1][1:]
-+                if extend_name not in DEPLOYABLE_IMAGE_TYPES:
-+                    valid = False
-+                    lbl = "<b>Undeployable imge type: %s</b>\nPress <b>Select Image</b> button to select an image." % extend_name
-+
-+            if not valid:
-+                image_path = ''
-+                crumbs_dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
-+                button = crumbs_dialog.add_button("Close", gtk.RESPONSE_OK)
-+                HobButton.style_button(button)
-+                crumbs_dialog.run()
-+                crumbs_dialog.destroy()
-+
-+        self.deploy_dialog = DeployImageDialog(Title, image_path, self,
-+                                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT
-+                                        | gtk.DIALOG_NO_SEPARATOR, None, standalone=True)
-+        close_button = self.deploy_dialog.add_button("Close", gtk.RESPONSE_NO)
-+        HobAltButton.style_button(close_button)
-+        close_button.connect('clicked', gtk.main_quit)
-+
-+        make_button = self.deploy_dialog.add_button("Make USB image", gtk.RESPONSE_YES)
-+        HobAltButton.style_button(make_button)
-+
-+        self.deploy_dialog.connect('select_image_clicked', self.select_image_clicked_cb)
-+        self.deploy_dialog.connect('destroy', gtk.main_quit)
-+        response = self.deploy_dialog.show()
-+
-+    def select_image_clicked_cb(self, dialog):
-+        cwd = os.getcwd()
-+        dialog = ImageSelectionDialog(cwd, DEPLOYABLE_IMAGE_TYPES, Title, self, gtk.FILE_CHOOSER_ACTION_SAVE )
-+        button = dialog.add_button("Cancel", gtk.RESPONSE_NO)
-+        HobAltButton.style_button(button)
-+        button = dialog.add_button("Open", gtk.RESPONSE_YES)
-+        HobAltButton.style_button(button)
-+        response = dialog.run()
-+
-+        if response == gtk.RESPONSE_YES:
-+            if not dialog.image_names:
-+                lbl = "<b>No selections made</b>\nClicked the radio button to select a image."
-+                crumbs_dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
-+                button = crumbs_dialog.add_button("Close", gtk.RESPONSE_OK)
-+                HobButton.style_button(button)
-+                crumbs_dialog.run()
-+                crumbs_dialog.destroy()
-+                dialog.destroy()
-+                return
-+
-+            # get the full path of image
-+            image_path = os.path.join(dialog.image_folder, dialog.image_names[0])
-+            self.deploy_dialog.set_image_text_buffer(image_path)
-+            self.deploy_dialog.set_image_path(image_path)
-+
-+        dialog.destroy()
-+
-+def main():
-+    parser = optparse.OptionParser(
-+                usage = """%prog [-h] [image_file]
-+
-+%prog writes bootable images to USB devices. You can
-+provide the image file on the command line or select it using the GUI.""")
-+
-+    options, args = parser.parse_args(sys.argv)
-+    image_file = args[1] if len(args) > 1 else ''
-+    dw = DeployWindow(image_file)
-+
-+if __name__ == '__main__':
-+    try:
-+        main()
-+        gtk.main()
-+    except Exception:
-+        import traceback
-+        traceback.print_exc(3)
--- 
-1.7.5.4
+solar@ubuntu:~/Downloads/test/build$ bitbake build
+Traceback (most recent call last):
+  File "/usr/local/bin/bitbake", line 143, in <module>
+    main()
+  File "/usr/local/bin/bitbake", line 123, in main
+    cooker.parseConfiguration()
+  File "/usr/local/lib/python2.6/dist-packages/bb/cooker.py", line 68, in p=
+arseConfiguration
+    self.parseConfigurationFile( os.path.join( "conf", "bitbake.conf" ) )
+  File "/usr/local/lib/python2.6/dist-packages/bb/cooker.py", line 404, in =
+parseConfigurationFile
+    bb.event.fire(bb.event.ConfigParsed(self.configuration.data))
+  File "/usr/local/lib/python2.6/dist-packages/bb/event.py", line 67, in fi=
+re
+    if tmpHandler(event) =3D=3D Handled:
+  File "tmpHandler(e)", line 3, in tmpHandler
+  File "<bb>", line 14, in oe_import
+ImportError: No module named oe.data
 
 
+Thanks,
+Girija. B
 
+
+Larsen & Toubro Limited
+
+www.larsentoubro.com
+
+This Email may contain confidential or privileged information for the inten=
+ded recipient (s). If you are not the intended recipient, please do not use=
+ or disseminate the information, notify the sender and delete it from your =
+system.
+
+ Earth Day. Every Day.
+
+--_000_098684E1B7B2F54491C5DA349D2EF443098C4837POCITMSEXMB03Ln_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
+>
+<style>
+<!--
+@font-face
+	{font-family:Calibri}
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif"}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline}
+span.EmailStyle17
+	{font-family:"Calibri","sans-serif";
+	color:windowtext}
+.MsoChpDefault
+	{font-family:"Calibri","sans-serif"}
+@page WordSection1
+	{margin:1.0in 1.0in 1.0in 1.0in}
+div.WordSection1
+	{}
+-->
+</style>
+</head>
+<body lang=3D"EN-US" link=3D"blue" vlink=3D"purple">
+<div class=3D"WordSection1">
+<p class=3D"MsoNormal">Hello,</p>
+<p class=3D"MsoNormal">&nbsp;</p>
+<p class=3D"MsoNormal">I had installed Bitbake and open embedded as describ=
+ed in the OE User Manual , when I tried to Build using : bitbake build comm=
+and , am getting the following Error ,</p>
+<p class=3D"MsoNormal">Please help in solving this .</p>
+<p class=3D"MsoNormal">&nbsp;</p>
+<p class=3D"MsoNormal">solar@ubuntu:~/Downloads/test/build$ bitbake build</=
+p>
+<p class=3D"MsoNormal">Traceback (most recent call last):</p>
+<p class=3D"MsoNormal">&nbsp; File &quot;/usr/local/bin/bitbake&quot;, line=
+ 143, in &lt;module&gt;</p>
+<p class=3D"MsoNormal">&nbsp;&nbsp;&nbsp; main()</p>
+<p class=3D"MsoNormal">&nbsp; File &quot;/usr/local/bin/bitbake&quot;, line=
+ 123, in main</p>
+<p class=3D"MsoNormal">&nbsp;&nbsp;&nbsp; cooker.parseConfiguration()</p>
+<p class=3D"MsoNormal">&nbsp; File &quot;/usr/local/lib/python2.6/dist-pack=
+ages/bb/cooker.py&quot;, line 68, in parseConfiguration</p>
+<p class=3D"MsoNormal">&nbsp;&nbsp;&nbsp; self.parseConfigurationFile( os.p=
+ath.join( &quot;conf&quot;, &quot;bitbake.conf&quot; ) )</p>
+<p class=3D"MsoNormal">&nbsp; File &quot;/usr/local/lib/python2.6/dist-pack=
+ages/bb/cooker.py&quot;, line 404, in parseConfigurationFile</p>
+<p class=3D"MsoNormal">&nbsp;&nbsp;&nbsp; bb.event.fire(bb.event.ConfigPars=
+ed(self.configuration.data))</p>
+<p class=3D"MsoNormal">&nbsp; File &quot;/usr/local/lib/python2.6/dist-pack=
+ages/bb/event.py&quot;, line 67, in fire</p>
+<p class=3D"MsoNormal">&nbsp;&nbsp;&nbsp; if tmpHandler(event) =3D=3D Handl=
+ed:</p>
+<p class=3D"MsoNormal">&nbsp; File &quot;tmpHandler(e)&quot;, line 3, in tm=
+pHandler</p>
+<p class=3D"MsoNormal">&nbsp; File &quot;&lt;bb&gt;&quot;, line 14, in oe_i=
+mport</p>
+<p class=3D"MsoNormal">ImportError: No module named oe.data</p>
+<p class=3D"MsoNormal">&nbsp;</p>
+<p class=3D"MsoNormal">&nbsp;</p>
+<p class=3D"MsoNormal">Thanks,</p>
+<p class=3D"MsoNormal">Girija. B</p>
+<p class=3D"MsoNormal">&nbsp;</p>
+</div>
+<p><span style=3D"color:#008000"><strong>Larsen &amp; Toubro Limited </stro=
+ng></span><br>
+<br>
+<strong><a href=3D"www.larsentoubro.com" target=3D"_blank">www.larsentoubro=
+.com</a></strong></p>
+<p><span style=3D"color:#008000">This Email may contain confidential or pri=
+vileged information for the intended recipient (s). If you are not the inte=
+nded recipient, please do not use or disseminate the information, notify th=
+e sender and delete it from your system.</span></p>
+<p><strong><span style=3D"color:#008000">&nbsp;Earth Day. Every Day.</span>=
+</strong></p>
+</body>
+</html>
+
+--_000_098684E1B7B2F54491C5DA349D2EF443098C4837POCITMSEXMB03Ln_--
