@@ -1,22 +1,24 @@
 Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <limingx.l.an@intel.com>) id 1SbV0h-0002hc-HT
+	(envelope-from <limingx.l.an@intel.com>) id 1SbV0i-0002hc-7L
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 04 Jun 2012 12:59:43 +0200
+	Mon, 04 Jun 2012 12:59:44 +0200
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 04 Jun 2012 03:49:18 -0700
+	by orsmga101.jf.intel.com with ESMTP; 04 Jun 2012 03:49:20 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="152298086"
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="152298113"
 Received: from hp.sh.intel.com ([10.239.47.6])
-	by orsmga002.jf.intel.com with ESMTP; 04 Jun 2012 03:49:17 -0700
+	by orsmga002.jf.intel.com with ESMTP; 04 Jun 2012 03:49:19 -0700
 From: Liming An <limingx.l.an@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  4 Jun 2012 18:52:10 +0800
-Message-Id: <57f497956749ad3a4c41051cb12f7a3b97f0254e.1338806537.git.limingx.l.an@intel.com>
+Date: Mon,  4 Jun 2012 18:52:11 +0800
+Message-Id: <535a0a1719495d21ca0e89a04de41e19e686d973.1338806537.git.limingx.l.an@intel.com>
 X-Mailer: git-send-email 1.7.5.4
+In-Reply-To: <57f497956749ad3a4c41051cb12f7a3b97f0254e.1338806537.git.limingx.l.an@intel.com>
+References: <57f497956749ad3a4c41051cb12f7a3b97f0254e.1338806537.git.limingx.l.an@intel.com>
 In-Reply-To: <cover.1338806537.git.limingx.l.an@intel.com>
 References: <cover.1338806537.git.limingx.l.an@intel.com>
-Subject: [PATCH 1/5] Hob: clear the repeated function get_kernel_file_name
+Subject: [PATCH 2/5] Hob: fix entry of recipe page can't be edited in case after clicked clear button
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -28,79 +30,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 04 Jun 2012 10:59:43 -0000
+X-List-Received-Date: Mon, 04 Jun 2012 10:59:44 -0000
 
-there are a repeated function in builder.py and imagedetailspage.py,
-so combine them to one.
+cancel some inviable code and fixed this issue
 
 Signed-off-by: Liming An <limingx.l.an@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/builder.py          |    5 +++--
- bitbake/lib/bb/ui/crumbs/imagedetailspage.py |   19 +------------------
- 2 files changed, 4 insertions(+), 20 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hobwidget.py |   10 ++--------
+ 1 files changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index 8d35ea9..899d0e0 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -1141,9 +1141,10 @@ class Builder(gtk.Window):
-         response = dialog.run()
-         dialog.destroy()
+diff --git a/bitbake/lib/bb/ui/crumbs/hobwidget.py b/bitbake/lib/bb/ui/crumbs/hobwidget.py
+index bd9e2e2..afcd5b8 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobwidget.py
++++ b/bitbake/lib/bb/ui/crumbs/hobwidget.py
+@@ -529,14 +529,8 @@ class HobNotebook(gtk.Notebook):
+         self.reset_entry(search)
  
--    def get_kernel_file_name(self, image_path):
-+    def get_kernel_file_name(self):
-         name_list = []
-         kernel_name = ""
-+        image_path = self.parameters.image_addr
-         if image_path:
-             files = [f for f in os.listdir(image_path) if f[0] <> '.']
-             for check_file in files:
-@@ -1166,7 +1167,7 @@ class Builder(gtk.Window):
-             dialog.destroy()
-             return
- 
--        kernel_name, kernels_number = self.get_kernel_file_name(self.parameters.image_addr)
-+        kernel_name, kernels_number = self.get_kernel_file_name()
-         if not kernel_name or kernels_number > 1:
-             dialog = gtk.FileChooserDialog("Load Kernel Files", self,
-                                            gtk.FILE_CHOOSER_ACTION_SAVE)
-diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-index deb053c..1ab80f8 100755
---- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-@@ -368,7 +368,7 @@ class ImageDetailsPage (HobPage):
-         iter = model.get_iter(path)
-         image_name = model[path][0]
-         if iter and model[path][2] == 'runnable':
--            kernel_name, kernel_number = self.get_kernel_file_name(image_name)
-+            kernel_name, kernel_number = self.builder.parameters.get_kernel_file_name()
-             self.builder.runqemu_image(image_name, kernel_name, kernel_number)
- 
-     def create_bottom_buttons(self, buttonlist, image_name):
-@@ -446,23 +446,6 @@ class ImageDetailsPage (HobPage):
-             button_id = build_new_button.connect("clicked", self.build_new_button_clicked_cb)
-             self.button_ids[button_id] = build_new_button
- 
--    def get_kernel_file_name(self, image_name):
--        name_list = []
--        kernel_name = ""
--        if image_name:
--            image_path = os.path.join(self.builder.parameters.image_addr)
--            files = [f for f in os.listdir(image_path) if f[0] <> '.']
--            for check_file in files:
--                if check_file.endswith(".bin"):
--                    if  self.test_mach_runnable(check_file):
--                        selected_machine = self.builder.configuration.curr_mach
--                        if selected_machine in check_file:
--                            kernel_name = check_file
--                    if not os.path.islink(os.path.join(image_path, check_file)):
--                        name_list.append(check_file)
+     def set_search_entry_clear_cb(self, search, icon_pos, event):
+-        self.reset_entry(search)
 -
--        return kernel_name, len(name_list)
--
-     def save_button_clicked_cb(self, button):
-         self.builder.show_save_template_dialog()
+-    def set_page(self, title):
+-        for child in self.tabbar.children:
+-            if child["title"] == title:
+-                self.tabbar.current_child = child
+-                self.tabbar.grab_focus()
+-                self.notebook.set_current_page(child["toggled_page"])
++        if search.get_editable() == True:
++            search.set_text("")
  
+ class HobWarpCellRendererText(gtk.CellRendererText):
+     def __init__(self, col_number):
 -- 
 1.7.5.4
 
