@@ -1,33 +1,27 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dvhart@linux.intel.com>) id 1Sbxh4-0000hO-7Z
+	(envelope-from <dvhart@linux.intel.com>) id 1SbxuN-0000rr-Cb
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 05 Jun 2012 19:37:22 +0200
+	Tue, 05 Jun 2012 19:51:08 +0200
 Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 05 Jun 2012 10:25:50 -0700
+	by azsmga102.ch.intel.com with ESMTP; 05 Jun 2012 10:39:20 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="108148174"
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="108152511"
 Received: from unknown (HELO envy.home) ([10.255.12.60])
-	by AZSMGA002.ch.intel.com with ESMTP; 05 Jun 2012 10:25:50 -0700
-Message-ID: <4FCE40D9.8070107@linux.intel.com>
-Date: Tue, 05 Jun 2012 10:24:41 -0700
+	by AZSMGA002.ch.intel.com with ESMTP; 05 Jun 2012 10:39:19 -0700
+Message-ID: <4FCE4403.6090701@linux.intel.com>
+Date: Tue, 05 Jun 2012 10:38:11 -0700
 From: Darren Hart <dvhart@linux.intel.com>
 User-Agent: Mozilla/5.0 (X11; Linux x86_64;
 	rv:12.0) Gecko/20120430 Thunderbird/12.0.1
 MIME-Version: 1.0
-To: Kang Kai <Kai.Kang@windriver.com>
+To: Kang Kai <kai.kang@windriver.com>
 References: <cover.1338866958.git.kai.kang@windriver.com>
-	<df48506400665d5bb161559583327cbd94ce3eb7.1338866958.git.kai.kang@windriver.com>
-	<3AB6CE7F274E534CAFD089D127A8A1FC23BCA57C@SHSMSX102.ccr.corp.intel.com>
-	<4FCDAF89.8000803@windriver.com>
-	<3AB6CE7F274E534CAFD089D127A8A1FC23BCA684@SHSMSX102.ccr.corp.intel.com>
-	<4FCDC027.5030304@windriver.com>
-In-Reply-To: <4FCDC027.5030304@windriver.com>
+	<bbe60345d083624fd2fd6bc4a60c2cb948fe2993.1338866958.git.kai.kang@windriver.com>
+In-Reply-To: <bbe60345d083624fd2fd6bc4a60c2cb948fe2993.1338866958.git.kai.kang@windriver.com>
 X-Enigmail-Version: 1.4.1
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>,
-	"zhenfeng.zhao@windriver.com" <zhenfeng.zhao@windriver.com>
-Subject: Re: [PATCH 2/2] hob2: create a standalone deploy image tool
+Cc: bitbake-devel@lists.openembedded.org, zhenfeng.zhao@windriver.com
+Subject: Re: [PATCH 1/2] hob2: update DeployImageDialog for seperated tool
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -39,66 +33,254 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Jun 2012 17:37:22 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Tue, 05 Jun 2012 17:51:08 -0000
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
 
 
-On 06/05/2012 01:15 AM, Kang Kai wrote:
-> On 2012年06月05日 15:40, Wang, Shane wrote:
->> Kang Kai wrote on 2012-06-05:
->>
->>> On 2012年06月05日 14:42, Wang, Shane wrote:
->>>>> -----Original Message-----
->>>>> From: Kang Kai [mailto:kai.kang@windriver.com]
->>>>> Sent: Tuesday, June 05, 2012 11:37 AM
->>>>> To: dvhart@linux.intel.com
->>>>> Cc: Wang, Shane; zhenfeng.zhao@windriver.com;
->>>>> bitbake-devel@lists.openembedded.org
->>>>> Subject: [PATCH 2/2] hob2: create a standalone deploy image tool
->>>>>
->>>>> diff --git a/bitbake/lib/bb/ui/crumbs/utils.py
->>>>> b/bitbake/lib/bb/ui/crumbs/utils.py
->>>>> index cd01a04..939864f 100644
->>>>> --- a/bitbake/lib/bb/ui/crumbs/utils.py
->>>>> +++ b/bitbake/lib/bb/ui/crumbs/utils.py
->>>>> @@ -22,6 +22,7 @@
->>>>>    # bitbake which will allow more flexibility.
->>>>>
->>>>>    import os
->>>>> +import bb
->>>> Why is this needed? I don't see any change you made in utils.py.
->>>> Is that to say without this line, the functions in utils.py don't work?
->>> Without the import, it just complains that
->>>
->>> NameError: global name 'bb' is not defined
->>>
->>> Regards,
->>> Kai
->> OK, It seems Saul didn't test it when he created utils.py;-)
+On 06/04/2012 08:37 PM, Kang Kai wrote:
+> Part of [Yocto 2388]
 > 
-> I am not quit sure because it is fine when call the deploy image in the 
-> hob. little weird.
+> Update class DeployImageDialog that could be used by a standalone
+> deploy image tool.
 > 
+> Update the method to get all usb device to avoid runtime error, and
+> get the deploy image process exit status then give user a information
+> dialog.
 
-Probably because another file in the import list includes bb.
+These are functionally different tasks that should probably broken up
+into a couple patches. This allows us to revert one while maintaining
+the other should a problem arise. It also makes reviewing the code easier.
 
-However, this change is not specific to the image tool and should be
-broken out as a separate patch. utils.py makes calls to bb.utils.which()
-on the third source line, so bb should certainly be imported in utils.py.
-
---
-Darren
-
-
-> Regards,
-> Kai
 > 
->>
->> --
->> Shane
+> Remove some extra spaces at same time.
 > 
+> Signed-off-by: Kang Kai <kai.kang@windriver.com>
+> ---
+>  bitbake/lib/bb/ui/crumbs/hig.py |   82 ++++++++++++++++++++++++++++++++-------
+>  1 files changed, 68 insertions(+), 14 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/ui/crumbs/hig.py b/bitbake/lib/bb/ui/crumbs/hig.py
+> index 7c9e73f..7d8daad 100644
+> --- a/bitbake/lib/bb/ui/crumbs/hig.py
+> +++ b/bitbake/lib/bb/ui/crumbs/hig.py
+> @@ -20,6 +20,7 @@
+>  # with this program; if not, write to the Free Software Foundation, Inc.,
+>  # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+>  
+> +import glob
+>  import gtk
+>  import gobject
+>  import hashlib
+> @@ -63,7 +64,7 @@ class CrumbsMessageDialog(CrumbsDialog):
+>      """
+>      def __init__(self, parent=None, label="", icon=gtk.STOCK_INFO):
+>          super(CrumbsMessageDialog, self).__init__("", parent, gtk.DIALOG_DESTROY_WITH_PARENT)
+> -        
+> +
+>          self.set_border_width(6)
+>          self.vbox.set_property("spacing", 12)
+>          self.action_area.set_property("spacing", 12)
+> @@ -748,21 +749,28 @@ class DeployImageDialog (CrumbsDialog):
+>  
+>      __dummy_usb__ = "--select a usb drive--"
+>  
+> -    def __init__(self, title, image_path, parent, flags, buttons=None):
+> +    def __init__(self, title, image_path, parent, flags, buttons=None, singleton=False):
+>          super(DeployImageDialog, self).__init__(title, parent, flags, buttons)
+>  
+>          self.image_path = image_path
+> +        self.singleton = singleton
+>  
+>          self.create_visual_elements()
+>          self.connect("response", self.response_cb)
+>  
+>      def create_visual_elements(self):
+> +        self.set_size_request(600, 400)
+>          label = gtk.Label()
+>          label.set_alignment(0.0, 0.5)
+>          markup = "<span font_desc='12'>The image to be written into usb drive:</span>"
+>          label.set_markup(markup)
+>          self.vbox.pack_start(label, expand=False, fill=False, padding=2)
+>  
+> +        table = gtk.Table(2, 10, False)
+> +        table.set_col_spacings(5)
+> +        table.set_row_spacings(5)
+> +        self.vbox.pack_start(table, expand=True, fill=True)
+> +
+
+
+It isn't obvious to me why things like setting the size request and
+creating a new table are required to make this stand alone. Do these
+changes fit under the "Update class DeployImageDialog that could be used
+by a standalone deploy image tool." ? If so, fine. If not, they might be
+better done in a separate patch.
+
+
+>          scroll = gtk.ScrolledWindow()
+>          scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+>          scroll.set_shadow_type(gtk.SHADOW_IN)
+> @@ -770,11 +778,26 @@ class DeployImageDialog (CrumbsDialog):
+>          tv.set_editable(False)
+>          tv.set_wrap_mode(gtk.WRAP_WORD)
+>          tv.set_cursor_visible(False)
+> -        buf = gtk.TextBuffer()
+> -        buf.set_text(self.image_path)
+> -        tv.set_buffer(buf)
+> +        self.buf = gtk.TextBuffer()
+> +        self.buf.set_text(self.image_path)
+> +        tv.set_buffer(self.buf)
+>          scroll.add(tv)
+> -        self.vbox.pack_start(scroll, expand=True, fill=True)
+> +        table.attach(scroll, 0, 10, 0, 1)
+> +
+> +        if self.singleton:
+> +                gobject.signal_new("select_image_clicked", self, gobject.SIGNAL_RUN_FIRST,
+> +                                   gobject.TYPE_NONE, ())
+> +                icon = gtk.Image()
+> +                pix_buffer = gtk.gdk.pixbuf_new_from_file(hic.ICON_IMAGES_DISPLAY_FILE)
+> +                icon.set_from_pixbuf(pix_buffer)
+> +                button = gtk.Button("Select Image")
+> +                button.set_image(icon)
+> +                button.set_size_request(140, 50)
+> +                table.attach(button, 9, 10, 1, 2, gtk.FILL, 0, 0, 0)
+> +                button.connect("clicked", self.select_image_button_clicked_cb)
+> +
+> +        separator = gtk.HSeparator()
+> +        self.vbox.pack_start(separator, expand=False, fill=False, padding=10)
+
+What does the self.singleton indicate? How is it related to running
+stand-alone or within Hob?
+
+>          self.usb_desc = gtk.Label()
+>          self.usb_desc.set_alignment(0.0, 0.5)
+> @@ -789,7 +812,7 @@ class DeployImageDialog (CrumbsDialog):
+>          for usb in self.find_all_usb_devices():
+>              self.usb_combo.append_text("/dev/" + usb)
+>          self.usb_combo.set_active(0)
+> -        self.vbox.pack_start(self.usb_combo, expand=True, fill=True)
+> +        self.vbox.pack_start(self.usb_combo, expand=False, fill=False)
+
+This would appear to be a superfluous layout change unrelated to the
+patch topic...
+
+>          self.vbox.pack_start(self.usb_desc, expand=False, fill=False, padding=2)
+>  
+>          self.progress_bar = HobProgressBar()
+> @@ -800,13 +823,19 @@ class DeployImageDialog (CrumbsDialog):
+>          self.vbox.show_all()
+>          self.progress_bar.hide()
+>  
+> +    def set_image_text_buffer(self, image_path):
+> +        self.buf.set_text(image_path)
+> +
+> +    def set_image_path(self, image_path):
+> +        self.image_path = image_path
+> +
+>      def popen_read(self, cmd):
+>          tmpout, errors = bb.process.run("%s" % cmd)
+>          return tmpout.strip()
+>  
+>      def find_all_usb_devices(self):
+>          usb_devs = [ os.readlink(u)
+> -            for u in self.popen_read('ls /dev/disk/by-id/usb*').split()
+> +            for u in glob.glob('/dev/disk/by-id/usb*')
+
+Secondary to the goal of the patch, but why are we restricting ourselves
+to sub drives? Why not read /proc/partitions and omit a configurable
+blacklist of devices (like /dev/sda for example). Again, secondary to
+this patch series.
+
+>              if not re.search(r'part\d+', u) ]
+>          return [ '%s' % u[u.rfind('/')+1:] for u in usb_devs ]
+>  
+> @@ -815,6 +844,9 @@ class DeployImageDialog (CrumbsDialog):
+>              (self.popen_read('cat /sys/class/block/%s/device/vendor' % dev),
+>              self.popen_read('cat /sys/class/block/%s/device/model' % dev))
+>  
+> +    def select_image_button_clicked_cb(self, button):
+> +            self.emit('select_image_clicked')
+> +
+>      def usb_combo_changed_cb(self, usb_combo):
+>          combo_item = self.usb_combo.get_active_text()
+>          if not combo_item or combo_item == self.__dummy_usb__:
+> @@ -826,12 +858,34 @@ class DeployImageDialog (CrumbsDialog):
+>  
+>      def response_cb(self, dialog, response_id):
+>          if response_id == gtk.RESPONSE_YES:
+> +            lbl = ''
+>              combo_item = self.usb_combo.get_active_text()
+> -            if combo_item and combo_item != self.__dummy_usb__:
+> +            if combo_item and combo_item != self.__dummy_usb__ and self.image_path:
+>                  cmdline = bb.ui.crumbs.utils.which_terminal()
+>                  if cmdline:
+> -                    cmdline += "\"sudo dd if=" + self.image_path + " of=" + combo_item + "\""
+> -                    bb.process.Popen(shlex.split(cmdline))
+> +                    tmpname = os.tmpnam()
+> +                    cmdline += "\"sudo dd if=" + self.image_path + " of=" + combo_item + "; echo $? > " + tmpname + "\""
+> +                    deploy_process = bb.process.Popen(shlex.split(cmdline))
+> +                    deploy_process.wait()
+> +                    tmpfile = open(tmpname)
+> +                    if int(tmpfile.readline().strip()) == 0:
+> +                        lbl = "<b>Deploy image successfully</b>"
+> +                    else:
+> +                        lbl = "<b>Deploy image failed</b>\nPlease try again"
+> +                    tmpfile.close()
+> +                    os.remove(tmpname)
+> +
+> +            else:
+> +                if not self.image_path:
+> +                    lbl = "<b>No selection made</b>\nYou have not selected image to deploy"
+
+"<b>No selection made.</b>\nPlease select an image."
+
+Is <br> appropriate here instead of \n?
+
+> +                else:
+> +                    lbl = "<b>No selection made</b>\nYou have not selected USB device"
+
+"<b>No selection made.</b>\nPlease select a device."
+
+Again, why are we limiting devices to USB devices?
+
+
+> +            if len(lbl):
+> +                crumbs_dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
+> +                button = crumbs_dialog.add_button("Close", gtk.RESPONSE_OK)
+> +                HobButton.style_button(button)
+> +                crumbs_dialog.run()
+> +                crumbs_dialog.destroy()
+>  
+>      def update_progress_bar(self, title, fraction, status=None):
+>          self.progress_bar.update(fraction)
+> @@ -1035,7 +1089,7 @@ class LayerSelectionDialog (CrumbsDialog):
+>          # create visual elements on the dialog
+>          self.create_visual_elements()
+>          self.connect("response", self.response_cb)
+> -                
+> +
+>      def create_visual_elements(self):
+>          layer_widget, self.layer_store = self.gen_layer_widget(self.layers, self.all_layers, self, None)
+>          layer_widget.set_size_request(450, 250)
+> @@ -1210,7 +1264,7 @@ class ImageSelectionDialog (CrumbsDialog):
+>                          if f.endswith('.' + real_image_type):
+>                              imageset.add(f.rsplit('.' + real_image_type)[0].rsplit('.rootfs')[0])
+>                              self.image_list.append(f)
+> -        
+> +
+>          for image in imageset:
+>              self.image_store.set(self.image_store.append(), 0, image, 1, False)
+>  
+> @@ -1226,7 +1280,7 @@ class ImageSelectionDialog (CrumbsDialog):
+>                      for f in self.image_list:
+>                          if f.startswith(self.image_store[path][0] + '.'):
+>                              self.image_names.append(f)
+> -                    break            
+> +                    break
+>                  iter = self.image_store.iter_next(iter)
+>  
+>  class ProxyDetailsDialog (CrumbsDialog):
 
 -- 
 Darren Hart
