@@ -1,35 +1,36 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Kai.Kang@windriver.com>) id 1Sbrgn-0005BN-F3
+	(envelope-from <shane.wang@intel.com>) id 1SbtFp-0006eu-Qw
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 05 Jun 2012 13:12:41 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q558F9OB021096
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Tue, 5 Jun 2012 01:15:09 -0700 (PDT)
-Received: from [128.224.162.164] (128.224.162.164) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.1.255.0;
-	Tue, 5 Jun 2012 01:15:09 -0700
-Message-ID: <4FCDC027.5030304@windriver.com>
-Date: Tue, 5 Jun 2012 16:15:35 +0800
-From: Kang Kai <Kai.Kang@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:10.0.2) Gecko/20120216 Thunderbird/10.0.2
+	Tue, 05 Jun 2012 14:52:58 +0200
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga102.ch.intel.com with ESMTP; 05 Jun 2012 05:42:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="108027408"
+Received: from azsmsx601.amr.corp.intel.com ([10.2.121.193])
+	by AZSMGA002.ch.intel.com with ESMTP; 05 Jun 2012 05:42:30 -0700
+Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
+	azsmsx601.amr.corp.intel.com (10.2.121.193) with Microsoft SMTP Server
+	(TLS) id 8.2.255.0; Tue, 5 Jun 2012 05:42:29 -0700
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.56]) by
+	SHSMSX101.ccr.corp.intel.com ([169.254.1.90]) with mapi id
+	14.01.0355.002; Tue, 5 Jun 2012 20:42:27 +0800
+From: "Wang, Shane" <shane.wang@intel.com>
+To: "Lv, XiaotongX" <xiaotongx.lv@intel.com>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] [PATCH 0/1] Webhob: helper based on webservice
+Thread-Index: AQHNQwG91qgTGWSbs0+hY1BAt8eD5JbrqntQ
+Date: Tue, 5 Jun 2012 12:42:27 +0000
+Message-ID: <3AB6CE7F274E534CAFD089D127A8A1FC23BCA8C2@SHSMSX102.ccr.corp.intel.com>
+References: <cover.1338969711.git.xiaotongx.lv@intel.com>
+In-Reply-To: <cover.1338969711.git.xiaotongx.lv@intel.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.239.127.40]
 MIME-Version: 1.0
-To: "Wang, Shane" <shane.wang@intel.com>
-References: <cover.1338866958.git.kai.kang@windriver.com>
-	<df48506400665d5bb161559583327cbd94ce3eb7.1338866958.git.kai.kang@windriver.com>
-	<3AB6CE7F274E534CAFD089D127A8A1FC23BCA57C@SHSMSX102.ccr.corp.intel.com>
-	<4FCDAF89.8000803@windriver.com>
-	<3AB6CE7F274E534CAFD089D127A8A1FC23BCA684@SHSMSX102.ccr.corp.intel.com>
-In-Reply-To: <3AB6CE7F274E534CAFD089D127A8A1FC23BCA684@SHSMSX102.ccr.corp.intel.com>
-X-Originating-IP: [128.224.162.164]
-X-MIME-Autoconverted: from 8bit to quoted-printable by mail.windriver.com id
-	q558F9OB021096
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>,
-	"zhenfeng.zhao@windriver.com" <zhenfeng.zhao@windriver.com>
-Subject: Re: [PATCH 2/2] hob2: create a standalone deploy image tool
+Subject: Re: [PATCH 0/1] Webhob: helper based on webservice
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -41,52 +42,141 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Jun 2012 11:12:41 -0000
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+X-List-Received-Date: Tue, 05 Jun 2012 12:52:58 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
-On 2012=E5=B9=B406=E6=9C=8805=E6=97=A5 15:40, Wang, Shane wrote:
-> Kang Kai wrote on 2012-06-05:
->
->> On 2012=E5=B9=B406=E6=9C=8805=E6=97=A5 14:42, Wang, Shane wrote:
->>>> -----Original Message-----
->>>> From: Kang Kai [mailto:kai.kang@windriver.com]
->>>> Sent: Tuesday, June 05, 2012 11:37 AM
->>>> To: dvhart@linux.intel.com
->>>> Cc: Wang, Shane; zhenfeng.zhao@windriver.com;
->>>> bitbake-devel@lists.openembedded.org
->>>> Subject: [PATCH 2/2] hob2: create a standalone deploy image tool
->>>>
->>>> diff --git a/bitbake/lib/bb/ui/crumbs/utils.py
->>>> b/bitbake/lib/bb/ui/crumbs/utils.py
->>>> index cd01a04..939864f 100644
->>>> --- a/bitbake/lib/bb/ui/crumbs/utils.py
->>>> +++ b/bitbake/lib/bb/ui/crumbs/utils.py
->>>> @@ -22,6 +22,7 @@
->>>>    # bitbake which will allow more flexibility.
->>>>
->>>>    import os
->>>> +import bb
->>> Why is this needed? I don't see any change you made in utils.py.
->>> Is that to say without this line, the functions in utils.py don't wor=
-k?
->> Without the import, it just complains that
->>
->> NameError: global name 'bb' is not defined
->>
->> Regards,
->> Kai
-> OK, It seems Saul didn't test it when he created utils.py;-)
+Xiaotong, I think you missed some patch.
+When you say "clean up the code", what is your code base?
 
-I am not quit sure because it is fine when call the deploy image in the=20
-hob. little weird.
+You should send out http://git.yoctoproject.org/cgit.cgi/poky-contrib/commi=
+t/?h=3Dxtlv/webhob-webservice&id=3D11eab3487db83bd1f4ca65de2767afbdc9958af0=
+ first.
 
-Regards,
-Kai
 
->
-> --
-> Shane
+--
+Shane
+
+Xiaotong lv wrote on=A02012-06-06:
+
+> This helper is a bitbake ui, based on soaplib 1.0 lib to implement a
+> webservice interface. I defined 2 webservice methods, they are
+> runCommand(param) and getEvent(). Different languages can remotely call
+> the 2 methods to communicate with bitbake. such as php, java, js, python
+> and so on. 1. runCommand(param) method is responsible for sending
+> commands to bitbake server.
+>    the param format is:
+>     {
+>         'function'  : string            (required, function name)
+>         'param_type': array(string)     (optional, params types, values
+>         only are 'string', 'list' or 'bool') 'params'    : array(string)
+>             (optional, string param
+> corresponds to itself,
+>                                                    list type corresponds
+>                                                    to 'str1 str2 str3
+>                                                    ....', bool type
+> corresponds to  'true' or 'false'
+>                                          )
+>     }
+>    =20
+>     some examples:
+>     1). to call bitbake server.runCommand(["initCooker"])
+>         param style is:
+> 	{
+>            'function': 'initCokker'
+> 	}
+>     2). to call bitbake server.runCommand(["getVariable", "BBLAYERS"])
+>         param style is:
+>         {
+>           'function'   : 'getVariable'
+>           'param_type' : ['string']
+>           'params'     : ['BBLASYERS']
+>         }
+>     3). to call bitbake server.runCommand(["buildTargets",
+> list(recipe_queue), 'build'])
+>         param style is:
+>         {
+>           'function'   : 'buildTargets'
+>           'param_type' : ['list','string']
+>           'params'     : ['recipe1 recipe2 recipe2 recipe4 ....', 'build'=
+]
+>         }
+> 2. getEvent() is respinsible for getting the event results generated by b=
+itbake
+> event objects, it returns a standard json format data.
+>    some examples:
+>    1)  to get some async configurations:
+>       [{'event': 'ConfigFilesFound',
+>        'values': 'poky-bleeding poky-lsb poky poky-tiny defaultsetup',
+>        'variable': 'distro'},
+>        {'event': 'CommandCompleted'}
+>       ]
+>       [{'event': 'ConfigFilesFound',
+>         'values': 'atom-pc routerstationpro mpc8315e-rdb beagleboard
+>         qemumips qemuarm qemux86-64 qemux86 qemuppc', 'variable':
+>         'machine'}, {'event': 'CommandCompleted'} 'values': 'i586 x86_64
+>         i686', 'variable': 'machine-sdk'},
+>        {'event': 'CommandCompleted'}
+>       ]
+>       [{'event': 'FilesMatchingFound',
+>         'matches': 'rootfs_rpm.bbclass rootfs_deb.bbclass
+>         rootfs_ipk.bbclass', 'pattern': 'rootfs_'},
+>        {'event': 'CommandCompleted'}
+>       ]
+>     2) some recipe progress values
+>          [{'current': 24,
+>           'event': 'TreeDataPreparationProgress', 'msg': 'Preparing tree
+>           data: 24/1105', 'total': 1105}, {'current': 25, 'event':
+>           'TreeDataPreparationProgress', 'msg': 'Preparing tree data:
+>           25/1105', 'total': 1105}, {'current': 26, 'event':
+>           'TreeDataPreparationProgress', 'msg': 'Preparing tree data:
+>           26/1105', 'total': 1105}, {'current': 27, 'event':
+>           'TreeDataPreparationProgress', 'msg': 'Preparing tree data:
+>           27/1105', 'total': 1105}, {'current': 28, 'event':
+>           'TreeDataPreparationProgress', 'msg': 'Preparing tree data:
+>           28/1105', 'total': 1105}, {'current': 29, 'event':
+>           'TreeDataPreparationProgress', 'msg': 'Preparing tree data:
+>           29/1105', 'total': 1105}]
+>     3) some task building values
+>          [{'event': 'TaskSucceeded',
+>           'message': 'package libpcre-native-8.21-r1: task
+>           do_populate_sysroot: Succeeded', 'package':
+>           'libpcre-native-8.21-r1', 'pid': 30382, 'task':
+>           'do_populate_sysroot'}, {'event': 'runQueueTaskCompleted',
+>           'pid': 0, 'taskid': 753, 'taskstring':
+> 'virtual:native:/home/xiaotong/workspace/python/poky-contrib/meta/recipes
+> -support/libpcre/libpcre_8.21.bb, do_populate_sysroot'},
+>          {'event': 'runQueueTaskStarted',
+>           'noexec': False,
+>           'pid': 0,
+>           'stats': {'active': 0, 'completed': 324, 'failed': 0},
+>           'taskid': 709,
+>           'taskstring':
+> 'virtual:native:/home/xiaotong/workspace/python/poky-contrib/meta/recipes
+> -support/db/db_5.1.19.bb, do_populate_sysroot'},
+>          {'event': 'TaskStarted',
+>           'message': 'package db-native-5.1.19-r4: task
+>           do_populate_sysroot: Started', 'package':
+>           'db-native-5.1.19-r4', 'pid': 30447,
+>=20
+> The following changes since commit
+> 11eab3487db83bd1f4ca65de2767afbdc9958af0:
+>=20
+>   Webhob: a general helper interface based on webservice (2012-06-02
+> 06:00:10 -0400)
+>=20
+> are available in the git repository at:
+>   git://git.yoctoproject.org/poky-contrib xtlv/webhob-webservice
+> http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=3Dxtlv/webhob-we=
+bs
+> erv ice
+>=20
+> Xiaotong lv (1):
+>   Webhob: Clean up the code and	 modify some errors
+>  bitbake/lib/bb/ui/crumbs/webserviceeventhandler.py |   20 ++++---
+>  bitbake/lib/bb/ui/webhob_webservice.py             |   53
+>  ++++++++----------- 2 files changed, 33 insertions(+), 40 deletions(-)
 
 
 
