@@ -1,23 +1,25 @@
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from mail.windriver.com ([147.11.1.11])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1ScN0Z-0006Zf-Hk
+	(envelope-from <jason.wessel@windriver.com>) id 1ScN0a-0006Zg-6X
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 06 Jun 2012 22:39:11 +0200
+	Wed, 06 Jun 2012 22:39:12 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q56KSgks014038
+	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q56KSh9d013154
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 6 Jun 2012 13:28:42 -0700 (PDT)
+	Wed, 6 Jun 2012 13:28:43 -0700 (PDT)
 Received: from ord-jrw.wrs.com (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Wed, 6 Jun 2012 13:28:41 -0700
+	Wed, 6 Jun 2012 13:28:42 -0700
 From: Jason Wessel <jason.wessel@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 6 Jun 2012 15:28:24 -0500
-Message-ID: <1339014519-9972-1-git-send-email-jason.wessel@windriver.com>
+Date: Wed, 6 Jun 2012 15:28:25 -0500
+Message-ID: <1339014519-9972-2-git-send-email-jason.wessel@windriver.com>
 X-Mailer: git-send-email 1.7.10
+In-Reply-To: <1339014519-9972-1-git-send-email-jason.wessel@windriver.com>
+References: <1339014519-9972-1-git-send-email-jason.wessel@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH v2 0/15] Multiplexed task logs / bitbake fixes for fetch2
+Subject: [PATCH v3 01/15] process.py: Fix log truncation problems
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -29,79 +31,93 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Jun 2012 20:39:11 -0000
+X-List-Received-Date: Wed, 06 Jun 2012 20:39:12 -0000
 Content-Type: text/plain
 
-This is the v3 patch set for various fixes/features to bit bake logging.
+There are two problems with the _logged_communicate that are both
+caused as a result of buffering I/O, instead of flushing it out to the
+log files as it arrives.
 
-New in this series:
-   Patch 8 - knotty would not flush in a timely manner throue |tee
-   Patch 9 - knotty2 - fix reporting of set scene tasks
-   Patch 10 - knotty2 - fix line wrap issues
-   Patch 11 - merge knotty2 functionatilty into knotty
-   Patch 12 - dynamically toggle log locations
-   Patch 15 - OE Core specific change to make screen_inline the default 
+1) log truncation when python dumps
+   I have seen the task logs missing data that was not flushed when
+   bitbake crashes.
 
---  Previous information from v2 patch set --
+2) While a bitbake task is running it is impossible to see what is
+   going on if it is only writing a small incremental log that is
+   smaller than the buffer, or you get only a partial log, up until
+   the task exists.  It is worse in the case that stderr and stdout
+   are separate file handles, because previous code blocks on the read
+   of stdout and then stderr, serially.
 
-New in this series:
-   Patch 5 - Change to the api for passing the screen connection
-   Patch 6 - Fix logging in fetch2
-   Patch 7 - Fix fetch2 failures to a read-only GITDIR
-   Patch 13/14 - OE Core specific changes related to screen as a reference
+The right approach is simply to use select() to determine if there is
+data available and then to flush the log buffers as they arrive.  This
+still makes use of buffering in the cases where there is more than 1
+byte of data, but the buffers are much more dynamic.
 
--- Previous information from first patch set --
+Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
+---
+ lib/bb/process.py |   29 +++++++++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
 
-This patch set is intended to provide a semi real time aspect to the
-logging to stdout.  Originally I was just interested in the output of
-the do_compile and I will still consider adding that capability, but I
-ended up using the logger generically.  It provides the ability to see
-all the task logs multiplexed to stdout by PID.
+diff --git a/lib/bb/process.py b/lib/bb/process.py
+index b74cb18..9848fc3 100644
+--- a/lib/bb/process.py
++++ b/lib/bb/process.py
+@@ -1,6 +1,9 @@
+ import logging
+ import signal
+ import subprocess
++import fcntl
++import errno
++import select
+ 
+ logger = logging.getLogger('BitBake.Process')
+ 
+@@ -70,18 +73,40 @@ def _logged_communicate(pipe, log, input):
+ 
+     bufsize = 512
+     outdata, errdata = [], []
++    rin = []
++
++    if pipe.stdout is not None:
++        fd = pipe.stdout.fileno()
++        fl = fcntl.fcntl(fd, fcntl.F_GETFL)
++        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
++        rin.append(pipe.stdout)
++    if pipe.stderr is not None:
++        fd = pipe.stderr.fileno()
++        fl = fcntl.fcntl(fd, fcntl.F_GETFL)
++        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
++        rin.append(pipe.stderr)
++
+     while pipe.poll() is None:
+-        if pipe.stdout is not None:
++        rlist = rin
++        try:
++            r,w,e = select.select (rlist, [], [])
++        except OSError, e:
++            if e.errno != errno.EINTR:
++                raise
++
++        if pipe.stdout in r:
+             data = pipe.stdout.read(bufsize)
+             if data is not None:
+                 outdata.append(data)
+                 log.write(data)
++                log.flush()
+ 
+-        if pipe.stderr is not None:
++        if pipe.stderr in r:
+             data = pipe.stderr.read(bufsize)
+             if data is not None:
+                 errdata.append(data)
+                 log.write(data)
++                log.flush()
+     return ''.join(outdata), ''.join(errdata)
+ 
+ def run(cmd, input=None, log=None, **options):
+-- 
+1.7.10
 
-More recently I decided I wanted to be able to toggle the logs on and
-off while bitbake was already running, so that was added into the
-series as well.  After seeing how that worked, I also decided I wanted
-to be able to run the dev shell in a single terminal window.  The last
-patch in the series is for the OE-Core, but since I made reference to
-this patch I included in this series for completeness.
-
-As a foot note, I have actually been using a more primitive version of
-this patch set for the last 4 weeks that was controlled only by the
-local.conf setting and used it to diagnose quite a few different
-problems as well as to just understand what it is that bitbake is
-doing at times.
-
-Thanks,
-Jason.
-
---
-
-Bitbake specific short log:
-
-Jason Wessel (12):
-      process.py: Fix log truncation problems
-      knotty: Extend knotty to support "real time" log tail for tasks
-      knotty: Add the ability to dynamically select loglevel from stdin
-      msg.py, knotty.py: Allow dynamic toggle of the debug log level
-      knotty.py: Add the ability to spawn screen directly from knotty with OE_TERMINAL=screen_inline
-      fetch2: Fix missing output from stderr in fetcher logs
-      fetch2/git.py: Use local download dir, when using an external read-only GITDIR
-      knotty.py, knotty2,py: Flush and update footer on dynamic log level change
-      knotty2.py: Fix knotty2 to report something other than 0 of 0 for setscene tasks
-      knotty2: Properly adjust for lines longer than terminal size
-      knotty: Merge knotty2 functionality into knotty
-      knotty: Add ability to dynamically toggle log location
-
- lib/bb/build.py                  |    4 +
- lib/bb/fetch2/__init__.py        |    5 +-
- lib/bb/fetch2/git.py             |    5 +-
- lib/bb/msg.py                    |    9 +-
- lib/bb/process.py                |   29 +++-
- lib/bb/ui/crumbs/multilogtail.py |  135 ++++++++++++++++++
- lib/bb/ui/knotty.py              |  283 ++++++++++++++++++++++++++++++++++++--
- lib/bb/ui/knotty2.py             |   51 ++++++-
- lib/bb/ui/uihelper.py            |    5 +
- 9 files changed, 503 insertions(+), 23 deletions(-)
- create mode 100644 lib/bb/ui/crumbs/multilogtail.py
 
 
