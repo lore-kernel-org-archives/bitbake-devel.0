@@ -1,34 +1,23 @@
-Received: from mail-ey0-f175.google.com ([209.85.215.175])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <raj.khem@gmail.com>) id 1ScJkq-0005Qx-00
+	(envelope-from <jason.wessel@windriver.com>) id 1ScN0Z-0006Zf-Hk
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 06 Jun 2012 19:10:44 +0200
-Received: by eaal1 with SMTP id l1so1986831eaa.6
+	Wed, 06 Jun 2012 22:39:11 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q56KSgks014038
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 06 Jun 2012 10:00:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-type:content-transfer-encoding;
-	bh=I6SMoZhLr0f+gvjbYeD2X/JCZJUC2tP8NaBgu8Jbn1U=;
-	b=FyymzNyuBb6fjf5ANvlctbDdOMzGybcxjdYl4f55Om/tbmhjW4ieJoOjRF3Jp3CLtf
-	tjAiWjHP8AQY2haLuhmOqMYm3WFbxBf5jPUo/rXGOyhh+rqAp6SOwq7yaG/kT3yT6m7r
-	DsKQzGHcusD4a/6OL2OwTNkReH3hBn0wYfIqgWxEsuSLPxRQkgVEDmBLRVkPJaMfoCid
-	CTjR+zGctGXf92YBNhjPkWywV84zzZemvCRBj/R6B6sibbZA/f0zWrEdeLceszoGNZK6
-	XAadDpvAO/3QtC9valyjxVygEi5/0XEirdpEevixaUe5NfyGRl8m29ed8xkVFbh6Hlre
-	lq2Q==
-Received: by 10.14.119.197 with SMTP id n45mr9933769eeh.180.1339002016293;
-	Wed, 06 Jun 2012 10:00:16 -0700 (PDT)
+	Wed, 6 Jun 2012 13:28:42 -0700 (PDT)
+Received: from ord-jrw.wrs.com (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
+	Wed, 6 Jun 2012 13:28:41 -0700
+From: Jason Wessel <jason.wessel@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Wed, 6 Jun 2012 15:28:24 -0500
+Message-ID: <1339014519-9972-1-git-send-email-jason.wessel@windriver.com>
+X-Mailer: git-send-email 1.7.10
 MIME-Version: 1.0
-Received: by 10.14.188.11 with HTTP; Wed, 6 Jun 2012 09:59:46 -0700 (PDT)
-In-Reply-To: <098684E1B7B2F54491C5DA349D2EF443098C4884@POCITMSEXMB03.LntUniverse.com>
-References: <098684E1B7B2F54491C5DA349D2EF443098C4884@POCITMSEXMB03.LntUniverse.com>
-From: Khem Raj <raj.khem@gmail.com>
-Date: Wed, 6 Jun 2012 09:59:46 -0700
-Message-ID: <CAMKF1sr_5n7kUVvb+aUYUqq8Amap-h2zSa=RiiiY0tvJyV9BSw@mail.gmail.com>
-To: Girija B <Girija.B@lnties.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: Error when Setting up Open Embedded Environment
+Subject: [PATCH v2 0/15] Multiplexed task logs / bitbake fixes for fetch2
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -40,34 +29,79 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Jun 2012 17:10:44 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Wed, 06 Jun 2012 20:39:11 -0000
+Content-Type: text/plain
 
-On Thu, May 31, 2012 at 10:11 PM, Girija B <Girija.B@lnties.com> wrote:
-> I had installed Bitbake and open embedded as described in the OE User Man=
-ual
-> , when I tried to Build using : bitbake build command , am getting the
-> following Error ,
+This is the v3 patch set for various fixes/features to bit bake logging.
 
+New in this series:
+   Patch 8 - knotty would not flush in a timely manner throue |tee
+   Patch 9 - knotty2 - fix reporting of set scene tasks
+   Patch 10 - knotty2 - fix line wrap issues
+   Patch 11 - merge knotty2 functionatilty into knotty
+   Patch 12 - dynamically toggle log locations
+   Patch 15 - OE Core specific change to make screen_inline the default 
 
-How did you install it ?
-you should check it out from git repo and use it not the package
-provided by distro on your build system
+--  Previous information from v2 patch set --
 
->
-> Please help in solving this .
->
->
->
-> solar@ubuntu:~/Downloads/test/build$ bitbake build
->
-> Traceback (most recent call last):
->
-> =C2=A0 File "/usr/local/bin/bitbake", line 143, in <module>
->
-> =C2=A0=C2=A0=C2=A0 main()
->
-> =C2=A0 File "/usr/local/bin/bitbake", line 123, in main
+New in this series:
+   Patch 5 - Change to the api for passing the screen connection
+   Patch 6 - Fix logging in fetch2
+   Patch 7 - Fix fetch2 failures to a read-only GITDIR
+   Patch 13/14 - OE Core specific changes related to screen as a reference
+
+-- Previous information from first patch set --
+
+This patch set is intended to provide a semi real time aspect to the
+logging to stdout.  Originally I was just interested in the output of
+the do_compile and I will still consider adding that capability, but I
+ended up using the logger generically.  It provides the ability to see
+all the task logs multiplexed to stdout by PID.
+
+More recently I decided I wanted to be able to toggle the logs on and
+off while bitbake was already running, so that was added into the
+series as well.  After seeing how that worked, I also decided I wanted
+to be able to run the dev shell in a single terminal window.  The last
+patch in the series is for the OE-Core, but since I made reference to
+this patch I included in this series for completeness.
+
+As a foot note, I have actually been using a more primitive version of
+this patch set for the last 4 weeks that was controlled only by the
+local.conf setting and used it to diagnose quite a few different
+problems as well as to just understand what it is that bitbake is
+doing at times.
+
+Thanks,
+Jason.
+
+--
+
+Bitbake specific short log:
+
+Jason Wessel (12):
+      process.py: Fix log truncation problems
+      knotty: Extend knotty to support "real time" log tail for tasks
+      knotty: Add the ability to dynamically select loglevel from stdin
+      msg.py, knotty.py: Allow dynamic toggle of the debug log level
+      knotty.py: Add the ability to spawn screen directly from knotty with OE_TERMINAL=screen_inline
+      fetch2: Fix missing output from stderr in fetcher logs
+      fetch2/git.py: Use local download dir, when using an external read-only GITDIR
+      knotty.py, knotty2,py: Flush and update footer on dynamic log level change
+      knotty2.py: Fix knotty2 to report something other than 0 of 0 for setscene tasks
+      knotty2: Properly adjust for lines longer than terminal size
+      knotty: Merge knotty2 functionality into knotty
+      knotty: Add ability to dynamically toggle log location
+
+ lib/bb/build.py                  |    4 +
+ lib/bb/fetch2/__init__.py        |    5 +-
+ lib/bb/fetch2/git.py             |    5 +-
+ lib/bb/msg.py                    |    9 +-
+ lib/bb/process.py                |   29 +++-
+ lib/bb/ui/crumbs/multilogtail.py |  135 ++++++++++++++++++
+ lib/bb/ui/knotty.py              |  283 ++++++++++++++++++++++++++++++++++++--
+ lib/bb/ui/knotty2.py             |   51 ++++++-
+ lib/bb/ui/uihelper.py            |    5 +
+ 9 files changed, 503 insertions(+), 23 deletions(-)
+ create mode 100644 lib/bb/ui/crumbs/multilogtail.py
 
 
