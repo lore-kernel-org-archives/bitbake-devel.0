@@ -1,27 +1,34 @@
-Received: from mailout2.ltindia.com ([125.18.18.171])
+Received: from mail-ey0-f175.google.com ([209.85.215.175])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Girija.B@lnties.com>) id 1SaKAx-000328-N0
+	(envelope-from <raj.khem@gmail.com>) id 1ScJkq-0005Qx-00
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 01 Jun 2012 07:13:28 +0200
-Received: from unknown (HELO POCITMSEXHUB03.LntUniverse.com) ([10.2.1.60])
-	by mailout2.ltindia.com with ESMTP; 01 Jun 2012 10:31:58 +0530
-Received: from POCITMSEXMB03.LntUniverse.com ([fe80::f495:7e6e:4c34:a3a9]) by
-	POCITMSEXHUB03.LntUniverse.com ([::1]) with mapi id 14.02.0247.003;
-	Fri, 1 Jun 2012 10:31:56 +0530
-From: Girija B <Girija.B@lnties.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: Error when Setting up Open Embedded Environment 
-Thread-Index: Ac0/s3VzJ6xqgAztRJSoVcnWGVohaw==
-Date: Fri, 1 Jun 2012 05:01:56 +0000
-Message-ID: <098684E1B7B2F54491C5DA349D2EF443098C4837@POCITMSEXMB03.LntUniverse.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.7.240.181]
+	Wed, 06 Jun 2012 19:10:44 +0200
+Received: by eaal1 with SMTP id l1so1986831eaa.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 06 Jun 2012 10:00:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc:content-type:content-transfer-encoding;
+	bh=I6SMoZhLr0f+gvjbYeD2X/JCZJUC2tP8NaBgu8Jbn1U=;
+	b=FyymzNyuBb6fjf5ANvlctbDdOMzGybcxjdYl4f55Om/tbmhjW4ieJoOjRF3Jp3CLtf
+	tjAiWjHP8AQY2haLuhmOqMYm3WFbxBf5jPUo/rXGOyhh+rqAp6SOwq7yaG/kT3yT6m7r
+	DsKQzGHcusD4a/6OL2OwTNkReH3hBn0wYfIqgWxEsuSLPxRQkgVEDmBLRVkPJaMfoCid
+	CTjR+zGctGXf92YBNhjPkWywV84zzZemvCRBj/R6B6sibbZA/f0zWrEdeLceszoGNZK6
+	XAadDpvAO/3QtC9valyjxVygEi5/0XEirdpEevixaUe5NfyGRl8m29ed8xkVFbh6Hlre
+	lq2Q==
+Received: by 10.14.119.197 with SMTP id n45mr9933769eeh.180.1339002016293;
+	Wed, 06 Jun 2012 10:00:16 -0700 (PDT)
 MIME-Version: 1.0
-X-Mailman-Approved-At: Wed, 06 Jun 2012 18:33:24 +0200
-Subject: Error when Setting up Open Embedded Environment
+Received: by 10.14.188.11 with HTTP; Wed, 6 Jun 2012 09:59:46 -0700 (PDT)
+In-Reply-To: <098684E1B7B2F54491C5DA349D2EF443098C4884@POCITMSEXMB03.LntUniverse.com>
+References: <098684E1B7B2F54491C5DA349D2EF443098C4884@POCITMSEXMB03.LntUniverse.com>
+From: Khem Raj <raj.khem@gmail.com>
+Date: Wed, 6 Jun 2012 09:59:46 -0700
+Message-ID: <CAMKF1sr_5n7kUVvb+aUYUqq8Amap-h2zSa=RiiiY0tvJyV9BSw@mail.gmail.com>
+To: Girija B <Girija.B@lnties.com>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: Error when Setting up Open Embedded Environment
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,145 +40,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Jun 2012 05:13:28 -0000
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_098684E1B7B2F54491C5DA349D2EF443098C4837POCITMSEXMB03Ln_"
-
---_000_098684E1B7B2F54491C5DA349D2EF443098C4837POCITMSEXMB03Ln_
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Wed, 06 Jun 2012 17:10:44 -0000
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-I had installed Bitbake and open embedded as described in the OE User Manua=
-l , when I tried to Build using : bitbake build command , am getting the fo=
-llowing Error ,
-Please help in solving this .
-
-solar@ubuntu:~/Downloads/test/build$ bitbake build
-Traceback (most recent call last):
-  File "/usr/local/bin/bitbake", line 143, in <module>
-    main()
-  File "/usr/local/bin/bitbake", line 123, in main
-    cooker.parseConfiguration()
-  File "/usr/local/lib/python2.6/dist-packages/bb/cooker.py", line 68, in p=
-arseConfiguration
-    self.parseConfigurationFile( os.path.join( "conf", "bitbake.conf" ) )
-  File "/usr/local/lib/python2.6/dist-packages/bb/cooker.py", line 404, in =
-parseConfigurationFile
-    bb.event.fire(bb.event.ConfigParsed(self.configuration.data))
-  File "/usr/local/lib/python2.6/dist-packages/bb/event.py", line 67, in fi=
-re
-    if tmpHandler(event) =3D=3D Handled:
-  File "tmpHandler(e)", line 3, in tmpHandler
-  File "<bb>", line 14, in oe_import
-ImportError: No module named oe.data
+On Thu, May 31, 2012 at 10:11 PM, Girija B <Girija.B@lnties.com> wrote:
+> I had installed Bitbake and open embedded as described in the OE User Man=
+ual
+> , when I tried to Build using : bitbake build command , am getting the
+> following Error ,
 
 
-Thanks,
-Girija. B
+How did you install it ?
+you should check it out from git repo and use it not the package
+provided by distro on your build system
 
-
-Larsen & Toubro Limited
-
-www.larsentoubro.com
-
-This Email may contain confidential or privileged information for the inten=
-ded recipient (s). If you are not the intended recipient, please do not use=
- or disseminate the information, notify the sender and delete it from your =
-system.
-
- Earth Day. Every Day.
-
---_000_098684E1B7B2F54491C5DA349D2EF443098C4837POCITMSEXMB03Ln_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
 >
-<style>
-<!--
-@font-face
-	{font-family:Calibri}
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0in;
-	margin-bottom:.0001pt;
-	font-size:11.0pt;
-	font-family:"Calibri","sans-serif"}
-a:link, span.MsoHyperlink
-	{color:blue;
-	text-decoration:underline}
-a:visited, span.MsoHyperlinkFollowed
-	{color:purple;
-	text-decoration:underline}
-span.EmailStyle17
-	{font-family:"Calibri","sans-serif";
-	color:windowtext}
-.MsoChpDefault
-	{font-family:"Calibri","sans-serif"}
-@page WordSection1
-	{margin:1.0in 1.0in 1.0in 1.0in}
-div.WordSection1
-	{}
--->
-</style>
-</head>
-<body lang=3D"EN-US" link=3D"blue" vlink=3D"purple">
-<div class=3D"WordSection1">
-<p class=3D"MsoNormal">Hello,</p>
-<p class=3D"MsoNormal">&nbsp;</p>
-<p class=3D"MsoNormal">I had installed Bitbake and open embedded as describ=
-ed in the OE User Manual , when I tried to Build using : bitbake build comm=
-and , am getting the following Error ,</p>
-<p class=3D"MsoNormal">Please help in solving this .</p>
-<p class=3D"MsoNormal">&nbsp;</p>
-<p class=3D"MsoNormal">solar@ubuntu:~/Downloads/test/build$ bitbake build</=
-p>
-<p class=3D"MsoNormal">Traceback (most recent call last):</p>
-<p class=3D"MsoNormal">&nbsp; File &quot;/usr/local/bin/bitbake&quot;, line=
- 143, in &lt;module&gt;</p>
-<p class=3D"MsoNormal">&nbsp;&nbsp;&nbsp; main()</p>
-<p class=3D"MsoNormal">&nbsp; File &quot;/usr/local/bin/bitbake&quot;, line=
- 123, in main</p>
-<p class=3D"MsoNormal">&nbsp;&nbsp;&nbsp; cooker.parseConfiguration()</p>
-<p class=3D"MsoNormal">&nbsp; File &quot;/usr/local/lib/python2.6/dist-pack=
-ages/bb/cooker.py&quot;, line 68, in parseConfiguration</p>
-<p class=3D"MsoNormal">&nbsp;&nbsp;&nbsp; self.parseConfigurationFile( os.p=
-ath.join( &quot;conf&quot;, &quot;bitbake.conf&quot; ) )</p>
-<p class=3D"MsoNormal">&nbsp; File &quot;/usr/local/lib/python2.6/dist-pack=
-ages/bb/cooker.py&quot;, line 404, in parseConfigurationFile</p>
-<p class=3D"MsoNormal">&nbsp;&nbsp;&nbsp; bb.event.fire(bb.event.ConfigPars=
-ed(self.configuration.data))</p>
-<p class=3D"MsoNormal">&nbsp; File &quot;/usr/local/lib/python2.6/dist-pack=
-ages/bb/event.py&quot;, line 67, in fire</p>
-<p class=3D"MsoNormal">&nbsp;&nbsp;&nbsp; if tmpHandler(event) =3D=3D Handl=
-ed:</p>
-<p class=3D"MsoNormal">&nbsp; File &quot;tmpHandler(e)&quot;, line 3, in tm=
-pHandler</p>
-<p class=3D"MsoNormal">&nbsp; File &quot;&lt;bb&gt;&quot;, line 14, in oe_i=
-mport</p>
-<p class=3D"MsoNormal">ImportError: No module named oe.data</p>
-<p class=3D"MsoNormal">&nbsp;</p>
-<p class=3D"MsoNormal">&nbsp;</p>
-<p class=3D"MsoNormal">Thanks,</p>
-<p class=3D"MsoNormal">Girija. B</p>
-<p class=3D"MsoNormal">&nbsp;</p>
-</div>
-<p><span style=3D"color:#008000"><strong>Larsen &amp; Toubro Limited </stro=
-ng></span><br>
-<br>
-<strong><a href=3D"www.larsentoubro.com" target=3D"_blank">www.larsentoubro=
-.com</a></strong></p>
-<p><span style=3D"color:#008000">This Email may contain confidential or pri=
-vileged information for the intended recipient (s). If you are not the inte=
-nded recipient, please do not use or disseminate the information, notify th=
-e sender and delete it from your system.</span></p>
-<p><strong><span style=3D"color:#008000">&nbsp;Earth Day. Every Day.</span>=
-</strong></p>
-</body>
-</html>
+> Please help in solving this .
+>
+>
+>
+> solar@ubuntu:~/Downloads/test/build$ bitbake build
+>
+> Traceback (most recent call last):
+>
+> =C2=A0 File "/usr/local/bin/bitbake", line 143, in <module>
+>
+> =C2=A0=C2=A0=C2=A0 main()
+>
+> =C2=A0 File "/usr/local/bin/bitbake", line 123, in main
 
---_000_098684E1B7B2F54491C5DA349D2EF443098C4837POCITMSEXMB03Ln_--
+
