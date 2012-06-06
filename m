@@ -1,25 +1,25 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1ScN0h-0006dC-EY
+	(envelope-from <jason.wessel@windriver.com>) id 1ScN0i-0006e7-22
 	for bitbake-devel@lists.openembedded.org;
 	Wed, 06 Jun 2012 22:39:20 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q56KSpR8013174
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q56KSq7t014059
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 6 Jun 2012 13:28:51 -0700 (PDT)
+	Wed, 6 Jun 2012 13:28:52 -0700 (PDT)
 Received: from ord-jrw.wrs.com (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
 	Wed, 6 Jun 2012 13:28:51 -0700
 From: Jason Wessel <jason.wessel@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 6 Jun 2012 15:28:36 -0500
-Message-ID: <1339014519-9972-13-git-send-email-jason.wessel@windriver.com>
+Date: Wed, 6 Jun 2012 15:28:37 -0500
+Message-ID: <1339014519-9972-14-git-send-email-jason.wessel@windriver.com>
 X-Mailer: git-send-email 1.7.10
 In-Reply-To: <1339014519-9972-1-git-send-email-jason.wessel@windriver.com>
 References: <1339014519-9972-1-git-send-email-jason.wessel@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH v3 12/15] knotty: Add ability to dynamically toggle log location
+Subject: [PATCH v3 13/15] meta/lib/oe/terminal.py: Add an additional reference to screen called screen_inline
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,66 +31,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Jun 2012 20:39:20 -0000
+X-List-Received-Date: Wed, 06 Jun 2012 20:39:21 -0000
 Content-Type: text/plain
 
-Add the ability to see where all the per task logs
-were written to disk.
-
-The resulting output looks like where [...] is the full path:
-
-NOTE: LOG: [...]/python-2.7.2-r2.20/temp/log.do_package_setscene.8719
-NOTE: LOG: [...]/perl-5.14.2-r7/temp/log.do_package_setscene.8760
+This is a new mode for screen with the explicit purpose of invoking
+screen on the same terminal that you started bitbake.  The bitbake knotty
+will attempt to launch screen directly when using this setting for
+OE_TERMINAL.
 
 Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
 ---
- lib/bb/ui/knotty.py |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ meta/lib/oe/terminal.py |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 765ad27..e485c7e 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -253,6 +253,7 @@ class StdinMgr:
- class RtLogLevel:
-     def __init__(self, handler, logfilter, mlt, tf):
-         self.displaytail = False
-+        self.displayLogLocations = False
-         self.handler = handler
-         self.logfilter = logfilter
-         self.defaultLevel = logfilter.getFiltLevel()
-@@ -291,6 +292,14 @@ class RtLogLevel:
-                 print "NOTE: Activing task \"top\" mode"
-             if isinstance(self.tf, TerminalFilter):
-                 self.tf.setTopMode()
-+        elif input == "l":
-+            if verbose:
-+                print "NOTE: Activating log locations display"
-+            self.displayLogLocations = True
-+        elif input == "L":
-+            if verbose:
-+                print "NOTE: Disable log locations display"
-+            self.displayLogLocations = False
-         elif input == "h":
-             print "============================================="
-             print "Interaction help commands:"
-@@ -300,6 +309,7 @@ class RtLogLevel:
-             print " 3 - turn on debug logging"
-             print " 4 - turn on debug logging and real time log tail"
-             print " t - Display tasks in \"top\" mode (formerly knotty2 mode)"
-+            print " l - emit log locations (L to turn off)"
-             print " h - display commands"
-             return False
-         return True
-@@ -387,6 +397,9 @@ def main(server, eventHandler, tf = TerminalFilter):
-                 continue
-             helper.eventHandler(event)
-             if isinstance(event, bb.build.TaskStarted):
-+                if (rtloglevel.displayLogLocations):
-+                    termfilter.clearFooter()
-+                    print "NOTE: LOG: %s" % event.logfile
-                 mlt.openLog(event.logfile, event.pid)
-                 rtloglevel.displayLogs()
+diff --git a/meta/lib/oe/terminal.py b/meta/lib/oe/terminal.py
+index 43639d5..ca94e73 100644
+--- a/meta/lib/oe/terminal.py
++++ b/meta/lib/oe/terminal.py
+@@ -92,6 +92,13 @@ class Rxvt(XTerminal):
+     command = 'rxvt -T "{title}" -e {command}'
+     priority = 1
+ 
++class Screen_inline(Terminal):
++    command = 'screen -D -m -t "{title}" -S devshell {command}'
++
++    def __init__(self, command, title=None, env=None):
++        Terminal.__init__(self, command, title, env)
++        logger.warn('Screen Connect Command: screen -r devshell')
++
+ class Screen(Terminal):
+     command = 'screen -D -m -t "{title}" -S devshell {command}'
  
 -- 
 1.7.10
