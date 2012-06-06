@@ -1,25 +1,25 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1ScN0a-0006Zg-6X
+	(envelope-from <jason.wessel@windriver.com>) id 1ScN0a-0006Zh-AC
 	for bitbake-devel@lists.openembedded.org;
 	Wed, 06 Jun 2012 22:39:12 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q56KSh9d013154
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q56KSiKd014041
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 6 Jun 2012 13:28:43 -0700 (PDT)
+	Wed, 6 Jun 2012 13:28:44 -0700 (PDT)
 Received: from ord-jrw.wrs.com (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Wed, 6 Jun 2012 13:28:42 -0700
+	Wed, 6 Jun 2012 13:28:43 -0700
 From: Jason Wessel <jason.wessel@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 6 Jun 2012 15:28:25 -0500
-Message-ID: <1339014519-9972-2-git-send-email-jason.wessel@windriver.com>
+Date: Wed, 6 Jun 2012 15:28:26 -0500
+Message-ID: <1339014519-9972-3-git-send-email-jason.wessel@windriver.com>
 X-Mailer: git-send-email 1.7.10
 In-Reply-To: <1339014519-9972-1-git-send-email-jason.wessel@windriver.com>
 References: <1339014519-9972-1-git-send-email-jason.wessel@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH v3 01/15] process.py: Fix log truncation problems
+Subject: [PATCH v3 02/15] knotty: Extend knotty to support "real time" log tail for tasks
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -34,88 +34,285 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 X-List-Received-Date: Wed, 06 Jun 2012 20:39:12 -0000
 Content-Type: text/plain
 
-There are two problems with the _logged_communicate that are both
-caused as a result of buffering I/O, instead of flushing it out to the
-log files as it arrives.
+This patch provides the capability to knotty to have a higher log
+level where the individual tasks logs can be multiplexed to stdio.
+This is highly desirable for several different use cases.
 
-1) log truncation when python dumps
-   I have seen the task logs missing data that was not flushed when
-   bitbake crashes.
+1) You can visually spot "hot spots" in building parallel tasks
 
-2) While a bitbake task is running it is impossible to see what is
-   going on if it is only writing a small incremental log that is
-   smaller than the buffer, or you get only a partial log, up until
-   the task exists.  It is worse in the case that stderr and stdout
-   are separate file handles, because previous code blocks on the read
-   of stdout and then stderr, serially.
+2) The relative order an sequence of events can be determined in
+   difficult to diagnose inter-related library problems.
 
-The right approach is simply to use select() to determine if there is
-data available and then to flush the log buffers as they arrive.  This
-still makes use of buffering in the cases where there is more than 1
-byte of data, but the buffers are much more dynamic.
+3) It provides a nice way to see what all is actually going on and
+   getting logged by various tasks such as a kernel compile where you
+   might want to actually look at the output in a build over build
+   scenario.
+
+4) There are most certainly other aspects where this is useful.
+
+The primary control is to set the BB_RT_LOGLEVEL = "2" in your
+local.conf.  Additional capabilities will follow in successive
+patches.  When parallel tasks are enabled, the logs will be
+multiplexed and prefixed with the PID of the task.  In the
+non-parallel case there is no PID prefix as everything is linear.
 
 Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
 ---
- lib/bb/process.py |   29 +++++++++++++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
+ lib/bb/build.py                  |    4 ++
+ lib/bb/ui/crumbs/multilogtail.py |  135 ++++++++++++++++++++++++++++++++++++++
+ lib/bb/ui/knotty.py              |   46 +++++++++++++
+ 3 files changed, 185 insertions(+)
+ create mode 100644 lib/bb/ui/crumbs/multilogtail.py
 
-diff --git a/lib/bb/process.py b/lib/bb/process.py
-index b74cb18..9848fc3 100644
---- a/lib/bb/process.py
-+++ b/lib/bb/process.py
-@@ -1,6 +1,9 @@
- import logging
- import signal
- import subprocess
-+import fcntl
-+import errno
-+import select
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index 95f1dcf..257ece7 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -88,6 +88,10 @@ class TaskBase(event.Event):
+ class TaskStarted(TaskBase):
+     """Task execution started"""
  
- logger = logging.getLogger('BitBake.Process')
- 
-@@ -70,18 +73,40 @@ def _logged_communicate(pipe, log, input):
- 
-     bufsize = 512
-     outdata, errdata = [], []
-+    rin = []
++    def __init__(self, t, d):
++        self.logfile = d.getVar("BB_LOGFILE", True) or "";
++        super(TaskStarted, self).__init__(t, d)
 +
-+    if pipe.stdout is not None:
-+        fd = pipe.stdout.fileno()
-+        fl = fcntl.fcntl(fd, fcntl.F_GETFL)
-+        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
-+        rin.append(pipe.stdout)
-+    if pipe.stderr is not None:
-+        fd = pipe.stderr.fileno()
-+        fl = fcntl.fcntl(fd, fcntl.F_GETFL)
-+        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
-+        rin.append(pipe.stderr)
+ class TaskSucceeded(TaskBase):
+     """Task execution completed"""
+ 
+diff --git a/lib/bb/ui/crumbs/multilogtail.py b/lib/bb/ui/crumbs/multilogtail.py
+new file mode 100644
+index 0000000..da8ae68
+--- /dev/null
++++ b/lib/bb/ui/crumbs/multilogtail.py
+@@ -0,0 +1,135 @@
++#
++# Multipile Log Tail for real time logging
++#
++# Copyright (C) 2012 Wind River Systems, Inc.
++#
++# Authored by Jason Wessel <jason.wessel@windriver.com>
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License version 2 as
++# published by the Free Software Foundation.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License along
++# with this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 +
-     while pipe.poll() is None:
--        if pipe.stdout is not None:
-+        rlist = rin
++import re
++import time
++import sys
++
++class LogTail(object):
++    """Tail a single log file"""
++
++    def __init__(self):
++        self.file = None
++        self.offset = 0
++        self.filterLines = True
++        self.limit = 8192
++        self.cnt = 0
++        self.storedLine = ""
++
++    def openLog(self, filename, filterLines=True, limit=8192):
 +        try:
-+            r,w,e = select.select (rlist, [], [])
-+        except OSError, e:
-+            if e.errno != errno.EINTR:
-+                raise
++            self.file = open(filename, 'rb')
++            self.limit = limit
++            self.filterLines = filterLines
++        except:
++            return False
++        return True
 +
-+        if pipe.stdout in r:
-             data = pipe.stdout.read(bufsize)
-             if data is not None:
-                 outdata.append(data)
-                 log.write(data)
-+                log.flush()
++    def getLeftLine(self):
++        (left, right) = self.storedLine.split('\r',1)
++        self.storedLine = right
++        self.cnt = len(right)
++        return left
++
++    def getLine(self):
++        if self.cnt > 0 and '\r' in self.storedLine:
++            return self.getLeftLine()
++        while 1:
++            self.offset = self.file.tell()
++            line = self.file.readline()
++            if line:
++                if self.filterLines:
++                    line = line.replace('\r\n','\r');
++                    line = line.replace('\n','\r');
++                    self.storedLine += line
++                    self.cnt = len(self.storedLine)
++                    if (self.cnt > self.limit):
++                        if not '\r' in self.storedLine:
++                            self.storedLine += '\r'
++                        return self.getLeftLine()
++                    if '\r' in self.storedLine:
++                        return self.getLeftLine()
++                    continue
++                else:
++                    return line
++            self.file.seek(self.offset)
++            return None
++
++    def closeLog(self):
++        if self.file:
++            self.file.close()
++            self.file = None
++
++    def __del__(self):
++        self.closeLog()
++
++class MultiLogTail(object):
++    """Tail mulitple log files"""
++
++    def __init__(self, printPid=True):
++        self.filelist = []
++        self.trackPid = []
++        self.printPid = printPid
++
++    def openLog(self, filename, pid=0, limit=8192):
++        logtail = LogTail()
++        if logtail.openLog(filename, True, limit):
++            self.filelist.append((logtail, filename, pid))
++        else:
++            if pid > 0:
++                self.trackPid.append(pid)
++
++    def displayLogs(self):
++        for (logtail, filename, pid) in self.filelist:
++            while 1:
++                output = logtail.getLine()
++                if output == None:
++                    break
++                if self.printPid:
++                    print " " + str(pid) + ":" + output
++                else:
++                    print output
++
++    def closeLogs(self):
++        while 1:
++            try:
++                (logtail, filename, pid) = self.filelist.pop()
++                logtail.closeLog()
++            except:
++                break
++
++    def closeLog(self, rm_filename):
++        for (logtail, filename, pid) in self.filelist:
++            if filename == rm_filename:
++                self.filelist.remove((logtail, filename, pid))
++                logtail.closeLog()
++                return
++        raise Exception("File %s not in the list" % rm_filename)
++
++    def closeLogPid(self, rm_pid):
++        for (logtail, filename, pid) in self.filelist:
++            if pid == rm_pid:
++                self.filelist.remove((logtail, filename, pid))
++                logtail.closeLog()
++                return
++        if rm_pid in self.trackPid:
++            self.trackPid.remove(rm_pid)
++            return
++        print "ERROR: PID %s not in the list" % rm_pid
+diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+index 0167416..fd86ed5 100644
+--- a/lib/bb/ui/knotty.py
++++ b/lib/bb/ui/knotty.py
+@@ -22,11 +22,15 @@ from __future__ import division
  
--        if pipe.stderr is not None:
-+        if pipe.stderr in r:
-             data = pipe.stderr.read(bufsize)
-             if data is not None:
-                 errdata.append(data)
-                 log.write(data)
-+                log.flush()
-     return ''.join(outdata), ''.join(errdata)
+ import os
+ import sys
++import select
++import termios
++import copy
+ import xmlrpclib
+ import logging
+ import progressbar
+ import bb.msg
+ from bb.ui import uihelper
++from bb.ui.crumbs.multilogtail import MultiLogTail
  
- def run(cmd, input=None, log=None, **options):
+ logger = logging.getLogger("BitBake")
+ interactive = sys.stdout.isatty()
+@@ -104,6 +108,25 @@ class TerminalFilter(object):
+     def finish(self):
+         return
+ 
++class RtLogLevel:
++    def __init__(self, mlt):
++        self.displaytail = False
++        self.mlt = mlt
++
++    def displayLogs(self):
++        if self.displaytail:
++            self.mlt.displayLogs()
++
++    def setLevel(self, input, verbose):
++        if input == "1":
++            if verbose:
++                print "NOTE: Turning off real time log tail"
++            self.displaytail = False
++        elif input == "2":
++            if verbose:
++                print "NOTE: Turning on real time log tail"
++            self.displaytail = True
++
+ def main(server, eventHandler, tf = TerminalFilter):
+ 
+     # Get values of variables which control our output
+@@ -111,11 +134,22 @@ def main(server, eventHandler, tf = TerminalFilter):
+     loglines = server.runCommand(["getVariable", "BBINCLUDELOGS_LINES"])
+     consolelogfile = server.runCommand(["getVariable", "BB_CONSOLELOG"])
+ 
++    # MultiTail affected varialbles
++    numthreads = server.runCommand(["getVariable", "BB_NUMBER_THREADS"])
++    if numthreads is None or numthreads == "1":
++        mlt = MultiLogTail(False)
++    else:
++        mlt = MultiLogTail(True)
++
+     helper = uihelper.BBUIHelper()
+ 
+     console = logging.StreamHandler(sys.stdout)
+     format = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
+     bb.msg.addDefaultlogFilter(console)
++    rtloglevel = RtLogLevel(mlt)
++    bb_rt_loglevel = server.runCommand(["getVariable", "BB_RT_LOGLEVEL"])
++    if bb_rt_loglevel and bb_rt_loglevel != "":
++        rtloglevel.setLevel(bb_rt_loglevel, False)
+     console.setFormatter(format)
+     logger.addHandler(console)
+     if consolelogfile:
+@@ -155,11 +189,23 @@ def main(server, eventHandler, tf = TerminalFilter):
+         try:
+             termfilter.updateFooter()
+             event = eventHandler.waitEvent(0.25)
++            # Always try printing any accumulated log files first
++            rtloglevel.displayLogs()
+             if event is None:
+                 if main.shutdown > 1:
+                     break
+                 continue
+             helper.eventHandler(event)
++            if isinstance(event, bb.build.TaskStarted):
++                mlt.openLog(event.logfile, event.pid)
++                rtloglevel.displayLogs()
++
++            if isinstance(event, bb.build.TaskSucceeded):
++                mlt.closeLogPid(event.pid)
++
++            if isinstance(event, bb.build.TaskFailed):
++                mlt.closeLogPid(event.pid)
++
+             if isinstance(event, bb.runqueue.runQueueExitWait):
+                 if not main.shutdown:
+                     main.shutdown = 1
 -- 
 1.7.10
 
