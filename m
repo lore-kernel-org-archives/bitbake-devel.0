@@ -1,25 +1,25 @@
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from mail.windriver.com ([147.11.1.11])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1ScN0d-0006a3-6F
+	(envelope-from <jason.wessel@windriver.com>) id 1ScN0d-0006aA-Ua
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 06 Jun 2012 22:39:15 +0200
+	Wed, 06 Jun 2012 22:39:16 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q56KSlIM014047
+	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q56KSlYF013165
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed, 6 Jun 2012 13:28:47 -0700 (PDT)
 Received: from ord-jrw.wrs.com (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Wed, 6 Jun 2012 13:28:46 -0700
+	Wed, 6 Jun 2012 13:28:47 -0700
 From: Jason Wessel <jason.wessel@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 6 Jun 2012 15:28:30 -0500
-Message-ID: <1339014519-9972-7-git-send-email-jason.wessel@windriver.com>
+Date: Wed, 6 Jun 2012 15:28:31 -0500
+Message-ID: <1339014519-9972-8-git-send-email-jason.wessel@windriver.com>
 X-Mailer: git-send-email 1.7.10
 In-Reply-To: <1339014519-9972-1-git-send-email-jason.wessel@windriver.com>
 References: <1339014519-9972-1-git-send-email-jason.wessel@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH v3 06/15] fetch2: Fix missing output from stderr in fetcher logs
+Subject: [PATCH v3 07/15] fetch2/git.py: Use local download dir, when using an external read-only GITDIR
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,62 +31,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Jun 2012 20:39:15 -0000
+X-List-Received-Date: Wed, 06 Jun 2012 20:39:16 -0000
 Content-Type: text/plain
 
-There are actually two problems to fix
+When building the yocto kernel or yocto kernel tools, if the GITDIR is
+on a read-only server that is shared and updated by via some cron
+jobs, the fetch2 should not try to write to that area.  The end result
+will be odd failures if you have download turned off, or extra
+needless downloading if you have download turned on.
 
-1) The exception for bb.process.ExecutionError must be processed first
-   because it is a derived from the bb.process.CmdError class and
-   we never reach the ExecutionError otherwise.
-
-2) The stderr needs to be printed as well as stdout to determine
-   the root cause of a fetch failure.
-
-The example I have is that I got a log that looked like:
-
---
-ERROR: Function failed: Network access disabled through
-  BB_NO_NETWORK but access requested with command
-   /usr/bin/env wget -t 5 -nv --passive-ftp --no-check-certificate -P
-   /localds 'http://downloads.yoctoproject.org/[...CLIPPED...] url None)
---
-
-That really didn't tell me much, but with this patch I get error above
-plus the following:
-
---
-STDERR: /net/[...CLIPPED...]kernel-tools.git: Read-only file system
---
-
-Having the ability to see that the build was trying to write to a
-read-only file system was a good clue that the fetcher is broken in
-some other way to be fixed in a follow on patch, but let us fix the
-logging problem first.
+The fetch2 should prefer to create mirror the mirror clones in the
+local "downloads" directory in the work space.
 
 Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
 ---
- lib/bb/fetch2/__init__.py |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ lib/bb/fetch2/git.py |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 3391e6a..ba562a8 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -421,11 +421,10 @@ def runfetchcmd(cmd, d, quiet = False, cleanup = []):
-         success = True
-     except bb.process.NotFoundError as e:
-         error_message = "Fetch command %s" % (e.command)
-+    except bb.process.ExecutionError as e:
-+        error_message = "Fetch command %s failed with exit code %s, output:\nSTDOUT: %s\nSTDERR: %s" % (e.command, e.exitcode, e.stdout, e.stderr)
-     except bb.process.CmdError as e:
-         error_message = "Fetch command %s could not be run:\n%s" % (e.command, e.msg)
--    except bb.process.ExecutionError as e:
--        error_message = "Fetch command %s failed with exit code %s, output:\n%s" % (e.command, e.exitcode, e.stderr)
--
-     if not success:
-         for f in cleanup:
-             try:
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index bcc0da5..59d95cb 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -136,8 +136,11 @@ class Git(FetchMethod):
+                 gitsrcname = gitsrcname + '_' + ud.revisions[name]
+         ud.mirrortarball = 'git2_%s.tar.gz' % (gitsrcname)
+         ud.fullmirror = os.path.join(data.getVar("DL_DIR", d, True), ud.mirrortarball)
+-        ud.clonedir = os.path.join(data.expand('${GITDIR}', d), gitsrcname)
++        ud.gitdir = os.path.join(data.expand('${GITDIR}', d), gitsrcname)
++        ud.clonedir = os.path.join(data.getVar("DL_DIR", d, True), gitsrcname)
+ 
++        if os.path.exists(ud.gitdir):
++            ud.clonedir = ud.gitdir
+         ud.localfile = ud.clonedir
+ 
+     def localpath(self, url, ud, d):
 -- 
 1.7.10
 
