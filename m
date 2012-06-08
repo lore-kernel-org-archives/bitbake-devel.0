@@ -1,25 +1,27 @@
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1SczdL-0004i1-EW
+	(envelope-from <dvhart@linux.intel.com>) id 1Sd0nW-0005vW-56
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 08 Jun 2012 15:54:01 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q58DhHOW015541
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 8 Jun 2012 06:43:17 -0700 (PDT)
-Received: from ord-jrw.wrs.com (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Fri, 8 Jun 2012 06:43:16 -0700
-From: Jason Wessel <jason.wessel@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 8 Jun 2012 08:41:50 -0500
-Message-ID: <1339162913-23759-16-git-send-email-jason.wessel@windriver.com>
-X-Mailer: git-send-email 1.7.10
-In-Reply-To: <1339162913-23759-1-git-send-email-jason.wessel@windriver.com>
-References: <1339162913-23759-1-git-send-email-jason.wessel@windriver.com>
+	Fri, 08 Jun 2012 17:08:22 +0200
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 08 Jun 2012 07:57:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="162897277"
+Received: from unknown (HELO envy.home) ([10.255.12.197])
+	by fmsmga001.fm.intel.com with ESMTP; 08 Jun 2012 07:57:50 -0700
+Message-ID: <4FD212A8.6080401@linux.intel.com>
+Date: Fri, 08 Jun 2012 07:56:40 -0700
+From: Darren Hart <dvhart@linux.intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:12.0) Gecko/20120430 Thunderbird/12.0.1
 MIME-Version: 1.0
-Subject: [PATCH v4 15/18] bitbake, runqueue.py: Add -i to invalidate a stamp and rebuild the target
+To: Kang Kai <kai.kang@windriver.com>
+References: <cover.1338976258.git.kai.kang@windriver.com>
+	<bda43415c8822a6a47f955a7df6b382db29f7b33.1338976258.git.kai.kang@windriver.com>
+In-Reply-To: <bda43415c8822a6a47f955a7df6b382db29f7b33.1338976258.git.kai.kang@windriver.com>
+X-Enigmail-Version: 1.4.2
+Cc: bitbake-devel@lists.openembedded.org, zhenfeng.zhao@windriver.com
+Subject: Re: [PATCH 4/6] ui/crumbs/hig.py: check deploy process return value
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,73 +33,98 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 08 Jun 2012 13:54:01 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 08 Jun 2012 15:08:22 -0000
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
-It is highly desirable to be able to invalidate a stamp used for
-do_compile and to be able to continue on to build the entire
-package's build rule.
+Hi Kang,
 
-If invalidating a stamp, the setscene rules for the specified targets
-should be automatically canceled so as to allow a forced build
-of an individual target.
+A couple comments below...
 
-Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
----
- bin/bitbake        |    3 +++
- lib/bb/runqueue.py |   13 ++++++++++++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
+On 06/06/2012 02:52 AM, Kang Kai wrote:
+> Update function response_cb of DeployImageDialog to get deploy process
+> return value. According the return value tell user that deploy image
+> successfully or not.
+> 
+> Signed-off-by: Kang Kai <kai.kang@windriver.com>
+> ---
+>  bitbake/lib/bb/ui/crumbs/hig.py |   32 +++++++++++++++++++++++++++++---
+>  1 files changed, 29 insertions(+), 3 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/ui/crumbs/hig.py b/bitbake/lib/bb/ui/crumbs/hig.py
+> index cf73145..97a3b22 100644
+> --- a/bitbake/lib/bb/ui/crumbs/hig.py
+> +++ b/bitbake/lib/bb/ui/crumbs/hig.py
+> @@ -827,12 +827,38 @@ class DeployImageDialog (CrumbsDialog):
+>  
+>      def response_cb(self, dialog, response_id):
+>          if response_id == gtk.RESPONSE_YES:
+> +            lbl = ''
+>              combo_item = self.usb_combo.get_active_text()
+> -            if combo_item and combo_item != self.__dummy_usb__:
+> +            if combo_item and combo_item != self.__dummy_usb__ and self.image_path:
+>                  cmdline = bb.ui.crumbs.utils.which_terminal()
+>                  if cmdline:
+> -                    cmdline += "\"sudo dd if=" + self.image_path + " of=" + combo_item + "\""
+> -                    bb.process.Popen(shlex.split(cmdline))
 
-diff --git a/bin/bitbake b/bin/bitbake
-index 702d99c..bf81a0c 100755
---- a/bin/bitbake
-+++ b/bin/bitbake
-@@ -150,6 +150,9 @@ Default BBFILES are the .bb files in the current directory.""")
-     parser.add_option("-I", "--ignore-deps", help = """Assume these dependencies don't exist and are already provided (equivalent to ASSUME_PROVIDED). Useful to make dependency graphs more appealing""",
-                 action = "append", dest = "extra_assume_provided", default = [])
- 
-+    parser.add_option("-i", "--invalidate-stamp", help = "Invalidate the specified stamp for a command such as 'compile' and build",
-+                action = "store", dest = "invalidate_stamp")
-+
-     parser.add_option("-l", "--log-domains", help = """Show debug logging for the specified logging domains""",
-                 action = "append", dest = "debug_domains", default = [])
- 
-diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
-index 6c802af..3dbfaad 100644
---- a/lib/bb/runqueue.py
-+++ b/lib/bb/runqueue.py
-@@ -720,10 +720,14 @@ class RunQueueData:
-                     self.runq_hash[task] = bb.parse.siggen.get_taskhash(self.taskData.fn_index[self.runq_fnid[task]], self.runq_task[task], procdep, self.dataCache)
-         try:
-             new_setscene = []
-+            test_fns = []
-+            if self.cooker.configuration.invalidate_stamp:
-+                for tgt in self.target_pairs:
-+                    test_fns.append(tgt[0])
-             for task in self.runq_setscene:
-                 try:
-                     fn = self.taskData.fn_index[self.rq.rqdata.runq_fnid[task]]
--                    if bb.build.exists_stamp("do_unpack", self.dataCache, fn):
-+                    if bb.build.exists_stamp("do_unpack", self.dataCache, fn) or (self.cooker.configuration.invalidate_stamp and fn in test_fns):
-                         logger.debug(2, 'Removing task %s from queue because do_unpack exists', task)
-                     else:
-                         new_setscene.append(task)
-@@ -746,6 +750,13 @@ class RunQueueData:
-                 deps.append(depidentifier)
-             self.hash_deps[identifier] = deps
- 
-+        # Remove stamps for forced invalidation
-+        if self.cooker.configuration.invalidate_stamp:
-+            for (fn, target) in self.target_pairs:
-+                for st in self.cooker.configuration.invalidate_stamp.split(','):
-+                    logger.verbose("Remove stamp %s, %s", st, fn)
-+                    bb.build.del_stamp("do_%s" % st, self.dataCache, fn)
-+
-         # Remove stamps for targets if force mode active
-         if self.cooker.configuration.force:
-             for (fn, target) in self.target_pairs:
+This should be subprocess.call()
+
+http://docs.python.org/library/subprocess.html
+
+> +                    tmpname = os.tmpnam()
+> +                    cmdline += "\"sudo dd if=" + self.image_path + \
+> +                                " of=" + combo_item + "; echo $? > " + tmpname + "\""
+> +                    deploy_process = bb.process.Popen(shlex.split(cmdline))
+> +                    deploy_process.wait()
+> +
+> +                    # if file tmpname not exists, that means there is something wrong with xterm
+> +                    # user can get the error message from xterm so no more warning need.
+> +                    if os.path.exists(tmpname):
+> +                        tmpfile = open(tmpname)
+> +                        if int(tmpfile.readline().strip()) == 0:
+> +                            lbl = "<b>Deploy image successfully</b>"
+
+"<b>Deployed image successfully.</b>"
+
+> +                        else:
+> +                            lbl = "<b>Deploy image failed</b>\nPlease try again."
+
+"<b>Failed to deploy image.</b>"
+
+As to "Please try again." Why would the user have any expectation of a
+different result? Is there something we can tell them about the reason
+for the failure?
+
+> +                        tmpfile.close()
+> +                        os.remove(tmpname)
+> +            else:
+> +                if not self.image_path:
+> +                    lbl = "<b>No selection made</b>\nYou have not selected an image to deploy"
+
+Missing periods.
+
+> +                else:
+> +                    lbl = "<b>No selection made</b>\nYou have not selected USB device"
+
+Missing periods. Missing article:
+
+"<b>No selection made.</b>\nYou have not selected a USB device."
+
+
+> +            if len(lbl):
+> +                crumbs_dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
+> +                button = crumbs_dialog.add_button("Close", gtk.RESPONSE_OK)
+> +                HobButton.style_button(button)
+> +                crumbs_dialog.run()
+> +                crumbs_dialog.destroy()
+>  
+>      def update_progress_bar(self, title, fraction, status=None):
+>          self.progress_bar.update(fraction)
+
 -- 
-1.7.10
-
+Darren Hart
+Intel Open Source Technology Center
+Yocto Project - Linux Kernel
 
 
