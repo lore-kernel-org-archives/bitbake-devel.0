@@ -1,25 +1,30 @@
-Received: from mail.windriver.com ([147.11.1.11])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1ScN0j-0006fB-Ej
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 06 Jun 2012 22:39:21 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q56KSrUx013180
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 6 Jun 2012 13:28:53 -0700 (PDT)
-Received: from ord-jrw.wrs.com (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Wed, 6 Jun 2012 13:28:53 -0700
-From: Jason Wessel <jason.wessel@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 6 Jun 2012 15:28:39 -0500
-Message-ID: <1339014519-9972-16-git-send-email-jason.wessel@windriver.com>
-X-Mailer: git-send-email 1.7.10
-In-Reply-To: <1339014519-9972-1-git-send-email-jason.wessel@windriver.com>
-References: <1339014519-9972-1-git-send-email-jason.wessel@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH v3 15/15] terminal.py: Make screen_inline have a higher priority than screen
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1Scx6o-0003mM-2L for bitbake-devel@lists.openembedded.org;
+	Fri, 08 Jun 2012 13:12:02 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q58B1VK1014653;
+	Fri, 8 Jun 2012 12:01:31 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 13899-08; Fri,  8 Jun 2012 12:01:26 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q58B1Oxg014647
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Fri, 8 Jun 2012 12:01:25 +0100
+Message-ID: <1339153287.30460.3.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Liming An <limingx.l.an@intel.com>
+Date: Fri, 08 Jun 2012 12:01:27 +0100
+In-Reply-To: <cover.1338546445.git.limingx.l.an@intel.com>
+References: <cover.1338546445.git.limingx.l.an@intel.com>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 0/3] Hob: bug fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,68 +36,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Jun 2012 20:39:21 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 08 Jun 2012 11:12:02 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-The screen_inline is far easier to use and less confusing for
-beginner users of oe-core.  Making this the default improves
-the end user experience, and it is possible to change
-the OE_TERMINAL variable as well as the default fall back list
-with OE_TERMINAL_PREFERRED for anyone who desires the original
-behavior.
+On Fri, 2012-06-01 at 18:36 +0800, Liming An wrote:
+> The following changes since commit de4cdfd6bc1280ac7ac0559b87734d26294ef773:
+> 
+>   documentation/kernel-manual/kernel-how-to.xml: Updated to kernel 3.4 (2012-05-31 21:16:55 +0100)
+> 
+> are available in the git repository at:
+>   git://git.pokylinux.org/poky-contrib limx/hob-bug-fixes-continue
+>   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=limx/hob-bug-fixes-continue
+> 
+> Liming An (3):
+>   Hob: clear the repeated function get_kernel_file_name
+>   Hob: fix entry of recipe page can't be edited in case after clicked
+>     clear button
+>   Hob: fixed a definition not match issue when click choose directflb
+>     in package page
 
-Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
----
- meta/lib/oe/terminal.py |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+Merged to master, thanks.
 
-diff --git a/meta/lib/oe/terminal.py b/meta/lib/oe/terminal.py
-index 943e5db..3122d56 100644
---- a/meta/lib/oe/terminal.py
-+++ b/meta/lib/oe/terminal.py
-@@ -55,11 +55,11 @@ class XTerminal(Terminal):
- 
- class Gnome(XTerminal):
-     command = 'gnome-terminal --disable-factory -t "{title}" -x {command}'
--    priority = 2
-+    priority = 3
- 
- class Xfce(XTerminal):
-     command = 'Terminal -T "{title}" -e "{command}"'
--    priority = 2
-+    priority = 3
- 
-     def __init__(self, command, title=None, env=None):
-         # Upstream binary name is Terminal but Debian/Ubuntu use
-@@ -73,7 +73,7 @@ class Xfce(XTerminal):
- 
- class Konsole(XTerminal):
-     command = 'konsole -T "{title}" -e {command}'
--    priority = 2
-+    priority = 3
- 
-     def __init__(self, command, title=None, env=None):
-         # Check version
-@@ -86,14 +86,15 @@ class Konsole(XTerminal):
- 
- class XTerm(XTerminal):
-     command = 'xterm -T "{title}" -e {command}'
--    priority = 1
-+    priority = 2
- 
- class Rxvt(XTerminal):
-     command = 'rxvt -T "{title}" -e {command}'
--    priority = 1
-+    priority = 2
- 
- class Screen_inline(Terminal):
-     command = 'screen -D -m -t "{title}" -S devshell {command}'
-+    priority = 1
- 
-     def __init__(self, command, title=None, env=None):
-         Terminal.__init__(self, command, title, env)
--- 
-1.7.10
+Richard
 
 
 
