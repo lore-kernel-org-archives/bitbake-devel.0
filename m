@@ -1,23 +1,25 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1SfBfO-0000aA-LV
+	(envelope-from <jason.wessel@windriver.com>) id 1SfBfP-0000aC-P7
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 14 Jun 2012 17:08:58 +0200
+	Thu, 14 Jun 2012 17:09:00 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q5EEwKea023616
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q5EEwLMk019269
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Jun 2012 07:58:20 -0700 (PDT)
+	Thu, 14 Jun 2012 07:58:21 -0700 (PDT)
 Received: from ord-jrw.wrs.com (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Thu, 14 Jun 2012 07:58:20 -0700
+	Thu, 14 Jun 2012 07:58:21 -0700
 From: Jason Wessel <jason.wessel@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 14 Jun 2012 09:58:17 -0500
-Message-ID: <1339685898-24757-1-git-send-email-jason.wessel@windriver.com>
+Date: Thu, 14 Jun 2012 09:58:18 -0500
+Message-ID: <1339685898-24757-2-git-send-email-jason.wessel@windriver.com>
 X-Mailer: git-send-email 1.7.10
+In-Reply-To: <1339685898-24757-1-git-send-email-jason.wessel@windriver.com>
+References: <1339685898-24757-1-git-send-email-jason.wessel@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 0/1] process.py, build.py: Fix log truncation problems with flush()
+Subject: [PATCH 1/1] process.py, build.py: Fix log truncation problems with flush()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -29,44 +31,108 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 14 Jun 2012 15:08:59 -0000
+X-List-Received-Date: Thu, 14 Jun 2012 15:09:00 -0000
 Content-Type: text/plain
 
-Separately Richard had asked me if this proposed patch to flush things
-out to disk immediately had a negative performance impact.  It is
-actually the opposite effect due to a very subtle problem that was
-fixed.
+There are two problems with the _logged_communicate that are both
+caused as a result of buffering I/O, instead of flushing it out to the
+log files as it arrives.
 
-My litmus test is to wipe the .o files, drop kernel caches, force
-compile the kernel which will generate 100's of very small single line
-logs under the size of the buffer limit.
+1) log truncation when python dumps
+   I have seen the task logs missing data that was not flushed when
+   bitbake crashes.
 
-Without the log flushing patch compiling a kernel:
-   real    3m33.906s
-   user    0m53.523s
-   sys     0m24.518s
+2) While a bitbake task is running it is impossible to see what is
+   going on if it is only writing a small incremental log that is
+   smaller than the buffer, or you get only a partial log, up until
+   the task exists.  It is worse in the case that stderr and stdout
+   are separate file handles, because previous code blocks on the read
+   of stdout and then stderr, serially.
 
-With the log flushing patch compiling a kernel:
-   real    3m28.102s
-   user    0m53.251s
-   sys     0m24.982s
+The right approach is simply to use select() to determine if there is
+data available and then to flush the log buffers as they arrive.  This
+still makes use of buffering in the cases where there is more than 1
+byte of data, but the buffers are much more dynamic.
 
-Why is it faster you ask?
+Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
+---
+ lib/bb/build.py   |    3 ++-
+ lib/bb/process.py |   29 +++++++++++++++++++++++++++--
+ 2 files changed, 29 insertions(+), 3 deletions(-)
 
-It has to do with the alternating blocking reads on stdin and stderr.
-First the existing code blocks on stdout until the buffer fills up in
-the python logger.  Once the buffer is full, it will switch to
-blocking on stderr, and if nothing ever comes it may wait all the way
-until the task completes and then tries to chunk the buffer out to disk
-at the end which is quite wasteful.  
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index a9ba02d..7e9bb23 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -135,7 +135,8 @@ class LogTee(object):
+ 
+     def __repr__(self):
+         return '<LogTee {0}>'.format(self.name)
+-
++    def flush(self):
++        self.outfile.flush()
+ 
+ def exec_func(func, d, dirs = None):
+     """Execute an BB 'function'"""
+diff --git a/lib/bb/process.py b/lib/bb/process.py
+index b74cb18..9848fc3 100644
+--- a/lib/bb/process.py
++++ b/lib/bb/process.py
+@@ -1,6 +1,9 @@
+ import logging
+ import signal
+ import subprocess
++import fcntl
++import errno
++import select
+ 
+ logger = logging.getLogger('BitBake.Process')
+ 
+@@ -70,18 +73,40 @@ def _logged_communicate(pipe, log, input):
+ 
+     bufsize = 512
+     outdata, errdata = [], []
++    rin = []
++
++    if pipe.stdout is not None:
++        fd = pipe.stdout.fileno()
++        fl = fcntl.fcntl(fd, fcntl.F_GETFL)
++        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
++        rin.append(pipe.stdout)
++    if pipe.stderr is not None:
++        fd = pipe.stderr.fileno()
++        fl = fcntl.fcntl(fd, fcntl.F_GETFL)
++        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
++        rin.append(pipe.stderr)
++
+     while pipe.poll() is None:
+-        if pipe.stdout is not None:
++        rlist = rin
++        try:
++            r,w,e = select.select (rlist, [], [])
++        except OSError, e:
++            if e.errno != errno.EINTR:
++                raise
++
++        if pipe.stdout in r:
+             data = pipe.stdout.read(bufsize)
+             if data is not None:
+                 outdata.append(data)
+                 log.write(data)
++                log.flush()
+ 
+-        if pipe.stderr is not None:
++        if pipe.stderr in r:
+             data = pipe.stderr.read(bufsize)
+             if data is not None:
+                 errdata.append(data)
+                 log.write(data)
++                log.flush()
+     return ''.join(outdata), ''.join(errdata)
+ 
+ def run(cmd, input=None, log=None, **options):
+-- 
+1.7.10
 
-Sometimes the existing behavior also leads to having any bitbake
-injected error messages into the log file appear out of chronological
-order with respect to how ever much data was in the log because bitbake
-will emit the error to stderr and stderr could get flushed before
-stdout.
-
-Cheers,
-Jason.
 
 
