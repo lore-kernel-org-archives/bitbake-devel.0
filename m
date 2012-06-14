@@ -1,36 +1,29 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <shane.wang@intel.com>) id 1Segjt-000397-30
+	(envelope-from <jason.wessel@windriver.com>) id 1Sf0T1-0005yz-A4
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 13 Jun 2012 08:07:33 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 12 Jun 2012 22:56:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="155615153"
-Received: from azsmsx601.amr.corp.intel.com ([10.2.121.193])
-	by azsmga001.ch.intel.com with ESMTP; 12 Jun 2012 22:56:56 -0700
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
-	azsmsx601.amr.corp.intel.com (10.2.121.193) with Microsoft SMTP Server
-	(TLS) id 8.2.255.0; Tue, 12 Jun 2012 22:56:56 -0700
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.56]) by
-	SHSMSX101.ccr.corp.intel.com ([169.254.1.90]) with mapi id
-	14.01.0355.002; Wed, 13 Jun 2012 13:56:54 +0800
-From: "Wang, Shane" <shane.wang@intel.com>
-To: "Lv, XiaotongX" <xiaotongx.lv@intel.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH 0/1] Webhob: helper based on webservice
-Thread-Index: AQHNQ4b83LDS+QpfeEqDoctOL9s6+5b3y3tQ
-Date: Wed, 13 Jun 2012 05:56:53 +0000
-Message-ID: <3AB6CE7F274E534CAFD089D127A8A1FC23BD27DB@SHSMSX102.ccr.corp.intel.com>
-References: <cover.1339033548.git.xiaotongx.lv@intel.com>
-In-Reply-To: <cover.1339033548.git.xiaotongx.lv@intel.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.239.127.40]
+	Thu, 14 Jun 2012 05:11:27 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q5E30kuM009154
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Wed, 13 Jun 2012 20:00:47 -0700 (PDT)
+Received: from [172.25.32.41] (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
+	Wed, 13 Jun 2012 20:00:46 -0700
+Message-ID: <4FD953DD.6030507@windriver.com>
+Date: Wed, 13 Jun 2012 22:00:45 -0500
+From: Jason Wessel <jason.wessel@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:12.0) Gecko/20120430 Thunderbird/12.0.1
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/1] Webhob: helper based on webservice
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <1339162913-23759-1-git-send-email-jason.wessel@windriver.com>
+	<1339162913-23759-15-git-send-email-jason.wessel@windriver.com>
+	<1339422729.28854.3.camel@ted>
+In-Reply-To: <1339422729.28854.3.camel@ted>
+X-Enigmail-Version: 1.4.2
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH v4 14/18] runqueue.py, build.py: Invalidate setscene tasks based on do_unpack stamps
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -42,137 +35,91 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 13 Jun 2012 06:07:33 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Thu, 14 Jun 2012 03:11:27 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Is there any feedback for this piece of helper code?
+On 06/11/2012 08:52 AM, Richard Purdie wrote:
+> On Fri, 2012-06-08 at 08:41 -0500, Jason Wessel wrote:
+>> If you have a fully populated sstate cache and have used it to
+>> execute a build, it is not possible to invalidate repackage
+>> an intermediate build after you have forced a compiled
+>>
+>> Example when you have build from a complete sstate cache build:
+>>   bitbake core-image-sato
+>>   bitbake -c patch acl
+>>      *** Make some changes to the C files for experimentation.
+>>   bitbake -f -c compile acl
+>>   bitbake acl
+>>
+>> The bitbake will refuse to build the acl package at this
+>> point and instead keep populating it from the sstate.  Using
+>> the cleanstate is no longer a good option because it will
+>> also erase the scratch area.
+>>
+>> Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
+>> ---
+>>  lib/bb/build.py    |    8 ++++++++
+>>  lib/bb/runqueue.py |   14 ++++++++++++++
+>>  2 files changed, 22 insertions(+)
+>>
+>> diff --git a/lib/bb/build.py b/lib/bb/build.py
+>> index fb61b00..18c28aa 100644
+>> --- a/lib/bb/build.py
+>> +++ b/lib/bb/build.py
+>> @@ -463,6 +463,14 @@ def del_stamp(task, d, file_name = None):
+>>      stamp = stamp_internal(task, d, file_name)
+>>      bb.utils.remove(stamp)
+>>  
+>> +def exists_stamp(task, d, file_name = None):
+>> +    """
+>> +    Removes a stamp for a given task
+>> +    (d can be a data dict or dataCache)
+>> +    """
+>> +    stamp = stamp_internal(task, d, file_name)
+>> +    return os.path.exists(stamp)
+>> +
+>>  def stampfile(taskname, d, file_name = None):
+>>      """
+>>      Return the stamp for a given task
+>> diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+>> index da3fdf9..6c802af 100644
+>> --- a/lib/bb/runqueue.py
+>> +++ b/lib/bb/runqueue.py
+>> @@ -718,6 +718,20 @@ class RunQueueData:
+>>                      for dep in self.runq_depends[task]:
+>>                          procdep.append(self.taskData.fn_index[self.runq_fnid[dep]] + "." + self.runq_task[dep])
+>>                      self.runq_hash[task] = bb.parse.siggen.get_taskhash(self.taskData.fn_index[self.runq_fnid[task]], self.runq_task[task], procdep, self.dataCache)
+>> +        try:
+>> +            new_setscene = []
+>> +            for task in self.runq_setscene:
+>> +                try:
+>> +                    fn = self.taskData.fn_index[self.rq.rqdata.runq_fnid[task]]
+>> +                    if bb.build.exists_stamp("do_unpack", self.dataCache, fn):
+>> +                        logger.debug(2, 'Removing task %s from queue because do_unpack exists', task)
+>> +                    else:
+>> +                        new_setscene.append(task)
+>> +                except:
+>> +                    logger.debug(2, 'Failed do_unpack check for %s', task)
+>> +            self.runq_setscene = new_setscene
+>> +        except:
+>> +            logger.debug(2, 'Failed to update runq_setscene')
+> We've gone to quite a bit of trouble to keep knowledge of the specific
+> tasks out of bitbake. I've noticed a few of your patches are "blurring"
+> the separation between bitbake and the metadata.
+>
+> Here, bitbake shouldn't have knowledge of "unpack" or why its special.
+> I'd also argue its not in fact special and there are probably other
+> "force" scenarios which would break with a similar problem even with
+> this patch. I agree there is a problem here but we need to fix it in a
+> more generic way. There is already a bug open on this kind of problem
+> (#2256).
 
---
-Shane
+As I mentioned in the 0/18 summary this is certainly the case that there needs to be an API and this should be treated as more of an RFC.
 
-Xiaotong lv wrote on=A02012-06-07:
-
-> This helper is a bitbake ui, based on soaplib 1.0 lib to implement a
-> webservice interface. Using 'bitbake -u webhob_webserivce ip:port' to
-> startup this help. I defined 2 webservice methods, they are
-> runCommand(param) and getEvent(). Different languages can remotely call
-> the 2 methods to communicate with bitbake. such as php, java, js, python
-> and so on. 1. runCommand(param) method is responsible for sending
-> commands to bitbake server.
->    the param format is:
->     {
->         'function'  : string            (required, function name)
->         'param_type': array(string)     (optional, params types, values
->         only are 'string', 'list' or 'bool') 'params'    : array(string)
->             (optional, string param
-> corresponds to itself,
->                                                    list type corresponds
->                                                    to 'str1 str2 str3
->                                                    ....', bool type
-> corresponds to  'true' or 'false'
->                                          )
->     }
->    =20
->     some examples:
->     1). to call bitbake server.runCommand(["initCooker"])
->         param style is:
->         {
->            'function': 'initCokker'
->         } 2). to call bitbake server.runCommand(["getVariable",
->         "BBLAYERS"]) param style is: {
->           'function'   : 'getVariable'
->           'param_type' : ['string']
->           'params'     : ['BBLASYERS']
->         }
->     3). to call bitbake server.runCommand(["buildTargets",
-> list(recipe_queue), 'build'])
->         param style is:
->         {
->           'function'   : 'buildTargets'
->           'param_type' : ['list','string']
->           'params'     : ['recipe1 recipe2 recipe2 recipe4 ....', 'build'=
-]
->         }
-> 2. getEvent() is respinsible for getting the event results generated by b=
-itbake
-> event objects, it returns a standard json format data.
->    some examples:
->    1)  to get some async configurations:
->       [{'event': 'ConfigFilesFound',
->        'values': 'poky-bleeding poky-lsb poky poky-tiny defaultsetup',
->        'variable': 'distro'},
->        {'event': 'CommandCompleted'}
->       ]
->       [{'event': 'ConfigFilesFound',
->         'values': 'atom-pc routerstationpro mpc8315e-rdb beagleboard
->         qemumips qemuarm qemux86-64 qemux86 qemuppc', 'variable':
->         'machine'}, {'event': 'CommandCompleted'} 'values': 'i586 x86_64
->         i686', 'variable': 'machine-sdk'},
->        {'event': 'CommandCompleted'}
->       ]
->       [{'event': 'FilesMatchingFound',
->         'matches': 'rootfs_rpm.bbclass rootfs_deb.bbclass
->         rootfs_ipk.bbclass', 'pattern': 'rootfs_'},
->        {'event': 'CommandCompleted'}
->       ]
->     2) some recipe progress values
->          [{'current': 24,
->           'event': 'TreeDataPreparationProgress', 'msg': 'Preparing tree
->           data: 24/1105', 'total': 1105}, {'current': 25, 'event':
->           'TreeDataPreparationProgress', 'msg': 'Preparing tree data:
->           25/1105', 'total': 1105}, {'current': 26, 'event':
->           'TreeDataPreparationProgress', 'msg': 'Preparing tree data:
->           26/1105', 'total': 1105}, {'current': 27, 'event':
->           'TreeDataPreparationProgress', 'msg': 'Preparing tree data:
->           27/1105', 'total': 1105}, {'current': 28, 'event':
->           'TreeDataPreparationProgress', 'msg': 'Preparing tree data:
->           28/1105', 'total': 1105}, {'current': 29, 'event':
->           'TreeDataPreparationProgress', 'msg': 'Preparing tree data:
->           29/1105', 'total': 1105}]
->     3) some task building values
->          [{'event': 'TaskSucceeded',
->           'message': 'package libpcre-native-8.21-r1: task
->           do_populate_sysroot: Succeeded', 'package':
->           'libpcre-native-8.21-r1', 'pid': 30382, 'task':
->           'do_populate_sysroot'}, {'event': 'runQueueTaskCompleted',
->           'pid': 0, 'taskid': 753, 'taskstring':
-> 'virtual:native:/home/xiaotong/workspace/python/poky-contrib/meta/recipes
-> -support/libpcre/libpcre_8.21.bb, do_populate_sysroot'},
->          {'event': 'runQueueTaskStarted',
->           'noexec': False,
->           'pid': 0,
->           'stats': {'active': 0, 'completed': 324, 'failed': 0},
->           'taskid': 709,
->           'taskstring':
-> 'virtual:native:/home/xiaotong/workspace/python/poky-contrib/meta/recipes
-> -support/db/db_5.1.19.bb, do_populate_sysroot'},
->          {'event': 'TaskStarted',
->           'message': 'package db-native-5.1.19-r4: task
->           do_populate_sysroot: Started', 'package':
->           'db-native-5.1.19-r4', 'pid': 30447,
-> The following changes since commit
-> 3bf8069100e54153d13319dc32ca089327b6a139:
->=20
->   documentation/yocto-project-qs/yocto-project-qs.xml: added quotes
-> (2012-05-01 21:00:36 +0100)
->=20
-> are available in the git repository at:
->   git://git.yoctoproject.org/poky-contrib xtlv/webhob-webservice
-> http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=3Dxtlv/webhob-we=
-bs
-> erv ice
->=20
-> Xiaotong lv (1):
->   Webhob: a general helper interface based on webservice
->  bitbake/lib/bb/ui/crumbs/webserviceeventhandler.py |  190
->  ++++++++++++++++++++ bitbake/lib/bb/ui/webhob_webservice.py           =20
->  |  141 +++++++++++++++ 2 files changed, 331 insertions(+), 0
->  deletions(-) create mode 100644
->  bitbake/lib/bb/ui/crumbs/webserviceeventhandler.py create mode 100755
->  bitbake/lib/bb/ui/webhob_webservice.py
+I will break whole series down into a few smaller chunks since there are some important fixes vs the features.
 
 
+Jason.
 
 
