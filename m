@@ -1,27 +1,27 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Kai.Kang@windriver.com>) id 1Sf7B3-0000uz-0D
+	(envelope-from <Kai.Kang@windriver.com>) id 1Sf7B3-0000ut-E2
 	for bitbake-devel@lists.openembedded.org;
 	Thu, 14 Jun 2012 12:21:21 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q5EAAhQE008714
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q5EAAdJ8016097
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Jun 2012 03:10:43 -0700 (PDT)
+	Thu, 14 Jun 2012 03:10:42 -0700 (PDT)
 Received: from localhost.localdomain (128.224.162.164) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server
-	(TLS) id 14.1.255.0; Thu, 14 Jun 2012 03:10:43 -0700
+	(TLS) id 14.1.255.0; Thu, 14 Jun 2012 03:10:38 -0700
 From: Kang Kai <kai.kang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 14 Jun 2012 18:10:57 +0800
-Message-ID: <6fd8d4b280166137d3ef31185eeaa4f4760c5ae9.1339653356.git.kai.kang@windriver.com>
+Date: Thu, 14 Jun 2012 18:10:56 +0800
+Message-ID: <cf49b94af8bfa7186d31620af742503ed4cd9605.1339653356.git.kai.kang@windriver.com>
 X-Mailer: git-send-email 1.7.5.4
 In-Reply-To: <cover.1339653356.git.kai.kang@windriver.com>
 References: <cover.1339653356.git.kai.kang@windriver.com>
 MIME-Version: 1.0
 X-Originating-IP: [128.224.162.164]
 Cc: Zhenfeng.Zhao@windriver.com
-Subject: [PATCH 2/3] ui/crumbs/hig.py: simplify subprocess call
+Subject: [PATCH 1/3] ui/crumbs/hig.py: tweak strings
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,37 +36,52 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 X-List-Received-Date: Thu, 14 Jun 2012 10:21:21 -0000
 Content-Type: text/plain
 
-According to Darren's suggestion, subprocess.call() will wait until the
-subprocess complete. So simplify the code, use subprocess.call() to wait
-command complete.
+Add comments for DeployImageDialog 'standalone' part of codes to make it
+easy to read.
+And tweak some strings.
 
 Signed-off-by: Kang Kai <kai.kang@windriver.com>
 ---
- bitbake/lib/bb/ui/crumbs/hig.py |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hig.py |   13 +++++++++----
+ 1 files changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/bitbake/lib/bb/ui/crumbs/hig.py b/bitbake/lib/bb/ui/crumbs/hig.py
-index 0c3f56c..b586b6c 100644
+index 3b50f68..0c3f56c 100644
 --- a/bitbake/lib/bb/ui/crumbs/hig.py
 +++ b/bitbake/lib/bb/ui/crumbs/hig.py
-@@ -27,6 +27,7 @@ import hashlib
- import os
- import re
- import shlex
-+import subprocess
- from bb.ui.crumbs.hobcolor import HobColors
- from bb.ui.crumbs.hobwidget import hcc, hic, HobViewTable, HobInfoButton, HobButton, HobAltButton, HobIconChecker
- from bb.ui.crumbs.progressbar import HobProgressBar
-@@ -871,8 +872,7 @@ class DeployImageDialog (CrumbsDialog):
-                     tmpname = os.tmpnam()
-                     cmdline += "\"sudo dd if=" + self.image_path + \
-                                 " of=" + combo_item + "; echo $? > " + tmpname + "\""
--                    deploy_process = bb.process.Popen(shlex.split(cmdline))
--                    deploy_process.wait()
-+                    subprocess.call(shlex.split(cmdline))
+@@ -784,6 +784,11 @@ class DeployImageDialog (CrumbsDialog):
+         scroll.add(tv)
+         table.attach(scroll, 0, 10, 0, 1)
  
-                     # if file tmpname not exists, that means there is something wrong with xterm
-                     # user can get the error message from xterm so no more warning need.
++        # There are 2 ways to use DeployImageDialog
++        # One way is that called by HOB when the 'Deploy Image' button is clicked
++        # The other way is that called by a standalone script.
++        # Following block of codes handles the latter way. It adds a 'Select Image' button and
++        # emit a signal when the button is clicked.
+         if self.standalone:
+                 gobject.signal_new("select_image_clicked", self, gobject.SIGNAL_RUN_FIRST,
+                                    gobject.TYPE_NONE, ())
+@@ -874,16 +879,16 @@ class DeployImageDialog (CrumbsDialog):
+                     if os.path.exists(tmpname):
+                         tmpfile = open(tmpname)
+                         if int(tmpfile.readline().strip()) == 0:
+-                            lbl = "<b>Deploy image successfully</b>"
++                            lbl = "<b>Deploy image successfully.</b>"
+                         else:
+-                            lbl = "<b>Deploy image failed</b>\nPlease try again."
++                            lbl = "<b>Failed to deploy image.</b>\nPlease check image <b>%s</b> exists and USB device <b>%s</b> is writable." % (self.image_path, combo_item)
+                         tmpfile.close()
+                         os.remove(tmpname)
+             else:
+                 if not self.image_path:
+-                    lbl = "<b>No selection made</b>\nYou have not selected an image to deploy"
++                    lbl = "<b>No selection made.</b>\nYou have not selected an image to deploy."
+                 else:
+-                    lbl = "<b>No selection made</b>\nYou have not selected USB device"
++                    lbl = "<b>No selection made.</b>\nYou have not selected a USB device."
+             if len(lbl):
+                 crumbs_dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_INFO)
+                 button = crumbs_dialog.add_button("Close", gtk.RESPONSE_OK)
 -- 
 1.7.5.4
 
