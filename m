@@ -1,30 +1,29 @@
-Received: from mail-lpp01m010-f47.google.com ([209.85.215.47])
+Received: from mail.windriver.com ([147.11.1.11])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <aiswaryassn@gmail.com>) id 1Se2VG-0003vI-HT
+	(envelope-from <jason.wessel@windriver.com>) id 1SfAL8-00085p-NJ
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 11 Jun 2012 13:09:46 +0200
-Received: by lags15 with SMTP id s15so2389585lag.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Jun 2012 03:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:date:message-id:subject:from:to:content-type;
-	bh=8bvAwy9mtKy3am4BOBjhqu47XQmdrEuIAoxwAi/Zxbw=;
-	b=V7lTrAIa6XJet+4Pwi28K5s/3k/wp+GDBJES8SvQjWgl6ZkRbpIo/w1vzU7uEtRRyw
-	uVZebUPgVWmt+YT5OBY6GNH1njvIjwJlxnHvnakL1v3YSEupiV8J3Vg6Gzr/h4gdD5M3
-	GqYIfeIUIFsA6A1KQYlO67UBOlH6QIAPFwooKRcgLrTpQxuU9wcthGCThloWsYODV03X
-	GbTzH56BafK+qZcZkaG+Hbmuj0HVAGyGRxEebhvUx3cyXLXhwcwb8Qq2lQdtsWSHldgx
-	nLwWqOtVx5tq9vSAazMTmjDYQxPPoqs1pzLLUEquI0YyGw8bT3jkEXO424OaEoLGUNx1
-	TeKw==
+	Thu, 14 Jun 2012 15:43:59 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q5EDXIVB009645
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Thu, 14 Jun 2012 06:33:19 -0700 (PDT)
+Received: from [172.25.32.41] (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
+	Thu, 14 Jun 2012 06:33:18 -0700
+Message-ID: <4FD9E81D.6030808@windriver.com>
+Date: Thu, 14 Jun 2012 08:33:17 -0500
+From: Jason Wessel <jason.wessel@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:12.0) Gecko/20120430 Thunderbird/12.0.1
 MIME-Version: 1.0
-Received: by 10.112.83.136 with SMTP id q8mr2950097lby.60.1339412353092; Mon,
-	11 Jun 2012 03:59:13 -0700 (PDT)
-Received: by 10.112.24.100 with HTTP; Mon, 11 Jun 2012 03:59:13 -0700 (PDT)
-Date: Mon, 11 Jun 2012 06:59:13 -0400
-Message-ID: <CAHqtJk6YhyUPSa_ijguUkXHV6PwS8esexNHDpQK9w+GoNoF8GA@mail.gmail.com>
-From: aiswarya mohan <aiswaryassn@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-X-Mailman-Approved-At: Thu, 14 Jun 2012 15:17:07 +0200
-Subject: Regarding Bitbake parsing error
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <1339643381-23026-1-git-send-email-jason.wessel@windriver.com>
+	<1339643381-23026-5-git-send-email-jason.wessel@windriver.com>
+	<1339679039.24333.76.camel@ted>
+In-Reply-To: <1339679039.24333.76.camel@ted>
+X-Enigmail-Version: 1.4.2
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 4/4] fetch2/git.py: Optimize clone fall back when it is local
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,52 +35,95 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 11 Jun 2012 11:09:46 -0000
-Content-Type: multipart/alternative; boundary=f46d04016d8f838d8804c2303d45
+X-List-Received-Date: Thu, 14 Jun 2012 13:43:59 -0000
+X-Groupsio-MsgNum: 2284
+Content-Type: multipart/mixed; boundary="------------080400080402010109070000"
 
---f46d04016d8f838d8804c2303d45
-Content-Type: text/plain; charset=ISO-8859-1
+--------------080400080402010109070000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hello!
+On 06/14/2012 08:03 AM, Richard Purdie wrote:
+> On Wed, 2012-06-13 at 22:09 -0500, Jason Wessel wrote:
+>> A file:// url should use "clone -s" to greatly speed
+>> up the clone in the case of a kernel when it is local.
+>>
+>> Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
+>> ---
+>>  lib/bb/fetch2/git.py |    8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+>> index 1ad9213..f5a3983 100644
+>> --- a/lib/bb/fetch2/git.py
+>> +++ b/lib/bb/fetch2/git.py
+>> @@ -192,7 +192,13 @@ class Git(FetchMethod):
+>>  
+>>          # If the repo still doesn't exist, fallback to cloning it
+>>          if not os.path.exists(ud.clonedir):
+>> -            clone_cmd = "%s clone --bare --mirror %s %s" % (ud.basecmd, repourl, ud.clonedir)
+>> +            if repourl.startswith("file://"):
+>> +                use_s = "-s"
+>> +                repo = repourl[7:]
+>> +            else:
+>> +                use_s = ""
+>> +                repo = repourl
+>> +            clone_cmd = "%s clone %s --bare --mirror %s %s" % (ud.basecmd, use_s, repo, ud.clonedir)
+>>              if ud.proto.lower() != 'file':
+>>                  bb.fetch2.check_network_access(d, clone_cmd)
+>>              runfetchcmd(clone_cmd, d)
+> 
+> How about always using the -l option instead?
+> 
 
-We set the configurations of Openembedded and Bitbake as per the user
-manual.
-The PATH AND BBPATH values have also been set appropriately.
+I just had to put it through some testing first.  Yes I agree it is fine to use -l as well.
 
-But then when we tried to build the opie-image.bb (sample from recipes
-folder), it lead to the following error:
+Attached is the new version of the patch.
+
+Jason.
+
+--------------080400080402010109070000
+Content-Type: text/x-diff;
+	name="0001-fetch2-git.py-Optimize-clone-fall-back-when-it-is-lo.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename*0="0001-fetch2-git.py-Optimize-clone-fall-back-when-it-is-lo.pa";
+	filename*1="tch"
+
+From daa5cc78b294406fd2376697d44c4de1a42d6f34 Mon Sep 17 00:00:00 2001
+From: Jason Wessel <jason.wessel@windriver.com>
+Date: Tue, 12 Jun 2012 13:23:34 -0500
+Subject: [PATCH] fetch2/git.py: Optimize clone fall back when it is local
+
+A file:// url should use "clone -l" to greatly speed
+up the clone in the case of a kernel when it is local.
+
+Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
+---
+ lib/bb/fetch2/git.py |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index ecc5e0d..d6a08ac 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -188,7 +188,13 @@ class Git(FetchMethod):
+ 
+         # If the repo still doesn't exist, fallback to cloning it
+         if not os.path.exists(ud.clonedir):
+-            clone_cmd = "%s clone --bare --mirror %s %s" % (ud.basecmd, repourl, ud.clonedir)
++            if repourl.startswith("file://"):
++                use_s = "-l"
++                repo = repourl[7:]
++            else:
++                use_s = ""
++                repo = repourl
++            clone_cmd = "%s clone %s --bare --mirror %s %s" % (ud.basecmd, use_s, repo, ud.clonedir)
+             if ud.proto.lower() != 'file':
+                 bb.fetch2.check_network_access(d, clone_cmd)
+             runfetchcmd(clone_cmd, d)
+-- 
+1.7.10
 
 
-*enggdesign@ubuntu:~/Desktop/OE/build$ export
-BBPATH=/Desktop/OE/build:/Desktop/OE/openembedded
-enggdesign@ubuntu:~/Desktop/OE/build$ bitbake opie-image.bb
-ERROR: Unable to parse conf/bitbake.conf: file conf/bitbake.conf not found
-in /Desktop/OE/build:/Desktop/OE/openembedded*
-
-We also noticed that bitbake.conf was not found in the build/conf directory.
-
-Kindly get back to us as soon as possible.
-
-Regards,
-Abhinaya
-Aiswarya
-
---f46d04016d8f838d8804c2303d45
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-Hello!<br><br>We set the configurations of Openembedded and Bitbake as per =
-the user manual.<br>The PATH AND BBPATH values have also been set appropria=
-tely.<br><br>But then when we tried to build the <a href=3D"http://opie-ima=
-ge.bb">opie-image.bb</a> (sample from recipes folder), it lead to the follo=
-wing error:<br>
-<br><br><b>enggdesign@ubuntu:~/Desktop/OE/build$ export BBPATH=3D/Desktop/O=
-E/build:/Desktop/OE/openembedded<br>enggdesign@ubuntu:~/Desktop/OE/build$ b=
-itbake <a href=3D"http://opie-image.bb">opie-image.bb</a><br>ERROR: Unable =
-to parse conf/bitbake.conf: file conf/bitbake.conf not found in /Desktop/OE=
-/build:/Desktop/OE/openembedded</b><br>
-<br>We also noticed that bitbake.conf was not found in the build/conf direc=
-tory.<br><br>Kindly get back to us as soon as possible.<br><br>Regards,<br>=
-Abhinaya<br>Aiswarya<br>
-
---f46d04016d8f838d8804c2303d45--
+--------------080400080402010109070000--
