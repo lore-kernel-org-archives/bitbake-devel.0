@@ -1,25 +1,30 @@
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from mail.windriver.com ([147.11.1.11])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1SfBfP-0000aC-P7
+	(envelope-from <jason.wessel@windriver.com>) id 1SfHUf-0000EG-0D
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 14 Jun 2012 17:09:00 +0200
+	Thu, 14 Jun 2012 23:22:17 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q5EEwLMk019269
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Jun 2012 07:58:21 -0700 (PDT)
-Received: from ord-jrw.wrs.com (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
+	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q5ELBXsG026066
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Thu, 14 Jun 2012 14:11:33 -0700 (PDT)
+Received: from [172.25.32.41] (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Thu, 14 Jun 2012 07:58:21 -0700
+	Thu, 14 Jun 2012 14:11:33 -0700
+Message-ID: <4FDA5383.7030201@windriver.com>
+Date: Thu, 14 Jun 2012 16:11:31 -0500
 From: Jason Wessel <jason.wessel@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 14 Jun 2012 09:58:18 -0500
-Message-ID: <1339685898-24757-2-git-send-email-jason.wessel@windriver.com>
-X-Mailer: git-send-email 1.7.10
-In-Reply-To: <1339685898-24757-1-git-send-email-jason.wessel@windriver.com>
-References: <1339685898-24757-1-git-send-email-jason.wessel@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:12.0) Gecko/20120430 Thunderbird/12.0.1
 MIME-Version: 1.0
-Subject: [PATCH 1/1] process.py, build.py: Fix log truncation problems with flush()
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <1339643381-23026-1-git-send-email-jason.wessel@windriver.com>
+	<1339643381-23026-5-git-send-email-jason.wessel@windriver.com>
+	<1339679039.24333.76.camel@ted> <4FD9E81D.6030808@windriver.com>
+	<1339683993.24333.81.camel@ted>
+In-Reply-To: <1339683993.24333.81.camel@ted>
+X-Enigmail-Version: 1.4.2
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 4/4] fetch2/git.py: Optimize clone fall back when it is local
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,108 +36,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 14 Jun 2012 15:09:00 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 14 Jun 2012 21:22:17 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-There are two problems with the _logged_communicate that are both
-caused as a result of buffering I/O, instead of flushing it out to the
-log files as it arrives.
+On 06/14/2012 09:26 AM, Richard Purdie wrote:
+> On Thu, 2012-06-14 at 08:33 -0500, Jason Wessel wrote:
+>> On 06/14/2012 08:03 AM, Richard Purdie wrote:
+>>> On Wed, 2012-06-13 at 22:09 -0500, Jason Wessel wrote:
+>>>> A file:// url should use "clone -s" to greatly speed
+>>>> up the clone in the case of a kernel when it is local.
+>>>>
+>>>> Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
+>>>> ---
+>>>>  lib/bb/fetch2/git.py |    8 +++++++-
+>>>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+>>>> index 1ad9213..f5a3983 100644
+>>>> --- a/lib/bb/fetch2/git.py
+>>>> +++ b/lib/bb/fetch2/git.py
+>>>> @@ -192,7 +192,13 @@ class Git(FetchMethod):
+>>>>  
+>>>>          # If the repo still doesn't exist, fallback to cloning it
+>>>>          if not os.path.exists(ud.clonedir):
+>>>> -            clone_cmd = "%s clone --bare --mirror %s %s" % (ud.basecmd, repourl, ud.clonedir)
+>>>> +            if repourl.startswith("file://"):
+>>>> +                use_s = "-s"
+>>>> +                repo = repourl[7:]
+>>>> +            else:
+>>>> +                use_s = ""
+>>>> +                repo = repourl
+>>>> +            clone_cmd = "%s clone %s --bare --mirror %s %s" % (ud.basecmd, use_s, repo, ud.clonedir)
+>>>>              if ud.proto.lower() != 'file':
+>>>>                  bb.fetch2.check_network_access(d, clone_cmd)
+>>>>              runfetchcmd(clone_cmd, d)
+> I think you can then simplify this to:
+>
+> @@ -192,7 +192,9 @@ class Git(FetchMethod):
+>   
+>          # If the repo still doesn't exist, fallback to cloning it
+>          if not os.path.exists(ud.clonedir):
+> -            clone_cmd = "%s clone --bare --mirror %s %s" % (ud.basecmd, repourl, ud.clonedir)
+> +            if repourl.startswith("file://"):
+> +                repo = repourl[7:]
+> +            clone_cmd = "%s clone -l --bare --mirror %s %s" % (ud.basecmd, repo, ud.clonedir)
+>              if ud.proto.lower() != 'file':
+>                  bb.fetch2.check_network_access(d, clone_cmd)
+>              runfetchcmd(clone_cmd, d)
 
-1) log truncation when python dumps
-   I have seen the task logs missing data that was not flushed when
-   bitbake crashes.
+This had one defect in it which I didn't notice until I tested it  "repo" should have been "repourl", so I'll send new version along with a respin of the local git:/// -> file:/// PREMIRROR patch.
 
-2) While a bitbake task is running it is impossible to see what is
-   going on if it is only writing a small incremental log that is
-   smaller than the buffer, or you get only a partial log, up until
-   the task exists.  It is worse in the case that stderr and stdout
-   are separate file handles, because previous code blocks on the read
-   of stdout and then stderr, serially.
+Many thanks for your comments.
 
-The right approach is simply to use select() to determine if there is
-data available and then to flush the log buffers as they arrive.  This
-still makes use of buffering in the cases where there is more than 1
-byte of data, but the buffers are much more dynamic.
-
-Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
----
- lib/bb/build.py   |    3 ++-
- lib/bb/process.py |   29 +++++++++++++++++++++++++++--
- 2 files changed, 29 insertions(+), 3 deletions(-)
-
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index a9ba02d..7e9bb23 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -135,7 +135,8 @@ class LogTee(object):
- 
-     def __repr__(self):
-         return '<LogTee {0}>'.format(self.name)
--
-+    def flush(self):
-+        self.outfile.flush()
- 
- def exec_func(func, d, dirs = None):
-     """Execute an BB 'function'"""
-diff --git a/lib/bb/process.py b/lib/bb/process.py
-index b74cb18..9848fc3 100644
---- a/lib/bb/process.py
-+++ b/lib/bb/process.py
-@@ -1,6 +1,9 @@
- import logging
- import signal
- import subprocess
-+import fcntl
-+import errno
-+import select
- 
- logger = logging.getLogger('BitBake.Process')
- 
-@@ -70,18 +73,40 @@ def _logged_communicate(pipe, log, input):
- 
-     bufsize = 512
-     outdata, errdata = [], []
-+    rin = []
-+
-+    if pipe.stdout is not None:
-+        fd = pipe.stdout.fileno()
-+        fl = fcntl.fcntl(fd, fcntl.F_GETFL)
-+        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
-+        rin.append(pipe.stdout)
-+    if pipe.stderr is not None:
-+        fd = pipe.stderr.fileno()
-+        fl = fcntl.fcntl(fd, fcntl.F_GETFL)
-+        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
-+        rin.append(pipe.stderr)
-+
-     while pipe.poll() is None:
--        if pipe.stdout is not None:
-+        rlist = rin
-+        try:
-+            r,w,e = select.select (rlist, [], [])
-+        except OSError, e:
-+            if e.errno != errno.EINTR:
-+                raise
-+
-+        if pipe.stdout in r:
-             data = pipe.stdout.read(bufsize)
-             if data is not None:
-                 outdata.append(data)
-                 log.write(data)
-+                log.flush()
- 
--        if pipe.stderr is not None:
-+        if pipe.stderr in r:
-             data = pipe.stderr.read(bufsize)
-             if data is not None:
-                 errdata.append(data)
-                 log.write(data)
-+                log.flush()
-     return ''.join(outdata), ''.join(errdata)
- 
- def run(cmd, input=None, log=None, **options):
--- 
-1.7.10
-
+Cheers,
+Jason.
 
 
