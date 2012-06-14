@@ -1,30 +1,23 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1SfHUf-0000EG-0D
+	(envelope-from <jason.wessel@windriver.com>) id 1SfI06-0000mz-BK
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 14 Jun 2012 23:22:17 +0200
+	Thu, 14 Jun 2012 23:54:46 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q5ELBXsG026066
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Thu, 14 Jun 2012 14:11:33 -0700 (PDT)
-Received: from [172.25.32.41] (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q5ELi7HO025686
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 14 Jun 2012 14:44:07 -0700 (PDT)
+Received: from ord-jrw.wrs.com (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Thu, 14 Jun 2012 14:11:33 -0700
-Message-ID: <4FDA5383.7030201@windriver.com>
-Date: Thu, 14 Jun 2012 16:11:31 -0500
+	Thu, 14 Jun 2012 14:44:06 -0700
 From: Jason Wessel <jason.wessel@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:12.0) Gecko/20120430 Thunderbird/12.0.1
+To: <bitbake-devel@lists.openembedded.org>
+Date: Thu, 14 Jun 2012 16:44:01 -0500
+Message-ID: <1339710244-6755-1-git-send-email-jason.wessel@windriver.com>
+X-Mailer: git-send-email 1.7.10
 MIME-Version: 1.0
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-References: <1339643381-23026-1-git-send-email-jason.wessel@windriver.com>
-	<1339643381-23026-5-git-send-email-jason.wessel@windriver.com>
-	<1339679039.24333.76.camel@ted> <4FD9E81D.6030808@windriver.com>
-	<1339683993.24333.81.camel@ted>
-In-Reply-To: <1339683993.24333.81.camel@ted>
-X-Enigmail-Version: 1.4.2
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 4/4] fetch2/git.py: Optimize clone fall back when it is local
+Subject: [PATCH v2 0/3] fetch2: optimizations and pre-mirrors
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,60 +29,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 14 Jun 2012 21:22:17 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 14 Jun 2012 21:54:46 -0000
+Content-Type: text/plain
 
-On 06/14/2012 09:26 AM, Richard Purdie wrote:
-> On Thu, 2012-06-14 at 08:33 -0500, Jason Wessel wrote:
->> On 06/14/2012 08:03 AM, Richard Purdie wrote:
->>> On Wed, 2012-06-13 at 22:09 -0500, Jason Wessel wrote:
->>>> A file:// url should use "clone -s" to greatly speed
->>>> up the clone in the case of a kernel when it is local.
->>>>
->>>> Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
->>>> ---
->>>>  lib/bb/fetch2/git.py |    8 +++++++-
->>>>  1 file changed, 7 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
->>>> index 1ad9213..f5a3983 100644
->>>> --- a/lib/bb/fetch2/git.py
->>>> +++ b/lib/bb/fetch2/git.py
->>>> @@ -192,7 +192,13 @@ class Git(FetchMethod):
->>>>  
->>>>          # If the repo still doesn't exist, fallback to cloning it
->>>>          if not os.path.exists(ud.clonedir):
->>>> -            clone_cmd = "%s clone --bare --mirror %s %s" % (ud.basecmd, repourl, ud.clonedir)
->>>> +            if repourl.startswith("file://"):
->>>> +                use_s = "-s"
->>>> +                repo = repourl[7:]
->>>> +            else:
->>>> +                use_s = ""
->>>> +                repo = repourl
->>>> +            clone_cmd = "%s clone %s --bare --mirror %s %s" % (ud.basecmd, use_s, repo, ud.clonedir)
->>>>              if ud.proto.lower() != 'file':
->>>>                  bb.fetch2.check_network_access(d, clone_cmd)
->>>>              runfetchcmd(clone_cmd, d)
-> I think you can then simplify this to:
->
-> @@ -192,7 +192,9 @@ class Git(FetchMethod):
->   
->          # If the repo still doesn't exist, fallback to cloning it
->          if not os.path.exists(ud.clonedir):
-> -            clone_cmd = "%s clone --bare --mirror %s %s" % (ud.basecmd, repourl, ud.clonedir)
-> +            if repourl.startswith("file://"):
-> +                repo = repourl[7:]
-> +            clone_cmd = "%s clone -l --bare --mirror %s %s" % (ud.basecmd, repo, ud.clonedir)
->              if ud.proto.lower() != 'file':
->                  bb.fetch2.check_network_access(d, clone_cmd)
->              runfetchcmd(clone_cmd, d)
+The first patch is a simple optimization to use a local clone if using
+a file:// URL.  This cuts down the kernel fetch in some configurations
+considerably.
 
-This had one defect in it which I didn't notice until I tested it  "repo" should have been "repourl", so I'll send new version along with a respin of the local git:/// -> file:/// PREMIRROR patch.
+The second two patches AIM to allow for the possibility of using a
+local git archive that is not stored in a tar.gz file.  Richard was
+kind enough to explain the the use cases around the uri_replace() such
+that I could create a test case to show why the prior version of the
+patch was completely wrong.
 
-Many thanks for your comments.
+The uri_replace() can rewrite one git URL to another git URL should
+have mirrors at your local site, and the prior patches had no
+possibility to deal with this, because the git method was re-used.
 
-Cheers,
+Thanks,
 Jason.
 
 
