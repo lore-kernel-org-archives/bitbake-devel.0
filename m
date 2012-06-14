@@ -1,30 +1,23 @@
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from mail.windriver.com ([147.11.1.11])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1SfBF9-0007s4-NU
+	(envelope-from <jason.wessel@windriver.com>) id 1SfBfO-0000aA-LV
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 14 Jun 2012 16:41:52 +0200
+	Thu, 14 Jun 2012 17:08:58 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q5EEVC7k018806
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Thu, 14 Jun 2012 07:31:12 -0700 (PDT)
-Received: from [172.25.32.41] (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
+	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q5EEwKea023616
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 14 Jun 2012 07:58:20 -0700 (PDT)
+Received: from ord-jrw.wrs.com (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Thu, 14 Jun 2012 07:31:12 -0700
-Message-ID: <4FD9F5AF.10905@windriver.com>
-Date: Thu, 14 Jun 2012 09:31:11 -0500
+	Thu, 14 Jun 2012 07:58:20 -0700
 From: Jason Wessel <jason.wessel@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:12.0) Gecko/20120430 Thunderbird/12.0.1
+To: <bitbake-devel@lists.openembedded.org>
+Date: Thu, 14 Jun 2012 09:58:17 -0500
+Message-ID: <1339685898-24757-1-git-send-email-jason.wessel@windriver.com>
+X-Mailer: git-send-email 1.7.10
 MIME-Version: 1.0
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-References: <1339643381-23026-1-git-send-email-jason.wessel@windriver.com>
-	<1339643381-23026-5-git-send-email-jason.wessel@windriver.com>
-	<1339679039.24333.76.camel@ted> <4FD9E81D.6030808@windriver.com>
-	<1339683993.24333.81.camel@ted>
-In-Reply-To: <1339683993.24333.81.camel@ted>
-X-Enigmail-Version: 1.4.2
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 4/4] fetch2/git.py: Optimize clone fall back when it is local
+Subject: [PATCH 0/1] process.py, build.py: Fix log truncation problems with flush()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,59 +29,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 14 Jun 2012 14:41:52 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 14 Jun 2012 15:08:59 -0000
+Content-Type: text/plain
 
-On 06/14/2012 09:26 AM, Richard Purdie wrote:
-> On Thu, 2012-06-14 at 08:33 -0500, Jason Wessel wrote:
->> On 06/14/2012 08:03 AM, Richard Purdie wrote:
->>> On Wed, 2012-06-13 at 22:09 -0500, Jason Wessel wrote:
->>>> A file:// url should use "clone -s" to greatly speed
->>>> up the clone in the case of a kernel when it is local.
->>>>
->>>> Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
->>>> ---
->>>>  lib/bb/fetch2/git.py |    8 +++++++-
->>>>  1 file changed, 7 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
->>>> index 1ad9213..f5a3983 100644
->>>> --- a/lib/bb/fetch2/git.py
->>>> +++ b/lib/bb/fetch2/git.py
->>>> @@ -192,7 +192,13 @@ class Git(FetchMethod):
->>>>  
->>>>          # If the repo still doesn't exist, fallback to cloning it
->>>>          if not os.path.exists(ud.clonedir):
->>>> -            clone_cmd = "%s clone --bare --mirror %s %s" % (ud.basecmd, repourl, ud.clonedir)
->>>> +            if repourl.startswith("file://"):
->>>> +                use_s = "-s"
->>>> +                repo = repourl[7:]
->>>> +            else:
->>>> +                use_s = ""
->>>> +                repo = repourl
->>>> +            clone_cmd = "%s clone %s --bare --mirror %s %s" % (ud.basecmd, use_s, repo, ud.clonedir)
->>>>              if ud.proto.lower() != 'file':
->>>>                  bb.fetch2.check_network_access(d, clone_cmd)
->>>>              runfetchcmd(clone_cmd, d)
-> I think you can then simplify this to:
->
-> @@ -192,7 +192,9 @@ class Git(FetchMethod):
->   
->          # If the repo still doesn't exist, fallback to cloning it
->          if not os.path.exists(ud.clonedir):
-> -            clone_cmd = "%s clone --bare --mirror %s %s" % (ud.basecmd, repourl, ud.clonedir)
-> +            if repourl.startswith("file://"):
-> +                repo = repourl[7:]
-> +            clone_cmd = "%s clone -l --bare --mirror %s %s" % (ud.basecmd, repo, ud.clonedir)
->              if ud.proto.lower() != 'file':
->                  bb.fetch2.check_network_access(d, clone_cmd)
->              runfetchcmd(clone_cmd, d)
->  
->
+Separately Richard had asked me if this proposed patch to flush things
+out to disk immediately had a negative performance impact.  It is
+actually the opposite effect due to a very subtle problem that was
+fixed.
 
-That is fine with me, given that it does the same thing.
+My litmus test is to wipe the .o files, drop kernel caches, force
+compile the kernel which will generate 100's of very small single line
+logs under the size of the buffer limit.
 
+Without the log flushing patch compiling a kernel:
+   real    3m33.906s
+   user    0m53.523s
+   sys     0m24.518s
+
+With the log flushing patch compiling a kernel:
+   real    3m28.102s
+   user    0m53.251s
+   sys     0m24.982s
+
+Why is it faster you ask?
+
+It has to do with the alternating blocking reads on stdin and stderr.
+First the existing code blocks on stdout until the buffer fills up in
+the python logger.  Once the buffer is full, it will switch to
+blocking on stderr, and if nothing ever comes it may wait all the way
+until the task completes and then tries to chunk the buffer out to disk
+at the end which is quite wasteful.  
+
+Sometimes the existing behavior also leads to having any bitbake
+injected error messages into the log file appear out of chronological
+order with respect to how ever much data was in the log because bitbake
+will emit the error to stderr and stderr could get flushed before
+stdout.
+
+Cheers,
 Jason.
 
 
