@@ -1,35 +1,20 @@
-Received: from mail-bk0-f47.google.com ([209.85.214.47])
+Received: from mga01.intel.com ([192.55.52.88])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <rep.dot.nop@gmail.com>) id 1SgaIa-0007qj-Kk
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1SgeKv-0000gd-IR
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 18 Jun 2012 13:39:12 +0200
-Received: by bkcjm2 with SMTP id jm2so3734509bkc.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 Jun 2012 04:28:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:x-mailer;
-	bh=IMrpfQgLVDPRr8Iz5oz8Ilt1cEpzD3kPz0i8qIFEPWE=;
-	b=oQ/ePOFH7aY2oKlnXoRoVrhXjyAgDaMhrJGav7tYeyl/Du0MoZ6GHsExyZXtKkr4P+
-	6dAL8sbRQts6S7EM+6rEo1f29GXVZbPLlCvIm1HWRffzQlCHTEiYPZf3DVnxf8GzxO9p
-	RDCwnkWQXz4HaKwbO4SrStG6M7ROLJXP6ZsOYERQCUvybm9sodRlGnG7dnrM4svTa2wq
-	469dtRZOxq19Owbbv/fcHuefJ8wMocQOvMD9hFvRGsEx93vKhRFiSWI/LqqbfJjyUN7q
-	P7rgqh8WbxdhD+oZcc/VRgJsCOeGO06gyYM9q5SKsSRZ8Ov8f22BOeiqw2bKubsD+srC
-	1D4g==
-Received: by 10.204.148.74 with SMTP id o10mr6309616bkv.111.1340018910707;
-	Mon, 18 Jun 2012 04:28:30 -0700 (PDT)
-Received: from s42.loc ([91.119.132.55])
-	by mx.google.com with ESMTPS id e20sm18249164bkv.10.2012.06.18.04.28.29
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Mon, 18 Jun 2012 04:28:30 -0700 (PDT)
-Received: from cow by s42.loc with local (Exim 4.77)
-	(envelope-from <rep.dot.nop@gmail.com>)
-	id 1Sga8C-0002Ii-VO; Mon, 18 Jun 2012 13:28:29 +0200
-From: Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
+	Mon, 18 Jun 2012 17:57:53 +0200
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga101.fm.intel.com with ESMTP; 18 Jun 2012 08:45:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="167049108"
+Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.120.122])
+	by fmsmga001.fm.intel.com with ESMTP; 18 Jun 2012 08:45:43 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 18 Jun 2012 13:28:27 +0200
-Message-Id: <1340018907-8814-1-git-send-email-rep.dot.nop@gmail.com>
-X-Mailer: git-send-email 1.7.10
-Subject: [PATCH] fetch2: do not try to checksum a socket
+Date: Mon, 18 Jun 2012 16:45:34 +0100
+Message-Id: <cover.1340034255.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH 0/2] Signature-based rebuild improvements
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -41,52 +26,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 18 Jun 2012 11:39:13 -0000
+X-List-Received-Date: Mon, 18 Jun 2012 15:57:53 -0000
 
-computing the md5 of a socket does not work too well.
+The following changes (against poky, but apply cleanly with -p2 against
+bitbake master) are available in the git repository at:
 
-Traceback (most recent call last):
-  File "/scratch/src/oe/bitbake/build/lib/bb/siggen.py", line 172, in SignatureGeneratorOEBasic.get_taskhash(fn='/scratch/src/oe/openembedded-core/meta/recipes-core/uclibc/uclibc_git.bb', task='do_fetch', deps=[], dataCache=<bb.cache.CacheData object at 0xd95890>):
-             if task in dataCache.file_checksums[fn]:
-    >            checksums = bb.fetch2.get_file_checksums(dataCache.file_checksums[fn][task], recipename)
-                 for (f,cs) in checksums:
-  File "/scratch/src/oe/bitbake/build/lib/bb/fetch2/__init__.py", line 627, in get_file_checksums(filelist='/scratch/src/uClibc/ /scratch/src/oe/openembedded-core/meta/recipes-core/uclibc/uclibc-git/uClibc.machine /scratch/src/oe/openembedded-core/meta/recipes-core/uclibc/uclibc-git/uClibc.distro', pn='uclibc'):
-                         fullpth = os.path.join(root, name)
-    >                    checksum = checksum_file(fullpth)
-                         if checksum:
-  File "/scratch/src/oe/bitbake/build/lib/bb/fetch2/__init__.py", line 605, in checksum_file(f='/scratch/src/uClibc/test/inet/socktest'):
-             try:
-    >            checksum = _checksum_cache.get_checksum(f)
-             except OSError as e:
-  File "/scratch/src/oe/bitbake/build/lib/bb/checksum.py", line 78, in FileChecksumCache.get_checksum(f='/scratch/src/uClibc/test/inet/socktest'):
+  git://git.yoctoproject.org/poky-contrib paule/bb-forcebuild
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-forcebuild
 
-    >        hashval = bb.utils.md5_file(f)
-             self.cachedata_extras[0][f] = (cmtime, hashval)
-  File "/scratch/src/oe/bitbake/build/lib/bb/utils.py", line 362, in md5_file(filename='/scratch/src/uClibc/test/inet/socktest'):
+Paul Eggleton (2):
+  bitbake: ensure -f causes dependent tasks to be re-run
+  bitbake: add -C option to invalidate a task and rebuild the target
 
-    >    for line in open(filename):
-             m.update(line)
-IOError: [Errno 6] No such device or address: '/scratch/src/uClibc/test/inet/socktest'
+ bitbake/bin/bitbake        |    3 +++
+ bitbake/lib/bb/build.py    |   18 ++++++++++++++++++
+ bitbake/lib/bb/cooker.py   |    6 +++---
+ bitbake/lib/bb/runqueue.py |   28 ++++++++++++++++++++++------
+ bitbake/lib/bb/siggen.py   |   35 +++++++++++++++++++++++++++++++++++
+ 5 files changed, 81 insertions(+), 9 deletions(-)
 
-Signed-off-by: Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
----
- lib/bb/fetch2/__init__.py |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 324eef2..0c0d60d 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -601,6 +601,7 @@ def get_file_checksums(filelist, pn):
-     """
- 
-     def checksum_file(f):
-+        if not os.path.isfile(f): return None
-         try:
-             checksum = _checksum_cache.get_checksum(f)
-         except OSError as e:
 -- 
-1.7.10
+1.7.9.5
 
 
 
