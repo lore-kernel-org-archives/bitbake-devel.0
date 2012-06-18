@@ -1,32 +1,27 @@
-Received: from mail-ey0-f175.google.com ([209.85.215.175])
+Received: from mail.windriver.com ([147.11.1.11])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <raj.khem@gmail.com>) id 1SgjM6-0001V5-Ew
+	(envelope-from <mark.hatle@windriver.com>) id 1SgjQm-0001Ym-6O
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 18 Jun 2012 23:19:26 +0200
-Received: by eaal1 with SMTP id l1so1762177eaa.6
+	Mon, 18 Jun 2012 23:24:16 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q5ILDWQf010654
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 Jun 2012 14:08:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-type:content-transfer-encoding;
-	bh=wz1PbigoZiHLZ4HKy1bNxzhQb8P+jpobBhZugeRw4Yo=;
-	b=ilDV+Qb7uh4kpuG8eZF4o+wLDpsxu0xpQW7QDR+8ubfUAUymXUvvBZuhRdOg2y0EE9
-	BAms+xvTp7ZIIHiK5I7YyMkcUtNj/xP+ZJZqHDAG6TM0jOIGQpeej9Xv1Rn55zPRVWrl
-	0F/n1H8weQqjgu6nLMR15z4EiLX3K5Yyz2kML7zINSLLiU9HQTUOTY1jiX9xYCmQ7S9I
-	p0ztjeYlzrckjhJSk0Igmb+2fJjSMdWhFDh5rHNEnOuZzRFFGxPOshqsB0QPnOAVN5SY
-	0NlbSM0hob4wcJBji6cZFJ8/xyu4UPY6g/DBMgj+Yqoe7u2yOJ0BR1eG8L2LW6tC674X
-	+dMA==
-Received: by 10.14.188.140 with SMTP id a12mr3674094een.25.1340053723597; Mon,
-	18 Jun 2012 14:08:43 -0700 (PDT)
+	Mon, 18 Jun 2012 14:13:32 -0700 (PDT)
+Received: from msp-dhcp56.wrs.com (172.25.34.56) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
+	Mon, 18 Jun 2012 14:13:32 -0700
+Message-ID: <4FDF99FB.2030503@windriver.com>
+Date: Mon, 18 Jun 2012 16:13:31 -0500
+From: Mark Hatle <mark.hatle@windriver.com>
+Organization: Wind River Systems
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6;
+	rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-Received: by 10.14.188.11 with HTTP; Mon, 18 Jun 2012 14:08:13 -0700 (PDT)
-In-Reply-To: <alpine.DEB.2.02.1206181608120.22003@oneiric>
+To: <bitbake-devel@lists.openembedded.org>
 References: <alpine.DEB.2.02.1206181608120.22003@oneiric>
-From: Khem Raj <raj.khem@gmail.com>
-Date: Mon, 18 Jun 2012 14:08:13 -0700
-Message-ID: <CAMKF1sqTiss0-CgVj5U=uvkUcuhs0o+fA+n-GbOCi8VunA+qGw@mail.gmail.com>
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>
-Cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
+	<CAMKF1sqTiss0-CgVj5U=uvkUcuhs0o+fA+n-GbOCi8VunA+qGw@mail.gmail.com>
+In-Reply-To: <CAMKF1sqTiss0-CgVj5U=uvkUcuhs0o+fA+n-GbOCi8VunA+qGw@mail.gmail.com>
 Subject: Re: is there a bitbake command to *just* fetch all necessary packages?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
@@ -39,32 +34,57 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 18 Jun 2012 21:19:26 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Mon, 18 Jun 2012 21:24:16 -0000
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-T24gTW9uLCBKdW4gMTgsIDIwMTIgYXQgMToxMCBQTSwgUm9iZXJ0IFAuIEouIERheSA8cnBqZGF5
-QGNyYXNoY291cnNlLmNhPiB3cm90ZToKPgo+IMKgcGVyaGFwcyBpJ20ganVzdCBtaXNyZWFkaW5n
-IHRoZSBkb2NzLCBidXQgaXMgdGhlcmUgYSBiaXRiYWtlCj4gaW5jYW50YXRpb24gdGhhdCBkb2Vz
-ICpub3RoaW5nKiBtb3JlIHRoYW4gZmV0Y2ggdGhlIHBhY2thZ2VzIG5lZWRlZAo+IGZvciBhIHRh
-cmdldCBpbWFnZT8KPgo+IMKgaWYgaSB1c2UgImJpdGJha2UgLWMgZmV0Y2hhbGwiLCB0aGUgcmVz
-dWx0IGlzIG5vdCBqdXN0IHRvIGZldGNoIHRoZQo+IHNvdXJjZSwgYnV0IHRvIHVubG9hZCBhbmQg
-cGF0Y2ggaXQgYXMgd2VsbC4KCmhtbW0gSSB0aG91Z2h0IGl0IGRpZCBqdXN0IHdoYXQgaXQgc2F5
-cyAnZmV0Y2ggYWxsJyBidXQgYXMgeW91IHNheSBpdApzZWVtcyB0byBkbyBtb3JlIGhtbSBJIGFt
-IG5vdCBzdXJlIGlmIGl0cyBpbnRlbmRlZCBiZWhhdmlvcgoKwqBpIGRvbid0IHdhbnQgdGhhdCwg
-aSB3YW50Cj4gd2hhdGV2ZXIgdGhlIG1hZ2ljIGlzIHRvIGp1c3QgKmZldGNoKiBhbmQgbGVhdmUg
-aXQgYXQgdGhhdC4gwqBvciBpcwo+IHRoYXQgc2ltcGx5IG5vdCBwb3NzaWJsZT8KPgo+IHJkYXkK
-Pgo+IC0tCj4KPiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT0KPiBSb2JlcnQgUC4gSi4gRGF5IMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIE90dGF3YSwgT250YXJpbywgQ0FO
-QURBCj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBodHRwOi8vY3Jhc2hjb3Vy
-c2UuY2EKPgo+IFR3aXR0ZXI6IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIGh0dHA6Ly90d2l0dGVyLmNvbS9ycGpkYXkKPiBMaW5rZWRJbjog
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgaHR0cDovL2NhLmxp
-bmtlZGluLmNvbS9pbi9ycGpkYXkKPiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPgo+IF9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gYml0YmFrZS1kZXZlbCBtYWlsaW5n
-IGxpc3QKPiBiaXRiYWtlLWRldmVsQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmcKPiBodHRwOi8vbGlz
-dHMubGludXh0b2dvLm9yZy9jZ2ktYmluL21haWxtYW4vbGlzdGluZm8vYml0YmFrZS1kZXZlbAo=
+On 6/18/12 4:08 PM, Khem Raj wrote:
+> On Mon, Jun 18, 2012 at 1:10 PM, Robert P. J. Day<rpjday@crashcourse.ca>  wrote:
+>>
+>>   perhaps i'm just misreading the docs, but is there a bitbake
+>> incantation that does *nothing* more than fetch the packages needed
+>> for a target image?
+>>
+>>   if i use "bitbake -c fetchall", the result is not just to fetch the
+>> source, but to unload and patch it as well.
+>
+> hmmm I thought it did just what it says 'fetch all' but as you say it
+> seems to do more hmm I am not sure if its intended behavior
+
+In order for fetchall to work, there are a few dependencies that have to be 
+executed as well..
+
+But bitbake -c fetchall <target>, will fetch everything needed for the <target> 
+recipe.  It will extract and build only the items necessary for fetch to work 
+properly.
+
+--Mark
+
+
+>   i don't want that, i want
+>> whatever the magic is to just *fetch* and leave it at that.  or is
+>> that simply not possible?
+>>
+>> rday
+>>
+>> --
+>>
+>> ========================================================================
+>> Robert P. J. Day                                 Ottawa, Ontario, CANADA
+>>                         http://crashcourse.ca
+>>
+>> Twitter:                                       http://twitter.com/rpjday
+>> LinkedIn:                               http://ca.linkedin.com/in/rpjday
+>> ========================================================================
+>>
+>> _______________________________________________
+>> bitbake-devel mailing list
+>> bitbake-devel@lists.openembedded.org
+>> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
+
 
 
