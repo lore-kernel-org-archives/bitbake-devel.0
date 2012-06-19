@@ -1,25 +1,24 @@
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1Sgx16-00050s-6b
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1SgyEz-00073B-Qh
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 19 Jun 2012 13:54:40 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q5JBhtQl000351
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Tue, 19 Jun 2012 04:43:55 -0700 (PDT)
-Received: from [172.25.32.41] (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Tue, 19 Jun 2012 04:43:55 -0700
-Message-ID: <4FE065F9.6010300@windriver.com>
-Date: Tue, 19 Jun 2012 06:43:53 -0500
-From: Jason Wessel <jason.wessel@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:12.0) Gecko/20120430 Thunderbird/12.0.1
-MIME-Version: 1.0
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
+	Tue, 19 Jun 2012 15:13:06 +0200
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga102.fm.intel.com with ESMTP; 19 Jun 2012 06:02:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="182128520"
+Received: from unknown (HELO helios.localnet) ([10.252.120.167])
+	by fmsmga002.fm.intel.com with ESMTP; 19 Jun 2012 06:02:20 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Jason Wessel <jason.wessel@windriver.com>
+Date: Tue, 19 Jun 2012 14:02:19 +0100
+Message-ID: <28515527.frR1roArDb@helios>
+Organization: Intel Corporation
+User-Agent: KMail/4.8.3 (Linux/3.2.0-25-generic-pae; KDE/4.8.3; i686; ; )
+In-Reply-To: <4FE065F9.6010300@windriver.com>
 References: <cover.1340034255.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1340034255.git.paul.eggleton@linux.intel.com>
-X-Enigmail-Version: 1.4.2
+	<4FE065F9.6010300@windriver.com>
+MIME-Version: 1.0
 Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH 0/2] Signature-based rebuild improvements
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -33,39 +32,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 19 Jun 2012 11:54:40 -0000
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 19 Jun 2012 13:13:06 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On 06/18/2012 10:45 AM, Paul Eggleton wrote:
-> The following changes (against poky, but apply cleanly with -p2 against
-> bitbake master) are available in the git repository at:
+On Tuesday 19 June 2012 06:43:53 Jason Wessel wrote:
+> While the use cases described in the defect work, there is a new side
+> effect.  The sstate dir starts to fill up with new sums for the what ever
+> package you compile.  Perhaps this is some kind of trade off we have to
+> live with, but I do thing it is worth discussing.
 > 
->   git://git.yoctoproject.org/poky-contrib paule/bb-forcebuild
->   http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-forcebuild
+> I start with a fully populated sstate.  I didn't make any code changes at
+> all to any package, I just wanted to see the compile log from acl in this
+> case.
 > 
-> Paul Eggleton (2):
->   bitbake: ensure -f causes dependent tasks to be re-run
->   bitbake: add -C option to invalidate a task and rebuild the target
-> 
->  bitbake/bin/bitbake        |    3 +++
->  bitbake/lib/bb/build.py    |   18 ++++++++++++++++++
->  bitbake/lib/bb/cooker.py   |    6 +++---
->  bitbake/lib/bb/runqueue.py |   28 ++++++++++++++++++++++------
->  bitbake/lib/bb/siggen.py   |   35 +++++++++++++++++++++++++++++++++++
->  5 files changed, 81 insertions(+), 9 deletions(-)
-> 
+>     bitbake -f -c compile acl
+>     bitbake acl
 
+> The sstate sum is completely different due to the hash injection, but the
+> code compiled for everything is the same.  There is probably no easy, cheap
+> (as in cpu/wall time) way to have the best of both worlds.
 
-While the use cases described in the defect work, there is a new side effect.  The sstate dir starts to fill up with new sums for the what ever package you compile.  Perhaps this is some kind of trade off we have to live with, but I do thing it is worth discussing.
+Agreed, I think this is the simplest way to implement this feature in a way 
+that the system remains consistent with shared state. Fortunately these days 
+disk space is cheap, and there's always the sstate-cache-management.sh script 
+in OE-Core/Poky which can help clean up the cache if buildup is a concern.
 
-I start with a fully populated sstate.  I didn't make any code changes at all to any package, I just wanted to see the compile log from acl in this case.
+We could look at some code to try to clean up older files in the sstate cache 
+on the fly, but I'd like to let the dust settle on some of these changes (and 
+have a chance to work on some of the more pressing issues) before looking at 
+that in detail if that's OK.
 
-    bitbake -f -c compile acl
-    bitbake acl
+Cheers,
+Paul
 
-The sstate sum is completely different due to the hash injection, but the code compiled for everything is the same.  There is probably no easy, cheap (as in cpu/wall time) way to have the best of both worlds.
+-- 
 
-Jason.
+Paul Eggleton
+Intel Open Source Technology Centre
 
 
