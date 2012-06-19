@@ -1,27 +1,27 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Kai.Kang@windriver.com>) id 1Sgv47-0007Ji-Kr
+	(envelope-from <jason.wessel@windriver.com>) id 1Sgx16-00050s-6b
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 19 Jun 2012 11:49:40 +0200
+	Tue, 19 Jun 2012 13:54:40 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q5J9ctrp001930
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 Jun 2012 02:38:55 -0700 (PDT)
-Received: from localhost.localdomain (128.224.162.164) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server
-	(TLS) id 14.1.255.0; Tue, 19 Jun 2012 02:38:54 -0700
-From: Kang Kai <kai.kang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 19 Jun 2012 17:39:18 +0800
-Message-ID: <8a6196c93278c9272e44420f190eff1cb2357e73.1340098628.git.kai.kang@windriver.com>
-X-Mailer: git-send-email 1.7.5.4
-In-Reply-To: <cover.1340098628.git.kai.kang@windriver.com>
-References: <cover.1340098628.git.kai.kang@windriver.com>
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q5JBhtQl000351
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Tue, 19 Jun 2012 04:43:55 -0700 (PDT)
+Received: from [172.25.32.41] (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
+	Tue, 19 Jun 2012 04:43:55 -0700
+Message-ID: <4FE065F9.6010300@windriver.com>
+Date: Tue, 19 Jun 2012 06:43:53 -0500
+From: Jason Wessel <jason.wessel@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:12.0) Gecko/20120430 Thunderbird/12.0.1
 MIME-Version: 1.0
-X-Originating-IP: [128.224.162.164]
-Cc: Zhenfeng.Zhao@windriver.com
-Subject: [PATCH 1/1] ui/depexp.py: use the new progressbar in Hob
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+References: <cover.1340034255.git.paul.eggleton@linux.intel.com>
+In-Reply-To: <cover.1340034255.git.paul.eggleton@linux.intel.com>
+X-Enigmail-Version: 1.4.2
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 0/2] Signature-based rebuild improvements
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,100 +33,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 19 Jun 2012 09:49:40 -0000
-Content-Type: text/plain
+X-List-Received-Date: Tue, 19 Jun 2012 11:54:40 -0000
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 
-[Yocto 2149]
+On 06/18/2012 10:45 AM, Paul Eggleton wrote:
+> The following changes (against poky, but apply cleanly with -p2 against
+> bitbake master) are available in the git repository at:
+> 
+>   git://git.yoctoproject.org/poky-contrib paule/bb-forcebuild
+>   http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-forcebuild
+> 
+> Paul Eggleton (2):
+>   bitbake: ensure -f causes dependent tasks to be re-run
+>   bitbake: add -C option to invalidate a task and rebuild the target
+> 
+>  bitbake/bin/bitbake        |    3 +++
+>  bitbake/lib/bb/build.py    |   18 ++++++++++++++++++
+>  bitbake/lib/bb/cooker.py   |    6 +++---
+>  bitbake/lib/bb/runqueue.py |   28 ++++++++++++++++++++++------
+>  bitbake/lib/bb/siggen.py   |   35 +++++++++++++++++++++++++++++++++++
+>  5 files changed, 81 insertions(+), 9 deletions(-)
+> 
 
-Use the new progressbar in Hob, so that we can reduce the maintenance
-burden of the multiple GUIs.
 
-Signed-off-by: Kang Kai <kai.kang@windriver.com>
----
- bitbake/lib/bb/ui/depexp.py |   29 ++++++++++++++++++-----------
- 1 files changed, 18 insertions(+), 11 deletions(-)
+While the use cases described in the defect work, there is a new side effect.  The sstate dir starts to fill up with new sums for the what ever package you compile.  Perhaps this is some kind of trade off we have to live with, but I do thing it is worth discussing.
 
-diff --git a/bitbake/lib/bb/ui/depexp.py b/bitbake/lib/bb/ui/depexp.py
-index b62adbf..425302e 100644
---- a/bitbake/lib/bb/ui/depexp.py
-+++ b/bitbake/lib/bb/ui/depexp.py
-@@ -24,7 +24,7 @@ import threading
- import xmlrpclib
- import bb
- import bb.event
--from bb.ui.crumbs.progress import ProgressBar
-+from bb.ui.crumbs.progressbar import HobProgressBar
- 
- # Package Model
- (COL_PKG_NAME) = (0)
-@@ -220,8 +220,12 @@ def main(server, eventHandler):
- 
-     gtk.gdk.threads_enter()
-     dep = DepExplorer()
--    pbar = ProgressBar(dep)
--    pbar.connect("delete-event", gtk.main_quit)
-+    bardialog = gtk.Dialog(parent=dep)
-+    bardialog.set_default_size(400, 50)
-+    pbar = HobProgressBar()
-+    bardialog.vbox.pack_start(pbar)
-+    bardialog.show_all()
-+    bardialog.connect("delete-event", gtk.main_quit)
-     gtk.gdk.threads_leave()
- 
-     progress_total = 0
-@@ -238,19 +242,20 @@ def main(server, eventHandler):
-             if isinstance(event, bb.event.CacheLoadStarted):
-                 progress_total = event.total
-                 gtk.gdk.threads_enter()
--                pbar.set_title("Loading Cache")
--                pbar.update(0, progress_total)
-+                bardialog.set_title("Loading Cache")
-+                pbar.update(0)
-                 gtk.gdk.threads_leave()
- 
-             if isinstance(event, bb.event.CacheLoadProgress):
-                 x = event.current
-                 gtk.gdk.threads_enter()
--                pbar.update(x, progress_total)
-+                pbar.update(x * 1.0 / progress_total)
-+                pbar.set_title('')
-                 gtk.gdk.threads_leave()
-                 continue
- 
-             if isinstance(event, bb.event.CacheLoadCompleted):
--                pbar.hide()
-+                bardialog.hide()
-                 continue
- 
-             if isinstance(event, bb.event.ParseStarted):
-@@ -258,19 +263,21 @@ def main(server, eventHandler):
-                 if progress_total == 0:
-                     continue
-                 gtk.gdk.threads_enter()
--                pbar.set_title("Processing recipes")
--                pbar.update(0, progress_total)
-+                pbar.update(0)
-+                bardialog.set_title("Processing recipes")
-+
-                 gtk.gdk.threads_leave()
- 
-             if isinstance(event, bb.event.ParseProgress):
-                 x = event.current
-                 gtk.gdk.threads_enter()
--                pbar.update(x, progress_total)
-+                pbar.update(x * 1.0 / progress_total)
-+                pbar.set_title('')
-                 gtk.gdk.threads_leave()
-                 continue
- 
-             if isinstance(event, bb.event.ParseCompleted):
--                pbar.hide()
-+                bardialog.hide()
-                 continue
- 
-             if isinstance(event, bb.event.DepTreeGenerated):
--- 
-1.7.5.4
+I start with a fully populated sstate.  I didn't make any code changes at all to any package, I just wanted to see the compile log from acl in this case.
 
+    bitbake -f -c compile acl
+    bitbake acl
+
+The sstate sum is completely different due to the hash injection, but the code compiled for everything is the same.  There is probably no easy, cheap (as in cpu/wall time) way to have the best of both worlds.
+
+Jason.
 
 
