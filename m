@@ -1,27 +1,31 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from m15-13.126.com ([220.181.15.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1Sh8Ma-0001M5-Vf
+	(envelope-from <scanli@126.com>) id 1ShA2l-0003BA-RM
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 20 Jun 2012 02:01:37 +0200
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 19 Jun 2012 16:50:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="155719023"
-Received: from unknown (HELO helios.localnet) ([10.252.120.138])
-	by orsmga001.jf.intel.com with ESMTP; 19 Jun 2012 16:50:49 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: =?ISO-8859-1?Q?Bj=F6rn?= Stenberg <bjst@enea.com>
-Date: Wed, 20 Jun 2012 00:50:46 +0100
-Message-ID: <4368013.N53ZsVQnoH@helios>
-Organization: Intel Corporation
-User-Agent: KMail/4.8.3 (Linux/3.2.0-25-generic-pae; KDE/4.8.3; i686; ; )
-In-Reply-To: <20120619193539.GA2530@giant>
-References: <cover.1340034255.git.paul.eggleton@linux.intel.com>
-	<dcf1fb0acb4bd3424cbb5f48cd62f4f994896c20.1340034255.git.paul.eggleton@linux.intel.com>
-	<20120619193539.GA2530@giant>
+	Wed, 20 Jun 2012 03:49:16 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Received:Date:From:To:Subject:Content-Type:
+	MIME-Version:Message-ID; bh=Tcgjmvg/awk8Z4XISlG7ZAf14aYwYxMk5Phz
+	T8L9YJ4=; b=fre+hYtlpWy6n+Amsl/I5jfE28ZLXhrfUSn2x2zKEngJ4qFW/mff
+	qmZDLuLqFYfz244mtkBltppX8bk57Jmzqq/P4UCMXhQZo3u9S15En2vsWkDqHz79
+	MoPu/OkCfFi5saMRaFUj57v64wQr51XfFCDlVI6cNwtqvlQLNdtzhfI=
+Received: from scanli$126.com ( [192.168.208.31] ) by ajax-webmail-wmsvr13
+	(Coremail) ; Wed, 20 Jun 2012 09:06:55 +0800 (CST)
+X-Originating-IP: [192.168.208.31]
+Date: Wed, 20 Jun 2012 09:06:55 +0800 (CST)
+From: =?GBK?B?wO698LPJ?= <scanli@126.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version SP_ntes V3.5 build
+	20120507(18390.4657.4663) Copyright (c) 2002-2012 www.mailtech.cn
+	126com
+X-CM-CTRLDATA: 7dhlXGZvb3Rlcl9odG09MTk4Nzo4MQ==
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/2] bitbake: ensure -f causes dependent tasks to be re-run
+Message-ID: <752ca278.1ab5.138076d8860.Coremail.scanli@126.com>
+X-CM-TRANSID: DcqowGB5JkAvIuFPLS8fAA--.2014W
+X-CM-SenderInfo: hvfd0zbl6rjloofrz/1tbiWBLTdE3AMXsQFAABsv
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Subject: Hob can't support external toolchain?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,75 +37,79 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 20 Jun 2012 00:01:37 -0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+X-List-Received-Date: Wed, 20 Jun 2012 01:49:16 -0000
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_19862_1210686702.1340154415200"
 
-On Tuesday 19 June 2012 21:35:39 Bj=F6rn Stenberg wrote:
-> Paul Eggleton wrote:
-> > If -f is specified, force dependent tasks to be re-run next time. T=
-his
-> > works by changing the force behaviour so that instead of deleting t=
-he
-> > task's stamp, we write a "taint" file into the stamps directory, wh=
-ich
-> > will alter the taskhash randomly and thus trigger the task to re-ru=
-n
->=20
-> I'm concerned about calling this -f/--force. I don't think I'm alone =
-in
-> interpreting -f / --force as "run all commands, even if the dependenc=
-ies
-> say we don't need to".
+------=_Part_19862_1210686702.1340154415200
+Content-Type: text/plain; charset=GBK
+Content-Transfer-Encoding: base64
 
-Well, what it used to do was just cause the specified task to be run ev=
-en if=20
-there is a stamp recording that it was already done; dependencies don't=
- come=20
-into it (although perhaps you meant stamps?)
+SGkhCkknbSB1c2luZyBwb2t5IHRvIGRldmVsb3AgbXkgaW1hZ2Ugd2l0aCBleHRlcm5hbCB0b29s
+Y2hhaW4gobBTb3VyY2VyeSBDb2RlQmVuY2ggTGl0ZSAyMDExLjA5LTcwobEuCkkgYWRkZWQgdGhl
+IGZlbGxvdyBsaW5lcyBpbiAiUG9reS5jb25mIjoKICAgICAgICBUQ01PREUgPSAiZXh0ZXJuYWwt
+Y3NsIgogICAgICAgIENTTF9WRVJfTUFJTiAgPSAiMjAxMS4wOS03MCIKICAgICAgICBFWFRFUk5B
+TF9UT09MQ0hBSU4gPSAiL2hvbWUvbGpjL2FybS0yMDExLjA5L2FybSIKICAgICAgICBUQVJHRVRf
+UFJFRklYID0gImFybS1ub25lLWxpbnV4LWdudWVhYmktIiAKSW4gInRjbW9kZS1leHRlcm5hbC1z
+b3VyY2VyeS5pbmMiLEkgY2hhbmdlZAogICAgICAgIFRBUkdFVF9QUkVGSVggPSAiJHtDU0xfVEFS
+R0VUX1NZU30tIgogICAgIHRvCiAgICAgICAgVEFSR0VUX1BSRUZJWCA/PSAiJHtDU0xfVEFSR0VU
+X1NZU30tIgoKV2hlbiBJIGxhdW5jaGVkIHBva3kgd2l0aCBDb21tYW5kIExpbmUsSXQgc3VjY2Vl
+ZCB3aXRoIHRoZSBmZWxsb3cgbWVzc2dhZXM6CiAgICAgICAuLi4uLgogICAgICAgV0FSTklORzog
+UUEgSXNzdWU6IE5vIEdOVV9IQVNIIGluIHRoZSBlbGYgYmluYXJ5OiAnL2hvbWUvbGpjL3Bva3kt
+ZGVuemlsLTcuMC9idWlsZC90bXAvd29yay9hcm12Ni12ZnAtcG9reS1saW51eC0KICAgICAgICAg
+ICAgICAgZ251ZWFiaS9wZXJsLTUuMTQuMi1yNi9wYWNrYWdlcy1zcGxpdC9wZXJsLW1vZHVsZS10
+aHJlYWRzL3Vzci9saWIvcGVybC81LjE0LjIvYXV0by90aHJlYWRzL3NoYXJlZC9zaGFyZWQuc28n
+CiAgICAgICAgTk9URTogcGFja2FnZSBweXRob24tMi43LjItcjIuMTQ6IHRhc2sgZG9fcGFja2Fn
+ZV93cml0ZV9ycG06IFN1Y2NlZWRlZAoKQnV0IHdoZW4gSSBsYXVuY2hlZCBwb2t5ICB3aXRoIGhv
+YiBndWksIHRoZSBwb2t5IGZhaWxlZCB3aXRoIHRoZSBmZWxsb3cgbWVzc2FnZXM6CiAgICAgIC4u
+Li4uLgogICAgICBRQSBJc3N1ZTpObyBHTlVfSEFTSCBpbiB0aGUgZWxmIGJpbmFyeTonL2hvbWUv
+bGpjL3Bva3ktZGVuemlsLTcuMC9idWlsZC90bXAvd29yay9hcm12Ni12ZnAtcG9reS1saW51eC1n
+bnVlYWJpL3BlcmwtCiAgICAgICAgICAgICAgICAgICAgICA1LjE0LjItcjYvcGFja2FnZXMtc3Bs
+aXQvcGVybC1tb2R1bGUtdGhyZWFkcy91c3IvbGliL3BlcmwvNS4xNC4yL2F1dG8vdGhyZWFkcy9z
+aGFyZWQvc2hhcmVkLnNvJwogICAgICBRQSBydW4gZm91bmQgZmF0YWwgZXJyb3JzLlBsZWFzZSBj
+b25zaWRlciBmaXhpbmcgdGhlbi4KICAgICAgRnVuY3Rpb24gZmFpbGQ6ZG9fcGFja2FnZV9xYQpI
+b2IgY2FuJ3Qgc3VwcG9ydCBleHRlcm5hbCB0b29sY2hhaW4/
 
-> I would expect the same output as the first time,
-> with the same sstate checksum.
+------=_Part_19862_1210686702.1340154415200
+Content-Type: text/html; charset=GBK
+Content-Transfer-Encoding: base64
 
-So my assumption is -f is most often used for the purpose of manually f=
-orcing=20
-a recompile after you have made modifications to the already extracted =
-source=20
-code under the workdir. If that is the case, there are two consequences=
- as I=20
-see it:
+PGRpdj5IaSE8YnI+SSdtIHVzaW5nIHBva3kgdG8gZGV2ZWxvcCBteSBpbWFnZSB3aXRoIGV4dGVy
+bmFsIHRvb2xjaGFpbiChsFNvdXJjZXJ5IENvZGVCZW5jaCBMaXRlIDIwMTEuMDktNzChsS48YnI+
+SSBhZGRlZCB0aGUgZmVsbG93IGxpbmVzIGluICJQb2t5LmNvbmYiOjxicj4mbmJzcDsgJm5ic3A7
+ICZuYnNwOyZuYnNwOyZuYnNwOyBUQ01PREUgPSAiZXh0ZXJuYWwtY3NsIjxicj4mbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgQ1NMX1ZFUl9NQUlOJm5ic3A7ID0gIjIw
+MTEuMDktNzAiPGJyPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBF
+WFRFUk5BTF9UT09MQ0hBSU4gPSAiL2hvbWUvbGpjL2FybS0yMDExLjA5L2FybSI8YnI+Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IFRBUkdFVF9QUkVGSVggPSAiYXJt
+LW5vbmUtbGludXgtZ251ZWFiaS0iJm5ic3A7IDxicj5JbiAidGNtb2RlLWV4dGVybmFsLXNvdXJj
+ZXJ5LmluYyIsSSBjaGFuZ2VkIDxicj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsgVEFSR0VUX1BSRUZJWCA9ICIke0NTTF9UQVJHRVRfU1lTfS0iPGJyPiZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyB0bzxicj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsgVEFSR0VUX1BSRUZJWCA/PSAiJHtDU0xfVEFSR0VUX1NZU30tIjxicj48YnI+V2hl
+biBJIGxhdW5jaGVkIHBva3kgd2l0aCBDb21tYW5kIExpbmUsSXQgc3VjY2VlZCB3aXRoIHRoZSBm
+ZWxsb3cgbWVzc2dhZXM6PGJyPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAu
+Li4uLjxicj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgV0FSTklORzogUUEg
+SXNzdWU6IE5vIEdOVV9IQVNIIGluIHRoZSBlbGYgYmluYXJ5OiAnL2hvbWUvbGpjL3Bva3ktZGVu
+emlsLTcuMC9idWlsZC90bXAvd29yay9hcm12Ni12ZnAtcG9reS1saW51eC08YnI+Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7IGdudWVhYmkvcGVybC01LjE0LjItcjYvcGFja2FnZXMtc3BsaXQv
+cGVybC1tb2R1bGUtdGhyZWFkcy91c3IvbGliL3BlcmwvNS4xNC4yL2F1dG8vdGhyZWFkcy9zaGFy
+ZWQvc2hhcmVkLnNvJzxicj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsgTk9URTogcGFja2FnZSBweXRob24tMi43LjItcjIuMTQ6IHRhc2sgZG9fcGFja2FnZV93cml0
+ZV9ycG06IFN1Y2NlZWRlZDxicj48YnI+QnV0IHdoZW4gSSBsYXVuY2hlZCBwb2t5Jm5ic3A7IHdp
+dGggaG9iIGd1aSwgdGhlIHBva3kgZmFpbGVkIHdpdGggdGhlIGZlbGxvdyBtZXNzYWdlczo8YnI+
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IC4uLi4uLjxicj4mbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsgUUEgSXNzdWU6Tm8gR05VX0hBU0ggaW4gdGhlIGVsZiBiaW5hcnk6Jy9o
+b21lL2xqYy9wb2t5LWRlbnppbC03LjAvYnVpbGQvdG1wL3dvcmsvYXJtdjYtdmZwLXBva3ktbGlu
+dXgtZ251ZWFiaS9wZXJsLSA8YnI+Jm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAm
+bmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyA1LjE0LjItcjYvcGFja2Fn
+ZXMtc3BsaXQvcGVybC1tb2R1bGUtdGhyZWFkcy91c3IvbGliL3BlcmwvNS4xNC4yL2F1dG8vdGhy
+ZWFkcy9zaGFyZWQvc2hhcmVkLnNvJzxicj4mbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsg
+UUEgcnVuIGZvdW5kIGZhdGFsIGVycm9ycy5QbGVhc2UgY29uc2lkZXIgZml4aW5nIHRoZW4uPGJy
+PiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBGdW5jdGlvbiBmYWlsZDpkb19wYWNrYWdl
+X3FhPGJyPkhvYiBjYW4ndCBzdXBwb3J0ICBleHRlcm5hbCB0b29sY2hhaW4/PC9kaXY+PGJyPjxi
+cj48c3BhbiB0aXRsZT0ibmV0ZWFzZWZvb3RlciI+PHNwYW4gaWQ9Im5ldGVhc2VfbWFpbF9mb290
+ZXIiPjwvc3Bhbj48L3NwYW4+
 
- * When Bitbake next checks whether you want to run dependent tasks, gi=
-ven=20
-that the output of the task almost certainly changed due to your modifi=
-cations,=20
-you would want those dependent tasks to be re-run again also. i.e. if y=
-ou've=20
-forced a compile, you would expect for the results to be installed and=20=
-
-packaged when you next ask for the do_install / do_package tasks to run=
-.
-
- * You don't really want those modifications going into the sstate pack=
-age that=20
-effectively claims to be produced from inputs that only come from the m=
-etadata.=20
-Now, obviously it doesn't physically prevent you from ever getting modi=
-fied=20
-data into an sstate package with the same signature, but it makes it le=
-ss=20
-likely.
-
-My question would be, are you using -f for something different or do yo=
-u=20
-disagree with one or both of the consequences above?
-
-Cheers,
-Paul
-
---=20
-
-Paul Eggleton
-Intel Open Source Technology Centre
-
-
+------=_Part_19862_1210686702.1340154415200--
