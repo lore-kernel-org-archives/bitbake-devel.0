@@ -1,26 +1,31 @@
-Received: from mga01.intel.com ([192.55.52.88])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1ShGcz-0006WC-ET
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 20 Jun 2012 10:51:05 +0200
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 20 Jun 2012 01:40:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="182595098"
-Received: from unknown (HELO helios.localnet) ([10.252.120.173])
-	by fmsmga002.fm.intel.com with ESMTP; 20 Jun 2012 01:40:19 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: =?ISO-8859-1?Q?Bj=F6rn?= Stenberg <bjst@enea.com>
-Date: Wed, 20 Jun 2012 09:40:16 +0100
-Message-ID: <1756623.6zWylpP7a0@helios>
-Organization: Intel Corporation
-User-Agent: KMail/4.8.3 (Linux/3.2.0-25-generic-pae; KDE/4.8.3; i686; ; )
-In-Reply-To: <20120620075504.GB22538@giant>
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1ShGfR-0006Yb-0L for bitbake-devel@lists.openembedded.org;
+	Wed, 20 Jun 2012 10:53:38 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5K8ghpU003139;
+	Wed, 20 Jun 2012 09:42:43 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 01637-10; Wed, 20 Jun 2012 09:42:39 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5K8gZlX003133
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Wed, 20 Jun 2012 09:42:36 +0100
+Message-ID: <1340181757.1640.30.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Jason Wessel <jason.wessel@windriver.com>
+Date: Wed, 20 Jun 2012 09:42:37 +0100
+In-Reply-To: <4FE065F9.6010300@windriver.com>
 References: <cover.1340034255.git.paul.eggleton@linux.intel.com>
-	<4368013.N53ZsVQnoH@helios> <20120620075504.GB22538@giant>
-MIME-Version: 1.0
+	<4FE065F9.6010300@windriver.com>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/2] bitbake: ensure -f causes dependent tasks to be re-run
+Subject: Re: [PATCH 0/2] Signature-based rebuild improvements
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,112 +37,62 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 20 Jun 2012 08:51:05 -0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+X-List-Received-Date: Wed, 20 Jun 2012 08:53:38 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Wednesday 20 June 2012 09:55:04 Bj=F6rn Stenberg wrote:
-> Paul Eggleton wrote:
-> > So my assumption is -f is most often used for the purpose of manual=
-ly
-> > forcing a recompile after you have made modifications to the alread=
-y
-> > extracted source code under the workdir.
->=20
-> I agree with that.
->=20
-> My concern is based on the fact that people (including myself) don't =
-fully
-> know all the details of how bitbake works, and tend to make assumptio=
-ns
-> based on other build systems they know, such as simple Makefiles.
->=20
-> I think the fact that bitbake sometime works differently means we sho=
-uld be
-> extra careful about not playing into devlelopers' assumptions. The bi=
-tbake
-> option --force sounds rather similar to make's --always-make, especia=
-lly
-> when it is described as: "force run of specified cmd, regardless of s=
-tamp
-> status".=20
+On Tue, 2012-06-19 at 06:43 -0500, Jason Wessel wrote:
+> On 06/18/2012 10:45 AM, Paul Eggleton wrote:
+> > The following changes (against poky, but apply cleanly with -p2 against
+> > bitbake master) are available in the git repository at:
+> > 
+> >   git://git.yoctoproject.org/poky-contrib paule/bb-forcebuild
+> >   http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-forcebuild
+> > 
+> > Paul Eggleton (2):
+> >   bitbake: ensure -f causes dependent tasks to be re-run
+> >   bitbake: add -C option to invalidate a task and rebuild the target
+> > 
+> >  bitbake/bin/bitbake        |    3 +++
+> >  bitbake/lib/bb/build.py    |   18 ++++++++++++++++++
+> >  bitbake/lib/bb/cooker.py   |    6 +++---
+> >  bitbake/lib/bb/runqueue.py |   28 ++++++++++++++++++++++------
+> >  bitbake/lib/bb/siggen.py   |   35 +++++++++++++++++++++++++++++++++++
+> >  5 files changed, 81 insertions(+), 9 deletions(-)
+> 
+> While the use cases described in the defect work, there is a new side
+> effect.  The sstate dir starts to fill up with new sums for the what
+> ever package you compile.  Perhaps this is some kind of trade off we
+> have to live with, but I do thing it is worth discussing.
+>
+> I start with a fully populated sstate.  I didn't make any code changes
+> at all to any package, I just wanted to see the compile log from acl
+> in this case.
+>
+>     bitbake -f -c compile acl
+>     bitbake acl
+>
+> The sstate sum is completely different due to the hash injection, but
+> the code compiled for everything is the same.  There is probably no
+> easy, cheap (as in cpu/wall time) way to have the best of both worlds.
 
-I've not used this option with make before, so I tried it with the foll=
-owing=20
-trivial Makefile:
+I think this fix is good and solves various immediate problems. Thinking
+forward to the future, if you can know the state of a code base as a
+checksum, you could inject that as the "taint" and then you would be
+able to match two existing matching compiles. Having everything under
+git control for example would be a cheap way to do this, if you can
+gurantee that all changes were encapsulated.
 
-------------- snip --------------
-b:
-        touch b
+For the menuconfig example, I did wonder about checksumming the new
+defconfig and injecting that for example.
 
-a: b
-        touch a
-------------- snip --------------
-
-If I run "make a" it of course runs "touch b" then "touch a". Then I ru=
-n "make=20
---always-make b", it runs "touch b" which is what you expect. However, =
-if I=20
-subsequently run "make a" it does a "touch a" again - the dependency b =
-has=20
-changed, so it recognises it needs to rebuild a. This looks to me to be=
-=20
-exactly the same as the new proposed behaviour of -f in bitbake. The on=
-ly=20
-wrinkle in external behaviour is that "make --always-make a" runs both =
-"touch=20
-b" and "touch a"; this would be difficult for us to replicate in bitbak=
-e and I'm=20
-not sure it would be particularly useful. In any case it appears to me =
-that if=20
-we're moving anywhere, we're at least moving in the direction of behavi=
-ng more=20
-like make rather than less like it, would you agree?
-
-> If we were to call it something different instead, like -t/--taint, t=
-his
-> would avoid some assumptions about its behaviour and make it more cle=
-ar
-> that the output will be different even if the input is the same.
->=20
-> Sure, it's not a major issue. But I'm fairly confident that if we kee=
-p the
-> option name but change its behaviour, I am going to have to explain m=
-ore
-> than once to developers not following this list or the commit logs wh=
-y -f
-> does not do what they think (even though one can argue it never did).=
- I'd
-> rather they discover up front that -f is deprecated and that they sho=
-uld
-> look up a new option instead.
-
-This is a change in established behaviour, yes, and all changes in beha=
-viour=20
-of existing functionality come with a potential cost in terms of breaki=
-ng=20
-existing user assumptions. It's worth pointing out though that bitbake'=
-s=20
-behaviour with regard to how it handles building after changes have bee=
-n made=20
-has already changed quite significantly recently with the introduction =
-and=20
-extension of shared state - it is now the case that if you make almost =
-any=20
-change to the recipe and/or files it points to, the sstate signature ch=
-anges=20
-and the task (plus all dependent tasks) will be rebuilt if called for. =
-IMHO,=20
-this makes the change to -f make more sense - we're remaining consisten=
-t with=20
-the way the rest of the build system now works.
+What I like about the architecture of the taint implementation is that
+it doesn't preclude any of the above so its something we can think about
+and work towards if we can come up with a good enough plan :)
 
 Cheers,
-Paul
 
---=20
+Richard
 
-Paul Eggleton
-Intel Open Source Technology Centre
 
 
