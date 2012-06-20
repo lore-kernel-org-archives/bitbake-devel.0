@@ -1,25 +1,23 @@
 Received: from mail.windriver.com ([147.11.1.11])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Peter.Seebach@windriver.com>) id 1ShQ0t-00052T-B6
+	(envelope-from <Peter.Seebach@windriver.com>) id 1ShQ17-00052R-Av
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 20 Jun 2012 20:52:23 +0200
+	Wed, 20 Jun 2012 20:52:38 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q5KIfbH5001640
+	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q5KIfa84001635
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 20 Jun 2012 11:41:37 -0700 (PDT)
+	Wed, 20 Jun 2012 11:41:36 -0700 (PDT)
 Received: from localhost.localdomain (172.25.34.64) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Wed, 20 Jun 2012 11:41:37 -0700
+	Wed, 20 Jun 2012 11:41:36 -0700
 From: Peter Seebach <peter.seebach@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 20 Jun 2012 13:41:35 -0500
-Message-ID: <ff3cec765131714f8dac874e7a1712a5ba15b0b8.1340217563.git.peter.seebach@windriver.com>
+Date: Wed, 20 Jun 2012 13:41:33 -0500
+Message-ID: <cover.1340217563.git.peter.seebach@windriver.com>
 X-Mailer: git-send-email 1.7.0.4
-In-Reply-To: <cover.1340217563.git.peter.seebach@windriver.com>
-References: <cover.1340217563.git.peter.seebach@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 2/2] data_smart.py: Track configuration file inclusions
+Subject: [PATCH 0/2] File inclusion and variable assignment tracking
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,144 +29,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 20 Jun 2012 18:52:23 -0000
+X-List-Received-Date: Wed, 20 Jun 2012 18:52:38 -0000
 Content-Type: text/plain
 
-This is a preliminary attempt to create a structured representation of
-the processing of include files.  It ignores line numbers because they're
-meaningless.  It could probably be updated to, say, distinguish between
-includes and requires.  Output is added to bitbake -e.
+This is the assignment/inclusion tracking stuff I've had floating
+around.  In further testing, I found one missing [1] that made it
+fail for "bitbake -e [specific package]".  Haven't had any other
+troubles with it.
 
-Signed-off-by: Peter Seebach <peter.seebach@windriver.com>
----
- lib/bb/data.py           |   16 ++++++++++++++++
- lib/bb/data_smart.py     |   41 ++++++++++++++++++++++++++++++++++++++---
- lib/bb/parse/__init__.py |    6 +++++-
- 3 files changed, 59 insertions(+), 4 deletions(-)
+This could totally use improvement, but I think this has reached a
+point where:
+1.  It's more useful to have it than not.
+2.  It will be better improved by feedback from live usage.
 
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index bd03e84..4db0280 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -253,10 +253,26 @@ def emit_env(o=sys.__stdout__, d = init(), all=False):
-     isfunc = lambda key: bool(d.getVarFlag(key, "func"))
-     keys = sorted((key for key in d.keys() if not key.startswith("__")), key=isfunc)
-     grouped = groupby(keys, isfunc)
-+    # Include history!
-+    if d.tracking():
-+        o.write('#\n# INCLUDE HISTORY:\n#\n')
-+        emit_history(o, d.getIncludeHistory())
-+        
-     for isfunc, keys in grouped:
-         for key in keys:
-             emit_var(key, o, d, all and not isfunc) and o.write('\n')
- 
-+def emit_history(o, h, depth = 0):
-+    if not h:
-+        return
-+    for event in h:
-+        o.write("# %*s%s" % (depth * 2, "", event[0]))
-+        if event[1]:
-+            o.write(" includes:\n")
-+            emit_history(o, event[1], depth + 1)
-+        else:
-+            o.write("\n")
-+
- def exported_keys(d):
-     return (key for key in d.keys() if not key.startswith('__') and
-                                       d.getVarFlag(key, 'export') and
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index e999006..e939c2e 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -30,6 +30,7 @@ BitBake build tools.
- 
- import traceback
- import copy, re
-+import sys
- from collections import MutableMapping
- import logging
- import hashlib
-@@ -116,6 +117,8 @@ class DataSmart(MutableMapping):
-     def __init__(self, special = COWDictBase.copy(), seen = COWDictBase.copy() ):
-         self.dict = {}
-         self.history = {}
-+        self.include_history = []
-+        self.include_stack = [(-1, self.include_history)]
- 
-         # cookie monster tribute
-         self._special_values = special
-@@ -124,6 +127,25 @@ class DataSmart(MutableMapping):
- 
-         self.expand_cache = {}
- 
-+    def includeLog(self, filename):
-+        """includeLog(included_file) shows that the file was included
-+        by the currently-processed file or context."""
-+        if self._tracking_enabled:
-+            event = (filename, [])
-+            position = (len(self.include_stack[-1][1]), event[1])
-+            self.include_stack[-1][1].append(event)
-+            self.include_stack.append(position)
-+
-+    def includeLogDone(self, filename):
-+        if self._tracking_enabled:
-+            if len(self.include_stack) > 1:
-+                self.include_stack.pop()
-+            else:
-+                bb.warn("Uh-oh:  includeLogDone(%s) tried to empty the stack." % filename)
-+
-+    def getIncludeHistory(self):
-+        return self.include_history
-+
-     def tracking(self):
-         return self._tracking_enabled
- 
-@@ -458,9 +480,22 @@ class DataSmart(MutableMapping):
-         # we really want this to be a DataSmart...
-         data = DataSmart(seen=self._seen_overrides.copy(), special=self._special_values.copy())
-         data.dict["_data"] = self.dict
--        data.history = self.history.copy()
--        data._tracking_enabled = self._tracking_enabled
--
-+        if self._tracking_enabled:
-+            data._tracking_enabled = self._tracking_enabled
-+            data.history = self.history.copy()
-+            data.include_history = copy.deepcopy(self.include_history)
-+            data.include_stack = []
-+            oldref = self.include_history
-+            newref = data.include_history
-+            # Create corresponding references, if we can
-+            try:
-+                for item in self.include_stack:
-+                    if item[0] >= 0:
-+                        newref = newref[item[0]][1]
-+                    newevent = (item[0], newref)
-+                    data.include_stack.append(newevent)
-+            except Exception:
-+                sys.exc_clear()
-         return data
- 
-     def expandVarref(self, variable, parents=False, filename = None, lineno = None):
-diff --git a/lib/bb/parse/__init__.py b/lib/bb/parse/__init__.py
-index 7b9c47e..0ea6a55 100644
---- a/lib/bb/parse/__init__.py
-+++ b/lib/bb/parse/__init__.py
-@@ -88,7 +88,11 @@ def handle(fn, data, include = 0):
-     """Call the handler that is appropriate for this file"""
-     for h in handlers:
-         if h['supports'](fn, data):
--            return h['handle'](fn, data, include)
-+            data.includeLog(fn)
-+            try:
-+                return h['handle'](fn, data, include)
-+            finally:
-+                data.includeLogDone(fn)
-     raise ParseError("not a BitBake file", fn)
- 
- def init(fn, data):
--- 
-1.7.0.4
+Impact outside of the bitbake -e case is basically nil, and in the
+-e case it's a HUGE improvement in usability.
+
+The following changes since commit d316f28ed725ff40daa8771c1aa224ac46d5b224:
+  Richard Purdie (1):
+        methodpool: Improve method already seen error message
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib seebs/tracking
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=seebs/tracking
+
+Peter Seebach (2):
+  data_smart.py: Provide (optional) logging of variable modifications
+  data_smart.py: Track configuration file inclusions
+
+ lib/bb/cooker.py         |    2 +
+ lib/bb/data.py           |   65 +++++++++++++++++-----
+ lib/bb/data_smart.py     |  140 +++++++++++++++++++++++++++++++++++++--------
+ lib/bb/parse/__init__.py |    6 ++-
+ lib/bb/parse/ast.py      |   65 ++++++++++++----------
+ 5 files changed, 209 insertions(+), 69 deletions(-)
 
 
 
