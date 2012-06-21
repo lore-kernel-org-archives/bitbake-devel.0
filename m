@@ -1,26 +1,30 @@
-Received: from mga09.intel.com ([134.134.136.24])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1ShgP3-0001b4-C0
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 21 Jun 2012 14:22:25 +0200
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 21 Jun 2012 05:10:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="160642913"
-Received: from unknown (HELO helios.localnet) ([10.252.120.141])
-	by orsmga002.jf.intel.com with ESMTP; 21 Jun 2012 05:10:33 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: =?ISO-8859-1?Q?Bj=F6rn?= Stenberg <bjst@enea.com>
-Date: Thu, 21 Jun 2012 13:10:33 +0100
-Message-ID: <1778547.OMx1BrFPz0@helios>
-Organization: Intel Corporation
-User-Agent: KMail/4.8.3 (Linux/3.2.0-25-generic-pae; KDE/4.8.3; i686; ; )
-In-Reply-To: <20120621112555.GD7204@giant>
-References: <cover.1340034255.git.paul.eggleton@linux.intel.com>
-	<1756623.6zWylpP7a0@helios> <20120621112555.GD7204@giant>
-MIME-Version: 1.0
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1ShgTU-0001ds-8c for bitbake-devel@lists.openembedded.org;
+	Thu, 21 Jun 2012 14:27:00 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5LCGDlD022112;
+	Thu, 21 Jun 2012 13:16:13 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 21414-07; Thu, 21 Jun 2012 13:16:09 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5LCG5Tc022106
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Thu, 21 Jun 2012 13:16:06 +0100
+Message-ID: <1340280968.1640.96.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
+Date: Thu, 21 Jun 2012 13:16:08 +0100
+In-Reply-To: <1340018907-8814-1-git-send-email-rep.dot.nop@gmail.com>
+References: <1340018907-8814-1-git-send-email-rep.dot.nop@gmail.com>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/2] bitbake: ensure -f causes dependent tasks to be re-run
+Subject: Re: [PATCH] fetch2: do not try to checksum a socket
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,46 +36,65 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jun 2012 12:22:25 -0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+X-List-Received-Date: Thu, 21 Jun 2012 12:27:00 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Thursday 21 June 2012 13:25:55 Bj=F6rn Stenberg wrote:
-> Paul Eggleton wrote:
-> > In any case it appears to me that if we're moving anywhere, we're a=
-t least
-> > moving in the direction of behaving more like make rather than less=
- like
-> > it, would you agree?
->=20
-> Yes, in terms of which commands are being ran. No, in terms of the re=
-sulting
-> output.
+On Mon, 2012-06-18 at 13:28 +0200, Bernhard Reutner-Fischer wrote:
+> computing the md5 of a socket does not work too well.
+> 
+> Traceback (most recent call last):
+>   File "/scratch/src/oe/bitbake/build/lib/bb/siggen.py", line 172, in SignatureGeneratorOEBasic.get_taskhash(fn='/scratch/src/oe/openembedded-core/meta/recipes-core/uclibc/uclibc_git.bb', task='do_fetch', deps=[], dataCache=<bb.cache.CacheData object at 0xd95890>):
+>              if task in dataCache.file_checksums[fn]:
+>     >            checksums = bb.fetch2.get_file_checksums(dataCache.file_checksums[fn][task], recipename)
+>                  for (f,cs) in checksums:
+>   File "/scratch/src/oe/bitbake/build/lib/bb/fetch2/__init__.py", line 627, in get_file_checksums(filelist='/scratch/src/uClibc/ /scratch/src/oe/openembedded-core/meta/recipes-core/uclibc/uclibc-git/uClibc.machine /scratch/src/oe/openembedded-core/meta/recipes-core/uclibc/uclibc-git/uClibc.distro', pn='uclibc'):
+>                          fullpth = os.path.join(root, name)
+>     >                    checksum = checksum_file(fullpth)
+>                          if checksum:
+>   File "/scratch/src/oe/bitbake/build/lib/bb/fetch2/__init__.py", line 605, in checksum_file(f='/scratch/src/uClibc/test/inet/socktest'):
+>              try:
+>     >            checksum = _checksum_cache.get_checksum(f)
+>              except OSError as e:
+>   File "/scratch/src/oe/bitbake/build/lib/bb/checksum.py", line 78, in FileChecksumCache.get_checksum(f='/scratch/src/uClibc/test/inet/socktest'):
+> 
+>     >        hashval = bb.utils.md5_file(f)
+>              self.cachedata_extras[0][f] = (cmtime, hashval)
+>   File "/scratch/src/oe/bitbake/build/lib/bb/utils.py", line 362, in md5_file(filename='/scratch/src/uClibc/test/inet/socktest'):
+> 
+>     >    for line in open(filename):
+>              m.update(line)
+> IOError: [Errno 6] No such device or address: '/scratch/src/uClibc/test/inet/socktest'
 
-The resulting output is only different in terms of what the user has ch=
-anged in=20
-the sources (if anything) and the sstate checksum. Why do you want it t=
-o be=20
-producing the same checksum for potentially different contents?
+Can you give some details on how to reproduce this? I'm guessing this is
+due to some kind of proxy configuration?
 
-> -f intentionally produces different output. I think this will confuse=
-
-> people, and that we should therefore be extra careful in informing th=
-e
-> user.
-
-It intentionally changes the checksum yes, and as Richard said we shoul=
-d=20
-probably mention this in the help text. I will produce a v2 of this ser=
-ies=20
-that does that.
+What is worrying me a bit is that we shouldn't be calling the checksum
+code for git repositories at all. Whilst this fix no doubt avoids the
+problem, I'm worried there might be something deeper going on...
 
 Cheers,
-Paul
 
---=20
+Richard
 
-Paul Eggleton
-Intel Open Source Technology Centre
+> Signed-off-by: Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
+> ---
+>  lib/bb/fetch2/__init__.py |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+> index 324eef2..0c0d60d 100644
+> --- a/lib/bb/fetch2/__init__.py
+> +++ b/lib/bb/fetch2/__init__.py
+> @@ -601,6 +601,7 @@ def get_file_checksums(filelist, pn):
+>      """
+>  
+>      def checksum_file(f):
+> +        if not os.path.isfile(f): return None
+>          try:
+>              checksum = _checksum_cache.get_checksum(f)
+>          except OSError as e:
+
+
 
 
