@@ -1,34 +1,31 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1Shimq-0002nX-J7 for bitbake-devel@lists.openembedded.org;
-	Thu, 21 Jun 2012 16:55:08 +0200
+	id 1ShjtM-0004PH-Pg for bitbake-devel@lists.openembedded.org;
+	Thu, 21 Jun 2012 18:05:57 +0200
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5LEiEJq023424;
-	Thu, 21 Jun 2012 15:44:14 +0100
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5LFtBbT024102;
+	Thu, 21 Jun 2012 16:55:11 +0100
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 22780-06; Thu, 21 Jun 2012 15:44:09 +0100 (BST)
+	id 23390-06; Thu, 21 Jun 2012 16:55:06 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5LEi6eR023418
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5LFt4eu024089
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Thu, 21 Jun 2012 15:44:07 +0100
-Message-ID: <1340289848.1640.125.camel@ted>
+	Thu, 21 Jun 2012 16:55:05 +0100
+Message-ID: <1340294106.1640.129.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: =?ISO-8859-1?Q?Bj=F6rn?= Stenberg <bjst@enea.com>
-Date: Thu, 21 Jun 2012 15:44:08 +0100
-In-Reply-To: <20120621122637.GF7204@giant>
-References: <cover.1340034255.git.paul.eggleton@linux.intel.com>
-	<1756623.6zWylpP7a0@helios> <20120621112555.GD7204@giant>
-	<1778547.OMx1BrFPz0@helios> <20120621122637.GF7204@giant>
+To: Jason Wessel <jason.wessel@windriver.com>
+Date: Thu, 21 Jun 2012 16:55:06 +0100
+In-Reply-To: <1339685898-24757-2-git-send-email-jason.wessel@windriver.com>
+References: <1339685898-24757-1-git-send-email-jason.wessel@windriver.com>
+	<1339685898-24757-2-git-send-email-jason.wessel@windriver.com>
 X-Mailer: Evolution 3.2.2- 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
-X-MIME-Autoconverted: from 8bit to quoted-printable by tim.rpsys.net id
-	q5LEiEJq023424
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/2] bitbake: ensure -f causes dependent tasks to be re-run
+Subject: Re: [PATCH 1/1] process.py, build.py: Fix log truncation problems with flush()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -40,35 +37,119 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jun 2012 14:55:08 -0000
+X-List-Received-Date: Thu, 21 Jun 2012 16:05:57 -0000
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2012-06-21 at 14:26 +0200, Bj=C3=B6rn Stenberg wrote:
-> Paul Eggleton wrote:
-> > Why do you want it to be producing the same checksum for potentially
-> > different contents?
->=20
-> I don't. Sorry if that was unclear. I want:
->=20
-> a) That we don't need an -f option at all, i.e. that we have
-> dependency tracking pinned down so well that any changed input
-> automatically causes a rebuild and changed hash. (A boy can dream,
-> can't he? :-), or
+On Thu, 2012-06-14 at 09:58 -0500, Jason Wessel wrote:
+> There are two problems with the _logged_communicate that are both
+> caused as a result of buffering I/O, instead of flushing it out to the
+> log files as it arrives.
+> 
+> 1) log truncation when python dumps
+>    I have seen the task logs missing data that was not flushed when
+>    bitbake crashes.
+> 
+> 2) While a bitbake task is running it is impossible to see what is
+>    going on if it is only writing a small incremental log that is
+>    smaller than the buffer, or you get only a partial log, up until
+>    the task exists.  It is worse in the case that stderr and stdout
+>    are separate file handles, because previous code blocks on the read
+>    of stdout and then stderr, serially.
+> 
+> The right approach is simply to use select() to determine if there is
+> data available and then to flush the log buffers as they arrive.  This
+> still makes use of buffering in the cases where there is more than 1
+> byte of data, but the buffers are much more dynamic.
+> 
+> Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
+> ---
+>  lib/bb/build.py   |    3 ++-
+>  lib/bb/process.py |   29 +++++++++++++++++++++++++++--
+>  2 files changed, 29 insertions(+), 3 deletions(-)
 
-For what its worth I share the dream and in many ways we are working
-towards it. There are a few things we still need to figure out to make
-that possible without totally destroying performance but we're closer
-than we ever have been.
-
-This is also a reason I fought hard not to have a "cleansstate" task.
-What would be the point of it? I did give in and let it in whilst
-various fixes were made to sstate but I'd like to think we can remove it
-at some point.
+For what its worth I'm seeing a small but consistent increase in real,
+sys and user times with this patch which is why I'm pausing to look at
+it a little further :(
 
 Cheers,
 
 Richard
+
+
+
+> diff --git a/lib/bb/build.py b/lib/bb/build.py
+> index a9ba02d..7e9bb23 100644
+> --- a/lib/bb/build.py
+> +++ b/lib/bb/build.py
+> @@ -135,7 +135,8 @@ class LogTee(object):
+>  
+>      def __repr__(self):
+>          return '<LogTee {0}>'.format(self.name)
+> -
+> +    def flush(self):
+> +        self.outfile.flush()
+>  
+>  def exec_func(func, d, dirs = None):
+>      """Execute an BB 'function'"""
+> diff --git a/lib/bb/process.py b/lib/bb/process.py
+> index b74cb18..9848fc3 100644
+> --- a/lib/bb/process.py
+> +++ b/lib/bb/process.py
+> @@ -1,6 +1,9 @@
+>  import logging
+>  import signal
+>  import subprocess
+> +import fcntl
+> +import errno
+> +import select
+>  
+>  logger = logging.getLogger('BitBake.Process')
+>  
+> @@ -70,18 +73,40 @@ def _logged_communicate(pipe, log, input):
+>  
+>      bufsize = 512
+>      outdata, errdata = [], []
+> +    rin = []
+> +
+> +    if pipe.stdout is not None:
+> +        fd = pipe.stdout.fileno()
+> +        fl = fcntl.fcntl(fd, fcntl.F_GETFL)
+> +        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
+> +        rin.append(pipe.stdout)
+> +    if pipe.stderr is not None:
+> +        fd = pipe.stderr.fileno()
+> +        fl = fcntl.fcntl(fd, fcntl.F_GETFL)
+> +        fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
+> +        rin.append(pipe.stderr)
+> +
+>      while pipe.poll() is None:
+> -        if pipe.stdout is not None:
+> +        rlist = rin
+> +        try:
+> +            r,w,e = select.select (rlist, [], [])
+> +        except OSError, e:
+> +            if e.errno != errno.EINTR:
+> +                raise
+> +
+> +        if pipe.stdout in r:
+>              data = pipe.stdout.read(bufsize)
+>              if data is not None:
+>                  outdata.append(data)
+>                  log.write(data)
+> +                log.flush()
+>  
+> -        if pipe.stderr is not None:
+> +        if pipe.stderr in r:
+>              data = pipe.stderr.read(bufsize)
+>              if data is not None:
+>                  errdata.append(data)
+>                  log.write(data)
+> +                log.flush()
+>      return ''.join(outdata), ''.join(errdata)
+>  
+>  def run(cmd, input=None, log=None, **options):
+
 
 
 
