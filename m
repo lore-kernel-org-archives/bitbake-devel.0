@@ -1,20 +1,34 @@
-Received: from mga03.intel.com ([143.182.124.21])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1Shili-0002lx-Au
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 21 Jun 2012 16:53:58 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 21 Jun 2012 07:43:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="159185635"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.120.141])
-	by azsmga001.ch.intel.com with ESMTP; 21 Jun 2012 07:43:10 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 21 Jun 2012 15:43:02 +0100
-Message-Id: <1340289782-5874-1-git-send-email-paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] lib/bb/utils.py: remove unnecessary preserved variables
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1Shimq-0002nX-J7 for bitbake-devel@lists.openembedded.org;
+	Thu, 21 Jun 2012 16:55:08 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5LEiEJq023424;
+	Thu, 21 Jun 2012 15:44:14 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 22780-06; Thu, 21 Jun 2012 15:44:09 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5LEi6eR023418
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Thu, 21 Jun 2012 15:44:07 +0100
+Message-ID: <1340289848.1640.125.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: =?ISO-8859-1?Q?Bj=F6rn?= Stenberg <bjst@enea.com>
+Date: Thu, 21 Jun 2012 15:44:08 +0100
+In-Reply-To: <20120621122637.GF7204@giant>
+References: <cover.1340034255.git.paul.eggleton@linux.intel.com>
+	<1756623.6zWylpP7a0@helios> <20120621112555.GD7204@giant>
+	<1778547.OMx1BrFPz0@helios> <20120621122637.GF7204@giant>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+X-MIME-Autoconverted: from 8bit to quoted-printable by tim.rpsys.net id
+	q5LEiEJq023424
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/2] bitbake: ensure -f causes dependent tasks to be re-run
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,41 +40,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jun 2012 14:53:58 -0000
+X-List-Received-Date: Thu, 21 Jun 2012 14:55:08 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-_ and LANG no longer need to be preserved from the external environment.
-The value of _ changes between non-pseudo-wrapped and pseudo-wrapped
-invocations (e.g. between "bitbake -p" and "bitbake target") and this
-will currently trigger a full reparse in the absence of a whitelist
-entry in BB_HASHCONFIG_WHITELIST, which is not ideal.
+On Thu, 2012-06-21 at 14:26 +0200, Bj=C3=B6rn Stenberg wrote:
+> Paul Eggleton wrote:
+> > Why do you want it to be producing the same checksum for potentially
+> > different contents?
+>=20
+> I don't. Sorry if that was unclear. I want:
+>=20
+> a) That we don't need an -f option at all, i.e. that we have
+> dependency tracking pinned down so well that any changed input
+> automatically causes a rebuild and changed hash. (A boy can dream,
+> can't he? :-), or
 
-LANG used to be preserved in order to ensure the C locale was being
-used for tools invoked by bitbake, however we now set LC_ALL in
-bitbake.conf to take care of this.
+For what its worth I share the dream and in many ways we are working
+towards it. There are a few things we still need to figure out to make
+that possible without totally destroying performance but we're closer
+than we ever have been.
 
-Second part of the fix for [YOCTO #2600].
+This is also a reason I fought hard not to have a "cleansstate" task.
+What would be the point of it? I did give in and let it in whilst
+various fixes were made to sstate but I'd like to think we can remove it
+at some point.
 
-Acked-by: Jason Wessel <jason.wessel@windriver.com>
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- lib/bb/utils.py |    2 --
- 1 file changed, 2 deletions(-)
+Cheers,
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index fc389a3..c1e5a61 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -422,8 +422,6 @@ def preserved_envvars():
-         'BB_PRESERVE_ENV',
-         'BB_ENV_WHITELIST',
-         'BB_ENV_EXTRAWHITE',
--        'LANG',
--        '_',
-     ]
-     return v + preserved_envvars_exported() + preserved_envvars_exported_interactive()
- 
--- 
-1.7.9.5
+Richard
 
 
 
