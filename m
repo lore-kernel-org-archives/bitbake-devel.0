@@ -1,26 +1,36 @@
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from mail-we0-f175.google.com ([74.125.82.175])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1Shhzr-0002El-Bk
+	(envelope-from <rep.dot.nop@gmail.com>) id 1Shi32-0002H7-8I
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 21 Jun 2012 16:04:31 +0200
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 21 Jun 2012 06:52:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="183237218"
-Received: from unknown (HELO helios.localnet) ([10.252.120.141])
-	by fmsmga002.fm.intel.com with ESMTP; 21 Jun 2012 06:52:21 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: =?ISO-8859-1?Q?Bj=F6rn?= Stenberg <bjst@enea.com>
-Date: Thu, 21 Jun 2012 14:52:20 +0100
-Message-ID: <1750781.s4FxKVuW1N@helios>
-Organization: Intel Corporation
-User-Agent: KMail/4.8.3 (Linux/3.2.0-25-generic-pae; KDE/4.8.3; i686; ; )
-In-Reply-To: <20120621134140.GH7204@giant>
-References: <cover.1340034255.git.paul.eggleton@linux.intel.com>
-	<20120621122637.GF7204@giant> <20120621134140.GH7204@giant>
+	Thu, 21 Jun 2012 16:07:48 +0200
+Received: by werg55 with SMTP id g55so411022wer.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 21 Jun 2012 06:57:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	:cc:content-type;
+	bh=nknR8fZMgAGEagWGrWS/gzEfK4JKcIRy56ZUZHj8FKY=;
+	b=AOTmbnqiKmpvh5uO4pf4gKYbieErUKLpkAgcyr6aWSFcNXluFGpGbh2rWx3/ydNplP
+	7jpYaHRrE+HvtuMwXV4mKAmvhy6QRJtpDf6hMBOyT9FxGw+3tT0aTESKvUnbRPSDAsDP
+	tTr6JYB6R90GoFJu3cWfYO+lJsu9z1ENDgm5kpn9zSXFw7IwP72o0PM2hE0XNGHqjbb/
+	1Gi8Am0CSsNzciXIgumH2AQXSiGeZAmKmajWrZYLV8k2DW4PbnpbiZHBkAW4Mb80iRSq
+	YKqEuDwZA2osBeZ7cDVMPOcU7hmcx41jef2tku9ZRWoCAn8Q+dAPZz2Apiq/kkN/AeaH
+	H5zQ==
 MIME-Version: 1.0
+Received: by 10.216.228.224 with SMTP id f74mr14837385weq.217.1340287022506;
+	Thu, 21 Jun 2012 06:57:02 -0700 (PDT)
+Received: by 10.216.234.92 with HTTP; Thu, 21 Jun 2012 06:57:02 -0700 (PDT)
+In-Reply-To: <1340285156.1640.114.camel@ted>
+References: <1340018907-8814-1-git-send-email-rep.dot.nop@gmail.com>
+	<1340280968.1640.96.camel@ted>
+	<CAC1BbcSr8K79m6idqVvDDrYG1KxgrMEVwmDVb2KWZ8xrUC0Z9Q@mail.gmail.com>
+	<1340285156.1640.114.camel@ted>
+Date: Thu, 21 Jun 2012 15:57:02 +0200
+Message-ID: <CAC1BbcQgOqcPTnRZksao5yFVH1k8UzcJOCGGO6gzBUWTiPUp7g@mail.gmail.com>
+From: Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/2] bitbake: ensure -f causes dependent tasks to be re-run
+Subject: Re: [PATCH] fetch2: do not try to checksum a socket
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,37 +42,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jun 2012 14:04:31 -0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+X-List-Received-Date: Thu, 21 Jun 2012 14:07:48 -0000
+Content-Type: text/plain; charset=ISO-8859-1
 
-On Thursday 21 June 2012 15:41:40 Bj=F6rn Stenberg wrote:
-> Bj=F6rn Stenberg wrote:
-> > c) A clear information message when using -f, maybe something like =
-"INFO:
-> > Tainting the hash to force a rebuild", that alerts the user to the
-> > goings-on under the hood.
->=20
-> Another thing: How will bitbake-diffsigs show a tainted build vs the
-> untained version? It would be very nice if that could be shown clearl=
-y.
+>> SRC_URI = "file:///scratch/src/uClibc/;branch=master;protocol=rsync;rebaseable=1
 
-It reports that the taint changed from None to the taint value (or vice=
-=20
-versa). Right now the taint value is not particularly useful - it's a r=
-andom=20
-UUID; however in future it's possible we might set the taint to somethi=
-ng non-
-random for other purposes. In any case, if a signature is tainted both=20=
+> Ah, this makes more sense now. For what its worth, the "file://" url
+> handler will simply strip off everything including and after the ";" so
+> all it really sees is "file:///scratch/src/uClibc/" but this works since
+> it will just copy that directory whole.
+>
+> It will then attempt to checksum everything in a file:// url which is
+> why it finds the socket and then fails. So your change does point at a
+> potentially valid issue. Paul might have a better idea on which level we
+> might want to fix this at?
+>
+>> > What is worrying me a bit is that we shouldn't be calling the checksum
+>> > code for git repositories at all. Whilst this fix no doubt avoids the
+>> > problem, I'm worried there might be something deeper going on...
+>>
+>> Could it be that the logic to deduce the fetcher is somehow broken?
+>>
+>> Indeed, this was failing for me a couple of weeks ago with a similar SRC_URI.
+>> Back then i could not use file:///mydir;protocol=git (i.e. create a
+>> clone from a clone living on the local filesystem) so had to resort
+>> back to protocol=rsync.
+>> There was a socket lying around in that directory, a leftover from
+>> some testsuite run.
+>
+> FWIW, the url you want is git:///mydir;protocol=file which should work.
 
-bitbake-diffsigs and bitbake-dumpsig will report it.
+Oh, that's rather surprising!
+The format suggested to me that, iff specified, with "protocol=" i can
+select the fetcher, regardless of the actual path-spec.
+Shouldn't protocol have precedence over any eventual path-implied fetcher?
+file:///mydir;protocol=rsync
+  rsync -a /mydir S
+file:///mydir;protocol=git
+  git clone -s file:///mydir S
 
-Cheers,
-Paul
+> As of the patches today, this also works as mirror syntax so you could
+> even add this in local.conf as a PREMIRROR and leave the recipe
+> pristine.
 
---=20
-
-Paul Eggleton
-Intel Open Source Technology Centre
+thanks for the hint, yes, i know. Changing the recipe reminds me that
+i have local changes and i can paste it to khem easily.
+cheers,
 
 
