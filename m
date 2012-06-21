@@ -1,23 +1,24 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Peter.Seebach@windriver.com>) id 1ShQ17-00052R-Av
+	(envelope-from <Liezhi.Yang@windriver.com>) id 1ShXID-0004rf-UK
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 20 Jun 2012 20:52:38 +0200
+	Thu, 21 Jun 2012 04:38:46 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q5KIfa84001635
+	by mail1.windriver.com (8.14.3/8.14.3) with ESMTP id q5L2RxTM003870
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 20 Jun 2012 11:41:36 -0700 (PDT)
-Received: from localhost.localdomain (172.25.34.64) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.1.255.0;
-	Wed, 20 Jun 2012 11:41:36 -0700
-From: Peter Seebach <peter.seebach@windriver.com>
+	Wed, 20 Jun 2012 19:27:59 -0700 (PDT)
+Received: from usp-ub10.corp.ad.wrs.com (128.224.163.69) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+	14.1.255.0; Wed, 20 Jun 2012 19:27:59 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 20 Jun 2012 13:41:33 -0500
-Message-ID: <cover.1340217563.git.peter.seebach@windriver.com>
-X-Mailer: git-send-email 1.7.0.4
+Date: Thu, 21 Jun 2012 10:28:53 +0800
+Message-ID: <cover.1340179047.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 1.7.1
 MIME-Version: 1.0
-Subject: [PATCH 0/2] File inclusion and variable assignment tracking
+Cc: Zhenfeng.Zhao@windriver.com
+Subject: [PATCH 0/1] print which pkgs would be built
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -29,41 +30,48 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 20 Jun 2012 18:52:38 -0000
+X-List-Received-Date: Thu, 21 Jun 2012 02:38:46 -0000
 Content-Type: text/plain
 
-This is the assignment/inclusion tracking stuff I've had floating
-around.  In further testing, I found one missing [1] that made it
-fail for "bitbake -e [specific package]".  Haven't had any other
-troubles with it.
+Hi Paul,
 
-This could totally use improvement, but I think this has reached a
-point where:
-1.  It's more useful to have it than not.
-2.  It will be better improved by feedback from live usage.
+This is for:
 
-Impact outside of the bitbake -e case is basically nil, and in the
--e case it's a HUGE improvement in usability.
+* The ability to know what pkgs will be *compiled* for a given image. 
 
-The following changes since commit d316f28ed725ff40daa8771c1aa224ac46d5b224:
-  Richard Purdie (1):
-        methodpool: Improve method already seen error message
+For the "installed" part, use the core-image-sato as an example, which
+will install 395 rpm binary pkgs:
+
+Note:
+The following ones has filtered out the "-dev/-dbg/-staticdev/-natives":
+
+1) If we only grab the RDEPENDS, there are only 342 pkgs, which is less
+than 395
+
+2) If we grab both the RDEPENDS and RRECOMMENDS, there are 476 pkgs,
+which is more than 395
+
+The problem is that there is a RCONFLICTS, the RRECOMMENDS and
+RCONFLICTS will be used by the package manager to determine which pkg
+would be installed, this makes it hard to predict the pkg that will be
+installed.
+
+// Robert
+
+The following changes since commit e0a70547069fe7e8a2d6bdaffc985fb172d46c31:
+
+  perl: Allow perl to cross build and native build in a directory named "t" (2012-06-18 17:33:04 +0100)
 
 are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib robert/buildlist
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/buildlist
 
-  git://git.yoctoproject.org/poky-contrib seebs/tracking
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=seebs/tracking
+Robert Yang (1):
+  print which pkgs would be built
 
-Peter Seebach (2):
-  data_smart.py: Provide (optional) logging of variable modifications
-  data_smart.py: Track configuration file inclusions
-
- lib/bb/cooker.py         |    2 +
- lib/bb/data.py           |   65 +++++++++++++++++-----
- lib/bb/data_smart.py     |  140 +++++++++++++++++++++++++++++++++++++--------
- lib/bb/parse/__init__.py |    6 ++-
- lib/bb/parse/ast.py      |   65 ++++++++++++----------
- 5 files changed, 209 insertions(+), 69 deletions(-)
+ bitbake/bin/bitbake      |    2 +-
+ bitbake/lib/bb/cooker.py |    4 ++++
+ 2 files changed, 5 insertions(+), 1 deletions(-)
 
 
 
