@@ -1,36 +1,30 @@
-Received: from mail-we0-f175.google.com ([74.125.82.175])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <rep.dot.nop@gmail.com>) id 1Shi32-0002H7-8I
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 21 Jun 2012 16:07:48 +0200
-Received: by werg55 with SMTP id g55so411022wer.6
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1Shido-0002f8-N4 for bitbake-devel@lists.openembedded.org;
+	Thu, 21 Jun 2012 16:45:49 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5LEZ3Nl023386
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Jun 2012 06:57:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:cc:content-type;
-	bh=nknR8fZMgAGEagWGrWS/gzEfK4JKcIRy56ZUZHj8FKY=;
-	b=AOTmbnqiKmpvh5uO4pf4gKYbieErUKLpkAgcyr6aWSFcNXluFGpGbh2rWx3/ydNplP
-	7jpYaHRrE+HvtuMwXV4mKAmvhy6QRJtpDf6hMBOyT9FxGw+3tT0aTESKvUnbRPSDAsDP
-	tTr6JYB6R90GoFJu3cWfYO+lJsu9z1ENDgm5kpn9zSXFw7IwP72o0PM2hE0XNGHqjbb/
-	1Gi8Am0CSsNzciXIgumH2AQXSiGeZAmKmajWrZYLV8k2DW4PbnpbiZHBkAW4Mb80iRSq
-	YKqEuDwZA2osBeZ7cDVMPOcU7hmcx41jef2tku9ZRWoCAn8Q+dAPZz2Apiq/kkN/AeaH
-	H5zQ==
-MIME-Version: 1.0
-Received: by 10.216.228.224 with SMTP id f74mr14837385weq.217.1340287022506;
-	Thu, 21 Jun 2012 06:57:02 -0700 (PDT)
-Received: by 10.216.234.92 with HTTP; Thu, 21 Jun 2012 06:57:02 -0700 (PDT)
-In-Reply-To: <1340285156.1640.114.camel@ted>
-References: <1340018907-8814-1-git-send-email-rep.dot.nop@gmail.com>
-	<1340280968.1640.96.camel@ted>
-	<CAC1BbcSr8K79m6idqVvDDrYG1KxgrMEVwmDVb2KWZ8xrUC0Z9Q@mail.gmail.com>
-	<1340285156.1640.114.camel@ted>
-Date: Thu, 21 Jun 2012 15:57:02 +0200
-Message-ID: <CAC1BbcQgOqcPTnRZksao5yFVH1k8UzcJOCGGO6gzBUWTiPUp7g@mail.gmail.com>
-From: Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] fetch2: do not try to checksum a socket
+	Thu, 21 Jun 2012 15:35:03 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 22548-09 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 21 Jun 2012 15:34:58 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5LEYt0x023374
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 21 Jun 2012 15:34:56 +0100
+Message-ID: <1340289297.1640.122.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 21 Jun 2012 15:34:57 +0100
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: [PATCH] fetch2: Add new mirror syntax to simplify mirror specifications
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -42,51 +36,106 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jun 2012 14:07:48 -0000
-Content-Type: text/plain; charset=ISO-8859-1
+X-List-Received-Date: Thu, 21 Jun 2012 14:45:49 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
->> SRC_URI = "file:///scratch/src/uClibc/;branch=master;protocol=rsync;rebaseable=1
+When writing mirror specifications, the current regexp syntax can be awkward
+and hard to get it to do what you want. For example, extracting the 'basename'
+of a repository:
 
-> Ah, this makes more sense now. For what its worth, the "file://" url
-> handler will simply strip off everything including and after the ";" so
-> all it really sees is "file:///scratch/src/uClibc/" but this works since
-> it will just copy that directory whole.
->
-> It will then attempt to checksum everything in a file:// url which is
-> why it finds the socket and then fails. So your change does point at a
-> potentially valid issue. Paul might have a better idea on which level we
-> might want to fix this at?
->
->> > What is worrying me a bit is that we shouldn't be calling the checksum
->> > code for git repositories at all. Whilst this fix no doubt avoids the
->> > problem, I'm worried there might be something deeper going on...
->>
->> Could it be that the logic to deduce the fetcher is somehow broken?
->>
->> Indeed, this was failing for me a couple of weeks ago with a similar SRC_URI.
->> Back then i could not use file:///mydir;protocol=git (i.e. create a
->> clone from a clone living on the local filesystem) so had to resort
->> back to protocol=rsync.
->> There was a socket lying around in that directory, a leftover from
->> some testsuite run.
->
-> FWIW, the url you want is git:///mydir;protocol=file which should work.
+PREMIRRORS = "git://.*/([^/]+/)*([^/]*) git://somewhere.org/somedir/\\2;protocol=file"
 
-Oh, that's rather surprising!
-The format suggested to me that, iff specified, with "protocol=" i can
-select the fetcher, regardless of the actual path-spec.
-Shouldn't protocol have precedence over any eventual path-implied fetcher?
-file:///mydir;protocol=rsync
-  rsync -a /mydir S
-file:///mydir;protocol=git
-  git clone -s file:///mydir S
+can now become:
 
-> As of the patches today, this also works as mirror syntax so you could
-> even add this in local.conf as a PREMIRROR and leave the recipe
-> pristine.
+PREMIRRORS = "git://.*/.* git://somewhere.org/somedir/BASENAME;protocol=file"
 
-thanks for the hint, yes, i know. Changing the recipe reminds me that
-i have local changes and i can paste it to khem easily.
-cheers,
+which is much clearer. A MIRRORNAME substitution is also added which contains
+an encoded form of both host and path. One of the problems with the existing
+regexp syntax is you couldn't access HOST information from PATH and vice-versa
+which is an issue this patch also addresses.
+
+Tests for the new syntax are also added.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 1b99a0f..e6f55f8 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -182,7 +182,7 @@ def encodeurl(decoded):
+ 
+     return url
+ 
+-def uri_replace(ud, uri_find, uri_replace, d):
++def uri_replace(ud, uri_find, uri_replace, replacements, d):
+     if not ud.url or not uri_find or not uri_replace:
+         logger.error("uri_replace: passed an undefined value, not replacing")
+         return None
+@@ -213,6 +213,8 @@ def uri_replace(ud, uri_find, uri_replace, d):
+             if not uri_replace_decoded[loc]:
+                 result_decoded[loc] = ""    
+             else:
++                for k in replacements:
++                    uri_replace_decoded[loc] = uri_replace_decoded[loc].replace(k, replacements[k])
+                 #bb.note("%s %s %s" % (i, uri_replace_decoded[loc], uri_decoded[loc]))
+                 result_decoded[loc] = re.sub(i, uri_replace_decoded[loc], uri_decoded[loc])
+             if loc == 2:
+@@ -485,13 +487,20 @@ def build_mirroruris(origud, mirrors, ld):
+     uris = []
+     uds = []
+ 
++    replacements = {}
++    replacements["TYPE"] = origud.type
++    replacements["HOST"] = origud.host
++    replacements["PATH"] = origud.path
++    replacements["BASENAME"] = origud.path.split("/")[-1]
++    replacements["MIRRORNAME"] = origud.host.replace(':','.') + origud.path.replace('/', '.')
++
+     def adduri(uri, ud, uris, uds):
+         for line in mirrors:
+             try:
+                 (find, replace) = line
+             except ValueError:
+                 continue
+-            newuri = uri_replace(ud, find, replace, ld)
++            newuri = uri_replace(ud, find, replace, replacements, ld)
+             if not newuri or newuri in uris or newuri == origud.url:
+                 continue
+             uris.append(newuri)
+diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
+index 9961343..1477fab 100644
+--- a/bitbake/lib/bb/tests/fetch.py
++++ b/bitbake/lib/bb/tests/fetch.py
+@@ -48,7 +48,14 @@ class FetcherTest(unittest.TestCase):
+         ("http://www.apache.org/dist/subversion/subversion-1.7.1.tar.bz2", "http://www.apache.org/dist", "http://archive.apache.org/dist")
+             : "http://archive.apache.org/dist/subversion/subversion-1.7.1.tar.bz2",
+         ("http://www.apache.org/dist/subversion/subversion-1.7.1.tar.bz2", "http://.*/.*", "file:///somepath/downloads/")
+-            : "file:///somepath/downloads/subversion-1.7.1.tar.bz2"
++            : "file:///somepath/downloads/subversion-1.7.1.tar.bz2",
++        ("git://git.invalid.infradead.org/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/.*", "git://somewhere.org/somedir/BASENAME;protocol=http") 
++            : "git://somewhere.org/somedir/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http", 
++        ("git://git.invalid.infradead.org/foo/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/.*", "git://somewhere.org/somedir/BASENAME;protocol=http") 
++            : "git://somewhere.org/somedir/mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http", 
++        ("git://git.invalid.infradead.org/foo/mtd-utils.git;tag=1234567890123456789012345678901234567890", "git://.*/.*", "git://somewhere.org/somedir/MIRRORNAME;protocol=http") 
++            : "git://somewhere.org/somedir/git.invalid.infradead.org.foo.mtd-utils.git;tag=1234567890123456789012345678901234567890;protocol=http", 
++
+         #Renaming files doesn't work
+         #("http://somewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://somewhere.org/somedir1/somefile_1.2.3.tar.gz", "http://somewhere2.org/somedir3/somefile_2.3.4.tar.gz") : "http://somewhere2.org/somedir3/somefile_2.3.4.tar.gz"
+         #("file://sstate-xyz.tgz", "file://.*/.*", "file:///somewhere/1234/sstate-cache") : "file:///somewhere/1234/sstate-cache/sstate-xyz.tgz",
+@@ -143,8 +150,9 @@ class FetcherTest(unittest.TestCase):
+         for k, v in self.replaceuris.items():
+             ud = bb.fetch.FetchData(k[0], self.d)
+             ud.setup_localpath(self.d)
+-            newuris = bb.fetch2.uri_replace(ud, k[1], k[2], self.d)
+-            self.assertEqual(newuris, v)
++            mirrors = bb.fetch2.mirror_from_string("%s %s" % (k[1], k[2]))
++            newuris, uds = bb.fetch2.build_mirroruris(ud, mirrors, self.d)
++            self.assertEqual(newuris, [v])
+ 
+     def test_urilist1(self):
+         fetcher = bb.fetch.FetchData("http://downloads.yoctoproject.org/releases/bitbake/bitbake-1.0.tar.gz", self.d)
+
+
 
 
