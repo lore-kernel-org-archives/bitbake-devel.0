@@ -1,31 +1,29 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1ShgUl-0001fZ-Kn for bitbake-devel@lists.openembedded.org;
-	Thu, 21 Jun 2012 14:28:19 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5LCHX1R022123;
-	Thu, 21 Jun 2012 13:17:33 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 22083-01; Thu, 21 Jun 2012 13:17:29 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5LCHQvo022117
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Thu, 21 Jun 2012 13:17:27 +0100
-Message-ID: <1340281048.1640.97.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Kang Kai <kai.kang@windriver.com>
-Date: Thu, 21 Jun 2012 13:17:28 +0100
-In-Reply-To: <8a6196c93278c9272e44420f190eff1cb2357e73.1340098628.git.kai.kang@windriver.com>
-References: <cover.1340098628.git.kai.kang@windriver.com>
-	<8a6196c93278c9272e44420f190eff1cb2357e73.1340098628.git.kai.kang@windriver.com>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org, Zhenfeng.Zhao@windriver.com
-Subject: Re: [PATCH 1/1] ui/depexp.py: use the new progressbar in Hob
+Received: from giant.haxx.se ([80.67.6.50])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <bjst@giant.haxx.se>) id 1Shgde-0001tp-OR
+	for bitbake-devel@lists.openembedded.org;
+	Thu, 21 Jun 2012 14:37:30 +0200
+Received: from giant.haxx.se (localhost.localdomain [127.0.0.1])
+	by giant.haxx.se (8.14.4/8.14.4/Debian-2) with ESMTP id q5LCQbpr014492
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+	Thu, 21 Jun 2012 14:26:37 +0200
+Received: (from bjst@localhost)
+	by giant.haxx.se (8.14.4/8.14.4/Submit) id q5LCQbFr014491;
+	Thu, 21 Jun 2012 14:26:37 +0200
+Date: Thu, 21 Jun 2012 14:26:37 +0200
+From: =?iso-8859-1?Q?Bj=F6rn?= Stenberg <bjst@enea.com>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+Message-ID: <20120621122637.GF7204@giant>
+References: <cover.1340034255.git.paul.eggleton@linux.intel.com>
+	<1756623.6zWylpP7a0@helios> <20120621112555.GD7204@giant>
+	<1778547.OMx1BrFPz0@helios>
+MIME-Version: 1.0
+In-Reply-To: <1778547.OMx1BrFPz0@helios>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-MIME-Autoconverted: from 8bit to quoted-printable by giant.haxx.se id
+	q5LCQbpr014492
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/2] bitbake: ensure -f causes dependent tasks to be re-run
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,24 +35,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Jun 2012 12:28:19 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 21 Jun 2012 12:37:30 -0000
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2012-06-19 at 17:39 +0800, Kang Kai wrote:
-> [Yocto 2149]
-> 
-> Use the new progressbar in Hob, so that we can reduce the maintenance
-> burden of the multiple GUIs.
-> 
-> Signed-off-by: Kang Kai <kai.kang@windriver.com>
-> ---
->  bitbake/lib/bb/ui/depexp.py |   29 ++++++++++++++++++-----------
->  1 files changed, 18 insertions(+), 11 deletions(-)
+Paul Eggleton wrote:
+> Why do you want it to be producing the same checksum for potentially
+> different contents?
 
-Merged to master, thanks.
+I don't. Sorry if that was unclear. I want:
 
-Richard
+a) That we don't need an -f option at all, i.e. that we have dependency t=
+racking pinned down so well that any changed input automatically causes a=
+ rebuild and changed hash. (A boy can dream, can't he? :-), or
 
+b) A different name for the -f option, or
+
+c) A clear information message when using -f, maybe something like "INFO:=
+ Tainting the hash to force a rebuild", that alerts the user to the going=
+s-on under the hood.
+
+--=20
+Bj=F6rn
 
 
