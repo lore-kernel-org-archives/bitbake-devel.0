@@ -1,30 +1,20 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1Si2dT-0000YP-Ed for bitbake-devel@lists.openembedded.org;
-	Fri, 22 Jun 2012 14:06:47 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5MBu1dS001190
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 22 Jun 2012 12:56:01 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 31946-06 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 22 Jun 2012 12:55:55 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5MBtr5X001170
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 22 Jun 2012 12:55:54 +0100
-Message-ID: <1340366155.394.18.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Fri, 22 Jun 2012 12:55:55 +0100
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: [PATCH] process: Improve _logged_communicate buffering
+Received: from mga03.intel.com ([143.182.124.21])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <cristian.iorga@intel.com>) id 1Si6ca-0006tJ-Dl
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 22 Jun 2012 18:22:08 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 22 Jun 2012 09:08:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="159621868"
+Received: from sentry (HELO localhost.localdomain) ([10.237.105.53])
+	by azsmga001.ch.intel.com with ESMTP; 22 Jun 2012 09:07:59 -0700
+From: Cristian Iorga <cristian.iorga@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 22 Jun 2012 19:08:24 +0300
+Message-Id: <1340381304-20531-1-git-send-email-cristian.iorga@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] Fix for Hob bug #2323
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,111 +26,72 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 22 Jun 2012 12:06:47 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 22 Jun 2012 16:22:08 -0000
 
-There are two problems with the _logged_communicate that are both
-caused as a result of buffering I/O issues:
+Removed unnecessary button from Recipes screen and
+replaced the button that diplayed packages size and total image size
+from Packages screen with a label.
 
-1) log truncation when python fails
-
-2) While a bitbake task is running it is impossible to see what is
-   going on if it is only writing a small incremental log that is
-   smaller than the buffer, or you get only a partial log, up until
-   the task exists.  It is worse in the case that stderr and stdout
-   are separate file handles, because previous code blocks on the read
-   of stdout and then stderr, serially.
-
-The right approach is simply to use select() to determine if there is
-data available and also flush the log before exiting.
-
-This is based on a patch from Jason Wessel <jason.wessel@windriver.com>
-with some changes to flush upon exit, abstract the non blocking file
-descriptor setup and drop the buffer size parameter.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Cristian Iorga <cristian.iorga@intel.com>
 ---
-diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-index 5e6b68d..21304c3 100644
---- a/bitbake/lib/bb/build.py
-+++ b/bitbake/lib/bb/build.py
-@@ -135,7 +135,8 @@ class LogTee(object):
- 
-     def __repr__(self):
-         return '<LogTee {0}>'.format(self.name)
--
-+    def flush(self):
-+        self.outfile.flush()
- 
- def exec_func(func, d, dirs = None):
-     """Execute an BB 'function'"""
-diff --git a/bitbake/lib/bb/process.py b/bitbake/lib/bb/process.py
-index b74cb18..05b5172 100644
---- a/bitbake/lib/bb/process.py
-+++ b/bitbake/lib/bb/process.py
-@@ -1,6 +1,8 @@
- import logging
- import signal
- import subprocess
-+import errno
-+import select
- 
- logger = logging.getLogger('BitBake.Process')
- 
-@@ -68,20 +70,38 @@ def _logged_communicate(pipe, log, input):
-             pipe.stdin.write(input)
-         pipe.stdin.close()
- 
--    bufsize = 512
-     outdata, errdata = [], []
--    while pipe.poll() is None:
--        if pipe.stdout is not None:
--            data = pipe.stdout.read(bufsize)
--            if data is not None:
--                outdata.append(data)
--                log.write(data)
--
--        if pipe.stderr is not None:
--            data = pipe.stderr.read(bufsize)
--            if data is not None:
--                errdata.append(data)
--                log.write(data)
-+    rin = []
-+
-+    if pipe.stdout is not None:
-+        bb.utils.nonblockingfd(pipe.stdout.fileno())
-+        rin.append(pipe.stdout)
-+    if pipe.stderr is not None:
-+        bb.utils.nonblockingfd(pipe.stderr.fileno())
-+        rin.append(pipe.stderr)
-+
-+    try:
-+        while pipe.poll() is None:
-+            rlist = rin
-+            try:
-+                r,w,e = select.select (rlist, [], [])
-+            except OSError, e:
-+                if e.errno != errno.EINTR:
-+                    raise
-+
-+            if pipe.stdout in r:
-+                data = pipe.stdout.read()
-+                if data is not None:
-+                    outdata.append(data)
-+                    log.write(data)
-+
-+            if pipe.stderr in r:
-+                data = pipe.stderr.read()
-+                if data is not None:
-+                    errdata.append(data)
-+                    log.write(data)
-+    finally:    
-+        log.flush()
-     return ''.join(outdata), ''.join(errdata)
- 
- def run(cmd, input=None, log=None, **options):
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    7 ++-----
+ bitbake/lib/bb/ui/crumbs/recipeselectionpage.py  |    9 ++-------
+ 2 files changed, 4 insertions(+), 12 deletions(-)
 
+diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+index 9895835..1b832eb 100755
+--- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
++++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+@@ -113,15 +113,12 @@ class PackageSelectionPage (HobPage):
+         self.ins.set_current_page(0)
+ 
+     def create_visual_elements(self):
+-        self.label = gtk.Button("Packages included: 0\nSelected packages size: 0 MB")
+-        self.label.set_can_default(False)
+-        self.label.set_relief(gtk.RELIEF_HALF)
+-        self.label.connect("clicked", self.included_clicked_cb)
++        self.label = gtk.Label("Packages included: 0\nSelected packages size: 0 MB")
+         self.eventbox = self.add_onto_top_bar(self.label, 73)
+         self.pack_start(self.eventbox, expand=False, fill=False)
+         self.pack_start(self.group_align, expand=True, fill=True)
+ 
+-        # set visiable members
++        # set visible members
+         self.ins = HobNotebook()
+         self.tables = [] # we need to modify table when the dialog is shown
+         # append the tab
+diff --git a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
+index ece37e0..af68f2a 100755
+--- a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
++++ b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
+@@ -138,15 +138,11 @@ class RecipeSelectionPage (HobPage):
+         self.ins.set_current_page(0)
+ 
+     def create_visual_elements(self):
+-        self.label = gtk.Button('Recipes included: 0')
+-        self.label.set_can_default(False)
+-        self.label.set_relief(gtk.RELIEF_HALF)
+-        self.label.connect("clicked", self.included_clicked_cb)
+-        self.eventbox = self.add_onto_top_bar(self.label, 73)
++        self.eventbox = self.add_onto_top_bar(None, 73)
+         self.pack_start(self.eventbox, expand=False, fill=False)
+         self.pack_start(self.group_align, expand=True, fill=True)
+ 
+-        # set visiable members
++        # set visible members
+         self.ins = HobNotebook()
+         self.tables = [] # we need modify table when the dialog is shown
+         # append the tabs in order
+@@ -205,7 +201,6 @@ class RecipeSelectionPage (HobPage):
+     def refresh_selection(self):
+         self.builder.configuration.selected_image = self.recipe_model.get_selected_image()
+         _, self.builder.configuration.selected_recipes = self.recipe_model.get_selected_recipes()
+-        self.label.set_label("Recipes included: %s" % len(self.builder.configuration.selected_recipes))
+         self.ins.show_indicator_icon("Included", len(self.builder.configuration.selected_recipes))
+ 
+     def toggle_item_idle_cb(self, path, view_tree, cell, pagename):
+-- 
+1.7.9.5
 
 
 
