@@ -1,38 +1,21 @@
-Received: from mail.cvg.de ([62.153.82.30])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <enrico.scholz@sigma-chemnitz.de>)
-	id 1Sk2kW-0004vj-2A; Thu, 28 Jun 2012 02:38:20 +0200
-Received: from ensc-virt.intern.sigma-chemnitz.de
-	(ensc-virt.intern.sigma-chemnitz.de [192.168.3.24])
-	by mail.cvg.de (8.14.4/8.14.4) with ESMTP id q5S0RLLL023684
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Thu, 28 Jun 2012 02:27:22 +0200
-Received: from ensc by ensc-virt.intern.sigma-chemnitz.de with local (Exim
-	4.76) (envelope-from <ensc@sigma-chemnitz.de>)
-	id 1Sk2aA-0008Ap-Rt; Thu, 28 Jun 2012 02:27:38 +0200
-From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-References: <1340793253.23146.19.camel@ted>
-	<1340808774-24884-1-git-send-email-enrico.scholz@sigma-chemnitz.de>
-	<1340829332.23146.86.camel@ted>
-	<lyr4t0e1bx.fsf@ensc-virt.intern.sigma-chemnitz.de>
-Date: Thu, 28 Jun 2012 02:27:38 +0200
-In-Reply-To: <lyr4t0e1bx.fsf@ensc-virt.intern.sigma-chemnitz.de> (Enrico
-	Scholz's message of "Thu, 28 Jun 2012 02:18:10 +0200")
-Message-ID: <lymx3oe0w5.fsf@ensc-virt.intern.sigma-chemnitz.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.0.97 (gnu/linux)
-MIME-Version: 1.0
-Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-X-DSPAM-Result: Innocent
-X-DSPAM-Probability: 0
-X-DSPAM-Confidence: 0.99
-X-Spam-Score: -5.3
-X-Spam-Level: -----
-X-Spam-Tests: AWL,BAYES_00,SPF_NEUTRAL,T_RP_MATCHES_RCVD,DSPAM_INNOCENT
-X-Scanned-By: MIMEDefang 2.73
-Cc: bitbake-devel@lists.openembedded.org,
-	openembedded-core@lists.openembedded.org
-Subject: Re: [PATCH 20/20] fetch: allow regexps in mirror protocol
+	(envelope-from <cristian.iorga@intel.com>) id 1Si6NE-0006kD-HF
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 22 Jun 2012 18:06:16 +0200
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga102.ch.intel.com with ESMTP; 22 Jun 2012 08:54:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="115071680"
+Received: from sentry (HELO localhost.localdomain) ([10.237.105.53])
+	by AZSMGA002.ch.intel.com with ESMTP; 22 Jun 2012 08:54:22 -0700
+From: Cristian Iorga <cristian.iorga@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 22 Jun 2012 18:54:47 +0300
+Message-Id: <1340380487-20446-1-git-send-email-cristian.iorga@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+X-Mailman-Approved-At: Thu, 28 Jun 2012 11:02:45 +0200
+Subject: [PATCH] Fix for Hob bug #2323
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -44,33 +27,72 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 28 Jun 2012 00:38:20 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 22 Jun 2012 16:06:16 -0000
 
-Enrico Scholz <enrico.scholz@sigma-chemnitz.de> writes:
+Removed unnecessary button from Recipes screen and
+replaced the button that diplayed packages size and total image size
+from Packages screen with a label.
 
->>> -            if i != uri_decoded[loc]:
->>> +            if not re.match(i, uri_decoded[loc]):
->
-> | FAIL: test_urilist2 (bb.tests.fetch.FetcherTest)
-> | AssertionError: Lists differ: ['file:///somepath/downloads/b... != ['file:///someotherpath/downlo...
-> | - ['file:///somepath/downloads/bitbake-1.0.tar.gz',
-> | -  'file:///someotherpath/downloads/bitbake-1.0.tar.gz']
-> | ? ^
-> | 
-> | + ['file:///someotherpath/downloads/bitbake-1.0.tar.gz']
-> | ? ^
->
-> Nothing which seems to be related to the patch.
+Signed-off-by: Cristian Iorga <cristian.iorga@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    7 ++-----
+ bitbake/lib/bb/ui/crumbs/recipeselectionpage.py  |    9 ++-------
+ 2 files changed, 4 insertions(+), 12 deletions(-)
 
-I have to correct me... the new line should be
+diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+index 9895835..1b832eb 100755
+--- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
++++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+@@ -113,15 +113,12 @@ class PackageSelectionPage (HobPage):
+         self.ins.set_current_page(0)
+ 
+     def create_visual_elements(self):
+-        self.label = gtk.Button("Packages included: 0\nSelected packages size: 0 MB")
+-        self.label.set_can_default(False)
+-        self.label.set_relief(gtk.RELIEF_HALF)
+-        self.label.connect("clicked", self.included_clicked_cb)
++        self.label = gtk.Label("Packages included: 0\nSelected packages size: 0 MB")
+         self.eventbox = self.add_onto_top_bar(self.label, 73)
+         self.pack_start(self.eventbox, expand=False, fill=False)
+         self.pack_start(self.group_align, expand=True, fill=True)
+ 
+-        # set visiable members
++        # set visible members
+         self.ins = HobNotebook()
+         self.tables = [] # we need to modify table when the dialog is shown
+         # append the tab
+diff --git a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
+index ece37e0..af68f2a 100755
+--- a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
++++ b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
+@@ -138,15 +138,11 @@ class RecipeSelectionPage (HobPage):
+         self.ins.set_current_page(0)
+ 
+     def create_visual_elements(self):
+-        self.label = gtk.Button('Recipes included: 0')
+-        self.label.set_can_default(False)
+-        self.label.set_relief(gtk.RELIEF_HALF)
+-        self.label.connect("clicked", self.included_clicked_cb)
+-        self.eventbox = self.add_onto_top_bar(self.label, 73)
++        self.eventbox = self.add_onto_top_bar(None, 73)
+         self.pack_start(self.eventbox, expand=False, fill=False)
+         self.pack_start(self.group_align, expand=True, fill=True)
+ 
+-        # set visiable members
++        # set visible members
+         self.ins = HobNotebook()
+         self.tables = [] # we need modify table when the dialog is shown
+         # append the tabs in order
+@@ -205,7 +201,6 @@ class RecipeSelectionPage (HobPage):
+     def refresh_selection(self):
+         self.builder.configuration.selected_image = self.recipe_model.get_selected_image()
+         _, self.builder.configuration.selected_recipes = self.recipe_model.get_selected_recipes()
+-        self.label.set_label("Recipes included: %s" % len(self.builder.configuration.selected_recipes))
+         self.ins.show_indicator_icon("Included", len(self.builder.configuration.selected_recipes))
+ 
+     def toggle_item_idle_cb(self, path, view_tree, cell, pagename):
+-- 
+1.7.9.5
 
-| +            if not re.match(i + '$', uri_decoded[loc]):
-
-to match the complete protocol.
-
-
-
-Enrico
 
 
