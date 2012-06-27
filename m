@@ -1,28 +1,35 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SjpkF-0007sI-FH; Wed, 27 Jun 2012 12:45:11 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5RAYI0U010657;
-	Wed, 27 Jun 2012 11:34:18 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 06198-04; Wed, 27 Jun 2012 11:34:14 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5RAY9dD010651
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Wed, 27 Jun 2012 11:34:10 +0100
-Message-ID: <1340793253.23146.19.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Martin Jansa <martin.jansa@gmail.com>
-Date: Wed, 27 Jun 2012 11:34:13 +0100
-In-Reply-To: <20120626173118.GB3169@jama.jama.net>
+Received: from mail-bk0-f47.google.com ([209.85.214.47])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <martin.jansa@gmail.com>)
+	id 1SjqFO-0000Av-MS; Wed, 27 Jun 2012 13:17:22 +0200
+Received: by bkcjm2 with SMTP id jm2so744822bkc.6
+	for <multiple recipients>; Wed, 27 Jun 2012 04:06:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-disposition:in-reply-to:user-agent;
+	bh=OnhYXcQ4FGGGBu8tdEUREbmK5N89ps/SdXv6a8Gb93Y=;
+	b=WDXSxOEpfh7Aaz1icLlgkWOXrD3/mOYGsDVct17hW9sAOS8kC7qk3cWRZeMxbQN3aw
+	ZTr1Pa9BS0KUHK8ayqBl4/i4zbcRzl4kKjQsFA+awlCJm4rTVGx7Njb8T4fxJWOdKUiQ
+	gRAjR9PdRsJzsc0wB0HPyZTQZ8a6ihSQG5AM+JWrUx81PYXR9geE6n+2SADhAfjl45vv
+	c2wC1bCH5j2pggq9KynNHiu/otavpq++X2FI9hLYqtL3JpLnCdni34yDqGobMtFfi5+h
+	ldRgXKGcKq6uKMLFkWnTcYz8cIuGkup3rmbCU7sqUAokAMbzTdFfgfvPZFEnNX+z0hLO
+	kEKw==
+Received: by 10.204.154.140 with SMTP id o12mr6917562bkw.139.1340795189438;
+	Wed, 27 Jun 2012 04:06:29 -0700 (PDT)
+Received: from localhost ([94.230.152.246])
+	by mx.google.com with ESMTPS id x23sm54424548bkw.12.2012.06.27.04.06.27
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Wed, 27 Jun 2012 04:06:28 -0700 (PDT)
+Date: Wed, 27 Jun 2012 13:06:26 +0200
+From: Martin Jansa <martin.jansa@gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Message-ID: <20120627110626.GA11927@jama.jama.net>
 References: <1340289297.1640.122.camel@ted>
 	<20120626173118.GB3169@jama.jama.net>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
+	<1340793253.23146.19.camel@ted>
+MIME-Version: 1.0
+In-Reply-To: <1340793253.23146.19.camel@ted>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
 	openembedded-core@lists.openembedded.org
 Subject: Re: (PRE)MIRRORS doesn't work with https?$:// anymore Was: [PATCH] fetch2: Add new mirror syntax to simplify mirror specifications
@@ -37,67 +44,107 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Jun 2012 10:45:11 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 27 Jun 2012 11:17:22 -0000
+X-Groupsio-MsgNum: 2382
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
+Content-Disposition: inline
 
-On Tue, 2012-06-26 at 19:31 +0200, Martin Jansa wrote:
-> On Thu, Jun 21, 2012 at 03:34:57PM +0100, Richard Purdie wrote:
-> > When writing mirror specifications, the current regexp syntax can be awkward
-> > and hard to get it to do what you want. For example, extracting the 'basename'
-> > of a repository:
-> > 
-> > PREMIRRORS = "git://.*/([^/]+/)*([^/]*) git://somewhere.org/somedir/\\2;protocol=file"
-> > 
-> > can now become:
-> > 
-> > PREMIRRORS = "git://.*/.* git://somewhere.org/somedir/BASENAME;protocol=file"
-> > 
-> > which is much clearer. A MIRRORNAME substitution is also added which contains
-> > an encoded form of both host and path. One of the problems with the existing
-> > regexp syntax is you couldn't access HOST information from PATH and vice-versa
-> > which is an issue this patch also addresses.
-> 
-> One of this fetch2 patches break https?:// in MIRRORS
-> 
-> It's used e.g in openembedded-core/meta/classes/mirrors.bbclass:
-> https?$://.*/.* http://downloads.yoctoproject.org/mirror/sources/
-> https?$://.*/.* http://sources.openembedded.org/
-> 
-> I've tested it with older bitbake in PREMIRRORS (to make log.do_fetch
-> log shorter) on libcap (which doesn't exist on upstream URL).
-> 
-> PREMIRRORS_append () {
-> cvs://.*/.* http://build.shr-project.org/sources/
-> svn://.*/.* http://build.shr-project.org/sources/
-> git://.*/.* http://build.shr-project.org/sources/
-> hg://.*/.* http://build.shr-project.org/sources/
-> bzr://.*/.* http://build.shr-project.org/sources/
-> https?$://.*/.* http://build.shr-project.org/sources/
-> }
+--qDbXVdCdHGoSgWSk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is almost certainly a result of:
+On Wed, Jun 27, 2012 at 11:34:13AM +0100, Richard Purdie wrote:
+> On Tue, 2012-06-26 at 19:31 +0200, Martin Jansa wrote:
+> > On Thu, Jun 21, 2012 at 03:34:57PM +0100, Richard Purdie wrote:
+> > > When writing mirror specifications, the current regexp syntax can be =
+awkward
+> > > and hard to get it to do what you want. For example, extracting the '=
+basename'
+> > > of a repository:
+> > >=20
+> > > PREMIRRORS =3D "git://.*/([^/]+/)*([^/]*) git://somewhere.org/somedir=
+/\\2;protocol=3Dfile"
+> > >=20
+> > > can now become:
+> > >=20
+> > > PREMIRRORS =3D "git://.*/.* git://somewhere.org/somedir/BASENAME;prot=
+ocol=3Dfile"
+> > >=20
+> > > which is much clearer. A MIRRORNAME substitution is also added which =
+contains
+> > > an encoded form of both host and path. One of the problems with the e=
+xisting
+> > > regexp syntax is you couldn't access HOST information from PATH and v=
+ice-versa
+> > > which is an issue this patch also addresses.
+> >=20
+> > One of this fetch2 patches break https?:// in MIRRORS
+> >=20
+> > It's used e.g in openembedded-core/meta/classes/mirrors.bbclass:
+> > https?$://.*/.* http://downloads.yoctoproject.org/mirror/sources/
+> > https?$://.*/.* http://sources.openembedded.org/
+> >=20
+> > I've tested it with older bitbake in PREMIRRORS (to make log.do_fetch
+> > log shorter) on libcap (which doesn't exist on upstream URL).
+> >=20
+> > PREMIRRORS_append () {
+> > cvs://.*/.* http://build.shr-project.org/sources/
+> > svn://.*/.* http://build.shr-project.org/sources/
+> > git://.*/.* http://build.shr-project.org/sources/
+> > hg://.*/.* http://build.shr-project.org/sources/
+> > bzr://.*/.* http://build.shr-project.org/sources/
+> > https?$://.*/.* http://build.shr-project.org/sources/
+> > }
+>=20
+> This is almost certainly a result of:
+>=20
+> http://git.openembedded.org/bitbake/commit/?id=3D604df1b25cf114e083f52917=
+df2df64e01279c25
+>=20
+> since I didn't believe anyone was using the regexp syntax in the base
+> url type. The bug I wanted to fix was where if you did:
+>=20
+> https://.*/.* file:///some/path/
+>=20
+> which seems reasonable enough, it would access:
+>=20
+> files:///some/path/
+>=20
+> which is clearly not what anyone would want.
+>=20
+> I'm not sure what to do about fixing this...
 
-http://git.openembedded.org/bitbake/commit/?id=604df1b25cf114e083f52917df2df64e01279c25
-
-since I didn't believe anyone was using the regexp syntax in the base
-url type. The bug I wanted to fix was where if you did:
-
-https://.*/.* file:///some/path/
-
-which seems reasonable enough, it would access:
-
-files:///some/path/
-
-which is clearly not what anyone would want.
-
-I'm not sure what to do about fixing this...
+oe-core mirrors.bbclass is using that..
+http://git.openembedded.org/openembedded-core/tree/meta/classes/mirrors.bbc=
+lass
+so maybe someone should fix mirrors.bbclass if this is expected behavior
+with new bitbake..
 
 Cheers,
 
-Richard
+>=20
+> Cheers,
+>=20
+> Richard
+>=20
+>=20
+>=20
 
+--=20
+Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
 
+--qDbXVdCdHGoSgWSk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
+iEYEARECAAYFAk/q6TIACgkQN1Ujt2V2gByIjwCeJa84eH6wDN8o1QX5dl0MAW7/
+P80AoISCaDS+z/CmPnawm9Q9rtnjoHKV
+=d8ER
+-----END PGP SIGNATURE-----
 
+--qDbXVdCdHGoSgWSk--
