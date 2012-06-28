@@ -1,30 +1,37 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SjzRo-0001a3-DA for bitbake-devel@lists.openembedded.org;
-	Wed, 27 Jun 2012 23:06:48 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5RKtui9019628
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Jun 2012 21:55:56 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 19483-01 for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Jun 2012 21:55:52 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q5RKtluJ019622
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Jun 2012 21:55:48 +0100
-Message-ID: <1340830550.23146.89.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Wed, 27 Jun 2012 21:55:50 +0100
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: [PATCH v2] runqueue: Reimplement recrdepends so it works more correctly
+Received: from mail.cvg.de ([62.153.82.30])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <enrico.scholz@sigma-chemnitz.de>)
+	id 1Sk2bX-0004jU-8k; Thu, 28 Jun 2012 02:29:03 +0200
+Received: from ensc-virt.intern.sigma-chemnitz.de
+	(ensc-virt.intern.sigma-chemnitz.de [192.168.3.24])
+	by mail.cvg.de (8.14.4/8.14.4) with ESMTP id q5S0Hr2Q022819
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Thu, 28 Jun 2012 02:17:54 +0200
+Received: from ensc by ensc-virt.intern.sigma-chemnitz.de with local (Exim
+	4.76) (envelope-from <ensc@sigma-chemnitz.de>)
+	id 1Sk2R0-0007wF-Qz; Thu, 28 Jun 2012 02:18:10 +0200
+From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <1340793253.23146.19.camel@ted>
+	<1340808774-24884-1-git-send-email-enrico.scholz@sigma-chemnitz.de>
+	<1340829332.23146.86.camel@ted>
+Date: Thu, 28 Jun 2012 02:18:10 +0200
+In-Reply-To: <1340829332.23146.86.camel@ted> (Richard Purdie's message of
+	"Wed, 27 Jun 2012 21:35:32 +0100")
+Message-ID: <lyr4t0e1bx.fsf@ensc-virt.intern.sigma-chemnitz.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.0.97 (gnu/linux)
+MIME-Version: 1.0
+Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+X-DSPAM-Result: Innocent
+X-DSPAM-Probability: 0
+X-DSPAM-Confidence: 0.84
+X-Spam-Score: -5.3
+X-Spam-Level: -----
+X-Spam-Tests: AWL,BAYES_00,SPF_NEUTRAL,T_RP_MATCHES_RCVD,DSPAM_INNOCENT
+X-Scanned-By: MIMEDefang 2.73
+Cc: bitbake-devel@lists.openembedded.org,
+	openembedded-core@lists.openembedded.org
+Subject: Re: [PATCH 20/20] fetch: allow regexps in mirror protocol
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,198 +43,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Jun 2012 21:06:48 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 28 Jun 2012 00:29:03 -0000
+Content-Type: text/plain
 
-Currently, recrdepends is extremely greedy. For example:
+Richard Purdie <richard.purdie@linuxfoundation.org> writes:
 
-do_foo[rdepends] = "somedep:sometask"
-addtask foo
+>>              # Principle of least surprise. We could end up with https matching against http and 
+>>              # generating "files://" urls if we use the regexp engine below.
+>> -            if i != uri_decoded[loc]:
+>> +            if not re.match(i, uri_decoded[loc]):
+>>                  return None
+>>              result_decoded[loc] = uri_replace_decoded[loc]
+>>          elif (re.match(i, uri_decoded[loc])):
+>
+> I'm not picking on you (Enrico) here, there is a problem with my change
+> and we probably should revert my change in this area.
+>
+> However the above patch fails "bitbake-selftest" and introduces a
+> regression.
 
-which adds foo with *no* dependencies, will suddenly start appearing
-as a dependency in every task which uses recrdepends. So far this has
-been mildy annoying but we now have use cases where this makes no sense
-at all.
+selftest fails here in
 
-This reworks the recrdepends code to avoid this problem. To do this we
-can no longer collapse things into lists just based on file ID. The problem
-is this code is extremely performance sensitive. The "preparing runqueue"
-phase spends a lot of time in these recursive dependency calculations so any
-change here could negatively impact the user experience.
+| ERROR: test_gitfetch_premirror3 (bb.tests.fetch.FetcherTest)
+| CalledProcessError: Command 'git clone git://git.openembedded.org/bitbake /tmp/tmpt_dDVD/sourcemirror.git 2> /dev/null' returned non-zero exit status 128
 
-As such, this code has been carefully tested on convoluted dependency trees
-with operations like "time bitbake world -g". The net result of this change
-and the preceding changes combined is a net speed up of these operations in
-all cases measured.
+and
 
-Tests were made comparing "bitbake world -g" task-depends.dot before and after
-this patch. There *are* differences for example -nativesdk do_build dependencies
-on -native recipes are no longer present. All removed dependencies appear to
-be sensible improvements to the system. The "rdepends" cross contamination
-issue above is also fixed.
+| FAIL: test_urilist2 (bb.tests.fetch.FetcherTest)
+| AssertionError: Lists differ: ['file:///somepath/downloads/b... != ['file:///someotherpath/downlo...
+| - ['file:///somepath/downloads/bitbake-1.0.tar.gz',
+| -  'file:///someotherpath/downloads/bitbake-1.0.tar.gz']
+| ? ^
+| 
+| + ['file:///someotherpath/downloads/bitbake-1.0.tar.gz']
+| ? ^
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index c45287d..e927afb 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -375,9 +375,7 @@ class RunQueueData:
-         """
- 
-         runq_build = []
--        recursive_tdepends = {}
--        runq_recrdepends = []
--        tdepends_fnid = {}
-+        recursivetasks = {}
- 
-         taskData = self.taskData
- 
-@@ -423,9 +421,15 @@ class RunQueueData:
-                     if taskid is not None:
-                         depends.add(taskid)
- 
-+        def add_resolved_dependencies(depids, tasknames, depends):
-+            for depid in depids:
-+                for taskname in tasknames:
-+                    taskid = taskData.gettask_id_fromfnid(depid, taskname)
-+                    if taskid is not None:
-+                        depends.add(taskid)
-+
-         for task in xrange(len(taskData.tasks_name)):
-             depends = set()
--            recrdepends = []
-             fnid = taskData.tasks_fnid[task]
-             fn = taskData.fn_index[fnid]
-             task_deps = self.dataCache.task_deps[fn]
-@@ -459,8 +463,6 @@ class RunQueueData:
-                 #
-                 # e.g. do_sometask[depends] = "targetname:do_someothertask"
-                 # (makes sure sometask runs after targetname's someothertask)
--                if fnid not in tdepends_fnid:
--                    tdepends_fnid[fnid] = set()
-                 idepends = taskData.tasks_idepends[task]
-                 for (depid, idependtask) in idepends:
-                     if depid in taskData.build_targets:
-@@ -471,8 +473,6 @@ class RunQueueData:
-                             if taskid is None:
-                                 bb.msg.fatal("RunQueue", "Task %s in %s depends upon non-existent task %s in %s" % (taskData.tasks_name[task], fn, idependtask, dep))
-                             depends.add(taskid)
--                            if depdata != fnid:
--                                tdepends_fnid[fnid].add(taskid)
-                 irdepends = taskData.tasks_irdepends[task]
-                 for (depid, idependtask) in irdepends:
-                     if depid in taskData.run_targets:
-@@ -483,24 +483,17 @@ class RunQueueData:
-                             if taskid is None:
-                                 bb.msg.fatal("RunQueue", "Task %s in %s rdepends upon non-existent task %s in %s" % (taskData.tasks_name[task], fn, idependtask, dep))
-                             depends.add(taskid)
--                            if depdata != fnid:
--                                tdepends_fnid[fnid].add(taskid)
- 
--                # Resolve recursive 'recrdeptask' dependencies (A)
-+                # Resolve recursive 'recrdeptask' dependencies (Part A)
-                 #
-                 # e.g. do_sometask[recrdeptask] = "do_someothertask"
-                 # (makes sure sometask runs after someothertask of all DEPENDS, RDEPENDS and intertask dependencies, recursively)
-                 # We cover the recursive part of the dependencies below
-                 if 'recrdeptask' in task_deps and taskData.tasks_name[task] in task_deps['recrdeptask']:
--                    for taskname in task_deps['recrdeptask'][taskData.tasks_name[task]].split():
--                        recrdepends.append(taskname)
--                        add_build_dependencies(taskData.depids[fnid], [taskname], depends)
--                        add_runtime_dependencies(taskData.rdepids[fnid], [taskname], depends)
--
--                # Rmove all self references
--                if task in depends:
--                    logger.debug(2, "Task %s (%s %s) contains self reference! %s", task, taskData.fn_index[taskData.tasks_fnid[task]], taskData.tasks_name[task], depends)
--                    depends.remove(task)
-+                    tasknames = task_deps['recrdeptask'][taskData.tasks_name[task]].split()
-+                    recursivetasks[task] = tasknames
-+                    add_build_dependencies(taskData.depids[fnid], tasknames, depends)
-+                    add_runtime_dependencies(taskData.rdepids[fnid], tasknames, depends)
- 
-             self.runq_fnid.append(taskData.tasks_fnid[task])
-             self.runq_task.append(taskData.tasks_name[task])
-@@ -509,48 +502,39 @@ class RunQueueData:
-             self.runq_hash.append("")
- 
-             runq_build.append(0)
--            runq_recrdepends.append(recrdepends)
- 
--        #
--        # Build a list of recursive cumulative dependencies for each fnid
--        # We do this by fnid, since if A depends on some task in B
--        # we're interested in later tasks B's fnid might have but B itself
--        # doesn't depend on
--        #
--        # Algorithm is O(tasks) + O(tasks)*O(fnids)
--        #
--        reccumdepends = {}
--        for task in xrange(len(self.runq_fnid)):
--            fnid = self.runq_fnid[task]
--            if fnid not in reccumdepends:
--                if fnid in tdepends_fnid:
--                    reccumdepends[fnid] = tdepends_fnid[fnid]
--                else:
--                    reccumdepends[fnid] = set()
--            reccumdepends[fnid].update(self.runq_depends[task])
--        for task in xrange(len(self.runq_fnid)):
--            taskfnid = self.runq_fnid[task]
--            for fnid in reccumdepends:
--                if task in reccumdepends[fnid]:
--                    reccumdepends[fnid].add(task)
--                    if taskfnid in reccumdepends:
--                        reccumdepends[fnid].update(reccumdepends[taskfnid])
--
--
--        # Resolve recursive 'recrdeptask' dependencies (B)
-+        # Resolve recursive 'recrdeptask' dependencies (Part B)
-         #
-         # e.g. do_sometask[recrdeptask] = "do_someothertask"
-         # (makes sure sometask runs after someothertask of all DEPENDS, RDEPENDS and intertask dependencies, recursively)
--        for task in xrange(len(self.runq_fnid)):
--            if len(runq_recrdepends[task]) > 0:
--                taskfnid = self.runq_fnid[task]
--                for dep in reccumdepends[taskfnid]:
--                    # Ignore self references
--                    if dep == task:
--                        continue
--                    for taskname in runq_recrdepends[task]:
--                        if taskData.tasks_name[dep] == taskname:
--                            self.runq_depends[task].add(dep)
-+        # We need to do this separately since we need all of self.runq_depends to be complete before this is processed
-+        extradeps = {}
-+        for task in recursivetasks:
-+            extradeps[task] = set()
-+            tasknames = recursivetasks[task]
-+            seendeps = set()
-+            seenfnid = []
-+
-+            def generate_recdeps(t):
-+                newdeps = set()
-+                add_resolved_dependencies([taskData.tasks_fnid[t]], tasknames, newdeps)
-+                extradeps[task].update(newdeps)
-+                seendeps.add(t)
-+                newdeps.add(t)
-+                for i in newdeps:
-+                    for n in self.runq_depends[i]:
-+                        if n not in seendeps:
-+                            generate_recdeps(n)
-+            generate_recdeps(task)
-+
-+        for task in xrange(len(taskData.tasks_name)):
-+            # Add in extra dependencies
-+            if task in extradeps:
-+                 self.runq_depends[task].update(extradeps[task])
-+            # Remove all self references
-+            if task in self.runq_depends[task]:
-+                logger.debug(2, "Task %s (%s %s) contains self reference! %s", task, taskData.fn_index[taskData.tasks_fnid[task]], taskData.tasks_name[task], self.runq_depends[task])
-+                self.runq_depends[task].remove(task)
- 
-         # Step B - Mark all active tasks
-         #
+(I am some days behind current bitbake master, so these might be fixed
+in the meantime)
 
 
+Nothing which seems to be related to the patch.
+
+
+> The trouble is its sees:
+>
+> https://.*/.* file:///someplace/
+>
+> but returns a url like files:// which the fetcher doesn't understand.
+> Suggestions on how to fix this are welcome.
+
+I do not see how my patch can cause such a rewrite. The troublesome
+'re.sub()' is done in a branch for loc != 0 only and won't be applied on
+the protocol part.
+
+
+Enrico
 
 
