@@ -1,31 +1,30 @@
-Received: from mail.cvg.de ([62.153.82.30])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <enrico.scholz@sigma-chemnitz.de>) id 1SlGzL-0002ls-1O
-	for bitbake-devel@lists.openembedded.org;
-	Sun, 01 Jul 2012 12:02:43 +0200
-Received: from ensc-virt.intern.sigma-chemnitz.de
-	(ensc-virt.intern.sigma-chemnitz.de [192.168.3.24])
-	by mail.cvg.de (8.14.4/8.14.4) with ESMTP id q619pes8003153
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1Sleg3-0006LJ-Qj; Mon, 02 Jul 2012 13:20:24 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q62B9Da1030479;
+	Mon, 2 Jul 2012 12:09:13 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 29631-03; Mon,  2 Jul 2012 12:09:08 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q62B95jj030473
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Sun, 1 Jul 2012 11:51:41 +0200
-Received: from ensc by ensc-virt.intern.sigma-chemnitz.de with local (Exim
-	4.76) (envelope-from <ensc@sigma-chemnitz.de>)
-	id 1SlGoz-0001dJ-DR; Sun, 01 Jul 2012 11:52:01 +0200
-From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-To: bitbake-devel@lists.openembedded.org
-Date: Sun,  1 Jul 2012 11:52:00 +0200
-Message-Id: <1341136320-6242-1-git-send-email-enrico.scholz@sigma-chemnitz.de>
-X-Mailer: git-send-email 1.7.10.2
-Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-X-DSPAM-Result: Innocent
-X-DSPAM-Probability: 0
-X-DSPAM-Confidence: 0.995
-X-Spam-Score: -5.3
-X-Spam-Level: -----
-X-Spam-Tests: AWL,BAYES_00,SPF_NEUTRAL,T_RP_MATCHES_RCVD,DSPAM_INNOCENT
-X-Scanned-By: MIMEDefang 2.73
-Cc: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-Subject: [PATCH] fetch2: try PREMIRRORS when calculating latest_revision
+	Mon, 2 Jul 2012 12:09:07 +0100
+Message-ID: <1341227352.23146.224.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+Date: Mon, 02 Jul 2012 12:09:12 +0100
+In-Reply-To: <ly8vf558di.fsf@ensc-virt.intern.sigma-chemnitz.de>
+References: <ly8vf558di.fsf@ensc-virt.intern.sigma-chemnitz.de>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org,
+	openembedded-core@lists.openembedded.org
+Subject: Re: do_fetchall broken by recent bitbake
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,73 +36,90 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 01 Jul 2012 10:02:43 -0000
+X-List-Received-Date: Mon, 02 Jul 2012 11:20:24 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Since support for native git mirrors was added in recent bitbake, it
-is possible to use local mirrors for calculating ${AUTOREV}.  This is
-very useful for development: recipes SRCREV can be overridden locally
-by 'SRCREV_pn-<recipe> = ${AUTOREV}' and a PREMIRROR which refers to a
-local repository can be added for the SRC_URI .
+On Sat, 2012-06-30 at 13:47 +0200, Enrico Scholz wrote:
+> the 82d73423c57569b984ee0ae3d93e3c3bd5dc5216 "runqueue: Reimplement
+> recrdepends so it works more correctly" bitbake commit breaks
+> OpenEmbedded's 'do_fetchall' task.  Previously sources of all dependent
+> tasks were downloaded.  Now, only a small subset gets fetched.
+> 
+> Before:
+> 
+> | $ ./bitbake my-image -c fetchall
+> | NOTE: Running task 1 of 202 (ID: 201, ...openssl/ocf-linux_20100325.bb, do_fetch)
 
-Patch checks PREMIRRORS only but not normal MIRRORS because:
+> After:
+> 
+> | $ ./bitbake my-image -c fetchall
+> | NOTE: Running task 1 of 11 (ID: 10, ...opkg-collateral.bb, do_fetch)
 
-a) it can break things when upstream is temporarily unavailable while
-   calling latest_revision() (--> MIRRORS will be consulted) but comes
-   back when fetching source.
+> Any chance to fix bitbake or OE?
 
-b) it makes the error reporting more complicated (only errors for
-   upstream should be shown to user, not the MIRROR's ones).
+Hmm, that is broken :(.
 
-Signed-off-by: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
----
- lib/bb/fetch2/__init__.py |   25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+We have a problem with recrdepends since it means different things in
+different contexts. Its turning out to be very hard to unravel the
+different issues. I'll try and summarise the different ways it could
+work. 
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index e3e03e5..2da5e99 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -616,6 +616,29 @@ def try_mirrors(d, origud, mirrors, check = False):
-             return ret
-     return None
- 
-+def latest_revision(ud, d, name):
-+    mirrors = mirror_from_string(d.getVar('PREMIRRORS', True))
-+    ld = d.createCopy()
-+    rev = None
-+    uris, uds = build_mirroruris(ud, mirrors, ld)
-+
-+    for index, uri in enumerate(uris):
-+        if not hasattr(uds[index].method, '_latest_revision'):
-+            continue
-+
-+        try:
-+            rev = uds[index].method.latest_revision(uri, uds[index], d, name)
-+            break
-+        except bb.fetch2.NetworkAccess:
-+            pass
-+        except bb.fetch2.BBFetchException as e:
-+            pass
-+
-+    if rev == None:
-+        rev = ud.method.latest_revision(ud.url, ud, d, name)
-+
-+    return rev
-+
- def srcrev_internal_helper(ud, d, name):
-     """
-     Return:
-@@ -643,7 +666,7 @@ def srcrev_internal_helper(ud, d, name):
-     if rev == "INVALID":
-         raise FetchError("Please set SRCREV to a valid value", ud.url)
-     if rev == "AUTOINC":
--        rev = ud.method.latest_revision(ud.url, ud, d, name)
-+        rev = latest_revision(ud, d, name)
- 
-     return rev
- 
--- 
-1.7.10.2
+Firstly, let me define some dependencies:
+
+build - a build time dependencies from DEPENDS
+runtime - a runtime dependency from RDEPENDS, RRECOMMENDS or similar
+intertask - an intertask dependency do_a[depends] = "somerecipe:do_b"
+
+So what does do_a[recrdeptask] = "do_b" in recipe A mean?
+
+"""
+Look though every build, runtime and intertask dependency recipe A has
+and see if those dependencies have a task do_b which would be added as a
+dependency. Whether they have or have not, then look through all the
+dependency's build, runtime and intertask dependencies do a task do_b
+and so on.
+"""
+
+However we have some corner cases to consider.
+
+a) If some dependency of A does not have a do_b task, should we still
+consider its dependencies? Should we consider build, runtime and
+intertask dependencies?
+
+b) Say recipe A has a dependency on recipe B which has a task do_b. Do
+we consider all build, runtime and intertask dependencies recipe B has?
+Or should we consider just the dependencies do_b has? Or a hybrid,
+consider the build and runtime dependencies overall but only any
+intertask dependencies do_b itself has?
+
+c) Imagine some task do_c has some intertask dependencies in recipe A
+but do_a and do_b don't depend on do_c. Should we consider those
+intertask dependencies?
+
+
+Changing c) in the commit was intentional. It seems that indirectly, the
+behaviour of b) has changed too and we now only consider the
+dependencies do_b has. Personally, having spent several days staring at
+this code, I think this actually makes a lot more sense.
+
+So how could we fix fetchall?
+
+I'm wondering if we should support the syntax
+
+do_fetchall[recrdeptask] = "do_fetchall do_fetch"
+
+since that would pull in the build and runtime deps of any dependency.
+The trouble is right now this will fail with circular dependency errors
+(understandably).
+
+Cheers,
+
+Richard
+
+
+
+
 
 
 
