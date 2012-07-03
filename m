@@ -1,30 +1,22 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SlnJu-00043p-6k for bitbake-devel@lists.openembedded.org;
-	Mon, 02 Jul 2012 22:34:06 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q62KN5NJ006286
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 2 Jul 2012 21:23:05 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 06197-01 for <bitbake-devel@lists.openembedded.org>;
-	Mon,  2 Jul 2012 21:23:00 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q62KMwTQ006250
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 2 Jul 2012 21:22:59 +0100
-Message-ID: <1341260584.23146.265.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 02 Jul 2012 21:23:04 +0100
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: [PATCH] fetch2/svn: Enhance to cope with subversion 1.7 upgrade
+Received: from mga09.intel.com ([134.134.136.24])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <limingx.l.an@intel.com>) id 1Sm1CG-0002yN-Fo
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 03 Jul 2012 13:23:08 +0200
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 03 Jul 2012 04:12:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,351,1309762800"; d="scan'208";a="166260363"
+Received: from hp.sh.intel.com ([10.239.47.6])
+	by orsmga002.jf.intel.com with ESMTP; 03 Jul 2012 04:12:05 -0700
+From: Liming An <limingx.l.an@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue,  3 Jul 2012 19:15:55 +0800
+Message-Id: <d835f663221a51d0d2bd82a91fdbcf8194f71875.1341313886.git.limingx.l.an@intel.com>
+X-Mailer: git-send-email 1.7.5.4
+In-Reply-To: <cover.1341313886.git.limingx.l.an@intel.com>
+References: <cover.1341313886.git.limingx.l.an@intel.com>
+Subject: [PATCH 1/1] Hob: fixed some variables not clean bug in detail page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,75 +28,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 02 Jul 2012 20:34:06 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 03 Jul 2012 11:23:08 -0000
 
-svn changed working checkout formats between 1.6 and 1.7. Its convoluted to
-detect what format a given working copy is in so the simplest solution is simply
-to run "svn upgrade" within the working copy.
+[YOCTO #2679]
 
-The base svn command variable is relocated slightly to enable this new code to
-work effectively.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Liming An <limingx.l.an@intel.com>
 ---
-diff --git a/bitbake/lib/bb/fetch2/svn.py b/bitbake/lib/bb/fetch2/svn.py
-index 59d7ccb..bc5b96b 100644
---- a/bitbake/lib/bb/fetch2/svn.py
-+++ b/bitbake/lib/bb/fetch2/svn.py
-@@ -49,6 +49,8 @@ class Svn(FetchMethod):
-         if not "module" in ud.parm:
-             raise MissingParameterError('module', ud.url)
- 
-+        ud.basecmd = d.getVar('FETCHCMD_svn', True)
-+
-         ud.module = ud.parm["module"]
- 
-         # Create paths to svn checkouts
-@@ -69,8 +71,6 @@ class Svn(FetchMethod):
-         command is "fetch", "update", "info"
-         """
- 
--        basecmd = data.expand('${FETCHCMD_svn}', d)
--
-         proto = ud.parm.get('proto', 'svn')
- 
-         svn_rsh = None
-@@ -88,7 +88,7 @@ class Svn(FetchMethod):
-             options.append("--password %s" % ud.pswd)
- 
-         if command == "info":
--            svncmd = "%s info %s %s://%s/%s/" % (basecmd, " ".join(options), proto, svnroot, ud.module)
-+            svncmd = "%s info %s %s://%s/%s/" % (ud.basecmd, " ".join(options), proto, svnroot, ud.module)
-         else:
-             suffix = ""
-             if ud.revision:
-@@ -96,9 +96,9 @@ class Svn(FetchMethod):
-                 suffix = "@%s" % (ud.revision)
- 
-             if command == "fetch":
--                svncmd = "%s co %s %s://%s/%s%s %s" % (basecmd, " ".join(options), proto, svnroot, ud.module, suffix, ud.module)
-+                svncmd = "%s co %s %s://%s/%s%s %s" % (ud.basecmd, " ".join(options), proto, svnroot, ud.module, suffix, ud.module)
-             elif command == "update":
--                svncmd = "%s update %s" % (basecmd, " ".join(options))
-+                svncmd = "%s update %s" % (ud.basecmd, " ".join(options))
-             else:
-                 raise FetchError("Invalid svn command %s" % command, ud.url)
- 
-@@ -117,6 +117,11 @@ class Svn(FetchMethod):
-             logger.info("Update " + loc)
-             # update sources there
-             os.chdir(ud.moddir)
-+            # We need to attempt to run svn upgrade first in case its an older working format
-+            try:
-+                runfetchcmd(ud.basecmd + " upgrade", d)
-+            except FetchError:
-+                pass
-             logger.debug(1, "Running %s", svnupdatecmd)
-             bb.fetch2.check_network_access(d, svnupdatecmd, ud.url)
-             runfetchcmd(svnupdatecmd, d)
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py |   14 +++-----------
+ 1 files changed, 3 insertions(+), 11 deletions(-)
 
+diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+index 07fc3a8..596fb85 100755
+--- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
++++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+@@ -232,7 +232,7 @@ class ImageDetailsPage (HobPage):
+ 
+         is_runnable = self.create_bottom_buttons(self.buttonlist, self.toggled_image)
+ 
+-        #if self.build_succeeded:
++        # Generated image files info
+         varlist = ["Name: ", "FileCreated: ", "Directory: "]
+         vallist = []
+ 
+@@ -428,7 +428,7 @@ class ImageDetailsPage (HobPage):
+             if fileitem['is_toggled']:
+                 if fileitem['action_attr'] == 'run':
+                     self.builder.runqemu_image(fileitem['name'], self.sel_kernel)
+-                elif image_attr == 'deploy':
++                elif fileitem['action_attr'] == 'deploy':
+                     self.builder.deploy_image(fileitem['name'])
+ 
+     def table_selected_cb(self, tbutton, image):
+@@ -445,14 +445,6 @@ class ImageDetailsPage (HobPage):
+             label = ((self.kernel_detail.get_children()[0]).get_children()[0]).get_children()[0]
+             label.set_markup(markup)
+ 
+-    def row_activated_cb(self, table, model, path):
+-        if not model:
+-            return
+-        iter = model.get_iter(path)
+-        image_name = model[path][0]
+-        if iter and model[path][2] == True:
+-            self.builder.runqemu_image(image_name, self.sel_kernel)
+-
+     def create_bottom_buttons(self, buttonlist, image_name):
+         # Create the buttons at the bottom
+         created = False
+@@ -536,7 +528,7 @@ class ImageDetailsPage (HobPage):
+ 
+     def deploy_button_clicked_cb(self, button):
+         if self.toggled_image:
+-            if self.build_succeeded or self.num_toggled > 1:
++            if self.num_toggled > 1:
+                 self.set_sensitive(False)
+                 self.show_builded_images_dialog(None, "Deploy image")
+                 self.set_sensitive(True)
+-- 
+1.7.5.4
 
 
 
