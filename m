@@ -1,36 +1,26 @@
-Received: from mail-vb0-f47.google.com ([209.85.212.47])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <eu@felipetonello.com>) id 1Sme3V-0005Fz-ND
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1SmiMi-0005uz-UC
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 05 Jul 2012 06:52:41 +0200
-Received: by vbbfr13 with SMTP id fr13so5230993vbb.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 04 Jul 2012 21:41:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=google.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:cc:content-type:x-gm-message-state;
-	bh=WLXM8YjWrg8dAKJk7q3XNNPiII97Ex3NBKND5fGR/kg=;
-	b=F7e+BZ/MuMSEnXjKTW7LeJvwT2DXXraBAL/LrSq24f3StE+vJRvIrIfnp3ngGnD/ek
-	LXWguSouz/IE1LXuV5j4IEGu2QE11k6Y/xW3v8Yl2IkSouHS67vyoymInKM7kM6RCxFn
-	qgIFvdclo1JynSwukwUQYvzBSo7/219/KynXUGzfYNPLV0nzaiEJOunp9gd3R9LHmXPG
-	PGkjKdLukb69f0qLTlDccZGF/7nA6EkYi+a0eCD3HLHF/0bbD+eeX/UM6tLF4YfmHeuj
-	FBsFCqBWLhft39WjqtKJ9CA2m3DT7jimoVvlxLh6/YS4+vTYtfukvKxP8xcpujw2kEEU
-	ZPFA==
-MIME-Version: 1.0
-Received: by 10.220.9.10 with SMTP id j10mr11743692vcj.7.1341463296999; Wed,
-	04 Jul 2012 21:41:36 -0700 (PDT)
-Received: by 10.220.178.134 with HTTP; Wed, 4 Jul 2012 21:41:36 -0700 (PDT)
-Received: by 10.220.178.134 with HTTP; Wed, 4 Jul 2012 21:41:36 -0700 (PDT)
-In-Reply-To: <CABcZANnbVf-d=2gZK1cbSR6y3JWAaHgXjszjA2qbo8jYVmuZgA@mail.gmail.com>
+	Thu, 05 Jul 2012 11:28:49 +0200
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 05 Jul 2012 02:17:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.71,315,1320652800"; d="scan'208";a="173620046"
+Received: from unknown (HELO helios.localnet) ([10.252.120.245])
+	by fmsmga001.fm.intel.com with ESMTP; 05 Jul 2012 02:17:43 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 05 Jul 2012 10:17:42 +0100
+Message-ID: <19168694.GrzTzre4EB@helios>
+Organization: Intel Corporation
+User-Agent: KMail/4.8.4 (Linux/3.2.0-26-generic-pae; KDE/4.8.4; i686; ; )
+In-Reply-To: <CAGrhNMyJHnf340iWCYndaVuMUbQuzZtUU0pXCGPWXivFXgSA3w@mail.gmail.com>
 References: <CAGrhNMxsvb7Qbcg369748pQi8S3+tO56pNTSr4urQTrH1M23QA@mail.gmail.com>
 	<CABcZANnbVf-d=2gZK1cbSR6y3JWAaHgXjszjA2qbo8jYVmuZgA@mail.gmail.com>
-Date: Wed, 4 Jul 2012 21:41:36 -0700
-Message-ID: <CAGrhNMyJHnf340iWCYndaVuMUbQuzZtUU0pXCGPWXivFXgSA3w@mail.gmail.com>
-From: Felipe Tonello <eu@felipetonello.com>
-To: Chris Larson <clarson@kergoth.com>
-X-Gm-Message-State: ALoCoQlGKGcFfXI+lPv4EmQ+IXCBy3VEM6P307IAGeOoAvjHuE34f5+Y54e4oG1ShWHT/mfoM+q5
-Cc: bitbake-devel@lists.openembedded.org
+	<CAGrhNMyJHnf340iWCYndaVuMUbQuzZtUU0pXCGPWXivFXgSA3w@mail.gmail.com>
+MIME-Version: 1.0
+Cc: Chris Larson <clarson@kergoth.com>
 Subject: Re: [PATCH] Updating optparse module to argparse module
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
@@ -43,61 +33,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 05 Jul 2012 04:52:41 -0000
-Content-Type: multipart/alternative; boundary=bcaec54fbaf64bffd404c40dc375
+X-List-Received-Date: Thu, 05 Jul 2012 09:28:49 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
---bcaec54fbaf64bffd404c40dc375
-Content-Type: text/plain; charset=ISO-8859-1
+On Wednesday 04 July 2012 21:41:36 Felipe Tonello wrote:
+> Oh right.
+> 
+> Is there any reason to that, since all major distributions come with python
+> 2.7?
 
-Oh right.
+Well, all "major distributions" perhaps except for the latest versions of 
+CentOS (and presumably RHEL...)
 
-Is there any reason to that, since all major distributions come with python
-2.7?
+Cheers,
+Paul
 
-Felipe
-On Jul 4, 2012 5:41 PM, "Chris Larson" <clarson@kergoth.com> wrote:
+-- 
 
-> On Wed, Jul 4, 2012 at 4:12 PM, Felipe Tonello <eu@felipetonello.com>
-> wrote:
-> > It's my first time here. So just to make a short intro, my name is Felipe
-> > Ferreri Tonello, I'm from Brazil but I currently live in USA.
-> >
-> > This patch is just to update the command line parse module to fit the new
-> > Python standards.
->
-> Sorry, that won't do, just yet. Last I checked, the current required
-> python version for bitbake and the main users of it is 2.6, not 2.7.
-> --
-> Christopher Larson
->
+Paul Eggleton
+Intel Open Source Technology Centre
 
---bcaec54fbaf64bffd404c40dc375
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
 
-<p>Oh right.</p>
-<p>Is there any reason to that, since all major distributions come with pyt=
-hon 2.7?</p>
-<p>Felipe</p>
-<div class=3D"gmail_quote">On Jul 4, 2012 5:41 PM, &quot;Chris Larson&quot;=
- &lt;<a href=3D"mailto:clarson@kergoth.com">clarson@kergoth.com</a>&gt; wro=
-te:<br type=3D"attribution"><blockquote class=3D"gmail_quote" style=3D"marg=
-in:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-On Wed, Jul 4, 2012 at 4:12 PM, Felipe Tonello &lt;<a href=3D"mailto:eu@fel=
-ipetonello.com">eu@felipetonello.com</a>&gt; wrote:<br>
-&gt; It&#39;s my first time here. So just to make a short intro, my name is=
- Felipe<br>
-&gt; Ferreri Tonello, I&#39;m from Brazil but I currently live in USA.<br>
-&gt;<br>
-&gt; This patch is just to update the command line parse module to fit the =
-new<br>
-&gt; Python standards.<br>
-<br>
-Sorry, that won&#39;t do, just yet. Last I checked, the current required<br=
->
-python version for bitbake and the main users of it is 2.6, not 2.7.<br>
---<br>
-Christopher Larson<br>
-</blockquote></div>
-
---bcaec54fbaf64bffd404c40dc375--
