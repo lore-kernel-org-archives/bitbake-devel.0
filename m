@@ -1,32 +1,34 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SoK65-0001Rs-8l for bitbake-devel@lists.openembedded.org;
-	Mon, 09 Jul 2012 21:58:17 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q69Jl8KY010241
+Received: from mail-qc0-f175.google.com ([209.85.216.175])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <andrei@gherzan.ro>) id 1SoYaN-0005dW-T6
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 10 Jul 2012 13:26:32 +0200
+Received: by qcad10 with SMTP id d10so5685451qca.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 9 Jul 2012 20:47:08 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 09244-06 for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 Jul 2012 20:47:04 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q69Jl0XA010213
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 9 Jul 2012 20:47:01 +0100
-Message-ID: <1341863220.22321.9.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 09 Jul 2012 20:47:00 +0100
-In-Reply-To: <1341852811.8066.28.camel@ted>
-References: <1341852811.8066.28.camel@ted>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: Re: [PATCH] fetch2/wget: Use FETCHCMD_wget to provide the commandline and options
+	Tue, 10 Jul 2012 04:15:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=google.com; s=20120113;
+	h=from:to:cc:subject:date:message-id:x-mailer:x-gm-message-state;
+	bh=2h+pciZb2+HVptKzd/8T8JqB4svfbCPScE5qL/RSMmU=;
+	b=PdjyA2f44qFsVspGqUs7cJBMcgDHECiJCpnFl4wgfB95c5AqtLhTJWsxgcJuMopflG
+	M63pOWAPKXrfzgsC40oAObL23/hJkDnujEDOckRU86+ekU4OOKPSLLGuhL7kIvJJVqVS
+	ORgAM21gs6ZpRmcBp3zrrNgghmIL2uJuelYWEy8IHWfaaxIkGeq344dLHPXQjnXEYPKF
+	XS8o0nTXnaCLSwLzP3d3j/wHfJuKjM6HpXm5ip2ylpF1Z9kEwl5l6E18zkrkmUqOOgCM
+	N0i2ZDUfBCthBqh5nGC7f/Y5O2TX4JcyE7IRIGdpRW4pG9BZzzd1CDvBlc6zMnsYE0a+
+	UlTQ==
+Received: by 10.229.135.195 with SMTP id o3mr23564153qct.87.1341918920930;
+	Tue, 10 Jul 2012 04:15:20 -0700 (PDT)
+Received: from otp-agherzan-l1.corp.ad.wrs.com ([89.121.200.106])
+	by mx.google.com with ESMTPS id fx5sm65157617qab.14.2012.07.10.04.15.18
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Tue, 10 Jul 2012 04:15:19 -0700 (PDT)
+From: Andrei Gherzan <andrei@gherzan.ro>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 10 Jul 2012 14:15:10 +0300
+Message-Id: <cover.1341918809.git.andrei@gherzan.ro>
+X-Mailer: git-send-email 1.7.9.5
+X-Gm-Message-State: ALoCoQl5Mw5Hu5eHUrBNMiD+baC9LBImr3UbkYu9eshzPpSpPOzg4/xNKybspslXJ8Db+nlGB5M4
+Subject: [PATCH 0/5] Modify fetchers to warn user if "param" is used
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -38,55 +40,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Jul 2012 19:58:17 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 10 Jul 2012 11:26:32 -0000
 
-On Mon, 2012-07-09 at 17:53 +0100, Richard Purdie wrote:
-> This also changes to use  -t 2 -T 30 as the defaults which are more sane for
-> a modern fetcher and already specified in OpenEmbedded metadata.
-> 
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
-> diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-> index e223b21..9881c8c 100644
-> --- a/bitbake/lib/bb/fetch2/wget.py
-> +++ b/bitbake/lib/bb/fetch2/wget.py
-> @@ -56,13 +56,15 @@ class Wget(FetchMethod):
->      def download(self, uri, ud, d, checkonly = False):
->          """Fetch urls"""
->  
-> +        basecmd = data.getVar("FETCHCMD_wget", True) or "/usr/bin/env wget -t 2 -T 30 -nv --passive-ftp --no-check-certificate"
+Andrei Gherzan (5):
+  fetch2/bzr.py: Use "protocol" parameter and warn user if recipe is
+    using "proto"
+  fetch2/git.py: Use "protocol" parameter and warn user if recipe is
+    using "proto"
+  fetch2/hg.py: Use "protocol" parameter and warn user if recipe is
+    using "proto"
+  fetch2/osc.py: Use "protocol" parameter and warn user if recipe is
+    using "proto"
+  fetch2/svn.py: Use "protocol" parameter and warn user if recipe is
+    using "proto"
 
-+        basecmd = d.getVar("FETCHCMD_wget", True) or "/usr/bin/env wget -t 2 -T 30 -nv --passive-ftp --no-check-certificate"
+ bitbake/lib/bb/fetch2/bzr.py |    7 ++++++-
+ bitbake/lib/bb/fetch2/git.py |    4 ++++
+ bitbake/lib/bb/fetch2/hg.py  |    7 ++++++-
+ bitbake/lib/bb/fetch2/osc.py |    7 ++++++-
+ bitbake/lib/bb/fetch2/svn.py |    7 ++++++-
+ 5 files changed, 28 insertions(+), 4 deletions(-)
 
-There is a typo here...
-
-Cheers,
-
-Richard
-
->          if checkonly:
-> -            fetchcmd = data.getVar("CHECKCOMMAND_wget", d, True) or d.expand("/usr/bin/env wget --spider -t 5 --passive-ftp --no-check-certificate -P ${DL_DIR} '${URI}'")
-> +            fetchcmd = data.getVar("CHECKCOMMAND_wget", d, True) or d.expand(basecmd + " -c -P ${DL_DIR} '${URI}'")
->          elif os.path.exists(ud.localpath):
->              # file exists, but we didnt complete it.. trying again..
-> -            fetchcmd = data.getVar("RESUMECOMMAND_wget", d, True) or d.expand("/usr/bin/env wget -c -t 5 -nv --passive-ftp --no-check-certificate -P ${DL_DIR} '${URI}'")
-> +            fetchcmd = data.getVar("RESUMECOMMAND_wget", d, True) or d.expand(basecmd + " --spider -P ${DL_DIR} '${URI}'")
->          else:
-> -            fetchcmd = data.getVar("FETCHCOMMAND_wget", d, True) or d.expand("/usr/bin/env wget -t 5 -nv --passive-ftp --no-check-certificate -P ${DL_DIR} '${URI}'")
-> +            fetchcmd = data.getVar("FETCHCOMMAND_wget", d, True) or d.expand(basecmd + " -P ${DL_DIR} '${URI}'")
->  
->          uri = uri.split(";")[0]
->          uri_decoded = list(decodeurl(uri))
-> 
-> 
-> 
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
-
+-- 
+1.7.9.5
 
 
 
