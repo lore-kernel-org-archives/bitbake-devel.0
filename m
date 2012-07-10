@@ -1,39 +1,30 @@
-Received: from mail-qc0-f175.google.com ([209.85.216.175])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <andrei@gherzan.ro>) id 1SoYcY-0007BG-CP
-	for bitbake-devel@lists.openembedded.org;
-	Tue, 10 Jul 2012 13:28:46 +0200
-Received: by qcad10 with SMTP id d10so5686365qca.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Jul 2012 04:17:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=google.com; s=20120113;
-	h=from:to:subject:date:message-id:x-mailer:in-reply-to:references
-	:in-reply-to:references:x-gm-message-state;
-	bh=P4Vzyg8B3OwVDybrcee5S6jcOI0fEny4AXW9LT+bIo8=;
-	b=BrC/nva0Q+2PTH4/vGDS/s0jO/+GqDD+xNPW/e4vdQXtrabb4uR7RZSlsGEQH2EloA
-	mT3m6JrEbBHp0FG87i/LUw2bxVGW97dbecZdz/W/Fyn98H1SlxB2Gu4OvWAwuj8pgHMY
-	sCw23W3RhFRyLgy9rmIPUfDDHLHi5L7mlt7/bzGNrvtiKEC7noZXXY3OUk3cIkFEn9WH
-	S76IntHSzcR5ARAPJ84Ri/QI+l8el1LiqO3MDqNX1/nxhbk60mPsngpOTApGSE++fGJZ
-	O0I59bofG2ezxLrmtPZX/BZdE0hsEIPN35E4nwDuQRR9osSnkRCF4RLWhqSXuWn2oTEz
-	1o+w==
-Received: by 10.224.176.70 with SMTP id bd6mr78754747qab.27.1341919055647;
-	Tue, 10 Jul 2012 04:17:35 -0700 (PDT)
-Received: from otp-agherzan-l1.corp.ad.wrs.com ([89.121.200.106])
-	by mx.google.com with ESMTPS id f14sm43675514qak.20.2012.07.10.04.17.33
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Tue, 10 Jul 2012 04:17:34 -0700 (PDT)
-From: Andrei Gherzan <andrei@gherzan.ro>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 10 Jul 2012 14:16:48 +0300
-Message-Id: <b6e8ccee34d81d6d11089a008d2d2996ed934c80.1341918809.git.andrei@gherzan.ro>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <04cbd60330fb7ae53d40956fa06feee67bc9e1cb.1341918809.git.andrei@gherzan.ro>
-References: <04cbd60330fb7ae53d40956fa06feee67bc9e1cb.1341918809.git.andrei@gherzan.ro>
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1Soak8-00038Y-Tm for bitbake-devel@lists.openembedded.org;
+	Tue, 10 Jul 2012 15:44:45 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q6ADXYI2017236;
+	Tue, 10 Jul 2012 14:33:34 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 16817-03; Tue, 10 Jul 2012 14:33:30 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q6ADXRWf017230
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Tue, 10 Jul 2012 14:33:28 +0100
+Message-ID: <1341927208.24837.9.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Andrei Gherzan <andrei@gherzan.ro>
+Date: Tue, 10 Jul 2012 14:33:28 +0100
 In-Reply-To: <cover.1341918809.git.andrei@gherzan.ro>
 References: <cover.1341918809.git.andrei@gherzan.ro>
-X-Gm-Message-State: ALoCoQkMqNF8yXV/1RsdCghfM1F7A/HUsyuuTXJY+og6pYuCK7+34eEoaEFhg2NiJna2CudZUOEa
-Subject: [PATCH 5/5] fetch2/svn.py: Use "protocol" parameter and warn user if recipe is using "proto"
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 0/5] Modify fetchers to warn user if "param" is used
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -45,36 +36,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Jul 2012 11:28:47 -0000
+X-List-Received-Date: Tue, 10 Jul 2012 13:44:45 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-If SRC_URI uses the parameter "proto" while specifying the protocol, use this
-value but warn the user about this problem.
+On Tue, 2012-07-10 at 14:15 +0300, Andrei Gherzan wrote:
+> Andrei Gherzan (5):
+>   fetch2/bzr.py: Use "protocol" parameter and warn user if recipe is
+>     using "proto"
+>   fetch2/git.py: Use "protocol" parameter and warn user if recipe is
+>     using "proto"
+>   fetch2/hg.py: Use "protocol" parameter and warn user if recipe is
+>     using "proto"
+>   fetch2/osc.py: Use "protocol" parameter and warn user if recipe is
+>     using "proto"
+>   fetch2/svn.py: Use "protocol" parameter and warn user if recipe is
+>     using "proto"
+> 
+>  bitbake/lib/bb/fetch2/bzr.py |    7 ++++++-
+>  bitbake/lib/bb/fetch2/git.py |    4 ++++
+>  bitbake/lib/bb/fetch2/hg.py  |    7 ++++++-
+>  bitbake/lib/bb/fetch2/osc.py |    7 ++++++-
+>  bitbake/lib/bb/fetch2/svn.py |    7 ++++++-
+>  5 files changed, 28 insertions(+), 4 deletions(-)
 
-Signed-off-by: Andrei Gherzan <andrei@gherzan.ro>
----
- bitbake/lib/bb/fetch2/svn.py |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+How about putting this check into __init__.py and then just setting the
+protocol parameter instead if its used? We can then change the backends
+just to use procotol right now.
 
-diff --git a/bitbake/lib/bb/fetch2/svn.py b/bitbake/lib/bb/fetch2/svn.py
-index bc5b96b..48adce8 100644
---- a/bitbake/lib/bb/fetch2/svn.py
-+++ b/bitbake/lib/bb/fetch2/svn.py
-@@ -71,7 +71,12 @@ class Svn(FetchMethod):
-         command is "fetch", "update", "info"
-         """
- 
--        proto = ud.parm.get('proto', 'svn')
-+        proto = ud.parm.get('protocol', 'svn')
-+
-+        if ud.parm.get('proto') is not None:
-+            logger.warn('Update %s recipe to use "protocol" not "proto".', d.getVar('PN', True))
-+            # Use proto value for now
-+            proto =  ud.parm.get('proto')
- 
-         svn_rsh = None
-         if proto == "svn+ssh" and "rsh" in ud.parm:
--- 
-1.7.9.5
+Cheers,
+
+Richard
+
 
 
 
