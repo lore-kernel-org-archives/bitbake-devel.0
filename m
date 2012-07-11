@@ -1,25 +1,30 @@
-Received: from mail.windriver.com ([147.11.1.11])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Wenzong.Fan@windriver.com>) id 1Sor4v-0008L0-OO
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 11 Jul 2012 09:11:18 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.3/8.14.3) with ESMTP id q6B3SDYu010351
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Jul 2012 20:28:13 -0700 (PDT)
-Received: from wenzong-desktop.corp.ad.wrs.com (128.224.162.182) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.1.255.0; Tue, 10 Jul 2012 20:28:13 -0700
-From: <wenzong.fan@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 11 Jul 2012 11:28:11 +0800
-Message-ID: <05c49df922dac41a9d86377c1400ae2ef58fe4ae.1341977062.git.wenzong.fan@windriver.com>
-X-Mailer: git-send-email 1.7.3
-In-Reply-To: <cover.1341977062.git.wenzong.fan@windriver.com>
-References: <cover.1341977062.git.wenzong.fan@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/1] bitbake: Abort build if runtime dependency conflict
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1SouZX-0004OM-9c for bitbake-devel@lists.openembedded.org;
+	Wed, 11 Jul 2012 12:55:07 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q6BAhtub002975;
+	Wed, 11 Jul 2012 11:43:55 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 02807-03; Wed, 11 Jul 2012 11:43:51 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q6BAhnVF002969
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Wed, 11 Jul 2012 11:43:50 +0100
+Message-ID: <1342003430.7934.7.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Andrei Gherzan <andrei@gherzan.ro>
+Date: Wed, 11 Jul 2012 11:43:50 +0100
+In-Reply-To: <cover.1341955881.git.andrei@gherzan.ro>
+References: <cover.1341955881.git.andrei@gherzan.ro>
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH-V2 0/5] Warn user if "param" is used in SRC_URI
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,60 +36,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 11 Jul 2012 07:11:18 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 11 Jul 2012 10:55:07 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Wenzong Fan <wenzong.fan@windriver.com>
+On Wed, 2012-07-11 at 00:34 +0300, Andrei Gherzan wrote:
+> The following changes since commit 90ad663909c0c8a405b22a510c9f957007d02669:
+> 
+>   upstream_tracking: update boost (2012-07-09 17:21:38 +0100)
+> 
+> are available in the git repository at:
+> 
+>   git://git.yoctoproject.org/poky-contrib ag/protocol
+>   http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=ag/protocol
+> 
+> Andrei Gherzan (5):
+>   fetch2/svn.py: Use "protocol" parameter to get the protocol
+>   fetch2/osc.py: Use "protocol" parameter to get the protocol
+>   fetch2/hg.py: Use "protocol" parameter to get the protocol
+>   fetch2/bzr.py: Use "protocol" parameter to get the protocol
+>   fetch2/__init__.py: Warn user if SRC_URI is using "proto" and not
+>     "protocol"
 
-Currently if there are multiple preferred providers available for
-a runtime dependency, bitbake will print an Error message and let
-the build go on. Anyways the build should abort while any Errors
-occured.
+Merged to master, thanks.
 
-[YOCTO #2734]
-
-Signed-off-by: Wenzong Fan <wenzong.fan@windriver.com>
----
- bitbake/lib/bb/providers.py |    2 ++
- bitbake/lib/bb/taskdata.py  |    3 ++-
- 2 files changed, 4 insertions(+), 1 deletions(-)
-
-diff --git a/bitbake/lib/bb/providers.py b/bitbake/lib/bb/providers.py
-index bd729df..24cb217 100644
---- a/bitbake/lib/bb/providers.py
-+++ b/bitbake/lib/bb/providers.py
-@@ -35,6 +35,8 @@ class NoProvider(bb.BBHandledException):
- class NoRProvider(bb.BBHandledException):
-     """Exception raised when no provider of a runtime dependency can be found"""
- 
-+class MultipleRProvider(bb.BBHandledException):
-+    """Exception raised when multiple providers of a runtime dependency can be found"""
- 
- def findProviders(cfgData, dataCache, pkg_pn = None):
-     """
-diff --git a/bitbake/lib/bb/taskdata.py b/bitbake/lib/bb/taskdata.py
-index 55cdde5..aed3a16 100644
---- a/bitbake/lib/bb/taskdata.py
-+++ b/bitbake/lib/bb/taskdata.py
-@@ -482,6 +482,7 @@ class TaskData:
-                     providers_list.append(dataCache.pkg_fn[fn])
-                 bb.event.fire(bb.event.MultipleProviders(item, providers_list, runtime=True), cfgData)
-             self.consider_msgs_cache.append(item)
-+            raise bb.providers.MultipleRProvider(item)
- 
-         # run through the list until we find one that we can build
-         for fn in eligible:
-@@ -580,7 +581,7 @@ class TaskData:
-                 try:
-                     self.add_rprovider(cfgData, dataCache, target)
-                     added = added + 1
--                except bb.providers.NoRProvider:
-+                except (bb.providers.NoRProvider, bb.providers.MultipleRProvider):
-                     self.remove_runtarget(self.getrun_id(target))
-             logger.debug(1, "Resolved " + str(added) + " extra dependencies")
-             if added == 0:
--- 
-1.7.3
+Richard
 
 
 
