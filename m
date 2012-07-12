@@ -1,31 +1,26 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SouZv-0004PN-O0 for bitbake-devel@lists.openembedded.org;
-	Wed, 11 Jul 2012 12:55:31 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q6BAiK9v002984;
-	Wed, 11 Jul 2012 11:44:20 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 01796-08; Wed, 11 Jul 2012 11:44:16 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q6BAiAoV002978
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Wed, 11 Jul 2012 11:44:11 +0100
-Message-ID: <1342003451.7934.8.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: wenzong.fan@windriver.com
-Date: Wed, 11 Jul 2012 11:44:11 +0100
-In-Reply-To: <05c49df922dac41a9d86377c1400ae2ef58fe4ae.1341977062.git.wenzong.fan@windriver.com>
-References: <cover.1341977062.git.wenzong.fan@windriver.com>
-	<05c49df922dac41a9d86377c1400ae2ef58fe4ae.1341977062.git.wenzong.fan@windriver.com>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] bitbake: Abort build if runtime dependency conflict
+Received: from mailout2.ltindia.com ([125.18.18.171])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <Girija.B@lnties.com>) id 1SpHDB-0007nM-Ru
+	for bitbake-devel@lists.openembedded.org;
+	Thu, 12 Jul 2012 13:06:10 +0200
+Received: from unknown (HELO POCITMSEXHUB01.LntUniverse.com) ([10.2.1.58])
+	by mailout2.ltindia.com with ESMTP; 12 Jul 2012 16:23:58 +0530
+Received: from POCITMSEXMB03.LntUniverse.com ([fe80::f495:7e6e:4c34:a3a9]) by
+	POCITMSEXHUB01.LntUniverse.com ([::1]) with mapi id 14.02.0309.002;
+	Thu, 12 Jul 2012 16:23:56 +0530
+From: Girija B <Girija.B@lnties.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: bitbake error 
+Thread-Index: AQHNYByiLSf6WCPDVUaYHvN65ohxJQ==
+Date: Thu, 12 Jul 2012 10:53:56 +0000
+Message-ID: <098684E1B7B2F54491C5DA349D2EF443098FD828@POCITMSEXMB03.LntUniverse.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.2.1.74]
+MIME-Version: 1.0
+Subject: bitbake error
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,29 +32,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 11 Jul 2012 10:55:32 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 12 Jul 2012 11:06:27 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2012-07-11 at 11:28 +0800, wenzong.fan@windriver.com wrote:
-> From: Wenzong Fan <wenzong.fan@windriver.com>
-> 
-> Currently if there are multiple preferred providers available for
-> a runtime dependency, bitbake will print an Error message and let
-> the build go on. Anyways the build should abort while any Errors
-> occured.
-> 
-> [YOCTO #2734]
-> 
-> Signed-off-by: Wenzong Fan <wenzong.fan@windriver.com>
-> ---
->  bitbake/lib/bb/providers.py |    2 ++
->  bitbake/lib/bb/taskdata.py  |    3 ++-
->  2 files changed, 4 insertions(+), 1 deletions(-)
+Hello,
 
-Merged to master, thanks.
+I have installed bitbake and open embedded environment , when i run the com=
+mand : bitbake meta-toolchain-qte , am getting the following error :
+Pseudo is not present but is required, building this first before the main =
+build
+ERROR: Failure expanding variable SRCPV, expression was ${@bb.fetch2.get_sr=
+crev(d)} which triggered exception FetchError: Fetcher failure: Fetch comma=
+nd export HOME=3D"/home/girija"; export SSH_AUTH_SOCK=3D"/tmp/keyring-vMpej=
+Y/ssh"; export GIT_CONFIG=3D"/home/girija/mft/platform/build/tmp-eglibc/sys=
+roots/i686-linux/etc/gitconfig"; export PATH=3D"/home/girija/mft/platform/b=
+uild/tmp-eglibc/sysroots/i686-linux/usr/bin/armv5te-oe-linux-gnueabi:/home/=
+girija/mft/platform/build/tmp-eglibc/sysroots/tonga2/usr/bin/crossscripts:/=
+home/girija/mft/platform/build/tmp-eglibc/sysroots/i686-linux/usr/sbin:/hom=
+e/girija/mft/platform/build/tmp-eglibc/sysroots/i686-linux/usr/bin:/home/gi=
+rija/mft/platform/build/tmp-eglibc/sysroots/i686-linux/sbin:/home/girija/mf=
+t/platform/build/tmp-eglibc/sysroots/i686-linux//bin:/home/girija/mft/platf=
+orm/3rd-party/bitbake/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin=
+:/sbin:/bin:/usr/games:/home/girija/mft/platform/3rd-party/openembedded-cor=
+e/scripts"; git ls-remote ssh://git@savage-git:10221/var/lib/git/joule/joul=
+e-test-app master could not be run:
+None
+ERROR: Command execution failed: Exited with 1
 
-Richard
+Summary: There were 2 ERROR messages shown, returning a non-zero exit code.
 
+
+
+please help me in solving this
+
+Thanks,
+Girija.B
+Larsen & Toubro Limited
+
+www.larsentoubro.com
+
+This Email may contain confidential or privileged information for the inten=
+ded recipient (s). If you are not the intended recipient, please do not use=
+ or disseminate the information, notify the sender and delete it from your =
+system.
 
 
