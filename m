@@ -1,28 +1,28 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jeffrey.honig@windriver.com>) id 1SqyC1-0003pN-OF
+	(envelope-from <jeffrey.honig@windriver.com>) id 1SqyC1-0003pM-OF
 	for bitbake-devel@lists.openembedded.org;
 	Tue, 17 Jul 2012 05:11:22 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id q6H0RxA5002122
+	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id q6H0n0LN011378
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 16 Jul 2012 17:27:59 -0700 (PDT)
+	Mon, 16 Jul 2012 17:49:00 -0700 (PDT)
 Received: from jch-schlepp.wrs.com (172.25.32.253) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.1.255.0;
-	Mon, 16 Jul 2012 17:27:59 -0700
+	Mon, 16 Jul 2012 17:48:58 -0700
 Received: from schlepp.honig.net (schlepp.honig.net [127.0.0.1])	by
 	jch-schlepp.wrs.com (8.14.4/8.14.4/Debian-2ubuntu2) with ESMTP id
-	q6H0RwEX005466	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256
+	q6H0mvIm009187	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256
 	verify=NOT)	for <bitbake-devel@lists.openembedded.org>; Mon, 16 Jul 2012
-	20:27:58 -0400
+	20:48:57 -0400
 Received: (from jch@localhost)	by schlepp.honig.net (8.14.4/8.14.4/Submit) id
-	q6H0RwSP005465	for bitbake-devel@lists.openembedded.org;
-	Mon, 16 Jul 2012 20:27:58 -0400
+	q6H0mvsv009186	for bitbake-devel@lists.openembedded.org;
+	Mon, 16 Jul 2012 20:48:57 -0400
 From: Jeffrey C Honig <jeffrey.honig@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 16 Jul 2012 20:27:58 -0400
-Message-ID: <1342484878-5420-1-git-send-email-jeffrey.honig@windriver.com>
+Date: Mon, 16 Jul 2012 20:48:57 -0400
+Message-ID: <1342486137-9149-1-git-send-email-jeffrey.honig@windriver.com>
 X-Mailer: git-send-email 1.7.5.4
 MIME-Version: 1.0
 Subject: [PATCH] siggen.py: Insure .siginfo files writes into shared sstate cache are atomic
