@@ -1,29 +1,39 @@
-Received: from bgl-iport-1.cisco.com ([72.163.197.25])
+Received: from mga10.intel.com ([192.55.52.92] helo=fmsmga102.fm.intel.com)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <mertsas@cisco.com>) id 1Srp8r-0002pw-BK
+	(envelope-from <ross.burton@intel.com>) id 1SrRWL-0007uY-PW
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 19 Jul 2012 13:43:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=cisco.com; i=mertsas@cisco.com; l=1005; q=dns/txt;
-	s=iport; t=1342697538; x=1343907138;
-	h=from:to:cc:subject:date:message-id;
-	bh=AGwrj8swoyo9XyIr6wcsliHoOTcap/JmwfG6joKJ7ns=;
-	b=VSlDzuV2aHCXjhNnGO0iy4XhcIZepZceTZ8L63N/oqzJfnNGwHHzLqN8
-	bphQBQXVF03Ru9vD2uBHgdfuuNO1C28R6pAqj1iI4A5c6EKtiWMEREOOE
-	WVbHoGbi1gmQ4iJZ1icyTT2c4MTbyAUWaduT/tFmeJQZor6pjxLjP4f9a w=;
-X-IronPort-AV: E=Sophos;i="4.77,615,1336348800"; d="scan'208";a="15162024"
-Received: from vla196-nat.cisco.com (HELO bgl-core-3.cisco.com)
-	([72.163.197.24])
-	by bgl-iport-1.cisco.com with ESMTP; 19 Jul 2012 11:31:08 +0000
-Received: from Lan.cisco.com (dhcp-10-54-74-11.cisco.com [10.54.74.11])
-	by bgl-core-3.cisco.com (8.14.5/8.14.5) with ESMTP id q6JBV6r6020271;
-	Thu, 19 Jul 2012 11:31:06 GMT
-From: Martin Ertsaas <mertsas@cisco.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 19 Jul 2012 13:26:25 +0200
-Message-Id: <1342697185-7332-1-git-send-email-mertsas@cisco.com>
-X-Mailer: git-send-email 1.7.8.6
-Subject: [PATCH] Change bzr fetcher to use branch instead of co. Fixes: bzr: ERROR: No pull location known or specified.
+	Wed, 18 Jul 2012 12:30:17 +0200
+Received: from mail-qc0-f180.google.com ([209.85.216.180])
+	by mga11.intel.com with ESMTP/TLS/RC4-SHA; 18 Jul 2012 03:17:51 -0700
+Received: by qcmv28 with SMTP id v28so761810qcm.25
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 18 Jul 2012 03:17:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=google.com; s=20120113;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc:content-type:x-gm-message-state;
+	bh=zTEXidXrdJvd2qxdsvO6WjK7BsHE33PQzB0usd2b2a4=;
+	b=GqNbkMFWmmWNq58Q12Jn4qzJM9oPFSzIM5XnJl8iWXkV5QbanrDhK4pcE7I6Mx78bs
+	gECToedlA0yhUFlIZy2UcYieoxCPLHLdzkAMMh2V5/oOO2FPuqD4Y/kObL5/UeqG8JPH
+	vsAQwGlF4DqBptnrtKHiRxzIBYhWr3Yxv9VUgs9Tr6rcEyxS8TlDHryjfTZJgsg9flyi
+	LQ/PHmAZ9INtHJQkEPVX95NQwTWbsQKchgBEu9Ydl2QTVhAXsy07uwenMmxKspFXMY7i
+	jljwmCBTz3iVw0CoAgMWf5Vw/6Eug4QkTwRGvS9MiAyLynjRyMOpTWiru/7q2MOQMHxA
+	EFHA==
+Received: by 10.224.177.1 with SMTP id bg1mr4837029qab.68.1342606670347; Wed,
+	18 Jul 2012 03:17:50 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.229.82.74 with HTTP; Wed, 18 Jul 2012 03:17:29 -0700 (PDT)
+In-Reply-To: <1342606005.30680.17.camel@ted>
+References: <1342606005.30680.17.camel@ted>
+From: "Burton, Ross" <ross.burton@intel.com>
+Date: Wed, 18 Jul 2012 11:17:29 +0100
+Message-ID: <CAJTo0LbkkXkJH-mbxwqKK7KM1PWDdF4mD+K8omTF4SQ9_WDogQ@mail.gmail.com>
+To: Patches and discussions about the oe-core layer
+	<openembedded-core@lists.openembedded.org>
+X-Gm-Message-State: ALoCoQn/U8Plr7KNC/BgR6LU3ALMceolR7CknINY4CZv14js0kyo3aHUBc2khPWlp9q5MLMWeLWm
+X-Mailman-Approved-At: Fri, 20 Jul 2012 11:07:59 +0200
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [OE-core] PLEASE READ: Major change landing shortly (python whitespace)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -35,31 +45,21 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 19 Jul 2012 11:43:37 -0000
+X-List-Received-Date: Wed, 18 Jul 2012 10:30:18 -0000
+Content-Type: text/plain; charset=UTF-8
 
-This problem occurs when fetching a different revision of the same source. Which mean every time you update a bzr package.
-Using branch sets the pull location, and are the preferred way of cloning/branching a repository in bzr.
+On 18 July 2012 11:06, Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+> I put a proposal to the TSC, that we have bitbake warn/error whenever it
+> finds tab characters in any python function. The advantage of this is
+> that we give the user a clear definitive error. The downside is that
+> we'll have to go through all the metadata and scrub it for the problem.
 
-Signed-off-by: Martin Ertsaas <mertsas@cisco.com>
----
- lib/bb/fetch2/bzr.py |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+Have you ran that warning over oe-core to check that there are not any
+legitimate uses of \t, not for indentation but inside strings?  I
+can't think of any realistic use but you never know (construct a
+Makefile in a python function?).
 
-diff --git a/lib/bb/fetch2/bzr.py b/lib/bb/fetch2/bzr.py
-index 97daa62..58e80c8 100644
---- a/lib/bb/fetch2/bzr.py
-+++ b/lib/bb/fetch2/bzr.py
-@@ -73,7 +73,7 @@ class Bzr(FetchMethod):
-                 options.append("-r %s" % ud.revision)
- 
-             if command == "fetch":
--                bzrcmd = "%s co %s %s://%s" % (basecmd, " ".join(options), proto, bzrroot)
-+                bzrcmd = "%s branch %s %s://%s" % (basecmd, " ".join(options), proto, bzrroot)
-             elif command == "update":
-                 bzrcmd = "%s pull %s --overwrite" % (basecmd, " ".join(options))
-             else:
--- 
-1.7.8.6
-
+Ross
 
 
