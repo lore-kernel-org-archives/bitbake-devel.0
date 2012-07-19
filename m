@@ -1,35 +1,23 @@
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <heinold@mi.fu-berlin.de>) id 1SrmZ5-0007OI-VN
+	(envelope-from <nitin.a.kamble@intel.com>) id 1Ss1S2-0005hU-2b
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 19 Jul 2012 10:58:32 +0200
-Received: from relay1.zedat.fu-berlin.de ([130.133.4.67])
-	by outpost1.zedat.fu-berlin.de (Exim 4.69) with esmtp
-	(envelope-from <heinold@mi.fu-berlin.de>)
-	id <1Srm3s-0007iX-IA>; Thu, 19 Jul 2012 10:26:16 +0200
-Received: from andorra.imp.fu-berlin.de ([160.45.42.84])
-	by relay1.zedat.fu-berlin.de (Exim 4.69) with esmtp
-	(envelope-from <heinold@mi.fu-berlin.de>)
-	id <1Srm3s-00016d-8r>; Thu, 19 Jul 2012 10:26:16 +0200
-Received: from heinold by internal andorra.imp.fu-berlin.de with local (Exim
-	4.72) id 1Srm3p-0001ig-61; Thu, 19 Jul 2012 10:26:13 +0200
-Date: Thu, 19 Jul 2012 10:26:13 +0200
-From: Henning Heinold <heinold@inf.fu-berlin.de>
-To: Patches and discussions about the oe-core layer
-	<openembedded-core@lists.openembedded.org>
-Message-ID: <20120719082613.GA5979@mi.fu-berlin.de>
-References: <1342606005.30680.17.camel@ted>
-	<CAJTo0LbkkXkJH-mbxwqKK7KM1PWDdF4mD+K8omTF4SQ9_WDogQ@mail.gmail.com>
-	<1342611618.30680.24.camel@ted>
-	<20120718214358.GT22569@jama.jama.net>
-MIME-Version: 1.0
-In-Reply-To: <20120718214358.GT22569@jama.jama.net>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Sender: Henning Heinold <heinold@mi.fu-berlin.de>
-X-Originating-IP: 160.45.42.84
+	Fri, 20 Jul 2012 02:52:14 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 19 Jul 2012 17:39:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="168720807"
+Received: from yocto-hm1.jf.intel.com ([10.23.232.32])
+	by orsmga001.jf.intel.com with ESMTP; 19 Jul 2012 17:39:46 -0700
+From: nitin.a.kamble@intel.com
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 18 Jul 2012 17:39:18 -0700
+Message-Id: <6af334f77b2e8bdbcc536fe777c57e4ac646f71b.1342635547.git.nitin.a.kamble@intel.com>
+X-Mailer: git-send-email 1.7.3.4
+In-Reply-To: <cover.1342635547.git.nitin.a.kamble@intel.com>
+References: <cover.1342635547.git.nitin.a.kamble@intel.com>
 X-Mailman-Approved-At: Fri, 20 Jul 2012 11:07:59 +0200
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [OE-core] PLEASE READ: Major change landing shortly (python whitespace)
+Subject: [PATCH 1/1] bitbake wget fetcher: add parameter: downloadfilename
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -41,50 +29,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 19 Jul 2012 08:58:32 -0000
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-List-Received-Date: Fri, 20 Jul 2012 00:52:14 -0000
 
-On Wed, Jul 18, 2012 at 11:43:58PM +0200, Martin Jansa wrote:
-> On Wed, Jul 18, 2012 at 12:40:18PM +0100, Richard Purdie wrote:
-> > On Wed, 2012-07-18 at 11:17 +0100, Burton, Ross wrote:
-> > > On 18 July 2012 11:06, Richard Purdie
-> > > <richard.purdie@linuxfoundation.org> wrote:
-> > > > I put a proposal to the TSC, that we have bitbake warn/error whenever it
-> > > > finds tab characters in any python function. The advantage of this is
-> > > > that we give the user a clear definitive error. The downside is that
-> > > > we'll have to go through all the metadata and scrub it for the problem.
-> > > 
-> > > Have you ran that warning over oe-core to check that there are not any
-> > > legitimate uses of \t, not for indentation but inside strings?  I
-> > > can't think of any realistic use but you never know (construct a
-> > > Makefile in a python function?).
-> > 
-> > The check is for actual tab characters, not "\t". There are some
-> > legitimate users of tab characters which I've replaced with \t in
-> > strings.
-> > 
-> > My current patch work in progress for the conversion is:
-> > 
-> > http://git.yoctoproject.org/cgit.cgi/poky-contrib/commit/?h=rpurdie/t14&id=49d3d01f3d61a0eb19b6852229fa8fc26712f653
-> 
-> Would be great if someone updates
-> 
-> bitbake/contrib/vim to highlight tabs, so that every tab would be easily
-> spotted in recipe/bbclass.
-> 
-> And maybe also meta-openembedded/contrib/oe-stylize.py, but that seems
-> to expand tabs to spaces already.
-> 
-> Cheers,
-> 
-> -- 
-> Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
+From: Nitin A Kamble <nitin.a.kamble@intel.com>
 
-Hi,
+this allows wget fetcher to store the downloaded file in a specified custom filename in ${DL_DIR}
 
-should we enable the vim unwanted spaces/tabs higlighting too?
+Exmaple:
+SRC_URI = "https://edc.intel.com/Download.aspx?id=6190;downloadfilename=LIN_IEMGD_1_14_GOLD_2443.tgz"
 
-Bye Henning
+This fixes bug:
+[YOCTO #2570]
+
+Signed-off-by: Nitin A Kamble <nitin.a.kamble@intel.com>
+---
+ bitbake/lib/bb/fetch2/wget.py |    9 ++++++++-
+ 1 files changed, 8 insertions(+), 1 deletions(-)
+
+diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
+index b784afb..9affa0d 100644
+--- a/bitbake/lib/bb/fetch2/wget.py
++++ b/bitbake/lib/bb/fetch2/wget.py
+@@ -50,7 +50,11 @@ class Wget(FetchMethod):
+ 
+     def urldata_init(self, ud, d):
+ 
+-        ud.basename = os.path.basename(ud.path)
++        if 'downloadfilename' in ud.parm:
++            ud.basename = ud.parm['downloadfilename']
++        else:
++            ud.basename = os.path.basename(ud.path)
++
+         ud.localfile = data.expand(urllib.unquote(ud.basename), d)
+ 
+     def download(self, uri, ud, d, checkonly = False):
+@@ -58,6 +62,9 @@ class Wget(FetchMethod):
+ 
+         basecmd = d.getVar("FETCHCMD_wget", True) or "/usr/bin/env wget -t 2 -T 30 -nv --passive-ftp --no-check-certificate"
+ 
++        if 'downloadfilename' in ud.parm:
++            basecmd += " -O ${DL_DIR}/" + ud.localfile
++
+         if checkonly:
+             fetchcmd = d.getVar("CHECKCOMMAND_wget", True) or d.expand(basecmd + " -c -P ${DL_DIR} '${URI}'")
+         elif os.path.exists(ud.localpath):
+-- 
+1.7.3.4
+
 
 
