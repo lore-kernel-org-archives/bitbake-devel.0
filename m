@@ -1,22 +1,35 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <nitin.a.kamble@intel.com>) id 1Ss1S1-0005hU-CB
+	(envelope-from <heinold@mi.fu-berlin.de>) id 1SrmZ5-0007OI-VN
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 20 Jul 2012 02:52:13 +0200
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 19 Jul 2012 17:39:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="168720804"
-Received: from yocto-hm1.jf.intel.com ([10.23.232.32])
-	by orsmga001.jf.intel.com with ESMTP; 19 Jul 2012 17:39:44 -0700
-From: nitin.a.kamble@intel.com
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 18 Jul 2012 17:39:16 -0700
-Message-Id: <cover.1342635547.git.nitin.a.kamble@intel.com>
-X-Mailer: git-send-email 1.7.3.4
+	Thu, 19 Jul 2012 10:58:32 +0200
+Received: from relay1.zedat.fu-berlin.de ([130.133.4.67])
+	by outpost1.zedat.fu-berlin.de (Exim 4.69) with esmtp
+	(envelope-from <heinold@mi.fu-berlin.de>)
+	id <1Srm3s-0007iX-IA>; Thu, 19 Jul 2012 10:26:16 +0200
+Received: from andorra.imp.fu-berlin.de ([160.45.42.84])
+	by relay1.zedat.fu-berlin.de (Exim 4.69) with esmtp
+	(envelope-from <heinold@mi.fu-berlin.de>)
+	id <1Srm3s-00016d-8r>; Thu, 19 Jul 2012 10:26:16 +0200
+Received: from heinold by internal andorra.imp.fu-berlin.de with local (Exim
+	4.72) id 1Srm3p-0001ig-61; Thu, 19 Jul 2012 10:26:13 +0200
+Date: Thu, 19 Jul 2012 10:26:13 +0200
+From: Henning Heinold <heinold@inf.fu-berlin.de>
+To: Patches and discussions about the oe-core layer
+	<openembedded-core@lists.openembedded.org>
+Message-ID: <20120719082613.GA5979@mi.fu-berlin.de>
+References: <1342606005.30680.17.camel@ted>
+	<CAJTo0LbkkXkJH-mbxwqKK7KM1PWDdF4mD+K8omTF4SQ9_WDogQ@mail.gmail.com>
+	<1342611618.30680.24.camel@ted>
+	<20120718214358.GT22569@jama.jama.net>
+MIME-Version: 1.0
+In-Reply-To: <20120718214358.GT22569@jama.jama.net>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+Sender: Henning Heinold <heinold@mi.fu-berlin.de>
+X-Originating-IP: 160.45.42.84
 X-Mailman-Approved-At: Fri, 20 Jul 2012 11:07:59 +0200
-Cc: Nitin A Kamble <nitin.a.kamble@intel.com>
-Subject: [PATCH 0/1] V2 add downloadfilename param to wget fetcher
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [OE-core] PLEASE READ: Major change landing shortly (python whitespace)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -28,36 +41,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 20 Jul 2012 00:52:13 -0000
+X-List-Received-Date: Thu, 19 Jul 2012 08:58:32 -0000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Nitin A Kamble <nitin.a.kamble@intel.com>
+On Wed, Jul 18, 2012 at 11:43:58PM +0200, Martin Jansa wrote:
+> On Wed, Jul 18, 2012 at 12:40:18PM +0100, Richard Purdie wrote:
+> > On Wed, 2012-07-18 at 11:17 +0100, Burton, Ross wrote:
+> > > On 18 July 2012 11:06, Richard Purdie
+> > > <richard.purdie@linuxfoundation.org> wrote:
+> > > > I put a proposal to the TSC, that we have bitbake warn/error whenever it
+> > > > finds tab characters in any python function. The advantage of this is
+> > > > that we give the user a clear definitive error. The downside is that
+> > > > we'll have to go through all the metadata and scrub it for the problem.
+> > > 
+> > > Have you ran that warning over oe-core to check that there are not any
+> > > legitimate uses of \t, not for indentation but inside strings?  I
+> > > can't think of any realistic use but you never know (construct a
+> > > Makefile in a python function?).
+> > 
+> > The check is for actual tab characters, not "\t". There are some
+> > legitimate users of tab characters which I've replaced with \t in
+> > strings.
+> > 
+> > My current patch work in progress for the conversion is:
+> > 
+> > http://git.yoctoproject.org/cgit.cgi/poky-contrib/commit/?h=rpurdie/t14&id=49d3d01f3d61a0eb19b6852229fa8fc26712f653
+> 
+> Would be great if someone updates
+> 
+> bitbake/contrib/vim to highlight tabs, so that every tab would be easily
+> spotted in recipe/bbclass.
+> 
+> And maybe also meta-openembedded/contrib/oe-stylize.py, but that seems
+> to expand tabs to spaces already.
+> 
+> Cheers,
+> 
+> -- 
+> Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
 
-This add a new parameter to wget fetcher. It enables storing the
-downloaded file with any custom name which can be different than
-the basename of the url.
+Hi,
 
-It is useful for situations like this:
-SRC_URI = "https://edc.intel.com/Download.aspx?id=6190;downloadfilename=LIN_IEMGD_1_14_GOLD_2443.tgz"
+should we enable the vim unwanted spaces/tabs higlighting too?
 
-Thanks,
-Nitin
-
-The following changes since commit 5b014eae151a1584df4e3d3b96d18f9df3e55665:
-
-  fix my typos in patch headers (2012-07-16 21:45:01 -0700)
-
-are available in the git repository at:
-  git://git.pokylinux.org/poky-contrib nitin/misc
-  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=nitin/misc
-
-Nitin A Kamble (1):
-  bitbake wget fetcher: add parameter: downloadfilename
-
- bitbake/lib/bb/fetch2/wget.py |    9 ++++++++-
- 1 files changed, 8 insertions(+), 1 deletions(-)
-
--- 
-1.7.3.4
-
+Bye Henning
 
 
