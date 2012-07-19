@@ -1,39 +1,22 @@
-Received: from mga10.intel.com ([192.55.52.92] helo=fmsmga102.fm.intel.com)
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <ross.burton@intel.com>) id 1SrRWL-0007uY-PW
+	(envelope-from <nitin.a.kamble@intel.com>) id 1Ss1S1-0005hU-CB
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 18 Jul 2012 12:30:17 +0200
-Received: from mail-qc0-f180.google.com ([209.85.216.180])
-	by mga11.intel.com with ESMTP/TLS/RC4-SHA; 18 Jul 2012 03:17:51 -0700
-Received: by qcmv28 with SMTP id v28so761810qcm.25
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Jul 2012 03:17:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=google.com; s=20120113;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-type:x-gm-message-state;
-	bh=zTEXidXrdJvd2qxdsvO6WjK7BsHE33PQzB0usd2b2a4=;
-	b=GqNbkMFWmmWNq58Q12Jn4qzJM9oPFSzIM5XnJl8iWXkV5QbanrDhK4pcE7I6Mx78bs
-	gECToedlA0yhUFlIZy2UcYieoxCPLHLdzkAMMh2V5/oOO2FPuqD4Y/kObL5/UeqG8JPH
-	vsAQwGlF4DqBptnrtKHiRxzIBYhWr3Yxv9VUgs9Tr6rcEyxS8TlDHryjfTZJgsg9flyi
-	LQ/PHmAZ9INtHJQkEPVX95NQwTWbsQKchgBEu9Ydl2QTVhAXsy07uwenMmxKspFXMY7i
-	jljwmCBTz3iVw0CoAgMWf5Vw/6Eug4QkTwRGvS9MiAyLynjRyMOpTWiru/7q2MOQMHxA
-	EFHA==
-Received: by 10.224.177.1 with SMTP id bg1mr4837029qab.68.1342606670347; Wed,
-	18 Jul 2012 03:17:50 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.229.82.74 with HTTP; Wed, 18 Jul 2012 03:17:29 -0700 (PDT)
-In-Reply-To: <1342606005.30680.17.camel@ted>
-References: <1342606005.30680.17.camel@ted>
-From: "Burton, Ross" <ross.burton@intel.com>
-Date: Wed, 18 Jul 2012 11:17:29 +0100
-Message-ID: <CAJTo0LbkkXkJH-mbxwqKK7KM1PWDdF4mD+K8omTF4SQ9_WDogQ@mail.gmail.com>
-To: Patches and discussions about the oe-core layer
-	<openembedded-core@lists.openembedded.org>
-X-Gm-Message-State: ALoCoQn/U8Plr7KNC/BgR6LU3ALMceolR7CknINY4CZv14js0kyo3aHUBc2khPWlp9q5MLMWeLWm
+	Fri, 20 Jul 2012 02:52:13 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 19 Jul 2012 17:39:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="168720804"
+Received: from yocto-hm1.jf.intel.com ([10.23.232.32])
+	by orsmga001.jf.intel.com with ESMTP; 19 Jul 2012 17:39:44 -0700
+From: nitin.a.kamble@intel.com
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 18 Jul 2012 17:39:16 -0700
+Message-Id: <cover.1342635547.git.nitin.a.kamble@intel.com>
+X-Mailer: git-send-email 1.7.3.4
 X-Mailman-Approved-At: Fri, 20 Jul 2012 11:07:59 +0200
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [OE-core] PLEASE READ: Major change landing shortly (python whitespace)
+Cc: Nitin A Kamble <nitin.a.kamble@intel.com>
+Subject: [PATCH 0/1] V2 add downloadfilename param to wget fetcher
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -45,21 +28,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 18 Jul 2012 10:30:18 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Fri, 20 Jul 2012 00:52:13 -0000
 
-On 18 July 2012 11:06, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
-> I put a proposal to the TSC, that we have bitbake warn/error whenever it
-> finds tab characters in any python function. The advantage of this is
-> that we give the user a clear definitive error. The downside is that
-> we'll have to go through all the metadata and scrub it for the problem.
+From: Nitin A Kamble <nitin.a.kamble@intel.com>
 
-Have you ran that warning over oe-core to check that there are not any
-legitimate uses of \t, not for indentation but inside strings?  I
-can't think of any realistic use but you never know (construct a
-Makefile in a python function?).
+This add a new parameter to wget fetcher. It enables storing the
+downloaded file with any custom name which can be different than
+the basename of the url.
 
-Ross
+It is useful for situations like this:
+SRC_URI = "https://edc.intel.com/Download.aspx?id=6190;downloadfilename=LIN_IEMGD_1_14_GOLD_2443.tgz"
+
+Thanks,
+Nitin
+
+The following changes since commit 5b014eae151a1584df4e3d3b96d18f9df3e55665:
+
+  fix my typos in patch headers (2012-07-16 21:45:01 -0700)
+
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib nitin/misc
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=nitin/misc
+
+Nitin A Kamble (1):
+  bitbake wget fetcher: add parameter: downloadfilename
+
+ bitbake/lib/bb/fetch2/wget.py |    9 ++++++++-
+ 1 files changed, 8 insertions(+), 1 deletions(-)
+
+-- 
+1.7.3.4
+
 
 
