@@ -1,23 +1,30 @@
-Received: from mga02.intel.com ([134.134.136.20])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <nitin.a.kamble@intel.com>) id 1Ss1S2-0005hU-2b
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 20 Jul 2012 02:52:14 +0200
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 19 Jul 2012 17:39:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.67,352,1309762800"; d="scan'208";a="168720807"
-Received: from yocto-hm1.jf.intel.com ([10.23.232.32])
-	by orsmga001.jf.intel.com with ESMTP; 19 Jul 2012 17:39:46 -0700
-From: nitin.a.kamble@intel.com
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 18 Jul 2012 17:39:18 -0700
-Message-Id: <6af334f77b2e8bdbcc536fe777c57e4ac646f71b.1342635547.git.nitin.a.kamble@intel.com>
-X-Mailer: git-send-email 1.7.3.4
-In-Reply-To: <cover.1342635547.git.nitin.a.kamble@intel.com>
-References: <cover.1342635547.git.nitin.a.kamble@intel.com>
-X-Mailman-Approved-At: Fri, 20 Jul 2012 11:07:59 +0200
-Subject: [PATCH 1/1] bitbake wget fetcher: add parameter: downloadfilename
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1StLs5-0008QQ-N8 for bitbake-devel@lists.openembedded.org;
+	Mon, 23 Jul 2012 18:52:37 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q6NGfBu7023797
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 23 Jul 2012 17:41:11 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 06321-10 for <bitbake-devel@lists.openembedded.org>;
+	Mon, 23 Jul 2012 17:41:07 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q6NGf2r3023790
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 23 Jul 2012 17:41:04 +0100
+Message-ID: <1343061661.21788.106.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Mon, 23 Jul 2012 17:41:01 +0100
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: [PATCH] cooker.py: Ensure we track parser errors and only show bbappend issues on complete parse
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -29,52 +36,69 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 20 Jul 2012 00:52:14 -0000
+X-List-Received-Date: Mon, 23 Jul 2012 16:52:37 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Nitin A Kamble <nitin.a.kamble@intel.com>
+Currently if any parsing failure occurs, there can be a long list of
+bbappends that are "dangling" based on the fact that recipes were not
+parsed. This change firstly ensures the error counter is incremented
+and secondly that the bbappends list is only shown on a completed
+parse list.
 
-this allows wget fetcher to store the downloaded file in a specified custom filename in ${DL_DIR}
-
-Exmaple:
-SRC_URI = "https://edc.intel.com/Download.aspx?id=6190;downloadfilename=LIN_IEMGD_1_14_GOLD_2443.tgz"
-
-This fixes bug:
-[YOCTO #2570]
-
-Signed-off-by: Nitin A Kamble <nitin.a.kamble@intel.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/fetch2/wget.py |    9 ++++++++-
- 1 files changed, 8 insertions(+), 1 deletions(-)
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 361bc88..5d01af3 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -1205,8 +1205,9 @@ class BBCooker:
+ 
+         if not self.parser.parse_next():
+             collectlog.debug(1, "parsing complete")
+-            self.show_appends_with_no_recipes()
+-            self.buildDepgraph()
++            if not self.parser.error:
++                self.show_appends_with_no_recipes()
++                self.buildDepgraph()
+             self.state = state.running
+             return None
+ 
+@@ -1601,6 +1602,7 @@ class CookerParser(object):
+                                             self.skipped, self.masked,
+                                             self.virtuals, self.error,
+                                             self.total)
++
+             bb.event.fire(event, self.cfgdata)
+             self.feeder_quit.put(None)
+             for process in self.processes:
+@@ -1658,20 +1660,25 @@ class CookerParser(object):
+             self.shutdown()
+             return False
+         except ParsingFailure as exc:
++            self.error += 1
+             logger.error('Unable to parse %s: %s' %
+                      (exc.recipe, bb.exceptions.to_string(exc.realexception)))
+             self.shutdown(clean=False)
+         except bb.parse.ParseError as exc:
++            self.error += 1
+             logger.error(str(exc))
+             self.shutdown(clean=False)
+         except bb.data_smart.ExpansionError as exc:
++            self.error += 1
+             _, value, _ = sys.exc_info()
+             logger.error('ExpansionError during parsing %s: %s', value.recipe, str(exc))
+             self.shutdown(clean=False)
+         except SyntaxError as exc:
++            self.error += 1
+             logger.error('Unable to parse %s', exc.recipe)
+             self.shutdown(clean=False)
+         except Exception as exc:
++            self.error += 1
+             etype, value, tb = sys.exc_info()
+             logger.error('Unable to parse %s', value.recipe,
+                          exc_info=(etype, value, exc.traceback))
 
-diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index b784afb..9affa0d 100644
---- a/bitbake/lib/bb/fetch2/wget.py
-+++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -50,7 +50,11 @@ class Wget(FetchMethod):
- 
-     def urldata_init(self, ud, d):
- 
--        ud.basename = os.path.basename(ud.path)
-+        if 'downloadfilename' in ud.parm:
-+            ud.basename = ud.parm['downloadfilename']
-+        else:
-+            ud.basename = os.path.basename(ud.path)
-+
-         ud.localfile = data.expand(urllib.unquote(ud.basename), d)
- 
-     def download(self, uri, ud, d, checkonly = False):
-@@ -58,6 +62,9 @@ class Wget(FetchMethod):
- 
-         basecmd = d.getVar("FETCHCMD_wget", True) or "/usr/bin/env wget -t 2 -T 30 -nv --passive-ftp --no-check-certificate"
- 
-+        if 'downloadfilename' in ud.parm:
-+            basecmd += " -O ${DL_DIR}/" + ud.localfile
-+
-         if checkonly:
-             fetchcmd = d.getVar("CHECKCOMMAND_wget", True) or d.expand(basecmd + " -c -P ${DL_DIR} '${URI}'")
-         elif os.path.exists(ud.localpath):
--- 
-1.7.3.4
 
 
 
