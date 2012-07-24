@@ -1,30 +1,24 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1StLs5-0008QQ-N8 for bitbake-devel@lists.openembedded.org;
-	Mon, 23 Jul 2012 18:52:37 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q6NGfBu7023797
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 23 Jul 2012 17:41:11 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 06321-10 for <bitbake-devel@lists.openembedded.org>;
-	Mon, 23 Jul 2012 17:41:07 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q6NGf2r3023790
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 23 Jul 2012 17:41:04 +0100
-Message-ID: <1343061661.21788.106.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 23 Jul 2012 17:41:01 +0100
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: [PATCH] cooker.py: Ensure we track parser errors and only show bbappend issues on complete parse
+Received: from mail.windriver.com ([147.11.1.11])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <Kai.Kang@windriver.com>) id 1StZLU-00063h-BC
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 24 Jul 2012 09:15:52 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id q6O74LnZ001992
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Tue, 24 Jul 2012 00:04:21 -0700 (PDT)
+Received: from localhost.localdomain (128.224.162.164) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server
+	(TLS) id 14.1.255.0; Tue, 24 Jul 2012 00:04:20 -0700
+From: Kang Kai <kai.kang@windriver.com>
+To: <richard.purdie@linuxfoundation.org>
+Date: Tue, 24 Jul 2012 15:04:13 +0800
+Message-ID: <cover.1343113295.git.kai.kang@windriver.com>
+X-Mailer: git-send-email 1.7.5.4
+MIME-Version: 1.0
+X-Originating-IP: [128.224.162.164]
+Cc: bitbake-devel@lists.openembedded.org, Zhenfeng.Zhao@windriver.com
+Subject: [PATCH 0/2] treat runqueue terminated by disk monitor as failure
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,69 +30,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 23 Jul 2012 16:52:37 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 24 Jul 2012 07:15:52 -0000
+Content-Type: text/plain
 
-Currently if any parsing failure occurs, there can be a long list of
-bbappends that are "dangling" based on the fact that recipes were not
-parsed. This change firstly ensures the error counter is incremented
-and secondly that the bbappends list is only shown on a completed
-parse list.
+Hi Richard,
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 361bc88..5d01af3 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1205,8 +1205,9 @@ class BBCooker:
- 
-         if not self.parser.parse_next():
-             collectlog.debug(1, "parsing complete")
--            self.show_appends_with_no_recipes()
--            self.buildDepgraph()
-+            if not self.parser.error:
-+                self.show_appends_with_no_recipes()
-+                self.buildDepgraph()
-             self.state = state.running
-             return None
- 
-@@ -1601,6 +1602,7 @@ class CookerParser(object):
-                                             self.skipped, self.masked,
-                                             self.virtuals, self.error,
-                                             self.total)
-+
-             bb.event.fire(event, self.cfgdata)
-             self.feeder_quit.put(None)
-             for process in self.processes:
-@@ -1658,20 +1660,25 @@ class CookerParser(object):
-             self.shutdown()
-             return False
-         except ParsingFailure as exc:
-+            self.error += 1
-             logger.error('Unable to parse %s: %s' %
-                      (exc.recipe, bb.exceptions.to_string(exc.realexception)))
-             self.shutdown(clean=False)
-         except bb.parse.ParseError as exc:
-+            self.error += 1
-             logger.error(str(exc))
-             self.shutdown(clean=False)
-         except bb.data_smart.ExpansionError as exc:
-+            self.error += 1
-             _, value, _ = sys.exc_info()
-             logger.error('ExpansionError during parsing %s: %s', value.recipe, str(exc))
-             self.shutdown(clean=False)
-         except SyntaxError as exc:
-+            self.error += 1
-             logger.error('Unable to parse %s', exc.recipe)
-             self.shutdown(clean=False)
-         except Exception as exc:
-+            self.error += 1
-             etype, value, tb = sys.exc_info()
-             logger.error('Unable to parse %s', value.recipe,
-                          exc_info=(etype, value, exc.traceback))
+These 2 patches are for Yocto 2168. BB_DISKMON_DIRS and BB_DISKMON_WARNINTERVAL
+should be set in local.conf to enable disk monitor to test the patches.
 
+Regards,
+Kai
+
+The following changes since commit 315d52934693b14f08b62f3f5f361d834484e180:
+
+  Pyphon-native: Fix typo (2012-07-22 14:20:57 +0100)
+
+are available in the git repository at:
+  git://git.pokylinux.org/poky-contrib kangkai/hob-check-size
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=kangkai/hob-check-size
+
+Kang Kai (2):
+  monitordisk: update return value
+  cooker: treat termination by disk monitor as failure
+
+ bitbake/lib/bb/cooker.py      |   14 ++++++++++++--
+ bitbake/lib/bb/event.py       |    5 +++--
+ bitbake/lib/bb/monitordisk.py |   12 ++++++++++--
+ bitbake/lib/bb/runqueue.py    |    9 +++++----
+ 4 files changed, 30 insertions(+), 10 deletions(-)
+
+-- 
+1.7.5.4
 
 
 
