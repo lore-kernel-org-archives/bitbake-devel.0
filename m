@@ -1,34 +1,29 @@
-Received: from mail-we0-f175.google.com ([74.125.82.175])
+Received: from mail.windriver.com ([147.11.1.11])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <martin.jansa@gmail.com>) id 1SwM7z-00066b-0e
+	(envelope-from <Kai.Kang@windriver.com>) id 1SwOPT-0001GD-IF
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 01 Aug 2012 01:45:27 +0200
-Received: by weyr6 with SMTP id r6so4341857wey.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 31 Jul 2012 16:33:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:x-mailer:in-reply-to:references;
-	bh=dt32FvGclJ548tjT+UeEo9cTtGyeGwP/2Q7znrtWklc=;
-	b=Wtl/Pe6/qdfychUhPn9F2ExOEhROEGyBI8tGiUE0kTz11xk+6UbRLwrIDy4h+JOGwe
-	JLv6Z8K+oIfzJ9qpovWXHth2qZsy/bY/I2Te3qxdJSMFzFs1WtOt8Qsc91IWZeWSUxKP
-	JQnVnSvNIp7XfxMszKD3iF9ectnEEzwTUmiLXGMz9EJZcLDnDHaC+8gW7NC0IRkIeCOd
-	NszIy1lv0PcmVSMYtb6TN8e5rLKAzqIZIn88t+HZHv/xCDieY+JHPyxJ7DZvlHZdMVFF
-	gIEyfUPY9iBw+CyFBou+HYEdFJF3rAKt0JEHXiziMPrEjQzw1rLmqHJcnzl9yORGccah
-	Fa7Q==
-Received: by 10.216.138.200 with SMTP id a50mr7898237wej.155.1343777629566;
-	Tue, 31 Jul 2012 16:33:49 -0700 (PDT)
-Received: from localhost ([94.230.152.246])
-	by mx.google.com with ESMTPS id ex20sm3960827wid.7.2012.07.31.16.33.47
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Tue, 31 Jul 2012 16:33:48 -0700 (PDT)
-From: Martin Jansa <martin.jansa@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  1 Aug 2012 01:33:41 +0200
-Message-Id: <1343777621-27958-1-git-send-email-Martin.Jansa@gmail.com>
-X-Mailer: git-send-email 1.7.8.6
-In-Reply-To: <1343732491-12072-1-git-send-email-Martin.Jansa@gmail.com>
-References: <1343732491-12072-1-git-send-email-Martin.Jansa@gmail.com>
-Subject: [PATCHv2] fetch2: print checksums when they are different then expected
+	Wed, 01 Aug 2012 04:11:39 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id q711xvmk014901
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Tue, 31 Jul 2012 18:59:58 -0700 (PDT)
+Received: from [128.224.162.164] (128.224.162.164) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.2.309.2;
+	Tue, 31 Jul 2012 18:59:57 -0700
+Message-ID: <50188DA3.4040606@windriver.com>
+Date: Wed, 1 Aug 2012 10:00:03 +0800
+From: Kang Kai <Kai.Kang@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:10.0.2) Gecko/20120216 Thunderbird/10.0.2
+MIME-Version: 1.0
+To: Kang Kai <kai.kang@windriver.com>
+References: <cover.1343378110.git.kai.kang@windriver.com>
+In-Reply-To: <cover.1343378110.git.kai.kang@windriver.com>
+X-Originating-IP: [128.224.162.164]
+X-MIME-Autoconverted: from 8bit to quoted-printable by mail.windriver.com id
+	q711xvmk014901
+Cc: bitbake-devel@lists.openembedded.org, Zhenfeng.Zhao@windriver.com
+Subject: Re: [PATCH 0/2] V3: hob check disk size
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -40,46 +35,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 31 Jul 2012 23:45:27 -0000
+X-List-Received-Date: Wed, 01 Aug 2012 02:11:40 -0000
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-* in form which can be copied into a recipe without modification
-* like oe-classic did since:
-  http://git.openembedded.org/openembedded/commit/?id=68abc465559a68e9201c9525be3c4acc6297eaed
-* it shows them in right form when they are missing completely, but in
-  more verbose form when different
-* it needs to print that only when checksums were requested, e.g.
-  fetching from sstate mirror sets both md5mismatch and sha256mismatch,
-  but your checksums shouldn't be shown
+On 2012=E5=B9=B407=E6=9C=8827=E6=97=A5 16:38, Kang Kai wrote:
+> Hi Richard,
+>
+> In V3 I fire the event DiskFull in diskMonitor.check() as your commente=
+d.
 
-Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
----
- lib/bb/fetch2/__init__.py |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+Hi Richard,
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index fa963be..31602fe 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -342,11 +342,17 @@ def verify_checksum(u, ud, d):
-     # We want to alert the user if a checksum is defined in the recipe but
-     # it does not match.
-     msg = ""
-+    mismatch = False
-     if md5mismatch and ud.md5_expected:
-         msg = msg + "\nFile: '%s' has %s checksum %s when %s was expected" % (ud.localpath, 'md5', md5data, ud.md5_expected)
-+        mismatch = True;
- 
-     if sha256mismatch and ud.sha256_expected:
-         msg = msg + "\nFile: '%s' has %s checksum %s when %s was expected" % (ud.localpath, 'sha256', sha256data, ud.sha256_expected)
-+        mismatch = True;
-+
-+    if mismatch:
-+        msg = msg + '\nYour checksums:\nSRC_URI[%s] = "%s"\nSRC_URI[%s] = "%s"' % (ud.md5_name, md5data, ud.sha256_name, sha256data)
- 
-     if len(msg):
-         raise ChecksumError('Checksum mismatch!%s' % msg, u)
--- 
-1.7.8.6
+Would you like to help me to review these patches?
+Thanks,
+
+Kai
+
+> Thanks,
+> Kai
+>
+> The following changes since commit 0ffb02eec2beaea27ff0ec9d3d31b0a09e67=
+5a4c:
+>
+>    documentation: Updated the h6 style to use a larger font (2012-07-24=
+ 10:35:34 +0100)
+>
+> are available in the git repository at:
+>    git://git.pokylinux.org/poky-contrib kangkai/hob-check-size
+>    http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=3Dkangkai/hob-=
+check-size
+>
+> Kang Kai (2):
+>    monitordisk: fire event DISKFULL when terminate build
+>    hob: deal event DiskFull
+>
+>   bitbake/lib/bb/event.py                  |    8 ++++++++
+>   bitbake/lib/bb/monitordisk.py            |    5 +++++
+>   bitbake/lib/bb/ui/crumbs/builder.py      |    4 ++++
+>   bitbake/lib/bb/ui/crumbs/runningbuild.py |   11 ++++++++++-
+>   4 files changed, 27 insertions(+), 1 deletions(-)
+>
 
 
 
