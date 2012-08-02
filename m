@@ -1,32 +1,30 @@
-Received: from mail-wi0-f171.google.com ([209.85.212.171])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <martin.jansa@gmail.com>) id 1SwyoX-0006kV-US
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 02 Aug 2012 19:03:57 +0200
-Received: by wibhq4 with SMTP id hq4so4674416wib.6
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1Sx2Qf-0006Ii-7L for bitbake-devel@lists.openembedded.org;
+	Thu, 02 Aug 2012 22:55:34 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q72Khs1L011091
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 02 Aug 2012 09:52:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:x-mailer;
-	bh=D+fxfvViyAgEs4CBiX1zq56x4tc1dy1+jj7wwbNObLM=;
-	b=hT3JH+kVsOmXUw5EBEGz6SxrCpkj0ysllEy+9IrTUybVFRx3jZMOv257hi8QJDrXA/
-	+/M+GFAOjLMDqSs5kH9hgooeWQYoUUrhIFrdnmftuies4ChYFUFeNABltADY5A/kvghC
-	+/FPXirMw3G7Hc/VQfoLoyBJFLr1dNQMbPUUehy3l/Cu2ZptOsgza/iKOzByvxlIbFeb
-	EdVDQjLbeaVbBdSsif3QbZrWbNFlqVE56Zc77G+AGsBvyfzQVIUW5FjWzoAWk1naUdZO
-	TRpW0D3SqrkYraa77hn6+ILvXkHBq6SV5E7rIY3stowAdu1Gt9hFQX3oG3NLFn2wV0uG
-	AxUg==
-Received: by 10.216.242.196 with SMTP id i46mr10247599wer.123.1343926338333;
-	Thu, 02 Aug 2012 09:52:18 -0700 (PDT)
-Received: from localhost ([94.230.152.246])
-	by mx.google.com with ESMTPS id ef5sm18479721wib.3.2012.08.02.09.52.16
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Thu, 02 Aug 2012 09:52:17 -0700 (PDT)
-From: Martin Jansa <martin.jansa@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu,  2 Aug 2012 18:52:15 +0200
-Message-Id: <1343926335-7612-1-git-send-email-Martin.Jansa@gmail.com>
-X-Mailer: git-send-email 1.7.8.6
-Subject: [PATCH] cooker: fix OVERRIDES in BB_SIGNATURE_HANDLER (to override value from DISTRO.conf from local.conf)
+	Thu, 2 Aug 2012 21:43:54 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 09592-02 for <bitbake-devel@lists.openembedded.org>;
+	Thu,  2 Aug 2012 21:43:49 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q72Khl3j011085
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 2 Aug 2012 21:43:47 +0100
+Message-ID: <1343940228.9756.99.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 02 Aug 2012 21:43:48 +0100
+X-Mailer: Evolution 3.2.2- 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: [PATCH] fetch2/local.py: Provide better debug output when fetch of a local file fails
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -38,30 +36,81 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 02 Aug 2012 17:03:58 -0000
+X-List-Received-Date: Thu, 02 Aug 2012 20:55:34 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-* added as RP said. I haven't seen any unwanted side-effects in last 2
-  days of using this
+When a fetch failure occurs for a local file, this patch ensures we print the
+locations searched making it easier for the user to debug the problem.
 
-Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/cooker.py |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
-
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 5d01af3..23fffc9 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -158,6 +158,7 @@ class BBCooker:
-         #
-         self.configuration.event_data = bb.data.createCopy(self.configuration.data)
-         bb.data.update_data(self.configuration.event_data)
-+        bb.parse.init_parser(self.configuration.event_data)
+diff --git a/.gitignore b/.gitignore
+index bd0acdc..0405bab 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,4 +1,3 @@
+-bitbake
+ *.pyc
+ *.pyo
+ /*.patch
+diff --git a/bitbake/lib/bb/fetch2/local.py b/bitbake/lib/bb/fetch2/local.py
+index bfef079..3a34f2a 100644
+--- a/bitbake/lib/bb/fetch2/local.py
++++ b/bitbake/lib/bb/fetch2/local.py
+@@ -30,7 +30,8 @@ import urllib
+ import bb
+ import bb.utils
+ from   bb import data
+-from   bb.fetch2 import FetchMethod
++from   bb.fetch2 import FetchMethod, FetchError
++from   bb.fetch2 import logger
  
-         # TOSTOP must not be set or our children will hang when they output
-         fd = sys.stdout.fileno()
--- 
-1.7.8.6
+ class Local(FetchMethod):
+     def supports(self, url, urldata, d):
+@@ -41,16 +42,15 @@ class Local(FetchMethod):
+ 
+     def urldata_init(self, ud, d):
+         # We don't set localfile as for this fetcher the file is already local!
+-        ud.basename = os.path.basename(urllib.unquote(ud.url.split("://")[1].split(";")[0]))
++        ud.decodedurl = urllib.unquote(ud.url.split("://")[1].split(";")[0])
++        ud.basename = os.path.basename(ud.decodedurl)
+         return
+ 
+     def localpath(self, url, urldata, d):
+         """
+         Return the local filename of a given url assuming a successful fetch.
+         """
+-        path = url.split("://")[1]
+-        path = path.split(";")[0]
+-        path = urllib.unquote(path)
++        path = urldata.decodedurl
+         newpath = path
+         if path[0] != "/":
+             filespath = data.getVar('FILESPATH', d, True)
+@@ -76,7 +76,20 @@ class Local(FetchMethod):
+     def download(self, url, urldata, d):
+         """Fetch urls (no-op for Local method)"""
+         # no need to fetch local files, we'll deal with them in place.
+-        return 1
++        if self.supports_checksum(urldata) and not os.path.exists(urldata.localpath):
++            locations = []
++            filespath = data.getVar('FILESPATH', d, True)
++            if filespath:
++                locations = filespath.split(":")
++            filesdir = data.getVar('FILESDIR', d, True)
++            if filesdir:
++                locations.append(filesdir)
++            locations.append(d.getVar("DL_DIR", True))
++
++            msg = "Unable to find file " + url + " anywhere. The paths that were searched were:\n    " + "\n    ".join(locations)
++            raise FetchError(msg)
++
++        return True
+ 
+     def checkstatus(self, url, urldata, d):
+         """
+
 
 
 
