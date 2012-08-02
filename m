@@ -1,31 +1,32 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1Swy6S-0004xF-Ov for bitbake-devel@lists.openembedded.org;
-	Thu, 02 Aug 2012 18:18:25 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q72G6cOP009436;
-	Thu, 2 Aug 2012 17:06:38 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 05174-08; Thu,  2 Aug 2012 17:06:34 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q72G6VUk009430
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Thu, 2 Aug 2012 17:06:32 +0100
-Message-ID: <1343923593.9756.86.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Martin Jansa <martin.jansa@gmail.com>
-Date: Thu, 02 Aug 2012 17:06:33 +0100
-In-Reply-To: <1343777621-27958-1-git-send-email-Martin.Jansa@gmail.com>
-References: <1343732491-12072-1-git-send-email-Martin.Jansa@gmail.com>
-	<1343777621-27958-1-git-send-email-Martin.Jansa@gmail.com>
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCHv2] fetch2: print checksums when they are different then expected
+Received: from mail-wi0-f171.google.com ([209.85.212.171])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <martin.jansa@gmail.com>) id 1SwyoX-0006kV-US
+	for bitbake-devel@lists.openembedded.org;
+	Thu, 02 Aug 2012 19:03:57 +0200
+Received: by wibhq4 with SMTP id hq4so4674416wib.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 02 Aug 2012 09:52:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id:x-mailer;
+	bh=D+fxfvViyAgEs4CBiX1zq56x4tc1dy1+jj7wwbNObLM=;
+	b=hT3JH+kVsOmXUw5EBEGz6SxrCpkj0ysllEy+9IrTUybVFRx3jZMOv257hi8QJDrXA/
+	+/M+GFAOjLMDqSs5kH9hgooeWQYoUUrhIFrdnmftuies4ChYFUFeNABltADY5A/kvghC
+	+/FPXirMw3G7Hc/VQfoLoyBJFLr1dNQMbPUUehy3l/Cu2ZptOsgza/iKOzByvxlIbFeb
+	EdVDQjLbeaVbBdSsif3QbZrWbNFlqVE56Zc77G+AGsBvyfzQVIUW5FjWzoAWk1naUdZO
+	TRpW0D3SqrkYraa77hn6+ILvXkHBq6SV5E7rIY3stowAdu1Gt9hFQX3oG3NLFn2wV0uG
+	AxUg==
+Received: by 10.216.242.196 with SMTP id i46mr10247599wer.123.1343926338333;
+	Thu, 02 Aug 2012 09:52:18 -0700 (PDT)
+Received: from localhost ([94.230.152.246])
+	by mx.google.com with ESMTPS id ef5sm18479721wib.3.2012.08.02.09.52.16
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Thu, 02 Aug 2012 09:52:17 -0700 (PDT)
+From: Martin Jansa <martin.jansa@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu,  2 Aug 2012 18:52:15 +0200
+Message-Id: <1343926335-7612-1-git-send-email-Martin.Jansa@gmail.com>
+X-Mailer: git-send-email 1.7.8.6
+Subject: [PATCH] cooker: fix OVERRIDES in BB_SIGNATURE_HANDLER (to override value from DISTRO.conf from local.conf)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,28 +38,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 02 Aug 2012 16:18:25 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 02 Aug 2012 17:03:58 -0000
 
-On Wed, 2012-08-01 at 01:33 +0200, Martin Jansa wrote:
-> * in form which can be copied into a recipe without modification
-> * like oe-classic did since:
->   http://git.openembedded.org/openembedded/commit/?id=68abc465559a68e9201c9525be3c4acc6297eaed
-> * it shows them in right form when they are missing completely, but in
->   more verbose form when different
-> * it needs to print that only when checksums were requested, e.g.
->   fetching from sstate mirror sets both md5mismatch and sha256mismatch,
->   but your checksums shouldn't be shown
-> 
-> Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
-> ---
->  lib/bb/fetch2/__init__.py |    6 ++++++
->  1 files changed, 6 insertions(+), 0 deletions(-)
+* added as RP said. I haven't seen any unwanted side-effects in last 2
+  days of using this
 
-Merged to master, thanks.
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ lib/bb/cooker.py |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-Richard
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 5d01af3..23fffc9 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -158,6 +158,7 @@ class BBCooker:
+         #
+         self.configuration.event_data = bb.data.createCopy(self.configuration.data)
+         bb.data.update_data(self.configuration.event_data)
++        bb.parse.init_parser(self.configuration.event_data)
+ 
+         # TOSTOP must not be set or our children will hang when they output
+         fd = sys.stdout.fileno()
+-- 
+1.7.8.6
 
 
 
