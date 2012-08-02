@@ -1,23 +1,23 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1Swy6C-0004wD-2d for bitbake-devel@lists.openembedded.org;
-	Thu, 02 Aug 2012 18:18:08 +0200
+	id 1Swy6S-0004xF-Ov for bitbake-devel@lists.openembedded.org;
+	Thu, 02 Aug 2012 18:18:25 +0200
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q72G6REo009427;
-	Thu, 2 Aug 2012 17:06:27 +0100
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q72G6cOP009436;
+	Thu, 2 Aug 2012 17:06:38 +0100
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 09311-02; Thu,  2 Aug 2012 17:06:22 +0100 (BST)
+	id 05174-08; Thu,  2 Aug 2012 17:06:34 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q72G6KHc009419
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q72G6VUk009430
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Thu, 2 Aug 2012 17:06:22 +0100
-Message-ID: <1343923575.9756.85.camel@ted>
+	Thu, 2 Aug 2012 17:06:32 +0100
+Message-ID: <1343923593.9756.86.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: Martin Jansa <martin.jansa@gmail.com>
-Date: Thu, 02 Aug 2012 17:06:15 +0100
+Date: Thu, 02 Aug 2012 17:06:33 +0100
 In-Reply-To: <1343777621-27958-1-git-send-email-Martin.Jansa@gmail.com>
 References: <1343732491-12072-1-git-send-email-Martin.Jansa@gmail.com>
 	<1343777621-27958-1-git-send-email-Martin.Jansa@gmail.com>
@@ -37,7 +37,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 02 Aug 2012 16:18:08 -0000
+X-List-Received-Date: Thu, 02 Aug 2012 16:18:25 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
