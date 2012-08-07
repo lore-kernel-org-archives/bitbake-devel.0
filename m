@@ -1,30 +1,24 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1SxEIv-0001oR-7a for bitbake-devel@lists.openembedded.org;
-	Fri, 03 Aug 2012 11:36:21 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q739Ofl1032124
+Received: from mail1.windriver.com ([147.11.146.13])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <Liezhi.Yang@windriver.com>) id 1Sym7Y-0006q7-Qt
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 07 Aug 2012 17:55:01 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id q77FhEOl002565
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 3 Aug 2012 10:24:41 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 31038-06 for <bitbake-devel@lists.openembedded.org>;
-	Fri,  3 Aug 2012 10:24:38 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q739OVGb032117
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 3 Aug 2012 10:24:33 +0100
-Message-ID: <1343985872.9756.123.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Fri, 03 Aug 2012 10:24:32 +0100
-X-Mailer: Evolution 3.2.2- 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: [PATCH] data_smart: Fix unanchored regexp causing strange parsing issue
+	Tue, 7 Aug 2012 08:43:14 -0700 (PDT)
+Received: from localhost.localdomain (128.224.163.124) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+	14.2.309.2; Tue, 7 Aug 2012 08:43:14 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Tue, 7 Aug 2012 23:48:55 +0800
+Message-ID: <cover.1344346253.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 1.7.11.2
+MIME-Version: 1.0
+Cc: Zhenfeng.Zhao@windriver.com
+Subject: [PATCH 0/1] bitbake-whatchanged: print what is about to happen
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,35 +30,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 03 Aug 2012 09:36:21 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 07 Aug 2012 15:55:01 -0000
+Content-Type: text/plain
 
-If this regular expression is unanchored, it would accept strings like:
+The following changes since commit c86d26cb976e665b1516e72153f3f686f62dedf9:
 
-do_install_append1
-do_install_appendsomelongstring
+  subversion: Add missing build dependency on sqlite3 (2012-08-06 16:14:06 +0100)
 
-and treat them like they were do_install_append. Clearly this isn't desirable.
-Only one instance of this type of issue was found in OE-Core and has been fixed
-so correcting the regexp should be safe to do.
+are available in the git repository at:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
-index 730deaa..31216e0 100644
---- a/bitbake/lib/bb/data_smart.py
-+++ b/bitbake/lib/bb/data_smart.py
-@@ -39,7 +39,7 @@ from bb.COW  import COWDictBase
- logger = logging.getLogger("BitBake.Data")
- 
- __setvar_keyword__ = ["_append", "_prepend"]
--__setvar_regexp__ = re.compile('(?P<base>.*?)(?P<keyword>_append|_prepend)(_(?P<add>.*))?')
-+__setvar_regexp__ = re.compile('(?P<base>.*?)(?P<keyword>_append|_prepend)(_(?P<add>.*))?$')
- __expand_var_regexp__ = re.compile(r"\${[^{}]+}")
- __expand_python_regexp__ = re.compile(r"\${@.+?}")
- 
+  git://git.pokylinux.org/poky-contrib robert/whatchanged
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/whatchanged
 
+Robert Yang (1):
+  bitbake-whatchanged: print what is about to happen
+
+ bitbake/bin/bitbake-whatchanged | 334 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 334 insertions(+)
+ create mode 100755 bitbake/bin/bitbake-whatchanged
+
+-- 
+1.7.11.2
 
 
 
