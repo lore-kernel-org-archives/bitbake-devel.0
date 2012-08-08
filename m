@@ -1,52 +1,32 @@
-Received: from almaty.radix50.net ([85.214.25.173] helo=almaty.kz-easy.com)
+Received: from mx4.leapfrog.com ([63.114.26.254])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <ibr@radix50.net>) id 1SyrWw-0001Jp-3U
+	(envelope-from <dlazzari@leapfrog.com>) id 1SyuvS-000062-4E
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 07 Aug 2012 23:41:34 +0200
-Received: from alatau.radix50.net (dslb-088-065-252-033.pools.arcor-ip.net
-	[88.65.252.33]) (authenticated bits=0)
-	by almaty.kz-easy.com (8.14.3/8.14.3/Debian-5+lenny1) with ESMTP id
-	q77LKD8c008594
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
+	Wed, 08 Aug 2012 03:19:06 +0200
+Received: from NAEXCHHT01.na.leapfrog.com (unknown [10.15.6.13])
+	by mx4.leapfrog.com (Postfix) with ESMTP id 2C9AD5EA6
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 7 Aug 2012 23:20:14 +0200
-Received: from medeu.radix50.net (root@medeu [192.168.0.3])
-	by alatau.radix50.net (8.14.3/8.14.3/Debian-5) with ESMTP id
-	q77LK8tu028223
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 7 Aug 2012 23:20:08 +0200
-Received: from medeu.radix50.net (ibr@localhost [127.0.0.1])
-	by medeu.radix50.net (8.14.3/8.14.3/Debian-9.4) with ESMTP id
-	q77LK8UX015132
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 7 Aug 2012 23:20:08 +0200
-Received: (from ibr@localhost)
-	by medeu.radix50.net (8.14.3/8.14.3/Submit) id q77LK8Sv015131
-	for bitbake-devel@lists.openembedded.org; Tue, 7 Aug 2012 23:20:08 +0200
-Date: Tue, 7 Aug 2012 23:20:08 +0200
-From: Baurzhan Ismagulov <ibr@radix50.net>
-To: bitbake-devel@lists.openembedded.org
-Message-ID: <20120807212006.GC13756@radix50.net>
+	Tue,  7 Aug 2012 17:43:50 -0700 (PDT)
+Received: from NAEMCASHT01.na.leapfrog.com (10.16.4.161) by
+	NAEXCHHT01.na.leapfrog.com (10.15.6.13) with Microsoft SMTP Server
+	(TLS) id 8.2.255.0; Tue, 7 Aug 2012 17:44:48 -0700
+Received: from naemmail02.na.leapfrog.com ([fe80::ad94:5dcc:6325:ef50]) by
+	NAEMCASHT01.na.leapfrog.com ([::1]) with mapi id 14.01.0355.002;
+	Tue, 7 Aug 2012 17:44:48 -0700
+From: Daniel Lazzari <dlazzari@leapfrog.com>
+To: "'bitbake-devel@lists.openembedded.org'
+	(bitbake-devel@lists.openembedded.org)"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: Making a noexec task executable again
+Thread-Index: Ac10/wK56xnEDy3/RluNmfNX4LwVBQ==
+Date: Wed, 8 Aug 2012 00:44:48 +0000
+Message-ID: <E7A9054A5ACABE48B0E540E46E862B0FB5B1F2A8@NAEMMAIL02.na.leapfrog.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.100.2.5]
 MIME-Version: 1.0
-User-Agent: Mutt/1.5.20 (2009-06-14)
-X-Spam-Flag: YES
-X-Spam-Status: Yes, score=6.6 required=5.0 tests=RCVD_IN_BRBL_LASTEXT,
-	RCVD_IN_PBL, RCVD_IN_SORBS_DUL, RDNS_DYNAMIC,
-	TO_NO_BRKTS_DYNIP autolearn=no version=3.3.1
-X-Spam-Report: * 0.0 RCVD_IN_SORBS_DUL RBL: SORBS: sent directly from dynamic IP
-	address *      [88.65.252.33 listed in dnsbl.sorbs.net]
-	*  3.6 RCVD_IN_PBL RBL: Received via a relay in Spamhaus PBL
-	*      [88.65.252.33 listed in zen.spamhaus.org]
-	*  1.6 RCVD_IN_BRBL_LASTEXT RBL: RCVD_IN_BRBL_LASTEXT
-	*      [88.65.252.33 listed in bb.barracudacentral.org]
-	*  0.4 RDNS_DYNAMIC Delivered to internal network by host with
-	*      dynamic-looking rDNS
-	*  1.0 TO_NO_BRKTS_DYNIP TO_NO_BRKTS_DYNIP
-X-Spam-Level: ******
-X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on almaty.kz-easy.com
-Subject: bitbake under msys
+Subject: Making a noexec task executable again
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -58,22 +38,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 07 Aug 2012 21:41:34 -0000
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-List-Received-Date: Wed, 08 Aug 2012 01:19:06 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+I ran across an interesting challenge today. One of our old image recipes i=
+s being ported into denzil and needs to fetch a file to do some whitelist p=
+rocessing. Unfortunately, in denzil, the image class has
 
-I've tried to use bitbake under msys. First, I used python 2.6 for
-Windows; this failed due to import fcntl. Then I tried cygwin python;
-this failed with the following message:
+do_fetch[noexec] =3D "1"
 
-ERROR: Unable to parse conf/bitbake.conf: file conf/bitbake.conf not
-found in c:/Data/home/ibr/src/hellobb/bb
+which stops the fetch task from running. How can I get it to run again? I t=
+ried
 
-Is there a combination that works under msys?
+do_fetch[noexec] =3D "0"
 
-With kind regards,
-Baurzhan.
+and
+
+do_fetch[noexec] =3D ""
+
+to no avail.
+
+Dan Lazzari Jr.
+Firmware Engineer
+dlazzari@leapfrog.com
+
 
 
