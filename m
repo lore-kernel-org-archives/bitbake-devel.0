@@ -1,25 +1,25 @@
 Received: from mail.windriver.com ([147.11.1.11])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Peter.Seebach@windriver.com>) id 1SzZRm-0005jB-15
+	(envelope-from <Peter.Seebach@windriver.com>) id 1SzZRm-0005jE-JV
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 09 Aug 2012 22:35:10 +0200
+	Thu, 09 Aug 2012 22:35:11 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id q79KNJa2025559
+	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id q79KNLkh025567
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 9 Aug 2012 13:23:20 -0700 (PDT)
+	Thu, 9 Aug 2012 13:23:21 -0700 (PDT)
 Received: from localhost.localdomain (172.25.34.64) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.2.309.2;
-	Thu, 9 Aug 2012 13:23:19 -0700
+	Thu, 9 Aug 2012 13:23:21 -0700
 From: Peter Seebach <peter.seebach@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 9 Aug 2012 15:23:16 -0500
-Message-ID: <246094575520f095cae82d34aa78cf8f19987487.1344543257.git.peter.seebach@windriver.com>
+Date: Thu, 9 Aug 2012 15:23:18 -0500
+Message-ID: <64c64f3b5ef519490877f1399b0dc697fa6ada14.1344543257.git.peter.seebach@windriver.com>
 X-Mailer: git-send-email 1.7.0.4
 In-Reply-To: <cover.1344543257.git.peter.seebach@windriver.com>
 References: <cover.1344543257.git.peter.seebach@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 1/3] data_smart.py: Provide (optional) logging of variable modifications
+Subject: [PATCH 3/3] data_smart.py: Fix variable tracking
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,604 +31,306 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 09 Aug 2012 20:35:10 -0000
+X-List-Received-Date: Thu, 09 Aug 2012 20:35:11 -0000
 Content-Type: text/plain
 
-This is very preliminary, and probably not very good, but it
-provides a much-wanted feature:  An explanation of how variables
-got their current values.
+There were a number of flaws in the variable tracking, some
+more bug-like, some more poor design choices.
 
-How it works:
+1. Appends were displaying the entire new state of the thing
+appended. For BBCLASSEXTEND, this could result in ten megabytes
+of diagnostic output for a single 27K or so variable. Solution:
+Add a new "details" option which is displayed instead of the
+value if provided, and modify appends/prepends to display only
+the change.
 
-1.  We create a history dict in the data_smart object, the
-members of which are lists of tuples.  It's three, count them,
-THREE unrelated data types in a single object!
-2.  There is an eventLog(...) function which allows recording
-things which happen to variables.
-3.  All over the place, tons of setVar and related functions
-are updated with two optional arguments, filename and lineno.
-4.  We log pretty much everything if logging is enabled.
-5.  You can query the history of a thing with data.getHistory(var)
+2. Some internal bookkeeping was generating log events that were
+uninformative to the user. As a new idiom, the file name 'Ignore'
+causes the logger to ignore operations on that file. Several
+operations, especially in finalize(), are changed to respect this.
 
-Tracking must be specifically turned on.  If it's not, the
-history object is a single empty table (cheap) and the calls
-to eventLog() and extra argument passing are also probably
-quite cheap.  As a proof of concept, the showEnvironment function
-used by bitbake -e now uses this if available.
+3. The display of overrides was confusing at best. Too many
+things were logged, resulting in a number of log events showing
+empty overrides (because the deletion of the override as its
+value gets stored in the thing overridden was tracked).
 
-Signed-off-by: Peter Seebach (peter.seebach@windriver.com)
+4. Because the copy of the history was not a deep copy, a
+database which was repeatedly copied-and-finalized ended up with
+multiple records of finalization events.
+
+5. In general, finalization was being overreported, because
+really we don't care that much; we already *saw* that these
+appends, etcetera, existed.
 ---
- lib/bb/cooker.py     |    2 +
- lib/bb/data.py       |   49 +++++++++++++++++-------
- lib/bb/data_smart.py |  103 ++++++++++++++++++++++++++++++++++++++------------
- lib/bb/parse/ast.py  |   65 +++++++++++++++++--------------
- 4 files changed, 152 insertions(+), 67 deletions(-)
+ lib/bb/data_smart.py                 |   81 ++++++++++++++++++++-------------
+ lib/bb/parse/ast.py                  |    7 +++-
+ lib/bb/parse/parse_py/ConfHandler.py |    4 +-
+ 3 files changed, 57 insertions(+), 35 deletions(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 23fffc9..8d59774 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -830,6 +830,8 @@ class BBCooker:
- 
-     def parseConfigurationFiles(self, prefiles, postfiles):
-         data = self.configuration.data
-+        if self.configuration.show_environment:
-+            data.enableTracking()
-         bb.parse.init_parser(data)
- 
-         # Parse files for loading *before* bitbake.conf and any includes
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index 5b7a092..64bf9a9 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -74,14 +74,22 @@ def createCopy(source):
-     """
-     return source.createCopy()
- 
-+# These are used in dataSmart, here as protection against KeyErrors.
-+def enableTracking():
-+    pass
-+
-+def disableTracking():
-+    pass
-+
- def initVar(var, d):
-     """Non-destructive var init for data structure"""
-     d.initVar(var)
- 
- 
--def setVar(var, value, d):
-+def setVar(var, value, d, filename = None, lineno = None):
-     """Set a variable to a given value"""
--    d.setVar(var, value)
-+    filename, lineno = d.infer_file_and_line(filename, lineno)
-+    d.setVar(var, value, filename, lineno)
- 
- 
- def getVar(var, d, exp = 0):
-@@ -89,27 +97,31 @@ def getVar(var, d, exp = 0):
-     return d.getVar(var, exp)
- 
- 
--def renameVar(key, newkey, d):
-+def renameVar(key, newkey, d, filename = None, lineno = None):
-     """Renames a variable from key to newkey"""
--    d.renameVar(key, newkey)
-+    filename, lineno = d.infer_file_and_line(filename, lineno)
-+    d.renameVar(key, newkey, filename, lineno)
- 
--def delVar(var, d):
-+def delVar(var, d, filename = None, lineno = None):
-     """Removes a variable from the data set"""
--    d.delVar(var)
-+    filename, lineno = d.infer_file_and_line(filename, lineno)
-+    d.delVar(var, filename, lineno)
- 
--def setVarFlag(var, flag, flagvalue, d):
-+def setVarFlag(var, flag, flagvalue, d, filename = None, lineno = None):
-     """Set a flag for a given variable to a given value"""
--    d.setVarFlag(var, flag, flagvalue)
-+    filename, lineno = d.infer_file_and_line(filename, lineno)
-+    d.setVarFlag(var, flag, flagvalue, filename, lineno)
- 
- def getVarFlag(var, flag, d):
-     """Gets given flag from given var"""
-     return d.getVarFlag(var, flag)
- 
--def delVarFlag(var, flag, d):
-+def delVarFlag(var, flag, d, filename = None, lineno = None):
-     """Removes a given flag from the variable's flags"""
--    d.delVarFlag(var, flag)
-+    filename, lineno = d.infer_file_and_line(filename, lineno)
-+    d.delVarFlag(var, flag, filename, lineno)
- 
--def setVarFlags(var, flags, d):
-+def setVarFlags(var, flags, d, filename = None, lineno = None):
-     """Set the flags for a given variable
- 
-     Note:
-@@ -117,15 +129,17 @@ def setVarFlags(var, flags, d):
-         flags. Think of this method as
-         addVarFlags
-     """
--    d.setVarFlags(var, flags)
-+    filename, lineno = d.infer_file_and_line(filename, lineno)
-+    d.setVarFlags(var, flags, filename, lineno)
- 
- def getVarFlags(var, d):
-     """Gets a variable's flags"""
-     return d.getVarFlags(var)
- 
--def delVarFlags(var, d):
-+def delVarFlags(var, d, filename = None, lineno = None):
-     """Removes a variable's flags"""
--    d.delVarFlags(var)
-+    filename, lineno = d.infer_file_and_line(filename, lineno)
-+    d.delVarFlags(var, filename, lineno)
- 
- def keys(d):
-     """Return a list of keys in d"""
-@@ -195,6 +209,13 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
- 
-     if all:
-         commentVal = re.sub('\n', '\n#', str(oval))
-+        history = d.getHistory(var)
-+        if history:
-+            o.write('#\n# %s [%d]\n' % (var, len(history)))
-+            for events in history:
-+                events = (events[0], events[1], events[2], re.sub('\n', '\n#     ', str(events[3])))
-+                o.write('#   %s %s:%s:\n#     <%s>\n' % events)
-+            o.write('#\n')
-         o.write('# %s=%s\n' % (var, commentVal))
- 
-     if (var.find("-") != -1 or var.find(".") != -1 or var.find('{') != -1 or var.find('}') != -1 or var.find('+') != -1) and not all:
 diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 31216e0..49e40ad 100644
+index feab6c8..a889441 100644
 --- a/lib/bb/data_smart.py
 +++ b/lib/bb/data_smart.py
-@@ -28,6 +28,7 @@ BitBake build tools.
- # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- # Based on functions from the base bb module, Copyright 2003 Holger Schurig
+@@ -156,7 +156,7 @@ class DataSmart(MutableMapping):
+         self._tracking_enabled = False
  
-+import traceback
- import copy, re
- from collections import MutableMapping
- import logging
-@@ -114,13 +115,30 @@ class ExpansionError(Exception):
- class DataSmart(MutableMapping):
-     def __init__(self, special = COWDictBase.copy(), seen = COWDictBase.copy() ):
-         self.dict = {}
-+        self.history = {}
+     def eventLog(self, var, event, value, filename = None, lineno = None):
+-        if self._tracking_enabled:
++        if self._tracking_enabled and filename != 'Ignore':
+             if var not in self.history:
+                 self.history[var] = []
+             self.history[var].append((event, filename, lineno, value))
+@@ -197,7 +197,7 @@ class DataSmart(MutableMapping):
+     # specified.
+     def infer_file_and_line(self, filename, lineno):
+         details = lineno
+-        if self._tracking_enabled and not filename:
++        if self._tracking_enabled and not filename and filename != 'Ignore':
+             filename, lineno, func, line = traceback.extract_stack(limit=3)[0]
+             details = "%d [%s]" % (lineno, func)
+         return filename, details
+@@ -222,6 +222,9 @@ class DataSmart(MutableMapping):
+         # Then  we will handle _append and _prepend
+         #
  
-         # cookie monster tribute
-         self._special_values = special
-         self._seen_overrides = seen
-+        self._tracking_enabled = False
- 
-         self.expand_cache = {}
- 
-+    def tracking(self):
-+        return self._tracking_enabled
-+
-+    def enableTracking(self):
-+        self._tracking_enabled = True
-+
-+    def disableTracking(self):
-+        self._tracking_enabled = False
-+
-+    def eventLog(self, var, event, value, filename = None, lineno = None):
-+        if self._tracking_enabled:
-+            if var not in self.history:
-+                self.history[var] = []
-+            self.history[var].append((event, filename, lineno, value))
-+
-     def expandWithRefs(self, s, varname):
- 
-         if not isinstance(s, basestring): # sanity check
-@@ -153,6 +171,14 @@ class DataSmart(MutableMapping):
-     def expand(self, s, varname = None):
-         return self.expandWithRefs(s, varname).value
- 
-+    # Figure out how to describe the caller when file/line weren't
-+    # specified.
-+    def infer_file_and_line(self, filename, lineno):
-+        details = lineno
-+        if self._tracking_enabled and not filename:
-+            filename, lineno, func, line = traceback.extract_stack(limit=3)[0]
-+            details = "%d [%s]" % (lineno, func)
-+        return filename, details
- 
-     def finalize(self):
-         """Performs final steps upon the datastore, including application of overrides"""
-@@ -186,10 +212,12 @@ class DataSmart(MutableMapping):
++        # Note that the tracking is going to report some things here
++        # which duplicate previous effects; we show it anyway because
++        # people may not be sure which overrides are being applied.
+         for o in overrides:
+             # calculate '_'+override
+             l = len(o) + 1
+@@ -234,14 +237,19 @@ class DataSmart(MutableMapping):
              for var in vars:
                  name = var[:-l]
                  try:
--                    self.setVar(name, self.getVar(var, False))
-+                    for event in self.getHistory(var):
-+                        self.eventLog(name, 'override:%s' % var, event[3], event[1], event[2])
-+                    self.setVar(name, self.getVar(var, False), '${%s}' % var, 'N/A', 'override')
-                     self.delVar(var)
--                except Exception:
--                    logger.info("Untracked delVar")
-+                except Exception, e:
-+                    logger.info("Untracked delVar %s: %s" % (var, e))
++                    # Move the history of the override into the history of
++                    # the overridden:
+                     for event in self.getHistory(var):
+-                        self.eventLog(name, 'override:%s' % var, event[3], event[1], event[2])
+-                    self.setVar(name, self.getVar(var, False), '${%s}' % var, 'N/A', 'override')
+-                    self.delVar(var)
++                        self.eventLog(name, 'override:%s' % o, event[3], event[1], event[2])
++                    self.setVar(name, self.getVar(var, False), 'Ignore')
++                    self.delVar(var, 'Ignore')
+                 except Exception, e:
+                     logger.info("Untracked delVar %s: %s" % (var, e))
  
          # now on to the appends and prepends
++        # We are going to shut off tracking briefly. Any _append we see
++        # here was already reported as a flag set previously, so we
++        # don't need to repeat it.
          for op in __setvar_keyword__:
-@@ -247,7 +275,8 @@ class DataSmart(MutableMapping):
+             if op in self._special_values:
+                 appends = self._special_values[op] or []
+@@ -260,16 +268,17 @@ class DataSmart(MutableMapping):
+                         if op == "_append":
+                             sval = self.getVar(append, False) or ""
+                             sval += a
+-                            self.setVar(append, sval)
++                            self.setVar(append, sval, 'Ignore')
+                         elif op == "_prepend":
+                             sval = a + (self.getVar(append, False) or "")
+-                            self.setVar(append, sval)
++                            self.setVar(append, sval, 'Ignore')
+ 
+                     # We save overrides that may be applied at some later stage
++                    # ... but we don't need to report on this.
+                     if keep:
+-                        self.setVarFlag(append, op, keep)
++                        self.setVarFlag(append, op, keep, 'Ignore')
+                     else:
+-                        self.delVarFlag(append, op)
++                        self.delVarFlag(append, op, 'Ignore')
+ 
+     def initVar(self, var):
+         self.expand_cache = {}
+@@ -297,7 +306,13 @@ class DataSmart(MutableMapping):
          else:
              self.initVar(var)
  
--    def setVar(self, var, value):
-+    def setVar(self, var, value, filename = None, lineno = None, op = 'set'):
-+        filename, lineno = self.infer_file_and_line(filename, lineno)
+-    def setVar(self, var, value, filename = None, lineno = None, op = 'set'):
++    # In some cases, we want to set a value, but only record part of it;
++    # for instance, when appending something, we want to record what we
++    # appended, not what the complete value of the now-appended value.
++    # This becomes especially obvious when looking at the output for
++    # BBCLASSEXTEND.
++
++    def setVar(self, var, value, filename = None, lineno = None, op = 'set', details = None):
+         filename, lineno = self.infer_file_and_line(filename, lineno)
          self.expand_cache = {}
          match  = __setvar_regexp__.match(var)
-         if match and match.group("keyword") in __setvar_keyword__:
-@@ -256,7 +285,7 @@ class DataSmart(MutableMapping):
+@@ -306,8 +321,12 @@ class DataSmart(MutableMapping):
+             keyword = match.group("keyword")
              override = match.group('add')
              l = self.getVarFlag(base, keyword) or []
-             l.append([value, override])
--            self.setVarFlag(base, keyword, l)
-+            self.setVarFlag(base, keyword, l, filename, lineno)
+-            l.append([value, override])
+-            self.setVarFlag(base, keyword, l, filename, lineno)
++            # Compute new details: This is what we're actually appending.
++            details = [value, override]
++            l.append(details)
++            # Log these with the keyword as the op, not as flag ops
++            self.setVarFlag(base, keyword, l, 'Ignore')
++            self.eventLog(base, keyword, details or value, filename, lineno)
  
              # todo make sure keyword is not __doc__ or __module__
              # pay the cookie monster
-@@ -265,6 +294,7 @@ class DataSmart(MutableMapping):
+@@ -316,7 +335,6 @@ class DataSmart(MutableMapping):
              except KeyError:
                  self._special_values[keyword] = set()
                  self._special_values[keyword].add( base )
-+            self.eventLog(base, keyword, base, filename, lineno)
+-            self.eventLog(base, keyword, base, filename, lineno)
  
              return
  
-@@ -281,6 +311,12 @@ class DataSmart(MutableMapping):
+@@ -333,7 +351,7 @@ class DataSmart(MutableMapping):
  
          # setting var
          self.dict[var]["content"] = value
-+        self.eventLog(var, op, value, filename, lineno)
-+
-+    def getHistory(self, var):
-+        if var in self.history:
-+            return self.history[var]
-+        return []
+-        self.eventLog(var, op, value, filename, lineno)
++        self.eventLog(var, op, details or value, filename, lineno)
  
-     def getVar(self, var, expand=False, noweakdefault=False):
-         value = self.getVarFlag(var, "content", False, noweakdefault)
-@@ -290,13 +326,14 @@ class DataSmart(MutableMapping):
-             return self.expand(value, var)
-         return value
+     def getHistory(self, var):
+         if var in self.history:
+@@ -372,15 +390,15 @@ class DataSmart(MutableMapping):
  
--    def renameVar(self, key, newkey):
-+    def renameVar(self, key, newkey, filename = None, lineno = None):
-         """
-         Rename the variable key to newkey
-         """
-+        filename, lineno = self.infer_file_and_line(filename, lineno)
-         val = self.getVar(key, 0)
-         if val is not None:
--            self.setVar(newkey, val)
-+            self.setVar(newkey, val, filename, lineno, 'rename-create')
+         self.delVar(key, filename, lineno, 'rename-delete')
  
-         for i in ('_append', '_prepend'):
-             src = self.getVarFlag(key, i)
-@@ -305,34 +342,41 @@ class DataSmart(MutableMapping):
+-    def appendVar(self, key, value, filename = None, lineno = None):
++    def appendVar(self, key, newValue, filename = None, lineno = None):
+         filename, lineno = self.infer_file_and_line(filename, lineno)
+-        value = (self.getVar(key, False) or "") + value
+-        self.setVar(key, value, filename, lineno, 'append')
++        value = (self.getVar(key, False) or "") + newValue
++        self.setVar(key, value, filename, lineno, 'append', newValue)
  
-             dest = self.getVarFlag(newkey, i) or []
-             dest.extend(src)
--            self.setVarFlag(newkey, i, dest)
-+            self.setVarFlag(newkey, i, dest, filename, lineno, 'rename')
+-    def prependVar(self, key, value, filename = None, lineno = None):
++    def prependVar(self, key, newValue, filename = None, lineno = None):
+         filename, lineno = self.infer_file_and_line(filename, lineno)
+-        value = value + (self.getVar(key, False) or "")
+-        self.setVar(key, value, filename, lineno, 'prepend')
++        value = newValue + (self.getVar(key, False) or "")
++        self.setVar(key, value, filename, lineno, 'prepend', newValue)
  
-             if i in self._special_values and key in self._special_values[i]:
-                 self._special_values[i].remove(key)
-                 self._special_values[i].add(newkey)
- 
--        self.delVar(key)
-+        self.delVar(key, filename, lineno, 'rename-delete')
- 
--    def appendVar(self, key, value):
-+    def appendVar(self, key, value, filename = None, lineno = None):
-+        filename, lineno = self.infer_file_and_line(filename, lineno)
-         value = (self.getVar(key, False) or "") + value
--        self.setVar(key, value)
-+        self.setVar(key, value, filename, lineno, 'append')
- 
--    def prependVar(self, key, value):
-+    def prependVar(self, key, value, filename = None, lineno = None):
-+        filename, lineno = self.infer_file_and_line(filename, lineno)
-         value = value + (self.getVar(key, False) or "")
--        self.setVar(key, value)
-+        self.setVar(key, value, filename, lineno, 'prepend')
- 
--    def delVar(self, var):
-+    def delVar(self, var, filename = None, lineno = None, op = 'del'):
-+        filename, lineno = self.infer_file_and_line(filename, lineno)
-         self.expand_cache = {}
-         self.dict[var] = {}
-+        self.eventLog(var, op, '', filename, lineno)
-         if '_' in var:
+     def delVar(self, var, filename = None, lineno = None, op = 'del'):
+         filename, lineno = self.infer_file_and_line(filename, lineno)
+@@ -391,14 +409,13 @@ class DataSmart(MutableMapping):
              override = var[var.rfind('_')+1:]
              if override and override in self._seen_overrides and var in self._seen_overrides[override]:
                  self._seen_overrides[override].remove(var)
-+                self.eventLog(var, 'del', '', filename, lineno)
+-                self.eventLog(var, 'del', '', filename, lineno)
  
--    def setVarFlag(self, var, flag, flagvalue):
-+    def setVarFlag(self, var, flag, flagvalue, filename = None, lineno = None, op = 'set'):
-+        filename, lineno = self.infer_file_and_line(filename, lineno)
+-    def setVarFlag(self, var, flag, flagvalue, filename = None, lineno = None, op = 'set'):
++    def setVarFlag(self, var, flag, flagvalue, filename = None, lineno = None, op = 'set', details = None):
+         filename, lineno = self.infer_file_and_line(filename, lineno)
          if not var in self.dict:
              self._makeShadowCopy(var)
          self.dict[var][flag] = flagvalue
-+        self.eventLog(var, '%s flag %s' % (op, flag), flagvalue, filename, lineno)
+-        self.eventLog(var, '%s flag %s' % (op, flag), flagvalue, filename, lineno)
++        self.eventLog(var, '[flag %s] %s' % (flag, op), details or flagvalue, filename, lineno)
  
      def getVarFlag(self, var, flag, expand=False, noweakdefault=False):
          local_var = self._findVar(var)
-@@ -346,31 +390,37 @@ class DataSmart(MutableMapping):
-             value = self.expand(value, None)
-         return value
- 
--    def delVarFlag(self, var, flag):
-+    def delVarFlag(self, var, flag, filename = None, lineno = None):
-         local_var = self._findVar(var)
-         if not local_var:
-             return
-         if not var in self.dict:
-             self._makeShadowCopy(var)
- 
-+        filename, lineno = self.infer_file_and_line(filename, lineno)
-+        self.eventLog(var, 'del flag %s' % flag, '', filename, lineno)
+@@ -424,17 +441,17 @@ class DataSmart(MutableMapping):
          if var in self.dict and flag in self.dict[var]:
              del self.dict[var][flag]
  
--    def appendVarFlag(self, key, flag, value):
-+    def appendVarFlag(self, key, flag, value, filename = None, lineno = None):
-+        filename, lineno = self.infer_file_and_line(filename, lineno)
-         value = (self.getVarFlag(key, flag, False) or "") + value
--        self.setVarFlag(key, flag, value)
-+        self.setVarFlag(key, flag, value, filename, lineno, 'append')
+-    def appendVarFlag(self, key, flag, value, filename = None, lineno = None):
++    def appendVarFlag(self, key, flag, newValue, filename = None, lineno = None):
+         filename, lineno = self.infer_file_and_line(filename, lineno)
+-        value = (self.getVarFlag(key, flag, False) or "") + value
+-        self.setVarFlag(key, flag, value, filename, lineno, 'append')
++        value = (self.getVarFlag(key, flag, False) or "") + newValue
++        self.setVarFlag(key, flag, value, filename, lineno, 'appendVar', newValue)
  
--    def prependVarFlag(self, key, flag, value):
-+    def prependVarFlag(self, key, flag, value, filename = None, lineno = None):
-+        filename, lineno = self.infer_file_and_line(filename, lineno)
-         value = value + (self.getVarFlag(key, flag, False) or "")
--        self.setVarFlag(key, flag, value)
-+        self.setVarFlag(key, flag, value, filename, lineno, 'prepend')
+-    def prependVarFlag(self, key, flag, value, filename = None, lineno = None):
++    def prependVarFlag(self, key, flag, newValue, filename = None, lineno = None):
+         filename, lineno = self.infer_file_and_line(filename, lineno)
+-        value = value + (self.getVarFlag(key, flag, False) or "")
+-        self.setVarFlag(key, flag, value, filename, lineno, 'prepend')
++        value = newValue + (self.getVarFlag(key, flag, False) or "")
++        self.setVarFlag(key, flag, value, filename, lineno, 'prependVar', newValue)
  
--    def setVarFlags(self, var, flags):
-+    def setVarFlags(self, var, flags, filename = None, lineno = None):
-+        filename, lineno = self.infer_file_and_line(filename, lineno)
+-    def setVarFlags(self, var, flags, filename = None, lineno = None):
++    def setVarFlags(self, var, flags, filename = None, lineno = None, details = None):
+         filename, lineno = self.infer_file_and_line(filename, lineno)
          if not var in self.dict:
              self._makeShadowCopy(var)
- 
+@@ -442,7 +459,7 @@ class DataSmart(MutableMapping):
          for i in flags:
              if i == "content":
                  continue
-+            self.eventLog(var, 'set flag %s' % i, flags[i], filename, lineno)
+-            self.eventLog(var, 'set flag %s' % i, flags[i], filename, lineno)
++            self.eventLog(var, 'set flag %s' % i, details or flags[i], filename, lineno)
              self.dict[var][i] = flags[i]
  
      def getVarFlags(self, var):
-@@ -388,13 +438,15 @@ class DataSmart(MutableMapping):
-         return flags
- 
- 
--    def delVarFlags(self, var):
-+    def delVarFlags(self, var, filename = None, lineno = None):
-         if not var in self.dict:
-             self._makeShadowCopy(var)
- 
-         if var in self.dict:
-             content = None
- 
-+            filename, lineno = self.infer_file_and_line(filename, lineno)
-+            self.eventLog(var, 'clear all flags', '', filename, lineno)
-             # try to save the content
-             if "content" in self.dict[var]:
-                 content  = self.dict[var]["content"]
-@@ -411,10 +463,12 @@ class DataSmart(MutableMapping):
-         # we really want this to be a DataSmart...
-         data = DataSmart(seen=self._seen_overrides.copy(), special=self._special_values.copy())
+@@ -487,7 +504,7 @@ class DataSmart(MutableMapping):
          data.dict["_data"] = self.dict
-+        data.history = self.history.copy()
-+        data._tracking_enabled = self._tracking_enabled
- 
-         return data
- 
--    def expandVarref(self, variable, parents=False):
-+    def expandVarref(self, variable, parents=False, filename = None, lineno = None):
-         """Find all references to variable in the data and expand it
-            in place, optionally descending to parent datastores."""
- 
-@@ -423,12 +477,13 @@ class DataSmart(MutableMapping):
-         else:
-             keys = self.localkeys()
- 
-+        filename, lineno = self.infer_file_and_line(filename, lineno)
-         ref = '${%s}' % variable
-         value = self.getVar(variable, False)
-         for key in keys:
-             referrervalue = self.getVar(key, False)
-             if referrervalue and ref in referrervalue:
--                self.setVar(key, referrervalue.replace(ref, value))
-+                self.setVar(key, referrervalue.replace(ref, value), filename, lineno, 'expandVarref')
- 
-     def localkeys(self):
-         for key in self.dict:
+         if self._tracking_enabled:
+             data._tracking_enabled = self._tracking_enabled
+-            data.history = self.history.copy()
++            data.history = copy.deepcopy(self.history)
+             data.include_history = copy.deepcopy(self.include_history)
+             data.include_stack = []
+             oldref = self.include_history
 diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index 86f9463..c5b4121 100644
+index c5b4121..dbc2237 100644
 --- a/lib/bb/parse/ast.py
 +++ b/lib/bb/parse/ast.py
-@@ -69,7 +69,7 @@ class ExportNode(AstNode):
-         self.var = var
- 
-     def eval(self, data):
--        data.setVarFlag(self.var, "export", 1)
-+        data.setVarFlag(self.var, "export", 1, self.filename, self.lineno)
- 
- class DataNode(AstNode):
-     """
-@@ -91,33 +91,40 @@ class DataNode(AstNode):
-     def eval(self, data):
+@@ -92,6 +92,7 @@ class DataNode(AstNode):
          groupd = self.groupd
          key = groupd["var"]
-+        op = 'set'
+         op = 'set'
++        details = None
          if "exp" in groupd and groupd["exp"] != None:
--            data.setVarFlag(key, "export", 1)
-+            data.setVarFlag(key, "export", 1, self.filename, self.lineno)
+             data.setVarFlag(key, "export", 1, self.filename, self.lineno)
          if "ques" in groupd and groupd["ques"] != None:
-             val = self.getFunc(key, data)
-             if val == None:
-                 val = groupd["value"]
-+                op = 'set?'
-         elif "colon" in groupd and groupd["colon"] != None:
-             e = data.createCopy()
-             bb.data.update_data(e)
-             val = e.expand(groupd["value"], key + "[:=]")
-+            op = 'immediate'
+@@ -107,15 +108,19 @@ class DataNode(AstNode):
          elif "append" in groupd and groupd["append"] != None:
              val = "%s %s" % ((self.getFunc(key, data) or ""), groupd["value"])
-+            op = 'append'
+             op = 'append'
++            details = groupd["value"]
          elif "prepend" in groupd and groupd["prepend"] != None:
              val = "%s %s" % (groupd["value"], (self.getFunc(key, data) or ""))
-+            op = 'prepend'
+             op = 'prepend'
++            details = groupd["value"]
          elif "postdot" in groupd and groupd["postdot"] != None:
              val = "%s%s" % ((self.getFunc(key, data) or ""), groupd["value"])
-+            op = 'postdot'
+             op = 'postdot'
++            details = groupd["value"]
          elif "predot" in groupd and groupd["predot"] != None:
              val = "%s%s" % (groupd["value"], (self.getFunc(key, data) or ""))
-+            op = 'predot'
+             op = 'predot'
++            details = groupd["value"]
          else:
              val = groupd["value"]
  
-         if 'flag' in groupd and groupd['flag'] != None:
--            data.setVarFlag(key, groupd['flag'], val)
-+            data.setVarFlag(key, groupd['flag'], val, self.filename, self.lineno, op)
+@@ -124,7 +129,7 @@ class DataNode(AstNode):
          elif groupd["lazyques"]:
--            data.setVarFlag(key, "defaultval", val)
-+            data.setVarFlag(key, "defaultval", val, self.filename, self.lineno, op)
+             data.setVarFlag(key, "defaultval", val, self.filename, self.lineno, op)
          else:
--            data.setVar(key, val)
-+            data.setVar(key, val, self.filename, self.lineno, op)
+-            data.setVar(key, val, self.filename, self.lineno, op)
++            data.setVar(key, val, self.filename, self.lineno, op, details)
  
  class MethodNode(AstNode):
      def __init__(self, filename, lineno, func_name, body):
-@@ -133,10 +140,10 @@ class MethodNode(AstNode):
-                 bb.methodpool.insert_method(funcname, text, self.filename)
-             anonfuncs = data.getVar('__BBANONFUNCS') or []
-             anonfuncs.append(funcname)
--            data.setVar('__BBANONFUNCS', anonfuncs)
-+            data.setVar('__BBANONFUNCS', anonfuncs, self.filename, self.lineno)
-         else:
--            data.setVarFlag(self.func_name, "func", 1)
--            data.setVar(self.func_name, '\n'.join(self.body))
-+            data.setVarFlag(self.func_name, "func", 1, self.filename, self.lineno)
-+            data.setVar(self.func_name, '\n'.join(self.body), self.filename, self.lineno)
+diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
+index 6f77bd4..4a1012e 100644
+--- a/lib/bb/parse/parse_py/ConfHandler.py
++++ b/lib/bb/parse/parse_py/ConfHandler.py
+@@ -110,10 +110,10 @@ def handle(fn, data, include):
+         feeder(lineno, s, fn, statements)
  
- class PythonMethodNode(AstNode):
-     def __init__(self, filename, lineno, function, define, body):
-@@ -152,9 +159,9 @@ class PythonMethodNode(AstNode):
-         text = '\n'.join(self.body)
-         if not bb.methodpool.parsed_module(self.define):
-             bb.methodpool.insert_method(self.define, text, self.filename)
--        data.setVarFlag(self.function, "func", 1)
--        data.setVarFlag(self.function, "python", 1)
--        data.setVar(self.function, text)
-+        data.setVarFlag(self.function, "func", 1, self.filename, self.lineno)
-+        data.setVarFlag(self.function, "python", 1, self.filename, self.lineno)
-+        data.setVar(self.function, text, self.filename, self.lineno)
+     # DONE WITH PARSING... time to evaluate
+-    data.setVar('FILE', abs_fn)
++    data.setVar('FILE', abs_fn, 'Ignore')
+     statements.eval(data)
+     if oldfile:
+-        data.setVar('FILE', oldfile)
++        data.setVar('FILE', oldfile, 'Ignore')
  
- class MethodFlagsNode(AstNode):
-     def __init__(self, filename, lineno, key, m):
-@@ -166,16 +173,16 @@ class MethodFlagsNode(AstNode):
-         if data.getVar(self.key):
-             # clean up old version of this piece of metadata, as its
-             # flags could cause problems
--            data.setVarFlag(self.key, 'python', None)
--            data.setVarFlag(self.key, 'fakeroot', None)
-+            data.setVarFlag(self.key, 'python', None, self.filename, self.lineno)
-+            data.setVarFlag(self.key, 'fakeroot', None, self.filename, self.lineno)
-         if self.m.group("py") is not None:
--            data.setVarFlag(self.key, "python", "1")
-+            data.setVarFlag(self.key, "python", "1", self.filename, self.lineno)
-         else:
--            data.delVarFlag(self.key, "python")
-+            data.delVarFlag(self.key, "python", self.filename, self.lineno)
-         if self.m.group("fr") is not None:
--            data.setVarFlag(self.key, "fakeroot", "1")
-+            data.setVarFlag(self.key, "fakeroot", "1", self.filename, self.lineno)
-         else:
--            data.delVarFlag(self.key, "fakeroot")
-+            data.delVarFlag(self.key, "fakeroot", self.filename, self.lineno)
- 
- class ExportFuncsNode(AstNode):
-     def __init__(self, filename, lineno, fns, classes):
-@@ -201,21 +208,21 @@ class ExportFuncsNode(AstNode):
-                     continue
- 
-                 if data.getVar(var):
--                    data.setVarFlag(var, 'python', None)
--                    data.setVarFlag(var, 'func', None)
-+                    data.setVarFlag(var, 'python', None, self.filename, self.lineno)
-+                    data.setVarFlag(var, 'func', None, self.filename, self.lineno)
- 
-                 for flag in [ "func", "python" ]:
-                     if data.getVarFlag(calledvar, flag):
--                        data.setVarFlag(var, flag, data.getVarFlag(calledvar, flag))
-+                        data.setVarFlag(var, flag, data.getVarFlag(calledvar, flag), self.filename, self.lineno)
-                 for flag in [ "dirs" ]:
-                     if data.getVarFlag(var, flag):
--                        data.setVarFlag(calledvar, flag, data.getVarFlag(var, flag))
-+                        data.setVarFlag(calledvar, flag, data.getVarFlag(var, flag), self.filename, self.lineno)
- 
-                 if data.getVarFlag(calledvar, "python"):
--                    data.setVar(var, "    bb.build.exec_func('" + calledvar + "', d)\n")
-+                    data.setVar(var, "    bb.build.exec_func('" + calledvar + "', d)\n", self.filename, self.lineno)
-                 else:
--                    data.setVar(var, "    " + calledvar + "\n")
--                data.setVarFlag(var, 'export_func', '1')
-+                    data.setVar(var, "    " + calledvar + "\n", self.filename, self.lineno)
-+                data.setVarFlag(var, 'export_func', '1', self.filename, self.lineno)
- 
- class AddTaskNode(AstNode):
-     def __init__(self, filename, lineno, func, before, after):
-@@ -229,11 +236,11 @@ class AddTaskNode(AstNode):
-         if self.func[:3] != "do_":
-             var = "do_" + self.func
- 
--        data.setVarFlag(var, "task", 1)
-+        data.setVarFlag(var, "task", 1, self.filename, self.lineno)
-         bbtasks = data.getVar('__BBTASKS') or []
-         if not var in bbtasks:
-             bbtasks.append(var)
--        data.setVar('__BBTASKS', bbtasks)
-+        data.setVar('__BBTASKS', bbtasks, self.filename, self.lineno)
- 
-         existing = data.getVarFlag(var, "deps") or []
-         if self.after is not None:
-@@ -241,13 +248,13 @@ class AddTaskNode(AstNode):
-             for entry in self.after.split():
-                 if entry not in existing:
-                     existing.append(entry)
--        data.setVarFlag(var, "deps", existing)
-+        data.setVarFlag(var, "deps", existing, self.filename, self.lineno)
-         if self.before is not None:
-             # set up things that depend on this func
-             for entry in self.before.split():
-                 existing = data.getVarFlag(entry, "deps") or []
-                 if var not in existing:
--                    data.setVarFlag(entry, "deps", [var] + existing)
-+                    data.setVarFlag(entry, "deps", [var] + existing, self.filename, self.lineno)
- 
- class BBHandlerNode(AstNode):
-     def __init__(self, filename, lineno, fns):
-@@ -258,7 +265,7 @@ class BBHandlerNode(AstNode):
-         bbhands = data.getVar('__BBHANDLERS') or []
-         for h in self.hs:
-             bbhands.append(h)
--            data.setVarFlag(h, "handler", 1)
-+            data.setVarFlag(h, "handler", 1, self.filename, self.lineno)
-         data.setVar('__BBHANDLERS', bbhands)
- 
- class InheritNode(AstNode):
+     for f in confFilters:
+         f(fn, data)
 -- 
 1.7.0.4
 
