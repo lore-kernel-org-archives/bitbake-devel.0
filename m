@@ -1,26 +1,26 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Liezhi.Yang@windriver.com>) id 1SzOld-0002z4-QD
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1SzWkz-0005Gm-15
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 09 Aug 2012 11:10:58 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id q798x9lO002689
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 9 Aug 2012 01:59:09 -0700 (PDT)
-Received: from usp-ub10.corp.ad.wrs.com (128.224.163.69) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.2.309.2; Thu, 9 Aug 2012 01:59:08 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 9 Aug 2012 16:56:26 +0800
-Message-ID: <2caf68f6aa334948840a647d7c34a59f0405d11b.1344482807.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.1
-In-Reply-To: <cover.1344482807.git.liezhi.yang@windriver.com>
-References: <cover.1344482807.git.liezhi.yang@windriver.com>
+	Thu, 09 Aug 2012 19:42:49 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 09 Aug 2012 10:30:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.77,741,1336374000"; d="scan'208";a="178077803"
+Received: from unknown (HELO helios.localnet) ([10.252.121.69])
+	by orsmga001.jf.intel.com with ESMTP; 09 Aug 2012 10:30:58 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Peter Seebach <peter.seebach@windriver.com>
+Date: Thu, 09 Aug 2012 18:30:57 +0100
+Message-ID: <1356576.1YqSGvrhCQ@helios>
+Organization: Intel Corporation
+User-Agent: KMail/4.9 (Linux/3.2.0-27-generic-pae; KDE/4.9.0; i686; ; )
+In-Reply-To: <9005aeb8b41113f05121842055434fdeeda8c63c.1344467794.git.peter.seebach@windriver.com>
+References: <cover.1344467794.git.peter.seebach@windriver.com>
+	<9005aeb8b41113f05121842055434fdeeda8c63c.1344467794.git.peter.seebach@windriver.com>
 MIME-Version: 1.0
-Cc: Zhenfeng.Zhao@windriver.com
-Subject: [PATCH 1/1] fetch2/__init__.py: add an "auto" policy for BB_SRCREV_POLICY
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/1] cooker.py: Remove explicit build targets from the ignored list
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,69 +32,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 09 Aug 2012 09:10:58 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 09 Aug 2012 17:42:49 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-The newly added "auto" policy is used for the SRCREV="${AUTOREV}" recipe,
-the current BB_SRCREV_POLICY are: "clear" (default) and "cache":
+On Wednesday 08 August 2012 18:19:42 Peter Seebach wrote:
+> If something is in ASSUMED_PROVIDED, and a user tries to build it
+> explicitly, Nothing Happens. Bitbake just says it ran 0 out of 0
+> tasks. No diagnostics or explanations are offered.
+> 
+> In practice, the right thing is probably to assume that explicit
+> targets are intentional. So far as I can tell, cooker.buildTargets
+> is called only from the command line or from command.py, and both
+> cases seem to be explicit user actions.
 
-* When "clear", the "AUTOREV" recipe will not be cached in bb_cache.dat
+I'd rather we not change it to behave this way - the better approach would 
+seem to me to be to just print a warning that the requested target is in 
+ASSUME_PROVIDED and then not do anything else; if the user really wants to 
+build the thing they can just remove it from ASSUME_PROVIDED.
 
-* When "cache", the "AUTOREV" would be cached in bb_cache.dat, but it
-  doesn't try to get the latest revision.
+If there is a genuine need to be able to force an item in ASSUME_PROVIDED to 
+be built I'd probably want to hear a bit more background.
 
-The "auto" policy is much like the "cache" except that it will try to
-get the latest revision.
+Cheers,
+Paul
 
-[YOCTO #2920]
-
-Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/fetch2/__init__.py |   12 +++++++++---
- 1 files changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index 12ebce2..27b73c0 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -249,8 +249,8 @@ def fetcher_init(d):
-     Calls before this must not hit the cache.
-     """
-     # When to drop SCM head revisions controlled by user policy
--    srcrev_policy = d.getVar('BB_SRCREV_POLICY', True) or "clear"
--    if srcrev_policy == "cache":
-+    srcrev_policy = get_srcrev_policy(d)
-+    if srcrev_policy == "cache" or srcrev_policy == "auto":
-         logger.debug(1, "Keeping SRCREV cache due to cache policy of: %s", srcrev_policy)
-     elif srcrev_policy == "clear":
-         logger.debug(1, "Clearing SRCREV cache due to cache policy of: %s", srcrev_policy)
-@@ -384,9 +384,13 @@ def subprocess_setup():
-     # SIGPIPE errors are known issues with gzip/bash
-     signal.signal(signal.SIGPIPE, signal.SIG_DFL)
- 
-+def get_srcrev_policy(d):
-+    return d.getVar('BB_SRCREV_POLICY', True) or "auto"
-+
- def get_autorev(d):
-     #  only not cache src rev in autorev case
--    if d.getVar('BB_SRCREV_POLICY', True) != "cache":
-+    srcrev_policy = get_srcrev_policy(d)
-+    if srcrev_policy != "cache" and srcrev_policy != "auto":
-         d.setVar('__BB_DONT_CACHE', '1')
-     return "AUTOINC"
- 
-@@ -1048,6 +1052,8 @@ class FetchMethod(object):
- 
-         revs = bb.persist_data.persist('BB_URI_HEADREVS', d)
-         key = self.generate_revision_key(url, ud, d, name)
-+        if get_srcrev_policy(d) == "auto":
-+            revs[key] = self._latest_revision(url, ud, d, name)
-         try:
-             return revs[key]
-         except KeyError:
 -- 
-1.7.1
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
 
