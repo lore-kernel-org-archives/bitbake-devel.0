@@ -1,38 +1,24 @@
-Received: from mx4.leapfrog.com ([63.114.26.254])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dlazzari@leapfrog.com>) id 1Szd4B-0001HC-7t
+	(envelope-from <Liezhi.Yang@windriver.com>) id 1Szeeg-00031a-BT
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 10 Aug 2012 02:27:03 +0200
-Received: from NAEXCHHT01.na.leapfrog.com (unknown [10.15.6.13])
-	by mx4.leapfrog.com (Postfix) with ESMTP
-	id 2B7EF5E8D; Thu,  9 Aug 2012 17:14:01 -0700 (PDT)
-Received: from NAEMCASHT02.na.leapfrog.com (10.12.2.36) by
-	NAEXCHHT01.na.leapfrog.com (10.15.6.13) with Microsoft SMTP Server
-	(TLS) id 8.2.255.0; Thu, 9 Aug 2012 17:15:00 -0700
-Received: from naemmail02.na.leapfrog.com ([fe80::ad94:5dcc:6325:ef50]) by
-	NAEMCASHT02.na.leapfrog.com ([::1]) with mapi id 14.01.0355.002;
-	Thu, 9 Aug 2012 17:15:00 -0700
-From: Daniel Lazzari <dlazzari@leapfrog.com>
-To: 'Chris Larson' <clarson@kergoth.com>
-Thread-Topic: [bitbake-devel] Making a noexec task executable again
-Thread-Index: Ac10/wK56xnEDy3/RluNmfNX4LwVBQA1vzYAAAq494D//9O7gP/+u2Kg
-Date: Fri, 10 Aug 2012 00:15:00 +0000
-Message-ID: <E7A9054A5ACABE48B0E540E46E862B0FB5B1FFB7@NAEMMAIL02.na.leapfrog.com>
-References: <E7A9054A5ACABE48B0E540E46E862B0FB5B1F2A8@NAEMMAIL02.na.leapfrog.com>
-	<CAEsOVNc6KjAdgpgnUgJ_UiR=vD6kE2OYo1BX4JfKLGUStPhVRQ@mail.gmail.com>
-	<E7A9054A5ACABE48B0E540E46E862B0FB5B1F690@NAEMMAIL02.na.leapfrog.com>
-	<CABcZANmKZ20vk1aPV4Bw6imhFZc=3kc2ZiGbWpynpZsU+3jbWg@mail.gmail.com>
-In-Reply-To: <CABcZANmKZ20vk1aPV4Bw6imhFZc=3kc2ZiGbWpynpZsU+3jbWg@mail.gmail.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.100.2.5]
+	Fri, 10 Aug 2012 04:08:50 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id q7A1v191023176
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 9 Aug 2012 18:57:01 -0700 (PDT)
+Received: from localhost.localdomain (128.224.163.124) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+	14.2.309.2; Thu, 9 Aug 2012 18:56:59 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Fri, 10 Aug 2012 10:02:29 +0800
+Message-ID: <cover.1344564039.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 1.7.11.2
 MIME-Version: 1.0
-Cc: McClintock Matthew-B29882 <B29882@freescale.com>,
-	"'bitbake-devel@lists.openembedded.org'
-	\(bitbake-devel@lists.openembedded.org\)"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: Making a noexec task executable again
+Cc: Zhenfeng.Zhao@windriver.com
+Subject: [PATCH 0/1] bitbake.conf: add BB_STAMPS_DIR for constructing STAMP
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -44,19 +30,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 10 Aug 2012 00:27:03 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Fri, 10 Aug 2012 02:08:50 -0000
+Content-Type: text/plain
 
-Pj4gR29vZCBzdWdnZXN0aW9uIGJ1dCBpdCBkaWRuJ3Qgc2VlbSB0byB3b3JrLiBJIGFkZGVkIHRo
-aXMgdG8gbXkgaW1hZ2U6DQo+PiBhZGR0YXNrIGZldGNoMg0KPj4gZG9fZmV0Y2gyW2RpcnNdID0g
-IiR7RExfRElSfSINCj4+IHB5dGhvbiBkb19mZXRjaDIoKSB7DQo+PiAgICAgICAgIGJhc2VfZG9f
-ZmV0Y2goKQ0KPj4gfQ0KPj4NCj4+IEFuZCBJIGdldCBhbiBlcnJvciBzYXlpbmc6DQo+PiBOYW1l
-RXJyb3I6IGdsb2JhbCBuYW1lICdiYXNlX2RvX2ZldGNoJyBpcyBub3QgZGVmaW5lZA0KPg0KPmJh
-c2VfZG9fZmV0Y2ggaXMgYSBtZXRhZGF0YSBmdW5jdGlvbiwgbm90IGEgZGVmJ2QgcHl0aG9uIGZ1
-bmN0aW9uLiBVc2UNCj5iYi5idWlsZC5leGVjX2Z1bmMoKSBpbnN0ZWFkLg0KPi0tDQo+Q2hyaXN0
-b3BoZXIgTGFyc29uDQoNClRoYXQgd29ya2VkISBUaGFua3MgdG8gYm90aCBvZiB5b3UsIGNvbXBs
-ZXRlbHkgdW5zdHVjayBub3cuDQo=
+The following changes since commit 5290e82ecef08b5e573d7442627276d7b42c6b93:
+
+  foomatic: fix perl path for target (2012-08-08 10:05:52 +0100)
+
+are available in the git repository at:
+
+  git://git.pokylinux.org/poky-contrib robert/stampsdir
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/stampsdir
+
+Robert Yang (1):
+  bitbake.conf: add BB_STAMPS_DIR for constructing STAMP
+
+ meta/conf/bitbake.conf       | 3 ++-
+ scripts/oe-buildenv-internal | 5 ++++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+-- 
+1.7.11.2
+
 
 
