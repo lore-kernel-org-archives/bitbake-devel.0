@@ -1,30 +1,30 @@
-Received: from mail1.windriver.com ([147.11.146.13])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Liezhi.Yang@windriver.com>) id 1T1eXI-0000JC-Ip
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 15 Aug 2012 16:25:33 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id q7FEDRk2013552
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Wed, 15 Aug 2012 07:13:27 -0700 (PDT)
-Received: from [128.224.163.142] (128.224.163.142) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.2.309.2;
-	Wed, 15 Aug 2012 07:13:26 -0700
-Message-ID: <502BAE85.5010804@windriver.com>
-Date: Wed, 15 Aug 2012 22:13:25 +0800
-From: Robert Yang <liezhi.yang@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
-	rv:14.0) Gecko/20120714 Thunderbird/14.0
-MIME-Version: 1.0
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-References: <cover.1344564039.git.liezhi.yang@windriver.com>
-	<86c6fef246be4e70f22d24754abbc920470d5997.1344564039.git.liezhi.yang@windriver.com>
-	<1345038156.538.15.camel@ted> <502BA8F2.9070606@windriver.com>
-	<1345039247.538.23.camel@ted>
-In-Reply-To: <1345039247.538.23.camel@ted>
-Cc: Chris Larson <clarson@kergoth.com>, bitbake-devel@lists.openembedded.org,
-	Zhenfeng.Zhao@windriver.com
-Subject: Re: [PATCH 1/1] bitbake.conf: add BB_STAMPS_DIR for constructing STAMP
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1T1gAM-0002bd-EJ for bitbake-devel@lists.openembedded.org;
+	Wed, 15 Aug 2012 18:09:54 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q7FFvwi8002904
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 15 Aug 2012 16:57:58 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 01979-05 for <bitbake-devel@lists.openembedded.org>;
+	Wed, 15 Aug 2012 16:57:54 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q7FFvld7002897
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 15 Aug 2012 16:57:48 +0100
+Message-ID: <1345046267.14667.7.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Wed, 15 Aug 2012 16:57:47 +0100
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: [PATCH] build.py: Only execute mkdirhier if stampdir doesn't exist
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,64 +36,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 15 Aug 2012 14:25:34 -0000
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+X-List-Received-Date: Wed, 15 Aug 2012 16:09:54 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
+I noticed this was showing up on profile logs as a sigificant time user
+in "bitbake bash" when bash was already built. It reduces the time from
+5.2 to 4.5 seconds in my test environment.
+
+We make use of the parser's mtime cache as once a directory exists,
+we can assume it continues to exist and this avoids syscalls.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+index bea2926..d64077e 100644
+--- a/bitbake/lib/bb/build.py
++++ b/bitbake/lib/bb/build.py
+@@ -464,7 +464,9 @@ def stamp_internal(taskname, d, file_name):
+ 
+     stamp = bb.parse.siggen.stampfile(stamp, file_name, taskname, extrainfo)
+ 
+-    bb.utils.mkdirhier(os.path.dirname(stamp))
++    stampdir = os.path.dirname(stamp)
++    if bb.parse.cached_mtime_noerror == 0:
++        bb.utils.mkdirhier(stampdir)
+ 
+     return stamp
+ 
 
 
-On 08/15/2012 10:00 PM, Richard Purdie wrote:
-> On Wed, 2012-08-15 at 21:49 +0800, Robert Yang wrote:
->>
->> On 08/15/2012 09:42 PM, Richard Purdie wrote:
->>> On Fri, 2012-08-10 at 10:02 +0800, Robert Yang wrote:
->>>> Add BB_STAMPS_DIR for constructing STAMP, the defination of STAMP
->>>> before:
->>>>
->>>> STAMP = "${TMPDIR}/stamps/${MULTIMACH_TARGET_SYS}/${PF}
->>>>
->>>> We can only change the TMPDIR if we want to change the STAMP's location,
->>>> but the cache would be regenerated if TMPDIR changed, so add
->>>> BB_STAMPS_DIR for constructing it, and add it to the BB_ENV_EXTRAWHITE,
->>>> this is very usefull for the "bitbake -S", since then it can be run by:
->>>>
->>>> BB_STAMPS_DIR=<path> bitbake -S <recipe>
->>>>
->>>> which will avoid putting the stamps to ${TMPDIR}/stamps.
->>>>
->>>> BTW, break the too long BB_ENV_EXTRAWHITE into several lines.
->>>>
->>>> [YOCTO #1659]
->>>>
->>>> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
->>>> ---
->>>>    meta/conf/bitbake.conf       | 3 ++-
->>>>    scripts/oe-buildenv-internal | 5 ++++-
->>>>    2 files changed, 6 insertions(+), 2 deletions(-)
->>>
->>> BB_ is a prefix for variables bitbake specifically uses for
->>> configuration. It doesn't fit in this context since its metadata defined
->>> and doesn't actually influence or is used by bitbake itself.
->>>
->>> We therefore need to use a different name for this.
->>>
->>
->> Thanks, how about "STAMPS_DIR" ? And can we put the bitbake-whatchanged
->> to bitbake/bin or bitbake/contrib as Chris Larson worried about ?
->
-> He's right, it depends on the metadata and therefore shouldn't really be
-> in bitbake. It could go into scripts/ in oe-core.
->
-
-Thanks, I will send a V3 to oe-core list.
-
-// Robert
-
-> Cheers,
->
-> Richard
->
->
->
 
 
