@@ -1,29 +1,31 @@
-Received: from mail-ob0-f175.google.com ([209.85.214.175])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <seth.boll@gmail.com>) id 1T1pHM-00068O-3t
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 16 Aug 2012 03:53:44 +0200
-Received: by obc16 with SMTP id 16so2868670obc.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 15 Aug 2012 18:41:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:date:message-id:subject:from:to:content-type;
-	bh=dQb1NBihNMb6Rqht/NThoATHYjzN9gEeVK8+LQuPOuI=;
-	b=JDWjxwfyClnW07+N1QjHMTmGiVxLszBG9ax4pO/VzOw3BeILIHC5jQ1pw+bXbIMRcf
-	65JkzXqzy3vIcm+AOMhNyThQ6otsIacR6kXGIjCuOlsfHyOEEuzycU23+JKt/YZ1dbva
-	/9sPLw2+RRIew90FVVIuJ2sUszb2CO3HvfMS+6nMhyYSufDEhYcdHBTM2Vl09VzRlcTN
-	h6CuMRvEStANyZGxNw3t7z0a40f/E+mlT6IeDlRCQpURoXWLVFmbzyPMAFlMSA09byLK
-	OvdJCkkn5j2M563TTI6shCA19XRpOX+PtFsQ173PPujNT688OPrlNnXve708Kc0HE+7R
-	SHYw==
-MIME-Version: 1.0
-Received: by 10.60.30.101 with SMTP id r5mr3448527oeh.68.1345081306879; Wed,
-	15 Aug 2012 18:41:46 -0700 (PDT)
-Received: by 10.76.33.234 with HTTP; Wed, 15 Aug 2012 18:41:46 -0700 (PDT)
-Date: Wed, 15 Aug 2012 20:41:46 -0500
-Message-ID: <CA+JN8xNHZUNn5FiUXAnBt=d0DabOt1A+M6RH4XGJsi1Ed2Gzbw@mail.gmail.com>
-From: Seth Bollinger <seth.boll@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] Add color to bitbake interactive console log formatter
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1T1xGz-0002Yt-9X for bitbake-devel@lists.openembedded.org;
+	Thu, 16 Aug 2012 12:25:53 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q7GADttV029377;
+	Thu, 16 Aug 2012 11:13:55 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 28019-09; Thu, 16 Aug 2012 11:13:50 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q7GADlFs029371
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
+	Thu, 16 Aug 2012 11:13:49 +0100
+Message-ID: <1345112026.14667.40.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Peter Seebach <peter.seebach@windriver.com>
+Date: Thu, 16 Aug 2012 11:13:46 +0100
+In-Reply-To: <2e26350de4ff2c38348031f65acac2f29d8656b9.1345079338.git.peter.seebach@windriver.com>
+References: <cover.1345079338.git.peter.seebach@windriver.com>
+	<2e26350de4ff2c38348031f65acac2f29d8656b9.1345079338.git.peter.seebach@windriver.com>
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 2/2] data_smart.py: implement _remove as a keyword like _append.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -35,190 +37,181 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 16 Aug 2012 01:53:44 -0000
-Content-Type: multipart/alternative; boundary=e89a8fb206787d97cc04c758250b
+X-List-Received-Date: Thu, 16 Aug 2012 10:25:53 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---e89a8fb206787d97cc04c758250b
-Content-Type: text/plain; charset=ISO-8859-1
+On Wed, 2012-08-15 at 20:14 -0500, Peter Seebach wrote:
+> There has historically been no way to remove a single word
+> from a list, but many lists (such as DISTRO_FEATURES) are
+> assembled from many sources all over the place. The _remove
+> keyword offers a clean(er) way to do this.
+> 
+> Implementation: _remove is added to the keyword list next
+> to _append and _prepend. During finalize(), the list of
+> removes for a given variable is subjected to the usual
+> filtering for overrides. However, the winning entries are
+> not removed; they are added to a list stored in the new
+> variable flag _remove_later.
+> 
+> At expansion time, after a variable has been expanded,
+> removes for it (if any) are processed. We use the same
+> _special_values magic here that we use elsewhere. Currently
+> there's no caching; perhaps there should be.
+> 
+> Additionally, "-=" and "=-" are accepted as synonyms for
+> _remove.
 
-Add bold color output to log level name and standard color output to log msg
-when bitbake is run from an iteractive console.  Color output is only
-enabled
-if the terminal supports colors.
----
- lib/bb/msg.py       |   40 ++++++++++++++++++++++++++++++++++++++++
- lib/bb/ui/knotty.py |    6 +++++-
- 2 files changed, 45 insertions(+), 1 deletions(-)
+I read this far.
 
-diff --git a/lib/bb/msg.py b/lib/bb/msg.py
-index 9b39325..51e335b 100644
---- a/lib/bb/msg.py
-+++ b/lib/bb/msg.py
-@@ -55,6 +55,25 @@ class BBLogFormatter(logging.Formatter):
-         CRITICAL: 'ERROR',
-     }
+This is not going to make any friends. += and =+ behave differently to
+_append with immediate vs. delayed functionality. I think equating -=
+and =- is just going to confuse users even more. So no, I don't think we
+can do this.
 
-+    color_enabled = False
-+    BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(30,38)
-+
-+    COLORS = {
-+        DEBUG3  : CYAN,
-+        DEBUG2  : CYAN,
-+        DEBUG   : CYAN,
-+        VERBOSE : WHITE,
-+        NOTE    : WHITE,
-+        PLAIN   : WHITE,
-+        WARNING : YELLOW,
-+        ERROR   : RED,
-+        CRITICAL: RED,
-+    }
-+
-+    BLD = '\033[1;%dm'
-+    STD = '\033[%dm'
-+    RST = '\033[0m'
-+
-     def getLevelName(self, levelno):
-         try:
-             return self.levelnames[levelno]
-@@ -67,6 +86,8 @@ class BBLogFormatter(logging.Formatter):
-         if record.levelno == self.PLAIN:
-             msg = record.getMessage()
-         else:
-+            if self.color_enabled:
-+                self.colorize(record)
-             msg = logging.Formatter.format(self, record)
+Why does this depend on 1/2 ?
 
-         if hasattr(record, 'bb_exc_info'):
-@@ -75,6 +96,25 @@ class BBLogFormatter(logging.Formatter):
-             msg += '\n' + ''.join(formatted)
-         return msg
+Cheers,
 
-+    def colorize(self, record):
-+        color = self.COLORS[record.levelno]
-+        if color is not None:
-+            record.levelname = "".join([self.BLD % color,
-record.levelname, self.RST])
-+            record.msg = "".join([self.STD % color, record.msg, self.RST])
-+
-+    def enable_color(self):
-+        import curses
-+        try:
-+            win = None
-+            win = curses.initscr()
-+            if curses.has_colors():
-+                self.color_enabled = True
-+        except:
-+            pass
-+        finally:
-+            if win is not None:
-+                curses.endwin()
-+
- class BBLogFilter(object):
-     def __init__(self, handler, level, debug_domains):
-         self.stdlevel = level
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 9f51823..a6f29a9 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -114,12 +114,16 @@ def main(server, eventHandler, tf = TerminalFilter):
-     helper = uihelper.BBUIHelper()
+Richard
 
-     console = logging.StreamHandler(sys.stdout)
--    format = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
-+    format_str = "%(levelname)s: %(message)s"
-+    format = bb.msg.BBLogFormatter(format_str)
-+    if interactive:
-+        format.enable_color()
-     bb.msg.addDefaultlogFilter(console)
-     console.setFormatter(format)
-     logger.addHandler(console)
-     if consolelogfile:
-         bb.utils.mkdirhier(os.path.dirname(consolelogfile))
-+        format = bb.msg.BBLogFormatter(format_str)
-         consolelog = logging.FileHandler(consolelogfile)
-         bb.msg.addDefaultlogFilter(consolelog)
-         consolelog.setFormatter(format)
--- 
-1.7.2.5
+> Signed-off-by: Peter Seebach <peter.seebach@windriver.com>
+> ---
+>  lib/bb/data_smart.py                 |   45 +++++++++++++++++++++++++++++----
+>  lib/bb/parse/ast.py                  |    6 ++++
+>  lib/bb/parse/parse_py/ConfHandler.py |    2 +-
+>  3 files changed, 46 insertions(+), 7 deletions(-)
+> 
+> diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+> index a128914..d59f8ab 100644
+> --- a/lib/bb/data_smart.py
+> +++ b/lib/bb/data_smart.py
+> @@ -40,8 +40,8 @@ from bb.COW  import COWDictBase
+>  
+>  logger = logging.getLogger("BitBake.Data")
+>  
+> -__setvar_keyword__ = ["_append", "_prepend"]
+> -__setvar_regexp__ = re.compile('(?P<base>.*?)(?P<keyword>_append|_prepend)(_(?P<add>.*))?$')
+> +__setvar_keyword__ = ["_append", "_prepend", "_remove"]
+> +__setvar_regexp__ = re.compile('(?P<base>.*?)(?P<keyword>_append|_prepend|_remove)(_(?P<add>.*))?$')
+>  __expand_var_regexp__ = re.compile(r"\${[^{}]+}")
+>  __expand_python_regexp__ = re.compile(r"\${@.+?}")
+>  
+> @@ -219,7 +219,10 @@ class DataSmart(MutableMapping):
+>  
+>          #
+>          # First we apply all overrides
+> -        # Then  we will handle _append and _prepend
+> +        # Then we will handle _append and _prepend and store the _remove
+> +        # information for later. (_remove has to be processed during
+> +        # expansion, but there's no reason to duplicate the override-checking
+> +        # logic.)
+>          #
+>  
+>          for o in overrides:
+> @@ -243,12 +246,16 @@ class DataSmart(MutableMapping):
+>                  except Exception, e:
+>                      logger.info("Untracked delVar %s: %s" % (var, e))
+>  
+> -        # now on to the appends and prepends
+> +        # now on to the appends and prepends, and stashing the removes
+> +        # for processing during expansion
+>          for op in __setvar_keyword__:
+>              if op in self._special_values:
+>                  appends = self._special_values[op] or []
+>                  for append in appends:
+>                      keep = []
+> +                    # Anything we already have tagged for removal should be
+> +                    # added to.
+> +                    remove_later = self.getVarFlag(append, '_remove_later') or []
+>                      for (a, o) in self.getVarFlag(append, op) or []:
+>                          match = True
+>                          if o:
+> @@ -266,6 +273,19 @@ class DataSmart(MutableMapping):
+>                          elif op == "_prepend":
+>                              sval = a + (self.getVar(append, False) or "")
+>                              self.setVar(append, sval, 'Ignore')
+> +                        elif op == "_remove":
+> +                            # stash for later processing
+> +                            remove_later.append(a)
+> +
+> +                    if remove_later:
+> +                        # We build a list of applicable _remove values,
+> +                        # which can then be used after expansion.
+> +                        self.setVarFlag(append, '_remove_later', remove_later, 'Ignore')
+> +                        try:
+> +                            self._special_values['_remove_later'].add(append)
+> +                        except KeyError:
+> +                            self._special_values['_remove_later'] = set()
+> +                            self._special_values['_remove_later'].add(append)
+>  
+>                      # We save overrides that may be applied at some later stage
+>                      # ... but we don't need to report on this.
+> @@ -356,10 +376,23 @@ class DataSmart(MutableMapping):
+>  
+>      def getVar(self, var, expand=False, noweakdefault=False):
+>          value = self.getVarFlag(var, "content", False, noweakdefault)
+> +        removes = None
+> +        try:
+> +            # See whether any _remove values made it through overrides
+> +            if var in self._special_values['_remove_later']:
+> +                removes = self.getVarFlag(var, '_remove_later', True)
+> +        except KeyError:
+> +            pass
+>  
+>          # Call expand() separately to make use of the expand cache
+>          if expand and value:
+> -            return self.expand(value, var)
+> +            value = self.expand(value, var)
+> +        if removes:
+> +            list = value.split(' ')
+> +            for r in removes:
+> +                if r in list:
+> +                    list.remove(r)
+> +            value = " ".join(list)
+>          return value
+>  
+>      def renameVar(self, key, newkey, filename = None, lineno = None):
+> @@ -371,7 +404,7 @@ class DataSmart(MutableMapping):
+>          if val is not None:
+>              self.setVar(newkey, val, filename, lineno, 'rename-create')
+>  
+> -        for i in ('_append', '_prepend'):
+> +        for i in (__setvar_keyword__):
+>              src = self.getVarFlag(key, i)
+>              if src is None:
+>                  continue
+> diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
+> index dbc2237..b2e038b 100644
+> --- a/lib/bb/parse/ast.py
+> +++ b/lib/bb/parse/ast.py
+> @@ -113,6 +113,12 @@ class DataNode(AstNode):
+>              val = "%s %s" % (groupd["value"], (self.getFunc(key, data) or ""))
+>              op = 'prepend'
+>              details = groupd["value"]
+> +        elif (("preminus" in groupd and groupd["preminus"] != None) or
+> +              ("postminus" in groupd and groupd["postminus"] != None)):
+> +            # There's no correct value to set in this case; it has to
+> +            # convert into a flag.
+> +            key = key + "_remove"
+> +            val = "%s" % groupd["value"]
+>          elif "postdot" in groupd and groupd["postdot"] != None:
+>              val = "%s%s" % ((self.getFunc(key, data) or ""), groupd["value"])
+>              op = 'postdot'
+> diff --git a/lib/bb/parse/parse_py/ConfHandler.py b/lib/bb/parse/parse_py/ConfHandler.py
+> index 4a1012e..a5a25fc 100644
+> --- a/lib/bb/parse/parse_py/ConfHandler.py
+> +++ b/lib/bb/parse/parse_py/ConfHandler.py
+> @@ -29,7 +29,7 @@ import logging
+>  import bb.utils
+>  from bb.parse import ParseError, resolve_file, ast, logger
+>  
+> -__config_regexp__  = re.compile( r"(?P<exp>export\s*)?(?P<var>[a-zA-Z0-9\-_+.${}/]+)(\[(?P<flag>[a-zA-Z0-9\-_+.]+)\])?\s*((?P<colon>:=)|(?P<lazyques>\?\?=)|(?P<ques>\?=)|(?P<append>\+=)|(?P<prepend>=\+)|(?P<predot>=\.)|(?P<postdot>\.=)|=)\s*(?P<apo>['\"])(?P<value>.*)(?P=apo)$")
+> +__config_regexp__  = re.compile( r"(?P<exp>export\s*)?(?P<var>[a-zA-Z0-9\-_+.${}/]+)(\[(?P<flag>[a-zA-Z0-9\-_+.]+)\])?\s*((?P<colon>:=)|(?P<lazyques>\?\?=)|(?P<ques>\?=)|(?P<append>\+=)|(?P<prepend>=\+)|(?P<preminus>=-)|(?P<postminus>-=)|(?P<predot>=\.)|(?P<postdot>\.=)|=)\s*(?P<apo>['\"])(?P<value>.*)(?P=apo)$")
+>  __include_regexp__ = re.compile( r"include\s+(.+)" )
+>  __require_regexp__ = re.compile( r"require\s+(.+)" )
+>  __export_regexp__ = re.compile( r"export\s+([a-zA-Z0-9\-_+.${}/]+)$" )
 
---e89a8fb206787d97cc04c758250b
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
 
-<div>Add bold color output to log level name and standard color output to l=
-og msg</div><div>when bitbake is run from an iteractive console. =A0Color o=
-utput is only enabled</div><div>if the terminal supports colors.</div><div>
----</div><div>=A0lib/bb/msg.py =A0 =A0 =A0 | =A0 40 +++++++++++++++++++++++=
-+++++++++++++++++</div><div>=A0lib/bb/ui/knotty.py | =A0 =A06 +++++-</div><=
-div>=A02 files changed, 45 insertions(+), 1 deletions(-)</div><div><br></di=
-v><div>diff --git a/lib/bb/msg.py b/lib/bb/msg.py</div>
-<div>index 9b39325..51e335b 100644</div><div>--- a/lib/bb/msg.py</div><div>=
-+++ b/lib/bb/msg.py</div><div>@@ -55,6 +55,25 @@ class BBLogFormatter(loggi=
-ng.Formatter):</div><div>=A0 =A0 =A0 =A0 =A0CRITICAL: &#39;ERROR&#39;,</div=
-><div>
-=A0 =A0 =A0}</div><div>=A0</div><div>+ =A0 =A0color_enabled =3D False</div>=
-<div>+ =A0 =A0BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE =3D ran=
-ge(30,38)</div><div>+</div><div>+ =A0 =A0COLORS =3D {</div><div>+ =A0 =A0 =
-=A0 =A0DEBUG3 =A0: CYAN,</div><div>
-+ =A0 =A0 =A0 =A0DEBUG2 =A0: CYAN,</div><div>+ =A0 =A0 =A0 =A0DEBUG =A0 : C=
-YAN,</div><div>+ =A0 =A0 =A0 =A0VERBOSE : WHITE,</div><div>+ =A0 =A0 =A0 =
-=A0NOTE =A0 =A0: WHITE,</div><div>+ =A0 =A0 =A0 =A0PLAIN =A0 : WHITE,</div>=
-<div>+ =A0 =A0 =A0 =A0WARNING : YELLOW,</div><div>+ =A0 =A0 =A0 =A0ERROR =
-=A0 : RED,</div>
-<div>+ =A0 =A0 =A0 =A0CRITICAL: RED,</div><div>+ =A0 =A0}</div><div>+ =A0 =
-=A0</div><div>+ =A0 =A0BLD =3D &#39;\033[1;%dm&#39;</div><div>+ =A0 =A0STD =
-=3D &#39;\033[%dm&#39;</div><div>+ =A0 =A0RST =3D &#39;\033[0m&#39;</div><d=
-iv>+</div><div>=A0 =A0 =A0def getLevelName(self, levelno):</div>
-<div>=A0 =A0 =A0 =A0 =A0try:</div><div>=A0 =A0 =A0 =A0 =A0 =A0 =A0return se=
-lf.levelnames[levelno]</div><div>@@ -67,6 +86,8 @@ class BBLogFormatter(log=
-ging.Formatter):</div><div>=A0 =A0 =A0 =A0 =A0if record.levelno =3D=3D self=
-.PLAIN:</div><div>=A0 =A0 =A0 =A0 =A0 =A0 =A0msg =3D record.getMessage()</d=
-iv>
-<div>=A0 =A0 =A0 =A0 =A0else:</div><div>+ =A0 =A0 =A0 =A0 =A0 =A0if self.co=
-lor_enabled:</div><div>+ =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0self.colorize(recor=
-d)</div><div>=A0 =A0 =A0 =A0 =A0 =A0 =A0msg =3D logging.Formatter.format(se=
-lf, record)</div><div>=A0</div><div>=A0 =A0 =A0 =A0 =A0if hasattr(record, &=
-#39;bb_exc_info&#39;):</div>
-<div>@@ -75,6 +96,25 @@ class BBLogFormatter(logging.Formatter):</div><div>=
-=A0 =A0 =A0 =A0 =A0 =A0 =A0msg +=3D &#39;\n&#39; + &#39;&#39;.join(formatte=
-d)</div><div>=A0 =A0 =A0 =A0 =A0return msg</div><div>=A0</div><div>+ =A0 =
-=A0def colorize(self, record):</div>
-<div>+ =A0 =A0 =A0 =A0color =3D self.COLORS[record.levelno]</div><div>+ =A0=
- =A0 =A0 =A0if color is not None:</div><div>+ =A0 =A0 =A0 =A0 =A0 =A0record=
-.levelname =3D &quot;&quot;.join([self.BLD % color, record.levelname, self.=
-RST])</div><div>+ =A0 =A0 =A0 =A0 =A0 =A0record.msg =3D &quot;&quot;.join([=
-self.STD % color, record.msg, self.RST])</div>
-<div>+</div><div>+ =A0 =A0def enable_color(self):</div><div>+ =A0 =A0 =A0 =
-=A0import curses</div><div>+ =A0 =A0 =A0 =A0try:</div><div>+ =A0 =A0 =A0 =
-=A0 =A0 =A0win =3D None</div><div>+ =A0 =A0 =A0 =A0 =A0 =A0win =3D curses.i=
-nitscr()</div><div>+ =A0 =A0 =A0 =A0 =A0 =A0if curses.has_colors():</div>
-<div>+ =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0self.color_enabled =3D True</div><div=
->+ =A0 =A0 =A0 =A0except:</div><div>+ =A0 =A0 =A0 =A0 =A0 =A0pass</div><div=
->+ =A0 =A0 =A0 =A0finally:</div><div>+ =A0 =A0 =A0 =A0 =A0 =A0if win is not=
- None:</div><div>+ =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0curses.endwin()</div>
-<div>+</div><div>=A0class BBLogFilter(object):</div><div>=A0 =A0 =A0def __i=
-nit__(self, handler, level, debug_domains):</div><div>=A0 =A0 =A0 =A0 =A0se=
-lf.stdlevel =3D level</div><div>diff --git a/lib/bb/ui/knotty.py b/lib/bb/u=
-i/knotty.py</div>
-<div>index 9f51823..a6f29a9 100644</div><div>--- a/lib/bb/ui/knotty.py</div=
-><div>+++ b/lib/bb/ui/knotty.py</div><div>@@ -114,12 +114,16 @@ def main(se=
-rver, eventHandler, tf =3D TerminalFilter):</div><div>=A0 =A0 =A0helper =3D=
- uihelper.BBUIHelper()</div>
-<div>=A0</div><div>=A0 =A0 =A0console =3D logging.StreamHandler(sys.stdout)=
-</div><div>- =A0 =A0format =3D bb.msg.BBLogFormatter(&quot;%(levelname)s: %=
-(message)s&quot;)</div><div>+ =A0 =A0format_str =3D &quot;%(levelname)s: %(=
-message)s&quot;</div>
-<div>+ =A0 =A0format =3D bb.msg.BBLogFormatter(format_str)</div><div>+ =A0 =
-=A0if interactive:</div><div>+ =A0 =A0 =A0 =A0format.enable_color()</div><d=
-iv>=A0 =A0 =A0bb.msg.addDefaultlogFilter(console)</div><div>=A0 =A0 =A0cons=
-ole.setFormatter(format)</div>
-<div>=A0 =A0 =A0logger.addHandler(console)</div><div>=A0 =A0 =A0if consolel=
-ogfile:</div><div>=A0 =A0 =A0 =A0 =A0bb.utils.mkdirhier(os.path.dirname(con=
-solelogfile))</div><div>+ =A0 =A0 =A0 =A0format =3D bb.msg.BBLogFormatter(f=
-ormat_str)</div><div>=A0 =A0 =A0 =A0 =A0consolelog =3D logging.FileHandler(=
-consolelogfile)</div>
-<div>=A0 =A0 =A0 =A0 =A0bb.msg.addDefaultlogFilter(consolelog)</div><div>=
-=A0 =A0 =A0 =A0 =A0consolelog.setFormatter(format)</div><div>--=A0</div><di=
-v>1.7.2.5</div>
 
---e89a8fb206787d97cc04c758250b--
+
