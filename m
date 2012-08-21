@@ -1,27 +1,28 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1T3sBa-0001jx-2U
+	(envelope-from <mark.hatle@windriver.com>) id 1T3vpu-0000pL-Ft
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 21 Aug 2012 19:24:15 +0200
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by fmsmga102.fm.intel.com with ESMTP; 21 Aug 2012 10:12:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.77,803,1336374000"; d="scan'208";a="136563937"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.121.105])
-	by AZSMGA002.ch.intel.com with ESMTP; 21 Aug 2012 10:12:09 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 21 Aug 2012 18:11:46 +0100
-Message-Id: <b3a23c6e0370290e2ab9c411c74c2607d9614118.1345568965.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1345568965.git.paul.eggleton@linux.intel.com>
-References: <cover.1345568965.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1345568965.git.paul.eggleton@linux.intel.com>
-References: <cover.1345568965.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 2/3] bitbake-layers: avoid full parse for show-layers subcommand
+	Tue, 21 Aug 2012 23:18:06 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
+	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id q7LL619f004493
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 21 Aug 2012 14:06:01 -0700 (PDT)
+Received: from localhost.localdomain (172.25.34.61) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.2.309.2;
+	Tue, 21 Aug 2012 14:06:00 -0700
+From: Mark Hatle <mark.hatle@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Tue, 21 Aug 2012 16:05:58 -0500
+Message-ID: <1345583158-3142-1-git-send-email-mark.hatle@windriver.com>
+X-Mailer: git-send-email 1.7.3.4
+MIME-Version: 1.0
+X-Originating-IP: [172.25.34.61]
+Subject: [PATCH] ui: Improve error message if bitbake cannot import python curses module
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
+Reply-To: Mark Hatle <mark.hatle@windriver.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 List-Unsubscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/options/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=unsubscribe>
@@ -30,48 +31,65 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 21 Aug 2012 17:24:15 -0000
+X-List-Received-Date: Tue, 21 Aug 2012 21:18:06 -0000
+Content-Type: text/plain
 
-We don't actually need to parse all recipes just to show the configured
-layers, so just parse the configuration instead.
+From: Konrad Scherer <Konrad.Scherer@windriver.com>
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+On some SuSE systems, the curses python module is not installed by default.
+Instead of a python failure, we want a nicer error message.
+
+(On SuSE systems the package is typically python-curses.)
+
+Signed-off-by: Konrad Scherer <Konrad.Scherer@windriver.com>
+Signed-off-by: Jeff Polk <jeff.polk@windriver.com>
+
+Reword commit message, rebase to latest bitbake.
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 ---
- bitbake/bin/bitbake-layers |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ lib/bb/ui/knotty.py  |    6 +++++-
+ lib/bb/ui/ncurses.py |    8 +++++++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/bin/bitbake-layers b/bitbake/bin/bitbake-layers
-index 1dacc25..6d18d94 100755
---- a/bitbake/bin/bitbake-layers
-+++ b/bitbake/bin/bitbake-layers
-@@ -86,9 +86,13 @@ class Commands(cmd.Cmd):
-         self.cooker_data = self.cooker.status
-         self.cooker_data.appends = self.cooker.appendlist
+diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+index b01daee..858cacf 100644
+--- a/lib/bb/ui/knotty.py
++++ b/lib/bb/ui/knotty.py
+@@ -141,7 +141,11 @@ class TerminalFilter(object):
+         if not self.interactive:
+             return
  
--    def check_prepare_cooker(self):
-+    def check_prepare_cooker(self, config_only = False):
-         if not self.cooker_data:
--            self.prepare_cooker()
-+            if config_only:
-+                self.cooker.parseConfiguration()
-+                self.cooker_data = self.cooker.status
-+            else:
-+                self.prepare_cooker()
+-        import curses
++        try:
++            import curses
++        except ImportError:
++            sys.exit("FATAL: The knotty ui could not load the required curses python module.")
++	
+         import termios
+         self.curses = curses
+         self.termios = termios
+diff --git a/lib/bb/ui/ncurses.py b/lib/bb/ui/ncurses.py
+index 1425bbd..f573b95 100644
+--- a/lib/bb/ui/ncurses.py
++++ b/lib/bb/ui/ncurses.py
+@@ -47,7 +47,13 @@
  
-     def default(self, line):
-         """Handle unrecognised commands"""
-@@ -113,8 +117,7 @@ class Commands(cmd.Cmd):
- 
-     def do_show_layers(self, args):
-         """show current configured layers"""
--        self.check_prepare_cooker()
--        logger.plain('')
-+        self.check_prepare_cooker(config_only = True)
-         logger.plain("%s  %s  %s" % ("layer".ljust(20), "path".ljust(40), "priority"))
-         logger.plain('=' * 74)
-         for layerdir in self.bblayers:
+ from __future__ import division
+ import logging
+-import os, sys, curses, itertools, time, subprocess
++import os, sys, itertools, time, subprocess
++
++try:
++    import curses
++except ImportError:
++    sys.exit("FATAL: The ncurses ui could not load the required curses python module.")
++
+ import bb
+ import xmlrpclib
+ from bb import ui
 -- 
-1.7.9.5
+1.7.3.4
 
 
 
