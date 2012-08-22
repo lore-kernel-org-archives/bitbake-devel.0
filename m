@@ -1,28 +1,33 @@
-Received: from mail1.windriver.com ([147.11.146.13])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <mark.hatle@windriver.com>) id 1T3yJg-0000IC-9L
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 22 Aug 2012 01:57:00 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id q7LJH3m5002462
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1T4Abr-0008GV-KV for bitbake-devel@lists.openembedded.org;
+	Wed, 22 Aug 2012 15:04:35 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q7MCqV9X003112
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 Aug 2012 12:17:03 -0700 (PDT)
-Received: from localhost.localdomain (172.25.34.61) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.2.309.2;
-	Tue, 21 Aug 2012 12:17:03 -0700
-From: Mark Hatle <mark.hatle@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 21 Aug 2012 14:17:00 -0500
-Message-ID: <1345576620-9407-1-git-send-email-mark.hatle@windriver.com>
-X-Mailer: git-send-email 1.7.3.4
-MIME-Version: 1.0
-X-Originating-IP: [172.25.34.61]
-Subject: [PATCH] ui: Improve error message if bitbake cannot import python curses module
+	Wed, 22 Aug 2012 13:52:31 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 02380-05 for <bitbake-devel@lists.openembedded.org>;
+	Wed, 22 Aug 2012 13:52:26 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q7MCqOLj003106
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 22 Aug 2012 13:52:25 +0100
+Message-ID: <1345639944.3907.105.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Wed, 22 Aug 2012 13:52:24 +0100
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: methodpool: Remove unused check_insert_method function
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
-Reply-To: Mark Hatle <mark.hatle@windriver.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 List-Unsubscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/options/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=unsubscribe>
@@ -31,65 +36,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 21 Aug 2012 23:57:00 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 22 Aug 2012 13:04:35 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Konrad Scherer <Konrad.Scherer@windriver.com>
-
-On some SuSE systems, the curses python module is not installed by default.
-Instead of a python failure, we want a nicer error message.
-
-(On SuSE systems the package is typically python-curses.)
-
-Signed-off-by: Konrad Scherer <Konrad.Scherer@windriver.com>
-Signed-off-by: Jeff Polk <jeff.polk@windriver.com>
-
-Reword commit message, rebase to latest bitbake.
-
-Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/ui/knotty.py  |    6 +++++-
- lib/bb/ui/ncurses.py |    8 +++++++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
+diff --git a/bitbake/lib/bb/methodpool.py b/bitbake/lib/bb/methodpool.py
+index c5aae9b..3b8e5c1 100644
+--- a/bitbake/lib/bb/methodpool.py
++++ b/bitbake/lib/bb/methodpool.py
+@@ -56,20 +56,6 @@ def insert_method(modulename, code, fn):
+         else:
+             _parsed_fns[name] = modulename
+ 
+-def check_insert_method(modulename, code, fn):
+-    """
+-    Add the code if it wasnt added before. The module
+-    name will be used for that
+-
+-    Variables:
+-        @modulename a short name e.g. base.bbclass
+-        @code The actual python code
+-        @fn   The filename from the outer file
+-    """
+-    if not modulename in _parsed_methods:
+-        return insert_method(modulename, code, fn)
+-    _parsed_methods[modulename] = 1
+-
+ def parsed_module(modulename):
+     """
+     Inform me file xyz was parsed
 
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index b01daee..858cacf 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -141,7 +141,11 @@ class TerminalFilter(object):
-         if not self.interactive:
-             return
- 
--        import curses
-+        try:
-+            import curses
-+        except ImportError:
-+            sys.exit("FATAL: The knotty ui could not load the required curses python module.")
-+	
-         import termios
-         self.curses = curses
-         self.termios = termios
-diff --git a/lib/bb/ui/ncurses.py b/lib/bb/ui/ncurses.py
-index 1425bbd..f573b95 100644
---- a/lib/bb/ui/ncurses.py
-+++ b/lib/bb/ui/ncurses.py
-@@ -47,7 +47,13 @@
- 
- from __future__ import division
- import logging
--import os, sys, curses, itertools, time, subprocess
-+import os, sys, itertools, time, subprocess
-+
-+try:
-+    import curses
-+except ImportError:
-+    sys.exit("FATAL: The ncurses ui could not load the required curses python module.")
-+
- import bb
- import xmlrpclib
- from bb import ui
--- 
-1.7.3.4
 
 
 
