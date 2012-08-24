@@ -1,30 +1,30 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1T4SNO-00017e-PD for bitbake-devel@lists.openembedded.org;
-	Thu, 23 Aug 2012 10:02:50 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q7N7oeir014897;
-	Thu, 23 Aug 2012 08:50:40 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 08673-10; Thu, 23 Aug 2012 08:50:30 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q7N7oL20014845
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Thu, 23 Aug 2012 08:50:26 +0100
-Message-ID: <1345708222.12043.0.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
-Date: Thu, 23 Aug 2012 08:50:22 +0100
-In-Reply-To: <1345648478-2678-1-git-send-email-paul.eggleton@linux.intel.com>
-References: <1345648478-2678-1-git-send-email-paul.eggleton@linux.intel.com>
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] cooker: fix traceback when using -b with skipped recipe
+Received: from [209.85.210.175] (helo=mail-iy0-f175.google.com)
+	by linuxtogo.org with esmtp (Exim 4.72) id 1T4hra-0002fO-2p
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 24 Aug 2012 02:35:02 +0200
+Received: by iaky10 with SMTP id y10so2253697iak.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 23 Aug 2012 17:22:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id:x-mailer;
+	bh=ZyDLNuE/1fOUj44ab9iIsaPQQZ96r9wd2i+hfQ7RZ78=;
+	b=Z286e2Fyrdwo6Ub/ZVlY/kjeF/F7mza7wLI6Vps6VOL6VQqG9SS02+rHQgkCZS7lyf
+	WKD6J3a06Cly7bbGdWujZxFskgmolOD/+ZNZ2hGc5RCnqtDcf5m3pEHK72zsHC86cmFz
+	5x0R5GENPxHJdHieVDG4OV0R38fDwB0q2UJkfTyZMvNK9dLDrVTjcm0wBG1sInU/1l/1
+	4j0NL7u+YsWlHDlj00NeR97xvyhDmsvqEeIwfDZokdHMKZSDTnQj+lh02PfrXV0aKRUk
+	9kSI2rgDBXrMziY7/CrL5woDi51MHxV7jcS6U+zLJq6GJHG402ut6xifTQTfqjTe3KC2
+	F1mw==
+Received: by 10.50.76.202 with SMTP id m10mr220860igw.52.1345767774692;
+	Thu, 23 Aug 2012 17:22:54 -0700 (PDT)
+Received: from localhost.localdomain (dsl-67-55-9-50.acanac.net. [67.55.9.50])
+	by mx.google.com with ESMTPS id wm7sm2046923igb.6.2012.08.23.17.22.52
+	(version=SSLv3 cipher=OTHER); Thu, 23 Aug 2012 17:22:53 -0700 (PDT)
+From: Trevor Woerner <twoerner@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 23 Aug 2012 20:22:40 -0400
+Message-Id: <1345767760-5516-1-git-send-email-twoerner@gmail.com>
+X-Mailer: git-send-email 1.7.10-rc3
+Subject: [PATCH] clarify wording
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,25 +36,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 23 Aug 2012 08:02:51 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 24 Aug 2012 00:35:02 -0000
 
-On Wed, 2012-08-22 at 16:14 +0100, Paul Eggleton wrote:
-> If a recipe is skipped during parsing for whatever reason, check and
-> report this as an error rather than trying to use the data that is sent
-> back and failing.
-> 
-> Fixes [YOCTO #2976].
-> 
-> Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
-> ---
->  bitbake/lib/bb/cooker.py |    4 ++++
->  1 file changed, 4 insertions(+)
+From: Trevor Woerner <twoerner@gmail.com>
 
-Merged to master, thanks.
+The '-s' option shows (input) recipes, not (built/output) packages. Clarify
+the help wording for this option so it is consistent.
 
-Richard
+Signed-off-by: Trevor Woerner <twoerner@gmail.com>
+---
+ bin/bitbake |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bin/bitbake b/bin/bitbake
+index 0b4f556..ed2ff06 100755
+--- a/bin/bitbake
++++ b/bin/bitbake
+@@ -142,7 +142,7 @@ Default BBFILES are the .bb files in the current directory.""")
+     parser.add_option("-p", "--parse-only", help = "quit after parsing the BB files (developers only)",
+                action = "store_true", dest = "parse_only", default = False)
+ 
+-    parser.add_option("-s", "--show-versions", help = "show current and preferred versions of all packages",
++    parser.add_option("-s", "--show-versions", help = "show current and preferred versions of all recipes",
+                action = "store_true", dest = "show_versions", default = False)
+ 
+     parser.add_option("-e", "--environment", help = "show the global or per-package environment (this is what used to be bbread)",
+-- 
+1.7.10.GIT
 
 
 
