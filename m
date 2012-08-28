@@ -1,26 +1,30 @@
-Received: from mail1.windriver.com ([147.11.146.13])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Kai.Kang@windriver.com>) id 1T6C1a-0004Un-Tp
-	for bitbake-devel@lists.openembedded.org;
-	Tue, 28 Aug 2012 04:59:31 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id q7S2lH5b026482
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Mon, 27 Aug 2012 19:47:17 -0700 (PDT)
-Received: from localhost.localdomain (128.224.162.164) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server
-	(TLS) id 14.2.309.2; Mon, 27 Aug 2012 19:47:17 -0700
-From: Kang Kai <kai.kang@windriver.com>
-To: <richard.purdie@linuxfoundation.org>
-Date: Tue, 28 Aug 2012 10:47:21 +0800
-Message-ID: <79f157731c01cb12b134acc269bb576bd1e8985c.1346121294.git.kai.kang@windriver.com>
-X-Mailer: git-send-email 1.7.5.4
-In-Reply-To: <cover.1346121294.git.kai.kang@windriver.com>
-References: <cover.1346121294.git.kai.kang@windriver.com>
-MIME-Version: 1.0
-X-Originating-IP: [128.224.162.164]
-Cc: bitbake-devel@lists.openembedded.org, Zhenfeng.Zhao@windriver.com
-Subject: [PATCH 3/3] image_types.bbclass: add variable for Hob
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1T6NeG-0000vV-Aw for bitbake-devel@lists.openembedded.org;
+	Tue, 28 Aug 2012 17:24:14 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q7SERUOT008276
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 28 Aug 2012 15:27:30 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 08249-01 for <bitbake-devel@lists.openembedded.org>;
+	Tue, 28 Aug 2012 15:27:26 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q7SERGf4008270
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 28 Aug 2012 15:27:20 +0100
+Message-ID: <1346166694.23096.0.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Tue, 28 Aug 2012 08:11:34 -0700
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: taskdata: Don't add dependencies on tasks that don't exist
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,32 +36,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 28 Aug 2012 02:59:31 -0000
-Content-Type: text/plain
+X-List-Received-Date: Tue, 28 Aug 2012 15:24:14 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Add a new variable "IMAGE_EXTENSION_live" for Hob to map image type
-"live" with real image file extension names.
+"bitbake meta-toolchain" with qemu image testing enabled causes problems
+since it adds a task after do_rootfs which doesn't exist in this case.
 
-This is for Hob to remove the hard-coded maps.
+We should simply ignore these extra dependencies rather than adding
+them in which is what this patch does (adding a debug message when this
+happens).
 
-Signed-off-by: Kang Kai <kai.kang@windriver.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- meta/classes/image_types.bbclass |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
+diff --git a/bitbake/lib/bb/taskdata.py b/bitbake/lib/bb/taskdata.py
+index aed3a16..c08186a 100644
+--- a/bitbake/lib/bb/taskdata.py
++++ b/bitbake/lib/bb/taskdata.py
+@@ -176,6 +176,9 @@ class TaskData:
+             # Work out task dependencies
+             parentids = []
+             for dep in task_deps['parents'][task]:
++                if dep not in task_deps['tasks']:
++                    bb.debug(2, "Not adding dependeny of %s on %s since %s does not exist" % (task, dep, dep))
++                    continue
+                 parentid = self.gettask_id(fn, dep)
+                 parentids.append(parentid)
+             taskid = self.gettask_id(fn, task)
 
-diff --git a/meta/classes/image_types.bbclass b/meta/classes/image_types.bbclass
-index d286eea..6f8514f 100644
---- a/meta/classes/image_types.bbclass
-+++ b/meta/classes/image_types.bbclass
-@@ -247,3 +247,6 @@ RUNNABLE_IMAGE_TYPES ?= "ext2 ext3"
- RUNNABLE_MACHINE_PATTERNS ?= "qemu"
- 
- DEPLOYABLE_IMAGE_TYPES ?= "hddimg iso" 
-+
-+# Use IMAGE_EXTENSION_xxx to map image type 'xxx' with real image file extension name(s) for Hob
-+IMAGE_EXTENSION_live = "hddimg iso"
--- 
-1.7.5.4
 
 
 
