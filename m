@@ -1,34 +1,21 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1T7MCX-0003Px-Ku for bitbake-devel@lists.openembedded.org;
-	Fri, 31 Aug 2012 10:03:37 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q7V0cdRA006205;
-	Fri, 31 Aug 2012 01:38:39 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 05116-06; Fri, 31 Aug 2012 01:38:35 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q7V0cRn2006195
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Fri, 31 Aug 2012 01:38:29 +0100
-Message-ID: <1346373507.16485.17.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Trevor Woerner <twoerner@gmail.com>
-Date: Thu, 30 Aug 2012 17:38:27 -0700
-In-Reply-To: <CAHUNapQsabEeNV7ZrpZfro8R8OKakS-862UJy1w1_5LmSZU8eQ@mail.gmail.com>
-References: <1345767760-5516-1-git-send-email-twoerner@gmail.com>
-	<CAK18fxFmxBPwray4tgs=LsPEs1hy9TEp7=jbw3i5LgCejmEDpw@mail.gmail.com>
-	<CAHUNapQnVGUxnNeoQEj8UDZdLWKit9K0RHy5a6t8a9x5cMwxfA@mail.gmail.com>
-	<CABcZANm2uL7c40LQWxmvu4q6yTjrymzqth-JmTdPvbC7XAHm_w@mail.gmail.com>
-	<CAHUNapQsabEeNV7ZrpZfro8R8OKakS-862UJy1w1_5LmSZU8eQ@mail.gmail.com>
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: Chris Larson <clarson@kergoth.com>, bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] clarify wording
+Received: from mga09.intel.com ([134.134.136.24])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <cristiana.voicu@intel.com>) id 1T7MqQ-0003qa-3Y
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 31 Aug 2012 10:44:50 +0200
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 31 Aug 2012 00:00:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.80,346,1344236400"; d="scan'208";a="193952861"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by orsmga002.jf.intel.com with ESMTP; 31 Aug 2012 00:00:35 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 31 Aug 2012 10:00:47 +0300
+Message-Id: <1346396447-8565-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob/packageselectionpage: Correctly restore previously selected packages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -40,31 +27,76 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 31 Aug 2012 08:03:38 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 31 Aug 2012 08:44:50 -0000
 
-On Sat, 2012-08-25 at 06:43 -0400, Trevor Woerner wrote:
-> On Fri, Aug 24, 2012 at 11:57 PM, Chris Larson <clarson@kergoth.com> wrote:
-> > No, this is wrong. When committing to the bitbake repository, there's
-> > no need to prefix it with 'bitbake:'.
-> 
-> I am new to bitbake-devel, but looking through several of the more
-> recent commits would indicate the majority of them do have some sort
-> of location identifier in the subject, some of which are just
-> "bitbake:". One (e0f91faf195be63803d39fb42fcd115ad558c79f) even has
-> "bin/bitbake:"; maybe I should use this for my patch?
+"Back" button from "Packageselection" page now restores correctly previously
+selected packages list. Till now "Back" button was implemented just to switch
+pages, not to cancel changes you have made to packages list.
 
-I think in this case bin/bitbake: is the best prefix. The idea is it
-gives a rough idea what changed and clearly in this case that is quite a
-good summary.
+[YOCTO #2984]
 
-Since this is such a simple patch, I've tweaked it and applied it. Also
-in future please include a Signed-off-by: line.
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/builder.py              |   10 +++++++++-
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    3 +++
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-Cheers,
-
-Richard
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index 7de4798..c6e0f39 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -123,6 +123,7 @@ class Configuration:
+         self.selected_image = None
+         self.selected_recipes = []
+         self.selected_packages = []
++        self.initial_selected_packages = []
+ 
+     def split_proxy(self, protocol, proxy):
+         entry = []
+@@ -519,6 +520,12 @@ class Builder(gtk.Window):
+         self.handler.reset_build()
+         self.handler.generate_packages(all_recipes, self.configuration.default_task)
+ 
++    def restore_initial_selected_packages(self):
++        self.package_model.set_selected_packages(self.configuration.initial_selected_packages)
++        for package in self.configuration.selected_packages:
++            if package not in self.configuration.initial_selected_packages:
++                self.package_model.exclude_item(self.package_model.find_path_for_item(package))
++
+     def fast_generate_image_async(self, log = False):
+         self.switch_page(self.FAST_IMAGE_GENERATING)
+         if log:
+@@ -658,6 +665,7 @@ class Builder(gtk.Window):
+             self.build_details_page.show_page(next_step)
+ 
+         elif next_step == self.PACKAGE_GENERATED:
++            self.configuration.initial_selected_packages = self.configuration.selected_packages
+             if self.recipe_model.get_selected_image() == self.recipe_model.__custom_image__:
+                 self.package_details_page.set_packages_curr_tab(self.package_details_page.ALL)
+             else:
+@@ -1334,4 +1342,4 @@ class Builder(gtk.Window):
+             format = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
+             self.consolelog.setFormatter(format)
+ 
+-            self.logger.addHandler(self.consolelog)
+\ No newline at end of file
++            self.logger.addHandler(self.consolelog)
+diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+index 3576ed5..89bf047 100755
+--- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
++++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+@@ -192,6 +192,9 @@ class PackageSelectionPage (HobPage):
+         self.builder.build_image()
+ 
+     def back_button_clicked_cb(self, button):
++        self.builder.restore_initial_selected_packages()
++        self.refresh_selection()
++
+         if self.builder.current_step ==  self.builder.PACKAGE_GENERATED:
+             self.builder.show_recipes()
+         elif self.builder.previous_step ==  self.builder.IMAGE_GENERATED:
+-- 
+1.7.9.5
 
 
 
