@@ -1,26 +1,21 @@
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Liezhi.Yang@windriver.com>) id 1T81bE-0002wD-5p
+	(envelope-from <ioanax.grigoropol@intel.com>) id 1T8TZT-0004y3-SG
 	for bitbake-devel@lists.openembedded.org;
-	Sun, 02 Sep 2012 06:15:52 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id q8243WGD004058
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 1 Sep 2012 21:03:32 -0700 (PDT)
-Received: from localhost.localdomain (128.224.163.124) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.2.309.2; Sat, 1 Sep 2012 21:03:32 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Sun, 2 Sep 2012 12:08:51 +0800
-Message-ID: <2b3b5cbd804f6d0d1949c7f15970be301a6900f4.1346558600.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.11.2
-In-Reply-To: <cover.1346558600.git.liezhi.yang@windriver.com>
-References: <cover.1346558600.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Cc: Zhenfeng.Zhao@windriver.com
-Subject: [PATCH 1/1] fetch2: unpack rpm, ipk and deb binary package
+	Mon, 03 Sep 2012 12:08:04 +0200
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga101.ch.intel.com with ESMTP; 03 Sep 2012 02:53:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.80,359,1344236400"; d="scan'208";a="140926633"
+Received: from ideapad (HELO localhost.localdomain) ([10.237.105.40])
+	by AZSMGA002.ch.intel.com with ESMTP; 03 Sep 2012 02:53:54 -0700
+From: Ioana Grigoropol <ioanax.grigoropol@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  3 Sep 2012 12:51:06 +0300
+Message-Id: <1346665866-12697-1-git-send-email-ioanax.grigoropol@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Cc: Ioana Grigoropol <ioanax.grigoropol@intel.com>
+Subject: [PATCH] [Yocto #3011] - Button theme is taken from host
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,46 +27,125 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 02 Sep 2012 04:15:52 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 03 Sep 2012 10:08:06 -0000
+X-List-Received-Date: Mon, 03 Sep 2012 10:08:06 -0000
 
-* Unpack the ".rpm" binary package (only .src.rpm in the past)
+-All buttons in the interface inherit a BaseHobButton that use the gtk settings for buttons from the host;
+-Removed 'or' label between actions on image details page
 
-* Unpack the .deb and .ipk binary package, their unpack commands are the same.
-
-* This is useful for binary package recipe.
-
-[YOCTO #1592]
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Ioana Grigoropol <ioanax.grigoropol@intel.com>
 ---
- bitbake/lib/bb/fetch2/__init__.py | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ bitbake/lib/bb/ui/crumbs/hobwidget.py        |   36 ++++++++++++++------------
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py |    8 +++---
+ 2 files changed, 23 insertions(+), 21 deletions(-)
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index 12ebce2..00fafb6 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -938,7 +938,7 @@ class FetchMethod(object):
-                 if dos:
-                     cmd = '%s -a' % cmd
-                 cmd = "%s '%s'" % (cmd, file)
--            elif file.endswith('.src.rpm') or file.endswith('.srpm'):
-+            elif file.endswith('.rpm') or file.endswith('.srpm'):
-                 if 'extract' in urldata.parm:
-                     unpack_file = urldata.parm.get('extract')
-                     cmd = 'rpm2cpio.sh %s | cpio -i %s' % (file, unpack_file)
-@@ -946,6 +946,8 @@ class FetchMethod(object):
-                     iterate_file = unpack_file
-                 else:
-                     cmd = 'rpm2cpio.sh %s | cpio -i' % (file)
-+            elif file.endswith('.deb') or file.endswith('.ipk'):
-+                cmd = 'ar -p %s data.tar.gz | zcat | tar --no-same-owner -xpf -' % file
+diff --git a/bitbake/lib/bb/ui/crumbs/hobwidget.py b/bitbake/lib/bb/ui/crumbs/hobwidget.py
+index d10c56b..3951dc1 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobwidget.py
++++ b/bitbake/lib/bb/ui/crumbs/hobwidget.py
+@@ -243,7 +243,7 @@ def soften_color(widget, state=gtk.STATE_NORMAL):
+     color.blue = color.blue * blend + style.base[state].blue * (1.0 - blend)
+     return color.to_string()
  
-         if not unpack or not cmd:
-             # If file == dest, then avoid any copies, as we already put the file into dest!
+-class HobButton(gtk.Button):
++class BaseHobButton(gtk.Button):
+     """
+     A gtk.Button subclass which follows the visual design of Hob for primary
+     action buttons
+@@ -257,24 +257,33 @@ class HobButton(gtk.Button):
+     @staticmethod
+     def style_button(button):
+         style = button.get_style()
+-        button_color = gtk.gdk.Color(HobColors.ORANGE)
+-        button.modify_bg(gtk.STATE_NORMAL, button_color)
+-        button.modify_bg(gtk.STATE_PRELIGHT, button_color)
+-        button.modify_bg(gtk.STATE_SELECTED, button_color)
++        style = gtk.rc_get_style_by_paths(gtk.settings_get_default(), 'gtk-button', 'gtk-button', gobject.TYPE_NONE)
+ 
+         button.set_flags(gtk.CAN_DEFAULT)
+         button.grab_default()
+ 
+-        label = "<span size='x-large'><b>%s</b></span>" % gobject.markup_escape_text(button.get_label())
++#        label = "<span size='x-large'><b>%s</b></span>" % gobject.markup_escape_text(button.get_label())
++        label = button.get_label()
+         button.set_label(label)
+         button.child.set_use_markup(True)
+ 
+-class HobAltButton(gtk.Button):
++class HobButton(BaseHobButton):
++    """
++    A gtk.Button subclass which follows the visual design of Hob for primary
++    action buttons
++
++    label: the text to display as the button's label
++    """
++    def __init__(self, label):
++        BaseHobButton.__init__(self, label)
++        HobButton.style_button(self)
++
++class HobAltButton(BaseHobButton):
+     """
+     A gtk.Button subclass which has no relief, and so is more discrete
+     """
+     def __init__(self, label):
+-        gtk.Button.__init__(self, label)
++        BaseHobButton.__init__(self, label)
+         HobAltButton.style_button(self)
+ 
+     """
+@@ -300,14 +309,6 @@ class HobAltButton(gtk.Button):
+         button.set_label("<span size='large' color='%s'><b>%s</b></span>" % (colour, gobject.markup_escape_text(button.text)))
+         button.child.set_use_markup(True)
+ 
+-    @staticmethod
+-    def style_button(button):
+-        button.text = button.get_label()
+-        button.connect("state-changed", HobAltButton.desensitise_on_state_change_cb)
+-        HobAltButton.set_text(button)
+-        button.child.set_use_markup(True)
+-        button.set_relief(gtk.RELIEF_NONE)
+-
+ class HobImageButton(gtk.Button):
+     """
+     A gtk.Button with an icon and two rows of text, the second of which is
+@@ -360,7 +361,8 @@ class HobInfoButton(gtk.EventBox):
+     def __init__(self, tip_markup, parent=None):
+         gtk.EventBox.__init__(self)
+         self.image = gtk.Image()
+-        self.image.set_from_file(hic.ICON_INFO_DISPLAY_FILE)
++        self.image.set_from_file(
++        hic.ICON_INFO_DISPLAY_FILE)
+         self.image.show()
+         self.add(self.image)
+ 
+diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+index 40eb7a4..c1a309d 100755
+--- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
++++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+@@ -485,8 +485,8 @@ class ImageDetailsPage (HobPage):
+         if name in buttonlist and self.test_type_runnable(image_name) and self.test_mach_runnable(image_name):
+             if created == True:
+                 # separator
+-                label = gtk.Label(" or ")
+-                self.details_bottom_buttons.pack_end(label, expand=False, fill=False)
++                #label = gtk.Label(" or ")
++                #self.details_bottom_buttons.pack_end(label, expand=False, fill=False)
+ 
+                 # create button "Run image"
+                 run_button = HobAltButton("Run image")
+@@ -507,8 +507,8 @@ class ImageDetailsPage (HobPage):
+         if name in buttonlist:
+             if created == True:
+                 # separator
+-                label = gtk.Label(" or ")
+-                self.details_bottom_buttons.pack_end(label, expand=False, fill=False)
++                #label = gtk.Label(" or ")
++                #self.details_bottom_buttons.pack_end(label, expand=False, fill=False)
+ 
+                 # create button "Save as template"
+                 save_button = HobAltButton("Save as template")
 -- 
-1.7.11.2
+1.7.9.5
 
 
 
