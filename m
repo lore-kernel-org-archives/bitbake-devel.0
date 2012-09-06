@@ -1,22 +1,36 @@
-Received: from mga14.intel.com ([143.182.124.37])
+Received: from mga07.intel.com ([143.182.124.22] helo=azsmga101.ch.intel.com)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <limingx.l.an@intel.com>) id 1T9Der-0003mz-Et
+	(envelope-from <bogdan.a.marinescu@intel.com>) id 1T9YsE-0005ub-2i
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 05 Sep 2012 13:20:34 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga102.ch.intel.com with ESMTP; 05 Sep 2012 04:08:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,372,1344236400"; d="scan'208";a="189038470"
-Received: from hp.sh.intel.com ([10.239.47.150])
-	by azsmga001.ch.intel.com with ESMTP; 05 Sep 2012 04:08:03 -0700
-From: Liming An <limingx.l.an@intel.com>
+	Thu, 06 Sep 2012 11:59:46 +0200
+Received: from mail-qa0-f47.google.com ([209.85.216.47])
+	by mga03.intel.com with ESMTP/TLS/RC4-SHA; 06 Sep 2012 02:45:57 -0700
+Received: by qadc11 with SMTP id c11so6757340qad.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 06 Sep 2012 02:45:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=google.com; s=20120113;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:content-type:x-gm-message-state;
+	bh=EiHLx74ZxQxVnTVE+SoGYjPt8tHBCT1GRR41nteSa90=;
+	b=eKdww2Rt/blN8VYgDp0gvO1FJ4R5SYbX8+vzO6U4JE/IHs9oxAN+7/cC4pGdSL2hdF
+	1v8MS+RijjAouquy3GHvL2NGIgbhhsQTEIR2tnmMoMso3XiVobMYmPLpTmzeJNkwkcDE
+	l2hPMBar3d+fyP7ANbz9eZ0HgcvnXiRMeLGzT/UhDPgzW4TZ3KU8x1107Qh/0QngZeyu
+	7hoqt47UAWXTLNZvzaTGIArkh3DteL/Zneu9GGeRuHDjnQ7eqG/YGPvp3BMJ4nm8nRCt
+	rF52ZsOiVrcWAXx2XqeNTfqAyEMQ5/RAt894OxJYgL7Y9k3uIhA/vn3aB50tmF+fS+tM
+	pKQw==
+Received: by 10.224.189.5 with SMTP id dc5mr1899609qab.89.1346924756195; Thu,
+	06 Sep 2012 02:45:56 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.49.74.74 with HTTP; Thu, 6 Sep 2012 02:45:36 -0700 (PDT)
+In-Reply-To: <mailman.11205.1346918934.14518.bitbake-devel@lists.openembedded.org>
+References: <mailman.11205.1346918934.14518.bitbake-devel@lists.openembedded.org>
+From: "Marinescu, Bogdan A" <bogdan.a.marinescu@intel.com>
+Date: Thu, 6 Sep 2012 12:45:36 +0300
+Message-ID: <CAMZjud1ThH1PG1gaFUXr34ATXAeNxqMZtuG+FKti6jd+_OTHAA@mail.gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  5 Sep 2012 19:13:48 +0800
-Message-Id: <302f1088dbc5d678b309a5bc766afbb414de9e81.1346842933.git.limingx.l.an@intel.com>
-X-Mailer: git-send-email 1.7.5.4
-In-Reply-To: <cover.1346842933.git.limingx.l.an@intel.com>
-References: <cover.1346842933.git.limingx.l.an@intel.com>
-Subject: [PATCH 1/1] Hob: change view of 'recipes' and 'packages' tables as ui design
+X-Gm-Message-State: ALoCoQnXeeggLy9AhwQ0wi86UelI2spr47nfuJsuyu1Kq3f+hvG10PDUmXkpXwvzcgU4afOdHN+O
+Subject: Your message to bitbake-devel awaits moderator approval
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -28,296 +42,85 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 05 Sep 2012 11:20:34 -0000
+X-List-Received-Date: Thu, 06 Sep 2012 09:59:46 -0000
+Content-Type: multipart/alternative; boundary=20cf30363e8ba1d81c04c9055beb
 
-changed the order of task tables,
-cancel the 'description' column,
-add the binb total number indicator, and so on
+--20cf30363e8ba1d81c04c9055beb
+Content-Type: text/plain; charset=ISO-8859-1
 
-[YOCTO 2195]
+Hi,
 
-Signed-off-by: Liming An <limingx.l.an@intel.com>
----
- bitbake/lib/bb/ui/crumbs/hoblistmodel.py         |    9 ++++-
- bitbake/lib/bb/ui/crumbs/hobwidget.py            |    7 +++-
- bitbake/lib/bb/ui/crumbs/packageselectionpage.py |   48 +++++----------------
- bitbake/lib/bb/ui/crumbs/recipeselectionpage.py  |   37 +++++++----------
- 4 files changed, 41 insertions(+), 60 deletions(-)
+I get this message when trying to send a patch to this list. The message
+size limit (40k) is probably a bit too small. Is it possible to enlarge
+this limit?
 
-diff --git a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
-index 3de9e5b..10b7c55 100644
---- a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
-+++ b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
-@@ -521,17 +521,24 @@ class RecipeListModel(gtk.ListStore):
-         val2 = model.get_value(iter2, RecipeListModel.COL_INC)
-         return ((val1 == True) and (val2 == False))
- 
-+    def include_item_sort_func(self, model, iter1, iter2):
-+        val1 = model.get_value(iter1, RecipeListModel.COL_INC)
-+        val2 = model.get_value(iter2, RecipeListModel.COL_INC)
-+        return ((val1 == False) and (val2 == True))
-+
-     """
-     Create, if required, and return a filtered gtk.TreeModelSort
-     containing only the items which are items specified by filter
-     """
--    def tree_model(self, filter, excluded_items_ahead=False):
-+    def tree_model(self, filter, excluded_items_ahead=False, included_items_ahead=True):
-         model = self.filter_new()
-         model.set_visible_func(self.tree_model_filter, filter)
- 
-         sort = gtk.TreeModelSort(model)
-         if excluded_items_ahead:
-             sort.set_default_sort_func(self.exclude_item_sort_func)
-+        elif included_items_ahead:
-+            sort.set_default_sort_func(self.include_item_sort_func)
-         else:
-             sort.set_sort_column_id(RecipeListModel.COL_NAME, gtk.SORT_ASCENDING)
-             sort.set_default_sort_func(None)
-diff --git a/bitbake/lib/bb/ui/crumbs/hobwidget.py b/bitbake/lib/bb/ui/crumbs/hobwidget.py
-index d10c56b..f6811a6 100644
---- a/bitbake/lib/bb/ui/crumbs/hobwidget.py
-+++ b/bitbake/lib/bb/ui/crumbs/hobwidget.py
-@@ -182,7 +182,12 @@ class HobViewTable (gtk.VBox):
-         # Just display the first item
-         if binb:
-             bin = binb.split(', ')
--            cell.set_property('text', bin[0])
-+            total_no = len(bin)
-+            if total_no > 1 and bin[0] == "User Selected":
-+                present_binb = bin[1] + ' (+' + str(total_no) + ')'
-+            else:
-+                present_binb = bin[0] + ' (+' + str(total_no) + ')'
-+            cell.set_property('text', present_binb)
-         else:
-             cell.set_property('text', "")
-         return True
-diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-index 3576ed5..93ade7c 100755
---- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-@@ -34,38 +34,33 @@ class PackageSelectionPage (HobPage):
- 
-     pages = [
-         {
--         'name'    : 'Included',
-+         'name'    : 'Included packages',
-          'filter'  : { PackageListModel.COL_INC : [True] },
-          'columns' : [{
-                        'col_name' : 'Package name',
-                        'col_id'   : PackageListModel.COL_NAME,
--                       'col_t_id' : PackageListModel.COL_FONT,
-                        'col_style': 'text',
-                        'col_min'  : 100,
-                        'col_max'  : 300,
-                        'expand'   : 'True'
-                       }, {
--                       'col_name' : 'Brought in by',
--                       'col_id'   : PackageListModel.COL_BINB,
--                       'col_t_id' : PackageListModel.COL_FONT,
--                       'col_style': 'binb',
--                       'col_min'  : 100,
--                       'col_max'  : 350,
--                       'expand'   : 'True'
--                      }, {
-                        'col_name' : 'Size',
-                        'col_id'   : PackageListModel.COL_SIZE,
--                       'col_t_id' : PackageListModel.COL_FONT,
-                        'col_style': 'text',
-                        'col_min'  : 100,
-                        'col_max'  : 300,
-                        'expand'   : 'True'
-                       }, {
-+                       'col_name' : 'Brought in by',
-+                       'col_id'   : PackageListModel.COL_BINB,
-+                       'col_style': 'binb',
-+                       'col_min'  : 100,
-+                       'col_max'  : 350,
-+                       'expand'   : 'True'
-+                      }, {
-                        'col_name' : 'Included',
-                        'col_id'   : PackageListModel.COL_INC,
--                       'col_t_id' : PackageListModel.COL_FONT,
-                        'col_style': 'check toggle',
--                       'col_group': 'tree store group',
-                        'col_min'  : 100,
-                        'col_max'  : 100
-                      }]
-@@ -75,7 +70,6 @@ class PackageSelectionPage (HobPage):
-          'columns' : [{
-                        'col_name' : 'Package name',
-                        'col_id'   : PackageListModel.COL_NAME,
--                       'col_t_id' : PackageListModel.COL_FONT,
-                        'col_style': 'text',
-                        'col_min'  : 100,
-                        'col_max'  : 400,
-@@ -83,7 +77,6 @@ class PackageSelectionPage (HobPage):
-                       }, {
-                        'col_name' : 'Size',
-                        'col_id'   : PackageListModel.COL_SIZE,
--                       'col_t_id' : PackageListModel.COL_FONT,
-                        'col_style': 'text',
-                        'col_min'  : 100,
-                        'col_max'  : 500,
-@@ -92,7 +85,6 @@ class PackageSelectionPage (HobPage):
-                        'col_name' : 'Included',
-                        'col_id'   : PackageListModel.COL_INC,
-                        'col_style': 'check toggle',
--                       'col_group': 'tree store group',
-                        'col_min'  : 100,
-                        'col_max'  : 100
-                       }]
-@@ -131,8 +123,7 @@ class PackageSelectionPage (HobPage):
-             filter = page['filter']
-             tab.set_model(self.package_model.tree_model(filter))
-             tab.connect("toggled", self.table_toggled_cb, page['name'])
--            tab.connect_group_selection(self.table_selected_cb)
--            if page['name'] == "Included":
-+            if page['name'] == "Included packages":
-                 tab.connect("button-release-event", self.button_click_cb)
-                 tab.connect("cell-fadeinout-stopped", self.after_fadeout_checkin_include)
-             self.ins.append_page(tab, page['name'])
-@@ -221,13 +212,13 @@ class PackageSelectionPage (HobPage):
- 
-         self.label.set_label("Packages included: %s\nSelected packages size: %s\nTotal image size: %s" %
-                             (selected_packages_num, selected_packages_size_str, image_total_size_str))
--        self.ins.show_indicator_icon("Included", selected_packages_num)
-+        self.ins.show_indicator_icon("Included packages", selected_packages_num)
- 
-     def toggle_item_idle_cb(self, path, view_tree, cell, pagename):
-         if not self.package_model.path_included(path):
-             self.package_model.include_item(item_path=path, binb="User Selected")
-         else:
--            if pagename == "Included":
-+            if pagename == "Included packages":
-                 self.pre_fadeout_checkout_include(view_tree)
-                 self.package_model.exclude_item(item_path=path)
-                 self.render_fadeout(view_tree, cell)
-@@ -284,21 +275,6 @@ class PackageSelectionPage (HobPage):
-         tree.set_model(self.package_model.tree_model(self.pages[0]['filter']))
-         tree.expand_all()
- 
--    def foreach_cell_change_font(self, model, path, iter, paths=None):
--        # Changed the font for a group cells
--        if path and iter and path[0] == paths[0]:
--            self.package_model.set(iter, self.package_model.COL_FONT, "bold")
--        else:
--            if iter and model.iter_parent(iter) == None:
--                self.package_model.set(iter, self.package_model.COL_FONT, '11')
--            else:
--                self.package_model.set(iter, self.package_model.COL_FONT, '10')
--
--    def table_selected_cb(self, selection):
--        model, paths = selection.get_selected_rows()
--        if paths:
--            child_path = self.package_model.convert_vpath_to_path(model, paths[0])
--            self.package_model.foreach(self.foreach_cell_change_font, child_path)
--
-     def set_packages_curr_tab(self, curr_page):
-         self.ins.set_current_page(curr_page)
-+
-diff --git a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-index d8e71b0..81bf7b8 100755
---- a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-@@ -33,7 +33,7 @@ from bb.ui.crumbs.hobpages import HobPage
- class RecipeSelectionPage (HobPage):
-     pages = [
-         {
--         'name'    : 'Included',
-+         'name'    : 'Included recipes',
-          'tooltip' : 'The recipes currently included for your image',
-          'filter'  : { RecipeListModel.COL_INC  : [True],
-                        RecipeListModel.COL_TYPE : ['recipe', 'task'] },
-@@ -45,13 +45,6 @@ class RecipeSelectionPage (HobPage):
-                        'col_max'  : 400,
-                        'expand'   : 'True'
-                       }, {
--                       'col_name' : 'Brought in by',
--                       'col_id'   : RecipeListModel.COL_BINB,
--                       'col_style': 'binb',
--                       'col_min'  : 100,
--                       'col_max'  : 500,
--                       'expand'   : 'True'
--                      }, {
-                        'col_name' : 'Group',
-                        'col_id'   : RecipeListModel.COL_GROUP,
-                        'col_style': 'text',
-@@ -59,6 +52,13 @@ class RecipeSelectionPage (HobPage):
-                        'col_max'  : 300,
-                        'expand'   : 'True'
-                       }, {
-+                       'col_name' : 'Brought in by',
-+                       'col_id'   : RecipeListModel.COL_BINB,
-+                       'col_style': 'binb',
-+                       'col_min'  : 100,
-+                       'col_max'  : 500,
-+                       'expand'   : 'True'
-+                      }, {
-                        'col_name' : 'Included',
-                        'col_id'   : RecipeListModel.COL_INC,
-                        'col_style': 'check toggle',
-@@ -77,15 +77,15 @@ class RecipeSelectionPage (HobPage):
-                        'col_max'  : 400,
-                        'expand'   : 'True'
-                       }, {
--                       'col_name' : 'License',
--                       'col_id'   : RecipeListModel.COL_LIC,
-+                       'col_name' : 'Group',
-+                       'col_id'   : RecipeListModel.COL_GROUP,
-                        'col_style': 'text',
-                        'col_min'  : 100,
-                        'col_max'  : 400,
-                        'expand'   : 'True'
-                       }, {
--                       'col_name' : 'Group',
--                       'col_id'   : RecipeListModel.COL_GROUP,
-+                       'col_name' : 'License',
-+                       'col_id'   : RecipeListModel.COL_LIC,
-                        'col_style': 'text',
-                        'col_min'  : 100,
-                        'col_max'  : 400,
-@@ -109,13 +109,6 @@ class RecipeSelectionPage (HobPage):
-                        'col_max'  : 400,
-                        'expand'   : 'True'
-                       }, {
--                       'col_name' : 'Description',
--                       'col_id'   : RecipeListModel.COL_DESC,
--                       'col_style': 'text',
--                       'col_min'  : 100,
--                       'col_max'  : 400,
--                       'expand'   : 'True'
--                      }, {
-                        'col_name' : 'Included',
-                        'col_id'   : RecipeListModel.COL_INC,
-                        'col_style': 'check toggle',
-@@ -156,7 +149,7 @@ class RecipeSelectionPage (HobPage):
-             filter = page['filter']
-             tab.set_model(self.recipe_model.tree_model(filter))
-             tab.connect("toggled", self.table_toggled_cb, page['name'])
--            if page['name'] == "Included":
-+            if page['name'] == "Included recipes":
-                 tab.connect("button-release-event", self.button_click_cb)
-                 tab.connect("cell-fadeinout-stopped", self.after_fadeout_checkin_include)
-             self.ins.append_page(tab, page['name'], page['tooltip'])
-@@ -205,13 +198,13 @@ class RecipeSelectionPage (HobPage):
-     def refresh_selection(self):
-         self.builder.configuration.selected_image = self.recipe_model.get_selected_image()
-         _, self.builder.configuration.selected_recipes = self.recipe_model.get_selected_recipes()
--        self.ins.show_indicator_icon("Included", len(self.builder.configuration.selected_recipes))
-+        self.ins.show_indicator_icon("Included recipes", len(self.builder.configuration.selected_recipes))
- 
-     def toggle_item_idle_cb(self, path, view_tree, cell, pagename):
-         if not self.recipe_model.path_included(path):
-             self.recipe_model.include_item(item_path=path, binb="User Selected", image_contents=False)
-         else:
--            if pagename == "Included":
-+            if pagename == "Included recipes":
-                 self.pre_fadeout_checkout_include(view_tree)
-                 self.recipe_model.exclude_item(item_path=path)
-                 self.render_fadeout(view_tree, cell)
--- 
-1.7.5.4
+Thanks,
+Bogdan
+
+---------- Forwarded message ----------
+From: <bitbake-devel-bounces@lists.openembedded.org>
+Date: Thu, Sep 6, 2012 at 11:08 AM
+Subject: Your message to bitbake-devel awaits moderator approval
+To: bogdan.a.marinescu@intel.com
 
 
+Your mail to 'bitbake-devel' with the subject
 
+    [PATCH] Implement 'settings' dialog as designed
+
+Is being held until the list moderator can review it for approval.
+
+The reason it is being held:
+
+    Message body is too big: 47927 bytes with a limit of 40 KB
+
+Either the message will get posted to the list, or you will receive
+notification of the moderator's decision.  If you would like to cancel
+this posting, please visit the following URL:
+
+
+http://lists.linuxtogo.org/cgi-bin/mailman/confirm/bitbake-devel/acf32f7845edd2c930a5a7888cbdd9d77803f1a7
+
+--20cf30363e8ba1d81c04c9055beb
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+Hi,<div><br></div><div>I get this message when trying to send a patch to th=
+is list. The message size limit (40k) is probably a bit too small. Is it po=
+ssible to enlarge this limit?</div><div><br></div><div>Thanks,</div><div>
+
+Bogdan<br><br><div class=3D"gmail_quote">---------- Forwarded message -----=
+-----<br>From: <b class=3D"gmail_sendername"></b> <span dir=3D"ltr">&lt;<a =
+href=3D"mailto:bitbake-devel-bounces@lists.openembedded.org">bitbake-devel-=
+bounces@lists.openembedded.org</a>&gt;</span><br>
+
+Date: Thu, Sep 6, 2012 at 11:08 AM<br>Subject: Your message to bitbake-deve=
+l awaits moderator approval<br>To: <a href=3D"mailto:bogdan.a.marinescu@int=
+el.com">bogdan.a.marinescu@intel.com</a><br><br><br>Your mail to &#39;bitba=
+ke-devel&#39; with the subject<br>
+
+
+<br>
+=A0 =A0 [PATCH] Implement &#39;settings&#39; dialog as designed<br>
+<br>
+Is being held until the list moderator can review it for approval.<br>
+<br>
+The reason it is being held:<br>
+<br>
+=A0 =A0 Message body is too big: 47927 bytes with a limit of 40 KB<br>
+<br>
+Either the message will get posted to the list, or you will receive<br>
+notification of the moderator&#39;s decision. =A0If you would like to cance=
+l<br>
+this posting, please visit the following URL:<br>
+<br>
+=A0 =A0 <a href=3D"http://lists.linuxtogo.org/cgi-bin/mailman/confirm/bitba=
+ke-devel/acf32f7845edd2c930a5a7888cbdd9d77803f1a7" target=3D"_blank">http:/=
+/lists.linuxtogo.org/cgi-bin/mailman/confirm/bitbake-devel/acf32f7845edd2c9=
+30a5a7888cbdd9d77803f1a7</a><br>
+
+
+<br>
+</div><br></div>
+
+--20cf30363e8ba1d81c04c9055beb--
