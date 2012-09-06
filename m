@@ -1,24 +1,46 @@
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from almaty.radix50.net ([85.214.25.173] helo=almaty.kz-easy.com)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1T9cFD-00066b-H1
+	(envelope-from <ibr@radix50.net>) id 1T9cOS-0006Gl-1v
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 06 Sep 2012 15:35:43 +0200
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 06 Sep 2012 06:23:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,380,1344236400"; d="scan'208";a="218566254"
-Received: from unknown (HELO helios.localnet) ([10.252.121.173])
-	by fmsmga002.fm.intel.com with ESMTP; 06 Sep 2012 06:22:57 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: Baurzhan Ismagulov <ibr@radix50.net>
-Date: Thu, 06 Sep 2012 14:22:56 +0100
-Message-ID: <4900668.FanvGGHKG9@helios>
-Organization: Intel Corporation
-User-Agent: KMail/4.9 (Linux/3.2.0-30-generic-pae; KDE/4.9.0; i686; ; )
-In-Reply-To: <20120807212006.GC13756@radix50.net>
+	Thu, 06 Sep 2012 15:45:16 +0200
+Received: from burundai.radix50.net (ip-2-205-216-232.web.vodafone.de
+	[2.205.216.232]) (authenticated bits=0)
+	by almaty.kz-easy.com (8.14.3/8.14.3/Debian-9.4) with ESMTP id
+	q86DWkBf028714
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 6 Sep 2012 15:32:49 +0200
+Received: from burundai.radix50.net (localhost [127.0.0.1])
+	by burundai.radix50.net (8.14.3/8.14.3/Debian-9.4) with ESMTP id
+	q86DWdfE005881
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 6 Sep 2012 15:32:39 +0200
+Received: (from ibr@localhost)
+	by burundai.radix50.net (8.14.3/8.14.3/Submit) id q86DWcOn005880
+	for bitbake-devel@lists.openembedded.org; Thu, 6 Sep 2012 15:32:38 +0200
+Date: Thu, 6 Sep 2012 15:32:38 +0200
+From: Baurzhan Ismagulov <ibr@radix50.net>
+To: bitbake-devel@lists.openembedded.org
+Message-ID: <20120906133236.GC2696@radix50.net>
 References: <20120807212006.GC13756@radix50.net>
+ <4900668.FanvGGHKG9@helios>
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
+In-Reply-To: <4900668.FanvGGHKG9@helios>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+X-Spam-Flag: YES
+X-Spam-Status: Yes, score=6.2 required=5.0 tests=RCVD_IN_PBL, RCVD_IN_RP_RNBL, 
+	RDNS_DYNAMIC,TO_NO_BRKTS_DYNIP autolearn=no version=3.3.1
+X-Spam-Report: *  3.6 RCVD_IN_PBL RBL: Received via a relay in Spamhaus PBL
+	*      [2.205.216.232 listed in zen.spamhaus.org]
+	*  1.3 RCVD_IN_RP_RNBL RBL: Relay in RNBL,
+	*      https://senderscore.org/blacklistlookup/
+	*      [2.205.216.232 listed in bl.score.senderscore.com]
+	*  0.4 RDNS_DYNAMIC Delivered to internal network by host with
+	*      dynamic-looking rDNS
+	*  1.0 TO_NO_BRKTS_DYNIP TO_NO_BRKTS_DYNIP
+X-Spam-Level: ******
+X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on almaty.kz-easy.com
 Subject: Re: bitbake under msys
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
@@ -31,29 +53,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 06 Sep 2012 13:35:43 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Thu, 06 Sep 2012 13:45:16 -0000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tuesday 07 August 2012 23:20:08 Baurzhan Ismagulov wrote:
-> I've tried to use bitbake under msys. First, I used python 2.6 for
-> Windows; this failed due to import fcntl. Then I tried cygwin python;
-> this failed with the following message:
+On Thu, Sep 06, 2012 at 02:22:56PM +0100, Paul Eggleton wrote:
+> > I've tried to use bitbake under msys. First, I used python 2.6 for
+> > Windows; this failed due to import fcntl. Then I tried cygwin python;
+> > this failed with the following message:
+...
+> > Is there a combination that works under msys?
 > 
-> ERROR: Unable to parse conf/bitbake.conf: file conf/bitbake.conf not
-> found in c:/Data/home/ibr/src/hellobb/bb
-> 
-> Is there a combination that works under msys?
+> I'm not sure that this is supported. Patches to improve the situation might be 
+> accepted if they're not too invasive though.
 
-I'm not sure that this is supported. Patches to improve the situation might be 
-accepted if they're not too invasive though.
+Thanks for the info. For now, I ended up using Cygwin, which is
+measurably slower.
 
-Cheers,
-Paul
-
--- 
-
-Paul Eggleton
-Intel Open Source Technology Centre
+With kind regards,
+Baurzhan.
 
 
