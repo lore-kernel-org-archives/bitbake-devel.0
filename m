@@ -1,18 +1,18 @@
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <bogdan.a.marinescu@intel.com>) id 1T8Xww-00071C-4K
+	(envelope-from <bogdan.a.marinescu@intel.com>) id 1T9X8t-0001FS-4y
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 03 Sep 2012 16:48:27 +0200
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 03 Sep 2012 07:35:00 -0700
+	Thu, 06 Sep 2012 10:08:53 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 06 Sep 2012 00:56:26 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,360,1344236400"; d="scan'208";a="217233283"
+X-IronPort-AV: E=Sophos;i="4.80,377,1344236400"; d="scan'208";a="189445577"
 Received: from bogdanm (HELO localhost.localdomain) ([10.237.105.62])
-	by fmsmga002.fm.intel.com with ESMTP; 03 Sep 2012 07:34:36 -0700
+	by azsmga001.ch.intel.com with ESMTP; 06 Sep 2012 00:56:08 -0700
 From: Bogdan Marinescu <bogdan.a.marinescu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  3 Sep 2012 17:36:54 +0300
-Message-Id: <1346683014-2845-1-git-send-email-bogdan.a.marinescu@intel.com>
+Date: Thu,  6 Sep 2012 10:58:32 +0300
+Message-Id: <1346918312-32162-1-git-send-email-bogdan.a.marinescu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
 X-Mailman-Approved-At: Thu, 06 Sep 2012 16:29:16 +0200
 Subject: [PATCH] Implement 'settings' dialog as designed
@@ -27,7 +27,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 03 Sep 2012 14:48:27 -0000
+X-List-Received-Date: Thu, 06 Sep 2012 08:08:53 -0000
 
 From: Valentin Popa <valentin.popa@intel.com>
 
