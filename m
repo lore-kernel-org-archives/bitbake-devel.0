@@ -1,31 +1,21 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1T9wt4-0003tu-JH for bitbake-devel@lists.openembedded.org;
-	Fri, 07 Sep 2012 13:38:14 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q87BPkrY028501;
-	Fri, 7 Sep 2012 12:25:46 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 27749-08; Fri,  7 Sep 2012 12:25:42 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q87BPdl1028495
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Fri, 7 Sep 2012 12:25:40 +0100
-Message-ID: <1347017140.7493.56.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Liming An <limingx.l.an@intel.com>
-Date: Fri, 07 Sep 2012 12:25:40 +0100
-In-Reply-To: <302f1088dbc5d678b309a5bc766afbb414de9e81.1346842933.git.limingx.l.an@intel.com>
-References: <cover.1346842933.git.limingx.l.an@intel.com>
-	<302f1088dbc5d678b309a5bc766afbb414de9e81.1346842933.git.limingx.l.an@intel.com>
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] Hob: change view of 'recipes' and 'packages' tables as ui design
+Received: from mga09.intel.com ([134.134.136.24])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <cristiana.voicu@intel.com>) id 1T9xQ2-00050q-0U
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 07 Sep 2012 14:12:18 +0200
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 07 Sep 2012 04:59:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.80,385,1344236400"; d="scan'208";a="198843720"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by orsmga002.jf.intel.com with ESMTP; 07 Sep 2012 04:59:50 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri,  7 Sep 2012 15:00:11 +0300
+Message-Id: <1347019211-24363-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob: print message when DISPLAY is not set
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,28 +27,57 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 07 Sep 2012 11:38:14 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 07 Sep 2012 12:12:18 -0000
 
-On Wed, 2012-09-05 at 19:13 +0800, Liming An wrote:
-> changed the order of task tables,
-> cancel the 'description' column,
-> add the binb total number indicator, and so on
-> 
-> [YOCTO 2195]
-> 
-> Signed-off-by: Liming An <limingx.l.an@intel.com>
-> ---
->  bitbake/lib/bb/ui/crumbs/hoblistmodel.py         |    9 ++++-
->  bitbake/lib/bb/ui/crumbs/hobwidget.py            |    7 +++-
->  bitbake/lib/bb/ui/crumbs/packageselectionpage.py |   48 +++++----------------
->  bitbake/lib/bb/ui/crumbs/recipeselectionpage.py  |   37 +++++++----------
->  4 files changed, 41 insertions(+), 60 deletions(-)
+If DISPLAY wasn't set, launching hob has printed a traceback
+difficult to understand. Now, the exception is caught and it
+shows a human message.
 
-Merged to master, thanks.
+[YOCTO #2596]
 
-Richard
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/builder.py |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index 7de4798..f9e54a8 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -28,6 +28,7 @@ import subprocess
+ import shlex
+ import re
+ import logging
++import sys
+ from bb.ui.crumbs.template import TemplateMgr
+ from bb.ui.crumbs.imageconfigurationpage import ImageConfigurationPage
+ from bb.ui.crumbs.recipeselectionpage import RecipeSelectionPage
+@@ -457,8 +458,14 @@ class Builder(gtk.Window):
+         self.set_title("Hob")
+         self.set_icon_name("applications-development")
+         self.set_resizable(True)
+-        window_width = self.get_screen().get_width()
+-        window_height = self.get_screen().get_height()
++
++        try:
++            window_width = self.get_screen().get_width()
++            window_height = self.get_screen().get_height()
++        except AttributeError:
++            print "Please set DISPLAY variable before running Hob."
++            sys.exit(1)
++
+         if window_width >= hwc.MAIN_WIN_WIDTH:
+             window_width = hwc.MAIN_WIN_WIDTH
+             window_height = hwc.MAIN_WIN_HEIGHT
+@@ -1334,4 +1341,4 @@ class Builder(gtk.Window):
+             format = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
+             self.consolelog.setFormatter(format)
+ 
+-            self.logger.addHandler(self.consolelog)
+\ No newline at end of file
++            self.logger.addHandler(self.consolelog)
+-- 
+1.7.9.5
 
 
 
