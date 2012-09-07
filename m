@@ -1,20 +1,30 @@
-Received: from mga03.intel.com ([143.182.124.21])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1T9yuv-0007Hu-9c
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 07 Sep 2012 15:48:17 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 07 Sep 2012 06:34:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,385,1344236400"; d="scan'208";a="190044766"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.121.175])
-	by azsmga001.ch.intel.com with ESMTP; 07 Sep 2012 06:34:44 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri,  7 Sep 2012 14:34:35 +0100
-Message-Id: <1347024875-9427-1-git-send-email-paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH v2] fetch2: replace double slashes in paths in encodeurl()
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1T9z66-0007Vj-2B for bitbake-devel@lists.openembedded.org;
+	Fri, 07 Sep 2012 15:59:50 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q87DlMZO029935;
+	Fri, 7 Sep 2012 14:47:22 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 29414-04; Fri,  7 Sep 2012 14:47:18 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q87DlDDu029929
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
+	Fri, 7 Sep 2012 14:47:14 +0100
+Message-ID: <1347025633.7493.67.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Cristiana Voicu <cristiana.voicu@intel.com>
+Date: Fri, 07 Sep 2012 14:47:13 +0100
+In-Reply-To: <1347019211-24363-1-git-send-email-cristiana.voicu@intel.com>
+References: <1347019211-24363-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] hob: print message when DISPLAY is not set
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,34 +36,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 07 Sep 2012 13:48:17 -0000
+X-List-Received-Date: Fri, 07 Sep 2012 13:59:50 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-This ensures that if all a MIRRORS entry does is add a slash, this does
-not result in a circular loop.
+On Fri, 2012-09-07 at 15:00 +0300, Cristiana Voicu wrote:
+> If DISPLAY wasn't set, launching hob has printed a traceback
+> difficult to understand. Now, the exception is caught and it
+> shows a human message.
+> 
+> [YOCTO #2596]
+> 
+> Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+> ---
+>  bitbake/lib/bb/ui/crumbs/builder.py |   13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
 
-Fixes [YOCTO #3073].
+Merged to master, thanks.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- bitbake/lib/bb/fetch2/__init__.py |    3 +++
- 1 file changed, 3 insertions(+)
+> diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+> index 7de4798..f9e54a8 100755
+> --- a/bitbake/lib/bb/ui/crumbs/builder.py
+> +++ b/bitbake/lib/bb/ui/crumbs/builder.py
+> @@ -1334,4 +1341,4 @@ class Builder(gtk.Window):
+>              format = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
+>              self.consolelog.setFormatter(format)
+>  
+> -            self.logger.addHandler(self.consolelog)
+> \ No newline at end of file
+> +            self.logger.addHandler(self.consolelog)
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index 12ebce2..b232d3e 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -178,6 +178,9 @@ def encodeurl(decoded):
-         url += "@"
-     if host and type != "file":
-         url += "%s" % host
-+    # Standardise path to ensure comparisons work
-+    while '//' in path:
-+        path = path.replace("//", "/")
-     url += "%s" % urllib.quote(path)
-     if p:
-         for parm in p:
--- 
-1.7.9.5
+I keep seeing this piece in your patches which doesn't seem to want to
+apply and the line ending looks correct in the main repository. Can you
+see if there is some problem locally?
+
+Cheers,
+
+Richard
+
 
 
 
