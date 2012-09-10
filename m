@@ -1,30 +1,21 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1TB35O-0002D8-2K for bitbake-devel@lists.openembedded.org;
-	Mon, 10 Sep 2012 14:27:30 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8ACEtDp030810;
-	Mon, 10 Sep 2012 13:14:55 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 04267-07; Mon, 10 Sep 2012 13:14:51 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8ACEnNF030801
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Mon, 10 Sep 2012 13:14:50 +0100
-Message-ID: <1347279290.26676.1.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Cristiana Voicu <cristiana.voicu@intel.com>
-Date: Mon, 10 Sep 2012 13:14:50 +0100
-In-Reply-To: <1347266967-18969-1-git-send-email-cristiana.voicu@intel.com>
-References: <1347266967-18969-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] hob/imageconfigurationpage: remove or_label reference
+Received: from mga03.intel.com ([143.182.124.21])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <cristiana.voicu@intel.com>) id 1TB3cv-0007dd-JV
+	for bitbake-devel@lists.openembedded.org;
+	Mon, 10 Sep 2012 15:02:09 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 10 Sep 2012 05:49:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.80,398,1344236400"; d="scan'208";a="190870313"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by azsmga001.ch.intel.com with ESMTP; 10 Sep 2012 05:49:31 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 10 Sep 2012 15:49:57 +0300
+Message-Id: <1347281397-15677-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob/packageselectionpage: restore selected packages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,23 +27,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Sep 2012 12:27:30 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 10 Sep 2012 13:02:09 -0000
 
-On Mon, 2012-09-10 at 11:49 +0300, Cristiana Voicu wrote:
-> When or_label was removed, I forgot to remove also the references to it.
-> 
-> [YOCTO #3010]
-> 
-> Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
-> ---
->  bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    2 --
->  1 file changed, 2 deletions(-)
+After "Cancel" action, selected packages are restored to default.
 
-Merged to master, thanks.
+[YOCTO #2984]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/builder.py              |    2 +-
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    5 ++---
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-Richard
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index 833577f..18261c2 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -660,6 +660,7 @@ class Builder(gtk.Window):
+                 self.recipe_details_page.set_recipe_curr_tab(self.recipe_details_page.INCLUDED)
+ 
+         elif next_step == self.PACKAGE_SELECTION:
++            self.configuration.initial_selected_packages = self.configuration.selected_packages
+             if self.recipe_model.get_selected_image() == self.recipe_model.__custom_image__:
+                 self.package_details_page.set_packages_curr_tab(self.package_details_page.ALL)
+             else:
+@@ -672,7 +673,6 @@ class Builder(gtk.Window):
+             self.build_details_page.show_page(next_step)
+ 
+         elif next_step == self.PACKAGE_GENERATED:
+-            self.configuration.initial_selected_packages = self.configuration.selected_packages
+             if self.recipe_model.get_selected_image() == self.recipe_model.__custom_image__:
+                 self.package_details_page.set_packages_curr_tab(self.package_details_page.ALL)
+             else:
+diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+index c73697b..e3d35ef 100755
+--- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
++++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+@@ -187,12 +187,11 @@ class PackageSelectionPage (HobPage):
+         self.builder.build_image()
+ 
+     def back_button_clicked_cb(self, button):
+-        self.builder.restore_initial_selected_packages()
+-        self.refresh_selection()
+-
+         if self.builder.current_step ==  self.builder.PACKAGE_GENERATED:
+             self.builder.show_recipes()
+         elif self.builder.previous_step ==  self.builder.IMAGE_GENERATED:
++            self.builder.restore_initial_selected_packages()
++            self.refresh_selection()
+             self.builder.show_image_details()
+ 
+     def _expand_all(self):
+-- 
+1.7.9.5
 
 
 
