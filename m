@@ -1,21 +1,20 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristiana.voicu@intel.com>) id 1TB3cv-0007dd-JV
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1TB5IW-0007cL-TP
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 10 Sep 2012 15:02:09 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 10 Sep 2012 05:49:32 -0700
+	Mon, 10 Sep 2012 16:49:13 +0200
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 10 Sep 2012 07:36:34 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,398,1344236400"; d="scan'208";a="190870313"
-Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
-	([10.237.105.151])
-	by azsmga001.ch.intel.com with ESMTP; 10 Sep 2012 05:49:31 -0700
-From: Cristiana Voicu <cristiana.voicu@intel.com>
+X-IronPort-AV: E=Sophos;i="4.80,398,1344236400"; d="scan'208";a="200800795"
+Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.121.193])
+	by orsmga002.jf.intel.com with ESMTP; 10 Sep 2012 07:36:32 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 10 Sep 2012 15:49:57 +0300
-Message-Id: <1347281397-15677-1-git-send-email-cristiana.voicu@intel.com>
+Date: Mon, 10 Sep 2012 15:36:29 +0100
+Message-Id: <1347287789-25496-1-git-send-email-paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob/packageselectionpage: restore selected packages
+Subject: [PATCH] hob: use correct semantics for dealing with pkgdata
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,56 +26,73 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Sep 2012 13:02:09 -0000
+X-List-Received-Date: Mon, 10 Sep 2012 14:49:13 -0000
 
-After "Cancel" action, selected packages are restored to default.
+Some of these values may or may not be overridden on a per-package
+basis, so handle them accordingly.
 
-[YOCTO #2984]
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/builder.py              |    2 +-
- bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    5 ++---
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hoblistmodel.py |   35 +++++++++++++++++-------------
+ 1 file changed, 20 insertions(+), 15 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index 833577f..18261c2 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -660,6 +660,7 @@ class Builder(gtk.Window):
-                 self.recipe_details_page.set_recipe_curr_tab(self.recipe_details_page.INCLUDED)
+diff --git a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+index 10b7c55..66b0efa 100644
+--- a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
++++ b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+@@ -145,6 +145,12 @@ class PackageListModel(gtk.TreeStore):
+         self.pkg_path = {}
+         self.rprov_pkg = {}
  
-         elif next_step == self.PACKAGE_SELECTION:
-+            self.configuration.initial_selected_packages = self.configuration.selected_packages
-             if self.recipe_model.get_selected_image() == self.recipe_model.__custom_image__:
-                 self.package_details_page.set_packages_curr_tab(self.package_details_page.ALL)
-             else:
-@@ -672,7 +673,6 @@ class Builder(gtk.Window):
-             self.build_details_page.show_page(next_step)
++        def getpkgvalue(pkgdict, key, pkgname, defaultval = None):
++            value = pkgdict.get('%s_%s' % (key, pkgname), None)
++            if not value:
++                value = pkgdict.get(key, defaultval)
++            return value
++
+         for pkginfo in pkginfolist:
+             pn = pkginfo['PN']
+             pv = pkginfo['PV']
+@@ -157,25 +163,24 @@ class PackageListModel(gtk.TreeStore):
+                                  self.COL_INC, False)
+                 self.pn_path[pn] = self.get_path(pniter)
  
-         elif next_step == self.PACKAGE_GENERATED:
--            self.configuration.initial_selected_packages = self.configuration.selected_packages
-             if self.recipe_model.get_selected_image() == self.recipe_model.__custom_image__:
-                 self.package_details_page.set_packages_curr_tab(self.package_details_page.ALL)
-             else:
-diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-index c73697b..e3d35ef 100755
---- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-@@ -187,12 +187,11 @@ class PackageSelectionPage (HobPage):
-         self.builder.build_image()
++            # PKG is always present
+             pkg = pkginfo['PKG']
+-            pkgv = pkginfo['PKGV']
+-            pkgr = pkginfo['PKGR']
+-            pkgsize = pkginfo['PKGSIZE_%s' % pkg] if 'PKGSIZE_%s' % pkg in pkginfo.keys() else "0"
+-            pkg_rename = pkginfo['PKG_%s' % pkg] if 'PKG_%s' % pkg in pkginfo.keys() else ""
+-            section = pkginfo['SECTION_%s' % pkg] if 'SECTION_%s' % pkg in pkginfo.keys() else ""
+-            summary = pkginfo['SUMMARY_%s' % pkg] if 'SUMMARY_%s' % pkg in pkginfo.keys() else ""
+-            rdep = pkginfo['RDEPENDS_%s' % pkg] if 'RDEPENDS_%s' % pkg in pkginfo.keys() else ""
+-            rrec = pkginfo['RRECOMMENDS_%s' % pkg] if 'RRECOMMENDS_%s' % pkg in pkginfo.keys() else ""
+-            rprov = pkginfo['RPROVIDES_%s' % pkg] if 'RPROVIDES_%s' % pkg in pkginfo.keys() else ""
++            pkgv = getpkgvalue(pkginfo, 'PKGV', pkg)
++            pkgr = getpkgvalue(pkginfo, 'PKGR', pkg)
++            # PKGSIZE is artificial, will always be overridden with the package name if present
++            pkgsize = pkginfo.get('PKGSIZE_%s' % pkg, "0")
++            # PKG_%s is the renamed version
++            pkg_rename = pkginfo.get('PKG_%s' % pkg, "")
++            # The rest may be overridden or not
++            section = getpkgvalue(pkginfo, 'SECTION', pkg, "")
++            summary = getpkgvalue(pkginfo, 'SUMMARY', pkg, "")
++            rdep = getpkgvalue(pkginfo, 'RDEPENDS', pkg, "")
++            rrec = getpkgvalue(pkginfo, 'RRECOMMENDS', pkg, "")
++            rprov = getpkgvalue(pkginfo, 'RPROVIDES', pkg, "")
+             for i in rprov.split():
+                 self.rprov_pkg[i] = pkg
  
-     def back_button_clicked_cb(self, button):
--        self.builder.restore_initial_selected_packages()
--        self.refresh_selection()
--
-         if self.builder.current_step ==  self.builder.PACKAGE_GENERATED:
-             self.builder.show_recipes()
-         elif self.builder.previous_step ==  self.builder.IMAGE_GENERATED:
-+            self.builder.restore_initial_selected_packages()
-+            self.refresh_selection()
-             self.builder.show_image_details()
+-            if 'ALLOW_EMPTY_%s' % pkg in pkginfo.keys():
+-                allow_empty = pkginfo['ALLOW_EMPTY_%s' % pkg]
+-            elif 'ALLOW_EMPTY' in pkginfo.keys():
+-                allow_empty = pkginfo['ALLOW_EMPTY']
+-            else:
+-                allow_empty = ""
++            allow_empty = getpkgvalue(pkginfo, 'ALLOW_EMPTY', pkg, "")
  
-     def _expand_all(self):
+             if pkgsize == "0" and not allow_empty:
+                 continue
 -- 
 1.7.9.5
 
