@@ -1,20 +1,30 @@
-Received: from mga02.intel.com ([134.134.136.20])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1TB7xA-0003gC-2P
-	for bitbake-devel@lists.openembedded.org;
-	Mon, 10 Sep 2012 19:39:20 +0200
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 10 Sep 2012 10:26:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,398,1344236400"; d="scan'208";a="200894883"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.121.193])
-	by orsmga002.jf.intel.com with ESMTP; 10 Sep 2012 10:26:48 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 10 Sep 2012 18:26:46 +0100
-Message-Id: <1347298006-29868-1-git-send-email-paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob: rename task -> packagegroup in recipe selection
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1TBBCq-0003UI-MX for bitbake-devel@lists.openembedded.org;
+	Mon, 10 Sep 2012 23:07:44 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8AKtAGL003627;
+	Mon, 10 Sep 2012 21:55:10 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 03438-01; Mon, 10 Sep 2012 21:55:06 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8AKt13J003608
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
+	Mon, 10 Sep 2012 21:55:02 +0100
+Message-ID: <1347310503.31154.9.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Cristiana Voicu <cristiana.voicu@intel.com>
+Date: Mon, 10 Sep 2012 21:55:03 +0100
+In-Reply-To: <1347281397-15677-1-git-send-email-cristiana.voicu@intel.com>
+References: <1347281397-15677-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] hob/packageselectionpage: restore selected packages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,84 +36,23 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Sep 2012 17:39:20 -0000
+X-List-Received-Date: Mon, 10 Sep 2012 21:07:44 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-This changes the filtering to use the inheritance of
-packagegroup.bbclass to determine if a recipe is a package group.
+On Mon, 2012-09-10 at 15:49 +0300, Cristiana Voicu wrote:
+> After "Cancel" action, selected packages are restored to default.
+> 
+> [YOCTO #2984]
+> Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+> ---
+>  bitbake/lib/bb/ui/crumbs/builder.py              |    2 +-
+>  bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    5 ++---
+>  2 files changed, 3 insertions(+), 4 deletions(-)
 
-Also makes the tab tooltip text generic; these recipes could come from
-any enabled layer, not just the default ones.
+Merged to master, thanks.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- bitbake/lib/bb/ui/crumbs/hoblistmodel.py        |    4 ++--
- bitbake/lib/bb/ui/crumbs/recipeselectionpage.py |   14 +++++++-------
- 2 files changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
-index 66b0efa..15894d3 100644
---- a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
-+++ b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
-@@ -595,8 +595,8 @@ class RecipeListModel(gtk.ListStore):
- 
-             depends = event_model["depends"].get(item, []) + event_model["rdepends-pn"].get(item, [])
- 
--            if ('task-' in name):
--                atype = 'task'
-+            if ('packagegroup.bbclass' in " ".join(inherits)):
-+                atype = 'packagegroup'
-             elif ('image.bbclass' in " ".join(inherits)):
-                 if name != "hob-image":
-                     atype = 'image'
-diff --git a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-index 693a449..0b159bb 100755
---- a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-@@ -36,7 +36,7 @@ class RecipeSelectionPage (HobPage):
-          'name'    : 'Included recipes',
-          'tooltip' : 'The recipes currently included for your image',
-          'filter'  : { RecipeListModel.COL_INC  : [True],
--                       RecipeListModel.COL_TYPE : ['recipe', 'task'] },
-+                       RecipeListModel.COL_TYPE : ['recipe', 'packagegroup'] },
-          'columns' : [{
-                        'col_name' : 'Recipe name',
-                        'col_id'   : RecipeListModel.COL_NAME,
-@@ -67,7 +67,7 @@ class RecipeSelectionPage (HobPage):
-                       }]
-         }, {
-          'name'    : 'All recipes',
--         'tooltip' : 'All recipes available in the Yocto Project',
-+         'tooltip' : 'All recipes in your configured layers',
-          'filter'  : { RecipeListModel.COL_TYPE : ['recipe'] },
-          'columns' : [{
-                        'col_name' : 'Recipe name',
-@@ -98,11 +98,11 @@ class RecipeSelectionPage (HobPage):
-                        'col_max'  : 100
-                       }]
-         }, {
--         'name'    : 'Tasks',
--         'tooltip' : 'All tasks available in the Yocto Project',
--         'filter'  : { RecipeListModel.COL_TYPE : ['task'] },
-+         'name'    : 'Package Groups',
-+         'tooltip' : 'All package groups in your configured layers',
-+         'filter'  : { RecipeListModel.COL_TYPE : ['packagegroup'] },
-          'columns' : [{
--                       'col_name' : 'Task name',
-+                       'col_name' : 'Package group name',
-                        'col_id'   : RecipeListModel.COL_NAME,
-                        'col_style': 'text',
-                        'col_min'  : 100,
-@@ -236,7 +236,7 @@ class RecipeSelectionPage (HobPage):
-         # Check out a model which base on the column COL_FADE_INC,
-         # it's save the prev state of column COL_INC before do exclude_item
-         filter = { RecipeListModel.COL_FADE_INC  : [True],
--                   RecipeListModel.COL_TYPE      : ['recipe', 'task'] }
-+                   RecipeListModel.COL_TYPE      : ['recipe', 'packagegroup'] }
-         new_model = self.recipe_model.tree_model(filter, excluded_items_ahead=True)
-         tree.set_model(new_model)
- 
--- 
-1.7.9.5
+Richard
 
 
 
