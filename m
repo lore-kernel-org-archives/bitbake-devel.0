@@ -1,20 +1,20 @@
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1TBN6Y-0007EB-WC
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1TBOPc-0002kR-1P
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 11 Sep 2012 11:50:03 +0200
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 11 Sep 2012 02:37:31 -0700
+	Tue, 11 Sep 2012 13:13:48 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga102.ch.intel.com with ESMTP; 11 Sep 2012 04:00:12 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,402,1344236400"; d="scan'208";a="220648288"
+X-IronPort-AV: E=Sophos;i="4.80,404,1344236400"; d="scan'208";a="191332387"
 Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.121.164])
-	by fmsmga001.fm.intel.com with ESMTP; 11 Sep 2012 02:37:30 -0700
+	by azsmga001.ch.intel.com with ESMTP; 11 Sep 2012 04:00:11 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 11 Sep 2012 10:37:22 +0100
-Message-Id: <1347356243-7920-1-git-send-email-paul.eggleton@linux.intel.com>
+Date: Tue, 11 Sep 2012 12:00:05 +0100
+Message-Id: <1347361205-9711-1-git-send-email-paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] lib/bb/event: improve handling of event queue on exit
+Subject: [PATCH] hob: format error messages properly
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,43 +26,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 11 Sep 2012 09:50:03 -0000
+X-List-Received-Date: Tue, 11 Sep 2012 11:13:48 -0000
 
-If BitBake exits before a UI handler (server) has been registered, we
-print the event queue; if there are any errors or other non-debug
-messages just print these and suppress the rest of the message queue.
+Error messages that use arguments need to be formatted properly, or we
+don't get the full message. Use a formatter to do this when an error
+occurs.
 
-This improves the output when sanity check failures occur with OE-Core
-by avoiding printing a long stream of uninformative debug messages.
+Partial fix for [YOCTO #2983].
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- bitbake/lib/bb/event.py |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
-index fa179d8..ab62d4d 100644
---- a/bitbake/lib/bb/event.py
-+++ b/bitbake/lib/bb/event.py
-@@ -104,6 +104,18 @@ def print_ui_queue():
-         console = logging.StreamHandler(sys.stdout)
-         console.setFormatter(BBLogFormatter("%(levelname)s: %(message)s"))
-         logger.handlers = [console]
-+
-+        # First check to see if we have any proper messages
-+        msgprint = False
-+        for event in ui_queue:
-+            if isinstance(event, logging.LogRecord):
-+                if event.levelno > logging.DEBUG:
-+                    logger.handle(event)
-+                    msgprint = True
-+        if msgprint:
-+            return
-+
-+        # Nope, so just print all of the messages we have (including debug messages)
-         for event in ui_queue:
-             if isinstance(event, logging.LogRecord):
-                 logger.handle(event)
+diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+index dac2f74..35cbded 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -177,7 +177,9 @@ class HobHandler(gobject.GObject):
+ 
+         elif isinstance(event, logging.LogRecord):
+             if event.levelno >= logging.ERROR:
+-                self.error_msg += event.msg + '\n'
++                formatter = bb.msg.BBLogFormatter()
++                formatter.format(event)
++                self.error_msg += event.message + '\n'
+ 
+         elif isinstance(event, bb.event.TargetsTreeGenerated):
+             self.current_phase = "data generation"
 -- 
 1.7.9.5
 
