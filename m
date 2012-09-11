@@ -1,24 +1,36 @@
-Received: from mga14.intel.com ([143.182.124.37])
+Received: from mail-lb0-f175.google.com ([209.85.217.175])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1TBTtG-0002ux-Rk
+	(envelope-from <kergoth@gmail.com>) id 1TBZb7-0005cD-Lv
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 11 Sep 2012 19:04:47 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga102.ch.intel.com with ESMTP; 11 Sep 2012 09:52:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,406,1344236400"; d="scan'208";a="191458851"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.121.206])
-	by azsmga001.ch.intel.com with ESMTP; 11 Sep 2012 09:52:11 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 11 Sep 2012 17:52:01 +0100
-Message-Id: <98eca12e39f253a65f0831bb30cef6cd48f1744f.1347382193.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1347382193.git.paul.eggleton@linux.intel.com>
+	Wed, 12 Sep 2012 01:10:26 +0200
+Received: by lban1 with SMTP id n1so677455lba.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 11 Sep 2012 15:57:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date
+	:x-google-sender-auth:message-id:subject:to:cc:content-type;
+	bh=Bwu9cHOx/zPo6KIaGSbkSQAhe/UfUAnPyhyStts40lg=;
+	b=nDzrdhFIGc2+hBcPjrSCmmCRGtaj9TBdsuYwuSOZ/GNf9UVJgX127XVpkiMjH2IDBr
+	zpaauYcFbsVBcdsIqlb+KHSF172CgJhfwPxAsfC0myM8agWe7nEYtWrKD0EwiHgcs+74
+	7+XCz4NHN8EzrcrgPdtCHdiI0+GstolhyOTrRtvcMavretS6V3/upUQP6k+J2MbYONAI
+	ZhFh56sAIXz3QP/c8BLUFFMeY1SlGWLvvVMsTPSo4lcjS/+FGSrO20DYIRF/nsYExvhC
+	5fWYludX5DCl5WutIbZoINZz7/4sU2RtKlWvMg36xh4pDuhLLMe7giRX187yEeYLXNgj
+	PIkg==
+Received: by 10.112.82.6 with SMTP id e6mr6792354lby.93.1347404264863; Tue, 11
+	Sep 2012 15:57:44 -0700 (PDT)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.114.19.2 with HTTP; Tue, 11 Sep 2012 15:57:24 -0700 (PDT)
+In-Reply-To: <2b9acb9c7fca686d4df885152458cae2e22f2cc5.1347382193.git.paul.eggleton@linux.intel.com>
 References: <cover.1347382193.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1347382193.git.paul.eggleton@linux.intel.com>
-References: <cover.1347382193.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 3/3] hob: sort base image drop-down list
+	<2b9acb9c7fca686d4df885152458cae2e22f2cc5.1347382193.git.paul.eggleton@linux.intel.com>
+From: Chris Larson <clarson@kergoth.com>
+Date: Tue, 11 Sep 2012 15:57:24 -0700
+X-Google-Sender-Auth: VXapMcLRGsNToXy0C8_R5a-W_aU
+Message-ID: <CABcZAN=_7d0ovDP6nHBTYCWbrs+QGF8bcinsNSrzQLSe3w14Aw@mail.gmail.com>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 2/3] lib/bb/command.py: ensure setVariable only sets values as strings
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,31 +42,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 11 Sep 2012 17:04:47 -0000
+X-List-Received-Date: Tue, 11 Sep 2012 23:10:30 -0000
+Content-Type: text/plain; charset=UTF-8
 
-Sort the list of base images to make it easier to find a specific image
-in the list. Note that "Create your own image" still remains the last
-item in the list.
+On Tue, Sep 11, 2012 at 9:52 AM, Paul Eggleton
+<paul.eggleton@linux.intel.com> wrote:
+> This is the interface Hob uses to set variable values in many instances,
+> and at the moment it is possible that some of the values it passes are
+> not strings. If a non-string value gets into the datastore it can
+> trigger exceptions during parsing when we attempt to expand the variable
+> and substitute in the non-string value.
+>
+> This fixes using the meta-ti layer within Hob - it currently has a
+> reference to BB_NUMBER_THREADS within a shell function and since this
+> is a variable that Hob was setting from its configuration as an integer,
+> due to the above this was triggering an ExpansionError.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-index 65c88cd..0cf9ebe 100644
---- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-@@ -345,6 +345,7 @@ class ImageConfigurationPage (HobPage):
-         # populate image combo
-         filter = {RecipeListModel.COL_TYPE : ['image']}
-         image_model = recipe_model.tree_model(filter)
-+        image_model.set_sort_column_id(recipe_model.COL_NAME, gtk.SORT_ASCENDING)
-         active = 0
-         cnt = 1
- 
+This is probably a good change, but I think that failing expansion due
+to a non-string value is a bad behavior in bitbake. I think it should
+call str() on it as appropriate, as that's the most idiomatic
+solution: Don't check if something is a string, don't require only
+strings, but call str() to get your string
 -- 
-1.7.9.5
-
+Christopher Larson
 
 
