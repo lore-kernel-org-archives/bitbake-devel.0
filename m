@@ -1,30 +1,21 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1TBBD7-0003VF-5K for bitbake-devel@lists.openembedded.org;
-	Mon, 10 Sep 2012 23:08:01 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8AKtQls003638;
-	Mon, 10 Sep 2012 21:55:26 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 01454-10; Mon, 10 Sep 2012 21:55:21 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8AKtJgH003630
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Mon, 10 Sep 2012 21:55:20 +0100
-Message-ID: <1347310520.31154.10.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
-Date: Mon, 10 Sep 2012 21:55:20 +0100
-In-Reply-To: <1347298006-29868-1-git-send-email-paul.eggleton@linux.intel.com>
-References: <1347298006-29868-1-git-send-email-paul.eggleton@linux.intel.com>
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] hob: rename task -> packagegroup in recipe selection
+Received: from mga03.intel.com ([143.182.124.21])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <cristiana.voicu@intel.com>) id 1TBLGd-000386-17
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 11 Sep 2012 09:52:19 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 11 Sep 2012 00:39:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.80,402,1344236400"; d="scan'208";a="191262856"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by azsmga001.ch.intel.com with ESMTP; 11 Sep 2012 00:39:39 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 11 Sep 2012 10:40:06 +0300
+Message-Id: <1347349206-9203-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob/imagedetailspage: change "FileCreated" label to "Files created"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,26 +27,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Sep 2012 21:08:01 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 11 Sep 2012 07:52:19 -0000
 
-On Mon, 2012-09-10 at 18:26 +0100, Paul Eggleton wrote:
-> This changes the filtering to use the inheritance of
-> packagegroup.bbclass to determine if a recipe is a package group.
-> 
-> Also makes the tab tooltip text generic; these recipes could come from
-> any enabled layer, not just the default ones.
-> 
-> Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
-> ---
->  bitbake/lib/bb/ui/crumbs/hoblistmodel.py        |    4 ++--
->  bitbake/lib/bb/ui/crumbs/recipeselectionpage.py |   14 +++++++-------
->  2 files changed, 9 insertions(+), 9 deletions(-)
+[YOCTO #2998]
 
-Merged to master, thanks (along with the other two patches).
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Richard
+diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+index cb3ca86..ed8c7ac 100755
+--- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
++++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+@@ -239,7 +239,7 @@ class ImageDetailsPage (HobPage):
+         is_runnable = self.create_bottom_buttons(self.buttonlist, self.toggled_image)
+ 
+         # Generated image files info
+-        varlist = ["Name: ", "FileCreated: ", "Directory: "]
++        varlist = ["Name: ", "Files created: ", "Directory: "]
+         vallist = []
+ 
+         vallist.append(image_name.split('.')[0])
+-- 
+1.7.9.5
 
 
 
