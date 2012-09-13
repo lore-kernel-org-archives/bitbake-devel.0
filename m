@@ -1,21 +1,30 @@
-Received: from mga14.intel.com ([143.182.124.37])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <constantinx.musca@intel.com>) id 1TC8k6-00045D-GU
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 13 Sep 2012 14:42:02 +0200
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga102.ch.intel.com with ESMTP; 13 Sep 2012 05:28:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,416,1344236400"; d="scan'208";a="144640972"
-Received: from costin-desktop (HELO localhost.localdomain) ([10.237.105.66])
-	by AZSMGA002.ch.intel.com with ESMTP; 13 Sep 2012 05:28:19 -0700
-From: Constantin Musca <constantinx.musca@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 13 Sep 2012 14:33:34 +0300
-Message-Id: <1347536014-13740-1-git-send-email-constantinx.musca@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Cc: Constantin Musca <constantinx.musca@intel.com>
-Subject: [PATCH] hob/builddetailspage: Add tooltips to the build failed notification
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1TCAYp-0007Aa-Tq for bitbake-devel@lists.openembedded.org;
+	Thu, 13 Sep 2012 16:38:32 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8DEPwUC031412
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 13 Sep 2012 15:25:58 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 30864-07 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 13 Sep 2012 15:25:54 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8DEPn4J031406
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 13 Sep 2012 15:25:51 +0100
+Message-ID: <1347546351.11710.103.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 13 Sep 2012 15:25:51 +0100
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: cooker: Fix priority for virtual recipes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,43 +36,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 13 Sep 2012 12:42:02 -0000
+X-List-Received-Date: Thu, 13 Sep 2012 14:38:32 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-[YOCTO #3046]
+When making filename comparisons for recipes for priority calculations,
+we need to split off any virtual prefix. Without this, BBCLASSEXTEND
+version of recipes don't follow the priority settings they should.
 
-Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
----
- bitbake/lib/bb/ui/crumbs/builddetailspage.py |    3 +++
- 1 file changed, 3 insertions(+)
+[YOCTO #2933]
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builddetailspage.py b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-index 4d2d947..8d76ade 100755
---- a/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-+++ b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-@@ -230,18 +230,21 @@ class BuildDetailsPage (HobPage):
-         # create button 'Edit packages'
-         action_button = HobButton(primary_action)
-         action_button.set_size_request(-1, 40)
-+        action_button.set_tooltip_text("Edit the %s parameters" % actions)
-         action_button.connect('clicked', self.failure_primary_action_button_clicked_cb, primary_action)
-         build_fail_tab.attach(action_button, 4, 13, 9, 12)
- 
-         if log_file:
-             open_log_button = HobAltButton("Open log")
-             open_log_button.set_relief(gtk.RELIEF_HALF)
-+            open_log_button.set_tooltip_text("Open the build's log file")
-             open_log_button.connect('clicked', self.failure_open_log_button_clicked_cb, log_file)
-             build_fail_tab.attach(open_log_button, 14, 23, 9, 12)
- 
-         attach_pos = (24 if log_file else 14)
-         file_bug_button = HobAltButton('File a bug')
-         file_bug_button.set_relief(gtk.RELIEF_HALF)
-+        file_bug_button.set_tooltip_text("Open the Yocto Project bug tracking website")
-         file_bug_button.connect('clicked', self.failure_activate_file_bug_link_cb)
-         build_fail_tab.attach(file_bug_button, attach_pos, attach_pos + 9, 9, 12)
- 
--- 
-1.7.9.5
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 1b3bb84..4861212 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -642,7 +642,8 @@ class BBCooker:
+         # Calculate priorities for each file
+         matched = set()
+         for p in self.status.pkg_fn:
+-            self.status.bbfile_priority[p] = self.calc_bbfile_priority(p, matched)
++            realfn, cls = bb.cache.Cache.virtualfn2realfn(p)
++            self.status.bbfile_priority[p] = self.calc_bbfile_priority(realfn, matched)
+  
+         # Don't show the warning if the BBFILE_PATTERN did match .bbappend files
+         unmatched = set()
 
 
 
