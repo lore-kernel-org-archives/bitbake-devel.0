@@ -1,35 +1,21 @@
-Received: from mail-lpp01m010-f47.google.com ([209.85.215.47])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1TBqXE-0002u5-LR
+	(envelope-from <constantinx.musca@intel.com>) id 1TC8k6-00045D-GU
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 12 Sep 2012 19:15:32 +0200
-Received: by lagv3 with SMTP id v3so1149283lag.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 12 Sep 2012 10:03:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	bh=RAB4cgcifffMTJ2yr1KgvdGQdvhPYmNhpzqJcYgwQ7I=;
-	b=jIQ//bGzCVnXKuOUi67VLgrDPfJftH688PsMYxfip+pxaT32xQw7vetBNquKc0s8a2
-	mAk6afZMMkVEhRSjNtkbO5O4FjFvHhcqldrP1Vh5SG3r9T42zRgYhvjDB1nQSvtte35Q
-	N3UpjSSWkkytABPcnx5CPAzArWqhl0kqMq86ul7bB9ZgqN7wOYCKmf6vFlUpdDCvtM44
-	GT8v5pMIlanco7PduGGaRbawiXIAQTAhIt1Nt5bvpqedLVumB8TJ4HWBpBLdrrazK22t
-	wQhGK7Dh5TdVfKDd5kkvlaSbMRaDA98Vnwdn9sVlhsYdIF4Z0tmAHXl6B+610BtbgPsN
-	+bBA==
-Received: by 10.112.51.174 with SMTP id l14mr7787454lbo.24.1347469380311; Wed,
-	12 Sep 2012 10:03:00 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.114.19.2 with HTTP; Wed, 12 Sep 2012 10:02:39 -0700 (PDT)
-In-Reply-To: <1347356243-7920-1-git-send-email-paul.eggleton@linux.intel.com>
-References: <1347356243-7920-1-git-send-email-paul.eggleton@linux.intel.com>
-From: Chris Larson <clarson@kergoth.com>
-Date: Wed, 12 Sep 2012 10:02:39 -0700
-X-Google-Sender-Auth: D3ixgTv8D4U7CUPZ2Mdv5lvy6dg
-Message-ID: <CABcZAN=ZgKVtUrKW4BuD-TkLTC1LMD8oBN_wc=ymM6fS1nvS6Q@mail.gmail.com>
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] lib/bb/event: improve handling of event queue on exit
+	Thu, 13 Sep 2012 14:42:02 +0200
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga102.ch.intel.com with ESMTP; 13 Sep 2012 05:28:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.80,416,1344236400"; d="scan'208";a="144640972"
+Received: from costin-desktop (HELO localhost.localdomain) ([10.237.105.66])
+	by AZSMGA002.ch.intel.com with ESMTP; 13 Sep 2012 05:28:19 -0700
+From: Constantin Musca <constantinx.musca@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 13 Sep 2012 14:33:34 +0300
+Message-Id: <1347536014-13740-1-git-send-email-constantinx.musca@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Cc: Constantin Musca <constantinx.musca@intel.com>
+Subject: [PATCH] hob/builddetailspage: Add tooltips to the build failed notification
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -41,26 +27,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 12 Sep 2012 17:15:32 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Thu, 13 Sep 2012 12:42:02 -0000
 
-On Tue, Sep 11, 2012 at 2:37 AM, Paul Eggleton
-<paul.eggleton@linux.intel.com> wrote:
-> If BitBake exits before a UI handler (server) has been registered, we
-> print the event queue; if there are any errors or other non-debug
-> messages just print these and suppress the rest of the message queue.
->
-> This improves the output when sanity check failures occur with OE-Core
-> by avoiding printing a long stream of uninformative debug messages.
->
-> Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+[YOCTO #3046]
 
-+1
+Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/builddetailspage.py |    3 +++
+ 1 file changed, 3 insertions(+)
 
-This one is biting us, obscuring the useful sanity check messages.
-
-Acked-by: Christopher Larson <chris_larson@mentor.com>
+diff --git a/bitbake/lib/bb/ui/crumbs/builddetailspage.py b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
+index 4d2d947..8d76ade 100755
+--- a/bitbake/lib/bb/ui/crumbs/builddetailspage.py
++++ b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
+@@ -230,18 +230,21 @@ class BuildDetailsPage (HobPage):
+         # create button 'Edit packages'
+         action_button = HobButton(primary_action)
+         action_button.set_size_request(-1, 40)
++        action_button.set_tooltip_text("Edit the %s parameters" % actions)
+         action_button.connect('clicked', self.failure_primary_action_button_clicked_cb, primary_action)
+         build_fail_tab.attach(action_button, 4, 13, 9, 12)
+ 
+         if log_file:
+             open_log_button = HobAltButton("Open log")
+             open_log_button.set_relief(gtk.RELIEF_HALF)
++            open_log_button.set_tooltip_text("Open the build's log file")
+             open_log_button.connect('clicked', self.failure_open_log_button_clicked_cb, log_file)
+             build_fail_tab.attach(open_log_button, 14, 23, 9, 12)
+ 
+         attach_pos = (24 if log_file else 14)
+         file_bug_button = HobAltButton('File a bug')
+         file_bug_button.set_relief(gtk.RELIEF_HALF)
++        file_bug_button.set_tooltip_text("Open the Yocto Project bug tracking website")
+         file_bug_button.connect('clicked', self.failure_activate_file_bug_link_cb)
+         build_fail_tab.attach(file_bug_button, attach_pos, attach_pos + 9, 9, 12)
+ 
 -- 
-Christopher Larson
+1.7.9.5
+
 
 
