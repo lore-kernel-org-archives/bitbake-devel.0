@@ -1,23 +1,64 @@
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from am1ehsobe006.messaging.microsoft.com ([213.199.154.209]
+	helo=am1outboundpool.messaging.microsoft.com)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <bogdan.a.marinescu@intel.com>) id 1TCWrd-0001r6-TD
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 14 Sep 2012 16:27:27 +0200
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 14 Sep 2012 07:14:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,423,1344236400"; d="scan'208";a="222066451"
-Received: from bogdanm (HELO localhost.localdomain) ([10.237.105.62])
-	by fmsmga002.fm.intel.com with ESMTP; 14 Sep 2012 07:14:49 -0700
-From: Bogdan Marinescu <bogdan.a.marinescu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 14 Sep 2012 17:17:13 +0300
-Message-Id: <1347632233-22080-1-git-send-email-bogdan.a.marinescu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] [hob] Fix settings
+	(envelope-from <B29882@freescale.com>)
+	id 1TCarT-0001fR-8Y; Fri, 14 Sep 2012 20:43:31 +0200
+Received: from mail97-am1-R.bigfish.com (10.3.201.234) by
+	AM1EHSOBE008.bigfish.com (10.3.204.28) with Microsoft SMTP Server id
+	14.1.225.23; Fri, 14 Sep 2012 18:30:55 +0000
+Received: from mail97-am1 (localhost [127.0.0.1])	by mail97-am1-R.bigfish.com
+	(Postfix) with ESMTP id D72483801A5;
+	Fri, 14 Sep 2012 18:30:55 +0000 (UTC)
+X-Forefront-Antispam-Report: CIP:70.37.183.190; KIP:(null); UIP:(null); IPV:NLI;
+	H:mail.freescale.net; RD:none; EFVD:NLI
+X-SpamScore: -9
+X-BigFish: VS-9(zz98dI9371Ic89bh936eI1441M1432I1453I62a3Id6f1izz1202h1d1ah1d2ahzz17326ah8275bh8275dhz2dh2a8h668h839h8e2h8e3hd25hf0ah107ah10d2h1288h12a5h12a9h12bdhbe9i1155h)
+Received: from mail97-am1 (localhost.localdomain [127.0.0.1]) by mail97-am1
+	(MessageSwitch) id 13476474542015_19286; Fri, 14 Sep 2012 18:30:54 +0000
+	(UTC)
+Received: from AM1EHSMHS015.bigfish.com (unknown [10.3.201.233])	by
+	mail97-am1.bigfish.com (Postfix) with ESMTP id E25593A00AD;
+	Fri, 14 Sep 2012 18:30:53 +0000 (UTC)
+Received: from mail.freescale.net (70.37.183.190) by AM1EHSMHS015.bigfish.com
+	(10.3.207.153) with Microsoft SMTP Server (TLS) id 14.1.225.23;
+	Fri, 14 Sep 2012 18:30:52 +0000
+Received: from 039-SN1MPN1-001.039d.mgd.msft.net ([169.254.1.124]) by
+	039-SN1MMR1-001.039d.mgd.msft.net ([10.84.1.13]) with mapi id
+	14.02.0309.003; Fri, 14 Sep 2012 13:30:50 -0500
+From: McClintock Matthew-B29882 <B29882@freescale.com>
+To: Otavio Salvador <otavio@ossystems.com.br>
+Thread-Topic: [bitbake-devel] [OE-core] [PATCH 1/4] gcc: Switch SRC_URI to
+	use svn
+Thread-Index: AQHNkqcQztcAN31T+0+Zoql5iEanQw==
+Date: Fri, 14 Sep 2012 18:30:50 +0000
+Message-ID: <70CC66F5C30A414DADDA6973E4CA391A67E750@039-SN1MPN1-001.039d.mgd.msft.net>
+References: <cover.1346905978.git.raj.khem@gmail.com>
+	<5c54fcdb91d19909f8658b6a6e8d6e6cac934cf2.1346905978.git.raj.khem@gmail.com>
+	<504FF70B.7060701@mlbassoc.com> <1347458928.11710.21.camel@ted>
+	<CAMKF1so6qUDFMw_aOZTdC4W_Dh=rDiiC1O7pvjaUQS2xkG8xWg@mail.gmail.com>
+	<20120913121935.GC18675@giant>
+	<CAP9ODKp8sKpVMi9MwdFxwZTq2-VMiRGzDzD=bBrFu8r4hZ0xMA@mail.gmail.com>
+	<CABcZANkbpR66G2-4WnBjdcjUGd4Khbje-kvpd2geUaVMMxE=4A@mail.gmail.com>
+	<1347623908.13596.2.camel@ted>
+	<CAP9ODKpZp1bhNg-EoHUYhU1YCU3=dRULpT8K_QCPZ9VLS8+xZg@mail.gmail.com>
+	<1347629023.13596.12.camel@ted>
+	<CAP9ODKpmveRGD02wP1DAO=+C0xa4sC3FfxaOud2zE6J=4zspmg@mail.gmail.com>
+In-Reply-To: <CAP9ODKpmveRGD02wP1DAO=+C0xa4sC3FfxaOud2zE6J=4zspmg@mail.gmail.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [70.112.201.132]
+MIME-Version: 1.0
+X-OriginatorOrg: freescale.com
+Cc: Chris Larson <clarson@kergoth.com>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	"openembedded-core@lists.openembedded.org"
+	<openembedded-core@lists.openembedded.org>
+Subject: Re: [OE-core] [PATCH 1/4] gcc: Switch SRC_URI to use svn
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
+Reply-To: McClintock Matthew-B29882 <B29882@freescale.com>
 List-Id: <bitbake-devel.lists.openembedded.org>
 List-Unsubscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/options/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=unsubscribe>
@@ -26,293 +67,82 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 14 Sep 2012 14:27:27 -0000
+X-List-Received-Date: Fri, 14 Sep 2012 18:43:32 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <B8A559BD8C190741900B54F38E5ADEB4@mgd.freescale.com>
+Content-Transfer-Encoding: quoted-printable
 
-Fix some issues with the settings dialog that were introduced as
-a result of merging the fix for #2162.
+On Fri, Sep 14, 2012 at 8:25 AM, Otavio Salvador
+<otavio@ossystems.com.br> wrote:
+> On Fri, Sep 14, 2012 at 10:23 AM, Richard Purdie
+> <richard.purdie@linuxfoundation.org> wrote:
+>> On Fri, 2012-09-14 at 09:36 -0300, Otavio Salvador wrote:
+>>> On Fri, Sep 14, 2012 at 8:58 AM, Richard Purdie
+>>> <richard.purdie@linuxfoundation.org> wrote:
+>>> > On Thu, 2012-09-13 at 07:22 -0700, Chris Larson wrote:
+>>> >> On Thu, Sep 13, 2012 at 6:06 AM, Otavio Salvador
+>>> >> <otavio@ossystems.com.br> wrote:
+>>> >> > On Thu, Sep 13, 2012 at 9:19 AM, Bj=F6rn Stenberg <bjst@enea.com> =
+wrote:
+>>> >> >> Khem Raj wrote:
+>>> >> >>> I agree but then 1.7 GB is noticeably huge too and it will only =
+become
+>>> >> >>> larger in future so I don't think fetching from git will be a go=
+od solution
+>>> >> >>> for gcc ever.
+>>> >> >>
+>>> >> >> Can we use shallow clones? A quick test of gcc-4.7 gave me a 308 =
+MB tar.gz when cloned with --depth 1.
+>>> >> >
+>>> >> > I did not check if the fetcher has this support  but it would be a
+>>> >> > nice solution.
+>>> >>
+>>> >> Shallow clones won't be able to support SRCREV properly, as you can
+>>> >> only clone shallowly from HEAD, not from an arbitrary point in
+>>> >> history, AFAIK.
+>>> >
+>>> > Right, shallow clones are a can of worms from a variety of angles.
+>>> >
+>>> > My current thinking is a ;allowsinglerev=3D1 parameter to the git fet=
+cher
+>>> > which:
+>>> >
+>>> > a) Generates tarballs of single git revisions if tarball generation i=
+s
+>>> > turned on
+>>> > b) Searches for single revision tarballs before trying the main check=
+out
+>>> > approach.
+>>> >
+>>> > This would mean that WORKDIR may or may not have a .git directory for
+>>> > any SRC_URI marked with this. I think we should all be able to live w=
+ith
+>>> > that and it shouldn't break too much?
+>>>
+>>> We'll end with multiple tarballs, aren't we?
+>>
+>> Yes. I'm not seeing that as a big problem for most of the usecases where
+>> we'd use this feature. You could skip shipping the big tarball of the
+>> whole repo at distribution time.
+>
+> By the way, there're any tool to clean the repo? (as we do for sstate-cac=
+he)?
 
-[YOCTO #3117]
+scripts/clean-workdir cleans tmp/ - not sure about downloads
 
-Signed-off-by: Bogdan Marinescu <bogdan.a.marinescu@intel.com>
----
- bitbake/lib/bb/ui/crumbs/hig.py              |  234 +++++++++++++-------------
- bitbake/lib/bb/ui/crumbs/imagedetailspage.py |    2 +-
- 2 files changed, 118 insertions(+), 118 deletions(-)
+-M
 
-diff --git a/bitbake/lib/bb/ui/crumbs/hig.py b/bitbake/lib/bb/ui/crumbs/hig.py
-index ff0ad17..e043f93 100644
---- a/bitbake/lib/bb/ui/crumbs/hig.py
-+++ b/bitbake/lib/bb/ui/crumbs/hig.py
-@@ -352,6 +352,123 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
-         md5 = self.config_md5()
-         self.settings_changed = (self.md5 != md5)
- 
-+    def create_build_environment_page(self):
-+        advanced_vbox = gtk.VBox(False, 6)
-+        advanced_vbox.set_border_width(6)
-+
-+        sub_vbox = gtk.VBox(False, 6)
-+        advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
-+        label = self.gen_label_widget("<span weight=\"bold\">Select distro:</span>")
-+        tooltip = "Selects the Yocto Project distribution you want"
-+        distro_widget, self.distro_combo = self.gen_combo_widget(self.configuration.curr_distro, self.all_distros, tooltip)
-+        sub_vbox.pack_start(label, expand=False, fill=False)
-+        sub_vbox.pack_start(distro_widget, expand=False, fill=False)
-+
-+        sub_vbox = gtk.VBox(False, 6)
-+        advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
-+        label = self.gen_label_widget("<span weight=\"bold\">BB number threads:</span>")
-+        tooltip = "Sets the number of threads that BitBake tasks can simultaneously run. See the <a href=\""
-+        tooltip += "http://www.yoctoproject.org/docs/current/poky-ref-manual/"
-+        tooltip += "poky-ref-manual.html#var-BB_NUMBER_THREADS\">Poky reference manual</a> for information"
-+        bbthread_widget, self.bb_spinner = self.gen_spinner_widget(self.configuration.bbthread, 1, self.max_threads, tooltip)
-+        sub_vbox.pack_start(label, expand=False, fill=False)
-+        sub_vbox.pack_start(bbthread_widget, expand=False, fill=False)
-+
-+        sub_vbox = gtk.VBox(False, 6)
-+        advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
-+        label = self.gen_label_widget("<span weight=\"bold\">Parallel make:</span>")
-+        tooltip = "Sets the maximum number of threads the host can use during the build. See the <a href=\""
-+        tooltip += "http://www.yoctoproject.org/docs/current/poky-ref-manual/"
-+        tooltip += "poky-ref-manual.html#var-PARALLEL_MAKE\">Poky reference manual</a> for information"
-+        pmake_widget, self.pmake_spinner = self.gen_spinner_widget(self.configuration.pmake, 1, self.max_threads, tooltip)
-+        sub_vbox.pack_start(label, expand=False, fill=False)
-+        sub_vbox.pack_start(pmake_widget, expand=False, fill=False)
-+
-+        sub_vbox = gtk.VBox(False, 6)
-+        advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
-+        label = self.gen_label_widget("<span weight=\"bold\">Select download directory:</span>")
-+        tooltip = "Select a folder that caches the upstream project source code"
-+        dldir_widget, self.dldir_text = self.gen_entry_widget(self.configuration.dldir, self, tooltip)
-+        sub_vbox.pack_start(label, expand=False, fill=False)
-+        sub_vbox.pack_start(dldir_widget, expand=False, fill=False)
-+
-+        sub_vbox = gtk.VBox(False, 6)
-+        advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
-+        label = self.gen_label_widget("<span weight=\"bold\">Select SSTATE directory:</span>")
-+        tooltip = "Select a folder that caches your prebuilt results"
-+        sstatedir_widget, self.sstatedir_text = self.gen_entry_widget(self.configuration.sstatedir, self, tooltip)
-+        sub_vbox.pack_start(label, expand=False, fill=False)
-+        sub_vbox.pack_start(sstatedir_widget, expand=False, fill=False)
-+
-+        sub_vbox = gtk.VBox(False, 6)
-+        advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
-+        label = self.gen_label_widget("<span weight=\"bold\">Select SSTATE mirror:</span>")
-+        tooltip = "Select the pre-built mirror that will speed your build"
-+        sstatemirror_widget, self.sstatemirror_text = self.gen_entry_widget(self.configuration.sstatemirror, self, tooltip)
-+        sub_vbox.pack_start(label, expand=False, fill=False)
-+        sub_vbox.pack_start(sstatemirror_widget, expand=False, fill=False)
-+
-+        return advanced_vbox
-+
-+    def create_proxy_page(self):
-+        advanced_vbox = gtk.VBox(False, 6)
-+        advanced_vbox.set_border_width(6)
-+
-+        sub_vbox = gtk.VBox(False, 6)
-+        advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
-+        label = self.gen_label_widget("<span weight=\"bold\">Set the proxies used when fetching source code</span>")
-+        tooltip = "Set the proxies used when fetching source code.  A blank field uses a direct internet connection."
-+        info = HobInfoButton(tooltip, self)
-+        hbox = gtk.HBox(False, 12)
-+        hbox.pack_start(label, expand=True, fill=True)
-+        hbox.pack_start(info, expand=False, fill=False)
-+        sub_vbox.pack_start(hbox, expand=False, fill=False)
-+
-+        self.direct_checkbox = gtk.RadioButton(None, "Direct internet connection")
-+        self.direct_checkbox.set_tooltip_text("Check this box to use a direct internet connection with no proxy")
-+        self.direct_checkbox.set_active(not self.configuration.enable_proxy)
-+        sub_vbox.pack_start(self.direct_checkbox, expand=False, fill=False)
-+
-+        self.proxy_checkbox = gtk.RadioButton(self.direct_checkbox, "Manual proxy configuration")
-+        self.proxy_checkbox.set_tooltip_text("Check this box to manually set up a specific proxy")
-+        self.proxy_checkbox.set_active(self.configuration.enable_proxy)
-+        sub_vbox.pack_start(self.proxy_checkbox, expand=False, fill=False)
-+
-+        self.same_checkbox = gtk.CheckButton("Use the same proxy for all protocols")
-+        self.same_checkbox.set_tooltip_text("Check this box to use the HTTP proxy for all five proxies")
-+        self.same_checkbox.set_active(self.configuration.same_proxy)
-+        hbox = gtk.HBox(False, 12)
-+        hbox.pack_start(self.same_checkbox, expand=False, fill=False, padding=24)
-+        sub_vbox.pack_start(hbox, expand=False, fill=False)
-+
-+        proxy_widget, self.http_proxy, self.http_proxy_port, self.http_proxy_details = self.gen_proxy_entry_widget(
-+            "http", self, True)
-+        sub_vbox.pack_start(proxy_widget, expand=False, fill=False)
-+
-+        proxy_widget, self.https_proxy, self.https_proxy_port, self.https_proxy_details = self.gen_proxy_entry_widget(
-+            "https", self, True)
-+        sub_vbox.pack_start(proxy_widget, expand=False, fill=False)
-+
-+        proxy_widget, self.ftp_proxy, self.ftp_proxy_port, self.ftp_proxy_details = self.gen_proxy_entry_widget(
-+            "ftp", self, True)
-+        sub_vbox.pack_start(proxy_widget, expand=False, fill=False)
-+
-+        proxy_widget, self.git_proxy, self.git_proxy_port, self.git_proxy_details = self.gen_proxy_entry_widget(
-+            "git", self, True)
-+        sub_vbox.pack_start(proxy_widget, expand=False, fill=False)
-+
-+        proxy_widget, self.cvs_proxy, self.cvs_proxy_port, self.cvs_proxy_details = self.gen_proxy_entry_widget(
-+            "cvs", self, True)
-+        sub_vbox.pack_start(proxy_widget, expand=False, fill=False)
-+
-+        self.direct_checkbox.connect("toggled", self.proxy_checkbox_toggled_cb)
-+        self.proxy_checkbox.connect("toggled", self.proxy_checkbox_toggled_cb)
-+        self.same_checkbox.connect("toggled", self.same_checkbox_toggled_cb)
-+
-+        self.refresh_proxy_components()
-+        return advanced_vbox
-+
-+
-     def create_visual_elements(self):
-         self.nb = gtk.Notebook()
-         self.nb.set_show_tabs(True)        
-@@ -364,7 +481,6 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
-         self.show_all()
- 
- 
--
- #
- # AdvancedSettings Dialog
- #
-@@ -685,122 +801,6 @@ class AdvancedSettingDialog (CrumbsDialog, SettingsUIHelper):
- 
-         return advanced_vbox
- 
--    def create_build_environment_page(self):
--        advanced_vbox = gtk.VBox(False, 6)
--        advanced_vbox.set_border_width(6)
--
--        sub_vbox = gtk.VBox(False, 6)
--        advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
--        label = self.gen_label_widget("<span weight=\"bold\">Select distro:</span>")
--        tooltip = "Selects the Yocto Project distribution you want"
--        distro_widget, self.distro_combo = self.gen_combo_widget(self.configuration.curr_distro, self.all_distros, tooltip)
--        sub_vbox.pack_start(label, expand=False, fill=False)
--        sub_vbox.pack_start(distro_widget, expand=False, fill=False)
--
--        sub_vbox = gtk.VBox(False, 6)
--        advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
--        label = self.gen_label_widget("<span weight=\"bold\">BB number threads:</span>")
--        tooltip = "Sets the number of threads that BitBake tasks can simultaneously run. See the <a href=\""
--        tooltip += "http://www.yoctoproject.org/docs/current/poky-ref-manual/"
--        tooltip += "poky-ref-manual.html#var-BB_NUMBER_THREADS\">Poky reference manual</a> for information"
--        bbthread_widget, self.bb_spinner = self.gen_spinner_widget(self.configuration.bbthread, 1, self.max_threads, tooltip)
--        sub_vbox.pack_start(label, expand=False, fill=False)
--        sub_vbox.pack_start(bbthread_widget, expand=False, fill=False)
--
--        sub_vbox = gtk.VBox(False, 6)
--        advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
--        label = self.gen_label_widget("<span weight=\"bold\">Parallel make:</span>")
--        tooltip = "Sets the maximum number of threads the host can use during the build. See the <a href=\""
--        tooltip += "http://www.yoctoproject.org/docs/current/poky-ref-manual/"
--        tooltip += "poky-ref-manual.html#var-PARALLEL_MAKE\">Poky reference manual</a> for information"
--        pmake_widget, self.pmake_spinner = self.gen_spinner_widget(self.configuration.pmake, 1, self.max_threads, tooltip)
--        sub_vbox.pack_start(label, expand=False, fill=False)
--        sub_vbox.pack_start(pmake_widget, expand=False, fill=False)
--
--        sub_vbox = gtk.VBox(False, 6)
--        advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
--        label = self.gen_label_widget("<span weight=\"bold\">Select download directory:</span>")
--        tooltip = "Select a folder that caches the upstream project source code"
--        dldir_widget, self.dldir_text = self.gen_entry_widget(self.configuration.dldir, self, tooltip)
--        sub_vbox.pack_start(label, expand=False, fill=False)
--        sub_vbox.pack_start(dldir_widget, expand=False, fill=False)
--
--        sub_vbox = gtk.VBox(False, 6)
--        advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
--        label = self.gen_label_widget("<span weight=\"bold\">Select SSTATE directory:</span>")
--        tooltip = "Select a folder that caches your prebuilt results"
--        sstatedir_widget, self.sstatedir_text = self.gen_entry_widget(self.configuration.sstatedir, self, tooltip)
--        sub_vbox.pack_start(label, expand=False, fill=False)
--        sub_vbox.pack_start(sstatedir_widget, expand=False, fill=False)
--
--        sub_vbox = gtk.VBox(False, 6)
--        advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
--        label = self.gen_label_widget("<span weight=\"bold\">Select SSTATE mirror:</span>")
--        tooltip = "Select the pre-built mirror that will speed your build"
--        sstatemirror_widget, self.sstatemirror_text = self.gen_entry_widget(self.configuration.sstatemirror, self, tooltip)
--        sub_vbox.pack_start(label, expand=False, fill=False)
--        sub_vbox.pack_start(sstatemirror_widget, expand=False, fill=False)
--
--        return advanced_vbox
--
--    def create_proxy_page(self):
--        advanced_vbox = gtk.VBox(False, 6)
--        advanced_vbox.set_border_width(6)
--
--        sub_vbox = gtk.VBox(False, 6)
--        advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
--        label = self.gen_label_widget("<span weight=\"bold\">Set the proxies used when fetching source code</span>")
--        tooltip = "Set the proxies used when fetching source code.  A blank field uses a direct internet connection."
--        info = HobInfoButton(tooltip, self)
--        hbox = gtk.HBox(False, 12)
--        hbox.pack_start(label, expand=True, fill=True)
--        hbox.pack_start(info, expand=False, fill=False)
--        sub_vbox.pack_start(hbox, expand=False, fill=False)
--
--        self.direct_checkbox = gtk.RadioButton(None, "Direct internet connection")
--        self.direct_checkbox.set_tooltip_text("Check this box to use a direct internet connection with no proxy")
--        self.direct_checkbox.set_active(not self.configuration.enable_proxy)
--        sub_vbox.pack_start(self.direct_checkbox, expand=False, fill=False)
--
--        self.proxy_checkbox = gtk.RadioButton(self.direct_checkbox, "Manual proxy configuration")
--        self.proxy_checkbox.set_tooltip_text("Check this box to manually set up a specific proxy")
--        self.proxy_checkbox.set_active(self.configuration.enable_proxy)
--        sub_vbox.pack_start(self.proxy_checkbox, expand=False, fill=False)
--
--        self.same_checkbox = gtk.CheckButton("Use the same proxy for all protocols")
--        self.same_checkbox.set_tooltip_text("Check this box to use the HTTP proxy for all five proxies")
--        self.same_checkbox.set_active(self.configuration.same_proxy)
--        hbox = gtk.HBox(False, 12)
--        hbox.pack_start(self.same_checkbox, expand=False, fill=False, padding=24)
--        sub_vbox.pack_start(hbox, expand=False, fill=False)
--
--        proxy_widget, self.http_proxy, self.http_proxy_port, self.http_proxy_details = self.gen_proxy_entry_widget(
--            "http", self, True)
--        sub_vbox.pack_start(proxy_widget, expand=False, fill=False)
--
--        proxy_widget, self.https_proxy, self.https_proxy_port, self.https_proxy_details = self.gen_proxy_entry_widget(
--            "https", self, True)
--        sub_vbox.pack_start(proxy_widget, expand=False, fill=False)
--
--        proxy_widget, self.ftp_proxy, self.ftp_proxy_port, self.ftp_proxy_details = self.gen_proxy_entry_widget(
--            "ftp", self, True)
--        sub_vbox.pack_start(proxy_widget, expand=False, fill=False)
--
--        proxy_widget, self.git_proxy, self.git_proxy_port, self.git_proxy_details = self.gen_proxy_entry_widget(
--            "git", self, True)
--        sub_vbox.pack_start(proxy_widget, expand=False, fill=False)
--
--        proxy_widget, self.cvs_proxy, self.cvs_proxy_port, self.cvs_proxy_details = self.gen_proxy_entry_widget(
--            "cvs", self, True)
--        sub_vbox.pack_start(proxy_widget, expand=False, fill=False)
--
--        self.direct_checkbox.connect("toggled", self.proxy_checkbox_toggled_cb)
--        self.proxy_checkbox.connect("toggled", self.proxy_checkbox_toggled_cb)
--        self.same_checkbox.connect("toggled", self.same_checkbox_toggled_cb)
--
--        self.refresh_proxy_components()
--        return advanced_vbox
--
-     def create_others_page(self):
-         advanced_vbox = gtk.VBox(False, 6)
-         advanced_vbox.set_border_width(6)
-diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-index ed8c7ac..5a6cb21 100755
---- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-@@ -587,7 +587,7 @@ class ImageDetailsPage (HobPage):
- 
-     def settings_button_clicked_cb(self, button):
-         # Create an advanced settings dialog
--        response, settings_changed = self.builder.show_adv_settings_dialog()
-+        response, settings_changed = self.builder.show_simple_settings_dialog()
-         if not response:
-             return
-         if settings_changed:
--- 
-1.7.9.5
+>
+> --
+> Otavio Salvador                             O.S. Systems
+> E-mail: otavio@ossystems.com.br  http://www.ossystems.com.br
+> Mobile: +55 53 9981-7854              http://projetos.ossystems.com.br
+>
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel=
 
 
 
