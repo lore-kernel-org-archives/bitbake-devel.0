@@ -1,30 +1,30 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1TCRRx-0006wY-8H for bitbake-devel@lists.openembedded.org;
-	Fri, 14 Sep 2012 10:40:33 +0200
+	id 1TCRSn-0006zL-Q2 for bitbake-devel@lists.openembedded.org;
+	Fri, 14 Sep 2012 10:41:26 +0200
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8E8R8ZN007608;
-	Fri, 14 Sep 2012 09:27:08 +0100
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8E8SjB9007797;
+	Fri, 14 Sep 2012 09:28:45 +0100
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 05870-06; Fri, 14 Sep 2012 09:26:55 +0100 (BST)
+	id 06256-06; Fri, 14 Sep 2012 09:28:38 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8E8Qnni007581
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8E8SZCW007772
 	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Fri, 14 Sep 2012 09:26:50 +0100
-Message-ID: <1347611211.9456.0.camel@ted>
+	Fri, 14 Sep 2012 09:28:36 +0100
+Message-ID: <1347611317.9456.3.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Cristiana Voicu <cristiana.voicu@intel.com>
-Date: Fri, 14 Sep 2012 09:26:51 +0100
-In-Reply-To: <1347349206-9203-1-git-send-email-cristiana.voicu@intel.com>
-References: <1347349206-9203-1-git-send-email-cristiana.voicu@intel.com>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+Date: Fri, 14 Sep 2012 09:28:37 +0100
+In-Reply-To: <1347356243-7920-1-git-send-email-paul.eggleton@linux.intel.com>
+References: <1347356243-7920-1-git-send-email-paul.eggleton@linux.intel.com>
 X-Mailer: Evolution 3.2.3-0ubuntu6 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] hob/imagedetailspage: change "FileCreated" label to "Files created"
+Subject: Re: [PATCH] lib/bb/event: improve handling of event queue on exit
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,17 +36,22 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 14 Sep 2012 08:40:33 -0000
+X-List-Received-Date: Fri, 14 Sep 2012 08:41:26 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2012-09-11 at 10:40 +0300, Cristiana Voicu wrote:
-> [YOCTO #2998]
+On Tue, 2012-09-11 at 10:37 +0100, Paul Eggleton wrote:
+> If BitBake exits before a UI handler (server) has been registered, we
+> print the event queue; if there are any errors or other non-debug
+> messages just print these and suppress the rest of the message queue.
 > 
-> Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+> This improves the output when sanity check failures occur with OE-Core
+> by avoiding printing a long stream of uninformative debug messages.
+> 
+> Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 > ---
->  bitbake/lib/bb/ui/crumbs/imagedetailspage.py |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  bitbake/lib/bb/event.py |   12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 
 Merged to master, thanks.
 
