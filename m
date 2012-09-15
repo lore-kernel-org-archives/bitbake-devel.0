@@ -1,25 +1,45 @@
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from mail-we0-f175.google.com ([74.125.82.175])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Peter.Seebach@windriver.com>) id 1TCdL6-0004kA-Av
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 14 Sep 2012 23:22:16 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca [147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id q8EL9cNH022995
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 14 Sep 2012 14:09:39 -0700 (PDT)
-Received: from localhost.localdomain (172.25.34.64) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.2.309.2;
-	Fri, 14 Sep 2012 14:09:39 -0700
-From: Peter Seebach <peter.seebach@windriver.com>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Fri, 14 Sep 2012 16:09:38 -0500
-Message-ID: <2b14209d1f740515c69d2534e3f7bf70950592ad.1347656669.git.peter.seebach@windriver.com>
-X-Mailer: git-send-email 1.7.0.4
-In-Reply-To: <cover.1347656669.git.peter.seebach@windriver.com>
-References: <cover.1347656669.git.peter.seebach@windriver.com>
+	(envelope-from <martin.jansa@gmail.com>)
+	id 1TCm1I-0000ZD-Np; Sat, 15 Sep 2012 08:38:24 +0200
+Received: by weyr6 with SMTP id r6so2834539wey.6
+	for <multiple recipients>; Fri, 14 Sep 2012 23:25:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-disposition:in-reply-to:user-agent;
+	bh=F9COBA5G/Q+NatzqDj4DbaUjyxhozyNGIaVvEjHOUVg=;
+	b=bHNrK4ZsaKfTNUOKWaQxSVOV12b1BOa0Qpn379eYCRhKBsACJhxV124pwlJjonpdRE
+	X2TK5LTBOMxcWmU3/1F7fscm88TVXeI+3/5w7gv/blFnGyVz+yBpwcaJDXx0gU47KScn
+	yfL8AZL3phU8rhJisyOMFxMjAtZCQGIBtnBDwolJ/ckUrAeDc2Qe+zIkoQ30MwUxTgIo
+	ClsVLnVY+nsf7qPGwDeS1FhHkq66Rn8WI2IDSFkwkhD/Uk1S2u0oeRWkYf09Kyck+15D
+	nGPPFZnjiEyZV4jbKve0cBj0xOC33jVzlUIl++Q/uxRS7rJLPgIYa7RYmeX/pJJH1wCY
+	dz0A==
+Received: by 10.217.3.71 with SMTP id q49mr2849354wes.33.1347690348926;
+	Fri, 14 Sep 2012 23:25:48 -0700 (PDT)
+Received: from localhost ([94.230.152.246])
+	by mx.google.com with ESMTPS id fr4sm4469926wib.8.2012.09.14.23.25.46
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Fri, 14 Sep 2012 23:25:47 -0700 (PDT)
+Date: Sat, 15 Sep 2012 08:25:52 +0200
+From: Martin Jansa <martin.jansa@gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Message-ID: <20120915062552.GC11252@jama.jama.net>
+References: <cover.1346905978.git.raj.khem@gmail.com>
+	<5c54fcdb91d19909f8658b6a6e8d6e6cac934cf2.1346905978.git.raj.khem@gmail.com>
+	<504FF70B.7060701@mlbassoc.com> <1347458928.11710.21.camel@ted>
+	<CAMKF1so6qUDFMw_aOZTdC4W_Dh=rDiiC1O7pvjaUQS2xkG8xWg@mail.gmail.com>
+	<20120913121935.GC18675@giant>
+	<CAP9ODKp8sKpVMi9MwdFxwZTq2-VMiRGzDzD=bBrFu8r4hZ0xMA@mail.gmail.com>
+	<CABcZANkbpR66G2-4WnBjdcjUGd4Khbje-kvpd2geUaVMMxE=4A@mail.gmail.com>
+	<1347623908.13596.2.camel@ted>
 MIME-Version: 1.0
-Subject: [PATCH 1/1] data_smart.py and friends: Track file inclusions for bitbake -e
+In-Reply-To: <1347623908.13596.2.camel@ted>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Cc: Chris Larson <clarson@kergoth.com>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	Otavio Salvador <otavio@ossystems.com.br>,
+	openembedded-core@lists.openembedded.org
+Subject: Re: [OE-core] [PATCH 1/4] gcc: Switch SRC_URI to use svn
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,133 +51,83 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 14 Sep 2012 21:22:16 -0000
-Content-Type: text/plain
+X-List-Received-Date: Sat, 15 Sep 2012 06:38:24 -0000
+X-Groupsio-MsgNum: 2718
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="iFRdW5/EC4oqxDHL"
+Content-Disposition: inline
 
-This code adds inclusion history to bitbake -e output, showing
-which files were included, in what order. This doesn't completely
-resolve timing questions, because it doesn't show you which lines
-of a file were processed before or after a given include, but it
-does let you figure out what the path was by which a particular
-file ended up in your build at all.
+--iFRdW5/EC4oqxDHL
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-How it works: data_smart acquires a .history member, which is an
-IncludeHistory; this represents the inclusion of a file and all its
-inclusions, recursively. It provides methods for including files,
-for finishing inclusion (done as an __exit__), and for
-dumping the whole tree.
+On Fri, Sep 14, 2012 at 12:58:28PM +0100, Richard Purdie wrote:
+> On Thu, 2012-09-13 at 07:22 -0700, Chris Larson wrote:
+> > On Thu, Sep 13, 2012 at 6:06 AM, Otavio Salvador
+> > <otavio@ossystems.com.br> wrote:
+> > > On Thu, Sep 13, 2012 at 9:19 AM, Bj=F6rn Stenberg <bjst@enea.com> wro=
+te:
+> > >> Khem Raj wrote:
+> > >>> I agree but then 1.7 GB is noticeably huge too and it will only bec=
+ome
+> > >>> larger in future so I don't think fetching from git will be a good =
+solution
+> > >>> for gcc ever.
+> > >>
+> > >> Can we use shallow clones? A quick test of gcc-4.7 gave me a 308 MB =
+tar.gz when cloned with --depth 1.
+> > >
+> > > I did not check if the fetcher has this support  but it would be a
+> > > nice solution.
+> >=20
+> > Shallow clones won't be able to support SRCREV properly, as you can
+> > only clone shallowly from HEAD, not from an arbitrary point in
+> > history, AFAIK.
+>=20
+> Right, shallow clones are a can of worms from a variety of angles.
+>=20
+> My current thinking is a ;allowsinglerev=3D1 parameter to the git fetcher
+> which:
+>=20
+> a) Generates tarballs of single git revisions if tarball generation is
+> turned on
+> b) Searches for single revision tarballs before trying the main checkout
+> approach.
+>=20
+> This would mean that WORKDIR may or may not have a .git directory for
+> any SRC_URI marked with this. I think we should all be able to live with
+> that and it shouldn't break too much?
 
-The parser is modified to run includes inside a with() to push
-and pop the include filename.
+Ah so finally fetch2 will have same functionality like fetch11 had?
 
-Signed-off-by: Peter Seebach <peter.seebach@windriver.com>
----
- lib/bb/cooker.py         |    5 +++++
- lib/bb/data_smart.py     |   44 ++++++++++++++++++++++++++++++++++++++++++++
- lib/bb/parse/__init__.py |    3 ++-
- 3 files changed, 51 insertions(+), 1 deletions(-)
+IIRC there is old buq report about this.
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 237019c..4642753 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -332,6 +332,11 @@ class BBCooker:
-                 parselog.exception("Unable to read %s", fn)
-                 raise
- 
-+        # Display history
-+        with closing(StringIO()) as env:
-+            self.configuration.data.history.emit(env)
-+            logger.plain(env.getvalue())
-+
-         # emit variables and shell functions
-         data.update_data(envdata)
-         with closing(StringIO()) as env:
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index f5f3b13..7cb53d8 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -111,6 +111,48 @@ class ExpansionError(Exception):
-     def __str__(self):
-         return self.msg
- 
-+class IncludeHistory(object):
-+    def __init__(self, parent = None, filename = None):
-+        self.parent = parent
-+        if parent:
-+            self.top = parent.top
-+        else:
-+            self.top = self
-+        self.filename = filename or '[TOP LEVEL]'
-+        self.children = []
-+        self.current = self
-+
-+    def include(self, filename):
-+        newfile = IncludeHistory(self.current, filename)
-+        self.current.children.append(newfile)
-+        self.current = newfile
-+        return self
-+
-+    def __enter__(self):
-+        pass
-+
-+    def __exit__(self, a, b, c):
-+        if self.current.parent:
-+            self.current = self.current.parent
-+        else:
-+            bb.warn("Include log: Tried to finish '%s' at top level." % filename)
-+        return False
-+
-+    def emit(self, o, level = 0):
-+        """Emit an include history file, and its children."""
-+        if self != self.top:
-+            spaces = "  " * level
-+            o.write("# %s%s" % (spaces, self.filename))
-+            if len(self.children) > 0:
-+                o.write(" includes:")
-+            o.write("\n")
-+            level = level + 1
-+        else:
-+            o.write("#\n# INCLUDE HISTORY:\n#\n")
-+        for child in self.children:
-+            child.emit(o, level)
-+
-+
- class DataSmart(MutableMapping):
-     def __init__(self, special = COWDictBase.copy(), seen = COWDictBase.copy() ):
-         self.dict = {}
-@@ -118,6 +160,7 @@ class DataSmart(MutableMapping):
-         # cookie monster tribute
-         self._special_values = special
-         self._seen_overrides = seen
-+        self.history = IncludeHistory()
- 
-         self.expand_cache = {}
- 
-@@ -411,6 +454,7 @@ class DataSmart(MutableMapping):
-         # we really want this to be a DataSmart...
-         data = DataSmart(seen=self._seen_overrides.copy(), special=self._special_values.copy())
-         data.dict["_data"] = self.dict
-+        data.history = copy.deepcopy(self.history)
- 
-         return data
- 
-diff --git a/lib/bb/parse/__init__.py b/lib/bb/parse/__init__.py
-index 7b9c47e..b24673b 100644
---- a/lib/bb/parse/__init__.py
-+++ b/lib/bb/parse/__init__.py
-@@ -88,7 +88,8 @@ def handle(fn, data, include = 0):
-     """Call the handler that is appropriate for this file"""
-     for h in handlers:
-         if h['supports'](fn, data):
--            return h['handle'](fn, data, include)
-+            with data.history.include(fn):
-+                return h['handle'](fn, data, include)
-     raise ParseError("not a BitBake file", fn)
- 
- def init(fn, data):
--- 
-1.7.0.4
+>=20
+> Cheers,
+>=20
+> Richard
+>=20
+>=20
+>=20
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
 
+--=20
+Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
 
+--iFRdW5/EC4oqxDHL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEYEARECAAYFAlBUH3AACgkQN1Ujt2V2gBweZQCeIhzj0rB7vKFb81ODFIObcLbe
+f+sAoJT794QdJpg0DjMt3C6i1C3oZex/
+=b+dm
+-----END PGP SIGNATURE-----
+
+--iFRdW5/EC4oqxDHL--
