@@ -1,26 +1,26 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1TDk8e-0003R3-DH
+	(envelope-from <jason.wessel@windriver.com>) id 1TDk8e-0003R5-Su
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 18 Sep 2012 00:50:00 +0200
+	Tue, 18 Sep 2012 00:50:01 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id q8HMbKpE001998
+	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id q8HMbLBW009858
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Sep 2012 15:37:20 -0700 (PDT)
+	Mon, 17 Sep 2012 15:37:21 -0700 (PDT)
 Received: from ord-lpggp2.wrs.com (128.224.65.244) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.2.309.2;
-	Mon, 17 Sep 2012 15:37:20 -0700
+	Mon, 17 Sep 2012 15:37:21 -0700
 From: Jason Wessel <jason.wessel@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 17 Sep 2012 17:43:34 -0500
-Message-ID: <1347921818-60562-5-git-send-email-jason.wessel@windriver.com>
+Date: Mon, 17 Sep 2012 17:43:35 -0500
+Message-ID: <1347921818-60562-6-git-send-email-jason.wessel@windriver.com>
 X-Mailer: git-send-email 1.7.1
 In-Reply-To: <1347921818-60562-1-git-send-email-jason.wessel@windriver.com>
 References: <1347921818-60562-1-git-send-email-jason.wessel@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 4/8] msg.py, knotty.py: Allow dynamic toggle of the debug log level
+Subject: [PATCH 5/8] knotty.py: update footer on dynamic log level change
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,109 +32,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 17 Sep 2012 22:50:00 -0000
+X-List-Received-Date: Mon, 17 Sep 2012 22:50:01 -0000
 Content-Type: text/plain
 
-If stdin is a controlling tty, make it possible to have
-log levels 1-4 where you can press a key to dynamically
-change the log level, while bitbake is running to see
-what is going on.
-
-1 = default log level
-2 = multiple log tail of bitbake tasks
-3 = bit bake debug messages
-4 = bitbake debug messages + multiple lot tail of bitbake tasks
-
-In order to make this possible a slight modification to
-the msg logfilter was needed to make it possible to get
-an object so as to change the filter log level.
+This patch adds a call to update the task list after changing log
+modes dynamically such that you can immediately see the remaining
+tasks.
 
 (LOCAL REV: NOT UPSTREAM)
 
 Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
 ---
- lib/bb/msg.py       |    9 ++++++++-
- lib/bb/ui/knotty.py |   21 ++++++++++++++++++---
- 2 files changed, 26 insertions(+), 4 deletions(-)
+ lib/bb/ui/knotty.py |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
 
-diff --git a/lib/bb/msg.py b/lib/bb/msg.py
-index 9b39325..4b2f90e 100644
---- a/lib/bb/msg.py
-+++ b/lib/bb/msg.py
-@@ -86,6 +86,13 @@ class BBLogFilter(object):
-         handler.setLevel(loglevel)
-         handler.addFilter(self)
- 
-+    def setFiltLevel(self, handler, level):
-+        self.stdlevel = level
-+        handler.setLevel(level)
-+
-+    def getFiltLevel(self):
-+        return self.stdlevel
-+
-     def filter(self, record):
-         if record.levelno >= self.stdlevel:
-             return True
-@@ -131,7 +138,7 @@ def addDefaultlogFilter(handler):
-         dlevel = len(tuple(iterator))
-         debug_domains["BitBake.%s" % domainarg] = logging.DEBUG - dlevel + 1
- 
--    BBLogFilter(handler, level, debug_domains)
-+    return BBLogFilter(handler, level, debug_domains)
- 
- #
- # Message handling functions
 diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index 0ec1b30..f7a770b 100644
+index f7a770b..5882c24 100644
 --- a/lib/bb/ui/knotty.py
 +++ b/lib/bb/ui/knotty.py
-@@ -243,8 +243,11 @@ class StdinMgr:
-             self.termios.tcsetattr(self.fd, self.termios.TCSANOW, new)
+@@ -179,6 +179,10 @@ class TerminalFilter(object):
+             sys.stdout.write(self.curses.tparm(self.ed))
+         self.footer_present = False
  
- class RtLogLevel:
--    def __init__(self, mlt):
-+    def __init__(self, handler, logfilter, mlt):
-         self.displaytail = False
-+        self.handler = handler
-+        self.logfilter = logfilter
-+        self.defaultLevel = logfilter.getFiltLevel()
-         self.mlt = mlt
- 
-     def displayLogs(self):
-@@ -255,10 +258,22 @@ class RtLogLevel:
-         if input == "1":
-             if verbose:
-                 print "NOTE: Turning off real time log tail"
-+            self.logfilter.setFiltLevel(self.handler, self.defaultLevel)
-             self.displaytail = False
-         elif input == "2":
-             if verbose:
-                 print "NOTE: Turning on real time log tail"
-+            self.logfilter.setFiltLevel(self.handler, self.defaultLevel)
-+            self.displaytail = True
-+        elif input == "3":
-+            if verbose:
-+                print "NOTE: Turning on DEBUG logging"
-+            self.logfilter.setFiltLevel(self.handler, logging.DEBUG)
-+            self.displaytail = False
-+        elif input == "4":
-+            if verbose:
-+                print "NOTE: Turning on DEBUG logging + real time log tail"
-+            self.logfilter.setFiltLevel(self.handler, logging.DEBUG)
-             self.displaytail = True
- 
- def main(server, eventHandler, tf = TerminalFilter):
-@@ -283,8 +298,8 @@ def main(server, eventHandler, tf = TerminalFilter):
- 
-     console = logging.StreamHandler(sys.stdout)
-     format = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
--    bb.msg.addDefaultlogFilter(console)
--    rtloglevel = RtLogLevel(mlt)
-+    logfilter = bb.msg.addDefaultlogFilter(console)
-+    rtloglevel = RtLogLevel(console, logfilter, mlt)
-     bb_rt_loglevel = server.runCommand(["getVariable", "BB_RT_LOGLEVEL"])
-     if bb_rt_loglevel and bb_rt_loglevel != "":
-         rtloglevel.setLevel(bb_rt_loglevel, False)
++    def updateFooterForce(self):
++        self.footer_present = False
++        self.updateFooter()
++
+     def updateFooter(self):
+         if not self.cuu:
+             return
+@@ -347,6 +351,8 @@ def main(server, eventHandler, tf = TerminalFilter):
+             if stdin_mgr.poll():
+                 keyinput = sys.stdin.read(1)
+                 rtloglevel.setLevel(keyinput, True)
++                termfilter.updateFooterForce()
++
+             # Always try printing any accumulated log files first
+             rtloglevel.displayLogs()
+             if event is None:
 -- 
 1.7.1
 
