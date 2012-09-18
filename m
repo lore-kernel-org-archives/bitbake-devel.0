@@ -1,33 +1,30 @@
-Received: from mga09.intel.com ([134.134.136.24])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristiana.voicu@intel.com>) id 1TDrTl-0007Ts-MP
-	for bitbake-devel@lists.openembedded.org;
-	Tue, 18 Sep 2012 08:40:18 +0200
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 17 Sep 2012 23:27:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,441,1344236400"; d="scan'208";a="206768681"
-Received: from irsmsx104.ger.corp.intel.com ([163.33.3.159])
-	by orsmga002.jf.intel.com with ESMTP; 17 Sep 2012 23:27:35 -0700
-Received: from irsmsx101.ger.corp.intel.com ([169.254.1.138]) by
-	IRSMSX104.ger.corp.intel.com ([169.254.5.154]) with mapi id
-	14.01.0355.002; Tue, 18 Sep 2012 07:27:35 +0100
-From: "Voicu, Cristiana" <cristiana.voicu@intel.com>
-To: "Marinescu, Bogdan A" <bogdan.a.marinescu@intel.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH] [hob] Fix settings
-Thread-Index: AQHNkoNaYn7iQ7SqDkWmrc334TpXnJePp/ew
-Date: Tue, 18 Sep 2012 06:27:34 +0000
-Message-ID: <BE68E9C8E0850C43B0F0B0B7D57FA5AE19394B95@IRSMSX101.ger.corp.intel.com>
-References: <1347632233-22080-1-git-send-email-bogdan.a.marinescu@intel.com>
-In-Reply-To: <1347632233-22080-1-git-send-email-bogdan.a.marinescu@intel.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [163.33.239.182]
-MIME-Version: 1.0
-Subject: Re: [PATCH] [hob] Fix settings
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1TDvIT-0006pr-Gc for bitbake-devel@lists.openembedded.org;
+	Tue, 18 Sep 2012 12:44:53 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8IAWDdK026586
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 18 Sep 2012 11:32:13 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 25975-04 for <bitbake-devel@lists.openembedded.org>;
+	Tue, 18 Sep 2012 11:32:07 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8IAW4bK026580
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 18 Sep 2012 11:32:05 +0100
+Message-ID: <1347964324.13596.109.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Tue, 18 Sep 2012 11:32:04 +0100
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: [PATCH] build/siggen: Add support for stamp 'clean' masks
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -39,405 +36,157 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 18 Sep 2012 06:40:18 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 18 Sep 2012 10:44:53 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hello,
+Currently when we execute a task, we don't remove other potentially stale
+stamps. This can mean if you switch between two different versions of a
+recipe without a clean, the build can get very confused.
 
-Can you please merge this patch? I have another bug, depending on this one.
+This patch adds in functionality to allow a wildcard expression of stamp
+files to be removed when creating a new stamp file. This patch adds in
+the core of the code to enable this but it also requires metadata support
+to enable it.
 
-Thank you,
-Cristiana
+When writing this improvement I went through several different options but
+this was the only way I could find to allow things like noexec tasks to
+function correctly (where stamps need to be created without the data store).
 
------Original Message-----
-From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-devel-bo=
-unces@lists.openembedded.org] On Behalf Of Bogdan Marinescu
-Sent: Friday, September 14, 2012 5:17 PM
-To: bitbake-devel@lists.openembedded.org
-Subject: [bitbake-devel] [PATCH] [hob] Fix settings
+[YOCTO #2961]
 
-Fix some issues with the settings dialog that were introduced as a result o=
-f merging the fix for #2162.
-
-[YOCTO #3117]
-
-Signed-off-by: Bogdan Marinescu <bogdan.a.marinescu@intel.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/ui/crumbs/hig.py              |  234 +++++++++++++---------=
-----
- bitbake/lib/bb/ui/crumbs/imagedetailspage.py |    2 +-
- 2 files changed, 118 insertions(+), 118 deletions(-)
-
-diff --git a/bitbake/lib/bb/ui/crumbs/hig.py b/bitbake/lib/bb/ui/crumbs/hig=
-.py index ff0ad17..e043f93 100644
---- a/bitbake/lib/bb/ui/crumbs/hig.py
-+++ b/bitbake/lib/bb/ui/crumbs/hig.py
-@@ -352,6 +352,123 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIH=
-elper):
-         md5 =3D self.config_md5()
-         self.settings_changed =3D (self.md5 !=3D md5)
-=20
-+    def create_build_environment_page(self):
-+        advanced_vbox =3D gtk.VBox(False, 6)
-+        advanced_vbox.set_border_width(6)
+diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+index 82d22f7..85af42c 100644
+--- a/bitbake/lib/bb/build.py
++++ b/bitbake/lib/bb/build.py
+@@ -470,11 +470,40 @@ def stamp_internal(taskname, d, file_name):
+ 
+     return stamp
+ 
++def stamp_cleanmask_internal(taskname, d, file_name):
++    """
++    Internal stamp helper function to generate stamp cleaning mask
++    Returns the stamp path+filename
 +
-+        sub_vbox =3D gtk.VBox(False, 6)
-+        advanced_vbox.pack_start(sub_vbox, expand=3DFalse, fill=3DFalse)
-+        label =3D self.gen_label_widget("<span weight=3D\"bold\">Select di=
-stro:</span>")
-+        tooltip =3D "Selects the Yocto Project distribution you want"
-+        distro_widget, self.distro_combo =3D self.gen_combo_widget(self.co=
-nfiguration.curr_distro, self.all_distros, tooltip)
-+        sub_vbox.pack_start(label, expand=3DFalse, fill=3DFalse)
-+        sub_vbox.pack_start(distro_widget, expand=3DFalse, fill=3DFalse)
++    In the bitbake core, d can be a CacheData and file_name will be set.
++    When called in task context, d will be a data store, file_name will not be set
++    """
++    taskflagname = taskname
++    if taskname.endswith("_setscene") and taskname != "do_setscene":
++        taskflagname = taskname.replace("_setscene", "")
 +
-+        sub_vbox =3D gtk.VBox(False, 6)
-+        advanced_vbox.pack_start(sub_vbox, expand=3DFalse, fill=3DFalse)
-+        label =3D self.gen_label_widget("<span weight=3D\"bold\">BB number=
- threads:</span>")
-+        tooltip =3D "Sets the number of threads that BitBake tasks can sim=
-ultaneously run. See the <a href=3D\""
-+        tooltip +=3D "http://www.yoctoproject.org/docs/current/poky-ref-ma=
-nual/"
-+        tooltip +=3D "poky-ref-manual.html#var-BB_NUMBER_THREADS\">Poky re=
-ference manual</a> for information"
-+        bbthread_widget, self.bb_spinner =3D self.gen_spinner_widget(self.=
-configuration.bbthread, 1, self.max_threads, tooltip)
-+        sub_vbox.pack_start(label, expand=3DFalse, fill=3DFalse)
-+        sub_vbox.pack_start(bbthread_widget, expand=3DFalse, fill=3DFalse)
++    if file_name:
++        stamp = d.stamp_base_clean[file_name].get(taskflagname) or d.stampclean[file_name]
++        extrainfo = d.stamp_extrainfo[file_name].get(taskflagname) or ""
++    else:
++        stamp = d.getVarFlag(taskflagname, 'stamp-base-clean', True) or d.getVar('STAMPCLEAN', True)
++        file_name = d.getVar('BB_FILENAME', True)
++        extrainfo = d.getVarFlag(taskflagname, 'stamp-extra-info', True) or ""
 +
-+        sub_vbox =3D gtk.VBox(False, 6)
-+        advanced_vbox.pack_start(sub_vbox, expand=3DFalse, fill=3DFalse)
-+        label =3D self.gen_label_widget("<span weight=3D\"bold\">Parallel =
-make:</span>")
-+        tooltip =3D "Sets the maximum number of threads the host can use d=
-uring the build. See the <a href=3D\""
-+        tooltip +=3D "http://www.yoctoproject.org/docs/current/poky-ref-ma=
-nual/"
-+        tooltip +=3D "poky-ref-manual.html#var-PARALLEL_MAKE\">Poky refere=
-nce manual</a> for information"
-+        pmake_widget, self.pmake_spinner =3D self.gen_spinner_widget(self.=
-configuration.pmake, 1, self.max_threads, tooltip)
-+        sub_vbox.pack_start(label, expand=3DFalse, fill=3DFalse)
-+        sub_vbox.pack_start(pmake_widget, expand=3DFalse, fill=3DFalse)
++    if not stamp:
++        return
 +
-+        sub_vbox =3D gtk.VBox(False, 6)
-+        advanced_vbox.pack_start(sub_vbox, expand=3DFalse, fill=3DFalse)
-+        label =3D self.gen_label_widget("<span weight=3D\"bold\">Select do=
-wnload directory:</span>")
-+        tooltip =3D "Select a folder that caches the upstream project sour=
-ce code"
-+        dldir_widget, self.dldir_text =3D self.gen_entry_widget(self.confi=
-guration.dldir, self, tooltip)
-+        sub_vbox.pack_start(label, expand=3DFalse, fill=3DFalse)
-+        sub_vbox.pack_start(dldir_widget, expand=3DFalse, fill=3DFalse)
++    return bb.parse.siggen.stampcleanmask(stamp, file_name, taskname, extrainfo)
 +
-+        sub_vbox =3D gtk.VBox(False, 6)
-+        advanced_vbox.pack_start(sub_vbox, expand=3DFalse, fill=3DFalse)
-+        label =3D self.gen_label_widget("<span weight=3D\"bold\">Select SS=
-TATE directory:</span>")
-+        tooltip =3D "Select a folder that caches your prebuilt results"
-+        sstatedir_widget, self.sstatedir_text =3D self.gen_entry_widget(se=
-lf.configuration.sstatedir, self, tooltip)
-+        sub_vbox.pack_start(label, expand=3DFalse, fill=3DFalse)
-+        sub_vbox.pack_start(sstatedir_widget, expand=3DFalse, fill=3DFalse=
-)
+ def make_stamp(task, d, file_name = None):
+     """
+     Creates/updates a stamp for a given task
+     (d can be a data dict or dataCache)
+     """
++    cleanmask = stamp_cleanmask_internal(task, d, file_name)
++    if cleanmask:
++        bb.utils.remove(cleanmask)
 +
-+        sub_vbox =3D gtk.VBox(False, 6)
-+        advanced_vbox.pack_start(sub_vbox, expand=3DFalse, fill=3DFalse)
-+        label =3D self.gen_label_widget("<span weight=3D\"bold\">Select SS=
-TATE mirror:</span>")
-+        tooltip =3D "Select the pre-built mirror that will speed your buil=
-d"
-+        sstatemirror_widget, self.sstatemirror_text =3D self.gen_entry_wid=
-get(self.configuration.sstatemirror, self, tooltip)
-+        sub_vbox.pack_start(label, expand=3DFalse, fill=3DFalse)
-+        sub_vbox.pack_start(sstatemirror_widget, expand=3DFalse,=20
-+ fill=3DFalse)
+     stamp = stamp_internal(task, d, file_name)
+     # Remove the file and recreate to force timestamp
+     # change on broken NFS filesystems
+diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
+index dea2a80..619b9ee 100644
+--- a/bitbake/lib/bb/cache.py
++++ b/bitbake/lib/bb/cache.py
+@@ -43,7 +43,7 @@ except ImportError:
+     logger.info("Importing cPickle failed. "
+                 "Falling back to a very slow implementation.")
+ 
+-__cache_version__ = "144"
++__cache_version__ = "145"
+ 
+ def getCacheFile(path, filename, data_hash):
+     return os.path.join(path, filename + "." + data_hash)
+@@ -130,7 +130,9 @@ class CoreRecipeInfo(RecipeInfoCommon):
+         self.broken = self.getvar('BROKEN', metadata)
+         self.not_world = self.getvar('EXCLUDE_FROM_WORLD', metadata)
+         self.stamp = self.getvar('STAMP', metadata)
++        self.stampclean = self.getvar('STAMPCLEAN', metadata)        
+         self.stamp_base = self.flaglist('stamp-base', self.tasks, metadata)
++        self.stamp_base_clean = self.flaglist('stamp-base-clean', self.tasks, metadata)
+         self.stamp_extrainfo = self.flaglist('stamp-extra-info', self.tasks, metadata)
+         self.file_checksums = self.flaglist('file-checksums', self.tasks, metadata, True)
+         self.packages_dynamic = self.listvar('PACKAGES_DYNAMIC', metadata)
+@@ -157,7 +159,9 @@ class CoreRecipeInfo(RecipeInfoCommon):
+         cachedata.pkg_dp = {}
+ 
+         cachedata.stamp = {}
++        cachedata.stampclean = {}
+         cachedata.stamp_base = {}
++        cachedata.stamp_base_clean = {}
+         cachedata.stamp_extrainfo = {}
+         cachedata.file_checksums = {}
+         cachedata.fn_provides = {}
+@@ -189,7 +193,9 @@ class CoreRecipeInfo(RecipeInfoCommon):
+         cachedata.pkg_pepvpr[fn] = (self.pe, self.pv, self.pr)
+         cachedata.pkg_dp[fn] = self.defaultpref
+         cachedata.stamp[fn] = self.stamp
++        cachedata.stampclean[fn] = self.stampclean
+         cachedata.stamp_base[fn] = self.stamp_base
++        cachedata.stamp_base_clean[fn] = self.stamp_base_clean
+         cachedata.stamp_extrainfo[fn] = self.stamp_extrainfo
+         cachedata.file_checksums[fn] = self.file_checksums
+ 
+diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
+index 8fe59b9..ff70d4f 100644
+--- a/bitbake/lib/bb/siggen.py
++++ b/bitbake/lib/bb/siggen.py
+@@ -48,6 +48,9 @@ class SignatureGenerator(object):
+     def stampfile(self, stampbase, file_name, taskname, extrainfo):
+         return ("%s.%s.%s" % (stampbase, taskname, extrainfo)).rstrip('.')
+ 
++    def stampcleanmask(self, stampbase, file_name, taskname, extrainfo):
++        return ("%s.%s*.%s" % (stampbase, taskname, extrainfo)).rstrip('.')
 +
-+        return advanced_vbox
-+
-+    def create_proxy_page(self):
-+        advanced_vbox =3D gtk.VBox(False, 6)
-+        advanced_vbox.set_border_width(6)
-+
-+        sub_vbox =3D gtk.VBox(False, 6)
-+        advanced_vbox.pack_start(sub_vbox, expand=3DFalse, fill=3DFalse)
-+        label =3D self.gen_label_widget("<span weight=3D\"bold\">Set the p=
-roxies used when fetching source code</span>")
-+        tooltip =3D "Set the proxies used when fetching source code.  A bl=
-ank field uses a direct internet connection."
-+        info =3D HobInfoButton(tooltip, self)
-+        hbox =3D gtk.HBox(False, 12)
-+        hbox.pack_start(label, expand=3DTrue, fill=3DTrue)
-+        hbox.pack_start(info, expand=3DFalse, fill=3DFalse)
-+        sub_vbox.pack_start(hbox, expand=3DFalse, fill=3DFalse)
-+
-+        self.direct_checkbox =3D gtk.RadioButton(None, "Direct internet co=
-nnection")
-+        self.direct_checkbox.set_tooltip_text("Check this box to use a dir=
-ect internet connection with no proxy")
-+        self.direct_checkbox.set_active(not self.configuration.enable_prox=
-y)
-+        sub_vbox.pack_start(self.direct_checkbox, expand=3DFalse,=20
-+ fill=3DFalse)
-+
-+        self.proxy_checkbox =3D gtk.RadioButton(self.direct_checkbox, "Man=
-ual proxy configuration")
-+        self.proxy_checkbox.set_tooltip_text("Check this box to manually s=
-et up a specific proxy")
-+        self.proxy_checkbox.set_active(self.configuration.enable_proxy)
-+        sub_vbox.pack_start(self.proxy_checkbox, expand=3DFalse,=20
-+ fill=3DFalse)
-+
-+        self.same_checkbox =3D gtk.CheckButton("Use the same proxy for all=
- protocols")
-+        self.same_checkbox.set_tooltip_text("Check this box to use the HTT=
-P proxy for all five proxies")
-+        self.same_checkbox.set_active(self.configuration.same_proxy)
-+        hbox =3D gtk.HBox(False, 12)
-+        hbox.pack_start(self.same_checkbox, expand=3DFalse, fill=3DFalse, =
-padding=3D24)
-+        sub_vbox.pack_start(hbox, expand=3DFalse, fill=3DFalse)
-+
-+        proxy_widget, self.http_proxy, self.http_proxy_port, self.http_pro=
-xy_details =3D self.gen_proxy_entry_widget(
-+            "http", self, True)
-+        sub_vbox.pack_start(proxy_widget, expand=3DFalse, fill=3DFalse)
-+
-+        proxy_widget, self.https_proxy, self.https_proxy_port, self.https_=
-proxy_details =3D self.gen_proxy_entry_widget(
-+            "https", self, True)
-+        sub_vbox.pack_start(proxy_widget, expand=3DFalse, fill=3DFalse)
-+
-+        proxy_widget, self.ftp_proxy, self.ftp_proxy_port, self.ftp_proxy_=
-details =3D self.gen_proxy_entry_widget(
-+            "ftp", self, True)
-+        sub_vbox.pack_start(proxy_widget, expand=3DFalse, fill=3DFalse)
-+
-+        proxy_widget, self.git_proxy, self.git_proxy_port, self.git_proxy_=
-details =3D self.gen_proxy_entry_widget(
-+            "git", self, True)
-+        sub_vbox.pack_start(proxy_widget, expand=3DFalse, fill=3DFalse)
-+
-+        proxy_widget, self.cvs_proxy, self.cvs_proxy_port, self.cvs_proxy_=
-details =3D self.gen_proxy_entry_widget(
-+            "cvs", self, True)
-+        sub_vbox.pack_start(proxy_widget, expand=3DFalse, fill=3DFalse)
-+
-+        self.direct_checkbox.connect("toggled", self.proxy_checkbox_toggle=
-d_cb)
-+        self.proxy_checkbox.connect("toggled", self.proxy_checkbox_toggled=
-_cb)
-+        self.same_checkbox.connect("toggled",=20
-+ self.same_checkbox_toggled_cb)
-+
-+        self.refresh_proxy_components()
-+        return advanced_vbox
-+
-+
-     def create_visual_elements(self):
-         self.nb =3D gtk.Notebook()
-         self.nb.set_show_tabs(True)       =20
-@@ -364,7 +481,6 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHel=
-per):
-         self.show_all()
-=20
-=20
--
- #
- # AdvancedSettings Dialog
- #
-@@ -685,122 +801,6 @@ class AdvancedSettingDialog (CrumbsDialog, SettingsUI=
-Helper):
-=20
-         return advanced_vbox
-=20
--    def create_build_environment_page(self):
--        advanced_vbox =3D gtk.VBox(False, 6)
--        advanced_vbox.set_border_width(6)
--
--        sub_vbox =3D gtk.VBox(False, 6)
--        advanced_vbox.pack_start(sub_vbox, expand=3DFalse, fill=3DFalse)
--        label =3D self.gen_label_widget("<span weight=3D\"bold\">Select di=
-stro:</span>")
--        tooltip =3D "Selects the Yocto Project distribution you want"
--        distro_widget, self.distro_combo =3D self.gen_combo_widget(self.co=
-nfiguration.curr_distro, self.all_distros, tooltip)
--        sub_vbox.pack_start(label, expand=3DFalse, fill=3DFalse)
--        sub_vbox.pack_start(distro_widget, expand=3DFalse, fill=3DFalse)
--
--        sub_vbox =3D gtk.VBox(False, 6)
--        advanced_vbox.pack_start(sub_vbox, expand=3DFalse, fill=3DFalse)
--        label =3D self.gen_label_widget("<span weight=3D\"bold\">BB number=
- threads:</span>")
--        tooltip =3D "Sets the number of threads that BitBake tasks can sim=
-ultaneously run. See the <a href=3D\""
--        tooltip +=3D "http://www.yoctoproject.org/docs/current/poky-ref-ma=
-nual/"
--        tooltip +=3D "poky-ref-manual.html#var-BB_NUMBER_THREADS\">Poky re=
-ference manual</a> for information"
--        bbthread_widget, self.bb_spinner =3D self.gen_spinner_widget(self.=
-configuration.bbthread, 1, self.max_threads, tooltip)
--        sub_vbox.pack_start(label, expand=3DFalse, fill=3DFalse)
--        sub_vbox.pack_start(bbthread_widget, expand=3DFalse, fill=3DFalse)
--
--        sub_vbox =3D gtk.VBox(False, 6)
--        advanced_vbox.pack_start(sub_vbox, expand=3DFalse, fill=3DFalse)
--        label =3D self.gen_label_widget("<span weight=3D\"bold\">Parallel =
-make:</span>")
--        tooltip =3D "Sets the maximum number of threads the host can use d=
-uring the build. See the <a href=3D\""
--        tooltip +=3D "http://www.yoctoproject.org/docs/current/poky-ref-ma=
-nual/"
--        tooltip +=3D "poky-ref-manual.html#var-PARALLEL_MAKE\">Poky refere=
-nce manual</a> for information"
--        pmake_widget, self.pmake_spinner =3D self.gen_spinner_widget(self.=
-configuration.pmake, 1, self.max_threads, tooltip)
--        sub_vbox.pack_start(label, expand=3DFalse, fill=3DFalse)
--        sub_vbox.pack_start(pmake_widget, expand=3DFalse, fill=3DFalse)
--
--        sub_vbox =3D gtk.VBox(False, 6)
--        advanced_vbox.pack_start(sub_vbox, expand=3DFalse, fill=3DFalse)
--        label =3D self.gen_label_widget("<span weight=3D\"bold\">Select do=
-wnload directory:</span>")
--        tooltip =3D "Select a folder that caches the upstream project sour=
-ce code"
--        dldir_widget, self.dldir_text =3D self.gen_entry_widget(self.confi=
-guration.dldir, self, tooltip)
--        sub_vbox.pack_start(label, expand=3DFalse, fill=3DFalse)
--        sub_vbox.pack_start(dldir_widget, expand=3DFalse, fill=3DFalse)
--
--        sub_vbox =3D gtk.VBox(False, 6)
--        advanced_vbox.pack_start(sub_vbox, expand=3DFalse, fill=3DFalse)
--        label =3D self.gen_label_widget("<span weight=3D\"bold\">Select SS=
-TATE directory:</span>")
--        tooltip =3D "Select a folder that caches your prebuilt results"
--        sstatedir_widget, self.sstatedir_text =3D self.gen_entry_widget(se=
-lf.configuration.sstatedir, self, tooltip)
--        sub_vbox.pack_start(label, expand=3DFalse, fill=3DFalse)
--        sub_vbox.pack_start(sstatedir_widget, expand=3DFalse, fill=3DFalse=
-)
--
--        sub_vbox =3D gtk.VBox(False, 6)
--        advanced_vbox.pack_start(sub_vbox, expand=3DFalse, fill=3DFalse)
--        label =3D self.gen_label_widget("<span weight=3D\"bold\">Select SS=
-TATE mirror:</span>")
--        tooltip =3D "Select the pre-built mirror that will speed your buil=
-d"
--        sstatemirror_widget, self.sstatemirror_text =3D self.gen_entry_wid=
-get(self.configuration.sstatemirror, self, tooltip)
--        sub_vbox.pack_start(label, expand=3DFalse, fill=3DFalse)
--        sub_vbox.pack_start(sstatemirror_widget, expand=3DFalse, fill=3DFa=
-lse)
--
--        return advanced_vbox
--
--    def create_proxy_page(self):
--        advanced_vbox =3D gtk.VBox(False, 6)
--        advanced_vbox.set_border_width(6)
--
--        sub_vbox =3D gtk.VBox(False, 6)
--        advanced_vbox.pack_start(sub_vbox, expand=3DFalse, fill=3DFalse)
--        label =3D self.gen_label_widget("<span weight=3D\"bold\">Set the p=
-roxies used when fetching source code</span>")
--        tooltip =3D "Set the proxies used when fetching source code.  A bl=
-ank field uses a direct internet connection."
--        info =3D HobInfoButton(tooltip, self)
--        hbox =3D gtk.HBox(False, 12)
--        hbox.pack_start(label, expand=3DTrue, fill=3DTrue)
--        hbox.pack_start(info, expand=3DFalse, fill=3DFalse)
--        sub_vbox.pack_start(hbox, expand=3DFalse, fill=3DFalse)
--
--        self.direct_checkbox =3D gtk.RadioButton(None, "Direct internet co=
-nnection")
--        self.direct_checkbox.set_tooltip_text("Check this box to use a dir=
-ect internet connection with no proxy")
--        self.direct_checkbox.set_active(not self.configuration.enable_prox=
-y)
--        sub_vbox.pack_start(self.direct_checkbox, expand=3DFalse, fill=3DF=
-alse)
--
--        self.proxy_checkbox =3D gtk.RadioButton(self.direct_checkbox, "Man=
-ual proxy configuration")
--        self.proxy_checkbox.set_tooltip_text("Check this box to manually s=
-et up a specific proxy")
--        self.proxy_checkbox.set_active(self.configuration.enable_proxy)
--        sub_vbox.pack_start(self.proxy_checkbox, expand=3DFalse, fill=3DFa=
-lse)
--
--        self.same_checkbox =3D gtk.CheckButton("Use the same proxy for all=
- protocols")
--        self.same_checkbox.set_tooltip_text("Check this box to use the HTT=
-P proxy for all five proxies")
--        self.same_checkbox.set_active(self.configuration.same_proxy)
--        hbox =3D gtk.HBox(False, 12)
--        hbox.pack_start(self.same_checkbox, expand=3DFalse, fill=3DFalse, =
-padding=3D24)
--        sub_vbox.pack_start(hbox, expand=3DFalse, fill=3DFalse)
--
--        proxy_widget, self.http_proxy, self.http_proxy_port, self.http_pro=
-xy_details =3D self.gen_proxy_entry_widget(
--            "http", self, True)
--        sub_vbox.pack_start(proxy_widget, expand=3DFalse, fill=3DFalse)
--
--        proxy_widget, self.https_proxy, self.https_proxy_port, self.https_=
-proxy_details =3D self.gen_proxy_entry_widget(
--            "https", self, True)
--        sub_vbox.pack_start(proxy_widget, expand=3DFalse, fill=3DFalse)
--
--        proxy_widget, self.ftp_proxy, self.ftp_proxy_port, self.ftp_proxy_=
-details =3D self.gen_proxy_entry_widget(
--            "ftp", self, True)
--        sub_vbox.pack_start(proxy_widget, expand=3DFalse, fill=3DFalse)
--
--        proxy_widget, self.git_proxy, self.git_proxy_port, self.git_proxy_=
-details =3D self.gen_proxy_entry_widget(
--            "git", self, True)
--        sub_vbox.pack_start(proxy_widget, expand=3DFalse, fill=3DFalse)
--
--        proxy_widget, self.cvs_proxy, self.cvs_proxy_port, self.cvs_proxy_=
-details =3D self.gen_proxy_entry_widget(
--            "cvs", self, True)
--        sub_vbox.pack_start(proxy_widget, expand=3DFalse, fill=3DFalse)
--
--        self.direct_checkbox.connect("toggled", self.proxy_checkbox_toggle=
-d_cb)
--        self.proxy_checkbox.connect("toggled", self.proxy_checkbox_toggled=
-_cb)
--        self.same_checkbox.connect("toggled", self.same_checkbox_toggled_c=
-b)
--
--        self.refresh_proxy_components()
--        return advanced_vbox
--
-     def create_others_page(self):
-         advanced_vbox =3D gtk.VBox(False, 6)
-         advanced_vbox.set_border_width(6) diff --git a/bitbake/lib/bb/ui/c=
-rumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-index ed8c7ac..5a6cb21 100755
---- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-@@ -587,7 +587,7 @@ class ImageDetailsPage (HobPage):
-=20
-     def settings_button_clicked_cb(self, button):
-         # Create an advanced settings dialog
--        response, settings_changed =3D self.builder.show_adv_settings_dial=
-og()
-+        response, settings_changed =3D=20
-+ self.builder.show_simple_settings_dialog()
-         if not response:
-             return
-         if settings_changed:
---
-1.7.9.5
+     def dump_sigtask(self, fn, task, stampbase, runtime):
+         return
+ 
+@@ -266,18 +269,24 @@ class SignatureGeneratorBasic(SignatureGenerator):
+ class SignatureGeneratorBasicHash(SignatureGeneratorBasic):
+     name = "basichash"
+ 
+-    def stampfile(self, stampbase, fn, taskname, extrainfo):
++    def stampfile(self, stampbase, fn, taskname, extrainfo, clean=False):
+         if taskname != "do_setscene" and taskname.endswith("_setscene"):
+             k = fn + "." + taskname[:-9]
+         else:
+             k = fn + "." + taskname
+-        if k in self.taskhash:
++        if clean:
++            h = "*"
++            taskname = taskname + "*"
++        elif k in self.taskhash:
+             h = self.taskhash[k]
+         else:
+             # If k is not in basehash, then error
+             h = self.basehash[k]
+         return ("%s.%s.%s.%s" % (stampbase, taskname, h, extrainfo)).rstrip('.')
+ 
++    def stampcleanmask(self, stampbase, fn, taskname, extrainfo):
++        return self.stampfile(stampbase, fn, taskname, extrainfo, clean=True)
++        
+     def invalidate_task(self, task, d, fn):
+         bb.note("Tainting hash to force rebuild of task %s, %s" % (fn, task))
+         bb.build.write_taint(task, d, fn)
 
 
-_______________________________________________
-bitbake-devel mailing list
-bitbake-devel@lists.openembedded.org
-http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
 
 
