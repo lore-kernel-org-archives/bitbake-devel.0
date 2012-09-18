@@ -1,30 +1,24 @@
 Received: from mail.windriver.com ([147.11.1.11])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1TDmbe-0006Wr-1i
+	(envelope-from <Peter.Seebach@windriver.com>) id 1TDnTq-0007Ui-UJ
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 18 Sep 2012 03:28:06 +0200
+	Tue, 18 Sep 2012 04:24:07 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id q8I1FNTS005331
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Mon, 17 Sep 2012 18:15:24 -0700 (PDT)
-Received: from [172.25.32.41] (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
+	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id q8I2BQAo011556
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 17 Sep 2012 19:11:27 -0700 (PDT)
+Received: from localhost.localdomain (172.25.34.64) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.2.309.2;
-	Mon, 17 Sep 2012 18:15:23 -0700
-Message-ID: <5057CB2A.9030508@windriver.com>
-Date: Mon, 17 Sep 2012 20:15:22 -0500
-From: Jason Wessel <jason.wessel@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:15.0) Gecko/20120827 Thunderbird/15.0
+	Mon, 17 Sep 2012 19:11:26 -0700
+From: Peter Seebach <peter.seebach@windriver.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Mon, 17 Sep 2012 21:11:23 -0500
+Message-ID: <cover.1347933709.git.peter.seebach@windriver.com>
+X-Mailer: git-send-email 1.7.0.4
 MIME-Version: 1.0
-To: Chris Larson <clarson@kergoth.com>
-References: <1347921818-60562-1-git-send-email-jason.wessel@windriver.com>
-	<1347921818-60562-2-git-send-email-jason.wessel@windriver.com>
-	<CABcZANkRiYXarfHjqF9u2tuqyqJZtqDuom3Ueta4AwYxENP_Sg@mail.gmail.com>
-In-Reply-To: <CABcZANkRiYXarfHjqF9u2tuqyqJZtqDuom3Ueta4AwYxENP_Sg@mail.gmail.com>
-X-Enigmail-Version: 1.4.4
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/8] bitbake: Unbuffer stdout for log files
+Subject: v4 or so [PATCH 0/2] variable/include tracking: revised
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,37 +30,55 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 18 Sep 2012 01:28:06 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 18 Sep 2012 02:24:07 -0000
+Content-Type: text/plain
 
-On 09/17/2012 07:46 PM, Chris Larson wrote:
-> On Mon, Sep 17, 2012 at 3:43 PM, Jason Wessel
-> <jason.wessel@windriver.com> wrote:
->> It is possible to lose critical log data when python exits in an
->> unorderly fashion via segmentation fault or certain types of crashes.
->> This is because the buffer characteristics are inherited from the top
->> level stdout, which should be set to unbuffered, for the purpose of
->> all the forked children.
->>
->> This pushes the buffering to the OS, instead of having python managing
->> the buffers in its stream handler class.
->>
->> This change is also to provide the ability to tail logs written from
->> processes in "real time" because they would be written in an orderly
->> fashion depending upon the OS characteristics for the file I/O.
->>
->> (LOCAL REV ONLY: NOT UPSTREAM)
->>
->> Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
->
-> I'm assuming you forgot to rebase -i and remove the LOCAL REV ONLY? :)
+This is a revision of the variable/include tracking stuff. The first
+patch adds include tracking, the second adds variable tracking on top of
+it.
 
+I am a little unsure about some of this. The big design issue I ran into
+is that I often wanted to specify the name of the variable being passed,
+but that if I passed a **loginfo containing a 'var' key, this clashed with
+the positional 'var' parameter. So I changed the name to 'variable'. I also
+made the inference code smarter; it can guess at variable name and value
+in common cases, reducing typing. Similarly, there is no longer a need
+for an explicit 'ignore'; rather, if the keyword dictionary is empty,
+'ignore' is assumed. (It can still be specified explicitly if we find
+an exception, such as a case where we often but not always want to record
+an operation.)
 
-Oops :-)
+There's a lot of things that could likely be improved with this; my
+starting point was to make it produce basically the same results as the
+previous patch set, then clean up the output quite a bit. So reporting
+on overrides and _append/_prepend overrides is smarter now, output
+format is cleaned up a bit, and so on.
 
-I can resend the patches, but I did re-base against the head but for some reason the filter was not working.
+Feedback welcome, as always. There may be some loose ends left over from
+things I tried and then abandoned; I've tried to catch them all, but the
+code's all blurred together for me at this point. Sending it out in part
+because I suspect people might want to mess with this a bit, or give feedback.
 
-Jason.
+The following changes since commit ac75b06744e73399ca1fbda322ef851ae5754b0a:
+  Valentin Popa (1):
+        Implement 'settings' dialog as designed
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib seebs/incvar
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=seebs/incvar
+
+Peter Seebach (2):
+  data_smart.py and friends: Track file inclusions for bitbake -e
+  data_smart.py and friends: Track variable history
+
+ lib/bb/cooker.py                   |   15 +++-
+ lib/bb/data.py                     |   28 ++++-
+ lib/bb/data_smart.py               |  216 ++++++++++++++++++++++++++++++++----
+ lib/bb/parse/__init__.py           |    3 +-
+ lib/bb/parse/ast.py                |   25 ++++-
+ lib/bb/parse/parse_py/BBHandler.py |    6 +-
+ 6 files changed, 257 insertions(+), 36 deletions(-)
+
 
 
