@@ -1,26 +1,26 @@
-Received: from smtpbg246.qq.com ([183.60.52.100])
-	by linuxtogo.org with smtp (Exim 4.72)
-	(envelope-from <treebody@embedstudy.com>) id 1TDwJh-0000CJ-93
-	for bitbake-devel@lists.openembedded.org;
-	Tue, 18 Sep 2012 13:50:13 +0200
-X-QQ-SSF: 00000000000000F000000000000000G
-X-HAS-ATTACH: no
-X-QQ-BUSINESS-ORIGIN: 2
-X-Originating-IP: 222.92.156.26
-X-QQ-STYLE: 
-X-QQ-mid: webmail676t1347968100t1802874
-From: "=?ISO-8859-1?B?TGl1?=" <treebody@embedstudy.com>
-To: "=?ISO-8859-1?B?Yml0YmFrZS1kZXZlbA==?="
-	<bitbake-devel@lists.openembedded.org>
-Mime-Version: 1.0
-Date: Tue, 18 Sep 2012 19:35:00 +0800
-X-Priority: 3
-Message-ID: <tencent_3803703C55862687444C4EB8@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
+Received: from exchsrvr.syntech-fuelmaster.com ([199.44.250.2]
+	helo=courier.syntech-fuelmaster.com)
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <Jate.Sujjavanich@myfuelmaster.com>)
+	id 1TE0rT-0005h6-AT
+	for bitbake-devel@lists.linuxtogo.org; Tue, 18 Sep 2012 18:41:23 +0200
+Received: from Courier.syntech.org ([fe80::f1e9:ec58:2caf:f234]) by
+	Courier.syntech.org ([fe80::f1e9:ec58:2caf:f234%14]) with mapi;
+	Tue, 18 Sep 2012 12:27:36 -0400
+From: Jate Sujjavanich <Jate.Sujjavanich@myfuelmaster.com>
+To: "'bitbake-devel@lists.linuxtogo.org'" <bitbake-devel@lists.linuxtogo.org>
+Date: Tue, 18 Sep 2012 12:27:35 -0400
+Thread-Topic: cvs.py fetcher
+Thread-Index: Ac2VuoJpiYkDyd1uTm+1Ij0UNYcZeQ==
+Message-ID: <6C2434209962DC46B88345CA85C334A20183E5A98599@Courier.syntech.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-vipre-scanned: 790BA34400333E790BA491
+acceptlanguage: en-US
+MIME-Version: 1.0
 X-Mailman-Approved-At: Thu, 20 Sep 2012 12:52:07 +0200
-Subject: how to parse makefile in bitbake
+Subject: cvs.py fetcher
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,41 +32,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 18 Sep 2012 11:50:13 -0000
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_50585C64_D4DBC590_2D14301C"
-Content-Transfer-Encoding: 8Bit
+X-List-Received-Date: Tue, 18 Sep 2012 16:41:23 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-------=_NextPart_50585C64_D4DBC590_2D14301C
-Content-Type: text/plain;
-	charset="ISO-8859-1"
-Content-Transfer-Encoding: base64
+While using a newer bitbake, I ran into some issues with a recipe that has =
+a cvs SRC_URI. This patch fixes it, and I wanted to submit it for further r=
+eview.
 
-SGkgYWxsLA0KICAgICBJIGhhdmUgYSBwcm9qZWN0IHdoaWNoIGlzIGJ1aWx0IGJ5IGJ1aWxk
-cm9vdCxzbyBpdCB1c2VzIGEgc2V0IG9mIG1ha2VmaWxlcyB0byBidWlsZCBpbWFnZS5CdXQg
-SSB3YW50IHRvIHVzZSBiaXRiYWtlIGluc3RlYWQgb2YgYnVpbGRyb290IHRvIGJ1aWxkIHRo
-ZSBwcm9qZWN0Lk5vdyBJIGFtIGZhY2VkIHdpdGggc29tZSBkaWZmaWN1bHRpZXMgOg0KIDEp
-IEhvdyBjYW4gSSB1c2UgdGhlIHZhcmlhYmxlcyBhbmQgcnVsZXMgaW4gbWFrZWZpbGUgPyBJ
-IGtub3cgYml0YmFrZSBjYW4gbm90IHBhcnNlIGZpbGVzIGxpa2UgbWFrZWZpbGUuDQogDQog
-ICAgIElzIHRoZXJlIGFueSBleGFtcGxlIGxpa2UgdGhpcyBwcm9ibGVtPyBDYW4gYW55b25l
-IGdpdmUgbWUgc29tZSBnb29kIGlkZWFzPw0KIA0KIEJlc3Qgd2lzaGVzLA0KIC0tLS0tLS0t
-LS0tLS0tLUxpdQ==
 
-------=_NextPart_50585C64_D4DBC590_2D14301C
-Content-Type: text/html;
-	charset="ISO-8859-1"
-Content-Transfer-Encoding: base64
+The localdata variable was removed but is required later in the download
+function.
+Add an extra space so that cvscmd's parameter is separated from the
+command.
+Signed-off-by: Jate Sujjavanich <jate.sujjavanich@myfuelmaster.com>
+----------------------------- lib/bb/fetch2/cvs.py ------------------------=
+----
+diff --git a/lib/bb/fetch2/cvs.py b/lib/bb/fetch2/cvs.py
+index 6a948c4..5249d85 100644
+--- a/lib/bb/fetch2/cvs.py
++++ b/lib/bb/fetch2/cvs.py
+@@ -111,8 +111,10 @@
+         if ud.tag:
+             options.append("-r %s" % ud.tag)
+=20
++        localdata =3D data.createCopy(d)
++       =20
+         cvsbasecmd =3D d.getVar("FETCHCMD_cvs", True)
+-        cvscmd =3D cvsbasecmd + "'-d" + cvsroot + "' co " + " ".join(optio=
+ns) + " " + ud.module
++        cvscmd =3D cvsbasecmd + " " + "'-d" + cvsroot + "' co " + " ".join=
+(options) + " " + ud.module
+         cvsupdatecmd =3D cvsbasecmd + "'-d" + cvsroot + "' update -d -P " =
++ " ".join(options)
+=20
+         if cvs_rsh:
 
-PERJVj4NCjxESVY+SGkgYWxsLDwvRElWPg0KPERJVj4mbmJzcDsmbmJzcDsmbmJzcDsgSSBo
-YXZlIGEgcHJvamVjdCB3aGljaCBpcyBidWlsdCBieSBidWlsZHJvb3Qsc28gaXQgdXNlcyBh
-IHNldCBvZiBtYWtlZmlsZXMgdG8gYnVpbGQgaW1hZ2UuQnV0IEkgd2FudCB0byB1c2UgYml0
-YmFrZSBpbnN0ZWFkIG9mIGJ1aWxkcm9vdCB0byBidWlsZCB0aGUgcHJvamVjdC5Ob3cgSSBh
-bSBmYWNlZCB3aXRoIHNvbWUgZGlmZmljdWx0aWVzIDo8L0RJVj4NCjxESVY+MSkgSG93IGNh
-biBJIHVzZSB0aGUgdmFyaWFibGVzIGFuZCBydWxlcyBpbiBtYWtlZmlsZSA/IEkga25vdyBi
-aXRiYWtlIGNhbiBub3QgcGFyc2UgZmlsZXMgbGlrZSBtYWtlZmlsZS48L0RJVj4NCjxESVY+
-PC9ESVY+DQo8RElWPiZuYnNwOyZuYnNwOyZuYnNwOyBJcyB0aGVyZSBhbnkgZXhhbXBsZSBs
-aWtlIHRoaXMgcHJvYmxlbT8gQ2FuIGFueW9uZSBnaXZlIG1lIHNvbWUgZ29vZCBpZGVhcz88
-L0RJVj4NCjxESVY+PC9ESVY+DQo8RElWPkJlc3Qgd2lzaGVzLDwvRElWPg0KPERJVj4tLS0t
-LS0tLS0tLS0tLS1MaXU8L0RJVj48L0RJVj4=
 
-------=_NextPart_50585C64_D4DBC590_2D14301C--
