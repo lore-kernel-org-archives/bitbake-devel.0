@@ -1,34 +1,28 @@
-Received: from mail-lpp01m010-f47.google.com ([209.85.215.47])
+Received: from mail.windriver.com ([147.11.1.11])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1TDm9Y-0005qZ-8k
+	(envelope-from <jason.wessel@windriver.com>) id 1TDmbe-0006Wr-1i
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 18 Sep 2012 02:59:04 +0200
-Received: by lagv3 with SMTP id v3so4279085lag.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Sep 2012 17:46:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	bh=59eflNVCOX9kTV87bJret7SrROQ3/C9xDIF6O4seZKk=;
-	b=G27moQQPS3L2VBfvrrIH68PionxQXcp4KqQl/wiOT5eYtOwGRcWWn0NZe/AR7smlzf
-	jZPkfIGcg3iQEAopwBC6txvpj2ii6z5Yjg/ZZ7izEmrPercU4hR87zrfJq1xfRcEGy5w
-	rWfCSxROuRDGZ0j/1HV3HbgM6NP483sG6QBSij5/2CyHq/XMjhhrB7Ot+/94C7pGrXls
-	MwaNeux7KvsoZ65ZwLyqoyr5Wk4OyE83lI8cOKBQkV5MhDXn/Zl9Opqa8oLdiwhJgli1
-	sq3gqS/xFY+8uKOq5ESbY1iYq/slZR794IlvHT7KPad/AWgsAMYjHx6WvLM8GWngK9ag
-	NcIQ==
-Received: by 10.112.87.164 with SMTP id az4mr4444692lbb.73.1347929184831; Mon,
-	17 Sep 2012 17:46:24 -0700 (PDT)
+	Tue, 18 Sep 2012 03:28:06 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id q8I1FNTS005331
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Mon, 17 Sep 2012 18:15:24 -0700 (PDT)
+Received: from [172.25.32.41] (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.2.309.2;
+	Mon, 17 Sep 2012 18:15:23 -0700
+Message-ID: <5057CB2A.9030508@windriver.com>
+Date: Mon, 17 Sep 2012 20:15:22 -0500
+From: Jason Wessel <jason.wessel@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:15.0) Gecko/20120827 Thunderbird/15.0
 MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.114.19.2 with HTTP; Mon, 17 Sep 2012 17:46:04 -0700 (PDT)
-In-Reply-To: <1347921818-60562-2-git-send-email-jason.wessel@windriver.com>
+To: Chris Larson <clarson@kergoth.com>
 References: <1347921818-60562-1-git-send-email-jason.wessel@windriver.com>
 	<1347921818-60562-2-git-send-email-jason.wessel@windriver.com>
-From: Chris Larson <clarson@kergoth.com>
-Date: Mon, 17 Sep 2012 17:46:04 -0700
-X-Google-Sender-Auth: 5dr1diMHdWQD41KUdjo1o37Pcts
-Message-ID: <CABcZANkRiYXarfHjqF9u2tuqyqJZtqDuom3Ueta4AwYxENP_Sg@mail.gmail.com>
-To: Jason Wessel <jason.wessel@windriver.com>
+	<CABcZANkRiYXarfHjqF9u2tuqyqJZtqDuom3Ueta4AwYxENP_Sg@mail.gmail.com>
+In-Reply-To: <CABcZANkRiYXarfHjqF9u2tuqyqJZtqDuom3Ueta4AwYxENP_Sg@mail.gmail.com>
+X-Enigmail-Version: 1.4.4
 Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH 1/8] bitbake: Unbuffer stdout for log files
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -42,31 +36,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 18 Sep 2012 00:59:04 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Tue, 18 Sep 2012 01:28:06 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 17, 2012 at 3:43 PM, Jason Wessel
-<jason.wessel@windriver.com> wrote:
-> It is possible to lose critical log data when python exits in an
-> unorderly fashion via segmentation fault or certain types of crashes.
-> This is because the buffer characteristics are inherited from the top
-> level stdout, which should be set to unbuffered, for the purpose of
-> all the forked children.
+On 09/17/2012 07:46 PM, Chris Larson wrote:
+> On Mon, Sep 17, 2012 at 3:43 PM, Jason Wessel
+> <jason.wessel@windriver.com> wrote:
+>> It is possible to lose critical log data when python exits in an
+>> unorderly fashion via segmentation fault or certain types of crashes.
+>> This is because the buffer characteristics are inherited from the top
+>> level stdout, which should be set to unbuffered, for the purpose of
+>> all the forked children.
+>>
+>> This pushes the buffering to the OS, instead of having python managing
+>> the buffers in its stream handler class.
+>>
+>> This change is also to provide the ability to tail logs written from
+>> processes in "real time" because they would be written in an orderly
+>> fashion depending upon the OS characteristics for the file I/O.
+>>
+>> (LOCAL REV ONLY: NOT UPSTREAM)
+>>
+>> Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
 >
-> This pushes the buffering to the OS, instead of having python managing
-> the buffers in its stream handler class.
->
-> This change is also to provide the ability to tail logs written from
-> processes in "real time" because they would be written in an orderly
-> fashion depending upon the OS characteristics for the file I/O.
->
-> (LOCAL REV ONLY: NOT UPSTREAM)
->
-> Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
+> I'm assuming you forgot to rebase -i and remove the LOCAL REV ONLY? :)
 
 
-I'm assuming you forgot to rebase -i and remove the LOCAL REV ONLY? :)
--- 
-Christopher Larson
+Oops :-)
+
+I can resend the patches, but I did re-base against the head but for some reason the filter was not working.
+
+Jason.
 
 
