@@ -1,22 +1,20 @@
-Received: from mga14.intel.com ([143.182.124.37])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristiana.voicu@intel.com>) id 1TEF1n-0008UO-06
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1TEHfs-0003BB-48
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 19 Sep 2012 09:48:59 +0200
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga102.ch.intel.com with ESMTP; 19 Sep 2012 00:36:17 -0700
+	Wed, 19 Sep 2012 12:38:32 +0200
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga102.fm.intel.com with ESMTP; 19 Sep 2012 03:25:49 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,447,1344236400"; d="scan'208";a="146633348"
-Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
-	([10.237.105.151])
-	by AZSMGA002.ch.intel.com with ESMTP; 19 Sep 2012 00:36:16 -0700
-From: Cristiana Voicu <cristiana.voicu@intel.com>
+X-IronPort-AV: E=Sophos;i="4.80,447,1344236400"; d="scan'208";a="223991587"
+Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.121.228])
+	by fmsmga002.fm.intel.com with ESMTP; 19 Sep 2012 03:25:49 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 19 Sep 2012 10:36:57 +0300
-Message-Id: <1348040217-30386-1-git-send-email-cristiana.voicu@intel.com>
+Date: Wed, 19 Sep 2012 11:25:42 +0100
+Message-Id: <1348050342-5402-1-git-send-email-paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 1.7.9.5
-MIME-Version: 1.0
-Subject: [PATCH] hob/packageselectionpage: "Cancel" button returns to "Image configuration" screen
+Subject: [PATCH] hob: report event handler failures
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -28,35 +26,78 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 19 Sep 2012 07:48:59 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Wed, 19 Sep 2012 10:38:32 -0000
 
-Once package building completes, you can customise the list of
-packages that will go into the ﬁnal image. Once you have made
-the changes you need, you can either build your image, or you
-can exit the process and go back to the 'Image conﬁguration'
-screen by selecting 'Cancel'.
+If an event handler failed we were not recieving an error message -
+parsing just "froze" at 99%. This is because we were expecting a
+CommandFailure event and this never happened in the case of
+RequestPackageInfo which is where the failure was occurring.
 
-[YOCTO #3105]
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+This also required tweaking the error formatting slightly, taking the
+return value of the format function rather than the message property
+since the latter only seems to contain the first line without the
+traceback in the case of event handler failure. Other error cases were
+tested and their message formatting is unaffected by this change.
+
+Final part of the fix for [YOCTO #2651].
+
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py |   20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-index e3d35ef..ad208a3 100755
---- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-@@ -188,7 +188,7 @@ class PackageSelectionPage (HobPage):
+diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+index 35cbded..8fc1732 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -156,6 +156,13 @@ class HobHandler(gobject.GObject):
+                 targets.append(self.toolchain)
+             self.runCommand(["buildTargets", targets, self.default_task])
  
-     def back_button_clicked_cb(self, button):
-         if self.builder.current_step ==  self.builder.PACKAGE_GENERATED:
--            self.builder.show_recipes()
-+            self.builder.show_configuration()
-         elif self.builder.previous_step ==  self.builder.IMAGE_GENERATED:
-             self.builder.restore_initial_selected_packages()
-             self.refresh_selection()
++    def display_error(self):
++        self.clear_busy()
++        self.emit("command-failed", self.error_msg)
++        self.error_msg = ""
++        if self.building:
++            self.building = False
++
+     def handle_event(self, event):
+         if not event:
+             return
+@@ -178,8 +185,8 @@ class HobHandler(gobject.GObject):
+         elif isinstance(event, logging.LogRecord):
+             if event.levelno >= logging.ERROR:
+                 formatter = bb.msg.BBLogFormatter()
+-                formatter.format(event)
+-                self.error_msg += event.message + '\n'
++                msg = formatter.format(event)
++                self.error_msg += msg + '\n'
+ 
+         elif isinstance(event, bb.event.TargetsTreeGenerated):
+             self.current_phase = "data generation"
+@@ -211,11 +218,7 @@ class HobHandler(gobject.GObject):
+             self.run_next_command()
+         elif isinstance(event, bb.command.CommandFailed):
+             self.commands_async = []
+-            self.clear_busy()
+-            self.emit("command-failed", self.error_msg)
+-            self.error_msg = ""
+-            if self.building:
+-                self.building = False
++            self.display_error()
+         elif isinstance(event, (bb.event.ParseStarted,
+                  bb.event.CacheLoadStarted,
+                  bb.event.TreeDataPreparationStarted,
+@@ -245,6 +248,9 @@ class HobHandler(gobject.GObject):
+             message["title"] = "Parsing recipes: "
+             self.emit("parsing-completed", message)
+ 
++        if self.error_msg and not self.commands_async:
++            self.display_error()
++
+         return
+ 
+     def init_cooker(self):
 -- 
 1.7.9.5
 
