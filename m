@@ -1,28 +1,25 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from exchsrvr.syntech-fuelmaster.com ([199.44.250.2]
+	helo=courier.syntech-fuelmaster.com)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1TEJBT-0001bI-N7
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 19 Sep 2012 14:15:16 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id q8JC2XjG008802
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Wed, 19 Sep 2012 05:02:33 -0700 (PDT)
-Received: from [172.25.32.41] (172.25.32.41) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.2.309.2;
-	Wed, 19 Sep 2012 05:02:32 -0700
-Message-ID: <5059B458.3070403@windriver.com>
-Date: Wed, 19 Sep 2012 07:02:32 -0500
-From: Jason Wessel <jason.wessel@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:15.0) Gecko/20120827 Thunderbird/15.0
+	(envelope-from <Jate.Sujjavanich@myfuelmaster.com>)
+	id 1TEL5u-0001fR-7M
+	for bitbake-devel@lists.linuxtogo.org; Wed, 19 Sep 2012 16:17:38 +0200
+Received: from Courier.syntech.org ([fe80::f1e9:ec58:2caf:f234]) by
+	Courier.syntech.org ([fe80::f1e9:ec58:2caf:f234%14]) with mapi;
+	Wed, 19 Sep 2012 10:04:56 -0400
+From: Jate Sujjavanich <Jate.Sujjavanich@myfuelmaster.com>
+To: "'bitbake-devel@lists.linuxtogo.org'" <bitbake-devel@lists.linuxtogo.org>
+Date: Wed, 19 Sep 2012 10:04:55 -0400
+Thread-Topic: [PATCH] cvs fetcher
+Thread-Index: Ac2VuoJpiYkDyd1uTm+1Ij0UNYcZeQ==
+Message-ID: <6C2434209962DC46B88345CA85C334A20183E5A9859A@Courier.syntech.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-vipre-scanned: 790BA34400333E790BA491
+acceptlanguage: en-US
 MIME-Version: 1.0
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
-References: <1348050342-5402-1-git-send-email-paul.eggleton@linux.intel.com>
-In-Reply-To: <1348050342-5402-1-git-send-email-paul.eggleton@linux.intel.com>
-X-Enigmail-Version: 1.4.4
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] hob: report event handler failures
+Subject: [PATCH] cvs fetcher
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -34,28 +31,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 19 Sep 2012 12:15:16 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 19 Sep 2012 14:17:38 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-On 09/19/2012 05:25 AM, Paul Eggleton wrote:
-> If an event handler failed we were not recieving an error message -
-> parsing just "froze" at 99%. This is because we were expecting a
-> CommandFailure event and this never happened in the case of
-> RequestPackageInfo which is where the failure was occurring.
->
-> This also required tweaking the error formatting slightly, taking the
-> return value of the format function rather than the message property
-> since the latter only seems to contain the first line without the
-> traceback in the case of event handler failure. Other error cases were
-> tested and their message formatting is unaffected by this change.
->
+While using a newer bitbake, I ran into some issues with a recipe that has =
+a cvs SRC_URI. This patch fixes it, and I wanted to submit it for further r=
+eview.
 
-This looks good Paul.  
 
-Thanks for fixing this up so we can get the reporting. :-)
-
-Cheers,
-Jason.
+The localdata variable was removed but is required later in the download
+function.
+Add an extra space so that cvscmd's parameter is separated from the
+command.
+Signed-off-by: Jate Sujjavanich <jate.sujjavanich@myfuelmaster.com>
+----------------------------- lib/bb/fetch2/cvs.py ------------------------=
+----
+diff --git a/lib/bb/fetch2/cvs.py b/lib/bb/fetch2/cvs.py
+index 6a948c4..5249d85 100644
+--- a/lib/bb/fetch2/cvs.py
++++ b/lib/bb/fetch2/cvs.py
+@@ -111,8 +111,10 @@
+         if ud.tag:
+             options.append("-r %s" % ud.tag)
+=20
++        localdata =3D data.createCopy(d)
++       =20
+         cvsbasecmd =3D d.getVar("FETCHCMD_cvs", True)
+-        cvscmd =3D cvsbasecmd + "'-d" + cvsroot + "' co " + " ".join(optio=
+ns) + " " + ud.module
++        cvscmd =3D cvsbasecmd + " " + "'-d" + cvsroot + "' co " + " ".join=
+(options) + " " + ud.module
+         cvsupdatecmd =3D cvsbasecmd + "'-d" + cvsroot + "' update -d -P " =
++ " ".join(options)
+=20
+         if cvs_rsh:
 
 
