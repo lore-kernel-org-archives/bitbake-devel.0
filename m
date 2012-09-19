@@ -1,42 +1,22 @@
-Received: from mga07.intel.com ([143.182.124.22] helo=azsmga101.ch.intel.com)
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <scott.a.garman@intel.com>) id 1TEDT5-0006dF-Tb
+	(envelope-from <cristiana.voicu@intel.com>) id 1TEF1n-0008UO-06
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 19 Sep 2012 08:09:04 +0200
-Received: from mail-pb0-f47.google.com ([209.85.160.47])
-	by mga03.intel.com with ESMTP/TLS/RC4-SHA; 18 Sep 2012 22:55:14 -0700
-Received: by pbcwy7 with SMTP id wy7so1587111pbc.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Sep 2012 22:55:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=google.com; s=20120113;
-	h=message-id:date:from:user-agent:mime-version:to:subject:references
-	:in-reply-to:content-type:content-transfer-encoding
-	:x-gm-message-state;
-	bh=qNKxJ+IX5dwV3t3tX+cl4mAfMJBsLltuvFlPvIDGsLc=;
-	b=lTRvTUyq3JY2RwsI5cNsbiIcArbagGDj/bnXBwMPIFY7oRgdjTto23OrW7/9D/gyWL
-	Jkb0fclfuaVLWxVmS60c+C+yqEYfZP2pZib9XlF96qt0DHgFQS7xBGsKa45bnVMdRO4j
-	iHjuirQwkyISbgjoH7wT1wDrZSuQwXQyAs7fFxN8UEdOoGa+0nay48xTXFsrj2YVhFGW
-	2J/reu5xjWYohSTeMrPJ56IugkG6OhGsmd7QfQkeBENKkxiaBDr+eI/3f9HLkT5m1jLQ
-	oVIji2rbAKurN28LMVxM0KhkxD30YWRvu5CcVn2X2DuA5+852f8uL1XW0lYNGKz4ZjjL
-	54EA==
-Received: by 10.68.233.97 with SMTP id tv1mr4584835pbc.96.1348034113363;
-	Tue, 18 Sep 2012 22:55:13 -0700 (PDT)
-Received: from [192.168.1.104] (c-76-105-137-48.hsd1.or.comcast.net.
-	[76.105.137.48])
-	by mx.google.com with ESMTPS id f9sm507955paz.1.2012.09.18.22.55.12
-	(version=SSLv3 cipher=OTHER); Tue, 18 Sep 2012 22:55:12 -0700 (PDT)
-Message-ID: <50595E3F.5070201@intel.com>
-Date: Tue, 18 Sep 2012 22:55:11 -0700
-From: Scott Garman <scott.a.garman@intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:15.0) Gecko/20120827 Thunderbird/15.0
-MIME-Version: 1.0
+	Wed, 19 Sep 2012 09:48:59 +0200
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga102.ch.intel.com with ESMTP; 19 Sep 2012 00:36:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.80,447,1344236400"; d="scan'208";a="146633348"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by AZSMGA002.ch.intel.com with ESMTP; 19 Sep 2012 00:36:16 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-References: <1347273777-26676-1-git-send-email-bogdan.a.marinescu@intel.com>
-In-Reply-To: <1347273777-26676-1-git-send-email-bogdan.a.marinescu@intel.com>
-X-Gm-Message-State: ALoCoQl3VzJ7mjDAV1fyuv2xmZeCZc4TCcqguYfzc0FvVphOAQVrLAVxXp47QWg/IkxQxBc12akY
-Subject: Re: [PATCH] [for-denzil] Save proxy settings
+Date: Wed, 19 Sep 2012 10:36:57 +0300
+Message-Id: <1348040217-30386-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+MIME-Version: 1.0
+Subject: [PATCH] hob/packageselectionpage: "Cancel" button returns to "Image configuration" screen
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -48,25 +28,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 19 Sep 2012 06:09:04 -0000
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 19 Sep 2012 07:48:59 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 09/10/2012 03:42 AM, Bogdan Marinescu wrote:
-> Proxy settings were not properly saved between Hob runs. This
-> fix is mostly a backport of code in master.
->
-> [YOCTO #3024]
->
-> Signed-off-by: Bogdan Marinescu <bogdan.a.marinescu@intel.com>
+Once package building completes, you can customise the list of
+packages that will go into the ﬁnal image. Once you have made
+the changes you need, you can either build your image, or you
+can exit the process and go back to the 'Image conﬁguration'
+screen by selecting 'Cancel'.
 
-I have this in my sgarman/denzil-next branch now, thanks!
+[YOCTO #3105]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Scott
-
+diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+index e3d35ef..ad208a3 100755
+--- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
++++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+@@ -188,7 +188,7 @@ class PackageSelectionPage (HobPage):
+ 
+     def back_button_clicked_cb(self, button):
+         if self.builder.current_step ==  self.builder.PACKAGE_GENERATED:
+-            self.builder.show_recipes()
++            self.builder.show_configuration()
+         elif self.builder.previous_step ==  self.builder.IMAGE_GENERATED:
+             self.builder.restore_initial_selected_packages()
+             self.refresh_selection()
 -- 
-Scott Garman
-Embedded Linux Engineer - Yocto Project
-Intel Open Source Technology Center
+1.7.9.5
+
 
 
