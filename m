@@ -1,25 +1,30 @@
-Received: from exchsrvr.syntech-fuelmaster.com ([199.44.250.2]
-	helo=courier.syntech-fuelmaster.com)
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Jate.Sujjavanich@myfuelmaster.com>)
-	id 1TEL5u-0001fR-7M
-	for bitbake-devel@lists.linuxtogo.org; Wed, 19 Sep 2012 16:17:38 +0200
-Received: from Courier.syntech.org ([fe80::f1e9:ec58:2caf:f234]) by
-	Courier.syntech.org ([fe80::f1e9:ec58:2caf:f234%14]) with mapi;
-	Wed, 19 Sep 2012 10:04:56 -0400
-From: Jate Sujjavanich <Jate.Sujjavanich@myfuelmaster.com>
-To: "'bitbake-devel@lists.linuxtogo.org'" <bitbake-devel@lists.linuxtogo.org>
-Date: Wed, 19 Sep 2012 10:04:55 -0400
-Thread-Topic: [PATCH] cvs fetcher
-Thread-Index: Ac2VuoJpiYkDyd1uTm+1Ij0UNYcZeQ==
-Message-ID: <6C2434209962DC46B88345CA85C334A20183E5A9859A@Courier.syntech.org>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-vipre-scanned: 790BA34400333E790BA491
-acceptlanguage: en-US
-MIME-Version: 1.0
-Subject: [PATCH] cvs fetcher
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1TEdI1-0005rB-3L for bitbake-devel@lists.openembedded.org;
+	Thu, 20 Sep 2012 11:43:21 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8K9UalD010869;
+	Thu, 20 Sep 2012 10:30:36 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 01250-06; Thu, 20 Sep 2012 10:30:31 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8K9U8mL010862
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
+	Thu, 20 Sep 2012 10:30:27 +0100
+Message-ID: <1348133403.25163.32.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Bogdan Marinescu <bogdan.a.marinescu@intel.com>
+Date: Thu, 20 Sep 2012 10:30:03 +0100
+In-Reply-To: <1347632233-22080-1-git-send-email-bogdan.a.marinescu@intel.com>
+References: <1347632233-22080-1-git-send-email-bogdan.a.marinescu@intel.com>
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] [hob] Fix settings
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,41 +36,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 19 Sep 2012 14:17:38 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Thu, 20 Sep 2012 09:43:21 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-While using a newer bitbake, I ran into some issues with a recipe that has =
-a cvs SRC_URI. This patch fixes it, and I wanted to submit it for further r=
-eview.
+On Fri, 2012-09-14 at 17:17 +0300, Bogdan Marinescu wrote:
+> Fix some issues with the settings dialog that were introduced as
+> a result of merging the fix for #2162.
+> 
+> [YOCTO #3117]
+> 
+> Signed-off-by: Bogdan Marinescu <bogdan.a.marinescu@intel.com>
+> ---
+>  bitbake/lib/bb/ui/crumbs/hig.py              |  234 +++++++++++++-------------
+>  bitbake/lib/bb/ui/crumbs/imagedetailspage.py |    2 +-
+>  2 files changed, 118 insertions(+), 118 deletions(-)
 
+Merged to master, thanks.
 
-The localdata variable was removed but is required later in the download
-function.
-Add an extra space so that cvscmd's parameter is separated from the
-command.
-Signed-off-by: Jate Sujjavanich <jate.sujjavanich@myfuelmaster.com>
------------------------------ lib/bb/fetch2/cvs.py ------------------------=
-----
-diff --git a/lib/bb/fetch2/cvs.py b/lib/bb/fetch2/cvs.py
-index 6a948c4..5249d85 100644
---- a/lib/bb/fetch2/cvs.py
-+++ b/lib/bb/fetch2/cvs.py
-@@ -111,8 +111,10 @@
-         if ud.tag:
-             options.append("-r %s" % ud.tag)
-=20
-+        localdata =3D data.createCopy(d)
-+       =20
-         cvsbasecmd =3D d.getVar("FETCHCMD_cvs", True)
--        cvscmd =3D cvsbasecmd + "'-d" + cvsroot + "' co " + " ".join(optio=
-ns) + " " + ud.module
-+        cvscmd =3D cvsbasecmd + " " + "'-d" + cvsroot + "' co " + " ".join=
-(options) + " " + ud.module
-         cvsupdatecmd =3D cvsbasecmd + "'-d" + cvsroot + "' update -d -P " =
-+ " ".join(options)
-=20
-         if cvs_rsh:
+Richard
+
 
 
