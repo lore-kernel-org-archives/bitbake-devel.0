@@ -1,20 +1,20 @@
 Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1TFmDL-0006ob-SI
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1TFppF-00034A-9J
 	for bitbake-devel@lists.openembedded.org;
-	Sun, 23 Sep 2012 15:27:16 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 23 Sep 2012 06:14:28 -0700
+	Sun, 23 Sep 2012 19:18:37 +0200
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga101.ch.intel.com with ESMTP; 23 Sep 2012 10:05:48 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,469,1344236400"; d="scan'208";a="196020445"
+X-IronPort-AV: E=Sophos;i="4.80,470,1344236400"; d="scan'208";a="148102839"
 Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.121.252])
-	by azsmga001.ch.intel.com with ESMTP; 23 Sep 2012 06:14:27 -0700
+	by AZSMGA002.ch.intel.com with ESMTP; 23 Sep 2012 10:05:47 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sun, 23 Sep 2012 14:14:24 +0100
-Message-Id: <1348406065-8828-1-git-send-email-paul.eggleton@linux.intel.com>
+Date: Sun, 23 Sep 2012 18:05:35 +0100
+Message-Id: <1348419936-13985-1-git-send-email-paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] lib/bb/runqueue.py: fix exceptions with -k and failed targets
+Subject: [PATCH 1/2] fetch2: make fetch failure errors more readable
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,46 +26,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 23 Sep 2012 13:27:16 -0000
+X-List-Received-Date: Sun, 23 Sep 2012 17:18:37 -0000
 
-If a target dependency is marked as failed and yet we are continuing on
-because -k has been specified, don't try to access the dependency's data
-in taskData.build_targets since it will have been removed. This fixes
-"IndexError: list index out of range" errors in this situation.
-
-Also, do not print the "unhandled exception" message when SystemExit is
-raised since we will have reported the actual error already in this
-case (e.g. when -k has been specified and some targets failed).
-
-Fixes [YOCTO #3133].
+Most of the time we don't need to see the fetch command; the fetch log
+includes the command as a debug message in any case, so omit it. Also
+adjust the way command output is printed (we don't need stderr/stdout
+labelled, and print "no output" instead of "output:\nNone" when there is
+no output.
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- bitbake/lib/bb/runqueue.py |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ bitbake/lib/bb/fetch2/__init__.py |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index bc2eb87..b90b7e7 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -466,7 +466,7 @@ class RunQueueData:
-                 # (makes sure sometask runs after targetname's someothertask)
-                 idepends = taskData.tasks_idepends[task]
-                 for (depid, idependtask) in idepends:
--                    if depid in taskData.build_targets:
-+                    if depid in taskData.build_targets and not depid in taskData.failed_deps:
-                         # Won't be in build_targets if ASSUME_PROVIDED
-                         depdata = taskData.build_targets[depid][0]
-                         if depdata is not None:
-@@ -932,6 +932,8 @@ class RunQueue:
-             return self._execute_runqueue()
-         except bb.runqueue.TaskFailure:
-             raise
-+        except SystemExit:
-+            raise
-         except:
-             logger.error("An uncaught exception occured in runqueue, please see the failure below:")
-             self.state = runQueueComplete
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 37f7d75..1acb0a4 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -471,7 +471,13 @@ def runfetchcmd(cmd, d, quiet = False, cleanup = []):
+     except bb.process.NotFoundError as e:
+         error_message = "Fetch command %s" % (e.command)
+     except bb.process.ExecutionError as e:
+-        error_message = "Fetch command %s failed with exit code %s, output:\nSTDOUT: %s\nSTDERR: %s" % (e.command, e.exitcode, e.stdout, e.stderr)
++        if e.stdout:
++            output = "output:\n%s\n%s" % (e.stdout, e.stderr)
++        elif e.stderr:
++            output = "output:\n%s" % e.stderr
++        else:
++            output = "no output"
++        error_message = "Fetch command failed with exit code %s, %s" % (e.exitcode, output)
+     except bb.process.CmdError as e:
+         error_message = "Fetch command %s could not be run:\n%s" % (e.command, e.msg)
+     if not success:
 -- 
 1.7.9.5
 
