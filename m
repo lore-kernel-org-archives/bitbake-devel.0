@@ -1,30 +1,30 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1TG6oj-00009A-IY for bitbake-devel@lists.openembedded.org;
-	Mon, 24 Sep 2012 13:27:14 +0200
+	id 1TG6ov-0000A3-Gz for bitbake-devel@lists.openembedded.org;
+	Mon, 24 Sep 2012 13:27:26 +0200
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8OBEKtj028109;
-	Mon, 24 Sep 2012 12:14:20 +0100
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8OBEVRZ028119;
+	Mon, 24 Sep 2012 12:14:31 +0100
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 27845-02; Mon, 24 Sep 2012 12:14:15 +0100 (BST)
+	id 27712-05; Mon, 24 Sep 2012 12:14:26 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8OBEC9l028103
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8OBEMpA028113
 	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Mon, 24 Sep 2012 12:14:14 +0100
-Message-ID: <1348485253.8662.4.camel@ted>
+	Mon, 24 Sep 2012 12:14:23 +0100
+Message-ID: <1348485263.8662.5.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Constantin Musca <constantinx.musca@intel.com>
-Date: Mon, 24 Sep 2012 12:14:13 +0100
-In-Reply-To: <1348223323-22195-1-git-send-email-constantinx.musca@intel.com>
-References: <1348223323-22195-1-git-send-email-constantinx.musca@intel.com>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+Date: Mon, 24 Sep 2012 12:14:23 +0100
+In-Reply-To: <cover.1348238757.git.paul.eggleton@linux.intel.com>
+References: <cover.1348238757.git.paul.eggleton@linux.intel.com>
 X-Mailer: Evolution 3.2.3-0ubuntu6 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] hob: The title of the packages screen depends on the screen you arrive from
+Subject: Re: [PATCH v2 0/4] More Hob fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,25 +36,22 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 24 Sep 2012 11:27:14 -0000
+X-List-Received-Date: Mon, 24 Sep 2012 11:27:26 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Fri, 2012-09-21 at 13:28 +0300, Constantin Musca wrote:
-> - If you arrive to the packages screen from the recipes screen, the title
-> should say: 'Step 2 of 2: Edit packages'
-> - If you arrive to the packages screen from the image details screen, the
-> title should say: 'Edit packages'
-> - The title of the recipes screen should say 'Step 1 of 2: Edit recipes'
+On Fri, 2012-09-21 at 15:47 +0100, Paul Eggleton wrote:
+> The following changes (against Poky, but apply cleanly with -p2 against
+> bitbake master) are available in the git repository at:
 > 
-> [YOCTO #2982]
+>   git://git.yoctoproject.org/poky-contrib paule/hob-fixes-2
+>   http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/hob-fixes-2
 > 
-> Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
-> ---
->  bitbake/lib/bb/ui/crumbs/builder.py             |    2 ++
->  bitbake/lib/bb/ui/crumbs/hobpages.py            |    9 ++++++---
->  bitbake/lib/bb/ui/crumbs/recipeselectionpage.py |    2 +-
->  3 files changed, 9 insertions(+), 4 deletions(-)
+> Paul Eggleton (4):
+>   hob: don't show error dialog for errors during building
+>   hob: allow configuring default machine using HOB_MACHINE
+>   hob: remove confirmation dialog on close
+>   hob: fix Gtk-WARNINGs due to invalid markup on Back button
 
 Merged to master, thanks.
 
