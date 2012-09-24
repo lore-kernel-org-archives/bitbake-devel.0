@@ -1,21 +1,30 @@
-Received: from mga11.intel.com ([192.55.52.93])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristiana.voicu@intel.com>) id 1TG8w5-0002oa-Db
-	for bitbake-devel@lists.openembedded.org;
-	Mon, 24 Sep 2012 15:42:57 +0200
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 24 Sep 2012 06:30:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,476,1344236400"; d="scan'208";a="225752279"
-Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
-	([10.237.105.151])
-	by fmsmga001.fm.intel.com with ESMTP; 24 Sep 2012 06:30:07 -0700
-From: Cristiana Voicu <cristiana.voicu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 24 Sep 2012 16:30:59 +0300
-Message-Id: <1348493459-18620-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob/packageselectionpage:cancel button should redirect to Image conf screen
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1TG9uZ-00048p-99 for bitbake-devel@lists.openembedded.org;
+	Mon, 24 Sep 2012 16:45:27 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8OEWdl6029776;
+	Mon, 24 Sep 2012 15:32:39 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 27845-09; Mon, 24 Sep 2012 15:32:35 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8OEWWlt029769
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
+	Mon, 24 Sep 2012 15:32:33 +0100
+Message-ID: <1348497152.8662.9.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Jason Wessel <jason.wessel@windriver.com>
+Date: Mon, 24 Sep 2012 15:32:32 +0100
+In-Reply-To: <1347921831-60604-1-git-send-email-jason.wessel@windriver.com>
+References: <1347921831-60604-1-git-send-email-jason.wessel@windriver.com>
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 0/4] Add ability to auto spawn screen on a controlling terminal
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,38 +36,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 24 Sep 2012 13:42:57 -0000
+X-List-Received-Date: Mon, 24 Sep 2012 14:45:27 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Cancel button brings you to Image configuration page.
+On Mon, 2012-09-17 at 17:43 -0500, Jason Wessel wrote:
+> This is a series of 4 patches, 2 for bitbake and 2 for oe-core.  On
+> the bitbake side the idea is to have a new type of event which can
+> exec a command or print a log message if there is no controlling
+> terminal available.
+> 
+> When a controlling terminal is available the knotty UI can directly
+> execute the command on the controlling terminal, instead of printing
+> something, which occurs in all the other UI's.  What is really nice
+> about this is that you don't have to spawn screen in separate
+> terminals when you only want to use a single terminal to a build
+> server.
 
-[YOCTO #3105]
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
----
- bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Merged to master, thanks.
 
-diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-index 7e7828b..46bd014 100755
---- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-@@ -187,12 +187,12 @@ class PackageSelectionPage (HobPage):
-         self.builder.build_image()
- 
-     def back_button_clicked_cb(self, button):
--        if self.builder.current_step ==  self.builder.PACKAGE_GENERATED:
--            self.builder.show_configuration()
--        elif self.builder.previous_step ==  self.builder.IMAGE_GENERATED:
-+        if self.builder.previous_step ==  self.builder.IMAGE_GENERATED:
-             self.builder.restore_initial_selected_packages()
-             self.refresh_selection()
-             self.builder.show_image_details()
-+        else:
-+            self.builder.show_configuration()
- 
-     def _expand_all(self):
-         for tab in self.tables:
--- 
-1.7.9.5
+Richard
 
 
 
