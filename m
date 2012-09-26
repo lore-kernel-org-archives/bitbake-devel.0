@@ -1,27 +1,25 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Liezhi.Yang@windriver.com>) id 1TGnvq-0000mG-Fr
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1TGnzG-0000vX-Sa
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 26 Sep 2012 11:29:26 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id q8Q9GZbL017570
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 26 Sep 2012 02:16:35 -0700 (PDT)
-Received: from usp-ub10.wrs.com (128.224.163.69) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.2.309.2;
-	Wed, 26 Sep 2012 02:16:35 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 26 Sep 2012 17:07:57 +0800
-Message-ID: <a396909f81ca30ac584002d0fe1b672afdefc46e.1348646054.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.1
-In-Reply-To: <cover.1348646054.git.liezhi.yang@windriver.com>
-References: <cover.1348646054.git.liezhi.yang@windriver.com>
+	Wed, 26 Sep 2012 11:32:59 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 26 Sep 2012 02:20:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.80,489,1344236400"; d="scan'208";a="197886785"
+Received: from unknown (HELO helios.localnet) ([10.252.122.36])
+	by orsmga001.jf.intel.com with ESMTP; 26 Sep 2012 02:20:04 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Ioana Grigoropol <ioanax.grigoropol@intel.com>
+Date: Wed, 26 Sep 2012 10:20:02 +0100
+Message-ID: <4243638.dprUypd7aI@helios>
+Organization: Intel Corporation
+User-Agent: KMail/4.9.1 (Linux/3.2.0-31-generic-pae; KDE/4.9.1; i686; ; )
+In-Reply-To: <1348564865-23697-1-git-send-email-ioanax.grigoropol@intel.com>
+References: <1348564865-23697-1-git-send-email-ioanax.grigoropol@intel.com>
 MIME-Version: 1.0
-Cc: Zhenfeng.Zhao@windriver.com
-Subject: [PATCH 1/1] fetch2: add "-d" option to cpio
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] hob: Buttons width and height are taken for host
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,41 +31,57 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 26 Sep 2012 09:29:26 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 26 Sep 2012 09:32:59 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Add "-d" option to cpio since it is useful:
-  -d
-  --make-directories
-  Create leading directories where needed.
+Hi Ioana,
 
-[YOCTO #3137]
+On Tuesday 25 September 2012 12:21:05 Ioana Grigoropol wrote:
+> - removed all set_size_request calls for buttons in order to:
+> 	- force autosizing of buttons with regard to the text length
+> 	- use host theme default height for buttons
+> - modified buttons on image details page to have the same height (default
+> host one) and the width of the button with the largest text - modified Stop
+> button on build details page to have the default height by directly
+> attaching it to the containing table instead of hbox
+> 
+> Signed-off-by: Ioana Grigoropol <ioanax.grigoropol@intel.com>
+> ---
+>  bitbake/lib/bb/ui/crumbs/builddetailspage.py       |   12 +--
+>  bitbake/lib/bb/ui/crumbs/hig.py                    |    2 +-
+>  bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |   15 +--
+>  bitbake/lib/bb/ui/crumbs/imagedetailspage.py       |  101
+> ++++++++++++++++---- bitbake/lib/bb/ui/crumbs/packageselectionpage.py   |  
+>  2 +-
+>  bitbake/lib/bb/ui/crumbs/recipeselectionpage.py    |    2 +-
+>  6 files changed, 102 insertions(+), 32 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/ui/crumbs/builddetailspage.py
+> b/bitbake/lib/bb/ui/crumbs/builddetailspage.py index a927c21..5add31d
+> 100755
+> --- a/bitbake/lib/bb/ui/crumbs/builddetailspage.py
+> +++ b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
+> @@ -165,7 +165,7 @@ class BuildDetailsPage (HobPage):
+>          self.builder.handler.build.model.connect_after("row-changed",
+> self.scroll_to_present_row, self.scrolled_view_build.get_vadjustment(),
+> self.build_tv)
+> 
+>          self.button_box = gtk.HBox(False, 6)
+> -        self.back_button = HobAltButton('&lt;&lt; Back')
+> +        self.back_button = HobAltButton('<< Back')
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/fetch2/__init__.py |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+I did make this change to avoid a runtime warning due to invalid markup - did 
+you change it back on purpose? If so I don't see it mentioned in the commit 
+message.
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index a713418..ea52874 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -950,11 +950,11 @@ class FetchMethod(object):
-             elif file.endswith('.rpm') or file.endswith('.srpm'):
-                 if 'extract' in urldata.parm:
-                     unpack_file = urldata.parm.get('extract')
--                    cmd = 'rpm2cpio.sh %s | cpio -i %s' % (file, unpack_file)
-+                    cmd = 'rpm2cpio.sh %s | cpio -id %s' % (file, unpack_file)
-                     iterate = True
-                     iterate_file = unpack_file
-                 else:
--                    cmd = 'rpm2cpio.sh %s | cpio -i' % (file)
-+                    cmd = 'rpm2cpio.sh %s | cpio -id' % (file)
-             elif file.endswith('.deb') or file.endswith('.ipk'):
-                 cmd = 'ar -p %s data.tar.gz | zcat | tar --no-same-owner -xpf -' % file
- 
+Cheers,
+Paul
+
+
 -- 
-1.7.1
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
 
