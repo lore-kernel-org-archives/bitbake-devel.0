@@ -1,36 +1,30 @@
-Received: from mga05.intel.com ([192.55.52.89] helo=fmsmga101.fm.intel.com)
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <ross.burton@intel.com>) id 1THGVc-0001Ur-7C
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 27 Sep 2012 18:00:16 +0200
-Received: from mail-we0-f175.google.com ([74.125.82.175])
-	by mga01.intel.com with ESMTP/TLS/RC4-SHA; 27 Sep 2012 08:47:11 -0700
-Received: by weyt44 with SMTP id t44so729944wey.6
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1THMQt-0002xB-F3 for bitbake-devel@lists.openembedded.org;
+	Fri, 28 Sep 2012 00:19:47 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8RM6sNC004593
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Sep 2012 08:47:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=google.com; s=20120113;
-	h=from:to:subject:date:message-id:x-mailer:x-gm-message-state;
-	bh=JEhoDOr4GcSsvjEkicKQriyD/vbvD/B7V1qcAOuj6UM=;
-	b=N89lgYZd/gxYnCUNByCQfKuu0fHqS5X9w8jvi03s1mWFBzBWA0F0EIU2QxAYzR513F
-	vXkW8xlAjwlya7TgK3RU6mtVsQApLos9lr1bJm1wGKsS+rUvNuws3XeTdlVsRlOfZ20/
-	l5+vXMmJOrsp0PG5FqYcWSZae5SDZ4lQO6OocuovmZGdjZdGnDfZO2lL9deTceKZtSBN
-	jIJ2Z3dzB9qlisNyKD+RnHANsvvORTzSTH06D5Ae7Vd/wHxnXMvoQ7ci7hTAnNDWznJb
-	N3rznaZb4EIO9vVDcdsfDIfA21UPTZ0rw6qoCQV9S6djjer2aBxHIVB7ZwtqAL/h5iIN
-	3aPg==
-Received: by 10.216.123.130 with SMTP id v2mr1730372weh.117.1348760829856;
-	Thu, 27 Sep 2012 08:47:09 -0700 (PDT)
-Received: from melchett.burtonini.com (35.106.2.81.in-addr.arpa. [81.2.106.35])
-	by mx.google.com with ESMTPS id k2sm13794052wiz.7.2012.09.27.08.47.07
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Thu, 27 Sep 2012 08:47:08 -0700 (PDT)
-From: Ross Burton <ross.burton@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 27 Sep 2012 16:46:09 +0100
-Message-Id: <1348760769-22726-1-git-send-email-ross.burton@intel.com>
-X-Mailer: git-send-email 1.7.10
-X-Gm-Message-State: ALoCoQkvX3c8ITK+H3cjelRpHhUT+DMAfvKiDLzSohDxju7spUzDmqN24RjrDIDJnRU9aK2jjn61
-Subject: [PATCH] hob: set modal flag on progress dialog
+	Thu, 27 Sep 2012 23:06:54 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 03933-05 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 27 Sep 2012 23:06:49 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8RM6kDe004587
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 27 Sep 2012 23:06:47 +0100
+Message-ID: <1348783608.15753.31.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 27 Sep 2012 23:06:48 +0100
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: [PATCH] knotty: Allow displaying of status when no tasks are active
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -42,33 +36,55 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 27 Sep 2012 16:00:16 -0000
+X-List-Received-Date: Thu, 27 Sep 2012 22:19:47 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-The entire interface isn't usable whilst the progress dialog is up so we might
-as well set the modal flag so that some WMs (such as GNOME 3) can do nice things
-with the dialog (such as pin it to the titlebar).
+The console can appear to hang when no tasks are executing even if bitbake
+is iterating through a large number of tasks behind the scenes.
 
-Signed-off-by: Ross Burton <ross.burton@intel.com>
+This patch tweaks the footer code to display a status even when no tasks
+are active to give the user better feedback about what is happening.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/ui/depexp.py |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/bitbake/lib/bb/ui/depexp.py b/bitbake/lib/bb/ui/depexp.py
-index 425302e..1a716a8 100644
---- a/bitbake/lib/bb/ui/depexp.py
-+++ b/bitbake/lib/bb/ui/depexp.py
-@@ -220,7 +220,8 @@ def main(server, eventHandler):
+diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
+index d81ad5d..1ec24d4 100644
+--- a/bitbake/lib/bb/ui/knotty.py
++++ b/bitbake/lib/bb/ui/knotty.py
+@@ -183,11 +183,11 @@ class TerminalFilter(object):
+         activetasks = self.helper.running_tasks
+         failedtasks = self.helper.failed_tasks
+         runningpids = self.helper.running_pids
+-        if self.footer_present and (self.lastpids == runningpids):
++        if self.footer_present and (self.lastcount == self.helper.tasknumber_current):
+             return
+         if self.footer_present:
+             self.clearFooter()
+-        if not activetasks:
++        if not self.helper.tasknumber_total or self.helper.tasknumber_current == self.helper.tasknumber_total:
+             return
+         tasks = []
+         for t in runningpids:
+@@ -195,6 +195,8 @@ class TerminalFilter(object):
  
-     gtk.gdk.threads_enter()
-     dep = DepExplorer()
--    bardialog = gtk.Dialog(parent=dep)
-+    bardialog = gtk.Dialog(parent=dep,
-+                           flags=gtk.DIALOG_MODAL|gtk.DIALOG_DESTROY_WITH_PARENT)
-     bardialog.set_default_size(400, 50)
-     pbar = HobProgressBar()
-     bardialog.vbox.pack_start(pbar)
--- 
-1.7.10
+         if self.main.shutdown:
+             content = "Waiting for %s running tasks to finish:" % len(activetasks)
++        elif not len(activetasks):
++            content = "No currently running tasks (%s of %s)" % (self.helper.tasknumber_current, self.helper.tasknumber_total)
+         else:
+             content = "Currently %s running tasks (%s of %s):" % (len(activetasks), self.helper.tasknumber_current, self.helper.tasknumber_total)
+         print content
+@@ -204,7 +206,7 @@ class TerminalFilter(object):
+             print content
+             lines = lines + 1 + int(len(content) / (self.columns + 1))
+         self.footer_present = lines
+-        self.lastpids = runningpids[:]
++        self.lastcount = self.helper.tasknumber_current
+ 
+     def finish(self):
+         if self.stdinbackup:
+
 
 
 
