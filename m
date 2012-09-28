@@ -1,33 +1,21 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1THXlg-0005YT-U8 for bitbake-devel@lists.openembedded.org;
-	Fri, 28 Sep 2012 12:26:01 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8SAD40t008889;
-	Fri, 28 Sep 2012 11:13:04 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 08702-01; Fri, 28 Sep 2012 11:12:59 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8SACsea008879
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Fri, 28 Sep 2012 11:12:56 +0100
-Message-ID: <1348827176.15753.37.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Voicu, Cristiana" <cristiana.voicu@intel.com>
-Date: Fri, 28 Sep 2012 11:12:56 +0100
-In-Reply-To: <BE68E9C8E0850C43B0F0B0B7D57FA5AE19396846@IRSMSX101.ger.corp.intel.com>
-References: <1348656248-5807-1-git-send-email-cristiana.voicu@intel.com>
-	<1348760602.11186.4.camel@ted>
-	<BE68E9C8E0850C43B0F0B0B7D57FA5AE19396846@IRSMSX101.ger.corp.intel.com>
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH v2] hob/settings: implement a new tab in settings dialog to show SSTATE_MIRRORS
+Received: from mga01.intel.com ([192.55.52.88])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <cristiana.voicu@intel.com>) id 1THaCm-0004mM-PU
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 28 Sep 2012 15:02:09 +0200
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 28 Sep 2012 05:49:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.80,502,1344236400"; d="scan'208";a="228117572"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by fmsmga002.fm.intel.com with ESMTP; 28 Sep 2012 05:49:13 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 28 Sep 2012 15:50:12 +0300
+Message-Id: <1348836612-17921-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob/builddetailspage: remove "back" button
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -39,25 +27,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 28 Sep 2012 10:26:01 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 28 Sep 2012 13:02:10 -0000
 
-On Fri, 2012-09-28 at 09:49 +0000, Voicu, Cristiana wrote:
-> Hello,
-> 
-> I saw the changes in code were merged, but I have changed also 2
-> images(bitbake/lib/bb/ui/icons/info/info_display.png &
-> bitbake/lib/bb/ui/icons/info/info_hover.png). Those are not changed in
-> master now.
-> 
-> Can you please check what happened?
+When a build fails, there should not be a back button on the screen.
+All available actions are provided within the failure notification,
+so no back button is needed.
 
-Sorry, I've fixed this. Its a gremlin from doing this via email.
+[YOCTO #3104]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/builddetailspage.py |    2 --
+ 1 file changed, 2 deletions(-)
 
-Cheers,
-
-Richard
+diff --git a/bitbake/lib/bb/ui/crumbs/builddetailspage.py b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
+index 50073c1..322a700 100755
+--- a/bitbake/lib/bb/ui/crumbs/builddetailspage.py
++++ b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
+@@ -263,8 +263,6 @@ class BuildDetailsPage (HobPage):
+         self.box_group_area.pack_start(self.vbox, expand=True, fill=True)
+ 
+         self.vbox.pack_start(self.notebook, expand=True, fill=True)
+-
+-        self.box_group_area.pack_end(self.button_box, expand=False, fill=False)
+         self.show_all()
+         self.back_button.hide()
+ 
+-- 
+1.7.9.5
 
 
 
