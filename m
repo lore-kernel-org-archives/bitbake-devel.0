@@ -1,30 +1,20 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1THcum-0002Pr-4Q for bitbake-devel@lists.openembedded.org;
-	Fri, 28 Sep 2012 17:55:44 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8SFgk3i012600;
-	Fri, 28 Sep 2012 16:42:46 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 12304-03; Fri, 28 Sep 2012 16:42:42 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q8SFgbdT012594
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Fri, 28 Sep 2012 16:42:38 +0100
-Message-ID: <1348846959.15753.54.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Cristian Iorga <cristian.iorga@intel.com>
-Date: Fri, 28 Sep 2012 16:42:39 +0100
-In-Reply-To: <1348844753-7604-1-git-send-email-cristian.iorga@intel.com>
-References: <1348844753-7604-1-git-send-email-cristian.iorga@intel.com>
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] hob: Error reports are done in a clearer way
+Received: from mga02.intel.com ([134.134.136.20])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <ioanax.grigoropol@intel.com>) id 1THdMr-00049r-JY
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 28 Sep 2012 18:24:45 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 28 Sep 2012 09:11:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.80,502,1344236400"; d="scan'208";a="199416345"
+Received: from ideapad (HELO localhost.localdomain) ([10.237.105.40])
+	by orsmga001.jf.intel.com with ESMTP; 28 Sep 2012 09:11:33 -0700
+From: Ioana Grigoropol <ioanax.grigoropol@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 28 Sep 2012 19:06:57 +0300
+Message-Id: <1348848417-8736-1-git-send-email-ioanax.grigoropol@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob/image_details: Remove kernel info from details
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,32 +26,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 28 Sep 2012 15:55:44 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 28 Sep 2012 16:24:45 -0000
 
-On Fri, 2012-09-28 at 18:05 +0300, Cristian Iorga wrote:
-> For long errors (bigger than 200 letters),
-> the text box is scrollable and resizable
-> and text is selectable.
-> 
-> Additionaly, all message dialogs are modal.
-> Otherwise, a user could still interact with hob
-> even in an error case, leading to potential problems.
-> 
-> See design details in related bugs.
-> 
-> Fixes [YOCTO #2960], [YOCTO #2983]
-> 
-> Signed-off-by: Cristian Iorga <cristian.iorga@intel.com>
-> ---
->  bitbake/lib/bb/ui/crumbs/builder.py |    5 ++-
->  bitbake/lib/bb/ui/crumbs/hig.py     |   59 ++++++++++++++++++++++++++---------
->  2 files changed, 46 insertions(+), 18 deletions(-)
+- removed kernel information from image details
 
-Merged to master, thanks.
+[Yocto #3002]
 
-Richard
+Signed-off-by: Ioana Grigoropol <ioanax.grigoropol@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+index a843ad4..44f8987 100755
+--- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
++++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+@@ -329,18 +329,18 @@ class ImageDetailsPage (HobPage):
+         # The default kernel box for the qemu images
+         self.sel_kernel = ""
+         self.kernel_detail = None
+-        if 'qemu' in image_name:
+-            self.sel_kernel = self.get_kernel_file_name()
+-
+-            varlist = ["Kernel: "]
+-            vallist = []
+-            vallist.append(self.sel_kernel)
+-
+-            change_kernel_button = HobAltButton("Change")
+-            change_kernel_button.connect("clicked", self.change_kernel_cb)
+-            change_kernel_button.set_tooltip_text("Change qemu kernel file")
+-            self.kernel_detail = self.DetailBox(varlist=varlist, vallist=vallist, button=change_kernel_button)
+-            self.box_group_area.pack_start(self.kernel_detail, expand=True, fill=True)
++        #if 'qemu' in image_name:
++        #    self.sel_kernel = self.get_kernel_file_name()
++
++        #    varlist = ["Kernel: "]
++        #    vallist = []
++        #    vallist.append(self.sel_kernel)
++
++        #    change_kernel_button = HobAltButton("Change")
++        #    change_kernel_button.connect("clicked", self.change_kernel_cb)
++        #    change_kernel_button.set_tooltip_text("Change qemu kernel file")
++        #    self.kernel_detail = self.DetailBox(varlist=varlist, vallist=vallist, button=change_kernel_button)
++        #    self.box_group_area.pack_start(self.kernel_detail, expand=True, fill=True)
+ 
+         # Machine, Base image and Layers
+         layer_num_limit = 15
+-- 
+1.7.9.5
 
 
 
