@@ -1,38 +1,35 @@
-Received: from mga10.intel.com ([192.55.52.92] helo=fmsmga102.fm.intel.com)
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <bogdan.a.marinescu@intel.com>) id 1THW4w-0003N4-AK
+	(envelope-from <cristiana.voicu@intel.com>) id 1THXOr-00052a-Mk
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 28 Sep 2012 10:37:46 +0200
-Received: from mail-qc0-f175.google.com ([209.85.216.175])
-	by mga11.intel.com with ESMTP/TLS/RC4-SHA; 28 Sep 2012 01:24:52 -0700
-Received: by qcad10 with SMTP id d10so2214425qca.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Sep 2012 01:24:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=google.com; s=20120113;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-type:x-gm-message-state;
-	bh=NuJM5hog9jsMQJY9U9jJwPEl+GrG2MchUoHyulRJMpg=;
-	b=AFY/mCx3QfKXCPS675BwWdcjZUsQ1VQslzkFVJ33IwgnqvWffOtZnz/OOD1VmsG3Kx
-	W3uWQpUDPeVOoK4XZcS7mf4eakvUBzS+Zj9BTFBPxYB4uK1yOWyz197vwvI57B3keGLb
-	ASDv2QQchLiT9sgK06LMCtrcfq5WHJdPxuv6GRsesiZF1S+5CxdDIt/TJeGBHRXtgwHQ
-	e+wNmycCvm/yK3jRlVmTbPCB8vqszvPff6pttvC1YHSRNRII44bOQspBmy2WFLIc7IxL
-	6e1iX44tMeA2DkwbQegbJzK4h+yxIGDaQq6piV6iYyV293/EqWONZv1RRcYOnpOGiY+g
-	gB1A==
-Received: by 10.224.190.200 with SMTP id dj8mr15545544qab.73.1348820691105;
-	Fri, 28 Sep 2012 01:24:51 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.49.74.74 with HTTP; Fri, 28 Sep 2012 01:24:30 -0700 (PDT)
-In-Reply-To: <1348760645.11186.7.camel@ted>
-References: <1348667997-7165-1-git-send-email-bogdan.a.marinescu@intel.com>
-	<1348760645.11186.7.camel@ted>
-From: "Marinescu, Bogdan A" <bogdan.a.marinescu@intel.com>
-Date: Fri, 28 Sep 2012 11:24:30 +0300
-Message-ID: <CAMZjud1+PiP04tBSwgOj=LKAXW0WaietY8Ae5hFw7y1a7ksnfQ@mail.gmail.com>
+	Fri, 28 Sep 2012 12:02:25 +0200
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga101.ch.intel.com with ESMTP; 28 Sep 2012 02:49:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.80,501,1344236400"; d="scan'208";a="150207731"
+Received: from irsmsx104.ger.corp.intel.com ([163.33.3.159])
+	by AZSMGA002.ch.intel.com with ESMTP; 28 Sep 2012 02:49:30 -0700
+Received: from irsmsx101.ger.corp.intel.com ([169.254.1.138]) by
+	IRSMSX104.ger.corp.intel.com ([169.254.5.154]) with mapi id
+	14.01.0355.002; Fri, 28 Sep 2012 10:49:27 +0100
+From: "Voicu, Cristiana" <cristiana.voicu@intel.com>
 To: Richard Purdie <richard.purdie@linuxfoundation.org>
-X-Gm-Message-State: ALoCoQnV9A0la+VF5F6AEQOdcsmFVXsLQByKF1LD0jbfLy0B+agFk6v/2Jhk0cIL8pCOVc3iEpEF
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH v2] [hob] Add sanity check progress screen
+Thread-Topic: [bitbake-devel] [PATCH v2] hob/settings: implement a new tab
+	in settings dialog to show SSTATE_MIRRORS
+Thread-Index: AQHNm9PKBiOEmstTb0CteIzCyXakmZeeRToAgAE/uSA=
+Date: Fri, 28 Sep 2012 09:49:24 +0000
+Message-ID: <BE68E9C8E0850C43B0F0B0B7D57FA5AE19396846@IRSMSX101.ger.corp.intel.com>
+References: <1348656248-5807-1-git-send-email-cristiana.voicu@intel.com>
+	<1348760602.11186.4.camel@ted>
+In-Reply-To: <1348760602.11186.4.camel@ted>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [163.33.239.181]
+MIME-Version: 1.0
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH v2] hob/settings: implement a new tab in settings dialog to show SSTATE_MIRRORS
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -44,140 +41,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 28 Sep 2012 08:37:46 -0000
-Content-Type: multipart/alternative; boundary=20cf3005def428b72f04cabecac9
+X-List-Received-Date: Fri, 28 Sep 2012 10:02:26 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
---20cf3005def428b72f04cabecac9
-Content-Type: text/plain; charset=ISO-8859-1
-
-Hi Richard,
-
-On Thu, Sep 27, 2012 at 6:44 PM, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
-
-> On Wed, 2012-09-26 at 16:59 +0300, Bogdan Marinescu wrote:
-> > This patch adds a sanity check progress screen to hob. The screen
-> > is displayed when Hob executes the sanity check procedure. The screen
-> > is displayed for at least 5 seconds. If a network error is detected,
-> > a special dialog is displayed which lets the user open the proxy
-> > configuration page directly.
-> > Note that currently bitbake triggers the network tests only when
-> > the value of its TMPDIR variable changes, which happens fairly rare
-> > on my system. This is the subject of another bug (#3026).
-> > Version 2 of the patch splits the changes in two parts (sanity.bbclass
-> > belongs to oe-core).
-> >
-> > [YOCTO #3025]
-> >
-> > Signed-off-by: Bogdan Marinescu <bogdan.a.marinescu@intel.com>
-> > ---
-> >  bitbake/lib/bb/event.py                     |    3 +-
-> >  bitbake/lib/bb/ui/crumbs/builder.py         |  124
-> ++++++++++++++++++++++++---
-> >  bitbake/lib/bb/ui/crumbs/hig.py             |    5 ++
-> >  bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    5 +-
-> >  bitbake/lib/bb/ui/crumbs/sanitycheckpage.py |   85 ++++++++++++++++++
-> >  5 files changed, 205 insertions(+), 17 deletions(-)
-> >  create mode 100644 bitbake/lib/bb/ui/crumbs/sanitycheckpage.py
->
->
-> Merged to master, thanks.
->
-
-It appears that this page was not merged properly. The new
-sanitycheckpage.py file didn't get merged. I remember that I needed to use
-"git add -f" (force) to add this file, since a .gitignore prevented it from
-being added in the usual way (why does .gitignore mask .py files anyway?)
-This might be why it didn't get merged in the end.
-For all the people that updated the master and can't start hob because of
-this problem: a temporary solution is to move your HEAD before my commit.
-In this case:
-
-git reset --hard 6fdff49d9b37a18221f8d5571f757e69b945e533
-
-One more thing for Richard: this patch has a corresponding patch in oe-core
-("Added explicit network error status in SanityCheckFailed event"). Please
-take a look at that one too.
-
-Thanks,
-Bogdan
+SGVsbG8sDQoNCkkgc2F3IHRoZSBjaGFuZ2VzIGluIGNvZGUgd2VyZSBtZXJnZWQsIGJ1dCBJIGhh
+dmUgY2hhbmdlZCBhbHNvIDIgaW1hZ2VzKGJpdGJha2UvbGliL2JiL3VpL2ljb25zL2luZm8vaW5m
+b19kaXNwbGF5LnBuZyAmIGJpdGJha2UvbGliL2JiL3VpL2ljb25zL2luZm8vaW5mb19ob3Zlci5w
+bmcpLiBUaG9zZSBhcmUgbm90IGNoYW5nZWQgaW4gbWFzdGVyIG5vdy4NCg0KQ2FuIHlvdSBwbGVh
+c2UgY2hlY2sgd2hhdCBoYXBwZW5lZD8NClRoYW5rIHlvdSwNCkNyaXN0aWFuYQ0KDQoNCi0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBSaWNoYXJkIFB1cmRpZSBbbWFpbHRvOnJpY2hh
+cmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5vcmddIA0KU2VudDogVGh1cnNkYXksIFNlcHRlbWJl
+ciAyNywgMjAxMiA2OjQzIFBNDQpUbzogVm9pY3UsIENyaXN0aWFuYQ0KQ2M6IGJpdGJha2UtZGV2
+ZWxAbGlzdHMub3BlbmVtYmVkZGVkLm9yZw0KU3ViamVjdDogUmU6IFtiaXRiYWtlLWRldmVsXSBb
+UEFUQ0ggdjJdIGhvYi9zZXR0aW5nczogaW1wbGVtZW50IGEgbmV3IHRhYiBpbiBzZXR0aW5ncyBk
+aWFsb2cgdG8gc2hvdyBTU1RBVEVfTUlSUk9SUw0KDQpPbiBXZWQsIDIwMTItMDktMjYgYXQgMTM6
+NDQgKzAzMDAsIENyaXN0aWFuYSBWb2ljdSB3cm90ZToNCj4gQWRkIGEgbmV3IHRhYiB0byBzaG93
+IGNvcnJlY3RseSBTU1RBVEVfTUlSUk9SUyB2YXJpYWJsZS4gTm93IHlvdSBjYW4gDQo+IGFkZCBu
+ZXcgbWlycm9ycyBvciBkZWxldGUgbWlycm9yLiAiaW5mbyIgaW1hZ2Ugd2FzIGFsc28gY2hhbmdl
+ZCggaXQgaXMgDQo+IHNtYWxsZXIsIHNvIGl0IGNhbiBiZSBuZXh0IHRvIGxhYmVscykuDQo+IEZy
+b20gIkJ1aWxkIGVudmlyb25tZW50IiB0YWIsIFNTVEFURV9ESVIgYW5kIFNTVEFURV9NSVJST1JT
+IHZhcnMgd2VyZSByZW1vdmVkLg0KPiANCj4gW1lPQ1RPICMyODkzXQ0KPiANCj4gU2lnbmVkLW9m
+Zi1ieTogQ3Jpc3RpYW5hIFZvaWN1IDxjcmlzdGlhbmEudm9pY3VAaW50ZWwuY29tPg0KPiAtLS0N
+Cj4gIGJpdGJha2UvbGliL2JiL3VpL2NydW1icy9idWlsZGVyLnB5ICAgICAgICAgICB8ICAgIDgg
+Ky0NCj4gIGJpdGJha2UvbGliL2JiL3VpL2NydW1icy9oaWcucHkgICAgICAgICAgICAgICB8ICAx
+ODAgKysrKysrKysrKysrKysrKysrKysrKystLQ0KPiAgYml0YmFrZS9saWIvYmIvdWkvY3J1bWJz
+L2hvYmV2ZW50aGFuZGxlci5weSAgIHwgICAgNiArLQ0KPiAgYml0YmFrZS9saWIvYmIvdWkvY3J1
+bWJzL3RlbXBsYXRlLnB5ICAgICAgICAgIHwgICAgMiArLQ0KPiAgYml0YmFrZS9saWIvYmIvdWkv
+aWNvbnMvaW5mby9pbmZvX2Rpc3BsYXkucG5nIHwgIEJpbiA0NTU4IC0+IDQxMTcgYnl0ZXMNCj4g
+IGJpdGJha2UvbGliL2JiL3VpL2ljb25zL2luZm8vaW5mb19ob3Zlci5wbmcgICB8ICBCaW4gNDY1
+MCAtPiA0MTY3IGJ5dGVzDQo+ICA2IGZpbGVzIGNoYW5nZWQsIDE3NSBpbnNlcnRpb25zKCspLCAy
+MSBkZWxldGlvbnMoLSkNCg0KTWVyZ2VkIHRvIG1hc3RlciwgdGhhbmtzLg0KDQpSaWNoYXJkDQoN
+Cg==
 
 
-> Richard
->
->
-
---20cf3005def428b72f04cabecac9
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-Hi Richard,<br><br><div class=3D"gmail_quote">On Thu, Sep 27, 2012 at 6:44 =
-PM, Richard Purdie <span dir=3D"ltr">&lt;<a href=3D"mailto:richard.purdie@l=
-inuxfoundation.org" target=3D"_blank">richard.purdie@linuxfoundation.org</a=
->&gt;</span> wrote:<br>
-
-
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div>On Wed, 2012-09-26 at 16:59 +0300, Bogd=
-an Marinescu wrote:<br>
-&gt; This patch adds a sanity check progress screen to hob. The screen<br>
-&gt; is displayed when Hob executes the sanity check procedure. The screen<=
-br>
-&gt; is displayed for at least 5 seconds. If a network error is detected,<b=
-r>
-&gt; a special dialog is displayed which lets the user open the proxy<br>
-&gt; configuration page directly.<br>
-&gt; Note that currently bitbake triggers the network tests only when<br>
-&gt; the value of its TMPDIR variable changes, which happens fairly rare<br=
->
-&gt; on my system. This is the subject of another bug (#3026).<br>
-&gt; Version 2 of the patch splits the changes in two parts (sanity.bbclass=
-<br>
-&gt; belongs to oe-core).<br>
-&gt;<br>
-&gt; [YOCTO #3025]<br>
-&gt;<br>
-&gt; Signed-off-by: Bogdan Marinescu &lt;<a href=3D"mailto:bogdan.a.marines=
-cu@intel.com" target=3D"_blank">bogdan.a.marinescu@intel.com</a>&gt;<br>
-&gt; ---<br>
-&gt; =A0bitbake/lib/bb/event.py =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =
-=A0 =A03 +-<br>
-&gt; =A0bitbake/lib/bb/ui/crumbs/builder.py =A0 =A0 =A0 =A0 | =A0124 ++++++=
-++++++++++++++++++---<br>
-&gt; =A0bitbake/lib/bb/ui/crumbs/hig.py =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =A05 =
-++<br>
-&gt; =A0bitbake/lib/bb/ui/crumbs/hobeventhandler.py | =A0 =A05 +-<br>
-&gt; =A0bitbake/lib/bb/ui/crumbs/sanitycheckpage.py | =A0 85 ++++++++++++++=
-++++<br>
-&gt; =A05 files changed, 205 insertions(+), 17 deletions(-)<br>
-&gt; =A0create mode 100644 bitbake/lib/bb/ui/crumbs/sanitycheckpage.py<br>
-<br>
-<br>
-</div>Merged to master, thanks.<br></blockquote><div><br></div><div>It appe=
-ars that this page was not merged properly. The new sanitycheckpage.py file=
- didn&#39;t get merged. I remember that I needed to use &quot;git add -f&qu=
-ot; (force) to add this file, since a .gitignore prevented it from being ad=
-ded in the usual way (why does .gitignore mask .py files anyway?) This migh=
-t be why it didn&#39;t get merged in the end.</div>
-
-
-<div>For all the people that updated the master and can&#39;t start hob bec=
-ause of this problem: a temporary solution is to move your HEAD before my c=
-ommit. In this case:</div><div><br></div><div>git reset --hard=A06fdff49d9b=
-37a18221f8d5571f757e69b945e533</div>
-
-
-<div><br></div><div>One more thing for Richard: this patch has a correspond=
-ing patch in oe-core (&quot;Added explicit network error status in SanityCh=
-eckFailed event&quot;). Please take a look at that one too.<br></div><div>
-
-<br></div><div>Thanks,</div><div>Bogdan</div><div><br></div><blockquote cla=
-ss=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;pa=
-dding-left:1ex">
-
-<span><font color=3D"#888888"><br>
-Richard<br>
-<br>
-</font></span></blockquote></div><br>
-
---20cf3005def428b72f04cabecac9--
