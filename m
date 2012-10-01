@@ -1,27 +1,21 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <mark.hatle@windriver.com>) id 1TI75y-0001dX-Lb
+	(envelope-from <cristiana.voicu@intel.com>) id 1TIcDl-0007r2-VK
 	for bitbake-devel@lists.openembedded.org;
-	Sun, 30 Sep 2012 02:09:19 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id q8TNuJ2D025896
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 29 Sep 2012 16:56:19 -0700 (PDT)
-Received: from localhost.localdomain (172.25.34.61) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.2.309.2;
-	Sat, 29 Sep 2012 16:56:18 -0700
-From: Mark Hatle <mark.hatle@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Sat, 29 Sep 2012 19:01:45 -0500
-Message-ID: <1348963305-26122-2-git-send-email-mark.hatle@windriver.com>
-X-Mailer: git-send-email 1.7.3.4
-In-Reply-To: <1348963305-26122-1-git-send-email-mark.hatle@windriver.com>
-References: <1348963305-26122-1-git-send-email-mark.hatle@windriver.com>
-MIME-Version: 1.0
-X-Originating-IP: [172.25.34.61]
-Subject: [PATCH 2/2 v2] utils.py: Allow explode_dep_versions comparisons to have arbitrary whitespace
+	Mon, 01 Oct 2012 11:23:26 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 01 Oct 2012 02:10:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.80,514,1344236400"; d="scan'208";a="200118946"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by orsmga001.jf.intel.com with ESMTP; 01 Oct 2012 02:10:26 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  1 Oct 2012 12:11:29 +0300
+Message-Id: <1349082689-7807-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob/settings: Change the 'Delete' button behaviour in the shared state settings tab
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,104 +27,97 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 30 Sep 2012 00:09:19 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 01 Oct 2012 09:23:26 -0000
 
-Refactor the explode_dep_versions to be more lenient on whitespace values.
+-the tab shows an empty mirror row when no mirror is configured
+-able to delete the mirror row even if it's not empty(if it's not
+the first mirror)
 
-The required format is:
-   foo (= 1.10)
-   foo (=1.10)
-   foo ( = 1.10)
-   foo ( =1.10)
-   foo ( = 1.10 )
-   foo ( =1.10 )
-
-Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+[YOCTO #3189]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- lib/bb/utils.py |   62 +++++++++++++++++++++++++++++++++++++++++-------------
- 1 files changed, 47 insertions(+), 15 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hig.py |   37 +++++++++++++++++++++----------------
+ 1 file changed, 21 insertions(+), 16 deletions(-)
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index d032ab2..a537338 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -147,26 +147,58 @@ def explode_dep_versions(s):
-     r = {}
-     l = s.replace(",", "").split()
-     lastdep = None
-+    lastcmp = ""
-     lastver = ""
-+    incmp = False
-     inversion = False
-     for i in l:
-         if i[0] == '(':
-+            incmp = True
-+            i = i[1:].strip()
-+            if not i:
-+                continue
-+
-+        if incmp:
-+            incmp = False
-             inversion = True
--            lastver = i[1:] or ""
--            #j = []
--        elif inversion and i.endswith(')'):
--            inversion = False
--            lastver = lastver + " " + (i[:-1] or "")
--            if lastdep in r and r[lastdep] and r[lastdep] != lastver:
--                raise ValueError("Error, item %s appeared in dependency string '%s' multiple times with different values.  explode_dep_versions cannot cope with this." % (lastdep, s))
--            r[lastdep] = lastver
--        elif not inversion:
--            if not (i in r and r[i]):
--                r[i] = None
--            lastdep = i
--            lastver = ""
--        elif inversion:
--            lastver = lastver + " " + i
-+            # This list is based on behavior and supported comparisons from deb, opkg and rpm.
-+            #
-+            # Even though =<, <<, ==, !=, =>, and >> may not be supported, 
-+            # we list each possibly valid item. 
-+            # The build system is responsible for validation of what it supports.
-+            if i.startswith(('<=', '=<', '<<', '==', '!=', '>=', '=>', '>>')):
-+                lastcmp = i[0:2]
-+                i = i[2:]
-+            elif i.startswith(('<', '>', '=')):
-+                lastcmp = i[0:1]
-+                i = i[1:]
+diff --git a/bitbake/lib/bb/ui/crumbs/hig.py b/bitbake/lib/bb/ui/crumbs/hig.py
+index 2ef8e36..dc7dce3 100644
+--- a/bitbake/lib/bb/ui/crumbs/hig.py
++++ b/bitbake/lib/bb/ui/crumbs/hig.py
+@@ -159,7 +159,7 @@ class SettingsUIHelper():
+ 
+         delete_button = HobAltButton("Delete")
+         delete_button.connect("clicked", self.delete_cb, index, entry)
+-        if content == "":
++        if content == "" and index == 0  and len(self.sstatemirrors_list) == 1:
+             delete_button.set_sensitive(False)
+ 
+         entry_match.connect("changed", self.insert_entry_match_cb, index)
+@@ -188,7 +188,7 @@ class SettingsUIHelper():
+ 
+     def insert_entry_cb(self, entry, index, button):
+         self.sstatemirrors_list[index][1] = entry.get_text()
+-        if entry.get_text() == "":
++        if entry.get_text() == "" and index == 0:
+             button.set_sensitive(False)
+         else:
+             button.set_sensitive(True)
+@@ -196,6 +196,7 @@ class SettingsUIHelper():
+     def on_combo_changed(self, combo, index):
+         if combo.get_active_text() == "Standard":
+             self.sstatemirrors_list[index][0] = 0
++            self.sstatemirrors_list[index][2] = "file://(.*)"
+         else:
+             self.sstatemirrors_list[index][0] = 1
+         self.refresh_shared_state_page()
+@@ -450,7 +451,7 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
+         self.configuration.sstatedir = self.sstatedir_text.get_text()
+         self.configuration.sstatemirror = ""
+         for mirror in self.sstatemirrors_list:
+-            if mirror[1] != "" or len(self.sstatemirrors_list)==1:
++            if mirror[1] != "":
+                 if mirror[1].endswith("\\1"):
+                     smirror = mirror[2] + " " + mirror[1] + " \\n "
+                 else:
+@@ -548,20 +549,24 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
+         if self.sstatemirrors_changed == 0:
+             self.sstatemirrors_changed = 1
+             sstatemirrors = self.configuration.sstatemirror
+-            while sstatemirrors.find(searched_string) != -1:
+-                if sstatemirrors.find(searched_string,1) != -1:
+-                    sstatemirror = sstatemirrors[:sstatemirrors.find(searched_string,1)]
+-                    sstatemirrors = sstatemirrors[sstatemirrors.find(searched_string,1):]
+-                else:
+-                    sstatemirror = sstatemirrors
+-                    sstatemirrors = sstatemirrors[1:]
+-
+-                sstatemirror_fields = [x for x in sstatemirror.split(' ') if x.strip()]
+-                if sstatemirror_fields[0] == "file://(.*)":
+-                    sm_list = [ 0, sstatemirror_fields[1], "file://(.*)"]
+-                else:
+-                    sm_list = [ 1, sstatemirror_fields[1], sstatemirror_fields[0]]
++            if sstatemirrors == "":
++                sm_list = [ 0, "", "file://(.*)"]
+                 self.sstatemirrors_list.append(sm_list)
 +            else:
-+                # This is an unsupported case!
-+                lastcmp = (i or "")
-+                i = ""
-+            i.strip()
-+            if not i:
-+                continue
++                while sstatemirrors.find(searched_string) != -1:
++                    if sstatemirrors.find(searched_string,1) != -1:
++                        sstatemirror = sstatemirrors[:sstatemirrors.find(searched_string,1)]
++                        sstatemirrors = sstatemirrors[sstatemirrors.find(searched_string,1):]
++                    else:
++                        sstatemirror = sstatemirrors
++                        sstatemirrors = sstatemirrors[1:]
 +
-+        if inversion:
-+            if i.endswith(')'):
-+                i = i[:-1] or ""
-+                inversion = False
-+                if lastver and i:
-+                    lastver += " "
-+            if i:
-+                lastver += i
-+                if lastdep in r and r[lastdep] and r[lastdep] != lastver:
-+                    raise ValueError("Error, item %s appeared in dependency string '%s' multiple times with different values.  explode_dep_versions cannot cope with this." % (lastdep, s))
-+                r[lastdep] = lastcmp + " " + lastver
-+            continue
-+
-+        #if not inversion:
-+        lastdep = i
-+        lastver = ""
-+        lastcmp = ""
-+        if not (i in r and r[i]):
-+            r[lastdep] = None
++                    sstatemirror_fields = [x for x in sstatemirror.split(' ') if x.strip()]
++                    if sstatemirror_fields[0] == "file://(.*)":
++                        sm_list = [ 0, sstatemirror_fields[1], "file://(.*)"]
++                    else:
++                        sm_list = [ 1, sstatemirror_fields[1], sstatemirror_fields[0]]
++                    self.sstatemirrors_list.append(sm_list)
  
-     return r
- 
+         index = 0
+         for mirror in self.sstatemirrors_list:
 -- 
-1.7.3.4
+1.7.9.5
 
 
 
