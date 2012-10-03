@@ -1,20 +1,30 @@
-Received: from mga01.intel.com ([192.55.52.88])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1TJOG4-0008Uk-Nm
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 03 Oct 2012 14:41:00 +0200
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 03 Oct 2012 05:28:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,527,1344236400"; d="scan'208";a="229983795"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.122.52])
-	by fmsmga002.fm.intel.com with ESMTP; 03 Oct 2012 05:27:59 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  3 Oct 2012 13:27:57 +0100
-Message-Id: <1349267277-1380-1-git-send-email-paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] fetch2: raise an exception if user specifies protocol=git with http://
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1TJOI6-00005L-Cb for bitbake-devel@lists.openembedded.org;
+	Wed, 03 Oct 2012 14:43:06 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q93CU7xQ027256
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 3 Oct 2012 13:30:07 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 26503-03 for <bitbake-devel@lists.openembedded.org>;
+	Wed,  3 Oct 2012 13:30:02 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q93CTuLN027236
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 3 Oct 2012 13:29:58 +0100
+Message-ID: <1349267399.18301.30.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Wed, 03 Oct 2012 13:29:59 +0100
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: [PATCH] providers.py: Fix PREFERRED_VERSION containing epochs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,34 +36,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 03 Oct 2012 12:41:00 -0000
+X-List-Received-Date: Wed, 03 Oct 2012 12:43:06 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-It is a common mistake to use http:// and protocol=git when attempting
-to fetch from a git repository using the http protocol; if this is
-detected then throw an error explaining that you need to use git:// with
-protocol=http instead.
+For some reason the code calls int() on the epoch component of any
+PREFERRED_VERSION. Since this is compared against strings, the comparison
+would always fail. This removes the stray cast and allows epochs
+in preferred_version to work correctly.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+[YOCTO #3187]
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/fetch2/wget.py |    3 +++
- 1 file changed, 3 insertions(+)
+diff --git a/bitbake/lib/bb/providers.py b/bitbake/lib/bb/providers.py
+index 24cb217..fcee6dc 100644
+--- a/bitbake/lib/bb/providers.py
++++ b/bitbake/lib/bb/providers.py
+@@ -130,7 +130,7 @@ def findPreferredProvider(pn, cfgData, dataCache, pkg_pn = None, item = None):
+         m = re.match('(\d+:)*(.*)(_.*)*', preferred_v)
+         if m:
+             if m.group(1):
+-                preferred_e = int(m.group(1)[:-1])
++                preferred_e = m.group(1)[:-1]
+             else:
+                 preferred_e = None
+             preferred_v = m.group(2)
 
-diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index 9affa0d..ea99198 100644
---- a/bitbake/lib/bb/fetch2/wget.py
-+++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -49,6 +49,9 @@ class Wget(FetchMethod):
-         return True
- 
-     def urldata_init(self, ud, d):
-+        if 'protocol' in ud.parm:
-+            if ud.parm['protocol'] == 'git':
-+                raise bb.fetch2.ParameterError("Invalid protocol - if you wish to fetch from a git repository using http, you need to instead use the git:// prefix with protocol=http", ud.url)
- 
-         if 'downloadfilename' in ud.parm:
-             ud.basename = ud.parm['downloadfilename']
--- 
-1.7.9.5
 
 
 
