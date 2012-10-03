@@ -1,21 +1,21 @@
 Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <constantinx.musca@intel.com>) id 1TJ502-0005lw-9K
+	(envelope-from <constantinx.musca@intel.com>) id 1TJLvZ-00047D-A2
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 02 Oct 2012 18:07:10 +0200
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 02 Oct 2012 08:54:10 -0700
+	Wed, 03 Oct 2012 12:11:41 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 03 Oct 2012 02:58:40 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,524,1344236400"; d="scan'208";a="151553515"
+X-IronPort-AV: E=Sophos;i="4.80,527,1344236400"; d="scan'208";a="199985626"
 Received: from costin-desktop (HELO localhost.localdomain) ([10.237.105.66])
-	by AZSMGA002.ch.intel.com with ESMTP; 02 Oct 2012 08:54:09 -0700
+	by azsmga001.ch.intel.com with ESMTP; 03 Oct 2012 02:58:39 -0700
 From: Constantin Musca <constantinx.musca@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  2 Oct 2012 17:59:45 +0300
-Message-Id: <1349189985-8377-1-git-send-email-constantinx.musca@intel.com>
+Date: Wed,  3 Oct 2012 12:04:17 +0300
+Message-Id: <1349255057-29737-1-git-send-email-constantinx.musca@intel.com>
 X-Mailer: git-send-email 1.7.9.5
 Cc: Constantin Musca <constantinx.musca@intel.com>
-Subject: [PATCH] hob/hobpages: Generate the title label every time
+Subject: [PATCH] hob/imagedetailspage: disable the deploy tool for qemu machines
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,30 +27,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 02 Oct 2012 16:07:10 -0000
+X-List-Received-Date: Wed, 03 Oct 2012 10:11:41 -0000
 
-- the title label is destroyed at page switching (that's why we need
-to generate it every time)
+- qemu images cannot be deployed to hardware, even if live
+images (hddimg and iso) files are created
 
-[YOCTO #3195]
+[YOCTO #3196]
 
 Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/hobpages.py |    1 +
- 1 file changed, 1 insertion(+)
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/hobpages.py b/bitbake/lib/bb/ui/crumbs/hobpages.py
-index 5b49764..0fd3598 100755
---- a/bitbake/lib/bb/ui/crumbs/hobpages.py
-+++ b/bitbake/lib/bb/ui/crumbs/hobpages.py
-@@ -62,6 +62,7 @@ class HobPage (gtk.VBox):
+diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+index a843ad4..79bca2e 100755
+--- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
++++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+@@ -426,6 +426,8 @@ class ImageDetailsPage (HobPage):
+         return mach_runnable
  
-         hbox = gtk.HBox()
- 
-+        self.title_label = gtk.Label()
-         self.title_label.set_markup("<span size='x-large'>%s</span>" % self.title)
-         hbox.pack_start(self.title_label, expand=False, fill=False, padding=20)
- 
+     def test_deployable(self, image_name):
++        if self.builder.configuration.curr_mach.startswith("qemu"):
++            return False
+         deployable = False
+         for t in self.builder.parameters.deployable_image_types:
+             if image_name.endswith(t):
 -- 
 1.7.9.5
 
