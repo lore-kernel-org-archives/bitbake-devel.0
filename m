@@ -1,30 +1,21 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1TJlEz-00044x-97 for bitbake-devel@lists.openembedded.org;
-	Thu, 04 Oct 2012 15:13:25 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q94D0MaQ006870;
-	Thu, 4 Oct 2012 14:00:22 +0100
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 06441-02; Thu,  4 Oct 2012 14:00:17 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q94D0Fix006864
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Thu, 4 Oct 2012 14:00:16 +0100
-Message-ID: <1349355619.18301.94.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Constantin Musca <constantinx.musca@intel.com>
-Date: Thu, 04 Oct 2012 14:00:19 +0100
-In-Reply-To: <1349327752-25155-1-git-send-email-constantinx.musca@intel.com>
-References: <1349327752-25155-1-git-send-email-constantinx.musca@intel.com>
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] hob/hobeventhandler: Throw an exception if runCommand fails
+Received: from mga09.intel.com ([134.134.136.24])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <constantinx.musca@intel.com>) id 1TK87g-0000Sl-G9
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 05 Oct 2012 15:39:24 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 05 Oct 2012 06:26:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.80,541,1344236400"; d="scan'208";a="202052925"
+Received: from costin-desktop (HELO localhost.localdomain) ([10.237.105.66])
+	by orsmga001.jf.intel.com with ESMTP; 05 Oct 2012 06:26:20 -0700
+From: Constantin Musca <constantinx.musca@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri,  5 Oct 2012 15:31:59 +0300
+Message-Id: <1349440319-23916-1-git-send-email-constantinx.musca@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Cc: Constantin Musca <constantinx.musca@intel.com>
+Subject: [PATCH] hob/hobeventhandler: Describe the runCommand failure exception
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,24 +27,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 04 Oct 2012 13:13:25 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 05 Oct 2012 13:39:24 -0000
 
-On Thu, 2012-10-04 at 08:15 +0300, Constantin Musca wrote:
-> - throw a Hob exception if runCommand returns 'Busy' or
-> 'No such command'
-> 
-> [YOCTO #1245]
-> 
-> Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
-> ---
->  bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+[YOCTO #1245]
 
-Merged to master, thanks.
+Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Richard
+diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+index 2ce5b66..5d038f4 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -105,7 +105,9 @@ class HobHandler(gobject.GObject):
+             result_str = str(result)
+             if (result_str.startswith("Busy (") or
+                     result_str == "No such command"):
+-                raise Exception(result_str)
++                raise Exception('%s has failed with output "%s". ' %
++                        (str(commandline), result_str) +
++                        "We recommend that you restart Hob.")
+             return result
+         except Exception as e:
+             self.commands_async = []
+-- 
+1.7.9.5
 
 
 
