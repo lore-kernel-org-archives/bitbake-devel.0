@@ -1,21 +1,24 @@
-Received: from mga14.intel.com ([143.182.124.37])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristiana.voicu@intel.com>) id 1TLAOQ-0004xl-PH
+	(envelope-from <Peter.Seebach@windriver.com>) id 1TLIcT-0007qW-Sw
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 08 Oct 2012 12:16:59 +0200
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga102.ch.intel.com with ESMTP; 08 Oct 2012 03:03:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,551,1344236400"; d="scan'208";a="153640623"
-Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
-	([10.237.105.151])
-	by AZSMGA002.ch.intel.com with ESMTP; 08 Oct 2012 03:03:49 -0700
-From: Cristiana Voicu <cristiana.voicu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon,  8 Oct 2012 13:05:06 +0300
-Message-Id: <1349690706-26574-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH v2] hob/imageconfigurationpage: a 'hob-image' appears listed in the base image combo box
+	Mon, 08 Oct 2012 21:04:02 +0200
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id q98Iopkp013945
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 8 Oct 2012 11:50:53 -0700 (PDT)
+Received: from localhost.localdomain (172.25.34.64) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.2.309.2;
+	Mon, 8 Oct 2012 11:50:51 -0700
+From: Peter Seebach <peter.seebach@windriver.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Mon, 8 Oct 2012 13:50:49 -0500
+Message-ID: <cover.1349721987.git.peter.seebach@windriver.com>
+X-Mailer: git-send-email 1.7.0.4
+MIME-Version: 1.0
+Subject: v5 [PATCH 0/2] variable history and file inclusion tracking
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,31 +30,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 08 Oct 2012 10:16:59 -0000
+X-List-Received-Date: Mon, 08 Oct 2012 19:04:02 -0000
+Content-Type: text/plain
 
--remove this image from image combo box
+This fixes one straight up bug (wrong kind of empty container literal)
+and improves clarity of messages in a number of cases by reporting who
+called finalize when a finalize() operation applies overrides. Fully
+supporting that for oe-core would require a couple of tweaks in oe-core,
+but this improves output regardless.
 
-[YOCTO #3230]
+The following changes since commit 90fd57ee3cb2856c10bda1f5af4879d2b7cf2668:
+  Cristiana Voicu (1):
+        hob/imageconfigurationpage: a 'hob-image' appears listed in the base image combo box
 
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
----
- bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    1 +
- 1 file changed, 1 insertion(+)
+are available in the git repository at:
 
-diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-index e1c7a67..8988df0 100644
---- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-@@ -368,6 +368,7 @@ class ImageConfigurationPage (HobPage):
-         if self.builder.parameters.image_black_pattern:
-             for i in self.builder.parameters.image_black_pattern.split():
-                 black_pattern.append(re.compile(i))
-+        black_pattern.append(re.compile("hob-image"))
- 
-         it = image_model.get_iter_first()
-         self._image_combo_disconnect_signal()
--- 
-1.7.9.5
+  git://git.yoctoproject.org/poky-contrib seebs/incvar
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=seebs/incvar
+
+Peter Seebach (2):
+  data_smart.py and friends: Track file inclusions for bitbake -e
+  data_smart.py and friends: Track variable history
+
+ lib/bb/cooker.py                   |   15 ++-
+ lib/bb/data.py                     |   34 +++++-
+ lib/bb/data.pyc                    |  Bin 0 -> 14383 bytes
+ lib/bb/data_smart.py               |  235 ++++++++++++++++++++++++++++++++----
+ lib/bb/data_smart.pyc              |  Bin 0 -> 21279 bytes
+ lib/bb/parse/__init__.py           |    3 +-
+ lib/bb/parse/ast.py                |   25 +++-
+ lib/bb/parse/parse_py/BBHandler.py |    6 +-
+ 8 files changed, 281 insertions(+), 37 deletions(-)
+ create mode 100644 lib/bb/data.pyc
+ create mode 100644 lib/bb/data_smart.pyc
 
 
 
