@@ -1,24 +1,26 @@
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from mail.windriver.com ([147.11.1.11])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Peter.Seebach@windriver.com>) id 1TLIcT-0007qW-Sw
+	(envelope-from <Peter.Seebach@windriver.com>) id 1TLIcU-0007qX-EO
 	for bitbake-devel@lists.openembedded.org;
 	Mon, 08 Oct 2012 21:04:02 +0200
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id q98Iopkp013945
+	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id q98IosmM011339
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 8 Oct 2012 11:50:53 -0700 (PDT)
+	Mon, 8 Oct 2012 11:50:54 -0700 (PDT)
 Received: from localhost.localdomain (172.25.34.64) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.2.309.2;
-	Mon, 8 Oct 2012 11:50:51 -0700
+	Mon, 8 Oct 2012 11:50:54 -0700
 From: Peter Seebach <peter.seebach@windriver.com>
 To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 8 Oct 2012 13:50:49 -0500
-Message-ID: <cover.1349721987.git.peter.seebach@windriver.com>
+Date: Mon, 8 Oct 2012 13:50:50 -0500
+Message-ID: <51ac38f69e9d576a9c76b3ff067f8d4defee2c9e.1349721987.git.peter.seebach@windriver.com>
 X-Mailer: git-send-email 1.7.0.4
+In-Reply-To: <cover.1349721987.git.peter.seebach@windriver.com>
+References: <cover.1349721987.git.peter.seebach@windriver.com>
 MIME-Version: 1.0
-Subject: v5 [PATCH 0/2] variable history and file inclusion tracking
+Subject: [PATCH 1/2] data_smart.py and friends: Track file inclusions for bitbake -e
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,36 +35,130 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 X-List-Received-Date: Mon, 08 Oct 2012 19:04:02 -0000
 Content-Type: text/plain
 
-This fixes one straight up bug (wrong kind of empty container literal)
-and improves clarity of messages in a number of cases by reporting who
-called finalize when a finalize() operation applies overrides. Fully
-supporting that for oe-core would require a couple of tweaks in oe-core,
-but this improves output regardless.
+This code adds inclusion history to bitbake -e output, showing
+which files were included, in what order. This doesn't completely
+resolve timing questions, because it doesn't show you which lines
+of a file were processed before or after a given include, but it
+does let you figure out what the path was by which a particular
+file ended up in your build at all.
 
-The following changes since commit 90fd57ee3cb2856c10bda1f5af4879d2b7cf2668:
-  Cristiana Voicu (1):
-        hob/imageconfigurationpage: a 'hob-image' appears listed in the base image combo box
+How it works: data_smart acquires a .history member, which is an
+IncludeHistory; this represents the inclusion of a file and all its
+inclusions, recursively. It provides methods for including files,
+for finishing inclusion (done as an __exit__), and for
+dumping the whole tree.
 
-are available in the git repository at:
+The parser is modified to run includes inside a with() to push
+and pop the include filename.
 
-  git://git.yoctoproject.org/poky-contrib seebs/incvar
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=seebs/incvar
+Signed-off-by: Peter Seebach <peter.seebach@windriver.com>
+---
+ lib/bb/cooker.py         |    5 +++++
+ lib/bb/data_smart.py     |   44 ++++++++++++++++++++++++++++++++++++++++++++
+ lib/bb/parse/__init__.py |    3 ++-
+ 3 files changed, 51 insertions(+), 1 deletions(-)
 
-Peter Seebach (2):
-  data_smart.py and friends: Track file inclusions for bitbake -e
-  data_smart.py and friends: Track variable history
-
- lib/bb/cooker.py                   |   15 ++-
- lib/bb/data.py                     |   34 +++++-
- lib/bb/data.pyc                    |  Bin 0 -> 14383 bytes
- lib/bb/data_smart.py               |  235 ++++++++++++++++++++++++++++++++----
- lib/bb/data_smart.pyc              |  Bin 0 -> 21279 bytes
- lib/bb/parse/__init__.py           |    3 +-
- lib/bb/parse/ast.py                |   25 +++-
- lib/bb/parse/parse_py/BBHandler.py |    6 +-
- 8 files changed, 281 insertions(+), 37 deletions(-)
- create mode 100644 lib/bb/data.pyc
- create mode 100644 lib/bb/data_smart.pyc
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 7ca1ffd..0c7c4e0 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -332,6 +332,11 @@ class BBCooker:
+                 parselog.exception("Unable to read %s", fn)
+                 raise
+ 
++        # Display history
++        with closing(StringIO()) as env:
++            self.configuration.data.history.emit(env)
++            logger.plain(env.getvalue())
++
+         # emit variables and shell functions
+         data.update_data(envdata)
+         with closing(StringIO()) as env:
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index ec3c04e..864f527 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -114,6 +114,48 @@ class ExpansionError(Exception):
+     def __str__(self):
+         return self.msg
+ 
++class IncludeHistory(object):
++    def __init__(self, parent = None, filename = None):
++        self.parent = parent
++        if parent:
++            self.top = parent.top
++        else:
++            self.top = self
++        self.filename = filename or '[TOP LEVEL]'
++        self.children = []
++        self.current = self
++
++    def include(self, filename):
++        newfile = IncludeHistory(self.current, filename)
++        self.current.children.append(newfile)
++        self.current = newfile
++        return self
++
++    def __enter__(self):
++        pass
++
++    def __exit__(self, a, b, c):
++        if self.current.parent:
++            self.current = self.current.parent
++        else:
++            bb.warn("Include log: Tried to finish '%s' at top level." % filename)
++        return False
++
++    def emit(self, o, level = 0):
++        """Emit an include history file, and its children."""
++        if self != self.top:
++            spaces = "  " * level
++            o.write("# %s%s" % (spaces, self.filename))
++            if len(self.children) > 0:
++                o.write(" includes:")
++            o.write("\n")
++            level = level + 1
++        else:
++            o.write("#\n# INCLUDE HISTORY:\n#\n")
++        for child in self.children:
++            child.emit(o, level)
++
++
+ class DataSmart(MutableMapping):
+     def __init__(self, special = COWDictBase.copy(), seen = COWDictBase.copy() ):
+         self.dict = {}
+@@ -121,6 +163,7 @@ class DataSmart(MutableMapping):
+         # cookie monster tribute
+         self._special_values = special
+         self._seen_overrides = seen
++        self.history = IncludeHistory()
+ 
+         self.expand_cache = {}
+ 
+@@ -414,6 +457,7 @@ class DataSmart(MutableMapping):
+         # we really want this to be a DataSmart...
+         data = DataSmart(seen=self._seen_overrides.copy(), special=self._special_values.copy())
+         data.dict["_data"] = self.dict
++        data.history = copy.deepcopy(self.history)
+ 
+         return data
+ 
+diff --git a/lib/bb/parse/__init__.py b/lib/bb/parse/__init__.py
+index 7b9c47e..b24673b 100644
+--- a/lib/bb/parse/__init__.py
++++ b/lib/bb/parse/__init__.py
+@@ -88,7 +88,8 @@ def handle(fn, data, include = 0):
+     """Call the handler that is appropriate for this file"""
+     for h in handlers:
+         if h['supports'](fn, data):
+-            return h['handle'](fn, data, include)
++            with data.history.include(fn):
++                return h['handle'](fn, data, include)
+     raise ParseError("not a BitBake file", fn)
+ 
+ def init(fn, data):
+-- 
+1.7.0.4
 
 
 
