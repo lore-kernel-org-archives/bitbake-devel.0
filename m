@@ -1,21 +1,20 @@
-Received: from mga14.intel.com ([143.182.124.37])
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristiana.voicu@intel.com>) id 1TMeYh-0001lc-21
+	(envelope-from <andrei.adrianx.dinu@intel.com>) id 1TMgnL-0002iL-QV
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 12 Oct 2012 14:41:43 +0200
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga102.ch.intel.com with ESMTP; 12 Oct 2012 05:28:30 -0700
+	Fri, 12 Oct 2012 17:05:00 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 12 Oct 2012 07:50:41 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,576,1344236400"; d="scan'208";a="203706184"
-Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
-	([10.237.105.151])
-	by azsmga001.ch.intel.com with ESMTP; 12 Oct 2012 05:28:28 -0700
-From: Cristiana Voicu <cristiana.voicu@intel.com>
+X-IronPort-AV: E=Sophos;i="4.80,576,1344236400"; d="scan'208";a="204845475"
+Received: from adinu-vostro-460 (HELO localhost.localdomain) ([10.237.105.39])
+	by orsmga001.jf.intel.com with ESMTP; 12 Oct 2012 07:50:40 -0700
+From: Andrei Dinu <andrei.adrianx.dinu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 12 Oct 2012 15:29:46 +0300
-Message-Id: <1350044986-21937-1-git-send-email-cristiana.voicu@intel.com>
+Date: Fri, 12 Oct 2012 17:51:30 +0300
+Message-Id: <1350053490-5977-1-git-send-email-andrei.adrianx.dinu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob: change behavior for "cancel" button from the Recipe selection page
+Subject: [PATCH] hob: stop build without percentage shown
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,57 +26,48 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 Oct 2012 12:41:43 -0000
+X-List-Received-Date: Fri, 12 Oct 2012 15:05:00 -0000
 
--when returned to the Image configuration page, after canceling on the
-Recipe selection page, the image selected previously is now shown corectly
+added a method in progressbar.py that doesn't update the
+percentage in the progress bar shown in hob.
 
-[YOCTO #3205}
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+the call of the method is done in builder.py.
+
+Signed-off-by: Andrei Dinu <andrei.adrianx.dinu@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/builder.py                |    1 +
- bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    1 +
- bitbake/lib/bb/ui/crumbs/recipeselectionpage.py    |    3 +++
- 3 files changed, 5 insertions(+)
+ bitbake/lib/bb/ui/crumbs/builder.py     |    2 +-
+ bitbake/lib/bb/ui/crumbs/progressbar.py |    5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index 6ddc5b6..7a30b7c 100755
+index 6ddc5b6..2a41657 100755
 --- a/bitbake/lib/bb/ui/crumbs/builder.py
 +++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -126,6 +126,7 @@ class Configuration:
-         self.selected_image = None
-         self.selected_recipes = []
-         self.selected_packages = []
-+        self.initial_selected_image = None
-         self.initial_selected_packages = []
-         self.initial_user_selected_packages = []
+@@ -1480,7 +1480,7 @@ class Builder(gtk.Window):
+         if response != gtk.RESPONSE_CANCEL:
+             self.stopping = True
+         if response == gtk.RESPONSE_OK:
+-            self.build_details_page.progress_bar.set_title("Stopping the build...")
++            self.build_details_page.progress_bar.set_stop_title("Stopping the build....")
+             self.build_details_page.progress_bar.set_rcstyle("stop")
+             self.cancel_build_sync()
+         elif response == gtk.RESPONSE_YES:
+diff --git a/bitbake/lib/bb/ui/crumbs/progressbar.py b/bitbake/lib/bb/ui/crumbs/progressbar.py
+index f75818a..3e2c660 100644
+--- a/bitbake/lib/bb/ui/crumbs/progressbar.py
++++ b/bitbake/lib/bb/ui/crumbs/progressbar.py
+@@ -43,6 +43,11 @@ class HobProgressBar (gtk.ProgressBar):
+         text += " %.0f%%" % self.percentage
+         self.set_text(text)
  
-diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-index 8988df0..cbef85a 100644
---- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-@@ -432,6 +432,7 @@ class ImageConfigurationPage (HobPage):
-         self.builder.just_bake()
- 
-     def edit_image_button_clicked_cb(self, button):
-+        self.builder.configuration.initial_selected_image = self.builder.configuration.selected_image
-         self.builder.show_recipes()
- 
-     def template_button_clicked_cb(self, button):
-diff --git a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-index 8655c29..79c7790 100755
---- a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-@@ -193,6 +193,9 @@ class RecipeSelectionPage (HobPage):
-         self.builder.build_packages()
- 
-     def back_button_clicked_cb(self, button):
-+        self.builder.recipe_model.set_selected_image(self.builder.configuration.initial_selected_image)
-+        self.builder.image_configuration_page.update_image_combo(self.builder.recipe_model, self.builder.configuration.initial_selected_image)
-+        self.builder.image_configuration_page.update_image_desc()
-         self.builder.show_configuration()
- 
-     def refresh_selection(self):
++    def set_stop_title(self, text=None):
++	if not text:
++	    text = ""
++	self.set_text(text)
++
+     def reset(self):
+         self.set_fraction(0)
+         self.set_text("")
 -- 
 1.7.9.5
 
