@@ -1,36 +1,20 @@
-Received: from mail-ia0-f175.google.com ([209.85.210.175])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jefro.net@gmail.com>) id 1TMMgP-00050U-22
+	(envelope-from <andrei.adrianx.dinu@intel.com>) id 1TMbPJ-0003YE-8V
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 11 Oct 2012 19:36:29 +0200
-Received: by mail-ia0-f175.google.com with SMTP id b35so1430153iac.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 11 Oct 2012 10:23:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:date
-	:x-google-sender-auth:message-id:subject:from:to:cc:content-type
-	:content-transfer-encoding;
-	bh=Kr0Q2EXdd51r9omPZOpbxQrPIyLhGeczltMoeJF++0U=;
-	b=U31fQpgWI/FmTJMU7SzCj/bKWE2YOpz/c7CDh1tiNLxXQ4iUw4AuH3nTkNRO+cgXh/
-	F7fKQ11qrQakkEESE7II/MKiVuW335WZVFGBZaloekYdKVu3ssn6ARwVxXttmy1yHbUZ
-	PNnE1Mn0/5w8NH1ZguwX6VsI5gRH2w9zGo44+TLd3+iage+w/74n4hMnE9I5sUZckGQC
-	rjtkvEg/e7VK4MAM992bMG3RJ8/CXEKcbWNyNQC0XPQ4cMacTkzJDOPLHgRMKAxbOA0N
-	c8EJxa0jbX/RXMRfsjjIYSJFHv56WxsmkDLQVA/+uwaZV4xLG+LY1OtT75PIeefsRVGR
-	3WAg==
-MIME-Version: 1.0
-Received: by 10.50.173.37 with SMTP id bh5mr1629124igc.45.1349976198007; Thu,
-	11 Oct 2012 10:23:18 -0700 (PDT)
-Sender: jefro.net@gmail.com
-Received: by 10.64.147.37 with HTTP; Thu, 11 Oct 2012 10:23:17 -0700 (PDT)
-In-Reply-To: <CAARmjOUkPhUdqUwKiRXcdKP_mwkT2+iTns=NRxO=Oax=Ap6fvA@mail.gmail.com>
-References: <CAARmjOUkPhUdqUwKiRXcdKP_mwkT2+iTns=NRxO=Oax=Ap6fvA@mail.gmail.com>
-Date: Thu, 11 Oct 2012 10:23:17 -0700
-X-Google-Sender-Auth: xfZNRadRBEDzrc9P-npqPvOzv0g
-Message-ID: <CA+YB3rZxWWtCe18jeMxFrujTpvtcyyFFRDoLSGnU1gC=FSTH5g@mail.gmail.com>
-From: Jeff Osier-Mixon <jefro@jefro.net>
-To: Frederic BLAIN <frederic.blain@valeo.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: recipes & kernel dependencies
+	Fri, 12 Oct 2012 11:19:49 +0200
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 12 Oct 2012 02:05:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.80,576,1344236400"; d="scan'208";a="233101535"
+Received: from adinu-vostro-460 (HELO localhost.localdomain) ([10.237.105.39])
+	by fmsmga001.fm.intel.com with ESMTP; 12 Oct 2012 02:05:32 -0700
+From: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 12 Oct 2012 12:06:23 +0300
+Message-Id: <1350032783-18499-1-git-send-email-andrei.adrianx.dinu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob: image size displayed wrong size in edit packages screen
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -42,61 +26,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 11 Oct 2012 17:36:29 -0000
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Fri, 12 Oct 2012 09:19:49 -0000
 
-Hello Fr=E9d=E9ric
+    size_str = '%.1f' % (size*1.0/(1024*1024)) + ' MB'
+    from /bitbake/lib/bb/ui/crumbs/hobpages.py file transformed
+    the size in MB. In our file it was again multiplied by 1024
+    instead of doing a division by 1024, which brought a faulty size on
+    the edit packages screen.
 
-I think what you are looking for is DEPENDS and RDEPENDS, and possibly
-RECOMMENDS and RRECOMMENDS. Some docs are here:
+Signed-off-by: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-http://www.openembedded.org/wiki/Getting_started
-http://www.openembedded.org/wiki/Inspect_DEPENDS
-http://www.yoctoproject.org/documentation
+diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+index 6792fe0..8eb388e 100755
+--- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
++++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+@@ -208,8 +208,8 @@ class PackageSelectionPage (HobPage):
+         selected_packages_size_str = HobPage._size_to_string(selected_packages_size)
+ 
+         image_overhead_factor = self.builder.configuration.image_overhead_factor
+-        image_rootfs_size = self.builder.configuration.image_rootfs_size * 1024 # image_rootfs_size is KB
+-        image_extra_size = self.builder.configuration.image_extra_size * 1024 # image_extra_size is KB
++        image_rootfs_size = self.builder.configuration.image_rootfs_size / 1024 # image_rootfs_size is KB
++        image_extra_size = self.builder.configuration.image_extra_size / 1024 # image_extra_size is KB
+         base_size = image_overhead_factor * selected_packages_size
+         image_total_size = max(base_size, image_rootfs_size) + image_extra_size
+         if "zypper" in self.builder.configuration.selected_packages:
+-- 
+1.7.9.5
 
-Also, the bitbake-devel list is normally used specifically for
-development of the bitbake tool, so it is not often watched as closely
-for those actually using the tool. You'll probably have better luck
-with the openembedded-core mailing list.
-
-hope this helps!
-
-On Thu, Oct 11, 2012 at 6:17 AM, Frederic BLAIN
-<frederic.blain@valeo.com> wrote:
-> Hello,
->
-> I'm quite new to bitbake but I'm facing a issues with some of my
-> software components that require specific kernel features to be
-> enabled (CONFIG_GPIO_SYSFS, ...) and that the current kernel config
-> does not.
->
-> Is there any way to indicate in a recipe that the component depend on
-> specific kernel feature ? What I'm looking for is a kind of KDEPEND
-> that ideally would trigger an error during the do_qa task.
->
-> Thanks for your support,
->
-> --
-> Fr=E9d=E9ric
-> This e-mail message is intended only for the use of the intended recipien=
-t(s).
-> The information contained therein may be confidential or privileged,
-> and its disclosure or reproduction is strictly prohibited.
-> If you are not the intended recipient, please return it immediately to it=
-s sender
-> at the above address and destroy it.
->
->
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
-
-
-
---=20
-Jeff Osier-Mixon http://jefro.net/blog
-Yocto Project Community Manager @Intel http://yoctoproject.org
 
 
