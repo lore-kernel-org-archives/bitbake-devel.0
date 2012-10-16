@@ -1,20 +1,21 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mga01.intel.com ([192.55.52.88])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristian.iorga@intel.com>) id 1TO36i-0003iz-QH
+	(envelope-from <cristiana.voicu@intel.com>) id 1TO5QZ-0007Yj-BC
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 16 Oct 2012 11:06:37 +0200
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 16 Oct 2012 01:53:18 -0700
+	Tue, 16 Oct 2012 13:35:15 +0200
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga101.fm.intel.com with ESMTP; 16 Oct 2012 04:21:57 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,593,1344236400"; d="scan'208";a="156655339"
-Received: from sentry (HELO localhost.localdomain) ([10.237.105.37])
-	by AZSMGA002.ch.intel.com with ESMTP; 16 Oct 2012 01:53:17 -0700
-From: Cristian Iorga <cristian.iorga@intel.com>
+X-IronPort-AV: E=Sophos;i="4.80,593,1344236400"; d="scan'208";a="234467245"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by fmsmga001.fm.intel.com with ESMTP; 16 Oct 2012 04:21:56 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 16 Oct 2012 11:52:38 +0300
-Message-Id: <1350377558-26471-1-git-send-email-cristian.iorga@intel.com>
+Date: Tue, 16 Oct 2012 14:23:27 +0300
+Message-Id: <1350386607-21309-1-git-send-email-cristiana.voicu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] bitbake: hob/hobwidget: "Brought in by" column is now displayed correctly
+Subject: [PATCH] hob/imageconfigurationpage: progress bar shows when recipe parsing is stopped
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,69 +27,57 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 16 Oct 2012 09:06:37 -0000
+X-List-Received-Date: Tue, 16 Oct 2012 11:35:15 -0000
 
-In "Edit Recipes" and "Edit packages" pages, the "Brought in by"
-column is displayed correctly, with the right number of additional
-packages and a proper title.
+-when the recipe parsing process is stopped, the progress bar shows
+"Stopping recipe parsing"
 
-Fixes [YOCTO #2195].
-
-Signed-off-by: Cristian Iorga <cristian.iorga@intel.com>
+[YOCTO #3259]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/hobwidget.py            |   10 ++++++++--
- bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    2 +-
- bitbake/lib/bb/ui/crumbs/recipeselectionpage.py  |    2 +-
- 3 files changed, 10 insertions(+), 4 deletions(-)
+ bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/hobwidget.py b/bitbake/lib/bb/ui/crumbs/hobwidget.py
-index 28dc375..65de9df 100644
---- a/bitbake/lib/bb/ui/crumbs/hobwidget.py
-+++ b/bitbake/lib/bb/ui/crumbs/hobwidget.py
-@@ -155,9 +155,15 @@ class HobViewTable (gtk.VBox):
-             bin = binb.split(', ')
-             total_no = len(bin)
-             if total_no > 1 and bin[0] == "User Selected":
--                present_binb = bin[1] + ' (+' + str(total_no) + ')'
-+                if total_no > 2:
-+                    present_binb = bin[1] + ' (+' + str(total_no - 1) + ')'
-+                else:
-+                    present_binb = bin[1]
-             else:
--                present_binb = bin[0] + ' (+' + str(total_no) + ')'
-+                if total_no > 1:
-+                    present_binb = bin[0] + ' (+' + str(total_no - 1) + ')'
-+                else:
-+                    present_binb = bin[0]
-             cell.set_property('text', present_binb)
-         else:
-             cell.set_property('text', "")
-diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-index 6792fe0..d05b4a2 100755
---- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-@@ -52,7 +52,7 @@ class PackageSelectionPage (HobPage):
-                        'col_max'  : 300,
-                        'expand'   : 'True'
-                       }, {
--                       'col_name' : 'Brought in by',
-+                       'col_name' : 'Brought in by (+others)',
-                        'col_id'   : PackageListModel.COL_BINB,
-                        'col_style': 'binb',
-                        'col_min'  : 100,
-diff --git a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-index 8655c29..27872ca 100755
---- a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-@@ -52,7 +52,7 @@ class RecipeSelectionPage (HobPage):
-                        'col_max'  : 300,
-                        'expand'   : 'True'
-                       }, {
--                       'col_name' : 'Brought in by',
-+                       'col_name' : 'Brought in by (+others)',
-                        'col_id'   : RecipeListModel.COL_BINB,
-                        'col_style': 'binb',
-                        'col_min'  : 100,
+diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+index 8988df0..37a3e15 100644
+--- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
++++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+@@ -45,6 +45,7 @@ class ImageConfigurationPage (HobPage):
+         # or by manual. If by manual, all user's recipe selection and package selection are
+         # cleared.
+         self.machine_combo_changed_by_manual = True
++        self.stopping = False
+         self.create_visual_elements()
+ 
+     def create_visual_elements(self):
+@@ -114,9 +115,10 @@ class ImageConfigurationPage (HobPage):
+         self.show_all()
+ 
+     def update_progress_bar(self, title, fraction, status=None):
+-        self.progress_bar.update(fraction)
+-        self.progress_bar.set_title(title)
+-        self.progress_bar.set_rcstyle(status)
++        if self.stopping == False:
++            self.progress_bar.update(fraction)
++            self.progress_bar.set_title(title)
++            self.progress_bar.set_rcstyle(status)
+ 
+     def show_info_populating(self):
+         self._pack_components(pack_config_build_button = False)
+@@ -248,9 +250,13 @@ class ImageConfigurationPage (HobPage):
+         return button_box
+ 
+     def stop_button_clicked_cb(self, button):
++        self.stopping = True
++        self.progress_bar.set_text("Stopping recipe parsing")
++        self.progress_bar.set_rcstyle("stop")
+         self.builder.cancel_parse_sync()
+ 
+     def machine_combo_changed_cb(self, machine_combo):
++        self.stopping = False
+         combo_item = machine_combo.get_active_text()
+         if not combo_item or combo_item == self.__dummy_machine__:
+             return
 -- 
 1.7.9.5
 
