@@ -1,20 +1,20 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <andrei.adrianx.dinu@intel.com>) id 1TMgnL-0002iL-QV
+	(envelope-from <cristian.iorga@intel.com>) id 1TO36i-0003iz-QH
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 12 Oct 2012 17:05:00 +0200
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 12 Oct 2012 07:50:41 -0700
+	Tue, 16 Oct 2012 11:06:37 +0200
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga101.ch.intel.com with ESMTP; 16 Oct 2012 01:53:18 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,576,1344236400"; d="scan'208";a="204845475"
-Received: from adinu-vostro-460 (HELO localhost.localdomain) ([10.237.105.39])
-	by orsmga001.jf.intel.com with ESMTP; 12 Oct 2012 07:50:40 -0700
-From: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+X-IronPort-AV: E=Sophos;i="4.80,593,1344236400"; d="scan'208";a="156655339"
+Received: from sentry (HELO localhost.localdomain) ([10.237.105.37])
+	by AZSMGA002.ch.intel.com with ESMTP; 16 Oct 2012 01:53:17 -0700
+From: Cristian Iorga <cristian.iorga@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 12 Oct 2012 17:51:30 +0300
-Message-Id: <1350053490-5977-1-git-send-email-andrei.adrianx.dinu@intel.com>
+Date: Tue, 16 Oct 2012 11:52:38 +0300
+Message-Id: <1350377558-26471-1-git-send-email-cristian.iorga@intel.com>
 X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob: stop build without percentage shown
+Subject: [PATCH] bitbake: hob/hobwidget: "Brought in by" column is now displayed correctly
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,48 +26,69 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 Oct 2012 15:05:00 -0000
+X-List-Received-Date: Tue, 16 Oct 2012 09:06:37 -0000
 
-added a method in progressbar.py that doesn't update the
-percentage in the progress bar shown in hob.
+In "Edit Recipes" and "Edit packages" pages, the "Brought in by"
+column is displayed correctly, with the right number of additional
+packages and a proper title.
 
-the call of the method is done in builder.py.
+Fixes [YOCTO #2195].
 
-Signed-off-by: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+Signed-off-by: Cristian Iorga <cristian.iorga@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/builder.py     |    2 +-
- bitbake/lib/bb/ui/crumbs/progressbar.py |    5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ bitbake/lib/bb/ui/crumbs/hobwidget.py            |   10 ++++++++--
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    2 +-
+ bitbake/lib/bb/ui/crumbs/recipeselectionpage.py  |    2 +-
+ 3 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index 6ddc5b6..2a41657 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -1480,7 +1480,7 @@ class Builder(gtk.Window):
-         if response != gtk.RESPONSE_CANCEL:
-             self.stopping = True
-         if response == gtk.RESPONSE_OK:
--            self.build_details_page.progress_bar.set_title("Stopping the build...")
-+            self.build_details_page.progress_bar.set_stop_title("Stopping the build....")
-             self.build_details_page.progress_bar.set_rcstyle("stop")
-             self.cancel_build_sync()
-         elif response == gtk.RESPONSE_YES:
-diff --git a/bitbake/lib/bb/ui/crumbs/progressbar.py b/bitbake/lib/bb/ui/crumbs/progressbar.py
-index f75818a..3e2c660 100644
---- a/bitbake/lib/bb/ui/crumbs/progressbar.py
-+++ b/bitbake/lib/bb/ui/crumbs/progressbar.py
-@@ -43,6 +43,11 @@ class HobProgressBar (gtk.ProgressBar):
-         text += " %.0f%%" % self.percentage
-         self.set_text(text)
- 
-+    def set_stop_title(self, text=None):
-+	if not text:
-+	    text = ""
-+	self.set_text(text)
-+
-     def reset(self):
-         self.set_fraction(0)
-         self.set_text("")
+diff --git a/bitbake/lib/bb/ui/crumbs/hobwidget.py b/bitbake/lib/bb/ui/crumbs/hobwidget.py
+index 28dc375..65de9df 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobwidget.py
++++ b/bitbake/lib/bb/ui/crumbs/hobwidget.py
+@@ -155,9 +155,15 @@ class HobViewTable (gtk.VBox):
+             bin = binb.split(', ')
+             total_no = len(bin)
+             if total_no > 1 and bin[0] == "User Selected":
+-                present_binb = bin[1] + ' (+' + str(total_no) + ')'
++                if total_no > 2:
++                    present_binb = bin[1] + ' (+' + str(total_no - 1) + ')'
++                else:
++                    present_binb = bin[1]
+             else:
+-                present_binb = bin[0] + ' (+' + str(total_no) + ')'
++                if total_no > 1:
++                    present_binb = bin[0] + ' (+' + str(total_no - 1) + ')'
++                else:
++                    present_binb = bin[0]
+             cell.set_property('text', present_binb)
+         else:
+             cell.set_property('text', "")
+diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+index 6792fe0..d05b4a2 100755
+--- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
++++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+@@ -52,7 +52,7 @@ class PackageSelectionPage (HobPage):
+                        'col_max'  : 300,
+                        'expand'   : 'True'
+                       }, {
+-                       'col_name' : 'Brought in by',
++                       'col_name' : 'Brought in by (+others)',
+                        'col_id'   : PackageListModel.COL_BINB,
+                        'col_style': 'binb',
+                        'col_min'  : 100,
+diff --git a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
+index 8655c29..27872ca 100755
+--- a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
++++ b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
+@@ -52,7 +52,7 @@ class RecipeSelectionPage (HobPage):
+                        'col_max'  : 300,
+                        'expand'   : 'True'
+                       }, {
+-                       'col_name' : 'Brought in by',
++                       'col_name' : 'Brought in by (+others)',
+                        'col_id'   : RecipeListModel.COL_BINB,
+                        'col_style': 'binb',
+                        'col_min'  : 100,
 -- 
 1.7.9.5
 
