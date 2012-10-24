@@ -1,21 +1,30 @@
-Received: from mga02.intel.com ([134.134.136.20])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristiana.voicu@intel.com>) id 1TOmIN-0007O6-Ci
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 18 Oct 2012 11:21:39 +0200
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 18 Oct 2012 02:08:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,606,1344236400"; d="scan'208";a="229136878"
-Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
-	([10.237.105.151])
-	by orsmga002.jf.intel.com with ESMTP; 18 Oct 2012 02:08:17 -0700
-From: Cristiana Voicu <cristiana.voicu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 18 Oct 2012 12:09:51 +0300
-Message-Id: <1350551391-4596-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob/settings: add a scroll bar for the box with mirrors
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1TR7UU-00013p-Bh for bitbake-devel@lists.openembedded.org;
+	Wed, 24 Oct 2012 22:23:50 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q9OKAHQP007322;
+	Wed, 24 Oct 2012 21:10:17 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 06617-02; Wed, 24 Oct 2012 21:10:13 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q9OKA94H007316
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
+	Wed, 24 Oct 2012 21:10:11 +0100
+Message-ID: <1351109409.22340.124.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+Date: Wed, 24 Oct 2012 21:10:09 +0100
+In-Reply-To: <1350032783-18499-1-git-send-email-andrei.adrianx.dinu@intel.com>
+References: <1350032783-18499-1-git-send-email-andrei.adrianx.dinu@intel.com>
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] hob: image size displayed wrong size in edit packages screen
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,59 +36,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 18 Oct 2012 09:21:39 -0000
+X-List-Received-Date: Wed, 24 Oct 2012 20:23:51 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-- added a scroll bar in the shared state tab from settings
-- added a signal on it, so when you add a new mirror, it will
-auto-scroll to the end of the list
+On Fri, 2012-10-12 at 12:06 +0300, Andrei Dinu wrote:
+> size_str = '%.1f' % (size*1.0/(1024*1024)) + ' MB'
+>     from /bitbake/lib/bb/ui/crumbs/hobpages.py file transformed
+>     the size in MB. In our file it was again multiplied by 1024
+>     instead of doing a division by 1024, which brought a faulty size on
+>     the edit packages screen.
+> 
+> Signed-off-by: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+> ---
+>  bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-[YOCTO #3229]
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
----
- bitbake/lib/bb/ui/crumbs/hig.py |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+Merged to master, thanks.
 
-diff --git a/bitbake/lib/bb/ui/crumbs/hig.py b/bitbake/lib/bb/ui/crumbs/hig.py
-index ccd9f39..e1aa84c 100644
---- a/bitbake/lib/bb/ui/crumbs/hig.py
-+++ b/bitbake/lib/bb/ui/crumbs/hig.py
-@@ -546,8 +546,6 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
-         sub_vbox.pack_start(label, expand=False, fill=False)
-         sub_vbox.pack_start(sstatedir_widget, expand=False, fill=False, padding=12)
- 
--        sub_vbox = gtk.VBox(False)
--        advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
-         content = "<span weight=\"bold\">Shared state mirrors</span>"
-         tooltip = "URLs pointing to pre-built mirrors that will speed your build. "
-         tooltip += "Select the \'Standard\' configuration if the structure of your "
-@@ -556,8 +554,14 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
-         tooltip += "http://www.yoctoproject.org/docs/current/poky-ref-manual/"
-         tooltip += "poky-ref-manual.html#shared-state\">Yocto Project Reference Manual</a>."
-         table = self.gen_label_info_widget(content, tooltip)
--        sub_vbox.pack_start(table, expand=False, fill=False)
-+        advanced_vbox.pack_start(table, expand=False, fill=False)
- 
-+        sub_vbox = gtk.VBox(False)
-+        scroll = gtk.ScrolledWindow()
-+        scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-+        scroll.add_with_viewport(sub_vbox)
-+        scroll.connect('size-allocate', self.scroll_changed)
-+        advanced_vbox.pack_start(scroll, gtk.TRUE, gtk.TRUE, 0)
-         searched_string = "file://"
- 
-         if self.sstatemirrors_changed == 0:
-@@ -608,6 +612,9 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
-         self.show_all()
-         self.nb.set_current_page(page_num)
- 
-+    def scroll_changed(self, widget, event, data=None):
-+        adj = widget.get_vadjustment()
-+        adj.set_value(adj.upper - adj.page_size)
- 
-     def create_proxy_page(self):
-         advanced_vbox = gtk.VBox(False, 6)
--- 
-1.7.9.5
+Richard
 
 
 
