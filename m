@@ -1,21 +1,30 @@
-Received: from mga01.intel.com ([192.55.52.88])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristiana.voicu@intel.com>) id 1TRkiC-0007kp-LJ
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 26 Oct 2012 16:16:36 +0200
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 26 Oct 2012 07:03:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,654,1344236400"; d="scan'208";a="238776249"
-Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
-	([10.237.105.151])
-	by fmsmga001.fm.intel.com with ESMTP; 26 Oct 2012 06:52:58 -0700
-From: Cristiana Voicu <cristiana.voicu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 26 Oct 2012 16:54:47 +0300
-Message-Id: <1351259688-11696-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob: reordering the layers in the Hob Layers dialog
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1TS2PB-00068E-Gd for bitbake-devel@lists.openembedded.org;
+	Sat, 27 Oct 2012 11:10:09 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q9R8uaxF005922;
+	Sat, 27 Oct 2012 09:56:36 +0100
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 05673-01; Sat, 27 Oct 2012 09:56:31 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id q9R8uU0k005915
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
+	Sat, 27 Oct 2012 09:56:31 +0100
+Message-ID: <1351328189.22340.215.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Cristiana Voicu <cristiana.voicu@intel.com>
+Date: Sat, 27 Oct 2012 09:56:29 +0100
+In-Reply-To: <1351161383-17278-1-git-send-email-cristiana.voicu@intel.com>
+References: <1351161383-17278-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] hob: add a progress indicator when you select 'view log'
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,88 +36,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 26 Oct 2012 14:16:36 -0000
+X-List-Received-Date: Sat, 27 Oct 2012 09:10:09 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
--since the order of the layers can potentially impact
-the build outcome, users should be able to reorder
-the layers within the layers dialog;
--used TreeView Drag and Drop
+On Thu, 2012-10-25 at 13:36 +0300, Cristiana Voicu wrote:
+> - created a new file named "hobthreads.py", defining a thread
+> for opening the log file in a subprocess using subprocess module;
+> in the future I think we will add some other threads here, to
+> implement some other performance issues
+> - on "builddetailspage", "packageselectionpage" and "imagedetailspage"
+> I have changed the manner for opening the log file; it uses the thread
+> to open the file, and on main thread it creates a dialog to show a
+> progress bar, which pulses till the file is open
+> - this was added because when the log file is big, it takes time to
+> be opened; on the dialog you can use "Cancel" button to terminate the
+> process initiated to open the file
+> 
+> [YOCTO #2997]
+> Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 
-[YOCTO #3270]
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
----
- bitbake/lib/bb/ui/crumbs/hig.py |   42 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 41 insertions(+), 1 deletion(-)
+Merged to master, thanks.
 
-diff --git a/bitbake/lib/bb/ui/crumbs/hig.py b/bitbake/lib/bb/ui/crumbs/hig.py
-index 4f4fecb..ee44117 100644
---- a/bitbake/lib/bb/ui/crumbs/hig.py
-+++ b/bitbake/lib/bb/ui/crumbs/hig.py
-@@ -1516,6 +1516,13 @@ class CellRendererPixbufActivatable(gtk.CellRendererPixbuf):
- #
- class LayerSelectionDialog (CrumbsDialog):
- 
-+    TARGETS = [
-+        ("MY_TREE_MODEL_ROW", gtk.TARGET_SAME_WIDGET, 0),
-+        ("text/plain", 0, 1),
-+        ("TEXT", 0, 2),
-+        ("STRING", 0, 3),
-+        ]
-+
-     def gen_label_widget(self, content):
-         label = gtk.Label()
-         label.set_alignment(0, 0)
-@@ -1579,7 +1586,17 @@ class LayerSelectionDialog (CrumbsDialog):
-         layer_tv.set_rules_hint(True)
-         layer_tv.set_headers_visible(False)
-         tree_selection = layer_tv.get_selection()
--        tree_selection.set_mode(gtk.SELECTION_NONE)
-+        tree_selection.set_mode(gtk.SELECTION_SINGLE)
-+
-+        # Allow enable drag and drop of rows including row move
-+        layer_tv.enable_model_drag_source( gtk.gdk.BUTTON1_MASK,
-+            self.TARGETS,
-+            gtk.gdk.ACTION_DEFAULT|
-+            gtk.gdk.ACTION_MOVE)
-+        layer_tv.enable_model_drag_dest(self.TARGETS,
-+            gtk.gdk.ACTION_DEFAULT)
-+        layer_tv.connect("drag_data_get", self.drag_data_get_cb)
-+        layer_tv.connect("drag_data_received", self.drag_data_received_cb)
- 
-         col0= gtk.TreeViewColumn('Path')
-         cell0 = gtk.CellRendererText()
-@@ -1634,6 +1651,29 @@ class LayerSelectionDialog (CrumbsDialog):
- 
-         return hbox, layer_store
- 
-+    def drag_data_get_cb(self, treeview, context, selection, target_id, etime):
-+        treeselection = treeview.get_selection()
-+        model, iter = treeselection.get_selected()
-+        data = model.get_value(iter, 0)
-+        selection.set(selection.target, 8, data)
-+
-+    def drag_data_received_cb(self, treeview, context, x, y, selection, info, etime):
-+        model = treeview.get_model()
-+        data = selection.data
-+        drop_info = treeview.get_dest_row_at_pos(x, y)
-+        if drop_info:
-+            path, position = drop_info
-+            iter = model.get_iter(path)
-+            if (position == gtk.TREE_VIEW_DROP_BEFORE or position == gtk.TREE_VIEW_DROP_INTO_OR_BEFORE):
-+                model.insert_before(iter, [data])
-+            else:
-+                model.insert_after(iter, [data])
-+        else:
-+            model.append([data])
-+        if context.action == gtk.gdk.ACTION_MOVE:
-+            context.finish(True, True, etime)
-+        return
-+
-     def add_hover_cb(self, button, event):
-         self.im.set_from_file(hic.ICON_INDI_ADD_HOVER_FILE)
- 
--- 
-1.7.9.5
+Richard
 
 
 
