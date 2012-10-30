@@ -1,32 +1,21 @@
-Received: from mail-ob0-f175.google.com ([209.85.214.175])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <bue@praqma.net>) id 1TT6ns-0000vS-LC
+	(envelope-from <cristiana.voicu@intel.com>) id 1TTAlU-0007EC-TW
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 30 Oct 2012 09:04:04 +0100
-Received: by mail-ob0-f175.google.com with SMTP id eq6so5413165obc.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 30 Oct 2012 00:50:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=google.com; s=20120113;
-	h=mime-version:date:message-id:subject:from:to:content-type
-	:x-gm-message-state;
-	bh=1WvVx0d8GdYHQ0PMcQOuB7PmFrAqo98kyadlTSYZZaY=;
-	b=a1sHqP9J0+HH6JaKhPwrcK9ry3KWrcb+gB82mUBq3i0yTp/qZyrjk+yTGr634drFmA
-	6BezoznIRX5l+iaQhd1IV4ivQubdpI0sa/t7QqPXAKZL4IZel2ezYOJHuRKF43Bitgmq
-	itiVqCcKQuNRKSZlAjkc6weFXYT34w7oNN/ZJG4Z5SCXpXtDTgYUrwHrm+UNL8AeDCc/
-	2dNg3CXh3SVPoZypDeRoZG0+PCaqsAMl137+QpcZ4SpE36tA3iJjQeiouNYZh62PhTCU
-	tAKKzqskQFBrg3PIUs0GeefZUafAF3aPr3ERaHqhnEX/61XUW2h0b8RwPnOpMgFwauh1
-	GroQ==
-MIME-Version: 1.0
-Received: by 10.60.27.166 with SMTP id u6mr27663546oeg.86.1351583429040; Tue,
-	30 Oct 2012 00:50:29 -0700 (PDT)
-Received: by 10.60.12.161 with HTTP; Tue, 30 Oct 2012 00:50:29 -0700 (PDT)
-Date: Tue, 30 Oct 2012 08:50:29 +0100
-Message-ID: <CAJB+B4Xwq+O6pPr34ufVQ0Jnpis1gfxbVAyWWF+5eLin8CQ_-Q@mail.gmail.com>
-From: Bue Petersen <bue@praqma.net>
+	Tue, 30 Oct 2012 13:17:53 +0100
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 30 Oct 2012 05:03:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.80,679,1344236400"; d="scan'208";a="212942832"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by orsmga001.jf.intel.com with ESMTP; 30 Oct 2012 05:04:15 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-X-Gm-Message-State: ALoCoQkfFJI2A6t5VGYV1+YjLIQsde+AulQZqGNX3/tjZcqAdj0yOdfbyoC5pFNbyDvP2A8Rqofi
-Subject: SDK install path and versioning
+Date: Tue, 30 Oct 2012 14:06:11 +0200
+Message-Id: <1351598771-31041-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob: make some layers non removable
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -38,34 +27,117 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 30 Oct 2012 08:04:04 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Tue, 30 Oct 2012 12:17:53 -0000
 
-Hi,
+- there are some layers which cannot be removed; so ,I have created
+a new variable called BBLAYERS_NON_REMOVABLE located in bblayers.conf,
+which contains those layers which cannot be deleted
+- "meta-hob" layer is added to this variable in hob code, like it's
+added to BBLAYERS var
 
-We are using bitbake + openembedded to build a custom linux platform
-with an image and a SDK for Qt development.
-I have some questions on how to achive some goals regarding automated
-testing. Really hope you can help.
+[YOCTO #3176]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/builder.py         |    2 ++
+ bitbake/lib/bb/ui/crumbs/hig.py             |   15 +++++----------
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    3 +++
+ meta-yocto/conf/bblayers.conf.sample        |    4 ++++
+ 4 files changed, 14 insertions(+), 10 deletions(-)
 
-1) how can we "stamp" a version number in the image? I found
-IMAGE_BASENAME for changing the filename, but I would like also to
-leave some kind of version number that can be checked on the running
-system. What is best practice there?
-2) Regarding the SDK I would like to install it on a custom path. The
-normal setup is system-wide on /usr/local/ as I can see. I need to be
-able to install several at different locations. Maybee even just in
-the workspace where we develop the Qt-application so I always know
-exactly which is used for the test. I found the SDKPATH and
-SDKNATIVEPATH to change this, but do we really need to set the exact
-path at build time?
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index e5222da..add067b 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -172,6 +172,7 @@ class Configuration:
+         # self.extra_setting/self.toolchain_build
+         # bblayers.conf
+         self.layers = params["layer"].split()
++        self.layers_non_removable = params["layers_non_removable"].split()
+         self.default_task = params["default_task"]
+ 
+         # proxy settings
+@@ -1194,6 +1195,7 @@ class Builder(gtk.Window):
+     def show_layer_selection_dialog(self):
+         dialog = LayerSelectionDialog(title = "Layers",
+                      layers = copy.deepcopy(self.configuration.layers),
++                     layers_non_removable = copy.deepcopy(self.configuration.layers_non_removable),
+                      all_layers = self.parameters.all_layers,
+                      parent = self,
+                      flags = gtk.DIALOG_MODAL
+diff --git a/bitbake/lib/bb/ui/crumbs/hig.py b/bitbake/lib/bb/ui/crumbs/hig.py
+index d973086..e56cf2a 100644
+--- a/bitbake/lib/bb/ui/crumbs/hig.py
++++ b/bitbake/lib/bb/ui/crumbs/hig.py
+@@ -1665,11 +1665,12 @@ class LayerSelectionDialog (CrumbsDialog):
+     def add_leave_cb(self, button, event):
+         self.im.set_from_file(hic.ICON_INDI_ADD_FILE)
+ 
+-    def __init__(self, title, layers, all_layers, parent, flags, buttons=None):
++    def __init__(self, title, layers, layers_non_removable, all_layers, parent, flags, buttons=None):
+         super(LayerSelectionDialog, self).__init__(title, parent, flags, buttons)
+ 
+         # class members from other objects
+         self.layers = layers
++        self.layers_non_removable = layers_non_removable
+         self.all_layers = all_layers
+         self.layers_changed = False
+ 
+@@ -1709,10 +1710,7 @@ class LayerSelectionDialog (CrumbsDialog):
+     """
+     def draw_delete_button_cb(self, col, cell, model, it, tv):
+         path =  model.get_value(it, 0)
+-        # Trailing slashes are uncommon in bblayers.conf but confuse os.path.basename
+-        path.rstrip('/')
+-        name = os.path.basename(path)
+-        if name == "meta" or name == "meta-hob":
++        if path in self.layers_non_removable:
+             cell.set_sensitive(False)
+             cell.set_property('pixbuf', None)
+             cell.set_property('mode', gtk.CELL_RENDERER_MODE_INERT)
+@@ -1730,11 +1728,8 @@ class LayerSelectionDialog (CrumbsDialog):
+     """
+     def draw_layer_path_cb(self, col, cell, model, it):
+         path = model.get_value(it, 0)
+-        name = os.path.basename(path)
+-        if name == "meta":
+-            cell.set_property('markup', "<b>Core layer for images: it cannot be removed</b>\n%s" % path)
+-        elif name == "meta-hob":
+-            cell.set_property('markup', "<b>Core layer for Hob: it cannot be removed</b>\n%s" % path)
++        if path in self.layers_non_removable:
++            cell.set_property('markup', "<b>It cannot be removed</b>\n%s" % path)
+         else:
+             cell.set_property('text', path)
+ 
+diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+index 7d3af6c..169eeed 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -439,8 +439,11 @@ class HobHandler(gobject.GObject):
+         params["core_base"] = self.runCommand(["getVariable", "COREBASE"]) or ""
+         hob_layer = params["core_base"] + "/meta-hob"
+         params["layer"] = self.runCommand(["getVariable", "BBLAYERS"]) or ""
++        params["layers_non_removable"] = self.runCommand(["getVariable", "BBLAYERS_NON_REMOVABLE"])
+         if hob_layer not in params["layer"].split():
+             params["layer"] += (" " + hob_layer)
++        if hob_layer not in params["layers_non_removable"].split():
++            params["layers_non_removable"] += (" " + hob_layer)
+         params["dldir"] = self.runCommand(["getVariable", "DL_DIR"]) or ""
+         params["machine"] = self.runCommand(["getVariable", "MACHINE"]) or ""
+         params["distro"] = self.runCommand(["getVariable", "DISTRO"]) or "defaultsetup"
+diff --git a/meta-yocto/conf/bblayers.conf.sample b/meta-yocto/conf/bblayers.conf.sample
+index 98bfd70..7fd755d 100644
+--- a/meta-yocto/conf/bblayers.conf.sample
++++ b/meta-yocto/conf/bblayers.conf.sample
+@@ -10,3 +10,7 @@ BBLAYERS ?= " \
+   ##COREBASE##/meta-yocto \
+   ##COREBASE##/meta-yocto-bsp \
+   "
++BBLAYERS_NON_REMOVABLE ?= " \
++  ##COREBASE##/meta \
++  ##COREBASE##/meta-yocto \
++  "
+-- 
+1.7.9.5
 
-I have done a lot of research and googled intensively, but still not
-solved the problem so I really hope someone can help. Any hints will
-be mostly appreciated.
-
-Thanks.
-Best regards,
-Bue Petersen
 
 
