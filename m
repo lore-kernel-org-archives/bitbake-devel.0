@@ -1,35 +1,32 @@
-Received: from mail-la0-f47.google.com ([209.85.215.47])
+Received: from mail-ob0-f175.google.com ([209.85.214.175])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1TSvme-0008C9-AQ
+	(envelope-from <bue@praqma.net>) id 1TT6ns-0000vS-LC
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 29 Oct 2012 21:18:04 +0100
-Received: by mail-la0-f47.google.com with SMTP id h5so3999472lam.6
+	Tue, 30 Oct 2012 09:04:04 +0100
+Received: by mail-ob0-f175.google.com with SMTP id eq6so5413165obc.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 29 Oct 2012 13:04:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	bh=C8ouM6/UPyeAhKmuANBL/Y7aw5BMM9dz/q6LtR+rLts=;
-	b=vp765k3p5z7y7+fNG4YEVJ0KOfoKJy/KwNX8CYLEUxyUqEWkQ6b+7G1B4CwxkmzezA
-	ufeExkR0qwgxE71mQ6sn1ojtwVIa65O/kcwv42Ar4khC1WHMSjoo6VuDxGjwUeqlvFqC
-	F8NsQ9ijak2iLh8E5JBVl/D5Occ1ehX1oMf2oA0N1F8ZO4Gz8eo50JOYg8b3Y8mX8J31
-	vnLFmr/rJRNeRbCqDI2lBg359HvIF5J3V0rIMI2M8vsk613kRs/DvGR44Qr/R6Qxs853
-	VFt1DTT0cjTmm7fXEsk1Or9bkGBdT6Ktmz0cORVIxcFEoMNkecrMaY84jg5l96V0tAe7
-	aJZg==
-Received: by 10.112.24.6 with SMTP id q6mr12625615lbf.24.1351541069530; Mon,
-	29 Oct 2012 13:04:29 -0700 (PDT)
+	Tue, 30 Oct 2012 00:50:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=google.com; s=20120113;
+	h=mime-version:date:message-id:subject:from:to:content-type
+	:x-gm-message-state;
+	bh=1WvVx0d8GdYHQ0PMcQOuB7PmFrAqo98kyadlTSYZZaY=;
+	b=a1sHqP9J0+HH6JaKhPwrcK9ry3KWrcb+gB82mUBq3i0yTp/qZyrjk+yTGr634drFmA
+	6BezoznIRX5l+iaQhd1IV4ivQubdpI0sa/t7QqPXAKZL4IZel2ezYOJHuRKF43Bitgmq
+	itiVqCcKQuNRKSZlAjkc6weFXYT34w7oNN/ZJG4Z5SCXpXtDTgYUrwHrm+UNL8AeDCc/
+	2dNg3CXh3SVPoZypDeRoZG0+PCaqsAMl137+QpcZ4SpE36tA3iJjQeiouNYZh62PhTCU
+	tAKKzqskQFBrg3PIUs0GeefZUafAF3aPr3ERaHqhnEX/61XUW2h0b8RwPnOpMgFwauh1
+	GroQ==
 MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.114.1.49 with HTTP; Mon, 29 Oct 2012 13:04:09 -0700 (PDT)
-In-Reply-To: <1351540883-10870-1-git-send-email-kergoth@gmail.com>
-References: <1351540883-10870-1-git-send-email-kergoth@gmail.com>
-From: Christopher Larson <chris_larson@mentor.com>
-Date: Mon, 29 Oct 2012 13:04:09 -0700
-X-Google-Sender-Auth: h_nLwta3F0esaolP2Cc0EUmm0Rg
-Message-ID: <CABcZAN=ftmG3BziBcWxiTgi43vqxKgzNPZ1ycB2rV=i-SiKHRg@mail.gmail.com>
+Received: by 10.60.27.166 with SMTP id u6mr27663546oeg.86.1351583429040; Tue,
+	30 Oct 2012 00:50:29 -0700 (PDT)
+Received: by 10.60.12.161 with HTTP; Tue, 30 Oct 2012 00:50:29 -0700 (PDT)
+Date: Tue, 30 Oct 2012 08:50:29 +0100
+Message-ID: <CAJB+B4Xwq+O6pPr34ufVQ0Jnpis1gfxbVAyWWF+5eLin8CQ_-Q@mail.gmail.com>
+From: Bue Petersen <bue@praqma.net>
 To: bitbake-devel@lists.openembedded.org
-Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: Re: [PATCH] command: add error to return of runCommand
+X-Gm-Message-State: ALoCoQkfFJI2A6t5VGYV1+YjLIQsde+AulQZqGNX3/tjZcqAdj0yOdfbyoC5pFNbyDvP2A8Rqofi
+Subject: SDK install path and versioning
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -41,20 +38,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 29 Oct 2012 20:18:04 -0000
+X-List-Received-Date: Tue, 30 Oct 2012 08:04:04 -0000
 Content-Type: text/plain; charset=UTF-8
 
-On Mon, Oct 29, 2012 at 1:01 PM, Christopher Larson <kergoth@gmail.com> wrote:
-> -        ret = server.runCommand(cmdline['action'])
-> -        if ret != True:
-> -            print("Couldn't get default commandline! %s" % ret)
-> +        elif ret != True:
-> +            logger.error("Command '%s' failed: returned %s" % (cmdline, ret))
+Hi,
 
-I forgot that I left the print->logger.error and improved error
-message in. That should probably have been a separate commit. Let me
-know if that's a concern for anyone.
+We are using bitbake + openembedded to build a custom linux platform
+with an image and a SDK for Qt development.
+I have some questions on how to achive some goals regarding automated
+testing. Really hope you can help.
 
--Chris
+1) how can we "stamp" a version number in the image? I found
+IMAGE_BASENAME for changing the filename, but I would like also to
+leave some kind of version number that can be checked on the running
+system. What is best practice there?
+2) Regarding the SDK I would like to install it on a custom path. The
+normal setup is system-wide on /usr/local/ as I can see. I need to be
+able to install several at different locations. Maybee even just in
+the workspace where we develop the Qt-application so I always know
+exactly which is used for the test. I found the SDKPATH and
+SDKNATIVEPATH to change this, but do we really need to set the exact
+path at build time?
+
+I have done a lot of research and googled intensively, but still not
+solved the problem so I really hope someone can help. Any hints will
+be mostly appreciated.
+
+Thanks.
+Best regards,
+Bue Petersen
 
 
