@@ -1,35 +1,21 @@
-Received: from mail-ie0-f175.google.com ([209.85.223.175])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <seth.boll@gmail.com>) id 1TYHxc-00036B-88
+	(envelope-from <cristiana.voicu@intel.com>) id 1TYHyR-0003Ss-NL
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 13 Nov 2012 15:59:32 +0100
-Received: by mail-ie0-f175.google.com with SMTP id c13so10911090ieb.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 13 Nov 2012 06:45:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:cc:content-type;
-	bh=wlbpttgXGIraGLOVf3Mx8wiJyTxV7EgLsB4s4BOdFfU=;
-	b=FaWU/ABL8ubaFLiSpissjYA1ScoNudiQCbTY6Khs0cj+ZPr7/EOMLYQKlSxAUTOe2F
-	YGqvEhPQRXGBjHDvaSqKOEZSoI62rHOS7YNzwPFP8f81NSkJl6nAZXpj/nwis2Z26rYZ
-	udJg6cDOSJVnk2JmRgviA0R4oGcQeDzY0/7KS3lou4uQPbgcwupeDne98EJXHinzy4hf
-	NJDmbsQhMXFkPnl9AzWiNFZ7xw3BxEJM8WnGmS+PTtLsHQuqLwQQuYDkZxG5UaFzz+zg
-	kTbXDZyTRJVZrihVARnpSm2ckbJD5G1MojcExegBwX716nhSPzxCpNsUMDEyeNAREXoS
-	OTgA==
-MIME-Version: 1.0
-Received: by 10.50.89.162 with SMTP id bp2mr11255269igb.7.1352817937470; Tue,
-	13 Nov 2012 06:45:37 -0800 (PST)
-Received: by 10.64.35.170 with HTTP; Tue, 13 Nov 2012 06:45:35 -0800 (PST)
-In-Reply-To: <1352816623.24487.128.camel@ted>
-References: <CA+JN8xNzAvDdt4bgS=z536YciYVAvZGE2+Z=qQa1XP4HCE8=gg@mail.gmail.com>
-	<1352816623.24487.128.camel@ted>
-Date: Tue, 13 Nov 2012 08:45:35 -0600
-Message-ID: <CA+JN8xOF_iVQb30NVdrXEtqieh0E6m2-tSE2uG6UiG+f9C6qHw@mail.gmail.com>
-From: Seth Bollinger <seth.boll@gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH v2] bitbake: Colorize knotty interactive console output
+	Tue, 13 Nov 2012 16:00:23 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 13 Nov 2012 06:46:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.80,767,1344236400"; d="scan'208";a="217118437"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by azsmga001.ch.intel.com with ESMTP; 13 Nov 2012 06:46:27 -0800
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 13 Nov 2012 16:48:46 +0200
+Message-Id: <1352818126-11334-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob: warnings during the build should be displayed in the Issues tab
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -41,97 +27,72 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 13 Nov 2012 14:59:32 -0000
-Content-Type: multipart/alternative; boundary=e89a8f3baef59bd5ff04ce61789a
+X-List-Received-Date: Tue, 13 Nov 2012 15:00:24 -0000
 
---e89a8f3baef59bd5ff04ce61789a
-Content-Type: text/plain; charset=ISO-8859-1
+Any issues encountered during the build (fatal or not) is displayed
+in the Issues tab, and the total number of issues is changed.
 
-I'm not sure how best to resolve this.  Would you like me to add some code
-to try and detect background color?  This seems like it might be more
-complex than it's worth...
+[YOCTO #3376]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/builder.py      |    1 +
+ bitbake/lib/bb/ui/crumbs/runningbuild.py |    8 ++++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-Or would it be better to have a selectable light background color set?  If
-you think light background is more common (I dislike staring at large
-blocks of white :)) it could default to the light color set.
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index ecf5371..25741fe 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -457,6 +457,7 @@ class Builder(gtk.Window):
+         self.handler.build.connect("build-aborted",      self.handler_build_aborted_cb)
+         self.handler.build.connect("task-started",       self.handler_task_started_cb)
+         self.handler.build.connect("log-error",          self.handler_build_failure_cb)
++        self.handler.build.connect("log-warning",        self.handler_build_failure_cb)
+         self.handler.build.connect("log",                self.handler_build_log_cb)
+         self.handler.build.connect("no-provider",        self.handler_no_provider_cb)
+         self.handler.connect("generating-data",          self.handler_generating_data_cb)
+diff --git a/bitbake/lib/bb/ui/crumbs/runningbuild.py b/bitbake/lib/bb/ui/crumbs/runningbuild.py
+index b4d19b6..f6848fd 100644
+--- a/bitbake/lib/bb/ui/crumbs/runningbuild.py
++++ b/bitbake/lib/bb/ui/crumbs/runningbuild.py
+@@ -46,7 +46,7 @@ class RunningBuildModel (gtk.TreeStore):
+         color = model.get(it, self.COL_COLOR)[0]
+         if not color:
+             return False
+-        if color == HobColors.ERROR:
++        if color == HobColors.ERROR or color == HobColors.WARNING:
+             return True
+         return False
+ 
+@@ -76,7 +76,7 @@ class RunningBuild (gobject.GObject):
+           'build-complete'  :  (gobject.SIGNAL_RUN_LAST,
+                                 gobject.TYPE_NONE,
+                                ()),
+-          'build-aborted'     :  (gobject.SIGNAL_RUN_LAST,
++          'build-aborted'   :  (gobject.SIGNAL_RUN_LAST,
+                                 gobject.TYPE_NONE,
+                                ()),
+           'task-started'    :  (gobject.SIGNAL_RUN_LAST,
+@@ -85,6 +85,9 @@ class RunningBuild (gobject.GObject):
+           'log-error'       :  (gobject.SIGNAL_RUN_LAST,
+                                 gobject.TYPE_NONE,
+                                ()),
++          'log-warning'     :  (gobject.SIGNAL_RUN_LAST,
++                                gobject.TYPE_NONE,
++                               ()),
+           'no-provider'     :  (gobject.SIGNAL_RUN_LAST,
+                                 gobject.TYPE_NONE,
+                                (gobject.TYPE_PYOBJECT,)),
+@@ -148,6 +151,7 @@ class RunningBuild (gobject.GObject):
+             elif event.levelno >= logging.WARNING:
+                 icon = "dialog-warning"
+                 color = HobColors.WARNING
++                self.emit("log-warning")
+             else:
+                 icon = None
+                 color = HobColors.OK
+-- 
+1.7.9.5
 
-Thanks!
-
-Seth
 
 
-On Tue, Nov 13, 2012 at 8:23 AM, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
-
-> On Sun, 2012-11-11 at 09:17 -0600, Seth Bollinger wrote:
-> > Add bold color output to log level name and standard color output to
-> > log msg
-> > when bitbake is run from an iteractive console.  Color output is only
-> > enabled
-> > if the terminal supports color.
-> >
-> > Signed-off-by: Seth Bollinger <seth.boll@gmail.com>
-> > ---
-> >  bitbake/lib/bb/msg.py       |   40
-> > ++++++++++++++++++++++++++++++++++++++++
-> >  bitbake/lib/bb/ui/knotty.py |    6 +++++-
-> >  2 files changed, 45 insertions(+), 1 deletions(-)
->
-> I love the idea. I tried testing it and realised that it doesn't work in
-> my black text on a white background terminals though, the result of the
-> patch was unreadable :(
->
-> Cheers,
->
-> Richard
->
->
->
-
---e89a8f3baef59bd5ff04ce61789a
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-I&#39;m not sure how best to resolve this. =A0Would you like me to add some=
- code to try and detect background color? =A0This seems like it might be mo=
-re complex than it&#39;s worth...<div><br></div><div>Or would it be better =
-to have a selectable light background color set? =A0If you think light back=
-ground is more common (I dislike staring at large blocks of white :)) it co=
-uld default to the light color set.<div>
-<br></div><div>Thanks!</div><div><br></div><div>Seth</div></div><div class=
-=3D"gmail_extra"><br><br><div class=3D"gmail_quote">On Tue, Nov 13, 2012 at=
- 8:23 AM, Richard Purdie <span dir=3D"ltr">&lt;<a href=3D"mailto:richard.pu=
-rdie@linuxfoundation.org" target=3D"_blank">richard.purdie@linuxfoundation.=
-org</a>&gt;</span> wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">On Sun, 2012-11-11 at 09:17 -0600, Seth Boll=
-inger wrote:<br>
-&gt; Add bold color output to log level name and standard color output to<b=
-r>
-&gt; log msg<br>
-&gt; when bitbake is run from an iteractive console. =A0Color output is onl=
-y<br>
-&gt; enabled<br>
-&gt; if the terminal supports color.<br>
-&gt;<br>
-&gt; Signed-off-by: Seth Bollinger &lt;<a href=3D"mailto:seth.boll@gmail.co=
-m">seth.boll@gmail.com</a>&gt;<br>
-&gt; ---<br>
-&gt; =A0bitbake/lib/bb/msg.py =A0 =A0 =A0 | =A0 40<br>
-&gt; ++++++++++++++++++++++++++++++++++++++++<br>
-&gt; =A0bitbake/lib/bb/ui/knotty.py | =A0 =A06 +++++-<br>
-&gt; =A02 files changed, 45 insertions(+), 1 deletions(-)<br>
-<br>
-I love the idea. I tried testing it and realised that it doesn&#39;t work i=
-n<br>
-my black text on a white background terminals though, the result of the<br>
-patch was unreadable :(<br>
-<br>
-Cheers,<br>
-<br>
-Richard<br>
-<br>
-<br>
-</blockquote></div><br></div>
-
---e89a8f3baef59bd5ff04ce61789a--
