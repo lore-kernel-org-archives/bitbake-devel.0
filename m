@@ -1,29 +1,34 @@
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from mail-ie0-f175.google.com ([209.85.223.175])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <mark.hatle@windriver.com>) id 1TYJYj-0005hD-A4
+	(envelope-from <kergoth@gmail.com>) id 1TYM8J-0001jM-Ml
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 13 Nov 2012 17:41:57 +0100
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id qADGS2M0009053
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	Tue, 13 Nov 2012 20:26:51 +0100
+Received: by mail-ie0-f175.google.com with SMTP id c13so11385450ieb.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 13 Nov 2012 08:28:03 -0800 (PST)
-Received: from msp-dhcp30.wrs.com (172.25.34.30) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.2.318.4;
-	Tue, 13 Nov 2012 08:28:01 -0800
-Message-ID: <50A27513.5030302@windriver.com>
-Date: Tue, 13 Nov 2012 10:28:03 -0600
-From: Mark Hatle <mark.hatle@windriver.com>
-Organization: Wind River Systems
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8;
-	rv:16.0) Gecko/20121026 Thunderbird/16.0.2
-MIME-Version: 1.0
-To: <bitbake-devel@lists.openembedded.org>
-References: <20121113123509.Horde.cZcPJLuWis5QojBtb0_w6KA@webmail.df.eu>
-	<1352816917.24487.130.camel@ted>
-In-Reply-To: <1352816917.24487.130.camel@ted>
-Subject: Re: BitBake & ClearCase
+	Tue, 13 Nov 2012 11:12:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id:x-mailer;
+	bh=x3cXkCY7FdYmwyWuJ/O/lKpmdfLVDARRGTcf412aTSQ=;
+	b=uB42Qq/Lw51QRm5wvsoiKhBio8c6JZccXVqX0/ervOJLD+ivksO50z3TEqYLT5keHs
+	8IvH/Ic139GluBb9rafQZnjUYuNesPAjBp4RMrdOoBW55oVK1tkzYRkaP01Ta23Mr7k3
+	sC/v/BgHbxKFjEg/ypYnpy4q4/GyEpRKWS+TafLy3rgXGRtZk2YMGQCD+7qGtJ7Jmul6
+	YlgYeYoFNhQmwKIBirV6R2U264dgT7HqF+nW25ZMUOPJ8s7xk18aqocmhsI1cyQzco0Q
+	P22vgMKF4QA4ZrBMdUF25eJx56yHJReiF5Fe7maYOx1EnHgjZwEiGi0MdPCXNhgXQjCj
+	a3dA==
+Received: by 10.50.36.138 with SMTP id q10mr12202194igj.0.1352833976600;
+	Tue, 13 Nov 2012 11:12:56 -0800 (PST)
+Received: from precise64.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
+	by mx.google.com with ESMTPS id
+	uj11sm11264848igb.15.2012.11.13.11.12.54
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Tue, 13 Nov 2012 11:12:55 -0800 (PST)
+From: Christopher Larson <kergoth@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 13 Nov 2012 12:12:50 -0700
+Message-Id: <1352833970-22315-1-git-send-email-kergoth@gmail.com>
+X-Mailer: git-send-email 1.7.12.4
+Cc: Christopher Larson <chris_larson@mentor.com>
+Subject: [PATCH] knotty: kill duplicated import of 'time'
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -35,61 +40,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 13 Nov 2012 16:41:57 -0000
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 13 Nov 2012 19:26:51 -0000
 
-On 11/13/12 8:28 AM, Richard Purdie wrote:
-> On Tue, 2012-11-13 at 12:35 +0100, news@christianvolk.net wrote:
->> Dear bitbake-developer-community,
->>
->> I just stumbled across a problem and knows of no other advice than to
->> write to you here:
->>
->> In my company we have to use bitbake in combination with ClearCase (CC).
->> Bitbake has some problems with the ClearCase-owned files called
->> ?.copyarea.db?.
->> Unfortunately, CC adds such a file to each directory which is under
->> source-control.
->> The file is read-only and so the task do_unpack fails with the
->> following error message:
->>
->> cp: cannot create regular file
->> `/home/[...]/testability-1.0-r0/./testability_src_gen/.copyarea.db':
->> Permission Denied
->
-> I'm a little confused about what the real problem is here. cp should be
-> able to cope with a file that is marked as read-only. Is this saying the
-> target already exists and can't be written to? Or is it unable to read
-> from the source? Is the source locked?
+From: Christopher Larson <chris_larson@mentor.com>
 
-Are you attempting to build inside of a ClearCase location?  Or are you copying 
-from a ClearCase location within a recipe..  If it's the later, this is what 
-Richard is referring to, if it's the former..  It likely won't work well. 
-ClearCase has a number of issues with it's virtual filesystem that cause 
-problems during the build.
+The duplicated import could result in an UnboundLocalError.
 
-What we have recommended to our customers using clearcase, is to define an 
-alternative location for the 'tmp' directory that is outside of the clearcase 
-filesystem and somewhere local to the machine.
+Signed-off-by: Christopher Larson <chris_larson@mentor.com>
+---
+ lib/bb/ui/knotty.py | 1 -
+ 1 file changed, 1 deletion(-)
 
---Mark
-
-> Worst case you can implement a custom "unpack" function for your
-> clearcase fetcher like git does and in there, exclude the problematic
-> files.
->
-> Cheers,
->
-> Richard
->
->
->
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
->
+diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
+index b99a121..77ec730 100644
+--- a/lib/bb/ui/knotty.py
++++ b/lib/bb/ui/knotty.py
+@@ -460,7 +460,6 @@ def main(server, eventHandler, tf = TerminalFilter):
+             if ioerror.args[0] == 4:
+                 pass
+         except KeyboardInterrupt:
+-            import time
+             termfilter.clearFooter()
+             if main.shutdown == 1:
+                 print("\nSecond Keyboard Interrupt, stopping...\n")
+-- 
+1.7.12.4
 
 
 
