@@ -1,21 +1,33 @@
-Received: from mga03.intel.com ([143.182.124.21])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristiana.voicu@intel.com>) id 1TYHyR-0003Ss-NL
-	for bitbake-devel@lists.openembedded.org;
-	Tue, 13 Nov 2012 16:00:23 +0100
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 13 Nov 2012 06:46:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.80,767,1344236400"; d="scan'208";a="217118437"
-Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
-	([10.237.105.151])
-	by azsmga001.ch.intel.com with ESMTP; 13 Nov 2012 06:46:27 -0800
-From: Cristiana Voicu <cristiana.voicu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 13 Nov 2012 16:48:46 +0200
-Message-Id: <1352818126-11334-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob: warnings during the build should be displayed in the Issues tab
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1TYIXg-00047f-8d for bitbake-devel@lists.openembedded.org;
+	Tue, 13 Nov 2012 16:36:48 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qADFMqBh005129;
+	Tue, 13 Nov 2012 15:22:52 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 04745-03; Tue, 13 Nov 2012 15:22:48 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qADFMjbn005123
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
+	Tue, 13 Nov 2012 15:22:46 GMT
+Message-ID: <1352820166.24487.136.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Seth Bollinger <seth.boll@gmail.com>
+Date: Tue, 13 Nov 2012 15:22:46 +0000
+In-Reply-To: <CA+JN8xOF_iVQb30NVdrXEtqieh0E6m2-tSE2uG6UiG+f9C6qHw@mail.gmail.com>
+References: <CA+JN8xNzAvDdt4bgS=z536YciYVAvZGE2+Z=qQa1XP4HCE8=gg@mail.gmail.com>
+	<1352816623.24487.128.camel@ted>
+	<CA+JN8xOF_iVQb30NVdrXEtqieh0E6m2-tSE2uG6UiG+f9C6qHw@mail.gmail.com>
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH v2] bitbake: Colorize knotty interactive console output
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,72 +39,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 13 Nov 2012 15:00:24 -0000
+X-List-Received-Date: Tue, 13 Nov 2012 15:36:48 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Any issues encountered during the build (fatal or not) is displayed
-in the Issues tab, and the total number of issues is changed.
+On Tue, 2012-11-13 at 08:45 -0600, Seth Bollinger wrote:
+> I'm not sure how best to resolve this.  Would you like me to add some
+> code to try and detect background color?  This seems like it might be
+> more complex than it's worth...
+>
+> Or would it be better to have a selectable light background color
+> set?  If you think light background is more common (I dislike staring
+> at large blocks of white :)) it could default to the light color set.
 
-[YOCTO #3376]
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
----
- bitbake/lib/bb/ui/crumbs/builder.py      |    1 +
- bitbake/lib/bb/ui/crumbs/runningbuild.py |    8 ++++++--
- 2 files changed, 7 insertions(+), 2 deletions(-)
+I have not looked into this and am not an expert on terminals and colour
+control of them. I don't know how we can solve this but the current
+situation where it prints white on white on my terminal is clearly
+unacceptable. This has to be a problem others have run into and solved
+before though...
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index ecf5371..25741fe 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -457,6 +457,7 @@ class Builder(gtk.Window):
-         self.handler.build.connect("build-aborted",      self.handler_build_aborted_cb)
-         self.handler.build.connect("task-started",       self.handler_task_started_cb)
-         self.handler.build.connect("log-error",          self.handler_build_failure_cb)
-+        self.handler.build.connect("log-warning",        self.handler_build_failure_cb)
-         self.handler.build.connect("log",                self.handler_build_log_cb)
-         self.handler.build.connect("no-provider",        self.handler_no_provider_cb)
-         self.handler.connect("generating-data",          self.handler_generating_data_cb)
-diff --git a/bitbake/lib/bb/ui/crumbs/runningbuild.py b/bitbake/lib/bb/ui/crumbs/runningbuild.py
-index b4d19b6..f6848fd 100644
---- a/bitbake/lib/bb/ui/crumbs/runningbuild.py
-+++ b/bitbake/lib/bb/ui/crumbs/runningbuild.py
-@@ -46,7 +46,7 @@ class RunningBuildModel (gtk.TreeStore):
-         color = model.get(it, self.COL_COLOR)[0]
-         if not color:
-             return False
--        if color == HobColors.ERROR:
-+        if color == HobColors.ERROR or color == HobColors.WARNING:
-             return True
-         return False
- 
-@@ -76,7 +76,7 @@ class RunningBuild (gobject.GObject):
-           'build-complete'  :  (gobject.SIGNAL_RUN_LAST,
-                                 gobject.TYPE_NONE,
-                                ()),
--          'build-aborted'     :  (gobject.SIGNAL_RUN_LAST,
-+          'build-aborted'   :  (gobject.SIGNAL_RUN_LAST,
-                                 gobject.TYPE_NONE,
-                                ()),
-           'task-started'    :  (gobject.SIGNAL_RUN_LAST,
-@@ -85,6 +85,9 @@ class RunningBuild (gobject.GObject):
-           'log-error'       :  (gobject.SIGNAL_RUN_LAST,
-                                 gobject.TYPE_NONE,
-                                ()),
-+          'log-warning'     :  (gobject.SIGNAL_RUN_LAST,
-+                                gobject.TYPE_NONE,
-+                               ()),
-           'no-provider'     :  (gobject.SIGNAL_RUN_LAST,
-                                 gobject.TYPE_NONE,
-                                (gobject.TYPE_PYOBJECT,)),
-@@ -148,6 +151,7 @@ class RunningBuild (gobject.GObject):
-             elif event.levelno >= logging.WARNING:
-                 icon = "dialog-warning"
-                 color = HobColors.WARNING
-+                self.emit("log-warning")
-             else:
-                 icon = None
-                 color = HobColors.OK
--- 
-1.7.9.5
+Cheers,
+
+Richard
+
+
+
 
 
 
