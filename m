@@ -1,33 +1,29 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1TYIXg-00047f-8d for bitbake-devel@lists.openembedded.org;
-	Tue, 13 Nov 2012 16:36:48 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qADFMqBh005129;
-	Tue, 13 Nov 2012 15:22:52 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 04745-03; Tue, 13 Nov 2012 15:22:48 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qADFMjbn005123
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Tue, 13 Nov 2012 15:22:46 GMT
-Message-ID: <1352820166.24487.136.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Seth Bollinger <seth.boll@gmail.com>
-Date: Tue, 13 Nov 2012 15:22:46 +0000
-In-Reply-To: <CA+JN8xOF_iVQb30NVdrXEtqieh0E6m2-tSE2uG6UiG+f9C6qHw@mail.gmail.com>
-References: <CA+JN8xNzAvDdt4bgS=z536YciYVAvZGE2+Z=qQa1XP4HCE8=gg@mail.gmail.com>
-	<1352816623.24487.128.camel@ted>
-	<CA+JN8xOF_iVQb30NVdrXEtqieh0E6m2-tSE2uG6UiG+f9C6qHw@mail.gmail.com>
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH v2] bitbake: Colorize knotty interactive console output
+Received: from mail1.windriver.com ([147.11.146.13])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <mark.hatle@windriver.com>) id 1TYJYj-0005hD-A4
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 13 Nov 2012 17:41:57 +0100
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id qADGS2M0009053
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 13 Nov 2012 08:28:03 -0800 (PST)
+Received: from msp-dhcp30.wrs.com (172.25.34.30) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.2.318.4;
+	Tue, 13 Nov 2012 08:28:01 -0800
+Message-ID: <50A27513.5030302@windriver.com>
+Date: Tue, 13 Nov 2012 10:28:03 -0600
+From: Mark Hatle <mark.hatle@windriver.com>
+Organization: Wind River Systems
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8;
+	rv:16.0) Gecko/20121026 Thunderbird/16.0.2
+MIME-Version: 1.0
+To: <bitbake-devel@lists.openembedded.org>
+References: <20121113123509.Horde.cZcPJLuWis5QojBtb0_w6KA@webmail.df.eu>
+	<1352816917.24487.130.camel@ted>
+In-Reply-To: <1352816917.24487.130.camel@ted>
+Subject: Re: BitBake & ClearCase
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -39,31 +35,61 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 13 Nov 2012 15:36:48 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Tue, 13 Nov 2012 16:41:57 -0000
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2012-11-13 at 08:45 -0600, Seth Bollinger wrote:
-> I'm not sure how best to resolve this.  Would you like me to add some
-> code to try and detect background color?  This seems like it might be
-> more complex than it's worth...
+On 11/13/12 8:28 AM, Richard Purdie wrote:
+> On Tue, 2012-11-13 at 12:35 +0100, news@christianvolk.net wrote:
+>> Dear bitbake-developer-community,
+>>
+>> I just stumbled across a problem and knows of no other advice than to
+>> write to you here:
+>>
+>> In my company we have to use bitbake in combination with ClearCase (CC).
+>> Bitbake has some problems with the ClearCase-owned files called
+>> ?.copyarea.db?.
+>> Unfortunately, CC adds such a file to each directory which is under
+>> source-control.
+>> The file is read-only and so the task do_unpack fails with the
+>> following error message:
+>>
+>> cp: cannot create regular file
+>> `/home/[...]/testability-1.0-r0/./testability_src_gen/.copyarea.db':
+>> Permission Denied
 >
-> Or would it be better to have a selectable light background color
-> set?  If you think light background is more common (I dislike staring
-> at large blocks of white :)) it could default to the light color set.
+> I'm a little confused about what the real problem is here. cp should be
+> able to cope with a file that is marked as read-only. Is this saying the
+> target already exists and can't be written to? Or is it unable to read
+> from the source? Is the source locked?
 
-I have not looked into this and am not an expert on terminals and colour
-control of them. I don't know how we can solve this but the current
-situation where it prints white on white on my terminal is clearly
-unacceptable. This has to be a problem others have run into and solved
-before though...
+Are you attempting to build inside of a ClearCase location?  Or are you copying 
+from a ClearCase location within a recipe..  If it's the later, this is what 
+Richard is referring to, if it's the former..  It likely won't work well. 
+ClearCase has a number of issues with it's virtual filesystem that cause 
+problems during the build.
 
-Cheers,
+What we have recommended to our customers using clearcase, is to define an 
+alternative location for the 'tmp' directory that is outside of the clearcase 
+filesystem and somewhere local to the machine.
 
-Richard
+--Mark
 
-
-
+> Worst case you can implement a custom "unpack" function for your
+> clearcase fetcher like git does and in there, exclude the problematic
+> files.
+>
+> Cheers,
+>
+> Richard
+>
+>
+>
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
+>
 
 
 
