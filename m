@@ -1,21 +1,37 @@
-Received: from mga14.intel.com ([143.182.124.37])
+Received: from mail-ia0-f175.google.com ([209.85.210.175])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristiana.voicu@intel.com>) id 1TYbKx-00020n-DH
+	(envelope-from <seth.boll@gmail.com>) id 1TYd4U-0002OY-FH
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 14 Nov 2012 12:40:55 +0100
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga102.ch.intel.com with ESMTP; 14 Nov 2012 03:26:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.83,250,1352102400"; d="scan'208";a="217557336"
-Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
-	([10.237.105.151])
-	by azsmga001.ch.intel.com with ESMTP; 14 Nov 2012 03:26:57 -0800
-From: Cristiana Voicu <cristiana.voicu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 14 Nov 2012 13:29:20 +0200
-Message-Id: <1352892560-23542-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob: saving any customizations into the project's configuration
+	Wed, 14 Nov 2012 14:32:05 +0100
+Received: by mail-ia0-f175.google.com with SMTP id z3so246639iad.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 14 Nov 2012 05:18:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	:cc:content-type;
+	bh=PKUFj9oY/zhZM9MAK8+mTJX5oyBUlzZas9jQN/b9gZo=;
+	b=ZYQ7kPoVrY2afXOagxkO9qapVvjr+D3c13S4plKzOdr/5hNQX5uWxfTZgfwIAWH1UB
+	+ZCzDUmqcw/w5hUDetTDJmIfuRn0BdaZf1DmlBQeW/4sSr5jqaHWu6Fx5zleurWNUv/Z
+	3UcA8BYBlrxebxgbxLHs4ZTrpXBRqEHPqoKcN9Pr5Kft8P0Gutp5UZcwKTStdkuytV7n
+	AoKrCd2hw1RXLaLg27CPRInz3BSaceA8fPs1NdxEHf+DmPR4cgkEdQO3G3h1hUe6y1ns
+	sa6okh3bd5PlkOL6mbylFG5+Z5snPabw0otN2ZpFvGmaQL6I6OJhxB4y74qZL+EXGepI
+	Qqlw==
+MIME-Version: 1.0
+Received: by 10.50.40.225 with SMTP id a1mr1665416igl.7.1352899086432; Wed, 14
+	Nov 2012 05:18:06 -0800 (PST)
+Received: by 10.64.35.170 with HTTP; Wed, 14 Nov 2012 05:18:06 -0800 (PST)
+In-Reply-To: <50A2CB5E.8030600@windriver.com>
+References: <CA+JN8xNzAvDdt4bgS=z536YciYVAvZGE2+Z=qQa1XP4HCE8=gg@mail.gmail.com>
+	<1352816623.24487.128.camel@ted>
+	<CA+JN8xOF_iVQb30NVdrXEtqieh0E6m2-tSE2uG6UiG+f9C6qHw@mail.gmail.com>
+	<1352820166.24487.136.camel@ted> <50A2CB5E.8030600@windriver.com>
+Date: Wed, 14 Nov 2012 07:18:06 -0600
+Message-ID: <CA+JN8xNDqbvnymb8pOpmEe=P5GV=WYtnLVskCNxmFPxYwkomvQ@mail.gmail.com>
+From: Seth Bollinger <seth.boll@gmail.com>
+To: Jason Wessel <jason.wessel@windriver.com>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH v2] bitbake: Colorize knotty interactive console output
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,268 +43,146 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 14 Nov 2012 11:40:56 -0000
+X-List-Received-Date: Wed, 14 Nov 2012 13:32:05 -0000
+Content-Type: multipart/alternative; boundary=14dae9340cb776b81e04ce745dfe
 
--hob uses and saves the variables from local.conf and bblayers.conf into
-the files with the same name from "conf/" directory; till now they were
-saved in ".hob" directory
--this patch assures the consistency between the configuration files from
-"conf/" directory and hob
+--14dae9340cb776b81e04ce745dfe
+Content-Type: text/plain; charset=ISO-8859-1
 
-[YOCTO #2934]
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
----
- bitbake/lib/bb/ui/crumbs/builder.py  |   42 ++++++---------
- bitbake/lib/bb/ui/crumbs/hig.py      |   11 ++--
- bitbake/lib/bb/ui/crumbs/template.py |   96 ++++++++++++++++++++++++++++------
- 3 files changed, 102 insertions(+), 47 deletions(-)
+Thanks!  I've tested this and it works on my dark color scheme (it's better
+actually :)).  I also tested on white and it looks fine.  If Richard is ok
+with this solution, I'll make the changes and submit another patch.
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index e5222da..5aa88a2 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -185,20 +185,6 @@ class Configuration:
-         self.split_proxy("cvs", params["cvs_proxy_host"] + ":" + params["cvs_proxy_port"])
- 
-     def load(self, template):
--        self.curr_mach = template.getVar("MACHINE")
--        self.curr_package_format = " ".join(template.getVar("PACKAGE_CLASSES").split("package_")).strip()
--        self.curr_distro = template.getVar("DISTRO")
--        self.dldir = template.getVar("DL_DIR")
--        self.sstatedir = template.getVar("SSTATE_DIR")
--        self.sstatemirror = template.getVar("SSTATE_MIRRORS")
--        try:
--            self.pmake = int(template.getVar("PARALLEL_MAKE").split()[1])
--        except:
--            pass
--        try:
--            self.bbthread = int(template.getVar("BB_NUMBER_THREADS"))
--        except:
--            pass
-         try:
-             self.image_rootfs_size = int(template.getVar("IMAGE_ROOTFS_SIZE"))
-         except:
-@@ -210,13 +196,9 @@ class Configuration:
-         # image_overhead_factor is read-only.
-         self.incompat_license = template.getVar("INCOMPATIBLE_LICENSE")
-         self.curr_sdk_machine = template.getVar("SDKMACHINE")
--        self.conf_version = template.getVar("CONF_VERSION")
--        self.lconf_version = template.getVar("LCONF_VERSION")
-         self.extra_setting = eval(template.getVar("EXTRA_SETTING"))
-         self.toolchain_build = eval(template.getVar("TOOLCHAIN_BUILD"))
-         self.image_fstypes = template.getVar("IMAGE_FSTYPES")
--        # bblayers.conf
--        self.layers = template.getVar("BBLAYERS").split()
-         # image/recipes/packages
-         self.selected_image = template.getVar("__SELECTED_IMAGE__")
-         self.selected_recipes = template.getVar("DEPENDS").split()
-@@ -233,14 +215,20 @@ class Configuration:
-     def save(self, template, defaults=False):
-         template.setVar("VERSION", "%s" % hobVer)
-         # bblayers.conf
--        template.setVar("BBLAYERS", " ".join(self.layers))
-+        template.setVar("BBLAYERS", self.layers)
-         # local.conf
-         if not defaults:
-             template.setVar("MACHINE", self.curr_mach)
-         template.setVar("DISTRO", self.curr_distro)
-         template.setVar("DL_DIR", self.dldir)
-         template.setVar("SSTATE_DIR", self.sstatedir)
--        template.setVar("SSTATE_MIRRORS", self.sstatemirror)
-+        sstate_mirror_list = self.sstatemirror.split("\\n ")
-+        sstate_mirror_list_modified = []
-+        for mirror in sstate_mirror_list:
-+            if mirror != "":
-+                mirror = mirror + "\\n"
-+                sstate_mirror_list_modified.append(mirror)
-+        template.setVar("SSTATE_MIRRORS", sstate_mirror_list_modified)
-         template.setVar("PARALLEL_MAKE", "-j %s" % self.pmake)
-         template.setVar("BB_NUMBER_THREADS", self.bbthread)
-         template.setVar("PACKAGE_CLASSES", " ".join(["package_" + i for i in self.curr_package_format.split()]))
-@@ -546,11 +534,11 @@ class Builder(gtk.Window):
- 
-     def initiate_new_build_async(self):
-         self.switch_page(self.MACHINE_SELECTION)
--        if self.load_template(TemplateMgr.convert_to_template_pathfilename("default", ".hob/")) == False:
--            self.show_sanity_check_page()
--            self.handler.init_cooker()
--            self.handler.set_extra_inherit("image_types")
--            self.generate_configuration()
-+        self.show_sanity_check_page()
-+        self.handler.init_cooker()
-+        self.handler.set_extra_inherit("image_types")
-+        self.generate_configuration()
-+        self.load_template(TemplateMgr.convert_to_template_pathfilename("default", ".hob/"))
- 
-     def update_config_async(self):
-         self.switch_page(self.MACHINE_SELECTION)
-@@ -656,8 +644,8 @@ class Builder(gtk.Window):
-             if not os.path.exists(layer+'/conf/layer.conf'):
-                 return False
- 
--        self.save_defaults() # remember layers and settings
--        self.update_config_async()
-+        #self.save_defaults() # remember layers and settings
-+        #self.update_config_async()
-         return True
- 
-     def save_template(self, path, defaults=False):
-diff --git a/bitbake/lib/bb/ui/crumbs/hig.py b/bitbake/lib/bb/ui/crumbs/hig.py
-index d973086..fc7a786 100644
---- a/bitbake/lib/bb/ui/crumbs/hig.py
-+++ b/bitbake/lib/bb/ui/crumbs/hig.py
-@@ -599,11 +599,12 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
-                         sstatemirrors = sstatemirrors[1:]
- 
-                     sstatemirror_fields = [x for x in sstatemirror.split(' ') if x.strip()]
--                    if sstatemirror_fields[0] == "file://(.*)":
--                        sm_list = [ 0, sstatemirror_fields[1], "file://(.*)"]
--                    else:
--                        sm_list = [ 1, sstatemirror_fields[1], sstatemirror_fields[0]]
--                    self.sstatemirrors_list.append(sm_list)
-+                    if len(sstatemirror_fields):
-+                        if sstatemirror_fields[0] == "file://(.*)":
-+                            sm_list = [ 0, sstatemirror_fields[1], "file://(.*)"]
-+                        else:
-+                            sm_list = [ 1, sstatemirror_fields[1], sstatemirror_fields[0]]
-+                        self.sstatemirrors_list.append(sm_list)
- 
-         index = 0
-         for mirror in self.sstatemirrors_list:
-diff --git a/bitbake/lib/bb/ui/crumbs/template.py b/bitbake/lib/bb/ui/crumbs/template.py
-index e303c3a..bd3c12d 100644
---- a/bitbake/lib/bb/ui/crumbs/template.py
-+++ b/bitbake/lib/bb/ui/crumbs/template.py
-@@ -42,8 +42,8 @@ class File(gobject.GObject):
- 
-         return contents
- 
--    def writeFile(self, contents):
--        if os.path.exists(self.pathfilename):
-+    def writeFile(self, contents, keep_orig=False):
-+        if keep_orig == True and os.path.exists(self.pathfilename):
-             orig = "%s.orig" % self.pathfilename
-             if os.path.exists(orig):
-                 os.remove(orig)
-@@ -87,7 +87,69 @@ class ConfigFile(File):
-         contents = self.header
-         for var, val in self.dictionary.items():
-             contents += "%s = \"%s\"\n" % (var, val)
--        File.writeFile(self, contents)
-+        File.writeFile(self, contents, keep_orig=True)
-+
-+class UserConfigFile(File):
-+    """
-+    This object does save different variables into bitbake config file.
-+    """
-+    def __init__(self, pathfilename):
-+        File.__init__(self, pathfilename, ".conf")
-+        self.dictionary = {}
-+
-+    def setVar(self, var, val):
-+        if isinstance(val, list):
-+            liststr = " \\\n  "
-+            if val:
-+                for value in val:
-+                    liststr += "%s \\\n  " % value
-+            self.dictionary[var] = liststr
-+        else:
-+            self.dictionary[var] = val
-+
-+    def save(self):
-+        contents = File.readFile(self)
-+        total = ""
-+        for line in contents:
-+            total += line
-+
-+        for var, val in self.dictionary.items():
-+            #search in contents where "var" is, to replace the "val" of the "var"
-+            exist = True;
-+            index_var = total.find(var)
-+            if index_var != -1:
-+                while self.check_if_commented(total, index_var):
-+                    index_var = total.find(var, index_var+1)
-+                if index_var == -1:
-+                    exist = False
-+                else:
-+                    index_val_begin = total.find("\"",index_var)
-+                    index_val_begin = index_val_begin + 1
-+                    index_val_end = total.find("\"",index_val_begin)
-+                    total_begin = total[:index_val_begin]
-+                    total_end = total[index_val_end:]
-+                    total = total_begin + str(val) + total_end
-+            else:
-+                exist = False
-+
-+            if exist is False:
-+                #the variable isn't defined in the file
-+                #add it to the end of the file
-+                total += "\n%s = \"%s\"\n" % (var, val)
-+
-+        File.writeFile(self, total)
-+
-+    def check_if_commented(self, content, index):
-+        commented = False
-+
-+        new_line = content.rfind("\n", 0, index)
-+        if new_line != -1:
-+            after_new_line = content[new_line:]
-+            first_word = after_new_line.split()
-+            if first_word[0][0] == "#":
-+                commented = True
-+
-+        return commented
- 
- class HobTemplateFile(ConfigFile):
-     """
-@@ -153,29 +215,33 @@ class TemplateMgr(gobject.GObject):
-         return "%s/%s%s%s" % (path, "template-", filename, ".hob")
- 
-     @classmethod
--    def convert_to_bblayers_pathfilename(cls, filename, path):
--        return "%s/%s%s%s" % (path, "bblayers-", filename, ".conf")
--
--    @classmethod
--    def convert_to_local_pathfilename(cls, filename, path):
--        return "%s/%s%s%s" % (path, "local-", filename, ".conf")
--
--    @classmethod
-     def convert_to_image_pathfilename(cls, filename, path):
-         return "%s/%s%s%s" % (path, "hob-image-", filename, ".bb")
- 
-     def open(self, filename, path):
-         self.template_hob = HobTemplateFile(TemplateMgr.convert_to_template_pathfilename(filename, path))
--        self.bblayers_conf = ConfigFile(TemplateMgr.convert_to_bblayers_pathfilename(filename, path))
--        self.local_conf = ConfigFile(TemplateMgr.convert_to_local_pathfilename(filename, path))
-+        bblayers_conf = self.findConfigFile("bblayers.conf")
-+        self.bblayers_conf = UserConfigFile(bblayers_conf)
-+        local_conf = self.findConfigFile("local.conf")
-+        self.local_conf = UserConfigFile(local_conf)
-         self.image_bb = RecipeFile(TemplateMgr.convert_to_image_pathfilename(filename, path))
- 
-+    def findConfigFile(self, configfile):
-+        path = os.getcwd()
-+        while path != "/":
-+            confpath = os.path.join(path, "conf", configfile)
-+            if os.path.exists(confpath):
-+                return confpath
-+
-+            path, _ = os.path.split(path)
-+        return path
-+
-     def setVar(self, var, val):
-         if var in TemplateMgr.__gLocalVars__:
-             self.local_conf.setVar(var, val)
--        if var in TemplateMgr.__gBBLayersVars__:
-+        elif var in TemplateMgr.__gBBLayersVars__:
-             self.bblayers_conf.setVar(var, val)
--        if var in TemplateMgr.__gRecipeVars__:
-+        elif var in TemplateMgr.__gRecipeVars__:
-             self.image_bb.setVar(var, val)
- 
-         self.template_hob.setVar(var, val)
--- 
-1.7.9.5
+Seth
 
 
+On Tue, Nov 13, 2012 at 4:36 PM, Jason Wessel <jason.wessel@windriver.com>wrote:
 
+> On 11/13/2012 09:22 AM, Richard Purdie wrote:
+> > On Tue, 2012-11-13 at 08:45 -0600, Seth Bollinger wrote:
+> >> I'm not sure how best to resolve this.  Would you like me to add some
+> >> code to try and detect background color?  This seems like it might be
+> >> more complex than it's worth...
+> >>
+> >> Or would it be better to have a selectable light background color
+> >> set?  If you think light background is more common (I dislike staring
+> >> at large blocks of white :)) it could default to the light color set.
+> > I have not looked into this and am not an expert on terminals and colour
+> > control of them. I don't know how we can solve this but the current
+> > situation where it prints white on white on my terminal is clearly
+> > unacceptable. This has to be a problem others have run into and solved
+> > before though...
+>
+>
+> If you are planning to colorize things, my recommendation would be to take
+> the "middle ground" and use the transparency instead of using white which
+> should work in general on any modern terminal.
+>
+> Change the patch a bit like this:
+> +    color_enabled = False
+> +    BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(30,38)
+>
+>     BASECOLOR, BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE =
+> range(29,38)
+>
+> +
+> +    COLORS = {
+> +        DEBUG3  : CYAN,
+> +        DEBUG2  : CYAN,
+> +        DEBUG   : CYAN,
+> +        VERBOSE : BASECOLOR,
+> +        NOTE    : BASECOLOR,
+> +        PLAIN   : BASECOLOR,
+> +        WARNING : YELLOW,
+> +        ERROR   : RED,
+> +        CRITICAL: RED,
+> +    }
+>
+>
+> Most of the time terminals are either "dark" or "light", and default color
+> is always set to -1 in the curses interface.  For example, the attached
+> patch will allow the patch to work on my "lawngreen" default xterms as well
+> as more typical defaults for gnome-terminal or rxvt.
+>
+> Cheers,
+> Jason.
+>
+
+--14dae9340cb776b81e04ce745dfe
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<div style=3D"font-family:arial,sans-serif;font-size:13px">Thanks! =A0I&#39=
+;ve tested this and it works on my dark color scheme (it&#39;s better actua=
+lly :)). =A0I also tested on white and it looks fine. =A0If Richard is ok w=
+ith this solution, I&#39;ll make the changes and submit another patch.<br>
+</div><div style=3D"font-family:arial,sans-serif;font-size:13px"><br></div>=
+<div style=3D"font-family:arial,sans-serif;font-size:13px">Seth</div><div c=
+lass=3D"gmail_extra"><br><br><div class=3D"gmail_quote">On Tue, Nov 13, 201=
+2 at 4:36 PM, Jason Wessel <span dir=3D"ltr">&lt;<a href=3D"mailto:jason.we=
+ssel@windriver.com" target=3D"_blank">jason.wessel@windriver.com</a>&gt;</s=
+pan> wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">On 11/13/2012 09:22 AM, Richard Purdie wrote=
+:<br>
+&gt; On Tue, 2012-11-13 at 08:45 -0600, Seth Bollinger wrote:<br>
+&gt;&gt; I&#39;m not sure how best to resolve this. =A0Would you like me to=
+ add some<br>
+&gt;&gt; code to try and detect background color? =A0This seems like it mig=
+ht be<br>
+&gt;&gt; more complex than it&#39;s worth...<br>
+&gt;&gt;<br>
+&gt;&gt; Or would it be better to have a selectable light background color<=
+br>
+&gt;&gt; set? =A0If you think light background is more common (I dislike st=
+aring<br>
+&gt;&gt; at large blocks of white :)) it could default to the light color s=
+et.<br>
+&gt; I have not looked into this and am not an expert on terminals and colo=
+ur<br>
+&gt; control of them. I don&#39;t know how we can solve this but the curren=
+t<br>
+&gt; situation where it prints white on white on my terminal is clearly<br>
+&gt; unacceptable. This has to be a problem others have run into and solved=
+<br>
+&gt; before though...<br>
+<br>
+<br>
+If you are planning to colorize things, my recommendation would be to take =
+the &quot;middle ground&quot; and use the transparency instead of using whi=
+te which should work in general on any modern terminal.<br>
+<br>
+Change the patch a bit like this:<br>
++ =A0 =A0color_enabled =3D False<br>
++ =A0 =A0BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE =3D range(30=
+,38)<br>
+<br>
+=A0 =A0 BASECOLOR, BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE =
+=3D range(29,38)<br>
+<br>
++<br>
++ =A0 =A0COLORS =3D {<br>
++ =A0 =A0 =A0 =A0DEBUG3 =A0: CYAN,<br>
++ =A0 =A0 =A0 =A0DEBUG2 =A0: CYAN,<br>
++ =A0 =A0 =A0 =A0DEBUG =A0 : CYAN,<br>
++ =A0 =A0 =A0 =A0VERBOSE : BASECOLOR,<br>
++ =A0 =A0 =A0 =A0NOTE =A0 =A0: BASECOLOR,<br>
++ =A0 =A0 =A0 =A0PLAIN =A0 : BASECOLOR,<br>
++ =A0 =A0 =A0 =A0WARNING : YELLOW,<br>
++ =A0 =A0 =A0 =A0ERROR =A0 : RED,<br>
++ =A0 =A0 =A0 =A0CRITICAL: RED,<br>
++ =A0 =A0}<br>
+<br>
+<br>
+Most of the time terminals are either &quot;dark&quot; or &quot;light&quot;=
+, and default color is always set to -1 in the curses interface. =A0For exa=
+mple, the attached patch will allow the patch to work on my &quot;lawngreen=
+&quot; default xterms as well as more typical defaults for gnome-terminal o=
+r rxvt.<br>
+
+<br>
+Cheers,<br>
+Jason.<br>
+</blockquote></div><br></div>
+
+--14dae9340cb776b81e04ce745dfe--
