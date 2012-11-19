@@ -1,20 +1,30 @@
-Received: from mga14.intel.com ([143.182.124.37])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristian.iorga@intel.com>) id 1TaSJo-0003Hz-Jq
-	for bitbake-devel@lists.openembedded.org;
-	Mon, 19 Nov 2012 15:27:25 +0100
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga102.ch.intel.com with ESMTP; 19 Nov 2012 06:13:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.83,279,1352102400"; d="scan'208";a="219688147"
-Received: from sentry (HELO localhost.localdomain) ([10.237.105.157])
-	by azsmga001.ch.intel.com with ESMTP; 19 Nov 2012 06:12:58 -0800
-From: Cristian Iorga <cristian.iorga@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 19 Nov 2012 16:13:12 +0200
-Message-Id: <1353334392-7949-1-git-send-email-cristian.iorga@intel.com>
-X-Mailer: git-send-email 1.7.10.4
-Subject: [PATCH] bitbake: Network test timeouts reduced
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1TaT4M-0004YD-3L for bitbake-devel@lists.openembedded.org;
+	Mon, 19 Nov 2012 16:15:30 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qAJF1RDs027867
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 19 Nov 2012 15:01:27 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 26882-06 for <bitbake-devel@lists.openembedded.org>;
+	Mon, 19 Nov 2012 15:01:23 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qAJF1ItR027861
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 19 Nov 2012 15:01:19 GMT
+Message-ID: <1353337280.3709.167.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Mon, 19 Nov 2012 15:01:20 +0000
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: [PATCH] parse/cache/cooker: Preserve order in the file inclusion list
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,48 +36,78 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 19 Nov 2012 14:27:25 -0000
+X-List-Received-Date: Mon, 19 Nov 2012 15:15:30 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Network timeouts affecting wget
-connectivity test are reduced,
-so that Hob network test will fail faster.
+The data returned by get_file_depends() may me used in contexts like
+checksums where order is important. The current usage of sets means
+that some of the checksums can change in circumstances they should not.
 
-Fixes [YOCTO #3248]
+This patch changes to use lists, thereby removing the problem.
 
-Signed-off-by: Cristian Iorga <cristian.iorga@intel.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/fetch2/wget.py |    2 +-
- meta/conf/bitbake.conf        |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
+index 619b9ee..a3c073a 100644
+--- a/bitbake/lib/bb/cache.py
++++ b/bitbake/lib/bb/cache.py
+@@ -405,12 +405,12 @@ class Cache(object):
+         """Parse the specified filename, returning the recipe information"""
+         infos = []
+         datastores = cls.load_bbfile(filename, appends, configdata)
+-        depends = set()
++        depends = []
+         for variant, data in sorted(datastores.iteritems(),
+                                     key=lambda i: i[0],
+                                     reverse=True):
+             virtualfn = cls.realfn2virtual(filename, variant)
+-            depends |= (data.getVar("__depends", False) or set())
++            depends = depends + (data.getVar("__depends", False) or [])
+             if depends and not variant:
+                 data.setVar("__depends", depends)
+ 
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index e299059..98d6957 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -692,8 +692,8 @@ class BBCooker:
+         # Generate a list of parsed configuration files by searching the files
+         # listed in the __depends and __base_depends variables with a .conf suffix.
+         conffiles = []
+-        dep_files = self.configuration.data.getVar('__depends') or set()
+-        dep_files.union(self.configuration.data.getVar('__base_depends') or set())
++        dep_files = self.configuration.data.getVar('__base_depends') or []
++        dep_files = dep_files + (self.configuration.data.getVar('__depends') or [])
+ 
+         for f in dep_files:
+             if f[0].endswith(".conf"):
+diff --git a/bitbake/lib/bb/parse/__init__.py b/bitbake/lib/bb/parse/__init__.py
+index 7b9c47e..4293d09c 100644
+--- a/bitbake/lib/bb/parse/__init__.py
++++ b/bitbake/lib/bb/parse/__init__.py
+@@ -73,8 +73,7 @@ def update_mtime(f):
+ def mark_dependency(d, f):
+     if f.startswith('./'):
+         f = "%s/%s" % (os.getcwd(), f[2:])
+-    deps = d.getVar('__depends') or set()
+-    deps.update([(f, cached_mtime(f))])
++    deps = (d.getVar('__depends') or []) + [(f, cached_mtime(f))]
+     d.setVar('__depends', deps)
+ 
+ def supports(fn, data):
+@@ -134,8 +133,8 @@ def vars_from_file(mypkg, d):
+ def get_file_depends(d):
+     '''Return the dependent files'''
+     dep_files = []
+-    depends = d.getVar('__depends', True) or set()
+-    depends = depends.union(d.getVar('__base_depends', True) or set())
++    depends = d.getVar('__base_depends', True) or []
++    depends = depends + (d.getVar('__depends', True) or [])
+     for (fn, _) in depends:
+         dep_files.append(os.path.abspath(fn))
+     return " ".join(dep_files)
 
-diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index ea99198..1b5bce0 100644
---- a/bitbake/lib/bb/fetch2/wget.py
-+++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -63,7 +63,7 @@ class Wget(FetchMethod):
-     def download(self, uri, ud, d, checkonly = False):
-         """Fetch urls"""
- 
--        basecmd = d.getVar("FETCHCMD_wget", True) or "/usr/bin/env wget -t 2 -T 30 -nv --passive-ftp --no-check-certificate"
-+        basecmd = d.getVar("FETCHCMD_wget", True) or "/usr/bin/env wget -t 2 -T 5 -nv --passive-ftp --no-check-certificate"
- 
-         if 'downloadfilename' in ud.parm:
-             basecmd += " -O ${DL_DIR}/" + ud.localfile
-diff --git a/meta/conf/bitbake.conf b/meta/conf/bitbake.conf
-index cf779a4..b5dd2d8 100644
---- a/meta/conf/bitbake.conf
-+++ b/meta/conf/bitbake.conf
-@@ -588,7 +588,7 @@ XORG_MIRROR = "http://xorg.freedesktop.org/releases"
- 
- FETCHCMD_svn = "/usr/bin/env svn --non-interactive --trust-server-cert"
- FETCHCMD_cvs = "/usr/bin/env cvs"
--FETCHCMD_wget = "/usr/bin/env wget -t 2 -T 30 -nv --passive-ftp --no-check-certificate"
-+FETCHCMD_wget = "/usr/bin/env wget -t 2 -T 5 -nv --passive-ftp --no-check-certificate"
- FETCHCMD_bzr = "/usr/bin/env bzr"
- FETCHCMD_hg = "/usr/bin/env hg"
- 
--- 
-1.7.10.4
 
 
 
