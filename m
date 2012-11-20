@@ -1,21 +1,37 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from astoria.ccjclearline.com ([64.235.106.9])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristiana.voicu@intel.com>) id 1TanGP-0007hn-VX
-	for bitbake-devel@lists.openembedded.org;
-	Tue, 20 Nov 2012 13:49:19 +0100
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 20 Nov 2012 04:35:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.83,285,1352102400"; d="scan'208";a="251828814"
-Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
-	([10.237.105.151])
-	by fmsmga002.fm.intel.com with ESMTP; 20 Nov 2012 04:35:12 -0800
-From: Cristiana Voicu <cristiana.voicu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 20 Nov 2012 14:37:46 +0200
-Message-Id: <1353415066-10784-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob: showing when build fails because out of disk space
+	(envelope-from <rpjday@crashcourse.ca>)
+	id 1TasGU-0000LP-Pv; Tue, 20 Nov 2012 19:09:43 +0100
+Received: from cpebcc8100fb8db-cmbcc8100fb8d8.cpe.net.cable.rogers.com
+	([174.116.196.46]:35451 helo=crashcourse.ca)
+	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES256-SHA:256)
+	(Exim 4.77) (envelope-from <rpjday@crashcourse.ca>)
+	id 1Tas2t-0001kB-Vn; Tue, 20 Nov 2012 12:55:40 -0500
+Date: Tue, 20 Nov 2012 12:55:35 -0500 (EST)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+X-X-Sender: rpjday@oneiric
+To: Denys Dmytriyenko <denis@denix.org>
+In-Reply-To: <20121120174811.GB19309@denix.org>
+Message-ID: <alpine.DEB.2.02.1211201253230.27867@oneiric>
+References: <alpine.DEB.2.02.1211201114100.29485@oneiric>
+	<20121120171630.GA19309@denix.org>
+	<alpine.DEB.2.02.1211201227390.27315@oneiric>
+	<20121120174811.GB19309@denix.org>
+User-Agent: Alpine 2.02 (DEB 1266 2009-07-14)
+MIME-Version: 1.0
+X-AntiAbuse: This header was added to track abuse,
+	please include it with any abuse report
+X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+Cc: meta-ti mailing list <meta-ti@yoctoproject.org>,
+	bitbake-devel@lists.openembedded.org,
+	openembedded-core@lists.openembedded.org
+Subject: Re: [meta-ti] building for pandaboard fails fetching u-boot *way* into the build phase
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,179 +43,98 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Nov 2012 12:49:19 -0000
+X-List-Received-Date: Tue, 20 Nov 2012 18:09:43 -0000
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 
--to enable this in hob, first you have to enable this in bitbake using
-BB_DISKMON_DIRS and/or BB_DISKMON_WARNINTERVAL vars
--created "restart the build" action on the build_fail_top_bar
+On Tue, 20 Nov 2012, Denys Dmytriyenko wrote:
 
-[YOCTO #3357]
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
----
- bitbake/lib/bb/ui/crumbs/builddetailspage.py |   38 ++++++++++++++++++++++----
- bitbake/lib/bb/ui/crumbs/builder.py          |    4 +++
- bitbake/lib/bb/ui/crumbs/hobwidget.py        |    3 +-
- bitbake/lib/bb/ui/crumbs/runningbuild.py     |    5 ++++
- 4 files changed, 43 insertions(+), 7 deletions(-)
+> On Tue, Nov 20, 2012 at 12:34:47PM -0500, Robert P. J. Day wrote:
+> > On Tue, 20 Nov 2012, Denys Dmytriyenko wrote:
+> >
+> > > On Tue, Nov 20, 2012 at 11:24:20AM -0500, Robert P. J. Day wrote:
+> > > >
+> > > >   i'm sure there's a trivial workaround/explanation for this, but i
+> > > > wanted to build the basic meta-ti based build for my panda ES, so i
+> > > > started with oe-core and added the meta-ti layer.  then, because of
+> > > > some license issues (and based on a quick google search), i added this
+> > > > to my local.conf:
+> > > >
+> > > >   BBMASK = "meta-ti/recipes-misc"
+> > > >
+> > > > at that point, after selecting "pandaboard" as the machine, i wanted
+> > > > to prefetch everything:
+> > > >
+> > > > $ bitbake -c fetchall core-image-minimal
+> > > >
+> > > > which used solely my pre-mirror directory so that didn't take long.
+> > > >
+> > > >   *then*, because i allegedly had fetched everything i needed for the
+> > > > build, i edited my site.conf file and added:
+> > > >
+> > > > BB_NO_NETWORK = "1"
+> > > >
+> > > > which, AIUI, should be perfectly safe since i had just done a
+> > > > fetchall.  not so:
+> > > >
+> > > > ERROR: Function failed: Network access disabled through BB_NO_NETWORK
+> > > > but access requested with command git clone --bare --mirror
+> > > > git://www.denx.de/git/u-boot.git
+> > > > /home/rpjday/y/builds/ti/panda/downloads/git2/www.denx.de.git.u-boot.git
+> > > > (for url None)
+> > > > ERROR: Logfile of failure stored in:
+> > > > /home/rpjday/y/builds/ti/panda/tmp-eglibc/work/pandaboard-oe-linux-gnueabi/u-boot-2011.12-r8/temp/log.do_fetch.29635
+> > > >
+> > > > hmmmmmm ...
+> > > >
+> > > > $ bitbake -s | grep u-boot
+> > > > nativesdk-u-boot-mkimage                          :2011.06-r0
+> > > > u-boot                                            :2011.12-r8
+> > > > u-boot-fw-utils                                   :2011.06-r1
+> > > > u-boot-mkimage                                    :2011.06-r0
+> > > > u-boot-mkimage-native                             :2011.06-r0
+> > > > $
+> > > >
+> > > >   ok, now i'm confused.  the above suggests that the version of u-boot
+> > > > to be used here is 2011.12-r8, but that was never fetched, and it's
+> > > > only now toward the end of the build that the fetch is attempted.
+> > > >
+> > > >   can someone clarify what's happening here?  why did my "fetchall"
+> > > > operation not fetch everything the build was going to need?
+> > >
+> > > Is that because u-boot is not in a standard DEPENDS/RDEPENDS
+> > > dependency tree, but rather in EXTRA_IMAGEDEPENDS list? I'm copying
+> > > bitbake and oe-core lists, as I don't think it's meta-ti specific
+> > > issue - u-boot recipe looks fine.
+> >
+> >   good question ... for which i don't know the answer.  to make sure
+> > this is reproducible, i blew everything away and started from scratch
+> > with a new panda build.  here's my bblayers.conf:
+> >
+> >   but when i do a "fetchall", i don't get u-boot_2011.12.  only when i
+> > try to build a core-image-minimal does the build fail toward the end
+> > trying to fetch u-boot_2011.12.  here's the layering info:
+> >
+> > i'm sure i'm just doing something silly, but i've never run into the
+> > situation where a "fetchall" doesn't actually fetch absolutely
+> > everything that's needed for the build.
+>
+> Try adding CORE_IMAGE_EXTRA_INSTALL="u-boot" somewhere, like local.conf and
+> if that fixes your usecase, it has to be a bug with bitbake forgetting to
+> pre-fetch machine's specific EXTRA_IMAGEDEPENDS - file a bug then.
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builddetailspage.py b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-index 1afacf8..6d8c38b 100755
---- a/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-+++ b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-@@ -206,8 +206,6 @@ class BuildDetailsPage (HobPage):
-     def add_build_fail_top_bar(self, actions, log_file=None):
-         primary_action = "Edit %s" % actions
- 
--        self.notebook.set_page("Issues")
--
-         color = HobColors.ERROR
-         build_fail_top = gtk.EventBox()
-         #build_fail_top.set_size_request(-1, 200)
-@@ -228,7 +226,17 @@ class BuildDetailsPage (HobPage):
- 
-         label = gtk.Label()
-         label.set_alignment(0.0, 0.5)
--        label.set_markup("<span size='medium'>Check the \"Issues\" information for more details</span>")
-+        # Ensure variable disk_full is defined
-+        try:
-+            self.builder.disk_full
-+        except NameError:
-+            self.builder.disk_full = False
-+        if self.builder.disk_full:
-+            markup = "<span size='medium'>There is no disk space left, so Hob cannot finish building your image. Free up some disk space\n"
-+            markup += "and restart the build. Check the \"Issues\" tab for more details</span>"
-+            label.set_markup(markup)
-+        else:
-+            label.set_markup("<span size='medium'>Check the \"Issues\" information for more details</span>")
-         build_fail_tab.attach(label, 4, 40, 4, 9)
- 
-         # create button 'Edit packages'
-@@ -236,22 +244,36 @@ class BuildDetailsPage (HobPage):
-         #action_button.set_size_request(-1, 40)
-         action_button.set_tooltip_text("Edit the %s parameters" % actions)
-         action_button.connect('clicked', self.failure_primary_action_button_clicked_cb, primary_action)
--        build_fail_tab.attach(action_button, 4, 13, 9, 12)
- 
-         if log_file:
-             open_log_button = HobAltButton("Open log")
-             open_log_button.set_relief(gtk.RELIEF_HALF)
-             open_log_button.set_tooltip_text("Open the build's log file")
-             open_log_button.connect('clicked', self.open_log_button_clicked_cb, log_file)
--            build_fail_tab.attach(open_log_button, 14, 23, 9, 12)
- 
-         attach_pos = (24 if log_file else 14)
-         file_bug_button = HobAltButton('File a bug')
-         file_bug_button.set_relief(gtk.RELIEF_HALF)
-         file_bug_button.set_tooltip_text("Open the Yocto Project bug tracking website")
-         file_bug_button.connect('clicked', self.failure_activate_file_bug_link_cb)
--        build_fail_tab.attach(file_bug_button, attach_pos, attach_pos + 9, 9, 12)
- 
-+        if not self.builder.disk_full:
-+            build_fail_tab.attach(action_button, 4, 13, 9, 12)
-+            if log_file:
-+                build_fail_tab.attach(open_log_button, 14, 23, 9, 12)
-+            build_fail_tab.attach(file_bug_button, attach_pos, attach_pos + 9, 9, 12)
-+
-+        else:
-+            restart_build = HobButton("Restart the build")
-+            restart_build.set_tooltip_text("Restart the build")
-+            restart_build.connect('clicked', self.restart_build_button_clicked_cb)
-+
-+            build_fail_tab.attach(restart_build, 4, 13, 9, 12)
-+            build_fail_tab.attach(action_button, 14, 23, 9, 12)
-+            if log_file:
-+                build_fail_tab.attach(open_log_button, attach_pos, attach_pos + 9, 9, 12)
-+
-+        self.builder.disk_full = False
-         return build_fail_top
- 
-     def show_fail_page(self, title):
-@@ -266,6 +288,7 @@ class BuildDetailsPage (HobPage):
- 
-         self.vbox.pack_start(self.notebook, expand=True, fill=True)
-         self.show_all()
-+        self.notebook.set_page("Issues")
-         self.back_button.hide()
- 
-     def add_build_stop_top_bar(self, action, log_file=None):
-@@ -396,6 +419,9 @@ class BuildDetailsPage (HobPage):
-         elif "Edit image" in action:
-             self.builder.show_configuration()
- 
-+    def restart_build_button_clicked_cb(self, button):
-+        self.builder.just_bake()
-+
-     def stop_primary_action_button_clicked_cb(self, button, action):
-         if "recipes" in action:
-             self.builder.show_recipes()
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index ecf5371..0fcfca7 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -457,6 +457,7 @@ class Builder(gtk.Window):
-         self.handler.build.connect("build-aborted",      self.handler_build_aborted_cb)
-         self.handler.build.connect("task-started",       self.handler_task_started_cb)
-         self.handler.build.connect("log-error",          self.handler_build_failure_cb)
-+        self.handler.build.connect("disk-full",          self.handler_disk_full_cb)
-         self.handler.build.connect("log",                self.handler_build_log_cb)
-         self.handler.build.connect("no-provider",        self.handler_no_provider_cb)
-         self.handler.connect("generating-data",          self.handler_generating_data_cb)
-@@ -1121,6 +1122,9 @@ class Builder(gtk.Window):
-         self.build_details_page.update_progress_bar(title + ": ", fraction)
-         self.build_details_page.update_build_status(message["current"], message["total"], message["task"])
- 
-+    def handler_disk_full_cb(self, running_build):
-+        self.disk_full = True
-+
-     def handler_build_failure_cb(self, running_build):
-         self.build_details_page.show_issues()
- 
-diff --git a/bitbake/lib/bb/ui/crumbs/hobwidget.py b/bitbake/lib/bb/ui/crumbs/hobwidget.py
-index 65de9df..3ca9066 100644
---- a/bitbake/lib/bb/ui/crumbs/hobwidget.py
-+++ b/bitbake/lib/bb/ui/crumbs/hobwidget.py
-@@ -521,7 +521,8 @@ class HobNotebook(gtk.Notebook):
-         for child in self.pages:
-             if child.lbl.get_label() == title:
-                 child.grab_focus()
--                self.set_current_page(self.page_num(child))
-+                self.set_current_page(self.pages.index(child))
-+                return
- 
- class HobWarpCellRendererText(gtk.CellRendererText):
-     def __init__(self, col_number):
-diff --git a/bitbake/lib/bb/ui/crumbs/runningbuild.py b/bitbake/lib/bb/ui/crumbs/runningbuild.py
-index b4d19b6..87995b9 100644
---- a/bitbake/lib/bb/ui/crumbs/runningbuild.py
-+++ b/bitbake/lib/bb/ui/crumbs/runningbuild.py
-@@ -85,6 +85,9 @@ class RunningBuild (gobject.GObject):
-           'log-error'       :  (gobject.SIGNAL_RUN_LAST,
-                                 gobject.TYPE_NONE,
-                                ()),
-+          'disk-full'       :  (gobject.SIGNAL_RUN_LAST,
-+                                gobject.TYPE_NONE,
-+                               ()),
-           'no-provider'     :  (gobject.SIGNAL_RUN_LAST,
-                                 gobject.TYPE_NONE,
-                                (gobject.TYPE_PYOBJECT,)),
-@@ -286,6 +289,7 @@ class RunningBuild (gobject.GObject):
-             # Emit the appropriate signal depending on the number of failures
-             if self.buildaborted:
-                 self.emit ("build-aborted")
-+                self.buildaborted = False
-             elif (failures >= 1):
-                 self.emit ("build-failed")
-             else:
-@@ -300,6 +304,7 @@ class RunningBuild (gobject.GObject):
- 
-         elif isinstance(event, bb.event.DiskFull):
-             self.buildaborted = True
-+            self.emit("disk-full")
- 
-         elif isinstance(event, bb.command.CommandFailed):
-             self.emit("log", "error", "Command execution failed: %s" % (event.error))
+  yup, that did it ... now bitbake is trying to fetch it.  so that's
+the problem.
+
+rday
+
 -- 
-1.7.9.5
 
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                        http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
 
 
