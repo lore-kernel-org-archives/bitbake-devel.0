@@ -1,34 +1,30 @@
-Received: from astoria.ccjclearline.com ([64.235.106.9])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <rpjday@crashcourse.ca>) id 1TbdqT-0008LP-OK
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 22 Nov 2012 21:58:02 +0100
-Received: from cpebcc81008dd2c-cmbcc81008dd29.cpe.net.cable.rogers.com
-	([99.253.156.71]:33398 helo=crashcourse.ca)
-	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.77) (envelope-from <rpjday@crashcourse.ca>)
-	id 1Tbdcq-0000Uy-0w; Thu, 22 Nov 2012 15:43:56 -0500
-Date: Thu, 22 Nov 2012 15:43:54 -0500 (EST)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@oneiric
-To: Chris Larson <clarson@kergoth.com>
-In-Reply-To: <CABcZANmiDXzOKYjTrya92D277+4RUtu7o4shR+CJkNfzTDTOoA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.02.1211221531260.7504@oneiric>
-References: <alpine.DEB.2.02.1211221354240.6298@oneiric>
-	<CABcZANmiDXzOKYjTrya92D277+4RUtu7o4shR+CJkNfzTDTOoA@mail.gmail.com>
-User-Agent: Alpine 2.02 (DEB 1266 2009-07-14)
-MIME-Version: 1.0
-X-AntiAbuse: This header was added to track abuse,
-	please include it with any abuse report
-X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Subject: Re: how easy to extend "bitbake -e" to print *selected* subset of variables?
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1TbejC-0000v1-Kz for bitbake-devel@lists.openembedded.org;
+	Thu, 22 Nov 2012 22:54:35 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qAMLeRJC029704
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 22 Nov 2012 21:40:27 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 27637-06 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 22 Nov 2012 21:40:21 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qAMLeILC029698
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 22 Nov 2012 21:40:20 GMT
+Message-ID: <1353620418.10459.63.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 22 Nov 2012 21:40:18 +0000
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: [PATCH] fetch2/local: Improve handling of wildcard matches
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -40,61 +36,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 22 Nov 2012 20:58:02 -0000
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323329-1014888528-1353617036=:7504"
+X-List-Received-Date: Thu, 22 Nov 2012 21:54:35 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---8323329-1014888528-1353617036=:7504
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Currently wildcard matches end up working by FILESDIR being defined
+in the metadata to a default of "." in FILESPATH which is hacky at best.
 
-On Thu, 22 Nov 2012, Chris Larson wrote:
+This patch adds the behaviour into the fetcher so its at least slightly
+more explicit.
 
-> I would personally like to see something like:
->
-> bitbake -E MACHINE,DISTRO,TMPDIR
->
-> Rather than having to define additional 'grouping' metadata.
->
-> For now, something like this might be convenient:
->
-> $ cat ~/bin/bitbake-env
-> #!/bin/sh
-> #
-> # bitbake-env VARIABLE [VARIBLE...]
-> #
-> # Filter out particular variables from bitbake -e, including the commente=
-d out
-> # unexpanded form, and both exported and unexported.
->
-> args_pattern () {
-> =C2=A0 =C2=A0 for arg; do
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 printf "$arg|"
-> =C2=A0 =C2=A0 done | sed 's,|$,,'
-> }
->
-> bitbake -e | grep -E "^((export )?|(# )?)($(args_pattern "$@"))=3D"
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+diff --git a/bitbake/lib/bb/fetch2/local.py b/bitbake/lib/bb/fetch2/local.py
+index 690532d..7ea2f3b 100644
+--- a/bitbake/lib/bb/fetch2/local.py
++++ b/bitbake/lib/bb/fetch2/local.py
+@@ -62,7 +62,12 @@ class Local(FetchMethod):
+                 if filesdir:
+                     logger.debug(2, "Searching for %s in path: %s" % (path, filesdir))
+                     newpath = os.path.join(filesdir, path)
+-            if not os.path.exists(newpath) and path.find("*") == -1:
++            if not newpath or not os.path.exists(newpath) and path.find("*") != -1:
++                # For expressions using '*', best we can do is take the first directory in FILESPATH that exists
++                newpath = bb.utils.which(filespath, ".")
++                logger.debug(2, "Searching for %s in path: %s" % (path, newpath))
++                return newpath
++            if not os.path.exists(newpath):
+                 dldirfile = os.path.join(d.getVar("DL_DIR", True), path)
+                 logger.debug(2, "Defaulting to %s for %s" % (dldirfile, path))
+                 bb.utils.mkdirhier(os.path.dirname(dldirfile))
 
-  ok, but there's still something i'm missing.  from
-linux-yocto_3.4.bb, i might want to see the final value of
-LINUX_VERSION, but that's not printed as part of the normal
-environment, so i'm assuming i'd need to export it first, right?
-because there's a lot of content i'd be interested in seeing that is
-currently not printed by "bitbake -e".
 
-rday
 
---=20
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
---8323329-1014888528-1353617036=:7504--
