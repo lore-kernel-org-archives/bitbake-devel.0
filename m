@@ -1,19 +1,19 @@
 Received: from astoria.ccjclearline.com ([64.235.106.9])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <rpjday@crashcourse.ca>) id 1TbsUo-0001fP-Be
+	(envelope-from <rpjday@crashcourse.ca>) id 1TbtUn-0002LJ-2R
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 23 Nov 2012 13:36:38 +0100
+	Fri, 23 Nov 2012 14:40:42 +0100
 Received: from cpebcc81008dd2c-cmbcc81008dd29.cpe.net.cable.rogers.com
-	([99.253.156.71]:35268 helo=crashcourse.ca)
+	([99.253.156.71]:36404 helo=crashcourse.ca)
 	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES256-SHA:256)
 	(Exim 4.77) (envelope-from <rpjday@crashcourse.ca>)
-	id 1TbsH9-0007NG-Ki; Fri, 23 Nov 2012 07:22:31 -0500
-Date: Fri, 23 Nov 2012 07:22:28 -0500 (EST)
+	id 1TbtH3-0002sj-87; Fri, 23 Nov 2012 08:26:29 -0500
+Date: Fri, 23 Nov 2012 08:26:24 -0500 (EST)
 From: "Robert P. J. Day" <rpjday@crashcourse.ca>
 X-X-Sender: rpjday@oneiric
 To: Chris Larson <clarson@kergoth.com>
 In-Reply-To: <CABcZANkFraUCk5OKQpHjFpzK-5fUGp+LS-QV2gsZ6to=b-9WTg@mail.gmail.com>
-Message-ID: <alpine.DEB.2.02.1211230641010.4484@oneiric>
+Message-ID: <alpine.DEB.2.02.1211230823040.2322@oneiric>
 References: <alpine.DEB.2.02.1211221354240.6298@oneiric>
 	<CABcZANmiDXzOKYjTrya92D277+4RUtu7o4shR+CJkNfzTDTOoA@mail.gmail.com>
 	<alpine.DEB.2.02.1211221531260.7504@oneiric>
@@ -44,17 +44,17 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 23 Nov 2012 12:36:38 -0000
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323329-436910253-1353671605=:4484"
-Content-ID: <alpine.DEB.2.02.1211230718160.612@oneiric>
+X-List-Received-Date: Fri, 23 Nov 2012 13:40:42 -0000
+Content-Type: MULTIPART/MIXED; BOUNDARY="8323329-209999374-1353677189=:2322"
 
---8323329-436910253-1353671605=:4484
-Content-Type: TEXT/PLAIN; CHARSET=ISO-8859-15
+--8323329-209999374-1353677189=:2322
+Content-Type: TEXT/PLAIN; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <alpine.DEB.2.02.1211230718161.612@oneiric>
 
 On Thu, 22 Nov 2012, Chris Larson wrote:
 
+>
+>
 > On Thu, Nov 22, 2012 at 5:03 PM, Robert P. J. Day <rpjday@crashcourse.ca>=
  wrote:
 >       On Thu, 22 Nov 2012, Chris Larson wrote:
@@ -63,7 +63,7 @@ On Thu, 22 Nov 2012, Chris Larson wrote:
 > > <provider>. You could modify it easily enough to support that,
 > > though.
 >
-> =A0 hang on ... i actually did just that to search the output of:
+> =C2=A0 hang on ... i actually did just that to search the output of:
 >
 > $ bitbake -e linux-omap4
 >
@@ -71,36 +71,16 @@ On Thu, 22 Nov 2012, Chris Larson wrote:
 > i'm not sure how to do that.
 >
 > What variables are you not seeing? bitbake -e shows all variables
-> but ones which are flagged 'unexport' (e.g. DISTRO, MACHINE).
+> but ones which are flagged 'unexport' (e.g. DISTRO, MACHINE). --
 
-  hmmmm ... i think i see my problem.  working from memory, i remember
-being able to examine kernel-related variables when using OE to build
-a qemuarm system, so i could examine, say, KMETA with:
+  *sigh* ... just ignore my stupidity.  in my fatigue, i totally
+forgot that configuring a pandaboard required adding meta-ti on top of
+straight OE, and there was no yocto-related content involved, but i
+was still remembering all of the variables i could see when i was
+using yocto.
 
-$ bitbake -e virtual/kernel | grep KMETA
-# KMETA=3Dmeta
-KMETA=3D"meta"
-=09export KMETA=3Dmeta
-=09export KMETA=3Dmeta
-=09## KMETA branch validation
-=09export KMETA=3Dmeta
-=09=09# If KMETA is defined, the branch must exist, but a machine branch
-    # if KMETA isn't set globally by a recipe using this routine, we need t=
-o
-    kmeta =3D d.getVar( "KMETA", True ) or "meta"
-$
-
-  recently, i used OE and the meta-ti layer to build for pandaboard
-but here's what happens when i tried the same thing there:
-
-$ bitbake -e virtual/kernel | grep KMETA
-$
-
-  as in, nothing.  i guess i was just assuming i would see similar
-information there, i obviously need to look at the meta-ti kernel
-recipes more closely.  or should i still be able to see that variable?
-it seems like a fairly critical part of the kernel configuration
-phase.
+ in any event, i like the bitbake-env script, is it worth adding some
+variant of that to bitbake itself?
 
 rday
 
@@ -118,4 +98,4 @@ LinkedIn:                               http://ca.linkedin.com/in/rpjday
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
---8323329-436910253-1353671605=:4484--
+--8323329-209999374-1353677189=:2322--
