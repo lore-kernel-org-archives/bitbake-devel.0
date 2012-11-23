@@ -1,38 +1,28 @@
-Received: from astoria.ccjclearline.com ([64.235.106.9])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <rpjday@crashcourse.ca>) id 1TbtUn-0002LJ-2R
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 23 Nov 2012 14:40:42 +0100
-Received: from cpebcc81008dd2c-cmbcc81008dd29.cpe.net.cable.rogers.com
-	([99.253.156.71]:36404 helo=crashcourse.ca)
-	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.77) (envelope-from <rpjday@crashcourse.ca>)
-	id 1TbtH3-0002sj-87; Fri, 23 Nov 2012 08:26:29 -0500
-Date: Fri, 23 Nov 2012 08:26:24 -0500 (EST)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@oneiric
-To: Chris Larson <clarson@kergoth.com>
-In-Reply-To: <CABcZANkFraUCk5OKQpHjFpzK-5fUGp+LS-QV2gsZ6to=b-9WTg@mail.gmail.com>
-Message-ID: <alpine.DEB.2.02.1211230823040.2322@oneiric>
-References: <alpine.DEB.2.02.1211221354240.6298@oneiric>
-	<CABcZANmiDXzOKYjTrya92D277+4RUtu7o4shR+CJkNfzTDTOoA@mail.gmail.com>
-	<alpine.DEB.2.02.1211221531260.7504@oneiric>
-	<CABcZANnHBqZvOhgZNYPjCJUwKqW+0W6KWuRU+r87094R-4R-qw@mail.gmail.com>
-	<alpine.DEB.2.02.1211221901200.5418@oneiric>
-	<CABcZANkFraUCk5OKQpHjFpzK-5fUGp+LS-QV2gsZ6to=b-9WTg@mail.gmail.com>
-User-Agent: Alpine 2.02 (DEB 1266 2009-07-14)
-MIME-Version: 1.0
-X-AntiAbuse: This header was added to track abuse,
-	please include it with any abuse report
-X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Subject: Re: how easy to extend "bitbake -e" to print *selected* subset of variables?
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1TbxFY-0004cU-AN; Fri, 23 Nov 2012 18:41:12 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qANHR1UT005001;
+	Fri, 23 Nov 2012 17:27:01 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 04292-04; Fri, 23 Nov 2012 17:26:57 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qANHQqmR004953
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
+	Fri, 23 Nov 2012 17:26:53 GMT
+Message-ID: <1353691611.1361.28.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>, openembedded-core
+	<openembedded-core@lists.openembedded.org>
+Date: Fri, 23 Nov 2012 17:26:51 +0000
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: Constantin Musca <constantinx.musca@intel.com>
+Subject: RFC: Versioning of git recipes (and incremental PR)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -44,58 +34,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 23 Nov 2012 13:40:42 -0000
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323329-209999374-1353677189=:2322"
+X-List-Received-Date: Fri, 23 Nov 2012 17:41:12 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---8323329-209999374-1353677189=:2322
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Currently we have some rather complex and potentially broken code in the
+fetcher code to deal with the the fact that you don't get incremental
+versions from git revisions easily. The system currently has a database
+and generates incremental numbers so PV becomes something like:
 
-On Thu, 22 Nov 2012, Chris Larson wrote:
+0.1+git1-deadbeefdecafbad
 
->
->
-> On Thu, Nov 22, 2012 at 5:03 PM, Robert P. J. Day <rpjday@crashcourse.ca>=
- wrote:
->       On Thu, 22 Nov 2012, Chris Larson wrote:
->
-> > Yeah, that quick script just ran bitbake -e, not bitbake -e
-> > <provider>. You could modify it easily enough to support that,
-> > though.
->
-> =C2=A0 hang on ... i actually did just that to search the output of:
->
-> $ bitbake -e linux-omap4
->
-> but i still don't see a number of variables i'm interested in, and
-> i'm not sure how to do that.
->
-> What variables are you not seeing? bitbake -e shows all variables
-> but ones which are flagged 'unexport' (e.g. DISTRO, MACHINE). --
+or for perverse recipes with more than one git source:
 
-  *sigh* ... just ignore my stupidity.  in my fatigue, i totally
-forgot that configuring a pandaboard required adding meta-ti on top of
-straight OE, and there was no yocto-related content involved, but i
-was still remembering all of the variables i could see when i was
-using yocto.
+0.1+git1-deadbeefdecafbad-git3-decafbaddeadbeef
 
- in any event, i like the bitbake-env script, is it worth adding some
-variant of that to bitbake itself?
+We currently have a bug that this doesn't interact well with sstate
+feeds since you have to have a single persistdb for any given sstate
+feed. It won't break in that sstate will just not be used but that is
+inefficient.
 
-rday
+The fact we need to have increasing values in the field is a very
+similar problem to the incremental PR for package fields that we're
+addressing with the PR server.
 
---=20
+I've therefore taken a step back and considered things and am proposing
+that we adapt the PR server to handle this issue and then drop the code
+from the fetcher. The rough implementation of this would mean that:
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
+* PV would become 0.1+gitAUTOINC-deadbeefdecafbad-decafbaddeadbeef
 
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+* We'd have one incrementing value rather than several.
 
---8323329-209999374-1353677189=:2322--
+* That the code would detect a PV containing AUTOINC and set PKGV to the
+same thing with AUTOINC replaced with the "auto PR" value
+
+* We'd do this in parallel with the usual auto PR value. In PR server
+terms this means likely in the same data table using "git-PV" as the key
+and just call the API with a different key name.
+
+* If the PR server isn't running, this would just set PKGV to PV but
+with AUTOINC set to 0. This would mean you wouldn't get updating package
+feeds but usual image creation would be just fine.
+
+* There are some complexities for data import and export we need to
+consider and work through.
+
+All things considered I think this would be a nice improvement and allow
+us to have one good set of "incremental" code and simplify the fetchers.
+
+I'm open to discussion... :)
+
+Cheers,
+
+Richard
+
+
+
