@@ -1,37 +1,36 @@
-Received: from mail-lb0-f175.google.com ([209.85.217.175])
+Received: from astoria.ccjclearline.com ([64.235.106.9])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1TbhIg-0003or-88
+	(envelope-from <rpjday@crashcourse.ca>) id 1TbsUo-0001fP-Be
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 23 Nov 2012 01:39:22 +0100
-Received: by mail-lb0-f175.google.com with SMTP id gg13so3751486lbb.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 22 Nov 2012 16:25:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	bh=lxwQF4AKauVz5l5xXsw/OqK4cSea/Qa5gs+1LlW77A0=;
-	b=R8/p4UegoxlOk4+gr5DwR2CKu9G+Fu2S8/Yc214F6km6KL61r2xuTC0hHuCcE9sLHH
-	8FPNmvxkXec/yq9Z0NJGV2du7DUv3QX66Thwsm7NbJM1X045WxvF31/wPWwr9CypzT2d
-	Nr0hOi4Kt28dc0q8JzyQd65h1YguI9RYACy5Q5Bc7goyssod9sjzH7xTCxhGjOS0y9yi
-	KCggPs8h5LaF0zzdgZ54ehaOacfJky3lMPHimrr22OkUZJyRajitiUAfCOYxO2xS5RCM
-	j+3z+SDQkqWlRPd/jlsnh4v4tesGilz78sCPudZ+axZMcQFlYl/g4V+99USpjlq1sfnR
-	X9KA==
-Received: by 10.152.104.148 with SMTP id ge20mr1784682lab.51.1353630315292;
-	Thu, 22 Nov 2012 16:25:15 -0800 (PST)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.42.162 with HTTP; Thu, 22 Nov 2012 16:24:54 -0800 (PST)
-In-Reply-To: <alpine.DEB.2.02.1211221901200.5418@oneiric>
+	Fri, 23 Nov 2012 13:36:38 +0100
+Received: from cpebcc81008dd2c-cmbcc81008dd29.cpe.net.cable.rogers.com
+	([99.253.156.71]:35268 helo=crashcourse.ca)
+	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES256-SHA:256)
+	(Exim 4.77) (envelope-from <rpjday@crashcourse.ca>)
+	id 1TbsH9-0007NG-Ki; Fri, 23 Nov 2012 07:22:31 -0500
+Date: Fri, 23 Nov 2012 07:22:28 -0500 (EST)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+X-X-Sender: rpjday@oneiric
+To: Chris Larson <clarson@kergoth.com>
+In-Reply-To: <CABcZANkFraUCk5OKQpHjFpzK-5fUGp+LS-QV2gsZ6to=b-9WTg@mail.gmail.com>
+Message-ID: <alpine.DEB.2.02.1211230641010.4484@oneiric>
 References: <alpine.DEB.2.02.1211221354240.6298@oneiric>
 	<CABcZANmiDXzOKYjTrya92D277+4RUtu7o4shR+CJkNfzTDTOoA@mail.gmail.com>
 	<alpine.DEB.2.02.1211221531260.7504@oneiric>
 	<CABcZANnHBqZvOhgZNYPjCJUwKqW+0W6KWuRU+r87094R-4R-qw@mail.gmail.com>
 	<alpine.DEB.2.02.1211221901200.5418@oneiric>
-From: Chris Larson <clarson@kergoth.com>
-Date: Thu, 22 Nov 2012 17:24:54 -0700
-X-Google-Sender-Auth: BrlCw-YR10FxJEGjM69PtpEYwxQ
-Message-ID: <CABcZANkFraUCk5OKQpHjFpzK-5fUGp+LS-QV2gsZ6to=b-9WTg@mail.gmail.com>
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>
+	<CABcZANkFraUCk5OKQpHjFpzK-5fUGp+LS-QV2gsZ6to=b-9WTg@mail.gmail.com>
+User-Agent: Alpine 2.02 (DEB 1266 2009-07-14)
+MIME-Version: 1.0
+X-AntiAbuse: This header was added to track abuse,
+	please include it with any abuse report
+X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
 Subject: Re: how easy to extend "bitbake -e" to print *selected* subset of variables?
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -45,63 +44,78 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 23 Nov 2012 00:39:22 -0000
-Content-Type: multipart/alternative; boundary=f46d0407116919a9a204cf1e9eb1
+X-List-Received-Date: Fri, 23 Nov 2012 12:36:38 -0000
+Content-Type: MULTIPART/MIXED; BOUNDARY="8323329-436910253-1353671605=:4484"
+Content-ID: <alpine.DEB.2.02.1211230718160.612@oneiric>
 
---f46d0407116919a9a204cf1e9eb1
-Content-Type: text/plain; charset=UTF-8
+--8323329-436910253-1353671605=:4484
+Content-Type: TEXT/PLAIN; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <alpine.DEB.2.02.1211230718161.612@oneiric>
 
-On Thu, Nov 22, 2012 at 5:03 PM, Robert P. J. Day <rpjday@crashcourse.ca>wrote:
+On Thu, 22 Nov 2012, Chris Larson wrote:
 
-> On Thu, 22 Nov 2012, Chris Larson wrote:
+> On Thu, Nov 22, 2012 at 5:03 PM, Robert P. J. Day <rpjday@crashcourse.ca>=
+ wrote:
+>       On Thu, 22 Nov 2012, Chris Larson wrote:
 >
 > > Yeah, that quick script just ran bitbake -e, not bitbake -e
 > > <provider>. You could modify it easily enough to support that,
 > > though.
 >
->   hang on ... i actually did just that to search the output of:
+> =A0 hang on ... i actually did just that to search the output of:
 >
 > $ bitbake -e linux-omap4
 >
-> but i still don't see a number of variables i'm interested in, and i'm
-> not sure how to do that.
+> but i still don't see a number of variables i'm interested in, and
+> i'm not sure how to do that.
 >
+> What variables are you not seeing? bitbake -e shows all variables
+> but ones which are flagged 'unexport' (e.g. DISTRO, MACHINE).
 
-What variables are you not seeing? bitbake -e shows all variables but ones
-which are flagged 'unexport' (e.g. DISTRO, MACHINE).
--- 
-Christopher Larson
+  hmmmm ... i think i see my problem.  working from memory, i remember
+being able to examine kernel-related variables when using OE to build
+a qemuarm system, so i could examine, say, KMETA with:
 
---f46d0407116919a9a204cf1e9eb1
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+$ bitbake -e virtual/kernel | grep KMETA
+# KMETA=3Dmeta
+KMETA=3D"meta"
+=09export KMETA=3Dmeta
+=09export KMETA=3Dmeta
+=09## KMETA branch validation
+=09export KMETA=3Dmeta
+=09=09# If KMETA is defined, the branch must exist, but a machine branch
+    # if KMETA isn't set globally by a recipe using this routine, we need t=
+o
+    kmeta =3D d.getVar( "KMETA", True ) or "meta"
+$
 
-<div class=3D"gmail_extra"><br><br><div class=3D"gmail_quote">On Thu, Nov 2=
-2, 2012 at 5:03 PM, Robert P. J. Day <span dir=3D"ltr">&lt;<a href=3D"mailt=
-o:rpjday@crashcourse.ca" target=3D"_blank">rpjday@crashcourse.ca</a>&gt;</s=
-pan> wrote:<br>
+  recently, i used OE and the meta-ti layer to build for pandaboard
+but here's what happens when i tried the same thing there:
 
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div class=3D"im">On Thu, 22 Nov 2012, Chris=
- Larson wrote:<br>
-<br>
-</div><div class=3D"im">&gt; Yeah, that quick script just ran bitbake -e, n=
-ot bitbake -e<br>
-&gt; &lt;provider&gt;. You could modify it easily enough to support that,<b=
-r>
-&gt; though.<br>
-<br>
-</div>=C2=A0 hang on ... i actually did just that to search the output of:<=
-br>
-<br>
-$ bitbake -e linux-omap4<br>
-<br>
-but i still don&#39;t see a number of variables i&#39;m interested in, and =
-i&#39;m<br>
-not sure how to do that.<br>
-<div class=3D"im"></div></blockquote></div><br>What variables are you not s=
-eeing? bitbake -e shows all variables but ones which are flagged &#39;unexp=
-ort&#39; (e.g. DISTRO, MACHINE).<br>-- <br>Christopher Larson<br>
-</div>
+$ bitbake -e virtual/kernel | grep KMETA
+$
 
---f46d0407116919a9a204cf1e9eb1--
+  as in, nothing.  i guess i was just assuming i would see similar
+information there, i obviously need to look at the meta-ti kernel
+recipes more closely.  or should i still be able to see that variable?
+it seems like a fairly critical part of the kernel configuration
+phase.
+
+rday
+
+--=20
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                        http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+--8323329-436910253-1353671605=:4484--
