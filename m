@@ -1,31 +1,28 @@
-Received: from mail-pa0-f47.google.com ([209.85.220.47])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <otavio.salvador@gmail.com>)
-	id 1Tbz4h-0000f9-Jo; Fri, 23 Nov 2012 20:38:07 +0100
-Received: by mail-pa0-f47.google.com with SMTP id fa10so1441039pad.6
-	for <multiple recipients>; Fri, 23 Nov 2012 11:23:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:date
-	:x-google-sender-auth:message-id:subject:from:to:cc:content-type;
-	bh=Uoq/c5WUW5o8BUPdyEWSxpTjx2aiaOBtn326sMP+nOI=;
-	b=X9Dc5Jlv5YrjYuzq5RzhW+JC26ejrRJwXyNemTTgmiYmYJVmUjrALIr1CQbhErArDQ
-	oXboqEIA5/D5GYzNrcaBwA2H7Uw1LHwFgi3Xv4Awej6pH13NkLjQ/civ4S45YCsE3W21
-	E2Z14/pzIyalqp95rJpBAR1uLTL3wF/C+ZtweDjARuiurPNaaB5G8QSFwUAZgIjFdw1m
-	Hh39Et3MJ0SXdmYp9XoRgGKhEjp/XOJL1xnvrMgaOuh8XpGUT+l8HKZrMYOiJ7e55anq
-	DfR3j+pL7UzgPAJZmKqMIWfPMjiCQx71FsNHw+XGvuRr3cEIj234U4Ih5nHBFdb6GIP6
-	dzMg==
-MIME-Version: 1.0
-Received: by 10.68.204.103 with SMTP id kx7mr16827740pbc.33.1353698638667;
-	Fri, 23 Nov 2012 11:23:58 -0800 (PST)
-Sender: otavio.salvador@gmail.com
-Received: by 10.68.16.225 with HTTP; Fri, 23 Nov 2012 11:23:58 -0800 (PST)
-In-Reply-To: <1353691611.1361.28.camel@ted>
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1TbzPO-00018y-Nu; Fri, 23 Nov 2012 20:59:30 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qANJjKX8006703;
+	Fri, 23 Nov 2012 19:45:20 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 04388-08; Fri, 23 Nov 2012 19:45:16 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qANJjAgX006659
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
+	Fri, 23 Nov 2012 19:45:12 GMT
+Message-ID: <1353699909.7352.2.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Otavio Salvador <otavio@ossystems.com.br>
+Date: Fri, 23 Nov 2012 19:45:09 +0000
+In-Reply-To: <CAP9ODKqPx8AE9O66ALLkpwXDFxr1outs_tdeDG2DnyZdw9Q=Ag@mail.gmail.com>
 References: <1353691611.1361.28.camel@ted>
-Date: Fri, 23 Nov 2012 17:23:58 -0200
-X-Google-Sender-Auth: Pt4yLkN30yOvFB37eh-cKEmYV0o
-Message-ID: <CAP9ODKqPx8AE9O66ALLkpwXDFxr1outs_tdeDG2DnyZdw9Q=Ag@mail.gmail.com>
-From: Otavio Salvador <otavio@ossystems.com.br>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
+	<CAP9ODKqPx8AE9O66ALLkpwXDFxr1outs_tdeDG2DnyZdw9Q=Ag@mail.gmail.com>
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
 	Constantin Musca <constantinx.musca@intel.com>,
 	openembedded-core <openembedded-core@lists.openembedded.org>
@@ -41,71 +38,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 23 Nov 2012 19:38:07 -0000
-Content-Type: text/plain; charset=ISO-8859-1
+X-List-Received-Date: Fri, 23 Nov 2012 19:59:30 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Fri, Nov 23, 2012 at 3:26 PM, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
-> Currently we have some rather complex and potentially broken code in the
-> fetcher code to deal with the the fact that you don't get incremental
-> versions from git revisions easily. The system currently has a database
-> and generates incremental numbers so PV becomes something like:
+On Fri, 2012-11-23 at 17:23 -0200, Otavio Salvador wrote:
+> I like to idea of a single updating place. What I dislike is AUTOINC
+> not being taken care in the fetcher.
 >
-> 0.1+git1-deadbeefdecafbad
->
-> or for perverse recipes with more than one git source:
->
-> 0.1+git1-deadbeefdecafbad-git3-decafbaddeadbeef
->
-> We currently have a bug that this doesn't interact well with sstate
-> feeds since you have to have a single persistdb for any given sstate
-> feed. It won't break in that sstate will just not be used but that is
-> inefficient.
->
-> The fact we need to have increasing values in the field is a very
-> similar problem to the incremental PR for package fields that we're
-> addressing with the PR server.
+> In this case any GIT revision changes, the AUTOINC won't bump as usual
+> (without PR server)?
 
-Yes; I had problem using GIT with PR server last time I tried it.
+Why do you need AUTOINC to bump? The only reason we have increments in
+the fetcher is for package upgrading...
 
-Good that it's being worked on/has been fixed.
+Cheers,
 
-> I've therefore taken a step back and considered things and am proposing
-> that we adapt the PR server to handle this issue and then drop the code
-> from the fetcher. The rough implementation of this would mean that:
->
-> * PV would become 0.1+gitAUTOINC-deadbeefdecafbad-decafbaddeadbeef
->
-> * We'd have one incrementing value rather than several.
->
-> * That the code would detect a PV containing AUTOINC and set PKGV to the
-> same thing with AUTOINC replaced with the "auto PR" value
->
-> * We'd do this in parallel with the usual auto PR value. In PR server
-> terms this means likely in the same data table using "git-PV" as the key
-> and just call the API with a different key name.
->
-> * If the PR server isn't running, this would just set PKGV to PV but
-> with AUTOINC set to 0. This would mean you wouldn't get updating package
-> feeds but usual image creation would be just fine.
->
-> * There are some complexities for data import and export we need to
-> consider and work through.
->
-> All things considered I think this would be a nice improvement and allow
-> us to have one good set of "incremental" code and simplify the fetchers.
->
-> I'm open to discussion... :)
+Richard
 
-I like to idea of a single updating place. What I dislike is AUTOINC
-not being taken care in the fetcher.
 
-In this case any GIT revision changes, the AUTOINC won't bump as usual
-(without PR server)?
 
--- 
-Otavio Salvador                             O.S. Systems
-E-mail: otavio@ossystems.com.br  http://www.ossystems.com.br
-Mobile: +55 53 9981-7854              http://projetos.ossystems.com.br
+
 
 
