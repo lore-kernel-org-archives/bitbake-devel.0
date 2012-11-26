@@ -1,19 +1,19 @@
 Received: from astoria.ccjclearline.com ([64.235.106.9])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <rpjday@crashcourse.ca>) id 1TcxTl-0002uk-Dz
+	(envelope-from <rpjday@crashcourse.ca>) id 1Tcy8V-0004F0-MJ
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 26 Nov 2012 13:08:01 +0100
+	Mon, 26 Nov 2012 13:50:08 +0100
 Received: from cpebcc81008dd2c-cmbcc81008dd29.cpe.net.cable.rogers.com
-	([99.253.156.71]:40098 helo=crashcourse.ca)
+	([99.253.156.71]:40842 helo=crashcourse.ca)
 	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES256-SHA:256)
 	(Exim 4.77) (envelope-from <rpjday@crashcourse.ca>)
-	id 1TcxG2-0000Ur-RG; Mon, 26 Nov 2012 06:53:50 -0500
-Date: Mon, 26 Nov 2012 06:53:48 -0500 (EST)
+	id 1Tcxum-00022T-SU; Mon, 26 Nov 2012 07:35:56 -0500
+Date: Mon, 26 Nov 2012 07:35:52 -0500 (EST)
 From: "Robert P. J. Day" <rpjday@crashcourse.ca>
 X-X-Sender: rpjday@oneiric
 To: Paul Eggleton <paul.eggleton@linux.intel.com>
 In-Reply-To: <29436129.kTOWlB2TST@helios>
-Message-ID: <alpine.DEB.2.02.1211260640170.4700@oneiric>
+Message-ID: <alpine.DEB.2.02.1211260724070.6200@oneiric>
 References: <alpine.DEB.2.02.1211240910580.934@oneiric>
 	<29436129.kTOWlB2TST@helios>
 User-Agent: Alpine 2.02 (DEB 1266 2009-07-14)
@@ -40,89 +40,95 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 26 Nov 2012 12:08:01 -0000
+X-List-Received-Date: Mon, 26 Nov 2012 12:50:08 -0000
 Content-Type: TEXT/PLAIN; charset=US-ASCII
 
 On Mon, 26 Nov 2012, Paul Eggleton wrote:
 
 > On Saturday 24 November 2012 09:23:20 Robert P. J. Day wrote:
-> >   preparing my own write-up on how bitbake processes combinations of
-> > overrides, _append and += and ran across an example in oe-core that is
-> > unnecessarily whitespacey, just wanted to make sure i was
-> > understanding this properly.
-> >
-> >   in the current bitbake user manual, there's this example of mixing
-> > overrides, _append and +=:
-> >
-> >   OVERRIDES = "foo"
-> >   A_foo_append = "X"
-> >   A_foo_append += "Y"
-> >
-> >   This behaves as per the first case above, but the value of A would
-> >   be "X Y" instead of just "X".
-> >
-> >   that, of course, makes sense as the "+=" operator automatically adds
-> > a leading space to what is being appended.  so for fun, i scanned all
-> > of oe-core looking for examples of "_append.*+=" for classroom demo
-> > purposes, and the *only* examples i found were in
-> > meta/recipes-devtools/python/python-smartpm_1.4.1.bb:
-> >
+
 > > RDEPENDS_python-smartpm_append = " python-smartpm-backend-rpm python-codecs
 > > python-textutils python-xml" RDEPENDS_python-smartpm_append += "
 > > python-fcntl python-pickle python-crypt python-compression python-shell"
 > > RDEPENDS_python-smartpm_append += " python-resource python-netclient
 > > python-threading python-unixadmin"
-> >
-> >   i can see that that first line *does* need an explicit leading space
-> > in the value being assigned, but the next two "+=" lines don't, do
-> > they?  it won't hurt, of course, you'll just *two* spaces inserted
-> > instead of one.  but i just want to make sure i understand what's
-> > happening there since it has the potential to be confusing for someone
-> > trying to follow along.
 >
-> I would strongly discourage the use of += in conjunction with _append because
-> the intent is unclear - I think we've discussed this before ...
+> I would strongly discourage the use of += in conjunction with
+> _append because the intent is unclear - I think we've discussed this
+> before; this is just a case where it slipped through. Ideally this
+> would just be done as a += split onto multiple lines and I will make
+> sure it gets changed to that if someone else doesn't get to it
+> first.
 
-  yes, i've whined about this sort of thing before :-P, not because it
-makes any *functional* difference but because (and i know i've said
-this before) when i teach OE/yocto, i like to use examples right out
-of the source code, and oddities like the above sometimes cause
-students to wonder if perhaps they've misunderstood something when
-they see something like that.  it's a perfect example where telling
-someone to RTFS can actually be counter-productive.
+  two more bits of pedantry that i think would improve the
+code/documentation, related to the above.
 
-> Ideally this would just be done as a += split onto multiple lines
-> and I will make sure it gets changed to that if someone else doesn't
-> get to it first.
+  first, as i understand it, the "_append" feature is used to do
+appending at the *end* of the, what, parsing?  what do you call that
+step, and how would you describe what happens when you use "_append"?
+because it seems that, while it's a useful feature when ordering *is*
+important, it's overkill when ordering doesn't matter.
 
-  help yourself.  on a related note, though, note that this feature is
-described in the bitbake user manual which, while it's not clear where
-to find it online, is in the bitbake git repo where one can build it.
-so two questions.
+  consider this snippet from linux-yocto_3.2.bb:
 
-  first, is the *individual* bitbake user manual considered part of
-the official yocto documentation?  should it be listed here?
+KERNEL_FEATURES_append=" features/netfilter"
+KERNEL_FEATURES_append=" features/taskstats"
+KERNEL_FEATURES_append_qemux86=" cfg/sound"
+KERNEL_FEATURES_append_qemux86-64=" cfg/sound"
 
-  https://www.yoctoproject.org/documentation
+since the above is defining kernel features, is there anything
+important about the ordering?  unless there's something tricky going
+on, couldn't one just have coded:
 
-if not, where should one go online to read it?  is it regularly
-rebuilt from the bitbake/doc directory?  and published where?  there
-are enough references to the bitbake user manual that people should
-know where to find it easily.
+KERNEL_FEATURES += "features/netfilter"
+KERNEL_FEATURES += "features/taskstats"
+KERNEL_FEATURES_qemux86 += "cfg/sound"
+KERNEL_FEATURES_qemux86-64 +="cfg/sound"
 
-  also, WRT the above, it's the bitbake user manual itself that shows
-the reader how to do this:
+  that second form is clearly simpler, as long as it represents
+identical functionality.  in short, don't use "_append" unless it's
+actually necessary.  which brings us to my second suggestion.
+
+  use actual OE/yocto code to explain features.  from the bitbake user
+manual, remember this snippet explaining how to use overrides and
+appending:
+
+===== start =====
+
+OVERRIDES = "foo"
+A_foo_append = "X"
+In this case, X is unconditionally appended to the variable A_foo.
+Since foo is an override, A_foo would then replace A.
+
+OVERRIDES = "foo"
+A = "X"
+A_append_foo = "Y"
+In this case, only when foo is in OVERRIDES, Y is appended to the
+variable A so the value of A would become XY (NB: no spaces are
+appended).
 
 OVERRIDES = "foo"
 A_foo_append = "X"
 A_foo_append += "Y"
 
-without perhaps explaining that that's a really weird thing to do and
-should be discouraged.  so there's a definite logical disconnect
-between things that are deprecated while still being explained in the
-user manual.
+===== end =====
 
-  just my $0.02.  another doc note coming shortly ...
+  but the above is not all that informative since the reader has no
+clue what "A" or "foo" might represent.  so use excerpts from recipes
+themselves that are immediately obvious; in fact, the above kernel
+features can be used for that:
+
+KERNEL_FEATURES += "features/netfilter"
+KERNEL_FEATURES += "features/taskstats"
+KERNEL_FEATURES_qemux86 += "cfg/sound"
+KERNEL_FEATURES_qemux86-64 +="cfg/sound"
+
+that at least makes it spectacularly clear that, given a particular
+architecture, additional features will be selected for the kernel.
+simply using "A" and "foo" and "X" and "Y" is fairly meaningless.
+
+  i may shortly have another suggestion or two that have worked for me
+in explaining stuff to students.
 
 rday
 
@@ -135,7 +141,5 @@ Robert P. J. Day                                 Ottawa, Ontario, CANADA
 Twitter:                                       http://twitter.com/rpjday
 LinkedIn:                               http://ca.linkedin.com/in/rpjday
 ========================================================================
-
-
 
 
