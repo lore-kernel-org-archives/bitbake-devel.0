@@ -1,33 +1,33 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1Te4Av-000056-8q for bitbake-devel@lists.openembedded.org;
-	Thu, 29 Nov 2012 14:29:09 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qATDEnm5020701;
-	Thu, 29 Nov 2012 13:14:49 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 23319-08; Thu, 29 Nov 2012 13:14:45 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qATDEddg020694
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Thu, 29 Nov 2012 13:14:41 GMT
-Message-ID: <1354191677.4053.1.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Chris Larson <clarson@kergoth.com>
-In-Reply-To: <CABcZANkDfxxQCupuJLEjJJfXM44MczWcSpvZCqQKmOsDbCPF5A@mail.gmail.com>
-References: <1354134376.15992.5.camel@ted>
-	<CABcZANkV1td28s-vZCXfukMHvYUAkoUH=3jScF3ZVkaBTyp9Qw@mail.gmail.com>
-	<CABcZANkDfxxQCupuJLEjJJfXM44MczWcSpvZCqQKmOsDbCPF5A@mail.gmail.com>
-Date: Thu, 29 Nov 2012 12:21:17 +0000
-Mime-Version: 1.0
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>, "Eggleton,
-	Paul" <paul.eggleton@intel.com>
-Subject: Re: [PATCH] build.py: Preserve sigdata files in the stamps directory
+Received: from mail-vc0-f175.google.com ([209.85.220.175])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <twoerner@gmail.com>) id 1Te74D-0007yL-9S
+	for bitbake-devel@lists.openembedded.org;
+	Thu, 29 Nov 2012 17:34:33 +0100
+Received: by mail-vc0-f175.google.com with SMTP id m8so11006421vcd.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 29 Nov 2012 08:20:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	:cc:content-type;
+	bh=21X7aCHQmiPo39Fo8BIGRG6dR4j1hsLzUXh2Y3A1nv8=;
+	b=Ze9TBr9CotDugbaOpayT/xlVU/bKLqSxjU8Gs073wmdEfz91cv/kC+if5QCQatTHys
+	e/GIPE2ZqinjGjZf84Gj4ArSBlAkYD7I1Fmx6bDvH/qlIXZvKYF33G723QX26s5bhUjG
+	Zn5KlHFIWFiWtbCgdKH6Q1SSvE96MwY15xOtzrcQQanFdAAsz5r5GG75R9unV32bQhDp
+	3zZArTiD1AkKf3piImNAVRNE6ELhoftjk8H/XDzFn1SwwySeOofMa/3U3UHqdBwVcNSZ
+	RKqY3j5KHx91s6AgqLiX0a3bC+4yKhgGEbsE/eexflgCRyzizsQWMe+gQhWRBkaMi1sQ
+	OB7g==
+MIME-Version: 1.0
+Received: by 10.52.99.197 with SMTP id es5mr27798056vdb.7.1354206009012; Thu,
+	29 Nov 2012 08:20:09 -0800 (PST)
+Received: by 10.220.155.5 with HTTP; Thu, 29 Nov 2012 08:20:08 -0800 (PST)
+In-Reply-To: <1354184946.4943.0.camel@ted>
+References: <1354184946.4943.0.camel@ted>
+Date: Thu, 29 Nov 2012 11:20:08 -0500
+Message-ID: <CAHUNapRmG=8YLOeVEvYLz7T7N73ODp42M8PphVA8GZwwAijiHw@mail.gmail.com>
+From: Trevor Woerner <twoerner@gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] data_smart: Improve get_hash to account for overrides and key expansion
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -39,31 +39,9 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 29 Nov 2012 13:29:09 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 29 Nov 2012 16:34:34 -0000
+Content-Type: text/plain; charset=ISO-8859-1
 
-On Wed, 2012-11-28 at 15:19 -0700, Chris Larson wrote:
-> On Wed, Nov 28, 2012 at 3:19 PM, Chris Larson <clarson@kergoth.com>
-> wrote:
->         On Wed, Nov 28, 2012 at 1:26 PM, Richard Purdie
->         <richard.purdie@linuxfoundation.org> wrote:
->                 -        bb.utils.remove(mask)
->                 -
->                 +        # Preserve sigdata files in the stamps
->                 directory
->                 +        for name in glob.glob(mask):
->                 +            if name.find("sigdata") != -1:
->
->         if 'sigdata' not in name:
->
-> Erm, s/not in/in/. You get the idea. Use of 'find' only really makes
-> sense if you need the locations within the string.
-
-Yes, good point, thanks.
-
-Richard
-
-
+Thank you. This patch solves the problem I was seeing.
 
 
