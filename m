@@ -1,33 +1,21 @@
-Received: from mail-vc0-f175.google.com ([209.85.220.175])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <twoerner@gmail.com>) id 1Te74D-0007yL-9S
+	(envelope-from <cristiana.voicu@intel.com>) id 1TfS56-0007h4-4H
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 29 Nov 2012 17:34:33 +0100
-Received: by mail-vc0-f175.google.com with SMTP id m8so11006421vcd.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 29 Nov 2012 08:20:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:cc:content-type;
-	bh=21X7aCHQmiPo39Fo8BIGRG6dR4j1hsLzUXh2Y3A1nv8=;
-	b=Ze9TBr9CotDugbaOpayT/xlVU/bKLqSxjU8Gs073wmdEfz91cv/kC+if5QCQatTHys
-	e/GIPE2ZqinjGjZf84Gj4ArSBlAkYD7I1Fmx6bDvH/qlIXZvKYF33G723QX26s5bhUjG
-	Zn5KlHFIWFiWtbCgdKH6Q1SSvE96MwY15xOtzrcQQanFdAAsz5r5GG75R9unV32bQhDp
-	3zZArTiD1AkKf3piImNAVRNE6ELhoftjk8H/XDzFn1SwwySeOofMa/3U3UHqdBwVcNSZ
-	RKqY3j5KHx91s6AgqLiX0a3bC+4yKhgGEbsE/eexflgCRyzizsQWMe+gQhWRBkaMi1sQ
-	OB7g==
-MIME-Version: 1.0
-Received: by 10.52.99.197 with SMTP id es5mr27798056vdb.7.1354206009012; Thu,
-	29 Nov 2012 08:20:09 -0800 (PST)
-Received: by 10.220.155.5 with HTTP; Thu, 29 Nov 2012 08:20:08 -0800 (PST)
-In-Reply-To: <1354184946.4943.0.camel@ted>
-References: <1354184946.4943.0.camel@ted>
-Date: Thu, 29 Nov 2012 11:20:08 -0500
-Message-ID: <CAHUNapRmG=8YLOeVEvYLz7T7N73ODp42M8PphVA8GZwwAijiHw@mail.gmail.com>
-From: Trevor Woerner <twoerner@gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] data_smart: Improve get_hash to account for overrides and key expansion
+	Mon, 03 Dec 2012 10:12:54 +0100
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 03 Dec 2012 00:57:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.84,205,1355126400"; d="scan'208";a="228144883"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by orsmga001.jf.intel.com with ESMTP; 03 Dec 2012 00:58:22 -0800
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  3 Dec 2012 11:01:19 +0200
+Message-Id: <1354525279-13249-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob: modified how the existence of a variable is checked
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -39,9 +27,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 29 Nov 2012 16:34:34 -0000
-Content-Type: text/plain; charset=ISO-8859-1
+X-List-Received-Date: Mon, 03 Dec 2012 09:12:58 -0000
 
-Thank you. This patch solves the problem I was seeing.
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/builddetailspage.py |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/bitbake/lib/bb/ui/crumbs/builddetailspage.py b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
+index 6d8c38b..2ecd95d 100755
+--- a/bitbake/lib/bb/ui/crumbs/builddetailspage.py
++++ b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
+@@ -227,10 +227,9 @@ class BuildDetailsPage (HobPage):
+         label = gtk.Label()
+         label.set_alignment(0.0, 0.5)
+         # Ensure variable disk_full is defined
+-        try:
+-            self.builder.disk_full
+-        except NameError:
++        if not hasattr(self.builder, 'disk_full'):
+             self.builder.disk_full = False
++
+         if self.builder.disk_full:
+             markup = "<span size='medium'>There is no disk space left, so Hob cannot finish building your image. Free up some disk space\n"
+             markup += "and restart the build. Check the \"Issues\" tab for more details</span>"
+-- 
+1.7.9.5
+
 
 
