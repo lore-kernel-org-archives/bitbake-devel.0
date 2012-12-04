@@ -1,21 +1,19 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from heron.softorchestra.com ([63.192.205.162])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristiana.voicu@intel.com>) id 1TfS56-0007h4-4H
+	(envelope-from <aland@SoftOrchestra.com>) id 1TfhiQ-00014g-22
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 03 Dec 2012 10:12:54 +0100
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 03 Dec 2012 00:57:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.84,205,1355126400"; d="scan'208";a="228144883"
-Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
-	([10.237.105.151])
-	by orsmga001.jf.intel.com with ESMTP; 03 Dec 2012 00:58:22 -0800
-From: Cristiana Voicu <cristiana.voicu@intel.com>
+	Tue, 04 Dec 2012 02:54:30 +0100
+Received: from heron.softorchestra.com (heron.softorchestra.com [192.168.1.50])
+	by heron.softorchestra.com (MTX) with ESMTP id 4FC322C15AE
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon,  3 Dec 2012 17:40:06 -0800 (PST)
+Date: Mon, 3 Dec 2012 17:40:06 -0800 (PST)
+From: Alan DuBoff <aland@SoftOrchestra.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  3 Dec 2012 11:01:19 +0200
-Message-Id: <1354525279-13249-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob: modified how the existence of a variable is checked
+Message-ID: <alpine.DEB.2.02.1212031731330.5149@heron.softorchestra.com>
+User-Agent: Alpine 2.02 (DEB 1266 2009-07-14)
+MIME-Version: 1.0
+Subject: autotools project won't install
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,32 +25,90 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 03 Dec 2012 09:12:58 -0000
+X-List-Received-Date: Tue, 04 Dec 2012 01:54:30 -0000
+Content-Type: TEXT/PLAIN; format=flowed; charset=US-ASCII
 
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
----
- bitbake/lib/bb/ui/crumbs/builddetailspage.py |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+I created a recipe for an autotools project I'm working on.
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builddetailspage.py b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-index 6d8c38b..2ecd95d 100755
---- a/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-+++ b/bitbake/lib/bb/ui/crumbs/builddetailspage.py
-@@ -227,10 +227,9 @@ class BuildDetailsPage (HobPage):
-         label = gtk.Label()
-         label.set_alignment(0.0, 0.5)
-         # Ensure variable disk_full is defined
--        try:
--            self.builder.disk_full
--        except NameError:
-+        if not hasattr(self.builder, 'disk_full'):
-             self.builder.disk_full = False
-+
-         if self.builder.disk_full:
-             markup = "<span size='medium'>There is no disk space left, so Hob cannot finish building your image. Free up some disk space\n"
-             markup += "and restart the build. Check the \"Issues\" tab for more details</span>"
--- 
-1.7.9.5
+Seems that it is able to fetch the sources, configure, and compile, but it 
+fails to install.
+
+The package normally installs to /usr/local/bin
+
+In order to create the recipe I tried several things, but all seem to fail 
+during the do_install.
+
+Seems I should be able to just have the SRC_URI in the recipe along with 
+"inherit autotools" and all the functionality of autotools will be taken 
+care of. However, that isn't the case.
+
+Would this mean my autotools files are somehow incorrect?
+
+This program compiles fine for both native and arm7 (using a BeagleBone 
+for development).
+
+For native x86:
+
+configure
+make
+make install
+
+for arm:
+
+configure --host=arm-angstrom-linux-gnueabi
+make
+make install
+
+However, my recipe breaks. My recipe is below. Most everything is 
+commented out, which should work with an autotools program.
+
+Any hints on why this doesn't work?
+
+--
+
+Regards,
+Alan
+
+DESCRIPTION = "Fiber Locator Server for Vivax-Metrotech"
+LICENSE = "GPLv3+"
+SECTION = "console/network"
+LIC_FILES_CHKSUM = 
+"file:///home/aland/src/vxmt/FLS/COPYING;md5=d32239bcb673463ab874e80d47fae504"
+PR = "r2"
+SRC_URI = "file:///home/aland/src/vxmt/FLS/"
+# DEPENDS = ""
+
+S = "${WORKDIR}"
+
+#       do_configure () {
+#         ./configure 
+--prefix=/home/aland/src/angstrom/build/tmp-angstrom_v2012_05-eglibc/sysroots/beaglebone 
+--host=arm-angstrom-linux-gnueabi
+#       }
+#
+#       do_compile () {
+#       # 
+DESTDIR=/home/aland/src/angstrom/build/tmp-angstrom_v2012_05-eglibc/work/armv7a-angstrom-linux-gnueabi/metrotech-fls-1.0-r2/FLS/
+#         make -C 
+/home/aland/src/angstrom/build/tmp-angstrom_v2012_05-eglibc/work/armv7a-angstrom-linux-gnueabi/metrotech-fls-1.0-r2/FLS/
+#       #  oe_runmake
+#       }
+#
+#       do_install () {
+# 
+#DESTDIR=/home/aland/src/angstrom/build/tmp-angstrom_v2012_05-eglibc/work/armv7a-angstrom-linux-gnueabi/metrotech-fls-1.0-r2/FLS/ 
+oe_runmake install
+#       # make install
+#           install -d ${D}/usr/local/bin
+#           install -m 0755 OrcaTX.out ${D}/usr/local/bin
+#       # install -m 0644  ${WORKDIR}
+#       # oe_runmake 'DESTDIR=${D}' install
+#       # oe_runmake install DESTDIR=${D}
+#       }
+
+FILES_${PN} = "/usr/local/bin/OrcaTX.out"
+
+inherit autotools
 
 
 
