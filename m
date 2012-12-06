@@ -1,30 +1,35 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1TgdWv-0006tg-LL for bitbake-devel@lists.openembedded.org;
-	Thu, 06 Dec 2012 16:38:29 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qB6FNwvO030160;
-	Thu, 6 Dec 2012 15:23:58 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 29127-08; Thu,  6 Dec 2012 15:23:54 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qB6FNmxD030153
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Thu, 6 Dec 2012 15:23:50 GMT
-Message-ID: <1354807419.12928.7.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>
-Date: Thu, 06 Dec 2012 15:23:39 +0000
-In-Reply-To: <alpine.DEB.2.02.1212051341001.24855@oneiric>
-References: <alpine.DEB.2.02.1212051341001.24855@oneiric>
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Subject: Re: is there a reason a bitbake "git" clone will hang while regular git works?
+Received: from mga09.intel.com ([134.134.136.24])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <cristiana.voicu@intel.com>) id 1TgdiP-000762-6p
+	for bitbake-devel@lists.openembedded.org;
+	Thu, 06 Dec 2012 16:50:21 +0100
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 06 Dec 2012 07:35:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.84,230,1355126400"; d="scan'208";a="229865305"
+Received: from irsmsx103.ger.corp.intel.com ([163.33.3.157])
+	by orsmga001.jf.intel.com with ESMTP; 06 Dec 2012 07:35:53 -0800
+Received: from irsmsx101.ger.corp.intel.com ([169.254.1.13]) by
+	IRSMSX103.ger.corp.intel.com ([169.254.3.74]) with mapi id
+	14.01.0355.002; Thu, 6 Dec 2012 15:35:52 +0000
+From: "Voicu, Cristiana" <cristiana.voicu@intel.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Thread-Topic: [bitbake-devel] [PATCH] hob/bitbake: custom image is now using
+	the base image
+Thread-Index: AQHN07NKDPEVLDmjRkyrN0IIBIJ49pgL44iAgAADqOA=
+Date: Thu, 6 Dec 2012 15:35:52 +0000
+Message-ID: <BE68E9C8E0850C43B0F0B0B7D57FA5AE193C6BCA@IRSMSX101.ger.corp.intel.com>
+References: <1354799706-9226-1-git-send-email-cristiana.voicu@intel.com>
+	<1354807333.12928.6.camel@ted>
+In-Reply-To: <1354807333.12928.6.camel@ted>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [163.33.239.180]
+MIME-Version: 1.0
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] hob/bitbake: custom image is now using the base image
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,58 +41,141 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 06 Dec 2012 15:38:29 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 06 Dec 2012 15:50:21 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Wed, 2012-12-05 at 13:49 -0500, Robert P. J. Day wrote:
-> since the git fetcher code is part of bitbake, i figured i'd ask
-> here.  on more than one occasion now, when i've configured a build and
-> start fetching, the git fetch of the corresponding kernel source will
-> simply hang.
-> 
->   for example, right now, i'm fetching for a dm814x-evm (using the
-> meta-ti layer), and the dir under git2 in the downloads directory
-> currently looks like this:
-> 
-> $ du -s *
-> 4	branches
-> 4	config
-> 4	description
-> 4	HEAD
-> 40	hooks
-> 8	info
-> 12	objects
-> 12	refs
-> $
-> 
-> and it hasn't changed for well over 10 minutes. the relevant part of
-> the recipe file:
-> 
-> SRC_URI +=
-> "git://arago-project.org/git/projects/linux-omap3.git;protocol=git;branch=ti81xx-master \
-> file://0001-ti814x-added-code-for-disabling-the-least-significan.patch \
->             file://defconfig"
-> 
->   however, as a test that git was still working properly, i simply
-> started a git clone of that SRC_URI and it's chugging away as i type.
-> and this has happened before -- that is, while the bitbake fetch/git
-> clone hangs almost immediately, i can generally use "git clone" from
-> the command line for that SRC_URI no problem.
-> 
->   does that even make sense?  are the git options being used by
-> bitbake perhaps causing this?
-
-Is it running a git clone or is it fetching a tarball from the source
-mirror?
-
-The options used by bitbake shouldn't be different in operation to the
-ones you use on the commandline. You could poke around /proc/xxx/cmdline
-to take a look...
-
-Cheers,
-
-Richard
-
+VGhhbmtzISBJIHdpbGwgY2hhbmdlIGl0IGFuZCBJIHdpbGwgc2VuZCBhIG5ldyB2ZXJzaW9uLg0K
+Q3Jpc3RpYW5hDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBSaWNoYXJkIFB1
+cmRpZSBbbWFpbHRvOnJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5vcmddIA0KU2VudDog
+VGh1cnNkYXksIERlY2VtYmVyIDA2LCAyMDEyIDU6MjIgUE0NClRvOiBWb2ljdSwgQ3Jpc3RpYW5h
+DQpDYzogYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnDQpTdWJqZWN0OiBSZTog
+W2JpdGJha2UtZGV2ZWxdIFtQQVRDSF0gaG9iL2JpdGJha2U6IGN1c3RvbSBpbWFnZSBpcyBub3cg
+dXNpbmcgdGhlIGJhc2UgaW1hZ2UNCg0KT24gVGh1LCAyMDEyLTEyLTA2IGF0IDE1OjE1ICswMjAw
+LCBDcmlzdGlhbmEgVm9pY3Ugd3JvdGU6DQo+IFRpbGwgbm93LCBhIGN1c3RvbSBpbWFnZSBtYWRl
+IGluIEhvYiB3YXMgdXNpbmcgb25seSB0aGUgcGFja2FnZXMgZnJvbSANCj4gdGhlIGJhc2UgaW1h
+Z2UuIE5vdyBpdCBpcyB1c2luZyBldmVyeXRoaW5nIGRlY2xhcmVkIGluIHRoZSBiYXNlIGltYWdl
+Lg0KPiBBbHNvIG5leHQgdG8gaG9iLWltYWdlLmJiLCBpdCBjcmVhdGVzIGFub3RoZXIgLmJiIGZp
+bGUgd2hpY2ggaXMgdXNlZCANCj4gaW4gYnVpbGRpbmcgcHJvY2Vzcy4gVGhvc2UgaW1hZ2VzIGFy
+ZSBpZ25vcmVkIGJ5IGdpdC4NCj4gDQo+IFtZT0NUTyAjMjYwMV0NCj4gU2lnbmVkLW9mZi1ieTog
+Q3Jpc3RpYW5hIFZvaWN1IDxjcmlzdGlhbmEudm9pY3VAaW50ZWwuY29tPg0KPiAtLS0NCj4gIC5n
+aXRpZ25vcmUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsNCj4gIGJp
+dGJha2UvbGliL2JiL2NvbW1hbmQucHkgICAgICAgICAgICAgICAgICAgfCAgICA4ICsrKysrLS0N
+Cj4gIGJpdGJha2UvbGliL2JiL2Nvb2tlci5weSAgICAgICAgICAgICAgICAgICAgfCAgIDMxICsr
+KysrKysrKysrKysrKysrKysrKysrKystLQ0KPiAgYml0YmFrZS9saWIvYmIvdWkvY3J1bWJzL2J1
+aWxkZXIucHkgICAgICAgICB8ICAgIDMgKysrDQo+ICBiaXRiYWtlL2xpYi9iYi91aS9jcnVtYnMv
+aG9iZXZlbnRoYW5kbGVyLnB5IHwgICAgNSArKystLQ0KPiAgNSBmaWxlcyBjaGFuZ2VkLCA0MiBp
+bnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhLy5naXRpZ25v
+cmUgYi8uZ2l0aWdub3JlDQo+IGluZGV4IDg4YzkxZjYuLjAwM2YwOWEgMTAwNjQ0DQo+IC0tLSBh
+Ly5naXRpZ25vcmUNCj4gKysrIGIvLmdpdGlnbm9yZQ0KPiBAQCAtMTUsMyArMTUsNCBAQCBtZXRh
+LSoNCj4gICp+DQo+ICAhbWV0YS15b2N0bw0KPiAgIW1ldGEteW9jdG8tYnNwDQo+ICtob2ItaW1h
+Z2UtKi5iYg0KPiBkaWZmIC0tZ2l0IGEvYml0YmFrZS9saWIvYmIvY29tbWFuZC5weSBiL2JpdGJh
+a2UvbGliL2JiL2NvbW1hbmQucHkgDQo+IGluZGV4IDNmMjhiY2EuLjQ4YjA5ZTQgMTAwNjQ0DQo+
+IC0tLSBhL2JpdGJha2UvbGliL2JiL2NvbW1hbmQucHkNCj4gKysrIGIvYml0YmFrZS9saWIvYmIv
+Y29tbWFuZC5weQ0KPiBAQCAtMjIwLDggKzIyMCwxMiBAQCBjbGFzcyBDb21tYW5kc0FzeW5jOg0K
+PiAgICAgICAgICAiIiINCj4gICAgICAgICAgcGtnc190b19idWlsZCA9IHBhcmFtc1swXQ0KPiAg
+ICAgICAgICB0YXNrID0gcGFyYW1zWzFdDQo+IC0NCj4gLSAgICAgICAgY29tbWFuZC5jb29rZXIu
+YnVpbGRUYXJnZXRzKHBrZ3NfdG9fYnVpbGQsIHRhc2spDQo+ICsgICAgICAgIGlmIGxlbihwYXJh
+bXMpID4gMjoNCj4gKyAgICAgICAgICAgIGJhc2VfaW1hZ2UgPSBwYXJhbXNbMl0NCj4gKyAgICAg
+ICAgICAgIHBhY2thZ2VfcXVldWUgPSBwYXJhbXNbM10NCj4gKyAgICAgICAgICAgIGNvbW1hbmQu
+Y29va2VyLmJ1aWxkVGFyZ2V0cyhwa2dzX3RvX2J1aWxkLCB0YXNrLCBiYXNlX2ltYWdlLCBwYWNr
+YWdlX3F1ZXVlKQ0KPiArICAgICAgICBlbHNlOg0KPiArICAgICAgICAgICAgY29tbWFuZC5jb29r
+ZXIuYnVpbGRUYXJnZXRzKHBrZ3NfdG9fYnVpbGQsIHRhc2spDQo+ICAgICAgYnVpbGRUYXJnZXRz
+Lm5lZWRjYWNoZSA9IFRydWUNCj4gIA0KPiAgICAgIGRlZiBnZW5lcmF0ZURlcFRyZWVFdmVudChz
+ZWxmLCBjb21tYW5kLCBwYXJhbXMpOg0KPiBkaWZmIC0tZ2l0IGEvYml0YmFrZS9saWIvYmIvY29v
+a2VyLnB5IGIvYml0YmFrZS9saWIvYmIvY29va2VyLnB5IGluZGV4IA0KPiA2YjU4ZjkxLi4yMmQ4
+YmQxIDEwMDY0NA0KPiAtLS0gYS9iaXRiYWtlL2xpYi9iYi9jb29rZXIucHkNCj4gKysrIGIvYml0
+YmFrZS9saWIvYmIvY29va2VyLnB5DQo+IEBAIC0yMyw3ICsyMyw3IEBADQo+ICAjIDUxIEZyYW5r
+bGluIFN0cmVldCwgRmlmdGggRmxvb3IsIEJvc3RvbiwgTUEgMDIxMTAtMTMwMSBVU0EuDQo+ICAN
+Cj4gIGZyb20gX19mdXR1cmVfXyBpbXBvcnQgcHJpbnRfZnVuY3Rpb24gLWltcG9ydCBzeXMsIG9z
+LCBnbG9iLCBvcy5wYXRoLCANCj4gcmUsIHRpbWUNCj4gK2ltcG9ydCBzeXMsIG9zLCBnbG9iLCBv
+cy5wYXRoLCByZSwgdGltZSwgc2h1dGlsDQo+ICBpbXBvcnQgYXRleGl0DQo+ICBpbXBvcnQgaXRl
+cnRvb2xzDQo+ICBpbXBvcnQgbG9nZ2luZw0KPiBAQCAtMTEyNywxMSArMTEyNywxNCBAQCBjbGFz
+cyBCQkNvb2tlcjoNCj4gIA0KPiAgICAgICAgICBzZWxmLnNlcnZlcl9yZWdpc3RyYXRpb25fY2Io
+YnVpbGRGaWxlSWRsZSwgcnEpDQo+ICANCj4gLSAgICBkZWYgYnVpbGRUYXJnZXRzKHNlbGYsIHRh
+cmdldHMsIHRhc2spOg0KPiArICAgIGRlZiBidWlsZFRhcmdldHMoc2VsZiwgdGFyZ2V0cywgdGFz
+aywgYmFzZV9pbWFnZT1Ob25lLCBwYWNrYWdlX3F1ZXVlPU5vbmUpOg0KPiAgICAgICAgICAiIiIN
+Cj4gICAgICAgICAgQXR0ZW1wdCB0byBidWlsZCB0aGUgdGFyZ2V0cyBzcGVjaWZpZWQNCj4gICAg
+ICAgICAgIiIiDQo+ICANCj4gKyAgICAgICAgaWYgYmFzZV9pbWFnZSAhPSBOb25lIGFuZCB0YXJn
+ZXRzWzBdID09ICJob2ItaW1hZ2UiOg0KPiArICAgICAgICAgICAgc2VsZi5wcmVwYXJlSG9iSW1h
+Z2UoYmFzZV9pbWFnZSwgcGFja2FnZV9xdWV1ZSkNCj4gKw0KPiAgICAgICAgICAjIE5lZWQgZmls
+ZXMgcGFyc2VkDQo+ICAgICAgICAgIHNlbGYudXBkYXRlQ2FjaGUoKQ0KPiAgDQo+IEBAIC0xMTg4
+LDYgKzExOTEsMzAgQEAgY2xhc3MgQkJDb29rZXI6DQo+ICANCj4gICAgICAgICAgc2VsZi5zZXJ2
+ZXJfcmVnaXN0cmF0aW9uX2NiKGJ1aWxkVGFyZ2V0c0lkbGUsIHJxKQ0KDQpUaGlzIGxvb2tzIGdv
+b2QsIEknZCBqdXN0IGFzayBmb3Igb25lIHR3ZWFrLg0KDQpSYXRoZXIgdGhhbiBvdmVybG9hZCAi
+YnVpbGRUYXJnZXRzIiwgbGV0cyBhZGQgYSBuZXcgY29tbWFuZCBzYXkgImdlbmVyYXRlTmV3SW1h
+Z2UiIHdoaWNoIGdlbmVyYXRlcyB0aGUgdGhpcy4gTGV0cyBhbHNvIG5vdCBtYWtlIHRoaXMgImhv
+YiIgc3BlY2lmaWMsIGxldHMgcGFzcyBpbiB0aGUgbmVjZXNzYXJ5IHBhcmFtZXRlcnMuDQoNClRo
+aXMgbWF5IG1lYW4gd2UgbmVlZCB0byBhbHNvIGFkZCBhIGNvbW1hbmQgdG8gcnVuICJtYXRjaEZp
+bGUiIG9uIHRoZSBzZXJ2ZXIgc28gd2UgY2FuIGNhbGwgdGhlICJnZW5lcmF0ZU5ld0ltYWdlIiBj
+b21tYW5kIHdpdGggdGhlIHJpZ2h0IG9wdGlvbnMuDQoNCkNoZWVycywNCg0KUmljaGFyZA0KDQoN
+Cj4gKyAgICBkZWYgcHJlcGFyZUhvYkltYWdlKHNlbGYsIGJhc2VfaW1hZ2UsIHBhY2thZ2VfcXVl
+dWUpOg0KPiArICAgICAgICAnJycNCj4gKyAgICAgICAgQ3JlYXRlIGEgbmV3IGhvYi1pbWFnZSB3
+aXRoIGEgInJlcXVpcmUiIGJhc2VfaW1hZ2Ugc3RhdGVtZW50DQo+ICsgICAgICAgICcnJw0KPiAr
+ICAgICAgICBob2JfaW1hZ2UgPSBzZWxmLm1hdGNoRmlsZSgiaG9iLWltYWdlLmJiIikNCj4gKyAg
+ICAgICAgYmFzZV9pbWFnZSA9IHNlbGYubWF0Y2hGaWxlKHN0cihiYXNlX2ltYWdlKSArICIuYmIi
+KQ0KPiArICAgICAgICB3aXRoIG9wZW4oaG9iX2ltYWdlLCAiYSIpIGFzIGhvYmltYWdlZmlsZToN
+Cj4gKyAgICAgICAgICAgIGhvYmltYWdlZmlsZS53cml0ZSgicmVxdWlyZSAiICsgYmFzZV9pbWFn
+ZSArICJcbiIpDQo+ICsgICAgICAgICAgICBwYWNrYWdlX2luc3RhbGwgPSAiUEFDS0FHRV9JTlNU
+QUxMX2ZvcmNldmFyaWFibGUgPSBcIiINCj4gKyAgICAgICAgICAgIGZvciBwYWNrYWdlIGluIHBh
+Y2thZ2VfcXVldWU6DQo+ICsgICAgICAgICAgICAgICAgcGFja2FnZV9pbnN0YWxsICs9IHN0cihw
+YWNrYWdlKSArICIgIg0KPiArICAgICAgICAgICAgcGFja2FnZV9pbnN0YWxsICs9ICJcIlxuIg0K
+PiArICAgICAgICAgICAgaG9iaW1hZ2VmaWxlLndyaXRlKHBhY2thZ2VfaW5zdGFsbCkNCj4gKw0K
+PiArICAgICAgICBkaXJfaG9iX2ltYWdlID0gb3MucGF0aC5kaXJuYW1lKGhvYl9pbWFnZSkNCj4g
+KyAgICAgICAgdGltZXN0ciA9IHRpbWUuc3RyZnRpbWUoIiVZJW0lZC0lSCVNJVMiKQ0KPiArICAg
+ICAgICBkZXN0ID0gZGlyX2hvYl9pbWFnZSArICIvaG9iLWltYWdlLSIgKyBzdHIodGltZXN0cikg
+KyAiLmJiIg0KPiArICAgICAgICBzaHV0aWwuY29weWZpbGUoaG9iX2ltYWdlLCBkZXN0KQ0KPiAr
+DQo+ICsgICAgICAgIHNlbGYucGFyc2VyLnJlcGFyc2UoaG9iX2ltYWdlKQ0KPiArDQo+ICsgICAg
+ICAgIHdpdGggb3Blbihob2JfaW1hZ2UsICJ3IikgYXMgaG9iaW1hZ2VmaWxlOg0KPiArICAgICAg
+ICAgICAgaG9iaW1hZ2VmaWxlLndyaXRlKCJpbmhlcml0IGltYWdlXG4iKQ0KPiArDQo+ICAgICAg
+ZGVmIHVwZGF0ZUNhY2hlKHNlbGYpOg0KPiAgICAgICAgICBpZiBzZWxmLnN0YXRlID09IHN0YXRl
+LnJ1bm5pbmc6DQo+ICAgICAgICAgICAgICByZXR1cm4NCj4gZGlmZiAtLWdpdCBhL2JpdGJha2Uv
+bGliL2JiL3VpL2NydW1icy9idWlsZGVyLnB5IA0KPiBiL2JpdGJha2UvbGliL2JiL3VpL2NydW1i
+cy9idWlsZGVyLnB5DQo+IGluZGV4IDJmM2Q2ZDAuLjY2M2MzMjIgMTAwNzU1DQo+IC0tLSBhL2Jp
+dGJha2UvbGliL2JiL3VpL2NydW1icy9idWlsZGVyLnB5DQo+ICsrKyBiL2JpdGJha2UvbGliL2Ji
+L3VpL2NydW1icy9idWlsZGVyLnB5DQo+IEBAIC02MTEsMTUgKzYxMSwxOCBAQCBjbGFzcyBCdWls
+ZGVyKGd0ay5XaW5kb3cpOg0KPiAgICAgICAgICAjIEJ1aWxkIGltYWdlDQo+ICAgICAgICAgIHNl
+bGYuc2V0X3VzZXJfY29uZmlnKCkNCj4gICAgICAgICAgdG9vbGNoYWluX3BhY2thZ2VzID0gW10N
+Cj4gKyAgICAgICAgYmFzZV9pbWFnZSA9IE5vbmUNCj4gICAgICAgICAgaWYgc2VsZi5jb25maWd1
+cmF0aW9uLnRvb2xjaGFpbl9idWlsZDoNCj4gICAgICAgICAgICAgIHRvb2xjaGFpbl9wYWNrYWdl
+cyA9IHNlbGYucGFja2FnZV9tb2RlbC5nZXRfc2VsZWN0ZWRfcGFja2FnZXNfdG9vbGNoYWluKCkN
+Cj4gICAgICAgICAgaWYgc2VsZi5jb25maWd1cmF0aW9uLnNlbGVjdGVkX2ltYWdlID09IHNlbGYu
+cmVjaXBlX21vZGVsLl9fY3VzdG9tX2ltYWdlX186DQo+ICAgICAgICAgICAgICBwYWNrYWdlcyA9
+IHNlbGYucGFja2FnZV9tb2RlbC5nZXRfc2VsZWN0ZWRfcGFja2FnZXMoKQ0KPiAgICAgICAgICAg
+ICAgaW1hZ2UgPSBzZWxmLmhvYl9pbWFnZQ0KPiArICAgICAgICAgICAgYmFzZV9pbWFnZSA9IHNl
+bGYuY29uZmlndXJhdGlvbi5pbml0aWFsX3NlbGVjdGVkX2ltYWdlDQo+ICAgICAgICAgIGVsc2U6
+DQo+ICAgICAgICAgICAgICBwYWNrYWdlcyA9IFtdDQo+ICAgICAgICAgICAgICBpbWFnZSA9IHNl
+bGYuY29uZmlndXJhdGlvbi5zZWxlY3RlZF9pbWFnZQ0KPiAgICAgICAgICBzZWxmLmhhbmRsZXIu
+Z2VuZXJhdGVfaW1hZ2UoaW1hZ2UsDQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBiYXNlX2ltYWdlLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+c2VsZi5ob2JfdG9vbGNoYWluLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgcGFja2FnZXMsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0b29s
+Y2hhaW5fcGFja2FnZXMsIGRpZmYgLS1naXQgDQo+IGEvYml0YmFrZS9saWIvYmIvdWkvY3J1bWJz
+L2hvYmV2ZW50aGFuZGxlci5weSANCj4gYi9iaXRiYWtlL2xpYi9iYi91aS9jcnVtYnMvaG9iZXZl
+bnRoYW5kbGVyLnB5DQo+IGluZGV4IDhhMmFjNWYuLjE1ODNmNzYgMTAwNjQ0DQo+IC0tLSBhL2Jp
+dGJha2UvbGliL2JiL3VpL2NydW1icy9ob2JldmVudGhhbmRsZXIucHkNCj4gKysrIGIvYml0YmFr
+ZS9saWIvYmIvdWkvY3J1bWJzL2hvYmV2ZW50aGFuZGxlci5weQ0KPiBAQCAtMTY2LDcgKzE2Niw3
+IEBAIGNsYXNzIEhvYkhhbmRsZXIoZ29iamVjdC5HT2JqZWN0KToNCj4gICAgICAgICAgICAgIGlm
+IHNlbGYudG9vbGNoYWluX3BhY2thZ2VzOg0KPiAgICAgICAgICAgICAgICAgIHNlbGYucnVuQ29t
+bWFuZChbInNldFZhcmlhYmxlIiwgIlRPT0xDSEFJTl9UQVJHRVRfVEFTSyIsICIgIi5qb2luKHNl
+bGYudG9vbGNoYWluX3BhY2thZ2VzKV0pDQo+ICAgICAgICAgICAgICAgICAgdGFyZ2V0cy5hcHBl
+bmQoc2VsZi50b29sY2hhaW4pDQo+IC0gICAgICAgICAgICBzZWxmLnJ1bkNvbW1hbmQoWyJidWls
+ZFRhcmdldHMiLCB0YXJnZXRzLCBzZWxmLmRlZmF1bHRfdGFza10pDQo+ICsgICAgICAgICAgICBz
+ZWxmLnJ1bkNvbW1hbmQoWyJidWlsZFRhcmdldHMiLCB0YXJnZXRzLCANCj4gKyBzZWxmLmRlZmF1
+bHRfdGFzaywgc2VsZi5iYXNlX2ltYWdlLCBzZWxmLnBhY2thZ2VfcXVldWVdKQ0KPiAgDQo+ICAg
+ICAgZGVmIGRpc3BsYXlfZXJyb3Ioc2VsZik6DQo+ICAgICAgICAgIHNlbGYuY2xlYXJfYnVzeSgp
+DQo+IEBAIC0zODYsOCArMzg2LDkgQEAgY2xhc3MgSG9iSGFuZGxlcihnb2JqZWN0LkdPYmplY3Qp
+Og0KPiAgICAgICAgICBzZWxmLmNvbW1hbmRzX2FzeW5jLmFwcGVuZChzZWxmLlNVQl9CVUlMRF9S
+RUNJUEVTKQ0KPiAgICAgICAgICBzZWxmLnJ1bl9uZXh0X2NvbW1hbmQoc2VsZi5HRU5FUkFURV9Q
+QUNLQUdFUykNCj4gIA0KPiAtICAgIGRlZiBnZW5lcmF0ZV9pbWFnZShzZWxmLCBpbWFnZSwgdG9v
+bGNoYWluLCBpbWFnZV9wYWNrYWdlcz1bXSwgdG9vbGNoYWluX3BhY2thZ2VzPVtdLCBkZWZhdWx0
+X3Rhc2s9ImJ1aWxkIik6DQo+ICsgICAgZGVmIGdlbmVyYXRlX2ltYWdlKHNlbGYsIGltYWdlLCBi
+YXNlX2ltYWdlLCB0b29sY2hhaW4sIGltYWdlX3BhY2thZ2VzPVtdLCB0b29sY2hhaW5fcGFja2Fn
+ZXM9W10sIGRlZmF1bHRfdGFzaz0iYnVpbGQiKToNCj4gICAgICAgICAgc2VsZi5pbWFnZSA9IGlt
+YWdlDQo+ICsgICAgICAgIHNlbGYuYmFzZV9pbWFnZSA9IGJhc2VfaW1hZ2UNCj4gICAgICAgICAg
+c2VsZi50b29sY2hhaW4gPSB0b29sY2hhaW4NCj4gICAgICAgICAgc2VsZi5wYWNrYWdlX3F1ZXVl
+ID0gaW1hZ2VfcGFja2FnZXMNCj4gICAgICAgICAgc2VsZi50b29sY2hhaW5fcGFja2FnZXMgPSB0
+b29sY2hhaW5fcGFja2FnZXMNCg0KDQo=
 
 
