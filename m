@@ -1,35 +1,31 @@
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mail.cvg.de ([62.153.82.30])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristiana.voicu@intel.com>) id 1TgdiP-000762-6p
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 06 Dec 2012 16:50:21 +0100
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 06 Dec 2012 07:35:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.84,230,1355126400"; d="scan'208";a="229865305"
-Received: from irsmsx103.ger.corp.intel.com ([163.33.3.157])
-	by orsmga001.jf.intel.com with ESMTP; 06 Dec 2012 07:35:53 -0800
-Received: from irsmsx101.ger.corp.intel.com ([169.254.1.13]) by
-	IRSMSX103.ger.corp.intel.com ([169.254.3.74]) with mapi id
-	14.01.0355.002; Thu, 6 Dec 2012 15:35:52 +0000
-From: "Voicu, Cristiana" <cristiana.voicu@intel.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Thread-Topic: [bitbake-devel] [PATCH] hob/bitbake: custom image is now using
-	the base image
-Thread-Index: AQHN07NKDPEVLDmjRkyrN0IIBIJ49pgL44iAgAADqOA=
-Date: Thu, 6 Dec 2012 15:35:52 +0000
-Message-ID: <BE68E9C8E0850C43B0F0B0B7D57FA5AE193C6BCA@IRSMSX101.ger.corp.intel.com>
-References: <1354799706-9226-1-git-send-email-cristiana.voicu@intel.com>
-	<1354807333.12928.6.camel@ted>
-In-Reply-To: <1354807333.12928.6.camel@ted>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [163.33.239.180]
+	(envelope-from <enrico.scholz@sigma-chemnitz.de>)
+	id 1TgvMb-0002aN-HO; Fri, 07 Dec 2012 11:41:02 +0100
+Received: from ensc-virt.intern.sigma-chemnitz.de
+	(ensc-virt.intern.sigma-chemnitz.de [192.168.3.24])
+	by mail.cvg.de (8.14.4/8.14.4) with ESMTP id qB7AQXXR002302
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Fri, 7 Dec 2012 11:26:34 +0100
+Received: from ensc by ensc-virt.intern.sigma-chemnitz.de with local (Exim
+	4.76) (envelope-from <ensc@sigma-chemnitz.de>)
+	id 1Tgv8a-0002xB-VI; Fri, 07 Dec 2012 11:26:33 +0100
+From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+To: bitbake-devel@lists.openembedded.org,
+	openembedded-core@lists.openembedded.org
+Date: Fri, 07 Dec 2012 11:26:32 +0100
+Message-ID: <lyfw3ii2ef.fsf@ensc-virt.intern.sigma-chemnitz.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.1 (gnu/linux)
 MIME-Version: 1.0
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] hob/bitbake: custom image is now using the base image
+Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+X-DSPAM-Result: Innocent
+X-DSPAM-Probability: 0
+X-DSPAM-Confidence: 0.85
+X-Spam-Score: -5.3
+X-Spam-Level: -----
+X-Spam-Tests: AWL,BAYES_00,RP_MATCHES_RCVD,SPF_NEUTRAL,DSPAM_INNOCENT
+X-Scanned-By: MIMEDefang 2.73
+Subject: Complete rebuilds due to random hashes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -41,141 +37,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 06 Dec 2012 15:50:21 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Fri, 07 Dec 2012 10:41:02 -0000
+Content-Type: text/plain
 
-VGhhbmtzISBJIHdpbGwgY2hhbmdlIGl0IGFuZCBJIHdpbGwgc2VuZCBhIG5ldyB2ZXJzaW9uLg0K
-Q3Jpc3RpYW5hDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBSaWNoYXJkIFB1
-cmRpZSBbbWFpbHRvOnJpY2hhcmQucHVyZGllQGxpbnV4Zm91bmRhdGlvbi5vcmddIA0KU2VudDog
-VGh1cnNkYXksIERlY2VtYmVyIDA2LCAyMDEyIDU6MjIgUE0NClRvOiBWb2ljdSwgQ3Jpc3RpYW5h
-DQpDYzogYml0YmFrZS1kZXZlbEBsaXN0cy5vcGVuZW1iZWRkZWQub3JnDQpTdWJqZWN0OiBSZTog
-W2JpdGJha2UtZGV2ZWxdIFtQQVRDSF0gaG9iL2JpdGJha2U6IGN1c3RvbSBpbWFnZSBpcyBub3cg
-dXNpbmcgdGhlIGJhc2UgaW1hZ2UNCg0KT24gVGh1LCAyMDEyLTEyLTA2IGF0IDE1OjE1ICswMjAw
-LCBDcmlzdGlhbmEgVm9pY3Ugd3JvdGU6DQo+IFRpbGwgbm93LCBhIGN1c3RvbSBpbWFnZSBtYWRl
-IGluIEhvYiB3YXMgdXNpbmcgb25seSB0aGUgcGFja2FnZXMgZnJvbSANCj4gdGhlIGJhc2UgaW1h
-Z2UuIE5vdyBpdCBpcyB1c2luZyBldmVyeXRoaW5nIGRlY2xhcmVkIGluIHRoZSBiYXNlIGltYWdl
-Lg0KPiBBbHNvIG5leHQgdG8gaG9iLWltYWdlLmJiLCBpdCBjcmVhdGVzIGFub3RoZXIgLmJiIGZp
-bGUgd2hpY2ggaXMgdXNlZCANCj4gaW4gYnVpbGRpbmcgcHJvY2Vzcy4gVGhvc2UgaW1hZ2VzIGFy
-ZSBpZ25vcmVkIGJ5IGdpdC4NCj4gDQo+IFtZT0NUTyAjMjYwMV0NCj4gU2lnbmVkLW9mZi1ieTog
-Q3Jpc3RpYW5hIFZvaWN1IDxjcmlzdGlhbmEudm9pY3VAaW50ZWwuY29tPg0KPiAtLS0NCj4gIC5n
-aXRpZ25vcmUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsNCj4gIGJp
-dGJha2UvbGliL2JiL2NvbW1hbmQucHkgICAgICAgICAgICAgICAgICAgfCAgICA4ICsrKysrLS0N
-Cj4gIGJpdGJha2UvbGliL2JiL2Nvb2tlci5weSAgICAgICAgICAgICAgICAgICAgfCAgIDMxICsr
-KysrKysrKysrKysrKysrKysrKysrKystLQ0KPiAgYml0YmFrZS9saWIvYmIvdWkvY3J1bWJzL2J1
-aWxkZXIucHkgICAgICAgICB8ICAgIDMgKysrDQo+ICBiaXRiYWtlL2xpYi9iYi91aS9jcnVtYnMv
-aG9iZXZlbnRoYW5kbGVyLnB5IHwgICAgNSArKystLQ0KPiAgNSBmaWxlcyBjaGFuZ2VkLCA0MiBp
-bnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhLy5naXRpZ25v
-cmUgYi8uZ2l0aWdub3JlDQo+IGluZGV4IDg4YzkxZjYuLjAwM2YwOWEgMTAwNjQ0DQo+IC0tLSBh
-Ly5naXRpZ25vcmUNCj4gKysrIGIvLmdpdGlnbm9yZQ0KPiBAQCAtMTUsMyArMTUsNCBAQCBtZXRh
-LSoNCj4gICp+DQo+ICAhbWV0YS15b2N0bw0KPiAgIW1ldGEteW9jdG8tYnNwDQo+ICtob2ItaW1h
-Z2UtKi5iYg0KPiBkaWZmIC0tZ2l0IGEvYml0YmFrZS9saWIvYmIvY29tbWFuZC5weSBiL2JpdGJh
-a2UvbGliL2JiL2NvbW1hbmQucHkgDQo+IGluZGV4IDNmMjhiY2EuLjQ4YjA5ZTQgMTAwNjQ0DQo+
-IC0tLSBhL2JpdGJha2UvbGliL2JiL2NvbW1hbmQucHkNCj4gKysrIGIvYml0YmFrZS9saWIvYmIv
-Y29tbWFuZC5weQ0KPiBAQCAtMjIwLDggKzIyMCwxMiBAQCBjbGFzcyBDb21tYW5kc0FzeW5jOg0K
-PiAgICAgICAgICAiIiINCj4gICAgICAgICAgcGtnc190b19idWlsZCA9IHBhcmFtc1swXQ0KPiAg
-ICAgICAgICB0YXNrID0gcGFyYW1zWzFdDQo+IC0NCj4gLSAgICAgICAgY29tbWFuZC5jb29rZXIu
-YnVpbGRUYXJnZXRzKHBrZ3NfdG9fYnVpbGQsIHRhc2spDQo+ICsgICAgICAgIGlmIGxlbihwYXJh
-bXMpID4gMjoNCj4gKyAgICAgICAgICAgIGJhc2VfaW1hZ2UgPSBwYXJhbXNbMl0NCj4gKyAgICAg
-ICAgICAgIHBhY2thZ2VfcXVldWUgPSBwYXJhbXNbM10NCj4gKyAgICAgICAgICAgIGNvbW1hbmQu
-Y29va2VyLmJ1aWxkVGFyZ2V0cyhwa2dzX3RvX2J1aWxkLCB0YXNrLCBiYXNlX2ltYWdlLCBwYWNr
-YWdlX3F1ZXVlKQ0KPiArICAgICAgICBlbHNlOg0KPiArICAgICAgICAgICAgY29tbWFuZC5jb29r
-ZXIuYnVpbGRUYXJnZXRzKHBrZ3NfdG9fYnVpbGQsIHRhc2spDQo+ICAgICAgYnVpbGRUYXJnZXRz
-Lm5lZWRjYWNoZSA9IFRydWUNCj4gIA0KPiAgICAgIGRlZiBnZW5lcmF0ZURlcFRyZWVFdmVudChz
-ZWxmLCBjb21tYW5kLCBwYXJhbXMpOg0KPiBkaWZmIC0tZ2l0IGEvYml0YmFrZS9saWIvYmIvY29v
-a2VyLnB5IGIvYml0YmFrZS9saWIvYmIvY29va2VyLnB5IGluZGV4IA0KPiA2YjU4ZjkxLi4yMmQ4
-YmQxIDEwMDY0NA0KPiAtLS0gYS9iaXRiYWtlL2xpYi9iYi9jb29rZXIucHkNCj4gKysrIGIvYml0
-YmFrZS9saWIvYmIvY29va2VyLnB5DQo+IEBAIC0yMyw3ICsyMyw3IEBADQo+ICAjIDUxIEZyYW5r
-bGluIFN0cmVldCwgRmlmdGggRmxvb3IsIEJvc3RvbiwgTUEgMDIxMTAtMTMwMSBVU0EuDQo+ICAN
-Cj4gIGZyb20gX19mdXR1cmVfXyBpbXBvcnQgcHJpbnRfZnVuY3Rpb24gLWltcG9ydCBzeXMsIG9z
-LCBnbG9iLCBvcy5wYXRoLCANCj4gcmUsIHRpbWUNCj4gK2ltcG9ydCBzeXMsIG9zLCBnbG9iLCBv
-cy5wYXRoLCByZSwgdGltZSwgc2h1dGlsDQo+ICBpbXBvcnQgYXRleGl0DQo+ICBpbXBvcnQgaXRl
-cnRvb2xzDQo+ICBpbXBvcnQgbG9nZ2luZw0KPiBAQCAtMTEyNywxMSArMTEyNywxNCBAQCBjbGFz
-cyBCQkNvb2tlcjoNCj4gIA0KPiAgICAgICAgICBzZWxmLnNlcnZlcl9yZWdpc3RyYXRpb25fY2Io
-YnVpbGRGaWxlSWRsZSwgcnEpDQo+ICANCj4gLSAgICBkZWYgYnVpbGRUYXJnZXRzKHNlbGYsIHRh
-cmdldHMsIHRhc2spOg0KPiArICAgIGRlZiBidWlsZFRhcmdldHMoc2VsZiwgdGFyZ2V0cywgdGFz
-aywgYmFzZV9pbWFnZT1Ob25lLCBwYWNrYWdlX3F1ZXVlPU5vbmUpOg0KPiAgICAgICAgICAiIiIN
-Cj4gICAgICAgICAgQXR0ZW1wdCB0byBidWlsZCB0aGUgdGFyZ2V0cyBzcGVjaWZpZWQNCj4gICAg
-ICAgICAgIiIiDQo+ICANCj4gKyAgICAgICAgaWYgYmFzZV9pbWFnZSAhPSBOb25lIGFuZCB0YXJn
-ZXRzWzBdID09ICJob2ItaW1hZ2UiOg0KPiArICAgICAgICAgICAgc2VsZi5wcmVwYXJlSG9iSW1h
-Z2UoYmFzZV9pbWFnZSwgcGFja2FnZV9xdWV1ZSkNCj4gKw0KPiAgICAgICAgICAjIE5lZWQgZmls
-ZXMgcGFyc2VkDQo+ICAgICAgICAgIHNlbGYudXBkYXRlQ2FjaGUoKQ0KPiAgDQo+IEBAIC0xMTg4
-LDYgKzExOTEsMzAgQEAgY2xhc3MgQkJDb29rZXI6DQo+ICANCj4gICAgICAgICAgc2VsZi5zZXJ2
-ZXJfcmVnaXN0cmF0aW9uX2NiKGJ1aWxkVGFyZ2V0c0lkbGUsIHJxKQ0KDQpUaGlzIGxvb2tzIGdv
-b2QsIEknZCBqdXN0IGFzayBmb3Igb25lIHR3ZWFrLg0KDQpSYXRoZXIgdGhhbiBvdmVybG9hZCAi
-YnVpbGRUYXJnZXRzIiwgbGV0cyBhZGQgYSBuZXcgY29tbWFuZCBzYXkgImdlbmVyYXRlTmV3SW1h
-Z2UiIHdoaWNoIGdlbmVyYXRlcyB0aGUgdGhpcy4gTGV0cyBhbHNvIG5vdCBtYWtlIHRoaXMgImhv
-YiIgc3BlY2lmaWMsIGxldHMgcGFzcyBpbiB0aGUgbmVjZXNzYXJ5IHBhcmFtZXRlcnMuDQoNClRo
-aXMgbWF5IG1lYW4gd2UgbmVlZCB0byBhbHNvIGFkZCBhIGNvbW1hbmQgdG8gcnVuICJtYXRjaEZp
-bGUiIG9uIHRoZSBzZXJ2ZXIgc28gd2UgY2FuIGNhbGwgdGhlICJnZW5lcmF0ZU5ld0ltYWdlIiBj
-b21tYW5kIHdpdGggdGhlIHJpZ2h0IG9wdGlvbnMuDQoNCkNoZWVycywNCg0KUmljaGFyZA0KDQoN
-Cj4gKyAgICBkZWYgcHJlcGFyZUhvYkltYWdlKHNlbGYsIGJhc2VfaW1hZ2UsIHBhY2thZ2VfcXVl
-dWUpOg0KPiArICAgICAgICAnJycNCj4gKyAgICAgICAgQ3JlYXRlIGEgbmV3IGhvYi1pbWFnZSB3
-aXRoIGEgInJlcXVpcmUiIGJhc2VfaW1hZ2Ugc3RhdGVtZW50DQo+ICsgICAgICAgICcnJw0KPiAr
-ICAgICAgICBob2JfaW1hZ2UgPSBzZWxmLm1hdGNoRmlsZSgiaG9iLWltYWdlLmJiIikNCj4gKyAg
-ICAgICAgYmFzZV9pbWFnZSA9IHNlbGYubWF0Y2hGaWxlKHN0cihiYXNlX2ltYWdlKSArICIuYmIi
-KQ0KPiArICAgICAgICB3aXRoIG9wZW4oaG9iX2ltYWdlLCAiYSIpIGFzIGhvYmltYWdlZmlsZToN
-Cj4gKyAgICAgICAgICAgIGhvYmltYWdlZmlsZS53cml0ZSgicmVxdWlyZSAiICsgYmFzZV9pbWFn
-ZSArICJcbiIpDQo+ICsgICAgICAgICAgICBwYWNrYWdlX2luc3RhbGwgPSAiUEFDS0FHRV9JTlNU
-QUxMX2ZvcmNldmFyaWFibGUgPSBcIiINCj4gKyAgICAgICAgICAgIGZvciBwYWNrYWdlIGluIHBh
-Y2thZ2VfcXVldWU6DQo+ICsgICAgICAgICAgICAgICAgcGFja2FnZV9pbnN0YWxsICs9IHN0cihw
-YWNrYWdlKSArICIgIg0KPiArICAgICAgICAgICAgcGFja2FnZV9pbnN0YWxsICs9ICJcIlxuIg0K
-PiArICAgICAgICAgICAgaG9iaW1hZ2VmaWxlLndyaXRlKHBhY2thZ2VfaW5zdGFsbCkNCj4gKw0K
-PiArICAgICAgICBkaXJfaG9iX2ltYWdlID0gb3MucGF0aC5kaXJuYW1lKGhvYl9pbWFnZSkNCj4g
-KyAgICAgICAgdGltZXN0ciA9IHRpbWUuc3RyZnRpbWUoIiVZJW0lZC0lSCVNJVMiKQ0KPiArICAg
-ICAgICBkZXN0ID0gZGlyX2hvYl9pbWFnZSArICIvaG9iLWltYWdlLSIgKyBzdHIodGltZXN0cikg
-KyAiLmJiIg0KPiArICAgICAgICBzaHV0aWwuY29weWZpbGUoaG9iX2ltYWdlLCBkZXN0KQ0KPiAr
-DQo+ICsgICAgICAgIHNlbGYucGFyc2VyLnJlcGFyc2UoaG9iX2ltYWdlKQ0KPiArDQo+ICsgICAg
-ICAgIHdpdGggb3Blbihob2JfaW1hZ2UsICJ3IikgYXMgaG9iaW1hZ2VmaWxlOg0KPiArICAgICAg
-ICAgICAgaG9iaW1hZ2VmaWxlLndyaXRlKCJpbmhlcml0IGltYWdlXG4iKQ0KPiArDQo+ICAgICAg
-ZGVmIHVwZGF0ZUNhY2hlKHNlbGYpOg0KPiAgICAgICAgICBpZiBzZWxmLnN0YXRlID09IHN0YXRl
-LnJ1bm5pbmc6DQo+ICAgICAgICAgICAgICByZXR1cm4NCj4gZGlmZiAtLWdpdCBhL2JpdGJha2Uv
-bGliL2JiL3VpL2NydW1icy9idWlsZGVyLnB5IA0KPiBiL2JpdGJha2UvbGliL2JiL3VpL2NydW1i
-cy9idWlsZGVyLnB5DQo+IGluZGV4IDJmM2Q2ZDAuLjY2M2MzMjIgMTAwNzU1DQo+IC0tLSBhL2Jp
-dGJha2UvbGliL2JiL3VpL2NydW1icy9idWlsZGVyLnB5DQo+ICsrKyBiL2JpdGJha2UvbGliL2Ji
-L3VpL2NydW1icy9idWlsZGVyLnB5DQo+IEBAIC02MTEsMTUgKzYxMSwxOCBAQCBjbGFzcyBCdWls
-ZGVyKGd0ay5XaW5kb3cpOg0KPiAgICAgICAgICAjIEJ1aWxkIGltYWdlDQo+ICAgICAgICAgIHNl
-bGYuc2V0X3VzZXJfY29uZmlnKCkNCj4gICAgICAgICAgdG9vbGNoYWluX3BhY2thZ2VzID0gW10N
-Cj4gKyAgICAgICAgYmFzZV9pbWFnZSA9IE5vbmUNCj4gICAgICAgICAgaWYgc2VsZi5jb25maWd1
-cmF0aW9uLnRvb2xjaGFpbl9idWlsZDoNCj4gICAgICAgICAgICAgIHRvb2xjaGFpbl9wYWNrYWdl
-cyA9IHNlbGYucGFja2FnZV9tb2RlbC5nZXRfc2VsZWN0ZWRfcGFja2FnZXNfdG9vbGNoYWluKCkN
-Cj4gICAgICAgICAgaWYgc2VsZi5jb25maWd1cmF0aW9uLnNlbGVjdGVkX2ltYWdlID09IHNlbGYu
-cmVjaXBlX21vZGVsLl9fY3VzdG9tX2ltYWdlX186DQo+ICAgICAgICAgICAgICBwYWNrYWdlcyA9
-IHNlbGYucGFja2FnZV9tb2RlbC5nZXRfc2VsZWN0ZWRfcGFja2FnZXMoKQ0KPiAgICAgICAgICAg
-ICAgaW1hZ2UgPSBzZWxmLmhvYl9pbWFnZQ0KPiArICAgICAgICAgICAgYmFzZV9pbWFnZSA9IHNl
-bGYuY29uZmlndXJhdGlvbi5pbml0aWFsX3NlbGVjdGVkX2ltYWdlDQo+ICAgICAgICAgIGVsc2U6
-DQo+ICAgICAgICAgICAgICBwYWNrYWdlcyA9IFtdDQo+ICAgICAgICAgICAgICBpbWFnZSA9IHNl
-bGYuY29uZmlndXJhdGlvbi5zZWxlY3RlZF9pbWFnZQ0KPiAgICAgICAgICBzZWxmLmhhbmRsZXIu
-Z2VuZXJhdGVfaW1hZ2UoaW1hZ2UsDQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBiYXNlX2ltYWdlLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-c2VsZi5ob2JfdG9vbGNoYWluLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgcGFja2FnZXMsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0b29s
-Y2hhaW5fcGFja2FnZXMsIGRpZmYgLS1naXQgDQo+IGEvYml0YmFrZS9saWIvYmIvdWkvY3J1bWJz
-L2hvYmV2ZW50aGFuZGxlci5weSANCj4gYi9iaXRiYWtlL2xpYi9iYi91aS9jcnVtYnMvaG9iZXZl
-bnRoYW5kbGVyLnB5DQo+IGluZGV4IDhhMmFjNWYuLjE1ODNmNzYgMTAwNjQ0DQo+IC0tLSBhL2Jp
-dGJha2UvbGliL2JiL3VpL2NydW1icy9ob2JldmVudGhhbmRsZXIucHkNCj4gKysrIGIvYml0YmFr
-ZS9saWIvYmIvdWkvY3J1bWJzL2hvYmV2ZW50aGFuZGxlci5weQ0KPiBAQCAtMTY2LDcgKzE2Niw3
-IEBAIGNsYXNzIEhvYkhhbmRsZXIoZ29iamVjdC5HT2JqZWN0KToNCj4gICAgICAgICAgICAgIGlm
-IHNlbGYudG9vbGNoYWluX3BhY2thZ2VzOg0KPiAgICAgICAgICAgICAgICAgIHNlbGYucnVuQ29t
-bWFuZChbInNldFZhcmlhYmxlIiwgIlRPT0xDSEFJTl9UQVJHRVRfVEFTSyIsICIgIi5qb2luKHNl
-bGYudG9vbGNoYWluX3BhY2thZ2VzKV0pDQo+ICAgICAgICAgICAgICAgICAgdGFyZ2V0cy5hcHBl
-bmQoc2VsZi50b29sY2hhaW4pDQo+IC0gICAgICAgICAgICBzZWxmLnJ1bkNvbW1hbmQoWyJidWls
-ZFRhcmdldHMiLCB0YXJnZXRzLCBzZWxmLmRlZmF1bHRfdGFza10pDQo+ICsgICAgICAgICAgICBz
-ZWxmLnJ1bkNvbW1hbmQoWyJidWlsZFRhcmdldHMiLCB0YXJnZXRzLCANCj4gKyBzZWxmLmRlZmF1
-bHRfdGFzaywgc2VsZi5iYXNlX2ltYWdlLCBzZWxmLnBhY2thZ2VfcXVldWVdKQ0KPiAgDQo+ICAg
-ICAgZGVmIGRpc3BsYXlfZXJyb3Ioc2VsZik6DQo+ICAgICAgICAgIHNlbGYuY2xlYXJfYnVzeSgp
-DQo+IEBAIC0zODYsOCArMzg2LDkgQEAgY2xhc3MgSG9iSGFuZGxlcihnb2JqZWN0LkdPYmplY3Qp
-Og0KPiAgICAgICAgICBzZWxmLmNvbW1hbmRzX2FzeW5jLmFwcGVuZChzZWxmLlNVQl9CVUlMRF9S
-RUNJUEVTKQ0KPiAgICAgICAgICBzZWxmLnJ1bl9uZXh0X2NvbW1hbmQoc2VsZi5HRU5FUkFURV9Q
-QUNLQUdFUykNCj4gIA0KPiAtICAgIGRlZiBnZW5lcmF0ZV9pbWFnZShzZWxmLCBpbWFnZSwgdG9v
-bGNoYWluLCBpbWFnZV9wYWNrYWdlcz1bXSwgdG9vbGNoYWluX3BhY2thZ2VzPVtdLCBkZWZhdWx0
-X3Rhc2s9ImJ1aWxkIik6DQo+ICsgICAgZGVmIGdlbmVyYXRlX2ltYWdlKHNlbGYsIGltYWdlLCBi
-YXNlX2ltYWdlLCB0b29sY2hhaW4sIGltYWdlX3BhY2thZ2VzPVtdLCB0b29sY2hhaW5fcGFja2Fn
-ZXM9W10sIGRlZmF1bHRfdGFzaz0iYnVpbGQiKToNCj4gICAgICAgICAgc2VsZi5pbWFnZSA9IGlt
-YWdlDQo+ICsgICAgICAgIHNlbGYuYmFzZV9pbWFnZSA9IGJhc2VfaW1hZ2UNCj4gICAgICAgICAg
-c2VsZi50b29sY2hhaW4gPSB0b29sY2hhaW4NCj4gICAgICAgICAgc2VsZi5wYWNrYWdlX3F1ZXVl
-ID0gaW1hZ2VfcGFja2FnZXMNCj4gICAgICAgICAgc2VsZi50b29sY2hhaW5fcGFja2FnZXMgPSB0
-b29sY2hhaW5fcGFja2FnZXMNCg0KDQo=
+Hello,
+
+I have encountered the problem the whole distribution gets rebuilt when
+I change a single, completely unrelated variable (e.g. BB_DISKMON_DIRS).
+
+Dumping data in _build_data() (siggen.py) revealed that sometimes a
+gitpkgv_do_configure() (or _do_compile/install...) function is in the
+deps, sometimes not.  The recipes where this happens (e.g. m4) do not
+inherit gitpkgv and it is not included globally either.
+
+Further debugging[1] shows
+
+| ERROR: calledvar=autotools_do_configure, vars=[['gitpkgv_do_configure', 'autotools_do_configure'], ['do_configure', 'gitpkgv_do_configure']], allvars=['do_configure', 'autotools_do_configure', 'gitpkgv_do_configure'], classes=[None, 'gitpkgv', 'autotools']
+
+for such a recipe (note the 'gitpkgv_do_configure')
+
+
+For me, it seems that this depends on the (random) order in which recipes
+are read.  E.g. when a recipe using 'gitpkgv' is read first, the global
+'classes' array will contain 'gitpkgv' and ExportFuncsNode() is constructed
+with it.
+
+But when m4 is read before the first recipe using 'gitpkgv', it won't be
+contained in 'classes' and the corresponding ExportFuncsNode() will not
+create this variable.
+
+
+Does somebody know how to fix this?
+
+
+Enrico
+
+Footnotes: 
+[1]  
+--- a/lib/bb/parse/ast.py
++++ b/lib/bb/parse/ast.py
+@@ -207,6 +207,8 @@ class ExportFuncsNode(AstNode):
+ 
+                 for flag in [ "func", "python" ]:
+                     if data.getVarFlag(calledvar, flag):
++                        if var == 'gitpkgv_do_configure':
++                            bb.error("calledvar=%s, vars=%s, allvars=%s, classes=%s" % (calledvar,vars,allvars,self.classes))
+                         data.setVarFlag(var, flag, data.getVarFlag(calledvar, flag))
+                 for flag in [ "dirs" ]:
+                     if data.getVarFlag(var, flag):
 
 
