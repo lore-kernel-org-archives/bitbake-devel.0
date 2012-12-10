@@ -1,27 +1,34 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1Ti694-0001Ql-Jy; Mon, 10 Dec 2012 17:24:10 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qBAG9N4o003171;
-	Mon, 10 Dec 2012 16:09:23 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 02629-03; Mon, 10 Dec 2012 16:09:19 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qBAG9GDC003164
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Mon, 10 Dec 2012 16:09:17 GMT
-Message-ID: <1355155747.29967.31.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>, openembedded-core
-	<openembedded-core@lists.openembedded.org>
-Date: Mon, 10 Dec 2012 16:09:07 +0000
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: EXPORT_FUNCTIONS - change in behaviour proposal
+Received: from mail-lb0-f175.google.com ([209.85.217.175])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <kergoth@gmail.com>)
+	id 1Ti7OU-0005X2-9w; Mon, 10 Dec 2012 18:43:54 +0100
+Received: by mail-lb0-f175.google.com with SMTP id gg13so2129818lbb.6
+	for <multiple recipients>; Mon, 10 Dec 2012 09:29:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date
+	:x-google-sender-auth:message-id:subject:to:cc:content-type;
+	bh=Aucg3N670Y1lZKraBKwnD0544pbqabwjq6eY5tbew2M=;
+	b=XLtk6a0f9+P2CXve4lUs0RLWowVNWBTg7yP/JmJbcyZMitQH7LxYigD9Zz5Fc25URt
+	cnWMyGTyfxGMQqJJD3IHvL/PMyekkWDQ+zD3nNzlUzw/m5Ova/hiKTo4LKi2gg64Qc76
+	WTddR4k6KmEiuZ5rJ5nixc7smeSWH/wd3pVM8Z9cryYcnqU/+TphP1q+EWxrg30eHdmn
+	8Rz3S5xDEVt3CJ1obr/pE1CMp05cPainINalVnWwveNvjYrJ7rVYBFe1c3zon+7XklsB
+	anX6EH0NtZU03DLppzpqGFvMPN/ATb2Vwtr6mSLFcDj5cGIkLke2R5AvBzqEjcTx7OSH
+	dHjA==
+Received: by 10.112.87.194 with SMTP id ba2mr6489277lbb.84.1355160563222; Mon,
+	10 Dec 2012 09:29:23 -0800 (PST)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.112.34.10 with HTTP; Mon, 10 Dec 2012 09:29:03 -0800 (PST)
+In-Reply-To: <1355155747.29967.31.camel@ted>
+References: <1355155747.29967.31.camel@ted>
+From: Chris Larson <clarson@kergoth.com>
+Date: Mon, 10 Dec 2012 10:29:03 -0700
+X-Google-Sender-Auth: Rmafg7PW7H0tXKRJZOxrlStgk0M
+Message-ID: <CABcZANkOXMWf-v=6uEMgcGhnQZrgfOTDgjtJwarM9NRzGUupug@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	openembedded-core <openembedded-core@lists.openembedded.org>
+Subject: Re: EXPORT_FUNCTIONS - change in behaviour proposal
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,123 +40,114 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Dec 2012 16:24:15 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 10 Dec 2012 17:43:54 -0000
+Content-Type: multipart/alternative; boundary=f46d0401fdfffc092f04d082e7ef
 
-After Enrico's reported problem, I've been poking around the
-EXPORT_FUNCTIONS code. Currently OE-Core metadata generates list A
-below. In particular, this leads to code like:
+--f46d0401fdfffc092f04d082e7ef
+Content-Type: text/plain; charset=UTF-8
 
- do_configure calls gnomebase_do_configure
- gnomebase_do_configure calls autotools_do_configure
+On Mon, Dec 10, 2012 at 9:09 AM, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-which has a level of indirection. The gnomebase class never references
-do_configure. I can appreciate adding in a default mapping of:
+> After Enrico's reported problem, I've been poking around the
+> EXPORT_FUNCTIONS code. Currently OE-Core metadata generates list A
+> below. In particular, this leads to code like:
+>
+>  do_configure calls gnomebase_do_configure
+>  gnomebase_do_configure calls autotools_do_configure
+>
+> which has a level of indirection. The gnomebase class never references
+> do_configure. I can appreciate adding in a default mapping of:
+>
+>  do_configure calls autotools_do_configure
+>
+> since it allows a user to call into autotools_do_configure from a custom
+> do_configure but I can't see the value of the intermediary
+> gnomebase_do_configure. Does anyone know of a use for it?
+>
+> I have a suspicion that if it ever did do anything useful, it stopped
+> being useful long ago.
+>
+> I'm therefore strongly tempted to remove the intermediaries from the
+> code. This would result in list B below which is a more direct set of
+> mappings.
+>
+> Any thoughts/comments from anyone?
+>
 
- do_configure calls autotools_do_configure
+In theory, I could see a situation where one class inherits another, rather
+than just individual components all inherited by the recipe.
 
-since it allows a user to call into autotools_do_configure from a custom
-do_configure but I can't see the value of the intermediary
-gnomebase_do_configure. Does anyone know of a use for it?
+E.g. in class alpha:
 
-I have a suspicion that if it ever did do anything useful, it stopped
-being useful long ago.
+inherit beta
 
-I'm therefore strongly tempted to remove the intermediaries from the
-code. This would result in list B below which is a more direct set of
-mappings.
+alpha_do_stuff () {
+   pre_stuff
+   beta_do_stuff
+   post_stuff
+}
 
-Any thoughts/comments from anyone?
+But this is a theoretical case, and often we hack around things via
+_prepend/_append rather than doing things like this, so I doubt this is
+actually done anywhere in practice.
+-- 
+Christopher Larson
 
-Cheers,
+--f46d0401fdfffc092f04d082e7ef
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Richard
+<div class=3D"gmail_extra"><br><br><div class=3D"gmail_quote">On Mon, Dec 1=
+0, 2012 at 9:09 AM, Richard Purdie <span dir=3D"ltr">&lt;<a href=3D"mailto:=
+richard.purdie@linuxfoundation.org" target=3D"_blank">richard.purdie@linuxf=
+oundation.org</a>&gt;</span> wrote:<br>
 
-List A:
- autotools_do_siteconfig calls siteconfig_do_siteconfig
- autotools_do_siteconfig_gencache calls siteconfig_do_siteconfig_gencache
- base_do_patch calls patch_do_patch
- cmake_do_configure calls autotools_do_configure
- cmake_do_install calls autotools_do_install
- core-image_do_rootfs calls image_do_rootfs
- core-image_make_zimage_symlink_relative calls image_make_zimage_symlink_relative
- core-image_remove_init_link calls image_remove_init_link
- core-image_rootfs_no_x_startup calls image_rootfs_no_x_startup
- core-image_rootfs_update_timestamp calls image_rootfs_update_timestamp
- core-image_set_image_autologin calls image_set_image_autologin
- core-image_zap_root_password calls image_zap_root_password
- do_compile calls base_do_compile
- do_compile calls cmake_do_compile
- do_compile calls cpan_do_compile
- do_compile calls distutils_do_compile
- do_compile calls kernel_do_compile
- do_compile calls module_do_compile
- do_compile calls setuptools_do_compile
- do_configure calls autotools_do_configure
- do_configure calls base_do_configure
- do_configure calls cmake_do_configure
- do_configure calls cml1_do_configure
- do_configure calls cpan_do_configure
- do_configure calls gnomebase_do_configure
- do_configure calls kernel_do_configure
- do_configure calls qmake2_do_configure
- do_configure calls qmake_base_do_configure
- do_deploy calls kernel_do_deploy
- do_fetch calls base_do_fetch
- do_generate_toolchain_file calls cmake_do_generate_toolchain_file
- do_install calls autotools_do_install
- do_install calls base_do_install
- do_install calls cmake_do_install
- do_install calls cpan_do_install
- do_install calls distutils_do_install
- do_install calls gnomebase_do_install
- do_install calls kernel_do_install
- do_install calls module_do_install
- do_install calls setuptools_do_install
- do_package calls base_do_package
- do_patch calls base_do_patch
- do_siteconfig calls autotools_do_siteconfig
- do_siteconfig_gencache calls autotools_do_siteconfig_gencache
- do_unpack calls base_do_unpack
- gnomebase_do_configure calls autotools_do_configure
- gnomebase_do_install calls autotools_do_install
- package_name_hook calls debian_package_name_hook
- qmake2_do_configure calls qmake_base_do_configure
- setuptools_do_compile calls distutils_do_compile
- setuptools_do_install calls distutils_do_install
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div id=3D":224">After Enrico&#39;s reported=
+ problem, I&#39;ve been poking around the<br>
+EXPORT_FUNCTIONS code. Currently OE-Core metadata generates list A<br>
+below. In particular, this leads to code like:<br>
+<br>
+=C2=A0do_configure calls gnomebase_do_configure<br>
+=C2=A0gnomebase_do_configure calls autotools_do_configure<br>
+<br>
+which has a level of indirection. The gnomebase class never references<br>
+do_configure. I can appreciate adding in a default mapping of:<br>
+<br>
+=C2=A0do_configure calls autotools_do_configure<br>
+<br>
+since it allows a user to call into autotools_do_configure from a custom<br=
+>
+do_configure but I can&#39;t see the value of the intermediary<br>
+gnomebase_do_configure. Does anyone know of a use for it?<br>
+<br>
+I have a suspicion that if it ever did do anything useful, it stopped<br>
+being useful long ago.<br>
+<br>
+I&#39;m therefore strongly tempted to remove the intermediaries from the<br=
+>
+code. This would result in list B below which is a more direct set of<br>
+mappings.<br>
+<br>
+Any thoughts/comments from anyone?</div></blockquote></div><br>In theory, I=
+ could see a situation where one class inherits another, rather than just i=
+ndividual components all inherited by the recipe.</div><div class=3D"gmail_=
+extra">
 
+<br></div><div class=3D"gmail_extra">E.g. in class alpha:</div><div class=
+=3D"gmail_extra"><br></div><div class=3D"gmail_extra">inherit beta</div><di=
+v class=3D"gmail_extra"><br></div><div class=3D"gmail_extra">alpha_do_stuff=
+ () {</div>
 
-List B:
- do_compile calls base_do_compile
- do_compile calls cmake_do_compile
- do_compile calls cpan_do_compile
- do_compile calls distutils_do_compile
- do_compile calls kernel_do_compile
- do_compile calls module_do_compile
- do_configure calls autotools_do_configure
- do_configure calls base_do_configure
- do_configure calls cmake_do_configure
- do_configure calls cml1_do_configure
- do_configure calls cpan_do_configure
- do_configure calls kernel_do_configure
- do_configure calls qmake_base_do_configure
- do_deploy calls kernel_do_deploy
- do_fetch calls base_do_fetch
- do_generate_toolchain_file calls cmake_do_generate_toolchain_file
- do_install calls autotools_do_install
- do_install calls base_do_install
- do_install calls cmake_do_install
- do_install calls cpan_do_install
- do_install calls distutils_do_install
- do_install calls kernel_do_install
- do_install calls module_do_install
- do_package calls base_do_package
- do_patch calls patch_do_patch
- do_siteconfig calls siteconfig_do_siteconfig
- do_siteconfig_gencache calls siteconfig_do_siteconfig_gencache
- do_unpack calls base_do_unpack
- package_name_hook calls debian_package_name_hook
+<div class=3D"gmail_extra">=C2=A0 =C2=A0pre_stuff</div><div class=3D"gmail_=
+extra">=C2=A0 =C2=A0beta_do_stuff</div><div class=3D"gmail_extra">=C2=A0 =
+=C2=A0post_stuff</div><div class=3D"gmail_extra">}<br clear=3D"all"><div><b=
+r></div><div>But this is a theoretical case, and often we hack around thing=
+s via _prepend/_append rather than doing things like this, so I doubt this =
+is actually done anywhere in practice.</div>
 
+-- <br>Christopher Larson<br>
+</div>
 
-
+--f46d0401fdfffc092f04d082e7ef--
