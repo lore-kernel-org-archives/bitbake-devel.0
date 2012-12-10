@@ -1,28 +1,33 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1Ti7dr-0005tu-QP; Mon, 10 Dec 2012 18:59:52 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qBAHjF1g004324;
-	Mon, 10 Dec 2012 17:45:15 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 02751-07; Mon, 10 Dec 2012 17:45:10 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qBAHj50B004313
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Mon, 10 Dec 2012 17:45:06 GMT
-Message-ID: <1355161495.28775.1.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Chris Larson <clarson@kergoth.com>
-Date: Mon, 10 Dec 2012 17:44:55 +0000
-In-Reply-To: <CABcZANkOXMWf-v=6uEMgcGhnQZrgfOTDgjtJwarM9NRzGUupug@mail.gmail.com>
+Received: from mail-la0-f47.google.com ([209.85.215.47])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <kergoth@gmail.com>)
+	id 1Ti9SM-00077H-MM; Mon, 10 Dec 2012 20:56:02 +0100
+Received: by mail-la0-f47.google.com with SMTP id u2so2172080lag.6
+	for <multiple recipients>; Mon, 10 Dec 2012 11:41:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date
+	:x-google-sender-auth:message-id:subject:to:cc:content-type;
+	bh=pjijrkC9IBbpG2F5PE85Ja6CUIDYblSDpk1QC8ThQXk=;
+	b=BvZh4XfeKq/gEu9jWVag6luwgUC4WekvfofWLoPuv5QYtdU7FRorP4DbjPyc9/v1oZ
+	RIYv/2OfexW4qH7m31S8RE5smNsnqK0umATNPMyPGP8rCj+7NhPNBy2BC85cX0fMWx80
+	UVMOQbt2E+8olFvAjbHRViLrKKyEWvv4HLQNSTMcnf2EG8DnbxB4oJ6ktT+YnfLoRDzO
+	YtJPErA19sbAJkdEIrIIWfF7AC7AV4WnkSDlaPNu75vYhg6IYsvVTxWPUHne9cZwyaJu
+	j6Gs56hKYRkOVGmJF0oImZS+RF6IcEEjFUgTCpXC5v2wDbILthQXrcaUD5hQ9eeCkh3Z
+	o96Q==
+Received: by 10.152.111.41 with SMTP id if9mr1781205lab.23.1355168491444; Mon,
+	10 Dec 2012 11:41:31 -0800 (PST)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.112.34.10 with HTTP; Mon, 10 Dec 2012 11:41:11 -0800 (PST)
+In-Reply-To: <1355161495.28775.1.camel@ted>
 References: <1355155747.29967.31.camel@ted>
 	<CABcZANkOXMWf-v=6uEMgcGhnQZrgfOTDgjtJwarM9NRzGUupug@mail.gmail.com>
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
+	<1355161495.28775.1.camel@ted>
+From: Chris Larson <clarson@kergoth.com>
+Date: Mon, 10 Dec 2012 12:41:11 -0700
+X-Google-Sender-Auth: KmbplGlnI8_QCDvEs2dH128cok0
+Message-ID: <CABcZANnVEBGUFLNKgD4RQFdUsfKXapT65+9L5crBJ4F9No1Spw@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
 	openembedded-core <openembedded-core@lists.openembedded.org>
 Subject: Re: EXPORT_FUNCTIONS - change in behaviour proposal
@@ -37,70 +42,100 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Dec 2012 17:59:52 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 10 Dec 2012 19:56:02 -0000
+Content-Type: multipart/alternative; boundary=f46d040715298b17a004d084c039
 
-On Mon, 2012-12-10 at 10:29 -0700, Chris Larson wrote:
-> On Mon, Dec 10, 2012 at 9:09 AM, Richard Purdie
-> <richard.purdie@linuxfoundation.org> wrote:
->         After Enrico's reported problem, I've been poking around the
->         EXPORT_FUNCTIONS code. Currently OE-Core metadata generates
->         list A
->         below. In particular, this leads to code like:
->         
->          do_configure calls gnomebase_do_configure
->          gnomebase_do_configure calls autotools_do_configure
->         
->         which has a level of indirection. The gnomebase class never
->         references
->         do_configure. I can appreciate adding in a default mapping of:
->         
->          do_configure calls autotools_do_configure
->         
->         since it allows a user to call into autotools_do_configure
->         from a custom
->         do_configure but I can't see the value of the intermediary
->         gnomebase_do_configure. Does anyone know of a use for it?
->         
->         I have a suspicion that if it ever did do anything useful, it
->         stopped
->         being useful long ago.
->         
->         I'm therefore strongly tempted to remove the intermediaries
->         from the
->         code. This would result in list B below which is a more direct
->         set of
->         mappings.
->         
->         Any thoughts/comments from anyone?
+--f46d040715298b17a004d084c039
+Content-Type: text/plain; charset=UTF-8
+
+On Mon, Dec 10, 2012 at 10:44 AM, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
+
+> > E.g. in class alpha:
+> >
+> > inherit beta
+> >
+> > alpha_do_stuff () {
+> >    pre_stuff
+> >    beta_do_stuff
+> >    post_stuff
+> > }
+> >
+> > But this is a theoretical case, and often we hack around things via
+> > _prepend/_append rather than doing things like this, so I doubt this
+> > is actually done anywhere in practice.
 >
-> In theory, I could see a situation where one class inherits another,
-> rather than just individual components all inherited by the recipe.
+> With an "EXPORT_FUNCTIONS = do_stuff" in alpha.bbclass, wouldn't that
+> still work without the intermediaries though?
 >
-> E.g. in class alpha:
+
+Hmm, yes, good point. Perhaps it was to allow the user to override an
+intermediate function that might or might not exist?
+
+E.g. in the do_configure calls gnomebase_do_configure calls
+autotools_do_configure case, the user could override
+gnomebase_do_configure, without having to know whether or not gnomebase
+actually defines a configure function?
+
+I'm guessing here, but that *could* be why it was implemented this way. In
+practice, however, we have to know what our classes are doing anyway, most
+of the time, for a wide variety of reasons. E.g. uses of overrides have to
+be operated against carefully to avoid your changes being blown away.
+-- 
+Christopher Larson
+
+--f46d040715298b17a004d084c039
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div class=3D"gmail_extra">On Mon, Dec 10, 2012 at 10:44 AM, Richard Purdie=
+ <span dir=3D"ltr">&lt;<a href=3D"mailto:richard.purdie@linuxfoundation.org=
+" target=3D"_blank">richard.purdie@linuxfoundation.org</a>&gt;</span> wrote=
+:<br>
+
+<div class=3D"gmail_quote"><blockquote class=3D"gmail_quote" style=3D"margi=
+n:0px 0px 0px 0.8ex;border-left-width:1px;border-left-color:rgb(204,204,204=
+);border-left-style:solid;padding-left:1ex"><div class=3D""><div class=3D"i=
+m">&gt; E.g. in class alpha:<br>
+
+
+&gt;<br>
+&gt; inherit beta<br>
+&gt;<br>
+&gt; alpha_do_stuff () {<br>
+&gt; =C2=A0 =C2=A0pre_stuff<br>
+&gt; =C2=A0 =C2=A0beta_do_stuff<br>
+&gt; =C2=A0 =C2=A0post_stuff<br>
+&gt; }<br>
+&gt;<br>
+&gt; But this is a theoretical case, and often we hack around things via<br=
 >
-> inherit beta
->
-> alpha_do_stuff () {
->    pre_stuff
->    beta_do_stuff
->    post_stuff
-> }
->
-> But this is a theoretical case, and often we hack around things via
-> _prepend/_append rather than doing things like this, so I doubt this
-> is actually done anywhere in practice.
+&gt; _prepend/_append rather than doing things like this, so I doubt this<b=
+r>
+&gt; is actually done anywhere in practice.<br>
+<br>
+</div></div>With an &quot;EXPORT_FUNCTIONS =3D do_stuff&quot; in alpha.bbcl=
+ass, wouldn&#39;t that<br>
+still work without the intermediaries though?<br></blockquote></div><br>Hmm=
+, yes, good point. Perhaps it was to allow the user to override an intermed=
+iate function that might or might not exist?</div><div class=3D"gmail_extra=
+">
 
-With an "EXPORT_FUNCTIONS = do_stuff" in alpha.bbclass, wouldn't that
-still work without the intermediaries though?
+<br></div><div class=3D"gmail_extra">E.g. in the=C2=A0<span style=3D"color:=
+rgb(80,0,80);font-family:arial,sans-serif;font-size:13px">do_configure call=
+s gnomebase_do_configure calls autotools_do_configure case, the user could =
+override gnomebase_do_configure, without having to know whether or not gnom=
+ebase actually defines a configure function?</span></div>
 
-Cheers,
+<div class=3D"gmail_extra"><font color=3D"#500050" face=3D"arial, sans-seri=
+f"><br></font></div><div class=3D"gmail_extra"><font color=3D"#500050" face=
+=3D"arial, sans-serif">I&#39;m guessing here, but that *could* be why it wa=
+s implemented this way. In practice, however, we have to know what our clas=
+ses are doing anyway, most of the time, for a wide variety of reasons. E.g.=
+ uses of overrides have to be operated against carefully to avoid your chan=
+ges being blown away.<br>
 
-Richard
+</font>-- <br>Christopher Larson<br>
+</div>
 
-
-
-
-
-
+--f46d040715298b17a004d084c039--
