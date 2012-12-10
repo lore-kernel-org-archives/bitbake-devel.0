@@ -1,30 +1,36 @@
-Received: from mail-ie0-f181.google.com ([209.85.223.181])
+Received: from mail.cvg.de ([62.153.82.30])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jon.szymaniak@gmail.com>) id 1TgPNu-0002d3-NG
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 06 Dec 2012 01:32:17 +0100
-Received: by mail-ie0-f181.google.com with SMTP id 16so9234625iea.40
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 05 Dec 2012 16:17:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:from:date:message-id:subject:to:content-type;
-	bh=ZC3On89W22OGAtnpfBXulp2ZPbNvyfmO1LbHL428I+Y=;
-	b=SFuHFPARCadfkUPIX7zym3pM/grtzdkKrcvbl91W4CGoVfa3Of/KpFHTJHgZIhh5eM
-	YdIXVXAYhOJJZ4VLBedMp4KRFWYwv1d1PBzqkVLdFitK6O+6hw2DhqGP4w18XpnlcFcQ
-	JtBV1TNa04VxuIO/3YRukBi3SpgwDmTANu0AbcGBric7MFtfKkF6FU9yxdCL6iRlrV1z
-	fexxAWlMgeXTOa9jGzruEfP5QTXtecqB5QvPzgUoO6OHvJad2b5oDV7O3OL/lFINuaYo
-	xCJ3//Nt8gtLYbu9jZwRPJUiN/kehJEc/mepwMksApG1tmHSq/2m4U39NzROhztAlklY
-	90CA==
-Received: by 10.50.173.106 with SMTP id bj10mr4107962igc.13.1354753069469;
-	Wed, 05 Dec 2012 16:17:49 -0800 (PST)
+	(envelope-from <enrico.scholz@sigma-chemnitz.de>)
+	id 1Ti1JS-0003qu-PN; Mon, 10 Dec 2012 12:14:18 +0100
+Received: from ensc-virt.intern.sigma-chemnitz.de
+	(ensc-virt.intern.sigma-chemnitz.de [192.168.3.24])
+	by mail.cvg.de (8.14.4/8.14.4) with ESMTP id qBAAxiKf016244
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Mon, 10 Dec 2012 11:59:45 +0100
+Received: from ensc by ensc-virt.intern.sigma-chemnitz.de with local (Exim
+	4.76) (envelope-from <ensc@sigma-chemnitz.de>)
+	id 1Ti15L-0006I0-UI; Mon, 10 Dec 2012 11:59:44 +0100
+From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <lyfw3ii2ef.fsf@ensc-virt.intern.sigma-chemnitz.de>
+	<1354882981.12928.24.camel@ted>
+Date: Mon, 10 Dec 2012 11:59:43 +0100
+In-Reply-To: <1354882981.12928.24.camel@ted> (Richard Purdie's message of
+	"Fri, 07 Dec 2012 12:23:01 +0000")
+Message-ID: <ly8v96mau8.fsf@ensc-virt.intern.sigma-chemnitz.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.1 (gnu/linux)
 MIME-Version: 1.0
-Received: by 10.64.167.165 with HTTP; Wed, 5 Dec 2012 16:17:29 -0800 (PST)
-From: Jon Szymaniak <jon.szymaniak@gmail.com>
-Date: Wed, 5 Dec 2012 19:17:29 -0500
-Message-ID: <CANge7vVgnJTskixvCtbWThgq8uqrS9fag8DcHL7HLb732ckDNg@mail.gmail.com>
-To: bitbake-devel@lists.openembedded.org
-X-Mailman-Approved-At: Sat, 08 Dec 2012 09:56:26 +0100
-Subject: hg fetcher failures for SRCREV set to a tag
+Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+X-DSPAM-Result: Innocent
+X-DSPAM-Probability: 0
+X-DSPAM-Confidence: 1
+X-Spam-Score: -5.3
+X-Spam-Level: -----
+X-Spam-Tests: AWL,BAYES_00,RP_MATCHES_RCVD,SPF_NEUTRAL,DSPAM_INNOCENT
+X-Scanned-By: MIMEDefang 2.73
+Cc: bitbake-devel@lists.openembedded.org,
+	openembedded-core@lists.openembedded.org
+Subject: Re: Complete rebuilds due to random hashes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,87 +42,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 06 Dec 2012 00:32:17 -0000
-Content-Type: text/plain; charset=ISO-8859-1
+X-List-Received-Date: Mon, 10 Dec 2012 11:14:19 -0000
+Content-Type: text/plain
 
-tl;dr: Doesn't the "update" in lines 142-147 of hg.py cause issues when
-SRCREV is a tag?
+Richard Purdie <richard.purdie@linuxfoundation.org> writes:
 
+>> I have encountered the problem the whole distribution gets rebuilt when
+>> I change a single, completely unrelated variable (e.g. BB_DISKMON_DIRS).
+>> 
+>> Dumping data in _build_data() (siggen.py) revealed that sometimes a
+>> gitpkgv_do_configure() (or _do_compile/install...) function is in the
+>> deps, sometimes not.
+> ...
+> I would add some debug code into gitpkgv.bbclass around the functions
+> there, perhaps a try:/except: and see if there is some kind of uncaught
+> exception happening for one of your recipes. If that isn't it, I would
+> be intersted to understand what you have which is breaking out the
+> fetcher. It could be a SkipPackage exception under some circumstance for
+> example.
 
-Hi all,
+Sorry, my fault.  I patched bitbake to ignore SkipPackage[1] and missed
+that the global 'classes' variable was not reset.
 
-I didn't have any luck with this post on the Yocto mailing list. Since it seems
-more like a bitbake issue (I'm very hesitant to cry "bug" at this point),
-I hope I'm in the right place.
-
-I've been running into "Fetcher failures" for my recipes using
-mercurial recently, which report that I'm asking for an unknown revision,
-despite it being valid. A trimmed log is at the end of this post.
-
-After looking at hg.py, it seems the issue is that the
-'hg update -r MY_TAG' that follows the 'hg clone -r MY_TAG ...' is doomed to
-fail because that tag isn't visible until the next rev, where the action of
-tagging it is committed.
-
-For example, if I clone v1.1.0, I won't see that tag because the tag is added
-to .hgtags in commit 41:58b..
-
-      tip                             41:58b8f368be68
-      v1.1.0                        40:a925b596c163
-      v1.0.4                        39:6bf84da2571e
-
-Therefore once I've cloned with "-r v1.1.0", I can't do an update
-specifying tag v1.1.0.
-
-Does this sound right, or am I way off here?
-
-I'm not sure if using a tag rather than the revision number is unorthodox or
-abnormal for bb's, so below's my use case, for a my-app_0.1.2.bb
-
-require my-app.inc
-PR = "${INC_PR}.0"
-SRCREV = "v${PV}"
-
-Therefore to bring in a new version, I can simply copy this file to a
-my-app_1.1.0.bb, and adjust PR back to 0 if needed.
-
-We have a policy not to move version tags, so tag-->revision should be 1:1. Is
-what I'm seeing a non-issue simply because one shouldn't use tags in SRCREV?
+fwiw, patch was required to allow 'gitpkgv' recipes to be skipped
+e.g. because no git branch exists for the corresponding setup. Expansion
+of PV will fail in this case with a fetcher error.
 
 
-Thank you,
-Jon
 
 
-Snipped Yocto/Poky log:
----------------------------
-DEBUG: Fetch: checking for module directory
-'/export/home/jon/projects/yocto/poky/build/test/downloads/hg/host/some_dir/my_package'
-NOTE: Fetch hg://hg@host/some_dir;module=my_package;protocol=ssh
-DEBUG: Running /usr/bin/env hg clone -r v1.1.0
-ssh://hg@host/some_dir/my_package my_package
-DEBUG: Fetcher accessed the network with the command /usr/bin/env hg
-clone -r v1.1.0 ssh://hg@host/some_dir/my_package my_package
-DEBUG: Running export HOME="/export/home/jon"; export
-SSH_AGENT_PID="1234"; export SSH_AUTH_SOCK="<snipped>"; export
-GIT_CONFIG="<snipped>/gitconfig"; export PATH="<snipped>";
-/usr/bin/env hg clone -r v1.1.0 ssh://hg@host/some_dir/my_package
-my_package
-DEBUG: Running /usr/bin/env hg update -C -r v1.1.0
-DEBUG: Running export HOME="/export/home/jon"; export
-SSH_AGENT_PID="1234"; export SSH_AUTH_SOCK="<snipped>"; export
-GIT_CONFIG="<snipped>/gitconfig"; export PATH="<snipped>";
-/usr/bin/env hg update -C -r v1.1.0
-WARNING: Failed to fetch URL
-hg://hg@host/some_dir;module=my_package;protocol=ssh, attempting
-MIRRORS if available
-DEBUG: Fetcher failure: Fetch command failed with exit code 255, output:
-  abort: unknown revision 'v1.1.0'!
+Enrico
 
-DEBUG: Python function base_do_fetch finished
-DEBUG: Python function do_fetch finished
-ERROR: Function failed: Fetcher failure for URL:
-'hg://hg@host/some_dir;module=my_package;protocol=ssh'. Unable to
-fetch URL from any source.
+Footnotes: 
+[1]  https://github.com/ensc/bitbake/commit/fe0093b34dabe979c81a9b428de96ba73a4e3edb
+     (working variant)
 
 
