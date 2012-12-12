@@ -1,35 +1,21 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1TiTms-0000pi-6n; Tue, 11 Dec 2012 18:38:34 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qBBHNp5T013675;
-	Tue, 11 Dec 2012 17:23:51 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 13481-01; Tue, 11 Dec 2012 17:23:47 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qBBHNgJH013669
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Tue, 11 Dec 2012 17:23:44 GMT
-Message-ID: <1355246622.6771.38.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>
-Date: Tue, 11 Dec 2012 17:23:42 +0000
-In-Reply-To: <alpine.DEB.2.02.1211201253230.27867@oneiric>
-References: <alpine.DEB.2.02.1211201114100.29485@oneiric>
-	<20121120171630.GA19309@denix.org>
-	<alpine.DEB.2.02.1211201227390.27315@oneiric>
-	<20121120174811.GB19309@denix.org>
-	<alpine.DEB.2.02.1211201253230.27867@oneiric>
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: meta-ti mailing list <meta-ti@yoctoproject.org>,
-	bitbake-devel@lists.openembedded.org,
-	openembedded-core@lists.openembedded.org
-Subject: Re: [meta-ti] building for pandaboard fails fetching u-boot *way* into the build phase
+Received: from mga01.intel.com ([192.55.52.88])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <cristiana.voicu@intel.com>) id 1Til1s-0000tM-Un
+	for bitbake-devel@lists.openembedded.org;
+	Wed, 12 Dec 2012 13:03:14 +0100
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 12 Dec 2012 03:48:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.84,266,1355126400"; d="scan'208";a="262925356"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by fmsmga002.fm.intel.com with ESMTP; 12 Dec 2012 03:48:37 -0800
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 12 Dec 2012 13:51:51 +0200
+Message-Id: <1355313111-28624-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PatchV3] hob/bitbake: custom image is now using the base image
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -41,99 +27,162 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 11 Dec 2012 17:38:34 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 12 Dec 2012 12:03:14 -0000
 
-On Tue, 2012-11-20 at 12:55 -0500, Robert P. J. Day wrote:
-> On Tue, 20 Nov 2012, Denys Dmytriyenko wrote:
-> 
-> > On Tue, Nov 20, 2012 at 12:34:47PM -0500, Robert P. J. Day wrote:
-> > > On Tue, 20 Nov 2012, Denys Dmytriyenko wrote:
-> > >
-> > > > On Tue, Nov 20, 2012 at 11:24:20AM -0500, Robert P. J. Day wrote:
-> > > > >
-> > > > >   i'm sure there's a trivial workaround/explanation for this, but i
-> > > > > wanted to build the basic meta-ti based build for my panda ES, so i
-> > > > > started with oe-core and added the meta-ti layer.  then, because of
-> > > > > some license issues (and based on a quick google search), i added this
-> > > > > to my local.conf:
-> > > > >
-> > > > >   BBMASK = "meta-ti/recipes-misc"
-> > > > >
-> > > > > at that point, after selecting "pandaboard" as the machine, i wanted
-> > > > > to prefetch everything:
-> > > > >
-> > > > > $ bitbake -c fetchall core-image-minimal
-> > > > >
-> > > > > which used solely my pre-mirror directory so that didn't take long.
-> > > > >
-> > > > >   *then*, because i allegedly had fetched everything i needed for the
-> > > > > build, i edited my site.conf file and added:
-> > > > >
-> > > > > BB_NO_NETWORK = "1"
-> > > > >
-> > > > > which, AIUI, should be perfectly safe since i had just done a
-> > > > > fetchall.  not so:
-> > > > >
-> > > > > ERROR: Function failed: Network access disabled through BB_NO_NETWORK
-> > > > > but access requested with command git clone --bare --mirror
-> > > > > git://www.denx.de/git/u-boot.git
-> > > > > /home/rpjday/y/builds/ti/panda/downloads/git2/www.denx.de.git.u-boot.git
-> > > > > (for url None)
-> > > > > ERROR: Logfile of failure stored in:
-> > > > > /home/rpjday/y/builds/ti/panda/tmp-eglibc/work/pandaboard-oe-linux-gnueabi/u-boot-2011.12-r8/temp/log.do_fetch.29635
-> > > > >
-> > > > > hmmmmmm ...
-> > > > >
-> > > > > $ bitbake -s | grep u-boot
-> > > > > nativesdk-u-boot-mkimage                          :2011.06-r0
-> > > > > u-boot                                            :2011.12-r8
-> > > > > u-boot-fw-utils                                   :2011.06-r1
-> > > > > u-boot-mkimage                                    :2011.06-r0
-> > > > > u-boot-mkimage-native                             :2011.06-r0
-> > > > > $
-> > > > >
-> > > > >   ok, now i'm confused.  the above suggests that the version of u-boot
-> > > > > to be used here is 2011.12-r8, but that was never fetched, and it's
-> > > > > only now toward the end of the build that the fetch is attempted.
-> > > > >
-> > > > >   can someone clarify what's happening here?  why did my "fetchall"
-> > > > > operation not fetch everything the build was going to need?
-> > > >
-> > > > Is that because u-boot is not in a standard DEPENDS/RDEPENDS
-> > > > dependency tree, but rather in EXTRA_IMAGEDEPENDS list? I'm copying
-> > > > bitbake and oe-core lists, as I don't think it's meta-ti specific
-> > > > issue - u-boot recipe looks fine.
-> > >
-> > >   good question ... for which i don't know the answer.  to make sure
-> > > this is reproducible, i blew everything away and started from scratch
-> > > with a new panda build.  here's my bblayers.conf:
-> > >
-> > >   but when i do a "fetchall", i don't get u-boot_2011.12.  only when i
-> > > try to build a core-image-minimal does the build fail toward the end
-> > > trying to fetch u-boot_2011.12.  here's the layering info:
-> > >
-> > > i'm sure i'm just doing something silly, but i've never run into the
-> > > situation where a "fetchall" doesn't actually fetch absolutely
-> > > everything that's needed for the build.
-> >
-> > Try adding CORE_IMAGE_EXTRA_INSTALL="u-boot" somewhere, like local.conf and
-> > if that fixes your usecase, it has to be a bug with bitbake forgetting to
-> > pre-fetch machine's specific EXTRA_IMAGEDEPENDS - file a bug then.
-> 
->   yup, that did it ... now bitbake is trying to fetch it.  so that's
-> the problem.
+Till now, a custom image made in Hob was using only the packages from
+the base image. Now it is using everything declared in the base image.
+Also next to hob-image.bb, it creates another .bb file which is used
+in building process. Those images are ignored by git.
 
-FWIW, this is the same issue as
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=3554
+[YOCTO #2601]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+---
+ .gitignore                                  |    1 +
+ bitbake/lib/bb/command.py                   |   10 ++++++++++
+ bitbake/lib/bb/cooker.py                    |   19 +++++++++++++++++++
+ bitbake/lib/bb/ui/crumbs/builder.py         |    6 +++++-
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py |   10 +++++++++-
+ bitbake/lib/bb/ui/crumbs/hoblistmodel.py    |    6 ++++++
+ 6 files changed, 50 insertions(+), 2 deletions(-)
 
-since EXTRA_IMAGEDEPENDS get injected as tdepends and these aren't
-becoming part of recrdepends any more.
-
-Cheers,
-
-Richard
+diff --git a/.gitignore b/.gitignore
+index 88c91f6..003f09a 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -15,3 +15,4 @@ meta-*
+ *~
+ !meta-yocto
+ !meta-yocto-bsp
++hob-image-*.bb
+diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
+index 3f28bca..28b4c5d 100644
+--- a/bitbake/lib/bb/command.py
++++ b/bitbake/lib/bb/command.py
+@@ -197,6 +197,16 @@ class CommandsSync:
+         filterfunc = params[0]
+         bb.parse.parse_py.ConfHandler.confFilters.append(filterfunc)
+ 
++    def matchFile(self, command, params):
++        fMatch = params[0]
++        return command.cooker.matchFile(fMatch)
++
++    def generateNewImage(self, command, params):
++        image = params[0]
++        base_image = params[1]
++        package_queue = params[2]
++        return command.cooker.generateNewImage(image, base_image, package_queue)
++
+ class CommandsAsync:
+     """
+     A class of asynchronous commands
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 6b58f91..1d38164 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -1188,6 +1188,25 @@ class BBCooker:
+ 
+         self.server_registration_cb(buildTargetsIdle, rq)
+ 
++    def generateNewImage(self, image, base_image, package_queue):
++        '''
++        Create a new image with a "require" base_image statement
++        '''
++        image_name = os.path.splitext(image)[0]
++        timestr = time.strftime("-%Y%m%d-%H%M%S")
++        dest = image_name + str(timestr) + ".bb"
++
++        with open(dest, "w") as imagefile:
++            imagefile.write("require " + base_image + "\n")
++            package_install = "PACKAGE_INSTALL_forcevariable = \""
++            for package in package_queue:
++                package_install += str(package) + " "
++            package_install += "\"\n"
++            imagefile.write(package_install)
++
++        self.state = state.initial
++        return timestr
++
+     def updateCache(self):
+         if self.state == state.running:
+             return
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index 2f3d6d0..023ac93 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -611,15 +611,18 @@ class Builder(gtk.Window):
+         # Build image
+         self.set_user_config()
+         toolchain_packages = []
++        base_image = None
+         if self.configuration.toolchain_build:
+             toolchain_packages = self.package_model.get_selected_packages_toolchain()
+         if self.configuration.selected_image == self.recipe_model.__custom_image__:
+             packages = self.package_model.get_selected_packages()
+             image = self.hob_image
++            base_image = self.configuration.initial_selected_image
+         else:
+             packages = []
+             image = self.configuration.selected_image
+         self.handler.generate_image(image,
++                                    base_image,
+                                     self.hob_toolchain,
+                                     packages,
+                                     toolchain_packages,
+@@ -1017,7 +1020,8 @@ class Builder(gtk.Window):
+             self.parameters.image_names = []
+             selected_image = self.recipe_model.get_selected_image()
+             if selected_image == self.recipe_model.__custom_image__:
+-                linkname = 'hob-image-' + self.configuration.curr_mach
++                version = self.recipe_model.get_custom_image_version()
++                linkname = 'hob-image' + version+ "-" + self.configuration.curr_mach
+             else:
+                 linkname = selected_image + '-' + self.configuration.curr_mach
+             image_extension = self.get_image_extension()
+diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+index 8a2ac5f..ae853ee 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -166,6 +166,13 @@ class HobHandler(gobject.GObject):
+             if self.toolchain_packages:
+                 self.runCommand(["setVariable", "TOOLCHAIN_TARGET_TASK", " ".join(self.toolchain_packages)])
+                 targets.append(self.toolchain)
++            if targets[0] == "hob-image":
++                hobImage = self.runCommand(["matchFile", "hob-image.bb"])
++                baseImage = self.runCommand(["matchFile", self.base_image + ".bb"])
++                version = self.runCommand(["generateNewImage", hobImage, baseImage, self.package_queue])
++                targets[0] += version
++                self.recipe_model.set_custom_image_version(version)
++
+             self.runCommand(["buildTargets", targets, self.default_task])
+ 
+     def display_error(self):
+@@ -386,8 +393,9 @@ class HobHandler(gobject.GObject):
+         self.commands_async.append(self.SUB_BUILD_RECIPES)
+         self.run_next_command(self.GENERATE_PACKAGES)
+ 
+-    def generate_image(self, image, toolchain, image_packages=[], toolchain_packages=[], default_task="build"):
++    def generate_image(self, image, base_image, toolchain, image_packages=[], toolchain_packages=[], default_task="build"):
+         self.image = image
++        self.base_image = base_image
+         self.toolchain = toolchain
+         self.package_queue = image_packages
+         self.toolchain_packages = toolchain_packages
+diff --git a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+index f4ccbc3..85c4f51 100644
+--- a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
++++ b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+@@ -766,3 +766,9 @@ class RecipeListModel(gtk.ListStore):
+                           binb="User Selected",
+                           image_contents=True)
+         self.selection_change_notification()
++
++    def set_custom_image_version(self, version):
++        self.custom_image_version = version
++
++    def get_custom_image_version(self):
++        return self.custom_image_version
+-- 
+1.7.9.5
 
 
 
