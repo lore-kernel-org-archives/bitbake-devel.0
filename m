@@ -1,32 +1,40 @@
-Received: from mail-we0-f175.google.com ([74.125.82.175])
+Received: from mail-ea0-f175.google.com ([209.85.215.175])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <martin.jansa@gmail.com>) id 1TitRI-0000T0-08
+	(envelope-from <eren@hambedded.org>) id 1Titc8-0000cr-4d
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 12 Dec 2012 22:02:07 +0100
-Received: by mail-we0-f175.google.com with SMTP id z53so494367wey.6
+	Wed, 12 Dec 2012 22:13:12 +0100
+Received: by mail-ea0-f175.google.com with SMTP id h11so390396eaa.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 12 Dec 2012 12:47:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:cc:content-type:content-transfer-encoding;
-	bh=vx679MOhv5JogdVWqLfWn+UJQotDrnaiSYDzGd7QCO8=;
-	b=gvqgWgAteJUNb3uZHhGIqciTU8HDXIXwrU7EZFU2dgWU2k2e/V6+xP8wgopF3m5rmf
-	VC5WZuUcqlLRfm08oMB91LBY+4MD/MkJHfLveXgKxl50stJuR+jpW55WLRlvR3D00jcx
-	fP737EQDttrwfpJWvbWWjalf3XZBCvfIdH2jPSJdtm6WpbMZEUP5KwqscBE6NmHACqAX
-	eOVYtGwQ6Ci9rFZeA7ZO8r9VeNClA/ZSJ/yBOtj4YoCpBe/UWfYD7VStb41Wk6XJj13P
-	Oq0qmxXMIgX3226jAbj+cOMXvEgflMkpfdkjiQcqac95kOOLdSVBas1XrkBCMgRGT87d
-	ClQg==
-MIME-Version: 1.0
-Received: by 10.180.93.40 with SMTP id cr8mr25025044wib.15.1355345246231; Wed,
-	12 Dec 2012 12:47:26 -0800 (PST)
-Received: by 10.194.84.103 with HTTP; Wed, 12 Dec 2012 12:47:26 -0800 (PST)
-In-Reply-To: <20121212203550.GD743@gmail.com>
+	Wed, 12 Dec 2012 12:58:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=google.com; s=20120113;
+	h=date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-disposition:in-reply-to:user-agent
+	:x-gm-message-state;
+	bh=lrZlO2kMhkxpH0gk39lEEQUblxQFxlTsPgUfmxIziG4=;
+	b=jFGkoplKCd7EFPjaAc81+foxR0D8b6H7ACNwDgq8ViBXK8yfvhb9Ko+JMNcHgXsKhN
+	sXhAwBrzT5nHq6yefm/GLTrwoW5fDNg/acZHxEaipPdvmywBXfP6bxFCvenqHnhEaA4/
+	MTj2NfCBvBg0bcIbbrEo4lQXCY1X/UYJ7GKrCrgaFWoqHE0AKo1KPks0hY8WbH6YFn2F
+	yTo+fPAm4/ex1GMH/hUyJpJERIBzqIXX5P+lCtGOyVap3cssxQ63K0i8BTkzeCEFuGS/
+	Dv5NgIoLX5THEEN8TGd3kWlAtY3MxflJABjN1Z/L6PXy0QIRju3KoCjCbusO5mrWHv8P
+	gi4Q==
+Received: by 10.14.219.72 with SMTP id l48mr5974727eep.37.1355345918214;
+	Wed, 12 Dec 2012 12:58:38 -0800 (PST)
+Received: from gmail.com ([46.196.117.99])
+	by mx.google.com with ESMTPS id l3sm40092157eem.14.2012.12.12.12.58.35
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Wed, 12 Dec 2012 12:58:37 -0800 (PST)
+Date: Wed, 12 Dec 2012 22:58:30 +0200
+From: Eren =?iso-8859-1?Q?T=FCrkay?= <eren@hambedded.org>
+To: Martin Jansa <martin.jansa@gmail.com>
+Message-ID: <20121212205830.GE743@gmail.com>
 References: <20121212203550.GD743@gmail.com>
-Date: Wed, 12 Dec 2012 21:47:26 +0100
-Message-ID: <CA+chaQdi0E-4ZtsaiAweAFU5PcYYjnMKAeA-cT3eK+tcJOe_Dg@mail.gmail.com>
-From: Martin Jansa <martin.jansa@gmail.com>
-To: =?UTF-8?B?RXJlbiBUw7xya2F5?= <eren@hambedded.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+	<CA+chaQdi0E-4ZtsaiAweAFU5PcYYjnMKAeA-cT3eK+tcJOe_Dg@mail.gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <CA+chaQdi0E-4ZtsaiAweAFU5PcYYjnMKAeA-cT3eK+tcJOe_Dg@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Gm-Message-State: ALoCoQnyAhkv5QIMTgAIFtEm4zNvBi5+z762wLiPwAhq6VntZp5ZLvfjRweia4tD5wkjN1EN1AQV
+Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH v2] bitbake.vim: detect *.bbappend files in ftdetect automatically
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
@@ -39,34 +47,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 12 Dec 2012 21:02:14 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Wed, 12 Dec 2012 21:13:12 -0000
+X-Groupsio-MsgNum: 3037
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zqjkMoGlbUJ91oFe"
+Content-Disposition: inline
+
+--zqjkMoGlbUJ91oFe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 12, 2012 at 9:35 PM, Eren T=C3=BCrkay <eren@hambedded.org> wrot=
-e:
-> Currently, *.bb and *.bbclass files are automatically highlighted and
-> detected as a bitbake file. Since *.bbappend files are also bitbake
-> files, vim plugin should automatically detect and highlight it as well.
-> ---
->  contrib/vim/ftdetect/bitbake.vim |    4 ++--
->  1 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/contrib/vim/ftdetect/bitbake.vim b/contrib/vim/ftdetect/bitb=
-ake.vim
-> index 179e4d9..b9529e6 100644
-> --- a/contrib/vim/ftdetect/bitbake.vim
-> +++ b/contrib/vim/ftdetect/bitbake.vim
-> @@ -10,8 +10,8 @@ if &compatible || version < 600
->      finish
->  endif
->
-> -" .bb and .bbclass
-> -au BufNewFile,BufRead *.b{b,bclass}    set filetype=3Dbitbake
-> +" .bb, .bbappend and .bbclass
-> +au BufNewFile,BufRead *.{bb,bbappend,bbclass}  set filetype=3Dbitbake
+On Wed, Dec 12, 2012 at 09:47:26PM +0100, Martin Jansa wrote:
+> fwiw: you can probably add .inc too, but some people will probably
+> find it conflicting with some other ftdetect.. :/
 
-fwiw: you can probably add .inc too, but some people will probably
-find it conflicting with some other ftdetect.. :/
+*.inc and *.conf are already defined in the lines 16 and 19. I haven't
+had any problems with them as I don't have conflicting files.
 
+I wonder why *.bbinc isn't used instead of such a generic name *.inc :)
+With a lot of recipes referencing *.inc, changing the suffix just for
+vim plugin wouldn't be suitable. However, for the sake of consistency
+with bb{class,append}, changing the practice of using *.inc to *.bbinc
+could be good in some time.
 
+Regards,
+Eren
+
+--=20
+    . 73! DE TA1AET
+      http://linkedin.com/in/erenturkay
+
+--zqjkMoGlbUJ91oFe
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (Darwin)
+
+iQIcBAEBAgAGBQJQyO/2AAoJEOM7bMm6HhcTw4sP/AzvodRRlX2p5XhaDlsPDDWQ
+FRTrin6VRvHvCGfu03j/HbCJfzgnXKauXZpc05nzn3/Kz8zPijY4JLBFOzvqlIT5
+QLPFfFxwzBpAs9YYJsg5P5Jlq9SQsyQuFg5sBcQsFPxWiMNmH5ZSPSg4CcPYgp2k
+xGkR7hFvcX6WKQsgayAJMIx69+265/MXxFIZ9e9Pbdc8wzLb3MGAVzx2idsnbInh
+pFIbzmqYkc8W0ekh9MZvYCKeFVir8qcKEm5O0p2jzqnz+91Wju/gbaX470h+ERHc
+MaVNAzwP6V8+4MAwRsKyBSQ0z0wef8YTDzez7JiBKEhMK+3L5y/tnUWHlEtLwAWb
+PwWqi7azNUw7ag8DbHdbaHMvWvHiJa5qj6ZrgzrZIjrF8DKMD3kKTfghuT6PzpRs
+XAJGuRhg+700vft4NlPsxgtV+DYlYUlKcYxSHqVzgujzx5fuEMIo9F6wlmoDzUds
+bJsV5clBBi9oZDZaEThaFY7aVQ4OENbsWyP3QIpbQPgmoEwpwja0WEgu3blfgNWg
+nknNQUptg5dQOpkXiQKmgB9Ba00+dsmBQzeAGdACOABXIg4sUbezrxfYaVSkJkol
+vOLrgXuv8umvRVjKdf1map5h4tVUiAT8eHOglvZZYDzwRSRF1mmDC9UIfhQm3pBV
+lh8b2nV3UkGUEQufGGKk
+=x1TN
+-----END PGP SIGNATURE-----
+
+--zqjkMoGlbUJ91oFe--
