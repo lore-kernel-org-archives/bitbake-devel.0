@@ -1,28 +1,21 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1TjVw4-0007U5-OV for bitbake-devel@lists.openembedded.org;
-	Fri, 14 Dec 2012 15:08:34 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qBEDrfpZ011914;
-	Fri, 14 Dec 2012 13:53:41 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 11710-02; Fri, 14 Dec 2012 13:53:37 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id qBEDrWxZ011908
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Fri, 14 Dec 2012 13:53:34 GMT
-Message-ID: <1355493212.32519.16.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Fri, 14 Dec 2012 13:53:32 +0000
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: Philip Balister <philip@balister.org>
-Subject: BBHandler/ConfHandler: Improve multiline comment handling
+Received: from mga14.intel.com ([143.182.124.37])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <cristiana.voicu@intel.com>) id 1TjXTh-0006qo-TB
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 14 Dec 2012 16:47:11 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga102.ch.intel.com with ESMTP; 14 Dec 2012 07:32:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.84,281,1355126400"; d="scan'208";a="231605781"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by azsmga001.ch.intel.com with ESMTP; 14 Dec 2012 07:32:31 -0800
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 14 Dec 2012 17:35:47 +0200
+Message-Id: <1355499347-9320-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob: use base image only if it was set
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -34,71 +27,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 14 Dec 2012 14:08:59 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 14 Dec 2012 15:47:11 -0000
 
-Faced with an expression like:
+As it is, when you create a new image from scratch, hob gives an error.
+This is because of the patch for #2601.
 
- # Some comment \
- FOO = "bar"
-
-what should bitbake do? Technically, the \ character means its multiline and
-currently the code treats this as a continuation of the comment. This can
-surprise some people and is not intuitive.
-
-This patch makes bitbake simply error and asks the user to be clearer
-about what they mean.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
-diff --git a/bitbake/lib/bb/parse/parse_py/BBHandler.py b/bitbake/lib/bb/parse/parse_py/BBHandler.py
-index 2ee8ebd..58049bd 100644
---- a/bitbake/lib/bb/parse/parse_py/BBHandler.py
-+++ b/bitbake/lib/bb/parse/parse_py/BBHandler.py
-@@ -200,7 +200,10 @@ def feeder(lineno, s, fn, root, statements):
- 
-     if s and s[0] == '#':
-         if len(__residue__) != 0 and __residue__[0][0] != "#":
--            bb.error("There is a comment on line %s of file %s (%s) which is in the middle of a multiline expression.\nBitbake used to ignore these but no longer does so, please fix your metadata as errors are likely as a result of this change." % (lineno, fn, s))
-+            bb.fatal("There is a comment on line %s of file %s (%s) which is in the middle of a multiline expression.\nBitbake used to ignore these but no longer does so, please fix your metadata as errors are likely as a result of this change." % (lineno, fn, s))
-+
-+    if len(__residue__) != 0 and __residue__[0][0] == "#" and s[0] != "#":
-+        bb.fatal("There is a confusing multiline, partially commented expression on line %s of file %s (%s).\nPlease clarify whether this is all a comment or should be parsed." % (lineno, fn, s))
- 
-     if s and s[-1] == '\\':
-         __residue__.append(s[:-1])
-diff --git a/bitbake/lib/bb/parse/parse_py/ConfHandler.py b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-index dbc6776..9b09c9f 100644
---- a/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-+++ b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-@@ -98,15 +98,22 @@ def handle(fn, data, include):
-     while True:
-         lineno = lineno + 1
-         s = f.readline()
--        if not s: break
-+        if not s:
-+            break
-         w = s.strip()
--        if not w: continue          # skip empty lines
-+        # skip empty lines
-+        if not w:
-+            continue
-         s = s.rstrip()
--        if s[0] == '#': continue    # skip comments
-         while s[-1] == '\\':
-             s2 = f.readline().strip()
-             lineno = lineno + 1
-+            if s2 and s[0] == "#" and s2[0] != "#":
-+                bb.fatal("There is a confusing multiline, partially commented expression on line %s of file %s (%s).\nPlease clarify whether this is all a comment or should be parsed." % (lineno, fn, s))
-             s = s[:-1] + s2
-+        # skip comments
-+        if s[0] == '#':
-+            continue
-         feeder(lineno, s, fn, statements)
- 
-     # DONE WITH PARSING... time to evaluate
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
+diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+index ae853ee..e690d4c 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -168,10 +168,11 @@ class HobHandler(gobject.GObject):
+                 targets.append(self.toolchain)
+             if targets[0] == "hob-image":
+                 hobImage = self.runCommand(["matchFile", "hob-image.bb"])
+-                baseImage = self.runCommand(["matchFile", self.base_image + ".bb"])
+-                version = self.runCommand(["generateNewImage", hobImage, baseImage, self.package_queue])
+-                targets[0] += version
+-                self.recipe_model.set_custom_image_version(version)
++                if self.base_image != "Create your own image":
++                    baseImage = self.runCommand(["matchFile", self.base_image + ".bb"])
++                    version = self.runCommand(["generateNewImage", hobImage, baseImage, self.package_queue])
++                    targets[0] += version
++                    self.recipe_model.set_custom_image_version(version)
+ 
+             self.runCommand(["buildTargets", targets, self.default_task])
+ 
+-- 
+1.7.9.5
 
 
 
