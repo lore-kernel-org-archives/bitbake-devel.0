@@ -1,38 +1,26 @@
-Received: from mail-ie0-f170.google.com ([209.85.223.170])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jon.szymaniak@gmail.com>) id 1TmTEf-0006eN-GP
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1TmrhL-0001E6-2w
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 22 Dec 2012 18:51:47 +0100
-Received: by mail-ie0-f170.google.com with SMTP id k10so7839606iea.29
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 22 Dec 2012 09:36:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:content-type; bh=Jcy40bPAmImfi+91ahdFFSjOYRxY2FcQJfpDrtXiqAg=;
-	b=JZLa+RmELq0YEA6hQ5a7bIMTrEbr+AjbAVJ3AYemM/cErwoD8Y/U9cJegKCHbHvibO
-	56Ww/QRdM53A4XljkDGClaH7WTr/tNjdWkUa6Ra/YD0LFyKunJuCefgKJiYcg8Qvh+mP
-	43L3kIcXADwoOmcMzjflzmZTWu1MX3RQjNXyGCiC/DOnCZL6nVMxlmTrjBCJtkQdz+kW
-	XCeZgAuh5uy5gg8m0jotByQyfjGF13v0FLr2qSoKWdySK/v1LVTgMrzgC5JsXPXbH9n+
-	vWbeppYjNIlR3HzMRtck/E30F6Zku9FyiqVNPyUEvXDGxywI66dlJ/BUjy3p9i/vOWVk
-	1xuw==
-Received: by 10.50.202.73 with SMTP id kg9mr16760405igc.51.1356197817520; Sat,
-	22 Dec 2012 09:36:57 -0800 (PST)
+	Sun, 23 Dec 2012 20:58:59 +0100
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga102.ch.intel.com with ESMTP; 23 Dec 2012 11:43:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.84,343,1355126400"; d="scan'208";a="184089571"
+Received: from unknown (HELO helios.localnet) ([10.252.123.19])
+	by AZSMGA002.ch.intel.com with ESMTP; 23 Dec 2012 11:43:02 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Bob Cochran <openembedded@mindchasers.com>
+Date: Sun, 23 Dec 2012 19:43 +0000
+Message-ID: <5680339.a2UlTKzCpO@helios>
+Organization: Intel Corporation
+User-Agent: KMail/4.9.3 (Linux/3.5.0-21-generic; KDE/4.9.3; i686; ; )
+In-Reply-To: <50D53C11.5030404@mindchasers.com>
+References: <50D50E7A.6060201@mindchasers.com>
+	<50D53C11.5030404@mindchasers.com>
 MIME-Version: 1.0
-Received: by 10.64.136.229 with HTTP; Sat, 22 Dec 2012 09:36:37 -0800 (PST)
-In-Reply-To: <CABcZANmUyaCd0kx0FSq5Ye=OXKiKdziGfAyiy3dH9BxrJtEh6g@mail.gmail.com>
-References: <CANge7vVgnJTskixvCtbWThgq8uqrS9fag8DcHL7HLb732ckDNg@mail.gmail.com>
-	<1355507217.32519.33.camel@ted>
-	<CANge7vVQnTVasye41HJiB9JOMno4fTX5mn=p499y7kus5O4NQw@mail.gmail.com>
-	<CANge7vURMxSYh=-O0ZHUWqopVjCkUwFMxhC8-bqHTy6J8mF2Mw@mail.gmail.com>
-	<CABcZANmUyaCd0kx0FSq5Ye=OXKiKdziGfAyiy3dH9BxrJtEh6g@mail.gmail.com>
-From: Jon Szymaniak <jon.szymaniak@gmail.com>
-Date: Sat, 22 Dec 2012 12:36:37 -0500
-Message-ID: <CANge7vVSFKAxDYyXh40bFP-uEpu+Otwbhdx69QrX0YgTaGhNjg@mail.gmail.com>
-To: Chris Larson <clarson@kergoth.com>, 
-	Richard Purdie <richard.purdie@linuxfoundation.org>, 
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: hg fetcher failures for SRCREV set to a tag
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: executable metadata not supported in bbappend files?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -44,36 +32,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 22 Dec 2012 17:51:48 -0000
-Content-Type: text/plain; charset=ISO-8859-1
+X-List-Received-Date: Sun, 23 Dec 2012 19:59:00 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
->> Hi Richard,
->>
->> Thanks for pinging back on this. (Sorry I just double-sent this to
->> you. Forgot to include the list! :P)
->>
->> I think a fairly simple solution might be to just clone the entire
->> repo by not adding "-r REV" to options[] for an 'hg clone' invocation.
->> The 'hg update' that follows on lines 142-147 should set the repo to
->> the desired revision.
+On Friday 21 December 2012 23:50:25 Bob Cochran wrote:
+> On 12/21/2012 08:35 PM, Bob Cochran wrote:
+> > I just noticed that the current bitbake manual states in the "Defining
+> > executable metadata" section that executable metadata is only supported
+> > in .bb and .bbclass files, but I find that I can put (at least some
+> > basic) tasks in .bbappend files, too.
+> > 
+> > Is this an oversight in the documentation, or are there gotchas adding
+> > tasks to bbappend files that I haven't come across?  If it's the former,
+> > I'll submit a patch.
 >
->
-> This does sound like the best bet, to me.
-> --
-> Christopher Larson
+> I see that bbappend isn't mentioned anywhere in the bitbake manual.
+> That's a little confusing?
 
-Hi all,
+This is just an example of where the bitbake manual needs updating - bbappends 
+weren't implemented when it was written. I believe the bitbake manual is being 
+updated at the moment but I'm sure patches would still be welcome to extend it 
+to mention bbappends in the appropriate places.
 
-Just wanted to touch base on this issue. I didn't hear anything back
-on the little patch I posted...not sure if that's a silent rejection,
-if I didn't include the right info in the subject line, or if folks
-haven't had a chance to test it. If there's something I screwed up,
-please do let me know for future reference. :)
+Cheers,
+Paul
 
-http://lists.linuxtogo.org/pipermail/bitbake-devel/2012-December/003962.html
+-- 
 
-
-Thanks,
-Jon
+Paul Eggleton
+Intel Open Source Technology Centre
 
 
