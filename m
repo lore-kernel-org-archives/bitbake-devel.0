@@ -1,38 +1,37 @@
-Received: from mail-la0-f42.google.com ([209.85.215.42])
+Received: from mail-ie0-f169.google.com ([209.85.223.169])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1TmvW8-0007pj-4f
+	(envelope-from <wmat@alphatroop.com>) id 1TmxUO-0004X9-Rj
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 24 Dec 2012 01:03:45 +0100
-Received: by mail-la0-f42.google.com with SMTP id s15so7900335lag.29
+	Mon, 24 Dec 2012 03:10:02 +0100
+Received: by mail-ie0-f169.google.com with SMTP id c14so8485326ieb.14
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 23 Dec 2012 15:48:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	bh=dPfxRx0QA9yppOA0mWwNk4RuiwV03P0Cm3QNI9KcEA4=;
-	b=P3ngZzZXQR2TKiXfJxVTp4d68qGWuz7QiTJan2ShxrbDxmdpZioaYnZjnu8bYIjPkI
-	JR9pOQ8hG0SqR0wGoiqoMMJ6hLcsFM4DAt3jul1PLrrZQlQj5V35Mk1Tt2cJf90Bk8jy
-	ue2gozL6tXt7ZTDkSKKzAL/9JN4QefxT3cL3h0u1IPtjqbIUjPvRlV+1kbPb9pPExtAB
-	vC4DOqTJnUyMiSxH2Zdzr+xD4PWpdwvughCsiCkV6L+D2gW7rMl/r1MvFGJYpAadSXpf
-	rO6FHffe3iribmVayjW7X71GchnYLNp+8QFhwrEQiMnbi+yKWUW8kd3KPo7d2G7Z2sLk
-	FvDA==
-Received: by 10.112.28.65 with SMTP id z1mr7982868lbg.119.1356306530727; Sun,
-	23 Dec 2012 15:48:50 -0800 (PST)
+	Sun, 23 Dec 2012 17:55:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=google.com; s=20120113;
+	h=mime-version:x-originating-ip:in-reply-to:references:from:date
+	:message-id:subject:to:cc:content-type:x-gm-message-state;
+	bh=JFLUpsZOSEzBD4ThNxG3Lbqe2DGVQ1PDTc5O+r22X9k=;
+	b=QoQ52arbqL/G6KmJS0B+jIbdN04QCsz3lCBSpqc2qgaWiejehG3pmj/hrFJrU3i4EK
+	f/p6GC0EgT6hkR9LdFQE3seX7IT1SdRPWGY83og+xlx8FmMK+v9DRzICiJ1YKUe3A/7C
+	VHdVqK0qLSH9PCYaKBfAm7NWEplzk6Dp83irQLRtOURchlSXLEJ/0xhc015dXn2jDXGV
+	+ChnODfprHb/4rsetFKhniJ3w+cKpSNa9+B2UyeChN6Wexn2ST2OrUzu9J7mbASXZoj3
+	co0kissoi6lzVjgiP7vCdzAXVRbu4Ls7mNrY+QCNDuZZf6lgaDRIceQLuAsMwdR+AbAH
+	XupQ==
+Received: by 10.50.91.195 with SMTP id cg3mr18853084igb.57.1356314111049; Sun,
+	23 Dec 2012 17:55:11 -0800 (PST)
 MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.34.10 with HTTP; Sun, 23 Dec 2012 15:48:30 -0800 (PST)
-In-Reply-To: <20121223204500.GO8988@jama.palm1.palmone.com>
-References: <1356294176-12058-1-git-send-email-Martin.Jansa@gmail.com>
-	<CABcZANmR7JKetymVnVD4TorB+DoMXPPN-sQ-BDsDegeWWwph5w@mail.gmail.com>
-	<20121223204500.GO8988@jama.palm1.palmone.com>
-From: Chris Larson <clarson@kergoth.com>
-Date: Sun, 23 Dec 2012 16:48:30 -0700
-X-Google-Sender-Auth: CmX3Exs4cu1HoJW4JqOMIRdyixA
-Message-ID: <CABcZANmLfGp7WZ2TK9whLq+mn-Sda2wy1E5nGLF5jEPREiFFtQ@mail.gmail.com>
-To: Martin Jansa <martin.jansa@gmail.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] cache: allow to set EXCLUDE_FROM_WORLD outside recipe
+Received: by 10.50.74.169 with HTTP; Sun, 23 Dec 2012 17:54:50 -0800 (PST)
+X-Originating-IP: [24.246.30.132]
+In-Reply-To: <5680339.a2UlTKzCpO@helios>
+References: <50D50E7A.6060201@mindchasers.com>
+	<50D53C11.5030404@mindchasers.com> <5680339.a2UlTKzCpO@helios>
+From: Bill Traynor <wmat@alphatroop.com>
+Date: Sun, 23 Dec 2012 20:54:50 -0500
+Message-ID: <CAGfZjq5=WktLfXqjWU3obz3mn_n-jRzBXMQGvns_jJMVESX1DA@mail.gmail.com>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+X-Gm-Message-State: ALoCoQlw1K4RmHwJFUADVPMGR5sy6NAkn8ZkbAxVvnhswLmMzwPJSAB8tudBSLsyb+GrSGMgODmH
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: executable metadata not supported in bbappend files?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -44,71 +43,118 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 24 Dec 2012 00:03:46 -0000
-Content-Type: multipart/alternative; boundary=bcaec554d9d6f876d604d18db8c7
+X-List-Received-Date: Mon, 24 Dec 2012 02:10:03 -0000
+Content-Type: multipart/alternative; boundary=e89a8f235329cb001704d18f7c00
 
---bcaec554d9d6f876d604d18db8c7
-Content-Type: text/plain; charset=UTF-8
+--e89a8f235329cb001704d18f7c00
+Content-Type: text/plain; charset=ISO-8859-1
 
-On Sun, Dec 23, 2012 at 1:45 PM, Martin Jansa <martin.jansa@gmail.com>wrote:
+On Sun, Dec 23, 2012 at 2:43 PM, Paul Eggleton <
+paul.eggleton@linux.intel.com> wrote:
 
-> On Sun, Dec 23, 2012 at 01:36:42PM -0700, Chris Larson wrote:
-> > On Sun, Dec 23, 2012 at 1:22 PM, Martin Jansa <martin.jansa@gmail.com
-> >wrote:
-> >
-> > > * sometimes it's useful for distro/builder to set
-> EXCLUDE_FROM_WORLD_foo =
-> > > "1"
-> > >   to exclude recipes not supported by distro/builder in some include
-> file
+> On Friday 21 December 2012 23:50:25 Bob Cochran wrote:
+> > On 12/21/2012 08:35 PM, Bob Cochran wrote:
+> > > I just noticed that the current bitbake manual states in the "Defining
+> > > executable metadata" section that executable metadata is only supported
+> > > in .bb and .bbclass files, but I find that I can put (at least some
+> > > basic) tasks in .bbappend files, too.
 > > >
-> > > Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
-> > >
+> > > Is this an oversight in the documentation, or are there gotchas adding
+> > > tasks to bbappend files that I haven't come across?  If it's the
+> former,
+> > > I'll submit a patch.
 > >
-> > EXCLUDE_FROM_WORLD_pn-foo = "1"
+> > I see that bbappend isn't mentioned anywhere in the bitbake manual.
+> > That's a little confusing?
 >
-> I've used what LOCALCOUNT is using, but I can change it to _pn-foo if
-> wanted.
+> This is just an example of where the bitbake manual needs updating -
+> bbappends
+> weren't implemented when it was written. I believe the bitbake manual is
+> being
+> updated at the moment but I'm sure patches would still be welcome to
+> extend it
+> to mention bbappends in the appropriate places.
+>
+
+Yes, the manual is being updated.  Look for significant patches over the
+next month.
 
 
-The point was, you shouldn't need to patch anything in at all. pn-${PN} is
-in OVERRIDES. The above line should work fine as is with no bitbake changes.
--- 
-Christopher Larson
+>
+> Cheers,
+> Paul
+>
+> --
+>
+> Paul Eggleton
+> Intel Open Source Technology Centre
+>
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
+>
 
---bcaec554d9d6f876d604d18db8c7
-Content-Type: text/html; charset=UTF-8
+--e89a8f235329cb001704d18f7c00
+Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><br><div class=3D"gmail_quo=
-te">On Sun, Dec 23, 2012 at 1:45 PM, Martin Jansa <span dir=3D"ltr">&lt;<a =
-href=3D"mailto:martin.jansa@gmail.com" target=3D"_blank">martin.jansa@gmail=
-.com</a>&gt;</span> wrote:<br>
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><br><div class=3D"gmail=
+_quote">On Sun, Dec 23, 2012 at 2:43 PM, Paul Eggleton <span dir=3D"ltr">&l=
+t;<a href=3D"mailto:paul.eggleton@linux.intel.com" target=3D"_blank">paul.e=
+ggleton@linux.intel.com</a>&gt;</span> wrote:<br>
 
 <blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div class=3D"HOEnZb adM"><div class=3D"im">=
-On Sun, Dec 23, 2012 at 01:36:42PM -0700, Chris Larson wrote:<br>
-&gt; On Sun, Dec 23, 2012 at 1:22 PM, Martin Jansa &lt;<a href=3D"mailto:ma=
-rtin.jansa@gmail.com">martin.jansa@gmail.com</a>&gt;wrote:<br>
-&gt;<br>
-&gt; &gt; * sometimes it&#39;s useful for distro/builder to set EXCLUDE_FRO=
-M_WORLD_foo =3D<br>
-&gt; &gt; &quot;1&quot;<br>
-&gt; &gt; =C2=A0 to exclude recipes not supported by distro/builder in some=
- include file<br>
+x #ccc solid;padding-left:1ex"><div class=3D"im">On Friday 21 December 2012=
+ 23:50:25 Bob Cochran wrote:<br>
+&gt; On 12/21/2012 08:35 PM, Bob Cochran wrote:<br>
+</div><div class=3D"im">&gt; &gt; I just noticed that the current bitbake m=
+anual states in the &quot;Defining<br>
+&gt; &gt; executable metadata&quot; section that executable metadata is onl=
+y supported<br>
+&gt; &gt; in .bb and .bbclass files, but I find that I can put (at least so=
+me<br>
+&gt; &gt; basic) tasks in .bbappend files, too.<br>
 &gt; &gt;<br>
-&gt; &gt; Signed-off-by: Martin Jansa &lt;<a href=3D"mailto:Martin.Jansa@gm=
-ail.com">Martin.Jansa@gmail.com</a>&gt;<br>
-&gt; &gt;<br>
+&gt; &gt; Is this an oversight in the documentation, or are there gotchas a=
+dding<br>
+&gt; &gt; tasks to bbappend files that I haven&#39;t come across? =A0If it&=
+#39;s the former,<br>
+&gt; &gt; I&#39;ll submit a patch.<br>
 &gt;<br>
-&gt; EXCLUDE_FROM_WORLD_pn-foo =3D &quot;1&quot;<br>
+</div><div class=3D"im">&gt; I see that bbappend isn&#39;t mentioned anywhe=
+re in the bitbake manual.<br>
+&gt; That&#39;s a little confusing?<br>
 <br>
-</div></div>I&#39;ve used what LOCALCOUNT is using, but I can change it to =
-_pn-foo if<br>
-wanted.</blockquote></div><br>The point was, you shouldn&#39;t need to patc=
-h anything in at all. pn-${PN} is in OVERRIDES. The above line should work =
-fine as is with no bitbake changes.<br>-- <br>Christopher Larson</div>
+</div>This is just an example of where the bitbake manual needs updating - =
+bbappends<br>
+weren&#39;t implemented when it was written. I believe the bitbake manual i=
+s being<br>
+updated at the moment but I&#39;m sure patches would still be welcome to ex=
+tend it<br>
+to mention bbappends in the appropriate places.<br></blockquote><div><br></=
+div><div style>Yes, the manual is being updated. =A0Look for significant pa=
+tches over the next month.</div><div style>=A0</div><blockquote class=3D"gm=
+ail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-le=
+ft:1ex">
 
-</div>
 
---bcaec554d9d6f876d604d18db8c7--
+<br>
+Cheers,<br>
+Paul<br>
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+--<br>
+<br>
+Paul Eggleton<br>
+Intel Open Source Technology Centre<br>
+</font></span><div class=3D"HOEnZb"><div class=3D"h5"><br>
+_______________________________________________<br>
+bitbake-devel mailing list<br>
+<a href=3D"mailto:bitbake-devel@lists.openembedded.org">bitbake-devel@lists=
+.openembedded.org</a><br>
+<a href=3D"http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-deve=
+l" target=3D"_blank">http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bi=
+tbake-devel</a><br>
+</div></div></blockquote></div><br></div></div>
+
+--e89a8f235329cb001704d18f7c00--
