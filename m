@@ -1,25 +1,30 @@
-Received: from mail1.windriver.com ([147.11.146.13])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <mark.hatle@windriver.com>) id 1TsGse-0003Sg-E3
-	for bitbake-devel@lists.openembedded.org;
-	Mon, 07 Jan 2013 18:53:00 +0100
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id r07Hbnxs020833
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 7 Jan 2013 09:37:49 -0800 (PST)
-Received: from localhost.localdomain (172.25.34.61) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.2.318.4;
-	Mon, 7 Jan 2013 09:37:49 -0800
-From: Mark Hatle <mark.hatle@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 7 Jan 2013 11:57:23 -0600
-Message-ID: <1357581443-27929-1-git-send-email-mark.hatle@windriver.com>
-X-Mailer: git-send-email 1.7.3.4
-MIME-Version: 1.0
-X-Originating-IP: [172.25.34.61]
-Subject: [PATCH] lib/bb/build.py: 'deps' may not always exist in a few corner cases.
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1TsKeL-0007xp-NU for bitbake-devel@lists.openembedded.org;
+	Mon, 07 Jan 2013 22:54:31 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id r07LdAli014271;
+	Mon, 7 Jan 2013 21:39:10 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 04131-07; Mon,  7 Jan 2013 21:39:06 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id r07Ld1t5014254
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
+	Mon, 7 Jan 2013 21:39:03 GMT
+Message-ID: <1357594743.25855.46.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Biao <huanmateme@163.com>
+Date: Mon, 07 Jan 2013 21:39:03 +0000
+In-Reply-To: <45483db.6a2c.13bbc028c57.Coremail.huanmateme@163.com>
+References: <45483db.6a2c.13bbc028c57.Coremail.huanmateme@163.com>
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: bitbake-dev <bitbake-devel@lists.openembedded.org>
+Subject: Re: Where does the python print goes?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -31,38 +36,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 07 Jan 2013 17:53:00 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 07 Jan 2013 21:54:42 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-With a small set of recipes (1), and all system dependencies assume_provided,
-we may end up with no parent dependencies.  So we check if 'deps' was defined
-instead of always assuming it exists.
+On Fri, 2012-12-21 at 13:49 +0800, Biao wrote:
+> Hi All,
+> 
+> 
+> I have a task in a dum.bb file, after running the task with -vDDD, i
+> can not find where the "I am the python output" goes, it is not in the
+> terminal, not in the log file. Where does the sys.__stdout__.write
+> output to?
+> 
+> 
+> /*----code snap begins---*/
+> python do_dm2 () {
+>         import sys
+>         sys.__stdout__.write("I am the python output\n")
+> }
+> addtask dm2
+> /*----code snap ends---*/
 
-Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
----
- lib/bb/build.py |    7 ++++---
- 1 files changed, 4 insertions(+), 3 deletions(-)
+Logfile in ${T} ?
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 43790a6..2f6a61f 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -591,9 +591,10 @@ def add_tasks(tasklist, d):
-         getTask('noexec')
-         getTask('umask')
-         task_deps['parents'][task] = []
--        for dep in flags['deps']:
--            dep = data.expand(dep, d)
--            task_deps['parents'][task].append(dep)
-+        if 'deps' in flags:
-+            for dep in flags['deps']:
-+                dep = data.expand(dep, d)
-+                task_deps['parents'][task].append(dep)
- 
-     # don't assume holding a reference
-     data.setVar('_task_deps', task_deps, d)
--- 
-1.7.3.4
+Cheers,
+
+Richard
+
 
 
 
