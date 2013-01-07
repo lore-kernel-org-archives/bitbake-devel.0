@@ -1,20 +1,25 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jessica.zhang@intel.com>) id 1TquLs-0000B4-SW
+	(envelope-from <mark.hatle@windriver.com>) id 1TsGse-0003Sg-E3
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 04 Jan 2013 00:37:33 +0100
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 03 Jan 2013 15:21:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.84,405,1355126400"; d="scan'208";a="241824961"
-Received: from jzhang-desktop.jf.intel.com (HELO localhost) ([10.7.201.69])
-	by orsmga001.jf.intel.com with ESMTP; 03 Jan 2013 15:20:57 -0800
-From: Jessica Zhang <jessica.zhang@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu,  3 Jan 2013 15:32:04 -0800
-Message-Id: <cover.1357255745.git.jessica.zhang@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH 0/1] Fix GTK+ and PyGtk version check error message to be more clear [Yocto #3637]
+	Mon, 07 Jan 2013 18:53:00 +0100
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id r07Hbnxs020833
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 7 Jan 2013 09:37:49 -0800 (PST)
+Received: from localhost.localdomain (172.25.34.61) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.2.318.4;
+	Mon, 7 Jan 2013 09:37:49 -0800
+From: Mark Hatle <mark.hatle@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Mon, 7 Jan 2013 11:57:23 -0600
+Message-ID: <1357581443-27929-1-git-send-email-mark.hatle@windriver.com>
+X-Mailer: git-send-email 1.7.3.4
+MIME-Version: 1.0
+X-Originating-IP: [172.25.34.61]
+Subject: [PATCH] lib/bb/build.py: 'deps' may not always exist in a few corner cases.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,25 +31,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 03 Jan 2013 23:37:33 -0000
+X-List-Received-Date: Mon, 07 Jan 2013 17:53:00 -0000
+Content-Type: text/plain
 
-The following changes since commit 247b6a3754c2c50318e2a73d79981ba0e9cb560b:
+With a small set of recipes (1), and all system dependencies assume_provided,
+we may end up with no parent dependencies.  So we check if 'deps' was defined
+instead of always assuming it exists.
 
-  gstreamer, gst-plugins*: fix localdata (2012-11-28 15:25:33 +0000)
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+---
+ lib/bb/build.py |    7 ++++---
+ 1 files changed, 4 insertions(+), 3 deletions(-)
 
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib jzhang/3637
-  http://git.yoctoproject.org/cgit.cgi//log/?h=jzhang/3637
-
-Jessica Zhang (1):
-  Fix GTK+ and PyGtk version check error message to be more clear [Yocto #3637]
-
- bitbake/lib/bb/ui/hob.py |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index 43790a6..2f6a61f 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -591,9 +591,10 @@ def add_tasks(tasklist, d):
+         getTask('noexec')
+         getTask('umask')
+         task_deps['parents'][task] = []
+-        for dep in flags['deps']:
+-            dep = data.expand(dep, d)
+-            task_deps['parents'][task].append(dep)
++        if 'deps' in flags:
++            for dep in flags['deps']:
++                dep = data.expand(dep, d)
++                task_deps['parents'][task].append(dep)
+ 
+     # don't assume holding a reference
+     data.setVar('_task_deps', task_deps, d)
 -- 
-1.7.9.5
+1.7.3.4
 
 
 
