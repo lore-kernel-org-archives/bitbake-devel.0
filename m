@@ -1,36 +1,36 @@
-Received: from mail-da0-f52.google.com ([209.85.210.52])
+Received: from mail-la0-f52.google.com ([209.85.215.52])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <martin.jansa@gmail.com>) id 1Tt2bt-0007MG-PB
+	(envelope-from <kergoth@gmail.com>) id 1Tt3So-00007W-GE
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 09 Jan 2013 21:51:00 +0100
-Received: by mail-da0-f52.google.com with SMTP id f10so917706dak.11
+	Wed, 09 Jan 2013 22:46:15 +0100
+Received: by mail-la0-f52.google.com with SMTP id fq12so2406248lab.11
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 09 Jan 2013 12:35:40 -0800 (PST)
+	Wed, 09 Jan 2013 13:30:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=x-received:date:from:to:cc:subject:message-id:references
-	:mime-version:content-type:content-disposition:in-reply-to
-	:user-agent; bh=ScJvIV7K4plw1HMGd+mX4II9VM6rR2bipx/l4MYuZxw=;
-	b=YLjmqF3pOq0wvLoZ22N9N8SqbTkQgWF3DjlI0eSYdpOjpnXqBbM0Ruobh2aaz1p6cg
-	tP85JlYaHK0qBbMpB0RIRvUjtR/e32Q2vyr5O1i++cFFdDFPosqmmSSK0IA7949gT+sN
-	YMpIJSGssTSll3HeOQkDal2Jw9AFqv1ewe6vUZWNZVo8hLak4hZZTaRYyKvGwAntl2Mo
-	9juEZ5UpURhL++U4xeVq1N+2TG5EhAI0h9Z41BUxqnyQg+P5HX6xtRtvMHZC7bydFCxh
-	te5bV2fQRjmnShyQKeOpYnX23FsCt8AnW7q20shHnP264cLO3PpXCdvMvkMsezBtqRg7
-	zqcA==
-X-Received: by 10.68.134.232 with SMTP id pn8mr210705861pbb.47.1357763740747; 
-	Wed, 09 Jan 2013 12:35:40 -0800 (PST)
-Received: from localhost (ip-62-24-80-7.net.upcbroadband.cz. [62.24.80.7])
-	by mx.google.com with ESMTPS id x6sm43387527pav.29.2013.01.09.12.35.37
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Wed, 09 Jan 2013 12:35:39 -0800 (PST)
-Date: Wed, 9 Jan 2013 21:35:44 +0100
-From: Martin Jansa <martin.jansa@gmail.com>
-To: Peter Seebach <peter.seebach@windriver.com>
-Message-ID: <20130109203544.GR3722@jama.palm1.palmone.com>
-References: <20130109122757.5c134665@e6410-2>
+	h=mime-version:sender:in-reply-to:references:from:date
+	:x-google-sender-auth:message-id:subject:to:cc:content-type;
+	bh=/v0vinHtKcffFZqPF4pFHXGa+b/O6Dcuzg8qzcObfk4=;
+	b=NThlFm9THHFDUP+qgayK1dMlEWxwIFB6NoWzrkEKGiBZMYEFqePRoxsIfH6Sgkw6y4
+	yDg6CSPVzcum/KpIBvuOU9eN0a/9mD3WiPQaqtmMwNGIsQphZX3l9z/C6G/G9e7uEG/l
+	uB2pgBAsqB8PO/n4CF8QIwDLbztSBcVYRf9QIVpdGiB5ixeXZmdRJCi4HH2B+6KtgCyH
+	HdUDGccuuoPBDeGAxDvDNmnQnjbloS39meIW9Q9FPrtMMlUt0CExxFjax0RnjOMjyLQX
+	v/LHMtxRnDavn8ziAJ1XZJYkdrfGaOdYjcu6YSBf2Fg+MyTxVEPM07gh5HfORoU0UywR
+	d7lQ==
+Received: by 10.152.144.103 with SMTP id sl7mr17575585lab.23.1357767021779;
+	Wed, 09 Jan 2013 13:30:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20130109122757.5c134665@e6410-2>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-Cc: bitbake-devel@lists.openembedded.org
+Sender: kergoth@gmail.com
+Received: by 10.112.34.10 with HTTP; Wed, 9 Jan 2013 13:30:01 -0800 (PST)
+In-Reply-To: <20130109203544.GR3722@jama.palm1.palmone.com>
+References: <20130109122757.5c134665@e6410-2>
+	<20130109203544.GR3722@jama.palm1.palmone.com>
+From: Chris Larson <clarson@kergoth.com>
+Date: Wed, 9 Jan 2013 14:30:01 -0700
+X-Google-Sender-Auth: -ckpNFZAPbriIDI0RW9jFh1A0JU
+Message-ID: <CABcZANmdLdkuhdwuq6jXpyMaLXt-mubUHn0XJoyfmGYfjS=z+w@mail.gmail.com>
+To: Martin Jansa <martin.jansa@gmail.com>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
 Subject: Re: Variable tracking...
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
@@ -43,45 +43,74 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 09 Jan 2013 20:51:02 -0000
-X-Groupsio-MsgNum: 3088
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="soWJpSPh+l8Y6Fy7"
-Content-Disposition: inline
+X-List-Received-Date: Wed, 09 Jan 2013 21:46:16 -0000
+Content-Type: multipart/alternative; boundary=e89a8f22bec10559fd04d2e1c58e
 
---soWJpSPh+l8Y6Fy7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--e89a8f22bec10559fd04d2e1c58e
+Content-Type: text/plain; charset=UTF-8
+
+On Wed, Jan 9, 2013 at 1:35 PM, Martin Jansa <martin.jansa@gmail.com> wrote:
+
+> On Wed, Jan 09, 2013 at 12:27:57PM -0600, Peter Seebach wrote:
+> > So, I sent some variable-tracking patches a while back that had been
+> > cleaned up in response to various feedback. And I don't think I heard
+> > back anything about problems with them, but I don't think I heard
+> > anything positive.
+> >
+> > Is anyone still interested in the variable-assignment-tracking stuff,
+> > other than me? I maintain that it is REALLY useful when trying to track
+> > down variables getting the wrong values.
+>
+> I didn't look at the implementation, but I also find this feature very
+> usefull.
+
+
+
+More than once over the past few weeks it would have been handy for me, and
+more than once it would have helped others asking me questions find the
+answers themselves, so I'd definitely like to see it go in. I'm not 100%
+happy with how it's implemented, but I honestly can't think of any other
+way to make it happen without major refactoring of bitbake, so I personally
+think it should go in as is, and potentially revisit things in the future.
+-- 
+Christopher Larson
+
+--e89a8f22bec10559fd04d2e1c58e
+Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 09, 2013 at 12:27:57PM -0600, Peter Seebach wrote:
-> So, I sent some variable-tracking patches a while back that had been
-> cleaned up in response to various feedback. And I don't think I heard
-> back anything about problems with them, but I don't think I heard
-> anything positive.
->=20
-> Is anyone still interested in the variable-assignment-tracking stuff,
-> other than me? I maintain that it is REALLY useful when trying to track
-> down variables getting the wrong values.
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Wed, Jan 9, 2013 at 1:35 PM, Martin Jansa <span dir=3D"ltr">&lt;<a href=
+=3D"mailto:martin.jansa@gmail.com" target=3D"_blank">martin.jansa@gmail.com=
+</a>&gt;</span> wrote:<br>
 
-I didn't look at the implementation, but I also find this feature very
-usefull.
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div class=3D"im">On Wed, Jan 09, 2013 at 12=
+:27:57PM -0600, Peter Seebach wrote:<br>
+&gt; So, I sent some variable-tracking patches a while back that had been<b=
+r>
+&gt; cleaned up in response to various feedback. And I don&#39;t think I he=
+ard<br>
+&gt; back anything about problems with them, but I don&#39;t think I heard<=
+br>
+&gt; anything positive.<br>
+&gt;<br>
+&gt; Is anyone still interested in the variable-assignment-tracking stuff,<=
+br>
+&gt; other than me? I maintain that it is REALLY useful when trying to trac=
+k<br>
+&gt; down variables getting the wrong values.<br>
+<br>
+</div>I didn&#39;t look at the implementation, but I also find this feature=
+ very<br>
+usefull.</blockquote></div><br><br>More than once over the past few weeks i=
+t would have been handy for me, and more than once it would have helped oth=
+ers asking me questions find the answers themselves, so I&#39;d definitely =
+like to see it go in. I&#39;m not 100% happy with how it&#39;s implemented,=
+ but I honestly can&#39;t think of any other way to make it happen without =
+major refactoring of bitbake, so I personally think it should go in as is, =
+and potentially revisit things in the future.<br>
 
-Cheers,
+-- <br>Christopher Larson</div></div>
 
---=20
-Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
-
---soWJpSPh+l8Y6Fy7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEYEARECAAYFAlDt1KAACgkQN1Ujt2V2gByj0ACgtIFbcN8LrKJASxNlEvUuv0/O
-i+cAnA1sjU5Rb3r8RQEoObGjrVN4M1Yx
-=roEt
------END PGP SIGNATURE-----
-
---soWJpSPh+l8Y6Fy7--
+--e89a8f22bec10559fd04d2e1c58e--
