@@ -1,35 +1,40 @@
-Received: from m13-70.163.com ([220.181.13.70])
+Received: from mail-ea0-f179.google.com ([209.85.215.179])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <huanmateme@163.com>) id 1TsPR4-00028q-QU
+	(envelope-from <rep.dot.nop@gmail.com>) id 1TsqKQ-00084D-J8
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 08 Jan 2013 04:01:13 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Received:Date:From:To:Cc:Subject:In-Reply-To:
-	References:Content-Type:MIME-Version:Message-ID; bh=q9mjYeYez0UI
-	gyKFjcOSd3F1mAOlOlDt1t6KPfZ8c34=; b=FRWD7fJ7O6uZPSt8vNWkWMC9TRx7
-	3koaNcuf9a4U6YSgDmUdLC3X8TuMO3P3Kh/emgmyyigJtQw0JReA4xxa8+e6LCsx
-	kmXPF19sZ1Vq32FxJEVosxrLKoyBT6k5yX0HQYyQiz7Buhs3u/8q1cs2yLGOE3ya
-	9kj0hRdMEKQ7jo4=
-Received: from huanmateme$163.com ( [61.148.56.138] ) by
-	ajax-webmail-wmsvr70 (Coremail) ; Tue, 8 Jan 2013 10:30:33 +0800 (CST)
-X-Originating-IP: [61.148.56.138]
-Date: Tue, 8 Jan 2013 10:30:33 +0800 (CST)
-From: Biao  <huanmateme@163.com>
-To: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version SP_ntes V3.5 build
-	20121219(21170.5156.5150) Copyright (c) 2002-2013 www.mailtech.cn
-	163com
-In-Reply-To: <1357594743.25855.46.camel@ted>
-References: <45483db.6a2c.13bbc028c57.Coremail.huanmateme@163.com>
-	<1357594743.25855.46.camel@ted>
+	Wed, 09 Jan 2013 08:44:09 +0100
+Received: by mail-ea0-f179.google.com with SMTP id i12so506429eaa.24
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 08 Jan 2013 23:28:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=x-received:from:to:date:message-id:in-reply-to:references
+	:user-agent:subject:mime-version:content-type
+	:content-transfer-encoding;
+	bh=XTmf57MifWMYg0X8Jg0vPwkBLq9kDmM5V2b7tcTMsns=;
+	b=O80wY6pxJAh6NE8bkWqAjoZ21EclFFslgKV8mmbYOqq/1QBeO0bX+yi11gm6QEjW6W
+	+mCF/sbD5/Hb7WqL33ih7I3JcyNdDI34OakRKUybYMpgBbPRsy0PrzS8wCv5VqpFz9Y1
+	G5KfUhSRmDGyGZp/c3FGlcwYhUrXAK2XTMxNP2k104RXddQEcx/zQyaYh0a1TefMdL4/
+	jnUootdqk6TsENDlUKz9/YwsPfX3Xa0lCKOiGOctU8Lcz4UvChCv3HrDfVMfQsM7QuAm
+	KMMSOxCIODaSAZGetKFqtGXGHvVU7DNab/bOcf3yWhKaJOEaPSqLlwSoucd62Fw4Lctv
+	Tf6Q==
+X-Received: by 10.14.194.199 with SMTP id m47mr179438914een.11.1357716530868; 
+	Tue, 08 Jan 2013 23:28:50 -0800 (PST)
+Received: from [93.111.204.44] (093111204044.atmpu0047.highway.a1.net.
+	[93.111.204.44])
+	by mx.google.com with ESMTPS id b2sm139876636eep.9.2013.01.08.23.28.48
+	(version=SSLv3 cipher=OTHER); Tue, 08 Jan 2013 23:28:49 -0800 (PST)
+From: "Bernhard Reutner-Fischer" <rep.dot.nop@gmail.com>
+To: Mark Hatle <mark.hatle@windriver.com>,
+	<bitbake-devel@lists.openembedded.org>
+Date: Wed, 09 Jan 2013 08:30:41 +0100
+Message-ID: <13c1e37c83e.2760.0f39ed3bcad52ef2c88c90062b7714dc@gmail.com>
+In-Reply-To: <1357581443-27929-1-git-send-email-mark.hatle@windriver.com>
+References: <1357581443-27929-1-git-send-email-mark.hatle@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:9.0) Gecko/20111222 Thunderbird/9.0.1 AquaMail/1.2.1 (build:
+	2100173)
 MIME-Version: 1.0
-Message-ID: <c599171.141a6.13c17feb4fa.Coremail.huanmateme@163.com>
-X-CM-TRANSID: RsGowEAJT0LKhOtQRHkmAA--.5599W
-X-CM-SenderInfo: xkxd0z5dwhzvi6rwjhhfrp/xtbBiBGdgE9o6ya0PgABsl
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
-Cc: bitbake-dev <bitbake-devel@lists.openembedded.org>
-Subject: Re: Where does the python print goes?
+Subject: Re: [PATCH] lib/bb/build.py: 'deps' may not always exist in a few corner cases.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -41,75 +46,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 08 Jan 2013 03:01:13 -0000
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_304486_560736562.1357612233978"
+X-List-Received-Date: Wed, 09 Jan 2013 07:44:10 -0000
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Transfer-Encoding: 8bit
 
-------=_Part_304486_560736562.1357612233978
-Content-Type: text/plain; charset=GBK
-Content-Transfer-Encoding: 7bit
-
-
-At 2013-01-08 05:39:03,"Richard Purdie" <richard.purdie@linuxfoundation.org> wrote:
->On Fri, 2012-12-21 at 13:49 +0800, Biao wrote:
->> Hi All,
->> 
->> 
->> I have a task in a dum.bb file, after running the task with -vDDD, i
->> can not find where the "I am the python output" goes, it is not in the
->> terminal, not in the log file. Where does the sys.__stdout__.write
->> output to?
->> 
->> 
->> /*----code snap begins---*/
->> python do_dm2 () {
->>         import sys
->>         sys.__stdout__.write("I am the python output\n")
->> }
->> addtask dm2
->> /*----code snap ends---*/
+On 7 January 2013 18:57:23 Mark Hatle <mark.hatle@windriver.com> wrote:
+> With a small set of recipes (1), and all system dependencies assume_provided,
+> we may end up with no parent dependencies.  So we check if 'deps' was defined
+> instead of always assuming it exists.
 >
->Logfile in ${T} ?
-
-Thanks for your reply.
-I tried to grep it in the whole tmp directory, it is not in any log file.
+> Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+> ---
+>  lib/bb/build.py |    7 ++++---
+>  1 files changed, 4 insertions(+), 3 deletions(-)
 >
->Cheers,
->
->Richard
->
->
+> diff --git a/lib/bb/build.py b/lib/bb/build.py
+> index 43790a6..2f6a61f 100644
+> --- a/lib/bb/build.py
+> +++ b/lib/bb/build.py
+> @@ -591,9 +591,10 @@ def add_tasks(tasklist, d):
+>          getTask('noexec')
+>          getTask('umask')
+>          task_deps['parents'][task] = []
+> -        for dep in flags['deps']:
+> -            dep = data.expand(dep, d)
+> -            task_deps['parents'][task].append(dep)
+> +        if 'deps' in flags:
+> +            for dep in flags['deps']:
 
-------=_Part_304486_560736562.1357612233978
-Content-Type: text/html; charset=GBK
-Content-Transfer-Encoding: 7bit
+for dep in flags.get('deps', []):
+?
+> +                dep = data.expand(dep, d)
+> +                task_deps['parents'][task].append(dep)
+>
+>      # don't assume holding a reference
+>      data.setVar('_task_deps', task_deps, d)
 
-<div style="line-height:1.7;color:#000000;font-size:14px;font-family:arial"><pre><br>At&nbsp;2013-01-08&nbsp;05:39:03,"Richard&nbsp;Purdie"&nbsp;&lt;richard.purdie@linuxfoundation.org&gt;&nbsp;wrote:
-&gt;On&nbsp;Fri,&nbsp;2012-12-21&nbsp;at&nbsp;13:49&nbsp;+0800,&nbsp;Biao&nbsp;wrote:
-&gt;&gt;&nbsp;Hi&nbsp;All,
-&gt;&gt;&nbsp;
-&gt;&gt;&nbsp;
-&gt;&gt;&nbsp;I&nbsp;have&nbsp;a&nbsp;task&nbsp;in&nbsp;a&nbsp;dum.bb&nbsp;file,&nbsp;after&nbsp;running&nbsp;the&nbsp;task&nbsp;with&nbsp;-vDDD,&nbsp;i
-&gt;&gt;&nbsp;can&nbsp;not&nbsp;find&nbsp;where&nbsp;the&nbsp;"I&nbsp;am&nbsp;the&nbsp;python&nbsp;output"&nbsp;goes,&nbsp;it&nbsp;is&nbsp;not&nbsp;in&nbsp;the
-&gt;&gt;&nbsp;terminal,&nbsp;not&nbsp;in&nbsp;the&nbsp;log&nbsp;file.&nbsp;Where&nbsp;does&nbsp;the&nbsp;sys.__stdout__.write
-&gt;&gt;&nbsp;output&nbsp;to?
-&gt;&gt;&nbsp;
-&gt;&gt;&nbsp;
-&gt;&gt;&nbsp;/*----code&nbsp;snap&nbsp;begins---*/
-&gt;&gt;&nbsp;python&nbsp;do_dm2&nbsp;()&nbsp;{
-&gt;&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;import&nbsp;sys
-&gt;&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sys.__stdout__.write("I&nbsp;am&nbsp;the&nbsp;python&nbsp;output\n")
-&gt;&gt;&nbsp;}
-&gt;&gt;&nbsp;addtask&nbsp;dm2
-&gt;&gt;&nbsp;/*----code&nbsp;snap&nbsp;ends---*/
-&gt;
-&gt;Logfile&nbsp;in&nbsp;${T}&nbsp;?</pre><pre>
-Thanks for your reply.</pre><pre>I tried to grep it in the whole tmp directory, it is not in any log file.</pre><pre>&gt;
-&gt;Cheers,
-&gt;
-&gt;Richard
-&gt;
-&gt;
-</pre></div>
 
-------=_Part_304486_560736562.1357612233978--
+Sent with AquaMail for Android
+http://www.aqua-mail.com
+
+
+
+
