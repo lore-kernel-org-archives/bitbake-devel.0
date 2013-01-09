@@ -1,28 +1,24 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1Tsxj0-00057E-95; Wed, 09 Jan 2013 16:37:59 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id r09FMfMM001981;
-	Wed, 9 Jan 2013 15:22:41 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 23373-07; Wed,  9 Jan 2013 15:22:37 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id r09FMW5P001974
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Wed, 9 Jan 2013 15:22:33 GMT
-Message-ID: <1357744955.13022.97.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>, openembedded-core
-	<openembedded-core@lists.openembedded.org>, poky
-	<poky@lists.yoctoproject.org>, yocto <yocto@yoctoproject.org>
-Date: Wed, 09 Jan 2013 15:22:35 +0000
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Subject: WebHob Mailing List Setup
+Received: from mail1.windriver.com ([147.11.146.13])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <Peter.Seebach@windriver.com>) id 1Tt23O-0006mQ-9g
+	for bitbake-devel@lists.openembedded.org;
+	Wed, 09 Jan 2013 21:15:14 +0100
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id r09ISZPL029526
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 9 Jan 2013 10:28:37 -0800 (PST)
+Received: from e6410-2 (172.25.40.227) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.2.318.4;
+	Wed, 9 Jan 2013 10:28:34 -0800
+Date: Wed, 9 Jan 2013 12:27:57 -0600
+From: Peter Seebach <peter.seebach@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Message-ID: <20130109122757.5c134665@e6410-2>
+X-Mailer: Claws Mail 3.8.0 (GTK+ 2.24.10; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Subject: Variable tracking...
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -34,31 +30,21 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 09 Jan 2013 15:37:59 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Wed, 09 Jan 2013 20:15:18 -0000
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 
-Various people at various times have expressed an interest in webhob
-which will be a web interface to bitbake's functionality as an evolution
-of the capabilities of the current hob UI. There are some people looking
-at the design of it and who are actively working on figuring out what it
-should look like, what it needs to do, who it needs to serve and some
-other key questions. They will also likely start implementing the
-functionality soon.
+So, I sent some variable-tracking patches a while back that had been
+cleaned up in response to various feedback. And I don't think I heard
+back anything about problems with them, but I don't think I heard
+anything positive.
 
-In the interests of collaboration, we've setup the mailing list:
+Is anyone still interested in the variable-assignment-tracking stuff,
+other than me? I maintain that it is REALLY useful when trying to track
+down variables getting the wrong values.
 
-https://lists.yoctoproject.org/listinfo/webhob
-
-which is where the design and initial implementation discussions are
-going to happen. If you are interested please join the list.
-
-I've cross posted this to ensure people know about it. Please take
-discussion and replies up on the webhob list itself.
-
-Cheers,
-
-Richard
-
+-s
+-- 
+Listen, get this.  Nobody with a good compiler needs to be justified.
 
 
