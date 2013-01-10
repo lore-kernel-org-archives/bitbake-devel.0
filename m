@@ -1,32 +1,33 @@
-Received: from mail-la0-f49.google.com ([209.85.215.49])
+Received: from mail-la0-f48.google.com ([209.85.215.48])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1TtJ5P-0007nE-DQ
+	(envelope-from <kergoth@gmail.com>) id 1TtJ63-0007nt-Kb
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 10 Jan 2013 15:26:28 +0100
-Received: by mail-la0-f49.google.com with SMTP id fk20so627952lab.36
+	Thu, 10 Jan 2013 15:27:08 +0100
+Received: by mail-la0-f48.google.com with SMTP id ej20so619178lab.21
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Jan 2013 06:11:13 -0800 (PST)
+	Thu, 10 Jan 2013 06:11:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=mime-version:sender:in-reply-to:references:from:date
 	:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	bh=Ji2ZiQkSzpkBQ9woQXWZGsNGCloZ7VLi7uDxAKITpuY=;
-	b=cppc+f52fWY0O2a9NQwwR9f/P0LuK3O3sF7nrbejwMZ+85tHIuJgtEBZIU7x2RVeKx
-	DhxjimE0PkQqHKpH1lDwJEu046zbwhsI76PhAK+NaEoNQPSmgKFel/vKdy1DkD5NtRp2
-	gqoO4x+0ppdDUAT1i3FSmbQ6N+jKB71z78yy+mGyHm1fsDHQ/r74JhGk1HC/reXBZccS
-	MhtfQPySrVom/UzA2amsBUSaap5eedbpKnkR1p7l3Up9CgiCZEu9c8/yg2Ti0emFKULh
-	Fb5MBmKQZQ32jXqnwhZMymkw5+G5+G9BewGkt+MgNAwHcOxJYapmOZCeo4CgoCeBUOz1
-	kk8g==
-Received: by 10.112.28.65 with SMTP id z1mr29301257lbg.119.1357827073785; Thu,
-	10 Jan 2013 06:11:13 -0800 (PST)
+	bh=z+6RbauO2Jl4a8uTi16zhywL4N+hivGrJfy9q21Eo5E=;
+	b=eptI4XBIgzACu2jxHJsZ7Pw5QWxHoVYKIDQG8gkbO3lzw5rgtn6suqNcQza9xvVfm5
+	jxM4wCBlMFy6gu8xGw5yBCu5ozXXBH4qRDza2Kd13YhCF3AodezxWKZwYDNNZLq6Uc0E
+	1kTSABiF9V+uEPrgMu/hNTQBbx4qa6Q4D2K0329L9iUiOfCwBRqk6M9rpYGi54TmL4cE
+	7VCtI0zTJjevAHFZPlN83Y23M1PdalIeFrY/Edd1zYoDeIjKYxBkGyWw5OWzP+EqH4+k
+	vXxEeQM8r/Fc0k3W7ZnSY463/uVLKpngSIGqUNOlI2sp8I3wegXZAadd3eUPRtLD61rw
+	ARAQ==
+Received: by 10.152.134.167 with SMTP id pl7mr21024050lab.36.1357827114208;
+	Thu, 10 Jan 2013 06:11:54 -0800 (PST)
 MIME-Version: 1.0
 Sender: kergoth@gmail.com
-Received: by 10.112.34.10 with HTTP; Thu, 10 Jan 2013 06:10:53 -0800 (PST)
-In-Reply-To: <1357807596-31587-1-git-send-email-martiert@gmail.com>
+Received: by 10.112.34.10 with HTTP; Thu, 10 Jan 2013 06:11:32 -0800 (PST)
+In-Reply-To: <CABcZANkgffV7FwXX4NVyBA2mm1YOg+1en9x_oidsey+AkqdGBg@mail.gmail.com>
 References: <1357807596-31587-1-git-send-email-martiert@gmail.com>
+	<CABcZANkgffV7FwXX4NVyBA2mm1YOg+1en9x_oidsey+AkqdGBg@mail.gmail.com>
 From: Chris Larson <clarson@kergoth.com>
-Date: Thu, 10 Jan 2013 07:10:53 -0700
-X-Google-Sender-Auth: BxrruSgAnQ1RKrCgGJAQRYm7HKE
-Message-ID: <CABcZANkgffV7FwXX4NVyBA2mm1YOg+1en9x_oidsey+AkqdGBg@mail.gmail.com>
+Date: Thu, 10 Jan 2013 07:11:32 -0700
+X-Google-Sender-Auth: oO9eMkv-kR5k36Uba-oOKvDwLYQ
+Message-ID: <CABcZAN=_k4LrYhi8_t35pQ3mkToJKCLO9FxKGoFQ9fB+8+M5Vg@mail.gmail.com>
 To: Martin Ertsaas <martiert@gmail.com>
 Cc: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
@@ -42,56 +43,68 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 10 Jan 2013 14:26:30 -0000
-Content-Type: multipart/alternative; boundary=bcaec554d9d666409404d2efc0da
+X-List-Received-Date: Thu, 10 Jan 2013 14:27:09 -0000
+Content-Type: multipart/alternative; boundary=f46d043bd988cf0e2f04d2efc2d2
 
---bcaec554d9d666409404d2efc0da
+--f46d043bd988cf0e2f04d2efc2d2
 Content-Type: text/plain; charset=UTF-8
 
-On Thu, Jan 10, 2013 at 1:46 AM, Martin Ertsaas <martiert@gmail.com> wrote:
+On Thu, Jan 10, 2013 at 7:10 AM, Chris Larson <clarson@kergoth.com> wrote:
 
-> On mac, os.unlink does not remove directories, and we therefor have
-> to explicitly use shutil.rmtree if the path is a directory.
-> ---
->  lib/bb/utils.py |    5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> On Thu, Jan 10, 2013 at 1:46 AM, Martin Ertsaas <martiert@gmail.com>wrote:
 >
-> diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-> index cef0fdd..8b6d3f5 100644
-> --- a/lib/bb/utils.py
-> +++ b/lib/bb/utils.py
-> @@ -561,7 +561,10 @@ def remove(path, recurse=False):
->      import os, errno, shutil, glob
->      for name in glob.glob(path):
->          try:
-> -            os.unlink(name)
-> +            if os.path.isdir(name):
-> +                shutil.rmtree(name)
-> +            else:
-> +                os.unlink(name)
->          except OSError as exc:
->              if recurse and exc.errno == errno.EISDIR:
->                  shutil.rmtree(name)
+>> On mac, os.unlink does not remove directories, and we therefor have
+>> to explicitly use shutil.rmtree if the path is a directory.
+>> ---
+>>  lib/bb/utils.py |    5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+>> index cef0fdd..8b6d3f5 100644
+>> --- a/lib/bb/utils.py
+>> +++ b/lib/bb/utils.py
+>> @@ -561,7 +561,10 @@ def remove(path, recurse=False):
+>>      import os, errno, shutil, glob
+>>      for name in glob.glob(path):
+>>          try:
+>> -            os.unlink(name)
+>> +            if os.path.isdir(name):
+>> +                shutil.rmtree(name)
+>> +            else:
+>> +                os.unlink(name)
+>>          except OSError as exc:
+>>              if recurse and exc.errno == errno.EISDIR:
+>>                  shutil.rmtree(name)
+>>
 >
+>
+> Look 2 lines down, where it checks to see if the os.unlink failed due to
+> it being a directory and runs shutil.rmtree if that's the case.
 
 
-Look 2 lines down, where it checks to see if the os.unlink failed due to it
-being a directory and runs shutil.rmtree if that's the case.
+I'm guessing you're trying to use it without passing recurse=True.
 -- 
 Christopher Larson
 
---bcaec554d9d666409404d2efc0da
+--f46d043bd988cf0e2f04d2efc2d2
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
 <div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Thu, Jan 10, 2013 at 1:46 AM, Martin Ertsaas <span dir=3D"ltr">&lt;<a hr=
-ef=3D"mailto:martiert@gmail.com" target=3D"_blank">martiert@gmail.com</a>&g=
+On Thu, Jan 10, 2013 at 7:10 AM, Chris Larson <span dir=3D"ltr">&lt;<a href=
+=3D"mailto:clarson@kergoth.com" target=3D"_blank">clarson@kergoth.com</a>&g=
 t;</span> wrote:<br>
 
 <blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div id=3D":13o">On mac, os.unlink does not =
-remove directories, and we therefor have<br>
+x #ccc solid;padding-left:1ex"><div class=3D"im"><div class=3D"gmail_quote"=
+>On Thu, Jan 10, 2013 at 1:46 AM, Martin Ertsaas <span dir=3D"ltr">&lt;<a h=
+ref=3D"mailto:martiert@gmail.com" target=3D"_blank">martiert@gmail.com</a>&=
+gt;</span> wrote:<br>
+
+
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div>On mac, os.unlink does not remove direc=
+tories, and we therefor have<br>
 to explicitly use shutil.rmtree if the path is a directory.<br>
 ---<br>
 =C2=A0lib/bb/utils.py | =C2=A0 =C2=A05 ++++-<br>
@@ -116,10 +129,11 @@ index cef0fdd..8b6d3f5 100644<br>
 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if recurse and exc.errno =
 =3D=3D errno.EISDIR:<br>
 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0shutil.rmtree=
-(name)</div></blockquote></div><br><br>Look 2 lines down, where it checks t=
-o see if the os.unlink failed due to it being a directory and runs shutil.r=
-mtree if that&#39;s the case.<br>-- <br>
+(name)</div></blockquote></div><br><br></div>Look 2 lines down, where it ch=
+ecks to see if the os.unlink failed due to it being a directory and runs sh=
+util.rmtree if that&#39;s the case.</blockquote>
 
-Christopher Larson</div></div>
+</div><br>I&#39;m guessing you&#39;re trying to use it without passing recu=
+rse=3DTrue.<br>-- <br>Christopher Larson</div></div>
 
---bcaec554d9d666409404d2efc0da--
+--f46d043bd988cf0e2f04d2efc2d2--
