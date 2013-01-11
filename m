@@ -1,42 +1,33 @@
-Received: from mail-ea0-f172.google.com ([209.85.215.172])
+Received: from mail-pb0-f51.google.com ([209.85.160.51])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <martiert@gmail.com>) id 1TtYY3-0003X1-7I
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 11 Jan 2013 07:57:04 +0100
-Received: by mail-ea0-f172.google.com with SMTP id f13so572259eaa.3
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Jan 2013 22:41:47 -0800 (PST)
+	(envelope-from <martin.jansa@gmail.com>)
+	id 1Ttgm3-0008RG-9B; Fri, 11 Jan 2013 16:44:08 +0100
+Received: by mail-pb0-f51.google.com with SMTP id ro12so1008202pbb.24
+	for <multiple recipients>; Fri, 11 Jan 2013 07:28:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=x-received:message-id:date:from:user-agent:mime-version:to:cc
-	:subject:references:in-reply-to:content-type;
-	bh=A68YEB6lN9YqcB+RiiN8qX4R+mbgfNUJnJqMYr04Pgw=;
-	b=Ov33RbFdNsJb50g3YxqAvLlTBkG1yvQ9o1YT0zkDaC8f7rTAW+BxwiBV7px0nlfBYP
-	UBgRK63upy0irpl08GMcHmtgG6ZmY8P3EsRaadFDZLYC1LC26J/L6ijr4trxxkHwdtO2
-	w9AnoZoCrV+BGS1NTvyEguwWQs6PXR5vxzLuf8Ij5HxgoCvmnxNjsbzNzUI3knGzZYQV
-	JnwFKGWcb1/6jXR9UnqgpIoxsplWkjtH+d1IzaWIXNYsoXJr7vyijuT5sNBiucoJl40m
-	HvJ3WWoo6uaRcJ/qqvzWjNHrWEsz5srP7hxBH+RLdLW940L3jV6SXzqHatowsTb/69Mw
-	d3kQ==
-X-Received: by 10.14.219.72 with SMTP id l48mr199464920eep.37.1357886507689;
-	Thu, 10 Jan 2013 22:41:47 -0800 (PST)
-Received: from [10.54.86.72] (64-103-25-233.cisco.com. [64.103.25.233])
-	by mx.google.com with ESMTPS id w44sm7277899eep.6.2013.01.10.22.41.45
-	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Thu, 10 Jan 2013 22:41:46 -0800 (PST)
-Message-ID: <50EFB428.8090700@gmail.com>
-Date: Fri, 11 Jan 2013 07:41:44 +0100
-From: Martin Ertsaas <martiert@gmail.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:10.0.11) Gecko/20121128 Thunderbird/10.0.11
+	h=x-received:date:from:to:cc:subject:message-id:mime-version
+	:content-type:content-disposition:user-agent;
+	bh=gDNm2r7xmlaw5QklSNH1rwg/3+UNEnzWRN+5sLNEZoU=;
+	b=oXAPXq7ahxBupDFEztmwICd8UKpBTMwOqtlw6A6uFUHiAyh68NFQU5HuoqTKroRJTE
+	elJhzqKQHNa7HIDIh4iswMH04/3nRSXG+FaYBDIrHizkMJE6McD5RRjKcTK2/hj7HC/v
+	dDIkJMKu2s8olXQIqAqmYpkAdKiprIspiclkxuICmHBHJhOOauFUsvbwCmDKeQBd1f6s
+	TJMcmo8iAeO0jLnfcHG2mCjyJP4LpdbuxBP+CAQCoLP5yXBkf18ewVcbZWQWx1Zi4x59
+	ZvCKYX6n4/9Dpqdi0yDhX+rhfOm9j+g9oPV7H7ikO7oDVGBoNvBC1EkAVLbgiLtZ954O
+	uGXQ==
+X-Received: by 10.68.253.161 with SMTP id ab1mr209805407pbd.97.1357918127406; 
+	Fri, 11 Jan 2013 07:28:47 -0800 (PST)
+Received: from localhost (ip-62-24-80-7.net.upcbroadband.cz. [62.24.80.7])
+	by mx.google.com with ESMTPS id nm2sm2954709pbc.43.2013.01.11.07.28.44
+	(version=TLSv1.2 cipher=RC4-SHA bits=128/128);
+	Fri, 11 Jan 2013 07:28:46 -0800 (PST)
+Date: Fri, 11 Jan 2013 16:28:56 +0100
+From: Martin Jansa <martin.jansa@gmail.com>
+To: openembedded-core@lists.openembedded.org
+Message-ID: <20130111152856.GC3781@jama.palm1.palmone.com>
 MIME-Version: 1.0
-To: Chris Larson <clarson@kergoth.com>
-References: <1357807596-31587-1-git-send-email-martiert@gmail.com>
-	<CABcZANkgffV7FwXX4NVyBA2mm1YOg+1en9x_oidsey+AkqdGBg@mail.gmail.com>
-	<CABcZAN=_k4LrYhi8_t35pQ3mkToJKCLO9FxKGoFQ9fB+8+M5Vg@mail.gmail.com>
-	<CABcZANnD8C4gZXEcRWfR8f_ftZjndOT9UJ5796SEigRqw6tohA@mail.gmail.com>
-In-Reply-To: <CABcZANnD8C4gZXEcRWfR8f_ftZjndOT9UJ5796SEigRqw6tohA@mail.gmail.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] utils.py: Use shutil.rmtree if the path we wish to remove is a directory.
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: bitbake hangs forever when PR serv is enabled
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -48,206 +39,71 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 11 Jan 2013 06:57:04 -0000
-Content-Type: multipart/alternative;
-	boundary="------------040302000506010103000104"
+X-List-Received-Date: Fri, 11 Jan 2013 15:44:09 -0000
+X-Groupsio-MsgNum: 3098
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RYJh/3oyKhIjGcML"
+Content-Disposition: inline
 
---------------040302000506010103000104
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+--RYJh/3oyKhIjGcML
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 01/10/13 15:18, Chris Larson wrote:
->
-> On Thu, Jan 10, 2013 at 7:11 AM, Chris Larson <clarson@kergoth.com
-> <mailto:clarson@kergoth.com>> wrote:
->
->
->     On Thu, Jan 10, 2013 at 7:10 AM, Chris Larson <clarson@kergoth.com
->     <mailto:clarson@kergoth.com>> wrote:
->
->         On Thu, Jan 10, 2013 at 1:46 AM, Martin Ertsaas
->         <martiert@gmail.com <mailto:martiert@gmail.com>> wrote:
->
->             On mac, os.unlink does not remove directories, and we
->             therefor have
->             to explicitly use shutil.rmtree if the path is a directory.
->             ---
->              lib/bb/utils.py |    5 ++++-
->              1 file changed, 4 insertions(+), 1 deletion(-)
->
->             diff --git a/lib/bb/utils.py b/lib/bb/utils.py
->             index cef0fdd..8b6d3f5 100644
->             --- a/lib/bb/utils.py
->             +++ b/lib/bb/utils.py
->             @@ -561,7 +561,10 @@ def remove(path, recurse=False):
->                  import os, errno, shutil, glob
->                  for name in glob.glob(path):
->                      try:
->             -            os.unlink(name)
->             +            if os.path.isdir(name):
->             +                shutil.rmtree(name)
->             +            else:
->             +                os.unlink(name)
->                      except OSError as exc:
->                          if recurse and exc.errno == errno.EISDIR:
->                              shutil.rmtree(name)
->
->
->
->         Look 2 lines down, where it checks to see if the os.unlink
->         failed due to it being a directory and runs shutil.rmtree if
->         that's the case.
->
->
->     I'm guessing you're trying to use it without passing recurse=True.
->
->
-> Having through about it further, I think it might be best to be alter
-> the code to also handle the case where recurse==False and the path is
-> a directory by calling os.rmdir(). Perhaps this would reduce confusion.
-> -- 
-> Christopher Larson
+When building world which takes long time to finish I=20
+sometimes see bitbake hanging forever. It didn't happen
+until I've enabled PR Service. But maybe it's not caused=20
+by PR Service and it's just coincidence.
 
-You are almost right. On normal folders, this will work with
-recurse=True, but on /tmp folders you get: OSError: [Errno 1] Operation
-not permitted: '/tmp/tmpl8qBDW' on the unlink call. This makes the if
-test inside the except catching false, and nothing happens.
+I've to kill python processes manually and this traceback shown:
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/threading.py", line 551, in __bootstrap_inner
+    self.run()
+  File "/usr/lib/python2.7/threading.py", line 504, in run
+    self.__target(*self.__args, **self.__kwargs)
+  File "/home/jenkins/oe/shr-core-branches/shr-core/bitbake/lib/prserv/serv=
+=2Epy", line 173, in _work
+    self.prserv.work_forever()
+  File "/home/jenkins/oe/shr-core-branches/shr-core/bitbake/lib/prserv/serv=
+=2Epy", line 93, in work_forever
+    self.handle_request()
+  File "/usr/lib/python2.7/SocketServer.py", line 265, in handle_request
+    fd_sets =3D select.select([self], [], [], timeout)
+error: (4, 'Interrupted system call')
 
-I'm not sure why this happens, as I am allowed to remove it using
-shutil.rmtree. Making a folder in linux with the exact same permissions
-does work however, so it seems to be some difference in how the os
-handles the call.
+When this happens, there is only one python process doing something=20
+for very long time:
+29299 jenkins    20   0     0     0     0 Z  0.0  0.0 26:13.66 |  |        =
+   |        `- python
 
-Other than that, I feel that it is cleaner to have an explicit check
-like this, and not use the exception framework for control flow. Which
-means in the except just use raise, or just ignore it and let someone
-else handle it like we actually do.
-To get back the same functionality though, we should change the isdir
-call to: 'if os.path.isdir(name) and recurse:'
+and when I've tried to connect to it with strace it was looping
+between 2 pipes both returning EAGAIN.
 
-Are you totally opposed to changing this? What I don't want to do is to
-add exc.errno == errno.EPERM to the line, which will just bloath it.
+Usually last cooker output is rm_work_all in gimp, but I don't see=20
+anything special in gimp recipe and it could be some other thread=20
+in background.
 
-- Martin
+NOTE: Running task 22874 of 23570 (ID: 996, /home/jenkins/oe/shr-core-branc=
+hes/shr-core/meta-openembedded/meta-oe/recipes-graphics/gimp/gimp_2.8.2.bb,=
+ do_rm_work_all)
+NOTE: recipe gimp-2.8.2-r0: task do_rm_work_all: Started
+NOTE: recipe gimp-2.8.2-r0: task do_rm_work_all: Succeeded
+Exception in thread Thread-1:
+=2E. traceback from above
 
---------------040302000506010103000104
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Anyone seen this too? Any hints?
 
-<html>
-  <head>
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    On 01/10/13 15:18, Chris Larson wrote:
-    <blockquote
-cite="mid:CABcZANnD8C4gZXEcRWfR8f_ftZjndOT9UJ5796SEigRqw6tohA@mail.gmail.com"
-      type="cite">
-      <div dir="ltr">
-        <div class="gmail_extra"><br>
-          <div class="gmail_quote">On Thu, Jan 10, 2013 at 7:11 AM,
-            Chris Larson <span dir="ltr">&lt;<a moz-do-not-send="true"
-                href="mailto:clarson@kergoth.com" target="_blank">clarson@kergoth.com</a>&gt;</span>
-            wrote:<br>
-            <blockquote class="gmail_quote" style="margin:0 0 0
-              .8ex;border-left:1px #ccc solid;padding-left:1ex">
-              <div class="adM">
-                <div class="h5"><br>
-                  <div class="gmail_quote">On Thu, Jan 10, 2013 at 7:10
-                    AM, Chris Larson <span dir="ltr">&lt;<a
-                        moz-do-not-send="true"
-                        href="mailto:clarson@kergoth.com"
-                        target="_blank">clarson@kergoth.com</a>&gt;</span>
-                    wrote:<br>
-                    <blockquote class="gmail_quote" style="margin:0 0 0
-                      .8ex;border-left:1px #ccc solid;padding-left:1ex">
-                      <div>
-                        <div class="gmail_quote">On Thu, Jan 10, 2013 at
-                          1:46 AM, Martin Ertsaas <span dir="ltr">&lt;<a
-                              moz-do-not-send="true"
-                              href="mailto:martiert@gmail.com"
-                              target="_blank">martiert@gmail.com</a>&gt;</span>
-                          wrote:<br>
-                          <blockquote class="gmail_quote"
-                            style="margin:0 0 0 .8ex;border-left:1px
-                            #ccc solid;padding-left:1ex">
-                            <div>On mac, os.unlink does not remove
-                              directories, and we therefor have<br>
-                              to explicitly use shutil.rmtree if the
-                              path is a directory.<br>
-                              ---<br>
-                               lib/bb/utils.py |    5 ++++-<br>
-                               1 file changed, 4 insertions(+), 1
-                              deletion(-)<br>
-                              <br>
-                              diff --git a/lib/bb/utils.py
-                              b/lib/bb/utils.py<br>
-                              index cef0fdd..8b6d3f5 100644<br>
-                              --- a/lib/bb/utils.py<br>
-                              +++ b/lib/bb/utils.py<br>
-                              @@ -561,7 +561,10 @@ def remove(path,
-                              recurse=False):<br>
-                                   import os, errno, shutil, glob<br>
-                                   for name in glob.glob(path):<br>
-                                       try:<br>
-                              -            os.unlink(name)<br>
-                              +            if os.path.isdir(name):<br>
-                              +                shutil.rmtree(name)<br>
-                              +            else:<br>
-                              +                os.unlink(name)<br>
-                                       except OSError as exc:<br>
-                                           if recurse and exc.errno ==
-                              errno.EISDIR:<br>
-                                               shutil.rmtree(name)</div>
-                          </blockquote>
-                        </div>
-                        <br>
-                        <br>
-                      </div>
-                      Look 2 lines down, where it checks to see if the
-                      os.unlink failed due to it being a directory and
-                      runs shutil.rmtree if that's the case.</blockquote>
-                  </div>
-                  <br>
-                </div>
-              </div>
-              I'm guessing you're trying to use it without passing
-              recurse=True.</blockquote>
-          </div>
-          <br>
-          Having through about it further, I think it might be best to
-          be alter the code to also handle the case where recurse==False
-          and the path is a directory by calling os.rmdir(). Perhaps
-          this would reduce confusion.<br>
-          -- <br>
-          Christopher Larson</div>
-      </div>
-    </blockquote>
-    <br>
-    You are almost right. On normal folders, this will work with
-    recurse=True, but on /tmp folders you get: OSError: [Errno 1]
-    Operation not permitted: '/tmp/tmpl8qBDW' on the unlink call. This
-    makes the if test inside the except catching false, and nothing
-    happens.<br>
-    <br>
-    I'm not sure why this happens, as I am allowed to remove it using
-    shutil.rmtree. Making a folder in linux with the exact same
-    permissions does work however, so it seems to be some difference in
-    how the os handles the call.<br>
-    <br>
-    Other than that, I feel that it is cleaner to have an explicit check
-    like this, and not use the exception framework for control flow.
-    Which means in the except just use raise, or just ignore it and let
-    someone else handle it like we actually do.<br>
-    To get back the same functionality though, we should change the
-    isdir call to: 'if os.path.isdir(name) and recurse:'<br>
-    <br>
-    Are you totally opposed to changing this? What I don't want to do is
-    to add exc.errno == errno.EPERM to the line, which will just bloath
-    it.<br>
-    <br>
-    - Martin<br>
-  </body>
-</html>
+--RYJh/3oyKhIjGcML
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
---------------040302000506010103000104--
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEYEARECAAYFAlDwL7gACgkQN1Ujt2V2gBwADgCfbfybY5nlPZIuEH7PKWHswc3n
+zEIAniItPgobbwXmeZ6Tm+qigumxs4+s
+=SXk+
+-----END PGP SIGNATURE-----
+
+--RYJh/3oyKhIjGcML--
