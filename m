@@ -1,26 +1,21 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Peter.Seebach@windriver.com>) id 1TtsV8-0005xb-6r
+	(envelope-from <cristiana.voicu@intel.com>) id 1Tugud-0001ms-La
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 12 Jan 2013 05:15:24 +0100
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id r0C1f5x9004840
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 11 Jan 2013 17:41:05 -0800 (PST)
-Received: from localhost.localdomain (172.25.34.64) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.2.318.4;
-	Fri, 11 Jan 2013 17:41:05 -0800
-From: Peter Seebach <peter.seebach@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 11 Jan 2013 19:40:59 -0600
-Message-ID: <f8b831dc3a8ac4bf67a52936b93c6043cdc4e30e.1357954043.git.peter.seebach@windriver.com>
-X-Mailer: git-send-email 1.7.0.4
-In-Reply-To: <cover.1357954043.git.peter.seebach@windriver.com>
-References: <cover.1357954043.git.peter.seebach@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 2/2] data_smart.py and friends: Track variable history
+	Mon, 14 Jan 2013 11:05:06 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 14 Jan 2013 01:48:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.84,466,1355126400"; d="scan'208";a="243498044"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by azsmga001.ch.intel.com with ESMTP; 14 Jan 2013 01:48:38 -0800
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 14 Jan 2013 11:52:49 +0200
+Message-Id: <1358157169-15577-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob: Hob should display warnings generated during parsing
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,670 +27,410 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 12 Jan 2013 04:15:25 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 14 Jan 2013 10:05:08 -0000
 
-This patch adds tracking of the history of variable assignments.
-The changes are predominantly localized to data_smart.py and
-parse/ast.py. BBHandler.py is changed to use d.setVar(...)
-instead of data.setVar(..., d), and cooker.py and data.py are
-altered to display the recorded data, and turn tracking on for
-the bitbake -e case. The data.py update_data() function warns
-DataSmart.finalize() to report the caller one further back up
-the tree.
+-now Hob catches the warnings generated during parsing, and after the parsing
+is completed, if there are any warnings, it shows a bar that contains a message
+with how many warnings has encountered, and a button "View warnings"
+-when "View warnings" button is clicked, Hob shows a dialog with the warnings;
+if there more than 1 warning, you can use "Previous" and "Next" button to see them
 
-In general, d.setVar() does what it used to do. Optionally,
-arguments describing an operation may be appended; if none
-are present, the operation is implicitly ignored. If it's
-not ignored, it will attempt to infer missing information
-(name of variable, value assigned, file and line) by examining
-the traceback. This slightly elaborate process eliminates a
-category of problems in which the 'var' member of the keyword
-arguments dict is set, and a positional argument corresponding
-to 'var' is also set. It also makes calling much simpler for
-the common cases.
-
-If you make manual calls to some of these functions, you can
-get surprises; for instance, infer_caller_details will set the
-'value' member of the loginfo object to None if it can't find
-a value; if you then pass that loginfo object to setVar, after
-a value, the loginfo array clashes with the positional
-parameter named value.
-
-The resulting output gives you a pretty good picture of what
-values got set, and how they got set.
-
-Signed-off-by: Peter Seebach <peter.seebach@windriver.com>
+[YOCTO #3215]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- lib/bb/cooker.py                   |   10 ++-
- lib/bb/data.py                     |   38 ++++++-
- lib/bb/data_smart.py               |  216 +++++++++++++++++++++++++++++++-----
- lib/bb/parse/ast.py                |   25 ++++-
- lib/bb/parse/parse_py/BBHandler.py |    6 +-
- 5 files changed, 253 insertions(+), 42 deletions(-)
+ bitbake/lib/bb/ui/crumbs/builder.py                |   19 ++-
+ bitbake/lib/bb/ui/crumbs/hig.py                    |  133 +++++++++++++++++++-
+ bitbake/lib/bb/ui/crumbs/hobcolor.py               |    1 +
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py        |   13 ++
+ bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |   55 +++++++-
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py   |    1 +
+ 6 files changed, 214 insertions(+), 8 deletions(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 86e3ed6..35e79a7 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -101,8 +101,10 @@ class BBCooker:
-         # to use environment variables which have been cleaned from the
-         # BitBake processes env
-         self.savedenv = bb.data.init()
-+        if self.configuration.show_environment:
-+            self.savedenv.enableTracking()
-         for k in savedenv:
--            self.savedenv.setVar(k, savedenv[k])
-+            self.savedenv.setVar(k, savedenv[k], op = 'inherit', file = '[saved environment]')
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index 023ac93..3bb5e1b 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -40,7 +40,8 @@ from bb.ui.crumbs.sanitycheckpage import SanityCheckPage
+ from bb.ui.crumbs.hobwidget import hwc, HobButton, HobAltButton
+ from bb.ui.crumbs.hig import CrumbsMessageDialog, ImageSelectionDialog, \
+                              AdvancedSettingDialog, SimpleSettingsDialog, \
+-                             LayerSelectionDialog, DeployImageDialog
++                             LayerSelectionDialog, DeployImageDialog, \
++                             ViewWarningsDialog
+ from bb.ui.crumbs.persistenttooltip import PersistentTooltip
+ import bb.ui.crumbs.utils
  
-         self.caches_array = []
-         # Currently, only Image Creator hob ui needs extra cache.
-@@ -177,6 +179,8 @@ class BBCooker:
+@@ -443,6 +444,9 @@ class Builder(gtk.Window):
+         # Indicate whether the sanity check ran
+         self.sanity_checked = False
  
-     def initConfigurationData(self):
-         self.configuration.data = bb.data.init()
-+        if self.configuration.show_environment:
-+            self.configuration.data.enableTracking()
++        # save parsing warnings
++        self.parsing_warnings = []
++
+         # create visual elements
+         self.create_visual_elements()
  
-         if not self.server_registration_cb:
-             self.configuration.data.setVar("BB_WORKERCONTEXT", "1")
-@@ -186,6 +190,8 @@ class BBCooker:
+@@ -469,6 +473,7 @@ class Builder(gtk.Window):
+         self.handler.connect("data-generated",           self.handler_data_generated_cb)
+         self.handler.connect("command-succeeded",        self.handler_command_succeeded_cb)
+         self.handler.connect("command-failed",           self.handler_command_failed_cb)
++        self.handler.connect("parsing-warning",          self.handler_parsing_warning_cb)
+         self.handler.connect("sanity-failed",            self.handler_sanity_failed_cb)
+         self.handler.connect("recipe-populated",         self.handler_recipe_populated_cb)
+         self.handler.connect("package-populated",        self.handler_package_populated_cb)
+@@ -877,6 +882,15 @@ class Builder(gtk.Window):
+         response = dialog.run()
+         dialog.destroy()
  
-     def loadConfigurationData(self):
-         self.configuration.data = bb.data.init()
-+        if self.configuration.show_environment:
-+            self.configuration.data.enableTracking()
++    def show_warning_dialog(self):
++        dialog = ViewWarningsDialog(title = "View warnings",
++                warnings = self.parsing_warnings,
++                parent = None,
++                flags = gtk.DIALOG_DESTROY_WITH_PARENT
++                       | gtk.DIALOG_NO_SEPARATOR)
++        response = dialog.run()
++        dialog.destroy()
++
+     def show_network_error_dialog(self):
+         lbl = "<b>Hob cannot connect to the network</b>\n"
+         msg = "Please check your network connection. If you are using a proxy server, please make sure it is configured correctly."
+@@ -900,6 +914,9 @@ class Builder(gtk.Window):
+             self.show_error_dialog(msg)
+         self.reset()
  
-         if not self.server_registration_cb:
-             self.configuration.data.setVar("BB_WORKERCONTEXT", "1")
-@@ -846,6 +852,8 @@ class BBCooker:
- 
-     def parseConfigurationFiles(self, prefiles, postfiles):
-         data = self.configuration.data
-+        if self.configuration.show_environment:
-+            data.enableTracking()
-         bb.parse.init_parser(data)
- 
-         # Parse files for loading *before* bitbake.conf and any includes
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index 478a482..ec0db9e 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -166,9 +166,9 @@ def inheritFromOS(d, savedenv, permitted):
-     for s in savedenv.keys():
-         if s in permitted:
-             try:
--                setVar(s, getVar(s, savedenv, True), d)
-+                d.setVar(s, getVar(s, savedenv, True), op = 'inherit')
-                 if s in exportlist:
--                    setVarFlag(s, "export", True, d)
-+                    d.setVarFlag(s, "export", True, op = 'automatic')
-             except TypeError:
-                 pass
- 
-@@ -194,8 +194,38 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
-         return 0
- 
-     if all:
-+        history = d.history.variable(var)
-         commentVal = re.sub('\n', '\n#', str(oval))
--        o.write('# %s=%s\n' % (var, commentVal))
-+        if history:
-+            if len(history) == 1:
-+                o.write("#\n# $%s\n" % var)
-+            else:
-+                o.write("#\n# $%s [%d operations]\n" % (var, len(history)))
-+            for event in history:
-+                # o.write("# %s\n" % str(event))
-+                if 'details' in event and event['details']:
-+                    value = event['details']
-+                else:
-+                    value = event['value']
-+                if 'func' in event:
-+                    # If we have a function listed, this is internal
-+                    # code, not an operation in a config file, and the
-+                    # full path is distracting.
-+                    event['file'] = re.sub('.*/', '', event['file'])
-+                    display_func = ' [%s]' % event['func']
-+                else:
-+                    display_func = ''
-+                if 'flag' in event:
-+                    flag = '[%s] ' % (event['flag'])
-+                else:
-+                    flag = ''
-+                o.write("#   %s %s:%s%s\n#     %s\"%s\"\n" % (event['op'], event['file'], event['line'], display_func, flag, re.sub('\n', '\n#     ', value)))
-+            if len(history) > 1:
-+                o.write("# computed:\n")
-+                o.write('#   "%s"\n' % (commentVal))
++    def handler_parsing_warning_cb(self, handler, warn_msg):
++        self.parsing_warnings.append(warn_msg)
++
+     def handler_sanity_failed_cb(self, handler, msg, network_error):
+         self.reset()
+         if network_error:
+diff --git a/bitbake/lib/bb/ui/crumbs/hig.py b/bitbake/lib/bb/ui/crumbs/hig.py
+index e56cf2a..4b57f09 100644
+--- a/bitbake/lib/bb/ui/crumbs/hig.py
++++ b/bitbake/lib/bb/ui/crumbs/hig.py
+@@ -271,7 +271,7 @@ class CrumbsMessageDialog(CrumbsDialog):
+         self.icon.set_property("yalign", 0.00)
+         self.icon.show()
+         first_column.pack_start(self.icon, expand=False, fill=True, padding=0)
+-        
++
+         if 0 <= len(msg) < 200:
+             lbl = label + "%s" % glib.markup_escape_text(msg)
+             self.label_short = gtk.Label()
+@@ -1976,3 +1976,134 @@ class OpeningLogDialog (CrumbsDialog):
+         button = self.add_button("Cancel", gtk.RESPONSE_CANCEL)
+         HobAltButton.style_button(button)
+         self.show_all()
++
++#
++# ViewWarningsDialog
++#
++class ViewWarningsDialog (CrumbsDialog):
++
++    def __init__(self, title, warnings, parent, flags, buttons=None):
++        super(ViewWarningsDialog, self).__init__(title, parent, flags, buttons)
++
++        self.warnings = warnings
++        self.warning_on = 0
++        self.warn_nb = len(warnings)
++
++        # create visual elements on the dialog
++        self.create_visual_elements()
++
++    def cancel_button_cb(self, button):
++        self.destroy()
++
++    def previous_button_cb(self, button):
++        self.warning_on = self.warning_on - 1
++        self.refresh_components()
++
++    def next_button_cb(self, button):
++        self.warning_on = self.warning_on + 1
++        self.refresh_components()
++
++    def refresh_components(self):
++        lbl = self.warnings[self.warning_on]
++        #when the warning text has more than 400 chars, it uses a scroll bar
++        if 0<= len(lbl) < 400:
++            self.warning_label.set_size_request(320, 230)
++            self.warning_label.set_use_markup(True)
++            self.warning_label.set_line_wrap(True)
++            self.warning_label.set_markup(lbl)
++            self.warning_label.set_property("yalign", 0.00)
 +        else:
-+            o.write("#\n# $%s\n#   [no history recorded]\n#\n" % var)
-+            o.write('#   "%s"\n' % (commentVal))
- 
-     if (var.find("-") != -1 or var.find(".") != -1 or var.find('{') != -1 or var.find('}') != -1 or var.find('+') != -1) and not all:
-         return 0
-@@ -274,7 +304,7 @@ def emit_func(func, o=sys.__stdout__, d = init()):
- 
- def update_data(d):
-     """Performs final steps upon the datastore, including application of overrides"""
--    d.finalize()
-+    d.finalize(parent = True)
- 
- def build_dependencies(key, keys, shelldeps, vardepvals, d):
-     deps = set()
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 8adda30..a2c6e41 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -8,6 +8,8 @@ BitBake build tools.
- 
- """
- 
-+import pprint
++            self.textWindow.set_shadow_type(gtk.SHADOW_IN)
++            self.textWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
++            self.msgView = gtk.TextView()
++            self.msgView.set_editable(False)
++            self.msgView.set_wrap_mode(gtk.WRAP_WORD)
++            self.msgView.set_cursor_visible(False)
++            self.msgView.set_size_request(320, 230)
++            self.buf = gtk.TextBuffer()
++            self.buf.set_text(lbl)
++            self.msgView.set_buffer(self.buf)
++            self.textWindow.add(self.msgView)
++            self.msgView.show()
 +
- # Copyright (C) 2003, 2004  Chris Larson
- # Copyright (C) 2004, 2005  Seb Frankengul
- # Copyright (C) 2005, 2006  Holger Hans Peter Freyther
-@@ -28,7 +30,7 @@ BitBake build tools.
- # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- # Based on functions from the base bb module, Copyright 2003 Holger Schurig
- 
--import copy, re
-+import copy, re, sys, traceback
- from collections import MutableMapping
- import logging
- import hashlib
-@@ -43,6 +45,53 @@ __setvar_regexp__ = re.compile('(?P<base>.*?)(?P<keyword>_append|_prepend)(_(?P<
- __expand_var_regexp__ = re.compile(r"\${[^{}]+}")
- __expand_python_regexp__ = re.compile(r"\${@.+?}")
- 
-+def infer_caller_details(loginfo, parent = False):
-+    """Save the caller the trouble of specifying everything."""
-+    locals = None
-+    # Save effort.
-+    if 'ignore' in loginfo and loginfo['ignore']:
-+        return
-+    # If nothing was provided, mark this as possibly unneeded.
-+    if not loginfo:
-+        loginfo['ignore'] = True
-+        return
-+    if parent:
-+        depth = 4
-+    else:
-+        depth = 3
-+    # Infer caller's likely values for variable (var), loginfo (loginfo),
-+    # and value (value), to reduce clutter in the rest of the code.
-+    if 'variable' not in loginfo or 'value' not in loginfo:
-+        try:
-+            raise Exception
-+        except Exception:
-+            tb = sys.exc_info()[2]
-+            if parent:
-+                above = tb.tb_frame.f_back.f_back
-+            else:
-+                above = tb.tb_frame.f_back
-+            locals = above.f_locals.items()
-+            tb = None
-+            above = None
-+        value = None
-+        variable = None
-+        for k, v in locals:
-+            if k == 'value':
-+                value = v
-+            if k == 'var':
-+                variable = v
-+        if 'value' not in loginfo:
-+            loginfo['value'] = value
-+        if 'variable' not in loginfo:
-+            loginfo['variable'] = variable
-+        locals = None
-+    # Infer file/line/function from traceback
-+    if 'file' not in loginfo:
-+        file, line, func, text = traceback.extract_stack(limit = depth)[0]
-+        loginfo['file'] = file
-+        loginfo['line'] = line
-+        if func not in loginfo:
-+            loginfo['func'] = func
- 
- class VariableParse:
-     def __init__(self, varname, d, val = None):
-@@ -115,15 +164,17 @@ class ExpansionError(Exception):
-         return self.msg
- 
- class IncludeHistory(object):
--    def __init__(self, parent = None, filename = None):
-+    def __init__(self, parent = None, filename = None, datasmart = None):
-         self.parent = parent
--        if parent:
-+        if parent is not None:
-             self.top = parent.top
-         else:
-             self.top = self
-+        self.datasmart = datasmart
-         self.filename = filename or '[TOP LEVEL]'
-         self.children = []
-         self.current = self
-+        self.variables = {}
- 
-     def include(self, filename):
-         newfile = IncludeHistory(self.current, filename)
-@@ -131,6 +182,34 @@ class IncludeHistory(object):
-         self.current = newfile
-         return self
- 
-+    def record(self, *kwonly, **loginfo):
-+        if len(kwonly) > 0:
-+            raise TypeError
-+        if not self.top.datasmart._tracking:
-+            return
-+        infer_caller_details(loginfo, parent = True)
-+        if 'ignore' in loginfo and loginfo['ignore']:
-+            return
-+        if 'op' not in loginfo or not loginfo['op']:
-+            loginfo['op'] = 'set'
-+        if 'details' in loginfo and loginfo['details']:
-+            loginfo['details'] = str(loginfo['details'])
-+        if 'value' in loginfo and loginfo['value']:
-+            loginfo['value'] = str(loginfo['value'])
-+        if 'variable' not in loginfo or 'file' not in loginfo:
-+            raise ValueError("record() missing variable or file.")
-+        var = loginfo['variable']
-+
-+        if var not in self.variables:
-+            self.variables[var] = []
-+        self.variables[var].append(loginfo.copy())
-+
-+    def variable(self, var):
-+        if var in self.variables:
-+            return self.variables[var]
++        if self.warning_on==0:
++            self.previous_button.set_sensitive(False)
 +        else:
-+            return []
++            self.previous_button.set_sensitive(True)
 +
-     def __enter__(self):
-         pass
- 
-@@ -148,11 +227,11 @@ class IncludeHistory(object):
-             o.write("# %s%s" % (spaces, self.filename))
-             if len(self.children) > 0:
-                 o.write(" includes:")
--            o.write("\n")
-             level = level + 1
-         else:
--            o.write("#\n# INCLUDE HISTORY:\n#\n")
-+            o.write("#\n# INCLUDE HISTORY:\n#")
-         for child in self.children:
-+            o.write("\n")
-             child.emit(o, level)
- 
- 
-@@ -163,10 +242,17 @@ class DataSmart(MutableMapping):
-         # cookie monster tribute
-         self._special_values = special
-         self._seen_overrides = seen
--        self.history = IncludeHistory()
-+        self.history = IncludeHistory(datasmart = self)
-+        self._tracking = False
- 
-         self.expand_cache = {}
- 
-+    def enableTracking(self):
-+        self._tracking = True
++        if self.warning_on==self.warn_nb-1:
++            self.next_button.set_sensitive(False)
++        else:
++            self.next_button.set_sensitive(True)
 +
-+    def disableTracking(self):
-+        self._tracking = False
++        if self.warn_nb>1:
++            self.heading = "Warning " + str(self.warning_on + 1) + " of " + str(self.warn_nb)
++            self.heading_label.set_markup('<span weight="bold">%s</span>' % self.heading)
++        else:
++            self.heading = "Warning"
++            self.heading_label.set_markup('<span weight="bold">%s</span>' % self.heading)
 +
-     def expandWithRefs(self, s, varname):
- 
-         if not isinstance(s, basestring): # sanity check
-@@ -202,10 +288,16 @@ class DataSmart(MutableMapping):
-         return self.expandWithRefs(s, varname).value
- 
- 
--    def finalize(self):
-+    def finalize(self, parent = False):
-         """Performs final steps upon the datastore, including application of overrides"""
- 
-         overrides = (self.getVar("OVERRIDES", True) or "").split(":") or []
-+        finalize_caller = {
-+            'variable': 'ignored',
-+            'value': 'ignored',
-+            'op': 'finalize',
-+        }
-+        infer_caller_details(finalize_caller, parent = parent)
- 
-         #
-         # Well let us see what breaks here. We used to iterate
-@@ -222,6 +314,9 @@ class DataSmart(MutableMapping):
-         # Then  we will handle _append and _prepend
-         #
- 
-+        # We only want to report finalization once per variable overridden.
-+        finalizes_reported = {}
++        self.show_all()
 +
-         for o in overrides:
-             # calculate '_'+override
-             l = len(o) + 1
-@@ -234,7 +329,19 @@ class DataSmart(MutableMapping):
-             for var in vars:
-                 name = var[:-l]
-                 try:
--                    self.setVar(name, self.getVar(var, False))
-+                    # Report only once, even if multiple changes.
-+                    if name not in finalizes_reported:
-+                        finalizes_reported[name] = True
-+                        finalize_caller['variable'] = name
-+                        finalize_caller['value'] = 'was: ' + str(self.getVar(name, False))
-+                        self.history.record(**finalize_caller)
-+                    # Copy history of the override over.
-+                    for event in self.history.variable(var):
-+                        loginfo = event.copy()
-+                        loginfo['variable'] = name
-+                        loginfo['op'] = 'override[%s]:%s' % (o, loginfo['op'])
-+                        self.history.record(**loginfo)
-+                    self.setVar(name, self.getVar(var, False), op = 'finalize', file = 'override[%s]' % o, line = '')
-                     self.delVar(var)
-                 except Exception:
-                     logger.info("Untracked delVar")
-@@ -295,7 +402,9 @@ class DataSmart(MutableMapping):
-         else:
-             self.initVar(var)
- 
--    def setVar(self, var, value):
++        if 0<= len(lbl) < 400:
++            self.textWindow.hide()
++        else:
++            self.warning_label.hide()
 +
-+    def setVar(self, var, value, **loginfo):
-+        infer_caller_details(loginfo)
-         self.expand_cache = {}
-         match  = __setvar_regexp__.match(var)
-         if match and match.group("keyword") in __setvar_keyword__:
-@@ -305,14 +414,21 @@ class DataSmart(MutableMapping):
-             l = self.getVarFlag(base, keyword) or []
-             l.append([value, override])
-             self.setVarFlag(base, keyword, l)
--
-+            # And cause that to be recorded:
-+            loginfo['details'] = value
-+            loginfo['variable'] = base
-+            if override:
-+                loginfo['op'] = '%s[%s]' % (keyword, override)
-+            else:
-+                loginfo['op'] = keyword
-+            self.history.record(**loginfo)
-             # todo make sure keyword is not __doc__ or __module__
-             # pay the cookie monster
-             try:
--                self._special_values[keyword].add( base )
-+                self._special_values[keyword].add(base)
-             except KeyError:
-                 self._special_values[keyword] = set()
--                self._special_values[keyword].add( base )
-+                self._special_values[keyword].add(base)
++    def create_visual_elements(self):
++        self.set_size_request(350, 350)
++        self.heading_label = gtk.Label()
++        self.heading_label.set_alignment(0.1, 0)
++        self.warning_label = gtk.Label()
++        self.textWindow = gtk.ScrolledWindow()
++
++        table = gtk.Table(1, 10, False)
++
++        cancel_button = gtk.Button()
++        cancel_button.set_label("Close")
++        cancel_button.connect("clicked", self.cancel_button_cb)
++        cancel_button.set_size_request(110, 30)
++
++        self.previous_button = gtk.Button()
++        image1 = gtk.image_new_from_stock(gtk.STOCK_GO_BACK, gtk.ICON_SIZE_BUTTON)
++        image1.show()
++        box = gtk.HBox(False, 6)
++        box.show()
++        self.previous_button.add(box)
++        lbl = gtk.Label("Previous")
++        lbl.show()
++        box.pack_start(image1, expand=False, fill=False, padding=3)
++        box.pack_start(lbl, expand=True, fill=True, padding=3)
++        self.previous_button.connect("clicked", self.previous_button_cb)
++        self.previous_button.set_size_request(110, 30)
++
++        self.next_button = gtk.Button()
++        image2 = gtk.image_new_from_stock(gtk.STOCK_GO_FORWARD, gtk.ICON_SIZE_BUTTON)
++        image2.show()
++        box = gtk.HBox(False, 6)
++        box.show()
++        self.next_button.add(box)
++        lbl = gtk.Label("Next")
++        lbl.show()
++        box.pack_start(lbl, expand=True, fill=True, padding=3)
++        box.pack_start(image2, expand=False, fill=False, padding=3)
++        self.next_button.connect("clicked", self.next_button_cb)
++        self.next_button.set_size_request(110, 30)
++
++        #when there more than one warning, we need "previous" and "next" button
++        if self.warn_nb>1:
++            self.vbox.pack_start(self.heading_label, expand=False, fill=False)
++            self.vbox.pack_start(self.warning_label, expand=False, fill=False)
++            self.vbox.pack_start(self.textWindow, expand=False, fill=False)
++            table.attach(cancel_button, 6, 7, 0, 1, xoptions=gtk.SHRINK)
++            table.attach(self.previous_button, 7, 8, 0, 1, xoptions=gtk.SHRINK)
++            table.attach(self.next_button, 8, 9, 0, 1, xoptions=gtk.SHRINK)
++            self.vbox.pack_end(table, expand=False, fill=False)
++        else:
++            self.vbox.pack_start(self.heading_label, expand=False, fill=False)
++            self.vbox.pack_start(self.warning_label, expand=False, fill=False)
++            self.vbox.pack_start(self.textWindow, expand=False, fill=False)
++            cancel_button = self.add_button("Cancel", gtk.RESPONSE_CANCEL)
++            HobAltButton.style_button(cancel_button)
++
++        self.refresh_components()
+diff --git a/bitbake/lib/bb/ui/crumbs/hobcolor.py b/bitbake/lib/bb/ui/crumbs/hobcolor.py
+index e10f546..3316542 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobcolor.py
++++ b/bitbake/lib/bb/ui/crumbs/hobcolor.py
+@@ -30,6 +30,7 @@ class HobColors:
+     BLACK        = "#000000"
+     PALE_BLUE    = "#53b8ff"
+     DEEP_RED     = "#aa3e3e"
++    KHAKI        = "#fff68f"
  
-             return
+     OK = WHITE
+     RUNNING = PALE_GREEN
+diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+index e690d4c..41022ef 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -41,6 +41,9 @@ class HobHandler(gobject.GObject):
+          "command-failed"          : (gobject.SIGNAL_RUN_LAST,
+                                       gobject.TYPE_NONE,
+                                      (gobject.TYPE_STRING,)),
++         "parsing-warning"         : (gobject.SIGNAL_RUN_LAST,
++                                      gobject.TYPE_NONE,
++                                     (gobject.TYPE_STRING,)),
+          "sanity-failed"           : (gobject.SIGNAL_RUN_LAST,
+                                       gobject.TYPE_NONE,
+                                      (gobject.TYPE_STRING, gobject.TYPE_INT)),
+@@ -95,6 +98,7 @@ class HobHandler(gobject.GObject):
+         self.server = server
+         self.error_msg = ""
+         self.initcmd = None
++        self.parsing = False
  
-@@ -329,6 +445,7 @@ class DataSmart(MutableMapping):
+     def set_busy(self):
+         if not self.generating:
+@@ -207,6 +211,11 @@ class HobHandler(gobject.GObject):
+                     formatter = bb.msg.BBLogFormatter()
+                     msg = formatter.format(event)
+                     self.error_msg += msg + '\n'
++                elif event.levelno >= logging.WARNING and self.parsing == True:
++                    formatter = bb.msg.BBLogFormatter()
++                    msg = formatter.format(event)
++                    warn_msg = msg + '\n'
++                    self.emit("parsing-warning", warn_msg)
  
-         # setting var
-         self.dict[var]["_content"] = value
-+        self.history.record(**loginfo)
+         elif isinstance(event, bb.event.TargetsTreeGenerated):
+             self.current_phase = "data generation"
+@@ -249,6 +258,8 @@ class HobHandler(gobject.GObject):
+             message["total"] = None
+             message["title"] = "Parsing recipes"
+             self.emit("parsing-started", message)
++            if isinstance(event, bb.event.ParseStarted):
++                self.parsing = True
+         elif isinstance(event, (bb.event.ParseProgress,
+                 bb.event.CacheLoadProgress,
+                 bb.event.TreeDataPreparationProgress)):
+@@ -267,6 +278,8 @@ class HobHandler(gobject.GObject):
+             message["total"] = event.total
+             message["title"] = "Parsing recipes"
+             self.emit("parsing-completed", message)
++            if isinstance(event, bb.event.ParseCompleted):
++                self.parsing = False
+         elif isinstance(event, bb.event.NetworkTestFailed):
+             self.emit("network-failed")
+             self.run_next_command()
+diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+index b94f35c..4fabd02 100644
+--- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
++++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+@@ -46,6 +46,7 @@ class ImageConfigurationPage (HobPage):
+         # cleared.
+         self.machine_combo_changed_by_manual = True
+         self.stopping = False
++        self.warning_shift = 0
+         self.create_visual_elements()
  
-     def getVar(self, var, expand=False, noweakdefault=False):
-         value = self.getVarFlag(var, "_content", False, noweakdefault)
-@@ -338,13 +455,23 @@ class DataSmart(MutableMapping):
-             return self.expand(value, var)
-         return value
+     def create_visual_elements(self):
+@@ -141,6 +142,38 @@ class ImageConfigurationPage (HobPage):
+         if self.builder.recipe_model.get_selected_image() == self.builder.recipe_model.__custom_image__:
+             self.just_bake_button.hide()
  
--    def renameVar(self, key, newkey):
-+    def renameVar(self, key, newkey, **loginfo):
-         """
-         Rename the variable key to newkey
-         """
-+        # Figure out who called us so the line information is meaningful.
-+        if 'op' not in loginfo:
-+            loginfo['op'] = 'rename'
-+        infer_caller_details(loginfo, True)
-         val = self.getVar(key, 0)
-         if val is not None:
--            self.setVar(newkey, val)
-+            loginfo['variable'] = newkey
-+            loginfo['op'] = 'rename from %s' % key
-+            loginfo['details'] = val
-+            # the parameter before kwargs is named 'value', this would clash:
-+            del loginfo['value']
-+            # bb.note("creating log entry: %s" % pprint.pformat(loginfo))
-+            self.setVar(newkey, val, **loginfo)
++    def add_warnings_bar(self):
++        #create the warnings bar shown when recipes parsing generates warnings
++        color = HobColors.KHAKI
++        warnings_bar = gtk.EventBox()
++        warnings_bar.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
++        warnings_bar.set_flags(gtk.CAN_DEFAULT)
++        warnings_bar.grab_default()
++
++        build_stop_tab = gtk.Table(10, 20, True)
++        warnings_bar.add(build_stop_tab)
++
++        icon = gtk.Image()
++        icon_pix_buffer = gtk.gdk.pixbuf_new_from_file(hic.ICON_INDI_ALERT_FILE)
++        icon.set_from_pixbuf(icon_pix_buffer)
++        build_stop_tab.attach(icon, 0, 2, 0, 10)
++
++        label = gtk.Label()
++        label.set_alignment(0.0, 0.5)
++        warnings_nb = len(self.builder.parsing_warnings)
++        if warnings_nb == 1:
++            label.set_markup("<span size='x-large'><b>1 recipe parsing warning</b></span>")
++        else:
++            label.set_markup("<span size='x-large'><b>%s recipe parsing warnings</b></span>" % warnings_nb)
++        build_stop_tab.attach(label, 2, 12, 0, 10)
++
++        view_warnings_button = HobButton("View warnings")
++        view_warnings_button.connect('clicked', self.view_warnings_button_clicked_cb)
++        build_stop_tab.attach(view_warnings_button, 15, 19, 1, 9)
++
++        return warnings_bar
++
++
+     def create_config_machine(self):
+         self.machine_title = gtk.Label()
+         self.machine_title.set_alignment(0.0, 0.5)
+@@ -187,6 +220,12 @@ class ImageConfigurationPage (HobPage):
+             #self.gtable.attach(self.progress_box, 0, 40, 15, 18)
+             self.gtable.attach(self.progress_bar, 0, 37, 15, 18)
+             self.gtable.attach(self.stop_button, 37, 40, 15, 18, 0, 0)
++        if self.builder.parsing_warnings:
++            self.warnings_bar = self.add_warnings_bar()
++            self.gtable.attach(self.warnings_bar, 0, 40, 14, 18)
++            self.warning_shift = 4
++        else:
++            self.warning_shift = 0
+         self.gtable.attach(self.machine_separator, 0, 40, 13, 14)
  
-         for i in ('_append', '_prepend'):
-             src = self.getVarFlag(key, i)
-@@ -359,17 +486,26 @@ class DataSmart(MutableMapping):
-                 self._special_values[i].remove(key)
-                 self._special_values[i].add(newkey)
+     def create_config_baseimg(self):
+@@ -222,12 +261,12 @@ class ImageConfigurationPage (HobPage):
+         self.image_separator = gtk.HSeparator()
  
--        self.delVar(key)
-+        loginfo['variable'] = key
-+        loginfo['op'] = 'rename (to)'
-+        loginfo['details'] = newkey
-+        self.delVar(key, **loginfo)
+     def set_config_baseimg_layout(self):
+-        self.gtable.attach(self.image_title, 0, 40, 15, 17)
+-        self.gtable.attach(self.image_title_desc, 0, 40, 18, 22)
+-        self.gtable.attach(self.image_combo, 0, 12, 23, 26)
+-        self.gtable.attach(self.image_desc, 0, 12, 27, 33)
+-        self.gtable.attach(self.view_adv_configuration_button, 14, 36, 23, 28)
+-        self.gtable.attach(self.image_separator, 0, 40, 35, 36)
++        self.gtable.attach(self.image_title, 0, 40, 15+self.warning_shift, 17+self.warning_shift)
++        self.gtable.attach(self.image_title_desc, 0, 40, 18+self.warning_shift, 22+self.warning_shift)
++        self.gtable.attach(self.image_combo, 0, 12, 23+self.warning_shift, 26+self.warning_shift)
++        self.gtable.attach(self.image_desc, 0, 12, 27+self.warning_shift, 33+self.warning_shift)
++        self.gtable.attach(self.view_adv_configuration_button, 14, 36, 23+self.warning_shift, 28+self.warning_shift)
++        self.gtable.attach(self.image_separator, 0, 40, 35+self.warning_shift, 36+self.warning_shift)
  
--    def appendVar(self, key, value):
-+    def appendVar(self, key, value, **loginfo):
-+        loginfo['details'] = value
-         value = (self.getVar(key, False) or "") + value
--        self.setVar(key, value)
-+        self.setVar(key, value, **loginfo)
+     def create_config_build_button(self):
+         # Create the "Build packages" and "Build image" buttons at the bottom
+@@ -255,6 +294,9 @@ class ImageConfigurationPage (HobPage):
+         self.progress_bar.set_rcstyle("stop")
+         self.builder.cancel_parse_sync()
  
--    def prependVar(self, key, value):
-+    def prependVar(self, key, value, **loginfo):
-+        loginfo['details'] = value
-         value = value + (self.getVar(key, False) or "")
--        self.setVar(key, value)
-+        self.setVar(key, value, **loginfo)
++    def view_warnings_button_clicked_cb(self, button):
++        self.builder.show_warning_dialog()
++
+     def machine_combo_changed_cb(self, machine_combo):
+         self.stopping = False
+         combo_item = machine_combo.get_active_text()
+@@ -435,6 +477,7 @@ class ImageConfigurationPage (HobPage):
+             self.builder.reparse_post_adv_settings()        
  
--    def delVar(self, var):
-+    def delVar(self, var, **loginfo):
-+        loginfo['value'] = ""
-+        if not 'op' in loginfo:
-+            loginfo['op'] = 'del'
-+        self.history.record(**loginfo)
-         self.expand_cache = {}
-         self.dict[var] = {}
-         if '_' in var:
-@@ -377,7 +513,11 @@ class DataSmart(MutableMapping):
-             if override and override in self._seen_overrides and var in self._seen_overrides[override]:
-                 self._seen_overrides[override].remove(var)
+     def just_bake_button_clicked_cb(self, button):
++        self.builder.parsing_warnings = []
+         self.builder.just_bake()
  
--    def setVarFlag(self, var, flag, flagvalue):
-+    def setVarFlag(self, var, flag, flagvalue, **loginfo):
-+        infer_caller_details(loginfo)
-+        loginfo['value'] = flagvalue
-+        loginfo['flag'] = flag
-+        self.history.record(**loginfo)
-         if not var in self.dict:
-             self._makeShadowCopy(var)
-         self.dict[var][flag] = flagvalue
-@@ -394,31 +534,44 @@ class DataSmart(MutableMapping):
-             value = self.expand(value, None)
-         return value
+     def edit_image_button_clicked_cb(self, button):
+diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+index ac9cc7e..43f691d 100755
+--- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
++++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+@@ -197,6 +197,7 @@ class PackageSelectionPage (HobPage):
+         self.show_all()
  
--    def delVarFlag(self, var, flag):
-+    def delVarFlag(self, var, flag, **loginfo):
-+        infer_caller_details(loginfo)
-+        loginfo['value'] = ""
-         local_var = self._findVar(var)
-+        if 'op' not in loginfo:
-+            loginfo['op'] = 'delFlag'
-+        loginfo['flag'] = flag
-         if not local_var:
-             return
-         if not var in self.dict:
-             self._makeShadowCopy(var)
+     def build_image_clicked_cb(self, button):
++        self.builder.parsing_warnings = []
+         self.builder.build_image()
  
-         if var in self.dict and flag in self.dict[var]:
-+            self.history.record(**loginfo)
-             del self.dict[var][flag]
- 
--    def appendVarFlag(self, key, flag, value):
-+    def appendVarFlag(self, key, flag, value, **loginfo):
-+        infer_caller_details(loginfo)
-+        loginfo['details'] = value
-         value = (self.getVarFlag(key, flag, False) or "") + value
--        self.setVarFlag(key, flag, value)
-+        self.setVarFlag(key, flag, value, **loginfo)
- 
--    def prependVarFlag(self, key, flag, value):
-+    def prependVarFlag(self, key, flag, value, **loginfo):
-+        infer_caller_details(loginfo)
-+        loginfo['details'] = value
-         value = value + (self.getVarFlag(key, flag, False) or "")
--        self.setVarFlag(key, flag, value)
-+        self.setVarFlag(key, flag, value, **loginfo)
- 
--    def setVarFlags(self, var, flags):
-+    def setVarFlags(self, var, flags, **loginfo):
-+        infer_caller_details(loginfo)
-         if not var in self.dict:
-             self._makeShadowCopy(var)
- 
-         for i in flags:
-             if i == "_content":
-                 continue
-+            loginfo['flag'] = i
-+            self.history.record(**loginfo)
-             self.dict[var][i] = flags[i]
- 
-     def getVarFlags(self, var):
-@@ -436,12 +589,16 @@ class DataSmart(MutableMapping):
-         return flags
- 
- 
--    def delVarFlags(self, var):
-+    def delVarFlags(self, var, **loginfo):
-+        infer_caller_details(loginfo)
-+        if 'op' not in loginfo:
-+            loginfo['op'] = 'delete flags'
-         if not var in self.dict:
-             self._makeShadowCopy(var)
- 
-         if var in self.dict:
-             content = None
-+            self.history.record(**loginfo)
- 
-             # try to save the content
-             if "_content" in self.dict[var]:
-@@ -451,7 +608,6 @@ class DataSmart(MutableMapping):
-             else:
-                 del self.dict[var]
- 
--
-     def createCopy(self):
-         """
-         Create a copy of self by setting _data to self
-@@ -460,6 +616,8 @@ class DataSmart(MutableMapping):
-         data = DataSmart(seen=self._seen_overrides.copy(), special=self._special_values.copy())
-         data.dict["_data"] = self.dict
-         data.history = copy.deepcopy(self.history)
-+        data.history.datasmart = data
-+        data._tracking = self._tracking
- 
-         return data
- 
-diff --git a/lib/bb/parse/ast.py b/lib/bb/parse/ast.py
-index 79e9f7e..ba672b1 100644
---- a/lib/bb/parse/ast.py
-+++ b/lib/bb/parse/ast.py
-@@ -68,7 +68,7 @@ class ExportNode(AstNode):
-         self.var = var
- 
-     def eval(self, data):
--        data.setVarFlag(self.var, "export", 1)
-+        data.setVarFlag(self.var, "export", 1, op = 'exported')
- 
- class DataNode(AstNode):
-     """
-@@ -90,33 +90,48 @@ class DataNode(AstNode):
-     def eval(self, data):
-         groupd = self.groupd
-         key = groupd["var"]
-+        loginfo = {
-+            'variable': key,
-+            'file': self.filename,
-+            'line': self.lineno,
-+        }
-         if "exp" in groupd and groupd["exp"] != None:
--            data.setVarFlag(key, "export", 1)
-+            data.setVarFlag(key, "export", 1, op = 'exported', **loginfo)
-+        # The others all want this by default:
-+        loginfo['details'] = groupd["value"]
-+        op = None
-         if "ques" in groupd and groupd["ques"] != None:
-             val = self.getFunc(key, data)
-+            op = "set?"
-             if val == None:
-                 val = groupd["value"]
-         elif "colon" in groupd and groupd["colon"] != None:
-             e = data.createCopy()
-             bb.data.update_data(e)
-+            op = "immediate"
-             val = e.expand(groupd["value"], key + "[:=]")
-         elif "append" in groupd and groupd["append"] != None:
-+            op = "append"
-             val = "%s %s" % ((self.getFunc(key, data) or ""), groupd["value"])
-         elif "prepend" in groupd and groupd["prepend"] != None:
-+            op = "prepend"
-             val = "%s %s" % (groupd["value"], (self.getFunc(key, data) or ""))
-         elif "postdot" in groupd and groupd["postdot"] != None:
-+            op = "postdot"
-             val = "%s%s" % ((self.getFunc(key, data) or ""), groupd["value"])
-         elif "predot" in groupd and groupd["predot"] != None:
-+            op = "predot"
-             val = "%s%s" % (groupd["value"], (self.getFunc(key, data) or ""))
-         else:
-             val = groupd["value"]
- 
-+        loginfo['op'] = op
-         if 'flag' in groupd and groupd['flag'] != None:
--            data.setVarFlag(key, groupd['flag'], val)
-+            data.setVarFlag(key, groupd['flag'], val, **loginfo)
-         elif groupd["lazyques"]:
--            data.setVarFlag(key, "defaultval", val)
-+            data.setVarFlag(key, "defaultval", val, **loginfo)
-         else:
--            data.setVar(key, val)
-+            data.setVar(key, val, **loginfo)
- 
- class MethodNode(AstNode):
-     def __init__(self, filename, lineno, func_name, body):
-diff --git a/lib/bb/parse/parse_py/BBHandler.py b/lib/bb/parse/parse_py/BBHandler.py
-index 2ee8ebd..c585b60 100644
---- a/lib/bb/parse/parse_py/BBHandler.py
-+++ b/lib/bb/parse/parse_py/BBHandler.py
-@@ -84,7 +84,7 @@ def inherit(files, fn, lineno, d):
-         if not file in __inherit_cache:
-             logger.log(logging.DEBUG -1, "BB %s:%d: inheriting %s", fn, lineno, file)
-             __inherit_cache.append( file )
--            data.setVar('__inherit_cache', __inherit_cache, d)
-+            d.setVar('__inherit_cache', __inherit_cache)
-             include(fn, file, lineno, d, "inherit")
-             __inherit_cache = d.getVar('__inherit_cache') or []
- 
-@@ -134,7 +134,7 @@ def handle(fn, d, include):
-         __inherit_cache = d.getVar('__inherit_cache') or []
-         if not fn in __inherit_cache:
-             __inherit_cache.append(fn)
--            data.setVar('__inherit_cache', __inherit_cache, d)
-+            d.setVar('__inherit_cache', __inherit_cache)
- 
-     if include != 0:
-         oldfile = d.getVar('FILE')
-@@ -151,7 +151,7 @@ def handle(fn, d, include):
- 
-     # DONE WITH PARSING... time to evaluate
-     if ext != ".bbclass":
--        data.setVar('FILE', abs_fn, d)
-+        d.setVar('FILE', abs_fn)
- 
-     try:
-         statements.eval(d)
+     def back_button_clicked_cb(self, button):
 -- 
-1.7.0.4
+1.7.9.5
 
 
 
