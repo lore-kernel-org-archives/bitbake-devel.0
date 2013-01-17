@@ -1,32 +1,35 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1Tvnu8-0005Q7-Co for bitbake-devel@lists.openembedded.org;
-	Thu, 17 Jan 2013 12:45:09 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id r0HBTj0t031144;
-	Thu, 17 Jan 2013 11:29:45 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 20832-08; Thu, 17 Jan 2013 11:29:41 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id r0HBTdR8031138
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Thu, 17 Jan 2013 11:29:40 GMT
-Message-ID: <1358422179.24249.24.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Peter Seebach <peter.seebach@windriver.com>
-Date: Thu, 17 Jan 2013 11:29:39 +0000
-In-Reply-To: <1358420667.24249.18.camel@ted>
-References: <cover.1357954043.git.peter.seebach@windriver.com>
-	<1358358898.24249.8.camel@ted> <20130116120104.1d40cced@e6410-2>
-	<1358420667.24249.18.camel@ted>
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/2] Variable tracking: Cleaned up and rebased.
+Received: from mail-pa0-f51.google.com ([209.85.220.51])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <martin.jansa@gmail.com>)
+	id 1Tvnx4-0005Tf-41; Thu, 17 Jan 2013 12:48:13 +0100
+Received: by mail-pa0-f51.google.com with SMTP id fb11so1416408pad.38
+	for <multiple recipients>; Thu, 17 Jan 2013 03:32:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=x-received:date:from:to:cc:subject:message-id:references
+	:mime-version:content-type:content-disposition:in-reply-to
+	:user-agent; bh=UBUS4RqG1cEb9g6Tjb/rCA50tZ7EaKdei7o7/PKVxF8=;
+	b=eiCHgGWF6zhpSHNJb81X63yO7H+PIMPbOY+CwiiOEJ08pgtrmIQZzTKfROOcioZoot
+	hslbuSLLOOj3sNPp8XsizwSW/OHltALNL4J/Uu5atxhk4fCwVoXMGCCZvhV9BqCFhNAG
+	cSdUgR68RpGUAOJh3/ypVA/yeK+GzF1QPjR5LBIynQvuYTRyeNsMXk7eyJgl6lPK6oKj
+	7hwASh5Nf5w4tHpSW9JOn+psSQzwfMvD5gg6eHTbjclnZ5RsDHJ2Ylbk+z4G4B6LZmai
+	xCTic8DoZaUuVXa1Kyj3PXeuSacl0FgnvRnc2QPInUkBD2dxE4aWiUgJ2hMuALjSWmrE
+	CWcg==
+X-Received: by 10.68.217.104 with SMTP id ox8mr12226616pbc.105.1358422365876; 
+	Thu, 17 Jan 2013 03:32:45 -0800 (PST)
+Received: from localhost (ip-62-24-80-7.net.upcbroadband.cz. [62.24.80.7])
+	by mx.google.com with ESMTPS id s5sm1182106pay.31.2013.01.17.03.32.43
+	(version=TLSv1.2 cipher=RC4-SHA bits=128/128);
+	Thu, 17 Jan 2013 03:32:44 -0800 (PST)
+Date: Thu, 17 Jan 2013 12:32:39 +0100
+From: Martin Jansa <martin.jansa@gmail.com>
+To: openembedded-core@lists.openembedded.org
+Message-ID: <20130117113239.GC3067@jama>
+References: <20130111152856.GC3781@jama.palm1.palmone.com>
+MIME-Version: 1.0
+In-Reply-To: <20130111152856.GC3781@jama.palm1.palmone.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: bitbake hangs forever when PR serv is enabled
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -38,57 +41,79 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 17 Jan 2013 11:45:11 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 17 Jan 2013 11:48:26 -0000
+X-Groupsio-MsgNum: 3117
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="adJ1OR3c6QgCpb/j"
+Content-Disposition: inline
 
-I figured out the issue, I shouldn't have been touching current at all.
-Rather than deepcopy, its also better to use our own copy operation on
-the children:
+--adJ1OR3c6QgCpb/j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
---- a/bitbake/lib/bb/data_smart.py
-+++ b/bitbake/lib/bb/data_smart.py
-@@ -174,7 +174,14 @@ class IncludeHistory(object):
-         self.filename = filename or '[TOP LEVEL]'
-         self.children = []
-         self.current = self
--        self.variables = {}
-+        self.variables = COWDictBase.copy()
-+
-+    def copy(self):
-+        new = IncludeHistory(self.parent, self.filename, self.datasmart)
-+        for c in self.children:
-+            new.children.append(c.copy())
-+        new.variables = self.variables.copy()
-+        return new
- 
-     def include(self, filename):
-         newfile = IncludeHistory(self.current, filename)
-@@ -615,7 +622,7 @@ class DataSmart(MutableMapping):
-         # we really want this to be a DataSmart...
-         data = DataSmart(seen=self._seen_overrides.copy(), special=self._special_values.copy())
-         data.dict["_data"] = self.dict
--        data.history = copy.deepcopy(self.history)
-+        data.history = self.history.copy()
-         data.history.datasmart = data
-         data._tracking = self._tracking
- 
-So with this applied, we get -e taking around 10s and parsing 3m26 so
-about a 10% increase and the output of -e is the same before and after
-that patch. I'm still not happy but that is obviously a better
-proposition.
+On Fri, Jan 11, 2013 at 04:28:56PM +0100, Martin Jansa wrote:
+> When building world which takes long time to finish I=20
+> sometimes see bitbake hanging forever. It didn't happen
+> until I've enabled PR Service. But maybe it's not caused=20
+> by PR Service and it's just coincidence.
+>=20
+> I've to kill python processes manually and this traceback shown:
+> Exception in thread Thread-1:
+> Traceback (most recent call last):
+>   File "/usr/lib/python2.7/threading.py", line 551, in __bootstrap_inner
+>     self.run()
+>   File "/usr/lib/python2.7/threading.py", line 504, in run
+>     self.__target(*self.__args, **self.__kwargs)
+>   File "/home/jenkins/oe/shr-core-branches/shr-core/bitbake/lib/prserv/se=
+rv.py", line 173, in _work
+>     self.prserv.work_forever()
+>   File "/home/jenkins/oe/shr-core-branches/shr-core/bitbake/lib/prserv/se=
+rv.py", line 93, in work_forever
+>     self.handle_request()
+>   File "/usr/lib/python2.7/SocketServer.py", line 265, in handle_request
+>     fd_sets =3D select.select([self], [], [], timeout)
+> error: (4, 'Interrupted system call')
+>=20
+> When this happens, there is only one python process doing something=20
+> for very long time:
+> 29299 jenkins    20   0     0     0     0 Z  0.0  0.0 26:13.66 |  |      =
+     |        `- python
+>=20
+> and when I've tried to connect to it with strace it was looping
+> between 2 pipes both returning EAGAIN.
+>=20
+> Usually last cooker output is rm_work_all in gimp, but I don't see=20
+> anything special in gimp recipe and it could be some other thread=20
+> in background.
+>=20
+> NOTE: Running task 22874 of 23570 (ID: 996, /home/jenkins/oe/shr-core-bra=
+nches/shr-core/meta-openembedded/meta-oe/recipes-graphics/gimp/gimp_2.8.2.b=
+b, do_rm_work_all)
+> NOTE: recipe gimp-2.8.2-r0: task do_rm_work_all: Started
+> NOTE: recipe gimp-2.8.2-r0: task do_rm_work_all: Succeeded
+> Exception in thread Thread-1:
+> .. traceback from above
+>=20
+> Anyone seen this too? Any hints?
 
-The real issue is these highly recursive and duplicate data structures
-are inefficient so I think there is still much room for improvement.
-Separating the variable and include history will likely help a lot.
-
-The main point of the above is to prove how much the deepcopy hurts us
-and also that there are ways we can fix it.
+More info in https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D3742
 
 Cheers,
 
-Richard
+--=20
+Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
 
+--adJ1OR3c6QgCpb/j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
+iEYEARECAAYFAlD34VcACgkQN1Ujt2V2gBzqOACbBL+rjW49lFJzC84XnpSxKUmF
+Ha0AoLkmTd3QlEondSKPMjINC1y9Mv8A
+=mOBT
+-----END PGP SIGNATURE-----
 
+--adJ1OR3c6QgCpb/j--
