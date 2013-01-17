@@ -1,26 +1,27 @@
 Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
 	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1TvnVl-0004Zb-IP for bitbake-devel@lists.openembedded.org;
-	Thu, 17 Jan 2013 12:20:00 +0100
+	id 1Tvnu8-0005Q7-Co for bitbake-devel@lists.openembedded.org;
+	Thu, 17 Jan 2013 12:45:09 +0100
 Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id r0HB4Ytf031007;
-	Thu, 17 Jan 2013 11:04:34 GMT
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id r0HBTj0t031144;
+	Thu, 17 Jan 2013 11:29:45 GMT
 Received: from tim.rpsys.net ([127.0.0.1])
 	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
 	port 10024) with LMTP
-	id 23524-07; Thu, 17 Jan 2013 11:04:29 +0000 (GMT)
+	id 20832-08; Thu, 17 Jan 2013 11:29:41 +0000 (GMT)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id r0HB4Rqk031001
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id r0HBTdR8031138
 	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Thu, 17 Jan 2013 11:04:28 GMT
-Message-ID: <1358420667.24249.18.camel@ted>
+	Thu, 17 Jan 2013 11:29:40 GMT
+Message-ID: <1358422179.24249.24.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: Peter Seebach <peter.seebach@windriver.com>
-Date: Thu, 17 Jan 2013 11:04:27 +0000
-In-Reply-To: <20130116120104.1d40cced@e6410-2>
+Date: Thu, 17 Jan 2013 11:29:39 +0000
+In-Reply-To: <1358420667.24249.18.camel@ted>
 References: <cover.1357954043.git.peter.seebach@windriver.com>
 	<1358358898.24249.8.camel@ted> <20130116120104.1d40cced@e6410-2>
+	<1358420667.24249.18.camel@ted>
 X-Mailer: Evolution 3.2.3-0ubuntu6 
 Mime-Version: 1.0
 X-Virus-Scanned: amavisd-new at rpsys.net
@@ -37,58 +38,13 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 17 Jan 2013 11:20:10 -0000
+X-List-Received-Date: Thu, 17 Jan 2013 11:45:11 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Wed, 2013-01-16 at 12:01 -0600, Peter Seebach wrote:
-> On Wed, 16 Jan 2013 17:54:58 +0000
-> Richard Purdie <richard.purdie@linuxfoundation.org> wrote:
-> 
-> > I *really* want to take these, however I did want to check
-> > performance:
-> 
-> Oh, good thought.
-> 
-> > $ time bitbake core-image-sato -e
-> > real	0m8.034s
-> > $ time bitbake -p
-> > real	0m12.220s
-> > user	3m3.887s
->  
-> > After:
->  
-> > $ time bitbake core-image-sato -e
-> > real	0m50.267s
-> > $ time bitbake -p
-> > real	0m14.607s
-> > user	3m55.179s
-> 
-> Hmm. That doesn't totally surprise me.
->  
-> > The 50s seems a touch excessive and it looks like a 20% parsing hit
-> > even when unused :(. Note the overall parsing times on this machine
-> > are fast as its running 24 in parallel. I'm going to try and figure
-> > out what is going on tomorrow as I've fixed a lot of this kind of
-> > thing in the past but wanted to mention it...
-> 
-> The 50s seems... not entirely surprsing. I don't know that much about
-> how Python does stuff, but in practice we end up with a LOT of deep
-> copies of structures floating around because there are a ton of data
-> copies; without these, finalize information gets duplicated and things
-> go pretty wrong.
-> 
-> My intuition is that the stack backtrace thing is probably expensive,
-> and might be noticably reduced by manually passing in the
-> likely-missing values in cases where we know what they are, so it's
-> less likely that any backtracing has to happen.
-
-Its not the stack backtrace stuff that is the limiting factor here, its
-the deepcopy, its really clear on the profiles. Anything with 48 million
-calls is a problem, we should be seeing 10s of thousands of calls tops
-for an operation like the above.
-
-I tried a little experiment:
+I figured out the issue, I shouldn't have been touching current at all.
+Rather than deepcopy, its also better to use our own copy operation on
+the children:
 
 --- a/bitbake/lib/bb/data_smart.py
 +++ b/bitbake/lib/bb/data_smart.py
@@ -101,8 +57,8 @@ I tried a little experiment:
 +
 +    def copy(self):
 +        new = IncludeHistory(self.parent, self.filename, self.datasmart)
-+        new.children = copy.deepcopy(self.children)
-+        new.current = self.current
++        for c in self.children:
++            new.children.append(c.copy())
 +        new.variables = self.variables.copy()
 +        return new
  
@@ -117,25 +73,22 @@ I tried a little experiment:
          data.history.datasmart = data
          data._tracking = self._tracking
  
-which replaces the brute force deepcopy with a more intelligent attempt
-to copy the IncludeHistory object. I've replaced the variables dict with
-our magic COW dict object since this is the kind of usage it was
-designed for.
+So with this applied, we get -e taking around 10s and parsing 3m26 so
+about a 10% increase and the output of -e is the same before and after
+that patch. I'm still not happy but that is obviously a better
+proposition.
 
-What is interesting is that even with profiling enabled (-P), this drops
-the execution time to 10s from 50s so it proves my theory about
-deepcopy. Diffing the output before and after shows that it even
-faithfully handles the variable dependencies, it does however totally
-break the include list, as I break "current".
+The real issue is these highly recursive and duplicate data structures
+are inefficient so I think there is still much room for improvement.
+Separating the variable and include history will likely help a lot.
 
-It does seem we're trying to merge two orthogonal sets of data into one
-object here (include history and variable history) and this results in a
-huge number of IncludeHistory instances in memory though the include
-chain. I'm therefore left wondering if we could separate the two?
+The main point of the above is to prove how much the deepcopy hurts us
+and also that there are ways we can fix it.
 
 Cheers,
 
 Richard
+
 
 
 
