@@ -1,31 +1,29 @@
-Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
-	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1TwBh7-0004jF-5Z for bitbake-devel@lists.openembedded.org;
-	Fri, 18 Jan 2013 14:09:29 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id r0ICrock008985;
-	Fri, 18 Jan 2013 12:53:50 GMT
-Received: from tim.rpsys.net ([127.0.0.1])
-	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP
-	id 05490-05; Fri, 18 Jan 2013 12:53:46 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id r0ICrh5I008978
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
-	Fri, 18 Jan 2013 12:53:44 GMT
-Message-ID: <1358513623.27799.24.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Jessica Zhang <jessica.zhang@intel.com>
-Date: Fri, 18 Jan 2013 12:53:43 +0000
-In-Reply-To: <eecefc2d16969c413dad379c8ba6605750665990.1357255745.git.jessica.zhang@intel.com>
-References: <cover.1357255745.git.jessica.zhang@intel.com>
-	<eecefc2d16969c413dad379c8ba6605750665990.1357255745.git.jessica.zhang@intel.com>
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Mime-Version: 1.0
-X-Virus-Scanned: amavisd-new at rpsys.net
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] Fix GTK+ and PyGtk version check error message to be more clear [Yocto #3637]
+Received: from mail-wg0-f44.google.com ([74.125.82.44])
+	by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <twoerner@gmail.com>) id 1TwGWi-0007qW-My
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 18 Jan 2013 19:18:52 +0100
+Received: by mail-wg0-f44.google.com with SMTP id dr12so2381279wgb.35
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 18 Jan 2013 10:03:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:x-received:date:message-id:subject:from:to
+	:content-type; bh=yKcPalS6oRDH+nHz/p7tTgnnnb2Fn4LzoXe3vnYbdmA=;
+	b=HZ1+q9WVPiO/dtSb0K41yJB+VNTePEiLJJ+p5GFo2/KVn78Bh9k1Icjr7fzapNbULu
+	F45ilcFArSDTe4QiicIbMibyWrfvX+9T3W43Rc45zejzzZ/pQnF0c0iIDS9w9LE/B29M
+	M46zJLIkoF0U8mfpEQ7CstIv59kFhDAeCO+Bcn69acNr0PNkJSPgDZyfuovbwS4tscdi
+	fbnvOiJ3o4MLNDXZAAJSalFN9A0NU4uApz2TO4Hkz3i3TJP5cfkBcorClnFgp/Zx7Nxw
+	PLoBUV8BwA/+SUWqXlV6LZiLajJQCIe8rc9EjzluhVQRF7gSBlYGdJlQOH+LGF9tNXQ+
+	T5VA==
+MIME-Version: 1.0
+X-Received: by 10.194.172.228 with SMTP id bf4mr15736738wjc.38.1358532205395; 
+	Fri, 18 Jan 2013 10:03:25 -0800 (PST)
+Received: by 10.227.132.205 with HTTP; Fri, 18 Jan 2013 10:03:25 -0800 (PST)
+Date: Fri, 18 Jan 2013 13:03:25 -0500
+Message-ID: <CAHUNapQHDYC7g4aJnPH5U784rywtX1AnwVkbY9e1RJrB5mPszg@mail.gmail.com>
+From: Trevor Woerner <twoerner@gmail.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: task override
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,37 +35,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 18 Jan 2013 13:09:30 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 18 Jan 2013 18:18:53 -0000
+Content-Type: text/plain; charset=ISO-8859-1
 
-On Thu, 2013-01-03 at 15:32 -0800, Jessica Zhang wrote:
-> Signed-off-by: Jessica Zhang <jessica.zhang@intel.com>
-> ---
->  bitbake/lib/bb/ui/hob.py |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hi all,
 
-I merged this but I had to reformat the summary and commit message as
-they weren't in the correct form.
+I was just wondering if it is possible to define, in a layer, a task
+that will override all other such tasks such that only mine runs?
 
-Cheers,
+I would like to perform a regular build:
 
-Richard
+$ bitbake myimg
 
-> diff --git a/bitbake/lib/bb/ui/hob.py b/bitbake/lib/bb/ui/hob.py
-> index 9ec32b1..55bd84c 100755
-> --- a/bitbake/lib/bb/ui/hob.py
-> +++ b/bitbake/lib/bb/ui/hob.py
-> @@ -22,7 +22,7 @@
->  
->  import sys
->  import os
-> -requirements = "FATAL: Gtk+, PyGtk and PyGobject are required to use Hob"
-> +requirements = "FATAL: Hob requires Gtk+ 2.20.0 or higher, PyGtk 2.21.0 or higher"
->  try:
->      import gobject
->      import gtk
+and in my layer I would like to have:
 
+-- meta-mylayer
+    |-- recipes-core
+    |   `-- images
+    |       `-- myimg
+    |            ...
+    |            inherit core-image
+    |            inherit myclass
+    |            ...
+    |
+    `-- classes
+        `-- myclass
+            addtask rootfs
+            myclass_do_rootfs() {
+                echo "rootfs from myclass!"
+            }
+            EXPORT_FUNCTIONS do_rootfs
 
+such that when the build is run, all tasks are run, and when it comes
+time for the "do_rootfs" task, mine is run (which does nothing,
+essentially skipping the whole task) and the build continues.
+
+Maybe I'm hitting a state-cache problem (since I'm doing this one
+piece at a time, adding a little bit then running "bitbake myimg"
+without doing any cleaning)?
+
+As far as I can tell, my additions make no change to the build.
+Everything appears to run as it did before (in other words, I can't
+even find my "rootfs from myclass!" string anywhere in the logs).
+
+Best regards,
+    Trevor
 
 
