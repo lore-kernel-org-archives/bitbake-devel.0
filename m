@@ -1,35 +1,27 @@
-Received: from mail-pa0-f51.google.com ([209.85.220.51])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <martin.jansa@gmail.com>)
-	id 1Tvnx4-0005Tf-41; Thu, 17 Jan 2013 12:48:13 +0100
-Received: by mail-pa0-f51.google.com with SMTP id fb11so1416408pad.38
-	for <multiple recipients>; Thu, 17 Jan 2013 03:32:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=x-received:date:from:to:cc:subject:message-id:references
-	:mime-version:content-type:content-disposition:in-reply-to
-	:user-agent; bh=UBUS4RqG1cEb9g6Tjb/rCA50tZ7EaKdei7o7/PKVxF8=;
-	b=eiCHgGWF6zhpSHNJb81X63yO7H+PIMPbOY+CwiiOEJ08pgtrmIQZzTKfROOcioZoot
-	hslbuSLLOOj3sNPp8XsizwSW/OHltALNL4J/Uu5atxhk4fCwVoXMGCCZvhV9BqCFhNAG
-	cSdUgR68RpGUAOJh3/ypVA/yeK+GzF1QPjR5LBIynQvuYTRyeNsMXk7eyJgl6lPK6oKj
-	7hwASh5Nf5w4tHpSW9JOn+psSQzwfMvD5gg6eHTbjclnZ5RsDHJ2Ylbk+z4G4B6LZmai
-	xCTic8DoZaUuVXa1Kyj3PXeuSacl0FgnvRnc2QPInUkBD2dxE4aWiUgJ2hMuALjSWmrE
-	CWcg==
-X-Received: by 10.68.217.104 with SMTP id ox8mr12226616pbc.105.1358422365876; 
-	Thu, 17 Jan 2013 03:32:45 -0800 (PST)
-Received: from localhost (ip-62-24-80-7.net.upcbroadband.cz. [62.24.80.7])
-	by mx.google.com with ESMTPS id s5sm1182106pay.31.2013.01.17.03.32.43
-	(version=TLSv1.2 cipher=RC4-SHA bits=128/128);
-	Thu, 17 Jan 2013 03:32:44 -0800 (PST)
-Date: Thu, 17 Jan 2013 12:32:39 +0100
-From: Martin Jansa <martin.jansa@gmail.com>
-To: openembedded-core@lists.openembedded.org
-Message-ID: <20130117113239.GC3067@jama>
-References: <20130111152856.GC3781@jama.palm1.palmone.com>
-MIME-Version: 1.0
-In-Reply-To: <20130111152856.GC3781@jama.palm1.palmone.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: bitbake hangs forever when PR serv is enabled
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1TwAcx-0002Gf-6J for bitbake-devel@lists.openembedded.org;
+	Fri, 18 Jan 2013 13:00:56 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id r0IBjUVQ008496;
+	Fri, 18 Jan 2013 11:45:30 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 05490-01; Fri, 18 Jan 2013 11:45:25 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id r0IBjMIi008489
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
+	Fri, 18 Jan 2013 11:45:24 GMT
+Message-ID: <1358509522.27799.6.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Fri, 18 Jan 2013 11:45:22 +0000
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Subject: [PATCH] bitbake: data_smart.py and friends: Track file inclusions for bitbake -e
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -41,79 +33,137 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 17 Jan 2013 11:48:26 -0000
-X-Groupsio-MsgNum: 3117
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="adJ1OR3c6QgCpb/j"
-Content-Disposition: inline
+X-List-Received-Date: Fri, 18 Jan 2013 12:02:02 -0000
+X-List-Received-Date: Fri, 18 Jan 2013 12:02:02 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---adJ1OR3c6QgCpb/j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From: Peter Seebach <peter.seebach@windriver.com>
 
-On Fri, Jan 11, 2013 at 04:28:56PM +0100, Martin Jansa wrote:
-> When building world which takes long time to finish I=20
-> sometimes see bitbake hanging forever. It didn't happen
-> until I've enabled PR Service. But maybe it's not caused=20
-> by PR Service and it's just coincidence.
->=20
-> I've to kill python processes manually and this traceback shown:
-> Exception in thread Thread-1:
-> Traceback (most recent call last):
->   File "/usr/lib/python2.7/threading.py", line 551, in __bootstrap_inner
->     self.run()
->   File "/usr/lib/python2.7/threading.py", line 504, in run
->     self.__target(*self.__args, **self.__kwargs)
->   File "/home/jenkins/oe/shr-core-branches/shr-core/bitbake/lib/prserv/se=
-rv.py", line 173, in _work
->     self.prserv.work_forever()
->   File "/home/jenkins/oe/shr-core-branches/shr-core/bitbake/lib/prserv/se=
-rv.py", line 93, in work_forever
->     self.handle_request()
->   File "/usr/lib/python2.7/SocketServer.py", line 265, in handle_request
->     fd_sets =3D select.select([self], [], [], timeout)
-> error: (4, 'Interrupted system call')
->=20
-> When this happens, there is only one python process doing something=20
-> for very long time:
-> 29299 jenkins    20   0     0     0     0 Z  0.0  0.0 26:13.66 |  |      =
-     |        `- python
->=20
-> and when I've tried to connect to it with strace it was looping
-> between 2 pipes both returning EAGAIN.
->=20
-> Usually last cooker output is rm_work_all in gimp, but I don't see=20
-> anything special in gimp recipe and it could be some other thread=20
-> in background.
->=20
-> NOTE: Running task 22874 of 23570 (ID: 996, /home/jenkins/oe/shr-core-bra=
-nches/shr-core/meta-openembedded/meta-oe/recipes-graphics/gimp/gimp_2.8.2.b=
-b, do_rm_work_all)
-> NOTE: recipe gimp-2.8.2-r0: task do_rm_work_all: Started
-> NOTE: recipe gimp-2.8.2-r0: task do_rm_work_all: Succeeded
-> Exception in thread Thread-1:
-> .. traceback from above
->=20
-> Anyone seen this too? Any hints?
+This code adds inclusion history to bitbake -e output, showing
+which files were included, in what order. This doesn't completely
+resolve timing questions, because it doesn't show you which lines
+of a file were processed before or after a given include, but it
+does let you figure out what the path was by which a particular
+file ended up in your build at all.
 
-More info in https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D3742
+How it works: data_smart acquires a .history member, which is an
+IncludeHistory; this represents the inclusion of a file and all its
+inclusions, recursively. It provides methods for including files,
+for finishing inclusion (done as an __exit__), and for
+dumping the whole tree.
 
-Cheers,
+The parser is modified to run includes inside a with() to push
+and pop the include filename.
 
---=20
-Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
+RP Modifications:
 
---adJ1OR3c6QgCpb/j
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+a) Split Include and Variable tracking
+b) Replace deepcopy usage with dedicated copy function
+c) Simplify some variable and usage
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+Signed-off-by: Peter Seebach <peter.seebach@windriver.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 1d38164..f06b71c 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -338,6 +338,11 @@ class BBCooker:
+                 parselog.exception("Unable to read %s", fn)
+                 raise
+ 
++        # Display history
++        with closing(StringIO()) as env:
++            self.configuration.data.inchistory.emit(env)
++            logger.plain(env.getvalue())
++
+         # emit variables and shell functions
+         data.update_data(envdata)
+         with closing(StringIO()) as env:
+diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
+index d328400..5fdfeee 100644
+--- a/bitbake/lib/bb/data_smart.py
++++ b/bitbake/lib/bb/data_smart.py
+@@ -114,10 +114,55 @@ class ExpansionError(Exception):
+     def __str__(self):
+         return self.msg
+ 
++class IncludeHistory(object):
++    def __init__(self, parent = None, filename = '[TOP LEVEL]'):
++        self.parent = parent
++        self.filename = filename
++        self.children = []
++        self.current = self
++
++    def copy(self):
++        new = IncludeHistory(self.parent, self.filename)
++        for c in self.children:
++            new.children.append(c)
++        return new
++
++    def include(self, filename):
++        newfile = IncludeHistory(self.current, filename)
++        self.current.children.append(newfile)
++        self.current = newfile
++        return self
++
++    def __enter__(self):
++        pass
++
++    def __exit__(self, a, b, c):
++        if self.current.parent:
++            self.current = self.current.parent
++        else:
++            bb.warn("Include log: Tried to finish '%s' at top level." % filename)
++        return False
++
++    def emit(self, o, level = 0):
++        """Emit an include history file, and its children."""
++        if level:
++            spaces = "  " * (level - 1)
++            o.write("# %s%s" % (spaces, self.filename))
++            if len(self.children) > 0:
++                o.write(" includes:")
++        else:
++            o.write("#\n# INCLUDE HISTORY:\n#")
++        level = level + 1
++        for child in self.children:
++            o.write("\n")
++            child.emit(o, level)
++
+ class DataSmart(MutableMapping):
+     def __init__(self, special = COWDictBase.copy(), seen = COWDictBase.copy() ):
+         self.dict = {}
+ 
++        self.inchistory = IncludeHistory()
++
+         # cookie monster tribute
+         self._special_values = special
+         self._seen_overrides = seen
+@@ -416,6 +461,7 @@ class DataSmart(MutableMapping):
+         # we really want this to be a DataSmart...
+         data = DataSmart(seen=self._seen_overrides.copy(), special=self._special_values.copy())
+         data.dict["_data"] = self.dict
++        data.inchistory = self.inchistory.copy()
+ 
+         return data
+ 
+diff --git a/bitbake/lib/bb/parse/__init__.py b/bitbake/lib/bb/parse/__init__.py
+index 4293d09c..3f93ad2 100644
+--- a/bitbake/lib/bb/parse/__init__.py
++++ b/bitbake/lib/bb/parse/__init__.py
+@@ -87,7 +87,8 @@ def handle(fn, data, include = 0):
+     """Call the handler that is appropriate for this file"""
+     for h in handlers:
+         if h['supports'](fn, data):
+-            return h['handle'](fn, data, include)
++            with data.inchistory.include(fn):
++                return h['handle'](fn, data, include)
+     raise ParseError("not a BitBake file", fn)
+ 
+ def init(fn, data):
 
-iEYEARECAAYFAlD34VcACgkQN1Ujt2V2gBzqOACbBL+rjW49lFJzC84XnpSxKUmF
-Ha0AoLkmTd3QlEondSKPMjINC1y9Mv8A
-=mOBT
------END PGP SIGNATURE-----
 
---adJ1OR3c6QgCpb/j--
+
+
