@@ -1,29 +1,40 @@
-Received: from mail-wg0-f44.google.com ([74.125.82.44])
+Received: from mail-ie0-f173.google.com ([209.85.223.173])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <twoerner@gmail.com>) id 1TwGWi-0007qW-My
+	(envelope-from <jon.szymaniak@gmail.com>) id 1TwH29-0000AY-1N
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 18 Jan 2013 19:18:52 +0100
-Received: by mail-wg0-f44.google.com with SMTP id dr12so2381279wgb.35
+	Fri, 18 Jan 2013 19:52:19 +0100
+Received: by mail-ie0-f173.google.com with SMTP id e13so6710463iej.18
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Jan 2013 10:03:25 -0800 (PST)
+	Fri, 18 Jan 2013 10:35:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:x-received:date:message-id:subject:from:to
-	:content-type; bh=yKcPalS6oRDH+nHz/p7tTgnnnb2Fn4LzoXe3vnYbdmA=;
-	b=HZ1+q9WVPiO/dtSb0K41yJB+VNTePEiLJJ+p5GFo2/KVn78Bh9k1Icjr7fzapNbULu
-	F45ilcFArSDTe4QiicIbMibyWrfvX+9T3W43Rc45zejzzZ/pQnF0c0iIDS9w9LE/B29M
-	M46zJLIkoF0U8mfpEQ7CstIv59kFhDAeCO+Bcn69acNr0PNkJSPgDZyfuovbwS4tscdi
-	fbnvOiJ3o4MLNDXZAAJSalFN9A0NU4uApz2TO4Hkz3i3TJP5cfkBcorClnFgp/Zx7Nxw
-	PLoBUV8BwA/+SUWqXlV6LZiLajJQCIe8rc9EjzluhVQRF7gSBlYGdJlQOH+LGF9tNXQ+
-	T5VA==
+	h=x-received:mime-version:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=zr2g6rMEonkjSdh4PSrwPnQuiva3lf8xhnzByPqkzDk=;
+	b=BTNI1zqL8b/a02k9g3pnsre1qRnX97JSmRHtthL4wjIhzLLgEN6wdQKj454THDuhN6
+	PT0YVd+TukJ9ckSS9axKjqMhumMBunFnC8tXFfe/Rr1muTk99vZlfVrJb5qQZyvJ5nMY
+	tpYP5hkhLb+wJwFI3hDrJ9ao2gfc4bw4aZDdDHgsCIaU2IdSVLH4iIDgGHT4OXCBIYvE
+	P/mKL9iyuDqWkzrRPMnl2cJL/wJ/X605qSHDGEDDC5YaOUB4j7kUS1KuuY7YJmnfh53e
+	gTGyCVdQtHBjR81h/PraeG7l5Xx7I8AajmFn9DZdkOHmXxkNaE9Zw22dx6Me18L2RvX/
+	3ZwQ==
+X-Received: by 10.43.83.1 with SMTP id ae1mr6800742icc.24.1358534155778; Fri,
+	18 Jan 2013 10:35:55 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 10.194.172.228 with SMTP id bf4mr15736738wjc.38.1358532205395; 
-	Fri, 18 Jan 2013 10:03:25 -0800 (PST)
-Received: by 10.227.132.205 with HTTP; Fri, 18 Jan 2013 10:03:25 -0800 (PST)
-Date: Fri, 18 Jan 2013 13:03:25 -0500
-Message-ID: <CAHUNapQHDYC7g4aJnPH5U784rywtX1AnwVkbY9e1RJrB5mPszg@mail.gmail.com>
-From: Trevor Woerner <twoerner@gmail.com>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: task override
+Received: by 10.64.12.129 with HTTP; Fri, 18 Jan 2013 10:35:34 -0800 (PST)
+In-Reply-To: <1358513490.27799.23.camel@ted>
+References: <CANge7vVgnJTskixvCtbWThgq8uqrS9fag8DcHL7HLb732ckDNg@mail.gmail.com>
+	<1355507217.32519.33.camel@ted>
+	<CANge7vVQnTVasye41HJiB9JOMno4fTX5mn=p499y7kus5O4NQw@mail.gmail.com>
+	<CANge7vURMxSYh=-O0ZHUWqopVjCkUwFMxhC8-bqHTy6J8mF2Mw@mail.gmail.com>
+	<CABcZANmUyaCd0kx0FSq5Ye=OXKiKdziGfAyiy3dH9BxrJtEh6g@mail.gmail.com>
+	<CANge7vVSFKAxDYyXh40bFP-uEpu+Otwbhdx69QrX0YgTaGhNjg@mail.gmail.com>
+	<1358513490.27799.23.camel@ted>
+From: Jon Szymaniak <jon.szymaniak@gmail.com>
+Date: Fri, 18 Jan 2013 13:35:34 -0500
+Message-ID: <CANge7vUkt+m6iPddVXqrjr4r8HGV9KtjYFvRLX4TMaYNk4sBNw@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: Chris Larson <clarson@kergoth.com>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: hg fetcher failures for SRCREV set to a tag
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -35,50 +46,57 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 18 Jan 2013 18:18:53 -0000
+X-List-Received-Date: Fri, 18 Jan 2013 18:52:21 -0000
+X-List-Received-Date: Fri, 18 Jan 2013 18:52:21 -0000
 Content-Type: text/plain; charset=ISO-8859-1
 
-Hi all,
+On Fri, Jan 18, 2013 at 7:51 AM, Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
+> On Sat, 2012-12-22 at 12:36 -0500, Jon Szymaniak wrote:
+>> >> Hi Richard,
+>> >>
+>> >> Thanks for pinging back on this. (Sorry I just double-sent this to
+>> >> you. Forgot to include the list! :P)
+>> >>
+>> >> I think a fairly simple solution might be to just clone the entire
+>> >> repo by not adding "-r REV" to options[] for an 'hg clone' invocation.
+>> >> The 'hg update' that follows on lines 142-147 should set the repo to
+>> >> the desired revision.
+>> >
+>> >
+>> > This does sound like the best bet, to me.
+>> > --
+>> > Christopher Larson
+>>
+>> Hi all,
+>>
+>> Just wanted to touch base on this issue. I didn't hear anything back
+>> on the little patch I posted...not sure if that's a silent rejection,
+>> if I didn't include the right info in the subject line, or if folks
+>> haven't had a chance to test it. If there's something I screwed up,
+>> please do let me know for future reference. :)
+>>
+>> http://lists.linuxtogo.org/pipermail/bitbake-devel/2012-December/003962.html
+>
+> Sorry about the delay, vacation and lots of other distractions. The
+> patch was find and I've merged it now, thanks. I did have trouble
+> applying it as it appeared the whitespace was messed up. I fixed it up
+> manually this time though.
+>
+> Cheers,
+>
+> Richard
+>
 
-I was just wondering if it is possible to define, in a layer, a task
-that will override all other such tasks such that only mine runs?
+Richard,
 
-I would like to perform a regular build:
+Thanks for pinging back -- I know it's certainty that busy time of year. :)
 
-$ bitbake myimg
+If you happen to have any details on those whitespace issues, mind
+shooting that my way? I'd like to get a feel of where I screwed up
+there. (e.g. email client, stuff in my .vimrc, etc)
 
-and in my layer I would like to have:
-
--- meta-mylayer
-    |-- recipes-core
-    |   `-- images
-    |       `-- myimg
-    |            ...
-    |            inherit core-image
-    |            inherit myclass
-    |            ...
-    |
-    `-- classes
-        `-- myclass
-            addtask rootfs
-            myclass_do_rootfs() {
-                echo "rootfs from myclass!"
-            }
-            EXPORT_FUNCTIONS do_rootfs
-
-such that when the build is run, all tasks are run, and when it comes
-time for the "do_rootfs" task, mine is run (which does nothing,
-essentially skipping the whole task) and the build continues.
-
-Maybe I'm hitting a state-cache problem (since I'm doing this one
-piece at a time, adding a little bit then running "bitbake myimg"
-without doing any cleaning)?
-
-As far as I can tell, my additions make no change to the build.
-Everything appears to run as it did before (in other words, I can't
-even find my "rootfs from myclass!" string anywhere in the logs).
-
-Best regards,
-    Trevor
+Thanks,
+Jon
 
 
