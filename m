@@ -1,31 +1,30 @@
-Received: from mail-la0-f46.google.com ([209.85.215.46])
+Received: from mail-bk0-f49.google.com ([209.85.214.49])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>)
-	id 1TwkgK-0005GR-Mg; Sun, 20 Jan 2013 03:30:59 +0100
-Received: by mail-la0-f46.google.com with SMTP id fq12so2586842lab.33
-	for <multiple recipients>; Sat, 19 Jan 2013 18:15:22 -0800 (PST)
+	(envelope-from <yanglei.fage@gmail.com>)
+	id 1TwmkP-0008F5-Mc; Sun, 20 Jan 2013 05:43:09 +0100
+Received: by mail-bk0-f49.google.com with SMTP id jm19so2596452bkc.36
+	for <multiple recipients>; Sat, 19 Jan 2013 20:27:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=x-received:mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	bh=IIBlvQXjAkT7+4E/uws6Owz/QHQKImRMEMYGjWxlLjI=;
-	b=hP6L9JRfBooDNd3vqq4gSK1cTbjvoQssk1oZYfZWa/eZAf4s14gsW64DMUxiAFRVHn
-	sq85pSmpiW6zddWI3u8YvtY+tvjw0t/lLFtBC6TdxuNgV6wrXKC1lky5iJ7GL02eb7rZ
-	VSxx9CC5onpfQ6os9pAP/wJDzfSFvNz9WxTQchgnKxOcchninkNWb7RhJcmoRYYYuDJ0
-	J+/5kS+ZyOZVdXcMzo/UJPAxFyfYb5lgFjLvxTRr7yr/MGEJWDfGfbEbDPYRhTXMpZhw
-	8NMBMtmv3rGZPCqHXXXtA0lsDf2LCcQbJ32RSROds/XvFGfSRatHD6yrek7+m7Yn+dcJ
-	2Z4g==
-X-Received: by 10.152.144.103 with SMTP id sl7mr13061487lab.23.1358648121901; 
-	Sat, 19 Jan 2013 18:15:21 -0800 (PST)
+	h=mime-version:x-received:in-reply-to:references:date:message-id
+	:subject:from:to:cc:content-type;
+	bh=cRcT7G/CmmJRtz9MtEgQTHJg6KO7GOTi2H8PJ+rGMrE=;
+	b=YTENvFl5el3ZbNbS4sFLLvo7m86lcJf0rDDtIEDB73m1p8edR+A7pZLJR79Kl5/+CT
+	USmlWqDOjuOt+NzauPIJC6WjO5ikq57pAwrgpJvGAJ+RNMkvgUVIYvu7LyK4rpMmBwMv
+	H5zmKUPmeXh+KrpWjaZbhAX0shTTh6p19B6OUxIZ8sVehkqBcZXoAoa4ithG31QC2ONi
+	slSyVcDKGLUp2TrQQEjcF72wTiAk68e50Xy6yk/lLL3mOLJjndcO2BiRDe4mKNv6yPWV
+	xElBD+FtMI1ow1EqNAVxqKteqyftc5q0Oqk6Umfr9OngCxBtDNH0gSF9TOBRTa5CkhZH
+	giKQ==
 MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.34.10 with HTTP; Sat, 19 Jan 2013 18:15:01 -0800 (PST)
-In-Reply-To: <CAHsH0E96h=aT6t-u-ACY7MGFHJv4_TTqSMfCmMpSKiq3NBjciw@mail.gmail.com>
+X-Received: by 10.204.5.202 with SMTP id 10mr3646936bkw.135.1358656062822;
+	Sat, 19 Jan 2013 20:27:42 -0800 (PST)
+Received: by 10.204.11.86 with HTTP; Sat, 19 Jan 2013 20:27:42 -0800 (PST)
+In-Reply-To: <CABcZANkpo5qMnPkL903SQjfkPhwUF-7rK+i5LaqxTFUdqE3H2Q@mail.gmail.com>
 References: <CAHsH0E96h=aT6t-u-ACY7MGFHJv4_TTqSMfCmMpSKiq3NBjciw@mail.gmail.com>
-From: Chris Larson <clarson@kergoth.com>
-Date: Sat, 19 Jan 2013 19:15:01 -0700
-X-Google-Sender-Auth: 3r1xWnOvLhNZGSKgSKIw_cJuWIk
-Message-ID: <CABcZANkpo5qMnPkL903SQjfkPhwUF-7rK+i5LaqxTFUdqE3H2Q@mail.gmail.com>
-To: lei yang <yanglei.fage@gmail.com>
+	<CABcZANkpo5qMnPkL903SQjfkPhwUF-7rK+i5LaqxTFUdqE3H2Q@mail.gmail.com>
+Date: Sun, 20 Jan 2013 12:27:42 +0800
+Message-ID: <CAHsH0E-Y5dLPvgqGCN57vt8BzKZy7ftdxZv7vL=HT0BYavCWcw@mail.gmail.com>
+From: lei yang <yanglei.fage@gmail.com>
+To: Chris Larson <clarson@kergoth.com>
 Cc: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>,
 	Patches and discussions about the oe-core layer
@@ -42,45 +41,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 20 Jan 2013 02:31:00 -0000
-Content-Type: multipart/alternative; boundary=e89a8f22bec1ae444d04d3aeeab1
+X-List-Received-Date: Sun, 20 Jan 2013 04:43:10 -0000
+Content-Type: text/plain; charset=ISO-8859-1
 
---e89a8f22bec1ae444d04d3aeeab1
-Content-Type: text/plain; charset=UTF-8
-
-On Sat, Jan 19, 2013 at 2:13 AM, lei yang <yanglei.fage@gmail.com> wrote:
-
-> SRC_URI = "git://git.opensvc.com/multipath-tools/.git;protocol=http"
-> it doe noting,and trying to find COPING,but it doesn't clone it
+On Sun, Jan 20, 2013 at 10:15 AM, Chris Larson <clarson@kergoth.com> wrote:
 >
+> On Sat, Jan 19, 2013 at 2:13 AM, lei yang <yanglei.fage@gmail.com> wrote:
+>>
+>> SRC_URI = "git://git.opensvc.com/multipath-tools/.git;protocol=http"
+>> it doe noting,and trying to find COPING,but it doesn't clone it
+>
+>
+> This is the correct syntax. The URL scheme (git://) determines what bitbake
+> fetcher, and therefore what tool, is used to fetch. If you use http://,
+> it'll try to download it with wget, not git.
+> --
+> Christopher Larson
 
-This is the correct syntax. The URL scheme (git://) determines what bitbake
-fetcher, and therefore what tool, is used to fetch. If you use http://,
-it'll try to download it with wget, not git.
--- 
-Christopher Larson
+But, the fact is git://git.opensvc.com/multipath-tools/.git can't be
+used, you can't  git clone  git://git.opensvc.com/multipath-tools/.git
+(git:// is not valid this this git repos)
+but you can "git clone  http://git.opensvc.com/multipath-tools/.git",
+I think bitbake doesn't handle this
 
---e89a8f22bec1ae444d04d3aeeab1
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Sat, Jan 19, 2013 at 2:13 AM, lei yang <span dir=3D"ltr">&lt;<a href=3D"=
-mailto:yanglei.fage@gmail.com" target=3D"_blank">yanglei.fage@gmail.com</a>=
-&gt;</span> wrote:<br>
-
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div id=3D":13v">SRC_URI =3D &quot;git://<a =
-href=3D"http://git.opensvc.com/multipath-tools/.git;protocol=3Dhttp" target=
-=3D"_blank">git.opensvc.com/multipath-tools/.git;protocol=3Dhttp</a>&quot;<=
-br>
+Lei
 
 
-it doe noting,and trying to find COPING,but it doesn&#39;t clone it</div></=
-blockquote></div><br>This is the correct syntax. The URL scheme (git://) de=
-termines what bitbake fetcher, and therefore what tool, is used to fetch. I=
-f you use http://, it&#39;ll try to download it with wget, not git.<br>
-
--- <br>Christopher Larson</div></div>
-
---e89a8f22bec1ae444d04d3aeeab1--
