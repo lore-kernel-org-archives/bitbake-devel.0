@@ -1,28 +1,28 @@
-Received: from mail-bk0-f49.google.com ([209.85.214.49])
+Received: from mail-bk0-f50.google.com ([209.85.214.50])
 	by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <yanglei.fage@gmail.com>)
-	id 1TwmkP-0008F5-Mc; Sun, 20 Jan 2013 05:43:09 +0100
-Received: by mail-bk0-f49.google.com with SMTP id jm19so2596452bkc.36
-	for <multiple recipients>; Sat, 19 Jan 2013 20:27:42 -0800 (PST)
+	id 1TwoK2-00075F-BS; Sun, 20 Jan 2013 07:24:07 +0100
+Received: by mail-bk0-f50.google.com with SMTP id jf3so2555664bkc.9
+	for <multiple recipients>; Sat, 19 Jan 2013 22:08:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=mime-version:x-received:in-reply-to:references:date:message-id
 	:subject:from:to:cc:content-type;
-	bh=cRcT7G/CmmJRtz9MtEgQTHJg6KO7GOTi2H8PJ+rGMrE=;
-	b=YTENvFl5el3ZbNbS4sFLLvo7m86lcJf0rDDtIEDB73m1p8edR+A7pZLJR79Kl5/+CT
-	USmlWqDOjuOt+NzauPIJC6WjO5ikq57pAwrgpJvGAJ+RNMkvgUVIYvu7LyK4rpMmBwMv
-	H5zmKUPmeXh+KrpWjaZbhAX0shTTh6p19B6OUxIZ8sVehkqBcZXoAoa4ithG31QC2ONi
-	slSyVcDKGLUp2TrQQEjcF72wTiAk68e50Xy6yk/lLL3mOLJjndcO2BiRDe4mKNv6yPWV
-	xElBD+FtMI1ow1EqNAVxqKteqyftc5q0Oqk6Umfr9OngCxBtDNH0gSF9TOBRTa5CkhZH
-	giKQ==
+	bh=L0AnjcsPQ6/221ilklED3b8P2x+eg6eJxZ0iC+BdBkY=;
+	b=fZc5MHjGrFYz4xmkDYGIRWXs/vRz4ld6/lE3Nq128ND95dCmR6Qtz9FunyM4B/SRhf
+	+ydKFb2ohm347Fo9S/oaD9K2g1/9h+qdRjaykUqfjWucsuAsIuXlfGEoMje/Ik3TRGhk
+	7ga42gf8lSahQsg2+H2ADkyf3FH/vYkTmbmjx9bJYzXPWKv+fjhpUxlGEPNNgCyXNFmE
+	7dxAODnhFIseWmK3d74mkVNYIkGZDS9FWL4yq1GOUwmzj8Z+6awaLyiWA5Mbs+E71wJv
+	F6TyQ9FmNc7+oyPyrqjIj5xNM17+8ZC0+/UHSplK6GOTf0QPUZl4bRmmws67oSU/3YrZ
+	y1eg==
 MIME-Version: 1.0
-X-Received: by 10.204.5.202 with SMTP id 10mr3646936bkw.135.1358656062822;
-	Sat, 19 Jan 2013 20:27:42 -0800 (PST)
-Received: by 10.204.11.86 with HTTP; Sat, 19 Jan 2013 20:27:42 -0800 (PST)
+X-Received: by 10.204.156.139 with SMTP id x11mr3617200bkw.128.1358662115418; 
+	Sat, 19 Jan 2013 22:08:35 -0800 (PST)
+Received: by 10.204.11.86 with HTTP; Sat, 19 Jan 2013 22:08:35 -0800 (PST)
 In-Reply-To: <CABcZANkpo5qMnPkL903SQjfkPhwUF-7rK+i5LaqxTFUdqE3H2Q@mail.gmail.com>
 References: <CAHsH0E96h=aT6t-u-ACY7MGFHJv4_TTqSMfCmMpSKiq3NBjciw@mail.gmail.com>
 	<CABcZANkpo5qMnPkL903SQjfkPhwUF-7rK+i5LaqxTFUdqE3H2Q@mail.gmail.com>
-Date: Sun, 20 Jan 2013 12:27:42 +0800
-Message-ID: <CAHsH0E-Y5dLPvgqGCN57vt8BzKZy7ftdxZv7vL=HT0BYavCWcw@mail.gmail.com>
+Date: Sun, 20 Jan 2013 14:08:35 +0800
+Message-ID: <CAHsH0E_9kaYC0_9rv+zHR8FwxXyU=7vTj2eL85_jJ=uRtb0aSw@mail.gmail.com>
 From: lei yang <yanglei.fage@gmail.com>
 To: Chris Larson <clarson@kergoth.com>
 Cc: "bitbake-devel@lists.openembedded.org"
@@ -41,7 +41,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 20 Jan 2013 04:43:10 -0000
+X-List-Received-Date: Sun, 20 Jan 2013 06:24:08 -0000
 Content-Type: text/plain; charset=ISO-8859-1
 
 On Sun, Jan 20, 2013 at 10:15 AM, Chris Larson <clarson@kergoth.com> wrote:
@@ -55,15 +55,18 @@ On Sun, Jan 20, 2013 at 10:15 AM, Chris Larson <clarson@kergoth.com> wrote:
 > This is the correct syntax. The URL scheme (git://) determines what bitbake
 > fetcher, and therefore what tool, is used to fetch. If you use http://,
 > it'll try to download it with wget, not git.
-> --
-> Christopher Larson
+> -
 
-But, the fact is git://git.opensvc.com/multipath-tools/.git can't be
-used, you can't  git clone  git://git.opensvc.com/multipath-tools/.git
-(git:// is not valid this this git repos)
-but you can "git clone  http://git.opensvc.com/multipath-tools/.git",
-I think bitbake doesn't handle this
+
+Correct, now it works for me, what protocol determines, , I thought
+SRC_URS="address;protocol=*"
+The address should be a real address, now I know it's not , a strange usage
+
+Thanks
 
 Lei
+
+
+> Christopher Larson
 
 
