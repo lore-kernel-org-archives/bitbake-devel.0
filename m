@@ -1,39 +1,39 @@
-Received: from ra.se.axis.com ([195.60.68.13])
+Received: from anubis.se.axis.com ([195.60.68.12])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <olof.johansson@axis.com>) id 1TxDu6-0005yK-VL
+	(envelope-from <olof.johansson@axis.com>) id 1TxDuE-0005yc-NI
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 21 Jan 2013 10:43:01 +0100
+	Mon, 21 Jan 2013 10:43:10 +0100
 Received: from localhost (localhost [127.0.0.1])
-	by ra.se.axis.com (Postfix) with ESMTP id 596BE11FAA
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Jan 2013 10:18:05 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at ra.se.axis.com
-Received: from ra.se.axis.com ([127.0.0.1])
-	by localhost (ra.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id w1F3U4FCOLfq for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Jan 2013 10:18:04 +0100 (CET)
-Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
-	by ra.se.axis.com (Postfix) with ESMTP id 8264811F7E
+	by anubis.se.axis.com (Postfix) with ESMTP id 98DEB19DC3
 	for <bitbake-devel@lists.openembedded.org>;
 	Mon, 21 Jan 2013 10:18:04 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at anubis.se.axis.com
+Received: from anubis.se.axis.com ([127.0.0.1])
+	by localhost (anubis.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id RcBbBPq4ujHz for <bitbake-devel@lists.openembedded.org>;
+	Mon, 21 Jan 2013 10:18:04 +0100 (CET)
+Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
+	by anubis.se.axis.com (Postfix) with ESMTP id 4291619DAC
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 21 Jan 2013 10:18:03 +0100 (CET)
 Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
-	by seth.se.axis.com (Postfix) with ESMTP id 2AEAD3E29D
+	by thoth.se.axis.com (Postfix) with ESMTP id D210D34186
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Jan 2013 10:18:04 +0100 (CET)
+	Mon, 21 Jan 2013 10:18:03 +0100 (CET)
 Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
 	(10.0.5.74) with Microsoft SMTP Server id 8.2.176.0; Mon, 21 Jan 2013
-	10:18:04 +0100
-Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id ED83E9C076; 
+	10:18:03 +0100
+Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id B4E9C9C078; 
 	Mon, 21 Jan 2013 10:18:03 +0100 (CET)
 From: Olof Johansson <olof.johansson@axis.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 21 Jan 2013 10:18:02 +0100
-Message-ID: <1358759883-7566-6-git-send-email-olof.johansson@axis.com>
+Date: Mon, 21 Jan 2013 10:17:59 +0100
+Message-ID: <1358759883-7566-3-git-send-email-olof.johansson@axis.com>
 X-Mailer: git-send-email 1.7.10.4
 In-Reply-To: <1358759883-7566-1-git-send-email-olof.johansson@axis.com>
 References: <1358759883-7566-1-git-send-email-olof.johansson@axis.com>
 MIME-Version: 1.0
-Subject: [PATCH 5/6] fetch2: Add editor modelines for bb.tests.*
+Subject: [PATCH 2/6] fetch2: Add a class representing a generic URI
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -45,68 +45,234 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 21 Jan 2013 09:43:01 -0000
+X-List-Received-Date: Mon, 21 Jan 2013 09:43:15 -0000
+X-List-Received-Date: Mon, 21 Jan 2013 09:43:15 -0000
 Content-Type: text/plain
+
+A class representing a generic URI, with methods for accessing the URI
+components, and stringifies to the URI. This class should be a bit more
+flexible than the existing {encode,decode}_url functions in that it
+supports more components (e.g. port) and that it does not rely on a
+specific order on the return values. This makes it easy to add new
+properties without affecting the API.
 
 Signed-off-by: Olof Johansson <olof.johansson@axis.com>
 ---
- lib/bb/tests/codeparser.py |    2 ++
- lib/bb/tests/cow.py        |    2 ++
- lib/bb/tests/data.py       |    2 ++
- lib/bb/tests/fetch.py      |    2 ++
- lib/bb/tests/utils.py      |    2 ++
- 5 files changed, 10 insertions(+)
+ lib/bb/fetch2/__init__.py |  194 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 194 insertions(+)
 
-diff --git lib/bb/tests/codeparser.py lib/bb/tests/codeparser.py
-index 9b2d588..d2bd4a2 100644
---- lib/bb/tests/codeparser.py
-+++ lib/bb/tests/codeparser.py
-@@ -1,3 +1,5 @@
-+# ex:ts=4:sw=4:sts=4:et
-+# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
- #
- # BitBake Test for codeparser.py
- #
-diff --git lib/bb/tests/cow.py lib/bb/tests/cow.py
-index 599b2aa..35c5841 100644
---- lib/bb/tests/cow.py
-+++ lib/bb/tests/cow.py
-@@ -1,3 +1,5 @@
-+# ex:ts=4:sw=4:sts=4:et
-+# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
- #
- # BitBake Tests for Copy-on-Write (cow.py)
- #
-diff --git lib/bb/tests/data.py lib/bb/tests/data.py
-index b2ab8ee..5161586 100644
---- lib/bb/tests/data.py
-+++ lib/bb/tests/data.py
-@@ -1,3 +1,5 @@
-+# ex:ts=4:sw=4:sts=4:et
-+# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
- #
- # BitBake Tests for the Data Store (data.py/data_smart.py)
- #
-diff --git lib/bb/tests/fetch.py lib/bb/tests/fetch.py
-index e765ca7..778d94f 100644
---- lib/bb/tests/fetch.py
-+++ lib/bb/tests/fetch.py
-@@ -1,3 +1,5 @@
-+# ex:ts=4:sw=4:sts=4:et
-+# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
- #
- # BitBake Tests for the Fetcher (fetch2/)
- #
-diff --git lib/bb/tests/utils.py lib/bb/tests/utils.py
-index 9f60491..7c50b1d 100644
---- lib/bb/tests/utils.py
-+++ lib/bb/tests/utils.py
-@@ -1,3 +1,5 @@
-+# ex:ts=4:sw=4:sts=4:et
-+# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
- #
- # BitBake Tests for utils.py
- #
+diff --git lib/bb/fetch2/__init__.py lib/bb/fetch2/__init__.py
+index 150dc3c..3b83c0c 100644
+--- lib/bb/fetch2/__init__.py
++++ lib/bb/fetch2/__init__.py
+@@ -30,6 +30,7 @@ from __future__ import print_function
+ import os, re
+ import logging
+ import urllib
++from urlparse import urlparse
+ import bb.persist_data, bb.utils
+ import bb.checksum
+ from bb import data
+@@ -119,6 +120,199 @@ class NonLocalMethod(Exception):
+     def __init__(self):
+         Exception.__init__(self)
+ 
++
++class URI(object):
++    """
++    A class representing a generic URI, with methods for
++    accessing the URI components, and stringifies to the
++    URI.
++
++    It is constructed by calling it with a URI, or setting
++    the attributes manually:
++
++     uri = URI("http://example.com/")
++
++     uri = URI()
++     uri.scheme = 'http'
++     uri.hostname = 'example.com'
++     uri.path = '/'
++
++    It has the following attributes:
++
++      * scheme (read/write)
++      * userinfo (authentication information) (read/write)
++        * username (read/write)
++        * password (read/write)
++
++        Note, password is deprecated as of RFC 3986.
++
++      * hostname (read/write)
++      * port (read/write)
++      * hostport (read only)
++        "hostname:port", if both are set, otherwise just "hostname"
++      * path (read/write)
++      * path_quoted (read/write)
++        A URI quoted version of path
++      * params (dict) (read/write)
++      * relative (bool) (read only)
++        True if this is a "relative URI", (e.g. file:foo.diff)
++
++    It stringifies to the URI itself.
++
++    Some notes about relative URIs: while it's specified that
++    a URI beginning with <scheme>:// should either be directly
++    followed by a hostname or a /, the old URI handling of the
++    fetch2 library did not comform to this. Therefore, this URI
++    class has some kludges to make sure that URIs are parsed in
++    a way comforming to bitbake's current usage. This URI class
++    supports the following:
++
++     file:relative/path.diff (IETF compliant)
++     git:relative/path.git (IETF compliant)
++     git:///absolute/path.git (IETF compliant)
++     file:///absolute/path.diff (IETF compliant)
++
++     file://relative/path.diff (not IETF compliant)
++
++    But it does not support the following:
++
++     file://hostname/absolute/path.diff (would be IETF compliant)
++
++    Note that the last case only applies to a list of
++    "whitelisted" schemes (currently only file://), that requires
++    its URIs to not have a network location.
++    """
++
++    _relative_schemes = ['file', 'git']
++    _netloc_forbidden = ['file']
++
++    def __init__(self, uri=None):
++        self.scheme = ''
++        self.userinfo = ''
++        self.hostname = ''
++        self.port = None
++        self._path = ''
++        self.params = {}
++        self.relative = False
++
++        if not uri:
++            return
++
++        urlp = urlparse(uri)
++        self.scheme = urlp.scheme
++
++        # Convert URI to be relative
++        if urlp.scheme in self._netloc_forbidden:
++            uri = re.sub("(?<=:)//(?!/)", "", uri, 1)
++            urlp = urlparse(uri)
++
++        # Identify if the URI is relative or not
++        if urlp.scheme in self._relative_schemes and \
++           re.compile("^\w+:(?!//)").match(uri):
++            self.relative = True
++
++        if not self.relative:
++            self.hostname = urlp.hostname or ''
++            self.port = urlp.port
++
++            self.userinfo += urlp.username or ''
++
++            if urlp.password:
++                self.userinfo += ':%s' % urlp.password
++
++        # Do support params even for URI schemes that Python's
++        # urlparse doesn't support params for.
++        path = ''
++        param_str = ''
++        if not urlp.params:
++            path, param_str = (list(urlp.path.split(";", 1)) + [None])[:2]
++        else:
++            path = urlp.path
++            param_str = urlp.params
++
++        self.path = urllib.unquote(path)
++
++        if param_str:
++            self.params = self._param_dict(param_str)
++
++    def __str__(self):
++        userinfo = self.userinfo
++        if userinfo:
++            userinfo += '@'
++
++        return "%s:%s%s%s%s%s" % (
++            self.scheme,
++            '' if self.relative else '//',
++            userinfo,
++            self.hostport,
++            self.path_quoted,
++            self._param_str)
++
++    @property
++    def _param_str(self):
++        ret = ''
++        for key, val in self.params.items():
++            ret += ";%s=%s" % (key, val)
++        return ret
++
++    def _param_dict(self, param_str):
++        parm = {}
++
++        for keyval in param_str.split(";"):
++            key, val = keyval.split("=", 1)
++            parm[key] = val
++
++        return parm
++
++    @property
++    def hostport(self):
++        if not self.port:
++            return self.hostname
++        return "%s:%d" % (self.hostname, self.port)
++
++    @property
++    def path_quoted(self):
++        return urllib.quote(self.path)
++
++    @path_quoted.setter
++    def path_quoted(self, path):
++        self.path = urllib.unquote(path)
++
++    @property
++    def path(self):
++        return self._path
++
++    @path.setter
++    def path(self, path):
++        self._path = path
++
++        if re.compile("^/").match(path):
++            self.relative = False
++        else:
++            self.relative = True
++
++    @property
++    def username(self):
++        if self.userinfo:
++            return (self.userinfo.split(":", 1))[0]
++        return ''
++
++    @username.setter
++    def username(self, username):
++        self.userinfo = username
++        if self.password:
++            self.userinfo += ":%s" % self.password
++
++    @property
++    def password(self):
++        if self.userinfo and ":" in self.userinfo:
++            return (self.userinfo.split(":", 1))[1]
++        return ''
++
++    @password.setter
++    def password(self, password):
++        self.userinfo = "%s:%s" % (self.username, password)
++
+ def decodeurl(url):
+     """Decodes an URL into the tokens (scheme, network location, path,
+     user, password, parameters).
 -- 
 1.7.10.4
 
