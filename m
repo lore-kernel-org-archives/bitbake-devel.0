@@ -1,39 +1,39 @@
 Received: from anubis.se.axis.com ([195.60.68.12])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <olof.johansson@axis.com>) id 1TxDuE-0005yd-Np
+	(envelope-from <olof.johansson@axis.com>) id 1TxDuE-0005yf-Li
 	for bitbake-devel@lists.openembedded.org;
 	Mon, 21 Jan 2013 10:43:10 +0100
 Received: from localhost (localhost [127.0.0.1])
-	by anubis.se.axis.com (Postfix) with ESMTP id 483E319DDE
+	by anubis.se.axis.com (Postfix) with ESMTP id 07D7319DD8
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Jan 2013 10:18:07 +0100 (CET)
+	Mon, 21 Jan 2013 10:18:06 +0100 (CET)
 X-Virus-Scanned: Debian amavisd-new at anubis.se.axis.com
 Received: from anubis.se.axis.com ([127.0.0.1])
 	by localhost (anubis.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 7wJlSqAtaKem for <bitbake-devel@lists.openembedded.org>;
+	with LMTP id FzR6w5+YNBsl for <bitbake-devel@lists.openembedded.org>;
 	Mon, 21 Jan 2013 10:18:04 +0100 (CET)
 Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
-	by anubis.se.axis.com (Postfix) with ESMTP id 4703519DCE
+	by anubis.se.axis.com (Postfix) with ESMTP id 48EC219DD0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Jan 2013 10:18:03 +0100 (CET)
+	Mon, 21 Jan 2013 10:18:04 +0100 (CET)
 Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
-	by seth.se.axis.com (Postfix) with ESMTP id F06393E29C
+	by seth.se.axis.com (Postfix) with ESMTP id 2C5953E2A0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Jan 2013 10:18:03 +0100 (CET)
+	Mon, 21 Jan 2013 10:18:04 +0100 (CET)
 Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
 	(10.0.5.74) with Microsoft SMTP Server id 8.2.176.0; Mon, 21 Jan 2013
-	10:18:03 +0100
-Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id C66339C079; 
+	10:18:04 +0100
+Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id DBC8C9C077; 
 	Mon, 21 Jan 2013 10:18:03 +0100 (CET)
 From: Olof Johansson <olof.johansson@axis.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 21 Jan 2013 10:18:00 +0100
-Message-ID: <1358759883-7566-4-git-send-email-olof.johansson@axis.com>
+Date: Mon, 21 Jan 2013 10:18:01 +0100
+Message-ID: <1358759883-7566-5-git-send-email-olof.johansson@axis.com>
 X-Mailer: git-send-email 1.7.10.4
 In-Reply-To: <1358759883-7566-1-git-send-email-olof.johansson@axis.com>
 References: <1358759883-7566-1-git-send-email-olof.johansson@axis.com>
 MIME-Version: 1.0
-Subject: [PATCH 3/6] fetch2: unittests for bb.fetch2.URI class
+Subject: [PATCH 4/6] fetch2: Adapt encode/decode url to use URI class
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -50,248 +50,99 @@ Content-Type: text/plain
 
 Signed-off-by: Olof Johansson <olof.johansson@axis.com>
 ---
- lib/bb/tests/fetch.py |  226 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 226 insertions(+)
+ lib/bb/fetch2/__init__.py |   66 ++++++++++++---------------------------------
+ 1 file changed, 17 insertions(+), 49 deletions(-)
 
-diff --git lib/bb/tests/fetch.py lib/bb/tests/fetch.py
-index 67eda59..e765ca7 100644
---- lib/bb/tests/fetch.py
-+++ lib/bb/tests/fetch.py
-@@ -21,8 +21,234 @@ import unittest
- import tempfile
- import subprocess
- import os
-+from bb.fetch2 import URI
- import bb
+diff --git lib/bb/fetch2/__init__.py lib/bb/fetch2/__init__.py
+index 3b83c0c..549e261 100644
+--- lib/bb/fetch2/__init__.py
++++ lib/bb/fetch2/__init__.py
+@@ -318,40 +318,9 @@ def decodeurl(url):
+     user, password, parameters).
+     """
  
-+class URITest(unittest.TestCase):
-+    test_uris = {
-+        "http://www.google.com/index.html" : {
-+            'uri': 'http://www.google.com/index.html',
-+            'scheme': 'http',
-+            'hostname': 'www.google.com',
-+            'port': None,
-+            'hostport': 'www.google.com',
-+            'path': '/index.html',
-+            'userinfo': '',
-+            'username': '',
-+            'password': '',
-+            'params': {},
-+            'relative': False
-+        },
-+        "http://www.google.com/index.html;param1=value1" : {
-+            'uri': 'http://www.google.com/index.html;param1=value1',
-+            'scheme': 'http',
-+            'hostname': 'www.google.com',
-+            'port': None,
-+            'hostport': 'www.google.com',
-+            'path': '/index.html',
-+            'userinfo': '',
-+            'username': '',
-+            'password': '',
-+            'params': {
-+                'param1': 'value1'
-+            },
-+            'relative': False
-+        },
-+        "http://www.example.com:8080/index.html" : {
-+            'uri': 'http://www.example.com:8080/index.html',
-+            'scheme': 'http',
-+            'hostname': 'www.example.com',
-+            'port': 8080,
-+            'hostport': 'www.example.com:8080',
-+            'path': '/index.html',
-+            'userinfo': '',
-+            'username': '',
-+            'password': '',
-+            'params': {},
-+            'relative': False
-+        },
-+        "cvs://anoncvs@cvs.handhelds.org/cvs;module=familiar/dist/ipkg" : {
-+            'uri': 'cvs://anoncvs@cvs.handhelds.org/cvs;module=familiar/dist/ipkg',
-+            'scheme': 'cvs',
-+            'hostname': 'cvs.handhelds.org',
-+            'port': None,
-+            'hostport': 'cvs.handhelds.org',
-+            'path': '/cvs',
-+            'userinfo': 'anoncvs',
-+            'username': 'anoncvs',
-+            'password': '',
-+            'params': {
-+                'module': 'familiar/dist/ipkg'
-+            },
-+            'relative': False
-+        },
-+        "cvs://anoncvs:anonymous@cvs.handhelds.org/cvs;tag=V0-99-81;module=familiar/dist/ipkg": {
-+            'uri': 'cvs://anoncvs:anonymous@cvs.handhelds.org/cvs;tag=V0-99-81;module=familiar/dist/ipkg',
-+            'scheme': 'cvs',
-+            'hostname': 'cvs.handhelds.org',
-+            'port': None,
-+            'hostport': 'cvs.handhelds.org',
-+            'path': '/cvs',
-+            'userinfo': 'anoncvs:anonymous',
-+            'username': 'anoncvs',
-+            'password': 'anonymous',
-+            'params': {
-+                'tag': 'V0-99-81',
-+                'module': 'familiar/dist/ipkg'
-+            },
-+            'relative': False
-+        },
-+        "file://example.diff": { # NOTE: Not RFC compliant!
-+            'uri': 'file:example.diff',
-+            'scheme': 'file',
-+            'hostname': '',
-+            'port': None,
-+            'hostport': '',
-+            'path': 'example.diff',
-+            'userinfo': '',
-+            'username': '',
-+            'password': '',
-+            'params': {},
-+            'relative': True
-+        },
-+        "file:example.diff": { # NOTE: RFC compliant version of the former
-+            'uri': 'file:example.diff',
-+            'scheme': 'file',
-+            'hostname': '',
-+            'port': None,
-+            'hostport': '',
-+            'path': 'example.diff',
-+            'userinfo': '',
-+            'userinfo': '',
-+            'username': '',
-+            'password': '',
-+            'params': {},
-+            'relative': True
-+        },
-+        "file:///tmp/example.diff": {
-+            'uri': 'file:///tmp/example.diff',
-+            'scheme': 'file',
-+            'hostname': '',
-+            'port': None,
-+            'hostport': '',
-+            'path': '/tmp/example.diff',
-+            'userinfo': '',
-+            'userinfo': '',
-+            'username': '',
-+            'password': '',
-+            'params': {},
-+            'relative': False
-+        },
-+        "git:///path/example.git": {
-+            'uri': 'git:///path/example.git',
-+            'scheme': 'git',
-+            'hostname': '',
-+            'port': None,
-+            'hostport': '',
-+            'path': '/path/example.git',
-+            'userinfo': '',
-+            'userinfo': '',
-+            'username': '',
-+            'password': '',
-+            'params': {},
-+            'relative': False
-+        },
-+        "git:path/example.git": {
-+            'uri': 'git:path/example.git',
-+            'scheme': 'git',
-+            'hostname': '',
-+            'port': None,
-+            'hostport': '',
-+            'path': 'path/example.git',
-+            'userinfo': '',
-+            'userinfo': '',
-+            'username': '',
-+            'password': '',
-+            'params': {},
-+            'relative': True
-+        },
-+        "git://example.net/path/example.git": {
-+            'uri': 'git://example.net/path/example.git',
-+            'scheme': 'git',
-+            'hostname': 'example.net',
-+            'port': None,
-+            'hostport': 'example.net',
-+            'path': '/path/example.git',
-+            'userinfo': '',
-+            'userinfo': '',
-+            'username': '',
-+            'password': '',
-+            'params': {},
-+            'relative': False
-+        }
-+    }
-+
-+    def test_uri(self):
-+        for test_uri, ref in self.test_uris.items():
-+            uri = URI(test_uri)
-+
-+            self.assertEqual(str(uri), ref['uri'])
-+
-+            # expected attributes
-+            self.assertEqual(uri.scheme, ref['scheme'])
-+
-+            self.assertEqual(uri.userinfo, ref['userinfo'])
-+            self.assertEqual(uri.username, ref['username'])
-+            self.assertEqual(uri.password, ref['password'])
-+
-+            self.assertEqual(uri.hostname, ref['hostname'])
-+            self.assertEqual(uri.port, ref['port'])
-+            self.assertEqual(uri.hostport, ref['hostport'])
-+
-+            self.assertEqual(uri.path, ref['path'])
-+            self.assertEqual(uri.params, ref['params'])
-+
-+            self.assertEqual(uri.relative, ref['relative'])
-+
-+    def test_dict(self):
-+        for test in self.test_uris.values():
-+            uri = URI()
-+
-+            self.assertEqual(uri.scheme, '')
-+            self.assertEqual(uri.userinfo, '')
-+            self.assertEqual(uri.username, '')
-+            self.assertEqual(uri.password, '')
-+            self.assertEqual(uri.hostname, '')
-+            self.assertEqual(uri.port, None)
-+            self.assertEqual(uri.path, '')
-+            self.assertEqual(uri.params, {})
-+
-+
-+            uri.scheme = test['scheme']
-+            self.assertEqual(uri.scheme, test['scheme'])
-+
-+            uri.userinfo = test['userinfo']
-+            self.assertEqual(uri.userinfo, test['userinfo'])
-+            self.assertEqual(uri.username, test['username'])
-+            self.assertEqual(uri.password, test['password'])
-+
-+            uri.hostname = test['hostname']
-+            self.assertEqual(uri.hostname, test['hostname'])
-+            self.assertEqual(uri.hostport, test['hostname'])
-+
-+            uri.port = test['port']
-+            self.assertEqual(uri.port, test['port'])
-+            self.assertEqual(uri.hostport, test['hostport'])
-+
-+            uri.path = test['path']
-+            self.assertEqual(uri.path, test['path'])
-+
-+            uri.params = test['params']
-+            self.assertEqual(uri.params, test['params'])
-+
-+            self.assertEqual(str(uri)+str(uri.relative), str(test['uri'])+str(test['relative']))
-+
-+            self.assertEqual(str(uri), test['uri'])
-+
-+            uri.params = {}
-+            self.assertEqual(uri.params, {})
-+            self.assertEqual(str(uri), (str(uri).split(";"))[0])
-+
+-    m = re.compile('(?P<type>[^:]*)://((?P<user>.+)@)?(?P<location>[^;]+)(;(?P<parm>.*))?').match(url)
+-    if not m:
+-        raise MalformedUrl(url)
+-
+-    type = m.group('type')
+-    location = m.group('location')
+-    if not location:
+-        raise MalformedUrl(url)
+-    user = m.group('user')
+-    parm = m.group('parm')
+-
+-    locidx = location.find('/')
+-    if locidx != -1 and type.lower() != 'file':
+-        host = location[:locidx]
+-        path = location[locidx:]
+-    else:
+-        host = ""
+-        path = location
+-    if user:
+-        m = re.compile('(?P<user>[^:]+)(:?(?P<pswd>.*))').match(user)
+-        if m:
+-            user = m.group('user')
+-            pswd = m.group('pswd')
+-    else:
+-        user = ''
+-        pswd = ''
+-
+-    p = {}
+-    if parm:
+-        for s in parm.split(';'):
+-            s1, s2 = s.split('=')
+-            p[s1] = s2
+-
+-    return type, host, urllib.unquote(path), user, pswd, p
++    urlo = URI(url)
++    return (urlo.scheme, urlo.hostport, urlo.path,
++            urlo.username, urlo.password, urlo.params)
  
- class FetcherTest(unittest.TestCase):
+ def encodeurl(decoded):
+     """Encodes a URL from tokens (scheme, network location, path,
+@@ -360,27 +329,26 @@ def encodeurl(decoded):
  
+     type, host, path, user, pswd, p = decoded
+ 
++    urlo = URI()
++
+     if not path:
+         raise MissingParameterError('path', "encoded from the data %s" % str(decoded))
+     if not type:
+         raise MissingParameterError('type', "encoded from the data %s" % str(decoded))
+-    url = '%s://' % type
+-    if user and type != "file":
+-        url += "%s" % user
+-        if pswd:
+-            url += ":%s" % pswd
+-        url += "@"
+-    if host and type != "file":
+-        url += "%s" % host
+-    # Standardise path to ensure comparisons work
+-    while '//' in path:
+-        path = path.replace("//", "/")
+-    url += "%s" % urllib.quote(path)
++
++    urlo.scheme = type
++    urlo.path = path
++
++    if host:
++        urlo.hostname = host
++    if user:
++        urlo.username = user
++    if pswd:
++        urlo.password = pswd
+     if p:
+-        for parm in p:
+-            url += ";%s=%s" % (parm, p[parm])
++        urlo.params = p
+ 
+-    return url
++    return str(urlo)
+ 
+ def uri_replace(ud, uri_find, uri_replace, replacements, d):
+     if not ud.url or not uri_find or not uri_replace:
 -- 
 1.7.10.4
 
