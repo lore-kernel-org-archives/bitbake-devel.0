@@ -1,39 +1,31 @@
-Received: from anubis.se.axis.com ([195.60.68.12])
-	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <olof.johansson@axis.com>) id 1TxDuE-0005yb-LP
-	for bitbake-devel@lists.openembedded.org;
-	Mon, 21 Jan 2013 10:43:10 +0100
+Received: from 93-97-173-237.zone5.bethere.co.uk ([93.97.173.237]
+	helo=tim.rpsys.net) by linuxtogo.org with esmtp (Exim 4.72)
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1TxFJC-00028F-P7 for bitbake-devel@lists.openembedded.org;
+	Mon, 21 Jan 2013 12:13:00 +0100
 Received: from localhost (localhost [127.0.0.1])
-	by anubis.se.axis.com (Postfix) with ESMTP id 7AF9019DB0
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Jan 2013 10:18:04 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at anubis.se.axis.com
-Received: from anubis.se.axis.com ([127.0.0.1])
-	by localhost (anubis.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id gTDcGGhs0tcL for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Jan 2013 10:18:04 +0100 (CET)
-Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
-	by anubis.se.axis.com (Postfix) with ESMTP id 44DF719DC3
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Jan 2013 10:18:03 +0100 (CET)
-Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
-	by thoth.se.axis.com (Postfix) with ESMTP id D163634183
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Jan 2013 10:18:03 +0100 (CET)
-Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
-	(10.0.5.74) with Microsoft SMTP Server id 8.2.176.0; Mon, 21 Jan 2013
-	10:18:03 +0100
-Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id A15699C076; 
-	Mon, 21 Jan 2013 10:18:03 +0100 (CET)
-From: Olof Johansson <olof.johansson@axis.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 21 Jan 2013 10:17:58 +0100
-Message-ID: <1358759883-7566-2-git-send-email-olof.johansson@axis.com>
-X-Mailer: git-send-email 1.7.10.4
-In-Reply-To: <1358759883-7566-1-git-send-email-olof.johansson@axis.com>
-References: <1358759883-7566-1-git-send-email-olof.johansson@axis.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/6] fetch2: Remove unused code in wget fetcher
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id r0LAvOoK015819;
+	Mon, 21 Jan 2013 10:57:24 GMT
+Received: from tim.rpsys.net ([127.0.0.1])
+	by localhost (tim.rpsys.net [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP
+	id 04712-08; Mon, 21 Jan 2013 10:57:20 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by tim.rpsys.net (8.13.6/8.13.8) with ESMTP id r0LAvFaD015804
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO);
+	Mon, 21 Jan 2013 10:57:16 GMT
+Message-ID: <1358765836.14265.47.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Martin Jansa <martin.jansa@gmail.com>
+Date: Mon, 21 Jan 2013 10:57:16 +0000
+In-Reply-To: <20121216201501.GG3448@jama>
+References: <1355493212.32519.16.camel@ted> <20121216201501.GG3448@jama>
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Mime-Version: 1.0
+X-Virus-Scanned: amavisd-new at rpsys.net
+Cc: Philip Balister <philip@balister.org>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: BBHandler/ConfHandler: Improve multiline comment handling
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -45,39 +37,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 21 Jan 2013 09:43:15 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 21 Jan 2013 11:13:01 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Olof Johansson <olof.johansson@axis.com>
----
- lib/bb/fetch2/wget.py |    5 -----
- 1 file changed, 5 deletions(-)
+On Sun, 2012-12-16 at 21:15 +0100, Martin Jansa wrote:
+> On Fri, Dec 14, 2012 at 01:53:32PM +0000, Richard Purdie wrote:
+> > Faced with an expression like:
+> > 
+> >  # Some comment \
+> >  FOO = "bar"
+> > 
+> > what should bitbake do? Technically, the \ character means its multiline and
+> > currently the code treats this as a continuation of the comment. This can
+> > surprise some people and is not intuitive.
+> > 
+> > This patch makes bitbake simply error and asks the user to be clearer
+> > about what they mean.
+> 
+> I have at least 2 bb files with '# foo \', but error message is not nice:
 
-diff --git lib/bb/fetch2/wget.py lib/bb/fetch2/wget.py
-index 2808df6..1fafc4a 100644
---- lib/bb/fetch2/wget.py
-+++ lib/bb/fetch2/wget.py
-@@ -32,8 +32,6 @@ import urllib
- from   bb import data
- from   bb.fetch2 import FetchMethod
- from   bb.fetch2 import FetchError
--from   bb.fetch2 import encodeurl
--from   bb.fetch2 import decodeurl
- from   bb.fetch2 import logger
- from   bb.fetch2 import runfetchcmd
- 
-@@ -77,9 +75,6 @@ class Wget(FetchMethod):
-             fetchcmd = d.getVar("FETCHCOMMAND_wget", True) or d.expand(basecmd + " -P ${DL_DIR} '${URI}'")
- 
-         uri = uri.split(";")[0]
--        uri_decoded = list(decodeurl(uri))
--        uri_type = uri_decoded[0]
--        uri_host = uri_decoded[1]
- 
-         fetchcmd = fetchcmd.replace("${URI}", uri.split(";")[0])
-         fetchcmd = fetchcmd.replace("${FILE}", ud.basename)
--- 
-1.7.10.4
+Agreed, I held off the patch due to this. It was due to a corner case
+of:
+
+# foo \
+
+with an empty line following. I've improved the patch to cope with that
+and give a sensible error message, then merged it to master. Thanks for
+the report.
+
+Cheers,
+
+Richard
 
 
 
