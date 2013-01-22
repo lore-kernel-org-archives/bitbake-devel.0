@@ -1,21 +1,26 @@
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <constantinx.musca@intel.com>) id 1TxaY3-00033M-Tv
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1TxbTy-00067M-U6
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 22 Jan 2013 10:53:44 +0100
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 22 Jan 2013 01:37:09 -0800
+	Tue, 22 Jan 2013 11:53:47 +0100
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 22 Jan 2013 02:35:51 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.84,513,1355126400"; d="scan'208";a="276893434"
-Received: from costin-desktop (HELO localhost.localdomain) ([10.237.105.152])
-	by fmsmga001.fm.intel.com with ESMTP; 22 Jan 2013 01:37:08 -0800
-From: Constantin Musca <constantinx.musca@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 22 Jan 2013 11:37:57 +0200
-Message-Id: <1358847477-6786-1-git-send-email-constantinx.musca@intel.com>
-X-Mailer: git-send-email 1.7.11.7
-Cc: Constantin Musca <constantinx.musca@intel.com>
-Subject: [PATCH 2/3] persist_data: add get_by_pattern method to API
+X-IronPort-AV: E=Sophos;i="4.84,513,1355126400"; d="scan'208";a="275107547"
+Received: from unknown (HELO helios.localnet) ([10.252.123.171])
+	by orsmga002.jf.intel.com with ESMTP; 22 Jan 2013 02:36:57 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: lei yang <yanglei.fage@gmail.com>
+Date: Tue, 22 Jan 2013 10:36:56 +0000
+Message-ID: <3325513.8ZibJSvNVU@helios>
+Organization: Intel Corporation
+User-Agent: KMail/4.9.4 (Linux/3.5.0-22-generic; KDE/4.9.4; i686; ; )
+In-Reply-To: <CAHsH0E96h=aT6t-u-ACY7MGFHJv4_TTqSMfCmMpSKiq3NBjciw@mail.gmail.com>
+References: <CAHsH0E96h=aT6t-u-ACY7MGFHJv4_TTqSMfCmMpSKiq3NBjciw@mail.gmail.com>
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org,
+	openembedded-core@lists.openembedded.org
+Subject: Re: [OE-core] git address in SRC_URI, doesn't works for me
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,34 +32,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 22 Jan 2013 09:53:45 -0000
+X-List-Received-Date: Tue, 22 Jan 2013 10:53:47 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-- one can use get_by_pattern to get a list of values associated
-with keys that match the specified pattern
+On Saturday 19 January 2013 17:13:01 lei yang wrote:
+> One git address's prefix is "http" --->
+> http://git.opensvc.com/multipath-tools/.git,
+> 
+> it means
+> 
+> git clone  http://git.opensvc.com/multipath-tools/.git  ---------> works
+> git clone git://git.opensvc.com/multipath-tools/.git ---------> doesn't work
+> 
+> I tried SRC_URI with below, both failed
+> 
+> SRC_URI = "http://git.opensvc.com/multipath-tools/.git;protocol=git"
+> it tells
+> fatal: reference is not a tree: c23c0d33ed98a1dcee40115018b73cb3d4cda8d7
+> 
+> 
+> SRC_URI = "git://git.opensvc.com/multipath-tools/.git;protocol=http"
+> it doe noting,and trying to find COPING,but it doesn't clone it
 
-Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
----
- bitbake/lib/bb/persist_data.py | 5 +++++
- 1 file changed, 5 insertions(+)
+I think you already got this answered on IRC, but for reference you need to 
+use git://....;protocol=http and not http://.....;protocol=git. BitBake uses 
+the prefix to determine which fetcher to use (matching the type of repository 
+being fetched from) and then each individual fetcher decides the meaning of 
+the protocol argument. In this case you're fetching from a git repository 
+using the HTTP transport protocol.
 
-diff --git a/bitbake/lib/bb/persist_data.py b/bitbake/lib/bb/persist_data.py
-index c69758d..994e61b 100644
---- a/bitbake/lib/bb/persist_data.py
-+++ b/bitbake/lib/bb/persist_data.py
-@@ -125,6 +125,11 @@ class SQLTable(collections.MutableMapping):
- 
-         return len(self) < len(other)
- 
-+    def get_by_pattern(self, pattern):
-+        data = self._execute("SELECT * FROM %s WHERE key LIKE ?;" %
-+                             self.table, [pattern])
-+        return [row[1] for row in data]
-+
-     def values(self):
-         return list(self.itervalues())
- 
+Cheers,
+Paul
+
 -- 
-1.7.11.7
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
 
