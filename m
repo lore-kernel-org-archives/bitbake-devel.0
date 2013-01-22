@@ -1,24 +1,40 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mail-pb0-f49.google.com ([209.85.160.49])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Peter.Seebach@windriver.com>) id 1Txkdk-0007wX-95
+	(envelope-from <trungiee@gmail.com>) id 1TxmQk-00044n-8O
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 22 Jan 2013 21:40:39 +0100
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id r0MKOj5E008484
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	Tue, 22 Jan 2013 23:34:58 +0100
+Received: by mail-pb0-f49.google.com with SMTP id un15so4225043pbc.22
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 22 Jan 2013 12:24:45 -0800 (PST)
-Received: from e6410-2 (172.25.40.227) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.2.318.4;
-	Tue, 22 Jan 2013 12:24:45 -0800
-Date: Tue, 22 Jan 2013 14:24:30 -0600
-From: Peter Seebach <peter.seebach@windriver.com>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Message-ID: <20130122142430.1cc1a705@e6410-2>
-X-Mailer: Claws Mail 3.8.0 (GTK+ 2.24.10; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Subject: Half-baked proposal: Introduce @{foo} variable expansion for bitbake
+	Tue, 22 Jan 2013 14:19:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=x-received:content-type:mime-version:subject:from:in-reply-to:date
+	:content-transfer-encoding:message-id:references:to:x-mailer;
+	bh=FiTHZUyUs9pgSKRgMjpgfih6Pbmo9uLYS5TyS4vT71U=;
+	b=KeV6QAqrjQEGnOw6J6rIXlE60JK8UVjYYp8/+9FKc9SGnFbK2jO9Afro8uh78FuVby
+	Xdawl4aO2Iuc719umhgU4f+C9fVG9YM5N6rA+KNadDVfOP+4WVtcvf2exkzw4/qFDAAm
+	odfxVQry/v1Pa+yG119LGGKxHa7ovdRUdObUeQakLDchhanSxEcmvw8pWCyiVvDUbT8b
+	ckR5aM2oCxOML+cFrD6wEAN6D5UVXIib6MaoyTZGgdLsmo3NMufUu3c0FERchHblPdJ4
+	8mrch7n16LDMjcriW+8waS6lYckCon9p1erTaNcg7+A8RGHRiXAZvN3y9A2aFLPT4yD9
+	M+9A==
+X-Received: by 10.68.227.73 with SMTP id ry9mr61638738pbc.73.1358893166862;
+	Tue, 22 Jan 2013 14:19:26 -0800 (PST)
+Received: from [192.168.0.26] (CPE-60-225-117-182.hhui4.ken.bigpond.net.au.
+	[60.225.117.182])
+	by mx.google.com with ESMTPS id v2sm12135604paz.36.2013.01.22.14.19.23
+	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Tue, 22 Jan 2013 14:19:25 -0800 (PST)
+Mime-Version: 1.0 (Mac OS X Mail 6.2 \(1499\))
+From: Trung Hoang <trungiee@gmail.com>
+In-Reply-To: <50FEC2BE.3020902@windriver.com>
+Date: Wed, 23 Jan 2013 09:21:08 +1100
+Message-Id: <2ABB9CD2-9E60-4E5A-A9B0-1C96F25A424B@gmail.com>
+References: <6811518C-5E13-40A7-8B8B-57C2810DEA8B@gmail.com>
+	<CAHUNapSSaOqnkOZq3_BaMthqY6hG+JTxvi9XpgD_38yT6+wDhA@mail.gmail.com>
+	<50FEC2BE.3020902@windriver.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+X-Mailer: Apple Mail (2.1499)
+Subject: Re: Display mode
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,75 +46,72 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 22 Jan 2013 20:41:09 -0000
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 22 Jan 2013 22:34:58 -0000
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-Observed issues:
-1. It can be non-obvious to a user that ${foo} in a shell script is
-probably expanded by bitbake, unless foo isn't set, but that
-${foo#pattern} is expanded by the shell, and so on.
-2. Furthermore, because ${foo#pattern} wants to be expanded by the
-shell, we can't easily add functionality similar to some of the shell
-expansion rules.
-3. For instance, think how useful it would be to have an easy way to
-express the equivalent of a shell ${foo:+/$foo} or ${foo:+:$foo}
-without an elaborate hunk of Python in a ${@...}.
+Ahh yes, Knotty2 rocks!=20
 
-My suggestion:
-Right now, I don't see a single @{ anywhere in oe-core. I propose the
-introduction of @{foo} as variable-expansion syntax, with intent that
-it would acquire the functionality of POSIX shell expansions, at least
-as far as:
-	@{foo-bar} => bar if foo is unset, else foo
-	@{foo+bar} => bar if foo is set
-	@{foo:-bar} => -bar, but "empty or unset"
-	@{foo:+bar} => +bar, but "empty or unset"
-	@{foo#bar} => foo with a minimal leading bar removed
-	@{foo##bar} => foo with a maximal leading bar removed
-	@{foo%bar} => like #, but trailing pattern
-	@{foo%%bar} => like ##, but trailing pattern
+For those who don't get this by default, i did this..=20
 
-And maybe a couple of others:
-	@{foo<bar} => foo, with bar as a prefix if foo is set
-	@{foo>bar} => foo, with bar as a suffix if foo is set
-	@{foo?bar:baz} => bar if foo is set, baz otherwise.
+`bitbake -u knotty2 gumstix-console-image'=20
 
-There is a lot of work right now going into replicating these
-functionalities. For instance, consider the prefix BBEXTENDVARIANT,
-which might be "lib32". I have a name, ${FOO}. I want to express a
-value which is:
-	${BBEXTENDVARIANT}-${FOO}
-if BBEXTENDVARIANT is set-and-non-empty, or
-	${FOO}
-otherwise.
+I do notice that sometimes the "Running task 3160 of 3162 =85" does get =
+buggy.. Instead of updating that line it makes a new line so i end up =
+with=85=20
 
-No problem! I just write:
-PREFIX = "${@['', (d.getVar("BBEXTENDVARIANT", True) or "") +
-'-'][(d.getVar("BBEXTENDVARIANT", True) or "") != ""]}"
+Running task 3160 of 3162..
+Running task 3161 of 3162..
+Running task 3162 of 3162=85
+0: =85
 
-and then use ${PREFIX}${FOO}.
 
-... wait, that's horrible. What if I could write:
-	@{BBEXTENDVARIANT+@{BBEXTENDVARIANT}-}
-instead? That's practically legible by comparison. Or, with the new
-bonus features,
-	@{BBEXTENDVARIANT>-}
 
-Yes, I'm sort of volunteering to try to add this functionality in my
-Copious Free Time. My thought is that this would be phased:
+On 23/01/2013, at 3:47 AM, Mark Hatle <mark.hatle@windriver.com> wrote:
 
-1. Add the new syntax.
-2. Encourage people to use the new syntax.
-3. Gradually start discouraging the old syntax.
-4. Eventually replace it completely.
+> On 1/22/13 10:37 AM, Trevor Woerner wrote:
+>> On Tue, Jan 22, 2013 at 1:20 AM, Trung Hoang <trungiee@gmail.com> =
+wrote:
+>>> The current git HEAD of bit bake nicely displays the x threads and =
+what is happening on them instead of constantly scrolling in detail what =
+is exactly happening.
+>>=20
+>> This feature is called "knotty".
+>>=20
+>>> Is this feature configurable? How do i enable it on older versions =
+of bitbake? As the gumstix setup scripts check out a older version of =
+bit bake and it displays reams and reams of info.
+>>=20
+>> Knotty was added this past... August (?) (or, perhaps it is more
+>> correct to say "it was made the default" this past August?). So =
+making
+>> it work on older versions would require back-porting it to those
+>> versions.
+>=20
+> "In general", newer versions of bitbake work with older systems.  =
+There is one main condition where this can be problematic however.  =
+There was a period of time where, in python functions, tabs were all =
+converted to spaces.  So code is in bitbake to check for this condition.
+>=20
+> If you try to use a modern bitbake with an older system that still has =
+tabs, you can get failures.
+>=20
+> Note, it does require testing to verify that the newer bitbake will =
+work on an older configuration, but it has in my experience.
+>=20
+> --Mark
+>=20
+>> _______________________________________________
+>> bitbake-devel mailing list
+>> bitbake-devel@lists.openembedded.org
+>> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
+>>=20
+>=20
+>=20
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
 
-Benefits: Much clearer code, a lot fewer inline Python hacks, less
-ambiguity about shell variable expansion, and every time you approve of
-one of my crazy ideas, a pony gets a lovely apple, crisp and sweet.
-
--s
--- 
-Listen, get this.  Nobody with a good compiler needs to be justified.
 
 
