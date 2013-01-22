@@ -1,40 +1,35 @@
-Received: from mail-pb0-f49.google.com ([209.85.160.49])
+Received: from mail-la0-f53.google.com ([209.85.215.53])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <trungiee@gmail.com>) id 1TxmQk-00044n-8O
+	(envelope-from <kergoth@gmail.com>) id 1Txnbl-0005jz-ET
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 22 Jan 2013 23:34:58 +0100
-Received: by mail-pb0-f49.google.com with SMTP id un15so4225043pbc.22
+	Wed, 23 Jan 2013 00:50:38 +0100
+Received: by mail-la0-f53.google.com with SMTP id fr10so1949066lab.12
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 22 Jan 2013 14:19:27 -0800 (PST)
+	Tue, 22 Jan 2013 15:34:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=x-received:content-type:mime-version:subject:from:in-reply-to:date
-	:content-transfer-encoding:message-id:references:to:x-mailer;
-	bh=FiTHZUyUs9pgSKRgMjpgfih6Pbmo9uLYS5TyS4vT71U=;
-	b=KeV6QAqrjQEGnOw6J6rIXlE60JK8UVjYYp8/+9FKc9SGnFbK2jO9Afro8uh78FuVby
-	Xdawl4aO2Iuc719umhgU4f+C9fVG9YM5N6rA+KNadDVfOP+4WVtcvf2exkzw4/qFDAAm
-	odfxVQry/v1Pa+yG119LGGKxHa7ovdRUdObUeQakLDchhanSxEcmvw8pWCyiVvDUbT8b
-	ckR5aM2oCxOML+cFrD6wEAN6D5UVXIib6MaoyTZGgdLsmo3NMufUu3c0FERchHblPdJ4
-	8mrch7n16LDMjcriW+8waS6lYckCon9p1erTaNcg7+A8RGHRiXAZvN3y9A2aFLPT4yD9
-	M+9A==
-X-Received: by 10.68.227.73 with SMTP id ry9mr61638738pbc.73.1358893166862;
-	Tue, 22 Jan 2013 14:19:26 -0800 (PST)
-Received: from [192.168.0.26] (CPE-60-225-117-182.hhui4.ken.bigpond.net.au.
-	[60.225.117.182])
-	by mx.google.com with ESMTPS id v2sm12135604paz.36.2013.01.22.14.19.23
-	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Tue, 22 Jan 2013 14:19:25 -0800 (PST)
-Mime-Version: 1.0 (Mac OS X Mail 6.2 \(1499\))
-From: Trung Hoang <trungiee@gmail.com>
-In-Reply-To: <50FEC2BE.3020902@windriver.com>
-Date: Wed, 23 Jan 2013 09:21:08 +1100
-Message-Id: <2ABB9CD2-9E60-4E5A-A9B0-1C96F25A424B@gmail.com>
-References: <6811518C-5E13-40A7-8B8B-57C2810DEA8B@gmail.com>
-	<CAHUNapSSaOqnkOZq3_BaMthqY6hG+JTxvi9XpgD_38yT6+wDhA@mail.gmail.com>
-	<50FEC2BE.3020902@windriver.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-X-Mailer: Apple Mail (2.1499)
-Subject: Re: Display mode
+	h=x-received:mime-version:sender:in-reply-to:references:from:date
+	:x-google-sender-auth:message-id:subject:to:cc:content-type;
+	bh=PQmMZcMhAB5+ggG52VoVFqCHkEaspzL9ofjYvy9+das=;
+	b=qGUeayiUBZHTAMNz3CAkc+TPr+yQNZiwdFmpzli6pGH8mYUXlJ9K3QtGP3eoLgcMcR
+	7m5Cw7vHAPZxT79fcQpMGr8a51mxZ6BkpgfwDk0RVobg60LxcS5yNZ54V9ET5zrAWQpd
+	ksQgfxrJBGPME4Ohf5bwX5mDHUuQD9tJKDZzclo6Vwn1H7mHBDRNguGbP/uha3Sx5S73
+	rJ/xuhZ0tz2nUqfHIIqBoJiEFBbMgHj6/BWUOVETdTjSjfM/bSKXjCmnk9xN4Q3Cyg5B
+	ldet49c5kGGmZ1xrmU9oG7OEAZXRBypOOcY7ezbrklKHnAAir7xj/kd5qHkYa5r4uLww
+	2INg==
+X-Received: by 10.112.99.2 with SMTP id em2mr9967829lbb.11.1358897694678; Tue,
+	22 Jan 2013 15:34:54 -0800 (PST)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.112.34.10 with HTTP; Tue, 22 Jan 2013 15:34:34 -0800 (PST)
+In-Reply-To: <20130122142430.1cc1a705@e6410-2>
+References: <20130122142430.1cc1a705@e6410-2>
+From: Chris Larson <clarson@kergoth.com>
+Date: Tue, 22 Jan 2013 16:34:34 -0700
+X-Google-Sender-Auth: lT1Q9zZ-aAC7knugOhB_n7L86U0
+Message-ID: <CABcZANnAOifC1=0i71USA+wPo2VyCRgGE3NXA82eaiDm88F3Jg@mail.gmail.com>
+To: Peter Seebach <peter.seebach@windriver.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: Half-baked proposal: Introduce @{foo} variable expansion for bitbake
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -46,72 +41,65 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 22 Jan 2013 22:34:58 -0000
-Content-Type: text/plain; charset=windows-1252
+X-List-Received-Date: Tue, 22 Jan 2013 23:50:39 -0000
+Content-Type: multipart/alternative; boundary=f46d0401f971609faa04d3e90683
+
+--f46d0401f971609faa04d3e90683
+Content-Type: text/plain; charset=UTF-8
+
+On Tue, Jan 22, 2013 at 1:24 PM, Peter Seebach
+<peter.seebach@windriver.com>wrote:
+
+> PREFIX = "${@['', (d.getVar("BBEXTENDVARIANT", True) or "") +
+> '-'][(d.getVar("BBEXTENDVARIANT", True) or "") != ""]}"
+>
+> and then use ${PREFIX}${FOO}.
+>
+> ... wait, that's horrible. What if I could write:
+>         @{BBEXTENDVARIANT+@{BBEXTENDVARIANT}-}
+> instead? That's practically legible by comparison. Or, with the new
+> bonus features,
+>
+
+BBEXTENDVARIANT ??= ""
+PREFIX = "${@BBEXTENDVARIANT + '-' if BBEXTENDVARIANT else ''}"
+
+Which leverages the python inline if statement syntax, coupled with the
+bitbake feature which allows you to reference variables as though they were
+python variables.
+-- 
+Christopher Larson
+
+--f46d0401f971609faa04d3e90683
+Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Ahh yes, Knotty2 rocks!=20
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Tue, Jan 22, 2013 at 1:24 PM, Peter Seebach <span dir=3D"ltr">&lt;<a hre=
+f=3D"mailto:peter.seebach@windriver.com" target=3D"_blank">peter.seebach@wi=
+ndriver.com</a>&gt;</span> wrote:<br>
 
-For those who don't get this by default, i did this..=20
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div id=3D":1wy">PREFIX =3D &quot;${@[&#39;&=
+#39;, (d.getVar(&quot;BBEXTENDVARIANT&quot;, True) or &quot;&quot;) +<br>
+&#39;-&#39;][(d.getVar(&quot;BBEXTENDVARIANT&quot;, True) or &quot;&quot;) =
+!=3D &quot;&quot;]}&quot;<br>
+<br>
+and then use ${PREFIX}${FOO}.<br>
+<br>
+... wait, that&#39;s horrible. What if I could write:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 @{BBEXTENDVARIANT+@{BBEXTENDVARIANT}-}<br>
+instead? That&#39;s practically legible by comparison. Or, with the new<br>
+bonus features,</div></blockquote></div><div class=3D"gmail_extra"><br></di=
+v><div class=3D"gmail_extra" style>BBEXTENDVARIANT ??=3D &quot;&quot;</div>=
+PREFIX =3D &quot;${@BBEXTENDVARIANT + &#39;-&#39; if BBEXTENDVARIANT else &=
+#39;&#39;}&quot;<br>
 
-`bitbake -u knotty2 gumstix-console-image'=20
+</div><div class=3D"gmail_extra"><br></div><div class=3D"gmail_extra">Which=
+ leverages the python inline if statement syntax, coupled with the bitbake =
+feature which allows you to reference variables as though they were python =
+variables.<br>
 
-I do notice that sometimes the "Running task 3160 of 3162 =85" does get =
-buggy.. Instead of updating that line it makes a new line so i end up =
-with=85=20
+-- <br>Christopher Larson</div></div>
 
-Running task 3160 of 3162..
-Running task 3161 of 3162..
-Running task 3162 of 3162=85
-0: =85
-
-
-
-On 23/01/2013, at 3:47 AM, Mark Hatle <mark.hatle@windriver.com> wrote:
-
-> On 1/22/13 10:37 AM, Trevor Woerner wrote:
->> On Tue, Jan 22, 2013 at 1:20 AM, Trung Hoang <trungiee@gmail.com> =
-wrote:
->>> The current git HEAD of bit bake nicely displays the x threads and =
-what is happening on them instead of constantly scrolling in detail what =
-is exactly happening.
->>=20
->> This feature is called "knotty".
->>=20
->>> Is this feature configurable? How do i enable it on older versions =
-of bitbake? As the gumstix setup scripts check out a older version of =
-bit bake and it displays reams and reams of info.
->>=20
->> Knotty was added this past... August (?) (or, perhaps it is more
->> correct to say "it was made the default" this past August?). So =
-making
->> it work on older versions would require back-porting it to those
->> versions.
->=20
-> "In general", newer versions of bitbake work with older systems.  =
-There is one main condition where this can be problematic however.  =
-There was a period of time where, in python functions, tabs were all =
-converted to spaces.  So code is in bitbake to check for this condition.
->=20
-> If you try to use a modern bitbake with an older system that still has =
-tabs, you can get failures.
->=20
-> Note, it does require testing to verify that the newer bitbake will =
-work on an older configuration, but it has in my experience.
->=20
-> --Mark
->=20
->> _______________________________________________
->> bitbake-devel mailing list
->> bitbake-devel@lists.openembedded.org
->> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
->>=20
->=20
->=20
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
-
-
-
+--f46d0401f971609faa04d3e90683--
