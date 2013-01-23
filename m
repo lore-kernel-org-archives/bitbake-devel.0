@@ -1,30 +1,36 @@
 Received: from dan.rpsys.net ([93.97.175.187])
 	by linuxtogo.org with esmtp (Exim 4.72)
 	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1Ty2Hh-0004Gz-V4 for bitbake-devel@lists.openembedded.org;
-	Wed, 23 Jan 2013 16:30:43 +0100
+	id 1Ty2NV-0004UX-LJ for bitbake-devel@lists.openembedded.org;
+	Wed, 23 Jan 2013 16:36:52 +0100
 Received: from localhost (dan.rpsys.net [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r0NFJ4CM013616; Wed, 23 Jan 2013 15:19:04 GMT
+	r0NFP9CU014281; Wed, 23 Jan 2013 15:25:10 GMT
 X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id FwZMv1DfwzuF; Wed, 23 Jan 2013 15:19:04 +0000 (GMT)
+	with LMTP id vefsKYv3IkvP; Wed, 23 Jan 2013 15:25:09 +0000 (GMT)
 Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r0NFIwMX013607
+	r0NFP4fM014268
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Wed, 23 Jan 2013 15:19:01 GMT
-Message-ID: <1358954088.6356.61.camel@ted>
+	verify=NOT); Wed, 23 Jan 2013 15:25:07 GMT
+Message-ID: <1358954455.6356.62.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Marinescu, Bogdan A" <bogdan.a.marinescu@intel.com>
-Date: Wed, 23 Jan 2013 15:14:48 +0000
-In-Reply-To: <CAMZjud1sM6e2Rd2tWsBjt_XJ7N9J6AZo5OJg+R6q47AXwdg_3A@mail.gmail.com>
-References: <CAMZjud1sM6e2Rd2tWsBjt_XJ7N9J6AZo5OJg+R6q47AXwdg_3A@mail.gmail.com>
+To: Trung Hoang <trungiee@gmail.com>
+Date: Wed, 23 Jan 2013 15:20:55 +0000
+In-Reply-To: <2ABB9CD2-9E60-4E5A-A9B0-1C96F25A424B@gmail.com>
+References: <6811518C-5E13-40A7-8B8B-57C2810DEA8B@gmail.com>
+	<CAHUNapSSaOqnkOZq3_BaMthqY6hG+JTxvi9XpgD_38yT6+wDhA@mail.gmail.com>
+	<50FEC2BE.3020902@windriver.com>
+	<2ABB9CD2-9E60-4E5A-A9B0-1C96F25A424B@gmail.com>
 X-Mailer: Evolution 3.6.2-0ubuntu0.1 
 Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: RFC: bugfix for 3575
+X-MIME-Autoconverted: from 8bit to quoted-printable by dan.rpsys.net id
+	r0NFP9CU014281
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: Display mode
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,55 +42,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 23 Jan 2013 15:30:44 -0000
+X-List-Received-Date: Wed, 23 Jan 2013 15:36:53 -0000
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2013-01-23 at 12:08 +0200, Marinescu, Bogdan A wrote:
-> Please review my fix of bug 3575 (Ensure windows hob client
-> communication with bitbake backend via xmlrpc). I'd like to get
-> feedback before uploading the patches. I've pushed my fix on
-> poky-contrib:
->http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=bogdanm/b3575
->
-> Currently, the fix allows bitbake and hob to run on different machines
-> and "talk" to each other via XMLRPC (no windows version yet, but it
-> can be tested in Linux). Hopefully the commit messages will tell the
-> rest of the story.
+On Wed, 2013-01-23 at 09:21 +1100, Trung Hoang wrote:
+> Ahh yes, Knotty2 rocks!=20
+>=20
+> For those who don't get this by default, i did this..=20
+>=20
+> `bitbake -u knotty2 gumstix-console-image'=20
+>=20
+> I do notice that sometimes the "Running task 3160 of 3162 =E2=80=A6" do=
+es get buggy.. Instead of updating that line it makes a new line so i end=
+ up with=E2=80=A6=20
+>=20
+> Running task 3160 of 3162..
+> Running task 3161 of 3162..
+> Running task 3162 of 3162=E2=80=A6
+> 0: =E2=80=A6
 
-First two commits are no problem.
-
-Third Commit:
-
-I don't like the merging of all the extra cache data. I think when a
-given UI registers, it needs to call into cooker and inform bitbake it
-requires the extra caches (if it does so). With your current code, we
-might as well throw away the extra cache code as it effectively works as
-the greatest set. I see this only happens in server mode but I'm still
-not 100% convinced its the right thing to do.
-
-I also don't see why knotty can't work in server mode?
-
-Fourth Commit:
-
-I have a strong opinion that we want to support multiple clients
-connected to one server. I appreciate this complicates things and
-currently would be chaotic. I think the easiest way to deal with this is
-to have some notion of a single "controller" which would perhaps be
-represented by the token. We'd then have some kind of handoff process so
-that a given UI could claim the token and then control the server. We
-might be able to lose the need for the manual reclaim option too if we
-can tie this to the registered handlers somehow?
-
-Any thoughts on that approach? 
+There were bug fixes made before it became the default and was merged
+back to "knotty" which fixed some of those issues.
 
 Cheers,
 
 Richard
-
-
-
-
 
 
 
