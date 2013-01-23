@@ -1,21 +1,21 @@
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristiana.voicu@intel.com>) id 1TxzNt-0007xT-CF
+	(envelope-from <cristiana.voicu@intel.com>) id 1TxzOF-0007y2-6U
 	for bitbake-devel@lists.openembedded.org;
 	Wed, 23 Jan 2013 13:25:40 +0100
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 23 Jan 2013 04:09:18 -0800
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 23 Jan 2013 04:09:42 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.84,521,1355126400"; d="scan'208";a="277412527"
+X-IronPort-AV: E=Sophos;i="4.84,521,1355126400"; d="scan'208";a="247430143"
 Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
 	([10.237.105.151])
-	by fmsmga001.fm.intel.com with ESMTP; 23 Jan 2013 04:09:17 -0800
+	by azsmga001.ch.intel.com with ESMTP; 23 Jan 2013 04:09:41 -0800
 From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 23 Jan 2013 14:13:44 +0200
-Message-Id: <1358943224-21272-1-git-send-email-cristiana.voicu@intel.com>
+Date: Wed, 23 Jan 2013 14:14:08 +0200
+Message-Id: <1358943248-21313-1-git-send-email-cristiana.voicu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH 1/2] hob: hob do not use .hob dir for variables from local.conf and bblayers.conf
+Subject: [PATCH 2/2] bitbake & hob: implement functions to assure consistency for configuration files
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -29,93 +29,324 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 23 Jan 2013 12:25:40 -0000
 
-If .hob exists, hob takes the variable from there. Change to not override anymore
-the variables which comes from bblayers.conf and local.conf
+Added a new command in bitbake to save a variable in a file; added a function
+in cooker which is called by this command
 
-[YOCTO #2934]
+The function saveConfigurationVar from cooker.py saves a variable in the file that
+is received by argument. It checks all the operations made on that variable, using the history.
+If it's the first time when it does some changes on a variable,it comments the lines where
+an operation is made on it, and it sets it in a line to the end of file. If it's not
+the first time(it has a comment before), it replaces the line.
+
+Make some changes in hob to save the variables from bblayers.conf and local.conf
+using the bitbake command.
+
 Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/builder.py                |   27 +++-----------------
- .../lib/bb/ui/crumbs/hig/simplesettingsdialog.py   |   11 ++++----
- 2 files changed, 10 insertions(+), 28 deletions(-)
+ bitbake/lib/bb/command.py                   |    7 +++
+ bitbake/lib/bb/cooker.py                    |   86 +++++++++++++++++++++++++++
+ bitbake/lib/bb/data_smart.py                |   21 +++++++
+ bitbake/lib/bb/ui/crumbs/builder.py         |   32 ++++++----
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    3 +
+ bitbake/lib/bb/ui/crumbs/template.py        |   24 --------
+ 6 files changed, 136 insertions(+), 37 deletions(-)
 
+diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
+index 0fed25a..77b08b1 100644
+--- a/bitbake/lib/bb/command.py
++++ b/bitbake/lib/bb/command.py
+@@ -179,6 +179,7 @@ class CommandsSync:
+         Init the cooker to initial state with nothing parsed
+         """
+         command.cooker.initialize()
++        command.cooker.enableDataTracking()
+ 
+     def resetCooker(self, command, params):
+         """
+@@ -210,6 +211,12 @@ class CommandsSync:
+         package_queue = params[2]
+         return command.cooker.generateNewImage(image, base_image, package_queue)
+ 
++    def setVarFile(self, command, params):
++        var = params[0]
++        val = params[1]
++        default_file = params[2]
++        command.cooker.saveConfigurationVar(var, val, default_file)
++
+ class CommandsAsync:
+     """
+     A class of asynchronous commands
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index caf1123..995cc53 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -186,6 +186,9 @@ class BBCooker:
+         filtered_keys = bb.utils.approved_variables()
+         bb.data.inheritFromOS(self.configuration.data, self.savedenv, filtered_keys)
+ 
++    def enableDataTracking(self):
++        self.configuration.data.enableTracking()
++
+     def loadConfigurationData(self):
+         self.initConfigurationData()
+ 
+@@ -201,6 +204,89 @@ class BBCooker:
+         if not self.configuration.cmd:
+             self.configuration.cmd = self.configuration.data.getVar("BB_DEFAULT_TASK", True) or "build"
+ 
++    def saveConfigurationVar(self, var, val, default_file):
++
++        replaced = False
++        #do not save if nothing changed
++        if str(val) == self.configuration.data.getVar(var):
++            return
++
++        conf_files = self.configuration.data.varhistory.get_variable_files(var)
++
++        #format the value when it is a list
++        if isinstance(val, list):
++            listval = ""
++            for value in val:
++                listval += "%s   " % value
++            val = listval
++
++        topdir = self.configuration.data.getVar("TOPDIR")
++
++        #comment or replace operations made on var
++        for conf_file in conf_files:
++            if topdir in conf_file:
++                with open(conf_file, 'r') as f:
++                    contents = f.readlines()
++                f.close()
++
++                lines = self.configuration.data.varhistory.get_variable_lines(var, conf_file)
++                for line in lines:
++                    total = ""
++                    i = 0
++                    for c in contents:
++                        total += c
++                        i = i + 1
++                        if i==int(line):
++                            end_index = len(total)
++                    index = total.rfind(var, 0, end_index)
++
++                    begin_line = total.count("\n",0,index)
++                    end_line = int(line)
++
++                    #check if the variable was saved before in the same way
++                    #if true it replace the place where the variable was declared
++                    #else it comments it
++                    if contents[begin_line-1]== "#added by bitbake\n":
++                        contents[begin_line] = "%s = \"%s\"\n" % (var, val)
++                        replaced = True
++                    else:
++                        for ii in range(begin_line, end_line):
++                            contents[ii] = "#" + contents[ii]
++
++                total = ""
++                for c in contents:
++                    total += c
++                with open(conf_file, 'w') as f:
++                    f.write(total)
++                f.close()
++
++        if replaced == False:
++            #remove var from history
++            self.configuration.data.varhistory.del_var_history(var)
++
++            #add var to the end of default_file
++            default_file = self._findConfigFile(default_file)
++
++            with open(default_file, 'r') as f:
++                contents = f.readlines()
++            f.close()
++
++            total = ""
++            for c in contents:
++                total += c
++
++            #add the variable on a single line, to be easy to replace the second time
++            total += "#added by bitbake"
++            total += "\n%s = \"%s\"\n" % (var, val)
++
++            with open(default_file, 'w') as f:
++                f.write(total)
++            f.close()
++
++            #add to history
++            loginfo = {"op":set, "file":default_file, "line":total.count("\n")}
++            self.configuration.data.setVar(var, val, **loginfo)
++
+     def parseConfiguration(self):
+ 
+         # Set log file verbosity
+diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
+index ddf98e6..2d4dac2 100644
+--- a/bitbake/lib/bb/data_smart.py
++++ b/bitbake/lib/bb/data_smart.py
+@@ -259,6 +259,27 @@ class VariableHistory(object):
+             o.write("#\n# $%s\n#   [no history recorded]\n#\n" % var)
+             o.write('#   "%s"\n' % (commentVal))
+ 
++    def get_variable_files(self, var):
++        """Get the files where operations are made on a variable"""
++        var_history = self.variable(var)
++        files = []
++        for event in var_history:
++            files.append(event['file'])
++        return files
++
++    def get_variable_lines(self, var, f):
++        """Get the line where a operation is made on a variable in file f"""
++        var_history = self.variable(var)
++        lines = []
++        for event in var_history:
++            if f== event['file']:
++                line = event['line']
++                lines.append(line)
++        return lines
++
++    def del_var_history(self, var):
++        if var in self.variables:
++            self.variables[var] = []
+ 
+ class DataSmart(MutableMapping):
+     def __init__(self, special = COWDictBase.copy(), seen = COWDictBase.copy() ):
 diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index d57cf4c..9da926d 100755
+index 9da926d..e9cfa21 100755
 --- a/bitbake/lib/bb/ui/crumbs/builder.py
 +++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -190,20 +190,6 @@ class Configuration:
-         self.split_proxy("cvs", params["cvs_proxy_host"] + ":" + params["cvs_proxy_port"])
+@@ -217,26 +217,32 @@ class Configuration:
+         self.split_proxy("git", template.getVar("GIT_PROXY_HOST") + ":" + template.getVar("GIT_PROXY_PORT"))
+         self.split_proxy("cvs", template.getVar("CVS_PROXY_HOST") + ":" + template.getVar("CVS_PROXY_PORT"))
  
-     def load(self, template):
--        self.curr_mach = template.getVar("MACHINE")
--        self.curr_package_format = " ".join(template.getVar("PACKAGE_CLASSES").split("package_")).strip()
--        self.curr_distro = template.getVar("DISTRO")
--        self.dldir = template.getVar("DL_DIR")
--        self.sstatedir = template.getVar("SSTATE_DIR")
--        self.sstatemirror = template.getVar("SSTATE_MIRRORS")
--        try:
--            self.pmake = int(template.getVar("PARALLEL_MAKE").split()[1])
--        except:
--            pass
--        try:
--            self.bbthread = int(template.getVar("BB_NUMBER_THREADS"))
--        except:
--            pass
+-    def save(self, template, defaults=False):
++    def save(self, handler, template, defaults=False):
+         template.setVar("VERSION", "%s" % hobVer)
+         # bblayers.conf
+-        template.setVar("BBLAYERS", " ".join(self.layers))
++        handler.set_var_in_file("BBLAYERS", self.layers, "bblayers.conf")
+         # local.conf
+         if not defaults:
+-            template.setVar("MACHINE", self.curr_mach)
+-        template.setVar("DISTRO", self.curr_distro)
+-        template.setVar("DL_DIR", self.dldir)
+-        template.setVar("SSTATE_DIR", self.sstatedir)
+-        template.setVar("SSTATE_MIRRORS", self.sstatemirror)
+-        template.setVar("PARALLEL_MAKE", "-j %s" % self.pmake)
+-        template.setVar("BB_NUMBER_THREADS", self.bbthread)
+-        template.setVar("PACKAGE_CLASSES", " ".join(["package_" + i for i in self.curr_package_format.split()]))
++            handler.set_var_in_file("MACHINE", self.curr_mach, "local.conf")
++        handler.set_var_in_file("DISTRO", self.curr_distro, "local.conf")
++        handler.set_var_in_file("DL_DIR", self.dldir, "local.conf")
++        handler.set_var_in_file("SSTATE_DIR", self.sstatedir, "local.conf")
++        sstate_mirror_list = self.sstatemirror.split("\\n ")
++        sstate_mirror_list_modified = []
++        for mirror in sstate_mirror_list:
++            if mirror != "":
++                mirror = mirror + "\\n"
++                sstate_mirror_list_modified.append(mirror)
++        handler.set_var_in_file("SSTATE_MIRRORS", sstate_mirror_list_modified, "local.conf")
++        handler.set_var_in_file("PARALLEL_MAKE", "-j %s" % self.pmake, "local.conf")
++        handler.set_var_in_file("BB_NUMBER_THREADS", self.bbthread, "local.conf")
++        handler.set_var_in_file("PACKAGE_CLASSES", " ".join(["package_" + i for i in self.curr_package_format.split()]), "local.conf")
+         template.setVar("IMAGE_ROOTFS_SIZE", self.image_rootfs_size)
+         template.setVar("IMAGE_EXTRA_SPACE", self.image_extra_size)
+         template.setVar("INCOMPATIBLE_LICENSE", self.incompat_license)
+         template.setVar("SDKMACHINE", self.curr_sdk_machine)
+-        template.setVar("CONF_VERSION", self.conf_version)
+-        template.setVar("LCONF_VERSION", self.lconf_version)
++        handler.set_var_in_file("CONF_VERSION", self.conf_version, "local.conf")
++        handler.set_var_in_file("LCONF_VERSION", self.lconf_version, "bblayers.conf")
+         template.setVar("EXTRA_SETTING", self.extra_setting)
+         template.setVar("TOOLCHAIN_BUILD", self.toolchain_build)
+         template.setVar("IMAGE_FSTYPES", self.image_fstypes)
+@@ -670,7 +676,7 @@ class Builder(gtk.Window):
+         self.template = TemplateMgr()
          try:
-             self.image_rootfs_size = int(template.getVar("IMAGE_ROOTFS_SIZE"))
-         except:
-@@ -215,13 +201,9 @@ class Configuration:
-         # image_overhead_factor is read-only.
-         self.incompat_license = template.getVar("INCOMPATIBLE_LICENSE")
-         self.curr_sdk_machine = template.getVar("SDKMACHINE")
--        self.conf_version = template.getVar("CONF_VERSION")
--        self.lconf_version = template.getVar("LCONF_VERSION")
-         self.extra_setting = eval(template.getVar("EXTRA_SETTING"))
-         self.toolchain_build = eval(template.getVar("TOOLCHAIN_BUILD"))
-         self.image_fstypes = template.getVar("IMAGE_FSTYPES")
--        # bblayers.conf
--        self.layers = template.getVar("BBLAYERS").split()
-         # image/recipes/packages
-         self.selected_image = template.getVar("__SELECTED_IMAGE__")
-         self.selected_recipes = template.getVar("DEPENDS").split()
-@@ -561,11 +543,10 @@ class Builder(gtk.Window):
+             self.template.open(filename, path)
+-            self.configuration.save(self.template, defaults)
++            self.configuration.save(self.handler, self.template, defaults)
  
-     def initiate_new_build_async(self):
-         self.switch_page(self.MACHINE_SELECTION)
--        if self.load_template(TemplateMgr.convert_to_template_pathfilename("default", ".hob/")) == False:
--            self.show_sanity_check_page()
--            self.handler.init_cooker()
--            self.handler.set_extra_inherit("image_types")
--            self.generate_configuration()
-+        self.show_sanity_check_page()
-+        self.handler.init_cooker()
-+        self.handler.set_extra_inherit("image_types")
-+        self.generate_configuration()
+             self.template.save()
+         except Exception as e:
+diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+index 41022ef..b97a047 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -451,6 +451,9 @@ class HobHandler(gobject.GObject):
+                 ret.append(i)
+         return " ".join(ret)
  
-     def update_config_async(self):
-         self.switch_page(self.MACHINE_SELECTION)
-diff --git a/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py b/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
-index 3642e9b..50c7510 100644
---- a/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
-+++ b/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
-@@ -323,11 +323,12 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
-                         sstatemirrors = sstatemirrors[1:]
++    def set_var_in_file(self, var, val, default_file=None):
++        self.server.runCommand(["setVarFile", var, val, default_file])
++
+     def get_parameters(self):
+         # retrieve the parameters from bitbake
+         params = {}
+diff --git a/bitbake/lib/bb/ui/crumbs/template.py b/bitbake/lib/bb/ui/crumbs/template.py
+index e303c3a..92c438f 100644
+--- a/bitbake/lib/bb/ui/crumbs/template.py
++++ b/bitbake/lib/bb/ui/crumbs/template.py
+@@ -137,8 +137,6 @@ class RecipeFile(ConfigFile):
  
-                     sstatemirror_fields = [x for x in sstatemirror.split(' ') if x.strip()]
--                    if sstatemirror_fields[0] == "file://(.*)":
--                        sm_list = [ 0, sstatemirror_fields[1], "file://(.*)"]
--                    else:
--                        sm_list = [ 1, sstatemirror_fields[1], sstatemirror_fields[0]]
--                    self.sstatemirrors_list.append(sm_list)
-+                    if len(sstatemirror_fields):
-+                        if sstatemirror_fields[0] == "file://(.*)":
-+                            sm_list = [ 0, sstatemirror_fields[1], "file://(.*)"]
-+                        else:
-+                            sm_list = [ 1, sstatemirror_fields[1], sstatemirror_fields[0]]
-+                        self.sstatemirrors_list.append(sm_list)
+ class TemplateMgr(gobject.GObject):
  
-         index = 0
-         for mirror in self.sstatemirrors_list:
+-    __gLocalVars__ = ["MACHINE", "PACKAGE_CLASSES", "DISTRO", "DL_DIR", "SSTATE_DIR", "SSTATE_MIRRORS", "PARALLEL_MAKE", "BB_NUMBER_THREADS", "CONF_VERSION"]
+-    __gBBLayersVars__ = ["BBLAYERS", "LCONF_VERSION"]
+     __gRecipeVars__ = ["DEPENDS", "IMAGE_INSTALL"]
+ 
+     def __init__(self):
+@@ -153,36 +151,20 @@ class TemplateMgr(gobject.GObject):
+         return "%s/%s%s%s" % (path, "template-", filename, ".hob")
+ 
+     @classmethod
+-    def convert_to_bblayers_pathfilename(cls, filename, path):
+-        return "%s/%s%s%s" % (path, "bblayers-", filename, ".conf")
+-
+-    @classmethod
+-    def convert_to_local_pathfilename(cls, filename, path):
+-        return "%s/%s%s%s" % (path, "local-", filename, ".conf")
+-
+-    @classmethod
+     def convert_to_image_pathfilename(cls, filename, path):
+         return "%s/%s%s%s" % (path, "hob-image-", filename, ".bb")
+ 
+     def open(self, filename, path):
+         self.template_hob = HobTemplateFile(TemplateMgr.convert_to_template_pathfilename(filename, path))
+-        self.bblayers_conf = ConfigFile(TemplateMgr.convert_to_bblayers_pathfilename(filename, path))
+-        self.local_conf = ConfigFile(TemplateMgr.convert_to_local_pathfilename(filename, path))
+         self.image_bb = RecipeFile(TemplateMgr.convert_to_image_pathfilename(filename, path))
+ 
+     def setVar(self, var, val):
+-        if var in TemplateMgr.__gLocalVars__:
+-            self.local_conf.setVar(var, val)
+-        if var in TemplateMgr.__gBBLayersVars__:
+-            self.bblayers_conf.setVar(var, val)
+         if var in TemplateMgr.__gRecipeVars__:
+             self.image_bb.setVar(var, val)
+ 
+         self.template_hob.setVar(var, val)
+ 
+     def save(self):
+-        self.local_conf.save()
+-        self.bblayers_conf.save()
+         self.image_bb.save()
+         self.template_hob.save()
+ 
+@@ -200,12 +182,6 @@ class TemplateMgr(gobject.GObject):
+         if self.template_hob:
+             del self.template_hob
+             template_hob = None
+-        if self.bblayers_conf:
+-            del self.bblayers_conf
+-            self.bblayers_conf = None
+-        if self.local_conf:
+-            del self.local_conf
+-            self.local_conf = None
+         if self.image_bb:
+             del self.image_bb
+             self.image_bb = None
 -- 
 1.7.9.5
 
