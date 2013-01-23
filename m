@@ -1,35 +1,36 @@
-Received: from mail-la0-f53.google.com ([209.85.215.53])
+Received: from mga12.intel.com ([143.182.124.36] helo=azsmga102.ch.intel.com)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1Txnbl-0005jz-ET
+	(envelope-from <bogdan.a.marinescu@intel.com>) id 1TxxWJ-0004oq-GN
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 23 Jan 2013 00:50:38 +0100
-Received: by mail-la0-f53.google.com with SMTP id fr10so1949066lab.12
+	Wed, 23 Jan 2013 11:25:44 +0100
+Received: from mail-ob0-f200.google.com ([209.85.214.200])
+	by mga14.intel.com with ESMTP/TLS/RC4-SHA; 23 Jan 2013 02:08:50 -0800
+Received: by mail-ob0-f200.google.com with SMTP id wd20so40525528obb.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 22 Jan 2013 15:34:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=x-received:mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	bh=PQmMZcMhAB5+ggG52VoVFqCHkEaspzL9ofjYvy9+das=;
-	b=qGUeayiUBZHTAMNz3CAkc+TPr+yQNZiwdFmpzli6pGH8mYUXlJ9K3QtGP3eoLgcMcR
-	7m5Cw7vHAPZxT79fcQpMGr8a51mxZ6BkpgfwDk0RVobg60LxcS5yNZ54V9ET5zrAWQpd
-	ksQgfxrJBGPME4Ohf5bwX5mDHUuQD9tJKDZzclo6Vwn1H7mHBDRNguGbP/uha3Sx5S73
-	rJ/xuhZ0tz2nUqfHIIqBoJiEFBbMgHj6/BWUOVETdTjSjfM/bSKXjCmnk9xN4Q3Cyg5B
-	ldet49c5kGGmZ1xrmU9oG7OEAZXRBypOOcY7ezbrklKHnAAir7xj/kd5qHkYa5r4uLww
-	2INg==
-X-Received: by 10.112.99.2 with SMTP id em2mr9967829lbb.11.1358897694678; Tue,
-	22 Jan 2013 15:34:54 -0800 (PST)
+	Wed, 23 Jan 2013 02:08:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=google.com; s=20120113;
+	h=x-received:x-received:mime-version:from:date:message-id:subject:to
+	:content-type:x-gm-message-state;
+	bh=UmyeKQmlVext5cyI/ygY7Ty2jL9cKXl3kwU3mNCfQHo=;
+	b=B0UWDPTZbVPNcHJbFdf9FDCpQtmU8CvTZejGJTMClDcgLmwGRWb+ZekXtl7RUV4oEC
+	Pr5gAEm9DWMTkyQxNXQ6iNH2R9tb6MGAg2/QMe7Rop1taW3kzMnCr3uGgXzfob1f1rT8
+	XzCw0pmjpbhxj1Fb3/J/nbmK4WlJkbRAsRCjbefRGydaTOBeNa+y5aAWF7auCXYh0fFM
+	NyUJplATMiwniJerHe8HtRNCTipJ2lp20G1CM5VOvHsry6FxMBZjzkeBHKM67RYzzfIn
+	/4Ig7X2QYu4UEb1yZIqPBdTfeesMJLfGwqwLo82RJN1TI13QTaVJZGa7q1XG5OOtP7XY
+	kk3A==
+X-Received: by 10.60.22.164 with SMTP id e4mr512739oef.87.1358935729151;
+	Wed, 23 Jan 2013 02:08:49 -0800 (PST)
+X-Received: by 10.60.22.164 with SMTP id e4mr512733oef.87.1358935729031; Wed,
+	23 Jan 2013 02:08:49 -0800 (PST)
 MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.34.10 with HTTP; Tue, 22 Jan 2013 15:34:34 -0800 (PST)
-In-Reply-To: <20130122142430.1cc1a705@e6410-2>
-References: <20130122142430.1cc1a705@e6410-2>
-From: Chris Larson <clarson@kergoth.com>
-Date: Tue, 22 Jan 2013 16:34:34 -0700
-X-Google-Sender-Auth: lT1Q9zZ-aAC7knugOhB_n7L86U0
-Message-ID: <CABcZANnAOifC1=0i71USA+wPo2VyCRgGE3NXA82eaiDm88F3Jg@mail.gmail.com>
-To: Peter Seebach <peter.seebach@windriver.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: Half-baked proposal: Introduce @{foo} variable expansion for bitbake
+Received: by 10.182.5.4 with HTTP; Wed, 23 Jan 2013 02:08:28 -0800 (PST)
+From: "Marinescu, Bogdan A" <bogdan.a.marinescu@intel.com>
+Date: Wed, 23 Jan 2013 12:08:28 +0200
+Message-ID: <CAMZjud1sM6e2Rd2tWsBjt_XJ7N9J6AZo5OJg+R6q47AXwdg_3A@mail.gmail.com>
+To: bitbake-devel@lists.openembedded.org
+X-Gm-Message-State: ALoCoQnm6tj9fvetDWE1TC7sy4cEqDMDdxCiqDCWDoVFPFmcHpsiY/8uxas79Sh2P8yPZ1xEUDtBKcEh5JQhfBX7HGJ3nM9ga/Nn4+rfMHMYcsdCUFsDiwSHn6ihOx8a6Hu0hR64mBtdL1iscDB90Xevj0u2oy/b5+M/xw1AtVopy383IBKmpC56S/Fw3Nep/NI+vYNR/LLg
+Subject: RFC: bugfix for 3575
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -41,65 +42,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 22 Jan 2013 23:50:39 -0000
-Content-Type: multipart/alternative; boundary=f46d0401f971609faa04d3e90683
+X-List-Received-Date: Wed, 23 Jan 2013 10:25:45 -0000
+Content-Type: multipart/alternative; boundary=e89a8fb203ee66ca7704d3f1e151
 
---f46d0401f971609faa04d3e90683
-Content-Type: text/plain; charset=UTF-8
+--e89a8fb203ee66ca7704d3f1e151
+Content-Type: text/plain; charset=ISO-8859-1
 
-On Tue, Jan 22, 2013 at 1:24 PM, Peter Seebach
-<peter.seebach@windriver.com>wrote:
+Hi,
 
-> PREFIX = "${@['', (d.getVar("BBEXTENDVARIANT", True) or "") +
-> '-'][(d.getVar("BBEXTENDVARIANT", True) or "") != ""]}"
->
-> and then use ${PREFIX}${FOO}.
->
-> ... wait, that's horrible. What if I could write:
->         @{BBEXTENDVARIANT+@{BBEXTENDVARIANT}-}
-> instead? That's practically legible by comparison. Or, with the new
-> bonus features,
->
+Please review my fix of bug 3575 (Ensure windows hob client communication
+with bitbake backend via xmlrpc). I'd like to get feedback before uploading
+the patches. I've pushed my fix on poky-contrib:
 
-BBEXTENDVARIANT ??= ""
-PREFIX = "${@BBEXTENDVARIANT + '-' if BBEXTENDVARIANT else ''}"
+http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=bogdanm/b3575
 
-Which leverages the python inline if statement syntax, coupled with the
-bitbake feature which allows you to reference variables as though they were
-python variables.
--- 
-Christopher Larson
+Currently, the fix allows bitbake and hob to run on different machines and
+"talk" to each other via XMLRPC (no windows version yet, but it can be
+tested in Linux). Hopefully the commit messages will tell the rest of the
+story.
 
---f46d0401f971609faa04d3e90683
-Content-Type: text/html; charset=UTF-8
+Thanks,
+Bogdan
+
+--e89a8fb203ee66ca7704d3f1e151
+Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Tue, Jan 22, 2013 at 1:24 PM, Peter Seebach <span dir=3D"ltr">&lt;<a hre=
-f=3D"mailto:peter.seebach@windriver.com" target=3D"_blank">peter.seebach@wi=
-ndriver.com</a>&gt;</span> wrote:<br>
+Hi,<div><br></div><div>Please review my fix of bug 3575 (Ensure windows hob=
+ client communication with bitbake backend via xmlrpc). I&#39;d like to get=
+ feedback before uploading the patches. I&#39;ve pushed my fix on poky-cont=
+rib:</div>
 
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div id=3D":1wy">PREFIX =3D &quot;${@[&#39;&=
-#39;, (d.getVar(&quot;BBEXTENDVARIANT&quot;, True) or &quot;&quot;) +<br>
-&#39;-&#39;][(d.getVar(&quot;BBEXTENDVARIANT&quot;, True) or &quot;&quot;) =
-!=3D &quot;&quot;]}&quot;<br>
-<br>
-and then use ${PREFIX}${FOO}.<br>
-<br>
-... wait, that&#39;s horrible. What if I could write:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 @{BBEXTENDVARIANT+@{BBEXTENDVARIANT}-}<br>
-instead? That&#39;s practically legible by comparison. Or, with the new<br>
-bonus features,</div></blockquote></div><div class=3D"gmail_extra"><br></di=
-v><div class=3D"gmail_extra" style>BBEXTENDVARIANT ??=3D &quot;&quot;</div>=
-PREFIX =3D &quot;${@BBEXTENDVARIANT + &#39;-&#39; if BBEXTENDVARIANT else &=
-#39;&#39;}&quot;<br>
+<div><br></div><div><a href=3D"http://git.yoctoproject.org/cgit/cgit.cgi/po=
+ky-contrib/log/?h=3Dbogdanm/b3575">http://git.yoctoproject.org/cgit/cgit.cg=
+i/poky-contrib/log/?h=3Dbogdanm/b3575</a></div><div><br></div><div>Currentl=
+y, the fix allows bitbake and hob to run on different machines and &quot;ta=
+lk&quot; to each other via XMLRPC (no windows version yet, but it can be te=
+sted in Linux). Hopefully the commit messages will tell the rest of the sto=
+ry.</div>
 
-</div><div class=3D"gmail_extra"><br></div><div class=3D"gmail_extra">Which=
- leverages the python inline if statement syntax, coupled with the bitbake =
-feature which allows you to reference variables as though they were python =
-variables.<br>
+<div><br></div><div>Thanks,</div><div>Bogdan</div><div><br></div>
 
--- <br>Christopher Larson</div></div>
-
---f46d0401f971609faa04d3e90683--
+--e89a8fb203ee66ca7704d3f1e151--
