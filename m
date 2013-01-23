@@ -1,34 +1,30 @@
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from dan.rpsys.net ([93.97.175.187])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1Ty2zQ-0005ad-GJ
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 23 Jan 2013 17:15:56 +0100
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id r0NCDumE013460
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Wed, 23 Jan 2013 04:13:57 -0800 (PST)
-Received: from [172.25.32.40] (172.25.32.40) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.2.318.4;
-	Wed, 23 Jan 2013 04:13:56 -0800
-Message-ID: <50FFD403.8070001@windriver.com>
-Date: Wed, 23 Jan 2013 06:13:55 -0600
-From: Jason Wessel <jason.wessel@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:17.0) Gecko/20130106 Thunderbird/17.0.2
-MIME-Version: 1.0
-To: Trung Hoang <trungiee@gmail.com>
-References: <6811518C-5E13-40A7-8B8B-57C2810DEA8B@gmail.com>
-	<CAHUNapSSaOqnkOZq3_BaMthqY6hG+JTxvi9XpgD_38yT6+wDhA@mail.gmail.com>
-	<50FEC2BE.3020902@windriver.com>
-	<2ABB9CD2-9E60-4E5A-A9B0-1C96F25A424B@gmail.com>
-In-Reply-To: <2ABB9CD2-9E60-4E5A-A9B0-1C96F25A424B@gmail.com>
-X-Enigmail-Version: 1.5
-X-MIME-Autoconverted: from 8bit to quoted-printable by mail1.windriver.com id
-	r0NCDumE013460
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: Display mode
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1Ty34j-0005kq-GZ for bitbake-devel@lists.openembedded.org;
+	Wed, 23 Jan 2013 17:21:40 +0100
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r0NG9i2k017617; Wed, 23 Jan 2013 16:09:44 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id sRWbe7uKjGdD; Wed, 23 Jan 2013 16:09:44 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r0NG9Ywg017607
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT); Wed, 23 Jan 2013 16:09:37 GMT
+Message-ID: <1358957124.6356.63.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Cristiana Voicu <cristiana.voicu@intel.com>
+Date: Wed, 23 Jan 2013 16:05:24 +0000
+In-Reply-To: <1358943248-21313-1-git-send-email-cristiana.voicu@intel.com>
+References: <1358943248-21313-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: Evolution 3.6.2-0ubuntu0.1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 2/2] bitbake & hob: implement functions to assure consistency for configuration files
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -40,34 +36,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 23 Jan 2013 16:15:56 -0000
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Wed, 23 Jan 2013 16:21:50 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On 01/22/2013 04:21 PM, Trung Hoang wrote:
-> Ahh yes, Knotty2 rocks!=20
->
-> For those who don't get this by default, i did this..=20
->
-> `bitbake -u knotty2 gumstix-console-image'=20
->
-> I do notice that sometimes the "Running task 3160 of 3162 =85" does get=
- buggy.. Instead of updating that line it makes a new line so i end up wi=
-th=85=20
->
-> Running task 3160 of 3162..
-> Running task 3161 of 3162..
-> Running task 3162 of 3162=85
-> 0: =85
+On Wed, 2013-01-23 at 14:14 +0200, Cristiana Voicu wrote:
+> Added a new command in bitbake to save a variable in a file; added a function
+> in cooker which is called by this command
+> 
+> The function saveConfigurationVar from cooker.py saves a variable in the file that
+> is received by argument. It checks all the operations made on that variable, using the history.
+> If it's the first time when it does some changes on a variable,it comments the lines where
+> an operation is made on it, and it sets it in a line to the end of file. If it's not
+> the first time(it has a comment before), it replaces the line.
+> 
+> Make some changes in hob to save the variables from bblayers.conf and local.conf
+> using the bitbake command.
+> 
+> Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+> ---
+>  bitbake/lib/bb/command.py                   |    7 +++
+>  bitbake/lib/bb/cooker.py                    |   86 +++++++++++++++++++++++++++
+>  bitbake/lib/bb/data_smart.py                |   21 +++++++
+>  bitbake/lib/bb/ui/crumbs/builder.py         |   32 ++++++----
+>  bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    3 +
+>  bitbake/lib/bb/ui/crumbs/template.py        |   24 --------
+>  6 files changed, 136 insertions(+), 37 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
+> index 0fed25a..77b08b1 100644
+> --- a/bitbake/lib/bb/command.py
+> +++ b/bitbake/lib/bb/command.py
+> @@ -179,6 +179,7 @@ class CommandsSync:
+>          Init the cooker to initial state with nothing parsed
+>          """
+>          command.cooker.initialize()
+> +        command.cooker.enableDataTracking()
 
+Please make this a new separte command to the server and also add a
+disable call which you can call once hob has the configuration data.
 
-I submitted a pile of fixes to knotty2 around the time it was made the de=
-fault to fix this problem and a number of others (such as resizing your t=
-erminal window while building).  The particular problem you see is caused=
- by not reading the terminal size and computing when lines are going to w=
-rap.   If you are seeing this behavior with the bitbake master branch ple=
-ase send a report.
+Cheers,
 
-Jason.
+Richard
+
 
 
