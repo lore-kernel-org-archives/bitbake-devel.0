@@ -1,36 +1,21 @@
-Received: from mail-da0-f48.google.com ([209.85.210.48])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <martin.jansa@gmail.com>)
-	id 1Tyjrh-0003GL-T8; Fri, 25 Jan 2013 15:02:46 +0100
-Received: by mail-da0-f48.google.com with SMTP id k18so179335dae.35
-	for <multiple recipients>; Fri, 25 Jan 2013 05:47:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=x-received:date:from:to:cc:subject:message-id:references
-	:mime-version:content-type:content-disposition:in-reply-to
-	:user-agent; bh=D6WfpBcH36c+V6w3RqjGltImZM8XUlqdCzCbjTIuDOc=;
-	b=C0Sia81db0D1VRS6UdLAABXbtk2lEW84deCfMvgPOLkh47p3mrFM9i3tDHLsP/5X7o
-	ovXz17JLTJk5prRVqA31NT2aj3mMc3aC2wF2jKsxW0vBe0086yiKMOc7sV6c4GiqD2gp
-	tJgemalmORmHMLB6Je1BDNi1dFf8Ymheg+v6mJ5JyO6URwuNemDHDz5yCSw9RHdm3ZGb
-	0kyaTmKYOcxE1P3VMi10KNWqnta9vZdgxeDhiwXnKkLEl3Bb+2CXI0F3dlA0Fe3k9Wpq
-	MJLfH850jopO12JvmksvzK4yvYU8G6N77+hPpPWXjy8r1fuBSX5HkjTuDWqXpF8p3Fhj
-	jFFg==
-X-Received: by 10.68.135.99 with SMTP id pr3mr14334116pbb.151.1359121630623;
-	Fri, 25 Jan 2013 05:47:10 -0800 (PST)
-Received: from localhost (ip-62-24-80-7.net.upcbroadband.cz. [62.24.80.7])
-	by mx.google.com with ESMTPS id vn2sm710244pbc.31.2013.01.25.05.47.07
-	(version=TLSv1.2 cipher=RC4-SHA bits=128/128);
-	Fri, 25 Jan 2013 05:47:09 -0800 (PST)
-Date: Fri, 25 Jan 2013 14:47:05 +0100
-From: Martin Jansa <martin.jansa@gmail.com>
-To: Constantin Musca <constantinx.musca@intel.com>
-Message-ID: <20130125134705.GF3200@jama>
-References: <1358952843-14300-1-git-send-email-constantinx.musca@intel.com>
-MIME-Version: 1.0
-In-Reply-To: <1358952843-14300-1-git-send-email-constantinx.musca@intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-Cc: bitbake-devel@lists.openembedded.org,
-	openembedded-core@lists.openembedded.org
-Subject: Re: [PATCH 1/3] prserv: use only PRSERV_HOST
+	(envelope-from <cristiana.voicu@intel.com>) id 1TykA2-0005Ze-MZ
+	for bitbake-devel@lists.openembedded.org;
+	Fri, 25 Jan 2013 15:21:46 +0100
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 25 Jan 2013 06:06:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.84,538,1355126400"; d="scan'208";a="278378033"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by fmsmga001.fm.intel.com with ESMTP; 25 Jan 2013 06:06:06 -0800
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 25 Jan 2013 16:10:12 +0200
+Message-Id: <1359123012-7707-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH V2] bitbake & hob: implement functions to assure consistency for configuration files
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -42,120 +27,363 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 25 Jan 2013 14:02:46 -0000
-X-Groupsio-MsgNum: 3177
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gneEPciiIl/aKvOT"
-Content-Disposition: inline
+X-List-Received-Date: Fri, 25 Jan 2013 14:21:46 -0000
 
---gneEPciiIl/aKvOT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Added a new command in bitbake to save a variable in a file; added a function
+in cooker which is called by this command.
 
-On Wed, Jan 23, 2013 at 04:54:03PM +0200, Constantin Musca wrote:
-> - remove PRSERV_PORT variable
-> - use 'hostname:port' as PRSERV_HOST format
-> - use 'localhost:0' for enabling the local PRServer
+Added new command in bitbake to enable/disable data tracking.
 
-Please update=20
-https://wiki.yoctoproject.org/wiki/index.php?title=3DPR_Service
+The function saveConfigurationVar from cooker.py saves a variable in the file that
+is received by argument. It checks all the operations made on that variable, using the history.
+If it's the first time when it does some changes on a variable,it comments the lines where
+an operation is made on it, and it sets it in a line to the end of file. If it's not
+the first time(it has a comment before), it replaces the line.
 
-This seems to break 'bitbake-prserv-tool migrate_localcount'
+Made some changes in hob to save the variables from bblayers.conf and local.conf
+using the bitbake command.
 
-ERROR: Execution of event handler 'primport_handler' failed################=
-################################################################## | ETA:  =
-00:00:00
-Traceback (most recent call last):
-  File "primport_handler(e)", line 9, in primport_handler(e=3D<bb.event.Par=
-seCompleted object at 0xce963d0>)
-  File "/OE/shr-core/openembedded-core/meta/lib/oe/prservice.py", line 43, =
-in prserv_import_db(d=3D<bb.data_smart.DataSmart object at 0x1aff710>, filt=
-er_version=3DNone, filter_pkgarch=3DNone, filter_checksum=3DNone):
-         if conn is None:
-    >        conn =3D prserv_make_conn(d)
-             if conn is None:
-  File "/OE/shr-core/openembedded-core/meta/lib/oe/prservice.py", line 13, =
-in prserv_make_conn(d=3D<bb.data_smart.DataSmart object at 0x1aff710>, chec=
-k=3DFalse):
-         except Exception, exc:
-    >        bb.fatal("Connecting to PR service %s:%s failed: %s" % (host, =
-port, str(exc)))
+[YOCTO #2934]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+---
+ bitbake/lib/bb/command.py                   |   18 ++++++
+ bitbake/lib/bb/cooker.py                    |   89 +++++++++++++++++++++++++++
+ bitbake/lib/bb/data_smart.py                |   22 +++++++
+ bitbake/lib/bb/ui/crumbs/builder.py         |   32 ++++++----
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    5 ++
+ bitbake/lib/bb/ui/crumbs/template.py        |   24 --------
+ 6 files changed, 153 insertions(+), 37 deletions(-)
 
-NameError: global name 'host' is not defined
+diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
+index 0fed25a..59336bb 100644
+--- a/bitbake/lib/bb/command.py
++++ b/bitbake/lib/bb/command.py
+@@ -174,6 +174,18 @@ class CommandsSync:
+         value = str(params[1])
+         command.cooker.configuration.data.setVar(varname, value)
+ 
++    def enableDataTracking(self, command, params):
++        """
++        Enable history tracking for variables
++        """
++        command.cooker.enableDataTracking()
++
++    def disableDataTracking(self, command, params):
++        """
++        Disable history tracking for variables
++        """
++        command.cooker.disableDataTracking()
++
+     def initCooker(self, command, params):
+         """
+         Init the cooker to initial state with nothing parsed
+@@ -210,6 +222,12 @@ class CommandsSync:
+         package_queue = params[2]
+         return command.cooker.generateNewImage(image, base_image, package_queue)
+ 
++    def setVarFile(self, command, params):
++        var = params[0]
++        val = params[1]
++        default_file = params[2]
++        command.cooker.saveConfigurationVar(var, val, default_file)
++
+ class CommandsAsync:
+     """
+     A class of asynchronous commands
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index caf1123..9a4695b 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -186,6 +186,12 @@ class BBCooker:
+         filtered_keys = bb.utils.approved_variables()
+         bb.data.inheritFromOS(self.configuration.data, self.savedenv, filtered_keys)
+ 
++    def enableDataTracking(self):
++        self.configuration.data.enableTracking()
++
++    def disableDataTracking(self):
++        self.configuration.data.disableTracking()
++
+     def loadConfigurationData(self):
+         self.initConfigurationData()
+ 
+@@ -201,6 +207,89 @@ class BBCooker:
+         if not self.configuration.cmd:
+             self.configuration.cmd = self.configuration.data.getVar("BB_DEFAULT_TASK", True) or "build"
+ 
++    def saveConfigurationVar(self, var, val, default_file):
++
++        replaced = False
++        #do not save if nothing changed
++        if str(val) == self.configuration.data.getVar(var):
++            return
++
++        conf_files = self.configuration.data.varhistory.get_variable_files(var)
++
++        #format the value when it is a list
++        if isinstance(val, list):
++            listval = ""
++            for value in val:
++                listval += "%s   " % value
++            val = listval
++
++        topdir = self.configuration.data.getVar("TOPDIR")
++
++        #comment or replace operations made on var
++        for conf_file in conf_files:
++            if topdir in conf_file:
++                with open(conf_file, 'r') as f:
++                    contents = f.readlines()
++                f.close()
++
++                lines = self.configuration.data.varhistory.get_variable_lines(var, conf_file)
++                for line in lines:
++                    total = ""
++                    i = 0
++                    for c in contents:
++                        total += c
++                        i = i + 1
++                        if i==int(line):
++                            end_index = len(total)
++                    index = total.rfind(var, 0, end_index)
++
++                    begin_line = total.count("\n",0,index)
++                    end_line = int(line)
++
++                    #check if the variable was saved before in the same way
++                    #if true it replace the place where the variable was declared
++                    #else it comments it
++                    if contents[begin_line-1]== "#added by bitbake\n":
++                        contents[begin_line] = "%s = \"%s\"\n" % (var, val)
++                        replaced = True
++                    else:
++                        for ii in range(begin_line, end_line):
++                            contents[ii] = "#" + contents[ii]
++
++                total = ""
++                for c in contents:
++                    total += c
++                with open(conf_file, 'w') as f:
++                    f.write(total)
++                f.close()
++
++        if replaced == False:
++            #remove var from history
++            self.configuration.data.varhistory.del_var_history(var)
++
++            #add var to the end of default_file
++            default_file = self._findConfigFile(default_file)
++
++            with open(default_file, 'r') as f:
++                contents = f.readlines()
++            f.close()
++
++            total = ""
++            for c in contents:
++                total += c
++
++            #add the variable on a single line, to be easy to replace the second time
++            total += "#added by bitbake"
++            total += "\n%s = \"%s\"\n" % (var, val)
++
++            with open(default_file, 'w') as f:
++                f.write(total)
++            f.close()
++
++            #add to history
++            loginfo = {"op":set, "file":default_file, "line":total.count("\n")}
++            self.configuration.data.setVar(var, val, **loginfo)
++
+     def parseConfiguration(self):
+ 
+         # Set log file verbosity
+diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
+index ddf98e6..5bf11e5 100644
+--- a/bitbake/lib/bb/data_smart.py
++++ b/bitbake/lib/bb/data_smart.py
+@@ -259,6 +259,27 @@ class VariableHistory(object):
+             o.write("#\n# $%s\n#   [no history recorded]\n#\n" % var)
+             o.write('#   "%s"\n' % (commentVal))
+ 
++    def get_variable_files(self, var):
++        """Get the files where operations are made on a variable"""
++        var_history = self.variable(var)
++        files = []
++        for event in var_history:
++            files.append(event['file'])
++        return files
++
++    def get_variable_lines(self, var, f):
++        """Get the line where a operation is made on a variable in file f"""
++        var_history = self.variable(var)
++        lines = []
++        for event in var_history:
++            if f== event['file']:
++                line = event['line']
++                lines.append(line)
++        return lines
++
++    def del_var_history(self, var):
++        if var in self.variables:
++            self.variables[var] = []
+ 
+ class DataSmart(MutableMapping):
+     def __init__(self, special = COWDictBase.copy(), seen = COWDictBase.copy() ):
+@@ -429,6 +450,7 @@ class DataSmart(MutableMapping):
+ 
+ 
+     def setVar(self, var, value, **loginfo):
++        #print("var=" + str(var) + "  val=" + str(value))
+         if 'op' not in loginfo:
+             loginfo['op'] = "set"
+         self.expand_cache = {}
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index 9da926d..e9cfa21 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -217,26 +217,32 @@ class Configuration:
+         self.split_proxy("git", template.getVar("GIT_PROXY_HOST") + ":" + template.getVar("GIT_PROXY_PORT"))
+         self.split_proxy("cvs", template.getVar("CVS_PROXY_HOST") + ":" + template.getVar("CVS_PROXY_PORT"))
+ 
+-    def save(self, template, defaults=False):
++    def save(self, handler, template, defaults=False):
+         template.setVar("VERSION", "%s" % hobVer)
+         # bblayers.conf
+-        template.setVar("BBLAYERS", " ".join(self.layers))
++        handler.set_var_in_file("BBLAYERS", self.layers, "bblayers.conf")
+         # local.conf
+         if not defaults:
+-            template.setVar("MACHINE", self.curr_mach)
+-        template.setVar("DISTRO", self.curr_distro)
+-        template.setVar("DL_DIR", self.dldir)
+-        template.setVar("SSTATE_DIR", self.sstatedir)
+-        template.setVar("SSTATE_MIRRORS", self.sstatemirror)
+-        template.setVar("PARALLEL_MAKE", "-j %s" % self.pmake)
+-        template.setVar("BB_NUMBER_THREADS", self.bbthread)
+-        template.setVar("PACKAGE_CLASSES", " ".join(["package_" + i for i in self.curr_package_format.split()]))
++            handler.set_var_in_file("MACHINE", self.curr_mach, "local.conf")
++        handler.set_var_in_file("DISTRO", self.curr_distro, "local.conf")
++        handler.set_var_in_file("DL_DIR", self.dldir, "local.conf")
++        handler.set_var_in_file("SSTATE_DIR", self.sstatedir, "local.conf")
++        sstate_mirror_list = self.sstatemirror.split("\\n ")
++        sstate_mirror_list_modified = []
++        for mirror in sstate_mirror_list:
++            if mirror != "":
++                mirror = mirror + "\\n"
++                sstate_mirror_list_modified.append(mirror)
++        handler.set_var_in_file("SSTATE_MIRRORS", sstate_mirror_list_modified, "local.conf")
++        handler.set_var_in_file("PARALLEL_MAKE", "-j %s" % self.pmake, "local.conf")
++        handler.set_var_in_file("BB_NUMBER_THREADS", self.bbthread, "local.conf")
++        handler.set_var_in_file("PACKAGE_CLASSES", " ".join(["package_" + i for i in self.curr_package_format.split()]), "local.conf")
+         template.setVar("IMAGE_ROOTFS_SIZE", self.image_rootfs_size)
+         template.setVar("IMAGE_EXTRA_SPACE", self.image_extra_size)
+         template.setVar("INCOMPATIBLE_LICENSE", self.incompat_license)
+         template.setVar("SDKMACHINE", self.curr_sdk_machine)
+-        template.setVar("CONF_VERSION", self.conf_version)
+-        template.setVar("LCONF_VERSION", self.lconf_version)
++        handler.set_var_in_file("CONF_VERSION", self.conf_version, "local.conf")
++        handler.set_var_in_file("LCONF_VERSION", self.lconf_version, "bblayers.conf")
+         template.setVar("EXTRA_SETTING", self.extra_setting)
+         template.setVar("TOOLCHAIN_BUILD", self.toolchain_build)
+         template.setVar("IMAGE_FSTYPES", self.image_fstypes)
+@@ -670,7 +676,7 @@ class Builder(gtk.Window):
+         self.template = TemplateMgr()
+         try:
+             self.template.open(filename, path)
+-            self.configuration.save(self.template, defaults)
++            self.configuration.save(self.handler, self.template, defaults)
+ 
+             self.template.save()
+         except Exception as e:
+diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+index 41022ef..d953f34 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -146,7 +146,9 @@ class HobHandler(gobject.GObject):
+         elif next_command == self.SUB_MATCH_CLASS:
+             self.runCommand(["findFilesMatchingInDir", "rootfs_", "classes"])
+         elif next_command == self.SUB_PARSE_CONFIG:
++            self.runCommand(["enableDataTracking"])
+             self.runCommand(["parseConfigurationFiles", "", ""])
++            self.runCommand(["disableDataTracking"])
+         elif next_command == self.SUB_GNERATE_TGTS:
+             self.runCommand(["generateTargetsTree", "classes/image.bbclass", []])
+         elif next_command == self.SUB_GENERATE_PKGINFO:
+@@ -451,6 +453,9 @@ class HobHandler(gobject.GObject):
+                 ret.append(i)
+         return " ".join(ret)
+ 
++    def set_var_in_file(self, var, val, default_file=None):
++        self.server.runCommand(["setVarFile", var, val, default_file])
++
+     def get_parameters(self):
+         # retrieve the parameters from bitbake
+         params = {}
+diff --git a/bitbake/lib/bb/ui/crumbs/template.py b/bitbake/lib/bb/ui/crumbs/template.py
+index e303c3a..92c438f 100644
+--- a/bitbake/lib/bb/ui/crumbs/template.py
++++ b/bitbake/lib/bb/ui/crumbs/template.py
+@@ -137,8 +137,6 @@ class RecipeFile(ConfigFile):
+ 
+ class TemplateMgr(gobject.GObject):
+ 
+-    __gLocalVars__ = ["MACHINE", "PACKAGE_CLASSES", "DISTRO", "DL_DIR", "SSTATE_DIR", "SSTATE_MIRRORS", "PARALLEL_MAKE", "BB_NUMBER_THREADS", "CONF_VERSION"]
+-    __gBBLayersVars__ = ["BBLAYERS", "LCONF_VERSION"]
+     __gRecipeVars__ = ["DEPENDS", "IMAGE_INSTALL"]
+ 
+     def __init__(self):
+@@ -153,36 +151,20 @@ class TemplateMgr(gobject.GObject):
+         return "%s/%s%s%s" % (path, "template-", filename, ".hob")
+ 
+     @classmethod
+-    def convert_to_bblayers_pathfilename(cls, filename, path):
+-        return "%s/%s%s%s" % (path, "bblayers-", filename, ".conf")
+-
+-    @classmethod
+-    def convert_to_local_pathfilename(cls, filename, path):
+-        return "%s/%s%s%s" % (path, "local-", filename, ".conf")
+-
+-    @classmethod
+     def convert_to_image_pathfilename(cls, filename, path):
+         return "%s/%s%s%s" % (path, "hob-image-", filename, ".bb")
+ 
+     def open(self, filename, path):
+         self.template_hob = HobTemplateFile(TemplateMgr.convert_to_template_pathfilename(filename, path))
+-        self.bblayers_conf = ConfigFile(TemplateMgr.convert_to_bblayers_pathfilename(filename, path))
+-        self.local_conf = ConfigFile(TemplateMgr.convert_to_local_pathfilename(filename, path))
+         self.image_bb = RecipeFile(TemplateMgr.convert_to_image_pathfilename(filename, path))
+ 
+     def setVar(self, var, val):
+-        if var in TemplateMgr.__gLocalVars__:
+-            self.local_conf.setVar(var, val)
+-        if var in TemplateMgr.__gBBLayersVars__:
+-            self.bblayers_conf.setVar(var, val)
+         if var in TemplateMgr.__gRecipeVars__:
+             self.image_bb.setVar(var, val)
+ 
+         self.template_hob.setVar(var, val)
+ 
+     def save(self):
+-        self.local_conf.save()
+-        self.bblayers_conf.save()
+         self.image_bb.save()
+         self.template_hob.save()
+ 
+@@ -200,12 +182,6 @@ class TemplateMgr(gobject.GObject):
+         if self.template_hob:
+             del self.template_hob
+             template_hob = None
+-        if self.bblayers_conf:
+-            del self.bblayers_conf
+-            self.bblayers_conf = None
+-        if self.local_conf:
+-            del self.local_conf
+-            self.local_conf = None
+         if self.image_bb:
+             del self.image_bb
+             self.image_bb = None
+-- 
+1.7.9.5
 
-Cheers,
 
->=20
-> [YOCTO #3744]
->=20
-> Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
-> ---
->  bitbake/lib/prserv/serv.py | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
->=20
-> diff --git a/bitbake/lib/prserv/serv.py b/bitbake/lib/prserv/serv.py
-> index 5567c6f..d8bdf31 100644
-> --- a/bitbake/lib/prserv/serv.py
-> +++ b/bitbake/lib/prserv/serv.py
-> @@ -268,10 +268,17 @@ def is_local_special(host, port):
-> =20
->  def auto_start(d):
->      global singleton
-> -    if (not d.getVar('PRSERV_HOST', True)) or (not d.getVar('PRSERV_PORT=
-', True)):
-> +
-> +    host_params =3D filter(None, (d.getVar('PRSERV_HOST', True) or '').s=
-plit(':'))
-> +    if not host_params:
-> +        return True
-> +
-> +    if len(host_params) !=3D 2:
-> +        logger.critical('\n'.join(['PRSERV_HOST: incorrect format',
-> +                'Usage: PRSERV_HOST =3D "<hostname>:<port>"']))
->          return True
-> =20
-> -    if is_local_special(d.getVar('PRSERV_HOST', True), int(d.getVar('PRS=
-ERV_PORT', True))) and not singleton:
-> +    if is_local_special(host_params[0], int(host_params[1])) and not sin=
-gleton:
->          import bb.utils
->          cachedir =3D (d.getVar("PERSISTENT_DIR", True) or d.getVar("CACH=
-E", True))
->          if not cachedir:
-> @@ -285,8 +292,8 @@ def auto_start(d):
->      if singleton:
->          host, port =3D singleton.getinfo()
->      else:
-> -        host =3D d.getVar('PRSERV_HOST', True)
-> -        port =3D int(d.getVar('PRSERV_PORT', True))
-> +        host =3D host_params[0]
-> +        port =3D int(host_params[1])
-> =20
->      try:
->          return PRServerConnection(host,port).ping()
-> --=20
-> 1.7.11.7
->=20
->=20
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel
 
---=20
-Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
-
---gneEPciiIl/aKvOT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iEYEARECAAYFAlECjNkACgkQN1Ujt2V2gBzW8wCgpyioftVZpZUQjELw/tLcsyna
-HuwAoJiRYjC3I1oNSzh1K/Et4gtvrV1G
-=77Id
------END PGP SIGNATURE-----
-
---gneEPciiIl/aKvOT--
