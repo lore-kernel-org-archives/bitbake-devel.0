@@ -1,38 +1,33 @@
-Received: from mail-lb0-f174.google.com ([209.85.217.174])
+Received: from mail-ia0-f170.google.com ([209.85.210.170])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1TyrpS-0006cR-3j
+	(envelope-from <kergoth@gmail.com>) id 1TyuKD-0005mE-Ic
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 25 Jan 2013 23:32:58 +0100
-Received: by mail-lb0-f174.google.com with SMTP id l12so1494604lbo.5
+	Sat, 26 Jan 2013 02:12:53 +0100
+Received: by mail-ia0-f170.google.com with SMTP id k20so1572592iak.15
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 25 Jan 2013 14:17:23 -0800 (PST)
+	Fri, 25 Jan 2013 16:57:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=x-received:mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	bh=881ShKjiIfRp5fSwmu9JHndHzX+Q2wQ3//dIe9sqcVI=;
-	b=InSU/Z5qYUQMdomCvcEzNoST3eq9cbf/cBEDJaXertDDhrA6dFYKtlV2lY7QzbpC7z
-	st5HtkiIET6lAgl0beKWy/ZXXI1GAlTsQAxOqMB5IfVEKQoU36JWWoEqSeSqTNyNeCnP
-	QQcjJZVAjEkc+7X7I2CA4C5q0oKSNGO5G1TDYU44MYUig7wH2I/+NQ3+Tt9YX1B4OlY9
-	up56iWEGzF43jyRTpRqMT+OWhppfOU6IK1uU6deW1xM8+g6iC6GaFw2dKgjGeoRbV74T
-	G2kxwHf6xdcM1UbmE7yKhjfdHj08SFTI/GUb3aGBi/4pAZvQzHAzN/rsQyj7mvpt8wl2
-	8CMA==
-X-Received: by 10.112.40.71 with SMTP id v7mr2777122lbk.32.1359152243296; Fri,
-	25 Jan 2013 14:17:23 -0800 (PST)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.34.10 with HTTP; Fri, 25 Jan 2013 14:17:03 -0800 (PST)
-In-Reply-To: <CA+chaQdCwSfEm0V4WtAg1KhVaDjxquE6WDFUfgvmwChCBgyVug@mail.gmail.com>
-References: <1359142708-24667-1-git-send-email-Martin.Jansa@gmail.com>
-	<CABcZANmTSLLfC=AvKjocVAN+Fj6n3Q3ZRQ=vON0EBw=5ahEiMw@mail.gmail.com>
-	<CA+chaQdCwSfEm0V4WtAg1KhVaDjxquE6WDFUfgvmwChCBgyVug@mail.gmail.com>
-From: Chris Larson <clarson@kergoth.com>
-Date: Fri, 25 Jan 2013 15:17:03 -0700
-X-Google-Sender-Auth: 0sHVpovszO3Qe4MB-3XBoEkDZtg
-Message-ID: <CABcZANk1SdS8v9=7N6Lg_3Li7TQzaVjqMXENpdzviSbUE3kKTA@mail.gmail.com>
-To: Martin Jansa <martin.jansa@gmail.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] world-image: add extra target
+	h=x-received:from:to:cc:subject:date:message-id:x-mailer;
+	bh=kVeHDRWVV81sF+4v1AqJ2gMdU2u3mRJytvw1B8Ucuqg=;
+	b=Klemtt+YmtaB/hZdZTcmhtxTBiDGQ097zMM5kiwe7f/uXaeqC59xuRzEevvW8C3wzJ
+	DRkuyZHGAfbVpAfBpN7Ki04azItCw9tY3o0maSlujyh3VWsejJ7/I8a/z8IfWrM9Agir
+	DVcW0p9hUSwXxsxvXC28htEUgcWSz7y0elk2VCNc7GTJe8F7iwGhWYbnCXwvUFE8Qywn
+	yxfLnIxrI83xusdkTJYPRkYquHB76V9LTPY+4YyGQ4+DVrU/wIicudp5LHEEz9bsoUgj
+	iBnJBy1ggHtOap7QfkENMlz+4fKTIu8KcLIxkQ5qKwPa1+kCDkAWIdpCEh5lWVKgXjqn
+	/J/w==
+X-Received: by 10.50.202.3 with SMTP id ke3mr220615igc.49.1359161836407;
+	Fri, 25 Jan 2013 16:57:16 -0800 (PST)
+Received: from precise64.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
+	by mx.google.com with ESMTPS id ua8sm324192igb.12.2013.01.25.16.57.14
+	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Fri, 25 Jan 2013 16:57:15 -0800 (PST)
+From: Christopher Larson <kergoth@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 25 Jan 2013 17:56:30 -0700
+Message-Id: <1359161790-4482-1-git-send-email-kergoth@gmail.com>
+X-Mailer: git-send-email 1.8.0.3
+Cc: Christopher Larson <chris_larson@mentor.com>
+Subject: [PATCH] tinfoil: support other fds, enable color support
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -44,46 +39,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 25 Jan 2013 22:32:58 -0000
-Content-Type: multipart/alternative; boundary=e0cb4efe3188a84b2404d4244a90
+X-List-Received-Date: Sat, 26 Jan 2013 01:12:53 -0000
 
---e0cb4efe3188a84b2404d4244a90
-Content-Type: text/plain; charset=UTF-8
+From: Christopher Larson <chris_larson@mentor.com>
 
-On Fri, Jan 25, 2013 at 3:13 PM, Martin Jansa <martin.jansa@gmail.com>wrote:
+Rather than only handling sys.stdout, also support any arbitrary file object,
+and enable color for the formatter if that file is a tty.
 
-> Agreed, I've tried with handler added in world-image.bbclass (cumulating
-> all PACKAGES on RecipeParsed event) and failed, that's why this ended in
-> bitbake code, but I'm open to ideas how to hook it properly.
+Signed-off-by: Christopher Larson <chris_larson@mentor.com>
+---
+ lib/bb/tinfoil.py | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-
-RecipeParsed isn't ideal, better to let bitbake collate the world recipe
-list, pass that along via a config level event (not ConfigParsed, but after
-the cooker and taskdata preparation), and map that to packages with pkgdata
-from the RecipeParsed.
+diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
+index 73d8fe9..cb53f3e 100644
+--- a/lib/bb/tinfoil.py
++++ b/lib/bb/tinfoil.py
+@@ -29,15 +29,17 @@ from bb.cooker import state
+ import bb.fetch2
+ 
+ class Tinfoil:
+-    def __init__(self):
++    def __init__(self, output=sys.stdout):
+         # Needed to avoid deprecation warnings with python 2.6
+         warnings.filterwarnings("ignore", category=DeprecationWarning)
+ 
+         # Set up logging
+         self.logger = logging.getLogger('BitBake')
+-        console = logging.StreamHandler(sys.stdout)
+-        format = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
++        console = logging.StreamHandler(output)
+         bb.msg.addDefaultlogFilter(console)
++        format = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
++        if output.isatty():
++            format.enable_color()
+         console.setFormatter(format)
+         self.logger.addHandler(console)
+ 
 -- 
-Christopher Larson
+1.8.0.3
 
---e0cb4efe3188a84b2404d4244a90
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Fri, Jan 25, 2013 at 3:13 PM, Martin Jansa <span dir=3D"ltr">&lt;<a href=
-=3D"mailto:martin.jansa@gmail.com" target=3D"_blank">martin.jansa@gmail.com=
-</a>&gt;</span> wrote:<br>
 
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">Agreed, I&#39;ve tried with handler added in=
- world-image.bbclass (cumulating all PACKAGES on RecipeParsed event) and fa=
-iled, that&#39;s why this ended in bitbake code, but I&#39;m open to ideas =
-how to hook it properly.</blockquote>
-
-</div><br>RecipeParsed isn&#39;t ideal, better to let bitbake collate the w=
-orld recipe list, pass that along via a config level event (not ConfigParse=
-d, but after the cooker and taskdata preparation), and map that to packages=
- with pkgdata from the RecipeParsed.<br>
-
--- <br>Christopher Larson</div></div>
-
---e0cb4efe3188a84b2404d4244a90--
