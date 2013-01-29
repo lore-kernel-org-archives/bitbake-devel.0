@@ -1,34 +1,39 @@
-Received: from mail-wi0-f176.google.com ([209.85.212.176])
+Received: from anubis.se.axis.com ([195.60.68.12])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <martin.jansa@gmail.com>) id 1TzrJk-0008Io-K8
+	(envelope-from <olof.johansson@axis.com>) id 1U06CW-0002zF-MT
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 28 Jan 2013 17:12:25 +0100
-Received: by mail-wi0-f176.google.com with SMTP id hm14so492085wib.3
+	Tue, 29 Jan 2013 09:05:54 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by anubis.se.axis.com (Postfix) with ESMTP id 2D69B19DDE
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Jan 2013 07:56:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=x-received:from:to:cc:subject:date:message-id:x-mailer:in-reply-to
-	:references; bh=ILJ2stXaecMEEqW02Fq5p90Eoezot4H07PPvKxYMkS8=;
-	b=X659fwR1ya3/eO2T3ngqE/KM6ZJO463RBcNzVYW5GLeLIDA5HVMsP4qiAW5GcFb47W
-	RQyquh0yxNTG1PCgsl/7SAtrWd9O++TNQgEIwsk4zLNzZjNJZXWDaWsgrsQWeAMMqlwb
-	otA+obzToU+4WE0+5ycIUr26e4vbosV/YVtb/Y3mkuhieq7L6ABpdIeQznvxyO+Ps+Wo
-	W7LidLqo5wksH5sywF6TTOkQPE6Zpv+1ogVLlnSnd4XS4ecXCwmjF7F+x+gpAEuZ4yoL
-	lnOYaJeaAlLatRfvTYe9jOOY+/lrfRiiNN9VODq/QuG0KLlxfRYpoYL9r1mFXWk/0QVW
-	2PIA==
-X-Received: by 10.194.76.165 with SMTP id l5mr22121447wjw.14.1359388602256;
-	Mon, 28 Jan 2013 07:56:42 -0800 (PST)
-Received: from localhost (ip-62-24-80-7.net.upcbroadband.cz. [62.24.80.7])
-	by mx.google.com with ESMTPS id hu8sm12676414wib.6.2013.01.28.07.56.41
-	(version=TLSv1.2 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Mon, 28 Jan 2013 07:56:41 -0800 (PST)
-From: Martin Jansa <martin.jansa@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 28 Jan 2013 16:56:41 +0100
-Message-Id: <1359388602-30536-2-git-send-email-Martin.Jansa@gmail.com>
-X-Mailer: git-send-email 1.8.1.1
-In-Reply-To: <1359388602-30536-1-git-send-email-Martin.Jansa@gmail.com>
-References: <1359388602-30536-1-git-send-email-Martin.Jansa@gmail.com>
-Subject: [PATCH 2/3] ssh.py: throw ParameterError when someone tries ssh://foo; protocol=git
+	Tue, 29 Jan 2013 08:50:13 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at anubis.se.axis.com
+Received: from anubis.se.axis.com ([127.0.0.1])
+	by localhost (anubis.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id TmkHnu0xYGSV for <bitbake-devel@lists.openembedded.org>;
+	Tue, 29 Jan 2013 08:50:12 +0100 (CET)
+Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
+	by anubis.se.axis.com (Postfix) with ESMTP id 7118719DCC
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 29 Jan 2013 08:50:12 +0100 (CET)
+Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
+	by thoth.se.axis.com (Postfix) with ESMTP id 35FDC3415F
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 29 Jan 2013 08:50:12 +0100 (CET)
+Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
+	(10.0.5.74) with Microsoft SMTP Server id 8.2.176.0; Tue, 29 Jan 2013
+	08:50:12 +0100
+Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id C3EDA9C072; 
+	Tue, 29 Jan 2013 08:50:11 +0100 (CET)
+From: Olof Johansson <olof.johansson@axis.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Tue, 29 Jan 2013 08:50:06 +0100
+Message-ID: <1359445811-6394-2-git-send-email-olof.johansson@axis.com>
+X-Mailer: git-send-email 1.7.10.4
+In-Reply-To: <1358759883-7566-1-git-send-email-olof.johansson@axis.com>
+References: <1358759883-7566-1-git-send-email-olof.johansson@axis.com>
+MIME-Version: 1.0
+Subject: [PATCH v2 1/6] fetch2: Remove unused code in wget fetcher
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -40,34 +45,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 28 Jan 2013 16:12:27 -0000
+X-List-Received-Date: Tue, 29 Jan 2013 08:06:12 -0000
+Content-Type: text/plain
 
-* taken from SFTP fetcher:
-  http://patchwork.openembedded.org/patch/43027/
-
-Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+Signed-off-by: Olof Johansson <olof.johansson@axis.com>
 ---
- lib/bb/fetch2/ssh.py | 5 +++++
- 1 file changed, 5 insertions(+)
+ lib/bb/fetch2/wget.py |    5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/lib/bb/fetch2/ssh.py b/lib/bb/fetch2/ssh.py
-index 61db435..721fb35 100644
---- a/lib/bb/fetch2/ssh.py
-+++ b/lib/bb/fetch2/ssh.py
-@@ -73,6 +73,11 @@ class SSH(FetchMethod):
-         return False
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 2808df6..1fafc4a 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -32,8 +32,6 @@ import urllib
+ from   bb import data
+ from   bb.fetch2 import FetchMethod
+ from   bb.fetch2 import FetchError
+-from   bb.fetch2 import encodeurl
+-from   bb.fetch2 import decodeurl
+ from   bb.fetch2 import logger
+ from   bb.fetch2 import runfetchcmd
  
-     def urldata_init(self, urldata, d):
-+        if 'protocol' in urldata.parm and urldata.parm['protocol'] == 'git':
-+            raise bb.fetch2.ParameterError(
-+                "Invalid protocol - if you wish to fetch from a git " +
-+                "repository using ssh, you need to use " +
-+                "git:// prefix with protocol=ssh", urldata.url)
-         m = __pattern__.match(urldata.url)
-         path = m.group('path')
-         host = m.group('host')
+@@ -77,9 +75,6 @@ class Wget(FetchMethod):
+             fetchcmd = d.getVar("FETCHCOMMAND_wget", True) or d.expand(basecmd + " -P ${DL_DIR} '${URI}'")
+ 
+         uri = uri.split(";")[0]
+-        uri_decoded = list(decodeurl(uri))
+-        uri_type = uri_decoded[0]
+-        uri_host = uri_decoded[1]
+ 
+         fetchcmd = fetchcmd.replace("${URI}", uri.split(";")[0])
+         fetchcmd = fetchcmd.replace("${FILE}", ud.basename)
 -- 
-1.8.1.1
+1.7.10.4
 
 
 
