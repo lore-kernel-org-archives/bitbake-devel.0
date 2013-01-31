@@ -1,37 +1,33 @@
-Received: from mail-ie0-f173.google.com ([209.85.223.173])
+Received: from mail-pb0-f43.google.com ([209.85.160.43])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <wmat@alphatroop.com>) id 1U0y7C-0004AU-43
+	(envelope-from <martin.jansa@gmail.com>) id 1U0yre-0007jZ-IV
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 31 Jan 2013 18:39:58 +0100
-Received: by mail-ie0-f173.google.com with SMTP id 9so2599057iec.32
+	Thu, 31 Jan 2013 19:28:06 +0100
+Received: by mail-pb0-f43.google.com with SMTP id jt11so1727419pbb.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 31 Jan 2013 09:24:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=google.com; s=20120113;
-	h=x-received:from:to:cc:subject:date:message-id:x-mailer:in-reply-to
-	:references:x-gm-message-state;
-	bh=u+rcxHlPT0aneL/TkYqBaNF6hasVFzQIq7wIdh5VYkM=;
-	b=QRlBHq61iCkV56ZbXa5w+7VvWzF10Z0A4NmPIPfsN5ozk7zbJZpivoGqyFQgmjFC+5
-	DLtrA77vdlvUGjw2SjGpg48+GCNpzKnBhR4jqWUA/MpH5l1kFArkpLX9ZPuwTsbCP4hv
-	GSmEoE4jN9ZzrF3RvPWn3l5mHPanGz7R70rPPEk7VTACtjFCZ2RYLxtJJ4aVS1gcJS2j
-	gjnFwz1TyYM62lmJMqwQdCfMaT91eJNdMme0XtZ7y0gbkqI2+7KPdTchP92uRc6OK+pF
-	E/E1H+MNMn9X9/LAo7Qr4d10vUV/Xjzfw35yNIkqXRvy/a59ENFS/JVcV0CFOcFIhMw2
-	SDtA==
-X-Received: by 10.42.180.65 with SMTP id bt1mr7511233icb.41.1359653054453;
-	Thu, 31 Jan 2013 09:24:14 -0800 (PST)
-Received: from univac.naoi.ca ([24.246.30.132])
-	by mx.google.com with ESMTPS id x7sm7129118igk.8.2013.01.31.09.24.13
-	(version=TLSv1 cipher=RC4-SHA bits=128/128);
-	Thu, 31 Jan 2013 09:24:13 -0800 (PST)
-From: Bill Traynor <wmat@alphatroop.com>
+	Thu, 31 Jan 2013 10:12:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=x-received:from:to:cc:subject:date:message-id:x-mailer;
+	bh=VoiLrx3Kimm+d5AnOtMmz5lfSYcgfqbf2ceY5DEU1SU=;
+	b=a5ouFvEi2yFMyOYvv8XwEMmhDcU6uE33szlt/r1bayEXeRO2tpenwx9erKxahApF3e
+	W/+Iqi9qh6HHLpWwtf/IPSaAQndtk0Z4c8RFlmmOXilxP6/l01ToJvNk1Ey91nXtZHvf
+	fzvornmvNayyUIwpfIjNcGuip82HumBEbbinCjbnsHBQRLePAL4/cxqMv8mQa6ogOlgW
+	AHMJ1mheG54UHbHjrUzGnwgaRRnYtjw4PmUksWz/THZRHcZFlu9fSTGUedFwhBrrQ0xl
+	ebROYhWnND7Lr0wniCwIgyT8bX0Q9apWBMspBUjHRYzCqo9vtn5+an3bFuKYDrMtfsgk
+	fzhQ==
+X-Received: by 10.68.217.42 with SMTP id ov10mr24573535pbc.51.1359655934988;
+	Thu, 31 Jan 2013 10:12:14 -0800 (PST)
+Received: from localhost (ip-62-24-80-7.net.upcbroadband.cz. [62.24.80.7])
+	by mx.google.com with ESMTPS id mz10sm5654889pbc.37.2013.01.31.10.12.11
+	(version=TLSv1.2 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Thu, 31 Jan 2013 10:12:13 -0800 (PST)
+From: Martin Jansa <martin.jansa@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 31 Jan 2013 12:24:08 -0500
-Message-Id: <1359653048-4965-1-git-send-email-wmat@alphatroop.com>
-X-Mailer: git-send-email 1.7.11.7
-In-Reply-To: <y>
-References: <y>
-X-Gm-Message-State: ALoCoQl5OPn/sZfeyPBi8axrKGmqr5BCPX1oLarfgi0B/6+6/cWIL0sGDGVDTqaxWIs8EA0e1Leu
-Subject: [PATCH] setup.py: Set the 'url' in setup.py to the OE BitBake page.
+Date: Thu, 31 Jan 2013 19:12:08 +0100
+Message-Id: <1359655930-1404-1-git-send-email-Martin.Jansa@gmail.com>
+X-Mailer: git-send-email 1.8.1.2
+Cc: Martin Jansa <martin.jansa@gmail.com>
+Subject: [PATCH][for-1.16 1/3] ssh: fix fetcher
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -43,32 +39,84 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 31 Jan 2013 17:40:00 -0000
+X-List-Received-Date: Thu, 31 Jan 2013 18:28:06 -0000
 
-Removed the old berlios BitBake project page and inserted
-the BitBake page from the OE project:
-http://www.openembedded.org/wiki/BitBake
+From: Martin Jansa <martin.jansa@gmail.com>
 
-Signed-off-by: Bill Traynor <wmat@alphatroop.com>
+* set localpath in urldata_init
+  otherwise localpath and basename were None, when fetcher was trying to
+  define .lock and .done paths
+  basepath = d.expand("${DL_DIR}/%s" % os.path.basename(self.localpath or self.basename))
+* remove "host" from localpath
+  .done and .lock files are always using just basename, so if someone
+  has 2 recipes with:
+  SRC_URI = "ssh://foo/file.txt"
+  SRC_URI = "ssh://bar/file.txt"
+  then there will be only one file.txt.done in downloads anyway (and
+  only first file.txt from first server will be returned on do_fetch
+
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- setup.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/bb/fetch2/ssh.py | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/setup.py b/setup.py
-index d5c70bc..8c26a9b 100755
---- a/setup.py
-+++ b/setup.py
-@@ -65,7 +65,7 @@ setup(name='bitbake',
-       },
+diff --git a/lib/bb/fetch2/ssh.py b/lib/bb/fetch2/ssh.py
+index 8d6434a..61db435 100644
+--- a/lib/bb/fetch2/ssh.py
++++ b/lib/bb/fetch2/ssh.py
+@@ -72,15 +72,14 @@ class SSH(FetchMethod):
+     def supports_checksum(self, urldata):
+         return False
  
-       license = 'GPLv2',
--      url = 'http://developer.berlios.de/projects/bitbake/',
-+      url = 'http://www.openembedded.org/wiki/BitBake',
-       description = 'BitBake build tool',
-       long_description = 'BitBake is a simple tool for the execution of tasks. It is derived from Portage, which is the package management system used by the Gentoo Linux distribution. It is most commonly used to build packages, as it can easily use its rudimentary inheritance to abstract common operations, such as fetching sources, unpacking them, patching them, compiling them, and so on.  It is the basis of the OpenEmbedded project, which is being used for OpenZaurus, Familiar, and a number of other Linux distributions.',
-       author = 'BitBake Development Team',
+-    def localpath(self, url, urldata, d):
++    def urldata_init(self, urldata, d):
+         m = __pattern__.match(urldata.url)
+         path = m.group('path')
+         host = m.group('host')
+-        lpath = os.path.join(data.getVar('DL_DIR', d, True), host, os.path.basename(path))
+-        return lpath
++        urldata.localpath = os.path.join(d.getVar('DL_DIR', True), os.path.basename(path))
+ 
+     def download(self, url, urldata, d):
+-        dldir = data.getVar('DL_DIR', d, True)
++        dldir = d.getVar('DL_DIR', True)
+ 
+         m = __pattern__.match(url)
+         path = m.group('path')
+@@ -89,16 +88,10 @@ class SSH(FetchMethod):
+         user = m.group('user')
+         password = m.group('pass')
+ 
+-        ldir = os.path.join(dldir, host)
+-        lpath = os.path.join(ldir, os.path.basename(path))
+-
+-        if not os.path.exists(ldir):
+-            os.makedirs(ldir)
+-
+         if port:
+-            port = '-P %s' % port
++            portarg = '-P %s' % port
+         else:
+-            port = ''
++            portarg = ''
+ 
+         if user:
+             fr = user
+@@ -112,9 +105,9 @@ class SSH(FetchMethod):
+ 
+         import commands
+         cmd = 'scp -B -r %s %s %s/' % (
+-            port,
++            portarg,
+             commands.mkarg(fr),
+-            commands.mkarg(ldir)
++            commands.mkarg(dldir)
+         )
+ 
+         bb.fetch2.check_network_access(d, cmd, urldata.url)
 -- 
-1.7.11.7
+1.8.1.2
 
 
 
