@@ -1,33 +1,25 @@
-Received: from dan.rpsys.net ([93.97.175.187])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1U0tjt-0005Ak-Ni for bitbake-devel@lists.openembedded.org;
-	Thu, 31 Jan 2013 13:59:40 +0100
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r0VCmQSI027270; Thu, 31 Jan 2013 12:48:27 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 6My8of3fuqko; Thu, 31 Jan 2013 12:48:26 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r0VCmIal027253
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Thu, 31 Jan 2013 12:48:21 GMT
-Message-ID: <1359636205.14071.28.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Olof Johansson <olof.johansson@axis.com>
-Date: Thu, 31 Jan 2013 12:43:25 +0000
-In-Reply-To: <20130130075555.GA7508@axis.com>
-References: <1358759883-7566-1-git-send-email-olof.johansson@axis.com>
-	<1359445811-6394-1-git-send-email-olof.johansson@axis.com>
-	<20130130075555.GA7508@axis.com>
-X-Mailer: Evolution 3.6.2-0ubuntu0.1 
-Mime-Version: 1.0
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH v2 0/6] fetch2: Updated SFTP fetcher
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1U0uzg-0004MJ-Sk
+	for bitbake-devel@lists.openembedded.org;
+	Thu, 31 Jan 2013 15:20:01 +0100
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga102.ch.intel.com with ESMTP; 31 Jan 2013 06:04:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.84,577,1355126400"; d="scan'208";a="197069072"
+Received: from unknown (HELO helios.localnet) ([10.252.120.26])
+	by AZSMGA002.ch.intel.com with ESMTP; 31 Jan 2013 06:04:16 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Robert Yang <liezhi.yang@windriver.com>
+Date: Thu, 31 Jan 2013 14:04:15 +0000
+Message-ID: <7274465.7DSL83VslB@helios>
+Organization: Intel Corporation
+User-Agent: KMail/4.9.4 (Linux/3.5.0-22-generic; KDE/4.9.4; i686; ; )
+In-Reply-To: <cover.1359080497.git.liezhi.yang@windriver.com>
+References: <cover.1359080497.git.liezhi.yang@windriver.com>
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org, Zhenfeng.Zhao@windriver.com
+Subject: Re: [PATCH 0/2] bitbake-layers: print the recipe's depends that crosses a layer boundary
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -39,54 +31,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 31 Jan 2013 12:59:42 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 31 Jan 2013 14:20:05 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, 2013-01-30 at 08:55 +0100, Olof Johansson wrote:
-> Hi,
-> 
-> On 2013-01-29 08:50, Olof Johansson wrote:
-> > Olof Johansson (6):
-> >   fetch2: Remove unused code in wget fetcher
-> >   fetch2: Add a class representing a generic URI
-> >   fetch2: unittests for bb.fetch2.URI class
-> >   fetch2: Adapt encode/decode url to use URI class
-> >   fetch2: Add editor modelines for bb.tests.*
-> >   fetch2: Add SFTP fetcher
-> 
-> One thing I forgot to mention; after speaking with kergoth on IRC
-> last Friday, we found that there are some performance penelties
-> in using the URI class instead of encode/decodeurl. I tried to
-> profile and see if there were any obvious ways to get it down to
-> the level of the old encode/decodeurl, but nothing obvious.
-> 
-> I did the performance evaluation by running the unittests.
-> 
-> Forking and running the unittests in seperate processes shows no
-> change:
-> 
->  http://codepad.org/SYsVsckY
-> 
-> However, running them in a single process with the timeit module
-> shows a pretty big (proportional) regression:
-> 
->  http://codepad.org/Vzu7Pqqw
-> 
-> Is this significant? Running the tests 10000, each run creating
-> three URI objects, takes ~2 seconds.
+Hi Robert,
 
-In the scheme of things and other bitbake overheads, I'd suspect its not
-significant although it is a good thing to check...
+On Friday 25 January 2013 16:35:08 Robert Yang wrote:
+> The following changes since commit 8d6e55bf2192524bda84138b5356a2791adbbe61:
+> 
+>   prserv: add LOCALCOUNT to AUTOINCs migration feature (2013-01-22 16:01:32
+> +0000)
+> 
+> are available in the git repository at:
+>   git://git.pokylinux.org/poky-contrib robert/bitbake-layers
+>  
+> http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/bitbake-layers
+> 
+> Robert Yang (2):
+>   bitbake-layers: fix get_file_layer
+>   bitbake-layers: print the recipe's depends that crosses a layer
+>     boundary
 
-What were the other changes between v1 and v2? In cases like this a 0/6
-summary email is helpful.
+Looks good, thanks for implementing this. I think we might be able to improve 
+the output formatting for this subcommand in a similar manner to the other 
+subcommands a while ago (i.e. avoiding long paths but with an option to go 
+back to the full path format - see show-overlayed and its -f option for an 
+example) however this can be done at a later date.
 
 Cheers,
+Paul
 
-Richard
+-- 
 
-
-
+Paul Eggleton
+Intel Open Source Technology Centre
 
 
