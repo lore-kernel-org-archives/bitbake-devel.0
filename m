@@ -1,28 +1,25 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Liezhi.Yang@windriver.com>) id 1U17LH-0007nF-7J
+	(envelope-from <Liezhi.Yang@windriver.com>) id 1U1CcK-0007KX-Jw
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 01 Feb 2013 04:31:17 +0100
+	Fri, 01 Feb 2013 10:09:05 +0100
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id r113FN09006091
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Thu, 31 Jan 2013 19:15:23 -0800 (PST)
-Received: from [128.224.162.186] (128.224.162.186) by ALA-HCA.corp.ad.wrs.com
+	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id r118rLHs009632
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 1 Feb 2013 00:53:21 -0800 (PST)
+Received: from pek-usp-3.wrs.com (128.224.163.124) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.2.318.4;
-	Thu, 31 Jan 2013 19:15:22 -0800
-Message-ID: <510B3347.1090008@windriver.com>
-Date: Fri, 1 Feb 2013 11:15:19 +0800
+	Fri, 1 Feb 2013 00:53:19 -0800
 From: Robert Yang <liezhi.yang@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
-	rv:17.0) Gecko/20130106 Thunderbird/17.0.2
+To: <bitbake-devel@lists.openembedded.org>
+Date: Fri, 1 Feb 2013 16:56:44 +0800
+Message-ID: <cover.1359697886.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 1.7.11.2
 MIME-Version: 1.0
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
-References: <cover.1359080497.git.liezhi.yang@windriver.com>
-	<7274465.7DSL83VslB@helios>
-In-Reply-To: <7274465.7DSL83VslB@helios>
-Cc: bitbake-devel@lists.openembedded.org, Zhenfeng.Zhao@windriver.com
-Subject: Re: [PATCH 0/2] bitbake-layers: print the recipe's depends that crosses a layer boundary
+Cc: Zhenfeng.Zhao@windriver.com
+Subject: [PATCH 0/1] knotty.py: fix unknown event bb.event.DiskFull
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -34,48 +31,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Feb 2013 03:31:17 -0000
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 01 Feb 2013 09:09:05 -0000
+Content-Type: text/plain
 
+The following changes since commit 8d80483e2f0f755a61087be1dffaf595fbc467fd:
 
-Hi Pual,
+  bitbake: bitbake-layers: print the recipe's depends that crosses a layer boundary (2013-01-31 14:00:03 +0000)
 
-Thank you very much, I've filed a defect for tracking this:
+are available in the git repository at:
 
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=3824
+  git://git.pokylinux.org/poky-contrib robert/knotty
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/knotty
 
-Bug 3824 - bitbake-layers: let show-cross-depends avoid long path
+Robert Yang (1):
+  knotty.py: fix unknown event bb.event.DiskFull
 
-// Robert
+ bitbake/lib/bb/ui/knotty.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On 01/31/2013 10:04 PM, Paul Eggleton wrote:
-> Hi Robert,
->
-> On Friday 25 January 2013 16:35:08 Robert Yang wrote:
->> The following changes since commit 8d6e55bf2192524bda84138b5356a2791adbbe61:
->>
->>    prserv: add LOCALCOUNT to AUTOINCs migration feature (2013-01-22 16:01:32
->> +0000)
->>
->> are available in the git repository at:
->>    git://git.pokylinux.org/poky-contrib robert/bitbake-layers
->>
->> http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/bitbake-layers
->>
->> Robert Yang (2):
->>    bitbake-layers: fix get_file_layer
->>    bitbake-layers: print the recipe's depends that crosses a layer
->>      boundary
->
-> Looks good, thanks for implementing this. I think we might be able to improve
-> the output formatting for this subcommand in a similar manner to the other
-> subcommands a while ago (i.e. avoiding long paths but with an option to go
-> back to the full path format - see show-overlayed and its -f option for an
-> example) however this can be done at a later date.
->
-> Cheers,
-> Paul
->
+-- 
+1.7.11.2
+
 
 
