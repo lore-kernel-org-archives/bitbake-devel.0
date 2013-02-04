@@ -1,27 +1,21 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Liezhi.Yang@windriver.com>) id 1U2J5n-00075o-Tq
+	(envelope-from <cristiana.voicu@intel.com>) id 1U2NeN-00057O-Vf
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 04 Feb 2013 11:16:06 +0100
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id r14A0F8o015556
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 4 Feb 2013 02:00:15 -0800 (PST)
-Received: from pek-usp-3.wrs.com (128.224.163.124) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.2.318.4;
-	Mon, 4 Feb 2013 02:00:14 -0800
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 4 Feb 2013 18:03:35 +0800
-Message-ID: <e6410ca8b71ebd3aa0183f2036c0fcde923c0508.1359970151.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.11.2
-In-Reply-To: <cover.1359970151.git.liezhi.yang@windriver.com>
-References: <cover.1359970151.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Cc: Zhenfeng.Zhao@windriver.com
-Subject: [PATCH 1/1] monitordisk.py: disable the inode checking for some fs
+	Mon, 04 Feb 2013 16:08:05 +0100
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga102.ch.intel.com with ESMTP; 04 Feb 2013 06:52:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.84,600,1355126400"; d="scan'208";a="198494000"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by AZSMGA002.ch.intel.com with ESMTP; 04 Feb 2013 06:52:13 -0800
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  4 Feb 2013 16:56:00 +0200
+Message-Id: <1359989760-16394-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob: remove parsing warnings when machine is changed
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,53 +27,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 04 Feb 2013 10:16:08 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 04 Feb 2013 15:08:19 -0000
 
-There is an error when use disk monitor on btrfs:
-WARNING: The free inode of rootfs is running low (0.000K left)
-ERROR: Immediately abort since the disk space monitor action is "ABORT"!
+When the machine is changed, the warnings list is emptied and the warnings
+bar is hidden.
 
-This is beucase some fs formats' statvfs.f_files (inodes) is zero, thus
-the statvfs.f_favail (free inodes) is zero, too, this a feature of the
-fs, we disable the inode checking for such a fs.
-
-[YOCTO #3609]
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+[YOCTO #3830]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- bitbake/lib/bb/monitordisk.py | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/bitbake/lib/bb/monitordisk.py b/bitbake/lib/bb/monitordisk.py
-index 2bd4881..1c1e614 100644
---- a/bitbake/lib/bb/monitordisk.py
-+++ b/bitbake/lib/bb/monitordisk.py
-@@ -128,7 +128,7 @@ def getDiskData(BBDirs, configuration):
-         if not os.path.exists(path):
-             bb.utils.mkdirhier(path)
-         mountedDev = getMountedDev(path)
--        devDict[mountedDev] = action, path, minSpace, minInode
-+        devDict[mountedDev] = [action, path, minSpace, minInode]
+diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+index df7a017..956f5ce 100644
+--- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
++++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+@@ -173,6 +173,11 @@ class ImageConfigurationPage (HobPage):
  
-     return devDict
+         return warnings_bar
  
-@@ -231,6 +231,13 @@ class diskMonitor:
-                 freeInode = st.f_favail
++    def disable_warnings_bar(self):
++        if self.builder.parsing_warnings:
++            self.warnings_bar.hide_all()
++            self.builder.parsing_warnings = []
++
+     def create_config_machine(self):
+         self.machine_title = gtk.Label()
+         self.machine_title.set_alignment(0.0, 0.5)
+@@ -319,6 +324,7 @@ class ImageConfigurationPage (HobPage):
+         self.builder.populate_recipe_package_info_async()
  
-                 if self.devDict[dev][3] and freeInode < self.devDict[dev][3]:
-+                    # Some fs formats' (e.g., btrfs) statvfs.f_files (inodes) is
-+                    # zero, this is a feature of the fs, we disable the inode
-+                    # checking for such a fs.
-+                    if st.f_files == 0:
-+                        logger.warn("Inode check for %s is unavaliable, remove it from disk monitor" % dev)
-+                        self.devDict[dev][3] = None
-+                        continue
-                     # Always show warning, the self.checked would always be False if the action is WARN
-                     if self.preFreeI[dev] == 0 or self.preFreeI[dev] - freeInode > self.inodeInterval and not self.checked[dev]:
-                         logger.warn("The free inode of %s is running low (%.3fK left)" % (dev, freeInode / 1024.0))
+     def update_machine_combo(self):
++        self.disable_warnings_bar()
+         all_machines = [self.__dummy_machine__] + self.builder.parameters.all_machines
+ 
+         model = self.machine_combo.get_model()
+@@ -328,6 +334,7 @@ class ImageConfigurationPage (HobPage):
+         self.machine_combo.set_active(0)
+ 
+     def switch_machine_combo(self):
++        self.disable_warnings_bar()
+         self.machine_combo_changed_by_manual = False
+         model = self.machine_combo.get_model()
+         active = 0
 -- 
-1.7.11.2
+1.7.9.5
 
 
 
