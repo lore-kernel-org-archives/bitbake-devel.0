@@ -1,26 +1,26 @@
 Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dvhart@linux.intel.com>) id 1U2g3j-0000mp-1Q
+	(envelope-from <dvhart@linux.intel.com>) id 1U2g3m-0000mt-1i
 	for bitbake-devel@lists.openembedded.org;
 	Tue, 05 Feb 2013 11:47:38 +0100
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
 	by orsmga102.jf.intel.com with ESMTP; 05 Feb 2013 02:29:16 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.84,602,1355126400"; d="scan'208";a="257891620"
+X-IronPort-AV: E=Sophos;i="4.84,602,1355126400"; d="scan'208";a="257891619"
 Received: from fear.jf.intel.com (HELO rage.local) ([10.7.201.160])
 	by orsmga001.jf.intel.com with ESMTP; 05 Feb 2013 02:30:08 -0800
 From: Darren Hart <dvhart@linux.intel.com>
 To: Poky <poky@yoctoproject.org>, openembedded-core@lists.openembedded.org,
 	Richard Purdie <richard.purdie@linuxfoundation.org>
-Date: Tue,  5 Feb 2013 02:31:38 -0800
-Message-Id: <c6c651aff98215bcc29fb72fcddbba50c5aec807.1360059615.git.dvhart@linux.intel.com>
+Date: Tue,  5 Feb 2013 02:31:37 -0800
+Message-Id: <c3eb52b9dbde2bccc9d3b53340712e445c949d2f.1360059615.git.dvhart@linux.intel.com>
 X-Mailer: git-send-email 1.7.5.4
 In-Reply-To: <cover.1360059615.git.dvhart@linux.intel.com>
 References: <cover.1360059615.git.dvhart@linux.intel.com>
 In-Reply-To: <cover.1360059615.git.dvhart@linux.intel.com>
 References: <cover.1360059615.git.dvhart@linux.intel.com>
 Cc: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 2/8] bitbake: fetch2: Export upper and lower case environment variables
+Subject: [PATCH 1/8] bitbake: fetch2: Print the complete SRCREV variable name when INVALID
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -34,41 +34,44 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 05 Feb 2013 10:47:49 -0000
 
-Applications are inconsistent in their use of upper and lower case proxy
-variables. Curl, for example, specifies NO_PROXY (not no_proxy) in the
-man page (changed in 2009 [1]). Avoid proxy issues by ensuring both the
-upper and lower case versions of each proxy variable is available in the
-environment for the fetcher commands.
+If a particular SRCREV (say for a particular branch) is missing, the
+fetcher will currently just report an obtuse error about the "SRCREV"
+being invalid. If there is more information is to be had (say from name,
+i.e. branch, and pn) then display that as well.
 
-Add FTPS_PROXY and ftps_proxy to the list as well.
+The new error looks something like this:
 
-1. http://curl.haxx.se/mail/tracker-2009-04/0012.html
+ERROR: ExpansionError during parsing /home/dvhart/source/poky/meta/recipes-kernel/linux/linux-yocto_3.4.bb: Failure expanding variable do_patch: ExpansionError: Failure expanding variable SRCPV, expression was ${@bb.fetch2.get_srcrev(d)} which triggered exception FetchError: Fetcher failure for URL: 'git://otcgit.jf.intel.com/dvhart/linux-yocto-minnow-3.4.git;protocol=git;nocheckout=1;branch=standard/minnow,meta,emgd-1.14;name=machine,meta,emgd'. Please set SRCREV_emgd_pn-linux-yocto to a valid value
+
+Note the variable listed as invalid is
+"SRCREV_emgd_pn-linux-yocto", making it explicit what is wrong.
 
 Signed-off-by: Darren Hart <dvhart@linux.intel.com>
 Cc: bitbake-devel@lists.openembedded.org
 ---
- bitbake/lib/bb/fetch2/__init__.py |    9 +++++++--
- 1 files changed, 7 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/fetch2/__init__.py |    7 +++++--
+ 1 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index cba45d0..7466a38 100644
+index 4746356..cba45d0 100644
 --- a/bitbake/lib/bb/fetch2/__init__.py
 +++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -459,8 +459,13 @@ def runfetchcmd(cmd, d, quiet = False, cleanup = []):
-     # Also include some other variables.
-     # FIXME: Should really include all export varaiables?
-     exportvars = ['PATH', 'GIT_PROXY_COMMAND', 'GIT_PROXY_HOST',
--                  'GIT_PROXY_PORT', 'GIT_CONFIG', 'http_proxy', 'ftp_proxy',
--                  'https_proxy', 'no_proxy', 'ALL_PROXY', 'all_proxy',
-+                  'GIT_PROXY_PORT', 'GIT_CONFIG',
-+                  'HTTP_PROXY', 'http_proxy',
-+                  'HTTPS_PROXY', 'https_proxy',
-+                  'FTP_PROXY', 'ftp_proxy',
-+                  'FTPS_PROXY', 'ftps_proxy',
-+                  'NO_PROXY', 'no_proxy',
-+                  'ALL_PROXY', 'all_proxy',
-                   'SSH_AUTH_SOCK', 'SSH_AGENT_PID', 'HOME',
-                   'GIT_PROXY_IGNORE', 'SOCKS5_USER', 'SOCKS5_PASSWD']
+@@ -650,11 +650,14 @@ def srcrev_internal_helper(ud, d, name):
+         if not rev:
+             rev = d.getVar("SRCREV_%s" % name, True)
+     if not rev:
+-       rev = d.getVar("SRCREV_pn-%s" % pn, True)
++        rev = d.getVar("SRCREV_pn-%s" % pn, True)
+     if not rev:
+         rev = d.getVar("SRCREV", True)
+     if rev == "INVALID":
+-        raise FetchError("Please set SRCREV to a valid value", ud.url)
++        var = "SRCREV_pn-%s" % pn
++        if name != '':
++            var = "SRCREV_%s_pn-%s" % (name, pn)
++        raise FetchError("Please set %s to a valid value" % var, ud.url)
+     if rev == "AUTOINC":
+         rev = ud.method.latest_revision(ud.url, ud, d, name)
  
 -- 
 1.7.5.4
