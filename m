@@ -1,30 +1,26 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Liezhi.Yang@windriver.com>) id 1U2Ydk-00012F-SK
+	(envelope-from <dvhart@linux.intel.com>) id 1U2g3j-0000mp-1Q
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 05 Feb 2013 03:52:10 +0100
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id r152aGPF009410
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Mon, 4 Feb 2013 18:36:16 -0800 (PST)
-Received: from [128.224.162.186] (128.224.162.186) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.2.318.4;
-	Mon, 4 Feb 2013 18:36:15 -0800
-Message-ID: <51107019.2070509@windriver.com>
-Date: Tue, 5 Feb 2013 10:36:09 +0800
-From: Robert Yang <liezhi.yang@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
-	rv:17.0) Gecko/20130106 Thunderbird/17.0.2
-MIME-Version: 1.0
-To: Chris Larson <clarson@kergoth.com>
-References: <cover.1359948771.git.liezhi.yang@windriver.com>
-	<9d21459877d1d94bdaff1cbe8ca4dd84f5f692fd.1359948771.git.liezhi.yang@windriver.com>
-	<CABcZAN=g5073uzZ_nu4Q585_BXmEiSTDcjZwQs4RvWQVhde1eA@mail.gmail.com>
-In-Reply-To: <CABcZAN=g5073uzZ_nu4Q585_BXmEiSTDcjZwQs4RvWQVhde1eA@mail.gmail.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>, Zhenfeng.Zhao@windriver.com
-Subject: Re: [PATCH 1/1] perforce.py: fix the perforce fetcher
+	Tue, 05 Feb 2013 11:47:38 +0100
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 05 Feb 2013 02:29:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.84,602,1355126400"; d="scan'208";a="257891620"
+Received: from fear.jf.intel.com (HELO rage.local) ([10.7.201.160])
+	by orsmga001.jf.intel.com with ESMTP; 05 Feb 2013 02:30:08 -0800
+From: Darren Hart <dvhart@linux.intel.com>
+To: Poky <poky@yoctoproject.org>, openembedded-core@lists.openembedded.org,
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Tue,  5 Feb 2013 02:31:38 -0800
+Message-Id: <c6c651aff98215bcc29fb72fcddbba50c5aec807.1360059615.git.dvhart@linux.intel.com>
+X-Mailer: git-send-email 1.7.5.4
+In-Reply-To: <cover.1360059615.git.dvhart@linux.intel.com>
+References: <cover.1360059615.git.dvhart@linux.intel.com>
+In-Reply-To: <cover.1360059615.git.dvhart@linux.intel.com>
+References: <cover.1360059615.git.dvhart@linux.intel.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: [PATCH 2/8] bitbake: fetch2: Export upper and lower case environment variables
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,79 +32,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Feb 2013 02:52:11 -0000
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 05 Feb 2013 10:47:49 -0000
 
+Applications are inconsistent in their use of upper and lower case proxy
+variables. Curl, for example, specifies NO_PROXY (not no_proxy) in the
+man page (changed in 2009 [1]). Avoid proxy issues by ensuring both the
+upper and lower case versions of each proxy variable is available in the
+environment for the fetcher commands.
 
-Hi Chris,
+Add FTPS_PROXY and ftps_proxy to the list as well.
 
-Thank you very much, I've updated the pull request:
+1. http://curl.haxx.se/mail/tracker-2009-04/0012.html
 
-   git://git.pokylinux.org/poky-contrib robert/p4
-   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/p4
+Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+Cc: bitbake-devel@lists.openembedded.org
+---
+ bitbake/lib/bb/fetch2/__init__.py |    9 +++++++--
+ 1 files changed, 7 insertions(+), 2 deletions(-)
 
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index cba45d0..7466a38 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -459,8 +459,13 @@ def runfetchcmd(cmd, d, quiet = False, cleanup = []):
+     # Also include some other variables.
+     # FIXME: Should really include all export varaiables?
+     exportvars = ['PATH', 'GIT_PROXY_COMMAND', 'GIT_PROXY_HOST',
+-                  'GIT_PROXY_PORT', 'GIT_CONFIG', 'http_proxy', 'ftp_proxy',
+-                  'https_proxy', 'no_proxy', 'ALL_PROXY', 'all_proxy',
++                  'GIT_PROXY_PORT', 'GIT_CONFIG',
++                  'HTTP_PROXY', 'http_proxy',
++                  'HTTPS_PROXY', 'https_proxy',
++                  'FTP_PROXY', 'ftp_proxy',
++                  'FTPS_PROXY', 'ftps_proxy',
++                  'NO_PROXY', 'no_proxy',
++                  'ALL_PROXY', 'all_proxy',
+                   'SSH_AUTH_SOCK', 'SSH_AGENT_PID', 'HOME',
+                   'GIT_PROXY_IGNORE', 'SOCKS5_USER', 'SOCKS5_PASSWD']
+ 
+-- 
+1.7.5.4
 
-diff --git a/bitbake/lib/bb/fetch2/perforce.py b/bitbake/lib/bb/fetch2/perforce.py
-index df3a3a3..fc4074d 100644
---- a/bitbake/lib/bb/fetch2/perforce.py
-+++ b/bitbake/lib/bb/fetch2/perforce.py
-@@ -170,7 +170,7 @@ class Perforce(FetchMethod):
-          logger.info("Fetch " + loc)
-          logger.info("%s%s files %s", p4cmd, p4opt, depot)
-          p4file, errors = bb.process.run("%s%s files %s" % (p4cmd, p4opt, depot))
--        p4file = p4file.strip()
-+        p4file = [f.rstrip() for f in p4file.splitlines()]
-
-          if not p4file:
-              raise FetchError("Fetch: unable to get the P4 files from %s" % 
-depot, loc)
-
-// Robert
-
-On 02/04/2013 11:46 PM, Chris Larson wrote:
-> On Mon, Feb 4, 2013 at 2:27 AM, Robert Yang <liezhi.yang@windriver.com>wrote:
->
->> The bb.process.run() will return one tuple, e.g:
->>
->> p4file = ('strA\nStrB\nstrC\n'), then there will be an iteration on p4file:
->>
->> for i in p4file:
->>          [snip]
->>
->> The i will be 's t r A ...', this is incorrect. use:
->>
->> p4file = p4file.splitlines()
->>
->> will fix the problem.
->>
->> [YOCTO #3619]
->>
->> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
->> ---
->>   bitbake/lib/bb/fetch2/perforce.py | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/bitbake/lib/bb/fetch2/perforce.py
->> b/bitbake/lib/bb/fetch2/perforce.py
->> index df3a3a3..86ec9ba 100644
->> --- a/bitbake/lib/bb/fetch2/perforce.py
->> +++ b/bitbake/lib/bb/fetch2/perforce.py
->> @@ -170,7 +170,7 @@ class Perforce(FetchMethod):
->>           logger.info("Fetch " + loc)
->>           logger.info("%s%s files %s", p4cmd, p4opt, depot)
->>           p4file, errors = bb.process.run("%s%s files %s" % (p4cmd, p4opt,
->> depot))
->> -        p4file = p4file.strip()
->> +        p4file = p4file.splitlines()
->>
->
-> Note that splitlines doesn't chop off the trailing newlines from the
-> individual strings. It *probably* wont cause an issue in this case due to
-> how it's passed to the shell in the subsequent subprocess call, but from a
-> correctness standpoint, I'd suggest changing this to something like p4files
-> = [f.rstrip() for f in p4file.splitlines], or doing an rstrip on the
-> individual files in the later iteration.
->
 
 
