@@ -1,27 +1,34 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mail-pa0-f44.google.com ([209.85.220.44])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Liezhi.Yang@windriver.com>) id 1U31Un-000824-6S
+	(envelope-from <martin.jansa@gmail.com>) id 1U3Yv0-0006sz-4x
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 06 Feb 2013 10:40:49 +0100
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id r169OvEb015986
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	Thu, 07 Feb 2013 22:22:38 +0100
+Received: by mail-pa0-f44.google.com with SMTP id kp1so1674117pab.17
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 6 Feb 2013 01:24:57 -0800 (PST)
-Received: from pek-usp-3.wrs.com (128.224.163.124) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.2.318.4;
-	Wed, 6 Feb 2013 01:24:56 -0800
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 6 Feb 2013 17:28:16 +0800
-Message-ID: <66a31eae92aaf7967451df4e96a1059f19920860.1360138241.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.11.2
-In-Reply-To: <cover.1360138241.git.liezhi.yang@windriver.com>
-References: <cover.1360138241.git.liezhi.yang@windriver.com>
+	Thu, 07 Feb 2013 13:06:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=x-received:date:from:to:subject:message-id:mime-version
+	:content-type:content-disposition:user-agent;
+	bh=oxT3IWrC8xhm0vG5eURie+ZWyCvEXEjEalJo7iRQGhs=;
+	b=Fm3Oy//UGd0uTxj0ReN1jL+rWgoaLmvz0dvglfTAMQmNZHb1SSE5VBu//OPm/+IOWP
+	269t4YymY5+GvlZttqPVviQbcU6V6jSVdkWGv+93KgDMXPaXadQk8KQOAzGmwWue0HEj
+	8J+fIkzEQw5H19/Q4ySQaZqMaf2yRTVjg54w0TN+yYbMkhPuHuaXrKX8q2EUwjDow6e1
+	hd+qHopr7BjhR7ulXhz8y+knEkSmJXHzPlCfQCC6LE3n6FVazohxHwa6yIJmOK3kGPUS
+	KlCe2WMkLmLuGghVkk5xYHgKvE3A94xfSZ7FJuFmpxUBiGvejHlNTY4gxG7TcV1qPHuK
+	cNmQ==
+X-Received: by 10.66.74.197 with SMTP id w5mr79524704pav.60.1360193439444;
+	Wed, 06 Feb 2013 15:30:39 -0800 (PST)
+Received: from localhost (ip-62-24-80-7.net.upcbroadband.cz. [62.24.80.7])
+	by mx.google.com with ESMTPS id d1sm41068407pav.6.2013.02.06.15.30.37
+	(version=TLSv1.2 cipher=RC4-SHA bits=128/128);
+	Wed, 06 Feb 2013 15:30:38 -0800 (PST)
+Date: Thu, 7 Feb 2013 00:30:31 +0100
+From: Martin Jansa <martin.jansa@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Message-ID: <20130206233031.GG3271@jama>
 MIME-Version: 1.0
-Cc: Zhenfeng.Zhao@windriver.com
-Subject: [PATCH 1/1] bitbake-layers: make show-cross-depends avoid long path
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Subject: bitbake cache broken today
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,170 +40,66 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Feb 2013 09:40:51 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 07 Feb 2013 21:24:42 -0000
+X-Groupsio-MsgNum: 3231
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ITEy4z2kE7rjCDPK"
+Content-Disposition: inline
 
-The "bitbake-layers show-cross-depends" print the absolute path in the
-past, now it will print the relative path (relative to the layer dir) by
-default, and add the "-f" option to make it print the absolute path.
+--ITEy4z2kE7rjCDPK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-For example:
+Very likely by this patch:
+cooker/utils: Drop custom 'interactive' variables list and store environmen=
+t in BB_ORIGENV instead
+http://git.openembedded.org/bitbake/commit/?id=3D0a99563a4ea270594fd9a61da4=
+6f9387fb79dc66
 
-$ bitbake-layers show-cross-depends
-[snip]
-meta-intel/meta-jasperforest/conf/machine/jasperforest.conf requires meta/conf/machine/include/ia32-base.inc
-[snip]
+$ bitbake -p > test1.cache
+$ bitbake -p > test2.cache
 
-$ bitbake-layers show-cross-depends -f
-[snip]
-/path/to/poky/meta-intel/meta-jasperforest/conf/machine/jasperforest.conf requires /path/to/poky/meta/conf/machine/include/ia32-base.inc
-[snip]
+$ grep "^Parsing of" test*
+test1.cache:Parsing of 773 .bb files complete (0 cached, 773 parsed). 1079 =
+targets, 43 skipped, 0 masked, 0 errors.
+test2.cache:Parsing of 773 .bb files complete (0 cached, 773 parsed). 1079 =
+targets, 43 skipped, 0 masked, 0 errors.
 
-[YOCTO #3824]
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/bin/bitbake-layers | 56 +++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 48 insertions(+), 8 deletions(-)
-
-diff --git a/bitbake/bin/bitbake-layers b/bitbake/bin/bitbake-layers
-index 774ce2d..b48590f 100755
---- a/bitbake/bin/bitbake-layers
-+++ b/bitbake/bin/bitbake-layers
-@@ -463,6 +463,21 @@ build results (as the layer priority order has effectively changed).
-                         return self.get_layer_name(layerdir)
-         return "?"
- 
-+    def get_file_layerdir(self, filename):
-+        for layer, _, regex, _ in self.bbhandler.cooker.status.bbfile_config_priorities:
-+            if regex.match(filename):
-+                for layerdir in self.bblayers:
-+                    if regex.match(os.path.join(layerdir, 'test')) and re.match(layerdir, filename):
-+                        return layerdir
-+        return "?"
-+
-+    def remove_layer_prefix(self, f):
-+        """Remove the layer_dir prefix, e.g., f = /path/to/layer_dir/foo/blah, the
-+           return value will be: layer_dir/foo/blah"""
-+        f_layerdir = self.get_file_layerdir(f)
-+        prefix = os.path.join(os.path.dirname(f_layerdir), '')
-+        return f[len(prefix):] if f.startswith(prefix) else f
-+
-     def get_layer_name(self, layerdir):
-         return os.path.basename(layerdir.rstrip(os.sep))
- 
-@@ -545,14 +560,27 @@ Recipes are listed with the bbappends that apply to them as subitems.
-     def do_show_cross_depends(self, args):
-         """figure out the dependency between recipes that crosses a layer boundary.
- 
--usage: show-cross-depends
-+usage: show-cross-depends [-f]
- 
- Figure out the dependency between recipes that crosses a layer boundary.
- 
-+Options:
-+  -f   show full file path
-+
- NOTE:
- The .bbappend file can impact the dependency.
- """
-         self.bbhandler.prepare()
-+
-+        show_filenames = False
-+        for arg in args.split():
-+            if arg == '-f':
-+                show_filenames = True
-+            else:
-+                sys.stderr.write("show-cross-depends: invalid option %s\n" % arg)
-+                self.do_help('')
-+                return
-+
-         pkg_fn = self.bbhandler.cooker_data.pkg_fn
-         bbpath = str(self.bbhandler.config_data.getVar('BBPATH', True))
-         self.require_re = re.compile(r"require\s+(.+)")
-@@ -573,7 +601,7 @@ The .bbappend file can impact the dependency.
-                             self.bbhandler.cooker.configuration.data,
-                             self.bbhandler.cooker_data,
-                             self.bbhandler.cooker_data.pkg_pn)
--                    self.check_cross_depends("DEPENDS", layername, f, best[3])
-+                    self.check_cross_depends("DEPENDS", layername, f, best[3], show_filenames)
- 
-             # The RDPENDS
-             all_rdeps = self.bbhandler.cooker_data.rundeps[f].values()
-@@ -590,7 +618,7 @@ The .bbappend file can impact the dependency.
-                     best = bb.providers.filterProvidersRunTime(all_p, rdep,
-                                     self.bbhandler.cooker.configuration.data,
-                                     self.bbhandler.cooker_data)[0][0]
--                    self.check_cross_depends("RDEPENDS", layername, f, best)
-+                    self.check_cross_depends("RDEPENDS", layername, f, best, show_filenames)
- 
-             # The inherit class
-             cls_re = re.compile('classes/')
-@@ -602,7 +630,12 @@ The .bbappend file can impact the dependency.
-                     if not cls_re.match(cls):
-                         inherit_layername = self.get_file_layer(cls)
-                         if inherit_layername != layername:
--                            logger.plain("%s inherits %s" % (f, cls))
-+                            if not show_filenames:
-+                                f_short = self.remove_layer_prefix(f)
-+                                cls = self.remove_layer_prefix(cls)
-+                            else:
-+                                f_short = f
-+                            logger.plain("%s inherits %s" % (f_short, cls))
- 
-             # The 'require/include xxx' in the bb file
-             pv_re = re.compile(r"\${PV}")
-@@ -617,7 +650,7 @@ The .bbappend file can impact the dependency.
-                     if pv_re.search(needed_file) and f in self.bbhandler.cooker_data.pkg_pepvpr:
-                         pv = self.bbhandler.cooker_data.pkg_pepvpr[f][1]
-                         needed_file = re.sub(r"\${PV}", pv, needed_file)
--                    self.print_cross_files(bbpath, keyword, layername, f, needed_file)
-+                    self.print_cross_files(bbpath, keyword, layername, f, needed_file, show_filenames)
-                 line = fnfile.readline()
-             fnfile.close()
- 
-@@ -644,17 +677,20 @@ The .bbappend file can impact the dependency.
-                                 bbclass=".bbclass"
-                             # Find a 'require/include xxxx'
-                             if m:
--                                self.print_cross_files(bbpath, keyword, layername, f, m.group(1) + bbclass)
-+                                self.print_cross_files(bbpath, keyword, layername, f, m.group(1) + bbclass, show_filenames)
-                             line = ffile.readline()
-                         ffile.close()
- 
--    def print_cross_files(self, bbpath, keyword, layername, f, needed_filename):
-+    def print_cross_files(self, bbpath, keyword, layername, f, needed_filename, show_filenames):
-         """Print the depends that crosses a layer boundary"""
-         needed_file = bb.utils.which(bbpath, needed_filename)
-         if needed_file:
-             # Which layer is this file from
-             needed_layername = self.get_file_layer(needed_file)
-             if needed_layername != layername:
-+                if not show_filenames:
-+                    f = self.remove_layer_prefix(f)
-+                    needed_file = self.remove_layer_prefix(needed_file)
-                 logger.plain("%s %s %s" %(f, keyword, needed_file))
-     def match_inherit(self, line):
-         """Match the inherit xxx line"""
-@@ -669,11 +705,15 @@ The .bbappend file can impact the dependency.
-             keyword = "includes"
-         return (m, keyword)
- 
--    def check_cross_depends(self, keyword, layername, f, needed_file):
-+    def check_cross_depends(self, keyword, layername, f, needed_file, show_filenames):
-         """Print the DEPENDS/RDEPENDS file that crosses a layer boundary"""
-         best_realfn = bb.cache.Cache.virtualfn2realfn(needed_file)[0]
-         needed_layername = self.get_file_layer(best_realfn)
-         if needed_layername != layername:
-+            if not show_filenames:
-+                f = self.remove_layer_prefix(f)
-+                best_realfn = self.remove_layer_prefix(best_realfn)
-+
-             logger.plain("%s %s %s" % (f, keyword, best_realfn))
- 
- if __name__ == '__main__':
--- 
-1.7.11.2
+--- test1.cache 2013-02-07 00:15:50.930868804 +0100
++++ test2.cache 2013-02-07 00:14:32.044865976 +0100
+@@ -4804,7 +4804,7 @@
+     else:
+         oe.path.remove(stfile + ".*")
+         oe.path.remove(stfile + "_setscene" + ".*")
+-', 'PREFERRED_PROVIDER_virtual/arm-oe-linux-gnueabi-compilerlibs': 'gcc-ru=
+ntime', 'BB_ORIGENV': <bb.data_smart.DataSmart object at 0x19d6150>, 'BUILD=
+HISTORY_DIR_IMAGE': '${BUILDHISTORY_DIR}/images/${MACHINE_ARCH}/${TCLIBC}/$=
+{IMAGE_BASENAME}', 'preferred_ml_updates': 'def preferred_ml_updates(d):
++', 'PREFERRED_PROVIDER_virtual/arm-oe-linux-gnueabi-compilerlibs': 'gcc-ru=
+ntime', 'BB_ORIGENV': <bb.data_smart.DataSmart object at 0x35e9590>, 'BUILD=
+HISTORY_DIR_IMAGE': '${BUILDHISTORY_DIR}/images/${MACHINE_ARCH}/${TCLIBC}/$=
+{IMAGE_BASENAME}', 'preferred_ml_updates': 'def preferred_ml_updates(d):
+     # If any PREFERRED_PROVIDER or PREFERRED_VERSIONS are set,
+     # we need to mirror these variables in the multilib case;
+     # likewise the PNBLACKLIST flags.
 
 
 
+
+--=20
+Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
+
+--ITEy4z2kE7rjCDPK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iEYEARECAAYFAlES55cACgkQN1Ujt2V2gBxK6ACfQwkaxl+vE/h9Fgou/JiibsDa
+qd0An2+n+206+k3XpNWIDuS4M85/pfsq
+=Qjrx
+-----END PGP SIGNATURE-----
+
+--ITEy4z2kE7rjCDPK--
