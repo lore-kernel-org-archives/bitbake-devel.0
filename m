@@ -1,26 +1,25 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <dvhart@linux.intel.com>) id 1U2rch-0005LR-Fk
+	(envelope-from <Liezhi.Yang@windriver.com>) id 1U31Ul-000823-MY
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 06 Feb 2013 00:08:20 +0100
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 05 Feb 2013 14:51:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.84,610,1355126400"; d="scan'208";a="281408760"
-Received: from fear.jf.intel.com (HELO rage.local) ([10.7.201.160])
-	by orsmga002.jf.intel.com with ESMTP; 05 Feb 2013 14:51:13 -0800
-From: Darren Hart <dvhart@linux.intel.com>
-To: Poky <poky@yoctoproject.org>, openembedded-core@lists.openembedded.org,
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Date: Tue,  5 Feb 2013 14:52:45 -0800
-Message-Id: <ae9006152f5551b3eb019c8d639625d5f32e1366.1360104547.git.dvhart@linux.intel.com>
-X-Mailer: git-send-email 1.7.5.4
-In-Reply-To: <cover.1360104547.git.dvhart@linux.intel.com>
-References: <cover.1360104547.git.dvhart@linux.intel.com>
-In-Reply-To: <cover.1360104547.git.dvhart@linux.intel.com>
-References: <cover.1360104547.git.dvhart@linux.intel.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: [PATCH 3/9] bitbake: fetch2: Remove broken git variables from the environment
+	Wed, 06 Feb 2013 10:40:49 +0100
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id r169OulJ026310
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 6 Feb 2013 01:24:56 -0800 (PST)
+Received: from pek-usp-3.wrs.com (128.224.163.124) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.2.318.4;
+	Wed, 6 Feb 2013 01:24:54 -0800
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Wed, 6 Feb 2013 17:28:15 +0800
+Message-ID: <cover.1360138241.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 1.7.11.2
+MIME-Version: 1.0
+Cc: Zhenfeng.Zhao@windriver.com
+Subject: [PATCH 0/1] bitbake-layers: make show-cross-depends avoid long path
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,68 +31,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Feb 2013 23:08:31 -0000
+X-List-Received-Date: Wed, 06 Feb 2013 09:40:49 -0000
+Content-Type: text/plain
 
-The following variables perform no function outside of bitbake:
+Hi Paul,
 
-    GIT_CONFIG
-    GIT_PROXY_HOST
-    GIT_PROXY_PORT
-    GIT_PROXY_IGNORE
+I added a "-f" option for the show-cross-depends, please feel free to give
+your comments. BTW., I will be on vacation from Feb. 7th to 17th because of
+the Chinese Spring Festival, and I will go back to my hometown where has no
+network, so I can't reply the email until Feb. 18th.
 
-GIT_CONFIG only affects the git-config command which is not relevant to
-the fetcher. This was previously used with the OE GIT_CORE_CONFIG
-variable which would provide a basic git config to use instead of the
-user's config. This usage was deprecated by git for over a year now:
+// Robert
 
-http://git.661346.n2.nabble.com/Overriding-gitconfig-using-GIT-CONFIG-td6680977.html
+The following changes since commit ee1f126ad5cb2c6af66815e55720257a1efc5a49:
 
-GIT_PROXY_HOST and GIT_PROXY_PORT are not used by git.
+  bitbake: bitbake: fetch2: Print the complete SRCREV variable name when INVALID (2013-02-05 15:22:45 +0000)
 
-GIT_PROXY_IGNORE was an OE construct used to create the custom git
-config and had no meaning outside of the OE environment. It is not used
-by git.
+are available in the git repository at:
 
-Remove these variables from the fetcher environment.
+  git://git.pokylinux.org/poky-contrib robert/bbl_long_path
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/bbl_long_path
 
-Users wishing to configure git to work with a proxy should define the
-GIT_PROXY_COMMAND environment variable to use an external script.
-NO_PROXY can be used within this script to skip the proxy for certain
-hosts.
+Robert Yang (1):
+  bitbake-layers: make show-cross-depends avoid long path
 
-Signed-off-by: Darren Hart <dvhart@linux.intel.com>
-Cc: bitbake-devel@lists.openembedded.org
----
- bitbake/lib/bb/fetch2/__init__.py |    8 ++++----
- 1 files changed, 4 insertions(+), 4 deletions(-)
+ bitbake/bin/bitbake-layers | 56 +++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 48 insertions(+), 8 deletions(-)
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index 7466a38..21f576e 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -458,16 +458,16 @@ def runfetchcmd(cmd, d, quiet = False, cleanup = []):
-     # rather than host provided
-     # Also include some other variables.
-     # FIXME: Should really include all export varaiables?
--    exportvars = ['PATH', 'GIT_PROXY_COMMAND', 'GIT_PROXY_HOST',
--                  'GIT_PROXY_PORT', 'GIT_CONFIG',
-+    exportvars = ['HOME', 'PATH',
-                   'HTTP_PROXY', 'http_proxy',
-                   'HTTPS_PROXY', 'https_proxy',
-                   'FTP_PROXY', 'ftp_proxy',
-                   'FTPS_PROXY', 'ftps_proxy',
-                   'NO_PROXY', 'no_proxy',
-                   'ALL_PROXY', 'all_proxy',
--                  'SSH_AUTH_SOCK', 'SSH_AGENT_PID', 'HOME',
--                  'GIT_PROXY_IGNORE', 'SOCKS5_USER', 'SOCKS5_PASSWD']
-+                  'GIT_PROXY_COMMAND',
-+                  'SSH_AUTH_SOCK', 'SSH_AGENT_PID',
-+                  'SOCKS5_USER', 'SOCKS5_PASSWD']
- 
-     for var in exportvars:
-         val = d.getVar(var, True)
 -- 
-1.7.5.4
+1.7.11.2
 
 
 
