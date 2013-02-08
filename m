@@ -1,34 +1,37 @@
-Received: from mail-lb0-f182.google.com ([209.85.217.182])
+Received: from anubis.se.axis.com ([195.60.68.12])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1U3ci5-00006E-NS
+	(envelope-from <peter.kjellerstedt@axis.com>) id 1U3oYK-0005bP-Iy
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 08 Feb 2013 02:25:01 +0100
-Received: by mail-lb0-f182.google.com with SMTP id gg6so2617802lbb.13
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 07 Feb 2013 17:09:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=x-received:mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	bh=x9RiW+Q70Ejm3EXa99xARdxoX5Hb9jbvfv9C1vzpynI=;
-	b=N2Bd2XLjNRln3ooEZzUgEVW1oKgx3WNqh6nf4vpbT9fGehWablEB/ZLY3RFb72tAsP
-	Y5cYGcRtZvaLn11CbEZK67kVee36cxvJxlX4owq6C5yCECmD+izNUUjW0pToZs10+E9F
-	StZtzrVvvBQrIsM/B2NU3OxiS5JUsVeAs/LLAsNpxi5XlEukz4cYXW5haDrMLyUC+E0M
-	DArQvVCF+iwiHbbhrYwGOZL7b8/wS6guZ4tzNw+zBw9CB5VMKkKzGJT9pFdF7CcoUeWg
-	vXG78WNuBKn44Y3ztZP9DLuauD46iXGz4HZrGpyTVwqDok/18KFm8j2/CO8G1WZb/lnS
-	yyJQ==
-X-Received: by 10.112.44.164 with SMTP id f4mr1594274lbm.43.1360285748372;
-	Thu, 07 Feb 2013 17:09:08 -0800 (PST)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.34.10 with HTTP; Thu, 7 Feb 2013 17:08:48 -0800 (PST)
-In-Reply-To: <1360281302.10722.68.camel@ted>
+	Fri, 08 Feb 2013 15:03:44 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by anubis.se.axis.com (Postfix) with ESMTP id 88FDF19E6E;
+	Fri,  8 Feb 2013 14:47:50 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at anubis.se.axis.com
+Received: from anubis.se.axis.com ([127.0.0.1])
+	by localhost (anubis.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id iu1Bu9+TQgtH; Fri,  8 Feb 2013 14:47:49 +0100 (CET)
+Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
+	by anubis.se.axis.com (Postfix) with ESMTP id EB84E19DEF;
+	Fri,  8 Feb 2013 14:47:48 +0100 (CET)
+Received: from xmail3.se.axis.com (xmail3.se.axis.com [10.0.5.75])
+	by thoth.se.axis.com (Postfix) with ESMTP id B35C234222;
+	Fri,  8 Feb 2013 14:47:48 +0100 (CET)
+Received: from xmail3.se.axis.com ([10.0.5.75]) by xmail3.se.axis.com
+	([10.0.5.75]) with mapi; Fri, 8 Feb 2013 14:47:48 +0100
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>, bitbake-devel
+	<bitbake-devel@lists.openembedded.org>
+Date: Fri, 8 Feb 2013 14:47:47 +0100
+Thread-Topic: [bitbake-devel] [PATCH] utils: Use rm -rf in remove()
+Thread-Index: Ac4FjpudX0vsiOWcQ76TJMqGSvUqkgAcSg4A
+Message-ID: <A612847CFE53224C91B23E3A5B48BAC755FD6C1E82@xmail3.se.axis.com>
 References: <1360281302.10722.68.camel@ted>
-From: Chris Larson <clarson@kergoth.com>
-Date: Thu, 7 Feb 2013 18:08:48 -0700
-X-Google-Sender-Auth: Ve8dPnXNe_qVqrl0zt6TfU7YhwM
-Message-ID: <CABcZANmd9_bcAUizAR3JiSX368HJsKhzGrGPkqAsbMsw2G9=ig@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+In-Reply-To: <1360281302.10722.68.camel@ted>
+Accept-Language: en-US, sv-SE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+acceptlanguage: en-US, sv-SE
+MIME-Version: 1.0
 Subject: Re: [PATCH] utils: Use rm -rf in remove()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
@@ -41,45 +44,72 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 08 Feb 2013 01:25:02 -0000
-Content-Type: multipart/alternative; boundary=f46d0401229fd3254504d52c34d6
-
---f46d0401229fd3254504d52c34d6
-Content-Type: text/plain; charset=UTF-8
-
-On Thu, Feb 7, 2013 at 4:55 PM, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
-
-> -                shutil.rmtree(name)
-> +                # shutil.rmtree(name) would be ideal but its too slow
-> +                subprocess.call('rm -rf %s' % path, shell=True)
->
-
-This is a good idea, but I'm curious about forking off a shell process for
-it. I'd think this would work as well: subprocess.call(['rm', '-rf', path])
--- 
-Christopher Larson
-
---f46d0401229fd3254504d52c34d6
-Content-Type: text/html; charset=UTF-8
+X-List-Received-Date: Fri, 08 Feb 2013 14:03:45 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Thu, Feb 7, 2013 at 4:55 PM, Richard Purdie <span dir=3D"ltr">&lt;<a hre=
-f=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.p=
-urdie@linuxfoundation.org</a>&gt;</span> wrote:<br>
+> -----Original Message-----
+> From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-
+> devel-bounces@lists.openembedded.org] On Behalf Of Richard Purdie
+> Sent: den 8 februari 2013 00:55
+> To: bitbake-devel
+> Subject: [bitbake-devel] [PATCH] utils: Use rm -rf in remove()
+>=20
+> Whilst shutils.rmtree() is pythonic, its also slow. Its faster to
+> use rm -rf which makes optimal use of the right syscalls.
+>=20
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+> diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+> index 484fb2d..94ef447 100644
+> --- a/bitbake/lib/bb/utils.py
+> +++ b/bitbake/lib/bb/utils.py
+> @@ -533,13 +533,15 @@ def remove(path, recurse=3DFalse):
+>      """Equivalent to rm -f or rm -rf"""
+>      if not path:
+>          return
+> -    import os, errno, shutil, glob
+> +    import os, errno, glob, subprocess
+>      for name in glob.glob(path):
+>          try:
+>              os.unlink(name)
+>          except OSError as exc:
+>              if recurse and exc.errno =3D=3D errno.EISDIR:
+> -                shutil.rmtree(name)
+> +                # shutil.rmtree(name) would be ideal but its too slow
 
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div id=3D":24s">- =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0shutil.rmtree(name)<br>
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# shutil.rmtree(na=
-me) would be ideal but its too slow<br>
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0subprocess.call(&#=
-39;rm -rf %s&#39; % path, shell=3DTrue)</div></blockquote></div><br>This is=
- a good idea, but I&#39;m curious about forking off a shell process for it.=
- I&#39;d think this would work as well: subprocess.call([&#39;rm&#39;, &#39=
-;-rf&#39;, path])</div>
+its -> it is
 
-<div class=3D"gmail_extra">-- <br>Christopher Larson</div></div>
+> +                subprocess.call('rm -rf %s' % path, shell=3DTrue)
+> +                return
 
---f46d0401229fd3254504d52c34d6--
+Shouldn't the last two lines above be:
+
+                   subprocess.call('rm -rf %s' % name, shell=3DTrue)
+
+to maintain behavior.
+
+>              elif exc.errno !=3D errno.ENOENT:
+>                  raise
+
+Alternatively, wouldn't it be better to check for recurse=20
+first:
+
+    if recurse:
+        import subprocess
+        subprocess.call('rm -rf %s' % path, shell=3DTrue)
+    else:
+        import os, errno, glob
+        for name in glob.glob(path):
+            try:
+                os.unlink(name)
+            except OSError as exc:
+                if exc.errno !=3D errno.ENOENT:
+                    raise
+
+//Peter
+
+
+
+
