@@ -1,43 +1,35 @@
-Received: from mail-pa0-f48.google.com ([209.85.220.48])
+Received: from mail-lb0-f182.google.com ([209.85.217.182])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <martin.jansa@gmail.com>) id 1U3bmc-0007BS-BX
+	(envelope-from <kergoth@gmail.com>) id 1U3ci5-00006E-NS
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 08 Feb 2013 01:25:38 +0100
-Received: by mail-pa0-f48.google.com with SMTP id hz10so1770210pad.7
+	Fri, 08 Feb 2013 02:25:01 +0100
+Received: by mail-lb0-f182.google.com with SMTP id gg6so2617802lbb.13
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 07 Feb 2013 16:09:44 -0800 (PST)
+	Thu, 07 Feb 2013 17:09:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=x-received:resent-from:resent-date:resent-message-id:resent-to:date
-	:from:cc:subject:message-id:mime-version:content-type
-	:content-disposition:user-agent;
-	bh=9vsQglQ4DA09jy5/RhPRwfngfmh19JmT0dWrXPfcXI0=;
-	b=mA0xZQcbHf5e48eOdCKSde2ZgLwwfY3e0aqLNX++AkF9CScimSe2yFRW9Do6Wc8WBG
-	7aVZMs5zufMJxZeP91o8hG2cceWTGtwePoot0jlBUFQjScc4ZUMLsV5ViAA78ezFobYk
-	NeVc8IXr3hBAoVnSAAmTnJGUMQSxENwg6ykJo5YIs2XQv2h/KwELMQii3HX0wTzyWtDm
-	nLvkfiTsZM0gE3lDJ1oIeRN0vVSAvS7NwhvoesaTNK8TOCF23Z1tyGKlJpOYzqFs4viy
-	+IFjLTH86LsgxPbNOOJZdPn2Mx+TU736V49cRJisQORdZZMsURADC0NNUsMH/z3EUdH2
-	L/YQ==
-X-Received: by 10.66.89.138 with SMTP id bo10mr43901886pab.32.1360193297705;
-	Wed, 06 Feb 2013 15:28:17 -0800 (PST)
-Received: from localhost (ip-62-24-80-7.net.upcbroadband.cz. [62.24.80.7])
-	by mx.google.com with ESMTPS id t6sm41053278paz.11.2013.02.06.15.28.15
-	(version=TLSv1.2 cipher=RC4-SHA bits=128/128);
-	Wed, 06 Feb 2013 15:28:16 -0800 (PST)
-Resent-From: Martin Jansa <Martin.Jansa@gmail.com>
-Resent-Date: Thu, 7 Feb 2013 00:28:09 +0100
-Resent-Message-ID: <20130206232809.GF3271@jama>
-Resent-To: bitbake-devel@lists.openembedded.org
-Received: from localhost (ip-62-24-80-7.net.upcbroadband.cz. [62.24.80.7])
-	by mx.google.com with ESMTPS id k7sm27665479paz.13.2013.02.06.15.18.36
-	(version=TLSv1.2 cipher=RC4-SHA bits=128/128);
-	Wed, 06 Feb 2013 15:18:37 -0800 (PST)
-Date: Thu, 7 Feb 2013 00:18:30 +0100
-From: Martin Jansa <martin.jansa@gmail.com>
-Cc: bitbake-devel@lists.openembedded.org
-Message-ID: <20130206231830.GE3271@jama>
+	h=x-received:mime-version:sender:in-reply-to:references:from:date
+	:x-google-sender-auth:message-id:subject:to:cc:content-type;
+	bh=x9RiW+Q70Ejm3EXa99xARdxoX5Hb9jbvfv9C1vzpynI=;
+	b=N2Bd2XLjNRln3ooEZzUgEVW1oKgx3WNqh6nf4vpbT9fGehWablEB/ZLY3RFb72tAsP
+	Y5cYGcRtZvaLn11CbEZK67kVee36cxvJxlX4owq6C5yCECmD+izNUUjW0pToZs10+E9F
+	StZtzrVvvBQrIsM/B2NU3OxiS5JUsVeAs/LLAsNpxi5XlEukz4cYXW5haDrMLyUC+E0M
+	DArQvVCF+iwiHbbhrYwGOZL7b8/wS6guZ4tzNw+zBw9CB5VMKkKzGJT9pFdF7CcoUeWg
+	vXG78WNuBKn44Y3ztZP9DLuauD46iXGz4HZrGpyTVwqDok/18KFm8j2/CO8G1WZb/lnS
+	yyJQ==
+X-Received: by 10.112.44.164 with SMTP id f4mr1594274lbm.43.1360285748372;
+	Thu, 07 Feb 2013 17:09:08 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mutt/1.5.21 (2010-09-15)
-Subject: bitbake cache broken today
+Sender: kergoth@gmail.com
+Received: by 10.112.34.10 with HTTP; Thu, 7 Feb 2013 17:08:48 -0800 (PST)
+In-Reply-To: <1360281302.10722.68.camel@ted>
+References: <1360281302.10722.68.camel@ted>
+From: Chris Larson <clarson@kergoth.com>
+Date: Thu, 7 Feb 2013 18:08:48 -0700
+X-Google-Sender-Auth: Ve8dPnXNe_qVqrl0zt6TfU7YhwM
+Message-ID: <CABcZANmd9_bcAUizAR3JiSX368HJsKhzGrGPkqAsbMsw2G9=ig@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] utils: Use rm -rf in remove()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -49,50 +41,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 08 Feb 2013 00:25:39 -0000
-X-Groupsio-MsgNum: 3235
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5iEYumb6eglF6CEb"
-Content-Disposition: inline
+X-List-Received-Date: Fri, 08 Feb 2013 01:25:02 -0000
+Content-Type: multipart/alternative; boundary=f46d0401229fd3254504d52c34d6
 
---5iEYumb6eglF6CEb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--f46d0401229fd3254504d52c34d6
+Content-Type: text/plain; charset=UTF-8
 
-Very likely by this patch:
-cooker/utils: Drop custom 'interactive' variables list and store environment in BB_ORIGENV instead
-http://git.openembedded.org/bitbake/commit/?id=0a99563a4ea270594fd9a61da46f9387fb79dc66
+On Thu, Feb 7, 2013 at 4:55 PM, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-$ bitbake -p > test1.cache
-$ bitbake -p > test2.cache
+> -                shutil.rmtree(name)
+> +                # shutil.rmtree(name) would be ideal but its too slow
+> +                subprocess.call('rm -rf %s' % path, shell=True)
+>
 
-$ grep "^Parsing of" test*
-test1.cache:Parsing of 773 .bb files complete (0 cached, 773 parsed). 1079 targets, 43 skipped, 0 masked, 0 errors.
-test2.cache:Parsing of 773 .bb files complete (0 cached, 773 parsed). 1079 targets, 43 skipped, 0 masked, 0 errors.
+This is a good idea, but I'm curious about forking off a shell process for
+it. I'd think this would work as well: subprocess.call(['rm', '-rf', path])
+-- 
+Christopher Larson
 
---- test1.cache 2013-02-07 00:15:50.930868804 +0100
-+++ test2.cache 2013-02-07 00:14:32.044865976 +0100
-@@ -4804,7 +4804,7 @@
-     else:
-         oe.path.remove(stfile + ".*")
-         oe.path.remove(stfile + "_setscene" + ".*")
--', 'PREFERRED_PROVIDER_virtual/arm-oe-linux-gnueabi-compilerlibs': 'gcc-runtime', 'BB_ORIGENV': <bb.data_smart.DataSmart object at 0x19d6150>, 'BUILDHISTORY_DIR_IMAGE': '${BUILDHISTORY_DIR}/images/${MACHINE_ARCH}/${TCLIBC}/${IMAGE_BASENAME}', 'preferred_ml_updates': 'def preferred_ml_updates(d):
-+', 'PREFERRED_PROVIDER_virtual/arm-oe-linux-gnueabi-compilerlibs': 'gcc-runtime', 'BB_ORIGENV': <bb.data_smart.DataSmart object at 0x35e9590>, 'BUILDHISTORY_DIR_IMAGE': '${BUILDHISTORY_DIR}/images/${MACHINE_ARCH}/${TCLIBC}/${IMAGE_BASENAME}', 'preferred_ml_updates': 'def preferred_ml_updates(d):
-     # If any PREFERRED_PROVIDER or PREFERRED_VERSIONS are set,
-     # we need to mirror these variables in the multilib case;
-     # likewise the PNBLACKLIST flags.
+--f46d0401229fd3254504d52c34d6
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Thu, Feb 7, 2013 at 4:55 PM, Richard Purdie <span dir=3D"ltr">&lt;<a hre=
+f=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.p=
+urdie@linuxfoundation.org</a>&gt;</span> wrote:<br>
 
---5iEYumb6eglF6CEb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div id=3D":24s">- =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0shutil.rmtree(name)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# shutil.rmtree(na=
+me) would be ideal but its too slow<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0subprocess.call(&#=
+39;rm -rf %s&#39; % path, shell=3DTrue)</div></blockquote></div><br>This is=
+ a good idea, but I&#39;m curious about forking off a shell process for it.=
+ I&#39;d think this would work as well: subprocess.call([&#39;rm&#39;, &#39=
+;-rf&#39;, path])</div>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+<div class=3D"gmail_extra">-- <br>Christopher Larson</div></div>
 
-iEYEARECAAYFAlES5MYACgkQN1Ujt2V2gBxFRwCghe9cnw6ACqgH/z2CdKVUJsk/
-TVwAn0Z6OEOumkE1EIGzhjev5TkcX8nQ
-=sF4n
------END PGP SIGNATURE-----
-
---5iEYumb6eglF6CEb--
+--f46d0401229fd3254504d52c34d6--
