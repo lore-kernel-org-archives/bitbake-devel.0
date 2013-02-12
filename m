@@ -1,30 +1,21 @@
-Received: from dan.rpsys.net ([93.97.175.187])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1U5FpX-00035k-PJ for bitbake-devel@lists.openembedded.org;
-	Tue, 12 Feb 2013 14:23:28 +0100
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r1CDCXC5021984; Tue, 12 Feb 2013 13:13:13 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id J4v9M6XXfm6w; Tue, 12 Feb 2013 13:13:13 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r1CDD6pK021994
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Tue, 12 Feb 2013 13:13:09 GMT
-Message-ID: <1360674427.30425.4.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Cristiana Voicu <cristiana.voicu@intel.com>
-Date: Tue, 12 Feb 2013 13:07:07 +0000
-In-Reply-To: <1360663886-9545-1-git-send-email-cristiana.voicu@intel.com>
-References: <1360663886-9545-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: Evolution 3.6.3-1 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] bitbake & hob: reparse config files, when sanity check updates bblayers.conf
+	(envelope-from <cristiana.voicu@intel.com>) id 1U5G4v-0003rz-Qg
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 12 Feb 2013 14:39:26 +0100
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 12 Feb 2013 05:23:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.84,650,1355126400"; d="scan'208";a="286145351"
+Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
+	([10.237.105.151])
+	by fmsmga001.fm.intel.com with ESMTP; 12 Feb 2013 05:23:20 -0800
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 12 Feb 2013 15:27:22 +0200
+Message-Id: <1360675642-12435-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH_V2] bitbake & hob: reparse config files, when sanity check updates bblayers.conf
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,32 +27,62 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 12 Feb 2013 13:23:28 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 12 Feb 2013 13:39:37 -0000
 
-On Tue, 2013-02-12 at 12:11 +0200, Cristiana Voicu wrote:
-> I've sent a patch to poky, with some changes in sanity.bbclass. When bblayers.conf
-> is updated, it updates also a variable to know when to reparse configuration files.
-> This patch contains the changes to reparse conf files, after a sanity check which
-> changes bblayers.conf.
-> 
-> [YOCTO #3213]
-> Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
-> ---
->  bitbake/lib/bb/cooker.py                    |   14 ++++++++++----
->  bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    4 ++++
->  2 files changed, 14 insertions(+), 4 deletions(-)
+I've sent a patch to poky, with some changes in sanity.bbclass. When bblayers.conf
+is updated, it updates also a variable to know when to reparse configuration files.
+This patch contains the changes to reparse conf files, after a sanity check which
+changes bblayers.conf.
 
-Can we rename this variable please, its not well namespaced.
-BB_INVALIDCONF would probably be a better name to indicate what the
-problem is, not the solution and the BB prefix indicates its something
-BitBake is expected to act upon.
+[YOCTO #3213]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+---
+ bitbake/lib/bb/cooker.py                    |   14 ++++++++++----
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    4 ++++
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
-Cheers,
-
-Richard
-
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index f70a04f..9d051fa 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -977,10 +977,16 @@ class BBCooker:
+             bb.fetch.fetcher_init(data)
+         bb.codeparser.parser_cache_init(data)
+         bb.event.fire(bb.event.ConfigParsed(), data)
+-        bb.parse.init_parser(data)
+-        data.setVar('BBINCLUDED',bb.parse.get_file_depends(data))
+-        self.configuration.data = data
+-        self.configuration.data_hash = data.get_hash()
++
++        if data.getVar("BB_INVALIDCONF") is True:
++            data.setVar("BB_INVALIDCONF", False)
++            self.parseConfigurationFiles(self.configuration.prefile,
++                                         self.configuration.postfile)
++        else:
++            bb.parse.init_parser(data)
++            data.setVar('BBINCLUDED',bb.parse.get_file_depends(data))
++            self.configuration.data = data
++            self.configuration.data_hash = data.get_hash()
+ 
+     def handleCollections( self, collections ):
+         """Handle collections"""
+diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+index d953f34..15d28d9 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -202,6 +202,10 @@ class HobHandler(gobject.GObject):
+             self.run_next_command()
+ 
+         elif isinstance(event, bb.event.SanityCheckPassed):
++            reparse = self.runCommand(["getVariable", "BB_INVALIDCONF"]) or None
++            if reparse is True:
++                self.runCommand(["setVariable", "BB_INVALIDCONF", False])
++                self.runCommand(["parseConfigurationFiles", "", ""])
+             self.run_next_command()
+ 
+         elif isinstance(event, bb.event.SanityCheckFailed):
+-- 
+1.7.9.5
 
 
 
