@@ -1,21 +1,30 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from dan.rpsys.net ([93.97.175.187])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristiana.voicu@intel.com>) id 1U5G4v-0003rz-Qg
-	for bitbake-devel@lists.openembedded.org;
-	Tue, 12 Feb 2013 14:39:26 +0100
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 12 Feb 2013 05:23:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.84,650,1355126400"; d="scan'208";a="286145351"
-Received: from cvoicu-vostro-460 (HELO localhost.localdomain)
-	([10.237.105.151])
-	by fmsmga001.fm.intel.com with ESMTP; 12 Feb 2013 05:23:20 -0800
-From: Cristiana Voicu <cristiana.voicu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 12 Feb 2013 15:27:22 +0200
-Message-Id: <1360675642-12435-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH_V2] bitbake & hob: reparse config files, when sanity check updates bblayers.conf
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1U5wVl-0002FV-I6 for bitbake-devel@lists.openembedded.org;
+	Thu, 14 Feb 2013 11:57:54 +0100
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r1EAleSQ032357 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 14 Feb 2013 10:47:40 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id oZWbA2DrjkPo for <bitbake-devel@lists.openembedded.org>;
+	Thu, 14 Feb 2013 10:47:40 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r1EAlXKM032330
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
+	Thu, 14 Feb 2013 10:47:36 GMT
+Message-ID: <1360838484.11225.102.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 14 Feb 2013 10:41:24 +0000
+X-Mailer: Evolution 3.6.3-1 
+Mime-Version: 1.0
+Subject: [PATCH] ConfHandler: Improve regexp to fix mis-parsing of += and no whitespace
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,62 +36,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 12 Feb 2013 13:39:37 -0000
+X-List-Received-Date: Thu, 14 Feb 2013 10:57:55 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-I've sent a patch to poky, with some changes in sanity.bbclass. When bblayers.conf
-is updated, it updates also a variable to know when to reparse configuration files.
-This patch contains the changes to reparse conf files, after a sanity check which
-changes bblayers.conf.
+If you have:
 
-[YOCTO #3213]
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+FOO = "a"
+FOO += "b"
+FOO+= "c"
+
+The expected result is "a b c" however we were seeing "a b" with the FOO+
+variable being assigned the value "c". This isn't the expected result.
+
+We need to make the name part of the variale non-greedy so that any + character
+becomes part of the operator. This patch does that. I compared the configuration
+in OE-Core before and after the change and only the test case changed.
+
+[YOCTO #3834]
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/cooker.py                    |   14 ++++++++++----
- bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    4 ++++
- 2 files changed, 14 insertions(+), 4 deletions(-)
+diff --git a/bitbake/lib/bb/parse/parse_py/ConfHandler.py b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
+index b3d10c6..4b62a3a 100644
+--- a/bitbake/lib/bb/parse/parse_py/ConfHandler.py
++++ b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
+@@ -29,7 +29,7 @@ import logging
+ import bb.utils
+ from bb.parse import ParseError, resolve_file, ast, logger
+ 
+-__config_regexp__  = re.compile( r"(?P<exp>export\s*)?(?P<var>[a-zA-Z0-9\-~_+.${}/]+)(\[(?P<flag>[a-zA-Z0-9\-_+.]+)\])?\s*((?P<colon>:=)|(?P<lazyques>\?\?=)|(?P<ques>\?=)|(?P<append>\+=)|(?P<prepend>=\+)|(?P<predot>=\.)|(?P<postdot>\.=)|=)\s*(?!'[^']*'[^']*'$)(?!\"[^\"]*\"[^\"]*\"$)(?P<apo>['\"])(?P<value>.*)(?P=apo)$")
++__config_regexp__  = re.compile( r"(?P<exp>export\s*)?(?P<var>[a-zA-Z0-9\-~_+.${}/]+?)(\[(?P<flag>[a-zA-Z0-9\-_+.]+)\])?\s*((?P<colon>:=)|(?P<lazyques>\?\?=)|(?P<ques>\?=)|(?P<append>\+=)|(?P<prepend>=\+)|(?P<predot>=\.)|(?P<postdot>\.=)|=)\s*(?!'[^']*'[^']*'$)(?!\"[^\"]*\"[^\"]*\"$)(?P<apo>['\"])(?P<value>.*)(?P=apo)$")
+ __include_regexp__ = re.compile( r"include\s+(.+)" )
+ __require_regexp__ = re.compile( r"require\s+(.+)" )
+ __export_regexp__ = re.compile( r"export\s+([a-zA-Z0-9\-_+.${}/]+)$" )
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index f70a04f..9d051fa 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -977,10 +977,16 @@ class BBCooker:
-             bb.fetch.fetcher_init(data)
-         bb.codeparser.parser_cache_init(data)
-         bb.event.fire(bb.event.ConfigParsed(), data)
--        bb.parse.init_parser(data)
--        data.setVar('BBINCLUDED',bb.parse.get_file_depends(data))
--        self.configuration.data = data
--        self.configuration.data_hash = data.get_hash()
-+
-+        if data.getVar("BB_INVALIDCONF") is True:
-+            data.setVar("BB_INVALIDCONF", False)
-+            self.parseConfigurationFiles(self.configuration.prefile,
-+                                         self.configuration.postfile)
-+        else:
-+            bb.parse.init_parser(data)
-+            data.setVar('BBINCLUDED',bb.parse.get_file_depends(data))
-+            self.configuration.data = data
-+            self.configuration.data_hash = data.get_hash()
- 
-     def handleCollections( self, collections ):
-         """Handle collections"""
-diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-index d953f34..15d28d9 100644
---- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -202,6 +202,10 @@ class HobHandler(gobject.GObject):
-             self.run_next_command()
- 
-         elif isinstance(event, bb.event.SanityCheckPassed):
-+            reparse = self.runCommand(["getVariable", "BB_INVALIDCONF"]) or None
-+            if reparse is True:
-+                self.runCommand(["setVariable", "BB_INVALIDCONF", False])
-+                self.runCommand(["parseConfigurationFiles", "", ""])
-             self.run_next_command()
- 
-         elif isinstance(event, bb.event.SanityCheckFailed):
--- 
-1.7.9.5
 
 
 
