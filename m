@@ -1,32 +1,41 @@
-Received: from dan.rpsys.net ([93.97.175.187])
+Received: from mail-lb0-f174.google.com ([209.85.217.174])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1U6jPw-0007WP-TE for bitbake-devel@lists.openembedded.org;
-	Sat, 16 Feb 2013 16:11:09 +0100
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r1GF1Fjh016918; Sat, 16 Feb 2013 15:01:15 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id GVRGrPoX1klV; Sat, 16 Feb 2013 15:01:15 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r1GF18kv016914
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Sat, 16 Feb 2013 15:01:11 GMT
-Message-ID: <1361026488.31795.60.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Martin =?ISO-8859-1?Q?Erts=E5s?= <martiert@gmail.com>
-Date: Sat, 16 Feb 2013 14:54:48 +0000
-In-Reply-To: <511F8EC6.1080201@gmail.com>
+	(envelope-from <martiert@gmail.com>) id 1U6jvP-0008Cd-Qq
+	for bitbake-devel@lists.openembedded.org;
+	Sat, 16 Feb 2013 16:43:41 +0100
+Received: by mail-lb0-f174.google.com with SMTP id l12so3263986lbo.5
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 16 Feb 2013 07:27:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=x-received:message-id:date:from:user-agent:mime-version:to:cc
+	:subject:references:in-reply-to:content-type
+	:content-transfer-encoding;
+	bh=K2unhttw6/Y3WHmQNU9LxqxNv0MOz7HxKSEcK2SNPYg=;
+	b=ISf3rIQfG2iEfucuoD/BXzXOK4jDiEam3uOY8tj6q8wOuYpgR+KQr8MT7AlqhQ2Qn2
+	QaX5CNbYfeR98GqtcDBo+xfwZ9wQMUOrBBQgyhpKcy6HLnaqurcmb7pZh/Ft0OzBrweD
+	mqX/3rvFHssvKwCoZfCMspmsKDHI7qhBcl46kpwNKDENxkLpJpYQzO5kywVNsf8HaiSq
+	hYlW2i+5XwcX1FtDtt+GpH8ptA3ZwudFuXCpkpEgkIOAu5/4htPlclghDVHMgO3O6Wkq
+	njyTQODUl3km9qsSVr3hL4ERUa6GGQsMKrsUWEYwRQswobCR3fLC3ZOsGGrAaNJuPF+i
+	GWcQ==
+X-Received: by 10.112.10.138 with SMTP id i10mr3539278lbb.24.1361028454343;
+	Sat, 16 Feb 2013 07:27:34 -0800 (PST)
+Received: from [192.168.1.115] ([37.191.128.59])
+	by mx.google.com with ESMTPS id
+	tm10sm31613126lab.10.2013.02.16.07.27.32
+	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Sat, 16 Feb 2013 07:27:33 -0800 (PST)
+Message-ID: <511FA563.3070208@gmail.com>
+Date: Sat, 16 Feb 2013 16:27:31 +0100
+From: =?UTF-8?B?TWFydGluIEVydHPDpXM=?= <martiert@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:17.0) Gecko/20130124 Thunderbird/17.0.2
+MIME-Version: 1.0
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
 References: <1360281302.10722.68.camel@ted>
 	<CABcZANmd9_bcAUizAR3JiSX368HJsKhzGrGPkqAsbMsw2G9=ig@mail.gmail.com>
 	<1360944017.31795.1.camel@ted> <511F8EC6.1080201@gmail.com>
-X-Mailer: Evolution 3.6.3-1 
-Mime-Version: 1.0
-X-MIME-Autoconverted: from 8bit to quoted-printable by dan.rpsys.net id
-	r1GF1Fjh016918
+	<1361026488.31795.60.camel@ted>
+In-Reply-To: <1361026488.31795.60.camel@ted>
 Cc: Chris Larson <clarson@kergoth.com>,
 	bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH] utils: Use rm -rf in remove()
@@ -41,76 +50,73 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 16 Feb 2013 15:11:12 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Sat, 16 Feb 2013 15:43:42 -0000
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, 2013-02-16 at 14:51 +0100, Martin Erts=C3=A5s wrote:
-> On 02/15/13 17:00, Richard Purdie wrote:
-> > On Thu, 2013-02-07 at 18:08 -0700, Chris Larson wrote:
-> >> On Thu, Feb 7, 2013 at 4:55 PM, Richard Purdie
-> >> <richard.purdie@linuxfoundation.org> wrote:
-> >>          -                shutil.rmtree(name)
-> >>          +                # shutil.rmtree(name) would be ideal but i=
-ts
-> >>          too slow
-> >>          +                subprocess.call('rm -rf %s' % path,
-> >>          shell=3DTrue)
-> >>
-> >> This is a good idea, but I'm curious about forking off a shell proce=
-ss
-> >> for it. I'd think this would work as well: subprocess.call(['rm',
-> >> '-rf', path])
-> > path can have wildcards in it. The code wasn't entirely obvious so I'=
-ve
-> > tweaked it after your/Peter's comments. I'm hoping it will help the
-> > problems Martin was seeing too.
-> >
-> > Cheers,
-> >
-> > Richard
-> >
-> >
-> I think this is a good idea as well. One thing I would question though,=
-=20
-> is to have this in the except clause. Why not:
->=20
->      for name in glob.glob(path):
->          try:
-> 	    if recurse and os.path.isdir(path):
-> 	       subprocess.call('rm -rf %s' % path, shell=3DTrue)
-> 	       return
-> 	    os.unlink(name)
->          except OSError as exc:
->              if exc.errno !=3D errno.ENOENT:
->                  raise
->=20
->=20
-> Personally I feel it is cleaner to have all the remove possibilities in=
-=20
-> the try, and let the exceptions be in except. Kind of feel it is wrong=20
-> to let the recursive case be handled in the exception, as I don't see i=
-t=20
-> being an exceptional case to delete a folder.
->=20
-> Also, unfortunately your patch would not fix osx, as EISDIR is not the=20
-> error that is returned there. What I get is either a EPERM or an EACCES=
-=20
-> (not on a mac now, so can't check it until monday). So osx would still=20
-> fall through to the raise.
+On 02/16/13 15:54, Richard Purdie wrote:
+> On Sat, 2013-02-16 at 14:51 +0100, Martin Ertsås wrote:
+>> On 02/15/13 17:00, Richard Purdie wrote:
+>>> On Thu, 2013-02-07 at 18:08 -0700, Chris Larson wrote:
+>>>> On Thu, Feb 7, 2013 at 4:55 PM, Richard Purdie
+>>>> <richard.purdie@linuxfoundation.org> wrote:
+>>>>           -                shutil.rmtree(name)
+>>>>           +                # shutil.rmtree(name) would be ideal but its
+>>>>           too slow
+>>>>           +                subprocess.call('rm -rf %s' % path,
+>>>>           shell=True)
+>>>>
+>>>> This is a good idea, but I'm curious about forking off a shell process
+>>>> for it. I'd think this would work as well: subprocess.call(['rm',
+>>>> '-rf', path])
+>>> path can have wildcards in it. The code wasn't entirely obvious so I've
+>>> tweaked it after your/Peter's comments. I'm hoping it will help the
+>>> problems Martin was seeing too.
+>>>
+>>> Cheers,
+>>>
+>>> Richard
+>>>
+>>>
+>> I think this is a good idea as well. One thing I would question though,
+>> is to have this in the except clause. Why not:
+>>
+>>       for name in glob.glob(path):
+>>           try:
+>> 	    if recurse and os.path.isdir(path):
+>> 	       subprocess.call('rm -rf %s' % path, shell=True)
+>> 	       return
+>> 	    os.unlink(name)
+>>           except OSError as exc:
+>>               if exc.errno != errno.ENOENT:
+>>                   raise
+>>
+>>
+>> Personally I feel it is cleaner to have all the remove possibilities in
+>> the try, and let the exceptions be in except. Kind of feel it is wrong
+>> to let the recursive case be handled in the exception, as I don't see it
+>> being an exceptional case to delete a folder.
+>>
+>> Also, unfortunately your patch would not fix osx, as EISDIR is not the
+>> error that is returned there. What I get is either a EPERM or an EACCES
+>> (not on a mac now, so can't check it until monday). So osx would still
+>> fall through to the raise.
+> Can you take a look at the patch I ended up committing? Its basically as
+> you describe above expect I moved the subprocess outside the for loop as
+> well.
+>
+> (http://git.openembedded.org/bitbake/commit/?id=96088ebdec08e49ba9e8dbcac437bfcdc21f5983)
+>
+> Cheers,
+>
+> Richard
+>
+>
+>
+That is great! Will fix up the mac problems without any problems, at 
+least it looks like. I'll try it out on monday, and come back 
+complaining if it doesn't fix it ;)
 
-Can you take a look at the patch I ended up committing? Its basically as
-you describe above expect I moved the subprocess outside the for loop as
-well.
-
-(http://git.openembedded.org/bitbake/commit/?id=3D96088ebdec08e49ba9e8dbc=
-ac437bfcdc21f5983)
-
-Cheers,
-
-Richard
-
-
-
+- Martin
 
 
