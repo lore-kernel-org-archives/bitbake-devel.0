@@ -1,33 +1,30 @@
-Received: from mail.cvg.de ([62.153.82.30])
+Received: from dan.rpsys.net ([93.97.175.187])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <enrico.scholz@sigma-chemnitz.de>) id 1U7Ux1-0007My-RA
-	for bitbake-devel@lists.openembedded.org;
-	Mon, 18 Feb 2013 18:56:29 +0100
-Received: from ensc-virt.intern.sigma-chemnitz.de
-	(ensc-virt.intern.sigma-chemnitz.de [192.168.3.24])
-	by mail.cvg.de (8.14.4/8.14.4) with ESMTP id r1IHbKYA023440
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 Feb 2013 18:37:22 +0100
-Received: from ensc by ensc-virt.intern.sigma-chemnitz.de with local (Exim
-	4.76) (envelope-from <ensc@sigma-chemnitz.de>) id 1U7UeW-0000MZ-Au
-	for bitbake-devel@lists.openembedded.org;
-	Mon, 18 Feb 2013 18:37:20 +0100
-From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 18 Feb 2013 18:37:20 +0100
-Message-ID: <lyobfhcylr.fsf@ensc-virt.intern.sigma-chemnitz.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.1 (gnu/linux)
-MIME-Version: 1.0
-Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-X-DSPAM-Result: Innocent
-X-DSPAM-Probability: 0
-X-DSPAM-Confidence: 1
-X-Spam-Score: -5.6
-X-Spam-Level: -----
-X-Spam-Tests: AWL,BAYES_00,RP_MATCHES_RCVD,SPF_NEUTRAL,DSPAM_INNOCENT
-X-Scanned-By: MIMEDefang 2.73
-Subject: Broken quoting in bb.utils.remove()
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1U7ZpH-0007Go-C6 for bitbake-devel@lists.openembedded.org;
+	Tue, 19 Feb 2013 00:08:59 +0100
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r1IMx5NF028031 for <bitbake-devel@lists.openembedded.org>;
+	Mon, 18 Feb 2013 22:59:06 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id g50KoWMvVkZU for <bitbake-devel@lists.openembedded.org>;
+	Mon, 18 Feb 2013 22:59:05 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r1IMwvMc028023
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
+	Mon, 18 Feb 2013 22:59:03 GMT
+Message-ID: <1361193511.5927.8.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Mon, 18 Feb 2013 13:18:31 +0000
+Mime-Version: 1.0
+X-Mailer: Evolution 3.6.3-1 
+Subject: [PATCH] runqueue.py: Ensure export flag is set for fakeroot environment variables
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -39,23 +36,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 18 Feb 2013 17:56:29 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 18 Feb 2013 23:09:04 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hi,
+This means the variables show up in the shell execution "run" files since
+its useful to know what the fakeroot environment is and how to set it up
+manually.
 
-commit 96088ebdec08e49ba9e8dbcac437bfcdc21f5983 causes unwanted effects
-when path contains special shell chars like whitespaces, '$', ';' or
-'\'.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ bitbake/lib/bb/runqueue.py |    1 +
+ 1 file changed, 1 insertion(+)
 
-Something like
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 1bbe791..58a3ce7 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1139,6 +1139,7 @@ class RunQueueExecute:
+                 for e in fakeenv:
+                     os.environ[e] = fakeenv[e]
+                     the_data.setVar(e, fakeenv[e])
++                    the_data.setVarFlag(e, 'export', "1")
+ 
+                 if quieterrors:
+                     the_data.setVarFlag(taskname, "quieterrors", "1")
 
-- subprocess.call("rm -rf %s" % path, shell=True)
-+ subprocess.call(['rm', '-rf'] + glob.glob(path), shell=False)
 
-would restore previous behavior.
-
-
-Enrico
 
 
