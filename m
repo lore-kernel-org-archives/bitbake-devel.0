@@ -1,44 +1,33 @@
-Received: from mail-lb0-f174.google.com ([209.85.217.174])
+Received: from mail.cvg.de ([62.153.82.30])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <martiert@gmail.com>) id 1U6jvP-0008Cd-Qq
+	(envelope-from <enrico.scholz@sigma-chemnitz.de>) id 1U7Ux1-0007My-RA
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 16 Feb 2013 16:43:41 +0100
-Received: by mail-lb0-f174.google.com with SMTP id l12so3263986lbo.5
+	Mon, 18 Feb 2013 18:56:29 +0100
+Received: from ensc-virt.intern.sigma-chemnitz.de
+	(ensc-virt.intern.sigma-chemnitz.de [192.168.3.24])
+	by mail.cvg.de (8.14.4/8.14.4) with ESMTP id r1IHbKYA023440
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 16 Feb 2013 07:27:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=x-received:message-id:date:from:user-agent:mime-version:to:cc
-	:subject:references:in-reply-to:content-type
-	:content-transfer-encoding;
-	bh=K2unhttw6/Y3WHmQNU9LxqxNv0MOz7HxKSEcK2SNPYg=;
-	b=ISf3rIQfG2iEfucuoD/BXzXOK4jDiEam3uOY8tj6q8wOuYpgR+KQr8MT7AlqhQ2Qn2
-	QaX5CNbYfeR98GqtcDBo+xfwZ9wQMUOrBBQgyhpKcy6HLnaqurcmb7pZh/Ft0OzBrweD
-	mqX/3rvFHssvKwCoZfCMspmsKDHI7qhBcl46kpwNKDENxkLpJpYQzO5kywVNsf8HaiSq
-	hYlW2i+5XwcX1FtDtt+GpH8ptA3ZwudFuXCpkpEgkIOAu5/4htPlclghDVHMgO3O6Wkq
-	njyTQODUl3km9qsSVr3hL4ERUa6GGQsMKrsUWEYwRQswobCR3fLC3ZOsGGrAaNJuPF+i
-	GWcQ==
-X-Received: by 10.112.10.138 with SMTP id i10mr3539278lbb.24.1361028454343;
-	Sat, 16 Feb 2013 07:27:34 -0800 (PST)
-Received: from [192.168.1.115] ([37.191.128.59])
-	by mx.google.com with ESMTPS id
-	tm10sm31613126lab.10.2013.02.16.07.27.32
-	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Sat, 16 Feb 2013 07:27:33 -0800 (PST)
-Message-ID: <511FA563.3070208@gmail.com>
-Date: Sat, 16 Feb 2013 16:27:31 +0100
-From: =?UTF-8?B?TWFydGluIEVydHPDpXM=?= <martiert@gmail.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:17.0) Gecko/20130124 Thunderbird/17.0.2
+	Mon, 18 Feb 2013 18:37:22 +0100
+Received: from ensc by ensc-virt.intern.sigma-chemnitz.de with local (Exim
+	4.76) (envelope-from <ensc@sigma-chemnitz.de>) id 1U7UeW-0000MZ-Au
+	for bitbake-devel@lists.openembedded.org;
+	Mon, 18 Feb 2013 18:37:20 +0100
+From: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 18 Feb 2013 18:37:20 +0100
+Message-ID: <lyobfhcylr.fsf@ensc-virt.intern.sigma-chemnitz.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.1 (gnu/linux)
 MIME-Version: 1.0
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-References: <1360281302.10722.68.camel@ted>
-	<CABcZANmd9_bcAUizAR3JiSX368HJsKhzGrGPkqAsbMsw2G9=ig@mail.gmail.com>
-	<1360944017.31795.1.camel@ted> <511F8EC6.1080201@gmail.com>
-	<1361026488.31795.60.camel@ted>
-In-Reply-To: <1361026488.31795.60.camel@ted>
-Cc: Chris Larson <clarson@kergoth.com>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] utils: Use rm -rf in remove()
+Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+X-DSPAM-Result: Innocent
+X-DSPAM-Probability: 0
+X-DSPAM-Confidence: 1
+X-Spam-Score: -5.6
+X-Spam-Level: -----
+X-Spam-Tests: AWL,BAYES_00,RP_MATCHES_RCVD,SPF_NEUTRAL,DSPAM_INNOCENT
+X-Scanned-By: MIMEDefang 2.73
+Subject: Broken quoting in bb.utils.remove()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -50,73 +39,23 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 16 Feb 2013 15:43:42 -0000
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Mon, 18 Feb 2013 17:56:29 -0000
+Content-Type: text/plain
 
-On 02/16/13 15:54, Richard Purdie wrote:
-> On Sat, 2013-02-16 at 14:51 +0100, Martin Ertsås wrote:
->> On 02/15/13 17:00, Richard Purdie wrote:
->>> On Thu, 2013-02-07 at 18:08 -0700, Chris Larson wrote:
->>>> On Thu, Feb 7, 2013 at 4:55 PM, Richard Purdie
->>>> <richard.purdie@linuxfoundation.org> wrote:
->>>>           -                shutil.rmtree(name)
->>>>           +                # shutil.rmtree(name) would be ideal but its
->>>>           too slow
->>>>           +                subprocess.call('rm -rf %s' % path,
->>>>           shell=True)
->>>>
->>>> This is a good idea, but I'm curious about forking off a shell process
->>>> for it. I'd think this would work as well: subprocess.call(['rm',
->>>> '-rf', path])
->>> path can have wildcards in it. The code wasn't entirely obvious so I've
->>> tweaked it after your/Peter's comments. I'm hoping it will help the
->>> problems Martin was seeing too.
->>>
->>> Cheers,
->>>
->>> Richard
->>>
->>>
->> I think this is a good idea as well. One thing I would question though,
->> is to have this in the except clause. Why not:
->>
->>       for name in glob.glob(path):
->>           try:
->> 	    if recurse and os.path.isdir(path):
->> 	       subprocess.call('rm -rf %s' % path, shell=True)
->> 	       return
->> 	    os.unlink(name)
->>           except OSError as exc:
->>               if exc.errno != errno.ENOENT:
->>                   raise
->>
->>
->> Personally I feel it is cleaner to have all the remove possibilities in
->> the try, and let the exceptions be in except. Kind of feel it is wrong
->> to let the recursive case be handled in the exception, as I don't see it
->> being an exceptional case to delete a folder.
->>
->> Also, unfortunately your patch would not fix osx, as EISDIR is not the
->> error that is returned there. What I get is either a EPERM or an EACCES
->> (not on a mac now, so can't check it until monday). So osx would still
->> fall through to the raise.
-> Can you take a look at the patch I ended up committing? Its basically as
-> you describe above expect I moved the subprocess outside the for loop as
-> well.
->
-> (http://git.openembedded.org/bitbake/commit/?id=96088ebdec08e49ba9e8dbcac437bfcdc21f5983)
->
-> Cheers,
->
-> Richard
->
->
->
-That is great! Will fix up the mac problems without any problems, at 
-least it looks like. I'll try it out on monday, and come back 
-complaining if it doesn't fix it ;)
+Hi,
 
-- Martin
+commit 96088ebdec08e49ba9e8dbcac437bfcdc21f5983 causes unwanted effects
+when path contains special shell chars like whitespaces, '$', ';' or
+'\'.
+
+Something like
+
+- subprocess.call("rm -rf %s" % path, shell=True)
++ subprocess.call(['rm', '-rf'] + glob.glob(path), shell=False)
+
+would restore previous behavior.
+
+
+Enrico
 
 
