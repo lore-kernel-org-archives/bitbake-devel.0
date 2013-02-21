@@ -1,20 +1,32 @@
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mail-ve0-f177.google.com ([209.85.128.177])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1U8YFZ-0007c0-HG
+	(envelope-from <pranap@gmail.com>) id 1U8gEZ-0000gq-FZ
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 21 Feb 2013 16:39:57 +0100
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 21 Feb 2013 07:23:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.84,710,1355126400"; d="scan'208";a="290151603"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.120.83])
-	by fmsmga001.fm.intel.com with ESMTP; 21 Feb 2013 07:23:41 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+	Fri, 22 Feb 2013 01:11:30 +0100
+Received: by mail-ve0-f177.google.com with SMTP id m1so83144ves.36
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 21 Feb 2013 15:55:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:x-received:in-reply-to:references:date:message-id
+	:subject:from:to:cc:content-type;
+	bh=jiAl6bJCOR0tkKaZBCMH5EYwUD+o0FA5k93Tluo7hv4=;
+	b=BUFKhVL06sU6PiULCOYKyPK7dD1CnC+G6nwnBcT9RHXjWX8V9EMMbFB6chrWbWAJ2a
+	qxkx9rK+IZcScJNODouUsPc4vLX/uQcunikWFKYCJe6IX40SBpATtVWU2tjmcYLFlCOB
+	v0q3d5MIxuDg9GGFofBoTImwGCsmquDf2GGAHIKlsryROdGhFPjUnM+jSwVgp9FWTjbB
+	epuICKPUmceusNBiolv31j3x40vcB3C2lHh9oKgRDDNq0Oft6EjEvVyj4awnvQkido0h
+	aj+0Sw4c6MVjMqn+dSo5gVgzLDu1zNR2iuGgix5TukzbJBX7wsZN2XbnE07oS38zTpEc
+	g/lQ==
+MIME-Version: 1.0
+X-Received: by 10.220.241.141 with SMTP id le13mr33240725vcb.26.1361490913523; 
+	Thu, 21 Feb 2013 15:55:13 -0800 (PST)
+Received: by 10.58.186.229 with HTTP; Thu, 21 Feb 2013 15:55:13 -0800 (PST)
+In-Reply-To: <1361460215-30292-1-git-send-email-paul.eggleton@linux.intel.com>
+References: <1361460215-30292-1-git-send-email-paul.eggleton@linux.intel.com>
+Date: Thu, 21 Feb 2013 16:55:13 -0700
+Message-ID: <CAKFDafV47wYzXObALnyFVnzcKRzcqsx0Yy+7mYF4FBu8r1nsXg@mail.gmail.com>
+From: Pr Pe <pranap@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 21 Feb 2013 15:23:35 +0000
-Message-Id: <1361460215-30292-1-git-send-email-paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.7.10.4
-Subject: [PATCH] build.py: avoid deleting taint files when writing stamps
+Subject: Re: [PATCH] build.py: avoid deleting taint files when writing stamps
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,47 +38,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Feb 2013 15:39:59 -0000
+X-List-Received-Date: Fri, 22 Feb 2013 00:11:32 -0000
+Content-Type: multipart/alternative; boundary=14dae9cdc32b43f8c804d644cec1
 
-The stamp cleaning process that occurs before writing out new stamps for
-a task was deleting taint files as well. This resulted in tasks that
-were forcibly re-executed using the -f or -C command line options to
-have their previous output restored from shared state when called upon a
-second time, because the taint value was no longer incorporated into the
-task signature and thus it was reverting to its previous value. This
-also affected the kernel menuconfig command in OE-Core.
+--14dae9cdc32b43f8c804d644cec1
+Content-Type: text/plain; charset=ISO-8859-1
 
-Note that the taint file *is* still deleted when doing -c clean, which
-is the desired behaviour.
+I have an image recipe (appending to core-image-minimal) that builds
+components specific to my project and I get a bzImage and a
+core-image-minimal.iso out of it. I want to add some bootloader code to be
+built as a separate entity  like bzImage and not as part of the
+core-image-minimal.iso. Is there a way to do this in yocto?
 
-Fixes [YOCTO #3919].
+Thanks,
+Prana
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- lib/bb/build.py |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+--14dae9cdc32b43f8c804d644cec1
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 5f5a007..d91ff53 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -519,10 +519,13 @@ def make_stamp(task, d, file_name = None):
-     """
-     cleanmask = stamp_cleanmask_internal(task, d, file_name)
-     for mask in cleanmask:
--        # Preserve sigdata files in the stamps directory
-         for name in glob.glob(mask):
-+            # Preserve sigdata files in the stamps directory
-             if "sigdata" in name:
-                 continue
-+            # Preserve taint files in the stamps directory
-+            if name.endswith('.taint'):
-+                continue
-             os.unlink(name)
-     
-     stamp = stamp_internal(task, d, file_name)
--- 
-1.7.10.4
+<div>I have an image recipe (appending to core-image-minimal) that builds c=
+omponents specific to my project and I get a bzImage and a core-image-minim=
+al.iso out of it. I want to add some bootloader code to be built as a separ=
+ate entity =A0like bzImage and not as part of the core-image-minimal.iso. I=
+s there a way to do this in yocto?</div>
+<div><br></div><div>Thanks,</div><div>Prana</div><div><br></div>
 
-
-
+--14dae9cdc32b43f8c804d644cec1--
