@@ -1,24 +1,30 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mail-ve0-f174.google.com ([209.85.128.174])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <paul.eggleton@linux.intel.com>) id 1U8r4d-0006rE-7N
+	(envelope-from <schnitzeltony@googlemail.com>) id 1U9N9Z-0002jw-3I
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 22 Feb 2013 12:46:26 +0100
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 22 Feb 2013 03:28:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.84,715,1355126400"; d="scan'208";a="266176047"
-Received: from unknown (HELO helios.localnet) ([10.252.120.142])
-	by orsmga001.jf.intel.com with ESMTP; 22 Feb 2013 03:28:35 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 22 Feb 2013 11:28:33 +0000
-Message-ID: <1848600.mfyoAxLOA5@helios>
-Organization: Intel Corporation
-User-Agent: KMail/4.10 (Linux/3.5.0-24-generic; KDE/4.10.0; i686; ; )
-In-Reply-To: <CAKFDafUoMXKYr_xdabpNdfz+yJcBnWLunK6pTL2J5dspkQEr2w@mail.gmail.com>
-References: <CAKFDafUoMXKYr_xdabpNdfz+yJcBnWLunK6pTL2J5dspkQEr2w@mail.gmail.com>
+	Sat, 23 Feb 2013 23:01:09 +0100
+Received: by mail-ve0-f174.google.com with SMTP id pb11so1421950veb.19
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 23 Feb 2013 13:44:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=googlemail.com; s=20120113;
+	h=mime-version:x-received:date:message-id:subject:from:to
+	:content-type; bh=M0YGiCxL5Y6fvvT65z++aep2G++D6n7Io5leMDVIrmc=;
+	b=IA8ApZRAqOfkqCx0p1z9jnd/esFT9M//OYXcWzKrRI7hSli71UHgyvQ3AoHz3WNIdx
+	X3gHJl6CInMMUUapFIyimP63FVKrNu1GjEwyKtz6XZFFWYQz9p7Wr1OdjHTz8V2TmVWB
+	hg5da0qGxMZ1dgczdl0LbOP0oXgzHUEJKjBE2xRcs3IHxugu3Xdg6qWkFKRzwGqe11ma
+	0q7hMelRsgn4hjZi+sfIgN1o3ByAcQf6cUwaw/OD8VJkMn1Gstj69b1SHG23vSqpJu00
+	E4lxCF/Pm7ooHSrbvXD2jFHzubx3XIMBPMQQ9DwJaKa4PHfKG7/yTKRYHYJV92BTwOsa
+	Dd1A==
 MIME-Version: 1.0
-Subject: Re: How to get additional binaries in tmp/deploy/images
+X-Received: by 10.58.132.170 with SMTP id ov10mr7915609veb.57.1361655893374;
+	Sat, 23 Feb 2013 13:44:53 -0800 (PST)
+Received: by 10.52.185.168 with HTTP; Sat, 23 Feb 2013 13:44:53 -0800 (PST)
+Date: Sat, 23 Feb 2013 22:44:53 +0100
+Message-ID: <CALbNGRSGHYF0-9AgF7KmK8W_BBBOriVmx7FYupxySHUgdqKeYg@mail.gmail.com>
+From: =?UTF-8?Q?Andreas_M=C3=BCller?= <schnitzeltony@googlemail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: parse does not cache
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,29 +36,14 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 22 Feb 2013 11:46:32 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Sat, 23 Feb 2013 22:01:14 -0000
+Content-Type: text/plain; charset=UTF-8
 
-On Thursday 21 February 2013 16:57:25 Pr Pe wrote:
-> I have an image recipe (appending to core-image-minimal) that builds
-> components specific to my project and I get a bzImage and a
-> core-image-minimal.iso out of it. I want to add some bootloader code to be
-> built as a separate entity  like bzImage and not as part of the
-> core-image-minimal.iso. Is there a way to do this in yocto?
+Hi,
 
-This is more of a question for the Yocto Project or OE mailing lists.
+with the latest HEAD bitbake performs a full parse for every run. I
+could not find a hint so far - so is it a bug or did I miss something?
 
-To answer your question though, with Poky/OE-Core you would add the items you 
-wanted built alongside to EXTRA_IMAGEDEPENDS - see meta-yocto-
-bsp/conf/machine/beagleboard.conf for an example.
-
-Cheers,
-Paul
-
--- 
-
-Paul Eggleton
-Intel Open Source Technology Centre
+Andreas
 
 
