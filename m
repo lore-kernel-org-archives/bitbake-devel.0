@@ -1,34 +1,40 @@
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from mail-wg0-f46.google.com ([74.125.82.46])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <jason.wessel@windriver.com>) id 1UA00H-0005fw-9R
+	(envelope-from <twoerner@gmail.com>) id 1UA0AS-0006Fd-79
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 25 Feb 2013 16:30:15 +0100
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id r1PFDljW019454
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Mon, 25 Feb 2013 07:13:47 -0800 (PST)
-Received: from [172.25.32.35] (172.25.32.35) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.2.342.3;
-	Mon, 25 Feb 2013 07:13:47 -0800
-Message-ID: <512B7FA9.6030508@windriver.com>
-Date: Mon, 25 Feb 2013 09:13:45 -0600
-From: Jason Wessel <jason.wessel@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:17.0) Gecko/20130106 Thunderbird/17.0.2
+	Mon, 25 Feb 2013 16:40:41 +0100
+Received: by mail-wg0-f46.google.com with SMTP id fg15so2465948wgb.25
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 25 Feb 2013 07:24:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:x-received:in-reply-to:references:date:message-id
+	:subject:from:to:content-type;
+	bh=CdJsnMtbI41ulzAiskdeWGfcSMmdH1bfVw3c2sFyWIc=;
+	b=MJZh2/eOtN/Q829oRrBVerWReVtGAG03X4ax8MknqNCjZfyFtKUzNUdYK+euytGLop
+	53AonuluQqpobKYwlqNIrVasjF4bcDs7ZP19FDjkuv+IRWw1ZR+LTyJyTiPuptInUZkq
+	Bny/iWxvFwRsXqYPiFXYG3vykj+CoCaemx0y++kMQy18XDdCWm75kR5BwtivDJCHzU8W
+	T7aHYTqiykQ39aX1gzJu1xR2E7A1CRAUjgsL4ddFbZpJ+Yvi/94tcySz34xEzHU6wqxq
+	Us3nwMB0Q7G0vy4Gg6NFzK6rgvlcPKzBHnKLlbyCPczdFadkO4gTHr3bLLVrWUFc1Y5M
+	RVBA==
 MIME-Version: 1.0
-To: Chris Larson <clarson@kergoth.com>
+X-Received: by 10.194.58.202 with SMTP id t10mr20064346wjq.4.1361805862341;
+	Mon, 25 Feb 2013 07:24:22 -0800 (PST)
+Received: by 10.194.45.100 with HTTP; Mon, 25 Feb 2013 07:24:22 -0800 (PST)
+In-Reply-To: <512B7034.1030504@mlbassoc.com>
 References: <CALbNGRRDr+6vLtJRDgRi1NbO+s0sUB5TLT7uTck5L5La6xfDQw@mail.gmail.com>
 	<CABcZANn3JbnhTEEP85K5bxXQd9ipYmuP9-bqMizpw+z9R3HhiQ@mail.gmail.com>
 	<CAPhnLPCYxVk8F72Tv=PJo2OQJQmMdN0RKXNmTj_JeVy+7VJ+qA@mail.gmail.com>
 	<CAPhnLPBwwM84Pu25od0pLr2446-RSbGsDHQbayQE3g+xNV2tkw@mail.gmail.com>
-In-Reply-To: <CAPhnLPBwwM84Pu25od0pLr2446-RSbGsDHQbayQE3g+xNV2tkw@mail.gmail.com>
-X-Enigmail-Version: 1.5
-X-MIME-Autoconverted: from 8bit to quoted-printable by mail1.windriver.com id
-	r1PFDljW019454
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: trouble during parsing
+	<CALbNGRSioFk7F3W9yp_VbHz6sXP-LjUtg0DqJorZmyHt_+J2sw@mail.gmail.com>
+	<CABxcv=kdCzvj=Z4GDtYC4P-az9LnT5VhrspRrZq8p568uPo9QA@mail.gmail.com>
+	<CALbNGRSZeOC0Tyv1-x6og6g+HOD148PUdCWcONYBE_YUQ7FASA@mail.gmail.com>
+	<CAHUNapR3-Z57mPUScW6TnptFbawE3y=+bCcpnTVVfAy-2KjwjA@mail.gmail.com>
+	<1361800868.25338.79.camel@ted> <512B7034.1030504@mlbassoc.com>
+Date: Mon, 25 Feb 2013 10:24:22 -0500
+Message-ID: <CAHUNapSfZZA07Hg_Og+41uRweR-WsXLrkodj8_Dsdj=ZP6c2AQ@mail.gmail.com>
+From: Trevor Woerner <twoerner@gmail.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [meta-ti] trouble during parsing
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -40,64 +46,17 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 25 Feb 2013 15:30:42 -0000
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Mon, 25 Feb 2013 15:40:42 -0000
+Content-Type: text/plain; charset=ISO-8859-1
 
-On 02/24/2013 08:28 PM, Flanagan, Elizabeth wrote:
-> On Sun, Feb 24, 2013 at 6:12 PM, Flanagan, Elizabeth
-> <elizabeth.flanagan@intel.com> wrote:
->> On Wed, Feb 20, 2013 at 6:31 AM, Chris Larson <clarson@kergoth.com> wr=
-ote:
->>>
->>> On Wed, Feb 20, 2013 at 5:54 AM, Andreas M=FCller
->>> <schnitzeltony@googlemail.com> wrote:
->>>>
->>>> with current bitbake master I get
->>>>
->>>> ERROR: Command execution failed: Traceback (most recent call
->>>> last):#########################################################
->>>> | ETA: 00:00:17
->>>> File "/home/andreas/oe-core/sources/bitbake/lib/bb/command.py", line
->>>> 92, in runAsyncCommand
->>>> self.cooker.updateCache()
->>>> File "/home/andreas/oe-core/sources/bitbake/lib/bb/cooker.py", line
->>>> 1330, in updateCache
->>>> if not self.parser.parse_next():
->>>> File "/home/andreas/oe-core/sources/bitbake/lib/bb/cooker.py", line
->>>> 1703, in parse_next
->>>> self.virtuals +=3D len(result)
->>>> TypeError: object of type 'ExpansionError' has no len()
->>>
->>>
->>> Hmm, looks like it's returning the exceptions rather than raising the=
-m, for
->>> some reason, but that doesn't make much sense =97 the pool code alway=
-s raises
->>> any exceptions from its imap iterator's next() method.
->>
->
-> Ach, should have updated my email. Seems reverting
-> 0a99563a4ea270594fd9a61da46f9387fb79dc66 cleared up the issue.
+On Mon, Feb 25, 2013 at 9:07 AM, Gary Thomas <gary@mlbassoc.com> wrote:
+> Additionally, the problem is that tags can move and the revid
+> will change.  Hence the need to probe the source GIT for the answer.
 
-The real question is what are the expansion errors about here.  This is p=
-robably not the right way to fix it, but it at least allows you to see wh=
-at is behind the expansion error:
+If a tag has moved then a
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 448f899..b166425 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1661,6 +1661,8 @@ class CookerParser(object):
-         parsed =3D None
-         try:
-             parsed, result =3D self.results.next()
-+            if isinstance(result, BaseException):
-+                raise result
-         except StopIteration:
-             self.shutdown()
-             return False
+    $ git fetch --tags
 
-
+would update your local tag refspecs with the updated information, wouldn't it?
 
 
