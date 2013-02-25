@@ -1,26 +1,25 @@
-Received: from mail-we0-f172.google.com ([74.125.82.172])
+Received: from dan.rpsys.net ([93.97.175.187])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <twoerner@gmail.com>) id 1U9ybx-0002xf-0U
-	for bitbake-devel@lists.openembedded.org;
-	Mon, 25 Feb 2013 15:01:06 +0100
-Received: by mail-we0-f172.google.com with SMTP id x10so2522424wey.3
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 25 Feb 2013 05:44:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:x-received:in-reply-to:references:date:message-id
-	:subject:from:to:content-type;
-	bh=TeFCmJaRjrUCJWSZca4yDGMzSa9EdHEOT83aJAFJx3M=;
-	b=sNZWErPFTwlwdpXexlSAEnJCBf28szVReyCx7cvFzZQSwKW9rY/NoB52kLWfsTKhzt
-	yz/bcC8EtdYDa4CXJ7WfDm96FljCvK4wf/t26hzp8S/pfdQTQHT15SKTJAN11HN0Q86P
-	mWogUWFLHrKebpGSpwyRCvufKUMZ1mVI4zQAIrXZ120SMgu615tflykM5CDqScN7asoO
-	AQAYpD/0lXOtwLljwTK5SlUeDWosyOTNL1a/uYMYQfoBT0pt063jliE7TRDnpMdhekIz
-	II18MKaW3bmRRckTALfkM6X8cEXHynJ/T+J7WBAEW/YTU1PJdSd4qCoxbDDeAvirr8N5
-	qaYg==
-MIME-Version: 1.0
-X-Received: by 10.180.75.177 with SMTP id d17mr12355290wiw.16.1361799879142;
-	Mon, 25 Feb 2013 05:44:39 -0800 (PST)
-Received: by 10.194.45.100 with HTTP; Mon, 25 Feb 2013 05:44:39 -0800 (PST)
-In-Reply-To: <CALbNGRSZeOC0Tyv1-x6og6g+HOD148PUdCWcONYBE_YUQ7FASA@mail.gmail.com>
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1U9ysF-0003Vm-9O for bitbake-devel@lists.openembedded.org;
+	Mon, 25 Feb 2013 15:18:09 +0100
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r1PE8Yng018023; Mon, 25 Feb 2013 14:08:34 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id yQ1p38RuwsNc; Mon, 25 Feb 2013 14:08:34 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r1PE8NAB018019
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT); Mon, 25 Feb 2013 14:08:29 GMT
+Message-ID: <1361800868.25338.79.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Trevor Woerner <twoerner@gmail.com>
+Date: Mon, 25 Feb 2013 06:01:08 -0800
+In-Reply-To: <CAHUNapR3-Z57mPUScW6TnptFbawE3y=+bCcpnTVVfAy-2KjwjA@mail.gmail.com>
 References: <CALbNGRRDr+6vLtJRDgRi1NbO+s0sUB5TLT7uTck5L5La6xfDQw@mail.gmail.com>
 	<CABcZANn3JbnhTEEP85K5bxXQd9ipYmuP9-bqMizpw+z9R3HhiQ@mail.gmail.com>
 	<CAPhnLPCYxVk8F72Tv=PJo2OQJQmMdN0RKXNmTj_JeVy+7VJ+qA@mail.gmail.com>
@@ -28,10 +27,10 @@ References: <CALbNGRRDr+6vLtJRDgRi1NbO+s0sUB5TLT7uTck5L5La6xfDQw@mail.gmail.com>
 	<CALbNGRSioFk7F3W9yp_VbHz6sXP-LjUtg0DqJorZmyHt_+J2sw@mail.gmail.com>
 	<CABxcv=kdCzvj=Z4GDtYC4P-az9LnT5VhrspRrZq8p568uPo9QA@mail.gmail.com>
 	<CALbNGRSZeOC0Tyv1-x6og6g+HOD148PUdCWcONYBE_YUQ7FASA@mail.gmail.com>
-Date: Mon, 25 Feb 2013 08:44:39 -0500
-Message-ID: <CAHUNapR3-Z57mPUScW6TnptFbawE3y=+bCcpnTVVfAy-2KjwjA@mail.gmail.com>
-From: Trevor Woerner <twoerner@gmail.com>
-To: "bitbake-devel@lists.openembedded.org"
+	<CAHUNapR3-Z57mPUScW6TnptFbawE3y=+bCcpnTVVfAy-2KjwjA@mail.gmail.com>
+X-Mailer: Evolution 3.6.3-1 
+Mime-Version: 1.0
+Cc: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
 Subject: Re: [meta-ti] trouble during parsing
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -45,21 +44,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 25 Feb 2013 14:01:06 -0000
-Content-Type: text/plain; charset=ISO-8859-1
+X-List-Received-Date: Mon, 25 Feb 2013 14:18:11 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-If the purpose of the ls-remote is to match a tag with a hash,
-wouldn't it be easier to just:
+On Mon, 2013-02-25 at 08:44 -0500, Trevor Woerner wrote:
+> If the purpose of the ls-remote is to match a tag with a hash,
+> wouldn't it be easier to just:
+> 
+>     cat .git/refs/tags/<tagid>
+> 
+> ?
 
-    cat .git/refs/tags/<tagid>
+If the git clone hasn't happened yet, this doesn't work.
 
-?
+> And if the purpose of knowing the tagid is to use that version of the
+> code, wouldn't it be easier to just:
+> 
+>     git checkout <tagid>
 
-And if the purpose of knowing the tagid is to use that version of the
-code, wouldn't it be easier to just:
+That isn't the only purpose.
 
-    git checkout <tagid>
+Cheers,
 
-?
+Richard
+
 
 
