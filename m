@@ -1,32 +1,30 @@
-Received: from mail-da0-f46.google.com ([209.85.210.46])
+Received: from dan.rpsys.net ([93.97.175.187])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <martin.jansa@gmail.com>) id 1UBpx7-00012O-Tj
-	for bitbake-devel@lists.openembedded.org;
-	Sat, 02 Mar 2013 18:10:50 +0100
-Received: by mail-da0-f46.google.com with SMTP id z8so1861715dad.5
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 02 Mar 2013 08:54:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=x-received:from:to:cc:subject:date:message-id:x-mailer;
-	bh=O1UaCg/78m2DUXrhmusKgk2U7LWtpedH7d7n/6ARqzs=;
-	b=bociIAqmD3pAoICzi6bxUAGWWqrSvyg89eNDrbVezlOU4AExq35Pk3zuN3ns8lVrbZ
-	cByxTN09E9oCzelbQ47Qbj3WfK7x35bZSgmLlG4EIGJQ5/KX90MSxVfqDiVnd7IX9dnJ
-	x0vh7bH04j2DJjef+XcQ7l8WK+Kb4xJ+G0rPxqmQD/2hQIkbIQC4lDXOeHJYQhCPXGXg
-	K8w9OxnMX8FUVhy8CaEGh3tVUgXqPGpyqHwzyHga7i/Wl5AG8bdE6HrA1ypHwuXRQ4/W
-	kuGKtQAtCJnGCmSknKQPm+3yDdabQqeqWA+QwiHSVvwRDD3PJyQQb3F4+7YZtRuqp/la
-	N3Eg==
-X-Received: by 10.66.7.196 with SMTP id l4mr23774755paa.81.1362243244176;
-	Sat, 02 Mar 2013 08:54:04 -0800 (PST)
-Received: from localhost (ip-62-24-80-7.net.upcbroadband.cz. [62.24.80.7])
-	by mx.google.com with ESMTPS id kl4sm16031993pbc.31.2013.03.02.08.54.01
-	(version=TLSv1.2 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Sat, 02 Mar 2013 08:54:03 -0800 (PST)
-From: Martin Jansa <martin.jansa@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Sat,  2 Mar 2013 17:50:05 +0100
-Message-Id: <1362243005-12124-1-git-send-email-Martin.Jansa@gmail.com>
-X-Mailer: git-send-email 1.8.1.4
-Subject: [PATCH] siggen: add quotes around variable values to see whitespace
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1UCWT0-0002N0-Ak for bitbake-devel@lists.openembedded.org;
+	Mon, 04 Mar 2013 15:34:14 +0100
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r24EPORb008528; Mon, 4 Mar 2013 14:25:24 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id TUSMoyJntj7D; Mon,  4 Mar 2013 14:25:24 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r24EPHg5008521
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT); Mon, 4 Mar 2013 14:25:20 GMT
+Message-ID: <1362406644.29587.31.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+Date: Mon, 04 Mar 2013 14:17:24 +0000
+In-Reply-To: <1361531534-30884-1-git-send-email-andrei.adrianx.dinu@intel.com>
+References: <1361531534-30884-1-git-send-email-andrei.adrianx.dinu@intel.com>
+X-Mailer: Evolution 3.6.3-1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] [HOB] replace tooltips with property windows
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -38,63 +36,130 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 02 Mar 2013 17:10:54 -0000
+X-List-Received-Date: Mon, 04 Mar 2013 14:34:15 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-* without this change it's hard to see what's changed:
-  bitbake-diffsigs sstate-cache/*/sstate-depmodwrapper-cross-cortexa8-vfp-neon-oe-linux-gnueabi-1.0-r0-cortexa8-vfp-neon-*_populate-sysroot.tgz.siginfo
-  basehash changed from 62f28c13172d38af917716d6d4b15ac5 to 9cf38842bcc79e0a4356856a64141548
-  Variable TUNE_CCARGS value changed from  -march=armv7-a    -mthumb -mthumb-interwork -mfloat-abi=softfp -mfpu=neon -mtune=cortex-a8  to  -march=armv7-a    -mthumb -mthumb-interwork -mfloat-abi=softfp -mfpu=neon -mtune=cortex-a8
-  Hash for dependent task depmodwrapper-cross_1.0.bb.do_install changed from 4494cb6c117309a9b4c541ad86c0aac5 to 1e3bcf2d14e5bd30a38350b41bb98db3
+On Fri, 2013-02-22 at 13:12 +0200, Andrei Dinu wrote:
+> Yocto Bug #2248
+> 
+>  - extended cache_extra.py with the extra information needed in the
+>  property windows.
+>  - extended cooker.py so that the extra information in cache_extra.py could
+>  be used.
+>  - replaced in the builder.py the function that displayed the tooltips
+>  with two functions that display property windows for recipes and packages
+>  pages.
+>  - advancedsettingsdialog.py : added information so that it would display
+>  correctly in the information dialogs.
+>  - propertydialog.py : new class aded for the property windows.
+>    this covers functionality for : recipe selection page
+>                                    package selection page
+>                                    information dialogs
+>  - simplesettingsdialog.py : added information so that it would display
+>  correctly in the information dialogs.
+>  - hoblistmodel.py : added information columns needed in order to display
+>  the information in the property dialogs.
+>  - hobwidget.py : added functionality for the information dialogs.
+>  - imageconfigurationpage.py : added information so that it would display
+>  correctly in the information dialogs.
+>  - packageselectionpage.py : added event for the "All packages" tab and
+>  passing the information needed to the function created in the builder.
+>  - recipeselectionpage.py : added events for the "Package Groups" and "All
+>  recipes" tabs and passing the information needed to the function created
+>  in the builder.
 
-* with this change, we can see extra trailing space in first version:
-  basehash changed from 62f28c13172d38af917716d6d4b15ac5 to 9cf38842bcc79e0a4356856a64141548
-  Variable TUNE_CCARGS value changed from ' -march=armv7-a    -mthumb -mthumb-interwork -mfloat-abi=softfp -mfpu=neon -mtune=cortex-a8 ' to ' -march=armv7-a    -mthumb -mthumb-interwork -mfloat-abi=softfp -mfpu=neon -mtune=cortex-a8'
-  Hash for dependent task depmodwrapper-cross_1.0.bb.do_install changed from 4494cb6c117309a9b4c541ad86c0aac5 to 1e3bcf2d14e5bd30a38350b41bb98db3
+Firstly, this is way too many changes in one patch. Please split them
+out into a logical series. There is also a problem, I think, see below.
 
-Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
----
- lib/bb/siggen.py | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> Signed-off-by: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+> ---
+>  bitbake/lib/bb/cache_extra.py                      |    9 +
+>  bitbake/lib/bb/cooker.py                           |    6 +
+>  bitbake/lib/bb/ui/crumbs/builder.py                |   36 +-
+>  .../lib/bb/ui/crumbs/hig/advancedsettingsdialog.py |   12 +-
+>  bitbake/lib/bb/ui/crumbs/hig/propertydialog.py     |  347 ++++++++++++++++++++
+>  .../lib/bb/ui/crumbs/hig/simplesettingsdialog.py   |   14 +-
+>  bitbake/lib/bb/ui/crumbs/hoblistmodel.py           |   23 +-
+>  bitbake/lib/bb/ui/crumbs/hobwidget.py              |   26 +-
+>  bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    2 +-
+>  bitbake/lib/bb/ui/crumbs/packageselectionpage.py   |   13 +-
+>  bitbake/lib/bb/ui/crumbs/recipeselectionpage.py    |   21 +-
+>  11 files changed, 473 insertions(+), 36 deletions(-)
+>  create mode 100644 bitbake/lib/bb/ui/crumbs/hig/propertydialog.py
+> 
+> diff --git a/bitbake/lib/bb/cache_extra.py b/bitbake/lib/bb/cache_extra.py
+> index 40ba304..bf02bb7 100644
+> --- a/bitbake/lib/bb/cache_extra.py
+> +++ b/bitbake/lib/bb/cache_extra.py
+> @@ -41,6 +41,9 @@ class HobRecipeInfo(RecipeInfoCommon):
+>          self.license = self.getvar('LICENSE', metadata)
+>          self.section = self.getvar('SECTION', metadata)
+>          self.description = self.getvar('DESCRIPTION', metadata)
+> +        self.homepage = self.getvar('HOMEPAGE', metadata)
+> +        self.bugtracker = self.getvar('BUGTRACKER', metadata)
+> +        self.prevision = self.getvar('PR', metadata)
+>  
+>      @classmethod
+>      def init_cacheData(cls, cachedata):
+> @@ -49,9 +52,15 @@ class HobRecipeInfo(RecipeInfoCommon):
+>          cachedata.license = {}
+>          cachedata.section = {}
+>          cachedata.description = {}
+> +        cachedata.homepage = {}
+> +        cachedata.bugtracker = {}
+> +        cachedata.prevision = {}
+>  
+>      def add_cacheData(self, cachedata, fn):
+>          cachedata.summary[fn] = self.summary
+>          cachedata.license[fn] = self.license
+>          cachedata.section[fn] = self.section
+>          cachedata.description[fn] = self.description
+> +        cachedata.homepage[fn] = self.homepage
+> +        cachedata.bugtracker[fn] = self.bugtracker
+> +        cachedata.prevision[fn] = self.prevision
 
-diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
-index 50e4558..8861337 100644
---- a/lib/bb/siggen.py
-+++ b/lib/bb/siggen.py
-@@ -331,12 +331,12 @@ def compare_sigfiles(a, b, recursecb = None):
-         return changed, added, removed
- 
-     if 'basewhitelist' in a_data and a_data['basewhitelist'] != b_data['basewhitelist']:
--        output.append("basewhitelist changed from %s to %s" % (a_data['basewhitelist'], b_data['basewhitelist']))
-+        output.append("basewhitelist changed from '%s' to '%s'" % (a_data['basewhitelist'], b_data['basewhitelist']))
-         if a_data['basewhitelist'] and b_data['basewhitelist']:
-             output.append("changed items: %s" % a_data['basewhitelist'].symmetric_difference(b_data['basewhitelist']))
- 
-     if 'taskwhitelist' in a_data and a_data['taskwhitelist'] != b_data['taskwhitelist']:
--        output.append("taskwhitelist changed from %s to %s" % (a_data['taskwhitelist'], b_data['taskwhitelist']))
-+        output.append("taskwhitelist changed from '%s' to '%s'" % (a_data['taskwhitelist'], b_data['taskwhitelist']))
-         if a_data['taskwhitelist'] and b_data['taskwhitelist']:
-             output.append("changed items: %s" % a_data['taskwhitelist'].symmetric_difference(b_data['taskwhitelist']))
- 
-@@ -349,7 +349,7 @@ def compare_sigfiles(a, b, recursecb = None):
-     changed, added, removed = dict_diff(a_data['gendeps'], b_data['gendeps'], a_data['basewhitelist'] & b_data['basewhitelist'])
-     if changed:
-         for dep in changed:
--            output.append("List of dependencies for variable %s changed from %s to %s" % (dep, a_data['gendeps'][dep], b_data['gendeps'][dep]))
-+            output.append("List of dependencies for variable %s changed from '%s' to '%s'" % (dep, a_data['gendeps'][dep], b_data['gendeps'][dep]))
-             if a_data['gendeps'][dep] and b_data['gendeps'][dep]:
-                 output.append("changed items: %s" % a_data['gendeps'][dep].symmetric_difference(b_data['gendeps'][dep]))
-     if added:
-@@ -363,7 +363,7 @@ def compare_sigfiles(a, b, recursecb = None):
-     changed, added, removed = dict_diff(a_data['varvals'], b_data['varvals'])
-     if changed:
-         for dep in changed:
--            output.append("Variable %s value changed from %s to %s" % (dep, a_data['varvals'][dep], b_data['varvals'][dep]))
-+            output.append("Variable %s value changed from '%s' to '%s'" % (dep, a_data['varvals'][dep], b_data['varvals'][dep]))
- 
-     changed, added, removed = dict_diff(a_data['file_checksum_values'], b_data['file_checksum_values'])
-     if changed:
--- 
-1.8.1.4
+
+The above is all good, you're adding the data to an extra cache.
+
+> diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+> index f70a04f..f23eed0 100644
+> --- a/bitbake/lib/bb/cooker.py
+> +++ b/bitbake/lib/bb/cooker.py
+> @@ -571,8 +571,11 @@ class BBCooker:
+>              lic = self.status.license[fn]
+>              section = self.status.section[fn]
+>              description = self.status.description[fn]
+> +            homepage = self.status.homepage[fn]
+> +            bugtracker = self.status.bugtracker[fn]
+>              rdepends = self.status.rundeps[fn]
+>              rrecs = self.status.runrecs[fn]
+> +            prevision = self.status.prevision[fn]
+>              inherits = self.status.inherits.get(fn, None)
+>              if pn not in depend_tree["pn"]:
+>                  depend_tree["pn"][pn] = {}
+> @@ -583,6 +586,9 @@ class BBCooker:
+>                  depend_tree["pn"][pn]["section"] = section
+>                  depend_tree["pn"][pn]["description"] = description
+>                  depend_tree["pn"][pn]["inherits"] = inherits
+> +                depend_tree["pn"][pn]["homepage"] = homepage
+> +                depend_tree["pn"][pn]["bugtracker"] = bugtracker
+> +                depend_tree["pn"][pn]["revision"] = prevision
+>  
+>              if fnid not in seen_fnids:
+>                  seen_fnids.append(fnid)
+
+However in this function, you're assuming the extra cache is available.
+I think this assumption has already been made by the code since
+summary/homepage/description/license are in the extra cache too. Its not
+documented however.
+
+Can you please document that this function requires the extra cache to
+be enabled?
+
+Thanks,
+
+Richard
 
 
 
