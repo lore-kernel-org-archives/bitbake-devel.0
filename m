@@ -1,22 +1,22 @@
 Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <andrei.adrianx.dinu@intel.com>) id 1UCuBY-0003eQ-5B
+	(envelope-from <andrei.adrianx.dinu@intel.com>) id 1UCuBg-0003eQ-17
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 05 Mar 2013 16:53:49 +0100
+	Tue, 05 Mar 2013 16:53:59 +0100
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 05 Mar 2013 07:34:50 -0800
+	by orsmga102.jf.intel.com with ESMTP; 05 Mar 2013 07:34:56 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.84,787,1355126400"; d="scan'208";a="271343655"
+X-IronPort-AV: E=Sophos;i="4.84,787,1355126400"; d="scan'208";a="271343683"
 Received: from adinu-vostro-460 (HELO localhost.localdomain) ([10.237.105.45])
-	by orsmga001.jf.intel.com with ESMTP; 05 Mar 2013 07:36:17 -0800
+	by orsmga001.jf.intel.com with ESMTP; 05 Mar 2013 07:36:20 -0800
 From: Andrei Dinu <andrei.adrianx.dinu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  5 Mar 2013 17:36:26 +0200
-Message-Id: <1362497791-30020-7-git-send-email-andrei.adrianx.dinu@intel.com>
+Date: Tue,  5 Mar 2013 17:36:27 +0200
+Message-Id: <1362497791-30020-8-git-send-email-andrei.adrianx.dinu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1362497791-30020-1-git-send-email-andrei.adrianx.dinu@intel.com>
 References: <1362497791-30020-1-git-send-email-andrei.adrianx.dinu@intel.com>
-Subject: [PATCH 06/11] added entries for information dialogs
+Subject: [PATCH 07/11] added information columns needed for prop dialogs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -28,82 +28,78 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Mar 2013 15:53:50 -0000
+X-List-Received-Date: Tue, 05 Mar 2013 15:54:00 -0000
 
-added information so that it would display correctly in the information dialogs.
+in order to display all the information gathered in the
+backend, new columns needed to be added in the hoblistmodel.
 
 Signed-off-by: Andrei Dinu <andrei.adrianx.dinu@intel.com>
 ---
- .../lib/bb/ui/crumbs/hig/simplesettingsdialog.py   |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hoblistmodel.py |   23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py b/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
-index 5f316ae..e0fbdca 100644
---- a/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
-+++ b/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
-@@ -260,7 +260,7 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
-         tooltip = "Sets the number of threads that BitBake tasks can simultaneously run. See the <a href=\""
-         tooltip += "http://www.yoctoproject.org/docs/current/poky-ref-manual/"
-         tooltip += "poky-ref-manual.html#var-BB_NUMBER_THREADS\">Poky reference manual</a> for information"
--        bbthread_widget, self.bb_spinner = self.gen_spinner_widget(self.configuration.bbthread, 1, self.max_threads, tooltip)
-+        bbthread_widget, self.bb_spinner = self.gen_spinner_widget(self.configuration.bbthread, 1, self.max_threads,"<b>BitBake prallalel threads</b>" + "*" + tooltip)
-         sub_vbox.pack_start(label, expand=False, fill=False)
-         sub_vbox.pack_start(bbthread_widget, expand=False, fill=False)
+diff --git a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+index 06c90d3..0f37a06 100644
+--- a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
++++ b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+@@ -381,7 +381,8 @@ class RecipeListModel(gtk.ListStore):
+     providing convenience functions to access gtk.TreeModel subclasses which
+     provide filtered views of the data.
+     """
+-    (COL_NAME, COL_DESC, COL_LIC, COL_GROUP, COL_DEPS, COL_BINB, COL_TYPE, COL_INC, COL_IMG, COL_INSTALL, COL_PN, COL_FADE_INC) = range(12)
++    (COL_NAME, COL_DESC, COL_LIC, COL_GROUP, COL_DEPS, COL_BINB, COL_TYPE, COL_INC, COL_IMG, COL_INSTALL, COL_PN, COL_FADE_INC, COL_SUMMARY, COL_VERSION,
++     COL_REVISION, COL_HOMEPAGE, COL_BUGTRACKER) = range(17)
  
-@@ -270,7 +270,7 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
-         tooltip = "Sets the maximum number of threads the host can use during the build. See the <a href=\""
-         tooltip += "http://www.yoctoproject.org/docs/current/poky-ref-manual/"
-         tooltip += "poky-ref-manual.html#var-PARALLEL_MAKE\">Poky reference manual</a> for information"
--        pmake_widget, self.pmake_spinner = self.gen_spinner_widget(self.configuration.pmake, 1, self.max_threads, tooltip)
-+        pmake_widget, self.pmake_spinner = self.gen_spinner_widget(self.configuration.pmake, 1, self.max_threads,"<b>Make parallel threads</b>" + "*" + tooltip)
-         sub_vbox.pack_start(label, expand=False, fill=False)
-         sub_vbox.pack_start(pmake_widget, expand=False, fill=False)
+     __custom_image__ = "Create your own image"
  
-@@ -279,7 +279,7 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
-         advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
-         label = self.gen_label_widget("Downloads directory")
-         tooltip = "Select a folder that caches the upstream project source code"
--        dldir_widget, self.dldir_text = self.gen_entry_widget(self.configuration.dldir, self, tooltip)
-+        dldir_widget, self.dldir_text = self.gen_entry_widget(self.configuration.dldir, self,"<b>Downloaded source code</b>" + "*" + tooltip)
-         sub_vbox.pack_start(label, expand=False, fill=False)
-         sub_vbox.pack_start(dldir_widget, expand=False, fill=False)
+@@ -406,7 +407,12 @@ class RecipeListModel(gtk.ListStore):
+                                 gobject.TYPE_BOOLEAN,
+                                 gobject.TYPE_STRING,
+                                 gobject.TYPE_STRING,
+-                                gobject.TYPE_BOOLEAN)
++                                gobject.TYPE_BOOLEAN,
++                                gobject.TYPE_STRING,
++                                gobject.TYPE_STRING,
++                                gobject.TYPE_STRING,
++                                gobject.TYPE_STRING,
++                                gobject.TYPE_STRING)
  
-@@ -293,7 +293,7 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
-         advanced_vbox.pack_start(sub_vbox, expand=False, fill=False, padding=24)
-         content = "<span>Shared state directory</span>"
-         tooltip = "Select a folder that caches your prebuilt results"
--        label = self.gen_label_info_widget(content, tooltip)
-+        label = self.gen_label_info_widget(content,"<b>Shared state directory</b>" + "*" + tooltip)
-         sstatedir_widget, self.sstatedir_text = self.gen_entry_widget(self.configuration.sstatedir, self)
-         sub_vbox.pack_start(label, expand=False, fill=False)
-         sub_vbox.pack_start(sstatedir_widget, expand=False, fill=False, padding=6)
-@@ -305,7 +305,7 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
-         tooltip += "For more information on shared state mirrors, check the <a href=\""
-         tooltip += "http://www.yoctoproject.org/docs/current/poky-ref-manual/"
-         tooltip += "poky-ref-manual.html#shared-state\">Yocto Project Reference Manual</a>."
--        table = self.gen_label_info_widget(content, tooltip)
-+        table = self.gen_label_info_widget(content,"Shared state mirrors" + "*" + tooltip)
-         advanced_vbox.pack_start(table, expand=False, fill=False, padding=6)
+     """
+     Find the model path for the item_name
+@@ -505,7 +511,9 @@ class RecipeListModel(gtk.ListStore):
+                  self.COL_LIC, "", self.COL_GROUP, "",
+                  self.COL_DEPS, "", self.COL_BINB, "",
+                  self.COL_TYPE, "image", self.COL_INC, False,
+-                 self.COL_IMG, False, self.COL_INSTALL, "", self.COL_PN, self.__custom_image__)
++                 self.COL_IMG, False, self.COL_INSTALL, "", self.COL_PN, self.__custom_image__,
++                 self.COL_SUMMARY, "", self.COL_VERSION, "", self.COL_REVISION, "",
++                 self.COL_HOMEPAGE, "", self.COL_BUGTRACKER, "")
  
-         sub_vbox = gtk.VBox(False)
-@@ -627,7 +627,7 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
-         advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
-         label = self.gen_label_widget("<span weight=\"bold\">Set the proxies used when fetching source code</span>")
-         tooltip = "Set the proxies used when fetching source code.  A blank field uses a direct internet connection."
--        info = HobInfoButton(tooltip, self)
-+        info = HobInfoButton("<span weight=\"bold\">Set the proxies used when fetching source code</span>" + "*" + tooltip, self)
-         hbox = gtk.HBox(False, 12)
-         hbox.pack_start(label, expand=True, fill=True)
-         hbox.pack_start(info, expand=False, fill=False)
-@@ -875,7 +875,7 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
-         advanced_vbox.pack_start(sub_vbox, expand=True, fill=True)
-         label = self.gen_label_widget("<span weight=\"bold\">Add your own variables:</span>")
-         tooltip = "These are key/value pairs for your extra settings. Click \'Add\' and then directly edit the key and the value"
--        setting_widget, self.setting_store = self.gen_editable_settings(self.configuration.extra_setting, tooltip)
-+        setting_widget, self.setting_store = self.gen_editable_settings(self.configuration.extra_setting,"<b>Add your own variables</b>" + "*" + tooltip)
-         sub_vbox.pack_start(label, expand=False, fill=False)
-         sub_vbox.pack_start(setting_widget, expand=True, fill=True)
+         for item in event_model["pn"]:
+             name = item
+@@ -513,6 +521,11 @@ class RecipeListModel(gtk.ListStore):
+             lic = event_model["pn"][item]["license"]
+             group = event_model["pn"][item]["section"]
+             inherits = event_model["pn"][item]["inherits"]
++            summary = event_model["pn"][item]["summary"]
++            version = event_model["pn"][item]["version"]
++            revision = event_model["pn"][item]["revision"]
++            homepage = event_model["pn"][item]["homepage"]
++            bugtracker = event_model["pn"][item]["bugtracker"]
+             install = []
  
+             depends = event_model["depends"].get(item, []) + event_model["rdepends-pn"].get(item, [])
+@@ -534,7 +547,9 @@ class RecipeListModel(gtk.ListStore):
+                      self.COL_LIC, lic, self.COL_GROUP, group,
+                      self.COL_DEPS, " ".join(depends), self.COL_BINB, "",
+                      self.COL_TYPE, atype, self.COL_INC, False,
+-                     self.COL_IMG, False, self.COL_INSTALL, " ".join(install), self.COL_PN, item)
++                     self.COL_IMG, False, self.COL_INSTALL, " ".join(install), self.COL_PN, item,
++                     self.COL_SUMMARY, summary, self.COL_VERSION, version, self.COL_REVISION, revision,
++                     self.COL_HOMEPAGE, homepage, self.COL_BUGTRACKER, bugtracker)
+ 
+         self.pn_path = {}
+         it = self.get_iter_first()
 -- 
 1.7.9.5
 
