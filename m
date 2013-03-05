@@ -1,20 +1,22 @@
 Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <andrei.adrianx.dinu@intel.com>) id 1UCuBQ-0003eG-FK
+	(envelope-from <andrei.adrianx.dinu@intel.com>) id 1UCuBY-0003eQ-5B
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 05 Mar 2013 16:53:42 +0100
+	Tue, 05 Mar 2013 16:53:49 +0100
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 05 Mar 2013 07:34:36 -0800
+	by orsmga102.jf.intel.com with ESMTP; 05 Mar 2013 07:34:50 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.84,787,1355126400"; d="scan'208";a="271343522"
+X-IronPort-AV: E=Sophos;i="4.84,787,1355126400"; d="scan'208";a="271343655"
 Received: from adinu-vostro-460 (HELO localhost.localdomain) ([10.237.105.45])
-	by orsmga001.jf.intel.com with ESMTP; 05 Mar 2013 07:36:03 -0800
+	by orsmga001.jf.intel.com with ESMTP; 05 Mar 2013 07:36:17 -0800
 From: Andrei Dinu <andrei.adrianx.dinu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  5 Mar 2013 17:36:20 +0200
-Message-Id: <1362497791-30020-1-git-send-email-andrei.adrianx.dinu@intel.com>
+Date: Tue,  5 Mar 2013 17:36:26 +0200
+Message-Id: <1362497791-30020-7-git-send-email-andrei.adrianx.dinu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH 00/11] replace tooltips with property windows in HOB
+In-Reply-To: <1362497791-30020-1-git-send-email-andrei.adrianx.dinu@intel.com>
+References: <1362497791-30020-1-git-send-email-andrei.adrianx.dinu@intel.com>
+Subject: [PATCH 06/11] added entries for information dialogs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,42 +28,82 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Mar 2013 15:53:43 -0000
-X-List-Received-Date: Tue, 05 Mar 2013 15:53:43 -0000
-X-List-Received-Date: Tue, 05 Mar 2013 15:53:43 -0000
+X-List-Received-Date: Tue, 05 Mar 2013 15:53:50 -0000
 
-[Enhancement 2248] - https://bugzilla.yoctoproject.org/show_bug.cgi?id=2248
+added information so that it would display correctly in the information dialogs.
 
-Added property windows for recipe selection page, package selection page
-and also replaced the tooltips information pages with dialogs.
+Signed-off-by: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+---
+ .../lib/bb/ui/crumbs/hig/simplesettingsdialog.py   |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Andrei Dinu (11):
-  added extra variables to cache_extra.py
-  extended cooker.py variables
-  replaced the function that displayed tooltips
-  added information for the information dialogs
-  new class added for the property windows.
-  added entries for information dialogs
-  added information columns needed for prop dialogs
-  added functionality for the information dialogs.
-  added information so that it displays correctly
-  added event for the "All packages" tab
-  added events for the "Package Groups" "All recipes
-
- bitbake/lib/bb/cache_extra.py                      |    9 +
- bitbake/lib/bb/cooker.py                           |    9 +
- bitbake/lib/bb/ui/crumbs/builder.py                |   35 +-
- .../lib/bb/ui/crumbs/hig/advancedsettingsdialog.py |   12 +-
- bitbake/lib/bb/ui/crumbs/hig/propertydialog.py     |  347 ++++++++++++++++++++
- .../lib/bb/ui/crumbs/hig/simplesettingsdialog.py   |   14 +-
- bitbake/lib/bb/ui/crumbs/hoblistmodel.py           |   23 +-
- bitbake/lib/bb/ui/crumbs/hobwidget.py              |   22 +-
- bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    3 +-
- bitbake/lib/bb/ui/crumbs/packageselectionpage.py   |   13 +-
- bitbake/lib/bb/ui/crumbs/recipeselectionpage.py    |   22 +-
- 11 files changed, 472 insertions(+), 37 deletions(-)
- create mode 100644 bitbake/lib/bb/ui/crumbs/hig/propertydialog.py
-
+diff --git a/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py b/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
+index 5f316ae..e0fbdca 100644
+--- a/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
++++ b/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
+@@ -260,7 +260,7 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
+         tooltip = "Sets the number of threads that BitBake tasks can simultaneously run. See the <a href=\""
+         tooltip += "http://www.yoctoproject.org/docs/current/poky-ref-manual/"
+         tooltip += "poky-ref-manual.html#var-BB_NUMBER_THREADS\">Poky reference manual</a> for information"
+-        bbthread_widget, self.bb_spinner = self.gen_spinner_widget(self.configuration.bbthread, 1, self.max_threads, tooltip)
++        bbthread_widget, self.bb_spinner = self.gen_spinner_widget(self.configuration.bbthread, 1, self.max_threads,"<b>BitBake prallalel threads</b>" + "*" + tooltip)
+         sub_vbox.pack_start(label, expand=False, fill=False)
+         sub_vbox.pack_start(bbthread_widget, expand=False, fill=False)
+ 
+@@ -270,7 +270,7 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
+         tooltip = "Sets the maximum number of threads the host can use during the build. See the <a href=\""
+         tooltip += "http://www.yoctoproject.org/docs/current/poky-ref-manual/"
+         tooltip += "poky-ref-manual.html#var-PARALLEL_MAKE\">Poky reference manual</a> for information"
+-        pmake_widget, self.pmake_spinner = self.gen_spinner_widget(self.configuration.pmake, 1, self.max_threads, tooltip)
++        pmake_widget, self.pmake_spinner = self.gen_spinner_widget(self.configuration.pmake, 1, self.max_threads,"<b>Make parallel threads</b>" + "*" + tooltip)
+         sub_vbox.pack_start(label, expand=False, fill=False)
+         sub_vbox.pack_start(pmake_widget, expand=False, fill=False)
+ 
+@@ -279,7 +279,7 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
+         advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
+         label = self.gen_label_widget("Downloads directory")
+         tooltip = "Select a folder that caches the upstream project source code"
+-        dldir_widget, self.dldir_text = self.gen_entry_widget(self.configuration.dldir, self, tooltip)
++        dldir_widget, self.dldir_text = self.gen_entry_widget(self.configuration.dldir, self,"<b>Downloaded source code</b>" + "*" + tooltip)
+         sub_vbox.pack_start(label, expand=False, fill=False)
+         sub_vbox.pack_start(dldir_widget, expand=False, fill=False)
+ 
+@@ -293,7 +293,7 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
+         advanced_vbox.pack_start(sub_vbox, expand=False, fill=False, padding=24)
+         content = "<span>Shared state directory</span>"
+         tooltip = "Select a folder that caches your prebuilt results"
+-        label = self.gen_label_info_widget(content, tooltip)
++        label = self.gen_label_info_widget(content,"<b>Shared state directory</b>" + "*" + tooltip)
+         sstatedir_widget, self.sstatedir_text = self.gen_entry_widget(self.configuration.sstatedir, self)
+         sub_vbox.pack_start(label, expand=False, fill=False)
+         sub_vbox.pack_start(sstatedir_widget, expand=False, fill=False, padding=6)
+@@ -305,7 +305,7 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
+         tooltip += "For more information on shared state mirrors, check the <a href=\""
+         tooltip += "http://www.yoctoproject.org/docs/current/poky-ref-manual/"
+         tooltip += "poky-ref-manual.html#shared-state\">Yocto Project Reference Manual</a>."
+-        table = self.gen_label_info_widget(content, tooltip)
++        table = self.gen_label_info_widget(content,"Shared state mirrors" + "*" + tooltip)
+         advanced_vbox.pack_start(table, expand=False, fill=False, padding=6)
+ 
+         sub_vbox = gtk.VBox(False)
+@@ -627,7 +627,7 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
+         advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
+         label = self.gen_label_widget("<span weight=\"bold\">Set the proxies used when fetching source code</span>")
+         tooltip = "Set the proxies used when fetching source code.  A blank field uses a direct internet connection."
+-        info = HobInfoButton(tooltip, self)
++        info = HobInfoButton("<span weight=\"bold\">Set the proxies used when fetching source code</span>" + "*" + tooltip, self)
+         hbox = gtk.HBox(False, 12)
+         hbox.pack_start(label, expand=True, fill=True)
+         hbox.pack_start(info, expand=False, fill=False)
+@@ -875,7 +875,7 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
+         advanced_vbox.pack_start(sub_vbox, expand=True, fill=True)
+         label = self.gen_label_widget("<span weight=\"bold\">Add your own variables:</span>")
+         tooltip = "These are key/value pairs for your extra settings. Click \'Add\' and then directly edit the key and the value"
+-        setting_widget, self.setting_store = self.gen_editable_settings(self.configuration.extra_setting, tooltip)
++        setting_widget, self.setting_store = self.gen_editable_settings(self.configuration.extra_setting,"<b>Add your own variables</b>" + "*" + tooltip)
+         sub_vbox.pack_start(label, expand=False, fill=False)
+         sub_vbox.pack_start(setting_widget, expand=True, fill=True)
+ 
 -- 
 1.7.9.5
 
