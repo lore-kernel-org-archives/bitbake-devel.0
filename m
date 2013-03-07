@@ -1,27 +1,31 @@
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from dan.rpsys.net ([93.97.175.187])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Liezhi.Yang@windriver.com>) id 1UD7Hj-0003rO-5r
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 06 Mar 2013 06:53:05 +0100
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id r265aV4L003247
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 5 Mar 2013 21:36:31 -0800 (PST)
-Received: from pek-usp-13.wrs.com (128.224.163.69) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.2.342.3;
-	Tue, 5 Mar 2013 21:36:31 -0800
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 6 Mar 2013 13:36:23 +0800
-Message-ID: <962cea1584c9c61ac765e65b1e4e24cc55f73c39.1362545842.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.1
-In-Reply-To: <cover.1362545842.git.liezhi.yang@windriver.com>
-References: <cover.1362545842.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Cc: qingtao.cao@windriver.com
-Subject: [PATCH 1/1] bitbake-layers: fix duplicated help info
+	(envelope-from <richard.purdie@linuxfoundation.org>)
+	id 1UDYdC-0005PU-Nv for bitbake-devel@lists.openembedded.org;
+	Thu, 07 Mar 2013 12:05:05 +0100
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r27Au3ln009084; Thu, 7 Mar 2013 10:56:31 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id PPDE0Vp2RoOa; Thu,  7 Mar 2013 10:56:31 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r27AuOEd009098
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT); Thu, 7 Mar 2013 10:56:28 GMT
+Message-ID: <1362653295.9443.9.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Mark Hatle <mark.hatle@windriver.com>
+Date: Thu, 07 Mar 2013 10:48:15 +0000
+In-Reply-To: <5134C272.7090008@windriver.com>
+References: <1362243005-12124-1-git-send-email-Martin.Jansa@gmail.com>
+	<5134C272.7090008@windriver.com>
+X-Mailer: Evolution 3.6.3-1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] siggen: add quotes around variable values to see whitespace
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,47 +37,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Mar 2013 05:53:05 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 07 Mar 2013 11:05:11 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-There are two "help" lines when run bitbake help under python 2.6.6
-(perhaps all python 2.6):
+On Mon, 2013-03-04 at 09:49 -0600, Mark Hatle wrote:
+> On 3/2/13 10:50 AM, Martin Jansa wrote:
+> > * without this change it's hard to see what's changed:
+> >    bitbake-diffsigs sstate-cache/*/sstate-depmodwrapper-cross-cortexa8-vfp-neon-oe-linux-gnueabi-1.0-r0-cortexa8-vfp-neon-*_populate-sysroot.tgz.siginfo
+> >    basehash changed from 62f28c13172d38af917716d6d4b15ac5 to 9cf38842bcc79e0a4356856a64141548
+> >    Variable TUNE_CCARGS value changed from  -march=armv7-a    -mthumb -mthumb-interwork -mfloat-abi=softfp -mfpu=neon -mtune=cortex-a8  to  -march=armv7-a    -mthumb -mthumb-interwork -mfloat-abi=softfp -mfpu=neon -mtune=cortex-a8
+> >    Hash for dependent task depmodwrapper-cross_1.0.bb.do_install changed from 4494cb6c117309a9b4c541ad86c0aac5 to 1e3bcf2d14e5bd30a38350b41bb98db3
+> >
+> > * with this change, we can see extra trailing space in first version:
+> >    basehash changed from 62f28c13172d38af917716d6d4b15ac5 to 9cf38842bcc79e0a4356856a64141548
+> >    Variable TUNE_CCARGS value changed from ' -march=armv7-a    -mthumb -mthumb-interwork -mfloat-abi=softfp -mfpu=neon -mtune=cortex-a8 ' to ' -march=armv7-a    -mthumb -mthumb-interwork -mfloat-abi=softfp -mfpu=neon -mtune=cortex-a8'
+> >    Hash for dependent task depmodwrapper-cross_1.0.bb.do_install changed from 4494cb6c117309a9b4c541ad86c0aac5 to 1e3bcf2d14e5bd30a38350b41bb98db3
+> 
+> No objection to this patch, but it does raise the question.  Should we somehow 
+> strip the leading and training white space, maybe even multiple spaces (like 
+> above) and then use the results to generate the checksum?
+>
+> If I saw the above, my first comment would be "well that's stupid, the output is 
+> the same"..  (Of course performance might be impacted by all of that stripping..)
 
-$ bitbake-layers help
-[snip]
-help
-    display general help or help on a specified command
-[snip]
-help
-    display general help or help on a specified command
+Bitbake has no idea whether the whitespace means anything in any given
+context when its constructing the checksums. Deciding when to strip and
+what to strip would be the kind of thing nightmares are made of and
+we're not going there. It was a conscious choice it behaves like it does
+now and I still believe its the right one.
 
-This is because the cmd.py in python 2.6.6 also has a do_help() function
-as our bitbake-layers, and the cmd.Cmd.get_names() doesn't consider the
-overload, this has been fixed in python 2.7, use set() to remove the
-duplicated would fix the problem.
+Cheers,
 
-[YOCTO #3428]
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/bin/bitbake-layers |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
-
-diff --git a/bitbake/bin/bitbake-layers b/bitbake/bin/bitbake-layers
-index b48590f..86da268 100755
---- a/bitbake/bin/bitbake-layers
-+++ b/bitbake/bin/bitbake-layers
-@@ -73,7 +73,7 @@ class Commands(cmd.Cmd):
-         else:
-             sys.stdout.write("usage: bitbake-layers <command> [arguments]\n\n")
-             sys.stdout.write("Available commands:\n")
--            procnames = self.get_names()
-+            procnames = list(set(self.get_names()))
-             for procname in procnames:
-                 if procname[:3] == 'do_':
-                     sys.stdout.write("  %s\n" % procname[3:].replace('_', '-'))
--- 
-1.7.1
+Richard
 
 
 
