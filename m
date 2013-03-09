@@ -1,30 +1,35 @@
-Received: from dan.rpsys.net ([93.97.175.187])
+Received: from mail-la0-f53.google.com ([209.85.215.53])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1UESog-0001fc-AO for bitbake-devel@lists.openembedded.org;
-	Sun, 10 Mar 2013 00:04:49 +0100
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r29MuG9S029321
-	for <bitbake-devel@lists.openembedded.org>; Sat, 9 Mar 2013 22:56:17 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id pj8OYCV70a90 for <bitbake-devel@lists.openembedded.org>;
-	Sat,  9 Mar 2013 22:56:16 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r29Mtuf2029301
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Sat, 9 Mar 2013 22:56:14 GMT
-Message-ID: <1362833241.9443.208.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Sat, 09 Mar 2013 12:47:21 +0000
-Mime-Version: 1.0
-X-Mailer: Evolution 3.6.3-1 
-Subject: [PATCH] data_smart: Add _remove operator
+	(envelope-from <kergoth@gmail.com>) id 1UETK6-0002UG-57
+	for bitbake-devel@lists.openembedded.org;
+	Sun, 10 Mar 2013 00:37:08 +0100
+Received: by mail-la0-f53.google.com with SMTP id fr10so2814115lab.12
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 09 Mar 2013 15:20:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=x-received:mime-version:sender:in-reply-to:references:from:date
+	:x-google-sender-auth:message-id:subject:to:cc:content-type;
+	bh=fQtHcWB2uuvPOrFRgnGDkpQNCrRGtrLF43mzGp7LQi4=;
+	b=t723hgQp8YAwbi0iclPISX2Bw4PKo9u2q3FnuEWfPaEDNSpZAA8hJJJzeQExTRTys8
+	rVZlNP1pPIbnYeXi6IQElumLk9e8zpS6v1/ayUtCvcRE2xr/mcwfuu9YMdvp62gmEeau
+	DfvtUQPCZtcj6L3BsjFr6ABc9TCLbnSDjipOrjwVyr1pOZF4kXd+ZRGN6iLCZSKiAaiz
+	i0su5DUXFeZ1oCeNpemDGEaK8Rowodg85LVvjchBJ0nA1C9auvWWx9Smrbd6e9nv5/2o
+	lfgPgWSMt5kNi1W66yRhAw+6jV9Y12w07JphLoQkBFZ87+vJhC+JTrLEEPGTOUooX6B5
+	3xCw==
+X-Received: by 10.112.49.201 with SMTP id w9mr2719357lbn.2.1362871230233; Sat,
+	09 Mar 2013 15:20:30 -0800 (PST)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.112.25.195 with HTTP; Sat, 9 Mar 2013 15:20:10 -0800 (PST)
+In-Reply-To: <1362833241.9443.208.camel@ted>
+References: <1362833241.9443.208.camel@ted>
+From: Chris Larson <clarson@kergoth.com>
+Date: Sat, 9 Mar 2013 16:20:10 -0700
+X-Google-Sender-Auth: le2lVOh3hG9Xs2ILkzTLUeIwwmw
+Message-ID: <CABcZANmT5Z6B=PoD9k06aqFq08nzDjUt9DYkBUwdgSTFLKM+6w@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] data_smart: Add _remove operator
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -36,96 +41,74 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 09 Mar 2013 23:04:52 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sat, 09 Mar 2013 23:37:11 -0000
+Content-Type: multipart/alternative; boundary=bcaec554d9848d8ab704d7862f45
 
-There are long standing complaints about the fact its very difficult
-to remove a portion of a variable. The immediate request is for a -=
-and =- operator. The trouble is that += and =+ are "immediate"
-operators and are applied straight away. Most people would expect
--= and =- to be deferred to have the effect most people desire and
-therefore implementing -= and =- would just make the situation more
-confusing.
+--bcaec554d9848d8ab704d7862f45
+Content-Type: text/plain; charset=UTF-8
 
-This deferred operation is much more similar to the override syntax
-which happens at data store finalisation. The _remove operator is
-therefore in keeping with the _append and _prepend operations.
+On Sat, Mar 9, 2013 at 5:47 AM, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-This code is loosely based on a patch from Peter Seebach although it
-has been rewritten to be simpler, more efficient and avoid some
-potential bugs.
+> There are long standing complaints about the fact its very difficult
+> to remove a portion of a variable. The immediate request is for a -=
+> and =- operator. The trouble is that += and =+ are "immediate"
+> operators and are applied straight away. Most people would expect
+> -= and =- to be deferred to have the effect most people desire and
+> therefore implementing -= and =- would just make the situation more
+> confusing.
+>
+> This deferred operation is much more similar to the override syntax
+> which happens at data store finalisation. The _remove operator is
+> therefore in keeping with the _append and _prepend operations.
+>
+> This code is loosely based on a patch from Peter Seebach although it
+> has been rewritten to be simpler, more efficient and avoid some
+> potential bugs.
+>
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- bitbake/lib/bb/data_smart.py |   18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+This is a nice idea, though I'm slightly concerned about the naive
+implementation (use of str.replace). Without it being either word-based
+(limits flexibility to optimize for the common case) or regex-based (more
+complex), we may be greatly limiting the usefulness. I wouldn't want to try
+to remove a word from DISTRO_FEATURES and end up removing part of a word,
+for example.
+-- 
+Christopher Larson
 
-diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
-index 5bf11e5..3806fdc 100644
---- a/bitbake/lib/bb/data_smart.py
-+++ b/bitbake/lib/bb/data_smart.py
-@@ -38,8 +38,8 @@ from bb.COW  import COWDictBase
- 
- logger = logging.getLogger("BitBake.Data")
- 
--__setvar_keyword__ = ["_append", "_prepend"]
--__setvar_regexp__ = re.compile('(?P<base>.*?)(?P<keyword>_append|_prepend)(_(?P<add>.*))?$')
-+__setvar_keyword__ = ["_append", "_prepend", "_remove"]
-+__setvar_regexp__ = re.compile('(?P<base>.*?)(?P<keyword>_append|_prepend|_remove)(_(?P<add>.*))?$')
- __expand_var_regexp__ = re.compile(r"\${[^{}]+}")
- __expand_python_regexp__ = re.compile(r"\${@.+?}")
- 
-@@ -357,7 +357,8 @@ class DataSmart(MutableMapping):
- 
-         #
-         # First we apply all overrides
--        # Then  we will handle _append and _prepend
-+        # Then we will handle _append and _prepend and store the _remove
-+        # information for later.
-         #
- 
-         # We only want to report finalization once per variable overridden.
-@@ -392,7 +393,7 @@ class DataSmart(MutableMapping):
-                 except Exception:
-                     logger.info("Untracked delVar")
- 
--        # now on to the appends and prepends
-+        # now on to the appends and prepends, and stashing the removes
-         for op in __setvar_keyword__:
-             if op in self._special_values:
-                 appends = self._special_values[op] or []
-@@ -415,6 +416,10 @@ class DataSmart(MutableMapping):
-                         elif op == "_prepend":
-                             sval = a + (self.getVar(append, False) or "")
-                             self.setVar(append, sval)
-+                        elif op == "_remove":
-+                            removes = self.getVarFlag(append, "_removeactive", False) or []
-+                            removes.append(a)
-+                            self.setVarFlag(append, "_removeactive", removes, ignore=True)
- 
-                     # We save overrides that may be applied at some later stage
-                     if keep:
-@@ -515,7 +520,7 @@ class DataSmart(MutableMapping):
-             self.varhistory.record(**loginfo)
-             self.setVar(newkey, val, ignore=True)
- 
--        for i in ('_append', '_prepend'):
-+        for i in (__setvar_keyword__):
-             src = self.getVarFlag(key, i)
-             if src is None:
-                 continue
-@@ -576,6 +581,9 @@ class DataSmart(MutableMapping):
-                 value = copy.copy(local_var["defaultval"])
-         if expand and value:
-             value = self.expand(value, None)
-+        if value and flag == "_content" and local_var and "_removeactive" in local_var:
-+            for i in local_var["_removeactive"]:
-+                value = value.replace(i, "")
-         return value
- 
-     def delVarFlag(self, var, flag, **loginfo):
+--bcaec554d9848d8ab704d7862f45
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Sat, Mar 9, 2013 at 5:47 AM, Richard Purdie <span dir=3D"ltr">&lt;<a hre=
+f=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.p=
+urdie@linuxfoundation.org</a>&gt;</span> wrote:<br>
 
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div id=3D":y2">There are long standing comp=
+laints about the fact its very difficult<br>
+to remove a portion of a variable. The immediate request is for a -=3D<br>
+and =3D- operator. The trouble is that +=3D and =3D+ are &quot;immediate&qu=
+ot;<br>
+operators and are applied straight away. Most people would expect<br>
+-=3D and =3D- to be deferred to have the effect most people desire and<br>
+therefore implementing -=3D and =3D- would just make the situation more<br>
+confusing.<br>
+<br>
+This deferred operation is much more similar to the override syntax<br>
+which happens at data store finalisation. The _remove operator is<br>
+therefore in keeping with the _append and _prepend operations.<br>
+<br>
+This code is loosely based on a patch from Peter Seebach although it<br>
+has been rewritten to be simpler, more efficient and avoid some<br>
+potential bugs.</div></blockquote></div><br>This is a nice idea, though I&#=
+39;m slightly concerned about the naive implementation (use of str.replace)=
+. Without it being either word-based (limits flexibility to optimize for th=
+e common case) or regex-based (more complex), we may be greatly limiting th=
+e usefulness. I wouldn&#39;t want to try to remove a word from DISTRO_FEATU=
+RES and end up removing part of a word, for example.<br>
 
+-- <br>Christopher Larson</div></div>
 
+--bcaec554d9848d8ab704d7862f45--
