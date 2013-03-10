@@ -1,35 +1,37 @@
-Received: from mail-la0-f53.google.com ([209.85.215.53])
+Received: from anubis.se.axis.com ([195.60.68.12])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1UETK6-0002UG-57
+	(envelope-from <olof.johansson@axis.com>) id 1UEjGv-0006qs-38
 	for bitbake-devel@lists.openembedded.org;
-	Sun, 10 Mar 2013 00:37:08 +0100
-Received: by mail-la0-f53.google.com with SMTP id fr10so2814115lab.12
+	Sun, 10 Mar 2013 17:38:53 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by anubis.se.axis.com (Postfix) with ESMTP id 123C819DEB
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 09 Mar 2013 15:20:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=x-received:mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	bh=fQtHcWB2uuvPOrFRgnGDkpQNCrRGtrLF43mzGp7LQi4=;
-	b=t723hgQp8YAwbi0iclPISX2Bw4PKo9u2q3FnuEWfPaEDNSpZAA8hJJJzeQExTRTys8
-	rVZlNP1pPIbnYeXi6IQElumLk9e8zpS6v1/ayUtCvcRE2xr/mcwfuu9YMdvp62gmEeau
-	DfvtUQPCZtcj6L3BsjFr6ABc9TCLbnSDjipOrjwVyr1pOZF4kXd+ZRGN6iLCZSKiAaiz
-	i0su5DUXFeZ1oCeNpemDGEaK8Rowodg85LVvjchBJ0nA1C9auvWWx9Smrbd6e9nv5/2o
-	lfgPgWSMt5kNi1W66yRhAw+6jV9Y12w07JphLoQkBFZ87+vJhC+JTrLEEPGTOUooX6B5
-	3xCw==
-X-Received: by 10.112.49.201 with SMTP id w9mr2719357lbn.2.1362871230233; Sat,
-	09 Mar 2013 15:20:30 -0800 (PST)
+	Sun, 10 Mar 2013 17:22:16 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at anubis.se.axis.com
+Received: from anubis.se.axis.com ([127.0.0.1])
+	by localhost (anubis.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 4WRXKDkh59DA for <bitbake-devel@lists.openembedded.org>;
+	Sun, 10 Mar 2013 17:22:15 +0100 (CET)
+Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
+	by anubis.se.axis.com (Postfix) with ESMTP id 3894B19DC9
+	for <bitbake-devel@lists.openembedded.org>;
+	Sun, 10 Mar 2013 17:22:14 +0100 (CET)
+Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
+	by seth.se.axis.com (Postfix) with ESMTP id EE9A93E2AC
+	for <bitbake-devel@lists.openembedded.org>;
+	Sun, 10 Mar 2013 17:22:14 +0100 (CET)
+Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
+	(10.0.5.74) with Microsoft SMTP Server id 8.2.176.0; Sun, 10 Mar 2013
+	17:22:14 +0100
+Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id 113509C078; 
+	Sun, 10 Mar 2013 17:22:23 +0100 (CET)
+From: Olof Johansson <olof.johansson@axis.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Sun, 10 Mar 2013 17:22:17 +0100
+Message-ID: <1362932543-3737-1-git-send-email-olof.johansson@axis.com>
+X-Mailer: git-send-email 1.7.10.4
 MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.25.195 with HTTP; Sat, 9 Mar 2013 15:20:10 -0800 (PST)
-In-Reply-To: <1362833241.9443.208.camel@ted>
-References: <1362833241.9443.208.camel@ted>
-From: Chris Larson <clarson@kergoth.com>
-Date: Sat, 9 Mar 2013 16:20:10 -0700
-X-Google-Sender-Auth: le2lVOh3hG9Xs2ILkzTLUeIwwmw
-Message-ID: <CABcZANmT5Z6B=PoD9k06aqFq08nzDjUt9DYkBUwdgSTFLKM+6w@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] data_smart: Add _remove operator
+Subject: [PATCH 0/5] bb.fetch2.URI class fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -41,74 +43,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 09 Mar 2013 23:37:11 -0000
-Content-Type: multipart/alternative; boundary=bcaec554d9848d8ab704d7862f45
+X-List-Received-Date: Sun, 10 Mar 2013 16:38:55 -0000
+X-List-Received-Date: Sun, 10 Mar 2013 16:38:55 -0000
+Content-Type: text/plain
 
---bcaec554d9848d8ab704d7862f45
-Content-Type: text/plain; charset=UTF-8
+During ELC, RP reverted the change where the encode- and
+decodeurl were replaced with wrappers around the URI class
+because of build failures in some corner cases. The cause of that
+issue was my failure to take query strings in to account, and
+that should now be solved.
 
-On Sat, Mar 9, 2013 at 5:47 AM, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+This patch serie also includes some minor bug fixes to the URI
+class.
 
-> There are long standing complaints about the fact its very difficult
-> to remove a portion of a variable. The immediate request is for a -=
-> and =- operator. The trouble is that += and =+ are "immediate"
-> operators and are applied straight away. Most people would expect
-> -= and =- to be deferred to have the effect most people desire and
-> therefore implementing -= and =- would just make the situation more
-> confusing.
->
-> This deferred operation is much more similar to the override syntax
-> which happens at data store finalisation. The _remove operator is
-> therefore in keeping with the _append and _prepend operations.
->
-> This code is loosely based on a patch from Peter Seebach although it
-> has been rewritten to be simpler, more efficient and avoid some
-> potential bugs.
->
+On a last note, if you know of any weird/complex/unconventional
+URLs in use somewhere, please let me know, and I'll add them to
+the unit tests to make sure they are parsed ok.
 
-This is a nice idea, though I'm slightly concerned about the naive
-implementation (use of str.replace). Without it being either word-based
-(limits flexibility to optimize for the common case) or regex-based (more
-complex), we may be greatly limiting the usefulness. I wouldn't want to try
-to remove a word from DISTRO_FEATURES and end up removing part of a word,
-for example.
+Olof Johansson (5):
+  fetch2.URI: Coerce urlparse to use netloc for all schemes
+  tests.fetch: Remove debug assert
+  fetch2.URI: add support for query parameters
+  fetch2.URI: Support URIs with both query strings and params
+  fetch2.URI: Set username/password should not change the other
+
+ lib/bb/fetch2/__init__.py |   80 ++++++++++++++++++++++++++-------------------
+ lib/bb/tests/fetch.py     |   62 ++++++++++++++++++++++++++++++++++-
+ 2 files changed, 107 insertions(+), 35 deletions(-)
+
 -- 
-Christopher Larson
+1.7.10.4
 
---bcaec554d9848d8ab704d7862f45
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Sat, Mar 9, 2013 at 5:47 AM, Richard Purdie <span dir=3D"ltr">&lt;<a hre=
-f=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.p=
-urdie@linuxfoundation.org</a>&gt;</span> wrote:<br>
 
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div id=3D":y2">There are long standing comp=
-laints about the fact its very difficult<br>
-to remove a portion of a variable. The immediate request is for a -=3D<br>
-and =3D- operator. The trouble is that +=3D and =3D+ are &quot;immediate&qu=
-ot;<br>
-operators and are applied straight away. Most people would expect<br>
--=3D and =3D- to be deferred to have the effect most people desire and<br>
-therefore implementing -=3D and =3D- would just make the situation more<br>
-confusing.<br>
-<br>
-This deferred operation is much more similar to the override syntax<br>
-which happens at data store finalisation. The _remove operator is<br>
-therefore in keeping with the _append and _prepend operations.<br>
-<br>
-This code is loosely based on a patch from Peter Seebach although it<br>
-has been rewritten to be simpler, more efficient and avoid some<br>
-potential bugs.</div></blockquote></div><br>This is a nice idea, though I&#=
-39;m slightly concerned about the naive implementation (use of str.replace)=
-. Without it being either word-based (limits flexibility to optimize for th=
-e common case) or regex-based (more complex), we may be greatly limiting th=
-e usefulness. I wouldn&#39;t want to try to remove a word from DISTRO_FEATU=
-RES and end up removing part of a word, for example.<br>
-
--- <br>Christopher Larson</div></div>
-
---bcaec554d9848d8ab704d7862f45--
