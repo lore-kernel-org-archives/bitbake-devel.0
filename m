@@ -1,38 +1,27 @@
-Received: from mail-la0-f43.google.com ([209.85.215.43])
+Received: from mail1.windriver.com ([147.11.146.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1UFuym-00040Y-Mm
+	(envelope-from <Liezhi.Yang@windriver.com>) id 1UGPmv-0001OL-Bs
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 14 Mar 2013 00:21:48 +0100
-Received: by mail-la0-f43.google.com with SMTP id ek20so1781626lab.30
+	Fri, 15 Mar 2013 09:15:03 +0100
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id r2F7w8BL008628
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 13 Mar 2013 16:04:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=x-received:mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	bh=hdmIkKGr0kG+NnrixEfL01gLdof4+tP0SczOT8mbuuc=;
-	b=Ep0QFjaq3VBFZks3JxsP8D4avFoQUVlmXtf6/8RGG222OzFD4JsPx4Pni1nsQ/3vB3
-	Ayca6oCCiLJgEcAWD5e6eI91ry1BjfnlTAhgRUKeh1Ge48TTf0rlmR36CEvbxc0guR96
-	lowkxtsYx59nEwlYZI2c7xjfPelomiy/L2HfHrHx4YefvWqHgl6nSZSbDtG6UOm6JSit
-	/sPSTe9bwzv3gVP6p1IU9/SnetbdI+9oYZ72Y5FQ4CpTrPLl+cfdmPgcIGvZ1TYJXBQG
-	eC+Voo8UDQJobtYXXDM+aTqgf79DbpDxrLWUP10qTQsyLWECf3lD0DO13mvyI515paP1
-	pi/Q==
-X-Received: by 10.112.69.75 with SMTP id c11mr221222lbu.119.1363215863033;
-	Wed, 13 Mar 2013 16:04:23 -0700 (PDT)
+	Fri, 15 Mar 2013 00:58:08 -0700 (PDT)
+Received: from pek-usp-9.wrs.com (128.224.162.26) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.40) with Microsoft SMTP Server id 14.2.342.3;
+	Fri, 15 Mar 2013 00:58:09 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Fri, 15 Mar 2013 15:42:48 +0800
+Message-ID: <3155e730627817a772d95ddab04372ff13c33b82.1363313983.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 1.7.7
+In-Reply-To: <cover.1363313983.git.liezhi.yang@windriver.com>
+References: <cover.1363313983.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.25.195 with HTTP; Wed, 13 Mar 2013 16:04:02 -0700 (PDT)
-In-Reply-To: <20130313132857.505e0f96@e6410-2>
-References: <1362833241.9443.208.camel@ted>
-	<CABcZANmT5Z6B=PoD9k06aqFq08nzDjUt9DYkBUwdgSTFLKM+6w@mail.gmail.com>
-	<2406047.qZssv5BGAg@helios> <20130313132857.505e0f96@e6410-2>
-From: Chris Larson <clarson@kergoth.com>
-Date: Wed, 13 Mar 2013 16:04:02 -0700
-X-Google-Sender-Auth: QDKelld5rq9zusJqj86NTGwevq0
-Message-ID: <CABcZANkUwODfNVkar0FeKh5st1A5QV5WHxzjvxxYDKA8Sy6Z=g@mail.gmail.com>
-To: Peter Seebach <peter.seebach@windriver.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] data_smart: Add _remove operator
+Cc: qingtao.cao@windriver.com
+Subject: [PATCH 1/1] monitordisk.py: monitor disks based on path
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -44,148 +33,180 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 13 Mar 2013 23:22:34 -0000
-Content-Type: multipart/alternative; boundary=90e6ba3091cc44ba1904d7d66d11
+X-List-Received-Date: Fri, 15 Mar 2013 08:15:10 -0000
+Content-Type: text/plain
 
---90e6ba3091cc44ba1904d7d66d11
-Content-Type: text/plain; charset=UTF-8
+The previous monitor is based on the disk, and one disk only can have
+one action, this limits its function, for example we set this in the
+current local.conf:
 
-On Wed, Mar 13, 2013 at 11:28 AM, Peter Seebach <peter.seebach@windriver.com
-> wrote:
+BB_DISKMON_DIRS = "\
+    STOPTASKS,${TMPDIR},1G,100K \
+    STOPTASKS,${DL_DIR},1G,100K \
+    STOPTASKS,${SSTATE_DIR},1G,100K \
+    ABORT,${TMPDIR},100M,1K \
+    ABORT,${DL_DIR},100M,1K \
+    ABORT,${SSTATE_DIR},100GM,1K"
 
-> On Sun, 10 Mar 2013 20:39:07 +0000
-> Paul Eggleton <paul.eggleton@linux.intel.com> wrote:
->
-> > I can't recall if we've discussed this before, but shouldn't we be
-> looking at
-> > introducing some understanding of list type variables into BitBake
-> itself? If
-> > BitBake knew the variable was a list it would be possible to have
-> language
-> > elements that understood how to behave in this situation.
->
+Before:
+  * If TMPDIR, DL_DIR and SSTATE_DIR are on the same disk partition,
+    only the last line "ABORT,${SSTATE_DIR},100GM,1K" works
 
-Yeah, this gets brought up from time to time, it's something we've wanted
-for a while, but nobody has taken the time to make it happen. I would love
-to see some form of typing go in, and I know Richard has expressed a desire
-to see this as well in the past.
+  * If TMPDIR, DL_DIR and SSTATE_DIR are on the different disk partitions,
+    only the last three lines (ABORT) work.
 
-I rather like this. I would like to have _remove, and it may even make sense
-> to adopt _remove in the short term, but really I think most of the things
-> where we're using append/remove should probably be lists, which would also
-> eliminate the entire category of bugs in which it is unclear whether or not
-> to add a space.
->
-> Rough thoughts about implementation: Listness could be a flag.
->
-> LIST[list] = " "
-> LIST = "blah blah blah"
-> # Oh, hey, what if...
-> PATH[list] = ":"
->
+These are not what we expect, now:
+  * We monitor the disk based on the path and action, so all the six lines
+    will work no matter whether they are on the same disk partition or
+    not.
 
-We do have a flag-based typing implementation in the metadata, just not in
-bitbake itself, see
-http://git.yoctoproject.org/cgit/cgit.cgi/poky/commit/?h=e4921fd for the
-original implementation. I particularly like the bits that automatically
-convert the function signature of the type callback (or class) into a
-request for additional information via flags. An added required argument to
-the function = a required flag of that name, same for optional. See
-http://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/meta/lib/oe/types.py#n27
- or
-http://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/meta/lib/oe/types.py#n13
-for
-examples of that particular implementation.
+  * The out put format will be:
+    WARNING: The free space of /path/to/directory (device) is running low (XXGB left)
 
-or as shorthand:
->
-> LIST = [blah blah blah]
->
+[YOCTO #3995]
 
-I played briefly around with a *really* preliminary prototype of something
-similar to this. See https://gist.github.com/kergoth/2788410 - any unquoted
-values are interpreted as json types, and the append/prepend operations are
-switched to better work with non-string values. It works surprisingly well
-considering how naive the implementation is, see the functional local.conf
-snippet in the gist.
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ bitbake/lib/bb/monitordisk.py |   73 +++++++++++++++++++++++------------------
+ 1 files changed, 41 insertions(+), 32 deletions(-)
+
+diff --git a/bitbake/lib/bb/monitordisk.py b/bitbake/lib/bb/monitordisk.py
+index 1c1e614..a71dd9f 100644
+--- a/bitbake/lib/bb/monitordisk.py
++++ b/bitbake/lib/bb/monitordisk.py
+@@ -107,7 +107,7 @@ def getDiskData(BBDirs, configuration):
+                 printErr("Invalid disk space value in BB_DISKMON_DIRS: %s" % pathSpaceInodeRe.group(3))
+                 return None
+         else:
+-            # 0 means that it is not specified
++            # None means that it is not specified
+             minSpace = None
+ 
+         minInode = pathSpaceInodeRe.group(4)
+@@ -117,7 +117,7 @@ def getDiskData(BBDirs, configuration):
+                 printErr("Invalid inode value in BB_DISKMON_DIRS: %s" % pathSpaceInodeRe.group(4))
+                 return None
+         else:
+-            # 0 means that it is not specified
++            # None means that it is not specified
+             minInode = None
+ 
+         if minSpace is None and minInode is None:
+@@ -127,8 +127,9 @@ def getDiskData(BBDirs, configuration):
+         # DL_DIR may not exist at the very beginning
+         if not os.path.exists(path):
+             bb.utils.mkdirhier(path)
+-        mountedDev = getMountedDev(path)
+-        devDict[mountedDev] = [action, path, minSpace, minInode]
++        dev = getMountedDev(path)
++        # Use path/action as the key
++        devDict[os.path.join(path, action)] = [dev, minSpace, minInode]
+ 
+     return devDict
+ 
+@@ -192,10 +193,10 @@ class diskMonitor:
+                     # This is for STOPTASKS and ABORT, to avoid print the message repeatly
+                     # during waiting the tasks to finish
+                     self.checked = {}
+-                    for dev in self.devDict:
+-                        self.preFreeS[dev] = 0
+-                        self.preFreeI[dev] = 0
+-                        self.checked[dev] = False
++                    for k in self.devDict:
++                        self.preFreeS[k] = 0
++                        self.preFreeI[k] = 0
++                        self.checked[k] = False
+                     if self.spaceInterval is None and self.inodeInterval is None:
+                         self.enableMonitor = False
+ 
+@@ -204,53 +205,61 @@ class diskMonitor:
+         """ Take action for the monitor """
+ 
+         if self.enableMonitor:
+-            for dev in self.devDict:
+-                st = os.statvfs(self.devDict[dev][1])
++            for k in self.devDict:
++                path = os.path.dirname(k)
++                action = os.path.basename(k)
++                dev = self.devDict[k][0]
++                minSpace = self.devDict[k][1]
++                minInode = self.devDict[k][2]
++
++                st = os.statvfs(path)
+ 
+                 # The free space, float point number
+                 freeSpace = st.f_bavail * st.f_frsize
+ 
+-                if self.devDict[dev][2] and freeSpace < self.devDict[dev][2]:
++                if minSpace and freeSpace < minSpace:
+                     # Always show warning, the self.checked would always be False if the action is WARN
+-                    if self.preFreeS[dev] == 0 or self.preFreeS[dev] - freeSpace > self.spaceInterval and not self.checked[dev]:
+-                        logger.warn("The free space of %s is running low (%.3fGB left)" % (dev, freeSpace / 1024 / 1024 / 1024.0))
+-                        self.preFreeS[dev] = freeSpace
++                    if self.preFreeS[k] == 0 or self.preFreeS[k] - freeSpace > self.spaceInterval and not self.checked[k]:
++                        logger.warn("The free space of %s (%s) is running low (%.3fGB left)" % \
++                                (path, dev, freeSpace / 1024 / 1024 / 1024.0))
++                        self.preFreeS[k] = freeSpace
+ 
+-                    if self.devDict[dev][0] == "STOPTASKS" and not self.checked[dev]:
++                    if action == "STOPTASKS" and not self.checked[k]:
+                         logger.error("No new tasks can be excuted since the disk space monitor action is \"STOPTASKS\"!")
+-                        self.checked[dev] = True
++                        self.checked[k] = True
+                         rq.finish_runqueue(False)
+-                        bb.event.fire(bb.event.DiskFull(dev, 'disk', freeSpace, self.devDict[dev][1]), self.configuration)
+-                    elif self.devDict[dev][0] == "ABORT" and not self.checked[dev]:
++                        bb.event.fire(bb.event.DiskFull(dev, 'disk', freeSpace, path), self.configuration)
++                    elif action == "ABORT" and not self.checked[k]:
+                         logger.error("Immediately abort since the disk space monitor action is \"ABORT\"!")
+-                        self.checked[dev] = True
++                        self.checked[k] = True
+                         rq.finish_runqueue(True)
+-                        bb.event.fire(bb.event.DiskFull(dev, 'disk', freeSpace, self.devDict[dev][1]), self.configuration)
++                        bb.event.fire(bb.event.DiskFull(dev, 'disk', freeSpace, path), self.configuration)
+ 
+                 # The free inodes, float point number
+                 freeInode = st.f_favail
+ 
+-                if self.devDict[dev][3] and freeInode < self.devDict[dev][3]:
++                if minInode and freeInode < minInode:
+                     # Some fs formats' (e.g., btrfs) statvfs.f_files (inodes) is
+                     # zero, this is a feature of the fs, we disable the inode
+                     # checking for such a fs.
+                     if st.f_files == 0:
+-                        logger.warn("Inode check for %s is unavaliable, remove it from disk monitor" % dev)
+-                        self.devDict[dev][3] = None
++                        logger.warn("Inode check for %s is unavaliable, will remove it from disk monitor" % path)
++                        minInode = None
+                         continue
+                     # Always show warning, the self.checked would always be False if the action is WARN
+-                    if self.preFreeI[dev] == 0 or self.preFreeI[dev] - freeInode > self.inodeInterval and not self.checked[dev]:
+-                        logger.warn("The free inode of %s is running low (%.3fK left)" % (dev, freeInode / 1024.0))
+-                        self.preFreeI[dev] = freeInode
++                    if self.preFreeI[k] == 0 or self.preFreeI[k] - freeInode > self.inodeInterval and not self.checked[k]:
++                        logger.warn("The free inode of %s (%s) is running low (%.3fK left)" % \
++                                (path, dev, freeInode / 1024.0))
++                        self.preFreeI[k] = freeInode
+ 
+-                    if self.devDict[dev][0]  == "STOPTASKS" and not self.checked[dev]:
++                    if action  == "STOPTASKS" and not self.checked[k]:
+                         logger.error("No new tasks can be excuted since the disk space monitor action is \"STOPTASKS\"!")
+-                        self.checked[dev] = True
++                        self.checked[k] = True
+                         rq.finish_runqueue(False)
+-                        bb.event.fire(bb.event.DiskFull(dev, 'inode', freeSpace, self.devDict[dev][1]), self.configuration)
+-                    elif self.devDict[dev][0]  == "ABORT" and not self.checked[dev]:
++                        bb.event.fire(bb.event.DiskFull(dev, 'inode', freeInode, path), self.configuration)
++                    elif action  == "ABORT" and not self.checked[k]:
+                         logger.error("Immediately abort since the disk space monitor action is \"ABORT\"!")
+-                        self.checked[dev] = True
++                        self.checked[k] = True
+                         rq.finish_runqueue(True)
+-                        bb.event.fire(bb.event.DiskFull(dev, 'inode', freeSpace, self.devDict[dev][1]), self.configuration)
++                        bb.event.fire(bb.event.DiskFull(dev, 'inode', freeInode, path), self.configuration)
+         return
 -- 
-Christopher Larson
-
---90e6ba3091cc44ba1904d7d66d11
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Wed, Mar 13, 2013 at 11:28 AM, Peter Seebach <span dir=3D"ltr">&lt;<a hr=
-ef=3D"mailto:peter.seebach@windriver.com" target=3D"_blank">peter.seebach@w=
-indriver.com</a>&gt;</span> wrote:<br>
-
-<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
-left-width:1px;border-left-color:rgb(204,204,204);border-left-style:solid;p=
-adding-left:1ex"><div class=3D"im">On Sun, 10 Mar 2013 20:39:07 +0000<br>
-Paul Eggleton &lt;<a href=3D"mailto:paul.eggleton@linux.intel.com">paul.egg=
-leton@linux.intel.com</a>&gt; wrote:<br>
-<br>
-&gt; I can&#39;t recall if we&#39;ve discussed this before, but shouldn&#39=
-;t we be looking at<br>
-&gt; introducing some understanding of list type variables into BitBake its=
-elf? If<br>
-&gt; BitBake knew the variable was a list it would be possible to have lang=
-uage<br>
-&gt; elements that understood how to behave in this situation.<br></div></b=
-lockquote><div><br></div><div style>Yeah, this gets brought up from time to=
- time, it&#39;s something we&#39;ve wanted for a while, but nobody has take=
-n the time to make it happen. I would love to see some form of typing go in=
-, and I know Richard has expressed a desire to see this as well in the past=
-.</div>
-
-<div style><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px =
-0px 0px 0.8ex;border-left-width:1px;border-left-color:rgb(204,204,204);bord=
-er-left-style:solid;padding-left:1ex">I rather like this. I would like to h=
-ave _remove, and it may even make sense<br>
+1.7.7
 
 
-to adopt _remove in the short term, but really I think most of the things<b=
-r>
-where we&#39;re using append/remove should probably be lists, which would a=
-lso<br>
-eliminate the entire category of bugs in which it is unclear whether or not=
-<br>
-to add a space.<br>
-<br>
-Rough thoughts about implementation: Listness could be a flag.<br>
-<br>
-LIST[list] =3D &quot; &quot;<br>
-LIST =3D &quot;blah blah blah&quot;<br>
-# Oh, hey, what if...<br>
-PATH[list] =3D &quot;:&quot;<br></blockquote><div><br></div><div style>We d=
-o have a flag-based typing implementation in the metadata, just not in bitb=
-ake itself, see=C2=A0<a href=3D"http://git.yoctoproject.org/cgit/cgit.cgi/p=
-oky/commit/?h=3De4921fd">http://git.yoctoproject.org/cgit/cgit.cgi/poky/com=
-mit/?h=3De4921fd</a>=C2=A0for the original implementation. I particularly l=
-ike the bits that automatically convert the function signature of the type =
-callback (or class) into a request for additional information via flags. An=
- added required argument to the function =3D a required flag of that name, =
-same for optional. See=C2=A0<a href=3D"http://git.yoctoproject.org/cgit/cgi=
-t.cgi/poky/tree/meta/lib/oe/types.py#n27">http://git.yoctoproject.org/cgit/=
-cgit.cgi/poky/tree/meta/lib/oe/types.py#n27</a>=C2=A0or=C2=A0<a href=3D"htt=
-p://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/meta/lib/oe/types.py#n13">=
-http://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/meta/lib/oe/types.py#n1=
-3</a>=C2=A0for examples of that particular implementation.</div>
 
-<div style><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px =
-0px 0px 0.8ex;border-left-width:1px;border-left-color:rgb(204,204,204);bord=
-er-left-style:solid;padding-left:1ex">
-or as shorthand:<br>
-<br>
-LIST =3D [blah blah blah]<br></blockquote></div><br>I played briefly around=
- with a *really* preliminary prototype of something similar to this. See=C2=
-=A0<a href=3D"https://gist.github.com/kergoth/2788410">https://gist.github.=
-com/kergoth/2788410</a>=C2=A0- any unquoted values are interpreted as json =
-types, and the append/prepend operations are switched to better work with n=
-on-string values. It works surprisingly well considering how naive the impl=
-ementation is, see the functional local.conf snippet in the gist.<br>
-
--- <br>Christopher Larson</div></div>
-
---90e6ba3091cc44ba1904d7d66d11--
