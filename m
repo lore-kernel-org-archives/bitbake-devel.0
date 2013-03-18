@@ -1,27 +1,27 @@
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from mga14.intel.com ([143.182.124.37])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Liezhi.Yang@windriver.com>) id 1UGmeb-0006Br-46
+	(envelope-from <andrei.adrianx.dinu@intel.com>) id 1UHY8x-0006il-69
 	for bitbake-devel@lists.openembedded.org;
-	Sat, 16 Mar 2013 09:39:49 +0100
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id r2G8N2F1028987
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 16 Mar 2013 01:23:03 -0700 (PDT)
-Received: from pek-usp-9.wrs.com (128.224.162.26) by ALA-HCB.corp.ad.wrs.com
-	(147.11.189.41) with Microsoft SMTP Server id 14.2.342.3;
-	Sat, 16 Mar 2013 01:23:02 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Sat, 16 Mar 2013 16:07:41 +0800
-Message-ID: <f341ad464c4b177654dbf26d77217870a7402f1f.1363405523.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.7
-In-Reply-To: <cover.1363405523.git.liezhi.yang@windriver.com>
-References: <cover.1363405523.git.liezhi.yang@windriver.com>
+	Mon, 18 Mar 2013 12:22:20 +0100
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga102.ch.intel.com with ESMTP; 18 Mar 2013 04:04:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.84,863,1355126400"; 
+	d="scan'208,217";a="272271623"
+Received: from adinu-vostro-460.rb.intel.com (HELO [10.237.105.45])
+	([10.237.105.45])
+	by azsmga001.ch.intel.com with ESMTP; 18 Mar 2013 04:04:24 -0700
+Message-ID: <5146F4E4.5040306@intel.com>
+Date: Mon, 18 Mar 2013 13:05:08 +0200
+From: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:17.0) Gecko/17.0 Thunderbird/17.0
 MIME-Version: 1.0
-Cc: qingtao.cao@windriver.com
-Subject: [PATCH 1/1] utils.py: fix BB_ENV_WHITELIST
+To: bitbake-devel@lists.openembedded.org
+References: <1362497791-30020-1-git-send-email-andrei.adrianx.dinu@intel.com>
+In-Reply-To: <1362497791-30020-1-git-send-email-andrei.adrianx.dinu@intel.com>
+X-Forwarded-Message-Id: <1362497791-30020-1-git-send-email-andrei.adrianx.dinu@intel.com>
+Subject: [PATCH 00/11] replace tooltips with property windows in HOB
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -33,60 +33,147 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 16 Mar 2013 08:39:50 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 18 Mar 2013 11:22:21 -0000
+Content-Type: multipart/alternative;
+	boundary="------------080904090706080609000401"
 
-The BB_ENV_WHITELIST doesn't work well and flushes BB_ENV_EXTRAWHITE,
-here is an example:
+--------------080904090706080609000401
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-$ export BB_ENV_WHITELIST
+Ping!
 
-$ export BB_NUMBER_THREADS=10 (or other value)
 
-Edit conf/local.conf, change "BB_NUMBER_THREADS =" to "BB_NUMBER_THREADS ?="
+-------- Original Message --------
+Subject: 	[PATCH 00/11] replace tooltips with property windows in HOB
+Date: 	Tue, 5 Mar 2013 17:36:20 +0200
+From: 	Andrei Dinu <andrei.adrianx.dinu@intel.com>
+To: 	<bitbake-devel@lists.openembedded.org>
+CC: 	Andrei Dinu <andrei.adrianx.dinu@intel.com>
 
-$ bitbake -e | grep '^BB_NUMBER_THREADS ='
-we will notice that BB_NUMBER_THREADS' value doesn't change, though
-BB_NUMBER_THREADS in both BB_ENV_WHITELIST and BB_ENV_EXTRAWHITE.
 
-This is because the "approved" inside the function approved_variables
-doesn't include BB_ENV_WHITELIST or BB_ENV_EXTRAWHITE when
-BB_ENV_WHITELIST is set (they are incuded by preserved_envvars()), so
-the BB_ENV_WHITELIST and BB_ENV_EXTRAWHITE will be removed from the env
-in the first call from bin/bitbake, and when it is called again by
-cooker.py, their value will be None, then the vars inside them will be
-removed from the env.
 
-Add BB_ENV_WHITELIST and BB_ENV_EXTRAWHITE to the "approved" would fix
-the problem.
+[Enhancement 2248] - https://bugzilla.yoctoproject.org/show_bug.cgi?id=2248
 
-[YOCTO #4031]
+Added property windows for recipe selection page, package selection page
+and also replaced the tooltips information pages with dialogs.
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/utils.py |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
+Andrei Dinu (11):
+   added extra variables to cache_extra.py
+   extended cooker.py variables
+   replaced the function that displayed tooltips
+   added information for the information dialogs
+   new class added for the property windows.
+   added entries for information dialogs
+   added information columns needed for prop dialogs
+   added functionality for the information dialogs.
+   added information so that it displays correctly
+   added event for the "All packages" tab
+   added events for the "Package Groups" "All recipes
 
-diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
-index b2f81c8..d671f56 100644
---- a/bitbake/lib/bb/utils.py
-+++ b/bitbake/lib/bb/utils.py
-@@ -496,10 +496,13 @@ def approved_variables():
-     approved = []
-     if 'BB_ENV_WHITELIST' in os.environ:
-         approved = os.environ['BB_ENV_WHITELIST'].split()
-+        approved.extend(['BB_ENV_WHITELIST'])
-     else:
-         approved = preserved_envvars()
-     if 'BB_ENV_EXTRAWHITE' in os.environ:
-         approved.extend(os.environ['BB_ENV_EXTRAWHITE'].split())
-+        if 'BB_ENV_EXTRAWHITE' not in approved:
-+            approved.extend(['BB_ENV_EXTRAWHITE'])
-     return approved
- 
- def clean_environment():
+  bitbake/lib/bb/cache_extra.py                      |    9 +
+  bitbake/lib/bb/cooker.py                           |    9 +
+  bitbake/lib/bb/ui/crumbs/builder.py                |   35 +-
+  .../lib/bb/ui/crumbs/hig/advancedsettingsdialog.py |   12 +-
+  bitbake/lib/bb/ui/crumbs/hig/propertydialog.py     |  347 ++++++++++++++++++++
+  .../lib/bb/ui/crumbs/hig/simplesettingsdialog.py   |   14 +-
+  bitbake/lib/bb/ui/crumbs/hoblistmodel.py           |   23 +-
+  bitbake/lib/bb/ui/crumbs/hobwidget.py              |   22 +-
+  bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    3 +-
+  bitbake/lib/bb/ui/crumbs/packageselectionpage.py   |   13 +-
+  bitbake/lib/bb/ui/crumbs/recipeselectionpage.py    |   22 +-
+  11 files changed, 472 insertions(+), 37 deletions(-)
+  create mode 100644 bitbake/lib/bb/ui/crumbs/hig/propertydialog.py
+
 -- 
-1.7.7
+1.7.9.5
 
 
 
+
+--------------080904090706080609000401
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=ISO-8859-1"
+      http-equiv="Content-Type">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    Ping!<br>
+    <div class="moz-forward-container"><br>
+      <br>
+      -------- Original Message --------
+      <table class="moz-email-headers-table" border="0" cellpadding="0"
+        cellspacing="0">
+        <tbody>
+          <tr>
+            <th align="RIGHT" nowrap="nowrap" valign="BASELINE">Subject:
+            </th>
+            <td>[PATCH 00/11] replace tooltips with property windows in
+              HOB</td>
+          </tr>
+          <tr>
+            <th align="RIGHT" nowrap="nowrap" valign="BASELINE">Date: </th>
+            <td>Tue, 5 Mar 2013 17:36:20 +0200</td>
+          </tr>
+          <tr>
+            <th align="RIGHT" nowrap="nowrap" valign="BASELINE">From: </th>
+            <td>Andrei Dinu <a class="moz-txt-link-rfc2396E" href="mailto:andrei.adrianx.dinu@intel.com">&lt;andrei.adrianx.dinu@intel.com&gt;</a></td>
+          </tr>
+          <tr>
+            <th align="RIGHT" nowrap="nowrap" valign="BASELINE">To: </th>
+            <td><a class="moz-txt-link-rfc2396E" href="mailto:bitbake-devel@lists.openembedded.org">&lt;bitbake-devel@lists.openembedded.org&gt;</a></td>
+          </tr>
+          <tr>
+            <th align="RIGHT" nowrap="nowrap" valign="BASELINE">CC: </th>
+            <td>Andrei Dinu <a class="moz-txt-link-rfc2396E" href="mailto:andrei.adrianx.dinu@intel.com">&lt;andrei.adrianx.dinu@intel.com&gt;</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <br>
+      <pre>[Enhancement 2248] - <a class="moz-txt-link-freetext" href="https://bugzilla.yoctoproject.org/show_bug.cgi?id=2248">https://bugzilla.yoctoproject.org/show_bug.cgi?id=2248</a>
+
+Added property windows for recipe selection page, package selection page
+and also replaced the tooltips information pages with dialogs.
+
+Andrei Dinu (11):
+  added extra variables to cache_extra.py
+  extended cooker.py variables
+  replaced the function that displayed tooltips
+  added information for the information dialogs
+  new class added for the property windows.
+  added entries for information dialogs
+  added information columns needed for prop dialogs
+  added functionality for the information dialogs.
+  added information so that it displays correctly
+  added event for the "All packages" tab
+  added events for the "Package Groups" "All recipes
+
+ bitbake/lib/bb/cache_extra.py                      |    9 +
+ bitbake/lib/bb/cooker.py                           |    9 +
+ bitbake/lib/bb/ui/crumbs/builder.py                |   35 +-
+ .../lib/bb/ui/crumbs/hig/advancedsettingsdialog.py |   12 +-
+ bitbake/lib/bb/ui/crumbs/hig/propertydialog.py     |  347 ++++++++++++++++++++
+ .../lib/bb/ui/crumbs/hig/simplesettingsdialog.py   |   14 +-
+ bitbake/lib/bb/ui/crumbs/hoblistmodel.py           |   23 +-
+ bitbake/lib/bb/ui/crumbs/hobwidget.py              |   22 +-
+ bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    3 +-
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py   |   13 +-
+ bitbake/lib/bb/ui/crumbs/recipeselectionpage.py    |   22 +-
+ 11 files changed, 472 insertions(+), 37 deletions(-)
+ create mode 100644 bitbake/lib/bb/ui/crumbs/hig/propertydialog.py
+
+-- 
+1.7.9.5
+
+</pre>
+      <br>
+    </div>
+    <br>
+  </body>
+</html>
+
+--------------080904090706080609000401--
