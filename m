@@ -1,21 +1,37 @@
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from anubis.se.axis.com ([195.60.68.12])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <andrei.adrianx.dinu@intel.com>) id 1UJ42L-0001bg-Uw
+	(envelope-from <olof.johansson@axis.com>) id 1UKDOS-0003VW-9s
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 22 Mar 2013 16:37:46 +0100
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 22 Mar 2013 08:19:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.84,892,1355126400"; d="scan'208";a="274635712"
-Received: from adinu-vostro-460.rb.intel.com (HELO localhost.localdomain)
-	([10.237.105.45])
-	by azsmga001.ch.intel.com with ESMTP; 22 Mar 2013 08:19:34 -0700
-From: Andrei Dinu <andrei.adrianx.dinu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 22 Mar 2013 17:20:10 +0200
-Message-Id: <1363965610-9866-1-git-send-email-andrei.adrianx.dinu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] Adjust spacing on information windows
+	Mon, 25 Mar 2013 20:49:22 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by anubis.se.axis.com (Postfix) with ESMTP id 6D1BB19E3F
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 25 Mar 2013 20:32:21 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at anubis.se.axis.com
+Received: from anubis.se.axis.com ([127.0.0.1])
+	by localhost (anubis.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id LPuxhl1cogBu for <bitbake-devel@lists.openembedded.org>;
+	Mon, 25 Mar 2013 20:32:21 +0100 (CET)
+Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
+	by anubis.se.axis.com (Postfix) with ESMTP id 51CDF19E37
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 25 Mar 2013 20:32:21 +0100 (CET)
+Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
+	by seth.se.axis.com (Postfix) with ESMTP id 1AF8C3E29D
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 25 Mar 2013 20:32:21 +0100 (CET)
+Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
+	(10.0.5.74) with Microsoft SMTP Server id 8.2.176.0; Mon, 25 Mar 2013
+	20:32:20 +0100
+Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id 445A39C078; 
+	Mon, 25 Mar 2013 20:32:42 +0100 (CET)
+From: Olof Johansson <olof.johansson@axis.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Mon, 25 Mar 2013 20:32:42 +0100
+Message-ID: <1364239962-11399-1-git-send-email-olof.johansson@axis.com>
+X-Mailer: git-send-email 1.7.10.4
+MIME-Version: 1.0
+Subject: [PATCH] bb.tests.fetch: Opt-in for unittests that require network
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -27,76 +43,79 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 22 Mar 2013 15:37:49 -0000
+X-List-Received-Date: Mon, 25 Mar 2013 19:49:34 -0000
+Content-Type: text/plain
 
-[Hob #4070]
+With this change, you have to opt-in to run unit tests that require an internet
+connection. To opt-in, you'll set the environment variable BB_NETTESTS to 'yes'.
 
-- tweaked the spacing on info windows
-
-- fixed text bolding in simple settings dialog
-
-Signed-off-by: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+Signed-off-by: Olof Johansson <olof.johansson@axis.com>
 ---
- bitbake/lib/bb/ui/crumbs/hig/propertydialog.py     |   14 +++++++-------
- .../lib/bb/ui/crumbs/hig/simplesettingsdialog.py   |    2 +-
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ lib/bb/tests/fetch.py |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/hig/propertydialog.py b/bitbake/lib/bb/ui/crumbs/hig/propertydialog.py
-index d68ef3a..4420f97 100644
---- a/bitbake/lib/bb/ui/crumbs/hig/propertydialog.py
-+++ b/bitbake/lib/bb/ui/crumbs/hig/propertydialog.py
-@@ -56,7 +56,7 @@ class PropertyDialog(CrumbsDialog):
-                 HOB_ICON_BASE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), ("icons/"))
-                 ICON_PACKAGES_DISPLAY_FILE    = os.path.join(HOB_ICON_BASE_DIR, ('info/info_display.png'))
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 778d94f..d51aace 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -308,6 +308,8 @@ class FetcherTest(unittest.TestCase):
+     def tearDown(self):
+         bb.utils.prunedir(self.tempdir)
  
--                self.table = gtk.Table(2,2,False)
-+                self.table = gtk.Table(1,1,False)
-                 self.table.set_row_spacings(0)
-                 self.table.set_col_spacings(0)
++    @unittest.skipUnless(os.environ.get("BB_NETTESTS") == "yes",
++                         "Set BB_NETTESTS to yes to run network tests")
+     def test_fetch(self):
+         fetcher = bb.fetch.Fetch(["http://downloads.yoctoproject.org/releases/bitbake/bitbake-1.0.tar.gz", "http://downloads.yoctoproject.org/releases/bitbake/bitbake-1.1.tar.gz"], self.d)
+         fetcher.download()
+@@ -320,12 +322,16 @@ class FetcherTest(unittest.TestCase):
+         self.assertEqual(len(os.listdir(self.unpackdir + "/bitbake-1.0/")), 9)
+         self.assertEqual(len(os.listdir(self.unpackdir + "/bitbake-1.1/")), 9)
  
-@@ -68,21 +68,21 @@ class PropertyDialog(CrumbsDialog):
-                 image_info = self.properties.split("*")[0]
-                 info = self.properties.split("*")[1]
-                 
--                vbox = gtk.VBox(True, spacing=0)        
-+                vbox = gtk.VBox(True, spacing=30)        
-                 
-                 self.label_short = gtk.Label()
-                 self.label_short.set_line_wrap(False)
--                self.label_short.set_markup("          " + image_info)
-+                self.label_short.set_markup(image_info)
-                 self.label_short.set_property("xalign", 0)
++    @unittest.skipUnless(os.environ.get("BB_NETTESTS") == "yes",
++                         "Set BB_NETTESTS to yes to run network tests")
+     def test_fetch_mirror(self):
+         self.d.setVar("MIRRORS", "http://.*/.* http://downloads.yoctoproject.org/releases/bitbake")
+         fetcher = bb.fetch.Fetch(["http://invalid.yoctoproject.org/releases/bitbake/bitbake-1.0.tar.gz"], self.d)
+         fetcher.download()
+         self.assertEqual(os.path.getsize(self.dldir + "/bitbake-1.0.tar.gz"), 57749)
  
-                 self.info_label = gtk.Label()
-                 self.info_label.set_line_wrap(True)
-                 self.info_label.set_markup(info)
--                self.info_label.set_property("xalign", 1)
-+                self.info_label.set_property("yalign", 0.5)
++    @unittest.skipUnless(os.environ.get("BB_NETTESTS") == "yes",
++                         "Set BB_NETTESTS to yes to run network tests")
+     def test_fetch_premirror(self):
+         self.d.setVar("PREMIRRORS", "http://.*/.* http://downloads.yoctoproject.org/releases/bitbake")
+         fetcher = bb.fetch.Fetch(["http://invalid.yoctoproject.org/releases/bitbake/bitbake-1.0.tar.gz"], self.d)
+@@ -351,21 +357,29 @@ class FetcherTest(unittest.TestCase):
+         fetcher.download()
+         checkrevision(self, fetcher)
  
--                self.table.attach(self.image, 0,1,0,1, xoptions=gtk.FILL|gtk.EXPAND, yoptions=gtk.FILL)
--                self.table.attach(self.label_short, 0,1,0,1, xoptions=gtk.FILL|gtk.EXPAND, yoptions=gtk.FILL)
--                self.table.attach(self.info_label, 0,1,1,2, xoptions=gtk.FILL|gtk.EXPAND, yoptions=gtk.FILL)
-+                self.table.attach(self.image, 0,1,0,1, xoptions=gtk.FILL|gtk.EXPAND, yoptions=gtk.FILL,xpadding=5,ypadding=5)
-+                self.table.attach(self.label_short, 0,1,0,1, xoptions=gtk.FILL|gtk.EXPAND, yoptions=gtk.FILL,xpadding=40,ypadding=5)
-+                self.table.attach(self.info_label, 0,1,1,2, xoptions=gtk.FILL|gtk.EXPAND, yoptions=gtk.FILL,xpadding=40,ypadding=10)
-         
-                 self.vbox.add(self.table)
++    @unittest.skipUnless(os.environ.get("BB_NETTESTS") == "yes",
++                         "Set BB_NETTESTS to yes to run network tests")
+     def test_gitfetch(self):
+         url1 = url2 = "git://git.openembedded.org/bitbake"
+         self.gitfetcher(url1, url2)
  
-diff --git a/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py b/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
-index e0fbdca..8ac82ed 100644
---- a/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
-+++ b/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
-@@ -305,7 +305,7 @@ class SimpleSettingsDialog (CrumbsDialog, SettingsUIHelper):
-         tooltip += "For more information on shared state mirrors, check the <a href=\""
-         tooltip += "http://www.yoctoproject.org/docs/current/poky-ref-manual/"
-         tooltip += "poky-ref-manual.html#shared-state\">Yocto Project Reference Manual</a>."
--        table = self.gen_label_info_widget(content,"Shared state mirrors" + "*" + tooltip)
-+        table = self.gen_label_info_widget(content,"<b>Shared state mirrors</b>" + "*" + tooltip)
-         advanced_vbox.pack_start(table, expand=False, fill=False, padding=6)
++    @unittest.skipUnless(os.environ.get("BB_NETTESTS") == "yes",
++                         "Set BB_NETTESTS to yes to run network tests")
+     def test_gitfetch_premirror(self):
+         url1 = "git://git.openembedded.org/bitbake"
+         url2 = "git://someserver.org/bitbake"
+         self.d.setVar("PREMIRRORS", "git://someserver.org/bitbake git://git.openembedded.org/bitbake \n")
+         self.gitfetcher(url1, url2)
  
-         sub_vbox = gtk.VBox(False)
++    @unittest.skipUnless(os.environ.get("BB_NETTESTS") == "yes",
++                         "Set BB_NETTESTS to yes to run network tests")
+     def test_gitfetch_premirror2(self):
+         url1 = url2 = "git://someserver.org/bitbake"
+         self.d.setVar("PREMIRRORS", "git://someserver.org/bitbake git://git.openembedded.org/bitbake \n")
+         self.gitfetcher(url1, url2)
+ 
++    @unittest.skipUnless(os.environ.get("BB_NETTESTS") == "yes",
++                         "Set BB_NETTESTS to yes to run network tests")
+     def test_gitfetch_premirror3(self):
+         realurl = "git://git.openembedded.org/bitbake"
+         dummyurl = "git://someserver.org/bitbake"
 -- 
-1.7.9.5
+1.7.10.4
 
 
 
