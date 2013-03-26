@@ -1,29 +1,35 @@
-Received: from dan.rpsys.net ([93.97.175.187])
+Received: from ra.se.axis.com ([195.60.68.13])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1UKEv3-0006Y8-Fr for bitbake-devel@lists.openembedded.org;
-	Mon, 25 Mar 2013 22:28:29 +0100
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r2PLJi8X010563; Mon, 25 Mar 2013 21:19:44 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id bxLnSV4CiKJu; Mon, 25 Mar 2013 21:19:44 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r2PLJYFE010558
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Mon, 25 Mar 2013 21:19:37 GMT
-Message-ID: <1364245781.3097.72.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Olof Johansson <olof.johansson@axis.com>
-Date: Mon, 25 Mar 2013 21:09:41 +0000
-In-Reply-To: <1364239962-11399-1-git-send-email-olof.johansson@axis.com>
+	(envelope-from <olof.johansson@axis.com>) id 1UKPNR-0007I2-Ry
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 26 Mar 2013 09:37:06 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by ra.se.axis.com (Postfix) with ESMTP id 960712614C1;
+	Tue, 26 Mar 2013 09:20:06 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at ra.se.axis.com
+Received: from ra.se.axis.com ([127.0.0.1])
+	by localhost (ra.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id oRDCLODvHWZZ; Tue, 26 Mar 2013 09:20:05 +0100 (CET)
+Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
+	by ra.se.axis.com (Postfix) with ESMTP id ED29D2614E1;
+	Tue, 26 Mar 2013 09:12:14 +0100 (CET)
+Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
+	by seth.se.axis.com (Postfix) with ESMTP id AD0F53E3C1;
+	Tue, 26 Mar 2013 09:12:14 +0100 (CET)
+Received: from axis.com (10.92.17.1) by xmail2.se.axis.com (10.0.5.74) with
+	Microsoft SMTP Server (TLS) id 8.2.176.0;
+	Tue, 26 Mar 2013 09:12:14 +0100
+Date: Tue, 26 Mar 2013 09:12:34 +0100
+From: Olof Johansson <olof.johansson@axis.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Message-ID: <20130326081234.GN7904@axis.com>
 References: <1364239962-11399-1-git-send-email-olof.johansson@axis.com>
-X-Mailer: Evolution 3.6.2-0ubuntu0.1 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
+	<1364245781.3097.72.camel@ted>
+MIME-Version: 1.0
+In-Reply-To: <1364245781.3097.72.camel@ted>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH] bb.tests.fetch: Opt-in for unittests that require network
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
@@ -36,87 +42,22 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 25 Mar 2013 21:28:46 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 26 Mar 2013 08:37:07 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-On Mon, 2013-03-25 at 20:32 +0100, Olof Johansson wrote:
-> With this change, you have to opt-in to run unit tests that require an internet
-> connection. To opt-in, you'll set the environment variable BB_NETTESTS to 'yes'.
-
-Can we do this the other way please and let people opt-out? I'd rather
-people make a conscious decision to opt-out than in.
-
-Cheers,
-
-Richard
-
-> Signed-off-by: Olof Johansson <olof.johansson@axis.com>
-> ---
->  lib/bb/tests/fetch.py |   14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+On 2013-03-25 22:09, Richard Purdie wrote:
+> On Mon, 2013-03-25 at 20:32 +0100, Olof Johansson wrote:
+> > With this change, you have to opt-in to run unit tests that require an internet
+> > connection. To opt-in, you'll set the environment variable BB_NETTESTS to 'yes'.
 > 
-> diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-> index 778d94f..d51aace 100644
-> --- a/lib/bb/tests/fetch.py
-> +++ b/lib/bb/tests/fetch.py
-> @@ -308,6 +308,8 @@ class FetcherTest(unittest.TestCase):
->      def tearDown(self):
->          bb.utils.prunedir(self.tempdir)
->  
-> +    @unittest.skipUnless(os.environ.get("BB_NETTESTS") == "yes",
-> +                         "Set BB_NETTESTS to yes to run network tests")
->      def test_fetch(self):
->          fetcher = bb.fetch.Fetch(["http://downloads.yoctoproject.org/releases/bitbake/bitbake-1.0.tar.gz", "http://downloads.yoctoproject.org/releases/bitbake/bitbake-1.1.tar.gz"], self.d)
->          fetcher.download()
-> @@ -320,12 +322,16 @@ class FetcherTest(unittest.TestCase):
->          self.assertEqual(len(os.listdir(self.unpackdir + "/bitbake-1.0/")), 9)
->          self.assertEqual(len(os.listdir(self.unpackdir + "/bitbake-1.1/")), 9)
->  
-> +    @unittest.skipUnless(os.environ.get("BB_NETTESTS") == "yes",
-> +                         "Set BB_NETTESTS to yes to run network tests")
->      def test_fetch_mirror(self):
->          self.d.setVar("MIRRORS", "http://.*/.* http://downloads.yoctoproject.org/releases/bitbake")
->          fetcher = bb.fetch.Fetch(["http://invalid.yoctoproject.org/releases/bitbake/bitbake-1.0.tar.gz"], self.d)
->          fetcher.download()
->          self.assertEqual(os.path.getsize(self.dldir + "/bitbake-1.0.tar.gz"), 57749)
->  
-> +    @unittest.skipUnless(os.environ.get("BB_NETTESTS") == "yes",
-> +                         "Set BB_NETTESTS to yes to run network tests")
->      def test_fetch_premirror(self):
->          self.d.setVar("PREMIRRORS", "http://.*/.* http://downloads.yoctoproject.org/releases/bitbake")
->          fetcher = bb.fetch.Fetch(["http://invalid.yoctoproject.org/releases/bitbake/bitbake-1.0.tar.gz"], self.d)
-> @@ -351,21 +357,29 @@ class FetcherTest(unittest.TestCase):
->          fetcher.download()
->          checkrevision(self, fetcher)
->  
-> +    @unittest.skipUnless(os.environ.get("BB_NETTESTS") == "yes",
-> +                         "Set BB_NETTESTS to yes to run network tests")
->      def test_gitfetch(self):
->          url1 = url2 = "git://git.openembedded.org/bitbake"
->          self.gitfetcher(url1, url2)
->  
-> +    @unittest.skipUnless(os.environ.get("BB_NETTESTS") == "yes",
-> +                         "Set BB_NETTESTS to yes to run network tests")
->      def test_gitfetch_premirror(self):
->          url1 = "git://git.openembedded.org/bitbake"
->          url2 = "git://someserver.org/bitbake"
->          self.d.setVar("PREMIRRORS", "git://someserver.org/bitbake git://git.openembedded.org/bitbake \n")
->          self.gitfetcher(url1, url2)
->  
-> +    @unittest.skipUnless(os.environ.get("BB_NETTESTS") == "yes",
-> +                         "Set BB_NETTESTS to yes to run network tests")
->      def test_gitfetch_premirror2(self):
->          url1 = url2 = "git://someserver.org/bitbake"
->          self.d.setVar("PREMIRRORS", "git://someserver.org/bitbake git://git.openembedded.org/bitbake \n")
->          self.gitfetcher(url1, url2)
->  
-> +    @unittest.skipUnless(os.environ.get("BB_NETTESTS") == "yes",
-> +                         "Set BB_NETTESTS to yes to run network tests")
->      def test_gitfetch_premirror3(self):
->          realurl = "git://git.openembedded.org/bitbake"
->          dummyurl = "git://someserver.org/bitbake"
+> Can we do this the other way please and let people opt-out? I'd rather
+> people make a conscious decision to opt-out than in.
 
+Sure! I'm just used to unit tests not having (or having very
+limited) side effects by default. But it's easy to change, so
+I'll do it right away. Thanks for the feedback.
 
+/Olof Johansson
 
 
