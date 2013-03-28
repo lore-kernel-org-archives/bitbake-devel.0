@@ -1,33 +1,26 @@
-Received: from mail-wg0-f54.google.com ([74.125.82.54])
+Received: from mga11.intel.com ([192.55.52.93])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <twoerner@gmail.com>) id 1ULI5Y-00055r-Jr
+	(envelope-from <paul.eggleton@linux.intel.com>) id 1ULIF1-0005Pi-Ue
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 28 Mar 2013 20:02:16 +0100
-Received: by mail-wg0-f54.google.com with SMTP id a12so1879206wgh.9
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 28 Mar 2013 11:45:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:x-received:in-reply-to:references:date:message-id
-	:subject:from:to:cc:content-type;
-	bh=UyHDzEtO20LFEXi/LL39Zhtr6TuWIecKvy53QlVyUqw=;
-	b=wsfQBcHlFk0xHtEeod+w0Ypb2xeth0jc/mtahiggbVE4ARyIIgbEKB2xuT7q+JviuL
-	SYzuw5QWBSdtlquu1bBhXnBu59pJqZ7xZYvnV5VqIvIF9saZCJ0UjzZBIGYsgl6VYjqr
-	fd77R3hhV4kI9tHjBGtjakwNNilijLy6Rdqa279nDKs1rTqQn824PazBAX4yzKgSQipQ
-	8g7g2YksEaoPAMXFOvjN3CbCJ75w4rSuVz8X3pB7TxDuIewy1svxaX2ppSQy3sTxs89O
-	R9XqvtBsv/V1Hmpmnr+P526qPCsRoURme99Mb1pd3iJt5j5aEtX/httEFzrIXzyoNunw
-	zpfQ==
-MIME-Version: 1.0
-X-Received: by 10.180.85.103 with SMTP id g7mr14022239wiz.23.1364496313806;
-	Thu, 28 Mar 2013 11:45:13 -0700 (PDT)
-Received: by 10.194.45.100 with HTTP; Thu, 28 Mar 2013 11:45:13 -0700 (PDT)
-In-Reply-To: <1364459002-4165-1-git-send-email-andrei.adrianx.dinu@intel.com>
-References: <1364459002-4165-1-git-send-email-andrei.adrianx.dinu@intel.com>
-Date: Thu, 28 Mar 2013 14:45:13 -0400
-Message-ID: <CAHUNapRpG++6MYT0JcD7Y=o3Hj2Q=jaQVRhbUwewhKFDwcECjQ@mail.gmail.com>
-From: Trevor Woerner <twoerner@gmail.com>
+	Thu, 28 Mar 2013 20:12:05 +0100
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 28 Mar 2013 11:55:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.87,367,1363158000"; d="scan'208";a="309912024"
+Received: from unknown (HELO helios.localnet) ([10.255.13.158])
+	by fmsmga001.fm.intel.com with ESMTP; 28 Mar 2013 11:54:59 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: Andrei Dinu <andrei.adrianx.dinu@intel.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 0/6] Add file information to package information window
+Date: Thu, 28 Mar 2013 18:54:58 +0000
+Message-ID: <3315515.WXWKcWa1L2@helios>
+Organization: Intel Corporation
+User-Agent: KMail/4.10.1 (Linux/3.5.0-26-generic; KDE/4.10.1; i686; ; )
+In-Reply-To: <1364459002-4165-4-git-send-email-andrei.adrianx.dinu@intel.com>
+References: <1364459002-4165-1-git-send-email-andrei.adrianx.dinu@intel.com>
+	<1364459002-4165-4-git-send-email-andrei.adrianx.dinu@intel.com>
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 3/6] packageinfo.bbclass : extended functionality
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -39,15 +32,84 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 28 Mar 2013 19:02:17 -0000
-Content-Type: text/plain; charset=ISO-8859-1
+X-List-Received-Date: Thu, 28 Mar 2013 19:12:06 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Mar 28, 2013 at 4:23 AM, Andrei Dinu
-<andrei.adrianx.dinu@intel.com> wrote:
-> Listing the files that are brought into an image
-> from each package.
+Hi Andrei,
 
-This sounds like a great feature! Is this also available from the
-bitbake command-line as well?
+On Thursday 28 March 2013 10:23:19 Andrei Dinu wrote:
+> Extended the functionality of packageinfo.bbclass
+> so that the sistem retrieves information about the
+> files brought in by each package. This is done
+> (without activating buildhistory) by parsing
+> the packages-split directory for each package.
+> 
+> Signed-off-by: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+> ---
+>  meta/classes/packageinfo.bbclass |   21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/meta/classes/packageinfo.bbclass
+> b/meta/classes/packageinfo.bbclass index bd7b249..5e6f590 100644
+> --- a/meta/classes/packageinfo.bbclass
+> +++ b/meta/classes/packageinfo.bbclass
+> @@ -8,6 +8,25 @@ python packageinfo_handler () {
+>          package_archs = e.data.getVar('PACKAGE_ARCHS', True)
+>          packaging = e.data.getVar('PACKAGE_CLASSES',
+> True).split()[0].split('_')[1] deploy_dir = e.data.getVar('DEPLOY_DIR',
+> True) + '/' + packaging +        dirs = os.listdir(tmpdir + '/work/')
+> +        pkgsplit_dir = tmpdir + '/work/'
+> +        items = {}
+> +        passing = ''
+> +        for directories in dirs:
+> +                temp_dirs = os.listdir(pkgsplit_dir + directories)
+> +                for temps1 in temp_dirs:
+> +                        if os.path.exists(pkgsplit_dir + directories + '/'
+> + temps1 + '/' + os.listdir(pkgsplit_dir + directories + '/' + temps1)[0] +
+> '/packages-split'): +                                subs = pkgsplit_dir +
+> directories + '/' + temps1 + '/' + os.listdir(pkgsplit_dir + directories +
+> '/' + temps1)[0] + '/packages-split' +                                for
+> temps in os.listdir(subs):
+> +                                        items[temps] = {}
+> +                                        for path, dirs, files in
+> os.walk(pkgsplit_dir + directories + '/' + temps1 + '/' +
+> os.listdir(pkgsplit_dir + directories + '/' + temps1)[0] +
+> '/packages-split' + '/' + temps): +                                        
+>                file_list = [] +                                            
+>            if os.listdir(path) != []: +                                    
+>                            items[temps][path] = [] +                       
+>                                         for f in files: +                  
+>                                                      file_list.append(f) + 
+>                                                              
+> items[temps][path].append(file_list) +
+>          for arch in package_archs.split():
+>              pkgdata_dir = tmpdir + '/pkgdata/' + arch + target_vendor + '-'
+> + target_os + '/runtime/' if os.path.exists(pkgdata_dir):
+> @@ -19,6 +38,8 @@ python packageinfo_handler () {
+>                              try:
+>                                  sdata =
+> oe.packagedata.read_pkgdatafile(pkgdatafile) sdata['PKG'] = pkgname
+> +                                if pkgname in items:
+> +                                        sdata['FILES_INFO'] =
+> items[pkgname] pkginfolist.append(sdata)
+>                              except Exception as e:
+>                                  bb.warn("Failed to read pkgdata file %s:
+> %s: %s" % (pkgdatafile, e.__class__, str(e)))
+
+This is a change against the metadata rather than BitBake; it needs to be sent 
+separately to the OE-Core mailing list.
+
+Before you send it there however, you really need to be using the PKGDEST 
+variable instead of composing the path to packages-split using hardcoded path 
+components.
+
+Cheers,
+Paul
+
+-- 
+
+Paul Eggleton
+Intel Open Source Technology Centre
 
 
