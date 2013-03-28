@@ -1,20 +1,33 @@
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mail-wg0-f54.google.com ([74.125.82.54])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <andrei.adrianx.dinu@intel.com>) id 1ULBUx-0001tY-Un
+	(envelope-from <twoerner@gmail.com>) id 1ULI5Y-00055r-Jr
 	for bitbake-devel@lists.openembedded.org;
-	Thu, 28 Mar 2013 13:00:36 +0100
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 28 Mar 2013 04:42:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.84,925,1355126400"; d="scan'208";a="308596792"
-Received: from adinu-vostro-460.rb.intel.com ([10.237.105.146])
-	by orsmga002.jf.intel.com with ESMTP; 28 Mar 2013 04:42:40 -0700
-From: Andrei Dinu <andrei.adrianx.dinu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 28 Mar 2013 13:43:33 +0200
-Message-Id: <1364471013-6273-1-git-send-email-andrei.adrianx.dinu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] Removed popup when including a package
+	Thu, 28 Mar 2013 20:02:16 +0100
+Received: by mail-wg0-f54.google.com with SMTP id a12so1879206wgh.9
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 28 Mar 2013 11:45:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:x-received:in-reply-to:references:date:message-id
+	:subject:from:to:cc:content-type;
+	bh=UyHDzEtO20LFEXi/LL39Zhtr6TuWIecKvy53QlVyUqw=;
+	b=wsfQBcHlFk0xHtEeod+w0Ypb2xeth0jc/mtahiggbVE4ARyIIgbEKB2xuT7q+JviuL
+	SYzuw5QWBSdtlquu1bBhXnBu59pJqZ7xZYvnV5VqIvIF9saZCJ0UjzZBIGYsgl6VYjqr
+	fd77R3hhV4kI9tHjBGtjakwNNilijLy6Rdqa279nDKs1rTqQn824PazBAX4yzKgSQipQ
+	8g7g2YksEaoPAMXFOvjN3CbCJ75w4rSuVz8X3pB7TxDuIewy1svxaX2ppSQy3sTxs89O
+	R9XqvtBsv/V1Hmpmnr+P526qPCsRoURme99Mb1pd3iJt5j5aEtX/httEFzrIXzyoNunw
+	zpfQ==
+MIME-Version: 1.0
+X-Received: by 10.180.85.103 with SMTP id g7mr14022239wiz.23.1364496313806;
+	Thu, 28 Mar 2013 11:45:13 -0700 (PDT)
+Received: by 10.194.45.100 with HTTP; Thu, 28 Mar 2013 11:45:13 -0700 (PDT)
+In-Reply-To: <1364459002-4165-1-git-send-email-andrei.adrianx.dinu@intel.com>
+References: <1364459002-4165-1-git-send-email-andrei.adrianx.dinu@intel.com>
+Date: Thu, 28 Mar 2013 14:45:13 -0400
+Message-ID: <CAHUNapRpG++6MYT0JcD7Y=o3Hj2Q=jaQVRhbUwewhKFDwcECjQ@mail.gmail.com>
+From: Trevor Woerner <twoerner@gmail.com>
+To: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH 0/6] Add file information to package information window
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,47 +39,15 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 28 Mar 2013 12:00:41 -0000
+X-List-Received-Date: Thu, 28 Mar 2013 19:02:17 -0000
+Content-Type: text/plain; charset=ISO-8859-1
 
-Fixed the functionality which made an information
-dialog pop up when including any package.
+On Thu, Mar 28, 2013 at 4:23 AM, Andrei Dinu
+<andrei.adrianx.dinu@intel.com> wrote:
+> Listing the files that are brought into an image
+> from each package.
 
-[HOB #4138]
-
-Signed-off-by: Andrei Dinu <andrei.adrianx.dinu@intel.com>
----
- bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    2 +-
- bitbake/lib/bb/ui/crumbs/recipeselectionpage.py  |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-index ce2deab..70d45ef 100755
---- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-@@ -202,7 +202,7 @@ class PackageSelectionPage (HobPage):
-     def button_click_cb(self, widget, event):
-         path, col = widget.table_tree.get_cursor()
-         tree_model = widget.table_tree.get_model()
--        if path: # else activation is likely a removal
-+        if path and col.get_title() != 'Included': # else activation is likely a removal
-             properties = {'binb': '' , 'name': '', 'size':'', 'recipe':''}
-             properties['binb'] = tree_model.get_value(tree_model.get_iter(path), PackageListModel.COL_BINB)
-             properties['name'] = tree_model.get_value(tree_model.get_iter(path), PackageListModel.COL_NAME)
-diff --git a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-index aa0cd60..e102b29 100755
---- a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-@@ -217,7 +217,7 @@ class RecipeSelectionPage (HobPage):
-     def button_click_cb(self, widget, event):
-         path, col = widget.table_tree.get_cursor()
-         tree_model = widget.table_tree.get_model()
--        if path: # else activation is likely a removal
-+        if path and col.get_title() != 'Included': # else activation is likely a removal
-             properties = {'summary': '', 'name': '', 'version': '', 'revision': '', 'binb': '', 'group': '', 'license': '', 'homepage': '', 'bugtracker': '', 'description': ''}
-             properties['summary'] = tree_model.get_value(tree_model.get_iter(path), RecipeListModel.COL_SUMMARY)
-             properties['name'] = tree_model.get_value(tree_model.get_iter(path), RecipeListModel.COL_NAME)
--- 
-1.7.9.5
-
+This sounds like a great feature! Is this also available from the
+bitbake command-line as well?
 
 
