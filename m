@@ -1,40 +1,34 @@
-Received: from mail1.bemta8.messagelabs.com ([216.82.243.200])
+Received: from mail-ea0-f181.google.com ([209.85.215.181])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Simon.Vanveerdeghem@barco.com>) id 1UQXxn-0006vK-Pk
+	(envelope-from <martin.jansa@gmail.com>) id 1UQev0-00023p-DC
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 12 Apr 2013 09:00:08 +0200
-Received: from [216.82.241.132:35233] by server-8.bemta-8.messagelabs.com id
-	76/C2-19818-66BA7615; Fri, 12 Apr 2013 06:36:22 +0000
-X-Env-Sender: Simon.Vanveerdeghem@barco.com
-X-Msg-Ref: server-13.tower-45.messagelabs.com!1365748580!29021377!3
-X-Originating-IP: [91.183.168.164]
-X-StarScan-Received: 
-X-StarScan-Version: 6.8.6.1; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 19091 invoked from network); 12 Apr 2013 06:36:22 -0000
-Received: from 164.168-183-91.adsl-static.isp.belgacom.be (HELO
-	KNDFEX01.barco.com) (91.183.168.164)
-	by server-13.tower-45.messagelabs.com with SMTP;
-	12 Apr 2013 06:36:22 -0000
-Received: from KNDMEX01.barco.com ([150.158.212.51]) by KNDFEX01.barco.com
-	with Microsoft SMTPSVC(6.0.3790.4675);
-	Fri, 12 Apr 2013 08:35:38 +0200
-Importance: normal
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.3790.4913
-Priority: normal
-MIME-Version: 1.0
-Date: Fri, 12 Apr 2013 08:35:38 +0200
-Message-ID: <8D433CD511BE4646B47F8B31C900818E0CD26090@kndmex01.barco.com>
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Thread-Topic: [PATCH] svn fetcher: do not save authentication
-Thread-Index: Ac43R9MRI1UnTBtVQ1yyyIYDibLM1A==
-From: "Vanveerdeghem, Simon" <Simon.Vanveerdeghem@barco.com>
-To: <bitbake-devel@lists.openembedded.org>
-X-OriginalArrivalTime: 12 Apr 2013 06:35:38.0243 (UTC)
-	FILETIME=[F1FD2D30:01CE3747]
-Cc: Simon.Vanveerdeghem@barco.com
-Subject: [PATCH] svn fetcher: do not save authentication
+	Fri, 12 Apr 2013 16:25:35 +0200
+Received: by mail-ea0-f181.google.com with SMTP id z10so1222422ead.26
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 12 Apr 2013 07:08:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=x-received:from:to:cc:subject:date:message-id:x-mailer:in-reply-to
+	:references; bh=FiGycoiJCMnAE34y89BAVkFAB++/U9TIYY2ti+bBMDM=;
+	b=HSDB4rTPfWphpvt5XUgJcGt6yDTgFPL6JXI6cnZXM5w8H+9XX8k86wgO++1i2VUwlJ
+	m/MWKEV3CiUfx3jUf5Pafpa74suw+yszIBMHm7m69lBXBQVC38whh6ADZACpFUqVCzWd
+	GU11BlOW8uRY4IfAsn8Ffl54j1CusjqmK15Gf41F8QrGiRTh6QR+0btFQ1hxXWwzDQTp
+	tROyCrlBzQ+9tBRs2JOMt+IN55gAPFA/v6CjOoaYT7YqjUiOpBK9aWadDnUq3Iy7txl/
+	KXsUc/ImrQ+Ba8HXvX0v4MpBg1OIOKQo2dzUZoytQVAj6BCi2EJbyB4qFtfiRie8CQYG
+	8Tog==
+X-Received: by 10.14.107.69 with SMTP id n45mr28639526eeg.23.1365775689885;
+	Fri, 12 Apr 2013 07:08:09 -0700 (PDT)
+Received: from localhost (ip-62-24-80-7.net.upcbroadband.cz. [62.24.80.7])
+	by mx.google.com with ESMTPS id ca4sm11234119eeb.15.2013.04.12.07.08.08
+	(version=TLSv1.2 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Fri, 12 Apr 2013 07:08:09 -0700 (PDT)
+From: Martin Jansa <martin.jansa@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 12 Apr 2013 16:08:10 +0200
+Message-Id: <1365775690-30487-1-git-send-email-Martin.Jansa@gmail.com>
+X-Mailer: git-send-email 1.8.1.5
+In-Reply-To: <20130411133031.GF2477@jama>
+References: <20130411133031.GF2477@jama>
+Subject: [PATCH] fetch2: rename file with bad checksum instead of removing it completely
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -46,164 +40,76 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 Apr 2013 07:00:09 -0000
-Content-Transfer-Encoding: 7bit
-Content-class: urn:content-classes:message
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01CE3747.F1877FF8"
+X-List-Received-Date: Fri, 12 Apr 2013 14:25:47 -0000
 
-------_=_NextPart_001_01CE3747.F1877FF8
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+* this can be useful when someone wan't to compare old file with
+  bad checksum and new one
 
-=20
-
-=20
-
-Signed-off-by: Simon Vanveerdeghem <simon.vanveerdeghem@barco.com>
-
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
+ lib/bb/fetch2/__init__.py | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-lib/bb/fetch2/svn.py |    2 ++
-
-1 file changed, 2 insertions(+)
-
-=20
-
-diff --git a/lib/bb/fetch2/svn.py b/lib/bb/fetch2/svn.py
-
-index ea5902e..a64a461 100644
-
---- a/lib/bb/fetch2/svn.py
-
-+++ b/lib/bb/fetch2/svn.py
-
-@@ -81,6 +81,8 @@ class Svn(FetchMethod):
-
-=20
-
-         options =3D []
-
-=20
-
-+       options.append("--no-auth-cache")
-
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 1bf67dd..dd1cc93 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -74,6 +74,9 @@ class FetchError(BBFetchException):
+ 
+ class ChecksumError(FetchError):
+     """Exception when mismatched checksum encountered"""
++    def __init__(self, message, url = None, checksum = None):
++        self.checksum = checksum
++        FetchError.__init__(self, message, url)
+ 
+ class NoChecksumError(FetchError):
+     """Exception when no checksum is specified, but BB_STRICT_CHECKSUM is set"""
+@@ -561,7 +564,7 @@ def verify_checksum(u, ud, d):
+         msg = msg + '\nIf this change is expected (e.g. you have upgraded to a new version without updating the checksums) then you can use these lines within the recipe:\nSRC_URI[%s] = "%s"\nSRC_URI[%s] = "%s"\nOtherwise you should retry the download and/or check with upstream to determine if the file has become corrupted or otherwise unexpectedly modified.\n' % (ud.md5_name, md5data, ud.sha256_name, sha256data)
+ 
+     if len(msg):
+-        raise ChecksumError('Checksum mismatch!%s' % msg, u)
++        raise ChecksumError('Checksum mismatch!%s' % msg, u, md5data)
+ 
+ 
+ def update_stamp(u, ud, d):
+@@ -804,6 +807,7 @@ def try_mirror_url(newuri, origud, ud, ld, check = False):
+         if isinstance(e, ChecksumError):
+             logger.warn("Mirror checksum failure for url %s (original url: %s)\nCleaning and trying again." % (newuri, origud.url))
+             logger.warn(str(e))
++            self.rename_bad_checksum(ud, e.checksum)
+         elif isinstance(e, NoChecksumError):
+             raise
+         else:
+@@ -1388,6 +1392,7 @@ class Fetch(object):
+                         if isinstance(e, ChecksumError):
+                             logger.warn("Checksum failure encountered with download of %s - will attempt other sources if available" % u)
+                             logger.debug(1, str(e))
++                            self.rename_bad_checksum(ud, e.checksum)
+                         elif isinstance(e, NoChecksumError):
+                             raise
+                         else:
+@@ -1495,6 +1500,18 @@ class Fetch(object):
+             if ud.lockfile:
+                 bb.utils.unlockfile(lf)
+ 
++    def rename_bad_checksum(self, ud, suffix):
++        """
++        Renames files to have suffix from parameter
++        """
 +
++        if ud.localpath is None:
++            return
++
++        new_localpath = "%s_bad-checksum_%s" % (ud.localpath, suffix)
++        bb.warn("Renaming %s to %s" % (ud.localpath, new_localpath))
++        bb.utils.movefile(ud.localpath, new_localpath)
++
+ from . import cvs
+ from . import git
+ from . import gitsm
+-- 
+1.8.1.5
 
-         if ud.user:
-
-             options.append("--username %s" % ud.user)
-
-=20
-
---
-
-1.7.10.4
 
 
-
-DISCLAIMER:
-Unless indicated otherwise, the information contained in this message is =
-privileged and confidential, and is intended only for the use of the =
-addressee(s) named above and others who have been specifically =
-authorized to receive it. If you are not the intended recipient, you are =
-hereby notified that any dissemination, distribution or copying of this =
-message and/or attachments is strictly prohibited. The company accepts =
-no liability for any damage caused by any virus transmitted by this =
-email. Furthermore, the company does not warrant a proper and complete =
-transmission of this information, nor does it accept liability for any =
-delays. If you have received this message in error, please contact the =
-sender and delete the message. Thank you.
-
-------_=_NextPart_001_01CE3747.F1877FF8
-Content-Type: text/html;
-	charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
-xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
-xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
-xmlns=3D"http://www.w3.org/TR/REC-html40"><head><META =
-HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
-charset=3Dus-ascii"><meta name=3DGenerator content=3D"Microsoft Word 14 =
-(filtered medium)"><style><!--
-/* Font Definitions */
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
-/* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0cm;
-	margin-bottom:.0001pt;
-	font-size:11.0pt;
-	font-family:"Calibri","sans-serif";}
-a:link, span.MsoHyperlink
-	{mso-style-priority:99;
-	color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{mso-style-priority:99;
-	color:purple;
-	text-decoration:underline;}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	font-family:"Calibri","sans-serif";
-	color:windowtext;}
-.MsoChpDefault
-	{mso-style-type:export-only;
-	font-family:"Calibri","sans-serif";}
-@page WordSection1
-	{size:612.0pt 792.0pt;
-	margin:70.85pt 70.85pt 70.85pt 70.85pt;}
-div.WordSection1
-	{page:WordSection1;}
---></style><!--[if gte mso 9]><xml>
-<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
-</xml><![endif]--><!--[if gte mso 9]><xml>
-<o:shapelayout v:ext=3D"edit">
-<o:idmap v:ext=3D"edit" data=3D"1" />
-</o:shapelayout></xml><![endif]--></head><body lang=3DEN-US link=3Dblue =
-vlink=3Dpurple><div class=3DWordSection1><p =
-class=3DMsoNormal><o:p>&nbsp;</o:p></p><p =
-class=3DMsoNormal><o:p>&nbsp;</o:p></p><p =
-class=3DMsoNormal>Signed-off-by: Simon Vanveerdeghem =
-&lt;simon.vanveerdeghem@barco.com&gt;<o:p></o:p></p><p =
-class=3DMsoNormal>---<o:p></o:p></p><p class=3DMsoNormal> =
-lib/bb/fetch2/svn.py |&nbsp;&nbsp;&nbsp; 2 ++<o:p></o:p></p><p =
-class=3DMsoNormal> 1 file changed, 2 insertions(+)<o:p></o:p></p><p =
-class=3DMsoNormal><o:p>&nbsp;</o:p></p><p class=3DMsoNormal>diff --git =
-a/lib/bb/fetch2/svn.py b/lib/bb/fetch2/svn.py<o:p></o:p></p><p =
-class=3DMsoNormal>index ea5902e..a64a461 100644<o:p></o:p></p><p =
-class=3DMsoNormal>--- a/lib/bb/fetch2/svn.py<o:p></o:p></p><p =
-class=3DMsoNormal>+++ b/lib/bb/fetch2/svn.py<o:p></o:p></p><p =
-class=3DMsoNormal>@@ -81,6 +81,8 @@ class =
-Svn(FetchMethod):<o:p></o:p></p><p =
-class=3DMsoNormal><o:p>&nbsp;</o:p></p><p =
-class=3DMsoNormal>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
-&nbsp;&nbsp;&nbsp;options =3D []<o:p></o:p></p><p =
-class=3DMsoNormal><o:p>&nbsp;</o:p></p><p =
-class=3DMsoNormal>+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
-options.append(&quot;--no-auth-cache&quot;)<o:p></o:p></p><p =
-class=3DMsoNormal>+<o:p></o:p></p><p =
-class=3DMsoNormal>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if =
-ud.user:<o:p></o:p></p><p =
-class=3DMsoNormal>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp; options.append(&quot;--username %s&quot; % =
-ud.user)<o:p></o:p></p><p class=3DMsoNormal><o:p>&nbsp;</o:p></p><p =
-class=3DMsoNormal>--<o:p></o:p></p><p =
-class=3DMsoNormal>1.7.10.4<o:p></o:p></p></div><p></p><p>DISCLAIMER:<br>U=
-nless indicated otherwise, the information contained in this message is =
-privileged and confidential, and is intended only for the use of the =
-addressee(s) named above and others who have been specifically =
-authorized to receive it. If you are not the intended recipient, you are =
-hereby notified that any dissemination, distribution or copying of this =
-message and/or attachments is strictly prohibited. The company accepts =
-no liability for any damage caused by any virus transmitted by this =
-email. Furthermore, the company does not warrant a proper and complete =
-transmission of this information, nor does it accept liability for any =
-delays. If you have received this message in error, please contact the =
-sender and delete the message. Thank you.</body></html>
-
-------_=_NextPart_001_01CE3747.F1877FF8--
