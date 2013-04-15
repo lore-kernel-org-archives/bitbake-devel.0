@@ -1,24 +1,20 @@
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from mga03.intel.com ([143.182.124.21])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Liezhi.Yang@windriver.com>) id 1URfad-0001ka-8G
+	(envelope-from <andrei.adrianx.dinu@intel.com>) id 1URh3y-0004B4-Mv
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 15 Apr 2013 11:21:05 +0200
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id r3F93DiQ011879
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Apr 2013 02:03:13 -0700 (PDT)
-Received: from pek-usp-9.wrs.com (128.224.162.26) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.2.342.3;
-	Mon, 15 Apr 2013 02:03:13 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 15 Apr 2013 16:47:35 +0800
-Message-ID: <cover.1365993432.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.7
-MIME-Version: 1.0
-Subject: [PATCH 0/1] monitordisk.py: disable inode checking for btrfs
+	Mon, 15 Apr 2013 12:55:07 +0200
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 15 Apr 2013 03:37:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.87,474,1363158000"; d="scan'208";a="286240160"
+Received: from adinu-vostro-460.rb.intel.com ([10.237.105.147])
+	by azsmga001.ch.intel.com with ESMTP; 15 Apr 2013 03:37:35 -0700
+From: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 15 Apr 2013 13:38:12 +0300
+Message-Id: <1366022295-4744-1-git-send-email-andrei.adrianx.dinu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH 0/3] Generic bitbake errors for hob ui
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,25 +26,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 15 Apr 2013 09:21:07 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 15 Apr 2013 10:55:09 -0000
 
-The following changes since commit 068085f79010e3db70085d4b789f84ae721e4901:
+Implemented a way to handle generic bitbake errors when
+starting a ui ( in this case hob ).
 
-  ref-manual: Review comments applied for patch session (2013-04-13 23:57:17 +0100)
+[HOB #3909]
 
-are available in the git repository at:
-  git://git.pokylinux.org/poky-contrib robert/monitor
-  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/monitor
+Andrei Dinu (3):
+  bitbake : handle each ui error
+  hob.py : implemented handle_sys_exit() for hob
+  hoberror.py : new class in handling hob errors
 
-Robert Yang (1):
-  monitordisk.py: disable inode checking for btrfs
-
- bitbake/lib/bb/monitordisk.py |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ bitbake/bin/bitbake                      |   13 +++--
+ bitbake/lib/bb/ui/crumbs/hig/hoberror.py |   87 ++++++++++++++++++++++++++++++
+ bitbake/lib/bb/ui/hob.py                 |    8 ++-
+ 3 files changed, 103 insertions(+), 5 deletions(-)
+ create mode 100644 bitbake/lib/bb/ui/crumbs/hig/hoberror.py
 
 -- 
-1.7.7
+1.7.9.5
 
 
 
