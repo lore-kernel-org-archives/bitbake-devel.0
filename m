@@ -1,31 +1,34 @@
-Received: from dan.rpsys.net ([93.97.175.187])
+Received: from mail-pd0-f175.google.com ([209.85.192.175])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1UTSgG-0005mT-46 for bitbake-devel@lists.openembedded.org;
-	Sat, 20 Apr 2013 09:57:58 +0200
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r3K7eqNj031877; Sat, 20 Apr 2013 08:40:52 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 2I9T36MIQxE8; Sat, 20 Apr 2013 08:40:52 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r3K7ekvd031867
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Sat, 20 Apr 2013 08:40:48 +0100
-Message-ID: <1366443597.10502.140.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Purcareata Bogdan-B43198 <B43198@freescale.com>
-Date: Sat, 20 Apr 2013 08:39:57 +0100
-In-Reply-To: <E7E317BD5B5D764682EEAC13B01676E2650BB2@039-SN2MPN1-021.039d.mgd.msft.net>
-References: <E7E317BD5B5D764682EEAC13B01676E2650BB2@039-SN2MPN1-021.039d.mgd.msft.net>
-X-Mailer: Evolution 3.6.2-0ubuntu0.1 
-Mime-Version: 1.0
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: bitbake clean / cleanall / cleansstate not working
+	(envelope-from <martin.jansa@gmail.com>) id 1UTgzL-0006iT-Ho
+	for bitbake-devel@lists.openembedded.org;
+	Sun, 21 Apr 2013 01:14:37 +0200
+Received: by mail-pd0-f175.google.com with SMTP id g10so2849203pdj.34
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 20 Apr 2013 15:56:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=x-received:date:from:to:subject:message-id:mime-version
+	:content-type:content-disposition:user-agent;
+	bh=WJF+hAEzs3whfV/sR8MCdJsjqHe+Wcklpdo/HDGXcd0=;
+	b=r1Na88r5cKlwsnu/11BIkOWr6uefEvs2U5Pe/AiVPKqeuf8W8oYvrrh+Qpez6EEX03
+	ZBoK2RHujOY1KsmSyvpZJIKElg2DzfDQNa0J5K5VkVNmc7Jo6j4NZwXzqXAfdZzfKPKs
+	KVJdSotfZQ7WacoHrqY1MilutN26ni8IPpVYD2RBARHeN+weMm6kNnoPR/RMMv6/KZEr
+	RRRsgJsGkflOoiR5xcgX634I2e12/m5HSLRBqWSm4OuznwVTNDdPK34LM2mzm5ZZXIhN
+	SX/q7BAgBrSGBobTq0gpz2QvLB7yCoWFhfTYpcRpDYGLJWxo/tndhjlj/mkRN0o1lRF4
+	CfZg==
+X-Received: by 10.66.156.103 with SMTP id wd7mr10788566pab.8.1366498618036;
+	Sat, 20 Apr 2013 15:56:58 -0700 (PDT)
+Received: from localhost (ip-62-24-80-7.net.upcbroadband.cz. [62.24.80.7])
+	by mx.google.com with ESMTPS id ya4sm18671386pbb.24.2013.04.20.15.56.55
+	(version=TLSv1.2 cipher=RC4-SHA bits=128/128);
+	Sat, 20 Apr 2013 15:56:56 -0700 (PDT)
+Date: Sun, 21 Apr 2013 00:56:59 +0200
+From: Martin Jansa <martin.jansa@gmail.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Message-ID: <20130420225659.GM2489@jama>
+MIME-Version: 1.0
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Subject: bash-completion
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -37,40 +40,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 20 Apr 2013 07:58:00 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sat, 20 Apr 2013 23:14:39 -0000
+X-Groupsio-MsgNum: 3391
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="l3ej7W/Jb2pB3qL2"
+Content-Disposition: inline
 
-On Wed, 2013-04-17 at 09:42 +0000, Purcareata Bogdan-B43198 wrote:
-> Hello,
-> 
-> I am using Yocto with BB_VERSION = "1.18.0" and the commands in the subject do not seem to work - they don't do anything. The image has the packages built.
-> 
-> $ bitbake -c cleanall gcc
-> [ ... ]
-> NOTE: Tasks Summary: Attempted 3 tasks of which 0 didn't need to be rerun and all succeeded.
-> 
-> $ bitbake -c clean gcc
-> [ ... ]
-> NOTE: Tasks Summary: Attempted 1 tasks of which 0 didn't need to be rerun and all succeeded.
-> 
-> $ bitbake -c cleansstate gcc
-> [ ... ]
-> NOTE: Tasks Summary: Attempted 2 tasks of which 0 didn't need to be rerun and all succeeded.
-> 
-> The information in [ ... ] is not really relevant. I just wanted to
-> give the output message. I know the error description is vague, but so
-> is this behavior. I don't know what it could be further related to.
+--l3ej7W/Jb2pB3qL2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What exactly are you trying to clean? The above messages say it ran 1, 2
-or 3 tasks and they all succeeded.
+There is old thread on oe-devel about it
+http://lists.linuxtogo.org/pipermail/openembedded-devel/2007-December/00376=
+4.html
 
-Keep in mind there are several "gcc" components such as gcc-cross,
-gcc-cross-initial and so on. "gcc" is the one used on target.
+Is there any reason why it wasn't added to contrib yet?
+
+Would it be applied if I send git patch adding it and update commands to
+include cleansstate and packagedata + new options like -S and maybe
+more?
 
 Cheers,
 
-Richard
+--=20
+Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
 
+--l3ej7W/Jb2pB3qL2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
+iEYEARECAAYFAlFzHTsACgkQN1Ujt2V2gBwK+QCfXmcVtDS3pP7fo4D6pdcjjyhS
+wVUAn1w2MF9ct+yIpmMm1z9Zpbb8xrht
+=GHNe
+-----END PGP SIGNATURE-----
+
+--l3ej7W/Jb2pB3qL2--
