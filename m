@@ -1,26 +1,37 @@
-Received: from exprod5og117.obsmtp.com ([64.18.0.149])
+Received: from tygrysek.juszkiewicz.com.pl ([178.33.81.99])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <martin.donnelly@ge.com>) id 1UVVbp-0003qt-FT
+	(envelope-from <marcin.juszkiewicz@linaro.org>) id 1UUMaL-000347-HE
 	for bitbake-devel@lists.openembedded.org;
-	Fri, 26 Apr 2013 01:29:58 +0200
-Received: from alpmlip12.e2k.ad.ge.com ([165.156.5.1]) (using TLSv1) by
-	exprod5ob117.postini.com ([64.18.4.12]) with SMTP
-	ID DSNKUXm4Rq7yUNCkp4P+JqcJIVKYY19j3l2r@postini.com;
-	Thu, 25 Apr 2013 16:12:07 PDT
-Received: from unknown (HELO alpmlip01.e2k.ad.ge.com) ([3.159.17.48])
-	by alpmlip12.e2k.ad.ge.com with ESMTP/TLS/RC4-SHA;
-	25 Apr 2013 12:41:25 -0400
-Received: from selma.edi.geip.ge.com ([3.26.68.70])
-	by alpmlip01.e2k.ad.ge.com with ESMTP; 25 Apr 2013 12:41:26 -0400
-Received: from edna.edi.geip.ge.com (edna.edi.geip.ge.com [3.26.68.71])
-	by selma.edi.geip.ge.com (Postfix) with ESMTP id 9F37BE0826;
-	Thu, 25 Apr 2013 17:41:24 +0100 (BST)
-From: Martin Donnelly <martin.donnelly@ge.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 25 Apr 2013 17:41:06 +0100
-Message-Id: <1366908066-8493-1-git-send-email-martin.donnelly@ge.com>
-X-Mailer: git-send-email 1.7.1
-Subject: [PATCH] goggle: fix invalid error check
+	Mon, 22 Apr 2013 21:39:44 +0200
+Received: by tygrysek.juszkiewicz.com.pl (Postfix, from userid 65534)
+	id 39402D2320; Mon, 22 Apr 2013 21:12:18 +0200 (CEST)
+X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
+	tygrysek.juszkiewicz.com.pl
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=5.0 tests=ALL_TRUSTED,BAYES_00
+	autolearn=ham version=3.3.2
+Received: from [192.168.1.112] (87-206-60-225.dynamic.chello.pl
+	[87.206.60.225])
+	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: marcin@juszkiewicz.com.pl)
+	by tygrysek.juszkiewicz.com.pl (Postfix) with ESMTPSA id 083E9D20DD;
+	Mon, 22 Apr 2013 21:11:47 +0200 (CEST)
+Message-ID: <51758B94.8010405@linaro.org>
+Date: Mon, 22 Apr 2013 21:12:20 +0200
+From: Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
+Organization: Linaro
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:17.0) Gecko/20130404 Thunderbird/17.0.5
+MIME-Version: 1.0
+To: Richard Purdie <rpurdie@rpsys.net>
+References: <1366640172.23738.12.camel@ted>
+In-Reply-To: <1366640172.23738.12.camel@ted>
+X-Enigmail-Version: 1.4.6
+X-Mailman-Approved-At: Sun, 28 Apr 2013 23:31:40 +0200
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	openembedded-core <openembedded-core@lists.openembedded.org>
+Subject: Re: [OE-core] BitBake changes in the Yocto Project 1.5 cycle
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -32,31 +43,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 25 Apr 2013 23:30:03 -0000
+X-List-Received-Date: Mon, 22 Apr 2013 19:39:45 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-runCommand was returning 'error' but checking for 'err'
-resulting in an exception.
+W dniu 22.04.2013 16:16, Richard Purdie pisze:
+> I've been giving some thought to where BitBake needs to go in the 
+> future in order to deliver for its users. It started life as a 
+> commandline utility and its grown a lot since it was first created.
+> I think there are some key decisions that need to be taken to ensure 
+> its future growth.
 
-Signed-off-by: Martin Donnelly <martin.donnelly@ge.com>
----
- lib/bb/ui/goggle.py |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+There is one thing which kind of bothers me. "ERROR" message which is
+just a warning. Like:
 
-diff --git a/lib/bb/ui/goggle.py b/lib/bb/ui/goggle.py
-index c0785b7..e8a54ab 100644
---- a/lib/bb/ui/goggle.py
-+++ b/lib/bb/ui/goggle.py
-@@ -81,7 +81,7 @@ def main (server, eventHandler):
- 
-     try:
-         cmdline, error = server.runCommand(["getCmdLineAction"])
--        if err:
-+        if error:
-             print("Error getting bitbake commandline: %s" % error)
-             return 1
-         elif not cmdline:
--- 
-1.7.1
+ERROR: libelf is listed in PACKAGES multiple times, this leads to packaging errors.
+ERROR: libasm is listed in PACKAGES multiple times, this leads to packaging errors.
+ERROR: libdw is listed in PACKAGES multiple times, this leads to packaging errors.
+ERROR: libdw-dev is listed in PACKAGES multiple times, this leads to packaging errors.
+ERROR: libasm-dev is listed in PACKAGES multiple times, this leads to packaging errors.
+ERROR: libelf-dev is listed in PACKAGES multiple times, this leads to packaging errors.
 
+If it is error then let BitBake exit instead of doing task. If it is
+not error but just a warning then let it be renamed?
+
+My recent build failed with:
+
+--------
+NOTE: recipe linaro-image-minimal-1.0-r0: task do_rm_work_all: Started
+NOTE: recipe linaro-image-minimal-1.0-r0: task do_rm_work_all: Succeeded
+NOTE: Tasks Summary: Attempted 2247 tasks of which 915 didn't need to be rerun and all succeeded.
+
+Summary: There were 3 WARNING messages shown.
+Summary: There were 6 ERROR messages shown, returning a non-zero exit code.
+Build step 'Execute shell' marked build as failure
+--------
+
+"all succeeded" does not look like a reason to fail a build.
 
 
