@@ -1,28 +1,52 @@
-Received: from dan.rpsys.net ([93.97.175.187])
+Received: from va3ehsobe006.messaging.microsoft.com ([216.32.180.16]
+	helo=va3outboundpool.messaging.microsoft.com)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <rpurdie@rpsys.net>) id 1UUHpw-0003eS-Tf
+	(envelope-from <B43198@freescale.com>) id 1UUIrQ-0005L3-Vn
 	for bitbake-devel@lists.openembedded.org;
-	Mon, 22 Apr 2013 16:35:23 +0200
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r3MEHHCe027691; Mon, 22 Apr 2013 15:17:17 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id S8Tez0WMCMhH; Mon, 22 Apr 2013 15:17:17 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r3MEHEPD027686
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Mon, 22 Apr 2013 15:17:15 +0100
-Message-ID: <1366640172.23738.12.camel@ted>
-From: Richard Purdie <rpurdie@rpsys.net>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 22 Apr 2013 15:16:12 +0100
-X-Mailer: Evolution 3.6.2-0ubuntu0.1 
-Mime-Version: 1.0
-Cc: openembedded-core <openembedded-core@lists.openembedded.org>
-Subject: BitBake changes in the Yocto Project 1.5 cycle
+	Mon, 22 Apr 2013 17:40:57 +0200
+Received: from mail65-va3-R.bigfish.com (10.7.14.231) by
+	VA3EHSOBE001.bigfish.com (10.7.40.21) with Microsoft SMTP Server id
+	14.1.225.23; Mon, 22 Apr 2013 14:22:53 +0000
+Received: from mail65-va3 (localhost [127.0.0.1])	by mail65-va3-R.bigfish.com
+	(Postfix) with ESMTP id EA2064C0310;
+	Mon, 22 Apr 2013 14:22:52 +0000 (UTC)
+X-Forefront-Antispam-Report: CIP:70.37.183.190; KIP:(null); UIP:(null); IPV:NLI;
+	H:mail.freescale.net; RD:none; EFVD:NLI
+X-SpamScore: -3
+X-BigFish: VS-3(zzbb2dI98dI9371I1432Izz1f42h1fc6h1ee6h1de0h1fdah1202h1e76h1d1ah1d2ahzzz2dh2a8h668h839h8e2h8e3h947hd25hf0ah1288h12a5h12a9h12bdh137ah13b6h1441h1504h1537h153bh15d0h162dh1631h1758h18e1h1946h19b5h1ad9h1b0ahbe9i1155h)
+Received: from mail65-va3 (localhost.localdomain [127.0.0.1]) by mail65-va3
+	(MessageSwitch) id 1366640571756692_19664;
+	Mon, 22 Apr 2013 14:22:51 +0000 (UTC)
+Received: from VA3EHSMHS023.bigfish.com (unknown [10.7.14.249])	by
+	mail65-va3.bigfish.com (Postfix) with ESMTP id A29B4180086;
+	Mon, 22 Apr 2013 14:22:51 +0000 (UTC)
+Received: from mail.freescale.net (70.37.183.190) by VA3EHSMHS023.bigfish.com
+	(10.7.99.33) with Microsoft SMTP Server (TLS) id 14.1.225.23;
+	Mon, 22 Apr 2013 14:22:46 +0000
+Received: from 039-SN2MPN1-023.039d.mgd.msft.net ([169.254.3.123]) by
+	039-SN1MMR1-004.039d.mgd.msft.net ([::1]) with mapi id 14.02.0328.011;
+	Mon, 22 Apr 2013 14:22:46 +0000
+From: Purcareata Bogdan-B43198 <B43198@freescale.com>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+Thread-Topic: [bitbake-devel] bitbake clean / cleanall / cleansstate not
+	working
+Thread-Index: Ac47T+pIaPJdHV4DTyGjcsswekyYHwCSlcCAAGjAqmAAAwN/AAAG4jYA
+Date: Mon, 22 Apr 2013 14:22:45 +0000
+Message-ID: <E7E317BD5B5D764682EEAC13B01676E2676093@039-SN2MPN1-023.039d.mgd.msft.net>
+References: <E7E317BD5B5D764682EEAC13B01676E2650BB2@039-SN2MPN1-021.039d.mgd.msft.net>
+	<1366443597.10502.140.camel@ted>
+	<E7E317BD5B5D764682EEAC13B01676E26731F2@039-SN2MPN1-023.039d.mgd.msft.net>
+	<3109661.1Vn9mzWreB@helios>
+In-Reply-To: <3109661.1Vn9mzWreB@helios>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.171.74.6]
+MIME-Version: 1.0
+X-OriginatorOrg: freescale.com
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: bitbake clean / cleanall / cleansstate not working
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -34,56 +58,68 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 22 Apr 2013 14:35:28 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 22 Apr 2013 15:40:57 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <E323FD11B62E6C4BB0B70D26F2453823@mgd.freescale.com>
+Content-Transfer-Encoding: quoted-printable
 
-I've been giving some thought to where BitBake needs to go in the future
-in order to deliver for its users. It started life as a commandline
-utility and its grown a lot since it was first created. I think there
-are some key decisions that need to be taken to ensure its future
-growth.
+On 4/22/2013 2:05 PM, Paul Eggleton wrote:
+> On Monday 22 April 2013 09:42:07 Purcareata Bogdan-B43198 wrote:
+>> Richard Purdie wrote:
+>>> What exactly are you trying to clean? The above messages say it ran 1, =
+2
+>>> or 3 tasks and they all succeeded.
+>> In my example, "gcc" can be replaced with any package provided by the Yo=
+cto
+>> recipes. The problem is that nothing is being run - "0 didn't need to be
+>> rerun " - so the built package is never cleaned. This issue is present w=
+hen
+>> running all clean commands - clean, cleanall, cleansstate.
+> "0 didn't need to be rerun" does not mean nothing was done - it means the
+> opposite. The number reported here is the number of tasks that were able =
+to be
+> restored from shared state - none (0) in this case because this is not
+> applicable to the clean* tasks.
+>
+> Other than the message above, how are you determining that these tasks ar=
+e not
+> doing anything?
 
-The first proposal is that we should change the BitBake server so it
-becomes memory resident. This means that the first time you run "bitbake
-X", the server loads into memory, then subsequent BitBake commands would
-just connect to the server and do things. We'd add in some kind of
-timeout of say 15 minutes so that it would gracefully exit.
+Thank you for the fast reply!
 
-The reason for doing this is simple, it would allow commands to be much
-more responsive rather than having the cache/configuration loading each
-time which is where our current overhead is. Obviously it would detect
-changes to things like MACHINE setting, local.conf and re-parse as
-normal in those cases. The intent would be to speed up the interaction
-with the system so you don't have the annoying delays/lag.
+I've run some more tests and found some new stuff.
 
-This would then lead into the second proposal which is to add better
-support for new commands. This would be along the lines of some of
-Chris' work with bb, the bitbake-env script and so on but with the added
-advantage of being able to connect to the server for info. It would
-allow us to add query commands for things like the available
-PACKAGECONFIG options/settings much more easily than the current
-infrastructure. There are some issues about whether these would belong
-as part of BitBake or OE and we'd need to figure that out.
+I'm running this:
+     bitbake <package>
+     bitbake -c cleanall <package>
+     bitbake <package>
 
-The third proposal is to do away with the BitBake wrapper script in
-OE-Core for pseudo. Doing this within BitBake is going to be hard and
-require some rework but ultimately, I think it will be worth it from a
-performance perspective and also stops some of the user confusion about
-BitBake running twice (two sets of log files and so on).
+My expected result was that, at the second run of bitbake <package>, the=20
+whole package will be built again starting from fetch. While this is=20
+true for packages such as gcc or busybox, it's not true for the lxc=20
+package - this one starts from do_populate_sysroot (or somewhere near, I=20
+can't seem to tell since it's running very fast). I discovered this=20
+while developing some patches for the lxc recipe. I was hoping to see=20
+the functionality applied after clean and build, but it was not there.
 
-These changes should also be in keeping with the expanded UI work and
-options such as WebHob and allowing remote use of multiple UIs connected
-to servers.
+When I saw "0 didn't need to be rerun " after bitbake cleanall, I=20
+thought it didn't run anything - now I understand what it means. I=20
+noticed this behavior for other packages as well, so I didn't bother to=20
+build the packages after clean, since I thought cleaning was the problem.
 
-Feedback/comments/suggestions etc./ welcome as always.
+Do you think this behavior is recipe dependent?
 
-I've cc'd the OE-Core list but further discussion should be taken to
-bitbake-devel.
-
-Cheers,
-
-Richard
+>
+>>> Keep in mind there are several "gcc" components such as gcc-cross,
+>>> gcc-cross-initial and so on. "gcc" is the one used on target.
+>> Do you think that a certain package can't be cleaned because of its
+>> dependencies?
+> No, that's very unlikely to be the case.
+>
+> Cheers,
+> Paul
+>
 
 
 
