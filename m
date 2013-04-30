@@ -1,33 +1,33 @@
-Received: from mail2.eads.net ([80.156.45.114] helo=mail.eads.net)
+Received: from mail-pb0-f42.google.com ([209.85.160.42])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <Wolfgang.Hauser.external@cassidian.com>)
-	id 1UUaXJ-00071U-JM; Tue, 23 Apr 2013 12:33:22 +0200
-Received: from gsx3072-vs5.mxchg.m.corp ([53.147.176.149])
-	by mail.eads.net (8.13.8/8.13.8/Debian-2) with ESMTP id r3NA2cFH014235; 
-	Tue, 23 Apr 2013 12:02:39 +0200
-Received: from gsx300a.mxchg.m.corp ([10.43.212.131]) by
-	gsx3072-vs5.mxchg.m.corp with Microsoft SMTPSVC(6.0.3790.4675); 
-	Tue, 23 Apr 2013 12:02:57 +0200
-X-MimeOLE: Produced By Microsoft Exchange V6.5
-MIME-Version: 1.0
-Date: Tue, 23 Apr 2013 12:02:57 +0200
-Message-ID: <0C757E680E33864AB113392C7E83F910019806D9@GSX300A.mxchg.m.corp>
-In-Reply-To: <51765508.1070803@windriver.com>
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Thread-Topic: [OE-core] BitBake changes in the Yocto Project 1.5 cycle
-Thread-Index: Ac5ABada16KtWc8wQ5uu4H1KFjhm/QAARhAg
-References: <1366640172.23738.12.camel@ted>
-	<51758B94.8010405@linaro.org><1366707875.23738.40.camel@ted>
-	<517653EA.9000401@linaro.org> <51765508.1070803@windriver.com>
-From: "Hauser, Wolfgang (external)" <Wolfgang.Hauser.external@cassidian.com>
-To: "Patches and discussions about the oe-core layer"
-	<openembedded-core@lists.openembedded.org>, 
-	<bitbake-devel@lists.openembedded.org>
-X-OriginalArrivalTime: 23 Apr 2013 10:02:57.0792 (UTC)
-	FILETIME=[BB14F800:01CE4009]
-X-Mailman-Approved-At: Sun, 28 Apr 2013 23:31:41 +0200
-Subject: Re: [OE-core] BitBake changes in the Yocto Project 1.5 cycle
+	(envelope-from <martin.jansa@gmail.com>) id 1UX8Ru-0004Rv-Nd
+	for bitbake-devel@lists.openembedded.org;
+	Tue, 30 Apr 2013 13:10:42 +0200
+Received: by mail-pb0-f42.google.com with SMTP id up15so203597pbc.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 30 Apr 2013 03:52:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=x-received:from:to:cc:subject:date:message-id:x-mailer;
+	bh=HnMP+dfKVNtq/BBs4lCPuTCuXA3ORtvH32sFuefLYcc=;
+	b=sePRWwZBqxYnryxMgNQH7Cq1+5q8hyuJfbmzzstkjk2VCITD8OVSHbddSbbfD1KKZH
+	wuLyxd4vmlkid4JgpDvGVuBmabY63xZ5TNTaOpXq8ZwsE1NlID3FIzN8mylBksuKCrGi
+	odduPe3XwoQa4UyNDVGfU6V6ZHDIH1OrTCjMUgH7AsIp8HHEah7JqjWm7K8yAjq6G0Zy
+	tS4UhMKyzfnq/GpcmtMJXOwZ6TIo2MQ1mtYTVuzLcRoFFggJ1Cl8igQKiwvChRP2A6A6
+	kGyv4pCuCOWkzX0AQqJftOmy4G4EdyMxaqym80FbEG3J2pZj7eyeaMV3F9gspBooU9yU
+	YhXw==
+X-Received: by 10.68.103.36 with SMTP id ft4mr74508217pbb.2.1367319147611;
+	Tue, 30 Apr 2013 03:52:27 -0700 (PDT)
+Received: from localhost (ip-62-24-80-145.net.upcbroadband.cz. [62.24.80.145])
+	by mx.google.com with ESMTPSA id
+	pa2sm30156991pac.9.2013.04.30.03.52.24 for <multiple recipients>
+	(version=TLSv1.2 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Tue, 30 Apr 2013 03:52:26 -0700 (PDT)
+From: Martin Jansa <martin.jansa@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 30 Apr 2013 12:52:40 +0200
+Message-Id: <1367319160-19785-1-git-send-email-Martin.Jansa@gmail.com>
+X-Mailer: git-send-email 1.8.2.1
+Subject: [RFC] git: add BB_FETCH_PREMIRROR_READONLY option
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -39,30 +39,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 23 Apr 2013 10:33:25 -0000
-Content-class: urn:content-classes:message
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Tue, 30 Apr 2013 11:10:51 -0000
 
-Hello,=20
-if there was a plan to divide bitbake into a server and a client part, I
-would suggest to add a kind of "fetching proxy" functionality or run
-mode to the bitbake sever part.
+* just RFC, because I haven't even tested this change,
+  use it only to describe the issue and discuss it
 
-The reason behind this suggestion is: If you sitting behind a
-restrictive proxy/firewall and want to use yocto (OE) you always get
-problems to load from git:// svn:// or cvn:// URLs.
+* remove symlink to ud.fullmirror when BB_FETCH_PREMIRROR_READONLY is set
 
-Here it may be useful to be able to run a bb fetch proxy outside of the
-firewall that tunnels the protocols by https or ssh (via (ssl)port 443
-like github does for git), or acts as a flexible download server, do the
-fetching part and providing the download archives to an other server
-through a common usable protocol tunnel.
-May be this was a special issue, but it may ease the use of yocto (OE)
-extremely.
+* with read-only PREMIRROR (e.g. mounted over NFS or CIFS
+  and referenced as file:///mnt/premirror) we cannot use
+  BB_GENERATE_MIRROR_TARBALLS because all git2_abc.git.tar.gz
+  files later became just symlinks to read-only location in PREMIRROR
+  (it works fine on first build and for new components, because
+  at that time there isn't tarball on PREMIRROR yet).
 
-Regards
-Wolfgang Hauser
+  ERROR: Fetcher failure: Fetch command failed with exit code 141, output:
+  tar (child): /build/downloads/git2_abc.git.tar.gz: Cannot open: Read-only file system
+  tar (child): Error is not recoverable: exiting now
+
+* maybe we can change the default behavior and always remove symlink
+  without introducing new option
+
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ lib/bb/fetch2/git.py | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 052802e..14a8bc2 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -217,6 +217,10 @@ class Git(FetchMethod):
+     def build_mirror_data(self, url, ud, d):
+         # Generate a mirror tarball if needed
+         if ud.write_tarballs and (ud.repochanged or not os.path.exists(ud.fullmirror)):
++            premirror_readonly = (d.getVar("BB_FETCH_PREMIRROR_READONLY", True) == "1")
++            if premirror_readonly and os.path.islink(ud.fullmirror):
++                os.unlink(origud.localpath)
++
+             os.chdir(ud.clonedir)
+             logger.info("Creating tarball of git repository")
+             runfetchcmd("tar -czf %s %s" % (ud.fullmirror, os.path.join(".") ), d)
+-- 
+1.8.2.1
+
 
 
