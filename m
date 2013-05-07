@@ -1,20 +1,22 @@
 Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <andrei.adrianx.dinu@intel.com>) id 1UZdCq-0000da-Ej
+	(envelope-from <cristiana.voicu@intel.com>) id 1UZdFQ-0000z9-0e
 	for bitbake-devel@lists.openembedded.org;
-	Tue, 07 May 2013 10:25:04 +0200
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 07 May 2013 01:03:48 -0700
+	Tue, 07 May 2013 10:27:45 +0200
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga102.jf.intel.com with ESMTP; 07 May 2013 01:07:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.87,627,1363158000"; d="scan'208";a="309420233"
-Received: from adinu-vostro-460.rb.intel.com ([10.237.105.57])
-	by orsmga001.jf.intel.com with ESMTP; 07 May 2013 01:05:43 -0700
-From: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+X-IronPort-AV: E=Sophos;i="4.87,627,1363158000"; d="scan'208";a="330103963"
+Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.151])
+	by fmsmga001.fm.intel.com with ESMTP; 07 May 2013 01:09:41 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  7 May 2013 11:06:34 +0300
-Message-Id: <1367913994-25475-1-git-send-email-andrei.adrianx.dinu@intel.com>
+Date: Tue,  7 May 2013 11:07:53 +0300
+Message-Id: <1367914076-4863-2-git-send-email-cristiana.voicu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] Updated information in tooltips
+In-Reply-To: <1367914076-4863-1-git-send-email-cristiana.voicu@intel.com>
+References: <1367914076-4863-1-git-send-email-cristiana.voicu@intel.com>
+Subject: [PATCH 1/4] hob: sort alphabetically results in groups of recipes/packages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -26,42 +28,111 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 07 May 2013 08:25:05 -0000
+X-List-Received-Date: Tue, 07 May 2013 08:27:46 -0000
 
-Updated information for "Additional free space" and
-"Image basic size" to match the description in the
-manual.
+When you search a string, there are 2 groups: recipes/packages starting
+with that string, and the rest. These 2 groups are now sorted.
 
-[HOB #4354]
-[HOB #4355]
-
-Signed-off-by: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+[YOCTO #4111]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- .../lib/bb/ui/crumbs/hig/advancedsettingsdialog.py |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hoblistmodel.py |   38 ++++++++++--------------------
+ 1 file changed, 12 insertions(+), 26 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/hig/advancedsettingsdialog.py b/bitbake/lib/bb/ui/crumbs/hig/advancedsettingsdialog.py
-index 2911906..bbcaba8 100644
---- a/bitbake/lib/bb/ui/crumbs/hig/advancedsettingsdialog.py
-+++ b/bitbake/lib/bb/ui/crumbs/hig/advancedsettingsdialog.py
-@@ -264,7 +264,7 @@ class AdvancedSettingsDialog (CrumbsDialog, SettingsUIHelper):
-         sub_vbox = gtk.VBox(False, 6)
-         advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
-         label = self.gen_label_widget("Image basic size (in MB)")
--        tooltip = "Sets the basic size of your target image.\nThis is the basic size of your target image unless your selected package size exceeds this value or you select \'Image Extra Size\'."
-+        tooltip = "Defines the size for the generated image. The OpenEmbedded build system determines the final size for the generated image using an algorithm that takes into account the initial disk space used for the generated image, the Image basic size value, and the Additional free space value.\n\nFor more information, check the <a href=\"http://www.yoctoproject.org/docs/current/poky-ref-manual/poky-ref-manual.html#var-IMAGE_ROOTFS_SIZE\">Yocto Project Reference Manual</a>."
-         rootfs_size_widget, self.rootfs_size_spinner = self.gen_spinner_widget(int(self.configuration.image_rootfs_size*1.0/1024), 0, 65536,"<b>Image basic size</b>" + "*" + tooltip)
-         sub_vbox.pack_start(label, expand=False, fill=False)
-         sub_vbox.pack_start(rootfs_size_widget, expand=False, fill=False)
-@@ -272,7 +272,7 @@ class AdvancedSettingsDialog (CrumbsDialog, SettingsUIHelper):
-         sub_vbox = gtk.VBox(False, 6)
-         advanced_vbox.pack_start(sub_vbox, expand=False, fill=False)
-         label = self.gen_label_widget("Additional free space (in MB)")
--        tooltip = "Sets the extra free space of your target image.\nBy default, the system reserves 30% of your image size as free space. If your image contains zypper, it brings in 50MB more space. The maximum free space is 64GB."
-+        tooltip = "Sets extra free disk space to be added to the generated image. Use this variable when you want to ensure that a specific amount of free disk space is available on a device after an image is installed and running."
-         extra_size_widget, self.extra_size_spinner = self.gen_spinner_widget(int(self.configuration.image_extra_size*1.0/1024), 0, 65536,"<b>Additional free space</b>" + "*" + tooltip)
-         sub_vbox.pack_start(label, expand=False, fill=False)
-         sub_vbox.pack_start(extra_size_widget, expand=False, fill=False)
+diff --git a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+index 547c1ca..42fd6ce 100644
+--- a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
++++ b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+@@ -152,12 +152,7 @@ class PackageListModel(gtk.ListStore):
+         if user_data:
+             val1 = model.get_value(iter1, PackageListModel.COL_NAME)
+             val2 = model.get_value(iter2, PackageListModel.COL_NAME)
+-            if val1.startswith(user_data) and not val2.startswith(user_data):
+-                return -1
+-            elif not val1.startswith(user_data) and val2.startswith(user_data):
+-                return 1
+-            else:
+-                return 0
++            return self.cmp_vals(val1, val2, user_data)
+         else:
+             val1 = model.get_value(iter1, PackageListModel.COL_FADE_INC)
+             val2 = model.get_value(iter2, PackageListModel.COL_INC)
+@@ -167,12 +162,7 @@ class PackageListModel(gtk.ListStore):
+         if user_data:
+             val1 = model.get_value(iter1, PackageListModel.COL_NAME)
+             val2 = model.get_value(iter2, PackageListModel.COL_NAME)
+-            if val1.startswith(user_data) and not val2.startswith(user_data):
+-                return -1
+-            elif not val1.startswith(user_data) and val2.startswith(user_data):
+-                return 1
+-            else:
+-                return 0
++            return self.cmp_vals(val1, val2, user_data)
+         else:
+             val1 = model.get_value(iter1, PackageListModel.COL_INC)
+             val2 = model.get_value(iter2, PackageListModel.COL_INC)
+@@ -181,12 +171,15 @@ class PackageListModel(gtk.ListStore):
+     def sort_func(self, model, iter1, iter2, user_data):
+         val1 = model.get_value(iter1, PackageListModel.COL_NAME)
+         val2 = model.get_value(iter2, PackageListModel.COL_NAME)
++        return self.cmp_vals(val1, val2, user_data)
++
++    def cmp_vals(self, val1, val2, user_data):
+         if val1.startswith(user_data) and not val2.startswith(user_data):
+             return -1
+         elif not val1.startswith(user_data) and val2.startswith(user_data):
+             return 1
+         else:
+-            return 0
++            return cmp(val1, val2)
+ 
+     def convert_vpath_to_path(self, view_model, view_path):
+         # view_model is the model sorted
+@@ -533,12 +526,7 @@ class RecipeListModel(gtk.ListStore):
+         if user_data:
+             val1 = model.get_value(iter1, RecipeListModel.COL_NAME)
+             val2 = model.get_value(iter2, RecipeListModel.COL_NAME)
+-            if val1.startswith(user_data) and not val2.startswith(user_data):
+-                return -1
+-            elif not val1.startswith(user_data) and val2.startswith(user_data):
+-                return 1
+-            else:
+-                return 0
++            return self.cmp_vals(val1, val2, user_data)
+         else:
+             val1 = model.get_value(iter1, RecipeListModel.COL_FADE_INC)
+             val2 = model.get_value(iter2, RecipeListModel.COL_INC)
+@@ -548,12 +536,7 @@ class RecipeListModel(gtk.ListStore):
+         if user_data:
+             val1 = model.get_value(iter1, RecipeListModel.COL_NAME)
+             val2 = model.get_value(iter2, RecipeListModel.COL_NAME)
+-            if val1.startswith(user_data) and not val2.startswith(user_data):
+-                return -1
+-            elif not val1.startswith(user_data) and val2.startswith(user_data):
+-                return 1
+-            else:
+-                return 0
++            return self.cmp_vals(val1, val2, user_data)
+         else:
+             val1 = model.get_value(iter1, RecipeListModel.COL_INC)
+             val2 = model.get_value(iter2, RecipeListModel.COL_INC)
+@@ -562,12 +545,15 @@ class RecipeListModel(gtk.ListStore):
+     def sort_func(self, model, iter1, iter2, user_data):
+         val1 = model.get_value(iter1, RecipeListModel.COL_NAME)
+         val2 = model.get_value(iter2, RecipeListModel.COL_NAME)
++        return self.cmp_vals(val1, val2, user_data)
++
++    def cmp_vals(self, val1, val2, user_data):
+         if val1.startswith(user_data) and not val2.startswith(user_data):
+             return -1
+         elif not val1.startswith(user_data) and val2.startswith(user_data):
+             return 1
+         else:
+-            return 0
++            return cmp(val1, val2)
+ 
+     """
+     Create, if required, and return a filtered gtk.TreeModelSort
 -- 
 1.7.9.5
 
