@@ -1,22 +1,22 @@
 Received: from mga09.intel.com ([134.134.136.24])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <cristiana.voicu@intel.com>) id 1UZdFT-0000z9-6n
+	(envelope-from <cristiana.voicu@intel.com>) id 1UZdFT-0000zS-Cl
 	for bitbake-devel@lists.openembedded.org;
 	Tue, 07 May 2013 10:27:51 +0200
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga102.jf.intel.com with ESMTP; 07 May 2013 01:07:49 -0700
+	by orsmga102.jf.intel.com with ESMTP; 07 May 2013 01:07:50 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.87,627,1363158000"; d="scan'208";a="330104002"
+X-IronPort-AV: E=Sophos;i="4.87,627,1363158000"; d="scan'208";a="330104017"
 Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.151])
-	by fmsmga001.fm.intel.com with ESMTP; 07 May 2013 01:09:45 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 07 May 2013 01:09:46 -0700
 From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  7 May 2013 11:07:55 +0300
-Message-Id: <1367914076-4863-4-git-send-email-cristiana.voicu@intel.com>
+Date: Tue,  7 May 2013 11:07:56 +0300
+Message-Id: <1367914076-4863-5-git-send-email-cristiana.voicu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1367914076-4863-1-git-send-email-cristiana.voicu@intel.com>
 References: <1367914076-4863-1-git-send-email-cristiana.voicu@intel.com>
-Subject: [PATCH 3/4] hob: clicking on "cancel" should reset table sorting to default
+Subject: [PATCH 4/4] hob: assure consistency for image size label
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -30,85 +30,80 @@ List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-dev
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 07 May 2013 08:27:57 -0000
 
-Changed the "cancel" callback function for both recipes and packages
-list page.
+After the image was build, update the image size in the packagelistpage.
 
-[YOCTO #4333]
+[YOCTO #4388]
 Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    9 +++++++++
- bitbake/lib/bb/ui/crumbs/recipeselectionpage.py  |   10 ++++++++++
- 2 files changed, 19 insertions(+)
+ bitbake/lib/bb/ui/crumbs/builder.py              |    2 ++
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py     |    2 ++
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py |   20 ++++++++++++--------
+ 3 files changed, 16 insertions(+), 8 deletions(-)
 
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index b347f6d..07118aa 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -108,6 +108,8 @@ class Configuration:
+         self.extra_setting = {}
+         self.toolchain_build = False
+         self.image_fstypes = ""
++        self.image_size = None
++        self.image_packages = []
+         # bblayers.conf
+         self.layers = []
+         # image/recipes/packages
+diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+index d586413..268ac68 100755
+--- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
++++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+@@ -369,6 +369,8 @@ class ImageDetailsPage (HobPage):
+         vallist = []
+         vallist.append(pkg_num)
+         vallist.append(default_image_size)
++        self.builder.configuration.image_size = default_image_size
++        self.builder.configuration.image_packages = self.builder.configuration.selected_packages
+         if self.build_succeeded:
+             edit_packages_button = HobAltButton("Edit packages")
+             edit_packages_button.set_tooltip_text("Edit the packages included in your image")
 diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-index 66cb7ff..a4d86bd 100755
+index a4d86bd..0cac92f 100755
 --- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
 +++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-@@ -199,6 +199,7 @@ class PackageSelectionPage (HobPage):
-         if self.package_model.filtered_nb == 0:
-             if not self.ins.get_nth_page(current_tab).top_bar:
-                 self.ins.get_nth_page(current_tab).add_no_result_bar(entry)
-+                self.ins.get_nth_page(current_tab).top_bar.set_no_show_all(True)
-             self.ins.get_nth_page(current_tab).top_bar.show()
-             self.ins.get_nth_page(current_tab).scroll.hide()
-         else:
-@@ -246,6 +247,13 @@ class PackageSelectionPage (HobPage):
-         self.builder.parsing_warnings = []
-         self.builder.build_image()
+@@ -270,14 +270,17 @@ class PackageSelectionPage (HobPage):
+         selected_packages_size = self.package_model.get_packages_size()
+         selected_packages_size_str = HobPage._size_to_string(selected_packages_size)
  
-+    def refresh_tables(self):
-+        self.ins.reset_entry(self.ins.search, 0)
-+        for tab in self.tables:
-+            index = self.tables.index(tab)
-+            filter = self.pages[index]['filter']
-+            tab.set_model(self.package_model.tree_model(filter, initial=True))
-+
-     def back_button_clicked_cb(self, button):
-         if self.builder.previous_step ==  self.builder.IMAGE_GENERATED:
-             self.builder.restore_initial_selected_packages()
-@@ -253,6 +261,7 @@ class PackageSelectionPage (HobPage):
-             self.builder.show_image_details()
-         else:
-             self.builder.show_configuration()
-+        self.refresh_tables()
+-        image_overhead_factor = self.builder.configuration.image_overhead_factor
+-        image_rootfs_size = self.builder.configuration.image_rootfs_size / 1024 # image_rootfs_size is KB
+-        image_extra_size = self.builder.configuration.image_extra_size / 1024 # image_extra_size is KB
+-        base_size = image_overhead_factor * selected_packages_size
+-        image_total_size = max(base_size, image_rootfs_size) + image_extra_size
+-        if "zypper" in self.builder.configuration.selected_packages:
+-            image_total_size += (51200 * 1024)
+-        image_total_size_str = HobPage._size_to_string(image_total_size)
++        if self.builder.configuration.image_packages == self.builder.configuration.selected_packages:
++            image_total_size_str = self.builder.configuration.image_size
++        else:
++            image_overhead_factor = self.builder.configuration.image_overhead_factor
++            image_rootfs_size = self.builder.configuration.image_rootfs_size / 1024 # image_rootfs_size is KB
++            image_extra_size = self.builder.configuration.image_extra_size / 1024 # image_extra_size is KB
++            base_size = image_overhead_factor * selected_packages_size
++            image_total_size = max(base_size, image_rootfs_size) + image_extra_size
++            if "zypper" in self.builder.configuration.selected_packages:
++                image_total_size += (51200 * 1024)
++            image_total_size_str = HobPage._size_to_string(image_total_size)
  
-     def refresh_selection(self):
-         self.builder.configuration.selected_packages = self.package_model.get_selected_packages()
-diff --git a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-index 8573b81..9c138b2 100755
---- a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-@@ -214,6 +214,7 @@ class RecipeSelectionPage (HobPage):
-         if self.recipe_model.filtered_nb == 0:
-             if not self.ins.get_nth_page(current_tab).top_bar:
-                 self.ins.get_nth_page(current_tab).add_no_result_bar(entry)
-+                self.ins.get_nth_page(current_tab).top_bar.set_no_show_all(True)
-             self.ins.get_nth_page(current_tab).top_bar.show()
-             self.ins.get_nth_page(current_tab).scroll.hide()
-         else:
-@@ -243,13 +244,22 @@ class RecipeSelectionPage (HobPage):
-             self.builder.show_recipe_property_dialog(properties)
+         self.label.set_label("Packages included: %s\nSelected packages size: %s\nTotal image size: %s" %
+                             (selected_packages_num, selected_packages_size_str, image_total_size_str))
+@@ -297,6 +300,7 @@ class PackageSelectionPage (HobPage):
+         self.refresh_selection()
+         if not self.builder.customized:
+             self.builder.customized = True
++            self.builder.configuration.initial_selected_image = self.builder.configuration.selected_image
+             self.builder.configuration.selected_image = self.recipe_model.__custom_image__
+             self.builder.rcppkglist_populated()
  
-     def build_packages_clicked_cb(self, button):
-+        self.refresh_tables()
-         self.builder.build_packages()
- 
-+    def refresh_tables(self):
-+        self.ins.reset_entry(self.ins.search, 0)
-+        for tab in self.tables:
-+            index = self.tables.index(tab)
-+            filter = self.pages[index]['filter']
-+            tab.set_model(self.recipe_model.tree_model(filter, search_data="", initial=True))
-+
-     def back_button_clicked_cb(self, button):
-         self.builder.recipe_model.set_selected_image(self.builder.configuration.initial_selected_image)
-         self.builder.image_configuration_page.update_image_combo(self.builder.recipe_model, self.builder.configuration.initial_selected_image)
-         self.builder.image_configuration_page.update_image_desc()
-         self.builder.show_configuration()
-+        self.refresh_tables()
- 
-     def refresh_selection(self):
-         self.builder.configuration.selected_image = self.recipe_model.get_selected_image()
 -- 
 1.7.9.5
 
