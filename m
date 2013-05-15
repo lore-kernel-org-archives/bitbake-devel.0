@@ -1,39 +1,23 @@
-Received: from gateout01.mbox.net ([165.212.64.21] helo=gwo1.mbox.net)
+Received: from mga02.intel.com ([134.134.136.20])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <drosen@electric-cloud.com>) id 1UcUCg-0000xP-8i
+	(envelope-from <andrei.adrianx.dinu@intel.com>) id 1UcYdc-0001W7-Ie
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 15 May 2013 07:24:47 +0200
-Received: from gwo1.mbox.net (localhost [127.0.0.1])
-	by gwo1.mbox.net (Postfix) with ESMTP id 3b9NvY3mPXzfkfGK;
-	Wed, 15 May 2013 05:03:37 +0000 (UTC)
-X-USANET-Received: from gwo1.mbox.net [127.0.0.1] by gwo1.mbox.net via mtad
-	(C8.MAIN.3.82G) 
-	with ESMTP id 219ReoFDh1712Mo1; Wed, 15 May 2013 05:03:33 -0000
-X-USANET-Routed: 3 gwsout-vs Q:bmvirus
-X-USANET-GWS2-Tenant: electric-cloud.com
-X-USANET-GWS2-Tagid: ECEP
-Received: from S1P5HUB4.EXCHPROD.USA.NET [165.212.120.254] by gwo1.mbox.net
-	via smtad (C8.MAIN.3.90S) 
-	with ESMTPS id XID418ReoFDh3337Xo1; Wed, 15 May 2013 05:03:33 -0000
-X-USANET-Source: 165.212.120.254 OUT drosen@electric-cloud.com
-	S1P5HUB4.EXCHPROD.USA.NET
-X-USANET-MsgId: XID418ReoFDh3337Xo1
-Received: from [192.168.1.124] (67.169.86.1) by exchange.postoffice.net
-	(10.120.223.34) with Microsoft SMTP Server id 14.3.123.3;
-	Wed, 15 May 2013 05:03:32 +0000
-Message-ID: <51931723.5080409@electric-cloud.com>
-Date: Tue, 14 May 2013 22:03:31 -0700
-From: David Rosen <drosen@electric-cloud.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:17.0) Gecko/20130329 Thunderbird/17.0.5
-MIME-Version: 1.0
-To: <yocto@yoctoproject.org>, <bitbake-devel@lists.openembedded.org>
-X-Originating-IP: [67.169.86.1]
-Subject: Bitbake build visualization
+	Wed, 15 May 2013 12:08:55 +0200
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 15 May 2013 02:50:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.87,675,1363158000"; d="scan'208";a="313906506"
+Received: from adinu-vostro-460.rb.intel.com ([10.237.105.143])
+	by orsmga001.jf.intel.com with ESMTP; 15 May 2013 02:50:33 -0700
+From: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 15 May 2013 12:51:08 +0300
+Message-Id: <1368611468-14420-1-git-send-email-andrei.adrianx.dinu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] propertydialog.py : Scrollable windows for long tooltips
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
-Reply-To: drosen@electric-cloud.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 List-Unsubscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/options/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=unsubscribe>
@@ -42,86 +26,161 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 15 May 2013 05:24:47 -0000
-Content-Type: multipart/alternative;
-	boundary="------------080506070309090000090903"
+X-List-Received-Date: Wed, 15 May 2013 10:09:13 -0000
 
---------------080506070309090000090903
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+In some cases, the length of the description and the brought
+in by field was too big. That led to the size of the property
+dialog exceeding Hob's size. For long tooltips we use
+scrollable windows now.
 
-Hi all,
+[HOB #4321]
 
-As a newbie to bitbake and Yocto I have attempted to explore the 
-behaviour, characteristics and performance of bitbake, through the 
-simple steps documented in the quick start guides on the Yocto Project 
-website. As part of this learning process I came up with a utility that 
-helps in visualizing and understanding the parallel distribution of the 
-various bitbake tasks across the build machine, as well as providing 
-some additional metrics and reports. More details available here:
-http://www.electric-cloud.com/blog/2013/05/10/yoctoopenembedded-bitbake-build-visualization/
+Signed-off-by: Andrei Dinu <andrei.adrianx.dinu@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/hig/propertydialog.py |   34 +++++++++---------------
+ 1 file changed, 13 insertions(+), 21 deletions(-)
 
-As-is, my thinking is this may be useful for the wider bitbake and Yocto 
-communities, hence I wanted to share on these mailing lists.
-If there is value here, are there other features or capabilities that 
-would be worthwhile to consider? Any other thoughts or feedback?
-
-Disclaimer: ElectricInsight, (the visualization part of this utility) is 
-free but proprietary software, currently gated behind a simple 
-registration form linked from the URL above.
-
-Thanks
-
-David Rosen
-
+diff --git a/bitbake/lib/bb/ui/crumbs/hig/propertydialog.py b/bitbake/lib/bb/ui/crumbs/hig/propertydialog.py
+index 89cb3a3..5a41ae7 100644
+--- a/bitbake/lib/bb/ui/crumbs/hig/propertydialog.py
++++ b/bitbake/lib/bb/ui/crumbs/hig/propertydialog.py
+@@ -274,24 +274,23 @@ class PropertyDialog(CrumbsDialog):
+                 binb_items_count = len(binb.split(','))
+                 binb_items = binb.split(',')
+                                		
+-		vbox = gtk.VBox(True,spacing = 0)
+-                
++		vbox = gtk.VBox(False,spacing = 0)
++
+                 ######################################## SUMMARY LABEL #########################################                	                
+                 
+                 if summary != '':                
+                         self.label_short = gtk.Label()
+-                        self.label_short.set_size_request(300,-1)
++                        self.label_short.set_width_chars(37)
+                         self.label_short.set_selectable(True)                
+                         self.label_short.set_line_wrap(True)
+                         self.label_short.set_markup("<b>" + summary + "</b>")
+                         self.label_short.set_property("xalign", 0)
+                         
+-                        self.vbox.pack_start(self.label_short, expand=False, fill=False, padding=0)
++                        self.vbox.add(self.label_short)
+                 
+                 ########################################## NAME ROW + COL #######################################
+                                 
+                 self.label_short = gtk.Label()
+-                self.label_short.set_size_request(300,-1)
+                 self.label_short.set_selectable(True)
+                 self.label_short.set_line_wrap(True)
+                 self.label_short.set_markup("<span weight=\"bold\">Name: </span>" + name)
+@@ -302,7 +301,6 @@ class PropertyDialog(CrumbsDialog):
+                 ####################################### VERSION ROW + COL ####################################
+                 
+                 self.label_short = gtk.Label()
+-                self.label_short.set_size_request(300,-1)
+                 self.label_short.set_selectable(True)
+                 self.label_short.set_line_wrap(True)
+                 self.label_short.set_markup("<span weight=\"bold\">Version: </span>" + version)
+@@ -313,7 +311,6 @@ class PropertyDialog(CrumbsDialog):
+                 ##################################### REVISION ROW + COL #####################################
+ 
+                 self.label_short = gtk.Label()
+-                self.label_short.set_size_request(300,-1)
+                 self.label_short.set_line_wrap(True)
+                 self.label_short.set_selectable(True)
+                 self.label_short.set_markup("<span weight=\"bold\">Revision: </span>" + revision)
+@@ -324,7 +321,6 @@ class PropertyDialog(CrumbsDialog):
+                 ################################## GROUP ROW + COL ############################################
+                
+                 self.label_short = gtk.Label()
+-                self.label_short.set_size_request(300,-1)  
+                 self.label_short.set_selectable(True)              
+                 self.label_short.set_line_wrap(True)                                
+                 self.label_short.set_markup("<span weight=\"bold\">Group: </span>" + group)
+@@ -346,7 +342,6 @@ class PropertyDialog(CrumbsDialog):
+                         self.label_info.set_property("xalign", 0)
+                        
+                         self.label_short = gtk.Label()
+-                        self.label_short.set_size_request(300,-1)   
+                         self.label_short.set_selectable(True)                     
+                         self.label_short.set_line_wrap(True)                        
+                         self.label_short.set_markup("<b>Homepage: </b>")                      
+@@ -368,7 +363,6 @@ class PropertyDialog(CrumbsDialog):
+                         self.label_info.set_property("xalign", 0)  
+ 
+                         self.label_short = gtk.Label()
+-                        self.label_short.set_size_request(300,-1)    
+                         self.label_short.set_selectable(True)                    
+                         self.label_short.set_line_wrap(True)
+                         self.label_short.set_markup("<b>Bugtracker: </b>")                   
+@@ -380,7 +374,6 @@ class PropertyDialog(CrumbsDialog):
+                 ################################# LICENSE ROW + COL ############################################
+                 
+                 self.label_info = gtk.Label()
+-                self.label_info.set_size_request(300,-1)
+                 self.label_info.set_selectable(True)
+                 self.label_info.set_line_wrap(True)
+                 self.label_info.set_markup(license)
+@@ -403,26 +396,24 @@ class PropertyDialog(CrumbsDialog):
+                         self.label_short.set_line_wrap(True)
+                         self.label_short.set_markup("<span weight=\"bold\">Brought in by: </span>")
+                         self.label_short.set_property("xalign", 0)
+-
+                         self.vbox.add(self.label_short)
+-
+                         self.label_info = gtk.Label()
+-                        self.label_info.set_size_request(300,-1)
+                         self.label_info.set_selectable(True)
++                        self.label_info.set_width_chars(36)
+                         if len(binb) > 200:
+                             scrolled_window = gtk.ScrolledWindow()
+                             scrolled_window.set_policy(gtk.POLICY_NEVER,gtk.POLICY_ALWAYS)
+                             scrolled_window.set_size_request(100,100)
+                             self.label_info.set_markup(binb)
+-                            self.label_info.set_property("xalign", 0)
++                            self.label_info.set_padding(6,6)
++                            self.label_info.set_alignment(0,0)
+                             self.label_info.set_line_wrap(True)
+                             scrolled_window.add_with_viewport(self.label_info)
+                             self.vbox.add(scrolled_window)
+                         else:
+                             self.label_info.set_markup(binb)
+                             self.label_info.set_property("xalign", 0)
+-                            self.label_info.set_line_wrap(True)
+-                        
++                            self.label_info.set_line_wrap(True) 
+                             self.vbox.add(self.label_info)
+ 
+                 ################################ DESCRIPTION TAG ROW #################################################
+@@ -438,21 +429,22 @@ class PropertyDialog(CrumbsDialog):
+                 hbox = gtk.HBox(True,spacing = 0)
+ 
+                 self.label_short = gtk.Label()
+-                self.label_short.set_size_request(300,-1)
+                 self.label_short.set_selectable(True)
++                self.label_short.set_width_chars(36)
+                 if len(description) > 200:
+                     scrolled_window = gtk.ScrolledWindow()
+                     scrolled_window.set_policy(gtk.POLICY_NEVER,gtk.POLICY_ALWAYS)
+                     scrolled_window.set_size_request(100,100)
+                     self.label_short.set_markup(description)
+-                    self.label_short.set_property("xalign", 0)
++                    self.label_short.set_padding(6,6)
++                    self.label_short.set_alignment(0,0)
+                     self.label_short.set_line_wrap(True)
+                     scrolled_window.add_with_viewport(self.label_short)
+                     self.vbox.add(scrolled_window)
+                 else:    
+-                    self.label_short.set_text(description)
+-                    self.label_short.set_line_wrap(True)
++                    self.label_short.set_markup(description)
+                     self.label_short.set_property("xalign", 0)
++                    self.label_short.set_line_wrap(True)
+                     self.vbox.add(self.label_short)
+ 
+                 self.vbox.show_all()
 -- 
-*David Rosen* | Product Manager | Electric Cloud | +1-408-419-4313 | 
-drosen@electric-cloud.com
+1.7.9.5
 
---------------080506070309090000090903
-Content-Type: text/html; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
 
-<html>
-  <head>
-    <meta http-equiv="content-type" content="text/html;
-      charset=ISO-8859-1">
-  </head>
-  <body text="#000000" bgcolor="#FFFFFF">
-    Hi all, <br>
-    <br>
-    As a newbie to bitbake and Yocto I have attempted to explore the
-    behaviour, characteristics and performance of bitbake, through the
-    simple steps documented in the quick start guides on the Yocto
-    Project website. As part of this learning process I came up with a
-    utility that helps in visualizing and understanding the parallel
-    distribution of the various bitbake tasks across the build machine,
-    as well as providing some additional metrics and reports. More
-    details available here: <br>
-    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-<a class="moz-txt-link-freetext" href="http://www.electric-cloud.com/blog/2013/05/10/yoctoopenembedded-bitbake-build-visualization/">http://www.electric-cloud.com/blog/2013/05/10/yoctoopenembedded-bitbake-build-visualization/</a><br>
-    <br>
-    As-is, my thinking is this may be useful for the wider bitbake and
-    Yocto communities, hence I wanted to share on these mailing lists. <br>
-    If there is value here, are there other features or capabilities
-    that would be worthwhile to consider? Any other thoughts or
-    feedback?<br>
-    <br>
-    Disclaimer: ElectricInsight, (the visualization part of this
-    utility) is free but proprietary software, currently gated behind a
-    simple registration form linked from the URL above.<br>
-    <br>
-    Thanks <br>
-    <br>
-    David Rosen<br>
-    <br>
-    <div class="moz-signature">-- <br>
-      <font size="-1" face="verdana" color="gray"><b>David Rosen</b> |
-        Product Manager | Electric Cloud | +1-408-419-4313 | <a
-          class="moz-txt-link-abbreviated"
-          href="mailto:drosen@electric-cloud.com">drosen@electric-cloud.com</a></font>
-    </div>
-  </body>
-</html>
 
---------------080506070309090000090903--
