@@ -1,33 +1,39 @@
-Received: from dan.rpsys.net ([93.97.175.187])
+Received: from gateout01.mbox.net ([165.212.64.21] helo=gwo1.mbox.net)
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <richard.purdie@linuxfoundation.org>)
-	id 1UbQwH-0001uz-0c for bitbake-devel@lists.openembedded.org;
-	Sun, 12 May 2013 09:43:28 +0200
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r4C7RwYo007274 for <bitbake-devel@lists.openembedded.org>;
-	Sun, 12 May 2013 08:27:58 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id BMNxaQgcvKdj for <bitbake-devel@lists.openembedded.org>;
-	Sun, 12 May 2013 08:27:58 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r4C7RnoC007270
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
-	Sun, 12 May 2013 08:27:52 +0100
-Message-ID: <1368343500.21569.0.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Sun, 12 May 2013 08:25:00 +0100
-X-Mailer: Evolution 3.6.2-0ubuntu0.1 
-Mime-Version: 1.0
-Subject: [PATCH] knotty: Limit printed lines to terminal size
+	(envelope-from <drosen@electric-cloud.com>) id 1UcUCg-0000xP-8i
+	for bitbake-devel@lists.openembedded.org;
+	Wed, 15 May 2013 07:24:47 +0200
+Received: from gwo1.mbox.net (localhost [127.0.0.1])
+	by gwo1.mbox.net (Postfix) with ESMTP id 3b9NvY3mPXzfkfGK;
+	Wed, 15 May 2013 05:03:37 +0000 (UTC)
+X-USANET-Received: from gwo1.mbox.net [127.0.0.1] by gwo1.mbox.net via mtad
+	(C8.MAIN.3.82G) 
+	with ESMTP id 219ReoFDh1712Mo1; Wed, 15 May 2013 05:03:33 -0000
+X-USANET-Routed: 3 gwsout-vs Q:bmvirus
+X-USANET-GWS2-Tenant: electric-cloud.com
+X-USANET-GWS2-Tagid: ECEP
+Received: from S1P5HUB4.EXCHPROD.USA.NET [165.212.120.254] by gwo1.mbox.net
+	via smtad (C8.MAIN.3.90S) 
+	with ESMTPS id XID418ReoFDh3337Xo1; Wed, 15 May 2013 05:03:33 -0000
+X-USANET-Source: 165.212.120.254 OUT drosen@electric-cloud.com
+	S1P5HUB4.EXCHPROD.USA.NET
+X-USANET-MsgId: XID418ReoFDh3337Xo1
+Received: from [192.168.1.124] (67.169.86.1) by exchange.postoffice.net
+	(10.120.223.34) with Microsoft SMTP Server id 14.3.123.3;
+	Wed, 15 May 2013 05:03:32 +0000
+Message-ID: <51931723.5080409@electric-cloud.com>
+Date: Tue, 14 May 2013 22:03:31 -0700
+From: David Rosen <drosen@electric-cloud.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:17.0) Gecko/20130329 Thunderbird/17.0.5
+MIME-Version: 1.0
+To: <yocto@yoctoproject.org>, <bitbake-devel@lists.openembedded.org>
+X-Originating-IP: [67.169.86.1]
+Subject: Bitbake build visualization
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
+Reply-To: drosen@electric-cloud.com
 List-Id: <bitbake-devel.lists.openembedded.org>
 List-Unsubscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/options/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=unsubscribe>
@@ -36,94 +42,86 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 12 May 2013 07:43:29 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Wed, 15 May 2013 05:24:47 -0000
+Content-Type: multipart/alternative;
+	boundary="------------080506070309090000090903"
+
+--------------080506070309090000090903
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 
-If you have a small terminal window with a large number of bitbake threads,
-the scrollback output becomes corrupted since the footer is larger than
-the height of the screen.
+Hi all,
 
-This patch ensures we limit the number of printed lines to match the
-terminal height.
+As a newbie to bitbake and Yocto I have attempted to explore the 
+behaviour, characteristics and performance of bitbake, through the 
+simple steps documented in the quick start guides on the Yocto Project 
+website. As part of this learning process I came up with a utility that 
+helps in visualizing and understanding the parallel distribution of the 
+various bitbake tasks across the build machine, as well as providing 
+some additional metrics and reports. More details available here:
+http://www.electric-cloud.com/blog/2013/05/10/yoctoopenembedded-bitbake-build-visualization/
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index 6ea7d86..c9323d9 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -102,13 +102,14 @@ class InteractConsoleLogFilter(logging.Filter):
- 
- class TerminalFilter(object):
-     columns = 80
-+    lines = 25
- 
-     def sigwinch_handle(self, signum, frame):
--        self.columns = self.getTerminalColumns()
-+        (self.lines, self.columns) = self.getTerminalSize()
-         if self._sigwinch_default:
-             self._sigwinch_default(signum, frame)
- 
--    def getTerminalColumns(self):
-+    def getTerminalSize(self):
-         def ioctl_GWINSZ(fd):
-             try:
-                 cr = struct.unpack('hh', fcntl.ioctl(fd, self.termios.TIOCGWINSZ, '1234'))
-@@ -128,7 +129,7 @@ class TerminalFilter(object):
-                 cr = (env['LINES'], env['COLUMNS'])
-             except:
-                 cr = (25, 80)
--        return cr[1]
-+        return cr
- 
-     def __init__(self, main, helper, console, format):
-         self.main = main
-@@ -167,7 +168,7 @@ class TerminalFilter(object):
-                 signal.signal(signal.SIGWINCH, self.sigwinch_handle)
-             except:
-                 pass
--            self.columns = self.getTerminalColumns()
-+            (self.lines, self.columns) = self.getTerminalSize()
-         except:
-             self.cuu = None
-         console.addFilter(InteractConsoleLogFilter(self, format))
-@@ -195,18 +196,30 @@ class TerminalFilter(object):
-         for t in runningpids:
-             tasks.append("%s (pid %s)" % (activetasks[t]["title"], t))
- 
-+        display = []
-+        def addline(content, display):
-+            display.append(content)
-+            extra = int(len(content) / (self.columns + 1))
-+            for n in range(extra):
-+                display.append(None)
-+            return 1 + extra
-+
-         if self.main.shutdown:
-             content = "Waiting for %s running tasks to finish:" % len(activetasks)
-         elif not len(activetasks):
-             content = "No currently running tasks (%s of %s)" % (self.helper.tasknumber_current, self.helper.tasknumber_total)
-         else:
-             content = "Currently %s running tasks (%s of %s):" % (len(activetasks), self.helper.tasknumber_current, self.helper.tasknumber_total)
--        print(content)
--        lines = 1 + int(len(content) / (self.columns + 1))
-+        lines = addline(content, display)
-         for tasknum, task in enumerate(tasks):
-             content = "%s: %s" % (tasknum, task)
--            print(content)
--            lines = lines + 1 + int(len(content) / (self.columns + 1))
-+            lines = lines + addline(content, display)
-+        if lines > (self.lines -1):
-+            display = display[-(self.lines - 1):]
-+            lines = self.lines - 1
-+        for l in display:
-+             if l:
-+                print(l)
-         self.footer_present = lines
-         self.lastpids = runningpids[:]
-         self.lastcount = self.helper.tasknumber_current
+As-is, my thinking is this may be useful for the wider bitbake and Yocto 
+communities, hence I wanted to share on these mailing lists.
+If there is value here, are there other features or capabilities that 
+would be worthwhile to consider? Any other thoughts or feedback?
 
+Disclaimer: ElectricInsight, (the visualization part of this utility) is 
+free but proprietary software, currently gated behind a simple 
+registration form linked from the URL above.
 
+Thanks
 
+David Rosen
 
+-- 
+*David Rosen* | Product Manager | Electric Cloud | +1-408-419-4313 | 
+drosen@electric-cloud.com
+
+--------------080506070309090000090903
+Content-Type: text/html; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html;
+      charset=ISO-8859-1">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    Hi all, <br>
+    <br>
+    As a newbie to bitbake and Yocto I have attempted to explore the
+    behaviour, characteristics and performance of bitbake, through the
+    simple steps documented in the quick start guides on the Yocto
+    Project website. As part of this learning process I came up with a
+    utility that helps in visualizing and understanding the parallel
+    distribution of the various bitbake tasks across the build machine,
+    as well as providing some additional metrics and reports. More
+    details available here: <br>
+    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+<a class="moz-txt-link-freetext" href="http://www.electric-cloud.com/blog/2013/05/10/yoctoopenembedded-bitbake-build-visualization/">http://www.electric-cloud.com/blog/2013/05/10/yoctoopenembedded-bitbake-build-visualization/</a><br>
+    <br>
+    As-is, my thinking is this may be useful for the wider bitbake and
+    Yocto communities, hence I wanted to share on these mailing lists. <br>
+    If there is value here, are there other features or capabilities
+    that would be worthwhile to consider? Any other thoughts or
+    feedback?<br>
+    <br>
+    Disclaimer: ElectricInsight, (the visualization part of this
+    utility) is free but proprietary software, currently gated behind a
+    simple registration form linked from the URL above.<br>
+    <br>
+    Thanks <br>
+    <br>
+    David Rosen<br>
+    <br>
+    <div class="moz-signature">-- <br>
+      <font size="-1" face="verdana" color="gray"><b>David Rosen</b> |
+        Product Manager | Electric Cloud | +1-408-419-4313 | <a
+          class="moz-txt-link-abbreviated"
+          href="mailto:drosen@electric-cloud.com">drosen@electric-cloud.com</a></font>
+    </div>
+  </body>
+</html>
+
+--------------080506070309090000090903--
