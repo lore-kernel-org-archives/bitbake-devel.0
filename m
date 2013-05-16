@@ -1,36 +1,32 @@
-Received: from mail-lb0-f171.google.com ([209.85.217.171])
+Received: from plane.gmane.org ([80.91.229.3])
 	by linuxtogo.org with esmtp (Exim 4.72)
-	(envelope-from <kergoth@gmail.com>) id 1UchVF-0002B9-7g
+	(envelope-from <gcsb-bitbake-dev@m.gmane.org>) id 1UcuiW-0002LF-HH
 	for bitbake-devel@lists.openembedded.org;
-	Wed, 15 May 2013 21:37:03 +0200
-Received: by mail-lb0-f171.google.com with SMTP id v20so2282796lbc.30
+	Thu, 16 May 2013 11:43:32 +0200
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <gcsb-bitbake-dev@m.gmane.org>) id 1UcuCJ-0007pL-03
+	for bitbake-devel@lists.openembedded.org;
+	Thu, 16 May 2013 11:10:03 +0200
+Received: from p5099b24a.dip0.t-ipconnect.de ([80.153.178.74])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 16 May 2013 11:10:02 +0200
+Received: from m.meier by p5099b24a.dip0.t-ipconnect.de with local (Gmexim 0.1
+	(Debian)) id 1AlnuQ-0007hv-00
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 15 May 2013 12:18:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=x-received:mime-version:sender:in-reply-to:references:from:date
-	:x-google-sender-auth:message-id:subject:to:cc:content-type;
-	bh=4E1G9G1ckKkko7Dpa19uq08AWNgmV68znT2mYB6Q3R4=;
-	b=ZDcLChNpQzZpcOHHJF9DgiGnPn6L2nb5+Og7HUvKsH4gYfqvAtU8wjb/x0z19NfmAg
-	qFYTB/rJIpD9v2n0+BPzH41TuqB9TGFEv7OqCqOB1Lhjg43UuNJzQM+0vFihGvkNDkas
-	hZCXXjDXhct1Hgauspdn9REqO0SfJpW5HfgCl9cwUc0Vqoy/UWNVwceYFjNJ566DfF4K
-	Byl6o9F1DJaqut6jfZifTjl5LfjbecM+fJ+U6rSqarFnTn+eHA+QcDZ2IrEdUbnpa+TS
-	SwiDTLAw6G45p8yNcj/ga+pyVrwN+7SBWLARf3RJbu2VilyK8YNBVfjf9KyWiHZBhXj4
-	4d2g==
-X-Received: by 10.112.89.231 with SMTP id br7mr5009523lbb.120.1368645511873;
-	Wed, 15 May 2013 12:18:31 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.141.74 with HTTP; Wed, 15 May 2013 12:18:11 -0700 (PDT)
-In-Reply-To: <CAFpw0gLkmOEVbXdVz8ihKNaqaHKSfghYuLo4CjqZUEDmKKwTtQ@mail.gmail.com>
-References: <CAFpw0gLkmOEVbXdVz8ihKNaqaHKSfghYuLo4CjqZUEDmKKwTtQ@mail.gmail.com>
-From: Chris Larson <clarson@kergoth.com>
-Date: Wed, 15 May 2013 12:18:11 -0700
-X-Google-Sender-Auth: thhJhkMfedAyMG12jNWd9qth71g
-Message-ID: <CABcZANnn446temrxab90iuu+N1JStWFYTiDgLZOpoWN-26PULA@mail.gmail.com>
-To: Francois Retief <fgretief@gmail.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: How to determine a flowId for log messages?
+	Thu, 16 May 2013 11:10:02 +0200
+X-Injected-Via-Gmane: http://gmane.org/
+To: bitbake-devel@lists.openembedded.org
+From: Michael <m.meier@plusoptix.de>
+Date: Thu, 16 May 2013 11:03:50 +0200
+Message-ID: <kn27dj$tdo$1@ger.gmane.org>
+Mime-Version: 1.0
+X-Complaints-To: usenet@ger.gmane.org
+X-Gmane-NNTP-Posting-Host: p5099b24a.dip0.t-ipconnect.de
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:17.0) Gecko/20130211 Thunderbird/17.0.2
+X-Mailman-Approved-At: Sun, 19 May 2013 10:50:59 +0200
+Subject: Can't run bitbake with su -c
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.11
 Precedence: list
@@ -42,104 +38,117 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.linuxtogo.org/cgi-bin/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 15 May 2013 19:37:04 -0000
-Content-Type: multipart/alternative; boundary=001a11c36b068f0d6904dcc69d1f
+X-List-Received-Date: Thu, 16 May 2013 09:43:34 -0000
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 7bit
 
---001a11c36b068f0d6904dcc69d1f
-Content-Type: text/plain; charset=UTF-8
+Hi all,
 
-On Wed, May 15, 2013 at 10:54 AM, Francois Retief <fgretief@gmail.com>wrote:
+if I call BitBake as super user like this: su <user> -c "bitbake
+<recipe>" I get the following traceback:
 
-> At work we use TeamCity [1] as our CI server.  I have written a small
-> patch (attached to email) to extend bitbake to output log messages in
-> TeamCity's Service Message format [2]. This allow us to better communicate
-> warnings and errors to the server.
->
-> I did this by overriding the BBLogFormatter class in knotty.py. The output
-> is formatted with timestamp, text, errorDetails and status fields so that
-> the TeamCity server can augment the logs with color and terminate if errors
-> occur.
->
-> TeamCity also has a *flowId* field that is used as a unique identifier to
-> distinguish between separate processes running in parallel. On the server,
-> all messages with the same *flowId* is grouped together. I would like to
-> use it with bitbake.
->
-> What bitbake logging attribute do I need to monitor to determine the *
-> flowId* of a message?
->
-> I tried to use the taskId attribute in the logging record, but most of the
-> time it is set to either zero or not there at all.
->
->         if hasattr(record, 'taskpid') and record.taskpid != 0:
->             msg += " flowId='%s'" % record.taskpid
->
-> Are there any other way to identify log messages for grouping them
-> together?
->
-> Or any alternative methods? Am I on the right track,
-> or do I need to write a whole new ui for this?
->
+Traceback (most recent call last):
+  File "/usr/bin/bitbake", line 196, in <module>
+    ret = main()
+  File "/usr/bin/bitbake", line 160, in main
+    cooker = bb.cooker.BBCooker(configuration, server)
+  File "/usr/lib/python2.7/site-packages/bb/cooker.py", line 90, in __init__
+    self.parseConfigurationFiles(self.configuration.file)
+  File "/usr/lib/python2.7/site-packages/bb/cooker.py", line 570, in
+parseConfigurationFiles
+    data = bb.parse.handle(os.path.join("conf", "bitbake.conf"), data)
+  File "/usr/lib/python2.7/site-packages/bb/parse/__init__.py", line 75,
+in handle
+    return h['handle'](fn, data, include)
+  File
+"/usr/lib/python2.7/site-packages/bb/parse/parse_py/ConfHandler.py",
+line 104, in handle
+    statements.eval(data)
+  File "/usr/lib/python2.7/site-packages/bb/parse/ast.py", line 33, in eval
+    map(lambda x: x.eval(data), self)
+  File "/usr/lib/python2.7/site-packages/bb/parse/ast.py", line 33, in
+<lambda>
+    map(lambda x: x.eval(data), self)
+  File "/usr/lib/python2.7/site-packages/bb/parse/ast.py", line 56, in eval
+    bb.parse.ConfHandler.include(self.from_fn, s, data, False)
+  File
+"/usr/lib/python2.7/site-packages/bb/parse/parse_py/ConfHandler.py",
+line 66, in include
+    ret = handle(fn, data, True)
+  File "/usr/lib/python2.7/site-packages/bb/parse/__init__.py", line 75,
+in handle
+    return h['handle'](fn, data, include)
+  File
+"/usr/lib/python2.7/site-packages/bb/parse/parse_py/ConfHandler.py",
+line 104, in handle
+    statements.eval(data)
+  File "/usr/lib/python2.7/site-packages/bb/parse/ast.py", line 33, in eval
+    map(lambda x: x.eval(data), self)
+  File "/usr/lib/python2.7/site-packages/bb/parse/ast.py", line 33, in
+<lambda>
+    map(lambda x: x.eval(data), self)
+  File "/usr/lib/python2.7/site-packages/bb/parse/ast.py", line 54, in eval
+    bb.parse.ConfHandler.include(self.from_fn, s, data, "include required")
+  File
+"/usr/lib/python2.7/site-packages/bb/parse/parse_py/ConfHandler.py",
+line 66, in include
+    ret = handle(fn, data, True)
+  File "/usr/lib/python2.7/site-packages/bb/parse/__init__.py", line 75,
+in handle
+    return h['handle'](fn, data, include)
+  File
+"/usr/lib/python2.7/site-packages/bb/parse/parse_py/BBHandler.py", line
+149, in handle
+    statements.eval(d)
+  File "/usr/lib/python2.7/site-packages/bb/parse/ast.py", line 33, in eval
+    map(lambda x: x.eval(data), self)
+  File "/usr/lib/python2.7/site-packages/bb/parse/ast.py", line 33, in
+<lambda>
+    map(lambda x: x.eval(data), self)
+  File "/usr/lib/python2.7/site-packages/bb/parse/ast.py", line 92, in eval
+    bb.data.update_data(e)
+  File "/usr/lib/python2.7/site-packages/bb/data.py", line 486, in
+update_data
+    overrides = (getVar('OVERRIDES', d, 1) or "").split(':') or []
+  File "/usr/lib/python2.7/site-packages/bb/data.py", line 100, in getVar
+    return d.getVar(var,exp)
+  File "/usr/lib/python2.7/site-packages/bb/data_smart.py", line 165, in
+getVar
+    return self.expand(value,var)
+  File "/usr/lib/python2.7/site-packages/bb/data_smart.py", line 82, in
+expand
+    s = __expand_var_regexp__.sub(var_sub, s)
+  File "/usr/lib/python2.7/site-packages/bb/data_smart.py", line 60, in
+var_sub
+    var = self.getVar(key, 1)
+  File "/usr/lib/python2.7/site-packages/bb/data_smart.py", line 165, in
+getVar
+    return self.expand(value,var)
+  File "/usr/lib/python2.7/site-packages/bb/data_smart.py", line 83, in
+expand
+    s = __expand_python_regexp__.sub(python_sub, s)
+  File "/usr/lib/python2.7/site-packages/bb/data_smart.py", line 69, in
+python_sub
+    s = utils.better_eval(codeobj, {"d": self})
+  File "/usr/lib/python2.7/site-packages/bb/utils.py", line 360, in
+better_eval
+    return eval(source, _context, locals)
+  File "PN", line 1, in <module>
+TypeError: getVar() takes exactly 3 arguments (2 given)
 
-'pid' on events and 'taskpid' on log records should always correspond to
-the process id of the spawned task. If it's not set, then it's likely that
-log message wasn't recorded in task context, but elsewhere, e.g. from an
-event handler, or general global log messages. Afaik. See msg.py and
-event.py, as well as fork_off_task in the runqueue for details.
--- 
-Christopher Larson
+I've tried it with BitBake from
+git://github.com/openembedded/bitbake.git, master-branch,
+commit:c47088a86fd8ad06c1810d04d9537c4cd01e8bef as well as commit:
+782bc0e797802224f06cb6f9098a50d658c86523
 
---001a11c36b068f0d6904dcc69d1f
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In previous BitBake-Versions (about 1.10.0) it was possible to call
+BitBake this way.
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Wed, May 15, 2013 at 10:54 AM, Francois Retief <span dir=3D"ltr">&lt;<a =
-href=3D"mailto:fgretief@gmail.com" target=3D"_blank">fgretief@gmail.com</a>=
-&gt;</span> wrote:<br>
+Any ideas how do fix this issue?
 
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div><div><div>At work we use TeamCity [1] a=
-s our CI server.=C2=A0 I have written a small patch (attached to email) to =
-extend bitbake to output log messages in TeamCity&#39;s Service Message for=
-mat [2]. This allow us to better communicate warnings and errors to the ser=
-ver.<br>
+Thanks in advance!
+
+Michael
 
 
-<br></div>I did this by overriding the BBLogFormatter class in knotty.py. T=
-he output is formatted with timestamp, text, errorDetails and status fields=
- so that the TeamCity server can augment the logs with color and terminate =
-if errors occur.<br>
 
-
-<br></div>TeamCity also has a <b>flowId</b> field that is used as a unique =
-identifier to distinguish between separate processes running in parallel. O=
-n the server, all messages with the same <b>flowId</b> is grouped together.=
- I would like to use it with bitbake.<br>
-
-
-<br></div><div>What bitbake logging attribute do I need to monitor to deter=
-mine the <b>flowId</b> of a message?<br><br></div><div>I tried to use the t=
-askId attribute in the logging record, but most of the time it is set to ei=
-ther zero or not there at all. <br>
-
-
-<br></div>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if hasattr(record, &#3=
-9;taskpid&#39;) and record.taskpid !=3D 0:<br><div>=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 msg +=3D &quot; flowId=3D&#39;%s=
-&#39;&quot; % record.taskpid<br></div><div><br></div><div>Are there any oth=
-er way to identify log messages for grouping them together?<br>
-
-
-</div><div><br>Or any alternative methods? Am I on the right track, <br>or =
-do I need to write a whole new ui for this?</div></blockquote></div><br>&#3=
-9;pid&#39; on events and &#39;taskpid&#39; on log records should always cor=
-respond to the process id of the spawned task. If it&#39;s not set, then it=
-&#39;s likely that log message wasn&#39;t recorded in task context, but els=
-ewhere, e.g. from an event handler, or general global log messages. Afaik. =
-See msg.py and event.py, as well as fork_off_task in the runqueue for detai=
-ls.<br>
-
--- <br>Christopher Larson</div></div>
-
---001a11c36b068f0d6904dcc69d1f--
