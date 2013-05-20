@@ -1,28 +1,51 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 93881608C5
+Return-Path: <mhalstead@linuxfoundation.org>
+Received: from mail-pb0-f54.google.com (mail-pb0-f54.google.com
+	[209.85.160.54])
+	by mail.openembedded.org (Postfix) with ESMTP id 32CA5608C5
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 May 2013 21:55:03 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r4KLwOpS025733; Mon, 20 May 2013 22:58:24 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id rfupYL_31Nwx; Mon, 20 May 2013 22:58:23 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r4KLwILp025726
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Mon, 20 May 2013 22:58:20 +0100
-Message-ID: <1369086881.4326.8.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Damian, Alexandru" <alexandru.damian@intel.com>, bitbake-devel
-	<bitbake-devel@lists.openembedded.org>
-Date: Mon, 20 May 2013 22:54:41 +0100
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] cooker: Move commandline parsing back into the UI/cookerdata
+	Mon, 20 May 2013 21:56:26 +0000 (UTC)
+Received: by mail-pb0-f54.google.com with SMTP id ro12so1047842pbb.41
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 20 May 2013 14:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linuxfoundation.org; s=google;
+	h=sender:message-id:date:from:user-agent:mime-version:to:subject
+	:x-enigmail-version:content-type;
+	bh=bhLfSRPxBfIVX+1SFX1s3q/PepBuM3dwXPy7Qn6nANc=;
+	b=PglAFXLOKH+oHC7elaSpp8KumIjytaApmwuNqd9sdikt2ir/lEmDSUw8mvqmzkvSim
+	N3d2Ov7IscjEtTrHRYdIxfIxNO/fR5Z9g72gQSL5DcqCD1xsgxPWBUX3HQgC9KEQ7/1w
+	6vsramk3QUnQEPuRqx24v5b17nLizHNf6t4Yg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=google.com; s=20120113;
+	h=sender:message-id:date:from:user-agent:mime-version:to:subject
+	:x-enigmail-version:content-type:x-gm-message-state;
+	bh=bhLfSRPxBfIVX+1SFX1s3q/PepBuM3dwXPy7Qn6nANc=;
+	b=MEhf1y4NjNELckKh0gM1bpP3aHmflDxZLPrBRzuRXbNJI6H2tDccgwGlUt6TuwSKDf
+	98LB1QFn/hFREYTpyUKUp+wCCWe46Fk4Fg79fqYtzr3GZYvkQxn1IlUaQPIj5istT3Yb
+	c846nULzw+OfxFTsJ8RPQ5BSGZGWpdryPz+zQe+bbfeQiT8JFJCKAMCJXGI/Am2mK83I
+	+2bVtzY+GiMR4I203PXOi2WWZFCOMaHaJsBx+qWIrZLawoCrPPX9XH/Oi3aPHalYhwHy
+	3awQHm9adtZgTXvdVr4uRuzd5t19AeTV3HcyGQrgNsi0CrHzF4M1M/NDq7fIvXUPfI1r
+	ggzA==
+X-Received: by 10.66.155.138 with SMTP id vw10mr79456pab.91.1369086987507;
+	Mon, 20 May 2013 14:56:27 -0700 (PDT)
+Received: from [192.168.1.67] (static-50-43-57-222.bvtn.or.frontiernet.net.
+	[50.43.57.222])
+	by mx.google.com with ESMTPSA id ra4sm185305pab.9.2013.05.20.14.56.26
+	for <multiple recipients>
+	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Mon, 20 May 2013 14:56:26 -0700 (PDT)
+Sender: Michael Halstead <mhalstead@linuxfoundation.org>
+Message-ID: <519A9C0B.1080403@yoctoproject.org>
+Date: Mon, 20 May 2013 14:56:27 -0700
+From: Michael Halstead <michael@yoctoproject.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:17.0) Gecko/20130510 Thunderbird/17.0.6
+MIME-Version: 1.0
+To: bitbake-devel@lists.openembedded.org
+X-Enigmail-Version: 1.4.6
+X-Gm-Message-State: ALoCoQnTJqQhjkjhSU/AB0XhZ37gYsI1OJbjqg8iuA3IPTbK37pYIO2kkPiy6cfRslM3YmywZM5l
+X-Mailman-Approved-At: Mon, 20 May 2013 21:57:18 +0000
+Subject: Bitbake OpenEmbedded lists moved to new hardware
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,400 +57,116 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 20 May 2013 21:55:04 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 20 May 2013 21:56:26 -0000
+X-Groupsio-MsgNum: 3472
+Content-Type: multipart/signed; protocol="application/pkcs7-signature";
+	micalg=sha1; boundary="------------ms020506010601060909060409"
 
+--------------ms020506010601060909060409
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Building up a set of actions for the server is tricky since we depend upon the
-commandline but fall back to values from the datastore. We should be able to build
-a datastore without a commandline and vice versa. Ultimately the UI should send
-the commands to the server.
+This mailing list has been moved from linuxtogo.org to new hardware at th=
+e OSL in Corvallis Oregon USA. The move has just completed and I am monit=
+oring for trouble. Mail sent to the list between 19:30 and 22:00 UTC was =
+rejected by the new server and should be sent again.
 
-This patch amounts to code rearranging, moving the heavy lifting to the UI, though
-a helper in the configuration option. This will need further cleanup/tweaking but
-this should be the only update needed to the UIs. The code now queries the server
-for any missing data should it need to.
+I expect there will be a few more early issues to work out. Please e-mail=
+ me directly or find halstead in IRC on Freenode.net if you discover an i=
+ssue. If you have an @openembedded.org e-mail address please pay extra at=
+tention to it this week.
 
-This code allows various knowledge of configuration variables to move to the UI side
-only, partcularly pkgs_to_build but also all the command specifiers. It should also
-be possible to move cmd eventually, I'm just unsure if any callers call the commands
-expecting this to default to something sane right now.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/bin/bitbake b/bitbake/bin/bitbake
-index 7087d2d..c87e5b3 100755
---- a/bitbake/bin/bitbake
-+++ b/bitbake/bin/bitbake
-@@ -238,7 +238,6 @@ def main():
-     try:
-         configuration.setServerRegIdleCallback(server.getServerIdleCB())
-         cooker = bb.cooker.BBCooker(configuration)
--        cooker.parseCommandLine()
- 
-         server.addcooker(cooker)
-         server.saveConnectionDetails()
-@@ -272,7 +271,7 @@ def main():
-             os.environ[k] = cleanedvars[k]
- 
-         try:
--            return server.launchUI(ui_main, server_connection.connection, server_connection.events)
-+            return server.launchUI(ui_main, server_connection.connection, server_connection.events, configParams)
-         finally:
-             bb.event.ui_queue = []
-             server_connection.terminate()
-diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
-index 8577df6..29d31d5 100644
---- a/bitbake/lib/bb/command.py
-+++ b/bitbake/lib/bb/command.py
-@@ -143,18 +143,6 @@ class CommandsSync:
-         """
-         command.cooker.stop()
- 
--    def getCmdLineAction(self, command, params):
--        """
--        Get any command parsed from the commandline
--        """
--        cmd_action = command.cooker.commandlineAction
--        if cmd_action is None:
--            return None
--        elif 'msg' in cmd_action and cmd_action['msg']:
--            raise CommandError(cmd_action['msg'])
--        else:
--            return cmd_action['action']
--
-     def getVariable(self, command, params):
-         """
-         Read the value of a variable from configuration.data
-@@ -174,6 +162,14 @@ class CommandsSync:
-         value = str(params[1])
-         command.cooker.configuration.data.setVar(varname, value)
- 
-+    def setConfig(self, command, params):
-+        """
-+        Set the value of variable in configuration
-+        """
-+        varname = params[0]
-+        value = str(params[1])
-+        setattr(command.cooker.configuration, varname, value)
-+
-     def enableDataTracking(self, command, params):
-         """
-         Enable history tracking for variables
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 1a2c016..ca54455 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -147,10 +147,6 @@ class BBCooker:
-         if not self.lock:
-             bb.fatal("Only one copy of bitbake should be run against a build directory")
- 
--        bbpkgs = self.configuration.data.getVar('BBPKGS', True)
--        if bbpkgs and len(self.configuration.pkgs_to_build) == 0:
--            self.configuration.pkgs_to_build.extend(bbpkgs.split())
--
-         #
-         # Special updated configuration we use for firing events
-         #
-@@ -175,7 +171,7 @@ class BBCooker:
- 
-     def initConfigurationData(self):
-         self.configuration.data = bb.data.init()
--        if self.configuration.show_environment:
-+        if self.configuration.tracking:
-             self.configuration.data.enableTracking()
- 
-         if not self.configuration.server_register_idlecallback:
-@@ -203,9 +199,6 @@ class BBCooker:
-             logger.exception("Error parsing configuration files")
-             sys.exit(1)
- 
--        if not self.configuration.cmd:
--            self.configuration.cmd = self.configuration.data.getVar("BB_DEFAULT_TASK", True) or "build"
--
-     def saveConfigurationVar(self, var, val, default_file):
- 
-         replaced = False
-@@ -309,44 +302,6 @@ class BBCooker:
- 
-         self.handleCollections( self.configuration.data.getVar("BBFILE_COLLECTIONS", True) )
- 
--    def parseCommandLine(self):
--        # Parse any commandline into actions
--        self.commandlineAction = {'action':None, 'msg':None}
--        if self.configuration.show_environment:
--            if 'world' in self.configuration.pkgs_to_build:
--                self.commandlineAction['msg'] = "'world' is not a valid target for --environment."
--            elif 'universe' in self.configuration.pkgs_to_build:
--                self.commandlineAction['msg'] = "'universe' is not a valid target for --environment."
--            elif len(self.configuration.pkgs_to_build) > 1:
--                self.commandlineAction['msg'] = "Only one target can be used with the --environment option."
--            elif self.configuration.buildfile and len(self.configuration.pkgs_to_build) > 0:
--                self.commandlineAction['msg'] = "No target should be used with the --environment and --buildfile options."
--            elif len(self.configuration.pkgs_to_build) > 0:
--                self.commandlineAction['action'] = ["showEnvironmentTarget", self.configuration.pkgs_to_build]
--                self.configuration.data.setVar("BB_CONSOLELOG", None)
--            else:
--                self.commandlineAction['action'] = ["showEnvironment", self.configuration.buildfile]
--                self.configuration.data.setVar("BB_CONSOLELOG", None)
--        elif self.configuration.buildfile is not None:
--            self.commandlineAction['action'] = ["buildFile", self.configuration.buildfile, self.configuration.cmd]
--        elif self.configuration.revisions_changed:
--            self.commandlineAction['action'] = ["compareRevisions"]
--        elif self.configuration.show_versions:
--            self.commandlineAction['action'] = ["showVersions"]
--        elif self.configuration.parse_only:
--            self.commandlineAction['action'] = ["parseFiles"]
--        elif self.configuration.dot_graph:
--            if self.configuration.pkgs_to_build:
--                self.commandlineAction['action'] = ["generateDotGraph", self.configuration.pkgs_to_build, self.configuration.cmd]
--            else:
--                self.commandlineAction['msg'] = "Please specify a package name for dependency graph generation."
--        else:
--            if self.configuration.pkgs_to_build:
--                self.commandlineAction['action'] = ["buildTargets", self.configuration.pkgs_to_build, self.configuration.cmd]
--            else:
--                #self.commandlineAction['msg'] = "Nothing to do.  Use 'bitbake world' to build everything, or run 'bitbake --help' for usage information."
--                self.commandlineAction = None
--
-     def runCommands(self, server, data, abort):
-         """
-         Run any queued asynchronous command
-diff --git a/bitbake/lib/bb/cookerdata.py b/bitbake/lib/bb/cookerdata.py
-index 2c3275a..3c2469e 100644
---- a/bitbake/lib/bb/cookerdata.py
-+++ b/bitbake/lib/bb/cookerdata.py
-@@ -50,6 +50,61 @@ class ConfigParameters(object):
-     def parseEnvironment(self):
-         return os.environ.copy()
- 
-+    def updateFromServer(self, server):
-+        if not self.options.cmd:
-+            defaulttask, error = server.runCommand(["getVariable", "BB_DEFAULT_TASK"])
-+            if error:
-+                raise Exception("Unable to get the value of BB_DEFAULT_TASK from the server: %s" % error)
-+            self.options.cmd = defaulttask or "build"
-+        _, error = server.runCommand(["setConfig", "cmd", self.options.cmd])
-+        if error:
-+            raise Exception("Unable to set configuration option 'cmd' on the server: %s" % error)
-+
-+        if not self.options.pkgs_to_build:
-+            bbpkgs, error = server.runCommand(["getVariable", "BBPKGS"])
-+            if error:
-+                raise Exception("Unable to get the value of BBPKGS from the server: %s" % error)
-+            if bbpkgs:
-+                self.options.pkgs_to_build.extend(bbpkgs.split())
-+
-+    def parseActions(self):
-+        # Parse any commandline into actions
-+        action = {'action':None, 'msg':None}
-+        if self.options.show_environment:
-+            if 'world' in self.options.pkgs_to_build:
-+                action['msg'] = "'world' is not a valid target for --environment."
-+            elif 'universe' in self.options.pkgs_to_build:
-+                action['msg'] = "'universe' is not a valid target for --environment."
-+            elif len(self.options.pkgs_to_build) > 1:
-+                action['msg'] = "Only one target can be used with the --environment option."
-+            elif self.options.buildfile and len(self.options.pkgs_to_build) > 0:
-+                action['msg'] = "No target should be used with the --environment and --buildfile options."
-+            elif len(self.options.pkgs_to_build) > 0:
-+                action['action'] = ["showEnvironmentTarget", self.options.pkgs_to_build]
-+            else:
-+                action['action'] = ["showEnvironment", self.options.buildfile]
-+        elif self.options.buildfile is not None:
-+            action['action'] = ["buildFile", self.options.buildfile, self.options.cmd]
-+        elif self.options.revisions_changed:
-+            action['action'] = ["compareRevisions"]
-+        elif self.options.show_versions:
-+            action['action'] = ["showVersions"]
-+        elif self.options.parse_only:
-+            action['action'] = ["parseFiles"]
-+        elif self.options.dot_graph:
-+            if self.options.pkgs_to_build:
-+                action['action'] = ["generateDotGraph", self.options.pkgs_to_build, self.options.cmd]
-+            else:
-+                action['msg'] = "Please specify a package name for dependency graph generation."
-+        else:
-+            if self.options.pkgs_to_build:
-+                action['action'] = ["buildTargets", self.options.pkgs_to_build, self.options.cmd]
-+            else:
-+                #action['msg'] = "Nothing to do.  Use 'bitbake world' to build everything, or run 'bitbake --help' for usage information."
-+                action = None
-+        self.options.initialaction = action
-+        return action
-+
- class CookerConfiguration(object):
-     """
-     Manages build options and configurations for one run
-@@ -61,7 +116,7 @@ class CookerConfiguration(object):
-         self.prefile = []
-         self.postfile = []
-         self.debug = 0
--        self.pkgs_to_build = []
-+        self.cmd = None
- 
-     def setConfigParameters(self, parameters):
-         self.params = parameters
-diff --git a/bitbake/lib/bb/ui/depexp.py b/bitbake/lib/bb/ui/depexp.py
-index 85910f6..885c31a 100644
---- a/bitbake/lib/bb/ui/depexp.py
-+++ b/bitbake/lib/bb/ui/depexp.py
-@@ -196,16 +196,18 @@ class gtkthread(threading.Thread):
-         gtkthread.quit.set()
- 
-
--def main(server, eventHandler):
-+def main(server, eventHandler, params):
-     try:
--        cmdline, error = server.runCommand(["getCmdLineAction"])
--        if error:
--            print("Error getting bitbake commandline: %s" % error)
--            return 1
--        elif not cmdline:
-+        params.updateFromServer(server)
-+        cmdline = params.parseActions()
-+        if not cmdline:
-             print("Nothing to do.  Use 'bitbake world' to build everything, or run 'bitbake --help' for usage information.")
-             return 1
--        elif not cmdline or cmdline[0] != "generateDotGraph":
-+        if 'msg' in cmdline and cmdline['msg']:
-+            logger.error(cmdline['msg'])
-+            return 1
-+        cmdline = cmdline['action']
-+        if not cmdline or cmdline[0] != "generateDotGraph":
-             print("This UI is only compatible with the -g option")
-             return 1
-         ret, error = server.runCommand(["generateDepTreeEvent", cmdline[1], cmdline[2]])
-diff --git a/bitbake/lib/bb/ui/goggle.py b/bitbake/lib/bb/ui/goggle.py
-index e8a54ab..16faba4 100644
---- a/bitbake/lib/bb/ui/goggle.py
-+++ b/bitbake/lib/bb/ui/goggle.py
-@@ -63,7 +63,7 @@ class MainWindow (gtk.Window):
-         scrolled_window.add (self.cur_build_tv)
- 
-
--def main (server, eventHandler):
-+def main (server, eventHandler, params):
-     gobject.threads_init()
-     gtk.gdk.threads_init()
- 
-@@ -80,13 +80,15 @@ def main (server, eventHandler):
-     running_build.connect ("build-failed", running_build_failed_cb)
- 
-     try:
--        cmdline, error = server.runCommand(["getCmdLineAction"])
--        if error:
--            print("Error getting bitbake commandline: %s" % error)
--            return 1
--        elif not cmdline:
-+        params.updateFromServer(server)
-+        cmdline = params.parseActions()
-+        if not cmdline:
-             print("Nothing to do.  Use 'bitbake world' to build everything, or run 'bitbake --help' for usage information.")
-             return 1
-+        if 'msg' in cmdline and cmdline['msg']:
-+            logger.error(cmdline['msg'])
-+            return 1
-+        cmdline = cmdline['action']
-         ret, error = server.runCommand(cmdline)
-         if error:
-             print("Error running command '%s': %s" % (cmdline, error))
-diff --git a/bitbake/lib/bb/ui/hob.py b/bitbake/lib/bb/ui/hob.py
-index 55bd84c..2c75cb8 100755
---- a/bitbake/lib/bb/ui/hob.py
-+++ b/bitbake/lib/bb/ui/hob.py
-@@ -58,7 +58,8 @@ def event_handle_idle_func(eventHandler, hobHandler):
-         event = eventHandler.getEvent()
-     return True
- 
--def main (server = None, eventHandler = None):
-+def main (server, eventHandler, params):
-+    params.updateFromServer(server)
-     gobject.threads_init()
- 
-     # That indicates whether the Hob and the bitbake server are
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index 6ea7d86..389c3cc 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -216,7 +216,7 @@ class TerminalFilter(object):
-             fd = sys.stdin.fileno()
-             self.termios.tcsetattr(fd, self.termios.TCSADRAIN, self.stdinbackup)
- 
--def main(server, eventHandler, tf = TerminalFilter):
-+def main(server, eventHandler, params, tf = TerminalFilter):
- 
-     # Get values of variables which control our output
-     includelogs, error = server.runCommand(["getVariable", "BBINCLUDELOGS"])
-@@ -245,7 +245,8 @@ def main(server, eventHandler, tf = TerminalFilter):
-     bb.msg.addDefaultlogFilter(console)
-     console.setFormatter(format)
-     logger.addHandler(console)
--    if consolelogfile:
-+
-+    if consolelogfile and not params.options.show_environment:
-         bb.utils.mkdirhier(os.path.dirname(consolelogfile))
-         conlogformat = bb.msg.BBLogFormatter(format_str)
-         consolelog = logging.FileHandler(consolelogfile)
-@@ -254,14 +255,16 @@ def main(server, eventHandler, tf = TerminalFilter):
-         logger.addHandler(consolelog)
- 
-     try:
--        cmdline, error = server.runCommand(["getCmdLineAction"])
--        if error:
--            logger.error("Unable to get bitbake commandline arguments: %s" % error)
--            return 1
--        elif not cmdline:
-+        params.updateFromServer(server)
-+        cmdline = params.parseActions()
-+        if not cmdline:
-             print("Nothing to do.  Use 'bitbake world' to build everything, or run 'bitbake --help' for usage information.")
-             return 1
--        ret, error = server.runCommand(cmdline)
-+        if 'msg' in cmdline and cmdline['msg']:
-+            logger.error(cmdline['msg'])
-+            return 1
-+
-+        ret, error = server.runCommand(cmdline['action'])
-         if error:
-             logger.error("Command '%s' failed: %s" % (cmdline, error))
-             return 1
-diff --git a/bitbake/lib/bb/ui/ncurses.py b/bitbake/lib/bb/ui/ncurses.py
-index 98647fc..c45ffd6 100644
---- a/bitbake/lib/bb/ui/ncurses.py
-+++ b/bitbake/lib/bb/ui/ncurses.py
-@@ -196,7 +196,7 @@ class NCursesUI:
- #            t.start()
- 
-     #-------------------------------------------------------------------------#
--    def main(self, stdscr, server, eventHandler):
-+    def main(self, stdscr, server, eventHandler, params):
-     #-------------------------------------------------------------------------#
-         height, width = stdscr.getmaxyx()
- 
-@@ -236,13 +236,15 @@ class NCursesUI:
-         shutdown = 0
- 
-         try:
--            cmdline, error = server.runCommand(["getCmdLineAction"])
-+            params.updateFromServer(server)
-+            cmdline = params.parseActions()
-             if not cmdline:
-                 print("Nothing to do.  Use 'bitbake world' to build everything, or run 'bitbake --help' for usage information.")
--                return
--            elif error:
--                print("Error getting bitbake commandline: %s" % error)
--                return
-+                return 1
-+            if 'msg' in cmdline and cmdline['msg']:
-+                logger.error(cmdline['msg'])
-+                return 1
-+            cmdline = cmdline['action']
-             ret, error = server.runCommand(cmdline)
-             if error:
-                 print("Error running command '%s': %s" % (cmdline, error))
+--=20
+Michael Halstead
+Yocto Project / System Administrator
 
 
 
+--------------ms020506010601060909060409
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
+MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIINjDCCBjQw
+ggQcoAMCAQICASAwDQYJKoZIhvcNAQEFBQAwfTELMAkGA1UEBhMCSUwxFjAUBgNVBAoTDVN0YXJ0
+Q29tIEx0ZC4xKzApBgNVBAsTIlNlY3VyZSBEaWdpdGFsIENlcnRpZmljYXRlIFNpZ25pbmcxKTAn
+BgNVBAMTIFN0YXJ0Q29tIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTA3MTAyNDIxMDI1NVoX
+DTE3MTAyNDIxMDI1NVowgYwxCzAJBgNVBAYTAklMMRYwFAYDVQQKEw1TdGFydENvbSBMdGQuMSsw
+KQYDVQQLEyJTZWN1cmUgRGlnaXRhbCBDZXJ0aWZpY2F0ZSBTaWduaW5nMTgwNgYDVQQDEy9TdGFy
+dENvbSBDbGFzcyAyIFByaW1hcnkgSW50ZXJtZWRpYXRlIENsaWVudCBDQTCCASIwDQYJKoZIhvcN
+AQEBBQADggEPADCCAQoCggEBAMsohUWcASz7GfKrpTOMKqANy9BV7V0igWdGxA8IU77L3aTxErQ+
+fcxtDYZ36Z6GH0YFn7fq5RADteP0AYzrCA+EQTfi8q1+kA3m0nwtwXG94M5sIqsvs7lRP1aycBke
+/s5g9hJHryZ2acScnzczjBCAo7X1v5G3yw8MDP2m2RCye0KfgZ4nODerZJVzhAlOD9YejvAXZqHk
+sw56HzElVIoYSZ3q4+RJuPXXfIoyby+Y2m1E+YzX5iCZXBx05gk6MKAW1vaw4/v2OOLy6FZH3XHH
+tOkzUreG//CsFnB9+uaYSlR65cdGzTsmoIK8WH1ygoXhRBm98SD7Hf/r3FELNvUCAwEAAaOCAa0w
+ggGpMA8GA1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQDAgEGMB0GA1UdDgQWBBSuVYNv7DHKufcd
++q9rMfPIHeOsuzAfBgNVHSMEGDAWgBROC+8apEBbpRdphzDKNGhD0EGu8jBmBggrBgEFBQcBAQRa
+MFgwJwYIKwYBBQUHMAGGG2h0dHA6Ly9vY3NwLnN0YXJ0c3NsLmNvbS9jYTAtBggrBgEFBQcwAoYh
+aHR0cDovL3d3dy5zdGFydHNzbC5jb20vc2ZzY2EuY3J0MFsGA1UdHwRUMFIwJ6AloCOGIWh0dHA6
+Ly93d3cuc3RhcnRzc2wuY29tL3Nmc2NhLmNybDAnoCWgI4YhaHR0cDovL2NybC5zdGFydHNzbC5j
+b20vc2ZzY2EuY3JsMIGABgNVHSAEeTB3MHUGCysGAQQBgbU3AQIBMGYwLgYIKwYBBQUHAgEWImh0
+dHA6Ly93d3cuc3RhcnRzc2wuY29tL3BvbGljeS5wZGYwNAYIKwYBBQUHAgEWKGh0dHA6Ly93d3cu
+c3RhcnRzc2wuY29tL2ludGVybWVkaWF0ZS5wZGYwDQYJKoZIhvcNAQEFBQADggIBADqpJw3I07QW
+ke9plNBpxUxcffc7nUrIQpJHDci91DFG7fVhHRkMZ1J+BKg5UNUxIFJ2Z9B90Micc/NXcs7kPBRd
+n6XGO/vPc87Y6R+cWS9Nc9+fp3Enmsm94OxOwI9wn8qnr/6o3mD4noP9JphwUPTXwHovjavRnhUQ
+HLfo/i2NG0XXgTHXS2Xm0kVUozXqpYpAdumMiB/vezj1QHQJDmUdPYMcp+reg9901zkyT3fDW/iv
+JVv6pWtkh6Pw2ytZT7mvg7YhX3V50Nv860cV11mocUVcqBLv0gcT+HBDYtbuvexNftwNQKD5193A
+7zN4vG7CTYkXxytSjKuXrpEatEiFPxWgb84nVj25SU5q/r1Xhwby6mLhkbaXslkVtwEWT3Van49r
+KjlK4XrUKYYWtnfzq6aSak5u0Vpxd1rY79tWhD3EdCvOhNz/QplNa+VkIsrcp7+8ZhP1l1b2U6Ma
+xIVteuVMD3X0vziIwr7jxYae9FZjbxlpUemqXjcC0QaFfN7qI0JsQMALL7iGRBg7K0CoOBzECdD3
+fuZil5kU/LP9cr1BK31U0Uy651bFnAMMMkqhAChIbn0ei72VnbpSsrrSdF0BAGYQ8vyHae5aCg+H
+75dVCV33K6FuxZrf09yTz+Vx/PkdRUYkXmZz/OTfyJXsUOUXrym6KvI2rYpccSk5MIIHUDCCBjig
+AwIBAgICIgMwDQYJKoZIhvcNAQEFBQAwgYwxCzAJBgNVBAYTAklMMRYwFAYDVQQKEw1TdGFydENv
+bSBMdGQuMSswKQYDVQQLEyJTZWN1cmUgRGlnaXRhbCBDZXJ0aWZpY2F0ZSBTaWduaW5nMTgwNgYD
+VQQDEy9TdGFydENvbSBDbGFzcyAyIFByaW1hcnkgSW50ZXJtZWRpYXRlIENsaWVudCBDQTAeFw0x
+MjA2MTMwNDU5MjlaFw0xNDA2MTQxNjE4MzBaMIGRMRkwFwYDVQQNExBnMDFwWTYwMWJGM1BrRTY3
+MQswCQYDVQQGEwJVUzEPMA0GA1UECBMGT3JlZ29uMRIwEAYDVQQHEwlIaWxsc2Jvcm8xGTAXBgNV
+BAMTEE1pY2hhZWwgSGFsc3RlYWQxJzAlBgkqhkiG9w0BCQEWGG1pY2hhZWxAeW9jdG9wcm9qZWN0
+Lm9yZzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMFZ+GW0VKdiyuQy3hlOvwcHxcm0
+8ZwNGGah4zipYky5wVFZO7p9LjJfyF6rvd24xdkaTluxTMmd9pfq2cOVQ6c3RsPufv1yBUbytk6F
+4Wk+qD0qEGjuHh5FfakcLIEsHiSn3nzaQZHaolS/yzx/A3coQS8pQrshZYqAF/ME5OxMyL8KDdtk
+xatt1reDPqzvI5rKYdeEbmHsTYgd9WWHvs8MfZFHidZoAXMXU+PcsKCUxEYhgP/h9NKcTApu/Mhd
+IPKn11pD+gfDM+ochGu1uxuW/t1tNJyRYDVQSDV+rpliQ7mrimSmyktIKkow02pUk4Xw3OqdYq7/
+/HpVOUs5nk8CAwEAAaOCA7MwggOvMAkGA1UdEwQCMAAwCwYDVR0PBAQDAgSwMB0GA1UdJQQWMBQG
+CCsGAQUFBwMCBggrBgEFBQcDBDAdBgNVHQ4EFgQUcZFNotb1OfDmPE6GQ6MQIBh7meUwHwYDVR0j
+BBgwFoAUrlWDb+wxyrn3HfqvazHzyB3jrLswIwYDVR0RBBwwGoEYbWljaGFlbEB5b2N0b3Byb2pl
+Y3Qub3JnMIICIQYDVR0gBIICGDCCAhQwggIQBgsrBgEEAYG1NwECAjCCAf8wLgYIKwYBBQUHAgEW
+Imh0dHA6Ly93d3cuc3RhcnRzc2wuY29tL3BvbGljeS5wZGYwNAYIKwYBBQUHAgEWKGh0dHA6Ly93
+d3cuc3RhcnRzc2wuY29tL2ludGVybWVkaWF0ZS5wZGYwgfcGCCsGAQUFBwICMIHqMCcWIFN0YXJ0
+Q29tIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MAMCAQEagb5UaGlzIGNlcnRpZmljYXRlIHdhcyBp
+c3N1ZWQgYWNjb3JkaW5nIHRvIHRoZSBDbGFzcyAyIFZhbGlkYXRpb24gcmVxdWlyZW1lbnRzIG9m
+IHRoZSBTdGFydENvbSBDQSBwb2xpY3ksIHJlbGlhbmNlIG9ubHkgZm9yIHRoZSBpbnRlbmRlZCBw
+dXJwb3NlIGluIGNvbXBsaWFuY2Ugb2YgdGhlIHJlbHlpbmcgcGFydHkgb2JsaWdhdGlvbnMuMIGc
+BggrBgEFBQcCAjCBjzAnFiBTdGFydENvbSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTADAgECGmRM
+aWFiaWxpdHkgYW5kIHdhcnJhbnRpZXMgYXJlIGxpbWl0ZWQhIFNlZSBzZWN0aW9uICJMZWdhbCBh
+bmQgTGltaXRhdGlvbnMiIG9mIHRoZSBTdGFydENvbSBDQSBwb2xpY3kuMDYGA1UdHwQvMC0wK6Ap
+oCeGJWh0dHA6Ly9jcmwuc3RhcnRzc2wuY29tL2NydHUyLWNybC5jcmwwgY4GCCsGAQUFBwEBBIGB
+MH8wOQYIKwYBBQUHMAGGLWh0dHA6Ly9vY3NwLnN0YXJ0c3NsLmNvbS9zdWIvY2xhc3MyL2NsaWVu
+dC9jYTBCBggrBgEFBQcwAoY2aHR0cDovL2FpYS5zdGFydHNzbC5jb20vY2VydHMvc3ViLmNsYXNz
+Mi5jbGllbnQuY2EuY3J0MCMGA1UdEgQcMBqGGGh0dHA6Ly93d3cuc3RhcnRzc2wuY29tLzANBgkq
+hkiG9w0BAQUFAAOCAQEANR/d6M8GHL/rkx3Kz9ILDxYMcekmFgefaDXNQMicUHiUw5TsIl5af1pS
+Y2AvbKlA2/FZnyG8w42FuK6ZQBZJxs4/N10NW8qDmuuFTi6TyJgurj73tx9RogW50miDHMZLoMRe
+avB1h8zy99L2lRPZSebpSFkrQdYDHaGRVhYMjEcWNW9cLxhR8BaAEw/KlpERv3hUQpwGMppYOE66
+M7KJ3HpeR7DXfa4njL9W2hukTQNsskdWtzejHp5iQ65+5Mv+NXLmYP4uLJcR9AbttgNhwStc0P1b
+LxnQkElGeUzATOBq+QsVZ7Fo6sSS7kqrhpfaPibqpj83m/wSgpKVsbZJ3DGCA9owggPWAgEBMIGT
+MIGMMQswCQYDVQQGEwJJTDEWMBQGA1UEChMNU3RhcnRDb20gTHRkLjErMCkGA1UECxMiU2VjdXJl
+IERpZ2l0YWwgQ2VydGlmaWNhdGUgU2lnbmluZzE4MDYGA1UEAxMvU3RhcnRDb20gQ2xhc3MgMiBQ
+cmltYXJ5IEludGVybWVkaWF0ZSBDbGllbnQgQ0ECAiIDMAkGBSsOAwIaBQCgggIbMBgGCSqGSIb3
+DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTEzMDUyMDIxNTYyN1owIwYJKoZIhvcN
+AQkEMRYEFLwtGEADK1Sgv0Rl2vf63m7cU/QIMGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZIAWUDBAEq
+MAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwICAUAw
+BwYFKw4DAgcwDQYIKoZIhvcNAwICASgwgaQGCSsGAQQBgjcQBDGBljCBkzCBjDELMAkGA1UEBhMC
+SUwxFjAUBgNVBAoTDVN0YXJ0Q29tIEx0ZC4xKzApBgNVBAsTIlNlY3VyZSBEaWdpdGFsIENlcnRp
+ZmljYXRlIFNpZ25pbmcxODA2BgNVBAMTL1N0YXJ0Q29tIENsYXNzIDIgUHJpbWFyeSBJbnRlcm1l
+ZGlhdGUgQ2xpZW50IENBAgIiAzCBpgYLKoZIhvcNAQkQAgsxgZaggZMwgYwxCzAJBgNVBAYTAklM
+MRYwFAYDVQQKEw1TdGFydENvbSBMdGQuMSswKQYDVQQLEyJTZWN1cmUgRGlnaXRhbCBDZXJ0aWZp
+Y2F0ZSBTaWduaW5nMTgwNgYDVQQDEy9TdGFydENvbSBDbGFzcyAyIFByaW1hcnkgSW50ZXJtZWRp
+YXRlIENsaWVudCBDQQICIgMwDQYJKoZIhvcNAQEBBQAEggEAmTTIgUhjH2G6oKOBBL9sUpA4daYn
+LlXO1G6Pyg/MhYdLcMDzcHYmOsyoxaZgOD6aOVsbDqTOA3MnCvXAtNhyteYXStxXvkq9754atOIG
+zqux4cJJpVETLtVSmzuNSSmr0bAXKqRTrQu139B89tfVI+K+5CQTOtShWwGFaAroIZWZWAXICXCy
+Y/L7xwxpgxxB4tWm7bQqrD/cvfwG4W2ZSUw7USfMLljs8IBd+qcL9Mz2FJF3ygr+3eznw8uyNEOT
+7fszGwMpRWUoSmHg7FUkvF8xDpda8HFzIdZnjW782OjHHJUmgNibhBrntntK4ng9rKkYvBluJwt6
+gTX6rzxgqgAAAAAAAA==
+
+--------------ms020506010601060909060409--
