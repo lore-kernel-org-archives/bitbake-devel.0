@@ -1,22 +1,22 @@
 Return-Path: <cristiana.voicu@intel.com>
 Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
-	by mail.openembedded.org (Postfix) with ESMTP id DCF2D60657
+	by mail.openembedded.org (Postfix) with ESMTP id 322586213E
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 22 May 2013 09:50:49 +0000 (UTC)
+	Wed, 22 May 2013 09:50:54 +0000 (UTC)
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by azsmga102.ch.intel.com with ESMTP; 22 May 2013 02:50:51 -0700
+	by azsmga102.ch.intel.com with ESMTP; 22 May 2013 02:50:55 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.87,718,1363158000"; d="scan'208";a="338121965"
+X-IronPort-AV: E=Sophos;i="4.87,718,1363158000"; d="scan'208";a="338121987"
 Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.151])
-	by fmsmga001.fm.intel.com with ESMTP; 22 May 2013 02:50:54 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 22 May 2013 02:50:57 -0700
 From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 22 May 2013 12:52:34 +0300
-Message-Id: <1369216355-13788-2-git-send-email-cristiana.voicu@intel.com>
+Date: Wed, 22 May 2013 12:52:35 +0300
+Message-Id: <1369216355-13788-3-git-send-email-cristiana.voicu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1369216355-13788-1-git-send-email-cristiana.voicu@intel.com>
 References: <1369216355-13788-1-git-send-email-cristiana.voicu@intel.com>
-Subject: [PATCH 1/2] hob: apply a fade out animation when deselecting from tables
+Subject: [PATCH 2/2] hob: Table sorting criteria should not change after deselecting recipes/packages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,163 +28,159 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 22 May 2013 09:50:50 -0000
+X-List-Received-Date: Wed, 22 May 2013 09:50:54 -0000
 
--applied a fade out mechanism for deselctiong on all the tabs of
-recipes and packages list page
--set cursor on the package/recipe when it is included(important
-when the its place is changing; like when the tree si order by
-included tab)
+After a recipe/package is deselected, the table is sorted as before the
+fadeout animation.
 
-[YOCTO #4342]
+[YOCTO #4453]
 Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/packageselectionpage.py |   24 ++++++-------
- bitbake/lib/bb/ui/crumbs/recipeselectionpage.py  |   40 +++++++++++-----------
- 2 files changed, 30 insertions(+), 34 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hoblistmodel.py         |   20 ++++++++++++++------
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    8 +++++++-
+ bitbake/lib/bb/ui/crumbs/recipeselectionpage.py  |    6 ++++++
+ 3 files changed, 27 insertions(+), 7 deletions(-)
 
+diff --git a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+index 887be79..7f7d82f 100644
+--- a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
++++ b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+@@ -63,6 +63,7 @@ class PackageListModel(gtk.ListStore):
+                                 gobject.TYPE_BOOLEAN,
+                                 gobject.TYPE_STRING,
+                                 gobject.TYPE_STRING)
++        self.sort_column_id, self.sort_order = PackageListModel.COL_NAME, gtk.SORT_ASCENDING
+ 
+     """
+     Find the model path for the item_name
+@@ -109,11 +110,11 @@ class PackageListModel(gtk.ListStore):
+         model.set_visible_func(self.tree_model_filter, filter)
+ 
+         sort = gtk.TreeModelSort(model)
++        sort.connect ('sort-column-changed', self.sort_column_changed_cb)
+         if initial:
+             sort.set_sort_column_id(PackageListModel.COL_NAME, gtk.SORT_ASCENDING)
+             sort.set_default_sort_func(None)
+-
+-        if excluded_items_ahead:
++        elif excluded_items_ahead:
+             sort.set_default_sort_func(self.exclude_item_sort_func, search_data)
+         elif included_items_ahead:
+             sort.set_default_sort_func(self.include_item_sort_func, search_data)
+@@ -121,7 +122,7 @@ class PackageListModel(gtk.ListStore):
+             if search_data and search_data!='Search recipes by name' and search_data!='Search package groups by name':
+                 sort.set_default_sort_func(self.sort_func, search_data)
+             else:
+-                sort.set_sort_column_id(PackageListModel.COL_NAME, gtk.SORT_ASCENDING)
++                sort.set_sort_column_id(self.sort_column_id, self.sort_order)
+                 sort.set_default_sort_func(None)
+ 
+         sort.set_sort_func(PackageListModel.COL_INC, self.sort_column, PackageListModel.COL_INC)
+@@ -130,6 +131,9 @@ class PackageListModel(gtk.ListStore):
+         sort.set_sort_func(PackageListModel.COL_RCP, self.sort_column, PackageListModel.COL_RCP)
+         return sort
+ 
++    def sort_column_changed_cb (self, data):
++        self.sort_column_id, self.sort_order = data.get_sort_column_id ()
++
+     def sort_column(self, model, row1, row2, col):
+         value1 = model.get_value(row1, col)
+         value2 = model.get_value(row2, col)
+@@ -501,6 +505,7 @@ class RecipeListModel(gtk.ListStore):
+                                 gobject.TYPE_STRING,
+                                 gobject.TYPE_STRING,
+                                 gobject.TYPE_STRING)
++        self.sort_column_id, self.sort_order = RecipeListModel.COL_NAME, gtk.SORT_ASCENDING
+ 
+     """
+     Find the model path for the item_name
+@@ -586,11 +591,11 @@ class RecipeListModel(gtk.ListStore):
+         model.set_visible_func(self.tree_model_filter, filter)
+ 
+         sort = gtk.TreeModelSort(model)
++        sort.connect ('sort-column-changed', self.sort_column_changed_cb)
+         if initial:
+             sort.set_sort_column_id(RecipeListModel.COL_NAME, gtk.SORT_ASCENDING)
+             sort.set_default_sort_func(None)
+-
+-        if excluded_items_ahead:
++        elif excluded_items_ahead:
+             sort.set_default_sort_func(self.exclude_item_sort_func, search_data)
+         elif included_items_ahead:
+             sort.set_default_sort_func(self.include_item_sort_func, search_data)
+@@ -598,7 +603,7 @@ class RecipeListModel(gtk.ListStore):
+             if search_data and search_data!='Search recipes by name' and search_data!='Search package groups by name':
+                 sort.set_default_sort_func(self.sort_func, search_data)
+             else:
+-                sort.set_sort_column_id(RecipeListModel.COL_NAME, gtk.SORT_ASCENDING)
++                sort.set_sort_column_id(self.sort_column_id, self.sort_order)
+                 sort.set_default_sort_func(None)
+ 
+         sort.set_sort_func(RecipeListModel.COL_INC, self.sort_column, RecipeListModel.COL_INC)
+@@ -607,6 +612,9 @@ class RecipeListModel(gtk.ListStore):
+         sort.set_sort_func(RecipeListModel.COL_LIC, self.sort_column, RecipeListModel.COL_LIC)
+         return sort
+ 
++    def sort_column_changed_cb (self, data):
++        self.sort_column_id, self.sort_order = data.get_sort_column_id ()
++
+     def sort_column(self, model, row1, row2, col):
+         value1 = model.get_value(row1, col)
+         value2 = model.get_value(row2, col)
 diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-index 0cac92f..b4cd47f 100755
+index b4cd47f..70caa48 100755
 --- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
 +++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
-@@ -150,12 +150,8 @@ class PackageSelectionPage (HobPage):
-             sort_model = self.package_model.tree_model(filter, initial=True)
-             tab.set_model(sort_model)
-             tab.connect("toggled", self.table_toggled_cb, name)
--            if name == "Included packages":
--                tab.connect("button-release-event", self.button_click_cb)
--                tab.connect("cell-fadeinout-stopped", self.after_fadeout_checkin_include)
--            if name == "All packages":
--                tab.connect("button-release-event", self.button_click_cb)
--                tab.connect("cell-fadeinout-stopped", self.after_fadeout_checkin_include)
-+            tab.connect("button-release-event", self.button_click_cb)
-+            tab.connect("cell-fadeinout-stopped", self.after_fadeout_checkin_include, filter)
-             self.ins.append_page(tab, page['name'], page['tooltip'])
-             self.tables.append(tab)
- 
-@@ -290,12 +286,9 @@ class PackageSelectionPage (HobPage):
-         if not self.package_model.path_included(path):
-             self.package_model.include_item(item_path=path, binb="User Selected")
-         else:
--            if pagename == "Included packages":
--                self.pre_fadeout_checkout_include(view_tree)
--                self.package_model.exclude_item(item_path=path)
--                self.render_fadeout(view_tree, cell)
--            else:
--                self.package_model.exclude_item(item_path=path)
-+            self.pre_fadeout_checkout_include(view_tree)
-+            self.package_model.exclude_item(item_path=path)
-+            self.render_fadeout(view_tree, cell)
- 
-         self.refresh_selection()
-         if not self.builder.customized:
-@@ -305,6 +298,9 @@ class PackageSelectionPage (HobPage):
-             self.builder.rcppkglist_populated()
- 
-         self.builder.window_sensitive(True)
-+        view_model = view_tree.get_model()
-+        vpath = self.package_model.convert_path_to_vpath(view_model, path)
-+        view_tree.set_cursor(vpath)
- 
-     def table_toggled_cb(self, table, cell, view_path, toggled_columnid, view_tree, pagename):
-         # Click to include a package
-@@ -344,8 +340,8 @@ class PackageSelectionPage (HobPage):
- 
-         cell.fadeout(tree, 1000, to_render_cells)
- 
--    def after_fadeout_checkin_include(self, table, ctrl, cell, tree):
--        tree.set_model(self.package_model.tree_model(self.pages[0]['filter']))
-+    def after_fadeout_checkin_include(self, table, ctrl, cell, tree, filter):
-+        tree.set_model(self.package_model.tree_model(filter))
-         tree.expand_all()
- 
-     def set_packages_curr_tab(self, curr_page):
-diff --git a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-index 9c138b2..ffe310a 100755
---- a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
-@@ -162,15 +162,8 @@ class RecipeSelectionPage (HobPage):
-             sort_model = self.recipe_model.tree_model(filter, initial=True)
-             tab.set_model(sort_model)
-             tab.connect("toggled", self.table_toggled_cb, name)
--            if name == "Included recipes":
--                tab.connect("button-release-event", self.button_click_cb)
--                tab.connect("cell-fadeinout-stopped", self.after_fadeout_checkin_include)
--            if name == "Package Groups":
--                tab.connect("button-release-event", self.button_click_cb)
--                tab.connect("cell-fadeinout-stopped", self.after_fadeout_checkin_include)
--            if name == "All recipes":
--                tab.connect("button-release-event", self.button_click_cb)
--                tab.connect("cell-fadeinout-stopped", self.button_click_cb)
-+            tab.connect("button-release-event", self.button_click_cb)
-+            tab.connect("cell-fadeinout-stopped", self.after_fadeout_checkin_include, filter)
-             self.ins.append_page(tab, page['name'], page['tooltip'])
-             self.tables.append(tab)
- 
-@@ -270,12 +263,9 @@ class RecipeSelectionPage (HobPage):
-         if not self.recipe_model.path_included(path):
-             self.recipe_model.include_item(item_path=path, binb="User Selected", image_contents=False)
-         else:
--            if pagename == "Included recipes":
--                self.pre_fadeout_checkout_include(view_tree)
--                self.recipe_model.exclude_item(item_path=path)
--                self.render_fadeout(view_tree, cell)
--            else:
--                self.recipe_model.exclude_item(item_path=path)
-+            self.pre_fadeout_checkout_include(view_tree, pagename)
-+            self.recipe_model.exclude_item(item_path=path)
-+            self.render_fadeout(view_tree, cell)
- 
-         self.refresh_selection()
-         if not self.builder.customized:
-@@ -285,6 +275,10 @@ class RecipeSelectionPage (HobPage):
- 
-         self.builder.window_sensitive(True)
- 
-+        view_model = view_tree.get_model()
-+        vpath = self.recipe_model.convert_path_to_vpath(view_model, path)
-+        view_tree.set_cursor(vpath)
-+
-     def table_toggled_cb(self, table, cell, view_path, toggled_columnid, view_tree, pagename):
-         # Click to include a recipe
-         self.builder.window_sensitive(False)
-@@ -292,7 +286,7 @@ class RecipeSelectionPage (HobPage):
-         path = self.recipe_model.convert_vpath_to_path(view_model, view_path)
+@@ -310,11 +310,15 @@ class PackageSelectionPage (HobPage):
          glib.idle_add(self.toggle_item_idle_cb, path, view_tree, cell, pagename)
  
--    def pre_fadeout_checkout_include(self, tree):
-+    def pre_fadeout_checkout_include(self, tree, pagename):
+     def pre_fadeout_checkout_include(self, tree):
++        #after the fadeout the table will be sorted as before
++        self.sort_column_id = self.package_model.sort_column_id
++        self.sort_order = self.package_model.sort_order
++
+         self.package_model.resync_fadeout_column(self.package_model.get_iter_first())
+         # Check out a model which base on the column COL_FADE_INC,
+         # it's save the prev state of column COL_INC before do exclude_item
+         filter = { PackageListModel.COL_FADE_INC  : [True]}
+-        new_model = self.package_model.tree_model(filter)
++        new_model = self.package_model.tree_model(filter, excluded_items_ahead=True)
+         tree.set_model(new_model)
+         tree.expand_all()
+ 
+@@ -341,6 +345,8 @@ class PackageSelectionPage (HobPage):
+         cell.fadeout(tree, 1000, to_render_cells)
+ 
+     def after_fadeout_checkin_include(self, table, ctrl, cell, tree, filter):
++        self.package_model.sort_column_id = self.sort_column_id
++        self.package_model.sort_order = self.sort_order
+         tree.set_model(self.package_model.tree_model(filter))
+         tree.expand_all()
+ 
+diff --git a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
+index ffe310a..58db43f 100755
+--- a/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
++++ b/bitbake/lib/bb/ui/crumbs/recipeselectionpage.py
+@@ -287,6 +287,10 @@ class RecipeSelectionPage (HobPage):
+         glib.idle_add(self.toggle_item_idle_cb, path, view_tree, cell, pagename)
+ 
+     def pre_fadeout_checkout_include(self, tree, pagename):
++        #after the fadeout the table will be sorted as before
++        self.sort_column_id = self.recipe_model.sort_column_id
++        self.sort_order = self.recipe_model.sort_order
++
          #resync the included items to a backup fade include column
          it = self.recipe_model.get_iter_first()
          while it:
-@@ -301,8 +295,14 @@ class RecipeSelectionPage (HobPage):
-             it = self.recipe_model.iter_next(it)
-         # Check out a model which base on the column COL_FADE_INC,
-         # it's save the prev state of column COL_INC before do exclude_item
--        filter = { RecipeListModel.COL_FADE_INC  : [True],
--                   RecipeListModel.COL_TYPE      : ['recipe', 'packagegroup'] }
-+        filter = { RecipeListModel.COL_FADE_INC:[True] }
-+        if pagename == "Included recipes":
-+            filter[RecipeListModel.COL_TYPE] = ['recipe', 'packagegroup']
-+        elif pagename == "All recipes":
-+            filter[RecipeListModel.COL_TYPE] = ['recipe']
-+        else:
-+            filter[RecipeListModel.COL_TYPE] = ['packagegroup']
-+
-         new_model = self.recipe_model.tree_model(filter, excluded_items_ahead=True)
-         tree.set_model(new_model)
- 
-@@ -322,8 +322,8 @@ class RecipeSelectionPage (HobPage):
- 
+@@ -323,6 +327,8 @@ class RecipeSelectionPage (HobPage):
          cell.fadeout(tree, 1000, to_render_cells)
  
--    def after_fadeout_checkin_include(self, table, ctrl, cell, tree):
--        tree.set_model(self.recipe_model.tree_model(self.pages[0]['filter']))
-+    def after_fadeout_checkin_include(self, table, ctrl, cell, tree, filter):
-+        tree.set_model(self.recipe_model.tree_model(filter))
+     def after_fadeout_checkin_include(self, table, ctrl, cell, tree, filter):
++        self.recipe_model.sort_column_id = self.sort_column_id
++        self.recipe_model.sort_order = self.sort_order
+         tree.set_model(self.recipe_model.tree_model(filter))
  
      def set_recipe_curr_tab(self, curr_page):
-         self.ins.set_current_page(curr_page)
 -- 
 1.7.9.5
 
