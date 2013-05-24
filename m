@@ -1,20 +1,20 @@
 Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
-	by mail.openembedded.org (Postfix) with ESMTP id 408126223C
+Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
+	by mail.openembedded.org (Postfix) with ESMTP id 82DE160974
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 24 May 2013 10:09:26 +0000 (UTC)
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga102.ch.intel.com with ESMTP; 24 May 2013 03:09:16 -0700
+	Fri, 24 May 2013 10:12:56 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by azsmga101.ch.intel.com with ESMTP; 24 May 2013 03:12:57 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.87,734,1363158000"; d="scan'208";a="307292997"
+X-IronPort-AV: E=Sophos;i="4.87,734,1363158000"; d="scan'208";a="339393258"
 Received: from unknown (HELO helios.amr.corp.intel.com) ([10.255.12.195])
-	by azsmga001.ch.intel.com with ESMTP; 24 May 2013 03:09:15 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 24 May 2013 03:13:02 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 24 May 2013 11:09:13 +0100
-Message-Id: <1369390153-25823-1-git-send-email-paul.eggleton@linux.intel.com>
+Date: Fri, 24 May 2013 11:12:50 +0100
+Message-Id: <1369390370-25973-1-git-send-email-paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 1.8.1.2
-Subject: [PATCH] bitbake-layers: fix show-layers and flatten for recent cooker changes
+Subject: [PATCH v2] bitbake-layers: fix show-appends and flatten for recent cooker changes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -26,10 +26,12 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 24 May 2013 10:09:26 -0000
+X-List-Received-Date: Fri, 24 May 2013 10:12:57 -0000
 
-Fixes the show-layers and flatten subcommands for recent refactoring in
+Fixes the show-appends and flatten subcommands for recent refactoring in
 cooker.
+
+Fixes [YOCTO #4536].
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
