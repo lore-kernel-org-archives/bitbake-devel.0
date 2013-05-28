@@ -1,34 +1,28 @@
-Return-Path: <15982203546@qq.com>
-Received: from smtpbg64.qq.com (smtpbg62.qq.com [103.7.29.139])
-	by mail.openembedded.org (Postfix) with SMTP id 77EC06065B
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id A7D796A58B
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 26 May 2013 04:52:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s0907;
-	t=1369543967; bh=8yYHbF+0SmOpWi0fhdYsj+1rLPaxOfojZvN4W5o/tQ0=;
-	h=X-QQ-SSF:X-HAS-ATTACH:X-QQ-BUSINESS-ORIGIN:X-Originating-IP:
-	X-QQ-STYLE:X-QQ-mid:From:To:Subject:Mime-Version:Content-Type:
-	Content-Transfer-Encoding:Date:X-Priority:Message-ID:X-QQ-MIME:
-	X-Mailer:X-QQ-Mailer;
-	b=CNA+LIYR46UjwbHVEOqi1LkQHjzzW+tnNjHtBGj8tXdTJEDgPe20RO2kKiltsN/Ju
-	xzjDDqQQdMvFSkc1xmz3hBs5yC73nNQUqgIx9wjK2VGBV1tK1HrDLTlcnLDVa5B
-X-QQ-SSF: 00000000000000F000000000000000Z
-X-HAS-ATTACH: no
-X-QQ-BUSINESS-ORIGIN: 1002
-X-Originating-IP: 118.122.156.75
-X-QQ-STYLE: 
-X-QQ-mid: webmail578t1369543966t888877
-From: "=?ISO-8859-1?B?bGVl?=" <15982203546@qq.com>
-To: "=?ISO-8859-1?B?Yml0YmFrZS1kZXZlbA==?="
-	<bitbake-devel@lists.openembedded.org>
-Mime-Version: 1.0
-Date: Sun, 26 May 2013 12:52:46 +0800
-X-Priority: 3
-Message-ID: <tencent_46D42C6E52FC9B0E66414E4E@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-X-Mailman-Approved-At: Sun, 26 May 2013 10:24:05 +0000
-Subject: Unpack failure for URL: 'http://zlib.net/pigz/pigz-2.3.tar.gz
+	Tue, 28 May 2013 15:47:17 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id r4SFlJan019237
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 28 May 2013 08:47:19 -0700 (PDT)
+Received: from Marks-MacBook-Pro.local (172.25.36.233) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+	14.2.342.3; Tue, 28 May 2013 08:47:18 -0700
+Message-ID: <51A4D192.1@windriver.com>
+Date: Tue, 28 May 2013 10:47:30 -0500
+From: Mark Hatle <mark.hatle@windriver.com>
+Organization: Wind River Systems
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8;
+	rv:17.0) Gecko/20130509 Thunderbird/17.0.6
+MIME-Version: 1.0
+To: <bitbake-devel@lists.openembedded.org>
+References: <tencent_46D42C6E52FC9B0E66414E4E@qq.com>
+In-Reply-To: <tencent_46D42C6E52FC9B0E66414E4E@qq.com>
+Subject: Re: Unpack failure for URL: 'http://zlib.net/pigz/pigz-2.3.tar.gz
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,237 +34,82 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 26 May 2013 04:52:48 -0000
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_51A1951E_0901B840_54868472"
-Content-Transfer-Encoding: 8Bit
+X-List-Received-Date: Tue, 28 May 2013 15:47:17 -0000
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-------=_NextPart_51A1951E_0901B840_54868472
-Content-Type: text/plain;
-	charset="ISO-8859-1"
-Content-Transfer-Encoding: base64
+On 5/25/13 11:52 PM, lee wrote:
+> Hi all:
+> I build a project according to the yocto project quit start guide as follows:
+>
+>   $ wget http://downloads.yoctoproject.org/releases/yocto/yocto-1.4/poky-dylan-9.0.tar.bz2
+>   $ tar xjf poky-dylan-9.0.tar.bz2
+>   $ cd poky-dylan-9.0
+>   $ source oe-init-build-env
+>
+> $ bitbake -k core-image-sato
+>
+> the result failed ,and print the following error log, can you give some suggestion to resolve this issue? thanks
+>
+> Pseudo is not present but is required, building this first before the main build
+> Loading cache: 100% |###########################################| ETA:  00:00:00
+> Loaded 1121 entries from dependency cache.
+>
+> Build Configuration:
+> BB_VERSION        = "1.18.0"
+> BUILD_SYS         = "i686-linux"
+> NATIVELSBSTRING   = "Ubuntu-10.04"
+> TARGET_SYS        = "i586-poky-linux"
+> MACHINE           = "qemux86"
+> DISTRO            = "poky"
+> DISTRO_VERSION    = "1.4"
+> TUNE_FEATURES     = "m32 i586"
+> TARGET_FPU        = ""
+> meta
+> meta-yocto
+> meta-yocto-bsp    = "<unknown>:<unknown>"
+>
+> NOTE: Resolving any missing task queue dependencies
+> NOTE: Preparing runqueue
+> NOTE: Executing SetScene Tasks
+> NOTE: Executing RunQueue Tasks
+> ERROR: Function failed: Unpack failure for URL: 'http://zlib.net/pigz/pigz-2.3.tar.gz'. Unpack command PATH="/home/lijilong/poky-dylan-9.0.0/scripts/native-intercept:/home/lijilong/poky-dylan-9.0.0/scripts:/home/lijilong/poky-dylan-9.0.0/build/tmp/sysroots/i686-linux/usr/bin/i586-linux:/home/lijilong/poky-dylan-9.0.0/build/tmp/sysroots/i686-linux/usr/bin:/home/lijilong/poky-dylan-9.0.0/build/tmp/sysroots/i686-linux/usr/sbin:/home/lijilong/poky-dylan-9.0.0/build/tmp/sysroots/i686-linux/usr/bin:/home/lijilong/poky-dylan-9.0.0/build/tmp/sysroots/i686-linux/sbin:/home/lijilong/poky-dylan-9.0.0/build/tmp/sysroots/i686-linux//bin:/home/lijilong/poky-dylan-9.0.0/bitbake/bin:/home/lijilong/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games" tar xz --no-same-owner -f /home/lijilong/poky-dylan-9.0.0/build/downloads/pigz-2.3.tar.gz failed with return value 2
+> ERROR: Logfile of failure stored in: /home/lijilong/poky-dylan-9.0.0/build/tmp/work/i686-linux/pigz-native/2.3-r1/temp/log.do_unpack.6223
+> Log data follows:
+> | DEBUG: Executing python function do_unpack
+> | DEBUG: Executing python function base_do_unpack
+> | NOTE: Unpacking /home/lijilong/poky-dylan-9.0.0/build/downloads/pigz-2.3.tar.gz to /home/lijilong/poky-dylan-9.0.0/build/tmp/work/i686-linux/pigz-native/2.3-r1/
+> |
+> | gzip: stdin: invalid compressed data--crc error
+> | tar: Child returned status 1
+> | tar: Error is not recoverable: exiting now
+> | DEBUG: Python function base_do_unpack finished
+> | DEBUG: Python function do_unpack finished
+> | ERROR: Function failed: Unpack failure for URL: 'http://zlib.net/pigz/pigz-2.3.tar.gz'. Unpack command PATH="/home/lijilong/poky-dylan-9.0.0/scripts/native-intercept:/home/lijilong/poky-dylan-9.0.0/scripts:/home/lijilong/poky-dylan-9.0.0/build/tmp/sysroots/i686-linux/usr/bin/i586-linux:/home/lijilong/poky-dylan-9.0.0/build/tmp/sysroots/i686-linux/usr/bin:/home/lijilong/poky-dylan-9.0.0/build/tmp/sysroots/i686-linux/usr/sbin:/home/lijilong/poky-dylan-9.0.0/build/tmp/sysroots/i686-linux/usr/bin:/home/lijilong/poky-dylan-9.0.0/build/tmp/sysroots/i686-linux/sbin:/home/lijilong/poky-dylan-9.0.0/build/tmp/sysroots/i686-linux//bin:/home/lijilong/poky-dylan-9.0.0/bitbake/bin:/home/lijilong/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games" tar xz --no-same-owner -f /home/lijilong/poky-dylan-9.0.0/build/downloads/pigz-2.3.tar.gz failed with return value 2
+> ERROR: Task 112 (virtual:native:/home/lijilong/poky-dylan-9.0.0/meta/recipes-extended/pigz/pigz_2.3.bb, do_unpack) failed with exit code '1'
+> NOTE: Tasks Summary: Attempted 58 tasks of which 57 didn't need to be rerun and 1 failed.
+> No currently running tasks (58 of 119)
 
-SGkgYWxsOg0KIEkgYnVpbGQgYSBwcm9qZWN0IGFjY29yZGluZyB0byB0aGUgeW9jdG8gcHJv
-amVjdCBxdWl0IHN0YXJ0IGd1aWRlIGFzIGZvbGxvd3M6DQogICQgd2dldCBodHRwOi8vZG93
-bmxvYWRzLnlvY3RvcHJvamVjdC5vcmcvcmVsZWFzZXMveW9jdG8veW9jdG8tMS40L3Bva3kt
-ZHlsYW4tOS4wLnRhci5iejIgICQgdGFyIHhqZiBwb2t5LWR5bGFuLTkuMC50YXIuYnoyICAk
-IGNkIHBva3ktZHlsYW4tOS4wICAkIHNvdXJjZSBvZS1pbml0LWJ1aWxkLWVudiQgYml0YmFr
-ZSAtayBjb3JlLWltYWdlLXNhdG8gdGhlIHJlc3VsdCBmYWlsZWQgLGFuZCBwcmludCB0aGUg
-Zm9sbG93aW5nIGVycm9yIGxvZywgY2FuIHlvdSBnaXZlIHNvbWUgc3VnZ2VzdGlvbiB0byBy
-ZXNvbHZlIHRoaXMgaXNzdWU/IHRoYW5rc1BzZXVkbyBpcyBub3QgcHJlc2VudCBidXQgaXMg
-cmVxdWlyZWQsIGJ1aWxkaW5nIHRoaXMgZmlyc3QgYmVmb3JlIHRoZSBtYWluIGJ1aWxkDQpM
-b2FkaW5nIGNhY2hlOiAxMDAlIHwjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMj
-IyMjIyMjIyMjfCBFVEE6ICAwMDowMDowMA0KTG9hZGVkIDExMjEgZW50cmllcyBmcm9tIGRl
-cGVuZGVuY3kgY2FjaGUuQnVpbGQgQ29uZmlndXJhdGlvbjoNCkJCX1ZFUlNJT04gICAgICAg
-ID0gIjEuMTguMCINCkJVSUxEX1NZUyAgICAgICAgID0gImk2ODYtbGludXgiDQpOQVRJVkVM
-U0JTVFJJTkcgICA9ICJVYnVudHUtMTAuMDQiDQpUQVJHRVRfU1lTICAgICAgICA9ICJpNTg2
-LXBva3ktbGludXgiDQpNQUNISU5FICAgICAgICAgICA9ICJxZW11eDg2Ig0KRElTVFJPICAg
-ICAgICAgICAgPSAicG9reSINCkRJU1RST19WRVJTSU9OICAgID0gIjEuNCINClRVTkVfRkVB
-VFVSRVMgICAgID0gIm0zMiBpNTg2Ig0KVEFSR0VUX0ZQVSAgICAgICAgPSAiIg0KbWV0YSAg
-ICAgICAgICAgICAgDQptZXRhLXlvY3RvICAgICAgICANCm1ldGEteW9jdG8tYnNwICAgID0g
-Ijx1bmtub3duPjo8dW5rbm93bj4iTk9URTogUmVzb2x2aW5nIGFueSBtaXNzaW5nIHRhc2sg
-cXVldWUgZGVwZW5kZW5jaWVzDQpOT1RFOiBQcmVwYXJpbmcgcnVucXVldWUNCk5PVEU6IEV4
-ZWN1dGluZyBTZXRTY2VuZSBUYXNrcw0KTk9URTogRXhlY3V0aW5nIFJ1blF1ZXVlIFRhc2tz
-DQpFUlJPUjogRnVuY3Rpb24gZmFpbGVkOiBVbnBhY2sgZmFpbHVyZSBmb3IgVVJMOiAnaHR0
-cDovL3psaWIubmV0L3BpZ3ovcGlnei0yLjMudGFyLmd6Jy4gVW5wYWNrIGNvbW1hbmQgUEFU
-SD0iL2hvbWUvbGlqaWxvbmcvcG9reS1keWxhbi05LjAuMC9zY3JpcHRzL25hdGl2ZS1pbnRl
-cmNlcHQ6L2hvbWUvbGlqaWxvbmcvcG9reS1keWxhbi05LjAuMC9zY3JpcHRzOi9ob21lL2xp
-amlsb25nL3Bva3ktZHlsYW4tOS4wLjAvYnVpbGQvdG1wL3N5c3Jvb3RzL2k2ODYtbGludXgv
-dXNyL2Jpbi9pNTg2LWxpbnV4Oi9ob21lL2xpamlsb25nL3Bva3ktZHlsYW4tOS4wLjAvYnVp
-bGQvdG1wL3N5c3Jvb3RzL2k2ODYtbGludXgvdXNyL2JpbjovaG9tZS9saWppbG9uZy9wb2t5
-LWR5bGFuLTkuMC4wL2J1aWxkL3RtcC9zeXNyb290cy9pNjg2LWxpbnV4L3Vzci9zYmluOi9o
-b21lL2xpamlsb25nL3Bva3ktZHlsYW4tOS4wLjAvYnVpbGQvdG1wL3N5c3Jvb3RzL2k2ODYt
-bGludXgvdXNyL2JpbjovaG9tZS9saWppbG9uZy9wb2t5LWR5bGFuLTkuMC4wL2J1aWxkL3Rt
-cC9zeXNyb290cy9pNjg2LWxpbnV4L3NiaW46L2hvbWUvbGlqaWxvbmcvcG9reS1keWxhbi05
-LjAuMC9idWlsZC90bXAvc3lzcm9vdHMvaTY4Ni1saW51eC8vYmluOi9ob21lL2xpamlsb25n
-L3Bva3ktZHlsYW4tOS4wLjAvYml0YmFrZS9iaW46L2hvbWUvbGlqaWxvbmcvYmluOi91c3Iv
-bG9jYWwvc2JpbjovdXNyL2xvY2FsL2JpbjovdXNyL3NiaW46L3Vzci9iaW46L3NiaW46L2Jp
-bjovdXNyL2dhbWVzIiB0YXIgeHogLS1uby1zYW1lLW93bmVyIC1mIC9ob21lL2xpamlsb25n
-L3Bva3ktZHlsYW4tOS4wLjAvYnVpbGQvZG93bmxvYWRzL3BpZ3otMi4zLnRhci5neiBmYWls
-ZWQgd2l0aCByZXR1cm4gdmFsdWUgMg0KRVJST1I6IExvZ2ZpbGUgb2YgZmFpbHVyZSBzdG9y
-ZWQgaW46IC9ob21lL2xpamlsb25nL3Bva3ktZHlsYW4tOS4wLjAvYnVpbGQvdG1wL3dvcmsv
-aTY4Ni1saW51eC9waWd6LW5hdGl2ZS8yLjMtcjEvdGVtcC9sb2cuZG9fdW5wYWNrLjYyMjMN
-CkxvZyBkYXRhIGZvbGxvd3M6DQp8IERFQlVHOiBFeGVjdXRpbmcgcHl0aG9uIGZ1bmN0aW9u
-IGRvX3VucGFjaw0KfCBERUJVRzogRXhlY3V0aW5nIHB5dGhvbiBmdW5jdGlvbiBiYXNlX2Rv
-X3VucGFjaw0KfCBOT1RFOiBVbnBhY2tpbmcgL2hvbWUvbGlqaWxvbmcvcG9reS1keWxhbi05
-LjAuMC9idWlsZC9kb3dubG9hZHMvcGlnei0yLjMudGFyLmd6IHRvIC9ob21lL2xpamlsb25n
-L3Bva3ktZHlsYW4tOS4wLjAvYnVpbGQvdG1wL3dvcmsvaTY4Ni1saW51eC9waWd6LW5hdGl2
-ZS8yLjMtcjEvDQp8IA0KfCBnemlwOiBzdGRpbjogaW52YWxpZCBjb21wcmVzc2VkIGRhdGEt
-LWNyYyBlcnJvcg0KfCB0YXI6IENoaWxkIHJldHVybmVkIHN0YXR1cyAxDQp8IHRhcjogRXJy
-b3IgaXMgbm90IHJlY292ZXJhYmxlOiBleGl0aW5nIG5vdw0KfCBERUJVRzogUHl0aG9uIGZ1
-bmN0aW9uIGJhc2VfZG9fdW5wYWNrIGZpbmlzaGVkDQp8IERFQlVHOiBQeXRob24gZnVuY3Rp
-b24gZG9fdW5wYWNrIGZpbmlzaGVkDQp8IEVSUk9SOiBGdW5jdGlvbiBmYWlsZWQ6IFVucGFj
-ayBmYWlsdXJlIGZvciBVUkw6ICdodHRwOi8vemxpYi5uZXQvcGlnei9waWd6LTIuMy50YXIu
-Z3onLiBVbnBhY2sgY29tbWFuZCBQQVRIPSIvaG9tZS9saWppbG9uZy9wb2t5LWR5bGFuLTku
-MC4wL3NjcmlwdHMvbmF0aXZlLWludGVyY2VwdDovaG9tZS9saWppbG9uZy9wb2t5LWR5bGFu
-LTkuMC4wL3NjcmlwdHM6L2hvbWUvbGlqaWxvbmcvcG9reS1keWxhbi05LjAuMC9idWlsZC90
-bXAvc3lzcm9vdHMvaTY4Ni1saW51eC91c3IvYmluL2k1ODYtbGludXg6L2hvbWUvbGlqaWxv
-bmcvcG9reS1keWxhbi05LjAuMC9idWlsZC90bXAvc3lzcm9vdHMvaTY4Ni1saW51eC91c3Iv
-YmluOi9ob21lL2xpamlsb25nL3Bva3ktZHlsYW4tOS4wLjAvYnVpbGQvdG1wL3N5c3Jvb3Rz
-L2k2ODYtbGludXgvdXNyL3NiaW46L2hvbWUvbGlqaWxvbmcvcG9reS1keWxhbi05LjAuMC9i
-dWlsZC90bXAvc3lzcm9vdHMvaTY4Ni1saW51eC91c3IvYmluOi9ob21lL2xpamlsb25nL3Bv
-a3ktZHlsYW4tOS4wLjAvYnVpbGQvdG1wL3N5c3Jvb3RzL2k2ODYtbGludXgvc2JpbjovaG9t
-ZS9saWppbG9uZy9wb2t5LWR5bGFuLTkuMC4wL2J1aWxkL3RtcC9zeXNyb290cy9pNjg2LWxp
-bnV4Ly9iaW46L2hvbWUvbGlqaWxvbmcvcG9reS1keWxhbi05LjAuMC9iaXRiYWtlL2Jpbjov
-aG9tZS9saWppbG9uZy9iaW46L3Vzci9sb2NhbC9zYmluOi91c3IvbG9jYWwvYmluOi91c3Iv
-c2JpbjovdXNyL2Jpbjovc2JpbjovYmluOi91c3IvZ2FtZXMiIHRhciB4eiAtLW5vLXNhbWUt
-b3duZXIgLWYgL2hvbWUvbGlqaWxvbmcvcG9reS1keWxhbi05LjAuMC9idWlsZC9kb3dubG9h
-ZHMvcGlnei0yLjMudGFyLmd6IGZhaWxlZCB3aXRoIHJldHVybiB2YWx1ZSAyDQpFUlJPUjog
-VGFzayAxMTIgKHZpcnR1YWw6bmF0aXZlOi9ob21lL2xpamlsb25nL3Bva3ktZHlsYW4tOS4w
-LjAvbWV0YS9yZWNpcGVzLWV4dGVuZGVkL3BpZ3ovcGlnel8yLjMuYmIsIGRvX3VucGFjaykg
-ZmFpbGVkIHdpdGggZXhpdCBjb2RlICcxJw0KTk9URTogVGFza3MgU3VtbWFyeTogQXR0ZW1w
-dGVkIDU4IHRhc2tzIG9mIHdoaWNoIDU3IGRpZG4ndCBuZWVkIHRvIGJlIHJlcnVuIGFuZCAx
-IGZhaWxlZC4NCk5vIGN1cnJlbnRseSBydW5uaW5nIHRhc2tzICg1OCBvZiAxMTkpU3VtbWFy
-eTogMSB0YXNrIGZhaWxlZDoNCiAgdmlydHVhbDpuYXRpdmU6L2hvbWUvbGlqaWxvbmcvcG9r
-eS1keWxhbi05LjAuMC9tZXRhL3JlY2lwZXMtZXh0ZW5kZWQvcGlnei9waWd6XzIuMy5iYiwg
-ZG9fdW5wYWNrDQpTdW1tYXJ5OiBUaGVyZSB3YXMgMSBFUlJPUiBtZXNzYWdlIHNob3duLCBy
-ZXR1cm5pbmcgYSBub24temVybyBleGl0IGNvZGUu
+Either the download is corrupted, you are having disk errors -- or more likely 
+the gzip on your system is old and causing some kind of incompatibility with the 
+system.
 
-------=_NextPart_51A1951E_0901B840_54868472
-Content-Type: text/html;
-	charset="ISO-8859-1"
-Content-Transfer-Encoding: base64
+What version of gzip are you running and what host OS are you using?
 
-PERJVj4NCjxESVY+SGkgYWxsOjwvRElWPg0KPERJVj5JIGJ1aWxkIGEgcHJvamVjdCBhY2Nv
-cmRpbmcgdG8gdGhlIHlvY3RvIHByb2plY3QgcXVpdCBzdGFydCBndWlkZSBhcyBmb2xsb3dz
-OjwvRElWPg0KPERJVj48UFJFIHN0eWxlPSJMSU5FLUhFSUdIVDogbm9ybWFsOyBXSURPV1M6
-IDI7IFRFWFQtVFJBTlNGT1JNOiBub25lOyBCQUNLR1JPVU5ELUNPTE9SOiByZ2IoMjU1LDI1
-NSwyNTUpOyBGT05ULVZBUklBTlQ6IG5vcm1hbDsgRk9OVC1TVFlMRTogbm9ybWFsOyBURVhU
-LUlOREVOVDogMHB4OyBPUlBIQU5TOiAyOyBMRVRURVItU1BBQ0lORzogbm9ybWFsOyBDT0xP
-UjogcmdiKDUxLDUxLDUxKTsgT1ZFUkZMT1c6IGF1dG87IEZPTlQtV0VJR0hUOiBub3JtYWw7
-IFdPUkQtU1BBQ0lORzogMHB4OyAtd2Via2l0LXRleHQtc2l6ZS1hZGp1c3Q6IGF1dG87IC13
-ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBweCIgY2xhc3M9bGl0ZXJhbGxheW91dD4gJCB3
-Z2V0IGh0dHA6Ly9kb3dubG9hZHMueW9jdG9wcm9qZWN0Lm9yZy9yZWxlYXNlcy95b2N0by95
-b2N0by0xLjQvcG9reS1keWxhbi05LjAudGFyLmJ6Mg0KICQgdGFyIHhqZiBwb2t5LWR5bGFu
-LTkuMC50YXIuYnoyDQogJCBjZCBwb2t5LWR5bGFuLTkuMA0KICQgc291cmNlIG9lLWluaXQt
-YnVpbGQtZW52PC9QUkU+PFBSRSBzdHlsZT0iTElORS1IRUlHSFQ6IG5vcm1hbDsgV0lET1dT
-OiAyOyBURVhULVRSQU5TRk9STTogbm9uZTsgQkFDS0dST1VORC1DT0xPUjogcmdiKDI1NSwy
-NTUsMjU1KTsgRk9OVC1WQVJJQU5UOiBub3JtYWw7IEZPTlQtU1RZTEU6IG5vcm1hbDsgVEVY
-VC1JTkRFTlQ6IDBweDsgT1JQSEFOUzogMjsgTEVUVEVSLVNQQUNJTkc6IG5vcm1hbDsgQ09M
-T1I6IHJnYig1MSw1MSw1MSk7IE9WRVJGTE9XOiBhdXRvOyBGT05ULVdFSUdIVDogbm9ybWFs
-OyBXT1JELVNQQUNJTkc6IDBweDsgLXdlYmtpdC10ZXh0LXNpemUtYWRqdXN0OiBhdXRvOyAt
-d2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHgiIGNsYXNzPWxpdGVyYWxsYXlvdXQ+JCBi
-aXRiYWtlIC1rIGNvcmUtaW1hZ2Utc2F0byA8L1BSRT48UFJFIHN0eWxlPSJMSU5FLUhFSUdI
-VDogbm9ybWFsOyBXSURPV1M6IDI7IFRFWFQtVFJBTlNGT1JNOiBub25lOyBCQUNLR1JPVU5E
-LUNPTE9SOiByZ2IoMjU1LDI1NSwyNTUpOyBGT05ULVZBUklBTlQ6IG5vcm1hbDsgRk9OVC1T
-VFlMRTogbm9ybWFsOyBURVhULUlOREVOVDogMHB4OyBPUlBIQU5TOiAyOyBMRVRURVItU1BB
-Q0lORzogbm9ybWFsOyBDT0xPUjogcmdiKDUxLDUxLDUxKTsgT1ZFUkZMT1c6IGF1dG87IEZP
-TlQtV0VJR0hUOiBub3JtYWw7IFdPUkQtU1BBQ0lORzogMHB4OyAtd2Via2l0LXRleHQtc2l6
-ZS1hZGp1c3Q6IGF1dG87IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBweCIgY2xhc3M9
-bGl0ZXJhbGxheW91dD50aGUgcmVzdWx0IGZhaWxlZCAsYW5kIHByaW50IHRoZSBmb2xsb3dp
-bmcgZXJyb3IgbG9nLCBjYW4geW91IGdpdmUgc29tZSBzdWdnZXN0aW9uIHRvIHJlc29sdmUg
-dGhpcyBpc3N1ZT8gdGhhbmtzPC9QUkU+PFBSRSBzdHlsZT0iTElORS1IRUlHSFQ6IG5vcm1h
-bDsgV0lET1dTOiAyOyBURVhULVRSQU5TRk9STTogbm9uZTsgQkFDS0dST1VORC1DT0xPUjog
-cmdiKDI1NSwyNTUsMjU1KTsgRk9OVC1WQVJJQU5UOiBub3JtYWw7IEZPTlQtU1RZTEU6IG5v
-cm1hbDsgVEVYVC1JTkRFTlQ6IDBweDsgT1JQSEFOUzogMjsgTEVUVEVSLVNQQUNJTkc6IG5v
-cm1hbDsgQ09MT1I6IHJnYig1MSw1MSw1MSk7IE9WRVJGTE9XOiBhdXRvOyBGT05ULVdFSUdI
-VDogbm9ybWFsOyBXT1JELVNQQUNJTkc6IDBweDsgLXdlYmtpdC10ZXh0LXNpemUtYWRqdXN0
-OiBhdXRvOyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHgiIGNsYXNzPWxpdGVyYWxs
-YXlvdXQ+PEZPTlQgY29sb3I9I2ZmMDAwMD5Qc2V1ZG8gaXMgbm90IHByZXNlbnQgYnV0IGlz
-IHJlcXVpcmVkLCBidWlsZGluZyB0aGlzIGZpcnN0IGJlZm9yZSB0aGUgbWFpbiBidWlsZDxC
-Uj48L0ZPTlQ+TG9hZGluZyBjYWNoZTogMTAwJSB8IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMj
-IyMjIyMjIyMjIyMjIyMjIyMjI3wgRVRBOiZuYnNwOyAwMDowMDowMDxCUj5Mb2FkZWQgMTEy
-MSBlbnRyaWVzIGZyb20gZGVwZW5kZW5jeSBjYWNoZS48L1BSRT48UFJFIHN0eWxlPSJMSU5F
-LUhFSUdIVDogbm9ybWFsOyBXSURPV1M6IDI7IFRFWFQtVFJBTlNGT1JNOiBub25lOyBCQUNL
-R1JPVU5ELUNPTE9SOiByZ2IoMjU1LDI1NSwyNTUpOyBGT05ULVZBUklBTlQ6IG5vcm1hbDsg
-Rk9OVC1TVFlMRTogbm9ybWFsOyBURVhULUlOREVOVDogMHB4OyBPUlBIQU5TOiAyOyBMRVRU
-RVItU1BBQ0lORzogbm9ybWFsOyBDT0xPUjogcmdiKDUxLDUxLDUxKTsgT1ZFUkZMT1c6IGF1
-dG87IEZPTlQtV0VJR0hUOiBub3JtYWw7IFdPUkQtU1BBQ0lORzogMHB4OyAtd2Via2l0LXRl
-eHQtc2l6ZS1hZGp1c3Q6IGF1dG87IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBweCIg
-Y2xhc3M9bGl0ZXJhbGxheW91dD5CdWlsZCBDb25maWd1cmF0aW9uOjxCUj5CQl9WRVJTSU9O
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7ID0gIjEuMTguMCI8
-QlI+QlVJTERfU1lTJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7ID0gImk2ODYtbGludXgiPEJSPk5BVElWRUxTQlNUUklORyZuYnNwOyZuYnNwOyA9
-ICJVYnVudHUtMTAuMDQiPEJSPlRBUkdFVF9TWVMmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsgPSAiaTU4Ni1wb2t5LWxpbnV4IjxCUj5NQUNISU5FJm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-ID0gInFlbXV4ODYiPEJSPkRJU1RSTyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyA9ICJwb2t5IjxCUj5ESVNUUk9f
-VkVSU0lPTiZuYnNwOyZuYnNwOyZuYnNwOyA9ICIxLjQiPEJSPlRVTkVfRkVBVFVSRVMmbmJz
-cDsmbmJzcDsmbmJzcDsmbmJzcDsgPSAibTMyIGk1ODYiPEJSPlRBUkdFVF9GUFUmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgPSAiIjxCUj5tZXRhJm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7IDxCUj5tZXRhLXlvY3RvJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IDxCUj5tZXRhLXlvY3RvLWJzcCZuYnNwOyZuYnNwOyZu
-YnNwOyA9ICImbHQ7dW5rbm93biZndDs6Jmx0O3Vua25vd24mZ3Q7IjwvUFJFPjxQUkUgc3R5
-bGU9IkxJTkUtSEVJR0hUOiBub3JtYWw7IFdJRE9XUzogMjsgVEVYVC1UUkFOU0ZPUk06IG5v
-bmU7IEJBQ0tHUk9VTkQtQ09MT1I6IHJnYigyNTUsMjU1LDI1NSk7IEZPTlQtVkFSSUFOVDog
-bm9ybWFsOyBGT05ULVNUWUxFOiBub3JtYWw7IFRFWFQtSU5ERU5UOiAwcHg7IE9SUEhBTlM6
-IDI7IExFVFRFUi1TUEFDSU5HOiBub3JtYWw7IENPTE9SOiByZ2IoNTEsNTEsNTEpOyBPVkVS
-RkxPVzogYXV0bzsgRk9OVC1XRUlHSFQ6IG5vcm1hbDsgV09SRC1TUEFDSU5HOiAwcHg7IC13
-ZWJraXQtdGV4dC1zaXplLWFkanVzdDogYXV0bzsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0
-aDogMHB4IiBjbGFzcz1saXRlcmFsbGF5b3V0Pk5PVEU6IFJlc29sdmluZyBhbnkgbWlzc2lu
-ZyB0YXNrIHF1ZXVlIGRlcGVuZGVuY2llczxCUj5OT1RFOiBQcmVwYXJpbmcgcnVucXVldWU8
-QlI+Tk9URTogRXhlY3V0aW5nIFNldFNjZW5lIFRhc2tzPEJSPk5PVEU6IEV4ZWN1dGluZyBS
-dW5RdWV1ZSBUYXNrczxCUj48Rk9OVCBjb2xvcj0jZmYwMDAwPkVSUk9SOiBGdW5jdGlvbiBm
-YWlsZWQ6IFVucGFjayBmYWlsdXJlIGZvciBVUkw6ICdodHRwOi8vemxpYi5uZXQvcGlnei9w
-aWd6LTIuMy50YXIuZ3onLiBVbnBhY2sgY29tbWFuZCBQQVRIPSIvaG9tZS9saWppbG9uZy9w
-b2t5LWR5bGFuLTkuMC4wL3NjcmlwdHMvbmF0aXZlLWludGVyY2VwdDovaG9tZS9saWppbG9u
-Zy9wb2t5LWR5bGFuLTkuMC4wL3NjcmlwdHM6L2hvbWUvbGlqaWxvbmcvcG9reS1keWxhbi05
-LjAuMC9idWlsZC90bXAvc3lzcm9vdHMvaTY4Ni1saW51eC91c3IvYmluL2k1ODYtbGludXg6
-L2hvbWUvbGlqaWxvbmcvcG9reS1keWxhbi05LjAuMC9idWlsZC90bXAvc3lzcm9vdHMvaTY4
-Ni1saW51eC91c3IvYmluOi9ob21lL2xpamlsb25nL3Bva3ktZHlsYW4tOS4wLjAvYnVpbGQv
-dG1wL3N5c3Jvb3RzL2k2ODYtbGludXgvdXNyL3NiaW46L2hvbWUvbGlqaWxvbmcvcG9reS1k
-eWxhbi05LjAuMC9idWlsZC90bXAvc3lzcm9vdHMvaTY4Ni1saW51eC91c3IvYmluOi9ob21l
-L2xpamlsb25nL3Bva3ktZHlsYW4tOS4wLjAvYnVpbGQvdG1wL3N5c3Jvb3RzL2k2ODYtbGlu
-dXgvc2JpbjovaG9tZS9saWppbG9uZy9wb2t5LWR5bGFuLTkuMC4wL2J1aWxkL3RtcC9zeXNy
-b290cy9pNjg2LWxpbnV4Ly9iaW46L2hvbWUvbGlqaWxvbmcvcG9reS1keWxhbi05LjAuMC9i
-aXRiYWtlL2JpbjovaG9tZS9saWppbG9uZy9iaW46L3Vzci9sb2NhbC9zYmluOi91c3IvbG9j
-YWwvYmluOi91c3Ivc2JpbjovdXNyL2Jpbjovc2JpbjovYmluOi91c3IvZ2FtZXMiIHRhciB4
-eiAtLW5vLXNhbWUtb3duZXIgLWYgL2hvbWUvbGlqaWxvbmcvcG9reS1keWxhbi05LjAuMC9i
-dWlsZC9kb3dubG9hZHMvcGlnei0yLjMudGFyLmd6IGZhaWxlZCB3aXRoIHJldHVybiB2YWx1
-ZSAyPEJSPkVSUk9SOiBMb2dmaWxlIG9mIGZhaWx1cmUgc3RvcmVkIGluOiAvaG9tZS9saWpp
-bG9uZy9wb2t5LWR5bGFuLTkuMC4wL2J1aWxkL3RtcC93b3JrL2k2ODYtbGludXgvcGlnei1u
-YXRpdmUvMi4zLXIxL3RlbXAvbG9nLmRvX3VucGFjay42MjIzPEJSPjwvRk9OVD5Mb2cgZGF0
-YSBmb2xsb3dzOjxCUj58IERFQlVHOiBFeGVjdXRpbmcgcHl0aG9uIGZ1bmN0aW9uIGRvX3Vu
-cGFjazxCUj58IERFQlVHOiBFeGVjdXRpbmcgcHl0aG9uIGZ1bmN0aW9uIGJhc2VfZG9fdW5w
-YWNrPEJSPnwgTk9URTogVW5wYWNraW5nIC9ob21lL2xpamlsb25nL3Bva3ktZHlsYW4tOS4w
-LjAvYnVpbGQvZG93bmxvYWRzL3BpZ3otMi4zLnRhci5neiB0byAvaG9tZS9saWppbG9uZy9w
-b2t5LWR5bGFuLTkuMC4wL2J1aWxkL3RtcC93b3JrL2k2ODYtbGludXgvcGlnei1uYXRpdmUv
-Mi4zLXIxLzxCUj58IDxCUj58IGd6aXA6IHN0ZGluOiBpbnZhbGlkIGNvbXByZXNzZWQgZGF0
-YS0tY3JjIGVycm9yPEJSPnwgdGFyOiBDaGlsZCByZXR1cm5lZCBzdGF0dXMgMTxCUj58IHRh
-cjogRXJyb3IgaXMgbm90IHJlY292ZXJhYmxlOiBleGl0aW5nIG5vdzxCUj58IERFQlVHOiBQ
-eXRob24gZnVuY3Rpb24gYmFzZV9kb191bnBhY2sgZmluaXNoZWQ8QlI+fCBERUJVRzogUHl0
-aG9uIGZ1bmN0aW9uIGRvX3VucGFjayBmaW5pc2hlZDxCUj58IEVSUk9SOiBGdW5jdGlvbiBm
-YWlsZWQ6IFVucGFjayBmYWlsdXJlIGZvciBVUkw6ICdodHRwOi8vemxpYi5uZXQvcGlnei9w
-aWd6LTIuMy50YXIuZ3onLiBVbnBhY2sgY29tbWFuZCBQQVRIPSIvaG9tZS9saWppbG9uZy9w
-b2t5LWR5bGFuLTkuMC4wL3NjcmlwdHMvbmF0aXZlLWludGVyY2VwdDovaG9tZS9saWppbG9u
-Zy9wb2t5LWR5bGFuLTkuMC4wL3NjcmlwdHM6L2hvbWUvbGlqaWxvbmcvcG9reS1keWxhbi05
-LjAuMC9idWlsZC90bXAvc3lzcm9vdHMvaTY4Ni1saW51eC91c3IvYmluL2k1ODYtbGludXg6
-L2hvbWUvbGlqaWxvbmcvcG9reS1keWxhbi05LjAuMC9idWlsZC90bXAvc3lzcm9vdHMvaTY4
-Ni1saW51eC91c3IvYmluOi9ob21lL2xpamlsb25nL3Bva3ktZHlsYW4tOS4wLjAvYnVpbGQv
-dG1wL3N5c3Jvb3RzL2k2ODYtbGludXgvdXNyL3NiaW46L2hvbWUvbGlqaWxvbmcvcG9reS1k
-eWxhbi05LjAuMC9idWlsZC90bXAvc3lzcm9vdHMvaTY4Ni1saW51eC91c3IvYmluOi9ob21l
-L2xpamlsb25nL3Bva3ktZHlsYW4tOS4wLjAvYnVpbGQvdG1wL3N5c3Jvb3RzL2k2ODYtbGlu
-dXgvc2JpbjovaG9tZS9saWppbG9uZy9wb2t5LWR5bGFuLTkuMC4wL2J1aWxkL3RtcC9zeXNy
-b290cy9pNjg2LWxpbnV4Ly9iaW46L2hvbWUvbGlqaWxvbmcvcG9reS1keWxhbi05LjAuMC9i
-aXRiYWtlL2JpbjovaG9tZS9saWppbG9uZy9iaW46L3Vzci9sb2NhbC9zYmluOi91c3IvbG9j
-YWwvYmluOi91c3Ivc2JpbjovdXNyL2Jpbjovc2JpbjovYmluOi91c3IvZ2FtZXMiIHRhciB4
-eiAtLW5vLXNhbWUtb3duZXIgLWYgL2hvbWUvbGlqaWxvbmcvcG9reS1keWxhbi05LjAuMC9i
-dWlsZC9kb3dubG9hZHMvcGlnei0yLjMudGFyLmd6IGZhaWxlZCB3aXRoIHJldHVybiB2YWx1
-ZSAyPEJSPjxGT05UIGNvbG9yPSNmZjAwMDA+RVJST1I6IFRhc2sgMTEyICh2aXJ0dWFsOm5h
-dGl2ZTovaG9tZS9saWppbG9uZy9wb2t5LWR5bGFuLTkuMC4wL21ldGEvcmVjaXBlcy1leHRl
-bmRlZC9waWd6L3BpZ3pfMi4zLmJiLCBkb191bnBhY2spIGZhaWxlZCB3aXRoIGV4aXQgY29k
-ZSAnMSc8QlI+PC9GT05UPk5PVEU6IFRhc2tzIFN1bW1hcnk6IEF0dGVtcHRlZCA1OCB0YXNr
-cyBvZiB3aGljaCA1NyBkaWRuJ3QgbmVlZCB0byBiZSByZXJ1biBhbmQgMSBmYWlsZWQuPEJS
-Pk5vIGN1cnJlbnRseSBydW5uaW5nIHRhc2tzICg1OCBvZiAxMTkpPC9QUkU+PFBSRSBzdHls
-ZT0iTElORS1IRUlHSFQ6IG5vcm1hbDsgV0lET1dTOiAyOyBURVhULVRSQU5TRk9STTogbm9u
-ZTsgQkFDS0dST1VORC1DT0xPUjogcmdiKDI1NSwyNTUsMjU1KTsgRk9OVC1WQVJJQU5UOiBu
-b3JtYWw7IEZPTlQtU1RZTEU6IG5vcm1hbDsgVEVYVC1JTkRFTlQ6IDBweDsgT1JQSEFOUzog
-MjsgTEVUVEVSLVNQQUNJTkc6IG5vcm1hbDsgQ09MT1I6IHJnYig1MSw1MSw1MSk7IE9WRVJG
-TE9XOiBhdXRvOyBGT05ULVdFSUdIVDogbm9ybWFsOyBXT1JELVNQQUNJTkc6IDBweDsgLXdl
-YmtpdC10ZXh0LXNpemUtYWRqdXN0OiBhdXRvOyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRo
-OiAwcHgiIGNsYXNzPWxpdGVyYWxsYXlvdXQ+U3VtbWFyeTogMSB0YXNrIGZhaWxlZDo8QlI+
-Jm5ic3A7IHZpcnR1YWw6bmF0aXZlOi9ob21lL2xpamlsb25nL3Bva3ktZHlsYW4tOS4wLjAv
-bWV0YS9yZWNpcGVzLWV4dGVuZGVkL3BpZ3ovcGlnel8yLjMuYmIsIGRvX3VucGFjazxCUj5T
-dW1tYXJ5OiBUaGVyZSB3YXMgMSBFUlJPUiBtZXNzYWdlIHNob3duLCByZXR1cm5pbmcgYSBu
-b24temVybyBleGl0IGNvZGUuPC9QUkU+PFBSRSBzdHlsZT0iTElORS1IRUlHSFQ6IG5vcm1h
-bDsgV0lET1dTOiAyOyBURVhULVRSQU5TRk9STTogbm9uZTsgQkFDS0dST1VORC1DT0xPUjog
-cmdiKDI1NSwyNTUsMjU1KTsgRk9OVC1WQVJJQU5UOiBub3JtYWw7IEZPTlQtU1RZTEU6IG5v
-cm1hbDsgVEVYVC1JTkRFTlQ6IDBweDsgT1JQSEFOUzogMjsgTEVUVEVSLVNQQUNJTkc6IG5v
-cm1hbDsgQ09MT1I6IHJnYig1MSw1MSw1MSk7IE9WRVJGTE9XOiBhdXRvOyBGT05ULVdFSUdI
-VDogbm9ybWFsOyBXT1JELVNQQUNJTkc6IDBweDsgLXdlYmtpdC10ZXh0LXNpemUtYWRqdXN0
-OiBhdXRvOyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHgiIGNsYXNzPWxpdGVyYWxs
-YXlvdXQ+Jm5ic3A7PC9QUkU+PC9ESVY+PC9ESVY+
+--Mark
 
-------=_NextPart_51A1951E_0901B840_54868472--
+> Summary: 1 task failed:
+>    virtual:native:/home/lijilong/poky-dylan-9.0.0/meta/recipes-extended/pigz/pigz_2.3.bb, do_unpack
+> Summary: There was 1 ERROR message shown, returning a non-zero exit code.
+>
+>
+>
+>
+>
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+>
+
+
