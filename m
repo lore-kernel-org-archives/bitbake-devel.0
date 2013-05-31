@@ -1,20 +1,27 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id AEA04608F7
+Return-Path: <Peter.Seebach@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id C40EB608F7
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 May 2013 14:55:52 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 31 May 2013 07:53:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.87,779,1363158000"; d="scan'208";a="346296188"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.121.185])
-	by orsmga002.jf.intel.com with ESMTP; 31 May 2013 07:55:52 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 31 May 2013 15:55:41 +0100
-Message-Id: <cover.1370011759.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.8.1.2
-Subject: [1.18][PATCH 0/5] Cherry-picks from master for 1.18 (cover letter only)
+	Fri, 31 May 2013 16:32:48 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id r4VGWlcx027588
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Fri, 31 May 2013 09:32:47 -0700 (PDT)
+Received: from e6410-2 (172.25.40.227) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.40) with Microsoft SMTP Server id 14.2.342.3;
+	Fri, 31 May 2013 09:32:46 -0700
+Date: Fri, 31 May 2013 11:32:35 -0500
+From: Peter Seebach <peter.seebach@windriver.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Message-ID: <20130531113235.2bd2df62@e6410-2>
+In-Reply-To: <1369985383.14887.341.camel@ted>
+References: <1369799698-1417-1-git-send-email-mark.hatle@windriver.com>
+	<1369985383.14887.341.camel@ted>
+X-Mailer: Claws Mail 3.8.0 (GTK+ 2.24.10; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] cooker.py: Remove explicit build targets from the ignored list
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -26,32 +33,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 31 May 2013 14:55:52 -0000
+X-List-Received-Date: Fri, 31 May 2013 16:32:48 -0000
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 
-The following changes cherry-picked from master (against poky, but apply
-cleanly against the bitbake 1.18 branch with -p2) are available in the
-git repository at:
+On Fri, 31 May 2013 08:29:43 +0100
+Richard Purdie <richard.purdie@linuxfoundation.org> wrote:
 
-  git://git.yoctoproject.org/poky-contrib paule/dylan-next2-bb
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/dylan-next2-bb
+> I'm not sure this is the right thing to do, the reason being
+> determinism. I don't expect different results for X in the different
+> cases:
+> 
+> bitbake X Y
+> 
+> bitbake X
+> 
+> (assuming Y is ASSUME_PROVIDED)
+> 
+> For example, X will rebuild between these two commands since the sstate
+> and task checksums will be different between the two. This really needs
+> more thought to make a consistent user experience...
 
-Martin Jansa (1):
-  bitbake: git: remove symling before updating mirror tarball
+Hmm. I don't *normally* expect different results, but might if the first one
+produced a diagnostic: "Warning: Y is in ASSUME_PROVIDED. Rebuilding Y will
+produce different versions of anything which depends on Y."
 
-Richard Purdie (4):
-  bitbake: tests/fetch: Allow to work on python 2.6
-  bitbake: test/fetch: Split the network tests from the rest of the
-    fetcher tests
-  bitbake: test/fetch: Allow the conditional network tests to work under
-    python 2.6
-  bitbake: fetch2: Fix missing function call
+Paul's suggestion that we just print a diagnostic for anything which is in
+both targets and ASSUME_PROVIDED might well do, too. Although it might be nice
+to have a reasonably straight forward command-line way to express "no, really,
+I want you to build Y" which doesn't require config file action.
 
- bitbake/lib/bb/fetch2/__init__.py |  29 +++---
- bitbake/lib/bb/fetch2/git.py      |   4 +
- bitbake/lib/bb/tests/fetch.py     | 183 ++++++++++++++++++--------------------
- 3 files changed, 106 insertions(+), 110 deletions(-)
-
+-s
 -- 
-1.8.1.2
-
+Listen, get this.  Nobody with a good compiler needs to be justified.
 
