@@ -1,25 +1,20 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 5A6B262222
+Return-Path: <cristian.iorga@intel.com>
+Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
+	by mail.openembedded.org (Postfix) with ESMTP id 1CA8962222
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 May 2013 10:54:50 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 31 May 2013 03:52:42 -0700
+	Fri, 31 May 2013 11:05:25 +0000 (UTC)
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga102.ch.intel.com with ESMTP; 31 May 2013 04:05:25 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.87,778,1363158000"; d="scan'208";a="346204357"
-Received: from unknown (HELO helios.localnet) ([10.252.121.185])
-	by orsmga002.jf.intel.com with ESMTP; 31 May 2013 03:54:48 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="4.87,778,1363158000"; d="scan'208";a="310504208"
+Received: from sentry.rb.intel.com ([10.237.105.54])
+	by azsmga001.ch.intel.com with ESMTP; 31 May 2013 04:05:24 -0700
+From: Cristian Iorga <cristian.iorga@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 31 May 2013 11:54:47 +0100
-Message-ID: <8305573.fN7bZe1l3B@helios>
-Organization: Intel Corporation
-User-Agent: KMail/4.10.2 (Linux/3.8.0-22-generic; KDE/4.10.2; i686; ; )
-In-Reply-To: <1369985383.14887.341.camel@ted>
-References: <1369799698-1417-1-git-send-email-mark.hatle@windriver.com>
-	<1369985383.14887.341.camel@ted>
-MIME-Version: 1.0
-Subject: Re: [PATCH] cooker.py: Remove explicit build targets from the ignored list
+Date: Fri, 31 May 2013 14:06:24 +0300
+Message-Id: <1369998384-20229-1-git-send-email-cristian.iorga@intel.com>
+X-Mailer: git-send-email 1.7.10.4
+Subject: [PATCH 1/2] autotools.bbclass: Factor out aclocal copying function
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,75 +26,82 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 31 May 2013 10:54:50 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Fri, 31 May 2013 11:05:26 -0000
 
-On Friday 31 May 2013 08:29:43 Richard Purdie wrote:
-> On Tue, 2013-05-28 at 22:54 -0500, Mark Hatle wrote:
-> > From: Peter Seebach <peter.seebach@windriver.com>
-> > 
-> > If something is in ASSUMED_PROVIDED, and a user tries to build it
-> > explicitly, Nothing Happens. Bitbake just says it ran 0 out of 0
-> > tasks. No diagnostics or explanations are offered.
-> > 
-> > In practice, the right thing is probably to assume that explicit
-> > targets are intentional. So far as I can tell, cooker.buildTargets
-> > is called only from the command line or from command.py, and both
-> > cases seem to be explicit user actions.
-> > 
-> > Signed-off-by: Peter Seebach <peter.seebach@windriver.com>
-> > Signed-off-by: Jeff Polk <jeff.polk@windriver.com>
-> > 
-> > Rename 'status' to 'recipecache' to match recent changes.
-> > 
-> > Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
-> > ---
-> > 
-> >  lib/bb/cooker.py | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-> > index 2ae3e9d..8f0e90c 100644
-> > --- a/lib/bb/cooker.py
-> > +++ b/lib/bb/cooker.py
-> > 
-> > @@ -1067,6 +1067,11 @@ class BBCooker:
-> >          universe = ('universe' in targets)
-> >          targets = self.checkPackages(targets)
-> > 
-> > +        # Explicitly disignore things that have been requested.
-> > +        for target in targets:
-> > +            if target in self.recipecache.ignored_dependencies:
-> > +                self.recipecache.ignored_dependencies.remove(target)
-> > +
-> > 
-> >          def buildTargetsIdle(server, rq, abort):
-> >              if abort or self.state == state.stop:
-> >                  rq.finish_runqueue(True)
-> 
-> I'm not sure this is the right thing to do, the reason being
-> determinism. I don't expect different results for X in the different
-> cases:
-> 
-> bitbake X Y
-> 
-> bitbake X
-> 
-> (assuming Y is ASSUME_PROVIDED)
-> 
-> For example, X will rebuild between these two commands since the sstate
-> and task checksums will be different between the two. This really needs
-> more thought to make a consistent user experience...
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-It seems to me the most consistent behaviour would be to just report a warning 
-that Y is in ASSUME_PROVIDED and carry on building.
+Some recipes may need to manually call the aclocal copying
+functionality so factor this out into a function.
 
-Cheers,
-Paul
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Cristian Iorga <cristian.iorga@intel.com>
+---
+ meta/classes/autotools.bbclass |   37 ++++++++++++++++++++++---------------
+ 1 file changed, 22 insertions(+), 15 deletions(-)
 
+diff --git a/meta/classes/autotools.bbclass b/meta/classes/autotools.bbclass
+index b19a871..66c0f5d 100644
+--- a/meta/classes/autotools.bbclass
++++ b/meta/classes/autotools.bbclass
+@@ -127,6 +127,26 @@ EXTRACONFFUNCS ??= ""
+ do_configure[prefuncs] += "autotools_preconfigure ${EXTRACONFFUNCS}"
+ do_configure[postfuncs] += "autotools_postconfigure"
+ 
++ACLOCALDIR = "${B}/aclocal-copy"
++
++autotools_copy_aclocal () {
++	# Remove any previous copy of the m4 macros
++	rm -rf ${ACLOCALDIR}/
++
++	# The aclocal directory could get modified by other processes
++	# uninstalling data from the sysroot. See Yocto #861 for details.
++	# We avoid this by taking a copy here and then files cannot disappear.
++	# We copy native first, then target. This avoids certain races since cp-noerror
++	# won't overwrite existing files.
++	mkdir -p ${ACLOCALDIR}/
++	if [ -d ${STAGING_DATADIR_NATIVE}/aclocal ]; then
++		cp-noerror ${STAGING_DATADIR_NATIVE}/aclocal/ ${ACLOCALDIR}/
++	fi
++	if [ -d ${STAGING_DATADIR}/aclocal -a "${STAGING_DATADIR_NATIVE}/aclocal" != "${STAGING_DATADIR}/aclocal" ]; then
++		cp-noerror ${STAGING_DATADIR}/aclocal/ ${ACLOCALDIR}/
++	fi
++}
++
+ autotools_do_configure() {
+ 	# WARNING: gross hack follows:
+ 	# An autotools built package generally needs these scripts, however only
+@@ -142,9 +162,8 @@ autotools_do_configure() {
+ 	if [ -e ${S}/configure.in -o -e ${S}/configure.ac ]; then
+ 		olddir=`pwd`
+ 		cd ${S}
+-		# Remove any previous copy of the m4 macros
+-		rm -rf ${B}/aclocal-copy/
+-		ACLOCAL="aclocal --system-acdir=${B}/aclocal-copy/"
++		autotools_copy_aclocal
++		ACLOCAL="aclocal --system-acdir=${ACLOCALDIR}/"
+ 		if [ x"${acpaths}" = xdefault ]; then
+ 			acpaths=
+ 			for i in `find ${S} -maxdepth 2 -name \*.m4|grep -v 'aclocal.m4'| \
+@@ -160,18 +179,6 @@ autotools_do_configure() {
+ 		if [ -d ${STAGING_DATADIR_NATIVE}/aclocal-$AUTOV ]; then
+ 			ACLOCAL="$ACLOCAL --automake-acdir=${STAGING_DATADIR_NATIVE}/aclocal-$AUTOV"
+ 		fi
+-		# The aclocal directory could get modified by other processes 
+-		# uninstalling data from the sysroot. See Yocto #861 for details.
+-		# We avoid this by taking a copy here and then files cannot disappear.
+-		# We copy native first, then target. This avoids certain races since cp-noerror
+-		# won't overwrite existing files.
+-		mkdir -p ${B}/aclocal-copy/
+-		if [ -d ${STAGING_DATADIR_NATIVE}/aclocal ]; then
+-			cp-noerror ${STAGING_DATADIR_NATIVE}/aclocal/ ${B}/aclocal-copy/
+-		fi
+-		if [ -d ${STAGING_DATADIR}/aclocal -a "${STAGING_DATADIR_NATIVE}/aclocal" != "${STAGING_DATADIR}/aclocal" ]; then
+-			cp-noerror ${STAGING_DATADIR}/aclocal/ ${B}/aclocal-copy/
+-		fi
+ 		# autoreconf is too shy to overwrite aclocal.m4 if it doesn't look
+ 		# like it was auto-generated.  Work around this by blowing it away
+ 		# by hand, unless the package specifically asked not to run aclocal.
 -- 
+1.7.10.4
 
-Paul Eggleton
-Intel Open Source Technology Centre
 
