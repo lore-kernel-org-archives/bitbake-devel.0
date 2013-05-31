@@ -1,42 +1,31 @@
-Return-Path: <eren@hambedded.org>
-Received: from mail-ea0-f179.google.com (mail-ea0-f179.google.com
-	[209.85.215.179])
-	by mail.openembedded.org (Postfix) with ESMTP id 58AF1608CA
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 337586041D
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 May 2013 19:08:50 +0000 (UTC)
-Received: by mail-ea0-f179.google.com with SMTP id z16so743321ead.10
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 May 2013 12:08:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=google.com; s=20120113;
-	h=date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:content-disposition:in-reply-to:user-agent
-	:x-gm-message-state;
-	bh=VBRzDX85fs9coPJeUQ+mJbM3Ewy2YLbY5SfyY6jyfnw=;
-	b=EpaaZW3Hf4EUcyXhliCrbtiJ6sW6Am9p32XgQPwHszNIRCwZ7KJXcpdfW6Tf1qpZGN
-	CR1oAzvg++X//7xIdFKM+yI8zN0AYH/yeUgFD7AIO/UcaOfi0EgzxnSUije+4/C/D2+5
-	5bwozUTXDC3Ezu8TXdLa0v1XC5I6oof8LDSHAiyJx+Al95gEHiZoBTpkJjAm3KdnVPT7
-	zvF/jQy1ndta83y+7PoIP3xMyb0eWFHs92R/i4gp9T9nIYp50dQOnyt8WGzKShGRfq50
-	wAoGnAOhfA93eJ1XfVip7mOo5fj3grDQ0p0usSjhejnJn128R0QxZNzQldYyeWtJWG5q
-	M1Wg==
-X-Received: by 10.14.4.3 with SMTP id 3mr10876281eei.59.1369940930196;
-	Thu, 30 May 2013 12:08:50 -0700 (PDT)
-Received: from gmail.com ([46.197.0.81])
-	by mx.google.com with ESMTPSA id e1sm27851476eem.10.2013.05.30.12.08.48
-	for <multiple recipients>
-	(version=TLSv1 cipher=RC4-SHA bits=128/128);
-	Thu, 30 May 2013 12:08:49 -0700 (PDT)
-Date: Thu, 30 May 2013 22:08:40 +0300
-From: Eren =?iso-8859-1?Q?T=FCrkay?= <eren@hambedded.org>
-To: "William M.A. Traynor" <wmat@alphatroop.com>
-Message-ID: <20130530190840.GA13314@gmail.com>
-References: <CAGfZjq7x_OAHRw-_S8Rm0mZRa793dmnp36mpPCbTw18zvNKhEA@mail.gmail.com>
-MIME-Version: 1.0
-In-Reply-To: <CAGfZjq7x_OAHRw-_S8Rm0mZRa793dmnp36mpPCbTw18zvNKhEA@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Gm-Message-State: ALoCoQlQTJQ48yseZjG1lH6tjMunrcO7ytO58VnpFPKUeFLV9z1XGKukrC/5HaTrCPgrW9vgQlhC
+	Fri, 31 May 2013 07:30:02 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r4V7YOeS031084; Fri, 31 May 2013 08:34:26 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id m4DTwEyu5o5h; Fri, 31 May 2013 08:34:24 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r4V7YH8u031080
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT); Fri, 31 May 2013 08:34:19 +0100
+Message-ID: <1369985383.14887.341.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Mark Hatle <mark.hatle@windriver.com>, Peter Seebach
+	<peter.seebach@windriver.com>, Jeff Polk <jeff.polk@windriver.com>
+Date: Fri, 31 May 2013 08:29:43 +0100
+In-Reply-To: <1369799698-1417-1-git-send-email-mark.hatle@windriver.com>
+References: <1369799698-1417-1-git-send-email-mark.hatle@windriver.com>
+X-Mailer: Evolution 3.6.4-0ubuntu1 
+Mime-Version: 1.0
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: Hello World example for BitBake Manual
+Subject: Re: [PATCH] cooker.py: Remove explicit build targets from the ignored list
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,65 +37,65 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 30 May 2013 19:08:51 -0000
-X-Groupsio-MsgNum: 3510
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
-Content-Disposition: inline
+X-List-Received-Date: Fri, 31 May 2013 07:30:02 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---ZGiS0Q5IWpPtfppv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, 2013-05-28 at 22:54 -0500, Mark Hatle wrote:
+> From: Peter Seebach <peter.seebach@windriver.com>
+> 
+> If something is in ASSUMED_PROVIDED, and a user tries to build it
+> explicitly, Nothing Happens. Bitbake just says it ran 0 out of 0
+> tasks. No diagnostics or explanations are offered.
+> 
+> In practice, the right thing is probably to assume that explicit
+> targets are intentional. So far as I can tell, cooker.buildTargets
+> is called only from the command line or from command.py, and both
+> cases seem to be explicit user actions.
+> 
+> Signed-off-by: Peter Seebach <peter.seebach@windriver.com>
+> Signed-off-by: Jeff Polk <jeff.polk@windriver.com>
+> 
+> Rename 'status' to 'recipecache' to match recent changes.
+> 
+> Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+> ---
+>  lib/bb/cooker.py | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+> index 2ae3e9d..8f0e90c 100644
+> --- a/lib/bb/cooker.py
+> +++ b/lib/bb/cooker.py
+> @@ -1067,6 +1067,11 @@ class BBCooker:
+>          universe = ('universe' in targets)
+>          targets = self.checkPackages(targets)
+>  
+> +        # Explicitly disignore things that have been requested.
+> +        for target in targets:
+> +            if target in self.recipecache.ignored_dependencies:
+> +                self.recipecache.ignored_dependencies.remove(target)
+> +
+>          def buildTargetsIdle(server, rq, abort):
+>              if abort or self.state == state.stop:
+>                  rq.finish_runqueue(True)
 
-On Wed, May 29, 2013 at 01:28:11PM -0400, William M.A. Traynor wrote:
-> In researching and trying to work through a Hello World example for
-> inclusion in the BitBake Manual, I've been able to reproduce the
-> examples described in the following thread:
-> http://www.mail-archive.com/yocto@yoctoproject.org/msg09347.html
->=20
-> and in the following blog post:
-> http://hambedded.org/blog/2012/11/24/from-bitbake-hello-world-to-an-image/
+I'm not sure this is the right thing to do, the reason being
+determinism. I don't expect different results for X in the different
+cases:
 
-Hello,
+bitbake X Y
 
-I tried to be comprehensive about how OE works in "From bitbake hello
-world to an image" post. As Paul suggested, it would be detailed to
-include in bitbake manual. However, I would be happy if it was
-referenced in the manual :)
+bitbake X
 
-There are still some parts that need to be fixed in the document. They
-are not show stopper but I haven't got time to fix them.
+(assuming Y is ASSUME_PROVIDED)
 
-If you have any suggestions or questions regarding to the post, please
-feel free to send an e-mail to me.
+For example, X will rebuild between these two commands since the sstate
+and task checksums will be different between the two. This really needs
+more thought to make a consistent user experience...
 
-Regards,
-Eren
+Cheers,
 
---=20
-    . 73! DE TA1AET
-      http://linkedin.com/in/erenturkay
+Richard
 
---ZGiS0Q5IWpPtfppv
-Content-Type: application/pgp-signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (Darwin)
-
-iQIcBAEBAgAGBQJRp6O4AAoJEOM7bMm6HhcTjXEP/iY4Nif1SbQVERmzo3TGQPly
-u6TRocRypW4ax8mm9OM317acpCeOZu7rxPP6RG0GETX8gbAJdXc3dBLFwgxfG3xr
-v6ufgCA1ErBMCesGqvMGThNM7DQ/1HmFZMdE3PwU/JNDPp4nRSDASkIJtVxci5ge
-PVx+OYiwIfAalbXo/jsc0qYntYf0Rqwr9CHh5+WfE/XutgfrbFYC542DjRC9BLo8
-CZHmF3HnroG+AkLCKPl9lvKrEYfhYAd3bamn4crPYcv3xiDzeBjXZL5bzs/l7r+X
-h3N25GB9pVewt5RmAm90t75+ZGkUMwMcgKVroybjcrjII4braNe9zpskf3SQlJcu
-rSAGicWzd5426yr/VVClpJ/yVFvpLtoi9IYzJu7JaRS51i8NKohEaRhjUiG5Qwle
-RXBrmMem/ibzxQj0iUUfsdvnhpv9PhA1MltJu+JibhPgh80ExmPDwbcCWxWnp+6E
-+h23pSNmph7UH3k0MASmMmRorZDJgfDEFRCWO4iwhsnFv+9KNhGTpkMsDnX59LTB
-LKW/iZyrSGp4Hxlcy09R62e4sILh9KYTqFUeKJRP0DG9ymfidIRV0dwsTlNu3iLD
-ANrvTpH7mWTrs1Q1wTcvbfN8veet1zSbKZIa5uNNEyruom5ICJzWjqJAybWhiGqI
-KJeoV9G4t9TTEcsw8Efg
-=oMq7
------END PGP SIGNATURE-----
-
---ZGiS0Q5IWpPtfppv--
