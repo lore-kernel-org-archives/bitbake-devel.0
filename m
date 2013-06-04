@@ -1,20 +1,31 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
-	by mail.openembedded.org (Postfix) with ESMTP id F13816086B
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 4CC836065C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  4 Jun 2013 08:59:53 +0000 (UTC)
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 04 Jun 2013 01:59:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.87,798,1363158000"; d="scan'208";a="311952217"
-Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.121.221])
-	by azsmga001.ch.intel.com with ESMTP; 04 Jun 2013 01:59:53 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue,  4 Jun 2013 09:59:37 +0100
-Message-Id: <1370336377-6394-1-git-send-email-paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.8.1.2
-Subject: [PATCH] lib/bb/cache.py: invalidate cache when file checksum entry no longer exists
+	Tue,  4 Jun 2013 10:33:45 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r54AcVVJ005367; Tue, 4 Jun 2013 11:38:31 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id jgGNqGkDCmAt; Tue,  4 Jun 2013 11:38:31 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r54AcPau005340
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT); Tue, 4 Jun 2013 11:38:27 +0100
+Message-ID: <1370342009.1640.8.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Peter Seebach <peter.seebach@windriver.com>
+Date: Tue, 04 Jun 2013 11:33:29 +0100
+In-Reply-To: <20130531113235.2bd2df62@e6410-2>
+References: <1369799698-1417-1-git-send-email-mark.hatle@windriver.com>
+	<1369985383.14887.341.camel@ted> <20130531113235.2bd2df62@e6410-2>
+X-Mailer: Evolution 3.6.4-0ubuntu1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] cooker.py: Remove explicit build targets from the ignored list
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -26,44 +37,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 04 Jun 2013 08:59:54 -0000
+X-List-Received-Date: Tue, 04 Jun 2013 10:33:45 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Go through the cached list of file checksums and check if any of the
-files no longer exist; if any are missing then invalidate the cached
-recipe, which will force it to be reparsed and thus force the list of
-files to be collected again. This prevents a warning when moving a file
-to a different location that is still picked up by the recipe, e.g.
-moving a file from a "files" subdirectory to one named with the recipe
-name (${BPN}).
+On Fri, 2013-05-31 at 11:32 -0500, Peter Seebach wrote:
+> On Fri, 31 May 2013 08:29:43 +0100
+> Richard Purdie <richard.purdie@linuxfoundation.org> wrote:
+> 
+> > I'm not sure this is the right thing to do, the reason being
+> > determinism. I don't expect different results for X in the different
+> > cases:
+> > 
+> > bitbake X Y
+> > 
+> > bitbake X
+> > 
+> > (assuming Y is ASSUME_PROVIDED)
+> > 
+> > For example, X will rebuild between these two commands since the sstate
+> > and task checksums will be different between the two. This really needs
+> > more thought to make a consistent user experience...
+> 
+> Hmm. I don't *normally* expect different results, but might if the first one
+> produced a diagnostic: "Warning: Y is in ASSUME_PROVIDED. Rebuilding Y will
+> produce different versions of anything which depends on Y."
+> 
+> Paul's suggestion that we just print a diagnostic for anything which is in
+> both targets and ASSUME_PROVIDED might well do, too.
 
-Fixes [YOCTO #4474].
+I'll certainly take a patch for that.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- lib/bb/cache.py | 9 +++++++++
- 1 file changed, 9 insertions(+)
+>  Although it might be nice
+> to have a reasonably straight forward command-line way to express "no, really,
+> I want you to build Y" which doesn't require config file action.
 
-diff --git a/lib/bb/cache.py b/lib/bb/cache.py
-index 9e89742..eee83b7 100644
---- a/lib/bb/cache.py
-+++ b/lib/bb/cache.py
-@@ -524,6 +524,15 @@ class Cache(object):
-                     self.remove(fn)
-                     return False
- 
-+        if hasattr(info_array[0], 'file_checksums'):
-+            for _, fl in info_array[0].file_checksums.items():
-+                for f in fl.split():
-+                    if not os.path.exists(f):
-+                        logger.debug(2, "Cache: %s's file checksum list file %s was removed",
-+                                        fn, f)
-+                        self.remove(fn)
-+                        return False
-+
-         if appends != info_array[0].appends:
-             logger.debug(2, "Cache: appends for %s changed", fn)
-             logger.debug(2, "%s to %s" % (str(appends), str(info_array[0].appends)))
--- 
-1.8.1.2
+Agreed, however we need to get the user interaction right here.
+Currently the user doesn't expect for example that the configuration
+files change from under them. In future this may well be something we do
+(along with informing the user what happened). Users tend not to read
+information though :/.
+
+Cheers,
+
+Richard
+
+
+
 
 
