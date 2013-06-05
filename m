@@ -1,27 +1,30 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 6D96861E92
+	by mail.openembedded.org (Postfix) with ESMTP id 463DC60881
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  5 Jun 2013 14:00:14 +0000 (UTC)
+	Wed,  5 Jun 2013 14:27:40 +0000 (UTC)
 Received: from localhost (dan.rpsys.net [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r55E50C8008686; Wed, 5 Jun 2013 15:05:00 +0100
+	r55EWXXv010542 for <bitbake-devel@lists.openembedded.org>;
+	Wed, 5 Jun 2013 15:32:33 +0100
 X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id cRvnymxfkarp; Wed,  5 Jun 2013 15:05:00 +0100 (BST)
+	with LMTP id 7xiDO2zgd5db for <bitbake-devel@lists.openembedded.org>;
+	Wed,  5 Jun 2013 15:32:33 +0100 (BST)
 Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r55E4skg008681
+	r55EWRhQ010515
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Wed, 5 Jun 2013 15:04:56 +0100
-Message-ID: <1370440792.1640.48.camel@ted>
+	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
+	Wed, 5 Jun 2013 15:32:28 +0100
+Message-ID: <1370442444.1640.55.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Wed, 05 Jun 2013 14:59:52 +0100
+Date: Wed, 05 Jun 2013 15:27:24 +0100
 X-Mailer: Evolution 3.6.4-0ubuntu1 
 Mime-Version: 1.0
-Subject: [RFC PATCH] Split runqueue to use bitbake-worker
+Subject: [PATCH] cooker: Split data from configuration
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,1811 +36,649 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 05 Jun 2013 14:00:16 -0000
+X-List-Received-Date: Wed, 05 Jun 2013 14:27:40 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-This is a pretty fundamental change to the way bitbake operates. It
-splits out the task execution part of runqueue into a completely
-separately exec'd process called bitbake-worker.
+Stashing the data store within the configuration data is rather ugly and
+leads to problems trying to pickle just the configuration for example.
 
-This means that the separate process has to build its own datastore and
-that configuration needs to be passed from the cooker over to the
-bitbake worker process.
-
-At this point the patch is an RFC just to let people see the way things
-are moving. Known issues:
-
-* Hob is broken with this patch since it writes to the configuration 
-  and that configuration isn't preserved in bitbake-worker.
-* We create a worker for setscene, then a new worker for the main task
-  execution. This is wasteful but shouldn't be hard to fix.
-* Logging is a bit verbose/debuggy at the moment.
-* The worker_fire() logic is ugly, needs a proper interface.
-* Need to have bitbake-worker have a magic argument and exit telling 
-  the user not to run it directly.
-* We probably send too much data over to bitbake-worker, need to 
-  see if we can streamline it.
-
-On the other hand it does actually build things and works without
-exploding horribly in local tests :)
-
-I'm open to feedback and we're running this change through the
-benchmarking to see what impact it has on performance as it stands.
-
-Obviously the interesting bit (removal of the double bitbake execution)
-would be a follow on to this patch, this just builds the groundwork.
+The reasons for combining these objects is ancient history, it makes
+sense to clean things up and separate them out now. This follows non
+logically from the configuration cleansups and leads well into the
+bitbake-worker changes.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
-diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
-new file mode 100755
-index 0000000..1f511d2
---- /dev/null
-+++ b/bitbake/bin/bitbake-worker
-@@ -0,0 +1,354 @@
-+#!/usr/bin/env python
-+
-+import os
-+import sys
-+import warnings
-+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'lib'))
-+from bb import fetch2
-+import logging
-+import bb
-+import select
-+import errno
-+
-+logger = logging.getLogger("BitBake")
-+
-+try:
-+    import cPickle as pickle
-+except ImportError:
-+    import pickle
-+    bb.msg.note(1, bb.msg.domain.Cache, "Importing cPickle failed. Falling back to a very slow implementation.")
-+
-+bb.event.worker_pid = os.getpid()
-+workerpipe = sys.stdout.fileno()
-+bb.event.worker_pipe = workerpipe
-+
-+handler = bb.event.LogHandler()
-+logger.addHandler(handler)
-+
-+bb.msg.init_msgconfig(False, 0, [])
-+
-+if 1:
-+        format_str = "%(levelname)s: %(message)s"
-+        conlogformat = bb.msg.BBLogFormatter(format_str)
-+        consolelog = logging.FileHandler("/tmp/rp6")
-+        bb.msg.addDefaultlogFilter(consolelog)
-+        consolelog.setFormatter(conlogformat)
-+        logger.addHandler(consolelog)
-+
-+lf = open("/tmp/rp7", "w+")
-+
-+bb.utils.nonblockingfd(workerpipe)
-+
-+
-+worker_queue = ""
-+
-+def worker_fire(event, d):
-+    global worker_queue
-+
-+    data = "<event>" + pickle.dumps(event) + "</event>"
-+    worker_fire_prepickled(data)
-+
-+def worker_fire_prepickled(event):
-+    global worker_queue
-+
-+    worker_queue = worker_queue + event
-+    worker_flush()
-+
-+def worker_flush():
-+    global worker_queue
-+    if not worker_queue:
-+        return
-+
-+    try:
-+        written = os.write(bb.event.worker_pipe, worker_queue)
-+        worker_queue = worker_queue[written:]
-+    except (IOError, OSError) as e:
-+        if e.errno != errno.EAGAIN:
-+            raise
-+
-+worker_fire_orig = bb.event.worker_fire
-+bb.event.worker_fire = worker_fire
-+
-+
-+def fork_off_task(cfg, data, workerdata, fn, task, taskname, appends, quieterrors=False):
-+    # We need to setup the environment BEFORE the fork, since
-+    # a fork() or exec*() activates PSEUDO...
-+
-+    envbackup = {}
-+    fakeenv = {}
-+    umask = None
-+
-+    taskdep = workerdata["taskdeps"][fn]
-+    if 'umask' in taskdep and taskname in taskdep['umask']:
-+        # umask might come in as a number or text string..
-+        try:
-+             umask = int(taskdep['umask'][taskname],8)
-+        except TypeError:
-+             umask = taskdep['umask'][taskname]
-+
-+    if 'fakeroot' in taskdep and taskname in taskdep['fakeroot']:
-+        envvars = (workerdata["fakerootenv"][fn] or "").split()
-+        for key, value in (var.split('=') for var in envvars):
-+            envbackup[key] = os.environ.get(key)
-+            os.environ[key] = value
-+            fakeenv[key] = value
-+
-+        fakedirs = (workerdata["fakerootdirs"][fn] or "").split()
-+        for p in fakedirs:
-+            bb.utils.mkdirhier(p)
-+        logger.debug(2, 'Running %s:%s under fakeroot, fakedirs: %s' %
-+                        (fn, taskname, ', '.join(fakedirs)))
-+    else:
-+        envvars = (workerdata["fakerootnoenv"][fn] or "").split()
-+        for key, value in (var.split('=') for var in envvars):
-+            envbackup[key] = os.environ.get(key)
-+            os.environ[key] = value
-+            fakeenv[key] = value
-+
-+    sys.stdout.flush()
-+    sys.stderr.flush()
-+    try:
-+        pipein, pipeout = os.pipe()
-+        pipein = os.fdopen(pipein, 'rb', 4096)
-+        pipeout = os.fdopen(pipeout, 'wb', 0)
-+        pid = os.fork()
-+    except OSError as e:
-+        bb.msg.fatal("RunQueue", "fork failed: %d (%s)" % (e.errno, e.strerror))
-+
-+    if pid == 0:
-+            pipein.close()
-+
-+            # Save out the PID so that the event can include it the
-+            # events
-+            bb.event.worker_pid = os.getpid()
-+            bb.event.worker_pipe = pipeout
-+            bb.event.worker_fire = worker_fire_orig
-+
-+            # Make the child the process group leader
-+            os.setpgid(0, 0)
-+            # No stdin
-+            newsi = os.open(os.devnull, os.O_RDWR)
-+            os.dup2(newsi, sys.stdin.fileno())
-+
-+            if umask:
-+                os.umask(umask)
-+
-+            data.setVar("BB_WORKERCONTEXT", "1")
-+            bb.parse.siggen.set_taskdata(workerdata["hashes"], workerdata["hash_deps"], workerdata["sigchecksums"])
-+            ret = 0
-+            try:
-+                the_data = bb.cache.Cache.loadDataFull(fn, appends, data)
-+                the_data.setVar('BB_TASKHASH', workerdata["runq_hash"][task])
-+                for h in workerdata["hashes"]:
-+                    the_data.setVar("BBHASH_%s" % h, workerdata["hashes"][h])
-+                for h in workerdata["hash_deps"]:
-+                    the_data.setVar("BBHASHDEPS_%s" % h, workerdata["hash_deps"][h])
-+
-+                # exported_vars() returns a generator which *cannot* be passed to os.environ.update() 
-+                # successfully. We also need to unset anything from the environment which shouldn't be there 
-+                exports = bb.data.exported_vars(the_data)
-+                bb.utils.empty_environment()
-+                for e, v in exports:
-+                    os.environ[e] = v
-+                for e in fakeenv:
-+                    os.environ[e] = fakeenv[e]
-+                    the_data.setVar(e, fakeenv[e])
-+                    the_data.setVarFlag(e, 'export', "1")
-+
-+                if quieterrors:
-+                    the_data.setVarFlag(taskname, "quieterrors", "1")
-+
-+            except Exception as exc:
-+                if not quieterrors:
-+                    logger.critical(str(exc))
-+                os._exit(1)
-+            try:
-+                if not cfg.dry_run:
-+                    ret = bb.build.exec_task(fn, taskname, the_data, cfg.profile)
-+                os._exit(ret)
-+            except:
-+                os._exit(1)
-+    else:
-+        for key, value in envbackup.iteritems():
-+            if value is None:
-+                del os.environ[key]
-+            else:
-+                os.environ[key] = value
-+
-+    return pid, pipein, pipeout
-+
-+
-+
-+class runQueueWorkerPipe():
-+    """
-+    Abstraction for a pipe between a worker thread and the worker server
-+    """
-+    def __init__(self, pipein, pipeout):
-+        self.input = pipein
-+        if pipeout:
-+            pipeout.close()
-+        bb.utils.nonblockingfd(self.input)
-+        self.queue = ""
-+
-+    def read(self):
-+        start = len(self.queue)
-+        try:
-+            self.queue = self.queue + self.input.read(102400)
-+        except (OSError, IOError):
-+            pass
-+        end = len(self.queue)
-+        index = self.queue.find("</event>")
-+        while index != -1:
-+            worker_fire_prepickled(self.queue[:index+8])
-+            self.queue = self.queue[index+8:]
-+            index = self.queue.find("</event>")
-+        return (end > start)
-+
-+    def close(self):
-+        while self.read():
-+            continue
-+        if len(self.queue) > 0:
-+            print("Warning, worker child left partial message: %s" % self.queue)
-+        self.input.close()
-+
-+normalexit = False
-+
-+class BitbakeWorker(object):
-+    def __init__(self, din):
-+        self.input = din
-+        bb.utils.nonblockingfd(self.input)
-+        self.queue = ""
-+        self.cookercfg = None
-+        self.databuilder = None
-+        self.data = None
-+        self.build_pids = {}
-+        self.build_pipes = {}
-+    
-+    def serve(self):        
-+        while True:
-+            (ready, _, _) = select.select([self.input] + [i.input for i in self.build_pipes.values()], [] , [], 1)
-+            if self.input in ready:
-+                start = len(self.queue)
-+                try:
-+                    self.queue = self.queue + self.input.read()
-+                except (OSError, IOError):
-+                    pass
-+                end = len(self.queue)
-+                self.handle_item("cookerconfig", self.handle_cookercfg)
-+                self.handle_item("workerdata", self.handle_workerdata)
-+                self.handle_item("runtask", self.handle_runtask)
-+                self.handle_item("finishnow", self.handle_finishnow)
-+                self.handle_item("ping", self.handle_ping)
-+                self.handle_item("quit", self.handle_quit)
-+
-+            worker_flush()
-+            if len(self.build_pids):
-+                self.process_waitpid()
-+            for pipe in self.build_pipes:
-+                self.build_pipes[pipe].read()
-+
-+
-+    def handle_item(self, item, func):
-+        if self.queue.startswith("<" + item + ">"):
-+            index = self.queue.find("</" + item + ">")
-+            while index != -1:
-+                func(self.queue[(len(item) + 2):index])
-+                self.queue = self.queue[(index + len(item) + 3):]
-+                index = self.queue.find("</" + item + ">")
-+
-+    def handle_cookercfg(self, data):
-+        self.cookercfg = pickle.loads(data)
-+        self.databuilder = bb.cookerdata.CookerDataBuilder(self.cookercfg, worker=True)
-+        logger.warn("Have databuilder %s" % self.databuilder)
-+        self.databuilder.parseBaseConfiguration()
-+        self.data = self.databuilder.data
-+        logger.warn("Have datastore %s" % self.data)
-+
-+    def handle_workerdata(self, data):
-+        self.workerdata = pickle.loads(data)
-+        bb.msg.loggerDefaultDebugLevel = self.workerdata["logdefaultdebug"]
-+        bb.msg.loggerDefaultVerbose = self.workerdata["logdefaultverbose"]
-+        bb.msg.loggerVerboseLogs = self.workerdata["logdefaultverboselogs"]
-+        bb.msg.loggerDefaultDomains = self.workerdata["logdefaultdomain"]
-+
-+    def handle_ping(self, _):
-+        lf.write("Handling ping\n")
-+        lf.flush()
-+
-+        logger.warn("Pong!")
-+
-+    def handle_quit(self, data):
-+        lf.write("Handling quit\n")
-+        lf.flush()
-+
-+        global normalexit
-+        normalexit = True
-+        sys.exit(0)
-+
-+    def handle_runtask(self, data):
-+        fn, task, taskname, quieterrors, appends = pickle.loads(data)
-+        pid, pipein, pipeout = fork_off_task(self.cookercfg, self.data, self.workerdata, fn, task, taskname, appends, quieterrors)
-+
-+        lf.write("Handling runtask %s %s %s\n" % (task, fn, taskname))
-+        lf.flush()
-+
-+
-+        self.build_pids[pid] = task
-+        self.build_pipes[pid] = runQueueWorkerPipe(pipein, pipeout)
-+
-+    def process_waitpid(self):
-+        """
-+        Return none is there are no processes awaiting result collection, otherwise
-+        collect the process exit codes and close the information pipe.
-+        """
-+        try:
-+            pid, status = os.waitpid(-1, os.WNOHANG)
-+            if pid == 0 or os.WIFSTOPPED(status):
-+                return None
-+        except OSError:
-+            return None
-+
-+        lf.write("Got %s for %s\n" % (status, pid))
-+        lf.flush()
-+
-+        if os.WIFEXITED(status):
-+            status = os.WEXITSTATUS(status)
-+        elif os.WIFSIGNALED(status):
-+            # Per shell conventions for $?, when a process exits due to
-+            # a signal, we return an exit code of 128 + SIGNUM
-+            status = 128 + os.WTERMSIG(status)
-+
-+        task = self.build_pids[pid]
-+        del self.build_pids[pid]
-+
-+        self.build_pipes[pid].close()
-+        del self.build_pipes[pid]
-+
-+        worker_fire_prepickled("<exitcode>" + pickle.dumps((task, status)) + "</exitcode>")
-+
-+    def handle_finishnow(self, _):
-+        if self.build_pids:
-+            logger.info("Sending SIGTERM to remaining %s tasks", len(self.build_pids))
-+            for k, v in self.build_pids.iteritems():
-+                try:
-+                    os.kill(-k, signal.SIGTERM)
-+                    os.waitpid(-1, 0)
-+                except:
-+                    pass
-+        for pipe in self.build_pipes:
-+            self.build_pipes[pipe].read()
-+
-+try:
-+    worker = BitbakeWorker(sys.stdin)
-+    worker.serve()
-+except BaseException as e:
-+    if not normalexit:
-+        import traceback
-+        sys.stderr.write(traceback.format_exc())
-+        sys.stderr.write(str(e))
-+while len(worker_queue):
-+    worker_flush()
-+lf.write("exitting")
-+lf.flush()
-+sys.exit(0)
-+
-diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
-index 9e89742..a38ca0d 100644
---- a/bitbake/lib/bb/cache.py
-+++ b/bitbake/lib/bb/cache.py
-@@ -715,7 +715,6 @@ class CacheData(object):
-         for info in info_array:
-             info.add_cacheData(self, fn)
- 
--
- class MultiProcessCache(object):
-     """
-     BitBake multi-process cache implementation
-@@ -737,13 +736,18 @@ class MultiProcessCache(object):
-         self.cachefile = os.path.join(cachedir, self.__class__.cache_file_name)
-         logger.debug(1, "Using cache in '%s'", self.cachefile)
- 
-+        glf = bb.utils.lockfile(self.cachefile + ".lock")
-+
-         try:
-             with open(self.cachefile, "rb") as f:
-                 p = pickle.Unpickler(f)
-                 data, version = p.load()
-         except:
-+            bb.utils.unlockfile(glf)
-             return
- 
-+        bb.utils.unlockfile(glf)
-+
-         if version != self.__class__.CACHE_VERSION:
-             return
- 
-diff --git a/bitbake/lib/bb/cookerdata.py b/bitbake/lib/bb/cookerdata.py
-index 149878f..1bed455 100644
---- a/bitbake/lib/bb/cookerdata.py
-+++ b/bitbake/lib/bb/cookerdata.py
-@@ -25,7 +25,9 @@
- import os, sys
- from functools import wraps
- import logging
-+import bb
- from bb import data
-+import bb.parse
- 
- logger      = logging.getLogger("BitBake")
- parselog    = logging.getLogger("BitBake.Parsing")
-@@ -139,6 +141,20 @@ class CookerConfiguration(object):
-     def setServerRegIdleCallback(self, srcb):
-         self.server_register_idlecallback = srcb
- 
-+    def __getstate__(self):
-+        state = {}
-+        for key in self.__dict__.keys():
-+            if key == "server_register_idlecallback":
-+                state[key] = None
-+            else:
-+                state[key] = getattr(self, key)
-+        return state
-+
-+    def __setstate__(self,state):
-+        for k in state:
-+            setattr(self, k, state[k]) 
-+
-+
- def catch_parse_error(func):
-     """Exception handling bits for our parsing"""
-     @wraps(func)
-@@ -146,6 +162,8 @@ def catch_parse_error(func):
-         try:
-             return func(fn, *args)
-         except (IOError, bb.parse.ParseError, bb.data_smart.ExpansionError) as exc:
-+            import traceback
-+            parselog.critical( traceback.format_exc())
-             parselog.critical("Unable to parse %s: %s" % (fn, exc))
-             sys.exit(1)
-     return wrapped
-diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
-index 2826e35..abc3892 100644
---- a/bitbake/lib/bb/event.py
-+++ b/bitbake/lib/bb/event.py
-@@ -33,6 +33,7 @@ import atexit
- import traceback
- import bb.utils
- import bb.compat
-+import bb.exceptions
- 
- # This is the pid for which we should generate the event. This is set when
- # the runqueue forks off.
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 090d1b5..9f92ce6 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -28,10 +28,17 @@ import sys
- import signal
- import stat
- import fcntl
-+import errno
- import logging
- import bb
- from bb import msg, data, event
- from bb import monitordisk
-+import subprocess
-+
-+try:
-+    import cPickle as pickle
-+except ImportError:
-+    import pickle
- 
- bblogger = logging.getLogger("BitBake")
- logger = logging.getLogger("BitBake.RunQueue")
-@@ -938,6 +945,10 @@ class RunQueue:
-             raise
-         except:
-             logger.error("An uncaught exception occured in runqueue, please see the failure below:")
-+            try:
-+                self.rqexe.teardown()
-+            except:
-+                pass
-             self.state = runQueueComplete
-             raise
- 
-@@ -979,38 +990,42 @@ class RunQueueExecute:
-         self.runq_buildable = []
-         self.runq_running = []
-         self.runq_complete = []
--        self.build_pids = {}
--        self.build_pipes = {}
-+
-         self.build_stamps = {}
-         self.failed_fnids = []
- 
-         self.stampcache = {}
- 
--    def runqueue_process_waitpid(self):
--        """
--        Return none is there are no processes awaiting result collection, otherwise
--        collect the process exit codes and close the information pipe.
--        """
--        pid, status = os.waitpid(-1, os.WNOHANG)
--        if pid == 0 or os.WIFSTOPPED(status):
--            return None
--
--        if os.WIFEXITED(status):
--            status = os.WEXITSTATUS(status)
--        elif os.WIFSIGNALED(status):
--            # Per shell conventions for $?, when a process exits due to
--            # a signal, we return an exit code of 128 + SIGNUM
--            status = 128 + os.WTERMSIG(status)
--
--        task = self.build_pids[pid]
--        del self.build_pids[pid]
--
--        self.build_pipes[pid].close()
--        del self.build_pipes[pid]
-+        logger.warn("Starting worker")
-+        self.worker = subprocess.Popen("bitbake-worker", stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-+        bb.utils.nonblockingfd(self.worker.stdout)
-+        self.workerpipe = runQueuePipe(self.worker.stdout, None, self.cfgData, self)
-+
-+        workerdata = {
-+            "taskdeps" : self.rqdata.dataCache.task_deps,
-+            "fakerootenv" : self.rqdata.dataCache.fakerootenv,
-+            "fakerootdirs" : self.rqdata.dataCache.fakerootdirs,
-+            "fakerootnoenv" : self.rqdata.dataCache.fakerootnoenv,
-+            "hashes" : self.rqdata.hashes,
-+            "hash_deps" : self.rqdata.hash_deps,
-+            "sigchecksums" : bb.parse.siggen.file_checksum_values,
-+            "runq_hash" : self.rqdata.runq_hash,
-+            "logdefaultdebug" : bb.msg.loggerDefaultDebugLevel,
-+            "logdefaultverbose" : bb.msg.loggerDefaultVerbose,
-+            "logdefaultverboselogs" : bb.msg.loggerVerboseLogs,
-+            "logdefaultdomain" : bb.msg.loggerDefaultDomains,
-+        }
-+
-+        self.worker.stdin.write("<cookerconfig>" + pickle.dumps(self.cooker.configuration) + "</cookerconfig>")
-+        self.worker.stdin.write("<workerdata>" + pickle.dumps(workerdata) + "</workerdata>")
-+        self.worker.stdin.write("<ping></ping>")
-+        self.worker.stdin.flush()
-+
-+    def runqueue_process_waitpid(self, task, status):
- 
-         # self.build_stamps[pid] may not exist when use shared work directory.
--        if pid in self.build_stamps:
--            del self.build_stamps[pid]
-+        if task in self.build_stamps:
-+            del self.build_stamps[task]
- 
-         if status != 0:
-             self.task_fail(task, status)
-@@ -1019,16 +1034,11 @@ class RunQueueExecute:
-         return True
- 
-     def finish_now(self):
--        if self.stats.active:
--            logger.info("Sending SIGTERM to remaining %s tasks", self.stats.active)
--            for k, v in self.build_pids.iteritems():
--                try:
--                    os.kill(-k, signal.SIGTERM)
--                    os.waitpid(-1, 0)
--                except:
--                    pass
--        for pipe in self.build_pipes:
--            self.build_pipes[pipe].read()
-+
-+        self.worker.stdin.write("<finishnow></finishnow>")
-+        self.worker.stdin.flush()
-+
-+        self.teardown()
- 
-         if len(self.failed_fnids) != 0:
-             self.rq.state = runQueueFailed
-@@ -1040,14 +1050,13 @@ class RunQueueExecute:
-     def finish(self):
-         self.rq.state = runQueueCleanUp
- 
--        for pipe in self.build_pipes:
--            self.build_pipes[pipe].read()
--
-         if self.stats.active > 0:
-             bb.event.fire(runQueueExitWait(self.stats.active), self.cfgData)
--            self.runqueue_process_waitpid()
-+            self.workerpipe.read()
-             return
- 
-+        self.teardown()
-+
-         if len(self.failed_fnids) != 0:
-             self.rq.state = runQueueFailed
-             return
-@@ -1055,115 +1064,6 @@ class RunQueueExecute:
-         self.rq.state = runQueueComplete
-         return
- 
--    def fork_off_task(self, fn, task, taskname, quieterrors=False):
--        # We need to setup the environment BEFORE the fork, since
--        # a fork() or exec*() activates PSEUDO...
--
--        envbackup = {}
--        fakeenv = {}
--        umask = None
--
--        taskdep = self.rqdata.dataCache.task_deps[fn]
--        if 'umask' in taskdep and taskname in taskdep['umask']:
--            # umask might come in as a number or text string..
--            try:
--                 umask = int(taskdep['umask'][taskname],8)
--            except TypeError:
--                 umask = taskdep['umask'][taskname]
--
--        if 'fakeroot' in taskdep and taskname in taskdep['fakeroot']:
--            envvars = (self.rqdata.dataCache.fakerootenv[fn] or "").split()
--            for key, value in (var.split('=') for var in envvars):
--                envbackup[key] = os.environ.get(key)
--                os.environ[key] = value
--                fakeenv[key] = value
--
--            fakedirs = (self.rqdata.dataCache.fakerootdirs[fn] or "").split()
--            for p in fakedirs:
--                bb.utils.mkdirhier(p)
--
--            logger.debug(2, 'Running %s:%s under fakeroot, fakedirs: %s' %
--                            (fn, taskname, ', '.join(fakedirs)))
--        else:
--            envvars = (self.rqdata.dataCache.fakerootnoenv[fn] or "").split()
--            for key, value in (var.split('=') for var in envvars):
--                envbackup[key] = os.environ.get(key)
--                os.environ[key] = value
--                fakeenv[key] = value
--
--        sys.stdout.flush()
--        sys.stderr.flush()
--        try:
--            pipein, pipeout = os.pipe()
--            pipein = os.fdopen(pipein, 'rb', 4096)
--            pipeout = os.fdopen(pipeout, 'wb', 0)
--            pid = os.fork()
--        except OSError as e:
--            bb.msg.fatal("RunQueue", "fork failed: %d (%s)" % (e.errno, e.strerror))
--
--        if pid == 0:
--            pipein.close()
--
--            # Save out the PID so that the event can include it the
--            # events
--            bb.event.worker_pid = os.getpid()
--            bb.event.worker_pipe = pipeout
--
--            self.rq.state = runQueueChildProcess
--            # Make the child the process group leader
--            os.setpgid(0, 0)
--            # No stdin
--            newsi = os.open(os.devnull, os.O_RDWR)
--            os.dup2(newsi, sys.stdin.fileno())
--
--            if umask:
--                os.umask(umask)
--
--            self.cooker.data.setVar("BB_WORKERCONTEXT", "1")
--            bb.parse.siggen.set_taskdata(self.rqdata.hashes, self.rqdata.hash_deps)
--            ret = 0
--            try:
--                the_data = bb.cache.Cache.loadDataFull(fn, self.cooker.collection.get_file_appends(fn), self.cooker.data)
--                the_data.setVar('BB_TASKHASH', self.rqdata.runq_hash[task])
--                for h in self.rqdata.hashes:
--                    the_data.setVar("BBHASH_%s" % h, self.rqdata.hashes[h])
--                for h in self.rqdata.hash_deps:
--                    the_data.setVar("BBHASHDEPS_%s" % h, self.rqdata.hash_deps[h])
--
--                # exported_vars() returns a generator which *cannot* be passed to os.environ.update() 
--                # successfully. We also need to unset anything from the environment which shouldn't be there 
--                exports = bb.data.exported_vars(the_data)
--                bb.utils.empty_environment()
--                for e, v in exports:
--                    os.environ[e] = v
--                for e in fakeenv:
--                    os.environ[e] = fakeenv[e]
--                    the_data.setVar(e, fakeenv[e])
--                    the_data.setVarFlag(e, 'export', "1")
--
--                if quieterrors:
--                    the_data.setVarFlag(taskname, "quieterrors", "1")
--
--            except Exception as exc:
--                if not quieterrors:
--                    logger.critical(str(exc))
--                os._exit(1)
--            try:
--                if not self.cooker.configuration.dry_run:
--                    profile = self.cooker.configuration.profile
--                    ret = bb.build.exec_task(fn, taskname, the_data, profile)
--                os._exit(ret)
--            except:
--                os._exit(1)
--        else:
--            for key, value in envbackup.iteritems():
--                if value is None:
--                    del os.environ[key]
--                else:
--                    os.environ[key] = value
--
--        return pid, pipein, pipeout
--
-     def check_dependencies(self, task, taskdeps, setscene = False):
-         if not self.rq.depvalidate:
-             return False
-@@ -1184,6 +1084,16 @@ class RunQueueExecute:
-         valid = bb.utils.better_eval(call, locs)
-         return valid
- 
-+    def teardown(self):
-+        logger.warn("Teardown called")
-+        self.worker.stdin.write("<quit></quit>")
-+        self.worker.stdin.flush()
-+        while self.worker.returncode is None:
-+            self.workerpipe.read()
-+            self.worker.poll()
-+        while self.workerpipe.read():
-+            continue
-+
- class RunQueueExecuteDummy(RunQueueExecute):
-     def __init__(self, rq):
-         self.rq = rq
-@@ -1275,7 +1185,6 @@ class RunQueueExecuteTasks(RunQueueExecute):
-             bb.fatal("Invalid scheduler '%s'.  Available schedulers: %s" %
-                      (self.scheduler, ", ".join(obj.name for obj in schedulers)))
- 
--
-     def get_schedulers(self):
-         schedulers = set(obj for obj in globals().values()
-                              if type(obj) is type and
-@@ -1349,6 +1258,9 @@ class RunQueueExecuteTasks(RunQueueExecute):
-         Run the tasks in a queue prepared by rqdata.prepare()
-         """
- 
-+        self.workerpipe.read()
-+        
-+
-         if self.stats.total == 0:
-             # nothing to do
-             self.rq.state = runQueueCleanUp
-@@ -1384,23 +1296,19 @@ class RunQueueExecuteTasks(RunQueueExecute):
-                 startevent = runQueueTaskStarted(task, self.stats, self.rq)
-                 bb.event.fire(startevent, self.cfgData)
- 
--            pid, pipein, pipeout = self.fork_off_task(fn, task, taskname)
-+            self.worker.stdin.write("<runtask>" + pickle.dumps((fn, task, taskname, False, self.cooker.collection.get_file_appends(fn))) + "</runtask>")
- 
--            self.build_pids[pid] = task
--            self.build_pipes[pid] = runQueuePipe(pipein, pipeout, self.cfgData)
--            self.build_stamps[pid] = bb.build.stampfile(taskname, self.rqdata.dataCache, fn)
-+            self.build_stamps[task] = bb.build.stampfile(taskname, self.rqdata.dataCache, fn)
-             self.runq_running[task] = 1
-             self.stats.taskActive()
-             if self.stats.active < self.number_tasks:
-                 return True
- 
--        for pipe in self.build_pipes:
--            self.build_pipes[pipe].read()
--
-         if self.stats.active > 0:
--            if self.runqueue_process_waitpid() is None:
--                return 0.5
--            return True
-+            self.workerpipe.read()
-+            return 0.5
-+
-+        self.teardown()
- 
-         if len(self.failed_fnids) != 0:
-             self.rq.state = runQueueFailed
-@@ -1415,6 +1323,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
-             if self.runq_complete[task] == 0:
-                 logger.error("Task %s never completed!", task)
-         self.rq.state = runQueueComplete
-+
-         return True
- 
- class RunQueueExecuteScenequeue(RunQueueExecute):
-@@ -1428,6 +1337,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-         # If we don't have any setscene functions, skip this step
-         if len(self.rqdata.runq_setscene) == 0:
-             rq.scenequeue_covered = set()
-+            self.teardown()
-             rq.state = runQueueRunInit
-             return
- 
-@@ -1676,6 +1586,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-         Run the tasks in a queue prepared by prepare_runqueue
-         """
- 
-+        self.workerpipe.read()
-+
-         task = None
-         if self.stats.active < self.number_tasks:
-             # Find the next setscene to run
-@@ -1716,22 +1628,16 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-             startevent = sceneQueueTaskStarted(task, self.stats, self.rq)
-             bb.event.fire(startevent, self.cfgData)
- 
--            pid, pipein, pipeout = self.fork_off_task(fn, realtask, taskname)
-+            self.worker.stdin.write("<runtask>" + pickle.dumps((fn, realtask, taskname, True, self.cooker.collection.get_file_appends(fn))) + "</runtask>")
- 
--            self.build_pids[pid] = task
--            self.build_pipes[pid] = runQueuePipe(pipein, pipeout, self.cfgData)
-             self.runq_running[task] = 1
-             self.stats.taskActive()
-             if self.stats.active < self.number_tasks:
-                 return True
- 
--        for pipe in self.build_pipes:
--            self.build_pipes[pipe].read()
--
-         if self.stats.active > 0:
--            if self.runqueue_process_waitpid() is None:
--                return 0.5
--            return True
-+            self.workerpipe.read()
-+            return 0.5
- 
-         # Convert scenequeue_covered task numbers into full taskgraph ids
-         oldcovered = self.scenequeue_covered
-@@ -1745,11 +1651,9 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-         logger.debug(1, 'We can skip tasks %s', sorted(self.rq.scenequeue_covered))
- 
-         self.rq.state = runQueueRunInit
-+        self.teardown()
-         return True
- 
--    def fork_off_task(self, fn, task, taskname):
--        return RunQueueExecute.fork_off_task(self, fn, task, taskname, quieterrors=True)
--
- class TaskFailure(Exception):
-     """
-     Exception raised when a task in a runqueue fails
-@@ -1828,25 +1732,42 @@ class runQueuePipe():
-     """
-     Abstraction for a pipe between a worker thread and the server
-     """
--    def __init__(self, pipein, pipeout, d):
-+    def __init__(self, pipein, pipeout, d, rq):
-         self.input = pipein
--        pipeout.close()
-+        if pipeout:
-+            pipeout.close()
-         bb.utils.nonblockingfd(self.input)
-         self.queue = ""
-         self.d = d
-+        self.rq = rq
-+
-+    def setrunqueue(self, rq):
-+        self.rq = rq
- 
-     def read(self):
-         start = len(self.queue)
-         try:
-             self.queue = self.queue + self.input.read(102400)
--        except (OSError, IOError):
--            pass
-+        except (OSError, IOError) as e:
-+            if e.errno != errno.EAGAIN:
-+                raise
-         end = len(self.queue)
--        indexFrom 9df95c7903fe69b37958b1357c3da8e1f21d0bd1 Mon Sep 17 00:00:00 2001
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date: Thu, 30 May 2013 12:29:32 +0000
-Subject: Start work on bitbake-worker
+This patch is a prerequisite for the bitbake-worker changes but I'd
+forgotten about it
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
-new file mode 100755
-index 0000000..1f511d2
---- /dev/null
-+++ b/bitbake/bin/bitbake-worker
-@@ -0,0 +1,354 @@
-+#!/usr/bin/env python
-+
-+import os
-+import sys
-+import warnings
-+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'lib'))
-+from bb import fetch2
-+import logging
-+import bb
-+import select
-+import errno
-+
-+logger = logging.getLogger("BitBake")
-+
-+try:
-+    import cPickle as pickle
-+except ImportError:
-+    import pickle
-+    bb.msg.note(1, bb.msg.domain.Cache, "Importing cPickle failed. Falling back to a very slow implementation.")
-+
-+bb.event.worker_pid = os.getpid()
-+workerpipe = sys.stdout.fileno()
-+bb.event.worker_pipe = workerpipe
-+
-+handler = bb.event.LogHandler()
-+logger.addHandler(handler)
-+
-+bb.msg.init_msgconfig(False, 0, [])
-+
-+if 1:
-+        format_str = "%(levelname)s: %(message)s"
-+        conlogformat = bb.msg.BBLogFormatter(format_str)
-+        consolelog = logging.FileHandler("/tmp/rp6")
-+        bb.msg.addDefaultlogFilter(consolelog)
-+        consolelog.setFormatter(conlogformat)
-+        logger.addHandler(consolelog)
-+
-+lf = open("/tmp/rp7", "w+")
-+
-+bb.utils.nonblockingfd(workerpipe)
-+
-+
-+worker_queue = ""
-+
-+def worker_fire(event, d):
-+    global worker_queue
-+
-+    data = "<event>" + pickle.dumps(event) + "</event>"
-+    worker_fire_prepickled(data)
-+
-+def worker_fire_prepickled(event):
-+    global worker_queue
-+
-+    worker_queue = worker_queue + event
-+    worker_flush()
-+
-+def worker_flush():
-+    global worker_queue
-+    if not worker_queue:
-+        return
-+
-+    try:
-+        written = os.write(bb.event.worker_pipe, worker_queue)
-+        worker_queue = worker_queue[written:]
-+    except (IOError, OSError) as e:
-+        if e.errno != errno.EAGAIN:
-+            raise
-+
-+worker_fire_orig = bb.event.worker_fire
-+bb.event.worker_fire = worker_fire
-+
-+
-+def fork_off_task(cfg, data, workerdata, fn, task, taskname, appends, quieterrors=False):
-+    # We need to setup the environment BEFORE the fork, since
-+    # a fork() or exec*() activates PSEUDO...
-+
-+    envbackup = {}
-+    fakeenv = {}
-+    umask = None
-+
-+    taskdep = workerdata["taskdeps"][fn]
-+    if 'umask' in taskdep and taskname in taskdep['umask']:
-+        # umask might come in as a number or text string..
-+        try:
-+             umask = int(taskdep['umask'][taskname],8)
-+        except TypeError:
-+             umask = taskdep['umask'][taskname]
-+
-+    if 'fakeroot' in taskdep and taskname in taskdep['fakeroot']:
-+        envvars = (workerdata["fakerootenv"][fn] or "").split()
-+        for key, value in (var.split('=') for var in envvars):
-+            envbackup[key] = os.environ.get(key)
-+            os.environ[key] = value
-+            fakeenv[key] = value
-+
-+        fakedirs = (workerdata["fakerootdirs"][fn] or "").split()
-+        for p in fakedirs:
-+            bb.utils.mkdirhier(p)
-+        logger.debug(2, 'Running %s:%s under fakeroot, fakedirs: %s' %
-+                        (fn, taskname, ', '.join(fakedirs)))
-+    else:
-+        envvars = (workerdata["fakerootnoenv"][fn] or "").split()
-+        for key, value in (var.split('=') for var in envvars):
-+            envbackup[key] = os.environ.get(key)
-+            os.environ[key] = value
-+            fakeenv[key] = value
-+
-+    sys.stdout.flush()
-+    sys.stderr.flush()
-+    try:
-+        pipein, pipeout = os.pipe()
-+        pipein = os.fdopen(pipein, 'rb', 4096)
-+        pipeout = os.fdopen(pipeout, 'wb', 0)
-+        pid = os.fork()
-+    except OSError as e:
-+        bb.msg.fatal("RunQueue", "fork failed: %d (%s)" % (e.errno, e.strerror))
-+
-+    if pid == 0:
-+            pipein.close()
-+
-+            # Save out the PID so that the event can include it the
-+            # events
-+            bb.event.worker_pid = os.getpid()
-+            bb.event.worker_pipe = pipeout
-+            bb.event.worker_fire = worker_fire_orig
-+
-+            # Make the child the process group leader
-+            os.setpgid(0, 0)
-+            # No stdin
-+            newsi = os.open(os.devnull, os.O_RDWR)
-+            os.dup2(newsi, sys.stdin.fileno())
-+
-+            if umask:
-+                os.umask(umask)
-+
-+            data.setVar("BB_WORKERCONTEXT", "1")
-+            bb.parse.siggen.set_taskdata(workerdata["hashes"], workerdata["hash_deps"], workerdata["sigchecksums"])
-+            ret = 0
-+            try:
-+                the_data = bb.cache.Cache.loadDataFull(fn, appends, data)
-+                the_data.setVar('BB_TASKHASH', workerdata["runq_hash"][task])
-+                for h in workerdata["hashes"]:
-+                    the_data.setVar("BBHASH_%s" % h, workerdata["hashes"][h])
-+                for h in workerdata["hash_deps"]:
-+                    the_data.setVar("BBHASHDEPS_%s" % h, workerdata["hash_deps"][h])
-+
-+                # exported_vars() returns a generator which *cannot* be passed to os.environ.update() 
-+                # successfully. We also need to unset anything from the environment which shouldn't be there 
-+                exports = bb.data.exported_vars(the_data)
-+                bb.utils.empty_environment()
-+                for e, v in exports:
-+                    os.environ[e] = v
-+                for e in fakeenv:
-+                    os.environ[e] = fakeenv[e]
-+                    the_data.setVar(e, fakeenv[e])
-+                    the_data.setVarFlag(e, 'export', "1")
-+
-+                if quieterrors:
-+                    the_data.setVarFlag(taskname, "quieterrors", "1")
-+
-+            except Exception as exc:
-+                if not quieterrors:
-+                    logger.critical(str(exc))
-+                os._exit(1)
-+            try:
-+                if not cfg.dry_run:
-+                    ret = bb.build.exec_task(fn, taskname, the_data, cfg.profile)
-+                os._exit(ret)
-+            except:
-+                os._exit(1)
-+    else:
-+        for key, value in envbackup.iteritems():
-+            if value is None:
-+                del os.environ[key]
-+            else:
-+                os.environ[key] = value
-+
-+    return pid, pipein, pipeout
-+
-+
-+
-+class runQueueWorkerPipe():
-+    """
-+    Abstraction for a pipe between a worker thread and the worker server
-+    """
-+    def __init__(self, pipein, pipeout):
-+        self.input = pipein
-+        if pipeout:
-+            pipeout.close()
-+        bb.utils.nonblockingfd(self.input)
-+        self.queue = ""
-+
-+    def read(self):
-+        start = len(self.queue)
-+        try:
-+            self.queue = self.queue + self.input.read(102400)
-+        except (OSError, IOError):
-+            pass
-+        end = len(self.queue)
-+        index = self.queue.find("</event>")
-+        while index != -1:
-+            worker_fire_prepickled(self.queue[:index+8])
-+            self.queue = self.queue[index+8:]
-+            index = self.queue.find("</event>")
-+        return (end > start)
-+
-+    def close(self):
-+        while self.read():
-+            continue
-+        if len(self.queue) > 0:
-+            print("Warning, worker child left partial message: %s" % self.queue)
-+        self.input.close()
-+
-+normalexit = False
-+
-+class BitbakeWorker(object):
-+    def __init__(self, din):
-+        self.input = din
-+        bb.utils.nonblockingfd(self.input)
-+        self.queue = ""
-+        self.cookercfg = None
-+        self.databuilder = None
+diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
+index cc6a981..ab69501 100644
+--- a/bitbake/lib/bb/command.py
++++ b/bitbake/lib/bb/command.py
+@@ -116,11 +116,11 @@ class Command:
+ 
+     def finishAsyncCommand(self, msg=None, code=None):
+         if msg:
+-            bb.event.fire(CommandFailed(msg), self.cooker.configuration.event_data)
++            bb.event.fire(CommandFailed(msg), self.cooker.event_data)
+         elif code:
+-            bb.event.fire(CommandExit(code), self.cooker.configuration.event_data)
++            bb.event.fire(CommandExit(code), self.cooker.event_data)
+         else:
+-            bb.event.fire(CommandCompleted(), self.cooker.configuration.event_data)
++            bb.event.fire(CommandCompleted(), self.cooker.event_data)
+         self.currentAsyncCommand = None
+ 
+ 
+@@ -145,22 +145,22 @@ class CommandsSync:
+ 
+     def getVariable(self, command, params):
+         """
+-        Read the value of a variable from configuration.data
++        Read the value of a variable from data
+         """
+         varname = params[0]
+         expand = True
+         if len(params) > 1:
+             expand = params[1]
+ 
+-        return command.cooker.configuration.data.getVar(varname, expand)
++        return command.cooker.data.getVar(varname, expand)
+ 
+     def setVariable(self, command, params):
+         """
+-        Set the value of variable in configuration.data
++        Set the value of variable in data
+         """
+         varname = params[0]
+         value = str(params[1])
+-        command.cooker.configuration.data.setVar(varname, value)
++        command.cooker.data.setVar(varname, value)
+ 
+     def setConfig(self, command, params):
+         """
+@@ -375,7 +375,7 @@ class CommandsAsync:
+         """
+         Parse the .bb files
+         """
+-        if bb.fetch.fetcher_compare_revisions(command.cooker.configuration.data):
++        if bb.fetch.fetcher_compare_revisions(command.cooker.data):
+             command.finishAsyncCommand(code=1)
+         else:
+             command.finishAsyncCommand()
+@@ -398,7 +398,7 @@ class CommandsAsync:
+         Trigger a certain event
+         """
+         event = params[0]
+-        bb.event.fire(eval(event), command.cooker.configuration.data)
++        bb.event.fire(eval(event), command.cooker.data)
+         command.currentAsyncCommand = None
+     triggerEvent.needcache = False
+ 
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 2edfa9f..77273dc 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -108,13 +108,13 @@ class BBCooker:
+                 logger.critical("Unable to import extra RecipeInfo '%s' from '%s': %s" % (cache_name, module_name, exc))
+                 sys.exit("FATAL: Failed to import extra cache class '%s'." % cache_name)
+ 
+-        self.configuration.data = None
 +        self.data = None
-+        self.build_pids = {}
-+        self.build_pipes = {}
-+    
-+    def serve(self):        
-+        while True:
-+            (ready, _, _) = select.select([self.input] + [i.input for i in self.build_pipes.values()], [] , [], 1)
-+            if self.input in ready:
-+                start = len(self.queue)
-+                try:
-+                    self.queue = self.queue + self.input.read()
-+                except (OSError, IOError):
-+                    pass
-+                end = len(self.queue)
-+                self.handle_item("cookerconfig", self.handle_cookercfg)
-+                self.handle_item("workerdata", self.handle_workerdata)
-+                self.handle_item("runtask", self.handle_runtask)
-+                self.handle_item("finishnow", self.handle_finishnow)
-+                self.handle_item("ping", self.handle_ping)
-+                self.handle_item("quit", self.handle_quit)
-+
-+            worker_flush()
-+            if len(self.build_pids):
-+                self.process_waitpid()
-+            for pipe in self.build_pipes:
-+                self.build_pipes[pipe].read()
-+
-+
-+    def handle_item(self, item, func):
-+        if self.queue.startswith("<" + item + ">"):
-+            index = self.queue.find("</" + item + ">")
-+            while index != -1:
-+                func(self.queue[(len(item) + 2):index])
-+                self.queue = self.queue[(index + len(item) + 3):]
-+                index = self.queue.find("</" + item + ">")
-+
-+    def handle_cookercfg(self, data):
-+        self.cookercfg = pickle.loads(data)
-+        self.databuilder = bb.cookerdata.CookerDataBuilder(self.cookercfg, worker=True)
-+        logger.warn("Have databuilder %s" % self.databuilder)
-+        self.databuilder.parseBaseConfiguration()
+         self.initConfigurationData()
+         self.loadConfigurationData()
+ 
+         # Take a lock so only one copy of bitbake can run against a given build
+         # directory at a time
+-        lockfile = self.configuration.data.expand("${TOPDIR}/bitbake.lock")
++        lockfile = self.data.expand("${TOPDIR}/bitbake.lock")
+         self.lock = bb.utils.lockfile(lockfile, False, False)
+         if not self.lock:
+             bb.fatal("Only one copy of bitbake should be run against a build directory")
+@@ -122,9 +122,9 @@ class BBCooker:
+         #
+         # Special updated configuration we use for firing events
+         #
+-        self.configuration.event_data = bb.data.createCopy(self.configuration.data)
+-        bb.data.update_data(self.configuration.event_data)
+-        bb.parse.init_parser(self.configuration.event_data)
++        self.event_data = bb.data.createCopy(self.data)
++        bb.data.update_data(self.event_data)
++        bb.parse.init_parser(self.event_data)
+ 
+         # TOSTOP must not be set or our children will hang when they output
+         fd = sys.stdout.fileno()
+@@ -147,27 +147,27 @@ class BBCooker:
+             worker = True
+ 
+         self.databuilder = bb.cookerdata.CookerDataBuilder(self.configuration, worker)
+-        self.configuration.data = self.databuilder.data
 +        self.data = self.databuilder.data
-+        logger.warn("Have datastore %s" % self.data)
-+
-+    def handle_workerdata(self, data):
-+        self.workerdata = pickle.loads(data)
-+        bb.msg.loggerDefaultDebugLevel = self.workerdata["logdefaultdebug"]
-+        bb.msg.loggerDefaultVerbose = self.workerdata["logdefaultverbose"]
-+        bb.msg.loggerVerboseLogs = self.workerdata["logdefaultverboselogs"]
-+        bb.msg.loggerDefaultDomains = self.workerdata["logdefaultdomain"]
-+
-+    def handle_ping(self, _):
-+        lf.write("Handling ping\n")
-+        lf.flush()
-+
-+        logger.warn("Pong!")
-+
-+    def handle_quit(self, data):
-+        lf.write("Handling quit\n")
-+        lf.flush()
-+
-+        global normalexit
-+        normalexit = True
-+        sys.exit(0)
-+
-+    def handle_runtask(self, data):
-+        fn, task, taskname, quieterrors, appends = pickle.loads(data)
-+        pid, pipein, pipeout = fork_off_task(self.cookercfg, self.data, self.workerdata, fn, task, taskname, appends, quieterrors)
-+
-+        lf.write("Handling runtask %s %s %s\n" % (task, fn, taskname))
-+        lf.flush()
-+
-+
-+        self.build_pids[pid] = task
-+        self.build_pipes[pid] = runQueueWorkerPipe(pipein, pipeout)
-+
-+    def process_waitpid(self):
-+        """
-+        Return none is there are no processes awaiting result collection, otherwise
-+        collect the process exit codes and close the information pipe.
-+        """
-+        try:
-+            pid, status = os.waitpid(-1, os.WNOHANG)
-+            if pid == 0 or os.WIFSTOPPED(status):
-+                return None
-+        except OSError:
-+            return None
-+
-+        lf.write("Got %s for %s\n" % (status, pid))
-+        lf.flush()
-+
-+        if os.WIFEXITED(status):
-+            status = os.WEXITSTATUS(status)
-+        elif os.WIFSIGNALED(status):
-+            # Per shell conventions for $?, when a process exits due to
-+            # a signal, we return an exit code of 128 + SIGNUM
-+            status = 128 + os.WTERMSIG(status)
-+
-+        task = self.build_pids[pid]
-+        del self.build_pids[pid]
-+
-+        self.build_pipes[pid].close()
-+        del self.build_pipes[pid]
-+
-+        worker_fire_prepickled("<exitcode>" + pickle.dumps((task, status)) + "</exitcode>")
-+
-+    def handle_finishnow(self, _):
-+        if self.build_pids:
-+            logger.info("Sending SIGTERM to remaining %s tasks", len(self.build_pids))
-+            for k, v in self.build_pids.iteritems():
-+                try:
-+                    os.kill(-k, signal.SIGTERM)
-+                    os.waitpid(-1, 0)
-+                except:
-+                    pass
-+        for pipe in self.build_pipes:
-+            self.build_pipes[pipe].read()
-+
-+try:
-+    worker = BitbakeWorker(sys.stdin)
-+    worker.serve()
-+except BaseException as e:
-+    if not normalexit:
-+        import traceback
-+        sys.stderr.write(traceback.format_exc())
-+        sys.stderr.write(str(e))
-+while len(worker_queue):
-+    worker_flush()
-+lf.write("exitting")
-+lf.flush()
-+sys.exit(0)
-+
-diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
-index 9e89742..a38ca0d 100644
---- a/bitbake/lib/bb/cache.py
-+++ b/bitbake/lib/bb/cache.py
-@@ -715,7 +715,6 @@ class CacheData(object):
-         for info in info_array:
-             info.add_cacheData(self, fn)
  
--
- class MultiProcessCache(object):
-     """
-     BitBake multi-process cache implementation
-@@ -737,13 +736,18 @@ class MultiProcessCache(object):
-         self.cachefile = os.path.join(cachedir, self.__class__.cache_file_name)
-         logger.debug(1, "Using cache in '%s'", self.cachefile)
+     def enableDataTracking(self):
+-        self.configuration.data.enableTracking()
++        self.data.enableTracking()
  
-+        glf = bb.utils.lockfile(self.cachefile + ".lock")
-+
+     def disableDataTracking(self):
+-        self.configuration.data.disableTracking()
++        self.data.disableTracking()
+ 
+     def loadConfigurationData(self):
+         self.databuilder.parseBaseConfiguration()
+-        self.configuration.data = self.databuilder.data
+-        self.configuration.data_hash = self.databuilder.data_hash
++        self.data = self.databuilder.data
++        self.data_hash = self.databuilder.data_hash
+ 
+     def saveConfigurationVar(self, var, val, default_file):
+ 
+         replaced = False
+         #do not save if nothing changed
+-        if str(val) == self.configuration.data.getVar(var):
++        if str(val) == self.data.getVar(var):
+             return
+ 
+-        conf_files = self.configuration.data.varhistory.get_variable_files(var)
++        conf_files = self.data.varhistory.get_variable_files(var)
+ 
+         #format the value when it is a list
+         if isinstance(val, list):
+@@ -176,7 +176,7 @@ class BBCooker:
+                 listval += "%s   " % value
+             val = listval
+ 
+-        topdir = self.configuration.data.getVar("TOPDIR")
++        topdir = self.data.getVar("TOPDIR")
+ 
+         #comment or replace operations made on var
+         for conf_file in conf_files:
+@@ -185,7 +185,7 @@ class BBCooker:
+                     contents = f.readlines()
+                 f.close()
+ 
+-                lines = self.configuration.data.varhistory.get_variable_lines(var, conf_file)
++                lines = self.data.varhistory.get_variable_lines(var, conf_file)
+                 for line in lines:
+                     total = ""
+                     i = 0
+@@ -218,7 +218,7 @@ class BBCooker:
+ 
+         if replaced == False:
+             #remove var from history
+-            self.configuration.data.varhistory.del_var_history(var)
++            self.data.varhistory.del_var_history(var)
+ 
+             #add var to the end of default_file
+             default_file = bb.cookerdata.findConfigFile(default_file)
+@@ -241,17 +241,17 @@ class BBCooker:
+ 
+             #add to history
+             loginfo = {"op":set, "file":default_file, "line":total.count("\n")}
+-            self.configuration.data.setVar(var, val, **loginfo)
++            self.data.setVar(var, val, **loginfo)
+ 
+     def parseConfiguration(self):
+ 
+         # Set log file verbosity
+-        verboselogs = bb.utils.to_boolean(self.configuration.data.getVar("BB_VERBOSE_LOGS", "0"))
++        verboselogs = bb.utils.to_boolean(self.data.getVar("BB_VERBOSE_LOGS", "0"))
+         if verboselogs:
+             bb.msg.loggerVerboseLogs = True
+ 
+         # Change nice level if we're asked to
+-        nice = self.configuration.data.getVar("BB_NICE_LEVEL", True)
++        nice = self.data.getVar("BB_NICE_LEVEL", True)
+         if nice:
+             curnice = os.nice(0)
+             nice = int(nice) - curnice
+@@ -261,7 +261,7 @@ class BBCooker:
+             del self.recipecache
+         self.recipecache = bb.cache.CacheData(self.caches_array)
+ 
+-        self.handleCollections( self.configuration.data.getVar("BBFILE_COLLECTIONS", True) )
++        self.handleCollections( self.data.getVar("BBFILE_COLLECTIONS", True) )
+ 
+     def runCommands(self, server, data, abort):
+         """
+@@ -275,7 +275,7 @@ class BBCooker:
+     def showVersions(self):
+ 
+         pkg_pn = self.recipecache.pkg_pn
+-        (latest_versions, preferred_versions) = bb.providers.findProviders(self.configuration.data, self.recipecache, pkg_pn)
++        (latest_versions, preferred_versions) = bb.providers.findProviders(self.data, self.recipecache, pkg_pn)
+ 
+         logger.plain("%-35s %25s %25s", "Recipe Name", "Latest Version", "Preferred Version")
+         logger.plain("%-35s %25s %25s\n", "===========", "==============", "=================")
+@@ -308,11 +308,11 @@ class BBCooker:
+             fn = self.matchFile(fn)
+             fn = bb.cache.Cache.realfn2virtual(fn, cls)
+         elif len(pkgs_to_build) == 1:
+-            ignore = self.configuration.data.getVar("ASSUME_PROVIDED", True) or ""
++            ignore = self.data.getVar("ASSUME_PROVIDED", True) or ""
+             if pkgs_to_build[0] in set(ignore.split()):
+                 bb.fatal("%s is in ASSUME_PROVIDED" % pkgs_to_build[0])
+ 
+-            localdata = data.createCopy(self.configuration.data)
++            localdata = data.createCopy(self.data)
+             bb.data.update_data(localdata)
+             bb.data.expandKeys(localdata)
+ 
+@@ -324,18 +324,18 @@ class BBCooker:
+             fnid = taskdata.build_targets[targetid][0]
+             fn = taskdata.fn_index[fnid]
+         else:
+-            envdata = self.configuration.data
++            envdata = self.data
+ 
+         if fn:
+             try:
+-                envdata = bb.cache.Cache.loadDataFull(fn, self.collection.get_file_appends(fn), self.configuration.data)
++                envdata = bb.cache.Cache.loadDataFull(fn, self.collection.get_file_appends(fn), self.data)
+             except Exception as e:
+                 parselog.exception("Unable to read %s", fn)
+                 raise
+ 
+         # Display history
+         with closing(StringIO()) as env:
+-            self.configuration.data.inchistory.emit(env)
++            self.data.inchistory.emit(env)
+             logger.plain(env.getvalue())
+ 
+         # emit variables and shell functions
+@@ -354,7 +354,7 @@ class BBCooker:
+         """
+         Prepare a runqueue and taskdata object for iteration over pkgs_to_build
+         """
+-        bb.event.fire(bb.event.TreeDataPreparationStarted(), self.configuration.data)
++        bb.event.fire(bb.event.TreeDataPreparationStarted(), self.data)
+ 
+         # If we are told to do the None task then query the default task
+         if (task == None):
+@@ -362,7 +362,7 @@ class BBCooker:
+ 
+         pkgs_to_build = self.checkPackages(pkgs_to_build)
+ 
+-        localdata = data.createCopy(self.configuration.data)
++        localdata = data.createCopy(self.data)
+         bb.data.update_data(localdata)
+         bb.data.expandKeys(localdata)
+         # We set abort to False here to prevent unbuildable targets raising
+@@ -375,9 +375,9 @@ class BBCooker:
+             taskdata.add_provider(localdata, self.recipecache, k)
+             runlist.append([k, "do_%s" % task])
+             current += 1
+-            bb.event.fire(bb.event.TreeDataPreparationProgress(current, len(pkgs_to_build)), self.configuration.data)
++            bb.event.fire(bb.event.TreeDataPreparationProgress(current, len(pkgs_to_build)), self.data)
+         taskdata.add_unresolved(localdata, self.recipecache)
+-        bb.event.fire(bb.event.TreeDataPreparationCompleted(len(pkgs_to_build)), self.configuration.data)
++        bb.event.fire(bb.event.TreeDataPreparationCompleted(len(pkgs_to_build)), self.data)
+         return runlist, taskdata
+     
+     ######## WARNING : this function requires cache_extra to be enabled ########
+@@ -388,7 +388,7 @@ class BBCooker:
+         information.
+         """
+         runlist, taskdata = self.prepareTreeData(pkgs_to_build, task)
+-        rq = bb.runqueue.RunQueue(self, self.configuration.data, self.recipecache, taskdata, runlist)
++        rq = bb.runqueue.RunQueue(self, self.data, self.recipecache, taskdata, runlist)
+         rq.rqdata.prepare()
+ 
+         seen_fnids = []
+@@ -543,7 +543,7 @@ class BBCooker:
+         Generate an event with the result
+         """
+         depgraph = self.generateTaskDepTreeData(pkgs_to_build, task)
+-        bb.event.fire(bb.event.DepTreeGenerated(depgraph), self.configuration.data)
++        bb.event.fire(bb.event.DepTreeGenerated(depgraph), self.data)
+ 
+     def generateDotGraphFiles(self, pkgs_to_build, task):
+         """
+@@ -621,7 +621,7 @@ class BBCooker:
+                            for append in appends)
+             msg = 'No recipes available for:\n%s' % '\n'.join(appendlines)
+             warn_only = data.getVar("BB_DANGLINGAPPENDS_WARNONLY", \
+-                 self.configuration.data, False) or "no"
++                 self.data, False) or "no"
+             if warn_only.lower() in ("1", "yes", "true"):
+                 bb.warn(msg)
+             else:
+@@ -629,7 +629,7 @@ class BBCooker:
+ 
+     def handlePrefProviders(self):
+ 
+-        localdata = data.createCopy(self.configuration.data)
++        localdata = data.createCopy(self.data)
+         bb.data.update_data(localdata)
+         bb.data.expandKeys(localdata)
+ 
+@@ -645,7 +645,7 @@ class BBCooker:
+             self.recipecache.preferred[providee] = provider
+ 
+     def findCoreBaseFiles(self, subdir, configfile):
+-        corebase = self.configuration.data.getVar('COREBASE', True) or ""
++        corebase = self.data.getVar('COREBASE', True) or ""
+         paths = []
+         for root, dirs, files in os.walk(corebase + '/' + subdir):
+             for d in dirs:
+@@ -654,7 +654,7 @@ class BBCooker:
+                     paths.append(os.path.join(root, d))
+ 
+         if paths:
+-            bb.event.fire(bb.event.CoreBaseFilesFound(paths), self.configuration.data)
++            bb.event.fire(bb.event.CoreBaseFilesFound(paths), self.data)
+ 
+     def findConfigFilePath(self, configfile):
+         """
+@@ -668,8 +668,8 @@ class BBCooker:
+         # Generate a list of parsed configuration files by searching the files
+         # listed in the __depends and __base_depends variables with a .conf suffix.
+         conffiles = []
+-        dep_files = self.configuration.data.getVar('__base_depends') or []
+-        dep_files = dep_files + (self.configuration.data.getVar('__depends') or [])
++        dep_files = self.data.getVar('__base_depends') or []
++        dep_files = dep_files + (self.data.getVar('__depends') or [])
+ 
+         for f in dep_files:
+             if f[0].endswith(".conf"):
+@@ -682,7 +682,7 @@ class BBCooker:
+         for cfg in conffiles:
+             if cfg.endswith(match):
+                 bb.event.fire(bb.event.ConfigFilePathFound(path),
+-                              self.configuration.data)
++                              self.data)
+                 break
+ 
+     def findFilesMatchingInDir(self, filepattern, directory):
+@@ -697,7 +697,7 @@ class BBCooker:
+ 
+         matches = []
+         p = re.compile(re.escape(filepattern))
+-        bbpaths = self.configuration.data.getVar('BBPATH', True).split(':')
++        bbpaths = self.data.getVar('BBPATH', True).split(':')
+         for path in bbpaths:
+             dirpath = os.path.join(path, directory)
+             if os.path.exists(dirpath):
+@@ -707,7 +707,7 @@ class BBCooker:
+                             matches.append(f)
+ 
+         if matches:
+-            bb.event.fire(bb.event.FilesMatchingFound(filepattern, matches), self.configuration.data)
++            bb.event.fire(bb.event.FilesMatchingFound(filepattern, matches), self.data)
+ 
+     def findConfigFiles(self, varname):
+         """
+@@ -717,7 +717,7 @@ class BBCooker:
+         possible = []
+         var = varname.lower()
+ 
+-        data = self.configuration.data
++        data = self.data
+         # iterate configs
+         bbpaths = data.getVar('BBPATH', True).split(':')
+         for path in bbpaths:
+@@ -731,7 +731,7 @@ class BBCooker:
+                             possible.append(val)
+ 
+         if possible:
+-            bb.event.fire(bb.event.ConfigFilesFound(var, possible), self.configuration.data)
++            bb.event.fire(bb.event.ConfigFilesFound(var, possible), self.data)
+ 
+     def findInheritsClass(self, klass):
+         """
+@@ -762,7 +762,7 @@ class BBCooker:
+ 
+         # generate a dependency tree for all our packages
+         tree = self.generatePkgDepTreeData(pkgs, 'build')
+-        bb.event.fire(bb.event.TargetsTreeGenerated(tree), self.configuration.data)
++        bb.event.fire(bb.event.TargetsTreeGenerated(tree), self.data)
+ 
+     def buildWorldTargetList(self):
+         """
+@@ -808,7 +808,7 @@ class BBCooker:
+             min_prio = 0
+             for c in collection_list:
+                 # Get collection priority if defined explicitly
+-                priority = self.configuration.data.getVar("BBFILE_PRIORITY_%s" % c, True)
++                priority = self.data.getVar("BBFILE_PRIORITY_%s" % c, True)
+                 if priority:
+                     try:
+                         prio = int(priority)
+@@ -822,7 +822,7 @@ class BBCooker:
+                     collection_priorities[c] = None
+ 
+                 # Check dependencies and store information for priority calculation
+-                deps = self.configuration.data.getVar("LAYERDEPENDS_%s" % c, True)
++                deps = self.data.getVar("LAYERDEPENDS_%s" % c, True)
+                 if deps:
+                     depnamelist = []
+                     deplist = deps.split()
+@@ -842,7 +842,7 @@ class BBCooker:
+ 
+                         if dep in collection_list:
+                             if depver:
+-                                layerver = self.configuration.data.getVar("LAYERVERSION_%s" % dep, True)
++                                layerver = self.data.getVar("LAYERVERSION_%s" % dep, True)
+                                 if layerver:
+                                     try:
+                                         lver = int(layerver)
+@@ -879,7 +879,7 @@ class BBCooker:
+             # Calculate all layer priorities using calc_layer_priority and store in bbfile_config_priorities
+             for c in collection_list:
+                 calc_layer_priority(c)
+-                regex = self.configuration.data.getVar("BBFILE_PATTERN_%s" % c, True)
++                regex = self.data.getVar("BBFILE_PATTERN_%s" % c, True)
+                 if regex == None:
+                     parselog.error("BBFILE_PATTERN_%s not defined" % c)
+                     errors = True
+@@ -899,9 +899,9 @@ class BBCooker:
+         """
+         Setup any variables needed before starting a build
+         """
+-        if not self.configuration.data.getVar("BUILDNAME"):
+-            self.configuration.data.setVar("BUILDNAME", time.strftime('%Y%m%d%H%M'))
+-        self.configuration.data.setVar("BUILDSTART", time.strftime('%m/%d/%Y %H:%M:%S', time.gmtime()))
++        if not self.data.getVar("BUILDNAME"):
++            self.data.setVar("BUILDNAME", time.strftime('%Y%m%d%H%M'))
++        self.data.setVar("BUILDSTART", time.strftime('%m/%d/%Y %H:%M:%S', time.gmtime()))
+ 
+     def matchFiles(self, bf):
+         """
+@@ -911,7 +911,7 @@ class BBCooker:
+             bf = os.path.abspath(bf)
+ 
+         self.collection = CookerCollectFiles(self.recipecache.bbfile_config_priorities)
+-        filelist, masked = self.collection.collect_bbfiles(self.configuration.data, self.configuration.event_data)
++        filelist, masked = self.collection.collect_bbfiles(self.data, self.event_data)
          try:
-             with open(self.cachefile, "rb") as f:
-                 p = pickle.Unpickler(f)
-                 data, version = p.load()
-         except:
-+            bb.utils.unlockfile(glf)
-             return
+             os.stat(bf)
+             bf = os.path.abspath(bf)
+@@ -966,7 +966,7 @@ class BBCooker:
  
-+        bb.utils.unlockfile(glf)
-+
-         if version != self.__class__.CACHE_VERSION:
-             return
+         self.recipecache = bb.cache.CacheData(self.caches_array)
+         infos = bb.cache.Cache.parse(fn, self.collection.get_file_appends(fn), \
+-                                     self.configuration.data,
++                                     self.data,
+                                      self.caches_array)
+         infos = dict(infos)
  
-diff --git a/bitbake/lib/bb/cookerdata.py b/bitbake/lib/bb/cookerdata.py
-index 149878f..1bed455 100644
---- a/bitbake/lib/bb/cookerdata.py
-+++ b/bitbake/lib/bb/cookerdata.py
-@@ -25,7 +25,9 @@
- import os, sys
- from functools import wraps
- import logging
-+import bb
- from bb import data
-+import bb.parse
+@@ -999,15 +999,15 @@ class BBCooker:
  
- logger      = logging.getLogger("BitBake")
- parselog    = logging.getLogger("BitBake.Parsing")
-@@ -139,6 +141,20 @@ class CookerConfiguration(object):
-     def setServerRegIdleCallback(self, srcb):
-         self.server_register_idlecallback = srcb
+         # Setup taskdata structure
+         taskdata = bb.taskdata.TaskData(self.configuration.abort)
+-        taskdata.add_provider(self.configuration.data, self.recipecache, item)
++        taskdata.add_provider(self.data, self.recipecache, item)
  
-+    def __getstate__(self):
-+        state = {}
-+        for key in self.__dict__.keys():
-+            if key == "server_register_idlecallback":
-+                state[key] = None
-+            else:
-+                state[key] = getattr(self, key)
-+        return state
-+
-+    def __setstate__(self,state):
-+        for k in state:
-+            setattr(self, k, state[k]) 
-+
-+
- def catch_parse_error(func):
-     """Exception handling bits for our parsing"""
-     @wraps(func)
-@@ -146,6 +162,8 @@ def catch_parse_error(func):
+-        buildname = self.configuration.data.getVar("BUILDNAME")
+-        bb.event.fire(bb.event.BuildStarted(buildname, [item]), self.configuration.event_data)
++        buildname = self.data.getVar("BUILDNAME")
++        bb.event.fire(bb.event.BuildStarted(buildname, [item]), self.event_data)
+ 
+         # Execute the runqueue
+         runlist = [[item, "do_%s" % task]]
+ 
+-        rq = bb.runqueue.RunQueue(self, self.configuration.data, self.recipecache, taskdata, runlist)
++        rq = bb.runqueue.RunQueue(self, self.data, self.recipecache, taskdata, runlist)
+ 
+         def buildFileIdle(server, rq, abort):
+ 
+@@ -1026,7 +1026,7 @@ class BBCooker:
+                 return False
+ 
+             if not retval:
+-                bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runq_fnid), buildname, item, failures), self.configuration.event_data)
++                bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runq_fnid), buildname, item, failures), self.event_data)
+                 self.command.finishAsyncCommand()
+                 return False
+             if retval is True:
+@@ -1063,7 +1063,7 @@ class BBCooker:
+                 return False
+ 
+             if not retval:
+-                bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runq_fnid), buildname, targets, failures), self.configuration.data)
++                bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runq_fnid), buildname, targets, failures), self.data)
+                 self.command.finishAsyncCommand()
+                 return False
+             if retval is True:
+@@ -1072,10 +1072,10 @@ class BBCooker:
+ 
+         self.buildSetVars()
+ 
+-        buildname = self.configuration.data.getVar("BUILDNAME")
+-        bb.event.fire(bb.event.BuildStarted(buildname, targets), self.configuration.data)
++        buildname = self.data.getVar("BUILDNAME")
++        bb.event.fire(bb.event.BuildStarted(buildname, targets), self.data)
+ 
+-        localdata = data.createCopy(self.configuration.data)
++        localdata = data.createCopy(self.data)
+         bb.data.update_data(localdata)
+         bb.data.expandKeys(localdata)
+ 
+@@ -1087,7 +1087,7 @@ class BBCooker:
+             runlist.append([k, "do_%s" % task])
+         taskdata.add_unresolved(localdata, self.recipecache)
+ 
+-        rq = bb.runqueue.RunQueue(self, self.configuration.data, self.recipecache, taskdata, runlist)
++        rq = bb.runqueue.RunQueue(self, self.data, self.recipecache, taskdata, runlist)
+         if universe:
+             rq.rqdata.warn_multi_bb = True
+ 
+@@ -1123,16 +1123,16 @@ class BBCooker:
+         if self.state != state.parsing:
+             self.parseConfiguration ()
+ 
+-            ignore = self.configuration.data.getVar("ASSUME_PROVIDED", True) or ""
++            ignore = self.data.getVar("ASSUME_PROVIDED", True) or ""
+             self.recipecache.ignored_dependencies = set(ignore.split())
+ 
+             for dep in self.configuration.extra_assume_provided:
+                 self.recipecache.ignored_dependencies.add(dep)
+ 
+             self.collection = CookerCollectFiles(self.recipecache.bbfile_config_priorities)
+-            (filelist, masked) = self.collection.collect_bbfiles(self.configuration.data, self.configuration.event_data)
++            (filelist, masked) = self.collection.collect_bbfiles(self.data, self.event_data)
+ 
+-            self.configuration.data.renameVar("__depends", "__base_depends")
++            self.data.renameVar("__depends", "__base_depends")
+ 
+             self.parser = CookerParser(self, filelist, masked)
+             self.state = state.parsing
+@@ -1177,14 +1177,14 @@ class BBCooker:
+         # necessary from the data store.
+         #bb.utils.empty_environment()
          try:
-             return func(fn, *args)
-         except (IOError, bb.parse.ParseError, bb.data_smart.ExpansionError) as exc:
-+            import traceback
-+            parselog.critical( traceback.format_exc())
-             parselog.critical("Unable to parse %s: %s" % (fn, exc))
-             sys.exit(1)
-     return wrapped
-diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
-index 2826e35..abc3892 100644
---- a/bitbake/lib/bb/event.py
-+++ b/bitbake/lib/bb/event.py
-@@ -33,6 +33,7 @@ import atexit
- import traceback
- import bb.utils
- import bb.compat
-+import bb.exceptions
- 
- # This is the pid for which we should generate the event. This is set when
- # the runqueue forks off.
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 090d1b5..9f92ce6 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -28,10 +28,17 @@ import sys
- import signal
- import stat
- import fcntl
-+import errno
- import logging
- import bb
- from bb import msg, data, event
- from bb import monitordisk
-+import subprocess
-+
-+try:
-+    import cPickle as pickle
-+except ImportError:
-+    import pickle
- 
- bblogger = logging.getLogger("BitBake")
- logger = logging.getLogger("BitBake.RunQueue")
-@@ -938,6 +945,10 @@ class RunQueue:
-             raise
-         except:
-             logger.error("An uncaught exception occured in runqueue, please see the failure below:")
-+            try:
-+                self.rqexe.teardown()
-+            except:
-+                pass
-             self.state = runQueueComplete
-             raise
- 
-@@ -979,38 +990,42 @@ class RunQueueExecute:
-         self.runq_buildable = []
-         self.runq_running = []
-         self.runq_complete = []
--        self.build_pids = {}
--        self.build_pipes = {}
-+
-         self.build_stamps = {}
-         self.failed_fnids = []
- 
-         self.stampcache = {}
- 
--    def runqueue_process_waitpid(self):
--        """
--        Return none is there are no processes awaiting result collection, otherwise
--        collect the process exit codes and close the information pipe.
--        """
--        pid, status = os.waitpid(-1, os.WNOHANG)
--        if pid == 0 or os.WIFSTOPPED(status):
--            return None
--
--        if os.WIFEXITED(status):
--            status = os.WEXITSTATUS(status)
--        elif os.WIFSIGNALED(status):
--            # Per shell conventions for $?, when a process exits due to
--            # a signal, we return an exit code of 128 + SIGNUM
--            status = 128 + os.WTERMSIG(status)
--
--        task = self.build_pids[pid]
--        del self.build_pids[pid]
--
--        self.build_pipes[pid].close()
--        del self.build_pipes[pid]
-+        logger.warn("Starting worker")
-+        self.worker = subprocess.Popen("bitbake-worker", stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-+        bb.utils.nonblockingfd(self.worker.stdout)
-+        self.workerpipe = runQueuePipe(self.worker.stdout, None, self.cfgData, self)
-+
-+        workerdata = {
-+            "taskdeps" : self.rqdata.dataCache.task_deps,
-+            "fakerootenv" : self.rqdata.dataCache.fakerootenv,
-+            "fakerootdirs" : self.rqdata.dataCache.fakerootdirs,
-+            "fakerootnoenv" : self.rqdata.dataCache.fakerootnoenv,
-+            "hashes" : self.rqdata.hashes,
-+            "hash_deps" : self.rqdata.hash_deps,
-+            "sigchecksums" : bb.parse.siggen.file_checksum_values,
-+            "runq_hash" : self.rqdata.runq_hash,
-+            "logdefaultdebug" : bb.msg.loggerDefaultDebugLevel,
-+            "logdefaultverbose" : bb.msg.loggerDefaultVerbose,
-+            "logdefaultverboselogs" : bb.msg.loggerVerboseLogs,
-+            "logdefaultdomain" : bb.msg.loggerDefaultDomains,
-+        }
-+
-+        self.worker.stdin.write("<cookerconfig>" + pickle.dumps(self.cooker.configuration) + "</cookerconfig>")
-+        self.worker.stdin.write("<workerdata>" + pickle.dumps(workerdata) + "</workerdata>")
-+        self.worker.stdin.write("<ping></ping>")
-+        self.worker.stdin.flush()
-+
-+    def runqueue_process_waitpid(self, task, status):
- 
-         # self.build_stamps[pid] may not exist when use shared work directory.
--        if pid in self.build_stamps:
--            del self.build_stamps[pid]
-+        if task in self.build_stamps:
-+            del self.build_stamps[task]
- 
-         if status != 0:
-             self.task_fail(task, status)
-@@ -1019,16 +1034,11 @@ class RunQueueExecute:
-         return True
- 
-     def finish_now(self):
--        if self.stats.active:
--            logger.info("Sending SIGTERM to remaining %s tasks", self.stats.active)
--            for k, v in self.build_pids.iteritems():
--                try:
--                    os.kill(-k, signal.SIGTERM)
--                    os.waitpid(-1, 0)
--                except:
--                    pass
--        for pipe in self.build_pipes:
--            self.build_pipes[pipe].read()
-+
-+        self.worker.stdin.write("<finishnow></finishnow>")
-+        self.worker.stdin.flush()
-+
-+        self.teardown()
- 
-         if len(self.failed_fnids) != 0:
-             self.rq.state = runQueueFailed
-@@ -1040,14 +1050,13 @@ class RunQueueExecute:
-     def finish(self):
-         self.rq.state = runQueueCleanUp
- 
--        for pipe in self.build_pipes:
--            self.build_pipes[pipe].read()
--
-         if self.stats.active > 0:
-             bb.event.fire(runQueueExitWait(self.stats.active), self.cfgData)
--            self.runqueue_process_waitpid()
-+            self.workerpipe.read()
-             return
- 
-+        self.teardown()
-+
-         if len(self.failed_fnids) != 0:
-             self.rq.state = runQueueFailed
-             return
-@@ -1055,115 +1064,6 @@ class RunQueueExecute:
-         self.rq.state = runQueueComplete
+-            prserv.serv.auto_start(self.configuration.data)
++            prserv.serv.auto_start(self.data)
+         except prserv.serv.PRServiceConfigError:
+-            bb.event.fire(CookerExit(), self.configuration.event_data)
++            bb.event.fire(CookerExit(), self.event_data)
          return
  
--    def fork_off_task(self, fn, task, taskname, quieterrors=False):
--        # We need to setup the environment BEFORE the fork, since
--        # a fork() or exec*() activates PSEUDO...
--
--        envbackup = {}
--        fakeenv = {}
--        umask = None
--
--        taskdep = self.rqdata.dataCache.task_deps[fn]
--        if 'umask' in taskdep and taskname in taskdep['umask']:
--            # umask might come in as a number or text string..
--            try:
--                 umask = int(taskdep['umask'][taskname],8)
--            except TypeError:
--                 umask = taskdep['umask'][taskname]
--
--        if 'fakeroot' in taskdep and taskname in taskdep['fakeroot']:
--            envvars = (self.rqdata.dataCache.fakerootenv[fn] or "").split()
--            for key, value in (var.split('=') for var in envvars):
--                envbackup[key] = os.environ.get(key)
--                os.environ[key] = value
--                fakeenv[key] = value
--
--            fakedirs = (self.rqdata.dataCache.fakerootdirs[fn] or "").split()
--            for p in fakedirs:
--                bb.utils.mkdirhier(p)
--
--            logger.debug(2, 'Running %s:%s under fakeroot, fakedirs: %s' %
--                            (fn, taskname, ', '.join(fakedirs)))
--        else:
--            envvars = (self.rqdata.dataCache.fakerootnoenv[fn] or "").split()
--            for key, value in (var.split('=') for var in envvars):
--                envbackup[key] = os.environ.get(key)
--                os.environ[key] = value
--                fakeenv[key] = value
--
--        sys.stdout.flush()
--        sys.stderr.flush()
--        try:
--            pipein, pipeout = os.pipe()
--            pipein = os.fdopen(pipein, 'rb', 4096)
--            pipeout = os.fdopen(pipeout, 'wb', 0)
--            pid = os.fork()
--        except OSError as e:
--            bb.msg.fatal("RunQueue", "fork failed: %d (%s)" % (e.errno, e.strerror))
--
--        if pid == 0:
--            pipein.close()
--
--            # Save out the PID so that the event can include it the
--            # events
--            bb.event.worker_pid = os.getpid()
--            bb.event.worker_pipe = pipeout
--
--            self.rq.state = runQueueChildProcess
--            # Make the child the process group leader
--            os.setpgid(0, 0)
--            # No stdin
--            newsi = os.open(os.devnull, os.O_RDWR)
--            os.dup2(newsi, sys.stdin.fileno())
--
--            if umask:
--                os.umask(umask)
--
--            self.cooker.data.setVar("BB_WORKERCONTEXT", "1")
--            bb.parse.siggen.set_taskdata(self.rqdata.hashes, self.rqdata.hash_deps)
--            ret = 0
--            try:
--                the_data = bb.cache.Cache.loadDataFull(fn, self.cooker.collection.get_file_appends(fn), self.cooker.data)
--                the_data.setVar('BB_TASKHASH', self.rqdata.runq_hash[task])
--                for h in self.rqdata.hashes:
--                    the_data.setVar("BBHASH_%s" % h, self.rqdata.hashes[h])
--                for h in self.rqdata.hash_deps:
--                    the_data.setVar("BBHASHDEPS_%s" % h, self.rqdata.hash_deps[h])
--
--                # exported_vars() returns a generator which *cannot* be passed to os.environ.update() 
--                # successfully. We also need to unset anything from the environment which shouldn't be there 
--                exports = bb.data.exported_vars(the_data)
--                bb.utils.empty_environment()
--                for e, v in exports:
--                    os.environ[e] = v
--                for e in fakeenv:
--                    os.environ[e] = fakeenv[e]
--                    the_data.setVar(e, fakeenv[e])
--                    the_data.setVarFlag(e, 'export', "1")
--
--                if quieterrors:
--                    the_data.setVarFlag(taskname, "quieterrors", "1")
--
--            except Exception as exc:
--                if not quieterrors:
--                    logger.critical(str(exc))
--                os._exit(1)
--            try:
--                if not self.cooker.configuration.dry_run:
--                    profile = self.cooker.configuration.profile
--                    ret = bb.build.exec_task(fn, taskname, the_data, profile)
--                os._exit(ret)
--            except:
--                os._exit(1)
--        else:
--            for key, value in envbackup.iteritems():
--                if value is None:
--                    del os.environ[key]
--                else:
--                    os.environ[key] = value
--
--        return pid, pipein, pipeout
--
-     def check_dependencies(self, task, taskdeps, setscene = False):
-         if not self.rq.depvalidate:
-             return False
-@@ -1184,6 +1084,16 @@ class RunQueueExecute:
+     def post_serve(self):
+-        prserv.serv.auto_shutdown(self.configuration.data)
+-        bb.event.fire(CookerExit(), self.configuration.event_data)
++        prserv.serv.auto_shutdown(self.data)
++        bb.event.fire(CookerExit(), self.event_data)
+ 
+     def shutdown(self):
+         self.state = state.shutdown
+@@ -1490,8 +1490,8 @@ class CookerParser(object):
+     def __init__(self, cooker, filelist, masked):
+         self.filelist = filelist
+         self.cooker = cooker
+-        self.cfgdata = cooker.configuration.data
+-        self.cfghash = cooker.configuration.data_hash
++        self.cfgdata = cooker.data
++        self.cfghash = cooker.data_hash
+ 
+         # Accounting statistics
+         self.parsed = 0
+@@ -1582,8 +1582,8 @@ class CookerParser(object):
+         sync = threading.Thread(target=self.bb_cache.sync)
+         sync.start()
+         multiprocessing.util.Finalize(None, sync.join, exitpriority=-100)
+-        bb.codeparser.parser_cache_savemerge(self.cooker.configuration.data)
+-        bb.fetch.fetcher_parse_done(self.cooker.configuration.data)
++        bb.codeparser.parser_cache_savemerge(self.cooker.data)
++        bb.fetch.fetcher_parse_done(self.cooker.data)
+ 
+     def load_cached(self):
+         for filename, appends in self.fromcache:
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index f1964da..090d1b5 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -957,7 +957,7 @@ class RunQueue:
+         for task in range(len(self.rqdata.runq_fnid)):
+             if self.rqdata.runq_fnid[task] not in done:
+                 fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[task]]
+-                the_data = bb.cache.Cache.loadDataFull(fn, self.cooker.collection.get_file_appends(fn), self.cooker.configuration.data)
++                the_data = bb.cache.Cache.loadDataFull(fn, self.cooker.collection.get_file_appends(fn), self.cooker.data)
+                 done.add(self.rqdata.runq_fnid[task])
+ 
+         bb.parse.siggen.dump_sigs(self.rqdata.dataCache)
+@@ -1119,11 +1119,11 @@ class RunQueueExecute:
+             if umask:
+                 os.umask(umask)
+ 
+-            self.cooker.configuration.data.setVar("BB_WORKERCONTEXT", "1")
++            self.cooker.data.setVar("BB_WORKERCONTEXT", "1")
+             bb.parse.siggen.set_taskdata(self.rqdata.hashes, self.rqdata.hash_deps)
+             ret = 0
+             try:
+-                the_data = bb.cache.Cache.loadDataFull(fn, self.cooker.collection.get_file_appends(fn), self.cooker.configuration.data)
++                the_data = bb.cache.Cache.loadDataFull(fn, self.cooker.collection.get_file_appends(fn), self.cooker.data)
+                 the_data.setVar('BB_TASKHASH', self.rqdata.runq_hash[task])
+                 for h in self.rqdata.hashes:
+                     the_data.setVar("BBHASH_%s" % h, self.rqdata.hashes[h])
+@@ -1180,7 +1180,7 @@ class RunQueueExecute:
+             taskname = self.rqdata.runq_task[depid]
+             taskdata[dep] = [pn, taskname, fn]
+         call = self.rq.depvalidate + "(task, taskdata, notneeded, d)"
+-        locs = { "task" : task, "taskdata" : taskdata, "notneeded" : self.scenequeue_notneeded, "d" : self.cooker.configuration.data }
++        locs = { "task" : task, "taskdata" : taskdata, "notneeded" : self.scenequeue_notneeded, "d" : self.cooker.data }
          valid = bb.utils.better_eval(call, locs)
          return valid
  
-+    def teardown(self):
-+        logger.warn("Teardown called")
-+        self.worker.stdin.write("<quit></quit>")
-+        self.worker.stdin.flush()
-+        while self.worker.returncode is None:
-+            self.workerpipe.read()
-+            self.worker.poll()
-+        while self.workerpipe.read():
-+            continue
-+
- class RunQueueExecuteDummy(RunQueueExecute):
-     def __init__(self, rq):
-         self.rq = rq
-@@ -1275,7 +1185,6 @@ class RunQueueExecuteTasks(RunQueueExecute):
-             bb.fatal("Invalid scheduler '%s'.  Available schedulers: %s" %
-                      (self.scheduler, ", ".join(obj.name for obj in schedulers)))
+@@ -1247,7 +1247,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
  
--
-     def get_schedulers(self):
-         schedulers = set(obj for obj in globals().values()
-                              if type(obj) is type and
-@@ -1349,6 +1258,9 @@ class RunQueueExecuteTasks(RunQueueExecute):
-         Run the tasks in a queue prepared by rqdata.prepare()
-         """
+             call = self.rq.setsceneverify + "(covered, tasknames, fnids, fns, d, invalidtasks=invalidtasks)"
+             call2 = self.rq.setsceneverify + "(covered, tasknames, fnids, fns, d)"
+-            locs = { "covered" : self.rq.scenequeue_covered, "tasknames" : self.rqdata.runq_task, "fnids" : self.rqdata.runq_fnid, "fns" : self.rqdata.taskData.fn_index, "d" : self.cooker.configuration.data, "invalidtasks" : invalidtasks }
++            locs = { "covered" : self.rq.scenequeue_covered, "tasknames" : self.rqdata.runq_task, "fnids" : self.rqdata.runq_fnid, "fns" : self.rqdata.taskData.fn_index, "d" : self.cooker.data, "invalidtasks" : invalidtasks }
+             # Backwards compatibility with older versions without invalidtasks
+             try:
+                 covered_remove = bb.utils.better_eval(call, locs)
+@@ -1607,7 +1607,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                 sq_taskname.append(taskname)
+                 sq_task.append(task)
+             call = self.rq.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, d)"
+-            locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "d" : self.cooker.configuration.data }
++            locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "d" : self.cooker.data }
+             valid = bb.utils.better_eval(call, locs)
  
-+        self.workerpipe.read()
-+        
-+
-         if self.stats.total == 0:
-             # nothing to do
-             self.rq.state = runQueueCleanUp
-@@ -1384,23 +1296,19 @@ class RunQueueExecuteTasks(RunQueueExecute):
-                 startevent = runQueueTaskStarted(task, self.stats, self.rq)
-                 bb.event.fire(startevent, self.cfgData)
- 
--            pid, pipein, pipeout = self.fork_off_task(fn, task, taskname)
-+            self.worker.stdin.write("<runtask>" + pickle.dumps((fn, task, taskname, False, self.cooker.collection.get_file_appends(fn))) + "</runtask>")
- 
--            self.build_pids[pid] = task
--            self.build_pipes[pid] = runQueuePipe(pipein, pipeout, self.cfgData)
--            self.build_stamps[pid] = bb.build.stampfile(taskname, self.rqdata.dataCache, fn)
-+            self.build_stamps[task] = bb.build.stampfile(taskname, self.rqdata.dataCache, fn)
-             self.runq_running[task] = 1
-             self.stats.taskActive()
-             if self.stats.active < self.number_tasks:
-                 return True
- 
--        for pipe in self.build_pipes:
--            self.build_pipes[pipe].read()
--
-         if self.stats.active > 0:
--            if self.runqueue_process_waitpid() is None:
--                return 0.5
--            return True
-+            self.workerpipe.read()
-+            return 0.5
-+
-+        self.teardown()
- 
-         if len(self.failed_fnids) != 0:
-             self.rq.state = runQueueFailed
-@@ -1415,6 +1323,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
-             if self.runq_complete[task] == 0:
-                 logger.error("Task %s never completed!", task)
-         self.rq.state = runQueueComplete
-+
-         return True
- 
- class RunQueueExecuteScenequeue(RunQueueExecute):
-@@ -1428,6 +1337,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-         # If we don't have any setscene functions, skip this step
-         if len(self.rqdata.runq_setscene) == 0:
-             rq.scenequeue_covered = set()
-+            self.teardown()
-             rq.state = runQueueRunInit
-             return
- 
-@@ -1676,6 +1586,8 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-         Run the tasks in a queue prepared by prepare_runqueue
-         """
- 
-+        self.workerpipe.read()
-+
-         task = None
-         if self.stats.active < self.number_tasks:
-             # Find the next setscene to run
-@@ -1716,22 +1628,16 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-             startevent = sceneQueueTaskStarted(task, self.stats, self.rq)
-             bb.event.fire(startevent, self.cfgData)
- 
--            pid, pipein, pipeout = self.fork_off_task(fn, realtask, taskname)
-+            self.worker.stdin.write("<runtask>" + pickle.dumps((fn, realtask, taskname, True, self.cooker.collection.get_file_appends(fn))) + "</runtask>")
- 
--            self.build_pids[pid] = task
--            self.build_pipes[pid] = runQueuePipe(pipein, pipeout, self.cfgData)
-             self.runq_running[task] = 1
-             self.stats.taskActive()
-             if self.stats.active < self.number_tasks:
-                 return True
- 
--        for pipe in self.build_pipes:
--            self.build_pipes[pipe].read()
--
-         if self.stats.active > 0:
--            if self.runqueue_process_waitpid() is None:
--                return 0.5
--            return True
-+            self.workerpipe.read()
-+            return 0.5
- 
-         # Convert scenequeue_covered task numbers into full taskgraph ids
-         oldcovered = self.scenequeue_covered
-@@ -1745,11 +1651,9 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-         logger.debug(1, 'We can skip tasks %s', sorted(self.rq.scenequeue_covered))
- 
-         self.rq.state = runQueueRunInit
-+        self.teardown()
-         return True
- 
--    def fork_off_task(self, fn, task, taskname):
--        return RunQueueExecute.fork_off_task(self, fn, task, taskname, quieterrors=True)
--
- class TaskFailure(Exception):
-     """
-     Exception raised when a task in a runqueue fails
-@@ -1828,25 +1732,42 @@ class runQueuePipe():
-     """
-     Abstraction for a pipe between a worker thread and the server
-     """
--    def __init__(self, pipein, pipeout, d):
-+    def __init__(self, pipein, pipeout, d, rq):
-         self.input = pipein
--        pipeout.close()
-+        if pipeout:
-+            pipeout.close()
-         bb.utils.nonblockingfd(self.input)
-         self.queue = ""
-         self.d = d
-+        self.rq = rq
-+
-+    def setrunqueue(self, rq):
-+        self.rq = rq
- 
-     def read(self):
-         start = len(self.queue)
-         try:
-             self.queue = self.queue + self.input.read(102400)
--        except (OSError, IOError):
--            pass
-+        except (OSError, IOError) as e:
-+            if e.errno != errno.EAGAIN:
-+                raise
-         end = len(self.queue)
--        index = self.queue.find("</event>")
--        while index != -1:
--            bb.event.fire_from_worker(self.queue[:index+8], self.d)
--            self.queue = self.queue[index+8:]
-+        found = True
-+        while found and len(self.queue):
-+            found = False
-             index = self.queue.find("</event>")
-+            while index != -1 and self.queue.startswith("<event>"):
-+                bb.event.fire_from_worker(self.queue[:index+8], self.d)
-+                found = True
-+                self.queue = self.queue[index+8:]
-+                index = self.queue.find("</event>")
-+            index = self.queue.find("</exitcode>")
-+            while index != -1 and self.queue.startswith("<exitcode>"):
-+                task, status = pickle.loads(self.queue[10:index])
-+                self.rq.runqueue_process_waitpid(task, status)
-+                found = True
-+                self.queue = self.queue[index+11:]
-+                index = self.queue.find("</exitcode>")
-         return (end > start)
- 
-     def close(self):
-diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
-index 1ff2ecc..fb8b678 100644
---- a/bitbake/lib/bb/siggen.py
-+++ b/bitbake/lib/bb/siggen.py
-@@ -201,9 +201,10 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         #d.setVar("BB_TASKHASH_task-%s" % task, taskhash[task])
-         return h
- 
--    def set_taskdata(self, hashes, deps):
-+    def set_taskdata(self, hashes, deps, checksums):
-         self.runtaskdeps = deps
-         self.taskhash = hashes
-+        self.file_checksum_values = checksums
- 
-     def dump_sigtask(self, fn, task, stampbase, runtime):
-         k = fn + "." + task
+             valid_new = stamppresent
 
 
 
