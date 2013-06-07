@@ -1,25 +1,30 @@
-Return-Path: <ddalex@intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 34DAD6A8EB
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 2019D6A8B4
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  7 Jun 2013 16:03:12 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 07 Jun 2013 09:03:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.87,822,1363158000"; d="scan'208";a="349756464"
-Received: from adamian-desktop.isw.intel.com (HELO
-	adamian-desktop.rb.intel.com) ([10.237.224.34])
-	by fmsmga002.fm.intel.com with ESMTP; 07 Jun 2013 09:03:05 -0700
-Received: by adamian-desktop.rb.intel.com (Postfix, from userid 1000)
-	id DD7F556075C; Fri,  7 Jun 2013 17:03:07 +0100 (BST)
-From: Alex DAMIAN <alexandru.damian@intel.com>
-To: richard.purdie@linuxfoundation.org,
-	bitbake-devel@lists.openembedded.org
-Date: Fri,  7 Jun 2013 17:03:06 +0100
-Message-Id: <1370620986-23507-1-git-send-email-alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.8.1.2
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH] xmlrpc: removes the event servers controller
+	Fri,  7 Jun 2013 17:10:48 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r57HFsLv001873 for <bitbake-devel@lists.openembedded.org>;
+	Fri, 7 Jun 2013 18:15:54 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id vmX2kQaRQNDa for <bitbake-devel@lists.openembedded.org>;
+	Fri,  7 Jun 2013 18:15:54 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r57HFoZ0001869
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
+	Fri, 7 Jun 2013 18:15:52 +0100
+Message-ID: <1370625036.6864.50.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Fri, 07 Jun 2013 18:10:36 +0100
+X-Mailer: Evolution 3.6.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] fetch2: Fix AUTOINC handling
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,106 +36,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 07 Jun 2013 16:03:12 -0000
+X-List-Received-Date: Fri, 07 Jun 2013 17:10:50 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+AUTOINC was meant to appear once at the start of the version string.
+The list of names may not be sorted meaning it could get inserted in
+the middle. This patch simplifies the code and ensures it appears at
+the start.
 
-XMLRPC API ran a XMLRPC server at port+2 in order
-to provide endpoints to register an event server
-in which to dump the events.
+Include cache version bump to ensure the cache picks up these changes.
 
-This is no longer used, so we remove it.
-
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/server/xmlrpc.py | 59 -------------------------------------------------
- 1 file changed, 59 deletions(-)
+diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
+index eee83b7..fb0f40c 100644
+--- a/bitbake/lib/bb/cache.py
++++ b/bitbake/lib/bb/cache.py
+@@ -43,7 +43,7 @@ except ImportError:
+     logger.info("Importing cPickle failed. "
+                 "Falling back to a very slow implementation.")
+ 
+-__cache_version__ = "145"
++__cache_version__ = "146"
+ 
+ def getCacheFile(path, filename, data_hash):
+     return os.path.join(path, filename + "." + data_hash)
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 1988dc7..1365335 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -638,12 +638,12 @@ def get_srcrev(d):
+         ud = urldata[scm]
+         for name in ud.names:
+             autoinc, rev = ud.method.sortable_revision(scm, ud, d, name)
++            seenautoinc = seenautoinc or autoinc
+             if len(rev) > 10:
+                 rev = rev[:10]
+-            if autoinc and not seenautoinc:
+-                rev = "AUTOINC+" + rev
+-                seenautoinc = True
+             format = format.replace(name, rev)
++    if seenautoinc:
++       format = "AUTOINC+" + format
+ 
+     return format
+ 
 
-diff --git a/lib/bb/server/xmlrpc.py b/lib/bb/server/xmlrpc.py
-index 1b3502e..44cea10 100644
---- a/lib/bb/server/xmlrpc.py
-+++ b/lib/bb/server/xmlrpc.py
-@@ -272,59 +272,6 @@ class BitBakeUIEventServer(threading.Thread):
-             if evt:
-                 self.connection.event.sendpickle(pickle.dumps(evt))
- 
--class BitBakeXMLRPCEventServerController(SimpleXMLRPCServer, threading.Thread):
--    def __init__(self, interface):
--        SimpleXMLRPCServer.__init__(self, interface, logRequests=False, allow_none=True)
--        threading.Thread.__init__(self)
--        self.register_function(self.registerEventHandler, "registerEventHandler")
--        self.register_function(self.unregisterEventHandler, "unregisterEventHandler")
--        self.register_function(self.terminateServer, "terminateServer")
--        #self.register_function(self.runCommand, "runCommand")
--        self.quit = False
--        self.clients = {}
--        self.client_ui_ids = {}
--        self.timeout = 1    # timeout for .handle_request()
--
--    def registerEventHandler(self, host, port):
--        """
--        Register a remote UI Event Handler
--        """
--        connection = xmlrpclib.ServerProxy("http://%s:%d/" % (host, port), allow_none=True)
--        client_hash = "%s:%d" % (host, port)
--        if self.clients.has_key(client_hash):
--            return None
--        client_ui_server = BitBakeUIEventServer(connection)
--        self.client_ui_ids[client_hash] = bb.event.register_UIHhandler(client_ui_server)
--        client_ui_server.start()
--        self.clients[client_hash] = client_ui_server
--        return client_hash
--
--    def unregisterEventHandler(self, client_hash):
--        """
--        Unregister a remote UI Event Handler
--        """
--        client_thread = self.clients[client_hash]
--        if client_thread:
--            bb.event.unregister_UIHhandler(self.clients_ui_ids[client_hash])
--            client_thread.terminateServer()
--            client_thread.join()
--            return True
--        else:
--            return False
--
--    def terminateServer(self):
--        self.quit = True
--
--    def runCommand(self, cmd):
--        return None
--
--    def run(self):
--        self.serve_forever()
--
--    def serve_forever(self):
--        while not self.quit:
--            self.handle_request()
--        self.server_close()
- 
- class XMLRPCProxyServer(BaseImplServer):
-     """ not a real working server, but a stub for a proxy server connection
-@@ -369,9 +316,6 @@ class XMLRPCServer(SimpleXMLRPCServer, BaseImplServer):
- 
- 
-     def serve_forever(self):
--        # Create and run the event server controller in a separate thread
--        self.event_controller_thread = BitBakeXMLRPCEventServerController((self.host, self.port + 2))
--        self.event_controller_thread.start()
-         # Start the actual XMLRPC server
-         bb.cooker.server_main(self.cooker, self._serve_forever)
- 
-@@ -414,9 +358,6 @@ class XMLRPCServer(SimpleXMLRPCServer, BaseImplServer):
-                 retval = function(self, data, True)
-             except:
-                 pass
--        # Terminate the event server
--        self.event_controller_thread.terminateServer()
--        self.event_controller_thread.join()
-         self.server_close()
-         return
- 
--- 
-1.8.1.2
 
 
