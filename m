@@ -1,30 +1,20 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 608486A88F
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id F25CB621CA
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  7 Jun 2013 17:15:00 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r57HK5ir002166 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 7 Jun 2013 18:20:05 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id dqnoPy1flnpT for <bitbake-devel@lists.openembedded.org>;
-	Fri,  7 Jun 2013 18:20:05 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r57HK16D002144
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
-	Fri, 7 Jun 2013 18:20:02 +0100
-Message-ID: <1370625286.6864.57.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Fri, 07 Jun 2013 18:14:46 +0100
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] bitbake: Bump minimum python version to 2.7.3
+	Sun,  9 Jun 2013 10:15:36 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga101.jf.intel.com with ESMTP; 09 Jun 2013 03:15:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.87,831,1363158000"; d="scan'208";a="347086930"
+Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.121.244])
+	by fmsmga001.fm.intel.com with ESMTP; 09 Jun 2013 03:16:02 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Sun,  9 Jun 2013 11:15:34 +0100
+Message-Id: <1370772935-12586-1-git-send-email-paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.8.1.2
+Subject: [PATCH 1/2] tinfoil: fix for move of data attribute to cooker
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,27 +26,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 07 Jun 2013 17:15:00 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sun, 09 Jun 2013 10:15:37 -0000
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
-diff --git a/bitbake/lib/bb/__init__.py b/bitbake/lib/bb/__init__.py
-index 3110c85..64491ff 100644
---- a/bitbake/lib/bb/__init__.py
-+++ b/bitbake/lib/bb/__init__.py
-@@ -24,8 +24,8 @@
- __version__ = "1.19.1"
- 
- import sys
--if sys.version_info < (2, 6, 0):
--    raise RuntimeError("Sorry, python 2.6.0 or later is required for this version of bitbake")
-+if sys.version_info < (2, 7, 3):
-+    raise RuntimeError("Sorry, python 2.7.3 or later is required for this version of bitbake")
- 
- 
- class BBHandledException(Exception):
+ lib/bb/tinfoil.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
+index 45bac5e..751a2d7 100644
+--- a/lib/bb/tinfoil.py
++++ b/lib/bb/tinfoil.py
+@@ -49,7 +49,7 @@ class Tinfoil:
+         self.config.setConfigParameters(configparams)
+         self.config.setServerRegIdleCallback(self.register_idle_function)
+         self.cooker = BBCooker(self.config)
+-        self.config_data = self.cooker.configuration.data
++        self.config_data = self.cooker.data
+         bb.providers.logger.setLevel(logging.ERROR)
+         self.cooker_data = None
+ 
+-- 
+1.8.1.2
 
 
