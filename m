@@ -1,27 +1,41 @@
-Return-Path: <ddalex@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
-	by mail.openembedded.org (Postfix) with ESMTP id AECC362195
+Return-Path: <alex.r.damian@gmail.com>
+Received: from mail-ea0-f195.google.com (mail-ea0-f195.google.com
+	[209.85.215.195])
+	by mail.openembedded.org (Postfix) with ESMTP id 56E646A5AF
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 13 Jun 2013 15:23:58 +0000 (UTC)
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 13 Jun 2013 08:23:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.87,859,1363158000"; d="scan'208";a="254566652"
-Received: from adamian-desktop.isw.intel.com (HELO
-	adamian-desktop.rb.intel.com) ([10.237.224.34])
-	by AZSMGA002.ch.intel.com with ESMTP; 13 Jun 2013 08:23:37 -0700
-Received: by adamian-desktop.rb.intel.com (Postfix, from userid 1000)
-	id 6C7435605D5; Thu, 13 Jun 2013 16:23:37 +0100 (BST)
-From: Alex DAMIAN <alexandru.damian@intel.com>
-To: bitbake-devel@lists.openembedded.org,
-	richard.purdie@linuxfoundation.org
-Date: Thu, 13 Jun 2013 16:23:35 +0100
-Message-Id: <1371137015-4416-2-git-send-email-alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.8.1.2
-In-Reply-To: <1371137015-4416-1-git-send-email-alexandru.damian@intel.com>
-References: <1371137015-4416-1-git-send-email-alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 2/2] bitbake: read BBSERVER environement for remote server
+	Thu, 13 Jun 2013 15:48:42 +0000 (UTC)
+Received: by mail-ea0-f195.google.com with SMTP id m14so3642332eaj.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 13 Jun 2013 08:48:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=message-id:date:from:user-agent:mime-version:to:subject:references
+	:in-reply-to:content-type:content-transfer-encoding;
+	bh=Oixw6+QWP3/v4W19Q1DzUH22Wv4LJkNqqcer36atAD0=;
+	b=r2pB2yPjh52q0TPy/2FKgZ1ufb6apuQXtwktSI2vp9HLVcnvJbB36DWnb1ohTGpGSB
+	I1dKMxkF3+gVhHV/L3dIjW+26+nmEZp+EXV4Z3wt637eJZLIhEYNLaepuixSUoAQbpaJ
+	rrcd5NoqutkAw+FOw0Rp5VpvKEtnW76f4r5qZowCBjiX327bAWueSDyYKf7sLb600w4K
+	2tfWdiOF3xWgf+VtlR83QpLLf7Cwk8HzpUIhAsUXWhx7+++IENXUIUDA2kR3CM3saK44
+	e6apTlBP7JFGVh4OgcvEwwDCfbHI+3sborW+Vl3KeUAT5J4Hpgf/v5PsPKApSwrEGnpq
+	88zA==
+X-Received: by 10.14.172.194 with SMTP id t42mr1918181eel.78.1371138522842;
+	Thu, 13 Jun 2013 08:48:42 -0700 (PDT)
+Received: from [192.198.151.36] (irdmzpr01-ext.ir.intel.com. [192.198.151.36])
+	by mx.google.com with ESMTPSA id
+	c5sm44586442eeu.8.2013.06.13.08.48.41
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Thu, 13 Jun 2013 08:48:42 -0700 (PDT)
+Message-ID: <51B9E9D8.1030608@gmail.com>
+Date: Thu, 13 Jun 2013 16:48:40 +0100
+From: Alex Damian <alex.r.damian@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:17.0) Gecko/20130510 Thunderbird/17.0.6
+MIME-Version: 1.0
+To: bitbake-devel@lists.openembedded.org
+References: <1371049906-17370-1-git-send-email-calinx.l.dragomir@intel.com>
+	<1371049906-17370-3-git-send-email-calinx.l.dragomir@intel.com>
+In-Reply-To: <1371049906-17370-3-git-send-email-calinx.l.dragomir@intel.com>
+Subject: Re: [PATCH 3/3] Create Data Store Interface (DSI) file
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,47 +47,650 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 13 Jun 2013 15:23:58 -0000
+X-List-Received-Date: Thu, 13 Jun 2013 15:48:43 -0000
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+Comments below.
 
-This change allows bitbake to connect to a remote server
-by reading the BBSERVER environment variable and effecting
-the config. Basically a shortcut to the command line parameters.
+Cheers,
+Alex
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
----
- bin/bitbake | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 06/12/2013 04:11 PM, Calin Dragomir wrote:
+> This adds the first version of the DSI file. It uses the Knotty
+> code for now, but inserts task related information into the database
+> using the Django ORM
+> ---
+>   bitbake/lib/bb/ui/dsi.py | 609 +++++++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 609 insertions(+)
+>   create mode 100644 bitbake/lib/bb/ui/dsi.py
+>
+> diff --git a/bitbake/lib/bb/ui/dsi.py b/bitbake/lib/bb/ui/dsi.py
+> new file mode 100644
+> index 0000000..4bcd509
+> --- /dev/null
+> +++ b/bitbake/lib/bb/ui/dsi.py
+> @@ -0,0 +1,609 @@
+> +#
+> +# BitBake (No)TTY UI Implementation
+> +#
+> +# Handling output to TTYs or files (no TTY)
+> +#
+Please update file description and copyright.
+> +# Copyright (C) 2006-2012 Richard Purdie
+> +#
+> +# This program is free software; you can redistribute it and/or modify
+> +# it under the terms of the GNU General Public License version 2 as
+> +# published by the Free Software Foundation.
+> +#
+> +# This program is distributed in the hope that it will be useful,
+> +# but WITHOUT ANY WARRANTY; without even the implied warranty of
+> +# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> +# GNU General Public License for more details.
+> +#
+> +# You should have received a copy of the GNU General Public License along
+> +# with this program; if not, write to the Free Software Foundation, Inc.,
+> +# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+> +
+> +from __future__ import division
+> +
+> +import os
+> +import sys
+> +import xmlrpclib
+> +import logging
+> +import progressbar
+> +import signal
+> +import bb.msg
+> +import time
+> +import fcntl
+> +import struct
+> +import copy
+> +import datetime
+> +
+> +from bb.ui import uihelper
+> +
+> +logger = logging.getLogger("BitBake")
+> +interactive = sys.stdout.isatty()
+> +
+> +class WebHOBHelper(object):
+> +
+> +    def __init__(self):
+> +        self.configure_django()
+> +        self.task_order = 0
+> +        self.tasks_information = {}
+> +
+> +    def configure_django(self):
+> +        import webhob.whbmain.settings as whb_django_settings
+> +        from django.core.management import setup_environ
+> +        setup_environ(whb_django_settings)
+> +        # Add webhob to sys path for importing modules
+> +        sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'webhob'))
+> +
+> +    def store_started_task(self, event, uuid):
+> +        self.task_order += 1
+> +        self.tasks_information[event.pid] = {
+> +                'uuid': uuid,
+> +                'task_id': 1,
+> +                'task_executed': True,
+> +                'order': self.task_order,
+> +                'recipe': event._package,
+> +                'task_name': event._task,
+> +                'start_time': time.time(),
+> +                }
+> +
+> +    def update_stored_tasks(self, event, uuid):
+> +        self.tasks_information[event.pid].update({
+> +                'outcome': event.getDisplayName().lower(),
+> +                'end_time': time.time(),
+> +                })
+> +
+> +    def write_in_database(self, tasks_information):
+> +        # This needs to be imported after we have configured the Django settings file
+> +        from webhob.orm.models import Tasks
+> +        for pid in tasks_information.keys():
+> +            task = tasks_information[pid]
+I'm not sure that there is any guarantee that any PID refers to a single 
+task.
+Primary lookup key for tasks should be task-name & task-recipe combination.
 
-diff --git a/bin/bitbake b/bin/bitbake
-index e924eec..1c2214d 100755
---- a/bin/bitbake
-+++ b/bin/bitbake
-@@ -204,6 +204,12 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
-                    action = "store_true", dest = "observe_only", default = False)
- 
-         options, targets = parser.parse_args(sys.argv)
-+
-+        # some environmental variables set also configuration options
-+        if "BBSERVER" in os.environ:
-+            options.servertype = "xmlrpc"
-+            options.remote_server = os.environ["BBSERVER"]
-+
-         return options, targets[1:]
- 
- 
-@@ -268,6 +274,9 @@ def main():
-             sys.exit("FATAL: If '--server-only' is defined, we must set the servertype as 'xmlrpc'.\n")
-         if not configParams.bind:
-             sys.exit("FATAL: The '--server-only' option requires a name/address to bind to with the -B option.\n")
-+        if configParams.remote_server:
-+            sys.exit("FATAL: The '--server-only' option conflicts with the '--remote-server' option. %s\n" % 
-+                ("Please check your BBSERVER environment" if "BBSERVER" in os.environ else "" ))
- 
-     if configParams.bind and configParams.servertype != "xmlrpc":
-         sys.exit("FATAL: If '-B' or '--bind' is defined, we must set the servertype as 'xmlrpc'.\n")
--- 
-1.8.1.2
+> +
+> +            task_obj = Tasks.objects.create(uuid=task['uuid'],
+> +                                            order=task['order'],
+> +                                            outcome=task['outcome'],
+> +                                            recipe=task['recipe'],
+> +                                            task_name=task['task_name'],
+> +                                            elapsed_time=task['end_time'] - task['start_time'],
+> +                                            # The next lines are just for testing reasons
+> +                                            task_id=1,
+> +                                            path_to_sstate_obj='/home/calin',
+> +                                            source_url='/',
+> +                                            log_file='/',
+> +                                            work_directory='/',
+> +                                            script_type='python',
+> +                                            file_path='/',
+> +                                            line_number=55,
+> +                                            py_stack_trace='Testing traceback',
+> +                                            disk_io = 23.55633,
+> +                                            cpu_usage=43,
+> +                                            dependent_tasks='Task 1',
+> +                                            errors_no=0,
+> +                                            warnings_no=0,
+> +                                            error='None',
+> +                                            warning='None',
+> +                                            sstate_result='not_applicable')
+> +            task_obj.save()
+> +
+> +class BBProgress(progressbar.ProgressBar):
+> +    def __init__(self, msg, maxval):
+> +        self.msg = msg
+> +        widgets = [progressbar.Percentage(), ' ', progressbar.Bar(), ' ',
+> +           progressbar.ETA()]
+> +
+> +        try:
+> +            self._resize_default = signal.getsignal(signal.SIGWINCH)
+> +        except:
+> +            self._resize_default = None
+> +        progressbar.ProgressBar.__init__(self, maxval, [self.msg + ": "] + widgets)
+> +
+> +    def _handle_resize(self, signum, frame):
+> +        progressbar.ProgressBar._handle_resize(self, signum, frame)
+> +        if self._resize_default:
+> +            self._resize_default(signum, frame)
+> +    def finish(self):
+> +        progressbar.ProgressBar.finish(self)
+> +        if self._resize_default:
+> +            signal.signal(signal.SIGWINCH, self._resize_default)
+> +
+> +class NonInteractiveProgress(object):
+> +    fobj = sys.stdout
+> +
+> +    def __init__(self, msg, maxval):
+> +        self.msg = msg
+> +        self.maxval = maxval
+> +
+> +    def start(self):
+> +        self.fobj.write("%s..." % self.msg)
+> +        self.fobj.flush()
+> +        return self
+> +
+> +    def update(self, value):
+> +        pass
+> +
+> +    def finish(self):
+> +        self.fobj.write("done.\n")
+> +        self.fobj.flush()
+> +
+> +def new_progress(msg, maxval):
+> +    if interactive:
+> +        return BBProgress(msg, maxval)
+> +    else:
+> +        return NonInteractiveProgress(msg, maxval)
+> +
+> +def pluralise(singular, plural, qty):
+> +    if(qty == 1):
+> +        return singular % qty
+> +    else:
+> +        return plural % qty
+> +
+> +
+> +class InteractConsoleLogFilter(logging.Filter):
+> +    def __init__(self, tf, format):
+> +        self.tf = tf
+> +        self.format = format
+> +
+> +    def filter(self, record):
+> +        if record.levelno == self.format.NOTE and (record.msg.startswith("Running") or record.msg.startswith("recipe ")):
+> +            return False
+> +        self.tf.clearFooter()
+> +        return True
+> +
+> +class TerminalFilter(object):
+> +    columns = 80
+> +
+> +    def sigwinch_handle(self, signum, frame):
+> +        self.columns = self.getTerminalColumns()
+> +        if self._sigwinch_default:
+> +            self._sigwinch_default(signum, frame)
+> +
+> +    def getTerminalColumns(self):
+> +        def ioctl_GWINSZ(fd):
+> +            try:
+> +                cr = struct.unpack('hh', fcntl.ioctl(fd, self.termios.TIOCGWINSZ, '1234'))
+> +            except:
+> +                return None
+> +            return cr
+> +        cr = ioctl_GWINSZ(sys.stdout.fileno())
+> +        if not cr:
+> +            try:
+> +                fd = os.open(os.ctermid(), os.O_RDONLY)
+> +                cr = ioctl_GWINSZ(fd)
+> +                os.close(fd)
+> +            except:
+> +                pass
+> +        if not cr:
+> +            try:
+> +                cr = (env['LINES'], env['COLUMNS'])
+> +            except:
+> +                cr = (25, 80)
+> +        return cr[1]
+> +
+> +    def __init__(self, main, helper, console, format):
+> +        self.main = main
+> +        self.helper = helper
+> +        self.cuu = None
+> +        self.stdinbackup = None
+> +        self.interactive = sys.stdout.isatty()
+> +        self.footer_present = False
+> +        self.lastpids = []
+> +
+> +        if not self.interactive:
+> +            return
+> +
+> +        try:
+> +            import curses
+> +        except ImportError:
+> +            sys.exit("FATAL: The knotty ui could not load the required curses python module.")
+> +
+> +        import termios
+> +        self.curses = curses
+> +        self.termios = termios
+> +        try:
+> +            fd = sys.stdin.fileno()
+> +            self.stdinbackup = termios.tcgetattr(fd)
+> +            new = copy.deepcopy(self.stdinbackup)
+> +            new[3] = new[3] & ~termios.ECHO
+> +            termios.tcsetattr(fd, termios.TCSADRAIN, new)
+> +            curses.setupterm()
+> +            if curses.tigetnum("colors") > 2:
+> +                format.enable_color()
+> +            self.ed = curses.tigetstr("ed")
+> +            if self.ed:
+> +                self.cuu = curses.tigetstr("cuu")
+> +            try:
+> +                self._sigwinch_default = signal.getsignal(signal.SIGWINCH)
+> +                signal.signal(signal.SIGWINCH, self.sigwinch_handle)
+> +            except:
+> +                pass
+> +            self.columns = self.getTerminalColumns()
+> +        except:
+> +            self.cuu = None
+> +        console.addFilter(InteractConsoleLogFilter(self, format))
+> +
+> +    def clearFooter(self):
+> +        if self.footer_present:
+> +            lines = self.footer_present
+> +            sys.stdout.write(self.curses.tparm(self.cuu, lines))
+> +            sys.stdout.write(self.curses.tparm(self.ed))
+> +        self.footer_present = False
+> +
+> +    def updateFooter(self):
+> +        if not self.cuu:
+> +            return
+> +        activetasks = self.helper.running_tasks
+> +        failedtasks = self.helper.failed_tasks
+> +        runningpids = self.helper.running_pids
+> +        if self.footer_present and (self.lastcount == self.helper.tasknumber_current) and (self.lastpids == runningpids):
+> +            return
+> +        if self.footer_present:
+> +            self.clearFooter()
+> +        if (not self.helper.tasknumber_total or self.helper.tasknumber_current == self.helper.tasknumber_total) and not len(activetasks):
+> +            return
+> +        tasks = []
+> +        for t in runningpids:
+> +            tasks.append("%s (pid %s)" % (activetasks[t]["title"], t))
+> +
+> +        if self.main.shutdown:
+> +            content = "Waiting for %s running tasks to finish:" % len(activetasks)
+> +        elif not len(activetasks):
+> +            content = "No currently running tasks (%s of %s)" % (self.helper.tasknumber_current, self.helper.tasknumber_total)
+> +        else:
+> +            content = "Currently %s running tasks (%s of %s):" % (len(activetasks), self.helper.tasknumber_current, self.helper.tasknumber_total)
+> +        print(content)
+> +        lines = 1 + int(len(content) / (self.columns + 1))
+> +        for tasknum, task in enumerate(tasks):
+> +            content = "%s: %s" % (tasknum, task)
+> +            print(content)
+> +            lines = lines + 1 + int(len(content) / (self.columns + 1))
+> +        self.footer_present = lines
+> +        self.lastpids = runningpids[:]
+> +        self.lastcount = self.helper.tasknumber_current
+> +
+> +    def finish(self):
+> +        if self.stdinbackup:
+> +            fd = sys.stdin.fileno()
+> +            self.termios.tcsetattr(fd, self.termios.TCSADRAIN, self.stdinbackup)
+> +
+> +def main(server, eventHandler, params, tf = TerminalFilter):
+> +    print "This is running in DSI mode"
+> +
+> +    # Generate an unique ID for this build
+> +    # TODO: for multiple build commands this might not work as expected
+> +    import uuid
+> +    uuid = sessionid = str(uuid.uuid4())
+> +
+> +    # Get values of variables which control our output
+> +    includelogs, error = server.runCommand(["getVariable", "BBINCLUDELOGS"])
+> +    if error:
+> +        logger.error("Unable to get the value of BBINCLUDELOGS variable: %s" % error)
+> +        return 1
+> +    loglines, error = server.runCommand(["getVariable", "BBINCLUDELOGS_LINES"])
+> +    if error:
+> +        logger.error("Unable to get the value of BBINCLUDELOGS_LINES variable: %s" % error)
+> +        return 1
+> +    consolelogfile, error = server.runCommand(["getVariable", "BB_CONSOLELOG"])
+> +    if error:
+> +        logger.error("Unable to get the value of BB_CONSOLELOG variable: %s" % error)
+> +        return 1
+> +
+> +    if sys.stdin.isatty() and sys.stdout.isatty():
+> +        log_exec_tty = True
+> +    else:
+> +        log_exec_tty = False
+> +
+> +    helper = uihelper.BBUIHelper()
+> +
+> +    console = logging.StreamHandler(sys.stdout)
+> +    format_str = "%(levelname)s: %(message)s"
+> +    format = bb.msg.BBLogFormatter(format_str)
+> +    bb.msg.addDefaultlogFilter(console)
+> +    console.setFormatter(format)
+> +    logger.addHandler(console)
+> +
+> +    if consolelogfile and not params.options.show_environment:
+> +        bb.utils.mkdirhier(os.path.dirname(consolelogfile))
+> +        conlogformat = bb.msg.BBLogFormatter(format_str)
+> +        consolelog = logging.FileHandler(consolelogfile)
+> +        bb.msg.addDefaultlogFilter(consolelog)
+> +        consolelog.setFormatter(conlogformat)
+> +        logger.addHandler(consolelog)
+> +
+> +    try:
+> +        params.updateFromServer(server)
+> +        cmdline = params.parseActions()
+> +        if not cmdline:
+> +            print("Nothing to do.  Use 'bitbake world' to build everything, or run 'bitbake --help' for usage information.")
+> +            return 1
+> +        if 'msg' in cmdline and cmdline['msg']:
+> +            logger.error(cmdline['msg'])
+> +            return 1
+> +
+> +        ret, error = server.runCommand(cmdline['action'])
+> +        if error:
+> +            logger.error("Command '%s' failed: %s" % (cmdline, error))
+> +            return 1
+> +        elif ret != True:
+> +            logger.error("Command '%s' failed: returned %s" % (cmdline, ret))
+> +            return 1
+> +    except xmlrpclib.Fault as x:
+> +        logger.error("XMLRPC Fault getting commandline:\n %s" % x)
+> +        return 1
+> +
+> +    parseprogress = None
+> +    cacheprogress = None
+> +    main.shutdown = 0
+> +    interrupted = False
+> +    return_value = 0
+> +    errors = 0
+> +    warnings = 0
+> +    taskfailures = []
+> +    wbhbhelper = WebHOBHelper()
+> +
+> +    termfilter = tf(main, helper, console, format)
+> +
+> +    while True:
+> +        try:
+> +            termfilter.updateFooter()
+> +            event = eventHandler.waitEvent(0.25)
+> +
+> +            if event is None:
+> +                if main.shutdown > 1:
+> +                    break
+> +                continue
+> +
+> +            helper.eventHandler(event)
+> +
+> +            if isinstance(event, bb.runqueue.runQueueExitWait):
+> +                if not main.shutdown:
+> +                    main.shutdown = 1
+> +
+> +            if isinstance(event, bb.build.TaskStarted):
+> +                wbhbhelper.store_started_task(event, uuid)
+> +
+> +            if isinstance(event, (bb.build.TaskSucceeded, bb.build.TaskFailedSilent, bb.build.TaskFailed)):
+> +                wbhbhelper.update_stored_tasks(event, uuid)
+> +
+> +            if isinstance(event, bb.event.LogExecTTY):
+> +                if log_exec_tty:
+> +                    tries = event.retries
+> +                    while tries:
+> +                        print("Trying to run: %s" % event.prog)
+> +                        if os.system(event.prog) == 0:
+> +                            break
+> +                        time.sleep(event.sleep_delay)
+> +                        tries -= 1
+> +                    if tries:
+> +                        continue
+> +                logger.warn(event.msg)
+> +                continue
+> +
+> +            if isinstance(event, logging.LogRecord):
+> +                if event.levelno >= format.ERROR:
+> +                    errors = errors + 1
+> +                    return_value = 1
+> +                elif event.levelno == format.WARNING:
+> +                    warnings = warnings + 1
+> +                # For "normal" logging conditions, don't show note logs from tasks
+> +                # but do show them if the user has changed the default log level to
+> +                # include verbose/debug messages
+> +                if event.taskpid != 0 and event.levelno <= format.NOTE:
+> +                    continue
+> +                logger.handle(event)
+> +                continue
+> +
+> +            if isinstance(event, bb.build.TaskFailed):
+> +                return_value = 1
+> +                logfile = event.logfile
+> +                if logfile and os.path.exists(logfile):
+> +                    termfilter.clearFooter()
+> +                    bb.error("Logfile of failure stored in: %s" % logfile)
+> +                    if includelogs and not event.errprinted:
+> +                        print("Log data follows:")
+> +                        f = open(logfile, "r")
+> +                        lines = []
+> +                        while True:
+> +                            l = f.readline()
+> +                            if l == '':
+> +                                break
+> +                            l = l.rstrip()
+> +                            if loglines:
+> +                                lines.append(' | %s' % l)
+> +                                if len(lines) > int(loglines):
+> +                                    lines.pop(0)
+> +                            else:
+> +                                print('| %s' % l)
+> +                        f.close()
+> +                        if lines:
+> +                            for line in lines:
+> +                                print(line)
+> +            if isinstance(event, bb.build.TaskBase):
+> +                logger.info(event._message)
+> +                continue
+> +            if isinstance(event, bb.event.ParseStarted):
+> +                if event.total == 0:
+> +                    continue
+> +                parseprogress = new_progress("Parsing recipes", event.total).start()
+> +                continue
+> +            if isinstance(event, bb.event.ParseProgress):
+> +                parseprogress.update(event.current)
+> +                continue
+> +            if isinstance(event, bb.event.ParseCompleted):
+> +                if not parseprogress:
+> +                    continue
+> +
+> +                parseprogress.finish()
+> +                print(("Parsing of %d .bb files complete (%d cached, %d parsed). %d targets, %d skipped, %d masked, %d errors."
+> +                    % ( event.total, event.cached, event.parsed, event.virtuals, event.skipped, event.masked, event.errors)))
+> +                continue
+> +
+> +            if isinstance(event, bb.event.CacheLoadStarted):
+> +                cacheprogress = new_progress("Loading cache", event.total).start()
+> +                continue
+> +            if isinstance(event, bb.event.CacheLoadProgress):
+> +                cacheprogress.update(event.current)
+> +                continue
+> +            if isinstance(event, bb.event.CacheLoadCompleted):
+> +                cacheprogress.finish()
+> +                print("Loaded %d entries from dependency cache." % event.num_entries)
+> +                continue
+> +
+> +            if isinstance(event, bb.command.CommandFailed):
+> +                return_value = event.exitcode
+> +                errors = errors + 1
+> +                logger.error("Command execution failed: %s", event.error)
+> +                main.shutdown = 2
+DSI should never exit.
+> +                continue
+> +            if isinstance(event, bb.command.CommandExit):
+> +                if not return_value:
+> +                    return_value = event.exitcode
+> +                continue
+> +            if isinstance(event, (bb.command.CommandCompleted, bb.cooker.CookerExit)):
+> +                main.shutdown = 2
+DSI should never exit.
+> +                continue
+> +            if isinstance(event, bb.event.MultipleProviders):
+> +                logger.info("multiple providers are available for %s%s (%s)", event._is_runtime and "runtime " or "",
+> +                            event._item,
+> +                            ", ".join(event._candidates))
+> +                logger.info("consider defining a PREFERRED_PROVIDER entry to match %s", event._item)
+> +                continue
+> +            if isinstance(event, bb.event.NoProvider):
+> +                return_value = 1
+> +                errors = errors + 1
+> +                if event._runtime:
+> +                    r = "R"
+> +                else:
+> +                    r = ""
+> +
+> +                if event._dependees:
+> +                    logger.error("Nothing %sPROVIDES '%s' (but %s %sDEPENDS on or otherwise requires it)", r, event._item, ", ".join(event._dependees), r)
+> +                else:
+> +                    logger.error("Nothing %sPROVIDES '%s'", r, event._item)
+> +                if event._reasons:
+> +                    for reason in event._reasons:
+> +                        logger.error("%s", reason)
+> +                continue
+> +
+> +            if isinstance(event, bb.runqueue.sceneQueueTaskStarted):
+> +                logger.info("Running setscene task %d of %d (%s)" % (event.stats.completed + event.stats.active + event.stats.failed + 1, event.stats.total, event.taskstring))
+> +                continue
+> +
+> +            if isinstance(event, bb.runqueue.runQueueTaskStarted):
+> +                if event.noexec:
+> +                    tasktype = 'noexec task'
+> +                else:
+> +                    tasktype = 'task'
+> +                logger.info("Running %s %s of %s (ID: %s, %s)",
+> +                            tasktype,
+> +                            event.stats.completed + event.stats.active +
+> +                                event.stats.failed + 1,
+> +                            event.stats.total, event.taskid, event.taskstring)
+> +                continue
+> +
+> +            if isinstance(event, bb.runqueue.runQueueTaskFailed):
+> +                taskfailures.append(event.taskstring)
+> +                logger.error("Task %s (%s) failed with exit code '%s'",
+> +                             event.taskid, event.taskstring, event.exitcode)
+> +                continue
+> +
+> +            if isinstance(event, bb.runqueue.sceneQueueTaskFailed):
+> +                logger.warn("Setscene task %s (%s) failed with exit code '%s' - real task will be run instead",
+> +                             event.taskid, event.taskstring, event.exitcode)
+> +                continue
+> +
+> +            if isinstance(event, bb.event.ConfigParsed):
+> +                # timestamp should be added for this
+> +                continue
+> +
+> +            if isinstance(event, bb.event.RecipeParsed):
+> +                # timestamp should be added for this
+> +                continue
+> +
+> +            if isinstance(event, bb.event.OperationStarted):
+> +                # timestamp should be added for this
+> +                continue
+> +
+> +            if isinstance(event, bb.event.OperationCompleted):
+> +                # timestamp should be added for this
+> +                # signal a complete operation
+> +                # calculate timing
+> +                continue
+> +
+> +            if isinstance(event, bb.event.DiskFull):
+> +                # trigger an error
+> +                continue
+> +
+> +            # ignore
+> +            if isinstance(event, (bb.event.BuildBase,
+> +                                  bb.event.StampUpdate,
+> +                                  bb.event.RecipePreFinalise,
+> +                                  bb.runqueue.runQueueEvent,
+> +                                  bb.runqueue.runQueueExitWait,
+> +                                  bb.event.OperationProgress)):
+> +                continue
+> +
+> +            logger.error("Unknown event: %s", event)
+> +
+> +        except EnvironmentError as ioerror:
+> +            termfilter.clearFooter()
+> +            # ignore interrupted io
+> +            if ioerror.args[0] == 4:
+> +                pass
+> +        except KeyboardInterrupt:
+> +            termfilter.clearFooter()
+> +            if main.shutdown == 1:
+> +                print("\nSecond Keyboard Interrupt, stopping...\n")
+> +                _, error = server.runCommand(["stateStop"])
+> +                if error:
+> +                    logger.error("Unable to cleanly stop: %s" % error)
+> +            if main.shutdown == 0:
+> +                print("\nKeyboard Interrupt, closing down...\n")
+> +                interrupted = True
+> +                _, error = server.runCommand(["stateShutdown"])
+> +                if error:
+> +                    logger.error("Unable to cleanly shutdown: %s" % error)
+> +            main.shutdown = main.shutdown + 1
+> +            pass
+> +
+> +    summary = ""
+> +    if taskfailures:
+> +        summary += pluralise("\nSummary: %s task failed:",
+> +                             "\nSummary: %s tasks failed:", len(taskfailures))
+> +        for failure in taskfailures:
+> +            summary += "\n  %s" % failure
+> +    if warnings:
+> +        summary += pluralise("\nSummary: There was %s WARNING message shown.",
+> +                             "\nSummary: There were %s WARNING messages shown.", warnings)
+> +    if return_value:
+> +        summary += pluralise("\nSummary: There was %s ERROR message shown, returning a non-zero exit code.",
+> +                             "\nSummary: There were %s ERROR messages shown, returning a non-zero exit code.", errors)
+> +    if summary:
+> +        print(summary)
+> +
+> +    if interrupted:
+> +        print("Execution was interrupted, returning a non-zero exit code.")
+> +        if return_value == 0:
+> +            return_value = 1
+> +
+> +    termfilter.finish()
+We don't expect to ever get here - DSI should never exit.
+> +    wbhbhelper.write_in_database(wbhbhelper.tasks_information)
+  Probably we need to write tasks as they become complete (i.e. 
+TaskFailed or TaskSucceeded or TaskInvalid comes through)
+and then clear the memory. This will prevent memory overusage.
+
+> +
+> +    return return_value
+> +
 
 
