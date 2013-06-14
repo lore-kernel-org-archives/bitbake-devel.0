@@ -1,31 +1,46 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id B917360E12
+Return-Path: <olof.johansson@axis.com>
+Received: from anubis.se.axis.com (anubis.se.axis.com [195.60.68.12])
+	by mail.openembedded.org (Postfix) with ESMTP id 3F3AF6A8DB
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 14 Jun 2013 13:33:56 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r5EDdbpt026747; Fri, 14 Jun 2013 14:39:37 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id Lc8uNQkY-57D; Fri, 14 Jun 2013 14:39:37 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r5EDdXRh026740
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Fri, 14 Jun 2013 14:39:34 +0100
-Message-ID: <1371216822.20823.83.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alex Damian <alex.r.damian@gmail.com>
-Date: Fri, 14 Jun 2013 14:33:42 +0100
-In-Reply-To: <51B9E3E1.8020905@gmail.com>
-References: <1370619726-22780-1-git-send-email-alexandru.damian@intel.com>
-	<1371042680.20823.24.camel@ted> <51B9E3E1.8020905@gmail.com>
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] knotty, xmlrpc: add observer-only mode
+	Fri, 14 Jun 2013 13:55:50 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by anubis.se.axis.com (Postfix) with ESMTP id 0DF3719DE5
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 14 Jun 2013 15:55:48 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at anubis.se.axis.com
+Received: from anubis.se.axis.com ([127.0.0.1])
+	by localhost (anubis.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id Jij3natshsiO for <bitbake-devel@lists.openembedded.org>;
+	Fri, 14 Jun 2013 15:55:47 +0200 (CEST)
+Received: from boulder.localdomain (boulder.se.axis.com [10.0.2.104])
+	by anubis.se.axis.com (Postfix) with ESMTP id 4DF2D19D7D
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 14 Jun 2013 15:55:47 +0200 (CEST)
+Received: from boulder.localdomain (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id 2FB36B1B
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 14 Jun 2013 15:55:47 +0200 (CEST)
+Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
+	by boulder.localdomain (Postfix) with ESMTP id 24E4D1F5
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 14 Jun 2013 15:55:47 +0200 (CEST)
+Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
+	by thoth.se.axis.com (Postfix) with ESMTP id 235F43423A
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 14 Jun 2013 15:55:47 +0200 (CEST)
+Received: from axis.com (10.92.17.1) by xmail2.se.axis.com (10.0.5.74) with
+	Microsoft SMTP Server (TLS) id 8.2.176.0;
+	Fri, 14 Jun 2013 15:55:46 +0200
+Date: Fri, 14 Jun 2013 15:55:45 +0200
+From: Olof Johansson <olof.johansson@axis.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Message-ID: <20130614135545.GE13277@axis.com>
+References: <1367918558-16136-1-git-send-email-olof.johansson@axis.com>
+MIME-Version: 1.0
+In-Reply-To: <1367918558-16136-1-git-send-email-olof.johansson@axis.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Subject: Re: [WIP 0/2] Adding support for shell arithmetics
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,50 +52,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 14 Jun 2013 13:33:57 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 14 Jun 2013 13:55:50 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-On Thu, 2013-06-13 at 16:23 +0100, Alex Damian wrote:
-> On 06/12/2013 02:11 PM, Richard Purdie wrote:
-> > On Fri, 2013-06-07 at 16:42 +0100, Alex DAMIAN wrote:
-> >> From: Alexandru DAMIAN <alexandru.damian@intel.com>
-> >>
-> >> I add an observer only mode for the knotty UI and
-> >> the XMLRPC server that will allow the UI to register
-> >> a callback with a server in order to receive events.
-> >>
-> >> The observer-UI will not send any commands to the
-> >> server apart from registering as an event handler.
-> >>
-> >> Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
-> >> ---
-> >>   bin/bitbake             |  8 +++++++-
-> >>   lib/bb/server/xmlrpc.py | 18 ++++++++++++------
-> >>   lib/bb/ui/knotty.py     | 29 +++++++++++++++++------------
-> >>   lib/bb/ui/uievent.py    |  1 +
-> >>   4 files changed, 37 insertions(+), 19 deletions(-)
-> >>
+On 2013-05-07 11:22, Olof Johansson wrote:
+> Hi,
+> 
+> A week or so I found out that shell fragments in bitbake recipes
+> don't support shell arithmetics (`$((1+1))`). The reason for this
+> is the shell lexing throwing NotImplemented exceptions. I've made
+> some progress in adding support for shell arithmetics, but I have
+> a hard time getting support for corner cases.
+> 
+> It was suprising to see that currently, only a subset of posix
+> shell scripts is supported, even though they are sent through to
+> be executed by the system shell. I think I understand the reason
+> for having to do the shell lexing; knowing what functions and
+> variables to export right? But I wonder if it's possible to do
+> the shell lexing as a best effort, and ignore any errors.
+> 
+> What are the risks with this approach? Is it feasibile to do so?
+> 
+> This patch series is a work in progress, and does support the use
+> cases we had issues with, however, I currently skip one unit
+> test, as I can't get it to work. Comments and feedback much
+> appreciated!
 
-You responded to one of my comments but not the other.
+Did anybody have any feedback on this? I have had a hard time
+understanding the design of the lexing. I really could use some
+pointers --- is there some documents somewhere that could make me
+understand it better? I haven't had time to work on this lately,
+but it would be great to get this fixed, so I figured I'll try to
+take some time in the near future.
 
-To put my concern succinctly, I think even in observer mode the UIs
-should still be able to query variables. I do not think they should be
-writing to things though, or running any of the async commands. The
-whole token business isn't working quite right yet.
+/Olof
 
-My worry is the architecture you're building here isn't quite right, its
-limiting the clients unnecessarily and complicating the handover between
-clients. I appreciate this patch in itself isn't too problematic,
-however if I merge it, you will continue down this path and we will end
-up adding code that is problematic. I therefore don't think I can take
-this patch until we better figure out what we need to do with the token
-handling, I do know we can do better than what is here.
-
-Cheers,
-
-Richard
-
-
-
+PS. Saw that RP merged the exception message patch, thanks :).
 
