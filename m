@@ -1,25 +1,31 @@
-Return-Path: <ddalex@intel.com>
-Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
-	by mail.openembedded.org (Postfix) with ESMTP id E14CE6A49F
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id B917360E12
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 14 Jun 2013 11:16:09 +0000 (UTC)
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga102.ch.intel.com with ESMTP; 14 Jun 2013 04:16:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.87,865,1363158000"; d="scan'208";a="254979027"
-Received: from adamian-desktop.isw.intel.com (HELO
-	adamian-desktop.rb.intel.com) ([10.237.224.34])
-	by AZSMGA002.ch.intel.com with ESMTP; 14 Jun 2013 04:16:09 -0700
-Received: by adamian-desktop.rb.intel.com (Postfix, from userid 1000)
-	id 73D89562234; Fri, 14 Jun 2013 12:16:09 +0100 (BST)
-From: Alex DAMIAN <alexandru.damian@intel.com>
-To: bitbake-devel@lists.openembedded.org,
-	webhob@yoctoproject.org
-Date: Fri, 14 Jun 2013 12:16:07 +0100
-Message-Id: <1371208567-14809-1-git-send-email-alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.8.1.2
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH] webhob: add system start/stop script
+	Fri, 14 Jun 2013 13:33:56 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r5EDdbpt026747; Fri, 14 Jun 2013 14:39:37 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id Lc8uNQkY-57D; Fri, 14 Jun 2013 14:39:37 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r5EDdXRh026740
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT); Fri, 14 Jun 2013 14:39:34 +0100
+Message-ID: <1371216822.20823.83.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alex Damian <alex.r.damian@gmail.com>
+Date: Fri, 14 Jun 2013 14:33:42 +0100
+In-Reply-To: <51B9E3E1.8020905@gmail.com>
+References: <1370619726-22780-1-git-send-email-alexandru.damian@intel.com>
+	<1371042680.20823.24.camel@ted> <51B9E3E1.8020905@gmail.com>
+X-Mailer: Evolution 3.6.4-0ubuntu1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] knotty, xmlrpc: add observer-only mode
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,121 +37,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 14 Jun 2013 11:16:10 -0000
+X-List-Received-Date: Fri, 14 Jun 2013 13:33:57 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+On Thu, 2013-06-13 at 16:23 +0100, Alex Damian wrote:
+> On 06/12/2013 02:11 PM, Richard Purdie wrote:
+> > On Fri, 2013-06-07 at 16:42 +0100, Alex DAMIAN wrote:
+> >> From: Alexandru DAMIAN <alexandru.damian@intel.com>
+> >>
+> >> I add an observer only mode for the knotty UI and
+> >> the XMLRPC server that will allow the UI to register
+> >> a callback with a server in order to receive events.
+> >>
+> >> The observer-UI will not send any commands to the
+> >> server apart from registering as an event handler.
+> >>
+> >> Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+> >> ---
+> >>   bin/bitbake             |  8 +++++++-
+> >>   lib/bb/server/xmlrpc.py | 18 ++++++++++++------
+> >>   lib/bb/ui/knotty.py     | 29 +++++++++++++++++------------
+> >>   lib/bb/ui/uievent.py    |  1 +
+> >>   4 files changed, 37 insertions(+), 19 deletions(-)
+> >>
 
-Adding a script that starts/stops the webhob system.
-Sourced, with a parameter, it will start or stop
-the bitbake resident, and the webhob server, as well
-as point a browser to the webhob home .
+You responded to one of my comments but not the other.
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
----
- bin/webhob | 93 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
- create mode 100755 bin/webhob
+To put my concern succinctly, I think even in observer mode the UIs
+should still be able to query variables. I do not think they should be
+writing to things though, or running any of the async commands. The
+whole token business isn't working quite right yet.
 
-diff --git a/bin/webhob b/bin/webhob
-new file mode 100755
-index 0000000..4c7e079
---- /dev/null
-+++ b/bin/webhob
-@@ -0,0 +1,93 @@
-+#!/bin/bash
-+# (c) 2013 Intel Corp.
-+
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License as published by
-+# the Free Software Foundation; either version 2 of the License, or
-+# (at your option) any later version.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+# GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License
-+# along with this program; if not, write to the Free Software
-+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-+
-+
-+# This script enables webhob event logging and
-+# starts bitbake resident server
-+# use as:  source webhob [start|stop]
-+
-+# Helper function to kill a background webhob development server
-+        
-+function webserverKillAllComponents() 
-+{
-+	local pidfile
-+	for pidfile in ${BUILDDIR}/whbmain.pid; do
-+		if [ -f ${pidfile} ]; then
-+		while kill -0 $(< ${pidfile}) 2>/dev/null; do
-+			kill -SIGTERM -`ps -p $(< ${pidfile}) -o "%r" --no-headers`	
-+			sleep 1;
-+		done;
-+		rm  ${pidfile}
-+		fi
-+	done
-+}
-+
-+# We make sure we're running in the current shell and in a good environment
-+
-+if [ -z "$ZSH_NAME" ] && [ `basename "$0"` = `basename $BASH_SOURCE` ]; then
-+    echo "Error: This script needs to be sourced. Please run as 'source webhob [start|stop]'" 1>&2;
-+    exit 1
-+fi
-+    
-+if [ -z "$BUILDDIR" ] || [ -z `which bitbake` ]; then
-+    echo "Error: Build environment is not setup or bitbake is not in path." 1>&2;
-+    return 2
-+fi
-+
-+BBBASEDIR=`dirname ${BASH_SOURCE}`/..
-+
-+# Determine the action. If specified by arguments, fine, if not, toggle it
-+if [ "x$1" == "xstart" ] || [ "x$1" == "xstop" ]; then
-+    CMD="$1"
-+else
-+    if [ -z "$BBSERVER" ]; then
-+        CMD="start"
-+    else
-+        CMD="stop"
-+    fi;
-+fi
-+
-+# Make sure it's safe to run by checking bitbake lock
-+
-+lock=1
-+flock -n 200 $BUILDDIR/bitbake.lock 2>/dev/null || lock=0
-+
-+if [ ${CMD} == "start" ] && ( [ $lock -eq 0 ] || [ -e $BUILDDIR/whbmain.pid ] ); then
-+    echo "Error: bitbake lock state error. start aborted" 2>&1
-+    return 3 
-+elif [ ${CMD} == "stop" ] && ( [ $lock -eq 1 ] || ! [ -e $BUILDDIR/whbmain.pid ] ) ; then
-+    echo "Error: bitbake lock state error. stop aborted" 2>&1
-+    return 3 
-+fi
-+
-+
-+# Execute the commands
-+
-+case $CMD in
-+    start )
-+        python $BBBASEDIR/lib/manage.py syncdb
-+        bitbake --server-only -t xmlrpc -B localhost:8200 
-+        export BBSERVER=localhost:8200
-+        python $BBBASEDIR/lib/webhob/manage.py runserver >${BUILDDIR}/whbmain.log 2>&1 & echo $! >${BUILDDIR}/whbmain.pid  
-+    ;;
-+    stop )
-+        bitbake -m
-+        unset BBSERVER
-+        webserverKillAllComponents
-+esac
-+
-+    
--- 
-1.8.1.2
+My worry is the architecture you're building here isn't quite right, its
+limiting the clients unnecessarily and complicating the handover between
+clients. I appreciate this patch in itself isn't too problematic,
+however if I merge it, you will continue down this path and we will end
+up adding code that is problematic. I therefore don't think I can take
+this patch until we better figure out what we need to do with the token
+handling, I do know we can do better than what is here.
+
+Cheers,
+
+Richard
+
+
 
 
