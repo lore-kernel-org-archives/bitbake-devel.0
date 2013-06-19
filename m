@@ -1,30 +1,30 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id A579A601AF
+Return-Path: <btraynor@gmail.com>
+Received: from mail-we0-f170.google.com (mail-we0-f170.google.com
+	[74.125.82.170])
+	by mail.openembedded.org (Postfix) with ESMTP id 01D6D601AF
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Jun 2013 13:06:23 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r5JDCW7l022992 for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Jun 2013 14:12:32 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id Xiqk_urP3mUJ for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Jun 2013 14:12:32 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r5JDCR6R022988
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Jun 2013 14:12:28 +0100
-Message-ID: <1371647168.20823.183.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Wed, 19 Jun 2013 14:06:08 +0100
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] fetch2: Enhance error message for BB_NO_NETWORK
+	Wed, 19 Jun 2013 13:52:04 +0000 (UTC)
+Received: by mail-we0-f170.google.com with SMTP id w57so4544571wes.15
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 19 Jun 2013 06:52:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:from:date:message-id:subject:to:content-type;
+	bh=ojQz5ZxCoHqaaUKdQa4z/wJ4JWljyS8y88lRYB7DlSo=;
+	b=rFtdpm4K0S+KlehX8CkCL6Oo8Mr/yXyG5qf3PItNSlik2Dcl9B21MbreeGRBE1w0SM
+	6Q8jt7dw/iMJPVf8SqxdLifSCQrx1OICSdwfXBgww0vtWAcczJJp8gAC9j19r7euHIK1
+	l5dDbd4MF6DIYI8t0c6n7FxL+7uWKprlYAOngtwuUWQUTH2k9zfPRsVM5AM9urutG9eK
+	qWHYA44RDxYNZhNg96GV+x+IaWskT2nT1ycKof4dTQx8EjPeFvWolLvvpr5SIQjqktM+
+	AvUiBQX9qoBfbF9t+b2umT8Y4Wi2GoNHrET1JVd81i765RmE1rp2dopfXn0DstSrTxEI
+	Mo2Q==
+X-Received: by 10.194.21.231 with SMTP id y7mr2222564wje.94.1371649925455;
+	Wed, 19 Jun 2013 06:52:05 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.194.16.69 with HTTP; Wed, 19 Jun 2013 06:51:25 -0700 (PDT)
+From: Bill Traynor <btraynor@gmail.com>
+Date: Wed, 19 Jun 2013 09:51:25 -0400
+Message-ID: <CAN20qYpYGS6huZ+MV8xTpJDyfwJR9mN6o=m5qKMwuJVEqFqf9A@mail.gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: User Manual: HelloWorld example questions.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,31 +36,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 19 Jun 2013 13:06:24 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 19 Jun 2013 13:52:05 -0000
+Content-Type: text/plain; charset=ISO-8859-1
 
-BB_NO_NETWORK can be set by bitbake internally by the use of
-BB_FETCH_PREMIRRORONLY so update the error message to give users a
-hint about this.
+NOTE:  The following questions are posed within the context of the
+BitBake User Manual rewrite.
 
-[YOCTO #3222]
+In working through the following two HelloWorld examples:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index 1365335..adbbf30 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -121,7 +121,7 @@ class ParameterError(BBFetchException):
- class NetworkAccess(BBFetchException):
-     """Exception raised when network access is disabled but it is required."""
-     def __init__(self, url, cmd):
--         msg = "Network access disabled through BB_NO_NETWORK but access requested with command %s (for url %s)" % (cmd, url)
-+         msg = "Network access disabled through BB_NO_NETWORK (or set indirectly due to use of BB_FETCH_PREMIRRORONLY) but access requested with command %s (for url %s)" % (cmd, url)
-          self.url = url
-          self.cmd = cmd
-          BBFetchException.__init__(self, msg)
+http://www.mail-archive.com/yocto@yoctoproject.org/msg09379.html
+http://hambedded.org/blog/2012/11/24/from-bitbake-hello-world-to-an-image/
 
+there are some concepts that I don't quite understand.
 
+1.  The simplest HelloWorld possible would only require a recipe and
+source, correct?  The concepts of Classes and Layers is beyond the
+basics, is it not?  Or is the simplest of HelloWorld examples without
+concepts such as Classes and Layers essentially pointless?
+
+2.  Why isn't there a sample base.bbclass in the bitbake source tree?
+
+3.  I think it would be very beneficial to understanding BitBake to
+build out the HelloWorld example beyond the basics, incorporating and
+explaining each concept along the way.  My thinking is that given the
+true value of BitBake is in the building of complex systems, it would
+be beneficial to walk through the concepts as simply as possible to
+demonstrate the concepts that require leverage to accomplish this.
+This would both demonstrate how BitBake works whiile avoiding overuse
+of OE or YP project examples.  Is this idea reasonable, or beyond the
+scope of the User manual?
+
+That's all for now.  I appreciate the feedback.
+
+Bill
 
