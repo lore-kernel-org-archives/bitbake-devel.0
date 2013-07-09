@@ -1,35 +1,30 @@
-Return-Path: <martin.jansa@gmail.com>
-Received: from mail-wi0-f175.google.com (mail-wi0-f175.google.com
-	[209.85.212.175])
-	by mail.openembedded.org (Postfix) with ESMTP id 8BFE46AF70
+Return-Path: <chmorgan@gmail.com>
+Received: from mail-ie0-f179.google.com (mail-ie0-f179.google.com
+	[209.85.223.179])
+	by mail.openembedded.org (Postfix) with ESMTP id 4BAB260780
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  8 Jul 2013 16:27:51 +0000 (UTC)
-Received: by mail-wi0-f175.google.com with SMTP id m6so9230811wiv.2
+	Tue,  9 Jul 2013 16:50:52 +0000 (UTC)
+Received: by mail-ie0-f179.google.com with SMTP id c10so12654846ieb.24
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 08 Jul 2013 09:27:51 -0700 (PDT)
+	Tue, 09 Jul 2013 09:50:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:cc:content-type;
-	bh=Zf01fHP+9CSVZsdLRyqNbt3d6aml86fZeQVYNjKEUXw=;
-	b=nqAwOMSe2AkQeqRoXMEkf7C492/FUutAGfgix70m2bH4DXNuZiKq/L6iijP9OWexu9
-	RJt8AncZsjYY1C8IO6WdPGXwm/f1+03Pj7IKvi/2S+H/OORIyvVS/JmR7uSxi7jIZhrF
-	0W43MhcxDNRED8NavQopPSmmb9LjzfPuHJxqg3DCoHfqO5g/BCe4XYKOaKzHUTH9ZHPm
-	1p5rWm313dJYFnBi5jEb/gdsoFvMu77E6FZbOwtp3s6hkg5ahpOQ5Jar8pM9aWvFsA2E
-	/JACjT9Q5FHLInsFeh5OJo3AgjetwnrYZR3WAarjdGyhEOGtckCOJMHNxm7As1z6eFKs
-	u+5w==
+	h=mime-version:from:date:message-id:subject:to:content-type;
+	bh=73Odx70xZexNxWQi59gtvUkNkmvTTlZMdstR+/vE0Js=;
+	b=l/8ocoUtg0bqcNRMmGUe2roFyysnp+9E5+vqyQNWpttuuvfecyRIYCwh8UVZG0s6uQ
+	BIjLBCA7+bY2wVaFgFUSHEwahc28g7NI0qT9tKLo1wwEmz0ABcbIr8pgJyj+kfaZJ0CH
+	LQwVnsDy+H1iQLn/Fi8H+dCE4HmM4d0V7K9SpERI9EIPX6PCxpMw+g9UNJGBWE99S9Ej
+	hcaNoi5bXQ67yE8wDRQM71fvAH4RyTT58MqvEztGT5wb07alqfCza+WBP9+d3tgU1LJX
+	BEvlTyjIaDBphmLTfQnjn39aZIPSFNIP0jL1Qx0pWiwOfktbTqmE++3pGohdxT83cg7D
+	JBQQ==
+X-Received: by 10.43.143.4 with SMTP id jk4mr8849691icc.81.1373388653104; Tue,
+	09 Jul 2013 09:50:53 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 10.180.19.200 with SMTP id h8mr17944144wie.17.1373300871784;
-	Mon, 08 Jul 2013 09:27:51 -0700 (PDT)
-Received: by 10.194.16.136 with HTTP; Mon, 8 Jul 2013 09:27:51 -0700 (PDT)
-In-Reply-To: <1371761594.20823.244.camel@ted>
-References: <1371761594.20823.244.camel@ted>
-Date: Mon, 8 Jul 2013 18:27:51 +0200
-Message-ID: <CA+chaQfWUHbGwjV+1HS1Jpit3a4tbJAb34Xv0oVF4n7Zncc=Wg@mail.gmail.com>
-From: Martin Jansa <martin.jansa@gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: Paul Eggleton <paul.eggleton@linux.intel.com>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] data_smart: Ensure variable flags are accounted for in config data hash
+Received: by 10.64.167.235 with HTTP; Tue, 9 Jul 2013 09:50:33 -0700 (PDT)
+From: Chris Morgan <chmorgan@gmail.com>
+Date: Tue, 9 Jul 2013 12:50:33 -0400
+Message-ID: <CAAPegz1FN26Owh8FRkon6zfngQfSJ0C_KUHr2a=AG4PRa4O=Wg@mail.gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: bitbake hang due to dpkg error
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,126 +36,59 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 08 Jul 2013 16:27:52 -0000
-Content-Type: multipart/alternative; boundary=bcaec53d5eb7a20ac504e10286f5
+X-List-Received-Date: Tue, 09 Jul 2013 16:50:52 -0000
+Content-Type: text/plain; charset=ISO-8859-1
 
---bcaec53d5eb7a20ac504e10286f5
-Content-Type: text/plain; charset=UTF-8
+Hello.
 
-Can we get this backported into bitbake-1.18 please?
+I'm not sure if this was the right place to report a bitbake bug (or
+at least what I believe is a bitbake bug).
 
+Ubuntu 13.04 here. The issue I had was that something had interrupted
+dpkg, this left around some kind of a lock. I ran a bitbake command,
+in this case:
 
-On Thu, Jun 20, 2013 at 10:53 PM, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+MACHINE=beagleboard ./oebb.sh bitbake console-image
 
-> Currently if the flags set against a variable in the base data store
-> change, it doesn't automatically trigger a reparse when it really
-> should. For example with the blacklist class setting:
->
-> PNBLACKLIST[qemu] = "bar"
-> PNBLACKLIST[bash] = "foo"
->
-> will not trigger a reparse if only one entry is changed and a
-> blacklisted recipe can still be built.
->
-> I did consider using BB_SIGNATURE_EXCLUDE_FLAGS in here however it
-> doesn't make sense, we want to trigger a reparse when any of the
-> flags change too (which is different to the sstate signatures which
-> we wouldn't want to change in those cases).
->
-> [YOCTO #4627]
->
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
-> diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
-> index 2fd8ccd..fa7811e 100644
-> --- a/bitbake/lib/bb/data_smart.py
-> +++ b/bitbake/lib/bb/data_smart.py
-> @@ -738,6 +738,12 @@ class DataSmart(MutableMapping):
->              value = d.getVar(key, False) or ""
->              data.update({key:value})
->
-> +            varflags = d.getVarFlags(key)
-> +            if not varflags:
-> +                continue
-> +            for f in varflags:
-> +                data.update({'%s[%s]' % (key, f):varflags[f]})
-> +
->          for key in ["__BBTASKS", "__BBANONFUNCS", "__BBHANDLERS"]:
->              bb_list = d.getVar(key, False) or []
->              bb_list.sort()
->
->
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
->
+And it hung, almost no cpu usage on the system.
 
---bcaec53d5eb7a20ac504e10286f5
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+I ended up aborting the tasks and at some point tried to do a dpkg
+command like 'sudo dpkg --remove blah' and got:
 
-<div dir=3D"ltr">Can we get this backported into bitbake-1.18 please?</div>=
-<div class=3D"gmail_extra"><br><br><div class=3D"gmail_quote">On Thu, Jun 2=
-0, 2013 at 10:53 PM, Richard Purdie <span dir=3D"ltr">&lt;<a href=3D"mailto=
-:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.purdie@linux=
-foundation.org</a>&gt;</span> wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">Currently if the flags set against a variabl=
-e in the base data store<br>
-change, it doesn&#39;t automatically trigger a reparse when it really<br>
-should. For example with the blacklist class setting:<br>
-<br>
-PNBLACKLIST[qemu] =3D &quot;bar&quot;<br>
-PNBLACKLIST[bash] =3D &quot;foo&quot;<br>
-<br>
-will not trigger a reparse if only one entry is changed and a<br>
-blacklisted recipe can still be built.<br>
-<br>
-I did consider using BB_SIGNATURE_EXCLUDE_FLAGS in here however it<br>
-doesn&#39;t make sense, we want to trigger a reparse when any of the<br>
-flags change too (which is different to the sstate signatures which<br>
-we wouldn&#39;t want to change in those cases).<br>
-<br>
-[YOCTO #4627]<br>
-<br>
-Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
-ndation.org">richard.purdie@linuxfoundation.org</a>&gt;<br>
----<br>
-diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py<br=
->
-index 2fd8ccd..fa7811e 100644<br>
---- a/bitbake/lib/bb/data_smart.py<br>
-+++ b/bitbake/lib/bb/data_smart.py<br>
-@@ -738,6 +738,12 @@ class DataSmart(MutableMapping):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0value =3D d.getVar(key, Fal=
-se) or &quot;&quot;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0data.update({key:value})<br=
->
-<br>
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0varflags =3D d.getVarFlags(key)<=
-br>
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if not varflags:<br>
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0continue<br>
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0for f in varflags:<br>
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0data.update({&#39;=
-%s[%s]&#39; % (key, f):varflags[f]})<br>
-+<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0for key in [&quot;__BBTASKS&quot;, &quot;=
-__BBANONFUNCS&quot;, &quot;__BBHANDLERS&quot;]:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bb_list =3D d.getVar(key, F=
-alse) or []<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0bb_list.sort()<br>
-<br>
-<br>
-_______________________________________________<br>
-bitbake-devel mailing list<br>
-<a href=3D"mailto:bitbake-devel@lists.openembedded.org">bitbake-devel@lists=
-.openembedded.org</a><br>
-<a href=3D"http://lists.openembedded.org/mailman/listinfo/bitbake-devel" ta=
-rget=3D"_blank">http://lists.openembedded.org/mailman/listinfo/bitbake-deve=
-l</a><br>
-</blockquote></div><br></div>
+E: dpkg was interrupted, you must manually run 'sudo dpkg --configure
+-a' to correct the problem.
 
---bcaec53d5eb7a20ac504e10286f5--
+After running 'sudo dpkg --configure -a' I re-ran the bitbake command
+and everything seems happy. It appears that bitbake was issuing an apt
+or dpkg command and hitting the same issue I saw with the 'dpkg was
+interrupted' error but it isn't handling that appropriately and was
+deadlocked.
+
+What I'm not sure of is exactly where the hang was, I don't yet
+understand bitbake. Here are the tasks that appeared to have been
+locked up:
+
+cmorgan@cmorgan-laptop:~$ ps aux |grep bitbake
+cmorgan  19494  0.0  0.0  12532  1664 pts/21   S+   11:32   0:00
+/bin/bash ./oebb.sh bitbake console-image
+cmorgan  20987  0.0  0.0  12420  1520 pts/21   S+   11:32   0:00
+/bin/sh /home/cmorgan/git/angstrom_setup-scripts/sources/openembedded-core/scripts/bitbake
+console-image
+cmorgan  21009  0.0  2.6 261484 214384 pts/21  S+   11:32   0:02
+python /home/cmorgan/git/angstrom_setup-scripts/sources/bitbake/bin/bitbake
+console-image
+cmorgan  21020  0.0  2.6 337316 212824 pts/21  Sl+  11:32   0:00
+python /home/cmorgan/git/angstrom_setup-scripts/sources/bitbake/bin/bitbake
+console-image
+cmorgan  21023  0.0  2.6 337316 211376 ?       S    11:32   0:00
+python /home/cmorgan/git/angstrom_setup-scripts/sources/bitbake/bin/bitbake
+console-image
+cmorgan  21232  0.0  0.0   9436   952 pts/25   S+   12:37   0:00 grep
+--color=auto bitbake
+
+I can provide more information if it would be helpful, and if this
+isn't the correct place just let me know and I'd appreciate if you
+could point me in the right direction.
+
+Chris
+
