@@ -1,22 +1,22 @@
 Return-Path: <cristiana.voicu@intel.com>
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id B135E6B10E
+	by mail.openembedded.org (Postfix) with ESMTP id DB3346B299
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 17 Jul 2013 10:33:43 +0000 (UTC)
+	Wed, 17 Jul 2013 10:33:44 +0000 (UTC)
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga102.jf.intel.com with ESMTP; 17 Jul 2013 03:31:12 -0700
+	by orsmga102.jf.intel.com with ESMTP; 17 Jul 2013 03:31:13 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.89,683,1367996400"; d="scan'208";a="366549967"
+X-IronPort-AV: E=Sophos;i="4.89,683,1367996400"; d="scan'208";a="366549971"
 Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.72])
-	by fmsmga001.fm.intel.com with ESMTP; 17 Jul 2013 03:33:43 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 17 Jul 2013 03:33:44 -0700
 From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 17 Jul 2013 13:35:38 +0300
-Message-Id: <1374057344-19708-9-git-send-email-cristiana.voicu@intel.com>
+Date: Wed, 17 Jul 2013 13:35:39 +0300
+Message-Id: <1374057344-19708-10-git-send-email-cristiana.voicu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1374057344-19708-1-git-send-email-cristiana.voicu@intel.com>
 References: <1374057344-19708-1-git-send-email-cristiana.voicu@intel.com>
-Subject: [PATCH 08/14] hob: the saved image should be editable
+Subject: [PATCH 09/14] bitbake: when an image is saved, it should require an image from layers
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,38 +28,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 17 Jul 2013 10:33:43 -0000
+X-List-Received-Date: Wed, 17 Jul 2013 10:33:45 -0000
 
-Also, the image can be saved when the a name is filled.
+If the image required is not from the layers and it is removed, when sanity
+check is running, Hob will show some errors related to this.
+Agreed to "require" only the images from layers.
 
 [YOCTO #4193]
 Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ bitbake/lib/bb/cooker.py |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py b/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
-index 6ebbca6..f8bf39f 100644
---- a/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
-+++ b/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
-@@ -99,7 +99,8 @@ class SaveImageDialog (CrumbsDialog):
-         self.save_button.set_label("Save")
-         self.save_button.connect("clicked", self.save_button_cb)
-         self.save_button.set_size_request(110, 30)
--        self.save_button.set_sensitive(False)
-+        if self.name_entry.get_text() == '':
-+            self.save_button.set_sensitive(False)
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 9965417..ad92dea 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -1147,10 +1147,17 @@ class BBCooker:
+             else:
+                 dest = image
  
-         table.attach(cancel_button, 2, 3, 0, 1)
-         table.attach(self.save_button, 3, 4, 0, 1)
-@@ -124,6 +125,7 @@ class SaveImageDialog (CrumbsDialog):
-         description = description_buffer.get_text(description_buffer.get_start_iter(),description_buffer.get_end_iter())
-         if new_text.islower() and new_text.isalnum():
-             self.builder.image_details_page.image_saved = True
-+            self.builder.customized = False
-             self.builder.generate_new_image(self.directory+text, description)
-             self.builder.recipe_model.set_in_list(text, description)
-             self.builder.recipe_model.set_selected_image(text)
++        if base_image:
++            with open(base_image, 'r') as f:
++                require_line = f.readline()
++
+         with open(dest, "w") as imagefile:
+             if base_image is None:
+                 imagefile.write("inherit image\n")
+             else:
++                topdir = self.data.getVar("TOPDIR")
++                if topdir in base_image:
++                    base_image = require_line.split()[1]
+                 imagefile.write("require " + base_image + "\n")
+             package_install = "PACKAGE_INSTALL_forcevariable = \""
+             for package in package_queue:
 -- 
 1.7.9.5
 
