@@ -1,22 +1,22 @@
 Return-Path: <cristiana.voicu@intel.com>
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 709DB6AF13
+	by mail.openembedded.org (Postfix) with ESMTP id 927E36B279
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 17 Jul 2013 10:33:41 +0000 (UTC)
+	Wed, 17 Jul 2013 10:33:42 +0000 (UTC)
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga102.jf.intel.com with ESMTP; 17 Jul 2013 03:31:10 -0700
+	by orsmga102.jf.intel.com with ESMTP; 17 Jul 2013 03:31:11 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.89,683,1367996400"; d="scan'208";a="366549957"
+X-IronPort-AV: E=Sophos;i="4.89,683,1367996400"; d="scan'208";a="366549963"
 Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.72])
-	by fmsmga001.fm.intel.com with ESMTP; 17 Jul 2013 03:33:41 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 17 Jul 2013 03:33:42 -0700
 From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 17 Jul 2013 13:35:36 +0300
-Message-Id: <1374057344-19708-7-git-send-email-cristiana.voicu@intel.com>
+Date: Wed, 17 Jul 2013 13:35:37 +0300
+Message-Id: <1374057344-19708-8-git-send-email-cristiana.voicu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1374057344-19708-1-git-send-email-cristiana.voicu@intel.com>
 References: <1374057344-19708-1-git-send-email-cristiana.voicu@intel.com>
-Subject: [PATCH 06/14] hob & bitbake: append a value to a variable from hob throught bitbake
+Subject: [PATCH 07/14] hob: change the name and description for the saveimagedialog
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,131 +28,85 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 17 Jul 2013 10:33:41 -0000
+X-List-Received-Date: Wed, 17 Jul 2013 10:33:42 -0000
 
-It was necessary to append ${TOPDIR}/recipes/images to BBFILES.
-Implemented the mechanism to append a value to a variable: a command and
-the method in cooker.
+The image name and description should be saved for a future
+save.
 
 [YOCTO #4193]
 Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- bitbake/lib/bb/command.py                   |    3 ++-
- bitbake/lib/bb/cooker.py                    |   29 +++++++++++++++++++++++++++
- bitbake/lib/bb/data.py                      |    4 ++++
- bitbake/lib/bb/ui/crumbs/builder.py         |    1 +
- bitbake/lib/bb/ui/crumbs/hobeventhandler.py |   15 +++++++++++++-
- 5 files changed, 50 insertions(+), 2 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py |    8 +++++++-
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py    |    6 ++++--
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
-index c38eab7..460b597 100644
---- a/bitbake/lib/bb/command.py
-+++ b/bitbake/lib/bb/command.py
-@@ -230,7 +230,8 @@ class CommandsSync:
-         var = params[0]
-         val = params[1]
-         default_file = params[2]
--        command.cooker.saveConfigurationVar(var, val, default_file)
-+        op = params[3]
-+        command.cooker.modifyConfigurationVar(var, val, default_file, op)
+diff --git a/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py b/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
+index 32847a8..6ebbca6 100644
+--- a/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
++++ b/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
+@@ -29,10 +29,12 @@ class SaveImageDialog (CrumbsDialog):
+     This class is used to create a dialog that permits to save
+     a custom image in a predefined directory.
+     """
+-    def __init__(self, directory, title, parent, flags, buttons=None):
++    def __init__(self, directory, name, description, title, parent, flags, buttons=None):
+         super(SaveImageDialog, self).__init__(title, parent, flags, buttons)
+         self.directory = directory
+         self.builder = parent
++        self.name_field = name
++        self.description_field = description
  
-     def createConfigFile(self, command, params):
-         """
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 096391f..9965417 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -162,6 +162,35 @@ class BBCooker:
-         self.data = self.databuilder.data
-         self.data_hash = self.databuilder.data_hash
+         # create visual elements on the dialog
+         self.create_visual_elements()
+@@ -52,6 +54,7 @@ class SaveImageDialog (CrumbsDialog):
+         content += "characters. The only special character you can use is the ASCII hyphen (-)."
+         sub_label.set_markup(content)
+         self.name_entry = gtk.Entry()
++        self.name_entry.set_text(self.name_field)
+         self.name_entry.set_size_request(350,30)
+         self.name_entry.connect("changed", self.name_entry_changed)
+         sub_vbox.pack_start(label, expand=False, fill=False)
+@@ -67,6 +70,7 @@ class SaveImageDialog (CrumbsDialog):
+         sub_label.set_alignment(0, 0)
+         sub_label.set_markup("The description should be less than 150 characters long.")
+         self.description_entry = gtk.TextView()
++        self.description_entry.get_buffer().set_text(self.description_field)
+         self.description_entry.set_wrap_mode(gtk.WRAP_WORD)
+         self.description_entry.set_size_request(350,150)
+         sub_vbox.pack_start(label, expand=False, fill=False)
+@@ -124,6 +128,8 @@ class SaveImageDialog (CrumbsDialog):
+             self.builder.recipe_model.set_in_list(text, description)
+             self.builder.recipe_model.set_selected_image(text)
+             self.builder.image_details_page.show_page(self.builder.IMAGE_GENERATED)
++            self.builder.image_details_page.name_field_template = text
++            self.builder.image_details_page.description_field_template = description
+             self.destroy()
+         else:
+             self.show_invalid_input_error_dialog()
+diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+index 3c88cb5..d96c76a 100755
+--- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
++++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+@@ -191,6 +191,8 @@ class ImageDetailsPage (HobPage):
+         self.details_bottom_buttons = gtk.HBox(False, 6)
+         self.image_saved = False
+         self.create_visual_elements()
++        self.name_field_template = ""
++        self.description_field_template = ""
  
-+    def modifyConfigurationVar(self, var, val, default_file, op):
-+        if op == "append":
-+            self.appendConfigurationVar(var, val, default_file)
-+        elif op == "set":
-+            self.saveConfigurationVar(var, val, default_file)
-+
-+    def appendConfigurationVar(self, var, val, default_file):
-+        #add append var operation to the end of default_file
-+        default_file = bb.cookerdata.findConfigFile(default_file)
-+
-+        with open(default_file, 'r') as f:
-+            contents = f.readlines()
-+        f.close()
-+
-+        total = ""
-+        for c in contents:
-+            total += c
-+
-+        total += "#added by bitbake"
-+        total += "\n%s += \"%s\"\n" % (var, val)
-+
-+        with open(default_file, 'w') as f:
-+            f.write(total)
-+        f.close()
-+
-+        #add to history
-+        loginfo = {"op":append, "file":default_file, "line":total.count("\n")}
-+        self.data.appendVar(var, val, **loginfo)
-+
-     def saveConfigurationVar(self, var, val, default_file):
+     def create_visual_elements(self):
+         # create visual elements
+@@ -632,8 +634,8 @@ class ImageDetailsPage (HobPage):
+         images_dir = topdir + "/recipes/images/"
+         self.builder.ensure_dir(images_dir)
  
-         replaced = False
-diff --git a/bitbake/lib/bb/data.py b/bitbake/lib/bb/data.py
-index 87c4808..8c9cb0f 100644
---- a/bitbake/lib/bb/data.py
-+++ b/bitbake/lib/bb/data.py
-@@ -97,6 +97,10 @@ def delVar(var, d):
-     """Removes a variable from the data set"""
-     d.delVar(var)
+-        dialog = SaveImageDialog(images_dir, "Save base image", self.builder,
+-                              gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT)
++        dialog = SaveImageDialog(images_dir, self.name_field_template, self.description_field_template,
++                "Save base image", self.builder, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT)
+         response = dialog.run()
+         dialog.destroy()
  
-+def appendVar(var, value, d):
-+    """Append additional value to a variable"""
-+    d.appendVar(var, value)
-+
- def setVarFlag(var, flag, flagvalue, d):
-     """Set a flag for a given variable to a given value"""
-     d.setVarFlag(var, flag, flagvalue)
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index 6bf4024..7e33f92 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -440,6 +440,7 @@ class Builder(gtk.Window):
-         self.handler.connect("recipe-populated",         self.handler_recipe_populated_cb)
-         self.handler.connect("package-populated",        self.handler_package_populated_cb)
- 
-+        self.handler.append_to_bbfiles("${TOPDIR}/recipes/images/*bb")
-         self.initiate_new_build_async()
- 
-         signal.signal(signal.SIGINT, self.event_handle_SIGINT)
-diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-index 04a9482..d160c69 100644
---- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -471,9 +471,22 @@ class HobHandler(gobject.GObject):
- 
-     def set_var_in_file(self, var, val, default_file=None):
-         self.runCommand(["enableDataTracking"])
--        self.server.runCommand(["setVarFile", var, val, default_file])
-+        self.server.runCommand(["setVarFile", var, val, default_file, "set"])
-         self.runCommand(["disableDataTracking"])
- 
-+    def append_var_in_file(self, var, val, default_file=None):
-+        self.server.runCommand(["setVarFile", var, val, default_file, "append"])
-+
-+    def append_to_bbfiles(self, val):
-+        bbfiles = self.runCommand(["getVariable", "BBFILES"]) or ""
-+        bbfiles = bbfiles.split()
-+        # replace TOPDIR in val, if necessary
-+        if "${TOPDIR}" in val:
-+            topdir = self.get_topdir()
-+            val = val.replace("${TOPDIR}", topdir)
-+        if val not in bbfiles:
-+            self.append_var_in_file("BBFILES", "${TOPDIR}/recipes/images/*bb", "local.conf")
-+
-     def get_parameters(self):
-         # retrieve the parameters from bitbake
-         params = {}
 -- 
 1.7.9.5
 
