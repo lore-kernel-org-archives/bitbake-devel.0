@@ -1,36 +1,24 @@
-Return-Path: <cristiana.voicu@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
-	by mail.openembedded.org (Postfix) with ESMTP id 818386B10E
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 6DE0D6B262
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 17 Jul 2013 10:37:53 +0000 (UTC)
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 17 Jul 2013 03:37:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.89,683,1367996400"; d="scan'208";a="269411068"
-Received: from irsmsx104.ger.corp.intel.com ([163.33.3.159])
-	by AZSMGA002.ch.intel.com with ESMTP; 17 Jul 2013 03:37:53 -0700
-Received: from irsmsx151.ger.corp.intel.com (163.33.192.59) by
-	IRSMSX104.ger.corp.intel.com (163.33.3.159) with Microsoft SMTP Server
-	(TLS) id 14.3.123.3; Wed, 17 Jul 2013 11:37:12 +0100
-Received: from irsmsx105.ger.corp.intel.com ([169.254.7.52]) by
-	IRSMSX151.ger.corp.intel.com ([169.254.4.214]) with mapi id
-	14.03.0123.003; Wed, 17 Jul 2013 11:37:11 +0100
-From: "Voicu, Cristiana" <cristiana.voicu@intel.com>
-To: "Voicu, Cristiana" <cristiana.voicu@intel.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [PATCH 00/14] bitbake+hob: templates enhancement
-Thread-Index: AQHOgtkXNMUYXbTRi0OdMXxviTyf45lorUPg
-Date: Wed, 17 Jul 2013 10:37:10 +0000
-Message-ID: <BE68E9C8E0850C43B0F0B0B7D57FA5AE2E7EBD56@IRSMSX105.ger.corp.intel.com>
-References: <1374057344-19708-1-git-send-email-cristiana.voicu@intel.com>
-In-Reply-To: <1374057344-19708-1-git-send-email-cristiana.voicu@intel.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [163.33.239.182]
+	Fri, 19 Jul 2013 08:11:10 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id r6J8BA3N028482
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 19 Jul 2013 01:11:10 -0700 (PDT)
+Received: from pek-hostel-vm02.wrs.com (128.224.153.172) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+	14.2.342.3; Fri, 19 Jul 2013 01:11:10 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Fri, 19 Jul 2013 04:11:06 -0400
+Message-ID: <cover.1374204011.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 1.7.10.4
 MIME-Version: 1.0
-Subject: Re: [PATCH 00/14] bitbake+hob: templates enhancement
+Subject: [PATCH 0/1] providers.py: print a debug message for dynamic pacakge
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,67 +30,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 17 Jul 2013 10:37:54 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Fri, 19 Jul 2013 08:11:10 -0000
+Content-Type: text/plain
 
-Hi,
+The following changes since commit 31e6eee860b5f9f4ac9ef0889bcff5648de6e3f9:
 
-If you want to test this functionality, there is a poky-contrib branch with=
- these patches:
-http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=3Dcvoicu/hobt=
-emplates
+  poky-tiny.conf: blacklist core-image-weston option (2013-07-18 21:26:58 +0100)
 
-Thanks,
-Cristiana
+are available in the git repository at:
 
------Original Message-----
-From: Voicu, Cristiana=20
-Sent: Wednesday, July 17, 2013 1:36 PM
-To: bitbake-devel@lists.openembedded.org
-Cc: Voicu, Cristiana
-Subject: [PATCH 00/14] bitbake+hob: templates enhancement
+  git://git.pokylinux.org/poky-contrib robert/dynamic
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/dynamic
 
-This set implements the templates functionality in Hob.
-There are two new files, with two different dialogs.
-The changes are in bitbake and Hob.
+Robert Yang (1):
+  providers.py: print a debug message for dynamic pacakge
 
-Cristiana Voicu (14):
-  hob: labelling changes in Hob
-  hob: create save image dialog used to save a template
-  hob/bitbake: create a template (a .bb file) from hob through bitbake
-  hob/bitbake: save the description of a custom image
-  hob: make changes in order to permit from UI to edit an image after
-    saving it
-  hob & bitbake: append a value to a variable from hob throught bitbake
-  hob: change the name and description for the saveimagedialog
-  hob: the saved image should be editable
-  bitbake: when an image is saved, it should require an image from
-    layers
-  hob: changes to image combo box
-  hob: retrieve file name of an image
-  hob: implement the "retrieve image dialog" + changes to image combo
-    box
-  bitbake: save packages in IMAGE_INSTALL instead of PACKAGE_INSTALL
-  hob: set focus on entry name when the name is not correct
+ bitbake/lib/bb/providers.py |    1 +
+ 1 file changed, 1 insertion(+)
 
- bitbake/lib/bb/command.py                          |   12 +-
- bitbake/lib/bb/cooker.py                           |   75 ++++++++--
- bitbake/lib/bb/data.py                             |    4 +
- bitbake/lib/bb/ui/crumbs/builder.py                |   15 ++
- .../lib/bb/ui/crumbs/hig/retrieveimagedialog.py    |   49 +++++++
- bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py    |  151 ++++++++++++++++=
-++++
- bitbake/lib/bb/ui/crumbs/hobeventhandler.py        |   29 +++-
- bitbake/lib/bb/ui/crumbs/hoblistmodel.py           |   40 ++++--
- bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |   70 +++++++--
- bitbake/lib/bb/ui/crumbs/imagedetailspage.py       |   37 ++++-
- 10 files changed, 438 insertions(+), 44 deletions(-)  create mode 100644 b=
-itbake/lib/bb/ui/crumbs/hig/retrieveimagedialog.py
- create mode 100644 bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
-
---
-1.7.9.5
+-- 
+1.7.10.4
 
 
