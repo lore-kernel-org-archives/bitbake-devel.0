@@ -1,25 +1,20 @@
-Return-Path: <petter@technux.se>
-Received: from vsp-authed-02-02.binero.net (vsp-authed02.binero.net
-	[195.74.38.226])
-	by mail.openembedded.org (Postfix) with SMTP id 7582360958
+Return-Path: <cristiana.voicu@intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id B7BAA6B446
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 29 Jul 2013 09:19:44 +0000 (UTC)
-Received: from smtp01.binero.se (unknown [195.74.38.28])
-	by vsp-authed-02-02.binero.net (Halon Mail Gateway) with ESMTP;
-	Mon, 29 Jul 2013 11:19:35 +0200 (CEST)
-Received: from eldbvzzwp1-7x.lan (90-224-44-236-no67.tbcn.telia.com
-	[90.224.44.236]) (Authenticated sender: petter@technux.se)
-	by smtp-06-01.atm.binero.net (Postfix) with ESMTPSA id 7EE553A10F;
-	Mon, 29 Jul 2013 11:19:35 +0200 (CEST)
-From: =?UTF-8?q?Petter=20Mab=C3=A4cker?= <petter@technux.se>
+	Mon, 29 Jul 2013 12:56:56 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga101.fm.intel.com with ESMTP; 29 Jul 2013 05:56:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.89,769,1367996400"; d="scan'208";a="372875938"
+Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.72])
+	by fmsmga001.fm.intel.com with ESMTP; 29 Jul 2013 05:56:55 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 29 Jul 2013 11:19:31 +0200
-Message-Id: <c8e2317302a86e93bdbe8746b02f0a42be91abcf.1375088734.git.petter@technux.se>
+Date: Mon, 29 Jul 2013 15:59:14 +0300
+Message-Id: <1375102770-14079-1-git-send-email-cristiana.voicu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1375088734.git.petter@technux.se>
-References: <cover.1375088734.git.petter@technux.se>
-MIME-Version: 1.0
-Subject: [PATCH 1/1] bitbake: runqueue: add warning in invalidate task
+Subject: [PATCH_V3 00/16] bitbake+hob: templates enhancement
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,34 +26,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 29 Jul 2013 09:19:45 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Mon, 29 Jul 2013 12:56:57 -0000
 
-Add a warning if 'bitbake -C' is executed with a task that does not
-exist.
+This set implements the templates functionality in Hob.
+There are two new files, with two different dialogs.
+The changes are in bitbake and in Hob.
 
-Fixes [YOCTO #4877]
+Cristiana Voicu (16):
+  hob: labelling changes in Hob
+  hob: create save image dialog used to save a template
+  hob/bitbake: create a template (a .bb file) from hob through bitbake
+  hob/bitbake: save the description of a custom image
+  hob: make changes in order to permit from UI to edit an image after
+    saving it
+  hob & bitbake: append a value to a variable from hob throught bitbake
+  hob: change the name and description for the saveimagedialog
+  hob: the saved image should be editable
+  hob/bitbake: when an image is saved, it should require an image from
+    layers
+  hob: changes to image combo box
+  hob: retrieve file name of an image
+  hob: implement the "retrieve image dialog" + changes to image combo
+    box
+  bitbake: save packages in IMAGE_INSTALL instead of PACKAGE_INSTALL
+  hob: set focus on entry name when the name is not correct
+  hob/imagedetailspage: add tooltip for save image recipe button
+  hob/imageconfigurationpage: changes to image combobox
 
-Signed-off-by: Petter Mabäcker <petter@technux.se>
----
- bitbake/lib/bb/runqueue.py |    3 +++
- 1 file changed, 3 insertions(+)
+ bitbake/lib/bb/command.py                          |   14 +-
+ bitbake/lib/bb/cooker.py                           |   71 +++++++--
+ bitbake/lib/bb/data.py                             |    4 +
+ bitbake/lib/bb/ui/crumbs/builder.py                |   15 ++
+ .../lib/bb/ui/crumbs/hig/retrieveimagedialog.py    |   49 +++++++
+ bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py    |  151 ++++++++++++++++++++
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py        |   25 +++-
+ bitbake/lib/bb/ui/crumbs/hoblistmodel.py           |   40 ++++--
+ bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |   76 +++++++---
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py       |   44 +++++-
+ 10 files changed, 438 insertions(+), 51 deletions(-)
+ create mode 100644 bitbake/lib/bb/ui/crumbs/hig/retrieveimagedialog.py
+ create mode 100644 bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index fce08ee..539e9af 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -720,6 +720,9 @@ class RunQueueData:
- 
-         def invalidate_task(fn, taskname, error_nostamp):
-             taskdep = self.dataCache.task_deps[fn]
-+            fnid = self.taskData.getfn_id(fn)
-+            if taskname not in taskData.tasks_lookup[fnid]:
-+                logger.warn("Task %s does not exist, invalidate this task will have no effect" % taskname)
-             if 'nostamp' in taskdep and taskname in taskdep['nostamp']:
-                 if error_nostamp:
-                     bb.fatal("Task %s is marked nostamp, cannot invalidate this task" % taskname)
 -- 
 1.7.9.5
 
