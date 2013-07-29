@@ -1,22 +1,22 @@
 Return-Path: <cristiana.voicu@intel.com>
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 29C1F6B463
+	by mail.openembedded.org (Postfix) with ESMTP id 711D56B486
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 29 Jul 2013 12:57:01 +0000 (UTC)
+	Mon, 29 Jul 2013 12:57:02 +0000 (UTC)
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 29 Jul 2013 05:57:02 -0700
+	by fmsmga101.fm.intel.com with ESMTP; 29 Jul 2013 05:57:03 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.89,769,1367996400"; d="scan'208";a="372875983"
+X-IronPort-AV: E=Sophos;i="4.89,769,1367996400"; d="scan'208";a="372875993"
 Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.72])
-	by fmsmga001.fm.intel.com with ESMTP; 29 Jul 2013 05:57:01 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 29 Jul 2013 05:57:02 -0700
 From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 29 Jul 2013 15:59:18 +0300
-Message-Id: <1375102770-14079-5-git-send-email-cristiana.voicu@intel.com>
+Date: Mon, 29 Jul 2013 15:59:19 +0300
+Message-Id: <1375102770-14079-6-git-send-email-cristiana.voicu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1375102770-14079-1-git-send-email-cristiana.voicu@intel.com>
 References: <1375102770-14079-1-git-send-email-cristiana.voicu@intel.com>
-Subject: [PATCH_V3 04/16] hob/bitbake: save the description of a custom image
+Subject: [PATCH_V3 05/16] hob: make changes in order to permit from UI to edit an image after saving it
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,120 +28,130 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 29 Jul 2013 12:57:01 -0000
+X-List-Received-Date: Mon, 29 Jul 2013 12:57:02 -0000
 
-When an new image is saved, the dialog for this action has
-a field for the description. Changed how an image is saved, by
-appending the DESCRIPTION variable at the end of the .bb file.
+Added the image name to the list model, in order to show the image name as
+the user named it.
 
 [YOCTO #4193]
 Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- bitbake/lib/bb/command.py                       |    3 ++-
- bitbake/lib/bb/cooker.py                        |    5 ++++-
- bitbake/lib/bb/ui/crumbs/builder.py             |    4 ++--
- bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py |    4 +++-
- bitbake/lib/bb/ui/crumbs/hobeventhandler.py     |    6 +++---
- 5 files changed, 14 insertions(+), 8 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py |    4 ++++
+ bitbake/lib/bb/ui/crumbs/hoblistmodel.py        |   28 +++++++++++++++--------
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py    |   10 ++++++--
+ 3 files changed, 31 insertions(+), 11 deletions(-)
 
-diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
-index 1893cce..5eb34af 100644
---- a/bitbake/lib/bb/command.py
-+++ b/bitbake/lib/bb/command.py
-@@ -215,8 +215,9 @@ class CommandsSync:
-         base_image = params[1]
-         package_queue = params[2]
-         timestamp = params[3]
-+        description = params[4]
-         return command.cooker.generateNewImage(image, base_image,
--                                 package_queue, timestamp)
-+                        package_queue, timestamp, description)
- 
-     def ensureDir(self, command, params):
-         directory = params[0]
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 4a5638f..7ca9947 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1100,7 +1100,7 @@ class BBCooker:
- 
-         self.configuration.server_register_idlecallback(buildTargetsIdle, rq)
- 
--    def generateNewImage(self, image, base_image, package_queue, timestamp):
-+    def generateNewImage(self, image, base_image, package_queue, timestamp, description):
-         '''
-         Create a new image with a "require"/"inherit" base_image statement
-         '''
-@@ -1125,6 +1125,9 @@ class BBCooker:
-             package_install += "\"\n"
-             imagefile.write(package_install)
- 
-+            description_var = "DESCRIPTION = \"" + description + "\"\n"
-+            imagefile.write(description_var)
-+
-         self.state = state.initial
-         if timestamp:
-             return timestr
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index 0a04c90..6bf4024 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -593,12 +593,12 @@ class Builder(gtk.Window):
-                                     toolchain_packages,
-                                     self.configuration.default_task)
- 
--    def generate_new_image(self, image):
-+    def generate_new_image(self, image, description):
-         base_image = self.configuration.initial_selected_image
-         if base_image == self.recipe_model.__custom_image__:
-             base_image = None
-         packages = self.package_model.get_selected_packages()
--        self.handler.generate_new_image(image, base_image, packages)
-+        self.handler.generate_new_image(image, base_image, packages, description)
- 
-     def ensure_dir(self, directory):
-         self.handler.ensure_dir(directory)
 diff --git a/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py b/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
-index b2fa3bd..b94e69f 100644
+index b94e69f..9ea512f 100644
 --- a/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
 +++ b/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
-@@ -116,8 +116,10 @@ class SaveImageDialog (CrumbsDialog):
-     def save_button_cb(self, button):
-         text = self.name_entry.get_text()
-         new_text = text.replace("-","")
-+        description_buffer = self.description_entry.get_buffer()
-+        description = description_buffer.get_text(description_buffer.get_start_iter(),description_buffer.get_end_iter())
+@@ -119,7 +119,11 @@ class SaveImageDialog (CrumbsDialog):
+         description_buffer = self.description_entry.get_buffer()
+         description = description_buffer.get_text(description_buffer.get_start_iter(),description_buffer.get_end_iter())
          if new_text.islower() and new_text.isalnum():
--            self.builder.generate_new_image(self.directory+text)
-+            self.builder.generate_new_image(self.directory+text, description)
++            self.builder.image_details_page.image_saved = True
+             self.builder.generate_new_image(self.directory+text, description)
++            self.builder.recipe_model.set_in_list(text, description)
++            self.builder.recipe_model.set_selected_image(text)
++            self.builder.image_details_page.show_page(self.builder.IMAGE_GENERATED)
              self.destroy()
          else:
              self.show_invalid_input_error_dialog()
-diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-index 34cd347..42fd0b9 100644
---- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -176,7 +176,7 @@ class HobHandler(gobject.GObject):
-                 hobImage = self.runCommand(["matchFile", "hob-image.bb"])
-                 if self.base_image != "Start with an empty image recipe":
-                     baseImage = self.runCommand(["matchFile", self.base_image + ".bb"])
--                    version = self.runCommand(["generateNewImage", hobImage, baseImage, self.package_queue, True])
-+                    version = self.runCommand(["generateNewImage", hobImage, baseImage, self.package_queue, True, ""])
-                     targets[0] += version
-                     self.recipe_model.set_custom_image_version(version)
+diff --git a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+index d8f3256..34ff76a 100644
+--- a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
++++ b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+@@ -678,15 +678,8 @@ class RecipeListModel(gtk.ListStore):
+         self.clear()
  
-@@ -426,9 +426,9 @@ class HobHandler(gobject.GObject):
-         self.commands_async.append(self.SUB_BUILD_IMAGE)
-         self.run_next_command(self.GENERATE_IMAGE)
+         # dummy image for prompt
+-        self.set(self.append(), self.COL_NAME, self.__custom_image__,
+-                 self.COL_DESC, "Use 'Edit image recipe' to customize recipes and packages " \
+-                                "to be included in your image ",
+-                 self.COL_LIC, "", self.COL_GROUP, "",
+-                 self.COL_DEPS, "", self.COL_BINB, "",
+-                 self.COL_TYPE, "image", self.COL_INC, False,
+-                 self.COL_IMG, False, self.COL_INSTALL, "", self.COL_PN, self.__custom_image__,
+-                 self.COL_SUMMARY, "", self.COL_VERSION, "", self.COL_REVISION, "",
+-                 self.COL_HOMEPAGE, "", self.COL_BUGTRACKER, "")
++        self.set_in_list(self.__custom_image__,  "Use 'Edit image recipe' to customize recipes and packages " \
++                                "to be included in your image ")
  
--    def generate_new_image(self, image, base_image, package_queue):
-+    def generate_new_image(self, image, base_image, package_queue, description):
-         base_image = self.runCommand(["matchFile", self.base_image + ".bb"])
--        self.runCommand(["generateNewImage", image, base_image, package_queue, False])
-+        self.runCommand(["generateNewImage", image, base_image, package_queue, False, description])
+         for item in event_model["pn"]:
+             name = item
+@@ -732,6 +725,23 @@ class RecipeListModel(gtk.ListStore):
+             self.pn_path[pn] = path
+             it = self.iter_next(it)
  
-     def ensure_dir(self, directory):
-         self.runCommand(["ensureDir", directory])
++    def set_in_list(self, item, desc):
++        self.set(self.append(), self.COL_NAME, item,
++                 self.COL_DESC, desc,
++                 self.COL_LIC, "", self.COL_GROUP, "",
++                 self.COL_DEPS, "", self.COL_BINB, "",
++                 self.COL_TYPE, "image", self.COL_INC, False,
++                 self.COL_IMG, False, self.COL_INSTALL, "", self.COL_PN, item,
++                 self.COL_SUMMARY, "", self.COL_VERSION, "", self.COL_REVISION, "",
++                 self.COL_HOMEPAGE, "", self.COL_BUGTRACKER, "")
++        self.pn_path = {}
++        it = self.get_iter_first()
++        while it:
++            pn = self.get_value(it, self.COL_NAME)
++            path = self.get_path(it)
++            self.pn_path[pn] = path
++            it = self.iter_next(it)
++
+     """
+     Update the model, send out the notification.
+     """
+diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+index f55d43f..eaa4588 100755
+--- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
++++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+@@ -189,6 +189,7 @@ class ImageDetailsPage (HobPage):
+         self.image_store = []
+         self.button_ids = {}
+         self.details_bottom_buttons = gtk.HBox(False, 6)
++        self.image_saved = False
+         self.create_visual_elements()
+ 
+     def create_visual_elements(self):
+@@ -248,7 +249,7 @@ class ImageDetailsPage (HobPage):
+         self.pack_start(self.group_align, expand=True, fill=True)
+ 
+         self.build_result = None
+-        if self.build_succeeded and self.builder.current_step == self.builder.IMAGE_GENERATING:
++        if self.image_saved or (self.build_succeeded and self.builder.current_step == self.builder.IMAGE_GENERATING):
+             # building is the previous step
+             icon = gtk.Image()
+             pixmap_path = hic.ICON_INDI_CONFIRM_FILE
+@@ -256,7 +257,10 @@ class ImageDetailsPage (HobPage):
+             pix_buffer = gtk.gdk.pixbuf_new_from_file(pixmap_path)
+             icon.set_from_pixbuf(pix_buffer)
+             varlist = [""]
+-            vallist = ["Your image is ready"]
++            if self.image_saved:
++                vallist = ["Your image recipe has been saved"]
++            else:
++                vallist = ["Your image is ready"]
+             self.build_result = self.BuildDetailBox(varlist=varlist, vallist=vallist, icon=icon, color=color)
+             self.box_group_area.pack_start(self.build_result, expand=False, fill=False)
+ 
+@@ -397,6 +401,7 @@ class ImageDetailsPage (HobPage):
+         self.show_all()
+         if self.kernel_detail and (not is_runnable):
+             self.kernel_detail.hide()
++        self.image_saved = False
+ 
+     def view_files_clicked_cb(self, button, image_addr):
+         subprocess.call("xdg-open /%s" % image_addr, shell=True)
+@@ -583,6 +588,7 @@ class ImageDetailsPage (HobPage):
+         name = "Save image recipe"
+         if name in buttonlist and self.builder.recipe_model.is_custom_image():
+             save_button = HobAltButton("Save image recipe")
++            save_button.set_sensitive(not self.image_saved)
+             button_id = save_button.connect("clicked", self.save_button_clicked_cb)
+             self.button_ids[button_id] = save_button
+             self.details_bottom_buttons.pack_end(save_button, expand=False, fill=False)
 -- 
 1.7.9.5
 
