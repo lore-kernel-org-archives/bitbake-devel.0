@@ -1,20 +1,20 @@
-Return-Path: <valentin.popa@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id E81686B410
+Return-Path: <cristiana.voicu@intel.com>
+Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
+	by mail.openembedded.org (Postfix) with ESMTP id E5E056B451
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 30 Jul 2013 08:26:21 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 30 Jul 2013 01:26:22 -0700
+	Tue, 30 Jul 2013 11:57:34 +0000 (UTC)
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 30 Jul 2013 04:57:35 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.89,776,1367996400"; d="scan'208";a="378767614"
-Received: from vpopa-desktop.rb.intel.com ([10.237.105.70])
-	by orsmga002.jf.intel.com with ESMTP; 30 Jul 2013 01:26:21 -0700
-From: Valentin Popa <valentin.popa@intel.com>
+X-IronPort-AV: E=Sophos;i="4.89,778,1367996400"; d="scan'208";a="338975165"
+Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.72])
+	by azsmga001.ch.intel.com with ESMTP; 30 Jul 2013 04:57:33 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 30 Jul 2013 11:27:28 +0300
-Message-Id: <1375172848-13567-1-git-send-email-valentin.popa@intel.com>
-X-Mailer: git-send-email 1.8.1.2
-Subject: [PATCH] Bitbake: import needed package
+Date: Tue, 30 Jul 2013 15:00:08 +0300
+Message-Id: <1375185608-18951-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob/packageslist: change image size label to estimated image size
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -26,31 +26,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 30 Jul 2013 08:26:22 -0000
+X-List-Received-Date: Tue, 30 Jul 2013 11:57:35 -0000
 
-bitbake-worker makes use of signal package
-but it doesn't import it. This patch fixes the issue.
+On the "Edit packages list" page, the image size may be computed before
+building. We didn't find another way to give a more accurate size, so
+we have agreed to inform the user that this an estimated size.
 
-[YOCTO #4750]
-
-Signed-off-by: Valentin Popa <valentin.popa@intel.com>
+[YOCTO #4388]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- bitbake/bin/bitbake-worker | 1 +
- 1 file changed, 1 insertion(+)
+ bitbake/lib/bb/ui/crumbs/packageselectionpage.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
-index 6580078..b438d98 100755
---- a/bitbake/bin/bitbake-worker
-+++ b/bitbake/bin/bitbake-worker
-@@ -9,6 +9,7 @@ import logging
- import bb
- import select
- import errno
-+import signal
+diff --git a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+index 70caa48..780f026 100755
+--- a/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
++++ b/bitbake/lib/bb/ui/crumbs/packageselectionpage.py
+@@ -278,7 +278,7 @@ class PackageSelectionPage (HobPage):
+                 image_total_size += (51200 * 1024)
+             image_total_size_str = HobPage._size_to_string(image_total_size)
  
- # Users shouldn't be running this code directly
- if len(sys.argv) != 2 or sys.argv[1] != "decafbad":
+-        self.label.set_label("Packages included: %s\nSelected packages size: %s\nTotal image size: %s" %
++        self.label.set_label("Packages included: %s\nSelected packages size: %s\nEstimated image size: %s" %
+                             (selected_packages_num, selected_packages_size_str, image_total_size_str))
+         self.ins.show_indicator_icon("Included packages", selected_packages_num)
+ 
 -- 
-1.8.1.2
+1.7.9.5
 
 
