@@ -1,20 +1,37 @@
-Return-Path: <cristiana.voicu@intel.com>
-Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
-	by mail.openembedded.org (Postfix) with ESMTP id C72BE6A9E1
+Return-Path: <joe@deserted.net>
+Received: from mail-qc0-f178.google.com (mail-qc0-f178.google.com
+	[209.85.216.178])
+	by mail.openembedded.org (Postfix) with ESMTP id B15BB61883
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  2 Aug 2013 14:55:26 +0000 (UTC)
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga102.ch.intel.com with ESMTP; 02 Aug 2013 07:55:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.89,801,1367996400"; d="scan'208";a="276838573"
-Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.72])
-	by AZSMGA002.ch.intel.com with ESMTP; 02 Aug 2013 07:55:25 -0700
-From: Cristiana Voicu <cristiana.voicu@intel.com>
+	Thu,  1 Aug 2013 14:19:54 +0000 (UTC)
+Received: by mail-qc0-f178.google.com with SMTP id s1so1110413qcw.9
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 01 Aug 2013 07:19:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=google.com; s=20120113;
+	h=from:to:subject:date:message-id:x-mailer:x-gm-message-state;
+	bh=Nta2a/KjGp3Fq02UwI1YDWeap747RR7O1JlpljWsPTM=;
+	b=c6Iu8FkdRgmwCP3qxBLdHBR0uf/angvEXZ6W+thfsEEhuj3oNOzz48yWu0A/HbnW6x
+	WRyy2S501NbGnKC0gun8hyVVKvZiK2tzbE/XIHjoyw5/2ZjNI1OYDiXNkTC9uw+d23kv
+	El2D2GNfWgTBy8Fw/i2+lufLnqrPn9hzsBaqMAcdl9M434VH2rRFEQCeYQRxWO86k4C6
+	wyOzVHTnGBpbwiggOA3cyVQ4ls9Q43PavuIa1b0V9d0/4MBAeB5FWGWq5nfgs9cozZoB
+	0gSuQzS1h95RegFgHFtzzqLH2xuPLvbgtynyR/UUQ5Ix25x+kYlJtN37mOGqirsa7tRo
+	vasw==
+X-Received: by 10.49.109.72 with SMTP id hq8mr2429946qeb.38.1375366794918;
+	Thu, 01 Aug 2013 07:19:54 -0700 (PDT)
+Received: from burninator.wrs.com ([128.224.252.2])
+	by mx.google.com with ESMTPSA id y1sm5356394qaj.2.2013.08.01.07.19.53
+	for <multiple recipients>
+	(version=TLSv1.2 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Thu, 01 Aug 2013 07:19:54 -0700 (PDT)
+From: joe@deserted.net
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  2 Aug 2013 17:57:55 +0300
-Message-Id: <1375455475-15015-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob/advancedsettings: change toolchain labels to sdk labels
+Date: Thu,  1 Aug 2013 10:19:46 -0400
+Message-Id: <1375366786-16892-1-git-send-email-joe@deserted.net>
+X-Mailer: git-send-email 1.7.10.4
+X-Gm-Message-State: ALoCoQlmJ8qhX6Lcvru+zTIVEXTGZJ+fXKslomxjvxwOdH4FeT/IhDA9wRnoJdpZSI2MuNiTDd46
+X-Mailman-Approved-At: Fri, 02 Aug 2013 18:11:14 +0000
+Subject: [PATCH] bitbake: enable pdb tracing
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -26,66 +43,81 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 02 Aug 2013 14:55:26 -0000
+X-List-Received-Date: Thu, 01 Aug 2013 14:19:55 -0000
 
-In order to be easier for the user to understand, we have changed the
-toolchain labels to sdk.
+From: Joe MacDonald <joe@deserted.net>
 
-[YOCTO #3808]
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+Based on:
+
+   http://blog.devork.be/2009/07/how-to-bring-running-python-program.html
+
+register a signal handler to dynamically start pdb tracing on receiving
+SIGUSR1.
+
+Signed-off-by: Joe MacDonald <joe@deserted.net>
 ---
- .../lib/bb/ui/crumbs/hig/advancedsettingsdialog.py |   21 ++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/hig/advancedsettingsdialog.py b/bitbake/lib/bb/ui/crumbs/hig/advancedsettingsdialog.py
-index bbcaba8..86a65ae 100644
---- a/bitbake/lib/bb/ui/crumbs/hig/advancedsettingsdialog.py
-+++ b/bitbake/lib/bb/ui/crumbs/hig/advancedsettingsdialog.py
-@@ -131,7 +131,7 @@ class AdvancedSettingsDialog (CrumbsDialog, SettingsUIHelper):
-         self.rootfs_size_spinner = None
-         self.extra_size_spinner = None
-         self.gplv3_checkbox = None
--        self.toolchain_checkbox = None
-+        self.sdk_checkbox = None
-         self.image_types_checkbuttons = {}
+I've been spending the last week or so looking at some perplexing hangs
+(for lack of a more descriptive word) with bitbake.  The behaviour is
+difficult to characterize and even harder to reproduce, but over the
+course of a day with a dozen machines or so doing various builds maybe a
+dozen times we'll get in a scenario where bitbake itself appears to be
+completely idle and waiting on something.  Occasionally it's been when
+doing a 'bitbake -g' or 'bitbake -e', most recently I saw this on a
+'bitbake core-image-minimal'.
+
+Given the difficulty I've had in actually making the hang occur in
+controlled circumstances, I can't say for certain, but it appears that
+enabling any level of debugging makes the problem disappear.  So I've been
+watching for it to happen then attaching gdb and investigating that way.
+
+That's when it occurred to me that it might actually be useful to others
+to have pdb available as an option, rather than needing to resort to
+attaching gdb/python and debugging that way.
+
+I did a quick search of the mailing list archives and didn't see this
+discussed before, but if it has been and dismissed, sorry.
+
+ -J.
+
+ bitbake/bin/bitbake |    9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/bitbake/bin/bitbake b/bitbake/bin/bitbake
+index 60c4b96..e40fe28 100755
+--- a/bitbake/bin/bitbake
++++ b/bitbake/bin/bitbake
+@@ -24,6 +24,7 @@
  
-         self.md5 = self.config_md5()
-@@ -286,16 +286,17 @@ class AdvancedSettingsDialog (CrumbsDialog, SettingsUIHelper):
-             self.gplv3_checkbox.set_active(False)
-         advanced_vbox.pack_start(self.gplv3_checkbox, expand=False, fill=False)
+ import os
+ import sys, logging
++import signal
+ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                 'lib'))
  
--        advanced_vbox.pack_start(self.gen_label_widget('<span weight="bold">Toolchain</span>'), expand=False, fill=False)
-+        advanced_vbox.pack_start(self.gen_label_widget('<span weight="bold">SDK</span>'), expand=False, fill=False)
-         sub_hbox = gtk.HBox(False, 6)
-         advanced_vbox.pack_start(sub_hbox, expand=False, fill=False)
--        self.toolchain_checkbox = gtk.CheckButton("Build toolchain")
--        self.toolchain_checkbox.set_tooltip_text("Check this box to build the related toolchain with your image")
--        self.toolchain_checkbox.set_active(self.configuration.toolchain_build)
--        sub_hbox.pack_start(self.toolchain_checkbox, expand=False, fill=False)
--
--        tooltip = "Selects the host platform for which you want to run the toolchain"
--        sdk_machine_widget, self.sdk_machine_combo = self.gen_combo_widget(self.configuration.curr_sdk_machine, self.all_sdk_machines,"<b>Build toolchain</b>" + "*" + tooltip)
-+        self.sdk_checkbox = gtk.CheckButton("Populate SDK")
-+        tooltip = "Check this box to generate an SDK tarball that consists of the cross-toolchain and a sysroot that contains development packages for your image."
-+        self.sdk_checkbox.set_tooltip_text(tooltip)
-+        self.sdk_checkbox.set_active(self.configuration.toolchain_build)
-+        sub_hbox.pack_start(self.sdk_checkbox, expand=False, fill=False)
-+
-+        tooltip = "Select the host platform for which you want to run the toolchain contained in the SDK tarball."
-+        sdk_machine_widget, self.sdk_machine_combo = self.gen_combo_widget(self.configuration.curr_sdk_machine, self.all_sdk_machines,"<b>Populate SDK</b>" + "*" + tooltip)
-         sub_hbox.pack_start(sdk_machine_widget, expand=False, fill=False)
+@@ -57,6 +58,13 @@ try:
+ except:
+     pass
  
-         return advanced_vbox
-@@ -330,7 +331,7 @@ class AdvancedSettingsDialog (CrumbsDialog, SettingsUIHelper):
-                 self.configuration.incompat_license = " ".join(self.configuration.incompat_license or [])
-         self.configuration.incompat_license = self.configuration.incompat_license.strip()
++# start pdb tracing if we receive SIGUSR1.
++def handle_pdb(sig, frame):
++    try:
++        import pdb
++        pdb.Pdb().set_trace(frame)
++    except ImportError:
++        logger.debug(2, 'Unable to import pdb module, interactive debugging of bitbake will not be possible')
  
--        self.configuration.toolchain_build = self.toolchain_checkbox.get_active()
-+        self.configuration.toolchain_build = self.sdk_checkbox.get_active()
-         self.configuration.curr_sdk_machine = self.sdk_machine_combo.get_active_text()
-         md5 = self.config_md5()
-         self.settings_changed = (self.md5 != md5)
+ def get_ui(config):
+     if not config.ui:
+@@ -338,6 +346,7 @@ def main():
+ 
+ if __name__ == "__main__":
+     try:
++        signal.signal(signal.SIGUSR1, handle_pdb)
+         ret = main()
+     except Exception:
+         ret = 1
 -- 
-1.7.9.5
+1.7.10.4
 
 
