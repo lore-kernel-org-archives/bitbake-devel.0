@@ -1,41 +1,42 @@
-Return-Path: <joe@deserted.net>
-Received: from mail-qc0-f178.google.com (mail-qc0-f178.google.com
-	[209.85.216.178])
-	by mail.openembedded.org (Postfix) with ESMTP id B15BB61883
+Return-Path: <kergoth@gmail.com>
+Received: from mail-la0-f49.google.com (mail-la0-f49.google.com
+	[209.85.215.49])
+	by mail.openembedded.org (Postfix) with ESMTP id 6BAA161AD1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  1 Aug 2013 14:19:54 +0000 (UTC)
-Received: by mail-qc0-f178.google.com with SMTP id s1so1110413qcw.9
+	Fri,  2 Aug 2013 21:06:00 +0000 (UTC)
+Received: by mail-la0-f49.google.com with SMTP id ev20so763708lab.8
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 01 Aug 2013 07:19:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=google.com; s=20120113;
-	h=from:to:subject:date:message-id:x-mailer:x-gm-message-state;
-	bh=Nta2a/KjGp3Fq02UwI1YDWeap747RR7O1JlpljWsPTM=;
-	b=c6Iu8FkdRgmwCP3qxBLdHBR0uf/angvEXZ6W+thfsEEhuj3oNOzz48yWu0A/HbnW6x
-	WRyy2S501NbGnKC0gun8hyVVKvZiK2tzbE/XIHjoyw5/2ZjNI1OYDiXNkTC9uw+d23kv
-	El2D2GNfWgTBy8Fw/i2+lufLnqrPn9hzsBaqMAcdl9M434VH2rRFEQCeYQRxWO86k4C6
-	wyOzVHTnGBpbwiggOA3cyVQ4ls9Q43PavuIa1b0V9d0/4MBAeB5FWGWq5nfgs9cozZoB
-	0gSuQzS1h95RegFgHFtzzqLH2xuPLvbgtynyR/UUQ5Ix25x+kYlJtN37mOGqirsa7tRo
-	vasw==
-X-Received: by 10.49.109.72 with SMTP id hq8mr2429946qeb.38.1375366794918;
-	Thu, 01 Aug 2013 07:19:54 -0700 (PDT)
-Received: from burninator.wrs.com ([128.224.252.2])
-	by mx.google.com with ESMTPSA id y1sm5356394qaj.2.2013.08.01.07.19.53
-	for <multiple recipients>
-	(version=TLSv1.2 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Thu, 01 Aug 2013 07:19:54 -0700 (PDT)
-From: joe@deserted.net
-To: bitbake-devel@lists.openembedded.org
-Date: Thu,  1 Aug 2013 10:19:46 -0400
-Message-Id: <1375366786-16892-1-git-send-email-joe@deserted.net>
-X-Mailer: git-send-email 1.7.10.4
-X-Gm-Message-State: ALoCoQlmJ8qhX6Lcvru+zTIVEXTGZJ+fXKslomxjvxwOdH4FeT/IhDA9wRnoJdpZSI2MuNiTDd46
-X-Mailman-Approved-At: Fri, 02 Aug 2013 18:11:14 +0000
-Subject: [PATCH] bitbake: enable pdb tracing
+	Fri, 02 Aug 2013 14:06:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date
+	:x-google-sender-auth:message-id:subject:to:cc:content-type;
+	bh=sDZ/dUqv3cgfdbZgSSzfjQoguVh5ozI8tZ/kfE/Q/mk=;
+	b=zRVyIoZ3s+6Z1CGafe4HQgTY9uqRqMGYx44ouwuMmpdv2o9aevwUFDolgKpeHwwkrJ
+	7tG130694bPafcpemWMfXxONSKGnW26N8K5fLE2S88D7p/Rk3kkqykHpHTI/JmKUR01w
+	cvX2KoolHsfeVRWOqn2vFKsFs2oIUWnBE4vnI7OSPWHDr8tLLBgL54zVOZk8D5l5VCU+
+	k7GKBYDUi6kCwIGaksfjWMguyQEQho1GJFThXFQHTvlqiZT6MemUZNKaxqv+kwmLxqiL
+	TlRf34MHXfx6DMPSRyI9nc6ykgNcnvFAJArssNtOuOxQxAL3vfwHkkP6AP8XrrSzX1wo
+	0Qhg==
+X-Received: by 10.152.37.232 with SMTP id b8mr3634527lak.80.1375477560366;
+	Fri, 02 Aug 2013 14:06:00 -0700 (PDT)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.112.17.67 with HTTP; Fri, 2 Aug 2013 14:05:40 -0700 (PDT)
+In-Reply-To: <1375366786-16892-1-git-send-email-joe@deserted.net>
+References: <1375366786-16892-1-git-send-email-joe@deserted.net>
+From: Chris Larson <clarson@kergoth.com>
+Date: Fri, 2 Aug 2013 14:05:40 -0700
+X-Google-Sender-Auth: 9e72uwl3vUcmkWb-y72uPmEP60U
+Message-ID: <CABcZANmaaKPj5Fno3aBiA0_DZyg6sEH4+QP8J_g=GODfAgwFag@mail.gmail.com>
+To: Joe MacDonald <joe@deserted.net>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] bitbake: enable pdb tracing
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
-List-Id: <bitbake-devel.lists.openembedded.org>
+List-Id: Patches and discussion that advance bitbake development
+	<bitbake-devel.lists.openembedded.org>
 List-Unsubscribe: <http://lists.openembedded.org/mailman/options/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=unsubscribe>
 List-Archive: <http://lists.openembedded.org/pipermail/bitbake-devel/>
@@ -43,81 +44,69 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 01 Aug 2013 14:19:55 -0000
+X-List-Received-Date: Fri, 02 Aug 2013 21:06:00 -0000
+Content-Type: multipart/alternative; boundary=089e01493e7a61dcb004e2fd53e7
 
-From: Joe MacDonald <joe@deserted.net>
+--089e01493e7a61dcb004e2fd53e7
+Content-Type: text/plain; charset=UTF-8
 
-Based on:
+On Thu, Aug 1, 2013 at 7:19 AM, <joe@deserted.net> wrote:
 
-   http://blog.devork.be/2009/07/how-to-bring-running-python-program.html
+> From: Joe MacDonald <joe@deserted.net>
+>
+> Based on:
+>
+>    http://blog.devork.be/2009/07/how-to-bring-running-python-program.html
+>
+> register a signal handler to dynamically start pdb tracing on receiving
+> SIGUSR1.
+>
+> Signed-off-by: Joe MacDonald <joe@deserted.net>
+>
 
-register a signal handler to dynamically start pdb tracing on receiving
-SIGUSR1.
-
-Signed-off-by: Joe MacDonald <joe@deserted.net>
----
-
-I've been spending the last week or so looking at some perplexing hangs
-(for lack of a more descriptive word) with bitbake.  The behaviour is
-difficult to characterize and even harder to reproduce, but over the
-course of a day with a dozen machines or so doing various builds maybe a
-dozen times we'll get in a scenario where bitbake itself appears to be
-completely idle and waiting on something.  Occasionally it's been when
-doing a 'bitbake -g' or 'bitbake -e', most recently I saw this on a
-'bitbake core-image-minimal'.
-
-Given the difficulty I've had in actually making the hang occur in
-controlled circumstances, I can't say for certain, but it appears that
-enabling any level of debugging makes the problem disappear.  So I've been
-watching for it to happen then attaching gdb and investigating that way.
-
-That's when it occurred to me that it might actually be useful to others
-to have pdb available as an option, rather than needing to resort to
-attaching gdb/python and debugging that way.
-
-I did a quick search of the mailing list archives and didn't see this
-discussed before, but if it has been and dismissed, sorry.
-
- -J.
-
- bitbake/bin/bitbake |    9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/bitbake/bin/bitbake b/bitbake/bin/bitbake
-index 60c4b96..e40fe28 100755
---- a/bitbake/bin/bitbake
-+++ b/bitbake/bin/bitbake
-@@ -24,6 +24,7 @@
- 
- import os
- import sys, logging
-+import signal
- sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)),
-                                 'lib'))
- 
-@@ -57,6 +58,13 @@ try:
- except:
-     pass
- 
-+# start pdb tracing if we receive SIGUSR1.
-+def handle_pdb(sig, frame):
-+    try:
-+        import pdb
-+        pdb.Pdb().set_trace(frame)
-+    except ImportError:
-+        logger.debug(2, 'Unable to import pdb module, interactive debugging of bitbake will not be possible')
- 
- def get_ui(config):
-     if not config.ui:
-@@ -338,6 +346,7 @@ def main():
- 
- if __name__ == "__main__":
-     try:
-+        signal.signal(signal.SIGUSR1, handle_pdb)
-         ret = main()
-     except Exception:
-         ret = 1
+As long as you keep in mind this will only affect the UI, not the forked
+off server, this could be useful. I'd suggest adding something for the
+server as well, but it'd need to listen to a socket for the input, lacking
+access to the user's tty, or would need to interface with the UI to do it :)
 -- 
-1.7.10.4
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
+--089e01493e7a61dcb004e2fd53e7
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On T=
+hu, Aug 1, 2013 at 7:19 AM,  <span dir=3D"ltr">&lt;<a href=3D"mailto:joe@de=
+serted.net" target=3D"_blank">joe@deserted.net</a>&gt;</span> wrote:<br><bl=
+ockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #=
+ccc solid;padding-left:1ex">
+
+<div id=3D":dz" style=3D"overflow:hidden">From: Joe MacDonald &lt;<a href=
+=3D"mailto:joe@deserted.net">joe@deserted.net</a>&gt;<br>
+<br>
+Based on:<br>
+<br>
+=C2=A0 =C2=A0<a href=3D"http://blog.devork.be/2009/07/how-to-bring-running-=
+python-program.html" target=3D"_blank">http://blog.devork.be/2009/07/how-to=
+-bring-running-python-program.html</a><br>
+<br>
+register a signal handler to dynamically start pdb tracing on receiving<br>
+SIGUSR1.<br>
+<br>
+Signed-off-by: Joe MacDonald &lt;<a href=3D"mailto:joe@deserted.net">joe@de=
+serted.net</a>&gt;</div></blockquote></div><br>As long as you keep in mind =
+this will only affect the UI, not the forked off server, this could be usef=
+ul. I&#39;d suggest adding something for the server as well, but it&#39;d n=
+eed to listen to a socket for the input, lacking access to the user&#39;s t=
+ty, or would need to interface with the UI to do it :)<br>
+
+-- <br>Christopher Larson<br>clarson at kergoth dot com<br>Founder - BitBak=
+e, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software Engine=
+er, Mentor Graphics
+</div></div>
+
+--089e01493e7a61dcb004e2fd53e7--
