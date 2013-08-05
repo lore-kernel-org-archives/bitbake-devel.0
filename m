@@ -1,42 +1,41 @@
 Return-Path: <ross.burton@intel.com>
-Received: from mail-we0-f175.google.com (mail-we0-f175.google.com
-	[74.125.82.175])
-	by mail.openembedded.org (Postfix) with ESMTP id 360006B41A
+Received: from mail-wg0-f41.google.com (mail-wg0-f41.google.com [74.125.82.41])
+	by mail.openembedded.org (Postfix) with ESMTP id 9A7886B4FD
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  5 Aug 2013 16:12:31 +0000 (UTC)
-Received: by mail-we0-f175.google.com with SMTP id q58so2645285wes.20
+	Mon,  5 Aug 2013 16:12:32 +0000 (UTC)
+Received: by mail-wg0-f41.google.com with SMTP id l18so1478159wgh.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 05 Aug 2013 09:12:31 -0700 (PDT)
+	Mon, 05 Aug 2013 09:12:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=google.com; s=20120113;
-	h=from:to:subject:date:message-id:x-mailer:in-reply-to:references
-	:in-reply-to:references:x-gm-message-state;
-	bh=hr6yga9NKYleVQ/DzISfyi4PRgmeni018TqfYJPfgE4=;
-	b=Z2CTCd2vKxdG4lcs/fAw9cF8d1vd7uPOhkO3SqYuGB6J4/ikpc6kYUeCEkasyRQcOL
-	JWMrCoqZKGQuHvbkxls/kBvl9zxUnH+IRVRciFptnns+GmgFs42Oz4R4QI0X7lter3Nz
-	azK4UrOfv9XTSyTO3a8lSs7HEqmDGy833M5TM0LG/dfxaJ2mL3yVMVTIB0w1pOBB5TXA
-	6bzSuWJuCjKmVdV3cpPFcP6kRyLVOlnkGzYKcvZ/w0YydKtXMmxb6n2P92sWZzg2wZhx
-	Dnc0Ck1XJAnf3Zffs2QFeQieAnytZ1mdThFar86jJvlSp1ZDtIZkvsIZKWLbl+ujsXmn
-	i5UQ==
-X-Received: by 10.194.123.69 with SMTP id ly5mr13755391wjb.29.1375719151260;
-	Mon, 05 Aug 2013 09:12:31 -0700 (PDT)
+	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+	:references:in-reply-to:references;
+	bh=lzdBlZsQDS/0Q03g9W/gMwmgMRO42NIQz/cds300V6I=;
+	b=loSxDietSnTUvGVF5Bq+pxrfEWJloFm0uokHLdJ01epLOaDysqm0CRvZW4O4uhCs89
+	fPA8rt7VluxoLOcL81bJKKnqEsbLYKMpE7yNHaUdmV/A4YvElm9GHiXY3QA+6aBc9MRh
+	4g5L3Me2u1crI+eLNlCXErZx20iQynnC0ajk7l39Uo1UgmflZ6Aj+/0jKMq9/emo9gXK
+	ZIv0YJrPMxpdkmENMC5juRm9ehGkzF3wviv8vc/rVemWIto16P1K/U6tXXsBkFn9kLaa
+	qkU9sfG7ZoEtDv97AjRZy3dHC+Ie+DomggBnDmXfXxSezxCHwizW+E9vUzjrdxKRU6rA
+	L9zg==
+X-Gm-Message-State: ALoCoQkS7HbEGxQlN80qujHdMi2i/3QaP92q0Awika/cwpsCWV/saIltXC0LHd3QGu79H5LxPmRF
+X-Received: by 10.180.82.5 with SMTP id e5mr1991404wiy.15.1375719153026;
+	Mon, 05 Aug 2013 09:12:33 -0700 (PDT)
 Received: from melchett.burtonini.com (35.106.2.81.in-addr.arpa. [81.2.106.35])
 	by mx.google.com with ESMTPSA id
-	fd3sm22434156wic.10.2013.08.05.09.12.29
+	fd3sm22434156wic.10.2013.08.05.09.12.31
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLSv1.2 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Mon, 05 Aug 2013 09:12:30 -0700 (PDT)
+	Mon, 05 Aug 2013 09:12:31 -0700 (PDT)
 From: Ross Burton <ross.burton@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  5 Aug 2013 17:12:22 +0100
-Message-Id: <87a392c25c6fed471c96b1bd781bfc481f1f03c4.1375718812.git.ross.burton@intel.com>
+Date: Mon,  5 Aug 2013 17:12:23 +0100
+Message-Id: <8b1a3c7eb0110cbb2345d32f26d37cb7fc5e8d6e.1375718812.git.ross.burton@intel.com>
 X-Mailer: git-send-email 1.7.10.4
 In-Reply-To: <cover.1375718812.git.ross.burton@intel.com>
 References: <cover.1375718812.git.ross.burton@intel.com>
 In-Reply-To: <cover.1375718812.git.ross.burton@intel.com>
 References: <cover.1375718812.git.ross.burton@intel.com>
-X-Gm-Message-State: ALoCoQkTUUKNV8Bvw2gV9OX16NFM6Hv3/J3mUpEG7IxAA8P6/f/OaHyE6gHVzVDk9ZVfOFXQRbqb
-Subject: [PATCH 2/3] depexp: insert data instead of append/set, for speed
+Subject: [PATCH 3/3] depexp: fix typo in variable name
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,42 +48,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 05 Aug 2013 16:12:32 -0000
+X-List-Received-Date: Mon, 05 Aug 2013 16:12:33 -0000
 
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 ---
- bitbake/lib/bb/ui/depexp.py |   12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ bitbake/lib/bb/ui/depexp.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/bitbake/lib/bb/ui/depexp.py b/bitbake/lib/bb/ui/depexp.py
-index b7e6f8f..03ed823 100644
+index 03ed823..cbda6d5 100644
 --- a/bitbake/lib/bb/ui/depexp.py
 +++ b/bitbake/lib/bb/ui/depexp.py
-@@ -165,21 +165,15 @@ class DepExplorer(gtk.Window):
+@@ -154,7 +154,7 @@ class DepExplorer(gtk.Window):
  
-     def parse(self, depgraph):
-         for package in depgraph["pn"]:
--            self.pkg_model.set(self.pkg_model.append(), COL_PKG_NAME, package)
-+            self.pkg_model.insert(0, (package,))
- 
-         for package in depgraph["depends"]:
-             for depend in depgraph["depends"][package]:
--                self.depends_model.set (self.depends_model.append(),
--                                        COL_DEP_TYPE, TYPE_DEP,
--                                        COL_DEP_PARENT, package,
--                                        COL_DEP_PACKAGE, depend)
-+                self.depends_model.insert (0, (TYPE_DEP, package, depend))
- 
-         for package in depgraph["rdepends-pn"]:
-             for rdepend in depgraph["rdepends-pn"][package]:
--                self.depends_model.set (self.depends_model.append(),
--                                        COL_DEP_TYPE, TYPE_RDEP,
--                                        COL_DEP_PARENT, package,
--                                        COL_DEP_PACKAGE, rdepend)
-+                self.depends_model.insert (0, (TYPE_RDEP, package, rdepend))
- 
- 
- class gtkthread(threading.Thread):
+     def on_cursor_changed(self, selection):
+         (model, it) = selection.get_selected()
+-        if iter is None:
++        if it is None:
+             current_package = None
+         else:
+             current_package = model.get_value(it, COL_PKG_NAME)
 -- 
 1.7.10.4
 
