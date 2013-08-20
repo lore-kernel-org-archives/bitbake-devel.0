@@ -1,37 +1,20 @@
-Return-Path: <nicolas.dechesne@linaro.org>
-Received: from mail-wi0-f170.google.com (mail-wi0-f170.google.com
-	[209.85.212.170])
-	by mail.openembedded.org (Postfix) with ESMTP id 072536B772
+Return-Path: <cristiana.voicu@intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 6003C6B84D
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Aug 2013 09:21:06 +0000 (UTC)
-Received: by mail-wi0-f170.google.com with SMTP id hi8so696795wib.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Aug 2013 02:21:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=google.com; s=20120113;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=er7rPEbdfrq/AQKaG0OcR/Jc16LiOIk89Q3PMsmjWLk=;
-	b=eaY4SBA7rxgAy9s1ylEHlg4n3s2ZD0CoAgeL2u30bWMwA1qglf4yl+jRZLHfG6EomS
-	IZYe2kSz8hxPu/kKu/ZOo7jqXJMM114fGIWT5L366w6fNdrm2yMYWkUmKNlHsGetIYs2
-	Z+it236EgPVnhenIiWIFOh4X0fuhse25R+CDOwtyPF/2XzvPEJyYDKggeAfF1N7KNvQ5
-	SEucmQP/zjG2pqv37iwC7s+ewdpIHSDuNUSsoYqbM/dzSG60ni820ZymVMtpBgy7j1ro
-	cgz9rCdTouTTh3MC3e8up5zNNSnwzIO9o/hc7oodOi/E98P/9+stlOFWjb9ztKXFcUA1
-	9scA==
-X-Gm-Message-State: ALoCoQm0KVsHDmjCqvUfLCee3IhFzgd6+0WQI9yvOzskbWUBVrZyGW6FOI1tWZaUroS/BGgWDwhu
-X-Received: by 10.195.18.39 with SMTP id gj7mr68792wjd.53.1376644866757;
-	Fri, 16 Aug 2013 02:21:06 -0700 (PDT)
-Received: from localhost.localdomain (gau06-1-78-243-126-63.fbx.proxad.net.
-	[78.243.126.63])
-	by mx.google.com with ESMTPSA id bt8sm789126wib.8.1969.12.31.16.00.00
-	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Fri, 16 Aug 2013 02:21:05 -0700 (PDT)
-From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+	Tue, 20 Aug 2013 13:27:32 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 20 Aug 2013 06:27:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.89,920,1367996400"; d="scan'208";a="365539691"
+Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.72])
+	by orsmga001.jf.intel.com with ESMTP; 20 Aug 2013 06:27:16 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 16 Aug 2013 11:20:59 +0200
-Message-Id: <1376644859-11034-1-git-send-email-nicolas.dechesne@linaro.org>
-X-Mailer: git-send-email 1.8.1.2
-Cc: Nicolas Dechesne <nicolas.dechesne@linaro.org>, patches@linaro.org
-Subject: [RFC PATCH] build.py: create symlink for run.do_xxx scripts
+Date: Tue, 20 Aug 2013 16:30:22 +0300
+Message-Id: <1377005422-6409-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob: changes to image combo box from image configuration page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,54 +27,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Aug 2013 09:21:07 -0000
+X-List-Received-Date: Tue, 20 Aug 2013 13:27:32 -0000
 
-The 'courtesy' symlink for log.do_xxx are quite useful when debugging, so
-with this commit, we now get similar 'courtesy' symlink for run.do_xxx
-scripts.
+In some cases when a new machine is selected, the image combo
+shows the same option. Fixed this issue, because the image
+combo box should be reseted.
 
-We only create symlink for tasks, not individual functions.
+Fix the counter for the options in the combobox. This bug
+was introduced by the templates functionality. The combo box had some
+last changes, and I forgot about this counter.
 
-The symlink is create right before the actual runfile is created, indeed
-we cannot create the symlink right after running the task since a failure
-or execption can happen, in which case the symlink wouldn't be created,
-and symlink are particularely useful when the task failed!
-
-Another option would be create the symlink after the runfile is created,
-and before the script is executed, but that means we need to duplicate the
-code in case of Shell vs Python task.
-
-Signed-off-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+[YOCTO #4858 & #5000]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- lib/bb/build.py | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index d91ff53..0977ea7 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -190,6 +190,20 @@ def exec_func(func, d, dirs = None):
-     runfile = os.path.join(tempdir, runfn)
-     bb.utils.mkdirhier(os.path.dirname(runfile))
+diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+index dcf1334..ca168bc 100644
+--- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
++++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+@@ -319,6 +319,8 @@ class ImageConfigurationPage (HobPage):
+         # reset machine_combo_changed_by_manual
+         self.machine_combo_changed_by_manual = True
  
-+    # Setup the courtesy link to the runfn, only for tasks
-+    # we create the link 'just' before the run script is created
-+    # if we create it after, and if the run script fails, then the
-+    # link won't be created as an exception would be fired.
-+    if task == func:
-+        runlink = os.path.join(tempdir, 'run.{0}'.format(task))
-+        if runlink:
-+            bb.utils.remove(runlink)
++        self.builder.configuration.selected_image = None
 +
-+            try:
-+                os.symlink(runfn, runlink)
-+            except OSError:
-+                pass
-+
-     with bb.utils.fileslocked(lockfiles):
-         if ispython:
-             exec_func_python(func, d, runfile, cwd=adir)
+         # Do reparse recipes
+         self.builder.populate_recipe_package_info_async()
+ 
+@@ -457,7 +459,7 @@ class ImageConfigurationPage (HobPage):
+ 
+         self.image_combo.append_text(self.__custom_image__)
+         self.image_combo.append_text("--Separator--")
+-        cnt = cnt + 3
++        cnt = cnt + 2
+ 
+         topdir = self.builder.get_topdir()
+         # append and set active
 -- 
-1.8.1.2
+1.7.9.5
 
 
