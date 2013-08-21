@@ -1,20 +1,28 @@
-Return-Path: <cristiana.voicu@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 6003C6B84D
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Aug 2013 13:27:32 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 20 Aug 2013 06:27:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.89,920,1367996400"; d="scan'208";a="365539691"
-Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.72])
-	by orsmga001.jf.intel.com with ESMTP; 20 Aug 2013 06:27:16 -0700
-From: Cristiana Voicu <cristiana.voicu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 20 Aug 2013 16:30:22 +0300
-Message-Id: <1377005422-6409-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob: changes to image combo box from image configuration page
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 17F726AFC2;
+	Wed, 21 Aug 2013 14:26:40 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r7LEcQCk030554; Wed, 21 Aug 2013 15:38:27 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id LJL-0s9xSJR9; Wed, 21 Aug 2013 15:38:26 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r7LEcKId030546
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT); Wed, 21 Aug 2013 15:38:22 +0100
+Message-ID: <1377095185.25999.116.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Wed, 21 Aug 2013 15:26:25 +0100
+X-Mailer: Evolution 3.6.4-0ubuntu1 
+Mime-Version: 1.0
+Cc: poky <poky@lists.yoctoproject.org>,
+	openembedded-core <openembedded-core@lists.openembedded.org>
+Subject: Bitbake in server mode
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,45 +35,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Aug 2013 13:27:32 -0000
+X-List-Received-Date: Wed, 21 Aug 2013 14:26:42 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-In some cases when a new machine is selected, the image combo
-shows the same option. Fixed this issue, because the image
-combo box should be reseted.
+I've just realised that we have some new functionality that has sneaked
+in but most people are unaware of. You can now run bitbake as a server
+in the background and then just connect the knotty UI to it with
+commands. The usage is:
 
-Fix the counter for the options in the combobox. This bug
-was introduced by the templates functionality. The combo box had some
-last changes, and I forgot about this counter.
+bitbake --server-only -t xmlrpc -B localhost:1234
 
-[YOCTO #4858 & #5000]
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
----
- bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+which starts a server on localhost port 1234 and then you can run
+commands with:
 
-diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-index dcf1334..ca168bc 100644
---- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-@@ -319,6 +319,8 @@ class ImageConfigurationPage (HobPage):
-         # reset machine_combo_changed_by_manual
-         self.machine_combo_changed_by_manual = True
- 
-+        self.builder.configuration.selected_image = None
-+
-         # Do reparse recipes
-         self.builder.populate_recipe_package_info_async()
- 
-@@ -457,7 +459,7 @@ class ImageConfigurationPage (HobPage):
- 
-         self.image_combo.append_text(self.__custom_image__)
-         self.image_combo.append_text("--Separator--")
--        cnt = cnt + 3
-+        cnt = cnt + 2
- 
-         topdir = self.builder.get_topdir()
-         # append and set active
--- 
-1.7.9.5
+BBSERVER=localhost:1234 bitbake <somecommand>
+
+and 
+
+BBSERVER=localhost:1234 bitbake -m
+
+to shut it down.
+
+Known issues:
+
+a) Parsing is slower. Probably due to all the debug messages going over
+the IPC/xmlrpc. UI event filtering should fix it.
+b) Something is causing a cache reparse initially. Need to figure out
+what. Maybe the BBSERVER variable itself?
+
+This is still development so I'd not recommend everyone use this for
+production just yet but it gives some nice insight into what the future
+holds!
+
+We should be able to make bitbake in this mode much more responsive to
+commands since there is no cache overhead.
+
+Cheers,
+
+Richard
 
 
