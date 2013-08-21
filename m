@@ -1,28 +1,36 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 17F726AFC2;
-	Wed, 21 Aug 2013 14:26:40 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r7LEcQCk030554; Wed, 21 Aug 2013 15:38:27 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id LJL-0s9xSJR9; Wed, 21 Aug 2013 15:38:26 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r7LEcKId030546
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Wed, 21 Aug 2013 15:38:22 +0100
-Message-ID: <1377095185.25999.116.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Wed, 21 Aug 2013 15:26:25 +0100
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: poky <poky@lists.yoctoproject.org>,
+Return-Path: <kergoth@gmail.com>
+Received: from mail-lb0-f181.google.com (mail-lb0-f181.google.com
+	[209.85.217.181])
+	by mail.openembedded.org (Postfix) with ESMTP id 4CD656B368;
+	Wed, 21 Aug 2013 15:56:35 +0000 (UTC)
+Received: by mail-lb0-f181.google.com with SMTP id u12so507249lbd.26
+	for <multiple recipients>; Wed, 21 Aug 2013 08:56:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=DkMcp2ar0DIFS5oS1xgFDlGLDjHkPj61L9awaLS+MwU=;
+	b=rZr1FJzAFRtzcCFP305M0OSJGRZIo3pJUtZys+ZPZH5FS0t/pexwC0Ugly9w7vn0E8
+	j1XrFi8r0km8vjfadm7wizs6IpnbcWB6ouVA3Ua4yLzTQHMaw/7sv2ki+U2Grv9RYOII
+	p0GN/bsriuDE1qgL+Bx8t9CFQ4rcgTcy6HO0LF9uMfjVmdm19t5mC9s5MaUDRkWiFTwj
+	zfzA0pSM7Fvc+dJ0RwqCXfk7xh5eDH0LANbZDn1aoUiVyLEZ6RuhsWf+ta9T+USFle8Z
+	+uTksdoaw8IosOMHSDhoO54+kRPpoNydunwHyfhJH4lgg9ohK5zGVGD6CZRZz3BvKZep
+	gCaQ==
+X-Received: by 10.112.64.36 with SMTP id l4mr7626317lbs.15.1377100595031; Wed,
+	21 Aug 2013 08:56:35 -0700 (PDT)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.112.53.197 with HTTP; Wed, 21 Aug 2013 08:56:14 -0700 (PDT)
+In-Reply-To: <1377095185.25999.116.camel@ted>
+References: <1377095185.25999.116.camel@ted>
+From: Chris Larson <clarson@kergoth.com>
+Date: Wed, 21 Aug 2013 08:56:14 -0700
+X-Google-Sender-Auth: XXV7DF0MaCGiGNfXMl_6bTDNHIU
+Message-ID: <CABcZANnt4v4LoM+HnK_=6VMDgSCFR7qGfciMdpXxSQ+Gc4HBEA@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	poky <poky@lists.yoctoproject.org>,
 	openembedded-core <openembedded-core@lists.openembedded.org>
-Subject: Bitbake in server mode
+Subject: Re: Bitbake in server mode
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,44 +43,70 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 21 Aug 2013 14:26:42 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 21 Aug 2013 15:56:36 -0000
+Content-Type: multipart/alternative; boundary=001a11c3eee4c978f004e47737e7
 
-I've just realised that we have some new functionality that has sneaked
-in but most people are unaware of. You can now run bitbake as a server
-in the background and then just connect the knotty UI to it with
-commands. The usage is:
+--001a11c3eee4c978f004e47737e7
+Content-Type: text/plain; charset=UTF-8
 
-bitbake --server-only -t xmlrpc -B localhost:1234
+On Wed, Aug 21, 2013 at 7:26 AM, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-which starts a server on localhost port 1234 and then you can run
-commands with:
+> Known issues:
+>
+> a) Parsing is slower. Probably due to all the debug messages going over
+> the IPC/xmlrpc. UI event filtering should fix it.
+> b) Something is causing a cache reparse initially. Need to figure out
+> what. Maybe the BBSERVER variable itself?
+>
+> This is still development so I'd not recommend everyone use this for
+> production just yet but it gives some nice insight into what the future
+> holds!
+>
+> We should be able to make bitbake in this mode much more responsive to
+> commands since there is no cache overhead.
+>
 
-BBSERVER=localhost:1234 bitbake <somecommand>
+I expect the obvious question to be, what happens if a recipe is altered
+between starting the server and running a command :)
+-- 
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
-and 
+--001a11c3eee4c978f004e47737e7
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-BBSERVER=localhost:1234 bitbake -m
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Wed, Aug 21, 2013 at 7:26 AM, Richard Purdie <span dir=3D"ltr">&lt;<a hr=
+ef=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.=
+purdie@linuxfoundation.org</a>&gt;</span> wrote:<br>
 
-to shut it down.
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div id=3D":4k" style=3D"overflow:hidden">Kn=
+own issues:<br>
+<br>
+a) Parsing is slower. Probably due to all the debug messages going over<br>
+the IPC/xmlrpc. UI event filtering should fix it.<br>
+b) Something is causing a cache reparse initially. Need to figure out<br>
+what. Maybe the BBSERVER variable itself?<br>
+<br>
+This is still development so I&#39;d not recommend everyone use this for<br=
+>
+production just yet but it gives some nice insight into what the future<br>
+holds!<br>
+<br>
+We should be able to make bitbake in this mode much more responsive to<br>
+commands since there is no cache overhead.</div></blockquote></div><br>I ex=
+pect the obvious question to be, what happens if a recipe is altered betwee=
+n starting the server and running a command :)<br>-- <br>Christopher Larson=
+<br>
 
-Known issues:
+clarson at kergoth dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<b=
+r>Maintainer - Tslib<br>Senior Software Engineer, Mentor Graphics
+</div></div>
 
-a) Parsing is slower. Probably due to all the debug messages going over
-the IPC/xmlrpc. UI event filtering should fix it.
-b) Something is causing a cache reparse initially. Need to figure out
-what. Maybe the BBSERVER variable itself?
-
-This is still development so I'd not recommend everyone use this for
-production just yet but it gives some nice insight into what the future
-holds!
-
-We should be able to make bitbake in this mode much more responsive to
-commands since there is no cache overhead.
-
-Cheers,
-
-Richard
-
-
+--001a11c3eee4c978f004e47737e7--
