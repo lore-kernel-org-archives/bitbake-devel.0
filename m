@@ -1,31 +1,34 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id E15EC60896
+Return-Path: <sidebranch.openembedded@gmail.com>
+Received: from mail-ob0-f181.google.com (mail-ob0-f181.google.com
+	[209.85.214.181])
+	by mail.openembedded.org (Postfix) with ESMTP id 613AD608A6
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 22 Aug 2013 11:38:17 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r7MBo158002902; Thu, 22 Aug 2013 12:50:01 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id Tmd9ieeDW3RT; Thu, 22 Aug 2013 12:50:01 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r7MBnwxO002796
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Thu, 22 Aug 2013 12:50:00 +0100
-Message-ID: <1377171477.6762.0.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Voicu, Cristiana" <cristiana.voicu@intel.com>
-Date: Thu, 22 Aug 2013 12:37:57 +0100
-In-Reply-To: <BE68E9C8E0850C43B0F0B0B7D57FA5AE2E81DF92@IRSMSX105.ger.corp.intel.com>
-References: <BE68E9C8E0850C43B0F0B0B7D57FA5AE2E81DF92@IRSMSX105.ger.corp.intel.com>
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: patch missed for #4321
+	Thu, 22 Aug 2013 14:47:01 +0000 (UTC)
+Received: by mail-ob0-f181.google.com with SMTP id dn14so3643432obc.26
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 22 Aug 2013 07:47:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	:cc:content-type;
+	bh=svmgHs/kfXmPw5+qAryFwIU8lFAmGUPWCqW9oGVgPIQ=;
+	b=pMWciRCOSpO0PwX2YByZ6iBRpEVHS/ITywA/HS1HRLa0IbfDp30QgTnUPotWpPUcmu
+	S2XvB0GijhxOqKW5uNAirvRagSnzdPG8TcbFkoj04RpihqB19MVjZ/Qxa6ls74atv8ze
+	u1DjT8vdBrGvTNhuWQ5+02lrYe00b+u2NhYFyBZoRKQyhIiUL0dFQMq/5aRVx5sS28Pr
+	kuGdz9nlMdh2yyvxjf/AdFZsQgWxvtjJ9ZYVeouTXR5lHhHfmATpAitBJO/JA71OtNGY
+	xD0itsG1GpI9ppbGvrHPvbSl1gCN2Cy3TmKe1IdO/PsB4C9IR+HDmLGH+YHGeg0QxzLH
+	xplg==
+MIME-Version: 1.0
+X-Received: by 10.60.131.3 with SMTP id oi3mr1438852oeb.104.1377182820723;
+	Thu, 22 Aug 2013 07:47:00 -0700 (PDT)
+Received: by 10.76.1.194 with HTTP; Thu, 22 Aug 2013 07:47:00 -0700 (PDT)
+In-Reply-To: <1376644859-11034-1-git-send-email-nicolas.dechesne@linaro.org>
+References: <1376644859-11034-1-git-send-email-nicolas.dechesne@linaro.org>
+Date: Thu, 22 Aug 2013 16:47:00 +0200
+Message-ID: <CAMvUbCxhEEyp5dCZjN0fidBJxxgX55CXL88ErL5u5bkz1rOdEQ@mail.gmail.com>
+From: Leon Woestenberg <sidebranch.openembedded@gmail.com>
+To: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Cc: bitbake-devel@lists.openembedded.org, patches@linaro.org
+Subject: Re: [RFC PATCH] build.py: create symlink for run.do_xxx scripts
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,24 +41,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 22 Aug 2013 11:38:18 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 22 Aug 2013 14:47:02 -0000
+Content-Type: multipart/alternative; boundary=089e01183b9cd1f2a204e48a5c59
 
-On Thu, 2013-08-22 at 10:24 +0000, Voicu, Cristiana wrote:
->  
-> Andrei Dinu sent a patch for #4321. Here is the patch:
+--089e01183b9cd1f2a204e48a5c59
+Content-Type: text/plain; charset=ISO-8859-1
+
+Hello Nicolas,
+
+On Fri, Aug 16, 2013 at 11:20 AM, Nicolas Dechesne <
+nicolas.dechesne@linaro.org> wrote:
+
+> The 'courtesy' symlink for log.do_xxx are quite useful when debugging, so
+> with this commit, we now get similar 'courtesy' symlink for run.do_xxx
+> scripts.
 >
-> http://patchwork.openembedded.org/patch/49917/
+> Signed-off-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+> ---
 >
->  
-> The bug is now assigned to me and I think  this patch was missed.
 
-It was, sorry. I've merged the patch.
+At least I can +1 on the debugging helpfulness, I would like this feature
+to be in bitbake.
 
-Cheers,
+As it's a courtesy link only, the chosen approach seems good to me.
 
-Richard
+Regards,
 
+Leon.
 
+--089e01183b9cd1f2a204e48a5c59
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_extra">Hello Nicolas,<br><br></div><di=
+v class=3D"gmail_extra"><div class=3D"gmail_quote">On Fri, Aug 16, 2013 at =
+11:20 AM, Nicolas Dechesne <span dir=3D"ltr">&lt;<a href=3D"mailto:nicolas.=
+dechesne@linaro.org" target=3D"_blank">nicolas.dechesne@linaro.org</a>&gt;<=
+/span> wrote:<br>
+
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">The &#39;courtesy&#39; symlink for log.do_xx=
+x are quite useful when debugging, so<br>
+with this commit, we now get similar &#39;courtesy&#39; symlink for run.do_=
+xxx<br>
+scripts.<br>
+<br>
+Signed-off-by: Nicolas Dechesne &lt;<a href=3D"mailto:nicolas.dechesne@lina=
+ro.org" target=3D"_blank">nicolas.dechesne@linaro.org</a>&gt;<br>
+---<br>
+</blockquote><br></div>At least I can +1 on the debugging helpfulness, I wo=
+uld like this feature to be in bitbake.<br><br></div><div class=3D"gmail_ex=
+tra">As it&#39;s a courtesy link only, the chosen approach seems good to me=
+.<br>
+<br>Regards,<br><br>Leon.<br></div></div>
+
+--089e01183b9cd1f2a204e48a5c59--
