@@ -1,30 +1,32 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id C18A160896
+Return-Path: <martin.jansa@gmail.com>
+Received: from mail-ee0-f41.google.com (mail-ee0-f41.google.com [74.125.83.41])
+	by mail.openembedded.org (Postfix) with ESMTP id CB33D6B66A
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 23 Aug 2013 14:55:33 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r7NF7UxF020943 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 23 Aug 2013 16:07:30 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id oijxvmXHusDe for <bitbake-devel@lists.openembedded.org>;
-	Fri, 23 Aug 2013 16:07:30 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r7NF7StT020939
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
-	Fri, 23 Aug 2013 16:07:29 +0100
-Message-ID: <1377269721.6762.89.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Fri, 23 Aug 2013 15:55:21 +0100
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] event/msg: Add primitive server side UI log record filtering
+	Fri, 23 Aug 2013 16:47:53 +0000 (UTC)
+Received: by mail-ee0-f41.google.com with SMTP id d17so403776eek.28
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 23 Aug 2013 09:47:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=LyJf1sHVJXSyylIocH7BvibrdlWFxWYtSQ6H3C2/X1c=;
+	b=UARnRORSTkEpeNzaw8ggRsZS//mwc3UI6h6rEjK9T/xzf0kw3Zv5yu51awWZxTMviN
+	ToeTJL7b30hGCo8WvHzdVw/jcmPry2GjgLCG7TFopve1t5B2Jb47xkLK7ouBuUprKTTs
+	c2lSIzf+W4Sk5HVTrm6EJ/VYKiTf65oDhxstdEyXfGpXw+Gkb2wMMK9gnisJN0CZoyxd
+	5jo6U1ub6Y7cEx8bTTD5xvTzQT8kSrciZfnMAVG+0Mo4BI47t9NixLNGkR3GcWIbjzHr
+	80b+8zBEuB77Mro6D2vYV6l+hwBKTmJsBp/kYjf4+NZPo4e1sLy6jUJvBjhBf/CdK1Rl
+	O/GA==
+X-Received: by 10.15.52.2 with SMTP id o2mr72125eew.83.1377276473877;
+	Fri, 23 Aug 2013 09:47:53 -0700 (PDT)
+Received: from localhost (ip-62-24-80-145.net.upcbroadband.cz. [62.24.80.145])
+	by mx.google.com with ESMTPSA id f49sm826954eec.7.1969.12.31.16.00.00
+	(version=TLSv1.2 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Fri, 23 Aug 2013 09:47:53 -0700 (PDT)
+From: Martin Jansa <martin.jansa@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 23 Aug 2013 18:48:58 +0200
+Message-Id: <1377276538-20486-1-git-send-email-Martin.Jansa@gmail.com>
+X-Mailer: git-send-email 1.8.3.2
+Subject: [RFC][PATCH] parse: Return IOError when including file with absolute path
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,108 +39,48 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 23 Aug 2013 14:55:35 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 23 Aug 2013 16:47:54 -0000
 
-Currently one of the bigger bottlenecks in bitbake is passing all the 
-log messages over IPC to the UI. This is worthwhile if the UI is going 
-to use them, pointless otherwise. The memory resident bitbake suffers
-from this performance issue particularly badly.
+* resolve_file was behaving different when relative and absolute
+  paths were passed to it
 
-This patch filters the log events on the server side with the global
-log levels and hence reduces the traffic. This speeds up parsing 
-(18.5s down to 17s) and bitbake general command overhead is reduced 
-(7.3s for a NOP to 6.2s).
+* include relative-path/non-existent-file.inc
+  works correctly resolve_file throws IOError, BBHandler.py:handle()
+  doesn't catch it, ConfHandler.py:include() catches IOError and shows:
+  DEBUG: CONF file 'relative-path/non-existent-file.inc' not found
+* include /absolute-path/non-existent-file.inc
+  was failing, because resolve_file just returns fn,
+  BBHandler.py:handle() calls bb.parse.mark_dependency(d, abs_fn)
+  which throws:
+  OSError: [Errno 2] No such file or directory: '/absolute-path/non-existent-file.inc'
+  and parsing fails.
+  Ad isfile() test for absolute fn and throw IOError to make
+  resolve_file behavior consistent for both paths.
 
-What isn't added here is general event filtering or the ability to 
-change the log levels once set. Provision is made for adding this
-in a follow up patch though.
+* I know we had some issues with -b relative-path-to-recipe.bb and
+  absolute path, so consider this patch only as RFC and documentation of
+  this problem
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
-diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
-index ba25d38..8ffd2c3 100644
---- a/bitbake/lib/bb/event.py
-+++ b/bitbake/lib/bb/event.py
-@@ -63,6 +63,7 @@ def clean_class_handlers():
- # Internal
- _handlers = clean_class_handlers()
- _ui_handlers = {}
-+_ui_logfilters = {}
- _ui_handler_seq = 0
- _event_handler_map = {}
- _catchall_handlers = {}
-@@ -135,6 +136,8 @@ def fire_ui_handlers(event, d):
-     for h in _ui_handlers:
-         #print "Sending event %s" % event
-         try:
-+             if not _ui_logfilters[h].filter(event):
-+                 continue
-              # We use pickle here since it better handles object instances
-              # which xmlrpc's marshaller does not. Events *must* be serializable
-              # by pickle.
-@@ -207,6 +210,8 @@ def remove(name, handler):
- def register_UIHhandler(handler):
-     bb.event._ui_handler_seq = bb.event._ui_handler_seq + 1
-     _ui_handlers[_ui_handler_seq] = handler
-+    level, debug_domains = bb.msg.constructLogOptions()
-+    _ui_logfilters[_ui_handler_seq] = UIEventFilter(level, debug_domains)
-     return _ui_handler_seq
- 
- def unregister_UIHhandler(handlerNum):
-@@ -214,6 +219,26 @@ def unregister_UIHhandler(handlerNum):
-         del _ui_handlers[handlerNum]
-     return
- 
-+# Class to allow filtering of events and specific filtering of LogRecords *before* we put them over the IPC
-+class UIEventFilter(object):
-+    def __init__(self, level, debug_domains):
-+        self.update(None, level, debug_domains)
-+
-+    def update(self, eventmask, level, debug_domains):
-+        self.eventmask = None
-+        self.stdlevel = level
-+        self.debug_domains = debug_domains
-+
-+    def filter(self, event):
-+        if isinstance(event, logging.LogRecord):
-+            if event.levelno >= self.stdlevel:
-+                return True
-+            if event.name in self.debug_domains and event.levelno >= self.debug_domains[event.name]:
-+                return True
-+            return False
-+        # Implement other event masking here on self.eventmask
-+        return True
-+
- def getName(e):
-     """Returns the name of a class or class instance"""
-     if getattr(e, "__name__", None) == None:
-diff --git a/bitbake/lib/bb/msg.py b/bitbake/lib/bb/msg.py
-index e70daee..5976970 100644
---- a/bitbake/lib/bb/msg.py
-+++ b/bitbake/lib/bb/msg.py
-@@ -146,8 +146,7 @@ def init_msgconfig(verbose, debug, debug_domains = []):
-         bb.msg.loggerVerboseLogs = True
-     bb.msg.loggerDefaultDomains = debug_domains
- 
--def addDefaultlogFilter(handler):
--
-+def constructLogOptions():
-     debug = loggerDefaultDebugLevel
-     verbose = loggerDefaultVerbose
-     domains = loggerDefaultDomains
-@@ -163,6 +162,10 @@ def addDefaultlogFilter(handler):
-     for (domainarg, iterator) in groupby(domains):
-         dlevel = len(tuple(iterator))
-         debug_domains["BitBake.%s" % domainarg] = logging.DEBUG - dlevel + 1
-+    return level, debug_domains
-+
-+def addDefaultlogFilter(handler):
-+    level, debug_domains = constructLogOptions()
- 
-     BBLogFilter(handler, level, debug_domains)
- 
+ lib/bb/parse/__init__.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/lib/bb/parse/__init__.py b/lib/bb/parse/__init__.py
+index 3f93ad2..c973f6f 100644
+--- a/lib/bb/parse/__init__.py
++++ b/lib/bb/parse/__init__.py
+@@ -107,6 +107,9 @@ def resolve_file(fn, d):
+             raise IOError("file %s not found in %s" % (fn, bbpath))
+         fn = newfn
+ 
++    if not os.path.isfile(fn):
++        raise IOError("file %s not found" % fn)
++
+     logger.debug(2, "LOAD %s", fn)
+     return fn
+ 
+-- 
+1.8.3.2
 
 
