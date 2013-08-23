@@ -1,33 +1,34 @@
-Return-Path: <sidebranch.openembedded@gmail.com>
-Received: from mail-ob0-f181.google.com (mail-ob0-f181.google.com
-	[209.85.214.181])
-	by mail.openembedded.org (Postfix) with ESMTP id 613AD608A6
+Return-Path: <raj.khem@gmail.com>
+Received: from mail-ie0-f176.google.com (mail-ie0-f176.google.com
+	[209.85.223.176])
+	by mail.openembedded.org (Postfix) with ESMTP id A1F0E61013
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 22 Aug 2013 14:47:01 +0000 (UTC)
-Received: by mail-ob0-f181.google.com with SMTP id dn14so3643432obc.26
+	Fri, 23 Aug 2013 06:52:25 +0000 (UTC)
+Received: by mail-ie0-f176.google.com with SMTP id s9so271904iec.7
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 22 Aug 2013 07:47:00 -0700 (PDT)
+	Thu, 22 Aug 2013 23:52:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
 	:cc:content-type;
-	bh=svmgHs/kfXmPw5+qAryFwIU8lFAmGUPWCqW9oGVgPIQ=;
-	b=pMWciRCOSpO0PwX2YByZ6iBRpEVHS/ITywA/HS1HRLa0IbfDp30QgTnUPotWpPUcmu
-	S2XvB0GijhxOqKW5uNAirvRagSnzdPG8TcbFkoj04RpihqB19MVjZ/Qxa6ls74atv8ze
-	u1DjT8vdBrGvTNhuWQ5+02lrYe00b+u2NhYFyBZoRKQyhIiUL0dFQMq/5aRVx5sS28Pr
-	kuGdz9nlMdh2yyvxjf/AdFZsQgWxvtjJ9ZYVeouTXR5lHhHfmATpAitBJO/JA71OtNGY
-	xD0itsG1GpI9ppbGvrHPvbSl1gCN2Cy3TmKe1IdO/PsB4C9IR+HDmLGH+YHGeg0QxzLH
-	xplg==
+	bh=HQJkSkmmlMSeovm/jH5EyJBt+jD6AXdLRkUxaXR90s8=;
+	b=AJ2POrr+Yp5jeEXLkCwJ4D8vHV42SSGgATIjzh+nJN8LBwHc+Z3lPJp5mx3win2WcF
+	qlVDoifD+y0RZLEWn6Y7ESa/AD1y9mH4mJXcgiL5FTlOedZAFHh5xBan4QwwcGYCfi01
+	g1V/DJILLgpz8mi3uOArCAQkxJFuVpOj/MzJKkORrVzn2+QMEopbeVrvakhg3lR4Ejs1
+	5kqAIyEZ9egdj9diW8SUmM/2HdnlLJO8RjqVSwfIC64KktstKLnnaTH7QRhj2EeIubaS
+	pDDkyzYK+8aQ4Qs0rZi4FGNqSqCiYcTiZnNsRz67vutIBJXndyrayg7i9gE34JQ5SdTo
+	L/Og==
+X-Received: by 10.50.103.3 with SMTP id fs3mr538270igb.39.1377240745880; Thu,
+	22 Aug 2013 23:52:25 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 10.60.131.3 with SMTP id oi3mr1438852oeb.104.1377182820723;
-	Thu, 22 Aug 2013 07:47:00 -0700 (PDT)
-Received: by 10.76.1.194 with HTTP; Thu, 22 Aug 2013 07:47:00 -0700 (PDT)
-In-Reply-To: <1376644859-11034-1-git-send-email-nicolas.dechesne@linaro.org>
+Received: by 10.50.216.195 with HTTP; Thu, 22 Aug 2013 23:51:55 -0700 (PDT)
+In-Reply-To: <CAMvUbCxhEEyp5dCZjN0fidBJxxgX55CXL88ErL5u5bkz1rOdEQ@mail.gmail.com>
 References: <1376644859-11034-1-git-send-email-nicolas.dechesne@linaro.org>
-Date: Thu, 22 Aug 2013 16:47:00 +0200
-Message-ID: <CAMvUbCxhEEyp5dCZjN0fidBJxxgX55CXL88ErL5u5bkz1rOdEQ@mail.gmail.com>
-From: Leon Woestenberg <sidebranch.openembedded@gmail.com>
-To: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Cc: bitbake-devel@lists.openembedded.org, patches@linaro.org
+	<CAMvUbCxhEEyp5dCZjN0fidBJxxgX55CXL88ErL5u5bkz1rOdEQ@mail.gmail.com>
+From: Khem Raj <raj.khem@gmail.com>
+Date: Thu, 22 Aug 2013 23:51:55 -0700
+Message-ID: <CAMKF1srp8QVHCtM7p7-dzrVPS5ipMqnDgTPt=spAsN9RVBAFkA@mail.gmail.com>
+To: Leon Woestenberg <sidebranch.openembedded@gmail.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>, patches@linaro.org
 Subject: Re: [RFC PATCH] build.py: create symlink for run.do_xxx scripts
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -41,58 +42,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 22 Aug 2013 14:47:02 -0000
-Content-Type: multipart/alternative; boundary=089e01183b9cd1f2a204e48a5c59
+X-List-Received-Date: Fri, 23 Aug 2013 06:52:27 -0000
+Content-Type: text/plain; charset=UTF-8
 
---089e01183b9cd1f2a204e48a5c59
-Content-Type: text/plain; charset=ISO-8859-1
-
-Hello Nicolas,
-
-On Fri, Aug 16, 2013 at 11:20 AM, Nicolas Dechesne <
-nicolas.dechesne@linaro.org> wrote:
-
-> The 'courtesy' symlink for log.do_xxx are quite useful when debugging, so
-> with this commit, we now get similar 'courtesy' symlink for run.do_xxx
-> scripts.
+On Thu, Aug 22, 2013 at 7:47 AM, Leon Woestenberg
+<sidebranch.openembedded@gmail.com> wrote:
+> Hello Nicolas,
 >
-> Signed-off-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-> ---
+> On Fri, Aug 16, 2013 at 11:20 AM, Nicolas Dechesne
+> <nicolas.dechesne@linaro.org> wrote:
+>>
+>> The 'courtesy' symlink for log.do_xxx are quite useful when debugging, so
+>> with this commit, we now get similar 'courtesy' symlink for run.do_xxx
+>> scripts.
+>>
+>> Signed-off-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+>> ---
+>
+>
+> At least I can +1 on the debugging helpfulness, I would like this feature to
+> be in bitbake.
+>
+> As it's a courtesy link only, the chosen approach seems good to me.
 >
 
-At least I can +1 on the debugging helpfulness, I would like this feature
-to be in bitbake.
+yeah its useful. Many times you just want to execute the latest run.doXXX
+and it will help there.
 
-As it's a courtesy link only, the chosen approach seems good to me.
+> Regards,
+>
+> Leon.
+>
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+>
 
-Regards,
-
-Leon.
-
---089e01183b9cd1f2a204e48a5c59
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra">Hello Nicolas,<br><br></div><di=
-v class=3D"gmail_extra"><div class=3D"gmail_quote">On Fri, Aug 16, 2013 at =
-11:20 AM, Nicolas Dechesne <span dir=3D"ltr">&lt;<a href=3D"mailto:nicolas.=
-dechesne@linaro.org" target=3D"_blank">nicolas.dechesne@linaro.org</a>&gt;<=
-/span> wrote:<br>
-
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">The &#39;courtesy&#39; symlink for log.do_xx=
-x are quite useful when debugging, so<br>
-with this commit, we now get similar &#39;courtesy&#39; symlink for run.do_=
-xxx<br>
-scripts.<br>
-<br>
-Signed-off-by: Nicolas Dechesne &lt;<a href=3D"mailto:nicolas.dechesne@lina=
-ro.org" target=3D"_blank">nicolas.dechesne@linaro.org</a>&gt;<br>
----<br>
-</blockquote><br></div>At least I can +1 on the debugging helpfulness, I wo=
-uld like this feature to be in bitbake.<br><br></div><div class=3D"gmail_ex=
-tra">As it&#39;s a courtesy link only, the chosen approach seems good to me=
-.<br>
-<br>Regards,<br><br>Leon.<br></div></div>
-
---089e01183b9cd1f2a204e48a5c59--
