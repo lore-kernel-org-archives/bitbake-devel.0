@@ -1,32 +1,20 @@
-Return-Path: <martin.jansa@gmail.com>
-Received: from mail-ee0-f41.google.com (mail-ee0-f41.google.com [74.125.83.41])
-	by mail.openembedded.org (Postfix) with ESMTP id CB33D6B66A
+Return-Path: <cristiana.voicu@intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id C22B96065F
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 23 Aug 2013 16:47:53 +0000 (UTC)
-Received: by mail-ee0-f41.google.com with SMTP id d17so403776eek.28
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 23 Aug 2013 09:47:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id;
-	bh=LyJf1sHVJXSyylIocH7BvibrdlWFxWYtSQ6H3C2/X1c=;
-	b=UARnRORSTkEpeNzaw8ggRsZS//mwc3UI6h6rEjK9T/xzf0kw3Zv5yu51awWZxTMviN
-	ToeTJL7b30hGCo8WvHzdVw/jcmPry2GjgLCG7TFopve1t5B2Jb47xkLK7ouBuUprKTTs
-	c2lSIzf+W4Sk5HVTrm6EJ/VYKiTf65oDhxstdEyXfGpXw+Gkb2wMMK9gnisJN0CZoyxd
-	5jo6U1ub6Y7cEx8bTTD5xvTzQT8kSrciZfnMAVG+0Mo4BI47t9NixLNGkR3GcWIbjzHr
-	80b+8zBEuB77Mro6D2vYV6l+hwBKTmJsBp/kYjf4+NZPo4e1sLy6jUJvBjhBf/CdK1Rl
-	O/GA==
-X-Received: by 10.15.52.2 with SMTP id o2mr72125eew.83.1377276473877;
-	Fri, 23 Aug 2013 09:47:53 -0700 (PDT)
-Received: from localhost (ip-62-24-80-145.net.upcbroadband.cz. [62.24.80.145])
-	by mx.google.com with ESMTPSA id f49sm826954eec.7.1969.12.31.16.00.00
-	(version=TLSv1.2 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Fri, 23 Aug 2013 09:47:53 -0700 (PDT)
-From: Martin Jansa <martin.jansa@gmail.com>
+	Fri, 23 Aug 2013 17:04:16 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 23 Aug 2013 10:01:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.89,943,1367996400"; d="scan'208";a="367485798"
+Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.72])
+	by orsmga001.jf.intel.com with ESMTP; 23 Aug 2013 10:03:56 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 23 Aug 2013 18:48:58 +0200
-Message-Id: <1377276538-20486-1-git-send-email-Martin.Jansa@gmail.com>
-X-Mailer: git-send-email 1.8.3.2
-Subject: [RFC][PATCH] parse: Return IOError when including file with absolute path
+Date: Fri, 23 Aug 2013 20:07:09 +0300
+Message-Id: <1377277629-767-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] bitbake: add ui event handlers filtering
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,48 +27,166 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 23 Aug 2013 16:47:54 -0000
+X-List-Received-Date: Fri, 23 Aug 2013 17:04:16 -0000
 
-* resolve_file was behaving different when relative and absolute
-  paths were passed to it
+Implement the filtering of the ui handlers in event.py.
+Created a command to set a mask for filtering and called it from
+knotty. In the future this will be called from other UIs too.
 
-* include relative-path/non-existent-file.inc
-  works correctly resolve_file throws IOError, BBHandler.py:handle()
-  doesn't catch it, ConfHandler.py:include() catches IOError and shows:
-  DEBUG: CONF file 'relative-path/non-existent-file.inc' not found
-* include /absolute-path/non-existent-file.inc
-  was failing, because resolve_file just returns fn,
-  BBHandler.py:handle() calls bb.parse.mark_dependency(d, abs_fn)
-  which throws:
-  OSError: [Errno 2] No such file or directory: '/absolute-path/non-existent-file.inc'
-  and parsing fails.
-  Ad isfile() test for absolute fn and throw IOError to make
-  resolve_file behavior consistent for both paths.
-
-* I know we had some issues with -b relative-path-to-recipe.bb and
-  absolute path, so consider this patch only as RFC and documentation of
-  this problem
-
-Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- lib/bb/parse/__init__.py | 3 +++
- 1 file changed, 3 insertions(+)
+ bitbake/lib/bb/command.py        |    5 +++++
+ bitbake/lib/bb/event.py          |   22 +++++++++++++++++-----
+ bitbake/lib/bb/server/process.py |    5 ++++-
+ bitbake/lib/bb/server/xmlrpc.py  |    8 ++++++--
+ bitbake/lib/bb/ui/knotty.py      |   11 +++++++++++
+ 5 files changed, 43 insertions(+), 8 deletions(-)
 
-diff --git a/lib/bb/parse/__init__.py b/lib/bb/parse/__init__.py
-index 3f93ad2..c973f6f 100644
---- a/lib/bb/parse/__init__.py
-+++ b/lib/bb/parse/__init__.py
-@@ -107,6 +107,9 @@ def resolve_file(fn, d):
-             raise IOError("file %s not found in %s" % (fn, bbpath))
-         fn = newfn
+diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
+index 33a2440..19a08bc 100644
+--- a/bitbake/lib/bb/command.py
++++ b/bitbake/lib/bb/command.py
+@@ -240,6 +240,11 @@ class CommandsSync:
+         name = params[0]
+         command.cooker.createConfigFile(name)
  
-+    if not os.path.isfile(fn):
-+        raise IOError("file %s not found" % fn)
++    def setEventMask(self, command, params):
++        handlerNum = params[0]
++        mask = params[1]
++        return bb.event.set_UIHmask(handlerNum, mask)
 +
-     logger.debug(2, "LOAD %s", fn)
-     return fn
+ class CommandsAsync:
+     """
+     A class of asynchronous commands
+diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
+index 8ffd2c3..eda937a 100644
+--- a/bitbake/lib/bb/event.py
++++ b/bitbake/lib/bb/event.py
+@@ -142,9 +142,9 @@ def fire_ui_handlers(event, d):
+              # which xmlrpc's marshaller does not. Events *must* be serializable
+              # by pickle.
+              if hasattr(_ui_handlers[h].event, "sendpickle"):
+-                _ui_handlers[h].event.sendpickle((pickle.dumps(event)))
++                 _ui_handlers[h].event.sendpickle((pickle.dumps(event)))
+              else:
+-                _ui_handlers[h].event.send(event)
++                 _ui_handlers[h].event.send(event)
+         except:
+             errors.append(h)
+     for h in errors:
+@@ -193,7 +193,7 @@ def register(name, handler, mask=[]):
+         else:
+             _handlers[name] = handler
  
+-        if not mask:
++        if not mask or '*' in mask:
+             _catchall_handlers[name] = True
+         else:
+             for m in mask:
+@@ -225,7 +225,7 @@ class UIEventFilter(object):
+         self.update(None, level, debug_domains)
+ 
+     def update(self, eventmask, level, debug_domains):
+-        self.eventmask = None
++        self.eventmask = eventmask
+         self.stdlevel = level
+         self.debug_domains = debug_domains
+ 
+@@ -236,9 +236,21 @@ class UIEventFilter(object):
+             if event.name in self.debug_domains and event.levelno >= self.debug_domains[event.name]:
+                 return True
+             return False
+-        # Implement other event masking here on self.eventmask
++        eid = str(event.__class__)[8:-2]
++        if eid not in self.eventmask:
++            return False
+         return True
+ 
++def set_UIHmask(handlerNum, mask):
++    if not handlerNum in _ui_handlers:
++        return False
++    level, debug_domains = bb.msg.constructLogOptions()
++    if '*' in mask:
++        _ui_logfilters[handlerNum].update(None, level, debug_domains)
++    else:
++        _ui_logfilters[handlerNum].update(mask, level, debug_domains)
++    return True
++
+ def getName(e):
+     """Returns the name of a class or class instance"""
+     if getattr(e, "__name__", None) == None:
+diff --git a/bitbake/lib/bb/server/process.py b/bitbake/lib/bb/server/process.py
+index 0d4a26c..4e584fc 100644
+--- a/bitbake/lib/bb/server/process.py
++++ b/bitbake/lib/bb/server/process.py
+@@ -137,7 +137,10 @@ class ProcessServer(Process, BaseImplServer):
+         """
+         Run a cooker command on the server
+         """
+-        self.command_channel.send(self.cooker.command.runCommand(command))
++        if command[0] == "setEventMask":
++            self.command_channel.send(self.cooker.command.runCommand(["setEventMask", self.event_handle, command[1]]))
++        else:
++            self.command_channel.send(self.cooker.command.runCommand(command))
+ 
+     def stop(self):
+         self.keep_running.clear()
+diff --git a/bitbake/lib/bb/server/xmlrpc.py b/bitbake/lib/bb/server/xmlrpc.py
+index 026415e..2ae562b 100644
+--- a/bitbake/lib/bb/server/xmlrpc.py
++++ b/bitbake/lib/bb/server/xmlrpc.py
+@@ -81,7 +81,8 @@ class BitBakeServerCommands():
+         """
+         s, t = _create_server(host, port)
+ 
+-        return bb.event.register_UIHhandler(s)
++        self.event_handle = bb.event.register_UIHhandler(s)
++        return self.event_handle
+ 
+     def unregisterEventHandler(self, handlerNum):
+         """
+@@ -93,7 +94,10 @@ class BitBakeServerCommands():
+         """
+         Run a cooker command on the server
+         """
+-        return self.cooker.command.runCommand(command, self.server.readonly)
++        if command[0] == "setEventMask":
++            return self.cooker.command.runCommand(["setEventMask", self.event_handle, command[1]], self.server.readonly)
++        else:
++            return self.cooker.command.runCommand(command, self.server.readonly)
+ 
+     def terminateServer(self):
+         """
+diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
+index 09ad99e..94f9f10 100644
+--- a/bitbake/lib/bb/ui/knotty.py
++++ b/bitbake/lib/bb/ui/knotty.py
+@@ -232,6 +232,15 @@ def _log_settings_from_server(server):
+         raise BaseException(error)
+     return includelogs, loglines, consolelogfile
+ 
++_evt_list = [ "bb.runqueue.runQueueExitWait", "bb.event.LogExecTTY", "logging.LogRecord",
++              "bb.build.TaskFailed", "bb.build.TaskBase", "bb.event.ParseStarted",
++              "bb.event.ParseProgress", "bb.event.ParseCompleted", "bb.event.CacheLoadStarted",
++              "bb.event.CacheLoadProgress", "bb.event.CacheLoadCompleted", "bb.command.CommandFailed",
++              "bb.command.CommandExit", "bb.command.CommandCompleted",  "bb.cooker.CookerExit",
++              "bb.event.MultipleProviders", "bb.event.NoProvider", "bb.runqueue.sceneQueueTaskStarted",
++              "bb.runqueue.runQueueTaskStarted", "bb.runqueue.runQueueTaskFailed", "bb.runqueue.sceneQueueTaskFailed",
++              "bb.event.BuildBase", "bb.build.TaskStarted", "bb.build.TaskSucceeded", "bb.build.TaskFailedSilent"]
++
+ def main(server, eventHandler, params, tf = TerminalFilter):
+ 
+     includelogs, loglines, consolelogfile = _log_settings_from_server(server)
+@@ -262,6 +271,8 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+         consolelog.setFormatter(conlogformat)
+         logger.addHandler(consolelog)
+ 
++    server.runCommand(["setEventMask", _evt_list])
++
+     if not params.observe_only:
+         params.updateFromServer(server)
+         cmdline = params.parseActions()
 -- 
-1.8.3.2
+1.7.9.5
 
 
