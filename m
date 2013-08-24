@@ -1,20 +1,27 @@
-Return-Path: <cristiana.voicu@intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 129BD6B91B
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 4DFC86AFCD
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 23 Aug 2013 17:10:14 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 23 Aug 2013 10:10:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.89,943,1367996400"; d="scan'208";a="391041063"
-Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.72])
-	by fmsmga002.fm.intel.com with ESMTP; 23 Aug 2013 10:10:13 -0700
-From: Cristiana Voicu <cristiana.voicu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 23 Aug 2013 20:13:27 +0300
-Message-Id: <1377278007-979-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH_V2] bitbake: add ui event handlers filtering
+	Sat, 24 Aug 2013 12:07:34 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r7OCJZgV016973; Sat, 24 Aug 2013 13:19:35 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id KASTxvTh7G5e; Sat, 24 Aug 2013 13:19:35 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r7OCJVxY016967
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT); Sat, 24 Aug 2013 13:19:33 +0100
+Message-ID: <1377346040.6762.186.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Sat, 24 Aug 2013 13:07:20 +0100
+X-Mailer: Evolution 3.6.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] process: Improve exit handling and hangs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,157 +34,97 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 23 Aug 2013 17:10:15 -0000
+X-List-Received-Date: Sat, 24 Aug 2013 12:07:35 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Implement the filtering of the ui handlers in event.py.
-Created a command to set a mask for filtering and called it from
-knotty. In the future this will be called from other UIs too.
+It turns out we have a number of different ways the process server termination can
+hang. If we call cancel_join_thread() on the event queue, it means that it can be left
+containing partial data. This means the reading of the event queue in the terminate()
+function can hang, the timeout and block parameters to Queue.get() don't make any
+difference.
 
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+Equally, if we don't call cancel_join_thread(), the join_thread in terminate()
+will hang giving a different deadlock.
+
+The best solution I could find is to loop over the process is_alive() after requesting
+it stops,  trying to join the thread and if that fails, try and flush the event
+queue again.
+
+It wasn't clear what difference a force option should make in this case, we're
+gracefully trying to empty queues and shut down regardless of whether its a SIGTERM
+so I've simply removed the force option.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/command.py        |    5 +++++
- bitbake/lib/bb/event.py          |   20 ++++++++++++++++----
- bitbake/lib/bb/server/process.py |    5 ++++-
- bitbake/lib/bb/server/xmlrpc.py  |    8 ++++++--
- bitbake/lib/bb/ui/knotty.py      |   11 +++++++++++
- 5 files changed, 42 insertions(+), 7 deletions(-)
 
-diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
-index 33a2440..19a08bc 100644
---- a/bitbake/lib/bb/command.py
-+++ b/bitbake/lib/bb/command.py
-@@ -240,6 +240,11 @@ class CommandsSync:
-         name = params[0]
-         command.cooker.createConfigFile(name)
- 
-+    def setEventMask(self, command, params):
-+        handlerNum = params[0]
-+        mask = params[1]
-+        return bb.event.set_UIHmask(handlerNum, mask)
-+
- class CommandsAsync:
-     """
-     A class of asynchronous commands
-diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
-index 8ffd2c3..a585fc2 100644
---- a/bitbake/lib/bb/event.py
-+++ b/bitbake/lib/bb/event.py
-@@ -142,9 +142,9 @@ def fire_ui_handlers(event, d):
-              # which xmlrpc's marshaller does not. Events *must* be serializable
-              # by pickle.
-              if hasattr(_ui_handlers[h].event, "sendpickle"):
--                _ui_handlers[h].event.sendpickle((pickle.dumps(event)))
-+                 _ui_handlers[h].event.sendpickle((pickle.dumps(event)))
-              else:
--                _ui_handlers[h].event.send(event)
-+                 _ui_handlers[h].event.send(event)
-         except:
-             errors.append(h)
-     for h in errors:
-@@ -225,7 +225,7 @@ class UIEventFilter(object):
-         self.update(None, level, debug_domains)
- 
-     def update(self, eventmask, level, debug_domains):
--        self.eventmask = None
-+        self.eventmask = eventmask
-         self.stdlevel = level
-         self.debug_domains = debug_domains
- 
-@@ -236,9 +236,21 @@ class UIEventFilter(object):
-             if event.name in self.debug_domains and event.levelno >= self.debug_domains[event.name]:
-                 return True
-             return False
--        # Implement other event masking here on self.eventmask
-+        eid = str(event.__class__)[8:-2]
-+        if self.eventmask and eid not in self.eventmask:
-+            return False
-         return True
- 
-+def set_UIHmask(handlerNum, mask):
-+    if not handlerNum in _ui_handlers:
-+        return False
-+    level, debug_domains = bb.msg.constructLogOptions()
-+    if '*' in mask:
-+        _ui_logfilters[handlerNum].update(None, level, debug_domains)
-+    else:
-+        _ui_logfilters[handlerNum].update(mask, level, debug_domains)
-+    return True
-+
- def getName(e):
-     """Returns the name of a class or class instance"""
-     if getattr(e, "__name__", None) == None:
+Jason: Not sure if this or the other patch will help the hang you are
+seeing or not but they seem like good changes regardless and fix real
+world issues.
+
 diff --git a/bitbake/lib/bb/server/process.py b/bitbake/lib/bb/server/process.py
-index 0d4a26c..4e584fc 100644
+index 0d4a26c..99a6bf5 100644
 --- a/bitbake/lib/bb/server/process.py
 +++ b/bitbake/lib/bb/server/process.py
-@@ -137,7 +137,10 @@ class ProcessServer(Process, BaseImplServer):
-         """
-         Run a cooker command on the server
-         """
--        self.command_channel.send(self.cooker.command.runCommand(command))
-+        if command[0] == "setEventMask":
-+            self.command_channel.send(self.cooker.command.runCommand(["setEventMask", self.event_handle, command[1]]))
-+        else:
-+            self.command_channel.send(self.cooker.command.runCommand(command))
+@@ -105,7 +105,7 @@ class ProcessServer(Process, BaseImplServer):
+             except Exception:
+                 logger.exception('Running command %s', command)
  
-     def stop(self):
-         self.keep_running.clear()
-diff --git a/bitbake/lib/bb/server/xmlrpc.py b/bitbake/lib/bb/server/xmlrpc.py
-index 026415e..2ae562b 100644
---- a/bitbake/lib/bb/server/xmlrpc.py
-+++ b/bitbake/lib/bb/server/xmlrpc.py
-@@ -81,7 +81,8 @@ class BitBakeServerCommands():
-         """
-         s, t = _create_server(host, port)
+-        self.event_queue.cancel_join_thread()
++        self.event_queue.close()
+         bb.event.unregister_UIHhandler(self.event_handle)
+         self.command_channel.close()
+         self.cooker.stop()
+@@ -150,27 +150,25 @@ class BitBakeProcessServerConnection(BitBakeBaseServerConnection):
+         self.connection = ServerCommunicator(self.ui_channel)
+         self.events = self.event_queue
  
--        return bb.event.register_UIHhandler(s)
-+        self.event_handle = bb.event.register_UIHhandler(s)
-+        return self.event_handle
- 
-     def unregisterEventHandler(self, handlerNum):
-         """
-@@ -93,7 +94,10 @@ class BitBakeServerCommands():
-         """
-         Run a cooker command on the server
-         """
--        return self.cooker.command.runCommand(command, self.server.readonly)
-+        if command[0] == "setEventMask":
-+            return self.cooker.command.runCommand(["setEventMask", self.event_handle, command[1]], self.server.readonly)
-+        else:
-+            return self.cooker.command.runCommand(command, self.server.readonly)
- 
-     def terminateServer(self):
-         """
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index 09ad99e..94f9f10 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -232,6 +232,15 @@ def _log_settings_from_server(server):
-         raise BaseException(error)
-     return includelogs, loglines, consolelogfile
- 
-+_evt_list = [ "bb.runqueue.runQueueExitWait", "bb.event.LogExecTTY", "logging.LogRecord",
-+              "bb.build.TaskFailed", "bb.build.TaskBase", "bb.event.ParseStarted",
-+              "bb.event.ParseProgress", "bb.event.ParseCompleted", "bb.event.CacheLoadStarted",
-+              "bb.event.CacheLoadProgress", "bb.event.CacheLoadCompleted", "bb.command.CommandFailed",
-+              "bb.command.CommandExit", "bb.command.CommandCompleted",  "bb.cooker.CookerExit",
-+              "bb.event.MultipleProviders", "bb.event.NoProvider", "bb.runqueue.sceneQueueTaskStarted",
-+              "bb.runqueue.runQueueTaskStarted", "bb.runqueue.runQueueTaskFailed", "bb.runqueue.sceneQueueTaskFailed",
-+              "bb.event.BuildBase", "bb.build.TaskStarted", "bb.build.TaskSucceeded", "bb.build.TaskFailedSilent"]
+-    def terminate(self, force = False):
++    def terminate(self):
++        def flushevents():
++            while True:
++                try:
++                    event = self.event_queue.get(block=False)
++                except (Empty, IOError):
++                    break
++                if isinstance(event, logging.LogRecord):
++                    logger.handle(event)
 +
- def main(server, eventHandler, params, tf = TerminalFilter):
- 
-     includelogs, loglines, consolelogfile = _log_settings_from_server(server)
-@@ -262,6 +271,8 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-         consolelog.setFormatter(conlogformat)
-         logger.addHandler(consolelog)
- 
-+    server.runCommand(["setEventMask", _evt_list])
+         signal.signal(signal.SIGINT, signal.SIG_IGN)
+         self.procserver.stop()
+-        if force:
+-            self.procserver.join(0.5)
+-            if self.procserver.is_alive():
+-                self.procserver.terminate()
+-                self.procserver.join()
+-        else:
+-            self.procserver.join()
+-        while True:
+-            try:
+-                event = self.event_queue.get(block=False)
+-            except (Empty, IOError):
+-                break
+-            if isinstance(event, logging.LogRecord):
+-                logger.handle(event)
 +
-     if not params.observe_only:
-         params.updateFromServer(server)
-         cmdline = params.parseActions()
--- 
-1.7.9.5
++        while self.procserver.is_alive():
++            flushevents()
++            self.procserver.join(0.1)
++
+         self.ui_channel.close()
+         self.event_queue.close()
+-        if force:
+-            sys.exit(1)
+ 
+ # Wrap Queue to provide API which isn't server implementation specific
+ class ProcessEventQueue(multiprocessing.queues.Queue):
+@@ -203,5 +201,5 @@ class BitBakeServer(BitBakeBaseServer):
+ 
+     def establishConnection(self):
+         self.connection = BitBakeProcessServerConnection(self.serverImpl, self.ui_channel, self.event_queue)
+-        signal.signal(signal.SIGTERM, lambda i, s: self.connection.terminate(force=True))
++        signal.signal(signal.SIGTERM, lambda i, s: self.connection.terminate())
+         return self.connection
+
 
 
