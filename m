@@ -1,20 +1,20 @@
 Return-Path: <cristiana.voicu@intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 2AB766BB3D
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 60A4360686
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Aug 2013 07:18:19 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 27 Aug 2013 00:15:27 -0700
+	Tue, 27 Aug 2013 07:57:13 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga101.fm.intel.com with ESMTP; 27 Aug 2013 00:57:14 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.89,966,1367996400"; d="scan'208";a="369016283"
+X-IronPort-AV: E=Sophos;i="4.89,966,1367996400"; d="scan'208";a="386987440"
 Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.72])
-	by orsmga001.jf.intel.com with ESMTP; 27 Aug 2013 00:18:18 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 27 Aug 2013 00:57:13 -0700
 From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 27 Aug 2013 10:21:38 +0300
-Message-Id: <1377588098-2149-1-git-send-email-cristiana.voicu@intel.com>
+Date: Tue, 27 Aug 2013 11:00:33 +0300
+Message-Id: <1377590433-28244-1-git-send-email-cristiana.voicu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob: add event handlers filtering in Hob
+Subject: [PATCH] bitbake/event.py: UIhandler filter should work without a mask
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,50 +27,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 27 Aug 2013 07:18:19 -0000
+X-List-Received-Date: Tue, 27 Aug 2013 07:57:16 -0000
 
-Create the _evt_list for hob; it is longer than the knotty
-uses because it handles more events.
-Whithout it, Hob is not passing the sanity checks, because the
-handler for this event is not running.
+The default for the mask will be * (all the handlers)
 
 Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- bitbake/lib/bb/ui/hob.py |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ bitbake/lib/bb/event.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/ui/hob.py b/bitbake/lib/bb/ui/hob.py
-index 2c75cb8..bc5ee14 100755
---- a/bitbake/lib/bb/ui/hob.py
-+++ b/bitbake/lib/bb/ui/hob.py
-@@ -58,6 +58,19 @@ def event_handle_idle_func(eventHandler, hobHandler):
-         event = eventHandler.getEvent()
-     return True
- 
-+_evt_list = [ "bb.runqueue.runQueueExitWait", "bb.event.LogExecTTY", "logging.LogRecord",
-+              "bb.build.TaskFailed", "bb.build.TaskBase", "bb.event.ParseStarted",
-+              "bb.event.ParseProgress", "bb.event.ParseCompleted", "bb.event.CacheLoadStarted",
-+              "bb.event.CacheLoadProgress", "bb.event.CacheLoadCompleted", "bb.command.CommandFailed",
-+              "bb.command.CommandExit", "bb.command.CommandCompleted",  "bb.cooker.CookerExit",
-+              "bb.event.MultipleProviders", "bb.event.NoProvider", "bb.runqueue.sceneQueueTaskStarted",
-+              "bb.runqueue.runQueueTaskStarted", "bb.runqueue.runQueueTaskFailed", "bb.runqueue.sceneQueueTaskFailed",
-+              "bb.event.BuildBase", "bb.build.TaskStarted", "bb.build.TaskSucceeded", "bb.build.TaskFailedSilent",
-+              "bb.event.SanityCheckPassed", "bb.event.SanityCheckFailed", "bb.event.PackageInfo",
-+              "bb.event.TargetsTreeGenerated", "bb.event.ConfigFilesFound", "bb.event.ConfigFilePathFound",
-+              "bb.event.FilesMatchingFound", "bb.event.NetworkTestFailed", "bb.event.NetworkTestPassed",
-+              "bb.event.BuildStarted", "bb.event.BuildCompleted", "bb.event.DiskFull"]
-+
- def main (server, eventHandler, params):
-     params.updateFromServer(server)
-     gobject.threads_init()
-@@ -68,6 +81,8 @@ def main (server, eventHandler, params):
-     recipe_model = RecipeListModel()
-     package_model = PackageListModel()
- 
-+    llevel, debug_domains = bb.msg.constructLogOptions()
-+    server.runCommand(["setEventMask", server.getEventHandle(), llevel, debug_domains, _evt_list])
-     hobHandler = HobHandler(server, recipe_model, package_model)
-     builder = Builder(hobHandler, recipe_model, package_model)
+diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
+index 1169cbf..67cfcea 100644
+--- a/bitbake/lib/bb/event.py
++++ b/bitbake/lib/bb/event.py
+@@ -237,7 +237,7 @@ class UIEventFilter(object):
+                 return True
+             return False
+         eid = str(event.__class__)[8:-2]
+-        if eid not in self.eventmask:
++        if self.eventmask and eid not in self.eventmask:
+             return False
+         return True
  
 -- 
 1.7.9.5
