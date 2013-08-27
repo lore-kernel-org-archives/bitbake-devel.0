@@ -1,32 +1,20 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 19EAF6B587
+Return-Path: <cristiana.voicu@intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 2AB766BB3D
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 26 Aug 2013 15:12:49 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r7QFOlNZ009027; Mon, 26 Aug 2013 16:25:01 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id DCjuVx2VSZ7A; Mon, 26 Aug 2013 16:25:01 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r7QFOvKM009078
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Mon, 26 Aug 2013 16:24:58 +0100
-Message-ID: <1377529955.26773.73.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Chris Larson <clarson@kergoth.com>
-Date: Mon, 26 Aug 2013 16:12:35 +0100
-In-Reply-To: <CABcZAN=pe52=h7NUyBWCE3s2Eu47fbuBwzpAaCdgaY+nmu_v0w@mail.gmail.com>
-References: <1377356035.6762.193.camel@ted>
-	<CABcZAN=pe52=h7NUyBWCE3s2Eu47fbuBwzpAaCdgaY+nmu_v0w@mail.gmail.com>
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
-	Otavio Salvador <otavio@ossystems.com.br>
-Subject: Re: [PATCH v2] data_smart: Add _remove operator
+	Tue, 27 Aug 2013 07:18:19 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 27 Aug 2013 00:15:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.89,966,1367996400"; d="scan'208";a="369016283"
+Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.72])
+	by orsmga001.jf.intel.com with ESMTP; 27 Aug 2013 00:18:18 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 27 Aug 2013 10:21:38 +0300
+Message-Id: <1377588098-2149-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob: add event handlers filtering in Hob
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,38 +27,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 26 Aug 2013 15:12:52 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 27 Aug 2013 07:18:19 -0000
 
-On Mon, 2013-08-26 at 07:54 -0700, Chris Larson wrote:
+Create the _evt_list for hob; it is longer than the knotty
+uses because it handles more events.
+Whithout it, Hob is not passing the sanity checks, because the
+handler for this event is not running.
 
-> On Sat, Aug 24, 2013 at 7:53 AM, Richard Purdie
-> <richard.purdie@linuxfoundation.org> wrote:
->         @@ -583,6 +588,14 @@ class DataSmart(MutableMapping):
->                          value = copy.copy(local_var["defaultval"])
->                  if expand and value:
->                      value = self.expand(value, None)
->         +        if value and flag == "_content" and local_var and
->         "_removeactive" in local_var:
->         +            for i in local_var["_removeactive"]:
->         +                if " " + i + " " in value:
->         +                    value = value.replace(" " + i + " ", " ")
->         +                if value.startswith(i + " "):
->         +                    value = value[len(i + " "):]
->         +                if value.endswith(" " + i):
->         +                    value = value[:-len(" " + i)]
->
-> I'm curious, did you profile this implementation vs a
-> split-filter-rejoin?
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+---
+ bitbake/lib/bb/ui/hob.py |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-No, in retrospect, that might have been better. I'll take a patch to
-update it :)
-
-Cheers,
-
-Richard
-
-
+diff --git a/bitbake/lib/bb/ui/hob.py b/bitbake/lib/bb/ui/hob.py
+index 2c75cb8..bc5ee14 100755
+--- a/bitbake/lib/bb/ui/hob.py
++++ b/bitbake/lib/bb/ui/hob.py
+@@ -58,6 +58,19 @@ def event_handle_idle_func(eventHandler, hobHandler):
+         event = eventHandler.getEvent()
+     return True
+ 
++_evt_list = [ "bb.runqueue.runQueueExitWait", "bb.event.LogExecTTY", "logging.LogRecord",
++              "bb.build.TaskFailed", "bb.build.TaskBase", "bb.event.ParseStarted",
++              "bb.event.ParseProgress", "bb.event.ParseCompleted", "bb.event.CacheLoadStarted",
++              "bb.event.CacheLoadProgress", "bb.event.CacheLoadCompleted", "bb.command.CommandFailed",
++              "bb.command.CommandExit", "bb.command.CommandCompleted",  "bb.cooker.CookerExit",
++              "bb.event.MultipleProviders", "bb.event.NoProvider", "bb.runqueue.sceneQueueTaskStarted",
++              "bb.runqueue.runQueueTaskStarted", "bb.runqueue.runQueueTaskFailed", "bb.runqueue.sceneQueueTaskFailed",
++              "bb.event.BuildBase", "bb.build.TaskStarted", "bb.build.TaskSucceeded", "bb.build.TaskFailedSilent",
++              "bb.event.SanityCheckPassed", "bb.event.SanityCheckFailed", "bb.event.PackageInfo",
++              "bb.event.TargetsTreeGenerated", "bb.event.ConfigFilesFound", "bb.event.ConfigFilePathFound",
++              "bb.event.FilesMatchingFound", "bb.event.NetworkTestFailed", "bb.event.NetworkTestPassed",
++              "bb.event.BuildStarted", "bb.event.BuildCompleted", "bb.event.DiskFull"]
++
+ def main (server, eventHandler, params):
+     params.updateFromServer(server)
+     gobject.threads_init()
+@@ -68,6 +81,8 @@ def main (server, eventHandler, params):
+     recipe_model = RecipeListModel()
+     package_model = PackageListModel()
+ 
++    llevel, debug_domains = bb.msg.constructLogOptions()
++    server.runCommand(["setEventMask", server.getEventHandle(), llevel, debug_domains, _evt_list])
+     hobHandler = HobHandler(server, recipe_model, package_model)
+     builder = Builder(hobHandler, recipe_model, package_model)
+ 
+-- 
+1.7.9.5
 
 
