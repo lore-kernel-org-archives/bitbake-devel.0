@@ -1,28 +1,24 @@
 Return-Path: <jason.wessel@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 6E9D16BB90
+Received: from mail7.windriver.com (mail7.windriver.com [128.224.252.3])
+	by mail.openembedded.org (Postfix) with ESMTP id 956A26BB90
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Aug 2013 20:11:47 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id r7RKBjCe017891
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Tue, 27 Aug 2013 13:11:45 -0700 (PDT)
-Received: from [172.25.32.37] (172.25.32.37) by ALA-HCB.corp.ad.wrs.com
-	(147.11.189.41) with Microsoft SMTP Server id 14.2.342.3;
-	Tue, 27 Aug 2013 13:11:45 -0700
-Message-ID: <521D07FF.9000507@windriver.com>
-Date: Tue, 27 Aug 2013 15:11:43 -0500
+	Tue, 27 Aug 2013 20:13:06 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail7.windriver.com (8.14.5/8.14.3) with ESMTP id r7RKD5ET025234
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 27 Aug 2013 16:13:06 -0400 (EDT)
+Received: from splat.wrs.com (128.224.60.28) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.40) with Microsoft SMTP Server id 14.2.347.0;
+	Tue, 27 Aug 2013 13:13:05 -0700
 From: Jason Wessel <jason.wessel@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:17.0) Gecko/20130308 Thunderbird/17.0.4
+To: <bitbake-devel@lists.openembedded.org>
+Date: Tue, 27 Aug 2013 15:12:55 -0500
+Message-ID: <1377634375-13016-1-git-send-email-jason.wessel@windriver.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-References: <1377346040.6762.186.camel@ted>
-In-Reply-To: <1377346040.6762.186.camel@ted>
-X-Enigmail-Version: 1.5.2
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] process: Improve exit handling and hangs
+Subject: [PATCH] serv.py: Fix hang when spawned dynamically with bitbake
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,43 +31,74 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 27 Aug 2013 20:11:48 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 27 Aug 2013 20:13:07 -0000
+Content-Type: text/plain
 
-On 08/24/2013 07:07 AM, Richard Purdie wrote:
-> It turns out we have a number of different ways the process server termination can
-> hang. If we call cancel_join_thread() on the event queue, it means that it can be left
-> containing partial data. This means the reading of the event queue in the terminate()
-> function can hang, the timeout and block parameters to Queue.get() don't make any
-> difference.
->
-> Equally, if we don't call cancel_join_thread(), the join_thread in terminate()
-> will hang giving a different deadlock.
->
-> The best solution I could find is to loop over the process is_alive() after requesting
-> it stops,  trying to join the thread and if that fails, try and flush the event
-> queue again.
->
-> It wasn't clear what difference a force option should make in this case, we're
-> gracefully trying to empty queues and shut down regardless of whether its a SIGTERM
-> so I've simply removed the force option.
->
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->
-> Jason: Not sure if this or the other patch will help the hang you are
-> seeing or not but they seem like good changes regardless and fix real
-> world issues.
+The PRServer has the possibility to hang indefinitely blocking on a
+semaphore processing a xmlrpc request to send an event back to the
+main bitbake instance.  This was observed during a "bitbake -e" on a
+heavily loaded machine and the main bitbake instance and cooker exited
+before the PRServer emitted its first log.
 
+The stack trace is provided below as to show what happens every time a
+logger.info() is executed in the PRServer.  Not only does it write to
+the stream handler but it also tries to send the event to the main
+event processor.
 
-Certainly the behavior is a bit better with your additional patches, but it is not the root of the problem.  I have tested your patches in the heavy load situations where we have observed all the hangs.
+    self._notempty.acquire()
+    self.queue.put(event)
+    _ui_handlers[h].event.send(event)
+    fire_ui_handlers(event, d)
+    fire(record, None)
+    self.emit(record)
+    hdlr.handle(record)
+    self.callHandlers(record)
+    self.handle(record)
+    self._log(INFO, msg, args, **kwargs)
+    (self.dbfile, self.host, self.port, str(os.getpid())))
+    self.work_forever()
+    pid = self.daemonize()
+    self.prserv.start()
+    singleton.start()
+    self.prhost = prserv.serv.auto_start(self.data)
+    cooker.pre_serve()
+    bb.cooker.server_main(self.cooker, self.main)
+    self.run()
+    code = process_obj._bootstrap()
+    self._popen = Popen(self)
+    self.serverImpl.start()
+    server.detach()
+    server = start_server(servermodule, configParams, configuration)
+    ret = main()
 
-I'll send a patch separately along with an explanation of the root cause of the hangs in the PR Server.
+It was never intended for the PRServer to send its logs anywhere but
+its own log file.  The event processing is an artifact of how the
+PRServer was forked and it inherits the event log handlers.  The
+simple fix is to clean up and purge all the log handlers after the
+fork() but before doing any of the typical PRServer work or logging.
 
-As for your patches, I have reviewed and tested them:  Acked-by: Jason Wessel <jason.wessel@windriver.com>
+Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
+---
+ lib/prserv/serv.py |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-Cheers,
-Jason.
+diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
+index 81b4f8d..781f054 100644
+--- a/lib/prserv/serv.py
++++ b/lib/prserv/serv.py
+@@ -143,6 +143,11 @@ class PRServer(SimpleXMLRPCServer):
+         os.dup2(so.fileno(),sys.stdout.fileno())
+         os.dup2(se.fileno(),sys.stderr.fileno())
+ 
++        # Clear out all log handlers prior to the fork() to avoid calling
++        # event handlers not part of the PRserver
++        for logger_iter in logging.Logger.manager.loggerDict.keys():
++            logger_iter.handlers = []
++
+         # Ensure logging makes it to the logfile
+         streamhandler = logging.StreamHandler()
+         streamhandler.setLevel(logging.DEBUG)
+-- 
+1.7.9.5
 
 
