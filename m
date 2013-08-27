@@ -1,20 +1,28 @@
-Return-Path: <cristiana.voicu@intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id E51246ABA5
+Return-Path: <jason.wessel@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 6E9D16BB90
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Aug 2013 10:24:17 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga102.jf.intel.com with ESMTP; 27 Aug 2013 03:21:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.89,967,1367996400"; d="scan'208";a="387042670"
-Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.72])
-	by fmsmga001.fm.intel.com with ESMTP; 27 Aug 2013 03:24:17 -0700
-From: Cristiana Voicu <cristiana.voicu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 27 Aug 2013 13:27:37 +0300
-Message-Id: <1377599257-29089-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob: fixes for image combo box
+	Tue, 27 Aug 2013 20:11:47 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id r7RKBjCe017891
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Tue, 27 Aug 2013 13:11:45 -0700 (PDT)
+Received: from [172.25.32.37] (172.25.32.37) by ALA-HCB.corp.ad.wrs.com
+	(147.11.189.41) with Microsoft SMTP Server id 14.2.342.3;
+	Tue, 27 Aug 2013 13:11:45 -0700
+Message-ID: <521D07FF.9000507@windriver.com>
+Date: Tue, 27 Aug 2013 15:11:43 -0500
+From: Jason Wessel <jason.wessel@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:17.0) Gecko/20130308 Thunderbird/17.0.4
+MIME-Version: 1.0
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <1377346040.6762.186.camel@ted>
+In-Reply-To: <1377346040.6762.186.camel@ted>
+X-Enigmail-Version: 1.5.2
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] process: Improve exit handling and hangs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,43 +35,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 27 Aug 2013 10:24:19 -0000
+X-List-Received-Date: Tue, 27 Aug 2013 20:11:48 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-When an image from scratch is selected, and recipes parsing
-is canceled, the image shown by the combo box isn't correct.
+On 08/24/2013 07:07 AM, Richard Purdie wrote:
+> It turns out we have a number of different ways the process server termination can
+> hang. If we call cancel_join_thread() on the event queue, it means that it can be left
+> containing partial data. This means the reading of the event queue in the terminate()
+> function can hang, the timeout and block parameters to Queue.get() don't make any
+> difference.
+>
+> Equally, if we don't call cancel_join_thread(), the join_thread in terminate()
+> will hang giving a different deadlock.
+>
+> The best solution I could find is to loop over the process is_alive() after requesting
+> it stops,  trying to join the thread and if that fails, try and flush the event
+> queue again.
+>
+> It wasn't clear what difference a force option should make in this case, we're
+> gracefully trying to empty queues and shut down regardless of whether its a SIGTERM
+> so I've simply removed the force option.
+>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+>
+> Jason: Not sure if this or the other patch will help the hang you are
+> seeing or not but they seem like good changes regardless and fix real
+> world issues.
 
-[YOCTO #5000]
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
----
- bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-index ca168bc..060fee2 100644
---- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-@@ -496,16 +496,15 @@ class ImageConfigurationPage (HobPage):
-                 cnt = cnt + 1
-         self.image_combo.append_text(self.builder.recipe_model.__custom_image__)
- 
-+        if selected_image == self.builder.recipe_model.__custom_image__:
-+            active = cnt
-+
-         if self.custom_image_selected:
-             self.image_combo.append_text("--Separator--")
--            cnt = cnt + 1
-             self.image_combo.append_text(self.custom_image_selected)
-+            cnt = cnt + 2
-             if self.custom_image_selected == selected_image:
-                 active = cnt
--            cnt = cnt + 1
--
--        if selected_image == self.builder.recipe_model.__custom_image__:
--            active = cnt
- 
-         self.image_combo.set_active(active)
- 
--- 
-1.7.9.5
+Certainly the behavior is a bit better with your additional patches, but it is not the root of the problem.  I have tested your patches in the heavy load situations where we have observed all the hangs.
+
+I'll send a patch separately along with an explanation of the root cause of the hangs in the PR Server.
+
+As for your patches, I have reviewed and tested them:  Acked-by: Jason Wessel <jason.wessel@windriver.com>
+
+Cheers,
+Jason.
 
 
