@@ -1,37 +1,24 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-pa0-f46.google.com (mail-pa0-f46.google.com
-	[209.85.220.46])
-	by mail.openembedded.org (Postfix) with ESMTP id 7EB9B6BBC4
+Return-Path: <jason.wessel@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 56B7E6BA7C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Aug 2013 23:27:51 +0000 (UTC)
-Received: by mail-pa0-f46.google.com with SMTP id fa1so5424330pad.5
+	Wed, 28 Aug 2013 02:21:08 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id r7S2L8IW024163
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Aug 2013 16:27:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=Zzoqy+jvJFiO2ECzyCtGoTC2gNNdEzHl9QF7W8UdUec=;
-	b=Skhk/By8AJxW3dcjJ27DcOovE3iRoZEnhU5fA+2MWKUdy7uJrJg+6ntyGR+uoUv8Y4
-	qF7biEeMlToCsxtAk+arhBZ7ay+figgO2rtxAV4Yj+0hHrAT9jlQMibfNkCFiCh0EKI/
-	3FmKsr/4akXkQ8/MYEWTt+yGVwfh0qP4M8qT1jiJ5qxpYGPwm8FAZEl6nzwdKPjpK59Y
-	iC56fcZEP9qsvv6MCR+BGJ0D6DRSs7Jf+eXaqadXQQRoko9TrgwLI/VeTSTwFfPfmWGe
-	qRmaC8j3V/WybdhPKRGxIveQgNVe4ybkwoRfhKs/y45+bQP8i0PfsJJV3jbW/wCUo6YJ
-	omqQ==
-X-Received: by 10.66.193.98 with SMTP id hn2mr11461053pac.173.1377646072540;
-	Tue, 27 Aug 2013 16:27:52 -0700 (PDT)
-Received: from amyr.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
-	by mx.google.com with ESMTPSA id
-	mz5sm27126503pbc.18.1969.12.31.16.00.00
-	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Tue, 27 Aug 2013 16:27:51 -0700 (PDT)
-From: Christopher Larson <kergoth@gmail.com>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Tue, 27 Aug 2013 16:27:41 -0700
-Message-Id: <1377646061-24208-2-git-send-email-kergoth@gmail.com>
-X-Mailer: git-send-email 1.8.3.4
-In-Reply-To: <1377646061-24208-1-git-send-email-kergoth@gmail.com>
-References: <1377646061-24208-1-git-send-email-kergoth@gmail.com>
-Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: [PATCH 2/2] data_smart: allow removal of multiple words at once with _remove
+	Tue, 27 Aug 2013 19:21:08 -0700 (PDT)
+Received: from splat.wrs.com (128.224.60.28) by ALA-HCB.corp.ad.wrs.com
+	(147.11.189.41) with Microsoft SMTP Server id 14.2.342.3;
+	Tue, 27 Aug 2013 19:21:08 -0700
+From: Jason Wessel <jason.wessel@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Tue, 27 Aug 2013 21:20:55 -0500
+Message-ID: <1377656455-5850-1-git-send-email-jason.wessel@windriver.com>
+X-Mailer: git-send-email 1.7.9.5
+MIME-Version: 1.0
+Subject: [PATCH] serv.py: Fix regression from 972bc43e6d5b
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,32 +31,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 27 Aug 2013 23:27:52 -0000
+X-List-Received-Date: Wed, 28 Aug 2013 02:21:09 -0000
+Content-Type: text/plain
 
-From: Christopher Larson <chris_larson@mentor.com>
+commit 972bc43e6d5b1207b944b3baa8f9805adb35dda7 (serv.py: Fix hang
+when spawned dynamically with bitbake) introduced a regression,
+because the wrong patch was submitted.  The syntax was incorrect in
+the original patch.  The logger iterator must be used with a call to
+getLogger().
 
-    FOO = "foo bar baz"
-    FOO_remove = "foo baz"
+[YOCTO #5059]
 
-Signed-off-by: Christopher Larson <chris_larson@mentor.com>
+Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
 ---
- lib/bb/data_smart.py | 2 +-
+ lib/prserv/serv.py |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 6229fbf..d325018 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -418,7 +418,7 @@ class DataSmart(MutableMapping):
-                             self.setVar(append, sval)
-                         elif op == "_remove":
-                             removes = self.getVarFlag(append, "_removeactive", False) or []
--                            removes.append(a)
-+                            removes.extend(a.split())
-                             self.setVarFlag(append, "_removeactive", removes, ignore=True)
+diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
+index 781f054..6d0c718 100644
+--- a/lib/prserv/serv.py
++++ b/lib/prserv/serv.py
+@@ -146,7 +146,7 @@ class PRServer(SimpleXMLRPCServer):
+         # Clear out all log handlers prior to the fork() to avoid calling
+         # event handlers not part of the PRserver
+         for logger_iter in logging.Logger.manager.loggerDict.keys():
+-            logger_iter.handlers = []
++            logging.getLogger(logger_iter).handlers = []
  
-                     # We save overrides that may be applied at some later stage
+         # Ensure logging makes it to the logfile
+         streamhandler = logging.StreamHandler()
 -- 
-1.8.3.4
+1.7.9.5
 
 
