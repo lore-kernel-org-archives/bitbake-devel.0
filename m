@@ -1,30 +1,31 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id F3D986BC98
+	by mail.openembedded.org (Postfix) with ESMTP id 61B666BC98
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 29 Aug 2013 13:27:42 +0000 (UTC)
+	Thu, 29 Aug 2013 13:38:30 +0000 (UTC)
 Received: from localhost (dan.rpsys.net [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r7TDeCUS014150 for <bitbake-devel@lists.openembedded.org>;
-	Thu, 29 Aug 2013 14:40:12 +0100
+	r7TDnwHj014636; Thu, 29 Aug 2013 14:50:59 +0100
 X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id fH___LvEDKm3 for <bitbake-devel@lists.openembedded.org>;
-	Thu, 29 Aug 2013 14:40:11 +0100 (BST)
+	with LMTP id 2ssFerpk5erD; Thu, 29 Aug 2013 14:50:58 +0100 (BST)
 Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r7TDe6Nw014147
+	r7TDorXh014729
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
-	Thu, 29 Aug 2013 14:40:08 +0100
-Message-ID: <1377782849.1059.1.camel@ted>
+	verify=NOT); Thu, 29 Aug 2013 14:50:54 +0100
+Message-ID: <1377783495.1059.4.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Thu, 29 Aug 2013 14:27:29 +0100
+To: "Peter A. Bigot" <pab@pabigot.com>
+Date: Thu, 29 Aug 2013 14:38:15 +0100
+In-Reply-To: <521E025B.7070308@pabigot.com>
+References: <1377695062-16111-1-git-send-email-pab@pabigot.com>
+	<521DFDAE.5040507@windriver.com> <521E025B.7070308@pabigot.com>
 X-Mailer: Evolution 3.6.4-0ubuntu1 
 Mime-Version: 1.0
-Subject: [PATCH] cookerdata: Allow bblayers.conf to be found using BBPATH
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] bitbake: server/xmlrpc/prserv: Increase timeout to default xmlrpc server
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,74 +38,65 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 29 Aug 2013 13:27:45 -0000
+X-List-Received-Date: Thu, 29 Aug 2013 13:38:30 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
+On Wed, 2013-08-28 at 08:59 -0500, Peter A. Bigot wrote:
+> On 08/28/2013 08:39 AM, Jason Wessel wrote:
+> > On 08/28/2013 08:04 AM, Peter A. Bigot wrote:
+> >> On a heavily-loaded host with local PR server the default 5 second timeout
+> >> produces too-frequent errors:
+> >>
+> >>    ERROR: Can NOT get PRAUTO, exception timed out
+> >>    ERROR: Function failed: package_get_auto_pr
+> >>
+> >> Since this error aborts the build a generous timeout seems appropriate.
+> >>
+> >> Signed-off-by: Peter A. Bigot <pab@pabigot.com>
+> >> ---
+> >>   lib/bb/server/xmlrpc.py | 2 +-
+> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/lib/bb/server/xmlrpc.py b/lib/bb/server/xmlrpc.py
+> >> index 4dee5d9..bb87fd7 100644
+> >> --- a/lib/bb/server/xmlrpc.py
+> >> +++ b/lib/bb/server/xmlrpc.py
+> >> @@ -78,7 +78,7 @@ class BBTransport(xmlrpclib.Transport):
+> >>               h.putheader("Bitbake-token", self.connection_token)
+> >>           xmlrpclib.Transport.send_content(self, h, body)
+> >>   
+> >> -def _create_server(host, port, timeout = 5):
+> >> +def _create_server(host, port, timeout = 20):
+> >>       t = BBTransport(timeout)
+> >>       s = xmlrpclib.Server("http://%s:%d/" % (host, port), transport=t, allow_none=True)
+> >>       return s, t
+> >
+> > I would go so far as to make this 60 seconds and or have it a configurable parameter.
+> >
+> > Previously the timeout was infinite.   I have observed process creation lagging by 30-45 seconds on a server with a load average of +300.   The new bitbake python code with the reduced timeout is not yet running on our edge case testing environment, but I do expect to hit the same issue.
+> 
+> Not sure when the timeout was added, but I believe it was before the 
+> modifications in the last few days that moved it to this function; I've 
+> been having this problem since switching to poky master.
+> 
+> 60 seconds would be fine with me; I could update the patch for that.  A 
+> configurable parameter would be better but it wasn't obvious how to do 
+> it, so if people prefer that approach I'd rather a bitbake maintainer 
+> take over from here.
 
+The downside is that if something goes wrong this ends up leaving
+bitbake hanging for 60 seconds at exit whilst it tries to connect to a
+server which is never going to exist. I'm rather frustrated that the PR
+service is so slow since this will block the packaging process for that
+length or time.
 
-It should be possible to run a build anywhere on the filesystem and have
-bitbake find the correct build directory if its set somehow. The BBPATH
-variable makes perfect sense for this usage. Therefore use any available
-value of BBPATH to search for conf/bblayers.conf before walking the parent
-directory structure.
+With that in mind I've radically improved the performance of the server
+with threading. Can people retest with master and see how things behave
+now?
 
-This restores the option of being able to run bitbake from anywhere if
-the user has set things up to operate in that environment.
+Cheers,
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/cookerdata.py b/bitbake/lib/bb/cookerdata.py
-index 8a0bc22..0b278b1 100644
---- a/bitbake/lib/bb/cookerdata.py
-+++ b/bitbake/lib/bb/cookerdata.py
-@@ -177,14 +177,21 @@ def _inherit(bbclass, data):
-     bb.parse.BBHandler.inherit(bbclass, "configuration INHERITs", 0, data)
-     return data
- 
--def findConfigFile(configfile):
-+def findConfigFile(configfile, data):
-+    search = []
-+    bbpath = data.getVar("BBPATH", True)
-+    if bbpath:
-+        for i in bbpath.split(":"):
-+            search.append(os.path.join(i, "conf", configfile))
-     path = os.getcwd()
-     while path != "/":
--        confpath = os.path.join(path, "conf", configfile)
--        if os.path.exists(confpath):
--            return confpath
--
-+        search.append(os.path.join(path, "conf", configfile))
-         path, _ = os.path.split(path)
-+
-+    for i in search:
-+        if os.path.exists(i):
-+            return i
-+
-     return None
- 
- class CookerDataBuilder(object):
-@@ -225,8 +232,8 @@ class CookerDataBuilder(object):
-             logger.exception("Error parsing configuration files")
-             sys.exit(1)
- 
--    def _findLayerConf(self):
--        return findConfigFile("bblayers.conf")
-+    def _findLayerConf(self, data):
-+        return findConfigFile("bblayers.conf", data)
- 
-     def parseConfigurationFiles(self, prefiles, postfiles):
-         data = self.data
-@@ -236,7 +243,7 @@ class CookerDataBuilder(object):
-         for f in prefiles:
-             data = parse_config_file(f, data)
- 
--        layerconf = self._findLayerConf()
-+        layerconf = self._findLayerConf(data)
-         if layerconf:
-             parselog.debug(2, "Found bblayers.conf (%s)", layerconf)
-             # By definition bblayers.conf is in conf/ of TOPDIR.
-
+Richard
 
 
