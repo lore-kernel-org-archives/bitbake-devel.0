@@ -1,32 +1,37 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 0E81C6BD9E
+Return-Path: <otavio.salvador@gmail.com>
+Received: from mail-ob0-f171.google.com (mail-ob0-f171.google.com
+	[209.85.214.171])
+	by mail.openembedded.org (Postfix) with ESMTP id 44FDF6BD80
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 30 Aug 2013 16:43:44 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r7UGuJeB009682; Fri, 30 Aug 2013 17:56:20 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 494zR4txOjpl; Fri, 30 Aug 2013 17:56:19 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r7UGuG5e009673
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Fri, 30 Aug 2013 17:56:17 +0100
-Message-ID: <1377881012.1059.101.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Peter A. Bigot" <pab@pabigot.com>
-Date: Fri, 30 Aug 2013 17:43:32 +0100
-In-Reply-To: <1377783495.1059.4.camel@ted>
-References: <1377695062-16111-1-git-send-email-pab@pabigot.com>
-	<521DFDAE.5040507@windriver.com> <521E025B.7070308@pabigot.com>
-	<1377783495.1059.4.camel@ted>
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
+	Sat, 31 Aug 2013 21:46:58 +0000 (UTC)
+Received: by mail-ob0-f171.google.com with SMTP id tb18so3259647obb.30
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 31 Aug 2013 14:46:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:date:message-id:subject
+	:from:to:cc:content-type;
+	bh=dbWc8CcwVNrGTVTqyZfmbBUrWgijfjtHvcTSWyEO6wI=;
+	b=uGiFsGerj3a/Hb3+oSyhwJseEn5v/k9LTwrodcBshYajCiYXGNLMli9cCuak1iidQc
+	4HzBvsie6ZhVpzACmLV9oKBlmjEAZfGzY7JOM5bAmaraNKRrwMKsZNXt0txKTeyLW0zh
+	M0wRas23srpZYMzMvhjslVvHhAr84QjEDqUQDXUeDn2r7rMOieqTbEpgt0IhVmPdCU2r
+	ylBo53GttJ/T/iTJMHsLOxP3UU+4QCJZRpRIbrXUVnBlEg46EytiCBG2N3jXC4ukdbm/
+	Kj8ys3IyKh/srCqErco689IhqISy9GlToBJAG9O+IUvbuJvf8GEW36MHuaRrVzNUSdEN
+	9ELw==
+MIME-Version: 1.0
+X-Received: by 10.182.18.9 with SMTP id s9mr11909016obd.15.1377985617474; Sat,
+	31 Aug 2013 14:46:57 -0700 (PDT)
+Sender: otavio.salvador@gmail.com
+Received: by 10.182.232.166 with HTTP; Sat, 31 Aug 2013 14:46:57 -0700 (PDT)
+In-Reply-To: <CABcZAN=pe52=h7NUyBWCE3s2Eu47fbuBwzpAaCdgaY+nmu_v0w@mail.gmail.com>
+References: <1377356035.6762.193.camel@ted>
+	<CABcZAN=pe52=h7NUyBWCE3s2Eu47fbuBwzpAaCdgaY+nmu_v0w@mail.gmail.com>
+Date: Sat, 31 Aug 2013 18:46:57 -0300
+X-Google-Sender-Auth: C0FwAPURNFvjaJf5wXFWKPbD25o
+Message-ID: <CAP9ODKp5Ek7aHDF5xVTb-DGupDB9MX55G4nBvMdj84t-3QEo7A@mail.gmail.com>
+From: Otavio Salvador <otavio@ossystems.com.br>
+To: Chris Larson <clarson@kergoth.com>
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] bitbake: server/xmlrpc/prserv: Increase timeout to default xmlrpc server
+Subject: Re: [PATCH v2] data_smart: Add _remove operator
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,68 +44,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 30 Aug 2013 16:43:45 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sat, 31 Aug 2013 21:47:00 -0000
+Content-Type: text/plain; charset=ISO-8859-1
 
-On Thu, 2013-08-29 at 14:38 +0100, Richard Purdie wrote:
-> On Wed, 2013-08-28 at 08:59 -0500, Peter A. Bigot wrote:
-> > On 08/28/2013 08:39 AM, Jason Wessel wrote:
-> > > On 08/28/2013 08:04 AM, Peter A. Bigot wrote:
-> > >> On a heavily-loaded host with local PR server the default 5 second timeout
-> > >> produces too-frequent errors:
-> > >>
-> > >>    ERROR: Can NOT get PRAUTO, exception timed out
-> > >>    ERROR: Function failed: package_get_auto_pr
-> > >>
-> > >> Since this error aborts the build a generous timeout seems appropriate.
-> > >>
-> > >> Signed-off-by: Peter A. Bigot <pab@pabigot.com>
-> > >> ---
-> > >>   lib/bb/server/xmlrpc.py | 2 +-
-> > >>   1 file changed, 1 insertion(+), 1 deletion(-)
-> > >>
-> > >> diff --git a/lib/bb/server/xmlrpc.py b/lib/bb/server/xmlrpc.py
-> > >> index 4dee5d9..bb87fd7 100644
-> > >> --- a/lib/bb/server/xmlrpc.py
-> > >> +++ b/lib/bb/server/xmlrpc.py
-> > >> @@ -78,7 +78,7 @@ class BBTransport(xmlrpclib.Transport):
-> > >>               h.putheader("Bitbake-token", self.connection_token)
-> > >>           xmlrpclib.Transport.send_content(self, h, body)
-> > >>   
-> > >> -def _create_server(host, port, timeout = 5):
-> > >> +def _create_server(host, port, timeout = 20):
-> > >>       t = BBTransport(timeout)
-> > >>       s = xmlrpclib.Server("http://%s:%d/" % (host, port), transport=t, allow_none=True)
-> > >>       return s, t
-> > >
-> > > I would go so far as to make this 60 seconds and or have it a configurable parameter.
-> > >
-> > > Previously the timeout was infinite.   I have observed process creation lagging by 30-45 seconds on a server with a load average of +300.   The new bitbake python code with the reduced timeout is not yet running on our edge case testing environment, but I do expect to hit the same issue.
-> > 
-> > Not sure when the timeout was added, but I believe it was before the 
-> > modifications in the last few days that moved it to this function; I've 
-> > been having this problem since switching to poky master.
-> > 
-> > 60 seconds would be fine with me; I could update the patch for that.  A 
-> > configurable parameter would be better but it wasn't obvious how to do 
-> > it, so if people prefer that approach I'd rather a bitbake maintainer 
-> > take over from here.
-> 
-> The downside is that if something goes wrong this ends up leaving
-> bitbake hanging for 60 seconds at exit whilst it tries to connect to a
-> server which is never going to exist. I'm rather frustrated that the PR
-> service is so slow since this will block the packaging process for that
-> length or time.
-> 
-> With that in mind I've radically improved the performance of the server
-> with threading. Can people retest with master and see how things behave
-> now?
+On Mon, Aug 26, 2013 at 11:54 AM, Chris Larson <clarson@kergoth.com> wrote:
+>
+> On Sat, Aug 24, 2013 at 7:53 AM, Richard Purdie
+> <richard.purdie@linuxfoundation.org> wrote:
+>>
+>> @@ -583,6 +588,14 @@ class DataSmart(MutableMapping):
+>>                  value = copy.copy(local_var["defaultval"])
+>>          if expand and value:
+>>              value = self.expand(value, None)
+>> +        if value and flag == "_content" and local_var and "_removeactive"
+>> in local_var:
+>> +            for i in local_var["_removeactive"]:
+>> +                if " " + i + " " in value:
+>> +                    value = value.replace(" " + i + " ", " ")
+>> +                if value.startswith(i + " "):
+>> +                    value = value[len(i + " "):]
+>> +                if value.endswith(" " + i):
+>> +                    value = value[:-len(" " + i)]
+>
+>
+> I'm curious, did you profile this implementation vs a split-filter-rejoin?
 
-Looking at the number of people hitting this, I've set it to 60s. 
+I noticed it has already been merged but I couldn't comment on this
+before as I was in a work trip.
 
-Cheers,
+I'd like to thank you both for doing it :)
 
-Richard
 
+-- 
+Otavio Salvador                             O.S. Systems
+http://www.ossystems.com.br        http://code.ossystems.com.br
+Mobile: +55 (53) 9981-7854            Mobile: +1 (347) 903-9750
 
