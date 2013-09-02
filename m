@@ -1,26 +1,20 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 912306BBDA
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 4F8B86BF67
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  2 Sep 2013 13:47:26 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail1.windriver.com (8.14.5/8.14.3) with ESMTP id r82DlRXL007348
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 2 Sep 2013 06:47:28 -0700 (PDT)
-Received: from pek-hostel-vm02.wrs.com (128.224.153.172) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
-	14.2.342.3; Mon, 2 Sep 2013 06:47:26 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 2 Sep 2013 09:47:21 -0400
-Message-ID: <38a257cf48a0e83f75352c5f3eff36c305b48d09.1378129369.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.10.4
-In-Reply-To: <cover.1378129369.git.liezhi.yang@windriver.com>
-References: <cover.1378129369.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/1] runqueue.py: check whether multiple versions of the same PN are due to be built
+	Mon,  2 Sep 2013 17:26:48 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 02 Sep 2013 10:26:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.89,1008,1367996400"; d="scan'208";a="372334554"
+Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.123.85])
+	by orsmga001.jf.intel.com with ESMTP; 02 Sep 2013 10:26:30 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  2 Sep 2013 18:26:28 +0100
+Message-Id: <1378142788-17001-1-git-send-email-paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.8.1.2
+Subject: [PATCH] bitbake-worker: ensure BUILDNAME is available during execution
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,65 +27,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 02 Sep 2013 13:47:26 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 02 Sep 2013 17:26:49 -0000
 
-There would be an race issue if we:
+BUILDNAME is set from cooker by default, so since the worker split it
+will not be set when executing functions. In OpenEmbedded this results
+in /etc/version (which is populated from BUILDNAME) not having any
+content. Pass this variable value through to the worker explicitly to
+fix the issue.
 
-$ bitbake make-3.81 make-3.82
+Fixes [YOCTO #4818].
 
-This because they are being built at the same time which would cause
-unexpected problems, for example:
-
-[snip]
-ERROR: Package already staged (/path/to/tmp/sstate-control/manifest-qemux86-make.populate-sysroot)?!
-ERROR: Function failed: sstate_task_postfunc
-[snip]
-
-Or there would be python's strack trace such as:
-
-[snip]
- *** 0004:    mfile = open(manifest)
-     0005:    entries = mfile.readlines()
-     0006:    mfile.close()
-     0007:
-     0008:    for entry in entries:
-Exception: IOError: [Errno 2] No such file or directory: xxx
-[snip]
-
-[YOCTO #5094]
-
-I think that we can quite earlier to fix the problem.
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- bitbake/lib/bb/runqueue.py |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ bin/bitbake-worker | 1 +
+ lib/bb/runqueue.py | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 0700a5b..c77cb85 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -702,7 +702,17 @@ class RunQueueData:
-                 else:
-                     msg += "\n This usually means one provides something the other doesn't and should."
-                     logger.error(msg)
--
-+                # Check whether multiple versions of the same PN are due to be
-+                # built, for example:
-+                # <pn>-1.0
-+                # <pn>-2.0
-+                seen_pn = []
-+                for fn in prov_list[prov]:
-+                    pn = self.dataCache.pkg_fn[fn]
-+                    if pn not in seen_pn:
-+                        seen_pn.append(pn)
-+                    else:
-+                        bb.fatal("Multiple versions of %s are due to be built." % pn)
+diff --git a/bin/bitbake-worker b/bin/bitbake-worker
+index b438d98..2f21e7c 100755
+--- a/bin/bitbake-worker
++++ b/bin/bitbake-worker
+@@ -147,6 +147,7 @@ def fork_off_task(cfg, data, workerdata, fn, task, taskname, appends, quieterror
+                 os.umask(umask)
  
-         # Create a whitelist usable by the stamp checks
-         stampfnwhitelist = []
+             data.setVar("BB_WORKERCONTEXT", "1")
++            data.setVar("BUILDNAME", workerdata["buildname"])
+             bb.parse.siggen.set_taskdata(workerdata["hashes"], workerdata["hash_deps"], workerdata["sigchecksums"])
+             ret = 0
+             try:
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 0700a5b..8d36f28 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -852,6 +852,7 @@ class RunQueue:
+             "logdefaultverboselogs" : bb.msg.loggerVerboseLogs,
+             "logdefaultdomain" : bb.msg.loggerDefaultDomains,
+             "prhost" : self.cooker.prhost,
++            "buildname" : self.cfgData.getVar("BUILDNAME", True),
+         }
+ 
+         worker.stdin.write("<cookerconfig>" + pickle.dumps(self.cooker.configuration) + "</cookerconfig>")
 -- 
-1.7.10.4
+1.8.1.2
 
 
