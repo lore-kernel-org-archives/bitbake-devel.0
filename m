@@ -1,20 +1,20 @@
 Return-Path: <cristiana.voicu@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
-	by mail.openembedded.org (Postfix) with ESMTP id 2ABDB6C083
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 6674961863
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  4 Sep 2013 15:41:32 +0000 (UTC)
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 04 Sep 2013 08:41:33 -0700
+	Thu,  5 Sep 2013 12:44:15 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 05 Sep 2013 05:44:17 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.89,1021,1367996400"; d="scan'208";a="290765244"
+X-IronPort-AV: E=Sophos;i="4.90,847,1371106800"; d="scan'208";a="391463163"
 Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.72])
-	by AZSMGA002.ch.intel.com with ESMTP; 04 Sep 2013 08:41:32 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 05 Sep 2013 05:44:16 -0700
 From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  4 Sep 2013 18:45:07 +0300
-Message-Id: <1378309507-10638-1-git-send-email-cristiana.voicu@intel.com>
+Date: Thu,  5 Sep 2013 15:47:52 +0300
+Message-Id: <1378385272-664-1-git-send-email-cristiana.voicu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob: remove custom image from the images list when not needed
+Subject: [PATCH_V2] hob: limit the description size when a custom image is saved
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,34 +27,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 04 Sep 2013 15:41:32 -0000
+X-List-Received-Date: Thu, 05 Sep 2013 12:44:15 -0000
 
-Selected custom image recipes should be cleared from the combo the moment
-you change your selection. The idea is to always perform the selection of
-those images in the same way (i.e through the "Select from my image
-recipes" option).
-
-[YOCTO #5001]
+[YOCTO #5003]
 Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    4 ++++
- 1 file changed, 4 insertions(+)
+ bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-index 060fee2..3babc8e 100644
---- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-@@ -387,6 +387,10 @@ class ImageConfigurationPage (HobPage):
-                 selected_image = self.__dummy_image__
-                 self.update_image_combo(self.builder.recipe_model, None)
-             dialog.destroy()
-+        else:
-+            if self.custom_image_selected:
-+                self.custom_image_selected = None
-+                self.update_image_combo(self.builder.recipe_model, selected_image)
+diff --git a/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py b/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
+index 56c00bb..e940cee 100644
+--- a/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
++++ b/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
+@@ -70,9 +70,11 @@ class SaveImageDialog (CrumbsDialog):
+         sub_label.set_alignment(0, 0)
+         sub_label.set_markup("The description should be less than 150 characters long.")
+         self.description_entry = gtk.TextView()
+-        self.description_entry.get_buffer().set_text(self.description_field)
++        description_buffer = self.description_entry.get_buffer()
++        description_buffer.set_text(self.description_field)
++        description_buffer.connect("insert-text", self.limit_description_length)
+         self.description_entry.set_wrap_mode(gtk.WRAP_WORD)
+-        self.description_entry.set_size_request(350,150)
++        self.description_entry.set_size_request(350,50)
+         sub_vbox.pack_start(label, expand=False, fill=False)
+         sub_vbox.pack_start(sub_label, expand=False, fill=False)
+         sub_vbox.pack_start(self.description_entry, expand=False, fill=False)
+@@ -108,6 +110,13 @@ class SaveImageDialog (CrumbsDialog):
  
-         if not selected_image or (selected_image == self.__dummy_image__):
-             self.builder.window_sensitive(True)
+         self.show_all()
+ 
++    def limit_description_length(self, textbuffer, iter, text, length):
++        buffer_bounds = textbuffer.get_bounds()
++        entire_text = textbuffer.get_text(*buffer_bounds)
++        entire_text += text
++        if len(entire_text)>150 or text=="\n":
++            textbuffer.emit_stop_by_name("insert-text")
++
+     def name_entry_changed(self, entry):
+         text = entry.get_text()
+         if text == '':
 -- 
 1.7.9.5
 
