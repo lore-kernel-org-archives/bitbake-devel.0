@@ -1,35 +1,46 @@
-Return-Path: <raj.khem@gmail.com>
-Received: from mail-pa0-f43.google.com (mail-pa0-f43.google.com
-	[209.85.220.43])
-	by mail.openembedded.org (Postfix) with ESMTP id C7CFE61622
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from anubis.se.axis.com (anubis.se.axis.com [195.60.68.12])
+	by mail.openembedded.org (Postfix) with ESMTP id DCD5D6BB3A
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  5 Sep 2013 21:10:40 +0000 (UTC)
-Received: by mail-pa0-f43.google.com with SMTP id hz10so2424854pad.30
+	Fri,  6 Sep 2013 15:53:26 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by anubis.se.axis.com (Postfix) with ESMTP id 4F6F019E4B
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 05 Sep 2013 14:10:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id;
-	bh=8X7RzZgWxIjL8lnEUknhzO7OmopYA1o/QI/8iNSKIgk=;
-	b=Mxxl4F4bR1mSS3XGPC5Ewmkvzg6HWcgZxKhvBGwGgO2PHcawjwSpJ4DZGKUdQSRl5v
-	kJN1EZ0rls0K9uceVsA72DWKmYsO3tNMVBZMVF4lbfENBvJIisW/AoJ1ao2XCt8IZCC4
-	w45aG/BdLInpyDvLI7y9D7j8pwBbOZKPobY4UhUyI5rDXXFbFncRdoG5iEkI4nlsq0NJ
-	aBAP0O/dKld01kQ+5ePCvVAqkCcroeBLeHaDgB+W6YfABFKCRE0f/jajH1tyOIC8LNhy
-	ig/hRIqP0nJpdloNhS5czzAGrIVL10UM7wi2xAam9Xyw/rZr+4Hi66twWHNu+EJBLEs4
-	HgpQ==
-X-Received: by 10.68.232.74 with SMTP id tm10mr11521361pbc.64.1378415442995;
-	Thu, 05 Sep 2013 14:10:42 -0700 (PDT)
-Received: from isis.gateway.2wire.net
-	(99-57-140-209.lightspeed.sntcca.sbcglobal.net. [99.57.140.209])
-	by mx.google.com with ESMTPSA id
-	om2sm37707355pbc.30.1969.12.31.16.00.00
-	(version=TLSv1.2 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Thu, 05 Sep 2013 14:10:42 -0700 (PDT)
-From: Khem Raj <raj.khem@gmail.com>
+	Fri,  6 Sep 2013 17:53:28 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at anubis.se.axis.com
+Received: from anubis.se.axis.com ([127.0.0.1])
+	by localhost (anubis.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id zcOIuJwiL+a2 for <bitbake-devel@lists.openembedded.org>;
+	Fri,  6 Sep 2013 17:53:23 +0200 (CEST)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by anubis.se.axis.com (Postfix) with ESMTP id 9996219E0C
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri,  6 Sep 2013 17:53:23 +0200 (CEST)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id 79B805DF
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri,  6 Sep 2013 17:53:23 +0200 (CEST)
+Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
+	by boulder.se.axis.com (Postfix) with ESMTP id 6E8204C1
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri,  6 Sep 2013 17:53:23 +0200 (CEST)
+Received: from saur-2.se.axis.com (saur-2.se.axis.com [10.92.3.2])
+	by seth.se.axis.com (Postfix) with ESMTP id 6278F3E06F
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri,  6 Sep 2013 17:53:23 +0200 (CEST)
+Received: from saur-2.se.axis.com (localhost [127.0.0.1])
+	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id r86FrNwv031413
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 6 Sep 2013 17:53:23 +0200
+Received: (from pkj@localhost)
+	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id r86FrNJU031388
+	for bitbake-devel@lists.openembedded.org; Fri, 6 Sep 2013 17:53:23 +0200
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu,  5 Sep 2013 14:09:20 -0700
-Message-Id: <1378415360-13657-1-git-send-email-raj.khem@gmail.com>
-X-Mailer: git-send-email 1.8.4
-Subject: [PATCH] newbb.vim: Use 'git config' instead of git-config
+Date: Fri,  6 Sep 2013 17:53:19 +0200
+Message-Id: <cover.1378482725.git.pkj@axis.com>
+X-Mailer: git-send-email 1.8.2.1
+Subject: [PATCH 0/1] Make ${DATE} and ${TIME} consistent
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,38 +53,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 05 Sep 2013 21:10:40 -0000
+X-List-Received-Date: Fri, 06 Sep 2013 15:53:27 -0000
 
-Newer versions of git do not have the '-' concatenated command
+This fixes a problem with ${DATE} and ${TIME} not being consistent
+between different workers. E.g., a fakerooted task had a different time
+than a non-fakerooted one...
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
- bitbake/contrib/vim/plugin/newbb.vim | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+//Peter
 
-diff --git a/bitbake/contrib/vim/plugin/newbb.vim b/bitbake/contrib/vim/plugin/newbb.vim
-index afba1d9..053ed71 100755
---- a/bitbake/contrib/vim/plugin/newbb.vim
-+++ b/bitbake/contrib/vim/plugin/newbb.vim
-@@ -15,7 +15,7 @@ if &compatible || v:version < 600
- endif
- 
- fun! <SID>GetUserName()
--    let l:user_name = system("git-config --get user.name")
-+    let l:user_name = system("git config --get user.name")
-     if v:shell_error
-         return "Unknow User"
-     else
-@@ -23,7 +23,7 @@ fun! <SID>GetUserName()
- endfun
- 
- fun! <SID>GetUserEmail()
--    let l:user_email = system("git-config --get user.email")
-+    let l:user_email = system("git config --get user.email")
-     if v:shell_error
-         return "unknow@user.org"
-     else
+The following changes since commit ed3ef0823fde89371a473d20c0127c0bd16d062b:
+
+  qemumips: fix keyboard entry in graphical boots (2013-09-05 16:27:54 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib pkj/consistent_date_and_time
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=pkj/consistent_date_and_time
+
+Peter Kjellerstedt (1):
+  bitbake: Ensure ${DATE} and ${TIME} are consistent
+
+ bitbake/bin/bitbake-worker | 2 ++
+ bitbake/lib/bb/runqueue.py | 2 ++
+ 2 files changed, 4 insertions(+)
+
 -- 
-1.8.4
+1.8.2.1
 
 
