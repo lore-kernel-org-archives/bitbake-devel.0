@@ -1,31 +1,24 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 7EC816BE32
+Return-Path: <ddalex@intel.com>
+Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
+	by mail.openembedded.org (Postfix) with ESMTP id A399C6BEC1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 Sep 2013 15:33:06 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r89FkZM5013027; Mon, 9 Sep 2013 16:46:36 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id FNSKKAX-FUa3; Mon,  9 Sep 2013 16:46:35 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r89FkVhG013019
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Mon, 9 Sep 2013 16:46:33 +0100
-Message-ID: <1378740773.3484.126.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Robert Yang <liezhi.yang@windriver.com>
-Date: Mon, 09 Sep 2013 16:32:53 +0100
-In-Reply-To: <27659d52912f96cb30a1a2d44638b262b50c1acc.1378121138.git.liezhi.yang@windriver.com>
-References: <cover.1378121137.git.liezhi.yang@windriver.com>
-	<27659d52912f96cb30a1a2d44638b262b50c1acc.1378121138.git.liezhi.yang@windriver.com>
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 2/2] taskdata.py: set PREFERRED_VERSION when it is in the item
+	Mon,  9 Sep 2013 16:40:48 +0000 (UTC)
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 09 Sep 2013 09:40:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.90,872,1371106800"; d="scan'208";a="357952728"
+Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
+	by azsmga001.ch.intel.com with ESMTP; 09 Sep 2013 09:40:48 -0700
+Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
+	id B8B8A560558; Mon,  9 Sep 2013 17:40:48 +0100 (BST)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: bitbake-devel@lists.openembedded.org,
+	richard.purdie@linuxfoundation.org
+Date: Mon,  9 Sep 2013 17:40:45 +0100
+Message-Id: <cover.1378743829.git.alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.8.1.2
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 00/13] webhob related changes in bitbake
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,84 +31,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Sep 2013 15:33:07 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 09 Sep 2013 16:40:49 -0000
 
-On Mon, 2013-09-02 at 09:41 -0400, Robert Yang wrote:
-> There is an error if we:
-> 
-> $ bitbake make (the make-3.82 will be built)
-> // Edit make.inc
-> $ bitbake make-3.81
-> [snip]
->  *** 0004:    mfile = open(manifest)
->      0005:    entries = mfile.readlines()
->      0006:    mfile.close()
->      0007:
->      0008:    for entry in entries:
-> Exception: IOError: [Errno 2] No such file or directory: xxx
-> [snip]
-> 
-> Set the PREFERRED_VERSION if we find the version info in the item would fix the
-> problem, I think that we need iterate in all the packages since it seems that
-> we can't know wether the item is just a PN or PN-PV unless we compare them,
-> what can I think is check len(all_p) == 1, but this doesn't work when the same
-> recipe is multiple layers.
-> 
-> [YOCTO #5067]
-> 
-> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> ---
->  bitbake/lib/bb/taskdata.py |   15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/bitbake/lib/bb/taskdata.py b/bitbake/lib/bb/taskdata.py
-> index 58fe199..38a3191 100644
-> --- a/bitbake/lib/bb/taskdata.py
-> +++ b/bitbake/lib/bb/taskdata.py
-> @@ -430,6 +430,21 @@ class TaskData:
->  
->          all_p = dataCache.providers[item]
->  
-> +        # Check whether item has the one of following formats and set the
-> +        # PREFERRED_VERSION if it does:
-> +        # - <pn>-<pv>
-> +        # - <pn>-<pv>-<pr> (when no PE)
-> +        # - <pn>-<pe>_<pv>-<pr> (when PE)
-> +        for fn in all_p:
-> +            pn = dataCache.pkg_fn[fn]
-> +            pe = dataCache.pkg_pepvpr[fn][0]
-> +            pv = dataCache.pkg_pepvpr[fn][1]
-> +            pr = dataCache.pkg_pepvpr[fn][2]
-> +            if not pe and (item == "%s-%s" % (pn, pv) or item == "%s-%s-%s" % (pn, pv, pr)):
-> +                cfgData.setVar("PREFERRED_VERSION_" + pn, pv)
-> +            elif pe and item == "%s-%s_%s-%s" % (pn, pe, pv, pr):
-> +                cfgData.setVar("PREFERRED_VERSION_" + pn, pv)
-> +
->          eligible, foundUnique = bb.providers.filterProviders(all_p, item, cfgData, dataCache)
->          eligible = [p for p in eligible if not self.getfn_id(p) in self.failed_fnids]
->  
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
+I'm sending in a set of patches that bring in changes that prepare bitbake
+for supporting WebHob-related tasks.
 
-This is a neat solution and I'm torn over it. On the one hand it does
-address the problem. On the other hand:
+The changes focus on improving and standardizing the information sent through
+the event system, and cleaning up code in bitbake.
 
-a) Its implementation specific knowledge since bitbake.conf in OE-Core
-is responsible for the extra PROVIDES
-b) It would confuse things if some recipe does DEPENDS = "make-3.81"
-c) The performance of this code isn't going to be good
+The following changes since commit 0ca5d1fb38157564a2b9452ade32391d18a41b09:
 
-b) can be fixed by adding a bb.warn(), c) might be either not much of an
-issue or could be fixed, a) is a real problem though.
+  yocto-bsp: remove apm as a default MACHINE_FEATURE (2013-09-09 16:28:47 +0100)
 
-I've put a counter proposal on the OE-Core mailing list suggesting we
-simplify PROVIDES in bitbake.conf. Depending on the feedback, we can
-either take that patch or this one with a bb.warn() added. Need some
-user feedback...
+are available in the git repository at:
 
-Cheers,
+  git://git.yoctoproject.org/poky-contrib adamian/bitbake-core-changes-0909
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/bitbake-core-changes-0909
 
-Richard
+Alexandru DAMIAN (13):
+  bitbake: cooker: clean up code and avoid duplication
+  bitbake: runqueue: Add runQueueTaskSkipped event
+  bitbake: runqueue: added prebuild detailed information
+  bitbake: runqueue, build: event data change
+  bitbake: runqueue: add sceneQueueTaskCompleted event
+  bitbake: build: add link to logfile for Task events
+  bitbake: cooker, command: add a command to return global data
+  bitbake: cooker: use prepareTreeData when computing environment
+  bitbake: event: do not abort on UI handlers error
+  bitbake: add SinglePackageInfo event
+  bitbake: event: adding an event to pass build file sizes
+  bitbake: xmlrpc: delete unused code BitBakeUIEventServer
+  bitbake: cooker: add extra recipe information
+
+ bitbake/lib/bb/build.py         |  4 +++
+ bitbake/lib/bb/command.py       |  7 ++++
+ bitbake/lib/bb/cooker.py        | 74 +++++++++++++++++++++++++----------------
+ bitbake/lib/bb/event.py         | 48 ++++++++++++++++++--------
+ bitbake/lib/bb/runqueue.py      | 33 ++++++++++++++++--
+ bitbake/lib/bb/server/xmlrpc.py | 45 -------------------------
+ bitbake/lib/bb/ui/knotty.py     |  2 ++
+ 7 files changed, 123 insertions(+), 90 deletions(-)
+
+-- 
+1.8.1.2
 
 
