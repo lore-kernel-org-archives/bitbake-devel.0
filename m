@@ -1,28 +1,28 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
-	by mail.openembedded.org (Postfix) with ESMTP id F0BBB6BF8A
+Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
+	by mail.openembedded.org (Postfix) with ESMTP id 1CB696BFD4
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 Sep 2013 16:41:08 +0000 (UTC)
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga102.ch.intel.com with ESMTP; 09 Sep 2013 09:41:11 -0700
+	Mon,  9 Sep 2013 16:41:09 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by azsmga101.ch.intel.com with ESMTP; 09 Sep 2013 09:41:11 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,872,1371106800"; d="scan'208";a="357952877"
+X-IronPort-AV: E=Sophos;i="4.90,872,1371106800"; d="scan'208";a="393133549"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by azsmga001.ch.intel.com with ESMTP; 09 Sep 2013 09:41:09 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 09 Sep 2013 09:41:09 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id 8792C560FA0; Mon,  9 Sep 2013 17:41:08 +0100 (BST)
+	id 8CC3D56122C; Mon,  9 Sep 2013 17:41:08 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org,
 	richard.purdie@linuxfoundation.org
-Date: Mon,  9 Sep 2013 17:41:01 +0100
-Message-Id: <f17ab1484cfea1c5d8f2926be5e61e2250072d20.1378743829.git.alexandru.damian@intel.com>
+Date: Mon,  9 Sep 2013 17:41:03 +0100
+Message-Id: <585c3c03c81324e8c24856f0fc35d46374d94312.1378743829.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <ea491a92f917fa72be06c5e897dc3a55045e776e.1378743829.git.alexandru.damian@intel.com>
 References: <ea491a92f917fa72be06c5e897dc3a55045e776e.1378743829.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1378743829.git.alexandru.damian@intel.com>
 References: <cover.1378743829.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 10/13] bitbake: add SinglePackageInfo event
+Subject: [PATCH 12/13] bitbake: xmlrpc: delete unused code BitBakeUIEventServer
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,47 +39,73 @@ X-List-Received-Date: Mon, 09 Sep 2013 16:41:09 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-We add a new event that will be triggered by the
-package-building class, containing the information
-about the currently built package.
+BitBakeUIEventServer is an unused class that pushes UI
+events over a separate thread.
+
+The current version of XMLRPC server works just fine with
+the classic UI event handlers, so this class is not needed.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bitbake/lib/bb/event.py     | 8 ++++++++
- bitbake/lib/bb/ui/knotty.py | 1 +
- 2 files changed, 9 insertions(+)
+ bitbake/lib/bb/server/xmlrpc.py | 45 -----------------------------------------
+ 1 file changed, 45 deletions(-)
 
-diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
-index 1258471..4be0e5b 100644
---- a/bitbake/lib/bb/event.py
-+++ b/bitbake/lib/bb/event.py
-@@ -593,6 +593,14 @@ class PackageInfo(Event):
-         Event.__init__(self)
-         self._pkginfolist = pkginfolist
+diff --git a/bitbake/lib/bb/server/xmlrpc.py b/bitbake/lib/bb/server/xmlrpc.py
+index a28672c..8326623 100644
+--- a/bitbake/lib/bb/server/xmlrpc.py
++++ b/bitbake/lib/bb/server/xmlrpc.py
+@@ -169,51 +169,6 @@ class BitBakeXMLRPCRequestHandler(SimpleXMLRPCRequestHandler):
+         self.end_headers()
+         self.wfile.write(response)
  
-+class SinglePackageInfo(Event):
-+    """
-+    Single Package Information sent on emit_pkgdata
-+    """
-+    def __init__(self, data):
-+        Event.__init__(self)
-+        self._data = data
-+
- class SanityCheck(Event):
-     """
-     Event to issue sanity check
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index 4520046..010530a 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -473,6 +473,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+-class BitBakeUIEventServer(threading.Thread):
+-    class EventAdapter():
+-        """
+-        Adapter to wrap our event queue since the caller (bb.event) expects to
+-        call a send() method, but our actual queue only has put()
+-        """
+-        def __init__(self, notify):
+-            self.queue = []
+-            self.notify = notify
+-            self.qlock = threading.Lock()
+-
+-        def send(self, event):
+-            self.qlock.acquire()
+-            self.queue.append(event)
+-            self.qlock.release()
+-            self.notify.set()
+-
+-        def get(self):
+-            self.qlock.acquire()
+-            if len(self.queue) == 0:
+-                self.qlock.release()
+-                return None
+-            e = self.queue.pop(0)
+-            if len(self.queue) == 0:
+-                self.notify.clear()
+-            self.qlock.release()
+-            return e
+-
+-    def __init__(self, connection):
+-        self.connection = connection
+-        self.notify = threading.Event()
+-        self.event = BitBakeUIEventServer.EventAdapter(self.notify)
+-        self.quit = False
+-        threading.Thread.__init__(self)
+-
+-    def terminateServer(self):
+-        self.quit = True
+-
+-    def run(self):
+-        while not self.quit:
+-            self.notify.wait(0.1)
+-            evt = self.event.get()
+-            if evt:
+-                self.connection.event.sendpickle(pickle.dumps(evt))
+-
  
-             # ignore
-             if isinstance(event, (bb.event.BuildBase,
-+                                  bb.event.SinglePackageInfo,
-                                   bb.event.StampUpdate,
-                                   bb.event.ConfigParsed,
-                                   bb.event.RecipeParsed,
+ class XMLRPCProxyServer(BaseImplServer):
+     """ not a real working server, but a stub for a proxy server connection
 -- 
 1.8.1.2
 
