@@ -1,26 +1,28 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
-	by mail.openembedded.org (Postfix) with ESMTP id 5083D6BEC1
+Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
+	by mail.openembedded.org (Postfix) with ESMTP id 5A6B96BF68
 	for <bitbake-devel@lists.openembedded.org>;
 	Mon,  9 Sep 2013 16:41:07 +0000 (UTC)
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga102.ch.intel.com with ESMTP; 09 Sep 2013 09:41:09 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by azsmga101.ch.intel.com with ESMTP; 09 Sep 2013 09:41:09 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,872,1371106800"; d="scan'208";a="292651222"
+X-IronPort-AV: E=Sophos;i="4.90,872,1371106800"; d="scan'208";a="393133534"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by AZSMGA002.ch.intel.com with ESMTP; 09 Sep 2013 09:41:08 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 09 Sep 2013 09:41:07 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id 700EF560395; Mon,  9 Sep 2013 17:41:08 +0100 (BST)
+	id 758C35606B6; Mon,  9 Sep 2013 17:41:08 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org,
 	richard.purdie@linuxfoundation.org
-Date: Mon,  9 Sep 2013 17:40:52 +0100
-Message-Id: <ea491a92f917fa72be06c5e897dc3a55045e776e.1378743829.git.alexandru.damian@intel.com>
+Date: Mon,  9 Sep 2013 17:40:54 +0100
+Message-Id: <838cce5be7f3e4c5e0ddb941a742bfa733e8bb8b.1378743829.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
+In-Reply-To: <ea491a92f917fa72be06c5e897dc3a55045e776e.1378743829.git.alexandru.damian@intel.com>
+References: <ea491a92f917fa72be06c5e897dc3a55045e776e.1378743829.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1378743829.git.alexandru.damian@intel.com>
 References: <cover.1378743829.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 01/13] bitbake: cooker: clean up code and avoid duplication
+Subject: [PATCH 03/13] bitbake: runqueue: added prebuild detailed information
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,86 +39,79 @@ X-List-Received-Date: Mon, 09 Sep 2013 16:41:07 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Clean-up to avoid duplication and promote code reuse.
-We're using the prepareTreeData in all instances where
-this needs to be done.
+Adds why the prebuild tasks were skipped,
+as to distinguish about covered/existing tasks.
 
-When we're only testing target image contents (HOB),
-we do not abort with an error if the target is
-unbuildable.
-
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+Adds task name and task package to all runQueue
+and sceneQueue events.
 ---
- bitbake/lib/bb/cooker.py | 30 +++++++++---------------------
- 1 file changed, 9 insertions(+), 21 deletions(-)
+ bitbake/lib/bb/runqueue.py | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index f03f16b..9fd3417 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -401,9 +401,7 @@ class BBCooker:
-         localdata = data.createCopy(self.data)
-         bb.data.update_data(localdata)
-         bb.data.expandKeys(localdata)
--        # We set abort to False here to prevent unbuildable targets raising
--        # an exception when we're just generating data
--        taskdata = bb.taskdata.TaskData(False, skiplist=self.skiplist)
-+        taskdata = bb.taskdata.TaskData(self.configuration.abort, skiplist=self.skiplist)
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index f084407..002bf76 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1331,10 +1331,10 @@ class RunQueueExecuteTasks(RunQueueExecute):
+         if self.rqdata.taskData.abort:
+             self.rq.state = runQueueCleanUp
  
-         runlist = []
-         current = 0
-@@ -495,7 +493,12 @@ class BBCooker:
-         """
-         Create a dependency tree of pkgs_to_build, returning the data.
-         """
-+
-+        # We set abort to False here to prevent unbuildable targets raising
-+        # an exception when we're just generating data
-+        self.configuration.abort = False
-         _, taskdata = self.prepareTreeData(pkgs_to_build, task)
-+
-         tasks_fnid = []
-         if len(taskdata.tasks_name) != 0:
-             for task in xrange(len(taskdata.tasks_name)):
-@@ -1076,13 +1079,6 @@ class BBCooker:
-         Attempt to build the targets specified
-         """
+-    def task_skip(self, task):
++    def task_skip(self, task, skip_reason = ""):
+         self.runq_running[task] = 1
+         self.runq_buildable[task] = 1
+-        bb.event.fire(runQueueTaskSkipped(task, self.stats, self.rq), self.cfgData)
++        bb.event.fire(runQueueTaskSkipped(task, self.stats, self.rq, skip_reason), self.cfgData)
+         self.task_completeoutright(task)
+         self.stats.taskCompleted()
+         self.stats.taskSkipped()
+@@ -1359,13 +1359,13 @@ class RunQueueExecuteTasks(RunQueueExecute):
+             if task in self.rq.scenequeue_covered:
+                 logger.debug(2, "Setscene covered task %s (%s)", task,
+                                 self.rqdata.get_user_idstring(task))
+-                self.task_skip(task)
++                self.task_skip(task, "covered")
+                 return True
  
--        # If we are told to do the NULL task then query the default task
--        if (task == None):
--            task = self.configuration.cmd
--
--        universe = ('universe' in targets)
--        targets = self.checkPackages(targets)
--
-         def buildTargetsIdle(server, rq, abort):
-             if abort or self.state == state.stop:
-                 rq.finish_runqueue(True)
-@@ -1109,21 +1105,13 @@ class BBCooker:
-         self.buildSetVars()
+             if self.rq.check_stamp_task(task, taskname, cache=self.stampcache):
+                 logger.debug(2, "Stamp current task %s (%s)", task,
+                                 self.rqdata.get_user_idstring(task))
+-                self.task_skip(task)
++                self.task_skip(task, "existing")
+                 return True
  
-         buildname = self.data.getVar("BUILDNAME")
--        bb.event.fire(bb.event.BuildStarted(buildname, targets), self.data)
--
--        localdata = data.createCopy(self.data)
--        bb.data.update_data(localdata)
--        bb.data.expandKeys(localdata)
+             taskdep = self.rqdata.dataCache.task_deps[fn]
+@@ -1786,6 +1786,8 @@ class runQueueEvent(bb.event.Event):
+     def __init__(self, task, stats, rq):
+         self.taskid = task
+         self.taskstring = rq.rqdata.get_user_idstring(task)
++        self.taskname = rq.rqdata.get_task_name(task)
++        self.taskpackage = rq.rqdata.get_task_package(task)
+         self.stats = stats.copy()
+         bb.event.Event.__init__(self)
  
--        taskdata = bb.taskdata.TaskData(self.configuration.abort, skiplist=self.skiplist)
-+        bb.event.fire(bb.event.BuildStarted(buildname, targets), self.data)
+@@ -1797,6 +1799,8 @@ class sceneQueueEvent(runQueueEvent):
+         runQueueEvent.__init__(self, task, stats, rq)
+         realtask = rq.rqdata.runq_setscene[task]
+         self.taskstring = rq.rqdata.get_user_idstring(realtask, "_setscene")
++        self.taskname = rq.rqdata.get_task_name(realtask) + "_setscene"
++        self.taskpackage = rq.rqdata.get_task_package(realtask)
  
--        runlist = []
--        for k in targets:
--            taskdata.add_provider(localdata, self.recipecache, k)
--            runlist.append([k, "do_%s" % task])
--        taskdata.add_unresolved(localdata, self.recipecache)
-+        runlist, taskdata = self.prepareTreeData(targets, task)
+ class runQueueTaskStarted(runQueueEvent):
+     """
+@@ -1839,10 +1843,11 @@ class runQueueTaskSkipped(runQueueEvent):
+     """
+     Event notifing a task was skipped
+     """
+-    def __init__(self, task, stats, rq):
++    def __init__(self, task, stats, rq, skip_reason):
+         runQueueEvent.__init__(self, task, stats, rq)
+         self._package = rq.rqdata.get_task_package(task)
+         self._task = rq.rqdata.get_task_name(task)
++        self._skip = skip_reason
  
-         rq = bb.runqueue.RunQueue(self, self.data, self.recipecache, taskdata, runlist)
-+        universe = ('universe' in targets)
-         if universe:
-             rq.rqdata.warn_multi_bb = True
- 
+ class runQueuePipe():
+     """
 -- 
 1.8.1.2
 
