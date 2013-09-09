@@ -1,24 +1,26 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
-	by mail.openembedded.org (Postfix) with ESMTP id A399C6BEC1
+Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
+	by mail.openembedded.org (Postfix) with ESMTP id 5083D6BEC1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 Sep 2013 16:40:48 +0000 (UTC)
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 09 Sep 2013 09:40:49 -0700
+	Mon,  9 Sep 2013 16:41:07 +0000 (UTC)
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga102.ch.intel.com with ESMTP; 09 Sep 2013 09:41:09 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,872,1371106800"; d="scan'208";a="357952728"
+X-IronPort-AV: E=Sophos;i="4.90,872,1371106800"; d="scan'208";a="292651222"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by azsmga001.ch.intel.com with ESMTP; 09 Sep 2013 09:40:48 -0700
+	by AZSMGA002.ch.intel.com with ESMTP; 09 Sep 2013 09:41:08 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id B8B8A560558; Mon,  9 Sep 2013 17:40:48 +0100 (BST)
+	id 700EF560395; Mon,  9 Sep 2013 17:41:08 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org,
 	richard.purdie@linuxfoundation.org
-Date: Mon,  9 Sep 2013 17:40:45 +0100
-Message-Id: <cover.1378743829.git.alexandru.damian@intel.com>
+Date: Mon,  9 Sep 2013 17:40:52 +0100
+Message-Id: <ea491a92f917fa72be06c5e897dc3a55045e776e.1378743829.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
+In-Reply-To: <cover.1378743829.git.alexandru.damian@intel.com>
+References: <cover.1378743829.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 00/13] webhob related changes in bitbake
+Subject: [PATCH 01/13] bitbake: cooker: clean up code and avoid duplication
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,49 +33,90 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Sep 2013 16:40:49 -0000
+X-List-Received-Date: Mon, 09 Sep 2013 16:41:07 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-I'm sending in a set of patches that bring in changes that prepare bitbake
-for supporting WebHob-related tasks.
+Clean-up to avoid duplication and promote code reuse.
+We're using the prepareTreeData in all instances where
+this needs to be done.
 
-The changes focus on improving and standardizing the information sent through
-the event system, and cleaning up code in bitbake.
+When we're only testing target image contents (HOB),
+we do not abort with an error if the target is
+unbuildable.
 
-The following changes since commit 0ca5d1fb38157564a2b9452ade32391d18a41b09:
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+---
+ bitbake/lib/bb/cooker.py | 30 +++++++++---------------------
+ 1 file changed, 9 insertions(+), 21 deletions(-)
 
-  yocto-bsp: remove apm as a default MACHINE_FEATURE (2013-09-09 16:28:47 +0100)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib adamian/bitbake-core-changes-0909
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/bitbake-core-changes-0909
-
-Alexandru DAMIAN (13):
-  bitbake: cooker: clean up code and avoid duplication
-  bitbake: runqueue: Add runQueueTaskSkipped event
-  bitbake: runqueue: added prebuild detailed information
-  bitbake: runqueue, build: event data change
-  bitbake: runqueue: add sceneQueueTaskCompleted event
-  bitbake: build: add link to logfile for Task events
-  bitbake: cooker, command: add a command to return global data
-  bitbake: cooker: use prepareTreeData when computing environment
-  bitbake: event: do not abort on UI handlers error
-  bitbake: add SinglePackageInfo event
-  bitbake: event: adding an event to pass build file sizes
-  bitbake: xmlrpc: delete unused code BitBakeUIEventServer
-  bitbake: cooker: add extra recipe information
-
- bitbake/lib/bb/build.py         |  4 +++
- bitbake/lib/bb/command.py       |  7 ++++
- bitbake/lib/bb/cooker.py        | 74 +++++++++++++++++++++++++----------------
- bitbake/lib/bb/event.py         | 48 ++++++++++++++++++--------
- bitbake/lib/bb/runqueue.py      | 33 ++++++++++++++++--
- bitbake/lib/bb/server/xmlrpc.py | 45 -------------------------
- bitbake/lib/bb/ui/knotty.py     |  2 ++
- 7 files changed, 123 insertions(+), 90 deletions(-)
-
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index f03f16b..9fd3417 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -401,9 +401,7 @@ class BBCooker:
+         localdata = data.createCopy(self.data)
+         bb.data.update_data(localdata)
+         bb.data.expandKeys(localdata)
+-        # We set abort to False here to prevent unbuildable targets raising
+-        # an exception when we're just generating data
+-        taskdata = bb.taskdata.TaskData(False, skiplist=self.skiplist)
++        taskdata = bb.taskdata.TaskData(self.configuration.abort, skiplist=self.skiplist)
+ 
+         runlist = []
+         current = 0
+@@ -495,7 +493,12 @@ class BBCooker:
+         """
+         Create a dependency tree of pkgs_to_build, returning the data.
+         """
++
++        # We set abort to False here to prevent unbuildable targets raising
++        # an exception when we're just generating data
++        self.configuration.abort = False
+         _, taskdata = self.prepareTreeData(pkgs_to_build, task)
++
+         tasks_fnid = []
+         if len(taskdata.tasks_name) != 0:
+             for task in xrange(len(taskdata.tasks_name)):
+@@ -1076,13 +1079,6 @@ class BBCooker:
+         Attempt to build the targets specified
+         """
+ 
+-        # If we are told to do the NULL task then query the default task
+-        if (task == None):
+-            task = self.configuration.cmd
+-
+-        universe = ('universe' in targets)
+-        targets = self.checkPackages(targets)
+-
+         def buildTargetsIdle(server, rq, abort):
+             if abort or self.state == state.stop:
+                 rq.finish_runqueue(True)
+@@ -1109,21 +1105,13 @@ class BBCooker:
+         self.buildSetVars()
+ 
+         buildname = self.data.getVar("BUILDNAME")
+-        bb.event.fire(bb.event.BuildStarted(buildname, targets), self.data)
+-
+-        localdata = data.createCopy(self.data)
+-        bb.data.update_data(localdata)
+-        bb.data.expandKeys(localdata)
+ 
+-        taskdata = bb.taskdata.TaskData(self.configuration.abort, skiplist=self.skiplist)
++        bb.event.fire(bb.event.BuildStarted(buildname, targets), self.data)
+ 
+-        runlist = []
+-        for k in targets:
+-            taskdata.add_provider(localdata, self.recipecache, k)
+-            runlist.append([k, "do_%s" % task])
+-        taskdata.add_unresolved(localdata, self.recipecache)
++        runlist, taskdata = self.prepareTreeData(targets, task)
+ 
+         rq = bb.runqueue.RunQueue(self, self.data, self.recipecache, taskdata, runlist)
++        universe = ('universe' in targets)
+         if universe:
+             rq.rqdata.warn_multi_bb = True
+ 
 -- 
 1.8.1.2
 
