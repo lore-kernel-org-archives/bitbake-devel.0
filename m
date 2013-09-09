@@ -1,28 +1,31 @@
-Return-Path: <ddalex@intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id 452556BE34
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 131576BE96
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 Sep 2013 16:41:21 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 09 Sep 2013 09:41:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,872,1371106800"; d="scan'208";a="398854311"
-Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by fmsmga002.fm.intel.com with ESMTP; 09 Sep 2013 09:41:08 -0700
-Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id 7A9BA56088B; Mon,  9 Sep 2013 17:41:08 +0100 (BST)
-From: Alex DAMIAN <alexandru.damian@intel.com>
-To: bitbake-devel@lists.openembedded.org,
-	richard.purdie@linuxfoundation.org
-Date: Mon,  9 Sep 2013 17:40:56 +0100
-Message-Id: <f67081e371fbddc8b387e1445ddd4b067dec47ad.1378743829.git.alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.8.1.2
-In-Reply-To: <ea491a92f917fa72be06c5e897dc3a55045e776e.1378743829.git.alexandru.damian@intel.com>
+	Mon,  9 Sep 2013 16:50:05 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r89H3R6p018230; Mon, 9 Sep 2013 18:03:27 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 3a8psgY7Uca2; Mon,  9 Sep 2013 18:03:27 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r89H3OfX018214
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT); Mon, 9 Sep 2013 18:03:26 +0100
+Message-ID: <1378745386.3484.143.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alex DAMIAN <alexandru.damian@intel.com>
+Date: Mon, 09 Sep 2013 17:49:46 +0100
+In-Reply-To: <57e230f40897c8ce63ccd4056f56747d64235788.1378743829.git.alexandru.damian@intel.com>
 References: <ea491a92f917fa72be06c5e897dc3a55045e776e.1378743829.git.alexandru.damian@intel.com>
-In-Reply-To: <cover.1378743829.git.alexandru.damian@intel.com>
-References: <cover.1378743829.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 05/13] bitbake: runqueue: add sceneQueueTaskCompleted event
+	<57e230f40897c8ce63ccd4056f56747d64235788.1378743829.git.alexandru.damian@intel.com>
+X-Mailer: Evolution 3.6.4-0ubuntu1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 09/13] bitbake: event: do not abort on UI handlers error
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,44 +38,83 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Sep 2013 16:41:21 -0000
+X-List-Received-Date: Mon, 09 Sep 2013 16:50:06 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+On Mon, 2013-09-09 at 17:41 +0100, Alex DAMIAN wrote:
+> From: Alexandru DAMIAN <alexandru.damian@intel.com>
+> 
+> Ignore runtime errors if UI handlers do something
+> funny, as exiting while the loop is running.
 
-Adding an event to be fired when a scene task is completed.
-It is analogous to the run task completed event, and has
-been missing for some reason.
+This does look rather strange to me. How can a handler exit within the
+loop? The handler is either another process or something we're using an
+xmlrpc call too. Fine, the other end can disappear but our local end
+(and entry in _ui_handlers) should exist until we remove it ourselves?
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
----
- bitbake/lib/bb/runqueue.py | 6 ++++++
- 1 file changed, 6 insertions(+)
+Only the server itself can do the removal and the server is single
+threaded?
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 73dd059..11ff193 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1652,6 +1652,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
- 
-     def task_complete(self, task):
-         self.stats.taskCompleted()
-+        bb.event.fire(sceneQueueTaskCompleted(task, self.stats, self.rq), self.cfgData)
-         self.task_completeoutright(task)
- 
-     def task_fail(self, task, result):
-@@ -1839,6 +1840,11 @@ class runQueueTaskCompleted(runQueueEvent):
-     Event notifing a task completed
-     """
- 
-+class sceneQueueTaskCompleted(sceneQueueEvent):
-+    """
-+    Event notifing a setscene task completed
-+    """
-+
- class runQueueTaskSkipped(runQueueEvent):
-     """
-     Event notifing a task was skipped
--- 
-1.8.1.2
+Cheers,
+
+Richard
+
+
+
+
+> This allows the builder to continue even if something
+> happens to the UI handlers, useful for remote bitbake
+> server.
+> 
+> Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+> ---
+>  bitbake/lib/bb/event.py | 32 ++++++++++++++++++--------------
+>  1 file changed, 18 insertions(+), 14 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
+> index 67cfcea..1258471 100644
+> --- a/bitbake/lib/bb/event.py
+> +++ b/bitbake/lib/bb/event.py
+> @@ -133,20 +133,24 @@ def fire_ui_handlers(event, d):
+>          return
+>  
+>      errors = []
+> -    for h in _ui_handlers:
+> -        #print "Sending event %s" % event
+> -        try:
+> -             if not _ui_logfilters[h].filter(event):
+> -                 continue
+> -             # We use pickle here since it better handles object instances
+> -             # which xmlrpc's marshaller does not. Events *must* be serializable
+> -             # by pickle.
+> -             if hasattr(_ui_handlers[h].event, "sendpickle"):
+> -                _ui_handlers[h].event.sendpickle((pickle.dumps(event)))
+> -             else:
+> -                _ui_handlers[h].event.send(event)
+> -        except:
+> -            errors.append(h)
+> +    try:
+> +        for h in _ui_handlers:
+> +            #print "Sending event %s" % event
+> +            try:
+> +                if not _ui_logfilters[h].filter(event):
+> +                    continue
+> +                # We use pickle here since it better handles object instances
+> +                # which xmlrpc's marshaller does not. Events *must* be serializable
+> +                # by pickle.
+> +                if hasattr(_ui_handlers[h].event, "sendpickle"):
+> +                    _ui_handlers[h].event.sendpickle((pickle.dumps(event)))
+> +                else:
+> +                    _ui_handlers[h].event.send(event)
+> +            except:
+> +                errors.append(h)
+> +    except RuntimeError:     # may happen that the ui handler simple disappears :D
+> +        errors.append(h)
+> +
+>      for h in errors:
+>          del _ui_handlers[h]
+>  
+
 
 
