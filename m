@@ -1,20 +1,31 @@
-Return-Path: <valentin.popa@intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 64AF5610F0
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 2B493614F3
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Sep 2013 12:57:45 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 10 Sep 2013 05:57:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,878,1371106800"; d="scan'208";a="399299008"
-Received: from vpopa-desktop.rb.intel.com ([10.237.105.58])
-	by fmsmga002.fm.intel.com with ESMTP; 10 Sep 2013 05:57:45 -0700
-From: Valentin Popa <valentin.popa@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 10 Sep 2013 15:58:52 +0300
-Message-Id: <1378817932-5304-1-git-send-email-valentin.popa@intel.com>
-X-Mailer: git-send-email 1.8.1.2
-Subject: [PATCH] HOB: Busy cursor when saving configuration
+	Tue, 10 Sep 2013 13:52:30 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r8AE5md6022111; Tue, 10 Sep 2013 15:05:58 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id CJ7LATAmoy5B; Tue, 10 Sep 2013 15:05:58 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r8AE5sLW022114
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT); Tue, 10 Sep 2013 15:05:56 +0100
+Message-ID: <1378821132.3484.153.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alex DAMIAN <alexandru.damian@intel.com>
+Date: Tue, 10 Sep 2013 14:52:12 +0100
+In-Reply-To: <9e330c1945465cfe7838a940e27cfb3e98f7f0ba.1378743829.git.alexandru.damian@intel.com>
+References: <ea491a92f917fa72be06c5e897dc3a55045e776e.1378743829.git.alexandru.damian@intel.com>
+	<9e330c1945465cfe7838a940e27cfb3e98f7f0ba.1378743829.git.alexandru.damian@intel.com>
+X-Mailer: Evolution 3.6.4-0ubuntu1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 04/13] bitbake: runqueue, build: event data change
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,78 +38,93 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Sep 2013 12:57:46 -0000
+X-List-Received-Date: Tue, 10 Sep 2013 13:52:32 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Display a busy cursor while the configuration is saved.
+On Mon, 2013-09-09 at 17:40 +0100, Alex DAMIAN wrote:
+> From: Alexandru DAMIAN <alexandru.damian@intel.com>
+> 
+> We modify event data to make sure we can match build events
+> with runqueue events. This is important because the build
+> events supply datastore-evaluated data while runqueue events supply
+> bitbake-related data. We get the recipe name and version from
+> the datastore, while the file paths and timing information are
+> collected from the RunQueue.
+> 
+> We modify filling-in the information side to take advantage of the
+> new info supplied.
+> 
+> Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+> ---
+>  bitbake/lib/bb/build.py    | 3 +++
+>  bitbake/lib/bb/runqueue.py | 8 ++++----
+>  2 files changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+> index a53aba9..1265bdc 100644
+> --- a/bitbake/lib/bb/build.py
+> +++ b/bitbake/lib/bb/build.py
+> @@ -72,6 +72,9 @@ class TaskBase(event.Event):
+>      def __init__(self, t, d ):
+>          self._task = t
+>          self._package = d.getVar("PF", True)
+> +        self._file = d.getVar("FILE", True)
+> +        self.taskfile = self._file
+> +        self.taskname = self._task
+>          event.Event.__init__(self)
+>          self._message = "recipe %s: task %s: %s" % (d.getVar("PF", True), t, self.getDisplayName())
+>  
+> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+> index 002bf76..73dd059 100644
+> --- a/bitbake/lib/bb/runqueue.py
+> +++ b/bitbake/lib/bb/runqueue.py
+> @@ -220,7 +220,7 @@ class RunQueueData:
+>      def get_task_name(self, task):
+>          return self.runq_task[task]
+>  
+> -    def get_task_package(self, task):
+> +    def get_task_file(self, task):
+>          return self.taskData.fn_index[self.runq_fnid[task]]
+>  
+>      def get_user_idstring(self, task, task_name_suffix = ""):
+> @@ -1787,7 +1787,7 @@ class runQueueEvent(bb.event.Event):
+>          self.taskid = task
+>          self.taskstring = rq.rqdata.get_user_idstring(task)
+>          self.taskname = rq.rqdata.get_task_name(task)
+> -        self.taskpackage = rq.rqdata.get_task_package(task)
+> +        self.taskfile = rq.rqdata.get_task_file(task)
+>          self.stats = stats.copy()
+>          bb.event.Event.__init__(self)
+>  
+> @@ -1800,7 +1800,7 @@ class sceneQueueEvent(runQueueEvent):
+>          realtask = rq.rqdata.runq_setscene[task]
+>          self.taskstring = rq.rqdata.get_user_idstring(realtask, "_setscene")
+>          self.taskname = rq.rqdata.get_task_name(realtask) + "_setscene"
+> -        self.taskpackage = rq.rqdata.get_task_package(realtask)
+> +        self.taskfile = rq.rqdata.get_task_file(realtask)
+>  
+>  class runQueueTaskStarted(runQueueEvent):
+>      """
+> @@ -1845,7 +1845,7 @@ class runQueueTaskSkipped(runQueueEvent):
+>      """
+>      def __init__(self, task, stats, rq, skip_reason):
+>          runQueueEvent.__init__(self, task, stats, rq)
+> -        self._package = rq.rqdata.get_task_package(task)
+> +        self._file = rq.rqdata.get_task_file(task)
+>          self._task = rq.rqdata.get_task_name(task)
+>          self._skip = skip_reason
+>  
 
-[YOCTO #4846]
-Signed-off-by: Valentin Popa <valentin.popa@intel.com>
----
- bitbake/lib/bb/ui/crumbs/builder.py                |  8 ++++++++
- bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py | 10 ++++++++++
- 2 files changed, 18 insertions(+)
+You added get_task_package() in 2/13, added calls to in 3/13, now we're
+getting rid of it. Is there not some way to clean up these patches so we
+just add the right things? Is get_task_package() still needed? Reviewing
+patches where things get added then removed again is rather confusing...
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index 86fdbfe..8292813 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -31,6 +31,7 @@ import re
- import logging
- import sys
- import signal
-+import time
- from bb.ui.crumbs.imageconfigurationpage import ImageConfigurationPage
- from bb.ui.crumbs.recipeselectionpage import RecipeSelectionPage
- from bb.ui.crumbs.packageselectionpage import PackageSelectionPage
-@@ -1466,3 +1467,10 @@ class Builder(gtk.Window):
- 
-     def get_topdir(self):
-         return self.handler.get_topdir()
-+
-+    def wait(self, delay):
-+        time_start = time.time()
-+        time_end = time_start + delay
-+        while time_end > time.time():
-+            while gtk.events_pending():
-+                gtk.main_iteration()
-diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-index 3babc8e..79709d0 100644
---- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-@@ -300,7 +300,12 @@ class ImageConfigurationPage (HobPage):
-     def view_warnings_button_clicked_cb(self, button):
-         self.builder.show_warning_dialog()
- 
-+    def machine_combo_changed_idle_cb(self):
-+        self.builder.window.set_cursor(None)
-+
-     def machine_combo_changed_cb(self, machine_combo):
-+        self.builder.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
-+        self.builder.wait(0.1) #wait for combo and cursor to update
-         self.stopping = False
-         self.builder.parsing_warnings = []
-         combo_item = machine_combo.get_active_text()
-@@ -324,6 +329,8 @@ class ImageConfigurationPage (HobPage):
-         # Do reparse recipes
-         self.builder.populate_recipe_package_info_async()
- 
-+        glib.idle_add(self.machine_combo_changed_idle_cb)
-+
-     def update_machine_combo(self):
-         self.disable_warnings_bar()
-         all_machines = [self.__dummy_machine__] + self.builder.parameters.all_machines
-@@ -527,7 +534,10 @@ class ImageConfigurationPage (HobPage):
-         if not response:
-             return
-         if settings_changed:
-+            self.builder.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
-+            self.builder.wait(0.1) #wait for adv_settings_dialog to terminate
-             self.builder.reparse_post_adv_settings()
-+            self.builder.window.set_cursor(None)
- 
-     def just_bake_button_clicked_cb(self, button):
-         self.builder.parsing_warnings = []
--- 
-1.8.1.2
+Cheers,
+
+Richard
+
+
 
 
