@@ -1,31 +1,20 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 131576BE96
+Return-Path: <valentin.popa@intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 64AF5610F0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 Sep 2013 16:50:05 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r89H3R6p018230; Mon, 9 Sep 2013 18:03:27 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 3a8psgY7Uca2; Mon,  9 Sep 2013 18:03:27 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r89H3OfX018214
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Mon, 9 Sep 2013 18:03:26 +0100
-Message-ID: <1378745386.3484.143.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alex DAMIAN <alexandru.damian@intel.com>
-Date: Mon, 09 Sep 2013 17:49:46 +0100
-In-Reply-To: <57e230f40897c8ce63ccd4056f56747d64235788.1378743829.git.alexandru.damian@intel.com>
-References: <ea491a92f917fa72be06c5e897dc3a55045e776e.1378743829.git.alexandru.damian@intel.com>
-	<57e230f40897c8ce63ccd4056f56747d64235788.1378743829.git.alexandru.damian@intel.com>
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 09/13] bitbake: event: do not abort on UI handlers error
+	Tue, 10 Sep 2013 12:57:45 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 10 Sep 2013 05:57:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.90,878,1371106800"; d="scan'208";a="399299008"
+Received: from vpopa-desktop.rb.intel.com ([10.237.105.58])
+	by fmsmga002.fm.intel.com with ESMTP; 10 Sep 2013 05:57:45 -0700
+From: Valentin Popa <valentin.popa@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 10 Sep 2013 15:58:52 +0300
+Message-Id: <1378817932-5304-1-git-send-email-valentin.popa@intel.com>
+X-Mailer: git-send-email 1.8.1.2
+Subject: [PATCH] HOB: Busy cursor when saving configuration
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,83 +27,78 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Sep 2013 16:50:06 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 10 Sep 2013 12:57:46 -0000
 
-On Mon, 2013-09-09 at 17:41 +0100, Alex DAMIAN wrote:
-> From: Alexandru DAMIAN <alexandru.damian@intel.com>
-> 
-> Ignore runtime errors if UI handlers do something
-> funny, as exiting while the loop is running.
+Display a busy cursor while the configuration is saved.
 
-This does look rather strange to me. How can a handler exit within the
-loop? The handler is either another process or something we're using an
-xmlrpc call too. Fine, the other end can disappear but our local end
-(and entry in _ui_handlers) should exist until we remove it ourselves?
+[YOCTO #4846]
+Signed-off-by: Valentin Popa <valentin.popa@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/builder.py                |  8 ++++++++
+ bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py | 10 ++++++++++
+ 2 files changed, 18 insertions(+)
 
-Only the server itself can do the removal and the server is single
-threaded?
-
-Cheers,
-
-Richard
-
-
-
-
-> This allows the builder to continue even if something
-> happens to the UI handlers, useful for remote bitbake
-> server.
-> 
-> Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
-> ---
->  bitbake/lib/bb/event.py | 32 ++++++++++++++++++--------------
->  1 file changed, 18 insertions(+), 14 deletions(-)
-> 
-> diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
-> index 67cfcea..1258471 100644
-> --- a/bitbake/lib/bb/event.py
-> +++ b/bitbake/lib/bb/event.py
-> @@ -133,20 +133,24 @@ def fire_ui_handlers(event, d):
->          return
->  
->      errors = []
-> -    for h in _ui_handlers:
-> -        #print "Sending event %s" % event
-> -        try:
-> -             if not _ui_logfilters[h].filter(event):
-> -                 continue
-> -             # We use pickle here since it better handles object instances
-> -             # which xmlrpc's marshaller does not. Events *must* be serializable
-> -             # by pickle.
-> -             if hasattr(_ui_handlers[h].event, "sendpickle"):
-> -                _ui_handlers[h].event.sendpickle((pickle.dumps(event)))
-> -             else:
-> -                _ui_handlers[h].event.send(event)
-> -        except:
-> -            errors.append(h)
-> +    try:
-> +        for h in _ui_handlers:
-> +            #print "Sending event %s" % event
-> +            try:
-> +                if not _ui_logfilters[h].filter(event):
-> +                    continue
-> +                # We use pickle here since it better handles object instances
-> +                # which xmlrpc's marshaller does not. Events *must* be serializable
-> +                # by pickle.
-> +                if hasattr(_ui_handlers[h].event, "sendpickle"):
-> +                    _ui_handlers[h].event.sendpickle((pickle.dumps(event)))
-> +                else:
-> +                    _ui_handlers[h].event.send(event)
-> +            except:
-> +                errors.append(h)
-> +    except RuntimeError:     # may happen that the ui handler simple disappears :D
-> +        errors.append(h)
-> +
->      for h in errors:
->          del _ui_handlers[h]
->  
-
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index 86fdbfe..8292813 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -31,6 +31,7 @@ import re
+ import logging
+ import sys
+ import signal
++import time
+ from bb.ui.crumbs.imageconfigurationpage import ImageConfigurationPage
+ from bb.ui.crumbs.recipeselectionpage import RecipeSelectionPage
+ from bb.ui.crumbs.packageselectionpage import PackageSelectionPage
+@@ -1466,3 +1467,10 @@ class Builder(gtk.Window):
+ 
+     def get_topdir(self):
+         return self.handler.get_topdir()
++
++    def wait(self, delay):
++        time_start = time.time()
++        time_end = time_start + delay
++        while time_end > time.time():
++            while gtk.events_pending():
++                gtk.main_iteration()
+diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+index 3babc8e..79709d0 100644
+--- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
++++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
+@@ -300,7 +300,12 @@ class ImageConfigurationPage (HobPage):
+     def view_warnings_button_clicked_cb(self, button):
+         self.builder.show_warning_dialog()
+ 
++    def machine_combo_changed_idle_cb(self):
++        self.builder.window.set_cursor(None)
++
+     def machine_combo_changed_cb(self, machine_combo):
++        self.builder.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
++        self.builder.wait(0.1) #wait for combo and cursor to update
+         self.stopping = False
+         self.builder.parsing_warnings = []
+         combo_item = machine_combo.get_active_text()
+@@ -324,6 +329,8 @@ class ImageConfigurationPage (HobPage):
+         # Do reparse recipes
+         self.builder.populate_recipe_package_info_async()
+ 
++        glib.idle_add(self.machine_combo_changed_idle_cb)
++
+     def update_machine_combo(self):
+         self.disable_warnings_bar()
+         all_machines = [self.__dummy_machine__] + self.builder.parameters.all_machines
+@@ -527,7 +534,10 @@ class ImageConfigurationPage (HobPage):
+         if not response:
+             return
+         if settings_changed:
++            self.builder.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
++            self.builder.wait(0.1) #wait for adv_settings_dialog to terminate
+             self.builder.reparse_post_adv_settings()
++            self.builder.window.set_cursor(None)
+ 
+     def just_bake_button_clicked_cb(self, button):
+         self.builder.parsing_warnings = []
+-- 
+1.8.1.2
 
 
