@@ -1,30 +1,31 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 567986B3A2
+	by mail.openembedded.org (Postfix) with ESMTP id A82C16BF0E
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Sep 2013 10:02:00 +0000 (UTC)
+	Wed, 11 Sep 2013 17:00:23 +0000 (UTC)
 Received: from localhost (dan.rpsys.net [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r8BAFdDw026926 for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Sep 2013 11:15:39 +0100
+	r8BHE209011872; Wed, 11 Sep 2013 18:14:02 +0100
 X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id dmfP9PPuH_yE for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Sep 2013 11:15:39 +0100 (BST)
+	with LMTP id qLI2RDjMqCHx; Wed, 11 Sep 2013 18:14:02 +0100 (BST)
 Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r8BAFYnN026922
+	r8BHDsQL011859
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Sep 2013 11:15:36 +0100
-Message-ID: <1378893707.3484.174.camel@ted>
+	verify=NOT); Wed, 11 Sep 2013 18:13:56 +0100
+Message-ID: <1378918805.3484.201.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Wed, 11 Sep 2013 11:01:47 +0100
+To: Denys Dmytriyenko <denis@denix.org>
+Date: Wed, 11 Sep 2013 18:00:05 +0100
+In-Reply-To: <1378830807-24027-2-git-send-email-denis@denix.org>
+References: <1378830807-24027-1-git-send-email-denis@denix.org>
+	<1378830807-24027-2-git-send-email-denis@denix.org>
 X-Mailer: Evolution 3.6.4-0ubuntu1 
 Mime-Version: 1.0
-Subject: [PATCH] utils: Fix BB_PRESERVE_ENV
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [1.18][PATCH] methodpool: Retire it, remove global method scope
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,30 +38,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 11 Sep 2013 10:02:02 -0000
+X-List-Received-Date: Wed, 11 Sep 2013 17:00:24 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-BB_PRESERVE_ENV wasn't working since data.inheritFromOS wasn't getting a
-correct list of keys to import into the data store. This fixes
-things so it does add all environment variables into the data store
-when BB_PRESERVE_ENV is used.
+On Tue, 2013-09-10 at 12:33 -0400, Denys Dmytriyenko wrote:
+> From: Richard Purdie <richard.purdie@linuxfoundation.org>
+> 
+> Having a global method scope confuses users and with the introduction
+> of parallel parsing, its not even possible to correctly detect conflicting
+> functions. Rather than try and fix that, its simpler to retire the global
+> method scope and restrict functions to those locations they're defined
+> within. This is more what users actually expect too.
+> 
+> If we remove the global function scope, the need for methodpool is reduced
+> to the point we may as well retire it. There is some small loss of caching
+> of parsed functions but timing measurements so the impact to be neglibile
+> in the overall parsing time.
+> 
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> Tested-by: Denys Dmytriyenko <denys@ti.com>
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
-index 7686602..c96f460 100644
---- a/bitbake/lib/bb/utils.py
-+++ b/bitbake/lib/bb/utils.py
-@@ -532,6 +532,8 @@ def approved_variables():
-     Determine and return the list of whitelisted variables which are approved
-     to remain in the envrionment.
-     """
-+    if 'BB_PRESERVE_ENV' in os.environ:
-+        return os.environ.keys()
-     approved = []
-     if 'BB_ENV_WHITELIST' in os.environ:
-         approved = os.environ['BB_ENV_WHITELIST'].split()
+In general I wouldn't take this (as a feature removal) however the code
+in question was really broken when we introduced parallel parsing. Its
+therefore totally broken, has been for a long time and this patch is
+therefore a good thing as it is a bugfix rather than feature removal.
+
+So I've merged it.
+
+Cheers,
+
+Richard
 
 
 
