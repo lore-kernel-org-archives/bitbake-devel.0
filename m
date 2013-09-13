@@ -1,29 +1,30 @@
-Return-Path: <denis@denix.org>
-Received: from vms173013pub.verizon.net (vms173013pub.verizon.net
-	[206.46.173.13])
-	by mail.openembedded.org (Postfix) with ESMTP id D3BCB60664
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 00D3560EE1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Sep 2013 02:24:55 +0000 (UTC)
-Received: from gandalf.denix.org ([unknown] [108.45.150.102])
-	by vms173013.mailsrvcs.net
-	(Sun Java(tm) System Messaging Server 7u2-7.02 32bit (built Apr 16
-	2009)) with ESMTPA id <0MSZ0070PQP751N1@vms173013.mailsrvcs.net> for
-	bitbake-devel@lists.openembedded.org;
-	Wed, 11 Sep 2013 21:24:44 -0500 (CDT)
-Received: by gandalf.denix.org (Postfix, from userid 1000)	id 8ABB426998; Wed,
-	11 Sep 2013 22:24:43 -0400 (EDT)
-Date: Wed, 11 Sep 2013 22:24:43 -0400
-From: Denys Dmytriyenko <denis@denix.org>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Message-id: <20130912022443.GK5834@denix.org>
-References: <1378830807-24027-1-git-send-email-denis@denix.org>
-	<1378830807-24027-2-git-send-email-denis@denix.org>
-	<1378918805.3484.201.camel@ted>
-MIME-version: 1.0
-In-reply-to: <1378918805.3484.201.camel@ted>
-User-Agent: Mutt/1.5.20 (2009-06-14)
+	Fri, 13 Sep 2013 12:47:29 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r8DD1DSN024644; Fri, 13 Sep 2013 14:01:13 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id sOgFHsKnmstf; Fri, 13 Sep 2013 14:01:13 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r8DD191t024637
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT); Fri, 13 Sep 2013 14:01:10 +0100
+Message-ID: <1379076430.3484.266.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alex DAMIAN <alexandru.damian@intel.com>
+Date: Fri, 13 Sep 2013 13:47:10 +0100
+In-Reply-To: <1378828081-22646-1-git-send-email-alexandru.damian@intel.com>
+References: <1378828081-22646-1-git-send-email-alexandru.damian@intel.com>
+X-Mailer: Evolution 3.6.4-0ubuntu1 
+Mime-Version: 1.0
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [1.18][PATCH] methodpool: Retire it, remove global method scope
+Subject: Re: [PATCH 1/1] bitbake: cooker: clear up state on stateShutdown command
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,37 +37,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 Sep 2013 02:24:56 -0000
-Content-type: text/plain; charset=us-ascii
-Content-disposition: inline
+X-List-Received-Date: Fri, 13 Sep 2013 12:47:30 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 11, 2013 at 06:00:05PM +0100, Richard Purdie wrote:
-> On Tue, 2013-09-10 at 12:33 -0400, Denys Dmytriyenko wrote:
-> > From: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > 
-> > Having a global method scope confuses users and with the introduction
-> > of parallel parsing, its not even possible to correctly detect conflicting
-> > functions. Rather than try and fix that, its simpler to retire the global
-> > method scope and restrict functions to those locations they're defined
-> > within. This is more what users actually expect too.
-> > 
-> > If we remove the global function scope, the need for methodpool is reduced
-> > to the point we may as well retire it. There is some small loss of caching
-> > of parsed functions but timing measurements so the impact to be neglibile
-> > in the overall parsing time.
-> > 
-> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > Tested-by: Denys Dmytriyenko <denys@ti.com>
+On Tue, 2013-09-10 at 16:48 +0100, Alex DAMIAN wrote:
+> From: Alexandru DAMIAN <alexandru.damian@intel.com>
 > 
-> In general I wouldn't take this (as a feature removal) however the code
-> in question was really broken when we introduced parallel parsing. Its
-> therefore totally broken, has been for a long time and this patch is
-> therefore a good thing as it is a bugfix rather than feature removal.
+> On resident bitbake server, a stateShutdown command (first
+> Ctrl-C in client) will leave the server in an unusable state.
 > 
-> So I've merged it.
+> This patch forces the server to reload data and begin
+> processing commands again, coping correctly with Ctrl-C commands.
+> 
+> Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+> 
+> diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+> index c3721aa..42eec2c 100644
+> --- a/bitbake/lib/bb/cooker.py
+> +++ b/bitbake/lib/bb/cooker.py
+> @@ -1101,6 +1101,7 @@ class BBCooker:
+>                  rq.finish_runqueue(True)
+>              elif self.state == state.shutdown:
+>                  rq.finish_runqueue(False)
+> +                self.state = state.initial
+>              failures = 0
+>              try:
+>                  retval = rq.execute_runqueue()
+> @@ -1191,7 +1192,7 @@ class BBCooker:
+>          if self.state == state.running:
+>              return
+>  
+> -        if self.state in (state.shutdown, state.stop):
+> +        if self.state == state.stop:
+>              self.parser.shutdown(clean=False, force = True)
+>              sys.exit(1)
 
-Thanks, Richard, appreciate it.
+This doesn't seem very intuitive. As I read the code above, "shutdown"
+means it sits and does nothing, "stop" means it exits? Surely these
+should be the other way around?
 
--- 
-Denys
+Cheers,
+
+Richard
+
+
+
+
 
