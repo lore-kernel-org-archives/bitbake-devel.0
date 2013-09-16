@@ -1,21 +1,21 @@
 Return-Path: <ddalex@intel.com>
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id 61FD76C7B4
+	by mail.openembedded.org (Postfix) with ESMTP id 8819C6C878
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 16 Sep 2013 13:33:34 +0000 (UTC)
+	Mon, 16 Sep 2013 13:33:36 +0000 (UTC)
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 16 Sep 2013 06:33:35 -0700
+	by fmsmga102.fm.intel.com with ESMTP; 16 Sep 2013 06:33:37 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,915,1371106800"; d="scan'208";a="402395386"
+X-IronPort-AV: E=Sophos;i="4.90,915,1371106800"; d="scan'208";a="402395583"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by fmsmga002.fm.intel.com with ESMTP; 16 Sep 2013 06:33:18 -0700
+	by fmsmga002.fm.intel.com with ESMTP; 16 Sep 2013 06:33:25 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id 4EB4156093A; Mon, 16 Sep 2013 14:33:19 +0100 (BST)
+	id 51F5B5609BA; Mon, 16 Sep 2013 14:33:19 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org,
 	richard.purdie@linuxfoundation.org
-Date: Mon, 16 Sep 2013 14:33:15 +0100
-Message-Id: <6614ca8b4786486ae3a58e78ca0c40b131c6ff57.1379338189.git.alexandru.damian@intel.com>
+Date: Mon, 16 Sep 2013 14:33:16 +0100
+Message-Id: <389466a059c3e6ba345bec88bb710f9dd3311189.1379338189.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <3a7c387d904ea3ea0ad4e493b95bf456a7b10c24.1379338189.git.alexandru.damian@intel.com>
 References: <cover.1379338189.git.alexandru.damian@intel.com>
@@ -23,7 +23,7 @@ References: <cover.1379338189.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1379338189.git.alexandru.damian@intel.com>
 References: <cover.1379338189.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 5/7] bitbake: cooker, command: add a command to return global data
+Subject: [PATCH 6/7] bitbake: event: adding events to allow bbclasses to push custom info
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,68 +36,67 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 16 Sep 2013 13:33:34 -0000
+X-List-Received-Date: Mon, 16 Sep 2013 13:33:36 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Adding the 'getAllKeysWithFlags' read-only command that will
-return a dump of the global data state, together with specified
-flags for each key. The flag list is passed in as the first
-parameter to the command.
+We add a new event that will be triggered by the
+package-building class, containing the information
+about the currently built package.
 
-This will be used by UI clients to get the build configuration.
+Adding an event that will passi information about the
+content of each package file that gets built.
+
+Knotty UI will ignore these events by default.
+
+Maybe a mechanism for using a single generic event is in order ?
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bitbake/lib/bb/command.py |  8 ++++++++
- bitbake/lib/bb/cooker.py  | 15 +++++++++++++++
- 2 files changed, 23 insertions(+)
+ bitbake/lib/bb/event.py     | 16 ++++++++++++++++
+ bitbake/lib/bb/ui/knotty.py |  2 ++
+ 2 files changed, 18 insertions(+)
 
-diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
-index f1abaf7..5d359e7 100644
---- a/bitbake/lib/bb/command.py
-+++ b/bitbake/lib/bb/command.py
-@@ -145,6 +145,14 @@ class CommandsSync:
-         """
-         command.cooker.shutdown(True)
+diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
+index 67cfcea..7dd9236 100644
+--- a/bitbake/lib/bb/event.py
++++ b/bitbake/lib/bb/event.py
+@@ -589,6 +589,22 @@ class PackageInfo(Event):
+         Event.__init__(self)
+         self._pkginfolist = pkginfolist
  
-+    def getAllKeysWithFlags(self, command, params):
-+        """
-+        Returns a dump of the global state. Call with
-+        variable flags to be retrieved as params.
-+        """
-+        return command.cooker.getAllKeysWithFlags(params[0])
-+    getAllKeysWithFlags.readonly = True
++class SinglePackageInfo(Event):
++    """
++    Single Package Information sent on emit_pkgdata
++    """
++    def __init__(self, data):
++        Event.__init__(self)
++        self._data = data
 +
-     def getVariable(self, command, params):
-         """
-         Read the value of a variable from data
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index cb0e3e5..981379b 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1134,6 +1134,21 @@ class BBCooker:
++class PackageFileSizes(Event):
++    """
++    Event that contains information about the file sizes contained in a package.
++    """
++    def __init__(self, data):
++        Event.__init__(self)
++        self._data = data
++
+ class SanityCheck(Event):
+     """
+     Event to issue sanity check
+diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
+index 0211b50..03baa75 100644
+--- a/bitbake/lib/bb/ui/knotty.py
++++ b/bitbake/lib/bb/ui/knotty.py
+@@ -477,6 +477,8 @@ def main(server, eventHandler, params, tf = TerminalFilter):
  
-         self.configuration.server_register_idlecallback(buildTargetsIdle, rq)
- 
-+
-+    def getAllKeysWithFlags(self, flaglist):
-+        dump = {}
-+        for k in self.data.keys():
-+            try:
-+                v = self.data.getVar(k, True)
-+                if not k.startswith("__") and not bool(self.data.getVarFlag(k, 'func')) and not isinstance(v, bb.data_smart.DataSmart):
-+                    dump[k] = { 'v' : v }
-+                    for d in flaglist:
-+                        dump[k][d] = self.data.getVarFlag(k, d)
-+            except:
-+                pass
-+        return dump
-+
-+
-     def generateNewImage(self, image, base_image, package_queue, timestamp, description):
-         '''
-         Create a new image with a "require"/"inherit" base_image statement
+             # ignore
+             if isinstance(event, (bb.event.BuildBase,
++                                  bb.event.PackageFileSizes,
++                                  bb.event.SinglePackageInfo,
+                                   bb.event.StampUpdate,
+                                   bb.event.ConfigParsed,
+                                   bb.event.RecipeParsed,
 -- 
 1.8.1.2
 
