@@ -1,31 +1,24 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 79B6160EDA
+Return-Path: <ddalex@intel.com>
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 91D9160662
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 14 Sep 2013 08:33:21 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r8E8l9ch026777; Sat, 14 Sep 2013 09:47:09 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id qby6ooXsysyN; Sat, 14 Sep 2013 09:47:09 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r8E8l4t1026773
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Sat, 14 Sep 2013 09:47:06 +0100
-Message-ID: <1379147582.3484.284.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alex DAMIAN <alexandru.damian@intel.com>
-Date: Sat, 14 Sep 2013 09:33:02 +0100
-In-Reply-To: <1379076430.3484.266.camel@ted>
-References: <1378828081-22646-1-git-send-email-alexandru.damian@intel.com>
-	<1379076430.3484.266.camel@ted>
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] bitbake: cooker: clear up state on stateShutdown command
+	Mon, 16 Sep 2013 11:56:34 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga102.fm.intel.com with ESMTP; 16 Sep 2013 04:56:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.90,914,1371106800"; d="scan'208";a="402317182"
+Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
+	by fmsmga002.fm.intel.com with ESMTP; 16 Sep 2013 04:56:35 -0700
+Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
+	id 027B8560407; Mon, 16 Sep 2013 12:56:35 +0100 (BST)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: bitbake-devel@lists.openembedded.org,
+	richard.purdie@linuxfoundation.org
+Date: Mon, 16 Sep 2013 12:56:26 +0100
+Message-Id: <cover.1379332511.git.alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.8.1.2
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 0/8] webhob related changes in bitbake, version 2
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,54 +31,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 14 Sep 2013 08:33:23 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 16 Sep 2013 11:56:35 -0000
 
-On Fri, 2013-09-13 at 13:47 +0100, Richard Purdie wrote:
-> On Tue, 2013-09-10 at 16:48 +0100, Alex DAMIAN wrote:
-> > From: Alexandru DAMIAN <alexandru.damian@intel.com>
-> > 
-> > On resident bitbake server, a stateShutdown command (first
-> > Ctrl-C in client) will leave the server in an unusable state.
-> > 
-> > This patch forces the server to reload data and begin
-> > processing commands again, coping correctly with Ctrl-C commands.
-> > 
-> > Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
-> > 
-> > diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-> > index c3721aa..42eec2c 100644
-> > --- a/bitbake/lib/bb/cooker.py
-> > +++ b/bitbake/lib/bb/cooker.py
-> > @@ -1101,6 +1101,7 @@ class BBCooker:
-> >                  rq.finish_runqueue(True)
-> >              elif self.state == state.shutdown:
-> >                  rq.finish_runqueue(False)
-> > +                self.state = state.initial
-> >              failures = 0
-> >              try:
-> >                  retval = rq.execute_runqueue()
-> > @@ -1191,7 +1192,7 @@ class BBCooker:
-> >          if self.state == state.running:
-> >              return
-> >  
-> > -        if self.state in (state.shutdown, state.stop):
-> > +        if self.state == state.stop:
-> >              self.parser.shutdown(clean=False, force = True)
-> >              sys.exit(1)
-> 
-> This doesn't seem very intuitive. As I read the code above, "shutdown"
-> means it sits and does nothing, "stop" means it exits? Surely these
-> should be the other way around?
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-For completeness, my patch series addresses the above problems in
-different ways. The underlying problems were the server not being reset
-to state.initial after a command failed and the sys.exit() call causing
-the server to exit.
+I'm sending in version 2 of the patches that bring in changes that prepare bitbake
+for supporting WebHob-related tasks.
 
-Cheers,
+The changes focus on improving and standardizing the information sent through
+the event system, and cleaning up code in bitbake.
 
-Richard
+The following changes since commit 5fca4d286eec240ad57d90defa43cd0ff24f88ed:
+
+  linux-yocto/3.10: genericx86 meta data factoring (2013-09-14 08:36:26 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib adamian/bitbake-core-changes-1609
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/bitbake-core-changes-1609
+
+Alexandru DAMIAN (8):
+  bitbake: cooker: clean up code and avoid duplication
+  bitbake: event: send the task dependency tree to UI
+  bitbake: runqueue: add runQueueTaskSkipped event
+  bitbake: cooker: add extra recipe information
+  bitbake: build: add logfile path for all Task events
+  bitbake: cooker, command: add a command to return global data
+  bitbake: event: adding events to allow bbclasses to push custom info
+  bitbake: runqueue: add task hash to Queue events
+
+ bitbake/lib/bb/build.py     | 18 ++++++++---
+ bitbake/lib/bb/command.py   |  8 +++++
+ bitbake/lib/bb/cooker.py    | 79 +++++++++++++++++++++++++++++----------------
+ bitbake/lib/bb/event.py     | 16 +++++++++
+ bitbake/lib/bb/runqueue.py  | 35 ++++++++++++++++++--
+ bitbake/lib/bb/ui/knotty.py |  5 +++
+ 6 files changed, 125 insertions(+), 36 deletions(-)
+
+-- 
+1.8.1.2
 
 
