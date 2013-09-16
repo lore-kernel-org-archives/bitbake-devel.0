@@ -1,29 +1,32 @@
-Return-Path: <ddalex@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
-	by mail.openembedded.org (Postfix) with ESMTP id B00696C81F
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id BFAF5605F2
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 16 Sep 2013 11:57:00 +0000 (UTC)
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 16 Sep 2013 04:57:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,914,1371106800"; d="scan'208";a="361055607"
-Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by azsmga001.ch.intel.com with ESMTP; 16 Sep 2013 04:57:01 -0700
-Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id C5189560BA7; Mon, 16 Sep 2013 12:57:00 +0100 (BST)
-From: Alex DAMIAN <alexandru.damian@intel.com>
-To: bitbake-devel@lists.openembedded.org,
-	richard.purdie@linuxfoundation.org
-Date: Mon, 16 Sep 2013 12:56:58 +0100
-Message-Id: <a85e76f2e43c8ebe5df514bf44e78fb731b4dffd.1379332511.git.alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.8.1.2
-In-Reply-To: <3a7c387d904ea3ea0ad4e493b95bf456a7b10c24.1379332511.git.alexandru.damian@intel.com>
+	Mon, 16 Sep 2013 12:14:31 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r8GCSV2i010302; Mon, 16 Sep 2013 13:28:31 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id cuwHd5geA_B9; Mon, 16 Sep 2013 13:28:31 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r8GCSOh7010294
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT); Mon, 16 Sep 2013 13:28:26 +0100
+Message-ID: <1379333649.3484.286.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alex DAMIAN <alexandru.damian@intel.com>
+Date: Mon, 16 Sep 2013 13:14:09 +0100
+In-Reply-To: <a5db8806dc326f93d8e0bb36ff1c7b83d1d77e6a.1379332511.git.alexandru.damian@intel.com>
 References: <cover.1379332511.git.alexandru.damian@intel.com>
 	<3a7c387d904ea3ea0ad4e493b95bf456a7b10c24.1379332511.git.alexandru.damian@intel.com>
-In-Reply-To: <cover.1379332511.git.alexandru.damian@intel.com>
-References: <cover.1379332511.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 8/8] bitbake: runqueue: add task hash to Queue events
+	<a5db8806dc326f93d8e0bb36ff1c7b83d1d77e6a.1379332511.git.alexandru.damian@intel.com>
+X-Mailer: Evolution 3.6.4-0ubuntu1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 5/8] bitbake: build: add logfile path for all Task events
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,49 +39,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 16 Sep 2013 11:57:01 -0000
+X-List-Received-Date: Mon, 16 Sep 2013 12:14:33 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+On Mon, 2013-09-16 at 12:56 +0100, Alex DAMIAN wrote:
+> From: Alexandru DAMIAN <alexandru.damian@intel.com>
+> 
+> We add the path to the logfile for all Task events, so
+> that we can record the logfile locations during the run.
+> 
+> This is needed because the logfile symlinks will point
+> only to the last build logs, and there is no other link
+> between a certain build and the log file it produces.
+> 
+> Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+> ---
+>  bitbake/lib/bb/build.py | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
 
-Adding the sstate-related hash for all runqueue and
-scenequeue tasks, as it's needed in the WebHob data.
+a) you might as well modify TaskBase intead of each Task 
+b) You didn't fix up all the original Task* references e.g. TaskInvalid.
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
----
- bitbake/lib/bb/runqueue.py | 5 +++++
- 1 file changed, 5 insertions(+)
+I gave up and merged my own version of this.
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 2ab4405..18ebce0 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -223,6 +223,9 @@ class RunQueueData:
-     def get_task_file(self, task):
-         return self.taskData.fn_index[self.runq_fnid[task]]
+Cheers,
+
+Richard
  
-+    def get_task_hash(self, task):
-+        return self.runq_hash[task]
-+
-     def get_user_idstring(self, task, task_name_suffix = ""):
-         fn = self.taskData.fn_index[self.runq_fnid[task]]
-         taskname = self.runq_task[task] + task_name_suffix
-@@ -1792,6 +1795,7 @@ class runQueueEvent(bb.event.Event):
-         self.taskstring = rq.rqdata.get_user_idstring(task)
-         self.taskname = rq.rqdata.get_task_name(task)
-         self.taskfile = rq.rqdata.get_task_file(task)
-+        self.taskhash = rq.rqdata.get_task_hash(task)
-         self.stats = stats.copy()
-         bb.event.Event.__init__(self)
- 
-@@ -1805,6 +1809,7 @@ class sceneQueueEvent(runQueueEvent):
-         self.taskstring = rq.rqdata.get_user_idstring(realtask, "_setscene")
-         self.taskname = rq.rqdata.get_task_name(realtask) + "_setscene"
-         self.taskfile = rq.rqdata.get_task_file(realtask)
-+        self.taskhash = rq.rqdata.get_task_hash(task)
- 
- class runQueueTaskStarted(runQueueEvent):
-     """
--- 
-1.8.1.2
 
 
