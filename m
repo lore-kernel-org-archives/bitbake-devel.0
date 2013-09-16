@@ -1,21 +1,21 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 439B86C800
+Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
+	by mail.openembedded.org (Postfix) with ESMTP id 7E2466C7F9
 	for <bitbake-devel@lists.openembedded.org>;
 	Mon, 16 Sep 2013 11:57:00 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga101.jf.intel.com with ESMTP; 16 Sep 2013 04:57:02 -0700
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 16 Sep 2013 04:57:02 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,914,1371106800"; d="scan'208";a="396295397"
+X-IronPort-AV: E=Sophos;i="4.90,914,1371106800"; d="scan'208";a="361055605"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by fmsmga001.fm.intel.com with ESMTP; 16 Sep 2013 04:57:01 -0700
+	by azsmga001.ch.intel.com with ESMTP; 16 Sep 2013 04:57:01 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id C0EA85609BA; Mon, 16 Sep 2013 12:57:00 +0100 (BST)
+	id C2E0C560B01; Mon, 16 Sep 2013 12:57:00 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org,
 	richard.purdie@linuxfoundation.org
-Date: Mon, 16 Sep 2013 12:56:56 +0100
-Message-Id: <b26fb58fcbdece4c7f36407045c1100a0d3fd8fb.1379332511.git.alexandru.damian@intel.com>
+Date: Mon, 16 Sep 2013 12:56:57 +0100
+Message-Id: <43ba608dc66801c0ca53bc91257edebbd7aef176.1379332511.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <3a7c387d904ea3ea0ad4e493b95bf456a7b10c24.1379332511.git.alexandru.damian@intel.com>
 References: <cover.1379332511.git.alexandru.damian@intel.com>
@@ -23,7 +23,7 @@ References: <cover.1379332511.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1379332511.git.alexandru.damian@intel.com>
 References: <cover.1379332511.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 6/8] bitbake: cooker, command: add a command to return global data
+Subject: [PATCH 7/8] bitbake: event: adding events to allow bbclasses to push custom info
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,62 +40,63 @@ X-List-Received-Date: Mon, 16 Sep 2013 11:57:00 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Adding the 'getDataDump' read-only command that will
-return a dump of the global data state.
+We add a new event that will be triggered by the
+package-building class, containing the information
+about the currently built package.
 
-This will be used by UI clients to get the build configuration.
+Adding an event that will passi information about the
+content of each package file that gets built.
+
+Knotty UI will ignore these events by default.
+
+Maybe a mechanism for using a single generic event is in order ?
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bitbake/lib/bb/command.py |  8 ++++++++
- bitbake/lib/bb/cooker.py  | 15 +++++++++++++++
- 2 files changed, 23 insertions(+)
+ bitbake/lib/bb/event.py     | 16 ++++++++++++++++
+ bitbake/lib/bb/ui/knotty.py |  2 ++
+ 2 files changed, 18 insertions(+)
 
-diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
-index f1abaf7..84136f1 100644
---- a/bitbake/lib/bb/command.py
-+++ b/bitbake/lib/bb/command.py
-@@ -145,6 +145,14 @@ class CommandsSync:
-         """
-         command.cooker.shutdown(True)
+diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
+index 67cfcea..7dd9236 100644
+--- a/bitbake/lib/bb/event.py
++++ b/bitbake/lib/bb/event.py
+@@ -589,6 +589,22 @@ class PackageInfo(Event):
+         Event.__init__(self)
+         self._pkginfolist = pkginfolist
  
-+    def getDataDump(self, command, params):
-+        """
-+        Returns a dump of the global state. Call with
-+        variable flags to be retrieved as params.
-+        """
-+        return command.cooker.getGlobalExpandedData(params)
-+    getDataDump.readonly = True
++class SinglePackageInfo(Event):
++    """
++    Single Package Information sent on emit_pkgdata
++    """
++    def __init__(self, data):
++        Event.__init__(self)
++        self._data = data
 +
-     def getVariable(self, command, params):
-         """
-         Read the value of a variable from data
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index cb0e3e5..12155b9 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1134,6 +1134,21 @@ class BBCooker:
++class PackageFileSizes(Event):
++    """
++    Event that contains information about the file sizes contained in a package.
++    """
++    def __init__(self, data):
++        Event.__init__(self)
++        self._data = data
++
+ class SanityCheck(Event):
+     """
+     Event to issue sanity check
+diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
+index 0211b50..03baa75 100644
+--- a/bitbake/lib/bb/ui/knotty.py
++++ b/bitbake/lib/bb/ui/knotty.py
+@@ -477,6 +477,8 @@ def main(server, eventHandler, params, tf = TerminalFilter):
  
-         self.configuration.server_register_idlecallback(buildTargetsIdle, rq)
- 
-+
-+    def getGlobalExpandedData(self, flags):
-+        dump = {}
-+        for k in self.data.keys():
-+            try:
-+                v = self.data.getVar(k, True)
-+                if not k.startswith("__") and not bool(self.data.getVarFlag(k, 'func')) and not isinstance(v, bb.data_smart.DataSmart):
-+                    dump[k] = { 'v' : v }
-+                    for d in flags:
-+                        dump[k][d] = self.data.getVarFlag(k, d)
-+            except:
-+                pass
-+        return dump
-+
-+
-     def generateNewImage(self, image, base_image, package_queue, timestamp, description):
-         '''
-         Create a new image with a "require"/"inherit" base_image statement
+             # ignore
+             if isinstance(event, (bb.event.BuildBase,
++                                  bb.event.PackageFileSizes,
++                                  bb.event.SinglePackageInfo,
+                                   bb.event.StampUpdate,
+                                   bb.event.ConfigParsed,
+                                   bb.event.RecipeParsed,
 -- 
 1.8.1.2
 
