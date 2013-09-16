@@ -1,32 +1,32 @@
 Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 91E4A6C8F1
+	by mail.openembedded.org (Postfix) with ESMTP id AAFCD6C900
 	for <bitbake-devel@lists.openembedded.org>;
 	Mon, 16 Sep 2013 21:54:04 +0000 (UTC)
 Received: from localhost (dan.rpsys.net [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r8GM87O3029322; Mon, 16 Sep 2013 23:08:12 +0100
+	r8GM884R029330; Mon, 16 Sep 2013 23:08:12 +0100
 X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id m-bY6ygkkIFE; Mon, 16 Sep 2013 23:08:12 +0100 (BST)
+	with LMTP id hZtWBvf4bVDT; Mon, 16 Sep 2013 23:08:12 +0100 (BST)
 Received: from ted (bebox.config [93.97.175.187] (may be forged))
 	(authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r8GM86nK029309
+	r8GM865v029310
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
 	Mon, 16 Sep 2013 23:08:07 +0100
 Received: from richard by ted with local (Exim 4.80)
 	(envelope-from <richard@dan.rpsys.net>)
-	id 1VLgjs-0002aD-Hk; Mon, 16 Sep 2013 22:53:48 +0100
+	id 1VLgjs-0002aI-Kz; Mon, 16 Sep 2013 22:53:48 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 16 Sep 2013 22:53:32 +0100
-Message-Id: <1379368413-9808-15-git-send-email-richard.purdie@linuxfoundation.org>
+Date: Mon, 16 Sep 2013 22:53:33 +0100
+Message-Id: <1379368413-9808-16-git-send-email-richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <1379368413-9808-1-git-send-email-richard.purdie@linuxfoundation.org>
 References: <1379368413-9808-1-git-send-email-richard.purdie@linuxfoundation.org>
-Subject: [PATCH 15/16] bitbake: bb.fatal: Raise a BBHandledException instead of exiting
+Subject: [PATCH 16/16] bitbake: bb: Drop deprecated functions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,31 +41,27 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Mon, 16 Sep 2013 21:54:05 -0000
 
-With new bitbake UIs having the cooker exit at 'random' points
-in the codebase is problematic. This patch raises an exception
-which matches the siutation instead.
+These functions in the main bb module have long been deprecated
+and moved to other modules. Finally remove the compatibility links.
 
-(Bitbake rev: 4effcdf21f42bf0c82891d998934065ca9f0097e)
+(Bitbake rev: ccd181c3ed4852e2b9169cf19aaf18aeacddcc18)
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/__init__.py | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ lib/bb/__init__.py | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
-index 64491ff..018b744 100644
+index 018b744..8a23a0f 100644
 --- a/lib/bb/__init__.py
 +++ b/lib/bb/__init__.py
-@@ -99,8 +99,7 @@ def error(*args):
+@@ -140,6 +140,3 @@ def deprecate_import(current, modulename, fromlist, renames = None):
  
- def fatal(*args):
-     logger.critical(''.join(args))
--    sys.exit(1)
--
-+    raise BBHandledException()
+         setattr(sys.modules[current], newname, newobj)
  
- def deprecated(func, name=None, advice=""):
-     """This is a decorator which can be used to mark functions
+-deprecate_import(__name__, "bb.fetch", ("MalformedUrl", "encodeurl", "decodeurl"))
+-deprecate_import(__name__, "bb.utils", ("mkdirhier", "movefile", "copyfile", "which"))
+-deprecate_import(__name__, "bb.utils", ["vercmp_string"], ["vercmp"])
 -- 
 1.8.1.2
 
