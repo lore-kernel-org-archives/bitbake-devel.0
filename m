@@ -1,28 +1,29 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 23BFC6111E
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 27FD06158F
 	for <bitbake-devel@lists.openembedded.org>;
 	Mon, 16 Sep 2013 11:56:59 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 16 Sep 2013 04:57:01 -0700
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 16 Sep 2013 04:53:58 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,914,1371106800"; d="scan'208";a="403929786"
+X-IronPort-AV: E=Sophos;i="4.90,914,1371106800"; d="scan'208";a="378817516"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by orsmga002.jf.intel.com with ESMTP; 16 Sep 2013 04:56:59 -0700
+	by orsmga001.jf.intel.com with ESMTP; 16 Sep 2013 04:56:59 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id B399756045D; Mon, 16 Sep 2013 12:57:00 +0100 (BST)
+	id BEDED56093A; Mon, 16 Sep 2013 12:57:00 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org,
 	richard.purdie@linuxfoundation.org
-Date: Mon, 16 Sep 2013 12:56:51 +0100
-Message-Id: <3a7c387d904ea3ea0ad4e493b95bf456a7b10c24.1379332511.git.alexandru.damian@intel.com>
+Date: Mon, 16 Sep 2013 12:56:55 +0100
+Message-Id: <a5db8806dc326f93d8e0bb36ff1c7b83d1d77e6a.1379332511.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
-In-Reply-To: <cover.1379332511.git.alexandru.damian@intel.com>
+In-Reply-To: <3a7c387d904ea3ea0ad4e493b95bf456a7b10c24.1379332511.git.alexandru.damian@intel.com>
 References: <cover.1379332511.git.alexandru.damian@intel.com>
+	<3a7c387d904ea3ea0ad4e493b95bf456a7b10c24.1379332511.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1379332511.git.alexandru.damian@intel.com>
 References: <cover.1379332511.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 1/8] bitbake: cooker: clean up code and avoid duplication
+Subject: [PATCH 5/8] bitbake: build: add logfile path for all Task events
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,103 +40,71 @@ X-List-Received-Date: Mon, 16 Sep 2013 11:56:59 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Clean-up to avoid duplication and promote code reuse.
-We're using the prepareTreeData in all instances where
-this needs to be done.
+We add the path to the logfile for all Task events, so
+that we can record the logfile locations during the run.
 
-bb.event.BuildStarted now contains unexpanded package names,
-since the UI will show the original target names.
-
-When we're only testing target image contents, we do not abort
-with an error if the target is unbuildable.
+This is needed because the logfile symlinks will point
+only to the last build logs, and there is no other link
+between a certain build and the log file it produces.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bitbake/lib/bb/cooker.py | 38 ++++++++++----------------------------
- 1 file changed, 10 insertions(+), 28 deletions(-)
+ bitbake/lib/bb/build.py | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index a07615b..3bfeefb 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -345,13 +345,7 @@ class BBCooker:
-             if pkgs_to_build[0] in set(ignore.split()):
-                 bb.fatal("%s is in ASSUME_PROVIDED" % pkgs_to_build[0])
+diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+index 1265bdc..8d001b1 100644
+--- a/bitbake/lib/bb/build.py
++++ b/bitbake/lib/bb/build.py
+@@ -91,13 +91,18 @@ class TaskBase(event.Event):
  
--            localdata = data.createCopy(self.data)
--            bb.data.update_data(localdata)
--            bb.data.expandKeys(localdata)
+ class TaskStarted(TaskBase):
+     """Task execution started"""
++    def __init__(self, task, logfile, metadata):
++        self.logfile = logfile
++        super(TaskStarted, self).__init__(task, metadata)
+ 
+ class TaskSucceeded(TaskBase):
+     """Task execution completed"""
++    def __init__(self, task, logfile, metadata):
++        self.logfile = logfile
++        super(TaskSucceeded, self).__init__(task, metadata)
+ 
+ class TaskFailed(TaskBase):
+     """Task execution failed"""
 -
--            taskdata = bb.taskdata.TaskData(self.configuration.abort)
--            taskdata.add_provider(localdata, self.recipecache, pkgs_to_build[0])
--            taskdata.add_unresolved(localdata, self.recipecache)
-+            runlist, taskdata = self.prepareTreeData(pkgs_to_build, None)
+     def __init__(self, task, logfile, metadata, errprinted = False):
+         self.logfile = logfile
+         self.errprinted = errprinted
+@@ -114,8 +119,8 @@ class TaskFailedSilent(TaskBase):
+         return "Failed"
  
-             targetid = taskdata.getbuild_id(pkgs_to_build[0])
-             fnid = taskdata.build_targets[targetid][0]
-@@ -398,9 +392,7 @@ class BBCooker:
-         localdata = data.createCopy(self.data)
-         bb.data.update_data(localdata)
-         bb.data.expandKeys(localdata)
--        # We set abort to False here to prevent unbuildable targets raising
--        # an exception when we're just generating data
--        taskdata = bb.taskdata.TaskData(False, skiplist=self.skiplist)
-+        taskdata = bb.taskdata.TaskData(self.configuration.abort, skiplist=self.skiplist)
- 
-         runlist = []
-         current = 0
-@@ -492,7 +484,12 @@ class BBCooker:
-         """
-         Create a dependency tree of pkgs_to_build, returning the data.
-         """
-+
-+        # We set abort to False here to prevent unbuildable targets raising
-+        # an exception when we're just generating data
-+        self.configuration.abort = False
-         _, taskdata = self.prepareTreeData(pkgs_to_build, task)
-+
-         tasks_fnid = []
-         if len(taskdata.tasks_name) != 0:
-             for task in xrange(len(taskdata.tasks_name)):
-@@ -1073,13 +1070,6 @@ class BBCooker:
-         Attempt to build the targets specified
-         """
- 
--        # If we are told to do the NULL task then query the default task
--        if (task == None):
--            task = self.configuration.cmd
+ class TaskInvalid(TaskBase):
 -
--        universe = ('universe' in targets)
--        targets = self.checkPackages(targets)
--
-         def buildTargetsIdle(server, rq, abort):
-             if abort or self.state == state.forceshutdown:
-                 rq.finish_runqueue(True)
-@@ -1106,21 +1096,13 @@ class BBCooker:
-         self.buildSetVars()
+-    def __init__(self, task, metadata):
++    def __init__(self, task, logfile, metadata):
++        self.logfile = logfile
+         super(TaskInvalid, self).__init__(task, metadata)
+         self._message = "No such task '%s'" % task
  
-         buildname = self.data.getVar("BUILDNAME")
--        bb.event.fire(bb.event.BuildStarted(buildname, targets), self.data)
--
--        localdata = data.createCopy(self.data)
--        bb.data.update_data(localdata)
--        bb.data.expandKeys(localdata)
+@@ -419,7 +424,7 @@ def _exec_task(fn, task, d, quieterr):
+     localdata.setVar('BB_LOGFILE', logfn)
+     localdata.setVar('BB_RUNTASK', task)
  
--        taskdata = bb.taskdata.TaskData(self.configuration.abort, skiplist=self.skiplist)
-+        bb.event.fire(bb.event.BuildStarted(buildname, targets), self.data)
+-    event.fire(TaskStarted(task, localdata), localdata)
++    event.fire(TaskStarted(task, logfn, localdata), localdata)
+     try:
+         for func in (prefuncs or '').split():
+             exec_func(func, localdata)
+@@ -456,7 +461,7 @@ def _exec_task(fn, task, d, quieterr):
+             logger.debug(2, "Zero size logfn %s, removing", logfn)
+             bb.utils.remove(logfn)
+             bb.utils.remove(loglink)
+-    event.fire(TaskSucceeded(task, localdata), localdata)
++    event.fire(TaskSucceeded(task, logfn, localdata), localdata)
  
--        runlist = []
--        for k in targets:
--            taskdata.add_provider(localdata, self.recipecache, k)
--            runlist.append([k, "do_%s" % task])
--        taskdata.add_unresolved(localdata, self.recipecache)
-+        runlist, taskdata = self.prepareTreeData(targets, task)
- 
-         rq = bb.runqueue.RunQueue(self, self.data, self.recipecache, taskdata, runlist)
-+        universe = ('universe' in targets)
-         if universe:
-             rq.rqdata.warn_multi_bb = True
- 
+     if not localdata.getVarFlag(task, 'nostamp') and not localdata.getVarFlag(task, 'selfstamp'):
+         make_stamp(task, localdata)
 -- 
 1.8.1.2
 
