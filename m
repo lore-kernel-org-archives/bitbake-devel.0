@@ -1,29 +1,28 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id 8819C6C878
+Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
+	by mail.openembedded.org (Postfix) with ESMTP id 6F7366C7B4
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 16 Sep 2013 13:33:36 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 16 Sep 2013 06:33:37 -0700
+	Mon, 16 Sep 2013 13:33:44 +0000 (UTC)
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga102.ch.intel.com with ESMTP; 16 Sep 2013 06:33:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,915,1371106800"; d="scan'208";a="402395583"
+X-IronPort-AV: E=Sophos;i="4.90,915,1371106800"; d="scan'208";a="361128146"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by fmsmga002.fm.intel.com with ESMTP; 16 Sep 2013 06:33:25 -0700
+	by azsmga001.ch.intel.com with ESMTP; 16 Sep 2013 06:33:19 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id 51F5B5609BA; Mon, 16 Sep 2013 14:33:19 +0100 (BST)
+	id 43F3B56045D; Mon, 16 Sep 2013 14:33:19 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org,
 	richard.purdie@linuxfoundation.org
-Date: Mon, 16 Sep 2013 14:33:16 +0100
-Message-Id: <389466a059c3e6ba345bec88bb710f9dd3311189.1379338189.git.alexandru.damian@intel.com>
+Date: Mon, 16 Sep 2013 14:33:11 +0100
+Message-Id: <3a7c387d904ea3ea0ad4e493b95bf456a7b10c24.1379338189.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
-In-Reply-To: <3a7c387d904ea3ea0ad4e493b95bf456a7b10c24.1379338189.git.alexandru.damian@intel.com>
+In-Reply-To: <cover.1379338189.git.alexandru.damian@intel.com>
 References: <cover.1379338189.git.alexandru.damian@intel.com>
-	<3a7c387d904ea3ea0ad4e493b95bf456a7b10c24.1379338189.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1379338189.git.alexandru.damian@intel.com>
 References: <cover.1379338189.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 6/7] bitbake: event: adding events to allow bbclasses to push custom info
+Subject: [PATCH 1/7] bitbake: cooker: clean up code and avoid duplication
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,67 +35,107 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 16 Sep 2013 13:33:36 -0000
+X-List-Received-Date: Mon, 16 Sep 2013 13:33:44 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-We add a new event that will be triggered by the
-package-building class, containing the information
-about the currently built package.
+Clean-up to avoid duplication and promote code reuse.
+We're using the prepareTreeData in all instances where
+this needs to be done.
 
-Adding an event that will passi information about the
-content of each package file that gets built.
+bb.event.BuildStarted now contains unexpanded package names,
+since the UI will show the original target names.
 
-Knotty UI will ignore these events by default.
-
-Maybe a mechanism for using a single generic event is in order ?
+When we're only testing target image contents, we do not abort
+with an error if the target is unbuildable.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bitbake/lib/bb/event.py     | 16 ++++++++++++++++
- bitbake/lib/bb/ui/knotty.py |  2 ++
- 2 files changed, 18 insertions(+)
+ bitbake/lib/bb/cooker.py | 38 ++++++++++----------------------------
+ 1 file changed, 10 insertions(+), 28 deletions(-)
 
-diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
-index 67cfcea..7dd9236 100644
---- a/bitbake/lib/bb/event.py
-+++ b/bitbake/lib/bb/event.py
-@@ -589,6 +589,22 @@ class PackageInfo(Event):
-         Event.__init__(self)
-         self._pkginfolist = pkginfolist
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index a07615b..3bfeefb 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -345,13 +345,7 @@ class BBCooker:
+             if pkgs_to_build[0] in set(ignore.split()):
+                 bb.fatal("%s is in ASSUME_PROVIDED" % pkgs_to_build[0])
  
-+class SinglePackageInfo(Event):
-+    """
-+    Single Package Information sent on emit_pkgdata
-+    """
-+    def __init__(self, data):
-+        Event.__init__(self)
-+        self._data = data
-+
-+class PackageFileSizes(Event):
-+    """
-+    Event that contains information about the file sizes contained in a package.
-+    """
-+    def __init__(self, data):
-+        Event.__init__(self)
-+        self._data = data
-+
- class SanityCheck(Event):
-     """
-     Event to issue sanity check
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index 0211b50..03baa75 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -477,6 +477,8 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+-            localdata = data.createCopy(self.data)
+-            bb.data.update_data(localdata)
+-            bb.data.expandKeys(localdata)
+-
+-            taskdata = bb.taskdata.TaskData(self.configuration.abort)
+-            taskdata.add_provider(localdata, self.recipecache, pkgs_to_build[0])
+-            taskdata.add_unresolved(localdata, self.recipecache)
++            runlist, taskdata = self.prepareTreeData(pkgs_to_build, None)
  
-             # ignore
-             if isinstance(event, (bb.event.BuildBase,
-+                                  bb.event.PackageFileSizes,
-+                                  bb.event.SinglePackageInfo,
-                                   bb.event.StampUpdate,
-                                   bb.event.ConfigParsed,
-                                   bb.event.RecipeParsed,
+             targetid = taskdata.getbuild_id(pkgs_to_build[0])
+             fnid = taskdata.build_targets[targetid][0]
+@@ -398,9 +392,7 @@ class BBCooker:
+         localdata = data.createCopy(self.data)
+         bb.data.update_data(localdata)
+         bb.data.expandKeys(localdata)
+-        # We set abort to False here to prevent unbuildable targets raising
+-        # an exception when we're just generating data
+-        taskdata = bb.taskdata.TaskData(False, skiplist=self.skiplist)
++        taskdata = bb.taskdata.TaskData(self.configuration.abort, skiplist=self.skiplist)
+ 
+         runlist = []
+         current = 0
+@@ -492,7 +484,12 @@ class BBCooker:
+         """
+         Create a dependency tree of pkgs_to_build, returning the data.
+         """
++
++        # We set abort to False here to prevent unbuildable targets raising
++        # an exception when we're just generating data
++        self.configuration.abort = False
+         _, taskdata = self.prepareTreeData(pkgs_to_build, task)
++
+         tasks_fnid = []
+         if len(taskdata.tasks_name) != 0:
+             for task in xrange(len(taskdata.tasks_name)):
+@@ -1073,13 +1070,6 @@ class BBCooker:
+         Attempt to build the targets specified
+         """
+ 
+-        # If we are told to do the NULL task then query the default task
+-        if (task == None):
+-            task = self.configuration.cmd
+-
+-        universe = ('universe' in targets)
+-        targets = self.checkPackages(targets)
+-
+         def buildTargetsIdle(server, rq, abort):
+             if abort or self.state == state.forceshutdown:
+                 rq.finish_runqueue(True)
+@@ -1106,21 +1096,13 @@ class BBCooker:
+         self.buildSetVars()
+ 
+         buildname = self.data.getVar("BUILDNAME")
+-        bb.event.fire(bb.event.BuildStarted(buildname, targets), self.data)
+-
+-        localdata = data.createCopy(self.data)
+-        bb.data.update_data(localdata)
+-        bb.data.expandKeys(localdata)
+ 
+-        taskdata = bb.taskdata.TaskData(self.configuration.abort, skiplist=self.skiplist)
++        bb.event.fire(bb.event.BuildStarted(buildname, targets), self.data)
+ 
+-        runlist = []
+-        for k in targets:
+-            taskdata.add_provider(localdata, self.recipecache, k)
+-            runlist.append([k, "do_%s" % task])
+-        taskdata.add_unresolved(localdata, self.recipecache)
++        runlist, taskdata = self.prepareTreeData(targets, task)
+ 
+         rq = bb.runqueue.RunQueue(self, self.data, self.recipecache, taskdata, runlist)
++        universe = ('universe' in targets)
+         if universe:
+             rq.rqdata.warn_multi_bb = True
+ 
 -- 
 1.8.1.2
 
