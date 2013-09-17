@@ -1,33 +1,20 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 5E6B560F86
+Return-Path: <cristiana.voicu@intel.com>
+Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
+	by mail.openembedded.org (Postfix) with ESMTP id 4028160F86
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 17 Sep 2013 09:42:26 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r8H9ubVw013497 for <bitbake-devel@lists.openembedded.org>;
-	Tue, 17 Sep 2013 10:56:37 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 6vS9zfmp2wcw for <bitbake-devel@lists.openembedded.org>;
-	Tue, 17 Sep 2013 10:56:37 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r8H9uW0u013493
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
-	Tue, 17 Sep 2013 10:56:33 +0100
-Message-ID: <1379410932.32201.97.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+	Tue, 17 Sep 2013 10:44:26 +0000 (UTC)
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 17 Sep 2013 03:44:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.90,922,1371106800"; d="scan'208";a="361669928"
+Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.72])
+	by azsmga001.ch.intel.com with ESMTP; 17 Sep 2013 03:44:26 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 17 Sep 2013 10:42:12 +0100
-In-Reply-To: <1379368413-9808-16-git-send-email-richard.purdie@linuxfoundation.org>
-References: <1379368413-9808-1-git-send-email-richard.purdie@linuxfoundation.org>
-	<1379368413-9808-16-git-send-email-richard.purdie@linuxfoundation.org>
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: Re: [PATCH 16/16] bitbake: bb: Drop deprecated functions
+Date: Tue, 17 Sep 2013 13:48:21 +0300
+Message-Id: <1379414901-28041-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob: populate "Save image" dialog when saving changes to a custom image recipe If my build starts from a YP standard image recipe, the 'Save image recipe' dialog should be empty.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,42 +27,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 17 Sep 2013 09:42:27 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 17 Sep 2013 10:44:28 -0000
 
-On Mon, 2013-09-16 at 22:53 +0100, Richard Purdie wrote:
-> These functions in the main bb module have long been deprecated
-> and moved to other modules. Finally remove the compatibility links.
-> 
-> (Bitbake rev: ccd181c3ed4852e2b9169cf19aaf18aeacddcc18)
-> 
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
->  lib/bb/__init__.py | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/lib/bb/__init__.py b/lib/bb/__init__.py
-> index 018b744..8a23a0f 100644
-> --- a/lib/bb/__init__.py
-> +++ b/lib/bb/__init__.py
-> @@ -140,6 +140,3 @@ def deprecate_import(current, modulename, fromlist, renames = None):
->  
->          setattr(sys.modules[current], newname, newobj)
->  
-> -deprecate_import(__name__, "bb.fetch", ("MalformedUrl", "encodeurl", "decodeurl"))
-> -deprecate_import(__name__, "bb.utils", ("mkdirhier", "movefile", "copyfile", "which"))
-> -deprecate_import(__name__, "bb.utils", ["vercmp_string"], ["vercmp"])
+If my build starts from a custom image recipe, the 'Save image recipe'
+dialog should populate the 'Name' and 'Description' fields with the values
+set for the custom image recipe.
 
-I should be clear with this one that now isn't the ideal time to merge
-this and that isn't my intention. 
+[YOCTO #5004]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/imagedetailspage.py |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-It is a reminder to people that this API *will* go away soon in the 1.6
-cycle though.
-
-Cheers,
-
-Richard
-
+diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+index ca33e08..b5d9660 100755
+--- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
++++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
+@@ -635,6 +635,14 @@ class ImageDetailsPage (HobPage):
+         images_dir = topdir + "/recipes/images/"
+         self.builder.ensure_dir(images_dir)
+ 
++        self.name_field_template = self.builder.image_configuration_page.custom_image_selected
++        if self.name_field_template:
++            image_path = self.builder.recipe_model.pn_path[self.name_field_template]
++            image_iter = self.builder.recipe_model.get_iter(image_path)
++            self.description_field_template = self.builder.recipe_model.get_value(image_iter, self.builder.recipe_model.COL_DESC)
++        else:
++            self.name_field_template = ""
++
+         dialog = SaveImageDialog(images_dir, self.name_field_template, self.description_field_template,
+                  "Save image recipe", self.builder, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT)
+         response = dialog.run()
+-- 
+1.7.9.5
 
 
