@@ -1,20 +1,20 @@
 Return-Path: <cristiana.voicu@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
-	by mail.openembedded.org (Postfix) with ESMTP id 4028160F86
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 72C4F6158F
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 17 Sep 2013 10:44:26 +0000 (UTC)
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 17 Sep 2013 03:44:27 -0700
+	Tue, 17 Sep 2013 10:47:18 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 17 Sep 2013 03:47:20 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,922,1371106800"; d="scan'208";a="361669928"
+X-IronPort-AV: E=Sophos;i="4.90,922,1371106800"; d="scan'208";a="402940268"
 Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.72])
-	by azsmga001.ch.intel.com with ESMTP; 17 Sep 2013 03:44:26 -0700
+	by fmsmga002.fm.intel.com with ESMTP; 17 Sep 2013 03:47:19 -0700
 From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 17 Sep 2013 13:48:21 +0300
-Message-Id: <1379414901-28041-1-git-send-email-cristiana.voicu@intel.com>
+Date: Tue, 17 Sep 2013 13:51:14 +0300
+Message-Id: <1379415074-28146-1-git-send-email-cristiana.voicu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob: populate "Save image" dialog when saving changes to a custom image recipe If my build starts from a YP standard image recipe, the 'Save image recipe' dialog should be empty.
+Subject: [PATCH_V2] hob: populate "Save image" dialog when saving changes to a custom image recipe
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,7 +27,10 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 17 Sep 2013 10:44:28 -0000
+X-List-Received-Date: Tue, 17 Sep 2013 10:47:18 -0000
+
+If my build starts from a YP standard image recipe, the 'Save image
+recipe' dialog should be empty.
 
 If my build starts from a custom image recipe, the 'Save image recipe'
 dialog should populate the 'Name' and 'Description' fields with the values
