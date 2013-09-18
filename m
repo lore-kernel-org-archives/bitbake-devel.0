@@ -1,21 +1,21 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id B9CAC6BDAF
+Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
+	by mail.openembedded.org (Postfix) with ESMTP id 46E286BDAF
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Sep 2013 12:15:55 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 18 Sep 2013 05:15:57 -0700
+	Wed, 18 Sep 2013 12:15:56 +0000 (UTC)
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga101.ch.intel.com with ESMTP; 18 Sep 2013 05:15:58 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,929,1371106800"; d="scan'208";a="403549422"
+X-IronPort-AV: E=Sophos;i="4.90,929,1371106800"; d="scan'208";a="296360751"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by fmsmga002.fm.intel.com with ESMTP; 18 Sep 2013 05:15:56 -0700
+	by AZSMGA002.ch.intel.com with ESMTP; 18 Sep 2013 05:15:56 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id AA691560A7B; Wed, 18 Sep 2013 13:15:56 +0100 (BST)
+	id A8209560902; Wed, 18 Sep 2013 13:15:56 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org,
 	richard.purdie@linuxfoundation.org
-Date: Wed, 18 Sep 2013 13:15:53 +0100
-Message-Id: <3f22b14f9fe193cb1e21bb6adf9c3b54ce7b2405.1379505533.git.alexandru.damian@intel.com>
+Date: Wed, 18 Sep 2013 13:15:52 +0100
+Message-Id: <02ce17946b69d5d0875828368df1a4a31b16568a.1379505533.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <89c7b50367088573fecc0114c94f5fa9b5e761d7.1379505533.git.alexandru.damian@intel.com>
 References: <cover.1379505533.git.alexandru.damian@intel.com>
@@ -23,7 +23,7 @@ References: <cover.1379505533.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1379505533.git.alexandru.damian@intel.com>
 References: <cover.1379505533.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 7/7] bitbake: runqueue: add task hash to Queue events
+Subject: [PATCH 6/7] bitbake: event: adding generic event for metadata usage
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,48 +36,65 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 18 Sep 2013 12:15:55 -0000
+X-List-Received-Date: Wed, 18 Sep 2013 12:15:57 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Adding the sstate-related hash for all runqueue and
-scenequeue tasks, as it's needed in the WebHob data.
+Adding the generic bb.event.MetadataEvent that is
+targeted specifically at metadata usage. This is
+needed in order to let the metadata code send and receive
+events during asynchrous execution without having
+to define each event specifically in Bitbake.
+
+Metadata code should subscribe to and fire the MetadataEvent
+in order to communicate asynchronously, and identify
+the object using event.type field, and parse the
+data in the event.data field.
+
+Knotty UI will ignore these event by default.
+
+This deprecates RequestPackageInfo/PackageInfo, and that
+event pair will be removed in the future.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bitbake/lib/bb/runqueue.py | 5 +++++
- 1 file changed, 5 insertions(+)
+ bitbake/lib/bb/event.py     | 10 ++++++++++
+ bitbake/lib/bb/ui/knotty.py |  1 +
+ 2 files changed, 11 insertions(+)
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 19e89e9..c09cfd4 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -223,6 +223,9 @@ class RunQueueData:
-     def get_task_file(self, task):
-         return self.taskData.fn_index[self.runq_fnid[task]]
+diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
+index 67cfcea..10eae5f 100644
+--- a/bitbake/lib/bb/event.py
++++ b/bitbake/lib/bb/event.py
+@@ -589,6 +589,16 @@ class PackageInfo(Event):
+         Event.__init__(self)
+         self._pkginfolist = pkginfolist
  
-+    def get_task_hash(self, task):
-+        return self.runq_hash[task]
++class MetadataEvent(Event):
++    """
++    Generic event that target for OE-Core classes
++    to report information during asynchrous execution
++    """
++    def __init__(self, eventtype, eventdata):
++        Event.__init__(self)
++        self.type = eventtype
++        self.data = eventdata
 +
-     def get_user_idstring(self, task, task_name_suffix = ""):
-         fn = self.taskData.fn_index[self.runq_fnid[task]]
-         taskname = self.runq_task[task] + task_name_suffix
-@@ -1794,6 +1797,7 @@ class runQueueEvent(bb.event.Event):
-         self.taskstring = rq.rqdata.get_user_idstring(task)
-         self.taskname = rq.rqdata.get_task_name(task)
-         self.taskfile = rq.rqdata.get_task_file(task)
-+        self.taskhash = rq.rqdata.get_task_hash(task)
-         self.stats = stats.copy()
-         bb.event.Event.__init__(self)
- 
-@@ -1807,6 +1811,7 @@ class sceneQueueEvent(runQueueEvent):
-         self.taskstring = rq.rqdata.get_user_idstring(realtask, "_setscene")
-         self.taskname = rq.rqdata.get_task_name(realtask) + "_setscene"
-         self.taskfile = rq.rqdata.get_task_file(realtask)
-+        self.taskhash = rq.rqdata.get_task_hash(task)
- 
- class runQueueTaskStarted(runQueueEvent):
+ class SanityCheck(Event):
      """
+     Event to issue sanity check
+diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
+index 0211b50..c1ee9f52 100644
+--- a/bitbake/lib/bb/ui/knotty.py
++++ b/bitbake/lib/bb/ui/knotty.py
+@@ -477,6 +477,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+ 
+             # ignore
+             if isinstance(event, (bb.event.BuildBase,
++                                  bb.event.MetadataEvent,
+                                   bb.event.StampUpdate,
+                                   bb.event.ConfigParsed,
+                                   bb.event.RecipeParsed,
 -- 
 1.8.1.2
 
