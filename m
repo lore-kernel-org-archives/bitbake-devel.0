@@ -1,29 +1,30 @@
-Return-Path: <ddalex@intel.com>
-Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
-	by mail.openembedded.org (Postfix) with ESMTP id E47156BDAF
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id B59BB610F7
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Sep 2013 12:16:22 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by azsmga102.ch.intel.com with ESMTP; 18 Sep 2013 05:15:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,929,1371106800"; d="scan'208";a="397540765"
-Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by fmsmga001.fm.intel.com with ESMTP; 18 Sep 2013 05:15:55 -0700
-Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id A2F9E56088B; Wed, 18 Sep 2013 13:15:56 +0100 (BST)
-From: Alex DAMIAN <alexandru.damian@intel.com>
-To: bitbake-devel@lists.openembedded.org,
-	richard.purdie@linuxfoundation.org
-Date: Wed, 18 Sep 2013 13:15:50 +0100
-Message-Id: <e8d7eac3b5ef37e5cb016d85e86930fb47ea3b62.1379505533.git.alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.8.1.2
-In-Reply-To: <89c7b50367088573fecc0114c94f5fa9b5e761d7.1379505533.git.alexandru.damian@intel.com>
-References: <cover.1379505533.git.alexandru.damian@intel.com>
-	<89c7b50367088573fecc0114c94f5fa9b5e761d7.1379505533.git.alexandru.damian@intel.com>
-In-Reply-To: <cover.1379505533.git.alexandru.damian@intel.com>
-References: <cover.1379505533.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 4/7] bitbake: cooker: get extra information from recipe cache
+	Wed, 18 Sep 2013 22:26:32 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r8IMeqJQ027906 for <bitbake-devel@lists.openembedded.org>;
+	Wed, 18 Sep 2013 23:40:52 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id p7K8_mjY1swW for <bitbake-devel@lists.openembedded.org>;
+	Wed, 18 Sep 2013 23:40:52 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r8IMeilK027896
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
+	Wed, 18 Sep 2013 23:40:50 +0100
+Message-ID: <1379543175.18603.66.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Wed, 18 Sep 2013 23:26:15 +0100
+X-Mailer: Evolution 3.6.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: bin/bitbake: Improve --help text
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,138 +37,112 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 18 Sep 2013 12:16:23 -0000
+X-List-Received-Date: Wed, 18 Sep 2013 22:26:33 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+The --help text was rather inconsistent in style and plain incorrect in places,
+using confusing terminology in others. I guess most people know what the options
+do and don't read this but its confusing to new users.
 
-The loaded cache modules may add extra attributes to
-the recipecache, that will be populated by the cache
-classes required by the UI. These attributes
-will be used by the UI to display relevant information.
+This updates it to use the terms recipe and task consistently, remove
+the references to stage, bbread and generally try and make the output
+more useful.
 
-Adds cachefields cache class field to specify
-for each cache class which attributes will be set
-in the recipecache.
+[YOCTO #4856]
 
-Adds code to automatically expand depends tree with the
-fields exported by the extra cache class.
-
-Fixes a cache field name in the HOB UI.
-
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/cache_extra.py            |  6 ++++
- bitbake/lib/bb/cooker.py                 | 50 ++++++++++++++++++--------------
- bitbake/lib/bb/ui/crumbs/hoblistmodel.py |  2 +-
- 3 files changed, 36 insertions(+), 22 deletions(-)
+diff --git a/bitbake/bin/bitbake b/bitbake/bin/bitbake
+index b4506ef..567a65d 100755
+--- a/bitbake/bin/bitbake
++++ b/bitbake/bin/bitbake
+@@ -107,22 +107,22 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+     be executed.  BBFILES does support wildcards.
+     Default BBFILES are the .bb files in the current directory.""")
+ 
+-        parser.add_option("-b", "--buildfile", help = "execute the task against this .bb file, rather than a package from BBFILES. Does not handle any dependencies.",
++        parser.add_option("-b", "--buildfile", help = "execute tasks from a specific .bb recipe directly. WARNING: Does not handle any dependencies from other recipes.",
+                    action = "store", dest = "buildfile", default = None)
+ 
+-        parser.add_option("-k", "--continue", help = "continue as much as possible after an error. While the target that failed, and those that depend on it, cannot be remade, the other dependencies of these targets can be processed all the same.",
++        parser.add_option("-k", "--continue", help = "continue as much as possible after an error. While the target that failed and anything depending on it cannot be built, as much as possible will be before stopping.",
+                    action = "store_false", dest = "abort", default = True)
+ 
+         parser.add_option("-a", "--tryaltconfigs", help = "continue with builds by trying to use alternative providers where possible.",
+                    action = "store_true", dest = "tryaltconfigs", default = False)
+ 
+-        parser.add_option("-f", "--force", help = "force run of specified cmd, regardless of stamp status",
++        parser.add_option("-f", "--force", help = "force the specified targets/task to run, invalidating any existing stamp file",
+                    action = "store_true", dest = "force", default = False)
+ 
+-        parser.add_option("-c", "--cmd", help = "Specify task to execute. Note that this only executes the specified task for the providee and the packages it depends on, i.e. 'compile' does not implicitly call stage for the dependencies (IOW: use only if you know what you are doing). Depending on the base.bbclass a listtasks tasks is defined and will show available tasks",
++        parser.add_option("-c", "--cmd", help = "Specify the task to execute. The exact options available depend on the metadata but examples might be 'compile' or 'populate_sysroot' or 'listtasks' may give a list of the tasks available.",
+                    action = "store", dest = "cmd")
+ 
+-        parser.add_option("-C", "--clear-stamp", help = "Invalidate the stamp for the specified cmd such as 'compile' and run the default task for the specified target(s)",
++        parser.add_option("-C", "--clear-stamp", help = "Invalidate the stamp for the specified task such as 'compile' and then run the default task for the specified target(s)",
+                     action = "store", dest = "invalidate_stamp")
+ 
+         parser.add_option("-r", "--read", help = "read the specified file before bitbake.conf",
+@@ -131,7 +131,7 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+         parser.add_option("-R", "--postread", help = "read the specified file after bitbake.conf",
+                           action = "append", dest = "postfile", default = [])
+ 
+-        parser.add_option("-v", "--verbose", help = "output more chit-chat to the terminal",
++        parser.add_option("-v", "--verbose", help = "output more log message data to the terminal",
+                    action = "store_true", dest = "verbose", default = False)
+ 
+         parser.add_option("-D", "--debug", help = "Increase the debug level. You can specify this more than once.",
+@@ -143,16 +143,16 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+         parser.add_option("-S", "--dump-signatures", help = "don't execute, just dump out the signature construction information",
+                    action = "store_true", dest = "dump_signatures", default = False)
+ 
+-        parser.add_option("-p", "--parse-only", help = "quit after parsing the BB files (developers only)",
++        parser.add_option("-p", "--parse-only", help = "quit after parsing the BB recipes files",
+                    action = "store_true", dest = "parse_only", default = False)
+ 
+         parser.add_option("-s", "--show-versions", help = "show current and preferred versions of all recipes",
+                    action = "store_true", dest = "show_versions", default = False)
+ 
+-        parser.add_option("-e", "--environment", help = "show the global or per-package environment (this is what used to be bbread)",
++        parser.add_option("-e", "--environment", help = "show the global or per-package environment complete with information about where variables were set/changed",
+                    action = "store_true", dest = "show_environment", default = False)
+ 
+-        parser.add_option("-g", "--graphviz", help = "emit the dependency trees of the specified packages in the dot syntax, and the pn-buildlist to show the build list",
++        parser.add_option("-g", "--graphviz", help = "emit dependency tree information for the specified targets in the dot syntax",
+                     action = "store_true", dest = "dot_graph", default = False)
+ 
+         parser.add_option("-I", "--ignore-deps", help = """Assume these dependencies don't exist and are already provided (equivalent to ASSUME_PROVIDED). Useful to make dependency graphs more appealing""",
+@@ -161,10 +161,10 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+         parser.add_option("-l", "--log-domains", help = """Show debug logging for the specified logging domains""",
+                     action = "append", dest = "debug_domains", default = [])
+ 
+-        parser.add_option("-P", "--profile", help = "profile the command and print a report",
++        parser.add_option("-P", "--profile", help = "profile the command and save reports",
+                    action = "store_true", dest = "profile", default = False)
+ 
+-        parser.add_option("-u", "--ui", help = "userinterface to use",
++        parser.add_option("-u", "--ui", help = "userinterface to use (e.g. knotty, hob, depexp)",
+                    action = "store", dest = "ui")
+ 
+         parser.add_option("-t", "--servertype", help = "Choose which server to use, process or xmlrpc",
+@@ -173,13 +173,13 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+         parser.add_option("", "--revisions-changed", help = "Set the exit code depending on whether upstream floating revisions have changed or not",
+                    action = "store_true", dest = "revisions_changed", default = False)
+ 
+-        parser.add_option("", "--server-only", help = "Run bitbake without UI,  the frontend can connect with bitbake server itself",
++        parser.add_option("", "--server-only", help = "Run bitbake without a UI, only starting a server (cooker) process",
+                    action = "store_true", dest = "server_only", default = False)
+ 
+         parser.add_option("-B", "--bind", help = "The name/address for the bitbake server to bind to",
+                    action = "store", dest = "bind", default = False)
+ 
+-        parser.add_option("", "--no-setscene", help = "Do not run any setscene tasks, forces builds",
++        parser.add_option("", "--no-setscene", help = "Do not run any setscene tasks so sstate is ignored and everything needed is built",
+                    action = "store_true", dest = "nosetscene", default = False)
+ 
+         parser.add_option("", "--remote-server", help = "Connect to the specified server",
 
-diff --git a/bitbake/lib/bb/cache_extra.py b/bitbake/lib/bb/cache_extra.py
-index 9e38a43..83f4959 100644
---- a/bitbake/lib/bb/cache_extra.py
-+++ b/bitbake/lib/bb/cache_extra.py
-@@ -35,6 +35,12 @@ class HobRecipeInfo(RecipeInfoCommon):
-     # such as (bb_cache.dat, bb_extracache_hob.dat) 
-     cachefile = "bb_extracache_" + classname +".dat"        
- 
-+    # override this member with the list of extra cache fields
-+    # that this class will provide
-+    cachefields = ['summary', 'license', 'section',
-+            'description', 'homepage', 'bugtracker',
-+            'prevision', 'files_info']
-+
-     def __init__(self, filename, metadata):
- 
-         self.summary = self.getvar('SUMMARY', metadata)
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index dd45ae8..fafa518 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -481,6 +481,19 @@ class BBCooker:
-                 depend_tree["pn"][pn] = {}
-                 depend_tree["pn"][pn]["filename"] = fn
-                 depend_tree["pn"][pn]["version"] = version
-+
-+                # if we have extra caches, list all attributes they bring in
-+                extra_info = []
-+                for cache_class in self.caches_array:
-+                    if type(cache_class) is type and issubclass(cache_class, bb.cache.RecipeInfoCommon) and hasattr(cache_class, 'cachefields'):
-+                        cachefields = getattr(cache_class, 'cachefields', [])
-+                        extra_info = extra_info + cachefields
-+
-+                # for all attributes stored, add them to the dependency tree
-+                for ei in extra_info:
-+                    depend_tree["pn"][pn][ei] = vars(self.recipecache)[ei][fn]
-+
-+
-             for dep in rq.rqdata.runq_depends[task]:
-                 depfn = taskdata.fn_index[rq.rqdata.runq_fnid[dep]]
-                 deppn = self.recipecache.pkg_fn[depfn]
-@@ -543,35 +556,30 @@ class BBCooker:
-         depend_tree["rdepends-pkg"] = {}
-         depend_tree["rrecs-pkg"] = {}
- 
-+        # if we have extra caches, list all attributes they bring in
-+        extra_info = []
-+        for cache_class in self.caches_array:
-+            if type(cache_class) is type and issubclass(cache_class, bb.cache.RecipeInfoCommon) and hasattr(cache_class, 'cachefields'):
-+                cachefields = getattr(cache_class, 'cachefields', [])
-+                extra_info = extra_info + cachefields
-+
-         for task in xrange(len(tasks_fnid)):
-             fnid = tasks_fnid[task]
-             fn = taskdata.fn_index[fnid]
-             pn = self.recipecache.pkg_fn[fn]
--            version  = "%s:%s-%s" % self.recipecache.pkg_pepvpr[fn]
--            summary = self.recipecache.summary[fn]
--            lic = self.recipecache.license[fn]
--            section = self.recipecache.section[fn]
--            description = self.recipecache.description[fn]
--            homepage = self.recipecache.homepage[fn]
--            bugtracker = self.recipecache.bugtracker[fn]
--            files_info = self.recipecache.files_info[fn]
--            rdepends = self.recipecache.rundeps[fn]
--            rrecs = self.recipecache.runrecs[fn]
--            prevision = self.recipecache.prevision[fn]
--            inherits = self.recipecache.inherits.get(fn, None)
-+
-             if pn not in depend_tree["pn"]:
-                 depend_tree["pn"][pn] = {}
-                 depend_tree["pn"][pn]["filename"] = fn
-+                version  = "%s:%s-%s" % self.recipecache.pkg_pepvpr[fn]
-                 depend_tree["pn"][pn]["version"] = version
--                depend_tree["pn"][pn]["summary"] = summary
--                depend_tree["pn"][pn]["license"] = lic
--                depend_tree["pn"][pn]["section"] = section
--                depend_tree["pn"][pn]["description"] = description
--                depend_tree["pn"][pn]["inherits"] = inherits
--                depend_tree["pn"][pn]["homepage"] = homepage
--                depend_tree["pn"][pn]["bugtracker"] = bugtracker
--                depend_tree["pn"][pn]["files_info"] = files_info
--                depend_tree["pn"][pn]["revision"] = prevision
-+                rdepends = self.recipecache.rundeps[fn]
-+                rrecs = self.recipecache.runrecs[fn]
-+                depend_tree["pn"][pn]["inherits"] = self.recipecache.inherits.get(fn, None)
-+
-+                # for all extra attributes stored, add them to the dependency tree
-+                for ei in extra_info:
-+                    depend_tree["pn"][pn][ei] = vars(self.recipecache)[ei][fn]
- 
-             if fnid not in seen_fnids:
-                 seen_fnids.append(fnid)
-diff --git a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
-index 74d335c..b4d2a62 100644
---- a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
-+++ b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
-@@ -690,7 +690,7 @@ class RecipeListModel(gtk.ListStore):
-             inherits = event_model["pn"][item]["inherits"]
-             summary = event_model["pn"][item]["summary"]
-             version = event_model["pn"][item]["version"]
--            revision = event_model["pn"][item]["revision"]
-+            revision = event_model["pn"][item]["prevision"]
-             homepage = event_model["pn"][item]["homepage"]
-             bugtracker = event_model["pn"][item]["bugtracker"]
-             filename = event_model["pn"][item]["filename"]
--- 
-1.8.1.2
 
 
