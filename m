@@ -1,21 +1,21 @@
 Return-Path: <ddalex@intel.com>
 Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
-	by mail.openembedded.org (Postfix) with ESMTP id AD4216BDAF
+	by mail.openembedded.org (Postfix) with ESMTP id E47156BDAF
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed, 18 Sep 2013 12:16:22 +0000 (UTC)
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
 	by azsmga102.ch.intel.com with ESMTP; 18 Sep 2013 05:15:56 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,929,1371106800"; d="scan'208";a="362259681"
+X-IronPort-AV: E=Sophos;i="4.90,929,1371106800"; d="scan'208";a="397540765"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by azsmga001.ch.intel.com with ESMTP; 18 Sep 2013 05:15:55 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 18 Sep 2013 05:15:55 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id A57EC5608B2; Wed, 18 Sep 2013 13:15:56 +0100 (BST)
+	id A2F9E56088B; Wed, 18 Sep 2013 13:15:56 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org,
 	richard.purdie@linuxfoundation.org
-Date: Wed, 18 Sep 2013 13:15:51 +0100
-Message-Id: <92d9aeb7b5d08d488f151f020eb0dfee7a237669.1379505533.git.alexandru.damian@intel.com>
+Date: Wed, 18 Sep 2013 13:15:50 +0100
+Message-Id: <e8d7eac3b5ef37e5cb016d85e86930fb47ea3b62.1379505533.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <89c7b50367088573fecc0114c94f5fa9b5e761d7.1379505533.git.alexandru.damian@intel.com>
 References: <cover.1379505533.git.alexandru.damian@intel.com>
@@ -23,7 +23,7 @@ References: <cover.1379505533.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1379505533.git.alexandru.damian@intel.com>
 References: <cover.1379505533.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 5/7] bitbake: cooker, command: add a command to return global data
+Subject: [PATCH 4/7] bitbake: cooker: get extra information from recipe cache
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,69 +36,137 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 18 Sep 2013 12:16:22 -0000
+X-List-Received-Date: Wed, 18 Sep 2013 12:16:23 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Adding the 'getAllKeysWithFlags' read-only command that will
-return a dump of the global data state, together with specified
-flags for each key. The flag list is passed in as the first
-parameter to the command.
+The loaded cache modules may add extra attributes to
+the recipecache, that will be populated by the cache
+classes required by the UI. These attributes
+will be used by the UI to display relevant information.
 
-This will be used by UI clients to get the build configuration.
+Adds cachefields cache class field to specify
+for each cache class which attributes will be set
+in the recipecache.
+
+Adds code to automatically expand depends tree with the
+fields exported by the extra cache class.
+
+Fixes a cache field name in the HOB UI.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bitbake/lib/bb/command.py |  9 +++++++++
- bitbake/lib/bb/cooker.py  | 15 +++++++++++++++
- 2 files changed, 24 insertions(+)
+ bitbake/lib/bb/cache_extra.py            |  6 ++++
+ bitbake/lib/bb/cooker.py                 | 50 ++++++++++++++++++--------------
+ bitbake/lib/bb/ui/crumbs/hoblistmodel.py |  2 +-
+ 3 files changed, 36 insertions(+), 22 deletions(-)
 
-diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
-index f1abaf7..21a6de0 100644
---- a/bitbake/lib/bb/command.py
-+++ b/bitbake/lib/bb/command.py
-@@ -145,6 +145,15 @@ class CommandsSync:
-         """
-         command.cooker.shutdown(True)
+diff --git a/bitbake/lib/bb/cache_extra.py b/bitbake/lib/bb/cache_extra.py
+index 9e38a43..83f4959 100644
+--- a/bitbake/lib/bb/cache_extra.py
++++ b/bitbake/lib/bb/cache_extra.py
+@@ -35,6 +35,12 @@ class HobRecipeInfo(RecipeInfoCommon):
+     # such as (bb_cache.dat, bb_extracache_hob.dat) 
+     cachefile = "bb_extracache_" + classname +".dat"        
  
-+    def getAllKeysWithFlags(self, command, params):
-+        """
-+        Returns a dump of the global state. Call with
-+        variable flags to be retrieved as params.
-+        """
-+        flaglist = params[0]
-+        return command.cooker.getAllKeysWithFlags(flaglist)
-+    getAllKeysWithFlags.readonly = True
++    # override this member with the list of extra cache fields
++    # that this class will provide
++    cachefields = ['summary', 'license', 'section',
++            'description', 'homepage', 'bugtracker',
++            'prevision', 'files_info']
 +
-     def getVariable(self, command, params):
-         """
-         Read the value of a variable from data
+     def __init__(self, filename, metadata):
+ 
+         self.summary = self.getvar('SUMMARY', metadata)
 diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index fafa518..ff2af69 100644
+index dd45ae8..fafa518 100644
 --- a/bitbake/lib/bb/cooker.py
 +++ b/bitbake/lib/bb/cooker.py
-@@ -1154,6 +1154,21 @@ class BBCooker:
+@@ -481,6 +481,19 @@ class BBCooker:
+                 depend_tree["pn"][pn] = {}
+                 depend_tree["pn"][pn]["filename"] = fn
+                 depend_tree["pn"][pn]["version"] = version
++
++                # if we have extra caches, list all attributes they bring in
++                extra_info = []
++                for cache_class in self.caches_array:
++                    if type(cache_class) is type and issubclass(cache_class, bb.cache.RecipeInfoCommon) and hasattr(cache_class, 'cachefields'):
++                        cachefields = getattr(cache_class, 'cachefields', [])
++                        extra_info = extra_info + cachefields
++
++                # for all attributes stored, add them to the dependency tree
++                for ei in extra_info:
++                    depend_tree["pn"][pn][ei] = vars(self.recipecache)[ei][fn]
++
++
+             for dep in rq.rqdata.runq_depends[task]:
+                 depfn = taskdata.fn_index[rq.rqdata.runq_fnid[dep]]
+                 deppn = self.recipecache.pkg_fn[depfn]
+@@ -543,35 +556,30 @@ class BBCooker:
+         depend_tree["rdepends-pkg"] = {}
+         depend_tree["rrecs-pkg"] = {}
  
-         self.configuration.server_register_idlecallback(buildTargetsIdle, rq)
++        # if we have extra caches, list all attributes they bring in
++        extra_info = []
++        for cache_class in self.caches_array:
++            if type(cache_class) is type and issubclass(cache_class, bb.cache.RecipeInfoCommon) and hasattr(cache_class, 'cachefields'):
++                cachefields = getattr(cache_class, 'cachefields', [])
++                extra_info = extra_info + cachefields
++
+         for task in xrange(len(tasks_fnid)):
+             fnid = tasks_fnid[task]
+             fn = taskdata.fn_index[fnid]
+             pn = self.recipecache.pkg_fn[fn]
+-            version  = "%s:%s-%s" % self.recipecache.pkg_pepvpr[fn]
+-            summary = self.recipecache.summary[fn]
+-            lic = self.recipecache.license[fn]
+-            section = self.recipecache.section[fn]
+-            description = self.recipecache.description[fn]
+-            homepage = self.recipecache.homepage[fn]
+-            bugtracker = self.recipecache.bugtracker[fn]
+-            files_info = self.recipecache.files_info[fn]
+-            rdepends = self.recipecache.rundeps[fn]
+-            rrecs = self.recipecache.runrecs[fn]
+-            prevision = self.recipecache.prevision[fn]
+-            inherits = self.recipecache.inherits.get(fn, None)
++
+             if pn not in depend_tree["pn"]:
+                 depend_tree["pn"][pn] = {}
+                 depend_tree["pn"][pn]["filename"] = fn
++                version  = "%s:%s-%s" % self.recipecache.pkg_pepvpr[fn]
+                 depend_tree["pn"][pn]["version"] = version
+-                depend_tree["pn"][pn]["summary"] = summary
+-                depend_tree["pn"][pn]["license"] = lic
+-                depend_tree["pn"][pn]["section"] = section
+-                depend_tree["pn"][pn]["description"] = description
+-                depend_tree["pn"][pn]["inherits"] = inherits
+-                depend_tree["pn"][pn]["homepage"] = homepage
+-                depend_tree["pn"][pn]["bugtracker"] = bugtracker
+-                depend_tree["pn"][pn]["files_info"] = files_info
+-                depend_tree["pn"][pn]["revision"] = prevision
++                rdepends = self.recipecache.rundeps[fn]
++                rrecs = self.recipecache.runrecs[fn]
++                depend_tree["pn"][pn]["inherits"] = self.recipecache.inherits.get(fn, None)
++
++                # for all extra attributes stored, add them to the dependency tree
++                for ei in extra_info:
++                    depend_tree["pn"][pn][ei] = vars(self.recipecache)[ei][fn]
  
-+
-+    def getAllKeysWithFlags(self, flaglist):
-+        dump = {}
-+        for k in self.data.keys():
-+            try:
-+                v = self.data.getVar(k, True)
-+                if not k.startswith("__") and not isinstance(v, bb.data_smart.DataSmart):
-+                    dump[k] = { 'v' : v }
-+                    for d in flaglist:
-+                        dump[k][d] = self.data.getVarFlag(k, d)
-+            except Exception as e:
-+                print(e)
-+        return dump
-+
-+
-     def generateNewImage(self, image, base_image, package_queue, timestamp, description):
-         '''
-         Create a new image with a "require"/"inherit" base_image statement
+             if fnid not in seen_fnids:
+                 seen_fnids.append(fnid)
+diff --git a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+index 74d335c..b4d2a62 100644
+--- a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
++++ b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+@@ -690,7 +690,7 @@ class RecipeListModel(gtk.ListStore):
+             inherits = event_model["pn"][item]["inherits"]
+             summary = event_model["pn"][item]["summary"]
+             version = event_model["pn"][item]["version"]
+-            revision = event_model["pn"][item]["revision"]
++            revision = event_model["pn"][item]["prevision"]
+             homepage = event_model["pn"][item]["homepage"]
+             bugtracker = event_model["pn"][item]["bugtracker"]
+             filename = event_model["pn"][item]["filename"]
 -- 
 1.8.1.2
 
