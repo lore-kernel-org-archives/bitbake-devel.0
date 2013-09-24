@@ -1,20 +1,20 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
-	by mail.openembedded.org (Postfix) with ESMTP id 5AAF76CB80
+Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
+	by mail.openembedded.org (Postfix) with ESMTP id 318436CB88
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue, 24 Sep 2013 16:53:19 +0000 (UTC)
 Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga102.ch.intel.com with ESMTP; 24 Sep 2013 09:53:21 -0700
+	by azsmga101.ch.intel.com with ESMTP; 24 Sep 2013 09:53:21 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,972,1371106800"; d="scan'208";a="364948524"
+X-IronPort-AV: E=Sophos;i="4.90,972,1371106800"; d="scan'208";a="364948512"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
 	by azsmga001.ch.intel.com with ESMTP; 24 Sep 2013 09:53:09 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id D66FB561D59; Tue, 24 Sep 2013 17:53:04 +0100 (BST)
+	id BABD4561479; Tue, 24 Sep 2013 17:53:04 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Sep 2013 17:52:07 +0100
-Message-Id: <58cab4377ea911bcd7eeeb38132e962f481972db.1380041477.git.alexandru.damian@intel.com>
+Date: Tue, 24 Sep 2013 17:51:56 +0100
+Message-Id: <9b2e4c051bc03743c9e15bb2a69982688ef8074b.1380041477.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <22b15f86ec61c7577adab12d7ab4d42373519f5c.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
@@ -22,7 +22,7 @@ References: <cover.1380041477.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 38/94] bitbake: webhob: validate inputs for build api
+Subject: [PATCH 27/94] bitbake: webhob: record dependency info
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,75 +37,149 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 24 Sep 2013 16:53:20 -0000
 
-From: Calin Dragomir <calinx.l.dragomir@intel.com>
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-This patch validates the inputs for the build api
-by checking the following:
-- have only one colon;
-- have equal number of terms on both sides of the colon;
-- left side terms must be part of the Django model fields.
+This patch adds the task dependency information
+to the database, and displays it in a primitive form
+for verification.
 
-Signed-off-by: Calin Dragomir <calinx.l.dragomir@intel.com>
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bitbake/lib/webhob/bldviewer/views.py | 33 ++++++++++++++++++++++++++++++---
- 1 file changed, 30 insertions(+), 3 deletions(-)
+ bitbake/lib/bb/ui/buildinfohelper.py             |  9 ++++---
+ bitbake/lib/webhob/bldviewer/templates/task.html | 33 +++++++++---------------
+ bitbake/lib/webhob/bldviewer/views.py            |  9 ++++++-
+ 3 files changed, 26 insertions(+), 25 deletions(-)
 
+diff --git a/bitbake/lib/bb/ui/buildinfohelper.py b/bitbake/lib/bb/ui/buildinfohelper.py
+index 07296d9..f5e3f25 100644
+--- a/bitbake/lib/bb/ui/buildinfohelper.py
++++ b/bitbake/lib/bb/ui/buildinfohelper.py
+@@ -8,7 +8,9 @@ import re
+ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webhob.whbmain.settings")
+ 
+ import webhob.whbmain.settings as whb_django_settings
+-from webhob.orm.models import Machine, Build, Task, Recipe, Build_Layer, Layer, Package, Task_Dependency, Package_Dependency
++from webhob.orm.models import Machine, Build, Task, Recipe, Build_Layer, Layer, Package
++from webhob.orm.models import Task_Dependency
++
+ 
+ class ORMWrapper(object):
+     """ This class creates the dictionaries needed to store information in the database
+@@ -429,8 +431,9 @@ class BuildInfoHelper(object):
+             return task_obj
+ 
+         for taskdesc in event._depgraph['tdepends']:
+-            _save_a_task(taskdesc)
++            target = _save_a_task(taskdesc)
+             for taskdesc1 in event._depgraph['tdepends'][taskdesc]:
+-                _save_a_task(taskdesc1)
++                dep = _save_a_task(taskdesc1)
++                Task_Dependency.objects.get_or_create( task = target, depends_on = dep )
+ 
+         del self.internal_state['recipes']
+diff --git a/bitbake/lib/webhob/bldviewer/templates/task.html b/bitbake/lib/webhob/bldviewer/templates/task.html
+index 7410489..1797028 100644
+--- a/bitbake/lib/webhob/bldviewer/templates/task.html
++++ b/bitbake/lib/webhob/bldviewer/templates/task.html
+@@ -17,57 +17,47 @@
+ 			<tr>
+ 			<th>Order</th>
+ 			<th>Task</th>
+-			<th>Recipe</th>
+ 			<th>Recipe Version</th>
+ 			<th>Task Type</th>
+ 			<th>Outcome</th>
+ 			<th>Errors</th>
+ 			<th>Warnings</th>
+ 			<th>Time</th>
+-			<th>Log</th>
+-			<th>Work directory</th>
+ 			<th>CPU usage</th>
+ 			<th>Disk I/O</th>
+-			<th>Sstate Checksum</th>
+-			<th>Path to sstate object</th>
+-			<th>Source URL</th>
+ 			<th>Script type</th>
+ 			<th>File path</th>
+-			<th>Line number</th>
+-			<th>Python Stack Trace</th>
+-			<th>Sstate Result</th>
++            <th>Depends</th>
+ 			</tr>
+ 
+ 			{% for task in tasks %}
+ 
+ 				<tr>
+ 				<td>{{task.order}}</td>
+-				<td>{{task.task_name}}</td>
+-				<td>{{task.recipe.name}}</td>
++				<td><a name="{{task.recipe.name}}.{{task.task_name}}">
++				{{task.recipe.name}}.{{task.task_name}}</a></td>
+ 				<td>{{task.recipe.version}}</td>
+ 
+ 				{% if task.task_executed %}
+-					<td>Executed</td>
++				<td>Executed</td>
+ 				{% else %}
+-					<td>Prebuilt</td>
++				<td>Prebuilt</td>
+ 				{% endif %}
+ 
+ 				<td>{{task.get_outcome_display}}</td>
+ 				<td>{{task.errors_no}}</td>
+ 				<td>{{task.warnings_no}}</td>
+ 				<td>{{task.elapsed_time}}</td>
+-				<td>{{task.log_file}}</td>
+-				<td>{{task.work_directory}}</td>
+ 				<td>{{task.cpu_usage}}</td>
+ 				<td>{{task.disk_io}}</td>
+-				<td>{{task.sstate_checksum}}</td>
+-				<td>{{task.path_to_sstate_obj}}</td>
+-				<td>{{task.source_url}}</td>
+ 				<td>{{task.get_script_type_display}}</td>
+ 				<td>{{task.recipe.file_path}}</td>
+-				<td>{{task.line_number}}</td>
+-				<td>{{task.py_stack_trace}}</td>
+-				<td>{{task.get_sstate_result_display}}</td>
++                <td>
++                {% for tt in task.depends_on %}
++                    <a href="#{{tt.recipe.name}}.{{tt.task_name}}">
++                    {{tt.recipe.name}}.{{tt.task_name}}</a><br/>
++                {% endfor %}
++                </td>
+ 				</tr>
+ 
+ 			{% endfor %}
+@@ -79,3 +69,4 @@
+ </body>
+ 
+ </html>
++
 diff --git a/bitbake/lib/webhob/bldviewer/views.py b/bitbake/lib/webhob/bldviewer/views.py
-index 71e95b4..a71aebc 100644
+index f40d396..eb901a4 100644
 --- a/bitbake/lib/webhob/bldviewer/views.py
 +++ b/bitbake/lib/webhob/bldviewer/views.py
-@@ -52,7 +52,7 @@ def layer_versions_recipes(request, layerversion_id):
- 
- import json
- from django.core import serializers
--from django.http import HttpResponse
-+from django.http import HttpResponse, HttpResponseBadRequest
+@@ -1,5 +1,5 @@
+ from django.shortcuts import render
+-from orm.models import Build, Task, Layer
++from orm.models import Build, Task, Layer, Task_Dependency
  
  
- def builds(request):
-@@ -69,8 +69,13 @@ def builds(request):
-     except ValueError:
-         offset = 0
+ def build(request):
+@@ -14,6 +14,13 @@ def task(request, build_id):
+     template = 'task.html'
  
--    ordering_string = request.GET.get('orderby', '')
--    filter_string = request.GET.get('filter', '')
-+    ordering_string, invalid = _validate_input(request.GET.get('orderby', ''))
-+    if invalid:
-+        return HttpResponseBadRequest()
+     tasks = Task.objects.filter(build=build_id)
++    task_depends = Task_Dependency.objects.filter(task__in=tasks)
 +
-+    filter_string, invalid = _validate_input(request.GET.get('filter', ''))
-+    if invalid:
-+        return HttpResponseBadRequest()
++    for t in tasks:
++        t.depends_on = []
++        for k in task_depends:
++            if t == k.task:
++                t.depends_on.append(k.depends_on)
  
-     if filter_string:
-         filter_terms = _get_filtering_terms(filter_string)
-@@ -111,3 +116,25 @@ def _get_filtering_terms(filter_string):
-     values = search_terms[1].split(',')
+     context = {'tasks': tasks}
  
-     return dict(zip(keys, values))
-+
-+def _validate_input(input):
-+    invalid = 0
-+
-+    if input:
-+        input_list = input.split(":")
-+
-+        # Check we have only one colon
-+        if len(input.split(":")) != 2:
-+            invalid = 1
-+
-+        # Check we have an equal number of terms both sides of the colon
-+        if len(input_list[0].split(',')) != len(input_list[1].split(',')):
-+            invalid = 1
-+
-+        # Check we are looking for a valid field
-+        valid_fields = Build._meta.get_all_field_names()
-+        for field in input_list[0].split(','):
-+            if field not in valid_fields:
-+                invalid = 1
-+
-+    return input, invalid
 -- 
 1.8.1.2
 
