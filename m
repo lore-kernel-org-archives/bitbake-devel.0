@@ -1,20 +1,20 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
-	by mail.openembedded.org (Postfix) with ESMTP id 584CD6CB2B
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id BDD216CABF
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue, 24 Sep 2013 16:53:08 +0000 (UTC)
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 24 Sep 2013 09:53:09 -0700
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 24 Sep 2013 09:53:11 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="298814489"
+X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="382902455"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by AZSMGA002.ch.intel.com with ESMTP; 24 Sep 2013 09:53:01 -0700
+	by orsmga001.jf.intel.com with ESMTP; 24 Sep 2013 09:53:09 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id 7A00E560FA1; Tue, 24 Sep 2013 17:53:04 +0100 (BST)
+	id DE0B95621CA; Tue, 24 Sep 2013 17:53:04 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Sep 2013 17:51:32 +0100
-Message-Id: <2ce49c1a5817f9c2d7b16012c91f745598517018.1380041477.git.alexandru.damian@intel.com>
+Date: Tue, 24 Sep 2013 17:52:10 +0100
+Message-Id: <ca1b3964ce8ec36f09b020ec177e334bac7e2a86.1380041477.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <22b15f86ec61c7577adab12d7ab4d42373519f5c.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
@@ -22,7 +22,7 @@ References: <cover.1380041477.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 03/94] webhob: create Django models for webhob
+Subject: [PATCH 41/94] bitbake: webhob: improve startup script
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,236 +37,131 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 24 Sep 2013 16:53:08 -0000
 
-From: Calin Dragomir <calinx.l.dragomir@intel.com>
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Patch adds the models we need in order to store all the information
-we need about the builds in the database using the Django ORM.
+A couple of modification targeted at making the
+system start/stop script more resilient.
+
+Also, it now checks for the correct Django version.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bitbake/lib/webhob/orm/__init__.py     |   0
- bitbake/lib/webhob/orm/models.py       | 162 +++++++++++++++++++++++++++++++++
- bitbake/lib/webhob/orm/tests.py        |  16 ++++
- bitbake/lib/webhob/orm/views.py        |   1 +
- bitbake/lib/webhob/whbmain/settings.py |   1 +
- 5 files changed, 180 insertions(+)
- create mode 100644 bitbake/lib/webhob/orm/__init__.py
- create mode 100644 bitbake/lib/webhob/orm/models.py
- create mode 100644 bitbake/lib/webhob/orm/tests.py
- create mode 100644 bitbake/lib/webhob/orm/views.py
+ bitbake/bin/webhob | 53 ++++++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 42 insertions(+), 11 deletions(-)
 
-diff --git a/bitbake/lib/webhob/orm/__init__.py b/bitbake/lib/webhob/orm/__init__.py
-new file mode 100644
-index 0000000..e69de29
-diff --git a/bitbake/lib/webhob/orm/models.py b/bitbake/lib/webhob/orm/models.py
-new file mode 100644
-index 0000000..43b4319
---- /dev/null
-+++ b/bitbake/lib/webhob/orm/models.py
-@@ -0,0 +1,162 @@
-+from django.db import models
-+
-+
-+class Builds(models.Model):
-+
-+    BUILD_OUTCOME = (
-+        (0, 'Succeded'),
-+        (1, 'Failed'),
-+    )
-+
-+    uuid = models.CharField(max_length=100, unique=True)
-+    target = models.CharField(max_length=100)
-+    host_machine = models.CharField(max_length=100)
-+    distro = models.CharField(max_length=100)
-+    distro_version = models.CharField(max_length=100)
-+    host_system = models.CharField(max_length=100)
-+    host_distribution = models.CharField(max_length=100)
-+    target_system = models.ForeignKey('Machines', related_name='builds_machines')
-+    layers = models.ManyToManyField('Layers')
-+    started_on = models.DateTimeField()
-+    completed_on = models.DateTimeField()
-+    outcome = models.IntegerField(choices=BUILD_OUTCOME)
-+    errors_no = models.IntegerField()
-+    warnings_no = models.IntegerField()
-+    cpu_usage = models.IntegerField()
-+    disk_io = models.DecimalField(max_digits=20, decimal_places=10)
-+    cooker_log_path = models.CharField(max_length=500)
-+    build_name = models.CharField(max_length=100)
-+    bitbake_version = models.CharField(max_length=50)
-+
-+
-+class Tasks(models.Model):
-+
-+    SSTATE_RESULT = (
-+        (0, 'Not Applicable'), # For rest of tasks, but they still need checking.
-+        (1, 'Unavailable'), # it is a miss
-+        (2, 'Failed'), # there was a pkg, but the script failed
-+        (3, 'Restored'), # succesfully restored
-+    )
-+
-+    TASK_CODING = (
-+        (0, 'Python'),
-+        (1, 'Shell'),
-+    )
-+
-+    TASK_OUTCOME = (
-+        (0, 'Covered'),
-+        (1, 'Sstate'),
-+        (2, 'Existing'),
-+        (3, 'Succeded'),
-+        (4, 'Failed'),
-+    )
-+
-+    uuid = models.ForeignKey(Builds, to_field='uuid', related_name='tasks_builds')
-+    order = models.IntegerField()
-+    task_executed = models.BooleanField() # True means Executed, False means Prebuilt
-+    outcome = models.IntegerField(choices=TASK_OUTCOME)
-+    sstate_checksum = models.CharField(max_length=100)
-+    path_to_sstate_obj = models.FilePathField(max_length=500, blank=True)
-+    recipe = models.ForeignKey('Recipes', related_name='builds_recipes')
-+    task_name = models.CharField(max_length=100)
-+    source_url = models.FilePathField(max_length=200)
-+    log_file = models.FilePathField(max_length=200, blank=True)
-+    work_directory = models.FilePathField(max_length=200)
-+    script_type = models.IntegerField(choices=TASK_CODING)
-+    file_path = models.FilePathField(max_length=200)
-+    line_number = models.IntegerField()
-+    py_stack_trace = models.TextField()
-+    disk_io = models.DecimalField(max_digits=20, decimal_places=10)
-+    cpu_usage = models.IntegerField()
-+    elapsed_time = models.CharField(max_length=50)
-+    errors_no = models.IntegerField()
-+    warnings_no = models.IntegerField()
-+    error = models.TextField()
-+    warning = models.TextField()
-+    sstate_result = models.IntegerField(choices=SSTATE_RESULT)
-+    diffsigs = models.CharField(max_length=500)
-+
-+
-+class Task_Dependencies(models.Model):
-+    task = models.ForeignKey(Tasks, related_name='task_dependencies_task')
-+    depends_on = models.ForeignKey(Tasks, related_name='task_dependencies_depends')
-+
-+
-+class Targets(models.Model):
-+    uuid = models.ForeignKey(Builds, to_field='uuid',  related_name='targets_builds')
-+    is_image = models.BooleanField()
-+
-+
-+class Artifacts(models.Model):
-+    uuid = models.ForeignKey(Builds, to_field='uuid', related_name='artifacts_builds')
-+    target = models.ForeignKey(Targets, related_name='artifacts_targets')
-+    file_name = models.CharField(max_length=100)
-+    file_size = models.IntegerField()
-+
-+
-+class Packages_In_Images(models.Model):
-+    package = models.ForeignKey('Packages', related_name='packages_in_images_package')
-+    target = models.ForeignKey(Targets, related_name='packages_in_images_target')
-+
-+
-+class Packages(models.Model):
-+    package_id = models.IntegerField()
-+    recipe = models.ForeignKey('Recipes', related_name='packages_recipes')
-+    name = models.CharField(max_length=100)
-+    version = models.CharField(max_length=100)
-+    size = models.IntegerField()
-+
-+
-+class Package_Dependencies(models.Model):
-+    package = models.ForeignKey(Packages, related_name='package_dependencies_package')
-+    depends_on = models.ForeignKey(Packages, related_name='package_dependencies_depends')
-+
-+
-+class Filelist(models.Model):
-+    package = models.ForeignKey(Packages, related_name='filelist_packages')
-+    complete_file_path = models.FilePathField(max_length=200, blank=True)
-+    file_size = models.IntegerField()
-+
-+
-+class Recipes(models.Model):
-+    name = models.CharField(max_length=100)
-+    version = models.CharField(max_length=100)
-+    layer = models.ForeignKey('Layers', related_name='recipes_layers')
-+    summary = models.CharField(max_length=100)
-+    description = models.CharField(max_length=100)
-+    section = models.CharField(max_length=100)
-+    license = models.CharField(max_length=200)
-+    licensing_info = models.TextField()
-+    homepage = models.URLField()
-+    bugtracker = models.URLField()
-+    author = models.CharField(max_length=100)
-+    file_path = models.FilePathField(max_length=200)
-+
-+
-+class Recipe_Dependencies(models.Model):
-+    recipe = models.ForeignKey(Recipes, related_name='recipe_dependencies_recipe')
-+    depends_on = models.ForeignKey(Recipes, related_name='recipe_dependencies_depends')
-+
-+
-+class Layers(models.Model):
-+    name = models.CharField(max_length=100)
-+    branch = models.CharField(max_length=50)
-+    commit = models.CharField(max_length=100)
-+    priority = models.IntegerField()
-+    link_to_oe_core = models.URLField()
-+
-+
-+class Variables(models.Model):
-+    uuid = models.ForeignKey(Builds, to_field='uuid', related_name='variables_builds')
-+    variable_name = models.CharField(max_length=100)
-+    variable_value = models.TextField()
-+    file = models.FilePathField(max_length=200)
-+    changed = models.BooleanField()
-+    human_readable_name = models.CharField(max_length=200)
-+    description = models.TextField()
-+
-+
-+class Machines(models.Model):
-+    name = models.CharField(max_length=100)
-+    description = models.TextField()
-+
-diff --git a/bitbake/lib/webhob/orm/tests.py b/bitbake/lib/webhob/orm/tests.py
-new file mode 100644
-index 0000000..501deb7
---- /dev/null
-+++ b/bitbake/lib/webhob/orm/tests.py
-@@ -0,0 +1,16 @@
-+"""
-+This file demonstrates writing tests using the unittest module. These will pass
-+when you run "manage.py test".
-+
-+Replace this with more appropriate tests for your application.
-+"""
-+
-+from django.test import TestCase
-+
-+
-+class SimpleTest(TestCase):
-+    def test_basic_addition(self):
-+        """
-+        Tests that 1 + 1 always equals 2.
-+        """
-+        self.assertEqual(1 + 1, 2)
-diff --git a/bitbake/lib/webhob/orm/views.py b/bitbake/lib/webhob/orm/views.py
-new file mode 100644
-index 0000000..60f00ef
---- /dev/null
-+++ b/bitbake/lib/webhob/orm/views.py
-@@ -0,0 +1 @@
-+# Create your views here.
-diff --git a/bitbake/lib/webhob/whbmain/settings.py b/bitbake/lib/webhob/whbmain/settings.py
-index 67aaf69..71bba4f 100644
---- a/bitbake/lib/webhob/whbmain/settings.py
-+++ b/bitbake/lib/webhob/whbmain/settings.py
-@@ -123,6 +123,7 @@ INSTALLED_APPS = (
-     # 'django.contrib.admin',
-     # Uncomment the next line to enable admin documentation:
-     # 'django.contrib.admindocs',
-+    'orm',
- )
+diff --git a/bitbake/bin/webhob b/bitbake/bin/webhob
+index 44a25cb..7b74465 100755
+--- a/bitbake/bin/webhob
++++ b/bitbake/bin/webhob
+@@ -22,13 +22,13 @@
  
- # A sample logging configuration. The only tangible logging
+ # Helper function to kill a background webhob development server
+ 
+-function webserverKillAllComponents()
++function webserverKillAll()
+ {
+ 	local pidfile
+ 	for pidfile in ${BUILDDIR}/whbmain.pid; do
+ 		if [ -f ${pidfile} ]; then
+ 		while kill -0 $(< ${pidfile}) 2>/dev/null; do
+-			kill -SIGTERM -$(< ${pidfile})
++			kill -SIGTERM -$(< ${pidfile}) 2>/dev/null
+ 			sleep 1;
+ 		done;
+ 		rm  ${pidfile}
+@@ -36,6 +36,15 @@ function webserverKillAllComponents()
+ 	done
+ }
+ 
++
++function webserverStartAll()
++{
++        python $BBBASEDIR/lib/webhob/manage.py syncdb || (echo "Failed db sync, stopping system start" 1>&2 && return 2)
++        python $BBBASEDIR/lib/webhob/manage.py runserver </dev/null >${BUILDDIR}/whbmain.log 2>&1 & echo $! >${BUILDDIR}/whbmain.pid
++        return 0
++}
++
++
+ # We make sure we're running in the current shell and in a good environment
+ 
+ if [ -z "$ZSH_NAME" ] && [ `basename "$0"` = `basename $BASH_SOURCE` ]; then
+@@ -50,6 +59,16 @@ fi
+ 
+ BBBASEDIR=`dirname ${BASH_SOURCE}`/..
+ 
++
++# Verify prerequisites
++
++if ! echo "import django; print (1,4,5) == django.VERSION[0:3]" | python 2>/dev/null | grep True >/dev/null; then
++    echo -e "This program needs Django 1.4.5. Please install with\n\nsudo pip install django==1.4.5"
++    return 2
++fi
++
++
++
+ # Determine the action. If specified by arguments, fine, if not, toggle it
+ if [ "x$1" == "xstart" ] || [ "x$1" == "xstop" ]; then
+     CMD="$1"
+@@ -61,6 +80,13 @@ else
+     fi;
+ fi
+ 
++NODSI=0
++if [ "x$2" == "xnodsi" ]; then
++    NODSI=1
++fi
++
++echo "The system will $CMD."
++
+ # Make sure it's safe to run by checking bitbake lock
+ 
+ lock=1
+@@ -69,11 +95,11 @@ if [ -e $BUILDDIR/bitbake.lock ]; then
+ fi
+ 
+ if [ ${CMD} == "start" ] && ( [ $lock -eq 0 ] || [ -e $BUILDDIR/whbmain.pid ] ); then
+-    echo "Error: bitbake lock state error. System may be already on." 2>&1
++    echo "Error: bitbake lock state error. System is already on." 2>&1
+     return 3
+ elif [ ${CMD} == "stop" ] && ( [ $lock -eq 1 ] || ! [ -e $BUILDDIR/whbmain.pid ] ) ; then
+-    echo "Error: bitbake lock state error. System may be already off.
+-manually stop system with bitbake -m / webserverKillAllComponents" 2>&1
++    echo "Error: bitbake lock state error. Trying to stop a stopped system ?
++manually stop system with bitbake -m / webserverKill" 2>&1
+     return 3
+ fi
+ 
+@@ -82,19 +108,24 @@ fi
+ 
+ case $CMD in
+     start )
++        webserverStartAll || return 4
+         unset BBSERVER
+-        python $BBBASEDIR/lib/webhob/manage.py syncdb || (echo "Failed db sync, stopping system start" 1>&2 && return 0)
+         bitbake --server-only -t xmlrpc -B localhost:8200
+         export BBSERVER=localhost:8200
+-        bitbake --observe-only -u dsi >/dev/null 2>&1 & echo $! >${BUILDDIR}/dsi.pid
+-        python $BBBASEDIR/lib/webhob/manage.py runserver </dev/null >${BUILDDIR}/whbmain.log 2>&1 & echo $! >${BUILDDIR}/whbmain.pid
++        if [ $NODSI == 0 ]; then        # we start the DSI only if not inhibited
++            bitbake --observe-only -u dsi >/dev/null 2>&1 & echo $! >${BUILDDIR}/dsi.pid
++        fi
+     ;;
+     stop )
+-        kill $(< ${BUILDDIR}/dsi.pid )
+-        rm ${BUILDDIR}/dsi.pid
++        if [ -f ${BUILDDIR}/dsi.pid ]; then
++            kill $(< ${BUILDDIR}/dsi.pid )
++            rm ${BUILDDIR}/dsi.pid
++        fi
+         bitbake -m
+         unset BBSERVER
+-        webserverKillAllComponents
++        webserverKillAll
++    ;;
+ esac
+ 
++echo "Successful ${CMD}."
+ 
 -- 
 1.8.1.2
 
