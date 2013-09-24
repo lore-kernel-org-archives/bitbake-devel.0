@@ -1,20 +1,20 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id E724E6CB72
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 006C16CB78
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue, 24 Sep 2013 16:53:13 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 24 Sep 2013 09:53:16 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 24 Sep 2013 09:53:15 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="382902517"
+X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="406511917"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by orsmga001.jf.intel.com with ESMTP; 24 Sep 2013 09:53:14 -0700
+	by fmsmga002.fm.intel.com with ESMTP; 24 Sep 2013 09:53:14 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id 74CB6562D68; Tue, 24 Sep 2013 17:53:05 +0100 (BST)
+	id 6E3B4562D44; Tue, 24 Sep 2013 17:53:05 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Sep 2013 17:53:03 +0100
-Message-Id: <9b35cc5e33eff429612f8274dfed5aec02129313.1380041477.git.alexandru.damian@intel.com>
+Date: Tue, 24 Sep 2013 17:53:00 +0100
+Message-Id: <7f44eff47ff6a513133a83c80a02fd439c7c3b39.1380041477.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <22b15f86ec61c7577adab12d7ab4d42373519f5c.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
@@ -22,7 +22,7 @@ References: <cover.1380041477.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 94/94] bitbake: webhob: do not set timezones
+Subject: [PATCH 91/94] bitbake: webhob: collect recipe licensing info
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,72 +39,78 @@ X-List-Received-Date: Tue, 24 Sep 2013 16:53:15 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Preventing webhob setting a default timezone.
-As such, it will always use the current time
-for the local computer.
+Collecting licensing info from log data.
+The logs are generated in insane.bbclass.
 
-[YOCTO #5186]
+Modified Simple interface to display licensing file.
+
+[YOCTO #5194]
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bitbake/lib/webhob/whbmain/settings.py | 26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+ bitbake/lib/bb/ui/buildinfohelper.py               | 7 +++++++
+ bitbake/lib/bb/ui/dsi.py                           | 2 +-
+ bitbake/lib/webhob/bldviewer/templates/recipe.html | 2 ++
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/webhob/whbmain/settings.py b/bitbake/lib/webhob/whbmain/settings.py
-index d470328..c5222e5 100644
---- a/bitbake/lib/webhob/whbmain/settings.py
-+++ b/bitbake/lib/webhob/whbmain/settings.py
-@@ -20,16 +20,6 @@ DATABASES = {
-     }
- }
+diff --git a/bitbake/lib/bb/ui/buildinfohelper.py b/bitbake/lib/bb/ui/buildinfohelper.py
+index c8820a5..a3a50a3 100644
+--- a/bitbake/lib/bb/ui/buildinfohelper.py
++++ b/bitbake/lib/bb/ui/buildinfohelper.py
+@@ -654,6 +654,13 @@ class BuildInfoHelper(object):
+         self.orm_wrapper.create_logmessage(log_information)
  
--# If we're using sqlite, we need to tweak the performance a bit
--from django.db.backends.signals import connection_created
--def activate_synchronous_off(sender, connection, **kwargs):
--    if connection.vendor == 'sqlite':
--        cursor = connection.cursor()
--        cursor.execute('PRAGMA synchronous = 0;')
--connection_created.connect(activate_synchronous_off)
--#
--
--
- # Hosts/domain names that are valid for this site; required if DEBUG is False
- # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
- ALLOWED_HOSTS = []
-@@ -38,7 +28,9 @@ ALLOWED_HOSTS = []
- # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
- # although not all choices may be available on all operating systems.
- # In a Windows environment this must be set to your system time zone.
--TIME_ZONE = 'America/Chicago'
+     def store_log_event(self, event):
++        # look up license files info from insane.bbclass
++        m = re.match("([^:]*): md5 checksum matched for ([^;]*)", event.msg)
++        if m:
++            (pn, fn) = m.groups()
++            self.internal_state['recipes'][pn].licensing_info = fn
++            self.internal_state['recipes'][pn].save()
 +
-+# Always use local computer's time zone
-+TIME_ZONE = ''
+         if event.levelno < format.WARNING:
+             return
+         if not 'build' in self.internal_state:
+diff --git a/bitbake/lib/bb/ui/dsi.py b/bitbake/lib/bb/ui/dsi.py
+index 22cff5d..434a6dd 100644
+--- a/bitbake/lib/bb/ui/dsi.py
++++ b/bitbake/lib/bb/ui/dsi.py
+@@ -322,6 +322,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+                 continue
  
- # Language code for this installation. All choices can be found here:
- # http://www.i18nguy.com/unicode/language-identifiers.html
-@@ -54,6 +46,7 @@ USE_I18N = True
- # calendars according to the current locale.
- USE_L10N = True
+             if isinstance(event, logging.LogRecord):
++                buildinfohelper.store_log_event(event)
+                 if event.levelno >= format.ERROR:
+                     errors = errors + 1
+                     return_value = 1
+@@ -333,7 +334,6 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+                 if event.taskpid != 0 and event.levelno <= format.NOTE:
+                     continue
  
-+
- # If you set this to False, Django will not use timezone-aware datetimes.
- USE_TZ = True
+-                buildinfohelper.store_log_event(event)
+                 logger.handle(event)
+                 continue
  
-@@ -167,3 +160,14 @@ LOGGING = {
-         },
-     }
- }
-+
-+# If we're using sqlite, we need to tweak the performance a bit
-+from django.db.backends.signals import connection_created
-+def activate_synchronous_off(sender, connection, **kwargs):
-+    if connection.vendor == 'sqlite':
-+        cursor = connection.cursor()
-+        cursor.execute('PRAGMA synchronous = 0;')
-+connection_created.connect(activate_synchronous_off)
-+#
-+
-+
+diff --git a/bitbake/lib/webhob/bldviewer/templates/recipe.html b/bitbake/lib/webhob/bldviewer/templates/recipe.html
+index ec8a46d..a624370 100644
+--- a/bitbake/lib/webhob/bldviewer/templates/recipe.html
++++ b/bitbake/lib/webhob/bldviewer/templates/recipe.html
+@@ -18,6 +18,7 @@
+             <th>Description</th>
+             <th>Section</th>
+             <th>License</th>
++            <th>License file</th>
+             <th>Homepage</th>
+             <th>Bugtracker</th>
+             <th>Author</th>
+@@ -34,6 +35,7 @@
+             <td>{{recipe.description}}</td>
+             <td>{{recipe.section}}</td>
+             <td>{{recipe.license}}</td>
++            <td>{{recipe.licensing_info}}</td>
+             <td>{{recipe.homepage}}</td>
+             <td>{{recipe.bugtracker}}</td>
+             <td>{{recipe.author}}</td>
 -- 
 1.8.1.2
 
