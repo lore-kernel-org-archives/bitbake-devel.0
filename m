@@ -1,20 +1,20 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 43DFA6CB6B
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 5D4336CB6D
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue, 24 Sep 2013 16:53:12 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 24 Sep 2013 09:53:14 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga102.jf.intel.com with ESMTP; 24 Sep 2013 09:50:08 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="382902495"
+X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="400405775"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by orsmga001.jf.intel.com with ESMTP; 24 Sep 2013 09:53:13 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 24 Sep 2013 09:53:13 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id 553DF562BFB; Tue, 24 Sep 2013 17:53:05 +0100 (BST)
+	id 6178E562CF7; Tue, 24 Sep 2013 17:53:05 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Sep 2013 17:52:50 +0100
-Message-Id: <e40d76bcffc1e30e4c370a497a9f4d57cbf4116f.1380041477.git.alexandru.damian@intel.com>
+Date: Tue, 24 Sep 2013 17:52:55 +0100
+Message-Id: <65c8e913c39fcaed29ed8917b7e9e6dc60814c40.1380041477.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <22b15f86ec61c7577adab12d7ab4d42373519f5c.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
@@ -22,7 +22,7 @@ References: <cover.1380041477.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 81/94] bitbake: webhob: better help message in startup script
+Subject: [PATCH 86/94] bitbake: cooker: add the inherits attribute to the dependency tree
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,35 +39,26 @@ X-List-Received-Date: Tue, 24 Sep 2013 16:53:13 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Improved the error during stop message in the
-startup script as the previous message was confusing
-to the users.
+The built dependency tree has to have the inherits attribute
+so that the UIs can use and save this information.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bitbake/bin/webhob | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ bitbake/lib/bb/cooker.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/bitbake/bin/webhob b/bitbake/bin/webhob
-index 0c4d9ea..7bc9759 100755
---- a/bitbake/bin/webhob
-+++ b/bitbake/bin/webhob
-@@ -104,7 +104,14 @@ if [ ${CMD} == "start" ] && ( [ $lock -eq 0 ] || [ -e $BUILDDIR/whbmain.pid ] );
-     return 3
- elif [ ${CMD} == "stop" ] && ( [ $lock -eq 1 ] || ! [ -e $BUILDDIR/whbmain.pid ] ) ; then
-     echo "Error: bitbake lock state error. Trying to stop a stopped system ?
--manually stop system with bitbake -m / webserverKill" 2>&1
-+If you think the system is hanged up, you can try to manually stop system with the commands
-+
-+# BBSERVER=localhost:8200 bitbake -m
-+
-+and
-+
-+# webserverKillAll
-+" 2>&1
-     return 3
- fi
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index ff2af69..9ed22c7 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -481,6 +481,7 @@ class BBCooker:
+                 depend_tree["pn"][pn] = {}
+                 depend_tree["pn"][pn]["filename"] = fn
+                 depend_tree["pn"][pn]["version"] = version
++                depend_tree["pn"][pn]["inherits"] = self.recipecache.inherits.get(fn, None)
  
+                 # if we have extra caches, list all attributes they bring in
+                 extra_info = []
 -- 
 1.8.1.2
 
