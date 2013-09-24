@@ -1,20 +1,20 @@
 Return-Path: <ddalex@intel.com>
 Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
-	by mail.openembedded.org (Postfix) with ESMTP id 1E3AA6CB82
+	by mail.openembedded.org (Postfix) with ESMTP id 32AFB6CB8F
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 Sep 2013 16:53:21 +0000 (UTC)
+	Tue, 24 Sep 2013 16:53:19 +0000 (UTC)
 Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 24 Sep 2013 09:53:21 -0700
+	by azsmga101.ch.intel.com with ESMTP; 24 Sep 2013 09:53:17 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,972,1371106800"; d="scan'208";a="364948553"
+X-IronPort-AV: E=Sophos;i="4.90,972,1371106800"; d="scan'208";a="364948483"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by azsmga001.ch.intel.com with ESMTP; 24 Sep 2013 09:53:12 -0700
+	by azsmga001.ch.intel.com with ESMTP; 24 Sep 2013 09:53:04 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id 346D45628CF; Tue, 24 Sep 2013 17:53:05 +0100 (BST)
+	id 8FA875610C5; Tue, 24 Sep 2013 17:53:04 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Sep 2013 17:52:37 +0100
-Message-Id: <c592a5c9efa95210f483162cf7adc02ab0d86b89.1380041477.git.alexandru.damian@intel.com>
+Date: Tue, 24 Sep 2013 17:51:40 +0100
+Message-Id: <92aa0e5d0233ab5c5dbd3a03b92dd05c97d9a4f7.1380041477.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <22b15f86ec61c7577adab12d7ab4d42373519f5c.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
@@ -22,7 +22,7 @@ References: <cover.1380041477.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 68/94] bitbake: dsi: use get vars command to store configuration
+Subject: [PATCH 11/94] bitbake: webhob: changes to build information table
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,85 +37,82 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 24 Sep 2013 16:53:24 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Calin Dragomir <calinx.l.dragomir@intel.com>
 
-Patch to store variable configuration for a build using
-the getAllKeysWithFlags command. Only variables that are
-not functions are saved.
+It was decided that disk_io and cpu usage information are not very
+relevant for a full build, so these fields have been droped from
+our models and replaced with output information (image_fstypes field)
 
-Minor fixes to the Variable model as to match data we receive.
-
+Signed-off-by: Calin Dragomir <calinx.l.dragomir@intel.com>
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bitbake/lib/bb/ui/buildinfohelper.py | 15 +++++++++++++--
- bitbake/lib/webhob/orm/models.py     |  6 +++---
- 2 files changed, 16 insertions(+), 5 deletions(-)
+ bitbake/lib/bb/ui/buildinfohelper.py              | 6 ++----
+ bitbake/lib/webhob/bldviewer/templates/build.html | 6 ++----
+ bitbake/lib/webhob/orm/models.py                  | 3 +--
+ 3 files changed, 5 insertions(+), 10 deletions(-)
 
 diff --git a/bitbake/lib/bb/ui/buildinfohelper.py b/bitbake/lib/bb/ui/buildinfohelper.py
-index 6f4789c..89d5f15 100644
+index 57e404b..e1ebd41 100644
 --- a/bitbake/lib/bb/ui/buildinfohelper.py
 +++ b/bitbake/lib/bb/ui/buildinfohelper.py
-@@ -9,7 +9,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webhob.whbmain.settings")
- 
- import webhob.whbmain.settings as whb_django_settings
- from webhob.orm.models import Machine, Build, Task, Recipe, Layer_Version, Layer, Package, LogMessage
--from webhob.orm.models import Task_Dependency, Package_Dependency
-+from webhob.orm.models import Task_Dependency, Package_Dependency, Variable
- from bb.msg import BBLogFormatter as format
- 
- class ORMWrapper(object):
-@@ -146,6 +146,15 @@ class ORMWrapper(object):
- 
-         return log_object.save()
- 
-+    def save_build_variables(self, build_obj, vardump):
-+        for k in vardump:
-+            if not bool(vardump[k]['func']):
-+                Variable.objects.create( build = build_obj,
-+                    variable_name = k,
-+                    variable_value = vardump[k]['v'],
-+                    description = vardump[k]['doc'])
-+
-+
- class BuildInfoHelper(object):
-     """ This class gathers the build information from the server and sends it
-         towards the ORM wrapper for storing in the database
-@@ -363,13 +372,15 @@ class BuildInfoHelper(object):
-         build_obj = self.orm_wrapper.create_build_object(build_information)
-         self.internal_state['build'] = build_obj
-         self.internal_state['target'] = build_information['target']
-+        # Load layer information for the build
-         self.internal_state['layer_versions'] = []
-         for layer_object in self.internal_state['layers']:
-             layer_version_information = self._get_layer_version_information(layer_object)
-             self.internal_state['layer_versions'].append(self.orm_wrapper.get_layer_version_object(layer_version_information))
- 
-         del self.internal_state['layers']
--
-+        # Save build configuration
-+        self.orm_wrapper.save_build_variables(build_obj, self.server.runCommand(["getAllKeysWithFlags", ["doc", "func"]])[0])
- 
- 
-     def update_build_information(self, event, errors, warnings, taskfailures):
+@@ -47,8 +47,7 @@ class ORMWrapper(object):
+         build_info['outcome'] = 0
+         build_info['number_of_errors'] = 0
+         build_info['number_of_warnings'] = 0
+-        build_info['cpu_usage'] = 0
+-        build_info['disk_io'] = 0
++        build_info['image_fstypes'] = server.runCommand(["getVariable", "IMAGE_FSTYPES"])[0]
+         build_info['cooker_log_path'] = server.runCommand(["getVariable", "BB_CONSOLELOG"])[0]
+         build_info['build_name'] = server.runCommand(["getVariable", "BUILDNAME"])[0]
+         build_info['bitbake_version'] = server.runCommand(["getVariable", "BB_VERSION"])[0]
+@@ -69,8 +68,7 @@ class ORMWrapper(object):
+                                     outcome=build_info['outcome'],
+                                     errors_no=build_info['number_of_errors'],
+                                     warnings_no=build_info['number_of_warnings'],
+-                                    cpu_usage=build_info['cpu_usage'],
+-                                    disk_io=build_info['disk_io'],
++                                    image_fstypes=build_info['image_fstypes'],
+                                     cooker_log_path=build_info['cooker_log_path'],
+                                     build_name=build_info['build_name'],
+                                     bitbake_version=build_info['bitbake_version'])
+diff --git a/bitbake/lib/webhob/bldviewer/templates/build.html b/bitbake/lib/webhob/bldviewer/templates/build.html
+index 9a2d412..1b694d6 100644
+--- a/bitbake/lib/webhob/bldviewer/templates/build.html
++++ b/bitbake/lib/webhob/bldviewer/templates/build.html
+@@ -20,8 +20,7 @@
+ 			<th>Time</th>
+ 			<th>Errors</th>
+ 			<th>Warnings</th>
+-			<th>CPU usage</th>
+-			<th>Disk I/O</th>
++			<th>Output</th>
+ 			<th>Log</th>
+ 			<th>Bitbake Version</th>
+ 			<th>Build Name</th>
+@@ -38,8 +37,7 @@
+ 			<td>{% time_difference build.started_on build.completed_on %}</td>
+ 			<td>{{build.errors_no}}</td>
+ 			<td>{{build.warnings_no}}</td>
+-			<td>{{build.cpu_usage}}</td>
+-			<td>{{build.disk_io}}</td>
++			<td>{{build.image_fstypes}}</td>
+ 			<td>{{build.cooker_log_path}}</td>
+ 			<td>{{build.bitbake_version}}</td>
+ 			<td>{{build.build_name}}</td>
 diff --git a/bitbake/lib/webhob/orm/models.py b/bitbake/lib/webhob/orm/models.py
-index f51f53d..1d67e40 100644
+index 6b8e2fa..f0492db 100644
 --- a/bitbake/lib/webhob/orm/models.py
 +++ b/bitbake/lib/webhob/orm/models.py
-@@ -161,11 +161,11 @@ class Layer_Version(models.Model):
- class Variable(models.Model):
-     build = models.ForeignKey(Build, related_name='variable_build')
-     variable_name = models.CharField(max_length=100)
--    variable_value = models.TextField()
-+    variable_value = models.TextField(null=True)
-     file = models.FilePathField(max_length=255)
--    changed = models.BooleanField()
-+    changed = models.BooleanField(default=False)
-     human_readable_name = models.CharField(max_length=200)
--    description = models.TextField()
-+    description = models.TextField(null=True)
- 
- 
- class Machine(models.Model):
+@@ -18,8 +18,7 @@ class Build(models.Model):
+     outcome = models.IntegerField(choices=BUILD_OUTCOME)
+     errors_no = models.IntegerField()
+     warnings_no = models.IntegerField()
+-    cpu_usage = models.IntegerField()
+-    disk_io = models.DecimalField(max_digits=20, decimal_places=10)
++    image_fstypes = models.CharField(max_length=100)
+     cooker_log_path = models.CharField(max_length=500)
+     build_name = models.CharField(max_length=100)
+     bitbake_version = models.CharField(max_length=50)
 -- 
 1.8.1.2
 
