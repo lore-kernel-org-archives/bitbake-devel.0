@@ -1,21 +1,20 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 88C636CB2A
+Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
+	by mail.openembedded.org (Postfix) with ESMTP id 584CD6CB2B
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue, 24 Sep 2013 16:53:08 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 24 Sep 2013 09:50:04 -0700
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga101.ch.intel.com with ESMTP; 24 Sep 2013 09:53:09 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; 
-	d="scan'208,217";a="408442568"
+X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="298814489"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by orsmga002.jf.intel.com with ESMTP; 24 Sep 2013 09:53:09 -0700
+	by AZSMGA002.ch.intel.com with ESMTP; 24 Sep 2013 09:53:01 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id D25AF561B9F; Tue, 24 Sep 2013 17:53:04 +0100 (BST)
+	id 7A00E560FA1; Tue, 24 Sep 2013 17:53:04 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Sep 2013 17:52:05 +0100
-Message-Id: <d96e94e94169a6e0a9bb4b1ce3ca72a449042149.1380041477.git.alexandru.damian@intel.com>
+Date: Tue, 24 Sep 2013 17:51:32 +0100
+Message-Id: <2ce49c1a5817f9c2d7b16012c91f745598517018.1380041477.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <22b15f86ec61c7577adab12d7ab4d42373519f5c.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
@@ -23,7 +22,7 @@ References: <cover.1380041477.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 36/94] bitbake: webhob: add simple pages for Recipes
+Subject: [PATCH 03/94] webhob: create Django models for webhob
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,153 +37,236 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 24 Sep 2013 16:53:08 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Calin Dragomir <calinx.l.dragomir@intel.com>
 
-We add simple pages to display database information
-about Layer versions and Recipes.
+Patch adds the models we need in order to store all the information
+we need about the builds in the database using the Django ORM.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bitbake/lib/webhob/bldviewer/templates/layer.html  |  8 ++++
- bitbake/lib/webhob/bldviewer/templates/recipe.html | 48 ++++++++++++++++++++++
- bitbake/lib/webhob/bldviewer/urls.py               |  4 +-
- bitbake/lib/webhob/bldviewer/views.py              | 15 ++++++-
- 4 files changed, 72 insertions(+), 3 deletions(-)
- create mode 100644 bitbake/lib/webhob/bldviewer/templates/recipe.html
+ bitbake/lib/webhob/orm/__init__.py     |   0
+ bitbake/lib/webhob/orm/models.py       | 162 +++++++++++++++++++++++++++++++++
+ bitbake/lib/webhob/orm/tests.py        |  16 ++++
+ bitbake/lib/webhob/orm/views.py        |   1 +
+ bitbake/lib/webhob/whbmain/settings.py |   1 +
+ 5 files changed, 180 insertions(+)
+ create mode 100644 bitbake/lib/webhob/orm/__init__.py
+ create mode 100644 bitbake/lib/webhob/orm/models.py
+ create mode 100644 bitbake/lib/webhob/orm/tests.py
+ create mode 100644 bitbake/lib/webhob/orm/views.py
 
-diff --git a/bitbake/lib/webhob/bldviewer/templates/layer.html b/bitbake/lib/webhob/bldviewer/templates/layer.html
-index 905a781..24bd86b 100644
---- a/bitbake/lib/webhob/bldviewer/templates/layer.html
-+++ b/bitbake/lib/webhob/bldviewer/templates/layer.html
-@@ -15,6 +15,7 @@
- 			<th>Name</th>
- 			<th>Local Path</th>
- 			<th>Layer Index URL</th>
-+            <th>Known Versions</th>
- 		</tr>
- 
- 		{% for layer in layers %}
-@@ -23,6 +24,13 @@
- 			<td>{{layer.name}}</td>
- 			<td>{{layer.local_path}}</td>
- 			<td><a href='{{layer.layer_index_url}}'>{{layer.layer_index_url}}</a></td>
-+            <td><table>
-+            {% for lv in layer.versions %}
-+                <tr><td>
-+        <a href="/simple/layerversions/{{lv.id}}/recipes">{{lv.branch}}:{{lv.commit}} ({{lv.count}} recipes)</a>
-+                </td></tr>
-+            {% endfor %}
-+            </table></td>
- 		</tr>
- 
- 		{% endfor %}
-diff --git a/bitbake/lib/webhob/bldviewer/templates/recipe.html b/bitbake/lib/webhob/bldviewer/templates/recipe.html
+diff --git a/bitbake/lib/webhob/orm/__init__.py b/bitbake/lib/webhob/orm/__init__.py
 new file mode 100644
-index 0000000..8f5dcb3
+index 0000000..e69de29
+diff --git a/bitbake/lib/webhob/orm/models.py b/bitbake/lib/webhob/orm/models.py
+new file mode 100644
+index 0000000..43b4319
 --- /dev/null
-+++ b/bitbake/lib/webhob/bldviewer/templates/recipe.html
-@@ -0,0 +1,48 @@
-+<html>
++++ b/bitbake/lib/webhob/orm/models.py
+@@ -0,0 +1,162 @@
++from django.db import models
 +
-+	<head>
-+		<title>WebHob Recipe page</title>
-+	</head>
 +
-+<body>
-+	<h1>WebHob Recipes for a Layer</h1>
++class Builds(models.Model):
 +
-+	<table border="1">
++    BUILD_OUTCOME = (
++        (0, 'Succeded'),
++        (1, 'Failed'),
++    )
 +
-+	{% load projecttags %}
++    uuid = models.CharField(max_length=100, unique=True)
++    target = models.CharField(max_length=100)
++    host_machine = models.CharField(max_length=100)
++    distro = models.CharField(max_length=100)
++    distro_version = models.CharField(max_length=100)
++    host_system = models.CharField(max_length=100)
++    host_distribution = models.CharField(max_length=100)
++    target_system = models.ForeignKey('Machines', related_name='builds_machines')
++    layers = models.ManyToManyField('Layers')
++    started_on = models.DateTimeField()
++    completed_on = models.DateTimeField()
++    outcome = models.IntegerField(choices=BUILD_OUTCOME)
++    errors_no = models.IntegerField()
++    warnings_no = models.IntegerField()
++    cpu_usage = models.IntegerField()
++    disk_io = models.DecimalField(max_digits=20, decimal_places=10)
++    cooker_log_path = models.CharField(max_length=500)
++    build_name = models.CharField(max_length=100)
++    bitbake_version = models.CharField(max_length=50)
 +
-+		<tr>
-+		</tr>
-+			<th>Name</th>
-+			<th>Version</th>
-+			<th>Summary</th>
-+			<th>Description</th>
-+	        <th>Section</th>
-+			<th>License</th>
-+			<th>Homepage</th>
-+			<th>Bugtracker</th>
-+			<th>Author</th>
-+			<th>File_path</th>
 +
-+		{% for recipe in recipes %}
++class Tasks(models.Model):
 +
-+		<tr>
-+			<td>{{recipe.name}}</td>
-+			<td>{{recipe.version}}</td>
-+			<td>{{recipe.summary}}</td>
-+			<td>{{recipe.description}}</td>
-+	        <td>{{recipe.section}}</td>
-+			<td>{{recipe.license}}</td>
-+			<td>{{recipe.homepage}}</td>
-+			<td>{{recipe.bugtracker}}</td>
-+			<td>{{recipe.author}}</td>
-+			<td>{{recipe.file_path}}</td>
-+		</tr>
++    SSTATE_RESULT = (
++        (0, 'Not Applicable'), # For rest of tasks, but they still need checking.
++        (1, 'Unavailable'), # it is a miss
++        (2, 'Failed'), # there was a pkg, but the script failed
++        (3, 'Restored'), # succesfully restored
++    )
 +
-+		{% endfor %}
++    TASK_CODING = (
++        (0, 'Python'),
++        (1, 'Shell'),
++    )
 +
-+	</table>
++    TASK_OUTCOME = (
++        (0, 'Covered'),
++        (1, 'Sstate'),
++        (2, 'Existing'),
++        (3, 'Succeded'),
++        (4, 'Failed'),
++    )
 +
-+</body>
++    uuid = models.ForeignKey(Builds, to_field='uuid', related_name='tasks_builds')
++    order = models.IntegerField()
++    task_executed = models.BooleanField() # True means Executed, False means Prebuilt
++    outcome = models.IntegerField(choices=TASK_OUTCOME)
++    sstate_checksum = models.CharField(max_length=100)
++    path_to_sstate_obj = models.FilePathField(max_length=500, blank=True)
++    recipe = models.ForeignKey('Recipes', related_name='builds_recipes')
++    task_name = models.CharField(max_length=100)
++    source_url = models.FilePathField(max_length=200)
++    log_file = models.FilePathField(max_length=200, blank=True)
++    work_directory = models.FilePathField(max_length=200)
++    script_type = models.IntegerField(choices=TASK_CODING)
++    file_path = models.FilePathField(max_length=200)
++    line_number = models.IntegerField()
++    py_stack_trace = models.TextField()
++    disk_io = models.DecimalField(max_digits=20, decimal_places=10)
++    cpu_usage = models.IntegerField()
++    elapsed_time = models.CharField(max_length=50)
++    errors_no = models.IntegerField()
++    warnings_no = models.IntegerField()
++    error = models.TextField()
++    warning = models.TextField()
++    sstate_result = models.IntegerField(choices=SSTATE_RESULT)
++    diffsigs = models.CharField(max_length=500)
 +
-+</html>
-diff --git a/bitbake/lib/webhob/bldviewer/urls.py b/bitbake/lib/webhob/bldviewer/urls.py
-index 756b3fa..b6c6796 100644
---- a/bitbake/lib/webhob/bldviewer/urls.py
-+++ b/bitbake/lib/webhob/bldviewer/urls.py
-@@ -1,10 +1,10 @@
- from django.conf.urls import patterns, include, url
- from django.views.generic.simple import redirect_to
- 
--
- urlpatterns = patterns('bldviewer.views',
-         url(r'^build/$', 'build', name='build'),
--        url(r'^layers/$', 'layer', name='layer'),
-         url(r'^build/(?P<build_id>\d+)/task/$', 'task', name='task'),
-+        url(r'^layer/$', 'layer', name='layer'),
-+        url(r'^layerversions/(?P<layerversion_id>\d+)/recipes$', 'layer_versions_recipes', name='layer_versions_recipes'),
-         url(r'^$', redirect_to, {'url': 'build/'}),
++
++class Task_Dependencies(models.Model):
++    task = models.ForeignKey(Tasks, related_name='task_dependencies_task')
++    depends_on = models.ForeignKey(Tasks, related_name='task_dependencies_depends')
++
++
++class Targets(models.Model):
++    uuid = models.ForeignKey(Builds, to_field='uuid',  related_name='targets_builds')
++    is_image = models.BooleanField()
++
++
++class Artifacts(models.Model):
++    uuid = models.ForeignKey(Builds, to_field='uuid', related_name='artifacts_builds')
++    target = models.ForeignKey(Targets, related_name='artifacts_targets')
++    file_name = models.CharField(max_length=100)
++    file_size = models.IntegerField()
++
++
++class Packages_In_Images(models.Model):
++    package = models.ForeignKey('Packages', related_name='packages_in_images_package')
++    target = models.ForeignKey(Targets, related_name='packages_in_images_target')
++
++
++class Packages(models.Model):
++    package_id = models.IntegerField()
++    recipe = models.ForeignKey('Recipes', related_name='packages_recipes')
++    name = models.CharField(max_length=100)
++    version = models.CharField(max_length=100)
++    size = models.IntegerField()
++
++
++class Package_Dependencies(models.Model):
++    package = models.ForeignKey(Packages, related_name='package_dependencies_package')
++    depends_on = models.ForeignKey(Packages, related_name='package_dependencies_depends')
++
++
++class Filelist(models.Model):
++    package = models.ForeignKey(Packages, related_name='filelist_packages')
++    complete_file_path = models.FilePathField(max_length=200, blank=True)
++    file_size = models.IntegerField()
++
++
++class Recipes(models.Model):
++    name = models.CharField(max_length=100)
++    version = models.CharField(max_length=100)
++    layer = models.ForeignKey('Layers', related_name='recipes_layers')
++    summary = models.CharField(max_length=100)
++    description = models.CharField(max_length=100)
++    section = models.CharField(max_length=100)
++    license = models.CharField(max_length=200)
++    licensing_info = models.TextField()
++    homepage = models.URLField()
++    bugtracker = models.URLField()
++    author = models.CharField(max_length=100)
++    file_path = models.FilePathField(max_length=200)
++
++
++class Recipe_Dependencies(models.Model):
++    recipe = models.ForeignKey(Recipes, related_name='recipe_dependencies_recipe')
++    depends_on = models.ForeignKey(Recipes, related_name='recipe_dependencies_depends')
++
++
++class Layers(models.Model):
++    name = models.CharField(max_length=100)
++    branch = models.CharField(max_length=50)
++    commit = models.CharField(max_length=100)
++    priority = models.IntegerField()
++    link_to_oe_core = models.URLField()
++
++
++class Variables(models.Model):
++    uuid = models.ForeignKey(Builds, to_field='uuid', related_name='variables_builds')
++    variable_name = models.CharField(max_length=100)
++    variable_value = models.TextField()
++    file = models.FilePathField(max_length=200)
++    changed = models.BooleanField()
++    human_readable_name = models.CharField(max_length=200)
++    description = models.TextField()
++
++
++class Machines(models.Model):
++    name = models.CharField(max_length=100)
++    description = models.TextField()
++
+diff --git a/bitbake/lib/webhob/orm/tests.py b/bitbake/lib/webhob/orm/tests.py
+new file mode 100644
+index 0000000..501deb7
+--- /dev/null
++++ b/bitbake/lib/webhob/orm/tests.py
+@@ -0,0 +1,16 @@
++"""
++This file demonstrates writing tests using the unittest module. These will pass
++when you run "manage.py test".
++
++Replace this with more appropriate tests for your application.
++"""
++
++from django.test import TestCase
++
++
++class SimpleTest(TestCase):
++    def test_basic_addition(self):
++        """
++        Tests that 1 + 1 always equals 2.
++        """
++        self.assertEqual(1 + 1, 2)
+diff --git a/bitbake/lib/webhob/orm/views.py b/bitbake/lib/webhob/orm/views.py
+new file mode 100644
+index 0000000..60f00ef
+--- /dev/null
++++ b/bitbake/lib/webhob/orm/views.py
+@@ -0,0 +1 @@
++# Create your views here.
+diff --git a/bitbake/lib/webhob/whbmain/settings.py b/bitbake/lib/webhob/whbmain/settings.py
+index 67aaf69..71bba4f 100644
+--- a/bitbake/lib/webhob/whbmain/settings.py
++++ b/bitbake/lib/webhob/whbmain/settings.py
+@@ -123,6 +123,7 @@ INSTALLED_APPS = (
+     # 'django.contrib.admin',
+     # Uncomment the next line to enable admin documentation:
+     # 'django.contrib.admindocs',
++    'orm',
  )
-diff --git a/bitbake/lib/webhob/bldviewer/views.py b/bitbake/lib/webhob/bldviewer/views.py
-index 58d9444..de89b84 100644
---- a/bitbake/lib/webhob/bldviewer/views.py
-+++ b/bitbake/lib/webhob/bldviewer/views.py
-@@ -1,5 +1,5 @@
- from django.shortcuts import render
--from orm.models import Build, Task, Layer, Task_Dependency
-+from orm.models import Build, Task, Layer, Layer_Version, Task_Dependency, Recipe
  
- 
- def build(request):
-@@ -30,11 +30,24 @@ def layer(request):
-     template = 'layer.html'
-     layer_info = Layer.objects.all()
- 
-+    for li in layer_info:
-+        li.versions = Layer_Version.objects.filter(layer = li)
-+        for liv in li.versions:
-+            liv.count = Recipe.objects.filter(layer_version__id = liv.id).count()
-+
-     context = {'layers': layer_info}
- 
-     return render(request, template, context)
- 
- 
-+def layer_versions_recipes(request, layerversion_id):
-+    template = 'recipe.html'
-+    recipes = Recipe.objects.filter(layer_version__id = layerversion_id)
-+    
-+    context = {'recipes': recipes}
-+    
-+    return render(request, template, context)
-+
- #### API
- 
- import json
+ # A sample logging configuration. The only tangible logging
 -- 
 1.8.1.2
 
