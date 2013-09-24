@@ -1,23 +1,23 @@
 Return-Path: <ddalex@intel.com>
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id DE7876C99C
+	by mail.openembedded.org (Postfix) with ESMTP id 316446CA17
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 Sep 2013 16:47:29 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 24 Sep 2013 09:47:32 -0700
+	Tue, 24 Sep 2013 16:52:49 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 24 Sep 2013 09:52:51 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="408440225"
+X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="382902323"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by orsmga002.jf.intel.com with ESMTP; 24 Sep 2013 09:47:30 -0700
+	by orsmga001.jf.intel.com with ESMTP; 24 Sep 2013 09:52:49 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id 699255604B0; Tue, 24 Sep 2013 17:47:33 +0100 (BST)
+	id 36319560F55; Tue, 24 Sep 2013 17:52:52 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Sep 2013 17:47:25 +0100
-Message-Id: <cover.1380040677.git.alexandru.damian@intel.com>
+Date: Tue, 24 Sep 2013 17:52:50 +0100
+Message-Id: <cover.1380041477.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 00/94] Webhob modules DSI and Web
+Subject: [PATCH 00/94] Webhob patches for DSI and Web modules
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,7 +30,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 24 Sep 2013 16:47:30 -0000
+X-List-Received-Date: Tue, 24 Sep 2013 16:52:49 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
@@ -162,9 +162,7 @@ Calin Dragomir (22):
  bitbake/lib/webhob/bldviewer/__init__.py           |    0
  bitbake/lib/webhob/bldviewer/api.py                |   19 +
  .../lib/webhob/bldviewer/static/css/bootstrap.css  | 4797 +++++++++++
- .../webhob/bldviewer/static/css/bootstrap.min.css  |    9 +
  .../lib/webhob/bldviewer/static/js/bootstrap.js    | 1982 +++++
- .../webhob/bldviewer/static/js/bootstrap.min.js    |    6 +
  .../lib/webhob/bldviewer/static/js/jquery-2.0.3.js | 8829 ++++++++++++++++++++
  bitbake/lib/webhob/bldviewer/templates/base.html   |   30 +
  .../webhob/bldviewer/templates/basebuildpage.html  |   17 +
@@ -196,7 +194,7 @@ Calin Dragomir (22):
  bitbake/lib/webhob/whbmain/settings.py             |  173 +
  bitbake/lib/webhob/whbmain/urls.py                 |   22 +
  bitbake/lib/webhob/whbmain/wsgi.py                 |   32 +
- 42 files changed, 18233 insertions(+)
+ 40 files changed, 18218 insertions(+)
  create mode 100755 bitbake/bin/webhob
  create mode 100644 bitbake/lib/bb/ui/buildinfohelper.py
  create mode 100644 bitbake/lib/bb/ui/dsi.py
@@ -204,9 +202,7 @@ Calin Dragomir (22):
  create mode 100644 bitbake/lib/webhob/bldviewer/__init__.py
  create mode 100644 bitbake/lib/webhob/bldviewer/api.py
  create mode 100644 bitbake/lib/webhob/bldviewer/static/css/bootstrap.css
- create mode 100644 bitbake/lib/webhob/bldviewer/static/css/bootstrap.min.css
  create mode 100644 bitbake/lib/webhob/bldviewer/static/js/bootstrap.js
- create mode 100644 bitbake/lib/webhob/bldviewer/static/js/bootstrap.min.js
  create mode 100644 bitbake/lib/webhob/bldviewer/static/js/jquery-2.0.3.js
  create mode 100644 bitbake/lib/webhob/bldviewer/templates/base.html
  create mode 100644 bitbake/lib/webhob/bldviewer/templates/basebuildpage.html
