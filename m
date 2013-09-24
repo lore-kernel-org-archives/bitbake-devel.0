@@ -1,28 +1,27 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
-	by mail.openembedded.org (Postfix) with ESMTP id 3AF9D6CB47
+Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
+	by mail.openembedded.org (Postfix) with ESMTP id 5F5356CB6D
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue, 24 Sep 2013 16:53:13 +0000 (UTC)
 Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 24 Sep 2013 09:53:15 -0700
+	by azsmga102.ch.intel.com with ESMTP; 24 Sep 2013 09:53:15 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="298814567"
+X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="298814592"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by AZSMGA002.ch.intel.com with ESMTP; 24 Sep 2013 09:53:09 -0700
+	by AZSMGA002.ch.intel.com with ESMTP; 24 Sep 2013 09:53:10 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id C5F035618C1; Tue, 24 Sep 2013 17:53:04 +0100 (BST)
+	id E97755622B8; Tue, 24 Sep 2013 17:53:04 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Sep 2013 17:52:00 +0100
-Message-Id: <be34511d888dd2efa693f3ee763012e4218573f7.1380041477.git.alexandru.damian@intel.com>
+Date: Tue, 24 Sep 2013 17:52:14 +0100
+Message-Id: <7603f3f6b9428b1bde94073522643b3fc8a03188.1380041477.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <22b15f86ec61c7577adab12d7ab4d42373519f5c.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
 	<22b15f86ec61c7577adab12d7ab4d42373519f5c.1380041477.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 31/94] bitbake: webhob: orm change to remove Target
+Subject: [PATCH 45/94] bitbake: webhob: fix ordering issue
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,54 +36,55 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 24 Sep 2013 16:53:14 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Calin Dragomir <calinx.l.dragomir@intel.com>
 
-Removes the Target dependency as it is replaced
-by a field in Build.
+This patch fixes the AssertionError issue that caused the
+build page to break.
+This happened because ordering cannot be done after a slicing
+operation has been executed.
+By placing the ordering before the slicing occurs, the issue
+stops appearing.
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+Signed-off-by: Calin Dragomir <calinx.l.dragomir@intel.com>
+
+Conflicts:
+	bitbake/lib/webhob/bldviewer/views.py
 ---
- bitbake/lib/webhob/orm/models.py | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+ bitbake/lib/webhob/bldviewer/views.py | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/bitbake/lib/webhob/orm/models.py b/bitbake/lib/webhob/orm/models.py
-index 83126d8..e6663a3 100644
---- a/bitbake/lib/webhob/orm/models.py
-+++ b/bitbake/lib/webhob/orm/models.py
-@@ -14,6 +14,7 @@ class Build(models.Model):
+diff --git a/bitbake/lib/webhob/bldviewer/views.py b/bitbake/lib/webhob/bldviewer/views.py
+index 423fdf7..a5c4387 100644
+--- a/bitbake/lib/webhob/bldviewer/views.py
++++ b/bitbake/lib/webhob/bldviewer/views.py
+@@ -110,6 +110,13 @@ def model_explorer(request, model_name):
+     if search_term:
+         queryset = _get_search_results(search_term, queryset, model)
  
-     uuid = models.CharField(max_length=100, unique=True)
-     target = models.CharField(max_length=100)
-+    is_image = models.BooleanField()
-     machine = models.ForeignKey('Machine', related_name='build_machine')
-     distro = models.CharField(max_length=100)
-     distro_version = models.CharField(max_length=100)
-@@ -98,24 +99,14 @@ class Task_Dependency(models.Model):
-     depends_on = models.ForeignKey(Task, related_name='task_dependencies_depends')
++    if ordering_string and queryset:
++        column, order = ordering_string.split(':')
++        if order.lower() == DESCENDING:
++            queryset = queryset.order_by('-' + column)
++        else:
++            queryset = queryset.order_by(column)
++
+     if offset and limit:
+         queryset = queryset[offset:(offset+limit)]
+     elif offset:
+@@ -122,13 +129,6 @@ def model_explorer(request, model_name):
+     else:
+         response_data['count'] = 0
  
- 
--class Target(models.Model):
--    build = models.ForeignKey(Build, related_name='target_build')
--    is_image = models.BooleanField()
+-    if queryset and ordering_string:
+-        column, order = ordering_string.split(':')
+-        if order.lower() == DESCENDING:
+-            queryset = queryset.order_by('-' + column)
+-        else:
+-            queryset = queryset.order_by(column)
 -
--
- class Artifact(models.Model):
-     build = models.ForeignKey(Build, related_name='artifact_build')
--    target = models.ForeignKey(Target, related_name='artifact_target')
-     file_name = models.CharField(max_length=100)
-     file_size = models.IntegerField()
+     response_data['list'] = serializers.serialize('json', queryset)
  
- 
--class Package_In_Image(models.Model):
--    package = models.ForeignKey('Package', related_name='package_in_image_package')
--    target = models.ForeignKey(Target, related_name='package_in_image_target')
--
--
- class Package(models.Model):
-+    build = models.ForeignKey('Build', related_name='package_build')
-     recipe = models.ForeignKey('Recipe', related_name='package_recipe')
-     name = models.CharField(max_length=100)
-     version = models.CharField(max_length=100)
+     return HttpResponse(json.dumps(response_data),
 -- 
 1.8.1.2
 
