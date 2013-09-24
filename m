@@ -1,20 +1,21 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
-	by mail.openembedded.org (Postfix) with ESMTP id C6F5A6CB17
+Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
+	by mail.openembedded.org (Postfix) with ESMTP id DC71E6CB7A
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue, 24 Sep 2013 16:53:19 +0000 (UTC)
 Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 24 Sep 2013 09:53:21 -0700
+	by azsmga102.ch.intel.com with ESMTP; 24 Sep 2013 09:53:21 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,972,1371106800"; d="scan'208";a="364948528"
+X-IronPort-AV: E=Sophos;i="4.90,972,1371106800"; 
+	d="scan'208,217";a="364948550"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by azsmga001.ch.intel.com with ESMTP; 24 Sep 2013 09:53:09 -0700
+	by azsmga001.ch.intel.com with ESMTP; 24 Sep 2013 09:53:11 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id D8A7D562059; Tue, 24 Sep 2013 17:53:04 +0100 (BST)
+	id 2261A5628C9; Tue, 24 Sep 2013 17:53:05 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Sep 2013 17:52:08 +0100
-Message-Id: <cb443e01054e762308f2deb2a0ca68d1d246151a.1380041477.git.alexandru.damian@intel.com>
+Date: Tue, 24 Sep 2013 17:52:31 +0100
+Message-Id: <b9b020b217ab7e13193e670b2d834e56edc282fc.1380041477.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <22b15f86ec61c7577adab12d7ab4d42373519f5c.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
@@ -22,7 +23,7 @@ References: <cover.1380041477.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 39/94] bitbake: webhob: generic view for multiple models
+Subject: [PATCH 62/94] bitbake: webhob: add toggle column functionality to build page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,128 +38,79 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 24 Sep 2013 16:53:22 -0000
 
-From: Calin Dragomir <calinx.l.dragomir@intel.com>
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-This patch creates a generic view that supports multiple
-models. It allows exploration of the fields of the models and
-it has validation of inputs given.
+We add demo toggle column functionality for the Simple interface,
+webhob builds page.
 
-Also avoids code replication.
-
-Signed-off-by: Calin Dragomir <calinx.l.dragomir@intel.com>
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
-
-Conflicts:
-	bitbake/lib/webhob/bldviewer/views.py
 ---
- bitbake/lib/webhob/bldviewer/api.py   |  4 +++-
- bitbake/lib/webhob/bldviewer/views.py | 33 ++++++++++++++++++++++++---------
- 2 files changed, 27 insertions(+), 10 deletions(-)
+ bitbake/lib/webhob/bldviewer/templates/base.html  | 15 +++++++++++++++
+ bitbake/lib/webhob/bldviewer/templates/build.html |  6 ++++++
+ bitbake/lib/webhob/bldviewer/views.py             |  3 ++-
+ 3 files changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/webhob/bldviewer/api.py b/bitbake/lib/webhob/bldviewer/api.py
-index d945861..3b2d7d2 100644
---- a/bitbake/lib/webhob/bldviewer/api.py
-+++ b/bitbake/lib/webhob/bldviewer/api.py
-@@ -2,5 +2,7 @@ from django.conf.urls import patterns, include, url
+diff --git a/bitbake/lib/webhob/bldviewer/templates/base.html b/bitbake/lib/webhob/bldviewer/templates/base.html
+index ab3c3b7..3f056a0 100644
+--- a/bitbake/lib/webhob/bldviewer/templates/base.html
++++ b/bitbake/lib/webhob/bldviewer/templates/base.html
+@@ -3,9 +3,24 @@
+ <html>
+ 	<head>
+ 		<title>WebHob Simple Explorer</title>
++<script src="/static/js/jquery-2.0.3.js">
++</script>
++<script src="/static/js/bootstrap.js">
++</script>
++<link href="/static/css/bootstrap.css" rel="stylesheet" type="text/css">
+ 	</head>
  
+ <body>
++<script>
++function showhideTableColumn(i, sh) {
++    if (sh)
++        $('td:nth-child('+i+'),th:nth-child('+i+')').show();
++    else
++        $('td:nth-child('+i+'),th:nth-child('+i+')').hide();
++g
++}
++</script>
++
+ <div>Menu: <a href="/simple/build/">All Builds</a>&nbsp;|&nbsp;<a href="/simple/layer/">All Layers</a>
+ </div>
+ {% block pagecontent %}
+diff --git a/bitbake/lib/webhob/bldviewer/templates/build.html b/bitbake/lib/webhob/bldviewer/templates/build.html
+index 20aa310..e30801b 100644
+--- a/bitbake/lib/webhob/bldviewer/templates/build.html
++++ b/bitbake/lib/webhob/bldviewer/templates/build.html
+@@ -5,6 +5,12 @@
  
- urlpatterns = patterns('bldviewer.views',
--        url(r'^builds/$', 'builds', name='builds'),
-+        url(r'^builds/$', 'model_explorer',  {'model_name':'build'}, name='builds'),
-+        url(r'^tasks/$', 'model_explorer', {'model_name':'task'}, name='task'),
-+        url(r'^packages/$', 'model_explorer', {'model_name':'package'}, name='package'),
- )
+     <table border="1">
+ 
++<div align="right" style="display: float">Show/Hide columns:
++<span>Output: <input type="checkbox" id="ctoutput" onchange="showhideTableColumn(10, $('#ctoutput').is(':checked'))" checked autocomplete="off"></span> |
++<span>Log: <input type="checkbox" id="ctlog" onchange="showhideTableColumn(11, $('#ctlog').is(':checked'))"checked autocomplete="off"></span> |
++<span>Build Name: <input type="checkbox" id="ctbuildname" onchange="showhideTableColumn(13, $('#ctbuildname').is(':checked'))" checked autocomplete="off"></span> |
++</div>
++
+     {% load projecttags %}
+ 
+         <tr>
 diff --git a/bitbake/lib/webhob/bldviewer/views.py b/bitbake/lib/webhob/bldviewer/views.py
-index a71aebc..73f7ba7 100644
+index 7f97312..ab69c91 100644
 --- a/bitbake/lib/webhob/bldviewer/views.py
 +++ b/bitbake/lib/webhob/bldviewer/views.py
-@@ -1,5 +1,5 @@
+@@ -4,8 +4,9 @@ from django.db.models import Q
  from django.shortcuts import render
--from orm.models import Build, Task, Layer, Layer_Version, Task_Dependency, Recipe
-+from orm.models import Build, Task, Layer, Layer_Version, Task_Dependency, Recipe, Package
+ from orm.models import Build, Task, Layer, Layer_Version, Recipe, Package, LogMessage
+ from orm.models import Task_Dependency, Package_Dependency
++from django.views.decorators.cache import cache_control
  
- 
+-
++@cache_control(no_store=True)
  def build(request):
-@@ -55,9 +55,20 @@ from django.core import serializers
- from django.http import HttpResponse, HttpResponseBadRequest
- 
- 
--def builds(request):
-+def model_explorer(request, model_name):
-+
-     DESCENDING = 'desc'
-     response_data = {}
-+    model_mapping = {
-+        'build': Build,
-+        'task': Task,
-+        'package': Package,
-+        }
-+
-+    if model_name not in model_mapping.keys():
-+        return HttpResponseBadRequest()
-+
-+    model = model_mapping[model_name]
- 
-     try:
-         limit = int(request.GET.get('limit', 0))
-@@ -69,22 +80,24 @@ def builds(request):
-     except ValueError:
-         offset = 0
- 
--    ordering_string, invalid = _validate_input(request.GET.get('orderby', ''))
-+    ordering_string, invalid = _validate_input(request.GET.get('orderby', ''),
-+                                               model)
-     if invalid:
-         return HttpResponseBadRequest()
- 
--    filter_string, invalid = _validate_input(request.GET.get('filter', ''))
-+    filter_string, invalid = _validate_input(request.GET.get('filter', ''),
-+                                             model)
-     if invalid:
-         return HttpResponseBadRequest()
- 
-     if filter_string:
-         filter_terms = _get_filtering_terms(filter_string)
-         try:
--            queryset = Build.objects.filter(**filter_terms)
-+            queryset = model.objects.filter(**filter_terms)
-         except ValueError:
-             queryset = []
-     else:
--        queryset = Build.objects.all()
-+        queryset = model.objects.all()
- 
-     if offset and limit:
-         queryset = queryset[offset:(offset+limit)]
-@@ -107,7 +120,8 @@ def builds(request):
- 
-     response_data['list'] = serializers.serialize('json', queryset)
- 
--    return HttpResponse(json.dumps(response_data), content_type='application/json')
-+    return HttpResponse(json.dumps(response_data),
-+                        content_type='application/json')
- 
- def _get_filtering_terms(filter_string):
- 
-@@ -117,7 +131,8 @@ def _get_filtering_terms(filter_string):
- 
-     return dict(zip(keys, values))
- 
--def _validate_input(input):
-+def _validate_input(input, model):
-+
-     invalid = 0
- 
-     if input:
-@@ -132,7 +147,7 @@ def _validate_input(input):
-             invalid = 1
- 
-         # Check we are looking for a valid field
--        valid_fields = Build._meta.get_all_field_names()
-+        valid_fields = model._meta.get_all_field_names()
-         for field in input_list[0].split(','):
-             if field not in valid_fields:
-                 invalid = 1
+     template = 'build.html'
+     build_info = Build.objects.all()
 -- 
 1.8.1.2
 
