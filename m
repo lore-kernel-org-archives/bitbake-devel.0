@@ -1,28 +1,25 @@
-Return-Path: <ddalex@intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id 0E3476CC68
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 1C5306C994
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 Sep 2013 16:53:30 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 24 Sep 2013 09:53:10 -0700
+	Tue, 24 Sep 2013 17:14:59 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 24 Sep 2013 10:11:54 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="406511876"
-Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by fmsmga002.fm.intel.com with ESMTP; 24 Sep 2013 09:53:09 -0700
-Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id CFE18561B94; Tue, 24 Sep 2013 17:53:04 +0100 (BST)
-From: Alex DAMIAN <alexandru.damian@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Sep 2013 17:52:04 +0100
-Message-Id: <618a4ca399aa451cba8cf8ab19a7967ef2dd2976.1380041477.git.alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.8.1.2
-In-Reply-To: <22b15f86ec61c7577adab12d7ab4d42373519f5c.1380041477.git.alexandru.damian@intel.com>
-References: <cover.1380041477.git.alexandru.damian@intel.com>
-	<22b15f86ec61c7577adab12d7ab4d42373519f5c.1380041477.git.alexandru.damian@intel.com>
+X-IronPort-AV: E=Sophos;i="4.90,972,1371106800"; d="scan'208";a="408456211"
+Received: from unknown (HELO helios.localnet) ([10.252.120.52])
+	by orsmga002.jf.intel.com with ESMTP; 24 Sep 2013 10:14:48 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Alex DAMIAN <alexandru.damian@intel.com>
+Date: Tue, 24 Sep 2013 18:14:47 +0100
+Message-ID: <1730576.5aMD7QhvXQ@helios>
+Organization: Intel Corporation
+User-Agent: KMail/4.10.5 (Linux/3.8.0-30-generic; KDE/4.10.5; i686; ; )
 In-Reply-To: <cover.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 35/94] bitbake: webhob: clean up URL structure
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 00/94] Webhob patches for DSI and Web modules
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,61 +32,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 24 Sep 2013 16:53:30 -0000
+X-List-Received-Date: Tue, 24 Sep 2013 17:15:00 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+Hi Alex,
 
-We clean up the URL structure.
-* default redirect to GUI version
-* basic HTML interface now available at /simple/
-* clear-up simple/ paths towards object-type URLs
+On Tuesday 24 September 2013 17:52:50 Alex DAMIAN wrote:
+> From: Alexandru DAMIAN <alexandru.damian@intel.com>
+> 
+> Patches for the DSI and Web modules of Webhob, in the order of development.
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
----
- bitbake/lib/webhob/bldviewer/urls.py | 6 ++++--
- bitbake/lib/webhob/whbmain/urls.py   | 5 ++++-
- 2 files changed, 8 insertions(+), 3 deletions(-)
+I hate to be a pain, but apart from the commits that change existing modules 
+e.g. cooker, all of these commits need to be squashed into one commit that 
+simply adds Web Hob to bitbake - we don't need the full incremental 
+development history. 
 
-diff --git a/bitbake/lib/webhob/bldviewer/urls.py b/bitbake/lib/webhob/bldviewer/urls.py
-index 8d5dc6e..756b3fa 100644
---- a/bitbake/lib/webhob/bldviewer/urls.py
-+++ b/bitbake/lib/webhob/bldviewer/urls.py
-@@ -1,8 +1,10 @@
- from django.conf.urls import patterns, include, url
-+from django.views.generic.simple import redirect_to
- 
- 
- urlpatterns = patterns('bldviewer.views',
--        url(r'^$', 'build', name='build'),
-+        url(r'^build/$', 'build', name='build'),
-         url(r'^layers/$', 'layer', name='layer'),
--        url(r'^(?P<build_id>\d+)/$', 'task', name='task'),
-+        url(r'^build/(?P<build_id>\d+)/task/$', 'task', name='task'),
-+        url(r'^$', redirect_to, {'url': 'build/'}),
- )
-diff --git a/bitbake/lib/webhob/whbmain/urls.py b/bitbake/lib/webhob/whbmain/urls.py
-index 14345f6..0e15eda 100644
---- a/bitbake/lib/webhob/whbmain/urls.py
-+++ b/bitbake/lib/webhob/whbmain/urls.py
-@@ -1,13 +1,16 @@
- from django.conf.urls import patterns, include, url
-+from django.views.generic.simple import redirect_to
-+
- 
- # Uncomment the next two lines to enable the admin:
- # from django.contrib import admin
- # admin.autodiscover()
- 
- urlpatterns = patterns('',
--    url(r'^build/', include('bldviewer.urls')),
-+    url(r'^simple/', include('bldviewer.urls')),
-     url(r'^api/1.0/', include('bldviewer.api')),
-     url(r'^gui/', include('whbgui.urls')),
-+    url(r'^$', redirect_to, {'url': '/gui/'}),
-     # Examples:
-     # url(r'^webhob/', include('webhob.foo.urls')),
- 
+(Of course we do want to preserve the list of bug IDs / contributors from the 
+commit messages, though.)
+
+Thanks,
+Paul
+
 -- 
-1.8.1.2
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
