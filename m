@@ -1,20 +1,20 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id DC9B16CABA
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 32EBF6CABA
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 Sep 2013 16:53:02 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga102.jf.intel.com with ESMTP; 24 Sep 2013 09:49:58 -0700
+	Tue, 24 Sep 2013 16:53:03 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga102.fm.intel.com with ESMTP; 24 Sep 2013 09:53:05 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="400405652"
+X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="406511818"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by fmsmga001.fm.intel.com with ESMTP; 24 Sep 2013 09:53:01 -0700
+	by fmsmga002.fm.intel.com with ESMTP; 24 Sep 2013 09:53:03 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id 7D04B560FAB; Tue, 24 Sep 2013 17:53:04 +0100 (BST)
+	id 829A056100F; Tue, 24 Sep 2013 17:53:04 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Sep 2013 17:51:33 +0100
-Message-Id: <fec60bcc5c1a60116cda2cfa34c6bf80314d597d.1380041477.git.alexandru.damian@intel.com>
+Date: Tue, 24 Sep 2013 17:51:35 +0100
+Message-Id: <81c2ea58343caeb8e0c7c90edd1a6066ad90f0b7.1380041477.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <22b15f86ec61c7577adab12d7ab4d42373519f5c.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
@@ -22,7 +22,7 @@ References: <cover.1380041477.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 04/94] bitbake: create Data Store Interface (DSI) file
+Subject: [PATCH 06/94] bitbake: webhob: make DSI store build information
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,68 +39,135 @@ X-List-Received-Date: Tue, 24 Sep 2013 16:53:03 -0000
 
 From: Calin Dragomir <calinx.l.dragomir@intel.com>
 
-The patch adds the first version of the DSI file. It uses the Knotty
-code for now and inserts task related information into the database
-using the Django ORM.
-It makes use of some test objects needed to create a valid record into
-the database based on the definition of the Django models.
+This patch will enable DSI to store build information defined in
+the Django models. This will be done for each executed build and it
+will use a helper file to save this information.
 
+Moved code from DSI interface to the helper file in to classes,
+one which wraps around Django model interface operations, and one that
+fills in information from the event system into the model data.
+
+Signed-off-by: Calin Dragomir <calinx.l.dragomir@intel.com>
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bitbake/lib/bb/ui/dsi.py | 667 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 667 insertions(+)
- create mode 100644 bitbake/lib/bb/ui/dsi.py
+ bitbake/lib/bb/ui/buildinfohelper.py | 127 ++++++++++++++++++++++++
+ bitbake/lib/bb/ui/dsi.py             | 180 ++++-------------------------------
+ 2 files changed, 148 insertions(+), 159 deletions(-)
+ create mode 100644 bitbake/lib/bb/ui/buildinfohelper.py
 
-diff --git a/bitbake/lib/bb/ui/dsi.py b/bitbake/lib/bb/ui/dsi.py
+diff --git a/bitbake/lib/bb/ui/buildinfohelper.py b/bitbake/lib/bb/ui/buildinfohelper.py
 new file mode 100644
-index 0000000..f832806
+index 0000000..c77248c
 --- /dev/null
-+++ b/bitbake/lib/bb/ui/dsi.py
-@@ -0,0 +1,667 @@
-+#
-+# BitBake DSI Implementation
-+#
-+# Copyright (C) 2013        Intel Corporation
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+# GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License along
-+# with this program; if not, write to the Free Software Foundation, Inc.,
-+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+
-+from __future__ import division
-+
-+import os
-+import sys
-+import xmlrpclib
-+import logging
-+import progressbar
-+import signal
-+import bb.msg
-+import time
-+import fcntl
-+import struct
-+import copy
++++ b/bitbake/lib/bb/ui/buildinfohelper.py
+@@ -0,0 +1,127 @@
 +import datetime
++import sys
++import uuid
 +
-+from bb.ui import uihelper
 +
-+logger = logging.getLogger("BitBake")
-+interactive = sys.stdout.isatty()
++class ORMWrapper(object):
++    """ This class creates the dictionaries needed to store information in the database
++        following the format defined by the Django models. It is also used to save this
++        information in the database.
++    """
 +
-+class WebHOBHelper(object):
-+    
++    def __init__(self):
++        self.uuid = None
++
++    def get_machine_information(self, server):
++        machine_info = {}
++
++        machine_info['name'] = server.runCommand(["getVariable", "MACHINE"])[0]
++        machine_info['description'] = 'Not Available'
++
++        return machine_info
++
++    def create_machine_object(self, machine_information):
++        # This needs to be imported after we have configured the Django settings file
++        from webhob.orm.models import Machine
++
++        machine = Machine.objects.get_or_create(name=machine_information['name'],
++                                                description=machine_information['description'])
++
++        return machine[0]
++
++    def get_build_information(self, server, machine_obj):
++        build_info = {}
++
++        # Generate an identifier for each new build
++        self.uuid = str(uuid.uuid4())
++
++        build_info['uuid'] = self.uuid
++        build_info['target'] = 'Not Available'
++        build_info['machine'] = machine_obj
++        build_info['distro'] = server.runCommand(["getVariable", "DISTRO"])[0]
++        build_info['distro_version'] = server.runCommand(["getVariable", "DISTRO_VERSION"])[0]
++        build_info['started_on'] = datetime.datetime.now()
++        build_info['completed_on'] = datetime.datetime.now()
++        build_info['outcome'] = 0
++        build_info['number_of_errors'] = 0
++        build_info['number_of_warnings'] = 0
++        build_info['cpu_usage'] = 0
++        build_info['disk_io'] = 0
++        build_info['cooker_log_path'] = server.runCommand(["getVariable", "BB_CONSOLELOG"])[0]
++        build_info['build_name'] = server.runCommand(["getVariable", "BUILDNAME"])[0]
++        build_info['bitbake_version'] = server.runCommand(["getVariable", "BB_VERSION"])[0]
++
++        return build_info
++
++    def create_build_object(self, build_info):
++        # This needs to be imported after we have configured the Django settings file
++        from webhob.orm.models import Build
++
++        build = Build.objects.create(uuid=build_info['uuid'],
++                                    target=build_info['target'],
++                                    machine=build_info['machine'],
++                                    distro=build_info['distro'],
++                                    distro_version=build_info['distro_version'],
++                                    started_on=build_info['started_on'],
++                                    completed_on=build_info['completed_on'],
++                                    outcome=build_info['outcome'],
++                                    errors_no=build_info['number_of_errors'],
++                                    warnings_no=build_info['number_of_warnings'],
++                                    cpu_usage=build_info['cpu_usage'],
++                                    disk_io=build_info['disk_io'],
++                                    cooker_log_path=build_info['cooker_log_path'],
++                                    build_name=build_info['build_name'],
++                                    bitbake_version=build_info['bitbake_version'])
++
++        return build
++
++    def update_build_object(self, build_obj, errors, warnings):
++        # This needs to be imported after we have configured the Django settings file
++        from webhob.orm.models import Build
++
++        outcome = 0
++        if errors or warnings:
++            outcome = 1
++
++        build = Build.objects.get(uuid=build_obj.uuid)
++        build.completed_on = datetime.datetime.now()
++        build.errors_no = errors
++        build.warnings_no = warnings
++        build.outcome = outcome
++        build.save()
++
++        return build_obj
++
++
++class BuildInfoHelper(object):
++    """ This class gathers the build information from the server and sends it
++        towards the ORM wrapper for storing in the database
++    """
++
 +    def __init__(self):
 +        self.configure_django()
 +        self.task_order = 0
 +        self.tasks_information = {}
++        self.uuid = None
++        self.transport_utils = {}
++        self.orm_wrapper = ORMWrapper()
 +
 +    def configure_django(self):
 +        import webhob.whbmain.settings as whb_django_settings
@@ -108,622 +175,270 @@ index 0000000..f832806
 +        setup_environ(whb_django_settings)
 +        # Add webhob to sys path for importing modules
 +        sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'webhob'))
-+    
-+    def store_build(self, uuid):
-+        # This needs to be imported after we have configured the Django settings file
-+        from webhob.orm.models import Builds, Machines, Layers
-+        machine_obj = Machines.objects.create(
-+                                name='Test Machine',
-+                                description='This is our great test machine'
-+                                )
-+        machine_obj.save()
 +
-+        layer_obj = Layers.objects.create(
-+                                name='Test Layer',
-+                                branch='master_test',
-+                                commit='2148u323nsau83smdmbnca3312f',
-+                                priority=2,
-+                                link_to_oe_core='http://test.oecore.com'
-+                                )
-+        layer_obj.save()
-+
-+        build_obj = Builds.objects.create(
-+                                uuid=uuid,
-+                                target='test target',
-+                                host_machine='Host machine',
-+                                distro='1.234',
-+                                distro_version='v2',
-+                                host_system='Test hosting system',
-+                                host_distribution='Test host distrib',
-+                                target_system=machine_obj,
-+                                started_on=datetime.datetime.now(),
-+                                completed_on=datetime.datetime.now(),
-+                                outcome=3,
-+                                errors_no=0,
-+                                warnings_no=0,
-+                                cpu_usage=54,
-+                                disk_io=23.3232,
-+                                cooker_log_path='/home/test/cooker_test',
-+                                build_name='tester_build',
-+                                bitbake_version='1.0.5')
-+        build_obj.layers.add(layer_obj)
-+        build_obj.save()
-+
-+        return build_obj, layer_obj
-+
-+    def store_started_task(self, event, build_object):
-+        self.task_order += 1
-+        identifier = event._package + event._task
-+        self.tasks_information[identifier] = {
-+                'uuid': build_object,
-+                'task_executed': True,
-+                'order': self.task_order,
-+                'recipe': event._package,
-+                'task_name': event._task,
-+                'start_time': time.time(),
-+                }
-+
-+    def write_stored_tasks(self, event, build_object, layer_object):
-+        identifier = event._package + event._task
-+
-+        # fix this
-+        if event.getDisplayName().lower() == 'succeded':
-+            outcome = 0
-+        else:
-+            outcome = 1
-+
-+        self.tasks_information[identifier].update({
-+                'outcome': outcome,
-+                'end_time': time.time(),
-+                })
-+
-+        task = self.tasks_information[identifier]
-+
-+        # This needs to be imported after we have configured the Django settings file
-+        from webhob.orm.models import Tasks, Recipes
-+
-+        recipe_obj = Recipes.objects.create(
-+                                    name=task['recipe'],
-+                                    version='1.0',
-+                                    layer=layer_object,
-+                                    summary='Short summary',
-+                                    description='Longer description',
-+                                    section='24',
-+                                    license='license title',
-+                                    licensing_info='longer license information',
-+                                    homepage='http://homepage.com',
-+                                    bugtracker='2456',
-+                                    author='Mr.Test',
-+                                    file_path='home/test/testproject/',
-+                                    )
-+
-+        # Store finished task
-+        task_obj = Tasks.objects.create(uuid=task['uuid'],
-+                                        order=task['order'],
-+                                        outcome=task['outcome'],
-+                                        recipe=recipe_obj,
-+                                        task_name=task['task_name'],
-+                                        elapsed_time=task['end_time'] - task['start_time'],
-+                                        # The next lines are just for testing reasons
-+                                        sstate_checksum = '2134123sdscsdf232342tgfdv',
-+                                        task_executed=True,
-+                                        path_to_sstate_obj='/home/calin',
-+                                        source_url='/',
-+                                        log_file='/',
-+                                        work_directory='/',
-+                                        script_type=0,
-+                                        file_path='/',
-+                                        line_number=55,
-+                                        py_stack_trace='Testing traceback',
-+                                        disk_io = 23.55633,
-+                                        cpu_usage=43,
-+                                        errors_no=0,
-+                                        warnings_no=0,
-+                                        error='None',
-+                                        warning='None',
-+                                        sstate_result=0,
-+                                        diffsigs="Testing diffsigs")
-+        task_obj.save()
-+        # Clean memory
-+        del self.tasks_information[identifier]
-+
-+
-+class BBProgress(progressbar.ProgressBar):
-+    def __init__(self, msg, maxval):
-+        self.msg = msg
-+        widgets = [progressbar.Percentage(), ' ', progressbar.Bar(), ' ',
-+           progressbar.ETA()]
-+
-+        try:
-+            self._resize_default = signal.getsignal(signal.SIGWINCH)
-+        except:
-+            self._resize_default = None
-+        progressbar.ProgressBar.__init__(self, maxval, [self.msg + ": "] + widgets)
-+
-+    def _handle_resize(self, signum, frame):
-+        progressbar.ProgressBar._handle_resize(self, signum, frame)
-+        if self._resize_default:
-+            self._resize_default(signum, frame)
-+    def finish(self):
-+        progressbar.ProgressBar.finish(self)
-+        if self._resize_default:
-+            signal.signal(signal.SIGWINCH, self._resize_default)
-+
-+class NonInteractiveProgress(object):
-+    fobj = sys.stdout
-+
-+    def __init__(self, msg, maxval):
-+        self.msg = msg
-+        self.maxval = maxval
-+
-+    def start(self):
-+        self.fobj.write("%s..." % self.msg)
-+        self.fobj.flush()
-+        return self
-+
-+    def update(self, value):
-+        pass
-+
-+    def finish(self):
-+        self.fobj.write("done.\n")
-+        self.fobj.flush()
-+
-+def new_progress(msg, maxval):
-+    if interactive:
-+        return BBProgress(msg, maxval)
-+    else:
-+        return NonInteractiveProgress(msg, maxval)
-+
-+def pluralise(singular, plural, qty):
-+    if(qty == 1):
-+        return singular % qty
-+    else:
-+        return plural % qty
-+
-+
-+class InteractConsoleLogFilter(logging.Filter):
-+    def __init__(self, tf, format):
-+        self.tf = tf
-+        self.format = format
-+
-+    def filter(self, record):
-+        if record.levelno == self.format.NOTE and (record.msg.startswith("Running") or record.msg.startswith("recipe ")):
-+            return False
-+        self.tf.clearFooter()
-+        return True
-+
-+class TerminalFilter(object):
-+    columns = 80
-+
-+    def sigwinch_handle(self, signum, frame):
-+        self.columns = self.getTerminalColumns()
-+        if self._sigwinch_default:
-+            self._sigwinch_default(signum, frame)
-+
-+    def getTerminalColumns(self):
-+        def ioctl_GWINSZ(fd):
-+            try:
-+                cr = struct.unpack('hh', fcntl.ioctl(fd, self.termios.TIOCGWINSZ, '1234'))
-+            except:
-+                return None
-+            return cr
-+        cr = ioctl_GWINSZ(sys.stdout.fileno())
-+        if not cr:
-+            try:
-+                fd = os.open(os.ctermid(), os.O_RDONLY)
-+                cr = ioctl_GWINSZ(fd)
-+                os.close(fd)
-+            except:
-+                pass
-+        if not cr:
-+            try:
-+                cr = (env['LINES'], env['COLUMNS'])
-+            except:
-+                cr = (25, 80)
-+        return cr[1]
-+
-+    def __init__(self, main, helper, console, format):
-+        self.main = main
-+        self.helper = helper
-+        self.cuu = None
-+        self.stdinbackup = None
-+        self.interactive = sys.stdout.isatty()
-+        self.footer_present = False
-+        self.lastpids = []
-+
-+        if not self.interactive:
-+            return
-+
-+        try:
-+            import curses
-+        except ImportError:
-+            sys.exit("FATAL: The knotty ui could not load the required curses python module.")
-+
-+        import termios
-+        self.curses = curses
-+        self.termios = termios
-+        try:
-+            fd = sys.stdin.fileno()
-+            self.stdinbackup = termios.tcgetattr(fd)
-+            new = copy.deepcopy(self.stdinbackup)
-+            new[3] = new[3] & ~termios.ECHO
-+            termios.tcsetattr(fd, termios.TCSADRAIN, new)
-+            curses.setupterm()
-+            if curses.tigetnum("colors") > 2:
-+                format.enable_color()
-+            self.ed = curses.tigetstr("ed")
-+            if self.ed:
-+                self.cuu = curses.tigetstr("cuu")
-+            try:
-+                self._sigwinch_default = signal.getsignal(signal.SIGWINCH)
-+                signal.signal(signal.SIGWINCH, self.sigwinch_handle)
-+            except:
-+                pass
-+            self.columns = self.getTerminalColumns()
-+        except:
-+            self.cuu = None
-+        console.addFilter(InteractConsoleLogFilter(self, format))
-+
-+    def clearFooter(self):
-+        if self.footer_present:
-+            lines = self.footer_present
-+            sys.stdout.write(self.curses.tparm(self.cuu, lines))
-+            sys.stdout.write(self.curses.tparm(self.ed))
-+        self.footer_present = False
-+
-+    def updateFooter(self):
-+        if not self.cuu:
-+            return
-+        activetasks = self.helper.running_tasks
-+        failedtasks = self.helper.failed_tasks
-+        runningpids = self.helper.running_pids
-+        if self.footer_present and (self.lastcount == self.helper.tasknumber_current) and (self.lastpids == runningpids):
-+            return
-+        if self.footer_present:
-+            self.clearFooter()
-+        if (not self.helper.tasknumber_total or self.helper.tasknumber_current == self.helper.tasknumber_total) and not len(activetasks):
-+            return
-+        tasks = []
-+        for t in runningpids:
-+            tasks.append("%s (pid %s)" % (activetasks[t]["title"], t))
-+
-+        if self.main.shutdown:
-+            content = "Waiting for %s running tasks to finish:" % len(activetasks)
-+        elif not len(activetasks):
-+            content = "No currently running tasks (%s of %s)" % (self.helper.tasknumber_current, self.helper.tasknumber_total)
-+        else:
-+            content = "Currently %s running tasks (%s of %s):" % (len(activetasks), self.helper.tasknumber_current, self.helper.tasknumber_total)
-+        print(content)
-+        lines = 1 + int(len(content) / (self.columns + 1))
-+        for tasknum, task in enumerate(tasks):
-+            content = "%s: %s" % (tasknum, task)
-+            print(content)
-+            lines = lines + 1 + int(len(content) / (self.columns + 1))
-+        self.footer_present = lines
-+        self.lastpids = runningpids[:]
-+        self.lastcount = self.helper.tasknumber_current
-+
-+    def finish(self):
-+        if self.stdinbackup:
-+            fd = sys.stdin.fileno()
-+            self.termios.tcsetattr(fd, self.termios.TCSADRAIN, self.stdinbackup)
-+
-+def main(server, eventHandler, params, tf = TerminalFilter):
-+    print "This is running in DSI mode"
-+
-+    # Generate an unique ID for this build
-+    # TODO: for multiple build commands this might not work as expected
-+    import uuid
-+    uuid = sessionid = str(uuid.uuid4())
-+
-+    # Get values of variables which control our output
-+    includelogs, error = server.runCommand(["getVariable", "BBINCLUDELOGS"])
-+    if error:
-+        logger.error("Unable to get the value of BBINCLUDELOGS variable: %s" % error)
-+        return 1
-+    loglines, error = server.runCommand(["getVariable", "BBINCLUDELOGS_LINES"])
-+    if error:
-+        logger.error("Unable to get the value of BBINCLUDELOGS_LINES variable: %s" % error)
-+        return 1
-+    consolelogfile, error = server.runCommand(["getVariable", "BB_CONSOLELOG"])
-+    if error:
-+        logger.error("Unable to get the value of BB_CONSOLELOG variable: %s" % error)
-+        return 1
-+
-+    if sys.stdin.isatty() and sys.stdout.isatty():
-+        log_exec_tty = True
-+    else:
-+        log_exec_tty = False
-+
-+    helper = uihelper.BBUIHelper()
-+
-+    console = logging.StreamHandler(sys.stdout)
-+    format_str = "%(levelname)s: %(message)s"
-+    format = bb.msg.BBLogFormatter(format_str)
-+    bb.msg.addDefaultlogFilter(console)
-+    console.setFormatter(format)
-+    logger.addHandler(console)
-+
-+    if consolelogfile and not params.options.show_environment:
-+        bb.utils.mkdirhier(os.path.dirname(consolelogfile))
-+        conlogformat = bb.msg.BBLogFormatter(format_str)
-+        consolelog = logging.FileHandler(consolelogfile)
-+        bb.msg.addDefaultlogFilter(consolelog)
-+        consolelog.setFormatter(conlogformat)
-+        logger.addHandler(consolelog)
-+
-+    try:
-+        params.updateFromServer(server)
-+        cmdline = params.parseActions()
-+        if not cmdline:
-+            print("Nothing to do.  Use 'bitbake world' to build everything, or run 'bitbake --help' for usage information.")
-+            return 1
-+        if 'msg' in cmdline and cmdline['msg']:
-+            logger.error(cmdline['msg'])
-+            return 1
-+
-+        ret, error = server.runCommand(cmdline['action'])
-+        if error:
-+            logger.error("Command '%s' failed: %s" % (cmdline, error))
-+            return 1
-+        elif ret != True:
-+            logger.error("Command '%s' failed: returned %s" % (cmdline, ret))
-+            return 1
-+    except xmlrpclib.Fault as x:
-+        logger.error("XMLRPC Fault getting commandline:\n %s" % x)
-+        return 1
-+
-+    parseprogress = None
-+    cacheprogress = None
-+    main.shutdown = 0
-+    interrupted = False
-+    return_value = 0
-+    errors = 0
-+    warnings = 0
-+    taskfailures = []
-+    wbhbhelper = WebHOBHelper()
-+    build_object, layer_object = wbhbhelper.store_build(uuid)
-+
-+    termfilter = tf(main, helper, console, format)
-+
-+    while True:
-+        try:
-+            termfilter.updateFooter()
-+            event = eventHandler.waitEvent(0.25)
-+
-+            if event is None:
-+                if main.shutdown > 1:
-+                    break
-+                continue
-+
-+            helper.eventHandler(event)
-+
-+            if isinstance(event, bb.runqueue.runQueueExitWait):
-+                if not main.shutdown:
-+                    main.shutdown = 1
-+
-+            if isinstance(event, bb.build.TaskStarted):
-+                wbhbhelper.store_started_task(event, build_object)
-+
-+            if isinstance(event, (bb.build.TaskSucceeded, bb.build.TaskFailedSilent, bb.build.TaskFailed)):
-+                wbhbhelper.write_stored_tasks(event, build_object, layer_object)
-+
-+            if isinstance(event, bb.event.LogExecTTY):
-+                if log_exec_tty:
-+                    tries = event.retries
-+                    while tries:
-+                        print("Trying to run: %s" % event.prog)
-+                        if os.system(event.prog) == 0:
-+                            break
-+                        time.sleep(event.sleep_delay)
-+                        tries -= 1
-+                    if tries:
-+                        continue
-+                logger.warn(event.msg)
-+                continue
-+
-+            if isinstance(event, logging.LogRecord):
-+                if event.levelno >= format.ERROR:
-+                    errors = errors + 1
-+                    return_value = 1
-+                elif event.levelno == format.WARNING:
-+                    warnings = warnings + 1
-+                # For "normal" logging conditions, don't show note logs from tasks
-+                # but do show them if the user has changed the default log level to 
-+                # include verbose/debug messages
-+                if event.taskpid != 0 and event.levelno <= format.NOTE:
-+                    continue
-+                logger.handle(event)
-+                continue
-+
-+            if isinstance(event, bb.build.TaskFailed):
-+                return_value = 1
-+                logfile = event.logfile
-+                if logfile and os.path.exists(logfile):
-+                    termfilter.clearFooter()
-+                    bb.error("Logfile of failure stored in: %s" % logfile)
-+                    if includelogs and not event.errprinted:
-+                        print("Log data follows:")
-+                        f = open(logfile, "r")
-+                        lines = []
-+                        while True:
-+                            l = f.readline()
-+                            if l == '':
-+                                break
-+                            l = l.rstrip()
-+                            if loglines:
-+                                lines.append(' | %s' % l)
-+                                if len(lines) > int(loglines):
-+                                    lines.pop(0)
-+                            else:
-+                                print('| %s' % l)
-+                        f.close()
-+                        if lines:
-+                            for line in lines:
-+                                print(line)
-+            if isinstance(event, bb.build.TaskBase):
-+                logger.info(event._message)
-+                continue
-+            if isinstance(event, bb.event.ParseStarted):
-+                if event.total == 0:
-+                    continue
-+                parseprogress = new_progress("Parsing recipes", event.total).start()
-+                continue
-+            if isinstance(event, bb.event.ParseProgress):
-+                parseprogress.update(event.current)
-+                continue
-+            if isinstance(event, bb.event.ParseCompleted):
-+                if not parseprogress:
-+                    continue
-+
-+                parseprogress.finish()
-+                print(("Parsing of %d .bb files complete (%d cached, %d parsed). %d targets, %d skipped, %d masked, %d errors."
-+                    % ( event.total, event.cached, event.parsed, event.virtuals, event.skipped, event.masked, event.errors)))
-+                continue
-+
-+            if isinstance(event, bb.event.CacheLoadStarted):
-+                cacheprogress = new_progress("Loading cache", event.total).start()
-+                continue
-+            if isinstance(event, bb.event.CacheLoadProgress):
-+                cacheprogress.update(event.current)
-+                continue
-+            if isinstance(event, bb.event.CacheLoadCompleted):
-+                cacheprogress.finish()
-+                print("Loaded %d entries from dependency cache." % event.num_entries)
-+                continue
-+
-+            if isinstance(event, bb.event.MultipleProviders):
-+                logger.info("multiple providers are available for %s%s (%s)", event._is_runtime and "runtime " or "",
-+                            event._item,
-+                            ", ".join(event._candidates))
-+                logger.info("consider defining a PREFERRED_PROVIDER entry to match %s", event._item)
-+                continue
-+            if isinstance(event, bb.event.NoProvider):
-+                return_value = 1
-+                errors = errors + 1
-+                if event._runtime:
-+                    r = "R"
-+                else:
-+                    r = ""
-+
-+                if event._dependees:
-+                    logger.error("Nothing %sPROVIDES '%s' (but %s %sDEPENDS on or otherwise requires it)", r, event._item, ", ".join(event._dependees), r)
-+                else:
-+                    logger.error("Nothing %sPROVIDES '%s'", r, event._item)
-+                if event._reasons:
-+                    for reason in event._reasons:
-+                        logger.error("%s", reason)
-+                continue
-+
-+            if isinstance(event, bb.runqueue.sceneQueueTaskStarted):
-+                logger.info("Running setscene task %d of %d (%s)" % (event.stats.completed + event.stats.active + event.stats.failed + 1, event.stats.total, event.taskstring))
-+                continue
-+
-+            if isinstance(event, bb.runqueue.runQueueTaskStarted):
-+                if event.noexec:
-+                    tasktype = 'noexec task'
-+                else:
-+                    tasktype = 'task'
-+                logger.info("Running %s %s of %s (ID: %s, %s)",
-+                            tasktype,
-+                            event.stats.completed + event.stats.active +
-+                                event.stats.failed + 1,
-+                            event.stats.total, event.taskid, event.taskstring)
-+                continue
-+
-+            if isinstance(event, bb.runqueue.runQueueTaskFailed):
-+                taskfailures.append(event.taskstring)
-+                logger.error("Task %s (%s) failed with exit code '%s'",
-+                             event.taskid, event.taskstring, event.exitcode)
-+                continue
-+ 
-+            if isinstance(event, bb.runqueue.sceneQueueTaskFailed):
-+                logger.warn("Setscene task %s (%s) failed with exit code '%s' - real task will be run instead",
-+                             event.taskid, event.taskstring, event.exitcode)
-+                continue
-+
-+            if isinstance(event, bb.event.ConfigParsed):
-+                # timestamp should be added for this
-+                continue
-+            
-+            if isinstance(event, bb.event.RecipeParsed):
-+                # timestamp should be added for this
-+                continue
-+                
-+            if isinstance(event, bb.event.OperationStarted):
-+                # timestamp should be added for this
-+                continue
-+
-+            if isinstance(event, bb.event.OperationCompleted):
-+                # timestamp should be added for this
-+                # signal a complete operation
-+                # calculate timing
-+                continue
-+
-+            if isinstance(event, bb.event.DiskFull):
-+                # trigger an error
-+                continue
-+
-+            # ignore
-+            if isinstance(event, (bb.event.BuildBase,
-+                                  bb.event.StampUpdate,
-+                                  bb.event.RecipePreFinalise,
-+                                  bb.runqueue.runQueueEvent,
-+                                  bb.runqueue.runQueueExitWait,
-+                                  bb.event.OperationProgress,
-+                                  bb.command.CommandFailed,
-+                                  bb.command.CommandExit,
-+                                  bb.command.CommandCompleted,
-+                                  bb.cooker.CookerExit)):
-+                continue
-+
-+            logger.error("Unknown event: %s", event)
-+
-+        except EnvironmentError as ioerror:
-+            termfilter.clearFooter()
-+            # ignore interrupted io
-+            if ioerror.args[0] == 4:
-+                pass
-+        except KeyboardInterrupt:
-+            termfilter.clearFooter()
-+            if main.shutdown == 1:
-+                print("\nSecond Keyboard Interrupt, stopping...\n")
-+                _, error = server.runCommand(["stateStop"])
-+                if error:
-+                    logger.error("Unable to cleanly stop: %s" % error)
-+            if main.shutdown == 0:
-+                print("\nKeyboard Interrupt, closing down...\n")
-+                interrupted = True
-+                _, error = server.runCommand(["stateShutdown"])
-+                if error:
-+                    logger.error("Unable to cleanly shutdown: %s" % error)
-+            main.shutdown = main.shutdown + 1
-+            pass
-+
-+    summary = ""
-+    if taskfailures:
-+        summary += pluralise("\nSummary: %s task failed:",
-+                             "\nSummary: %s tasks failed:", len(taskfailures))
-+        for failure in taskfailures:
-+            summary += "\n  %s" % failure
-+    if warnings:
-+        summary += pluralise("\nSummary: There was %s WARNING message shown.",
-+                             "\nSummary: There were %s WARNING messages shown.", warnings)
-+    if return_value:
-+        summary += pluralise("\nSummary: There was %s ERROR message shown, returning a non-zero exit code.",
-+                             "\nSummary: There were %s ERROR messages shown, returning a non-zero exit code.", errors)
-+    if summary:
-+        print(summary)
-+
-+    if interrupted:
-+        print("Execution was interrupted, returning a non-zero exit code.")
-+        if return_value == 0:
-+            return_value = 1
-+
-+    termfilter.finish()
-+
-+    return return_value
-+
++    def store_started_build(self, event, server):
++
++        machine_information = self.orm_wrapper.get_machine_information(server)
++        machine_obj = self.orm_wrapper.create_machine_object(machine_information)
++
++        build_information = self.orm_wrapper.get_build_information(server, machine_obj)
++        build_obj = self.orm_wrapper.create_build_object(build_information)
++        self.transport_utils['build'] = build_obj
++
++    def update_build_information(self, event, errors, warnings):
++        build_obj = self.orm_wrapper.update_build_object(self.transport_utils['build'], errors, warnings)
++        del self.transport_utils['build']
+diff --git a/bitbake/lib/bb/ui/dsi.py b/bitbake/lib/bb/ui/dsi.py
+index f832806..d7b038c 100644
+--- a/bitbake/lib/bb/ui/dsi.py
++++ b/bitbake/lib/bb/ui/dsi.py
+@@ -17,157 +17,25 @@
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+ from __future__ import division
++from bb.ui import uihelper
++from bb.ui.buildinfohelper import BuildInfoHelper
+ 
+-import os
+-import sys
+-import xmlrpclib
++import bb.msg
++import copy
++import fcntl
+ import logging
++import os
+ import progressbar
+ import signal
+-import bb.msg
+-import time
+-import fcntl
+ import struct
+-import copy
+-import datetime
++import sys
++import time
++import xmlrpclib
+ 
+-from bb.ui import uihelper
+ 
+ logger = logging.getLogger("BitBake")
+ interactive = sys.stdout.isatty()
+ 
+-class WebHOBHelper(object):
+-    
+-    def __init__(self):
+-        self.configure_django()
+-        self.task_order = 0
+-        self.tasks_information = {}
+-
+-    def configure_django(self):
+-        import webhob.whbmain.settings as whb_django_settings
+-        from django.core.management import setup_environ
+-        setup_environ(whb_django_settings)
+-        # Add webhob to sys path for importing modules
+-        sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'webhob'))
+-    
+-    def store_build(self, uuid):
+-        # This needs to be imported after we have configured the Django settings file
+-        from webhob.orm.models import Builds, Machines, Layers
+-        machine_obj = Machines.objects.create(
+-                                name='Test Machine',
+-                                description='This is our great test machine'
+-                                )
+-        machine_obj.save()
+-
+-        layer_obj = Layers.objects.create(
+-                                name='Test Layer',
+-                                branch='master_test',
+-                                commit='2148u323nsau83smdmbnca3312f',
+-                                priority=2,
+-                                link_to_oe_core='http://test.oecore.com'
+-                                )
+-        layer_obj.save()
+-
+-        build_obj = Builds.objects.create(
+-                                uuid=uuid,
+-                                target='test target',
+-                                host_machine='Host machine',
+-                                distro='1.234',
+-                                distro_version='v2',
+-                                host_system='Test hosting system',
+-                                host_distribution='Test host distrib',
+-                                target_system=machine_obj,
+-                                started_on=datetime.datetime.now(),
+-                                completed_on=datetime.datetime.now(),
+-                                outcome=3,
+-                                errors_no=0,
+-                                warnings_no=0,
+-                                cpu_usage=54,
+-                                disk_io=23.3232,
+-                                cooker_log_path='/home/test/cooker_test',
+-                                build_name='tester_build',
+-                                bitbake_version='1.0.5')
+-        build_obj.layers.add(layer_obj)
+-        build_obj.save()
+-
+-        return build_obj, layer_obj
+-
+-    def store_started_task(self, event, build_object):
+-        self.task_order += 1
+-        identifier = event._package + event._task
+-        self.tasks_information[identifier] = {
+-                'uuid': build_object,
+-                'task_executed': True,
+-                'order': self.task_order,
+-                'recipe': event._package,
+-                'task_name': event._task,
+-                'start_time': time.time(),
+-                }
+-
+-    def write_stored_tasks(self, event, build_object, layer_object):
+-        identifier = event._package + event._task
+-
+-        # fix this
+-        if event.getDisplayName().lower() == 'succeded':
+-            outcome = 0
+-        else:
+-            outcome = 1
+-
+-        self.tasks_information[identifier].update({
+-                'outcome': outcome,
+-                'end_time': time.time(),
+-                })
+-
+-        task = self.tasks_information[identifier]
+-
+-        # This needs to be imported after we have configured the Django settings file
+-        from webhob.orm.models import Tasks, Recipes
+-
+-        recipe_obj = Recipes.objects.create(
+-                                    name=task['recipe'],
+-                                    version='1.0',
+-                                    layer=layer_object,
+-                                    summary='Short summary',
+-                                    description='Longer description',
+-                                    section='24',
+-                                    license='license title',
+-                                    licensing_info='longer license information',
+-                                    homepage='http://homepage.com',
+-                                    bugtracker='2456',
+-                                    author='Mr.Test',
+-                                    file_path='home/test/testproject/',
+-                                    )
+-
+-        # Store finished task
+-        task_obj = Tasks.objects.create(uuid=task['uuid'],
+-                                        order=task['order'],
+-                                        outcome=task['outcome'],
+-                                        recipe=recipe_obj,
+-                                        task_name=task['task_name'],
+-                                        elapsed_time=task['end_time'] - task['start_time'],
+-                                        # The next lines are just for testing reasons
+-                                        sstate_checksum = '2134123sdscsdf232342tgfdv',
+-                                        task_executed=True,
+-                                        path_to_sstate_obj='/home/calin',
+-                                        source_url='/',
+-                                        log_file='/',
+-                                        work_directory='/',
+-                                        script_type=0,
+-                                        file_path='/',
+-                                        line_number=55,
+-                                        py_stack_trace='Testing traceback',
+-                                        disk_io = 23.55633,
+-                                        cpu_usage=43,
+-                                        errors_no=0,
+-                                        warnings_no=0,
+-                                        error='None',
+-                                        warning='None',
+-                                        sstate_result=0,
+-                                        diffsigs="Testing diffsigs")
+-        task_obj.save()
+-        # Clean memory
+-        del self.tasks_information[identifier]
+-
+ 
+ class BBProgress(progressbar.ProgressBar):
+     def __init__(self, msg, maxval):
+@@ -350,12 +218,7 @@ class TerminalFilter(object):
+             self.termios.tcsetattr(fd, self.termios.TCSADRAIN, self.stdinbackup)
+ 
+ def main(server, eventHandler, params, tf = TerminalFilter):
+-    print "This is running in DSI mode"
+-
+-    # Generate an unique ID for this build
+-    # TODO: for multiple build commands this might not work as expected
+-    import uuid
+-    uuid = sessionid = str(uuid.uuid4())
++    print "DSI - Data Store Interface"
+ 
+     # Get values of variables which control our output
+     includelogs, error = server.runCommand(["getVariable", "BBINCLUDELOGS"])
+@@ -422,8 +285,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+     errors = 0
+     warnings = 0
+     taskfailures = []
+-    wbhbhelper = WebHOBHelper()
+-    build_object, layer_object = wbhbhelper.store_build(uuid)
++    buildinfohelper = BuildInfoHelper()
+ 
+     termfilter = tf(main, helper, console, format)
+ 
+@@ -443,11 +305,8 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+                 if not main.shutdown:
+                     main.shutdown = 1
+ 
+-            if isinstance(event, bb.build.TaskStarted):
+-                wbhbhelper.store_started_task(event, build_object)
+-
+-            if isinstance(event, (bb.build.TaskSucceeded, bb.build.TaskFailedSilent, bb.build.TaskFailed)):
+-                wbhbhelper.write_stored_tasks(event, build_object, layer_object)
++            if isinstance(event, bb.event.BuildStarted):
++                buildinfohelper.store_started_build(event, server)
+ 
+             if isinstance(event, bb.event.LogExecTTY):
+                 if log_exec_tty:
+@@ -470,7 +329,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+                 elif event.levelno == format.WARNING:
+                     warnings = warnings + 1
+                 # For "normal" logging conditions, don't show note logs from tasks
+-                # but do show them if the user has changed the default log level to 
++                # but do show them if the user has changed the default log level to
+                 # include verbose/debug messages
+                 if event.taskpid != 0 and event.levelno <= format.NOTE:
+                     continue
+@@ -577,20 +436,24 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+                 logger.error("Task %s (%s) failed with exit code '%s'",
+                              event.taskid, event.taskstring, event.exitcode)
+                 continue
+- 
++
+             if isinstance(event, bb.runqueue.sceneQueueTaskFailed):
+                 logger.warn("Setscene task %s (%s) failed with exit code '%s' - real task will be run instead",
+                              event.taskid, event.taskstring, event.exitcode)
+                 continue
+ 
++            if isinstance(event, (bb.command.CommandFailed, bb.command.CommandExit, bb.command.CommandCompleted, bb.cooker.CookerExit)):
++                buildinfohelper.update_build_information(event, errors, warnings)
++                main.shutdown = 2
++
+             if isinstance(event, bb.event.ConfigParsed):
+                 # timestamp should be added for this
+                 continue
+-            
++
+             if isinstance(event, bb.event.RecipeParsed):
+                 # timestamp should be added for this
+                 continue
+-                
++
+             if isinstance(event, bb.event.OperationStarted):
+                 # timestamp should be added for this
+                 continue
+@@ -664,4 +527,3 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+     termfilter.finish()
+ 
+     return return_value
+-
 -- 
 1.8.1.2
 
