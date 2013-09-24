@@ -1,20 +1,20 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 5D4336CB6D
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 705126CB29
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue, 24 Sep 2013 16:53:12 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga102.jf.intel.com with ESMTP; 24 Sep 2013 09:50:08 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 24 Sep 2013 09:53:11 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="400405775"
+X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="406511883"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by fmsmga001.fm.intel.com with ESMTP; 24 Sep 2013 09:53:13 -0700
+	by fmsmga002.fm.intel.com with ESMTP; 24 Sep 2013 09:53:10 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id 6178E562CF7; Tue, 24 Sep 2013 17:53:05 +0100 (BST)
+	id EC52F5622D2; Tue, 24 Sep 2013 17:53:04 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Sep 2013 17:52:55 +0100
-Message-Id: <65c8e913c39fcaed29ed8917b7e9e6dc60814c40.1380041477.git.alexandru.damian@intel.com>
+Date: Tue, 24 Sep 2013 17:52:15 +0100
+Message-Id: <1292e652e0af307e1d2086402c09dd5789e00304.1380041477.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <22b15f86ec61c7577adab12d7ab4d42373519f5c.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
@@ -22,7 +22,7 @@ References: <cover.1380041477.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 86/94] bitbake: cooker: add the inherits attribute to the dependency tree
+Subject: [PATCH 46/94] bitbake: webhob: extend search for multiple terms
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,26 +39,34 @@ X-List-Received-Date: Tue, 24 Sep 2013 16:53:13 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-The built dependency tree has to have the inherits attribute
-so that the UIs can use and save this information.
+We extend the search functionality as to be able to narrow
+down search results based on multiple terms.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bitbake/lib/bb/cooker.py | 1 +
- 1 file changed, 1 insertion(+)
+ bitbake/lib/webhob/bldviewer/views.py | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index ff2af69..9ed22c7 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -481,6 +481,7 @@ class BBCooker:
-                 depend_tree["pn"][pn] = {}
-                 depend_tree["pn"][pn]["filename"] = fn
-                 depend_tree["pn"][pn]["version"] = version
-+                depend_tree["pn"][pn]["inherits"] = self.recipecache.inherits.get(fn, None)
+diff --git a/bitbake/lib/webhob/bldviewer/views.py b/bitbake/lib/webhob/bldviewer/views.py
+index a5c4387..4f7b46c 100644
+--- a/bitbake/lib/webhob/bldviewer/views.py
++++ b/bitbake/lib/webhob/bldviewer/views.py
+@@ -169,10 +169,13 @@ def _validate_input(input, model):
+     return input, invalid
  
-                 # if we have extra caches, list all attributes they bring in
-                 extra_info = []
+ def _get_search_results(search_term, queryset, model):
+-    q_map = map(lambda x: Q(**{x+'__icontains': search_term}),
++    search_objects = []
++    for st in search_term.split(" "):
++        q_map = map(lambda x: Q(**{x+'__icontains': st}),
+                 model.search_allowed_fields)
+ 
+-    search_object = reduce(operator.or_, q_map)
++        search_objects.append(reduce(operator.or_, q_map))
++    search_object = reduce(operator.and_, search_objects)
+     queryset = queryset.filter(search_object)
+ 
+     return queryset
 -- 
 1.8.1.2
 
