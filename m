@@ -1,28 +1,27 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 5E4E66CB15
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 54FC06CAF4
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue, 24 Sep 2013 16:53:07 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 24 Sep 2013 09:50:03 -0700
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 24 Sep 2013 09:53:09 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="408442561"
+X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="382902437"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by orsmga002.jf.intel.com with ESMTP; 24 Sep 2013 09:53:08 -0700
+	by orsmga001.jf.intel.com with ESMTP; 24 Sep 2013 09:53:08 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id B38B7561334; Tue, 24 Sep 2013 17:53:04 +0100 (BST)
+	id AEE2F561307; Tue, 24 Sep 2013 17:53:04 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Sep 2013 17:51:53 +0100
-Message-Id: <f61e47d18d0eaad4d647e96bff7243586c953823.1380041477.git.alexandru.damian@intel.com>
+Date: Tue, 24 Sep 2013 17:51:51 +0100
+Message-Id: <dee4685fd360f04aa6baec19a3cc8bbef53c00bb.1380041477.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <22b15f86ec61c7577adab12d7ab4d42373519f5c.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
 	<22b15f86ec61c7577adab12d7ab4d42373519f5c.1380041477.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 24/94] bitbake: dsi: event data change
+Subject: [PATCH 22/94] bitbake: webhob: mark private methods inside DSI
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,102 +36,189 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 24 Sep 2013 16:53:07 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Calin Dragomir <calinx.l.dragomir@intel.com>
 
-Changes in the BuildInfoHelper and DSI as to record task
-file names and task names coming through the bb.build.Task*
-events.
-
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+This patch marks private methods used in the DSI.
+It also cleans some old meaningless comments.
 ---
- bitbake/lib/bb/ui/buildinfohelper.py | 22 +++++++++++++---------
- bitbake/lib/bb/ui/dsi.py             |  1 +
- 2 files changed, 14 insertions(+), 9 deletions(-)
+ bitbake/lib/bb/ui/buildinfohelper.py | 49 +++++++++++++++---------------------
+ 1 file changed, 20 insertions(+), 29 deletions(-)
 
 diff --git a/bitbake/lib/bb/ui/buildinfohelper.py b/bitbake/lib/bb/ui/buildinfohelper.py
-index 820e0f8..e43aa8c 100644
+index 2da38e2..820e0f8 100644
 --- a/bitbake/lib/bb/ui/buildinfohelper.py
 +++ b/bitbake/lib/bb/ui/buildinfohelper.py
-@@ -116,7 +116,7 @@ class ORMWrapper(object):
-         task_information['log_file'] = 'Not Available'
-         task_information['work_directory'] = 'Not Available'
-         task_information['script_type'] = 0
--        task_information['file_path'] = 'Not Available'
-+        task_information['file_path'] = event.taskfile
-         task_information['line_number'] = 0
-         task_information['py_stack_trace'] = 'Not Available'
-         task_information['disk_io'] = 0
-@@ -132,7 +132,7 @@ class ORMWrapper(object):
+@@ -32,7 +32,6 @@ class ORMWrapper(object):
+         return machine_info
+ 
+     def create_machine_object(self, machine_information):
+-        # This needs to be imported after we have configured the Django settings file
+ 
+         machine = Machine.objects.get_or_create(name=machine_information['name'],
+                                                 description=machine_information['description'])
+@@ -63,7 +62,6 @@ class ORMWrapper(object):
+         return build_info
+ 
+     def create_build_object(self, build_info):
+-        # This needs to be imported after we have configured the Django settings file
+ 
+         build = Build.objects.create(uuid=build_info['uuid'],
+                                     target=build_info['target'],
+@@ -83,7 +81,6 @@ class ORMWrapper(object):
+         return build
+ 
+     def update_build_object(self, build_obj, errors, warnings, taskfailures):
+-        # This needs to be imported after we have configured the Django settings file
+ 
+         outcome = 0
+         if errors or taskfailures:
+@@ -98,8 +95,7 @@ class ORMWrapper(object):
+ 
+     def get_task_information(self, event):
+ 
+-
+-        recipe = self.get_recipe_object(event)
++        recipe = self._get_recipe_object(event)
+ 
+         task_information = {}
+         task_information['build'] = self.transport_utils['build']
+@@ -135,7 +131,6 @@ class ORMWrapper(object):
+         return task_information
  
      def create_task_object(self, task_information):
+-        # This needs to be imported after we have configured the Django settings file
          self.task_order += 1
--        identifier = task_information['recipe'].name + task_information['task_name']
-+        identifier = task_information['recipe'].file_path + task_information['task_name']
+         identifier = task_information['recipe'].name + task_information['task_name']
  
-         task_object = Task.objects.get_or_create(
-                                 build=task_information['build'],
-@@ -173,14 +173,16 @@ class ORMWrapper(object):
+@@ -170,7 +165,6 @@ class ORMWrapper(object):
+         return task_object[0]
  
+     def update_task_object(self, task_dictionary, event):
+-        # This needs to be imported after we have configured the Django settings file
+ 
+         task = task_dictionary['object']
+ 
+@@ -180,7 +174,7 @@ class ORMWrapper(object):
          if isinstance(event, bb.runqueue.runQueueTaskCompleted):
              task.outcome = 3
-+            task.save()
-+
-+        if isinstance(event, bb.build.TaskBase):
-+            task.recipe.name = event._package
-+            task.recipe.save()
  
-         task_build_stats = self._get_task_build_stats(task)
+-        task_build_stats = self.get_task_build_stats(task)
++        task_build_stats = self._get_task_build_stats(task)
          task.cpu_usage = task_build_stats['cpu_usage']
          task.disk_io = task_build_stats['disk_io']
  
--        if outcome_info.get('error', ''):
--            task.error = outcome_info['error']
--
-         #TODO: get error number
-         #TODO: get warnings number
-         #TODO: get warning information
-@@ -264,7 +266,7 @@ class ORMWrapper(object):
-         build_layer_obj = self._get_build_layer_object(event)
+@@ -193,13 +187,13 @@ class ORMWrapper(object):
+ 
+         task.save()
+ 
+-    def get_task_build_stats(self, task_object):
+-        bs_path = self.get_path_information(task_object)
+-        task_build_stats = self.get_build_stats_from_file(bs_path, task_object.task_name)
++    def _get_task_build_stats(self, task_object):
++        bs_path = self._get_path_information(task_object)
++        task_build_stats = self._get_build_stats_from_file(bs_path, task_object.task_name)
+ 
+         return task_build_stats
+ 
+-    def get_path_information(self, task_object):
++    def _get_path_information(self, task_object):
+         build_stats_format = "{tmpdir}/buildstats/{target}-{machine}/{buildname}/{package}/"
+ 
+         tmp_dir = self.server.runCommand(["getVariable", "TMPDIR"])[0]
+@@ -214,7 +208,7 @@ class ORMWrapper(object):
+ 
+         return build_stats_path
+ 
+-    def get_build_stats_from_file(self, bs_path, task_name):
++    def _get_build_stats_from_file(self, bs_path, task_name):
+ 
+         task_bs_filename = str(bs_path) + str(task_name)
+         task_bs = open(task_bs_filename, 'r')
+@@ -244,10 +238,9 @@ class ORMWrapper(object):
+ 
+         return task_build_stats
+ 
+-    def get_recipe_object(self, event):
+-        # This needs to be imported after we have configured the Django settings file
++    def _get_recipe_object(self, event):
+ 
+-        recipe_information = self.get_recipe_information(event)
++        recipe_information = self._get_recipe_information(event)
+ 
+         recipe_object = Recipe.objects.get_or_create(
+                                 name=recipe_information['name'],
+@@ -266,9 +259,9 @@ class ORMWrapper(object):
+ 
+         return recipe_object[0]
+ 
+-    def get_recipe_information(self, event):
++    def _get_recipe_information(self, event):
+ 
+-        build_layer_obj = self.get_build_layer_object(event)
++        build_layer_obj = self._get_build_layer_object(event)
  
          recipe_info = {}
--        recipe_info['name'] = event.taskpackage
-+        recipe_info['name'] = 'N/A'
-         recipe_info['version'] = 'Not Available'
-         recipe_info['layer'] = build_layer_obj
-         recipe_info['summary'] = 'Not Available'
-@@ -275,7 +277,8 @@ class ORMWrapper(object):
-         recipe_info['homepage'] = 'Not Available'
-         recipe_info['bugtracker'] = 'Not Available'
-         recipe_info['author'] = 'Not Available'
--        recipe_info['file_path'] = 'Not Available'
-+        recipe_info['file_path'] = event.taskfile
-+
+         recipe_info['name'] = event.taskpackage
+@@ -286,10 +279,9 @@ class ORMWrapper(object):
  
          return recipe_info
  
-@@ -406,7 +409,8 @@ class BuildInfoHelper(object):
-         task_obj = self.orm_wrapper.create_task_object(task_information)
+-    def get_build_layer_object(self, event):
+-        # This needs to be imported after we have configured the Django settings file
++    def _get_build_layer_object(self, event):
  
-     def update_and_store_task(self, event):
--        identifier = event.taskpackage + event.taskname
-+        identifier = event.taskfile + event.taskname
-         task_dictionary = self.orm_wrapper.transport_utils[identifier]
-         self.orm_wrapper.update_task_object(task_dictionary, event)
--        del self.orm_wrapper.transport_utils[identifier]
-+        if isinstance(event,bb.runqueue.runQueueTaskCompleted):
-+            del self.orm_wrapper.transport_utils[identifier]
-diff --git a/bitbake/lib/bb/ui/dsi.py b/bitbake/lib/bb/ui/dsi.py
-index 90dd732..22b35e2 100644
---- a/bitbake/lib/bb/ui/dsi.py
-+++ b/bitbake/lib/bb/ui/dsi.py
-@@ -288,6 +288,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                 buildinfohelper.store_started_build(event)
+-        build_layer_information = self.get_build_layer_information(event)
++        build_layer_information = self._get_build_layer_information(event)
  
-             if isinstance(event, (bb.build.TaskSucceeded, bb.build.TaskFailedSilent, bb.build.TaskFailed)):
-+                buildinfohelper.update_and_store_task(event)
-                 continue
+         build_layer_object = Build_Layer.objects.get_or_create(
+                                     build = build_layer_information['build'],
+@@ -301,9 +293,9 @@ class ORMWrapper(object):
  
-             if isinstance(event, bb.event.LogExecTTY):
+         return build_layer_object[0]
+ 
+-    def get_build_layer_information(self, event):
++    def _get_build_layer_information(self, event):
+ 
+-        layer_object = self.get_layer_object(event)
++        layer_object = self._get_layer_object(event)
+ 
+         build_layer_info = {}
+         build_layer_info['build'] = self.transport_utils['build']
+@@ -314,10 +306,9 @@ class ORMWrapper(object):
+ 
+         return build_layer_info
+ 
+-    def get_layer_object(self, event):
+-        # This needs to be imported after we have configured the Django settings file
++    def _get_layer_object(self, event):
+ 
+-        layer_information = self.get_layer_information(event)
++        layer_information = self._get_layer_information(event)
+ 
+         layer_object = Layer.objects.get_or_create(
+                                 name=layer_information['name'],
+@@ -327,7 +318,7 @@ class ORMWrapper(object):
+ 
+         return layer_object[0]
+ 
+-    def get_layer_information(self, event):
++    def _get_layer_information(self, event):
+ 
+         layer_info = {}
+         layer_info['name'] = 'Layer Test Name'
+@@ -386,10 +377,10 @@ class BuildInfoHelper(object):
+     """
+ 
+     def __init__(self, server):
+-        self.configure_django()
++        self._configure_django()
+         self.orm_wrapper = ORMWrapper(server)
+ 
+-    def configure_django(self):
++    def _configure_django(self):
+         # Add webhob to sys path for importing modules
+         sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'webhob'))
+ 
 -- 
 1.8.1.2
 
