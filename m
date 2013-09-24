@@ -1,20 +1,20 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id ABD6A6CB63
+Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
+	by mail.openembedded.org (Postfix) with ESMTP id BF7F96CB75
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue, 24 Sep 2013 16:53:13 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 24 Sep 2013 09:53:14 -0700
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga102.ch.intel.com with ESMTP; 24 Sep 2013 09:53:15 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="406511909"
+X-IronPort-AV: E=Sophos;i="4.90,971,1371106800"; d="scan'208";a="298814600"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by fmsmga002.fm.intel.com with ESMTP; 24 Sep 2013 09:53:13 -0700
+	by AZSMGA002.ch.intel.com with ESMTP; 24 Sep 2013 09:53:11 -0700
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id 487D056297A; Tue, 24 Sep 2013 17:53:05 +0100 (BST)
+	id 0E5A556248B; Tue, 24 Sep 2013 17:53:05 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Sep 2013 17:52:45 +0100
-Message-Id: <120c4325b3180b5930a16d709e6bf3bd5fb5c158.1380041477.git.alexandru.damian@intel.com>
+Date: Tue, 24 Sep 2013 17:52:24 +0100
+Message-Id: <be86be2995118cf9ca524d3d6f3d2f953ef722b7.1380041477.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <22b15f86ec61c7577adab12d7ab4d42373519f5c.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
@@ -22,7 +22,7 @@ References: <cover.1380041477.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1380041477.git.alexandru.damian@intel.com>
 References: <cover.1380041477.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 76/94] bitbake: webhob: Simple visualisation for the build-time packages
+Subject: [PATCH 55/94] bitbake: dsi: store log information
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,135 +35,136 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 24 Sep 2013 16:53:14 -0000
+X-List-Received-Date: Tue, 24 Sep 2013 16:53:15 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Adding pages and views to allow viewing the data collected
-about the build-time packages.
+Adding database model for storing Log Information
+
+Adding code to store log information for errors
+and warnings coming through the build system.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- .../webhob/bldviewer/templates/basebuildpage.html  | 17 ++++++++++
- .../lib/webhob/bldviewer/templates/bpackage.html   | 36 ++++++++++++++++++++++
- .../lib/webhob/bldviewer/templates/package.html    | 10 ------
- bitbake/lib/webhob/bldviewer/views.py              |  9 +++++-
- 4 files changed, 61 insertions(+), 11 deletions(-)
- create mode 100644 bitbake/lib/webhob/bldviewer/templates/basebuildpage.html
- create mode 100644 bitbake/lib/webhob/bldviewer/templates/bpackage.html
+ bitbake/lib/bb/ui/buildinfohelper.py | 41 +++++++++++++++++++++++++++++++++---
+ bitbake/lib/bb/ui/dsi.py             |  9 ++++++--
+ bitbake/lib/webhob/orm/models.py     | 15 +++++++++++++
+ 3 files changed, 60 insertions(+), 5 deletions(-)
 
-diff --git a/bitbake/lib/webhob/bldviewer/templates/basebuildpage.html b/bitbake/lib/webhob/bldviewer/templates/basebuildpage.html
-new file mode 100644
-index 0000000..478019b
---- /dev/null
-+++ b/bitbake/lib/webhob/bldviewer/templates/basebuildpage.html
-@@ -0,0 +1,17 @@
-+{% extends "basetable.html" %}
-+
-+{% block pagename %}
-+<ul class="nav nav-tabs" style="display: inline-block">
-+  <li><a>Build {{build.target_set.all|join:"&nbsp;"}} at {{build.started_on}} : </a></li>
-+  <li><a href="/simple/build/{{build.id}}/task/"> Tasks </a></li>
-+  <li><a href="/simple/build/{{build.id}}/packages/"> Build Packages </a></li>
-+    {% for t in build.target_set.all %}
-+        {% if t.is_image %}
-+  <li><a href="/simple/build/{{build.id}}/target/{{t.pk}}/packages/"> Packages for {{t.target}} </a> </li>
-+        {% endif %}
-+    {% endfor %}
-+  <li><a href="/simple/build/{{build.id}}/configuration/"> Configuration </a> </li>
-+</ul>
-+     <h1>Toaster - Build {% block pagetitle %} {% endblock %}</h1>
-+{% endblock %}
-+
-diff --git a/bitbake/lib/webhob/bldviewer/templates/bpackage.html b/bitbake/lib/webhob/bldviewer/templates/bpackage.html
-new file mode 100644
-index 0000000..4e6cb00
---- /dev/null
-+++ b/bitbake/lib/webhob/bldviewer/templates/bpackage.html
-@@ -0,0 +1,36 @@
-+{% extends "basebuildpage.html" %}
-+
-+{% block pagetable %}
-+    {% if not packages %}
-+        <p>No packages were recorded for this target!</p>
-+    {% else %}
-+
-+            <tr>
-+            <th>Name</th>
-+            <th>Version</th>
-+            <th>Revision</th>
-+            <th>Recipe</th>
-+            <th>Summary</th>
-+            <th>Section</th>
-+            <th>Description</th>
-+            <th>License</th>
-+            </tr>
-+
-+            {% for package in packages %}
-+
-+            <tr class="data">
-+                <td><a name="#{{package.name}}">{{package.name}}</a></td>
-+                <td>{{package.version}}</td>
-+                <td>{{package.revision}}</td>
-+                <td><a href="/simple/layerversions/{{package.recipe.layer_version_id}}/recipes/#{{package.recipe.name}}">{{package.recipe.name}}</a>{{package.package_name}}</a></td>
-+                
-+            <td>{{package.summary}}</td>
-+            <td>{{package.section}}</td>
-+            <td>{{package.description}}</td>
-+            <td>{{package.license}}</td>
-+
-+            {% endfor %}
-+
-+    {% endif %}
-+
-+{% endblock %}
-diff --git a/bitbake/lib/webhob/bldviewer/templates/package.html b/bitbake/lib/webhob/bldviewer/templates/package.html
-index cba21e1..4ce25ae 100644
---- a/bitbake/lib/webhob/bldviewer/templates/package.html
-+++ b/bitbake/lib/webhob/bldviewer/templates/package.html
-@@ -1,15 +1,5 @@
- {% extends "basebuildpage.html" %}
+diff --git a/bitbake/lib/bb/ui/buildinfohelper.py b/bitbake/lib/bb/ui/buildinfohelper.py
+index bfd7fef..d435f19 100644
+--- a/bitbake/lib/bb/ui/buildinfohelper.py
++++ b/bitbake/lib/bb/ui/buildinfohelper.py
+@@ -8,9 +8,9 @@ import re
+ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "webhob.whbmain.settings")
  
--{% block pagename %}
--<ul class="nav nav-tabs" style="display: inline-block">
--  <li><a>Build {{build}} : </a></li>
--  <li><a href="/simple/build/{{build}}/task/"> Tasks </a></li>
--  <li><a href="/simple/build/{{build}}/package/"> Package </a> </li>
--  <li><a href="/simple/build/{{build}}/configuration/"> Configuration </a> </li>
--</ul>
--     <h1>Toaster - Target Install Packages</h1>
--{% endblock %}
+ import webhob.whbmain.settings as whb_django_settings
+-from webhob.orm.models import Machine, Build, Task, Recipe, Layer_Version, Layer, Package, Package_Dependency
+-from webhob.orm.models import Task_Dependency
 -
- {% block pagetable %}
-     {% if not packages %}
-         <p>No packages were recorded for this target!</p>
-diff --git a/bitbake/lib/webhob/bldviewer/views.py b/bitbake/lib/webhob/bldviewer/views.py
-index cfc2a89..a1da8b3 100644
---- a/bitbake/lib/webhob/bldviewer/views.py
-+++ b/bitbake/lib/webhob/bldviewer/views.py
-@@ -3,7 +3,7 @@ import operator
- from django.db.models import Q
- from django.shortcuts import render
- from orm.models import Build, Task, Layer, Layer_Version, Recipe, Target_Package, LogMessage, Variable
--from orm.models import Task_Dependency, Target_Package_Dependency
-+from orm.models import Task_Dependency, Target_Package_Dependency, Build_Package
- from django.views.decorators.cache import cache_control
++from webhob.orm.models import Machine, Build, Task, Recipe, Layer_Version, Layer, Package, LogMessage
++from webhob.orm.models import Task_Dependency, Package_Dependency
++from bb.msg import BBLogFormatter as format
  
- @cache_control(no_store=True)
-@@ -36,6 +36,13 @@ def configuration(request, build_id):
-     context = {'build': Build.objects.filter(pk=build_id)[0], 'configuration' : variables}
-     return render(request, template, context)
+ class ORMWrapper(object):
+     """ This class creates the dictionaries needed to store information in the database
+@@ -134,6 +134,18 @@ class ORMWrapper(object):
+                                         depends_on = packagedict[px]['object'] );
+ 
+ 
++    def create_logmessage(self, log_information):
++        log_object = LogMessage.objects.create(
++                        build = log_information['build'],
++                        level = log_information['level'],
++                        message = log_information['message'])
++
++        for v in vars(log_object):
++            if v in log_information.keys():
++                vars(log_object)[v] = log_information[v]
++
++        return log_object.save()
++
+ class BuildInfoHelper(object):
+     """ This class gathers the build information from the server and sends it
+         towards the ORM wrapper for storing in the database
+@@ -513,3 +525,26 @@ class BuildInfoHelper(object):
+                 dep = _save_a_task(taskdesc1)
+                 Task_Dependency.objects.get_or_create( task = target, depends_on = dep )
+ 
++    def store_log_information(self, level, text):
++        log_information = {}
++        log_information['build'] = self.internal_state['build']
++        log_information['level'] = level
++        log_information['message'] = text
++        self.orm_wrapper.create_logmessage(log_information)
++
++    def store_log_event(self, event):
++        if event.levelno < format.WARNING:
++            return
++        if not 'build' in self.internal_state:
++            return
++        log_information = {}
++        log_information['build'] = self.internal_state['build']
++        if event.levelno >= format.ERROR:
++            log_information['level'] = LogMessage.ERROR
++        elif event.levelno == format.WARNING:
++            log_information['level'] = LogMessage.WARNING
++        log_information['message'] = event.msg
++        log_information['pathname'] = event.pathname
++        log_information['lineno'] = event.lineno
++        self.orm_wrapper.create_logmessage(log_information)
++
+diff --git a/bitbake/lib/bb/ui/dsi.py b/bitbake/lib/bb/ui/dsi.py
+index 0305121..78982f2 100644
+--- a/bitbake/lib/bb/ui/dsi.py
++++ b/bitbake/lib/bb/ui/dsi.py
+@@ -332,6 +332,8 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+                 # include verbose/debug messages
+                 if event.taskpid != 0 and event.levelno <= format.NOTE:
+                     continue
++
++                buildinfohelper.store_log_event(event)
+                 logger.handle(event)
+                 continue
+ 
+@@ -406,9 +408,12 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+                     r = ""
+ 
+                 if event._dependees:
+-                    logger.error("Nothing %sPROVIDES '%s' (but %s %sDEPENDS on or otherwise requires it)", r, event._item, ", ".join(event._dependees), r)
++                    text = "Nothing %sPROVIDES '%s' (but %s %sDEPENDS on or otherwise requires it)" % (r, event._item, ", ".join(event._dependees), r)
+                 else:
+-                    logger.error("Nothing %sPROVIDES '%s'", r, event._item)
++                    text = "Nothing %sPROVIDES '%s'" % (r, event._item)
++
++                logger.error(text)
++                buildinfohelper.store_log_information(2, text)  # don't judge me
+                 if event._reasons:
+                     for reason in event._reasons:
+                         logger.error("%s", reason)
+diff --git a/bitbake/lib/webhob/orm/models.py b/bitbake/lib/webhob/orm/models.py
+index f2cc7d9..91a51ff 100644
+--- a/bitbake/lib/webhob/orm/models.py
++++ b/bitbake/lib/webhob/orm/models.py
+@@ -174,3 +174,18 @@ class Machine(models.Model):
+     name = models.CharField(max_length=100)
+     description = models.TextField()
  
 +
-+def bpackage(request, build_id):
-+    template = 'bpackage.html'
-+    packages = Build_Package.objects.filter(build = build_id)
-+    context = {'build': Build.objects.filter(pk=build_id)[0], 'packages' : packages}
-+    return render(request, template, context)
++class LogMessage(models.Model):
++    INFO = 0
++    WARNING = 1
++    ERROR = 2
 +
- def tpackage(request, build_id, target_id):
-     template = 'package.html'
- 
++    LOG_LEVEL = ( (INFO, "info"),
++            (WARNING, "warn"),
++            (ERROR, "error") )
++
++    build = models.ForeignKey(Build)
++    level = models.IntegerField(choices=LOG_LEVEL, default=INFO)
++    message=models.CharField(max_length=240)
++    pathname = models.FilePathField(max_length=255, null=True)
++    lineno = models.IntegerField(null=True)
 -- 
 1.8.1.2
 
