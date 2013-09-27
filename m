@@ -1,27 +1,29 @@
 Return-Path: <valentin.popa@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 211D161005
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 797F861005
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 27 Sep 2013 10:23:46 +0000 (UTC)
+	Fri, 27 Sep 2013 10:27:05 +0000 (UTC)
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 27 Sep 2013 03:23:34 -0700
+	by orsmga102.jf.intel.com with ESMTP; 27 Sep 2013 03:23:59 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,991,1371106800"; d="scan'208";a="384345290"
+X-IronPort-AV: E=Sophos;i="4.90,991,1371106800"; 
+	d="scan'208,217";a="384346272"
 Received: from vpopa-desktop.rb.intel.com (HELO [10.237.105.58])
 	([10.237.105.58])
-	by orsmga001.jf.intel.com with ESMTP; 27 Sep 2013 03:23:23 -0700
-Message-ID: <52455D02.5030300@intel.com>
-Date: Fri, 27 Sep 2013 13:25:06 +0300
+	by orsmga001.jf.intel.com with ESMTP; 27 Sep 2013 03:27:05 -0700
+Message-ID: <52455DE0.3020303@intel.com>
+Date: Fri, 27 Sep 2013 13:28:48 +0300
 From: Valentin Popa <valentin.popa@intel.com>
 User-Agent: Mozilla/5.0 (X11; Linux x86_64;
 	rv:24.0) Gecko/20100101 Thunderbird/24.0
 MIME-Version: 1.0
 To: "cristiana.voicu" <cristiana.voicu@intel.com>
 References: <1380107900-4395-1-git-send-email-valentin.popa@intel.com>
-	<52453F89.1020708@intel.com>
-In-Reply-To: <52453F89.1020708@intel.com>
+	<1380107900-4395-2-git-send-email-valentin.popa@intel.com>
+	<52453FA8.5040304@intel.com>
+In-Reply-To: <52453FA8.5040304@intel.com>
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/2] HOB: HIG compliant message dialogs
+Subject: Re: [PATCH 2/2] GUI error dialog for bitbake
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,521 +36,325 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 27 Sep 2013 10:23:47 -0000
+X-List-Received-Date: Fri, 27 Sep 2013 10:27:06 -0000
+Content-Type: multipart/alternative;
+	boundary="------------090307030000060005040104"
+
+--------------090307030000060005040104
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 09/27/2013 11:19 AM, cristiana.voicu wrote:
+> Hi Valentin,
+>
+> I have some comments on this patch:
+>
 > On 09/25/2013 02:18 PM, Valentin Popa wrote:
->> "More" HIG compliant dialogs for HOB.
+>> When the user starts HOB, he/she expects to see some GUI.
+>> If bitbake signals an erros before HOB starts the error will
+>> be visible only in console and hob script will terminate.
+>> This patch allows bitbake to report errors inside a GUI dialog
+>> when the user wants to use HOB.
+>> WebHOB starts before bitbake's launch and  a common solution
+>> for this problem that applies to both HOB and WebHOB is not so obvious.
 >>
 >> Signed-off-by: Valentin Popa <valentin.popa@intel.com>
 >> ---
->>   bitbake/lib/bb/ui/crumbs/builder.py                | 99 
->> ++++++++++++----------
->>   .../lib/bb/ui/crumbs/hig/advancedsettingsdialog.py |  5 +-
->>   .../lib/bb/ui/crumbs/hig/crumbsmessagedialog.py    | 56 ++++--------
->>   bitbake/lib/bb/ui/crumbs/hig/deployimagedialog.py  | 12 ++-
->>   .../lib/bb/ui/crumbs/hig/layerselectiondialog.py   | 11 +--
->>   bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py    |  5 +-
->>   .../lib/bb/ui/crumbs/hig/simplesettingsdialog.py   |  4 +-
->>   7 files changed, 90 insertions(+), 102 deletions(-)
+>>   bitbake/lib/bb/ui/show_error_dialog | 62 
+>> +++++++++++++++++++++++++++++++++++++
+> The new file doesn't have the extension .py
+>> scripts/hob                         |  9 +++++-
+>>   2 files changed, 70 insertions(+), 1 deletion(-)
+>>   create mode 100755 bitbake/lib/bb/ui/show_error_dialog
 >>
->> diff --git a/bitbake/lib/bb/ui/crumbs/builder.py 
->> b/bitbake/lib/bb/ui/crumbs/builder.py
->> index 86fdbfe..433ff11 100755
->> --- a/bitbake/lib/bb/ui/crumbs/builder.py
->> +++ b/bitbake/lib/bb/ui/crumbs/builder.py
->> @@ -793,8 +793,8 @@ class Builder(gtk.Window):
->>                   self.generate_image_async(True)
->>         def show_error_dialog(self, msg):
->> -        lbl = "<b>Hob found an error</b>\n"
->> -        dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.STOCK_DIALOG_ERROR, msg)
->> +        lbl = "<b>Hob found an error</b>"
->> +        dialog = CrumbsMessageDialog(self, lbl, gtk.MESSAGE_ERROR, msg)
->>           button = dialog.add_button("Close", gtk.RESPONSE_OK)
->>           HobButton.style_button(button)
->>           response = dialog.run()
->> @@ -810,10 +810,9 @@ class Builder(gtk.Window):
->>           dialog.destroy()
->>         def show_network_error_dialog(self):
->> -        lbl = "<b>Hob cannot connect to the network</b>\n"
->> -        msg = "Please check your network connection. If you are 
->> using a proxy server, please make sure it is configured correctly."
->> -        lbl = lbl + "%s\n\n" % glib.markup_escape_text(msg)
->> -        dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_ERROR)
->> +        lbl = "<b>Hob cannot connect to the network</b>"
->> +        msg = msg + "Please check your network connection. If you 
->> are using a proxy server, please make sure it is configured correctly."
->> +        dialog = CrumbsMessageDialog(self, lbl, gtk.MESSAGE_ERROR, msg)
->>           button = dialog.add_button("Close", gtk.RESPONSE_OK)
->>           HobButton.style_button(button)
->>           button = dialog.add_button("Proxy settings", 
->> gtk.RESPONSE_CANCEL)
->> @@ -1036,7 +1035,7 @@ class Builder(gtk.Window):
->>           self.build_failed()
->>         def handler_no_provider_cb(self, running_build, msg):
->> -        dialog = CrumbsMessageDialog(self, 
->> glib.markup_escape_text(msg), gtk.STOCK_DIALOG_INFO)
->> +        dialog = CrumbsMessageDialog(self, 
->> glib.markup_escape_text(msg), gtk.MESSAGE_INFO)
->>           button = dialog.add_button("Close", gtk.RESPONSE_OK)
->>           HobButton.style_button(button)
->>           dialog.run()
->> @@ -1099,9 +1098,10 @@ class Builder(gtk.Window):
->>       def build_packages(self):
->>           _, all_recipes = self.recipe_model.get_selected_recipes()
->>           if not all_recipes:
->> -            lbl = "<b>No selections made</b>\nYou have not made any 
->> selections"
->> -            lbl = lbl + " so there isn't anything to bake at this 
->> time."
->> -            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.STOCK_DIALOG_INFO)
->> +            lbl = "<b>No selections made</b>"
->> +            msg = "You have not made any selections"
->> +            msg = msg + " so there isn't anything to bake at this 
->> time."
->> +            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.MESSAGE_INFO, msg)
->>               button = dialog.add_button("Close", gtk.RESPONSE_OK)
->>               HobButton.style_button(button)
->>               dialog.run()
->> @@ -1112,9 +1112,10 @@ class Builder(gtk.Window):
->>       def build_image(self):
->>           selected_packages = self.package_model.get_selected_packages()
->>           if not selected_packages:
->> -            lbl = "<b>No selections made</b>\nYou have not made any 
->> selections"
->> -            lbl = lbl + " so there isn't anything to bake at this 
->> time."
->> -            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.STOCK_DIALOG_INFO)
->> +            lbl = "<b>No selections made</b>"
->> +            msg = "You have not made any selections"
->> +            msg = msg + " so there isn't anything to bake at this 
->> time."
->> +            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.MESSAGE_INFO, msg)
->>               button = dialog.add_button("Close", gtk.RESPONSE_OK)
->>               HobButton.style_button(button)
->>               dialog.run()
->> @@ -1128,9 +1129,10 @@ class Builder(gtk.Window):
->>             # If no base image and no selected packages don't build 
->> anything
->>           if not (selected_packages or selected_image != 
->> self.recipe_model.__custom_image__):
->> -            lbl = "<b>No selections made</b>\nYou have not made any 
->> selections"
->> -            lbl = lbl + " so there isn't anything to bake at this 
->> time."
->> -            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.STOCK_DIALOG_INFO)
->> +            lbl = "<b>No selections made</b>"
->> +            msg = "You have not made any selections"
->> +            msg = msg + " so there isn't anything to bake at this 
->> time."
->> +            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.MESSAGE_INFO, msg)
->>               button = dialog.add_button("Close", gtk.RESPONSE_OK)
->>               HobButton.style_button(button)
->>               dialog.run()
->> @@ -1214,8 +1216,9 @@ class Builder(gtk.Window):
->>           response = dialog.run()
->>           if response == gtk.RESPONSE_YES:
->>               if not dialog.image_names:
->> -                lbl = "<b>No selections made</b>\nYou have not made 
->> any selections"
->> -                crumbs_dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.STOCK_DIALOG_INFO)
->> +                lbl = "<b>No selections made</b>"
->> +                msg = "You have not made any selections"
->> +                crumbs_dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.MESSAGE_INFO, msg)
->>                   button = crumbs_dialog.add_button("Close", 
->> gtk.RESPONSE_OK)
->>                   HobButton.style_button(button)
->>                   crumbs_dialog.run()
->> @@ -1302,7 +1305,7 @@ class Builder(gtk.Window):
->>       def deploy_image(self, image_name):
->>           if not image_name:
->>               lbl = "<b>Please select an image to deploy.</b>"
->> -            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.STOCK_DIALOG_INFO)
->> +            dialog = CrumbsMessageDialog(self, lbl, gtk.MESSAGE_INFO)
->>               button = dialog.add_button("Close", gtk.RESPONSE_OK)
->>               HobButton.style_button(button)
->>               dialog.run()
->> @@ -1349,7 +1352,7 @@ class Builder(gtk.Window):
->>       def runqemu_image(self, image_name, kernel_name):
->>           if not image_name or not kernel_name:
->>               lbl = "<b>Please select an %s to launch in QEMU.</b>" % 
->> ("kernel" if image_name else "image")
->> -            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.STOCK_DIALOG_INFO)
->> +            dialog = CrumbsMessageDialog(self, lbl, gtk.MESSAGE_INFO)
->>               button = dialog.add_button("Close", gtk.RESPONSE_OK)
->>               HobButton.style_button(button)
->>               dialog.run()
->> @@ -1370,14 +1373,15 @@ class Builder(gtk.Window):
->>               cmdline += "runqemu " + kernel_path + " " + image_path 
->> + "\"\'"
->>               subprocess.Popen(shlex.split(cmdline))
->>           else:
->> -            lbl = "<b>Path error</b>\nOne of your paths is wrong,"
->> -            lbl = lbl + " please make sure the following paths 
->> exist:\n"
->> -            lbl = lbl + "image path:" + image_path + "\n"
->> -            lbl = lbl + "kernel path:" + kernel_path + "\n"
->> -            lbl = lbl + "source environment path:" + source_env_path 
->> + "\n"
->> -            lbl = lbl + "tmp path: " + tmp_path + "."
->> -            lbl = lbl + "You may be missing either xterm or vte for 
->> terminal services."
->> -            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.STOCK_DIALOG_ERROR)
->> +            lbl = "<b>Path error</b>"
->> +            msg = "One of your paths is wrong,"
->> +            msg = msg + " please make sure the following paths 
->> exist:\n"
->> +            msg = msg + "image path:" + image_path + "\n"
->> +            msg = msg + "kernel path:" + kernel_path + "\n"
->> +            msg = msg + "source environment path:" + source_env_path 
->> + "\n"
->> +            msg = msg + "tmp path: " + tmp_path + "."
->> +            msg = msg + "You may be missing either xterm or vte for 
->> terminal services."
->> +            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.MESSAGE_ERROR, msg)
->>               button = dialog.add_button("Close", gtk.RESPONSE_OK)
->>               HobButton.style_button(button)
->>               dialog.run()
->> @@ -1386,9 +1390,10 @@ class Builder(gtk.Window):
->>       def show_packages(self, ask=True):
->>           _, selected_recipes = self.recipe_model.get_selected_recipes()
->>           if selected_recipes and ask:
->> -            lbl = "<b>Package list may be incomplete!</b>\nDo you 
->> want to build selected recipes"
->> -            lbl = lbl + " to get a full list or just view the 
->> existing packages?"
->> -            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.STOCK_DIALOG_INFO)
->> +            lbl = "<b>Package list may be incomplete!</b>"
->> +            msg = "Do you want to build selected recipes"
->> +            msg = msg + " to get a full list or just view the 
->> existing packages?"
->> +            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.MESSAGE_INFO, msg)
->>               button = dialog.add_button("View packages", 
->> gtk.RESPONSE_NO)
->>               HobAltButton.style_button(button)
->>               button = dialog.add_button("Build packages", 
->> gtk.RESPONSE_YES)
->> @@ -1414,26 +1419,28 @@ class Builder(gtk.Window):
->>         def stop_build(self):
->>           if self.stopping:
->> -            lbl = "<b>Force Stop build?</b>\nYou've already selected 
->> Stop once,"
->> -            lbl = lbl + " would you like to 'Force Stop' the 
->> build?\n\n"
->> -            lbl = lbl + "This will stop the build as quickly as 
->> possible but may"
->> -            lbl = lbl + " well leave your build directory in an  
->> unusable state"
->> -            lbl = lbl + " that requires manual steps to fix.\n"
->> -            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.STOCK_DIALOG_WARNING)
->> +            lbl = "<b>Force Stop build?</b>"
->> +            msg = "You've already selected Stop once,"
->> +            msg = msg + " would you like to 'Force Stop' the 
->> build?\n\n"
->> +            msg = msg + "This will stop the build as quickly as 
->> possible but may"
->> +            msg = msg + " well leave your build directory in an  
->> unusable state"
->> +            msg = msg + " that requires manual steps to fix."
->> +            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.MESSAGE_WARNING, msg)
->>               button = dialog.add_button("Cancel", gtk.RESPONSE_CANCEL)
->>               HobAltButton.style_button(button)
->>               button = dialog.add_button("Force Stop", gtk.RESPONSE_YES)
->>               HobButton.style_button(button)
->>           else:
->> -            lbl = "<b>Stop build?</b>\n\nAre you sure you want to 
->> stop this"
->> -            lbl = lbl + " build?\n\n'Stop' will stop the build as 
->> soon as all in"
->> -            lbl = lbl + " progress build tasks are finished. However 
->> if a"
->> -            lbl = lbl + " lengthy compilation phase is in progress 
->> this may take"
->> -            lbl = lbl + " some time.\n\n"
->> -            lbl = lbl + "'Force Stop' will stop the build as quickly 
->> as"
->> -            lbl = lbl + " possible but may well leave your build 
->> directory in an"
->> -            lbl = lbl + " unusable state that requires manual steps 
->> to fix."
->> -            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.STOCK_DIALOG_WARNING)
->> +            lbl = "<b>Stop build?</b>"
->> +            msg = "Are you sure you want to stop this"
->> +            msg = msg + " build?\n\n'Stop' will stop the build as 
->> soon as all in"
->> +            msg = msg + " progress build tasks are finished. However 
->> if a"
->> +            msg = msg + " lengthy compilation phase is in progress 
->> this may take"
->> +            msg = msg + " some time.\n\n"
->> +            msg = msg + "'Force Stop' will stop the build as quickly 
->> as"
->> +            msg = msg + " possible but may well leave your build 
->> directory in an"
->> +            msg = msg + " unusable state that requires manual steps 
->> to fix."
->> +            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.MESSAGE_WARNING, msg)
->>               button = dialog.add_button("Cancel", gtk.RESPONSE_CANCEL)
->>               HobAltButton.style_button(button)
->>               button = dialog.add_button("Force stop", gtk.RESPONSE_YES)
->> diff --git a/bitbake/lib/bb/ui/crumbs/hig/advancedsettingsdialog.py 
->> b/bitbake/lib/bb/ui/crumbs/hig/advancedsettingsdialog.py
->> index 86a65ae..5b449cd 100644
->> --- a/bitbake/lib/bb/ui/crumbs/hig/advancedsettingsdialog.py
->> +++ b/bitbake/lib/bb/ui/crumbs/hig/advancedsettingsdialog.py
->> @@ -183,8 +183,9 @@ class AdvancedSettingsDialog (CrumbsDialog, 
->> SettingsUIHelper):
->>           self.set_save_button_state()
->>           if self.get_num_checked_image_types() == 0:
->>               # Show an error dialog
->> -            lbl = "<b>Select an image type</b>\n\nYou need to select 
->> at least one image type."
->> -            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.STOCK_DIALOG_WARNING)
->> +            lbl = "<b>Select an image type</b>"
->> +            msg = "You need to select at least one image type."
->> +            dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.MESSAGE_WARNING, msg)
->>               button = dialog.add_button("OK", gtk.RESPONSE_OK)
->>               HobButton.style_button(button)
->>               response = dialog.run()
->> diff --git a/bitbake/lib/bb/ui/crumbs/hig/crumbsmessagedialog.py 
->> b/bitbake/lib/bb/ui/crumbs/hig/crumbsmessagedialog.py
->> index 097ce7b..b9a32ae 100644
->> --- a/bitbake/lib/bb/ui/crumbs/hig/crumbsmessagedialog.py
->> +++ b/bitbake/lib/bb/ui/crumbs/hig/crumbsmessagedialog.py
->> @@ -31,51 +31,28 @@ BitBake GUI's
->>   In summary: spacing = 12px, border-width = 6px
->>   """
->>   -class CrumbsMessageDialog(CrumbsDialog):
->> +class CrumbsMessageDialog(gtk.MessageDialog):
->>       """
->>       A GNOME HIG compliant dialog widget.
->>       Add buttons with gtk.Dialog.add_button or gtk.Dialog.add_buttons
->>       """
->> -    def __init__(self, parent=None, label="", icon=gtk.STOCK_INFO, 
->> msg=""):
->> -        super(CrumbsMessageDialog, self).__init__("", parent, 
->> gtk.DIALOG_MODAL)
->> +    def __init__(self, parent = None, label="", dialog_type = 
->> gtk.MESSAGE_QUESTION, msg=""):
->> +        super(CrumbsMessageDialog, self).__init__(None,
->> + gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
->> +                                                  dialog_type,
->> + gtk.BUTTONS_NONE,
->> +                                                  None)
->>   -        self.set_border_width(6)
->> -        self.vbox.set_property("spacing", 12)
->> -        self.action_area.set_property("spacing", 12)
->> -        self.action_area.set_property("border-width", 6)
->> +        self.set_skip_taskbar_hint(False)
->>   -        first_column = gtk.HBox(spacing=12)
->> -        first_column.set_property("border-width", 6)
->> -        first_column.show()
->> -        self.vbox.add(first_column)
->> -
->> -        self.icon = gtk.Image()
->> -        # We have our own Info icon which should be used in 
->> preference of the stock icon
->> -        self.icon_chk = HobIconChecker()
->> - self.icon.set_from_stock(self.icon_chk.check_stock_icon(icon), 
->> gtk.ICON_SIZE_DIALOG)
->> -        self.icon.set_property("yalign", 0.00)
->> -        self.icon.show()
->> -        first_column.pack_start(self.icon, expand=False, fill=True, 
->> padding=0)
->> +        self.set_markup(label)
->>           -        if 0 <= len(msg) < 200:
->> -            lbl = label + "%s" % glib.markup_escape_text(msg)
->> -            self.label_short = gtk.Label()
->> -            self.label_short.set_use_markup(True)
->> -            self.label_short.set_line_wrap(True)
->> -            self.label_short.set_markup(lbl)
->> -            self.label_short.set_property("yalign", 0.00)
->> -            self.label_short.show()
->> -            first_column.add(self.label_short)
->> +        if 0 <= len(msg) < 300:
->> +            self.format_secondary_markup(msg)
->>           else:
->> -            second_row = gtk.VBox(spacing=12)
->> -            second_row.set_property("border-width", 6)
->> -            self.label_long = gtk.Label()
->> -            self.label_long.set_use_markup(True)
->> -            self.label_long.set_line_wrap(True)
->> -            self.label_long.set_markup(label)
->> -            self.label_long.set_alignment(0.0, 0.0)
->> -            second_row.pack_start(self.label_long, expand=False, 
->> fill=False, padding=0)
->> -            self.label_long.show()
->> +            vbox = self.get_message_area()
->> +            vbox.set_border_width(1)
->> +            vbox.set_property("spacing", 12)
->>               self.textWindow = gtk.ScrolledWindow()
->>               self.textWindow.set_shadow_type(gtk.SHADOW_IN)
->>               self.textWindow.set_policy(gtk.POLICY_AUTOMATIC, 
->> gtk.POLICY_AUTOMATIC)
->> @@ -89,7 +66,6 @@ class CrumbsMessageDialog(CrumbsDialog):
->>               self.msgView.set_buffer(self.buf)
->>               self.textWindow.add(self.msgView)
->>               self.msgView.show()
->> -            second_row.add(self.textWindow)
->> +            vbox.add(self.textWindow)
->>               self.textWindow.show()
->> -            first_column.add(second_row)
->> -            second_row.show()
+>> diff --git a/bitbake/lib/bb/ui/show_error_dialog 
+>> b/bitbake/lib/bb/ui/show_error_dialog
+>> new file mode 100755
+>> index 0000000..09d0c5c
+>> --- /dev/null
+>> +++ b/bitbake/lib/bb/ui/show_error_dialog
+>> @@ -0,0 +1,62 @@
+>> +#!/usr/bin/env python
+>> +#
+>> +# BitBake graphical error reporting dialog used by hob script
+>> +#
+>> +# Copyright (C) 2013        Intel Corporation
+>> +#
+>> +# Authored by Valentin Popa <valentin.popa@lintel.com>
+>> +# Authored by Andrei Dinu <andrei.adrianx.dinu@intel.com>
+>> +#
+>> +# This program is free software; you can redistribute it and/or modify
+>> +# it under the terms of the GNU General Public License version 2 as
+>> +# published by the Free Software Foundation.
+>> +#
+>> +# This program is distributed in the hope that it will be useful,
+>> +# but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> +# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> +# GNU General Public License for more details.
+>> +#
+>> +# You should have received a copy of the GNU General Public License 
+>> along
+>> +# with this program; if not, write to the Free Software Foundation, 
+>> Inc.,
+>> +# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 >> +
->> diff --git a/bitbake/lib/bb/ui/crumbs/hig/deployimagedialog.py 
->> b/bitbake/lib/bb/ui/crumbs/hig/deployimagedialog.py
->> index bc1efbb..f64fbd6 100644
->> --- a/bitbake/lib/bb/ui/crumbs/hig/deployimagedialog.py
->> +++ b/bitbake/lib/bb/ui/crumbs/hig/deployimagedialog.py
->> @@ -160,6 +160,7 @@ class DeployImageDialog (CrumbsDialog):
->>       def response_cb(self, dialog, response_id):
->>           if response_id == gtk.RESPONSE_YES:
->>               lbl = ''
->> +            msg = ''
->>               combo_item = self.usb_combo.get_active_text()
->>               if combo_item and combo_item != self.__dummy_usb__ and 
->> self.image_path:
->>                   cmdline = bb.ui.crumbs.utils.which_terminal()
->> @@ -172,15 +173,18 @@ class DeployImageDialog (CrumbsDialog):
->>                       if int(tmpfile.readline().strip()) == 0:
->>                           lbl = "<b>Deploy image successfully.</b>"
->>                       else:
->> -                        lbl = "<b>Failed to deploy 
->> image.</b>\nPlease check image <b>%s</b> exists and USB device 
->> <b>%s</b> is writable." % (self.image_path, combo_item)
->> +                        lbl = "<b>Failed to deploy image.</b>"
->> +                        msg = "Please check image <b>%s</b> exists 
->> and USB device <b>%s</b> is writable." % (self.image_path, combo_item)
->>                       tmpfile.close()
->>               else:
->>                   if not self.image_path:
->> -                    lbl = "<b>No selection made.</b>\nYou have not 
->> selected an image to deploy."
->> +                    lbl = "<b>No selection made.</b>"
->> +                    msg = "You have not selected an image to deploy."
->>                   else:
->> -                    lbl = "<b>No selection made.</b>\nYou have not 
->> selected a USB device."
->> +                    lbl = "<b>No selection made.</b>"
->> +                    msg = "You have not selected a USB device."
->>               if len(lbl):
->> -                crumbs_dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.STOCK_DIALOG_INFO)
->> +                crumbs_dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.MESSAGE_INFO, msg)
->>                   button = crumbs_dialog.add_button("Close", 
->> gtk.RESPONSE_OK)
->>                   HobButton.style_button(button)
->>                   crumbs_dialog.run()
->> diff --git a/bitbake/lib/bb/ui/crumbs/hig/layerselectiondialog.py 
->> b/bitbake/lib/bb/ui/crumbs/hig/layerselectiondialog.py
->> index 783ee73..1d100c5 100644
->> --- a/bitbake/lib/bb/ui/crumbs/hig/layerselectiondialog.py
->> +++ b/bitbake/lib/bb/ui/crumbs/hig/layerselectiondialog.py
->> @@ -92,7 +92,8 @@ class LayerSelectionDialog (CrumbsDialog):
->>           path = dialog.get_filename()
->>           dialog.destroy()
->>   -        lbl = "<b>Error</b>\nUnable to load layer <i>%s</i> 
->> because " % path
->> +        lbl = "<b>Error</b>"
->> +        msg = "Unable to load layer <i>%s</i> because " % path
->>           if response == gtk.RESPONSE_YES:
->>               import os
->>               import os.path
->> @@ -103,15 +104,15 @@ class LayerSelectionDialog (CrumbsDialog):
->>                   it = layer_store.iter_next(it)
->>                 if not path:
->> -                lbl += "it is an invalid path."
->> +                msg += "it is an invalid path."
->>               elif not os.path.exists(path+"/conf/layer.conf"):
->> -                lbl += "there is no layer.conf inside the directory."
->> +                msg += "there is no layer.conf inside the directory."
->>               elif path in layers:
->> -                lbl += "it is already in loaded layers."
->> +                msg += "it is already in loaded layers."
->>               else:
->>                   layer_store.append([path])
->>                   return
->> -            dialog = CrumbsMessageDialog(parent, lbl)
->> +            dialog = CrumbsMessageDialog(parent, lbl, 
->> gtk.MESSAGE_ERROR, msg)
->>               dialog.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_OK)
->>               response = dialog.run()
->>               dialog.destroy()
->> diff --git a/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py 
->> b/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
->> index e940cee..4195f70 100644
->> --- a/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
->> +++ b/bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py
->> @@ -146,12 +146,11 @@ class SaveImageDialog (CrumbsDialog):
->>               self.show_invalid_input_error_dialog()
->>         def show_invalid_input_error_dialog(self):
->> -        lbl = "<b>Invalid characters in image recipe name</b>\n"
->> +        lbl = "<b>Invalid characters in image recipe name</b>"
->>           msg = "Image recipe names should be all lowercase and\n"
->>           msg += "include only alphanumeric characters. The only\n"
->>           msg += "special character you can use is the ASCII hyphen 
->> (-)."
->> -        lbl = lbl + "\n%s\n" % glib.markup_escape_text(msg)
->> -        dialog = CrumbsMessageDialog(self, lbl, gtk.STOCK_DIALOG_ERROR)
->> +        dialog = CrumbsMessageDialog(self, lbl, gtk.MESSAGE_ERROR, msg)
->>           button = dialog.add_button("Close", gtk.RESPONSE_OK)
->>           HobButton.style_button(button)
->>   diff --git a/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py 
->> b/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
->> index de924b1..5229a3d 100644
->> --- a/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
->> +++ b/bitbake/lib/bb/ui/crumbs/hig/simplesettingsdialog.py
->> @@ -214,9 +214,9 @@ class SimpleSettingsDialog (CrumbsDialog, 
->> SettingsUIHelper):
->>               # Check that all proxy entries have a corresponding port
->>               for proxy, port in zip(self.all_proxy_addresses, 
->> self.all_proxy_ports):
->>                   if proxy.get_text() and not port.get_text():
->> -                    lbl = "<b>Enter all port numbers</b>\n\n"
->> +                    lbl = "<b>Enter all port numbers</b>"
->>                       msg = "Proxy servers require a port number. 
->> Please make sure you have entered a port number for each proxy server."
->> -                    dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.STOCK_DIALOG_WARNING, msg)
->> +                    dialog = CrumbsMessageDialog(self, lbl, 
->> gtk.MESSAGE_WARNING, msg)
->>                       button = dialog.add_button("Close", 
->> gtk.RESPONSE_OK)
->>                       HobButton.style_button(button)
->>                       response = dialog.run()
-> Hi Valentin,
-> Using gtk.STOCK_DIALOG_.. stuff, Hob looks as per design. I tested 
-> your patch, but, for example, when you stop a build the message shown 
-> uses an error image (not a warning one) and all the widgets are placed 
-> different. It looks better without it. Please send a contrib branch to 
-> Belen, to know her opinion, because it hase a big impact on design.
-> Thanks,
+>> +import sys
+>> +import os
+>> +requirements = "FATAL: Gtk+ 2.20.0 or higher & PyGtk 2.21.0 or 
+>> higher is required"
+>> +try:
+>> +    import gtk
+>> +    import pygtk
+>> +    pygtk.require('2.0') # to be certain we don't have gtk+ 1.x !?!
+>> +    gtkver = gtk.gtk_version
+>> +    pygtkver = gtk.pygtk_version
+>> +    if gtkver  < (2, 20, 0) or pygtkver < (2, 21, 0):
+>> +        sys.exit("%s,\nYou have Gtk+ %s and PyGtk %s." % (requirements,
+>> +                ".".join(map(str, gtkver)),
+>> +                ".".join(map(str, pygtkver))))
+>> +except ImportError as exc:
+>> +    sys.exit("%s (%s)." % (requirements, str(exc)))
+>> +
+>> +try:
+>> +    import crumbs
+>> +except RuntimeError as exc:
+>> +    sys.exit(str(exc))
+>> +sys.path.insert(0, 
+>> os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+>> +
+>> +from crumbs.hig.crumbsmessagedialog import CrumbsMessageDialog
+>> +from crumbs.hobwidget import HobButton
+>> +
+>> +class HobError(gtk.Window):
+>> +
+>> +    def __init__(self, error_log_file):
+>> +        message = open(error_log_file).readlines()
+>> +        label = "<b>Hob found an error</b>"
+>> +        dialog = CrumbsMessageDialog(self, label, gtk.MESSAGE_ERROR, 
+>> "".join(message))
+>> +        button = dialog.add_button("Close", gtk.RESPONSE_OK)
+>> +        HobButton.style_button(button)
+>> +        button.connect("clicked", lambda w:sys.exit())
+>> +        dialog.run()
+>> +        dialog.destroy()
+>> +
+>> +if __name__ == "__main__":
+>> +    HobError(sys.argv[1])
+>> +
+>> diff --git a/scripts/hob b/scripts/hob
+>> index 8d33ab1..bbb2366 100755
+>> --- a/scripts/hob
+>> +++ b/scripts/hob
+>> @@ -1,6 +1,13 @@
+>>   #!/usr/bin/env bash
+>>   export BB_ENV_EXTRAWHITE="DISABLE_SANITY_CHECKS $BB_ENV_EXTRAWHITE"
+>> -DISABLE_SANITY_CHECKS=1 bitbake -u hob $@
+>> +ERROR_LOG=$BUILDDIR/tmp/log/saved_errors.log
+> Instead of $BUILDDIR/tmp you should use $TMPDIR
+     I'll try to store the error log in /tmp (using mktemp, as Laurentiu 
+suggested)
+>> +DISABLE_SANITY_CHECKS=1 bitbake -u hob $@ > $ERROR_LOG
+>>     ret=$?
+>> +
+>> +if (( $ret == 1 )); then #there is an error and hob didn't start
+>> +    $BUILDDIR/../bitbake/lib/bb/ui/show_error_dialog $ERROR_LOG
+> The path to show_error_dialog is hardcoded. For example, my poky 
+> directory is somewhere else.
+     I'll move show_error_dialog in scripts. Thank you for the comments.
+>> +    rm $ERROR_LOG
+>> +fi
+>> +
+>>   exit $ret
 > Cristiana
-     Hi Cristiana,
-     I know it's different but is more Gnome HIG compliant.
-     Belen has already reviewed and approved the design.
 
+
+--------------090307030000060005040104
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=ISO-8859-1"
+      http-equiv="Content-Type">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    <div class="moz-cite-prefix">On 09/27/2013 11:19 AM, cristiana.voicu
+      wrote:<br>
+    </div>
+    <blockquote cite="mid:52453FA8.5040304@intel.com" type="cite">
+      <meta http-equiv="Content-Type" content="text/html;
+        charset=ISO-8859-1">
+      <div class="moz-text-flowed" style="font-family: -moz-fixed;
+        font-size: 12px;" lang="x-western">Hi Valentin, <br>
+        <br>
+        I have some comments on this patch: <br>
+        <br>
+        On 09/25/2013 02:18 PM, Valentin Popa wrote: <br>
+        <blockquote type="cite" style="color: #000000;">When the user
+          starts HOB, he/she expects to see some GUI. <br>
+          If bitbake signals an erros before HOB starts the error will <br>
+          be visible only in console and hob script will terminate. <br>
+          This patch allows bitbake to report errors inside a GUI dialog
+          <br>
+          when the user wants to use HOB. <br>
+          WebHOB starts before bitbake's launch and&nbsp; a common solution <br>
+          for this problem that applies to both HOB and WebHOB is not so
+          obvious. <br>
+          <br>
+          Signed-off-by: Valentin Popa <a moz-do-not-send="true"
+            class="moz-txt-link-rfc2396E"
+            href="mailto:valentin.popa@intel.com">&lt;valentin.popa@intel.com&gt;</a>
+          <br>
+          --- <br>
+          &nbsp; bitbake/lib/bb/ui/show_error_dialog | 62
+          +++++++++++++++++++++++++++++++++++++ <br>
+        </blockquote>
+        The new file doesn't have the extension .py <br>
+        <blockquote type="cite" style="color: #000000;">&nbsp;
+          scripts/hob&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp; 9 +++++- <br>
+          &nbsp; 2 files changed, 70 insertions(+), 1 deletion(-) <br>
+          &nbsp; create mode 100755 bitbake/lib/bb/ui/show_error_dialog <br>
+          <br>
+          diff --git a/bitbake/lib/bb/ui/show_error_dialog
+          b/bitbake/lib/bb/ui/show_error_dialog <br>
+          new file mode 100755 <br>
+          index 0000000..09d0c5c <br>
+          --- /dev/null <br>
+          +++ b/bitbake/lib/bb/ui/show_error_dialog <br>
+          @@ -0,0 +1,62 @@ <br>
+          +#!/usr/bin/env python <br>
+          +# <br>
+          +# BitBake graphical error reporting dialog used by hob script
+          <br>
+          +# <br>
+          +# Copyright (C) 2013&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Intel Corporation <br>
+          +# <br>
+          +# Authored by Valentin Popa <a moz-do-not-send="true"
+            class="moz-txt-link-rfc2396E"
+            href="mailto:valentin.popa@lintel.com">&lt;valentin.popa@lintel.com&gt;</a>
+          <br>
+          +# Authored by Andrei Dinu <a moz-do-not-send="true"
+            class="moz-txt-link-rfc2396E"
+            href="mailto:andrei.adrianx.dinu@intel.com">&lt;andrei.adrianx.dinu@intel.com&gt;</a>
+          <br>
+          +# <br>
+          +# This program is free software; you can redistribute it
+          and/or modify <br>
+          +# it under the terms of the GNU General Public License
+          version 2 as <br>
+          +# published by the Free Software Foundation. <br>
+          +# <br>
+          +# This program is distributed in the hope that it will be
+          useful, <br>
+          +# but WITHOUT ANY WARRANTY; without even the implied warranty
+          of <br>
+          +# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.&nbsp; See
+          the <br>
+          +# GNU General Public License for more details. <br>
+          +# <br>
+          +# You should have received a copy of the GNU General Public
+          License along <br>
+          +# with this program; if not, write to the Free Software
+          Foundation, Inc., <br>
+          +# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+          <br>
+          + <br>
+          +import sys <br>
+          +import os <br>
+          +requirements = "FATAL: Gtk+ 2.20.0 or higher &amp; PyGtk
+          2.21.0 or higher is required" <br>
+          +try: <br>
+          +&nbsp;&nbsp;&nbsp; import gtk <br>
+          +&nbsp;&nbsp;&nbsp; import pygtk <br>
+          +&nbsp;&nbsp;&nbsp; pygtk.require('2.0') # to be certain we don't have gtk+
+          1.x !?! <br>
+          +&nbsp;&nbsp;&nbsp; gtkver = gtk.gtk_version <br>
+          +&nbsp;&nbsp;&nbsp; pygtkver = gtk.pygtk_version <br>
+          +&nbsp;&nbsp;&nbsp; if gtkver&nbsp; &lt; (2, 20, 0) or pygtkver &lt; (2, 21, 0): <br>
+          +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sys.exit("%s,\nYou have Gtk+ %s and PyGtk %s." %
+          (requirements, <br>
+          +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ".".join(map(str, gtkver)), <br>
+          +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ".".join(map(str, pygtkver)))) <br>
+          +except ImportError as exc: <br>
+          +&nbsp;&nbsp;&nbsp; sys.exit("%s (%s)." % (requirements, str(exc))) <br>
+          + <br>
+          +try: <br>
+          +&nbsp;&nbsp;&nbsp; import crumbs <br>
+          +except RuntimeError as exc: <br>
+          +&nbsp;&nbsp;&nbsp; sys.exit(str(exc)) <br>
+          +sys.path.insert(0,
+          os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) <br>
+          + <br>
+          +from crumbs.hig.crumbsmessagedialog import
+          CrumbsMessageDialog <br>
+          +from crumbs.hobwidget import HobButton <br>
+          + <br>
+          +class HobError(gtk.Window): <br>
+          + <br>
+          +&nbsp;&nbsp;&nbsp; def __init__(self, error_log_file): <br>
+          +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; message = open(error_log_file).readlines() <br>
+          +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; label = "&lt;b&gt;Hob found an error&lt;/b&gt;" <br>
+          +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dialog = CrumbsMessageDialog(self, label,
+          gtk.MESSAGE_ERROR, "".join(message)) <br>
+          +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; button = dialog.add_button("Close", gtk.RESPONSE_OK)
+          <br>
+          +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HobButton.style_button(button) <br>
+          +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; button.connect("clicked", lambda w:sys.exit()) <br>
+          +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dialog.run() <br>
+          +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dialog.destroy() <br>
+          + <br>
+          +if __name__ == "__main__": <br>
+          +&nbsp;&nbsp;&nbsp; HobError(sys.argv[1]) <br>
+          + <br>
+          diff --git a/scripts/hob b/scripts/hob <br>
+          index 8d33ab1..bbb2366 100755 <br>
+          --- a/scripts/hob <br>
+          +++ b/scripts/hob <br>
+          @@ -1,6 +1,13 @@ <br>
+          &nbsp; #!/usr/bin/env bash <br>
+          &nbsp; export BB_ENV_EXTRAWHITE="DISABLE_SANITY_CHECKS
+          $BB_ENV_EXTRAWHITE" <br>
+          -DISABLE_SANITY_CHECKS=1 bitbake -u hob $@ <br>
+          +ERROR_LOG=$BUILDDIR/tmp/log/saved_errors.log <br>
+        </blockquote>
+        Instead of $BUILDDIR/tmp you should use $TMPDIR <br>
+      </div>
+    </blockquote>
+    &nbsp;&nbsp;&nbsp; I'll try to store the error log in /tmp (using mktemp, as
+    Laurentiu suggested)<br>
+    <blockquote cite="mid:52453FA8.5040304@intel.com" type="cite">
+      <div class="moz-text-flowed" style="font-family: -moz-fixed;
+        font-size: 12px;" lang="x-western">
+        <blockquote type="cite" style="color: #000000;">+DISABLE_SANITY_CHECKS=1
+
+          bitbake -u hob $@ &gt; $ERROR_LOG <br>
+          &nbsp; &nbsp; ret=$? <br>
+          + <br>
+          +if (( $ret == 1 )); then #there is an error and hob didn't
+          start <br>
+          +&nbsp;&nbsp;&nbsp; $BUILDDIR/../bitbake/lib/bb/ui/show_error_dialog
+          $ERROR_LOG <br>
+        </blockquote>
+        The path to show_error_dialog is hardcoded. For example, my poky
+        directory is somewhere else. <br>
+      </div>
+    </blockquote>
+    &nbsp;&nbsp;&nbsp; I'll move show_error_dialog in scripts. Thank you for the
+    comments.<br>
+    <blockquote cite="mid:52453FA8.5040304@intel.com" type="cite">
+      <div class="moz-text-flowed" style="font-family: -moz-fixed;
+        font-size: 12px;" lang="x-western">
+        <blockquote type="cite" style="color: #000000;">+&nbsp;&nbsp;&nbsp; rm
+          $ERROR_LOG <br>
+          +fi <br>
+          + <br>
+          &nbsp; exit $ret <br>
+        </blockquote>
+        Cristiana <br>
+      </div>
+    </blockquote>
+    <br>
+  </body>
+</html>
+
+--------------090307030000060005040104--
