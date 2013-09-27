@@ -1,20 +1,20 @@
 Return-Path: <valentin.popa@intel.com>
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id D1A6861005
+	by mail.openembedded.org (Postfix) with ESMTP id C900961005
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 27 Sep 2013 11:15:44 +0000 (UTC)
+	Fri, 27 Sep 2013 14:08:58 +0000 (UTC)
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 27 Sep 2013 04:15:45 -0700
+	by fmsmga101.fm.intel.com with ESMTP; 27 Sep 2013 07:09:00 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,991,1371106800"; d="scan'208";a="401895623"
+X-IronPort-AV: E=Sophos;i="4.90,993,1371106800"; d="scan'208";a="401959262"
 Received: from vpopa-desktop.rb.intel.com ([10.237.105.58])
-	by fmsmga001.fm.intel.com with ESMTP; 27 Sep 2013 04:15:44 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 27 Sep 2013 07:08:59 -0700
 From: Valentin Popa <valentin.popa@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 27 Sep 2013 14:17:26 +0300
-Message-Id: <1380280646-11708-1-git-send-email-valentin.popa@intel.com>
+Date: Fri, 27 Sep 2013 17:10:41 +0300
+Message-Id: <1380291041-11238-1-git-send-email-valentin.popa@intel.com>
 X-Mailer: git-send-email 1.8.1.2
-Subject: [PATCH_V2] GUI error dialog for bitbake
+Subject: [PATCH] HOB: MACHINE should be saved in conf files using ?=
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,111 +27,114 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 27 Sep 2013 11:15:45 -0000
+X-List-Received-Date: Fri, 27 Sep 2013 14:08:58 -0000
 
-When the user starts HOB, he/she expects to see some GUI.
-If bitbake signals an erros before HOB starts the error will
-be visible only in console and hob script will terminate.
-This patch allows bitbake to report errors inside a GUI dialog
-when the user wants to use HOB.
-WebHOB starts before bitbake's launch and  a common solution
-for this problem that applies to both HOB and WebHOB is not so obvious.
+MACHINE var is saved using early assignment operator.
+Calling  MACHINE=x bitbake core-image-... works properly.
+Comment "#added by bitbake" is replaced with "#added by hob".
 
+[YOCTO #5070]
 Signed-off-by: Valentin Popa <valentin.popa@intel.com>
 ---
- scripts/hob               |  9 ++++++-
- scripts/show_error_dialog | 63 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 71 insertions(+), 1 deletion(-)
- create mode 100755 scripts/show_error_dialog
+ bitbake/lib/bb/cooker.py                    | 17 ++++++++++-------
+ bitbake/lib/bb/ui/crumbs/builder.py         |  2 +-
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py |  7 ++++++-
+ 3 files changed, 17 insertions(+), 9 deletions(-)
 
-diff --git a/scripts/hob b/scripts/hob
-index 8d33ab1..406765f 100755
---- a/scripts/hob
-+++ b/scripts/hob
-@@ -1,6 +1,13 @@
- #!/usr/bin/env bash
- export BB_ENV_EXTRAWHITE="DISABLE_SANITY_CHECKS $BB_ENV_EXTRAWHITE"
--DISABLE_SANITY_CHECKS=1 bitbake -u hob $@
-+SAVED_ERRORS="$(mktemp)"
-+DISABLE_SANITY_CHECKS=1 bitbake -u hob $@ > $SAVED_ERRORS
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index ff2af69..ce7ca43 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -193,7 +193,10 @@ class BBCooker:
+         if op == "append":
+             self.appendConfigurationVar(var, val, default_file)
+         elif op == "set":
+-            self.saveConfigurationVar(var, val, default_file)
++            self.saveConfigurationVar(var, val, default_file, "=")
++        elif op == "earlyAssign":
++            self.saveConfigurationVar(var, val, default_file, "?=")
++
  
- ret=$?
+     def appendConfigurationVar(self, var, val, default_file):
+         #add append var operation to the end of default_file
+@@ -207,7 +210,7 @@ class BBCooker:
+         for c in contents:
+             total += c
+ 
+-        total += "#added by bitbake"
++        total += "#added by hob"
+         total += "\n%s += \"%s\"\n" % (var, val)
+ 
+         with open(default_file, 'w') as f:
+@@ -218,7 +221,7 @@ class BBCooker:
+         loginfo = {"op":append, "file":default_file, "line":total.count("\n")}
+         self.data.appendVar(var, val, **loginfo)
+ 
+-    def saveConfigurationVar(self, var, val, default_file):
++    def saveConfigurationVar(self, var, val, default_file, op):
+ 
+         replaced = False
+         #do not save if nothing changed
+@@ -260,8 +263,8 @@ class BBCooker:
+                     #check if the variable was saved before in the same way
+                     #if true it replace the place where the variable was declared
+                     #else it comments it
+-                    if contents[begin_line-1]== "#added by bitbake\n":
+-                        contents[begin_line] = "%s = \"%s\"\n" % (var, val)
++                    if contents[begin_line-1]== "#added by hob\n":
++                        contents[begin_line] = "%s %s \"%s\"\n" % (var, op, val)
+                         replaced = True
+                     else:
+                         for ii in range(begin_line, end_line):
+@@ -290,8 +293,8 @@ class BBCooker:
+                 total += c
+ 
+             #add the variable on a single line, to be easy to replace the second time
+-            total += "\n#added by bitbake"
+-            total += "\n%s = \"%s\"\n" % (var, val)
++            total += "\n#added by hob"
++            total += "\n%s %s \"%s\"\n" % (var, op, val)
+ 
+             with open(default_file, 'w') as f:
+                 f.write(total)
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index 86fdbfe..f9fd15a 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -197,7 +197,7 @@ class Configuration:
+         handler.set_var_in_file("BBLAYERS", self.layers, "bblayers.conf")
+         # local.conf
+         if not defaults:
+-            handler.set_var_in_file("MACHINE", self.curr_mach, "local.conf")
++            handler.early_assign_var_in_file("MACHINE", self.curr_mach, "local.conf")
+         handler.set_var_in_file("DISTRO", self.curr_distro, "local.conf")
+         handler.set_var_in_file("DL_DIR", self.dldir, "local.conf")
+         handler.set_var_in_file("SSTATE_DIR", self.sstatedir, "local.conf")
+diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+index ef74e56..3f5beba 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -315,7 +315,7 @@ class HobHandler(gobject.GObject):
+ 
+     def set_machine(self, machine):
+         if machine:
+-            self.set_var_in_file("MACHINE", machine, "local.conf")
++            self.early_assign_var_in_file("MACHINE", machine, "local.conf")
+ 
+     def set_sdk_machine(self, sdk_machine):
+         self.set_var_in_file("SDKMACHINE", sdk_machine, "local.conf")
+@@ -472,6 +472,11 @@ class HobHandler(gobject.GObject):
+         self.server.runCommand(["setVarFile", var, val, default_file, "set"])
+         self.runCommand(["disableDataTracking"])
+ 
++    def early_assign_var_in_file(self, var, val, default_file=None):
++        self.runCommand(["enableDataTracking"])
++        self.server.runCommand(["setVarFile", var, val, default_file, "earlyAssign"])
++        self.runCommand(["disableDataTracking"])
 +
-+if (( $ret == 1 )); then #there is an error and hob didn't start
-+    show_error_dialog $SAVED_ERRORS
-+fi
-+rm $SAVED_ERRORS
-+
- exit $ret
-diff --git a/scripts/show_error_dialog b/scripts/show_error_dialog
-new file mode 100755
-index 0000000..beb7cb3
---- /dev/null
-+++ b/scripts/show_error_dialog
-@@ -0,0 +1,63 @@
-+#!/usr/bin/env python
-+#
-+# BitBake graphical error reporting dialog used by hob script
-+#
-+# Copyright (C) 2013        Intel Corporation
-+#
-+# Authored by Valentin Popa <valentin.popa@lintel.com>
-+# Authored by Andrei Dinu <andrei.adrianx.dinu@intel.com>
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+# GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License along
-+# with this program; if not, write to the Free Software Foundation, Inc.,
-+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+
-+import sys
-+import os
-+requirements = "FATAL: Gtk+ 2.20.0 or higher & PyGtk 2.21.0 or higher is required"
-+try:
-+    import gtk
-+    import pygtk
-+    pygtk.require('2.0') # to be certain we don't have gtk+ 1.x !?!
-+    gtkver = gtk.gtk_version
-+    pygtkver = gtk.pygtk_version
-+    if gtkver  < (2, 20, 0) or pygtkver < (2, 21, 0):
-+        sys.exit("%s,\nYou have Gtk+ %s and PyGtk %s." % (requirements,
-+                ".".join(map(str, gtkver)),
-+                ".".join(map(str, pygtkver))))
-+except ImportError as exc:
-+    sys.exit("%s (%s)." % (requirements, str(exc)))
-+
-+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__))+"/bitbake/lib")
-+
-+try:
-+    import bb
-+except RuntimeError as exc:
-+    sys.exit(str(exc))
-+
-+from bb.ui.crumbs.hig.crumbsmessagedialog import CrumbsMessageDialog
-+from bb.ui.crumbs.hobwidget import HobButton
-+
-+class HobError(gtk.Window):
-+
-+    def __init__(self, error_log_file):
-+        message = open(error_log_file).readlines()
-+        label = "<b>Hob found an error</b>"
-+        dialog = CrumbsMessageDialog(self, label, gtk.MESSAGE_ERROR, "".join(message))
-+        button = dialog.add_button("Close", gtk.RESPONSE_OK)
-+        HobButton.style_button(button)
-+        button.connect("clicked", lambda w:sys.exit())
-+        dialog.run()
-+        dialog.destroy()
-+
-+if __name__ == "__main__":
-+    HobError(sys.argv[1])
-+
+     def append_var_in_file(self, var, val, default_file=None):
+         self.server.runCommand(["setVarFile", var, val, default_file, "append"])
+ 
 -- 
 1.8.1.2
 
