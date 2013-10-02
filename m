@@ -1,34 +1,34 @@
 Return-Path: <ross.burton@intel.com>
-Received: from mail-wg0-f47.google.com (mail-wg0-f47.google.com [74.125.82.47])
-	by mail.openembedded.org (Postfix) with ESMTP id 63A1C6CBAC
+Received: from mail-wg0-f43.google.com (mail-wg0-f43.google.com [74.125.82.43])
+	by mail.openembedded.org (Postfix) with ESMTP id 821586CBAC
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  2 Oct 2013 16:46:59 +0000 (UTC)
-Received: by mail-wg0-f47.google.com with SMTP id f12so1181288wgh.26
+	Wed,  2 Oct 2013 16:47:32 +0000 (UTC)
+Received: by mail-wg0-f43.google.com with SMTP id z12so1188876wgg.34
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 02 Oct 2013 09:47:00 -0700 (PDT)
+	Wed, 02 Oct 2013 09:47:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=l1ckftztq4SOkclM1enLd4DdmhngRjigmVnIj2exs3U=;
-	b=TxlvhrFx4EZ0sw7sgIUZahpB7/91Jsipoo75T/BLsK1Bl8AO3yjCrImixatvH7rDml
-	ED3jDzL8/JvjyQmjiw+J/ANFWbVP3o0/MU8q0msYXiLa6DldH5YBLTR4u6acbkk9GU/c
-	O49gD9JRbIHyzxgFydjyBG0CZSfSywJpmrt5ArmiWXAndyAS+BaEsS2Ex4pOwXPm1SMM
-	KmA5HxMDxhR0NDfuD6RqX+qCcUT9wcF6E76kcDyTeTCV+cbitpW043VqgRuqnbvne4sv
-	/LcB5XFrZFw0ua0S44ugj0kz2657J2Qd8GcjhecRnwbwbiZ8V+k+36BMHrgGl+ADEGth
-	CsOQ==
-X-Gm-Message-State: ALoCoQmxsJkdOEMizbU8MAkVjmQZjnx3cNX9ja+O0o+635k+PhTHD1nAEADKXrtogxvOUEaHRx9p
-X-Received: by 10.180.221.38 with SMTP id qb6mr2918075wic.8.1380732420429;
-	Wed, 02 Oct 2013 09:47:00 -0700 (PDT)
+	bh=VJ/jkb4p4hGocbtNE2yXKA++0m77UPfdUY30EGJ1/+g=;
+	b=E22Z4T/X3WboWbtlUzefuGSdlpJrnKazwuQhPzM5ZlcSCcm0HhPkm8bh2gK4lZ3tbe
+	x8pXntsePFlZj/s4qeXKfHoFznH2iK0p0Dk3vnAri6ydH3IXhjt6OEyh9gi/TRtigkJ8
+	tPkk4PjwwMHgVJ3qOf9VVpyVf27+kl+Woo5bXfYLsp5/e/+iPYrop7Fzvkqe647yxuQa
+	9DTnjBU1hZbAhNTPTevy60w8MGuWhwQnXZGj6YJeRRA4aumcitXglu4eiluc+9WJCN3P
+	naQmHJaTiptHXaWC7ACG6qMitwR6FcmE5qQ9n96T+3ImztLz2ZOvW8S2VEZeW5C9xvRk
+	sUEQ==
+X-Gm-Message-State: ALoCoQn7I4Z3VlUyS2B3H634C10iC+IVUyja3As1Fi3LOSUkAzvvBXDd4Jal7LDuYVLNYYUVoiQ/
+X-Received: by 10.180.93.166 with SMTP id cv6mr2910407wib.37.1380732453991;
+	Wed, 02 Oct 2013 09:47:33 -0700 (PDT)
 Received: from melchett.burtonini.com (35.106.2.81.in-addr.arpa. [81.2.106.35])
-	by mx.google.com with ESMTPSA id i8sm5265121wiy.6.1969.12.31.16.00.00
+	by mx.google.com with ESMTPSA id i8sm5270496wiy.6.1969.12.31.16.00.00
 	(version=TLSv1.2 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Wed, 02 Oct 2013 09:46:59 -0700 (PDT)
+	Wed, 02 Oct 2013 09:47:33 -0700 (PDT)
 From: Ross Burton <ross.burton@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  2 Oct 2013 17:46:55 +0100
-Message-Id: <1380732415-1417-1-git-send-email-ross.burton@intel.com>
+Date: Wed,  2 Oct 2013 17:47:28 +0100
+Message-Id: <1380732448-1725-1-git-send-email-ross.burton@intel.com>
 X-Mailer: git-send-email 1.7.10.4
-Subject: [PATCH][V2] utils: use bb.warn instead of print in copyfile
+Subject: [PATCH][V3] utils: use logger.warn instead of print in copyfile
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,9 +41,9 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 02 Oct 2013 16:47:00 -0000
+X-List-Received-Date: Wed, 02 Oct 2013 16:47:32 -0000
 
-print disappears into the ether, so use bb.warn and clean up the messages.
+print disappears into the ether, so use logger.warn and clean up the messages.
 
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 ---
