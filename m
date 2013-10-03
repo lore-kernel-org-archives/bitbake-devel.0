@@ -1,34 +1,27 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-wg0-f43.google.com (mail-wg0-f43.google.com [74.125.82.43])
-	by mail.openembedded.org (Postfix) with ESMTP id 821586CBAC
+Return-Path: <cristiana.voicu@intel.com>
+Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
+	by mail.openembedded.org (Postfix) with ESMTP id 767E6616EA
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  2 Oct 2013 16:47:32 +0000 (UTC)
-Received: by mail-wg0-f43.google.com with SMTP id z12so1188876wgg.34
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 02 Oct 2013 09:47:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=VJ/jkb4p4hGocbtNE2yXKA++0m77UPfdUY30EGJ1/+g=;
-	b=E22Z4T/X3WboWbtlUzefuGSdlpJrnKazwuQhPzM5ZlcSCcm0HhPkm8bh2gK4lZ3tbe
-	x8pXntsePFlZj/s4qeXKfHoFznH2iK0p0Dk3vnAri6ydH3IXhjt6OEyh9gi/TRtigkJ8
-	tPkk4PjwwMHgVJ3qOf9VVpyVf27+kl+Woo5bXfYLsp5/e/+iPYrop7Fzvkqe647yxuQa
-	9DTnjBU1hZbAhNTPTevy60w8MGuWhwQnXZGj6YJeRRA4aumcitXglu4eiluc+9WJCN3P
-	naQmHJaTiptHXaWC7ACG6qMitwR6FcmE5qQ9n96T+3ImztLz2ZOvW8S2VEZeW5C9xvRk
-	sUEQ==
-X-Gm-Message-State: ALoCoQn7I4Z3VlUyS2B3H634C10iC+IVUyja3As1Fi3LOSUkAzvvBXDd4Jal7LDuYVLNYYUVoiQ/
-X-Received: by 10.180.93.166 with SMTP id cv6mr2910407wib.37.1380732453991;
-	Wed, 02 Oct 2013 09:47:33 -0700 (PDT)
-Received: from melchett.burtonini.com (35.106.2.81.in-addr.arpa. [81.2.106.35])
-	by mx.google.com with ESMTPSA id i8sm5270496wiy.6.1969.12.31.16.00.00
-	(version=TLSv1.2 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Wed, 02 Oct 2013 09:47:33 -0700 (PDT)
-From: Ross Burton <ross.burton@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  2 Oct 2013 17:47:28 +0100
-Message-Id: <1380732448-1725-1-git-send-email-ross.burton@intel.com>
-X-Mailer: git-send-email 1.7.10.4
-Subject: [PATCH][V3] utils: use logger.warn instead of print in copyfile
+	Thu,  3 Oct 2013 13:23:32 +0000 (UTC)
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga101.ch.intel.com with ESMTP; 03 Oct 2013 06:23:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.90,1026,1371106800"; d="scan'208";a="302674707"
+Received: from cvoicu-vostro-460.rb.intel.com (HELO [10.237.105.65])
+	([10.237.105.65])
+	by AZSMGA002.ch.intel.com with ESMTP; 03 Oct 2013 06:23:32 -0700
+Message-ID: <524D70DD.7050709@intel.com>
+Date: Thu, 03 Oct 2013 16:27:57 +0300
+From: "cristiana.voicu" <cristiana.voicu@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:17.0) Gecko/20130804 Thunderbird/17.0.8
+MIME-Version: 1.0
+To: Valentin Popa <valentin.popa@intel.com>
+References: <1380291041-11238-1-git-send-email-valentin.popa@intel.com>
+	<52492975.20408@intel.com>
+In-Reply-To: <52492975.20408@intel.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] HOB: MACHINE should be saved in conf files using ?=
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,63 +34,136 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 02 Oct 2013 16:47:32 -0000
+X-List-Received-Date: Thu, 03 Oct 2013 13:23:34 -0000
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-print disappears into the ether, so use logger.warn and clean up the messages.
+On 09/30/2013 10:34 AM, cristiana.voicu wrote:
+> On 09/27/2013 05:10 PM, Valentin Popa wrote:
+>> MACHINE var is saved using early assignment operator.
+>> Calling  MACHINE=x bitbake core-image-... works properly.
+>> Comment "#added by bitbake" is replaced with "#added by hob".
+>>
+>> [YOCTO #5070]
+>> Signed-off-by: Valentin Popa <valentin.popa@intel.com>
+>> ---
+>>   bitbake/lib/bb/cooker.py                    | 17 ++++++++++-------
+>>   bitbake/lib/bb/ui/crumbs/builder.py         |  2 +-
+>>   bitbake/lib/bb/ui/crumbs/hobeventhandler.py |  7 ++++++-
+>>   3 files changed, 17 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+>> index ff2af69..ce7ca43 100644
+>> --- a/bitbake/lib/bb/cooker.py
+>> +++ b/bitbake/lib/bb/cooker.py
+>> @@ -193,7 +193,10 @@ class BBCooker:
+>>           if op == "append":
+>>               self.appendConfigurationVar(var, val, default_file)
+>>           elif op == "set":
+>> -            self.saveConfigurationVar(var, val, default_file)
+>> +            self.saveConfigurationVar(var, val, default_file, "=")
+>> +        elif op == "earlyAssign":
+>> +            self.saveConfigurationVar(var, val, default_file, "?=")
+>> +
+>>         def appendConfigurationVar(self, var, val, default_file):
+>>           #add append var operation to the end of default_file
+>> @@ -207,7 +210,7 @@ class BBCooker:
+>>           for c in contents:
+>>               total += c
+>>   -        total += "#added by bitbake"
+>> +        total += "#added by hob"
+>>           total += "\n%s += \"%s\"\n" % (var, val)
+>>             with open(default_file, 'w') as f:
+>> @@ -218,7 +221,7 @@ class BBCooker:
+>>           loginfo = {"op":append, "file":default_file, 
+>> "line":total.count("\n")}
+>>           self.data.appendVar(var, val, **loginfo)
+>>   -    def saveConfigurationVar(self, var, val, default_file):
+>> +    def saveConfigurationVar(self, var, val, default_file, op):
+>>             replaced = False
+>>           #do not save if nothing changed
+>> @@ -260,8 +263,8 @@ class BBCooker:
+>>                       #check if the variable was saved before in the 
+>> same way
+>>                       #if true it replace the place where the 
+>> variable was declared
+>>                       #else it comments it
+>> -                    if contents[begin_line-1]== "#added by bitbake\n":
+>> -                        contents[begin_line] = "%s = \"%s\"\n" % 
+>> (var, val)
+>> +                    if contents[begin_line-1]== "#added by hob\n":
+>> +                        contents[begin_line] = "%s %s \"%s\"\n" % 
+>> (var, op, val)
+>>                           replaced = True
+>>                       else:
+>>                           for ii in range(begin_line, end_line):
+>> @@ -290,8 +293,8 @@ class BBCooker:
+>>                   total += c
+>>                 #add the variable on a single line, to be easy to 
+>> replace the second time
+>> -            total += "\n#added by bitbake"
+>> -            total += "\n%s = \"%s\"\n" % (var, val)
+>> +            total += "\n#added by hob"
+>> +            total += "\n%s %s \"%s\"\n" % (var, op, val)
+>>                 with open(default_file, 'w') as f:
+>>                   f.write(total)
+>> diff --git a/bitbake/lib/bb/ui/crumbs/builder.py 
+>> b/bitbake/lib/bb/ui/crumbs/builder.py
+>> index 86fdbfe..f9fd15a 100755
+>> --- a/bitbake/lib/bb/ui/crumbs/builder.py
+>> +++ b/bitbake/lib/bb/ui/crumbs/builder.py
+>> @@ -197,7 +197,7 @@ class Configuration:
+>>           handler.set_var_in_file("BBLAYERS", self.layers, 
+>> "bblayers.conf")
+>>           # local.conf
+>>           if not defaults:
+>> -            handler.set_var_in_file("MACHINE", self.curr_mach, 
+>> "local.conf")
+>> +            handler.early_assign_var_in_file("MACHINE", 
+>> self.curr_mach, "local.conf")
+>>           handler.set_var_in_file("DISTRO", self.curr_distro, 
+>> "local.conf")
+>>           handler.set_var_in_file("DL_DIR", self.dldir, "local.conf")
+>>           handler.set_var_in_file("SSTATE_DIR", self.sstatedir, 
+>> "local.conf")
+>> diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py 
+>> b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+>> index ef74e56..3f5beba 100644
+>> --- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+>> +++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+>> @@ -315,7 +315,7 @@ class HobHandler(gobject.GObject):
+>>         def set_machine(self, machine):
+>>           if machine:
+>> -            self.set_var_in_file("MACHINE", machine, "local.conf")
+>> +            self.early_assign_var_in_file("MACHINE", machine, 
+>> "local.conf")
+>>         def set_sdk_machine(self, sdk_machine):
+>>           self.set_var_in_file("SDKMACHINE", sdk_machine, "local.conf")
+>> @@ -472,6 +472,11 @@ class HobHandler(gobject.GObject):
+>>           self.server.runCommand(["setVarFile", var, val, 
+>> default_file, "set"])
+>>           self.runCommand(["disableDataTracking"])
+>>   +    def early_assign_var_in_file(self, var, val, default_file=None):
+>> +        self.runCommand(["enableDataTracking"])
+>> +        self.server.runCommand(["setVarFile", var, val, 
+>> default_file, "earlyAssign"])
+>> +        self.runCommand(["disableDataTracking"])
+>> +
+>>       def append_var_in_file(self, var, val, default_file=None):
+>>           self.server.runCommand(["setVarFile", var, val, 
+>> default_file, "append"])
+> Looks good to me.
+> Cristiana
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+Hi Valentin,
 
-Signed-off-by: Ross Burton <ross.burton@intel.com>
----
- bitbake/lib/bb/utils.py |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
-index ae3ef10..f9ee4f1 100644
---- a/bitbake/lib/bb/utils.py
-+++ b/bitbake/lib/bb/utils.py
-@@ -724,7 +724,7 @@ def copyfile(src, dest, newmtime = None, sstat = None):
-         if not sstat:
-             sstat = os.lstat(src)
-     except Exception as e:
--        print("copyfile: Stating source file failed...", e)
-+        logger.warn("copyfile: stat of %s failed (%s)" % (src, e))
-         return False
- 
-     destexists = 1
-@@ -751,7 +751,7 @@ def copyfile(src, dest, newmtime = None, sstat = None):
-             #os.lchown(dest,sstat[stat.ST_UID],sstat[stat.ST_GID])
-             return os.lstat(dest)
-         except Exception as e:
--            print("copyfile: failed to properly create symlink:", dest, "->", target, e)
-+            logger.warn("copyfile: failed to create symlink %s to %s (%s)" % (dest, target, e))
-             return False
- 
-     if stat.S_ISREG(sstat[stat.ST_MODE]):
-@@ -766,7 +766,7 @@ def copyfile(src, dest, newmtime = None, sstat = None):
-             shutil.copyfile(src, dest + "#new")
-             os.rename(dest + "#new", dest)
-         except Exception as e:
--            print('copyfile: copy', src, '->', dest, 'failed.', e)
-+            logger.warn("copyfile: copy %s to %s failed (%s)" % (src, dest, e))
-             return False
-         finally:
-             if srcchown:
-@@ -777,13 +777,13 @@ def copyfile(src, dest, newmtime = None, sstat = None):
-         #we don't yet handle special, so we need to fall back to /bin/mv
-         a = getstatusoutput("/bin/cp -f " + "'" + src + "' '" + dest + "'")
-         if a[0] != 0:
--            print("copyfile: Failed to copy special file:" + src + "' to '" + dest + "'", a)
-+            logger.warn("copyfile: failed to copy special file %s to %s (%s)" % (src, dest, a))
-             return False # failure
-     try:
-         os.lchown(dest, sstat[stat.ST_UID], sstat[stat.ST_GID])
-         os.chmod(dest, stat.S_IMODE(sstat[stat.ST_MODE])) # Sticky is reset on chown
-     except Exception as e:
--        print("copyfile: Failed to chown/chmod/unlink", dest, e)
-+        logger.warn("copyfile: failed to chown/chmod %s (%s)" % (dest, e))
-         return False
- 
-     if newmtime:
--- 
-1.7.10.4
-
+I know I replied with an ack for this patch, but working on a similar 
+bug I realized that replacing the comment "total += "\n#added by 
+bitbake" with total += "\n#added by hob" in bitbake code is not ok. I 
+think it will be better to give as argument the comment string, in order 
+to keep this method reusable in  other ui.
+Cristiana
 
