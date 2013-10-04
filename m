@@ -1,24 +1,24 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 7E72D6CC2D
+	by mail.openembedded.org (Postfix) with ESMTP id 7AE586CBD8
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri,  4 Oct 2013 16:44:37 +0000 (UTC)
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 04 Oct 2013 09:44:38 -0700
+	by orsmga101.jf.intel.com with ESMTP; 04 Oct 2013 09:44:37 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,1034,1371106800"; d="scan'208";a="414098043"
+X-IronPort-AV: E=Sophos;i="4.90,1034,1371106800"; d="scan'208";a="414098038"
 Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.120.164])
-	by orsmga002.jf.intel.com with ESMTP; 04 Oct 2013 09:44:37 -0700
+	by orsmga002.jf.intel.com with ESMTP; 04 Oct 2013 09:44:36 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  4 Oct 2013 17:44:27 +0100
-Message-Id: <4a967dd0e35a031a6cad58b1da10fe2cd35fcfa4.1380904913.git.paul.eggleton@linux.intel.com>
+Date: Fri,  4 Oct 2013 17:44:26 +0100
+Message-Id: <9dbfa318841331af7397e0c4c7de721c4eca3d8f.1380904913.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <cover.1380904913.git.paul.eggleton@linux.intel.com>
 References: <cover.1380904913.git.paul.eggleton@linux.intel.com>
 In-Reply-To: <cover.1380904913.git.paul.eggleton@linux.intel.com>
 References: <cover.1380904913.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 3/4] bitbake-diffsigs: improve error handling
+Subject: [PATCH 2/4] bitbake-diffsigs: refactor argument parsing slightly
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,70 +33,65 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 04 Oct 2013 16:44:38 -0000
 
-* Set up a logger independent of BitBake so we can log errors ourselves
-* Handle common errors without printing a traceback
+* Use OptionParser to parse the two options to -t rather than trying to
+  pick them out ourselves.
+* Add a description shown with --help output
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- bitbake/bin/bitbake-diffsigs | 30 +++++++++++++++++++++++++-----
- 1 file changed, 25 insertions(+), 5 deletions(-)
+ bitbake/bin/bitbake-diffsigs | 29 +++++++++++++----------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
 
 diff --git a/bitbake/bin/bitbake-diffsigs b/bitbake/bin/bitbake-diffsigs
-index 6f24981..53b47e0 100755
+index 6e4c44a..6f24981 100755
 --- a/bitbake/bin/bitbake-diffsigs
 +++ b/bitbake/bin/bitbake-diffsigs
-@@ -3,7 +3,7 @@
- # bitbake-diffsigs
- # BitBake task signature data comparison utility
- #
--# Copyright (C) 2012 Intel Corporation
-+# Copyright (C) 2013 Intel Corporation
- #
- # This program is free software; you can redistribute it and/or modify
- # it under the terms of the GNU General Public License version 2 as
-@@ -30,7 +30,18 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), '
- import bb.tinfoil
- import bb.siggen
+@@ -75,6 +75,7 @@ def find_compare_task(bbhandler, pn, taskname):
  
--logger = logging.getLogger('BitBake')
-+def logger_create(name, output=sys.stderr):
-+    logger = logging.getLogger(name)
-+    console = logging.StreamHandler(output)
-+    format = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
-+    if output.isatty():
-+        format.enable_color()
-+    console.setFormatter(format)
-+    logger.addHandler(console)
-+    logger.setLevel(logging.INFO)
-+    return logger
-+
-+logger = logger_create('bitbake-diffsigs')
  
- def find_compare_task(bbhandler, pn, taskname):
-     """ Find the most recent signature files for the specified PN/task and compare them """
-@@ -94,10 +105,19 @@ if options.taskargs:
+ parser = optparse.OptionParser(
++    description = "Compares siginfo/sigdata files written out by BitBake",
+     usage = """
+   %prog -t recipename taskname
+   %prog sigdatafile1 sigdatafile2
+@@ -82,25 +83,21 @@ parser = optparse.OptionParser(
+ 
+ parser.add_option("-t", "--task",
+         help = "find the signature data files for last two runs of the specified task and compare them",
+-        action="store_true", dest="taskmode")
++        action="store", dest="taskargs", nargs=2, metavar='recipename taskname')
+ 
+ options, args = parser.parse_args(sys.argv)
+ 
+-if len(args) == 1:
+-    parser.print_help()
++if options.taskargs:
++    tinfoil = bb.tinfoil.Tinfoil()
++    tinfoil.prepare(config_only = True)
++    find_compare_task(tinfoil, options.taskargs[0], options.taskargs[1])
  else:
-     if len(args) == 1:
-         parser.print_help()
--    elif len(args) == 2:
--        output = bb.siggen.dump_sigfile(sys.argv[1])
+-    if options.taskmode:
+-        tinfoil = bb.tinfoil.Tinfoil()
+-        if len(args) < 3:
+-            logger.error("Please specify a recipe and task name")
+-            sys.exit(1)
+-        tinfoil.prepare(config_only = True)
+-        find_compare_task(tinfoil, args[1], args[2])
++    if len(args) == 1:
++        parser.print_help()
++    elif len(args) == 2:
++        output = bb.siggen.dump_sigfile(sys.argv[1])
      else:
--        output = bb.siggen.compare_sigfiles(sys.argv[1], sys.argv[2])
-+        import cPickle
-+        try:
-+            if len(args) == 2:
-+                output = bb.siggen.dump_sigfile(sys.argv[1])
-+            else:
-+                output = bb.siggen.compare_sigfiles(sys.argv[1], sys.argv[2])
-+        except IOError as e:
-+            logger.error(str(e))
-+            sys.exit(1)
-+        except cPickle.UnpicklingError, EOFError:
-+            logger.error('Invalid signature data - ensure you are specifying sigdata/siginfo files')
-+            sys.exit(1)
+-        if len(args) == 2:
+-            output = bb.siggen.dump_sigfile(sys.argv[1])
+-        else:
+-            output = bb.siggen.compare_sigfiles(sys.argv[1], sys.argv[2])
++        output = bb.siggen.compare_sigfiles(sys.argv[1], sys.argv[2])
  
-     if output:
-         print '\n'.join(output)
+-        if output:
+-            print '\n'.join(output)
++    if output:
++        print '\n'.join(output)
 -- 
 1.8.1.2
 
