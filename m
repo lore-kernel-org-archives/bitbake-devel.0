@@ -1,25 +1,30 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
-	by mail.openembedded.org (Postfix) with ESMTP id 747CF6B109
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 93587610F7
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  4 Oct 2013 17:04:30 +0000 (UTC)
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga102.ch.intel.com with ESMTP; 04 Oct 2013 10:04:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.90,1034,1371106800"; d="scan'208";a="303248461"
-Received: from unknown (HELO helios.localnet) ([10.252.120.164])
-	by AZSMGA002.ch.intel.com with ESMTP; 04 Oct 2013 10:04:21 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 04 Oct 2013 18:04:20 +0100
-Message-ID: <13030124.ISsAHLpZIV@helios>
-Organization: Intel Corporation
-User-Agent: KMail/4.10.5 (Linux/3.8.0-31-generic; KDE/4.10.5; i686; ; )
-In-Reply-To: <6b322934d5cc34601098dc935400e0e8a6e7df1e.1380904913.git.paul.eggleton@linux.intel.com>
-References: <cover.1380904913.git.paul.eggleton@linux.intel.com>
-	<6b322934d5cc34601098dc935400e0e8a6e7df1e.1380904913.git.paul.eggleton@linux.intel.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 1/4] bitbake-diffsigs: handle if task name is specified without do_ prefix
+	Sun,  6 Oct 2013 12:42:54 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r96Cgo9X024549 for <bitbake-devel@lists.openembedded.org>;
+	Sun, 6 Oct 2013 13:42:50 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id hHlLqG51rQZl for <bitbake-devel@lists.openembedded.org>;
+	Sun,  6 Oct 2013 13:42:50 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	r96Cgi2W024541
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
+	Sun, 6 Oct 2013 13:42:45 +0100
+Message-ID: <1381063359.30971.21.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Sun, 06 Oct 2013 13:42:39 +0100
+X-Mailer: Evolution 3.6.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] cooker/command: Add error state for the server and use for pre_serve errors
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,45 +37,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 04 Oct 2013 17:04:30 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Sun, 06 Oct 2013 12:42:55 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Friday 04 October 2013 17:44:25 Paul Eggleton wrote:
-> Warn the user and adjust the task name automatically if the -t option
-> is specified with a task name that doesn't start with do_ (e.g.
-> "configure" instead of "do_configure").
-> 
-> Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
-> ---
->  bitbake/bin/bitbake-diffsigs | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/bitbake/bin/bitbake-diffsigs b/bitbake/bin/bitbake-diffsigs
-> index 3ce70da..6e4c44a 100755
-> --- a/bitbake/bin/bitbake-diffsigs
-> +++ b/bitbake/bin/bitbake-diffsigs
-> @@ -39,6 +39,10 @@ def find_compare_task(bbhandler, pn, taskname):
->          logger.error('Metadata does not support finding signature data
-> files') sys.exit(1)
-> 
-> +    if not taskname.startswith('do_'):
-> +        logger.warn('Invalid task name "%s" - assuming you meant "do_%s"' %
-> (taskname, taskname)) +        taskname = 'do_%s' % taskname
-> +
->      filedates = bb.siggen.find_siginfo(pn, taskname, None,
-> bbhandler.config_data) latestfiles = sorted(filedates.keys(), key=lambda f:
-> filedates[f])[-2:] if not latestfiles:
+Currently if errors occur when starting the PR service, there is a race that
+occurs since the UI runs various commands including starting builds before
+processing the CookerExit(). By adding the error state and refusing to run
+async commands in this mode, builds are prevented from starting and the
+UI reaches the exit code with the system shutting down cleanly.
 
-I've dropped the warning message on the branch after discussion with Richard - 
-the do_ prefix is really an internal detail and users are used to specifying 
-these without the prefix when using bitbake -c.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
+index 3ca27a6..a2795ce 100644
+--- a/bitbake/lib/bb/command.py
++++ b/bitbake/lib/bb/command.py
+@@ -86,6 +86,8 @@ class Command:
+ 
+     def runAsyncCommand(self):
+         try:
++            if self.cooker.state == bb.cooker.state.error:
++                return False
+             if self.currentAsyncCommand is not None:
+                 (command, options) = self.currentAsyncCommand
+                 commandmethod = getattr(CommandsAsync, command)
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index d17716d..870b18e 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -61,7 +61,7 @@ class CollectionError(bb.BBHandledException):
+     """
+ 
+ class state:
+-    initial, parsing, running, shutdown, forceshutdown, stopped = range(6)
++    initial, parsing, running, shutdown, forceshutdown, stopped, error = range(7)
+ 
+ 
+ class SkippedPackage:
+@@ -1321,6 +1321,7 @@ class BBCooker:
+             self.prhost = prserv.serv.auto_start(self.data)
+         except prserv.serv.PRServiceConfigError:
+             bb.event.fire(CookerExit(), self.event_data)
++            self.state = state.error
+         return
+ 
+     def post_serve(self):
 
-Cheers,
-Paul
 
--- 
-
-Paul Eggleton
-Intel Open Source Technology Centre
 
