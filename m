@@ -1,30 +1,20 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 93587610F7
+Return-Path: <cristiana.voicu@intel.com>
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 2760F60CEA
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun,  6 Oct 2013 12:42:54 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r96Cgo9X024549 for <bitbake-devel@lists.openembedded.org>;
-	Sun, 6 Oct 2013 13:42:50 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id hHlLqG51rQZl for <bitbake-devel@lists.openembedded.org>;
-	Sun,  6 Oct 2013 13:42:50 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r96Cgi2W024541
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
-	Sun, 6 Oct 2013 13:42:45 +0100
-Message-ID: <1381063359.30971.21.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Sun, 06 Oct 2013 13:42:39 +0100
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] cooker/command: Add error state for the server and use for pre_serve errors
+	Mon,  7 Oct 2013 11:24:23 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 07 Oct 2013 04:24:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.90,1049,1371106800"; d="scan'208";a="406537297"
+Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.65])
+	by fmsmga001.fm.intel.com with ESMTP; 07 Oct 2013 04:24:23 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  7 Oct 2013 14:28:55 +0300
+Message-Id: <1381145335-13742-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] bitbake: replace comment added in conf files
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,52 +27,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 06 Oct 2013 12:42:55 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 07 Oct 2013 11:24:24 -0000
 
-Currently if errors occur when starting the PR service, there is a race that
-occurs since the UI runs various commands including starting builds before
-processing the CookerExit(). By adding the error state and refusing to run
-async commands in this mode, builds are prevented from starting and the
-UI reaches the exit code with the system shutting down cleanly.
+The patch that implements removeConfigurationVar method was made before
+merging the patch that replaces "added by bitbake" with "added by hob".
+This patch corrects this issue.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+[YOCTO #5284]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
-diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
-index 3ca27a6..a2795ce 100644
---- a/bitbake/lib/bb/command.py
-+++ b/bitbake/lib/bb/command.py
-@@ -86,6 +86,8 @@ class Command:
- 
-     def runAsyncCommand(self):
-         try:
-+            if self.cooker.state == bb.cooker.state.error:
-+                return False
-             if self.currentAsyncCommand is not None:
-                 (command, options) = self.currentAsyncCommand
-                 commandmethod = getattr(CommandsAsync, command)
+ bitbake/lib/bb/cooker.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index d17716d..870b18e 100644
+index d17716d..ad36b34 100644
 --- a/bitbake/lib/bb/cooker.py
 +++ b/bitbake/lib/bb/cooker.py
-@@ -61,7 +61,7 @@ class CollectionError(bb.BBHandledException):
-     """
+@@ -328,7 +328,7 @@ class BBCooker:
+                     begin_line = total.count("\n",0,index)
  
- class state:
--    initial, parsing, running, shutdown, forceshutdown, stopped = range(6)
-+    initial, parsing, running, shutdown, forceshutdown, stopped, error = range(7)
- 
- 
- class SkippedPackage:
-@@ -1321,6 +1321,7 @@ class BBCooker:
-             self.prhost = prserv.serv.auto_start(self.data)
-         except prserv.serv.PRServiceConfigError:
-             bb.event.fire(CookerExit(), self.event_data)
-+            self.state = state.error
-         return
- 
-     def post_serve(self):
-
+                     #check if the variable was saved before in the same way
+-                    if contents[begin_line-1]== "#added by bitbake\n":
++                    if contents[begin_line-1]== "#added by hob\n":
+                         contents[begin_line-1] = contents[begin_line] = "\n"
+                     else:
+                         contents[begin_line] = "\n"
+-- 
+1.7.9.5
 
 
