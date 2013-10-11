@@ -1,31 +1,30 @@
-Return-Path: <rpjday@crashcourse.ca>
-Received: from astoria.ccjclearline.com (astoria.ccjclearline.com
-	[64.235.106.9])
-	by mail.openembedded.org (Postfix) with ESMTP id 137EF6CF18
+Return-Path: <chmorgan@gmail.com>
+Received: from mail-ie0-f174.google.com (mail-ie0-f174.google.com
+	[209.85.223.174])
+	by mail.openembedded.org (Postfix) with ESMTP id C1F3D6CC7F
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Oct 2013 09:02:40 +0000 (UTC)
-Received: from [174.115.226.96] (port=50161 helo=crashcourse.ca)
-	by astoria.ccjclearline.com with esmtpsa (TLSv1:DHE-RSA-AES256-SHA:256)
-	(Exim 4.80) (envelope-from <rpjday@crashcourse.ca>)
-	id 1VUC8n-0004Kk-6N for bitbake-devel@lists.openembedded.org;
-	Thu, 10 Oct 2013 05:02:41 -0400
-Date: Thu, 10 Oct 2013 05:02:35 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@oneiric
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Message-ID: <alpine.DEB.2.02.1310100501120.12311@oneiric>
-User-Agent: Alpine 2.02 (DEB 1266 2009-07-14)
+	Fri, 11 Oct 2013 13:22:36 +0000 (UTC)
+Received: by mail-ie0-f174.google.com with SMTP id qd12so3367955ieb.19
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 11 Oct 2013 06:22:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:from:date:message-id:subject:to:content-type;
+	bh=B4dY03EcAyFSfB7Uj+fLPCvAckAU7AWYQHXRI1iHxWQ=;
+	b=D4HZJunldy8L1R1seIOWt9uff3T2LO/5pi+IQJ8YXJpVa11CAqe38tHKp4qTa1JPb1
+	GKNEK19Ge7rfd4GgD3WDdq3SxelUPbqrH7/JxPX38+xTYBx4Qqi/UKeiMqF/VQz1CxVK
+	t90IFCtUcv1nmo4lSIHfPbpKJBh6fqa5bk8pvB/LNz/O5id0J8ZekuwLFXMEdlaNdjfU
+	qcQtx65yoOuVB1T0cJLc/6pHm0XRoakYVKG35oZW2xJFZfMAJDe6eAiDq7JgdT9FeGT7
+	enTB5L9T7r91/fVPSA8Jb7+Svh+2GG4dyzjCGopcrrdvcI7zTbK6/FqY/n+5A5C33Gux
+	62Jg==
+X-Received: by 10.43.101.138 with SMTP id da10mr242118icc.77.1381497757994;
+	Fri, 11 Oct 2013 06:22:37 -0700 (PDT)
 MIME-Version: 1.0
-X-AntiAbuse: This header was added to track abuse,
-	please include it with any abuse report
-X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Subject: can all that FETCHCOMMAND stuff not be removed from bitbake.conf?
+Received: by 10.64.143.195 with HTTP; Fri, 11 Oct 2013 06:22:17 -0700 (PDT)
+From: Chris Morgan <chmorgan@gmail.com>
+Date: Fri, 11 Oct 2013 09:22:17 -0400
+Message-ID: <CAAPegz09fP8ppysRS_opbSxv6nLknfd4NUnyVmgqzMNcu7+zmg@mail.gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: Bitbake for native x86 project?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,24 +37,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 10 Oct 2013 09:02:40 -0000
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-List-Received-Date: Fri, 11 Oct 2013 13:22:37 -0000
+Content-Type: text/plain; charset=ISO-8859-1
 
+Hello.
 
-  if memory serves, the "FETCHCOMMAND_*" variables in bitbake's
-bitbake.conf file are superfluous -- richard purdie once mentioned
-that they've all been transmogrified to "FETCHCMD_*". so can they not
-be tossed?
+I can't be sure that I'm asking the question correctly so please
+forgive me if I've gotten something wrong here.
 
-rday
+I'm working on a project that generates several libraries and
+applications. Today we build and run exclusively on x86 Linux desktop
+machines and use cmake for the build system. In the future we plan to
+add cross-compiling of these same libraries and applications for an
+embedded arm platform, Yocto based. We would like to maintain both
+types of build, for x86 and for arm.
 
--- 
+I've seen guides on how to use Yocto (or other bitbake based
+distributions) to generate x86 images but these appear to involve
+building the entire x86 toolchain, kernel, all libraries, creating a
+virtual root and building a root filesystem image that one would run
+under an emulator.
 
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
+In my case I'd like to use bitbake to build libraries and applications
+and create a virtual root, but not create a kernel, toolchain and
+other system provided libraries. Then, when we decide to transition
+over to Yocto I'd like to leverage the recipes by plugging them into
+the Yocto system somehow (I'm still starting to understand the
+process).
 
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
+I haven't seen any guides or information on how to use bitbake for
+native desktop applications. I feel like its certainly possible but it
+appears to be quite a bit of work just to proof of concept things.
+
+Is there anything inherently wrong with what I'm proposing here with
+bitbake? Does it make sense that it would save time to develop the
+recipes once and use bitbake for the desktop like this?
+
+Chris
 
