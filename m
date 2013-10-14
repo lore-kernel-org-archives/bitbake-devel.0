@@ -1,27 +1,28 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id E986460F06
+	by mail.openembedded.org (Postfix) with ESMTP id F3B6060FAA
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 14 Oct 2013 14:34:09 +0000 (UTC)
+	Mon, 14 Oct 2013 14:40:48 +0000 (UTC)
 Received: from localhost (dan.rpsys.net [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r9EEXKU1002343; Mon, 14 Oct 2013 15:34:05 +0100
+	r9EEeixg002681; Mon, 14 Oct 2013 15:40:44 +0100
 X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id ZUgOEImVStvX; Mon, 14 Oct 2013 15:34:04 +0100 (BST)
+	with LMTP id o5VHGTBpZdVX; Mon, 14 Oct 2013 15:40:43 +0100 (BST)
 Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r9EEXxhR002370
+	r9EEeeMH002652
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Mon, 14 Oct 2013 15:34:01 +0100
-Message-ID: <1381761236.29912.322.camel@ted>
+	verify=NOT); Mon, 14 Oct 2013 15:40:42 +0100
+Message-ID: <1381761637.29912.326.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: Chris Morgan <chmorgan@gmail.com>
-Date: Mon, 14 Oct 2013 15:33:56 +0100
-In-Reply-To: <1381683215.29912.233.camel@ted>
+Date: Mon, 14 Oct 2013 15:40:37 +0100
+In-Reply-To: <CAAPegz12Mnrbipi0w4zMdcje1R4SUwhMiUKsOAOfKHpzukea2Q@mail.gmail.com>
 References: <CAAPegz09fP8ppysRS_opbSxv6nLknfd4NUnyVmgqzMNcu7+zmg@mail.gmail.com>
 	<1381683215.29912.233.camel@ted>
+	<CAAPegz12Mnrbipi0w4zMdcje1R4SUwhMiUKsOAOfKHpzukea2Q@mail.gmail.com>
 X-Mailer: Evolution 3.6.4-0ubuntu1 
 Mime-Version: 1.0
 Cc: bitbake-devel@lists.openembedded.org
@@ -38,72 +39,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 14 Oct 2013 14:34:11 -0000
+X-List-Received-Date: Mon, 14 Oct 2013 14:40:49 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Sun, 2013-10-13 at 17:53 +0100, Richard Purdie wrote:
+On Mon, 2013-10-14 at 09:28 -0400, Chris Morgan wrote:
+> Ahh interesting. I was thinking that this kind of a short-circuit
+> approach might make sense. Its good to hear that the concept isn't so
+> crazy although I've literally found no information about anyone doing
+> anything of the sort on the web.
 
-> Its certainly possible, its just that nobody has done it. Your options
-> would be to either reconfigure the native recipes to be packaged, or to
-> add in a configuration which shortcircuits the cross compiler and adds
-> in some native magic to specific machine targets.
+I just sent out my notes/patch attempt at just short circuiting in gcc.
+Its a bit messy and I found some issues I didn't expect. It would be
+possible to do it with both gcc/libc I'd guess but its not something I'm
+going to have any more time to try any time soon...
+
+> I considered using the full blown x86/x86-64 targets but our build
+> time right now using cmake and native tools is ~30 seconds with only a
+> handful of MB of data to download.
 > 
-> Whilst adding packaging to native sounds attractive, the reality is that
-> its not easy and doesn't really make sense technically. Adding in those
-> short-circuits I mention by comparison shouldn't be hard and if I were
-> doing this, its the way I'd go.
+> Would using a sstate cache + a custom image target be able to get down
+> to that kind of time? Today each developer is building on their
+> desktop and from my own testing with angstrom it looks like the builds
+> take nearly an hour and generate 30+GB of data. This is almost
+> entirely why I've been hesitant to try to use the built-in x86/x86-64
+> support. I love the idea of ensuring that everything matches exactly
+> on each developer machine but the overhead is pretty crazy.
 
-I had a kind of morbid curiosity about this. I came up with the patches
-here:
-
-http://git.yoctoproject.org/cgit.cgi/poky-contrib/commit/?h=rpurdie/t2&id=c1c02d166f22179fb18e430aeae2806bb5d51a3f
-
-where I've basically tried to wire in the host gcc yet compile
-everything else for the target as usual including the libc. Its a bit of
-an arbitrary choice but should in theory be easier than providing a
-whole libc from the native system.
-
-It works to a point (e.g. gettext compiled) but ncurses did not due to
-symbol errors with __poll_chk. Why? Basically the compiler/linker do not
-respect the sysroot, go searching for libc and find the system one
-rather than the one we built. It then fails to link as there is version
-mismatch. There isn't any compiler commandline option you can tweak to
-stop it doing this :(.
-
-Some questions this raises:
-
-a) Do you use a sysroot of "/" or STAGING_DIR_TARGET?
-
-I did the latter, it wasn't particularly successful as the tools don't
-all respect it properly. In theory you can link the pieces inside the
-STAGING_DIR to outside the sysroot if you want the compiler to see them,
-the reality is some search paths are hardcoded into gcc and they leak
-in. When we compile our compiler, we configure it not to do that.
-
-To use "/" you'd have to do what native.bbclass does, set
-STAGING_DIR_TARGET to be "/" and then set prefix to be inside the
-STAGING_DIR but this means that binaries would expect to always run with
-such a prefix.
-
-I guess a hybrid would be possible, add -L and -I for the sysroot and
-accept it linking with the system lib/include directories, ditching the
-sysroot option a bit like the system did before gcc has sysroot support.
-
-b) Can you use the system compiler without the libc?
-
-Answer appears to be no, you can't. This means you would have to add in
-some kind of tweaking to the output packages to add in dependencies on
-libc and anything else that was system provided. You can therefore not
-use this approach to build complete systems. Packaging up the system
-provided libc would also seem to be ruled out.
+You can build a complete rootfs from sstate in about 4 minutes so I'd
+suggest trying it and see. If you've just building a cmake app, it will
+need to download and install a toolchain but it will just do that once
+for any given build directory and I suspect you could make it work. 
 
 Cheers,
 
 Richard
-
-
-
 
 
 
