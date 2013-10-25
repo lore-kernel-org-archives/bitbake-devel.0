@@ -1,30 +1,48 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id AE44160E03
+Return-Path: <fabrice.coulon@axis.com>
+Received: from ra.se.axis.com (ra.se.axis.com [195.60.68.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 728AA6D3AB
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Dec 2013 21:22:05 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	rBJLLr4S011277; Thu, 19 Dec 2013 21:21:54 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id XlbzWQW8yqf9; Thu, 19 Dec 2013 21:21:53 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	rBJLLnJV011265
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-	Thu, 19 Dec 2013 21:21:50 GMT
-Message-ID: <1387488104.6402.75.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alex DAMIAN <alexandru.damian@intel.com>
-Date: Thu, 19 Dec 2013 21:21:44 +0000
-In-Reply-To: <1387394811-24196-1-git-send-email-alexandru.damian@intel.com>
-References: <1387394811-24196-1-git-send-email-alexandru.damian@intel.com>
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] toaster: add buildstats to toaster config file
+	Fri, 25 Oct 2013 07:57:33 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by ra.se.axis.com (Postfix) with ESMTP id 5A7D9384EE0
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 25 Oct 2013 09:57:30 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at ra.se.axis.com
+Received: from ra.se.axis.com ([127.0.0.1])
+	by localhost (ra.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 6HbdHzRyXDDT for <bitbake-devel@lists.openembedded.org>;
+	Fri, 25 Oct 2013 09:57:29 +0200 (CEST)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by ra.se.axis.com (Postfix) with ESMTP id 6662E384EEE
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 25 Oct 2013 09:57:28 +0200 (CEST)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id 43858807
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 25 Oct 2013 09:57:28 +0200 (CEST)
+Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
+	by boulder.se.axis.com (Postfix) with ESMTP id 386737F8
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 25 Oct 2013 09:57:28 +0200 (CEST)
+Received: from xmail3.se.axis.com (xmail3.se.axis.com [10.0.5.75])
+	by seth.se.axis.com (Postfix) with ESMTP id 369B23E06F
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 25 Oct 2013 09:57:28 +0200 (CEST)
+Received: from xmail3.se.axis.com ([10.0.5.75]) by xmail3.se.axis.com
+	([10.0.5.75]) with mapi; Fri, 25 Oct 2013 09:57:28 +0200
+From: Fabrice Coulon <fabrice.coulon@axis.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: Python tasks and scope
+Thread-Index: AQHO0VfZVC2zJY1ScE2iN2wlJSDbGw==
+Message-ID: <A612847CFE53224C91B23E3A5B48BAC7A40D0F4023@xmail3.se.axis.com>
+Accept-Language: en-US, sv-SE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+acceptlanguage: en-US, sv-SE
+MIME-Version: 1.0
+X-Mailman-Approved-At: Fri, 20 Dec 2013 09:50:02 +0000
+Subject: Python tasks and scope
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,59 +55,68 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 19 Dec 2013 21:22:07 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Date: Fri, 25 Oct 2013 07:57:34 -0000
+X-Original-Date: Fri, 25 Oct 2013 09:57:28 +0200
+X-List-Received-Date: Fri, 25 Oct 2013 07:57:34 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2013-12-18 at 19:26 +0000, Alex DAMIAN wrote:
-> From: Alexandru DAMIAN <alexandru.damian@intel.com>
-> 
-> Toaster needs buildstats to be enabled in order to
-> be able to collect task running stats. This patch
-> adds buildstats to the running configuration in toaster mode.
-> 
-> Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
-> ---
->  bin/toaster | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/bin/toaster b/bin/toaster
-> index 38e71ac..d6c3175 100755
-> --- a/bin/toaster
-> +++ b/bin/toaster
-> @@ -61,10 +61,13 @@ function webserverStartAll()
->  }
->  
->  # Helper functions to add a special configuration file
-> +function initConfiguration()
-> +{
-> +        echo "#Created by toaster start script" > ${BUILDDIR}/conf/$1
-> +}
->  
->  function addtoConfiguration()
->  {
-> -        echo "#Created by toaster start script" > ${BUILDDIR}/conf/$2
->          echo $1 >> ${BUILDDIR}/conf/$2
->  }
->  
-> @@ -167,7 +170,9 @@ fi
->  case $CMD in
->      start )
->          start_success=1
-> +        initConfiguration toaster.conf
->          addtoConfiguration "INHERIT+=\"toaster buildhistory\"" toaster.conf
-> +        addtoConfiguration "USER_CLASSES+=\"buildstats\"" toaster.conf
->          if ! webserverStartAll; then
->              echo "Failed ${CMD}."
->              return 4
+Hi,
 
-Why not just add this to the INHERIT? I'm trying to figure out if
-USER_CLASSES is special in some way and when we should use one and when
-we should use the other...
+I am quite new to BitBake but there is something which I really do not unde=
+rstand as a Python programmer.
+And I was hoping somebody could help me with this problem.
 
-Cheers,
+I have had to write a recipe for some proprietary package which tries to do=
+ the following:
 
-Richard
+ python do_get_uid_gid() {
+    # Read UID and GID from some file not shown here
+    d.setVar('UID', '1')
+    d.setVar('GID', '2')
+    bb.warn("UID =3D %s" % d.getVar('UID'))
+}
 
+addtask get_uid_gid before do_compile after do_configure
 
+python do_print_data() {
+    for k in d:
+        print "=3D"*20
+        print "|%s| -> |%s|" % (k, str(d.getVar(k)))
+}
+
+addtask print_data before do_compile after do_get_uid_gid
+
+do_compile_prepend() {
+    bbwarn "do_compile_prepend: UID=3D$UID, GID=3D$GID"
+    bbwarn "d.getVar =3D "${@d.getVar('UID')}
+}
+
+When I look at the output after running bitbake <my-recipe>
+
+WARNING: UID =3D 1
+...
+
+BUT In the "tmp/work/.../temp/log.do_compile",
+I can read following:
+
+DEBUG: Executing shell function do_compile
+WARNING: do_compile_prepend: UID=3D, GID=3D
+WARNING: d.getVar =3D None
+
+I was expecting UID to be 1 and not "None" or "" in do_compile too.
+
+As a Python programmer, if I can set a variable in a data structure called =
+'d' which is defined
+outside of the scope of "do_get_uid_gid" why can't I retrieve the data late=
+r on with a getVar()
+from another python or shell method?
+
+I think that this is quite counter intuitive.=20
+
+I actually had to inspect the d struct in "do_print_data" to discover that =
+UID was not among the keys.
+
+/Fabrice
 
