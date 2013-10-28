@@ -1,45 +1,20 @@
-Return-Path: <olof.johansson@axis.com>
-Received: from ra.se.axis.com (ra.se.axis.com [195.60.68.13])
-	by mail.openembedded.org (Postfix) with ESMTP id F2A416D23B
+Return-Path: <cristiana.voicu@intel.com>
+Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
+	by mail.openembedded.org (Postfix) with ESMTP id 7140B6D13A
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Oct 2013 10:21:59 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by ra.se.axis.com (Postfix) with ESMTP id A0DA713BCE
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Oct 2013 12:22:01 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at ra.se.axis.com
-Received: from ra.se.axis.com ([127.0.0.1])
-	by localhost (ra.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id bK0QqqyPYFBh for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Oct 2013 12:22:01 +0200 (CEST)
-Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by ra.se.axis.com (Postfix) with ESMTP id D746113BA3
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Oct 2013 12:21:59 +0200 (CEST)
-Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id BE8195E6
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Oct 2013 12:21:59 +0200 (CEST)
-Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
-	by boulder.se.axis.com (Postfix) with ESMTP id B39824C1
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Oct 2013 12:21:59 +0200 (CEST)
-Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
-	by thoth.se.axis.com (Postfix) with ESMTP id B16943404E
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Oct 2013 12:21:59 +0200 (CEST)
-Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
-	(10.0.5.74) with Microsoft SMTP Server id 8.2.255.0; Fri, 18 Oct 2013
-	12:21:59 +0200
-Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id 6FEF69C078; 
-	Fri, 18 Oct 2013 12:21:59 +0200 (CEST)
-From: Olof Johansson <olof.johansson@axis.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 18 Oct 2013 12:21:59 +0200
-Message-ID: <1382091719-30603-1-git-send-email-olof.johansson@axis.com>
-X-Mailer: git-send-email 1.7.10.4
-MIME-Version: 1.0
-Subject: [PATCH v2] monitordisk: lower inode check warning to note
+	Mon, 28 Oct 2013 11:23:20 +0000 (UTC)
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 28 Oct 2013 04:23:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.93,535,1378882800"; d="scan'208";a="381086937"
+Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.65])
+	by azsmga001.ch.intel.com with ESMTP; 28 Oct 2013 04:23:20 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 28 Oct 2013 13:28:16 +0200
+Message-Id: <1382959696-24874-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] toaster: set INHERIT var in the script that starts toaster
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,34 +27,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 18 Oct 2013 10:22:00 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 28 Oct 2013 11:23:20 -0000
 
-Filesystems like btrfs and reiserfs sets the inode count to 0, since
-they don't have an inode concept. This is expected, and having a warning
-show up every time you run bitbake can cause undue concern.
+In order to use toaster, now you have to set INHERIT+="toaster buildhistory"
+To keep it simple, I've done some changes in order to automate it. When toaster
+is started, this line is added to local.conf. When it is stoped, it is removed.
 
-Signed-off-by: Olof Johansson <olof.johansson@axis.com>
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
-Fixes stupid typo in commit message. Thanks Chris!
----
- lib/bb/monitordisk.py |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/bin/toaster |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/lib/bb/monitordisk.py b/lib/bb/monitordisk.py
-index 3e6ecbd..fca43ee 100644
---- a/lib/bb/monitordisk.py
-+++ b/lib/bb/monitordisk.py
-@@ -243,7 +243,7 @@ class diskMonitor:
-                     # zero, this is a feature of the fs, we disable the inode
-                     # checking for such a fs.
-                     if st.f_files == 0:
--                        logger.warn("Inode check for %s is unavaliable, will remove it from disk monitor" % path)
-+                        logger.info("Inode check for %s is unavaliable, will remove it from disk monitor" % path)
-                         self.devDict[k][2] = None
-                         continue
-                     # Always show warning, the self.checked would always be False if the action is WARN
+diff --git a/bitbake/bin/toaster b/bitbake/bin/toaster
+index 16de52b..639b7b7 100755
+--- a/bitbake/bin/toaster
++++ b/bitbake/bin/toaster
+@@ -49,6 +49,21 @@ function webserverStartAll()
+         return $retval
+ }
+ 
++#Helper functions to add/remove a line from a configuration file
++
++function addtoConfiguration()
++{
++        echo "#added by toaster" >> ${BUILDDIR}/conf/$2
++        echo $1 >> ${BUILDDIR}/conf/$2
++}
++
++function removefromConfiguration()
++{
++        comment_line=$(grep -n "#added by toaster" "$file" | cut -f1 -d:)
++        variable_line=$((comment_line+1))
++        lines="${comment_line},${variable_line}"
++        sed -i "$lines"'d' ${BUILDDIR}/conf/$1
++}
+ 
+ # We make sure we're running in the current shell and in a good environment
+ 
+@@ -120,6 +135,7 @@ fi
+ 
+ case $CMD in
+     start )
++        addtoConfiguration "INHERIT+=\"toaster buildhistory\"" local.conf
+         webserverStartAll || return 4
+         unset BBSERVER
+         bitbake --server-only -t xmlrpc -B localhost:8200
+@@ -138,6 +154,7 @@ case $CMD in
+         webserverKillAll
+         # force stop any misbehaving bitbake server
+         lsof bitbake.lock | awk '{print $2}' | grep "[0-9]\+" | xargs -n1 -r kill
++        removefromConfiguration local.conf
+     ;;
+ esac
+ 
 -- 
-1.7.10.4
+1.7.9.5
 
 
