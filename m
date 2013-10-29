@@ -1,26 +1,24 @@
 Return-Path: <Liezhi.Yang@windriver.com>
 Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 2020F6D405
+	by mail.openembedded.org (Postfix) with ESMTP id 21B926D10F
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 29 Oct 2013 06:23:05 +0000 (UTC)
+	Tue, 29 Oct 2013 06:23:04 +0000 (UTC)
 Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
 	[147.11.189.41])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id r9T6N7NN009081
+	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id r9T6N5Dd009078
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Oct 2013 23:23:07 -0700 (PDT)
+	Mon, 28 Oct 2013 23:23:05 -0700 (PDT)
 Received: from pek-blade16.wrs.com (128.224.153.44) by ALA-HCB.corp.ad.wrs.com
 	(147.11.189.41) with Microsoft SMTP Server id 14.2.347.0;
-	Mon, 28 Oct 2013 23:23:06 -0700
+	Mon, 28 Oct 2013 23:23:04 -0700
 From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 29 Oct 2013 22:24:31 +0800
-Message-ID: <90225254375e09a27b2a7e754a1ee0268e75f0d5.1383056532.git.liezhi.yang@windriver.com>
+Date: Tue, 29 Oct 2013 22:24:30 +0800
+Message-ID: <cover.1383056532.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1383056532.git.liezhi.yang@windriver.com>
-References: <cover.1383056532.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 1/1] bb/fetch2: fix the "filename too long" error
+Subject: [PATCH 0/1] bb/fetch2: fix the "filename too long" error
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,25 +34,18 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 X-List-Received-Date: Tue, 29 Oct 2013 06:23:05 -0000
 Content-Type: text/plain
 
-When the SRC_URI is very long or the PREMIRROR/MIRROR is in a very deep
-directory, the git, svn and other fetchers will covert the path into
-the filename, so if:
+The following changes since commit 78b91ab23d9856525fc7ac1bb8da2975382813bf:
 
-  len(path) > NAME_MAX,
+  pigz: bump to 2.3.1 (2013-10-26 16:08:41 +0100)
 
-then we will get the "filename too long" error, the oe-core supports to
-build when len(TMPDIR) <= 410, but the NAME_MAX is usually 256, so we
-can easily get this error when we put the PREMIRROR/MIRROR in a deep
-dir.
+are available in the git repository at:
 
-Truncate the filename to NAME_MAX - 10 will fix the problem, the "-10"
-is used for the ".done" and ".lock", in fact, -5 would be OK, but use
-"-10" in case we will have other longer suffix in the future.
+  git://git.pokylinux.org/poky-contrib robert/name_max
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/name_max
 
-[YOCTO #5389]
+Robert Yang (1):
+  bb/fetch2: fix the "filename too long" error
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
  bitbake/lib/bb/fetch2/__init__.py | 18 ++++++++++++++++++
  bitbake/lib/bb/fetch2/bzr.py      |  2 ++
  bitbake/lib/bb/fetch2/git.py      |  6 ++++++
@@ -65,144 +56,6 @@ Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
  bitbake/lib/bb/fetch2/svn.py      |  3 +++
  8 files changed, 40 insertions(+)
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index 451d104..f76568e 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -959,6 +959,24 @@ def get_file_checksums(filelist, pn):
-     checksums.sort(key=operator.itemgetter(1))
-     return checksums
- 
-+def truncate_to_name_max(dirpath, filename):
-+    """
-+    Truncate the filename to meet len(filename) <= NAME_MAX -10, return
-+    the last NAME_MAX - 10 characters if it doesn't, the -10 is for the
-+    '.done', '.lock' and perhaps others in the future.
-+    """
-+    if not os.path.exists(dirpath):
-+        bb.utils.mkdirhier(dirpath)
-+
-+    name_max = os.pathconf(dirpath, 'PC_NAME_MAX')
-+    new_max = name_max - 10
-+    if len(filename) > new_max:
-+        new_name = filename[-new_max:]
-+        logger.debug(1, "Truncate %s to %s to meet %s (NAME_MAX - 10) characters" % \
-+                    (filename, new_name, new_max))
-+        filename = new_name
-+
-+    return filename
- 
- class FetchData(object):
-     """
-diff --git a/bitbake/lib/bb/fetch2/bzr.py b/bitbake/lib/bb/fetch2/bzr.py
-index 5d9e5f9..f91c7ee 100644
---- a/bitbake/lib/bb/fetch2/bzr.py
-+++ b/bitbake/lib/bb/fetch2/bzr.py
-@@ -51,6 +51,8 @@ class Bzr(FetchMethod):
-             ud.revision = self.latest_revision(ud.url, ud, d)
- 
-         ud.localfile = data.expand('bzr_%s_%s_%s.tar.gz' % (ud.host, ud.path.replace('/', '.'), ud.revision), d)
-+        # The length of the filename should be less than NAME_MAX - 10
-+        ud.localfile = bb.fetch2.truncate_to_name_max(ud.pkgdir, ud.localfile)
- 
-     def _buildbzrcommand(self, ud, d, command):
-         """
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 6175e4c..19598ef 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -135,9 +135,15 @@ class Git(FetchMethod):
-         if ud.rebaseable:
-             for name in ud.names:
-                 gitsrcname = gitsrcname + '_' + ud.revisions[name]
-+
-         ud.mirrortarball = 'git2_%s.tar.gz' % (gitsrcname)
-+        # The length of the filename should be less than NAME_MAX - 10
-+        ud.mirrortarball = bb.fetch2.truncate_to_name_max(d.getVar("DL_DIR", True), ud.mirrortarball)
-         ud.fullmirror = os.path.join(d.getVar("DL_DIR", True), ud.mirrortarball)
-+
-         gitdir = d.getVar("GITDIR", True) or (d.getVar("DL_DIR", True) + "/git2/")
-+        # The length of the filename should be less than NAME_MAX - 10
-+        gitsrcname = bb.fetch2.truncate_to_name_max(gitdir, gitsrcname)
-         ud.clonedir = os.path.join(gitdir, gitsrcname)
- 
-         ud.localfile = ud.clonedir
-diff --git a/bitbake/lib/bb/fetch2/hg.py b/bitbake/lib/bb/fetch2/hg.py
-index b1c8675..be9bb26 100644
---- a/bitbake/lib/bb/fetch2/hg.py
-+++ b/bitbake/lib/bb/fetch2/hg.py
-@@ -66,6 +66,9 @@ class Hg(FetchMethod):
- 
-         ud.localfile = data.expand('%s_%s_%s_%s.tar.gz' % (ud.module.replace('/', '.'), ud.host, ud.path.replace('/', '.'), ud.revision), d)
- 
-+        # The length of the filename should be less than NAME_MAX - 10
-+        ud.localfile = bb.fetch2.truncate_to_name_max(ud.pkgdir, ud.localfile)
-+
-     def need_update(self, url, ud, d):
-         revTag = ud.parm.get('rev', 'tip')
-         if revTag == "tip":
-diff --git a/bitbake/lib/bb/fetch2/osc.py b/bitbake/lib/bb/fetch2/osc.py
-index 1a3a7bb..2e276e0 100644
---- a/bitbake/lib/bb/fetch2/osc.py
-+++ b/bitbake/lib/bb/fetch2/osc.py
-@@ -48,6 +48,8 @@ class Osc(FetchMethod):
-                 ud.revision = ""
- 
-         ud.localfile = data.expand('%s_%s_%s.tar.gz' % (ud.module.replace('/', '.'), ud.path.replace('/', '.'), ud.revision), d)
-+        # The length of the filename should be less than NAME_MAX - 10
-+        ud.localfile = bb.fetch2.truncate_to_name_max(ud.pkgdir, ud.localfile)
- 
-     def _buildosccommand(self, ud, d, command):
-         """
-diff --git a/bitbake/lib/bb/fetch2/repo.py b/bitbake/lib/bb/fetch2/repo.py
-index 8300da8..1e46968 100644
---- a/bitbake/lib/bb/fetch2/repo.py
-+++ b/bitbake/lib/bb/fetch2/repo.py
-@@ -52,6 +52,8 @@ class Repo(FetchMethod):
-             ud.manifest += '.xml'
- 
-         ud.localfile = data.expand("repo_%s%s_%s_%s.tar.gz" % (ud.host, ud.path.replace("/", "."), ud.manifest, ud.branch), d)
-+        # The length of the filename should be less than NAME_MAX - 10
-+        ud.localfile = bb.fetch2.truncate_to_name_max(d.getVar("DL_DIR", True), ud.localfile)
- 
-     def download(self, loc, ud, d):
-         """Fetch url"""
-@@ -62,6 +64,8 @@ class Repo(FetchMethod):
- 
-         gitsrcname = "%s%s" % (ud.host, ud.path.replace("/", "."))
-         repodir = data.getVar("REPODIR", d, True) or os.path.join(data.getVar("DL_DIR", d, True), "repo")
-+        # The length of the filename should be less than NAME_MAX - 10
-+        gitsrcname = bb.fetch2.truncate_to_name_max(repodir, gitsrcname)
-         codir = os.path.join(repodir, gitsrcname, ud.manifest)
- 
-         if ud.user:
-diff --git a/bitbake/lib/bb/fetch2/svk.py b/bitbake/lib/bb/fetch2/svk.py
-index ee3823f..dbd78f3 100644
---- a/bitbake/lib/bb/fetch2/svk.py
-+++ b/bitbake/lib/bb/fetch2/svk.py
-@@ -53,6 +53,8 @@ class Svk(FetchMethod):
-         ud.revision = ud.parm.get('rev', "")
- 
-         ud.localfile = data.expand('%s_%s_%s_%s_%s.tar.gz' % (ud.module.replace('/', '.'), ud.host, ud.path.replace('/', '.'), ud.revision, ud.date), d)
-+        # The length of the filename should be less than NAME_MAX - 10
-+        ud.localfile = bb.fetch2.truncate_to_name_max(d.getVar("DL_DIR", True), ud.localfile)
- 
-     def need_update(self, url, ud, d):
-         if ud.date == "now":
-diff --git a/bitbake/lib/bb/fetch2/svn.py b/bitbake/lib/bb/fetch2/svn.py
-index 9a779d2..c155735 100644
---- a/bitbake/lib/bb/fetch2/svn.py
-+++ b/bitbake/lib/bb/fetch2/svn.py
-@@ -65,6 +65,9 @@ class Svn(FetchMethod):
- 
-         ud.localfile = data.expand('%s_%s_%s_%s_.tar.gz' % (ud.module.replace('/', '.'), ud.host, ud.path.replace('/', '.'), ud.revision), d)
- 
-+        # The length of the filename should be less than NAME_MAX - 10
-+        ud.localfile = bb.fetch2.truncate_to_name_max(ud.pkgdir, ud.localfile)
-+
-     def _buildsvncommand(self, ud, d, command):
-         """
-         Build up an svn commandline based on ud
 -- 
 1.8.3.1
 
