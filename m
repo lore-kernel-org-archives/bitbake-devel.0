@@ -1,31 +1,34 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 2B24C6C770
+Return-Path: <alex.r.damian@gmail.com>
+Received: from mail-qc0-f174.google.com (mail-qc0-f174.google.com
+	[209.85.216.174])
+	by mail.openembedded.org (Postfix) with ESMTP id CB6E16B0F9
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 30 Oct 2013 14:27:44 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r9UEReNE019061; Wed, 30 Oct 2013 14:27:41 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id xgzuB11diPYS; Wed, 30 Oct 2013 14:27:40 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	r9UERahq019052
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Wed, 30 Oct 2013 14:27:37 GMT
-Message-ID: <1383143251.25877.31.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Robert Yang <liezhi.yang@windriver.com>
-Date: Wed, 30 Oct 2013 14:27:31 +0000
-In-Reply-To: <90225254375e09a27b2a7e754a1ee0268e75f0d5.1383056532.git.liezhi.yang@windriver.com>
-References: <cover.1383056532.git.liezhi.yang@windriver.com>
-	<90225254375e09a27b2a7e754a1ee0268e75f0d5.1383056532.git.liezhi.yang@windriver.com>
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
+	Wed, 30 Oct 2013 15:37:26 +0000 (UTC)
+Received: by mail-qc0-f174.google.com with SMTP id v1so880853qcw.19
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 30 Oct 2013 08:37:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	:cc:content-type;
+	bh=ltPP4cXo+FWyf5xQ/xYk9oNzorgfrwYpeO62RyOxnZs=;
+	b=LvBr6nBTZlYAlnUWTwNfLtBywODz0FKbsHvpWHEDKT8DQnKwGvYKsmpGjMVGiHMGFi
+	8yXJX7i5TZLoI4stpPYimDj173PWH227zCIkGgUk84OzXVfd7sXPPUDDNMx2L6PU5heQ
+	XDma2HQC8KyGSWAzA+1mlQkpitwSjLrrnnuJfgtAGo3aV73cfmehftPep1tD6bNi7QEB
+	NEzSazPgLdpqmg2scgyQx7tRgY/VJiujrreXSMTGIWQbvTQpRn7kve3cUcNwIOB3gTLn
+	qt92esuNpGrFDnLrJRzRTPPOfVs4kCKuqKO4iOU3RY3ViaI69j/dUlUChKE34w3aLC3O
+	YeJg==
+MIME-Version: 1.0
+X-Received: by 10.49.94.72 with SMTP id da8mr7339776qeb.67.1383147448357; Wed,
+	30 Oct 2013 08:37:28 -0700 (PDT)
+Received: by 10.224.3.70 with HTTP; Wed, 30 Oct 2013 08:37:28 -0700 (PDT)
+In-Reply-To: <1382959696-24874-1-git-send-email-cristiana.voicu@intel.com>
+References: <1382959696-24874-1-git-send-email-cristiana.voicu@intel.com>
+Date: Wed, 30 Oct 2013 15:37:28 +0000
+Message-ID: <CAL7ttbe5fOBpiyL0qnZmmk1=b=N0WM5kk7OTT9kvDRobhjaS3w@mail.gmail.com>
+From: Alex Damian <alex.r.damian@gmail.com>
+To: Cristiana Voicu <cristiana.voicu@intel.com>
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] bb/fetch2: fix the "filename too long" error
+Subject: Re: [PATCH] toaster: set INHERIT var in the script that starts toaster
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,203 +41,163 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 30 Oct 2013 14:27:45 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 30 Oct 2013 15:37:28 -0000
+Content-Type: multipart/alternative; boundary=047d7b5d4e3c54d8c204e9f71c06
 
-On Tue, 2013-10-29 at 22:24 +0800, Robert Yang wrote:
-> When the SRC_URI is very long or the PREMIRROR/MIRROR is in a very deep
-> directory, the git, svn and other fetchers will covert the path into
-> the filename, so if:
-> 
->   len(path) > NAME_MAX,
-> 
-> then we will get the "filename too long" error, the oe-core supports to
-> build when len(TMPDIR) <= 410, but the NAME_MAX is usually 256, so we
-> can easily get this error when we put the PREMIRROR/MIRROR in a deep
-> dir.
-> 
-> Truncate the filename to NAME_MAX - 10 will fix the problem, the "-10"
-> is used for the ".done" and ".lock", in fact, -5 would be OK, but use
-> "-10" in case we will have other longer suffix in the future.
-> 
-> [YOCTO #5389]
+--047d7b5d4e3c54d8c204e9f71c06
+Content-Type: text/plain; charset=ISO-8859-1
 
-Aren't the "long SRC_URI" and deep PREMIRROR/MIRROR problems different
-issues?
-
-As far as I know, we don't have any long SRC_URIs in use anywhere within
-the project. We could just error if we found one with a path we couldn't
-cope with.
-
-The deep PREMIRROR/MIRROR issue on the other hand sounds like something
-we should adjust the code to handle properly?
-
-Randomly truncating path names like this looks like a rather hacky
-solution and it loses key information, there is a reason these long
-names are being used as keys.
-
-Put another way, the mirror tarball name should not change depending on
-how deep the DL_DIR or other directories are.
-
-So no, there is no way this patch is correct or should be merged, sorry.
-
-Cheers,
-
-Richard
+Taken in toaster/master.
 
 
+On Mon, Oct 28, 2013 at 11:28 AM, Cristiana Voicu <cristiana.voicu@intel.com
+> wrote:
 
-> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+> In order to use toaster, now you have to set INHERIT+="toaster
+> buildhistory"
+> To keep it simple, I've done some changes in order to automate it. When
+> toaster
+> is started, this line is added to local.conf. When it is stoped, it is
+> removed.
+>
+> Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 > ---
->  bitbake/lib/bb/fetch2/__init__.py | 18 ++++++++++++++++++
->  bitbake/lib/bb/fetch2/bzr.py      |  2 ++
->  bitbake/lib/bb/fetch2/git.py      |  6 ++++++
->  bitbake/lib/bb/fetch2/hg.py       |  3 +++
->  bitbake/lib/bb/fetch2/osc.py      |  2 ++
->  bitbake/lib/bb/fetch2/repo.py     |  4 ++++
->  bitbake/lib/bb/fetch2/svk.py      |  2 ++
->  bitbake/lib/bb/fetch2/svn.py      |  3 +++
->  8 files changed, 40 insertions(+)
-> 
-> diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-> index 451d104..f76568e 100644
-> --- a/bitbake/lib/bb/fetch2/__init__.py
-> +++ b/bitbake/lib/bb/fetch2/__init__.py
-> @@ -959,6 +959,24 @@ def get_file_checksums(filelist, pn):
->      checksums.sort(key=operator.itemgetter(1))
->      return checksums
->  
-> +def truncate_to_name_max(dirpath, filename):
-> +    """
-> +    Truncate the filename to meet len(filename) <= NAME_MAX -10, return
-> +    the last NAME_MAX - 10 characters if it doesn't, the -10 is for the
-> +    '.done', '.lock' and perhaps others in the future.
-> +    """
-> +    if not os.path.exists(dirpath):
-> +        bb.utils.mkdirhier(dirpath)
+>  bitbake/bin/toaster |   17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>
+> diff --git a/bitbake/bin/toaster b/bitbake/bin/toaster
+> index 16de52b..639b7b7 100755
+> --- a/bitbake/bin/toaster
+> +++ b/bitbake/bin/toaster
+> @@ -49,6 +49,21 @@ function webserverStartAll()
+>          return $retval
+>  }
+>
+> +#Helper functions to add/remove a line from a configuration file
 > +
-> +    name_max = os.pathconf(dirpath, 'PC_NAME_MAX')
-> +    new_max = name_max - 10
-> +    if len(filename) > new_max:
-> +        new_name = filename[-new_max:]
-> +        logger.debug(1, "Truncate %s to %s to meet %s (NAME_MAX - 10) characters" % \
-> +                    (filename, new_name, new_max))
-> +        filename = new_name
+> +function addtoConfiguration()
+> +{
+> +        echo "#added by toaster" >> ${BUILDDIR}/conf/$2
+> +        echo $1 >> ${BUILDDIR}/conf/$2
+> +}
 > +
-> +    return filename
->  
->  class FetchData(object):
->      """
-> diff --git a/bitbake/lib/bb/fetch2/bzr.py b/bitbake/lib/bb/fetch2/bzr.py
-> index 5d9e5f9..f91c7ee 100644
-> --- a/bitbake/lib/bb/fetch2/bzr.py
-> +++ b/bitbake/lib/bb/fetch2/bzr.py
-> @@ -51,6 +51,8 @@ class Bzr(FetchMethod):
->              ud.revision = self.latest_revision(ud.url, ud, d)
->  
->          ud.localfile = data.expand('bzr_%s_%s_%s.tar.gz' % (ud.host, ud.path.replace('/', '.'), ud.revision), d)
-> +        # The length of the filename should be less than NAME_MAX - 10
-> +        ud.localfile = bb.fetch2.truncate_to_name_max(ud.pkgdir, ud.localfile)
->  
->      def _buildbzrcommand(self, ud, d, command):
->          """
-> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-> index 6175e4c..19598ef 100644
-> --- a/bitbake/lib/bb/fetch2/git.py
-> +++ b/bitbake/lib/bb/fetch2/git.py
-> @@ -135,9 +135,15 @@ class Git(FetchMethod):
->          if ud.rebaseable:
->              for name in ud.names:
->                  gitsrcname = gitsrcname + '_' + ud.revisions[name]
-> +
->          ud.mirrortarball = 'git2_%s.tar.gz' % (gitsrcname)
-> +        # The length of the filename should be less than NAME_MAX - 10
-> +        ud.mirrortarball = bb.fetch2.truncate_to_name_max(d.getVar("DL_DIR", True), ud.mirrortarball)
->          ud.fullmirror = os.path.join(d.getVar("DL_DIR", True), ud.mirrortarball)
-> +
->          gitdir = d.getVar("GITDIR", True) or (d.getVar("DL_DIR", True) + "/git2/")
-> +        # The length of the filename should be less than NAME_MAX - 10
-> +        gitsrcname = bb.fetch2.truncate_to_name_max(gitdir, gitsrcname)
->          ud.clonedir = os.path.join(gitdir, gitsrcname)
->  
->          ud.localfile = ud.clonedir
-> diff --git a/bitbake/lib/bb/fetch2/hg.py b/bitbake/lib/bb/fetch2/hg.py
-> index b1c8675..be9bb26 100644
-> --- a/bitbake/lib/bb/fetch2/hg.py
-> +++ b/bitbake/lib/bb/fetch2/hg.py
-> @@ -66,6 +66,9 @@ class Hg(FetchMethod):
->  
->          ud.localfile = data.expand('%s_%s_%s_%s.tar.gz' % (ud.module.replace('/', '.'), ud.host, ud.path.replace('/', '.'), ud.revision), d)
->  
-> +        # The length of the filename should be less than NAME_MAX - 10
-> +        ud.localfile = bb.fetch2.truncate_to_name_max(ud.pkgdir, ud.localfile)
-> +
->      def need_update(self, url, ud, d):
->          revTag = ud.parm.get('rev', 'tip')
->          if revTag == "tip":
-> diff --git a/bitbake/lib/bb/fetch2/osc.py b/bitbake/lib/bb/fetch2/osc.py
-> index 1a3a7bb..2e276e0 100644
-> --- a/bitbake/lib/bb/fetch2/osc.py
-> +++ b/bitbake/lib/bb/fetch2/osc.py
-> @@ -48,6 +48,8 @@ class Osc(FetchMethod):
->                  ud.revision = ""
->  
->          ud.localfile = data.expand('%s_%s_%s.tar.gz' % (ud.module.replace('/', '.'), ud.path.replace('/', '.'), ud.revision), d)
-> +        # The length of the filename should be less than NAME_MAX - 10
-> +        ud.localfile = bb.fetch2.truncate_to_name_max(ud.pkgdir, ud.localfile)
->  
->      def _buildosccommand(self, ud, d, command):
->          """
-> diff --git a/bitbake/lib/bb/fetch2/repo.py b/bitbake/lib/bb/fetch2/repo.py
-> index 8300da8..1e46968 100644
-> --- a/bitbake/lib/bb/fetch2/repo.py
-> +++ b/bitbake/lib/bb/fetch2/repo.py
-> @@ -52,6 +52,8 @@ class Repo(FetchMethod):
->              ud.manifest += '.xml'
->  
->          ud.localfile = data.expand("repo_%s%s_%s_%s.tar.gz" % (ud.host, ud.path.replace("/", "."), ud.manifest, ud.branch), d)
-> +        # The length of the filename should be less than NAME_MAX - 10
-> +        ud.localfile = bb.fetch2.truncate_to_name_max(d.getVar("DL_DIR", True), ud.localfile)
->  
->      def download(self, loc, ud, d):
->          """Fetch url"""
-> @@ -62,6 +64,8 @@ class Repo(FetchMethod):
->  
->          gitsrcname = "%s%s" % (ud.host, ud.path.replace("/", "."))
->          repodir = data.getVar("REPODIR", d, True) or os.path.join(data.getVar("DL_DIR", d, True), "repo")
-> +        # The length of the filename should be less than NAME_MAX - 10
-> +        gitsrcname = bb.fetch2.truncate_to_name_max(repodir, gitsrcname)
->          codir = os.path.join(repodir, gitsrcname, ud.manifest)
->  
->          if ud.user:
-> diff --git a/bitbake/lib/bb/fetch2/svk.py b/bitbake/lib/bb/fetch2/svk.py
-> index ee3823f..dbd78f3 100644
-> --- a/bitbake/lib/bb/fetch2/svk.py
-> +++ b/bitbake/lib/bb/fetch2/svk.py
-> @@ -53,6 +53,8 @@ class Svk(FetchMethod):
->          ud.revision = ud.parm.get('rev', "")
->  
->          ud.localfile = data.expand('%s_%s_%s_%s_%s.tar.gz' % (ud.module.replace('/', '.'), ud.host, ud.path.replace('/', '.'), ud.revision, ud.date), d)
-> +        # The length of the filename should be less than NAME_MAX - 10
-> +        ud.localfile = bb.fetch2.truncate_to_name_max(d.getVar("DL_DIR", True), ud.localfile)
->  
->      def need_update(self, url, ud, d):
->          if ud.date == "now":
-> diff --git a/bitbake/lib/bb/fetch2/svn.py b/bitbake/lib/bb/fetch2/svn.py
-> index 9a779d2..c155735 100644
-> --- a/bitbake/lib/bb/fetch2/svn.py
-> +++ b/bitbake/lib/bb/fetch2/svn.py
-> @@ -65,6 +65,9 @@ class Svn(FetchMethod):
->  
->          ud.localfile = data.expand('%s_%s_%s_%s_.tar.gz' % (ud.module.replace('/', '.'), ud.host, ud.path.replace('/', '.'), ud.revision), d)
->  
-> +        # The length of the filename should be less than NAME_MAX - 10
-> +        ud.localfile = bb.fetch2.truncate_to_name_max(ud.pkgdir, ud.localfile)
-> +
->      def _buildsvncommand(self, ud, d, command):
->          """
->          Build up an svn commandline based on ud
+> +function removefromConfiguration()
+> +{
+> +        comment_line=$(grep -n "#added by toaster" "$file" | cut -f1 -d:)
+> +        variable_line=$((comment_line+1))
+> +        lines="${comment_line},${variable_line}"
+> +        sed -i "$lines"'d' ${BUILDDIR}/conf/$1
+> +}
+>
+>  # We make sure we're running in the current shell and in a good
+> environment
+>
+> @@ -120,6 +135,7 @@ fi
+>
+>  case $CMD in
+>      start )
+> +        addtoConfiguration "INHERIT+=\"toaster buildhistory\"" local.conf
+>          webserverStartAll || return 4
+>          unset BBSERVER
+>          bitbake --server-only -t xmlrpc -B localhost:8200
+> @@ -138,6 +154,7 @@ case $CMD in
+>          webserverKillAll
+>          # force stop any misbehaving bitbake server
+>          lsof bitbake.lock | awk '{print $2}' | grep "[0-9]\+" | xargs -n1
+> -r kill
+> +        removefromConfiguration local.conf
+>      ;;
+>  esac
+>
+> --
+> 1.7.9.5
+>
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+>
 
+--047d7b5d4e3c54d8c204e9f71c06
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr">Taken in toaster/master.</div><div class=3D"gmail_extra"><=
+br><br><div class=3D"gmail_quote">On Mon, Oct 28, 2013 at 11:28 AM, Cristia=
+na Voicu <span dir=3D"ltr">&lt;<a href=3D"mailto:cristiana.voicu@intel.com"=
+ target=3D"_blank">cristiana.voicu@intel.com</a>&gt;</span> wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">In order to use toaster, now you have to set=
+ INHERIT+=3D&quot;toaster buildhistory&quot;<br>
+To keep it simple, I&#39;ve done some changes in order to automate it. When=
+ toaster<br>
+is started, this line is added to local.conf. When it is stoped, it is remo=
+ved.<br>
+<br>
+Signed-off-by: Cristiana Voicu &lt;<a href=3D"mailto:cristiana.voicu@intel.=
+com">cristiana.voicu@intel.com</a>&gt;<br>
+---<br>
+=A0bitbake/bin/toaster | =A0 17 +++++++++++++++++<br>
+=A01 file changed, 17 insertions(+)<br>
+<br>
+diff --git a/bitbake/bin/toaster b/bitbake/bin/toaster<br>
+index 16de52b..639b7b7 100755<br>
+--- a/bitbake/bin/toaster<br>
++++ b/bitbake/bin/toaster<br>
+@@ -49,6 +49,21 @@ function webserverStartAll()<br>
+=A0 =A0 =A0 =A0 =A0return $retval<br>
+=A0}<br>
+<br>
++#Helper functions to add/remove a line from a configuration file<br>
++<br>
++function addtoConfiguration()<br>
++{<br>
++ =A0 =A0 =A0 =A0echo &quot;#added by toaster&quot; &gt;&gt; ${BUILDDIR}/co=
+nf/$2<br>
++ =A0 =A0 =A0 =A0echo $1 &gt;&gt; ${BUILDDIR}/conf/$2<br>
++}<br>
++<br>
++function removefromConfiguration()<br>
++{<br>
++ =A0 =A0 =A0 =A0comment_line=3D$(grep -n &quot;#added by toaster&quot; &qu=
+ot;$file&quot; | cut -f1 -d:)<br>
++ =A0 =A0 =A0 =A0variable_line=3D$((comment_line+1))<br>
++ =A0 =A0 =A0 =A0lines=3D&quot;${comment_line},${variable_line}&quot;<br>
++ =A0 =A0 =A0 =A0sed -i &quot;$lines&quot;&#39;d&#39; ${BUILDDIR}/conf/$1<b=
+r>
++}<br>
+<br>
+=A0# We make sure we&#39;re running in the current shell and in a good envi=
+ronment<br>
+<br>
+@@ -120,6 +135,7 @@ fi<br>
+<br>
+=A0case $CMD in<br>
+=A0 =A0 =A0start )<br>
++ =A0 =A0 =A0 =A0addtoConfiguration &quot;INHERIT+=3D\&quot;toaster buildhi=
+story\&quot;&quot; local.conf<br>
+=A0 =A0 =A0 =A0 =A0webserverStartAll || return 4<br>
+=A0 =A0 =A0 =A0 =A0unset BBSERVER<br>
+=A0 =A0 =A0 =A0 =A0bitbake --server-only -t xmlrpc -B localhost:8200<br>
+@@ -138,6 +154,7 @@ case $CMD in<br>
+=A0 =A0 =A0 =A0 =A0webserverKillAll<br>
+=A0 =A0 =A0 =A0 =A0# force stop any misbehaving bitbake server<br>
+=A0 =A0 =A0 =A0 =A0lsof bitbake.lock | awk &#39;{print $2}&#39; | grep &quo=
+t;[0-9]\+&quot; | xargs -n1 -r kill<br>
++ =A0 =A0 =A0 =A0removefromConfiguration local.conf<br>
+=A0 =A0 =A0;;<br>
+=A0esac<br>
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+--<br>
+1.7.9.5<br>
+<br>
+_______________________________________________<br>
+bitbake-devel mailing list<br>
+<a href=3D"mailto:bitbake-devel@lists.openembedded.org">bitbake-devel@lists=
+.openembedded.org</a><br>
+<a href=3D"http://lists.openembedded.org/mailman/listinfo/bitbake-devel" ta=
+rget=3D"_blank">http://lists.openembedded.org/mailman/listinfo/bitbake-deve=
+l</a><br>
+</font></span></blockquote></div><br></div>
 
+--047d7b5d4e3c54d8c204e9f71c06--
