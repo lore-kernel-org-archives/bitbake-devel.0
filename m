@@ -1,37 +1,20 @@
-Return-Path: <nicolas.dechesne@linaro.org>
-Received: from mail-pa0-f43.google.com (mail-pa0-f43.google.com
-	[209.85.220.43])
-	by mail.openembedded.org (Postfix) with ESMTP id 0313F6D4EE
+Return-Path: <cristiana.voicu@intel.com>
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 7DBBC6D383
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Nov 2013 00:36:33 +0000 (UTC)
-Received: by mail-pa0-f43.google.com with SMTP id hz1so3269873pad.2
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 31 Oct 2013 17:36:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=Hwk67pC/rpYmenulcY6s9IDVjN6GKO0F8Vt0Oy9GYVs=;
-	b=PzOhqI3PAA+QZqa1AxnoglwQU89+0RFLZdGHcik2Mwu3jPZcV3o99pdaRTLTz2/4ZF
-	ol1YMwXBcziPt6p75dgpEchYx23SMknS5RGjwAFv4GvSpd9Un48ohrkibkMzzOOIEQoA
-	ifYdIRZaxn3cGReWmL+s6rtC/qXYnJKZHrPE+WLFY2gmkB2enliu6bP1V2aO/dNc5+6o
-	grLWGQbMD7ACNynScKjZiJ52aCTO99zGqMN3fHw6BryL7tV/1n4HEMLx9FzSk2kHVfDp
-	EBDJD+uU7FrQENwfnlRQJM5q+Y0ROuZHpDFHUyXVRxL4w65nq0Zb9ZUWyqOEDpIH0NsM
-	4yzw==
-X-Gm-Message-State: ALoCoQmyOIUyvjJjS6+iIldu7dM3YrdUd5vm3Glc581Mu1Z7J3eTzlAc9Oht1FgkmAbZe9MTEwmX
-X-Received: by 10.68.58.137 with SMTP id r9mr416412pbq.148.1383266195783;
-	Thu, 31 Oct 2013 17:36:35 -0700 (PDT)
-Received: from localhost.localdomain ([63.239.94.10])
-	by mx.google.com with ESMTPSA id i6sm6927404pbc.1.2013.10.31.17.36.34
-	for <multiple recipients>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 31 Oct 2013 17:36:35 -0700 (PDT)
-From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+	Fri,  1 Nov 2013 09:13:58 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga102.fm.intel.com with ESMTP; 01 Nov 2013 02:14:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.93,615,1378882800"; d="scan'208";a="426339693"
+Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.65])
+	by fmsmga002.fm.intel.com with ESMTP; 01 Nov 2013 02:13:42 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 31 Oct 2013 17:36:25 -0700
-Message-Id: <1383266185-2917-1-git-send-email-nicolas.dechesne@linaro.org>
-X-Mailer: git-send-email 1.8.4.2
-Cc: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Subject: [PATCH RFC] fetch2/svn.py: use log instead of info to retrieve revision
+Date: Fri,  1 Nov 2013 11:18:45 +0200
+Message-Id: <1383297526-16557-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob: populate error_msg when hob receives a CommandFailed event
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,67 +27,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Nov 2013 00:36:34 -0000
+X-List-Received-Date: Fri, 01 Nov 2013 09:13:58 -0000
 
-We have faced a corner case situation where the 'last changed
-revision' returned from svn info is wrong. It happens when the last
-revision is a directory move. e.g. if we assume that the svn
-repository at revA has root/x/y/z/foo/bar and it is moved to
-root/a/b/c/foo/bar in revB, then svn info 'last change revision' will
-return revA. As such when using AUTOREV, we are going to attempt to
-retrieve root/a/b/c/foo/bar (as per SRC_URI) but at revA when it did
-not exist.
+When Hob receives a bb.command.CommandFailed event, it doesn't show any error,
+because the error_msg is empty. If so, it is hard to detect the issue, because
+Hob continues to run till it blocks because of an information gap.
 
-So this patch changes how we retrieve the latest revision and uses
-'svn log --limit 1' which gives correct result in all tested cases.
-
-Signed-off-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+[YOCTO #5097]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- lib/bb/fetch2/svn.py | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/lib/bb/fetch2/svn.py b/lib/bb/fetch2/svn.py
-index 9a779d2..123aa13 100644
---- a/lib/bb/fetch2/svn.py
-+++ b/lib/bb/fetch2/svn.py
-@@ -27,6 +27,7 @@ import os
- import sys
- import logging
- import bb
-+import re
- from   bb import data
- from   bb.fetch2 import FetchMethod
- from   bb.fetch2 import FetchError
-@@ -91,6 +92,8 @@ class Svn(FetchMethod):
+diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+index 7854742..2a629e2 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -97,6 +97,7 @@ class HobHandler(gobject.GObject):
  
-         if command == "info":
-             svncmd = "%s info %s %s://%s/%s/" % (ud.basecmd, " ".join(options), proto, svnroot, ud.module)
-+        elif command == "log1":
-+            svncmd = "%s log --limit 1 %s %s://%s/%s/" % (ud.basecmd, " ".join(options), proto, svnroot, ud.module)
-         else:
-             suffix = ""
-             if ud.revision:
-@@ -167,14 +170,13 @@ class Svn(FetchMethod):
-         """
-         Return the latest upstream revision number
-         """
--        bb.fetch2.check_network_access(d, self._buildsvncommand(ud, d, "info"))
-+        bb.fetch2.check_network_access(d, self._buildsvncommand(ud, d, "log1"))
+         self.server = server
+         self.error_msg = ""
++        self.lastCommand = ""
+         self.initcmd = None
+         self.parsing = False
  
--        output = runfetchcmd("LANG=C LC_ALL=C " + self._buildsvncommand(ud, d, "info"), d, True)
-+        output = runfetchcmd("LANG=C LC_ALL=C " + self._buildsvncommand(ud, d, "log1"), d, True)
+@@ -111,6 +112,7 @@ class HobHandler(gobject.GObject):
+             self.generating = False
  
--        revision = None
--        for line in output.splitlines():
--            if "Last Changed Rev" in line:
--                revision = line.split(":")[1].strip()
-+        # skip the first line, as per output of svn log
-+        # then we expect the revision on the 2nd line
-+        revision = re.search('^r([0-9]*)', output.splitlines()[1]).group(1)
- 
-         return revision
- 
+     def runCommand(self, commandline):
++        self.lastCommand = commandline[0]
+         try:
+             result, error = self.server.runCommand(commandline)
+             if error:
+@@ -252,6 +254,10 @@ class HobHandler(gobject.GObject):
+             self.current_phase = None
+             self.run_next_command()
+         elif isinstance(event, bb.command.CommandFailed):
++            if self.error_msg == "":
++                self.error_msg = "The command \"" + self.lastCommand
++                self.error_msg += "\" was sent to bitbake server but it failed. Please"
++                self.error_msg += " check the code executed by this command in bitbake."
+             self.commands_async = []
+             self.display_error()
+         elif isinstance(event, (bb.event.ParseStarted,
 -- 
-1.8.4.2
+1.7.9.5
 
 
