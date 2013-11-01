@@ -1,20 +1,20 @@
-Return-Path: <cristiana.voicu@intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id 7DBBC6D383
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 971896CE3F
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Nov 2013 09:13:58 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 01 Nov 2013 02:14:00 -0700
+	Fri,  1 Nov 2013 15:58:38 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 01 Nov 2013 08:55:14 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.93,615,1378882800"; d="scan'208";a="426339693"
-Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.65])
-	by fmsmga002.fm.intel.com with ESMTP; 01 Nov 2013 02:13:42 -0700
-From: Cristiana Voicu <cristiana.voicu@intel.com>
+X-IronPort-AV: E=Sophos;i="4.93,535,1378882800"; d="scan'208";a="428337408"
+Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.121.91])
+	by orsmga002.jf.intel.com with ESMTP; 01 Nov 2013 08:58:39 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  1 Nov 2013 11:18:45 +0200
-Message-Id: <1383297526-16557-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob: populate error_msg when hob receives a CommandFailed event
+Date: Fri,  1 Nov 2013 15:58:27 +0000
+Message-Id: <cover.1383321482.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.8.1.2
+Subject: [PATCH 0/8] Toaster-related improvements
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,50 +27,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Nov 2013 09:13:58 -0000
+X-List-Received-Date: Fri, 01 Nov 2013 15:58:39 -0000
 
-When Hob receives a bb.command.CommandFailed event, it doesn't show any error,
-because the error_msg is empty. If so, it is hard to detect the issue, because
-Hob continues to run till it blocks because of an information gap.
+The following changes since commit f3ac2d3678f48c68a250a0a20c08cf8687322d38:
 
-[YOCTO #5097]
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
----
- bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    6 ++++++
- 1 file changed, 6 insertions(+)
+  monitordisk: lower inode check warning to note (2013-10-18 16:02:10 +0100)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-index 7854742..2a629e2 100644
---- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -97,6 +97,7 @@ class HobHandler(gobject.GObject):
- 
-         self.server = server
-         self.error_msg = ""
-+        self.lastCommand = ""
-         self.initcmd = None
-         self.parsing = False
- 
-@@ -111,6 +112,7 @@ class HobHandler(gobject.GObject):
-             self.generating = False
- 
-     def runCommand(self, commandline):
-+        self.lastCommand = commandline[0]
-         try:
-             result, error = self.server.runCommand(commandline)
-             if error:
-@@ -252,6 +254,10 @@ class HobHandler(gobject.GObject):
-             self.current_phase = None
-             self.run_next_command()
-         elif isinstance(event, bb.command.CommandFailed):
-+            if self.error_msg == "":
-+                self.error_msg = "The command \"" + self.lastCommand
-+                self.error_msg += "\" was sent to bitbake server but it failed. Please"
-+                self.error_msg += " check the code executed by this command in bitbake."
-             self.commands_async = []
-             self.display_error()
-         elif isinstance(event, (bb.event.ParseStarted,
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib paule/toaster2-bb
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/toaster2-bb
+
+Alexandru DAMIAN (7):
+  toaster: fixes for null values from events
+  cooker: add data to the dependency tree dump
+  cooker: do not recreate recipecache in buildfile mode
+  build, toaster: record proper task type
+  toaster: fix timezone settings
+  toaster: server shutdown on terminal exit
+  toaster: enable required classes in the toaster startup script
+
+Cristiana Voicu (1):
+  toaster: add variable description for prefixed/suffixed variables
+
+ bin/toaster                         | 41 +++++++++++++++++++++--------
+ lib/bb/build.py                     |  7 ++++-
+ lib/bb/cooker.py                    |  3 ++-
+ lib/bb/ui/buildinfohelper.py        | 52 ++++++++++++++++++++-----------------
+ lib/bb/ui/toasterui.py              |  3 +--
+ lib/toaster/orm/models.py           |  8 +++---
+ lib/toaster/toastermain/settings.py |  5 ++--
+ 7 files changed, 75 insertions(+), 44 deletions(-)
+
 -- 
-1.7.9.5
+1.8.1.2
 
 
