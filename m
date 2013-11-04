@@ -1,30 +1,20 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id A66866CCC9
+Return-Path: <valentin.popa@intel.com>
+Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
+	by mail.openembedded.org (Postfix) with ESMTP id 981FD6D290
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Nov 2013 17:57:12 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	rA1Hv2jY011253; Fri, 1 Nov 2013 17:57:02 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id rg3SeBrhGmwp; Fri,  1 Nov 2013 17:57:02 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	rA1HuwTx011237
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Fri, 1 Nov 2013 17:57:00 GMT
-Message-ID: <1383328614.6271.60.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
-Date: Fri, 01 Nov 2013 17:56:54 +0000
-In-Reply-To: <526FE2D3.7020808@digitalendoscopy.de>
-References: <526FE2D3.7020808@digitalendoscopy.de>
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: HG Fetch with username and password in url
+	Mon,  4 Nov 2013 10:52:14 +0000 (UTC)
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga101.ch.intel.com with ESMTP; 04 Nov 2013 02:52:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.93,535,1378882800"; d="scan'208";a="316669551"
+Received: from vpopa-desktop.rb.intel.com ([10.237.105.58])
+	by AZSMGA002.ch.intel.com with ESMTP; 04 Nov 2013 02:52:12 -0800
+From: Valentin Popa <valentin.popa@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  4 Nov 2013 12:53:11 +0200
+Message-Id: <1383562393-22087-1-git-send-email-valentin.popa@intel.com>
+X-Mailer: git-send-email 1.8.3.2
+Subject: [PATCH 0/2] Rebased "HIG compliant message dialogs"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,31 +27,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Nov 2013 17:57:13 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 04 Nov 2013 10:52:14 -0000
 
-On Tue, 2013-10-29 at 17:31 +0100, Volker Vogelhuber wrote:
-> We currently use an company internal mercurial server with username
-> and 
-> password authentication
-> that will be accessed during the build of a firmware image from within
-> a 
-> custom recipe.
-> The only way to access it from within the yocto toolchain seems to
-> have 
-> the username and password
-> stored within the URL of the SRC_URI variable.
-> 
-> But the current hg.py fetcher does not completely support this.
-> Attached 
-> is a patch that fixes the missing parts.
+Two patches that weren't merged in 1.5.
+Rebased, in case they are needed for 1.6.
 
-Thanks. In the future, a commit message and a Signed-off-by line would
-help but I've merged this change.
+Valentin Popa (2):
+  HOB: HIG compliant message dialogs
+  GUI error dialog for bitbake
 
-Cheers,
+ bitbake/lib/bb/ui/crumbs/builder.py                | 92 ++++++++++++----------
+ .../lib/bb/ui/crumbs/hig/advancedsettingsdialog.py |  5 +-
+ .../lib/bb/ui/crumbs/hig/crumbsmessagedialog.py    | 55 ++++---------
+ bitbake/lib/bb/ui/crumbs/hig/deployimagedialog.py  | 12 ++-
+ .../lib/bb/ui/crumbs/hig/layerselectiondialog.py   | 11 +--
+ bitbake/lib/bb/ui/crumbs/hig/saveimagedialog.py    |  5 +-
+ .../lib/bb/ui/crumbs/hig/simplesettingsdialog.py   |  9 +--
+ scripts/hob                                        |  9 ++-
+ scripts/show_error_dialog                          | 63 +++++++++++++++
+ 9 files changed, 158 insertions(+), 103 deletions(-)
+ create mode 100755 scripts/show_error_dialog
 
-Richard
+-- 
+1.8.3.2
 
 
