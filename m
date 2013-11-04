@@ -1,22 +1,36 @@
-Return-Path: <valentin.popa@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
-	by mail.openembedded.org (Postfix) with ESMTP id 87AF66D459
+Return-Path: <nicolas.dechesne@linaro.org>
+Received: from mail-ob0-f169.google.com (mail-ob0-f169.google.com
+	[209.85.214.169])
+	by mail.openembedded.org (Postfix) with ESMTP id 601C16D3CC
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  4 Nov 2013 10:52:17 +0000 (UTC)
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 04 Nov 2013 02:52:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.93,535,1378882800"; d="scan'208";a="316669571"
-Received: from vpopa-desktop.rb.intel.com ([10.237.105.58])
-	by AZSMGA002.ch.intel.com with ESMTP; 04 Nov 2013 02:52:18 -0800
-From: Valentin Popa <valentin.popa@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon,  4 Nov 2013 12:53:13 +0200
-Message-Id: <1383562393-22087-3-git-send-email-valentin.popa@intel.com>
-X-Mailer: git-send-email 1.8.3.2
-In-Reply-To: <1383562393-22087-1-git-send-email-valentin.popa@intel.com>
-References: <1383562393-22087-1-git-send-email-valentin.popa@intel.com>
-Subject: [PATCH 2/2] GUI error dialog for bitbake
+	Mon,  4 Nov 2013 18:48:42 +0000 (UTC)
+Received: by mail-ob0-f169.google.com with SMTP id uz6so7561426obc.14
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 04 Nov 2013 10:48:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc:content-type;
+	bh=7XbhKdn6B2AYZWQqvFPDZ+eyMYQLyXUdJGXTiUCaaHo=;
+	b=JxmqX7ZcJm+gTq7+PJZFmaZgGmd0Np2urNwRCN2sI0vbofE02F1BGhKpLe3c/q7zlJ
+	A5cYmjfs6k/i4tXzN2h8YJjylnmtJjy587lNhIK8ZvEks0Gqcw1d1HirQIV+Ye4vpSG9
+	HvldghVc+Qj8xzWBUTBzkYBkI3uQCUiBdVzhxuKGGj4631xzgpY39yFCkHiDld6bvrxz
+	33OR4vnYwrMnCHZzkZc9joopjT7XMO+P34hfD1fmKgp3UKaB9qPhxrvowplnzwe+TwZu
+	dMwzDXeMBgHXPCA1ns4pC9etMrsWBqWKGgJuqi0mWfE9f3XJ//57VFX5gqcDwCLabWrh
+	k/5w==
+X-Gm-Message-State: ALoCoQkAmKQuiC+gMrBS4iFlX/vXaH1C0YjU3MldEwodWPebC5Gfa6Qwl+U2gVBhjtU4dy0D8ugD
+X-Received: by 10.182.44.167 with SMTP id f7mr15377726obm.3.1383590924118;
+	Mon, 04 Nov 2013 10:48:44 -0800 (PST)
+MIME-Version: 1.0
+Received: by 10.76.156.40 with HTTP; Mon, 4 Nov 2013 10:48:24 -0800 (PST)
+In-Reply-To: <1383266185-2917-1-git-send-email-nicolas.dechesne@linaro.org>
+References: <1383266185-2917-1-git-send-email-nicolas.dechesne@linaro.org>
+From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Date: Mon, 4 Nov 2013 10:48:24 -0800
+Message-ID: <CAP71Wjz8DXdFYqMER6uy+7X9ic-PJmGQVp+d5ayC4TJ5Eqgozw@mail.gmail.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Cc: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Subject: Re: [PATCH RFC] fetch2/svn.py: use log instead of info to retrieve revision
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,112 +43,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 04 Nov 2013 10:52:17 -0000
+X-List-Received-Date: Mon, 04 Nov 2013 18:48:43 -0000
+Content-Type: text/plain; charset=ISO-8859-1
 
-When the user starts HOB, he/she expects to see some GUI.
-If bitbake signals an erros before HOB starts the error will
-be visible only in console and hob script will terminate.
-This patch allows bitbake to report errors inside a GUI dialog
-when the user wants to use HOB.
-WebHOB starts before bitbake's launch and  a common solution
-for this problem that applies to both HOB and WebHOB is not so obvious.
+On Thu, Oct 31, 2013 at 5:36 PM, Nicolas Dechesne
+<nicolas.dechesne@linaro.org> wrote:
+> We have faced a corner case situation where the 'last changed
+> revision' returned from svn info is wrong. It happens when the last
+> revision is a directory move. e.g. if we assume that the svn
+> repository at revA has root/x/y/z/foo/bar and it is moved to
+> root/a/b/c/foo/bar in revB, then svn info 'last change revision' will
+> return revA. As such when using AUTOREV, we are going to attempt to
+> retrieve root/a/b/c/foo/bar (as per SRC_URI) but at revA when it did
+> not exist.
+>
+> So this patch changes how we retrieve the latest revision and uses
+> 'svn log --limit 1' which gives correct result in all tested cases.
 
-Signed-off-by: Valentin Popa <valentin.popa@intel.com>
----
- scripts/hob               |  9 ++++++-
- scripts/show_error_dialog | 63 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 71 insertions(+), 1 deletion(-)
- create mode 100755 scripts/show_error_dialog
+Richard, thanks for merging in master. any chance this can go to dora
+and dylan too, as this is a bug fix? the same patch applies in both
+branches, and we are currently using dylan and dora for our projects.
 
-diff --git a/scripts/hob b/scripts/hob
-index 8d33ab1..406765f 100755
---- a/scripts/hob
-+++ b/scripts/hob
-@@ -1,6 +1,13 @@
- #!/usr/bin/env bash
- export BB_ENV_EXTRAWHITE="DISABLE_SANITY_CHECKS $BB_ENV_EXTRAWHITE"
--DISABLE_SANITY_CHECKS=1 bitbake -u hob $@
-+SAVED_ERRORS="$(mktemp)"
-+DISABLE_SANITY_CHECKS=1 bitbake -u hob $@ > $SAVED_ERRORS
- 
- ret=$?
-+
-+if (( $ret == 1 )); then #there is an error and hob didn't start
-+    show_error_dialog $SAVED_ERRORS
-+fi
-+rm $SAVED_ERRORS
-+
- exit $ret
-diff --git a/scripts/show_error_dialog b/scripts/show_error_dialog
-new file mode 100755
-index 0000000..beb7cb3
---- /dev/null
-+++ b/scripts/show_error_dialog
-@@ -0,0 +1,63 @@
-+#!/usr/bin/env python
-+#
-+# BitBake graphical error reporting dialog used by hob script
-+#
-+# Copyright (C) 2013        Intel Corporation
-+#
-+# Authored by Valentin Popa <valentin.popa@lintel.com>
-+# Authored by Andrei Dinu <andrei.adrianx.dinu@intel.com>
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+# GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License along
-+# with this program; if not, write to the Free Software Foundation, Inc.,
-+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+
-+import sys
-+import os
-+requirements = "FATAL: Gtk+ 2.20.0 or higher & PyGtk 2.21.0 or higher is required"
-+try:
-+    import gtk
-+    import pygtk
-+    pygtk.require('2.0') # to be certain we don't have gtk+ 1.x !?!
-+    gtkver = gtk.gtk_version
-+    pygtkver = gtk.pygtk_version
-+    if gtkver  < (2, 20, 0) or pygtkver < (2, 21, 0):
-+        sys.exit("%s,\nYou have Gtk+ %s and PyGtk %s." % (requirements,
-+                ".".join(map(str, gtkver)),
-+                ".".join(map(str, pygtkver))))
-+except ImportError as exc:
-+    sys.exit("%s (%s)." % (requirements, str(exc)))
-+
-+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__))+"/bitbake/lib")
-+
-+try:
-+    import bb
-+except RuntimeError as exc:
-+    sys.exit(str(exc))
-+
-+from bb.ui.crumbs.hig.crumbsmessagedialog import CrumbsMessageDialog
-+from bb.ui.crumbs.hobwidget import HobButton
-+
-+class HobError(gtk.Window):
-+
-+    def __init__(self, error_log_file):
-+        message = open(error_log_file).readlines()
-+        label = "<b>Hob found an error</b>"
-+        dialog = CrumbsMessageDialog(self, label, gtk.MESSAGE_ERROR, "".join(message))
-+        button = dialog.add_button("Close", gtk.RESPONSE_OK)
-+        HobButton.style_button(button)
-+        button.connect("clicked", lambda w:sys.exit())
-+        dialog.run()
-+        dialog.destroy()
-+
-+if __name__ == "__main__":
-+    HobError(sys.argv[1])
-+
--- 
-1.8.3.2
-
+thanks
 
