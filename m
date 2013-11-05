@@ -1,23 +1,28 @@
-Return-Path: <ddalex@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
-	by mail.openembedded.org (Postfix) with ESMTP id 666716D160
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 832ED6D160
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  5 Nov 2013 12:26:44 +0000 (UTC)
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 05 Nov 2013 04:26:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.93,535,1378882800"; d="scan'208";a="317172629"
-Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by AZSMGA002.ch.intel.com with ESMTP; 05 Nov 2013 04:26:44 -0800
-Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id 491B7560AE4; Tue,  5 Nov 2013 12:26:47 +0000 (GMT)
-From: Alex DAMIAN <alexandru.damian@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue,  5 Nov 2013 12:26:46 +0000
-Message-Id: <1383654406-15206-1-git-send-email-alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.8.3.2
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 1/1] toaster: fix target package information
+	Tue,  5 Nov 2013 13:17:45 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id rA5DHkoV026343
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Tue, 5 Nov 2013 05:17:46 -0800 (PST)
+Received: from [128.224.162.242] (128.224.162.242) by ALA-HCB.corp.ad.wrs.com
+	(147.11.189.41) with Microsoft SMTP Server id 14.2.347.0;
+	Tue, 5 Nov 2013 05:17:45 -0800
+Message-ID: <5278EFF0.7010601@windriver.com>
+Date: Tue, 5 Nov 2013 21:17:36 +0800
+From: Robert Yang <liezhi.yang@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux i686;
+	rv:24.0) Gecko/20100101 Thunderbird/24.0
+MIME-Version: 1.0
+To: Nicolas Dechesne <nicolas.dechesne@linaro.org>, bitbake-devel
+	<bitbake-devel@lists.openembedded.org>
+References: <1383266185-2917-1-git-send-email-nicolas.dechesne@linaro.org>
+	<CAP71Wjz8DXdFYqMER6uy+7X9ic-PJmGQVp+d5ayC4TJ5Eqgozw@mail.gmail.com>
+In-Reply-To: <CAP71Wjz8DXdFYqMER6uy+7X9ic-PJmGQVp+d5ayC4TJ5Eqgozw@mail.gmail.com>
+Subject: Re: [PATCH RFC] fetch2/svn.py: use log instead of info to retrieve revision
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,66 +35,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Nov 2013 12:26:45 -0000
+X-List-Received-Date: Tue, 05 Nov 2013 13:17:46 -0000
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Toaster needs to record information about packages
-installed on a built target image, and dependencies
-between these packages.
 
-This patch fixes a bug where the variable from the
-server wasn't read correctly leading which caused
-the buildhistory to not be processed correctly.
+On 11/05/2013 02:48 AM, Nicolas Dechesne wrote:
+> On Thu, Oct 31, 2013 at 5:36 PM, Nicolas Dechesne
+> <nicolas.dechesne@linaro.org> wrote:
+>> We have faced a corner case situation where the 'last changed
+>> revision' returned from svn info is wrong. It happens when the last
+>> revision is a directory move. e.g. if we assume that the svn
+>> repository at revA has root/x/y/z/foo/bar and it is moved to
+>> root/a/b/c/foo/bar in revB, then svn info 'last change revision' will
+>> return revA. As such when using AUTOREV, we are going to attempt to
+>> retrieve root/a/b/c/foo/bar (as per SRC_URI) but at revA when it did
+>> not exist.
+>>
+>> So this patch changes how we retrieve the latest revision and uses
+>> 'svn log --limit 1' which gives correct result in all tested cases.
+>
+> Richard, thanks for merging in master. any chance this can go to dora
 
-Additionally, two display issues in the package table
-were fixed, issues that lead to package information
-being displayed incorrectly.
+Hi Nicolas,
 
-    [YOCTO #5197]
+I will add it to the queue of dora, thanks.
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
----
- bitbake/lib/bb/ui/buildinfohelper.py                 |  2 +-
- bitbake/lib/toaster/bldviewer/templates/package.html | 10 +++++-----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+// Robert
 
-diff --git a/bitbake/lib/bb/ui/buildinfohelper.py b/bitbake/lib/bb/ui/buildinfohelper.py
-index 2ca0bd3..fbf7546 100644
---- a/bitbake/lib/bb/ui/buildinfohelper.py
-+++ b/bitbake/lib/bb/ui/buildinfohelper.py
-@@ -548,7 +548,7 @@ class BuildInfoHelper(object):
- 
-             MACHINE_ARCH, error = self.server.runCommand(['getVariable', 'MACHINE_ARCH'])
-             TCLIBC, error = self.server.runCommand(['getVariable', 'TCLIBC'])
--            BUILDHISTORY_DIR = self.server.runCommand(['getVariable', 'BUILDHISTORY_DIR'])
-+            BUILDHISTORY_DIR, error = self.server.runCommand(['getVariable', 'BUILDHISTORY_DIR'])
-             BUILDHISTORY_DIR_IMAGE = "%s/images/%s/%s/%s" % (BUILDHISTORY_DIR, MACHINE_ARCH, TCLIBC, target.target)
- 
-             self.internal_state['packages'] = {}
-diff --git a/bitbake/lib/toaster/bldviewer/templates/package.html b/bitbake/lib/toaster/bldviewer/templates/package.html
-index 642fcab..c22e988 100644
---- a/bitbake/lib/toaster/bldviewer/templates/package.html
-+++ b/bitbake/lib/toaster/bldviewer/templates/package.html
-@@ -19,12 +19,12 @@
-                 <td><a name="#{{package.name}}">{{package.name}}</a></td>
-                 <td>{{package.version}}</td>
-                 <td>{{package.size}}</td>
--                <td><a name="{{package.recipe.name}}.{{package.package_name}}">
--                <a href="{% url layer_versions_recipes package.recipe.layer_version_id %}#{{package.recipe.name}}">{{package.recipe.name}}</a>{{package.package_name}}</a></td>
-+                <td>{%if package.recipe %}<a name="{{package.recipe.name}}.{{package.package_name}}">
-+                <a href="{% url layer_versions_recipes package.recipe.layer_version_id %}#{{package.recipe.name}}">{{package.recipe.name}}</a>{{package.package_name}}</a>{%endif%}</td>
-                 <td>
--            <div style="height: 3em; overflow:auto">
--                    {% for d in package.depends_on %}
--                    <a href="#{{d.name}}">{{d.name}}</a><br/>
-+            <div style="height: 4em; overflow:auto">
-+                    {% for d in package.tpackage_dependencies_package.all %}
-+                    <a href="#{{d.name}}">{{d.depends_on.name}}</a><br/>
-                     {% endfor %}
-             </div>
-                 </td>
--- 
-1.8.3.2
 
+> and dylan too, as this is a bug fix? the same patch applies in both
+> branches, and we are currently using dylan and dora for our projects.
+>
+> thanks
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+>
+>
 
