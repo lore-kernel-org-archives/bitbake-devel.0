@@ -1,25 +1,26 @@
 Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
-	by mail.openembedded.org (Postfix) with ESMTP id 36DD86D2FB
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id E9D286D2FB
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Nov 2013 16:25:17 +0000 (UTC)
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga101.ch.intel.com with ESMTP; 07 Nov 2013 08:25:18 -0800
+	Thu,  7 Nov 2013 16:26:33 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 07 Nov 2013 08:26:36 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.93,535,1378882800"; d="scan'208";a="318310518"
+X-IronPort-AV: E=Sophos;i="4.93,535,1378882800"; d="scan'208";a="431401485"
 Received: from unknown (HELO helios.localnet) ([10.252.121.102])
-	by AZSMGA002.ch.intel.com with ESMTP; 07 Nov 2013 08:25:11 -0800
+	by orsmga002.jf.intel.com with ESMTP; 07 Nov 2013 08:26:34 -0800
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: Gary Thomas <gary@mlbassoc.com>
-Date: Thu, 07 Nov 2013 16:25:10 +0000
-Message-ID: <7286154.LbYKCCWHqH@helios>
+To: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Date: Thu, 07 Nov 2013 16:26:33 +0000
+Message-ID: <3712809.5Iazxv3HWn@helios>
 Organization: Intel Corporation
 User-Agent: KMail/4.10.5 (Linux/3.8.0-31-generic; KDE/4.10.5; i686; ; )
-In-Reply-To: <527BAC0F.3090901@mlbassoc.com>
-References: <527BAC0F.3090901@mlbassoc.com>
+In-Reply-To: <CAP71Wjz8DXdFYqMER6uy+7X9ic-PJmGQVp+d5ayC4TJ5Eqgozw@mail.gmail.com>
+References: <1383266185-2917-1-git-send-email-nicolas.dechesne@linaro.org>
+	<CAP71Wjz8DXdFYqMER6uy+7X9ic-PJmGQVp+d5ayC4TJ5Eqgozw@mail.gmail.com>
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org, Ross Burton <ross.burton@intel.com>
-Subject: Re: Some 'depexp' nits
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH RFC] fetch2/svn.py: use log instead of info to retrieve revision
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,41 +33,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 07 Nov 2013 16:25:17 -0000
+X-List-Received-Date: Thu, 07 Nov 2013 16:26:34 -0000
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
 
-Hi Gary,
+Hi Nicolas,
 
-On Thursday 07 November 2013 08:04:47 Gary Thomas wrote:
-> I hope this is the correct list.
+On Monday 04 November 2013 10:48:24 Nicolas Dechesne wrote:
+> On Thu, Oct 31, 2013 at 5:36 PM, Nicolas Dechesne
+> <nicolas.dechesne@linaro.org> wrote:
+> > We have faced a corner case situation where the 'last changed
+> > revision' returned from svn info is wrong. It happens when the last
+> > revision is a directory move. e.g. if we assume that the svn
+> > repository at revA has root/x/y/z/foo/bar and it is moved to
+> > root/a/b/c/foo/bar in revB, then svn info 'last change revision' will
+> > return revA. As such when using AUTOREV, we are going to attempt to
+> > retrieve root/a/b/c/foo/bar (as per SRC_URI) but at revA when it did
+> > not exist.
+> > 
+> > So this patch changes how we retrieve the latest revision and uses
+> > 'svn log --limit 1' which gives correct result in all tested cases.
 > 
-> I was just using '-u depexp' and noticed a few small things.
->    $ bitbake my-qt5-image -u depexp
->    This UI is only compatible with the -g option
-> 
-> Perhaps this should be worded more strongly, like this?
->    This UI requires the -g option
+> Richard, thanks for merging in master. any chance this can go to dora
+> and dylan too, as this is a bug fix? the same patch applies in both
+> branches, and we are currently using dylan and dora for our projects.
 
-Sounds like a good idea yes.
+OK, I've queued it up for dylan as well.
 
-> Also, after running successfully, I closed the window (using
-> the close WM button) and got this:
->    $ bitbake my-qt5-image -u depexp -g
->    Unable to cleanly stop: No such command
-> 
-> There didn't seem to be any other way to exit the program, so
-> at least this should be clean.
-
-There is now a bug open for the latter issue:
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=5445
-
-> Are these valid concerns/observations?  Would you entertain patches
-> for these items?
-
-Yes, that would be great.
-
-Cheers,
+Thanks,
 Paul
 
 -- 
