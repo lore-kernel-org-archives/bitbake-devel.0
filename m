@@ -1,35 +1,25 @@
-Return-Path: <raj.khem@gmail.com>
-Received: from mail-pb0-f48.google.com (mail-pb0-f48.google.com
-	[209.85.160.48])
-	by mail.openembedded.org (Postfix) with ESMTP id 762B86D320
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
+	by mail.openembedded.org (Postfix) with ESMTP id 36DD86D2FB
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Nov 2013 15:11:27 +0000 (UTC)
-Received: by mail-pb0-f48.google.com with SMTP id mc8so714261pbc.35
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 07 Nov 2013 07:11:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id;
-	bh=SQCsUDITtig2+2sFZdV6G0b3MvKkJ8Wgcxe4+cZcZXc=;
-	b=WVEJqtu1EcZp7zYtvPx2fsZZBmJi9l6kkodj+VQrGsn2R260TIF/B7KhMz9j0zV5Pt
-	Rgjng5Ao6NKzg2a4CY9MDvsjxFtoRnU7r2caO3IM0LbEhCl0XKzR78AVtPw7TPb8me6J
-	TpbfAtrLM4ub6RNFmZaHIeeF9doDoXPYrRSGfyOoCpHry77cy3HRZwoXp9umvfpDJfTD
-	ICSptZFobxbJdr95iMr59xbTh/3lK2qMQk03DNXRHKXt46VG7BRNL2lcV0F+qq/ZiBlp
-	RoZjw9TXOq2GjTC1fK7AuwKpzA5RpDw6vEjiCoLXmYtctzLIPWiOmmLyGeN7caFKLC4H
-	6P9g==
-X-Received: by 10.68.101.225 with SMTP id fj1mr9602073pbb.8.1383837089462;
-	Thu, 07 Nov 2013 07:11:29 -0800 (PST)
-Received: from haswell.gateway.2wire.net
-	(99-57-140-209.lightspeed.sntcca.sbcglobal.net. [99.57.140.209])
-	by mx.google.com with ESMTPSA id zq10sm7067992pab.6.2013.11.07.07.11.28
-	for <multiple recipients>
-	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Thu, 07 Nov 2013 07:11:28 -0800 (PST)
-From: Khem Raj <raj.khem@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu,  7 Nov 2013 07:10:35 -0800
-Message-Id: <1383837035-29410-1-git-send-email-raj.khem@gmail.com>
-X-Mailer: git-send-email 1.8.3.2
-Subject: [PATCH] bitbake.vim: fix highlighing for ??= operator
+	Thu,  7 Nov 2013 16:25:17 +0000 (UTC)
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga101.ch.intel.com with ESMTP; 07 Nov 2013 08:25:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.93,535,1378882800"; d="scan'208";a="318310518"
+Received: from unknown (HELO helios.localnet) ([10.252.121.102])
+	by AZSMGA002.ch.intel.com with ESMTP; 07 Nov 2013 08:25:11 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Gary Thomas <gary@mlbassoc.com>
+Date: Thu, 07 Nov 2013 16:25:10 +0000
+Message-ID: <7286154.LbYKCCWHqH@helios>
+Organization: Intel Corporation
+User-Agent: KMail/4.10.5 (Linux/3.8.0-31-generic; KDE/4.10.5; i686; ; )
+In-Reply-To: <527BAC0F.3090901@mlbassoc.com>
+References: <527BAC0F.3090901@mlbassoc.com>
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org, Ross Burton <ross.burton@intel.com>
+Subject: Re: Some 'depexp' nits
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,30 +32,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 07 Nov 2013 15:11:28 -0000
+X-List-Received-Date: Thu, 07 Nov 2013 16:25:17 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-equation is OK but operator itself is highlighted
-which is odd
+Hi Gary,
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
- contrib/vim/syntax/bitbake.vim | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thursday 07 November 2013 08:04:47 Gary Thomas wrote:
+> I hope this is the correct list.
+> 
+> I was just using '-u depexp' and noticed a few small things.
+>    $ bitbake my-qt5-image -u depexp
+>    This UI is only compatible with the -g option
+> 
+> Perhaps this should be worded more strongly, like this?
+>    This UI requires the -g option
 
-diff --git a/contrib/vim/syntax/bitbake.vim b/contrib/vim/syntax/bitbake.vim
-index fb55f91..0cad484 100644
---- a/contrib/vim/syntax/bitbake.vim
-+++ b/contrib/vim/syntax/bitbake.vim
-@@ -59,7 +59,7 @@ syn region bbVarPyValue         start=+${@+ skip=+\\$+ end=+}+ contained contain
- 
- " Vars metadata flags
- syn match bbVarFlagDef          "^\([a-zA-Z0-9\-_\.]\+\)\(\[[a-zA-Z0-9\-_\.]\+\]\)\@=" contains=bbIdentifier nextgroup=bbVarFlagFlag
--syn region bbVarFlagFlag        matchgroup=bbArrayBrackets start="\[" end="\]\s*\(=\|+=\|=+\|?=\)\@=" contained contains=bbIdentifier nextgroup=bbVarEq
-+syn region bbVarFlagFlag        matchgroup=bbArrayBrackets start="\[" end="\]\s*\(=\|+=\|=+\|?=\|??=\)\@=" contained contains=bbIdentifier nextgroup=bbVarEq
- 
- " Includes and requires
- syn keyword bbInclude           inherit include require contained 
+Sounds like a good idea yes.
+
+> Also, after running successfully, I closed the window (using
+> the close WM button) and got this:
+>    $ bitbake my-qt5-image -u depexp -g
+>    Unable to cleanly stop: No such command
+> 
+> There didn't seem to be any other way to exit the program, so
+> at least this should be clean.
+
+There is now a bug open for the latter issue:
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=5445
+
+> Are these valid concerns/observations?  Would you entertain patches
+> for these items?
+
+Yes, that would be great.
+
+Cheers,
+Paul
+
 -- 
-1.8.3.2
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
