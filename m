@@ -1,16 +1,27 @@
-Return-Path: <gthomas@mail.chez-thomas.org>
-Received: from mail.chez-thomas.org (mail.mlbassoc.com [65.100.170.105])
-	by mail.openembedded.org (Postfix) with ESMTP id A6E246BE6E
+Return-Path: <dvhart@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 67A306BE6E
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Nov 2013 17:24:26 +0000 (UTC)
-Received: by mail.chez-thomas.org (Postfix, from userid 996)
-	id A1A3DF81226; Thu,  7 Nov 2013 10:24:28 -0700 (MST)
-From: Gary Thomas <gary@mlbassoc.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu,  7 Nov 2013 10:24:27 -0700
-Message-Id: <1383845067-1320-1-git-send-email-gary@mlbassoc.com>
-X-Mailer: git-send-email 1.7.7.6
-Subject: [PATCH] depexp: Improve wording on requirements
+	Thu,  7 Nov 2013 18:57:33 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 07 Nov 2013 10:57:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.93,535,1378882800"; d="scan'208";a="405204407"
+Received: from dvhart-mobl4.jf.intel.com (HELO [10.7.196.57]) ([10.7.196.57])
+	by orsmga001.jf.intel.com with ESMTP; 07 Nov 2013 10:57:35 -0800
+Message-ID: <1383850654.5378.55.camel@dvhart-mobl4.amr.corp.intel.com>
+From: Darren Hart <dvhart@linux.intel.com>
+To: Chris Morgan <chmorgan@gmail.com>
+Date: Thu, 07 Nov 2013 10:57:34 -0800
+In-Reply-To: <CAAPegz10UN90-vCTT9+OiiniJ6OXZ2ADw+NMd1HEFfCqnDLmuA@mail.gmail.com>
+References: <CAAPegz09fP8ppysRS_opbSxv6nLknfd4NUnyVmgqzMNcu7+zmg@mail.gmail.com>
+	<CALmOhgmJVjqnhUvQn=5hk3ZaM6r42PYWa+A2Xve34v6fEdc94w@mail.gmail.com>
+	<CAAPegz10UN90-vCTT9+OiiniJ6OXZ2ADw+NMd1HEFfCqnDLmuA@mail.gmail.com>
+Organization: Intel
+X-Mailer: Evolution 3.8.5 (3.8.5-2.fc19) 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: Bitbake for native x86 project?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -23,29 +34,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 07 Nov 2013 17:24:29 -0000
+X-List-Received-Date: Thu, 07 Nov 2013 18:57:34 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Since -g is required, tell the user exactly so.
+On Tue, 2013-10-15 at 08:17 -0400, Chris Morgan wrote:
+> >Chris,
+> >
+> >Are all of your developers working on creating the target's kernel,
+> >rootfs, and/or bootloader? If most of the developers are only doing
+> >target, user-space, application development then all they need is an
+> >appropriate SDK (which only needs to be generated whenever any target
+> >packages change). This means a huge build only needs to be done once,
+> >and then everyone can use the results. In this scenario a
+> >network-shared sstate can still be employed for further build-time
+> >savings.
+> 
+> I suspect that we could get away with the appropriate sdk. I can see
+> how this would work for the cross-compilation process, with an arm
+> sdk, but if we had an x86-64 sdk for running things natively I'm not
+> sure the libraries would be in sync enough for the applications to run
+> on the developer's Linux machines. I'm thinking a mismatch in any
+> library would prevent the executables from being run without going
+> through the qemu approach.
+> 
+> I can certainly see that there is a path forward though and thank you
+> for brining up the sdk idea. I had read about that but haven't gotten
+> to trying it or trying to figure out where it best fits yet.
+> 
 
-Signed-off-by: Gary Thomas <gary@mlbassoc.com>
----
- lib/bb/ui/depexp.py |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+I was also going to suggest the SDK for the app developers. In most
+product groups I've met with using the Yocto Project, the developers
+maintain their existing workflow through use of the SDK (which ensures
+they are using the same compiler, libraries, etc) and the bitbake tasks
+are owned by a small build team of 1 or 2 engineers.
 
-diff --git a/lib/bb/ui/depexp.py b/lib/bb/ui/depexp.py
-index 0b160e2..4578dce 100644
---- a/lib/bb/ui/depexp.py
-+++ b/lib/bb/ui/depexp.py
-@@ -202,7 +202,7 @@ def main(server, eventHandler, params):
-             return 1
-         cmdline = cmdline['action']
-         if not cmdline or cmdline[0] != "generateDotGraph":
--            print("This UI is only compatible with the -g option")
-+            print("This UI requires the -g option")
-             return 1
-         ret, error = server.runCommand(["generateDepTreeEvent", cmdline[1], cmdline[2]])
-         if error:
 -- 
-1.7.7.6
+Darren Hart
+Intel Open Source Technology Center
+Yocto Project - Linux Kernel
+
 
 
