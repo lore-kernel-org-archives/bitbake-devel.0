@@ -1,28 +1,26 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 832ED6D160
+Return-Path: <gary@mlbassoc.com>
+Received: from mail.chez-thomas.org (mail.mlbassoc.com [65.100.170.105])
+	by mail.openembedded.org (Postfix) with ESMTP id 6E1226D320
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  5 Nov 2013 13:17:45 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id rA5DHkoV026343
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Tue, 5 Nov 2013 05:17:46 -0800 (PST)
-Received: from [128.224.162.242] (128.224.162.242) by ALA-HCB.corp.ad.wrs.com
-	(147.11.189.41) with Microsoft SMTP Server id 14.2.347.0;
-	Tue, 5 Nov 2013 05:17:45 -0800
-Message-ID: <5278EFF0.7010601@windriver.com>
-Date: Tue, 5 Nov 2013 21:17:36 +0800
-From: Robert Yang <liezhi.yang@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
-	rv:24.0) Gecko/20100101 Thunderbird/24.0
+	Thu,  7 Nov 2013 15:04:34 +0000 (UTC)
+Received: by mail.chez-thomas.org (Postfix, from userid 1998)
+	id 6DBCDF81221; Thu,  7 Nov 2013 08:04:36 -0700 (MST)
+X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
+	hermes.chez-thomas.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=4.0 tests=ALL_TRUSTED,BAYES_00
+	autolearn=unavailable version=3.3.2
+Received: from [192.168.1.114] (zeus [192.168.1.114])
+	by mail.chez-thomas.org (Postfix) with ESMTP id ED349F81220;
+	Thu,  7 Nov 2013 08:04:34 -0700 (MST)
+Message-ID: <527BAC0F.3090901@mlbassoc.com>
+Date: Thu, 07 Nov 2013 08:04:47 -0700
+From: Gary Thomas <gary@mlbassoc.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:24.0) Gecko/20100101 Thunderbird/24.1.0
 MIME-Version: 1.0
-To: Nicolas Dechesne <nicolas.dechesne@linaro.org>, bitbake-devel
-	<bitbake-devel@lists.openembedded.org>
-References: <1383266185-2917-1-git-send-email-nicolas.dechesne@linaro.org>
-	<CAP71Wjz8DXdFYqMER6uy+7X9ic-PJmGQVp+d5ayC4TJ5Eqgozw@mail.gmail.com>
-In-Reply-To: <CAP71Wjz8DXdFYqMER6uy+7X9ic-PJmGQVp+d5ayC4TJ5Eqgozw@mail.gmail.com>
-Subject: Re: [PATCH RFC] fetch2/svn.py: use log instead of info to retrieve revision
+To: bitbake-devel@lists.openembedded.org
+Subject: Some 'depexp' nits
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,44 +33,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Nov 2013 13:17:46 -0000
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+X-List-Received-Date: Thu, 07 Nov 2013 15:04:34 -0000
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 
+I hope this is the correct list.
 
+I was just using '-u depexp' and noticed a few small things.
+   $ bitbake my-qt5-image -u depexp
+   This UI is only compatible with the -g option
 
-On 11/05/2013 02:48 AM, Nicolas Dechesne wrote:
-> On Thu, Oct 31, 2013 at 5:36 PM, Nicolas Dechesne
-> <nicolas.dechesne@linaro.org> wrote:
->> We have faced a corner case situation where the 'last changed
->> revision' returned from svn info is wrong. It happens when the last
->> revision is a directory move. e.g. if we assume that the svn
->> repository at revA has root/x/y/z/foo/bar and it is moved to
->> root/a/b/c/foo/bar in revB, then svn info 'last change revision' will
->> return revA. As such when using AUTOREV, we are going to attempt to
->> retrieve root/a/b/c/foo/bar (as per SRC_URI) but at revA when it did
->> not exist.
->>
->> So this patch changes how we retrieve the latest revision and uses
->> 'svn log --limit 1' which gives correct result in all tested cases.
->
-> Richard, thanks for merging in master. any chance this can go to dora
+Perhaps this should be worded more strongly, like this?
+   This UI requires the -g option
 
-Hi Nicolas,
+Also, after running successfully, I closed the window (using
+the close WM button) and got this:
+   $ bitbake my-qt5-image -u depexp -g
+   Unable to cleanly stop: No such command
 
-I will add it to the queue of dora, thanks.
+There didn't seem to be any other way to exit the program, so
+at least this should be clean.
 
-// Robert
+Are these valid concerns/observations?  Would you entertain patches
+for these items?
 
-
-> and dylan too, as this is a bug fix? the same patch applies in both
-> branches, and we are currently using dylan and dora for our projects.
->
-> thanks
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
->
->
+-- 
+------------------------------------------------------------
+Gary Thomas                 |  Consulting for the
+MLB Associates              |    Embedded world
+------------------------------------------------------------
 
