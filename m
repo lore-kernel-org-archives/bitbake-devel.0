@@ -1,26 +1,35 @@
-Return-Path: <gary@mlbassoc.com>
-Received: from mail.chez-thomas.org (mail.mlbassoc.com [65.100.170.105])
-	by mail.openembedded.org (Postfix) with ESMTP id 6E1226D320
+Return-Path: <raj.khem@gmail.com>
+Received: from mail-pb0-f48.google.com (mail-pb0-f48.google.com
+	[209.85.160.48])
+	by mail.openembedded.org (Postfix) with ESMTP id 762B86D320
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Nov 2013 15:04:34 +0000 (UTC)
-Received: by mail.chez-thomas.org (Postfix, from userid 1998)
-	id 6DBCDF81221; Thu,  7 Nov 2013 08:04:36 -0700 (MST)
-X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
-	hermes.chez-thomas.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=4.0 tests=ALL_TRUSTED,BAYES_00
-	autolearn=unavailable version=3.3.2
-Received: from [192.168.1.114] (zeus [192.168.1.114])
-	by mail.chez-thomas.org (Postfix) with ESMTP id ED349F81220;
-	Thu,  7 Nov 2013 08:04:34 -0700 (MST)
-Message-ID: <527BAC0F.3090901@mlbassoc.com>
-Date: Thu, 07 Nov 2013 08:04:47 -0700
-From: Gary Thomas <gary@mlbassoc.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:24.0) Gecko/20100101 Thunderbird/24.1.0
-MIME-Version: 1.0
+	Thu,  7 Nov 2013 15:11:27 +0000 (UTC)
+Received: by mail-pb0-f48.google.com with SMTP id mc8so714261pbc.35
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 07 Nov 2013 07:11:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=SQCsUDITtig2+2sFZdV6G0b3MvKkJ8Wgcxe4+cZcZXc=;
+	b=WVEJqtu1EcZp7zYtvPx2fsZZBmJi9l6kkodj+VQrGsn2R260TIF/B7KhMz9j0zV5Pt
+	Rgjng5Ao6NKzg2a4CY9MDvsjxFtoRnU7r2caO3IM0LbEhCl0XKzR78AVtPw7TPb8me6J
+	TpbfAtrLM4ub6RNFmZaHIeeF9doDoXPYrRSGfyOoCpHry77cy3HRZwoXp9umvfpDJfTD
+	ICSptZFobxbJdr95iMr59xbTh/3lK2qMQk03DNXRHKXt46VG7BRNL2lcV0F+qq/ZiBlp
+	RoZjw9TXOq2GjTC1fK7AuwKpzA5RpDw6vEjiCoLXmYtctzLIPWiOmmLyGeN7caFKLC4H
+	6P9g==
+X-Received: by 10.68.101.225 with SMTP id fj1mr9602073pbb.8.1383837089462;
+	Thu, 07 Nov 2013 07:11:29 -0800 (PST)
+Received: from haswell.gateway.2wire.net
+	(99-57-140-209.lightspeed.sntcca.sbcglobal.net. [99.57.140.209])
+	by mx.google.com with ESMTPSA id zq10sm7067992pab.6.2013.11.07.07.11.28
+	for <multiple recipients>
+	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Thu, 07 Nov 2013 07:11:28 -0800 (PST)
+From: Khem Raj <raj.khem@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: Some 'depexp' nits
+Date: Thu,  7 Nov 2013 07:10:35 -0800
+Message-Id: <1383837035-29410-1-git-send-email-raj.khem@gmail.com>
+X-Mailer: git-send-email 1.8.3.2
+Subject: [PATCH] bitbake.vim: fix highlighing for ??= operator
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,33 +42,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 07 Nov 2013 15:04:34 -0000
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 07 Nov 2013 15:11:28 -0000
 
-I hope this is the correct list.
+equation is OK but operator itself is highlighted
+which is odd
 
-I was just using '-u depexp' and noticed a few small things.
-   $ bitbake my-qt5-image -u depexp
-   This UI is only compatible with the -g option
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ contrib/vim/syntax/bitbake.vim | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Perhaps this should be worded more strongly, like this?
-   This UI requires the -g option
-
-Also, after running successfully, I closed the window (using
-the close WM button) and got this:
-   $ bitbake my-qt5-image -u depexp -g
-   Unable to cleanly stop: No such command
-
-There didn't seem to be any other way to exit the program, so
-at least this should be clean.
-
-Are these valid concerns/observations?  Would you entertain patches
-for these items?
-
+diff --git a/contrib/vim/syntax/bitbake.vim b/contrib/vim/syntax/bitbake.vim
+index fb55f91..0cad484 100644
+--- a/contrib/vim/syntax/bitbake.vim
++++ b/contrib/vim/syntax/bitbake.vim
+@@ -59,7 +59,7 @@ syn region bbVarPyValue         start=+${@+ skip=+\\$+ end=+}+ contained contain
+ 
+ " Vars metadata flags
+ syn match bbVarFlagDef          "^\([a-zA-Z0-9\-_\.]\+\)\(\[[a-zA-Z0-9\-_\.]\+\]\)\@=" contains=bbIdentifier nextgroup=bbVarFlagFlag
+-syn region bbVarFlagFlag        matchgroup=bbArrayBrackets start="\[" end="\]\s*\(=\|+=\|=+\|?=\)\@=" contained contains=bbIdentifier nextgroup=bbVarEq
++syn region bbVarFlagFlag        matchgroup=bbArrayBrackets start="\[" end="\]\s*\(=\|+=\|=+\|?=\|??=\)\@=" contained contains=bbIdentifier nextgroup=bbVarEq
+ 
+ " Includes and requires
+ syn keyword bbInclude           inherit include require contained 
 -- 
-------------------------------------------------------------
-Gary Thomas                 |  Consulting for the
-MLB Associates              |    Embedded world
-------------------------------------------------------------
+1.8.3.2
+
 
