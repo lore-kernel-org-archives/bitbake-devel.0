@@ -1,23 +1,15 @@
-Return-Path: <gary@mlbassoc.com>
+Return-Path: <gthomas@mail.chez-thomas.org>
 Received: from mail.chez-thomas.org (mail.mlbassoc.com [65.100.170.105])
-	by mail.openembedded.org (Postfix) with ESMTP id B901660FF0
+	by mail.openembedded.org (Postfix) with ESMTP id A6E246BE6E
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Nov 2013 17:09:11 +0000 (UTC)
-Received: by mail.chez-thomas.org (Postfix, from userid 1998)
-	id C545AF81228; Thu,  7 Nov 2013 10:09:13 -0700 (MST)
-X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
-	hermes.chez-thomas.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=4.0 tests=ALL_TRUSTED,BAYES_00
-	autolearn=unavailable version=3.3.2
-Received: from zeus.chez-thomas.org (zeus [192.168.1.114])
-	by mail.chez-thomas.org (Postfix) with ESMTP id D9769F81226;
-	Thu,  7 Nov 2013 10:09:11 -0700 (MST)
+	Thu,  7 Nov 2013 17:24:26 +0000 (UTC)
+Received: by mail.chez-thomas.org (Postfix, from userid 996)
+	id A1A3DF81226; Thu,  7 Nov 2013 10:24:28 -0700 (MST)
 From: Gary Thomas <gary@mlbassoc.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu,  7 Nov 2013 10:09:23 -0700
-Message-Id: <1383844163-29633-1-git-send-email-gary@mlbassoc.com>
-X-Mailer: git-send-email 1.7.9.5
+Date: Thu,  7 Nov 2013 10:24:27 -0700
+Message-Id: <1383845067-1320-1-git-send-email-gary@mlbassoc.com>
+X-Mailer: git-send-email 1.7.7.6
 Subject: [PATCH] depexp: Improve wording on requirements
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -31,14 +23,14 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 07 Nov 2013 17:09:11 -0000
+X-List-Received-Date: Thu, 07 Nov 2013 17:24:29 -0000
 
 Since -g is required, tell the user exactly so.
 
 Signed-off-by: Gary Thomas <gary@mlbassoc.com>
 ---
  lib/bb/ui/depexp.py |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/lib/bb/ui/depexp.py b/lib/bb/ui/depexp.py
 index 0b160e2..4578dce 100644
@@ -54,6 +46,6 @@ index 0b160e2..4578dce 100644
          ret, error = server.runCommand(["generateDepTreeEvent", cmdline[1], cmdline[2]])
          if error:
 -- 
-1.7.9.5
+1.7.7.6
 
 
