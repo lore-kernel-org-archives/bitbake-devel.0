@@ -1,26 +1,29 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id E9D286D2FB
+Return-Path: <gary@mlbassoc.com>
+Received: from mail.chez-thomas.org (mail.mlbassoc.com [65.100.170.105])
+	by mail.openembedded.org (Postfix) with ESMTP id 974D76D66B
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Nov 2013 16:26:33 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 07 Nov 2013 08:26:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.93,535,1378882800"; d="scan'208";a="431401485"
-Received: from unknown (HELO helios.localnet) ([10.252.121.102])
-	by orsmga002.jf.intel.com with ESMTP; 07 Nov 2013 08:26:34 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Date: Thu, 07 Nov 2013 16:26:33 +0000
-Message-ID: <3712809.5Iazxv3HWn@helios>
-Organization: Intel Corporation
-User-Agent: KMail/4.10.5 (Linux/3.8.0-31-generic; KDE/4.10.5; i686; ; )
-In-Reply-To: <CAP71Wjz8DXdFYqMER6uy+7X9ic-PJmGQVp+d5ayC4TJ5Eqgozw@mail.gmail.com>
-References: <1383266185-2917-1-git-send-email-nicolas.dechesne@linaro.org>
-	<CAP71Wjz8DXdFYqMER6uy+7X9ic-PJmGQVp+d5ayC4TJ5Eqgozw@mail.gmail.com>
+	Thu,  7 Nov 2013 16:36:08 +0000 (UTC)
+Received: by mail.chez-thomas.org (Postfix, from userid 1998)
+	id A8E83F81226; Thu,  7 Nov 2013 09:36:10 -0700 (MST)
+X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
+	hermes.chez-thomas.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=4.0 tests=ALL_TRUSTED,BAYES_00
+	autolearn=unavailable version=3.3.2
+Received: from [192.168.1.114] (zeus [192.168.1.114])
+	by mail.chez-thomas.org (Postfix) with ESMTP id B3AD1F81225;
+	Thu,  7 Nov 2013 09:36:09 -0700 (MST)
+Message-ID: <527BC186.5040406@mlbassoc.com>
+Date: Thu, 07 Nov 2013 09:36:22 -0700
+From: Gary Thomas <gary@mlbassoc.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:24.0) Gecko/20100101 Thunderbird/24.1.0
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH RFC] fetch2/svn.py: use log instead of info to retrieve revision
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+References: <527BAC0F.3090901@mlbassoc.com> <7286154.LbYKCCWHqH@helios>
+In-Reply-To: <7286154.LbYKCCWHqH@helios>
+Cc: bitbake-devel@lists.openembedded.org, Ross Burton <ross.burton@intel.com>
+Subject: Re: Some 'depexp' nits
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,38 +36,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 07 Nov 2013 16:26:34 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Thu, 07 Nov 2013 16:36:08 -0000
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Nicolas,
+On 2013-11-07 09:25, Paul Eggleton wrote:
+> Hi Gary,
+>
+> On Thursday 07 November 2013 08:04:47 Gary Thomas wrote:
+>> I hope this is the correct list.
+>>
+>> I was just using '-u depexp' and noticed a few small things.
+>>     $ bitbake my-qt5-image -u depexp
+>>     This UI is only compatible with the -g option
+>>
+>> Perhaps this should be worded more strongly, like this?
+>>     This UI requires the -g option
+>
+> Sounds like a good idea yes.
+>
+>> Also, after running successfully, I closed the window (using
+>> the close WM button) and got this:
+>>     $ bitbake my-qt5-image -u depexp -g
+>>     Unable to cleanly stop: No such command
+>>
+>> There didn't seem to be any other way to exit the program, so
+>> at least this should be clean.
+>
+> There is now a bug open for the latter issue:
+> https://bugzilla.yoctoproject.org/show_bug.cgi?id=5445
+>
+>> Are these valid concerns/observations?  Would you entertain patches
+>> for these items?
+>
+> Yes, that would be great.
 
-On Monday 04 November 2013 10:48:24 Nicolas Dechesne wrote:
-> On Thu, Oct 31, 2013 at 5:36 PM, Nicolas Dechesne
-> <nicolas.dechesne@linaro.org> wrote:
-> > We have faced a corner case situation where the 'last changed
-> > revision' returned from svn info is wrong. It happens when the last
-> > revision is a directory move. e.g. if we assume that the svn
-> > repository at revA has root/x/y/z/foo/bar and it is moved to
-> > root/a/b/c/foo/bar in revB, then svn info 'last change revision' will
-> > return revA. As such when using AUTOREV, we are going to attempt to
-> > retrieve root/a/b/c/foo/bar (as per SRC_URI) but at revA when it did
-> > not exist.
-> > 
-> > So this patch changes how we retrieve the latest revision and uses
-> > 'svn log --limit 1' which gives correct result in all tested cases.
-> 
-> Richard, thanks for merging in master. any chance this can go to dora
-> and dylan too, as this is a bug fix? the same patch applies in both
-> branches, and we are currently using dylan and dora for our projects.
-
-OK, I've queued it up for dylan as well.
-
-Thanks,
-Paul
+Can I send them against the Poky/Yocto tree?  Or should it be the
+separate bitbake tree (which is where?)?
 
 -- 
-
-Paul Eggleton
-Intel Open Source Technology Centre
+------------------------------------------------------------
+Gary Thomas                 |  Consulting for the
+MLB Associates              |    Embedded world
+------------------------------------------------------------
 
