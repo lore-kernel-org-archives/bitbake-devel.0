@@ -1,24 +1,22 @@
-Return-Path: <gthomas@zeus.chez-thomas.org>
+Return-Path: <gary@mlbassoc.com>
 Received: from mail.chez-thomas.org (mail.mlbassoc.com [65.100.170.105])
-	by mail.openembedded.org (Postfix) with ESMTP id 853FC6D666
+	by mail.openembedded.org (Postfix) with ESMTP id B901660FF0
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Nov 2013 17:04:13 +0000 (UTC)
+	Thu,  7 Nov 2013 17:09:11 +0000 (UTC)
 Received: by mail.chez-thomas.org (Postfix, from userid 1998)
-	id 394EFF81226; Thu,  7 Nov 2013 10:04:14 -0700 (MST)
+	id C545AF81228; Thu,  7 Nov 2013 10:09:13 -0700 (MST)
 X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
 	hermes.chez-thomas.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=4.0 tests=ALL_TRUSTED,BAYES_00,
-	NO_DNS_FOR_FROM autolearn=no version=3.3.2
-Received: from zeus (zeus [192.168.1.114])
-	by mail.chez-thomas.org (Postfix) with ESMTP id DD180F81226;
-	Thu,  7 Nov 2013 10:04:13 -0700 (MST)
-Received: by zeus (Postfix, from userid 996)
-	id 21EC8520C99; Thu,  7 Nov 2013 10:04:26 -0700 (MST)
+X-Spam-Status: No, score=-2.9 required=4.0 tests=ALL_TRUSTED,BAYES_00
+	autolearn=unavailable version=3.3.2
+Received: from zeus.chez-thomas.org (zeus [192.168.1.114])
+	by mail.chez-thomas.org (Postfix) with ESMTP id D9769F81226;
+	Thu,  7 Nov 2013 10:09:11 -0700 (MST)
 From: Gary Thomas <gary@mlbassoc.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu,  7 Nov 2013 10:04:21 -0700
-Message-Id: <1383843861-29372-1-git-send-email-gary@mlbassoc.com>
+Date: Thu,  7 Nov 2013 10:09:23 -0700
+Message-Id: <1383844163-29633-1-git-send-email-gary@mlbassoc.com>
 X-Mailer: git-send-email 1.7.9.5
 Subject: [PATCH] depexp: Improve wording on requirements
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -33,7 +31,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 07 Nov 2013 17:04:14 -0000
+X-List-Received-Date: Thu, 07 Nov 2013 17:09:11 -0000
 
 Since -g is required, tell the user exactly so.
 
