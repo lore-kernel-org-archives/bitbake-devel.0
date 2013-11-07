@@ -1,48 +1,30 @@
-Return-Path: <fabrice.coulon@axis.com>
-Received: from ra.se.axis.com (ra.se.axis.com [195.60.68.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 7598F6D2AA
+Return-Path: <uvbapat@gmail.com>
+Received: from mail-lb0-f174.google.com (mail-lb0-f174.google.com
+	[209.85.217.174])
+	by mail.openembedded.org (Postfix) with ESMTP id 56C976BE6E
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Oct 2013 08:40:03 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by ra.se.axis.com (Postfix) with ESMTP id 4E3AA13CE9
+	Thu,  7 Nov 2013 20:31:16 +0000 (UTC)
+Received: by mail-lb0-f174.google.com with SMTP id q8so864382lbi.19
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Oct 2013 09:40:04 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at ra.se.axis.com
-Received: from ra.se.axis.com ([127.0.0.1])
-	by localhost (ra.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id ec0u64GrAjdN for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Oct 2013 09:40:03 +0100 (CET)
-Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by ra.se.axis.com (Postfix) with ESMTP id B7CE213D26
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Oct 2013 09:39:52 +0100 (CET)
-Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id 9691A979
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Oct 2013 09:39:52 +0100 (CET)
-Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
-	by boulder.se.axis.com (Postfix) with ESMTP id 8AE3E715
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Oct 2013 09:39:52 +0100 (CET)
-Received: from xmail3.se.axis.com (xmail3.se.axis.com [10.0.5.75])
-	by seth.se.axis.com (Postfix) with ESMTP id 8948C3E06F
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Oct 2013 09:39:52 +0100 (CET)
-Received: from xmail3.se.axis.com ([10.0.5.75]) by xmail3.se.axis.com
-	([10.0.5.75]) with mapi; Mon, 28 Oct 2013 09:39:52 +0100
-From: Fabrice Coulon <fabrice.coulon@axis.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: Python tasks and variable scope
-Thread-Index: Ac7TuEYSMTxcNyXtR6GkLugTq4/RLw==
-Message-ID: <A612847CFE53224C91B23E3A5B48BAC7A40E02F554@xmail3.se.axis.com>
-Accept-Language: en-US, sv-SE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-acceptlanguage: en-US, sv-SE
+	Thu, 07 Nov 2013 12:31:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:date:message-id:subject:from:to:content-type;
+	bh=pyVS/VQVAIsR0f52slOKoxJ1vx6GR9Pn7YDFL4DYJ94=;
+	b=ZOxXDbFPigrUCo+oMBpwuh8SqZGYcy9RoqV8+oI4h7GVYc7acc0Fm2KVANZtCb8+7I
+	BmRRRmSHUCmIvEGT5Ti4NKoWdHwqy8qBRx7ZbrQw7O8iSlv3cF34tKlYGNWbQTnc+xHS
+	h7bD5qs8dcySeo1oZDG0WIQ5RN7WkPBH/wykPgXdEA4GgiKcdUCD9xAs1ofw4J7Vo5Xh
+	AL7lGoKVTIzJ3gdNU4/JDzByDm1zgxX8ndVtWZ18+eCQV41XE5EfjQtjtu+Ikkw4hv93
+	IvR1UFuPrjszoaSPpjG9Dzu0vLF+T+p6cDzvhVKPcsEjz/38qGXmIH/ctBww+uADEAjy
+	gJWg==
 MIME-Version: 1.0
+X-Received: by 10.112.200.170 with SMTP id jt10mr7831067lbc.10.1383856277044; 
+	Thu, 07 Nov 2013 12:31:17 -0800 (PST)
+Received: by 10.112.14.199 with HTTP; Thu, 7 Nov 2013 12:31:17 -0800 (PST)
+Message-ID: <CAJ7NSKrbE9XAN=B+KWY5RD31q-3wwJtX9xdkuyN9QLLq=iUSPg@mail.gmail.com>
+From: Udayan Bapat <uvbapat@gmail.com>
+To: bitbake-devel@lists.openembedded.org
 X-Mailman-Approved-At: Fri, 20 Dec 2013 09:50:02 +0000
-Subject: Python tasks and variable scope
+Subject: Regarding CFLAGS in recipe
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,68 +37,77 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-Date: Mon, 28 Oct 2013 08:40:03 -0000
-X-Original-Date: Mon, 28 Oct 2013 09:37:17 +0100
-X-List-Received-Date: Mon, 28 Oct 2013 08:40:03 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
+Date: Thu, 07 Nov 2013 20:31:16 -0000
+X-Original-Date: Thu, 7 Nov 2013 15:31:17 -0500
+X-List-Received-Date: Thu, 07 Nov 2013 20:31:16 -0000
+Content-Type: multipart/alternative; boundary=001a11c265b8d0430904ea9c259f
+
+--001a11c265b8d0430904ea9c259f
+Content-Type: text/plain; charset=ISO-8859-1
+
+Hi all,
+
+I have a Yocto build environment where I intend to build all recipes with
+-fPIE flag. So I have added CFLAGS_append += '-fPIE' in the local.conf.
+However since shared libraries can not be built using -fPIE flag, I would
+like to remove it from some recipes.
+
+So far I have tried this in .bb files -
+
+CFLAGS_noPIE = "${@'${CFLAGS}'.replace('-fPIE','')}"
+
+do_compile_prepend () {
+    CFLAGS = "${CFLAGS_noPIE}"
+}
+
+This throws an error -
+
+*/zlib-native/1.2.8-r0/temp/run.do_compile.23159: line 82: CFLAGS: command
+not found
+
+I also have tried -
+
+CFLAGS = "${@'${CFLAGS}'.replace('-fPIE','')}"
+
+This doesn't work because same variable can not be referenced twice.
+
+Then I tried this -
+
+CFLAGS_noPIE = "${@'${CFLAGS}'.replace('-fPIE','')}"
+CFLAGS = "${CFLAGS_noPIE}"
+
+This fails with an error "maximum recursion depth exceeded for variable
+'CFLAGS'"
+
+What is the correct way to doing this?
+
+Thanks
+Udayan
+
+--001a11c265b8d0430904ea9c259f
+Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+<div dir=3D"ltr"><div><div>Hi all,<br><br>I have a Yocto build environment =
+where I intend to build all recipes with -fPIE flag. So I have added CFLAGS=
+_append +=3D &#39;-fPIE&#39; in the local.conf. However since shared librar=
+ies can not be built using -fPIE flag, I would like to remove it from some =
+recipes.<br>
+<br>So far I have tried this in .bb files - <br><br>CFLAGS_noPIE =3D &quot;=
+${@&#39;${CFLAGS}&#39;.replace(&#39;-fPIE&#39;,&#39;&#39;)}&quot;<br><br>do=
+_compile_prepend () {<br>=A0=A0=A0 CFLAGS =3D &quot;${CFLAGS_noPIE}&quot;<b=
+r>}<br>
+<br></div>This throws an error - <br><br>*/zlib-native/1.2.8-r0/temp/run.do=
+_compile.23159: line 82: CFLAGS: command not found<br><br></div>I also have=
+ tried - <br><br>CFLAGS =3D &quot;${@&#39;${CFLAGS}&#39;.replace(&#39;-fPIE=
+&#39;,&#39;&#39;)}&quot;<br>
+<br><div><div>This doesn&#39;t work because same variable can not be refere=
+nced twice.<br><br></div><div>Then I tried this - <br><br>CFLAGS_noPIE =3D =
+&quot;${@&#39;${CFLAGS}&#39;.replace(&#39;-fPIE&#39;,&#39;&#39;)}&quot;<br>
+</div><div>CFLAGS =3D &quot;${CFLAGS_noPIE}&quot; </div><div><br></div><div=
+>This fails with an error &quot;maximum recursion depth exceeded for variab=
+le &#39;CFLAGS&#39;&quot;<br><br></div><div>What is the correct way to doin=
+g this?<br>
+<br>Thanks<br>Udayan<br></div><div><br></div></div></div>
 
-I am new to BitBake but there is something which I really do not understand=
- as a Python programmer.
-And I was hoping somebody could help me with this problem.
-
-I have had to write a recipe for some proprietary package which tries to do=
- the following:
-
- python do_get_uid_gid() {
-    # Read UID and GID from some file not shown here
-    d.setVar('UID', '1')
-    d.setVar('GID', '2')
-    bb.warn("UID =3D %s" % d.getVar('UID'))
-}
-
-addtask get_uid_gid before do_compile after do_configure
-
-python do_print_data() {
-    for k in d:
-        print "=3D"*20
-        print "|%s| -> |%s|" % (k, str(d.getVar(k)))
-}
-
-addtask print_data before do_compile after do_get_uid_gid
-
-do_compile_prepend() {
-    bbwarn "do_compile_prepend: UID=3D$UID, GID=3D$GID"
-    bbwarn "d.getVar =3D "${@d.getVar('UID')}
-}
-
-When I look at the output after running bitbake <my-recipe>
-
-WARNING: UID =3D 1
-...
-
-BUT In the "tmp/work/.../temp/log.do_compile",
-I can read following:
-
-DEBUG: Executing shell function do_compile
-WARNING: do_compile_prepend: UID=3D, GID=3D
-WARNING: d.getVar =3D None
-
-I was expecting UID to be 1 and not "None" or "" in do_compile too.
-
-As a Python programmer, if I can set a variable in a data structure called =
-'d' which is defined
-outside of the scope of "do_get_uid_gid" why can't I retrieve the data late=
-r on with a getVar()
-from another python or shell method?
-
-I think that this is quite counter intuitive.=20
-
-I actually had to inspect the d struct in "do_print_data" to discover that =
-UID was not among the keys.
-
-/Fabrice
-
+--001a11c265b8d0430904ea9c259f--
