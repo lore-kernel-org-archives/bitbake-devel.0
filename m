@@ -1,31 +1,39 @@
-Return-Path: <gary@mlbassoc.com>
-Received: from mail.chez-thomas.org (mail.mlbassoc.com [65.100.170.105])
-	by mail.openembedded.org (Postfix) with ESMTP id 98A126D663
+Return-Path: <ross.burton@intel.com>
+Received: from mail-vc0-f175.google.com (mail-vc0-f175.google.com
+	[209.85.220.175])
+	by mail.openembedded.org (Postfix) with ESMTP id CA1556D663
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  8 Nov 2013 13:19:55 +0000 (UTC)
-Received: by mail.chez-thomas.org (Postfix, from userid 1998)
-	id 38668F8123F; Fri,  8 Nov 2013 06:19:55 -0700 (MST)
-X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
-	hermes.chez-thomas.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=4.0 tests=ALL_TRUSTED,BAYES_00
-	autolearn=unavailable version=3.3.2
-Received: from [192.168.1.114] (zeus [192.168.1.114])
-	by mail.chez-thomas.org (Postfix) with ESMTP id 42515F8123C;
-	Fri,  8 Nov 2013 06:19:54 -0700 (MST)
-Message-ID: <527CE508.404@mlbassoc.com>
-Date: Fri, 08 Nov 2013 06:20:08 -0700
-From: Gary Thomas <gary@mlbassoc.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:24.0) Gecko/20100101 Thunderbird/24.1.0
+	Fri,  8 Nov 2013 13:33:54 +0000 (UTC)
+Received: by mail-vc0-f175.google.com with SMTP id ht10so1362314vcb.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 08 Nov 2013 05:33:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc:content-type;
+	bh=8r3w30Mj/QPFGQYc6a//M2WOunYykS13gJUwj86V3pY=;
+	b=jClCjeeYwu88NGfWVdpQs0FmpHfszfwhOV5WsA+rq8bHdm1ITkkCaMdd33Zca4/+zO
+	dGdl00JatWhJSZosjxGuWAvZz3PeAxBQxM/T9EzlJYxTjwRt297sZTl4zS42WV2gNZkK
+	tdyjoF+nvBzJQYxGd+4+2bWN6ZmYxYuqFy4jbWWG3nQLECvbyY4cQ/PQHEnqAsrqD3X2
+	N3qzI5hjyTVfA5wCW6hwd0G71iZ6s5eUg4cFgewUYxRfwbziLCnSnP+GyAph89Bhaa6v
+	yuTMqpiiWrjA6x2dpmKvIprQ3H4OMU59Qb0ANr8RH90K+miFiotDYMBN7L/Ptp1kX4go
+	/Mrw==
+X-Gm-Message-State: ALoCoQkpT2ufIcWoDghIE1lEa+0n1OR4r2V9IlMr4U4BucZXYT6VgbrgDgEK9s9IWxlfvCb8tX1m
+X-Received: by 10.52.187.138 with SMTP id fs10mr9802494vdc.10.1383917636153;
+	Fri, 08 Nov 2013 05:33:56 -0800 (PST)
 MIME-Version: 1.0
-To: "Burton, Ross" <ross.burton@intel.com>
+Received: by 10.220.71.201 with HTTP; Fri, 8 Nov 2013 05:33:35 -0800 (PST)
+In-Reply-To: <527CE508.404@mlbassoc.com>
 References: <527BAC0F.3090901@mlbassoc.com> <7286154.LbYKCCWHqH@helios>
 	<527BC186.5040406@mlbassoc.com>
 	<CABcZANkDuRL2bMgoy=zNbguwT6xWXw0ktDhy0KPOMZwAiS4kfg@mail.gmail.com>
 	<527CD8E4.4000202@mlbassoc.com>
 	<CAJTo0LbPatd4dHmL5SF4x5ERZwq+A3-UKo7AT-SBNvfBrNpt5w@mail.gmail.com>
-In-Reply-To: <CAJTo0LbPatd4dHmL5SF4x5ERZwq+A3-UKo7AT-SBNvfBrNpt5w@mail.gmail.com>
+	<527CE508.404@mlbassoc.com>
+From: "Burton, Ross" <ross.burton@intel.com>
+Date: Fri, 8 Nov 2013 13:33:35 +0000
+Message-ID: <CAJTo0LZeK7Y0MGpKUZiAZdocRQuA5KynGh_0F=U2jH1KxHiuyQ@mail.gmail.com>
+To: Gary Thomas <gary@mlbassoc.com>
 Cc: Paul Eggleton <paul.eggleton@linux.intel.com>,
 	Chris Larson <clarson@kergoth.com>, "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
@@ -42,30 +50,13 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 08 Nov 2013 13:19:56 -0000
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 08 Nov 2013 13:33:55 -0000
+Content-Type: text/plain; charset=UTF-8
 
-On 2013-11-08 05:37, Burton, Ross wrote:
-> On 8 November 2013 12:28, Gary Thomas <gary@mlbassoc.com> wrote:
->> I sent a patch, but I never received it from the list although
->> I can find it in the list archives.  This made me think I had
->> messed up somehow, so I ended up sending it three times :-(
->
-> As it is on the archives it made it to the list...  maybe you
-> accidently turned off delivery of the list mails, or that list doesn't
-> send your own messages back to you (I know gmail at least recognises
-> mails that you sent and doesn't show them in your inbox).
+On 8 November 2013 13:20, Gary Thomas <gary@mlbassoc.com> wrote:
+> So, did you see the patch (by email, not archives)?
 
-I do get my posts (send from my desk using Thunderbird), but not
-it seems patches sent directly from git.  Perhaps they are being
-filtered somehow.
+Personally, I'm not on bitbake-list (yet).
 
-So, did you see the patch (by email, not archives)?
-
--- 
-------------------------------------------------------------
-Gary Thomas                 |  Consulting for the
-MLB Associates              |    Embedded world
-------------------------------------------------------------
+Ross
 
