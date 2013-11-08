@@ -1,26 +1,33 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id ECA1E6D7C4
+Return-Path: <gary@mlbassoc.com>
+Received: from mail.chez-thomas.org (mail.mlbassoc.com [65.100.170.105])
+	by mail.openembedded.org (Postfix) with ESMTP id 95DBD6AE37
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  8 Nov 2013 08:29:30 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.3) with ESMTP id rA88TXOB020711
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 8 Nov 2013 00:29:33 -0800 (PST)
-Received: from pek-blade16.wrs.com (128.224.153.44) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.2.347.0;
-	Fri, 8 Nov 2013 00:29:32 -0800
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Sat, 9 Nov 2013 00:31:51 +0800
-Message-ID: <589acd189b9af4ebb3e13845de0cba3035db37e0.1383927399.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1383927399.git.liezhi.yang@windriver.com>
-References: <cover.1383927399.git.liezhi.yang@windriver.com>
+	Fri,  8 Nov 2013 12:28:06 +0000 (UTC)
+Received: by mail.chez-thomas.org (Postfix, from userid 1998)
+	id 8C839F8123C; Fri,  8 Nov 2013 05:28:08 -0700 (MST)
+X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
+	hermes.chez-thomas.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=4.0 tests=ALL_TRUSTED,BAYES_00
+	autolearn=unavailable version=3.3.2
+Received: from [192.168.1.114] (zeus [192.168.1.114])
+	by mail.chez-thomas.org (Postfix) with ESMTP id 3F001F8123A;
+	Fri,  8 Nov 2013 05:28:06 -0700 (MST)
+Message-ID: <527CD8E4.4000202@mlbassoc.com>
+Date: Fri, 08 Nov 2013 05:28:20 -0700
+From: Gary Thomas <gary@mlbassoc.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:24.0) Gecko/20100101 Thunderbird/24.1.0
 MIME-Version: 1.0
-Subject: [PATCH 1/1 RFC] fetch2/git.py: fix the filename too long error
+To: Chris Larson <clarson@kergoth.com>
+References: <527BAC0F.3090901@mlbassoc.com> <7286154.LbYKCCWHqH@helios>
+	<527BC186.5040406@mlbassoc.com>
+	<CABcZANkDuRL2bMgoy=zNbguwT6xWXw0ktDhy0KPOMZwAiS4kfg@mail.gmail.com>
+In-Reply-To: <CABcZANkDuRL2bMgoy=zNbguwT6xWXw0ktDhy0KPOMZwAiS4kfg@mail.gmail.com>
+Cc: Paul Eggleton <paul.eggleton@linux.intel.com>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>, Ross Burton <ross.burton@intel.com>
+Subject: Re: Some 'depexp' nits
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,56 +40,66 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 08 Nov 2013 08:29:31 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 08 Nov 2013 12:28:06 -0000
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When we use the PREMIRROR/MIRROR from the local disk, and if it is in a
-deep directory, for example, when len(path) > 255 (The NAME_MAX), we
-will get the "filename too long error".
+On 2013-11-07 09:46, Chris Larson wrote:
+>
+> On Thu, Nov 7, 2013 at 9:36 AM, Gary Thomas <gary@mlbassoc.com <mailto:gary@mlbassoc.com>> wrote:
+>
+>     On 2013-11-07 09:25, Paul Eggleton wrote:
+>
+>         Hi Gary,
+>
+>         On Thursday 07 November 2013 08:04:47 Gary Thomas wrote:
+>
+>             I hope this is the correct list.
+>
+>             I was just using '-u depexp' and noticed a few small things.
+>                  $ bitbake my-qt5-image -u depexp
+>                  This UI is only compatible with the -g option
+>
+>             Perhaps this should be worded more strongly, like this?
+>                  This UI requires the -g option
+>
+>
+>         Sounds like a good idea yes.
+>
+>             Also, after running successfully, I closed the window (using
+>             the close WM button) and got this:
+>                  $ bitbake my-qt5-image -u depexp -g
+>                  Unable to cleanly stop: No such command
+>
+>             There didn't seem to be any other way to exit the program, so
+>             at least this should be clean.
+>
+>
+>         There is now a bug open for the latter issue:
+>         https://bugzilla.yoctoproject.__org/show_bug.cgi?id=5445 <https://bugzilla.yoctoproject.org/show_bug.cgi?id=5445>
+>
+>             Are these valid concerns/observations?  Would you entertain patches
+>             for these items?
+>
+>
+>         Yes, that would be great.
+>
+>
+>     Can I send them against the Poky/Yocto tree?  Or should it be the
+>     separate bitbake tree (which is where?)?
+>
+>
+> http://git.openembedded.org/, mirrored at https://github.com/openembedded/. Submit the patches against the separate bitbake repo to the bitbake-devel list.
 
-This is becuase we use ud.path.replace('/', '.') to change the path to
-the filename. We seldom see such a long url, but it is easy to produce
-it on the local machine.
+I sent a patch, but I never received it from the list although
+I can find it in the list archives.  This made me think I had
+messed up somehow, so I ended up sending it three times :-(
 
-Another problem is that:
+Did you (or anyone) actually see it?  Did I do something wrong?
 
-file:///local/path
-
-will be converted into .local.path whichi is a hidden file by default.
-
-Don't convert the name when ud.proto == "file" will fix the problem.
-
-PS:
-- This is only for git, other fetchers also have the similar problem,
-  will send the patch for others if this is fine.
-
-- Another solution might be: use the md5sum(path) as part of the
-  filename, I'm not sure whether it is worth.
-
-[YOCTO #5389]
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/fetch2/git.py | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 6175e4c..53fd2f5 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -127,7 +127,10 @@ class Git(FetchMethod):
-                     ud.branches[name] = ud.revisions[name]
-                 ud.revisions[name] = self.latest_revision(ud.url, ud, d, name)
- 
--        gitsrcname = '%s%s' % (ud.host.replace(':','.'), ud.path.replace('/', '.').replace('*', '.'))
-+        if ud.proto == "file":
-+            gitsrcname = '%s%s' % ("file...", os.path.basename(ud.path))
-+        else:
-+            gitsrcname = '%s%s' % (ud.host.replace(':','.'), ud.path.replace('/', '.').replace('*', '.'))
-         # for rebaseable git repo, it is necessary to keep mirror tar ball
-         # per revision, so that even the revision disappears from the
-         # upstream repo in the future, the mirror will remain intact and still
 -- 
-1.8.3.1
-
+------------------------------------------------------------
+Gary Thomas                 |  Consulting for the
+MLB Associates              |    Embedded world
+------------------------------------------------------------
 
