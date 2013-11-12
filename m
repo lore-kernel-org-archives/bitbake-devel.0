@@ -1,34 +1,37 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-lb0-f176.google.com (mail-lb0-f176.google.com
-	[209.85.217.176])
-	by mail.openembedded.org (Postfix) with ESMTP id 88A816D598
+Return-Path: <cristiana.voicu@intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 121256D885
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 Nov 2013 15:17:53 +0000 (UTC)
-Received: by mail-lb0-f176.google.com with SMTP id p9so1996388lbv.21
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 Nov 2013 07:17:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=ztcZ/lLcz9MgxebczGCQnu7ORkozdMphaoe4BVfUwm8=;
-	b=wqTIsi+c/AQZAMbIkGAqTTil/10CgL9mGlvRj4meXEDEwHaC6treywJvr26PZdHGW4
-	kcP0a2TsacUpyPUGor10vHcjSg4QhSOtsjEGYYOMSA6YKmkBh5m2/Wt2NHCPO/iuM0ML
-	nWHTVzgnNWK9KsqQDiSRCCR0WGG0B8PG3Bm6Mzm6bThlj/X25aTh+2iwiUVt06b/EmGh
-	1kusB0siblzj/fSUdMOkouqIMmsUTM5Rt9X5tQcCoTailRCICAWhjDub/b+c3B6aPRnd
-	i/co7PvUvYMkBeINZuERuymkGWadPXdWiuyF2QBE1ROtc1xVAk3J4S89FHHOqyHxvdEO
-	tfog==
-X-Received: by 10.112.135.103 with SMTP id pr7mr64487lbb.65.1384269474686;
-	Tue, 12 Nov 2013 07:17:54 -0800 (PST)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.53.197 with HTTP; Tue, 12 Nov 2013 07:17:34 -0800 (PST)
-In-Reply-To: <1384265249-11307-1-git-send-email-stefanx.stanacar@intel.com>
+	Tue, 12 Nov 2013 15:44:28 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 12 Nov 2013 07:44:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.93,685,1378882800"; 
+	d="scan'208,217";a="432128251"
+Received: from irsmsx103.ger.corp.intel.com ([163.33.3.157])
+	by fmsmga002.fm.intel.com with ESMTP; 12 Nov 2013 07:44:28 -0800
+Received: from irsmsx152.ger.corp.intel.com (163.33.192.66) by
+	IRSMSX103.ger.corp.intel.com (163.33.3.157) with Microsoft SMTP Server
+	(TLS) id 14.3.123.3; Tue, 12 Nov 2013 15:44:27 +0000
+Received: from irsmsx105.ger.corp.intel.com ([169.254.7.75]) by
+	IRSMSX152.ger.corp.intel.com ([163.33.192.66]) with mapi id
+	14.03.0123.003; Tue, 12 Nov 2013 15:44:27 +0000
+From: "Voicu, Cristiana" <cristiana.voicu@intel.com>
+To: Chris Larson <clarson@kergoth.com>, "Stanacar, StefanX"
+	<stefanx.stanacar@intel.com>
+Thread-Topic: [bitbake-devel] [PATCH] cooker: remove some redundant file
+	manipulation code
+Thread-Index: AQHO37qUDknjA67TU0uGxFl4AUcvvJohuvsg
+Date: Tue, 12 Nov 2013 15:44:27 +0000
+Message-ID: <BE68E9C8E0850C43B0F0B0B7D57FA5AE2E89EBEE@IRSMSX105.ger.corp.intel.com>
 References: <1384265249-11307-1-git-send-email-stefanx.stanacar@intel.com>
-From: Chris Larson <clarson@kergoth.com>
-Date: Tue, 12 Nov 2013 08:17:34 -0700
-X-Google-Sender-Auth: t6DZKSZwXbYfk0LUQKmNkiZTgmE
-Message-ID: <CABcZANmis=Y6ke+6xG1Bnk5so1DBwvSdf7s9ar-BcTxMs4VxDA@mail.gmail.com>
-To: Stefan Stanacar <stefanx.stanacar@intel.com>
+	<CABcZANmis=Y6ke+6xG1Bnk5so1DBwvSdf7s9ar-BcTxMs4VxDA@mail.gmail.com>
+In-Reply-To: <CABcZANmis=Y6ke+6xG1Bnk5so1DBwvSdf7s9ar-BcTxMs4VxDA@mail.gmail.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [163.33.239.180]
+MIME-Version: 1.0
 Cc: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH] cooker: remove some redundant file manipulation code
@@ -44,83 +47,132 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 12 Nov 2013 15:17:55 -0000
-Content-Type: multipart/alternative; boundary=089e01176e734fedfe04eafc5a4b
+X-List-Received-Date: Tue, 12 Nov 2013 15:44:28 -0000
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_BE68E9C8E0850C43B0F0B0B7D57FA5AE2E89EBEEIRSMSX105gercor_"
 
---089e01176e734fedfe04eafc5a4b
-Content-Type: text/plain; charset=UTF-8
+--_000_BE68E9C8E0850C43B0F0B0B7D57FA5AE2E89EBEEIRSMSX105gercor_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Tue, Nov 12, 2013 at 7:07 AM, Stefan Stanacar <stefanx.stanacar@intel.com
-> wrote:
+SXTigJlzIG15IG1pc3Rha2UuIEkgcmVtZW1iZXIgSSBzZW50IG1vcmUgc2ltaWxhciBtZXRob2Rz
+LCBzb21lIG9mIHRoZW0gbW9kaWZ5aW5nIHRoZSBjb250ZW50cy4gSG9wZSB0aGlzIGlzIGEgZ29v
+ZCBleGN1c2Ug4pi6DQpJIHdpbGwgc2VuZCBhIHBhdGNoIHRoYXQgdXNlcyBhcHBlbmQuDQpDcmlz
+dGlhbmENCkZyb206IGJpdGJha2UtZGV2ZWwtYm91bmNlc0BsaXN0cy5vcGVuZW1iZWRkZWQub3Jn
+IFttYWlsdG86Yml0YmFrZS1kZXZlbC1ib3VuY2VzQGxpc3RzLm9wZW5lbWJlZGRlZC5vcmddIE9u
+IEJlaGFsZiBPZiBDaHJpcyBMYXJzb24NClNlbnQ6IFR1ZXNkYXksIE5vdmVtYmVyIDEyLCAyMDEz
+IDU6MTggUE0NClRvOiBTdGFuYWNhciwgU3RlZmFuWA0KQ2M6IGJpdGJha2UtZGV2ZWxAbGlzdHMu
+b3BlbmVtYmVkZGVkLm9yZw0KU3ViamVjdDogUmU6IFtiaXRiYWtlLWRldmVsXSBbUEFUQ0hdIGNv
+b2tlcjogcmVtb3ZlIHNvbWUgcmVkdW5kYW50IGZpbGUgbWFuaXB1bGF0aW9uIGNvZGUNCg0KDQpP
+biBUdWUsIE5vdiAxMiwgMjAxMyBhdCA3OjA3IEFNLCBTdGVmYW4gU3RhbmFjYXIgPHN0ZWZhbngu
+c3RhbmFjYXJAaW50ZWwuY29tPG1haWx0bzpzdGVmYW54LnN0YW5hY2FyQGludGVsLmNvbT4+IHdy
+b3RlOg0KKyAgICAgICAgdG90YWwgPSAnJw0KICAgICAgICAgd2l0aCBvcGVuKGRlZmF1bHRfZmls
+ZSwgJ3InKSBhcyBmOg0KLSAgICAgICAgICAgIGNvbnRlbnRzID0gZi5yZWFkbGluZXMoKQ0KLSAg
+ICAgICAgZi5jbG9zZSgpDQotDQotICAgICAgICB0b3RhbCA9ICIiDQotICAgICAgICBmb3IgYyBp
+biBjb250ZW50czoNCi0gICAgICAgICAgICB0b3RhbCArPSBjDQorICAgICAgICAgICAgZm9yIGxp
+bmUgaW4gZjoNCisgICAgICAgICAgICAgICAgdG90YWwgKz0gbGluZQ0KDQogICAgICAgICB0b3Rh
+bCArPSAiI2FkZGVkIGJ5IGhvYiINCiAgICAgICAgIHRvdGFsICs9ICJcbiVzICs9IFwiJXNcIlxu
+IiAlICh2YXIsIHZhbCkNCg0KICAgICAgICAgd2l0aCBvcGVuKGRlZmF1bHRfZmlsZSwgJ3cnKSBh
+cyBmOg0KICAgICAgICAgICAgIGYud3JpdGUodG90YWwpDQotICAgICAgICBmLmNsb3NlKCkNCg0K
+VGhpcyBpcyB3ZWlyZC4gSGF2ZSB0aGV5IGV2ZXIgaGVhcmQgb2Ygb3BlbmluZyBhIGZpbGUgaW4g
+YXBwZW5kIG1vZGU/IDopIEFuZCBvYnZpb3VzbHksIHNwbGl0dGluZyB0aGUgY29udGVudHMgaW50
+byBsaW5lcywgdGhlbiByZS1jb25jYXRlbmF0aW5nIHRob3NlIGxpbmVzIGludG8gYSBzdHJpbmcg
+YmxvYiBtYWtlcyBubyBzZW5zZSBlaXRoZXIuDQotLQ0KQ2hyaXN0b3BoZXIgTGFyc29uDQpjbGFy
+c29uIGF0IGtlcmdvdGggZG90IGNvbQ0KRm91bmRlciAtIEJpdEJha2UsIE9wZW5FbWJlZGRlZCwg
+T3BlblphdXJ1cw0KTWFpbnRhaW5lciAtIFRzbGliDQpTZW5pb3IgU29mdHdhcmUgRW5naW5lZXIs
+IE1lbnRvciBHcmFwaGljcw0K
 
-> +        total = ''
->          with open(default_file, 'r') as f:
-> -            contents = f.readlines()
-> -        f.close()
-> -
-> -        total = ""
-> -        for c in contents:
-> -            total += c
-> +            for line in f:
-> +                total += line
->
->          total += "#added by hob"
->          total += "\n%s += \"%s\"\n" % (var, val)
->
->          with open(default_file, 'w') as f:
->              f.write(total)
-> -        f.close()
->
+--_000_BE68E9C8E0850C43B0F0B0B7D57FA5AE2E89EBEEIRSMSX105gercor_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-This is weird. Have they ever heard of opening a file in append mode? :)
-And obviously, splitting the contents into lines, then re-concatenating
-those lines into a string blob makes no sense either.
--- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTIgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+V2luZ2RpbmdzOw0KCXBhbm9zZS0xOjUgMCAwIDAgMCAwIDAgMCAwIDA7fQ0KQGZvbnQtZmFjZQ0K
+CXtmb250LWZhbWlseToiQ2FtYnJpYSBNYXRoIjsNCglwYW5vc2UtMToyIDQgNSAzIDUgNCA2IDMg
+MiA0O30NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6Q2FsaWJyaTsNCglwYW5vc2UtMToyIDE1
+IDUgMiAyIDIgNCAzIDIgNDt9DQpAZm9udC1mYWNlDQoJe2ZvbnQtZmFtaWx5OlRhaG9tYTsNCglw
+YW5vc2UtMToyIDExIDYgNCAzIDUgNCA0IDIgNDt9DQovKiBTdHlsZSBEZWZpbml0aW9ucyAqLw0K
+cC5Nc29Ob3JtYWwsIGxpLk1zb05vcm1hbCwgZGl2Lk1zb05vcm1hbA0KCXttYXJnaW46MGluOw0K
+CW1hcmdpbi1ib3R0b206LjAwMDFwdDsNCglmb250LXNpemU6MTIuMHB0Ow0KCWZvbnQtZmFtaWx5
+OiJUaW1lcyBOZXcgUm9tYW4iLCJzZXJpZiI7fQ0KYTpsaW5rLCBzcGFuLk1zb0h5cGVybGluaw0K
+CXttc28tc3R5bGUtcHJpb3JpdHk6OTk7DQoJY29sb3I6Ymx1ZTsNCgl0ZXh0LWRlY29yYXRpb246
+dW5kZXJsaW5lO30NCmE6dmlzaXRlZCwgc3Bhbi5Nc29IeXBlcmxpbmtGb2xsb3dlZA0KCXttc28t
+c3R5bGUtcHJpb3JpdHk6OTk7DQoJY29sb3I6cHVycGxlOw0KCXRleHQtZGVjb3JhdGlvbjp1bmRl
+cmxpbmU7fQ0Kc3Bhbi5FbWFpbFN0eWxlMTcNCgl7bXNvLXN0eWxlLXR5cGU6cGVyc29uYWwtcmVw
+bHk7DQoJZm9udC1mYW1pbHk6IkNhbGlicmkiLCJzYW5zLXNlcmlmIjsNCgljb2xvcjojMUY0OTdE
+O30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBlOmV4cG9ydC1vbmx5O30NCkBwYWdl
+IFdvcmRTZWN0aW9uMQ0KCXtzaXplOjguNWluIDExLjBpbjsNCgltYXJnaW46MS4waW4gMS4waW4g
+MS4waW4gMS4waW47fQ0KZGl2LldvcmRTZWN0aW9uMQ0KCXtwYWdlOldvcmRTZWN0aW9uMTt9DQot
+LT48L3N0eWxlPjwhLS1baWYgZ3RlIG1zbyA5XT48eG1sPg0KPG86c2hhcGVkZWZhdWx0cyB2OmV4
+dD0iZWRpdCIgc3BpZG1heD0iMTAyNiIgLz4NCjwveG1sPjwhW2VuZGlmXS0tPjwhLS1baWYgZ3Rl
+IG1zbyA5XT48eG1sPg0KPG86c2hhcGVsYXlvdXQgdjpleHQ9ImVkaXQiPg0KPG86aWRtYXAgdjpl
+eHQ9ImVkaXQiIGRhdGE9IjEiIC8+DQo8L286c2hhcGVsYXlvdXQ+PC94bWw+PCFbZW5kaWZdLS0+
+DQo8L2hlYWQ+DQo8Ym9keSBsYW5nPSJFTi1VUyIgbGluaz0iYmx1ZSIgdmxpbms9InB1cnBsZSI+
+DQo8ZGl2IGNsYXNzPSJXb3JkU2VjdGlvbjEiPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4g
+c3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZxdW90Oywm
+cXVvdDtzYW5zLXNlcmlmJnF1b3Q7O2NvbG9yOiMxRjQ5N0QiPkl04oCZcyBteSBtaXN0YWtlLiBJ
+IHJlbWVtYmVyIEkgc2VudCBtb3JlIHNpbWlsYXIgbWV0aG9kcywgc29tZSBvZiB0aGVtIG1vZGlm
+eWluZyB0aGUgY29udGVudHMuIEhvcGUgdGhpcyBpcyBhIGdvb2QgZXhjdXNlDQo8L3NwYW4+PHNw
+YW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6V2luZ2RpbmdzO2NvbG9yOiMx
+RjQ5N0QiPko8L3NwYW4+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6
+JnF1b3Q7Q2FsaWJyaSZxdW90OywmcXVvdDtzYW5zLXNlcmlmJnF1b3Q7O2NvbG9yOiMxRjQ5N0Qi
+PjxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIHN0eWxl
+PSJmb250LXNpemU6MTEuMHB0O2ZvbnQtZmFtaWx5OiZxdW90O0NhbGlicmkmcXVvdDssJnF1b3Q7
+c2Fucy1zZXJpZiZxdW90Oztjb2xvcjojMUY0OTdEIj5JIHdpbGwgc2VuZCBhIHBhdGNoIHRoYXQg
+dXNlcyBhcHBlbmQuPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMS4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7Q2FsaWJyaSZx
+dW90OywmcXVvdDtzYW5zLXNlcmlmJnF1b3Q7O2NvbG9yOiMxRjQ5N0QiPkNyaXN0aWFuYTxvOnA+
+PC9vOnA+PC9zcGFuPjwvcD4NCjxkaXYgc3R5bGU9ImJvcmRlcjpub25lO2JvcmRlci10b3A6c29s
+aWQgI0I1QzRERiAxLjBwdDtwYWRkaW5nOjMuMHB0IDBpbiAwaW4gMGluIj4NCjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPjxiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6MTAuMHB0O2ZvbnQtZmFtaWx5OiZx
+dW90O1RhaG9tYSZxdW90OywmcXVvdDtzYW5zLXNlcmlmJnF1b3Q7Ij5Gcm9tOjwvc3Bhbj48L2I+
+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMC4wcHQ7Zm9udC1mYW1pbHk6JnF1b3Q7VGFob21hJnF1
+b3Q7LCZxdW90O3NhbnMtc2VyaWYmcXVvdDsiPiBiaXRiYWtlLWRldmVsLWJvdW5jZXNAbGlzdHMu
+b3BlbmVtYmVkZGVkLm9yZyBbbWFpbHRvOmJpdGJha2UtZGV2ZWwtYm91bmNlc0BsaXN0cy5vcGVu
+ZW1iZWRkZWQub3JnXQ0KPGI+T24gQmVoYWxmIE9mIDwvYj5DaHJpcyBMYXJzb248YnI+DQo8Yj5T
+ZW50OjwvYj4gVHVlc2RheSwgTm92ZW1iZXIgMTIsIDIwMTMgNToxOCBQTTxicj4NCjxiPlRvOjwv
+Yj4gU3RhbmFjYXIsIFN0ZWZhblg8YnI+DQo8Yj5DYzo8L2I+IGJpdGJha2UtZGV2ZWxAbGlzdHMu
+b3BlbmVtYmVkZGVkLm9yZzxicj4NCjxiPlN1YmplY3Q6PC9iPiBSZTogW2JpdGJha2UtZGV2ZWxd
+IFtQQVRDSF0gY29va2VyOiByZW1vdmUgc29tZSByZWR1bmRhbnQgZmlsZSBtYW5pcHVsYXRpb24g
+Y29kZTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjwvZGl2Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+PG86cD4mbmJzcDs8L286cD48L3A+DQo8ZGl2Pg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PjxvOnA+Jm5ic3A7PC9vOnA+PC9wPg0KPGRpdj4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPk9uIFR1
+ZSwgTm92IDEyLCAyMDEzIGF0IDc6MDcgQU0sIFN0ZWZhbiBTdGFuYWNhciAmbHQ7PGEgaHJlZj0i
+bWFpbHRvOnN0ZWZhbnguc3RhbmFjYXJAaW50ZWwuY29tIiB0YXJnZXQ9Il9ibGFuayI+c3RlZmFu
+eC5zdGFuYWNhckBpbnRlbC5jb208L2E+Jmd0OyB3cm90ZTo8bzpwPjwvbzpwPjwvcD4NCjxkaXYg
+aWQ9Ijp6cyI+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj4mIzQzOyAmbmJzcDsgJm5ic3A7ICZuYnNw
+OyAmbmJzcDt0b3RhbCA9ICcnPGJyPg0KJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNw
+O3dpdGggb3BlbihkZWZhdWx0X2ZpbGUsICdyJykgYXMgZjo8YnI+DQotICZuYnNwOyAmbmJzcDsg
+Jm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7Y29udGVudHMgPSBmLnJlYWRsaW5lcygpPGJyPg0K
+LSAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDtmLmNsb3NlKCk8YnI+DQotPGJyPg0KLSAmbmJz
+cDsgJm5ic3A7ICZuYnNwOyAmbmJzcDt0b3RhbCA9ICZxdW90OyZxdW90Ozxicj4NCi0gJm5ic3A7
+ICZuYnNwOyAmbmJzcDsgJm5ic3A7Zm9yIGMgaW4gY29udGVudHM6PGJyPg0KLSAmbmJzcDsgJm5i
+c3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwO3RvdGFsICYjNDM7PSBjPGJyPg0KJiM0Mzsg
+Jm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDtmb3IgbGluZSBpbiBmOjxi
+cj4NCiYjNDM7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNw
+OyAmbmJzcDt0b3RhbCAmIzQzOz0gbGluZTxicj4NCjxicj4NCiZuYnNwOyAmbmJzcDsgJm5ic3A7
+ICZuYnNwOyAmbmJzcDt0b3RhbCAmIzQzOz0gJnF1b3Q7I2FkZGVkIGJ5IGhvYiZxdW90Ozxicj4N
+CiZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDt0b3RhbCAmIzQzOz0gJnF1b3Q7XG4l
+cyAmIzQzOz0gXCZxdW90OyVzXCZxdW90O1xuJnF1b3Q7ICUgKHZhciwgdmFsKTxicj4NCjxicj4N
+CiZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDt3aXRoIG9wZW4oZGVmYXVsdF9maWxl
+LCAndycpIGFzIGY6PGJyPg0KJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJz
+cDsgJm5ic3A7Zi53cml0ZSh0b3RhbCk8YnI+DQotICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNw
+O2YuY2xvc2UoKTxvOnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjxwIGNsYXNzPSJNc29O
+b3JtYWwiPjxicj4NClRoaXMgaXMgd2VpcmQuIEhhdmUgdGhleSBldmVyIGhlYXJkIG9mIG9wZW5p
+bmcgYSBmaWxlIGluIGFwcGVuZCBtb2RlPyA6KSBBbmQgb2J2aW91c2x5LCBzcGxpdHRpbmcgdGhl
+IGNvbnRlbnRzIGludG8gbGluZXMsIHRoZW4gcmUtY29uY2F0ZW5hdGluZyB0aG9zZSBsaW5lcyBp
+bnRvIGEgc3RyaW5nIGJsb2IgbWFrZXMgbm8gc2Vuc2UgZWl0aGVyLjxicj4NCi0tIDxicj4NCkNo
+cmlzdG9waGVyIExhcnNvbjxicj4NCmNsYXJzb24gYXQga2VyZ290aCBkb3QgY29tPGJyPg0KRm91
+bmRlciAtIEJpdEJha2UsIE9wZW5FbWJlZGRlZCwgT3BlblphdXJ1czxicj4NCk1haW50YWluZXIg
+LSBUc2xpYjxicj4NClNlbmlvciBTb2Z0d2FyZSBFbmdpbmVlciwgTWVudG9yIEdyYXBoaWNzIDxv
+OnA+PC9vOnA+PC9wPg0KPC9kaXY+DQo8L2Rpdj4NCjwvZGl2Pg0KPC9ib2R5Pg0KPC9odG1sPg0K
 
---089e01176e734fedfe04eafc5a4b
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Tue, Nov 12, 2013 at 7:07 AM, Stefan Stanacar <span dir=3D"ltr">&lt;<a h=
-ref=3D"mailto:stefanx.stanacar@intel.com" target=3D"_blank">stefanx.stanaca=
-r@intel.com</a>&gt;</span> wrote:<br>
-
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div id=3D":zs" style=3D"overflow:hidden">+ =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0total =3D &#39;&#39;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0with open(default_file, &#39;r&#39;) as f=
-:<br>
-- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0contents =3D f.readlines()<br>
-- =C2=A0 =C2=A0 =C2=A0 =C2=A0f.close()<br>
--<br>
-- =C2=A0 =C2=A0 =C2=A0 =C2=A0total =3D &quot;&quot;<br>
-- =C2=A0 =C2=A0 =C2=A0 =C2=A0for c in contents:<br>
-- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0total +=3D c<br>
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0for line in f:<br>
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0total +=3D line<br=
->
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0total +=3D &quot;#added by hob&quot;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0total +=3D &quot;\n%s +=3D \&quot;%s\&quo=
-t;\n&quot; % (var, val)<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0with open(default_file, &#39;w&#39;) as f=
-:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0f.write(total)<br>
-- =C2=A0 =C2=A0 =C2=A0 =C2=A0f.close()</div></blockquote></div><br>This is =
-weird. Have they ever heard of opening a file in append mode? :) And obviou=
-sly, splitting the contents into lines, then re-concatenating those lines i=
-nto a string blob makes no sense either.<br>
-
--- <br>Christopher Larson<br>clarson at kergoth dot com<br>Founder - BitBak=
-e, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software Engine=
-er, Mentor Graphics
-</div></div>
-
---089e01176e734fedfe04eafc5a4b--
+--_000_BE68E9C8E0850C43B0F0B0B7D57FA5AE2E89EBEEIRSMSX105gercor_--
