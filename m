@@ -1,37 +1,23 @@
-Return-Path: <trevor.woerner@linaro.org>
-Received: from mail-ie0-f169.google.com (mail-ie0-f169.google.com
-	[209.85.223.169])
-	by mail.openembedded.org (Postfix) with ESMTP id 2D38A6D46B
+Return-Path: <stefanx.stanacar@intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id E5F426D8AE
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Nov 2013 18:51:49 +0000 (UTC)
-Received: by mail-ie0-f169.google.com with SMTP id tp5so1957557ieb.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Nov 2013 10:51:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=AuGnuiHRANIydJYkNxqDDSQyViFBnTe+xhoYqiF6yYU=;
-	b=DoipB6s8Gd4EWr0feKmmkdW+Bc8mh60DB08UimE6RBHh+DLyLOGUlAGvOXzvMFnHUx
-	P5ChVXFwg2b+MaH0o0IAM0rKVmYxHpzQTdXz6WxqNXs0J43Fql6QMqid4m93WF7Vyjpm
-	3Ltxprrhc+qZ0Tfm7d1hrb8aSHS5OAlbpo0cVmRWfNl1boO8i3KyAGDebc5IEvYpFzTt
-	SmlqEboXdH2Xezm4KCWemEQx1ktxe1xqdw+/4sQc6CSWLRqhzbM6LXTXBvTF90hn8vEO
-	m25Oh36FvsaPAmhNnn1KEWmBRzEAL2Ht9VTauPn/kMAVnm6V4ipXfGu3H7A25wk1Qlua
-	HYFw==
-X-Gm-Message-State: ALoCoQkg/Q8PXffqh6ZMSmhVhe0Jo9aFIBeMmSPhG8D+FrIjXHmW1yU9p3OKUuhhQjl3994x20XA
-X-Received: by 10.50.111.110 with SMTP id ih14mr12476499igb.58.1384195910896; 
-	Mon, 11 Nov 2013 10:51:50 -0800 (PST)
-Received: from suse64-i7.site (dsl-67-55-9-50.acanac.net. [67.55.9.50])
-	by mx.google.com with ESMTPSA id f5sm20104701igc.4.2013.11.11.10.51.49
-	for <multiple recipients>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 11 Nov 2013 10:51:50 -0800 (PST)
-From: Trevor Woerner <trevor.woerner@linaro.org>
+	Tue, 12 Nov 2013 14:07:08 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 12 Nov 2013 06:07:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.93,685,1378882800"; d="scan'208";a="432078351"
+Received: from linux.jf.intel.com (HELO linux.intel.com) ([10.23.219.25])
+	by fmsmga002.fm.intel.com with ESMTP; 12 Nov 2013 06:07:02 -0800
+Received: from firebird.rb.intel.com (firebird.rb.intel.com [10.237.105.73])
+	by linux.intel.com (Postfix) with ESMTP id A11836A4007;
+	Tue, 12 Nov 2013 06:07:00 -0800 (PST)
+From: Stefan Stanacar <stefanx.stanacar@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 11 Nov 2013 13:51:30 -0500
-Message-Id: <1384195890-1465-1-git-send-email-trevor.woerner@linaro.org>
-X-Mailer: git-send-email 1.8.4.474.g128a96c
-Cc: patches@linaro.org
-Subject: [PATCH] newbb.vim: fix spelling
+Date: Tue, 12 Nov 2013 16:07:29 +0200
+Message-Id: <1384265249-11307-1-git-send-email-stefanx.stanacar@intel.com>
+X-Mailer: git-send-email 1.8.3.1
+Subject: [PATCH] cooker: remove some redundant file manipulation code
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,27 +30,115 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 11 Nov 2013 18:51:50 -0000
+X-List-Received-Date: Tue, 12 Nov 2013 14:07:09 -0000
 
-Signed-off-by: Trevor Woerner <trevor.woerner@linaro.org>
+There is no need to call close() for files opened in "with" statements.
+Also, in some places files content was unnecessarily copied from a list to a string,
+and there is no reason to do that.
+
+Signed-off-by: Stefan Stanacar <stefanx.stanacar@intel.com>
 ---
- contrib/vim/plugin/newbb.vim | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/bb/cooker.py | 34 ++++++++--------------------------
+ 1 file changed, 8 insertions(+), 26 deletions(-)
 
-diff --git a/contrib/vim/plugin/newbb.vim b/contrib/vim/plugin/newbb.vim
-index 053ed71..3019c85 100755
---- a/contrib/vim/plugin/newbb.vim
-+++ b/contrib/vim/plugin/newbb.vim
-@@ -17,7 +17,7 @@ endif
- fun! <SID>GetUserName()
-     let l:user_name = system("git config --get user.name")
-     if v:shell_error
--        return "Unknow User"
-+        return "Unknown User"
-     else
-         return substitute(l:user_name, "\n", "", "")
- endfun
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 0af4558..3aa69ed 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -202,20 +202,16 @@ class BBCooker:
+         #add append var operation to the end of default_file
+         default_file = bb.cookerdata.findConfigFile(default_file, self.data)
+ 
++        total = ''
+         with open(default_file, 'r') as f:
+-            contents = f.readlines()
+-        f.close()
+-
+-        total = ""
+-        for c in contents:
+-            total += c
++            for line in f:
++                total += line
+ 
+         total += "#added by hob"
+         total += "\n%s += \"%s\"\n" % (var, val)
+ 
+         with open(default_file, 'w') as f:
+             f.write(total)
+-        f.close()
+ 
+         #add to history
+         loginfo = {"op":append, "file":default_file, "line":total.count("\n")}
+@@ -244,7 +240,6 @@ class BBCooker:
+             if topdir in conf_file:
+                 with open(conf_file, 'r') as f:
+                     contents = f.readlines()
+-                f.close()
+ 
+                 lines = self.data.varhistory.get_variable_lines(var, conf_file)
+                 for line in lines:
+@@ -270,12 +265,8 @@ class BBCooker:
+                         for ii in range(begin_line, end_line):
+                             contents[ii] = "#" + contents[ii]
+ 
+-                total = ""
+-                for c in contents:
+-                    total += c
+                 with open(conf_file, 'w') as f:
+-                    f.write(total)
+-                f.close()
++                    f.writelines(contents)
+ 
+         if replaced == False:
+             #remove var from history
+@@ -284,13 +275,10 @@ class BBCooker:
+             #add var to the end of default_file
+             default_file = bb.cookerdata.findConfigFile(default_file, self.data)
+ 
+-            with open(default_file, 'r') as f:
+-                contents = f.readlines()
+-            f.close()
+-
+             total = ""
+-            for c in contents:
+-                total += c
++            with open(default_file, 'r') as f:
++                for line in f:
++                    total += line
+ 
+             #add the variable on a single line, to be easy to replace the second time
+             total += "\n#added by hob"
+@@ -298,7 +286,6 @@ class BBCooker:
+ 
+             with open(default_file, 'w') as f:
+                 f.write(total)
+-            f.close()
+ 
+             #add to history
+             loginfo = {"op":set, "file":default_file, "line":total.count("\n")}
+@@ -312,7 +299,6 @@ class BBCooker:
+             if topdir in conf_file:
+                 with open(conf_file, 'r') as f:
+                     contents = f.readlines()
+-                f.close()
+ 
+                 lines = self.data.varhistory.get_variable_lines(var, conf_file)
+                 for line in lines:
+@@ -335,12 +321,8 @@ class BBCooker:
+                     #remove var from history
+                     self.data.varhistory.del_var_history(var, conf_file, line)
+ 
+-                total = ""
+-                for c in contents:
+-                    total += c
+                 with open(conf_file, 'w') as f:
+-                    f.write(total)
+-                f.close()
++                    f.writelines(contents)
+ 
+     def createConfigFile(self, name):
+         path = os.getcwd()
 -- 
-1.8.4.474.g128a96c
+1.8.3.1
 
 
