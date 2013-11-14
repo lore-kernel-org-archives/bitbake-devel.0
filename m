@@ -1,25 +1,25 @@
 Return-Path: <ddalex@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
-	by mail.openembedded.org (Postfix) with ESMTP id 14B536D685
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id BD19C6D684
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Nov 2013 10:53:20 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by azsmga101.ch.intel.com with ESMTP; 14 Nov 2013 02:53:05 -0800
+	Thu, 14 Nov 2013 10:53:40 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga102.fm.intel.com with ESMTP; 14 Nov 2013 02:53:05 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.93,699,1378882800"; d="scan'208";a="427485132"
+X-IronPort-AV: E=Sophos;i="4.93,699,1378882800"; d="scan'208";a="433318188"
 Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by fmsmga001.fm.intel.com with ESMTP; 14 Nov 2013 02:53:03 -0800
+	by fmsmga002.fm.intel.com with ESMTP; 14 Nov 2013 02:53:03 -0800
 Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id 190CB560401; Thu, 14 Nov 2013 10:53:03 +0000 (GMT)
+	id 1B350560479; Thu, 14 Nov 2013 10:53:03 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 14 Nov 2013 10:52:57 +0000
-Message-Id: <1384426381-7869-2-git-send-email-alexandru.damian@intel.com>
+Date: Thu, 14 Nov 2013 10:52:58 +0000
+Message-Id: <1384426381-7869-3-git-send-email-alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.3.2
 In-Reply-To: <1384426381-7869-1-git-send-email-alexandru.damian@intel.com>
 References: <1384426381-7869-1-git-send-email-alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 1/5] cooker, toaster: variable definition tracking
+Subject: [PATCH 2/5] toaster: fix tasks showing as NoExec
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,202 +32,57 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 14 Nov 2013 10:53:21 -0000
+X-List-Received-Date: Thu, 14 Nov 2013 10:53:40 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-In order to track the file where a configuration
-variable was defined, this patch bring these changes:
+Tasks without script type information showed by default
+as NoExec; this happens for all Prebuild or Covered
+tasks, as script type information comes only on TaskStarted
+event. Such a default value may drive confusion, as NoExec value
+should be reserved for the NoExec-flagged tasks.
 
-* a new feature is defined in CookerFeatures, named
-VARIABLE_TRACKING. When a UI requests VARIABLE_TRACKING,
-the variable definition are tracked when configuration
-is parsed.
+This patch adds a new default value named Unknown that will be
+used for all tasks that don't have script type information
+available.
 
-* getAllKeysWithFlags now includes variable history in the
-data dump
-
-* toaster_ui.py will record the operation, file path
-and line number where the variable was changes
-
-* toaster Simple UI will display the file path
-and line number for Configuration page
-
-There is a change in the models to accomodate the recording
-of variable change history.
-
-[YOCTO #5227]
+    [YOCTO #5327]
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/bb/cooker.py                                   | 15 ++++++++++++---
- lib/bb/cookerdata.py                               |  1 +
- lib/bb/ui/buildinfohelper.py                       | 14 ++++++++++----
- lib/bb/ui/toasterui.py                             |  2 +-
- lib/toaster/bldviewer/templates/configuration.html |  6 ++++--
- lib/toaster/orm/models.py                          |  6 +++++-
- 6 files changed, 33 insertions(+), 11 deletions(-)
+ lib/toaster/orm/models.py | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 0580cd5..4c9067b 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -81,7 +81,7 @@ class SkippedPackage:
- 
- 
- class CookerFeatures(object):
--    _feature_list = [HOB_EXTRA_CACHES, SEND_DEPENDS_TREE] = range(2)
-+    _feature_list = [HOB_EXTRA_CACHES, SEND_DEPENDS_TREE, BASEDATASTORE_TRACKING] = range(3)
- 
-     def __init__(self):
-         self._features=set()
-@@ -177,6 +177,9 @@ class BBCooker:
-         self.data.disableTracking()
- 
-     def loadConfigurationData(self):
-+        if CookerFeatures.BASEDATASTORE_TRACKING in self.featureset:
-+            self.enableDataTracking()
-+
-         self.initConfigurationData()
-         self.databuilder.parseBaseConfiguration()
-         self.data = self.databuilder.data
-@@ -189,6 +192,10 @@ class BBCooker:
-         bb.data.update_data(self.event_data)
-         bb.parse.init_parser(self.event_data)
- 
-+        if CookerFeatures.BASEDATASTORE_TRACKING in self.featureset:
-+            self.disableDataTracking()
-+
-+
-     def modifyConfigurationVar(self, var, val, default_file, op):
-         if op == "append":
-             self.appendConfigurationVar(var, val, default_file)
-@@ -320,7 +327,6 @@ class BBCooker:
-         open(confpath, 'w').close()
- 
-     def parseConfiguration(self):
--
-         # Set log file verbosity
-         verboselogs = bb.utils.to_boolean(self.data.getVar("BB_VERBOSE_LOGS", "0"))
-         if verboselogs:
-@@ -1175,7 +1181,10 @@ class BBCooker:
-             try:
-                 v = self.data.getVar(k, True)
-                 if not k.startswith("__") and not isinstance(v, bb.data_smart.DataSmart):
--                    dump[k] = { 'v' : v }
-+                    dump[k] = {
-+    'v' : v ,
-+    'history' : self.data.varhistory.variable(k),
-+                    }
-                     for d in flaglist:
-                         dump[k][d] = self.data.getVarFlag(k, d)
-             except Exception as e:
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index e640ed0..1cc7bc2 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -127,6 +127,7 @@ class CookerConfiguration(object):
-         self.dump_signatures = False
-         self.dry_run = False
-         self.tracking = False
-+        self.server_only = False
- 
-         self.env = {}
- 
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index 2b0298e..863a20e 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -27,8 +27,10 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "toaster.toastermain.settings")
- 
- import toaster.toastermain.settings as toaster_django_settings
- from toaster.orm.models import Build, Task, Recipe, Layer_Version, Layer, Target, LogMessage
--from toaster.orm.models import Target_Package, Build_Package, Variable, Build_File
--from toaster.orm.models import Task_Dependency, Build_Package_Dependency, Target_Package_Dependency, Recipe_Dependency
-+from toaster.orm.models import Variable, VariableHistory
-+from toaster.orm.models import Target_Package, Build_Package, Build_File
-+from toaster.orm.models import Task_Dependency, Build_Package_Dependency
-+from toaster.orm.models import Target_Package_Dependency, Recipe_Dependency
- from bb.msg import BBLogFormatter as format
- 
- class ORMWrapper(object):
-@@ -232,11 +234,15 @@ class ORMWrapper(object):
-                         desc = vardump[root_var]['doc']
-                 if desc is None:
-                     desc = ''
--                Variable.objects.create( build = build_obj,
-+                variable_obj = Variable.objects.create( build = build_obj,
-                     variable_name = k,
-                     variable_value = value,
-                     description = desc)
--
-+                for vh in vardump[k]['history']:
-+                    VariableHistory.objects.create( variable = variable_obj,
-+                            file_name = vh['file'],
-+                            line_number = vh['line'],
-+                            operation = vh['op'])
- 
- class BuildInfoHelper(object):
-     """ This class gathers the build information from the server and sends it
-diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
-index 6c5b152..d2dba25 100644
---- a/lib/bb/ui/toasterui.py
-+++ b/lib/bb/ui/toasterui.py
-@@ -41,7 +41,7 @@ import sys
- import time
- import xmlrpclib
- 
--featureSet = [bb.cooker.CookerFeatures.HOB_EXTRA_CACHES, bb.cooker.CookerFeatures.SEND_DEPENDS_TREE]
-+featureSet = [bb.cooker.CookerFeatures.HOB_EXTRA_CACHES, bb.cooker.CookerFeatures.SEND_DEPENDS_TREE, bb.cooker.CookerFeatures.BASEDATASTORE_TRACKING]
- 
- logger = logging.getLogger("BitBake")
- interactive = sys.stdout.isatty()
-diff --git a/lib/toaster/bldviewer/templates/configuration.html b/lib/toaster/bldviewer/templates/configuration.html
-index 052c37c..8db35e0 100644
---- a/lib/toaster/bldviewer/templates/configuration.html
-+++ b/lib/toaster/bldviewer/templates/configuration.html
-@@ -5,16 +5,18 @@
- 
-             <tr>
-             <th>Name</th>
--            <th>Value</th>
-             <th>Description</th>
-+            <th>Definition history</th>
-+            <th>Value</th>
-             </tr>
- 
-             {% for variable in configuration %}
- 
-             <tr class="data">
-                 <td>{{variable.variable_name}}</td>
--                <td>{{variable.variable_value}}</td>
-                 <td>{% if variable.description %}{{variable.description}}{% endif %}</td>
-+                <td>{% for vh in variable.variablehistory_set.all %}{{vh.operation}} in {{vh.file_name}}:{{vh.line_number}}<br/>{%endfor%}</td>
-+                <td>{{variable.variable_value}}</td>
-             {% endfor %}
- 
- {% endblock %}
 diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 53b9e3a..2ae0b51 100644
+index 2ae0b51..a3df990 100644
 --- a/lib/toaster/orm/models.py
 +++ b/lib/toaster/orm/models.py
-@@ -238,11 +238,15 @@ class Variable(models.Model):
-     build = models.ForeignKey(Build, related_name='variable_build')
-     variable_name = models.CharField(max_length=100)
-     variable_value = models.TextField(blank=True)
--    file = models.FilePathField(max_length=255)
-     changed = models.BooleanField(default=False)
-     human_readable_name = models.CharField(max_length=200)
-     description = models.TextField(blank=True)
+@@ -74,11 +74,13 @@ class Task(models.Model):
+         (SSTATE_RESTORED, 'Restored'), # succesfully restored
+     )
  
-+class VariableHistory(models.Model):
-+    variable = models.ForeignKey(Variable)
-+    file_name = models.FilePathField(max_length=255)
-+    line_number = models.IntegerField(null=True)
-+    operation = models.CharField(max_length=16)
+-    CODING_NOEXEC = 0
+-    CODING_PYTHON = 1
+-    CODING_SHELL = 2
++    CODING_NA = 0
++    CODING_NOEXEC = 1
++    CODING_PYTHON = 2
++    CODING_SHELL = 3
  
- class LogMessage(models.Model):
-     INFO = 0
+     TASK_CODING = (
++        (CODING_NA, 'N/A'),
+         (CODING_NOEXEC, 'NoExec'),
+         (CODING_PYTHON, 'Python'),
+         (CODING_SHELL, 'Shell'),
+@@ -110,7 +112,7 @@ class Task(models.Model):
+     task_name = models.CharField(max_length=100)
+     source_url = models.FilePathField(max_length=255, blank=True)
+     work_directory = models.FilePathField(max_length=255, blank=True)
+-    script_type = models.IntegerField(choices=TASK_CODING, default=CODING_NOEXEC)
++    script_type = models.IntegerField(choices=TASK_CODING, default=CODING_NA)
+     line_number = models.IntegerField(default=0)
+     disk_io = models.IntegerField(null=True)
+     cpu_usage = models.DecimalField(max_digits=6, decimal_places=2, null=True)
 -- 
 1.8.3.2
 
