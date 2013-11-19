@@ -1,30 +1,25 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 1E06C6D37F
+Return-Path: <ddalex@intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 86BFC6D2C7
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 Nov 2013 21:37:00 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	rAILau3Y019828; Mon, 18 Nov 2013 21:36:56 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 2L-14JIJWEfI; Mon, 18 Nov 2013 21:36:56 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	rAILapmp019824
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT); Mon, 18 Nov 2013 21:36:52 GMT
-Message-ID: <1384810607.6460.274.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Martin Jansa <martin.jansa@gmail.com>
-Date: Mon, 18 Nov 2013 21:36:47 +0000
-In-Reply-To: <20131118183213.GI3727@jama>
-References: <1384795036.6460.247.camel@ted> <20131118183213.GI3727@jama>
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] git: Use merge-base instead of log for testing if a commit is present
+	Tue, 19 Nov 2013 10:53:39 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga101.jf.intel.com with ESMTP; 19 Nov 2013 02:53:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.93,728,1378882800"; d="scan'208";a="430134217"
+Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
+	by fmsmga001.fm.intel.com with ESMTP; 19 Nov 2013 02:53:40 -0800
+Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
+	id 7272156069E; Tue, 19 Nov 2013 10:53:40 +0000 (GMT)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 19 Nov 2013 10:53:39 +0000
+Message-Id: <1384858419-12869-2-git-send-email-alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.8.3.2
+In-Reply-To: <1384858419-12869-1-git-send-email-alexandru.damian@intel.com>
+References: <1384858419-12869-1-git-send-email-alexandru.damian@intel.com>
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 1/1] toasterui: fix typo
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,48 +32,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 18 Nov 2013 21:37:01 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 19 Nov 2013 10:53:40 -0000
 
-On Mon, 2013-11-18 at 19:32 +0100, Martin Jansa wrote:
-> On Mon, Nov 18, 2013 at 05:17:16PM +0000, Richard Purdie wrote:
-> > The current use of git log to check if a given revision is present can be
-> > a little fragile.
-> > 
-> > For example if revision X was on branch A, and then later added to branch
-> > B, the update checks would not notice this since they just check for X
-> > being in the repository.
-> > 
-> > We also had some autobuilder corruption where an older packed-refs file
-> > was copied over a new repository containing newer pack files. There
-> > was no update to the refs file since the revision was present but
-> > not accessible in any branch.
-> > 
-> > The correct fix is to check that the required revisions are present
-> > on the specific branches. This patch does this using merge-base.
-> 
-> I guess that merge-base is probably faster or easier to use, but did you
-> consider using git branch --contains?
-> 
-> e.g. checking if selected branch is in
-> git branch --contains ud.revisions[name]
-> 
-> I'm asking only because I'm using "git branch --contains" in some
-> scripts and maybe there is good reason I should rewrite them to use git
-> merge-base instead.
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-git branch --contains gives you a branch list back which you'd have to
-then parse to see if branch X was listed. git merge-base is faster and
-we can directly ask what we need with an exit code. There is no more
-deeply technical reason than that, was just neater.
+A typo in buildinfo helper leads to a bug where
+information about tasks is not correctly stored.
 
-Cheers,
+This patch fixes the typo.
 
-Richard
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+---
+ lib/bb/ui/buildinfohelper.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-
-
+diff --git a/lib/bb/ui/buildinfohelper.py b/bitbake/lib/bb/ui/buildinfohelper.py
+index 170ee12..2c9d77a 100644
+--- a/lib/bb/ui/buildinfohelper.py
++++ b/lib/bb/ui/buildinfohelper.py
+@@ -543,7 +543,7 @@ class BuildInfoHelper(object):
+             task_information['disk_io'] = task_build_stats['disk_io']
+             del self.internal_state[identifier]
+ 
+-        if isinstance(event, (bb.runqueue.runQueueTaskFailed, bb.runCommand.sceneQueueTaskFailed)):
++        if isinstance(event, (bb.runqueue.runQueueTaskFailed, bb.runqueue.sceneQueueTaskFailed)):
+             task_information['outcome'] = Task.OUTCOME_FAILED
+             del self.internal_state[identifier]
+ 
+-- 
+1.8.3.2
 
 
