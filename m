@@ -1,20 +1,30 @@
-Return-Path: <seebs@msp-lpggp2.wrs.com>
-Received: from msp-lpggp2.wrs.com (unknown [206.144.70.9])
-	by mail.openembedded.org (Postfix) with ESMTP id 329CD6D4FE
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 1BBED6CC86
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 20 Nov 2013 00:30:20 +0000 (UTC)
-Received: by msp-lpggp2.wrs.com (Postfix, from userid 508)
-	id E1B9BA02E70; Tue, 19 Nov 2013 18:31:40 -0600 (CST)
-From: Peter Seebach <peter.seebach@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 19 Nov 2013 18:31:40 -0600
-Message-Id: <a85ab002cac4c7fe0881a8fd73fe6011dbddcff8.1384907121.git.peter.seebach@windriver.com>
-X-Mailer: git-send-email 1.7.1
-In-Reply-To: <cover.1384907121.git.peter.seebach@windriver.com>
-References: <cover.1384907121.git.peter.seebach@windriver.com>
-In-Reply-To: <cover.1384907121.git.peter.seebach@windriver.com>
-References: <cover.1384907121.git.peter.seebach@windriver.com>
-Subject: [PATCH 2/2] data_smart.py: Add isTracking() to datasmart
+	Wed, 20 Nov 2013 10:46:38 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	rAKAkZii012970 for <bitbake-devel@lists.openembedded.org>;
+	Wed, 20 Nov 2013 10:46:35 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id wLxZWIIAFJtf for <bitbake-devel@lists.openembedded.org>;
+	Wed, 20 Nov 2013 10:46:35 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	rAKAkVom012966
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
+	Wed, 20 Nov 2013 10:46:32 GMT
+Message-ID: <1384944388.16887.41.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Wed, 20 Nov 2013 10:46:28 +0000
+X-Mailer: Evolution 3.6.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH v2] runqueue: Fix hole in setsceneverify skipped task logic
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,32 +37,72 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 20 Nov 2013 00:30:20 -0000
+X-List-Received-Date: Wed, 20 Nov 2013 10:46:39 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-It would be awesome to have "bitbake -e" work even when sanity failures
-occur. But you can't do that if you can't tell whether tracking is
-enabled. We add a trivial accessor.
+We have do_bundle_initramfs which is a task inserted after compile and
+before build. It is not covered by sstate.
 
-Signed-off-by: Peter Seebach <peter.seebach@windriver.com>
+If we run a build with a valid sstate cache present, the setsceneverify
+function realises it will rerun the do_compile step (due to the
+bundle_initramfs task) and hence marks do_populate_sysroot to rerun.
+do_install, a dependency of do_populate_sysroot is left as marked as
+covered by sstate.
+
+What we need to do is traverse the dependency tree for any setsceneverify
+invalided task and ensure any dependencies are also invalidated. We can
+stop at any point we reach another setscene task though.
+
+This means the do_populate_sysroot task has the data from do_install
+available and doesn't crash.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/data_smart.py |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
-
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index a1cbaba..4ff2717 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -309,6 +309,9 @@ class DataSmart(MutableMapping):
-     def disableTracking(self):
-         self._tracking = False
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index b570ff5..2b484d3 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1230,6 +1230,8 @@ class RunQueueExecuteTasks(RunQueueExecute):
  
-+    def isTracking(self):
-+        return self._tracking
+         self.stampcache = {}
+ 
++        initial_covered = self.rq.scenequeue_covered.copy()
 +
-     def expandWithRefs(self, s, varname):
+         # Mark initial buildable tasks
+         for task in xrange(self.stats.total):
+             self.runq_running.append(0)
+@@ -1283,13 +1285,28 @@ class RunQueueExecuteTasks(RunQueueExecute):
+             except TypeError:
+                 covered_remove = bb.utils.better_eval(call2, locs)
  
-         if not isinstance(s, basestring): # sanity check
--- 
-1.7.1
+-        for task in covered_remove:
++        def removecoveredtask(task):
+             fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[task]]
+             taskname = self.rqdata.runq_task[task] + '_setscene'
+             bb.build.del_stamp(taskname, self.rqdata.dataCache, fn)
+-            logger.debug(1, 'Not skipping task %s due to setsceneverify', task)
+             self.rq.scenequeue_covered.remove(task)
+ 
++        toremove = covered_remove
++        for task in toremove:
++            logger.debug(1, 'Not skipping task %s due to setsceneverify', task)
++        while toremove:
++            covered_remove = []
++            for task in toremove:
++                removecoveredtask(task)
++                for deptask in self.rqdata.runq_depends[task]:
++                    if deptask not in self.rq.scenequeue_covered:
++                        continue
++                    if deptask in toremove or deptask in covered_remove or deptask in initial_covered:
++                        continue
++                    logger.debug(1, 'Task %s depends on task %s so not skipping' % (task, deptask))
++                    covered_remove.append(deptask)
++            toremove = covered_remove
++
+         logger.debug(1, 'Full skip list %s', self.rq.scenequeue_covered)
+ 
+         event.fire(bb.event.StampUpdate(self.rqdata.target_pairs, self.rqdata.dataCache.stamp), self.cfgData)
+
 
 
