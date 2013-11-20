@@ -1,16 +1,20 @@
 Return-Path: <seebs@msp-lpggp2.wrs.com>
 Received: from msp-lpggp2.wrs.com (unknown [206.144.70.9])
-	by mail.openembedded.org (Postfix) with ESMTP id 8EE5B60F50
+	by mail.openembedded.org (Postfix) with ESMTP id 45EE86CF32
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 20 Nov 2013 00:30:18 +0000 (UTC)
+	Wed, 20 Nov 2013 00:30:19 +0000 (UTC)
 Received: by msp-lpggp2.wrs.com (Postfix, from userid 508)
-	id 48F6DA02E72; Tue, 19 Nov 2013 18:31:40 -0600 (CST)
+	id E1443A01F05; Tue, 19 Nov 2013 18:31:40 -0600 (CST)
 From: Peter Seebach <peter.seebach@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 19 Nov 2013 18:31:38 -0600
-Message-Id: <cover.1384907121.git.peter.seebach@windriver.com>
+Date: Tue, 19 Nov 2013 18:31:39 -0600
+Message-Id: <de01254a667f743deae8545423ec7a3220649f80.1384907121.git.peter.seebach@windriver.com>
 X-Mailer: git-send-email 1.7.1
-Subject: [PATCH 0/2] improve recovery when something goes horribly wrong
+In-Reply-To: <cover.1384907121.git.peter.seebach@windriver.com>
+References: <cover.1384907121.git.peter.seebach@windriver.com>
+In-Reply-To: <cover.1384907121.git.peter.seebach@windriver.com>
+References: <cover.1384907121.git.peter.seebach@windriver.com>
+Subject: [PATCH 1/2] build.py: add single-quotes around already-expanded directory name
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -23,37 +27,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 20 Nov 2013 00:30:18 -0000
+X-List-Received-Date: Wed, 20 Nov 2013 00:30:19 -0000
 
-Certain early failures can result in things going wrong in ways that
-prevent "bitbake -e" from running, creating strange or cryptic failures,
-and even when they're not all that cryptic, lack of include tracking
-or variable history tracking can be a significant disadvantage.
+If the computed name of a directory contains an undefined variable
+reference, bitbake dutifully creates a directory with a name that has
+${...} in it. However, the actual task script created then tries to cd
+to that directory, and the cd command fails, because no such directory
+exists -- because the shell has helpfully removed the ${...} which did
+not match any actual variables.
 
-These patches address one of the failure modes, and make it possible for
-an oe-core change to address another.
+Since we want the name to be used exactly-as-is, add single quotes around
+the name so this doesn't cause strange failures running tasks, which
+allows us to progress past such failures and get to a point where they
+can be diagnosed.
 
-The first patch makes run.* scripts work even when the path name generated
-contains unexpanded variable names, by quoting the argument to cd. The
-second provides an isTracking() to DataSmart to allow the sanity checks
-to be normal errors rather than fatal errors when trying to run with
-tracking enabled (which only occurs when you want to dump the results of
-the tracking).
+Signed-off-by: Peter Seebach <peter.seebach@windriver.com>
+---
+ lib/bb/build.py |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-The following changes since commit a66ee0994645aa5658b2f5ea134ed17d89f8751a:
-
-  fetch2: Fix handling of SCM mirrors in MIRRORS (2013-11-19 13:22:10 +0000)
-
-are available in the git repository at:
-  git://git.yoctoproject.org/poky-contrib seebs/warning_helper
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=seebs/warning_helper
-
-Peter Seebach (2):
-  build.py: add single-quotes around already-expanded directory name
-  data_smart.py: Add isTracking() to datasmart
-
- lib/bb/build.py      |    2 +-
- lib/bb/data_smart.py |    3 +++
- 2 files changed, 4 insertions(+), 1 deletions(-)
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index f9aca42..92c45a3 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -288,7 +288,7 @@ set -e
+         if bb.msg.loggerVerboseLogs:
+             script.write("set -x\n")
+         if cwd:
+-            script.write("cd %s\n" % cwd)
++            script.write("cd '%s'\n" % cwd)
+         script.write("%s\n" % func)
+         script.write('''
+ # cleanup
+-- 
+1.7.1
 
 
