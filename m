@@ -1,20 +1,20 @@
 Return-Path: <seebs@msp-lpggp2.wrs.com>
 Received: from msp-lpggp2.wrs.com (unknown [206.144.70.9])
-	by mail.openembedded.org (Postfix) with ESMTP id 45EE86CF32
+	by mail.openembedded.org (Postfix) with ESMTP id 329CD6D4FE
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 20 Nov 2013 00:30:19 +0000 (UTC)
+	Wed, 20 Nov 2013 00:30:20 +0000 (UTC)
 Received: by msp-lpggp2.wrs.com (Postfix, from userid 508)
-	id E1443A01F05; Tue, 19 Nov 2013 18:31:40 -0600 (CST)
+	id E1B9BA02E70; Tue, 19 Nov 2013 18:31:40 -0600 (CST)
 From: Peter Seebach <peter.seebach@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 19 Nov 2013 18:31:39 -0600
-Message-Id: <de01254a667f743deae8545423ec7a3220649f80.1384907121.git.peter.seebach@windriver.com>
+Date: Tue, 19 Nov 2013 18:31:40 -0600
+Message-Id: <a85ab002cac4c7fe0881a8fd73fe6011dbddcff8.1384907121.git.peter.seebach@windriver.com>
 X-Mailer: git-send-email 1.7.1
 In-Reply-To: <cover.1384907121.git.peter.seebach@windriver.com>
 References: <cover.1384907121.git.peter.seebach@windriver.com>
 In-Reply-To: <cover.1384907121.git.peter.seebach@windriver.com>
 References: <cover.1384907121.git.peter.seebach@windriver.com>
-Subject: [PATCH 1/2] build.py: add single-quotes around already-expanded directory name
+Subject: [PATCH 2/2] data_smart.py: Add isTracking() to datasmart
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,38 +27,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 20 Nov 2013 00:30:19 -0000
+X-List-Received-Date: Wed, 20 Nov 2013 00:30:20 -0000
 
-If the computed name of a directory contains an undefined variable
-reference, bitbake dutifully creates a directory with a name that has
-${...} in it. However, the actual task script created then tries to cd
-to that directory, and the cd command fails, because no such directory
-exists -- because the shell has helpfully removed the ${...} which did
-not match any actual variables.
-
-Since we want the name to be used exactly-as-is, add single quotes around
-the name so this doesn't cause strange failures running tasks, which
-allows us to progress past such failures and get to a point where they
-can be diagnosed.
+It would be awesome to have "bitbake -e" work even when sanity failures
+occur. But you can't do that if you can't tell whether tracking is
+enabled. We add a trivial accessor.
 
 Signed-off-by: Peter Seebach <peter.seebach@windriver.com>
 ---
- lib/bb/build.py |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ lib/bb/data_smart.py |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index f9aca42..92c45a3 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -288,7 +288,7 @@ set -e
-         if bb.msg.loggerVerboseLogs:
-             script.write("set -x\n")
-         if cwd:
--            script.write("cd %s\n" % cwd)
-+            script.write("cd '%s'\n" % cwd)
-         script.write("%s\n" % func)
-         script.write('''
- # cleanup
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index a1cbaba..4ff2717 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -309,6 +309,9 @@ class DataSmart(MutableMapping):
+     def disableTracking(self):
+         self._tracking = False
+ 
++    def isTracking(self):
++        return self._tracking
++
+     def expandWithRefs(self, s, varname):
+ 
+         if not isinstance(s, basestring): # sanity check
 -- 
 1.7.1
 
