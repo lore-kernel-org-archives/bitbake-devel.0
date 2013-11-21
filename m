@@ -1,30 +1,20 @@
-Return-Path: <uvbapat@gmail.com>
-Received: from mail-la0-f49.google.com (mail-la0-f49.google.com
-	[209.85.215.49])
-	by mail.openembedded.org (Postfix) with ESMTP id ADBE960B60
+Return-Path: <sgw@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id BC9646DA27
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Nov 2013 15:45:03 +0000 (UTC)
-Received: by mail-la0-f49.google.com with SMTP id er20so8462774lab.8
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Nov 2013 07:45:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:date:message-id:subject:from:to:content-type;
-	bh=u1GSP/Crr/JgSIuI8q67owEBXOpoayZaAlDQDRd1o2A=;
-	b=QEHc84sJZBRXswHcesVYo8fymbIQ6gM7DUPVzm/2OPZOW8VF4NP3YPFZJxxaeRDItB
-	zbAkGnZdNey42lckF5wjsVcDesdCVidwFX15g5kPjVEOSY9CTf9dsl2S7mnI6k2vidpR
-	Nl3vXXfAIb7VYfQaFlbICrQhzRJ2W9X+p4m6E05T7EI64lpCDP1JSnKKur0GzNwVcSeA
-	jPYQq22AC9cYiSsAGrNfHFtgb6XbztUpeZNxfhiYVmnmPS0bFDPv1IGGYHKvrnox/RH3
-	iZfXwhYFEeZQ+YxeS7Xhhk4ZqC3EZZbqx2kRbF1HHP2bqCOPfewLcCc3/yb5wcXQCtWv
-	QJGQ==
-MIME-Version: 1.0
-X-Received: by 10.152.88.46 with SMTP id bd14mr105189lab.59.1385048702322;
-	Thu, 21 Nov 2013 07:45:02 -0800 (PST)
-Received: by 10.112.35.129 with HTTP; Thu, 21 Nov 2013 07:45:02 -0800 (PST)
-Date: Thu, 21 Nov 2013 10:45:02 -0500
-Message-ID: <CAJ7NSKpQnuc9gco8UnrMxoJ7=5TQbCtu9bkzhobxnuB6WzM3jg@mail.gmail.com>
-From: Udayan Bapat <uvbapat@gmail.com>
+	Thu, 21 Nov 2013 17:50:42 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga101.jf.intel.com with ESMTP; 21 Nov 2013 09:50:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.93,746,1378882800"; d="scan'208";a="431629542"
+Received: from unknown (HELO swold-linux.bigsur.com) ([10.255.15.149])
+	by fmsmga001.fm.intel.com with ESMTP; 21 Nov 2013 09:50:41 -0800
+From: Saul Wold <sgw@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: Doing 'oerunmake configure' verses just 'configure'
+Date: Thu, 21 Nov 2013 09:50:41 -0800
+Message-Id: <1385056241-19978-1-git-send-email-sgw@linux.intel.com>
+X-Mailer: git-send-email 1.8.3.1
+Subject: [PATCH] cooker: add support for using % as a wildcard in bbappend filename
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,95 +27,77 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Nov 2013 15:45:04 -0000
-Content-Type: multipart/alternative; boundary=001a11c351b6e60a9304ebb1c7e8
+X-List-Received-Date: Thu, 21 Nov 2013 17:50:43 -0000
 
---001a11c351b6e60a9304ebb1c7e8
-Content-Type: text/plain; charset=ISO-8859-1
+There has been a continuing call for supporting wildcard in bbappend
+filenames. The wildcard is actually allow matching of the name and
+version up to the point of encountering the %.  This approach will
+allow for matching of the major or major.minor.
 
-Hi all
+Exampes:
 
-I am trying to build a custom recipe that heavily relies on autotools. Due
-to some hierarchy (one package building other), I am not able to call
-'oe_runmake configure' and 'oe_runmake make' directly from the .bb file.
-Instead I manually cd into that directory and then issue ./configure
-followed by 'make'
+busybox_1.21.1.bb
+busybox_1.21.%.bbappend will match
+busybox_1.2%.bbappend will also match
 
-It seems when I try that it is failing on  -
+if we update to busybox_1.3.0.bb the above won't match, but a busybox_1.%.bb
+will.
 
-|
-/ADT/opensource/poky/build/tmp/sysroots/x86_64-linux/usr/share/automake-1.12/am/
-ltlibrary.am: archiver requires 'AM_PROG_AR' in 'configure.ac'
-|
-| autoreconf: automake failed with exit status: 1
+[YOCTO #5411]
 
-If I try to update configure.ac with -
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+---
+ lib/bb/cooker.py | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-+AC_CONFIG_MACRO_DIR([m4])
-+AM_PROG_AR
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 3295f6c..64f286e 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -706,14 +706,9 @@ class BBCooker:
+         logger.info("Task dependencies saved to 'task-depends.dot'")
+ 
+     def show_appends_with_no_recipes( self ):
+-        recipes = set(os.path.basename(f)
+-                      for f in self.recipecache.pkg_fn.iterkeys())
+-        recipes |= set(os.path.basename(f)
+-                      for f in self.skiplist.iterkeys())
+-        appended_recipes = self.collection.appendlist.iterkeys()
+         appends_without_recipes = [self.collection.appendlist[recipe]
+-                                   for recipe in appended_recipes
+-                                   if recipe not in recipes]
++                                   for recipe in self.collection.appendlist
++                                   if recipe not in self.collection.appliedappendlist]
+         if appends_without_recipes:
+             appendlines = ('  %s' % append
+                            for appends in appends_without_recipes
+@@ -1371,6 +1366,7 @@ class CookerExit(bb.event.Event):
+ class CookerCollectFiles(object):
+     def __init__(self, priorities):
+         self.appendlist = {}
++        self.appliedappendlist = []
+         self.bbfile_config_priorities = priorities
+ 
+     def calc_bbfile_priority( self, filename, matched = None ):
+@@ -1487,10 +1483,14 @@ class CookerCollectFiles(object):
+         """
+         Returns a list of .bbappend files to apply to fn
+         """
++        filelist = []
+         f = os.path.basename(fn)
+-        if f in self.appendlist:
+-            return self.appendlist[f]
+-        return []
++        for bbappend in self.appendlist:
++            if bbappend in f or ('%' in bbappend and bbappend.startswith(f[:bbappend.index('%')])):
++                self.appliedappendlist.append(bbappend)
++                for filename in self.appendlist[bbappend]:
++                    filelist.append(filename)
++        return filelist
+ 
+     def collection_priorities(self, pkgfns):
+ 
+-- 
+1.8.3.1
 
-then I hit this error -
 
- aclocal.m4:86: AC_LIBTOOL_SETUP is expanded from...
-| aclocal.m4:66: _AC_PROG_LIBTOOL is expanded from...
-| aclocal.m4:31: AC_PROG_LIBTOOL is expanded from...
-| configure.ac:25: the top level
-| configure.ac:19: error: possibly undefined macro: AM_PROG_AR
-|       If this token and others are legitimate, please use
-m4_pattern_allow.
-
-Yocto uses automake 1.12.6 so I know it supports AM_PROG_AR
-
-
-
-However, if I separate out the package and build it separately with
-oe_runmake * it works correctly. It seems when I run manually, it is
-skipping some steps (such as running aclocal may be?) so the package runs
-into tool incompatibility issues.
-
-Where can I find the script that runs oerunmake configure? Also what can be
-done to allow manually ./configure and make? Is there any place where I can
-see any guidelines about what care needs to be taken while using manual
-build options?
-
-Thanks
-Udayan
-
---001a11c351b6e60a9304ebb1c7e8
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div><div><div><div><br></div>Hi all<br><br>I am trying to=
- build a custom recipe that heavily relies on autotools. Due to some hierar=
-chy (one package building other), I am not able to call &#39;oe_runmake con=
-figure&#39; and &#39;oe_runmake make&#39; directly from the .bb file. Inste=
-ad I manually cd into that directory and then issue ./configure followed by=
- &#39;make&#39;<br>
-<br></div>It seems when I try that it is failing on=A0 - <br><br>| /ADT/ope=
-nsource/poky/build/tmp/sysroots/x86_64-linux/usr/share/automake-1.12/am/<a =
-href=3D"http://ltlibrary.am">ltlibrary.am</a>: archiver requires &#39;AM_PR=
-OG_AR&#39; in &#39;<a href=3D"http://configure.ac">configure.ac</a>&#39;<br=
->
-| <br>| autoreconf: automake failed with exit status: 1<br><br></div><div>I=
-f I try to update <a href=3D"http://configure.ac">configure.ac</a> with - <=
-br><br>+AC_CONFIG_MACRO_DIR([m4])<br>+AM_PROG_AR<br><br></div><div>then I h=
-it this error -<br>
-<br>=A0aclocal.m4:86: AC_LIBTOOL_SETUP is expanded from...<br>| aclocal.m4:=
-66: _AC_PROG_LIBTOOL is expanded from...<br>| aclocal.m4:31: AC_PROG_LIBTOO=
-L is expanded from...<br>| <a href=3D"http://configure.ac:25">configure.ac:=
-25</a>: the top level<br>
-| <a href=3D"http://configure.ac:19">configure.ac:19</a>: error: possibly u=
-ndefined macro: AM_PROG_AR<br>|=A0=A0=A0=A0=A0=A0 If this token and others =
-are legitimate, please use m4_pattern_allow.<br><br></div><div>Yocto uses a=
-utomake 1.12.6 so I know it supports AM_PROG_AR<br>
-</div><div><br></div><div><br><br></div><div>However, if I separate out the=
- package and build it separately with oe_runmake * it works correctly. It s=
-eems when I run manually, it is skipping some steps (such as running acloca=
-l may be?) so the package runs into tool incompatibility issues.<br>
-</div><br></div>Where can I find the script that runs oerunmake configure? =
-Also what can be done to allow manually ./configure and make? Is there any =
-place where I can see any guidelines about what care needs to be taken whil=
-e using manual build options?<br>
-<br>Thanks<br>Udayan<br></div>
-
---001a11c351b6e60a9304ebb1c7e8--
