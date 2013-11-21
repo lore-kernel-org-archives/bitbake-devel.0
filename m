@@ -1,21 +1,30 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 30464616F9
+Return-Path: <uvbapat@gmail.com>
+Received: from mail-la0-f49.google.com (mail-la0-f49.google.com
+	[209.85.215.49])
+	by mail.openembedded.org (Postfix) with ESMTP id ADBE960B60
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Nov 2013 14:10:04 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga101.jf.intel.com with ESMTP; 21 Nov 2013 06:10:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.93,744,1378882800"; d="scan'208";a="431510149"
-Received: from pmcgurk-mobl.ger.corp.intel.com (HELO
-	helios.ger.corp.intel.com) ([10.252.121.225])
-	by fmsmga001.fm.intel.com with ESMTP; 21 Nov 2013 06:10:01 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+	Thu, 21 Nov 2013 15:45:03 +0000 (UTC)
+Received: by mail-la0-f49.google.com with SMTP id er20so8462774lab.8
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 21 Nov 2013 07:45:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:date:message-id:subject:from:to:content-type;
+	bh=u1GSP/Crr/JgSIuI8q67owEBXOpoayZaAlDQDRd1o2A=;
+	b=QEHc84sJZBRXswHcesVYo8fymbIQ6gM7DUPVzm/2OPZOW8VF4NP3YPFZJxxaeRDItB
+	zbAkGnZdNey42lckF5wjsVcDesdCVidwFX15g5kPjVEOSY9CTf9dsl2S7mnI6k2vidpR
+	Nl3vXXfAIb7VYfQaFlbICrQhzRJ2W9X+p4m6E05T7EI64lpCDP1JSnKKur0GzNwVcSeA
+	jPYQq22AC9cYiSsAGrNfHFtgb6XbztUpeZNxfhiYVmnmPS0bFDPv1IGGYHKvrnox/RH3
+	iZfXwhYFEeZQ+YxeS7Xhhk4ZqC3EZZbqx2kRbF1HHP2bqCOPfewLcCc3/yb5wcXQCtWv
+	QJGQ==
+MIME-Version: 1.0
+X-Received: by 10.152.88.46 with SMTP id bd14mr105189lab.59.1385048702322;
+	Thu, 21 Nov 2013 07:45:02 -0800 (PST)
+Received: by 10.112.35.129 with HTTP; Thu, 21 Nov 2013 07:45:02 -0800 (PST)
+Date: Thu, 21 Nov 2013 10:45:02 -0500
+Message-ID: <CAJ7NSKpQnuc9gco8UnrMxoJ7=5TQbCtu9bkzhobxnuB6WzM3jg@mail.gmail.com>
+From: Udayan Bapat <uvbapat@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 21 Nov 2013 14:09:46 +0000
-Message-Id: <1385042986-11444-1-git-send-email-paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.8.1.2
-Subject: [PATCH] bitbake-layers: avoid loading configuration when not needed
+Subject: Doing 'oerunmake configure' verses just 'configure'
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,99 +37,95 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Nov 2013 14:10:04 -0000
+X-List-Received-Date: Thu, 21 Nov 2013 15:45:04 -0000
+Content-Type: multipart/alternative; boundary=001a11c351b6e60a9304ebb1c7e8
 
-In recent versions of bitbake, it is not possible to initialise a
-BBCooker object without having it load the configuration first. Thus we
-should avoid creating the Tinfoil object here in bitbake-layers which
-does that internally until we actually need to, so you can run
-"bitbake-layers help" and not have to wait several seconds for the
-output.
+--001a11c351b6e60a9304ebb1c7e8
+Content-Type: text/plain; charset=ISO-8859-1
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- bin/bitbake-layers | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+Hi all
 
-diff --git a/bin/bitbake-layers b/bin/bitbake-layers
-index 047583c..2a7f829 100755
---- a/bin/bitbake-layers
-+++ b/bin/bitbake-layers
-@@ -55,10 +55,16 @@ def main(args):
- 
- class Commands(cmd.Cmd):
-     def __init__(self):
--        cmd.Cmd.__init__(self)
--        self.bbhandler = bb.tinfoil.Tinfoil()
-+        self.bbhandler = None
-         self.returncode = 0
--        self.bblayers = (self.bbhandler.config_data.getVar('BBLAYERS', True) or "").split()
-+        self.bblayers = []
-+        cmd.Cmd.__init__(self)
-+
-+    def init_bbhandler(self, config_only = False):
-+        if not self.bbhandler:
-+            self.bbhandler = bb.tinfoil.Tinfoil()
-+            self.bblayers = (self.bbhandler.config_data.getVar('BBLAYERS', True) or "").split()
-+            self.bbhandler.prepare(config_only)
- 
-     def default(self, line):
-         """Handle unrecognised commands"""
-@@ -83,7 +89,7 @@ class Commands(cmd.Cmd):
- 
-     def do_show_layers(self, args):
-         """show current configured layers"""
--        self.bbhandler.prepare(config_only = True)
-+        self.init_bbhandler(config_only = True)
-         logger.plain("%s  %s  %s" % ("layer".ljust(20), "path".ljust(40), "priority"))
-         logger.plain('=' * 74)
-         for layerdir in self.bblayers:
-@@ -120,7 +126,7 @@ Options:
-        recipes with the ones they overlay indented underneath
-   -s   only list overlayed recipes where the version is the same
- """
--        self.bbhandler.prepare()
-+        self.init_bbhandler()
- 
-         show_filenames = False
-         show_same_ver_only = False
-@@ -203,7 +209,7 @@ Options:
-   -m   only list where multiple recipes (in the same layer or different
-        layers) exist for the same recipe name
- """
--        self.bbhandler.prepare()
-+        self.init_bbhandler()
- 
-         show_filenames = False
-         show_multi_provider_only = False
-@@ -341,7 +347,7 @@ build results (as the layer priority order has effectively changed).
-             logger.error('Directory %s exists and is non-empty, please clear it out first' % outputdir)
-             return
- 
--        self.bbhandler.prepare()
-+        self.init_bbhandler()
-         layers = self.bblayers
-         if len(arglist) > 2:
-             layernames = arglist[:-1]
-@@ -497,7 +503,7 @@ usage: show-appends
- 
- Recipes are listed with the bbappends that apply to them as subitems.
- """
--        self.bbhandler.prepare()
-+        self.init_bbhandler()
-         if not self.bbhandler.cooker.collection.appendlist:
-             logger.plain('No append files found')
-             return
-@@ -570,7 +576,7 @@ Options:
- NOTE:
- The .bbappend file can impact the dependency.
- """
--        self.bbhandler.prepare()
-+        self.init_bbhandler()
- 
-         show_filenames = False
-         for arg in args.split():
--- 
-1.8.1.2
+I am trying to build a custom recipe that heavily relies on autotools. Due
+to some hierarchy (one package building other), I am not able to call
+'oe_runmake configure' and 'oe_runmake make' directly from the .bb file.
+Instead I manually cd into that directory and then issue ./configure
+followed by 'make'
+
+It seems when I try that it is failing on  -
+
+|
+/ADT/opensource/poky/build/tmp/sysroots/x86_64-linux/usr/share/automake-1.12/am/
+ltlibrary.am: archiver requires 'AM_PROG_AR' in 'configure.ac'
+|
+| autoreconf: automake failed with exit status: 1
+
+If I try to update configure.ac with -
+
++AC_CONFIG_MACRO_DIR([m4])
++AM_PROG_AR
+
+then I hit this error -
+
+ aclocal.m4:86: AC_LIBTOOL_SETUP is expanded from...
+| aclocal.m4:66: _AC_PROG_LIBTOOL is expanded from...
+| aclocal.m4:31: AC_PROG_LIBTOOL is expanded from...
+| configure.ac:25: the top level
+| configure.ac:19: error: possibly undefined macro: AM_PROG_AR
+|       If this token and others are legitimate, please use
+m4_pattern_allow.
+
+Yocto uses automake 1.12.6 so I know it supports AM_PROG_AR
 
 
+
+However, if I separate out the package and build it separately with
+oe_runmake * it works correctly. It seems when I run manually, it is
+skipping some steps (such as running aclocal may be?) so the package runs
+into tool incompatibility issues.
+
+Where can I find the script that runs oerunmake configure? Also what can be
+done to allow manually ./configure and make? Is there any place where I can
+see any guidelines about what care needs to be taken while using manual
+build options?
+
+Thanks
+Udayan
+
+--001a11c351b6e60a9304ebb1c7e8
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div><div><div><div><br></div>Hi all<br><br>I am trying to=
+ build a custom recipe that heavily relies on autotools. Due to some hierar=
+chy (one package building other), I am not able to call &#39;oe_runmake con=
+figure&#39; and &#39;oe_runmake make&#39; directly from the .bb file. Inste=
+ad I manually cd into that directory and then issue ./configure followed by=
+ &#39;make&#39;<br>
+<br></div>It seems when I try that it is failing on=A0 - <br><br>| /ADT/ope=
+nsource/poky/build/tmp/sysroots/x86_64-linux/usr/share/automake-1.12/am/<a =
+href=3D"http://ltlibrary.am">ltlibrary.am</a>: archiver requires &#39;AM_PR=
+OG_AR&#39; in &#39;<a href=3D"http://configure.ac">configure.ac</a>&#39;<br=
+>
+| <br>| autoreconf: automake failed with exit status: 1<br><br></div><div>I=
+f I try to update <a href=3D"http://configure.ac">configure.ac</a> with - <=
+br><br>+AC_CONFIG_MACRO_DIR([m4])<br>+AM_PROG_AR<br><br></div><div>then I h=
+it this error -<br>
+<br>=A0aclocal.m4:86: AC_LIBTOOL_SETUP is expanded from...<br>| aclocal.m4:=
+66: _AC_PROG_LIBTOOL is expanded from...<br>| aclocal.m4:31: AC_PROG_LIBTOO=
+L is expanded from...<br>| <a href=3D"http://configure.ac:25">configure.ac:=
+25</a>: the top level<br>
+| <a href=3D"http://configure.ac:19">configure.ac:19</a>: error: possibly u=
+ndefined macro: AM_PROG_AR<br>|=A0=A0=A0=A0=A0=A0 If this token and others =
+are legitimate, please use m4_pattern_allow.<br><br></div><div>Yocto uses a=
+utomake 1.12.6 so I know it supports AM_PROG_AR<br>
+</div><div><br></div><div><br><br></div><div>However, if I separate out the=
+ package and build it separately with oe_runmake * it works correctly. It s=
+eems when I run manually, it is skipping some steps (such as running acloca=
+l may be?) so the package runs into tool incompatibility issues.<br>
+</div><br></div>Where can I find the script that runs oerunmake configure? =
+Also what can be done to allow manually ./configure and make? Is there any =
+place where I can see any guidelines about what care needs to be taken whil=
+e using manual build options?<br>
+<br>Thanks<br>Udayan<br></div>
+
+--001a11c351b6e60a9304ebb1c7e8--
