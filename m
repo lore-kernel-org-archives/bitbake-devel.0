@@ -1,24 +1,21 @@
-Return-Path: <valentin.popa@intel.com>
+Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id DE2F96B1A9
+	by mail.openembedded.org (Postfix) with ESMTP id 30464616F9
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Nov 2013 11:54:22 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 21 Nov 2013 03:54:22 -0800
+	Thu, 21 Nov 2013 14:10:04 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga101.jf.intel.com with ESMTP; 21 Nov 2013 06:10:03 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.93,743,1378882800"; d="scan'208";a="412351549"
-Received: from vpopa-desktop.rb.intel.com ([10.237.105.58])
-	by orsmga001.jf.intel.com with ESMTP; 21 Nov 2013 03:54:21 -0800
-From: Valentin Popa <valentin.popa@intel.com>
+X-IronPort-AV: E=Sophos;i="4.93,744,1378882800"; d="scan'208";a="431510149"
+Received: from pmcgurk-mobl.ger.corp.intel.com (HELO
+	helios.ger.corp.intel.com) ([10.252.121.225])
+	by fmsmga001.fm.intel.com with ESMTP; 21 Nov 2013 06:10:01 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 21 Nov 2013 13:55:13 +0200
-Message-Id: <3766a4d9a15a56261fe139a9b332f9afbae966f0.1385034591.git.valentin.popa@intel.com>
-X-Mailer: git-send-email 1.8.3.2
-In-Reply-To: <cover.1385034591.git.valentin.popa@intel.com>
-References: <cover.1385034591.git.valentin.popa@intel.com>
-In-Reply-To: <cover.1385034591.git.valentin.popa@intel.com>
-References: <cover.1385034591.git.valentin.popa@intel.com>
-Subject: [PATCH 1/1] HOB: Show warnings in Issues tab
+Date: Thu, 21 Nov 2013 14:09:46 +0000
+Message-Id: <1385042986-11444-1-git-send-email-paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.8.1.2
+Subject: [PATCH] bitbake-layers: avoid loading configuration when not needed
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,93 +28,99 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Nov 2013 11:54:23 -0000
+X-List-Received-Date: Thu, 21 Nov 2013 14:10:04 -0000
 
-Proper update of warnings view during build.
+In recent versions of bitbake, it is not possible to initialise a
+BBCooker object without having it load the configuration first. Thus we
+should avoid creating the Tinfoil object here in bitbake-layers which
+does that internally until we actually need to, so you can run
+"bitbake-layers help" and not have to wait several seconds for the
+output.
 
-[YOCTO #3496]
-
-Signed-off-by: Valentin Popa <valentin.popa@intel.com>
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/runningbuild.py | 48 ++++++++++++++++++++++----------
- 1 file changed, 33 insertions(+), 15 deletions(-)
+ bin/bitbake-layers | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/runningbuild.py b/bitbake/lib/bb/ui/crumbs/runningbuild.py
-index abd3300..0a48a6b 100644
---- a/bitbake/lib/bb/ui/crumbs/runningbuild.py
-+++ b/bitbake/lib/bb/ui/crumbs/runningbuild.py
-@@ -174,6 +174,15 @@ class RunningBuild (gobject.GObject):
-                       color,
-                       0))
+diff --git a/bin/bitbake-layers b/bin/bitbake-layers
+index 047583c..2a7f829 100755
+--- a/bin/bitbake-layers
++++ b/bin/bitbake-layers
+@@ -55,10 +55,16 @@ def main(args):
  
-+            # if there are warnings, mark the task with warning
-+            # color;
-+            # in case there are errors, the updates will be
-+            #  handled on TaskFailed.
-+            if color == HobColors.WARNING:
-+                self.model.set(parent, self.model.COL_COLOR, color)
-+                if task: #then we have a parent, and update it's color
-+                    self.model.set(self.tasks_to_iter[(package, None)], self.model.COL_COLOR, color)
+ class Commands(cmd.Cmd):
+     def __init__(self):
+-        cmd.Cmd.__init__(self)
+-        self.bbhandler = bb.tinfoil.Tinfoil()
++        self.bbhandler = None
+         self.returncode = 0
+-        self.bblayers = (self.bbhandler.config_data.getVar('BBLAYERS', True) or "").split()
++        self.bblayers = []
++        cmd.Cmd.__init__(self)
 +
-         elif isinstance(event, bb.build.TaskStarted):
-             (package, task) = (event._package, event._task)
++    def init_bbhandler(self, config_only = False):
++        if not self.bbhandler:
++            self.bbhandler = bb.tinfoil.Tinfoil()
++            self.bblayers = (self.bbhandler.config_data.getVar('BBLAYERS', True) or "").split()
++            self.bbhandler.prepare(config_only)
  
-@@ -201,9 +210,10 @@ class RunningBuild (gobject.GObject):
+     def default(self, line):
+         """Handle unrecognised commands"""
+@@ -83,7 +89,7 @@ class Commands(cmd.Cmd):
  
-             # Because this parent package now has an active child mark it as
-             # such.
--            # @todo if parent is already in error, don't mark it green
--            self.model.set(parent, self.model.COL_ICON, "gtk-execute",
--                           self.model.COL_COLOR, HobColors.RUNNING)
-+            self.model.set(parent, self.model.COL_ICON, "gtk-execute")
-+            parent_color = self.model.get(parent, self.model.COL_COLOR)[0]
-+            if parent_color != HobColors.ERROR and parent_color != HobColors.WARNING:
-+                self.model.set(parent, self.model.COL_COLOR, HobColors.RUNNING)
+     def do_show_layers(self, args):
+         """show current configured layers"""
+-        self.bbhandler.prepare(config_only = True)
++        self.init_bbhandler(config_only = True)
+         logger.plain("%s  %s  %s" % ("layer".ljust(20), "path".ljust(40), "priority"))
+         logger.plain('=' * 74)
+         for layerdir in self.bblayers:
+@@ -120,7 +126,7 @@ Options:
+        recipes with the ones they overlay indented underneath
+   -s   only list overlayed recipes where the version is the same
+ """
+-        self.bbhandler.prepare()
++        self.init_bbhandler()
  
-             # Add an entry in the model for this task
-             i = self.model.append (parent, (None,
-@@ -246,20 +256,28 @@ class RunningBuild (gobject.GObject):
-                     self.model.set(i, self.model.COL_ICON, icon,
-                                    self.model.COL_COLOR, color)
-             else:
--                icon = None
--                color = HobColors.OK
-+                # Mark the parent package and the task as inactive,
-+                # but make sure to preserve error, warnings and active
-+                # states
-+                parent_color = self.model.get(parent, self.model.COL_COLOR)[0]
-+                task_color = self.model.get(current, self.model.COL_COLOR)[0]
+         show_filenames = False
+         show_same_ver_only = False
+@@ -203,7 +209,7 @@ Options:
+   -m   only list where multiple recipes (in the same layer or different
+        layers) exist for the same recipe name
+ """
+-        self.bbhandler.prepare()
++        self.init_bbhandler()
  
-                 # Mark the task as inactive
--                self.model.set(current, self.model.COL_ICON, icon,
--                               self.model.COL_COLOR, color)
--
--                # Mark the parent package as inactive, but make sure to
--                # preserve error and active states
--                i = self.tasks_to_iter[(package, None)]
--                if self.model.get(parent, self.model.COL_ICON) != 'dialog-error':
--                    self.model.set(parent, self.model.COL_ICON, icon)
--                    if num_active == 0:
--                        self.model.set(parent, self.model.COL_COLOR, HobColors.OK)
-+                self.model.set(current, self.model.COL_ICON, None)
-+                if task_color != HobColors.ERROR:
-+                    if task_color == HobColors.WARNING:
-+                        self.model.set(current, self.model.COL_ICON, 'dialog-warning')
-+                    else:
-+                        self.model.set(current, self.model.COL_COLOR, HobColors.OK)
-+
-+                # Mark the parent as inactive
-+                if parent_color != HobColors.ERROR:
-+                    if parent_color == HobColors.WARNING:
-+                        self.model.set(parent, self.model.COL_ICON, "dialog-warning")
-+                    else:
-+                        self.model.set(parent, self.model.COL_ICON, None)
-+                        if num_active == 0:
-+                            self.model.set(parent, self.model.COL_COLOR, HobColors.OK)
+         show_filenames = False
+         show_multi_provider_only = False
+@@ -341,7 +347,7 @@ build results (as the layer priority order has effectively changed).
+             logger.error('Directory %s exists and is non-empty, please clear it out first' % outputdir)
+             return
  
-             # Clear the iters and the pids since when the task goes away the
-             # pid will no longer be used for messages
+-        self.bbhandler.prepare()
++        self.init_bbhandler()
+         layers = self.bblayers
+         if len(arglist) > 2:
+             layernames = arglist[:-1]
+@@ -497,7 +503,7 @@ usage: show-appends
+ 
+ Recipes are listed with the bbappends that apply to them as subitems.
+ """
+-        self.bbhandler.prepare()
++        self.init_bbhandler()
+         if not self.bbhandler.cooker.collection.appendlist:
+             logger.plain('No append files found')
+             return
+@@ -570,7 +576,7 @@ Options:
+ NOTE:
+ The .bbappend file can impact the dependency.
+ """
+-        self.bbhandler.prepare()
++        self.init_bbhandler()
+ 
+         show_filenames = False
+         for arg in args.split():
 -- 
-1.8.3.2
+1.8.1.2
 
 
