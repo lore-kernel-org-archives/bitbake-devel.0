@@ -1,20 +1,37 @@
-Return-Path: <sgw@linux.intel.com>
+Return-Path: <cristiana.voicu@intel.com>
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id BC9646DA27
+	by mail.openembedded.org (Postfix) with ESMTP id D24D66C73C
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 21 Nov 2013 17:50:42 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga101.jf.intel.com with ESMTP; 21 Nov 2013 09:50:42 -0800
+	Fri, 22 Nov 2013 09:32:03 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 22 Nov 2013 01:32:03 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.93,746,1378882800"; d="scan'208";a="431629542"
-Received: from unknown (HELO swold-linux.bigsur.com) ([10.255.15.149])
-	by fmsmga001.fm.intel.com with ESMTP; 21 Nov 2013 09:50:41 -0800
-From: Saul Wold <sgw@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 21 Nov 2013 09:50:41 -0800
-Message-Id: <1385056241-19978-1-git-send-email-sgw@linux.intel.com>
-X-Mailer: git-send-email 1.8.3.1
-Subject: [PATCH] cooker: add support for using % as a wildcard in bbappend filename
+X-IronPort-AV: E=Sophos;i="4.93,751,1378882800"; d="scan'208";a="412937841"
+Received: from irsmsx103.ger.corp.intel.com ([163.33.3.157])
+	by orsmga001.jf.intel.com with ESMTP; 22 Nov 2013 01:32:02 -0800
+Received: from irsmsx152.ger.corp.intel.com (163.33.192.66) by
+	IRSMSX103.ger.corp.intel.com (163.33.3.157) with Microsoft SMTP Server
+	(TLS) id 14.3.123.3; Fri, 22 Nov 2013 09:32:01 +0000
+Received: from irsmsx105.ger.corp.intel.com ([169.254.7.215]) by
+	IRSMSX152.ger.corp.intel.com ([169.254.6.169]) with mapi id
+	14.03.0123.003; Fri, 22 Nov 2013 09:32:00 +0000
+From: "Voicu, Cristiana" <cristiana.voicu@intel.com>
+To: "Popa, Valentin" <valentin.popa@intel.com>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] [PATCH 1/1] HOB: Show warnings in Issues tab
+Thread-Index: AQHO5rByKf6FDlQRXkGALtRTNvpMxJow/fFQ
+Date: Fri, 22 Nov 2013 09:32:01 +0000
+Message-ID: <BE68E9C8E0850C43B0F0B0B7D57FA5AE2E8B4697@IRSMSX105.ger.corp.intel.com>
+References: <cover.1385034591.git.valentin.popa@intel.com>
+	<3766a4d9a15a56261fe139a9b332f9afbae966f0.1385034591.git.valentin.popa@intel.com>
+In-Reply-To: <3766a4d9a15a56261fe139a9b332f9afbae966f0.1385034591.git.valentin.popa@intel.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [163.33.239.180]
+MIME-Version: 1.0
+Subject: Re: [PATCH 1/1] HOB: Show warnings in Issues tab
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,77 +44,126 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 21 Nov 2013 17:50:43 -0000
+X-List-Received-Date: Fri, 22 Nov 2013 09:32:03 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-There has been a continuing call for supporting wildcard in bbappend
-filenames. The wildcard is actually allow matching of the name and
-version up to the point of encountering the %.  This approach will
-allow for matching of the major or major.minor.
+Looks good to me.
+Cristiana
 
-Exampes:
+-----Original Message-----
+From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-devel-bo=
+unces@lists.openembedded.org] On Behalf Of Valentin Popa
+Sent: Thursday, November 21, 2013 1:55 PM
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake-devel] [PATCH 1/1] HOB: Show warnings in Issues tab
 
-busybox_1.21.1.bb
-busybox_1.21.%.bbappend will match
-busybox_1.2%.bbappend will also match
+Proper update of warnings view during build.
 
-if we update to busybox_1.3.0.bb the above won't match, but a busybox_1.%.bb
-will.
+[YOCTO #3496]
 
-[YOCTO #5411]
-
-Signed-off-by: Saul Wold <sgw@linux.intel.com>
+Signed-off-by: Valentin Popa <valentin.popa@intel.com>
 ---
- lib/bb/cooker.py | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ bitbake/lib/bb/ui/crumbs/runningbuild.py | 48 ++++++++++++++++++++++------=
+----
+ 1 file changed, 33 insertions(+), 15 deletions(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 3295f6c..64f286e 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -706,14 +706,9 @@ class BBCooker:
-         logger.info("Task dependencies saved to 'task-depends.dot'")
- 
-     def show_appends_with_no_recipes( self ):
--        recipes = set(os.path.basename(f)
--                      for f in self.recipecache.pkg_fn.iterkeys())
--        recipes |= set(os.path.basename(f)
--                      for f in self.skiplist.iterkeys())
--        appended_recipes = self.collection.appendlist.iterkeys()
-         appends_without_recipes = [self.collection.appendlist[recipe]
--                                   for recipe in appended_recipes
--                                   if recipe not in recipes]
-+                                   for recipe in self.collection.appendlist
-+                                   if recipe not in self.collection.appliedappendlist]
-         if appends_without_recipes:
-             appendlines = ('  %s' % append
-                            for appends in appends_without_recipes
-@@ -1371,6 +1366,7 @@ class CookerExit(bb.event.Event):
- class CookerCollectFiles(object):
-     def __init__(self, priorities):
-         self.appendlist = {}
-+        self.appliedappendlist = []
-         self.bbfile_config_priorities = priorities
- 
-     def calc_bbfile_priority( self, filename, matched = None ):
-@@ -1487,10 +1483,14 @@ class CookerCollectFiles(object):
-         """
-         Returns a list of .bbappend files to apply to fn
-         """
-+        filelist = []
-         f = os.path.basename(fn)
--        if f in self.appendlist:
--            return self.appendlist[f]
--        return []
-+        for bbappend in self.appendlist:
-+            if bbappend in f or ('%' in bbappend and bbappend.startswith(f[:bbappend.index('%')])):
-+                self.appliedappendlist.append(bbappend)
-+                for filename in self.appendlist[bbappend]:
-+                    filelist.append(filename)
-+        return filelist
- 
-     def collection_priorities(self, pkgfns):
- 
--- 
-1.8.3.1
+diff --git a/bitbake/lib/bb/ui/crumbs/runningbuild.py b/bitbake/lib/bb/ui/c=
+rumbs/runningbuild.py
+index abd3300..0a48a6b 100644
+--- a/bitbake/lib/bb/ui/crumbs/runningbuild.py
++++ b/bitbake/lib/bb/ui/crumbs/runningbuild.py
+@@ -174,6 +174,15 @@ class RunningBuild (gobject.GObject):
+                       color,
+                       0))
+=20
++            # if there are warnings, mark the task with warning
++            # color;
++            # in case there are errors, the updates will be
++            #  handled on TaskFailed.
++            if color =3D=3D HobColors.WARNING:
++                self.model.set(parent, self.model.COL_COLOR, color)
++                if task: #then we have a parent, and update it's color
++                    self.model.set(self.tasks_to_iter[(package, None)],=20
++ self.model.COL_COLOR, color)
++
+         elif isinstance(event, bb.build.TaskStarted):
+             (package, task) =3D (event._package, event._task)
+=20
+@@ -201,9 +210,10 @@ class RunningBuild (gobject.GObject):
+=20
+             # Because this parent package now has an active child mark it =
+as
+             # such.
+-            # @todo if parent is already in error, don't mark it green
+-            self.model.set(parent, self.model.COL_ICON, "gtk-execute",
+-                           self.model.COL_COLOR, HobColors.RUNNING)
++            self.model.set(parent, self.model.COL_ICON, "gtk-execute")
++            parent_color =3D self.model.get(parent, self.model.COL_COLOR)[=
+0]
++            if parent_color !=3D HobColors.ERROR and parent_color !=3D Hob=
+Colors.WARNING:
++                self.model.set(parent, self.model.COL_COLOR,=20
++ HobColors.RUNNING)
+=20
+             # Add an entry in the model for this task
+             i =3D self.model.append (parent, (None, @@ -246,20 +256,28 @@ =
+class RunningBuild (gobject.GObject):
+                     self.model.set(i, self.model.COL_ICON, icon,
+                                    self.model.COL_COLOR, color)
+             else:
+-                icon =3D None
+-                color =3D HobColors.OK
++                # Mark the parent package and the task as inactive,
++                # but make sure to preserve error, warnings and active
++                # states
++                parent_color =3D self.model.get(parent, self.model.COL_COL=
+OR)[0]
++                task_color =3D self.model.get(current,=20
++ self.model.COL_COLOR)[0]
+=20
+                 # Mark the task as inactive
+-                self.model.set(current, self.model.COL_ICON, icon,
+-                               self.model.COL_COLOR, color)
+-
+-                # Mark the parent package as inactive, but make sure to
+-                # preserve error and active states
+-                i =3D self.tasks_to_iter[(package, None)]
+-                if self.model.get(parent, self.model.COL_ICON) !=3D 'dialo=
+g-error':
+-                    self.model.set(parent, self.model.COL_ICON, icon)
+-                    if num_active =3D=3D 0:
+-                        self.model.set(parent, self.model.COL_COLOR, HobCo=
+lors.OK)
++                self.model.set(current, self.model.COL_ICON, None)
++                if task_color !=3D HobColors.ERROR:
++                    if task_color =3D=3D HobColors.WARNING:
++                        self.model.set(current, self.model.COL_ICON, 'dial=
+og-warning')
++                    else:
++                        self.model.set(current, self.model.COL_COLOR,=20
++ HobColors.OK)
++
++                # Mark the parent as inactive
++                if parent_color !=3D HobColors.ERROR:
++                    if parent_color =3D=3D HobColors.WARNING:
++                        self.model.set(parent, self.model.COL_ICON, "dialo=
+g-warning")
++                    else:
++                        self.model.set(parent, self.model.COL_ICON, None)
++                        if num_active =3D=3D 0:
++                            self.model.set(parent,=20
++ self.model.COL_COLOR, HobColors.OK)
+=20
+             # Clear the iters and the pids since when the task goes away t=
+he
+             # pid will no longer be used for messages
+--
+1.8.3.2
 
+_______________________________________________
+bitbake-devel mailing list
+bitbake-devel@lists.openembedded.org
+http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
