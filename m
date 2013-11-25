@@ -1,30 +1,47 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id AB0ED6B7F3
+Return-Path: <peter.kjellerstedt@axis.com>
+Received: from ra.se.axis.com (ra.se.axis.com [195.60.68.13])
+	by mail.openembedded.org (Postfix) with ESMTP id C38696DB86
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 22 Nov 2013 16:17:54 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	rAMGHmrd024338 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 22 Nov 2013 16:17:48 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 6Prgz5Wdhuu0 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 22 Nov 2013 16:17:48 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	rAMGHhJb024332
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
-	Fri, 22 Nov 2013 16:17:44 GMT
-Message-ID: <1385137059.16887.179.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Fri, 22 Nov 2013 16:17:39 +0000
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] data: Fix output inconsistencies for emit_var
+	Mon, 25 Nov 2013 11:41:18 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by ra.se.axis.com (Postfix) with ESMTP id 2243B3C26D1
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 25 Nov 2013 12:41:18 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at ra.se.axis.com
+Received: from ra.se.axis.com ([127.0.0.1])
+	by localhost (ra.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id OfD+RQqnNz3q for <bitbake-devel@lists.openembedded.org>;
+	Mon, 25 Nov 2013 12:41:18 +0100 (CET)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by ra.se.axis.com (Postfix) with ESMTP id D6E263C26C6
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 25 Nov 2013 12:41:17 +0100 (CET)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id C0FA8AFA
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 25 Nov 2013 12:41:17 +0100 (CET)
+Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
+	by boulder.se.axis.com (Postfix) with ESMTP id B5E989E5
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 25 Nov 2013 12:41:17 +0100 (CET)
+Received: from saur-2.se.axis.com (saur-2.se.axis.com [10.92.3.2])
+	by thoth.se.axis.com (Postfix) with ESMTP id B1CED3404E
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 25 Nov 2013 12:41:17 +0100 (CET)
+Received: from saur-2.se.axis.com (localhost [127.0.0.1])
+	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id rAPBfHCM019884
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 25 Nov 2013 12:41:17 +0100
+Received: (from pkj@localhost)
+	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id rAPBfHpK019883
+	for bitbake-devel@lists.openembedded.org;
+	Mon, 25 Nov 2013 12:41:17 +0100
+From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 25 Nov 2013 12:41:16 +0100
+Message-Id: <1385379676-19838-1-git-send-email-pkj@axis.com>
+X-Mailer: git-send-email 1.8.4
+Subject: [PATCH] fetch2: Correct a few calls to latest_revision()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,46 +54,59 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 22 Nov 2013 16:17:56 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 25 Nov 2013 11:41:19 -0000
 
-VAL = ""     (not shown)
-VAL = " "    (shown as "")
-VAL = " x"   (shown as "x")
+In 6a48474de9505a3700863f31839a7c53c5e18a8d the url parameter to a
+number of functions was removed. However, not all calls to
+latest_revision() were fixed...
 
-would all show up rather differently to what would be expected in the
-bitbake -e output. This fixes things so they appear consistently.
-
-The output for running some shell functions may also change slightly
-but shouldn't change in a way that is likely to cause problems.
-
-[YOCTO #5507]
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 ---
-diff --git a/bitbake/lib/bb/data.py b/bitbake/lib/bb/data.py
-index 349fcfe..bdd1e79 100644
---- a/bitbake/lib/bb/data.py
-+++ b/bitbake/lib/bb/data.py
-@@ -214,7 +214,7 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
-         o.write('unset %s\n' % varExpanded)
-         return 0
- 
--    if not val:
-+    if val is None:
-         return 0
- 
-     val = str(val)
-@@ -229,7 +229,7 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
- 
-     # if we're going to output this within doublequotes,
-     # to a shell, we need to escape the quotes in the var
--    alter = re.sub('"', '\\"', val.strip())
-+    alter = re.sub('"', '\\"', val)
-     alter = re.sub('\n', ' \\\n', alter)
-     o.write('%s="%s"\n' % (varExpanded, alter))
-     return 0
+ lib/bb/fetch2/bzr.py | 2 +-
+ lib/bb/fetch2/git.py | 2 +-
+ lib/bb/fetch2/hg.py  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/lib/bb/fetch2/bzr.py b/lib/bb/fetch2/bzr.py
+index 3caaa6f..03e9ac4 100644
+--- a/lib/bb/fetch2/bzr.py
++++ b/lib/bb/fetch2/bzr.py
+@@ -48,7 +48,7 @@ class Bzr(FetchMethod):
+         ud.setup_revisons(d)
+ 
+         if not ud.revision:
+-            ud.revision = self.latest_revision(ud.url, ud, d)
++            ud.revision = self.latest_revision(ud, d)
+ 
+         ud.localfile = data.expand('bzr_%s_%s_%s.tar.gz' % (ud.host, ud.path.replace('/', '.'), ud.revision), d)
+ 
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index b236631..a9470e4 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -125,7 +125,7 @@ class Git(FetchMethod):
+             if not ud.revisions[name] or len(ud.revisions[name]) != 40  or (False in [c in "abcdef0123456789" for c in ud.revisions[name]]):
+                 if ud.revisions[name]:
+                     ud.branches[name] = ud.revisions[name]
+-                ud.revisions[name] = self.latest_revision(ud.url, ud, d, name)
++                ud.revisions[name] = self.latest_revision(ud, d, name)
+ 
+         gitsrcname = '%s%s' % (ud.host.replace(':','.'), ud.path.replace('/', '.').replace('*', '.'))
+         # for rebaseable git repo, it is necessary to keep mirror tar ball
+diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py
+index 76810ab..6927f61 100644
+--- a/lib/bb/fetch2/hg.py
++++ b/lib/bb/fetch2/hg.py
+@@ -62,7 +62,7 @@ class Hg(FetchMethod):
+         if 'rev' in ud.parm:
+             ud.revision = ud.parm['rev']
+         elif not ud.revision:
+-            ud.revision = self.latest_revision(ud.url, ud, d)
++            ud.revision = self.latest_revision(ud, d)
+ 
+         ud.localfile = data.expand('%s_%s_%s_%s.tar.gz' % (ud.module.replace('/', '.'), ud.host, ud.path.replace('/', '.'), ud.revision), d)
+ 
+-- 
+1.8.4
 
 
