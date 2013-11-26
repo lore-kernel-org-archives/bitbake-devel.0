@@ -1,30 +1,36 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id AF2BE6D959
+Return-Path: <kergoth@gmail.com>
+Received: from mail-la0-f53.google.com (mail-la0-f53.google.com
+	[209.85.215.53])
+	by mail.openembedded.org (Postfix) with ESMTP id 71CC06DD0F
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 25 Nov 2013 23:18:35 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	rAPNITCv026371 for <bitbake-devel@lists.openembedded.org>;
-	Mon, 25 Nov 2013 23:18:29 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id EcueZNDDG_8n for <bitbake-devel@lists.openembedded.org>;
-	Mon, 25 Nov 2013 23:18:29 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	rAPNIPpJ026367
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
-	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
-	Mon, 25 Nov 2013 23:18:26 GMT
-Message-ID: <1385421502.24083.26.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 25 Nov 2013 23:18:22 +0000
-X-Mailer: Evolution 3.6.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] bitbake: Share BB_TASKDEPDATA with tasks
+	Tue, 26 Nov 2013 02:07:28 +0000 (UTC)
+Received: by mail-la0-f53.google.com with SMTP id ea20so3678675lab.40
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 25 Nov 2013 18:07:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=cdOtjFLC5ro+G4sdggOjTozjDijnAD+uMfnO6I19bCQ=;
+	b=lgs6hAVV1yxXIMaN2F96x06FwxPgFpNJiC8j+I9Fyhy0eEFIvAradpGvSXB5htK1aM
+	o4Ll/ODswjV7HsNdDOmuCQK4Tkw6pOXnYzp+HFOzcPBkuNVDwd231DD5S23jnTo8F6di
+	Yc1xst4w1lpwL4rz1CyY8wKP37bSH1ut76VkLuT0KPAWGwKZGN+/YVboqJYF9pdXfqOI
+	e4I5A7WKJvKIQVPz2H1gg379yRnLSzSc9q9653xot+JjXdgjS+zGLECjhIM1BrDXTVfo
+	CMoHdaOHFR6UYoARqfQMTVSYTBRm9CxMiub0NN5rVN6ymCxmTHWfKgHMpjpbuHvRjKQn
+	34Hw==
+X-Received: by 10.112.29.147 with SMTP id k19mr23628936lbh.9.1385431646975;
+	Mon, 25 Nov 2013 18:07:26 -0800 (PST)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.112.53.197 with HTTP; Mon, 25 Nov 2013 18:07:06 -0800 (PST)
+In-Reply-To: <1385420379.24083.22.camel@ted>
+References: <1385420379.24083.22.camel@ted>
+From: Chris Larson <clarson@kergoth.com>
+Date: Mon, 25 Nov 2013 19:07:06 -0700
+X-Google-Sender-Auth: DGqRPKKwaVwoykK_C6ELgqzMNZw
+Message-ID: <CABcZAN=O7Uov0xBXEQn8=Gaq2YBSNC9yFGvrKhhdeQfLi4NW+Q@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] data/codeparser: Improve handling of contains functions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,120 +43,87 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 25 Nov 2013 23:18:36 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 26 Nov 2013 02:07:29 -0000
+Content-Type: multipart/alternative; boundary=001a1133aa862dc84d04ec0af1f7
 
-Currently tasks have no knowledge of which other tasks they depend
-upon. This makes it impossible to do at least two things which would be
-desirable/interesting:
+--001a1133aa862dc84d04ec0af1f7
+Content-Type: text/plain; charset=UTF-8
 
-a) Have the ability to create per recipe sysroots
-b) Allow the aclocal files to be present only for the entries in
-   DEPENDS (directly and indirectly)
+On Mon, Nov 25, 2013 at 3:59 PM, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-By exporting task data through this new variable, tasks can inspect
-their dependencies and then take actions based upon this.
+> One of the current frustrations with the sstate checksums is that
+> code like base_contains('X', 'y',...) adds a full dependency on X
+> and varies depend even on whitespace changes in X.
+>
+> This patch adds special handling of the contains functions to expand
+> the first parameter and check for the flag specified by the second
+> parameter (assuming its a string).
+>
+> The result is then appended to the value of the variable with a "Set"
+> or "Unset" status. If the flag is added/removed, the stored variable
+> value changes and hence the checksum changes. No dependency on X
+> is added so it is free to change with regard to other flags or
+> whitespace.
+>
+> This code is far from ideal, ideally we'd have properly typed variables
+> however it fixes a major annoyance of the current checksums and
+> is of enough value its worth adding in a stopgap solution. It shouldn't
+> significantly restrict any propely typed variable implementation in
+> future.
+>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+>
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
-index ff20c1c..bc13b4f 100755
---- a/bitbake/bin/bitbake-worker
-+++ b/bitbake/bin/bitbake-worker
-@@ -81,7 +81,7 @@ def workerlog_write(msg):
-         lf.write(msg)
-         lf.flush()
- 
--def fork_off_task(cfg, data, workerdata, fn, task, taskname, appends, quieterrors=False):
-+def fork_off_task(cfg, data, workerdata, fn, task, taskname, appends, taskdepdata, quieterrors=False):
-     # We need to setup the environment BEFORE the fork, since
-     # a fork() or exec*() activates PSEUDO...
- 
-@@ -148,6 +148,7 @@ def fork_off_task(cfg, data, workerdata, fn, task, taskname, appends, quieterror
-                 os.umask(umask)
- 
-             data.setVar("BB_WORKERCONTEXT", "1")
-+            data.setVar("BB_TASKDEPDATA", taskdepdata)
-             data.setVar("BUILDNAME", workerdata["buildname"])
-             data.setVar("DATE", workerdata["date"])
-             data.setVar("TIME", workerdata["time"])
-@@ -300,10 +301,10 @@ class BitbakeWorker(object):
-         sys.exit(0)
- 
-     def handle_runtask(self, data):
--        fn, task, taskname, quieterrors, appends = pickle.loads(data)
-+        fn, task, taskname, quieterrors, appends, taskdepdata = pickle.loads(data)
-         workerlog_write("Handling runtask %s %s %s\n" % (task, fn, taskname))
- 
--        pid, pipein, pipeout = fork_off_task(self.cookercfg, self.data, self.workerdata, fn, task, taskname, appends, quieterrors)
-+        pid, pipein, pipeout = fork_off_task(self.cookercfg, self.data, self.workerdata, fn, task, taskname, appends, taskdepdata, quieterrors)
- 
-         self.build_pids[pid] = task
-         self.build_pipes[pid] = runQueueWorkerPipe(pipein, pipeout)
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index f984119..428cff1 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1437,14 +1437,16 @@ class RunQueueExecuteTasks(RunQueueExecute):
-                 startevent = runQueueTaskStarted(task, self.stats, self.rq)
-                 bb.event.fire(startevent, self.cfgData)
- 
-+            taskdepdata = self.build_taskdepdata(task)
-+
-             taskdep = self.rqdata.dataCache.task_deps[fn]
-             if 'fakeroot' in taskdep and taskname in taskdep['fakeroot'] and not self.cooker.configuration.dry_run:
-                 if not self.rq.fakeworker:
-                     self.rq.start_fakeworker(self)
--                self.rq.fakeworker.stdin.write("<runtask>" + pickle.dumps((fn, task, taskname, False, self.cooker.collection.get_file_appends(fn))) + "</runtask>")
-+                self.rq.fakeworker.stdin.write("<runtask>" + pickle.dumps((fn, task, taskname, False, self.cooker.collection.get_file_appends(fn), taskdepdata)) + "</runtask>")
-                 self.rq.fakeworker.stdin.flush()
-             else:
--                self.rq.worker.stdin.write("<runtask>" + pickle.dumps((fn, task, taskname, False, self.cooker.collection.get_file_appends(fn))) + "</runtask>")
-+                self.rq.worker.stdin.write("<runtask>" + pickle.dumps((fn, task, taskname, False, self.cooker.collection.get_file_appends(fn), taskdepdata)) + "</runtask>")
-                 self.rq.worker.stdin.flush()
- 
-             self.build_stamps[task] = bb.build.stampfile(taskname, self.rqdata.dataCache, fn)
-@@ -1474,6 +1476,26 @@ class RunQueueExecuteTasks(RunQueueExecute):
- 
-         return True
- 
-+    def build_taskdepdata(self, task):
-+        taskdepdata = {}
-+        next = self.rqdata.runq_depends[task]
-+        next.add(task)
-+        while next:
-+            additional = []
-+            for revdep in next:
-+                fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[revdep]]
-+                pn = self.rqdata.dataCache.pkg_fn[fn]
-+                taskname = self.rqdata.runq_task[revdep]
-+                deps = self.rqdata.runq_depends[revdep]
-+                taskdepdata[revdep] = [pn, taskname, fn, deps]
-+                for revdep2 in deps:
-+                    if revdep2 not in taskdepdata:
-+                        additional.append(revdep2)
-+            next = additional
-+
-+        #bb.note("Task %s: " % task + str(taskdepdata).replace("], ", "],\n"))
-+        return taskdepdata
-+
- class RunQueueExecuteScenequeue(RunQueueExecute):
-     def __init__(self, rq):
-         RunQueueExecute.__init__(self, rq)
-@@ -1784,10 +1806,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-             if 'fakeroot' in taskdep and taskname in taskdep['fakeroot']:
-                 if not self.rq.fakeworker:
-                     self.rq.start_fakeworker(self)
--                self.rq.fakeworker.stdin.write("<runtask>" + pickle.dumps((fn, realtask, taskname, True, self.cooker.collection.get_file_appends(fn))) + "</runtask>")
-+                self.rq.fakeworker.stdin.write("<runtask>" + pickle.dumps((fn, realtask, taskname, True, self.cooker.collection.get_file_appends(fn), None)) + "</runtask>")
-                 self.rq.fakeworker.stdin.flush()
-             else:
--                self.rq.worker.stdin.write("<runtask>" + pickle.dumps((fn, realtask, taskname, True, self.cooker.collection.get_file_appends(fn))) + "</runtask>")
-+                self.rq.worker.stdin.write("<runtask>" + pickle.dumps((fn, realtask, taskname, True, self.cooker.collection.get_file_appends(fn), None)) + "</runtask>")
-                 self.rq.worker.stdin.flush()
- 
-             self.runq_running[task] = 1
+Looks good, will be very helpful for now.
 
+Signed-off-by: Christopher Larson <chris_larson@mentor.com>
+-- 
+Christopher Larson
 
+--001a1133aa862dc84d04ec0af1f7
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Mon, Nov 25, 2013 at 3:59 PM, Richard Purdie <span dir=3D"ltr">&lt;<a hr=
+ef=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.=
+purdie@linuxfoundation.org</a>&gt;</span> wrote:<br>
+
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div id=3D":11v" style=3D"overflow:hidden">O=
+ne of the current frustrations with the sstate checksums is that<br>
+code like base_contains(&#39;X&#39;, &#39;y&#39;,...) adds a full dependenc=
+y on X<br>
+and varies depend even on whitespace changes in X.<br>
+<br>
+This patch adds special handling of the contains functions to expand<br>
+the first parameter and check for the flag specified by the second<br>
+parameter (assuming its a string).<br>
+<br>
+The result is then appended to the value of the variable with a &quot;Set&q=
+uot;<br>
+or &quot;Unset&quot; status. If the flag is added/removed, the stored varia=
+ble<br>
+value changes and hence the checksum changes. No dependency on X<br>
+is added so it is free to change with regard to other flags or<br>
+whitespace.<br>
+<br>
+This code is far from ideal, ideally we&#39;d have properly typed variables=
+<br>
+however it fixes a major annoyance of the current checksums and<br>
+is of enough value its worth adding in a stopgap solution. It shouldn&#39;t=
+<br>
+significantly restrict any propely typed variable implementation in<br>
+future.<br>
+<br>
+Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
+ndation.org">richard.purdie@linuxfoundation.org</a>&gt;</div></blockquote><=
+/div><br>Looks good, will be very helpful for now.</div><div class=3D"gmail=
+_extra">
+
+<br></div><div class=3D"gmail_extra">Signed-off-by: Christopher Larson &lt;=
+<a href=3D"mailto:chris_larson@mentor.com">chris_larson@mentor.com</a>&gt;<=
+br>-- <br>Christopher Larson</div></div>
+
+--001a1133aa862dc84d04ec0af1f7--
