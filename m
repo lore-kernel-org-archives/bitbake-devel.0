@@ -1,30 +1,30 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id B3CE46C72F
+	by mail.openembedded.org (Postfix) with ESMTP id 9DD8A611E8
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 29 Nov 2013 18:12:00 +0000 (UTC)
+	Fri, 29 Nov 2013 23:16:08 +0000 (UTC)
 Received: from localhost (dan.rpsys.net [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	rATIBsVN018620 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 29 Nov 2013 18:11:54 GMT
+	rATNG2LY024500 for <bitbake-devel@lists.openembedded.org>;
+	Fri, 29 Nov 2013 23:16:02 GMT
 X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id LneK6xlGVMOB for <bitbake-devel@lists.openembedded.org>;
-	Fri, 29 Nov 2013 18:11:54 +0000 (GMT)
+	with LMTP id TqJlXHkda_XV for <bitbake-devel@lists.openembedded.org>;
+	Fri, 29 Nov 2013 23:16:02 +0000 (GMT)
 Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	rATIBpi5018612
+	rATNFw6P024496
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
 	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
-	Fri, 29 Nov 2013 18:11:53 GMT
-Message-ID: <1385748708.11222.76.camel@ted>
+	Fri, 29 Nov 2013 23:16:00 GMT
+Message-ID: <1385766956.11222.80.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Fri, 29 Nov 2013 18:11:48 +0000
+Date: Fri, 29 Nov 2013 23:15:56 +0000
 X-Mailer: Evolution 3.6.4-0ubuntu1 
 Mime-Version: 1.0
-Subject: [PATCH] parse/ConfHander/utils: Fix cache dependency bugs
+Subject: [PATCH v2] parse/ConfHander/BBHandler/utils: Fix cache dependency bugs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,9 +37,10 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 29 Nov 2013 18:12:01 -0000
+X-List-Received-Date: Fri, 29 Nov 2013 23:16:09 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+
 
 Currently bitbake only adds files to its dependency list if they exist.
 If you add 'include foo.inc' to your recipe and the file doesn't exist,
@@ -58,6 +59,10 @@ The patch also adds in checks for duplicate file includes and for now
 prints a warning about this. That will likely become a fatal error at
 some point since its never usually desired to include a file twice.
 
+The same issue is also fixed for class inheritance. Now when a class 
+is added which would be found in the usual search path, it will cause
+the cache to be invalidated.
+
 Unfortunately this is old code in bitbake and the patch isn't the
 neatest since we have to work within that framework.
 
@@ -67,7 +72,7 @@ neatest since we have to work within that framework.
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
 diff --git a/bitbake/lib/bb/parse/__init__.py b/bitbake/lib/bb/parse/__init__.py
-index c973f6f..d45b583 100644
+index c973f6f..97983c9 100644
 --- a/bitbake/lib/bb/parse/__init__.py
 +++ b/bitbake/lib/bb/parse/__init__.py
 @@ -73,9 +73,17 @@ def update_mtime(f):
@@ -96,7 +101,7 @@ index c973f6f..d45b583 100644
      if not os.path.isabs(fn):
          bbpath = d.getVar("BBPATH", True)
 -        newfn = bb.utils.which(bbpath, fn)
-+        newfn, attempts = bb.utils.which_hist(bbpath, fn)
++        newfn, attempts = bb.utils.which(bbpath, fn, history=True)
 +        for af in attempts:
 +            mark_dependency(d, af)
          if not newfn:
@@ -107,8 +112,24 @@ index c973f6f..d45b583 100644
      if not os.path.isfile(fn):
          raise IOError("file %s not found" % fn)
  
+diff --git a/bitbake/lib/bb/parse/parse_py/BBHandler.py b/bitbake/lib/bb/parse/parse_py/BBHandler.py
+index 01f22d3..7cba649 100644
+--- a/bitbake/lib/bb/parse/parse_py/BBHandler.py
++++ b/bitbake/lib/bb/parse/parse_py/BBHandler.py
+@@ -77,7 +77,10 @@ def inherit(files, fn, lineno, d):
+         if not os.path.isabs(file):
+             dname = os.path.dirname(fn)
+             bbpath = "%s:%s" % (dname, d.getVar("BBPATH", True))
+-            abs_fn = bb.utils.which(bbpath, file)
++            abs_fn, attempts = bb.utils.which(bbpath, file, history=True)
++            for af in attempts:
++                if af != abs_fn:
++                    bb.parse.mark_dependency(d, af)
+             if abs_fn:
+                 file = abs_fn
+ 
 diff --git a/bitbake/lib/bb/parse/parse_py/ConfHandler.py b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
-index c28f18b..6355c19 100644
+index c28f18b..f4fb2aa 100644
 --- a/bitbake/lib/bb/parse/parse_py/ConfHandler.py
 +++ b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
 @@ -82,12 +82,15 @@ def include(oldfn, fn, lineno, data, error_out):
@@ -116,7 +137,7 @@ index c28f18b..6355c19 100644
          dname = os.path.dirname(oldfn)
          bbpath = "%s:%s" % (dname, data.getVar("BBPATH", True))
 -        abs_fn = bb.utils.which(bbpath, fn)
-+        abs_fn, attempts = bb.utils.which_hist(bbpath, fn)
++        abs_fn, attempts = bb.utils.which(bbpath, fn, history=True)
 +        if abs_fn and bb.parse.check_dependency(data, abs_fn):
 +            bb.warn("Duplicate inclusion for %s in %s" % (abs_fn, data.getVar('FILE', True)))
 +        for af in attempts:
@@ -140,36 +161,39 @@ index c28f18b..6355c19 100644
  # We have an issue where a UI might want to enforce particular settings such as
  # an empty DISTRO variable. If configuration files do something like assigning
 diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
-index 560f55a..af33a69 100644
+index 560f55a..0be45e1 100644
 --- a/bitbake/lib/bb/utils.py
 +++ b/bitbake/lib/bb/utils.py
-@@ -814,6 +814,26 @@ def which(path, item, direction = 0):
+@@ -796,22 +796,28 @@ def copyfile(src, dest, newmtime = None, sstat = None):
+         newmtime = sstat[stat.ST_MTIME]
+     return newmtime
  
+-def which(path, item, direction = 0):
++def which(path, item, direction = 0, history = False):
+     """
+     Locate a file in a PATH
+     """
+ 
++    hist = []
+     paths = (path or "").split(':')
+     if direction != 0:
+         paths.reverse()
+ 
+     for p in paths:
+         next = os.path.join(p, item)
++        hist.append(next)
+         if os.path.exists(next):
+             if not os.path.isabs(next):
+                 next = os.path.abspath(next)
++            if history:
++                return next, hist
+             return next
+ 
++    if history:
++        return "", hist
      return ""
  
-+def which_hist(path, item, direction = 0):
-+    """
-+    Locate a file in a PATH
-+    """
-+
-+    hist = []
-+    paths = (path or "").split(':')
-+    if direction != 0:
-+        paths.reverse()
-+
-+    for p in paths:
-+        next = os.path.join(p, item)
-+        hist.append(next)
-+        if os.path.exists(next):
-+            if not os.path.isabs(next):
-+                next = os.path.abspath(next)
-+            return next, hist
-+
-+    return "", hist
-+
  def to_boolean(string, default=None):
-     if not string:
-         return default
 
 
 
