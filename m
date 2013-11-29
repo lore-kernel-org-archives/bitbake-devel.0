@@ -1,48 +1,30 @@
-Return-Path: <nathan.rossi@xilinx.com>
-Received: from tx2outboundpool.messaging.microsoft.com
-	(tx2ehsobe005.messaging.microsoft.com [65.55.88.15])
-	by mail.openembedded.org (Postfix) with ESMTP id 1F4DD6D5A1
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id B3CE46C72F
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 29 Nov 2013 05:19:21 +0000 (UTC)
-Received: from mail130-tx2-R.bigfish.com (10.9.14.236) by
-	TX2EHSOBE011.bigfish.com (10.9.40.31) with Microsoft SMTP Server id
-	14.1.225.22; Fri, 29 Nov 2013 05:19:19 +0000
-Received: from mail130-tx2 (localhost [127.0.0.1])	by
-	mail130-tx2-R.bigfish.com (Postfix) with ESMTP id BC4441C00E8;
-	Fri, 29 Nov 2013 05:19:19 +0000 (UTC)
-X-Forefront-Antispam-Report: CIP:149.199.60.83; KIP:(null); UIP:(null); IPV:NLI;
-	H:xsj-gw1; RD:unknown-60-83.xilinx.com; EFVD:NLI
-X-SpamScore: 0
-X-BigFish: VPS0(zz4015Izz1f42h2148h208ch1ee6h1de0h1fdah2073h2146h1202h1e76h1d1ah1d2ah1fc6hzz1de098h8275bh1de097hz2fh95h839hd24hf0ah119dh1288h12a5h12a9h12bdh12e5h137ah139eh13b6h1441h14ddh1504h1537h162dh1631h1758h1898h18e1h1946h19b5h1b0ah224fh1d0ch1d2eh1d3fh1dc1h1dfeh1dffh1e1dh1e23h1fe8h1ff5h2218h2216h226dh2327h2336h906i1155h)
-Received-SPF: pass (mail130-tx2: domain of xilinx.com designates 149.199.60.83
-	as permitted sender) client-ip=149.199.60.83;
-	envelope-from=nathan.rossi@xilinx.com; helo=xsj-gw1 ;
-	helo=xsj-gw1 ; 
-Received: from mail130-tx2 (localhost.localdomain [127.0.0.1]) by mail130-tx2
-	(MessageSwitch) id 1385702357200179_11932;
-	Fri, 29 Nov 2013 05:19:17 +0000 (UTC)
-Received: from TX2EHSMHS044.bigfish.com (unknown [10.9.14.228])	by
-	mail130-tx2.bigfish.com (Postfix) with ESMTP id 2A78F1A004B;
-	Fri, 29 Nov 2013 05:19:17 +0000 (UTC)
-Received: from xsj-gw1 (149.199.60.83) by TX2EHSMHS044.bigfish.com
-	(10.9.99.144) with Microsoft SMTP Server id 14.16.227.3;
-	Fri, 29 Nov 2013 05:19:16 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-smtp1)	by
-	xsj-gw1 with esmtp (Exim 4.63)	(envelope-from
-	<nathan.rossi@xilinx.com>)	id
-	1VmGU0-0006bY-Mb; Thu, 28 Nov 2013 21:19:16 -0800
-From: Nathan Rossi <nathan.rossi@xilinx.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 29 Nov 2013 15:19:11 +1000
-X-Mailer: git-send-email 1.7.9.5
-X-RCIS-Action: ALLOW
-MIME-Version: 1.0
-Message-ID: <fc56b436-2f80-4db5-a39c-672ddfa04224@TX2EHSMHS044.ehs.local>
-X-OriginatorOrg: xilinx.com
-X-FOPE-CONNECTOR: Id%0$Dn%*$RO%0$TLS%0$FQDN%$TlsDn%
-X-Mailman-Approved-At: Fri, 29 Nov 2013 18:03:35 +0000
-Cc: Nathan Rossi <nathan.rossi@xilinx.com>, meta-xilinx@yoctoproject.org
-Subject: [PATCH] cooker: Fix support for wildcards in bbappend filenames
+	Fri, 29 Nov 2013 18:12:00 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	rATIBsVN018620 for <bitbake-devel@lists.openembedded.org>;
+	Fri, 29 Nov 2013 18:11:54 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id LneK6xlGVMOB for <bitbake-devel@lists.openembedded.org>;
+	Fri, 29 Nov 2013 18:11:54 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	rATIBpi5018612
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT) for <bitbake-devel@lists.openembedded.org>;
+	Fri, 29 Nov 2013 18:11:53 GMT
+Message-ID: <1385748708.11222.76.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Fri, 29 Nov 2013 18:11:48 +0000
+X-Mailer: Evolution 3.6.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] parse/ConfHander/utils: Fix cache dependency bugs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,55 +37,139 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 29 Nov 2013 05:19:22 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 29 Nov 2013 18:12:01 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-The 'bbappend in f' incorrectly compares the current recipe with the avaliable
-bbappends recipes. This comparsion causes unrequested bbappend files to be
-appended, e.g. in the case of 'libgcc_4.8.bb', the bbappends for 'libgcc_4.8.bb'
-and 'gcc_4.8.bb' are added to the filelist (because 'gcc_4.8.bb' is contained in
-the 'libgcc_4.8.bb' string) which in turn causes the gcc_4.8.bbappend files to
-be appended to the libgcc_4.8 recipe.
+Currently bitbake only adds files to its dependency list if they exist.
+If you add 'include foo.inc' to your recipe and the file doesn't exist,
+then later you add the file, the cache will not be invalidated.
 
-This should be a 'bbappend == f' to match the previous implementation of this
-function, such that if no wildcard is present the recipe names must match
-exactly.
+This leads to another bug which is that if files don't exist and then
+you add them and they should be found first due to BBPATH, again the
+cache won't invalidate.
 
-This issue was introduced by commit 31bc9af9cd56e7b318924869970e850993fafc5f,
-which it related to [YOCTO #5411].
+This patch adds in tracking of files we check for the existence of so
+that if they are added later, the cache correctly invalidates. This
+necessitated a new version of bb.utils.which which returns a list of
+files tested for.
 
-Signed-off-by: Nathan Rossi <nathan.rossi@xilinx.com>
+The patch also adds in checks for duplicate file includes and for now
+prints a warning about this. That will likely become a fatal error at
+some point since its never usually desired to include a file twice.
+
+Unfortunately this is old code in bitbake and the patch isn't the
+neatest since we have to work within that framework.
+
+[YOCTO #5611]
+[YOCTO #4425]
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
-
-This patch resolves an issue that is seen in the meta-xilinx yocto layer. In the
-layer we add appends for both gcc and libgcc, as such we get a duplication of
-configuration.
-
-Please let me know if this patch is expected, or if the change to the bbappend
-naming has changed such that the layer needs to be fixed.
-
-Thanks,
-Nathan
-
----
- lib/bb/cooker.py |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 1f494ee..b36ed6f 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1486,7 +1486,7 @@ class CookerCollectFiles(object):
-         filelist = []
-         f = os.path.basename(fn)
-         for bbappend in self.appendlist:
--            if bbappend in f or ('%' in bbappend and bbappend.startswith(f[:bbappend.index('%')])):
-+            if (bbappend == f) or ('%' in bbappend and bbappend.startswith(f[:bbappend.index('%')])):
-                 self.appliedappendlist.append(bbappend)
-                 for filename in self.appendlist[bbappend]:
-                     filelist.append(filename)
--- 
-1.7.9.5
+diff --git a/bitbake/lib/bb/parse/__init__.py b/bitbake/lib/bb/parse/__init__.py
+index c973f6f..d45b583 100644
+--- a/bitbake/lib/bb/parse/__init__.py
++++ b/bitbake/lib/bb/parse/__init__.py
+@@ -73,9 +73,17 @@ def update_mtime(f):
+ def mark_dependency(d, f):
+     if f.startswith('./'):
+         f = "%s/%s" % (os.getcwd(), f[2:])
+-    deps = (d.getVar('__depends') or []) + [(f, cached_mtime(f))]
+-    d.setVar('__depends', deps)
+-
++    deps = (d.getVar('__depends') or [])
++    s = (f, cached_mtime_noerror(f))
++    if s not in deps:
++        deps.append(s)
++        d.setVar('__depends', deps)
++
++def check_dependency(d, f):
++    s = (f, cached_mtime_noerror(f))
++    deps = (d.getVar('__depends') or [])
++    return s in deps
++   
+ def supports(fn, data):
+     """Returns true if we have a handler for this file, false otherwise"""
+     for h in handlers:
+@@ -102,11 +110,14 @@ def init_parser(d):
+ def resolve_file(fn, d):
+     if not os.path.isabs(fn):
+         bbpath = d.getVar("BBPATH", True)
+-        newfn = bb.utils.which(bbpath, fn)
++        newfn, attempts = bb.utils.which_hist(bbpath, fn)
++        for af in attempts:
++            mark_dependency(d, af)
+         if not newfn:
+             raise IOError("file %s not found in %s" % (fn, bbpath))
+         fn = newfn
+ 
++    mark_dependency(d, fn)
+     if not os.path.isfile(fn):
+         raise IOError("file %s not found" % fn)
+ 
+diff --git a/bitbake/lib/bb/parse/parse_py/ConfHandler.py b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
+index c28f18b..6355c19 100644
+--- a/bitbake/lib/bb/parse/parse_py/ConfHandler.py
++++ b/bitbake/lib/bb/parse/parse_py/ConfHandler.py
+@@ -82,12 +82,15 @@ def include(oldfn, fn, lineno, data, error_out):
+     if not os.path.isabs(fn):
+         dname = os.path.dirname(oldfn)
+         bbpath = "%s:%s" % (dname, data.getVar("BBPATH", True))
+-        abs_fn = bb.utils.which(bbpath, fn)
++        abs_fn, attempts = bb.utils.which_hist(bbpath, fn)
++        if abs_fn and bb.parse.check_dependency(data, abs_fn):
++            bb.warn("Duplicate inclusion for %s in %s" % (abs_fn, data.getVar('FILE', True)))
++        for af in attempts:
++            bb.parse.mark_dependency(data, af)
+         if abs_fn:
+             fn = abs_fn
+-
+-    if fn in (data.getVar("__depends", False) or ""):
+-        bb.warn("Duplicate inclusion for %s" % fn)
++    elif bb.parse.check_dependency(data, fn):
++        bb.warn("Duplicate inclusion for %s in %s" % (fn, data.getVar('FILE', True)))
+ 
+     from bb.parse import handle
+     try:
+@@ -96,6 +99,7 @@ def include(oldfn, fn, lineno, data, error_out):
+         if error_out:
+             raise ParseError("Could not %(error_out)s file %(fn)s" % vars(), oldfn, lineno)
+         logger.debug(2, "CONF file '%s' not found", fn)
++        bb.parse.mark_dependency(data, fn)
+ 
+ # We have an issue where a UI might want to enforce particular settings such as
+ # an empty DISTRO variable. If configuration files do something like assigning
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+index 560f55a..af33a69 100644
+--- a/bitbake/lib/bb/utils.py
++++ b/bitbake/lib/bb/utils.py
+@@ -814,6 +814,26 @@ def which(path, item, direction = 0):
+ 
+     return ""
+ 
++def which_hist(path, item, direction = 0):
++    """
++    Locate a file in a PATH
++    """
++
++    hist = []
++    paths = (path or "").split(':')
++    if direction != 0:
++        paths.reverse()
++
++    for p in paths:
++        next = os.path.join(p, item)
++        hist.append(next)
++        if os.path.exists(next):
++            if not os.path.isabs(next):
++                next = os.path.abspath(next)
++            return next, hist
++
++    return "", hist
++
+ def to_boolean(string, default=None):
+     if not string:
+         return default
 
 
 
