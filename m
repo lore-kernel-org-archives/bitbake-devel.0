@@ -1,24 +1,20 @@
-Return-Path: <Yi.Zhao@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 0E8BF6CCEF
+Return-Path: <cristiana.voicu@intel.com>
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id DF2B26D77B
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Nov 2013 09:41:00 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.5) with ESMTP id rAR9ewlr021648
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Wed, 27 Nov 2013 01:40:58 -0800 (PST)
-Received: from localhost (128.224.158.249) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.2.347.0;
-	Wed, 27 Nov 2013 01:40:58 -0800
-From: Yi Zhao <yi.zhao@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 27 Nov 2013 17:40:56 +0800
-Message-ID: <1385545256-11483-1-git-send-email-yi.zhao@windriver.com>
+	Fri, 29 Nov 2013 11:25:40 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 29 Nov 2013 03:25:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.93,797,1378882800"; d="scan'208";a="436056038"
+Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.65])
+	by fmsmga001.fm.intel.com with ESMTP; 29 Nov 2013 03:25:29 -0800
+From: Cristiana Voicu <cristiana.voicu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 29 Nov 2013 13:31:22 +0200
+Message-Id: <1385724682-2289-1-git-send-email-cristiana.voicu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
-MIME-Version: 1.0
-X-Originating-IP: [128.224.158.249]
-Subject: [PATCH] crumbs/builder.py: Fix typo for indefinite article
+Subject: [PATCH] bitbake: btibake server must reparse the conf between builds
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,27 +27,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Nov 2013 09:41:00 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 29 Nov 2013 11:25:41 -0000
 
-Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
+When the UI event handlers are registered, the cooker reset is
+triggered. In this way it doesn't affect the cooker state.
+
+[YOCTO #5535]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/builder.py |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/bb/server/xmlrpc.py |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index de002b9..1ace5cf 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -1352,7 +1352,7 @@ class Builder(gtk.Window):
+diff --git a/bitbake/lib/bb/server/xmlrpc.py b/bitbake/lib/bb/server/xmlrpc.py
+index 82c0e8d..fb7a8b4 100644
+--- a/bitbake/lib/bb/server/xmlrpc.py
++++ b/bitbake/lib/bb/server/xmlrpc.py
+@@ -103,8 +103,9 @@ class BitBakeServerCommands():
+         for f in featureset:
+             self.cooker.featureset.setFeature(f)
  
-     def runqemu_image(self, image_name, kernel_name):
-         if not image_name or not kernel_name:
--            lbl = "<b>Please select an %s to launch in QEMU.</b>" % ("kernel" if image_name else "image")
-+            lbl = "<b>Please select %s to launch in QEMU.</b>" % ("a kernel" if image_name else "an image")
-             dialog = CrumbsMessageDialog(self, lbl, gtk.MESSAGE_INFO)
-             button = dialog.add_button("Close", gtk.RESPONSE_OK)
-             HobButton.style_button(button)
+-        if (original_featureset != list(self.cooker.featureset)):
+-            self.cooker.reset()
++        #always reset the cooker when a remote UI Event Handler is registered,
++        #in order to reparse the configuration files
++        self.cooker.reset()
+ 
+         self.event_handle = bb.event.register_UIHhandler(s)
+         return self.event_handle
 -- 
 1.7.9.5
 
