@@ -1,21 +1,30 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 9BF3A6DD6E
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id D1F716D86B
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  2 Dec 2013 15:10:56 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 02 Dec 2013 07:10:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.93,811,1378882800"; d="scan'208";a="443207854"
-Received: from pmcgurk-mobl.ger.corp.intel.com (HELO
-	helios.ger.corp.intel.com) ([10.252.121.184])
-	by fmsmga002.fm.intel.com with ESMTP; 02 Dec 2013 07:10:42 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon,  2 Dec 2013 15:10:34 +0000
-Message-Id: <1385997034-8237-1-git-send-email-paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.8.1.2
-Subject: [PATCH] hob: fix rotating progress icon animation
+	Mon,  2 Dec 2013 17:48:06 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	rB2Hm00r000366
+	for <bitbake-devel@lists.openembedded.org>; Mon, 2 Dec 2013 17:48:00 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id e20KlMsTlCtU for <bitbake-devel@lists.openembedded.org>;
+	Mon,  2 Dec 2013 17:48:00 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	rB2Hlwsq000303
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-CAMELLIA256-SHA bits=256
+	verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Mon, 2 Dec 2013 17:47:59 GMT
+Message-ID: <1386006476.11222.110.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Mon, 02 Dec 2013 17:47:56 +0000
+X-Mailer: Evolution 3.6.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] hob: Use BASEDATASTORE_TRACKING feature
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,32 +37,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 02 Dec 2013 15:10:57 -0000
+X-List-Received-Date: Mon, 02 Dec 2013 17:48:07 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-I've always found it somewhat annoying that this icon's rotation
-animation wasn't quite correct; this was because it was looping around
-to the second position instead of the first, which made it appear to
-stutter.
+Might as well use this functionality now we have it available.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/ui/crumbs/hobwidget.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+index 817f638..06a05b6 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -308,9 +308,7 @@ class HobHandler(gobject.GObject):
+         self.runCommand(["createConfigFile", ".hob.conf"])
+ 
+     def reset_cooker(self):
+-        self.runCommand(["enableDataTracking"])
+         self.runCommand(["resetCooker"])
+-        self.runCommand(["disableDataTracking"])
+ 
+     def set_extra_inherit(self, bbclass):
+         inherits = self.runCommand(["getVariable", "INHERIT"]) or ""
+diff --git a/bitbake/lib/bb/ui/hob.py b/bitbake/lib/bb/ui/hob.py
+index 154a3b3..da5b411 100755
+--- a/bitbake/lib/bb/ui/hob.py
++++ b/bitbake/lib/bb/ui/hob.py
+@@ -46,7 +46,7 @@ from bb.ui.crumbs.hoblistmodel import RecipeListModel, PackageListModel
+ from bb.ui.crumbs.hobeventhandler import HobHandler
+ from bb.ui.crumbs.builder import Builder
+ 
+-featureSet = [bb.cooker.CookerFeatures.HOB_EXTRA_CACHES]
++featureSet = [bb.cooker.CookerFeatures.HOB_EXTRA_CACHES, bb.cooker.CookerFeatures.BASEDATASTORE_TRACKING]
+ 
+ def event_handle_idle_func(eventHandler, hobHandler):
+     # Consume as many messages as we can in the time available to us
 
-diff --git a/lib/bb/ui/crumbs/hobwidget.py b/lib/bb/ui/crumbs/hobwidget.py
-index 3707d61..2b969c1 100644
---- a/lib/bb/ui/crumbs/hobwidget.py
-+++ b/lib/bb/ui/crumbs/hobwidget.py
-@@ -734,7 +734,7 @@ class HobCellRendererController(gobject.GObject):
-         self.current_angle_pos += self.step_angle
-         if self.running_mode == self.MODE_CYCLE_RUNNING:
-             if (self.current_angle_pos >= 1):
--                self.current_angle_pos = self.step_angle
-+                self.current_angle_pos = 0
-         else:
-             if self.current_angle_pos > 1:
-                 self.force_stop()
--- 
-1.8.1.2
 
 
