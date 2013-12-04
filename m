@@ -1,21 +1,20 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id 3CD406D292
+Return-Path: <cristiana.voicu@intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 443626D99E
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  3 Dec 2013 16:37:04 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga102.fm.intel.com with ESMTP; 03 Dec 2013 08:37:03 -0800
+	Wed,  4 Dec 2013 13:52:06 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 04 Dec 2013 05:52:06 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.93,818,1378882800"; d="scan'208";a="443910760"
-Received: from timevans-mobl.ger.corp.intel.com (HELO
-	helios.ger.corp.intel.com) ([10.252.121.200])
-	by fmsmga002.fm.intel.com with ESMTP; 03 Dec 2013 08:37:02 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="4.93,824,1378882800"; d="scan'208";a="446739258"
+Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.65])
+	by orsmga002.jf.intel.com with ESMTP; 04 Dec 2013 05:52:04 -0800
+From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  3 Dec 2013 16:36:55 +0000
-Message-Id: <cover.1386088140.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.8.1.2
-Subject: [1.18][PATCH 0/3] Backports for 1.18 branch (cover letter only)
+Date: Wed,  4 Dec 2013 15:58:06 +0200
+Message-Id: <1386165486-25470-1-git-send-email-cristiana.voicu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] toaster: exclude "set in documentation.conf" from variable history
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,32 +27,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 03 Dec 2013 16:37:04 -0000
+X-List-Received-Date: Wed, 04 Dec 2013 13:52:06 -0000
 
-The following changes since commit bbb4fa427739912ff3b87379bf629066f6662458:
+That has no impact on the builds themselves, so we should just
+remove that line from the variable history.
 
-  methodpool: Retire it, remove global method scope (2013-09-11 17:58:14 +0100)
+[YOCTO #5561]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+---
+ bitbake/lib/bb/ui/buildinfohelper.py |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib paule/bitbake-118-next
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bitbake-118-next
-
-Nicolas Dechesne (1):
-  bitbake: fetch2/svn.py: use log instead of info to retrieve revision
-
-Richard Purdie (1):
-  bitbake: perforce: Fix path subdirectory issues
-
-Volker Vogelhuber (1):
-  bitbake: fetch/hg: Improve user/password handling
-
- lib/bb/fetch2/hg.py       | 10 ++++++++--
- lib/bb/fetch2/perforce.py |  2 +-
- lib/bb/fetch2/svn.py      | 14 ++++++++------
- 3 files changed, 17 insertions(+), 9 deletions(-)
-
+diff --git a/bitbake/lib/bb/ui/buildinfohelper.py b/bitbake/lib/bb/ui/buildinfohelper.py
+index 61149fa..c99a511 100644
+--- a/bitbake/lib/bb/ui/buildinfohelper.py
++++ b/bitbake/lib/bb/ui/buildinfohelper.py
+@@ -245,10 +245,11 @@ class ORMWrapper(object):
+                     variable_value = value,
+                     description = desc)
+                 for vh in vardump[k]['history']:
+-                    VariableHistory.objects.create( variable = variable_obj,
+-                            file_name = vh['file'],
+-                            line_number = vh['line'],
+-                            operation = vh['op'])
++                    if not 'documentation.conf' in vh['file']:
++                        VariableHistory.objects.create( variable = variable_obj,
++                                file_name = vh['file'],
++                                line_number = vh['line'],
++                                operation = vh['op'])
+ 
+ class BuildInfoHelper(object):
+     """ This class gathers the build information from the server and sends it
 -- 
-1.8.1.2
+1.7.9.5
 
 
