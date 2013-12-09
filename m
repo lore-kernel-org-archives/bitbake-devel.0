@@ -1,24 +1,24 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 252B96E237
+	by mail.openembedded.org (Postfix) with ESMTP id 2FB906D840
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 Dec 2013 19:07:32 +0000 (UTC)
+	Mon,  9 Dec 2013 19:07:33 +0000 (UTC)
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 09 Dec 2013 11:07:32 -0800
+	by orsmga101.jf.intel.com with ESMTP; 09 Dec 2013 11:07:33 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.93,859,1378882800"; d="scan'208";a="449359929"
+X-IronPort-AV: E=Sophos;i="4.93,859,1378882800"; d="scan'208";a="449359940"
 Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.122.25])
-	by orsmga002.jf.intel.com with ESMTP; 09 Dec 2013 11:07:31 -0800
+	by orsmga002.jf.intel.com with ESMTP; 09 Dec 2013 11:07:32 -0800
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  9 Dec 2013 19:07:12 +0000
-Message-Id: <f6031bd753917c459ab232d88d7dcfc3f10e8184.1386615747.git.paul.eggleton@linux.intel.com>
+Date: Mon,  9 Dec 2013 19:07:13 +0000
+Message-Id: <5839e5b0af45d4c9e05145b16c4ed5817e152606.1386615747.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 1.8.1.2
 In-Reply-To: <cover.1386615747.git.paul.eggleton@linux.intel.com>
 References: <cover.1386615747.git.paul.eggleton@linux.intel.com>
 In-Reply-To: <cover.1386615747.git.paul.eggleton@linux.intel.com>
 References: <cover.1386615747.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 06/11] toasterui: fix version numbers for no PE specified
+Subject: [PATCH 07/11] toasterui: do not link non-image targets
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,38 +31,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Dec 2013 19:07:32 -0000
+X-List-Received-Date: Mon, 09 Dec 2013 19:07:33 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-PE is an optional field in recipes specifiying the epoch
-for the recipe. The canonical form for the
-full recipe version string is: PE:PV-PR
+In the Simple UI, builds table, targets that are images
+have link to the list of installed packages.
 
-If no PE is specified, we shouldn't store the initial ":"
-character, as it leads to inconsistency with how the
-version string is used elsewhere. This patch drops the leading ":"
+There is no point in having links enabled for the non-image
+targets, so we don't link in this case.
 
-    [YOCTO #5459]
+    [YOCTO #5366]
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/bb/ui/buildinfohelper.py | 2 +-
+ lib/toaster/bldviewer/templates/build.html | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index 0252efd..3d5f1c8 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -531,7 +531,7 @@ class BuildInfoHelper(object):
- 
-             recipe_info = {}
-             recipe_info['name'] = pn
--            recipe_info['version'] = event._depgraph['pn'][pn]['version']
-+            recipe_info['version'] = event._depgraph['pn'][pn]['version'].lstrip(":")
-             recipe_info['layer_version'] = layer_version_obj
-             recipe_info['summary'] = event._depgraph['pn'][pn]['summary']
-             recipe_info['license'] = event._depgraph['pn'][pn]['license']
+diff --git a/lib/toaster/bldviewer/templates/build.html b/lib/toaster/bldviewer/templates/build.html
+index ab6e196..5f62350 100644
+--- a/lib/toaster/bldviewer/templates/build.html
++++ b/lib/toaster/bldviewer/templates/build.html
+@@ -26,7 +26,7 @@
+             <td><a href="{% url configuration build.id %}">{{build.get_outcome_display}}</a></td>
+             <td>{{build.started_on}}</td>
+             <td>{{build.completed_on}}</td>
+-            <td>{% for t in build.target_set.all %}<a href="{% url tpackage build.id t.id %}">{{t.target}}</a>{% if t.is_image %} (Img){% endif %}<br/>{% endfor %}</td>
++            <td>{% for t in build.target_set.all %}{%if t.is_image %}<a href="{% url tpackage build.id t.id %}">{% endif %}{{t.target}}{% if t.is_image %}</a>{% endif %}<br/>{% endfor %}</td>
+             <td>{{build.machine}}</td>
+             <td>{% time_difference build.started_on build.completed_on %}</td>
+             <td>{{build.errors_no}}:{% if  build.errors_no %}{% for error in logs %}{% if error.build == build %}{% if error.level == 2 %}<p>{{error.message}}</p>{% endif %}{% endif %}{% endfor %}{% else %}None{% endif %}</td>
 -- 
 1.8.1.2
 
