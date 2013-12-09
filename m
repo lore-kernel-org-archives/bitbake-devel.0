@@ -1,20 +1,20 @@
-Return-Path: <cristiana.voicu@intel.com>
+Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id B6C466DF55
+	by mail.openembedded.org (Postfix) with ESMTP id 75EC36E26A
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  6 Dec 2013 12:17:04 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 06 Dec 2013 04:17:04 -0800
+	Mon,  9 Dec 2013 19:07:26 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 09 Dec 2013 11:07:24 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.93,840,1378882800"; d="scan'208";a="420431706"
-Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.65])
-	by orsmga001.jf.intel.com with ESMTP; 06 Dec 2013 04:16:58 -0800
-From: Cristiana Voicu <cristiana.voicu@intel.com>
+X-IronPort-AV: E=Sophos;i="4.93,859,1378882800"; d="scan'208";a="449359872"
+Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.122.25])
+	by orsmga002.jf.intel.com with ESMTP; 09 Dec 2013 11:07:23 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  6 Dec 2013 14:23:04 +0200
-Message-Id: <1386332584-12164-1-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob: after adding a layer, hob do not parse the configuration
+Date: Mon,  9 Dec 2013 19:07:06 +0000
+Message-Id: <cover.1386615747.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.8.1.2
+Subject: [PATCH 00/11] Toaster improvements (BitBake part)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,53 +27,61 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 06 Dec 2013 12:17:06 -0000
+X-List-Received-Date: Mon, 09 Dec 2013 19:07:26 -0000
 
-Moved the parseConfiguration method before obtaining the machines and
-other configurations from bitbake. If not, Hob doesn't see the new machines
-added by the new layer.
+Note: this should be merged into BitBake at the same time that the
+corresponding changes to toaster.bbclass are merged in OE-Core.
 
-[YOCTO #5632]
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
----
- bitbake/lib/bb/ui/crumbs/builder.py         |    2 +-
- bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index e0fc0d1..1eae814 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -528,9 +528,9 @@ class Builder(gtk.Window):
-         self.generate_configuration()
- 
-     def update_config_async(self):
--        self.switch_page(self.MACHINE_SELECTION)
-         self.set_user_config()
-         self.generate_configuration()
-+        self.switch_page(self.MACHINE_SELECTION)
- 
-     def sanity_check(self):
-         self.handler.trigger_sanity_check()
-diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-index 7014935..b12f2d8 100644
---- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -403,12 +403,12 @@ class HobHandler(gobject.GObject):
- 
-     def generate_configuration(self):
-         self.runCommand(["setPrePostConfFiles", "conf/.hob.conf", ""])
-+        self.commands_async.append(self.SUB_PARSE_CONFIG)
-         self.commands_async.append(self.SUB_PATH_LAYERS)
-         self.commands_async.append(self.SUB_FILES_DISTRO)
-         self.commands_async.append(self.SUB_FILES_MACH)
-         self.commands_async.append(self.SUB_FILES_SDKMACH)
-         self.commands_async.append(self.SUB_MATCH_CLASS)
--        self.commands_async.append(self.SUB_PARSE_CONFIG)
-         self.run_next_command(self.GENERATE_CONFIGURATION)
- 
-     def generate_recipes(self):
+The following changes since commit 8f453bb11d72afc90a986ac604b3477d97eaf9a8:
+
+  data: Ensure we add the contains keys in a particular order (2013-12-09 10:25:41 +0000)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib paule/toaster-bb
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/toaster-bb
+
+Alexandru DAMIAN (11):
+  toaster: Analysis API variablehistory update
+  toaster: remove Author field in SimpleUI
+  toaster: move layer information reading code
+  toaster: update build stats reading
+  toaster: change package storage model
+  toasterui: fix version numbers for no PE specified
+  toasterui: do not link non-image targets
+  toaster: update to Django 1.5
+  toaster: migrate orm models to South
+  toaster: add pagination to the Simple UI
+  toaster: Add more information for tasks in Simple UI
+
+ bin/toaster                                        |  20 +-
+ lib/bb/ui/buildinfohelper.py                       | 319 ++++++----------
+ lib/bb/ui/toasterui.py                             |   9 +-
+ lib/toaster/bldviewer/api.py                       |   1 +
+ lib/toaster/bldviewer/templates/base.html          |   4 +-
+ lib/toaster/bldviewer/templates/basebuildpage.html |   8 +-
+ lib/toaster/bldviewer/templates/basetable.html     |  22 +-
+ lib/toaster/bldviewer/templates/bfile.html         |   6 +-
+ lib/toaster/bldviewer/templates/bpackage.html      |  12 +-
+ lib/toaster/bldviewer/templates/build.html         |   6 +-
+ lib/toaster/bldviewer/templates/configuration.html |   2 +-
+ lib/toaster/bldviewer/templates/layer.html         |   4 +-
+ lib/toaster/bldviewer/templates/package.html       |   8 +-
+ lib/toaster/bldviewer/templates/recipe.html        |   3 +-
+ lib/toaster/bldviewer/templates/task.html          |  18 +-
+ lib/toaster/bldviewer/urls.py                      |   4 +-
+ lib/toaster/bldviewer/views.py                     |  70 ++--
+ lib/toaster/orm/migrations/0001_initial.py         | 400 +++++++++++++++++++++
+ lib/toaster/orm/migrations/__init__.py             |   0
+ lib/toaster/orm/models.py                          |  51 +--
+ lib/toaster/toastermain/settings.py                |   1 +
+ lib/toaster/toastermain/urls.py                    |   4 +-
+ 22 files changed, 659 insertions(+), 313 deletions(-)
+ create mode 100644 lib/toaster/orm/migrations/0001_initial.py
+ create mode 100644 lib/toaster/orm/migrations/__init__.py
+
 -- 
-1.7.9.5
+1.8.1.2
 
 
