@@ -1,26 +1,23 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 794BA6E23F
+Return-Path: <ddalex@intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 285B460EE0
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Dec 2013 15:09:50 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.5) with ESMTP id rBAF9o4Y010938
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Dec 2013 07:09:50 -0800 (PST)
-Received: from pek-hostel-vm02.wrs.com (128.224.153.172) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
-	14.2.347.0; Tue, 10 Dec 2013 07:09:49 -0800
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 10 Dec 2013 10:09:39 -0500
-Message-ID: <48d01638daeb8b3a0f08082556144cd443d70eed.1386680149.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.10.4
-In-Reply-To: <cover.1386680149.git.liezhi.yang@windriver.com>
-References: <cover.1386680149.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 5/5] [dora] bitbake: runqueue: Fix hole in setsceneverify skipped task logic
+	Tue, 10 Dec 2013 18:24:25 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 10 Dec 2013 10:24:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.93,866,1378882800"; d="scan'208";a="447828210"
+Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
+	by fmsmga002.fm.intel.com with ESMTP; 10 Dec 2013 10:24:20 -0800
+Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
+	id 4BEC356022D; Tue, 10 Dec 2013 18:24:20 +0000 (GMT)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 10 Dec 2013 18:24:18 +0000
+Message-Id: <1386699858-13195-1-git-send-email-alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.8.3.2
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 1/1] toaster: add two-stage commit startup logic
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,80 +30,114 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Dec 2013 15:09:50 -0000
-Content-Type: text/plain
+X-List-Received-Date: Tue, 10 Dec 2013 18:24:26 -0000
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-We have do_bundle_initramfs which is a task inserted after compile and
-before build. It is not covered by sstate.
+Toaster start script lunches multiple process components
+of the toaster system.
 
-If we run a build with a valid sstate cache present, the setsceneverify
-function realises it will rerun the do_compile step (due to the
-bundle_initramfs task) and hence marks do_populate_sysroot to rerun.
-do_install, a dependency of do_populate_sysroot is left as marked as
-covered by sstate.
+This patch adds logic into the startup script to
+safely fail startup and do proper cleanup on any error
+that may happen during system start.
 
-What we need to do is traverse the dependency tree for any setsceneverify
-invalided task and ensure any dependencies are also invalidated. We can
-stop at any point we reach another setscene task though.
+Bitbake needs to return 0 if it will successfully lunches
+the server-mode.
 
-This means the do_populate_sysroot task has the data from do_install
-available and doesn't crash.
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-(Bitbake master rev: f21910157d873c030b149c4cdc5b57c5062ab5a6)
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/runqueue.py |   21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
-
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index c09cfd4..72c0208 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1204,6 +1204,8 @@ class RunQueueExecuteTasks(RunQueueExecute):
+diff --git a/bin/bitbake b/bin/bitbake
+index 5857b92..fbd8c91 100755
+--- a/bin/bitbake
++++ b/bin/bitbake
+@@ -343,6 +343,7 @@ def main():
+             server_connection.terminate()
+     else:
+         print("server address: %s, server port: %s" % (server.serverImpl.host, server.serverImpl.port))
++        return 0
  
-         self.stampcache = {}
+     return 1
  
-+        initial_covered = self.rq.scenequeue_covered.copy()
-+
-         # Mark initial buildable tasks
-         for task in xrange(self.stats.total):
-             self.runq_running.append(0)
-@@ -1257,13 +1259,28 @@ class RunQueueExecuteTasks(RunQueueExecute):
-             except TypeError:
-                 covered_remove = bb.utils.better_eval(call2, locs)
+diff --git a/bin/toaster b/bin/toaster
+index fc59fe5..38e71ac 100755
+--- a/bin/toaster
++++ b/bin/toaster
+@@ -51,6 +51,11 @@ function webserverStartAll()
+         fi
+         if [ $retval -eq 0 ]; then
+             python $BBBASEDIR/lib/toaster/manage.py runserver 0.0.0.0:8000 </dev/null >${BUILDDIR}/toaster_web.log 2>&1 & echo $! >${BUILDDIR}/.toastermain.pid
++            sleep 1
++            if ! cat "${BUILDDIR}/.toastermain.pid" | xargs -I{} kill -0 {} ; then
++                retval=1
++                rm "${BUILDDIR}/.toastermain.pid"
++            fi
+         fi
+         return $retval
+ }
+@@ -120,9 +125,13 @@ else
+ fi
  
--        for task in covered_remove:
-+        def removecoveredtask(task):
-             fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[task]]
-             taskname = self.rqdata.runq_task[task] + '_setscene'
-             bb.build.del_stamp(taskname, self.rqdata.dataCache, fn)
--            logger.debug(1, 'Not skipping task %s due to setsceneverify', task)
-             self.rq.scenequeue_covered.remove(task)
+ NOTOASTERUI=0
+-if [ "x$2" == "xnoui" ]; then
+-    NOTOASTERUI=1
+-fi
++for param in $*; do
++    case $param in
++    noui )
++            NOTOASTERUI=1
++    ;;
++    esac
++done
  
-+        toremove = covered_remove
-+        for task in toremove:
-+            logger.debug(1, 'Not skipping task %s due to setsceneverify', task)
-+        while toremove:
-+            covered_remove = []
-+            for task in toremove:
-+                removecoveredtask(task)
-+                for deptask in self.rqdata.runq_depends[task]:
-+                    if deptask not in self.rq.scenequeue_covered:
-+                        continue
-+                    if deptask in toremove or deptask in covered_remove or deptask in initial_covered:
-+                        continue
-+                    logger.debug(1, 'Task %s depends on task %s so not skipping' % (task, deptask))
-+                    covered_remove.append(deptask)
-+            toremove = covered_remove
-+
-         logger.debug(1, 'Full skip list %s', self.rq.scenequeue_covered)
+ echo "The system will $CMD."
  
-         event.fire(bb.event.StampUpdate(self.rqdata.target_pairs, self.rqdata.dataCache.stamp), self.cfgData)
+@@ -157,22 +166,38 @@ fi
+ 
+ case $CMD in
+     start )
++        start_success=1
+         addtoConfiguration "INHERIT+=\"toaster buildhistory\"" toaster.conf
+-        webserverStartAll || return 4
++        if ! webserverStartAll; then
++            echo "Failed ${CMD}."
++            return 4
++        fi
+         unset BBSERVER
+         bitbake --postread conf/toaster.conf --server-only -t xmlrpc -B localhost:8200
+-        export BBSERVER=localhost:8200
+-        if [ $NOTOASTERUI == 0 ]; then        # we start the TOASTERUI only if not inhibited
+-            bitbake --observe-only -u toasterui >${BUILDDIR}/toaster_ui.log 2>&1 & echo $! >${BUILDDIR}/.toasterui.pid
++        if [ $? -ne 0 ]; then
++            start_success=0
++            echo "Bitbake server start failed"
++        else
++            export BBSERVER=localhost:8200
++            if [ $NOTOASTERUI == 0 ]; then        # we start the TOASTERUI only if not inhibited
++                bitbake --observe-only -u toasterui >${BUILDDIR}/toaster_ui.log 2>&1 & echo $! >${BUILDDIR}/.toasterui.pid
++            fi
++        fi
++        if [ $start_success -eq 1 ]; then
++            # set fail safe stop system on terminal exit
++            trap stop_system SIGHUP
++            echo "Successful ${CMD}."
++        else
++            # failed start, do stop
++            stop_system
++            echo "Failed ${CMD}."
+         fi
+-        # stop system on terminal exit
+-        trap stop_system SIGHUP
+     ;;
+     stop )
+         stop_system
+         trap '' SIGHUP
++        echo "Successful ${CMD}."
+     ;;
+ esac
+ 
+-echo "Successful ${CMD}."
+ 
 -- 
-1.7.10.4
+1.8.3.2
 
 
