@@ -1,26 +1,26 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 3DBDB6DEDA
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 794BA6E23F
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Dec 2013 15:09:49 +0000 (UTC)
+	Tue, 10 Dec 2013 15:09:50 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.5) with ESMTP id rBAF9mQH006908
+	by mail.windriver.com (8.14.5/8.14.5) with ESMTP id rBAF9o4Y010938
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Dec 2013 07:09:48 -0800 (PST)
+	Tue, 10 Dec 2013 07:09:50 -0800 (PST)
 Received: from pek-hostel-vm02.wrs.com (128.224.153.172) by
 	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
-	14.2.347.0; Tue, 10 Dec 2013 07:09:47 -0800
+	14.2.347.0; Tue, 10 Dec 2013 07:09:49 -0800
 From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 10 Dec 2013 10:09:38 -0500
-Message-ID: <938f6010fa84c1a18d2fed6ec29cc0bfdf551fe8.1386680149.git.liezhi.yang@windriver.com>
+Date: Tue, 10 Dec 2013 10:09:39 -0500
+Message-ID: <48d01638daeb8b3a0f08082556144cd443d70eed.1386680149.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 1.7.10.4
 In-Reply-To: <cover.1386680149.git.liezhi.yang@windriver.com>
 References: <cover.1386680149.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 4/5] [dora] bitbake: build.py: add single-quotes around already-expanded directory name
+Subject: [PATCH 5/5] [dora] bitbake: runqueue: Fix hole in setsceneverify skipped task logic
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,45 +33,79 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Dec 2013 15:09:49 -0000
+X-List-Received-Date: Tue, 10 Dec 2013 15:09:50 -0000
 Content-Type: text/plain
 
-From: Peter Seebach <peter.seebach@windriver.com>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-If the computed name of a directory contains an undefined variable
-reference, bitbake dutifully creates a directory with a name that has
-${...} in it. However, the actual task script created then tries to cd
-to that directory, and the cd command fails, because no such directory
-exists -- because the shell has helpfully removed the ${...} which did
-not match any actual variables.
+We have do_bundle_initramfs which is a task inserted after compile and
+before build. It is not covered by sstate.
 
-Since we want the name to be used exactly-as-is, add single quotes around
-the name so this doesn't cause strange failures running tasks, which
-allows us to progress past such failures and get to a point where they
-can be diagnosed.
+If we run a build with a valid sstate cache present, the setsceneverify
+function realises it will rerun the do_compile step (due to the
+bundle_initramfs task) and hence marks do_populate_sysroot to rerun.
+do_install, a dependency of do_populate_sysroot is left as marked as
+covered by sstate.
 
-(Bitbake master rev: 2809c2e6f2f35f9b08058950be896947ab5a0284)
+What we need to do is traverse the dependency tree for any setsceneverify
+invalided task and ensure any dependencies are also invalidated. We can
+stop at any point we reach another setscene task though.
 
-Signed-off-by: Peter Seebach <peter.seebach@windriver.com>
+This means the do_populate_sysroot task has the data from do_install
+available and doesn't crash.
+
+(Bitbake master rev: f21910157d873c030b149c4cdc5b57c5062ab5a6)
+
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- bitbake/lib/bb/build.py |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/bb/runqueue.py |   21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-index 2e49a09..edab556 100644
---- a/bitbake/lib/bb/build.py
-+++ b/bitbake/lib/bb/build.py
-@@ -285,7 +285,7 @@ set -e
-         if bb.msg.loggerVerboseLogs:
-             script.write("set -x\n")
-         if cwd:
--            script.write("cd %s\n" % cwd)
-+            script.write("cd '%s'\n" % cwd)
-         script.write("%s\n" % func)
-         script.write('''
- # cleanup
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index c09cfd4..72c0208 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1204,6 +1204,8 @@ class RunQueueExecuteTasks(RunQueueExecute):
+ 
+         self.stampcache = {}
+ 
++        initial_covered = self.rq.scenequeue_covered.copy()
++
+         # Mark initial buildable tasks
+         for task in xrange(self.stats.total):
+             self.runq_running.append(0)
+@@ -1257,13 +1259,28 @@ class RunQueueExecuteTasks(RunQueueExecute):
+             except TypeError:
+                 covered_remove = bb.utils.better_eval(call2, locs)
+ 
+-        for task in covered_remove:
++        def removecoveredtask(task):
+             fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[task]]
+             taskname = self.rqdata.runq_task[task] + '_setscene'
+             bb.build.del_stamp(taskname, self.rqdata.dataCache, fn)
+-            logger.debug(1, 'Not skipping task %s due to setsceneverify', task)
+             self.rq.scenequeue_covered.remove(task)
+ 
++        toremove = covered_remove
++        for task in toremove:
++            logger.debug(1, 'Not skipping task %s due to setsceneverify', task)
++        while toremove:
++            covered_remove = []
++            for task in toremove:
++                removecoveredtask(task)
++                for deptask in self.rqdata.runq_depends[task]:
++                    if deptask not in self.rq.scenequeue_covered:
++                        continue
++                    if deptask in toremove or deptask in covered_remove or deptask in initial_covered:
++                        continue
++                    logger.debug(1, 'Task %s depends on task %s so not skipping' % (task, deptask))
++                    covered_remove.append(deptask)
++            toremove = covered_remove
++
+         logger.debug(1, 'Full skip list %s', self.rq.scenequeue_covered)
+ 
+         event.fire(bb.event.StampUpdate(self.rqdata.target_pairs, self.rqdata.dataCache.stamp), self.cfgData)
 -- 
 1.7.10.4
 
