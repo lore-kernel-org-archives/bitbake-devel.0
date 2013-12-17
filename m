@@ -1,22 +1,22 @@
 Return-Path: <cristiana.voicu@intel.com>
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 3AD1A6E55D
+	by mail.openembedded.org (Postfix) with ESMTP id 576656E4C1
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue, 17 Dec 2013 12:58:37 +0000 (UTC)
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 17 Dec 2013 04:58:18 -0800
+	by fmsmga101.fm.intel.com with ESMTP; 17 Dec 2013 04:58:19 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.95,501,1384329600"; d="scan'208";a="445629345"
+X-IronPort-AV: E=Sophos;i="4.95,501,1384329600"; d="scan'208";a="445629352"
 Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.151])
-	by fmsmga001.fm.intel.com with ESMTP; 17 Dec 2013 04:57:54 -0800
+	by fmsmga001.fm.intel.com with ESMTP; 17 Dec 2013 04:57:57 -0800
 From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 17 Dec 2013 15:04:04 +0200
-Message-Id: <1387285447-18057-3-git-send-email-cristiana.voicu@intel.com>
+Date: Tue, 17 Dec 2013 15:04:06 +0200
+Message-Id: <1387285447-18057-5-git-send-email-cristiana.voicu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1387285447-18057-1-git-send-email-cristiana.voicu@intel.com>
 References: <1387285447-18057-1-git-send-email-cristiana.voicu@intel.com>
-Subject: [PATCH 2/5] hob: create a base hob image used to create custom images
+Subject: [PATCH 4/5] hob: remove the code that adds hob layer to bblayers
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,95 +31,30 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 17 Dec 2013 12:58:37 -0000
 
-In order to remove hob-image.bb from meta-hob, a hob-image.bb should
-be created somewhere in the build directory. I've saved it in build/recipes/images
-directory, and moved the templates to recipes/images/custom (here are those
-templates saved by the user).
-The image is created when hob starts. Also it appends to BBFILES the directory
-where it is created.
-
-Removed images directory from meta-hob.
-
 [YOCTO #5118]
 Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/builder.py                |    3 ++-
- bitbake/lib/bb/ui/crumbs/hobeventhandler.py        |    9 ++++++++-
- bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py |    2 +-
- bitbake/lib/bb/ui/crumbs/imagedetailspage.py       |    2 +-
- meta-hob/recipes-core/images/hob-image.bb          |    1 -
- 5 files changed, 12 insertions(+), 5 deletions(-)
- delete mode 100644 meta-hob/recipes-core/images/hob-image.bb
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index 0ce9297..cc418fd 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -441,7 +441,8 @@ class Builder(gtk.Window):
-         self.handler.connect("recipe-populated",         self.handler_recipe_populated_cb)
-         self.handler.connect("package-populated",        self.handler_package_populated_cb)
- 
--        self.handler.append_to_bbfiles("${TOPDIR}/recipes/images/*.bb")
-+        self.handler.append_to_bbfiles("${TOPDIR}/recipes/images/custom/*.bb")
-+        self.handler.generate_hob_base_image()
-         self.initiate_new_build_async()
- 
-         signal.signal(signal.SIGINT, self.event_handle_SIGINT)
 diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-index b12f2d8..4cb10b7 100644
+index 4cb10b7..b412368 100644
 --- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
 +++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -440,9 +440,16 @@ class HobHandler(gobject.GObject):
-         self.run_next_command(self.GENERATE_IMAGE)
- 
-     def generate_new_image(self, image, base_image, package_queue, description):
--        base_image = self.runCommand(["matchFile", self.base_image + ".bb"])
-+        if base_image:
-+            base_image = self.runCommand(["matchFile", self.base_image + ".bb"])
-         self.runCommand(["generateNewImage", image, base_image, package_queue, False, description])
- 
-+    def generate_hob_base_image(self):
-+        image_dir = self.get_topdir() + "/recipes/images/"
-+        self.ensure_dir(image_dir)
-+        self.generate_new_image(image_dir+"hob-image.bb", None, [], "")
-+        self.append_to_bbfiles(image_dir + "*.bb")
-+
-     def ensure_dir(self, directory):
-         self.runCommand(["ensureDir", directory])
- 
-diff --git a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-index 79709d0..5e40f71 100644
---- a/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imageconfigurationpage.py
-@@ -378,7 +378,7 @@ class ImageConfigurationPage (HobPage):
-         selected_image = self.image_combo.get_active_text()
-         if selected_image == self.__custom_image__:
-             topdir = self.builder.get_topdir()
--            images_dir = topdir + "/recipes/images/"
-+            images_dir = topdir + "/recipes/images/custom/"
-             self.builder.ensure_dir(images_dir)
- 
-             dialog = RetrieveImageDialog(images_dir, "Select from my image recipes",
-diff --git a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-index 271635f..352e948 100755
---- a/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-+++ b/bitbake/lib/bb/ui/crumbs/imagedetailspage.py
-@@ -632,7 +632,7 @@ class ImageDetailsPage (HobPage):
- 
-     def save_button_clicked_cb(self, button):
-         topdir = self.builder.get_topdir()
--        images_dir = topdir + "/recipes/images/"
-+        images_dir = topdir + "/recipes/images/custom/"
-         self.builder.ensure_dir(images_dir)
- 
-         self.name_field_template = self.builder.image_configuration_page.custom_image_selected
-diff --git a/meta-hob/recipes-core/images/hob-image.bb b/meta-hob/recipes-core/images/hob-image.bb
-deleted file mode 100644
-index c8d6f49..0000000
---- a/meta-hob/recipes-core/images/hob-image.bb
-+++ /dev/null
-@@ -1 +0,0 @@
--inherit image
+@@ -515,13 +515,8 @@ class HobHandler(gobject.GObject):
+         # retrieve the parameters from bitbake
+         params = {}
+         params["core_base"] = self.runCommand(["getVariable", "COREBASE"]) or ""
+-        hob_layer = params["core_base"] + "/meta-hob"
+         params["layer"] = self.runCommand(["getVariable", "BBLAYERS"]) or ""
+         params["layers_non_removable"] = self.runCommand(["getVariable", "BBLAYERS_NON_REMOVABLE"]) or ""
+-        if hob_layer not in params["layer"].split():
+-            params["layer"] += (" " + hob_layer)
+-        if hob_layer not in params["layers_non_removable"].split():
+-            params["layers_non_removable"] += (" " + hob_layer)
+         params["dldir"] = self.runCommand(["getVariable", "DL_DIR"]) or ""
+         params["machine"] = self.runCommand(["getVariable", "MACHINE"]) or ""
+         params["distro"] = self.runCommand(["getVariable", "DISTRO"]) or "defaultsetup"
 -- 
 1.7.9.5
 
