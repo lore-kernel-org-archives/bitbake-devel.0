@@ -1,22 +1,22 @@
 Return-Path: <cristiana.voicu@intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id AC3046E4C1
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 14C686E4C1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 17 Dec 2013 12:57:47 +0000 (UTC)
+	Tue, 17 Dec 2013 12:58:37 +0000 (UTC)
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga102.jf.intel.com with ESMTP; 17 Dec 2013 04:53:59 -0800
+	by fmsmga101.fm.intel.com with ESMTP; 17 Dec 2013 04:58:18 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.95,501,1384329600"; d="scan'208";a="445629209"
+X-IronPort-AV: E=Sophos;i="4.95,501,1384329600"; d="scan'208";a="445629347"
 Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.151])
-	by fmsmga001.fm.intel.com with ESMTP; 17 Dec 2013 04:57:46 -0800
+	by fmsmga001.fm.intel.com with ESMTP; 17 Dec 2013 04:57:56 -0800
 From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 17 Dec 2013 15:04:03 +0200
-Message-Id: <1387285447-18057-2-git-send-email-cristiana.voicu@intel.com>
+Date: Tue, 17 Dec 2013 15:04:05 +0200
+Message-Id: <1387285447-18057-4-git-send-email-cristiana.voicu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1387285447-18057-1-git-send-email-cristiana.voicu@intel.com>
 References: <1387285447-18057-1-git-send-email-cristiana.voicu@intel.com>
-Subject: [PATCH 1/5] hob: replace hob-toolchain with meta-toolchain
+Subject: [PATCH 3/5] hob: remove the rest of meta-hob
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,47 +29,61 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 17 Dec 2013 12:57:47 -0000
-
-In order to remove meta-hob, hob-toolchain was removed.
-In hob, it was replaced with meta-toolchain.
+X-List-Received-Date: Tue, 17 Dec 2013 12:58:37 -0000
 
 [YOCTO #5118]
 Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/builder.py         |    2 +-
- meta-hob/recipes-core/meta/hob-toolchain.bb |    9 ---------
- 2 files changed, 1 insertion(+), 10 deletions(-)
- delete mode 100644 meta-hob/recipes-core/meta/hob-toolchain.bb
+ meta-hob/COPYING.MIT     |   17 -----------------
+ meta-hob/conf/layer.conf |   15 ---------------
+ 2 files changed, 32 deletions(-)
+ delete mode 100644 meta-hob/COPYING.MIT
+ delete mode 100644 meta-hob/conf/layer.conf
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index 1eae814..0ce9297 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -374,7 +374,7 @@ class Builder(gtk.Window):
-         super(Builder, self).__init__()
- 
-         self.hob_image = "hob-image"
--        self.hob_toolchain = "hob-toolchain"
-+        self.hob_toolchain = "meta-toolchain"
- 
-         # handler
-         self.handler = hobHandler
-diff --git a/meta-hob/recipes-core/meta/hob-toolchain.bb b/meta-hob/recipes-core/meta/hob-toolchain.bb
+diff --git a/meta-hob/COPYING.MIT b/meta-hob/COPYING.MIT
 deleted file mode 100644
-index 6f1a3d4..0000000
---- a/meta-hob/recipes-core/meta/hob-toolchain.bb
+index fb950dc..0000000
+--- a/meta-hob/COPYING.MIT
 +++ /dev/null
-@@ -1,9 +0,0 @@
--DESCRIPTION = "dummy toolchain"
--LICENSE = "MIT"
+@@ -1,17 +0,0 @@
+-Permission is hereby granted, free of charge, to any person obtaining a copy 
+-of this software and associated documentation files (the "Software"), to deal 
+-in the Software without restriction, including without limitation the rights 
+-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+-copies of the Software, and to permit persons to whom the Software is 
+-furnished to do so, subject to the following conditions:
 -
--PR = "r0"
+-The above copyright notice and this permission notice shall be included in 
+-all copies or substantial portions of the Software.
 -
--LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
--                    file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
+-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+-THE SOFTWARE.
+diff --git a/meta-hob/conf/layer.conf b/meta-hob/conf/layer.conf
+deleted file mode 100644
+index 1785e65..0000000
+--- a/meta-hob/conf/layer.conf
++++ /dev/null
+@@ -1,15 +0,0 @@
+-# We have a conf and classes directory, add to BBPATH
+-BBPATH .= ":${LAYERDIR}"
 -
--inherit populate_sdk
+-# We have recipes-* directories, add to BBFILES
+-BBFILES += "${LAYERDIR}/recipes-*/*/*.bb"
+-
+-BBFILE_COLLECTIONS += "hob"
+-BBFILE_PATTERN_hob = "^${LAYERDIR}/"
+-BBFILE_PRIORITY_hob = "1"
+-
+-# This should only be incremented on significant changes that will
+-# cause compatibility issues with other layers
+-LAYERVERSION_hob = "1"
+-
+-LAYERDEPENDS_hob = "core"
 -- 
 1.7.9.5
 
