@@ -1,23 +1,30 @@
-Return-Path: <ddalex@intel.com>
-Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
-	by mail.openembedded.org (Postfix) with ESMTP id 96D0C60DCA
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id F387A60E97
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Dec 2013 19:26:55 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by azsmga102.ch.intel.com with ESMTP; 18 Dec 2013 11:26:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.95,508,1384329600"; d="scan'208";a="446512352"
-Received: from adamian-desktop.isw.intel.com ([10.237.224.35])
-	by fmsmga001.fm.intel.com with ESMTP; 18 Dec 2013 11:26:54 -0800
-Received: by adamian-desktop.isw.intel.com (Postfix, from userid 1000)
-	id 5925C560594; Wed, 18 Dec 2013 19:26:56 +0000 (GMT)
-From: Alex DAMIAN <alexandru.damian@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 18 Dec 2013 19:26:51 +0000
-Message-Id: <1387394811-24196-1-git-send-email-alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.8.3.2
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 1/1] toaster: add buildstats to toaster config file
+	Thu, 19 Dec 2013 09:37:11 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	rBJ9b7Ke005944 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 19 Dec 2013 09:37:07 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id SBpzf9JSEdKC for <bitbake-devel@lists.openembedded.org>;
+	Thu, 19 Dec 2013 09:37:07 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	rBJ9b2YD005938
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 19 Dec 2013 09:37:03 GMT
+Message-ID: <1387445818.6402.60.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 19 Dec 2013 09:36:58 +0000
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] runqueue: Fix data being written into siginfo/sigdata files
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,49 +37,55 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 18 Dec 2013 19:26:55 -0000
+X-List-Received-Date: Thu, 19 Dec 2013 09:37:13 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+The way hash_deps was being generated was different to the way siggen generated
+the data internally which lead to seemingly different sigdata/siginfo files
+for the same checksum. The -S output correct but the files written during
+builds contained superflous data which would look like a difference.
 
-Toaster needs buildstats to be enabled in order to
-be able to collect task running stats. This patch
-adds buildstats to the running configuration in toaster mode.
+This patch removes the badly duplicated data and uses it from the source
+which ensures its consistent.
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bin/toaster | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index b7a602b..37dc362 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -802,19 +802,6 @@ class RunQueueData:
+                         procdep.append(self.taskData.fn_index[self.runq_fnid[dep]] + "." + self.runq_task[dep])
+                     self.runq_hash[task] = bb.parse.siggen.get_taskhash(self.taskData.fn_index[self.runq_fnid[task]], self.runq_task[task], procdep, self.dataCache)
+ 
+-        self.hashes = {}
+-        self.hash_deps = {}
+-        for task in xrange(len(self.runq_fnid)):
+-            identifier = '%s.%s' % (self.taskData.fn_index[self.runq_fnid[task]],
+-                                    self.runq_task[task])
+-            self.hashes[identifier] = self.runq_hash[task]
+-            deps = []
+-            for dep in self.runq_depends[task]:
+-                depidentifier = '%s.%s' % (self.taskData.fn_index[self.runq_fnid[dep]],
+-                                           self.runq_task[dep])
+-                deps.append(depidentifier)
+-            self.hash_deps[identifier] = deps
+-
+         return len(self.runq_fnid)
+ 
+     def dump_data(self, taskQueue):
+@@ -883,8 +870,8 @@ class RunQueue:
+             "fakerootenv" : self.rqdata.dataCache.fakerootenv,
+             "fakerootdirs" : self.rqdata.dataCache.fakerootdirs,
+             "fakerootnoenv" : self.rqdata.dataCache.fakerootnoenv,
+-            "hashes" : self.rqdata.hashes,
+-            "hash_deps" : self.rqdata.hash_deps,
++            "hashes" : bb.parse.siggen.taskhash,
++            "hash_deps" : bb.parse.siggen.runtaskdeps,
+             "sigchecksums" : bb.parse.siggen.file_checksum_values,
+             "runq_hash" : self.rqdata.runq_hash,
+             "logdefaultdebug" : bb.msg.loggerDefaultDebugLevel,
 
-diff --git a/bin/toaster b/bin/toaster
-index 38e71ac..d6c3175 100755
---- a/bin/toaster
-+++ b/bin/toaster
-@@ -61,10 +61,13 @@ function webserverStartAll()
- }
- 
- # Helper functions to add a special configuration file
-+function initConfiguration()
-+{
-+        echo "#Created by toaster start script" > ${BUILDDIR}/conf/$1
-+}
- 
- function addtoConfiguration()
- {
--        echo "#Created by toaster start script" > ${BUILDDIR}/conf/$2
-         echo $1 >> ${BUILDDIR}/conf/$2
- }
- 
-@@ -167,7 +170,9 @@ fi
- case $CMD in
-     start )
-         start_success=1
-+        initConfiguration toaster.conf
-         addtoConfiguration "INHERIT+=\"toaster buildhistory\"" toaster.conf
-+        addtoConfiguration "USER_CLASSES+=\"buildstats\"" toaster.conf
-         if ! webserverStartAll; then
-             echo "Failed ${CMD}."
-             return 4
--- 
-1.8.3.2
 
 
