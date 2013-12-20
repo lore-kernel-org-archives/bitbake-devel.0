@@ -1,36 +1,30 @@
-Return-Path: <nicolas.dechesne@linaro.org>
-Received: from mail-ob0-f179.google.com (mail-ob0-f179.google.com
-	[209.85.214.179])
-	by mail.openembedded.org (Postfix) with ESMTP id 3E7126007C
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id CA7C760C12
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Dec 2013 09:54:58 +0000 (UTC)
-Received: by mail-ob0-f179.google.com with SMTP id wm4so2474612obc.10
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Dec 2013 01:54:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-type;
-	bh=RTNGfoZC1EU+7p1y3OBAEgsE2s9SUZJlrFJ+82iVEhc=;
-	b=J3IMuWgwnblSKzu1eHOoZE4EevpkwShZdJBffvLD7Ncew/2kcotAHDey67P/9VnPU2
-	QpY8ZLpdL/MszIgXPhmxf5unsSRLflGL42oDmFBZ2iCCh4RAVkWIZPiFhFI9WzbEQChh
-	xxIvd5rYQg2eUiWVWcepVwqi89cye0EcYP+8NtmstEzisBEjPJGlAH7eIN/6jgHrS5Bq
-	lNkiRbMHkVxSybfMfssOCDPDwk6axXD9EeQkJErfWOttoo9AavHeMuAE8Ic0juDJr/3o
-	VVqWzeWulHIqjimKDyv9WXlZ7b9x6xYgEL62w4M/6wykoJM0XSBz9H+l8kVcTW+s1D2v
-	+ROQ==
-X-Gm-Message-State: ALoCoQkmvElsuqsSDmhT+H9nziEub+rBtYys6SomtbwzhBD1rfJi/ur1ca98vNyHCJROLvNhF+Wr
-X-Received: by 10.60.74.37 with SMTP id q5mr5583041oev.3.1387533299016; Fri,
-	20 Dec 2013 01:54:59 -0800 (PST)
-MIME-Version: 1.0
-Received: by 10.76.122.81 with HTTP; Fri, 20 Dec 2013 01:54:38 -0800 (PST)
-In-Reply-To: <CAJ7NSKrbE9XAN=B+KWY5RD31q-3wwJtX9xdkuyN9QLLq=iUSPg@mail.gmail.com>
-References: <CAJ7NSKrbE9XAN=B+KWY5RD31q-3wwJtX9xdkuyN9QLLq=iUSPg@mail.gmail.com>
-From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Date: Fri, 20 Dec 2013 10:54:38 +0100
-Message-ID: <CAP71WjyxC+ScMoCCjct9uaLraktZbkPb-_EC=wAFkFxgonGp_Q@mail.gmail.com>
-To: Udayan Bapat <uvbapat@gmail.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: Regarding CFLAGS in recipe
+	Fri, 20 Dec 2013 11:38:03 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	rBKBbwKu004362; Fri, 20 Dec 2013 11:37:58 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id gHOxJobCvZEO; Fri, 20 Dec 2013 11:37:58 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	rBKBbrea004359
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+	Fri, 20 Dec 2013 11:37:55 GMT
+Message-ID: <1387539469.6402.89.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: David Good <david.good1@gmail.com>
+Date: Fri, 20 Dec 2013 11:37:49 +0000
+In-Reply-To: <CALMFhSzPCspAJ6BbgD0dYk7EVP780zQPb8enJ7YCYY05mBdf8g@mail.gmail.com>
+References: <CALMFhSzPCspAJ6BbgD0dYk7EVP780zQPb8enJ7YCYY05mBdf8g@mail.gmail.com>
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: Running configure script up one dir
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,104 +37,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 20 Dec 2013 09:54:59 -0000
-Content-Type: multipart/alternative; boundary=001a1135f7bc67036d04edf445ba
+X-List-Received-Date: Fri, 20 Dec 2013 11:38:04 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---001a1135f7bc67036d04edf445ba
-Content-Type: text/plain; charset=ISO-8859-1
+Hi,
 
-On Thu, Nov 7, 2013 at 9:31 PM, Udayan Bapat <uvbapat@gmail.com> wrote:
+On Thu, 2013-12-19 at 23:18 -0600, David Good wrote:
+> I hope that this is the right list for my question.
 
-> Hi all,
->
-> I have a Yocto build environment where I intend to build all recipes with
-> -fPIE flag. So I have added CFLAGS_append += '-fPIE' in the local.conf.
-> However since shared libraries can not be built using -fPIE flag, I would
-> like to remove it from some recipes.
->
-> So far I have tried this in .bb files -
->
-> CFLAGS_noPIE = "${@'${CFLAGS}'.replace('-fPIE','')}"
->
-> do_compile_prepend () {
->     CFLAGS = "${CFLAGS_noPIE}"
-> }
->
-> This throws an error -
->
-> */zlib-native/1.2.8-r0/temp/run.do_compile.23159: line 82: CFLAGS: command
-> not found
->
-> I also have tried -
->
-> CFLAGS = "${@'${CFLAGS}'.replace('-fPIE','')}"
->
-> This doesn't work because same variable can not be referenced twice.
->
-> Then I tried this -
->
-> CFLAGS_noPIE = "${@'${CFLAGS}'.replace('-fPIE','')}"
-> CFLAGS = "${CFLAGS_noPIE}"
->
-> This fails with an error "maximum recursion depth exceeded for variable
-> 'CFLAGS'"
->
-> What is the correct way to doing this?
->
+Its really a question that should go to the openembedded-core list since
+its about the metadata which is part of OE-Core.
 
-if you use 'master' you can use the newly added _remove modifier. e.g.
-CFLAGS_remove = "-fPIE"
+>   I'm trying to write a bb recipe for Angstrom v2012_12 (BeagleBone
+> Black) for the tDOM package which uses autotools in a strange way (to
+> me anyhow).  configure is expected to be run from /(project
+> root)/unix, like this:
 
-otherwise you might need to query the DB to retrieve CFLAGS, something
-along these lines: ${@d.getVar('CFLAGS', True).replace(xxx)}
+It tricky to do but the freetype recipe in OE-Core shows one way of
+handling this. 
 
---001a1135f7bc67036d04edf445ba
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Cheers,
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Thu, Nov 7, 2013 at 9:31 PM, Udayan Bapat <span dir=3D"ltr">&lt;<a href=
-=3D"mailto:uvbapat@gmail.com" target=3D"_blank">uvbapat@gmail.com</a>&gt;</=
-span> wrote:<br>
-
-<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
-left-width:1px;border-left-color:rgb(204,204,204);border-left-style:solid;p=
-adding-left:1ex"><div><div>Hi all,<br><br>I have a Yocto build environment =
-where I intend to build all recipes with -fPIE flag. So I have added CFLAGS=
-_append +=3D &#39;-fPIE&#39; in the local.conf. However since shared librar=
-ies can not be built using -fPIE flag, I would like to remove it from some =
-recipes.<br>
+Richard
 
 
-<br>So far I have tried this in .bb files - <br><br>CFLAGS_noPIE =3D &quot;=
-${@&#39;${CFLAGS}&#39;.replace(&#39;-fPIE&#39;,&#39;&#39;)}&quot;<br><br>do=
-_compile_prepend () {<br>=A0=A0=A0 CFLAGS =3D &quot;${CFLAGS_noPIE}&quot;<b=
-r>}<br>
 
-
-<br></div>This throws an error - <br><br>*/zlib-native/1.2.8-r0/temp/run.do=
-_compile.23159: line 82: CFLAGS: command not found<br><br></div>I also have=
- tried - <br><br>CFLAGS =3D &quot;${@&#39;${CFLAGS}&#39;.replace(&#39;-fPIE=
-&#39;,&#39;&#39;)}&quot;<br>
-
-
-<br><div><div>This doesn&#39;t work because same variable can not be refere=
-nced twice.<br><br></div><div>Then I tried this - <br><br>CFLAGS_noPIE =3D =
-&quot;${@&#39;${CFLAGS}&#39;.replace(&#39;-fPIE&#39;,&#39;&#39;)}&quot;<br>
-
-
-</div><div>CFLAGS =3D &quot;${CFLAGS_noPIE}&quot; </div><div><br></div><div=
->This fails with an error &quot;maximum recursion depth exceeded for variab=
-le &#39;CFLAGS&#39;&quot;<br><br></div><div>What is the correct way to doin=
-g this?</div>
-
-</div></blockquote></div><br>if you use &#39;master&#39; you can use the ne=
-wly added _remove modifier. e.g. CFLAGS_remove =3D &quot;-fPIE&quot;</div><=
-div class=3D"gmail_extra"><br></div><div class=3D"gmail_extra">otherwise yo=
-u might need to query the DB to retrieve CFLAGS, something along these line=
-s: ${@d.getVar(&#39;CFLAGS&#39;, True).replace(xxx)}</div>
-
-<div class=3D"gmail_extra"><br></div><div class=3D"gmail_extra"><br></div><=
-/div>
-
---001a1135f7bc67036d04edf445ba--
