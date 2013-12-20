@@ -1,31 +1,36 @@
-Return-Path: <david.good1@gmail.com>
-Received: from mail-we0-f170.google.com (mail-we0-f170.google.com
-	[74.125.82.170])
-	by mail.openembedded.org (Postfix) with ESMTP id 6CF8760DED
+Return-Path: <nicolas.dechesne@linaro.org>
+Received: from mail-ob0-f179.google.com (mail-ob0-f179.google.com
+	[209.85.214.179])
+	by mail.openembedded.org (Postfix) with ESMTP id 3E7126007C
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Dec 2013 05:18:44 +0000 (UTC)
-Received: by mail-we0-f170.google.com with SMTP id w61so2020363wes.15
+	Fri, 20 Dec 2013 09:54:58 +0000 (UTC)
+Received: by mail-ob0-f179.google.com with SMTP id wm4so2474612obc.10
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Dec 2013 21:18:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:from:date:message-id:subject:to:content-type;
-	bh=P12mY5pwfFxQcOP3CURDC6atj9Y2X3Z/cmB0ydptr3E=;
-	b=ert6u+jC1edtSD7gbMe8ynVSfYKTG9BnhCUwMIp/mAREZnYNMWKZ7MFi6d+0+icjpG
-	9CPd1VmvAT68eqnshHsTY5CV2NkjSUPzkBfkwnvQM/l6C2F47a2wCJOoJw9DnT0WHCAy
-	4Yu27WLSqVYsuA0ze90s011XRIWWBTryW8WrtsVtjMn4gLnQOc74CWuCYAykX2Ld2VBE
-	V2Z6EJK/00C9BrNgtQKat4Cx02Vvjkv1RfBdqIZylHze5JGSurEzavHhOcA5wThpPhMz
-	Qrp4vfbr870M2K8NFblDcu5dd6FOUuqkLuuCEp4flpi6617xRl12si604FaLFh5A80L0
-	qUfA==
-X-Received: by 10.180.104.42 with SMTP id gb10mr6050348wib.51.1387516723961;
-	Thu, 19 Dec 2013 21:18:43 -0800 (PST)
+	Fri, 20 Dec 2013 01:54:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc:content-type;
+	bh=RTNGfoZC1EU+7p1y3OBAEgsE2s9SUZJlrFJ+82iVEhc=;
+	b=J3IMuWgwnblSKzu1eHOoZE4EevpkwShZdJBffvLD7Ncew/2kcotAHDey67P/9VnPU2
+	QpY8ZLpdL/MszIgXPhmxf5unsSRLflGL42oDmFBZ2iCCh4RAVkWIZPiFhFI9WzbEQChh
+	xxIvd5rYQg2eUiWVWcepVwqi89cye0EcYP+8NtmstEzisBEjPJGlAH7eIN/6jgHrS5Bq
+	lNkiRbMHkVxSybfMfssOCDPDwk6axXD9EeQkJErfWOttoo9AavHeMuAE8Ic0juDJr/3o
+	VVqWzeWulHIqjimKDyv9WXlZ7b9x6xYgEL62w4M/6wykoJM0XSBz9H+l8kVcTW+s1D2v
+	+ROQ==
+X-Gm-Message-State: ALoCoQkmvElsuqsSDmhT+H9nziEub+rBtYys6SomtbwzhBD1rfJi/ur1ca98vNyHCJROLvNhF+Wr
+X-Received: by 10.60.74.37 with SMTP id q5mr5583041oev.3.1387533299016; Fri,
+	20 Dec 2013 01:54:59 -0800 (PST)
 MIME-Version: 1.0
-Received: by 10.194.171.202 with HTTP; Thu, 19 Dec 2013 21:18:23 -0800 (PST)
-From: David Good <david.good1@gmail.com>
-Date: Thu, 19 Dec 2013 23:18:23 -0600
-Message-ID: <CALMFhSzPCspAJ6BbgD0dYk7EVP780zQPb8enJ7YCYY05mBdf8g@mail.gmail.com>
-To: bitbake-devel@lists.openembedded.org
-X-Mailman-Approved-At: Fri, 20 Dec 2013 09:50:02 +0000
-Subject: Running configure script up one dir
+Received: by 10.76.122.81 with HTTP; Fri, 20 Dec 2013 01:54:38 -0800 (PST)
+In-Reply-To: <CAJ7NSKrbE9XAN=B+KWY5RD31q-3wwJtX9xdkuyN9QLLq=iUSPg@mail.gmail.com>
+References: <CAJ7NSKrbE9XAN=B+KWY5RD31q-3wwJtX9xdkuyN9QLLq=iUSPg@mail.gmail.com>
+From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Date: Fri, 20 Dec 2013 10:54:38 +0100
+Message-ID: <CAP71WjyxC+ScMoCCjct9uaLraktZbkPb-_EC=wAFkFxgonGp_Q@mail.gmail.com>
+To: Udayan Bapat <uvbapat@gmail.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: Regarding CFLAGS in recipe
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,72 +43,104 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 20 Dec 2013 05:18:45 -0000
-Content-Type: multipart/alternative; boundary=f46d041826f673a70d04edf06946
+X-List-Received-Date: Fri, 20 Dec 2013 09:54:59 -0000
+Content-Type: multipart/alternative; boundary=001a1135f7bc67036d04edf445ba
 
---f46d041826f673a70d04edf06946
+--001a1135f7bc67036d04edf445ba
 Content-Type: text/plain; charset=ISO-8859-1
 
-Hi all,
+On Thu, Nov 7, 2013 at 9:31 PM, Udayan Bapat <uvbapat@gmail.com> wrote:
 
-I hope that this is the right list for my question.  I'm trying to write a
-bb recipe for Angstrom v2012_12 (BeagleBone Black) for the tDOM package
-which uses autotools in a strange way (to me anyhow).  configure is
-expected to be run from /(project root)/unix, like this:
+> Hi all,
+>
+> I have a Yocto build environment where I intend to build all recipes with
+> -fPIE flag. So I have added CFLAGS_append += '-fPIE' in the local.conf.
+> However since shared libraries can not be built using -fPIE flag, I would
+> like to remove it from some recipes.
+>
+> So far I have tried this in .bb files -
+>
+> CFLAGS_noPIE = "${@'${CFLAGS}'.replace('-fPIE','')}"
+>
+> do_compile_prepend () {
+>     CFLAGS = "${CFLAGS_noPIE}"
+> }
+>
+> This throws an error -
+>
+> */zlib-native/1.2.8-r0/temp/run.do_compile.23159: line 82: CFLAGS: command
+> not found
+>
+> I also have tried -
+>
+> CFLAGS = "${@'${CFLAGS}'.replace('-fPIE','')}"
+>
+> This doesn't work because same variable can not be referenced twice.
+>
+> Then I tried this -
+>
+> CFLAGS_noPIE = "${@'${CFLAGS}'.replace('-fPIE','')}"
+> CFLAGS = "${CFLAGS_noPIE}"
+>
+> This fails with an error "maximum recursion depth exceeded for variable
+> 'CFLAGS'"
+>
+> What is the correct way to doing this?
+>
 
-cd (git checkout of project)/unix
-../configure; make; make install
+if you use 'master' you can use the newly added _remove modifier. e.g.
+CFLAGS_remove = "-fPIE"
 
-How do I get bitbake to run configure in this way?
+otherwise you might need to query the DB to retrieve CFLAGS, something
+along these lines: ${@d.getVar('CFLAGS', True).replace(xxx)}
 
-Here's my bb file if it helps:
-
-DESCRIPTION = "XML data processing in Tcl"
-LICENSE = "MPL-1"
-SECTION = "devel/tcltk"
-HOMEPAGE = "http://tdom.github.io/"
-DEPENDS = "tcl-native"
-LIC_FILES_CHKSUM = "file://../LICENSE;md5=4673aaff544d4c9b9a521cb8e0860bfb"
-PR = "r0"
-
-SRC_URI = "git://github.com/tDOM/tdom.git;protocol=git;tag=master"
-
-S = "${WORKDIR}/git/unix"
-
-inherit autotools
-
----
-
-Any thoughts would be appreciated!
-
---David
-
---f46d041826f673a70d04edf06946
+--001a1135f7bc67036d04edf445ba
 Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div><div><div><div><div><div><div>Hi all,<br><br></div>I =
-hope that this is the right list for my question.=A0 I&#39;m trying to writ=
-e a bb recipe for Angstrom v2012_12 (BeagleBone Black) for the tDOM package=
- which uses autotools in a strange way (to me anyhow).=A0 configure is expe=
-cted to be run from /(project root)/unix, like this:<br>
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Thu, Nov 7, 2013 at 9:31 PM, Udayan Bapat <span dir=3D"ltr">&lt;<a href=
+=3D"mailto:uvbapat@gmail.com" target=3D"_blank">uvbapat@gmail.com</a>&gt;</=
+span> wrote:<br>
 
-<br></div>cd (git checkout of project)/unix<br></div>../configure; make; ma=
-ke install<br><br></div>How do I get bitbake to run configure in this way?<=
-br><br></div>Here&#39;s my bb file if it helps:<br><br>DESCRIPTION =3D &quo=
-t;XML data processing in Tcl&quot;<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
+left-width:1px;border-left-color:rgb(204,204,204);border-left-style:solid;p=
+adding-left:1ex"><div><div>Hi all,<br><br>I have a Yocto build environment =
+where I intend to build all recipes with -fPIE flag. So I have added CFLAGS=
+_append +=3D &#39;-fPIE&#39; in the local.conf. However since shared librar=
+ies can not be built using -fPIE flag, I would like to remove it from some =
+recipes.<br>
 
-LICENSE =3D &quot;MPL-1&quot;<br>SECTION =3D &quot;devel/tcltk&quot;<br>HOM=
-EPAGE =3D &quot;<a href=3D"http://tdom.github.io/">http://tdom.github.io/</=
-a>&quot;<br>DEPENDS =3D &quot;tcl-native&quot;<br>LIC_FILES_CHKSUM =3D &quo=
-t;file://../LICENSE;md5=3D4673aaff544d4c9b9a521cb8e0860bfb&quot;<br>
 
-PR =3D &quot;r0&quot;<br><br>SRC_URI =3D &quot;git://<a href=3D"http://gith=
-ub.com/tDOM/tdom.git;protocol=3Dgit;tag=3Dmaster">github.com/tDOM/tdom.git;=
-protocol=3Dgit;tag=3Dmaster</a>&quot;<br><br>S =3D &quot;${WORKDIR}/git/uni=
-x&quot;<br>
-<br>
-inherit autotools<br><br>---<br><br></div>Any thoughts would be appreciated=
-!<br><br></div>--David<br></div>
+<br>So far I have tried this in .bb files - <br><br>CFLAGS_noPIE =3D &quot;=
+${@&#39;${CFLAGS}&#39;.replace(&#39;-fPIE&#39;,&#39;&#39;)}&quot;<br><br>do=
+_compile_prepend () {<br>=A0=A0=A0 CFLAGS =3D &quot;${CFLAGS_noPIE}&quot;<b=
+r>}<br>
 
---f46d041826f673a70d04edf06946--
+
+<br></div>This throws an error - <br><br>*/zlib-native/1.2.8-r0/temp/run.do=
+_compile.23159: line 82: CFLAGS: command not found<br><br></div>I also have=
+ tried - <br><br>CFLAGS =3D &quot;${@&#39;${CFLAGS}&#39;.replace(&#39;-fPIE=
+&#39;,&#39;&#39;)}&quot;<br>
+
+
+<br><div><div>This doesn&#39;t work because same variable can not be refere=
+nced twice.<br><br></div><div>Then I tried this - <br><br>CFLAGS_noPIE =3D =
+&quot;${@&#39;${CFLAGS}&#39;.replace(&#39;-fPIE&#39;,&#39;&#39;)}&quot;<br>
+
+
+</div><div>CFLAGS =3D &quot;${CFLAGS_noPIE}&quot; </div><div><br></div><div=
+>This fails with an error &quot;maximum recursion depth exceeded for variab=
+le &#39;CFLAGS&#39;&quot;<br><br></div><div>What is the correct way to doin=
+g this?</div>
+
+</div></blockquote></div><br>if you use &#39;master&#39; you can use the ne=
+wly added _remove modifier. e.g. CFLAGS_remove =3D &quot;-fPIE&quot;</div><=
+div class=3D"gmail_extra"><br></div><div class=3D"gmail_extra">otherwise yo=
+u might need to query the DB to retrieve CFLAGS, something along these line=
+s: ${@d.getVar(&#39;CFLAGS&#39;, True).replace(xxx)}</div>
+
+<div class=3D"gmail_extra"><br></div><div class=3D"gmail_extra"><br></div><=
+/div>
+
+--001a1135f7bc67036d04edf445ba--
