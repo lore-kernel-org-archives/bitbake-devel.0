@@ -1,36 +1,36 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-lb0-f182.google.com (mail-lb0-f182.google.com
-	[209.85.217.182])
-	by mail.openembedded.org (Postfix) with ESMTP id 7DA7E6A5A2
+Return-Path: <martin.jansa@gmail.com>
+Received: from mail-ee0-f47.google.com (mail-ee0-f47.google.com [74.125.83.47])
+	by mail.openembedded.org (Postfix) with ESMTP id 51F1F6B2E6
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 30 Dec 2013 16:18:49 +0000 (UTC)
-Received: by mail-lb0-f182.google.com with SMTP id l4so5736551lbv.13
+	Mon, 30 Dec 2013 16:25:14 +0000 (UTC)
+Received: by mail-ee0-f47.google.com with SMTP id e51so4422790eek.34
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 30 Dec 2013 08:18:49 -0800 (PST)
+	Mon, 30 Dec 2013 08:25:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=+hC3mGLLzEGYZ6XLknG5SKEeTRM9+zHDti1LOB+YK8s=;
-	b=NzKx/yXSqHOWK3z+FuLsd5jOuwD6C6bsFFVtbsiRjfJXnE4ljMOsQ9ednhN4C1dyTm
-	PVVZNUp8BnazSQO3HBE6ciM4PWJvAy95zEgxzwBd/Nz/gNNTuZ64c/7KVQSLAWH/LLlJ
-	vxsW+H0ulGhYHOF4usThFLqRovWcbifSbJz+QXNzk+pze1GsSH+GkBqWjmivpXD1Knvz
-	fmkfmMxwxGguVVkBYKCTi3+hmzNGhoAW4uGie7qq3TmsJr6i/1zJn1/wu0EbislsPj9c
-	BkHRi2doM8KHDlq0nY4Syc9WRMIpqFQztTc3PE9EMSk4f44LmrZw7PfpAoQX7EimpMTw
-	v+5A==
-X-Received: by 10.112.52.6 with SMTP id p6mr1643003lbo.67.1388420329854; Mon,
-	30 Dec 2013 08:18:49 -0800 (PST)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.22.167 with HTTP; Mon, 30 Dec 2013 08:18:29 -0800 (PST)
-In-Reply-To: <20131228132413.GB3706@jama>
-References: <1387383687.6402.49.camel@ted> <20131228132413.GB3706@jama>
-From: Chris Larson <clarson@kergoth.com>
-Date: Mon, 30 Dec 2013 09:18:29 -0700
-X-Google-Sender-Auth: 0psxMGaora-7g2c7QTTiOKaxMgc
-Message-ID: <CABcZANnopy5be2w7k0JRC12bcc6sZ8REsXt9ga0z-qdkHwA2tQ@mail.gmail.com>
-To: Martin Jansa <martin.jansa@gmail.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] runqueue: Add output for -S option for listing the changepoints compared with an sstate cache
+	h=from:to:cc:subject:date:message-id:in-reply-to:references;
+	bh=KFRvteHSOfpaFedTTOcLlL7RHrH3CREb5nfTw/jBrGM=;
+	b=VDFMiPnNsVyYGRAX3LmnebF2Sm4gu9ayo9lQ+QEN5hUVJQ9b2cLZ8H062lZp7Ccs/H
+	mJjzCF10ljF/Z6qhjI3Vj89AIE/pTqcZcSxhx23Esp3btEYYqio/O8hMNGn+nMmxebtF
+	9zFYp7XeMlIPnQ5NuVkDavvM1j/hEozB9gNCigSGaCvfpjYNWLxcKvKryzDVJhHFJwyx
+	uWaVPuXutWq2CNy2/7OOFWxT01mXiRBsDPDHEv/5VGtYOv+7z19IAWQj/nIu6pIqUbWY
+	NYIqYb8tEDebT1vHIZW9a47zigHTSasEiREPn01bOxLqqq53OdWifwQ8lDouFtec3kbY
+	bRQQ==
+X-Received: by 10.14.211.69 with SMTP id v45mr2425070eeo.75.1388420715060;
+	Mon, 30 Dec 2013 08:25:15 -0800 (PST)
+Received: from localhost (ip-89-176-104-107.net.upcbroadband.cz.
+	[89.176.104.107])
+	by mx.google.com with ESMTPSA id 4sm110065709eed.14.2013.12.30.08.25.13
+	for <multiple recipients>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Mon, 30 Dec 2013 08:25:13 -0800 (PST)
+From: Martin Jansa <martin.jansa@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 30 Dec 2013 17:25:13 +0100
+Message-Id: <1388420713-15293-1-git-send-email-Martin.Jansa@gmail.com>
+X-Mailer: git-send-email 1.8.4.3
+In-Reply-To: <CABcZANnopy5be2w7k0JRC12bcc6sZ8REsXt9ga0z-qdkHwA2tQ@mail.gmail.com>
+References: <CABcZANnopy5be2w7k0JRC12bcc6sZ8REsXt9ga0z-qdkHwA2tQ@mail.gmail.com>
+Subject: [RFC][WIP][PATCH] runqueue: Don't fail without match found
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,81 +43,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 30 Dec 2013 16:18:50 -0000
-Content-Type: multipart/alternative; boundary=001a11c3cd4a8f5c9104eec2cc41
+X-List-Received-Date: Mon, 30 Dec 2013 16:25:14 -0000
 
---001a11c3cd4a8f5c9104eec2cc41
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+* WIP, because I haven't checked the reasons why this happens
+  I'm using this now only to see which recipes/tasks are failing
+  like this
 
-On Sat, Dec 28, 2013 at 6:24 AM, Martin Jansa <martin.jansa@gmail.com>wrote=
-:
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ lib/bb/runqueue.py | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-> On Wed, Dec 18, 2013 at 04:21:27PM +0000, Richard Purdie wrote:
-> > Its useful to understand where the delta starts against an existing
-> sstate cache
-> > for a given target. Adding this to the output of the -S option seems
-> like a
-> > natural fit.
-> >
-> > We use the hashvalidate function to figure this out and assume it can
-> find siginfo
-> > files for more than just the setscene tasks.
->
-> I haven't tried to find smaller reproducer or exact part of code where
-> it happends, but in bigger builds I have it fails with
->
-> I'll try to reproduce and narrow it a bit, but if you have tip where
-> to look first..
->
-> IndexError: list index out of range:
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 4577236..413b95e 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1224,10 +1224,14 @@ class RunQueue:
+             if match is None:
+                 bb.fatal("Can't find a task we're supposed to have written out? (hash: %s)?" % h)
+             matches = {k : v for k, v in matches.iteritems() if h not in k}
+-            latestmatch = sorted(matches.keys(), key=lambda f: matches[f])[-1]
+-            prevh = __find_md5__.search(latestmatch).group(0)
+-            output = bb.siggen.compare_sigfiles(latestmatch, match, recursecb)
+-            bb.plain("\nTask %s:%s couldn't be used from the cache because:\n  We need hash %s, closest matching task was %s\n  " % (pn, taskname, h, prevh) + '\n  '.join(output))
++            sortedmatches=sorted(matches.keys(), key=lambda f: matches[f])
++            if sortedmatches:
++                latestmatch = sorted(matches.keys(), key=lambda f: matches[f])[-1]
++                prevh = __find_md5__.search(latestmatch).group(0)
++                output = bb.siggen.compare_sigfiles(latestmatch, match, recursecb)
++                bb.plain("\nTask %s:%s couldn't be used from the cache because:\n  We need hash %s, closest matching task was %s\n  " % (pn, taskname, h, prevh) + '\n  '.join(output))
++            else:
++                bb.plain("\nTask %s:%s couldn't find any matches for hash %s" % (pn, taskname, h))
+              
+ 
+ 
+-- 
+1.8.4.3
 
 
-I=E2=80=99m hitting this now as well.
---=20
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
-
---001a11c3cd4a8f5c9104eec2cc41
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra">On Sat, Dec 28, 2013 at 6:24 AM=
-, Martin Jansa <span dir=3D"ltr">&lt;<a href=3D"mailto:martin.jansa@gmail.c=
-om" target=3D"_blank">martin.jansa@gmail.com</a>&gt;</span> wrote:<br><div =
-class=3D"gmail_quote">
-
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div class=3D"im">On Wed, Dec 18, 2013 at 04=
-:21:27PM +0000, Richard Purdie wrote:<br>
-&gt; Its useful to understand where the delta starts against an existing ss=
-tate cache<br>
-&gt; for a given target. Adding this to the output of the -S option seems l=
-ike a<br>
-&gt; natural fit.<br>
-&gt;<br>
-&gt; We use the hashvalidate function to figure this <span class=3D"il">out=
-</span> and assume it can find siginfo<br>
-&gt; files for more than just the setscene tasks.<br>
-<br>
-</div>I haven&#39;t tried to find smaller reproducer or exact part of code =
-where<br>
-it happends, but in bigger builds I have it fails with<br>
-<br>
-I&#39;ll try to reproduce and narrow it a bit, but if you have tip where<br=
->
-to look first..<br>
-<br>
-<span class=3D"il">IndexError</span>: <span class=3D"il">list</span> <span =
-class=3D"il">index</span> <span class=3D"il">out</span> of <span class=3D"i=
-l">range</span>:</blockquote></div><br>I=E2=80=99m hitting this now as well=
-.<br>-- <br>Christopher Larson<br>
-
-clarson at kergoth dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<b=
-r>Maintainer - Tslib<br>Senior Software Engineer, Mentor Graphics
-</div></div>
-
---001a11c3cd4a8f5c9104eec2cc41--
