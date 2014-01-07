@@ -1,38 +1,46 @@
-Return-Path: <olof.johansson@axis.com>
-Received: from anubis.se.axis.com (anubis.se.axis.com [195.60.68.12])
-	by mail.openembedded.org (Postfix) with ESMTP id 8EB396BC1F
+Return-Path: <zhenhua.luo@freescale.com>
+Received: from am1outboundpool.messaging.microsoft.com
+	(am1ehsobe003.messaging.microsoft.com [213.199.154.206])
+	by mail.openembedded.org (Postfix) with ESMTP id 5BA3B6C74C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  7 Jan 2014 10:36:07 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by anubis.se.axis.com (Postfix) with ESMTP id CB82419D82;
-	Tue,  7 Jan 2014 11:36:06 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at anubis.se.axis.com
-Received: from anubis.se.axis.com ([127.0.0.1])
-	by localhost (anubis.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id cuOGJGI0WRYg; Tue,  7 Jan 2014 11:36:06 +0100 (CET)
-Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by anubis.se.axis.com (Postfix) with ESMTP id 593FA19D79;
-	Tue,  7 Jan 2014 11:36:04 +0100 (CET)
-Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id 36E9EA5F;
-	Tue,  7 Jan 2014 11:36:04 +0100 (CET)
-Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
-	by boulder.se.axis.com (Postfix) with ESMTP id 28949965;
-	Tue,  7 Jan 2014 11:36:04 +0100 (CET)
-Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
-	by thoth.se.axis.com (Postfix) with ESMTP id 2484634070;
-	Tue,  7 Jan 2014 11:36:04 +0100 (CET)
-Received: from axis.com (10.92.17.1) by xmail2.se.axis.com (10.0.5.74) with
-	Microsoft SMTP Server (TLS) id 8.2.255.0; Tue, 7 Jan 2014 11:36:03 +0100
-Date: Tue, 7 Jan 2014 11:36:02 +0100
-From: Olof Johansson <olof.johansson@axis.com>
-To: Andrei Gherzan <andrei@gherzan.ro>, <bitbake-devel@lists.openembedded.org>
-Message-ID: <20140107103602.GP31548@axis.com>
-References: <1388886808-25624-1-git-send-email-andrei@gherzan.ro>
+	Tue,  7 Jan 2014 10:45:48 +0000 (UTC)
+Received: from mail2-am1-R.bigfish.com (10.3.201.236) by
+	AM1EHSOBE006.bigfish.com (10.3.204.26) with Microsoft SMTP Server id
+	14.1.225.22; Tue, 7 Jan 2014 10:45:48 +0000
+Received: from mail2-am1 (localhost [127.0.0.1])	by mail2-am1-R.bigfish.com
+	(Postfix) with ESMTP id 2B6361002FC	for
+	<bitbake-devel@lists.openembedded.org>;
+	Tue,  7 Jan 2014 10:45:48 +0000 (UTC)
+X-Forefront-Antispam-Report: CIP:70.37.183.190; KIP:(null); UIP:(null); IPV:NLI;
+	H:mail.freescale.net; RD:none; EFVD:NLI
+X-SpamScore: 0
+X-BigFish: VS0(zzzz1f42h2148h208ch1ee6h1de0h1fdah2073h2146h1202h1e76h2189h1d1ah1d2ah1fc6hzz1de098h8275bh1de097hz2dh2a8h839hd24he5bhf0ah1288h12a5h12a9h12bdh12e5h1354h137ah139eh13b6h1441h1504h1537h162dh1631h1758h1898h18e1h1946h19b5h1ad9h1b0ah1b2fh2222h224fh1fb3h1d0ch1d2eh1d3fh1dc1h1dfeh1dffh1e23h1fe8h1ff5h2218h2216h226dh22d0h2327h2336h1155h)
+Received: from mail2-am1 (localhost.localdomain [127.0.0.1]) by mail2-am1
+	(MessageSwitch) id 1389091546611204_997; Tue,  7 Jan 2014 10:45:46 +0000
+	(UTC)
+Received: from AM1EHSMHS011.bigfish.com (unknown [10.3.201.250])	by
+	mail2-am1.bigfish.com (Postfix) with ESMTP id 904AC2C004F;
+	Tue,  7 Jan 2014 10:45:46 +0000 (UTC)
+Received: from mail.freescale.net (70.37.183.190) by AM1EHSMHS011.bigfish.com
+	(10.3.207.111) with Microsoft SMTP Server (TLS) id 14.16.227.3;
+	Tue, 7 Jan 2014 10:45:45 +0000
+Received: from tx30smr01.am.freescale.net (10.81.153.31) by
+	039-SN1MMR1-005.039d.mgd.msft.net (10.84.1.17) with Microsoft SMTP
+	Server (TLS) id 14.3.158.2; Tue, 7 Jan 2014 10:45:44 +0000
+Received: from localhost.localdomain (B19537-03-010193020127.ap.freescale.net
+	[10.193.20.127])	by tx30smr01.am.freescale.net (8.14.3/8.14.0) with
+	ESMTP id s07AjfEw021231;	Tue, 7 Jan 2014 03:45:42 -0700
+From: Zhenhua Luo <zhenhua.luo@freescale.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Tue, 7 Jan 2014 18:45:34 +0800
+Message-ID: <1389091534-34351-1-git-send-email-zhenhua.luo@freescale.com>
+X-Mailer: git-send-email 1.8.4.2
 MIME-Version: 1.0
-In-Reply-To: <1388886808-25624-1-git-send-email-andrei@gherzan.ro>
-User-Agent: Mutt/1.5.22 (2013-10-16)
-Subject: Re: [PATCH] bitbake: bb.fetch2.git: Fix _latest_revision function while using tags
+X-OriginatorOrg: freescale.com
+X-FOPE-CONNECTOR: Id%0$Dn%*$RO%0$TLS%0$FQDN%$TlsDn%
+X-FOPE-CONNECTOR: Id%0$Dn%FREESCALE.MAIL.ONMICROSOFT.COM$RO%1$TLS%0$FQDN%$TlsDn%
+Cc: b43082@freescale.com, b40290@freescale.com, b40527@freescale.com
+Subject: [PATCH v2] bitbake: fetch2/git: add nobranch option for SRC_URI to skip SHA validating for branch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,22 +53,48 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 07 Jan 2014 10:36:08 -0000
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+X-List-Received-Date: Tue, 07 Jan 2014 10:45:49 -0000
+Content-Type: text/plain
 
-On 14-01-05 02:53 +0100, Andrei Gherzan wrote:
-> When getting the revision we must take into consideration if the name we are
-> looking for is a tag and in that case we need the dereferenced commit ID in
-> order to check for it existance in a specific branch.
-> 
-> So first search for the reference^{} commit ID and only if that returns nothing
-> get the name as it is.
+For rebased git tree, some commits doesn't exist in any branch, and such commits are
+valid in tag, the change is useful for such case.
 
-I think this is the same issue I've tried to solve in a patch i
-sent in December (subject: bb.fetch2.git: support resolving both
-tags and branches). I haven't heard anything about it yet though.
+Signed-off-by: Zhenhua Luo <zhenhua.luo@freescale.com>
+---
+ lib/bb/fetch2/git.py | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index b4b9368..c323309 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -101,6 +101,8 @@ class Git(FetchMethod):
+ 
+         ud.rebaseable = ud.parm.get("rebaseable","0") == "1"
+ 
++        ud.nobranch = ud.parm.get("nobranch","0") == "1"
++
+         # bareclone implies nocheckout
+         ud.bareclone = ud.parm.get("bareclone","0") == "1"
+         if ud.bareclone:
+@@ -289,8 +291,13 @@ class Git(FetchMethod):
+         return True
+ 
+     def _contains_ref(self, ud, d, name):
+-        cmd =  "%s branch --contains %s --list %s 2> /dev/null | wc -l" % (
+-            ud.basecmd, ud.revisions[name], ud.branches[name])
++        cmd = ""
++        if ud.nobranch:
++            cmd = "%s log --pretty=oneline -n 1 %s -- 2> /dev/null | wc -l" % (
++                ud.basecmd, ud.revisions[name])
++        else:
++            cmd =  "%s branch --contains %s --list %s 2> /dev/null | wc -l" % (
++                ud.basecmd, ud.revisions[name], ud.branches[name])
+         try:
+             output = runfetchcmd(cmd, d, quiet=True)
+         except bb.fetch2.FetchError:
 -- 
-olofjn
+1.8.4.2
+
+
 
