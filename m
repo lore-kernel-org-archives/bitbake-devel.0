@@ -1,41 +1,46 @@
-Return-Path: <andrei@gherzan.ro>
-Received: from mail-wi0-f170.google.com (mail-wi0-f170.google.com
-	[209.85.212.170])
-	by mail.openembedded.org (Postfix) with ESMTP id 3E5636CD4B
+Return-Path: <zhenhua.luo@freescale.com>
+Received: from db9outboundpool.messaging.microsoft.com
+	(mail-db9lp0249.outbound.messaging.microsoft.com [213.199.154.249])
+	by mail.openembedded.org (Postfix) with ESMTP id 39C446C6D4
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  7 Jan 2014 17:18:56 +0000 (UTC)
-Received: by mail-wi0-f170.google.com with SMTP id hq4so4302550wib.3
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 07 Jan 2014 09:18:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:date
-	:message-id:subject:from:to:cc:content-type;
-	bh=hMzpstjyTWlYFGHopV0jSqnleLYroUnUUm5iQl1FZfk=;
-	b=TJ84FwTB8EAPPnpATbu8g4WDTxBdC5iQoolmlh/mAsPYTYdUGayb7ogMRKP3cCTqwd
-	+r3N4hvCKWjW4AohqjMCSDmakQTkc2fCmD+EecPWxGVc1ZbBtCrmZhh59nV4Sr8Lh0vi
-	8Vl3Zhf0gI9IxIm5Zq4zlduiGKSAnIuYDDDxV5Y6z0IeAKKMmL9BXhkjUGXizstfDhBd
-	H/8T2/vqNjsCDxbWsnbWBIxp2d6ddm7nTw4K5Ak0s1XColCowaI4HKZsJqrMHwjiohHA
-	C3r0eMVAch3qrKtnfyyEdR50gMo2R+kSGVvR92MpQ9qqgp9wwk3k0pLUeeEbX75YwEy0
-	V3gw==
-X-Gm-Message-State: ALoCoQn+1Pw09ZNDNuOEKEkt/USFUSYI4XTz97E4dGTgmURPSZ5mdAgBmbSWQALEvzzCVsfo/sam
+	Wed,  8 Jan 2014 10:17:29 +0000 (UTC)
+Received: from mail183-db9-R.bigfish.com (10.174.16.254) by
+	DB9EHSOBE030.bigfish.com (10.174.14.93) with Microsoft SMTP Server id
+	14.1.225.22; Wed, 8 Jan 2014 10:17:29 +0000
+Received: from mail183-db9 (localhost [127.0.0.1])	by
+	mail183-db9-R.bigfish.com (Postfix) with ESMTP id 837614802C5	for
+	<bitbake-devel@lists.openembedded.org>;
+	Wed,  8 Jan 2014 10:17:29 +0000 (UTC)
+X-Forefront-Antispam-Report: CIP:70.37.183.190; KIP:(null); UIP:(null); IPV:NLI;
+	H:mail.freescale.net; RD:none; EFVD:NLI
+X-SpamScore: 0
+X-BigFish: VS0(zzzz1f42h2148h208ch1ee6h1de0h1fdah2073h2146h1202h1e76h2189h1d1ah1d2ah1fc6hzz1de098h8275bh1de097hz2dh2a8h839hd24he5bhf0ah1288h12a5h12a9h12bdh12e5h1354h137ah139eh13b6h1441h1504h1537h162dh1631h1758h1898h18e1h1946h19b5h1ad9h1b0ah1b2fh2222h224fh1fb3h1d0ch1d2eh1d3fh1dc1h1dfeh1dffh1e23h1fe8h1ff5h2218h2216h226dh22d0h2327h2336h1155h)
+Received: from mail183-db9 (localhost.localdomain [127.0.0.1]) by mail183-db9
+	(MessageSwitch) id 1389176247943329_28275;
+	Wed,  8 Jan 2014 10:17:27 +0000 (UTC)
+Received: from DB9EHSMHS026.bigfish.com (unknown [10.174.16.225])	by
+	mail183-db9.bigfish.com (Postfix) with ESMTP id E051E4E0049;
+	Wed,  8 Jan 2014 10:17:27 +0000 (UTC)
+Received: from mail.freescale.net (70.37.183.190) by DB9EHSMHS026.bigfish.com
+	(10.174.14.36) with Microsoft SMTP Server (TLS) id 14.16.227.3;
+	Wed, 8 Jan 2014 10:17:24 +0000
+Received: from tx30smr01.am.freescale.net (10.81.153.31) by
+	039-SN1MMR1-005.039d.mgd.msft.net (10.84.1.17) with Microsoft SMTP
+	Server (TLS) id 14.3.158.2; Wed, 8 Jan 2014 10:17:19 +0000
+Received: from localhost.localdomain (B19537-03.ap.freescale.net
+	[10.193.20.127])	by tx30smr01.am.freescale.net (8.14.3/8.14.0) with
+	ESMTP id s08AHGiR020993;	Wed, 8 Jan 2014 03:17:18 -0700
+From: Zhenhua Luo <zhenhua.luo@freescale.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Wed, 8 Jan 2014 18:17:08 +0800
+Message-ID: <1389176228-5336-1-git-send-email-zhenhua.luo@freescale.com>
+X-Mailer: git-send-email 1.8.4.2
 MIME-Version: 1.0
-X-Received: by 10.180.187.72 with SMTP id fq8mr17633778wic.26.1389115136283;
-	Tue, 07 Jan 2014 09:18:56 -0800 (PST)
-Received: by 10.217.150.199 with HTTP; Tue, 7 Jan 2014 09:18:56 -0800 (PST)
-X-Originating-IP: [5.13.221.193]
-Received: by 10.217.150.199 with HTTP; Tue, 7 Jan 2014 09:18:56 -0800 (PST)
-In-Reply-To: <20140107154802.GA12425@axis.com>
-References: <1388886808-25624-1-git-send-email-andrei@gherzan.ro>
-	<20140107103602.GP31548@axis.com> <1389102055.6899.25.camel@ted>
-	<20140107144635.GA5566@axis.com> <1389106946.6899.38.camel@ted>
-	<20140107154802.GA12425@axis.com>
-Date: Tue, 7 Jan 2014 19:18:56 +0200
-Message-ID: <CAK18fxHAMDd59Scq6ChPNsOHsqbUWw_iDhYm5nDjPO5vgdjk1g@mail.gmail.com>
-From: Andrei Gherzan <andrei@gherzan.ro>
-To: Olof Johansson <olof.johansson@axis.com>
-Cc: openembedded <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] bitbake: bb.fetch2.git: Fix _latest_revision function while using tags
+X-OriginatorOrg: freescale.com
+X-FOPE-CONNECTOR: Id%0$Dn%*$RO%0$TLS%0$FQDN%$TlsDn%
+X-FOPE-CONNECTOR: Id%0$Dn%FREESCALE.MAIL.ONMICROSOFT.COM$RO%1$TLS%0$FQDN%$TlsDn%
+Cc: b40290@freescale.com, b40527@freescale.com
+Subject: [PATCH] bitbake: fetch2/git: add description for nobranch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,140 +53,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 07 Jan 2014 17:18:56 -0000
-Content-Type: multipart/alternative; boundary=001a11c2679c402a6c04ef64921f
+X-List-Received-Date: Wed, 08 Jan 2014 10:17:30 -0000
+Content-Type: text/plain
 
---001a11c2679c402a6c04ef64921f
-Content-Type: text/plain; charset=ISO-8859-1
+Signed-off-by: Zhenhua Luo <zhenhua.luo@freescale.com>
+---
+ lib/bb/fetch2/git.py | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-On Jan 7, 2014 5:52 PM, "Olof Johansson" <olof.johansson@axis.com> wrote:
->
-> On 14-01-07 16:02 +0100, Richard Purdie wrote:
-> > On Tue, 2014-01-07 at 15:46 +0100, Olof Johansson wrote:
-> > > I agree with your reasoning with regards to not needing a
-> > > fallback for Andrei's patch, but my patch tries to first resolve
-> > > refs/tags/<tag> (fully qualified) and then falls back to try
-> > > refs/heads/<branch>. The reason for this is that ls-remote will
-> > > return things like refs/heads/lalala/<tag> if you only do
-> > > ls-remote <tag>.
-> >
-> > Can we somehow anchor the expression instead e.g. refs/*/<xxx>^{}
->
-> Sure, we can do ls-remote without any arguments and parse the
-> output. But this won't make the patch easier in any way. One less
-> fork though.
->
-> > > My attempt was also to break out the tasks into simple,
-> > > atomic(-ish) functions that would later be easier to write unit
-> > > tests for. You complained on IRC that changes to the fetcher
-> > > usually comes back to bite you. I believe increased unit test
-> > > coverage on low level functions, as a compliment to the existing
-> > > more high level suite, can be beneficial in this regard.
-> >
-> > I believe that my complaint could also be addressed by ensuring the high
-> > level tests had more coverage of the variety of supported use cases. In
-> > this case a range of tags of differing types, branches and hanging
-> > commits would have helped ensure the changes to the fetcher didn't break
-> > things.
->
-> Yes, that probably possible. *I* find low level unit tests easier
-> to work with, and I wanted to do what I could to alleviate the
-> situation; making sure that (at least) our use cases are covered
-> by automated tests.
->
-> > I'm less keen on forcing an atom like set of functions on the fetcher
-> > just for the purposes of the test suite. Sorry I was unclear on that, I
-> > guess different people have different understandings of what increased
-> > coverage would mean.
->
-> I find it easier to work in functions with limited scopes, with
-> clear purposes --- with or without unittests (unittests being
-> preferable, obviously). But then again, I'm not the maintainer,
-> so your preferences are more important :-).
->
-> > > Also, if you are holding things off, I would really appreciate
-> > > you letting us know so that we can make appropriate workarounds
-> > > if needed (as in this case, where we have had to supsend testing
-> > > on master :-().
-> >
-> > Well, it wasn't a conscious decision so much as the holidays came along
-> > and I ran out of time to look at it. I'm trying to get this resolved now
-> > since obviously various people are hitting the problem cases.
->
-> I really appreciate the hard work you are doing :-).
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index c323309..cae1653 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -44,6 +44,11 @@ Supported SRC_URI options are:
+    checkout code and tracking branch requirements.
+    The default is "0", set bareclone=1 if needed.
+ 
++- nobranch
++   Don't check the SHA validation for branch. set this option for the recipe
++   referring to commit which is valid in tag instead of branch.
++   The default is "0", set nobranch=1 if needed.
++
+ """
+ 
+ #Copyright (C) 2005 Richard Purdie
+-- 
+1.8.4.2
 
-Me too :-)
 
-I agree that we really need to fix this as we are breaking layers out in
-the wild with this issue.
 
-@olof sorry for duplicate email.
-
-ag
-
---001a11c2679c402a6c04ef64921f
-Content-Type: text/html; charset=ISO-8859-1
-
-<p dir="ltr"><br>
-On Jan 7, 2014 5:52 PM, &quot;Olof Johansson&quot; &lt;<a href="mailto:olof.johansson@axis.com">olof.johansson@axis.com</a>&gt; wrote:<br>
-&gt;<br>
-&gt; On 14-01-07 16:02 +0100, Richard Purdie wrote:<br>
-&gt; &gt; On Tue, 2014-01-07 at 15:46 +0100, Olof Johansson wrote:<br>
-&gt; &gt; &gt; I agree with your reasoning with regards to not needing a<br>
-&gt; &gt; &gt; fallback for Andrei&#39;s patch, but my patch tries to first resolve<br>
-&gt; &gt; &gt; refs/tags/&lt;tag&gt; (fully qualified) and then falls back to try<br>
-&gt; &gt; &gt; refs/heads/&lt;branch&gt;. The reason for this is that ls-remote will<br>
-&gt; &gt; &gt; return things like refs/heads/lalala/&lt;tag&gt; if you only do<br>
-&gt; &gt; &gt; ls-remote &lt;tag&gt;.<br>
-&gt; &gt;<br>
-&gt; &gt; Can we somehow anchor the expression instead e.g. refs/*/&lt;xxx&gt;^{}<br>
-&gt;<br>
-&gt; Sure, we can do ls-remote without any arguments and parse the<br>
-&gt; output. But this won&#39;t make the patch easier in any way. One less<br>
-&gt; fork though.<br>
-&gt;<br>
-&gt; &gt; &gt; My attempt was also to break out the tasks into simple,<br>
-&gt; &gt; &gt; atomic(-ish) functions that would later be easier to write unit<br>
-&gt; &gt; &gt; tests for. You complained on IRC that changes to the fetcher<br>
-&gt; &gt; &gt; usually comes back to bite you. I believe increased unit test<br>
-&gt; &gt; &gt; coverage on low level functions, as a compliment to the existing<br>
-&gt; &gt; &gt; more high level suite, can be beneficial in this regard.<br>
-&gt; &gt;<br>
-&gt; &gt; I believe that my complaint could also be addressed by ensuring the high<br>
-&gt; &gt; level tests had more coverage of the variety of supported use cases. In<br>
-&gt; &gt; this case a range of tags of differing types, branches and hanging<br>
-&gt; &gt; commits would have helped ensure the changes to the fetcher didn&#39;t break<br>
-&gt; &gt; things.<br>
-&gt;<br>
-&gt; Yes, that probably possible. *I* find low level unit tests easier<br>
-&gt; to work with, and I wanted to do what I could to alleviate the<br>
-&gt; situation; making sure that (at least) our use cases are covered<br>
-&gt; by automated tests.<br>
-&gt;<br>
-&gt; &gt; I&#39;m less keen on forcing an atom like set of functions on the fetcher<br>
-&gt; &gt; just for the purposes of the test suite. Sorry I was unclear on that, I<br>
-&gt; &gt; guess different people have different understandings of what increased<br>
-&gt; &gt; coverage would mean.<br>
-&gt;<br>
-&gt; I find it easier to work in functions with limited scopes, with<br>
-&gt; clear purposes --- with or without unittests (unittests being<br>
-&gt; preferable, obviously). But then again, I&#39;m not the maintainer,<br>
-&gt; so your preferences are more important :-).<br>
-&gt;<br>
-&gt; &gt; &gt; Also, if you are holding things off, I would really appreciate<br>
-&gt; &gt; &gt; you letting us know so that we can make appropriate workarounds<br>
-&gt; &gt; &gt; if needed (as in this case, where we have had to supsend testing<br>
-&gt; &gt; &gt; on master :-().<br>
-&gt; &gt;<br>
-&gt; &gt; Well, it wasn&#39;t a conscious decision so much as the holidays came along<br>
-&gt; &gt; and I ran out of time to look at it. I&#39;m trying to get this resolved now<br>
-&gt; &gt; since obviously various people are hitting the problem cases.<br>
-&gt;<br>
-&gt; I really appreciate the hard work you are doing :-).</p>
-<p dir="ltr">Me too :-)</p>
-<p dir="ltr">I agree that we really need to fix this as we are breaking layers out in the wild with this issue.</p>
-<p dir="ltr">@olof sorry for duplicate email.</p>
-<p dir="ltr">ag<br>
-</p>
-
---001a11c2679c402a6c04ef64921f--
