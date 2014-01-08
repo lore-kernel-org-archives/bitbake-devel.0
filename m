@@ -1,46 +1,49 @@
 Return-Path: <zhenhua.luo@freescale.com>
-Received: from db9outboundpool.messaging.microsoft.com
-	(mail-db9lp0249.outbound.messaging.microsoft.com [213.199.154.249])
-	by mail.openembedded.org (Postfix) with ESMTP id 39C446C6D4
+Received: from na01-bn1-obe.outbound.protection.outlook.com
+	(mail-bn1blp0182.outbound.protection.outlook.com [207.46.163.182])
+	by mail.openembedded.org (Postfix) with ESMTP id B9FFF6C6D4
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  8 Jan 2014 10:17:29 +0000 (UTC)
-Received: from mail183-db9-R.bigfish.com (10.174.16.254) by
-	DB9EHSOBE030.bigfish.com (10.174.14.93) with Microsoft SMTP Server id
-	14.1.225.22; Wed, 8 Jan 2014 10:17:29 +0000
-Received: from mail183-db9 (localhost [127.0.0.1])	by
-	mail183-db9-R.bigfish.com (Postfix) with ESMTP id 837614802C5	for
-	<bitbake-devel@lists.openembedded.org>;
-	Wed,  8 Jan 2014 10:17:29 +0000 (UTC)
-X-Forefront-Antispam-Report: CIP:70.37.183.190; KIP:(null); UIP:(null); IPV:NLI;
-	H:mail.freescale.net; RD:none; EFVD:NLI
-X-SpamScore: 0
-X-BigFish: VS0(zzzz1f42h2148h208ch1ee6h1de0h1fdah2073h2146h1202h1e76h2189h1d1ah1d2ah1fc6hzz1de098h8275bh1de097hz2dh2a8h839hd24he5bhf0ah1288h12a5h12a9h12bdh12e5h1354h137ah139eh13b6h1441h1504h1537h162dh1631h1758h1898h18e1h1946h19b5h1ad9h1b0ah1b2fh2222h224fh1fb3h1d0ch1d2eh1d3fh1dc1h1dfeh1dffh1e23h1fe8h1ff5h2218h2216h226dh22d0h2327h2336h1155h)
-Received: from mail183-db9 (localhost.localdomain [127.0.0.1]) by mail183-db9
-	(MessageSwitch) id 1389176247943329_28275;
-	Wed,  8 Jan 2014 10:17:27 +0000 (UTC)
-Received: from DB9EHSMHS026.bigfish.com (unknown [10.174.16.225])	by
-	mail183-db9.bigfish.com (Postfix) with ESMTP id E051E4E0049;
-	Wed,  8 Jan 2014 10:17:27 +0000 (UTC)
-Received: from mail.freescale.net (70.37.183.190) by DB9EHSMHS026.bigfish.com
-	(10.174.14.36) with Microsoft SMTP Server (TLS) id 14.16.227.3;
-	Wed, 8 Jan 2014 10:17:24 +0000
-Received: from tx30smr01.am.freescale.net (10.81.153.31) by
-	039-SN1MMR1-005.039d.mgd.msft.net (10.84.1.17) with Microsoft SMTP
-	Server (TLS) id 14.3.158.2; Wed, 8 Jan 2014 10:17:19 +0000
-Received: from localhost.localdomain (B19537-03.ap.freescale.net
-	[10.193.20.127])	by tx30smr01.am.freescale.net (8.14.3/8.14.0) with
-	ESMTP id s08AHGiR020993;	Wed, 8 Jan 2014 03:17:18 -0700
-From: Zhenhua Luo <zhenhua.luo@freescale.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 8 Jan 2014 18:17:08 +0800
-Message-ID: <1389176228-5336-1-git-send-email-zhenhua.luo@freescale.com>
-X-Mailer: git-send-email 1.8.4.2
+	Wed,  8 Jan 2014 10:21:55 +0000 (UTC)
+Received: from DM2PR03MB399.namprd03.prod.outlook.com (10.141.84.148) by
+	DM2PR03MB303.namprd03.prod.outlook.com (10.141.54.14) with Microsoft
+	SMTP Server (TLS) id 15.0.851.11; Wed, 8 Jan 2014 10:21:54 +0000
+Received: from DM2PR03MB399.namprd03.prod.outlook.com ([10.141.84.148]) by
+	DM2PR03MB399.namprd03.prod.outlook.com ([10.141.84.148]) with mapi id
+	15.00.0847.008; Wed, 8 Jan 2014 10:21:54 +0000
+From: "zhenhua.luo@freescale.com" <zhenhua.luo@freescale.com>
+To: Martin Jansa <martin.jansa@gmail.com>
+Thread-Topic: [bitbake-devel] [PATCH 1/2] bitbake: fetch2/git: Add sanity
+	check for SHA validity of tag
+Thread-Index: AQHPAH8nLje/Nfxiu0GWw2q/vwMifJpzEqSAgAQV1YCAAFV0gIABJCPAgADLlICAAUcSUA==
+Date: Wed, 8 Jan 2014 10:21:53 +0000
+Message-ID: <10ed04d1db504750b8a54f0786735f50@DM2PR03MB399.namprd03.prod.outlook.com>
+References: <1387872393-4567-1-git-send-email-zhenhua.luo@freescale.com>
+	<1387872393-4567-2-git-send-email-zhenhua.luo@freescale.com>
+	<20140103134343.GF3707@jama>
+	<566cdb63dddc4dc28aa269289bf94ea8@DM2PR03MB399.namprd03.prod.outlook.com>
+	<20140106091245.GE3709@jama>
+	<c4d074a69c9d4c29b77cdf0bd01f7f20@DM2PR03MB399.namprd03.prod.outlook.com>
+	<20140107144659.GR3709@jama>
+In-Reply-To: <20140107144659.GR3709@jama>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [192.88.158.216]
+x-forefront-prvs: 00851CA28B
+x-forefront-antispam-report: SFV:NSPM;
+	SFS:(10009001)(51704005)(189002)(199002)(51914003)(13464003)(24454002)(377454003)(51444003)(76576001)(76786001)(74706001)(81342001)(33646001)(74876001)(74366001)(74662001)(69226001)(76796001)(81542001)(74316001)(4396001)(31966008)(19580405001)(83322001)(47446002)(59766001)(77982001)(74502001)(19580395003)(54356001)(56776001)(54316002)(87266001)(87936001)(2656002)(81816001)(80976001)(81686001)(49866001)(47736001)(50986001)(90146001)(47976001)(56816005)(83072002)(85306002)(85852003)(76482001)(46102001)(66066001)(79102001)(63696002)(65816001)(53806001)(80022001)(15202345003)(51856001)(15975445006)(92566001)(24736002);
+	DIR:OUT; SFP:1101; SCL:1; SRVR:DM2PR03MB303;
+	H:DM2PR03MB399.namprd03.prod.outlook.com; CLIP:192.88.158.216;
+	FPR:; RD:InfoNoRecords; MX:1; A:1; LANG:en; 
 MIME-Version: 1.0
 X-OriginatorOrg: freescale.com
-X-FOPE-CONNECTOR: Id%0$Dn%*$RO%0$TLS%0$FQDN%$TlsDn%
-X-FOPE-CONNECTOR: Id%0$Dn%FREESCALE.MAIL.ONMICROSOFT.COM$RO%1$TLS%0$FQDN%$TlsDn%
-Cc: b40290@freescale.com, b40527@freescale.com
-Subject: [PATCH] bitbake: fetch2/git: add description for nobranch
+Cc: "Zongchun.Yu@freescale.com" <Zongchun.Yu@freescale.com>,
+	"B40290@freescale.com" <B40290@freescale.com>,
+	"ting.liu@freescale.com" <ting.liu@freescale.com>,
+	"bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>,
+	Richard Schmitt <richard.schmitt@freescale.com>
+Subject: Re: [PATCH 1/2] bitbake: fetch2/git: Add sanity check for SHA validity of tag
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,32 +56,98 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 08 Jan 2014 10:17:30 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 08 Jan 2014 10:21:56 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Zhenhua Luo <zhenhua.luo@freescale.com>
----
- lib/bb/fetch2/git.py | 5 +++++
- 1 file changed, 5 insertions(+)
+> -----Original Message-----
+> From: Martin Jansa [mailto:martin.jansa@gmail.com]
+> Sent: Tuesday, January 07, 2014 10:47 PM
+>=20
+> On Tue, Jan 07, 2014 at 03:29:22AM +0000, zhenhua.luo@freescale.com wrote=
+:
+> > It is a simple way to add "nobranch" option to skip the SHA validity
+> check. I have posted a patch, please review.
+> >
+> > http://patches.openembedded.org/patch/64197/
+>=20
+> The v2 looks good and it's already merged :).
+>=20
+> > > > 	When tag is defined in SRC_URI, there are three SHA
+> definition
+> > > scenarios:
+> > > > 	* SRCREV is set to SHA corresponding to the tag, commit
+> > > corresponding
+> > > > to the tag will be used
+> > >
+> > > This is OK, but you cannot check that it really corresponds and show
+> > > warning if not, because it could be now allowed variant with older
+> > > SHA as bellow.
+>=20
+> Be aware that for this to work correctly you need to run "git fetch --
+> tags" or equivalent, because with lightweight tags you can have repo like
+> this:
+>=20
+> SHA-1
+> A123  <- tag-1.0
+> B123
+> C123  <- master HEAD
+>=20
+> You're building C123 or tag-1.0 when C123 revision already exists, so
+> fetcher creates clone including all 3 SHA-1s, it creates tarball with
+> checkout and puts it on PREMIRROR.
+>=20
+> Someone in upstream adds tag-1.1 pointing to B123
+>=20
+> SHA-1
+> A123  <- tag-1.0
+> B123  <- tag-1.1
+> C123  <- master HEAD
+>=20
+> Someone changes recipe to use:
+> SRCREV =3D "B123"
+> SRC_URI =3D "git://foo;tag=3Dtag-1.1"
+>=20
+> Current fetcher starts by checking if "B123" SHA-1 exists in checkout in
+> downloads directory (or even downloaded from PREMIRROR) and it returns
+> yes, so it doesn't try to update it, but then if you try to check that
+> B123 corresponds with "tag-1.1" it fails, because tag-1.1 doesn't exist
+> yet in current checkout/premirror.
+>=20
+> With annotated tags it's not problem because every new tag has new SHA-1,
+> so fetcher always updates the checkout first when checking for new tag.
+[Luo Zhenhua-B19537] Thanks for the explanation.=20
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index c323309..cae1653 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -44,6 +44,11 @@ Supported SRC_URI options are:
-    checkout code and tracking branch requirements.
-    The default is "0", set bareclone=1 if needed.
- 
-+- nobranch
-+   Don't check the SHA validation for branch. set this option for the recipe
-+   referring to commit which is valid in tag instead of branch.
-+   The default is "0", set nobranch=1 if needed.
-+
- """
- 
- #Copyright (C) 2005 Richard Purdie
--- 
-1.8.4.2
+> > > > 	* SRCREV is set to an older SHA in the tag, the older commit
+> in
+> > > > the tag will be used
+> > >
+> > > This one is IMHO a bit confusing, because people can notice
+> > > SRC_URI=3D.*;tag=3Dfoo
+> > >
+> > > and then they don't notice SRCREV in the recipe (or don't expect it
+> > > to be older commit in foo tag) and they just assume that tag=3Dfoo
+> > > means the tip of the tag will be used in build.
+> > >
+> > > In most cases such commit is also included in some branch and using
+> > > just SRC_URI=3D.*;branch=3Dfoo + SRCREV would be less confusing.
+> > >
+> > > So I would show warning in this case.
+> > >
+> > > In very few exceptions (if any) where you really want SRCREV not
+> > > included in any branch and included in some tag, but not
+> > > corresponding to that tag you would use SRC_URI=3D.*;nobranch + SRCRE=
+V
+>=20
+> I think that with nobranch patch now merged we should show warning when
+> this case happens, people shouldn't use tag parameter when they don't
+> want exactly that tag.
+[Luo Zhenhua-B19537] You point is to show warning when SRCREV and tag are s=
+et, meanwhile SRCREV is not corresponding to the tag, right?
 
 
+Best Regards,
+
+Zhenhua
 
