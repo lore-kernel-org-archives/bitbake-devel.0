@@ -1,43 +1,20 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 9D1726CFF1
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 0F3046D251
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  8 Jan 2014 12:43:34 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s08ChLcO009246; Wed, 8 Jan 2014 12:43:21 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id jtTt27eOW7Vb; Wed,  8 Jan 2014 12:43:21 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s08ChGIl009242
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-	Wed, 8 Jan 2014 12:43:17 GMT
-Message-ID: <1389184991.6899.95.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Martin Jansa <martin.jansa@gmail.com>
-Date: Wed, 08 Jan 2014 12:43:11 +0000
-In-Reply-To: <20140108113213.GV3709@jama>
-References: <1387872393-4567-1-git-send-email-zhenhua.luo@freescale.com>
-	<1387872393-4567-2-git-send-email-zhenhua.luo@freescale.com>
-	<20140103134343.GF3707@jama>
-	<566cdb63dddc4dc28aa269289bf94ea8@DM2PR03MB399.namprd03.prod.outlook.com>
-	<20140106091245.GE3709@jama>
-	<c4d074a69c9d4c29b77cdf0bd01f7f20@DM2PR03MB399.namprd03.prod.outlook.com>
-	<20140107144659.GR3709@jama>
-	<10ed04d1db504750b8a54f0786735f50@DM2PR03MB399.namprd03.prod.outlook.com>
-	<20140108113213.GV3709@jama>
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: "Zongchun.Yu@freescale.com" <Zongchun.Yu@freescale.com>,
-	"B40290@freescale.com" <B40290@freescale.com>,
-	"ting.liu@freescale.com" <ting.liu@freescale.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>,
-	Richard Schmitt <richard.schmitt@freescale.com>
-Subject: Re: [PATCH 1/2] bitbake: fetch2/git: Add sanity check for SHA validity of tag
+	Wed,  8 Jan 2014 17:35:43 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 08 Jan 2014 09:35:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.95,625,1384329600"; d="scan'208";a="435837858"
+Received: from unknown (HELO helios.ger.corp.intel.com) ([10.252.122.128])
+	by orsmga001.jf.intel.com with ESMTP; 08 Jan 2014 09:35:22 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  8 Jan 2014 17:35:19 +0000
+Message-Id: <1389202519-21149-1-git-send-email-paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.8.1.2
+Subject: [1.18][PATCH] hob/hoblistmodel: check if vals of packages/recipes names are not None
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,43 +27,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 08 Jan 2014 12:43:35 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 08 Jan 2014 17:35:43 -0000
 
-On Wed, 2014-01-08 at 12:32 +0100, Martin Jansa wrote:
-> > [Luo Zhenhua-B19537] You point is to show warning when SRCREV and tag are set, meanwhile SRCREV is not corresponding to the tag, right?
-> 
-> Yes
+From: Cristiana Voicu <cristiana.voicu@intel.com>
 
-We have several different issues around and the moment and I'm worried
-some cases are going to get lost. We really need a list of them along
-with the planed fix. As I see it we have:
+[YOCTO #5053]
 
-a) conflicting SRCREV and tag/rev url parameters
+(Corresponds to BitBake master rev: ba9fe77e37be31e8246431578902e871dd94515e)
 
-Plan: bb.error on this case asking the user to say what they want
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+---
+ lib/bb/ui/crumbs/hoblistmodel.py | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-b) dereferencing of tags when checking existance of commits
-
-Plan: Add ^{} to ls-remote command to allow dereferencing
-
-c) tags may get resolved to incorrect tags in sub directories
-
-Plan: Need to anchor tag/branch search expression
-
-
-What else are we missing?
-
-
-Ideally we could do with examples of these in the fetcher test code
-too...
-
-Cheers,
-
-Richard
-
-
-
+diff --git a/lib/bb/ui/crumbs/hoblistmodel.py b/lib/bb/ui/crumbs/hoblistmodel.py
+index 547c1ca..f6b3f09 100644
+--- a/lib/bb/ui/crumbs/hoblistmodel.py
++++ b/lib/bb/ui/crumbs/hoblistmodel.py
+@@ -181,7 +181,9 @@ class PackageListModel(gtk.ListStore):
+     def sort_func(self, model, iter1, iter2, user_data):
+         val1 = model.get_value(iter1, PackageListModel.COL_NAME)
+         val2 = model.get_value(iter2, PackageListModel.COL_NAME)
+-        if val1.startswith(user_data) and not val2.startswith(user_data):
++        if val1 is None or val2 is None:
++            return 0
++        elif val1.startswith(user_data) and not val2.startswith(user_data):
+             return -1
+         elif not val1.startswith(user_data) and val2.startswith(user_data):
+             return 1
+@@ -562,7 +564,9 @@ class RecipeListModel(gtk.ListStore):
+     def sort_func(self, model, iter1, iter2, user_data):
+         val1 = model.get_value(iter1, RecipeListModel.COL_NAME)
+         val2 = model.get_value(iter2, RecipeListModel.COL_NAME)
+-        if val1.startswith(user_data) and not val2.startswith(user_data):
++        if val1 is None or val2 is None:
++            return 0
++        elif val1.startswith(user_data) and not val2.startswith(user_data):
+             return -1
+         elif not val1.startswith(user_data) and val2.startswith(user_data):
+             return 1
+-- 
+1.8.1.2
 
 
