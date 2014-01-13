@@ -1,41 +1,24 @@
-Return-Path: <pb@pbcl.net>
-Received: from hetzner.pbcl.net (mail.pbcl.net [88.198.119.4])
-	by mail.openembedded.org (Postfix) with ESMTP id 6DC2D6028A
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 101626C6EC
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 10 Jan 2014 16:28:47 +0000 (UTC)
-Received: from cpc6-cmbg17-2-0-cust487.5-4.cable.virginm.net ([86.30.57.232]
-	helo=[172.30.1.45])
-	by hetzner.pbcl.net with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:256)
-	(Exim 4.80) (envelope-from <pb@pbcl.net>) id 1W1ewu-00079u-C0
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 10 Jan 2014 17:28:47 +0100
-Message-ID: <1389371323.9182.169.camel@phil-desktop.brightsign>
-From: Phil Blundell <pb@pbcl.net>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 10 Jan 2014 16:28:43 +0000
-X-Mailer: Evolution 3.8.5-2+b1 
-Mime-Version: 1.0
-X-Spam_score: -1.0
-X-Spam_score_int: -9
-X-Spam_bar: -
-X-Spam_report: Spam detection software,
-	running on the system "hetzner.pbcl.net", has
-	identified this incoming email as possible spam. The original message
-	has been attached to this so you can view it (if it isn't spam) or
-	label similar future email.  If you have any questions, see
-	@@CONTACT_ADDRESS@@ for details.
-	Content preview: This means that it now understands "standard" URI
-	syntax as
-	well as the slightly odd legacy bitbake variant. There are other places
-	in bitbake (e.g. Local.urldata_init) that also need fixing,
-	but this is a start. [...] 
-	Content analysis details:   (-1.0 points, 5.0 required)
-	pts rule name              description
-	---- ----------------------
-	--------------------------------------------------
-	-1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-X-Mailman-Approved-At: Fri, 10 Jan 2014 17:09:25 +0000
-Subject: [RFC PATCH] bitbake: Rewrite fetch2.decodeurl() to use urlparse.urlsplit()
+	Mon, 13 Jan 2014 08:19:58 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.14.5/8.14.5) with ESMTP id s0D8Jx6S022637
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 13 Jan 2014 00:19:59 -0800 (PST)
+Received: from pek-hostel-vm02.wrs.com (128.224.153.172) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+	14.2.347.0; Mon, 13 Jan 2014 00:19:58 -0800
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Mon, 13 Jan 2014 03:19:55 -0500
+Message-ID: <cover.1389601138.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 1.7.10.4
+MIME-Version: 1.0
+Subject: [PATCH 0/1] bitbake: data.py: convert "__" to "-" for PREFERRED_VERSION
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,102 +31,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 10 Jan 2014 16:28:47 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 13 Jan 2014 08:19:59 -0000
+Content-Type: text/plain
 
-This means that it now understands "standard" URI syntax as well as
-the slightly odd legacy bitbake variant.
+The following changes since commit 6ee5d95317de77c1cfb6db6f1ab2de77f5fa085e:
 
-There are other places in bitbake (e.g. Local.urldata_init) that also 
-need fixing, but this is a start.
+  bitbake: fetch2/gitannex: Fix function arguments to match bitbake master (2014-01-08 15:27:37 +0000)
 
-Signed-off-by: Phil Blundell <pb@pbcl.net>
----
- lib/bb/fetch2/__init__.py | 60 ++++++++++++++++++++++++++---------------------
- 1 file changed, 33 insertions(+), 27 deletions(-)
+are available in the git repository at:
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 260fb37..4886dae 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -329,40 +329,46 @@ def decodeurl(url):
-     user, password, parameters).
-     """
- 
--    m = re.compile('(?P<type>[^:]*)://((?P<user>.+)@)?(?P<location>[^;]+)(;(?P<parm>.*))?').match(url)
--    if not m:
-+    if url.startswith("file://"):
-+        # This is an old-style bitbake URL.  Fix it up.
-+        url = "file:" + url[7:]
-+
-+    import urlparse
-+    d = urlparse.urlsplit(url)
-+    if not d.scheme:
-         raise MalformedUrl(url)
- 
--    type = m.group('type')
--    location = m.group('location')
--    if not location:
-+    netloc = d.netloc
-+    path = d.path
-+
-+    if not path:
-         raise MalformedUrl(url)
--    user = m.group('user')
--    parm = m.group('parm')
- 
--    locidx = location.find('/')
--    if locidx != -1 and type.lower() != 'file':
--        host = location[:locidx]
--        path = location[locidx:]
--    else:
--        host = ""
--        path = location
--    if user:
--        m = re.compile('(?P<user>[^:]+)(:?(?P<pswd>.*))').match(user)
--        if m:
--            user = m.group('user')
--            pswd = m.group('pswd')
--    else:
--        user = ''
--        pswd = ''
-+    user = ''
-+    pswd = ''
-+    host = ''
-+
-+    if netloc:
-+        m = re.compile('((?P<user>[^:@]+)(:(?P<pswd>[^@]+))?@)?(?P<host>.+)').match(netloc)
-+        if not m:
-+            raise MalformedUrl(url)
-+
-+        user = m.group('user')
-+        pswd = m.group('pswd')
-+        host = m.group('host')
- 
-     p = {}
--    if parm:
--        for s in parm.split(';'):
--            s1, s2 = s.split('=')
--            p[s1] = s2
-+    sep = path.find(";")
-+    if sep != -1:
-+        for s in path[sep+1:].split(';'):
-+            try:
-+                s1, s2 = s.split('=')
-+                p[s1] = s2
-+            except ValueError:
-+                raise MalformedUrl(url)
-+        path = path[:sep]
- 
--    return type, host, urllib.unquote(path), user, pswd, p
-+    return d.scheme, host, urllib.unquote(path), user, pswd, p
- 
- def encodeurl(decoded):
-     """Encodes a URL from tokens (scheme, network location, path,
+  git://git.pokylinux.org/poky-contrib rbt/pv
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=rbt/pv
+
+Robert Yang (1):
+  bitbake: data.py: convert "__" to "-" for PREFERRED_VERSION
+
+ bitbake/lib/bb/data.py |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
 -- 
-1.8.5
-
-
+1.7.10.4
 
 
