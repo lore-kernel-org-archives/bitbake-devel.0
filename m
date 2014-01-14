@@ -1,26 +1,28 @@
 Return-Path: <Liezhi.Yang@windriver.com>
 Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id C7E276B880
+	by mail.openembedded.org (Postfix) with ESMTP id 2EC8C6B50C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Jan 2014 01:44:45 +0000 (UTC)
+	Tue, 14 Jan 2014 01:45:22 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.5) with ESMTP id s0E1ijKn007643
+	by mail.windriver.com (8.14.5/8.14.5) with ESMTP id s0E1jMZc007732
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Mon, 13 Jan 2014 17:44:45 -0800 (PST)
+	Mon, 13 Jan 2014 17:45:22 -0800 (PST)
 Received: from [128.224.162.226] (128.224.162.226) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.40) with Microsoft SMTP Server id 14.2.347.0;
-	Mon, 13 Jan 2014 17:44:45 -0800
-Message-ID: <52D4968B.4030402@windriver.com>
-Date: Tue, 14 Jan 2014 09:44:43 +0800
+	Mon, 13 Jan 2014 17:45:21 -0800
+Message-ID: <52D496B0.6070308@windriver.com>
+Date: Tue, 14 Jan 2014 09:45:20 +0800
 From: Robert Yang <liezhi.yang@windriver.com>
 User-Agent: Mozilla/5.0 (X11; Linux i686;
 	rv:24.0) Gecko/20100101 Thunderbird/24.0
 MIME-Version: 1.0
-To: Gary Thomas <gary@mlbassoc.com>, <bitbake-devel@lists.openembedded.org>
-References: <cover.1389601138.git.liezhi.yang@windriver.com>	<69aa90ef3b947f39f49563b84a10c226d7df61d8.1389601138.git.liezhi.yang@windriver.com>
-	<52D3CAC4.5090807@mlbassoc.com>
-In-Reply-To: <52D3CAC4.5090807@mlbassoc.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <cover.1389601138.git.liezhi.yang@windriver.com>	
+	<69aa90ef3b947f39f49563b84a10c226d7df61d8.1389601138.git.liezhi.yang@windriver.com>
+	<1389654461.14987.32.camel@ted>
+In-Reply-To: <1389654461.14987.32.camel@ted>
+Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH 1/1] bitbake: data.py: convert "__" to "-" for PREFERRED_VERSION
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -34,14 +36,14 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 14 Jan 2014 01:44:46 -0000
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+X-List-Received-Date: Tue, 14 Jan 2014 01:45:22 -0000
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 01/13/2014 07:15 PM, Gary Thomas wrote:
-> On 2014-01-13 01:19, Robert Yang wrote:
+On 01/14/2014 07:07 AM, Richard Purdie wrote:
+> On Mon, 2014-01-13 at 03:19 -0500, Robert Yang wrote:
 >> We can set the PREFERRED_VERSION from the command line:
 >>
 >> $ export BB_PRESERVE_ENV=1
@@ -60,7 +62,22 @@ On 01/13/2014 07:15 PM, Gary Thomas wrote:
 >> ---
 >>   bitbake/lib/bb/data.py |   11 ++++++++++-
 >>   1 file changed, 10 insertions(+), 1 deletion(-)
->>
+>
+> Should we do this just for PREFERRED_VERSION or all environment
+> variables? I can't think of a case we'd use __ currently but I can think
+> of other variable names where this mapping would help...
+>
+> Any strong opinions?
+>
+
+Sounds good, I will send a V2.
+
+// Robert
+
+> Cheers,
+>
+> Richard
+>
 >> diff --git a/bitbake/lib/bb/data.py b/bitbake/lib/bb/data.py
 >> index 5840803..666cdcb 100644
 >> --- a/bitbake/lib/bb/data.py
@@ -87,35 +104,8 @@ On 01/13/2014 07:15 PM, Gary Thomas wrote:
 >>                   if s in exportlist:
 >>                       d.setVarFlag(s, "export", True, op = 'auto env export')
 >>               except TypeError:
->>
 >
-> Are you sure this is correct for the 's in exportlist' case?
 >
-
-Yes, I think so, the exportlist contains constant:
-
-['BB_TASKHASH', 'HOME', 'LOGNAME', 'PATH', 'PWD', 'SHELL', 'TERM', 'USER']
-
-So we don't have to worry about it.
-
-> Perhaps the change should look like this (which is also easier to read):
-> @@ -175,6 +175,8 @@ def inheritFromOS(d, savedenv, permitted):
->       for s in savedenv.keys():
->           if s in permitted:
->               try:
-> +                if preferred_version_re.match(s):
-> +                    s = s.replace('__', '-')
->                   d.setVar(s, getVar(s, savedenv, True), op = 'from env')
-
-We must need the s_new (or s_to) here, because:
-
-  d.setVar(s_to, getVar(s_from, savedenv, True), xxx)
-
-the s_to and s_from are different.
-
-// Robert
-
->                   if s in exportlist:
->                       d.setVarFlag(s, "export", True, op = 'auto env export')
+>
 >
 
