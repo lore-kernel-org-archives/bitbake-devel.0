@@ -1,18 +1,18 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 2EC8C6B50C
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id BC5F36B50C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Jan 2014 01:45:22 +0000 (UTC)
+	Tue, 14 Jan 2014 02:39:02 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.5) with ESMTP id s0E1jMZc007732
+	by mail1.windriver.com (8.14.5/8.14.5) with ESMTP id s0E2cxr4009777
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Mon, 13 Jan 2014 17:45:22 -0800 (PST)
+	Mon, 13 Jan 2014 18:38:59 -0800 (PST)
 Received: from [128.224.162.226] (128.224.162.226) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.40) with Microsoft SMTP Server id 14.2.347.0;
-	Mon, 13 Jan 2014 17:45:21 -0800
-Message-ID: <52D496B0.6070308@windriver.com>
-Date: Tue, 14 Jan 2014 09:45:20 +0800
+	Mon, 13 Jan 2014 18:38:58 -0800
+Message-ID: <52D4A33F.2030501@windriver.com>
+Date: Tue, 14 Jan 2014 10:38:55 +0800
 From: Robert Yang <liezhi.yang@windriver.com>
 User-Agent: Mozilla/5.0 (X11; Linux i686;
 	rv:24.0) Gecko/20100101 Thunderbird/24.0
@@ -36,11 +36,20 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 14 Jan 2014 01:45:22 -0000
+X-List-Received-Date: Tue, 14 Jan 2014 02:39:03 -0000
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
+I've update the PULL, changes:
+
+1) Not only for the PREFERRED_VERSION, but for all env vars.
+2) Also take care of the exportlist, though we don't have to care
+    about it currently, but maybe in the future.
+
+git://git.pokylinux.org/poky-contrib rbt/pv
+
+// Robert
 
 On 01/14/2014 07:07 AM, Richard Purdie wrote:
 > On Mon, 2014-01-13 at 03:19 -0500, Robert Yang wrote:
@@ -69,11 +78,6 @@ On 01/14/2014 07:07 AM, Richard Purdie wrote:
 >
 > Any strong opinions?
 >
-
-Sounds good, I will send a V2.
-
-// Robert
-
 > Cheers,
 >
 > Richard
