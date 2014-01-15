@@ -1,30 +1,31 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id A27CC6E74E
+Return-Path: <solomon.kinard@gmail.com>
+Received: from mail-ve0-f181.google.com (mail-ve0-f181.google.com
+	[209.85.128.181])
+	by mail.openembedded.org (Postfix) with ESMTP id 2641E6AE73
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Jan 2014 12:02:16 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s0HC2BJ6015012 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Jan 2014 12:02:11 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id YxXfEv8GkUrc for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Jan 2014 12:02:11 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s0HC1XJN014994
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
+	Wed, 15 Jan 2014 04:30:52 +0000 (UTC)
+Received: by mail-ve0-f181.google.com with SMTP id cz12so216794veb.12
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Jan 2014 12:01:35 GMT
-Message-ID: <1389960087.14987.115.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Fri, 17 Jan 2014 12:01:27 +0000
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] fetch2/gitsm: Use ud.basecmd instead of hardcoding git
+	Tue, 14 Jan 2014 20:30:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:from:date:message-id:subject:to:content-type;
+	bh=k2HHdskJuxNQHQpZY0F4Waksa2o/vdTU9KOlQXpaMUw=;
+	b=eB1uWN0Yk0NHWWItmuMNjHejsCX3YhFS5MXMEITYiCZ4nVsQnYq5PJMY4pk4s79D+H
+	apLVi+vU3UCSJ1pWQ0uqC52lydt1EDqjh0JUhIBvgOje4eOGM+eTEsvqawe6UQ2YgKdx
+	+Rf0KxFlbe50Nd4K1Rrkp4hzEWjvTMkNLtMEEtn3+ldVGxzxvAwV//bxjsT8NPST3Q1Q
+	o7TuqZTkXCIg5nVDHrnv29btsprem5/CusBHL5Fe/HHaYNNZ76jztacHheEvusOOpO+R
+	hekhYEWjrzCXP5UG4Vvce2XR6j3pCUc8NgzNHnJYKIdraHcIoV4cCM7663GzVZs17ydD
+	9Hhw==
+X-Received: by 10.52.187.232 with SMTP id fv8mr12262vdc.60.1389760252557; Tue,
+	14 Jan 2014 20:30:52 -0800 (PST)
+MIME-Version: 1.0
+Received: by 10.58.89.132 with HTTP; Tue, 14 Jan 2014 20:30:32 -0800 (PST)
+From: Solomon Kinard <solomon.kinard@gmail.com>
+Date: Tue, 14 Jan 2014 20:30:32 -0800
+Message-ID: <CANKRQkhtgoiA7PP_HdVtjbbozGfvvb4rN9O-9qHJw3W10q43fw@mail.gmail.com>
+To: bitbake-devel@lists.openembedded.org
+X-Mailman-Approved-At: Fri, 17 Jan 2014 12:34:45 +0000
+Subject: bitbake error
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,42 +38,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 17 Jan 2014 12:02:17 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 15 Jan 2014 04:30:54 -0000
+Content-Type: multipart/alternative; boundary=bcaec548a6032d40ba04effac6ea
 
-This allows FETCHCMD_git to override the fetcher command as the git fetcher does.
+--bcaec548a6032d40ba04effac6ea
+Content-Type: text/plain; charset=ISO-8859-1
 
-[YOCTO #5717]
+Hi,
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/fetch2/gitsm.py b/bitbake/lib/bb/fetch2/gitsm.py
-index 4093f6e..9fdde46 100644
---- a/bitbake/lib/bb/fetch2/gitsm.py
-+++ b/bitbake/lib/bb/fetch2/gitsm.py
-@@ -51,9 +51,9 @@ class GitSM(Git):
-         os.rename(ud.clonedir, gitdir)
-         runfetchcmd("sed " + gitdir + "/config -i -e 's/bare.*=.*true/bare = false/'", d)
-         os.chdir(tmpclonedir)
--        runfetchcmd("git reset --hard", d)
--        runfetchcmd("git submodule init", d)
--        runfetchcmd("git submodule update", d)
-+        runfetchcmd(ud.basecmd + " reset --hard", d)
-+        runfetchcmd(ud.basecmd + " submodule init", d)
-+        runfetchcmd(ud.basecmd + " submodule update", d)
-         runfetchcmd("sed " + gitdir + "/config -i -e 's/bare.*=.*false/bare = true/'", d)
-         os.rename(gitdir, ud.clonedir,)
-         bb.utils.remove(tmpclonedir, True)
-@@ -73,6 +73,6 @@ class GitSM(Git):
-         submodules = self.uses_submodules(ud, d)
-         if submodules:
-             runfetchcmd("cp -r " + ud.clonedir + "/modules " + ud.destdir + "/.git/", d)
--            runfetchcmd("git submodule init", d)
--            runfetchcmd("git submodule update", d)
-+            runfetchcmd(ud.basecmd + " submodule init", d)
-+            runfetchcmd(ud.basecmd + " submodule update", d)
- 
+error: pathspec 'master' did not match any file(s) known to git. Can you
+please share any ideas?
 
+Regards,
+Solomon Kinard
 
+--bcaec548a6032d40ba04effac6ea
+Content-Type: text/html; charset=ISO-8859-1
 
+<div dir="ltr">Hi,<div><br></div><div><div>error: pathspec &#39;master&#39; did not match any file(s) known to git. Can you please share any ideas?</div></div><div><br clear="all"><div><div dir="ltr">Regards,<div>Solomon Kinard</div>
+
+</div></div>
+</div></div>
+
+--bcaec548a6032d40ba04effac6ea--
