@@ -1,38 +1,37 @@
 Return-Path: <martin.jansa@gmail.com>
-Received: from mail-ea0-f177.google.com (mail-ea0-f177.google.com
-	[209.85.215.177])
-	by mail.openembedded.org (Postfix) with ESMTP id 04FC06B880
+Received: from mail-ea0-f176.google.com (mail-ea0-f176.google.com
+	[209.85.215.176])
+	by mail.openembedded.org (Postfix) with ESMTP id D6AB56B880
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 16 Jan 2014 14:53:42 +0000 (UTC)
-Received: by mail-ea0-f177.google.com with SMTP id n15so1188060ead.22
+	Thu, 16 Jan 2014 14:54:58 +0000 (UTC)
+Received: by mail-ea0-f176.google.com with SMTP id h14so1158446eaj.21
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 16 Jan 2014 06:53:43 -0800 (PST)
+	Thu, 16 Jan 2014 06:54:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=h1wM5ulLgcdl1mnXGff8psPbYD7H7tdrlCBwCfaa8Uo=;
-	b=CWzQJaKGD25g8mFHz4kpHmkJ/wW0pOiSD8UYAbGJJZcxZaoOzHxrPuQAZWIfB/r+e3
-	ib64bcmTTgBojoBLvrDvcoOXvqg0UnZj1FRBi/b8fWrZ77rQnMh/WPmR90ms5JxPQe0Y
-	wbmw6G/v7C02SBHPHKeZwBHj5fASFjvIO5JG4HsiCW+BCsj7ERj1kFNu3uYzEQsFyB8o
-	v4VDmLNNecLx15fdgq68llVwgL7UL/LG71oz3b+YRvAxL+ReL5yWhAkkngXrW7lnntih
-	XiMn0im7GNQp87YA0GImjeJlY7kuxZ38fqCK5Xg6fysAEYYEOrmMbQ6pXtoLDYXhXeA4
-	jOvQ==
-X-Received: by 10.15.53.129 with SMTP id r1mr1564558eew.111.1389884023245;
-	Thu, 16 Jan 2014 06:53:43 -0800 (PST)
+	bh=f6Bxfitrxyn841khaHlReTqVqlKvsSdD0RgnOkQmy88=;
+	b=eZ9mUDguuU2RHulRAl8aCur+dUN+/Q8HMbKoqdFq54VurHJxc7Nhn1GkJlgnBE5dH+
+	iIOSCHuMGqpmddd0Z2bQmFtubtNAW3TARvN6LcaP13t/dlTeiudrp2z+M1k3HYd0UD2E
+	dGSiLrd3shKUXUy2ahpDATAMNQjH+cKV0iN4Y4ksd8PYaeTSt9sBFJZoR+BDAWkPSoQj
+	5h68K4hYTZaNMHsLLfNuJv7chExw4PkGwZaYhqNxDx1KR2w4oakNg2R8mDM1SzyjVfdH
+	Z0EmmYzW4hihWErmKknRgGkdoOJ/D5BbESg2fNweRvlTEEvjZgYO+ZgWxrkFmViSOHyx
+	VfiA==
+X-Received: by 10.14.202.196 with SMTP id d44mr1881098eeo.87.1389884099146;
+	Thu, 16 Jan 2014 06:54:59 -0800 (PST)
 Received: from localhost (ip-89-176-104-107.net.upcbroadband.cz.
 	[89.176.104.107])
-	by mx.google.com with ESMTPSA id z46sm18771615een.1.2014.01.16.06.53.42
+	by mx.google.com with ESMTPSA id m47sm18776466eey.7.2014.01.16.06.54.58
 	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 16 Jan 2014 06:53:42 -0800 (PST)
+	Thu, 16 Jan 2014 06:54:58 -0800 (PST)
 From: Martin Jansa <martin.jansa@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 16 Jan 2014 15:54:02 +0100
-Message-Id: <1389884042-23531-1-git-send-email-Martin.Jansa@gmail.com>
+Date: Thu, 16 Jan 2014 15:55:19 +0100
+Message-Id: <1389884119-3694-1-git-send-email-Martin.Jansa@gmail.com>
 X-Mailer: git-send-email 1.8.5.2
 In-Reply-To: <1389880881-4209-1-git-send-email-Martin.Jansa@gmail.com>
 References: <1389880881-4209-1-git-send-email-Martin.Jansa@gmail.com>
-Cc: Martin Jansa <martin.jansa@lge.com>
-Subject: [PATCHv2] fetch2: Don't allow '/' in user:pass, fix branch containing '@'
+Subject: [PATCHv3] fetch2: Don't allow '/' in user:pass, fix branch containing '@'
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,9 +44,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 16 Jan 2014 14:53:43 -0000
-
-From: Martin Jansa <martin.jansa@lge.com>
+X-List-Received-Date: Thu, 16 Jan 2014 14:54:59 -0000
 
 * currently decode_url regexp parses branch=@foo as username so it ends like this:
   - ('git', '', 'foo', 'git.openembedded.org/bitbake;branch=', '', {})
@@ -56,7 +53,7 @@ From: Martin Jansa <martin.jansa@lge.com>
   that there is at least one '/' as separator between netloc and path,
   params, so it looks reasonable to prevent including '/' in username
 
-Signed-off-by: Martin Jansa <martin.jansa@lge.com>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
  lib/bb/fetch2/__init__.py | 2 +-
  lib/bb/tests/fetch.py     | 3 ++-
