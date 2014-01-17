@@ -1,32 +1,35 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 471256007C
+Return-Path: <martin.jansa@gmail.com>
+Received: from mail-ea0-f177.google.com (mail-ea0-f177.google.com
+	[209.85.215.177])
+	by mail.openembedded.org (Postfix) with ESMTP id 2F9FA6AA18
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Jan 2014 12:35:03 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s0HCYolh016670; Fri, 17 Jan 2014 12:34:50 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id KqppGMNEXMaN; Fri, 17 Jan 2014 12:34:50 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s0HCXnbc016587
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-	Fri, 17 Jan 2014 12:33:52 GMT
-Message-ID: <1389962023.14987.119.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Olof Johansson <olof.johansson@axis.com>
-Date: Fri, 17 Jan 2014 12:33:43 +0000
-In-Reply-To: <20140116144514.GE1459@axis.com>
-References: <1389371323.9182.169.camel@phil-desktop.brightsign>
-	<20140116144514.GE1459@axis.com>
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>, Phil Blundell <pb@pbcl.net>
-Subject: Re: [RFC PATCH] bitbake: Rewrite fetch2.decodeurl() to use urlparse.urlsplit()
+	Fri, 17 Jan 2014 13:13:22 +0000 (UTC)
+Received: by mail-ea0-f177.google.com with SMTP id n15so1748775ead.22
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 17 Jan 2014 05:13:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=8/vruSYoTFLKgMpWsk5Emc0FQ5DMcQvERYLFrhJZHJw=;
+	b=pARqgIE/HHuHw+fMP8A4jyNIm3QziEtC8gJi0mSQfrJqI6t8r+A6FGIsgrJ3UDGmAe
+	fAUXToiaGotuXUnU2KfJlVVz4o0XVpsjUvxY1O8EOburH65gByovQz9eGQIRxWF0FPp9
+	HZFIpC+4lf15qqW2bSYfI26hutMvBt+HN0wNryVY1uK2QgUWOi8JglmLxtoBNF66F5tE
+	BvNYs8BIUW9JSm1J1x7WVAWa0jEGLCue1tYohOQ7qr7d8asLD+I2Ba20LffESlFN5TON
+	6un+cexjYtbw/nzIr4Jw010WScxTdQniStOFOAldEszlodvyJNWTmzCSSDsmV6U3/LSc
+	fpdw==
+X-Received: by 10.15.86.75 with SMTP id h51mr2445789eez.44.1389964402306;
+	Fri, 17 Jan 2014 05:13:22 -0800 (PST)
+Received: from localhost (ip-89-176-104-107.net.upcbroadband.cz.
+	[89.176.104.107])
+	by mx.google.com with ESMTPSA id w4sm26782437eef.20.2014.01.17.05.13.21
+	for <multiple recipients>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 17 Jan 2014 05:13:21 -0800 (PST)
+From: Martin Jansa <martin.jansa@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 17 Jan 2014 14:13:43 +0100
+Message-Id: <1389964423-6092-1-git-send-email-Martin.Jansa@gmail.com>
+X-Mailer: git-send-email 1.8.5.2
+Subject: [PATCH] SignatureGenerator: Add empty implementation for dump_sigs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,32 +42,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 17 Jan 2014 12:35:03 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 17 Jan 2014 13:13:23 -0000
 
-On Thu, 2014-01-16 at 15:45 +0100, Olof Johansson wrote:
-> On 14-01-10 17:28 +0100, Phil Blundell wrote:
-> > This means that it now understands "standard" URI syntax as well as
-> > the slightly odd legacy bitbake variant.
-> > 
-> > There are other places in bitbake (e.g. Local.urldata_init) that also 
-> > need fixing, but this is a start.
-> 
-> I wrote a URI class last year that got integrated to bitbake's
-> fetch2, but the commit that actually made decode/encodeurl a
-> wrapper around it was reverted because I missed adding support
-> for query params (oops :-)). The class itself is still intact
-> though (it's just above decodeurl).
-> 
-> I did send fixes for that (adding support for query params), but
-> they haven't been merged. Perhaps I should resend?
+* bitbake -S throws exception when 'noop' signature handler is used
 
-Please do, they've fallen off the radar...
+[YOCTO #5738]
 
-Cheers,
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ lib/bb/siggen.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Richard
-
+diff --git a/lib/bb/siggen.py b/lib/bb/siggen.py
+index bc96fd3..9796c31 100644
+--- a/lib/bb/siggen.py
++++ b/lib/bb/siggen.py
+@@ -57,6 +57,8 @@ class SignatureGenerator(object):
+     def invalidate_task(self, task, d, fn):
+         bb.build.del_stamp(task, d, fn)
+ 
++    def dump_sigs(self, dataCache):
++        return
+ 
+ class SignatureGeneratorBasic(SignatureGenerator):
+     """
+-- 
+1.8.5.2
 
 
