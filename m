@@ -1,47 +1,47 @@
 Return-Path: <olof.johansson@axis.com>
 Received: from anubis.se.axis.com (anubis.se.axis.com [195.60.68.12])
-	by mail.openembedded.org (Postfix) with ESMTP id 3ECCB6E71D
+	by mail.openembedded.org (Postfix) with ESMTP id 8EA326E71B
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Jan 2014 11:03:45 +0000 (UTC)
+	Mon, 20 Jan 2014 11:03:44 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by anubis.se.axis.com (Postfix) with ESMTP id 1720219E6F
+	by anubis.se.axis.com (Postfix) with ESMTP id E7E4D19DE4
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Jan 2014 12:03:46 +0100 (CET)
+	Mon, 20 Jan 2014 12:03:44 +0100 (CET)
 X-Virus-Scanned: Debian amavisd-new at anubis.se.axis.com
 Received: from anubis.se.axis.com ([127.0.0.1])
 	by localhost (anubis.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id hLSuuKyZSzKU for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Jan 2014 12:03:45 +0100 (CET)
+	with LMTP id Ln3RIzstu+nR for <bitbake-devel@lists.openembedded.org>;
+	Mon, 20 Jan 2014 12:03:42 +0100 (CET)
 Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by anubis.se.axis.com (Postfix) with ESMTP id 5481919DD0
+	by anubis.se.axis.com (Postfix) with ESMTP id 8B1F619DD7
 	for <bitbake-devel@lists.openembedded.org>;
 	Mon, 20 Jan 2014 12:03:25 +0100 (CET)
 Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id 3DCD0BB0
+	by postfix.imss71 (Postfix) with ESMTP id 70E50C6F
 	for <bitbake-devel@lists.openembedded.org>;
 	Mon, 20 Jan 2014 12:03:25 +0100 (CET)
-Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
-	by boulder.se.axis.com (Postfix) with ESMTP id 330B170A
+Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
+	by boulder.se.axis.com (Postfix) with ESMTP id 64E48C6C
 	for <bitbake-devel@lists.openembedded.org>;
 	Mon, 20 Jan 2014 12:03:25 +0100 (CET)
 Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
-	by thoth.se.axis.com (Postfix) with ESMTP id 3047034055
+	by seth.se.axis.com (Postfix) with ESMTP id 6125C3E070
 	for <bitbake-devel@lists.openembedded.org>;
 	Mon, 20 Jan 2014 12:03:25 +0100 (CET)
 Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
 	(10.0.5.74) with Microsoft SMTP Server id 8.2.255.0; Mon, 20 Jan 2014
 	12:03:25 +0100
-Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id 14B969C075; 
-	Mon, 20 Jan 2014 12:03:25 +0100 (CET)
+Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id 274F79C07C; 
+	Mon, 20 Jan 2014 12:03:24 +0100 (CET)
 From: Olof Johansson <olof.johansson@axis.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 20 Jan 2014 12:03:23 +0100
-Message-ID: <1390215804-20578-5-git-send-email-olof.johansson@axis.com>
+Date: Mon, 20 Jan 2014 12:03:22 +0100
+Message-ID: <1390215804-20578-4-git-send-email-olof.johansson@axis.com>
 X-Mailer: git-send-email 1.8.5.2
 In-Reply-To: <1390215804-20578-1-git-send-email-olof.johansson@axis.com>
 References: <1390215804-20578-1-git-send-email-olof.johansson@axis.com>
 MIME-Version: 1.0
-Subject: [PATCH 4/5] fetch2.URI: Support URIs with both query strings and params
+Subject: [PATCH 3/5] fetch2.URI: add support for query parameters
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,66 +57,117 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 X-List-Received-Date: Mon, 20 Jan 2014 11:03:46 -0000
 Content-Type: text/plain
 
-There is a case in meta-intel where a SRC_URI contains both a query string and
-URI parameter:
+This change introduces the .query property of the URI class. It is a
+read/write dict of the parameters supplied in the query string of the
+URI. E.g.:
 
- https://edc.intel.com/Download.aspx?id=6190;downloadfilename=LIN_IEMGD_1_14_GOLD_2443.tgz
-
-Python's urlparse thought the URI parameters were part of the query parameter
-value, but in the bitbake context this is obviously not the case. As bitbake's
-usage isn't really RFC compliant, we have to extract and remove the URI parameters
-*before* urlparse sees the URI.
+  http://example.com/?foo=bar => .query = {'foo': 'bar'}
 
 Signed-off-by: Olof Johansson <olof.johansson@axis.com>
 ---
- lib/bb/fetch2/__init__.py | 16 +++++-----------
- lib/bb/tests/fetch.py     | 18 ++++++++++++++++++
- 2 files changed, 23 insertions(+), 11 deletions(-)
+ lib/bb/fetch2/__init__.py | 38 +++++++++++++++++++++++---------------
+ lib/bb/tests/fetch.py     | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 53 insertions(+), 15 deletions(-)
 
 diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 2ebdafa..abff9e2 100644
+index 9c201aa..2ebdafa 100644
 --- a/lib/bb/fetch2/__init__.py
 +++ b/lib/bb/fetch2/__init__.py
-@@ -208,6 +208,10 @@ class URI(object):
+@@ -162,6 +162,7 @@ class URI(object):
+       * path_quoted (read/write)
+         A URI quoted version of path
+       * params (dict) (read/write)
++      * query (dict) (read/write)
+       * relative (bool) (read only)
+         True if this is a "relative URI", (e.g. file:foo.diff)
+ 
+@@ -201,6 +202,7 @@ class URI(object):
+         self.port = None
+         self._path = ''
+         self.params = {}
++        self.query = {}
+         self.relative = False
+ 
          if not uri:
-             return
- 
-+        # We hijack the URL parameters, since the way bitbake uses
-+        # them are not quite RFC compliant.
-+        uri, param_str = (uri.split(";", 1) + [None])[:2]
-+
-         urlp = urlparse.urlparse(uri)
-         self.scheme = urlp.scheme
- 
-@@ -242,17 +246,7 @@ class URI(object):
-             if urlp.password:
-                 self.userinfo += ':%s' % urlp.password
- 
--        # Do support params even for URI schemes that Python's
--        # urlparse doesn't support params for.
--        path = ''
--        param_str = ''
--        if not urlp.params:
--            path, param_str = (list(urlp.path.split(";", 1)) + [None])[:2]
--        else:
--            path = urlp.path
--            param_str = urlp.params
--
--        self.path = urllib.unquote(path)
-+        self.path = urllib.unquote(urlp.path)
+@@ -253,36 +255,42 @@ class URI(object):
+         self.path = urllib.unquote(path)
  
          if param_str:
-             self.params = self._param_str_split(param_str, ";")
+-            self.params = self._param_dict(param_str)
++            self.params = self._param_str_split(param_str, ";")
++        if urlp.query:
++            self.query = self._param_str_split(urlp.query, "&")
+ 
+     def __str__(self):
+         userinfo = self.userinfo
+         if userinfo:
+             userinfo += '@'
+ 
+-        return "%s:%s%s%s%s%s" % (
++        return "%s:%s%s%s%s%s%s" % (
+             self.scheme,
+             '' if self.relative else '//',
+             userinfo,
+             self.hostport,
+             self.path_quoted,
+-            self._param_str)
++            self._query_str(),
++            self._param_str())
+ 
+-    @property
+     def _param_str(self):
+-        ret = ''
+-        for key, val in self.params.items():
+-            ret += ";%s=%s" % (key, val)
++        return (
++            ''.join([';', self._param_str_join(self.params, ";")])
++            if self.params else '')
++
++    def _query_str(self):
++        return (
++            ''.join(['?', self._param_str_join(self.query, "&")])
++            if self.query else '')
++
++    def _param_str_split(self, string, elmdelim, kvdelim="="):
++        ret = {}
++        for k, v in [x.split(kvdelim, 1) for x in string.split(elmdelim)]:
++            ret[k] = v
+         return ret
+ 
+-    def _param_dict(self, param_str):
+-        parm = {}
+-
+-        for keyval in param_str.split(";"):
+-            key, val = keyval.split("=", 1)
+-            parm[key] = val
+-
+-        return parm
++    def _param_str_join(self, dict_, elmdelim, kvdelim="="):
++        return elmdelim.join([kvdelim.join([k, v]) for k, v in dict_.items()])
+ 
+     @property
+     def hostport(self):
 diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 5169496..6ffe296 100644
+index 3dbeafa..5169496 100644
 --- a/lib/bb/tests/fetch.py
 +++ b/lib/bb/tests/fetch.py
-@@ -74,6 +74,24 @@ class URITest(unittest.TestCase):
-             },
+@@ -39,6 +39,7 @@ class URITest(unittest.TestCase):
+             'username': '',
+             'password': '',
+             'params': {},
++            'query': {},
              'relative': False
          },
-+        "http://www.example.org/index.html?qparam1=qvalue1;param2=value2" : {
-+            'uri': 'http://www.example.org/index.html?qparam1=qvalue1;param2=value2',
+         "http://www.google.com/index.html;param1=value1" : {
+@@ -54,6 +55,23 @@ class URITest(unittest.TestCase):
+             'params': {
+                 'param1': 'value1'
+             },
++            'query': {},
++            'relative': False
++        },
++        "http://www.example.org/index.html?param1=value1" : {
++            'uri': 'http://www.example.org/index.html?param1=value1',
 +            'scheme': 'http',
 +            'hostname': 'www.example.org',
 +            'port': None,
@@ -125,17 +176,95 @@ index 5169496..6ffe296 100644
 +            'userinfo': '',
 +            'username': '',
 +            'password': '',
-+            'params': {
-+                'param2': 'value2'
-+            },
++            'params': {},
 +            'query': {
-+                'qparam1': 'qvalue1'
++                'param1': 'value1'
 +            },
-+            'relative': False
-+        },
+             'relative': False
+         },
          "http://www.example.com:8080/index.html" : {
-             'uri': 'http://www.example.com:8080/index.html',
-             'scheme': 'http',
+@@ -67,6 +85,7 @@ class URITest(unittest.TestCase):
+             'username': '',
+             'password': '',
+             'params': {},
++            'query': {},
+             'relative': False
+         },
+         "cvs://anoncvs@cvs.handhelds.org/cvs;module=familiar/dist/ipkg" : {
+@@ -82,6 +101,7 @@ class URITest(unittest.TestCase):
+             'params': {
+                 'module': 'familiar/dist/ipkg'
+             },
++            'query': {},
+             'relative': False
+         },
+         "cvs://anoncvs:anonymous@cvs.handhelds.org/cvs;tag=V0-99-81;module=familiar/dist/ipkg": {
+@@ -98,6 +118,7 @@ class URITest(unittest.TestCase):
+                 'tag': 'V0-99-81',
+                 'module': 'familiar/dist/ipkg'
+             },
++            'query': {},
+             'relative': False
+         },
+         "file://example.diff": { # NOTE: Not RFC compliant!
+@@ -111,6 +132,7 @@ class URITest(unittest.TestCase):
+             'username': '',
+             'password': '',
+             'params': {},
++            'query': {},
+             'relative': True
+         },
+         "file:example.diff": { # NOTE: RFC compliant version of the former
+@@ -125,6 +147,7 @@ class URITest(unittest.TestCase):
+             'username': '',
+             'password': '',
+             'params': {},
++            'query': {},
+             'relative': True
+         },
+         "file:///tmp/example.diff": {
+@@ -139,6 +162,7 @@ class URITest(unittest.TestCase):
+             'username': '',
+             'password': '',
+             'params': {},
++            'query': {},
+             'relative': False
+         },
+         "git:///path/example.git": {
+@@ -153,6 +177,7 @@ class URITest(unittest.TestCase):
+             'username': '',
+             'password': '',
+             'params': {},
++            'query': {},
+             'relative': False
+         },
+         "git:path/example.git": {
+@@ -167,6 +192,7 @@ class URITest(unittest.TestCase):
+             'username': '',
+             'password': '',
+             'params': {},
++            'query': {},
+             'relative': True
+         },
+         "git://example.net/path/example.git": {
+@@ -181,6 +207,7 @@ class URITest(unittest.TestCase):
+             'username': '',
+             'password': '',
+             'params': {},
++            'query': {},
+             'relative': False
+         }
+     }
+@@ -243,6 +270,9 @@ class URITest(unittest.TestCase):
+             uri.params = test['params']
+             self.assertEqual(uri.params, test['params'])
+ 
++            uri.query = test['query']
++            self.assertEqual(uri.query, test['query'])
++
+             self.assertEqual(str(uri), test['uri'])
+ 
+             uri.params = {}
 -- 
 1.8.5.2
 
