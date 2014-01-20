@@ -1,26 +1,30 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id B29DE6E71A
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 271066B678
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Jan 2014 11:44:44 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail.windriver.com (8.14.5/8.14.5) with ESMTP id s0KBijRx008525
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	Mon, 20 Jan 2014 15:20:06 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s0KFK2Ba009478 for <bitbake-devel@lists.openembedded.org>;
+	Mon, 20 Jan 2014 15:20:02 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id WoFop4gcQl6z for <bitbake-devel@lists.openembedded.org>;
+	Mon, 20 Jan 2014 15:20:01 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s0KFJoK9009455
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Jan 2014 03:44:45 -0800 (PST)
-Received: from pek-blade16.wrs.com (128.224.153.44) by ALA-HCB.corp.ad.wrs.com
-	(147.11.189.41) with Microsoft SMTP Server id 14.2.347.0;
-	Mon, 20 Jan 2014 03:44:45 -0800
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 20 Jan 2014 19:44:53 +0800
-Message-ID: <9f7465db614c664c49904033aa70170278972932.1390218256.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1390218256.git.liezhi.yang@windriver.com>
-References: <cover.1390218256.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/1] siggen.py: fix the SignatureGenerator()
+	Mon, 20 Jan 2014 15:19:52 GMT
+Message-ID: <1390231184.874.33.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Mon, 20 Jan 2014 15:19:44 +0000
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] fetch2: Clean up srcrev_internal_helper
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,57 +37,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 20 Jan 2014 11:44:44 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 20 Jan 2014 15:20:07 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-If we set:
+Currently INVALID and None are checked as incorrect values under different
+circumstances. This code standardises those checks to be consistent. We
+should phase out the use of "INVALID".
 
-BB_SIGNATURE_HANDLER = "noop"
-
-Then we would get the following errors:
-
-[snip]
-File "runqueue.py", line 876, in RunQueue._start_worker(fakeroot=False, rqexec=None):
-                "fakerootnoenv" : self.rqdata.dataCache.fakerootnoenv,
-   >            "hashes" : bb.parse.siggen.taskhash,
-                "hash_deps" : bb.parse.siggen.runtaskdeps,
-AttributeError: 'SignatureGenerator' object has no attribute 'taskhash'
-[snip]
-
-This patch fixes the problem.
-
-[YOCTO #5741]
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/siggen.py | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 9306323..4af089d 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -873,17 +873,24 @@ def srcrev_internal_helper(ud, d, name):
+     if 'tag' in ud.parm:
+         return ud.parm['tag']
+ 
+-    rev = None
++    srcrev = None
+     pn = d.getVar("PN", True)
++    attempts = []
++    if name != '' and pn:
++        attempts.append("SRCREV_%s_pn-%s" % (name, pn))
+     if name != '':
+-        rev = d.getVar("SRCREV_%s_pn-%s" % (name, pn), True)
+-        if not rev:
+-            rev = d.getVar("SRCREV_%s" % name, True)
+-    if not rev:
+-        rev = d.getVar("SRCREV_pn-%s" % pn, True)
+-    if not rev:
+-        rev = d.getVar("SRCREV", True)
+-    if rev == "INVALID":
++        attempts.append("SRCREV_%s" % name)
++    if pn:
++        attempts.append("SRCREV_pn-%s" % pn)
++    attempts.append("SRCREV")
++
++    for a in attempts:
++        srcrev = d.getVar(a, True)              
++        if srcrev and srcrev != "INVALID":
++            break
++
++    rev = srcrev
++    if rev == "INVALID" or not rev:
+         var = "SRCREV_pn-%s" % pn
+         if name != '':
+             var = "SRCREV_%s_pn-%s" % (name, pn)
 
-diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
-index 9db29a2..a54357a 100644
---- a/bitbake/lib/bb/siggen.py
-+++ b/bitbake/lib/bb/siggen.py
-@@ -34,7 +34,9 @@ class SignatureGenerator(object):
-     name = "noop"
- 
-     def __init__(self, data):
--        return
-+        self.taskhash = {}
-+        self.runtaskdeps = {}
-+        self.file_checksum_values = {}
- 
-     def finalise(self, fn, d, varient):
-         return
-@@ -42,7 +44,7 @@ class SignatureGenerator(object):
-     def get_taskhash(self, fn, task, deps, dataCache):
-         return "0"
- 
--    def set_taskdata(self, hashes, deps):
-+    def set_taskdata(self, hashes, deps, checksum):
-         return
- 
-     def stampfile(self, stampbase, file_name, taskname, extrainfo):
--- 
-1.8.3.1
 
 
