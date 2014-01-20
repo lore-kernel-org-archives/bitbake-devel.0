@@ -1,47 +1,24 @@
-Return-Path: <olof.johansson@axis.com>
-Received: from anubis.se.axis.com (anubis.se.axis.com [195.60.68.12])
-	by mail.openembedded.org (Postfix) with ESMTP id BAE5C6CBD7
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 560B36E51F
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Jan 2014 11:03:50 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by anubis.se.axis.com (Postfix) with ESMTP id 83BD519DC8
+	Mon, 20 Jan 2014 11:44:43 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail1.windriver.com (8.14.5/8.14.5) with ESMTP id s0KBihC8000489
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Jan 2014 12:03:51 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at anubis.se.axis.com
-Received: from anubis.se.axis.com ([127.0.0.1])
-	by localhost (anubis.se.axis.com [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 4UXQBH8cCcix for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Jan 2014 12:03:48 +0100 (CET)
-Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by anubis.se.axis.com (Postfix) with ESMTP id 70BA419DDE
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Jan 2014 12:03:27 +0100 (CET)
-Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id 71D6AC70
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Jan 2014 12:03:25 +0100 (CET)
-Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
-	by boulder.se.axis.com (Postfix) with ESMTP id 61E5670A
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Jan 2014 12:03:25 +0100 (CET)
-Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
-	by seth.se.axis.com (Postfix) with ESMTP id 604DF3E06F
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Jan 2014 12:03:25 +0100 (CET)
-Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
-	(10.0.5.74) with Microsoft SMTP Server id 8.2.255.0; Mon, 20 Jan 2014
-	12:03:25 +0100
-Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id 38CA99C075; 
-	Mon, 20 Jan 2014 12:03:25 +0100 (CET)
-From: Olof Johansson <olof.johansson@axis.com>
+	Mon, 20 Jan 2014 03:44:43 -0800 (PST)
+Received: from pek-blade16.wrs.com (128.224.153.44) by ALA-HCB.corp.ad.wrs.com
+	(147.11.189.41) with Microsoft SMTP Server id 14.2.347.0;
+	Mon, 20 Jan 2014 03:44:44 -0800
+From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 20 Jan 2014 12:03:24 +0100
-Message-ID: <1390215804-20578-6-git-send-email-olof.johansson@axis.com>
-X-Mailer: git-send-email 1.8.5.2
-In-Reply-To: <1390215804-20578-1-git-send-email-olof.johansson@axis.com>
-References: <1390215804-20578-1-git-send-email-olof.johansson@axis.com>
+Date: Mon, 20 Jan 2014 19:44:52 +0800
+Message-ID: <cover.1390218256.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Subject: [PATCH 5/5] fetch2.URI: Set username/password should not change the other
+Subject: [PATCH 0/1] siggen.py: fix the SignatureGenerator()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,62 +31,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 20 Jan 2014 11:03:51 -0000
+X-List-Received-Date: Mon, 20 Jan 2014 11:44:43 -0000
 Content-Type: text/plain
 
-When setting the username after already having set the password, the password
-was unexpectedly reset. This change fixes this issue and introduces unit tests
-to make sure it doesn't happen again.
+The following changes since commit 47b1d3283f93b4b12ba5da4c6b049d46f64e7414:
 
-Signed-off-by: Olof Johansson <olof.johansson@axis.com>
----
- lib/bb/fetch2/__init__.py |  5 +++--
- lib/bb/tests/fetch.py     | 14 ++++++++++++++
- 2 files changed, 17 insertions(+), 2 deletions(-)
+  sstate.bbclass: remove previous version's stamp (2014-01-20 17:26:47 +0800)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index abff9e2..18cd821 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -321,9 +321,10 @@ class URI(object):
- 
-     @username.setter
-     def username(self, username):
-+        password = self.password
-         self.userinfo = username
--        if self.password:
--            self.userinfo += ":%s" % self.password
-+        if password:
-+            self.userinfo += ":%s" % password
- 
-     @property
-     def password(self):
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 6ffe296..707062e 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -274,6 +274,20 @@ class URITest(unittest.TestCase):
-             self.assertEqual(uri.username, test['username'])
-             self.assertEqual(uri.password, test['password'])
- 
-+            # make sure changing the values doesn't do anything unexpected
-+            uri.username = 'changeme'
-+            self.assertEqual(uri.username, 'changeme')
-+            self.assertEqual(uri.password, test['password'])
-+            uri.password = 'insecure'
-+            self.assertEqual(uri.username, 'changeme')
-+            self.assertEqual(uri.password, 'insecure')
-+
-+            # reset back after our trickery
-+            uri.userinfo = test['userinfo']
-+            self.assertEqual(uri.userinfo, test['userinfo'])
-+            self.assertEqual(uri.username, test['username'])
-+            self.assertEqual(uri.password, test['password'])
-+
-             uri.hostname = test['hostname']
-             self.assertEqual(uri.hostname, test['hostname'])
-             self.assertEqual(uri.hostport, test['hostname'])
+are available in the git repository at:
+
+  git://git.pokylinux.org/poky-contrib rbt/noop
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=rbt/noop
+
+Robert Yang (1):
+  siggen.py: fix the SignatureGenerator()
+
+ bitbake/lib/bb/siggen.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
 -- 
-1.8.5.2
+1.8.3.1
 
 
