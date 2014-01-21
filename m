@@ -1,30 +1,30 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 3305060144
+	by mail.openembedded.org (Postfix) with ESMTP id 9647460144
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 Jan 2014 22:31:22 +0000 (UTC)
+	Tue, 21 Jan 2014 22:32:10 +0000 (UTC)
 Received: from localhost (dan.rpsys.net [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s0LMTmZT004789 for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 Jan 2014 22:31:17 GMT
+	s0LMW5Ja004828 for <bitbake-devel@lists.openembedded.org>;
+	Tue, 21 Jan 2014 22:32:06 GMT
 X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id ITHuzQpjFqDf for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 Jan 2014 22:31:17 +0000 (GMT)
+	with LMTP id jDWIN3C8_RLx for <bitbake-devel@lists.openembedded.org>;
+	Tue, 21 Jan 2014 22:32:05 +0000 (GMT)
 Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s0LMVFQI004809
+	s0LMVxTi004825
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 Jan 2014 22:31:16 GMT
-Message-ID: <1390343468.874.123.camel@ted>
+	Tue, 21 Jan 2014 22:32:01 GMT
+Message-ID: <1390343512.874.124.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Tue, 21 Jan 2014 22:31:08 +0000
+Date: Tue, 21 Jan 2014 22:31:52 +0000
 X-Mailer: Evolution 3.8.4-0ubuntu1 
 Mime-Version: 1.0
-Subject: [PATCH] fetch2/wget: Check downloaded file isn't zero size
+Subject: [PATCH] runqueue: Only attempt to print closest matching task if there is a match
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,35 +37,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 21 Jan 2014 22:31:22 -0000
+X-List-Received-Date: Tue, 21 Jan 2014 22:32:11 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-
-
-I can't think of a reason we'd download zero sized files however there are
-reasons zero length files can accidently make it onto source mirrors.
-
-This check allows us to ignore the broken files and switch to another
-mirror rather than fail with odd checksum failures.
+This avoids backtraces some people have been seeing.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index 0073201..7cd25a5 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -91,6 +91,10 @@ class Wget(FetchMethod):
-         if not os.path.exists(ud.localpath) and not checkonly:
-             raise FetchError("The fetch command returned success for url %s but %s doesn't exist?!" % (uri, ud.localpath), uri)
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index 4577236..bf2dc54 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -1224,12 +1224,11 @@ class RunQueue:
+             if match is None:
+                 bb.fatal("Can't find a task we're supposed to have written out? (hash: %s)?" % h)
+             matches = {k : v for k, v in matches.iteritems() if h not in k}
+-            latestmatch = sorted(matches.keys(), key=lambda f: matches[f])[-1]
+-            prevh = __find_md5__.search(latestmatch).group(0)
+-            output = bb.siggen.compare_sigfiles(latestmatch, match, recursecb)
+-            bb.plain("\nTask %s:%s couldn't be used from the cache because:\n  We need hash %s, closest matching task was %s\n  " % (pn, taskname, h, prevh) + '\n  '.join(output))
+-             
+-
++            if len(matches):
++                latestmatch = sorted(matches.keys(), key=lambda f: matches[f])[-1]
++                prevh = __find_md5__.search(latestmatch).group(0)
++                output = bb.siggen.compare_sigfiles(latestmatch, match, recursecb)
++                bb.plain("\nTask %s:%s couldn't be used from the cache because:\n  We need hash %s, closest matching task was %s\n  " % (pn, taskname, h, prevh) + '\n  '.join(output))
  
-+        if not checkonly and os.path.getsize(ud.localpath) == 0:
-+            os.remove(ud.localpath)
-+            raise FetchError("The fetch of %s resulted in a zero size file?! Deleting and failing since this isn't right." % (uri), uri)
-+
-         return True
+ class RunQueueExecute:
  
-     def checkstatus(self, ud, d):
 
 
 
