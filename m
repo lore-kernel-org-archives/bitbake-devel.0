@@ -1,34 +1,29 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-lb0-f180.google.com (mail-lb0-f180.google.com
-	[209.85.217.180])
-	by mail.openembedded.org (Postfix) with ESMTP id E8D3D6C921
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 9697F6C921
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 22 Jan 2014 16:17:02 +0000 (UTC)
-Received: by mail-lb0-f180.google.com with SMTP id n15so484172lbi.39
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 22 Jan 2014 08:17:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=tErJyP6yu7LeQvoMxF7+1zUxSqTv1j2DFVS/cTUP8xg=;
-	b=I9WiFCIZblNe2mxBvq8bd9BnzT84tMSChaoiyZrTcxOK1oj0MNeSitIBua34rYztMz
-	dL3NRte5zq79ZPHniymszcSdFEYtfmK9raAMrPZcOcApbDSbUAKYOWa32OsHg3FJAN6c
-	vvcJxNvIvnXXeAxFHQR4V06u84kq8Shmf12n+f5AI0E8s4xWDfViQMA9dZ/DOjWMMuk0
-	BuLuIWFooYYP9qAzHh7UXGvM+pMklfjNSNmhPNxkgKoz7tuX3um5prIollTa39GF0v7Y
-	mcaeqF2d3vycbF84+9O1O4LCJlIVJTSWxH8x9f1VGERrTFLsvRrZ3qGwzTNtQOCPVpWI
-	L9kA==
-X-Received: by 10.152.88.103 with SMTP id bf7mr1694610lab.0.1390407423344;
-	Wed, 22 Jan 2014 08:17:03 -0800 (PST)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.55.135 with HTTP; Wed, 22 Jan 2014 08:16:43 -0800 (PST)
-In-Reply-To: <1390343512.874.124.camel@ted>
+	Wed, 22 Jan 2014 18:05:52 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s0MI5ev8010005; Wed, 22 Jan 2014 18:05:41 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id o1St86M28178; Wed, 22 Jan 2014 18:05:40 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s0MI5Z30009991
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+	Wed, 22 Jan 2014 18:05:37 GMT
+Message-ID: <1390413929.17424.44.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Chris Larson <clarson@kergoth.com>
+Date: Wed, 22 Jan 2014 18:05:29 +0000
+In-Reply-To: <CABcZANnuhcDYMcsrC=2NUxv9q=EqUYqK0uDqi+=bwE+0y71u4g@mail.gmail.com>
 References: <1390343512.874.124.camel@ted>
-From: Chris Larson <clarson@kergoth.com>
-Date: Wed, 22 Jan 2014 09:16:43 -0700
-X-Google-Sender-Auth: Db1_EAyzHJUzM1IOy_8k7sMXoPs
-Message-ID: <CABcZANnuhcDYMcsrC=2NUxv9q=EqUYqK0uDqi+=bwE+0y71u4g@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
+	<CABcZANnuhcDYMcsrC=2NUxv9q=EqUYqK0uDqi+=bwE+0y71u4g@mail.gmail.com>
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH] runqueue: Only attempt to print closest matching task if there is a match
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -43,47 +38,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 22 Jan 2014 16:17:03 -0000
-Content-Type: multipart/alternative; boundary=001a11c367728fc59e04f0917475
+X-List-Received-Date: Wed, 22 Jan 2014 18:05:53 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---001a11c367728fc59e04f0917475
-Content-Type: text/plain; charset=UTF-8
+On Wed, 2014-01-22 at 09:16 -0700, Chris Larson wrote:
+> On Tue, Jan 21, 2014 at 3:31 PM, Richard Purdie
+> <richard.purdie@linuxfoundation.org> wrote:
+>         +            if len(matches):
+> 
+> Minor quibble, this could almost be considered an antipattern in
+> python :) Whenever you see yourself doing this, you're almost always
+> better off removing the len(). Python can test if a container is
+> empty.
 
-On Tue, Jan 21, 2014 at 3:31 PM, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+Sorry, I do know this too :/.
 
-> +            if len(matches):
+It started life as a len(x) > 1, then when I fixed something else I
+didn't properly simplify it.
+
+Cheers,
+
+Richard
 
 
-Minor quibble, this could almost be considered an antipattern in python :)
-Whenever you see yourself doing this, you're almost always better off
-removing the len(). Python can test if a container is empty.
--- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
 
---001a11c367728fc59e04f0917475
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On T=
-ue, Jan 21, 2014 at 3:31 PM, Richard Purdie <span dir=3D"ltr">&lt;<a href=
-=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.pu=
-rdie@linuxfoundation.org</a>&gt;</span> wrote:<br>
-
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0i=
-f len(matches):</blockquote></div><br>Minor quibble, this could almost be c=
-onsidered an antipattern in python :) Whenever you see yourself doing this,=
- you&#39;re almost always better off removing the len(). Python can test if=
- a container is empty.<br>
-
--- <br>Christopher Larson<br>clarson at kergoth dot com<br>Founder - BitBak=
-e, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software Engine=
-er, Mentor Graphics
-</div></div>
-
---001a11c367728fc59e04f0917475--
