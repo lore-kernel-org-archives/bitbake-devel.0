@@ -1,26 +1,36 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 99A7A6E786
+Return-Path: <kergoth@gmail.com>
+Received: from mail-lb0-f180.google.com (mail-lb0-f180.google.com
+	[209.85.217.180])
+	by mail.openembedded.org (Postfix) with ESMTP id E8D3D6C921
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 22 Jan 2014 10:54:43 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail1.windriver.com (8.14.5/8.14.5) with ESMTP id s0MAsjtN008140
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	Wed, 22 Jan 2014 16:17:02 +0000 (UTC)
+Received: by mail-lb0-f180.google.com with SMTP id n15so484172lbi.39
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 22 Jan 2014 02:54:45 -0800 (PST)
-Received: from pek-blade16.wrs.com (128.224.153.44) by ALA-HCB.corp.ad.wrs.com
-	(147.11.189.41) with Microsoft SMTP Server id 14.2.347.0;
-	Wed, 22 Jan 2014 02:54:44 -0800
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 22 Jan 2014 18:55:02 +0800
-Message-ID: <d944b5d90bd21c920b016db2e71688356a96d68f.1390387902.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1390387902.git.liezhi.yang@windriver.com>
-References: <cover.1390387902.git.liezhi.yang@windriver.com>
+	Wed, 22 Jan 2014 08:17:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=tErJyP6yu7LeQvoMxF7+1zUxSqTv1j2DFVS/cTUP8xg=;
+	b=I9WiFCIZblNe2mxBvq8bd9BnzT84tMSChaoiyZrTcxOK1oj0MNeSitIBua34rYztMz
+	dL3NRte5zq79ZPHniymszcSdFEYtfmK9raAMrPZcOcApbDSbUAKYOWa32OsHg3FJAN6c
+	vvcJxNvIvnXXeAxFHQR4V06u84kq8Shmf12n+f5AI0E8s4xWDfViQMA9dZ/DOjWMMuk0
+	BuLuIWFooYYP9qAzHh7UXGvM+pMklfjNSNmhPNxkgKoz7tuX3um5prIollTa39GF0v7Y
+	mcaeqF2d3vycbF84+9O1O4LCJlIVJTSWxH8x9f1VGERrTFLsvRrZ3qGwzTNtQOCPVpWI
+	L9kA==
+X-Received: by 10.152.88.103 with SMTP id bf7mr1694610lab.0.1390407423344;
+	Wed, 22 Jan 2014 08:17:03 -0800 (PST)
 MIME-Version: 1.0
-Subject: [PATCH 1/1] bitbake:cache.py: remove the add()
+Sender: kergoth@gmail.com
+Received: by 10.112.55.135 with HTTP; Wed, 22 Jan 2014 08:16:43 -0800 (PST)
+In-Reply-To: <1390343512.874.124.camel@ted>
+References: <1390343512.874.124.camel@ted>
+From: Chris Larson <clarson@kergoth.com>
+Date: Wed, 22 Jan 2014 09:16:43 -0700
+X-Google-Sender-Auth: Db1_EAyzHJUzM1IOy_8k7sMXoPs
+Message-ID: <CABcZANnuhcDYMcsrC=2NUxv9q=EqUYqK0uDqi+=bwE+0y71u4g@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] runqueue: Only attempt to print closest matching task if there is a match
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,41 +43,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 22 Jan 2014 10:54:43 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 22 Jan 2014 16:17:03 -0000
+Content-Type: multipart/alternative; boundary=001a11c367728fc59e04f0917475
 
-No one uses the add(), so remove it.
+--001a11c367728fc59e04f0917475
+Content-Type: text/plain; charset=UTF-8
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/cache.py | 13 -------------
- 1 file changed, 13 deletions(-)
+On Tue, Jan 21, 2014 at 3:31 PM, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
-index 318781b..3486031 100644
---- a/bitbake/lib/bb/cache.py
-+++ b/bitbake/lib/bb/cache.py
-@@ -630,19 +630,6 @@ class Cache(object):
-                 self.cacheclean = False
-             self.depends_cache[filename] = info_array
- 
--    def add(self, file_name, data, cacheData, parsed=None):
--        """
--        Save data we need into the cache
--        """
--
--        realfn = self.virtualfn2realfn(file_name)[0]
--
--        info_array = []
--        for cache_class in self.caches_array:
--            if type(cache_class) is type and issubclass(cache_class, RecipeInfoCommon):
--                info_array.append(cache_class(realfn, data))
--        self.add_info(file_name, info_array, cacheData, parsed)
--
-     @staticmethod
-     def load_bbfile(bbfile, appends, config):
-         """
+> +            if len(matches):
+
+
+Minor quibble, this could almost be considered an antipattern in python :)
+Whenever you see yourself doing this, you're almost always better off
+removing the len(). Python can test if a container is empty.
 -- 
-1.8.3.1
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
+--001a11c367728fc59e04f0917475
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On T=
+ue, Jan 21, 2014 at 3:31 PM, Richard Purdie <span dir=3D"ltr">&lt;<a href=
+=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.pu=
+rdie@linuxfoundation.org</a>&gt;</span> wrote:<br>
+
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0i=
+f len(matches):</blockquote></div><br>Minor quibble, this could almost be c=
+onsidered an antipattern in python :) Whenever you see yourself doing this,=
+ you&#39;re almost always better off removing the len(). Python can test if=
+ a container is empty.<br>
+
+-- <br>Christopher Larson<br>clarson at kergoth dot com<br>Founder - BitBak=
+e, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software Engine=
+er, Mentor Graphics
+</div></div>
+
+--001a11c367728fc59e04f0917475--
