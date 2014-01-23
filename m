@@ -1,31 +1,22 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 9697F6C921
+Return-Path: <irina.patru@intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id B12836B05F
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 22 Jan 2014 18:05:52 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s0MI5ev8010005; Wed, 22 Jan 2014 18:05:41 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id o1St86M28178; Wed, 22 Jan 2014 18:05:40 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s0MI5Z30009991
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-	Wed, 22 Jan 2014 18:05:37 GMT
-Message-ID: <1390413929.17424.44.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Chris Larson <clarson@kergoth.com>
-Date: Wed, 22 Jan 2014 18:05:29 +0000
-In-Reply-To: <CABcZANnuhcDYMcsrC=2NUxv9q=EqUYqK0uDqi+=bwE+0y71u4g@mail.gmail.com>
-References: <1390343512.874.124.camel@ted>
-	<CABcZANnuhcDYMcsrC=2NUxv9q=EqUYqK0uDqi+=bwE+0y71u4g@mail.gmail.com>
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] runqueue: Only attempt to print closest matching task if there is a match
+	Thu, 23 Jan 2014 09:46:01 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga101.jf.intel.com with ESMTP; 23 Jan 2014 01:45:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.95,705,1384329600"; d="scan'208";a="463399771"
+Received: from irina-vostro-460.rb.intel.com ([10.237.105.140])
+	by fmsmga001.fm.intel.com with ESMTP; 23 Jan 2014 01:45:49 -0800
+From: Irina Patru <irina.patru@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 23 Jan 2014 11:49:42 +0200
+Message-Id: <1390470583-30319-1-git-send-email-irina.patru@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <y>
+References: <y>
+Subject: [PATCH 1/2] hob: Don't always save proxy values in conf file
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,28 +29,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 22 Jan 2014 18:05:53 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 23 Jan 2014 09:46:02 -0000
 
-On Wed, 2014-01-22 at 09:16 -0700, Chris Larson wrote:
-> On Tue, Jan 21, 2014 at 3:31 PM, Richard Purdie
-> <richard.purdie@linuxfoundation.org> wrote:
->         +            if len(matches):
-> 
-> Minor quibble, this could almost be considered an antipattern in
-> python :) Whenever you see yourself doing this, you're almost always
-> better off removing the len(). Python can test if a container is
-> empty.
+If enable_proxy is not activated, Hob should not save the proxy values
+in the conf file when user hits save button.
 
-Sorry, I do know this too :/.
+[ HOB #5308 ]
 
-It started life as a len(x) > 1, then when I fixed something else I
-didn't properly simplify it.
+Signed-off-by: Irina Patru <irina.patru@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/builder.py |   20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-Cheers,
-
-Richard
-
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index 1eae814..7bc3227 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -229,12 +229,20 @@ class Configuration:
+         # proxy
+         handler.set_var_in_file("enable_proxy", self.enable_proxy, "local.conf")
+         handler.set_var_in_file("use_same_proxy", self.same_proxy, "local.conf")
+-        handler.set_var_in_file("http_proxy", self.combine_proxy("http"), "local.conf")
+-        handler.set_var_in_file("https_proxy", self.combine_proxy("https"), "local.conf")
+-        handler.set_var_in_file("ftp_proxy", self.combine_proxy("ftp"), "local.conf")
+-        handler.set_var_in_file("all_proxy", self.combine_proxy("socks"), "local.conf")
+-        handler.set_var_in_file("CVS_PROXY_HOST", self.combine_host_only("cvs"), "local.conf")
+-        handler.set_var_in_file("CVS_PROXY_PORT", self.combine_port_only("cvs"), "local.conf")
++        if self.enable_proxy == True:
++            handler.set_var_in_file("http_proxy", self.combine_proxy("http"), "local.conf")
++            handler.set_var_in_file("https_proxy", self.combine_proxy("https"), "local.conf")
++            handler.set_var_in_file("ftp_proxy", self.combine_proxy("ftp"), "local.conf")
++            handler.set_var_in_file("all_proxy", self.combine_proxy("socks"), "local.conf")
++            handler.set_var_in_file("CVS_PROXY_HOST", self.combine_host_only("cvs"), "local.conf")
++            handler.set_var_in_file("CVS_PROXY_PORT", self.combine_port_only("cvs"), "local.conf")
++        else:
++            handler.set_var_in_file("http_proxy", "", "local.conf")
++            handler.set_var_in_file("https_proxy", "", "local.conf")
++            handler.set_var_in_file("ftp_proxy", "", "local.conf")
++            handler.set_var_in_file("all_proxy", "", "local.conf")
++            handler.set_var_in_file("CVS_PROXY_HOST", "", "local.conf")
++            handler.set_var_in_file("CVS_PROXY_PORT", "", "local.conf")
+ 
+     def __str__(self):
+         s = "VERSION: '%s', BBLAYERS: '%s', MACHINE: '%s', DISTRO: '%s', DL_DIR: '%s'," % \
+-- 
+1.7.9.5
 
 
