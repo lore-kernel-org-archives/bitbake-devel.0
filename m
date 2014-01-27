@@ -1,29 +1,45 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 19F6F6CBB4
+Return-Path: <martin.jansa@gmail.com>
+Received: from mail-ea0-f181.google.com (mail-ea0-f181.google.com
+	[209.85.215.181])
+	by mail.openembedded.org (Postfix) with ESMTP id 658896C76F
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 25 Jan 2014 13:28:39 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s0PDSPZm018737; Sat, 25 Jan 2014 13:28:26 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id GItfei278cJg; Sat, 25 Jan 2014 13:28:25 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s0PDSJoX018733
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-	Sat, 25 Jan 2014 13:28:21 GMT
-Message-ID: <1390656494.17424.220.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Sat, 25 Jan 2014 13:28:14 +0000
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: Bill Traynor <wmat@alphatroop.com>, "Rifenbark,
-	Scott M" <scott.m.rifenbark@intel.com>
-Subject: [PATCH 00/45] Bitbake manual updates pull request
+	Mon, 27 Jan 2014 08:52:28 +0000 (UTC)
+Received: by mail-ea0-f181.google.com with SMTP id m10so2144696eaj.40
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 27 Jan 2014 00:52:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-disposition:in-reply-to:user-agent;
+	bh=my4hZPbUowtl3xY9C3RhndqfVI03QGYdB9kLYcZpsI0=;
+	b=eiWzQ6WaqqqTdwYuvuZIw69xGSIPmHGFFTBbxa52vghO3gVw1AvuGLXMRlYDF0ap93
+	1Cjsh5oD/mOhQW+vycghd3TRWsCOzgei+tOgp6zN4ASfnAfqBXJefI/8wkmPnzJy22Up
+	ZjakMFcxjvkse044hVpO6sFvB6sIOFuLkoxAJ7kzg58yE2kZqIw8zcoLPp4A/lxSjvjS
+	JGKv+u7NB4RHPRbW7ro1JhZG1uFbbmZfDgoWiMHIW2/wxcWUlnaG6vOLER1wzu0k8wJD
+	NJSFm17TTKIvHJOuL5ngIy5hvd1q7YgkLp294A96dN//c/PhmK0xOQSQ0M3pEWx9Kg9f
+	LHQA==
+X-Received: by 10.14.175.2 with SMTP id y2mr7562297eel.75.1390812748624;
+	Mon, 27 Jan 2014 00:52:28 -0800 (PST)
+Received: from localhost (ip-89-176-104-107.net.upcbroadband.cz.
+	[89.176.104.107]) by mx.google.com with ESMTPSA id
+	j46sm39641014eew.18.2014.01.27.00.52.26 for <multiple recipients>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Mon, 27 Jan 2014 00:52:26 -0800 (PST)
+Date: Mon, 27 Jan 2014 09:52:32 +0100
+From: Martin Jansa <martin.jansa@gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Message-ID: <20140127085232.GE3718@jama>
+References: <1387383687.6402.49.camel@ted> <20131228132413.GB3706@jama>
+	<CABcZANnopy5be2w7k0JRC12bcc6sZ8REsXt9ga0z-qdkHwA2tQ@mail.gmail.com>
+	<CABcZANnFCcx7aX=HcfmXvLSYmnS+hwfo7SW4BN0SRwq2BE-Avw@mail.gmail.com>
+	<20131230163534.GB3719@jama> <1388441430.11527.80.camel@ted>
+	<CABcZANkW_QjvWdEK_5s0pVS4YOrrj+2zjHLg5Oe1Ye13YXaahQ@mail.gmail.com>
+	<1388619481.11527.98.camel@ted> <20140110141417.GR3709@jama>
+MIME-Version: 1.0
+In-Reply-To: <20140110141417.GR3709@jama>
+User-Agent: Mutt/1.5.22 (2013-10-16)
+Cc: Chris Larson <clarson@kergoth.com>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] runqueue: Add output for -S option for listing the changepoints compared with an sstate cache
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,138 +52,122 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 25 Jan 2014 13:28:40 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 27 Jan 2014 08:52:29 -0000
+X-Groupsio-MsgNum: 4369
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7mxbaLlpDEyR1+x6"
+Content-Disposition: inline
 
-I've worked with Scott Rifenbark to incorporate Bill Traynor's BitbBake
-manual work and then work on improving it. The following patch set
-incorporates the various changes. Bill's branch was significantly
-modified to separate out whitespace changes from content changes. In
-future we'll try and get this merged in smaller chunks but this brings
-us into sync which I think all will agree is a good thing. I'm not going
-to spam the list with the individual patches, anyone interested can see
-them in the branch.
+--7mxbaLlpDEyR1+x6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The following changes since commit 2ca15117e4bbda38cda07511d0ff317273f91528:
+On Fri, Jan 10, 2014 at 03:14:17PM +0100, Martin Jansa wrote:
+> On Wed, Jan 01, 2014 at 11:38:01PM +0000, Richard Purdie wrote:
+> > So can we find the "least delta" fast? Its not actually that hard
+> > computationally or on resources, at least in the experiments I've made.
+> > We know the hashes of the current target's tasks and we can quickly tell
+> > which are in the cache and which are not (using the same function sstate
+> > uses for that purpose).
+>=20
+> I've finally got some numbers to support my claim that it "feels" slower
+> with this added functionality.
+>=20
+> My script is calling
+> openembedded-core/scripts/sstate-diff-machines.sh --machines=3D"qemuarm q=
+emux86 qemux86copy" --targets=3Dworld --tmpdir=3Dtmp-eglibc/;
+>=20
+> which in turn runs
+> bitbake -S world
+> three times (once for each machine).
+>=20
+> The script on jenkins doing world builds is completely crazy (I've
+> killed it in last run assuming it was stuck, but it wasn't just terribly
+> slow).
+> http://jenkins.nas-admin.org/job/oe_world_compare_signatures/11/
+> Running 21 hours already and doing 2nd machine from 3 (maybe because
+> longer SSTATE_MIRROR?). There is one python process using 100% cpu.
 
-  toaster: Toaster GUI, generic search, filter and order (2014-01-10 14:13:53 +0000)
+FWIW: this jenkins job was completed yesterday after 16 days
 
-are available in the git repository at:
+small part of strace:
+http://logs.nslu2-linux.org/buildlogs/oe/oe-shr-core-branches/log.world.201=
+40109_144047.log/log.strace
 
-  git://git.pokylinux.org/poky-contrib srifenbark/wmat3
-  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=srifenbark/wmat3
+complete log:
+http://logs.nslu2-linux.org/buildlogs/oe/oe-shr-core-branches/log.world.201=
+40109_144047.log/signatures.sstate-diff-machines
 
-Bill Traynor (6):
-  usermanual: Updated CC License to version 3.0
-  usermanual: Renamed manual dir to user-manual to be consistent.
-  user-manual: Import YP Docs templates for usermanual improvements
-  gitignore: Update for recent docs changes
-  documentation: Add README based off the YP docs one
-  user-manual-intro.xml: Re-write of BitBake introduction.
+Previous runs of the same job took 25-40 minutes
 
-Richard Purdie (29):
-  user-manual: Separate out chapters into individual files
-  user-manual-intro: Expand introduction and fix spelling mistakes
-  user-manual-intro: Update/improve whitespace
-  user-manual-intro: Add obtaining bitbake and summary sections
-  user-manual-intro: Various minor cleanups/improvements
-  user-manual-metadata: Add section ids for most sections
-  user-manual-metadata: Reorder sections to more logical order
-  user-manual-metadata: Update whitespace (no content changes)
-  user-manual-metadata: Replace screen tags with literallayout tags
-  user-manual-metadata: Use filename tags instead of literal and varname
-    tags
-  user-manual-metadata: Editing pass over the manual chapter
-  user-manual-metadata: Add lists of common events
-  user-manual-metadata: Add section about data store operations
-  user-manual-metadata: Rework section about shell/python functions
-  user-manual-metadata: Add section about running tasks and the
-    environment
-  user-manual-metadata: Add section about INHERIT
-  user-manual-metadata: Add section about layers
-  user-manual-metadata: Expand parsing process docuemtnation
-  user-manual-metadata: Clean up task flag section
-  user-manual-metadata: Clean up task documentation
-  user-manual-fetching: Change the file whitespace
-  user-manual-fetching: Change screen -> literallayout
-  user-manual-fetching: Change varname/emphasis tags to filename
-  user-manual-fetching: Editing pass over the manual chapter
-  user-manual-bitbakecommand: Update help text output with that from
-    bitbake master
-  user-manual-bitbakecommand: Reform whitespace
-  user-manual-bitbakecommand: Replace screen tags with literallayout
-  user-manual-bitbakecommand: Standardise on section tags, not example
-  user-manual-bitbakecommand: Various edits/cleanups
-
-Scott Rifenbark (10):
-  user-manual-intro.xml: Added "Concepts" section.
-  user-manual.xml: Cleanup on the title page.
-  user-manual-hello.xml: Added new chapter for "Hello World Example"
-  user-manual-ref-variavbles.xml: Added new glossary chapter.
-  user-manual-metadata.xml: Renamed section tag
-  user-manual-customization.xsl: Updated param list to pass
-  template/titlepage.templates.xml: Suppress Title Text.
-  user-manual-ref-variables.xml: Editing pass.
-  user-manual-ref-variables.xml: Fixed references to "Build Directory".
-  user-manual-ref-variables.xml: Added 10 new variables to the glossary.
-
- .gitignore                                     |    3 +
- doc/Makefile                                   |   77 ++
- doc/README                                     |   39 +
- doc/manual/Makefile                            |   56 -
- doc/manual/usermanual.xml                      |  627 ----------
- doc/poky.ent                                   |   59 +
- doc/template/Vera.ttf                          |  Bin 0 -> 65932 bytes
- doc/template/Vera.xml                          |    1 +
- doc/template/VeraMoBd.ttf                      |  Bin 0 -> 49052 bytes
- doc/template/VeraMoBd.xml                      |    1 +
- doc/template/VeraMono.ttf                      |  Bin 0 -> 49224 bytes
- doc/template/VeraMono.xml                      |    1 +
- doc/template/db-pdf.xsl                        |   64 +
- doc/template/draft.png                         |  Bin 0 -> 24847 bytes
- doc/template/fop-config.xml                    |   58 +
- doc/template/titlepage.templates.xml           | 1259 ++++++++++++++++++++
- doc/tools/docbook-to-pdf                       |   51 +
- doc/user-manual/figures/bitbake-title.png      |  Bin 0 -> 5086 bytes
- doc/{manual => user-manual}/html.css           |    0
- doc/user-manual/user-manual-bitbakecommand.xml |  367 ++++++
- doc/user-manual/user-manual-customization.xsl  |   14 +
- doc/user-manual/user-manual-fetching.xml       |  230 ++++
- doc/user-manual/user-manual-hello.xml          |  321 ++++++
- doc/user-manual/user-manual-intro.xml          |  336 ++++++
- doc/user-manual/user-manual-metadata.xml       | 1175 +++++++++++++++++++
- doc/user-manual/user-manual-ref-variables.xml  | 1474 ++++++++++++++++++++++++
- doc/user-manual/user-manual-style.css          |  978 ++++++++++++++++
- doc/user-manual/user-manual.xml                |   86 ++
- 28 files changed, 6594 insertions(+), 683 deletions(-)
- create mode 100644 doc/Makefile
- create mode 100644 doc/README
- delete mode 100644 doc/manual/Makefile
- delete mode 100644 doc/manual/usermanual.xml
- create mode 100644 doc/poky.ent
- create mode 100644 doc/template/Vera.ttf
- create mode 100644 doc/template/Vera.xml
- create mode 100644 doc/template/VeraMoBd.ttf
- create mode 100644 doc/template/VeraMoBd.xml
- create mode 100644 doc/template/VeraMono.ttf
- create mode 100644 doc/template/VeraMono.xml
- create mode 100644 doc/template/db-pdf.xsl
- create mode 100644 doc/template/draft.png
- create mode 100644 doc/template/fop-config.xml
- create mode 100644 doc/template/titlepage.templates.xml
- create mode 100755 doc/tools/docbook-to-pdf
- create mode 100644 doc/user-manual/figures/bitbake-title.png
- rename doc/{manual => user-manual}/html.css (100%)
- create mode 100644 doc/user-manual/user-manual-bitbakecommand.xml
- create mode 100644 doc/user-manual/user-manual-customization.xsl
- create mode 100644 doc/user-manual/user-manual-fetching.xml
- create mode 100644 doc/user-manual/user-manual-hello.xml
- create mode 100644 doc/user-manual/user-manual-intro.xml
- create mode 100644 doc/user-manual/user-manual-metadata.xml
- create mode 100644 doc/user-manual/user-manual-ref-variables.xml
- create mode 100644 doc/user-manual/user-manual-style.css
- create mode 100644 doc/user-manual/user-manual.xml
+> In local builds without SSTATE_MIRROR it's not so bad, but still
+> significantly slower with each release (dylan-dora-master).
+>=20
+> Master builds have that WIP patch included in order to finish.
+>=20
+> It's not very accurate, because it was running on my desktop and each one=
+ has
+> different metadata, but at least the layers included are similar (only
+> systems which got separated in dora and removal
+> of meta-webos-backports which isn't needed for dora and newer).
+>=20
+> At least I've executed each test twice.
+>=20
+> dylan:
+> real   9m37.271s
+> user   6m37.104s
+> sys    3m12.625s
+>=20
+> real   10m5.787s
+> user   6m37.832s
+> sys    3m23.614s
+>=20
+> dora:
+> real   26m11.374s
+> user   9m7.325s
+> sys    3m0.048s
+>=20
+> real   28m10.606s
+> user   8m27.895s
+> sys    2m57.497s
+>=20
+> master:
+> real   38m17.641s
+> user   17m46.905s
+> sys    5m12.061s
+>=20
+> real    36m12.748s
+> user    16m32.961s
+> sys     4m43.103s
+>=20
+> master-without-S-changes:
+> real    27m34.228s
+> user    8m6.811s
+> sys     2m53.724s
+>=20
+> real    27m49.752s
+> user    8m25.026s
+> sys     2m50.921s
+>=20
+> --=20
+> Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
 
 
 
+--=20
+Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
+
+--7mxbaLlpDEyR1+x6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iEYEARECAAYFAlLmHlAACgkQN1Ujt2V2gBwMNgCdFJTTUrJnGnKkYTaYE0Ao4uxO
+1i8AniL9PU3PPGcbjaZkfGGKaa+DB+Y6
+=xboT
+-----END PGP SIGNATURE-----
+
+--7mxbaLlpDEyR1+x6--
