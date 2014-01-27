@@ -1,30 +1,33 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 9F9286E7E2
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-ob0-f169.google.com (mail-ob0-f169.google.com
+	[209.85.214.169])
+	by mail.openembedded.org (Postfix) with ESMTP id B1B896E831
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 27 Jan 2014 14:37:20 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s0REbF1T001847 for <bitbake-devel@lists.openembedded.org>;
-	Mon, 27 Jan 2014 14:37:16 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id qvojyqcDVL05 for <bitbake-devel@lists.openembedded.org>;
-	Mon, 27 Jan 2014 14:37:15 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s0REbA7N001842
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
+	Mon, 27 Jan 2014 16:49:50 +0000 (UTC)
+Received: by mail-ob0-f169.google.com with SMTP id wo20so6711956obc.14
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 27 Jan 2014 14:37:11 GMT
-Message-ID: <1390833424.17424.251.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 27 Jan 2014 14:37:04 +0000
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] cooker: Add option of specifying indvidual tasks for targets
+	Mon, 27 Jan 2014 08:49:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+	:content-type;
+	bh=XLdBhQUGR89epJvYyMUIFCFr0Dr3w+5V4vc3PbBXu1M=;
+	b=JvnPT/72E/fwY+Et8BUlmW3YMgNARsNQwGW9paIUQBxzzhp17Xlb4NH3UPWvzYh4zF
+	j7cQUhk+Ult2OJuRRqGFSlH6m1Ib3iTs3UKqgLK8UKkCttHGLYPG8kC2Mp+nz7cBgghj
+	nOc28YGbbwg8SzAzzJsVxx4ByjveWuX8GQ1hDN2w9kVcHtKTsNUp03aj1jnQv2g6zyOt
+	+pED8CeXNRkHpY7wTVcvjkZAAHvYptV5dA34SKYpwH1+l2Oy7DVkBoxbrE++V6vtpvAJ
+	DOz/tDXnwy4NMo/bCoPuR0a5r2qfKl0+90suitiV73p+bOGMN68+clQorcchn972A/vd
+	tRLQ==
+X-Gm-Message-State: ALoCoQnZq8A/vSPk8XMq8fDfVWadIkIlD0D/Q9wdyjLpnfZaewrLMGf2yv9YJ3gpat2naV05rpgZ
+X-Received: by 10.182.29.66 with SMTP id i2mr24406472obh.23.1390841391467;
+	Mon, 27 Jan 2014 08:49:51 -0800 (PST)
+MIME-Version: 1.0
+Received: by 10.76.86.193 with HTTP; Mon, 27 Jan 2014 08:49:31 -0800 (PST)
+From: "Damian, Alexandru" <alexandru.damian@intel.com>
+Date: Mon, 27 Jan 2014 16:49:31 +0000
+Message-ID: <CAJ2CSBtYQ6fMSboyGDzFPR8OpANbrxxUdMKYeHjx4dw1b=PwgQ@mail.gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: patchset for toaster, upstream from toaster/master
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,42 +40,68 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 27 Jan 2014 14:37:22 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 27 Jan 2014 16:49:52 -0000
+Content-Type: multipart/alternative; boundary=001a11c2bbdc13e26e04f0f67f75
 
-Currently its near enough impossible to tell bitbake to run target X,
-task Y and target A, task B. We could hack various parts of the API
-around but it would mean incompatibilities.
+--001a11c2bbdc13e26e04f0f67f75
+Content-Type: text/plain; charset=UTF-8
 
-An alternative is to accept the syntax "<target>:do_<task>" as a target
-name. The default task would be used where the task is unspecified.
+Hello,
 
-This has the advantage that its neat/clean code and works from all
-current APIs including the commandline.
+This is a pull-request for a patchset on toaster.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index db4cb51..cc7d84e 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -449,9 +449,14 @@ class BBCooker:
-         current = 0
-         runlist = []
-         for k in fulltargetlist:
-+            ktask = task
-+            if ":do_" in k:
-+                k2 = k.split(":do_")
-+                k = k2[0]
-+                ktask = k2[1]
-             taskdata.add_provider(localdata, self.recipecache, k)
-             current += 1
--            runlist.append([k, "do_%s" % task])
-+            runlist.append([k, "do_%s" % ktask])
-             bb.event.fire(bb.event.TreeDataPreparationProgress(current, len(fulltargetlist)), self.data)
-         taskdata.add_unresolved(localdata, self.recipecache)
-         bb.event.fire(bb.event.TreeDataPreparationCompleted(len(fulltargetlist)), self.data)
+The patchset is a subset of poky-contrib/toaster/master, filtered for just
+the bitbake relevant patches.
 
+The patchset has passed multiple reviews by me and Paul Eggleton.
 
+Can you please pull:
 
+http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=adamian/submission27012014
+
+Thank you,
+Alex
+
+-- 
+Alex Damian
+Yocto Project
+SSG / OTC
+
+--001a11c2bbdc13e26e04f0f67f75
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-family:tahoma,s=
+ans-serif">Hello,</div><div class=3D"gmail_default" style=3D"font-family:ta=
+homa,sans-serif"><br></div><div class=3D"gmail_default" style=3D"font-famil=
+y:tahoma,sans-serif">
+
+This is a pull-request for a patchset on toaster.=C2=A0</div><div class=3D"=
+gmail_default" style=3D"font-family:tahoma,sans-serif"><br></div><div class=
+=3D"gmail_default" style=3D"font-family:tahoma,sans-serif">The patchset is =
+a subset of poky-contrib/toaster/master, filtered for just the bitbake rele=
+vant patches.=C2=A0</div>
+
+<div class=3D"gmail_default" style=3D"font-family:tahoma,sans-serif"><br></=
+div><div class=3D"gmail_default" style=3D"font-family:tahoma,sans-serif">Th=
+e patchset has passed multiple reviews by me and Paul Eggleton.</div><div c=
+lass=3D"gmail_default" style=3D"font-family:tahoma,sans-serif">
+
+<br></div><div class=3D"gmail_default" style=3D"font-family:tahoma,sans-ser=
+if">Can you please pull:</div><div class=3D"gmail_default" style=3D"font-fa=
+mily:tahoma,sans-serif"><br></div><div class=3D"gmail_default"><font face=
+=3D"tahoma, sans-serif"><a href=3D"http://git.yoctoproject.org/cgit/cgit.cg=
+i/poky-contrib/log/?h=3Dadamian/submission27012014">http://git.yoctoproject=
+.org/cgit/cgit.cgi/poky-contrib/log/?h=3Dadamian/submission27012014</a></fo=
+nt><br>
+
+</div><div class=3D"gmail_default"><font face=3D"tahoma, sans-serif"><br></=
+font></div><div class=3D"gmail_default"><font face=3D"tahoma, sans-serif">T=
+hank you,</font></div><div class=3D"gmail_default"><font face=3D"tahoma, sa=
+ns-serif">Alex</font></div>
+
+<div><br></div>-- <br><div dir=3D"ltr">Alex Damian<div>Yocto Project<br></d=
+iv><div>SSG / OTC=C2=A0</div></div>
+</div>
+
+--001a11c2bbdc13e26e04f0f67f75--
