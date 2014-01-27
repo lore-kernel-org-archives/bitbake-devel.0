@@ -1,37 +1,30 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 2ACAD6C765
+	by mail.openembedded.org (Postfix) with ESMTP id 9F9286E7E2
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 27 Jan 2014 13:47:12 +0000 (UTC)
+	Mon, 27 Jan 2014 14:37:20 +0000 (UTC)
 Received: from localhost (dan.rpsys.net [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s0RDl5cd032055; Mon, 27 Jan 2014 13:47:05 GMT
+	s0REbF1T001847 for <bitbake-devel@lists.openembedded.org>;
+	Mon, 27 Jan 2014 14:37:16 GMT
 X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id ZC8Z5h0vsoED; Mon, 27 Jan 2014 13:47:05 +0000 (GMT)
+	with LMTP id qvojyqcDVL05 for <bitbake-devel@lists.openembedded.org>;
+	Mon, 27 Jan 2014 14:37:15 +0000 (GMT)
 Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s0RDl3P6032051
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-	Mon, 27 Jan 2014 13:47:04 GMT
-Message-ID: <1390830418.17424.248.camel@ted>
+	s0REbA7N001842
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 27 Jan 2014 14:37:11 GMT
+Message-ID: <1390833424.17424.251.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Martin Jansa <martin.jansa@gmail.com>
-Date: Mon, 27 Jan 2014 13:46:58 +0000
-In-Reply-To: <20140127133906.GH3718@jama>
-References: <1387383687.6402.49.camel@ted> <20131228132413.GB3706@jama>
-	<CABcZANnopy5be2w7k0JRC12bcc6sZ8REsXt9ga0z-qdkHwA2tQ@mail.gmail.com>
-	<CABcZANnFCcx7aX=HcfmXvLSYmnS+hwfo7SW4BN0SRwq2BE-Avw@mail.gmail.com>
-	<20131230163534.GB3719@jama> <1388441430.11527.80.camel@ted>
-	<CABcZANkW_QjvWdEK_5s0pVS4YOrrj+2zjHLg5Oe1Ye13YXaahQ@mail.gmail.com>
-	<1388619481.11527.98.camel@ted> <1390343853.874.130.camel@ted>
-	<1390829005.17424.238.camel@ted> <20140127133906.GH3718@jama>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Mon, 27 Jan 2014 14:37:04 +0000
 X-Mailer: Evolution 3.8.4-0ubuntu1 
 Mime-Version: 1.0
-Cc: Chris Larson <clarson@kergoth.com>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] runqueue: Add output for -S option for listing the changepoints compared with an sstate cache
+Subject: [PATCH] cooker: Add option of specifying indvidual tasks for targets
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,68 +37,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 27 Jan 2014 13:47:13 -0000
+X-List-Received-Date: Mon, 27 Jan 2014 14:37:22 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Mon, 2014-01-27 at 14:39 +0100, Martin Jansa wrote:
-> On Mon, Jan 27, 2014 at 01:23:25PM +0000, Richard Purdie wrote:
-> > On Tue, 2014-01-21 at 22:37 +0000, Richard Purdie wrote:
-> > > I appreciate its taken me a while to loop back around on this but I do
-> > > now have an idea. What I'm proposing we do is add an optional parameter
-> > > to -S. Without any parameter it would behave as it did classically.
-> > > 
-> > > With a parameter, it could trigger the current "debug sstate" behaviour
-> > > to stdout and it also allows it to trigger an sstate siggen specific
-> > > behaviour as appripriate. I have some prototype code with writes out a
-> > > "locked-sigs.inc" file for example, triggered from this same code block.
-> > > 
-> > > I think this should let us do more creative things with sstate (even
-> > > from the OE siggen class) yet also let it remain useful for different
-> > > people.
-> > 
-> > So we have a small potential issue here. We use python's optparse which
-> > doesn't allow optional arguments. This means we can make -S take options
-> > but the options must always be specified.
-> > 
-> > It has good reason for this as its near impossible for optparse to tell
-> > the difference between:
-> > 
-> > bitbake image -S tracesigs
-> > and
-> > bitbake image -S image2
-> > 
-> > So our options are:
-> > 
-> > a) Require a new parameter to -S always
-> > b) Hack it to use the option after -S as a parameter (meaning -S should
-> > always be last on the commandline). I do have a proof of concept but it
-> > makes me uneasy
-> > c) Add a new option with a different name
-> > 
-> > In the interests of not doing something which binds us into a problem in
-> > future, I'm thinking -S should start to always take a parameter. The
-> > only issue is I'd like that parameter to be metadata (siggen) definable
-> > so we can't validate the option passed.
-> > 
-> > Any opinions?
-> 
-> What about using some existing parameter in combination with -S?
-> 
-> -S + -v shows tracesigs
-> -S without -v old behavior
+Currently its near enough impossible to tell bitbake to run target X,
+task Y and target A, task B. We could hack various parts of the API
+around but it would mean incompatibilities.
 
-I have some use cases locally (such as locked sigs) which could really
-benefit from a string parameter which gets passed into the siggen code.
-I can see us needing more than two "behaviours" of -S...
+An alternative is to accept the syntax "<target>:do_<task>" as a target
+name. The default task would be used where the task is unspecified.
 
-I also think using something like -v will lead to more confusion and the
-code won't be particularly nice either :/.
+This has the advantage that its neat/clean code and works from all
+current APIs including the commandline.
 
-Cheers,
-
-Richard
-
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index db4cb51..cc7d84e 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -449,9 +449,14 @@ class BBCooker:
+         current = 0
+         runlist = []
+         for k in fulltargetlist:
++            ktask = task
++            if ":do_" in k:
++                k2 = k.split(":do_")
++                k = k2[0]
++                ktask = k2[1]
+             taskdata.add_provider(localdata, self.recipecache, k)
+             current += 1
+-            runlist.append([k, "do_%s" % task])
++            runlist.append([k, "do_%s" % ktask])
+             bb.event.fire(bb.event.TreeDataPreparationProgress(current, len(fulltargetlist)), self.data)
+         taskdata.add_unresolved(localdata, self.recipecache)
+         bb.event.fire(bb.event.TreeDataPreparationCompleted(len(fulltargetlist)), self.data)
 
 
 
