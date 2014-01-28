@@ -1,32 +1,26 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 9B67A6E719
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 408496DC01
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 27 Jan 2014 22:43:24 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s0RMhAUm000619; Mon, 27 Jan 2014 22:43:10 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 8rqjVfm8htsk; Mon, 27 Jan 2014 22:43:10 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s0RMh7gx000606
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-	Mon, 27 Jan 2014 22:43:09 GMT
-Message-ID: <1390862582.21652.41.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Khem Raj <raj.khem@gmail.com>
-Date: Mon, 27 Jan 2014 22:43:02 +0000
-In-Reply-To: <CAMKF1soPEMALs27a1f2Xi7upTgbt9EDix-dACYLct+QDt_3+hw@mail.gmail.com>
-References: <1390833424.17424.251.camel@ted>
-	<CAMKF1soPEMALs27a1f2Xi7upTgbt9EDix-dACYLct+QDt_3+hw@mail.gmail.com>
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>, "Rifenbark,
-	Scott M" <scott.m.rifenbark@intel.com>
-Subject: Re: [PATCH] cooker: Add option of specifying indvidual tasks for targets
+	Tue, 28 Jan 2014 09:06:54 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 28 Jan 2014 01:02:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.95,735,1384329600"; d="scan'208";a="445697933"
+Received: from unknown (HELO peggleto-mobl5.ger.corp.intel.com)
+	([10.252.122.226])
+	by orsmga001.jf.intel.com with ESMTP; 28 Jan 2014 01:06:54 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: "Damian, Alexandru" <alexandru.damian@intel.com>
+Date: Tue, 28 Jan 2014 09:06:52 +0000
+Message-ID: <231818182.Sb91aSKJsj@peggleto-mobl5.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.11.5 (Linux/3.12.8-300.fc20.x86_64; KDE/4.11.5; x86_64; ; )
+In-Reply-To: <CAJ2CSBtYQ6fMSboyGDzFPR8OpANbrxxUdMKYeHjx4dw1b=PwgQ@mail.gmail.com>
+References: <CAJ2CSBtYQ6fMSboyGDzFPR8OpANbrxxUdMKYeHjx4dw1b=PwgQ@mail.gmail.com>
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: patchset for toaster, upstream from toaster/master
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,66 +33,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 27 Jan 2014 22:43:25 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 28 Jan 2014 09:06:54 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, 2014-01-27 at 14:39 -0800, Khem Raj wrote:
-> On Mon, Jan 27, 2014 at 6:37 AM, Richard Purdie
-> <richard.purdie@linuxfoundation.org> wrote:
-> > Currently its near enough impossible to tell bitbake to run target X,
-> > task Y and target A, task B. We could hack various parts of the API
-> > around but it would mean incompatibilities.
-> >
-> > An alternative is to accept the syntax "<target>:do_<task>" as a target
-> > name. The default task would be used where the task is unspecified.
-> >
+Hi Alex,
+
+On Monday 27 January 2014 16:49:31 Damian, Alexandru wrote:
+> This is a pull-request for a patchset on toaster.
 > 
-> This should be documented in manuals as well IMO
-
-Totally agreed.
-
-Hi Scott, we need to document this new syntax! ;-)
-
-(I was planning to talk to Scott when I reached the point of merging
-this)
-
-Cheers,
-
-Richard
-
-> > This has the advantage that its neat/clean code and works from all
-> > current APIs including the commandline.
-> >
-> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > ---
-> > diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-> > index db4cb51..cc7d84e 100644
-> > --- a/bitbake/lib/bb/cooker.py
-> > +++ b/bitbake/lib/bb/cooker.py
-> > @@ -449,9 +449,14 @@ class BBCooker:
-> >          current = 0
-> >          runlist = []
-> >          for k in fulltargetlist:
-> > +            ktask = task
-> > +            if ":do_" in k:
-> > +                k2 = k.split(":do_")
-> > +                k = k2[0]
-> > +                ktask = k2[1]
-> >              taskdata.add_provider(localdata, self.recipecache, k)
-> >              current += 1
-> > -            runlist.append([k, "do_%s" % task])
-> > +            runlist.append([k, "do_%s" % ktask])
-> >              bb.event.fire(bb.event.TreeDataPreparationProgress(current, len(fulltargetlist)), self.data)
-> >          taskdata.add_unresolved(localdata, self.recipecache)
-> >          bb.event.fire(bb.event.TreeDataPreparationCompleted(len(fulltargetlist)), self.data)
-> >
-> >
-> > _______________________________________________
-> > bitbake-devel mailing list
-> > bitbake-devel@lists.openembedded.org
-> > http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+> The patchset is a subset of poky-contrib/toaster/master, filtered for just
+> the bitbake relevant patches.
 > 
+> The patchset has passed multiple reviews by me and Paul Eggleton.
+> 
+> Can you please pull:
+> 
+> http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=adamian/submis
+> sion27012014
 
+I forgot to mention - could you please drop the vim modelines patch from the 
+branch?
 
+Thanks,
+Paul
+
+-- 
+
+Paul Eggleton
+Intel Open Source Technology Centre
 
