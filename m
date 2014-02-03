@@ -1,36 +1,21 @@
-Return-Path: <alex.r.damian@gmail.com>
-Received: from mail-qc0-f179.google.com (mail-qc0-f179.google.com
-	[209.85.216.179])
-	by mail.openembedded.org (Postfix) with ESMTP id 408E56BD61
+Return-Path: <laurentiu.palcu@intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 89E186D491
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 Jan 2014 11:13:22 +0000 (UTC)
-Received: by mail-qc0-f179.google.com with SMTP id e16so275788qcx.38
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 Jan 2014 03:13:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:cc:content-type;
-	bh=iwQYf3I5Ym1SRGDzKeLT3dDjk/+DAElm9S2C/A9Ho/I=;
-	b=Jcfgik4jpEKZSgzS+6obIxojK7mSxgcZzoC8SyynlwDBtwVtMntF5SiTI67wN8v8Hf
-	lFnHpXx4cz2EVA2GMqElC8795CI87PCu8ftR0F5mBD459YugmWE2EcNBCV/GoRDaPVMO
-	lZluSJAVidjOQr433rmi20EGcPPsYH9hQo6KuXz1FqpoNNxnFOGU7wHVtp2uSt9tF2YE
-	m6MQRYNvg8c4KzenN44CqcxqeyRjb45TYIc/ke14hj88tVnwMceAJYiWrvAZQnIBFOcp
-	r6JvMwqQGRJAX0sB8GJjbmlrwROZlvERDxyKLlsBE19R/OtZnYgoUUYkDajUCcUqaLNo
-	nCiQ==
-MIME-Version: 1.0
-X-Received: by 10.140.89.52 with SMTP id u49mr1043134qgd.93.1390907602711;
-	Tue, 28 Jan 2014 03:13:22 -0800 (PST)
-Received: by 10.224.8.9 with HTTP; Tue, 28 Jan 2014 03:13:22 -0800 (PST)
-In-Reply-To: <231818182.Sb91aSKJsj@peggleto-mobl5.ger.corp.intel.com>
-References: <CAJ2CSBtYQ6fMSboyGDzFPR8OpANbrxxUdMKYeHjx4dw1b=PwgQ@mail.gmail.com>
-	<231818182.Sb91aSKJsj@peggleto-mobl5.ger.corp.intel.com>
-Date: Tue, 28 Jan 2014 11:13:22 +0000
-Message-ID: <CAL7ttbf-hjJZs9mDyaZbUYO_6e=2c-iApTdQm_W7tj5sX27jog@mail.gmail.com>
-From: Alex Damian <alex.r.damian@gmail.com>
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
-Cc: "Damian, Alexandru" <alexandru.damian@intel.com>,
-	bitbake-devel@lists.openembedded.org
-Subject: Re: patchset for toaster, upstream from toaster/master
+	Mon,  3 Feb 2014 11:33:08 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 03 Feb 2014 03:33:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.95,771,1384329600"; d="scan'208";a="475076901"
+Received: from lpalcu-mobl.ger.corp.intel.com (HELO lpalcu-linux.rb.intel.com)
+	([10.237.105.45])
+	by fmsmga002.fm.intel.com with ESMTP; 03 Feb 2014 03:33:08 -0800
+From: Laurentiu Palcu <laurentiu.palcu@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  3 Feb 2014 13:33:07 +0200
+Message-Id: <1391427187-14499-1-git-send-email-laurentiu.palcu@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] bitbake: build.py: create separate function for shell trap creation code
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,101 +28,98 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 28 Jan 2014 11:13:23 -0000
-Content-Type: multipart/alternative; boundary=001a11c1236a9339eb04f105e96d
+X-List-Received-Date: Mon, 03 Feb 2014 11:33:08 -0000
 
---001a11c1236a9339eb04f105e96d
-Content-Type: text/plain; charset=ISO-8859-1
+Currently, the shell trap code was created in exec_func_shell(). Split
+the function so that we can create the code separately.
 
-Dropped and resubmitted.
+Also, some whitespaces were automatically deleted by my editor. Since
+this is not necessarily a bad thing, leave these changes too.
 
-Thanks,
-Alex
+Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
+---
+This change is needed by the rootfs refactoring patchset that went to oe-core.
+
+laurentiu
 
 
-On Tue, Jan 28, 2014 at 9:06 AM, Paul Eggleton <
-paul.eggleton@linux.intel.com> wrote:
+ bitbake/lib/bb/build.py |   37 ++++++++++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
 
-> Hi Alex,
->
-> On Monday 27 January 2014 16:49:31 Damian, Alexandru wrote:
-> > This is a pull-request for a patchset on toaster.
-> >
-> > The patchset is a subset of poky-contrib/toaster/master, filtered for
-> just
-> > the bitbake relevant patches.
-> >
-> > The patchset has passed multiple reviews by me and Paul Eggleton.
-> >
-> > Can you please pull:
-> >
-> >
-> http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=adamian/submis
-> > sion27012014
->
-> I forgot to mention - could you please drop the vim modelines patch from
-> the
-> branch?
->
-> Thanks,
-> Paul
->
-> --
->
-> Paul Eggleton
-> Intel Open Source Technology Centre
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
->
+diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+index 3aa6375..692b91e 100644
+--- a/bitbake/lib/bb/build.py
++++ b/bitbake/lib/bb/build.py
+@@ -254,19 +254,8 @@ def exec_func_python(func, d, runfile, cwd=None):
+             except OSError:
+                 pass
+ 
+-def exec_func_shell(func, d, runfile, cwd=None):
+-    """Execute a shell function from the metadata
+-
+-    Note on directory behavior.  The 'dirs' varflag should contain a list
+-    of the directories you need created prior to execution.  The last
+-    item in the list is where we will chdir/cd to.
+-    """
+-
+-    # Don't let the emitted shell script override PWD
+-    d.delVarFlag('PWD', 'export')
+-
+-    with open(runfile, 'w') as script:
+-        script.write('''#!/bin/sh\n
++def shell_trap_code():
++    return '''#!/bin/sh\n
+ # Emit a useful diagnostic if something fails:
+ bb_exit_handler() {
+     ret=$?
+@@ -282,7 +271,21 @@ bb_exit_handler() {
+ }
+ trap 'bb_exit_handler' 0
+ set -e
+-''')
++'''
++
++def exec_func_shell(func, d, runfile, cwd=None):
++    """Execute a shell function from the metadata
++
++    Note on directory behavior.  The 'dirs' varflag should contain a list
++    of the directories you need created prior to execution.  The last
++    item in the list is where we will chdir/cd to.
++    """
++
++    # Don't let the emitted shell script override PWD
++    d.delVarFlag('PWD', 'export')
++
++    with open(runfile, 'w') as script:
++        script.write(shell_trap_code())
+ 
+         bb.data.emit_func(func, script, d)
+ 
+@@ -473,12 +476,12 @@ def _exec_task(fn, task, d, quieterr):
+     return 0
+ 
+ def exec_task(fn, task, d, profile = False):
+-    try: 
++    try:
+         quieterr = False
+         if d.getVarFlag(task, "quieterrors") is not None:
+             quieterr = True
+ 
+-        if profile: 
++        if profile:
+             profname = "profile-%s.log" % (d.getVar("PN", True) + "-" + task)
+             try:
+                 import cProfile as profile
+@@ -576,7 +579,7 @@ def make_stamp(task, d, file_name = None):
+             if name.endswith('.taint'):
+                 continue
+             os.unlink(name)
+-    
++
+     stamp = stamp_internal(task, d, file_name)
+     # Remove the file and recreate to force timestamp
+     # change on broken NFS filesystems
+-- 
+1.7.9.5
 
---001a11c1236a9339eb04f105e96d
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div>Dropped and resubmitted.<br><br></div>Thanks,<br>Alex=
-<br></div><div class=3D"gmail_extra"><br><br><div class=3D"gmail_quote">On =
-Tue, Jan 28, 2014 at 9:06 AM, Paul Eggleton <span dir=3D"ltr">&lt;<a href=
-=3D"mailto:paul.eggleton@linux.intel.com" target=3D"_blank">paul.eggleton@l=
-inux.intel.com</a>&gt;</span> wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">Hi Alex,<br>
-<div class=3D"im"><br>
-On Monday 27 January 2014 16:49:31 Damian, Alexandru wrote:<br>
-&gt; This is a pull-request for a patchset on toaster.<br>
-&gt;<br>
-&gt; The patchset is a subset of poky-contrib/toaster/master, filtered for =
-just<br>
-&gt; the bitbake relevant patches.<br>
-&gt;<br>
-&gt; The patchset has passed multiple reviews by me and Paul Eggleton.<br>
-&gt;<br>
-&gt; Can you please pull:<br>
-&gt;<br>
-&gt; <a href=3D"http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/=
-?h=3Dadamian/submis" target=3D"_blank">http://git.yoctoproject.org/cgit/cgi=
-t.cgi/poky-contrib/log/?h=3Dadamian/submis</a><br>
-&gt; sion27012014<br>
-<br>
-</div>I forgot to mention - could you please drop the vim modelines patch f=
-rom the<br>
-branch?<br>
-<br>
-Thanks,<br>
-Paul<br>
-<span class=3D"HOEnZb"><font color=3D"#888888"><br>
---<br>
-<br>
-Paul Eggleton<br>
-Intel Open Source Technology Centre<br>
-_______________________________________________<br>
-bitbake-devel mailing list<br>
-<a href=3D"mailto:bitbake-devel@lists.openembedded.org">bitbake-devel@lists=
-.openembedded.org</a><br>
-<a href=3D"http://lists.openembedded.org/mailman/listinfo/bitbake-devel" ta=
-rget=3D"_blank">http://lists.openembedded.org/mailman/listinfo/bitbake-deve=
-l</a><br>
-</font></span></blockquote></div><br></div>
-
---001a11c1236a9339eb04f105e96d--
