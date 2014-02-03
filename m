@@ -1,21 +1,29 @@
-Return-Path: <laurentiu.palcu@intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 89E186D491
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id ECCE56E949
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  3 Feb 2014 11:33:08 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 03 Feb 2014 03:33:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.95,771,1384329600"; d="scan'208";a="475076901"
-Received: from lpalcu-mobl.ger.corp.intel.com (HELO lpalcu-linux.rb.intel.com)
-	([10.237.105.45])
-	by fmsmga002.fm.intel.com with ESMTP; 03 Feb 2014 03:33:08 -0800
-From: Laurentiu Palcu <laurentiu.palcu@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon,  3 Feb 2014 13:33:07 +0200
-Message-Id: <1391427187-14499-1-git-send-email-laurentiu.palcu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] bitbake: build.py: create separate function for shell trap creation code
+	Mon,  3 Feb 2014 16:18:05 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s13GI0bb015393
+	for <bitbake-devel@lists.openembedded.org>; Mon, 3 Feb 2014 16:18:00 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 8F2HnbLlqIkC for <bitbake-devel@lists.openembedded.org>;
+	Mon,  3 Feb 2014 16:18:00 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s13GHr9S015332
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>; Mon, 3 Feb 2014 16:17:55 GMT
+Message-ID: <1391444267.3330.3.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Mon, 03 Feb 2014 16:17:47 +0000
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] data: Account for pre/postfunc functions when calculating dependencies
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,98 +36,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 03 Feb 2014 11:33:08 -0000
+X-List-Received-Date: Mon, 03 Feb 2014 16:18:08 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Currently, the shell trap code was created in exec_func_shell(). Split
-the function so that we can create the code separately.
+pre/postfuncs were not being added to checksums. This meant that when reconfiguration
+occurred, tasks were not always being rerun when they should. This include
+sstate functions as well as systemd's do_install function in the OE metadata.
 
-Also, some whitespaces were automatically deleted by my editor. Since
-this is not necessarily a bad thing, leave these changes too.
+With the addition of postfuncs, its possible a shell task can have a python
+pre/postfunc so we have to guard against this when generating shell output
+in emit_func.
 
-Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
-This change is needed by the rootfs refactoring patchset that went to oe-core.
+diff --git a/bitbake/lib/bb/data.py b/bitbake/lib/bb/data.py
+index 5840803..a56b79c 100644
+--- a/bitbake/lib/bb/data.py
++++ b/bitbake/lib/bb/data.py
+@@ -275,7 +275,7 @@ def emit_func(func, o=sys.__stdout__, d = init()):
+         seen |= deps
+         newdeps = set()
+         for dep in deps:
+-            if d.getVarFlag(dep, "func"):
++            if d.getVarFlag(dep, "func") and not d.getVarFlag(dep, "python"):
+                emit_var(dep, o, d, False) and o.write('\n')
+                newdeps |=  bb.codeparser.ShellParser(dep, logger).parse_shell(d.getVar(dep, True))
+                newdeps |= set((d.getVarFlag(dep, "vardeps", True) or "").split())
+@@ -295,7 +295,7 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, d):
+             deps |= parser.references
+             deps = deps | (keys & parser.execs)
+             return deps, value
+-        varflags = d.getVarFlags(key, ["vardeps", "vardepvalue", "vardepsexclude"]) or {}
++        varflags = d.getVarFlags(key, ["vardeps", "vardepvalue", "vardepsexclude", "postfuncs", "prefuncs"]) or {}
+         vardeps = varflags.get("vardeps")
+         value = d.getVar(key, False)
+ 
+@@ -332,6 +332,10 @@ def build_dependencies(key, keys, shelldeps, varflagsexcl, d):
+                 deps = deps | shelldeps
+             if vardeps is None:
+                 parser.log.flush()
++            if "prefuncs" in varflags:
++                deps = deps | set(varflags["prefuncs"].split())
++            if "postfuncs" in varflags:
++                deps = deps | set(varflags["postfuncs"].split())
+             deps = deps | parsedvar.references
+             deps = deps | (keys & parser.execs) | (keys & parsedvar.execs)
+             value = handle_contains(value, parsedvar.contains, d)
 
-laurentiu
-
-
- bitbake/lib/bb/build.py |   37 ++++++++++++++++++++-----------------
- 1 file changed, 20 insertions(+), 17 deletions(-)
-
-diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-index 3aa6375..692b91e 100644
---- a/bitbake/lib/bb/build.py
-+++ b/bitbake/lib/bb/build.py
-@@ -254,19 +254,8 @@ def exec_func_python(func, d, runfile, cwd=None):
-             except OSError:
-                 pass
- 
--def exec_func_shell(func, d, runfile, cwd=None):
--    """Execute a shell function from the metadata
--
--    Note on directory behavior.  The 'dirs' varflag should contain a list
--    of the directories you need created prior to execution.  The last
--    item in the list is where we will chdir/cd to.
--    """
--
--    # Don't let the emitted shell script override PWD
--    d.delVarFlag('PWD', 'export')
--
--    with open(runfile, 'w') as script:
--        script.write('''#!/bin/sh\n
-+def shell_trap_code():
-+    return '''#!/bin/sh\n
- # Emit a useful diagnostic if something fails:
- bb_exit_handler() {
-     ret=$?
-@@ -282,7 +271,21 @@ bb_exit_handler() {
- }
- trap 'bb_exit_handler' 0
- set -e
--''')
-+'''
-+
-+def exec_func_shell(func, d, runfile, cwd=None):
-+    """Execute a shell function from the metadata
-+
-+    Note on directory behavior.  The 'dirs' varflag should contain a list
-+    of the directories you need created prior to execution.  The last
-+    item in the list is where we will chdir/cd to.
-+    """
-+
-+    # Don't let the emitted shell script override PWD
-+    d.delVarFlag('PWD', 'export')
-+
-+    with open(runfile, 'w') as script:
-+        script.write(shell_trap_code())
- 
-         bb.data.emit_func(func, script, d)
- 
-@@ -473,12 +476,12 @@ def _exec_task(fn, task, d, quieterr):
-     return 0
- 
- def exec_task(fn, task, d, profile = False):
--    try: 
-+    try:
-         quieterr = False
-         if d.getVarFlag(task, "quieterrors") is not None:
-             quieterr = True
- 
--        if profile: 
-+        if profile:
-             profname = "profile-%s.log" % (d.getVar("PN", True) + "-" + task)
-             try:
-                 import cProfile as profile
-@@ -576,7 +579,7 @@ def make_stamp(task, d, file_name = None):
-             if name.endswith('.taint'):
-                 continue
-             os.unlink(name)
--    
-+
-     stamp = stamp_internal(task, d, file_name)
-     # Remove the file and recreate to force timestamp
-     # change on broken NFS filesystems
--- 
-1.7.9.5
 
 
