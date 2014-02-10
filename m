@@ -1,38 +1,30 @@
-Return-Path: <rmcarlsson@gmail.com>
-Received: from mail-lb0-f169.google.com (mail-lb0-f169.google.com
-	[209.85.217.169])
-	by mail.openembedded.org (Postfix) with ESMTP id C388F6E712
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 10F2D6E744
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun,  9 Feb 2014 14:16:24 +0000 (UTC)
-Received: by mail-lb0-f169.google.com with SMTP id q8so4031962lbi.14
+	Mon, 10 Feb 2014 22:50:42 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s1AMocRO032272 for <bitbake-devel@lists.openembedded.org>;
+	Mon, 10 Feb 2014 22:50:38 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id wm2uWJ8IjA-6 for <bitbake-devel@lists.openembedded.org>;
+	Mon, 10 Feb 2014 22:50:38 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s1AMoYIP032269
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 09 Feb 2014 06:16:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=message-id:date:from:user-agent:mime-version:to:subject
-	:content-type:content-transfer-encoding;
-	bh=hWiv5CpefzOFdWcSwWBq39dpQ7lzxPinLEuAsxYVb60=;
-	b=hclJ93VzEAyAaxazna6t9AEAEvg+dQ5biVMF6NPKheA9piL+slTO5oWlJekvsvIkO8
-	FkackGbtZQV1nHG9S8lQgcBVw1kpbCID8O3gsTwqVByGfX3kRaIgEzAGB7guaqD9jG68
-	VtSDZ9uE8dooUy9WZEQks3yTj4vxMH2Mf5D+vwW71x8t/6UsKKh8CuURnM1IeX3R43oA
-	o/8Nt4yFZ4e/nMgt6BnZVLPKGpRqruCuxNkKVIpokUk3CjVGoQns000Wchwi0FKrcVRS
-	okUAFLLylpNK+ftRMLkQwd1qlPmHlvWb3h+rLKnjXoFZ6BftuLUt4XdKt7+C5Qd7/D62
-	Orlw==
-X-Received: by 10.152.8.47 with SMTP id o15mr18107792laa.20.1391955384220;
-	Sun, 09 Feb 2014 06:16:24 -0800 (PST)
-Received: from [192.168.1.3] (c83-253-132-34.bredband.comhem.se.
-	[83.253.132.34])
-	by mx.google.com with ESMTPSA id y2sm17267075lal.10.2014.02.09.06.16.22
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Sun, 09 Feb 2014 06:16:23 -0800 (PST)
-Message-ID: <52F78DB6.7020903@gmail.com>
-Date: Sun, 09 Feb 2014 15:16:22 +0100
-From: Mikael Carlsson <rmcarlsson@gmail.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:24.0) Gecko/20100101 Thunderbird/24.2.0
-MIME-Version: 1.0
-To: bitbake-devel@lists.openembedded.org
-Subject: Configure Yocto Eclipse plug-in with Build system derived toolchain
+	Mon, 10 Feb 2014 22:50:35 GMT
+Message-ID: <1392072628.7120.64.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Mon, 10 Feb 2014 22:50:28 +0000
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] runqueue: Fix setscene hard dependency problems
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,28 +37,96 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 09 Feb 2014 14:16:26 -0000
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+X-List-Received-Date: Mon, 10 Feb 2014 22:50:44 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-Hi!
+Commit c54e738e2b5dc0d8e6fd8e93b284ed96e7a83051 added in the idea of hard dependencies
+such as the case a setscene has a hard dependency on pseudo-native and that
+dependency wasn't available from sstate for some reason.
 
-I cannot make the Eclipse Yocto plug-in working properly with the Build 
-system derived toolchain.
+Unfortunately the implementation was a bit too enthusiastic, causing rebuilds
+of things when it wasn't necessary. A test case was:
 
-Some background; I have a Intel Galileo board. I have built the BSP, 
-image-full. I have a fully operational ssh and serial connection. I have 
-aslo built the toolschain. bitbake image-full -c populate_sdk. Using 
-this toolchain I have built the most simplest program, uploaded it using 
-scp and successfully executed it on target.
+bitbake quilt-native
+bitbake quilt-native -c clean
+bitbake <some-image>
 
-I don not however understand how to make the Yocto Eclipse plug-in work 
-with the build system derived toolchain. I have built the toolchain with 
-bitbake meta-ide-support. The first thing I would like to have help with 
-is what paths to put in "Toolchain Root Location" and Sysroot Location".
+and then you'd watch quilt-native get rebuilt for no good reason.
 
-Anyone got any ideas?
+The clue to the problem is in the for loop where it never depends on
+the item being iterated over.
 
-   / Mikael
+The fix is to include the exact list of hard dependencies rather than
+guessing. With these changes, the use case above works, the one in
+the original commit also works.
+
+This patch also adds in or cleans up various pieces of logging to
+allow issues like this to be more easily debugged in future.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 26a0d86..a83fc6a 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1637,7 +1637,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+         sq_revdeps = []
+         sq_revdeps_new = []
+         sq_revdeps_squash = []
+-        self.sq_harddeps = []
++        self.sq_harddeps = {}
+ 
+         # We need to construct a dependency graph for the setscene functions. Intermediate
+         # dependencies between the setscene tasks only complicate the code. This code
+@@ -1748,15 +1748,19 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                     dep = self.rqdata.taskData.fn_index[depdata]
+                     taskid = self.rqdata.get_task_id(self.rqdata.taskData.getfn_id(dep), idependtask.replace("_setscene", ""))
+                     if taskid is None:
+-                        bb.msg.fatal("RunQueue", "Task %s:%s depends upon non-existent task %s:%s" % (self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[realid]], self.rqdata.taskData.tasks_name[realid], dep, idependtask))
++                        bb.msg.fatal("RunQueue", "Task %s_setscene depends upon non-existent task %s:%s" % (self.self.rqdata.get_user_idstring(task), dep, idependtask))
++
++                    if not self.rqdata.runq_setscene.index(taskid) in self.sq_harddeps:
++                        self.sq_harddeps[self.rqdata.runq_setscene.index(taskid)] = set()
++                    self.sq_harddeps[self.rqdata.runq_setscene.index(taskid)].add(self.rqdata.runq_setscene.index(task))
+ 
+-                    self.sq_harddeps.append(self.rqdata.runq_setscene.index(taskid))
+                     sq_revdeps_squash[self.rqdata.runq_setscene.index(task)].add(self.rqdata.runq_setscene.index(taskid))
+                     # Have to zero this to avoid circular dependencies
+                     sq_revdeps_squash[self.rqdata.runq_setscene.index(taskid)] = set()
+ 
+         #for task in xrange(len(sq_revdeps_squash)):
+-        #    print "Task %s: %s.%s is %s " % (task, self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[self.rqdata.runq_setscene[task]]], self.rqdata.runq_task[self.rqdata.runq_setscene[task]] + "_setscene", sq_revdeps_squash[task])
++        #    realtask = self.rqdata.runq_setscene[task]
++        #    bb.warn("Task %s: %s_setscene is %s " % (task, self.rqdata.get_user_idstring(realtask) , sq_revdeps_squash[task]))
+ 
+         self.sq_deps = []
+         self.sq_revdeps = sq_revdeps_squash
+@@ -1830,7 +1834,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+ 
+     def scenequeue_updatecounters(self, task, fail = False):
+         for dep in self.sq_deps[task]:
+-            if fail and task in self.sq_harddeps:
++            if fail and task in self.sq_harddeps and dep in self.sq_harddeps[task]:
++                realtask = self.rqdata.runq_setscene[task]
++                realdep = self.rqdata.runq_setscene[dep]
++                logger.debug(2, "%s was unavailable and is a hard dependency of %s so skipping" % (self.rqdata.get_user_idstring(realtask), self.rqdata.get_user_idstring(realdep)))
+                 continue
+             self.sq_revdeps2[dep].remove(task)
+             if len(self.sq_revdeps2[dep]) == 0:
+@@ -1943,6 +1950,12 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+             self.rq.read_workers()
+             return self.rq.active_fds()
+ 
++        #for task in xrange(self.stats.total):
++        #    if self.runq_running[task] != 1:
++        #        buildable = self.runq_buildable[task]
++        #        revdeps = self.sq_revdeps[task]
++        #        bb.warn("Found we didn't run %s %s %s %s" % (task, buildable, str(revdeps), self.rqdata.get_user_idstring(self.rqdata.runq_setscene[task])))
++
+         # Convert scenequeue_covered task numbers into full taskgraph ids
+         oldcovered = self.scenequeue_covered
+         self.rq.scenequeue_covered = set()
+
 
 
