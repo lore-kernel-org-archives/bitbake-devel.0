@@ -1,30 +1,33 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 10F2D6E744
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-oa0-f50.google.com (mail-oa0-f50.google.com
+	[209.85.219.50])
+	by mail.openembedded.org (Postfix) with ESMTP id 25BB96E8FE
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Feb 2014 22:50:42 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s1AMocRO032272 for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Feb 2014 22:50:38 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id wm2uWJ8IjA-6 for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Feb 2014 22:50:38 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s1AMoYIP032269
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
+	Wed, 12 Feb 2014 11:02:05 +0000 (UTC)
+Received: by mail-oa0-f50.google.com with SMTP id n16so10677715oag.37
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Feb 2014 22:50:35 GMT
-Message-ID: <1392072628.7120.64.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 10 Feb 2014 22:50:28 +0000
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] runqueue: Fix setscene hard dependency problems
+	Wed, 12 Feb 2014 03:02:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+	:content-type;
+	bh=f6o3vEqKz6M/AN+wbOhUqmy/JuTZu9JIl+z1fPBJGrE=;
+	b=IR5EUBO2ck5rqzCGmhu5Qzhyu+9kdJn2ZrgEWB3fjrUu2vjV272ecNJN7CSIxUq2V6
+	tY6zx/r0vYOFTUoVgRrN3US0rEmgx8GhHFrPUD9numqpAp8F+t7+ET/XgpXZE9c61jVp
+	P4UYE7DAjVT8Mpr0tHE809KsB5pVDeDhTxEr3FxwgHQlsNVcWymZq+gqhYb+rxBQ0Meu
+	+KuZYGntCk0oOlhFikxyy+s3/c/9ndS6nSQbLrzulKcxHZehSsjGsA3fJIEJDr0OmfTp
+	FCzr7Kfh6EJQtFcx0UPqYNo9XjZe+q0owxBSbaJkIrbYeuy+IFVh1PHvSIIE33VDit+P
+	zL9A==
+X-Gm-Message-State: ALoCoQmvxrURW6Kt7gB848cRW/HeCBU9SopJ5eI20Q4wgwvlNp42SPoSob0squ6q2+mGGc6qlnLb
+X-Received: by 10.60.116.74 with SMTP id ju10mr36022089oeb.6.1392202926129;
+	Wed, 12 Feb 2014 03:02:06 -0800 (PST)
+MIME-Version: 1.0
+Received: by 10.76.11.201 with HTTP; Wed, 12 Feb 2014 03:01:44 -0800 (PST)
+From: "Damian, Alexandru" <alexandru.damian@intel.com>
+Date: Wed, 12 Feb 2014 11:01:44 +0000
+Message-ID: <CAJ2CSBv7RMk7b5WSyUzpgM7Hi_TpSDqJoneAcD7bPxfg13ZW4A@mail.gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: toaster patchset, upstream from toaster/master
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,96 +40,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Feb 2014 22:50:44 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 12 Feb 2014 11:02:05 -0000
+Content-Type: multipart/alternative; boundary=089e0116150ade17eb04f23380ab
 
-Commit c54e738e2b5dc0d8e6fd8e93b284ed96e7a83051 added in the idea of hard dependencies
-such as the case a setscene has a hard dependency on pseudo-native and that
-dependency wasn't available from sstate for some reason.
+--089e0116150ade17eb04f23380ab
+Content-Type: text/plain; charset=UTF-8
 
-Unfortunately the implementation was a bit too enthusiastic, causing rebuilds
-of things when it wasn't necessary. A test case was:
+Hello,
 
-bitbake quilt-native
-bitbake quilt-native -c clean
-bitbake <some-image>
+This is a pull-request for a toaster patchset.
 
-and then you'd watch quilt-native get rebuilt for no good reason.
+The patchset has been reviewed by me and Paul Eggleton.
 
-The clue to the problem is in the for loop where it never depends on
-the item being iterated over.
+Can you please pull:
 
-The fix is to include the exact list of hard dependencies rather than
-guessing. With these changes, the use case above works, the one in
-the original commit also works.
+poky-contrib/adamian/toaster-changes-120214
 
-This patch also adds in or cleans up various pieces of logging to
-allow issues like this to be more easily debugged in future.
+Thanks,
+Alex
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 26a0d86..a83fc6a 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1637,7 +1637,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-         sq_revdeps = []
-         sq_revdeps_new = []
-         sq_revdeps_squash = []
--        self.sq_harddeps = []
-+        self.sq_harddeps = {}
- 
-         # We need to construct a dependency graph for the setscene functions. Intermediate
-         # dependencies between the setscene tasks only complicate the code. This code
-@@ -1748,15 +1748,19 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-                     dep = self.rqdata.taskData.fn_index[depdata]
-                     taskid = self.rqdata.get_task_id(self.rqdata.taskData.getfn_id(dep), idependtask.replace("_setscene", ""))
-                     if taskid is None:
--                        bb.msg.fatal("RunQueue", "Task %s:%s depends upon non-existent task %s:%s" % (self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[realid]], self.rqdata.taskData.tasks_name[realid], dep, idependtask))
-+                        bb.msg.fatal("RunQueue", "Task %s_setscene depends upon non-existent task %s:%s" % (self.self.rqdata.get_user_idstring(task), dep, idependtask))
-+
-+                    if not self.rqdata.runq_setscene.index(taskid) in self.sq_harddeps:
-+                        self.sq_harddeps[self.rqdata.runq_setscene.index(taskid)] = set()
-+                    self.sq_harddeps[self.rqdata.runq_setscene.index(taskid)].add(self.rqdata.runq_setscene.index(task))
- 
--                    self.sq_harddeps.append(self.rqdata.runq_setscene.index(taskid))
-                     sq_revdeps_squash[self.rqdata.runq_setscene.index(task)].add(self.rqdata.runq_setscene.index(taskid))
-                     # Have to zero this to avoid circular dependencies
-                     sq_revdeps_squash[self.rqdata.runq_setscene.index(taskid)] = set()
- 
-         #for task in xrange(len(sq_revdeps_squash)):
--        #    print "Task %s: %s.%s is %s " % (task, self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[self.rqdata.runq_setscene[task]]], self.rqdata.runq_task[self.rqdata.runq_setscene[task]] + "_setscene", sq_revdeps_squash[task])
-+        #    realtask = self.rqdata.runq_setscene[task]
-+        #    bb.warn("Task %s: %s_setscene is %s " % (task, self.rqdata.get_user_idstring(realtask) , sq_revdeps_squash[task]))
- 
-         self.sq_deps = []
-         self.sq_revdeps = sq_revdeps_squash
-@@ -1830,7 +1834,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
- 
-     def scenequeue_updatecounters(self, task, fail = False):
-         for dep in self.sq_deps[task]:
--            if fail and task in self.sq_harddeps:
-+            if fail and task in self.sq_harddeps and dep in self.sq_harddeps[task]:
-+                realtask = self.rqdata.runq_setscene[task]
-+                realdep = self.rqdata.runq_setscene[dep]
-+                logger.debug(2, "%s was unavailable and is a hard dependency of %s so skipping" % (self.rqdata.get_user_idstring(realtask), self.rqdata.get_user_idstring(realdep)))
-                 continue
-             self.sq_revdeps2[dep].remove(task)
-             if len(self.sq_revdeps2[dep]) == 0:
-@@ -1943,6 +1950,12 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-             self.rq.read_workers()
-             return self.rq.active_fds()
- 
-+        #for task in xrange(self.stats.total):
-+        #    if self.runq_running[task] != 1:
-+        #        buildable = self.runq_buildable[task]
-+        #        revdeps = self.sq_revdeps[task]
-+        #        bb.warn("Found we didn't run %s %s %s %s" % (task, buildable, str(revdeps), self.rqdata.get_user_idstring(self.rqdata.runq_setscene[task])))
-+
-         # Convert scenequeue_covered task numbers into full taskgraph ids
-         oldcovered = self.scenequeue_covered
-         self.rq.scenequeue_covered = set()
+-- 
+Alex Damian
+Yocto Project
+SSG / OTC
 
+--089e0116150ade17eb04f23380ab
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-family:tahoma,s=
+ans-serif">Hello,</div><div class=3D"gmail_default" style=3D"font-family:ta=
+homa,sans-serif"><br></div><div class=3D"gmail_default" style=3D"font-famil=
+y:tahoma,sans-serif">
 
+This is a pull-request for a toaster patchset.</div><div class=3D"gmail_def=
+ault" style=3D"font-family:tahoma,sans-serif"><br></div><div class=3D"gmail=
+_default" style=3D"font-family:tahoma,sans-serif">The patchset has been rev=
+iewed by me and Paul Eggleton.</div>
+
+<div class=3D"gmail_default" style=3D"font-family:tahoma,sans-serif"><br>Ca=
+n you please pull:</div><div class=3D"gmail_default" style=3D"font-family:t=
+ahoma,sans-serif"><br></div><div class=3D"gmail_default"><font face=3D"taho=
+ma, sans-serif">poky-contrib/adamian/toaster-changes-120214</font><br>
+
+</div><div class=3D"gmail_default"><font face=3D"tahoma, sans-serif"><br></=
+font></div><div class=3D"gmail_default"><font face=3D"tahoma, sans-serif">T=
+hanks,</font></div><div class=3D"gmail_default"><font face=3D"tahoma, sans-=
+serif">Alex</font></div>
+
+<div><br></div>-- <br><div dir=3D"ltr">Alex Damian<div>Yocto Project<br></d=
+iv><div>SSG / OTC=C2=A0</div></div>
+</div>
+
+--089e0116150ade17eb04f23380ab--
