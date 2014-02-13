@@ -1,41 +1,30 @@
-Return-Path: <rep.dot.nop@gmail.com>
-Received: from mail-ee0-f41.google.com (mail-ee0-f41.google.com [74.125.83.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 7BA7F6EB24
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 15C386E6B7
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 13 Feb 2014 13:18:06 +0000 (UTC)
-Received: by mail-ee0-f41.google.com with SMTP id e51so4440891eek.14
+	Thu, 13 Feb 2014 15:01:40 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s1DF1aXN001855 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 13 Feb 2014 15:01:36 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id xrTenFZU72I0 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 13 Feb 2014 15:01:36 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s1DF1V3f001851
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 13 Feb 2014 05:18:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:date:message-id:in-reply-to:references:user-agent:subject
-	:mime-version:content-type:content-transfer-encoding;
-	bh=SngFrX10nSu73vnYbe+cJZboZbdRSfePH9tuBVQGKUI=;
-	b=w/teMLstlT88GZfsiWMWbNoqWacGmKukXGc9Geskjr71qfZIz7FvQ0q9XtjY7UWAGu
-	Dd7hbpNS/ZmmI+kNOc0qJB+wCVsIDq/gLzbcSnoISJSzD1YUNLoeTe2qVE8I6MxpD8Py
-	/5gLitrBbAokE+7Wlr82uEw2uN7+56BhC/+l/rQfLPBFtauq40St0CLuvfUP/UVnq9zK
-	83iQTHFX7IqoEMeyN4eR6Gd92/4ZLy8tg2YgKEhPFUbOvYR2ArCSmD9MfASpTkSmdjV1
-	Ea0VcrgthSY7MHslLYhZMBrdZf4v+BMYOhgFt9buxZd5LO/uSnOzD2LpmYQKH96NzweX
-	6eAA==
-X-Received: by 10.14.205.3 with SMTP id i3mr1782560eeo.23.1392297487105;
-	Thu, 13 Feb 2014 05:18:07 -0800 (PST)
-Received: from [46.206.16.206] (046206016206.atmpu0017.highway.a1.net.
-	[46.206.16.206])
-	by mx.google.com with ESMTPSA id o45sm6877385eeb.18.2014.02.13.05.18.00
-	for <multiple recipients>
-	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Thu, 13 Feb 2014 05:18:05 -0800 (PST)
-From: "Bernhard Reutner-Fischer" <rep.dot.nop@gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	"bitbake-devel" <bitbake-devel@lists.openembedded.org>
-Date: Thu, 13 Feb 2014 14:18:00 +0100
-Message-ID: <1442b656830.2760.0f39ed3bcad52ef2c88c90062b7714dc@gmail.com>
-In-Reply-To: <1392072628.7120.64.camel@ted>
-References: <1392072628.7120.64.camel@ted>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:9.0) Gecko/20111222 Thunderbird/9.0.1 AquaMail/1.3.8 (build:
-	2100414)
-MIME-Version: 1.0
-Subject: Re: [PATCH] runqueue: Fix setscene hard dependency problems
+	Thu, 13 Feb 2014 15:01:32 GMT
+Message-ID: <1392303685.14081.19.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 13 Feb 2014 15:01:25 +0000
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] runqueue: Ensure we do run 'masked' setscene tasks if specified as targets
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,27 +37,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 13 Feb 2014 13:18:06 -0000
-Content-Type: text/plain; charset="us-ascii"; format=flowed
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 13 Feb 2014 15:01:41 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On 10 February 2014 23:51:18 Richard Purdie 
-<richard.purdie@linuxfoundation.org> wrote:
+If you specify multiple targets on bitbake's commandline and some of them are
+setscene tasks which are "masked" by other tasks they may not get run.
 
+For example <image>:do_rootfs <kernel>:do_populate_sysroot
 
-> +
-> +                    if not self.rqdata.runq_setscene.index(taskid) in 
-> self.sq_harddeps:
-> +                        
-> self.sq_harddeps[self.rqdata.runq_setscene.index(taskid)] = set()
-> +                    
-> self.sq_harddeps[self.rqdata.runq_setscene.index(taskid)].add(self.rqdata.runq_setscene.index(task))
+the rootfs tasks "masks" the populate_sysroot task so bitbake would currently
+decide not to run it. In this case, we do really want it to be run.
 
-pythonic nit: setdefault ?
-Thanks && cheers,
+The fix is not to skip anything which has been given as an explict target.
 
-Sent with AquaMail for Android
-http://www.aqua-mail.com
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index a83fc6a..2475fd1 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1899,10 +1899,18 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                     if nexttask in self.unskippable:
+                         logger.debug(2, "Setscene task %s is unskippable" % self.rqdata.get_user_idstring(self.rqdata.runq_setscene[nexttask]))                      
+                     if nexttask not in self.unskippable and len(self.sq_revdeps[nexttask]) > 0 and self.sq_revdeps[nexttask].issubset(self.scenequeue_covered) and self.check_dependencies(nexttask, self.sq_revdeps[nexttask], True):
+-                        logger.debug(2, "Skipping setscene for task %s" % self.rqdata.get_user_idstring(self.rqdata.runq_setscene[nexttask]))
+-                        self.task_skip(nexttask)
+-                        self.scenequeue_notneeded.add(nexttask)
+-                        return True
++                        realtask = self.rqdata.runq_setscene[nexttask]
++                        fn = self.rqdata.taskData.fn_index[self.rqdata.runq_fnid[realtask]]
++                        target = False
++                        for target in self.rqdata.target_pairs:
++                            if target[0] == fn and target[1] == self.rqdata.runq_task[realtask]:
++                                target = True
++                                break
++                        if not target:
++                            logger.debug(2, "Skipping setscene for task %s" % self.rqdata.get_user_idstring(self.rqdata.runq_setscene[nexttask]))
++                            self.task_skip(nexttask)
++                            self.scenequeue_notneeded.add(nexttask)
++                            return True
+                     task = nexttask
+                     break
+         if task is not None:
 
 
 
