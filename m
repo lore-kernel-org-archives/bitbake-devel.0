@@ -1,25 +1,20 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id E69A96E872
+Return-Path: <marius.avram@intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id B8A6D6EE3A
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Feb 2014 14:07:49 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 17 Feb 2014 06:07:51 -0800
+	Tue, 18 Feb 2014 14:35:02 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga102.jf.intel.com with ESMTP; 18 Feb 2014 06:30:44 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.95,860,1384329600"; d="scan'208";a="456876177"
-Received: from nithyasr-mobl.ger.corp.intel.com (HELO
-	peggleto-mobl5.ger.corp.intel.com) ([10.252.123.246])
-	by orsmga001.jf.intel.com with ESMTP; 17 Feb 2014 06:07:50 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="4.97,502,1389772800"; d="scan'208";a="477062490"
+Received: from mavram-vostro.rb.intel.com ([10.237.105.158])
+	by fmsmga001.fm.intel.com with ESMTP; 18 Feb 2014 06:35:02 -0800
+From: Marius Avram <marius.avram@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 17 Feb 2014 14:07:41 +0000
-Message-Id: <54dc5e6cfb5376c07717eedab121a96454555899.1392645935.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.8.5.3
-In-Reply-To: <cover.1392645935.git.paul.eggleton@linux.intel.com>
-References: <cover.1392645935.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1392645935.git.paul.eggleton@linux.intel.com>
-References: <cover.1392645935.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 2/2] build: fix handling of task override for tasks with underscores in their names
+Date: Tue, 18 Feb 2014 16:39:24 +0200
+Message-Id: <1392734364-8388-1-git-send-email-marius.avram@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] bb/ui: store_dependency_information optimization
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,32 +27,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 17 Feb 2014 14:07:50 -0000
+X-List-Received-Date: Tue, 18 Feb 2014 14:35:03 -0000
 
-Tasks whose names contain underscores (such as do_populate_sdk in OE)
-when converted to a task override do not function properly. If we
-replace underscores with hyphens we can still have a working override
-for these tasks.
+This optimization is in support of the bug #5485. The function called
+at the beginning of every build: store_dependency_information was taking
+approximately 20sec and it was delaying the arrival of events from the
+event queue. The change minimizes the calls to _save_a_task(),
+reducing the time to half.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+Signed-off-by: Marius Avram <marius.avram@intel.com>
 ---
- lib/bb/build.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/bb/ui/buildinfohelper.py |   16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 692b91e..50a28dc 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -330,7 +330,7 @@ def _task_data(fn, task, d):
-     localdata.setVar('BB_FILENAME', fn)
-     localdata.setVar('BB_CURRENTTASK', task[3:])
-     localdata.setVar('OVERRIDES', 'task-%s:%s' %
--                     (task[3:], d.getVar('OVERRIDES', False)))
-+                     (task[3:].replace('_', '-'), d.getVar('OVERRIDES', False)))
-     localdata.finalize()
-     bb.data.expandKeys(localdata)
-     return localdata
+diff --git a/bitbake/lib/bb/ui/buildinfohelper.py b/bitbake/lib/bb/ui/buildinfohelper.py
+index 0a8073f..da777f1 100644
+--- a/bitbake/lib/bb/ui/buildinfohelper.py
++++ b/bitbake/lib/bb/ui/buildinfohelper.py
+@@ -605,11 +605,21 @@ class BuildInfoHelper(object):
+             task_info['task_name'] = taskname
+             task_obj = self.orm_wrapper.get_update_task_object(task_info)
+             return task_obj
++ 
++        # create tasks
++        tasks = {}
++        for taskdesc in event._depgraph['tdepends']:
++            tasks[taskdesc] = _save_a_task(taskdesc)
+ 
++        # create dependencies between tasks
+         for taskdesc in event._depgraph['tdepends']:
+-            target = _save_a_task(taskdesc)
+-            for taskdesc1 in event._depgraph['tdepends'][taskdesc]:
+-                dep = _save_a_task(taskdesc1)
++            target = tasks[taskdesc]
++            for taskdep in event._depgraph['tdepends'][taskdesc]:
++                if taskdep not in tasks:
++                    # Fetch tasks info is not collected previously
++                    dep = _save_a_task(taskdep)
++                else:
++                    dep = tasks[taskdep]
+                 Task_Dependency.objects.get_or_create( task = target, depends_on = dep )
+ 
+     def store_build_package_information(self, event):
 -- 
-1.8.5.3
+1.7.9.5
 
 
