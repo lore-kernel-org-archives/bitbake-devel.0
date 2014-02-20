@@ -1,53 +1,29 @@
-Return-Path: <peter.kjellerstedt@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 5679E6B5DA
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 8BE6960167
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 20 Feb 2014 15:32:09 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id 0583B1858B
+	Thu, 20 Feb 2014 15:42:32 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.14.5/8.14.5) with ESMTP id s1KFgW9K001943
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 20 Feb 2014 16:32:04 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-X-Amavis-Alert: BAD HEADER SECTION, Duplicate header field: "References"
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id CxoNqElDcqVg for <bitbake-devel@lists.openembedded.org>;
-	Thu, 20 Feb 2014 16:32:03 +0100 (CET)
-Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by bastet.se.axis.com (Postfix) with ESMTP id C3EE918701
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 20 Feb 2014 15:55:53 +0100 (CET)
-Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id AD2FEAC4
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 20 Feb 2014 15:55:53 +0100 (CET)
-Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
-	by boulder.se.axis.com (Postfix) with ESMTP id A21FDAC0
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 20 Feb 2014 15:55:53 +0100 (CET)
-Received: from saur-2.se.axis.com (saur-2.se.axis.com [10.92.3.2])
-	by thoth.se.axis.com (Postfix) with ESMTP id A00D934005
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 20 Feb 2014 15:55:53 +0100 (CET)
-Received: from saur-2.se.axis.com (localhost [127.0.0.1])
-	by saur-2.se.axis.com (8.14.5/8.14.5) with ESMTP id s1KEtr5f021103
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 20 Feb 2014 15:55:53 +0100
-Received: (from pkj@localhost)
-	by saur-2.se.axis.com (8.14.5/8.14.5/Submit) id s1KEtrA0021100
-	for bitbake-devel@lists.openembedded.org;
-	Thu, 20 Feb 2014 15:55:53 +0100
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 20 Feb 2014 15:55:51 +0100
-Message-Id: <c7f06c48293a2d7edc3894fe5259a8704afd1e17.1392908060.git.pkj@axis.com>
-X-Mailer: git-send-email 1.8.4
-In-Reply-To: <cover.1392908060.git.pkj@axis.com>
+	Thu, 20 Feb 2014 07:42:32 -0800 (PST)
+Received: from Marks-MacBook-Pro.local (172.25.36.235) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+	14.2.347.0; Thu, 20 Feb 2014 07:42:32 -0800
+Message-ID: <53062267.3060605@windriver.com>
+Date: Thu, 20 Feb 2014 09:42:31 -0600
+From: Mark Hatle <mark.hatle@windriver.com>
+Organization: Wind River Systems
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9;
+	rv:24.0) Gecko/20100101 Thunderbird/24.3.0
+MIME-Version: 1.0
+To: <bitbake-devel@lists.openembedded.org>
 References: <cover.1392908060.git.pkj@axis.com>
-In-Reply-To: <cover.1392908060.git.pkj@axis.com>
-References: <cover.1392908060.git.pkj@axis.com>
-Subject: [PATCH 1/1] bitbake: Disable pseudo in runfetchcmd()
+	<c7f06c48293a2d7edc3894fe5259a8704afd1e17.1392908060.git.pkj@axis.com>
+In-Reply-To: <c7f06c48293a2d7edc3894fe5259a8704afd1e17.1392908060.git.pkj@axis.com>
+Subject: Re: [PATCH 1/1] bitbake: Disable pseudo in runfetchcmd()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -60,40 +36,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 20 Feb 2014 15:32:12 -0000
+X-List-Received-Date: Thu, 20 Feb 2014 15:42:34 -0000
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-If a fetcher, e.g., git, is run when pseudo is active it will think it
-is running as root. If it in turn uses ssh (as git does), ssh too will
-think it is running as root. This will cause it to try to read root's
-ssh configuration from /root/.ssh which will fail. If ssh then needs to
-ask for credentials it will hang indefinitely as there is nowhere for it
-to ask the user for them (and even if there was it would not access the
-correct private keys).
+On 2/20/14, 8:55 AM, Peter Kjellerstedt wrote:
+> If a fetcher, e.g., git, is run when pseudo is active it will think it
+> is running as root. If it in turn uses ssh (as git does), ssh too will
+> think it is running as root. This will cause it to try to read root's
+> ssh configuration from /root/.ssh which will fail. If ssh then needs to
+> ask for credentials it will hang indefinitely as there is nowhere for it
+> to ask the user for them (and even if there was it would not access the
+> correct private keys).
+>
+> The solution to the above is to temporarily disable pseudo while
+> executing any fetcher commands. There should be no reason for them to be
+> executed under pseudo anyway so this should not be a problem.
+>
+> Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+> ---
+>   bitbake/lib/bb/fetch2/__init__.py | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+> index de95074..1c3ee4f 100644
+> --- a/bitbake/lib/bb/fetch2/__init__.py
+> +++ b/bitbake/lib/bb/fetch2/__init__.py
+> @@ -680,6 +680,9 @@ def runfetchcmd(cmd, d, quiet = False, cleanup = []):
+>           if val:
+>               cmd = 'export ' + var + '=\"%s\"; %s' % (val, cmd)
+>
+> +    # Disable pseudo as it may affect ssh, potentially causing it to hang.
+> +    cmd = 'export PSEUDO_DISABLED=1; ' + cmd
+> +
 
-The solution to the above is to temporarily disable pseudo while
-executing any fetcher commands. There should be no reason for them to be
-executed under pseudo anyway so this should not be a problem.
+This may be a reasonable workaround... but is there any way we can identify the 
+offending command and create a reproducer for pseudo?  It would be nice to 
+identify what the actual problem is -- as something else in the system may 
+encounter it.
 
-Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
----
- bitbake/lib/bb/fetch2/__init__.py | 3 +++
- 1 file changed, 3 insertions(+)
+--Mark
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index de95074..1c3ee4f 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -680,6 +680,9 @@ def runfetchcmd(cmd, d, quiet = False, cleanup = []):
-         if val:
-             cmd = 'export ' + var + '=\"%s\"; %s' % (val, cmd)
- 
-+    # Disable pseudo as it may affect ssh, potentially causing it to hang.
-+    cmd = 'export PSEUDO_DISABLED=1; ' + cmd
-+
-     logger.debug(1, "Running %s", cmd)
- 
-     success = False
--- 
-1.8.4
+>       logger.debug(1, "Running %s", cmd)
+>
+>       success = False
+>
 
 
