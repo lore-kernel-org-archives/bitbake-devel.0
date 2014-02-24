@@ -1,36 +1,25 @@
-Return-Path: <nicolas.dechesne@linaro.org>
-Received: from mail-ob0-f181.google.com (mail-ob0-f181.google.com
-	[209.85.214.181])
-	by mail.openembedded.org (Postfix) with ESMTP id 416996BB41
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 4D9DF6E908
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Feb 2014 07:34:29 +0000 (UTC)
-Received: by mail-ob0-f181.google.com with SMTP id wp4so4624155obc.26
-	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 23 Feb 2014 23:34:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-type:content-transfer-encoding;
-	bh=pS14G781sdw+WCzvO1IJm8ZO2wsQ33uvmvlEA1+P0Sc=;
-	b=WV3f3SZG+xiyLtOHptFBCxpSouon7vjwFe4Hemow8XONNUUfUn/MCUmRBVm9ffyeJS
-	oehhdq18rGnRgFK8YptrZnYSnOiESvlAwu2X6X3mRSPzPgVBJ8bd5t/FzW+6/SHPWx/X
-	bnBcMcduUaKJJYWMGR2hcBgTqNf5zzZ1gyTRawJ0SW1eVRdjWwSR1fQC+ce3uOBOjeyr
-	IjKOfXF6mmyktLDvnDzfxN0up9KDpN1BDRNtSszkmieErks2oMwreztN6vtXFdTKgydb
-	6T0dMMnMTROMA+palT2n27ANvLvuGfp66ahz9Kck8B7HqU02ZzfhHXKxhWhHvOXtponH
-	FF2A==
-X-Gm-Message-State: ALoCoQmB9sJkNHrTCDd5H3f3p+vN/1wlLaujJBgzaMxsP+GM4iPVjKF1YujwCaQ1hC3WaW5OAP5S
-X-Received: by 10.60.62.199 with SMTP id a7mr19642226oes.64.1393227270359;
-	Sun, 23 Feb 2014 23:34:30 -0800 (PST)
-MIME-Version: 1.0
-Received: by 10.76.182.99 with HTTP; Sun, 23 Feb 2014 23:34:10 -0800 (PST)
-In-Reply-To: <CAC7Dm8+3uyPxwUiUxYbRnw0_+gZsN+0L6hEq7Wsv3GksctH6Ew@mail.gmail.com>
-References: <CAC7Dm8+3uyPxwUiUxYbRnw0_+gZsN+0L6hEq7Wsv3GksctH6Ew@mail.gmail.com>
-From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Date: Mon, 24 Feb 2014 08:34:10 +0100
-Message-ID: <CAP71Wjy3QXvznrcOj88RvrdZQL0NemFSNDw_9zijhazemY8NNA@mail.gmail.com>
-To: =?KOI8-R?B?5M3J1NLJyiDvws/U1dLP1w==?= <oboturoff@gmail.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: bitbake -c cleanall <target>
+	Mon, 24 Feb 2014 18:50:27 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 24 Feb 2014 10:50:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.97,536,1389772800"; d="scan'208";a="487258411"
+Received: from mmckenna-mobl2.ger.corp.intel.com (HELO
+	peggleto-mobl5.ger.corp.intel.com) ([10.252.123.143])
+	by fmsmga002.fm.intel.com with ESMTP; 24 Feb 2014 10:50:16 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 24 Feb 2014 18:50:02 +0000
+Message-Id: <3dcb6582ecead3b99fbf8b7a45ed7caae9598b2e.1393267755.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.8.5.3
+In-Reply-To: <cover.1393267755.git.paul.eggleton@linux.intel.com>
+References: <cover.1393267755.git.paul.eggleton@linux.intel.com>
+In-Reply-To: <cover.1393267755.git.paul.eggleton@linux.intel.com>
+References: <cover.1393267755.git.paul.eggleton@linux.intel.com>
+Subject: [PATCH 1/4] fetch2: fix fetching git submodules with git 1.7.9.x or older
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,46 +32,92 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 24 Feb 2014 07:34:33 -0000
-Content-Type: text/plain; charset=KOI8-R
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Mon, 24 Feb 2014 18:50:28 -0000
 
-On Fri, Feb 21, 2014 at 2:18 PM, =E4=CD=C9=D4=D2=C9=CA =EF=C2=CF=D4=D5=D2=
-=CF=D7 <oboturoff@gmail.com> wrote:
->
-> sorry for my stupid question. i am beginner in bitbake.
->
-> How I can correct delete all images from folder:
-> /build_p5040ds_release/tmp/deploy/images
->
-> in yocto system.
->
-> i know a command:
->  bitbake -c cleanall <target>
->
-> but i am not understand, what this <target>?
->
-> i try to use:
-> bitbake -c cleanall e5500
-> bitbake -c cleanall fsl-networking
-> bitbake -c cleanall ppc
-> bitbake -c cleanall fsl*
-> bitbake -c cleanall fsl-image-minimal-p5040ds-20140212095057.rootfs.tar.g=
-z
-> bitbake -c cleanall linux
->
-> they are not working.... and I have always error:
-> ERROR: Nothing PROVIDES ....
+Git versions older than 1.7.10 put absolute paths in configuration files
+for the submodule repositories, leading to errors when the repository
+checkout is moved. We move the repository as a matter of course in the
+gitsm fetcher; the failure occurs in do_unpack). Change the absolute
+paths to be relative during processing to fix this.
 
-first of all, it's not the right mailing list for such questions. you
-should use openemebedded-core or yocto list.
+(At the time of writing, Ubuntu 12.04.4 LTS ships Git version 1.7.9.5,
+hence the desire to fix this rather than just mandating a newer Git
+version.)
 
-<target> is a recipe name.
+Fixes [YOCTO #5525].
 
-bitbake -c <task> <target> will complete the <task> for <target>, as
-well as as dependent tasks. "cleanall" will in turn run the 'make
-clean' command in your WORKDIR, clean up the sstate folder for
-<target>, and remove any files downloaded by <target> from DOWNLOADS
-folder. but it won't clean up tmp/deploy/images, you need to
-manage/cleanup this folder yourself.
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+---
+ lib/bb/fetch2/gitsm.py | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
+index 9fdde46..1a76215 100644
+--- a/lib/bb/fetch2/gitsm.py
++++ b/lib/bb/fetch2/gitsm.py
+@@ -42,6 +42,53 @@ class GitSM(Git):
+                 pass
+         return False
+ 
++    def _set_relative_paths(self, repopath):
++        """
++        Fix submodule paths to be relative instead of absolute,
++        so that when we move the repo it doesn't break
++        (In Git 1.7.10+ this is done automatically)
++        """
++        submodules = []
++        with open(os.path.join(repopath, '.gitmodules'), 'r') as f:
++            for line in f.readlines():
++                if line.startswith('[submodule'):
++                    submodules.append(line.split('"')[1])
++
++        for module in submodules:
++            repo_conf = os.path.join(repopath, module, '.git')
++            if os.path.exists(repo_conf):
++                with open(repo_conf, 'r') as f:
++                    lines = f.readlines()
++                newpath = ''
++                for i, line in enumerate(lines):
++                    if line.startswith('gitdir:'):
++                        oldpath = line.split(': ')[-1].rstrip()
++                        if oldpath.startswith('/'):
++                            newpath = '../' * (module.count('/') + 1) + '.git/modules/' + module
++                            lines[i] = 'gitdir: %s\n' % newpath
++                            break
++                if newpath:
++                    with open(repo_conf, 'w') as f:
++                        for line in lines:
++                            f.write(line)
++
++            repo_conf2 = os.path.join(repopath, '.git', 'modules', module, 'config')
++            if os.path.exists(repo_conf2):
++                with open(repo_conf2, 'r') as f:
++                    lines = f.readlines()
++                newpath = ''
++                for i, line in enumerate(lines):
++                    if line.lstrip().startswith('worktree = '):
++                        oldpath = line.split(' = ')[-1].rstrip()
++                        if oldpath.startswith('/'):
++                            newpath = '../' * (module.count('/') + 3) + module
++                            lines[i] = '\tworktree = %s\n' % newpath
++                            break
++                if newpath:
++                    with open(repo_conf2, 'w') as f:
++                        for line in lines:
++                            f.write(line)
++
+     def update_submodules(self, ud, d):
+         # We have to convert bare -> full repo, do the submodule bit, then convert back
+         tmpclonedir = ud.clonedir + ".tmp"
+@@ -54,6 +101,7 @@ class GitSM(Git):
+         runfetchcmd(ud.basecmd + " reset --hard", d)
+         runfetchcmd(ud.basecmd + " submodule init", d)
+         runfetchcmd(ud.basecmd + " submodule update", d)
++        self._set_relative_paths(tmpclonedir)
+         runfetchcmd("sed " + gitdir + "/config -i -e 's/bare.*=.*false/bare = true/'", d)
+         os.rename(gitdir, ud.clonedir,)
+         bb.utils.remove(tmpclonedir, True)
+-- 
+1.8.5.3
+
 
