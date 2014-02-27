@@ -1,22 +1,23 @@
-Return-Path: <cristiana.voicu@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 9B5086F159
+Return-Path: <stefanx.stanacar@intel.com>
+Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
+	by mail.openembedded.org (Postfix) with ESMTP id 9CC5D6F0FE
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 25 Feb 2014 13:22:43 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga101.jf.intel.com with ESMTP; 25 Feb 2014 05:22:43 -0800
+	Thu, 27 Feb 2014 15:42:05 +0000 (UTC)
+Received: from azsmga002.ch.intel.com ([10.2.17.35])
+	by azsmga102.ch.intel.com with ESMTP; 27 Feb 2014 07:42:05 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.97,540,1389772800"; d="scan'208";a="481450529"
-Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.62])
-	by fmsmga001.fm.intel.com with ESMTP; 25 Feb 2014 05:22:18 -0800
-From: Cristiana Voicu <cristiana.voicu@intel.com>
+X-IronPort-AV: E=Sophos;i="4.97,555,1389772800"; d="scan'208";a="344182940"
+Received: from linux.jf.intel.com (HELO linux.intel.com) ([10.23.219.25])
+	by AZSMGA002.ch.intel.com with ESMTP; 27 Feb 2014 07:42:05 -0800
+Received: from firebird.rb.intel.com (firebird.rb.intel.com [10.237.105.156])
+	by linux.intel.com (Postfix) with ESMTP id C865E6A4007;
+	Thu, 27 Feb 2014 07:41:54 -0800 (PST)
+From: Stefan Stanacar <stefanx.stanacar@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 25 Feb 2014 15:30:11 +0200
-Message-Id: <1393335012-26237-3-git-send-email-cristiana.voicu@intel.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1393335012-26237-1-git-send-email-cristiana.voicu@intel.com>
-References: <y> <1393335012-26237-1-git-send-email-cristiana.voicu@intel.com>
-Subject: [PATCH 2/3] hob: remove the code that adds hob layer to bblayers
+Date: Thu, 27 Feb 2014 17:42:07 +0200
+Message-Id: <1393515727-421-1-git-send-email-stefanx.stanacar@intel.com>
+X-Mailer: git-send-email 1.8.5.3
+Subject: [PATCH] build: filter out expanded empty strings for lockfiles flag
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,33 +30,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 25 Feb 2014 13:22:44 -0000
+X-List-Received-Date: Thu, 27 Feb 2014 15:42:07 -0000
 
-[YOCTO #5118]
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+If we have something similar to:
+
+    LOCKFILES = "${TMPDIR}/my.lock"
+    LOCKFILES_qemuall = ""
+
+    do_task[lockfiles] += "${LOCKFILES}"
+
+when expanded, lockfiles will be empty for qemu, resulting in
+
+     File "/home/stefans/yocto/poky/bitbake/lib/bb/utils.py", line 630, in mkdirhier
+	raise e
+    OSError: [Errno 2] No such file or directory: ''
+
+This should filter out the empty expansions.
+
+Signed-off-by: Stefan Stanacar <stefanx.stanacar@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    5 -----
- 1 file changed, 5 deletions(-)
+ bitbake/lib/bb/build.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-index e848405..cdf1eb5 100644
---- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -511,13 +511,8 @@ class HobHandler(gobject.GObject):
-         # retrieve the parameters from bitbake
-         params = {}
-         params["core_base"] = self.runCommand(["getVariable", "COREBASE"]) or ""
--        hob_layer = params["core_base"] + "/meta-hob"
-         params["layer"] = self.runCommand(["getVariable", "BBLAYERS"]) or ""
-         params["layers_non_removable"] = self.runCommand(["getVariable", "BBLAYERS_NON_REMOVABLE"]) or ""
--        if hob_layer not in params["layer"].split():
--            params["layer"] += (" " + hob_layer)
--        if hob_layer not in params["layers_non_removable"].split():
--            params["layers_non_removable"] += (" " + hob_layer)
-         params["dldir"] = self.runCommand(["getVariable", "DL_DIR"]) or ""
-         params["machine"] = self.runCommand(["getVariable", "MACHINE"]) or ""
-         params["distro"] = self.runCommand(["getVariable", "DISTRO"]) or "defaultsetup"
+diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+index 50a28dc..52e4149 100644
+--- a/bitbake/lib/bb/build.py
++++ b/bitbake/lib/bb/build.py
+@@ -173,7 +173,7 @@ def exec_func(func, d, dirs = None):
+ 
+     lockflag = flags.get('lockfiles')
+     if lockflag:
+-        lockfiles = [d.expand(f) for f in lockflag.split()]
++        lockfiles = [f for f in d.expand(lockflag).split()]
+     else:
+         lockfiles = None
+ 
 -- 
-1.7.9.5
+1.8.5.3
 
 
