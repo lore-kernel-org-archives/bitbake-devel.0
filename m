@@ -1,23 +1,30 @@
-Return-Path: <stefanx.stanacar@intel.com>
-Received: from mga14.intel.com (mga14.intel.com [143.182.124.37])
-	by mail.openembedded.org (Postfix) with ESMTP id 9CC5D6F0FE
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 5D4946BD75
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Feb 2014 15:42:05 +0000 (UTC)
-Received: from azsmga002.ch.intel.com ([10.2.17.35])
-	by azsmga102.ch.intel.com with ESMTP; 27 Feb 2014 07:42:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.97,555,1389772800"; d="scan'208";a="344182940"
-Received: from linux.jf.intel.com (HELO linux.intel.com) ([10.23.219.25])
-	by AZSMGA002.ch.intel.com with ESMTP; 27 Feb 2014 07:42:05 -0800
-Received: from firebird.rb.intel.com (firebird.rb.intel.com [10.237.105.156])
-	by linux.intel.com (Postfix) with ESMTP id C865E6A4007;
-	Thu, 27 Feb 2014 07:41:54 -0800 (PST)
-From: Stefan Stanacar <stefanx.stanacar@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 27 Feb 2014 17:42:07 +0200
-Message-Id: <1393515727-421-1-git-send-email-stefanx.stanacar@intel.com>
-X-Mailer: git-send-email 1.8.5.3
-Subject: [PATCH] build: filter out expanded empty strings for lockfiles flag
+	Fri, 28 Feb 2014 17:23:10 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s1SHN6Ji004627 for <bitbake-devel@lists.openembedded.org>;
+	Fri, 28 Feb 2014 17:23:06 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id jE9-uZrzSENh for <bitbake-devel@lists.openembedded.org>;
+	Fri, 28 Feb 2014 17:23:06 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s1SHN1Ul004623
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 28 Feb 2014 17:23:03 GMT
+Message-ID: <1393608174.31769.199.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Fri, 28 Feb 2014 17:22:54 +0000
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] fetch/git: Separate out an ls-remote function
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,42 +37,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 27 Feb 2014 15:42:07 -0000
+X-List-Received-Date: Fri, 28 Feb 2014 17:23:11 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-If we have something similar to:
+There is other code which can want to run ls-remote style commands with 
+different parameters so split out the function.
 
-    LOCKFILES = "${TMPDIR}/my.lock"
-    LOCKFILES_qemuall = ""
-
-    do_task[lockfiles] += "${LOCKFILES}"
-
-when expanded, lockfiles will be empty for qemu, resulting in
-
-     File "/home/stefans/yocto/poky/bitbake/lib/bb/utils.py", line 630, in mkdirhier
-	raise e
-    OSError: [Errno 2] No such file or directory: ''
-
-This should filter out the empty expansions.
-
-Signed-off-by: Stefan Stanacar <stefanx.stanacar@intel.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/build.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index f7c26b3..1edcee4 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -317,22 +317,30 @@ class Git(FetchMethod):
+         """
+         return "git:" + ud.host + ud.path.replace('/', '.') + ud.unresolvedrev[name]
+ 
+-    def _latest_revision(self, ud, d, name):
++    def __lsremote(self, ud, d, search):
+         """
+-        Compute the HEAD revision for the url
++        Run git ls-remote with the specified search string
+         """
+         if ud.user:
+             username = ud.user + '@'
+         else:
+             username = ""
+ 
+-        cmd = "%s ls-remote %s://%s%s%s refs/heads/%s refs/tags/%s^{}" % \
+-              (ud.basecmd, ud.proto, username, ud.host, ud.path, ud.unresolvedrev[name], ud.unresolvedrev[name])
++        cmd = "%s ls-remote %s://%s%s%s %s" % \
++              (ud.basecmd, ud.proto, username, ud.host, ud.path, search)
+         if ud.proto.lower() != 'file':
+             bb.fetch2.check_network_access(d, cmd)
+         output = runfetchcmd(cmd, d, True)
+         if not output:
+             raise bb.fetch2.FetchError("The command %s gave empty output unexpectedly" % cmd, ud.url)
++        return output
++
++    def _latest_revision(self, ud, d, name):
++        """
++        Compute the HEAD revision for the url
++        """
++        search = "refs/heads/%s refs/tags/%s^{}" % (ud.unresolvedrev[name], ud.unresolvedrev[name])
++        output = self.__lsremote(ud, d, search)
+         return output.split()[0]
+ 
+     def _build_revision(self, ud, d, name):
 
-diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-index 50a28dc..52e4149 100644
---- a/bitbake/lib/bb/build.py
-+++ b/bitbake/lib/bb/build.py
-@@ -173,7 +173,7 @@ def exec_func(func, d, dirs = None):
- 
-     lockflag = flags.get('lockfiles')
-     if lockflag:
--        lockfiles = [d.expand(f) for f in lockflag.split()]
-+        lockfiles = [f for f in d.expand(lockflag).split()]
-     else:
-         lockfiles = None
- 
--- 
-1.8.5.3
 
 
