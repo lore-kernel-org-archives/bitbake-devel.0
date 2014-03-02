@@ -1,30 +1,36 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id D2EC96F190
+Return-Path: <kergoth@gmail.com>
+Received: from mail-lb0-f182.google.com (mail-lb0-f182.google.com
+	[209.85.217.182])
+	by mail.openembedded.org (Postfix) with ESMTP id E4E636EE4D
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Feb 2014 17:56:19 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s1SHuCag006117 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Feb 2014 17:56:15 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id qe7WsVIMKQG5 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Feb 2014 17:56:15 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s1SHuCeS006107
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
+	Sun,  2 Mar 2014 04:50:36 +0000 (UTC)
+Received: by mail-lb0-f182.google.com with SMTP id n15so3725651lbi.41
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Feb 2014 17:56:13 GMT
-Message-ID: <1393610164.31769.206.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Fri, 28 Feb 2014 17:56:04 +0000
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] wget: Drop usage of old style *COMMAND variables
+	Sat, 01 Mar 2014 20:50:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=K/UH7D5vuS4+JLNY1tNClIPhlb84PRgBVt/Y89BtTl0=;
+	b=zzXOxugPc0KtyQmRbJXzODLNakg6tKj1iiVoEQcGzG4S0Iy/FV3e7ZqlSbU7lfNOcs
+	IIqDeYfwC/x7ykajJv7i3a9GUrEc3TV6NjMgsiz73XVZ/A2VN7UEl1lp1OAzfGBbgUur
+	yoT2Pv6zYgM6dudOvR65aUQ3q3oKgSaK76sz64eHZaaO/t+k1xf5IWiiBXGsF3r/8F8T
+	AlhKzfEjWGkFwfJ242ybHa7FwYodsFe7JimLnM5tRrc2348XI9WUP2JAFYliJ5awdDn5
+	btW6mLHooz+HwjiqVR6KbA6+Zj6q8+VcRB/te68R1uXTzWIfAFvoMjIIlytN3G1XhZNt
+	sS1w==
+X-Received: by 10.152.25.193 with SMTP id e1mr1554204lag.13.1393735836323;
+	Sat, 01 Mar 2014 20:50:36 -0800 (PST)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.112.35.200 with HTTP; Sat, 1 Mar 2014 20:50:16 -0800 (PST)
+In-Reply-To: <1393608174.31769.199.camel@ted>
+References: <1393608174.31769.199.camel@ted>
+From: Chris Larson <clarson@kergoth.com>
+Date: Sat, 1 Mar 2014 21:50:16 -0700
+X-Google-Sender-Auth: OvjfSPQCwoIAxRT8YF9ta1Q4j4M
+Message-ID: <CABcZANnkVHatSbYqJAL3ZR6uKORYB=1hdBiwZOUXfCad4S2T8w@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] fetch/git: Separate out an ls-remote function
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,35 +43,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 28 Feb 2014 17:56:22 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sun, 02 Mar 2014 04:50:37 -0000
+Content-Type: multipart/alternative; boundary=089e0158c5846f539004f39869ce
 
-These variables were dropped from OE-Core some time ago, drop their
-usage from the fetcher as well.
+--089e0158c5846f539004f39869ce
+Content-Type: text/plain; charset=UTF-8
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index 7cd25a5..e2f99ce 100644
---- a/bitbake/lib/bb/fetch2/wget.py
-+++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -69,12 +69,12 @@ class Wget(FetchMethod):
-             basecmd += " -O " + dldir + os.sep + ud.localfile
- 
-         if checkonly:
--            fetchcmd = d.getVar("CHECKCOMMAND_wget", True) or d.expand(basecmd + " --spider '${URI}'")
-+            fetchcmd = d.expand(basecmd + " --spider '${URI}'")
-         elif os.path.exists(ud.localpath):
-             # file exists, but we didnt complete it.. trying again..
--            fetchcmd = d.getVar("RESUMECOMMAND_wget", True) or d.expand(basecmd + " -c -P ${DL_DIR} '${URI}'")
-+            fetchcmd = d.expand(basecmd + " -c -P ${DL_DIR} '${URI}'")
-         else:
--            fetchcmd = d.getVar("FETCHCOMMAND_wget", True) or d.expand(basecmd + " -P ${DL_DIR} '${URI}'")
-+            fetchcmd = d.expand(basecmd + " -P ${DL_DIR} '${URI}'")
- 
-         uri = ud.url.split(";")[0]
- 
+On Fri, Feb 28, 2014 at 10:22 AM, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
+> -    def _latest_revision(self, ud, d, name):
+> +    def __lsremote(self, ud, d, search):
+>
 
+Are we sure we want to use __ here? Double-underscore will trigger python
+internal name mangling. While using it doesn't break anything, it doesn't
+really buy us much either vs _, and makes inspection of the class/object
+rather ugly, IMO :)
+-- 
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
+--089e0158c5846f539004f39869ce
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Fri, Feb 28, 2014 at 10:22 AM, Richard Purdie <span dir=3D"ltr">&lt;<a h=
+ref=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard=
+.purdie@linuxfoundation.org</a>&gt;</span> wrote:<br>
+
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div id=3D":1de" class=3D"a3s" style=3D"over=
+flow:hidden">- =C2=A0 =C2=A0def _latest_revision(self, ud, d, name):<br>
++ =C2=A0 =C2=A0def __lsremote(self, ud, d, search):</div></blockquote></div=
+><br></div><div class=3D"gmail_extra">Are we sure we want to use __ here? D=
+ouble-underscore will trigger python internal name mangling. While using it=
+ doesn&#39;t break anything, it doesn&#39;t really buy us much either vs _,=
+ and makes inspection of the class/object rather ugly, IMO :)<br>
+
+-- <br>Christopher Larson<br>clarson at kergoth dot com<br>Founder - BitBak=
+e, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software Engine=
+er, Mentor Graphics
+</div></div>
+
+--089e0158c5846f539004f39869ce--
