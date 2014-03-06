@@ -1,33 +1,30 @@
-Return-Path: <alexandru.damian@intel.com>
-Received: from mail-oa0-f53.google.com (mail-oa0-f53.google.com
-	[209.85.219.53])
-	by mail.openembedded.org (Postfix) with ESMTP id F32616F5B9
+Return-Path: <krirobo@gmail.com>
+Received: from mail-vc0-f176.google.com (mail-vc0-f176.google.com
+	[209.85.220.176])
+	by mail.openembedded.org (Postfix) with ESMTP id 4C1196E77A
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  6 Mar 2014 18:15:52 +0000 (UTC)
-Received: by mail-oa0-f53.google.com with SMTP id j17so2985522oag.12
+	Thu,  6 Mar 2014 20:41:34 +0000 (UTC)
+Received: by mail-vc0-f176.google.com with SMTP id lc6so2663796vcb.7
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 06 Mar 2014 10:15:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-	:content-type;
-	bh=l8vcuPFIrrpsl4q7ceHcYYB3zaeKWtPurZoiOdCskfg=;
-	b=GXrKD5Ob6mcpmuBJxLkx6EQAqf4GhJuU/2W1lIjPeE1ff3golHtxlMTK+U7W5FaaP0
-	A3OZr56xQiqZSnWIyQNulyzD5zXu0Ph+CW4Mk8JV9CxmTGIujMrNrxw6xkQin2tQjSDs
-	LjVJYnAnE943IqShZEceQ56+l9KSZiaxKqpCNdZpRZzgPhjEgcRpnZJE2wTaM1xI/Rja
-	NrBlDno5d+NgDSjcvRHIo4gU1cpSzyHwS6GuBsDbR5ZP01IVcdH/MHnuAqn8QwGy9wTA
-	afqv67Q0DMRRbW35f2Dn/sJpbxbcWNGLDA+06ia3SvAZOEZot/Bp6JmMW0PDFDQ209/V
-	iZfA==
-X-Gm-Message-State: ALoCoQlJG85z6q2g99aXOKhDMwf142D7XgtEIHD21dQQNUcubBmsoxQJPf1af0iRIzUqvHuBpF0W
-X-Received: by 10.60.58.193 with SMTP id t1mr1648825oeq.78.1394129752869; Thu,
-	06 Mar 2014 10:15:52 -0800 (PST)
+	Thu, 06 Mar 2014 12:41:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:date:message-id:subject:from:to:content-type;
+	bh=Fh4ByNfKvMxlk4K30z1iQNHrByxnn6OQvLvn6N5/xHg=;
+	b=oP6kkP3e7iVb0PrMaVzohKfcvddW4Gn7DwRdef/+0oSq47L8C8hLomPYGvoFeQbrgG
+	UFLpgBEyfECmZmG35aTuptmu/zFJXACK2/fXlzCpMV49zKXFXlFon2qRUCciqOtL1rKM
+	Xher0QwjqhyvvvA5zJl6IBaCJOSTew0Dv54GWpsJwNZWCdxLHCnB9cfYN6qzCfxv9s5h
+	XeOQ+HuVwVElZ7DtToU61KtTEFoJeId4AJU2CCbpKKyzJ7wRBuOOWq5kWQ84G5iroVMt
+	wzVV5ZljQuNr646TkXO5VUZ6rSiOpjVDV7TtNHok7qmGXk/Fehx1XSn8J7gViQucULcd
+	W57A==
 MIME-Version: 1.0
-Received: by 10.76.11.165 with HTTP; Thu, 6 Mar 2014 10:15:32 -0800 (PST)
-From: "Damian, Alexandru" <alexandru.damian@intel.com>
-Date: Thu, 6 Mar 2014 18:15:32 +0000
-Message-ID: <CAJ2CSBu6iYe4b+PJHCvZ4BZLkL6bS0hZXKuhetdTT-=y=eJG7g@mail.gmail.com>
+X-Received: by 10.220.136.6 with SMTP id p6mr6723274vct.9.1394138495400; Thu,
+	06 Mar 2014 12:41:35 -0800 (PST)
+Received: by 10.58.133.233 with HTTP; Thu, 6 Mar 2014 12:41:35 -0800 (PST)
+Date: Thu, 6 Mar 2014 21:41:35 +0100
+Message-ID: <CAFgGSN6AaG6ZPPUmJzqiJeYXDK1mKyG=i8vH6q=u8E63fPT6OQ@mail.gmail.com>
+From: Kristof Robot <krirobo@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: toaster patchset, upstream from toaster/master
+Subject: Re: [PATCH] fetch/wget: Start to clean up command construction
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,58 +37,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 06 Mar 2014 18:15:54 -0000
-Content-Type: multipart/alternative; boundary=089e013cb946b0e33c04f3f420e8
+X-List-Received-Date: Thu, 06 Mar 2014 20:41:39 -0000
+Content-Type: text/plain; charset=ISO-8859-1
 
---089e013cb946b0e33c04f3f420e8
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+>Start to clean up wget fetcher command construction to allow clearer
+>and more extensible code structure. Drops support for ${URI} and
+>${FILE} directly in the commands.
+>
+>Signed-off-by: Richard Purdie <richard.purdie at linuxfoundation.org>
+>[...]
+>         if not checkonly and 'downloadfilename' in ud.parm:
+>             dldir = d.getVar("DL_DIR", True)
+>             bb.utils.mkdirhier(os.path.dirname(dldir + os.sep + ud.localfile))
+>-            basecmd += " -O " + dldir + os.sep + ud.localfile
+>+            fetchcmd += " -O " + dldir + os.sep + ud.localfile
+>
+>+        uri = ud.url.split(";")[0]
+>         if checkonly:
+>-            fetchcmd = d.expand(basecmd + " --spider '${URI}'")
+>+            fetchcmd = self.basecmd + " --spider '%s'" % uri
+>         elif os.path.exists(ud.localpath):
+>             # file exists, but we didnt complete it.. trying again..
+>-            fetchcmd = d.expand(basecmd + " -c -P ${DL_DIR} '${URI}'")
+>+            fetchcmd = self.basecmd + d.expand(" -c -P ${DL_DIR} '%s'" % uri)
+>         else:
+>-            fetchcmd = d.expand(basecmd + " -P ${DL_DIR} '${URI}'")
+>-
 
-Hello,
+This patch breaks the "downloadfilename" functionality, as the
+fetchcmd append in the first if structure will be overwritten by the
+fetchcmd assignments in the second if structure, effectively losing
+the appended information.
 
-This is a pull-request for a toaster patchset.
+As a quick fix, I replaced
 
-The patchset has been reviewed by me and Paul Eggleton.
+ fetchcmd += " -O " + dldir + os.sep + ud.localfile
 
-=E2=80=8BCan you please pull:
+by
 
-poky-contrib/adamian/submission-06032014=E2=80=8B
+ self.basecmd += " -O " + dldir + os.sep + ud.localfile
 
-=E2=80=8BThanks,
-Alex=E2=80=8B
+but there might be a better way of resolving this?
 
+Kristof
 
---=20
-Alex Damian
-Yocto Project
-SSG / OTC
-
---089e013cb946b0e33c04f3f420e8
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-family:tahoma,s=
-ans-serif">Hello,</div><div class=3D"gmail_default" style=3D"font-family:ta=
-homa,sans-serif"><br></div><div class=3D"gmail_default" style=3D"font-famil=
-y:tahoma,sans-serif">
-
-This is a pull-request for a toaster patchset.</div><div class=3D"gmail_def=
-ault" style=3D"font-family:tahoma,sans-serif"><br></div><div class=3D"gmail=
-_default" style=3D"font-family:tahoma,sans-serif">The patchset has been rev=
-iewed by me and Paul Eggleton.</div>
-
-<div><br></div><div><div class=3D"gmail_default" style=3D"font-family:tahom=
-a,sans-serif">=E2=80=8BCan you please pull:</div><div class=3D"gmail_defaul=
-t" style=3D"font-family:tahoma,sans-serif"><br></div><div class=3D"gmail_de=
-fault" style=3D"font-family:tahoma,sans-serif">
-
-poky-contrib/adamian/submission-06032014=E2=80=8B</div><br></div><div><div =
-class=3D"gmail_default" style=3D"font-family:tahoma,sans-serif">=E2=80=8BTh=
-anks,</div><div class=3D"gmail_default" style=3D"font-family:tahoma,sans-se=
-rif">Alex=E2=80=8B</div><br>
-
-</div><div><br></div>-- <br><div dir=3D"ltr">Alex Damian<div>Yocto Project<=
-br></div><div>SSG / OTC=C2=A0</div></div>
-</div>
-
---089e013cb946b0e33c04f3f420e8--
