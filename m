@@ -1,30 +1,36 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 5C4C06F58F
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wi0-f175.google.com (mail-wi0-f175.google.com
+	[209.85.212.175])
+	by mail.openembedded.org (Postfix) with ESMTP id 794576F707
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Mar 2014 01:00:10 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s2A105o3028121 for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Mar 2014 01:00:05 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id c8WBriVHjqKx for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Mar 2014 01:00:05 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s2A0xwi0028091
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
+	Mon, 10 Mar 2014 15:28:52 +0000 (UTC)
+Received: by mail-wi0-f175.google.com with SMTP id cc10so207830wib.8
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Mar 2014 01:00:03 GMT
-Message-ID: <1394413193.7883.22.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Sun, 09 Mar 2014 17:59:53 -0700
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] runqueue: Use SIGCHLD instead of polling waitpid
+	Mon, 10 Mar 2014 08:28:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=02f/EoLpp0xHqwc6Q6ttNBHto+2ifmwn5a8mrOp7Xjg=;
+	b=C5ZYN4gXrscI0AuhYy3xeyd8t2r8c5pUiSWsjy3z3lrZUY5FOR/TMPy8KayhqZeQ0g
+	lMtOI2lIUqFm+Ra8sNGBFmRRnusM/h4RpRhgorEeLBtyMij66gSgTtOUF0gN1tcsJ3hf
+	Vs/zmUSjx4qH2ko7TcSlBh3A3pmRk8U7/xmZ8HbgFA9enrM3RkTK3Axb3BwUuBu3Ihcf
+	4+zI1uNQi1kA4dDkYccjKs/E7ngtCkPxappznSl2Q36yKvsLY7XElAwdFJufwVSJrhHf
+	aekolwa1N69xnz3/6IRuackEkHEo6fdKXqecTbNBYzN/9idyd+z76HgmhoanBDgZtxSP
+	omJw==
+X-Gm-Message-State: ALoCoQmFbWDitFeMh3jGsjYRL/3OYfkNjwKACnsGrFm8Qfl9Csue9cykMItcWLQMZxoCG+JK3TxF
+X-Received: by 10.181.13.11 with SMTP id eu11mr9223197wid.30.1394465333089;
+	Mon, 10 Mar 2014 08:28:53 -0700 (PDT)
+Received: from melchett.burtonini.com (35.106.2.81.in-addr.arpa. [81.2.106.35])
+	by mx.google.com with ESMTPSA id ju6sm51720249wjc.1.2014.03.10.08.28.51
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Mon, 10 Mar 2014 08:28:51 -0700 (PDT)
+From: Ross Burton <ross.burton@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 10 Mar 2014 15:28:48 +0000
+Message-Id: <1394465328-12842-1-git-send-email-ross.burton@intel.com>
+X-Mailer: git-send-email 1.7.10.4
+Subject: [PATCH] bitbake: fix typo in variable name
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,77 +43,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Mar 2014 01:00:10 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 10 Mar 2014 15:28:56 -0000
 
-Instead of a significant number of calls to waitpid, register a SIGCHLD
-handler instead.
+When passing -t with an incorrect server type, the error message was using a
+variable that doesn't exist.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Ross Burton <ross.burton@intel.com>
 ---
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index c486c98..6650bd8 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -912,10 +912,28 @@ class RunQueue:
-             continue
-         workerpipe.close()
- 
-+    def sigchild_exception(self, signum, stackframe):
-+        pid = True
-+        while pid:
-+            try:
-+                pid, status = os.waitpid(-1, os.WNOHANG)
-+                if pid != 0 and not self.teardown:
-+                    if self.worker and pid == self.worker.pid:
-+                        name = "Worker"
-+                    elif self.fakeworker and pid == self.fakeworker.pid:
-+                        name = "Fakeroot"
-+                    else:
-+                        name = "Unknown"
-+                    bb.error("%s process (%s) exited unexpectedly (%s), shutting down..." % (name, pid, str(status)))
-+                    self.finish_runqueue(True)
-+            except OSError:
-+                pid = False
-+
-     def start_worker(self):
-         if self.worker:
-             self.teardown_workers()
-         self.teardown = False
-+        signal.signal(signal.SIGCHLD, self.sigchild_exception)
-         self.worker, self.workerpipe = self._start_worker()
- 
-     def start_fakeworker(self, rqexec):
-@@ -924,6 +942,7 @@ class RunQueue:
- 
-     def teardown_workers(self):
-         self.teardown = True
-+        signal.signal(signal.SIGCHLD, signal.SIG_DFL)
-         self._teardown_worker(self.worker, self.workerpipe)
-         self.worker = None
-         self.workerpipe = None
-@@ -2090,20 +2109,6 @@ class runQueuePipe():
-         self.rqexec = rqexec
- 
-     def read(self):
--        try:
--            pid, status = os.waitpid(-1, os.WNOHANG)
--            if pid != 0 and not self.rq.teardown:
--                if self.rq.worker and pid == self.rq.worker.pid:
--                    name = "Worker"
--                elif self.rq.fakeworker and pid == self.rq.fakeworker.pid:
--                    name = "Fakeroot"
--                else:
--                    name = "Unknown"
--                bb.error("%s process (%s) exited unexpectedly (%s), shutting down..." % (name, pid, str(status)))
--                self.rq.finish_runqueue(True)
--        except OSError:
--            pass
--
-         start = len(self.queue)
-         try:
-             self.queue = self.queue + self.input.read(102400)
+ bitbake/bin/bitbake |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/bitbake/bin/bitbake b/bitbake/bin/bitbake
+index cbfd2c9..5c0b2d4 100755
+--- a/bitbake/bin/bitbake
++++ b/bitbake/bin/bitbake
+@@ -259,7 +259,7 @@ def main():
+         servermodule = getattr(module, server_type)
+     except AttributeError:
+         sys.exit("FATAL: Invalid server type '%s' specified.\n"
+-                 "Valid interfaces: xmlrpc, process [default]." % servertype)
++                 "Valid interfaces: xmlrpc, process [default]." % server_type)
+ 
+     if configParams.server_only:
+         if configParams.servertype != "xmlrpc":
+-- 
+1.7.10.4
 
 
