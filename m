@@ -1,39 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f41.google.com (mail-wg0-f41.google.com [74.125.82.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 7CE766F7B2
+Received: from mail-we0-f169.google.com (mail-we0-f169.google.com
+	[74.125.82.169])
+	by mail.openembedded.org (Postfix) with ESMTP id B6B506F876
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 11 Mar 2014 15:49:48 +0000 (UTC)
-Received: by mail-wg0-f41.google.com with SMTP id n12so10397804wgh.12
+	Tue, 11 Mar 2014 15:49:53 +0000 (UTC)
+Received: by mail-we0-f169.google.com with SMTP id w62so10350205wes.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 11 Mar 2014 08:49:49 -0700 (PDT)
+	Tue, 11 Mar 2014 08:49:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=/gppmCNfW/k+gb9CxJPAdovnRGG+NSMxQAFPQ/bJGA8=;
-	b=JymhGaWngKNJKRMavKjBozSU4nMZRJBwURn/8qx2qaH2/tUtXMsfH8Va1DHcst0jzz
-	5lFKxfVuKZiTTs3tTNNRtz/UibwUngXxo2XZgZZQTi9HwcegZvBTSrIV0CLnisPsQd4/
-	gLSwW8zGIaL6F2ju/8vseF4qhrqmmK4KNMabLhK1jqqrACWxvc7JIJU8yVPDzYip//K+
-	4A2iFT98BWpCKv7sChRd8mvoy7l9c7kc9AdvO2xK6pxfD8R/kuIJOr9LiSrB+VtX1L24
-	uMxzruL14QCHWlTdKtfbk5UPgVWgVhClTKGnGT4x69UEJXiBmLYvBb+aSINdeMU+wcQw
-	1OCw==
-X-Gm-Message-State: ALoCoQl8oro76/RsKKFhF8yS98i8ED6Aa8B6fgvADnWiQaBajPu0MDdzquGDoROamExvLITlqd22
-X-Received: by 10.194.243.68 with SMTP id ww4mr2329102wjc.58.1394552988989;
-	Tue, 11 Mar 2014 08:49:48 -0700 (PDT)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references:in-reply-to:references;
+	bh=zItJekmd2tGDhmg6kyFCDLY96TN/xbaPVTx6IOPaV0c=;
+	b=YIayBs2FKQGFY2mho/5nZqqfCF6eeLxrvDG5fEJyoP+3DI+44O7QCIoXDCbvDurTdA
+	Dmk5MyVAtYfTG3PM+jx4dt9IFeOMThvUb8VPlc/SsNoCFZV43m17q2awK9q53JOQ2hZc
+	fHTQu1YMcqID0R2LbUt4P52cppSiOA7fNzHJrgKdk2DcxqdY4gwKvTbd5ebW7pBjxZsk
+	7sZvaGbcKRqtON1ftvHIpSc7Iell7gHIco9hDXbO75D+TjGL2oP6Slz+5uIDa6pdbnG/
+	QkiZjuhVS+Ue80VTO26b/Jkiz793M5VQeDHEGWcn5WSulRVY2N6fQvg2tzi0xj6fyIlR
+	C+PQ==
+X-Gm-Message-State: ALoCoQmcXqfTLWQLvV2coa+3lDJfTQJFreMKTA8C/OZF/QKx5e6zADkrgcCmIonaaS/IFLDXH4Wg
+X-Received: by 10.194.48.100 with SMTP id k4mr8224310wjn.49.1394552994090;
+	Tue, 11 Mar 2014 08:49:54 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id g5sm62431404wjs.8.2014.03.11.08.49.47
+	by mx.google.com with ESMTPSA id dd3sm62440151wjb.9.2014.03.11.08.49.52
 	for <multiple recipients>
 	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Tue, 11 Mar 2014 08:49:48 -0700 (PDT)
+	Tue, 11 Mar 2014 08:49:53 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id A7D525605BD; Tue, 11 Mar 2014 15:49:48 +0000 (GMT)
+	id 35DE25605D0; Tue, 11 Mar 2014 15:49:54 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 11 Mar 2014 15:49:47 +0000
-Message-Id: <cover.1394552757.git.alexandru.damian@intel.com>
+Date: Tue, 11 Mar 2014 15:49:48 +0000
+Message-Id: <5d6594de8876be8ce4df56b846fee0fc687a6261.1394552757.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.3.2
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>,
-	David Reyna <David.Reyna@windriver.com>
-Subject: [PATCH 0/8] Bugfixes for Toaster
+In-Reply-To: <f8488845ee9670e16a63c331dd2e97fdb314929c.1394552757.git.alexandru.damian@intel.com>
+References: <f8488845ee9670e16a63c331dd2e97fdb314929c.1394552757.git.alexandru.damian@intel.com>
+In-Reply-To: <cover.1394552757.git.alexandru.damian@intel.com>
+References: <cover.1394552757.git.alexandru.damian@intel.com>
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 4/8] toaster: erase checks for stop command
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -46,60 +51,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 11 Mar 2014 15:49:49 -0000
+X-List-Received-Date: Tue, 11 Mar 2014 15:49:54 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-This is a set of bugfixes for Toaster.
+We remove the checks for the stop command, since we assume
+the user really means it wants to shutdown the system when
+he issues the command.
 
-Patches were reviewed on the toaster@yoctoproject.org mailing list.
+	[YOCTO #5376]
 
-Can you please pull them into bitbake master ?
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+---
+ bin/toaster | 17 ++---------------
+ 1 file changed, 2 insertions(+), 15 deletions(-)
 
-Thank you,
-Alex
-
-The following changes since commit 76029d08ad56a0a264ff9738a0336971a455b7f5:
-
-  runqueue: Use SIGCHLD instead of polling waitpid (2014-03-09 18:58:49 -0700)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib adamian/submission-11032014
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/submission-11032014
-
-Alexandru DAMIAN (4):
-  toaster: update database schema
-  toaster: write files-in-image to the database
-  toaster: add commands to list and delete builds
-  toaster: erase checks for stop command
-
-Belen Barros Pena (1):
-  toaster: Fix help text for task details outcome
-
-David Reyna (3):
-  toaster: add empty outcome support to task page
-  toaster: add 'bblayers.conf' files to local config filter
-  toaster: fix 'show all' labels for tasks and variables
-
- bin/toaster                                        |  17 +-
- lib/bb/ui/buildinfohelper.py                       | 115 +++++++++-
- ...ge_size__add_field_target_license_manifest_p.py | 235 +++++++++++++++++++++
- lib/toaster/orm/models.py                          |  32 +--
- .../toastergui/templates/basetable_top.html        |   2 +-
- lib/toaster/toastergui/templates/task.html         |   6 +-
- lib/toaster/toastergui/views.py                    |   6 +-
- lib/toaster/toastermain/management/__init__.py     |   0
- .../toastermain/management/commands/__init__.py    |   0
- .../toastermain/management/commands/builddelete.py |  33 +++
- .../toastermain/management/commands/buildslist.py  |  13 ++
- 11 files changed, 423 insertions(+), 36 deletions(-)
- create mode 100644 lib/toaster/orm/migrations/0006_auto__add_field_target_image_size__add_field_target_license_manifest_p.py
- create mode 100644 lib/toaster/toastermain/management/__init__.py
- create mode 100644 lib/toaster/toastermain/management/commands/__init__.py
- create mode 100644 lib/toaster/toastermain/management/commands/builddelete.py
- create mode 100644 lib/toaster/toastermain/management/commands/buildslist.py
-
+diff --git a/bin/toaster b/bin/toaster
+index 38e71ac..9c0a15f 100755
+--- a/bin/toaster
++++ b/bin/toaster
+@@ -143,25 +143,12 @@ if [ -e $BUILDDIR/bitbake.lock ]; then
+ fi
+ 
+ if [ ${CMD} == "start" ] && ( [ $lock -eq 0 ] || [ -e $BUILDDIR/.toastermain.pid ] ); then
+-    echo "Error: bitbake lock state error. System is already on." 2>&1
+-    return 3
+-elif [ ${CMD} == "stop" ] && ( [ $lock -eq 1 ] || ! [ -e $BUILDDIR/.toastermain.pid ] ) ; then
+-    echo "Error: bitbake lock state error. Trying to stop a stopped system ?
+-If you think the system is hanged up, you can try to manually stop system with the commands
+-
+-# BBSERVER=localhost:8200 bitbake -m
+-
+-and
+-
+-# webserverKillAll
+-" 2>&1
++    echo "Error: bitbake lock state error. File locks show that the system is on." 2>&1
++    echo "If you see problems, stop and then start the system again." 2>&1
+     return 3
+ fi
+ 
+ 
+-
+-
+-
+ # Execute the commands
+ 
+ case $CMD in
 -- 
 1.8.3.2
 
