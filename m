@@ -1,45 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f175.google.com (mail-we0-f175.google.com
-	[74.125.82.175])
-	by mail.openembedded.org (Postfix) with ESMTP id BE23260DFA
+Received: from mail-we0-f171.google.com (mail-we0-f171.google.com
+	[74.125.82.171])
+	by mail.openembedded.org (Postfix) with ESMTP id 1CC616F647
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed, 12 Mar 2014 18:47:43 +0000 (UTC)
-Received: by mail-we0-f175.google.com with SMTP id q58so11546966wes.6
+Received: by mail-we0-f171.google.com with SMTP id t61so11703360wes.16
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed, 12 Mar 2014 11:47:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=3s9fEf5aaaDCNsTHnE6O+PVMezTLoVVkhbXkjtOUJUk=;
-	b=GZTs9wVznaqgp12nAHBy1A7TJJWyCu3toSCJJbgmHtD5jJBvH7HCuV2TCRd/7dALSd
-	oTwYoNvakcqGkhQd+arBPxO2UflF2NcymKK2i0KfSwL17Cdx+qrIh5eUoScN8hWmw2lV
-	MN3YuceIk2HcBIUhsUpkQFZ9nNzG6n4ZDDv8sZFSLr8RQlsihdGBvzJzxhQmnrSjehOt
-	NLV6g+lbapjGq/yy/sx9ujjiCkcRLBuUIO0QoVfz6ZZy3zX7/9AJ5idUVM4CWMpbwtSr
-	x7QffHlXgmhUHX+e4t6Zk6DVF4tQtjquL+dIEiErYIS3k+jxZtTuseh/DffvmVUKKVFo
-	QJcA==
-X-Gm-Message-State: ALoCoQk8LD5pIif8XfCadIcvqf6ZFX+7Y4SQ5goWKyNGxXtLWuGgLXj8Mt8HzEHdIzcVIuYm0MXj
-X-Received: by 10.180.89.136 with SMTP id bo8mr8691938wib.52.1394650064632;
+	bh=2GCC44UHSH0RY2Ve6/cDopTowm2piQlRu5la8ToY16g=;
+	b=OWKJUJ3dxjToXY6p+L7+ULPDpNq/UWRvAIWTrXf/UZl12wOC4iBpeyNk/Dkj4vhV9n
+	8q0z1/1oPQ55FVtjfuziMEghoYmgi79p3uyQIEXpftWJqWCoRox0qYp1bnkhQk8IYOqv
+	vhJPSk2a84ap/iSVQUAkN8d1zpZGkqQFuXYXTe3he7ViBWWOGUdHoN/qH//EW/7aqNiD
+	8T8Sh5P55/byw8ibLkfHD+qF5udkVMlUV8Vei1yA/wsEmDuOwBwlBKKHGfWQOFlfcbly
+	ZxIxlbpeZb68e5X8Vvo2BjZGvKitZqTe0FPnShnpeK+I91hy8bVZN+D1KvT8fq869HTe
+	cXcQ==
+X-Gm-Message-State: ALoCoQl3BW0SJDQ0X+VHrzJ7bO+kPrVws8oHd7PIeAKTntTaclD7q2DMMfwfV/NzPnLht23LGver
+X-Received: by 10.194.59.226 with SMTP id c2mr14166734wjr.6.1394650064267;
 	Wed, 12 Mar 2014 11:47:44 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id 12sm71809722wjm.10.2014.03.12.11.47.42
+	by mx.google.com with ESMTPSA id z1sm71838071wjq.19.2014.03.12.11.47.42
 	for <multiple recipients>
 	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
 	Wed, 12 Mar 2014 11:47:42 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id B52435605BC; Wed, 12 Mar 2014 18:47:43 +0000 (GMT)
+	id AE21E5605BD; Wed, 12 Mar 2014 18:47:43 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 12 Mar 2014 18:47:42 +0000
-Message-Id: <93666733ffc89c9a3534c2ad774c0a49857c028c.1394649860.git.alexandru.damian@intel.com>
+Date: Wed, 12 Mar 2014 18:47:39 +0000
+Message-Id: <f1ccf1eb81e7ba89b9e540a19c839a3dfdef234b.1394649860.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.3.2
-In-Reply-To: <f1ccf1eb81e7ba89b9e540a19c839a3dfdef234b.1394649860.git.alexandru.damian@intel.com>
+In-Reply-To: <y>
 References: <y>
-	<f1ccf1eb81e7ba89b9e540a19c839a3dfdef234b.1394649860.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1394649860.git.alexandru.damian@intel.com>
 References: <cover.1394649860.git.alexandru.damian@intel.com>
-Cc: Amit Kumar Chaudhary <amit@floatingpondtech.com>
-Subject: [PATCH 4/4] toaster: add errors and warnings listing
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 1/4] toaster: populate target image file table
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,141 +53,107 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 12 Mar 2014 18:47:47 -0000
 
-From: Amit Kumar Chaudhary <amit@floatingpondtech.com>
+From: Cristiana Voicu <cristiana.voicu@intel.com>
 
-Add the errors and warnings listing to the build
-dashboard page.
+Using ImageFileSize Metadata event, the image output file and its
+size are populated into target_image_file table.
 
-Signed-off-by: Amit Kumar Chaudhary <amit@floatingpondtech.com>
+	[YOCTO #5189]
+	[YOCTO #5228]
+
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/static/js/main.js           | 20 ++++++++
- .../toastergui/templates/builddashboard.html       | 56 +++++++++++++++++++++-
- lib/toaster/toastergui/views.py                    |  3 +-
- 3 files changed, 76 insertions(+), 3 deletions(-)
+ lib/bb/ui/buildinfohelper.py   | 13 +++++++++++++
+ lib/bb/ui/toasterui.py         |  2 ++
+ lib/toaster/bldviewer/api.py   |  1 +
+ lib/toaster/bldviewer/views.py |  3 ++-
+ 4 files changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/lib/toaster/toastergui/static/js/main.js b/lib/toaster/toastergui/static/js/main.js
-index c80f716..07aba3d 100644
---- a/lib/toaster/toastergui/static/js/main.js
-+++ b/lib/toaster/toastergui/static/js/main.js
-@@ -91,3 +91,23 @@ $(document).ready(function() {
-     });
+diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
+index f9b067f..1b17c1f 100644
+--- a/lib/bb/ui/buildinfohelper.py
++++ b/lib/bb/ui/buildinfohelper.py
+@@ -26,6 +26,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "toaster.toastermain.settings")
  
- });
-+
-+$(document).ready(function() {
-+    //toggle the errors and warnings sections
-+    $('.show-errors').click(function() {
-+        $('#collapse-errors').addClass('in');
-+    });
-+    $('.toggle-errors').click(function() {
-+        $('#collapse-errors').toggleClass('in');
-+    });
-+    $('.show-warnings').click(function() {
-+        $('#collapse-warnings').addClass('in');
-+    });
-+    $('.toggle-warnings').click(function() {
-+        $('#collapse-warnings').toggleClass('in');
-+    });
-+    //show warnings section when requested from the previous page
-+    if (location.href.search('#warnings') > -1) {
-+        $('#collapse-warnings').addClass('in');
-+    }
-+});
-diff --git a/lib/toaster/toastergui/templates/builddashboard.html b/lib/toaster/toastergui/templates/builddashboard.html
-index b6506c7..763a28d 100644
---- a/lib/toaster/toastergui/templates/builddashboard.html
-+++ b/lib/toaster/toastergui/templates/builddashboard.html
-@@ -18,10 +18,10 @@
-   <div class="alert {%if build.outcome == build.SUCCEEDED%}alert-success{%elif build.outcome == build.FAILED%}alert-error{%else%}alert-info{%endif%}">
-     <div class="row-fluid lead">
-             <span class="pull-left"><strong>{%if build.outcome == build.SUCCEEDED%}Completed{%elif build.outcome == build.FAILED%}Failed{%else%}{%endif%}</strong> {{build.completed_on|date:"d/m/y H:i"}} with </span>{%if build.outcome == build.SUCCEEDED or build.outcome == build.FAILED %}{% if  build.errors_no %}
--            <span class="span2"><i class="icon-minus-sign red"></i><strong><a href="{%url 'builddashboard' build.pk%}" class="error"> {{build.errors_no}} error{{build.errors_no|pluralize}}</a></strong></span>
-+            <span class="span2"><i class="icon-minus-sign red"></i><strong><a href="#errors" class="error"> {{build.errors_no}} error{{build.errors_no|pluralize}}</a></strong></span>
- {% endif %}
- {% if  build.warnings_no %}
--            <span class="span2"><i class="icon-warning-sign yellow"></i><strong><a href="{%url 'builddashboard' build.pk%}" class="warning"> {{build.warnings_no}} warning{{build.warnings_no|pluralize}}</a></strong></span>
-+            <span class="span2"><i class="icon-warning-sign yellow"></i><strong><a href="#warnings" class="warning"> {{build.warnings_no}} warning{{build.warnings_no|pluralize}}</a></strong></span>
- {% endif %}
-             <span class="pull-right">Build time: <a href="build-time.html">{{ build.timespent|sectohms }}</a></span>
- {%endif%}
-@@ -29,6 +29,32 @@
-   </div>
- </div>
+ import toaster.toastermain.settings as toaster_django_settings
+ from toaster.orm.models import Build, Task, Recipe, Layer_Version, Layer, Target, LogMessage
++from toaster.orm.models import Target_Image_File
+ from toaster.orm.models import Variable, VariableHistory
+ from toaster.orm.models import Package, Package_File, Target_Installed_Package, Target_File
+ from toaster.orm.models import Task_Dependency, Package_Dependency
+@@ -344,6 +345,11 @@ class ORMWrapper(object):
+         if (len(errormsg) > 0):
+             raise Exception(errormsg)
  
-+{% if build.errors_no %}
-+<div class="accordion span10 pull-right" id="errors">
-+  <div class="accordion-group">
-+    <div class="accordion-heading">
-+      <a class="accordion-toggle error toggle-errors">
-+         <h2 id="error-toggle">
-+           <i class="icon-minus-sign"></i>
-+           {{build.errors_no}} error{{build.errors_no|pluralize}}
-+         </h2>
-+      </a>
-+    </div>
-+    <div class="accordion-body collapse in" id="collapse-errors">
-+      <div class="accordion-inner">
-+        <div class="span10">
-+          {% for error in logmessages %}{% if error.level == 2 %}
-+            <div class="alert alert-error">
-+              <pre>{{error.message}}</pre>
-+            </div>
-+          {% endif %}{% endfor %}
-+        </div>
-+      </div>
-+    </div>
-+  </div>
-+</div>
-+{% endif %}
-+
- {%if build.outcome == build.SUCCEEDED%}
- <!-- built images -->
- <div class="row-fluid span10 pull-right">
-@@ -71,4 +97,30 @@
-     </div>
- </div>
++    def save_target_image_file_information(self, target_obj, file_name, file_size):
++        target_image_file = Target_Image_File.objects.create( target = target_obj,
++                            file_name = file_name,
++                            file_size = file_size)
++        target_image_file.save()
  
-+{% if build.warnings_no %}
-+<div class="accordion span10 pull-right" id="warnings">
-+  <div class="accordion-group">
-+    <div class="accordion-heading">
-+      <a class="accordion-toggle warning toggle-warnings">
-+        <h2 id="warning-toggle">
-+          <i class="icon-warning-sign"></i>
-+          {{build.warnings_no}} warning{{build.warnings_no|pluralize}}
-+        </h2>
-+      </a>
-+    </div>
-+    <div class="accordion-body collapse" id="collapse-warnings">
-+      <div class="accordion-inner">
-+        <div class="span10">
-+          {% for warning in logmessages %}{% if warning.level == 1 %}
-+            <div class="alert alert-warning">
-+              <pre>{{warning.message}}</pre>
-+            </div>
-+          {% endif %}{% endfor %}
-+        </div>
-+      </div>
-+    </div>
-+  </div>
-+</div>
-+{% endif %}
-+
- {% endblock %}
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index a499c30..7f61ade 100644
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -356,7 +356,8 @@ def builddashboard(request, build_id):
-         return redirect(builds)
-     context = {
-             'build' : Build.objects.filter(pk=build_id)[0],
--            'recipecount' : Recipe.objects.filter(layer_version__id__in=Layer_Version.objects.filter(build=build_id)).count()
-+            'recipecount' : Recipe.objects.filter(layer_version__id__in=Layer_Version.objects.filter(build=build_id)).count(),
-+            'logmessages' : LogMessage.objects.filter(build=build_id),
-     }
-     return render(request, template, context)
+     def create_logmessage(self, log_information):
+         assert 'build' in log_information
+@@ -598,6 +604,13 @@ class BuildInfoHelper(object):
+         # Save build configuration
+         self.orm_wrapper.save_build_variables(build_obj, self.server.runCommand(["getAllKeysWithFlags", ["doc", "func"]])[0])
  
++    def update_target_image_file(self, event):
++        for t in self.internal_state['targets']:
++            if t.is_image == True:
++                output_files = list(event.data.viewkeys())
++                for output in output_files:
++                    if t.target in output:
++                        self.orm_wrapper.save_target_image_file_information(t, output, event.data[output])
+ 
+     def update_build_information(self, event, errors, warnings, taskfailures):
+         if 'build' in self.internal_state:
+diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
+index e469d93..04e0f99 100644
+--- a/lib/bb/ui/toasterui.py
++++ b/lib/bb/ui/toasterui.py
+@@ -241,6 +241,8 @@ def main(server, eventHandler, params ):
+                     buildinfohelper.store_tasks_stats(event)
+                 if event.type == "ImagePkgList":
+                     buildinfohelper.store_target_package_data(event)
++                elif event.type == "ImageFileSize":
++                    buildinfohelper.update_target_image_file(event)
+                 continue
+ 
+             # ignore
+diff --git a/lib/toaster/bldviewer/api.py b/lib/toaster/bldviewer/api.py
+index 654864e..76d45c7 100644
+--- a/lib/toaster/bldviewer/api.py
++++ b/lib/toaster/bldviewer/api.py
+@@ -25,6 +25,7 @@ from django.conf.urls import patterns, include, url
+ urlpatterns = patterns('bldviewer.views',
+         url(r'^builds$', 'model_explorer',  {'model_name':'build'}, name='builds'),
+         url(r'^targets$', 'model_explorer',  {'model_name':'target'}, name='targets'),
++        url(r'^target_image_file$', 'model_explorer',  {'model_name':'target_image_file'}, name='target_image_file'),
+         url(r'^tasks$', 'model_explorer', {'model_name':'task'}, name='task'),
+         url(r'^task_dependencies$', 'model_explorer',  {'model_name':'task_dependency'}, name='task_dependencies'),
+         url(r'^packages$', 'model_explorer',  {'model_name':'package'}, name='package'),
+diff --git a/lib/toaster/bldviewer/views.py b/lib/toaster/bldviewer/views.py
+index 435bc8e..6f86379 100644
+--- a/lib/toaster/bldviewer/views.py
++++ b/lib/toaster/bldviewer/views.py
+@@ -25,7 +25,7 @@ from django.db.models import Q
+ from django.shortcuts import render
+ from orm.models import Build, Target, Task, Layer, Layer_Version, Recipe, LogMessage, Variable, Target_Installed_Package
+ from orm.models import Task_Dependency, Recipe_Dependency, Package, Package_File, Package_Dependency
+-from orm.models import Target_Installed_Package, VariableHistory
++from orm.models import Target_Installed_Package, VariableHistory, Target_Image_File
+ from django.views.decorators.cache import cache_control
+ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+ 
+@@ -159,6 +159,7 @@ def model_explorer(request, model_name):
+     model_mapping = {
+         'build': Build,
+         'target': Target,
++        'target_image_file': Target_Image_File,
+         'task': Task,
+         'task_dependency': Task_Dependency,
+         'package': Package,
 -- 
 1.8.3.2
 
