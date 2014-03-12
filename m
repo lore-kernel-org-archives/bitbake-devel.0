@@ -1,44 +1,37 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f171.google.com (mail-we0-f171.google.com
-	[74.125.82.171])
-	by mail.openembedded.org (Postfix) with ESMTP id 1CC616F647
+Received: from mail-ob0-f173.google.com (mail-ob0-f173.google.com
+	[209.85.214.173])
+	by mail.openembedded.org (Postfix) with ESMTP id 82F756DE07
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 12 Mar 2014 18:47:43 +0000 (UTC)
-Received: by mail-we0-f171.google.com with SMTP id t61so11703360wes.16
+	Wed, 12 Mar 2014 18:49:21 +0000 (UTC)
+Received: by mail-ob0-f173.google.com with SMTP id gq1so10436734obb.32
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 12 Mar 2014 11:47:44 -0700 (PDT)
+	Wed, 12 Mar 2014 11:49:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=2GCC44UHSH0RY2Ve6/cDopTowm2piQlRu5la8ToY16g=;
-	b=OWKJUJ3dxjToXY6p+L7+ULPDpNq/UWRvAIWTrXf/UZl12wOC4iBpeyNk/Dkj4vhV9n
-	8q0z1/1oPQ55FVtjfuziMEghoYmgi79p3uyQIEXpftWJqWCoRox0qYp1bnkhQk8IYOqv
-	vhJPSk2a84ap/iSVQUAkN8d1zpZGkqQFuXYXTe3he7ViBWWOGUdHoN/qH//EW/7aqNiD
-	8T8Sh5P55/byw8ibLkfHD+qF5udkVMlUV8Vei1yA/wsEmDuOwBwlBKKHGfWQOFlfcbly
-	ZxIxlbpeZb68e5X8Vvo2BjZGvKitZqTe0FPnShnpeK+I91hy8bVZN+D1KvT8fq869HTe
-	cXcQ==
-X-Gm-Message-State: ALoCoQl3BW0SJDQ0X+VHrzJ7bO+kPrVws8oHd7PIeAKTntTaclD7q2DMMfwfV/NzPnLht23LGver
-X-Received: by 10.194.59.226 with SMTP id c2mr14166734wjr.6.1394650064267;
-	Wed, 12 Mar 2014 11:47:44 -0700 (PDT)
-Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id z1sm71838071wjq.19.2014.03.12.11.47.42
-	for <multiple recipients>
-	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Wed, 12 Mar 2014 11:47:42 -0700 (PDT)
-Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id AE21E5605BD; Wed, 12 Mar 2014 18:47:43 +0000 (GMT)
-From: Alex DAMIAN <alexandru.damian@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 12 Mar 2014 18:47:39 +0000
-Message-Id: <f1ccf1eb81e7ba89b9e540a19c839a3dfdef234b.1394649860.git.alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.8.3.2
-In-Reply-To: <y>
-References: <y>
-In-Reply-To: <cover.1394649860.git.alexandru.damian@intel.com>
-References: <cover.1394649860.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 1/4] toaster: populate target image file table
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc:content-type;
+	bh=Tv90c53Max97Tc7PagXo2oAyj0zgz8Jlv3Bif/ux5JU=;
+	b=Z6gsOT1Vp0vWuvTrHYUjVE/AfHB9oahH41ucfzsE/KP/AZYH6Ud0RsF+qudbvjD6Vh
+	FMy9gfEmQ919s+j9jOYTnRX7HL0t3Nn/4yQsWzOxBIFRXHbL0bfhADnTqmJl0uz74JpB
+	kd0bJrkWvag+Y0pRW4HoOgaGTF2NVoZtHQ70N+hIznzNLKVJRlH1ttRYmUzrIeuCUuAw
+	rEJ1Y1lMm37ShaTxEE5Lhb3kxtvIti15Wc+KhLJL59jFFL985CIV43ypAJ6y6eaBJ6Q9
+	FK4+I8Kr2gS6+b/9cAWGg0efsLRmO2w4/v8Xo0LEFuD7ZX3eXyi31xgzJTjUhywih5rz
+	Rv+A==
+X-Gm-Message-State: ALoCoQmXt9Hc4/FFJ0kWO2lR58LoOAReqyL/2Bi8ct7XiEPSVo2bhgpcPsJdzkVo2ey8lUOMA7xg
+X-Received: by 10.182.142.229 with SMTP id rz5mr39811182obb.12.1394650162097; 
+	Wed, 12 Mar 2014 11:49:22 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.76.11.165 with HTTP; Wed, 12 Mar 2014 11:49:02 -0700 (PDT)
+In-Reply-To: <CAJTo0LY3oh5S2w1QxsGWBuYf1OUJbUBtakOWDGvRHVtafzYDvQ@mail.gmail.com>
+References: <1394631711-1083-1-git-send-email-alexandru.damian@intel.com>
+	<CAJTo0LY3oh5S2w1QxsGWBuYf1OUJbUBtakOWDGvRHVtafzYDvQ@mail.gmail.com>
+From: "Damian, Alexandru" <alexandru.damian@intel.com>
+Date: Wed, 12 Mar 2014 18:49:02 +0000
+Message-ID: <CAJ2CSBv4rwENCu1q7RFFBV8Fr3y8sZS2RX74ZSNd6fj8DKnvKQ@mail.gmail.com>
+To: "Burton, Ross" <ross.burton@intel.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH 1/1] toaster: fix timezone detection
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,110 +44,90 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 12 Mar 2014 18:47:47 -0000
+X-List-Received-Date: Wed, 12 Mar 2014 18:49:21 -0000
+Content-Type: multipart/alternative; boundary=001a11c362e67f85b004f46d4b46
 
-From: Cristiana Voicu <cristiana.voicu@intel.com>
+--001a11c362e67f85b004f46d4b46
+Content-Type: text/plain; charset=UTF-8
 
-Using ImageFileSize Metadata event, the image output file and its
-size are populated into target_image_file table.
+This is a Debian-ism :(
 
-	[YOCTO #5189]
-	[YOCTO #5228]
+Does toaster show you improper times, or refuses to start ?
 
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
----
- lib/bb/ui/buildinfohelper.py   | 13 +++++++++++++
- lib/bb/ui/toasterui.py         |  2 ++
- lib/toaster/bldviewer/api.py   |  1 +
- lib/toaster/bldviewer/views.py |  3 ++-
- 4 files changed, 18 insertions(+), 1 deletion(-)
+Alex
 
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index f9b067f..1b17c1f 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -26,6 +26,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "toaster.toastermain.settings")
- 
- import toaster.toastermain.settings as toaster_django_settings
- from toaster.orm.models import Build, Task, Recipe, Layer_Version, Layer, Target, LogMessage
-+from toaster.orm.models import Target_Image_File
- from toaster.orm.models import Variable, VariableHistory
- from toaster.orm.models import Package, Package_File, Target_Installed_Package, Target_File
- from toaster.orm.models import Task_Dependency, Package_Dependency
-@@ -344,6 +345,11 @@ class ORMWrapper(object):
-         if (len(errormsg) > 0):
-             raise Exception(errormsg)
- 
-+    def save_target_image_file_information(self, target_obj, file_name, file_size):
-+        target_image_file = Target_Image_File.objects.create( target = target_obj,
-+                            file_name = file_name,
-+                            file_size = file_size)
-+        target_image_file.save()
- 
-     def create_logmessage(self, log_information):
-         assert 'build' in log_information
-@@ -598,6 +604,13 @@ class BuildInfoHelper(object):
-         # Save build configuration
-         self.orm_wrapper.save_build_variables(build_obj, self.server.runCommand(["getAllKeysWithFlags", ["doc", "func"]])[0])
- 
-+    def update_target_image_file(self, event):
-+        for t in self.internal_state['targets']:
-+            if t.is_image == True:
-+                output_files = list(event.data.viewkeys())
-+                for output in output_files:
-+                    if t.target in output:
-+                        self.orm_wrapper.save_target_image_file_information(t, output, event.data[output])
- 
-     def update_build_information(self, event, errors, warnings, taskfailures):
-         if 'build' in self.internal_state:
-diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
-index e469d93..04e0f99 100644
---- a/lib/bb/ui/toasterui.py
-+++ b/lib/bb/ui/toasterui.py
-@@ -241,6 +241,8 @@ def main(server, eventHandler, params ):
-                     buildinfohelper.store_tasks_stats(event)
-                 if event.type == "ImagePkgList":
-                     buildinfohelper.store_target_package_data(event)
-+                elif event.type == "ImageFileSize":
-+                    buildinfohelper.update_target_image_file(event)
-                 continue
- 
-             # ignore
-diff --git a/lib/toaster/bldviewer/api.py b/lib/toaster/bldviewer/api.py
-index 654864e..76d45c7 100644
---- a/lib/toaster/bldviewer/api.py
-+++ b/lib/toaster/bldviewer/api.py
-@@ -25,6 +25,7 @@ from django.conf.urls import patterns, include, url
- urlpatterns = patterns('bldviewer.views',
-         url(r'^builds$', 'model_explorer',  {'model_name':'build'}, name='builds'),
-         url(r'^targets$', 'model_explorer',  {'model_name':'target'}, name='targets'),
-+        url(r'^target_image_file$', 'model_explorer',  {'model_name':'target_image_file'}, name='target_image_file'),
-         url(r'^tasks$', 'model_explorer', {'model_name':'task'}, name='task'),
-         url(r'^task_dependencies$', 'model_explorer',  {'model_name':'task_dependency'}, name='task_dependencies'),
-         url(r'^packages$', 'model_explorer',  {'model_name':'package'}, name='package'),
-diff --git a/lib/toaster/bldviewer/views.py b/lib/toaster/bldviewer/views.py
-index 435bc8e..6f86379 100644
---- a/lib/toaster/bldviewer/views.py
-+++ b/lib/toaster/bldviewer/views.py
-@@ -25,7 +25,7 @@ from django.db.models import Q
- from django.shortcuts import render
- from orm.models import Build, Target, Task, Layer, Layer_Version, Recipe, LogMessage, Variable, Target_Installed_Package
- from orm.models import Task_Dependency, Recipe_Dependency, Package, Package_File, Package_Dependency
--from orm.models import Target_Installed_Package, VariableHistory
-+from orm.models import Target_Installed_Package, VariableHistory, Target_Image_File
- from django.views.decorators.cache import cache_control
- from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
- 
-@@ -159,6 +159,7 @@ def model_explorer(request, model_name):
-     model_mapping = {
-         'build': Build,
-         'target': Target,
-+        'target_image_file': Target_Image_File,
-         'task': Task,
-         'task_dependency': Task_Dependency,
-         'package': Package,
+
+On Wed, Mar 12, 2014 at 4:06 PM, Burton, Ross <ross.burton@intel.com> wrote:
+
+> On 12 March 2014 13:41, Alex DAMIAN <alexandru.damian@intel.com> wrote:
+> > This patch replaces faulty timezone detection with a version
+> > that simply reads the TZ environment variable if it is set.
+>
+> My Debian system doesn't have a TZ environment variable but does have
+> /etc/localtime which is the current timezone data. Yes, determining
+> the local timezone is a pain.  :)
+>
+> Ross
+> ---------------------------------------------------------------------
+> Intel Corporation (UK) Limited
+> Registered No. 1134945 (England)
+> Registered Office: Pipers Way, Swindon SN3 1RJ
+> VAT No: 860 2173 47
+>
+> This e-mail and any attachments may contain confidential material for
+> the sole use of the intended recipient(s). Any review or distribution
+> by others is strictly prohibited. If you are not the intended
+> recipient, please contact the sender and delete all copies.
+>
+
+
+
 -- 
-1.8.3.2
+Alex Damian
+Yocto Project
+SSG / OTC
+
+--001a11c362e67f85b004f46d4b46
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-family:tahoma,s=
+ans-serif">This is a Debian-ism :( <br><br></div><div class=3D"gmail_defaul=
+t" style=3D"font-family:tahoma,sans-serif">Does toaster show you improper t=
+imes, or refuses to start ?<br>
+
+<br>Alex<br></div></div><div class=3D"gmail_extra"><br><br><div class=3D"gm=
+ail_quote">On Wed, Mar 12, 2014 at 4:06 PM, Burton, Ross <span dir=3D"ltr">=
+&lt;<a href=3D"mailto:ross.burton@intel.com" target=3D"_blank">ross.burton@=
+intel.com</a>&gt;</span> wrote:<br>
+
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div class=3D"">On 12 March 2014 13:41, Alex=
+ DAMIAN &lt;<a href=3D"mailto:alexandru.damian@intel.com">alexandru.damian@=
+intel.com</a>&gt; wrote:<br>
 
 
+&gt; This patch replaces faulty timezone detection with a version<br>
+&gt; that simply reads the TZ environment variable if it is set.<br>
+<br>
+</div>My Debian system doesn&#39;t have a TZ environment variable but does =
+have<br>
+/etc/localtime which is the current timezone data. Yes, determining<br>
+the local timezone is a pain. =C2=A0:)<br>
+<br>
+Ross<br>
+---------------------------------------------------------------------<br>
+Intel Corporation (UK) Limited<br>
+Registered No. 1134945 (England)<br>
+Registered Office: Pipers Way, Swindon SN3 1RJ<br>
+VAT No: 860 2173 47<br>
+<br>
+This e-mail and any attachments may contain confidential material for<br>
+the sole use of the intended recipient(s). Any review or distribution<br>
+by others is strictly prohibited. If you are not the intended<br>
+recipient, please contact the sender and delete all copies.<br>
+</blockquote></div><br><br clear=3D"all"><br>-- <br><div dir=3D"ltr">Alex D=
+amian<div>Yocto Project<br></div><div>SSG / OTC=C2=A0</div></div>
+</div>
+
+--001a11c362e67f85b004f46d4b46--
