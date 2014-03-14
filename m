@@ -1,43 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f178.google.com (mail-wi0-f178.google.com
-	[209.85.212.178])
-	by mail.openembedded.org (Postfix) with ESMTP id C09236EEFA
+Received: from mail-wi0-f169.google.com (mail-wi0-f169.google.com
+	[209.85.212.169])
+	by mail.openembedded.org (Postfix) with ESMTP id 86B736F877
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 14 Mar 2014 17:59:09 +0000 (UTC)
-Received: by mail-wi0-f178.google.com with SMTP id n15so2954761wiw.17
+Received: by mail-wi0-f169.google.com with SMTP id hm4so32408wib.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 14 Mar 2014 10:59:09 -0700 (PDT)
+	Fri, 14 Mar 2014 10:59:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=MkUlin+5ewKe7J4e+XLbcDTKyvq+qsC+MlCZWxsrcOo=;
-	b=nKlmfnQJALDvGPnFYpmU0cRFNlt2V2ASxbChH42UGVepxVJvWoA9ERNV+HCo7FwEba
-	3RKM5lYvtuaxTfZSB0iHD78aKidm1TZXlyT8Yaxo5q7zJ7oPtCa0+6DGU2BC+fmygFrQ
-	QOFXcbWZYEUFJytbaFM/zMIcwPMqcloYSXWKu27AInfxksH/BRiYS03cXxn2yaAmLmUN
-	pgr3IjHQsx/JuOEo7m7JWWp85FJEig7jO6NxXsL22zGC98s4Oz41nk56/fhAJ4gKOAQx
-	r9oy/SvncHVojYhTz4CSrkFvuu6sjWsVJ0OGYpapM/u2QmqusGo2AKAwMjHFWIs0iPUL
-	HiYg==
-X-Gm-Message-State: ALoCoQmDH53aL9U9BqqcWGgTpXRJT35JdKDXJrGYpBHlpBmLOVEjUVVUf78bJXMHRNXDXE3CBZau
-X-Received: by 10.194.2.70 with SMTP id 6mr7706298wjs.25.1394819949854;
-	Fri, 14 Mar 2014 10:59:09 -0700 (PDT)
+	bh=tPIzBdCeSiTOH8YcgdKvrzdGYVyv2pecoLpjROlJqVw=;
+	b=KH86lxAjLVVb/9m46wpRxVvUfKW5XHOIyUHHdkecqJ6ZyaQxw4Z4dRFGrBaBoY0BQm
+	Xjm+FH1oJ6nM7oRZowv28ydjIfrE4SAujmUIiZQlJu5YVjoqrPvyPmVvj5tzUwSvIhHI
+	o+I1ZvN5DrfhWeIFPV3SZIr/A1hW4muk6ccIMJufMqF6IE0/ItQ6KwltRUKUfe0jAqUF
+	juQ/TqA2iX45W7dE070OFyjeiaqARADj1e0GpUEd0LczAphOrqD87OQjk0mLCS0wGDgN
+	ZqAYgZOO26W5rXREDl5t1jNRDhwSxU5f7Rnvj+UIRQ9ufOH8+ZguZkcQgDrv8hOuWbeK
+	eTgA==
+X-Gm-Message-State: ALoCoQkfRLrctmN1q+3LDT5BfTmMa8fk3AO/5H8IOsWqcmpL6za2m8HTNYHdo9mX3E93ShKuTst4
+X-Received: by 10.180.79.7 with SMTP id f7mr7344790wix.20.1394819950831;
+	Fri, 14 Mar 2014 10:59:10 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id ee5sm18715861wib.8.2014.03.14.10.59.05
+	by mx.google.com with ESMTPSA id j8sm15553388wjn.13.2014.03.14.10.59.06
 	for <multiple recipients>
 	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
 	Fri, 14 Mar 2014 10:59:08 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id 1FD6756120A; Fri, 14 Mar 2014 17:59:01 +0000 (GMT)
+	id 2A5DF56133A; Fri, 14 Mar 2014 17:59:01 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 14 Mar 2014 17:58:55 +0000
-Message-Id: <9516827571b3cf9ceaa38e716360d1fc052d22f4.1394819783.git.alexandru.damian@intel.com>
+Date: Fri, 14 Mar 2014 17:59:00 +0000
+Message-Id: <5984a3c7b8cc113794eb863caba7c7353165fdc1.1394819783.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.3.2
 In-Reply-To: <9f34a1c5e94d73cdba1def7059c60211514e054c.1394819783.git.alexandru.damian@intel.com>
 References: <9f34a1c5e94d73cdba1def7059c60211514e054c.1394819783.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1394819783.git.alexandru.damian@intel.com>
 References: <cover.1394819783.git.alexandru.damian@intel.com>
-Subject: [PATCH 14/19] bitbake:toaster: Not using task_color tag for execution heading
+Cc: Farrell Wymore <farrell.wymore@windriver.com>
+Subject: [PATCH 19/19] toaster: added file types to the Outputs column in the build page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,70 +53,78 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 14 Mar 2014 17:59:10 -0000
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
+From: Farrell Wymore <farrell.wymore@windriver.com>
 
-The modifications to the task_color tag in commit
-23a7c338d387ac2ba13a7a1114a4abc75228c960 broke the styling
-of failed tasks in the tasks.html template. Undo the
-changes to the task_color tag and use an if statement
-instead to set the .muted class when the execution
-heading says "Not executed".
+The file types are displayed in the Outputs column in the build page.
+The file types are derived from the target image filenames.
 
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
+[YOCTO #5947]
+
+Signed-off-by: Farrell Wymore <farrell.wymore@windriver.com>
 ---
- lib/toaster/toastergui/templates/task.html         | 9 +++++----
- lib/toaster/toastergui/templatetags/projecttags.py | 6 +++---
- 2 files changed, 8 insertions(+), 7 deletions(-)
+ lib/toaster/toastergui/templates/build.html        |  6 ++++-
+ lib/toaster/toastergui/templatetags/projecttags.py | 27 ++++++++++++++++++++++
+ 2 files changed, 32 insertions(+), 1 deletion(-)
 
-diff --git a/lib/toaster/toastergui/templates/task.html b/lib/toaster/toastergui/templates/task.html
-index af994fd..7c5b743 100644
---- a/lib/toaster/toastergui/templates/task.html
-+++ b/lib/toaster/toastergui/templates/task.html
-@@ -131,15 +131,16 @@
- {% endif %}
+diff --git a/lib/toaster/toastergui/templates/build.html b/lib/toaster/toastergui/templates/build.html
+index 3c9256c..f1fa70d 100644
+--- a/lib/toaster/toastergui/templates/build.html
++++ b/lib/toaster/toastergui/templates/build.html
+@@ -92,7 +92,11 @@
+             <td class="warnings_no">{% if  build.warnings_no %}<a class="warnings_no warning" href="{% url "builddashboard" build.id %}#warnings">{{build.warnings_no}} warning{{build.warnings_no|pluralize}}</a>{%endif%}</td>
+             <td class="time"><a href="{% url "buildtime" build.id %}">{{build.timespent|sectohms}}</a></td>
+             <td class="log">{{build.cooker_log_path}}</td>
+-            <td class="output">{% if build.outcome == 0 %}{% for t in build.target_set.all %}{% if t.is_image %}<a href="{%url "builddashboard" build.id%}#images">TODO: compute image output fstypes</a>{% endif %}{% endfor %}{% endif %}</td>
++            <td class="output">
++              {% if build.outcome == 0 %}
++              {{build|get_image_extensions}}
++              {% endif %}
++            </td>
+         </tr>
  
- {# Execution section #}
--<h2 {{task|task_color}}>
-     {% if task.task_executed %}
-+	<h2>
-         Executed
-         <i class="icon-question-sign get-help heading-help" title="Executed tasks are those that need to run in order to generate the task output"></i>
--     {% else %}
-+    {% else %}
-+	<h2 class="muted">
-         Not Executed
-         <i class="icon-question-sign get-help heading-help" title="Not executed tasks don't need to run because their outcome is provided by another task"></i>
--     {% endif %}
--</h2>
-+    {% endif %}
-+	</h2>
- <dl class="dl-horizontal">
-     <dt>
-         <i class="icon-question-sign get-help" title="To make builds more efficient, the build system detects changes in the 'inputs' to a given task by creating a 'task signature'. If the signature changes, the build system assumes the inputs have changed and the task needs to be rerun"></i>
+         {% endfor %}
 diff --git a/lib/toaster/toastergui/templatetags/projecttags.py b/lib/toaster/toastergui/templatetags/projecttags.py
-index 2d339d6..857680b 100644
+index 857680b..60d5dd0 100644
 --- a/lib/toaster/toastergui/templatetags/projecttags.py
 +++ b/lib/toaster/toastergui/templatetags/projecttags.py
-@@ -70,16 +70,16 @@ def sortcols(tablecols):
-     return sorted(tablecols, key = lambda t: t['name'])
+@@ -24,6 +24,8 @@ import re
+ from django import template
+ from django.utils import timezone
+ from django.template.defaultfilters import filesizeformat
++from orm.models import Target_Installed_Package, Target_Image_File
++from orm.models import Build, Target, Task, Layer, Layer_Version
  
- @register.filter
--def task_color(task_object, show_colour=False):
-+def task_color(task_object, show_green=False):
-     """ Return css class depending on Task execution status and execution outcome.
-         By default, green is not returned for executed and successful tasks;
-         show_green argument should be True to get green color.
-     """
-     if not task_object.task_executed:
-         return 'class=muted'
--    elif task_object.outcome == task_object.OUTCOME_FAILED and show_colour:
-+    elif task_object.outcome == task_object.OUTCOME_FAILED:
-         return 'class=error'
--    elif task_object.outcome == task_object.OUTCOME_SUCCESS and show_colour:
-+    elif task_object.outcome == task_object.OUTCOME_SUCCESS and show_green:
-         return 'class=green'
+ register = template.Library()
+ 
+@@ -188,3 +190,28 @@ def string_slice(strvar,slicevar):
      else:
-         return ''
+         return strvar[int(first):int(last)]
+ 
++@register.filter
++def get_image_extensions( build ):
++    """
++    This is a simple filter that returns a list (string)
++    of extensions of the build-targets-image files. Note
++    that each build can have multiple targets and each
++    target can yield more than one image file
++    """
++    targets = Target.objects.filter( build_id = build.id );
++    comma = "";
++    extensions = "";
++    for t in targets:
++        if ( not t.is_image ):
++            continue;
++        tif = Target_Image_File.objects.filter( target_id = t.id );
++        for i in tif:
++            try:
++                ndx = i.file_name.index( "." );
++            except ValueError:
++                ndx = 0;
++            s = i.file_name[ ndx + 1 : ];
++            extensions += comma + s;
++            comma = ", ";
++    return( extensions );
++
 -- 
 1.8.3.2
 
