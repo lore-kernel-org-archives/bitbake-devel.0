@@ -1,49 +1,36 @@
-Return-Path: <olof.johansson@axis.com>
-Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
-	by mail.openembedded.org (Postfix) with ESMTP id 075E760144
+Return-Path: <kergoth@gmail.com>
+Received: from mail-la0-f44.google.com (mail-la0-f44.google.com
+	[209.85.215.44])
+	by mail.openembedded.org (Postfix) with ESMTP id 487B26F573
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Mar 2014 15:43:47 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bes.se.axis.com (Postfix) with ESMTP id 740592E383
+	Wed, 19 Mar 2014 21:30:28 +0000 (UTC)
+Received: by mail-la0-f44.google.com with SMTP id hr13so6404161lab.17
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Mar 2014 16:43:45 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
-Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id G2LhwgtjIhDW for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Mar 2014 16:43:45 +0100 (CET)
-Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by bes.se.axis.com (Postfix) with ESMTP id DA5AE2E2E1
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Mar 2014 16:43:44 +0100 (CET)
-Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id BBFAA7F8
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Mar 2014 16:43:44 +0100 (CET)
-Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
-	by boulder.se.axis.com (Postfix) with ESMTP id B106A61D
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Mar 2014 16:43:44 +0100 (CET)
-Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
-	by thoth.se.axis.com (Postfix) with ESMTP id AEFC534005
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Mar 2014 16:43:44 +0100 (CET)
-Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
-	(10.0.5.74) with Microsoft SMTP Server id 8.3.342.0; Wed, 19 Mar 2014
-	16:43:44 +0100
-Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id 740329C29D; 
-	Wed, 19 Mar 2014 16:43:44 +0100 (CET)
-Date: Wed, 19 Mar 2014 16:43:44 +0100
-From: Olof Johansson <olof.johansson@axis.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Message-ID: <20140319154344.GA951@axis.com>
-References: <1390215804-20578-1-git-send-email-olof.johansson@axis.com>
+	Wed, 19 Mar 2014 14:30:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=BBIA3qXYAjRdZyPqdJKNLqpe1UV+56/42FUzWBUZiGk=;
+	b=E23a4p8hQXFBqK/j+ql46nIqHA59Yz03hLFk3nIU00fBEMPD6Y4D7wRKcruk2WYMDK
+	hggxPzN6OIqLzDxIc/gL18YprGTY+IcXOyS7Vy4MbiBMjSfMm/tfx7oAEfl3W7ty5Ew8
+	HJZ5zuutR6seqzgV1u3QqukofMiDi3L5kPdvoaRaUt1oywQ2z1bu6U3njFjycgVCMJ6y
+	+6/6/b0/LrwCXxDsi8+wxbBZirlva37Q+02LMS5QXF0LSBdxNzq10txI3IXAybmwywU3
+	w4Md2laxwKqYv2r7xTegnmPxhODHUJSaMYyRMglVtIk6JOQdjTYOhKlLO8sl6U4Dx670
+	kqhQ==
+X-Received: by 10.112.163.69 with SMTP id yg5mr6547477lbb.14.1395264628966;
+	Wed, 19 Mar 2014 14:30:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1390215804-20578-1-git-send-email-olof.johansson@axis.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-Subject: Re: [PATCH 0/5] Improvements to bb.fetch2.URI class
+Sender: kergoth@gmail.com
+Received: by 10.112.35.200 with HTTP; Wed, 19 Mar 2014 14:30:08 -0700 (PDT)
+In-Reply-To: <1395183532.3808.99.camel@ted>
+References: <1395183532.3808.99.camel@ted>
+From: Chris Larson <clarson@kergoth.com>
+Date: Wed, 19 Mar 2014 14:30:08 -0700
+X-Google-Sender-Auth: NWzrjdZfysVff6T_XX4wOui0TP0
+Message-ID: <CABcZANmHKR0EFDaKVq4nFQUUxb=NWeSCT=O6QKPSaPkHKcKc-A@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] runqueue: Really fix sigchld handling
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,18 +43,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 19 Mar 2014 15:43:54 -0000
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+X-List-Received-Date: Wed, 19 Mar 2014 21:30:41 -0000
+Content-Type: multipart/alternative; boundary=089e0118294e93cb7404f4fc5c78
 
-On 14-01-20 12:03 +0100, Olof Johansson wrote:
-> This patch series fixes some issues that was encountered after the URI class
-> was integrated to Bitbake's fetch2 package. Notably, it adds support for query
-> parameters. This patch series does *not* make encode/decodeurl use the URI
-> class, as I had issues getting uri_replace to work with it.
+--089e0118294e93cb7404f4fc5c78
+Content-Type: text/plain; charset=UTF-8
 
-Ping?
+On Tue, Mar 18, 2014 at 3:58 PM, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
+> +                        bb.warn("Unknown process (%s) exited unexpectedly
+> (%s), shutting down..." % (pid, str(status)))
+>
+
+This says it's shutting down, but the commit message and code imply that it
+isn't for these. I'm guessing this message needs adjustment from a
+copy/paste? :)
 -- 
-olofjn
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
+--089e0118294e93cb7404f4fc5c78
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Tue, Mar 18, 2014 at 3:58 PM, Richard Purdie <span dir=3D"ltr">&lt;<a hr=
+ef=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.=
+purdie@linuxfoundation.org</a>&gt;</span> wrote:<br>
+
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div id=3D":nl" class=3D"a3s" style=3D"overf=
+low:hidden">+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0bb.warn(&quot;Unknown process (%s) exited unexpecte=
+dly (%s), shutting down...&quot; % (pid, str(status)))<br>
+
+</div></blockquote><div><br></div><div>This says it&#39;s shutting down, bu=
+t the commit message and code imply that it isn&#39;t for these. I&#39;m gu=
+essing this message needs adjustment from a copy/paste? :)<br></div></div>
+
+-- <br>Christopher Larson<br>clarson at kergoth dot com<br>Founder - BitBak=
+e, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software Engine=
+er, Mentor Graphics
+</div></div>
+
+--089e0118294e93cb7404f4fc5c78--
