@@ -1,34 +1,29 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-la0-f44.google.com (mail-la0-f44.google.com
-	[209.85.215.44])
-	by mail.openembedded.org (Postfix) with ESMTP id 487B26F573
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 9D73B6A9C4
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Mar 2014 21:30:28 +0000 (UTC)
-Received: by mail-la0-f44.google.com with SMTP id hr13so6404161lab.17
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Mar 2014 14:30:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=BBIA3qXYAjRdZyPqdJKNLqpe1UV+56/42FUzWBUZiGk=;
-	b=E23a4p8hQXFBqK/j+ql46nIqHA59Yz03hLFk3nIU00fBEMPD6Y4D7wRKcruk2WYMDK
-	hggxPzN6OIqLzDxIc/gL18YprGTY+IcXOyS7Vy4MbiBMjSfMm/tfx7oAEfl3W7ty5Ew8
-	HJZ5zuutR6seqzgV1u3QqukofMiDi3L5kPdvoaRaUt1oywQ2z1bu6U3njFjycgVCMJ6y
-	+6/6/b0/LrwCXxDsi8+wxbBZirlva37Q+02LMS5QXF0LSBdxNzq10txI3IXAybmwywU3
-	w4Md2laxwKqYv2r7xTegnmPxhODHUJSaMYyRMglVtIk6JOQdjTYOhKlLO8sl6U4Dx670
-	kqhQ==
-X-Received: by 10.112.163.69 with SMTP id yg5mr6547477lbb.14.1395264628966;
-	Wed, 19 Mar 2014 14:30:28 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.35.200 with HTTP; Wed, 19 Mar 2014 14:30:08 -0700 (PDT)
-In-Reply-To: <1395183532.3808.99.camel@ted>
+	Wed, 19 Mar 2014 21:40:36 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s2JLeTEv004185; Wed, 19 Mar 2014 21:40:29 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id PnsCHslpFGNm; Wed, 19 Mar 2014 21:40:29 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s2JLeP0X004162
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
+	Wed, 19 Mar 2014 21:40:26 GMT
+Message-ID: <1395265219.3808.139.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Chris Larson <clarson@kergoth.com>
+Date: Wed, 19 Mar 2014 21:40:19 +0000
+In-Reply-To: <CABcZANmHKR0EFDaKVq4nFQUUxb=NWeSCT=O6QKPSaPkHKcKc-A@mail.gmail.com>
 References: <1395183532.3808.99.camel@ted>
-From: Chris Larson <clarson@kergoth.com>
-Date: Wed, 19 Mar 2014 14:30:08 -0700
-X-Google-Sender-Auth: NWzrjdZfysVff6T_XX4wOui0TP0
-Message-ID: <CABcZANmHKR0EFDaKVq4nFQUUxb=NWeSCT=O6QKPSaPkHKcKc-A@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
+	<CABcZANmHKR0EFDaKVq4nFQUUxb=NWeSCT=O6QKPSaPkHKcKc-A@mail.gmail.com>
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH] runqueue: Really fix sigchld handling
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -43,51 +38,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 19 Mar 2014 21:30:41 -0000
-Content-Type: multipart/alternative; boundary=089e0118294e93cb7404f4fc5c78
+X-List-Received-Date: Wed, 19 Mar 2014 21:40:41 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---089e0118294e93cb7404f4fc5c78
-Content-Type: text/plain; charset=UTF-8
+On Wed, 2014-03-19 at 14:30 -0700, Chris Larson wrote:
+> 
+> On Tue, Mar 18, 2014 at 3:58 PM, Richard Purdie
+> <richard.purdie@linuxfoundation.org> wrote:
+>         +                        bb.warn("Unknown process (%s) exited
+>         unexpectedly (%s), shutting down..." % (pid, str(status)))
+>         
+> 
+> 
+> This says it's shutting down, but the commit message and code imply
+> that it isn't for these. I'm guessing this message needs adjustment
+> from a copy/paste? :)
+> 
+Yes, indeed.
 
-On Tue, Mar 18, 2014 at 3:58 PM, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+This signal handler stuff has been a mess and that patch and others have
+just been making things worse.
 
-> +                        bb.warn("Unknown process (%s) exited unexpectedly
-> (%s), shutting down..." % (pid, str(status)))
->
+Basically there are bugs in python 2.7.3 which expose problems which are
+addressed in 2.7.4 and onwards. The whole signal handler approach was
+flawed due to the toxic mix with subprocess anyway.
 
-This says it's shutting down, but the commit message and code imply that it
-isn't for these. I'm guessing this message needs adjustment from a
-copy/paste? :)
--- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+I've pushed some further patches basically reverting the signal handler
+and we've ended up polling. Hopefully this stops things hanging and gets
+us back to some kind of stability, I think I do understand all the
+facets of the issues we've been hitting finally.
 
---089e0118294e93cb7404f4fc5c78
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Cheers,
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Tue, Mar 18, 2014 at 3:58 PM, Richard Purdie <span dir=3D"ltr">&lt;<a hr=
-ef=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.=
-purdie@linuxfoundation.org</a>&gt;</span> wrote:<br>
+Richard
 
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div id=3D":nl" class=3D"a3s" style=3D"overf=
-low:hidden">+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0bb.warn(&quot;Unknown process (%s) exited unexpecte=
-dly (%s), shutting down...&quot; % (pid, str(status)))<br>
 
-</div></blockquote><div><br></div><div>This says it&#39;s shutting down, bu=
-t the commit message and code imply that it isn&#39;t for these. I&#39;m gu=
-essing this message needs adjustment from a copy/paste? :)<br></div></div>
 
--- <br>Christopher Larson<br>clarson at kergoth dot com<br>Founder - BitBak=
-e, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software Engine=
-er, Mentor Graphics
-</div></div>
 
---089e0118294e93cb7404f4fc5c78--
