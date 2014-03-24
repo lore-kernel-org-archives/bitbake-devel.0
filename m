@@ -1,44 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f175.google.com (mail-we0-f175.google.com
-	[74.125.82.175])
-	by mail.openembedded.org (Postfix) with ESMTP id C7DDE6FB3C
+Received: from mail-wi0-f178.google.com (mail-wi0-f178.google.com
+	[209.85.212.178])
+	by mail.openembedded.org (Postfix) with ESMTP id CF7A86FB6D
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Mar 2014 18:37:38 +0000 (UTC)
-Received: by mail-we0-f175.google.com with SMTP id q58so3712773wes.34
+	Mon, 24 Mar 2014 18:37:45 +0000 (UTC)
+Received: by mail-wi0-f178.google.com with SMTP id bs8so2711895wib.17
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Mar 2014 11:37:39 -0700 (PDT)
+	Mon, 24 Mar 2014 11:37:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=nF0FW362sLBDUE08Cnkp+no+f0VzFwJQUBfVi3PpI38=;
-	b=jtrlVxGyOT8AwcqwDzRCtL2tvYn/o7xpIpsJMI459n4LGh3DOGiJZnkdNOxmVsilLW
-	oVDHni9ukx+wEYq5hm75Rj0rBBuMcghaDnJjXrkH2GOpd0Sa2TZlhEpArxgUdS0gSwXe
-	/UbIR8WJ+9z1YaNSp75s2xGMssMStchTvWTaad/K9gnncpF3m5bO30Tsi80uwhv/zyba
-	tfO6GbzWcydQ98I/QF7Y15VvAT1WCYbJCo0vmBm9ntoj33fcwz5/MrmtLFdX+BaJi2z7
-	roZKdsLcJHN+DDCEcNGqRtIcumx1eJcZXC+seJE0pqtv01aDThWyn2/OeMNkTHGx6QBF
-	3FQg==
-X-Gm-Message-State: ALoCoQmZPpQXiMVptZmFNL0NSUgrnzAPgPnjjfvGH0LrZLz6ycS7pBFoN5G+qcdCSJxZk91e6YFW
-X-Received: by 10.180.76.137 with SMTP id k9mr781161wiw.21.1395686259379;
-	Mon, 24 Mar 2014 11:37:39 -0700 (PDT)
+	bh=t6QxDBM/A+U1v6kB2XPhd8iRRYxPvTR5JYQ8LBMTu2E=;
+	b=QM/CKXoPV3iNoB2l1t9X90jFBEo/Y0JTdVAWSHuLu/VqmpsyEv+Qvr329eXlldDcq6
+	tBUYUcXlDM2nLuv+m0/1tVOxTNARXmx/JZsexLnW83apyiAOtwszEipWBpbb5WjMNf7Q
+	7OYJOcG1mGgBokHnZdLTT0JgBFBFGFPEaPwfVwNR6us9EIcDOygN4bAbEmbq5RQRiM8G
+	VhYi7ag4YsVbPdYCqauYqQk0b2lc+JfxEO6UsFLkJcW4828YUU8MZoIGw8qW8WW58RzA
+	t/tntWoVoQ3OPU+WWFfyX/mbGoOy8ntZat8xPA5gN69xabKx6pOyo+wdicOZAlNDJ8yM
+	xh6A==
+X-Gm-Message-State: ALoCoQnCXAYl0Zheggkss9GBNMGtpDGqm5KhICAsSv9vCZG1ef7zd7FMHlXUv2WtOD33kDC8co6c
+X-Received: by 10.180.72.230 with SMTP id g6mr18148099wiv.1.1395686266328;
+	Mon, 24 Mar 2014 11:37:46 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id lz3sm41541980wic.1.2014.03.24.11.37.35
+	by mx.google.com with ESMTPSA id fs8sm41451470wib.8.2014.03.24.11.37.44
 	for <multiple recipients>
 	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Mon, 24 Mar 2014 11:37:38 -0700 (PDT)
+	Mon, 24 Mar 2014 11:37:45 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id CC46A56239D; Mon, 24 Mar 2014 18:37:29 +0000 (GMT)
+	id CE0F5562BD5; Mon, 24 Mar 2014 18:37:29 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 24 Mar 2014 18:37:27 +0000
-Message-Id: <a9cfa3eacfc99550e1ad3f8bb61b2a0bc9b44332.1395686148.git.alexandru.damian@intel.com>
+Date: Mon, 24 Mar 2014 18:37:28 +0000
+Message-Id: <9dd53bd4355148916a89cf672b6c5db5f6b1ae35.1395686148.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.3.2
 In-Reply-To: <7e59b6b1cb44de00c512facece5ede96375a411f.1395686148.git.alexandru.damian@intel.com>
 References: <7e59b6b1cb44de00c512facece5ede96375a411f.1395686148.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1395686148.git.alexandru.damian@intel.com>
 References: <cover.1395686148.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 17/18] toaster: clean exit on bb server shutdown
+Subject: [PATCH 18/18] toaster: replace package dependency tag w/ view queries
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,108 +51,87 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 24 Mar 2014 18:37:39 -0000
+X-List-Received-Date: Mon, 24 Mar 2014 18:37:46 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-This patch adds the capability to have the Toaster UI
-detect when the Bitbake server exited and cleanly
-trigger a clean shutdown of the system through the toaster
-starting script.
+This patch moves the queries for package dependencies from the
+project tags to the views. This is done to bring the code inline
+with the Django philosophy of making all data queries in views.py
+
+This change has no performance implication.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bin/toaster            | 28 ++++++++++++++++++++++++++--
- lib/bb/ui/toasterui.py |  7 +++++--
- 2 files changed, 31 insertions(+), 4 deletions(-)
+ lib/toaster/toastergui/templates/target.html       |  4 ++--
+ lib/toaster/toastergui/templatetags/projecttags.py | 14 --------------
+ lib/toaster/toastergui/views.py                    |  6 ++++++
+ 3 files changed, 8 insertions(+), 16 deletions(-)
 
-diff --git a/bin/toaster b/bin/toaster
-index 9c0a15f..b27f7c2 100755
---- a/bin/toaster
-+++ b/bin/toaster
-@@ -68,11 +68,16 @@ function addtoConfiguration()
-         echo $1 >> ${BUILDDIR}/conf/$2
- }
- 
-+INSTOPSYSTEM=0
+diff --git a/lib/toaster/toastergui/templates/target.html b/lib/toaster/toastergui/templates/target.html
+index 4512898..5396b17 100644
+--- a/lib/toaster/toastergui/templates/target.html
++++ b/lib/toaster/toastergui/templates/target.html
+@@ -79,7 +79,7 @@
+             {{package.license}}
+         </td>
+         <td class="depends">
+-            {% with deps=package|runtime_dependencies:target.id %}
++            {% with deps=package.runtime_dependencies %}
+             {% with deps_count=deps|length %}
+             {% if deps_count > 0 %}
+             <a class="btn"
+@@ -96,7 +96,7 @@
+             {% endwith %}
+         </td>
+         <td class="brought_in_by">
+-            {% with rdeps=package|reverse_runtime_dependencies:target.id %}
++            {% with rdeps=package.reverse_runtime_dependencies %}
+             {% with rdeps_count=rdeps|length %}
+             {% if rdeps_count > 0 %}
+             <a class="btn"
+diff --git a/lib/toaster/toastergui/templatetags/projecttags.py b/lib/toaster/toastergui/templatetags/projecttags.py
+index 39e92ce..12c2468 100644
+--- a/lib/toaster/toastergui/templatetags/projecttags.py
++++ b/lib/toaster/toastergui/templatetags/projecttags.py
+@@ -217,20 +217,6 @@ def filtered_packageversion(version, revision):
+     """
+     return "" if (not version or version == "") else version if (not revision or revision == "") else version + "-" + revision
+         
+-from django.db import models
+-from orm.models import Package
+-@register.filter
+-def runtime_dependencies(package_object, targetid):
+-    """ Return a queryset that lists the packages this package depends on
+-    """
+-    return package_object.package_dependencies_source.filter(target_id__exact=targetid, dep_type__in={'1'})
+-
+-@register.filter
+-def reverse_runtime_dependencies(package_object, targetid):
+-    """ Return a queryset that lists the packages depending on this package
+-    """
+-    return package_object.package_dependencies_target.filter(target_id__exact = targetid,dep_type__in={'1'})
+-
+ @register.filter
+ def filter_sizeovertotal(package_object, total_size):
+     """ Return the % size of the package over the total size argument
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 732be8f..e523c31 100644
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -429,6 +429,12 @@ def target(request, build_id, target_id):
+     packages_sum =  queryset.aggregate(Sum('installed_size'))
+     queryset = _get_queryset(Package, queryset, filter_string, search_term, ordering_string)
+     packages = _build_page_range(Paginator(queryset, request.GET.get('count', 25)),request.GET.get('page', 1))
 +
- # define the stop command
- function stop_system()
- {
-+    # prevent reentry
-+    if [ $INSTOPSYSTEM == 1 ]; then return; fi
-+    INSTOPSYSTEM=1
-     if [ -f ${BUILDDIR}/.toasterui.pid ]; then
--        kill $(< ${BUILDDIR}/.toasterui.pid )
-+        kill $(< ${BUILDDIR}/.toasterui.pid ) 2>/dev/null
-         rm ${BUILDDIR}/.toasterui.pid
-     fi
-     BBSERVER=localhost:8200 bitbake -m
-@@ -80,8 +85,24 @@ function stop_system()
-     webserverKillAll
-     # force stop any misbehaving bitbake server
-     lsof bitbake.lock | awk '{print $2}' | grep "[0-9]\+" | xargs -n1 -r kill
-+    trap - SIGHUP
-+    trap - SIGCHLD
-+    INSTOPSYSTEM=0
-+}
++    # bring in package dependencies
++    for p in packages.object_list:
++        p.runtime_dependencies = p.package_dependencies_source.filter(target_id = target_id, dep_type=Package_Dependency.TYPE_TRDEPENDS)
++        p.reverse_runtime_dependencies = p.package_dependencies_target.filter(target_id = target_id, dep_type=Package_Dependency.TYPE_TRDEPENDS)
 +
-+function check_pidbyfile() {
-+    [ -e $1 ] && kill -0 $(< $1) 2>/dev/null
- }
- 
-+
-+function notify_chldexit() {
-+    if [ $NOTOASTERUI == 0 ]; then
-+        check_pidbyfile ${BUILDDIR}/.toasterui.pid && return
-+        stop_system
-+    fi
-+}
-+
-+
- # We make sure we're running in the current shell and in a good environment
- 
- if [ -z "$ZSH_NAME" ] && [ `basename \"$0\"` = `basename \"$BASH_SOURCE\"` ]; then
-@@ -179,10 +200,13 @@ case $CMD in
-             stop_system
-             echo "Failed ${CMD}."
-         fi
-+        # stop system on terminal exit
-+        set -o monitor
-+        trap stop_system SIGHUP
-+        trap notify_chldexit SIGCHLD
-     ;;
-     stop )
-         stop_system
--        trap '' SIGHUP
-         echo "Successful ${CMD}."
-     ;;
- esac
-diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
-index 453eaf9..37d6b1a 100644
---- a/lib/bb/ui/toasterui.py
-+++ b/lib/bb/ui/toasterui.py
-@@ -249,6 +249,10 @@ def main(server, eventHandler, params ):
-                     buildinfohelper.store_license_manifest_path(event)
-                 continue
- 
-+            if isinstance(event, bb.cooker.CookerExit):
-+                # exit when the server exits
-+                break
-+
-             # ignore
-             if isinstance(event, (bb.event.BuildBase,
-                                   bb.event.StampUpdate,
-@@ -258,8 +262,7 @@ def main(server, eventHandler, params ):
-                                   bb.event.OperationProgress,
-                                   bb.command.CommandFailed,
-                                   bb.command.CommandExit,
--                                  bb.command.CommandCompleted,
--                                  bb.cooker.CookerExit)):
-+                                  bb.command.CommandCompleted)):
-                 continue
- 
-             if isinstance(event, bb.event.DepTreeGenerated):
+     context = { 'build': Build.objects.filter(pk=build_id)[0],
+                 'target': Target.objects.filter(pk=target_id)[0],
+                 'objects': packages,
 -- 
 1.8.3.2
 
