@@ -1,44 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f170.google.com (mail-wi0-f170.google.com
-	[209.85.212.170])
-	by mail.openembedded.org (Postfix) with ESMTP id F2BE96FB4A
+Received: from mail-we0-f180.google.com (mail-we0-f180.google.com
+	[74.125.82.180])
+	by mail.openembedded.org (Postfix) with ESMTP id 2032D6FB4D
 	for <bitbake-devel@lists.openembedded.org>;
 	Mon, 24 Mar 2014 18:37:36 +0000 (UTC)
-Received: by mail-wi0-f170.google.com with SMTP id bs8so2707698wib.3
+Received: by mail-we0-f180.google.com with SMTP id p61so3631055wes.39
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Mar 2014 11:37:37 -0700 (PDT)
+	Mon, 24 Mar 2014 11:37:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=3mRBj9glRff6LGLxVzAKaf3EPKDjfYzLdmjnEjDW5sI=;
-	b=l0vmSlEMXguoDwygoSwe4I7QCMWG+yovw+6wdbIHmtvW9dtrm2u8dGE6IWEOh3FAyA
-	Sp5qKDQZpSoSHqbzN4kBgtO3TtK/z0QUMVmqCodNXsF8f+0kIWF1rW0WVZXU6U7dCmKk
-	C7i31dXs3wpvj5OJrROnjpqdZOgqLq1PkcoAL2bucQBwUoOwnWRJ/k5KluGS4JYdnW6G
-	W1Jizlcuu2q8IWE+WnS8GUa0I6ipHYYXL8nSWEgBmmJvNCgW09Ife6SDl8VttnthgdXC
-	xKH601hS/XaD/xpMlePutBTW4adT9n/y0MJbi1NHmJaG4nsU3rn2kagiAno84ktqYOnH
-	reBw==
-X-Gm-Message-State: ALoCoQlKYoMMSXjS0TP5qjoMXsXkjhCCzgQ4FgaY3O8Zj5LVcdhpeHdcaftwjp9bWoua7SGFT8Ru
-X-Received: by 10.180.89.102 with SMTP id bn6mr17821114wib.28.1395686257395;
-	Mon, 24 Mar 2014 11:37:37 -0700 (PDT)
+	bh=ecuCWidoec+Yot1bYiWDtVvQ8I2QIOhRF2MRpGWGvaY=;
+	b=PzB9S7H7ahCW6QObF5FMihtDYYur149iwB+6Ig4YvIzrL98GFtCi/9EXkRdyi04sFE
+	ECpnCCUyn/1fyK/AA8f9CXqvi5fpfBOM+aov6O7a5Cblt2cHFEs2w2lDnAr5KfKQlKoS
+	+iXlRbTpmFYcYCX1yNqG3v2pYUtg03PwuGuKKqZWyz6HD4VTAo9seCjXbi9OtOU8g8Ea
+	TbY37RPQZx17dcKknGac/u61Lw6Cy4GKVXp7R+8Yef30lDUpXkgaxLoEmiNIHkq04/wI
+	B10NsWwMOdNeAFdMD1e80/cqY6YtnU3UNHA22g9OEV7S9Up2aUDP3Y1Uyz/gDL5ww3Ap
+	1j4w==
+X-Gm-Message-State: ALoCoQnBUMO+65CoweM3azRXq+ggjpS6HFqddskK339d/nvvmYEUt9ML8fUwcR3eCvAti6Co9Wyj
+X-Received: by 10.180.77.200 with SMTP id u8mr16916396wiw.48.1395686256748;
+	Mon, 24 Mar 2014 11:37:36 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id jd2sm41562124wic.9.2014.03.24.11.37.33
+	by mx.google.com with ESMTPSA id em1sm41551090wid.5.2014.03.24.11.37.34
 	for <multiple recipients>
 	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Mon, 24 Mar 2014 11:37:35 -0700 (PDT)
+	Mon, 24 Mar 2014 11:37:34 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id BDC735614E3; Mon, 24 Mar 2014 18:37:29 +0000 (GMT)
+	id C9142561B15; Mon, 24 Mar 2014 18:37:29 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 24 Mar 2014 18:37:19 +0000
-Message-Id: <8d71bd39947dd909d02c8d33847e5852c9f20f19.1395686148.git.alexandru.damian@intel.com>
+Date: Mon, 24 Mar 2014 18:37:25 +0000
+Message-Id: <e855031410daf2b99a6ca40b70956fe67c96f71c.1395686148.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.3.2
 In-Reply-To: <7e59b6b1cb44de00c512facece5ede96375a411f.1395686148.git.alexandru.damian@intel.com>
 References: <7e59b6b1cb44de00c512facece5ede96375a411f.1395686148.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1395686148.git.alexandru.damian@intel.com>
 References: <cover.1395686148.git.alexandru.damian@intel.com>
-Cc: David Reyna <David.Reyna@windriver.com>
-Subject: [PATCH 09/18] toaster: Change "0 found" to "No found"
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 15/18] toaster: select recipe based on PN name
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,96 +53,74 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Mon, 24 Mar 2014 18:37:37 -0000
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Change the string in the h1 when search returns no results
-from "0 things found" to "None things found". The change
-applies to the BitBake variables, tasks, recipes, packages
-built, time, CPU and disk I/O tables.
+When saving task stats, if there were multiple tasks executed
+based on the same recipe file, we might have saved the stats
+to the wrong task by selecting another recipe.
 
-[YOCTO #5981]
+This patch takes the PN into account to properly select
+the file stats.
 
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
+A check is also made to make sure we don't fail saving
+data due to interrupted builds.
+
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/templates/bpackage.html   | 6 +++---
- lib/toaster/toastergui/templates/configvars.html | 6 +++---
- lib/toaster/toastergui/templates/recipes.html    | 6 +++---
- lib/toaster/toastergui/templates/tasks.html      | 6 +++---
- 4 files changed, 12 insertions(+), 12 deletions(-)
+ lib/bb/ui/buildinfohelper.py | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/bpackage.html b/lib/toaster/toastergui/templates/bpackage.html
-index 7da8ce7..dad0d7f 100644
---- a/lib/toaster/toastergui/templates/bpackage.html
-+++ b/lib/toaster/toastergui/templates/bpackage.html
-@@ -10,10 +10,10 @@
- <div class="span10">
- <div class="page-header">
- <h1>
--  {% if request.GET.filter or request.GET.search and objects.count > 0  %}
-+  {% if request.GET.search and objects.paginator.count > 0  %}
-       {{objects.paginator.count}} package{{objects.paginator.count|pluralize}} found
--  {%elif objects.paginator.count == 0%}
--      No Packages
-+  {%elif request.GET.search and objects.paginator.count == 0%}
-+      No packages found
-   {%else%}
-       Packages
-   {%endif%}
-diff --git a/lib/toaster/toastergui/templates/configvars.html b/lib/toaster/toastergui/templates/configvars.html
-index d705253..24cb2a5 100644
---- a/lib/toaster/toastergui/templates/configvars.html
-+++ b/lib/toaster/toastergui/templates/configvars.html
-@@ -10,10 +10,10 @@
- <div class="row-fluid span10">
-  <div class="page-header">
-  <h1>
--  {% if request.GET.filter or request.GET.search and objects.count > 0  %}
-+  {% if request.GET.filter and objects.paginator.count > 0 or request.GET.search and objects.paginator.count > 0 %}
-       {{objects.paginator.count}} variable{{objects.paginator.count|pluralize}} found
--  {%elif objects.paginator.count == 0%}
--      No variables
-+  {%elif request.GET.filter and objects.paginator.count == 0 or request.GETs.search and objects.paginator.count == 0 %}
-+      No variables found
-   {%else%}
-       Configuration
-   {%endif%}
-diff --git a/lib/toaster/toastergui/templates/recipes.html b/lib/toaster/toastergui/templates/recipes.html
-index 860d30d..22c3d1a 100755
---- a/lib/toaster/toastergui/templates/recipes.html
-+++ b/lib/toaster/toastergui/templates/recipes.html
-@@ -10,10 +10,10 @@
- <div class="span10">
- <div class="page-header">
- <h1>
--  {% if request.GET.filter or request.GET.search and objects.count > 0  %}
-+  {% if request.GET.search and objects.paginator.count > 0  %}
-       {{objects.paginator.count}} recipe{{objects.paginator.count|pluralize}} found
--  {%elif objects.paginator.count == 0%}
--      No Recipes
-+  {%elif request.GET.search and objects.paginator.count == 0%}
-+      No recipes found
-   {%else%}
-       Recipes
-   {%endif%}
-diff --git a/lib/toaster/toastergui/templates/tasks.html b/lib/toaster/toastergui/templates/tasks.html
-index d881811..a2629dc 100644
---- a/lib/toaster/toastergui/templates/tasks.html
-+++ b/lib/toaster/toastergui/templates/tasks.html
-@@ -8,10 +8,10 @@
- <div class="span10">
- <div class="page-header">
- <h1>
--  {% if request.GET.filter or request.GET.search and objects.count > 0  %}
-+  {% if request.GET.filter or request.GET.search and objects.paginator.count > 0  %}
-       {{objects.paginator.count}} task{{objects.paginator.count|pluralize}} found
--  {%elif objects.paginator.count == 0%}
--      No tasks
-+  {%elif request.GET.filter or request.GET.search and objects.paginator.count == 0%}
-+      No tasks found
-   {%else%}
-       {{title}}
-   {%endif%}
+diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
+index 30c9b92..71b2ff5 100644
+--- a/lib/bb/ui/buildinfohelper.py
++++ b/lib/bb/ui/buildinfohelper.py
+@@ -678,20 +678,18 @@ class BuildInfoHelper(object):
+ 
+ 
+     def store_tasks_stats(self, event):
+-        for (taskfile, taskname, taskstats) in event.data:
++        for (taskfile, taskname, taskstats, recipename) in event.data:
+             localfilepath = taskfile.split(":")[-1]
+             assert localfilepath.startswith("/")
+ 
+             recipe_information = self._get_recipe_information_from_taskfile(taskfile)
+-            try:
+-                recipe = self.orm_wrapper.get_update_recipe_object(recipe_information, True)
+-            except NotExisting:
+-                recipe = Recipe.objects.get(layer_version = recipe_information['layer_version'],
+-                            file_path__endswith = recipe_information['file_path'])
++            recipe_object = Recipe.objects.get(layer_version = recipe_information['layer_version'],
++                            file_path__endswith = recipe_information['file_path'],
++                            name = recipename)
+ 
+             task_information = {}
+             task_information['build'] = self.internal_state['build']
+-            task_information['recipe'] = recipe
++            task_information['recipe'] = recipe_object
+             task_information['task_name'] = taskname
+             task_information['cpu_usage'] = taskstats['cpu_usage']
+             task_information['disk_io'] = taskstats['disk_io']
+@@ -756,11 +754,15 @@ class BuildInfoHelper(object):
+         # for all image targets
+         for target in self.internal_state['targets']:
+             if target.is_image:
+-                pkgdata = event.data['pkgdata']
+-                imgdata = event.data['imgdata'][target.target]
+-                self.orm_wrapper.save_target_package_information(self.internal_state['build'], target, imgdata, pkgdata, self.internal_state['recipes'])
+-                filedata = event.data['filedata'][target.target]
+-                self.orm_wrapper.save_target_file_information(self.internal_state['build'], target, filedata)
++                try:
++                    pkgdata = event.data['pkgdata']
++                    imgdata = event.data['imgdata'][target.target]
++                    self.orm_wrapper.save_target_package_information(self.internal_state['build'], target, imgdata, pkgdata, self.internal_state['recipes'])
++                    filedata = event.data['filedata'][target.target]
++                    self.orm_wrapper.save_target_file_information(self.internal_state['build'], target, filedata)
++                except KeyError:
++                    # we must have not got the data for this image, nothing to save
++                    pass
+ 
+ 
+ 
 -- 
 1.8.3.2
 
