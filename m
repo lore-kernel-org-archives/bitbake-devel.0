@@ -1,44 +1,43 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f180.google.com (mail-we0-f180.google.com
-	[74.125.82.180])
-	by mail.openembedded.org (Postfix) with ESMTP id 2032D6FB4D
+Received: from mail-wg0-f48.google.com (mail-wg0-f48.google.com [74.125.82.48])
+	by mail.openembedded.org (Postfix) with ESMTP id 453316FB49
 	for <bitbake-devel@lists.openembedded.org>;
 	Mon, 24 Mar 2014 18:37:36 +0000 (UTC)
-Received: by mail-we0-f180.google.com with SMTP id p61so3631055wes.39
+Received: by mail-wg0-f48.google.com with SMTP id l18so3751684wgh.7
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Mar 2014 11:37:36 -0700 (PDT)
+	Mon, 24 Mar 2014 11:37:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=ecuCWidoec+Yot1bYiWDtVvQ8I2QIOhRF2MRpGWGvaY=;
-	b=PzB9S7H7ahCW6QObF5FMihtDYYur149iwB+6Ig4YvIzrL98GFtCi/9EXkRdyi04sFE
-	ECpnCCUyn/1fyK/AA8f9CXqvi5fpfBOM+aov6O7a5Cblt2cHFEs2w2lDnAr5KfKQlKoS
-	+iXlRbTpmFYcYCX1yNqG3v2pYUtg03PwuGuKKqZWyz6HD4VTAo9seCjXbi9OtOU8g8Ea
-	TbY37RPQZx17dcKknGac/u61Lw6Cy4GKVXp7R+8Yef30lDUpXkgaxLoEmiNIHkq04/wI
-	B10NsWwMOdNeAFdMD1e80/cqY6YtnU3UNHA22g9OEV7S9Up2aUDP3Y1Uyz/gDL5ww3Ap
-	1j4w==
-X-Gm-Message-State: ALoCoQnBUMO+65CoweM3azRXq+ggjpS6HFqddskK339d/nvvmYEUt9ML8fUwcR3eCvAti6Co9Wyj
-X-Received: by 10.180.77.200 with SMTP id u8mr16916396wiw.48.1395686256748;
-	Mon, 24 Mar 2014 11:37:36 -0700 (PDT)
+	bh=v/dnxcqEvnVaUIuLVxRRxrNIOLZkW9eQ2E8u+zKsWDY=;
+	b=eM9PCkulwXFvxeO7hmOlHR+WkPykC/YQlbFbj9SID6qZjAsRLMvMskaMWdjQ/ua404
+	aBrlzHWAGVMmdxMUCYII9o++erDXktMPjiipPgOd7D0O2soTY+SwPikBrsu/kz/RuAzE
+	ctSUCJDJ9JRK2Q2vVXWk2lVxPlwTyAoG7L3VU9XBloVRtjarQLnBaU2YC8jtKUKmzaK+
+	Go8DlUdwaLzGhgEUxxQwX3dh1TtIse4mkSHpqJYWQcxApN0e6o24jx2Dg1/ED9hun6b5
+	zeICVMSGotWbjz3qii70jCge0yLplOfs4Nhuc9NF1BiTIdqfpLtrFk6srIKbQnaqZ13R
+	GB4A==
+X-Gm-Message-State: ALoCoQkHqZPzzIdiSjjkEL2sZRmmjrB4wt5R6AmcVeVk9yBqJvmFp+e0kAUFD7/viF6NEBcfaAZP
+X-Received: by 10.180.94.196 with SMTP id de4mr16903202wib.16.1395686257047;
+	Mon, 24 Mar 2014 11:37:37 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id em1sm41551090wid.5.2014.03.24.11.37.34
+	by mx.google.com with ESMTPSA id fs8sm41449751wib.8.2014.03.24.11.37.33
 	for <multiple recipients>
 	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
 	Mon, 24 Mar 2014 11:37:34 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id C9142561B15; Mon, 24 Mar 2014 18:37:29 +0000 (GMT)
+	id C52F856157D; Mon, 24 Mar 2014 18:37:29 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 24 Mar 2014 18:37:25 +0000
-Message-Id: <e855031410daf2b99a6ca40b70956fe67c96f71c.1395686148.git.alexandru.damian@intel.com>
+Date: Mon, 24 Mar 2014 18:37:23 +0000
+Message-Id: <16e6fc6e0492f4ebd5f18bd236478b6f9f778a1e.1395686148.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.3.2
 In-Reply-To: <7e59b6b1cb44de00c512facece5ede96375a411f.1395686148.git.alexandru.damian@intel.com>
 References: <7e59b6b1cb44de00c512facece5ede96375a411f.1395686148.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1395686148.git.alexandru.damian@intel.com>
 References: <cover.1395686148.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 15/18] toaster: select recipe based on PN name
+Cc: Amit Kumar Chaudhary <amit@floatingpondtech.com>
+Subject: [PATCH 13/18] toaster: combine ready functions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,74 +52,37 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Mon, 24 Mar 2014 18:37:37 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Amit Kumar Chaudhary <amit@floatingpondtech.com>
 
-When saving task stats, if there were multiple tasks executed
-based on the same recipe file, we might have saved the stats
-to the wrong task by selecting another recipe.
+Merge the code into single ready function.
 
-This patch takes the PN into account to properly select
-the file stats.
+[YOCTO #4283]
 
-A check is also made to make sure we don't fail saving
-data due to interrupted builds.
-
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+Signed-off-by: Amit Kumar Chaudhary <amit@floatingpondtech.com>
 ---
- lib/bb/ui/buildinfohelper.py | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ lib/toaster/toastergui/static/js/main.js | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index 30c9b92..71b2ff5 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -678,20 +678,18 @@ class BuildInfoHelper(object):
+diff --git a/lib/toaster/toastergui/static/js/main.js b/lib/toaster/toastergui/static/js/main.js
+index 07aba3d..7f897d2 100644
+--- a/lib/toaster/toastergui/static/js/main.js
++++ b/lib/toaster/toastergui/static/js/main.js
+@@ -90,9 +90,6 @@ $(document).ready(function() {
+         });
+     });
  
- 
-     def store_tasks_stats(self, event):
--        for (taskfile, taskname, taskstats) in event.data:
-+        for (taskfile, taskname, taskstats, recipename) in event.data:
-             localfilepath = taskfile.split(":")[-1]
-             assert localfilepath.startswith("/")
- 
-             recipe_information = self._get_recipe_information_from_taskfile(taskfile)
--            try:
--                recipe = self.orm_wrapper.get_update_recipe_object(recipe_information, True)
--            except NotExisting:
--                recipe = Recipe.objects.get(layer_version = recipe_information['layer_version'],
--                            file_path__endswith = recipe_information['file_path'])
-+            recipe_object = Recipe.objects.get(layer_version = recipe_information['layer_version'],
-+                            file_path__endswith = recipe_information['file_path'],
-+                            name = recipename)
- 
-             task_information = {}
-             task_information['build'] = self.internal_state['build']
--            task_information['recipe'] = recipe
-+            task_information['recipe'] = recipe_object
-             task_information['task_name'] = taskname
-             task_information['cpu_usage'] = taskstats['cpu_usage']
-             task_information['disk_io'] = taskstats['disk_io']
-@@ -756,11 +754,15 @@ class BuildInfoHelper(object):
-         # for all image targets
-         for target in self.internal_state['targets']:
-             if target.is_image:
--                pkgdata = event.data['pkgdata']
--                imgdata = event.data['imgdata'][target.target]
--                self.orm_wrapper.save_target_package_information(self.internal_state['build'], target, imgdata, pkgdata, self.internal_state['recipes'])
--                filedata = event.data['filedata'][target.target]
--                self.orm_wrapper.save_target_file_information(self.internal_state['build'], target, filedata)
-+                try:
-+                    pkgdata = event.data['pkgdata']
-+                    imgdata = event.data['imgdata'][target.target]
-+                    self.orm_wrapper.save_target_package_information(self.internal_state['build'], target, imgdata, pkgdata, self.internal_state['recipes'])
-+                    filedata = event.data['filedata'][target.target]
-+                    self.orm_wrapper.save_target_file_information(self.internal_state['build'], target, filedata)
-+                except KeyError:
-+                    # we must have not got the data for this image, nothing to save
-+                    pass
- 
- 
- 
+-});
+-
+-$(document).ready(function() {
+     //toggle the errors and warnings sections
+     $('.show-errors').click(function() {
+         $('#collapse-errors').addClass('in');
+@@ -110,4 +107,5 @@ $(document).ready(function() {
+     if (location.href.search('#warnings') > -1) {
+         $('#collapse-warnings').addClass('in');
+     }
++
+ });
 -- 
 1.8.3.2
 
