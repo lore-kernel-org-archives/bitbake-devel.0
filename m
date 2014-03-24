@@ -1,44 +1,43 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f174.google.com (mail-wi0-f174.google.com
-	[209.85.212.174])
-	by mail.openembedded.org (Postfix) with ESMTP id 4491B6F77C
+Received: from mail-wg0-f45.google.com (mail-wg0-f45.google.com [74.125.82.45])
+	by mail.openembedded.org (Postfix) with ESMTP id 5AF716FB0B
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Mar 2014 18:37:34 +0000 (UTC)
-Received: by mail-wi0-f174.google.com with SMTP id d1so2701954wiv.1
+	Mon, 24 Mar 2014 18:37:35 +0000 (UTC)
+Received: by mail-wg0-f45.google.com with SMTP id l18so3798328wgh.16
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Mar 2014 11:37:35 -0700 (PDT)
+	Mon, 24 Mar 2014 11:37:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=yM8RX++SW8ylrPUZZtXAbjM16xmKjlALn3AespOBWnw=;
-	b=IbG88ShicTX3AtXBt6TcSH6SI8RWXX2T33jsiOZicVmKOMj5WweFZM0KjyxXQ9hDp7
-	22ehMQVo+5piUP7Xnk7BRQFtwXLJmavw0DGQE6BAX/hvjTKuI3lc+Hn5qAYCLed2JvIh
-	71Y8BZqs0qUsgCyU1C+Sy4HJwj6d2aODVDxvZdauVqy6S50lfE8u0DTUJR8W27L6Oy1c
-	/sSQ2lqjp8V6VJTe8ntkL64uVilk6Aucf0+ijfzR3Qal3mX5AObjNTtYhetlEMQsebZr
-	Iy7fq2TX6vkHjLl1bw1AZpjwpNK3DJiYyxfIxmV8mWjWb766w4JmP5h3XUjH9JAFyqov
-	jPeA==
-X-Gm-Message-State: ALoCoQmwDVL7ezQ5WEjAOxGo5C2iIKS70BM737N6G8vZq2XAvVzUA3JAJ7tdz3cC+P3jQWGzIcA5
-X-Received: by 10.180.100.70 with SMTP id ew6mr16536526wib.57.1395686255614;
-	Mon, 24 Mar 2014 11:37:35 -0700 (PDT)
+	bh=PMyZ82M7Y4s9KSkZqd8dveNr/th6sBJHIKkcs/+PXEk=;
+	b=FLS0pzQ82hOcjHEr5OlTf6fIh88cM6FNlwlGFhF1mIlob55a29soiY2dtWBOzQOzVK
+	jbCjVW3sPpWHm00qHdAY5gG+f7OT/fYefA5Q95s8wsMr0t1/VbiDMiue0ebZFJVQTcHZ
+	70lqnZdZMzK727W7Dsq2bCl4Ueec/ePWh7X7vtrMmbbIqRVNFkpE5w09ZWb7MlgCM3dc
+	esENwEfNz2WKzvlDTQXgiR6BHo8cSzhNiyHWhQtsiosPpwnlTx7lPSxH+Qpaovnb5ixb
+	5xsEUEq3JAWFlFCfWE2Rx6edH/mJYUcsc0Oi4tTkhmRNjLjus+CIRiVtpnL3Z2tAxf6c
+	rdiQ==
+X-Gm-Message-State: ALoCoQnqwkzjO2dZ3z3IQuy7avUt/otVwn6Ep25WRHB5ZOIIqGce2ZC333JuZf5UtzEG+e4oTVBX
+X-Received: by 10.181.13.40 with SMTP id ev8mr18151281wid.0.1395686256067;
+	Mon, 24 Mar 2014 11:37:36 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id r1sm41445149wia.5.2014.03.24.11.37.33
+	by mx.google.com with ESMTPSA id r1sm41445148wia.5.2014.03.24.11.37.33
 	for <multiple recipients>
 	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
 	Mon, 24 Mar 2014 11:37:34 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id C1C68561521; Mon, 24 Mar 2014 18:37:29 +0000 (GMT)
+	id C0576561515; Mon, 24 Mar 2014 18:37:29 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 24 Mar 2014 18:37:21 +0000
-Message-Id: <017771ed0508b247edaf875789260906f44381f4.1395686148.git.alexandru.damian@intel.com>
+Date: Mon, 24 Mar 2014 18:37:20 +0000
+Message-Id: <50e7f8f3bcfdd5b3e1b7778bfaaa93a563aba45d.1395686148.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.3.2
 In-Reply-To: <7e59b6b1cb44de00c512facece5ede96375a411f.1395686148.git.alexandru.damian@intel.com>
 References: <7e59b6b1cb44de00c512facece5ede96375a411f.1395686148.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1395686148.git.alexandru.damian@intel.com>
 References: <cover.1395686148.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 11/18] bitbake toaster: check the file_name with the content of the IMAGE_FSTYPES variable
+Subject: [PATCH 10/18] toaster: apply filter only on selected attributes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,40 +52,37 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Mon, 24 Mar 2014 18:37:35 -0000
 
-From: Cristiana Voicu <cristiana.voicu@intel.com>
+From: Marius Avram <marius.avram@intel.com>
 
-File_name information of Target_image_file is being collected for a
-.rootfs.manifest file. We would like not to collect this. The solution is
-to cross check the information gathered for file_name with the content
-of the IMAGE_FSTYPES variable. If any of the file_name entries does not
-match the content of IMAGE_FSTYPES, we do not store it.
+This fixes the filter from the main page: 'All builds' applied to the
+table header. Once one is selected, the filter button for that respective
+column will receive a title attribute which will show additional options
+when you hover over it. Until now the additional option was active for
+all filters buttons not only for the one selected. This also caused
+malformed output in the case of the buttons which weren't among the
+selected filter.
 
-[YOCTO #5189]
+[YOCTO #5929]
 
-Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
+Signed-off-by: Marius Avram <marius.avram@intel.com>
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/bb/ui/buildinfohelper.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ lib/toaster/toastergui/templates/basetable_top.html | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index 08d9fcf..30c9b92 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -615,11 +615,12 @@ class BuildInfoHelper(object):
-         self.orm_wrapper.save_build_variables(build_obj, self.server.runCommand(["getAllKeysWithFlags", ["doc", "func"]])[0])
- 
-     def update_target_image_file(self, event):
-+        image_fstypes = self.server.runCommand(["getVariable", "IMAGE_FSTYPES"])[0]
-         for t in self.internal_state['targets']:
-             if t.is_image == True:
-                 output_files = list(event.data.viewkeys())
-                 for output in output_files:
--                    if t.target in output:
-+                    if t.target in output and output.split('.rootfs.')[1] in image_fstypes:
-                         self.orm_wrapper.save_target_image_file_information(t, output, event.data[output])
- 
-     def update_build_information(self, event, errors, warnings, taskfailures):
+diff --git a/lib/toaster/toastergui/templates/basetable_top.html b/lib/toaster/toastergui/templates/basetable_top.html
+index 58b55b6..3fc0f31 100644
+--- a/lib/toaster/toastergui/templates/basetable_top.html
++++ b/lib/toaster/toastergui/templates/basetable_top.html
+@@ -77,7 +77,7 @@
+                 {%if tc.orderfield%}<a {%if tc.ordericon%} class="sorted" {%endif%}href="javascript:reload_params({'page': 1, 'orderby' : '{{tc.orderfield}}' })" >{{tc.name}}</a>{%else%}<span class="muted">{{tc.name}}</span>{%endif%}
+                 {%if tc.ordericon%} <i class="icon-caret-{{tc.ordericon}}"></i>{%endif%}
+                 {%if tc.filter%}<div class="btn-group pull-right">
+-                    <a href="#filter_{{tc.filter.class}}" role="button" class="btn btn-mini {%if request.GET.filter%}{{tc.filter.options|filtered_icon:request.GET.filter}} {%endif%}" {%if request.GET.filter%} title="<p>{{tc.filter.options|filtered_tooltip:request.GET.filter}}</p><p><a class='btn btn-small btn-primary' href=javascript:reload_params({'filter':''})>Show all {% if filter_search_display %}{{filter_search_display}}{% else %}{{objectname}}{% endif %}</a></p>" {%endif%} data-toggle="modal"> <i class="icon-filter filtered"></i> </a>
++                    <a href="#filter_{{tc.filter.class}}" role="button" class="btn btn-mini {%if request.GET.filter%}{{tc.filter.options|filtered_icon:request.GET.filter}} {%endif%}" {%if request.GET.filter and tc.filter.options|filtered_tooltip:request.GET.filter %} title="<p>{{tc.filter.options|filtered_tooltip:request.GET.filter}}</p><p><a class='btn btn-small btn-primary' href=javascript:reload_params({'filter':''})>Show all {% if filter_search_display %}{{filter_search_display}}{% else %}{{objectname}}{% endif %}</a></p>" {%endif%} data-toggle="modal"> <i class="icon-filter filtered"></i> </a>
+                 </div>{%endif%}
+             </th>{% endfor %}
+         </tr>
 -- 
 1.8.3.2
 
