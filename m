@@ -1,43 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f41.google.com (mail-wg0-f41.google.com [74.125.82.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 43D986FB48
+Received: from mail-we0-f170.google.com (mail-we0-f170.google.com
+	[74.125.82.170])
+	by mail.openembedded.org (Postfix) with ESMTP id 77C4A6FB3C
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Mar 2014 18:37:36 +0000 (UTC)
-Received: by mail-wg0-f41.google.com with SMTP id n12so3798221wgh.24
+	Mon, 24 Mar 2014 18:37:37 +0000 (UTC)
+Received: by mail-we0-f170.google.com with SMTP id w61so3727558wes.29
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Mar 2014 11:37:37 -0700 (PDT)
+	Mon, 24 Mar 2014 11:37:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=iHlVbUmdLbyG18jBAm+RE6GSb0GBiFH3RO2NzF1FiE8=;
-	b=LijdWpCCQvR3AzbtJxbY8hD0RrOFBL34+7ZHHI2gXbypgRQGna0Pbbwq/ve5HJBguJ
-	fIxo7p9mTJ3diI3e/H56x1mW5PoqM9Pj4aXA9M1dIeAjKlUGfXtX7tiyqTqimgwgIqAy
-	9jww1VpxTJG9AfdpJ50c1prC1AEQ/3r+WL7X5xgzTsGNSibmwQsTK2jtk35a+k7n89PU
-	TW/jNO/9yOCNLm04+gL0MQMzOe09zg7TevlEfxDdEo4IIuzun4aI0P1kvoKjaIpXvngh
-	AyGkFNteP0oM9q4GEmnA7BHTPkfmyPj7612oLP0h7rIESdXnXjUUeH+AmwFwfjMAlN8B
-	M/Pg==
-X-Gm-Message-State: ALoCoQn+/MRKFbFr3iA/F/iZ21cSQ0dUaaO+QEOmsWtkEMc6m+TdKEeDDGMWj125disML33LzR9o
-X-Received: by 10.180.89.136 with SMTP id bo8mr16888699wib.52.1395686257703;
-	Mon, 24 Mar 2014 11:37:37 -0700 (PDT)
+	bh=hZtzA7wpTd7z1XMVROPFCc+wpQZqZCIVD/YfKchjusg=;
+	b=BnlITopzs19N6HvuxHRdpq91+HqqG6TxY2khiVDQxNgop/qoV9wAa0IYxwwitoVCXY
+	IcvNmfbJs2ju+blAN+iRnCJezDqYfYnPcpuV89k4JsspaVwNqgr8xiFfsk1Kwi9R8VZP
+	TG6TuDuKjOG4GIQpj5rmKWsRn2+mkNsCW/rjnWxI5UO8K7Mzn2vh94z4xbQuazENIVks
+	Xarby5pwSdspcjZMGIMG3NA3OYlLDtRmbmGMv2mjyCjwjmw2SVm3O0jzrDiAb8WI1zUP
+	DguVODNNConpJMoZcO8ebrk08dJfXR/8ontIsyWEiWXe49hwq8AMOYzP/ITFCXrmv2Eb
+	9cYA==
+X-Gm-Message-State: ALoCoQkgLkcvS6koDdv+jX4eNLRp9QxonQd2IB805W9S+NzgwXRRi+jIQFPc0dzes0DxGzbLBBUW
+X-Received: by 10.180.20.71 with SMTP id l7mr16330112wie.35.1395686258028;
+	Mon, 24 Mar 2014 11:37:38 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id
-	qg3sm41447341wic.10.2014.03.24.11.37.34 for <multiple recipients>
+	by mx.google.com with ESMTPSA id u6sm41446876wif.6.2014.03.24.11.37.34
+	for <multiple recipients>
 	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
 	Mon, 24 Mar 2014 11:37:35 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id CACB45622C7; Mon, 24 Mar 2014 18:37:29 +0000 (GMT)
+	id C722B5616BD; Mon, 24 Mar 2014 18:37:29 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 24 Mar 2014 18:37:26 +0000
-Message-Id: <6f22e02614adcc642fe011e5e31ca4936d1cb19d.1395686148.git.alexandru.damian@intel.com>
+Date: Mon, 24 Mar 2014 18:37:24 +0000
+Message-Id: <77e6cc952e73dec4a6e5149e52f87000709d2152.1395686148.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.3.2
 In-Reply-To: <7e59b6b1cb44de00c512facece5ede96375a411f.1395686148.git.alexandru.damian@intel.com>
 References: <7e59b6b1cb44de00c512facece5ede96375a411f.1395686148.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1395686148.git.alexandru.damian@intel.com>
 References: <cover.1395686148.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 16/18] toasterui: save missed sstate tasks
+Subject: [PATCH 14/18] toaster: Remove circular dependecies from packages/recipes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,63 +53,73 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Mon, 24 Mar 2014 18:37:37 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Irina Patru <irina.patru@intel.com>
 
-We save the missed sstate tasks as tasks that executed
-but have the sstate_result set to "SSTATE_MISSED", signaling
-that the attempt to find an sstate file failed.
+The RelatedManager for Package_Dependency and Recipe_Dependency is changed
+so that circular dependacies are hidden in the UI, but will still remain in
+the database.
 
+[YOCTO #5655]
+
+Signed-off-by: Irina Patru <irina.patru@intel.com>
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/bb/ui/buildinfohelper.py | 21 +++++++++++++++++++++
- lib/bb/ui/toasterui.py       |  2 ++
- 2 files changed, 23 insertions(+)
+ lib/toaster/orm/models.py | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index 71b2ff5..d1d92c8 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -749,6 +749,27 @@ class BuildInfoHelper(object):
-         self.orm_wrapper.get_update_task_object(task_information, True) # must exist
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index bb018a9..3059908 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -20,6 +20,7 @@
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+ from django.db import models
++from django.db.models import F
+ from django.utils.encoding import python_2_unicode_compatible
  
  
-+    def store_missed_state_tasks(self, event):
-+        for (fn, taskname, taskhash, sstatefile) in event.data:
+@@ -211,6 +212,12 @@ class Package(models.Model):
+     section = models.CharField(max_length=80, blank=True)
+     license = models.CharField(max_length=80, blank=True)
+ 
++class Package_DependencyManager(models.Manager):
++    use_for_related_fields = True
 +
-+            identifier = fn + taskname + "_setscene"
-+            recipe_information = self._get_recipe_information_from_taskfile(fn)
-+            recipe = self.orm_wrapper.get_update_recipe_object(recipe_information)
-+            class MockEvent: pass
-+            event = MockEvent()
-+            event.taskname = taskname
-+            event.taskhash = taskhash
-+            task_information = self._get_task_information(event,recipe)
++    def get_query_set(self):
++        return super(Package_DependencyManager, self).get_query_set().exclude(package_id = F('depends_on__id'))
 +
-+            task_information['start_time'] = datetime.datetime.now()
-+            task_information['outcome'] = Task.OUTCOME_NA
-+            task_information['sstate_checksum'] = taskhash
-+            task_information['sstate_result'] = Task.SSTATE_MISS
-+            task_information['path_to_sstate_obj'] = sstatefile
+ class Package_Dependency(models.Model):
+     TYPE_RDEPENDS = 0
+     TYPE_TRDEPENDS = 1
+@@ -250,6 +257,7 @@ class Package_Dependency(models.Model):
+     depends_on = models.ForeignKey(Package, related_name='package_dependencies_target')   # soft dependency
+     dep_type = models.IntegerField(choices=DEPENDS_TYPE)
+     target = models.ForeignKey(Target, null=True)
++    objects = Package_DependencyManager()
+ 
+ class Target_Installed_Package(models.Model):
+     target = models.ForeignKey(Target)
+@@ -273,6 +281,11 @@ class Recipe(models.Model):
+     bugtracker = models.URLField(blank=True)
+     file_path = models.FilePathField(max_length=255)
+ 
++class Recipe_DependencyManager(models.Manager):
++    use_for_related_fields = True
 +
-+            self.orm_wrapper.get_update_task_object(task_information)
-+
-+
-     def store_target_package_data(self, event):
-         assert 'data' in vars(event)
-         # for all image targets
-diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
-index b2c084c..453eaf9 100644
---- a/lib/bb/ui/toasterui.py
-+++ b/lib/bb/ui/toasterui.py
-@@ -241,6 +241,8 @@ def main(server, eventHandler, params ):
-                     buildinfohelper.store_tasks_stats(event)
-                 elif event.type == "ImagePkgList":
-                     buildinfohelper.store_target_package_data(event)
-+                elif event.type == "MissedSstate":
-+                    buildinfohelper.store_missed_state_tasks(event)
-                 elif event.type == "ImageFileSize":
-                     buildinfohelper.update_target_image_file(event)
-                 elif event.type == "LicenseManifestPath":
++    def get_query_set(self):
++        return super(Recipe_DependencyManager, self).get_query_set().exclude(recipe_id = F('depends_on__id'))
+ 
+ class Recipe_Dependency(models.Model):
+     TYPE_DEPENDS = 0
+@@ -285,6 +298,7 @@ class Recipe_Dependency(models.Model):
+     recipe = models.ForeignKey(Recipe, related_name='r_dependencies_recipe')
+     depends_on = models.ForeignKey(Recipe, related_name='r_dependencies_depends')
+     dep_type = models.IntegerField(choices=DEPENDS_TYPE)
++    objects = Recipe_DependencyManager()
+ 
+ class Layer(models.Model):
+     name = models.CharField(max_length=100)
 -- 
 1.8.3.2
 
