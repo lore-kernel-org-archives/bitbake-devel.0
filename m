@@ -1,44 +1,20 @@
-Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f178.google.com (mail-wi0-f178.google.com
-	[209.85.212.178])
-	by mail.openembedded.org (Postfix) with ESMTP id CF7A86FB6D
+Return-Path: <marius.avram@intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id E51DD6B25F
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Mar 2014 18:37:45 +0000 (UTC)
-Received: by mail-wi0-f178.google.com with SMTP id bs8so2711895wib.17
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Mar 2014 11:37:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=t6QxDBM/A+U1v6kB2XPhd8iRRYxPvTR5JYQ8LBMTu2E=;
-	b=QM/CKXoPV3iNoB2l1t9X90jFBEo/Y0JTdVAWSHuLu/VqmpsyEv+Qvr329eXlldDcq6
-	tBUYUcXlDM2nLuv+m0/1tVOxTNARXmx/JZsexLnW83apyiAOtwszEipWBpbb5WjMNf7Q
-	7OYJOcG1mGgBokHnZdLTT0JgBFBFGFPEaPwfVwNR6us9EIcDOygN4bAbEmbq5RQRiM8G
-	VhYi7ag4YsVbPdYCqauYqQk0b2lc+JfxEO6UsFLkJcW4828YUU8MZoIGw8qW8WW58RzA
-	t/tntWoVoQ3OPU+WWFfyX/mbGoOy8ntZat8xPA5gN69xabKx6pOyo+wdicOZAlNDJ8yM
-	xh6A==
-X-Gm-Message-State: ALoCoQnCXAYl0Zheggkss9GBNMGtpDGqm5KhICAsSv9vCZG1ef7zd7FMHlXUv2WtOD33kDC8co6c
-X-Received: by 10.180.72.230 with SMTP id g6mr18148099wiv.1.1395686266328;
-	Mon, 24 Mar 2014 11:37:46 -0700 (PDT)
-Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id fs8sm41451470wib.8.2014.03.24.11.37.44
-	for <multiple recipients>
-	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Mon, 24 Mar 2014 11:37:45 -0700 (PDT)
-Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id CE0F5562BD5; Mon, 24 Mar 2014 18:37:29 +0000 (GMT)
-From: Alex DAMIAN <alexandru.damian@intel.com>
+	Tue, 25 Mar 2014 13:03:33 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga101.jf.intel.com with ESMTP; 25 Mar 2014 06:03:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.97,728,1389772800"; d="scan'208";a="479530131"
+Received: from mavram-vostro.rb.intel.com ([10.237.105.158])
+	by orsmga001.jf.intel.com with ESMTP; 25 Mar 2014 06:02:34 -0700
+From: Marius Avram <marius.avram@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 24 Mar 2014 18:37:28 +0000
-Message-Id: <9dd53bd4355148916a89cf672b6c5db5f6b1ae35.1395686148.git.alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.8.3.2
-In-Reply-To: <7e59b6b1cb44de00c512facece5ede96375a411f.1395686148.git.alexandru.damian@intel.com>
-References: <7e59b6b1cb44de00c512facece5ede96375a411f.1395686148.git.alexandru.damian@intel.com>
-In-Reply-To: <cover.1395686148.git.alexandru.damian@intel.com>
-References: <cover.1395686148.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 18/18] toaster: replace package dependency tag w/ view queries
+Date: Tue, 25 Mar 2014 15:02:35 +0200
+Message-Id: <1395752555-24073-1-git-send-email-marius.avram@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH 2/2] hob: fix set_extra_setting function
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,88 +27,75 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 24 Mar 2014 18:37:46 -0000
+X-List-Received-Date: Tue, 25 Mar 2014 13:03:38 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+The function is used to save additional variables in the configuration file
+when the user adds a new (key, value) pair from the Settings->Others. There
+was a problem though when the function was trying to retrieve an older
+instance of EXTRA_SETTINGS from the configuration file. Sometimes its value
+was returned as a dictionary and sometimes a string, which caused a crash when
+calling ast.literal_eval(). The reason of the problem must be a change in
+bitbake's parsing system. The changes will fix this issues.
 
-This patch moves the queries for package dependencies from the
-project tags to the views. This is done to bring the code inline
-with the Django philosophy of making all data queries in views.py
+While analysing this problem I discovered that the variables were not saved
+properly in the configuration file after consecutive changes to Settings->Others
+because of the way saveConfigurationVar() from cooker.py works. This patch
+will also solve this issue.
 
-This change has no performance implication.
+[YOCTO #5989]
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+Signed-off-by: Marius Avram <marius.avram@intel.com>
 ---
- lib/toaster/toastergui/templates/target.html       |  4 ++--
- lib/toaster/toastergui/templatetags/projecttags.py | 14 --------------
- lib/toaster/toastergui/views.py                    |  6 ++++++
- 3 files changed, 8 insertions(+), 16 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py |   30 +++++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/target.html b/lib/toaster/toastergui/templates/target.html
-index 4512898..5396b17 100644
---- a/lib/toaster/toastergui/templates/target.html
-+++ b/lib/toaster/toastergui/templates/target.html
-@@ -79,7 +79,7 @@
-             {{package.license}}
-         </td>
-         <td class="depends">
--            {% with deps=package|runtime_dependencies:target.id %}
-+            {% with deps=package.runtime_dependencies %}
-             {% with deps_count=deps|length %}
-             {% if deps_count > 0 %}
-             <a class="btn"
-@@ -96,7 +96,7 @@
-             {% endwith %}
-         </td>
-         <td class="brought_in_by">
--            {% with rdeps=package|reverse_runtime_dependencies:target.id %}
-+            {% with rdeps=package.reverse_runtime_dependencies %}
-             {% with rdeps_count=rdeps|length %}
-             {% if rdeps_count > 0 %}
-             <a class="btn"
-diff --git a/lib/toaster/toastergui/templatetags/projecttags.py b/lib/toaster/toastergui/templatetags/projecttags.py
-index 39e92ce..12c2468 100644
---- a/lib/toaster/toastergui/templatetags/projecttags.py
-+++ b/lib/toaster/toastergui/templatetags/projecttags.py
-@@ -217,20 +217,6 @@ def filtered_packageversion(version, revision):
-     """
-     return "" if (not version or version == "") else version if (not revision or revision == "") else version + "-" + revision
-         
--from django.db import models
--from orm.models import Package
--@register.filter
--def runtime_dependencies(package_object, targetid):
--    """ Return a queryset that lists the packages this package depends on
--    """
--    return package_object.package_dependencies_source.filter(target_id__exact=targetid, dep_type__in={'1'})
--
--@register.filter
--def reverse_runtime_dependencies(package_object, targetid):
--    """ Return a queryset that lists the packages depending on this package
--    """
--    return package_object.package_dependencies_target.filter(target_id__exact = targetid,dep_type__in={'1'})
--
- @register.filter
- def filter_sizeovertotal(package_object, total_size):
-     """ Return the % size of the package over the total size argument
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 732be8f..e523c31 100644
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -429,6 +429,12 @@ def target(request, build_id, target_id):
-     packages_sum =  queryset.aggregate(Sum('installed_size'))
-     queryset = _get_queryset(Package, queryset, filter_string, search_term, ordering_string)
-     packages = _build_page_range(Paginator(queryset, request.GET.get('count', 25)),request.GET.get('page', 1))
+diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+index 73d5f98..890e05f 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -359,20 +359,32 @@ class HobHandler(gobject.GObject):
+         self.set_var_in_file("EXTRA_SETTING", extra_setting, "local.conf")
+ 
+     def set_extra_config(self, extra_setting):
+-        old_extra_setting = ast.literal_eval(self.runCommand(["getVariable", "EXTRA_SETTING"]) or "{}")
+-        if extra_setting:
+-            self.set_var_in_file("EXTRA_SETTING", extra_setting, "local.conf")
+-        else:
+-            self.remove_var_from_file("EXTRA_SETTING")
++        old_extra_setting = self.runCommand(["getVariable", "EXTRA_SETTING"]) or {}
++        old_extra_setting = str(old_extra_setting)
 +
-+    # bring in package dependencies
-+    for p in packages.object_list:
-+        p.runtime_dependencies = p.package_dependencies_source.filter(target_id = target_id, dep_type=Package_Dependency.TYPE_TRDEPENDS)
-+        p.reverse_runtime_dependencies = p.package_dependencies_target.filter(target_id = target_id, dep_type=Package_Dependency.TYPE_TRDEPENDS)
++        old_extra_setting = ast.literal_eval(old_extra_setting)
++        if not type(old_extra_setting) == dict:
++            old_extra_setting = {}
 +
-     context = { 'build': Build.objects.filter(pk=build_id)[0],
-                 'target': Target.objects.filter(pk=target_id)[0],
-                 'objects': packages,
++        # settings not changed
++        if old_extra_setting == extra_setting:
++            return
+ 
+-        #remove not needed settings from conf
+-        for key in old_extra_setting:
++        # remove the old EXTRA SETTING variable
++        self.remove_var_from_file("EXTRA_SETTING")
++
++        # remove old settings from conf
++        for key in old_extra_setting.keys():
+             if key not in extra_setting:
+                 self.remove_var_from_file(key)
+-        for key in extra_setting.keys():
+-            value = extra_setting[key]
++
++        # add new settings
++        for key, value in extra_setting.iteritems():
+             self.set_var_in_file(key, value, "local.conf")
+ 
++        if extra_setting:
++            self.set_var_in_file("EXTRA_SETTING", extra_setting, "local.conf")
++
+     def set_http_proxy(self, http_proxy):
+         self.set_var_in_file("http_proxy", http_proxy, "local.conf")
+ 
 -- 
-1.8.3.2
+1.7.9.5
 
 
