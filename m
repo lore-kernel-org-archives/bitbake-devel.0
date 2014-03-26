@@ -1,22 +1,30 @@
-Return-Path: <Reinhard.Thies@web.de>
-Received: from mout.web.de (mout.web.de [212.227.15.4])
-	by mail.openembedded.org (Postfix) with ESMTP id 1CFA96F9EF
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 639656EE8A
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 26 Mar 2014 12:58:43 +0000 (UTC)
-Received: from silent.localnet ([145.253.169.211]) by smtp.web.de (mrweb102)
-	with ESMTPSA (Nemesis) id 0LlF9O-1X2Osp47Ik-00b0rC;
-	Wed, 26 Mar 2014 13:58:42 +0100
-To: bitbake-devel@lists.openembedded.org
-From: Reinhard Thies <Reinhard.Thies@web.de>
-Date: Wed, 26 Mar 2014 13:58:41 +0100
-X-KMail-Markup: true
-MIME-Version: 1.0
-Message-Id: <201403261358.41447.Reinhard.Thies@web.de>
-X-Provags-ID: V03:K0:rq8RUmyF6DTQABH25SGBGVS2oaQB213npII/JZ1GrpU+e/+mfBO
-	1qPB+8QvriDk8FkO/VsTqXTCgu0vEwyPC5Ae4R/CCN5ec3gfffH/DVR94A6Mh5FLFhsj1td
-	Al/gRvpLyHUjPqRI1r7uBwl/mnMVbQ4NI0tUpnebpRXWFn71WEzttLYBrUarHHXSoABQehd
-	KoohLK8tpkf1jtXJpLheA==
-Subject: gitsm
+	Wed, 26 Mar 2014 13:47:09 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s2QDl4gk019068 for <bitbake-devel@lists.openembedded.org>;
+	Wed, 26 Mar 2014 13:47:04 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 2P1H5c_NIBcU for <bitbake-devel@lists.openembedded.org>;
+	Wed, 26 Mar 2014 13:47:04 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s2QDl0GH019054
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 26 Mar 2014 13:47:02 GMT
+Message-ID: <1395841614.24890.92.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Wed, 26 Mar 2014 13:46:54 +0000
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] bitbake: Force -S option to take a parameter
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,88 +37,68 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 26 Mar 2014 12:58:44 -0000
-Content-Type: multipart/alternative; boundary="Boundary-01=_B8sMTiFPbuW/vyI"
+X-List-Received-Date: Wed, 26 Mar 2014 13:47:12 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
---Boundary-01=_B8sMTiFPbuW/vyI
-Content-Type: text/plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
+There is no easy way to make this change. We really need parameters for the -S
+(dump signatures) handling code. Such a parameter can then be used within the
+codebase to handle the signatures in different ways.
 
-Hi,
+For now, "none" is the recommended default and "printdiff" will execute the
+new (and more expensive) comparison algorithms.
 
-I am just started to work with gitsm. Maybe I am doing something wrong because 
-it wont work until I remove a line in the gitsm.py file.
-
-I have so idea what the line should be for and would appreciate any help.
-
-diff --git a/bitbake/lib/bb/fetch2/gitsm.py b/bitbake/lib/bb/fetch2/gitsm.py
-index 572b637..06f7fb7 100644
---- a/bitbake/lib/bb/fetch2/gitsm.py
-+++ b/bitbake/lib/bb/fetch2/gitsm.py
-@@ -68,11 +68,11 @@ class GitSM(Git):
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+diff --git a/bitbake/bin/bitbake b/bitbake/bin/bitbake
+index 5c0b2d4..b173f16 100755
+--- a/bitbake/bin/bitbake
++++ b/bitbake/bin/bitbake
+@@ -139,8 +139,8 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+         parser.add_option("-n", "--dry-run", help = "Don't execute, just go through the motions.",
+                    action = "store_true", dest = "dry_run", default = False)
  
-     def unpack(self, ud, destdir, d):
-         Git.unpack(self, ud, destdir, d)
--        
-+
-         os.chdir(ud.destdir)
-         submodules = self.uses_submodules(ud, d)
-         if submodules:
--            runfetchcmd("cp -r " + ud.clonedir + "/modules " + ud.destdir + 
-"/.git/", d)
-+#            runfetchcmd("cp -r " + ud.clonedir + "/modules " + ud.destdir + 
-"/.git/", d)
-             runfetchcmd("git submodule init", d)
-             runfetchcmd("git submodule update", d)
+-        parser.add_option("-S", "--dump-signatures", help = "Don't execute, just dump out the signature construction information.",
+-                   action = "store_true", dest = "dump_signatures", default = False)
++        parser.add_option("-S", "--dump-signatures", help = "Dump out the signature construction information, with no task execution. Parameters are passed to the signature handling code, use 'none' if no specific handler is required.",
++                   action = "append", dest = "dump_signatures", default = [])
+ 
+         parser.add_option("-p", "--parse-only", help = "Quit after parsing the BB recipes.",
+                    action = "store_true", dest = "parse_only", default = False)
+diff --git a/bitbake/lib/bb/cookerdata.py b/bitbake/lib/bb/cookerdata.py
+index 6200b0e..b9b9e16 100644
+--- a/bitbake/lib/bb/cookerdata.py
++++ b/bitbake/lib/bb/cookerdata.py
+@@ -124,7 +124,7 @@ class CookerConfiguration(object):
+         self.profile = False
+         self.nosetscene = False
+         self.invalidate_stamp = False
+-        self.dump_signatures = False
++        self.dump_signatures = []
+         self.dry_run = False
+         self.tracking = False
+         self.interface = []
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 90fe40b..423b03c 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1036,10 +1036,13 @@ class RunQueue:
+                     bb.event.fire(bb.event.DepTreeGenerated(depgraph), self.cooker.data)
+ 
+         if self.state is runQueueSceneInit:
+-            if self.cooker.configuration.dump_signatures:
+-                invalidtasks = self.print_diffscenetasks()
++            dump = self.cooker.configuration.dump_signatures
++            if dump:
++                if 'printdiff' in dump:
++                    invalidtasks = self.print_diffscenetasks()
+                 self.dump_signatures()
+-                self.write_diffscenetasks(invalidtasks)
++                if 'printdiff' in dump:
++                    self.write_diffscenetasks(invalidtasks)
+                 self.state = runQueueComplete
+             else:
+                 self.start_worker()
 
---
-thx
-Reinhard
 
 
-
-
---Boundary-01=_B8sMTiFPbuW/vyI
-Content-Type: text/html;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
-<html><head><meta name="qrichtext" content="1" /><style type="text/css">
-p, li { white-space: pre-wrap; }
-</style></head><body style=" font-family:'Arial'; font-size:14pt; font-weight:600; font-style:normal;">
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Hi,</p>
-<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">I am just started to work with gitsm. Maybe I am doing something wrong because it wont work until I remove a line in the gitsm.py file.</p>
-<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">I have so idea what the line should be for and would appreciate any help.</p>
-<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">diff --git a/bitbake/lib/bb/fetch2/gitsm.py b/bitbake/lib/bb/fetch2/gitsm.py</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">index 572b637..06f7fb7 100644</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">--- a/bitbake/lib/bb/fetch2/gitsm.py</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">+++ b/bitbake/lib/bb/fetch2/gitsm.py</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">@@ -68,11 +68,11 @@ class GitSM(Git):</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;"> </p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">     def unpack(self, ud, destdir, d):</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">         Git.unpack(self, ud, destdir, d)</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">-        </p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">+</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">         os.chdir(ud.destdir)</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">         submodules = self.uses_submodules(ud, d)</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">         if submodules:</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">-            runfetchcmd(&quot;cp -r &quot; + ud.clonedir + &quot;/modules &quot; + ud.destdir + &quot;/.git/&quot;, d)</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">+#            runfetchcmd(&quot;cp -r &quot; + ud.clonedir + &quot;/modules &quot; + ud.destdir + &quot;/.git/&quot;, d)</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">             runfetchcmd(&quot;git submodule init&quot;, d)</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">             runfetchcmd(&quot;git submodule update&quot;, d)</p>
-<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">--</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">thx</p>
-<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Reinhard</p>
-<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
-<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
-<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
-<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p></body></html>
-
---Boundary-01=_B8sMTiFPbuW/vyI--
