@@ -1,31 +1,22 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id ED1B46F993
+Return-Path: <Reinhard.Thies@web.de>
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	by mail.openembedded.org (Postfix) with ESMTP id 1CFA96F9EF
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 26 Mar 2014 10:05:16 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s2QA5Ahb007338; Wed, 26 Mar 2014 10:05:11 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id M8oPE-ofWn01; Wed, 26 Mar 2014 10:05:10 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s2QA55fn007335
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
-	Wed, 26 Mar 2014 10:05:07 GMT
-Message-ID: <1395828299.24890.85.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Robert Yang <liezhi.yang@windriver.com>
-Date: Wed, 26 Mar 2014 10:04:59 +0000
-In-Reply-To: <6d78004e5ccfd737bac24e5346d079aab11df2e7.1395802560.git.liezhi.yang@windriver.com>
-References: <cover.1395802560.git.liezhi.yang@windriver.com>
-	<6d78004e5ccfd737bac24e5346d079aab11df2e7.1395802560.git.liezhi.yang@windriver.com>
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] bitbake: fetch2/git: Anchor names when using ls-remote
+	Wed, 26 Mar 2014 12:58:43 +0000 (UTC)
+Received: from silent.localnet ([145.253.169.211]) by smtp.web.de (mrweb102)
+	with ESMTPSA (Nemesis) id 0LlF9O-1X2Osp47Ik-00b0rC;
+	Wed, 26 Mar 2014 13:58:42 +0100
+To: bitbake-devel@lists.openembedded.org
+From: Reinhard Thies <Reinhard.Thies@web.de>
+Date: Wed, 26 Mar 2014 13:58:41 +0100
+X-KMail-Markup: true
+MIME-Version: 1.0
+Message-Id: <201403261358.41447.Reinhard.Thies@web.de>
+X-Provags-ID: V03:K0:rq8RUmyF6DTQABH25SGBGVS2oaQB213npII/JZ1GrpU+e/+mfBO
+	1qPB+8QvriDk8FkO/VsTqXTCgu0vEwyPC5Ae4R/CCN5ec3gfffH/DVR94A6Mh5FLFhsj1td
+	Al/gRvpLyHUjPqRI1r7uBwl/mnMVbQ4NI0tUpnebpRXWFn71WEzttLYBrUarHHXSoABQehd
+	KoohLK8tpkf1jtXJpLheA==
+Subject: gitsm
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,53 +29,88 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 26 Mar 2014 10:05:17 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Wed, 26 Mar 2014 12:58:44 -0000
+Content-Type: multipart/alternative; boundary="Boundary-01=_B8sMTiFPbuW/vyI"
 Content-Transfer-Encoding: 7bit
 
-On Wed, 2014-03-26 at 05:27 -0400, Robert Yang wrote:
-> From: Richard Purdie <richard.purdie@linuxfoundation.org>
-> 
-> When specifying tags, they're searched for unanchored so foo/bar could
-> match:
-> 
-> refs/heads/abc/foo/bar
-> refs/heads/xyz/foo/bar
-> refs/heads/foo/bar
-> 
-> This change anchors the expressions so they are based against heads
-> or tags (or any other base level tree that has been created).
-> 
-> (Bitbake master rev: df2e0972cd1db7abd5ec8b7cb295fb0c42e284a4)
-> 
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> 
-> Conflicts:
-> 	bitbake/lib/bb/fetch2/git.py
-> 	(ud.basecmd and basecmd conflicts, keep using basecmd)
-> 
-> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> ---
->  bitbake/lib/bb/fetch2/git.py |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-> index 6175e4c..cff5ce1 100644
-> --- a/bitbake/lib/bb/fetch2/git.py
-> +++ b/bitbake/lib/bb/fetch2/git.py
-> @@ -305,8 +305,8 @@ class Git(FetchMethod):
->              username = ""
->  
->          basecmd = data.getVar("FETCHCMD_git", d, True) or "git"
-> -        cmd = "%s ls-remote %s://%s%s%s %s" % \
-> -              (basecmd, ud.proto, username, ud.host, ud.path, ud.branches[name])
-> +        cmd = "%s ls-remote %s://%s%s%s refs/heads/%s refs/tags/%s" % \
-> +              (basecmd, ud.proto, username, ud.host, ud.path, ud.unresolvedrev[name], ud.unresolvedrev[name])
+--Boundary-01=_B8sMTiFPbuW/vyI
+Content-Type: text/plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Shouldn't this be ud.branches[name] for dora?
+Hi,
 
-Cheers,
+I am just started to work with gitsm. Maybe I am doing something wrong because 
+it wont work until I remove a line in the gitsm.py file.
 
-Richard
+I have so idea what the line should be for and would appreciate any help.
+
+diff --git a/bitbake/lib/bb/fetch2/gitsm.py b/bitbake/lib/bb/fetch2/gitsm.py
+index 572b637..06f7fb7 100644
+--- a/bitbake/lib/bb/fetch2/gitsm.py
++++ b/bitbake/lib/bb/fetch2/gitsm.py
+@@ -68,11 +68,11 @@ class GitSM(Git):
+ 
+     def unpack(self, ud, destdir, d):
+         Git.unpack(self, ud, destdir, d)
+-        
++
+         os.chdir(ud.destdir)
+         submodules = self.uses_submodules(ud, d)
+         if submodules:
+-            runfetchcmd("cp -r " + ud.clonedir + "/modules " + ud.destdir + 
+"/.git/", d)
++#            runfetchcmd("cp -r " + ud.clonedir + "/modules " + ud.destdir + 
+"/.git/", d)
+             runfetchcmd("git submodule init", d)
+             runfetchcmd("git submodule update", d)
+
+--
+thx
+Reinhard
 
 
+
+
+--Boundary-01=_B8sMTiFPbuW/vyI
+Content-Type: text/html;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Arial'; font-size:14pt; font-weight:600; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Hi,</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">I am just started to work with gitsm. Maybe I am doing something wrong because it wont work until I remove a line in the gitsm.py file.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">I have so idea what the line should be for and would appreciate any help.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">diff --git a/bitbake/lib/bb/fetch2/gitsm.py b/bitbake/lib/bb/fetch2/gitsm.py</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">index 572b637..06f7fb7 100644</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">--- a/bitbake/lib/bb/fetch2/gitsm.py</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">+++ b/bitbake/lib/bb/fetch2/gitsm.py</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">@@ -68,11 +68,11 @@ class GitSM(Git):</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;"> </p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">     def unpack(self, ud, destdir, d):</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">         Git.unpack(self, ud, destdir, d)</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">-        </p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">+</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">         os.chdir(ud.destdir)</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">         submodules = self.uses_submodules(ud, d)</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">         if submodules:</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">-            runfetchcmd(&quot;cp -r &quot; + ud.clonedir + &quot;/modules &quot; + ud.destdir + &quot;/.git/&quot;, d)</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">+#            runfetchcmd(&quot;cp -r &quot; + ud.clonedir + &quot;/modules &quot; + ud.destdir + &quot;/.git/&quot;, d)</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">             runfetchcmd(&quot;git submodule init&quot;, d)</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">             runfetchcmd(&quot;git submodule update&quot;, d)</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">--</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">thx</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Reinhard</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; ">&nbsp;</p></body></html>
+
+--Boundary-01=_B8sMTiFPbuW/vyI--
