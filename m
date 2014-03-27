@@ -1,30 +1,38 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 87E586B7B7
+Return-Path: <trevor.woerner@linaro.org>
+Received: from mail-oa0-f50.google.com (mail-oa0-f50.google.com
+	[209.85.219.50])
+	by mail.openembedded.org (Postfix) with ESMTP id 3C4886F7E7
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Mar 2014 16:51:17 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s2RGoR8g007794; Thu, 27 Mar 2014 16:51:06 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 3b61TPEQa1Vr; Thu, 27 Mar 2014 16:51:05 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s2RGow9F007895
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
-	Thu, 27 Mar 2014 16:51:00 GMT
-Message-ID: <1395939052.24890.141.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alex DAMIAN <alexandru.damian@intel.com>
-Date: Thu, 27 Mar 2014 16:50:52 +0000
-In-Reply-To: <1395925753-31968-1-git-send-email-alexandru.damian@intel.com>
-References: <1395925753-31968-1-git-send-email-alexandru.damian@intel.com>
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org, toaster@yoctoproject.org
-Subject: Re: [Toaster] [PATCH 1/1] bitbake: toaster: fix timezone detection
+	Thu, 27 Mar 2014 17:01:06 +0000 (UTC)
+Received: by mail-oa0-f50.google.com with SMTP id i7so4774095oag.9
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 27 Mar 2014 10:01:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=qcCR/C6rsDbgX1DOQMaDom3IppfIhGSFet1KT8/+5bs=;
+	b=kHne99H9Tl4U+jmAK69NfC5755O9dPVcN0y1e8YIG1kUIWpO9ib34cB2InauMRnpde
+	t4WjBb4QfyMawDzS/vngD4NjBDJ/cwIBKex9Z+Lr7lXddWCG0iKGtG6JMzHT0xFpKZdB
+	Etj1hfNfKghJUDzho/l9/FcP8UAzrJSyJs6earDo5gR5lF/6Y2WPKJg+/U/gkCks0IsB
+	MRBMOzXymJZ4dyF3B3M38RuGSKB1BSMXIc5SdAOY5dwzZEBuPshm0lr+s+nGFpMNwv3P
+	nBJ7Tu8NLoBoqSBFw0pA/z2kf+rxaxjxgG8/UrDwGZsxB0PNzFK2Oo8Y4k1mmw0By2a4
+	ai5g==
+X-Gm-Message-State: ALoCoQniip8nBzYQ5z1Gp0I8kT0Oo1WEpSZ+L+wcqUW0fd+P3+J6JgElg7RYK8sNop/vuYwjpxl0
+X-Received: by 10.182.117.195 with SMTP id kg3mr2315016obb.17.1395939667316;
+	Thu, 27 Mar 2014 10:01:07 -0700 (PDT)
+Received: from openSUSE-i7.site (69-165-220-158.dsl.teksavvy.com.
+	[69.165.220.158])
+	by mx.google.com with ESMTPSA id x3sm10448801oek.3.2014.03.27.10.01.06
+	for <multiple recipients>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 27 Mar 2014 10:01:06 -0700 (PDT)
+From: Trevor Woerner <trevor.woerner@linaro.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 27 Mar 2014 13:00:51 -0400
+Message-Id: <1395939651-31508-1-git-send-email-trevor.woerner@linaro.org>
+X-Mailer: git-send-email 1.9.0
+Cc: patches@linaro.org
+Subject: [PATCH] .gitignore: update documentation directory name
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,55 +45,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 27 Mar 2014 16:51:21 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 27 Mar 2014 17:01:09 -0000
 
-On Thu, 2014-03-27 at 13:09 +0000, Alex DAMIAN wrote:
-> From: Alexandru DAMIAN <alexandru.damian@intel.com>
-> 
-> This patch replaces faulty timezone detection with a version
-> that simply reads the TZ environment variable if it is set.
-> 
-> If the TZ is not set, we do a reverse match search among known
-> timezone definitions and take the first match.
-> 
-> 	[YOCTO #5499]
-> 
-> Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
-> ---
->  bitbake/lib/toaster/toastermain/settings.py | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/bitbake/lib/toaster/toastermain/settings.py b/bitbake/lib/toaster/toastermain/settings.py
-> index 51fa3cc..98d2ac3 100644
-> --- a/bitbake/lib/toaster/toastermain/settings.py
-> +++ b/bitbake/lib/toaster/toastermain/settings.py
-> @@ -51,8 +51,16 @@ ALLOWED_HOSTS = []
->  # In a Windows environment this must be set to your system time zone.
->  
->  # Always use local computer's time zone
-> -import time
-> -TIME_ZONE = time.tzname[0]
-> +import os, subprocess
-> +
-> +# the TZ variable overrides any default timezone setting
-> +if 'TZ' in os.environ:
-> +    TIME_ZONE = os.environ['TZ']
-> +else:
-> +    # need to read the /etc/localtime file which is the libc standard
-> +    # and do a reverse-mapping to /usr/share/zoneinfo/; since the timezone may match any number of identical timezone definitions,
-> +    # we just select the first that matches
-> +    TIME_ZONE = subprocess.Popen("find /usr/share/zoneinfo/  -type f -exec diff -s {} /etc/localtime \; | grep identical | head -1 | awk '{print $2;}' | sed 's/\/usr\/share\/zoneinfo\///'", shell=True, stdout = subprocess.PIPE).communicate()[0].strip()
+In the yocto-docs repository, the documentation is stored in a directory
+called "documentation". In this repository the documentation is stored in
+"doc".
 
-Forking off a shell pipeline for this is rather ugly, particularly every
-time the program starts :/
+This update allows git to properly ignore generated documentation.
 
-Cheers,
+Signed-off-by: Trevor Woerner <trevor.woerner@linaro.org>
+---
+ .gitignore | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Richard
- 
-
-
+diff --git a/.gitignore b/.gitignore
+index d64f6f8..ba767de 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -7,6 +7,6 @@ pyshtables.py
+ /bin/bitbakec
+ *.swp
+ tags
+-documentation/user-manual/user-manual.html
+-documentation/user-manual/user-manual.pdf
+-documentation/user-manual/user-manual.tgz
++doc/user-manual/user-manual.html
++doc/user-manual/user-manual.pdf
++doc/user-manual/user-manual.tgz
+-- 
+1.9.0
 
 
