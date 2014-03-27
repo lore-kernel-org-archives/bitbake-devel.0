@@ -1,46 +1,43 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f169.google.com (mail-we0-f169.google.com
-	[74.125.82.169])
-	by mail.openembedded.org (Postfix) with ESMTP id C149D6F8DE
+Received: from mail-wg0-f41.google.com (mail-wg0-f41.google.com [74.125.82.41])
+	by mail.openembedded.org (Postfix) with ESMTP id D0CF46F8DF
 	for <bitbake-devel@lists.openembedded.org>;
 	Thu, 27 Mar 2014 16:50:05 +0000 (UTC)
-Received: by mail-we0-f169.google.com with SMTP id w62so1988466wes.28
+Received: by mail-wg0-f41.google.com with SMTP id n12so2691789wgh.12
 	for <bitbake-devel@lists.openembedded.org>;
 	Thu, 27 Mar 2014 09:50:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=AfHKRovgAG+02Vp0Y4CfDNbLSBoUQVyyT5IpF3CbC94=;
-	b=nMVCdLGjXaj1cDkeO+pqeS/y+HCNEObMKCLt8ldSwloc5qWj55Z/lK+ng7LQw3lNxq
-	LuCl/yog1Xy3aabHwgA+irM9x6UCALg6VgE5yzAhZVnJ/Q08rvtSSp4MQbp8iNStnoOR
-	dF1Fqvkn7EXCGvcky8a3NxlT/97j5HWkeGDueInTwYuTtrgqQ1MWhFsTi0l/UQvKlqJL
-	Imaa7EaB02n2bKH4TFtThp++cSBXX2camQcUso1VLDqw9Pc4KdNtCj+kG5dx31QpmAKJ
-	UeUW4UsFN/LcgjjwUBV/TJgEcSKNhzsogDE1PG3noYsiFC4hGTQ6JZyPWs7mGkWcRRNQ
-	puBw==
-X-Gm-Message-State: ALoCoQnkc9covJdlXaxdB4Fm4PiV6Ktpe2QqE321Q9sqXjZM1wBuNr0V9E+8QVrtkk7XSGj2NbNs
-X-Received: by 10.180.184.167 with SMTP id ev7mr14909852wic.55.1395939005859; 
-	Thu, 27 Mar 2014 09:50:05 -0700 (PDT)
+	bh=z4qSxbMuwXRvF+UNEQLnGnZTcwwLWstOi6vkRQPZqdY=;
+	b=TpHSY1J/xf5J06MNzxXrDLmjGDtZojH3mQFB62dILqyey5xBG1IjaLWjFvFrBbKBme
+	7h1PkFIAGuJZ5YPuiXytmohbklex/e0FLAIy5cBLwFuryVANOwNfKX2ZTWISahhp7Tcc
+	NF18FrQLHIJzPLWu11wgB5nM4IqjGmXZzowSdyE4AvENlEGroxonusEVHQQl7P4hDWPp
+	sllFZmVLrtNI7LPxFm6lHM4VG+O2kKDqKa8wqY39MR5TEHmhV/7d/hj2bhWvvHH9phD+
+	O+xSCYlcpqq0MMS9MOjAsr1Zyl0b79qSAt7wbUiVTeRTWZTJMlc3Tuwx4bOzLLAFuFjW
+	1jRQ==
+X-Gm-Message-State: ALoCoQmf1gbiqVqsvczIR1FoPp1tOXG4H5B6zMSnCM85ikP7TVC9CghM3AgegV/Oh01pWMfdUw39
+X-Received: by 10.180.99.225 with SMTP id et1mr6361955wib.13.1395939006517;
+	Thu, 27 Mar 2014 09:50:06 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id fs8sm13903593wib.8.2014.03.27.09.50.04
-	for <multiple recipients>
+	by mx.google.com with ESMTPSA id
+	fs16sm8778690wic.18.2014.03.27.09.50.04 for <multiple recipients>
 	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Thu, 27 Mar 2014 09:50:04 -0700 (PDT)
+	Thu, 27 Mar 2014 09:50:05 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id 877AE560079; Thu, 27 Mar 2014 16:50:02 +0000 (GMT)
+	id 88E1C560E3C; Thu, 27 Mar 2014 16:50:02 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 27 Mar 2014 16:49:59 +0000
-Message-Id: <8ba24af501d6b3a47a77bfa617e7405d2ab0e82c.1395938903.git.alexandru.damian@intel.com>
+Date: Thu, 27 Mar 2014 16:50:00 +0000
+Message-Id: <528163262263bf5315b8c1f3822dff7eb15d9e81.1395938903.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.8.3.2
 In-Reply-To: <30647848c4c202df4537eb2c1810ec0999dab4bd.1395938903.git.alexandru.damian@intel.com>
 References: <30647848c4c202df4537eb2c1810ec0999dab4bd.1395938903.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1395938903.git.alexandru.damian@intel.com>
 References: <cover.1395938903.git.alexandru.damian@intel.com>
-Cc: Farrell Wymore <farrell.wymore@windriver.com>,
-	Alexandru DAMIAN <alexandru.damian@intel.com>,
-	David Reyna <David.Reyna@windriver.com>
-Subject: [PATCH 7/9] toaster: added file types to the Outputs column in the build
+Cc: Dave Lerner <dave.lerner@windriver.com>
+Subject: [PATCH 8/9] toaster: fix dirinfo empty dir expansion
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,110 +52,40 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Thu, 27 Mar 2014 16:50:06 -0000
 
-From: David Reyna <David.Reyna@windriver.com>
+From: Dave Lerner <dave.lerner@windriver.com>
 
-The file types are displayed in the Outputs column in the build page. The file types
-are derived from the target image filenames.
+[YOCTO 6036]
 
-[YOCTO #5947]
+In the page that shows the directory layout for an image, if the
+directory is empty, then the directory folder icon should be black and
+the table row should not be 'expandable' on a mouse click.  That
+behavior depends on the directory's child entry count calculated in the
+view function controlling that page.
 
-Signed-off-by: Farrell Wymore <farrell.wymore@windriver.com>
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+Two images in the database with the same directory path in the target
+image, but one with path having entries and the other not having
+any entries caused the path without entries to be clickable; the
+query for a directory's count of entries, didn't filter on the image id,
+only on the path.
+
+Signed-off-by: Dave Lerner <dave.lerner@windriver.com>
 ---
- lib/toaster/toastergui/templates/build.html        |  6 +++++-
- lib/toaster/toastergui/templatetags/projecttags.py |  9 ++++++++
- lib/toaster/toastergui/views.py                    | 24 ++++++++++++++++++++--
- 3 files changed, 36 insertions(+), 3 deletions(-)
+ lib/toaster/toastergui/views.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/toaster/toastergui/templates/build.html b/lib/toaster/toastergui/templates/build.html
-index 38ab2bf..7d13cc8 100644
---- a/lib/toaster/toastergui/templates/build.html
-+++ b/lib/toaster/toastergui/templates/build.html
-@@ -122,7 +122,11 @@
-             <td class="warnings_no">{% if  build.warnings_no %}<a class="warnings_no warning" href="{% url "builddashboard" build.id %}#warnings">{{build.warnings_no}} warning{{build.warnings_no|pluralize}}</a>{%endif%}</td>
-             <td class="time"><a href="{% url "buildtime" build.id %}">{{build.timespent|sectohms}}</a></td>
-             <td class="log">{{build.cooker_log_path}}</td>
--            <td class="output">{% if build.outcome == 0 %}{% for t in build.target_set.all %}{% if t.is_image %}<a href="{%url "builddashboard" build.id%}#images">TODO: compute image output fstypes</a>{% endif %}{% endfor %}{% endif %}</td>
-+            <td class="output">
-+              {% if build.outcome == build.SUCCEEDED %}
-+              <a href="{%url "builddashboard" build.id%}#images">{{fstypes|get_dict_value:build.id}}</a>
-+              {% endif %}
-+            </td>
-         </tr>
- 
-         {% endfor %}
-diff --git a/lib/toaster/toastergui/templatetags/projecttags.py b/lib/toaster/toastergui/templatetags/projecttags.py
-index 76166ca..aa0ba39 100644
---- a/lib/toaster/toastergui/templatetags/projecttags.py
-+++ b/lib/toaster/toastergui/templatetags/projecttags.py
-@@ -240,3 +240,12 @@ def format_vpackage_namehelp(name):
-     r += ' title="' + name + ' only has dependency information available.">'
-     r += '</i>'
-     return mark_safe(r)
-+
-+@register.filter
-+def get_dict_value(dictionary, key):
-+    """ return the value of a dictionary key
-+    """
-+    try:
-+        return dictionary[key]
-+    except KeyError:
-+        return ''
 diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 0f92caf..d323b37 100644
+index d323b37..4f7170b 100644
 --- a/lib/toaster/toastergui/views.py
 +++ b/lib/toaster/toastergui/views.py
-@@ -19,13 +19,13 @@
- # with this program; if not, write to the Free Software Foundation, Inc.,
- # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+@@ -646,7 +646,7 @@ def _get_dir_entries(build_id, target_id, start):
+             if o.inodetype == Target_File.ITYPE_DIRECTORY:
+                 entry['isdir'] = 1
+                 # is there content in directory
+-                entry['childcount'] = Target_File.objects.filter(directory__path=o.path).all().count()
++                entry['childcount'] = Target_File.objects.filter(target__exact=target_id, directory__path=o.path).all().count()
+             else:
+                 entry['isdir'] = 0
  
--import operator
-+import operator,re
- 
- from django.db.models import Q, Sum
- from django.shortcuts import render, redirect
- from orm.models import Build, Target, Task, Layer, Layer_Version, Recipe, LogMessage, Variable
- from orm.models import Task_Dependency, Recipe_Dependency, Package, Package_File, Package_Dependency
--from orm.models import Target_Installed_Package, Target_Image_File
-+from orm.models import Target_Installed_Package, Target_File, Target_Image_File
- from django.views.decorators.cache import cache_control
- from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
- from django.http import HttpResponseBadRequest
-@@ -231,6 +231,25 @@ def builds(request):
-         else:
-             b.eta = 0
- 
-+    # set up list of fstypes for each build
-+    fstypes_map = {};
-+    for build in build_info:
-+        targets = Target.objects.filter( build_id = build.id )
-+        comma = "";
-+        extensions = "";
-+        for t in targets:
-+            if ( not t.is_image ):
-+                continue
-+            tif = Target_Image_File.objects.filter( target_id = t.id )
-+            for i in tif:
-+                s=re.sub('.*tar.bz2', 'tar.bz2', i.file_name)
-+                if s == i.file_name:
-+                    s=re.sub('.*\.', '', i.file_name)
-+                if None == re.search(s,extensions):
-+                    extensions += comma + s
-+                    comma = ", "
-+        fstypes_map[build.id]=extensions
-+
-     # send the data to the template
-     context = {
-             # specific info for
-@@ -238,6 +257,7 @@ def builds(request):
-             # TODO: common objects for all table views, adapt as needed
-                 'objects' : build_info,
-                 'objectname' : "builds",
-+                'fstypes' : fstypes_map,
-                 'search_term' : search_term,
-                 'total_count' : queryset_with_search.count(),
-             # Specifies the display of columns for the table, appearance in "Edit columns" box, toggling default show/hide, and specifying filters for columns
 -- 
 1.8.3.2
 
