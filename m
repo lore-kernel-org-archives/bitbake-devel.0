@@ -1,29 +1,40 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 123386E8A6
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-we0-f180.google.com (mail-we0-f180.google.com
+	[74.125.82.180])
+	by mail.openembedded.org (Postfix) with ESMTP id 085896B4F7
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Mar 2014 03:25:22 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.5) with ESMTP id s2R3PLKF014835
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Wed, 26 Mar 2014 20:25:21 -0700 (PDT)
-Received: from [128.224.162.226] (128.224.162.226) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.3.169.1;
-	Wed, 26 Mar 2014 20:25:21 -0700
-Message-ID: <53339A1F.4050907@windriver.com>
-Date: Thu, 27 Mar 2014 11:25:19 +0800
-From: Robert Yang <liezhi.yang@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
-	rv:24.0) Gecko/20100101 Thunderbird/24.2.0
-MIME-Version: 1.0
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-References: <cover.1395802560.git.liezhi.yang@windriver.com>	
-	<6d78004e5ccfd737bac24e5346d079aab11df2e7.1395802560.git.liezhi.yang@windriver.com>
-	<1395828299.24890.85.camel@ted>
-In-Reply-To: <1395828299.24890.85.camel@ted>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] bitbake: fetch2/git: Anchor names when using ls-remote
+	Thu, 27 Mar 2014 13:09:16 +0000 (UTC)
+Received: by mail-we0-f180.google.com with SMTP id p61so1780738wes.11
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 27 Mar 2014 06:09:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=Up2oA9DcuMGRUtlVE32at8bEm56Ll3zIT9AMlPPsTnA=;
+	b=hPxI9B6rupJFoNqBERJ//m4WjcgoFgGP28Qj6o+cJ1IqaUMjxKgSgcqJ9fplVdNjuE
+	r1Y9K908us3S0XATIJUGgwgoMAX3cUGtxftkOQ+OCqjiqkAXGVklDb+KklEABdSs3mCz
+	7ppPQ/yhvlaZKo0uR29psDcjwg6t6QG9h59rKpePbpxK8mNzF2YGT11T1+PrGUm6Vao6
+	CLdVpiURJd655kINVnYFTSeTp2ThoCbn/2sGSCD8e9LvseoVqHd3/qnSZBa2LR/NoxH6
+	IKWWldvQCVqH8jJ7LKL9ujx4FaQ2LhdsCJjBnRlHWFYmof3IR5Ag46gI6FvgGo06tyxU
+	a3WQ==
+X-Gm-Message-State: ALoCoQmS+XLaQhliX3Zmugqw2ED/ErDH51GhNbJsDBBzOObIxifV1IwTHFzeCHAmHUh5TFB030gP
+X-Received: by 10.180.19.69 with SMTP id c5mr4929732wie.7.1395925756814;
+	Thu, 27 Mar 2014 06:09:16 -0700 (PDT)
+Received: from adamian-desk.corp.intel.com ([83.217.123.106])
+	by mx.google.com with ESMTPSA id t18sm7091327wiv.16.2014.03.27.06.09.15
+	for <multiple recipients>
+	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Thu, 27 Mar 2014 06:09:16 -0700 (PDT)
+Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
+	id 690CF563150; Thu, 27 Mar 2014 13:09:14 +0000 (GMT)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: bitbake-devel@lists.openembedded.org,
+	toaster@yoctoproject.org
+Date: Thu, 27 Mar 2014 13:09:13 +0000
+Message-Id: <1395925753-31968-1-git-send-email-alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.8.3.2
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 1/1] bitbake: toaster: fix timezone detection
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,84 +47,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 27 Mar 2014 03:25:26 -0000
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 27 Mar 2014 13:09:20 -0000
 
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
+This patch replaces faulty timezone detection with a version
+that simply reads the TZ environment variable if it is set.
 
-On 03/26/2014 06:04 PM, Richard Purdie wrote:
-> On Wed, 2014-03-26 at 05:27 -0400, Robert Yang wrote:
->> From: Richard Purdie <richard.purdie@linuxfoundation.org>
->>
->> When specifying tags, they're searched for unanchored so foo/bar could
->> match:
->>
->> refs/heads/abc/foo/bar
->> refs/heads/xyz/foo/bar
->> refs/heads/foo/bar
->>
->> This change anchors the expressions so they are based against heads
->> or tags (or any other base level tree that has been created).
->>
->> (Bitbake master rev: df2e0972cd1db7abd5ec8b7cb295fb0c42e284a4)
->>
->> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
->>
->> Conflicts:
->> 	bitbake/lib/bb/fetch2/git.py
->> 	(ud.basecmd and basecmd conflicts, keep using basecmd)
->>
->> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
->> ---
->>   bitbake/lib/bb/fetch2/git.py |    4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
->> index 6175e4c..cff5ce1 100644
->> --- a/bitbake/lib/bb/fetch2/git.py
->> +++ b/bitbake/lib/bb/fetch2/git.py
->> @@ -305,8 +305,8 @@ class Git(FetchMethod):
->>               username = ""
->>
->>           basecmd = data.getVar("FETCHCMD_git", d, True) or "git"
->> -        cmd = "%s ls-remote %s://%s%s%s %s" % \
->> -              (basecmd, ud.proto, username, ud.host, ud.path, ud.branches[name])
->> +        cmd = "%s ls-remote %s://%s%s%s refs/heads/%s refs/tags/%s" % \
->> +              (basecmd, ud.proto, username, ud.host, ud.path, ud.unresolvedrev[name], ud.unresolvedrev[name])
->
-> Shouldn't this be ud.branches[name] for dora?
->
+If the TZ is not set, we do a reverse match search among known
+timezone definitions and take the first match.
 
-OOPS, thanks, I've updated the patch:
+	[YOCTO #5499]
 
-git://git.pokylinux.org/poky-contrib robert/dora-next
-http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/dora-next
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+---
+ bitbake/lib/toaster/toastermain/settings.py | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 6175e4c..989d72c 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -305,8 +305,8 @@ class Git(FetchMethod):
-              username = ""
+diff --git a/bitbake/lib/toaster/toastermain/settings.py b/bitbake/lib/toaster/toastermain/settings.py
+index 51fa3cc..98d2ac3 100644
+--- a/bitbake/lib/toaster/toastermain/settings.py
++++ b/bitbake/lib/toaster/toastermain/settings.py
+@@ -51,8 +51,16 @@ ALLOWED_HOSTS = []
+ # In a Windows environment this must be set to your system time zone.
+ 
+ # Always use local computer's time zone
+-import time
+-TIME_ZONE = time.tzname[0]
++import os, subprocess
++
++# the TZ variable overrides any default timezone setting
++if 'TZ' in os.environ:
++    TIME_ZONE = os.environ['TZ']
++else:
++    # need to read the /etc/localtime file which is the libc standard
++    # and do a reverse-mapping to /usr/share/zoneinfo/; since the timezone may match any number of identical timezone definitions,
++    # we just select the first that matches
++    TIME_ZONE = subprocess.Popen("find /usr/share/zoneinfo/  -type f -exec diff -s {} /etc/localtime \; | grep identical | head -1 | awk '{print $2;}' | sed 's/\/usr\/share\/zoneinfo\///'", shell=True, stdout = subprocess.PIPE).communicate()[0].strip()
+ 
+ # Language code for this installation. All choices can be found here:
+ # http://www.i18nguy.com/unicode/language-identifiers.html
+-- 
+1.8.3.2
 
-          basecmd = data.getVar("FETCHCMD_git", d, True) or "git"
--        cmd = "%s ls-remote %s://%s%s%s %s" % \
--              (basecmd, ud.proto, username, ud.host, ud.path, ud.branches[name])
-+        cmd = "%s ls-remote %s://%s%s%s refs/heads/%s refs/tags/%s" % \
-+              (basecmd, ud.proto, username, ud.host, ud.path, 
-ud.branches[name], ud.branches[name])
-          if ud.proto.lower() != 'file':
-              bb.fetch2.check_network_access(d, cmd)
-          output = runfetchcmd(cmd, d, True)
-
-// Robert
-
-
-> Cheers,
->
-> Richard
->
->
->
 
