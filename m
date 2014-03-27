@@ -1,30 +1,29 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id 8AF3F6EC83
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 123386E8A6
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 26 Mar 2014 16:57:56 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s2QGvpnV029097 for <bitbake-devel@lists.openembedded.org>;
-	Wed, 26 Mar 2014 16:57:52 GMT
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id i1zxdwvRXMXL for <bitbake-devel@lists.openembedded.org>;
-	Wed, 26 Mar 2014 16:57:51 +0000 (GMT)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s2QGvmvg029091
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 26 Mar 2014 16:57:49 GMT
-Message-ID: <1395853061.24890.108.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Wed, 26 Mar 2014 16:57:41 +0000
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] knotty: Split error output onto stderr
+	Thu, 27 Mar 2014 03:25:22 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.14.5/8.14.5) with ESMTP id s2R3PLKF014835
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Wed, 26 Mar 2014 20:25:21 -0700 (PDT)
+Received: from [128.224.162.226] (128.224.162.226) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.40) with Microsoft SMTP Server id 14.3.169.1;
+	Wed, 26 Mar 2014 20:25:21 -0700
+Message-ID: <53339A1F.4050907@windriver.com>
+Date: Thu, 27 Mar 2014 11:25:19 +0800
+From: Robert Yang <liezhi.yang@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux i686;
+	rv:24.0) Gecko/20100101 Thunderbird/24.2.0
+MIME-Version: 1.0
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <cover.1395802560.git.liezhi.yang@windriver.com>	
+	<6d78004e5ccfd737bac24e5346d079aab11df2e7.1395802560.git.liezhi.yang@windriver.com>
+	<1395828299.24890.85.camel@ted>
+In-Reply-To: <1395828299.24890.85.camel@ted>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/1] bitbake: fetch2/git: Anchor names when using ls-remote
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,39 +36,84 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 26 Mar 2014 16:57:57 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Thu, 27 Mar 2014 03:25:26 -0000
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 
-When using bitbake -e in scripts, it would be helpful if the error
-output appeared on stderr, not stdout. This change enables that building
-upon the new bb.msg filters.
-
-[YOCTO #5274]
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index 31c2dbb..05c3134 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -256,11 +256,15 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-     helper = uihelper.BBUIHelper()
- 
-     console = logging.StreamHandler(sys.stdout)
-+    errconsole = logging.StreamHandler(sys.stderr)
-     format_str = "%(levelname)s: %(message)s"
-     format = bb.msg.BBLogFormatter(format_str)
--    bb.msg.addDefaultlogFilter(console)
-+    bb.msg.addDefaultlogFilter(console, bb.msg.BBLogFilterStdOut)
-+    bb.msg.addDefaultlogFilter(errconsole, bb.msg.BBLogFilterStdErr)
-     console.setFormatter(format)
-+    errconsole.setFormatter(format)
-     logger.addHandler(console)
-+    logger.addHandler(errconsole)
- 
-     if params.options.remote_server and params.options.kill_server:
-         server.terminateServer()
 
 
+On 03/26/2014 06:04 PM, Richard Purdie wrote:
+> On Wed, 2014-03-26 at 05:27 -0400, Robert Yang wrote:
+>> From: Richard Purdie <richard.purdie@linuxfoundation.org>
+>>
+>> When specifying tags, they're searched for unanchored so foo/bar could
+>> match:
+>>
+>> refs/heads/abc/foo/bar
+>> refs/heads/xyz/foo/bar
+>> refs/heads/foo/bar
+>>
+>> This change anchors the expressions so they are based against heads
+>> or tags (or any other base level tree that has been created).
+>>
+>> (Bitbake master rev: df2e0972cd1db7abd5ec8b7cb295fb0c42e284a4)
+>>
+>> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+>>
+>> Conflicts:
+>> 	bitbake/lib/bb/fetch2/git.py
+>> 	(ud.basecmd and basecmd conflicts, keep using basecmd)
+>>
+>> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+>> ---
+>>   bitbake/lib/bb/fetch2/git.py |    4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+>> index 6175e4c..cff5ce1 100644
+>> --- a/bitbake/lib/bb/fetch2/git.py
+>> +++ b/bitbake/lib/bb/fetch2/git.py
+>> @@ -305,8 +305,8 @@ class Git(FetchMethod):
+>>               username = ""
+>>
+>>           basecmd = data.getVar("FETCHCMD_git", d, True) or "git"
+>> -        cmd = "%s ls-remote %s://%s%s%s %s" % \
+>> -              (basecmd, ud.proto, username, ud.host, ud.path, ud.branches[name])
+>> +        cmd = "%s ls-remote %s://%s%s%s refs/heads/%s refs/tags/%s" % \
+>> +              (basecmd, ud.proto, username, ud.host, ud.path, ud.unresolvedrev[name], ud.unresolvedrev[name])
+>
+> Shouldn't this be ud.branches[name] for dora?
+>
+
+OOPS, thanks, I've updated the patch:
+
+git://git.pokylinux.org/poky-contrib robert/dora-next
+http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=robert/dora-next
+
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index 6175e4c..989d72c 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -305,8 +305,8 @@ class Git(FetchMethod):
+              username = ""
+
+          basecmd = data.getVar("FETCHCMD_git", d, True) or "git"
+-        cmd = "%s ls-remote %s://%s%s%s %s" % \
+-              (basecmd, ud.proto, username, ud.host, ud.path, ud.branches[name])
++        cmd = "%s ls-remote %s://%s%s%s refs/heads/%s refs/tags/%s" % \
++              (basecmd, ud.proto, username, ud.host, ud.path, 
+ud.branches[name], ud.branches[name])
+          if ud.proto.lower() != 'file':
+              bb.fetch2.check_network_access(d, cmd)
+          output = runfetchcmd(cmd, d, True)
+
+// Robert
+
+
+> Cheers,
+>
+> Richard
+>
+>
+>
 
