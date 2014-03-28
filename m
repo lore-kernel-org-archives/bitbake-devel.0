@@ -1,38 +1,30 @@
-Return-Path: <trevor.woerner@linaro.org>
-Received: from mail-oa0-f50.google.com (mail-oa0-f50.google.com
-	[209.85.219.50])
-	by mail.openembedded.org (Postfix) with ESMTP id 3C4886F7E7
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 7CC1D6B4F7
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Mar 2014 17:01:06 +0000 (UTC)
-Received: by mail-oa0-f50.google.com with SMTP id i7so4774095oag.9
+	Fri, 28 Mar 2014 11:06:34 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s2SB6ULY013549 for <bitbake-devel@lists.openembedded.org>;
+	Fri, 28 Mar 2014 11:06:30 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 26D8A_04_vjK for <bitbake-devel@lists.openembedded.org>;
+	Fri, 28 Mar 2014 11:06:29 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s2SB6Pi8013544
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Mar 2014 10:01:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=qcCR/C6rsDbgX1DOQMaDom3IppfIhGSFet1KT8/+5bs=;
-	b=kHne99H9Tl4U+jmAK69NfC5755O9dPVcN0y1e8YIG1kUIWpO9ib34cB2InauMRnpde
-	t4WjBb4QfyMawDzS/vngD4NjBDJ/cwIBKex9Z+Lr7lXddWCG0iKGtG6JMzHT0xFpKZdB
-	Etj1hfNfKghJUDzho/l9/FcP8UAzrJSyJs6earDo5gR5lF/6Y2WPKJg+/U/gkCks0IsB
-	MRBMOzXymJZ4dyF3B3M38RuGSKB1BSMXIc5SdAOY5dwzZEBuPshm0lr+s+nGFpMNwv3P
-	nBJ7Tu8NLoBoqSBFw0pA/z2kf+rxaxjxgG8/UrDwGZsxB0PNzFK2Oo8Y4k1mmw0By2a4
-	ai5g==
-X-Gm-Message-State: ALoCoQniip8nBzYQ5z1Gp0I8kT0Oo1WEpSZ+L+wcqUW0fd+P3+J6JgElg7RYK8sNop/vuYwjpxl0
-X-Received: by 10.182.117.195 with SMTP id kg3mr2315016obb.17.1395939667316;
-	Thu, 27 Mar 2014 10:01:07 -0700 (PDT)
-Received: from openSUSE-i7.site (69-165-220-158.dsl.teksavvy.com.
-	[69.165.220.158])
-	by mx.google.com with ESMTPSA id x3sm10448801oek.3.2014.03.27.10.01.06
-	for <multiple recipients>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 27 Mar 2014 10:01:06 -0700 (PDT)
-From: Trevor Woerner <trevor.woerner@linaro.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 27 Mar 2014 13:00:51 -0400
-Message-Id: <1395939651-31508-1-git-send-email-trevor.woerner@linaro.org>
-X-Mailer: git-send-email 1.9.0
-Cc: patches@linaro.org
-Subject: [PATCH] .gitignore: update documentation directory name
+	Fri, 28 Mar 2014 11:06:26 GMT
+Message-ID: <1396004778.24890.172.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Fri, 28 Mar 2014 11:06:18 +0000
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] cooker: Only change self.data if it exists
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,34 +37,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 27 Mar 2014 17:01:09 -0000
+X-List-Received-Date: Fri, 28 Mar 2014 11:06:40 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-In the yocto-docs repository, the documentation is stored in a directory
-called "documentation". In this repository the documentation is stored in
-"doc".
+With the change to more optimal default featureset behaviour, a race was
+exposed by hob where the code may try and change self.data before it
+exists. This change avoids that.
 
-This update allows git to properly ignore generated documentation.
+When the datastore is created, the cooker configuration is used so
+data tracking is correctly handled regardless.
 
-Signed-off-by: Trevor Woerner <trevor.woerner@linaro.org>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- .gitignore | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index e81d887..5d3ac60 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -207,11 +207,13 @@ class BBCooker:
+ 
+     def enableDataTracking(self):
+         self.configuration.tracking = True
+-        self.data.enableTracking()
++        if hasattr(self, "data"):
++            self.data.enableTracking()
+ 
+     def disableDataTracking(self):
+         self.configuration.tracking = False
+-        self.data.disableTracking()
++        if hasattr(self, "data"):
++            self.data.disableTracking()
+ 
+     def modifyConfigurationVar(self, var, val, default_file, op):
+         if op == "append":
 
-diff --git a/.gitignore b/.gitignore
-index d64f6f8..ba767de 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -7,6 +7,6 @@ pyshtables.py
- /bin/bitbakec
- *.swp
- tags
--documentation/user-manual/user-manual.html
--documentation/user-manual/user-manual.pdf
--documentation/user-manual/user-manual.tgz
-+doc/user-manual/user-manual.html
-+doc/user-manual/user-manual.pdf
-+doc/user-manual/user-manual.tgz
--- 
-1.9.0
 
 
