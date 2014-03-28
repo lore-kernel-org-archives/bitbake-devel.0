@@ -1,31 +1,30 @@
-Return-Path: <jason.wessel@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id CDCD66E3BB
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id 0B4C96CE74
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Mar 2014 15:25:58 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.5) with ESMTP id s2SFPu73011102
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Fri, 28 Mar 2014 08:25:56 -0700 (PDT)
-Received: from [10.0.2.15] (147.11.118.122) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.3.169.1;
-	Fri, 28 Mar 2014 08:25:56 -0700
-Message-ID: <53359484.7070707@windriver.com>
-Date: Fri, 28 Mar 2014 10:25:56 -0500
-From: Jason Wessel <jason.wessel@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:24.0) Gecko/20100101 Thunderbird/24.3.0
-MIME-Version: 1.0
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
-References: <1395821145-2242-1-git-send-email-cristiana.voicu@intel.com>
-	<CAL7ttbdPWNTANmGEEK9T7OwQ7HY0j1xtMdhJeOdouvEZ__cvwQ@mail.gmail.com>
-	<5335718B.3070709@windriver.com>
-	<2703747.EGqZ9dGWcs@peggleto-mobl5.ger.corp.intel.com>
-In-Reply-To: <2703747.EGqZ9dGWcs@peggleto-mobl5.ger.corp.intel.com>
-X-Enigmail-Version: 1.6
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] cooker: bitbake memres server should not always reload the cache
+	Fri, 28 Mar 2014 17:06:57 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s2SH6qVj028292 for <bitbake-devel@lists.openembedded.org>;
+	Fri, 28 Mar 2014 17:06:52 GMT
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id SmYGQHy7Ttjn for <bitbake-devel@lists.openembedded.org>;
+	Fri, 28 Mar 2014 17:06:52 +0000 (GMT)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s2SH6mvV028289
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 28 Mar 2014 17:06:49 GMT
+Message-ID: <1396026403.14790.7.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Fri, 28 Mar 2014 17:06:43 +0000
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] server/xmlrpc: Simlify featureset handling
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,38 +37,82 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 28 Mar 2014 15:25:58 -0000
-Content-Type: text/plain; charset="ISO-8859-1"
+X-List-Received-Date: Fri, 28 Mar 2014 17:06:58 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On 03/28/2014 09:22 AM, Paul Eggleton wrote:
-> On Friday 28 March 2014 07:56:43 Jason Wessel wrote:
->> On 03/28/2014 06:43 AM, Alex Damian wrote:
->>> Please hold merging this change.
->>>
->>> I think we need to discuss a bit on this. My expectation is that the
->>> Bitbake server will reinit its state between builds, re-parsing the
->>> configuration files and reload the cache. I am not sure why we would
->>> consider maintaining the hot cache copy in memory between builds.
->> It is about increasing the interactivity of the system.  There are certainly
->> times you need to soft reset, but perhaps that is what we need to expose. 
->> If I want to run a dev shell and have done a build, this is something I'd
->> like to be instantaneous, or if I am working on the package and want to
->> re-run the compile and package steps, there really is no need to parse.
->>
->> There is a trade off for the individual package work vs the work of
->> rebuilding the entire image.  In the case of the entire image you most
->> certainly want the soft reset behavior.
-> To my mind it depends on the likelihood of something having changed and 
-> whether that change might affect what you would be doing with the action that 
-> follows. For example. if you're trying to fix the execution of a particular 
-> task, you would expect to see any change in the recipe / configuration to take 
-> effect when re-running the task.
+Rather than passing featureset around various places where the data doesn't
+really belong, run a command at connection time to set the appropriate
+features. This is similar to what the process server does.
 
-I think there should be a lighter weight way to check then.  I have to believe we could actually check all the time stamps pretty quickly if we have them stored away as a part of the parse for all the files that were touched.  I admit I have not looked a whole lot at what determines when to re-parse / soft reset, but I have to believe we can come up with a light enough way in mem-res mode so as not to pay a reparse toll like we are doing presently.  Perhaps this is what the cache check already does today?
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+diff --git a/bitbake/lib/bb/server/xmlrpc.py b/bitbake/lib/bb/server/xmlrpc.py
+index 46d074a..bf867b5 100644
+--- a/bitbake/lib/bb/server/xmlrpc.py
++++ b/bitbake/lib/bb/server/xmlrpc.py
+@@ -89,7 +89,7 @@ class BitBakeServerCommands():
+         self.server = server
+         self.has_client = False
+ 
+-    def registerEventHandler(self, host, port, featureset = []):
++    def registerEventHandler(self, host, port):
+         """
+         Register a remote UI Event Handler
+         """
+@@ -99,13 +99,6 @@ class BitBakeServerCommands():
+         if (self.cooker.state in [bb.cooker.state.parsing, bb.cooker.state.running]):
+             return None
+ 
+-        original_featureset = list(self.cooker.featureset)
+-        for f in featureset:
+-            self.cooker.featureset.setFeature(f)
+-
+-        if (original_featureset != list(self.cooker.featureset)):
+-            self.cooker.reset()
+-
+         self.event_handle = bb.event.register_UIHhandler(s)
+         return self.event_handle
+ 
+@@ -293,9 +286,15 @@ class BitBakeXMLRPCServerConnection(BitBakeBaseServerConnection):
+             return None
+         self.transport.set_connection_token(token)
+ 
+-        self.events = uievent.BBUIEventQueue(self.connection, self.clientinfo, self.featureset)
++        self.events = uievent.BBUIEventQueue(self.connection, self.clientinfo)
+         for event in bb.event.ui_queue:
+             self.events.queue_event(event)
++
++        _, error = self.connection.runCommand(["setFeatures", self.featureset])
++        if error:
++            logger.error("Unable to set the cooker to the correct featureset: %s" % error)
++            raise BaseException(error)
++
+         return self
+ 
+     def removeClient(self):
+diff --git a/bitbake/lib/bb/ui/uievent.py b/bitbake/lib/bb/ui/uievent.py
+index 2133b44..98658f6 100644
+--- a/bitbake/lib/bb/ui/uievent.py
++++ b/bitbake/lib/bb/ui/uievent.py
+@@ -28,7 +28,7 @@ import socket, threading, pickle
+ from SimpleXMLRPCServer import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
+ 
+ class BBUIEventQueue:
+-    def __init__(self, BBServer, clientinfo=("localhost, 0"), featureset=[]):
++    def __init__(self, BBServer, clientinfo=("localhost, 0")):
+ 
+         self.eventQueue = []
+         self.eventQueueLock = threading.Lock()
+@@ -44,7 +44,7 @@ class BBUIEventQueue:
+         server.register_function( self.send_event, "event.sendpickle" )
+         server.socket.settimeout(1)
+ 
+-        self.EventHandle = self.BBServer.registerEventHandler(self.host, self.port, featureset)
++        self.EventHandle = self.BBServer.registerEventHandler(self.host, self.port)
+ 
+         if (self.EventHandle == None):
+             bb.fatal("Could not register UI event handler")
 
-Perhaps you know what all is going on when the bitbake cache is doing its load (which takes ~ 2 seconds or so) for the set of recipes I was interested in.  My goal here is merely to improve the interactivity, assuming it is possible.
 
-Cheers,
-Jason.
 
