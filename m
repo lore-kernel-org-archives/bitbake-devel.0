@@ -1,36 +1,30 @@
-Return-Path: <joe@deserted.net>
-Received: from mail-qg0-f44.google.com (mail-qg0-f44.google.com
-	[209.85.192.44])
-	by mail.openembedded.org (Postfix) with ESMTP id 2E1F060DFA
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id D66CA6A8F0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 31 Mar 2014 20:44:29 +0000 (UTC)
-Received: by mail-qg0-f44.google.com with SMTP id a108so7888790qge.17
+	Mon, 31 Mar 2014 22:07:36 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s2VM6meR030305 for <bitbake-devel@lists.openembedded.org>;
+	Mon, 31 Mar 2014 23:07:31 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 3PAdCaHtOaew for <bitbake-devel@lists.openembedded.org>;
+	Mon, 31 Mar 2014 23:07:31 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s2VM7P1C030321
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 31 Mar 2014 13:44:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=vCh6gsONVXOruU83A/JNW3iixwrDqdHSx5tc/uKcbUc=;
-	b=Gn/9PdhLp3iSruXa5S/7jv8Yh0Z5pmYJZxRhyoF0ereZ9ooSgPzWI9s0F6zZIBS1mw
-	xw2e9jSEmlOEXKQTzr6UIgjthGpQMPt2DU72mUGo/cs80MHY2EAPa6jBUCaPNEbFRYGf
-	2lfD6a1PxNPwowaazWiWcVzZYdYB6+rP6cA5n/v0aPdIF6AkMJzEhSrg9I0uT1hEOctl
-	ebJTLb9jyCjEJZ/NS2RnXd4ZHCOabMafFmBrICS0ERKnDNgMibxQVGLe1It7FerSkQfZ
-	a8YLb1aVpYC/rR/AZD5wCNxWdgOp55iixzscl/PrNGIQIPZKfyTDfqn7jHui7GtqLQrd
-	KZqw==
-X-Gm-Message-State: ALoCoQnhxQzqaGQLPUSm3A5byqicQQiMVQ6wPj7O97VPZRYn0Gva8LLYt7Wmp69jIUcCIon4sQwr
-X-Received: by 10.224.14.14 with SMTP id e14mr10395841qaa.80.1396298670384;
-	Mon, 31 Mar 2014 13:44:30 -0700 (PDT)
-Received: from burninator.local ([128.224.252.2])
-	by mx.google.com with ESMTPSA id p2sm30445725qah.38.2014.03.31.13.44.29
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 31 Mar 2014 13:44:29 -0700 (PDT)
-From: joe@deserted.net
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 31 Mar 2014 16:44:27 -0400
-Message-Id: <1396298667-17975-1-git-send-email-joe@deserted.net>
-X-Mailer: git-send-email 1.7.10.4
-Subject: [PATCH] bitbake: parse: allow vars_from_file to consider inc files as recipes
+	Mon, 31 Mar 2014 23:07:27 +0100
+Message-ID: <1396303640.14790.85.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Mon, 31 Mar 2014 23:07:20 +0100
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] runqueue: Fix sstate task dependency problems
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,47 +37,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 31 Mar 2014 20:44:31 -0000
+X-List-Received-Date: Mon, 31 Mar 2014 22:07:40 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Joe MacDonald <joe@deserted.net>
+If a setscene task has [depends], its possible they may still get executed out
+of order. The issue is that the dependencies are set to set() for all tasks
+involved. This patch adds back in explict dependencies within these chains
+to avoid the setscene task failures.
 
-A side-effect of making vars_from_file return None for non-recipes is that
-PV gets 'None' if you have an included file named <recipe>.inc.  If there
-is a recipe with a version number in the name for a .inc file, it's
-probably reasonable to calculate PV based on that file, rather than giving
-it 'None' (which becomes 1.0 in most cases).
+[YOCTO #6069]
 
-Signed-off-by: Joe MacDonald <joe@deserted.net>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- bitbake/lib/bb/parse/__init__.py |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 42b6c48..1a19677 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1757,6 +1757,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                     # Have to zero this to avoid circular dependencies
+                     sq_revdeps_squash[self.rqdata.runq_setscene.index(taskid)] = set()
+ 
++        for task in self.sq_harddeps:
++             for dep in self.sq_harddeps[task]:
++                 sq_revdeps_squash[dep].add(task)
++
+         #for task in xrange(len(sq_revdeps_squash)):
+         #    realtask = self.rqdata.runq_setscene[task]
+         #    bb.warn("Task %s: %s_setscene is %s " % (task, self.rqdata.get_user_idstring(realtask) , sq_revdeps_squash[task]))
 
-I ran into this when building meta-selinux where there's a chain of includes:
-
-   refpolicy-mls_2.20130424.bb
-    -> refpolicy_2.20130424.inc
-      -> refpolicy_common.inc
-
-refpolicy_2.20130424.inc sets FILESEXTRAPATH to pick up patches out of the
-refpolicy-2.20130424 directory, but during the build PV would be 2.20130424 only
-until the .inc file was included, then it became 1.0 and the patches were never
-found.
-
-
-diff --git a/bitbake/lib/bb/parse/__init__.py b/bitbake/lib/bb/parse/__init__.py
-index e4a44dd..5157d80 100644
---- a/bitbake/lib/bb/parse/__init__.py
-+++ b/bitbake/lib/bb/parse/__init__.py
-@@ -127,7 +127,7 @@ def resolve_file(fn, d):
- # Used by OpenEmbedded metadata
- __pkgsplit_cache__={}
- def vars_from_file(mypkg, d):
--    if not mypkg or not mypkg.endswith((".bb", ".bbappend")):
-+    if not mypkg or not mypkg.endswith((".bb", ".bbappend", ".inc")):
-         return (None, None, None)
-     if mypkg in __pkgsplit_cache__:
-         return __pkgsplit_cache__[mypkg]
--- 
-1.7.10.4
 
 
