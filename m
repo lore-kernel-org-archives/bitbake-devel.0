@@ -1,42 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f178.google.com (mail-we0-f178.google.com
-	[74.125.82.178])
-	by mail.openembedded.org (Postfix) with ESMTP id AD02E6EDF9
+Received: from mail-wi0-f182.google.com (mail-wi0-f182.google.com
+	[209.85.212.182])
+	by mail.openembedded.org (Postfix) with ESMTP id CF0466EDF9
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 31 Mar 2014 16:47:11 +0000 (UTC)
-Received: by mail-we0-f178.google.com with SMTP id u56so4937111wes.23
+	Mon, 31 Mar 2014 16:47:15 +0000 (UTC)
+Received: by mail-wi0-f182.google.com with SMTP id d1so3680570wiv.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 31 Mar 2014 09:47:12 -0700 (PDT)
+	Mon, 31 Mar 2014 09:47:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=pImpYeVPYSANqTqHouWGsWR7A3Wthf68jBhrk2Cq4KQ=;
-	b=EO/jFmkmO3Q6mqKcfRdlTnU4OmM0NqFlEJNo2rpgm7gXQGJMxtcyDQSpaEVr0ax7K5
-	4Cy89FXdA/CGy+Gu/8KXQfwDCoVRpTnrd0Eru2i9BMV1FnIYGxTzeKOVWzKbgg4xwYuY
-	78gJw8Q0zmxHNsBHdz12S1p6b0iFVyrai230BMoQn1gKrqKkttp+i3m/ws6bavjzO6AH
-	+oCmfK0Cxe0+CCgDwfKtDt8YW/iA0/Mutn6rON6ePcUQKKpWM6YvxBR1iW0fF57RHGvG
-	NusuDpuE+5aPbQrYcXCo9fKfz0HUujnlx9rgeZhyWzUK77nsx+4Wb6kmlfBwpWcMad8A
-	OwrQ==
-X-Gm-Message-State: ALoCoQmGCxQr6jHpNKAwKk4wnSZy/v/zupVxkcP/h4vVYf3YNA+QzW7akxrgBEMfFltZLvk3P6qp
-X-Received: by 10.194.104.197 with SMTP id gg5mr15974175wjb.26.1396284432570; 
-	Mon, 31 Mar 2014 09:47:12 -0700 (PDT)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references:in-reply-to:references;
+	bh=GJU4jSJRjcmBs7gN1fgPH687HXDzGbwapYP+Dt4J0D8=;
+	b=hRRbxJtAB3bwtdCwCcV4acY2rywTJR0fbGNtyfvBod7GxurBN5RyUJa4FvQhiiWdul
+	gfTy31MxhLlkmtRyxLZM3ccOTl6XhDvIxbi+smnO47FkCmQATWbHu14uc8KXVgV8YPFM
+	IzcmJTHKvBpEZVJp+i1V2V000JHILbZU1y2kHi65+ExRpnA77RtPtqQTmm1uft9uMpLo
+	j6s98oKeBjO3r/FwAqSz0ms0iSrz6kAFg/vPjYKNgLiJjblHzLXtZ0EynyA+x3ut95JB
+	TuIdcrA3wJlMy1RwpBPkmLNdO9fOOMJkwIQqVtvOJAEBT9ze0Wrdtm/EBYJU2B8jQZTy
+	kS0A==
+X-Gm-Message-State: ALoCoQlk73twSp5nhqzBzVMvGOJs2vuznA1DZNOUddyIU/Dasak4XzrNoUC8M5Lx+6+h+7t7AEri
+X-Received: by 10.194.90.39 with SMTP id bt7mr4553868wjb.93.1396284435996;
+	Mon, 31 Mar 2014 09:47:15 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id f3sm27699924wiv.2.2014.03.31.09.47.10
+	by mx.google.com with ESMTPSA id w6sm13283630wjq.29.2014.03.31.09.47.13
 	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 31 Mar 2014 09:47:11 -0700 (PDT)
+	Mon, 31 Mar 2014 09:47:14 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id 740335601AD; Mon, 31 Mar 2014 17:47:11 +0100 (BST)
+	id 09D0B5601EB; Mon, 31 Mar 2014 17:47:15 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 31 Mar 2014 17:47:10 +0100
-Message-Id: <cover.1396284354.git.alexandru.damian@intel.com>
+Date: Mon, 31 Mar 2014 17:47:02 +0100
+Message-Id: <53e5cdf5b6cd715e8b1ed57c52abbce2184de75e.1396284354.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
-Cc: Dave Lerner <dave.lerner@windriver.com>,
-	David Reyna <David.Reyna@windriver.com>,
-	Ravi Chintakunta <ravi.chintakunta@timesys.com>,
-	Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 00/14] Toaster pull request
+In-Reply-To: <2eb6aba6ca24b899b4afe03cb21460d4238e19ed.1396284354.git.alexandru.damian@intel.com>
+References: <2eb6aba6ca24b899b4afe03cb21460d4238e19ed.1396284354.git.alexandru.damian@intel.com>
+In-Reply-To: <cover.1396284354.git.alexandru.damian@intel.com>
+References: <cover.1396284354.git.alexandru.damian@intel.com>
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 02/14] toaster: fix timezone detection
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,70 +51,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 31 Mar 2014 16:47:13 -0000
+X-List-Received-Date: Mon, 31 Mar 2014 16:47:16 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Hello,
+This patch replaces faulty timezone detection with a version
+that simply reads the TZ environment variable if it is set.
 
-This is a Toaster patchset pull request. These patches have been reviewed on the toaster
-mailing list.
+If the TZ is not set, we do a reverse match search among known
+timezone definitions and take the first match.
 
-Can you please pull at your convenience ?
+    [YOCTO #5499]
 
-Thank you,
-Alex
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+---
+ lib/toaster/toastermain/settings.py | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
-The following changes since commit f4ebc4de63d64e3b5f87e1d0f51507760c3d82d7:
-
-  user-manual-execution.xml: Added how BB processes curly braces. (2014-03-30 10:19:41 +0100)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib adamian/20140331-bb-submission
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20140331-bb-submission
-
-Alexandru DAMIAN (2):
-  toaster: update saving sstate task data
-  toaster: fix timezone detection
-
-Belen Barros Pena (7):
-  toaster: Show "No builds found" in the builds table
-  toaster: Remove trailing spaces from 'name'
-  toaster: Small tweaks to the packages included interface
-  toaster: Fix the fade out animation
-  toaster: Increase animation duration
-  toaster: Match search results form to no results form
-  toaster: Update help text in format_vpackage_namehelp tag
-
-Cristiana Voicu (1):
-  toaster: use deploy_dir var to obtain the license.manifest path
-
-Dave Lerner (1):
-  toaster: unbuilt package dependency formats
-
-David Reyna (2):
-  toaster: disable configvar sorts for value and files
-  toaster: secondary sort key as table's default order
-
-Ravi Chintakunta (1):
-  toaster: Display task description
-
- lib/bb/ui/buildinfohelper.py                       | 19 +++++-
- lib/toaster/orm/models.py                          |  7 ++
- lib/toaster/toastergui/static/css/default.css      |  3 +-
- .../toastergui/templates/basetable_top.html        |  2 +-
- lib/toaster/toastergui/templates/build.html        |  6 +-
- .../templates/package_built_dependencies.html      | 75 ++++++++++------------
- .../templates/package_included_tabs.html           |  2 +-
- lib/toaster/toastergui/templates/recipe.html       |  2 +-
- lib/toaster/toastergui/templates/target.html       |  8 +--
- lib/toaster/toastergui/templates/tasks.html        |  2 +-
- lib/toaster/toastergui/templatetags/projecttags.py |  2 +-
- lib/toaster/toastergui/views.py                    | 37 +++++------
- lib/toaster/toastermain/settings.py                | 20 +++++-
- 13 files changed, 106 insertions(+), 79 deletions(-)
-
+diff --git a/lib/toaster/toastermain/settings.py b/lib/toaster/toastermain/settings.py
+index 51fa3cc..e26ee3c 100644
+--- a/lib/toaster/toastermain/settings.py
++++ b/lib/toaster/toastermain/settings.py
+@@ -50,9 +50,23 @@ ALLOWED_HOSTS = []
+ # although not all choices may be available on all operating systems.
+ # In a Windows environment this must be set to your system time zone.
+ 
+-# Always use local computer's time zone
+-import time
+-TIME_ZONE = time.tzname[0]
++# Always use local computer's time zone, find
++import os, hashlib
++if 'TZ' in os.environ:
++    TIME_ZONE = os.environ['TZ']
++else:
++    # need to read the /etc/localtime file which is the libc standard
++    # and do a reverse-mapping to /usr/share/zoneinfo/;
++    # since the timezone may match any number of identical timezone definitions,
++
++    zonefilelist = {}
++    ZONEINFOPATH = '/usr/share/zoneinfo/'
++    for dirpath, dirnames, filenames in os.walk(ZONEINFOPATH):
++        for fn in filenames:
++            filepath = os.path.join(dirpath, fn)
++            zonefilelist[hashlib.md5(open(filepath).read()).hexdigest()] = filepath.lstrip(ZONEINFOPATH).strip()
++
++    TIME_ZONE = zonefilelist[hashlib.md5(open('/etc/localtime').read()).hexdigest()]
+ 
+ # Language code for this installation. All choices can be found here:
+ # http://www.i18nguy.com/unicode/language-identifiers.html
 -- 
 1.9.1
 
