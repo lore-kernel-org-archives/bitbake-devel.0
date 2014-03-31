@@ -1,43 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f178.google.com (mail-wi0-f178.google.com
-	[209.85.212.178])
-	by mail.openembedded.org (Postfix) with ESMTP id D5F496EDF9
+Received: from mail-wi0-f177.google.com (mail-wi0-f177.google.com
+	[209.85.212.177])
+	by mail.openembedded.org (Postfix) with ESMTP id F31306F8DF
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 31 Mar 2014 16:47:17 +0000 (UTC)
-Received: by mail-wi0-f178.google.com with SMTP id bs8so3678980wib.5
+	Mon, 31 Mar 2014 16:47:15 +0000 (UTC)
+Received: by mail-wi0-f177.google.com with SMTP id cc10so3672771wib.16
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 31 Mar 2014 09:47:18 -0700 (PDT)
+	Mon, 31 Mar 2014 09:47:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=OnW7CdPoZ7R7iUn/gsdgcYw13kHp2WGyGDZH04CvH0E=;
-	b=f1weSKIWDjSEtSg9o1OJQOeSSaJLBiYlz0vdvIj2yxY/IquKxnDvTkLeIGGV6I5RUY
-	9qaPglI5Puij+5TguCOsDtmhFhX4vg96zCKHdgSWP70Mzoeu4hHVrh8r610CJSJeFBHh
-	5pCOXx6uStnqOr5G5UQIkpYm3mGWSt3lgOtvuk3+MVrHh2cgaEVXBA2GZXoQ01OAwHRb
-	xn6qvgTjxK4WRzvXtWu/n9KrQtU9NDu3VEofQP3ixRx12VkNaiWOUtCIGspJwKbYSpj/
-	n+meuQZEkPcDSRXgvdlalmUTVeXuXLZ86ucvSw11br3IbPGkJ4s+gJfLb2oqaEaZ3vcw
-	BLoA==
-X-Gm-Message-State: ALoCoQmIXYpjj5V40eWsfx/zofEJNRMRjMOoB4uT47L4Ygat1izbeEgTqgUBvHFR4o1j2Tp/TK/U
-X-Received: by 10.180.189.169 with SMTP id gj9mr13736816wic.17.1396284438183; 
-	Mon, 31 Mar 2014 09:47:18 -0700 (PDT)
+	bh=FfRTFd9dlopqOrfFBxaR2JXHsYFIQk6evKq18sthpeU=;
+	b=BfIVIJO6jCpYJre1ptzeIgtOoS3jfZ6PHmzWAFySjS20861L1kzyVTi+JecQcW5kN+
+	oyIbH972oGHyDDmOa8B3bBjdowV/xtk542ogvM8jLN0doCgk1SOZ+w5UDiMUWzRdDFns
+	u0C0fOkjCMiWjuQApE2Eykelp16GK9/FmwXQgRSuSkC+wdGwjHMtBDhB/bm4QmdsLcKZ
+	Q4JvO4KykMhywNXjVOh8wz1E65Qu7G4dnkzMfkC45lmwFj0Om+jLYuIcUWtsswDuRGCx
+	cLqEAzSjHfBtqddYTb+mM1r6XFHbt7uxJAouKJ1IAZNPRa1nEPP1eeJk0YjMMJ6zuoWX
+	vrww==
+X-Gm-Message-State: ALoCoQnGXJS054l4MfXVrl4+nHGWPV/yts8I/1rTM/XWw+ug/F7c6oLuD2imBT+bYXi/tbbJbZD/
+X-Received: by 10.180.101.134 with SMTP id fg6mr13731097wib.6.1396284436295;
+	Mon, 31 Mar 2014 09:47:16 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id fs8sm27645771wib.8.2014.03.31.09.47.15
+	by mx.google.com with ESMTPSA id fs8sm27645608wib.8.2014.03.31.09.47.13
 	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 31 Mar 2014 09:47:16 -0700 (PDT)
+	Mon, 31 Mar 2014 09:47:14 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id 133C05603A6; Mon, 31 Mar 2014 17:47:15 +0100 (BST)
+	id 0F8FB56038C; Mon, 31 Mar 2014 17:47:15 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 31 Mar 2014 17:47:07 +0100
-Message-Id: <9f2c13bae1f892db529d56b9539483a5a5c86979.1396284354.git.alexandru.damian@intel.com>
+Date: Mon, 31 Mar 2014 17:47:05 +0100
+Message-Id: <edbffe6dbd1c1c2532cdcd4945982c7f7104179e.1396284354.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <2eb6aba6ca24b899b4afe03cb21460d4238e19ed.1396284354.git.alexandru.damian@intel.com>
 References: <2eb6aba6ca24b899b4afe03cb21460d4238e19ed.1396284354.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1396284354.git.alexandru.damian@intel.com>
 References: <cover.1396284354.git.alexandru.damian@intel.com>
-Subject: [PATCH 07/14] toaster: Remove trailing spaces from 'name'
+Cc: David Reyna <David.Reyna@windriver.com>
+Subject: [PATCH 05/14] toaster: disable configvar sorts for value and files
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,45 +53,40 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Mon, 31 Mar 2014 16:47:18 -0000
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
+From: David Reyna <David.Reyna@windriver.com>
 
-Remove all trailing spaces from 'name' because they show up
-in the filter headings, which I find incredibly annoying.
+Disable the sort on files because it sorts on the file array's
+first (and invisible) element. Disable the sort on values
+because the raw ASCII sort looks wrong to the general user,
+especially for values with leading spaces.
 
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
+[YOCTO #6004]
+
+Signed-off-by: David Reyna <David.Reyna@windriver.com>
 ---
- lib/toaster/toastergui/views.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ lib/toaster/toastergui/views.py | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 6413c80..6028d4d 100644
+index 4e412ca..6413c80 100644
 --- a/lib/toaster/toastergui/views.py
 +++ b/lib/toaster/toastergui/views.py
-@@ -1111,13 +1111,13 @@ def configvars(request, build_id):
-                 'search_term':search_term,
-             # Specifies the display of columns for the table, appearance in "Edit columns" box, toggling default show/hide, and specifying filters for columns
-                 'tablecols' : [
--                {'name': 'Variable ',
-+                {'name': 'Variable',
-                  'qhelp': "BitBake is a generic task executor that considers a list of tasks with dependencies and handles metadata that consists of variables in a certain format that get passed to the tasks",
-                  'dclass' : "span3",
-                  'orderfield': _get_toggle_order(request, "variable_name"),
-                  'ordericon':_get_toggle_order_icon(request, "variable_name"),
-                 },
--                {'name': 'Value ',
-+                {'name': 'Value',
+@@ -1120,15 +1120,11 @@ def configvars(request, build_id):
+                 {'name': 'Value ',
                   'qhelp': "The value assigned to the variable",
                   'dclass': "span4",
+-                 'orderfield': _get_toggle_order(request, "variable_value"),
+-                 'ordericon':_get_toggle_order_icon(request, "variable_value"),
                  },
-@@ -1137,7 +1137,7 @@ def configvars(request, build_id):
-                                ]
-                              },
-                 },
--                {'name': 'Description ',
-+                {'name': 'Description',
-                  'qhelp': "A brief explanation of the variable",
-                  'clclass': 'description', 'hidden' : 0,
-                  'dclass': "span5",
+                 {'name': 'Set in file',
+                  'qhelp': "The last configuration file that touched the variable value",
+                  'clclass': 'file', 'hidden' : 0,
+                  'dclass': "span6",
+-                 'orderfield': _get_toggle_order(request, "vhistory__file_name"),
+-                 'ordericon':_get_toggle_order_icon(request, "vhistory__file_name"),
+                  'filter' : {
+                     'class' : 'vhistory__file_name',
+                     'label': 'Show:',
 -- 
 1.9.1
 
