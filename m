@@ -1,30 +1,27 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id D66CA6A8F0
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id CA3E56084B
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 31 Mar 2014 22:07:36 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s2VM6meR030305 for <bitbake-devel@lists.openembedded.org>;
-	Mon, 31 Mar 2014 23:07:31 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 3PAdCaHtOaew for <bitbake-devel@lists.openembedded.org>;
-	Mon, 31 Mar 2014 23:07:31 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s2VM7P1C030321
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
+	Tue,  1 Apr 2014 01:46:37 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.14.5/8.14.5) with ESMTP id s311kcCE029685
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 31 Mar 2014 23:07:27 +0100
-Message-ID: <1396303640.14790.85.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 31 Mar 2014 23:07:20 +0100
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] runqueue: Fix sstate task dependency problems
+	Mon, 31 Mar 2014 18:46:38 -0700 (PDT)
+Received: from [128.224.162.226] (128.224.162.226) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.40) with Microsoft SMTP Server id 14.3.169.1;
+	Mon, 31 Mar 2014 18:46:38 -0700
+Message-ID: <533A1A7C.8030509@windriver.com>
+Date: Tue, 1 Apr 2014 09:46:36 +0800
+From: Robert Yang <liezhi.yang@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux i686;
+	rv:24.0) Gecko/20100101 Thunderbird/24.2.0
+MIME-Version: 1.0
+To: <bitbake-devel@lists.openembedded.org>
+References: <1396303640.14790.85.camel@ted>
+In-Reply-To: <1396303640.14790.85.camel@ted>
+Subject: Re: [PATCH] runqueue: Fix sstate task dependency problems
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,34 +34,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 31 Mar 2014 22:07:40 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Tue, 01 Apr 2014 01:46:40 -0000
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 
-If a setscene task has [depends], its possible they may still get executed out
-of order. The issue is that the dependencies are set to set() for all tasks
-involved. This patch adds back in explict dependencies within these chains
-to avoid the setscene task failures.
 
-[YOCTO #6069]
+Cool, it works well now.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 42b6c48..1a19677 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1757,6 +1757,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-                     # Have to zero this to avoid circular dependencies
-                     sq_revdeps_squash[self.rqdata.runq_setscene.index(taskid)] = set()
- 
-+        for task in self.sq_harddeps:
-+             for dep in self.sq_harddeps[task]:
-+                 sq_revdeps_squash[dep].add(task)
-+
-         #for task in xrange(len(sq_revdeps_squash)):
-         #    realtask = self.rqdata.runq_setscene[task]
-         #    bb.warn("Task %s: %s_setscene is %s " % (task, self.rqdata.get_user_idstring(realtask) , sq_revdeps_squash[task]))
+Tested-by: Robert Yang <liezhi.yang@windriver.com>
+
+// Robert
 
 
+On 04/01/2014 06:07 AM, Richard Purdie wrote:
+> If a setscene task has [depends], its possible they may still get executed out
+> of order. The issue is that the dependencies are set to set() for all tasks
+> involved. This patch adds back in explict dependencies within these chains
+> to avoid the setscene task failures.
+>
+> [YOCTO #6069]
+>
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> ---
+> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+> index 42b6c48..1a19677 100644
+> --- a/bitbake/lib/bb/runqueue.py
+> +++ b/bitbake/lib/bb/runqueue.py
+> @@ -1757,6 +1757,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+>                       # Have to zero this to avoid circular dependencies
+>                       sq_revdeps_squash[self.rqdata.runq_setscene.index(taskid)] = set()
+>
+> +        for task in self.sq_harddeps:
+> +             for dep in self.sq_harddeps[task]:
+> +                 sq_revdeps_squash[dep].add(task)
+> +
+>           #for task in xrange(len(sq_revdeps_squash)):
+>           #    realtask = self.rqdata.runq_setscene[task]
+>           #    bb.warn("Task %s: %s_setscene is %s " % (task, self.rqdata.get_user_idstring(realtask) , sq_revdeps_squash[task]))
+>
+>
 
