@@ -1,30 +1,20 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
-	by mail.openembedded.org (Postfix) with ESMTP id C3F256E3DE
+Return-Path: <marius.avram@intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id E90126B5D9
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  1 Apr 2014 08:58:50 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s318whGY010960; Tue, 1 Apr 2014 09:58:43 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id TuGjWAGMX7rG; Tue,  1 Apr 2014 09:58:43 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s318waJQ010953
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
-	Tue, 1 Apr 2014 09:58:38 +0100
-Message-ID: <1396342711.14790.92.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: joe@deserted.net
-Date: Tue, 01 Apr 2014 09:58:31 +0100
-In-Reply-To: <1396298667-17975-1-git-send-email-joe@deserted.net>
-References: <1396298667-17975-1-git-send-email-joe@deserted.net>
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] bitbake: parse: allow vars_from_file to consider inc files as recipes
+	Tue,  1 Apr 2014 10:58:56 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 01 Apr 2014 03:58:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="4.97,771,1389772800"; d="scan'208";a="511763245"
+Received: from mavram-vostro.rb.intel.com ([10.237.105.50])
+	by fmsmga002.fm.intel.com with ESMTP; 01 Apr 2014 03:58:57 -0700
+From: Marius Avram <marius.avram@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue,  1 Apr 2014 13:59:05 +0300
+Message-Id: <1396349945-30180-1-git-send-email-marius.avram@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] cooker: Overwrite IMAGE_BASENAME to default in custom image
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,54 +27,72 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 01 Apr 2014 08:58:56 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 01 Apr 2014 10:59:00 -0000
 
-On Mon, 2014-03-31 at 16:44 -0400, joe@deserted.net wrote:
-> From: Joe MacDonald <joe@deserted.net>
-> 
-> A side-effect of making vars_from_file return None for non-recipes is that
-> PV gets 'None' if you have an included file named <recipe>.inc.  If there
-> is a recipe with a version number in the name for a .inc file, it's
-> probably reasonable to calculate PV based on that file, rather than giving
-> it 'None' (which becomes 1.0 in most cases).
-> 
-> Signed-off-by: Joe MacDonald <joe@deserted.net>
-> ---
->  bitbake/lib/bb/parse/__init__.py |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> I ran into this when building meta-selinux where there's a chain of includes:
-> 
->    refpolicy-mls_2.20130424.bb
->     -> refpolicy_2.20130424.inc
->       -> refpolicy_common.inc
+This solves a problem of custom images which inherit a base
+image with IMAGE_BASENAME overwritten in their recipe by a
+different value than its default one: ${PN}.
 
-The question to ask here is why is PV being expanded during the .inc
-file?
+The value of IMAGE_BASE causes a crash when hob will try to
+create symbolic links to the resulting images from the deploy
+directory, because it will look for names similar to
+<original_recipe_name>-edited-timestamp-machine.rootfs.*
+which might be different from the actual resulting image.
 
-When this code was changed, we did find some issues like this but it
-usually means something unexpected was happening and "bad" PV values
-were actually being used in some cases. It was therefore a conscious
-decision not to do this.
+The solution is to simply overwrite IMAGE_BASENAME in the
+custom recipe to the default value in the case IMAGE_BASENAME
+is found in the base recipe.
 
-If I take this change, you could get PV of "common" being used in the
-second .inc file which is nasty.
+Some recipes which were affected by this problem are those
+from meta-fsl-demos (e.g.: fsl-image-test).
 
-I'd therefore much rather figure out what is happening to cause the
-expansion of PV in the .inc file and see if we can't avoid that.
+[YOCTO #6017]
 
-Looking at the layer, the issue is:
+Signed-off-by: Marius Avram <marius.avram@intel.com>
+---
+ bitbake/lib/bb/cooker.py |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/refpolicy-${PV}:"
-
-and I'd suggest that line move to the .bb files in this case.
-
-Cheers,
-
-Richard
-
-
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 07202e3..ea861fa 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -1219,6 +1219,7 @@ class BBCooker:
+         '''
+         Create a new image with a "require"/"inherit" base_image statement
+         '''
++        import re
+         if timestamp:
+             image_name = os.path.splitext(image)[0]
+             timestr = time.strftime("-%Y%m%d-%H%M%S")
+@@ -1229,9 +1230,14 @@ class BBCooker:
+             else:
+                 dest = image
+ 
++        basename = False
+         if base_image:
+             with open(base_image, 'r') as f:
+                 require_line = f.readline()
++                p = re.compile("IMAGE_BASENAME *=")
++                for line in f:
++                    if p.search(line):
++                        basename = True
+ 
+         with open(dest, "w") as imagefile:
+             if base_image is None:
+@@ -1250,6 +1256,11 @@ class BBCooker:
+             description_var = "DESCRIPTION = \"" + description + "\"\n"
+             imagefile.write(description_var)
+ 
++            if basename:
++                # If this is overwritten in a inherited image, reset it to default
++                image_basename = "IMAGE_BASENAME = \"${PN}\"\n"
++                imagefile.write(image_basename)
++
+         self.state = state.initial
+         if timestamp:
+             return timestr
+-- 
+1.7.9.5
 
 
