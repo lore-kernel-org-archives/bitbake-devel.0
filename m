@@ -1,44 +1,43 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f178.google.com (mail-wi0-f178.google.com
-	[209.85.212.178])
-	by mail.openembedded.org (Postfix) with ESMTP id BC03A6E760
+Received: from mail-wi0-f169.google.com (mail-wi0-f169.google.com
+	[209.85.212.169])
+	by mail.openembedded.org (Postfix) with ESMTP id B20646E221
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri,  4 Apr 2014 14:11:01 +0000 (UTC)
-Received: by mail-wi0-f178.google.com with SMTP id bs8so1338665wib.11
+Received: by mail-wi0-f169.google.com with SMTP id hm4so2722719wib.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 04 Apr 2014 07:11:02 -0700 (PDT)
+	Fri, 04 Apr 2014 07:11:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=XeBV2XeCvFnsgXcKXWO0VfhEUqkIkPzoek3qAJUgXd0=;
-	b=YRgdbaET08wWAusPoqpcZck8yKjsW4DH0PmNlQMKyoFUUfmy09DOId2v+p4Uc/TS7M
-	I7bbygWIq6btxAIMVn/JyE/t+PHX4RekJQgahd//lnbR+hSUuwgirkrTF/UcFosTyPCh
-	fmSZEfE8eFhLRxIEO5iP3t2azVv01IrFgNd29RnlZ7ElFk2oITafxt3vJUf96veSUn9X
-	nz+CfoDfD39mMTO3isBavlc5T/HaUN5uPx6jJHNoosWoqISxB5AiF1kfAyf0oC2JeYZ9
-	bhl74hDOt5O3TC3iJfwKsGbpxhjaJIze7adM+OeWVGNssA4+ZKELCuuJx4cYs6H5dYh1
-	mptQ==
-X-Gm-Message-State: ALoCoQnACeqpxodVdoscM1o1vHtIDk0n0TABb2smH0TWwQ1pQe5JlO4NtCMRi+/q7K3J0wk4sPBM
-X-Received: by 10.194.71.164 with SMTP id w4mr20683218wju.0.1396620662421;
-	Fri, 04 Apr 2014 07:11:02 -0700 (PDT)
+	bh=UYALM8rpX9/WV0Gzcf1CB+vkDznfOBdmt3ltfI4o1WI=;
+	b=OtVK6vu5HhWo7BM70Ew2t7u5rqfVoXbw66A/QHQfRBqqdLsU0X/A4eRntHp0UbZC2v
+	fCR3cJ+WjuLVCnBLrlfAzwEI/3XCXPuOb0qIQEKpttaTJRObArwjBGcjPYzBy8efgGpT
+	J0tnHXDCLVXwEQW7wOpFIM/cYsIVxG6ecPW7uJrdd43aWEJUaXhA/Md0NlhShxH6SUAw
+	Vc7qtgdUT/3uSY69mOWC2tLnCn7QcCG9d1nLWPf8oa+QgwltH+U4C1RrUthrMMgctWKH
+	uGcDwMsQ16KlPb6vH1Chq4rLDHGOJUdNEZR2IntCitWmi4SV3VnJUPn+GvIoG5/Sk523
+	9HQQ==
+X-Gm-Message-State: ALoCoQkzP1i6AND4Mi4OhYO+xxWJEqlLA3paAbR7kNQdcFr5CzktmKNuMNWPs25/Nz6HRo6ny43m
+X-Received: by 10.180.98.165 with SMTP id ej5mr4837399wib.33.1396620661668;
+	Fri, 04 Apr 2014 07:11:01 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id
-	fs16sm4898864wic.18.2014.04.04.07.10.57 for <multiple recipients>
+	by mx.google.com with ESMTPSA id b2sm4903581wiz.15.2014.04.04.07.10.57
+	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Fri, 04 Apr 2014 07:11:00 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id 9743B560F7F; Fri,  4 Apr 2014 15:10:54 +0100 (BST)
+	id 95410560D8F; Fri,  4 Apr 2014 15:10:54 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  4 Apr 2014 15:10:52 +0100
-Message-Id: <a6ded338cf91a4fae2b5f5413cc7cd509dfcbd5a.1396620556.git.alexandru.damian@intel.com>
+Date: Fri,  4 Apr 2014 15:10:51 +0100
+Message-Id: <e4bb38e9db3948f6cb9677730c92f09093582228.1396620556.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <c0b41b6763e049cd67b1b8038d85c49482557773.1396620556.git.alexandru.damian@intel.com>
 References: <c0b41b6763e049cd67b1b8038d85c49482557773.1396620556.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1396620556.git.alexandru.damian@intel.com>
 References: <cover.1396620556.git.alexandru.damian@intel.com>
-Cc: Farrell Wymore <farrell.wymore@windriver.com>
-Subject: [PATCH 13/14] toaster: correct package count
+Subject: [PATCH 12/14] toaster: Fixes to the build dashboard
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,137 +52,161 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 04 Apr 2014 14:11:03 -0000
 
-From: Farrell Wymore <farrell.wymore@windriver.com>
+From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-The package count was incorrect because it was counting anonymous
-packages. the full path of the image files was shortened to just
-the filename.
+* Add "on" before the date in the build status
 
-[YOCTO 6087]
-[YOCTO 6091]
+* Get rid of the extra space before the "and" in the
+build status
 
-Signed-off-by: Farrell Wymore <farrell.wymore@windriver.com>
+* Make the errors and warnings links in the build
+status show the message content
+
+* Make sure that the "Images" section in the left navigation
+appears only for successful builds
+
+* Link the number of packages installed to the "Packages
+included" tab in the image information page
+
+* Remove unnecessary inline styles in the dashboard
+template
+
+* Make sure target names in the h1 are listed in
+alphabetical order
+
+Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
 ---
- .../toastergui/templates/builddashboard.html       |  2 +-
- lib/toaster/toastergui/views.py                    | 73 ++++++++++++++--------
- 2 files changed, 47 insertions(+), 28 deletions(-)
+ lib/toaster/toastergui/static/css/default.css      |  1 +
+ .../toastergui/templates/basebuildpage.html        |  2 +-
+ .../toastergui/templates/builddashboard.html       | 30 +++++++++++-----------
+ 3 files changed, 17 insertions(+), 16 deletions(-)
 
+diff --git a/lib/toaster/toastergui/static/css/default.css b/lib/toaster/toastergui/static/css/default.css
+index baf70fb..e33f177 100644
+--- a/lib/toaster/toastergui/static/css/default.css
++++ b/lib/toaster/toastergui/static/css/default.css
+@@ -108,6 +108,7 @@ select { width: auto; }
+ .hero-unit { margin: 20px 0 30px; }
+ .hero-unit > .close { font-size:40px; }
+ .hero-actions { margin-top: 30px; }
++.dashboard-section { background-color: transparent; }
+ 
+ /* make tables Chrome-happy (me, not so much) */
+ #otable { table-layout: fixed; word-wrap: break-word; }
+diff --git a/lib/toaster/toastergui/templates/basebuildpage.html b/lib/toaster/toastergui/templates/basebuildpage.html
+index 778c4d4..4611051 100644
+--- a/lib/toaster/toastergui/templates/basebuildpage.html
++++ b/lib/toaster/toastergui/templates/basebuildpage.html
+@@ -32,7 +32,7 @@
+         <!-- begin left sidebar container -->
+         <div id="nav" class="span2">
+             <ul class="nav nav-list well">
+-              {% if build.target_set.all.0.is_image %}
++              {% if build.target_set.all.0.is_image and build.outcome == 0 %}
+                 <li class="nav-header">Images</li>
+                 {% block nav-target %}
+                   {% for t in build.get_sorted_target_list %}
 diff --git a/lib/toaster/toastergui/templates/builddashboard.html b/lib/toaster/toastergui/templates/builddashboard.html
-index 891d860..fa4b194 100644
+index cc92af5..891d860 100644
 --- a/lib/toaster/toastergui/templates/builddashboard.html
 +++ b/lib/toaster/toastergui/templates/builddashboard.html
-@@ -155,7 +155,7 @@
+@@ -10,7 +10,7 @@
+ <!-- page title -->
+ <div class="row-fluid span10">
+  <div class="page-header">
+-     <h1>{{build.target_set.all|join:", "}} {{build.machine}}</h1>
++     <h1>{{build.target_set.all|dictsort:"target"|join:", "}} {{build.machine}}</h1>
+  </div>
+ </div>
+ 
+@@ -20,7 +20,7 @@
+     <div class="row-fluid lead">
+             <span class="pull-left"><strong>
+                 {%if build.outcome == build.SUCCEEDED%}Completed{%elif build.outcome == build.FAILED%}Failed{%else%}{%endif%}
+-              </strong>
++              </strong> on
+             {{build.completed_on|date:"d/m/y H:i"}}
+ </span>
+ {% if  build.warnings_no or build.errors_no %}
+@@ -28,13 +28,13 @@
+ {% endif %}
+ {%if build.outcome == build.SUCCEEDED or build.outcome == build.FAILED %}
+ {% if  build.errors_no %}
+-     <span > <i class="icon-minus-sign red"></i><strong><a href="#errors" class="error"> {{build.errors_no}} error{{build.errors_no|pluralize}}</a></strong></span>
++     <span > <i class="icon-minus-sign red"></i><strong><a href="#errors" class="error show-errors"> {{build.errors_no}} error{{build.errors_no|pluralize}}</a></strong></span>
+ {% endif %}
+ {% if  build.warnings_no %}
+ {% if  build.errors_no %}
+-&nbsp;and
++    and
+ {% endif %}
+-    <span > <i class="icon-warning-sign yellow"></i><strong><a href="#warnings" class="warning"> {{build.warnings_no}} warning{{build.warnings_no|pluralize}}</a></strong></span>
++    <span > <i class="icon-warning-sign yellow"></i><strong><a href="#warnings" class="warning show-warnings"> {{build.warnings_no}} warning{{build.warnings_no|pluralize}}</a></strong></span>
+ {% endif %}
+             <span class="pull-right">Build time: <a href="{% url 'buildtime' build.pk %}">{{ build.timespent|sectohms }}</a></span>
+ {%endif%}
+@@ -75,27 +75,27 @@
+ 	<h2>Images</h2>
+ 	{% for target in targets %}
+         {% if target.target.is_image %}
+-	<div class="well" style="background-color:transparent;">
++	<div class="well dashboard-section">
+ 		<h3><a href="{% url 'target' build.pk target.target.pk %}">{{target.target}}</a>
+                 </h3>
+ 		<dl class="dl-horizontal">
+ 			<dt>Packages included</dt>
+-			<dd><a href="{% url 'packages' build.pk %}">{{target.npkg}}</a></dd>
++			<dd><a href="{% url 'target' build.pk target.target.pk %}">{{target.npkg}}</a></dd>
+ 			<dt>Total package size</dt>
+ 			<dd>{{target.pkgsz|filtered_filesizeformat}}</dd>
+ 			<dt>
+-				<i class="icon-question-sign get-help" title="Path to the license manifest, which is a document listing all packages installed in your image and their licenses"></i>
+-				License manifest
++				<i class="icon-question-sign get-help" title="The location in disk of the license manifest, a document listing all packages installed in your image and their licenses"></i>
++				<a href="{% url 'target' build.pk target.target.pk %}">License manifest</a>
+ 			</dt>
+-			<dd><a href="{% url 'targetpackages' build.pk target.target.pk %}"><code>{{target.target.license_manifest_path}}</code></a></dd>
++			<dd><code>{{target.target.license_manifest_path}}</code></dd>
+ 			<dt>
+-				<i class="icon-question-sign get-help" title="Image files are stored in <code style='background-color:transparent;color:#FFFFFF;font-weight:normal;border:none;'>/build/tmp/deploy/images/</code>"></i>
++				<i class="icon-question-sign get-help" title="Image files are stored in <code>/build/tmp/deploy/images/</code>"></i>
+ 				Image files
+ 			</dt>
+ 			<dd>
+ 				<ul>
+                                   {% for i in target.imageFiles %}
+-					<li><strong>{{i.path}}</strong>
++					<li>{{i.path}}
+ 					({{i.size|filtered_filesizeformat}})</li>
+                                   {% endfor %}
+ 				</ul>
+@@ -114,7 +114,7 @@
+ <!-- build summary -->
+ <div class="row-fluid span10 pull-right">
+ <h2>Build summary</h2>
+-    <div class="well span4" style="margin-left:0px; background-color:transparent;">
++    <div class="well span4 dashboard-section" style="margin-left:0px;">
+         <h4><a href="{%url 'configuration' build.pk%}">Configuration</a></h4>
+             <dl>
+         <dt>Machine</dt><dd>{{build.machine}}</dd>
+@@ -122,7 +122,7 @@
+         <dt>Layers</dt>{% for i in build.layer_version_build.all|dictsort:"layer.name" %}<dd>{{i.layer.name}}</dd>{%endfor%}
+             </dl>
+     </div>
+-    <div class="well span4" style="background-color:transparent;">
++    <div class="well span4 dashboard-section">
+         <h4><a href="{%url 'tasks' build.pk%}">Tasks</a></h4>
+             <dl>
+         <dt>Total number of tasks</dt><dd><a href="{% url 'tasks' build.pk %}">{{build.task_build.all.count}}</a></dd>
+@@ -151,7 +151,7 @@
+         </dd>
+             </dl>
+     </div>
+-    <div class="well span4" style="background-color:transparent;">
++    <div class="well span4 dashboard-section">
          <h4><a href="{% url 'recipes' build.pk %}">Recipes</a> & <a href="{% url 'packages' build.pk %}">Packages</a></h4>
              <dl>
          <dt>Recipes built</dt><dd><a href="{% url 'recipes' build.pk %}">{{recipecount}}</a></dd>
--        <dt>Packages built</dt><dd><a href="{% url 'packages' build.pk %}">{{build.package_set.all.count}}</a></dd>
-+        <dt>Packages built</dt><dd><a href="{% url 'packages' build.pk %}">{{packagecount}}</a></dd>
-             </dl>
-     </div>
- </div>
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index e346ac4..2da81c1 100644
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -381,42 +381,60 @@ def builds(request):
- # Each build may contain multiple targets and each target
- # may generate multiple image files. display them all.
- #
--def builddashboard(request, build_id):
-+def builddashboard( request, build_id ):
-     template = "builddashboard.html"
--    if Build.objects.filter(pk=build_id).count() == 0 :
--        return redirect(builds)
--    build = Build.objects.filter(pk = build_id)[0];
-+    if Build.objects.filter( pk=build_id ).count( ) == 0 :
-+        return redirect( builds )
-+    build = Build.objects.filter( pk = build_id )[ 0 ];
-     layerVersionId = Layer_Version.objects.filter( build = build_id );
-     recipeCount = Recipe.objects.filter( layer_version__id__in = layerVersionId ).count( );
-     tgts = Target.objects.filter( build_id = build_id ).order_by( 'target' );
- 
-+    ##
-     # set up custom target list with computed package and image data
--    targets = [ ];
--    ntargets = 0;
--    hasImages = False;
-+    #
-+
-+    targets = [ ]
-+    ntargets = 0
-+    hasImages = False
-     for t in tgts:
--        elem = { };
--        elem[ 'target' ] = t;
-+        elem = { }
-+        elem[ 'target' ] = t
-         if ( t.is_image ):
--            hasImages = True;
--        npkg = 0;
--        pkgsz = 0;
--        pid= 0;
--        tp = Target_Installed_Package.objects.filter( target_id = t.id );
--        package = None;
-+            hasImages = True
-+        npkg = 0
-+        pkgsz = 0
-+        pid= 0
-+        tp = Target_Installed_Package.objects.filter( target_id = t.id )
-+        package = None
-         for p in tp:
--            pid = p.package_id;
-+            pid = p.package_id
-             package = Package.objects.get( pk = p.package_id )
--            pkgsz = pkgsz + package.size;
--            npkg = npkg + 1;
--        elem[ 'npkg' ] = npkg;
--        elem[ 'pkgsz' ] = pkgsz;
--        ti = Target_Image_File.objects.filter( target_id = t.id );
--        imageFiles = [ ];
-+            pkgsz = pkgsz + package.size
-+            if ( package.installed_name ):
-+                npkg = npkg + 1
-+        elem[ 'npkg' ] = npkg
-+        elem[ 'pkgsz' ] = pkgsz
-+        ti = Target_Image_File.objects.filter( target_id = t.id )
-+        imageFiles = [ ]
-         for i in ti:
--            imageFiles.append({ 'path': i.file_name, 'size' : i.file_size });
--        elem[ 'imageFiles' ] = imageFiles;
--        targets.append( elem );
-+            ndx = i.file_name.rfind( '/' )
-+            if ( ndx < 0 ):
-+                ndx = 0;
-+            f = i.file_name[ ndx + 1: ]
-+            imageFiles.append({ 'path': f, 'size' : i.file_size })
-+        elem[ 'imageFiles' ] = imageFiles
-+        targets.append( elem )
-+
-+    ##
-+    # how many packages in this build - ignore anonymous ones
-+    #
-+
-+    packageCount = 0
-+    packages = Package.objects.filter( build_id = build_id )
-+    for p in packages:
-+        if ( p.installed_name ):
-+            packageCount = packageCount + 1
- 
-     context = {
-             'build'           : build,
-@@ -424,9 +442,10 @@ def builddashboard(request, build_id):
-             'ntargets'        : ntargets,
-             'targets'         : targets,
-             'recipecount'     : recipeCount,
--            'logmessages'     : LogMessage.objects.filter(build=build_id),
-+            'packagecount'    : packageCount,
-+            'logmessages'     : LogMessage.objects.filter( build = build_id ),
-     }
--    return render(request, template, context)
-+    return render( request, template, context )
- 
- 
- def task(request, build_id, task_id):
 -- 
 1.9.1
 
