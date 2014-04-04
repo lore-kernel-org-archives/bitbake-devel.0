@@ -1,20 +1,20 @@
-Return-Path: <marius.avram@intel.com>
+Return-Path: <cristiana.voicu@intel.com>
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id E9F356F61F
+	by mail.openembedded.org (Postfix) with ESMTP id D07FA60DFA
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  3 Apr 2014 12:15:49 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 03 Apr 2014 05:15:49 -0700
+	Fri,  4 Apr 2014 10:53:03 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 04 Apr 2014 03:53:04 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.97,786,1389772800"; d="scan'208";a="486482081"
-Received: from mavram-vostro.rb.intel.com ([10.237.105.50])
-	by orsmga001.jf.intel.com with ESMTP; 03 Apr 2014 05:15:48 -0700
-From: Marius Avram <marius.avram@intel.com>
+X-IronPort-AV: E=Sophos;i="4.97,794,1389772800"; d="scan'208";a="514781320"
+Received: from cvoicu-vostro-460.rb.intel.com ([10.237.105.143])
+	by orsmga002.jf.intel.com with ESMTP; 04 Apr 2014 03:53:02 -0700
+From: Cristiana Voicu <cristiana.voicu@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu,  3 Apr 2014 15:15:59 +0300
-Message-Id: <1396527360-25682-1-git-send-email-marius.avram@intel.com>
+Date: Fri,  4 Apr 2014 13:53:40 +0300
+Message-Id: <1396608820-6039-1-git-send-email-cristiana.voicu@intel.com>
 X-Mailer: git-send-email 1.7.9.5
-Subject: [PATCH] hob: fix customization of empty image recipe
+Subject: [PATCH] hob: adding INHERIT += " testimage " affects image recipes list
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,59 +27,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 03 Apr 2014 12:15:54 -0000
+X-List-Received-Date: Fri, 04 Apr 2014 10:53:06 -0000
 
-This fixes a problem which happened when you tried to build an
-image by selecting 'Start with an empty image recipe' from the
-Image configuration page of hob.
+To find if a recipe is for an image, Hob checks if it inherits
+image.bbclass. But when you add testimage in local.conf, this will
+be added for each recipe, and it pass the test. Adding a "/" before
+"image.bbclass", will check only for image.bbclass.
 
-The reason on of the bug was that the name of the resulting image
-was threated the same way as ordinary custom images, when in fact
-they should use the default name: "hob-image", because they do not
-derive from any other recipe.
-
-[YOCTO #6102]
-
-Signed-off-by: Marius Avram <marius.avram@intel.com>
+[YOCTO #6117]
+Signed-off-by: Cristiana Voicu <cristiana.voicu@intel.com>
 ---
- bitbake/lib/bb/ui/crumbs/builder.py         |    3 ++-
- bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    9 +++++----
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ bitbake/lib/bb/ui/crumbs/hoblistmodel.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
-index 9adb1f7..3033e77 100755
---- a/bitbake/lib/bb/ui/crumbs/builder.py
-+++ b/bitbake/lib/bb/ui/crumbs/builder.py
-@@ -739,7 +739,8 @@ class Builder(gtk.Window):
+diff --git a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+index 02d6332..50df156 100644
+--- a/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
++++ b/bitbake/lib/bb/ui/crumbs/hoblistmodel.py
+@@ -703,7 +703,7 @@ class RecipeListModel(gtk.ListStore):
  
-     def set_base_image(self):
-         self.configuration.initial_selected_image = self.configuration.selected_image
--        self.hob_image = self.configuration.selected_image + "-edited"
-+        if self.configuration.selected_image != self.recipe_model.__custom_image__:
-+            self.hob_image = self.configuration.selected_image + "-edited"
- 
-     def reset(self):
-         self.configuration.curr_mach = ""
-diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-index 890e05f..62c4704 100644
---- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-+++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
-@@ -171,10 +171,11 @@ class HobHandler(gobject.GObject):
-                 self.generate_hob_base_image(target)
-                 self.set_var_in_file("LINGUAS_INSTALL", "", "local.conf")
-                 hobImage = self.runCommand(["matchFile", target + ".bb"])
--                baseImage = self.runCommand(["matchFile", self.base_image + ".bb"])
--                version = self.runCommand(["generateNewImage", hobImage, baseImage, self.package_queue, True, ""])
--                target += version
--                self.recipe_model.set_custom_image_version(version)
-+                if self.base_image != self.recipe_model.__custom_image__:
-+                    baseImage = self.runCommand(["matchFile", self.base_image + ".bb"])
-+                    version = self.runCommand(["generateNewImage", hobImage, baseImage, self.package_queue, True, ""])
-+                    target += version
-+                    self.recipe_model.set_custom_image_version(version)
- 
-             targets = [target]
-             if self.toolchain_packages:
+             if ('packagegroup.bbclass' in " ".join(inherits)):
+                 atype = 'packagegroup'
+-            elif ('image.bbclass' in " ".join(inherits)):
++            elif ('/image.bbclass' in " ".join(inherits)):
+                 if "edited" not in name:
+                     atype = 'image'
+                     install = event_model["rdepends-pkg"].get(item, []) + event_model["rrecs-pkg"].get(item, [])
 -- 
 1.7.9.5
 
