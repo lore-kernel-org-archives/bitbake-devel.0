@@ -1,43 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f50.google.com (mail-wg0-f50.google.com [74.125.82.50])
-	by mail.openembedded.org (Postfix) with ESMTP id 741476EE4D
+Received: from mail-wi0-f178.google.com (mail-wi0-f178.google.com
+	[209.85.212.178])
+	by mail.openembedded.org (Postfix) with ESMTP id BC03A6E760
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri,  4 Apr 2014 14:11:01 +0000 (UTC)
-Received: by mail-wg0-f50.google.com with SMTP id x13so3603995wgg.9
+Received: by mail-wi0-f178.google.com with SMTP id bs8so1338665wib.11
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 04 Apr 2014 07:11:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=w/zvLHa0zYn+9H28BM5rteB+SroNc60lb4IEgGJQ4W8=;
-	b=mBD5R7U1m8utPKmmtoz/f/kDwHoJcDR2ZmbTKAskrcN8NOeRHgdB2wlNeMUVFy8SUf
-	b6vL2jBNNuEEsmrMyFEVAvqYrbwt9Sf7w/p5ktfv8Wa/dBbihouVJ+3UmNGURGipnrRM
-	TOqXdMORvAMiHnbbVKtRuJNPLbtZd0psWP5hqHPjy7SGfPhDrgDuJ9t9bDuUzfFszIk1
-	sEVoDHT5SCNbqjmMeOf//5kgEDlFHSUb3ekGRdHhdQ1tHo3HqX9rOzw9VjxpTTF1aTCO
-	6G0Y86IEgtHoQAHskGJlnLDrYbhvB6qW8YpwFGT49mpy31GAxWFSZwKhtsIRzyMG1poq
-	MgLg==
-X-Gm-Message-State: ALoCoQlst6tuuIntkEeg20osImID1ywcMqNS3yOUwuCR5KgRE3P6aR/UPFL/kZmmPax5GHkw3Slp
-X-Received: by 10.180.211.208 with SMTP id ne16mr4877727wic.21.1396620662029; 
+	bh=XeBV2XeCvFnsgXcKXWO0VfhEUqkIkPzoek3qAJUgXd0=;
+	b=YRgdbaET08wWAusPoqpcZck8yKjsW4DH0PmNlQMKyoFUUfmy09DOId2v+p4Uc/TS7M
+	I7bbygWIq6btxAIMVn/JyE/t+PHX4RekJQgahd//lnbR+hSUuwgirkrTF/UcFosTyPCh
+	fmSZEfE8eFhLRxIEO5iP3t2azVv01IrFgNd29RnlZ7ElFk2oITafxt3vJUf96veSUn9X
+	nz+CfoDfD39mMTO3isBavlc5T/HaUN5uPx6jJHNoosWoqISxB5AiF1kfAyf0oC2JeYZ9
+	bhl74hDOt5O3TC3iJfwKsGbpxhjaJIze7adM+OeWVGNssA4+ZKELCuuJx4cYs6H5dYh1
+	mptQ==
+X-Gm-Message-State: ALoCoQnACeqpxodVdoscM1o1vHtIDk0n0TABb2smH0TWwQ1pQe5JlO4NtCMRi+/q7K3J0wk4sPBM
+X-Received: by 10.194.71.164 with SMTP id w4mr20683218wju.0.1396620662421;
 	Fri, 04 Apr 2014 07:11:02 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id cu6sm2946808wjb.8.2014.04.04.07.10.59
-	for <multiple recipients>
+	by mx.google.com with ESMTPSA id
+	fs16sm4898864wic.18.2014.04.04.07.10.57 for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 04 Apr 2014 07:11:01 -0700 (PDT)
+	Fri, 04 Apr 2014 07:11:00 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id 995B2560F88; Fri,  4 Apr 2014 15:10:54 +0100 (BST)
+	id 9743B560F7F; Fri,  4 Apr 2014 15:10:54 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  4 Apr 2014 15:10:53 +0100
-Message-Id: <21e31a9751934c23c19ec919116455369137c93a.1396620556.git.alexandru.damian@intel.com>
+Date: Fri,  4 Apr 2014 15:10:52 +0100
+Message-Id: <a6ded338cf91a4fae2b5f5413cc7cd509dfcbd5a.1396620556.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <c0b41b6763e049cd67b1b8038d85c49482557773.1396620556.git.alexandru.damian@intel.com>
 References: <c0b41b6763e049cd67b1b8038d85c49482557773.1396620556.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1396620556.git.alexandru.damian@intel.com>
 References: <cover.1396620556.git.alexandru.damian@intel.com>
 Cc: Farrell Wymore <farrell.wymore@windriver.com>
-Subject: [PATCH 14/14] toaster: added covered task list
+Subject: [PATCH 13/14] toaster: correct package count
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,128 +51,139 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 04 Apr 2014 14:11:02 -0000
+X-List-Received-Date: Fri, 04 Apr 2014 14:11:03 -0000
 
 From: Farrell Wymore <farrell.wymore@windriver.com>
 
-if a task has a 'covered' indication, the list of tasks that
-covered the task are computed and displayed. amended to add tooltip.
+The package count was incorrect because it was counting anonymous
+packages. the full path of the image files was shortened to just
+the filename.
 
-[YOCTO #5925]
+[YOCTO 6087]
+[YOCTO 6091]
 
 Signed-off-by: Farrell Wymore <farrell.wymore@windriver.com>
 ---
- lib/toaster/toastergui/templates/task.html | 11 ++++-
- lib/toaster/toastergui/views.py            | 64 ++++++++++++++++++++----------
- 2 files changed, 52 insertions(+), 23 deletions(-)
+ .../toastergui/templates/builddashboard.html       |  2 +-
+ lib/toaster/toastergui/views.py                    | 73 ++++++++++++++--------
+ 2 files changed, 47 insertions(+), 28 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/task.html b/lib/toaster/toastergui/templates/task.html
-index c1504b6..66a6695 100644
---- a/lib/toaster/toastergui/templates/task.html
-+++ b/lib/toaster/toastergui/templates/task.html
-@@ -109,7 +109,16 @@
-             </dt>
-             <dd>
-                 <ul>
--                    <li><p class="alert-info">TODO:Covering tasks will be displayed here</p></li>
-+                  {% for t in covered_by %}
-+                    <li>
-+                      <a href="{%url 'task' t.build.pk t.pk%}"
-+                         class="task-info"
-+                        title="{{t.get_executed_display}} | {{t.get_outcome_display}}">
-+                        {{t.recipe.name}}_{{t.recipe.version}}
-+                        {{t.task_name}}
-+                      </a>
-+                    </li>
-+                  {% endfor %}
-                 </ul>
-             </dd>
-         </dl>
+diff --git a/lib/toaster/toastergui/templates/builddashboard.html b/lib/toaster/toastergui/templates/builddashboard.html
+index 891d860..fa4b194 100644
+--- a/lib/toaster/toastergui/templates/builddashboard.html
++++ b/lib/toaster/toastergui/templates/builddashboard.html
+@@ -155,7 +155,7 @@
+         <h4><a href="{% url 'recipes' build.pk %}">Recipes</a> & <a href="{% url 'packages' build.pk %}">Packages</a></h4>
+             <dl>
+         <dt>Recipes built</dt><dd><a href="{% url 'recipes' build.pk %}">{{recipecount}}</a></dd>
+-        <dt>Packages built</dt><dd><a href="{% url 'packages' build.pk %}">{{build.package_set.all.count}}</a></dd>
++        <dt>Packages built</dt><dd><a href="{% url 'packages' build.pk %}">{{packagecount}}</a></dd>
+             </dl>
+     </div>
+ </div>
 diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 2da81c1..910b3b9 100644
+index e346ac4..2da81c1 100644
 --- a/lib/toaster/toastergui/views.py
 +++ b/lib/toaster/toastergui/views.py
-@@ -448,38 +448,58 @@ def builddashboard( request, build_id ):
-     return render( request, template, context )
- 
- 
--def task(request, build_id, task_id):
--    template = "task.html"
--    if Task.objects.filter(pk=task_id).count() == 0 :
+@@ -381,42 +381,60 @@ def builds(request):
+ # Each build may contain multiple targets and each target
+ # may generate multiple image files. display them all.
+ #
+-def builddashboard(request, build_id):
++def builddashboard( request, build_id ):
+     template = "builddashboard.html"
+-    if Build.objects.filter(pk=build_id).count() == 0 :
 -        return redirect(builds)
--    task = Task.objects.filter(pk=task_id)[0]
--
--    dependencies = sorted(_find_task_dep(task), key=lambda t:'%s_%s %s'%(t.recipe.name, t.recipe.version, t.task_name))
--    reverse_dependencies = sorted(_find_task_revdep(task), key=lambda t:'%s_%s %s'%(t.recipe.name, t.recipe.version, t.task_name))
-+def generateCoveredList( task ):
-+    revList = _find_task_revdep( task );
-+    list = { };
-+    for t in revList:
-+        if ( t.outcome == Task.OUTCOME_COVERED ):
-+            list.update( generateCoveredList( t ));
-+        else:
-+            list[ t.task_name ] = t;
-+    return( list );
- 
-+def task( request, build_id, task_id ):
-+    template = "task.html"
-+    tasks = Task.objects.filter( pk=task_id )
-+    if tasks.count( ) == 0:
+-    build = Build.objects.filter(pk = build_id)[0];
++    if Build.objects.filter( pk=build_id ).count( ) == 0 :
 +        return redirect( builds )
-+    task = tasks[ 0 ];
-+    dependencies = sorted(
-+        _find_task_dep( task ),
-+        key=lambda t:'%s_%s %s'%(t.recipe.name, t.recipe.version, t.task_name))
-+    reverse_dependencies = sorted(
-+        _find_task_revdep( task ),
-+        key=lambda t:'%s_%s %s'%( t.recipe.name, t.recipe.version, t.task_name ))
-+    coveredBy = '';
-+    if ( task.outcome == Task.OUTCOME_COVERED ):
-+        dict = generateCoveredList( task )
-+        coveredBy = [ ]
-+        for name, t in dict.items( ):
-+            coveredBy.append( t )
-     log_head = ''
-     log_body = ''
-     if task.outcome == task.OUTCOME_FAILED:
-         pass
--# FIXME: the log should be read from the orm_logmessage table.
--# This will be fixed when the backend is done.
++    build = Build.objects.filter( pk = build_id )[ 0 ];
+     layerVersionId = Layer_Version.objects.filter( build = build_id );
+     recipeCount = Recipe.objects.filter( layer_version__id__in = layerVersionId ).count( );
+     tgts = Target.objects.filter( build_id = build_id ).order_by( 'target' );
+ 
++    ##
+     # set up custom target list with computed package and image data
+-    targets = [ ];
+-    ntargets = 0;
+-    hasImages = False;
++    #
++
++    targets = [ ]
++    ntargets = 0
++    hasImages = False
+     for t in tgts:
+-        elem = { };
+-        elem[ 'target' ] = t;
++        elem = { }
++        elem[ 'target' ] = t
+         if ( t.is_image ):
+-            hasImages = True;
+-        npkg = 0;
+-        pkgsz = 0;
+-        pid= 0;
+-        tp = Target_Installed_Package.objects.filter( target_id = t.id );
+-        package = None;
++            hasImages = True
++        npkg = 0
++        pkgsz = 0
++        pid= 0
++        tp = Target_Installed_Package.objects.filter( target_id = t.id )
++        package = None
+         for p in tp:
+-            pid = p.package_id;
++            pid = p.package_id
+             package = Package.objects.get( pk = p.package_id )
+-            pkgsz = pkgsz + package.size;
+-            npkg = npkg + 1;
+-        elem[ 'npkg' ] = npkg;
+-        elem[ 'pkgsz' ] = pkgsz;
+-        ti = Target_Image_File.objects.filter( target_id = t.id );
+-        imageFiles = [ ];
++            pkgsz = pkgsz + package.size
++            if ( package.installed_name ):
++                npkg = npkg + 1
++        elem[ 'npkg' ] = npkg
++        elem[ 'pkgsz' ] = pkgsz
++        ti = Target_Image_File.objects.filter( target_id = t.id )
++        imageFiles = [ ]
+         for i in ti:
+-            imageFiles.append({ 'path': i.file_name, 'size' : i.file_size });
+-        elem[ 'imageFiles' ] = imageFiles;
+-        targets.append( elem );
++            ndx = i.file_name.rfind( '/' )
++            if ( ndx < 0 ):
++                ndx = 0;
++            f = i.file_name[ ndx + 1: ]
++            imageFiles.append({ 'path': f, 'size' : i.file_size })
++        elem[ 'imageFiles' ] = imageFiles
++        targets.append( elem )
++
++    ##
++    # how many packages in this build - ignore anonymous ones
++    #
++
++    packageCount = 0
++    packages = Package.objects.filter( build_id = build_id )
++    for p in packages:
++        if ( p.installed_name ):
++            packageCount = packageCount + 1
  
      context = {
--            'build' : Build.objects.filter(pk=build_id)[0],
--            'object': task,
--            'task':task,
--            'deps': dependencies,
--            'rdeps': reverse_dependencies,
--            'log_head':log_head,
--            'log_body':log_body,
--            'showing_matches':False,
-+            'build'           : Build.objects.filter( pk = build_id )[ 0 ],
-+            'object'          : task,
-+            'task'            : task,
-+            'covered_by'      : coveredBy,
-+            'deps'            : dependencies,
-+            'rdeps'           : reverse_dependencies,
-+            'log_head'        : log_head,
-+            'log_body'        : log_body,
-+            'showing_matches' : False,
+             'build'           : build,
+@@ -424,9 +442,10 @@ def builddashboard(request, build_id):
+             'ntargets'        : ntargets,
+             'targets'         : targets,
+             'recipecount'     : recipeCount,
+-            'logmessages'     : LogMessage.objects.filter(build=build_id),
++            'packagecount'    : packageCount,
++            'logmessages'     : LogMessage.objects.filter( build = build_id ),
      }
-+    if request.GET.get( 'show_matches', "" ):
-+        context[ 'showing_matches' ] = True
-+        context[ 'matching_tasks' ] = Task.objects.filter( 
-+            sstate_checksum=task.sstate_checksum ).filter( 
-+            build__completed_on__lt=task.build.completed_on ).order_by('-build__completed_on')
- 
--    if request.GET.get('show_matches', ""):
--        context['showing_matches'] = True
--        context['matching_tasks'] = Task.objects.filter(sstate_checksum=task.sstate_checksum).filter(build__completed_on__lt=task.build.completed_on).order_by('-build__completed_on')
+-    return render(request, template, context)
 +    return render( request, template, context )
  
--    return render(request, template, context)
  
- def recipe(request, build_id, recipe_id):
-     template = "recipe.html"
+ def task(request, build_id, task_id):
 -- 
 1.9.1
 
