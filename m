@@ -1,27 +1,30 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 8311A60E07
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (dan.rpsys.net [93.97.175.187])
+	by mail.openembedded.org (Postfix) with ESMTP id C9D2C60CEB
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  4 Apr 2014 15:20:39 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 04 Apr 2014 08:15:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.97,795,1389772800"; d="scan'208";a="514915224"
-Received: from davidllo-mobl.ger.corp.intel.com (HELO
-	peggleto-mobl5.ger.corp.intel.com) ([10.252.120.87])
-	by orsmga002.jf.intel.com with ESMTP; 04 Apr 2014 08:20:38 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: Alex DAMIAN <alexandru.damian@intel.com>
-Date: Fri, 04 Apr 2014 16:20:36 +0100
-Message-ID: <2189102.coGc3LNv3A@peggleto-mobl5.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.12.3 (Linux/3.13.7-200.fc20.x86_64; KDE/4.12.3; x86_64; ; )
-In-Reply-To: <8ab63a668e94e4179850e4e8d901e719d071d3bc.1396620556.git.alexandru.damian@intel.com>
-References: <c0b41b6763e049cd67b1b8038d85c49482557773.1396620556.git.alexandru.damian@intel.com>
-	<8ab63a668e94e4179850e4e8d901e719d071d3bc.1396620556.git.alexandru.damian@intel.com>
-MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 03/14] toaster: do not load all available timezones
+	Sun,  6 Apr 2014 10:08:37 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s36A8WEj001629 for <bitbake-devel@lists.openembedded.org>;
+	Sun, 6 Apr 2014 11:08:32 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id JH-ba-RJIHfB for <bitbake-devel@lists.openembedded.org>;
+	Sun,  6 Apr 2014 11:08:32 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s36A8RDY001613
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Sun, 6 Apr 2014 11:08:28 +0100
+Message-ID: <1396778902.24597.3.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Sun, 06 Apr 2014 11:08:22 +0100
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] fetch2: Fix bug in file checksum generation
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,51 +37,78 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 04 Apr 2014 15:20:39 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Sun, 06 Apr 2014 10:08:39 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Friday 04 April 2014 15:10:42 Alex DAMIAN wrote:
-> From: Alexandru DAMIAN <alexandru.damian@intel.com>
-> 
-> This patch makes sure that we only load pytz-recognized
-> timezones. Pytz is used to transform the timezone information
-> for the database queries, and needs to be able to deal with
-> the TIME_ZONE value that we set up.
-> 
-> [YOCTO #6093]
-> 
-> Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
-> ---
->  lib/toaster/toastermain/settings.py | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/toaster/toastermain/settings.py
-> b/lib/toaster/toastermain/settings.py index e26ee3c..e39b4cb 100644
-> --- a/lib/toaster/toastermain/settings.py
-> +++ b/lib/toaster/toastermain/settings.py
-> @@ -64,7 +64,13 @@ else:
->      for dirpath, dirnames, filenames in os.walk(ZONEINFOPATH):
->          for fn in filenames:
->              filepath = os.path.join(dirpath, fn)
-> -            zonefilelist[hashlib.md5(open(filepath).read()).hexdigest()] =
-> filepath.lstrip(ZONEINFOPATH).strip() +            try:
-> +                import pytz
-> +                zonename = filepath.lstrip(ZONEINFOPATH).strip()
-> +                if pytz.timezone(zonename) is not None:
-> +                   
-> zonefilelist[hashlib.md5(open(filepath).read()).hexdigest()] = zonename 
-> +          except Exception:
-> +                pass
+For a while its been puzzling me why connman-gnome rebuilds as often as it
+does. It turns out you can trigger this with a new checkout of the metadata.
 
-Please do not do blanket exception catching like this. You need to catch the 
-exact class of exception you expect to receive.
+The SRC_URI that is causing the problems is:
 
-Cheers,
-Paul
+SRC_URI = "file://images/*"
 
--- 
+and rather oddly the results in checksums for a file "." being added to
+the tree, e.g.:
 
-Paul Eggleton
-Intel Open Source Technology Centre
+('.', 'ab48a68186f0e0f277c21ef4cb390b4b')
+
+The problem is that when iterating files lists, the checksum variable can
+become set yet we don't break the out from the for loop, which leads to
+odd (and non-deterministic) entries being added into the file checksum list.
+The exact item added probably depends on the order of items on the disk.
+
+Before this change, bitbake-diffsigs on connman-gnome:do_fetch would report:
+
+This task depends on the checksums of files: [
+('connman-signal-03.png', 'f6c16aee57b37b73793a2f1dea433ffa'),
+('connman-signal-02.png', 'ad0cd22710c097d8174121fc1023c3be'),
+('connman-signal-01.png', '8842bd83d2fa9ba56480df34c727c629'),
+('null_check_for_ipv4_config.patch', 'a23271e41c9fe81551244d875106af10'),
+('connman-signal-05.png', '808589e7e8d502b44c7b007e9e68d48c'),
+('connman-signal-04.png', 'ab48a68186f0e0f277c21ef4cb390b4b'),
+('null_check_for_ipv4_config.patch', 'a23271e41c9fe81551244d875106af10'),
+('0001-Removed-icon-from-connman-gnome-about-applet.patch', 'e2d8269357c1e8c84291606da24eea85'),
+('0001-Removed-icon-from-connman-gnome-about-applet.patch', 'e2d8269357c1e8c84291606da24eea85'),
+('.', 'ab48a68186f0e0f277c21ef4cb390b4b')]
+
+Afterwards:
+
+This task depends on the checksums of files: [
+('connman-signal-03.png', 'f6c16aee57b37b73793a2f1dea433ffa'),
+('connman-signal-02.png', 'ad0cd22710c097d8174121fc1023c3be'),
+('connman-signal-01.png', '8842bd83d2fa9ba56480df34c727c629'),
+('null_check_for_ipv4_config.patch', 'a23271e41c9fe81551244d875106af10'),
+('connman-signal-05.png', '808589e7e8d502b44c7b007e9e68d48c'),
+('connman-signal-04.png', 'ab48a68186f0e0f277c21ef4cb390b4b'),
+('null_check_for_ipv4_config.patch', 'a23271e41c9fe81551244d875106af10'),
+('0001-Removed-icon-from-connman-gnome-about-applet.patch', 'e2d8269357c1e8c84291606da24eea85'),
+('0001-Removed-icon-from-connman-gnome-about-applet.patch', 'e2d8269357c1e8c84291606da24eea85')]
+
+which is correct and deterministic without the "." entry.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 4335e7a..8e5342f 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -969,6 +969,7 @@ def get_file_checksums(filelist, pn):
+                 checksum = checksum_file(f)
+                 if checksum:
+                     checksums.append((f, checksum))
++            continue
+         elif os.path.isdir(pth):
+             # Handle directories
+             for root, dirs, files in os.walk(pth):
+@@ -977,6 +978,7 @@ def get_file_checksums(filelist, pn):
+                     checksum = checksum_file(fullpth)
+                     if checksum:
+                         checksums.append((fullpth, checksum))
++            continue
+         else:
+             checksum = checksum_file(pth)
+ 
+
+
 
