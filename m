@@ -1,21 +1,20 @@
-Return-Path: <paul.eggleton@linux.intel.com>
+Return-Path: <irina.patru@intel.com>
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 66EA66F242
+	by mail.openembedded.org (Postfix) with ESMTP id DA7FB65D89
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  7 Apr 2014 14:35:43 +0000 (UTC)
+	Tue,  8 Apr 2014 11:55:09 +0000 (UTC)
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 07 Apr 2014 07:01:58 -0700
+	by orsmga102.jf.intel.com with ESMTP; 08 Apr 2014 04:50:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.97,810,1389772800"; d="scan'208";a="488623562"
-Received: from scfernan-mobl.gar.corp.intel.com (HELO
-	peggleto-mobl5.ger.corp.intel.com) ([10.252.120.216])
-	by orsmga001.jf.intel.com with ESMTP; 07 Apr 2014 07:01:24 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="4.97,817,1389772800"; d="scan'208";a="489210922"
+Received: from irina-vostro-460.rb.intel.com ([10.237.105.165])
+	by orsmga001.jf.intel.com with ESMTP; 08 Apr 2014 04:55:09 -0700
+From: Irina Patru <irina.patru@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  7 Apr 2014 15:01:16 +0100
-Message-Id: <cover.1396879250.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.9.0
-Subject: [PATCH 0/1] Fix for missing file checksums
+Date: Tue,  8 Apr 2014 14:59:30 +0300
+Message-Id: <1396958370-23653-1-git-send-email-irina.patru@intel.com>
+X-Mailer: git-send-email 1.7.9.5
+Subject: [PATCH] hob: add "recipes/images/" to BBFILES when Hob is launched
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,24 +27,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 07 Apr 2014 14:35:50 -0000
+X-List-Received-Date: Tue, 08 Apr 2014 11:55:10 -0000
 
-The following change since commit f9416e76e272ba3249abff099f6f3a47fe82e03e:
+The path for "recipes/images/" was not added in BBFILES when Hob had
+to search for an image recipe. Therefore, it could not find it and an
+error occurred.
+This path needs to be added when Hob is launched.
 
-  fetch2: Fix bug in file checksum generation (2014-04-06 11:31:18 +0100)
+[HOB #6086]
 
-is available in the git repository at:
+Signed-off-by: Irina Patru <irina.patru@intel.com>
+---
+ bitbake/lib/bb/ui/crumbs/builder.py         |    1 +
+ bitbake/lib/bb/ui/crumbs/hobeventhandler.py |    1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-  git://git.yoctoproject.org/poky-contrib paule/checksumfix
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/checksumfix
-
-Paul Eggleton (1):
-  fetch2: avoid cache ignoring missing files
-
- lib/bb/fetch2/__init__.py | 1 -
- 1 file changed, 1 deletion(-)
-
+diff --git a/bitbake/lib/bb/ui/crumbs/builder.py b/bitbake/lib/bb/ui/crumbs/builder.py
+index 3033e77..455af32 100755
+--- a/bitbake/lib/bb/ui/crumbs/builder.py
++++ b/bitbake/lib/bb/ui/crumbs/builder.py
+@@ -447,6 +447,7 @@ class Builder(gtk.Window):
+         self.handler.connect("package-populated",        self.handler_package_populated_cb)
+ 
+         self.handler.append_to_bbfiles("${TOPDIR}/recipes/images/custom/*.bb")
++        self.handler.append_to_bbfiles("${TOPDIR}/recipes/images/*.bb")
+         self.initiate_new_build_async()
+ 
+         signal.signal(signal.SIGINT, self.event_handle_SIGINT)
+diff --git a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+index 62c4704..43edb70 100644
+--- a/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
++++ b/bitbake/lib/bb/ui/crumbs/hobeventhandler.py
+@@ -461,7 +461,6 @@ class HobHandler(gobject.GObject):
+         recipe_name = hob_image + ".bb"
+         self.ensure_dir(image_dir)
+         self.generate_new_image(image_dir + recipe_name, None, [], "")
+-        self.append_to_bbfiles(image_dir + "*.bb")
+ 
+     def ensure_dir(self, directory):
+         self.runCommand(["ensureDir", directory])
 -- 
-1.9.0
+1.7.9.5
 
 
