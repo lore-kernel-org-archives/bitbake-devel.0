@@ -1,25 +1,41 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 463FA65DD8
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-wi0-f175.google.com (mail-wi0-f175.google.com
+	[209.85.212.175])
+	by mail.openembedded.org (Postfix) with ESMTP id E543565D4A
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  8 Apr 2014 17:30:52 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 08 Apr 2014 08:45:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.97,818,1389772800"; d="scan'208";a="489326629"
-Received: from paulonei-mobl.ger.corp.intel.com (HELO
-	peggleto-mobl5.ger.corp.intel.com) ([10.252.120.244])
-	by orsmga001.jf.intel.com with ESMTP; 08 Apr 2014 08:50:11 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+	Wed,  9 Apr 2014 13:17:39 +0000 (UTC)
+Received: by mail-wi0-f175.google.com with SMTP id cc10so8862562wib.8
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 09 Apr 2014 06:17:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=N4OKHxhNdn12bavE9t6T94D/LUWPfV4VGbboFA4c5gg=;
+	b=eCXfTBq+GKegcUfH7HXQQQYiqlqcVXA/kijWSZvsvyTDgWGBQVqtp+9izj5Ezc2Q4C
+	fs00NrYcJmjIEzyQ4M4izQlbEC/JwtdJCpF4pnu7auXPLEbG3ue64Kl4xVEu4tqCfd1x
+	hEvVtfGaVTLfp1XJncrWkhJVGgT5c/DlP2rKpC/4Ohb5gO6ULL3rVb6krIIVlFM5NCxs
+	qm99GZIBNyvisCZg84OKH8xG3pEUFWAHby8GST63sZrGtM1aZ+vnly4cwVCbB2WLlXCd
+	1V0umavJkwPOE39cqefJEJ47v81ZijyXvm0FLUjJqzkh/Qy38vnnRqELhA5NLPDVSh7q
+	35QA==
+X-Gm-Message-State: ALoCoQlnoQ62WaDoI7KxzZBBHdr5n69w4iSxwIaEp8HK18ire180gDRIH9xkv5/IzjNKFxg0Xl/n
+X-Received: by 10.180.74.242 with SMTP id x18mr10023475wiv.20.1397049459752;
+	Wed, 09 Apr 2014 06:17:39 -0700 (PDT)
+Received: from adamian-desk.corp.intel.com ([83.217.123.106])
+	by mx.google.com with ESMTPSA id lh6sm1654874wjb.27.2014.04.09.06.17.38
+	for <multiple recipients>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Wed, 09 Apr 2014 06:17:38 -0700 (PDT)
+Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
+	id 3575F560213; Wed,  9 Apr 2014 14:17:37 +0100 (BST)
+From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  8 Apr 2014 16:49:55 +0100
-Message-Id: <009039f87754a13ada8654fd3aa406fe250849af.1396972155.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.9.0
-In-Reply-To: <cover.1396972155.git.paul.eggleton@linux.intel.com>
-References: <cover.1396972155.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1396972155.git.paul.eggleton@linux.intel.com>
-References: <cover.1396972155.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 2/2] bitbake-selftest: add tests for local fetching
+Date: Wed,  9 Apr 2014 14:17:35 +0100
+Message-Id: <cover.1397049329.git.alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.9.1
+Cc: Dave Lerner <dave.lerner@windriver.com>,
+	Alexandru DAMIAN <alexandru.damian@intel.com>,
+	David Reyna <David.Reyna@windriver.com>
+Subject: [PATCH 0/9] toaster patchset pull request
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,85 +48,66 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 08 Apr 2014 17:30:52 -0000
+X-List-Received-Date: Wed, 09 Apr 2014 13:17:42 -0000
 
-Add some explicit tests for unpacking local files to the appropriate
-location. Some of these tests are actually testing for broken behaviour;
-these have been called out in the comments, and associated bugs have
-been filed.
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- lib/bb/tests/fetch.py | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+Hello,
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 4be5a07..7df7a0e 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -390,6 +390,61 @@ class MirrorUriTest(FetcherTest):
-         uris, uds = bb.fetch2.build_mirroruris(fetcher, mirrors, self.d)
-         self.assertEqual(uris, ['file:///someotherpath/downloads/bitbake-1.0.tar.gz'])
- 
-+
-+class FetcherLocalTest(FetcherTest):
-+    def setUp(self):
-+        def touch(fn):
-+            with file(fn, 'a'):
-+                os.utime(fn, None)
-+
-+        super(FetcherLocalTest, self).setUp()
-+        self.localsrcdir = os.path.join(self.tempdir, 'localsrc')
-+        os.makedirs(self.localsrcdir)
-+        touch(os.path.join(self.localsrcdir, 'a'))
-+        touch(os.path.join(self.localsrcdir, 'b'))
-+        os.makedirs(os.path.join(self.localsrcdir, 'dir'))
-+        touch(os.path.join(self.localsrcdir, 'dir', 'c'))
-+        touch(os.path.join(self.localsrcdir, 'dir', 'd'))
-+        os.makedirs(os.path.join(self.localsrcdir, 'dir', 'subdir'))
-+        touch(os.path.join(self.localsrcdir, 'dir', 'subdir', 'e'))
-+        self.d.setVar("FILESPATH", self.localsrcdir)
-+
-+    def fetchUnpack(self, uris):
-+        fetcher = bb.fetch.Fetch(uris, self.d)
-+        fetcher.download()
-+        fetcher.unpack(self.unpackdir)
-+        flst = []
-+        for root, dirs, files in os.walk(self.unpackdir):
-+            for f in files:
-+                flst.append(os.path.relpath(os.path.join(root, f), self.unpackdir))
-+        flst.sort()
-+        return flst
-+
-+    def test_local(self):
-+        tree = self.fetchUnpack(['file://a', 'file://dir/c'])
-+        self.assertEqual(tree, ['a', 'dir/c'])
-+
-+    def test_local_wildcard(self):
-+        tree = self.fetchUnpack(['file://a', 'file://dir/*'])
-+        # FIXME: this is broken - it should return ['a', 'dir/c', 'dir/d', 'dir/subdir/e']
-+        # see https://bugzilla.yoctoproject.org/show_bug.cgi?id=6128
-+        self.assertEqual(tree, ['a', 'b', 'dir/c', 'dir/d', 'dir/subdir/e'])
-+
-+    def test_local_dir(self):
-+        tree = self.fetchUnpack(['file://a', 'file://dir'])
-+        self.assertEqual(tree, ['a', 'dir/c', 'dir/d', 'dir/subdir/e'])
-+
-+    def test_local_subdir(self):
-+        tree = self.fetchUnpack(['file://dir/subdir'])
-+        # FIXME: this is broken - it should return ['dir/subdir/e']
-+        # see https://bugzilla.yoctoproject.org/show_bug.cgi?id=6129
-+        self.assertEqual(tree, ['subdir/e'])
-+
-+    def test_local_subdir_file(self):
-+        tree = self.fetchUnpack(['file://dir/subdir/e'])
-+        self.assertEqual(tree, ['dir/subdir/e'])
-+
-+
- class FetcherNetworkTest(FetcherTest):
- 
-     if os.environ.get("BB_SKIP_NETTESTS") == "yes":
+This is a pull request for toaster.
+
+All the patches have been reviewed on the toaster mailing list.
+Patches have been tested invidividually and in this patchset.
+
+Can you please pull at your convenience ?
+
+Thank you,
+Alex
+
+The following changes since commit 4fafea4fa69542b491e84463f6eae0d5bf645673:
+
+  bitbake: knotty: Clear footer before outputting to stderr (2014-04-08 18:05:19 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib adamian/20140409-bb-submission
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20140409-bb-submission
+
+Alexandru DAMIAN (3):
+  toaster: do not load all available timezones
+  toaster: keep number of rows across searches
+  toaster: fix filtering query for multiple filters
+
+Dave Lerner (2):
+  toaster: disable 'size over total' sort
+  toaster: sort on size in detail pages
+
+David Reyna (4):
+  toaster: show unique set-in files in configvar
+  toaster: regex alternation filter caused django error
+  toaster: hide tasks without order or outcome
+  toaster: add URI search path list
+
+ lib/toaster/toastergui/static/css/default.css      |   4 +-
+ .../toastergui/templates/basetable_top.html        |   1 +
+ lib/toaster/toastergui/templates/bpackage.html     |   2 +-
+ lib/toaster/toastergui/templates/dirinfo.html      |   2 +-
+ .../templates/package_built_dependencies.html      |   8 +-
+ .../toastergui/templates/package_built_detail.html |  14 +-
+ .../templates/package_included_dependencies.html   |   8 +-
+ .../templates/package_included_detail.html         |  14 +-
+ .../package_included_reverse_dependencies.html     |  19 +--
+ lib/toaster/toastergui/templates/recipe.html       |   4 +-
+ lib/toaster/toastergui/templates/tablesort.html    |  38 +++++
+ lib/toaster/toastergui/templates/target.html       |   4 +-
+ lib/toaster/toastergui/templates/task.html         |   2 +-
+ lib/toaster/toastergui/templatetags/projecttags.py |  20 +--
+ lib/toaster/toastergui/views.py                    | 158 ++++++++++++++++-----
+ lib/toaster/toastermain/settings.py                |  10 +-
+ 16 files changed, 211 insertions(+), 97 deletions(-)
+ create mode 100644 lib/toaster/toastergui/templates/tablesort.html
+
 -- 
-1.9.0
+1.9.1
 
 
