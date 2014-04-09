@@ -1,42 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f173.google.com (mail-wi0-f173.google.com
-	[209.85.212.173])
-	by mail.openembedded.org (Postfix) with ESMTP id F36A860EFA
+Received: from mail-we0-f170.google.com (mail-we0-f170.google.com
+	[74.125.82.170])
+	by mail.openembedded.org (Postfix) with ESMTP id 820D865D4A
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  9 Apr 2014 13:17:42 +0000 (UTC)
-Received: by mail-wi0-f173.google.com with SMTP id z2so8864980wiv.12
+	Wed,  9 Apr 2014 13:17:43 +0000 (UTC)
+Received: by mail-we0-f170.google.com with SMTP id w61so2476311wes.1
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed, 09 Apr 2014 06:17:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=rP+RutB9pX1D94zVoJiB8kBy3wYiSj6AeWmYOJ5h+mo=;
-	b=JSeDWvGShEMLHSu89jas1rL+T9U5txFpmdRSB9pYn5voJcpe9qqWpjiekmoaoXSJ6x
-	35xjIEIph4tbQiWQJml9gOapwDhwHZ5m21PA/2OSYBLq0wy/9yO24mxnZm2dpgiZhz8+
-	ZrHMOnz1PvrZhfiV8hvHX2kwv8DpyukB4V7oJ/Lmr36Otz3iIlYj539gSB18DEqbTyiL
-	xqgGAcpKWPjoGRUb+EXIPSImJW3as0RibithnQMcvGrX5YySnEG8pWzKLYbo31qE+T59
-	oLgu7Hmq6Ae9jgIVVqUncJo4CBSrSZGoHwxSOTsxsGlCijg1kNgTR5nmM1K5YfKHgJYZ
-	2uzQ==
-X-Gm-Message-State: ALoCoQnheFNgLUYUlFMPWLXBhucNuhr88ZeUXyD/ZgUqeml5S0cHiaEOopDSo2NcGr17aimDmxvl
-X-Received: by 10.194.77.50 with SMTP id p18mr2463727wjw.68.1397049463290;
+	:references:in-reply-to:references;
+	bh=DrycGPLvvdKOe9uYcnvoC9gLDCGR9m+7X1ONr+iiki8=;
+	b=cvHrCN83U47fBvWcnYAtdJJNMn/vQ8FPW+HiTMP0bAJ9YjtkjGDjxPtLBd7MbeqqVC
+	1QwVqKq5C0lg1GBTOY73m/barMMIdULyNb0tp7xIEzEjpZK7OSg4jPY7lyDrMa0UHgJU
+	UluBeDF5s1ai8lEW2e4pEuH5+zfD1ZWWBO93bc9PZ9ttQ/1JXrWCbEs9TtaDdL+k4y5Z
+	6rRymokjr0NLHPIzXXrhJuGSBTUlmfruUKQfGCnYm7RDYy9JAoXD9lshx7Xrg1jr2sbW
+	EHdhq9kCYibitaH9MsMc6ycIGYxN5UQLnTdQjBj6GIbHa2kQGo6dRnsWv6j8hSbtDY4T
+	bzKw==
+X-Gm-Message-State: ALoCoQnKouVvRZqhXaWyTVCwx2RZAZX/nGTQW8pIUaBkwRPPbCtv8cpd3ckLkvpuJxsLy4Z2R3ll
+X-Received: by 10.180.7.227 with SMTP id m3mr9828369wia.59.1397049463769;
 	Wed, 09 Apr 2014 06:17:43 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id
-	l10sm10053057wiz.18.2014.04.09.06.17.41 for <multiple recipients>
+	by mx.google.com with ESMTPSA id ct2sm1650208wjb.33.2014.04.09.06.17.41
+	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Wed, 09 Apr 2014 06:17:42 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id 716C4560213; Wed,  9 Apr 2014 14:17:41 +0100 (BST)
+	id 73146560234; Wed,  9 Apr 2014 14:17:41 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  9 Apr 2014 14:17:32 +0100
-Message-Id: <c93e5ca809d9c335b0cf35dcad4705487414c71b.1397049329.git.alexandru.damian@intel.com>
+Date: Wed,  9 Apr 2014 14:17:33 +0100
+Message-Id: <586cd2f6af11cd316a12799b2b9d031e8b7098b6.1397049329.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <c93e5ca809d9c335b0cf35dcad4705487414c71b.1397049329.git.alexandru.damian@intel.com>
+References: <c93e5ca809d9c335b0cf35dcad4705487414c71b.1397049329.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1397049329.git.alexandru.damian@intel.com>
 References: <cover.1397049329.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 1/9] toaster: do not load all available timezones
+Cc: Dave Lerner <dave.lerner@windriver.com>
+Subject: [PATCH 2/9] toaster: disable 'size over total' sort
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,41 +53,32 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 09 Apr 2014 13:17:45 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Dave Lerner <dave.lerner@windriver.com>
 
-This patch makes sure that we only load pytz-recognized
-timezones. Pytz is used to transform the timezone information
-for the database queries, and needs to be able to deal with
-the TIME_ZONE value that we set up.
+[YOCTO 6061]
 
-[YOCTO #6093]
+Disable size-over-total table column sorts in the image installed
+packages view because that field is a computed field and only model
+fields are sortable in the current table toaster implementation.
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+Signed-off-by: Dave Lerner <dave.lerner@windriver.com>
 ---
- lib/toaster/toastermain/settings.py | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ lib/toaster/toastergui/views.py | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/lib/toaster/toastermain/settings.py b/lib/toaster/toastermain/settings.py
-index e26ee3c..6e9d85d 100644
---- a/lib/toaster/toastermain/settings.py
-+++ b/lib/toaster/toastermain/settings.py
-@@ -64,7 +64,15 @@ else:
-     for dirpath, dirnames, filenames in os.walk(ZONEINFOPATH):
-         for fn in filenames:
-             filepath = os.path.join(dirpath, fn)
--            zonefilelist[hashlib.md5(open(filepath).read()).hexdigest()] = filepath.lstrip(ZONEINFOPATH).strip()
-+            try:
-+                import pytz
-+                from pytz.exceptions import UnknownTimeZoneError
-+                zonename = filepath.lstrip(ZONEINFOPATH).strip()
-+                if pytz.timezone(zonename) is not None:
-+                    zonefilelist[hashlib.md5(open(filepath).read()).hexdigest()] = zonename
-+            except UnknownTimeZoneError, ValueError:
-+                # we expect timezone failures here, just move over
-+                pass
- 
-     TIME_ZONE = zonefilelist[hashlib.md5(open('/etc/localtime').read()).hexdigest()]
- 
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 910b3b9..96ce4d7 100644
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -568,8 +568,6 @@ def target(request, build_id, target_id):
+                 {
+                     'name':'Size over total (%)',
+                     'qhelp':'Proportion of the overall included package size represented by this package',
+-                    'orderfield': _get_toggle_order(request, "size"),
+-                    'ordericon':_get_toggle_order_icon(request, "size"),
+                     'clclass': 'size_over_total',
+                     'hidden' : 1,
+                 },
 -- 
 1.9.1
 
