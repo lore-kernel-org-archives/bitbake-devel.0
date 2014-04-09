@@ -1,44 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f181.google.com (mail-we0-f181.google.com
-	[74.125.82.181])
-	by mail.openembedded.org (Postfix) with ESMTP id CAAA465E14
+Received: from mail-wi0-f175.google.com (mail-wi0-f175.google.com
+	[209.85.212.175])
+	by mail.openembedded.org (Postfix) with ESMTP id DC82D65E21
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  9 Apr 2014 13:17:43 +0000 (UTC)
-Received: by mail-we0-f181.google.com with SMTP id q58so2401125wes.40
+	Wed,  9 Apr 2014 13:17:45 +0000 (UTC)
+Received: by mail-wi0-f175.google.com with SMTP id cc10so8854960wib.14
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 09 Apr 2014 06:17:44 -0700 (PDT)
+	Wed, 09 Apr 2014 06:17:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=4hTczNGIzAAVQOtKe5SqVyIrLvB42FPdbwgJN5co6uI=;
-	b=mM8E4+VVK067S4TPM1URzz0JgkIZQU0pu9isktdqY5E2SmVx5VTEUNBtrw2valpxTD
-	GCxovGYj5F/09poXdpuGG5c4fBKk4Ds88oNpxo3Y+TrPECaf/+jpYyeeiXyVTYVkw9fC
-	/4kHMEIVkCVlGJq5+ptjREf9dK1rmT/roq64gM5v6+gAHJcDt0aCmW08TuaKBOJ67RBe
-	BW/cqF9s6KLyKZ2H30cnl3J8t4zRoGKVyRBvE9JemaxigdFHX7xTn2tp6WG0LyhrMWtX
-	Go8zUx3X0k3I+AVmgVsS5lUrVv6kK1IgtncWDJUmHxVFjtFGYfbyVrb4tR4YthC3grGR
-	JgLw==
-X-Gm-Message-State: ALoCoQldIB5iLpYwBJJYPXT22V324q2bnO9cDHVjUoC0Dyyumejme2X7PgDBx2t5sR7mPo4k6R6f
-X-Received: by 10.180.105.132 with SMTP id gm4mr12327182wib.39.1397049464286; 
-	Wed, 09 Apr 2014 06:17:44 -0700 (PDT)
+	bh=d8NtFhkwZkwbyyDUOmhQxEr/HaFYjap2Nb5f7vlItPY=;
+	b=HM7FWgmEQ+YAGwpyOQMsTF+XEgtCzlSLyYxtNLGsU01SG7aIRJJKvvCnKopO0x4MO5
+	O6/zhevBQW6A1poDcxq+z4gKBWWt9QLTATj9E/ZrDXzGkDNLKpA8rM80KIANDP2uwxvY
+	bsArpBuB0GtTO3UrGq6bNqBbEJEYj8/lyv8y9+JgwE4CMD/6HzLTqffVOKCZZsNehU71
+	rGC8sqDWV2rlHzMipEPvbaX86GnWyVZv9LpqcTfB40faiAwgzV96PY1JVGeqTXppquUs
+	V2Jxu8ooHfr7hPlZN1fxnBFmh+LzDgx+I/YJ6qNGsBPV/eXlppxZPIidvBGlchPa6R+J
+	PCLg==
+X-Gm-Message-State: ALoCoQlDFMTE39jh9pr73whxT3K6joMJf2Y1580IC2ZlEowzM6G0ppZlar2u+C+J/66zOKtX8Q8l
+X-Received: by 10.194.57.239 with SMTP id l15mr9624004wjq.40.1397049466355;
+	Wed, 09 Apr 2014 06:17:46 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id i9sm10053839wiy.17.2014.04.09.06.17.41
-	for <multiple recipients>
+	by mx.google.com with ESMTPSA id
+	bx16sm10061325wib.13.2014.04.09.06.17.43 for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 09 Apr 2014 06:17:42 -0700 (PDT)
+	Wed, 09 Apr 2014 06:17:44 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id 793C15602D5; Wed,  9 Apr 2014 14:17:41 +0100 (BST)
+	id 7CFA0560343; Wed,  9 Apr 2014 14:17:41 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  9 Apr 2014 14:17:36 +0100
-Message-Id: <befe17a5084ebd878df11f67d0de0154a020a977.1397049329.git.alexandru.damian@intel.com>
+Date: Wed,  9 Apr 2014 14:17:38 +0100
+Message-Id: <63f47afa9faf429c2c0c6ab9bc9cf6a67538d5ef.1397049329.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <c93e5ca809d9c335b0cf35dcad4705487414c71b.1397049329.git.alexandru.damian@intel.com>
 References: <c93e5ca809d9c335b0cf35dcad4705487414c71b.1397049329.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1397049329.git.alexandru.damian@intel.com>
 References: <cover.1397049329.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 5/9] toaster: fix filtering query for multiple filters
+Cc: David Reyna <David.Reyna@windriver.com>
+Subject: [PATCH 7/9] toaster: hide tasks without order or outcome
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,52 +53,68 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 09 Apr 2014 13:17:46 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: David Reyna <David.Reyna@windriver.com>
 
-This is a fix for using multiple expressions in filters.
-Three different issues are touched:
-* added an explicit error message for incorrect filter usage
-* changed the value separator to something that will pass
-through from the browser to the actual code
-* changed the "and" operator for combining Q from a dubios
-lambda function to the standard operator.and_
+Hide the incomplete tasks, those without order numbers and/or outcomes.
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+[YOCTO #6060]
+
+Signed-off-by: David Reyna <David.Reyna@windriver.com>
 ---
- lib/toaster/toastergui/views.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ lib/toaster/toastergui/views.py | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 96ce4d7..4ed9940 100644
+index 78726a8..f5fa72e 100644
 --- a/lib/toaster/toastergui/views.py
 +++ b/lib/toaster/toastergui/views.py
-@@ -80,7 +80,7 @@ def _redirect_parameters(view, g, mandatory_parameters, *args, **kwargs):
-     return redirect(url + "?%s" % urllib.urlencode(params), *args, **kwargs)
+@@ -496,7 +496,8 @@ def task( request, build_id, task_id ):
+         context[ 'showing_matches' ] = True
+         context[ 'matching_tasks' ] = Task.objects.filter( 
+             sstate_checksum=task.sstate_checksum ).filter( 
+-            build__completed_on__lt=task.build.completed_on ).order_by('-build__completed_on')
++            build__completed_on__lt=task.build.completed_on).exclude(
++            order__isnull=True).exclude(outcome=Task.OUTCOME_NA).order_by('-build__completed_on')
  
- FIELD_SEPARATOR = ":"
--VALUE_SEPARATOR = ";"
-+VALUE_SEPARATOR = "!"
- DESCENDING = "-"
+     return render( request, template, context )
  
- def __get_q_for_val(name, value):
-@@ -102,7 +102,7 @@ def _get_filtering_query(filter_string):
-     values = search_terms[1].split(VALUE_SEPARATOR)
+@@ -509,7 +510,7 @@ def recipe(request, build_id, recipe_id):
+     object = Recipe.objects.filter(pk=recipe_id)[0]
+     layer_version = Layer_Version.objects.filter(pk=object.layer_version_id)[0]
+     layer  = Layer.objects.filter(pk=layer_version.layer_id)[0]
+-    tasks  = Task.objects.filter(recipe_id = recipe_id).filter(build_id = build_id).exclude(task_name__endswith='_setscene')
++    tasks  = Task.objects.filter(recipe_id = recipe_id, build_id = build_id).exclude(order__isnull=True).exclude(task_name__endswith='_setscene').exclude(outcome=Task.OUTCOME_NA)
+     packages = Package.objects.filter(recipe_id = recipe_id).filter(build_id = build_id).filter(size__gte=0)
  
-     querydict = dict(zip(keys, values))
--    return reduce(lambda x, y: x & y, map(lambda x: __get_q_for_val(k, querydict[k]),[k for k in querydict]))
-+    return reduce(operator.and_, map(lambda x: __get_q_for_val(x, querydict[x]), [k for k in querydict]))
+     context = {
+@@ -762,14 +763,16 @@ def dirinfo(request, build_id, target_id, file_path=None):
+ def _find_task_dep(task):
+     tp = []
+     for p in Task_Dependency.objects.filter(task=task):
+-        tp.append(p.depends_on);
++        if (p.depends_on.order > 0) and (p.depends_on.outcome != Task.OUTCOME_NA):
++            tp.append(p.depends_on);
+     return tp
  
- def _get_toggle_order(request, orderkey, reverse = False):
-     if reverse:
-@@ -128,7 +128,7 @@ def _validate_input(input, model):
  
-         # Check we have only one colon
-         if len(input_list) != 2:
--            invalid = "We have an invalid number of separators"
-+            invalid = "We have an invalid number of separators: " + input + " -> " + str(input_list)
-             return None, invalid
+ def _find_task_revdep(task):
+     tp = []
+     for p in Task_Dependency.objects.filter(depends_on=task):
+-        tp.append(p.task);
++        if (p.task.order > 0) and (p.task.outcome != Task.OUTCOME_NA):
++            tp.append(p.task);
+     return tp
  
-         # Check we have an equal number of terms both sides of the colon
+ def _find_task_provider(task):
+@@ -836,7 +839,7 @@ def tasks_common(request, build_id, variant, task_anchor):
+ 	        mandatory_parameters['anchor']=task_anchor
+         return _redirect_parameters( variant, request.GET, mandatory_parameters, build_id = build_id)
+     (filter_string, search_term, ordering_string) = _search_tuple(request, Task)
+-    queryset_all = Task.objects.filter(build=build_id, order__gt=0)
++    queryset_all = Task.objects.filter(build=build_id).exclude(order__isnull=True).exclude(outcome=Task.OUTCOME_NA)
+     queryset_with_search = _get_queryset(Task, queryset_all, None , search_term, ordering_string, 'order')
+     queryset = _get_queryset(Task, queryset_all, filter_string, search_term, ordering_string, 'order')
+ 
 -- 
 1.9.1
 
