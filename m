@@ -1,45 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f170.google.com (mail-we0-f170.google.com
-	[74.125.82.170])
-	by mail.openembedded.org (Postfix) with ESMTP id 5BCEF65D4A
+Received: from mail-we0-f179.google.com (mail-we0-f179.google.com
+	[74.125.82.179])
+	by mail.openembedded.org (Postfix) with ESMTP id A408C65E2F
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed,  9 Apr 2014 13:17:45 +0000 (UTC)
-Received: by mail-we0-f170.google.com with SMTP id w61so2453011wes.29
+Received: by mail-we0-f179.google.com with SMTP id x48so2374887wes.24
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 09 Apr 2014 06:17:46 -0700 (PDT)
+	Wed, 09 Apr 2014 06:17:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=i9qpPCp9CuVBvwDlaCcE+oOcoEWWv/3nyRDGg4kIkrc=;
-	b=MG00mz1qfFwHO1G6HwEOsCff7z82j5bJ4J/60/x+ek9PDmcaOXOGlxXhTadnCiQ+Hu
-	vDn1cEZjj94SANoJOLeAR+Bjf6GOYrj6j97Ti7hb6zpdNnC50zVMZOJZhxsahOfeVvPC
-	3BxTGoutPJq5fS7OhKi7ZSi15OsXfysfK/+FtY20QH5Wq7JbLnvsn/digFPZjvEFWyPQ
-	Zv4nBpABj1B0aQ2SA7V+hhjeqgIxVBzmdWVErih9waHY7Lv5XyuM9Es5caurfp5wP4sb
-	3LR1z78GpsvS3erH8jWhBQJEdGWtcJxSfI72vspcpi1UXSadcHy7OiNqw/3Q7x5hZIJK
-	TSYg==
-X-Gm-Message-State: ALoCoQm0x44bz3tL4yx3VaYg/GrN+6T2uUJ0HGIGZFmzemjVpLoJKMjn1Us95N46ALA/bGH6oO9L
-X-Received: by 10.194.92.177 with SMTP id cn17mr9752292wjb.18.1397049466721;
-	Wed, 09 Apr 2014 06:17:46 -0700 (PDT)
+	bh=BJysBbNNQo8WrOd8U58cniUisqDwaqR+Br9n+34284Y=;
+	b=RPHagmAeco03xMMtaC35gWjZOfiATjqiEdKjHijvv1P4LSfNqdCgaKj4d1Y3Z9PsFd
+	WBxEAghzSpfeND7DT+oQ+MzLpjFlvpg4pPF1X7fW8xsa9+06kraeujcnGvK5v5THJQWf
+	bqos4OuI9Eb3UoDrZmbgOBj2XLff7byHrSe4t1tKC8LrMAJRqvk32zljc/c5DHSpX4sr
+	rtOihBTY9eTzcdh99UJqCgu9pKd5H+0gSTp9Bg7aXhRoNhpvabAgswVfM6fU9ssdHGPp
+	5Ie8IW3B23LyTk4wgpeemEd73Zvw2vfvID+yLh7xAQitOz8iRlheUhKD2bZGBLObUOvs
+	2Qiw==
+X-Gm-Message-State: ALoCoQm0novR6PkWqKwjSMDeOKdO4ROtGyIVad6qRaGk78vC242SdDiNr3QXjwKCRsgW0kKoo1ew
+X-Received: by 10.194.89.40 with SMTP id bl8mr79116wjb.90.1397049465449;
+	Wed, 09 Apr 2014 06:17:45 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id co9sm1659007wjb.22.2014.04.09.06.17.43
-	for <multiple recipients>
+	by mx.google.com with ESMTPSA id
+	ff9sm10065223wib.11.2014.04.09.06.17.42 for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Wed, 09 Apr 2014 06:17:44 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id 80AAF560373; Wed,  9 Apr 2014 14:17:41 +0100 (BST)
+	id 74D34560236; Wed,  9 Apr 2014 14:17:41 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  9 Apr 2014 14:17:40 +0100
-Message-Id: <50625fd85f0165642d26b75bf1b7263221ec96f2.1397049329.git.alexandru.damian@intel.com>
+Date: Wed,  9 Apr 2014 14:17:34 +0100
+Message-Id: <e0d3dfe4bf9ab82a045ca5806a0716c6c4538252.1397049329.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <c93e5ca809d9c335b0cf35dcad4705487414c71b.1397049329.git.alexandru.damian@intel.com>
 References: <c93e5ca809d9c335b0cf35dcad4705487414c71b.1397049329.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1397049329.git.alexandru.damian@intel.com>
 References: <cover.1397049329.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>,
-	David Reyna <David.Reyna@windriver.com>
-Subject: [PATCH 9/9] toaster: add URI search path list
+Cc: David Reyna <David.Reyna@windriver.com>
+Subject: [PATCH 3/9] toaster: show unique set-in files in configvar
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,65 +51,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 09 Apr 2014 13:17:46 -0000
+X-List-Received-Date: Wed, 09 Apr 2014 13:17:47 -0000
 
 From: David Reyna <David.Reyna@windriver.com>
 
-Display the URI paths from SSTATE_DIR and SSTATE_MIRRORS
-in the Task page.
+When listing the set-in files in the configure varaible table, only show
+each file once in that summary view.
 
-[YOCTO #5996]
+[YOCTO #6048]
 
 Signed-off-by: David Reyna <David.Reyna@windriver.com>
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/templates/task.html |  2 +-
- lib/toaster/toastergui/views.py            | 12 ++++++++++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ lib/toaster/toastergui/templatetags/projecttags.py | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/task.html b/lib/toaster/toastergui/templates/task.html
-index 66a6695..4555999 100644
---- a/lib/toaster/toastergui/templates/task.html
-+++ b/lib/toaster/toastergui/templates/task.html
-@@ -172,7 +172,7 @@
-                 <i class="icon-question-sign get-help" title="The locations searched for the above file (i.e. your <code>sstate-cache</code> directory and any mirrors you have set up)"></i>
-                 URI(s) searched
-             </dt>
--            <dd><code>{{task.work_directory}}</code></dd>
-+            <dd><ul>{% for uri in uri_list %}<li><code>{{uri}}</code></li>{% endfor %}</ul></dd>
-         </dl>
-     {% endif %}
-     {% if task.sstate_result == task.SSTATE_MISS %}
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 36eb0bf..e4ada14 100644
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -481,6 +481,17 @@ def task( request, build_id, task_id ):
-     if task.outcome == task.OUTCOME_FAILED:
-         pass
+diff --git a/lib/toaster/toastergui/templatetags/projecttags.py b/lib/toaster/toastergui/templatetags/projecttags.py
+index ee08ab7..aa1ebf8 100644
+--- a/lib/toaster/toastergui/templatetags/projecttags.py
++++ b/lib/toaster/toastergui/templatetags/projecttags.py
+@@ -164,21 +164,25 @@ def filter_setin_files(file_list,matchstr):
+     if search == '':
+         for i in range(len(file_list)):   
+             if file_list[i].file_name.find(filter) >= 0:
+-                htmlstr += file_list[i].file_name + "<p>"
++                if htmlstr.find(file_list[i].file_name + "<p>") < 0:
++                    htmlstr += file_list[i].file_name + "<p>"
+         return htmlstr
+        
+     # match only search string, plus always last file
+     if filter == "":
+         for i in range(len(file_list)-1):   
+             if file_list[i].file_name.find(search) >= 0:
+-                htmlstr += file_list[i].file_name + "<p>"
+-        htmlstr += file_list[len(file_list)-1].file_name
++                if htmlstr.find(file_list[i].file_name + "<p>") < 0:
++                    htmlstr += file_list[i].file_name + "<p>"
++        if htmlstr.find(file_list[len(file_list)-1].file_name) < 0:
++            htmlstr += file_list[len(file_list)-1].file_name
+         return htmlstr
+        
+     # match filter or search string
+     for i in range(len(file_list)):   
+         if (file_list[i].file_name.find(filter) >= 0) or (file_list[i].file_name.find(search) >= 0):
+-            htmlstr += file_list[i].file_name + "<p>"
++            if htmlstr.find(file_list[i].file_name + "<p>") < 0:
++                htmlstr += file_list[i].file_name + "<p>"
+     return htmlstr
  
-+    uri_list= [ ]
-+    variables = Variable.objects.filter(build=build_id)
-+    v=variables.filter(variable_name='SSTATE_DIR')
-+    if v.count > 0:
-+        uri_list.append(v[0].variable_value)
-+    v=variables.filter(variable_name='SSTATE_MIRRORS')
-+    if (v.count > 0):
-+        for mirror in v[0].variable_value.split('\\n'):
-+            s=re.sub('.* ','',mirror.strip(' \t\n\r'))
-+            if len(s): uri_list.append(s)
-+
-     context = {
-             'build'           : Build.objects.filter( pk = build_id )[ 0 ],
-             'object'          : task,
-@@ -491,6 +502,7 @@ def task( request, build_id, task_id ):
-             'log_head'        : log_head,
-             'log_body'        : log_body,
-             'showing_matches' : False,
-+			'uri_list'        : uri_list,
-     }
-     if request.GET.get( 'show_matches', "" ):
-         context[ 'showing_matches' ] = True
+ 
 -- 
 1.9.1
 
