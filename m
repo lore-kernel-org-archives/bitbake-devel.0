@@ -1,41 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f175.google.com (mail-wi0-f175.google.com
-	[209.85.212.175])
-	by mail.openembedded.org (Postfix) with ESMTP id E543565D4A
+Received: from mail-wi0-f170.google.com (mail-wi0-f170.google.com
+	[209.85.212.170])
+	by mail.openembedded.org (Postfix) with ESMTP id 8C29560EFA
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  9 Apr 2014 13:17:39 +0000 (UTC)
-Received: by mail-wi0-f175.google.com with SMTP id cc10so8862562wib.8
+	Wed,  9 Apr 2014 13:17:41 +0000 (UTC)
+Received: by mail-wi0-f170.google.com with SMTP id bs8so9488506wib.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 09 Apr 2014 06:17:39 -0700 (PDT)
+	Wed, 09 Apr 2014 06:17:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=N4OKHxhNdn12bavE9t6T94D/LUWPfV4VGbboFA4c5gg=;
-	b=eCXfTBq+GKegcUfH7HXQQQYiqlqcVXA/kijWSZvsvyTDgWGBQVqtp+9izj5Ezc2Q4C
-	fs00NrYcJmjIEzyQ4M4izQlbEC/JwtdJCpF4pnu7auXPLEbG3ue64Kl4xVEu4tqCfd1x
-	hEvVtfGaVTLfp1XJncrWkhJVGgT5c/DlP2rKpC/4Ohb5gO6ULL3rVb6krIIVlFM5NCxs
-	qm99GZIBNyvisCZg84OKH8xG3pEUFWAHby8GST63sZrGtM1aZ+vnly4cwVCbB2WLlXCd
-	1V0umavJkwPOE39cqefJEJ47v81ZijyXvm0FLUjJqzkh/Qy38vnnRqELhA5NLPDVSh7q
-	35QA==
-X-Gm-Message-State: ALoCoQlnoQ62WaDoI7KxzZBBHdr5n69w4iSxwIaEp8HK18ire180gDRIH9xkv5/IzjNKFxg0Xl/n
-X-Received: by 10.180.74.242 with SMTP id x18mr10023475wiv.20.1397049459752;
-	Wed, 09 Apr 2014 06:17:39 -0700 (PDT)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references:in-reply-to:references;
+	bh=O5tlUqIDap07zwvtEauzgpp8AIYIWGIgtuBt8DWwF7Y=;
+	b=bxJSqOClw+czGDbHQuiB0csZHEL4/n0HuWw2mkJrFsbQNgs24k0Svvr4NP6YkNAUES
+	QI5LhxClcC/ZrN0SiCCW2eh3sEw4T5kuUH7eExzNMq7VDeEPP/7514AQaLTdvq8cpjoB
+	BuXLJKC7+OjQgKdEzm41jkdDDcZnmFdOtFxAezaaDkyWL4be+b9BaQrxPQ0E0n3gjIVa
+	dIhmNzAsg3I15pIO85VKApD5W8OvyQcJF8E4unStWDQ8HXKMhZPqmN28Az2L6B4L0PgS
+	qlyjAWlmeeBkMNhhFDRAByQNUsHA0hMxt3jXD17XIcIwrzT/GIMVnfCbvW8aklKrrgHS
+	YJ2w==
+X-Gm-Message-State: ALoCoQmXjHRwFy8TSzjjH+RlffFGuLjSvgQOKHLfC9RQ3yzqE3d/w5MVVSWRpA2xhTf17Y6impve
+X-Received: by 10.194.122.6 with SMTP id lo6mr9691234wjb.38.1397049462811;
+	Wed, 09 Apr 2014 06:17:42 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id lh6sm1654874wjb.27.2014.04.09.06.17.38
+	by mx.google.com with ESMTPSA id t18sm4342352wiv.16.2014.04.09.06.17.41
 	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 09 Apr 2014 06:17:38 -0700 (PDT)
+	Wed, 09 Apr 2014 06:17:42 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id 3575F560213; Wed,  9 Apr 2014 14:17:37 +0100 (BST)
+	id 76CE85602D4; Wed,  9 Apr 2014 14:17:41 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
 Date: Wed,  9 Apr 2014 14:17:35 +0100
-Message-Id: <cover.1397049329.git.alexandru.damian@intel.com>
+Message-Id: <1450de9793d7af8e8570ddc5a683edc8912405f1.1397049329.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
-Cc: Dave Lerner <dave.lerner@windriver.com>,
-	Alexandru DAMIAN <alexandru.damian@intel.com>,
-	David Reyna <David.Reyna@windriver.com>
-Subject: [PATCH 0/9] toaster patchset pull request
+In-Reply-To: <c93e5ca809d9c335b0cf35dcad4705487414c71b.1397049329.git.alexandru.damian@intel.com>
+References: <c93e5ca809d9c335b0cf35dcad4705487414c71b.1397049329.git.alexandru.damian@intel.com>
+In-Reply-To: <cover.1397049329.git.alexandru.damian@intel.com>
+References: <cover.1397049329.git.alexandru.damian@intel.com>
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 4/9] toaster: keep number of rows across searches
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,65 +51,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 09 Apr 2014 13:17:42 -0000
+X-List-Received-Date: Wed, 09 Apr 2014 13:17:44 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Hello,
+This patch will make Toaster remember the selected
+number of rows to be displayed in tables across different
+searches.
 
-This is a pull request for toaster.
+The number of rows setting will not be remembered if the
+the user leaves the page and subsequently returns to it.
 
-All the patches have been reviewed on the toaster mailing list.
-Patches have been tested invidividually and in this patchset.
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+---
+ lib/toaster/toastergui/templates/basetable_top.html | 1 +
+ 1 file changed, 1 insertion(+)
 
-Can you please pull at your convenience ?
-
-Thank you,
-Alex
-
-The following changes since commit 4fafea4fa69542b491e84463f6eae0d5bf645673:
-
-  bitbake: knotty: Clear footer before outputting to stderr (2014-04-08 18:05:19 +0100)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib adamian/20140409-bb-submission
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20140409-bb-submission
-
-Alexandru DAMIAN (3):
-  toaster: do not load all available timezones
-  toaster: keep number of rows across searches
-  toaster: fix filtering query for multiple filters
-
-Dave Lerner (2):
-  toaster: disable 'size over total' sort
-  toaster: sort on size in detail pages
-
-David Reyna (4):
-  toaster: show unique set-in files in configvar
-  toaster: regex alternation filter caused django error
-  toaster: hide tasks without order or outcome
-  toaster: add URI search path list
-
- lib/toaster/toastergui/static/css/default.css      |   4 +-
- .../toastergui/templates/basetable_top.html        |   1 +
- lib/toaster/toastergui/templates/bpackage.html     |   2 +-
- lib/toaster/toastergui/templates/dirinfo.html      |   2 +-
- .../templates/package_built_dependencies.html      |   8 +-
- .../toastergui/templates/package_built_detail.html |  14 +-
- .../templates/package_included_dependencies.html   |   8 +-
- .../templates/package_included_detail.html         |  14 +-
- .../package_included_reverse_dependencies.html     |  19 +--
- lib/toaster/toastergui/templates/recipe.html       |   4 +-
- lib/toaster/toastergui/templates/tablesort.html    |  38 +++++
- lib/toaster/toastergui/templates/target.html       |   4 +-
- lib/toaster/toastergui/templates/task.html         |   2 +-
- lib/toaster/toastergui/templatetags/projecttags.py |  20 +--
- lib/toaster/toastergui/views.py                    | 158 ++++++++++++++++-----
- lib/toaster/toastermain/settings.py                |  10 +-
- 16 files changed, 211 insertions(+), 97 deletions(-)
- create mode 100644 lib/toaster/toastergui/templates/tablesort.html
-
+diff --git a/lib/toaster/toastergui/templates/basetable_top.html b/lib/toaster/toastergui/templates/basetable_top.html
+index f625901..22c3897 100644
+--- a/lib/toaster/toastergui/templates/basetable_top.html
++++ b/lib/toaster/toastergui/templates/basetable_top.html
+@@ -33,6 +33,7 @@
+             <input class="input-xxlarge" id="search" name="search" type="text" placeholder="Search {%if object_search_display %}{{object_search_display}}{%else%}{{objectname}}{%endif%}" value="{{request.GET.search}}"/>{% if request.GET.search %}<a href="javascript:$('#search').val('');searchform.submit()" class="add-on btn" tabindex="-1"><i class="icon-remove"></i></a>{%endif%}
+             <input type="hidden" name="orderby" value="{{request.GET.orderby}}">
+             <input type="hidden" name="page" value="1">
++            <input type="hidden" name="count" value="{{request.GET.count}}">
+             <button class="btn" type="submit" value="Search">Search</button>
+         </form>
+         <div class="pull-right">
 -- 
 1.9.1
 
