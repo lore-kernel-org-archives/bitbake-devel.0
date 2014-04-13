@@ -1,30 +1,28 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 335B965EBA
+Return-Path: <dlazzari@leapfrog.com>
+Received: from mx3.leapfrog.com (mx3.leapfrog.com [63.114.26.253])
+	by mail.openembedded.org (Postfix) with ESMTP id 7916065EAC
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 13 Apr 2014 10:50:03 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s3DAnwnD008127 for <bitbake-devel@lists.openembedded.org>;
-	Sun, 13 Apr 2014 11:49:58 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id ylbXoJg1oeQF for <bitbake-devel@lists.openembedded.org>;
-	Sun, 13 Apr 2014 11:49:58 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s3DAnogE008119
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
+	Sun, 13 Apr 2014 23:18:39 +0000 (UTC)
+Received: from NAEMCASHT01.na.leapfrog.com (unknown [10.12.2.37])
+	by mx3.leapfrog.com (Postfix) with ESMTP id 0E5E9615D
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 13 Apr 2014 11:49:54 +0100
-Message-ID: <1397386185.15843.51.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Sun, 13 Apr 2014 11:49:45 +0100
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] bitbake-worker: Drop BBHASH variables
+	Sun, 13 Apr 2014 16:18:28 -0700 (PDT)
+Received: from NAEMMAIL01.na.leapfrog.com ([fe80::252e:28a6:3d8f:6991]) by
+	NAEMCASHT01.na.leapfrog.com ([::1]) with mapi id 14.01.0379.000;
+	Sun, 13 Apr 2014 16:18:28 -0700
+From: Daniel Lazzari <dlazzari@leapfrog.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: Can't clone password protected git repo
+Thread-Index: Ac9XbME12beOE+QOTei4dti+GE93Vw==
+Date: Sun, 13 Apr 2014 23:18:26 +0000
+Message-ID: <E7A9054A5ACABE48B0E540E46E862B0F0139F49EB2@NAEMMAIL01.na.leapfrog.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.12.2.72]
+MIME-Version: 1.0
+Subject: Can't clone password protected git repo
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,34 +35,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 13 Apr 2014 10:50:03 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sun, 13 Apr 2014 23:18:41 -0000
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_E7A9054A5ACABE48B0E540E46E862B0F0139F49EB2NAEMMAIL01nal_"
 
-Iterating through and calling setVar on this number of variables has significant
-overhead in the profiling data. By not setting this, we save 3,000 calls
-to setVar which gives a noticeable improvement to the speed of task execution.
+--_000_E7A9054A5ACABE48B0E540E46E862B0F0139F49EB2NAEMMAIL01nal_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-The BBHASH variables have since been replaced by accessing that data through
-the siggen code and going forward, that is the preferred way work with it.
+Hello,
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
-diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
-index 68e2bf4..05e0cf6 100755
---- a/bitbake/bin/bitbake-worker
-+++ b/bitbake/bin/bitbake-worker
-@@ -159,10 +159,6 @@ def fork_off_task(cfg, data, workerdata, fn, task, taskname, appends, taskdepdat
-             try:
-                 the_data = bb.cache.Cache.loadDataFull(fn, appends, data)
-                 the_data.setVar('BB_TASKHASH', workerdata["runq_hash"][task])
--                for h in workerdata["hashes"]:
--                    the_data.setVar("BBHASH_%s" % h, workerdata["hashes"][h])
--                for h in workerdata["hash_deps"]:
--                    the_data.setVar("BBHASHDEPS_%s" % h, workerdata["hash_deps"][h])
- 
-                 # exported_vars() returns a generator which *cannot* be passed to os.environ.update() 
-                 # successfully. We also need to unset anything from the environment which shouldn't be there 
+There's a project we are trying to pull from a private BitBucket repo. I tr=
+ied setting the SRC_URI to something like:
+SRC_URI =3D "git://user:pass@bitbucket.org/path/project;protocol=3Dhttps"
 
+but bitbake hangs waiting for the password. Am I missing something? I'm stu=
+ck on the ancient bitbake 1.15.2 in case this has been fixed in a later rel=
+ease.
 
+Thanks,
+Daniel Lazzari Jr.
+Firmware Engineer
+dlazzari@leapfrog.com
 
+--_000_E7A9054A5ACABE48B0E540E46E862B0F0139F49EB2NAEMMAIL01nal_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html dir=3D"ltr">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
+1">
+<style id=3D"owaParaStyle" type=3D"text/css">P {margin-top:0;margin-bottom:=
+0;}</style>
+</head>
+<body ocsi=3D"0" fpstyle=3D"1">
+<div style=3D"direction: ltr;font-family: Tahoma;color: #000000;font-size: =
+10pt;">Hello,<br>
+<br>
+There's a project we are trying to pull from a private BitBucket repo. I tr=
+ied setting the SRC_URI to something like:<br>
+SRC_URI =3D &quot;git://user:pass@bitbucket.org/path/project;protocol=3Dhtt=
+ps&quot;<br>
+<br>
+but bitbake hangs waiting for the password. Am I missing something? I'm stu=
+ck on the ancient bitbake 1.15.2 in case this has been fixed in a later rel=
+ease.<br>
+<br>
+Thanks,<br>
+Daniel Lazzari Jr.<br>
+Firmware Engineer<br>
+dlazzari@leapfrog.com<br>
+</div>
+</body>
+</html>
+
+--_000_E7A9054A5ACABE48B0E540E46E862B0F0139F49EB2NAEMMAIL01nal_--
