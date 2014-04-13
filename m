@@ -1,30 +1,30 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 67EF665EB7
+	by mail.openembedded.org (Postfix) with ESMTP id 06DA765EC2
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 13 Apr 2014 10:44:42 +0000 (UTC)
+	Sun, 13 Apr 2014 10:45:20 +0000 (UTC)
 Received: from localhost (dan.rpsys.net [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s3DAibap008015 for <bitbake-devel@lists.openembedded.org>;
-	Sun, 13 Apr 2014 11:44:38 +0100
+	s3DAjGHr008034 for <bitbake-devel@lists.openembedded.org>;
+	Sun, 13 Apr 2014 11:45:16 +0100
 X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id ScLI7Ub5RJ9q for <bitbake-devel@lists.openembedded.org>;
-	Sun, 13 Apr 2014 11:44:37 +0100 (BST)
+	with LMTP id SQ2H3PH01CIj for <bitbake-devel@lists.openembedded.org>;
+	Sun, 13 Apr 2014 11:45:16 +0100 (BST)
 Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s3DAiUgK008011
+	s3DAj9xT008019
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 13 Apr 2014 11:44:34 +0100
-Message-ID: <1397385865.15843.45.camel@ted>
+	Sun, 13 Apr 2014 11:45:13 +0100
+Message-ID: <1397385903.15843.46.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Sun, 13 Apr 2014 11:44:25 +0100
+Date: Sun, 13 Apr 2014 11:45:03 +0100
 X-Mailer: Evolution 3.8.4-0ubuntu1 
 Mime-Version: 1.0
-Subject: [PATCH] runqueue: Fix handling of zero priority task
+Subject: [PATCH] runqueue: Fix task weighting algorithm
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,32 +37,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 13 Apr 2014 10:44:48 -0000
+X-List-Received-Date: Sun, 13 Apr 2014 10:45:21 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-The zero priority task should be run first but was being confused with
-the None value the priority field defaulted to. Check for None
-explicitly to avoid this error.
+When looking at a list of tasks, do_patch and do_unpack were being
+given equal priority when one clearly depends on another. The
+reason for this was the default task weights of 0 being to tasks.
+This is therefore changed to 1 to allow correct weighting of dependencies
+which means the scheduler has better information available to it about
+tasks.
 
-In the real world this doesn't change much but it confused the debug
-output from the schedulers.
+Weight endpoints differently (10) for clearer debugging of priorities.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
 diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 6372b65..274ccf2 100644
+index 274ccf2..6ca693d 100644
 --- a/bitbake/lib/bb/runqueue.py
 +++ b/bitbake/lib/bb/runqueue.py
-@@ -139,7 +139,7 @@ class RunQueueScheduler(object):
-         bestprio = None
-         for taskid in self.buildable:
-             prio = self.rev_prio_map[taskid]
--            if not bestprio or bestprio > prio:
-+            if bestprio is None or bestprio > prio:
-                 stamp = self.stamps[taskid]
-                 if stamp in self.rq.build_stamps.itervalues():
-                     continue
+@@ -370,11 +370,11 @@ class RunQueueData:
+ 
+         for listid in xrange(numTasks):
+             task_done.append(False)
+-            weight.append(0)
++            weight.append(1)
+             deps_left.append(len(self.runq_revdeps[listid]))
+ 
+         for listid in endpoints:
+-            weight[listid] = 1
++            weight[listid] = 10
+             task_done[listid] = True
+ 
+         while True:
 
 
 
