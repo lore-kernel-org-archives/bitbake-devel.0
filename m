@@ -1,28 +1,29 @@
-Return-Path: <dlazzari@leapfrog.com>
-Received: from mx3.leapfrog.com (mx3.leapfrog.com [63.114.26.253])
-	by mail.openembedded.org (Postfix) with ESMTP id 7916065EAC
+Return-Path: <anders@chargestorm.se>
+Received: from stoexhubfe02.domain01.net (STOEXHUBFE02.domain01.net
+	[83.145.59.141])
+	by mail.openembedded.org (Postfix) with ESMTP id 5F77265DC9
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 13 Apr 2014 23:18:39 +0000 (UTC)
-Received: from NAEMCASHT01.na.leapfrog.com (unknown [10.12.2.37])
-	by mx3.leapfrog.com (Postfix) with ESMTP id 0E5E9615D
-	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 13 Apr 2014 16:18:28 -0700 (PDT)
-Received: from NAEMMAIL01.na.leapfrog.com ([fe80::252e:28a6:3d8f:6991]) by
-	NAEMCASHT01.na.leapfrog.com ([::1]) with mapi id 14.01.0379.000;
-	Sun, 13 Apr 2014 16:18:28 -0700
-From: Daniel Lazzari <dlazzari@leapfrog.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: Can't clone password protected git repo
-Thread-Index: Ac9XbME12beOE+QOTei4dti+GE93Vw==
-Date: Sun, 13 Apr 2014 23:18:26 +0000
-Message-ID: <E7A9054A5ACABE48B0E540E46E862B0F0139F49EB2@NAEMMAIL01.na.leapfrog.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.12.2.72]
+	Mon, 14 Apr 2014 07:33:23 +0000 (UTC)
+Received: from ad.chargestorm.se (37.250.232.98) by stoexhubfe02.domain01.net
+	(10.12.10.7) with Microsoft SMTP Server (TLS) id 8.3.279.1;
+	Mon, 14 Apr 2014 09:33:22 +0200
+Date: Mon, 14 Apr 2014 09:33:20 +0200
+From: Anders Darander <anders@chargestorm.se>
+To: Daniel Lazzari <dlazzari@leapfrog.com>, <g@ad.chargestorm.se>
+Message-ID: <20140414073318.GA20694@ad.chargestorm.se>
+References: <E7A9054A5ACABE48B0E540E46E862B0F0139F49EB2@NAEMMAIL01.na.leapfrog.com>
 MIME-Version: 1.0
-Subject: Can't clone password protected git repo
+In-Reply-To: <E7A9054A5ACABE48B0E540E46E862B0F0139F49EB2@NAEMMAIL01.na.leapfrog.com>
+X-Accept-Language: sv, en, de
+X-GPG-Fingerprint: 5AF0 B2E9 78FE 9D75 D110  6F8F 3E31 84D7 920E 938C
+X-GPG-Key-Id: 0x920E938C
+X-GPG-Keyserver: hkp://keys.gnupg.net
+Organization: ChargeStorm AB
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-GFI-SMTP-Submission: 1
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: Can't clone password protected git repo
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,60 +36,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 13 Apr 2014 23:18:41 -0000
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_E7A9054A5ACABE48B0E540E46E862B0F0139F49EB2NAEMMAIL01nal_"
+X-List-Received-Date: Mon, 14 Apr 2014 07:33:27 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
---_000_E7A9054A5ACABE48B0E540E46E862B0F0139F49EB2NAEMMAIL01nal_
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hello,
+* Daniel Lazzari <dlazzari@leapfrog.com> [140414 01:19]:
+> There's a project we are trying to pull from a private BitBucket repo. I tried
+> setting the SRC_URI to something like:
+> SRC_URI = "git://user:pass@bitbucket.org/path/project;protocol=https"
 
-There's a project we are trying to pull from a private BitBucket repo. I tr=
-ied setting the SRC_URI to something like:
-SRC_URI =3D "git://user:pass@bitbucket.org/path/project;protocol=3Dhttps"
+> but bitbake hangs waiting for the password. Am I missing something? I'm stuck
+> on the ancient bitbake 1.15.2 in case this has been fixed in a later release.
 
-but bitbake hangs waiting for the password. Am I missing something? I'm stu=
-ck on the ancient bitbake 1.15.2 in case this has been fixed in a later rel=
-ease.
+Maybe not the answer you're looking for. When I'm using private repos, I
+use ssh keys for authentication, which works without any issues with
+bitbake.
 
-Thanks,
-Daniel Lazzari Jr.
-Firmware Engineer
-dlazzari@leapfrog.com
+If you need a buildserver to access the private repos, I'd guess that
+using ssh-agent together with keys with an empty passphrase will be just
+as secure as adding the password to the SRC_URI.
 
---_000_E7A9054A5ACABE48B0E540E46E862B0F0139F49EB2NAEMMAIL01nal_
-Content-Type: text/html; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Cheers,
+Anders
 
-<html dir=3D"ltr">
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
-1">
-<style id=3D"owaParaStyle" type=3D"text/css">P {margin-top:0;margin-bottom:=
-0;}</style>
-</head>
-<body ocsi=3D"0" fpstyle=3D"1">
-<div style=3D"direction: ltr;font-family: Tahoma;color: #000000;font-size: =
-10pt;">Hello,<br>
-<br>
-There's a project we are trying to pull from a private BitBucket repo. I tr=
-ied setting the SRC_URI to something like:<br>
-SRC_URI =3D &quot;git://user:pass@bitbucket.org/path/project;protocol=3Dhtt=
-ps&quot;<br>
-<br>
-but bitbake hangs waiting for the password. Am I missing something? I'm stu=
-ck on the ancient bitbake 1.15.2 in case this has been fixed in a later rel=
-ease.<br>
-<br>
-Thanks,<br>
-Daniel Lazzari Jr.<br>
-Firmware Engineer<br>
-dlazzari@leapfrog.com<br>
-</div>
-</body>
-</html>
+-- 
+Anders Darander
+ChargeStorm AB / eStorm AB
 
---_000_E7A9054A5ACABE48B0E540E46E862B0F0139F49EB2NAEMMAIL01nal_--
