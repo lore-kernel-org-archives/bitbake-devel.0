@@ -1,31 +1,39 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id E29D565E30
+Return-Path: <otavio.salvador@gmail.com>
+Received: from mail-yh0-f45.google.com (mail-yh0-f45.google.com
+	[209.85.213.45])
+	by mail.openembedded.org (Postfix) with ESMTP id BFF8465D1B
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 17 Apr 2014 05:15:48 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s3H5FZ8W009169; Thu, 17 Apr 2014 06:15:35 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id xfpNg-2GaCCg; Thu, 17 Apr 2014 06:15:35 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s3H5FP7B009152
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
-	Thu, 17 Apr 2014 06:15:30 +0100
-Message-ID: <1397711720.15843.184.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Christopher Wyse <CWyse@accu-time.com>
-Date: Thu, 17 Apr 2014 06:15:20 +0100
-In-Reply-To: <4749E398ABC0754A82239442E1B13E2A6144EFD7@ATSSBS2K11.Accu-Time.com>
-References: <4749E398ABC0754A82239442E1B13E2A6144EFD7@ATSSBS2K11.Accu-Time.com>
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: AUTOREV with different branches
+	Fri, 25 Apr 2014 21:21:28 +0000 (UTC)
+Received: by mail-yh0-f45.google.com with SMTP id a41so4068431yho.4
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 25 Apr 2014 14:21:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=sender:from:to:cc:subject:date:message-id:organization;
+	bh=S2Yrp+HtP2VT1AH28c4f+/TJQlKcGZVtITCFqAsr5Sw=;
+	b=1BJ4mh1uw58Vg/GubpOD04KSv2Mi3LL1OCP0US9eU4XlAuuUfsfxecVXWl9t3BGSlT
+	HYjPvYHOhPpTlhW3Gwug2cyzlRGh+k8cL1LV9ck1io5shyG0iz8YpA++Q5QSxSPYIwTT
+	Roi93jWA/53yzM5PSTtIWLjN4xMG3EtQRhYDZNElBeU9zcfzBbe/1Jgrjlp/nT5ueBTJ
+	YesFVUpy0W/eb8bEBpj8N68ZXEghTF91FwYNPWTNnshgcPbMAVhcovi6AvzgkSR8q7HC
+	dZhXY9id3uyvklc590y3RwZGogbGNE83y+ggI2TkeGhuIllL5w9/sQ/3QF7VcsNOkdtr
+	1Fkg==
+X-Received: by 10.236.231.130 with SMTP id l2mr6519506yhq.116.1398460889816;
+	Fri, 25 Apr 2014 14:21:29 -0700 (PDT)
+Received: from nano.lab.ossystems.com.br ([177.194.208.225])
+	by mx.google.com with ESMTPSA id
+	t63sm15639975yhm.32.2014.04.25.14.21.27 for <multiple recipients>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 25 Apr 2014 14:21:28 -0700 (PDT)
+Sender: Otavio Salvador <otavio.salvador@gmail.com>
+Received: by nano.lab.ossystems.com.br (Postfix, from userid 1000)
+	id 1A1801A5BA21B; Fri, 25 Apr 2014 18:21:24 -0300 (BRT)
+From: Otavio Salvador <otavio@ossystems.com.br>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 25 Apr 2014 18:21:23 -0300
+Message-Id: <1398460884-26033-1-git-send-email-otavio@ossystems.com.br>
+X-Mailer: git-send-email 2.0.0.rc0
+Organization: O.S. Systems Software LTDA.
+Cc: Otavio Salvador <otavio@ossystems.com.br>
+Subject: [PATCH 1/2] bb.codeparser.py: Remove reference for oe.utils.contains
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,61 +46,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 17 Apr 2014 05:15:51 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 25 Apr 2014 21:21:32 -0000
 
-On Tue, 2014-04-15 at 14:48 +0000, Christopher Wyse wrote:
-> I'd like to auto-increment my package revision.  I have 'SRCREV =
-> "${AUTOREV}" ', and 'PR_append = "+gitr${SRCPV}" ' set.  This is
-> working fine as long as I stay on a single branch.  However, my
-> SRC_URI has the branch parameter set to branch=${BRANCH}, and BRANCH
-> is set in the environment prior to calling bitbake.  This has resulted
-> in the following issue.
-> 
-> On the develop branch, my package name is:
-> 
-> setup-utility_0.90-r24+gitr9
-> +537d03f5ed3a78caa8148448c8c92053be99010d_armv7a-vfp-neon.ipk
-> 
-> and on the release branch:
-> 
-> setup-utility_0.90-r24+gitr1
-> +db553099700f4b6a5e2db0475957700afe6cbcab_armv7a-vfp-neon.ipk
-> 
-> The release branch had been built most recently.  I want opkg to use
-> the latest package regardless of which branch it was built on, but in
-> this case opkg will use the develop build.
-> 
-> I'm not sure how to correct this.  I see references to LOCALCOUNT and
-> AUTOINC, and it seems like other people have had similar issues, but
-> after reviewing them I'm still not sure of the best solution.
-> 
-> Here's a the relevant snippets from my recipe:
-> 
->    SRC_URI =
-> "git://gitolite@....com/universal/SetupUtility.git;protocol=ssh;branch=${BRANCH}"
->    PV = "0.90"
-> 
->    SRCREV = "${AUTOREV}"
-> 
->    # Package Revision, Update this whenever you change the recipe. 
->    PR = "r24"
->    PR_append = "+gitr${SRCPV}"
-> 
-> If anyone could provide any help/suggestions, I would really
-> appreciate it.
+The oe.utils.contains function has been removed from OE-Core metadata
+as the references for it has been replaced to use the
+bb.utils.contains.
 
-I suspect the problem here is we're keying the data either in the PR
-server or in the fetcher incorrectly. It should be keyed off the PN
-value. In reality I suspect branchname and some other info gets used to
-key the data and causes this problem. I don't have the time to dig into
-this right now but please do file a bug report about this and if you
-don't figure it out, we will try and do so in due course.
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+---
+ lib/bb/codeparser.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers,
-
-Richard
-
+diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
+index a50b9f2..b4b1013 100644
+--- a/lib/bb/codeparser.py
++++ b/lib/bb/codeparser.py
+@@ -103,7 +103,7 @@ class BufferedLogger(Logger):
+ 
+ class PythonParser():
+     getvars = ("d.getVar", "bb.data.getVar", "data.getVar", "d.appendVar", "d.prependVar")
+-    containsfuncs = ("bb.utils.contains", "base_contains", "oe.utils.contains")
++    containsfuncs = ("bb.utils.contains", "base_contains")
+     execfuncs = ("bb.build.exec_func", "bb.build.exec_task")
+ 
+     def warn(self, func, arg):
+-- 
+2.0.0.rc0
 
 
