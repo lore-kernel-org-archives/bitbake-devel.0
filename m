@@ -1,41 +1,30 @@
-Return-Path: <otavio.salvador@gmail.com>
-Received: from mail-yk0-f172.google.com (mail-yk0-f172.google.com
-	[209.85.160.172])
-	by mail.openembedded.org (Postfix) with ESMTP id F225E65E00
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 8E0CE65DC0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 25 Apr 2014 21:21:29 +0000 (UTC)
-Received: by mail-yk0-f172.google.com with SMTP id q9so3078216ykb.31
+	Sat, 26 Apr 2014 10:20:16 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s3QAKCp8001244 for <bitbake-devel@lists.openembedded.org>;
+	Sat, 26 Apr 2014 11:20:12 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id WPTpiB09KPh9 for <bitbake-devel@lists.openembedded.org>;
+	Sat, 26 Apr 2014 11:20:12 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s3QAK9XP001223
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 25 Apr 2014 14:21:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-	:organization; bh=cSsD3Od4ysIvPe7QcfoO6fxWTP7nCGc947qn91MdPcw=;
-	b=zki6jeKORPaxDsaew1l0DNgVlt/W6muvi27oo9oSOS1DLxZE/lkyHS/vI5Hr28ACbf
-	z+MrVcNniU4BjLlxiOYOgkhIiVS4P/lzHEi5y9VzUMhLuHazizRb5hSBvtf549RD96jb
-	kHPfuNjAIwIwoKU8sPMpYH0jwQ5cSnFjuyI6/UT1toB+sn3H+ZWd0mcxwyrf2i8jFPYk
-	dE3JsX0yRzyd7MA1ox63AYMJiGmfARTg/Gdh+Y6wrEkmlLQpLKWbjxpqpusFHE76671u
-	01DMdP/sYAQECOhgxKLUGPNqiO3j2lHS+DndGF8sY7Hl9+2q6Egp+3kaVHyUR/GgUxwj
-	zEjA==
-X-Received: by 10.236.88.116 with SMTP id z80mr6426720yhe.112.1398460890291;
-	Fri, 25 Apr 2014 14:21:30 -0700 (PDT)
-Received: from nano.lab.ossystems.com.br ([177.194.208.225])
-	by mx.google.com with ESMTPSA id l4sm15645212yhj.24.2014.04.25.14.21.27
-	for <multiple recipients>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 25 Apr 2014 14:21:28 -0700 (PDT)
-Sender: Otavio Salvador <otavio.salvador@gmail.com>
-Received: by nano.lab.ossystems.com.br (Postfix, from userid 1000)
-	id 1C27C1A5BA21D; Fri, 25 Apr 2014 18:21:25 -0300 (BRT)
-From: Otavio Salvador <otavio@ossystems.com.br>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 25 Apr 2014 18:21:24 -0300
-Message-Id: <1398460884-26033-2-git-send-email-otavio@ossystems.com.br>
-X-Mailer: git-send-email 2.0.0.rc0
-In-Reply-To: <1398460884-26033-1-git-send-email-otavio@ossystems.com.br>
-References: <1398460884-26033-1-git-send-email-otavio@ossystems.com.br>
-Organization: O.S. Systems Software LTDA.
-Cc: Otavio Salvador <otavio@ossystems.com.br>
-Subject: [PATCH 2/2] bb.utils, bb.codeparser: Add bb.utils.contains_any
+	Sat, 26 Apr 2014 11:20:11 +0100
+Message-ID: <1398507604.16672.239.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Sat, 26 Apr 2014 11:20:04 +0100
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] fetch2/git: Stop git from triggering fsync() calls
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,63 +37,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 25 Apr 2014 21:21:33 -0000
+X-List-Received-Date: Sat, 26 Apr 2014 10:20:20 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-This includes contains_any in the special handling code for sstate. It
-does not take into account the equivalence of the values. In current
-code, considering 'bb.utils.contains_any("A", "foo bar", ...)':
+We only ever clone other repositories, if there were a problem such as power
+failure, we'd blow away data and rebuild. As such we don't need fsync(). With
+filesystems like ext*, the fsync pushes nearly all the data out to disk
+which impacts all running processes.
 
-A = "foo"
-A = "bar"
-A = "foo bar"
+We therefore set a configuration parameter to disable the fsync() calls.
 
-All those will get different signatures.
+Also fixup a case where basecmd wasn't being used for no good reason.
 
-Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/codeparser.py |  3 ++-
- lib/bb/utils.py      | 13 +++++++++++++
- 2 files changed, 15 insertions(+), 1 deletion(-)
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index ecaaaf9..7c0c95c 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -124,7 +124,7 @@ class Git(FetchMethod):
+             ud.branches[name] = branch
+             ud.unresolvedrev[name] = branch
+ 
+-        ud.basecmd = data.getVar("FETCHCMD_git", d, True) or "git"
++        ud.basecmd = data.getVar("FETCHCMD_git", d, True) or "git -c core.fsyncobjectfiles=0"
+ 
+         ud.write_tarballs = ((data.getVar("BB_GENERATE_MIRROR_TARBALLS", d, True) or "0") != "0") or ud.rebaseable
+ 
+@@ -276,7 +276,7 @@ class Git(FetchMethod):
+             os.symlink(ud.clonedir, indirectiondir)
+             clonedir = indirectiondir
+ 
+-        runfetchcmd("git clone %s %s/ %s" % (cloneflags, clonedir, destdir), d)
++        runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, cloneflags, clonedir, destdir), d)
+         if not ud.nocheckout:
+             os.chdir(destdir)
+             if subdir != "":
 
-diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
-index b4b1013..58e0016 100644
---- a/lib/bb/codeparser.py
-+++ b/lib/bb/codeparser.py
-@@ -103,7 +103,8 @@ class BufferedLogger(Logger):
- 
- class PythonParser():
-     getvars = ("d.getVar", "bb.data.getVar", "data.getVar", "d.appendVar", "d.prependVar")
--    containsfuncs = ("bb.utils.contains", "base_contains")
-+    containsfuncs = ("bb.utils.contains", "base_contains",
-+                     "bb.utils.contains_any", "base_contains_any")
-     execfuncs = ("bb.build.exec_func", "bb.build.exec_task")
- 
-     def warn(self, func, arg):
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 0be45e1..1be1874 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -845,6 +845,19 @@ def contains(variable, checkvalues, truevalue, falsevalue, d):
-         return truevalue
-     return falsevalue
- 
-+def contains_any(variable, checkvalues, truevalue, falsevalue, d):
-+    val = d.getVar(variable, True)
-+    if not val:
-+        return falsevalue
-+    val = set(val.split())
-+    if isinstance(checkvalues, basestring):
-+        checkvalues = set(checkvalues.split())
-+    else:
-+        checkvalues = set(checkvalues)
-+    if checkvalues in val:
-+        return truevalue
-+    return falsevalue
-+
- def cpu_count():
-     return multiprocessing.cpu_count()
- 
--- 
-2.0.0.rc0
 
 
