@@ -1,31 +1,35 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
-	by mail.openembedded.org (Postfix) with ESMTP id AA9CF609AC
+Return-Path: <kergoth@gmail.com>
+Received: from mail-pb0-f44.google.com (mail-pb0-f44.google.com
+	[209.85.160.44])
+	by mail.openembedded.org (Postfix) with ESMTP id 477AF65E3D
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Apr 2014 12:25:11 +0000 (UTC)
-Received: from azsmga001.ch.intel.com ([10.2.17.19])
-	by azsmga101.ch.intel.com with ESMTP; 28 Apr 2014 05:25:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.97,944,1389772800"; d="scan'208";a="424849207"
-Received: from unknown (HELO peggleto-mobl5.ger.corp.intel.com)
-	([10.252.122.52])
-	by azsmga001.ch.intel.com with ESMTP; 28 Apr 2014 05:24:58 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: Jacob Kroon <jacob.kroon@gmail.com>,
-	Jacob Kroon <jacob.kroon@mikrodidakt.se>,
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Date: Mon, 28 Apr 2014 13:24:56 +0100
-Message-ID: <2658824.UBEqCzP8hC@peggleto-mobl5.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.12.4 (Linux/3.13.10-200.fc20.x86_64; KDE/4.12.4; x86_64; ;
-	)
-In-Reply-To: <9717871.1LDkiApose@peggleto-mobl5.ger.corp.intel.com>
-References: <1398522738-8979-1-git-send-email-jacob.kroon@mikrodidakt.se>
-	<CAPbeDCk-0ajUc+1XryV-JqhQkg=_kFcrtiVJy3Tg=__rV0jBLg@mail.gmail.com>
-	<9717871.1LDkiApose@peggleto-mobl5.ger.corp.intel.com>
-MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] fetch2: Cleanup file checksum generation
+	Mon, 28 Apr 2014 15:27:37 +0000 (UTC)
+Received: by mail-pb0-f44.google.com with SMTP id jt11so4246928pbb.31
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 28 Apr 2014 08:27:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:subject:date:message-id;
+	bh=tuuCCe15ybYfN9dDZ8jORSA7I3zv/t7vzPHO6/pIWho=;
+	b=bpK3DMDRO5GULf+3PoTysLlG8kdha6EiQcWVkxwMaz1dm+SDcVel6S8ELoM9ECVi1R
+	APeyobGqHA0Sw3h4zrGHU0A1F8sVZ+OLlVGWGJFjbFQnCobgPr9swW+zPDDhjUtAP2Ln
+	sGM3A8YcTPbB9WEYm2Ty/nA3Pf/O/RrT5eb+5pg01B5fAto3yqaWEX0mbDsk+8DpMEaZ
+	3tV0JoE7z6zs7tze7V7OYyM/k4wQfznu72q4HYXziNK5DHCiIVNEMa885bYzPpKslG/Q
+	HSd//jlIVwoRtvAG1M+WnW8KaKtqw588amlz2/hprObXRzkTWTUcd2whVcDvqtp45Xqt
+	Qksg==
+X-Received: by 10.66.250.161 with SMTP id zd1mr4631663pac.136.1398698858815;
+	Mon, 28 Apr 2014 08:27:38 -0700 (PDT)
+Received: from amyr.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
+	by mx.google.com with ESMTPSA id
+	ov4sm35707889pbc.46.2014.04.28.08.27.36
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Mon, 28 Apr 2014 08:27:37 -0700 (PDT)
+From: Christopher Larson <kergoth@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 28 Apr 2014 08:27:34 -0700
+Message-Id: <1398698854-15713-1-git-send-email-kergoth@gmail.com>
+X-Mailer: git-send-email 1.8.3.4
+Subject: [PATCH] codeparser: don't interact with the cache for subshells
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,85 +42,95 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 28 Apr 2014 12:25:15 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Mon, 28 Apr 2014 15:27:40 -0000
 
-On Monday 28 April 2014 13:08:06 Paul Eggleton wrote:
-> On Monday 28 April 2014 13:55:48 Jacob Kroon wrote:
-> > On Mon, Apr 28, 2014 at 1:23 PM, Paul Eggleton <
-> > 
-> > paul.eggleton@linux.intel.com> wrote:
-> > > On Saturday 26 April 2014 16:32:18 Jacob Kroon wrote:
-> > > > Cleanup the fix done in f9416e76e272ba3249abff099f6f3a47fe82e03e.
-> > > > 
-> > > > Instead of adding continue statements we can just move the last
-> > > > statements into the final else-clause.
-> > > > 
-> > > > Signed-off-by: Jacob Kroon <jacob.kroon@mikrodidakt.se>
-> > > > ---
-> > > > 
-> > > >  lib/bb/fetch2/__init__.py | 7 ++-----
-> > > >  1 file changed, 2 insertions(+), 5 deletions(-)
-> > > > 
-> > > > diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-> > > > index 5a03a0e..bc4e8fd 100644
-> > > > --- a/lib/bb/fetch2/__init__.py
-> > > > +++ b/lib/bb/fetch2/__init__.py
-> > > > 
-> > > > @@ -985,15 +985,12 @@ def get_file_checksums(filelist, pn):
-> > > >                      checksum = checksum_file(f)
-> > > >                      
-> > > >                      if checksum:
-> > > >                          checksums.append((f, checksum))
-> > > 
-> > > Note the above, then see below.
-> > > 
-> > > > -            continue
-> > > > 
-> > > >          elif os.path.isdir(pth):
-> > > >              checksums.extend(checksum_dir(pth))
-> > > > 
-> > > > -            continue
-> > > > 
-> > > >          else:
-> > > >              checksum = checksum_file(pth)
-> > > > 
-> > > > -
-> > > > -        if checksum:
-> > > > -            checksums.append((pth, checksum))
-> > > > +            if checksum:
-> > > > +                checksums.append((pth, checksum))
-> > > > 
-> > > >      checksums.sort(key=operator.itemgetter(1))
-> > > >      return checksums
-> > > 
-> > > This cleanup seems innocuous but unfortunately it does cause a change in
-> > > behaviour - now for the glob case we will get the last item duplicated
-> > > because
-> > > it will be added to the list a second time at the end.
-> > 
-> > Sorry..
-> > But I can't see why this would cause a different behaviour. Both previous
-> > 'continue' statements applied to the outer for-loop. Unless they have an
-> > effect on the if-statements aswell ?
-> 
-> Because if we expand a glob we add each expanded item to the list, but
-> because we use the "checksum" variable in that inner loop as well it will
-> be left assigned to the last added item; thus without the continue when it
-> is checked again at the end it will still be assigned and will add it to
-> the list a second time.
+Doing so was causing leakage between the execs of the main value and that of
+the subshell value, and was causing the cached subshell value to be used for
+the overall variable. At the least this could cause execs contamination
+between two variables that while differing, run the same subshell. Beyond
+that, it's possible we could have been using an incomplete cached value of
+a subshell for that of the main value.
 
-Oops, it seems I missed that the second checksums.append() is now part of the 
-else block and thus I'm talking complete nonsense above. No need to revert.
+Before this, bb_codeparser.dat would change between parses with differing
+bbfile parse order. After, it does not change.
 
-Sorry for the noise...
+The codeparser cache version is bumped, to ensure we don't use potentially
+incorrect cached values from previous runs.
 
-Cheers,
-Paul
+This should hopefully resolve the difficult-to-reproduce issues we've seen at
+Mentor Graphics where bitbake emits a script to run a task and misses
+dependent functions, resulting in 'command not found' failures. This issue has
+also been mentioned on the oe devel list, where someone hit a case where
+oe_runmake was missing from a do_install task (IIRC). Adding debug information
+showed that bitbake's information about the variable dependencies for this
+task is inaccurate in the failure cases.
 
+Signed-off-by: Christopher Larson <kergoth@gmail.com>
+---
+ lib/bb/codeparser.py | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
+
+diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
+index a50b9f2..de8d2eb 100644
+--- a/lib/bb/codeparser.py
++++ b/lib/bb/codeparser.py
+@@ -35,7 +35,7 @@ def check_indent(codestr):
+ 
+ class CodeParserCache(MultiProcessCache):
+     cache_file_name = "bb_codeparser.dat"
+-    CACHE_VERSION = 4
++    CACHE_VERSION = 5
+ 
+     def __init__(self):
+         MultiProcessCache.__init__(self)
+@@ -217,6 +217,15 @@ class ShellParser():
+             self.execs = codeparsercache.shellcacheextras[h]["execs"]
+             return self.execs
+ 
++        self._parse_shell(value)
++        self.execs = set(cmd for cmd in self.allexecs if cmd not in self.funcdefs)
++
++        codeparsercache.shellcacheextras[h] = {}
++        codeparsercache.shellcacheextras[h]["execs"] = self.execs
++
++        return self.execs
++
++    def _parse_shell(self, value):
+         try:
+             tokens, _ = pyshyacc.parse(value, eof=True, debug=False)
+         except pyshlex.NeedMore:
+@@ -224,12 +233,6 @@ class ShellParser():
+ 
+         for token in tokens:
+             self.process_tokens(token)
+-        self.execs = set(cmd for cmd in self.allexecs if cmd not in self.funcdefs)
+-
+-        codeparsercache.shellcacheextras[h] = {}
+-        codeparsercache.shellcacheextras[h]["execs"] = self.execs
+-
+-        return self.execs
+ 
+     def process_tokens(self, tokens):
+         """Process a supplied portion of the syntax tree as returned by
+@@ -303,7 +306,7 @@ class ShellParser():
+ 
+                 if part[0] in ('`', '$('):
+                     command = pyshlex.wordtree_as_string(part[1:-1])
+-                    self.parse_shell(command)
++                    self._parse_shell(command)
+ 
+                     if word[0] in ("cmd_name", "cmd_word"):
+                         if word in words:
+@@ -322,7 +325,7 @@ class ShellParser():
+                     self.log.debug(1, self.unhandled_template % cmd)
+                 elif cmd == "eval":
+                     command = " ".join(word for _, word in words[1:])
+-                    self.parse_shell(command)
++                    self._parse_shell(command)
+                 else:
+                     self.allexecs.add(cmd)
+                 break
 -- 
+1.8.3.4
 
-Paul Eggleton
-Intel Open Source Technology Centre
 
