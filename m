@@ -1,35 +1,33 @@
 Return-Path: <kergoth@gmail.com>
-Received: from mail-pb0-f44.google.com (mail-pb0-f44.google.com
-	[209.85.160.44])
-	by mail.openembedded.org (Postfix) with ESMTP id 477AF65E3D
+Received: from mail-lb0-f181.google.com (mail-lb0-f181.google.com
+	[209.85.217.181])
+	by mail.openembedded.org (Postfix) with ESMTP id 1AD8F65E7F
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Apr 2014 15:27:37 +0000 (UTC)
-Received: by mail-pb0-f44.google.com with SMTP id jt11so4246928pbb.31
+	Mon, 28 Apr 2014 15:32:00 +0000 (UTC)
+Received: by mail-lb0-f181.google.com with SMTP id z11so3840382lbi.26
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Apr 2014 08:27:38 -0700 (PDT)
+	Mon, 28 Apr 2014 08:32:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:subject:date:message-id;
-	bh=tuuCCe15ybYfN9dDZ8jORSA7I3zv/t7vzPHO6/pIWho=;
-	b=bpK3DMDRO5GULf+3PoTysLlG8kdha6EiQcWVkxwMaz1dm+SDcVel6S8ELoM9ECVi1R
-	APeyobGqHA0Sw3h4zrGHU0A1F8sVZ+OLlVGWGJFjbFQnCobgPr9swW+zPDDhjUtAP2Ln
-	sGM3A8YcTPbB9WEYm2Ty/nA3Pf/O/RrT5eb+5pg01B5fAto3yqaWEX0mbDsk+8DpMEaZ
-	3tV0JoE7z6zs7tze7V7OYyM/k4wQfznu72q4HYXziNK5DHCiIVNEMa885bYzPpKslG/Q
-	HSd//jlIVwoRtvAG1M+WnW8KaKtqw588amlz2/hprObXRzkTWTUcd2whVcDvqtp45Xqt
-	Qksg==
-X-Received: by 10.66.250.161 with SMTP id zd1mr4631663pac.136.1398698858815;
-	Mon, 28 Apr 2014 08:27:38 -0700 (PDT)
-Received: from amyr.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
-	by mx.google.com with ESMTPSA id
-	ov4sm35707889pbc.46.2014.04.28.08.27.36
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Mon, 28 Apr 2014 08:27:37 -0700 (PDT)
-From: Christopher Larson <kergoth@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 28 Apr 2014 08:27:34 -0700
-Message-Id: <1398698854-15713-1-git-send-email-kergoth@gmail.com>
-X-Mailer: git-send-email 1.8.3.4
-Subject: [PATCH] codeparser: don't interact with the cache for subshells
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:content-type; bh=BrGItcPe6a9waDkXcLOjuYF0vXcLcit6lDesf6AgIVs=;
+	b=jIu+8tYbWQu5xf1motvvrlNn+R7SyW2RB7amhaLw/p6CjenI8TZa39akHeW6d9VPg6
+	Gwi8vqnRmOAz246UYbWx3EHhykXIQ8okKQdtU8Whj+3xxLM2qHsaW3NMwqX5XkOp1rF/
+	3JTKsQwDdZKaSRQP87yarkq5W2H/vEPgdFh0CWAEPgX6Ou39m70+yJ3mq4Dku9X6TH3G
+	4Dvi7phI8R1108pVs9XZd/7kWUqDEvMN+OL5yLrZpfAJ6qbceNYSAb4g0PQDIryjhYoL
+	c6lzN/d7adhTMd9ogtrpU7VwOwnocwhYjvupP1skZlmicpTKwg+KgXckMj8ffcLqzR7O
+	Mung==
+X-Received: by 10.152.43.168 with SMTP id x8mr552322lal.60.1398699120916; Mon,
+	28 Apr 2014 08:32:00 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.112.35.194 with HTTP; Mon, 28 Apr 2014 08:31:40 -0700 (PDT)
+In-Reply-To: <1398698854-15713-1-git-send-email-kergoth@gmail.com>
+References: <1398698854-15713-1-git-send-email-kergoth@gmail.com>
+From: Chris Larson <kergoth@gmail.com>
+Date: Mon, 28 Apr 2014 08:31:40 -0700
+Message-ID: <CABcZANm93gs9sC0s=xLyRxvH4DBP15WPmwGbMdseFk_FSOSjgg@mail.gmail.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] codeparser: don't interact with the cache for subshells
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,95 +40,118 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 28 Apr 2014 15:27:40 -0000
+X-List-Received-Date: Mon, 28 Apr 2014 15:32:01 -0000
+Content-Type: multipart/alternative; boundary=001a11c22a5e3ffe4704f81c0457
 
-Doing so was causing leakage between the execs of the main value and that of
-the subshell value, and was causing the cached subshell value to be used for
-the overall variable. At the least this could cause execs contamination
-between two variables that while differing, run the same subshell. Beyond
-that, it's possible we could have been using an incomplete cached value of
-a subshell for that of the main value.
+--001a11c22a5e3ffe4704f81c0457
+Content-Type: text/plain; charset=UTF-8
 
-Before this, bb_codeparser.dat would change between parses with differing
-bbfile parse order. After, it does not change.
+On Mon, Apr 28, 2014 at 8:27 AM, Christopher Larson <kergoth@gmail.com>wrote:
 
-The codeparser cache version is bumped, to ensure we don't use potentially
-incorrect cached values from previous runs.
+> Doing so was causing leakage between the execs of the main value and that
+> of
+> the subshell value, and was causing the cached subshell value to be used
+> for
+> the overall variable. At the least this could cause execs contamination
+> between two variables that while differing, run the same subshell. Beyond
+> that, it's possible we could have been using an incomplete cached value of
+> a subshell for that of the main value.
+>
+> Before this, bb_codeparser.dat would change between parses with differing
+> bbfile parse order. After, it does not change.
+>
+> The codeparser cache version is bumped, to ensure we don't use potentially
+> incorrect cached values from previous runs.
+>
+> This should hopefully resolve the difficult-to-reproduce issues we've seen
+> at
+> Mentor Graphics where bitbake emits a script to run a task and misses
+> dependent functions, resulting in 'command not found' failures. This issue
+> has
+> also been mentioned on the oe devel list, where someone hit a case where
+> oe_runmake was missing from a do_install task (IIRC). Adding debug
+> information
+> showed that bitbake's information about the variable dependencies for this
+> task is inaccurate in the failure cases.
+>
 
-This should hopefully resolve the difficult-to-reproduce issues we've seen at
-Mentor Graphics where bitbake emits a script to run a task and misses
-dependent functions, resulting in 'command not found' failures. This issue has
-also been mentioned on the oe devel list, where someone hit a case where
-oe_runmake was missing from a do_install task (IIRC). Adding debug information
-showed that bitbake's information about the variable dependencies for this
-task is inaccurate in the failure cases.
+We're trying to confirm the fix, but given it's not really reproducible,
+and only seemed
+to be hit during automated builds, it'll be difficult to say with certainty
+that the problem
+is resolved. That said, I think it's clear from reading the code that this
+is the correct
+thing, and the previous beahvior was just an unintentional oversight when
+the cache
+usage was added.
 
-Signed-off-by: Christopher Larson <kergoth@gmail.com>
----
- lib/bb/codeparser.py | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
-
-diff --git a/lib/bb/codeparser.py b/lib/bb/codeparser.py
-index a50b9f2..de8d2eb 100644
---- a/lib/bb/codeparser.py
-+++ b/lib/bb/codeparser.py
-@@ -35,7 +35,7 @@ def check_indent(codestr):
- 
- class CodeParserCache(MultiProcessCache):
-     cache_file_name = "bb_codeparser.dat"
--    CACHE_VERSION = 4
-+    CACHE_VERSION = 5
- 
-     def __init__(self):
-         MultiProcessCache.__init__(self)
-@@ -217,6 +217,15 @@ class ShellParser():
-             self.execs = codeparsercache.shellcacheextras[h]["execs"]
-             return self.execs
- 
-+        self._parse_shell(value)
-+        self.execs = set(cmd for cmd in self.allexecs if cmd not in self.funcdefs)
-+
-+        codeparsercache.shellcacheextras[h] = {}
-+        codeparsercache.shellcacheextras[h]["execs"] = self.execs
-+
-+        return self.execs
-+
-+    def _parse_shell(self, value):
-         try:
-             tokens, _ = pyshyacc.parse(value, eof=True, debug=False)
-         except pyshlex.NeedMore:
-@@ -224,12 +233,6 @@ class ShellParser():
- 
-         for token in tokens:
-             self.process_tokens(token)
--        self.execs = set(cmd for cmd in self.allexecs if cmd not in self.funcdefs)
--
--        codeparsercache.shellcacheextras[h] = {}
--        codeparsercache.shellcacheextras[h]["execs"] = self.execs
--
--        return self.execs
- 
-     def process_tokens(self, tokens):
-         """Process a supplied portion of the syntax tree as returned by
-@@ -303,7 +306,7 @@ class ShellParser():
- 
-                 if part[0] in ('`', '$('):
-                     command = pyshlex.wordtree_as_string(part[1:-1])
--                    self.parse_shell(command)
-+                    self._parse_shell(command)
- 
-                     if word[0] in ("cmd_name", "cmd_word"):
-                         if word in words:
-@@ -322,7 +325,7 @@ class ShellParser():
-                     self.log.debug(1, self.unhandled_template % cmd)
-                 elif cmd == "eval":
-                     command = " ".join(word for _, word in words[1:])
--                    self.parse_shell(command)
-+                    self._parse_shell(command)
-                 else:
-                     self.allexecs.add(cmd)
-                 break
+Thanks!
 -- 
-1.8.3.4
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
+
+--001a11c22a5e3ffe4704f81c0457
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Mon, Apr 28, 2014 at 8:27 AM, Christopher Larson <span dir=3D"ltr">&lt;<=
+a href=3D"mailto:kergoth@gmail.com" target=3D"_blank">kergoth@gmail.com</a>=
+&gt;</span> wrote:<br>
+
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div id=3D":1gm" class=3D"a3s" style=3D"over=
+flow:hidden">Doing so was causing leakage between the execs of the main val=
+ue and that of<br>
 
 
+the subshell value, and was causing the cached subshell value to be used fo=
+r<br>
+the overall variable. At the least this could cause execs contamination<br>
+between two variables that while differing, run the same subshell. Beyond<b=
+r>
+that, it&#39;s possible we could have been using an incomplete cached value=
+ of<br>
+a subshell for that of the main value.<br>
+<br>
+Before this, bb_codeparser.dat would change between parses with differing<b=
+r>
+bbfile parse order. After, it does not change.<br>
+<br>
+The codeparser cache version is bumped, to ensure we don&#39;t use potentia=
+lly<br>
+incorrect cached values from previous runs.<br>
+<br>
+This should hopefully resolve the difficult-to-reproduce issues we&#39;ve s=
+een at<br>
+Mentor Graphics where bitbake emits a script to run a task and misses<br>
+dependent functions, resulting in &#39;command not found&#39; failures. Thi=
+s issue has<br>
+also been mentioned on the oe devel list, where someone hit a case where<br=
+>
+oe_runmake was missing from a do_install task (IIRC). Adding debug informat=
+ion<br>
+showed that bitbake&#39;s information about the variable dependencies for t=
+his<br>
+task is inaccurate in the failure cases.</div></blockquote></div><br>We&#39=
+;re trying to confirm the fix, but given it&#39;s not really reproducible, =
+and only seemed</div><div class=3D"gmail_extra">to be hit during automated =
+builds, it&#39;ll be difficult to say with certainty that the problem</div>
+
+<div class=3D"gmail_extra">is resolved. That said, I think it&#39;s clear f=
+rom reading the code that this is the correct</div><div class=3D"gmail_extr=
+a">thing, and the previous beahvior was just an unintentional oversight whe=
+n the cache</div>
+
+<div class=3D"gmail_extra">usage was added.</div><div class=3D"gmail_extra"=
+><br></div><div class=3D"gmail_extra">Thanks!<br>-- <br>Christopher Larson<=
+br>clarson at kergoth dot com<br>Founder - BitBake, OpenEmbedded, OpenZauru=
+s<br>
+
+Maintainer - Tslib<br>Senior Software Engineer, Mentor Graphics
+</div></div>
+
+--001a11c22a5e3ffe4704f81c0457--
