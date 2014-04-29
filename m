@@ -1,42 +1,30 @@
-Return-Path: <V.Vogelhuber@DigitalEndoscopy.de>
-Received: from mxout51.expurgate.net (mxout51.expurgate.net [194.37.255.51])
-	by mail.openembedded.org (Postfix) with ESMTP id 934A8609B2
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 017C9609B2
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 29 Apr 2014 15:34:15 +0000 (UTC)
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.80.1)
-	(envelope-from <V.Vogelhuber@DigitalEndoscopy.de>)
-	id 1WfA2w-00014m-Lm for bitbake-devel@lists.openembedded.org;
-	Tue, 29 Apr 2014 17:34:14 +0200
-Received: from [80.81.19.29] (helo=SRV-MSX01.digitendos.local)
-	by relay.expurgate.net with esmtp (Exim 4.80.1)
-	(envelope-from <V.Vogelhuber@DigitalEndoscopy.de>)
-	id 1WfA2w-0003mp-8P for bitbake-devel@lists.openembedded.org;
-	Tue, 29 Apr 2014 17:34:14 +0200
-Received: from [192.168.10.111] (192.168.10.111) by SRV-MSX01.digitendos.local
-	(192.168.10.14) with Microsoft SMTP Server (TLS) id 14.2.347.0;
-	Tue, 29 Apr 2014 17:34:11 +0200
-Message-ID: <535FC66B.8050802@digitalendoscopy.de>
-Date: Tue, 29 Apr 2014 17:34:03 +0200
-From: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:24.0) Gecko/20100101 Thunderbird/24.4.0
-MIME-Version: 1.0
-To: <bitbake-devel@lists.openembedded.org>
-X-Originating-IP: [192.168.10.111]
-X-TM-AS-Product-Ver: SMEX-10.1.0.2244-7.500.1017-20662.006
-X-TM-AS-Result: No--10.138700-0.000000-31
-X-TM-AS-User-Approved-Sender: Yes
-X-TM-AS-User-Blocked-Sender: No
-X-purgate-relay-fid: relay-d8919a
-X-purgate-sourceid: 1WfA2w-0003mp-8P
-X-purgate-Ad: Checked for spam and viruses by eXpurgate(R),
-	see www.eleven.de for details.
-X-purgate-ID: 151534::1398785654-00007EF9-8E761B7D/0/0
-X-purgate: clean
-X-purgate-type: clean
-X-purgate-relay-bid: relay-230693
-Subject: HG Fetch with username and password in url
+	Tue, 29 Apr 2014 16:35:25 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s3TGZJI2021503; Tue, 29 Apr 2014 17:35:20 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 7V0f8SIslJVZ; Tue, 29 Apr 2014 17:35:19 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s3TGZG0W021500
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
+	Tue, 29 Apr 2014 17:35:18 +0100
+Message-ID: <1398789310.16672.440.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Christopher Larson <kergoth@gmail.com>
+Date: Tue, 29 Apr 2014 17:35:10 +0100
+In-Reply-To: <1398698854-15713-1-git-send-email-kergoth@gmail.com>
+References: <1398698854-15713-1-git-send-email-kergoth@gmail.com>
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] codeparser: don't interact with the cache for subshells
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,54 +37,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 29 Apr 2014 15:34:18 -0000
-X-Groupsio-MsgNum: 4695
-Content-Type: multipart/mixed; boundary="------------050009030107090304050107"
-
---------------050009030107090304050107
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+X-List-Received-Date: Tue, 29 Apr 2014 16:35:27 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-Following up a previous patch for mercurial fetcher, I just fixed a 
-problem when calling update on a repository with subrepositories enabled.
+On Mon, 2014-04-28 at 08:27 -0700, Christopher Larson wrote:
+> Doing so was causing leakage between the execs of the main value and that of
+> the subshell value, and was causing the cached subshell value to be used for
+> the overall variable. At the least this could cause execs contamination
+> between two variables that while differing, run the same subshell. Beyond
+> that, it's possible we could have been using an incomplete cached value of
+> a subshell for that of the main value.
+> 
+> Before this, bb_codeparser.dat would change between parses with differing
+> bbfile parse order. After, it does not change.
+> 
+> The codeparser cache version is bumped, to ensure we don't use potentially
+> incorrect cached values from previous runs.
+> 
+> This should hopefully resolve the difficult-to-reproduce issues we've seen at
+> Mentor Graphics where bitbake emits a script to run a task and misses
+> dependent functions, resulting in 'command not found' failures. This issue has
+> also been mentioned on the oe devel list, where someone hit a case where
+> oe_runmake was missing from a do_install task (IIRC). Adding debug information
+> showed that bitbake's information about the variable dependencies for this
+> task is inaccurate in the failure cases.
+> 
+> Signed-off-by: Christopher Larson <kergoth@gmail.com>
+> ---
+>  lib/bb/codeparser.py | 21 ++++++++++++---------
+>  1 file changed, 12 insertions(+), 9 deletions(-)
 
-Attached a patch that fixes this problem
+That is nasty bug, nicely found!
 
+Cheers,
 
---------------050009030107090304050107
-Content-Type: text/x-patch;
-	name="0001-fixed-authentication-issues-in-case-of-using-sub-rep.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename*0="0001-fixed-authentication-issues-in-case-of-using-sub-rep.pa";
-	filename*1="tch"
-
-From caae519a2bd64bf7c729bb26aff344827def47fb Mon Sep 17 00:00:00 2001
-From: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
-Date: Tue, 29 Apr 2014 15:29:47 +0200
-Subject: [PATCH] - fixed authentication issues in case of using sub
- repositories
-
-Signed-off-by: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
----
- bitbake/lib/bb/fetch2/hg.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/bitbake/lib/bb/fetch2/hg.py b/bitbake/lib/bb/fetch2/hg.py
-index cf21481..2b56e86 100644
---- a/bitbake/lib/bb/fetch2/hg.py
-+++ b/bitbake/lib/bb/fetch2/hg.py
-@@ -120,7 +120,7 @@ class Hg(FetchMethod):
-             else:
-                 cmd = "%s pull" % (basecmd)
-         elif command == "update":
--            cmd = "%s update -C %s" % (basecmd, " ".join(options))
-+            cmd = "%s update --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" -C %s" % (basecmd, ud.user, ud.pswd, proto, " ".join(options))
-         else:
-             raise FetchError("Invalid hg command %s" % command, ud.url)
- 
--- 
-1.9.1
+Richard
 
 
---------------050009030107090304050107--
