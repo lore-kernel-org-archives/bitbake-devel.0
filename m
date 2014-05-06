@@ -1,30 +1,36 @@
-Return-Path: <mark.hatle@windriver.com>
-X-Greylist: delayed 10930 seconds by postgrey-1.34 at layers.openembedded.org;
-	Sat, 03 May 2014 19:14:58 UTC
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 265C765EF2
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  3 May 2014 19:14:58 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.5) with ESMTP id s43GCm7h001479
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 3 May 2014 09:12:48 -0700 (PDT)
-Received: from Marks-MacBook-Pro.local (147.11.116.120) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.169.1; Sat, 3 May 2014 09:12:48 -0700
-Message-ID: <53651583.5000708@windriver.com>
-Date: Sat, 3 May 2014 09:12:51 -0700
-From: Mark Hatle <mark.hatle@windriver.com>
-Organization: Wind River Systems
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9;
-	rv:24.0) Gecko/20100101 Thunderbird/24.5.0
+Return-Path: <raj.khem@gmail.com>
+Received: from mail-ie0-f177.google.com (mail-ie0-f177.google.com
+	[209.85.223.177])
+	by mail.openembedded.org (Postfix) with ESMTP id 0742D65D20;
+	Tue,  6 May 2014 17:56:28 +0000 (UTC)
+Received: by mail-ie0-f177.google.com with SMTP id rp18so10120666iec.22
+	for <multiple recipients>; Tue, 06 May 2014 10:56:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc:content-type;
+	bh=k6e2IwfPlj4kyweWjzD1Z0168WW3TXTtabNwZrbIyb0=;
+	b=0waYXWer7E/KI+QUa3PUYU6yHLalvIXnxTSf3qYopgAibuNlbpvOct08059Cg61d7H
+	lyLjliSzDZJryvRh0ZosH3buj3VAPf4CvrMe5mumVpYtW6raeuPhvlc9PQkciG/mT8O0
+	vtQK9iQfxDWdC1vxzWup0+mnXm+ADSWxrwec/aSZoYVS4B0VpOTBsiNyfhKdUb2d+rlA
+	W7V1QOK1x+fZp4LGoesdGZX2/MHzqBwTIZytlyHtBhpdvizKCYDo/eqnwUWUK5UBIfEK
+	KDQmd0cZu8okp/ZpE74/DZNdFW8WvW8n48G+jeKA1RePnAJvitsM6rgFx0R17EszbrAE
+	8dXg==
+X-Received: by 10.50.30.167 with SMTP id t7mr34315132igh.17.1399398989618;
+	Tue, 06 May 2014 10:56:29 -0700 (PDT)
 MIME-Version: 1.0
-To: <bitbake-devel@lists.openembedded.org>
-References: <1399112321.12731.101.camel@ted>
-In-Reply-To: <1399112321.12731.101.camel@ted>
-Subject: Re: [PATCH] prserv/db: Avoid fsync() calls
+Received: by 10.50.74.228 with HTTP; Tue, 6 May 2014 10:55:59 -0700 (PDT)
+In-Reply-To: <53691266.2090107@intel.com>
+References: <53691266.2090107@intel.com>
+From: Khem Raj <raj.khem@gmail.com>
+Date: Tue, 6 May 2014 10:55:59 -0700
+Message-ID: <CAMKF1so2Zrx0D39wkGj0xYSbGOKu7Kd3iMS6D=6_+yjj2vGYXA@mail.gmail.com>
+To: Saul Wold <saul.wold@intel.com>
+Cc: Yocto Project Discussion <yocto@yoctoproject.org>,
+	"poky@yoctoproject.org" <poky@yoctoproject.org>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>,
+	Patches and discussions about the oe-core layer
+	<openembedded-core@lists.openembedded.org>
+Subject: Re: [OE-core] Daisy Stable Branch - open for patch suggestions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,38 +43,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 03 May 2014 19:15:00 -0000
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 06 May 2014 17:56:29 -0000
+Content-Type: text/plain; charset=UTF-8
 
-On 5/3/14, 3:18 AM, Richard Purdie wrote:
-> If the power were to fail, it doesn't matter to us much if the data
-> makes it to disk or not, we'd have other problems. However an fsync()
-> call on a multi build autobuilder is painful so lets avoid them.
+Saul
+
+On Tue, May 6, 2014 at 9:48 AM, Saul Wold <saul.wold@intel.com> wrote:
 >
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> ---
-> diff --git a/bitbake/lib/prserv/db.py b/bitbake/lib/prserv/db.py
-> index 86eafe3..49f36da 100644
-> --- a/bitbake/lib/prserv/db.py
-> +++ b/bitbake/lib/prserv/db.py
-> @@ -220,6 +220,7 @@ class PRData(object):
->                   raise e
->           self.connection=sqlite3.connect(self.filename, isolation_level="EXCLUSIVE", check_same_thread = False)
->           self.connection.row_factory=sqlite3.Row
-> +        self.connection.execute("pragma synchronous = off;")
->           self._tables={}
+> [Sorry for the overlap, want to make sure I hit a broad audience]
 >
->       def __del__(self):
+> Hi Everyone!
 >
+> I will be the stable maintainer for the Daisy branch, and it is now open for
+> suggestions of backport patches.  I am starting to generate a list of
+> patches that are already in master.
+
+Thanks for helping with 1.6/daisy
+
+>
+> The following wiki page has the Policies and process for requesting a fix in
+> a stable branch, please review that before sending a patch.
+>
+> https://wiki.yoctoproject.org/wiki/Stable_branch_maintenance
+>
+> Please remember to include [daisy] in any request (backport or commit).
 >
 
-Does the prserver make any noticeable difference?  This may be the one case 
-where I could see an fsync being desired.  If you are serving remote machines, 
-once you've requested a PR, the number should be stored to disk so that it will 
-be the same one that comes back again.  ... but I can easily see that in the 
-middle of a build, when the PR server is on the same machine (and not shared) 
-this could cause enough slow down to justify turning off the fsync.
+I already have a patch posted for daisy back port.
+see http://comments.gmane.org/gmane.comp.handhelds.openembedded.core/50627
 
---Mark
+> We do not have a hard date for this yet, but likely be in late May - early
+> June time frame for the 1.6.1 release.
+>
+> Thanks to all for your efforts.
+>
+> Sau!
+> --
+> _______________________________________________
+> Openembedded-core mailing list
+> Openembedded-core@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/openembedded-core
 
