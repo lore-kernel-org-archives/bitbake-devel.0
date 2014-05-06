@@ -1,26 +1,45 @@
-Return-Path: <Peter.Seebach@windriver.com>
-Received: from mail1.windriver.com (unknown [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 958FD660CC
+Return-Path: <saul.wold@intel.com>
+Received: from mail-pa0-f51.google.com (mail-pa0-f51.google.com
+	[209.85.220.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 1F01265D3D
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 19 May 2014 21:48:26 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail1.windriver.com (8.14.5/8.14.5) with ESMTP id s4JLmRHG021902
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	Tue,  6 May 2014 16:48:38 +0000 (UTC)
+Received: by mail-pa0-f51.google.com with SMTP id kq14so4521025pab.38
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 19 May 2014 14:48:27 -0700 (PDT)
-Received: from msp-lpggp2.wrs.com (172.25.34.109) by ALA-HCB.corp.ad.wrs.com
-	(147.11.189.41) with Microsoft SMTP Server id 14.3.169.1;
-	Mon, 19 May 2014 14:48:27 -0700
-From: Peter Seebach <peter.seebach@windriver.com>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 19 May 2014 16:52:44 -0500
-Message-ID: <87695832bf6a443b530e9058f5c9cf208b276d8f.1400270358.git.peter.seebach@windriver.com>
-X-Mailer: git-send-email 1.7.1
-In-Reply-To: <cover.1400270358.git.peter.seebach@windriver.com>
-References: <cover.1400270358.git.peter.seebach@windriver.com>
+	Tue, 06 May 2014 09:48:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:message-id:date:from:organization:user-agent
+	:mime-version:to:subject:content-type:content-transfer-encoding;
+	bh=uqKhxAsMjJUYEvmYel2XFHyLSS4BIlBP6qjD3gV/aCE=;
+	b=SbuVerb6SemgSOONOZQ2n+g3YimbdjRWZhD/Tcf11fl0yjGaQPSdJuGbUFvnI17jIr
+	a2zOcalVczZBU9otcj/fH73+Sq+WdXfctVzAInSiQL7FZd6G52tkuXcThTC86XtWMYwT
+	vFeel0Sc8I16C39ifpDV5ItllaKUS2meX0snmXOFj2uQsoPqOnBwp8hd3vnojb1vEHqq
+	5yq6c/cftKS0IHI9xQVdBFJb3/WRJJbdbESq+H3k7oyfNQ8gkUmk+VxUJb3+ubLGyiMH
+	MqqZFU8t3iUjEhzpfrvnr1Ogdt9EbyE1EIHq7XYejFyK8CyBUn4queT5pAICeurHuKv0
+	0mRQ==
+X-Gm-Message-State: ALoCoQkoTHHP+BD/FZyddItm73bydHHsSrhtfAm/PPaiHd41xp+scUu+Lt2NwIazye5ymMOWIYoC
+X-Received: by 10.66.136.103 with SMTP id pz7mr8220553pab.140.1399394919765;
+	Tue, 06 May 2014 09:48:39 -0700 (PDT)
+Received: from [10.6.18.24] (c-50-186-0-160.hsd1.or.comcast.net.
+	[50.186.0.160]) by mx.google.com with ESMTPSA id
+	iq10sm1393660pbc.14.2014.05.06.09.48.38 for <multiple recipients>
+	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Tue, 06 May 2014 09:48:39 -0700 (PDT)
+Message-ID: <53691266.2090107@intel.com>
+Date: Tue, 06 May 2014 09:48:38 -0700
+From: Saul Wold <saul.wold@intel.com>
+Organization: Intel
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:24.0) Gecko/20100101 Thunderbird/24.4.0
 MIME-Version: 1.0
-Subject: [PATCH 1/1] utils.py: default mode for mkdirhier
+To: 'Patches and discussions about the oe-core layer'
+	<openembedded-core@lists.openembedded.org>, 
+	Yocto Project Discussion <yocto@yoctoproject.org>, 
+	"poky@yoctoproject.org" <poky@yoctoproject.org>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+X-Mailman-Approved-At: Tue, 20 May 2014 10:33:43 +0000
+Subject: Daisy Stable Branch - open for patch suggestions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,48 +52,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 19 May 2014 21:48:26 -0000
-Content-Type: text/plain
+X-List-Received-Date: Tue, 06 May 2014 16:48:42 -0000
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The default behavior of os.makedirs() is to create a directory
-with mode 777 & ~umask. When populating packages, oe-core uses
-a umask of 0, so that files and directories copied in from the
-source tree will have the right modes, and that's reasonable,
-but it can result in packages-split being created with mode 777,
-which is not so reasonable.
 
-Since mkdirhier is used for build system stuff, it is
-pretty reasonable for it to assume that you don't want or need
-world-writeable directories, so we add a default mode, allowing
-a caller to override it if they really want to. Which they
-don't.
+[Sorry for the overlap, want to make sure I hit a broad audience]
 
-Signed-off-by: Peter Seebach <peter.seebach@windriver.com>
----
- lib/bb/utils.py |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+Hi Everyone!
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 1be1874..cd16b3b 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -618,13 +618,13 @@ def prune_suffix(var, suffixes, d):
-             return var.replace(suffix, "")
-     return var
- 
--def mkdirhier(directory):
-+def mkdirhier(directory, mode = 0755):
-     """Create a directory like 'mkdir -p', but does not complain if
-     directory already exists like os.makedirs
-     """
- 
-     try:
--        os.makedirs(directory)
-+        os.makedirs(directory, mode)
-     except OSError as e:
-         if e.errno != errno.EEXIST:
-             raise e
--- 
-1.7.1
+I will be the stable maintainer for the Daisy branch, and it is now open 
+for suggestions of backport patches.  I am starting to generate a list 
+of patches that are already in master.
 
+The following wiki page has the Policies and process for requesting a 
+fix in a stable branch, please review that before sending a patch.
+
+https://wiki.yoctoproject.org/wiki/Stable_branch_maintenance
+
+Please remember to include [daisy] in any request (backport or commit).
+
+We do not have a hard date for this yet, but likely be in late May - 
+early June time frame for the 1.6.1 release.
+
+Thanks to all for your efforts.
+
+Sau!
 
