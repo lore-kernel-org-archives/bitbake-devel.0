@@ -1,44 +1,30 @@
-Return-Path: <martin.jansa@gmail.com>
-Received: from mail-ve0-f180.google.com (mail-ve0-f180.google.com
-	[209.85.128.180])
-	by mail.openembedded.org (Postfix) with ESMTP id C915B65D20;
-	Tue,  6 May 2014 18:09:06 +0000 (UTC)
-Received: by mail-ve0-f180.google.com with SMTP id db12so7669116veb.11
-	for <multiple recipients>; Tue, 06 May 2014 11:09:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:content-disposition:in-reply-to:user-agent;
-	bh=J9ENx/wUtye5UCGmeCN3scVT5wMDfc/8nofhZzUxoGE=;
-	b=q2mclvJ6g1nbI/R2AUQeGZVBpb0kJDMqHifb0fT5DuGntosb2VO097FSVVhsYgSn6P
-	RzOK00nwDJZB6cQqvhmUmTo7tqpLhI6uUWrrl3/6EewjHd9aQCXVePKYKvahywD+44XV
-	QNXf2r8xRe+PdgYKjTeL4LLiL75qwqpWxlknSXpMpJWzsrQxied0FRis41//vwXD8hYK
-	+iJIijR4/9blyZvOMIT+ykk5Wj/npt+RYN3doYKXR0u8yWuPI1XPCDz8R0F+X6aJpD1m
-	GxVgIGjiesMb6rsAshyUn7sngNr9YJSGLZZr+Rc5uYEbd2nq0baClfsgikgMeu2y70mr
-	YK4A==
-X-Received: by 10.52.72.4 with SMTP id z4mr1618194vdu.71.1399399747118;
-	Tue, 06 May 2014 11:09:07 -0700 (PDT)
-Received: from localhost (ip-89-176-104-3.net.upcbroadband.cz. [89.176.104.3])
-	by mx.google.com with ESMTPSA id
-	xr10sm17305670vec.2.2014.05.06.11.09.05 for <multiple recipients>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 06 May 2014 11:09:06 -0700 (PDT)
-X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
-Date: Tue, 6 May 2014 20:09:26 +0200
-From: Martin Jansa <martin.jansa@gmail.com>
-To: Khem Raj <raj.khem@gmail.com>
-Message-ID: <20140506180926.GB30955@jama>
-References: <53691266.2090107@intel.com>
-	<CAMKF1so2Zrx0D39wkGj0xYSbGOKu7Kd3iMS6D=6_+yjj2vGYXA@mail.gmail.com>
-MIME-Version: 1.0
-In-Reply-To: <CAMKF1so2Zrx0D39wkGj0xYSbGOKu7Kd3iMS6D=6_+yjj2vGYXA@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-Cc: Patches and discussions about the oe-core layer
-	<openembedded-core@lists.openembedded.org>,
-	Yocto Project Discussion <yocto@yoctoproject.org>,
-	"poky@yoctoproject.org" <poky@yoctoproject.org>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>,
-	Saul Wold <saul.wold@intel.com>
-Subject: Re: [OE-core] Daisy Stable Branch - open for patch suggestions
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 2023D60781
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue,  6 May 2014 20:47:11 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s46Kl6mj000515; Tue, 6 May 2014 21:47:06 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id X5Jo9f7arf71; Tue,  6 May 2014 21:47:06 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s46Kl2d0000488
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
+	Tue, 6 May 2014 21:47:04 +0100
+Message-ID: <1399409216.31891.4.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Mark Hatle <mark.hatle@windriver.com>
+Date: Tue, 06 May 2014 21:46:56 +0100
+In-Reply-To: <53651583.5000708@windriver.com>
+References: <1399112321.12731.101.camel@ted> <53651583.5000708@windriver.com>
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] prserv/db: Avoid fsync() calls
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,83 +37,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 06 May 2014 18:09:11 -0000
-X-Groupsio-MsgNum: 4702
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MW5yreqqjyrRcusr"
-Content-Disposition: inline
+X-List-Received-Date: Tue, 06 May 2014 20:47:14 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---MW5yreqqjyrRcusr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sat, 2014-05-03 at 09:12 -0700, Mark Hatle wrote:
+> On 5/3/14, 3:18 AM, Richard Purdie wrote:
+> > If the power were to fail, it doesn't matter to us much if the data
+> > makes it to disk or not, we'd have other problems. However an fsync()
+> > call on a multi build autobuilder is painful so lets avoid them.
+> >
+> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> > ---
+> > diff --git a/bitbake/lib/prserv/db.py b/bitbake/lib/prserv/db.py
+> > index 86eafe3..49f36da 100644
+> > --- a/bitbake/lib/prserv/db.py
+> > +++ b/bitbake/lib/prserv/db.py
+> > @@ -220,6 +220,7 @@ class PRData(object):
+> >                   raise e
+> >           self.connection=sqlite3.connect(self.filename, isolation_level="EXCLUSIVE", check_same_thread = False)
+> >           self.connection.row_factory=sqlite3.Row
+> > +        self.connection.execute("pragma synchronous = off;")
+> >           self._tables={}
+> >
+> >       def __del__(self):
+> >
+> >
+> 
+> Does the prserver make any noticeable difference?  This may be the one case 
+> where I could see an fsync being desired.  If you are serving remote machines, 
+> once you've requested a PR, the number should be stored to disk so that it will 
+> be the same one that comes back again.  ... but I can easily see that in the 
+> middle of a build, when the PR server is on the same machine (and not shared) 
+> this could cause enough slow down to justify turning off the fsync.
 
-On Tue, May 06, 2014 at 10:55:59AM -0700, Khem Raj wrote:
-> Saul
->=20
-> On Tue, May 6, 2014 at 9:48 AM, Saul Wold <saul.wold@intel.com> wrote:
-> >
-> > [Sorry for the overlap, want to make sure I hit a broad audience]
-> >
-> > Hi Everyone!
-> >
-> > I will be the stable maintainer for the Daisy branch, and it is now ope=
-n for
-> > suggestions of backport patches.  I am starting to generate a list of
-> > patches that are already in master.
->=20
-> Thanks for helping with 1.6/daisy
->=20
-> >
-> > The following wiki page has the Policies and process for requesting a f=
-ix in
-> > a stable branch, please review that before sending a patch.
-> >
-> > https://wiki.yoctoproject.org/wiki/Stable_branch_maintenance
-> >
-> > Please remember to include [daisy] in any request (backport or commit).
-> >
->=20
-> I already have a patch posted for daisy back port.
-> see http://comments.gmane.org/gmane.comp.handhelds.openembedded.core/50627
+Our default use case is that of the same machine and yes, these fsyncs
+do made a difference in that workload for things like UI interaction
+too. I stumbled into this wondering why my build wasn't starting and the
+IO maxed out which made me look further.
 
-I'm preparing patches I would like to see in daisy in
-contrib/jansa/daisy-backports branch, I'll send it to ML when I consider
-them ready, e.g. top 7 commits:
-http://git.openembedded.org/openembedded-core-contrib/log/?h=3Djansa/daisy-=
-backports
+I understand the issue of the remote server needing to write to disk
+however even if its not on disk, it will be in sync with any other
+questions due to the locking so it is just a power interruption issue
+and I'm therefore less worried about it in most of the use cases we see
+this used in.
 
-> > We do not have a hard date for this yet, but likely be in late May - ea=
-rly
-> > June time frame for the 1.6.1 release.
-> >
-> > Thanks to all for your efforts.
-> >
-> > Sau!
-> > --
-> > _______________________________________________
-> > Openembedded-core mailing list
-> > Openembedded-core@lists.openembedded.org
-> > http://lists.openembedded.org/mailman/listinfo/openembedded-core
-> --=20
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+Cheers,
 
---=20
-Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
+Richard
 
---MW5yreqqjyrRcusr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
 
-iEYEARECAAYFAlNpJVYACgkQN1Ujt2V2gBzEVQCfcZ3wSzmF4QQcwPmLccmGy57x
-NvMAoIgXLZPhU5UDYTpfdutvfB0yY9Tz
-=MM9P
------END PGP SIGNATURE-----
-
---MW5yreqqjyrRcusr--
