@@ -1,17 +1,30 @@
-Return-Path: <andreas@gazonk.org>
-Received: from gazonk.org (foo.gazonk.org [212.247.24.42])
-	by mail.openembedded.org (Postfix) with SMTP id 41429601A0
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id BA01861489
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  7 May 2014 04:30:09 +0000 (UTC)
-Received: (qmail 29331 invoked from network); 7 May 2014 04:30:06 -0000
-Received: from localhost (HELO minimuffin.kakfat.se) (127.0.0.1)
-	by localhost with SMTP; 7 May 2014 04:30:06 -0000
-From: Andreas Bofjall <andreas@gazonk.org>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  7 May 2014 06:29:24 +0200
-Message-Id: <1399436964-10270-1-git-send-email-andreas@gazonk.org>
-X-Mailer: git-send-email 2.0.0.rc0
-Subject: [PATCH] setup.py: fix documentation build
+	Wed,  7 May 2014 09:20:34 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s479KTPk021050 for <bitbake-devel@lists.openembedded.org>;
+	Wed, 7 May 2014 10:20:29 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id Mp6alH6Q-LzM for <bitbake-devel@lists.openembedded.org>;
+	Wed,  7 May 2014 10:20:29 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s479KNsd021044
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 7 May 2014 10:20:25 +0100
+Message-ID: <1399454417.31891.6.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Wed, 07 May 2014 10:20:17 +0100
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] data_smart: Ensure all possible overrides are cache including those with '_' in the name
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -24,64 +37,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 07 May 2014 04:30:13 -0000
+X-List-Received-Date: Wed, 07 May 2014 09:20:35 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-setup.py currently aborts when building the documentation:
+Unfortunately we've been neglecting to pay the correct tributes to the
+cookie monster and hence the datastore is malfunctioning.
 
-> ./setup.py build
-[..]
-error: [Errno 2] No such file or directory:
-'/home/jab/src/x/bitbake/doc/manual'
+Currently tributes are only paid on the last part of a variable after
+the last "_" character. We need to split by *all* "_" characters since
+an override may contain the character.
 
-because the doc/manual directory has been renamed to
-doc/bitbake-user-manual since commit 452a62a ("doc: Rename user-manual
--> bitbake-user-manual") and its Makefile has been removed as of commit
-d419907 ("user-manual: Import YP Docs templates for usermanual
-improvements").
+This fixes the code so the correct number of tributes are made. Paradoxically
+parsing appears to be faster after this change.
 
-Update setup.py to reflect the new name and usage.
-
-Signed-off-by: Andreas Bofjall <andreas@gazonk.org>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- setup.py | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/setup.py b/setup.py
-index 8c26a9b..02de77b 100755
---- a/setup.py
-+++ b/setup.py
-@@ -33,17 +33,17 @@ class Clean(clean):
-     def run(self):
-         clean.run(self)
-         origpath = os.path.abspath(os.curdir)
--        os.chdir(os.path.join(origpath, 'doc', 'manual'))
-+        os.chdir(os.path.join(origpath, 'doc'))
-         make = os.environ.get('MAKE') or 'make'
--        os.system('%s clean-%s' % (make, doctype))
-+        os.system('%s clean-%s DOC=bitbake-user-manual' % (make, doctype))
+diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
+index 9da86ce..27806f9 100644
+--- a/bitbake/lib/bb/data_smart.py
++++ b/bitbake/lib/bb/data_smart.py
+@@ -539,10 +539,15 @@ class DataSmart(MutableMapping):
+     def _setvar_update_overrides(self, var):
+         # aka pay the cookie monster
+         override = var[var.rfind('_')+1:]
+-        if len(override) > 0:
++        shortvar = var[:var.rfind('_')]
++        while override:
+             if override not in self._seen_overrides:
+                 self._seen_overrides[override] = set()
+             self._seen_overrides[override].add( var )
++            override = None
++            if "_" in shortvar:
++                override = var[shortvar.rfind('_')+1:]
++                shortvar = var[:shortvar.rfind('_')]
  
- class Build(build):
-     def run(self):
-         build.run(self)
-         origpath = os.path.abspath(os.curdir)
--        os.chdir(os.path.join(origpath, 'doc', 'manual'))
-+        os.chdir(os.path.join(origpath, 'doc'))
-         make = os.environ.get('MAKE') or 'make'
--        ret = os.system('%s %s' % (make, doctype))
-+        ret = os.system('%s %s DOC=bitbake-user-manual' % (make, doctype))
-         if ret != 0:
-             print("ERROR: Unable to generate html documentation.")
-             sys.exit(ret)
-@@ -58,7 +58,7 @@ setup(name='bitbake',
-       py_modules = ["codegen"],
-       scripts = ["bin/bitbake", "bin/bitbake-layers", "bin/bitbake-diffsigs", "bin/bitbake-prserv", "bin/bitbake-selftest", "bin/image-writer"],
-       data_files = [("share/bitbake", glob("conf/*") + glob("classes/*")),
--                  ("share/doc/bitbake-%s/manual" % __version__, glob("doc/manual/html/*"))],
-+                  ("share/doc/bitbake-%s/bitbake-user-manual" % __version__, glob("doc/bitbake-user-manual/html/*"))],
-       cmdclass = {
-           "build": Build,
-           "clean": Clean,
--- 
-2.0.0.rc0
+     def getVar(self, var, expand=False, noweakdefault=False):
+         return self.getVarFlag(var, "_content", expand, noweakdefault)
+
 
 
