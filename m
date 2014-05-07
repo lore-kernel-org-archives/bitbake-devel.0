@@ -1,30 +1,17 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 2023D60781
+Return-Path: <andreas@gazonk.org>
+Received: from gazonk.org (foo.gazonk.org [212.247.24.42])
+	by mail.openembedded.org (Postfix) with SMTP id 41429601A0
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  6 May 2014 20:47:11 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s46Kl6mj000515; Tue, 6 May 2014 21:47:06 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id X5Jo9f7arf71; Tue,  6 May 2014 21:47:06 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s46Kl2d0000488
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
-	Tue, 6 May 2014 21:47:04 +0100
-Message-ID: <1399409216.31891.4.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Mark Hatle <mark.hatle@windriver.com>
-Date: Tue, 06 May 2014 21:46:56 +0100
-In-Reply-To: <53651583.5000708@windriver.com>
-References: <1399112321.12731.101.camel@ted> <53651583.5000708@windriver.com>
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] prserv/db: Avoid fsync() calls
+	Wed,  7 May 2014 04:30:09 +0000 (UTC)
+Received: (qmail 29331 invoked from network); 7 May 2014 04:30:06 -0000
+Received: from localhost (HELO minimuffin.kakfat.se) (127.0.0.1)
+	by localhost with SMTP; 7 May 2014 04:30:06 -0000
+From: Andreas Bofjall <andreas@gazonk.org>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  7 May 2014 06:29:24 +0200
+Message-Id: <1399436964-10270-1-git-send-email-andreas@gazonk.org>
+X-Mailer: git-send-email 2.0.0.rc0
+Subject: [PATCH] setup.py: fix documentation build
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,54 +24,64 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 06 May 2014 20:47:14 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 07 May 2014 04:30:13 -0000
 
-On Sat, 2014-05-03 at 09:12 -0700, Mark Hatle wrote:
-> On 5/3/14, 3:18 AM, Richard Purdie wrote:
-> > If the power were to fail, it doesn't matter to us much if the data
-> > makes it to disk or not, we'd have other problems. However an fsync()
-> > call on a multi build autobuilder is painful so lets avoid them.
-> >
-> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > ---
-> > diff --git a/bitbake/lib/prserv/db.py b/bitbake/lib/prserv/db.py
-> > index 86eafe3..49f36da 100644
-> > --- a/bitbake/lib/prserv/db.py
-> > +++ b/bitbake/lib/prserv/db.py
-> > @@ -220,6 +220,7 @@ class PRData(object):
-> >                   raise e
-> >           self.connection=sqlite3.connect(self.filename, isolation_level="EXCLUSIVE", check_same_thread = False)
-> >           self.connection.row_factory=sqlite3.Row
-> > +        self.connection.execute("pragma synchronous = off;")
-> >           self._tables={}
-> >
-> >       def __del__(self):
-> >
-> >
-> 
-> Does the prserver make any noticeable difference?  This may be the one case 
-> where I could see an fsync being desired.  If you are serving remote machines, 
-> once you've requested a PR, the number should be stored to disk so that it will 
-> be the same one that comes back again.  ... but I can easily see that in the 
-> middle of a build, when the PR server is on the same machine (and not shared) 
-> this could cause enough slow down to justify turning off the fsync.
+setup.py currently aborts when building the documentation:
 
-Our default use case is that of the same machine and yes, these fsyncs
-do made a difference in that workload for things like UI interaction
-too. I stumbled into this wondering why my build wasn't starting and the
-IO maxed out which made me look further.
+> ./setup.py build
+[..]
+error: [Errno 2] No such file or directory:
+'/home/jab/src/x/bitbake/doc/manual'
 
-I understand the issue of the remote server needing to write to disk
-however even if its not on disk, it will be in sync with any other
-questions due to the locking so it is just a power interruption issue
-and I'm therefore less worried about it in most of the use cases we see
-this used in.
+because the doc/manual directory has been renamed to
+doc/bitbake-user-manual since commit 452a62a ("doc: Rename user-manual
+-> bitbake-user-manual") and its Makefile has been removed as of commit
+d419907 ("user-manual: Import YP Docs templates for usermanual
+improvements").
 
-Cheers,
+Update setup.py to reflect the new name and usage.
 
-Richard
+Signed-off-by: Andreas Bofjall <andreas@gazonk.org>
+---
+ setup.py | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/setup.py b/setup.py
+index 8c26a9b..02de77b 100755
+--- a/setup.py
++++ b/setup.py
+@@ -33,17 +33,17 @@ class Clean(clean):
+     def run(self):
+         clean.run(self)
+         origpath = os.path.abspath(os.curdir)
+-        os.chdir(os.path.join(origpath, 'doc', 'manual'))
++        os.chdir(os.path.join(origpath, 'doc'))
+         make = os.environ.get('MAKE') or 'make'
+-        os.system('%s clean-%s' % (make, doctype))
++        os.system('%s clean-%s DOC=bitbake-user-manual' % (make, doctype))
+ 
+ class Build(build):
+     def run(self):
+         build.run(self)
+         origpath = os.path.abspath(os.curdir)
+-        os.chdir(os.path.join(origpath, 'doc', 'manual'))
++        os.chdir(os.path.join(origpath, 'doc'))
+         make = os.environ.get('MAKE') or 'make'
+-        ret = os.system('%s %s' % (make, doctype))
++        ret = os.system('%s %s DOC=bitbake-user-manual' % (make, doctype))
+         if ret != 0:
+             print("ERROR: Unable to generate html documentation.")
+             sys.exit(ret)
+@@ -58,7 +58,7 @@ setup(name='bitbake',
+       py_modules = ["codegen"],
+       scripts = ["bin/bitbake", "bin/bitbake-layers", "bin/bitbake-diffsigs", "bin/bitbake-prserv", "bin/bitbake-selftest", "bin/image-writer"],
+       data_files = [("share/bitbake", glob("conf/*") + glob("classes/*")),
+-                  ("share/doc/bitbake-%s/manual" % __version__, glob("doc/manual/html/*"))],
++                  ("share/doc/bitbake-%s/bitbake-user-manual" % __version__, glob("doc/bitbake-user-manual/html/*"))],
+       cmdclass = {
+           "build": Build,
+           "clean": Clean,
+-- 
+2.0.0.rc0
 
 
