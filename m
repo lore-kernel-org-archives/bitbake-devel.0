@@ -1,30 +1,31 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (unknown [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 88CA165D1A
+Return-Path: <mahyarelc@gmail.com>
+X-Greylist: delayed 1472 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 22 May 2014 16:55:34 UTC
+Received: from mail-we0-f181.google.com (unknown [74.125.82.181])
+	by mail.openembedded.org (Postfix) with ESMTP id E91F965EA8
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 May 2014 14:29:58 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s4LETsfN022317 for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 May 2014 15:29:54 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 2p0aiPCy0CP0 for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 May 2014 15:29:54 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s4LETlqF022305
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
+	Thu, 22 May 2014 16:55:33 +0000 (UTC)
+Received: by mail-we0-f181.google.com with SMTP id w61so3643465wes.26
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 May 2014 15:29:49 +0100
-Message-ID: <1400682580.17834.0.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Wed, 21 May 2014 15:29:40 +0100
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] data_smart: Fix an unusual variable reference bug
+	Thu, 22 May 2014 09:55:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:date:message-id:subject:from:to:content-type;
+	bh=AR9G08CWeqdIu57lEKTU5+cjjlqc6AdKDK255J/o9TM=;
+	b=h1rnqnqwFbzZmrDTEethJQr7YJUedmEoKPn0t1HqLNqy7BnuhrAsvouzPPxBSm0+g5
+	vHOqNXRY85CEViKxNAiEYkAHPpjk50xp64yepDjpUMpnrOTQ23uvtsFYzVUP3p7wrsh5
+	+WtlTvqATz3dTs/XLhO+T1XoTb9ZaEGZc8hOrmemykcOM78KZVmmXbCHQ8OWP6ZiFrPp
+	GfwnmbNs+tJ9GSiViXT9l8hR+GFPD30XkZ1Z1J29G78NSJaB0jOc2Et6vrFymkH21QCA
+	fdKaNl5UP9FB0jQzN/lOqRc7uYXePTq37jnkz7oABbBl6SU//pCXuqQ2duZQuLXzjzGV
+	wQnQ==
+MIME-Version: 1.0
+X-Received: by 10.180.228.6 with SMTP id se6mr17486616wic.52.1400776263520;
+	Thu, 22 May 2014 09:31:03 -0700 (PDT)
+Received: by 10.194.80.99 with HTTP; Thu, 22 May 2014 09:31:03 -0700 (PDT)
+Date: Thu, 22 May 2014 09:31:03 -0700
+Message-ID: <CAB5p4qNLCwAvpanApx6XJ0BJKHLViggiFLUsgyb96dQ4+mVgHw@mail.gmail.com>
+From: Mahyar Yaghmaee <mahyarelc@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: meta-ruby recipe fails
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,55 +38,57 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 21 May 2014 14:30:00 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 22 May 2014 16:55:41 -0000
+Content-Type: multipart/alternative; boundary=001a1135e39898dc2104f9ffa302
 
-If you try:
+--001a1135e39898dc2104f9ffa302
+Content-Type: text/plain; charset=UTF-8
 
-Y = ""
-Y_remove = "X"
+Hello,
 
-in OE-Core, bitbake will crash with a KeyError during expansion. The reason
-is that no expansion of the empty value is attempted but removal from is it
-and hence no varparse data is present for it in the expand_cache.
+When I build ruby recipe with Yocto (located at
+meta-openembedded/meta-ruby/recipes-devtools/ruby/ruby_1.9.3-p429.bb) on
+Master branch, I get the following error:
 
-If the value is empty, there is nothing to remove so the best fix is simply
-not to check for None but check it has any value.
+Generating RDoc documentation
+uh-oh! RDoc had a problem:
 
-Also add a test for this error so it doesn't get reintroduced.
+Directory .ext/rdoc already exists, but it looks like it isn't an RDoc
+directory.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-
-diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
-index 27806f9..db0f8e6 100644
---- a/bitbake/lib/bb/data_smart.py
-+++ b/bitbake/lib/bb/data_smart.py
-@@ -641,7 +641,7 @@ class DataSmart(MutableMapping):
-             else:
-                 cachename = var + "[" + flag + "]"
-             value = self.expand(value, cachename)
--        if value is not None and flag == "_content" and local_var is not None and "_removeactive" in local_var:
-+        if value and flag == "_content" and local_var is not None and "_removeactive" in local_var:
-             filtered = filter(lambda v: v not in local_var["_removeactive"],
-                               value.split(" "))
-             value = " ".join(filtered)
-diff --git a/bitbake/lib/bb/tests/data.py b/bitbake/lib/bb/tests/data.py
-index ee66b22..228f72c 100644
---- a/bitbake/lib/bb/tests/data.py
-+++ b/bitbake/lib/bb/tests/data.py
-@@ -253,6 +253,11 @@ class TestConcatOverride(unittest.TestCase):
-         bb.data.update_data(self.d)
-         self.assertEqual(self.d.getVar("TEST_TEST", True), "bar bar")
- 
-+    def test_empty_remove(self):
-+        self.d.setVar("TEST", "")
-+        self.d.setVar("TEST_remove", "val")
-+        bb.data.update_data(self.d)
-+        self.assertEqual(self.d.getVar("TEST", True), "")
- 
- class TestOverrides(unittest.TestCase):
-     def setUp(self):
+Because RDoc doesn't want to risk destroying any of your existing files,
+you'll need to specify a different output directory name (using the --op
+<dir>
+option)
 
 
+run with --debug for full backtrace
+make: *** [rdoc] Error 1
+ERROR: oe_runmake failed
+WARNING: exit code 1 from a shell command.
 
+
+Any suggestion on how to solve the problem would be great.
+Thanks
+
+--001a1135e39898dc2104f9ffa302
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hello,<div><br></div><div>When I build ruby recipe with Yo=
+cto (located at meta-openembedded/meta-ruby/recipes-devtools/ruby/<a href=
+=3D"http://ruby_1.9.3-p429.bb">ruby_1.9.3-p429.bb</a>) on Master branch, I =
+get the following error:</div>
+<div><br></div><div><div>Generating RDoc documentation</div><div>uh-oh! RDo=
+c had a problem:</div><div><br></div><div>Directory .ext/rdoc already exist=
+s, but it looks like it isn&#39;t an RDoc directory.</div><div><br></div>
+<div>Because RDoc doesn&#39;t want to risk destroying any of your existing =
+files,</div><div>you&#39;ll need to specify a different output directory na=
+me (using the --op &lt;dir&gt;</div><div>option)</div><div><br></div><div>
+<br></div><div>run with --debug for full backtrace</div><div>make: *** [rdo=
+c] Error 1</div><div>ERROR: oe_runmake failed</div><div>WARNING: exit code =
+1 from a shell command.</div></div><div><br></div><div><br></div><div>Any s=
+uggestion on how to solve the problem would be great.</div>
+<div>Thanks</div></div>
+
+--001a1135e39898dc2104f9ffa302--
