@@ -1,25 +1,25 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga02.intel.com (unknown [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 611026B49F
+	by mail.openembedded.org (Postfix) with ESMTP id 353186B49F
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 23 May 2014 15:22:35 +0000 (UTC)
+	Fri, 23 May 2014 15:22:37 +0000 (UTC)
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 23 May 2014 08:22:36 -0700
+	by orsmga101.jf.intel.com with ESMTP; 23 May 2014 08:22:38 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.98,894,1392192000"; d="scan'208";a="545581341"
+X-IronPort-AV: E=Sophos;i="4.98,894,1392192000"; d="scan'208";a="545581382"
 Received: from bidesilv-mobl1.gar.corp.intel.com (HELO
 	peggleto-mobl5.ger.corp.intel.com) ([10.252.123.159])
-	by orsmga002.jf.intel.com with ESMTP; 23 May 2014 08:22:31 -0700
+	by orsmga002.jf.intel.com with ESMTP; 23 May 2014 08:22:34 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 23 May 2014 16:22:15 +0100
-Message-Id: <29701c5132760101bb6ccaf68d33a9354296db08.1400858501.git.paul.eggleton@linux.intel.com>
+Date: Fri, 23 May 2014 16:22:17 +0100
+Message-Id: <95f35e6212702496490f1a4c442379cb53ed680e.1400858501.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 1.9.0
 In-Reply-To: <cover.1400858501.git.paul.eggleton@linux.intel.com>
 References: <cover.1400858501.git.paul.eggleton@linux.intel.com>
 In-Reply-To: <cover.1400858501.git.paul.eggleton@linux.intel.com>
 References: <cover.1400858501.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 2/4] bitbake-layers: show-cross-depends: ignore global inherits
+Subject: [PATCH 4/4] bitbake-layers: show-cross-depends: add support for RRECOMMENDS
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,39 +32,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 23 May 2014 15:22:36 -0000
+X-List-Received-Date: Fri, 23 May 2014 15:22:37 -0000
 
-It's not particularly useful to show globally inherited classes here
-since they do not normally represent a dependency.
+RRECOMMENDS must be satisfied at build time, and these could cross layer
+boundaries, so report these if they exist.
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- bin/bitbake-layers | 5 +++++
- 1 file changed, 5 insertions(+)
+ bin/bitbake-layers | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/bin/bitbake-layers b/bin/bitbake-layers
-index 826a3e7..326239a 100755
+index 135096b..302f020 100755
 --- a/bin/bitbake-layers
 +++ b/bin/bitbake-layers
-@@ -596,6 +596,8 @@ The .bbappend file can impact the dependency.
-         self.include_re = re.compile(r"include\s+(.+)")
-         self.inherit_re = re.compile(r"inherit\s+(.+)")
+@@ -634,6 +634,26 @@ The .bbappend file can impact the dependency.
+                                     self.bbhandler.cooker_data)[0][0]
+                     self.check_cross_depends("RDEPENDS", layername, f, best, options.show_filenames, ignore_layers)
  
-+        global_inherit = (self.bbhandler.config_data.getVar('INHERIT', True) or "").split()
++            # The RRECOMMENDS
++            all_rrecs = self.bbhandler.cooker_data.runrecs[f].values()
++            # Remove the duplicated or null one.
++            sorted_rrecs = {}
++            # The all_rrecs is the list in list, so we need two for loops
++            for k1 in all_rrecs:
++                for k2 in k1:
++                    sorted_rrecs[k2] = 1
++            all_rrecs = sorted_rrecs.keys()
++            for rrec in all_rrecs:
++                all_p = bb.providers.getRuntimeProviders(self.bbhandler.cooker_data, rrec)
++                if all_p:
++                    if f in all_p:
++                        # The recipe provides this one itself, ignore
++                        continue
++                    best = bb.providers.filterProvidersRunTime(all_p, rrec,
++                                    self.bbhandler.config_data,
++                                    self.bbhandler.cooker_data)[0][0]
++                    self.check_cross_depends("RRECOMMENDS", layername, f, best, options.show_filenames, ignore_layers)
 +
-         # The bb's DEPENDS and RDEPENDS
-         for f in pkg_fn:
-             f = bb.cache.Cache.virtualfn2realfn(f)[0]
-@@ -637,6 +639,9 @@ The .bbappend file can impact the dependency.
-                     # The inherits' format is [classes/cls, /path/to/classes/cls]
-                     # ignore the classes/cls.
-                     if not cls_re.match(cls):
-+                        classname = os.path.splitext(os.path.basename(cls))[0]
-+                        if classname in global_inherit:
-+                            continue
-                         inherit_layername = self.get_file_layer(cls)
-                         if inherit_layername != layername and not inherit_layername in ignore_layers:
-                             if not options.show_filenames:
+             # The inherit class
+             cls_re = re.compile('classes/')
+             if f in self.bbhandler.cooker_data.inherits:
 -- 
 1.9.0
 
