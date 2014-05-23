@@ -1,37 +1,21 @@
-Return-Path: <belen.barros.pena@intel.com>
-X-Greylist: delayed 587 seconds by postgrey-1.34 at layers.openembedded.org;
-	Thu, 22 May 2014 16:59:36 UTC
-Received: from mga01.intel.com (unknown [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id A21D866101
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga02.intel.com (unknown [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 3858E6ABDB
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 22 May 2014 16:59:36 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 22 May 2014 09:49:48 -0700
+	Fri, 23 May 2014 15:22:27 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 23 May 2014 08:22:28 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.98,888,1392192000"; d="scan'208";a="543452229"
-Received: from irsmsx101.ger.corp.intel.com ([163.33.3.153])
-	by fmsmga002.fm.intel.com with ESMTP; 22 May 2014 09:49:40 -0700
-Received: from irsmsx152.ger.corp.intel.com (163.33.192.66) by
-	IRSMSX101.ger.corp.intel.com (163.33.3.153) with Microsoft SMTP Server
-	(TLS) id 14.3.123.3; Thu, 22 May 2014 17:49:40 +0100
-Received: from irsmsx106.ger.corp.intel.com ([169.254.8.28]) by
-	IRSMSX152.ger.corp.intel.com ([169.254.6.128]) with mapi id
-	14.03.0123.003; Thu, 22 May 2014 17:49:40 +0100
-From: "Barros Pena, Belen" <belen.barros.pena@intel.com>
-To: "yocto@yoctoproject.org" <yocto@yoctoproject.org>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: Hob maintenance
-Thread-Index: AQHPdd3S3dQgscsb4UKnmkykXvPtRw==
-Date: Thu, 22 May 2014 16:49:40 +0000
-Message-ID: <CFA3E932.44E6F%belen.barros.pena@intel.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Microsoft-MacOutlook/14.4.1.140326
-x-originating-ip: [10.237.224.34]
-MIME-Version: 1.0
-Subject: Hob maintenance
+X-IronPort-AV: E=Sophos;i="4.98,894,1392192000"; d="scan'208";a="545581318"
+Received: from bidesilv-mobl1.gar.corp.intel.com (HELO
+	peggleto-mobl5.ger.corp.intel.com) ([10.252.123.159])
+	by orsmga002.jf.intel.com with ESMTP; 23 May 2014 08:22:27 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 23 May 2014 16:22:13 +0100
+Message-Id: <cover.1400858501.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.9.0
+Subject: [PATCH 0/4] bitbake-layers show-cross-depends improvements
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,20 +28,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 22 May 2014 16:59:37 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <F1C697E50246FE45B0F0A6388EEE2D68@intel.com>
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Fri, 23 May 2014 15:22:30 -0000
 
-With Toaster work picking up, it looks like we won't be able to add any
-new features to Hob. We will continue fixing serious bugs until Toaster
-matches Hob functionality.
+The following changes since commit af3ce0fc0280e6642fa35de400f75fdbabf329b1:
 
-All Hob features in Bugzilla have been set to 'won't fix'.
+  data_smart: Fix an unusual variable reference bug (2014-05-21 16:46:45 +0100)
 
-Cheers
+are available in the git repository at:
 
-Bel=E9n
+  git://git.yoctoproject.org/poky-contrib paule/bitbake-layers
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bitbake-layers
+
+Paul Eggleton (4):
+  bitbake-layers: show-cross-depends: add option to ignore a layer
+  bitbake-layers: show-cross-depends: ignore global inherits
+  bitbake-layers: show-cross-depends: ignore self-satisfied RDEPENDS
+  bitbake-layers: show-cross-depends: add support for RRECOMMENDS
+
+ bin/bitbake-layers | 72 +++++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 52 insertions(+), 20 deletions(-)
+
+-- 
+1.9.0
 
 
