@@ -1,44 +1,30 @@
-Return-Path: <V.Vogelhuber@DigitalEndoscopy.de>
-X-Greylist: delayed 1937 seconds by postgrey-1.34 at layers.openembedded.org;
-	Mon, 26 May 2014 07:57:32 UTC
-Received: from mxout51.expurgate.net (unknown [194.37.255.51])
-	by mail.openembedded.org (Postfix) with ESMTP id 2945F60196
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (unknown [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 206B76FB9D
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 26 May 2014 07:57:32 +0000 (UTC)
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.80.1)
-	(envelope-from <V.Vogelhuber@DigitalEndoscopy.de>)
-	id 1WopHY-0003Wp-8Q for bitbake-devel@lists.openembedded.org;
-	Mon, 26 May 2014 09:25:16 +0200
-Received: from [80.81.19.29] (helo=SRV-MSX01.digitendos.local)
-	by relay.expurgate.net with esmtp (Exim 4.80.1)
-	(envelope-from <V.Vogelhuber@DigitalEndoscopy.de>)
-	id 1WopHT-0007X0-Lx for bitbake-devel@lists.openembedded.org;
-	Mon, 26 May 2014 09:25:11 +0200
-Received: from [192.168.10.111] (192.168.10.111) by SRV-MSX01.digitendos.local
-	(192.168.10.14) with Microsoft SMTP Server (TLS) id 14.2.347.0;
-	Mon, 26 May 2014 09:25:10 +0200
-Message-ID: <5382EC56.5090701@digitalendoscopy.de>
-Date: Mon, 26 May 2014 09:25:10 +0200
-From: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:24.0) Gecko/20100101 Thunderbird/24.5.0
-MIME-Version: 1.0
-To: <bitbake-devel@lists.openembedded.org>
-X-Originating-IP: [192.168.10.111]
-X-TM-AS-Product-Ver: SMEX-10.1.0.2244-7.500.1017-20716.002
-X-TM-AS-Result: No--16.450300-0.000000-31
-X-TM-AS-User-Approved-Sender: Yes
-X-TM-AS-User-Blocked-Sender: No
-X-purgate-relay-fid: relay-938205
-X-purgate-sourceid: 1WopHT-0007X0-Lx
-X-purgate-Ad: Checked for spam and viruses by eXpurgate(R),
-	see www.eleven.de for details.
-X-purgate-ID: 151534::1401089112-00007EF9-C1152DBE/0/0
-X-purgate: clean
-X-purgate-type: clean
-X-purgate-relay-bid: relay-230693
-Subject: Fixed missing proto param in hg checkout with user and pw
+	Wed, 28 May 2014 12:09:13 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s4SC98kT002065; Wed, 28 May 2014 13:09:08 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id QhcUvuNILMIn; Wed, 28 May 2014 13:09:07 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s4SC95BU002032
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
+	Wed, 28 May 2014 13:09:06 +0100
+Message-ID: <1401278937.2607.47.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Mahyar Yaghmaee <mahyarelc@gmail.com>
+Date: Wed, 28 May 2014 13:08:57 +0100
+In-Reply-To: <CAB5p4qNLCwAvpanApx6XJ0BJKHLViggiFLUsgyb96dQ4+mVgHw@mail.gmail.com>
+References: <CAB5p4qNLCwAvpanApx6XJ0BJKHLViggiFLUsgyb96dQ4+mVgHw@mail.gmail.com>
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: meta-ruby recipe fails
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,57 +37,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 26 May 2014 07:57:34 -0000
-X-Groupsio-MsgNum: 4736
-Content-Type: multipart/mixed; boundary="------------020807000601000304020306"
-
---------------020807000601000304020306
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+X-List-Received-Date: Wed, 28 May 2014 12:09:14 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-Attached a fix for the former patch when checking out a repository with 
-username and password using HG
+On Thu, 2014-05-22 at 09:31 -0700, Mahyar Yaghmaee wrote:
+> When I build ruby recipe with Yocto (located at
+> meta-openembedded/meta-ruby/recipes-devtools/ruby/ruby_1.9.3-p429.bb)
+> on Master branch, I get the following error:
+>
+> Generating RDoc documentation
+> uh-oh! RDoc had a problem:
+>
+> Directory .ext/rdoc already exists, but it looks like it isn't an RDoc
+> directory.
+>
+> Because RDoc doesn't want to risk destroying any of your existing
+> files,
+> you'll need to specify a different output directory name (using the
+> --op <dir>
+> option)
+>
+run with --debug for full backtrace
+> make: *** [rdoc] Error 1
+> ERROR: oe_runmake failed
+> WARNING: exit code 1 from a shell command.
+>
+> Any suggestion on how to solve the problem would be great.
 
-(Hopefully this is the last time, sorry for not having test my former 
-one properly before posting)
+Questions like this should go to the openembedded-devel list since its
+related to metadata bitbake is parsing and executing, not bitbake
+itself.
 
-Regards,
-    Volker
+Cheers,
 
---------------020807000601000304020306
-Content-Type: text/x-patch;
-	name="0001-fixed-missing-proto-param-for-hg-checkout-with-user-.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename*0="0001-fixed-missing-proto-param-for-hg-checkout-with-user-.pa";
-	filename*1="tch"
-
-From 5834eb8675c0d0b9e622e2ce9473ec36220dee2a Mon Sep 17 00:00:00 2001
-From: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
-Date: Mon, 26 May 2014 09:22:03 +0200
-Subject: [PATCH 1/1] - fixed missing proto param for hg checkout with user and
- pw
-
-Signed-off-by: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
----
- bitbake/lib/bb/fetch2/hg.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/bitbake/lib/bb/fetch2/hg.py b/bitbake/lib/bb/fetch2/hg.py
-index 157b1b1..5760fcd 100644
---- a/bitbake/lib/bb/fetch2/hg.py
-+++ b/bitbake/lib/bb/fetch2/hg.py
-@@ -111,7 +111,7 @@ class Hg(FetchMethod):
- 
-         if command == "fetch":
-             if ud.user and ud.pswd:
--                cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" clone %s %s://%s/%s %s" % (basecmd, ud.user, ud.pswd, " ".join(options), proto, hgroot, ud.module, ud.module)
-+                cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" clone %s %s://%s/%s %s" % (basecmd, ud.user, ud.pswd, proto, " ".join(options), proto, hgroot, ud.module, ud.module)
-             else:
-                 cmd = "%s clone %s %s://%s/%s %s" % (basecmd, " ".join(options), proto, hgroot, ud.module, ud.module)	      
-         elif command == "pull":
--- 
-1.9.1
+Richard
 
 
---------------020807000601000304020306--
