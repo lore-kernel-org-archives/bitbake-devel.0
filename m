@@ -1,25 +1,25 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 2AFFE6FCF7
+	by mail.openembedded.org (Postfix) with ESMTP id D0E1A65E42
 	for <bitbake-devel@lists.openembedded.org>;
 	Thu, 29 May 2014 17:18:37 +0000 (UTC)
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 29 May 2014 10:12:54 -0700
+	by orsmga102.jf.intel.com with ESMTP; 29 May 2014 10:12:55 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.98,935,1392192000"; d="scan'208";a="548480128"
+X-IronPort-AV: E=Sophos;i="4.98,935,1392192000"; d="scan'208";a="548480131"
 Received: from acdivito-mobl2.gar.corp.intel.com (HELO
 	peggleto-mobl5.ger.corp.intel.com) ([10.252.123.240])
-	by orsmga002.jf.intel.com with ESMTP; 29 May 2014 10:18:04 -0700
+	by orsmga002.jf.intel.com with ESMTP; 29 May 2014 10:18:05 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 29 May 2014 18:17:15 +0100
-Message-Id: <35531b2a4dd2b386adb9598e53b46ceaa1f5ac22.1401383609.git.paul.eggleton@linux.intel.com>
+Date: Thu, 29 May 2014 18:17:16 +0100
+Message-Id: <85658d5f5073fcdda8f8109253efb01e5b8abef7.1401383609.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 1.9.3
 In-Reply-To: <cover.1401383609.git.paul.eggleton@linux.intel.com>
 References: <cover.1401383609.git.paul.eggleton@linux.intel.com>
 In-Reply-To: <cover.1401383609.git.paul.eggleton@linux.intel.com>
 References: <cover.1401383609.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 1/2] fetch2: improve handling of two classes of URL parameter mistakes
+Subject: [PATCH 2/2] utils: avoid printing traceback on ExpansionError during parsing
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,51 +32,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 29 May 2014 17:18:39 -0000
+X-List-Received-Date: Thu, 29 May 2014 17:18:41 -0000
 
-Handle the following situations in a URL (e.g. in SRC_URI):
-
-* Trailing semicolon in a URL - this is now ignored.
-* Parameter specified with no value (no equals sign). This still
-  produces an error, but at least it is MalformedUrl with a proper
-  message rather than "ValueError: need more than 1 value to unpack".
+If an ExpansionError occurs during better_exec() we should just raise it
+instead of printing the traceback, so that recipe errors (such as broken
+URLs in SRC_URI) are more easily comprehensible.
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- lib/bb/fetch2/__init__.py | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ lib/bb/utils.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index f571fc4..dcada12 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -56,8 +56,11 @@ class BBFetchException(Exception):
- 
- class MalformedUrl(BBFetchException):
-     """Exception raised when encountering an invalid url"""
--    def __init__(self, url):
--         msg = "The URL: '%s' is invalid and cannot be interpreted" % url
-+    def __init__(self, url, message=''):
-+         if message:
-+             msg = message
-+         else:
-+             msg = "The URL: '%s' is invalid and cannot be interpreted" % url
-          self.url = url
-          BBFetchException.__init__(self, msg)
-          self.args = (url,)
-@@ -371,8 +374,11 @@ def decodeurl(url):
-     p = {}
-     if parm:
-         for s in parm.split(';'):
--            s1, s2 = s.split('=')
--            p[s1] = s2
-+            if s:
-+                if not '=' in s:
-+                    raise MalformedUrl(url, "The URL: '%s' is invalid: parameter %s does not specify a value (missing '=')" % (url, s))
-+                s1, s2 = s.split('=')
-+                p[s1] = s2
- 
-     return type, host, urllib.unquote(path), user, pswd, p
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 1be1874..ead5f36 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -357,6 +357,8 @@ def better_exec(code, context, text = None, realfile = "<code>"):
+     except bb.BBHandledException:
+         # Error already shown so passthrough
+         raise
++    except bb.data_smart.ExpansionError:
++        raise
+     except Exception as e:
+         (t, value, tb) = sys.exc_info()
  
 -- 
 1.9.3
