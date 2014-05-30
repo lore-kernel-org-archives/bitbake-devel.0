@@ -1,25 +1,30 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id D0E1A65E42
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 2F4A26FD9D
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 29 May 2014 17:18:37 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 29 May 2014 10:12:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.98,935,1392192000"; d="scan'208";a="548480131"
-Received: from acdivito-mobl2.gar.corp.intel.com (HELO
-	peggleto-mobl5.ger.corp.intel.com) ([10.252.123.240])
-	by orsmga002.jf.intel.com with ESMTP; 29 May 2014 10:18:05 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 29 May 2014 18:17:16 +0100
-Message-Id: <85658d5f5073fcdda8f8109253efb01e5b8abef7.1401383609.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.9.3
-In-Reply-To: <cover.1401383609.git.paul.eggleton@linux.intel.com>
-References: <cover.1401383609.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1401383609.git.paul.eggleton@linux.intel.com>
-References: <cover.1401383609.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 2/2] utils: avoid printing traceback on ExpansionError during parsing
+	Fri, 30 May 2014 12:32:41 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s4UCWb3u006586 for <bitbake-devel@lists.openembedded.org>;
+	Fri, 30 May 2014 13:32:37 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id bQpRJizG51M7 for <bitbake-devel@lists.openembedded.org>;
+	Fri, 30 May 2014 13:32:37 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s4UCWUqa006577
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 30 May 2014 13:32:32 +0100
+Message-ID: <1401453143.31309.28.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Fri, 30 May 2014 13:32:23 +0100
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] event: Fix event handlers to raise SkipPackage
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,31 +37,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 29 May 2014 17:18:41 -0000
+X-List-Received-Date: Fri, 30 May 2014 12:32:42 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-If an ExpansionError occurs during better_exec() we should just raise it
-instead of printing the traceback, so that recipe errors (such as broken
-URLs in SRC_URI) are more easily comprehensible.
+If an event handler triggers a SkipPackage event, we really want that
+event to be received and processed by the higher code levels. Currently
+it was getting caught and ignored which was leading to recipes
+being present when they clearly shouldn't have been.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- lib/bb/utils.py | 2 ++
- 1 file changed, 2 insertions(+)
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 1be1874..ead5f36 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -357,6 +357,8 @@ def better_exec(code, context, text = None, realfile = "<code>"):
-     except bb.BBHandledException:
-         # Error already shown so passthrough
-         raise
-+    except bb.data_smart.ExpansionError:
-+        raise
-     except Exception as e:
-         (t, value, tb) = sys.exc_info()
+diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
+index e205043..a95db52 100644
+--- a/bitbake/lib/bb/event.py
++++ b/bitbake/lib/bb/event.py
+@@ -96,6 +96,8 @@ def fire_class_handlers(event, d):
+         if name in _catchall_handlers or name in evt_hmap:
+             try:
+                 execute_handler(name, handler, event, d)
++            except bb.parse.SkipPackage:
++                raise
+             except Exception:
+                 continue
  
--- 
-1.9.3
+
 
 
