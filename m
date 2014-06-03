@@ -1,44 +1,39 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f175.google.com (mail-wi0-f175.google.com
-	[209.85.212.175])
-	by mail.openembedded.org (Postfix) with ESMTP id A25D965F11
+Received: from mail-we0-f173.google.com (mail-we0-f173.google.com
+	[74.125.82.173])
+	by mail.openembedded.org (Postfix) with ESMTP id 92280609BE
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  3 Jun 2014 15:26:17 +0000 (UTC)
-Received: by mail-wi0-f175.google.com with SMTP id f8so6702027wiw.14
+	Tue,  3 Jun 2014 15:26:14 +0000 (UTC)
+Received: by mail-we0-f173.google.com with SMTP id u57so7000060wes.18
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 03 Jun 2014 08:26:17 -0700 (PDT)
+	Tue, 03 Jun 2014 08:26:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=pgpNqoQDYZfxc0L7cXhkJJI0prKPP5fKtOWbVsfWNSk=;
-	b=iYMEng5LKP25JKHG+P5c+hn3TtLCAct90+wK4DUxnNejVUrV88/8PHoLTi8b+RCWGz
-	y1qTX+A2WoCJJl9VT+Wt+p85tZHVWMbPAxr6HsbpkH4x4715+wW3Qr/7R1D3rVktG34h
-	l3nTRMPMiaAgqqVazEdb+TxPz1ACGADik44RLhQer+06lyohWF6+fjZ+Iz1hcZUlTydm
-	7OikSr1s8RgQZJy9tqifPz+l5i7mnfTBnD5NyzEHAnrkxjbJI/EkBbAMHo2DncpSVXg7
-	sDVcj7A8HWK+iuNVGPQnjhBXKF7HhW78CoxDwpiD1QvlZP5ymF66vm8Zg2UzKGFha7TJ
-	qmuA==
-X-Gm-Message-State: ALoCoQmM2vCPB1L52L2AC70quG5IkSa1m9o+SVIZNZCw5Zsy+CdPBEBxQ4mBQrVoi8Jpwb89Am37
-X-Received: by 10.180.101.98 with SMTP id ff2mr8748116wib.40.1401809177728;
-	Tue, 03 Jun 2014 08:26:17 -0700 (PDT)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=yvPZ0vL4COqXro/WgNZwBgf5Nxqe4VTNEPdtpw73gkw=;
+	b=I3hQJycM77wst7Ld3nhQm5bH8ZPj+W9hW14sifBi/3Qoat0tSeZrMsUBMnx46LgENu
+	tG5wMbI471NlQFmFZjH18r6v7GvQHhhQM8/fFWY6o7jnIKAuMlv/dmZAG8trEEF4//FS
+	nz6DhyR1j9AaENh/6BG0g0V8KqXrfenkS2MJW3Vk7UBB8e0K20Kj52Srr8DGIR4msq29
+	xQQygRtDwKOKa10HKeqOZUkfPQVUkRTkNlug2xZcGp2gDmyZEMK9rO9b9wA9xKqEh8aP
+	tjZRjuVwKVN8SqgVlLU9t7Htt7b1+RbIWcgtOR9eQq5x/TRrrKgmqDSAKjlXBUPjbFtS
+	VGIQ==
+X-Gm-Message-State: ALoCoQlnJ6FhARcRYJo/5F5RI/ZNCBXcCcCQMU1S4+x11udgLp+8MtWtB/oXIjndu0Vu8/ouaeQY
+X-Received: by 10.180.20.210 with SMTP id p18mr33545977wie.8.1401809173551;
+	Tue, 03 Jun 2014 08:26:13 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id
-	ht5sm44719487wjb.49.2014.06.03.08.26.16 for <multiple recipients>
+	by mx.google.com with ESMTPSA id ek4sm3753614wib.9.2014.06.03.08.26.12
+	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 03 Jun 2014 08:26:16 -0700 (PDT)
+	Tue, 03 Jun 2014 08:26:12 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id CB7B15605CC; Tue,  3 Jun 2014 16:26:18 +0100 (BST)
+	id 8C706560496; Tue,  3 Jun 2014 16:26:14 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  3 Jun 2014 16:26:12 +0100
-Message-Id: <7b0af0cdbae865c2e0b961fae17c217b1e4ac31a.1401808899.git.alexandru.damian@intel.com>
+Date: Tue,  3 Jun 2014 16:26:13 +0100
+Message-Id: <cover.1401808899.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <b6ae17f19c56ec99362290dd701542373720e572.1401808899.git.alexandru.damian@intel.com>
-References: <b6ae17f19c56ec99362290dd701542373720e572.1401808899.git.alexandru.damian@intel.com>
-In-Reply-To: <cover.1401808899.git.alexandru.damian@intel.com>
-References: <cover.1401808899.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 3/9] uievent: retry on handler registration failure
+Subject: [PATCH 0/9] toaster build functionality - preparatory patches
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,55 +50,50 @@ X-List-Received-Date: Tue, 03 Jun 2014 15:26:22 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-The registration of a remote UI event handler may fail
-if the server cooker is currently in some certain states.
-This may happen, for example, when a remote UI is started
-very fast after the bitbake server is started, and the
-server hadn't time to finish initial configuration parsing.
+Hello,
 
-Rather than fail outright, we have the remote UI event retry
-registration for five time at one-second intervals,
-in the hope it will succeed.
+This is a set of patches that bring punctual fixes, in preparation for deploying 
+Toaster build functionality. They are mainly focused on making bitbake and toaster a bit
+more resilient on starting and stopping programatically, under the control 
+of a program, and preparing data models for controlling a build.
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
----
- lib/bb/ui/uievent.py | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+The patches have been reviewed on the toaster list.
 
-diff --git a/lib/bb/ui/uievent.py b/lib/bb/ui/uievent.py
-index eb760c0..c6b100c 100644
---- a/lib/bb/ui/uievent.py
-+++ b/lib/bb/ui/uievent.py
-@@ -44,10 +44,26 @@ class BBUIEventQueue:
-         server.register_function( self.send_event, "event.sendpickle" )
-         server.socket.settimeout(1)
- 
--        self.EventHandle = self.BBServer.registerEventHandler(self.host, self.port)
-+        self.EventHandler = None
-+        count_tries = 0
- 
--        if (self.EventHandle == None):
--            bb.warn("Could not register UI event handler %s:%d" % (self.host, self.port))
-+        # the event handler registration may fail here due to cooker being in invalid state
-+        # this is a transient situation, and we should retry a couple of times before
-+        # giving up
-+
-+        while self.EventHandler == None and count_tries < 5:
-+            self.EventHandle = self.BBServer.registerEventHandler(self.host, self.port)
-+
-+            if (self.EventHandle != None):
-+                break
-+
-+            bb.warn("Could not register UI event handler %s:%d, retry" % (self.host, self.port))
-+            count_tries += 1
-+            import time
-+            time.sleep(1)
-+
-+
-+        if self.EventHandle == None:
-             raise Exception("Could not register UI event handler")
- 
-         self.server = server
+Can you please pull ?
+
+Cheers,
+Alex
+
+The following changes since commit 18f9bcbad059608e22fca20309314e1c399acec7:
+
+  siggen: Print warning about tainted tasks (2014-06-01 14:26:51 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib adamian/20140503-submission-bb
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20140503-submission-bb
+
+Alexandru DAMIAN (9):
+  bitbake: move configuration reading code
+  xmlrpc: client - remove fatal errors
+  uievent: retry on handler registration failure
+  toaster: read database settings from the environment
+  toaster: startup script noweb mode
+  toaster: startup script standalone mode
+  toaster: update toaster to run in managed mode
+  toaster: add project related models
+  toasterui: fix django settings environment value
+
+ bin/bitbake                         | 60 +++++++++++++++++++++++++------------
+ bin/toaster                         | 58 ++++++++++++++++++++++++++++++-----
+ lib/bb/server/xmlrpc.py             | 46 ++++++++++------------------
+ lib/bb/ui/buildinfohelper.py        |  2 +-
+ lib/bb/ui/toasterui.py              | 16 +++++++---
+ lib/bb/ui/uievent.py                | 23 ++++++++++++--
+ lib/toaster/orm/models.py           | 19 ++++++++++++
+ lib/toaster/toastermain/settings.py | 35 +++++++++++++++++++++-
+ 8 files changed, 193 insertions(+), 66 deletions(-)
+
 -- 
 1.9.1
 
