@@ -1,20 +1,30 @@
-Return-Path: <valentin.popa@intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 86FBB6FA41
+Return-Path: <ashcharles@gmail.com>
+Received: from mail-vc0-f173.google.com (mail-vc0-f173.google.com
+	[209.85.220.173])
+	by mail.openembedded.org (Postfix) with ESMTP id 68C6B6FA7C
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  5 Jun 2014 13:19:24 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 05 Jun 2014 06:19:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.98,981,1392192000"; d="scan'208";a="550216649"
-Received: from vpopa-desktop.rb.intel.com ([10.237.105.76])
-	by fmsmga002.fm.intel.com with ESMTP; 05 Jun 2014 06:19:24 -0700
-From: Valentin Popa <valentin.popa@intel.com>
+	Thu,  5 Jun 2014 19:14:55 +0000 (UTC)
+Received: by mail-vc0-f173.google.com with SMTP id ik5so1702728vcb.32
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 05 Jun 2014 12:14:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:from:date:message-id:subject:to:content-type;
+	bh=58GkGZApOnqLU7zU2oR5visly+I6oSig7yfylB9/JIU=;
+	b=kAyLwY5CDF6aWxDU09RRxL2Y5GICylqi5wR081RurnxABdDDfFmT4f9WuwL4F53RHq
+	BN/vVDO/vByCbzzklotSm4ppZOHOZF/rJxhtmy1CqVKypscAnp+kjw7A0hdM7BrO2LsP
+	vmu7DQzitC0FbhsoPcC9/qMkd+gkfkAyEZ+uDC7DR99zTyRCdsEXKFhmD24a+Ealoxup
+	HFVITJFKEVZQvpFsJlhDZnWfTbnKRDvecWljqD1ZuL/NoEaKVYhSZrZT7MpQVfhAXbzQ
+	c/5K5k3LlscdR3fJiSNoZdgMtr8xuX1+LjUzu/SreP7/vwOqpqnwc7Wjqt0DvAzq5lA5
+	6wMQ==
+X-Received: by 10.53.12.229 with SMTP id et5mr24253105vdd.32.1401995696765;
+	Thu, 05 Jun 2014 12:14:56 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 10.58.227.67 with HTTP; Thu, 5 Jun 2014 12:14:26 -0700 (PDT)
+From: Ash Charles <ashcharles@gmail.com>
+Date: Thu, 5 Jun 2014 12:14:26 -0700
+Message-ID: <CAK8F28=zftQQKQymrxk_Zu_3ttURMFEW+0szvXeC+XhQjHT=_w@mail.gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu,  5 Jun 2014 16:18:47 +0300
-Message-Id: <1401974327-6414-1-git-send-email-valentin.popa@intel.com>
-X-Mailer: git-send-email 1.9.1
-Subject: [PATCH] bitbake: fix contains_any()
+Subject: bitbake-layers show-appends doesn't show wildcarded appends
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,30 +37,20 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 05 Jun 2014 13:19:25 -0000
+X-List-Received-Date: Thu, 05 Jun 2014 19:14:59 -0000
+Content-Type: text/plain; charset=UTF-8
 
-"in" doesn't work for this case where
-checkvalues is a set.
+Hi,
 
-Signed-off-by: Valentin Popa <valentin.popa@intel.com>
----
- bitbake/lib/bb/utils.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I just tried using bitbake-layers show-appends but I don't see
+wildcarded bbappends in the list.
 
-diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
-index 96d8218..1ff201f 100644
---- a/bitbake/lib/bb/utils.py
-+++ b/bitbake/lib/bb/utils.py
-@@ -851,7 +851,7 @@ def contains_any(variable, checkvalues, truevalue, falsevalue, d):
-         checkvalues = set(checkvalues.split())
-     else:
-         checkvalues = set(checkvalues)
--    if checkvalues in val:
-+    if checkvalues & val != set([]):
-         return truevalue
-     return falsevalue
- 
--- 
-1.9.1
+e.g. if I have a bbappend named eglinfo_%.bbappend, it doesn't show up if I do
+$ bitbake-layers show-appends
+but it does show up if I change the file name to eglinfo_1.0.bbappend
+(as '1.0' is the current version).
 
+Regardless of the file name, the bbappend is used.
+
+--Ash
 
