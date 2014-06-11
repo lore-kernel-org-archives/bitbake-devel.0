@@ -1,35 +1,39 @@
 Return-Path: <ross.burton@intel.com>
-Received: from mail-wg0-f49.google.com (mail-wg0-f49.google.com [74.125.82.49])
-	by mail.openembedded.org (Postfix) with ESMTP id 395CB60E68
+Received: from mail-wi0-f176.google.com (mail-wi0-f176.google.com
+	[209.85.212.176])
+	by mail.openembedded.org (Postfix) with ESMTP id 54CD265E05
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Jun 2014 10:07:24 +0000 (UTC)
-Received: by mail-wg0-f49.google.com with SMTP id y10so2830686wgg.20
+	Wed, 11 Jun 2014 10:07:26 +0000 (UTC)
+Received: by mail-wi0-f176.google.com with SMTP id n3so5047057wiv.9
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Jun 2014 03:07:25 -0700 (PDT)
+	Wed, 11 Jun 2014 03:07:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=8oT4LErmWeCQPs2MAo+82CIaxzuK72n9oEJEDjSZsTM=;
-	b=IRogfJCypK4z8a24lcmC0ijYdxhbohfNpbdz5HNEGFppvqSuCt97qWbFgxnzrOFv0a
-	DS2iuuohFZW7vySWbR9ahgFyI2sSTNpMv/ha5r8PLC+5/DcjF/cD6WO95rCDbuNQqGUl
-	aXfUuhx8EYbwYeCEQlsxugl/3ykGGqHMhVKNXrCw1+h0by1uL6AYIthh52BK+JwcW71Y
-	5R5/uLIP8Wt8oTozT5MOo3A5Y+0/puDoqfjK06HDQI/mfkkRAcJduG7NpGR5ZSy/E3Tj
-	S7obtT2HTi9KohLKlNajUdSOUHw/qnifHw+ashTTqkkm542niqvyrBuKsrlGs8IS/ifF
-	gUTg==
-X-Gm-Message-State: ALoCoQm6zcgcPdR2cvJG3hwnuth0mO7wYtzQ5m/v0Mn4hSRg9ASHWsO121lj10jV1t400LMwTmrr
-X-Received: by 10.194.120.68 with SMTP id la4mr49761424wjb.40.1402481245044;
-	Wed, 11 Jun 2014 03:07:25 -0700 (PDT)
+	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+	:references;
+	bh=5ZbtE6oS0RSqHgUSaKQ2VN5GKBkm6F9T/EoZqjrUD0Q=;
+	b=J05xeSBK3M93gdiTb/w7GBC1EBUDR6iQq2QGQut6SYp8iS1kPkPBQXhqXQfTwf7S6Z
+	oMtAtWB7yqIpJbjROPKDr6en3ZIwhmV9QIDqTpB+9NiD85Z300sEhZL15xtvkzLH9FC0
+	FHGDthSOwZcsg+KPjfRedF9KZy30VbT4uUCZaAlVWt3IbBQuJ5AkrttsO6cTM+qxMqIX
+	E9pk8yH+10RRmNK7OJa6jrUsYSJ0M9/q/ln3TIyG3v3AAUXZq/G4icKcdALK7TDxwrwt
+	s7+GOu6Z9jHSBxFy5cSW36x4wkRFxRyfQbnVti9QFly3Oi0b4bQnb0mUqgDHkT1N8ROM
+	4TJA==
+X-Gm-Message-State: ALoCoQkp7ASivwayUUgpnW3FEoi80fAF3mGCz2d1PXq3SjX56O4vwTZWdMKAoWRxEpXyEXKgnA9z
+X-Received: by 10.194.110.10 with SMTP id hw10mr22814467wjb.81.1402481246464; 
+	Wed, 11 Jun 2014 03:07:26 -0700 (PDT)
 Received: from melchett.burtonini.com (35.106.2.81.in-addr.arpa. [81.2.106.35])
-	by mx.google.com with ESMTPSA id vc2sm33522760wjc.2.2014.06.11.03.07.23
+	by mx.google.com with ESMTPSA id vc2sm33522760wjc.2.2014.06.11.03.07.25
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 11 Jun 2014 03:07:24 -0700 (PDT)
+	Wed, 11 Jun 2014 03:07:25 -0700 (PDT)
 From: Ross Burton <ross.burton@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 11 Jun 2014 11:04:43 +0100
-Message-Id: <1402481084-13848-1-git-send-email-ross.burton@intel.com>
+Date: Wed, 11 Jun 2014 11:04:44 +0100
+Message-Id: <1402481084-13848-2-git-send-email-ross.burton@intel.com>
 X-Mailer: git-send-email 1.7.10.4
-Subject: [PATCH 1/2] bb/tests/data.py: add tests for contains() and contains_any()
+In-Reply-To: <1402481084-13848-1-git-send-email-ross.burton@intel.com>
+References: <1402481084-13848-1-git-send-email-ross.burton@intel.com>
+Subject: [PATCH 2/2] bb/utils: fix contains_any()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,57 +48,33 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 11 Jun 2014 10:07:33 -0000
 
-contains_any is buggy so write a test case to demonstrate this.
+"set1 in set2" doesn't do what you'd expect, and if it did do a subset test
+that's not the logic required by contains_any().
+
+Instead get the intersection of checkvalues and val and check if the resulting
+set is empty or not (by evaluating it in a boolean context), which tells us if
+there are any elements in common.
+
+Based on a patch by Valentin Popa <valentin.popa@intel.com>.
 
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 ---
- bitbake/lib/bb/tests/data.py |   36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ bitbake/lib/bb/utils.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/tests/data.py b/bitbake/lib/bb/tests/data.py
-index 228f72c..944a906 100644
---- a/bitbake/lib/bb/tests/data.py
-+++ b/bitbake/lib/bb/tests/data.py
-@@ -299,3 +299,39 @@ class TestFlags(unittest.TestCase):
-         self.assertEqual(self.d.getVarFlag("foo", "flag2"), None)
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+index 96d8218..f62709b 100644
+--- a/bitbake/lib/bb/utils.py
++++ b/bitbake/lib/bb/utils.py
+@@ -851,7 +851,7 @@ def contains_any(variable, checkvalues, truevalue, falsevalue, d):
+         checkvalues = set(checkvalues.split())
+     else:
+         checkvalues = set(checkvalues)
+-    if checkvalues in val:
++    if checkvalues & val:
+         return truevalue
+     return falsevalue
  
- 
-+class Contains(unittest.TestCase):
-+    def setUp(self):
-+        self.d = bb.data.init()
-+        self.d.setVar("SOMEFLAG", "a b c")
-+
-+    def test_contains(self):
-+        self.assertTrue(bb.utils.contains("SOMEFLAG", "a", True, False, self.d))
-+        self.assertTrue(bb.utils.contains("SOMEFLAG", "b", True, False, self.d))
-+        self.assertTrue(bb.utils.contains("SOMEFLAG", "c", True, False, self.d))
-+
-+        self.assertTrue(bb.utils.contains("SOMEFLAG", "a b", True, False, self.d))
-+        self.assertTrue(bb.utils.contains("SOMEFLAG", "b c", True, False, self.d))
-+        self.assertTrue(bb.utils.contains("SOMEFLAG", "c a", True, False, self.d))
-+
-+        self.assertTrue(bb.utils.contains("SOMEFLAG", "a b c", True, False, self.d))
-+        self.assertTrue(bb.utils.contains("SOMEFLAG", "c b a", True, False, self.d))
-+
-+        self.assertFalse(bb.utils.contains("SOMEFLAG", "x", True, False, self.d))
-+        self.assertFalse(bb.utils.contains("SOMEFLAG", "a x", True, False, self.d))
-+        self.assertFalse(bb.utils.contains("SOMEFLAG", "x c b", True, False, self.d))
-+        self.assertFalse(bb.utils.contains("SOMEFLAG", "x c b a", True, False, self.d))
-+
-+    def test_contains_any(self):
-+        self.assertTrue(bb.utils.contains_any("SOMEFLAG", "a", True, False, self.d))
-+        self.assertTrue(bb.utils.contains_any("SOMEFLAG", "b", True, False, self.d))
-+        self.assertTrue(bb.utils.contains_any("SOMEFLAG", "c", True, False, self.d))
-+
-+        self.assertTrue(bb.utils.contains_any("SOMEFLAG", "a b", True, False, self.d))
-+        self.assertTrue(bb.utils.contains_any("SOMEFLAG", "b c", True, False, self.d))
-+        self.assertTrue(bb.utils.contains_any("SOMEFLAG", "c a", True, False, self.d))
-+
-+        self.assertTrue(bb.utils.contains_any("SOMEFLAG", "a x", True, False, self.d))
-+        self.assertTrue(bb.utils.contains_any("SOMEFLAG", "x c", True, False, self.d))
-+
-+        self.assertFalse(bb.utils.contains_any("SOMEFLAG", "x", True, False, self.d))
-+        self.assertFalse(bb.utils.contains_any("SOMEFLAG", "x y z", True, False, self.d))
 -- 
 1.7.10.4
 
