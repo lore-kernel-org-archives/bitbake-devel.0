@@ -1,26 +1,28 @@
 Return-Path: <Wenlin.Kang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 935E16FB90
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 960066B232
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Jun 2014 02:56:29 +0000 (UTC)
+	Wed, 11 Jun 2014 08:24:28 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.5) with ESMTP id s5B2uTk2017257
+	by mail1.windriver.com (8.14.5/8.14.5) with ESMTP id s5B8OSZu016294
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Jun 2014 19:56:29 -0700 (PDT)
-Received: from PEK-WKANG-D1.corp.ad.wrs.com (128.224.162.182) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.169.1; Tue, 10 Jun 2014 19:56:29 -0700
+	Wed, 11 Jun 2014 01:24:28 -0700 (PDT)
+Received: from [128.224.162.182] (128.224.162.182) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.169.1;
+	Wed, 11 Jun 2014 01:24:27 -0700
+Message-ID: <5398120C.7040001@windriver.com>
+Date: Wed, 11 Jun 2014 16:23:40 +0800
 From: Wenlin Kang <wenlin.kang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 11 Jun 2014 10:55:40 +0800
-Message-ID: <1402455340-29531-2-git-send-email-wenlin.kang@windriver.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1402455340-29531-1-git-send-email-wenlin.kang@windriver.com>
-References: <1402455340-29531-1-git-send-email-wenlin.kang@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:24.0) Gecko/20100101 Thunderbird/24.5.0
 MIME-Version: 1.0
-Subject: [PATCH] fetch2/svn.py: fix Unable to fetch URL bug
+To: <bitbake-devel@lists.openembedded.org>
+References: <1402455340-29531-1-git-send-email-wenlin.kang@windriver.com>
+In-Reply-To: <1402455340-29531-1-git-send-email-wenlin.kang@windriver.com>
+X-Originating-IP: [128.224.162.182]
+Subject: Re: [PATCH] fetch2/svn.py: fix Unable to fetch URL bug
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,35 +35,55 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 11 Jun 2014 02:56:33 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 11 Jun 2014 08:24:36 -0000
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 
-For svn source, when download a revsion on branches, if the download
-revsion < the branch created time revsion, then it will fail.
+On 2014年06月11日 10:55, Wenlin Kang wrote:
+> The testing steps and instructions:
+>
+> First, we need to create a svn server on the server side, eg, my is svnroot
+> $svnadmin create ~/workspace/svnroot
+>
+> Second, on the client side:
+> $mkdir -p ~/workspace/svntest
+> $cd ~/workspace/svntest
+> $mkdir -p test/{trunk,branches,tag}
+> $mkdir -p test/trunk/tdir0/tdir1/tdir2
+> $touch test/trunk/hello.c
+> $touch test/trunk/tdir0/tdir1/tdir2/test2.c
+> $touch test/trunk/tdir0/tdir1/test1.c
+> $touch test/trunk/tdir0/test0.c
+>
+> $svn import -m "create the project test" test/ svn://xxx.xxx.xxx.xxx/svnroot/test
+>
+> Then, make some commit,...
+> Such, we now get "r15"
+>
+> $svn cp -m "create a branch test_debug-1.0" svn://xxx.xxx.xxx.xxx/svnroot/test/trunk svn://xxx.xxx.xxx.xxx/svnroot/test/branches/test_debug-1.0
+>
+> Now, we need to create a bb file(eg,mytest.bb) to download "tdir1" with the verion < test_debug-1.0 created time version,
+> eg, download r12, then in bb file has:
+>
+> SRCREV = "12"
+> SRC_URI = "svn://xxx.xxx.xxx.xxx/svnroot/test/branches/test_debug-1.0;module=test0/tdir1"
 
-The detail description reference the Yocto Project bugzilla, please see:
-https://bugzilla.yoctoproject.org/show_bug.cgi?id=6258
+Replace "module=test0/tdir1" with "module=tdir0/tdir1"
 
-Signed-off-by: Wenlin Kang <wenlin.kang@windriver.com>
----
- lib/bb/fetch2/svn.py |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+//Wenlin
 
-diff --git a/lib/bb/fetch2/svn.py b/lib/bb/fetch2/svn.py
-index 8847461..75e21df 100644
---- a/lib/bb/fetch2/svn.py
-+++ b/lib/bb/fetch2/svn.py
-@@ -98,7 +98,8 @@ class Svn(FetchMethod):
-             suffix = ""
-             if ud.revision:
-                 options.append("-r %s" % ud.revision)
--                suffix = "@%s" % (ud.revision)
-+                #follow this line can make the fetch fail when download a revsion on branches if the download revsion < the branch created time revsion.
-+                #suffix = "@%s" % (ud.revision)
- 
-             if command == "fetch":
-                 svncmd = "%s co %s %s://%s/%s%s %s" % (ud.basecmd, " ".join(options), proto, svnroot, ud.module, suffix, ud.module)
+> Last, run fetch for mytest.bb
+>
+> Wenlin Kang (1):
+>    fetch2/svn.py: fix Unable to fetch URL bug
+>
+>   lib/bb/fetch2/svn.py |    3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+
+
 -- 
-1.7.9.5
+Thanks,
+Wenlin Kang
 
 
