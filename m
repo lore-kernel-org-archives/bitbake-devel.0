@@ -1,44 +1,45 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f47.google.com (mail-wg0-f47.google.com [74.125.82.47])
-	by mail.openembedded.org (Postfix) with ESMTP id 4CD4765E0F
+Received: from mail-wi0-f177.google.com (mail-wi0-f177.google.com
+	[209.85.212.177])
+	by mail.openembedded.org (Postfix) with ESMTP id B5D6F6FA5E
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Jun 2014 13:51:58 +0000 (UTC)
-Received: by mail-wg0-f47.google.com with SMTP id k14so1266477wgh.6
+	Thu, 12 Jun 2014 13:51:59 +0000 (UTC)
+Received: by mail-wi0-f177.google.com with SMTP id r20so1652519wiv.10
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Jun 2014 06:51:59 -0700 (PDT)
+	Thu, 12 Jun 2014 06:52:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=yYoOVOFf272CC0AWQe0wuA9E39G3/aqBwV3tM5JZe6g=;
-	b=iSO/TAySIezi1KDz/yhwckvGgLQRfguRgxwCBfoCHMaEP5D8YlJcKppYi0Fi/UirNU
-	LU127nb4ObIUVXrCvl4U5JMZFqJl6gi+5c8PRW6cKqchqFUhYC7aubWW59JRmEnYnhBM
-	V1rMkuXdgXcMNifDf0OH+qxrCDrDXLghybYoYJj6IXp+kxGtNjIyrtRRS4IT4Rn8v0LK
-	t89An0LPEToSDbvI0Gr4pY/9h/UJfpXKYKaT8Ws/c+19T/ybXaO4qxdPCOExabA9JITO
-	xNmRBuhZsVHzDYcsV80r0BF64OFN8gUCYrfajO6BLL7KOgi4UrIhMh4/L/wVbqHkcbTn
-	Ezkw==
-X-Gm-Message-State: ALoCoQmEVCC+abaP5suEO+pFc6leqZAepOVUk4kyBcgkOsERPl3NGlwUsxH4nVJqEEn+fFzV2sTI
-X-Received: by 10.180.20.141 with SMTP id n13mr6923000wie.6.1402581119471;
-	Thu, 12 Jun 2014 06:51:59 -0700 (PDT)
+	bh=3wwtvzxvSEMXaZTqtDJb0dcJzyetuPFk3JE9icj3Wow=;
+	b=WPDJeip1n3dCt1hQLMFHDJexytSKnX2kKyRC3o8VFKw1WIRgvlx/45JGtmxReizere
+	a7uUf95ZPTFH4BUUfwevrGOmPg4v2Ex9U7Jt2bE6f1hibdDwWRz2aSJgksVKH9Zl+u3h
+	FeBlZck9hgATesRFMDrvCcNSVs8PidTBXTfVkMBvGHOg6FJBiL6ezrjQ7k6xCBpeuG4o
+	ziienbvHdMmF61hDgjRw3swVdF33tvBQJwU+oy59xvlskJx1dZ6TQoY1bmZBNAmczAfM
+	8GBYjuIRgMN61dCZ8Skm59Bn6TZyedNslTxS1KRUquZJ4F0v8AW8/8Oq2gW6yMCnHvKd
+	nFLg==
+X-Gm-Message-State: ALoCoQn06jHo5XGqyTERmyZf3F6XCuiHchqysdRLWiVV9J0f3ewHv9iqjtvwPb+tZGn5jknIdQjb
+X-Received: by 10.180.74.6 with SMTP id p6mr6824170wiv.17.1402581120135;
+	Thu, 12 Jun 2014 06:52:00 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id
-	fg5sm33532992wib.17.2014.06.12.06.51.58 for <multiple recipients>
+	by mx.google.com with ESMTPSA id a6sm4207007wic.13.2014.06.12.06.51.58
+	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Thu, 12 Jun 2014 06:51:58 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id A562D560CE5; Thu, 12 Jun 2014 14:52:03 +0100 (BST)
+	id A9A52561141; Thu, 12 Jun 2014 14:52:03 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org,
 	toaster@yoctoproject.org
-Date: Thu, 12 Jun 2014 14:51:58 +0100
-Message-Id: <d4bfe9059f765f11244b97e324c0131f32f8e400.1402580802.git.alexandru.damian@intel.com>
+Date: Thu, 12 Jun 2014 14:52:00 +0100
+Message-Id: <db5390940c0afbcdc9fbcf1225761968ae51d4a7.1402580802.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <08556b79b7b2af08aaeedf8733b1b8996f387c4e.1402580802.git.alexandru.damian@intel.com>
 References: <08556b79b7b2af08aaeedf8733b1b8996f387c4e.1402580802.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1402580802.git.alexandru.damian@intel.com>
 References: <cover.1402580802.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 2/6] toaster: create models for bldcontrol and enable it
+Subject: [PATCH 4/6] xmlrpc: add support for token reusing
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,314 +56,104 @@ X-List-Received-Date: Thu, 12 Jun 2014 13:52:00 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-We create the model classes that store information
-about triggering builds, and the available build
-environments.
+We add support to specify a connection token in the command line
+and in the environment variable BBTOKEN.
 
-We add a fixture with a default build environment
-for build control, using a "build/" directory under
-the poky checkout directory.
+When a client registers to a bitbake server, that client
+will have exclusive access to the server. The client is identified
+by a server-supplied token. If a client terminates, we cannot
+reconnect to the server as the token is lost.
 
-We enable the bldcontrol in toaster starting script
-and in the toaster settings as to allow the actual database
-to be kept in sync with the source code.
+This patch adds the capability to specify the connection token
+in the command line for xmlrpc clients. This allows us
+to have bitbake work as an already-authenticated
+client with the server and resume sending commands to a server.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bin/toaster                                       |   2 +-
- lib/toaster/bldcontrol/fixtures/initial_data.json |   1 +
- lib/toaster/bldcontrol/migrations/0001_initial.py | 154 ++++++++++++++++++++++
- lib/toaster/bldcontrol/migrations/__init__.py     |   0
- lib/toaster/bldcontrol/models.py                  |  80 ++++++++++-
- lib/toaster/toastermain/settings.py               |   1 +
- 6 files changed, 236 insertions(+), 2 deletions(-)
- create mode 100644 lib/toaster/bldcontrol/fixtures/initial_data.json
- create mode 100644 lib/toaster/bldcontrol/migrations/0001_initial.py
- create mode 100644 lib/toaster/bldcontrol/migrations/__init__.py
+ bin/bitbake             |  8 +++++++-
+ lib/bb/server/xmlrpc.py | 19 ++++++++++++-------
+ 2 files changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/bin/toaster b/bin/toaster
-index f469e4f..80bda6d 100755
---- a/bin/toaster
-+++ b/bin/toaster
-@@ -63,7 +63,7 @@ function webserverStartAll()
-             retval=0
-             python $BBBASEDIR/lib/toaster/manage.py migrate orm || retval=1
-         fi
--        # python $BBBASEDIR/lib/toaster/manage.py migrate bldcontrol || retval=1
-+        python $BBBASEDIR/lib/toaster/manage.py migrate bldcontrol || retval=1
+diff --git a/bin/bitbake b/bin/bitbake
+index f120bac..b3acbe1 100755
+--- a/bin/bitbake
++++ b/bin/bitbake
+@@ -169,6 +169,9 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+         parser.add_option("-t", "--servertype", help = "Choose which server to use, process or xmlrpc.",
+                    action = "store", dest = "servertype")
  
-         if [ $retval -eq 0 ]; then
-             python $BBBASEDIR/lib/toaster/manage.py runserver 0.0.0.0:8000 </dev/null >${BUILDDIR}/toaster_web.log 2>&1 & echo $! >${BUILDDIR}/.toastermain.pid
-diff --git a/lib/toaster/bldcontrol/fixtures/initial_data.json b/lib/toaster/bldcontrol/fixtures/initial_data.json
-new file mode 100644
-index 0000000..21883ab
---- /dev/null
-+++ b/lib/toaster/bldcontrol/fixtures/initial_data.json
-@@ -0,0 +1 @@
-+[{"pk": 1, "model": "bldcontrol.buildenvironment", "fields": {"updated": "2014-05-20T12:17:30Z", "created": "2014-05-20T12:17:30Z", "lock": 0, "bbstate": 0, "bbaddress": "", "betype": 0, "bbtoken": "", "address": "localhost", "bbport": -1}}]
-diff --git a/lib/toaster/bldcontrol/migrations/0001_initial.py b/lib/toaster/bldcontrol/migrations/0001_initial.py
-new file mode 100644
-index 0000000..9f13d14
---- /dev/null
-+++ b/lib/toaster/bldcontrol/migrations/0001_initial.py
-@@ -0,0 +1,154 @@
-+# -*- coding: utf-8 -*-
-+from south.utils import datetime_utils as datetime
-+from south.db import db
-+from south.v2 import SchemaMigration
-+from django.db import models
++        parser.add_option("", "--token", help = "Specify the connection token to be used when connecting to a remote server.",
++                   action = "store", dest = "xmlrpctoken")
 +
-+
-+class Migration(SchemaMigration):
-+
-+    def forwards(self, orm):
-+        # Adding model 'BuildEnvironment'
-+        db.create_table(u'bldcontrol_buildenvironment', (
-+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-+            ('address', self.gf('django.db.models.fields.CharField')(max_length=254)),
-+            ('betype', self.gf('django.db.models.fields.IntegerField')()),
-+            ('bbaddress', self.gf('django.db.models.fields.CharField')(max_length=254, blank=True)),
-+            ('bbport', self.gf('django.db.models.fields.IntegerField')(default=-1)),
-+            ('bbtoken', self.gf('django.db.models.fields.CharField')(max_length=126, blank=True)),
-+            ('bbstate', self.gf('django.db.models.fields.IntegerField')(default=0)),
-+            ('lock', self.gf('django.db.models.fields.IntegerField')(default=0)),
-+            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-+            ('updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-+        ))
-+        db.send_create_signal(u'bldcontrol', ['BuildEnvironment'])
-+
-+        # Adding model 'BuildRequest'
-+        db.create_table(u'bldcontrol_buildrequest', (
-+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-+            ('project', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['orm.Project'])),
-+            ('build', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['orm.Build'], null=True)),
-+            ('state', self.gf('django.db.models.fields.IntegerField')(default=0)),
-+            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-+            ('updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-+        ))
-+        db.send_create_signal(u'bldcontrol', ['BuildRequest'])
-+
-+        # Adding model 'BRLayer'
-+        db.create_table(u'bldcontrol_brlayer', (
-+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-+            ('req', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['bldcontrol.BuildRequest'])),
-+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-+            ('giturl', self.gf('django.db.models.fields.CharField')(max_length=254)),
-+            ('commit', self.gf('django.db.models.fields.CharField')(max_length=254)),
-+        ))
-+        db.send_create_signal(u'bldcontrol', ['BRLayer'])
-+
-+        # Adding model 'BRVariable'
-+        db.create_table(u'bldcontrol_brvariable', (
-+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-+            ('req', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['bldcontrol.BuildRequest'])),
-+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-+            ('value', self.gf('django.db.models.fields.TextField')(blank=True)),
-+        ))
-+        db.send_create_signal(u'bldcontrol', ['BRVariable'])
-+
-+        # Adding model 'BRTarget'
-+        db.create_table(u'bldcontrol_brtarget', (
-+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-+            ('req', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['bldcontrol.BuildRequest'])),
-+            ('target', self.gf('django.db.models.fields.CharField')(max_length=100)),
-+            ('task', self.gf('django.db.models.fields.CharField')(max_length=100, null=True)),
-+        ))
-+        db.send_create_signal(u'bldcontrol', ['BRTarget'])
-+
-+
-+    def backwards(self, orm):
-+        # Deleting model 'BuildEnvironment'
-+        db.delete_table(u'bldcontrol_buildenvironment')
-+
-+        # Deleting model 'BuildRequest'
-+        db.delete_table(u'bldcontrol_buildrequest')
-+
-+        # Deleting model 'BRLayer'
-+        db.delete_table(u'bldcontrol_brlayer')
-+
-+        # Deleting model 'BRVariable'
-+        db.delete_table(u'bldcontrol_brvariable')
-+
-+        # Deleting model 'BRTarget'
-+        db.delete_table(u'bldcontrol_brtarget')
-+
-+
-+    models = {
-+        u'bldcontrol.brlayer': {
-+            'Meta': {'object_name': 'BRLayer'},
-+            'commit': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
-+            'giturl': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'req': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildRequest']"})
-+        },
-+        u'bldcontrol.brtarget': {
-+            'Meta': {'object_name': 'BRTarget'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'req': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildRequest']"}),
-+            'target': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'task': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'})
-+        },
-+        u'bldcontrol.brvariable': {
-+            'Meta': {'object_name': 'BRVariable'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'req': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildRequest']"}),
-+            'value': ('django.db.models.fields.TextField', [], {'blank': 'True'})
-+        },
-+        u'bldcontrol.buildenvironment': {
-+            'Meta': {'object_name': 'BuildEnvironment'},
-+            'address': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
-+            'bbaddress': ('django.db.models.fields.CharField', [], {'max_length': '254', 'blank': 'True'}),
-+            'bbport': ('django.db.models.fields.IntegerField', [], {'default': '-1'}),
-+            'bbstate': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'bbtoken': ('django.db.models.fields.CharField', [], {'max_length': '126', 'blank': 'True'}),
-+            'betype': ('django.db.models.fields.IntegerField', [], {}),
-+            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'lock': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
-+        },
-+        u'bldcontrol.buildrequest': {
-+            'Meta': {'object_name': 'BuildRequest'},
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Build']", 'null': 'True'}),
-+            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']"}),
-+            'state': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
-+        },
-+        u'orm.build': {
-+            'Meta': {'object_name': 'Build'},
-+            'bitbake_version': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-+            'build_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'completed_on': ('django.db.models.fields.DateTimeField', [], {}),
-+            'cooker_log_path': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-+            'distro': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'distro_version': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'errors_no': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'machine': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'outcome': ('django.db.models.fields.IntegerField', [], {'default': '2'}),
-+            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']", 'null': 'True'}),
-+            'started_on': ('django.db.models.fields.DateTimeField', [], {}),
-+            'timespent': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'warnings_no': ('django.db.models.fields.IntegerField', [], {'default': '0'})
-+        },
-+        u'orm.project': {
-+            'Meta': {'object_name': 'Project'},
-+            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
-+        }
-+    }
-+
-+    complete_apps = ['bldcontrol']
-\ No newline at end of file
-diff --git a/lib/toaster/bldcontrol/migrations/__init__.py b/lib/toaster/bldcontrol/migrations/__init__.py
-new file mode 100644
-index 0000000..e69de29
-diff --git a/lib/toaster/bldcontrol/models.py b/lib/toaster/bldcontrol/models.py
-index 71a8362..11f487c 100644
---- a/lib/toaster/bldcontrol/models.py
-+++ b/lib/toaster/bldcontrol/models.py
-@@ -1,3 +1,81 @@
- from django.db import models
-+from django.core.validators import MaxValueValidator, MinValueValidator
-+from orm.models import Project, ProjectLayer, ProjectVariable, ProjectTarget, Build
-+
-+# a BuildEnvironment is the equivalent of the "build/" directory on the localhost
-+class BuildEnvironment(models.Model):
-+    SERVER_STOPPED = 0
-+    SERVER_STARTED = 1
-+    SERVER_STATE = (
-+        (SERVER_STOPPED, "stopped"),
-+        (SERVER_STARTED, "started"),
-+    )
-+
-+    TYPE_LOCAL = 0
-+    TYPE_SSH   = 1
-+    TYPE = (
-+        (TYPE_LOCAL, "local"),
-+        (TYPE_SSH, "ssh"),
-+    )
-+
-+    LOCK_FREE = 0
-+    LOCK_LOCK = 1
-+    LOCK_STATE = (
-+        (LOCK_FREE, "free"),
-+        (LOCK_LOCK, "lock"),
-+    )
-+
-+    address     = models.CharField(max_length = 254)
-+    betype      = models.IntegerField(choices = TYPE)
-+    bbaddress   = models.CharField(max_length = 254, blank = True)
-+    bbport      = models.IntegerField(default = -1)
-+    bbtoken     = models.CharField(max_length = 126, blank = True)
-+    bbstate     = models.IntegerField(choices = SERVER_STATE, default = SERVER_STOPPED)
-+    lock        = models.IntegerField(choices = LOCK_STATE, default = LOCK_FREE)
-+    created     = models.DateTimeField(auto_now_add = True)
-+    updated     = models.DateTimeField(auto_now = True)
-+
-+
-+# a BuildRequest is a request that the scheduler will build using a BuildEnvironment
-+# the build request queue is the table itself, ordered by state
-+
-+class BuildRequest(models.Model):
-+    REQ_CREATED = 0
-+    REQ_QUEUED = 1
-+    REQ_INPROGRESS = 2
-+    REQ_COMPLETED = 3
-+
-+    REQUEST_STATE = (
-+        (REQ_CREATED, "created"),
-+        (REQ_QUEUED, "queued"),
-+        (REQ_INPROGRESS, "in progress"),
-+        (REQ_COMPLETED, "completed"),
-+    )
-+
-+    project     = models.ForeignKey(Project)
-+    build       = models.ForeignKey(Build, null = True)     # TODO: toasterui should set this when Build is created
-+    state       = models.IntegerField(choices = REQUEST_STATE, default = REQ_CREATED)
-+    created     = models.DateTimeField(auto_now_add = True)
-+    updated     = models.DateTimeField(auto_now = True)
-+
-+
-+# These tables specify the settings for running an actual build.
-+# They MUST be kept in sync with the tables in orm.models.Project*
-+
-+class BRLayer(models.Model):
-+    req         = models.ForeignKey(BuildRequest)
-+    name        = models.CharField(max_length = 100)
-+    giturl      = models.CharField(max_length = 254)
-+    commit      = models.CharField(max_length = 254)
-+
-+class BRVariable(models.Model):
-+    req         = models.ForeignKey(BuildRequest)
-+    name        = models.CharField(max_length=100)
-+    value       = models.TextField(blank = True)
-+
-+class BRTarget(models.Model):
-+    req         = models.ForeignKey(BuildRequest)
-+    target      = models.CharField(max_length=100)
-+    task        = models.CharField(max_length=100, null=True)
-+
+         parser.add_option("", "--revisions-changed", help = "Set the exit code depending on whether upstream floating revisions have changed or not.",
+                    action = "store_true", dest = "revisions_changed", default = False)
  
--# Create your models here.
-diff --git a/lib/toaster/toastermain/settings.py b/lib/toaster/toastermain/settings.py
-index adaa56c..2c52b68 100644
---- a/lib/toaster/toastermain/settings.py
-+++ b/lib/toaster/toastermain/settings.py
-@@ -221,6 +221,7 @@ INSTALLED_APPS = (
-     'toastergui',
-     'bldviewer',
-     'south',
-+    'bldcontrol',
- )
+@@ -200,6 +203,9 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+             options.servertype = "xmlrpc"
+             options.remote_server = os.environ["BBSERVER"]
  
- # A sample logging configuration. The only tangible logging
++        if "BBTOKEN" in os.environ:
++            options.xmlrpctoken = os.environ["BBTOKEN"]
++
+         # if BBSERVER says to autodetect, let's do that
+         if options.remote_server:
+             [host, port] = options.remote_server.split(":", 2)
+@@ -332,7 +338,7 @@ def main():
+         bb.event.ui_queue = []
+     else:
+         # we start a stub server that is actually a XMLRPClient that connects to a real server
+-        server = servermodule.BitBakeXMLRPCClient(configParams.observe_only)
++        server = servermodule.BitBakeXMLRPCClient(configParams.observe_only, configParams.xmlrpctoken)
+         server.saveConnectionDetails(configParams.remote_server)
+ 
+ 
+diff --git a/lib/bb/server/xmlrpc.py b/lib/bb/server/xmlrpc.py
+index d6f4338..4205a4c 100644
+--- a/lib/bb/server/xmlrpc.py
++++ b/lib/bb/server/xmlrpc.py
+@@ -281,13 +281,16 @@ class BitBakeXMLRPCServerConnection(BitBakeBaseServerConnection):
+         self.observer_only = observer_only
+         self.featureset = featureset
+ 
+-    def connect(self):
+-        if not self.observer_only:
+-            token = self.connection.addClient()
+-        else:
+-            token = "observer"
++    def connect(self, token = None):
++        if token is None:
++            if self.observer_only:
++                token = "observer"
++            else:
++                token = self.connection.addClient()
++
+         if token is None:
+             return None
++
+         self.transport.set_connection_token(token)
+ 
+         self.events = uievent.BBUIEventQueue(self.connection, self.clientinfo)
+@@ -336,7 +339,9 @@ class BitBakeServer(BitBakeBaseServer):
+ 
+ class BitBakeXMLRPCClient(BitBakeBaseServer):
+ 
+-    def __init__(self, observer_only = False):
++    def __init__(self, observer_only = False, token = None):
++        self.token = token
++
+         self.observer_only = observer_only
+         # if we need extra caches, just tell the server to load them all
+         pass
+@@ -366,7 +371,7 @@ class BitBakeXMLRPCClient(BitBakeBaseServer):
+         try:
+             self.serverImpl = XMLRPCProxyServer(host, port)
+             self.connection = BitBakeXMLRPCServerConnection(self.serverImpl, (ip, 0), self.observer_only, featureset)
+-            return self.connection.connect()
++            return self.connection.connect(self.token)
+         except Exception as e:
+             bb.warn("Could not connect to server at %s:%s (%s)" % (host, port, str(e)))
+             raise e
 -- 
 1.9.1
 
