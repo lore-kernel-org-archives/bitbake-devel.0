@@ -1,39 +1,39 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-wi0-f176.google.com (mail-wi0-f176.google.com
-	[209.85.212.176])
-	by mail.openembedded.org (Postfix) with ESMTP id 54CD265E05
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-wg0-f50.google.com (mail-wg0-f50.google.com [74.125.82.50])
+	by mail.openembedded.org (Postfix) with ESMTP id D8A0565E0F
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Jun 2014 10:07:26 +0000 (UTC)
-Received: by mail-wi0-f176.google.com with SMTP id n3so5047057wiv.9
+	Thu, 12 Jun 2014 13:51:42 +0000 (UTC)
+Received: by mail-wg0-f50.google.com with SMTP id x13so1255702wgg.33
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Jun 2014 03:07:26 -0700 (PDT)
+	Thu, 12 Jun 2014 06:51:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-	:references;
-	bh=5ZbtE6oS0RSqHgUSaKQ2VN5GKBkm6F9T/EoZqjrUD0Q=;
-	b=J05xeSBK3M93gdiTb/w7GBC1EBUDR6iQq2QGQut6SYp8iS1kPkPBQXhqXQfTwf7S6Z
-	oMtAtWB7yqIpJbjROPKDr6en3ZIwhmV9QIDqTpB+9NiD85Z300sEhZL15xtvkzLH9FC0
-	FHGDthSOwZcsg+KPjfRedF9KZy30VbT4uUCZaAlVWt3IbBQuJ5AkrttsO6cTM+qxMqIX
-	E9pk8yH+10RRmNK7OJa6jrUsYSJ0M9/q/ln3TIyG3v3AAUXZq/G4icKcdALK7TDxwrwt
-	s7+GOu6Z9jHSBxFy5cSW36x4wkRFxRyfQbnVti9QFly3Oi0b4bQnb0mUqgDHkT1N8ROM
-	4TJA==
-X-Gm-Message-State: ALoCoQkp7ASivwayUUgpnW3FEoi80fAF3mGCz2d1PXq3SjX56O4vwTZWdMKAoWRxEpXyEXKgnA9z
-X-Received: by 10.194.110.10 with SMTP id hw10mr22814467wjb.81.1402481246464; 
-	Wed, 11 Jun 2014 03:07:26 -0700 (PDT)
-Received: from melchett.burtonini.com (35.106.2.81.in-addr.arpa. [81.2.106.35])
-	by mx.google.com with ESMTPSA id vc2sm33522760wjc.2.2014.06.11.03.07.25
-	for <bitbake-devel@lists.openembedded.org>
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=t1lR2/TKsDal3k4inHPE8gszH+2YirzQ/qY01bO6aM0=;
+	b=G3tgNHyuS4FlPv3Sk8q2EB4WL8HOROgrK+yviteusQnBs7dU6vyUIijTtAzr0lsv8v
+	Rz3Ui2NVpm8vkqm1DCy1c2eg9FGEwWdmo8uDRHrE2BEV6hCo0qcOlrMAtyJxOtrg67WG
+	VMPVXxgBfOt8+GDDEGgag/l4t61mVEdqMAGawrA13nYJ1AYJugvm3mOWI5besiuFMvt7
+	FGa0V7C0HxqpXmzyltSEHpwOF39wvBmhIHQxwDYCvJqi2FiVjxdkix8yjW9mwomYHlJC
+	EaYn8yXcD2YpKTTVKSt13gu5rkG6J25OGf1fZuhwJzUIVOkr43o4rG6w60FsJKKSmuhp
+	t3JQ==
+X-Gm-Message-State: ALoCoQnx9XRy94zd8M66jw6CHkrvflw9NLQRWoEtZA2P5T+MEsiD++XcFBtvDDUCodfzV3/CjUuR
+X-Received: by 10.180.107.97 with SMTP id hb1mr6974924wib.20.1402581102672;
+	Thu, 12 Jun 2014 06:51:42 -0700 (PDT)
+Received: from adamian-desk.corp.intel.com ([83.217.123.106])
+	by mx.google.com with ESMTPSA id i6sm4197896wiy.17.2014.06.12.06.51.41
+	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 11 Jun 2014 03:07:25 -0700 (PDT)
-From: Ross Burton <ross.burton@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 11 Jun 2014 11:04:44 +0100
-Message-Id: <1402481084-13848-2-git-send-email-ross.burton@intel.com>
-X-Mailer: git-send-email 1.7.10.4
-In-Reply-To: <1402481084-13848-1-git-send-email-ross.burton@intel.com>
-References: <1402481084-13848-1-git-send-email-ross.burton@intel.com>
-Subject: [PATCH 2/2] bb/utils: fix contains_any()
+	Thu, 12 Jun 2014 06:51:41 -0700 (PDT)
+Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
+	id 986E15606C5; Thu, 12 Jun 2014 14:51:46 +0100 (BST)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: bitbake-devel@lists.openembedded.org,
+	toaster@yoctoproject.org
+Date: Thu, 12 Jun 2014 14:51:44 +0100
+Message-Id: <cover.1402580802.git.alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.9.1
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 0/6] toaster patchset: localhost build control
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -46,36 +46,69 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 11 Jun 2014 10:07:33 -0000
+X-List-Received-Date: Thu, 12 Jun 2014 13:51:49 -0000
 
-"set1 in set2" doesn't do what you'd expect, and if it did do a subset test
-that's not the logic required by contains_any().
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Instead get the intersection of checkvalues and val and check if the resulting
-set is empty or not (by evaluating it in a boolean context), which tells us if
-there are any elements in common.
+Hello,
 
-Based on a patch by Valentin Popa <valentin.popa@intel.com>.
+This toaster patchset contains the core of the build control functionality
+for running on a localhost backend. Variants of this patchset have
+been reviewed on the toaster mailing list.
 
-Signed-off-by: Ross Burton <ross.burton@intel.com>
----
- bitbake/lib/bb/utils.py |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please merge at your convenience,
 
-diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
-index 96d8218..f62709b 100644
---- a/bitbake/lib/bb/utils.py
-+++ b/bitbake/lib/bb/utils.py
-@@ -851,7 +851,7 @@ def contains_any(variable, checkvalues, truevalue, falsevalue, d):
-         checkvalues = set(checkvalues.split())
-     else:
-         checkvalues = set(checkvalues)
--    if checkvalues in val:
-+    if checkvalues & val:
-         return truevalue
-     return falsevalue
- 
+Alex
+
+The following changes since commit 2e742c03e8dfdfa67899e7f5d579ed14bd87e139:
+
+  bb/utils: fix contains_any() (2014-06-11 13:18:20 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib adamian/20140612-submission-bb
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20140612-submission-bb
+
+Alexandru DAMIAN (6):
+  toaster: initial bldcontrol application
+  toaster: create models for bldcontrol and enable it
+  toaster: add function to get the database url
+  xmlrpc: add support for token reusing
+  toastergui: fix built ETA calculation
+  toaster: build control functionality
+
+ bin/bitbake                                        |   8 +-
+ bin/toaster                                        |   9 +-
+ lib/bb/server/xmlrpc.py                            |  19 +-
+ lib/bb/ui/buildinfohelper.py                       |  10 +
+ lib/bb/ui/toasterui.py                             |   3 +
+ lib/toaster/bldcontrol/__init__.py                 |   0
+ lib/toaster/bldcontrol/bbcontroller.py             | 239 +++++++++++++++++++++
+ lib/toaster/bldcontrol/fixtures/initial_data.json  |   1 +
+ lib/toaster/bldcontrol/management/__init__.py      |   0
+ .../bldcontrol/management/commands/__init__.py     |   0
+ .../bldcontrol/management/commands/runbuilds.py    |  85 ++++++++
+ lib/toaster/bldcontrol/migrations/0001_initial.py  | 154 +++++++++++++
+ lib/toaster/bldcontrol/migrations/__init__.py      |   0
+ lib/toaster/bldcontrol/models.py                   |  83 +++++++
+ lib/toaster/bldcontrol/tests.py                    |  81 +++++++
+ lib/toaster/bldcontrol/views.py                    |   1 +
+ lib/toaster/toastergui/views.py                    |   7 +-
+ lib/toaster/toastermain/settings.py                |  20 ++
+ 18 files changed, 704 insertions(+), 16 deletions(-)
+ create mode 100644 lib/toaster/bldcontrol/__init__.py
+ create mode 100644 lib/toaster/bldcontrol/bbcontroller.py
+ create mode 100644 lib/toaster/bldcontrol/fixtures/initial_data.json
+ create mode 100644 lib/toaster/bldcontrol/management/__init__.py
+ create mode 100644 lib/toaster/bldcontrol/management/commands/__init__.py
+ create mode 100644 lib/toaster/bldcontrol/management/commands/runbuilds.py
+ create mode 100644 lib/toaster/bldcontrol/migrations/0001_initial.py
+ create mode 100644 lib/toaster/bldcontrol/migrations/__init__.py
+ create mode 100644 lib/toaster/bldcontrol/models.py
+ create mode 100644 lib/toaster/bldcontrol/tests.py
+ create mode 100644 lib/toaster/bldcontrol/views.py
+
 -- 
-1.7.10.4
+1.9.1
 
 
