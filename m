@@ -1,30 +1,27 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id D07D86FD34
+Return-Path: <paul.eggleton@linux.intel.com>
+X-Greylist: delayed 629 seconds by postgrey-1.34 at layers.openembedded.org;
+	Wed, 18 Jun 2014 16:01:02 UTC
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 16C8B6FE30
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Jun 2014 15:52:37 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s5IFpJZW022447; Wed, 18 Jun 2014 16:52:18 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id cJ1UZMQyAhTe; Wed, 18 Jun 2014 16:52:17 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s5IFqC6q022473
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
-	Wed, 18 Jun 2014 16:52:14 +0100
-Message-ID: <1403106727.2104.72.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>
-Date: Wed, 18 Jun 2014 16:52:07 +0100
-In-Reply-To: <alpine.LFD.2.11.1406181120030.29194@localhost>
-References: <alpine.LFD.2.11.1406181120030.29194@localhost>
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] bitbake-user-manual-execution.xml: Update parallelization note.
+	Wed, 18 Jun 2014 16:01:02 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga103.fm.intel.com with ESMTP; 18 Jun 2014 08:45:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.01,501,1400050800"; d="scan'208";a="549893798"
+Received: from tlankage-mobl.gar.corp.intel.com (HELO
+	peggleto-mobl5.ger.corp.intel.com) ([10.252.120.87])
+	by fmsmga001.fm.intel.com with ESMTP; 18 Jun 2014 08:50:33 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+Date: Wed, 18 Jun 2014 16:50:32 +0100
+Message-ID: <3485367.eXfHHFnm7Z@peggleto-mobl5.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.12.5 (Linux/3.14.7-200.fc20.x86_64; KDE/4.12.5; x86_64; ; )
+In-Reply-To: <alpine.LFD.2.11.1406180908370.25541@localhost>
+References: <alpine.LFD.2.11.1406180908370.25541@localhost>
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: curious about setting of PROVIDES in bitbake.conf
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,72 +34,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 18 Jun 2014 15:52:42 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 18 Jun 2014 16:01:12 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, 2014-06-18 at 11:22 -0400, Robert P. J. Day wrote:
-> Update the note to explain that current versions of BitBake
-> automatically calculate the proper values for BB_NUMBER_THREADS
+On Wednesday 18 June 2014 09:10:00 Robert P. J. Day wrote:
+>   from current bitbake.conf file:
+> 
+> PROVIDES = ""
+> PROVIDES_prepend = "${PN} "
+> 
+> is there a reason that PROVIDES is set to null, only to immediately
+> set it based on the following line? is there some subtle issue this is
+> meant to address?
 
-The current version of bitbake doesn't though.
-
-There is an *OE* helper function which the default local.conf files use.
+I think the intention is to set the initial value to blank, and ensure that 
+${PN} is the first item in the list (since _prepend gets applied later). If you 
+just simply had PROVIDES = "${PN}" then it could be overridden somewhere else 
+such that ${PN} was not in PROVIDES at all, which would be counter-intuitive.
 
 Cheers,
+Paul
 
-Richard
+-- 
 
->  and
-> PARALLEL_MAKE so you no longer need to set those values manually.
-> 
-> Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
-> 
-> ---
-> 
-> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-execution.xml b/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
-> index 8514f23..6d49fb6 100644
-> --- a/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
-> +++ b/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
-> @@ -29,11 +29,23 @@
->      </para>
-> 
->      <note>
-> -        Prior to executing BitBake, you should take advantage of parallel
-> -        thread execution by setting the
-> -        <link linkend='var-BB_NUMBER_THREADS'><filename>BB_NUMBER_THREADS</filename></link>
-> -        variable in your <filename>local.conf</filename>
-> -        configuration file.
-> +        In order to take advantage of parallel thread execution on your build
-> +        host, earlier versions of BitBake recommended setting the following
-> +        variables in your project's <filename>local.conf</filename> file,
-> +        based on your host's number of CPUs or multithreading
-> +        capability:
-> +        <literallayout class='monospaced'>
-> +     BB_NUMBER_THREADS ?= ...
-> +     PARALLEL_MAKE ?= ...
-> +        </literallayout>
-> +        The current version of BitBake now handles this automatically by
-> +        assigning default values to those variables as follows:
-> +        <literallayout class='monospaced'>
-> +     BB_NUMBER_THREADS ?= "${@oe.utils.cpu_count()}"
-> +     PARALLEL_MAKE ?= "-j ${@oe.utils.cpu_count()}"
-> +        </literallayout>
-> +        so you no longer need to worry about this, unless you specifically
-> +        want to override this for some reason.
->      </note>
-> 
->      <section id='parsing-the-base-configuration-metadata'>
-> 
-> -- 
-> 
-> ========================================================================
-> Robert P. J. Day                                 Ottawa, Ontario, CANADA
->                         http://crashcourse.ca
-> 
-> Twitter:                                       http://twitter.com/rpjday
-> LinkedIn:                               http://ca.linkedin.com/in/rpjday
-> ========================================================================
-
-
+Paul Eggleton
+Intel Open Source Technology Centre
 
