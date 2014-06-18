@@ -1,31 +1,26 @@
-Return-Path: <rpjday@crashcourse.ca>
-Received: from astoria.ccjclearline.com (astoria.ccjclearline.com
-	[64.235.106.9])
-	by mail.openembedded.org (Postfix) with ESMTP id 405816FDD2
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
+	by mail.openembedded.org (Postfix) with ESMTP id F2E086FE3C
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Jun 2014 14:19:51 +0000 (UTC)
-Received: from [69.196.158.250] (port=38862 helo=crashcourse.ca)
-	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES128-SHA:128)
-	(Exim 4.80) (envelope-from <rpjday@crashcourse.ca>)
-	id 1WxGiN-0006nD-C0 for bitbake-devel@lists.openembedded.org;
-	Wed, 18 Jun 2014 10:19:51 -0400
-Date: Wed, 18 Jun 2014 10:16:09 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@localhost
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Message-ID: <alpine.LFD.2.11.1406180958160.27179@localhost>
-User-Agent: Alpine 2.11 (LFD 23 2013-08-11)
+	Wed, 18 Jun 2014 14:35:40 +0000 (UTC)
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 18 Jun 2014 07:35:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.01,501,1400050800"; d="scan'208";a="447049526"
+Received: from tlankage-mobl.gar.corp.intel.com (HELO
+	peggleto-mobl5.ger.corp.intel.com) ([10.252.120.87])
+	by azsmga001.ch.intel.com with ESMTP; 18 Jun 2014 07:35:40 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: "Robert P. J. Day" <rpjday@crashcourse.ca>
+Date: Wed, 18 Jun 2014 15:35:38 +0100
+Message-ID: <7886309.jgNHRpTCme@peggleto-mobl5.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.12.5 (Linux/3.14.7-200.fc20.x86_64; KDE/4.12.5; x86_64; ; )
+In-Reply-To: <alpine.LFD.2.11.1406170936190.619@localhost>
+References: <alpine.LFD.2.11.1406170936190.619@localhost>
 MIME-Version: 1.0
-X-AntiAbuse: This header was added to track abuse,
-	please include it with any abuse report
-X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Subject: trying to clarify PREFERRED_VERSION processing
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: some questions about bitbake user manual, fetching chapter
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,83 +33,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 18 Jun 2014 14:19:58 -0000
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-List-Received-Date: Wed, 18 Jun 2014 14:35:45 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
+Hi Robert,
 
-  still working my way through the bitbake user manual, currently in
-section 2.3, "Preferences and Providers", and i think this section is
-unnecessarily confusing as it tries to discuss both preferences and
-providers at the same time, which i think are two separate concepts
-that should be covered independently, so let me ask some questions
-about just PREFERRED_VERSION processing using an actual example ripped
-from the oe/poky codebase.
+On Tuesday 17 June 2014 10:12:42 Robert P. J. Day wrote:
+>   working my way thru the fetching chapter, some questions:
+> 
+> * manual doesn't explain what happens if you don't supply *both*
+> checksums for downloading -- what if you supply only one? or both
+> and one is correct while the other is incorrect? i think this would
+> be useful info for the reader.
 
-  (side note: i'm writing up a bunch of examples of bitbake processing
-for my courses and, rather than use generic labels like "foo" and
-"bar", i want to use actual examples from the codebase so i can show
-the results with things like "bitbake -s".)
+Our convention within OE is to specify both, and because of that I haven't 
+tried only specifying one for quite some time. Last I did it only required one 
+of them; but for recipes that you're going to submit to OE layers, both are 
+expected. (We're talking about the bitbake manual here though so it's not 
+really appropriate to have OE references in there other than for the purpose 
+of giving examples.)
 
-  consider (from my poky checkout) the two possibilities for the
-busybox recipe:
+> * right now, manual says FILESDIR is still "deprecated". is it just
+> deprecated, or is it at the point where it can be killed outright?
+> currently, there's nothing in the entire poky checkout that uses it.
+> have people been given sufficient warning at this point?
 
-  busybox_1.22.1.bb
-  busybox_git.bb
+A quick check on my side shows that there are still some isolated references 
+to it across the various layers. I don't know that we have a specific timeframe 
+for removing it.
+ 
+> * i asked about this a long time ago -- in section 4.3.1 (local file
+> fetcher), there's an alleged sample line:
+> 
+>  SRC_URI = "file://relativefile.patch;this=ignored"
+> 
+> "this=ignored"? can that be replaced by, say, a sample line involving
+> "apply=yes" or "apply=no"? or any other relevant examples?
 
-obviously, there are two versions available to me and, if i examine
-the respective .bb files, i can see in the git version:
+So, yes it's a bad example; but I think we have to be careful about what we do 
+put there - e.g. apply= isn't actually handled by BitBake at all, it's 
+implemented in OE in patch.bbclass.
 
-  DEFAULT_PREFERENCE = "-1"
-
-making that the *unpreferred* version. let's verify that with "bitbake
--s" (using my build for beaglebone/core-image-minimal):
-
-$ bitbake -s
-...
-busybox                                           :1.22.1-r32
-...
-$
-
-  good, that's what i expected -- the fixed version recipe is the one
-that would be selected. now say i wanted to use the other (git)
-version, what would be the appropriate line i would add to local.conf?
-it seems i can just use wildcarding, as in:
-
-  PREFERRED_VERSION_busybox = "1.22.1+git%"
-
-at which point i can see:
-
-$ bitbake -s
-...
-busybox                                           :1.22.1-r32 :1.22.1+gitAUTOINC+d9e0c438e1-r0
-...
-$
-
-  from what i read from "bitbake -h", what is being printed is the
-"current" version, followed by the "preferred" version, so i'm
-interpreting that as the first value would be the version selected if
-i didn't override it, and the second value is the version that will
-actually be used given that i've explicitly preferred a version for
-that recipe. is that the proper way to describe that?
-
-  also, what would be the proper PREFERRED_VERSION line in my
-local.conf if i wanted to prefer *precisely* that git version of
-busybox? i know wildcarding works, as in:
-
-  PREFERRED_VERSION_busybox = "1.22.1+git%"
-
-but what value would i use to match *precisely* that git-based
-version? something involving SRCREV or SRCPV or something like that?
-
-rday
+Cheers,
+Paul
 
 -- 
 
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
+Paul Eggleton
+Intel Open Source Technology Centre
 
