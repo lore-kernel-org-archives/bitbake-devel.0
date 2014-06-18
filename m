@@ -1,31 +1,30 @@
-Return-Path: <rpjday@crashcourse.ca>
-Received: from astoria.ccjclearline.com (astoria.ccjclearline.com
-	[64.235.106.9])
-	by mail.openembedded.org (Postfix) with ESMTP id 3825B6FE20
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 7940A6FFE9
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Jun 2014 16:06:59 +0000 (UTC)
-Received: from [69.196.158.250] (port=40024 helo=crashcourse.ca)
-	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES128-SHA:128)
-	(Exim 4.80) (envelope-from <rpjday@crashcourse.ca>)
-	id 1WxIO4-0003C9-BP for bitbake-devel@lists.openembedded.org;
-	Wed, 18 Jun 2014 12:07:00 -0400
-Date: Wed, 18 Jun 2014 12:03:18 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@localhost
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Message-ID: <alpine.LFD.2.11.1406181202040.30320@localhost>
-User-Agent: Alpine 2.11 (LFD 23 2013-08-11)
-MIME-Version: 1.0
-X-AntiAbuse: This header was added to track abuse,
-	please include it with any abuse report
-X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Subject: [PATCH] bitbake-user-manual-execution.xml: Typo, grammar fixes.
+	Wed, 18 Jun 2014 16:59:53 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s5IGxmls025681 for <bitbake-devel@lists.openembedded.org>;
+	Wed, 18 Jun 2014 17:59:49 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id ggf--5wlM8LP for <bitbake-devel@lists.openembedded.org>;
+	Wed, 18 Jun 2014 17:59:48 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s5IGxiW2025678
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 18 Jun 2014 17:59:46 +0100
+Message-ID: <1403110779.2104.80.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Wed, 18 Jun 2014 17:59:39 +0100
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] build.py: Ensure shared work siginfo files are written to the correct location
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,83 +37,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 18 Jun 2014 16:07:01 -0000
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-List-Received-Date: Wed, 18 Jun 2014 16:59:54 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+
+Right now shared work signature data is saved to the non-shared directory
+which is confusing to everyone including bitbake. Whilst its messy,
+extra the stampbase data instead, which ensures the sig data is written
+to the correct location alongside its corresponding stamp file.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+index 6b70ce5..d1eaed4 100644
+--- a/bitbake/lib/bb/build.py
++++ b/bitbake/lib/bb/build.py
+@@ -506,7 +506,7 @@ def exec_task(fn, task, d, profile = False):
+             event.fire(failedevent, d)
+         return 1
+ 
+-def stamp_internal(taskname, d, file_name):
++def stamp_internal(taskname, d, file_name, baseonly=False):
+     """
+     Internal stamp helper function
+     Makes sure the stamp directory exists
+@@ -527,6 +527,9 @@ def stamp_internal(taskname, d, file_name):
+         file_name = d.getVar('BB_FILENAME', True)
+         extrainfo = d.getVarFlag(taskflagname, 'stamp-extra-info', True) or ""
+ 
++    if baseonly:
++        return stamp
++
+     if not stamp:
+         return
+ 
+@@ -591,8 +594,9 @@ def make_stamp(task, d, file_name = None):
+     # If we're in task context, write out a signature file for each task
+     # as it completes
+     if not task.endswith("_setscene") and task != "do_setscene" and not file_name:
++        stampbase = stamp_internal(task, d, None, True)
+         file_name = d.getVar('BB_FILENAME', True)
+-        bb.parse.siggen.dump_sigtask(file_name, task, d.getVar('STAMP', True), True)
++        bb.parse.siggen.dump_sigtask(file_name, task, stampbase, True)
+ 
+ def del_stamp(task, d, file_name = None):
+     """
 
 
-Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
-
----
-
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-execution.xml b/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
-index 8514f23..2b58276 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
-@@ -72,7 +72,7 @@
-             <link linkend='var-BBFILES'><filename>BBFILES</filename></link>.
-             <filename>BBPATH</filename> is used to search for
-             configuration and class files under
--            <filename>conf/</filename> and <filename>class/</filename>
-+            <filename>conf/</filename> and <filename>classes/</filename>
-             directories, respectively.
-             <filename>BBFILES</filename> is used to find recipe files
-             (<filename>.bb</filename> and <filename>.bbappend</filename>).
-@@ -120,7 +120,7 @@
-             variable that is a space delimited list of 'layer' directories.
-             Recall that if BitBake cannot find a <filename>bblayers.conf</filename>
-             file then it is assumed the user has set the <filename>BBPATH</filename>
--            and <filename>BBFILES</filename> directly in the environment.
-+            and <filename>BBFILES</filename> variables directly in the environment.
-         </para>
-
-         <para>
-@@ -128,7 +128,7 @@
-             file is searched for and parsed with the
-             <link linkend='var-LAYERDIR'><filename>LAYERDIR</filename></link>
-             variable being set to the directory where the layer was found.
--            The idea is these files automatically setup
-+            The idea is these files automatically set up
-             <link linkend='var-BBPATH'><filename>BBPATH</filename></link>
-             and other variables correctly for a given build directory.
-         </para>
-@@ -495,7 +495,7 @@
-             As each task completes, a timestamp is written to the directory specified by the
-             <link linkend='var-STAMP'><filename>STAMP</filename></link> variable.
-             On subsequent runs, BitBake looks in the build directory within
--            <filename>tmp/stamps</filename>and does not rerun
-+            <filename>tmp/stamps</filename> and does not rerun
-             tasks that are already completed unless a timestamp is found to be invalid.
-             Currently, invalid timestamps are only considered on a per
-             recipe file basis.
-@@ -535,7 +535,7 @@
-         <title>Executing Tasks</title>
-
-         <para>
--            Tasks can either be a shell task or a Python task.
-+            Tasks can be either a shell task or a Python task.
-             For shell tasks, BitBake writes a shell script to
-             <filename>${</filename><link linkend='var-T'><filename>T</filename></link><filename>}/run.do_taskname.pid</filename>
-             and then executes the script.
-@@ -755,9 +755,9 @@
-             to determine the stamps and delta where these two
-             stamp trees diverge.
-             <note>
--                It is likely that future versions of BitBake with
-+                It is likely that future versions of BitBake will
-                 provide other signature handlers triggered through
--                additional "-S" paramters.
-+                additional "-S" parameters.
-             </note>
-         </para>
-
-
--- 
-
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
 
