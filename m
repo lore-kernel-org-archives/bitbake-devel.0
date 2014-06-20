@@ -1,31 +1,36 @@
-Return-Path: <rpjday@crashcourse.ca>
-Received: from astoria.ccjclearline.com (astoria.ccjclearline.com
-	[64.235.106.9])
-	by mail.openembedded.org (Postfix) with ESMTP id 9ED506B4F7
+Return-Path: <kergoth@gmail.com>
+Received: from mail-la0-f42.google.com (mail-la0-f42.google.com
+	[209.85.215.42])
+	by mail.openembedded.org (Postfix) with ESMTP id 8DAAE701CC
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Jun 2014 15:51:18 +0000 (UTC)
-Received: from [69.196.158.250] (port=53221 helo=crashcourse.ca)
-	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES128-SHA:128)
-	(Exim 4.80) (envelope-from <rpjday@crashcourse.ca>)
-	id 1Wy15z-0006PI-Mp for bitbake-devel@lists.openembedded.org;
-	Fri, 20 Jun 2014 11:51:19 -0400
-Date: Fri, 20 Jun 2014 11:47:37 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@localhost
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Message-ID: <alpine.LFD.2.11.1406200725340.5971@localhost>
-User-Agent: Alpine 2.11 (LFD 23 2013-08-11)
+	Fri, 20 Jun 2014 15:54:42 +0000 (UTC)
+Received: by mail-la0-f42.google.com with SMTP id pn19so2558144lab.29
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 20 Jun 2014 08:54:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=Jv97XfGwY5b92vbFtHa36sitEF/qJCBR/+OZf8PI7fg=;
+	b=ChM+86QyvNIl5ACj5ycXHpu8UQqKCgQbdHx7Xid3WpTIILJ3jhOfFTsWwo8bm7ny7X
+	rmyovmdgZogHbu7huXIFVCoksKetn/lUzyjlrhiPEpjri5mUDXr3Exv0vXznIbvDx8T5
+	4Ix9ENhGy/k79J2xOONe5kytR6wVgim6IwooPbQwp8f0e1EeARkWm9aRtEqnCNuXpgJC
+	TtVxHssUWk3qLDjQw6tD5a1TzpzOuJM8JChXwJjMno0E6d16xwOjsaKChSCPFeInyxnF
+	mhttd1MzhYey/I9+fYVMi+YyDCryvYj1NTkf6xixLD/gsTgdShtk0gaC6jhb7Pk6JJK+
+	MY4A==
+X-Received: by 10.112.13.137 with SMTP id h9mr2972114lbc.33.1403279682141;
+	Fri, 20 Jun 2014 08:54:42 -0700 (PDT)
 MIME-Version: 1.0
-X-AntiAbuse: This header was added to track abuse,
-	please include it with any abuse report
-X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Subject: distinguishing between bitbake and "higher" layers WRT fetching variables [LONG]
+Sender: kergoth@gmail.com
+Received: by 10.112.31.165 with HTTP; Fri, 20 Jun 2014 08:54:22 -0700 (PDT)
+In-Reply-To: <alpine.LFD.2.11.1406200725340.5971@localhost>
+References: <alpine.LFD.2.11.1406200725340.5971@localhost>
+From: Christopher Larson <clarson@kergoth.com>
+Date: Fri, 20 Jun 2014 08:54:22 -0700
+X-Google-Sender-Auth: 4V2LOzr5JD9hp5MxZOlHUNwuX-0
+Message-ID: <CABcZANn_x7Y9XJ-g861+9YEsXtVNwF-krtf7QBgrG50PxUdEPw@mail.gmail.com>
+To: "Robert P. J. Day" <rpjday@crashcourse.ca>
+Cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
+Subject: Re: distinguishing between bitbake and "higher" layers WRT fetching variables [LONG]
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,158 +43,79 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 20 Jun 2014 15:51:23 -0000
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-List-Received-Date: Fri, 20 Jun 2014 15:54:44 -0000
+Content-Type: multipart/alternative; boundary=001a11c3d10af984e804fc4682ea
 
+--001a11c3d10af984e804fc4682ea
+Content-Type: text/plain; charset=UTF-8
 
-  (note: more annoying pedantry regarding bitbake configuration and
-documentation but, if i'm going to explain this to my students, i
-really need to understand it completely.)
+On Fri, Jun 20, 2014 at 8:47 AM, Robert P. J. Day <rpjday@crashcourse.ca>
+wrote:
 
-  some questions and observations about how bitbake defines some
-fetch-related variables as opposed to how those variables are defined
-in higher layers such as oe-core and poky. as richard purdie(?)
-pointed out recently, the goal should be to document bitbake as
-independently as possible from what happens in layers such as oe and
-poky, but it seems this is not as clean as it could be.
+>   (note: more annoying pedantry regarding bitbake configuration and
+> documentation but, if i'm going to explain this to my students, i
+> really need to understand it completely.)
+>
+>   some questions and observations about how bitbake defines some
+> fetch-related variables as opposed to how those variables are defined
+> in higher layers such as oe-core and poky. as richard purdie(?)
+> pointed out recently, the goal should be to document bitbake as
+> independently as possible from what happens in layers such as oe and
+> poky, but it seems this is not as clean as it could be.
+>
+>   consider first bitbake's current bitbake.conf file. first, can we
+> agree that this set of variables:
+>
 
-  consider first bitbake's current bitbake.conf file. first, can we
-agree that this set of variables:
-
-FETCHCOMMAND = ""
-FETCHCOMMAND_cvs = "/usr/bin/env cvs -d${CVSROOT} co ${CVSCOOPTS} ${CVSMODULE}"
-FETCHCOMMAND_svn = "/usr/bin/env svn co ${SVNCOOPTS} ${SVNROOT} ${SVNMODULE}"
-FETCHCOMMAND_wget = "/usr/bin/env wget -t 5 --passive-ftp -P ${DL_DIR} ${URI}"
-
-is entirely superfluous? i see nothing that uses them -- everything
-seems to use the alternative "FETCHCMD_*" naming. can the above just
-be deleted?
-
-  with respect to the "FETCHCMD_*" variables, this is a bit messier.
-the bitbake user manual defines that variable thusly:
-
-file:///home/rpjday/oe/dist/layers/bitbake/doc/bitbake-user-manual/bitbake-user-manual.html#var-FETCHCMD
-
-tossing out examples of FETCHCMD_git and FETCHCMD_svn, and here's the
-messy part.
-
-  who is responsible for setting the default values for those fetcher
-commands? the first possibility is that bitbake itself can do that in
-the fetcher code. for instance, here's the test from git.py:
-
-ud.basecmd = data.getVar("FETCHCMD_git", d, True) or "git -c core.fsyncobjectfiles=0"
-
-what the above seems to be doing (based on my mediocre understanding
-of python) is that either that fetcher variable is set, or it's set to
-the subsequent git command, correct? in short, the fundamental bitbake
-git fetcher code is responsible for setting the basic git fetch
-command. perfectly reasonable, but there's another possibility.
-
-  a number of other fetch variables appear to be defined in oe-core,
-whose bitbake.conf file contains:
-
-FETCHCMD_svn = "/usr/bin/env svn --non-interactive --trust-server-cert"
-FETCHCMD_cvs = "/usr/bin/env cvs"
-FETCHCMD_wget = "/usr/bin/env wget -t 2 -T 30 -nv --passive-ftp --no-check-certificate"
-FETCHCMD_bzr = "/usr/bin/env bzr"
-FETCHCMD_hg = "/usr/bin/env hg"
-
-and, back in bitbake, the fetch command for, say, svn, is determined
-in svn.py simply with:
-
-  ud.basecmd = d.getVar('FETCHCMD_svn', True)
-
-if i read this correctly, then, that code from bitbake simply
-*assumes* that that variable for the svn fetcher is set -- there is no
-error checking if it isn't. this suggests that the fetcher variables
-for things like svn and hg and bzr are assumed by bitbake to come from
-elsewhere -- in this case, oe-core or poky or what have you.
-
-  this seems inconsistent -- in some cases, the bitbake fetch code
-will guarantee that a fetcher variable is set (as with git or
-perforce):
-
-git.py:        ud.basecmd = data.getVar("FETCHCMD_git", d, True) or "git -c core.fsyncobjectfiles=0"
-perforce.py:        p4cmd = d.getVar('FETCHCMD_p4', True) or "p4"
-
-in other cases, bitbake seems to count on someone else setting the
-appropriate fetcher variable (as in oe-core):
-
-FETCHCMD_svn = "/usr/bin/env svn --non-interactive --trust-server-cert"
-FETCHCMD_cvs = "/usr/bin/env cvs"
-FETCHCMD_wget = "/usr/bin/env wget -t 2 -T 30 -nv --passive-ftp --no-check-certificate"
-FETCHCMD_bzr = "/usr/bin/env bzr"
-FETCHCMD_hg = "/usr/bin/env hg"
-
-and in one case, both the bitbake layer and oe-core currently (and
-redundantly) take responsibility for setting the correct fetcher
-command for wget:
-
-self.basecmd = d.getVar("FETCHCMD_wget", True) or "/usr/bin/env wget -t 2 -T 30 -nv --passive-ftp --no-check-certificate"
-FETCHCMD_wget = "/usr/bin/env wget -t 2 -T 30 -nv --passive-ftp --no-check-certificate"
-
-this just seems confusing, as there is no obvious basis for deciding
-who gets to set those variables.
-
-  oh, and one more (admittedly minor) observation related to the
-above. in my courses, i really like to use chris larson's cool "bb"
-utility to display environment and variables, and the above situation
-causes the following glitch.
-
-  if a fetcher variable is set explicitly (say, in oe-core), as in:
-
-FETCHCMD_bzr = "/usr/bin/env bzr"
-FETCHCMD_hg = "/usr/bin/env hg"
-
-then the "bb" command will happily show me the value of that variable:
-
-$ bb show FETCHCMD_bzr
-FETCHCMD_bzr="/usr/bin/env bzr"
-$ bb show FETCHCMD_hg
-FETCHCMD_hg="/usr/bin/env hg"
-$
-
-but if the fetch variable is determined by the bitbake fetcher code at
-run-time, as with git or perforce, well, i'm screwed:
-
-$ bb show FETCHCMD_git
-WARNING: Requested variable 'FETCHCMD_git' does not exist
-$ bb show FETCHCMD_p4
-WARNING: Requested variable 'FETCHCMD_p4' does not exist
-$
-
-  it just seems that there isn't a rigourously clean separation
-between bitbake and oe-core, and it's entirely possible there *can't*
-be, but some things seem unnecessarily confusing as to where certain
-values or variables are defined.
-
-  yes, there should be a bitbake user manual covering bitbake-only
-content independent of higher layers like oe-core, but at the same
-time, given that readers will be using bitbake *in the context* of
-building with oe-core or poky, i think bitbake should avoid code or
-documentation that is almost guaranteed to be different in the context
-of those higher layers. case in point -- bitbake:
-
-  GITDIR = "${DL_DIR}/git"
-
-oe-core:
-
-  GITDIR = "${CO_DIR}/git2"
-
-anyway, i've rambled sufficiently. thoughts?
-
-rday
-
+Before I dive into the remainder of the email, we should note that the
+bitbake.conf in bitbake is never used when you use oe, it's solely as an
+example / starting point for other non-oe projects wanting to use bitbake.
+Presumably it gets forgotten about when changes to bitbake itself are made,
+and so it's fallen behind.
 -- 
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
+--001a11c3d10af984e804fc4682ea
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Fri, Jun 20, 2014 at 8:47 AM, Robert P. J. Day <span dir=3D"ltr">&lt;<a =
+href=3D"mailto:rpjday@crashcourse.ca" target=3D"_blank">rpjday@crashcourse.=
+ca</a>&gt;</span> wrote:<br>
+
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div id=3D":ax" class=3D"a3s" style=3D"overf=
+low:hidden">=C2=A0 (note: more annoying pedantry regarding bitbake configur=
+ation and<br>
 
 
+documentation but, if i&#39;m going to explain this to my students, i<br>
+really need to understand it completely.)<br>
+<br>
+=C2=A0 some questions and observations about how bitbake defines some<br>
+fetch-related variables as opposed to how those variables are defined<br>
+in higher layers such as oe-core and poky. as richard purdie(?)<br>
+pointed out recently, the goal should be to document bitbake as<br>
+independently as possible from what happens in layers such as oe and<br>
+poky, but it seems this is not as clean as it could be.<br>
+<br>
+=C2=A0 consider first bitbake&#39;s current bitbake.conf file. first, can w=
+e<br>
+agree that this set of variables:</div></blockquote></div><br></div><div cl=
+ass=3D"gmail_extra">Before I dive into the remainder of the email, we shoul=
+d note that the bitbake.conf in bitbake is never used when you use oe, it&#=
+39;s solely as an example / starting point for other non-oe projects wantin=
+g to use bitbake. Presumably it gets forgotten about when changes to bitbak=
+e itself are made, and so it&#39;s fallen behind.<br>
 
+-- <br>Christopher Larson<br>clarson at kergoth dot com<br>Founder - BitBak=
+e, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software Engine=
+er, Mentor Graphics
+</div></div>
 
+--001a11c3d10af984e804fc4682ea--
