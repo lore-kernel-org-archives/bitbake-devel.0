@@ -1,31 +1,36 @@
-Return-Path: <rpjday@crashcourse.ca>
-Received: from astoria.ccjclearline.com (astoria.ccjclearline.com
-	[64.235.106.9])
-	by mail.openembedded.org (Postfix) with ESMTP id B3FDC6FE3F
+Return-Path: <pandey_himanshu80@rediffmail.com>
+X-Greylist: delayed 749 seconds by postgrey-1.34 at layers.openembedded.org;
+	Sat, 21 Jun 2014 12:39:05 UTC
+Received: from f4mail-83-123.rediffmail.com (unknown [203.199.83.123])
+	by mail.openembedded.org (Postfix) with ESMTP id 999B465E05
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 21 Jun 2014 11:24:25 +0000 (UTC)
-Received: from [99.240.204.5] (port=37499 helo=crashcourse.ca)
-	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES128-SHA:128)
-	(Exim 4.80) (envelope-from <rpjday@crashcourse.ca>)
-	id 1WyJPF-0002Tf-US for bitbake-devel@lists.openembedded.org;
-	Sat, 21 Jun 2014 07:24:26 -0400
-Date: Sat, 21 Jun 2014 07:20:41 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@localhost
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Message-ID: <alpine.LFD.2.11.1406210718480.5097@localhost>
-User-Agent: Alpine 2.11 (LFD 23 2013-08-11)
+	Sat, 21 Jun 2014 12:39:05 +0000 (UTC)
+Received: from rediffmail.com (unknown [10.50.250.70])
+	by f4mail-83-121.rediffmail.com (Postfix) with SMTP id 4F10230826A3
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 21 Jun 2014 17:48:32 +0530 (IST)
+Received: (qmail 19524 invoked by uid 510); 21 Jun 2014 12:26:16 -0000
+Comment: DomainKeys? See http://antispam.yahoo.com/domainkeys
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; s=redf; d=rediffmail.com;
+	b=B632LEdpBBKMNsY3SrlInp1SeddL+rZ5hTfkqSpDTDkDwj2pY2W+ZrsfMq88BpyZYWhQKPWS3NUYIbYZDNiy8m8bpr+xIEob8fwnic14MvKBCHYHBHoCSPA3XoIvs1LAZ9239+bevmmmW+FsvmbBnmSt7xlZPCf1nBrQMg8BWgY=
+	; 
+x-m-msg: asd54ad564ad7aa6sd5as6d5; a6da7d6asas6dasd77; 5dad65ad5sd;
+X-CTCH-Spam: Unknown
+X-CTCH-VOD: Unknown
+X-CTCH-Flags: : 0
+X-CTCH-RefID: str=0001.0A160205.53A579E8.00B3, ss=1, re=0.000, recu=0.000,
+	reip=0.000, cl=1, cld=1, fgs=0
+X-REDF-OSEN: pandey_himanshu80@rediffmail.com
+Date: 21 Jun 2014 12:26:16 -0000
+Message-ID: <20140621122616.19509.qmail@f4mail-235-223.rediffmail.com>
 MIME-Version: 1.0
-X-AntiAbuse: This header was added to track abuse,
-	please include it with any abuse report
-X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Subject: [PATCH v2] bitbake-user-manual-intro.xml: Grammar/editing tweaks.
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Received: from unknown 122.177.232.157 by rediffmail.com via HTTP;
+	21 Jun 2014 12:26:16 -0000
+Sender: pandey_himanshu80@rediffmail.com
+From: "Himanshu  Pandey" <pandey_himanshu80@rediffmail.com>
+Subject: Hi
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,167 +43,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 21 Jun 2014 11:24:28 -0000
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-List-Received-Date: Sat, 21 Jun 2014 12:39:13 -0000
+Content-Type: multipart/alternative;
+	boundary="=_7796f35a9f327c249d7493dbfa80684e"
 
+--=_7796f35a9f327c249d7493dbfa80684e
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 
-Minor fixes mostly involving grammar adjustments.
+Hi,
+I have a requirement that once the .tar.bz2 is created I want my shell script to be executed finally.&nbsp;
+So where do I have to add this?
+So what I have to do in order to achieve this. &nbsp;
+Regards,Himanshu Pandey
 
-Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
+--=_7796f35a9f327c249d7493dbfa80684e
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset="UTF-8"
 
----
+<div>Hi,</div><div><br></div><div>I have a requirement that once the .tar.b=
+z2 is created I want my shell script to be executed finally.&nbsp;</div><di=
+v><br></div><div>So where do I have to add this?</div><div><br></div><div>S=
+o what I have to do in order to achieve this. &nbsp;</div><div><br></div><d=
+iv>Regards,</div><div>Himanshu Pandey</div><br><A HREF=3D"http://sigads.red=
+iff.com/RealMedia/ads/click_nx.ads/www.rediffmail.com/signatureline.htm@Mid=
+dle?" target=3D"_blank"><IMG SRC=3D"http://sigads.rediff.com/RealMedia/ads/=
+adstream_nx.ads/www.rediffmail.com/signatureline.htm@Middle"></A><table cel=
+lpadding=3D"0" cellspacing=3D"0"><tbody><tr><td><div style=3D"font-family: =
+Arial, Helvetica, sans-serif; font-size:14px">Get your own <span style=3D"p=
+adding-bottom: 0px; background-color: #cc0000; padding-left: 3px; padding-R=
+IGHT: 3px; font-family: Arial, Helvetica, sans-serif; color: #ffffff; font-=
+size: 12px; padding-top: 0px"><b>FREE</b></span> website,  <span style=3D"p=
+adding-bottom: 0px; background-color: #c00; padding-left: 3px; padding-RIGH=
+T: 3px; font-family: Arial, Helvetica, sans-serif; color: #ffffff; font-siz=
+e: 12px; padding-top: 0px"><b>FREE</b></span> domain &amp; <span style=3D"p=
+adding-bottom: 0px; background-color: #c00; padding-left: 3px; padding-RIGH=
+T: 3px; font-family: Arial, Helvetica, sans-serif; color: #ffffff; font-siz=
+e: 12px; padding-top: 0px"><b>FREE</b></span> mobile app with Company email=
+. &nbsp;</div></td><td><a href=3D"http://track.rediff.com/click?url=3D___ht=
+tp://businessemail.rediff.com/email-ids-for-companies-with-less-than-50-emp=
+loyees?sc_cid=3Dsign-1-10-13___&cmp=3Dhost&lnk=3Dsign-1-10-13&nsrv1=3Dhost"=
+ style=3D"font-family: Arial, Helvetica, sans-serif; color: #fff; font-size=
+: 14px; color:#0000cc" target=3D"_blank"><b>Know More ></b></a><!-- <in-put=
+ type=3D"button" cl-ass=3D"button" on-click=3D"parent.location=3D&#39;http:=
+//track.rediff.com/click?url=3D___http://businessemail.rediff.com/company-e=
+mail-hosting-services?sc_cid=3Dsignature-23-9-13___&amp;cmp=3Dsignature-23-=
+9-13&amp;lnk=3Dmypagelogout&amp;nsrv1=3Dhost&#39;" value=3D"Know more &gt;"=
+> </input> --></td></tr></tbody></table>
 
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.xml b/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
-index ae267b4..b639027 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
-@@ -8,9 +8,9 @@
-         Welcome to the BitBake User Manual.
-         This manual provides information on the BitBake tool.
-         The information attempts to be as independent as possible regarding
--        systems that use BitBake, such as the Yocto Project and
--        OpenEmbedded.
--        In some cases, scenarios or examples that within the context of
-+        systems that use BitBake, such as OpenEmbedded and the
-+        Yocto Project.
-+        In some cases, scenarios or examples within the context of
-         a build system are used in the manual to help with understanding.
-         For these cases, the manual clearly states the context.
-     </para>
-@@ -36,6 +36,7 @@
-                     BitBake executes tasks according to provided
-                     metadata that builds up the tasks.
-                     Metadata is stored in recipe (<filename>.bb</filename>),
-+                    recipe "append" (<filename>.bbappend</filename>),
-                     configuration (<filename>.conf</filename>), and class
-                     (<filename>.bbclass</filename>) files and provides
-                     BitBake with instructions on what tasks to run and
-@@ -43,19 +44,19 @@
-                     </para></listitem>
-                 <listitem><para>
-                     BitBake includes a fetcher library for obtaining source
--                    code from various places such as source control
-+                    code from various places such as local files, source control
-                     systems or websites.
-                     </para></listitem>
-                 <listitem><para>
-                     The instructions for each unit to be built (e.g. a piece
--                    of software) are known as recipe files and
-+                    of software) are known as "recipe" files and
-                     contain all the information about the unit
-                     (dependencies, source file locations, checksums, description
-                     and so on).
-                     </para></listitem>
-                 <listitem><para>
-                     BitBake includes a client/server abstraction and can
--                    be used from a command line or used as a service over XMLRPC and
-+                    be used from a command line or as a service over XMLRPC and
-                     has several different user interfaces.
-                     </para></listitem>
-             </itemizedlist>
-@@ -88,7 +89,7 @@
-             an aspiring embedded Linux distribution.
-             All of the build systems used by traditional desktop Linux
-             distributions lacked important functionality, and none of the
--            ad-hoc Buildroot-based systems, prevalent in the
-+            ad hoc Buildroot-based systems, prevalent in the
-             embedded space, were scalable or maintainable.
-         </para>
-
-@@ -178,8 +179,8 @@
-             what tasks are required to run, and executes those tasks.
-             Similar to GNU Make, BitBake controls how software is
-             built.
--            GNU Make achieves its control through "makefiles".
--            BitBake uses "recipes".
-+            GNU Make achieves its control through "makefiles";
-+            BitBake uses "recipe files".
-         </para>
-
-         <para>
-@@ -205,12 +206,12 @@
-                 <itemizedlist>
-                     <listitem><para>Descriptive information about the package</para></listitem>
-                     <listitem><para>The version of the recipe</para></listitem>
--                    <listitem><para>Existing Dependencies</para></listitem>
--                    <listitem><para>Where the source code resides</para></listitem>
-+                    <listitem><para>Existing dependencies</para></listitem>
-+                    <listitem><para>Where the source code resides and how to fetch it</para></listitem>
-                     <listitem><para>Whether the source code requires any patches</para></listitem>
--                    <listitem><para>How to compile the source code</para></listitem>
-+                    <listitem><para>How to configure and compile the source code</para></listitem>
-                     <listitem><para>Where on the target machine to install the
--                        package being compiled</para></listitem>
-+                        package(s) being compiled</para></listitem>
-                 </itemizedlist>
-             </para>
-
-@@ -242,7 +243,7 @@
-                 The main configuration file is the sample
-                 <filename>bitbake.conf</filename> file, which is
-                 located within the BitBake source tree
--                <filename>conf</filename> directory.
-+                <filename>conf/</filename> directory.
-             </para>
-         </section>
-
-@@ -256,8 +257,8 @@
-                 The BitBake source tree currently comes with one class metadata file
-                 called <filename>base.bbclass</filename>.
-                 You can find this file in the
--                <filename>classes</filename> directory.
--                The <filename>base.bbclass</filename> is special since it
-+                <filename>classes/</filename> directory.
-+                The <filename>base.bbclass</filename> class file is special since it
-                 is always included automatically for all recipes
-                 and classes.
-                 This class contains definitions for standard basic tasks such
-@@ -284,7 +285,7 @@
-                 To illustrate how you can use layers to keep things modular,
-                 consider customizations you might make to support a specific target machine.
-                 These types of customizations typically reside in a special layer,
--                rather than a general layer, called a Board Specific Package (BSP) Layer.
-+                rather than a general layer, called a Board Support Package (BSP) Layer.
-                 Furthermore, the machine customizations should be isolated from
-                 recipes and metadata that support a new GUI environment, for
-                 example.
-@@ -304,9 +305,8 @@
-
-             <para>
-                 Append files, which are files that have the
--                <filename>.bbappend</filename> file extension, add or
--                extend build information to an existing
--                recipe file.
-+                <filename>.bbappend</filename> file extension, extend or
-+                override information in an existing recipe file.
-             </para>
-
-             <para>
-@@ -559,14 +559,14 @@
-                     when one wants to manage multiple <filename>.bb</filename>
-                     files.
-                     Clearly there needs to be a way to tell BitBake what
--                    files are available, and of those, which you
-+                    files are available and, of those, which you
-                     want to execute.
-                     There also needs to be a way for each recipe
-                     to express its dependencies, both for build-time and
-                     runtime.
-                     There must be a way for you to express recipe preferences
-                     when multiple recipes provide the same functionality, or when
--                    there are multiple versions of a  recipe.
-+                    there are multiple versions of a recipe.
-                 </para>
-
-                 <para>
-
--- 
-
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
-
+--=_7796f35a9f327c249d7493dbfa80684e--
