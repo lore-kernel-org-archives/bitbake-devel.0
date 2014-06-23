@@ -1,31 +1,29 @@
-Return-Path: <rpjday@crashcourse.ca>
-Received: from astoria.ccjclearline.com (astoria.ccjclearline.com
-	[64.235.106.9])
-	by mail.openembedded.org (Postfix) with ESMTP id 3E58F6AB50
+Return-Path: <Wenlin.Kang@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 68E1766007
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 22 Jun 2014 14:50:47 +0000 (UTC)
-Received: from [99.240.204.5] (port=33184 helo=crashcourse.ca)
-	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES128-SHA:128)
-	(Exim 4.80) (envelope-from <rpjday@crashcourse.ca>)
-	id 1Wyj6V-0008Td-A3 for bitbake-devel@lists.openembedded.org;
-	Sun, 22 Jun 2014 10:50:47 -0400
-Date: Sun, 22 Jun 2014 10:47:01 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@localhost
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Message-ID: <alpine.LFD.2.11.1406221041150.4008@localhost>
-User-Agent: Alpine 2.11 (LFD 23 2013-08-11)
+	Mon, 23 Jun 2014 07:12:34 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.14.5/8.14.5) with ESMTP id s5N7CYaU003391
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 23 Jun 2014 00:12:35 -0700 (PDT)
+Received: from [128.224.162.182] (128.224.162.182) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.169.1;
+	Mon, 23 Jun 2014 00:12:34 -0700
+Message-ID: <53A7D358.6000605@windriver.com>
+Date: Mon, 23 Jun 2014 15:12:24 +0800
+From: Wenlin Kang <wenlin.kang@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:24.0) Gecko/20100101 Thunderbird/24.5.0
 MIME-Version: 1.0
-X-AntiAbuse: This header was added to track abuse,
-	please include it with any abuse report
-X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Subject: bitbake user manual: "Variable Flags" section seems to need updating
+To: <bitbake-devel@lists.openembedded.org>
+References: <1402455340-29531-1-git-send-email-wenlin.kang@windriver.com>
+	<5398120C.7040001@windriver.com>
+In-Reply-To: <5398120C.7040001@windriver.com>
+X-Originating-IP: [128.224.162.182]
+Subject: Re: [PATCH] fetch2/svn.py: fix Unable to fetch URL bug
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,38 +36,69 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 22 Jun 2014 14:50:48 -0000
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-List-Received-Date: Mon, 23 Jun 2014 07:12:36 -0000
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+
+On 2014年06月11日 16:23, Wenlin Kang wrote:
+> On 2014年06月11日 10:55, Wenlin Kang wrote:
+>> The testing steps and instructions:
+>>
+>> First, we need to create a svn server on the server side, eg, my is 
+>> svnroot
+>> $svnadmin create ~/workspace/svnroot
+>>
+>> Second, on the client side:
+>> $mkdir -p ~/workspace/svntest
+>> $cd ~/workspace/svntest
+>> $mkdir -p test/{trunk,branches,tag}
+>> $mkdir -p test/trunk/tdir0/tdir1/tdir2
+>> $touch test/trunk/hello.c
+>> $touch test/trunk/tdir0/tdir1/tdir2/test2.c
+>> $touch test/trunk/tdir0/tdir1/test1.c
+>> $touch test/trunk/tdir0/test0.c
+>>
+>> $svn import -m "create the project test" test/ 
+>> svn://xxx.xxx.xxx.xxx/svnroot/test
+>>
+>> Then, make some commit,...
+>> Such, we now get "r15"
+>>
+>> $svn cp -m "create a branch test_debug-1.0" 
+>> svn://xxx.xxx.xxx.xxx/svnroot/test/trunk 
+>> svn://xxx.xxx.xxx.xxx/svnroot/test/branches/test_debug-1.0
+>>
+>> Now, we need to create a bb file(eg,mytest.bb) to download "tdir1" 
+>> with the verion < test_debug-1.0 created time version,
+>> eg, download r12, then in bb file has:
+>>
+>> SRCREV = "12"
+>> SRC_URI = 
+>> "svn://xxx.xxx.xxx.xxx/svnroot/test/branches/test_debug-1.0;module=test0/tdir1"
+>
+> Replace "module=test0/tdir1" with "module=tdir0/tdir1"
+>
+> //Wenlin
+>
+>> Last, run fetch for mytest.bb
+>>
+>> Wenlin Kang (1):
+>>    fetch2/svn.py: fix Unable to fetch URL bug
+>>
+>>   lib/bb/fetch2/svn.py |    3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>
+>
 
 
-  the "Variable Flags" section of the bitbake user manual seems to be
-incomplete:
+ping
 
-http://www.yoctoproject.org/docs/1.6/bitbake-user-manual/bitbake-user-manual.html#variable-flags
 
-at the very least, i see additional task flags such as "selfstamp",
-"lockfiles", "stamp-base" and more, just from having stumbled across
-this:
-
-lib/toaster/orm/fixtures/orm_views_testdata.json:
-"variable_value": "doc defaultval _append _prepend deps depends
-lockfiles type vardepsexclude vardeps vardepvalue file-checksums
-python func task export unexport noexec nostamp dirs cleandirs
-sstate-lockfile-shared prefuncs postfuncs export_func deptask rdeptask
-recrdeptask nodeprrecs stamp-base stamp-extra-info",
-
-but i don't know enough about some of those flags to know what to add
-for them (if anything).
-
-rday
+// Wenlin
 
 -- 
+Thanks,
+Wenlin Kang
 
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
 
