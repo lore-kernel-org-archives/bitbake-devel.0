@@ -1,29 +1,26 @@
-Return-Path: <Wenlin.Kang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 68E1766007
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 20A9B60E24
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 23 Jun 2014 07:12:34 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.5) with ESMTP id s5N7CYaU003391
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 23 Jun 2014 00:12:35 -0700 (PDT)
-Received: from [128.224.162.182] (128.224.162.182) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.169.1;
-	Mon, 23 Jun 2014 00:12:34 -0700
-Message-ID: <53A7D358.6000605@windriver.com>
-Date: Mon, 23 Jun 2014 15:12:24 +0800
-From: Wenlin Kang <wenlin.kang@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:24.0) Gecko/20100101 Thunderbird/24.5.0
+	Wed, 25 Jun 2014 13:56:57 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 25 Jun 2014 06:51:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.01,546,1400050800"; d="scan'208";a="563225337"
+Received: from unknown (HELO peggleto-mobl5.ger.corp.intel.com)
+	([10.252.121.119])
+	by orsmga002.jf.intel.com with ESMTP; 25 Jun 2014 06:56:08 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: "Robert P. J. Day" <rpjday@crashcourse.ca>
+Date: Wed, 25 Jun 2014 14:56:07 +0100
+Message-ID: <1917643.yKPVX7CVPo@peggleto-mobl5.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.12.5 (Linux/3.14.8-200.fc20.x86_64; KDE/4.12.5; x86_64; ; )
+In-Reply-To: <alpine.LFD.2.11.1406220832520.1583@localhost>
+References: <alpine.LFD.2.11.1406220832520.1583@localhost>
 MIME-Version: 1.0
-To: <bitbake-devel@lists.openembedded.org>
-References: <1402455340-29531-1-git-send-email-wenlin.kang@windriver.com>
-	<5398120C.7040001@windriver.com>
-In-Reply-To: <5398120C.7040001@windriver.com>
-X-Originating-IP: [128.224.162.182]
-Subject: Re: [PATCH] fetch2/svn.py: fix Unable to fetch URL bug
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: can someone explain "git" versus "gitr" wrt PREFERRED_VERSION?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,69 +33,79 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 23 Jun 2014 07:12:36 -0000
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Wed, 25 Jun 2014 13:57:01 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On 2014年06月11日 16:23, Wenlin Kang wrote:
-> On 2014年06月11日 10:55, Wenlin Kang wrote:
->> The testing steps and instructions:
->>
->> First, we need to create a svn server on the server side, eg, my is 
->> svnroot
->> $svnadmin create ~/workspace/svnroot
->>
->> Second, on the client side:
->> $mkdir -p ~/workspace/svntest
->> $cd ~/workspace/svntest
->> $mkdir -p test/{trunk,branches,tag}
->> $mkdir -p test/trunk/tdir0/tdir1/tdir2
->> $touch test/trunk/hello.c
->> $touch test/trunk/tdir0/tdir1/tdir2/test2.c
->> $touch test/trunk/tdir0/tdir1/test1.c
->> $touch test/trunk/tdir0/test0.c
->>
->> $svn import -m "create the project test" test/ 
->> svn://xxx.xxx.xxx.xxx/svnroot/test
->>
->> Then, make some commit,...
->> Such, we now get "r15"
->>
->> $svn cp -m "create a branch test_debug-1.0" 
->> svn://xxx.xxx.xxx.xxx/svnroot/test/trunk 
->> svn://xxx.xxx.xxx.xxx/svnroot/test/branches/test_debug-1.0
->>
->> Now, we need to create a bb file(eg,mytest.bb) to download "tdir1" 
->> with the verion < test_debug-1.0 created time version,
->> eg, download r12, then in bb file has:
->>
->> SRCREV = "12"
->> SRC_URI = 
->> "svn://xxx.xxx.xxx.xxx/svnroot/test/branches/test_debug-1.0;module=test0/tdir1"
->
-> Replace "module=test0/tdir1" with "module=tdir0/tdir1"
->
-> //Wenlin
->
->> Last, run fetch for mytest.bb
->>
->> Wenlin Kang (1):
->>    fetch2/svn.py: fix Unable to fetch URL bug
->>
->>   lib/bb/fetch2/svn.py |    3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->
->
+Hi Robert,
+
+On Sunday 22 June 2014 08:52:08 Robert P. J. Day wrote:
+>   possibly a stupid question but i've never let that stop me before.
+> still rummaging around in the bitbake user manual and looking through
+> the oe and poky codebase, and i notice examples like this (from poky).
+> 
+>   first, there's the recipe and PREFERRED_VERSION for drm:
+> 
+> meta/recipes-graphics/drm/libdrm_git.bb:
+>   SRCREV = "e01d68f9f3acfc35fe164283904b5d058c2ab378"
+>   PV = "2.4.40+git${SRCPV}"
+> 
+> meta-yocto/conf/distro/include/poky-floating-revisions.inc:
+>   #PREFERRED_VERSION_libdrm ?= "2.4.0+git${SRCREV}"
+> 
+>   also, the recipe and PFEFERRED_VERSION for libxcb:
+> 
+> meta/recipes-graphics/xorg-lib/libxcb_git.bb:
+>   SRCREV = "625ed596cae6dd8175aeb6cb6f26784928042f22"
+>   PV = "1.1.90.1+gitr${SRCPV}"
+> 
+> meta-yocto/conf/distro/include/poky-floating-revisions.inc:
+>   #PREFERRED_VERSION_libxcb ?= "1.1.90.1+gitr${SRCREV}"
+> 
+> 
+>   admittedly, the PREFERRED_VERSION settings for both of those are
+> commented out
+
+It's a good job that they are by the way, because a ${SRCREV} reference in 
+PREFERRED_VERSION absolutely will not work. (We have % wildcard support in 
+PREFERRED_VERSION to handle this situation.) 
 
 
-ping
+> , but why does the first use:
+> 
+>   git${SRCREV}
+> 
+> while the second uses:
+> 
+>   gitr${SRCREV}
+> 
+> so what's with "git" versus "gitr"? i see no mention of this in the
+> bitbake user manual (would that be the right place to explain that?).
+> or is that covered in one of the higher-level yocto manuals?
 
+gitr in PV is an old convention. I don't think it really warrants explanation, 
+just use the current convention.
 
-// Wenlin
+>   also (and i realize this is outside the scope of the bitbake
+> manual), i noticed the meta-oe layer adds another git-based version
+> selector in the gitpkgv.bbclass. is *that* documented anywhere? i
+> don't see a single mention of the phrase "gitpkgv" in any of the
+> current yocto docs.
+
+Generally the Yocto Project manuals confine themselves to the things that the 
+Yocto Project contributes to, and meta-oe isn't one of those things (at least, 
+not directly or on a regular basis). So we wouldn't document gitpkgv.bbclass 
+there. FWIW, people have asked for that class to be moved to OE-Core but 
+Richard would prefer to implement it properly as an extension to the fetcher; 
+we still have an enhancement bug open for that if anyone wants to dig into it:
+
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=2872
+
+Cheers,
+Paul
 
 -- 
-Thanks,
-Wenlin Kang
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
