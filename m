@@ -1,30 +1,30 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 7D27360E24
+Return-Path: <amit.k.chaudhuri@gmail.com>
+Received: from mail-vc0-f171.google.com (mail-vc0-f171.google.com
+	[209.85.220.171])
+	by mail.openembedded.org (Postfix) with ESMTP id DF1A760889
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 27 Jun 2014 10:59:19 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s5RAx9do025457; Fri, 27 Jun 2014 11:59:09 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id CVIBVuEM791T; Fri, 27 Jun 2014 11:59:09 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s5RAx36v025453
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
-	Fri, 27 Jun 2014 11:59:05 +0100
-Message-ID: <1403866737.28648.6.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Dr. Markus Eich" <markus.eich@dfki.de>
-Date: Fri, 27 Jun 2014 11:58:57 +0100
-In-Reply-To: <53AD22C1.8010602@dfki.de>
-References: <53AD22C1.8010602@dfki.de>
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: Bitbake: error in cachedpath.py
+	Sun, 29 Jun 2014 09:17:16 +0000 (UTC)
+Received: by mail-vc0-f171.google.com with SMTP id id10so6510293vcb.30
+	for <bitbake-devel@lists.openembedded.org>;
+	Sun, 29 Jun 2014 02:17:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:date:message-id:subject:from:to:content-type;
+	bh=WRIWjtrsdv6is+s9b5kRExowl6hzsUVUPOotNQl1DU8=;
+	b=B1pn//AxaLGgVZ/8X6hVPbVFVtupnyVa/Kk0FT0n0fqBtjjPNFCPmaR43u7n1TEM+k
+	aRVNh32Lig5efTkMjRtokYQQkIvE56W0aRf7UHSgbn9rmFWbPn5O+bS6EsEnntNedicc
+	HHnU6ma40epDfucM4nazIAZKA1T7bHQxkCoyMEmnHkyvLhce3+zsEdgNDH8moRVw5Xsp
+	bdMs/86D0q+PBtZJAgsWsZsSsOhKHh6hS6W8XMbEuHS1kvSWBEzSHB6p+uas//6N9V4Q
+	4BKoRz4BS01E9fUMQVa0RUikjAoMKeQ9AdYJlhbb7aXWVFlzYrqgVJHqOb5LfNmLwt+3
+	0tfw==
+MIME-Version: 1.0
+X-Received: by 10.220.53.72 with SMTP id l8mr31426867vcg.16.1404033437687;
+	Sun, 29 Jun 2014 02:17:17 -0700 (PDT)
+Received: by 10.58.46.193 with HTTP; Sun, 29 Jun 2014 02:17:17 -0700 (PDT)
+Date: Sun, 29 Jun 2014 10:17:17 +0100
+Message-ID: <CAH=VbNfK1qPSY3bBK-T4S9PheUj-P+KLRZMS6ewWGZxkpET5JA@mail.gmail.com>
+From: Amit Chaudhuri <amit.k.chaudhuri@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: AttributeError: 'SignatureGenerator' object has no attribute 'file_checksum_values'
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,112 +37,92 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 27 Jun 2014 10:59:25 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sun, 29 Jun 2014 09:17:18 -0000
+Content-Type: text/plain; charset=UTF-8
 
-On Fri, 2014-06-27 at 09:52 +0200, Dr. Markus Eich wrote:
-> Dear all,
-> 
-> I am setting up Yocto to compile my kernel for odroid xu. During the 
-> package phase of building the kernel, I get an error in cachedpath.py
-> 
-> ================
-> 
-> DEBUG: Executing python function sstate_task_prefunc
-> DEBUG: Python function sstate_task_prefunc finished
-> DEBUG: Executing python function do_package
-> DEBUG: Executing python function package_get_auto_pr
-> DEBUG: Python function package_get_auto_pr finished
-> DEBUG: Executing python function perform_packagecopy
-> DEBUG: Python function perform_packagecopy finished
-> DEBUG: Executing python function split_and_strip_files
-> ERROR: Error executing a python function in 
-> /home/eich/yocto/poky/meta-odroid/recipes-kernel/linux/linux-hardkernel_3.4.bb:
-> 
-> The stack trace of python calls that resulted in this exception/failure 
-> was:
-> File: 'split_and_strip_files', lineno: 222, function: <module>
->       0218:    # End of strip
->       0219:    #
->       0220:
->       0221:
->   *** 0222:split_and_strip_files(d)
->       0223:
-> File: 'split_and_strip_files', lineno: 85, function: split_and_strip_files
->       0081:                if debugdir and debugdir in 
-> os.path.dirname(file[len(dvar):]):
->       0082:                    continue
->       0083:
->       0084:                try:
->   *** 0085:                    ltarget = cpath.realpath(file, dvar, False)
->       0086:                    s = cpath.lstat(ltarget)
->       0087:                except OSError as e:
->       0088:                    (err, strerror) = e.args
->       0089:                    if err != errno.ENOENT:
-> File: '/home/eich/yocto/poky/meta/lib/oe/cachedpath.py', lineno: 229, 
-> function: realpath
->       0225:                # be printed a backtrace with 100s of OSError 
-> exceptions
->       0226:                # else
->       0227:                raise OSError(errno.ELOOP,
->       0228:                              "too much recursions while 
-> resolving '%s'; loop in '%s'" %
->   *** 0229:                              (file, e.strerror))
->       0230:
->       0231:            raise
->       0232:
->       0233:        return file
-> Exception: OSError: [Errno 40] too much recursions while resolving 
-> '/home/eich/odroid/build/tmp/work/odroid_xu-poky-linux-gnueabi/linux-hardkernel/3.4-r0/package/usr/src/kernel/drivers/gpu/arm/mali400/ump/arch/arch-release'; 
-> loop in 
-> '/home/eich/odroid/build/tmp/work/odroid_xu-poky-linux-gnueabi/linux-hardkernel/3.4-r0/package/usr/src/kernel/drivers/gpu/arm/mali400/ump/arch/arch-release'
-> 
-> DEBUG: Python function split_and_strip_files finished
-> DEBUG: Python function do_package finished
-> ERROR: Function failed: split_and_strip_files
-> 
-> ====================
-> 
-> Seems that the path is to deep?
-> 
-> To track the error, I have attached my kernel.bb
-> 
-> 
-> ==================
-> require recipes-kernel/linux/linux-yocto.inc
-> 
-> KERNEL_IMAGETYPE = "uImage"
-> 
-> COMPATIBLE_MACHINE = "odroid-xu"
-> 
-> LINUX_VERSION = "3.4.91"
-> LINUX_VERSION_EXTENSION = "-custom"
-> 
-> FILESEXTRAPATHS_prepend := "${THISDIR}/linux-hardkernel-3.4:"
-> 
-> S = "${WORKDIR}/git"
-> 
-> # from where to fetch the kernel
-> KERNEL_REPO_OWNER ??= "hardkernel"
-> KERNEL_REPO_URI ??= "git://github.com/${KERNEL_REPO_OWNER}/linux.git"
-> KBRANCH = "odroidxu-3.4.y"
-> 
-> SRCREV = "${AUTOREV}"
-> 
-> SRC_URI = " \
->    ${KERNEL_REPO_URI};nocheckout=1;branch=${KBRANCH} \
-> file://defconfig \
-> "
-> 
-> 
-> Any ideas ?
+Hi all,
 
-It sounds like you have recursive symlinks which just loop between each
-other...
+I am following the "Hello World" example from
+yoctoproject.org/docs/1.6/bitbake-user-manual/bitbake-user-manual.html#the-hello-world-example.
 
-Cheers,
+I have sourced the oe-init-build-env script.
 
-Richard
+I get an error message when trying to execute the bitbake printhello
+command from my project dir.  Command and output here:
 
+amit@linux-erag:~/hello> bitbake printhello
+Parsing recipes: 100%
+|##############################################################################################|
+Time: 00:00:00
+Parsing of 1 .bb files complete (0 cached, 1 parsed). 1 targets, 0
+skipped, 0 masked, 0 errors.
+NOTE: Resolving any missing task queue dependencies
+NOTE: Preparing runqueue
+ERROR: An uncaught exception occured in runqueue, please see the failure below:
+ERROR: Running idle function
+Traceback (most recent call last):
+  File "/home/amit/poky/bitbake/lib/bb/cooker.py", line 1169, in
+buildTargetsIdle(server=<ProcessServer(ProcessServer-2, started)>,
+rq=<bb.runqueue.RunQueue instance at 0x1941050>, abort=False):
+                 try:
+    >                retval = rq.execute_runqueue()
+                 except runqueue.TaskFailure as exc:
+  File "/home/amit/poky/bitbake/lib/bb/runqueue.py", line 1065, in
+RunQueue.execute_runqueue():
+             try:
+    >            return self._execute_runqueue()
+             except bb.runqueue.TaskFailure:
+  File "/home/amit/poky/bitbake/lib/bb/runqueue.py", line 1020, in
+RunQueue._execute_runqueue():
+                 else:
+    >                self.start_worker()
+                     self.rqexe = RunQueueExecuteScenequeue(self)
+  File "/home/amit/poky/bitbake/lib/bb/runqueue.py", line 898, in
+RunQueue.start_worker():
+                 self.teardown_workers()
+    >        self.worker, self.workerpipe = self._start_worker()
+
+  File "/home/amit/poky/bitbake/lib/bb/runqueue.py", line 864, in
+RunQueue._start_worker(fakeroot=False, rqexec=None):
+                 "hash_deps" : self.rqdata.hash_deps,
+    >            "sigchecksums" : bb.parse.siggen.file_checksum_values,
+                 "runq_hash" : self.rqdata.runq_hash,
+AttributeError: 'SignatureGenerator' object has no attribute
+'file_checksum_values'
+
+NOTE: Tasks Summary: Attempted 0 tasks of which 0 didn't need to be
+rerun and all succeeded.
+
+Summary: There were 2 ERROR messages shown, returning a non-zero exit code.
+
+Bitbake version is:
+
+BitBake Build Tool Core version 1.20.0, bitbake version 1.20.0
+
+OS details:
+
+cat /etc/os-release
+NAME=openSUSE
+VERSION="13.1 (Bottle)"
+VERSION_ID="13.1"
+PRETTY_NAME="openSUSE 13.1 (Bottle) (x86_64)"
+ID=opensuse
+ANSI_COLOR="0;32"
+CPE_NAME="cpe:/o:opensuse:opensuse:13.1"
+BUG_REPORT_URL="https://bugs.opensuse.org"
+HOME_URL="https://opensuse.org/"
+ID_LIKE="suse"
+
+The only difference I can see between example and my attempt is the
+layer name (testlayer vs mylayer) and I've checked that I am being
+consistent.
+
+The error message suggests to me that there's a versioning problem on
+the SignatureGenerator.
+
+Can anyone point me in the right direction here?
+Happy to provide additional info (e.g. strace).
+
+Regards,
+Amit
 
