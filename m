@@ -1,27 +1,34 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id B173B6059A
+Return-Path: <pandey_himanshu80@rediffmail.com>
+Received: from f4mail-83-110.rediffmail.com (unknown [203.199.83.110])
+	by mail.openembedded.org (Postfix) with ESMTP id 8F7956AD02
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 30 Jun 2014 03:38:13 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail1.windriver.com (8.14.5/8.14.5) with ESMTP id s5U3cCqS015887
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Sun, 29 Jun 2014 20:38:12 -0700 (PDT)
-Received: from [128.224.162.181] (128.224.162.181) by ALA-HCB.corp.ad.wrs.com
-	(147.11.189.41) with Microsoft SMTP Server id 14.3.174.1;
-	Sun, 29 Jun 2014 20:38:11 -0700
-Message-ID: <53B0DBA2.3010307@windriver.com>
-Date: Mon, 30 Jun 2014 11:38:10 +0800
-From: Robert Yang <liezhi.yang@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
-	rv:24.0) Gecko/20100101 Thunderbird/24.6.0
+	Wed,  2 Jul 2014 07:36:31 +0000 (UTC)
+Received: from rediffmail.com (unknown [10.50.250.70])
+	by f4mail-83-110.rediffmail.com (Postfix) with SMTP id C5CAE3082032
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed,  2 Jul 2014 12:57:42 +0530 (IST)
+Received: (qmail 25688 invoked by uid 510); 2 Jul 2014 07:36:05 -0000
+Comment: DomainKeys? See http://antispam.yahoo.com/domainkeys
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; s=redf; d=rediffmail.com;
+	b=gy2gPS6kdm7KNHRx64jTUj4JOXA+/cehOX+86RfOxFJRGKwXKQow21S5D1/pLUz+d9rWGUwcS0i24ZnGfxlk6NP9ho74l7j1w8PP2di6JMt/haBRpHBYh4wq3r1va56nPCyvsERZKNO5MF+3rtRSAU3ffF/P7KJC5eu4lkjbEz0=
+	; 
+x-m-msg: asd54ad564ad7aa6sd5as6d5; a6da7d6asas6dasd77; 5dad65ad5sd;
+X-CTCH-Spam: Unknown
+X-CTCH-VOD: Unknown
+X-CTCH-Flags: : 0
+X-CTCH-RefID: str=0001.0A150202.53B3B665.010C, ss=1, re=0.000, recu=0.000,
+	reip=0.000, cl=1, cld=1, fgs=0
+X-REDF-OSEN: pandey_himanshu80@rediffmail.com
+Date: 2 Jul 2014 07:36:04 -0000
+Message-ID: <20140702073604.25636.qmail@f4mail-235-146.rediffmail.com>
 MIME-Version: 1.0
-To: Amit Chaudhuri <amit.k.chaudhuri@gmail.com>,
+To: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
-References: <CAH=VbNfK1qPSY3bBK-T4S9PheUj-P+KLRZMS6ewWGZxkpET5JA@mail.gmail.com>
-In-Reply-To: <CAH=VbNfK1qPSY3bBK-T4S9PheUj-P+KLRZMS6ewWGZxkpET5JA@mail.gmail.com>
-Subject: Re: AttributeError: 'SignatureGenerator' object has no attribute 'file_checksum_values'
+Received: from unknown 103.25.205.2 by rediffmail.com via HTTP;
+	02 Jul 2014 07:36:04 -0000
+Sender: pandey_himanshu80@rediffmail.com
+From: "Himanshu  Pandey" <pandey_himanshu80@rediffmail.com>
+Subject: Regarding Net-Snmp package
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,113 +41,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 30 Jun 2014 03:38:15 -0000
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+X-List-Received-Date: Wed, 02 Jul 2014 07:36:36 -0000
+Content-Type: multipart/alternative;
+	boundary="=_5c566bd532233981903c27b21fda2b18"
+
+--=_5c566bd532233981903c27b21fda2b18
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+
+Hi,
+
+I am getting following errors:
+
+Error: net-snmp not found in the base feeds (genericx86_64 x86_64 noarch any all).
+
+sed: can't read /home/yocto/poky-dora-10.0.0/build/tmp/work/x86_64-poky-linux/net-snmp/5.7.2-r1/image/usr/bin/net-snmp-config: No such file or directory
+
+Please help.
+
+Regards,
+Himanshu
 
 
-Hello,
+--=_5c566bd532233981903c27b21fda2b18
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset="UTF-8"
 
-What's version of bitbake are you using, please ?
+Hi,<br><br>I am getting following errors:<br><br>Error: net-snmp not found =
+in the base feeds (genericx86_64 x86_64 noarch any all).<br><br>sed: can't =
+read /home/yocto/poky-dora-10.0.0/build/tmp/work/x86_64-poky-linux/net-snmp=
+/5.7.2-r1/image/usr/bin/net-snmp-config: No such file or directory<br><br>P=
+lease help.<br><br>Regards,<br>Himanshu<br><br><br><A HREF=3D"http://sigads=
+.rediff.com/RealMedia/ads/click_nx.ads/www.rediffmail.com/signatureline.htm=
+@Middle?" target=3D"_blank"><IMG SRC=3D"http://sigads.rediff.com/RealMedia/=
+ads/adstream_nx.ads/www.rediffmail.com/signatureline.htm@Middle"></A><table=
+ cellpadding=3D"0" cellspacing=3D"0"><tbody><tr><td><div style=3D"font-fami=
+ly: Arial, Helvetica, sans-serif; font-size:14px">Get your own <span style=
+=3D"padding-bottom: 0px; background-color: #cc0000; padding-left: 3px; padd=
+ing-RIGHT: 3px; font-family: Arial, Helvetica, sans-serif; color: #ffffff; =
+font-size: 12px; padding-top: 0px"><b>FREE</b></span> website,  <span style=
+=3D"padding-bottom: 0px; background-color: #c00; padding-left: 3px; padding=
+-RIGHT: 3px; font-family: Arial, Helvetica, sans-serif; color: #ffffff; fon=
+t-size: 12px; padding-top: 0px"><b>FREE</b></span> domain &amp; <span style=
+=3D"padding-bottom: 0px; background-color: #c00; padding-left: 3px; padding=
+-RIGHT: 3px; font-family: Arial, Helvetica, sans-serif; color: #ffffff; fon=
+t-size: 12px; padding-top: 0px"><b>FREE</b></span> mobile app with Company =
+email. &nbsp;</div></td><td><a href=3D"http://track.rediff.com/click?url=3D=
+___http://businessemail.rediff.com/email-ids-for-companies-with-less-than-5=
+0-employees?sc_cid=3Dsign-1-10-13___&cmp=3Dhost&lnk=3Dsign-1-10-13&nsrv1=3D=
+host" style=3D"font-family: Arial, Helvetica, sans-serif; color: #fff; font=
+-size: 14px; color:#0000cc" target=3D"_blank"><b>Know More ></b></a><!-- <i=
+n-put type=3D"button" cl-ass=3D"button" on-click=3D"parent.location=3D&#39;=
+http://track.rediff.com/click?url=3D___http://businessemail.rediff.com/comp=
+any-email-hosting-services?sc_cid=3Dsignature-23-9-13___&amp;cmp=3Dsignatur=
+e-23-9-13&amp;lnk=3Dmypagelogout&amp;nsrv1=3Dhost&#39;" value=3D"Know more =
+&gt;"> </input> --></td></tr></tbody></table>
 
-$ bitbake --version
-
-Have you set BB_SIGNATURE_HANDLER ? You can try to add:
-
-BB_SIGNATURE_HANDLER = 'OEBasicHash'
-
-to con/local.conf.
-
-I think that this has been fixed even if you don't set the
-BB_SIGNATURE_HANDLER which means 'noop' in the latest bitbake.
-
-// Robert
-
-On 06/29/2014 05:17 PM, Amit Chaudhuri wrote:
-> Hi all,
->
-> I am following the "Hello World" example from
-> yoctoproject.org/docs/1.6/bitbake-user-manual/bitbake-user-manual.html#the-hello-world-example.
->
-> I have sourced the oe-init-build-env script.
->
-> I get an error message when trying to execute the bitbake printhello
-> command from my project dir.  Command and output here:
->
-> amit@linux-erag:~/hello> bitbake printhello
-> Parsing recipes: 100%
-> |##############################################################################################|
-> Time: 00:00:00
-> Parsing of 1 .bb files complete (0 cached, 1 parsed). 1 targets, 0
-> skipped, 0 masked, 0 errors.
-> NOTE: Resolving any missing task queue dependencies
-> NOTE: Preparing runqueue
-> ERROR: An uncaught exception occured in runqueue, please see the failure below:
-> ERROR: Running idle function
-> Traceback (most recent call last):
->    File "/home/amit/poky/bitbake/lib/bb/cooker.py", line 1169, in
-> buildTargetsIdle(server=<ProcessServer(ProcessServer-2, started)>,
-> rq=<bb.runqueue.RunQueue instance at 0x1941050>, abort=False):
->                   try:
->      >                retval = rq.execute_runqueue()
->                   except runqueue.TaskFailure as exc:
->    File "/home/amit/poky/bitbake/lib/bb/runqueue.py", line 1065, in
-> RunQueue.execute_runqueue():
->               try:
->      >            return self._execute_runqueue()
->               except bb.runqueue.TaskFailure:
->    File "/home/amit/poky/bitbake/lib/bb/runqueue.py", line 1020, in
-> RunQueue._execute_runqueue():
->                   else:
->      >                self.start_worker()
->                       self.rqexe = RunQueueExecuteScenequeue(self)
->    File "/home/amit/poky/bitbake/lib/bb/runqueue.py", line 898, in
-> RunQueue.start_worker():
->                   self.teardown_workers()
->      >        self.worker, self.workerpipe = self._start_worker()
->
->    File "/home/amit/poky/bitbake/lib/bb/runqueue.py", line 864, in
-> RunQueue._start_worker(fakeroot=False, rqexec=None):
->                   "hash_deps" : self.rqdata.hash_deps,
->      >            "sigchecksums" : bb.parse.siggen.file_checksum_values,
->                   "runq_hash" : self.rqdata.runq_hash,
-> AttributeError: 'SignatureGenerator' object has no attribute
-> 'file_checksum_values'
->
-> NOTE: Tasks Summary: Attempted 0 tasks of which 0 didn't need to be
-> rerun and all succeeded.
->
-> Summary: There were 2 ERROR messages shown, returning a non-zero exit code.
->
-> Bitbake version is:
->
-> BitBake Build Tool Core version 1.20.0, bitbake version 1.20.0
->
-> OS details:
->
-> cat /etc/os-release
-> NAME=openSUSE
-> VERSION="13.1 (Bottle)"
-> VERSION_ID="13.1"
-> PRETTY_NAME="openSUSE 13.1 (Bottle) (x86_64)"
-> ID=opensuse
-> ANSI_COLOR="0;32"
-> CPE_NAME="cpe:/o:opensuse:opensuse:13.1"
-> BUG_REPORT_URL="https://bugs.opensuse.org"
-> HOME_URL="https://opensuse.org/"
-> ID_LIKE="suse"
->
-> The only difference I can see between example and my attempt is the
-> layer name (testlayer vs mylayer) and I've checked that I am being
-> consistent.
->
-> The error message suggests to me that there's a versioning problem on
-> the SignatureGenerator.
->
-> Can anyone point me in the right direction here?
-> Happy to provide additional info (e.g. strace).
->
-> Regards,
-> Amit
->
-
+--=_5c566bd532233981903c27b21fda2b18--
