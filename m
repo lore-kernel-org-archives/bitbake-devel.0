@@ -1,26 +1,27 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id A69716ACC6
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 69A486084E
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  3 Jul 2014 06:27:28 +0000 (UTC)
+	Thu,  3 Jul 2014 06:34:35 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.5) with ESMTP id s636RUrf026650
+	by mail.windriver.com (8.14.5/8.14.5) with ESMTP id s636Ybng017064
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 2 Jul 2014 23:27:30 -0700 (PDT)
-Received: from pek-blade16.wrs.com (128.224.153.44) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.169.1;
-	Wed, 2 Jul 2014 23:27:26 -0700
+	Wed, 2 Jul 2014 23:34:37 -0700 (PDT)
+Received: from [128.224.162.181] (128.224.162.181) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.40) with Microsoft SMTP Server id 14.3.169.1;
+	Wed, 2 Jul 2014 23:34:36 -0700
+Message-ID: <53B4F97B.7030202@windriver.com>
+Date: Thu, 3 Jul 2014 14:34:35 +0800
 From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 3 Jul 2014 14:42:06 +0800
-Message-ID: <7361f79c4044c3a66dfa3d695611002b5abfab11.1404369560.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1404369559.git.liezhi.yang@windriver.com>
-References: <cover.1404369559.git.liezhi.yang@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux i686;
+	rv:24.0) Gecko/20100101 Thunderbird/24.6.0
 MIME-Version: 1.0
-Subject: [PATCH 3/3] bitbake: lib: fix no newline at end of file
+To: <bitbake-devel@lists.openembedded.org>
+References: <cover.1404369559.git.liezhi.yang@windriver.com>
+In-Reply-To: <cover.1404369559.git.liezhi.yang@windriver.com>
+Subject: [PATCH 1/3] toaster: fix no newline at end of file
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,8 +34,15 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 03 Jul 2014 06:27:28 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 03 Jul 2014 06:34:37 -0000
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+
+This is the [PATCH 1/3] which is too big and blocked by the mailing
+list, I just send the header here, you can get the patch from the
+PULL.
+
+// Robert
 
 Add a '\n' to the last line of the file to fix:
 
@@ -42,33 +50,19 @@ No newline at end of file
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- bitbake/lib/bb/pysh/sherrors.py | 2 +-
- bitbake/lib/prserv/__init__.py  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/bitbake/lib/bb/pysh/sherrors.py b/bitbake/lib/bb/pysh/sherrors.py
-index 1d5bd53..49d0533 100644
---- a/bitbake/lib/bb/pysh/sherrors.py
-+++ b/bitbake/lib/bb/pysh/sherrors.py
-@@ -38,4 +38,4 @@ class ExitSignal(ShellError):
-     
- class ReturnSignal(ShellError):
-     """Exit signal."""
--    pass
-\ No newline at end of file
-+    pass
-diff --git a/bitbake/lib/prserv/__init__.py b/bitbake/lib/prserv/__init__.py
-index 0e0c98b..c3cb73a 100644
---- a/bitbake/lib/prserv/__init__.py
-+++ b/bitbake/lib/prserv/__init__.py
-@@ -11,4 +11,4 @@ def init_logger(logfile, loglevel):
-     logging.basicConfig(level=numeric_level, filename=logfile, format=FORMAT)
- 
- class NotFoundError(Exception):
--    pass
-\ No newline at end of file
-+    pass
--- 
-1.8.3.1
+  bitbake/lib/toaster/bldcontrol/migrations/0001_initial.py               | 2 +-
+  bitbake/lib/toaster/bldviewer/static/css/bootstrap.css                  | 2 +-
+  bitbake/lib/toaster/orm/migrations/0001_initial.py                      | 2 +-
+  .../lib/toaster/orm/migrations/0002_auto__add_field_build_timespent.py  | 2 +-
+  .../orm/migrations/0004_auto__add_field_package_installed_name.py       | 2 +-
+  ..._add_target_image_file__add_target_file__add_field_variablehistor.py | 2 +-
+  ..._add_field_target_image_size__add_field_target_license_manifest_p.py | 2 +-
+  bitbake/lib/toaster/orm/migrations/0007_auto__add_helptext.py           | 2 +-
+  ..._chg_field_variablehistory_operation__chg_field_recipe_descriptio.py | 2 +-
+  ..._add_projectvariable__add_projectlayer__add_projecttarget__add_pr.py | 2 +-
+  bitbake/lib/toaster/toastergui/static/css/prettify.css                  | 2 +-
+  bitbake/lib/toaster/toastergui/static/js/bootstrap.min.js               | 2 +-
+  bitbake/lib/toaster/toastergui/static/js/jquery-2.0.3.min.map           | 2 +-
+  13 files changed, 13 insertions(+), 13 deletions(-)
 
 
