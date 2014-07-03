@@ -1,27 +1,30 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 69A486084E
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 9E9EE609B1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  3 Jul 2014 06:34:35 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.5) with ESMTP id s636Ybng017064
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	Thu,  3 Jul 2014 10:39:52 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s63AdmpW029236 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 3 Jul 2014 11:39:48 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id vrBRw8rzs4Xd for <bitbake-devel@lists.openembedded.org>;
+	Thu,  3 Jul 2014 11:39:48 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s63AdfN5029232
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 2 Jul 2014 23:34:37 -0700 (PDT)
-Received: from [128.224.162.181] (128.224.162.181) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.3.169.1;
-	Wed, 2 Jul 2014 23:34:36 -0700
-Message-ID: <53B4F97B.7030202@windriver.com>
-Date: Thu, 3 Jul 2014 14:34:35 +0800
-From: Robert Yang <liezhi.yang@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
-	rv:24.0) Gecko/20100101 Thunderbird/24.6.0
-MIME-Version: 1.0
-To: <bitbake-devel@lists.openembedded.org>
-References: <cover.1404369559.git.liezhi.yang@windriver.com>
-In-Reply-To: <cover.1404369559.git.liezhi.yang@windriver.com>
-Subject: [PATCH 1/3] toaster: fix no newline at end of file
+	Thu, 3 Jul 2014 11:39:43 +0100
+Message-ID: <1404383974.6362.79.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 03 Jul 2014 11:39:34 +0100
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] fetch2/svn: Add transportuser parameter
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,35 +37,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 03 Jul 2014 06:34:37 -0000
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+X-List-Received-Date: Thu, 03 Jul 2014 10:39:54 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-This is the [PATCH 1/3] which is too big and blocked by the mailing
-list, I just send the header here, you can get the patch from the
-PULL.
+There may be a need to set the user for the transport rather than the subversion
+command itself. Add a parameter to the url to allow this.
 
-// Robert
+[YOCTO #6475]
 
-Add a '\n' to the last line of the file to fix:
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-No newline at end of file
+diff --git a/bitbake/lib/bb/fetch2/svn.py b/bitbake/lib/bb/fetch2/svn.py
+index 8847461..1733c2b 100644
+--- a/bitbake/lib/bb/fetch2/svn.py
++++ b/bitbake/lib/bb/fetch2/svn.py
+@@ -101,7 +101,8 @@ class Svn(FetchMethod):
+                 suffix = "@%s" % (ud.revision)
+ 
+             if command == "fetch":
+-                svncmd = "%s co %s %s://%s/%s%s %s" % (ud.basecmd, " ".join(options), proto, svnroot, ud.module, suffix, ud.module)
++                transportuser = ud.parm.get("transportuser", "")
++                svncmd = "%s co %s %s://%s%s/%s%s %s" % (ud.basecmd, " ".join(options), proto, transportuser, svnroot, ud.module, suffix, ud.module)
+             elif command == "update":
+                 svncmd = "%s update %s" % (ud.basecmd, " ".join(options))
+             else:
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
-  bitbake/lib/toaster/bldcontrol/migrations/0001_initial.py               | 2 +-
-  bitbake/lib/toaster/bldviewer/static/css/bootstrap.css                  | 2 +-
-  bitbake/lib/toaster/orm/migrations/0001_initial.py                      | 2 +-
-  .../lib/toaster/orm/migrations/0002_auto__add_field_build_timespent.py  | 2 +-
-  .../orm/migrations/0004_auto__add_field_package_installed_name.py       | 2 +-
-  ..._add_target_image_file__add_target_file__add_field_variablehistor.py | 2 +-
-  ..._add_field_target_image_size__add_field_target_license_manifest_p.py | 2 +-
-  bitbake/lib/toaster/orm/migrations/0007_auto__add_helptext.py           | 2 +-
-  ..._chg_field_variablehistory_operation__chg_field_recipe_descriptio.py | 2 +-
-  ..._add_projectvariable__add_projectlayer__add_projecttarget__add_pr.py | 2 +-
-  bitbake/lib/toaster/toastergui/static/css/prettify.css                  | 2 +-
-  bitbake/lib/toaster/toastergui/static/js/bootstrap.min.js               | 2 +-
-  bitbake/lib/toaster/toastergui/static/js/jquery-2.0.3.min.map           | 2 +-
-  13 files changed, 13 insertions(+), 13 deletions(-)
 
 
