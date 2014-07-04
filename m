@@ -1,45 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f182.google.com (mail-we0-f182.google.com
-	[74.125.82.182])
-	by mail.openembedded.org (Postfix) with ESMTP id 4DF1C6AC9C
+Received: from mail-we0-f181.google.com (mail-we0-f181.google.com
+	[74.125.82.181])
+	by mail.openembedded.org (Postfix) with ESMTP id 991C86AC9D
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  4 Jul 2014 12:44:28 +0000 (UTC)
-Received: by mail-we0-f182.google.com with SMTP id q59so1641054wes.27
+	Fri,  4 Jul 2014 12:44:27 +0000 (UTC)
+Received: by mail-we0-f181.google.com with SMTP id q59so1645663wes.12
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 04 Jul 2014 05:44:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=HSspxfB2HFbgGSkdiA3mXvO3x0photrGmDKki0u4Rn0=;
-	b=Q/gAZSToXGj4t/ApVZ5KVTJwrWIEecKt0/p6QWTKjWpBhp3nGbk2T0J/Fu2HBa8R4A
-	eIh0CAAXVj4QA3SLzt/R/3INgV3Rjo57qS8Vn7D6+Rj70mtw1Mv7IMwyU5e03YaHnxrq
-	cEkAP/q4AhzhdohADrPZgYEO1K9G3E7Q1fBQKfimnXk1YP3nu7tLkxJdiuIHjApDB/qz
-	0nzf18/AID3GrOSfLPSk/Qdzg44yLNIHGH7OXXlIDO+H/vDwgKN9tX6y3vbWp3bwixqG
-	ORWtD6eH2NePlRKSZ2m8W/XQtmCSmvSTwP67H0wJ3QMHKH9lp6BVgiuIAfQNbKIpg6bI
-	M4IQ==
-X-Gm-Message-State: ALoCoQlL0F09qxDLvbcaLcoVz8S7Vxg/rCFUsD85VtCzsb3i/+S7zfU4hzpjdVtzM0xacAYKngbc
-X-Received: by 10.180.198.116 with SMTP id jb20mr17433926wic.59.1404477869601; 
-	Fri, 04 Jul 2014 05:44:29 -0700 (PDT)
+	bh=ZtSQKeQWweZIT78BIcgdN+QCeCCBw+msYtXuyG9abiI=;
+	b=BAPAXs3RmLbML2ERdSxIuSS24h+Ok1opyissIva0Hixwpvd/aNvrhJkIVhKa/TubAP
+	ISN1/IoOaUVacd8B95gDjrB/lSOqHoX0pWFJfFn/CC/YS/t6jmMo7agb6NiyYxHjd6fd
+	+DemjKgPuVcfT3rVI3B1ZIkALdXUnJDR1hNlTOqpcyJwHdF3dkXwmSWuAPuOe8bqw3ag
+	ATuPhXY6W52Iy6mbnZ5eSNnF16PNFNC9WTi/Md6oDEFZpRLdaH/JqmnbMErfsJh4Xqi3
+	iUTgAB/Wy/ZPLVJcE+LLelFrWI/RQJg00Yo1FM/LpdvIIYIz675gqF+MmpwT3q5odyhW
+	TOkA==
+X-Gm-Message-State: ALoCoQmQKsxmm1KXf6uYmJpKTyozrxbAT6OSvOUnnEiNKJKyiurTIlRPBsqfAjOnaHO6CClCjGdY
+X-Received: by 10.180.91.81 with SMTP id cc17mr56300392wib.17.1404477868972;
+	Fri, 04 Jul 2014 05:44:28 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id l2sm25035425wjw.31.2014.07.04.05.44.27
+	by mx.google.com with ESMTPSA id s14sm24808981wij.1.2014.07.04.05.44.27
 	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Fri, 04 Jul 2014 05:44:27 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id 22A595611B0; Fri,  4 Jul 2014 13:44:27 +0100 (BST)
+	id 2544C561294; Fri,  4 Jul 2014 13:44:27 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  4 Jul 2014 13:44:21 +0100
-Message-Id: <9949948f92bbe2717a05a380d3df63a332d39c9a.1404477729.git.alexandru.damian@intel.com>
+Date: Fri,  4 Jul 2014 13:44:22 +0100
+Message-Id: <927a27c68e24cfe13f62ca5f0e60878b04fa4e24.1404477729.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <149693a342fe3a56027943d3ecb8bf2e1d0d652b.1404477729.git.alexandru.damian@intel.com>
 References: <149693a342fe3a56027943d3ecb8bf2e1d0d652b.1404477729.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1404477729.git.alexandru.damian@intel.com>
 References: <cover.1404477729.git.alexandru.damian@intel.com>
-Cc: Dave Lerner <dave.lerner@windriver.com>,
-	Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 4/9] toasterui: Show in the log that ToasterUi is ready to receive events.
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 5/9] toaster: add project pages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,48 +53,231 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 04 Jul 2014 12:44:32 -0000
 
-From: Dave Lerner <dave.lerner@windriver.com>
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Issue: TA53702
+We add the new project and project page skeletons.
 
-It was observed that a sequence in a script such as
-   bitbake --server-only ..
-   bitbake --observe-only ..
-   bitbake <some target>
-could generate events from the server to the observer before
-the observer was ready to read the events, and the early events
-of builds were consistently dropped.  Adding a "ready" note in the
-log allows the script to scan for that message before proceeding
-to building a target.
+In the process, we add an identifier in the settings.py
+to detect whenever Toaster is running in managed mode,
+and a context processor to make this value available
+to the template processor.
 
-Signed-off-by: Dave Lerner <dave.lerner@windriver.com>
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/bb/ui/toasterui.py | 4 ++++
- 1 file changed, 4 insertions(+)
+ bin/toaster                                      |  1 +
+ lib/toaster/toastergui/templates/base.html       | 13 ++++++++
+ lib/toaster/toastergui/templates/newproject.html | 41 ++++++++++++++++++++++++
+ lib/toaster/toastergui/templates/project.html    |  6 ++++
+ lib/toaster/toastergui/urls.py                   |  5 +++
+ lib/toaster/toastergui/views.py                  | 38 ++++++++++++++++++++++
+ lib/toaster/toastermain/settings.py              | 19 ++++++++---
+ 7 files changed, 119 insertions(+), 4 deletions(-)
+ create mode 100644 lib/toaster/toastergui/templates/newproject.html
+ create mode 100644 lib/toaster/toastergui/templates/project.html
 
-diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
-index b1c80cc..5f87a9d 100644
---- a/lib/bb/ui/toasterui.py
-+++ b/lib/bb/ui/toasterui.py
-@@ -91,6 +91,7 @@ def main(server, eventHandler, params ):
-     errors = 0
-     warnings = 0
-     taskfailures = []
-+    first = True
+diff --git a/bin/toaster b/bin/toaster
+index 01ffc7a..90cd982 100755
+--- a/bin/toaster
++++ b/bin/toaster
+@@ -139,6 +139,7 @@ if [ -z "$ZSH_NAME" ] && [ `basename \"$0\"` = `basename \"$BASH_SOURCE\"` ]; th
+         webserverKillAll
+         RUNNING=0
+     }
++    export TOASTER_MANAGED=1
+     webserverStartAll || (echo "Fail to start the web server, stopping" 1>&2 && exit 1)
+     xdg-open http://0.0.0.0:8000/ >/dev/null 2>&1 &
+     trap trap_ctrlc SIGINT
+diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
+index 9ca9c9a..1407d64 100644
+--- a/lib/toaster/toastergui/templates/base.html
++++ b/lib/toaster/toastergui/templates/base.html
+@@ -58,6 +58,19 @@ function reload_params(params) {
+     <div class="navbar-inner">
+             <a class="brand logo" href="#"><img src="{% static 'img/logo.png' %}" class="" alt="Yocto logo project"/></a>
+             <a class="brand" href="/">Toaster</a>
++				{%if MANAGED %}
++					  <div class="btn-group pull-right">
++						  <a class="btn" href="{% url 'newproject' %}">New project</a>
++						  <button class="btn dropdown-toggle" data-toggle="dropdown">
++							  <i class="icon-caret-down"></i>
++						  </button>
++						  <ul class="dropdown-menu">
++							  <li><a href="#">Clone project</a></li>
++							  <li><a href="#">Export project</a></li>
++							  <li><a href="#">Import project</a></li>
++						  </ul>
++					  </div>
++				{%endif%}
+             <a class="pull-right manual" target="_blank" href="http://www.yoctoproject.org/documentation/toaster-manual">
+                 <i class="icon-book"></i>
+                 Toaster manual
+diff --git a/lib/toaster/toastergui/templates/newproject.html b/lib/toaster/toastergui/templates/newproject.html
+new file mode 100644
+index 0000000..e5a6551
+--- /dev/null
++++ b/lib/toaster/toastergui/templates/newproject.html
+@@ -0,0 +1,41 @@
++{% extends "base.html" %}
++{% load projecttags %}
++{% load humanize %}
++{% block pagecontent %}
++<div class="row-fluid">
++				<div class="span6">
++				<div class="page-header">
++					<h1>Create a new project</h1>
++				</div>  
++					<form>
++						<fieldset>
++							<label>Project name <span class="muted">(required)</span></label>
++							<input type="text" class="input-xlarge" required name="projectname">
++							<label class="project-form">
++								Project owner
++								<i class="icon-question-sign get-help" title="The go-to person for this project"></i>
++							</label>
++				<form method="POST">
++							<input type="text">
++							<label class="project-form">Owner's email</label>
++							<input type="email" class="input-large" name="email">
++							<label class="project-form">
++								Yocto Project version
++								<i class="icon-question-sign get-help" title="This sets the branch for the Yocto Project core layers (meta, meta-yocto and meta-yocto-bsp), and for the layers you use from the OpenEmbedded Metadata Index"></i>
++							</label>
++							<select>
++								<option>Yocto Project 1.7 "D?"</option>
++								<option>Yocto Project 1.6 "Daisy"</option>
++								<option>Yocto Project 1.5 "Dora"</option>
++							</select>
++				</form>
++						</fieldset>
++									
++						<div class="form-actions">
++							<a href="project-with-targets.html" class="btn btn-primary btn-large">Create project</a>
++						</div>
++					</form> 
++				</div>
++			</div>
++		</div>  
++{% endblock %}
+diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
+new file mode 100644
+index 0000000..71adb54
+--- /dev/null
++++ b/lib/toaster/toastergui/templates/project.html
+@@ -0,0 +1,6 @@
++{% extends "base.html" %}
++{% load projecttags %}
++{% load humanize %}
++{% block pagecontent %}
++
++{% endblock %}
+diff --git a/lib/toaster/toastergui/urls.py b/lib/toaster/toastergui/urls.py
+index 9b583f2..bba4fda 100644
+--- a/lib/toaster/toastergui/urls.py
++++ b/lib/toaster/toastergui/urls.py
+@@ -65,6 +65,11 @@ urlpatterns = patterns('toastergui.views',
+         # urls not linked from the dashboard
+         url(r'^layers/$', 'layer', name='all-layers'),
+         url(r'^layerversions/(?P<layerversion_id>\d+)/recipes/.*$', 'layer_versions_recipes', name='layer_versions_recipes'),
++
++        # project URLs
++        url(r'^newproject/$', 'newproject', name='newproject'),
++        url(r'^project/$', 'project', name='project'),
++
+         # default redirection
+         url(r'^$', RedirectView.as_view( url= 'builds/')),
+ )
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 1f3e11d..7dc0108 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -1758,3 +1758,41 @@ def image_information_dir(request, build_id, target_id, packagefile_id):
+     # stubbed for now
+     return redirect(builds)
  
-     buildinfohelper = BuildInfoHelper(server, build_history_enabled)
++
++import toastermain.settings
++def managedcontextprocessor(request):
++    return { "MANAGED" : toastermain.settings.MANAGED }
++
++
++# we have a set of functions if we're in managed mode, or
++# a default "page not available" simple functions for interactive mode
++if toastermain.settings.MANAGED:
++
++    # new project
++    def newproject(request):
++        template = "newproject.html"
++        context = {}
++        if request.method == "GET":
++            # render new project page
++            return render(request, template, context)
++        elif request.method == "POST":
++            if request.method:
++                return redirect(project)
++            else:
++                return render(request, template, context)
++        raise Exception("Invalid HTTP method for this page")
++
++    # Shows the edit project page
++    def project(request):
++        template = "project.html"
++        context = {}
++        return render(request, template, context)
++
++
++else:
++    # these are pages that are NOT available in interactive mode
++    def newproject(request):
++        raise Exception("page not available in interactive mode")
++
++    def project(request):
++        raise Exception("page not available in interactive mode")
+diff --git a/lib/toaster/toastermain/settings.py b/lib/toaster/toastermain/settings.py
+index 97f2ff7..09ec2bd 100644
+--- a/lib/toaster/toastermain/settings.py
++++ b/lib/toaster/toastermain/settings.py
+@@ -75,6 +75,11 @@ if 'DATABASE_URL' in os.environ:
+         raise Exception("FIXME: Please implement missing database url schema for url: %s" % dburl)
  
-@@ -98,6 +99,9 @@ def main(server, eventHandler, params ):
-     while True:
-         try:
-             event = eventHandler.waitEvent(0.25)
-+            if first:
-+                first = False
-+                logger.info("ToasterUI waiting for events")
  
-             if event is None:
-                 if main.shutdown > 0:
++if 'TOASTER_MANAGED' in os.environ and os.environ['TOASTER_MANAGED'] == "1":
++    MANAGED = True
++else:
++    MANAGED = False
++
+ # Allows current database settings to be exported as a DATABASE_URL environment variable value
+ 
+ def getDATABASE_URL():
+@@ -221,12 +226,11 @@ TEMPLATE_CONTEXT_PROCESSORS = ('django.contrib.auth.context_processors.auth',
+  'django.core.context_processors.static',
+  'django.core.context_processors.tz',
+  'django.contrib.messages.context_processors.messages',
+- "django.core.context_processors.request")
++ "django.core.context_processors.request",
++ 'toastergui.views.managedcontextprocessor',
++ )
+ 
+ INSTALLED_APPS = (
+-    #'django.contrib.auth',
+-    #'django.contrib.contenttypes',
+-    #'django.contrib.sessions',
+     #'django.contrib.sites',
+     #'django.contrib.messages',
+     'django.contrib.staticfiles',
+@@ -243,6 +247,13 @@ INSTALLED_APPS = (
+     'bldcontrol',
+ )
+ 
++# if we run in managed mode, we need user support
++if MANAGED:
++    INSTALLED_APPS = ('django.contrib.auth',
++    'django.contrib.contenttypes',
++    'django.contrib.sessions',) + INSTALLED_APPS
++
++
+ # We automatically detect and install applications here if
+ # they have a 'models.py' or 'views.py' file
+ import os
 -- 
 1.9.1
 
