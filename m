@@ -1,26 +1,31 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 9C6F165CAD
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 760FF65D03
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  4 Jul 2014 06:41:30 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.5/8.14.5) with ESMTP id s646fV0S024400
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 3 Jul 2014 23:41:31 -0700 (PDT)
-Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.169.1;
-	Thu, 3 Jul 2014 23:41:31 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 3 Jul 2014 23:41:30 -0700
-Message-ID: <b1c51cb854393ae662b63034b60e1878fe7cdf14.1404455961.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1404455961.git.liezhi.yang@windriver.com>
-References: <cover.1404455961.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/1] bitbake-user-manual-metadata.xml: remove populate_staging
+	Fri,  4 Jul 2014 07:36:41 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s647abCs021859; Fri, 4 Jul 2014 08:36:37 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id fHmLe1gTVa_Y; Fri,  4 Jul 2014 08:36:37 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s647aVZr021847
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
+	Fri, 4 Jul 2014 08:36:33 +0100
+Message-ID: <1404459386.6362.94.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Robert Yang <liezhi.yang@windriver.com>
+Date: Fri, 04 Jul 2014 08:36:26 +0100
+In-Reply-To: <c16e5647966901f79b9520ba0565220ebcd0fa3d.1404452300.git.liezhi.yang@windriver.com>
+References: <cover.1404452300.git.liezhi.yang@windriver.com>
+	<c16e5647966901f79b9520ba0565220ebcd0fa3d.1404452300.git.liezhi.yang@windriver.com>
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/2] bitbake: update help message for dump-signatures
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,45 +38,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 04 Jul 2014 06:41:38 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 04 Jul 2014 07:36:45 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-There is no populate_staging any longer, should be populate_sysroot.
+On Thu, 2014-07-03 at 22:39 -0700, Robert Yang wrote:
+> The bitbake -S had been updated which always reuires an argument, so
+> update the help info:
+> - Add the two args in the help message: none and printdiff
+> 
+> - Use type="choice" so that we can get more friendly error messages,
+>   for example:
+>   bitbake: error: option -S: invalid choice: 'printdiffX' (choose from 'none', 'printdiff')
+> 
+> - dump-signatures=DUMP_SIGNATURES -> dump-signatures=SIGNATURE_HANDLER
+> 
+> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+> ---
+>  bitbake/bin/bitbake |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/bitbake/bin/bitbake b/bitbake/bin/bitbake
+> index b3acbe1..5c25a9d 100755
+> --- a/bitbake/bin/bitbake
+> +++ b/bitbake/bin/bitbake
+> @@ -139,8 +139,8 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+>          parser.add_option("-n", "--dry-run", help = "Don't execute, just go through the motions.",
+>                     action = "store_true", dest = "dry_run", default = False)
+>  
+> -        parser.add_option("-S", "--dump-signatures", help = "Dump out the signature construction information, with no task execution. Parameters are passed to the signature handling code, use 'none' if no specific handler is required.",
+> -                   action = "append", dest = "dump_signatures", default = [])
+> +        parser.add_option("-S", "--dump-signatures", help = "Dump out the signature construction information, with no task execution. The SIGNATURE_HANDLER can be none or printdiff, while none means only dump the signature, printdiff means compare the dumped signature with the cached one.",
+> +                   action = "append", dest = "dump_signatures", default = [], type="choice", choices=("none", "printdiff"), metavar="SIGNATURE_HANDLER")
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- .../bitbake-user-manual-metadata.xml               |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+The problem here is the different options are (or will be) metadata
+defined and bitbake can't know which options may or may not be valid :(
 
-diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-index a9f5072..a10a660 100644
---- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-+++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-metadata.xml
-@@ -1466,9 +1466,9 @@
-                 complete before that task can be executed.
-                 Here is an example:
-                 <literallayout class='monospaced'>
--     do_configure[deptask] = "do_populate_staging"
-+     do_configure[deptask] = "do_populate_sysroot"
-                 </literallayout>
--                In this example, the <filename>do_populate_staging</filename>
-+                In this example, the <filename>do_populate_sysroot</filename>
-                 task of each item in <filename>DEPENDS</filename> must complete before
-                 <filename>do_configure</filename> can execute.
-             </para>
-@@ -1543,9 +1543,9 @@
-                 the data in <filename>DEPENDS</filename>.
-                 Here is an example:
-                 <literallayout class='monospaced'>
--     do_patch[depends] = "quilt-native:do_populate_staging"
-+     do_patch[depends] = "quilt-native:do_populate_sysroot"
-                 </literallayout>
--                In this example, the <filename>do_populate_staging</filename>
-+                In this example, the <filename>do_populate_sysroot</filename>
-                 task of the target <filename>quilt-native</filename>
-                 must have completed before the
-                 <filename>do_patch</filename> task can execute.
--- 
-1.7.9.5
+Cheers,
+
+Richard
 
 
