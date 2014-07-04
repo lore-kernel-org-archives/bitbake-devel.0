@@ -1,30 +1,24 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 9E9EE609B1
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 3C2306AC7B
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  3 Jul 2014 10:39:52 +0000 (UTC)
-Received: from localhost (dan.rpsys.net [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s63AdmpW029236 for <bitbake-devel@lists.openembedded.org>;
-	Thu, 3 Jul 2014 11:39:48 +0100
-X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id vrBRw8rzs4Xd for <bitbake-devel@lists.openembedded.org>;
-	Thu,  3 Jul 2014 11:39:48 +0100 (BST)
-Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s63AdfN5029232
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
+	Fri,  4 Jul 2014 05:39:04 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.14.5/8.14.5) with ESMTP id s645d5iG008820
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 3 Jul 2014 11:39:43 +0100
-Message-ID: <1404383974.6362.79.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Thu, 03 Jul 2014 11:39:34 +0100
-X-Mailer: Evolution 3.8.4-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] fetch2/svn: Add transportuser parameter
+	Thu, 3 Jul 2014 22:39:05 -0700 (PDT)
+Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.169.1;
+	Thu, 3 Jul 2014 22:39:05 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Thu, 3 Jul 2014 22:39:03 -0700
+Message-ID: <cover.1404452300.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 1.7.9.5
+MIME-Version: 1.0
+Subject: [PATCH 0/2] bitbake: update help message for dump-signatures
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,31 +31,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 03 Jul 2014 10:39:54 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 04 Jul 2014 05:39:04 -0000
+Content-Type: text/plain
 
-There may be a need to set the user for the transport rather than the subversion
-command itself. Add a parameter to the url to allow this.
+The following changes since commit 0ed5a13f5f9478e2c22f517fb3504b738422f85c:
 
-[YOCTO #6475]
+  python3: fix builtins imports (2014-06-30 16:36:44 +0100)
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+are available in the git repository at:
 
-diff --git a/bitbake/lib/bb/fetch2/svn.py b/bitbake/lib/bb/fetch2/svn.py
-index 8847461..1733c2b 100644
---- a/bitbake/lib/bb/fetch2/svn.py
-+++ b/bitbake/lib/bb/fetch2/svn.py
-@@ -101,7 +101,8 @@ class Svn(FetchMethod):
-                 suffix = "@%s" % (ud.revision)
- 
-             if command == "fetch":
--                svncmd = "%s co %s %s://%s/%s%s %s" % (ud.basecmd, " ".join(options), proto, svnroot, ud.module, suffix, ud.module)
-+                transportuser = ud.parm.get("transportuser", "")
-+                svncmd = "%s co %s %s://%s%s/%s%s %s" % (ud.basecmd, " ".join(options), proto, transportuser, svnroot, ud.module, suffix, ud.module)
-             elif command == "update":
-                 svncmd = "%s update %s" % (ud.basecmd, " ".join(options))
-             else:
+  git://git.pokylinux.org/poky-contrib rbt/sig
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=rbt/sig
 
+Robert Yang (2):
+  bitbake: update help message for dump-signatures
+  bitbake-user-manual-intro.xml: update for dump-signatures
+
+ bitbake/bin/bitbake                                |    4 ++--
+ .../bitbake-user-manual-intro.xml                  |   10 ++++++----
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
+-- 
+1.7.9.5
 
 
