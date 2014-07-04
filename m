@@ -1,29 +1,40 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 6887A6116C
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-wi0-f182.google.com (mail-wi0-f182.google.com
+	[209.85.212.182])
+	by mail.openembedded.org (Postfix) with ESMTP id 370CE617B8
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  4 Jul 2014 08:23:06 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.5) with ESMTP id s648N4FV010322
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Fri, 4 Jul 2014 01:23:05 -0700 (PDT)
-Received: from [128.224.162.181] (128.224.162.181) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.3.169.1;
-	Fri, 4 Jul 2014 01:23:03 -0700
-Message-ID: <53B66466.1070204@windriver.com>
-Date: Fri, 4 Jul 2014 16:23:02 +0800
-From: Robert Yang <liezhi.yang@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
-	rv:24.0) Gecko/20100101 Thunderbird/24.6.0
-MIME-Version: 1.0
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-References: <cover.1404452300.git.liezhi.yang@windriver.com>	
-	<c16e5647966901f79b9520ba0565220ebcd0fa3d.1404452300.git.liezhi.yang@windriver.com>
-	<1404459386.6362.94.camel@ted>
-In-Reply-To: <1404459386.6362.94.camel@ted>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/2] bitbake: update help message for dump-signatures
+	Fri,  4 Jul 2014 12:44:25 +0000 (UTC)
+Received: by mail-wi0-f182.google.com with SMTP id bs8so3755716wib.15
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 04 Jul 2014 05:44:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=6NCZVnQ+WzyQGDntlIKGyw/jiXwd1qDYl2FBvIlU5tQ=;
+	b=RFeTsMGkrmNeRsI456HKG3Pzaar2wDWM1u1f6yuhhqm3oIpHNyRtjUlvc2nFfxFgdM
+	M/pEUeQbfo4Ts0FmucPfqdOPfn6CBswPjk8AwTBHF61cua0o+jdr6EyYUzBQkTZ7ya5+
+	WCRGo9xmgT5x1jbvuQPQKIsP7HwI5wdh0HobYdMCdW1lyqkUPat7DxoYmMaI3e/6i3Hi
+	DfMgK2uQA4KRu5AXsRrQckex/lJKH0dUITo60mYl2iDDMPeRneV66fW60MaVr3aHYF2i
+	7e0tlCFl1pG97ywrLqoqMsBXWa8+4yEdxqABwRdGMkKmkN9PZyZMM0eAEmdu/jmlnLM3
+	DgfA==
+X-Gm-Message-State: ALoCoQndmf+Oz1jWNYH1lXtSRIw9aR3xMZgnEWGEoM2In8Z3+qLf5e4wYF551oMIUjobBFiwo/uP
+X-Received: by 10.194.121.6 with SMTP id lg6mr3250291wjb.116.1404477864400;
+	Fri, 04 Jul 2014 05:44:24 -0700 (PDT)
+Received: from adamian-desk.corp.intel.com ([83.217.123.106])
+	by mx.google.com with ESMTPSA id
+	nf11sm45052563wic.9.2014.07.04.05.44.23 for <multiple recipients>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 04 Jul 2014 05:44:23 -0700 (PDT)
+Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
+	id 23D5B560609; Fri,  4 Jul 2014 13:44:23 +0100 (BST)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri,  4 Jul 2014 13:44:21 +0100
+Message-Id: <cover.1404477729.git.alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.9.1
+Cc: Dave Lerner <dave.lerner@windriver.com>,
+	Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 0/9] toaster pull request
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,65 +47,62 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 04 Jul 2014 08:23:11 -0000
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 04 Jul 2014 12:44:29 -0000
 
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
+Hello,
 
-On 07/04/2014 03:36 PM, Richard Purdie wrote:
-> On Thu, 2014-07-03 at 22:39 -0700, Robert Yang wrote:
->> The bitbake -S had been updated which always reuires an argument, so
->> update the help info:
->> - Add the two args in the help message: none and printdiff
->>
->> - Use type="choice" so that we can get more friendly error messages,
->>    for example:
->>    bitbake: error: option -S: invalid choice: 'printdiffX' (choose from 'none', 'printdiff')
->>
->> - dump-signatures=DUMP_SIGNATURES -> dump-signatures=SIGNATURE_HANDLER
->>
->> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
->> ---
->>   bitbake/bin/bitbake |    4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/bitbake/bin/bitbake b/bitbake/bin/bitbake
->> index b3acbe1..5c25a9d 100755
->> --- a/bitbake/bin/bitbake
->> +++ b/bitbake/bin/bitbake
->> @@ -139,8 +139,8 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
->>           parser.add_option("-n", "--dry-run", help = "Don't execute, just go through the motions.",
->>                      action = "store_true", dest = "dry_run", default = False)
->>
->> -        parser.add_option("-S", "--dump-signatures", help = "Dump out the signature construction information, with no task execution. Parameters are passed to the signature handling code, use 'none' if no specific handler is required.",
->> -                   action = "append", dest = "dump_signatures", default = [])
->> +        parser.add_option("-S", "--dump-signatures", help = "Dump out the signature construction information, with no task execution. The SIGNATURE_HANDLER can be none or printdiff, while none means only dump the signature, printdiff means compare the dumped signature with the cached one.",
->> +                   action = "append", dest = "dump_signatures", default = [], type="choice", choices=("none", "printdiff"), metavar="SIGNATURE_HANDLER")
->
-> The problem here is the different options are (or will be) metadata
-> defined and bitbake can't know which options may or may not be valid :(
+Can you please merge these changes into the master tree ?
 
-Thanks, how about remove the type="choice" and update the help info to:
+This patchset consists of some bug fixes and new feature related to 
+the project building functionality. The patchset has been reviewed
+on the toaster mailing list.
 
--S SIGNATURE_HANDLER, --dump-signatures=SIGNATURE_HANDLER
-Dump out the signature construction information, with no task execution.
-The SIGNATURE_HANDLER can be none, printdiff or other metadata defined
-handlers, while none means only dump the signature, printdiff means compare
-the dumped signature with the cached one.
+Thank you,
+Alex
 
-Or drop the patch and update the user manual ?
+The following changes since commit 56c294dc30b6c2575b1cf904e26b8b8bef7677c2:
 
-I updated it was because when I used the bitbake -S, I didn't know there
-is a very useful handler printdiff.
+  fetch2/svn: Add transportuser parameter (2014-07-03 14:09:17 +0100)
 
-// Robert
+are available in the git repository at:
 
->
-> Cheers,
->
-> Richard
->
->
->
+  git://git.yoctoproject.org/poky-contrib adamian/20140704-submission-bb
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20140704-submission-bb
+
+Alexandru DAMIAN (8):
+  toaster: remove strftime calls in filters
+  toaster: automatically discover urls.py files
+  toaster: automatically enable applications
+  toaster: add project pages
+  toaster: add automated login in new project page
+  toaster: whitespace fix
+  toaster: new project page implementation
+  toasterui: fix build - project identification
+
+Dave Lerner (1):
+  toasterui: Show in the log that ToasterUi is ready to receive events.
+
+ bin/toaster                                        |   1 +
+ lib/bb/ui/buildinfohelper.py                       |  17 +-
+ lib/bb/ui/toasterui.py                             |  11 +-
+ ...anch__add_field_project_short_description__a.py | 257 +++++++++++++++++++++
+ lib/toaster/orm/models.py                          |   7 +
+ lib/toaster/toastergui/templates/base.html         |  13 ++
+ lib/toaster/toastergui/templates/newproject.html   |  43 ++++
+ lib/toaster/toastergui/templates/project.html      |   6 +
+ lib/toaster/toastergui/templatetags/projecttags.py |  18 +-
+ lib/toaster/toastergui/urls.py                     |   5 +
+ lib/toaster/toastergui/views.py                    | 106 +++++++--
+ lib/toaster/toastermain/settings.py                |  28 ++-
+ lib/toaster/toastermain/urls.py                    |  16 +-
+ 13 files changed, 491 insertions(+), 37 deletions(-)
+ create mode 100644 lib/toaster/orm/migrations/0010_auto__add_field_project_branch__add_field_project_short_description__a.py
+ create mode 100644 lib/toaster/toastergui/templates/newproject.html
+ create mode 100644 lib/toaster/toastergui/templates/project.html
+
+-- 
+1.9.1
+
 
