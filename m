@@ -1,31 +1,35 @@
-Return-Path: <rpjday@crashcourse.ca>
-Received: from astoria.ccjclearline.com (astoria.ccjclearline.com
-	[64.235.106.9])
-	by mail.openembedded.org (Postfix) with ESMTP id 090977018E
+Return-Path: <kvserr@gmail.com>
+Received: from mail-wg0-f41.google.com (mail-wg0-f41.google.com [74.125.82.41])
+	by mail.openembedded.org (Postfix) with ESMTP id 3034E703F4
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  8 Jul 2014 14:10:40 +0000 (UTC)
-Received: from [69.196.158.250] (port=34562 helo=crashcourse.ca)
-	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES128-SHA:128)
-	(Exim 4.80) (envelope-from <rpjday@crashcourse.ca>)
-	id 1X4W6T-00068W-3J for bitbake-devel@lists.openembedded.org;
-	Tue, 08 Jul 2014 10:10:41 -0400
-Date: Tue, 8 Jul 2014 10:10:37 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@localhost
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Message-ID: <alpine.LFD.2.11.1407081010150.14336@localhost>
-User-Agent: Alpine 2.11 (LFD 23 2013-08-11)
-MIME-Version: 1.0
-X-AntiAbuse: This header was added to track abuse,
-	please include it with any abuse report
-X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Subject: [PATCH] Documentation: A few tweaks to Chapter 2, BitBake User Manual
+	Tue,  8 Jul 2014 15:14:27 +0000 (UTC)
+Received: by mail-wg0-f41.google.com with SMTP id k14so3443650wgh.12
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 08 Jul 2014 08:14:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=3iweTombhaeSVXLLFH7pG0IoANYQOpnvogzjODPb2nc=;
+	b=ziLcIHyBHNaHwDz2XhDSGTDdkzI2TA83RzQrbIzDfzWnwPar5Hi1fUhhkSfxmp8IZK
+	codG0mAme99DCA/pnmXJwKzFT6C13KT63G8ND+8JTUDsjN4RALSXAH/PLWE21eRWPRXO
+	ZJbHp66SGJ8UZCqhLMriB/O1d4gToIKRhetFyQdaVl16rlJKGTPQT26Ft6XdoLXiPakk
+	YamAJqaacb72QkEwtMdOfHvbqwAsEeYmqCXQwnn1QQB7FBM7Qa5+F+MBiK4SaVAZtell
+	MRNncL/B2AhEgqXbx1V6IKuo0+v2iCOoL8BFshIrAntUOc+5IcQSiCIKgnF1nIcHwC0T
+	LgpA==
+X-Received: by 10.180.102.100 with SMTP id fn4mr4782958wib.22.1404832467934;
+	Tue, 08 Jul 2014 08:14:27 -0700 (PDT)
+Received: from debivit.LGE.NET ([195.160.253.4])
+	by mx.google.com with ESMTPSA id lo18sm8126831wic.1.2014.07.08.08.14.26
+	for <multiple recipients>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Tue, 08 Jul 2014 08:14:27 -0700 (PDT)
+From: Vitaliy Kharin <kvserr@gmail.com>
+X-Google-Original-From: Vitaliy Kharin <vitaliy.kharin@lge.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue,  8 Jul 2014 19:09:44 +0400
+Message-Id: <1404832184-16471-1-git-send-email-vitaliy.kharin@lge.com>
+X-Mailer: git-send-email 2.0.0
+Cc: Vitaliy Kharin <vitaliy.kharin@lge.com>
+Subject: [PATCH] bb.utils.which is intend to locate regular file only as it is written in comment
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,92 +42,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 08 Jul 2014 14:10:49 -0000
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-List-Received-Date: Tue, 08 Jul 2014 15:14:29 -0000
 
-
-Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
-
+Signed-off-by: Vitaliy Kharin <vitaliy.kharin@lge.com>
 ---
+ bitbake/lib/bb/utils.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  only questionable part is my example of busybox supplying two
-versions, perhaps that's outside the scope of this manual.
-
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-execution.xml b/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
-index 8b6e0b4..403ad5b 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
-@@ -7,7 +7,8 @@
-     <para>
-         The primary purpose for running BitBake is to produce some kind
-         of output such as a single installable package, a kernel, a software
--        development kit, or even a full, board-specific bootable Linux image.
-+        development kit, or even a full, board-specific bootable Linux image,
-+        complete with bootloader, kernel and root filesystem.
-         Of course, you can execute the <filename>bitbake</filename>
-         command with options that cause it to execute single tasks,
-         compile single recipe files, capture or clear data, or simply
-@@ -45,6 +46,11 @@
-                 build host with hyper-threading will most likely show eight processors,
-                 which is the value you would then assign to that variable.
-             </para>
-+
-+            <para>
-+                A possibly simpler solution is that some Linux distributions
-+                (Debian, Ubuntu) provide the <filename>ncpus</filename> command.
-+            </para>
-         </note>
-     </para>
-
-@@ -84,7 +90,7 @@
-             <link linkend='var-BBFILES'><filename>BBFILES</filename></link>.
-             <filename>BBPATH</filename> is used to search for
-             configuration and class files under the
--            <filename>conf</filename> and <filename>classes</filename>
-+            <filename>conf/</filename> and <filename>classes/</filename>
-             directories, respectively.
-             <filename>BBFILES</filename> is used to locate both recipe
-             and recipe append files
-@@ -464,6 +470,29 @@
-      PREFERRED_VERSION_a = "1.1"
-             </literallayout>
-         </para>
-+
-+        <note>
-+            <para>
-+                It's common for a recipe to provide two versions -- a stable,
-+                numbered (and preferred) version, and a version that is
-+                automatically checked out from a source code repository that
-+                is considered more "bleeding edge" but can be selected only
-+                explicitly.
-+            </para>
-+
-+            <para>
-+                For example, in the OpenEmbedded codebase, there is a standard,
-+                versioned recipe file for BusyBox,
-+                <filename>busybox_1.22.1.bb</filename>,
-+                but there is also a Git-based version,
-+                <filename>busybox_git.bb</filename>, which explicitly contains the line
-+                <literallayout class='monospaced'>
-+    DEFAULT_PREFERENCE = "-1"
-+                </literallayout>
-+                to ensure that the numbered, stable version is always preferred
-+                unless the developer selects otherwise.
-+            </para>
-+        </note>
-     </section>
-
-     <section id='bb-bitbake-dependencies'>
-
-rday
-
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+index 0be45e1..c48b237 100644
+--- a/bitbake/lib/bb/utils.py
++++ b/bitbake/lib/bb/utils.py
+@@ -809,7 +809,7 @@ def which(path, item, direction = 0, history = False):
+     for p in paths:
+         next = os.path.join(p, item)
+         hist.append(next)
+-        if os.path.exists(next):
++        if os.path.isfile(next):
+             if not os.path.isabs(next):
+                 next = os.path.abspath(next)
+             if history:
 -- 
+2.0.0
 
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
 
