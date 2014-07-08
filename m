@@ -1,38 +1,36 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-lb0-f182.google.com (mail-lb0-f182.google.com
-	[209.85.217.182])
-	by mail.openembedded.org (Postfix) with ESMTP id 7956F7041E
+Return-Path: <scott.m.rifenbark@intel.com>
+Received: from mga03.intel.com (mga03.intel.com [143.182.124.21])
+	by mail.openembedded.org (Postfix) with ESMTP id 8B41960017
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  8 Jul 2014 18:54:30 +0000 (UTC)
-Received: by mail-lb0-f182.google.com with SMTP id c11so4211039lbj.41
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 08 Jul 2014 11:54:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=3bKiFQf6NZFBjRpETCDxQRaQ4wVbrJ+oIXwhkpU50AM=;
-	b=WF0XA59BwX6nVfsrJFCgRfnu7phN/f+lr3s5aoGwXwhiOhEspSxnSjvRJo94csKUOo
-	PhhO+GS4MqdUvTuzaCj3VUqp2jhR6Us4521+fr/KLh+gxCqesZgkMDozdqpT3lp+HH2Y
-	a2qkxnWFkozV9SWFROHTnbEw+7UxbQ+2lDtPXCxpaL1jyPZlJRddyoM9Y6buWNY3dYIc
-	8kyMBWV2Tv9bzGGrNWAfZeJMlHfUu45DToHBqdypZkT2PA/ANWszlQADk7/xlC0T/uSR
-	BGVaHh48rR67FKcz4cGIvADyJWvolMZju/jZfWTvxdXISQZ6O9qQsBNBeMCG4ugAH7ok
-	xhog==
-X-Received: by 10.112.198.161 with SMTP id jd1mr12288925lbc.56.1404845671315; 
-	Tue, 08 Jul 2014 11:54:31 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.168.66 with HTTP; Tue, 8 Jul 2014 11:54:11 -0700 (PDT)
-In-Reply-To: <1404832184-16471-1-git-send-email-vitaliy.kharin@lge.com>
-References: <1404832184-16471-1-git-send-email-vitaliy.kharin@lge.com>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Tue, 8 Jul 2014 11:54:11 -0700
-X-Google-Sender-Auth: ntXBY4JBDyOSiDMlAoMGJCk24eU
-Message-ID: <CABcZANmdpjjGExdJktZUz0owXynDmqhmLVWZnZMqq0GqWx6YRQ@mail.gmail.com>
-To: Vitaliy Kharin <kvserr@gmail.com>
-Cc: Vitaliy Kharin <vitaliy.kharin@lge.com>,
-	"bitbake-devel@lists.openembedded.org"
+	Tue,  8 Jul 2014 19:06:40 +0000 (UTC)
+Received: from azsmga001.ch.intel.com ([10.2.17.19])
+	by azsmga101.ch.intel.com with ESMTP; 08 Jul 2014 12:06:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.01,626,1400050800"; d="scan'208";a="454602720"
+Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
+	by azsmga001.ch.intel.com with ESMTP; 08 Jul 2014 12:06:37 -0700
+Received: from orsmsx156.amr.corp.intel.com (10.22.240.22) by
+	ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server
+	(TLS) id 14.3.123.3; Tue, 8 Jul 2014 12:05:22 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.157]) by
+	ORSMSX156.amr.corp.intel.com ([169.254.8.193]) with mapi id
+	14.03.0123.003; Tue, 8 Jul 2014 12:05:22 -0700
+From: "Rifenbark, Scott M" <scott.m.rifenbark@intel.com>
+To: "Robert P. J. Day" <rpjday@crashcourse.ca>, BitBake developer list
 	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] bb.utils.which is intend to locate regular file only as it is written in comment
+Thread-Topic: [bitbake-devel] [PATCH] Documentation: A few tweaks to Chapter
+	2, BitBake User Manual
+Thread-Index: AQHPmraNo4WHMWoObEuUHS8gcsYMMJuWiYug
+Date: Tue, 8 Jul 2014 19:05:20 +0000
+Message-ID: <41DEA4B02DBDEF40A0F3B6D0DDB1237983FB6AED@ORSMSX101.amr.corp.intel.com>
+References: <alpine.LFD.2.11.1407081010150.14336@localhost>
+In-Reply-To: <alpine.LFD.2.11.1407081010150.14336@localhost>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.22.254.139]
+MIME-Version: 1.0
+Subject: Re: [PATCH] Documentation: A few tweaks to Chapter 2, BitBake User Manual
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,84 +43,136 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 08 Jul 2014 18:54:32 -0000
-Content-Type: multipart/alternative; boundary=001a11c34b8833ffe604fdb31f42
-
---001a11c34b8833ffe604fdb31f42
-Content-Type: text/plain; charset=UTF-8
-
-On Tue, Jul 8, 2014 at 8:09 AM, Vitaliy Kharin <kvserr@gmail.com> wrote:
-
-> Signed-off-by: Vitaliy Kharin <vitaliy.kharin@lge.com>
-> ---
->  bitbake/lib/bb/utils.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
-> index 0be45e1..c48b237 100644
-> --- a/bitbake/lib/bb/utils.py
-> +++ b/bitbake/lib/bb/utils.py
-> @@ -809,7 +809,7 @@ def which(path, item, direction = 0, history = False):
->      for p in paths:
->          next = os.path.join(p, item)
->          hist.append(next)
-> -        if os.path.exists(next):
-> +        if os.path.isfile(next):
->              if not os.path.isabs(next):
->                  next = os.path.abspath(next)
->              if history:
->
-
-This seems questionable to me. With this, it wouldn't find symlinks, no?
--- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
-
---001a11c34b8833ffe604fdb31f42
-Content-Type: text/html; charset=UTF-8
+X-List-Received-Date: Tue, 08 Jul 2014 19:06:40 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Tue, Jul 8, 2014 at 8:09 AM, Vitaliy Kharin <span dir=3D"ltr">&lt;<a hre=
-f=3D"mailto:kvserr@gmail.com" target=3D"_blank">kvserr@gmail.com</a>&gt;</s=
-pan> wrote:<br>
+Applied.  Needs merged into BB repo.
 
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div id=3D":4jo" class=3D"a3s" style=3D"over=
-flow:hidden">Signed-off-by: Vitaliy Kharin &lt;<a href=3D"mailto:vitaliy.kh=
-arin@lge.com">vitaliy.kharin@lge.com</a>&gt;<br>
+Scott
 
+>-----Original Message-----
+>From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-
+>devel-bounces@lists.openembedded.org] On Behalf Of Robert P. J. Day
+>Sent: Tuesday, July 08, 2014 7:11 AM
+>To: BitBake developer list
+>Subject: [bitbake-devel] [PATCH] Documentation: A few tweaks to Chapter 2,
+>BitBake User Manual
+>
+>
+>Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
+>
+>---
+>
+>  only questionable part is my example of busybox supplying two versions,
+>perhaps that's outside the scope of this manual.
+>
+>diff --git a/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
+>b/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
+>index 8b6e0b4..403ad5b 100644
+>--- a/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
+>+++ b/doc/bitbake-user-manual/bitbake-user-manual-execution.xml
+>@@ -7,7 +7,8 @@
+>     <para>
+>         The primary purpose for running BitBake is to produce some kind
+>         of output such as a single installable package, a kernel, a softw=
+are
+>-        development kit, or even a full, board-specific bootable Linux im=
+age.
+>+        development kit, or even a full, board-specific bootable Linux im=
+age,
+>+        complete with bootloader, kernel and root filesystem.
+>         Of course, you can execute the <filename>bitbake</filename>
+>         command with options that cause it to execute single tasks,
+>         compile single recipe files, capture or clear data, or simply @@ =
+-45,6
+>+46,11 @@
+>                 build host with hyper-threading will most likely show eig=
+ht
+>processors,
+>                 which is the value you would then assign to that variable=
+.
+>             </para>
+>+
+>+            <para>
+>+                A possibly simpler solution is that some Linux distributi=
+ons
+>+                (Debian, Ubuntu) provide the <filename>ncpus</filename>
+>command.
+>+            </para>
+>         </note>
+>     </para>
+>
+>@@ -84,7 +90,7 @@
+>             <link linkend=3D'var-BBFILES'><filename>BBFILES</filename></l=
+ink>.
+>             <filename>BBPATH</filename> is used to search for
+>             configuration and class files under the
+>-            <filename>conf</filename> and <filename>classes</filename>
+>+            <filename>conf/</filename> and
+>+ <filename>classes/</filename>
+>             directories, respectively.
+>             <filename>BBFILES</filename> is used to locate both recipe
+>             and recipe append files
+>@@ -464,6 +470,29 @@
+>      PREFERRED_VERSION_a =3D "1.1"
+>             </literallayout>
+>         </para>
+>+
+>+        <note>
+>+            <para>
+>+                It's common for a recipe to provide two versions -- a sta=
+ble,
+>+                numbered (and preferred) version, and a version that is
+>+                automatically checked out from a source code repository t=
+hat
+>+                is considered more "bleeding edge" but can be selected on=
+ly
+>+                explicitly.
+>+            </para>
+>+
+>+            <para>
+>+                For example, in the OpenEmbedded codebase, there is a sta=
+ndard,
+>+                versioned recipe file for BusyBox,
+>+                <filename>busybox_1.22.1.bb</filename>,
+>+                but there is also a Git-based version,
+>+                <filename>busybox_git.bb</filename>, which explicitly con=
+tains the
+>line
+>+                <literallayout class=3D'monospaced'>
+>+    DEFAULT_PREFERENCE =3D "-1"
+>+                </literallayout>
+>+                to ensure that the numbered, stable version is always pre=
+ferred
+>+                unless the developer selects otherwise.
+>+            </para>
+>+        </note>
+>     </section>
+>
+>     <section id=3D'bb-bitbake-dependencies'>
+>
+>rday
+>
+>--
+>
+>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>Robert P. J. Day                                 Ottawa, Ontario, CANADA
+>                        http://crashcourse.ca
+>
+>Twitter:                                       http://twitter.com/rpjday
+>LinkedIn:                               http://ca.linkedin.com/in/rpjday
+>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>--
+>_______________________________________________
+>bitbake-devel mailing list
+>bitbake-devel@lists.openembedded.org
+>http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
----<br>
-=C2=A0<span class=3D"il">bitbake</span>/lib/bb/utils.py | 2 +-<br>
-=C2=A01 file changed, 1 insertion(+), 1 deletion(-)<br>
-<br>
-diff --git a/<span class=3D"il">bitbake</span>/lib/bb/utils.py b/<span clas=
-s=3D"il">bitbake</span>/lib/bb/utils.py<br>
-index 0be45e1..c48b237 100644<br>
---- a/<span class=3D"il">bitbake</span>/lib/bb/utils.py<br>
-+++ b/<span class=3D"il">bitbake</span>/lib/bb/utils.py<br>
-@@ -809,7 +809,7 @@ def which(path, item, direction =3D 0, history =3D Fals=
-e):<br>
-=C2=A0 =C2=A0 =C2=A0for p in paths:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0next =3D os.path.join(p, item)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0hist.append(next)<br>
-- =C2=A0 =C2=A0 =C2=A0 =C2=A0if os.path.exists(next):<br>
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0if os.path.isfile(next):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if not os.path.isabs(next):=
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0next =3D os.p=
-ath.abspath(next)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if history:</div></blockquo=
-te></div><br></div><div class=3D"gmail_extra">This seems questionable to me=
-. With this, it wouldn&#39;t find symlinks, no?<br>-- <br>Christopher Larso=
-n<br>clarson at kergoth dot com<br>
-
-Founder - BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior=
- Software Engineer, Mentor Graphics
-</div></div>
-
---001a11c34b8833ffe604fdb31f42--
