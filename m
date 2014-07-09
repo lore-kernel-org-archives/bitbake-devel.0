@@ -1,31 +1,36 @@
-Return-Path: <rpjday@crashcourse.ca>
-Received: from astoria.ccjclearline.com (astoria.ccjclearline.com
-	[64.235.106.9])
-	by mail.openembedded.org (Postfix) with ESMTP id 72BCF70253
+Return-Path: <kergoth@gmail.com>
+Received: from mail-lb0-f177.google.com (mail-lb0-f177.google.com
+	[209.85.217.177])
+	by mail.openembedded.org (Postfix) with ESMTP id 2755B70253
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  9 Jul 2014 15:14:51 +0000 (UTC)
-Received: from [69.196.158.250] (port=45814 helo=crashcourse.ca)
-	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES128-SHA:128)
-	(Exim 4.80) (envelope-from <rpjday@crashcourse.ca>)
-	id 1X4ta8-0003pu-9u for bitbake-devel@lists.openembedded.org;
-	Wed, 09 Jul 2014 11:14:52 -0400
-Date: Wed, 9 Jul 2014 11:14:43 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@localhost
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Message-ID: <alpine.LFD.2.11.1407091107010.10307@localhost>
-User-Agent: Alpine 2.11 (LFD 23 2013-08-11)
+	Wed,  9 Jul 2014 15:20:28 +0000 (UTC)
+Received: by mail-lb0-f177.google.com with SMTP id u10so5058086lbd.22
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 09 Jul 2014 08:20:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=Eq3ADEs3/19JHo/Y5likjP+utH01DJtCCrzganHxhPg=;
+	b=YaGGouBowOAqH9UhzJnKS+iq7DMK8H9Opxae20RpvI4KI7mDlt4i49U2UFlSBdk6kO
+	/6BYPXa8ba6xMfzvMDsRgWOMF+hihWZoK0C/71NweSmcZ3gpufmfWcDpfgNK7aURdn7L
+	oFsqMboceg7EGUnE7kZYDevIFU6FeZIv6iYS4mnOQ9aEWFrUGoyRTWYEGHRMqnzlYE2a
+	V6RNhhcOfuRd/v6xxdxkKz5n8ImPvBfbtjwkBoGIAFAph3+sTNw2qimRb9ailmvZcwND
+	lddDu2l2Vydx/rRvs4AtEbMoNZ9YkjC8AGnNld5l5VwBM3kxF/Kw0VCsHXmVJBWpd+Cp
+	EujQ==
+X-Received: by 10.152.19.164 with SMTP id g4mr32817490lae.47.1404919228734;
+	Wed, 09 Jul 2014 08:20:28 -0700 (PDT)
 MIME-Version: 1.0
-X-AntiAbuse: This header was added to track abuse,
-	please include it with any abuse report
-X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-Subject: possible clarification of EXPORT_FUNCTIONS for user manual
+Sender: kergoth@gmail.com
+Received: by 10.112.168.66 with HTTP; Wed, 9 Jul 2014 08:20:07 -0700 (PDT)
+In-Reply-To: <alpine.LFD.2.11.1407090934540.8165@localhost>
+References: <alpine.LFD.2.11.1407090934540.8165@localhost>
+From: Christopher Larson <clarson@kergoth.com>
+Date: Wed, 9 Jul 2014 08:20:07 -0700
+X-Google-Sender-Auth: VzoOKphlqmkEW-nb9EcKj5ZARQ0
+Message-ID: <CABcZAN=OPjSrfQNSjarThUu37Q3LgoZc8jvX4t1+CN8nZnEh=w@mail.gmail.com>
+To: "Robert P. J. Day" <rpjday@crashcourse.ca>
+Cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
+Subject: Re: should list of "Variable Flags" include "fakeroot"?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,43 +43,66 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 09 Jul 2014 15:14:57 -0000
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-List-Received-Date: Wed, 09 Jul 2014 15:20:32 -0000
+Content-Type: multipart/alternative; boundary=089e0149423091256b04fdc43f43
 
+--089e0149423091256b04fdc43f43
+Content-Type: text/plain; charset=UTF-8
 
-  so, just to make sure i'm understanding this correctly, in section
-3.4.5 of BB user manual, discussion of EXPORT_FUNCTIONS talks about
-the general concept of exporting *functions*, but the entire section
-uses exclusively "do_" examples, which might mislead the reader into
-thinking it's good only for *tasks*.
+On Wed, Jul 9, 2014 at 6:38 AM, Robert P. J. Day <rpjday@crashcourse.ca>
+wrote:
 
-  i decided to look through the oe-core layer for examples of
-exporting an actual function, and i found all of one example -- in
-meta/classes/debian.bbclass:
+>   user manual, "3.6 Variable Flags" includes "fakeroot" as one of the
+> numerous flags, but that section claims that all of those flags can be
+> set using the standard variable syntax. but IIRC, fakeroot is set as
+> an *attribute* on tasks these days, as in:
+>
+>   fakeroot tar_sdk() {
+>
+> so how should that entry be worded/reworded? unless i'm misreading
+> something.
+>
 
-  python debian_package_name_hook () {
-      ... snip ...
-  }
-  ...
-  EXPORT_FUNCTIONS package_name_hook
-
-which seems like a valid example of exporting a function, except i
-can't find a single example of this function being used anywhere else.
-am i missing something?
-
-  anyway, i guess my point is that that section could be tweaked to
-emphasize that exporting works for both functions and tasks, although
-the only function example i found seems unused. thoughts?
-
-rday
-
+It likely shouldn't be mentioned as a flag. The fact that it's a flag
+internally is a bitbake implementation detail that likely isn't something
+they need to be aware of, in my personal opinion, anyway.
 -- 
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
+--089e0149423091256b04fdc43f43
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Wed, Jul 9, 2014 at 6:38 AM, Robert P. J. Day <span dir=3D"ltr">&lt;<a h=
+ref=3D"mailto:rpjday@crashcourse.ca" target=3D"_blank">rpjday@crashcourse.c=
+a</a>&gt;</span> wrote:<br>
 
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div id=3D":xm" class=3D"a3s" style=3D"overf=
+low:hidden">=C2=A0 user manual, &quot;3.6 Variable Flags&quot; includes &qu=
+ot;fakeroot&quot; as one of the<br>
+
+
+numerous flags, but that section claims that all of those flags can be<br>
+set using the standard variable syntax. but IIRC, fakeroot is set as<br>
+an *attribute* on tasks these days, as in:<br>
+<br>
+=C2=A0 fakeroot tar_sdk() {<br>
+<br>
+so how should that entry be worded/reworded? unless i&#39;m misreading<br>
+something.</div></blockquote></div><br></div><div class=3D"gmail_extra">It =
+likely shouldn&#39;t be mentioned as a flag. The fact that it&#39;s a flag =
+internally is a bitbake implementation detail that likely isn&#39;t somethi=
+ng they need to be aware of, in my personal opinion, anyway.<br>
+
+-- <br>Christopher Larson<br>clarson at kergoth dot com<br>Founder - BitBak=
+e, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software Engine=
+er, Mentor Graphics
+</div></div>
+
+--089e0149423091256b04fdc43f43--
