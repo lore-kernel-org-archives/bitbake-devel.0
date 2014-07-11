@@ -1,28 +1,33 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 9271C7023E
+Return-Path: <lchristina26@gmail.com>
+Received: from mail-ie0-f171.google.com (mail-ie0-f171.google.com
+	[209.85.223.171])
+	by mail.openembedded.org (Postfix) with ESMTP id 849F36B737
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 14 Jul 2014 11:24:05 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 14 Jul 2014 04:18:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.01,657,1400050800"; d="scan'208";a="572763801"
-Received: from snaufer-mobl1.gar.corp.intel.com (HELO
-	peggleto-mobl5.ger.corp.intel.com) ([10.252.121.80])
-	by orsmga002.jf.intel.com with ESMTP; 14 Jul 2014 04:24:05 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: "Rifenbark, Scott M" <scott.m.rifenbark@intel.com>,
-	"Robert P. J. Day" <rpjday@crashcourse.ca>
-Date: Mon, 14 Jul 2014 12:24:02 +0100
-Message-ID: <2465679.y5U0thETEa@peggleto-mobl5.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.13.2 (Linux/3.15.4-200.fc20.x86_64; KDE/4.13.2; x86_64; ; )
-In-Reply-To: <41DEA4B02DBDEF40A0F3B6D0DDB1237983FB688C@ORSMSX101.amr.corp.intel.com>
-References: <alpine.LFD.2.11.1407080725470.32352@localhost>
-	<41DEA4B02DBDEF40A0F3B6D0DDB1237983FB688C@ORSMSX101.amr.corp.intel.com>
+	Fri, 11 Jul 2014 21:43:19 +0000 (UTC)
+Received: by mail-ie0-f171.google.com with SMTP id at1so1418587iec.30
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 11 Jul 2014 14:43:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:date:message-id:subject:from:to:content-type;
+	bh=x5rLuTFuJVEMatx3tU6ZH0qiZWwPN65tfXuvF52nm4s=;
+	b=LNxfgKeUtz+vBx6NVGVKwNsU2/fq2N0FL3jU/OQ8J7boIhGb/64f6epvjxzgDY53e9
+	FnOhcej3unogOPc9qTJqf809Idx6LisLrG9nYIfPrgjApzxhfkcWiY8LHF5WzLE8Y6bQ
+	56pgJzOtWEKb/atYok8hopHd/qtsva6bWS/SMwHS7cUVE7IqiN9tR7Jqf0qKnL/uE4DZ
+	r6A+l/VqqE+NXLVNLOMIJ9nkpMAmAkZ/fIVYz9vtv/vvTq+AGLq4MHLz/KFJR3Vp0YPP
+	Ru9Puapm4/Ler70fCGSRL1k/5lT3U/39Pfck1fUtMns12CXQ3tMuL/Yz0VURvcIeoxLy
+	I57A==
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: how much effort is going into updating bitbake user	manual?
+X-Received: by 10.42.161.132 with SMTP id t4mr7546120icx.34.1405115000278;
+	Fri, 11 Jul 2014 14:43:20 -0700 (PDT)
+Sender: lchristina26@gmail.com
+Received: by 10.64.11.102 with HTTP; Fri, 11 Jul 2014 14:43:20 -0700 (PDT)
+Date: Fri, 11 Jul 2014 15:43:20 -0600
+X-Google-Sender-Auth: d591tRk-WkYHdgoo7HuugMeWl5c
+Message-ID: <CAL0pqZ1j0Lw2tuNA1ZVutmAqu2hX9eX_x=2ipM7++hmhM5KsJA@mail.gmail.com>
+From: Leah <leah@wolfssl.com>
+To: bitbake-devel@lists.openembedded.org
+X-Mailman-Approved-At: Tue, 15 Jul 2014 10:17:28 +0000
+Subject: CyaSSL Lightweight SSL layer for OE
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,29 +40,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 14 Jul 2014 11:24:07 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Fri, 11 Jul 2014 21:43:21 -0000
+Content-Type: multipart/alternative; boundary=90e6ba6e835675d52104fdf1d420
 
-On Tuesday 08 July 2014 11:44:51 Rifenbark, Scott M wrote:
-> Robert P. J. Day wrote:
-> > case in point -- there are at least some BB variables that aren't listed
-> > in the glossary, such as PARALLEL_MAKE. i'm making a list of these, but i
-> > know that the yocto project also has a massive reference manual which
-> > includes a variable glossary. so where should i concentrate my efforts?
-> > personally, if something is BB-specific, i'd rather it go into the BB user
-> > manual.
->
-> If it is BB-specific then it definitely goes in the BB-manual
+--90e6ba6e835675d52104fdf1d420
+Content-Type: text/plain; charset=UTF-8
 
-Right; and in the case of PARALLEL_MAKE, that variable is not understood by 
-BitBake itself - its implementation is in the OE metadata.
+CyaSSL is now compatible with OpenEmbedded! Check out our latest updates to
+the meta-wolfssl layer:
+http://yassl.com/yaSSL/Blog/Entries/2014/7/11_meta-wolfssl_Layer_for_Yocto_and_OpenEmbedded.html
 
-Cheers,
-Paul
 
 -- 
 
-Paul Eggleton
-Intel Open Source Technology Centre
+Leah
 
+--90e6ba6e835675d52104fdf1d420
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">CyaSSL is now compatible with OpenEmbedded! Check out our =
+latest updates to the meta-wolfssl layer: <a href=3D"http://yassl.com/yaSSL=
+/Blog/Entries/2014/7/11_meta-wolfssl_Layer_for_Yocto_and_OpenEmbedded.html"=
+>http://yassl.com/yaSSL/Blog/Entries/2014/7/11_meta-wolfssl_Layer_for_Yocto=
+_and_OpenEmbedded.html</a><br>
+<div><br clear=3D"all"><br>-- <br><div dir=3D"ltr"><div><div><div><p></p>Le=
+ah<br></div></div></div><div><div><br><br></div></div></div></div></div>
+
+--90e6ba6e835675d52104fdf1d420--
