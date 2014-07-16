@@ -1,45 +1,49 @@
-Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f173.google.com (mail-we0-f173.google.com
-	[74.125.82.173])
-	by mail.openembedded.org (Postfix) with ESMTP id 1EBE47061F
+Return-Path: <ting.liu@freescale.com>
+X-Greylist: delayed 951 seconds by postgrey-1.34 at layers.openembedded.org;
+	Wed, 16 Jul 2014 10:33:19 UTC
+Received: from na01-bl2-obe.outbound.protection.outlook.com
+	(mail-bl2lp0212.outbound.protection.outlook.com [207.46.163.212])
+	by mail.openembedded.org (Postfix) with ESMTP id C7C287036A
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Jul 2014 12:15:07 +0000 (UTC)
-Received: by mail-we0-f173.google.com with SMTP id q58so4607589wes.4
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Jul 2014 05:15:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=z+2OxFwikzDLrfHiahVuqY9CLcNVDN3hnuGZjOa+JQ4=;
-	b=XQAJjIi9L9JlH3m/vWXD6OzDSgUBpEV9/pTu4tXhebBJwhtlV16nJyhDHSZy9XuM1k
-	YeyYBiAfUYa8cIW0QAmsGUaCtpwkFtVZO9B0afT1bM2xFPLioc3emELFz4yuI4lVVOPc
-	UlQMFuGHiWEHvLQRub7fC6C9Z5WeKSaV7XO/KPQAU0+ATS7asgksOEEaB+ec5sym3oix
-	MDgaY4e/Oh+1yutc9SKzOph4v1U+qpNWmxYrANx35ucmQ5ivrdik79+Az0WaGp20yLnV
-	kxGs/3XHNPTG+W2N2oIi1R26HCzbjwMbARqz+4fkEaYUgaid+ul3xBtTPj+FKaYSh1ht
-	pMTg==
-X-Gm-Message-State: ALoCoQm+64UyOEFYM6fR/1IjT4B6j09nZI1Z64oUjoRoEjm3tkjuwr5awnR3x9QhhLLmFt84s13y
-X-Received: by 10.180.74.142 with SMTP id t14mr6894115wiv.71.1405685706938;
-	Fri, 18 Jul 2014 05:15:06 -0700 (PDT)
-Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id l2sm13810404wjw.31.2014.07.18.05.15.04
-	for <multiple recipients>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 18 Jul 2014 05:15:05 -0700 (PDT)
-Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id DC382560429; Fri, 18 Jul 2014 13:15:02 +0100 (BST)
-From: Alex DAMIAN <alexandru.damian@intel.com>
-To: bitbake-devel@lists.openembedded.org,
-	toaster@yoctoproject.org
-Date: Fri, 18 Jul 2014 13:15:02 +0100
-Message-Id: <80305c320af2e118915c561bd3f26e99c306fbea.1405685308.git.alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <a487f31bcfa47e1a48cb4bc122017ccb5e8b8f1a.1405685308.git.alexandru.damian@intel.com>
-References: <a487f31bcfa47e1a48cb4bc122017ccb5e8b8f1a.1405685308.git.alexandru.damian@intel.com>
-In-Reply-To: <cover.1405685308.git.alexandru.damian@intel.com>
-References: <cover.1405685308.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 8/8] toasterui: fixing event.data clash
+	Wed, 16 Jul 2014 10:33:19 +0000 (UTC)
+Received: from CH1PR03CA008.namprd03.prod.outlook.com (10.255.156.153) by
+	CY1PR0301MB0716.namprd03.prod.outlook.com (25.160.159.146) with
+	Microsoft
+	SMTP Server (TLS) id 15.0.985.8; Wed, 16 Jul 2014 10:17:28 +0000
+Received: from BN1BFFO11FD050.protection.gbl (10.255.156.132) by
+	CH1PR03CA008.outlook.office365.com (10.255.156.153) with Microsoft SMTP
+	Server (TLS) id 15.0.985.8 via Frontend Transport;
+	Wed, 16 Jul 2014 10:17:27 +0000
+Received: from tx30smr01.am.freescale.net (192.88.168.50) by
+	BN1BFFO11FD050.mail.protection.outlook.com (10.58.145.5) with Microsoft
+	SMTP Server (TLS) id 15.0.980.11 via Frontend Transport;
+	Wed, 16 Jul 2014 10:17:27 +0000
+Received: from b28495.ap.freescale.net (b28495.ap.freescale.net [10.193.20.99])
+	by tx30smr01.am.freescale.net (8.14.3/8.14.0) with ESMTP id
+	s6GAHOUT007631; Wed, 16 Jul 2014 03:17:25 -0700
+From: <ting.liu@freescale.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Wed, 16 Jul 2014 18:18:22 +0800
+Message-ID: <1405505902-29285-1-git-send-email-ting.liu@freescale.com>
+X-Mailer: git-send-email 1.7.3.4
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:192.88.168.50; CTRY:US; IPV:CAL; IPV:NLI;
+	EFV:NLI; SFV:NSPM;
+	SFS:(6009001)(199002)(189002)(6806004)(229853001)(26826002)(76482001)(104166001)(50226001)(46102001)(102836001)(4396001)(85306003)(84676001)(44976005)(85852003)(19580395003)(21056001)(47776003)(83322001)(106466001)(87286001)(2351001)(62966002)(48376002)(50466002)(89996001)(50986999)(95666004)(68736004)(80022001)(105606002)(99396002)(36756003)(74502001)(64706001)(86362001)(31966008)(83072002)(77156001)(88136002)(110136001)(19580405001)(93916002)(104016003)(92566001)(107046002)(81542001)(79102001)(86152002)(97736001)(87936001)(20776003)(81342001)(92726001)(74662001)(77982001)(33646002);
+	DIR:OUT; SFP:; SCL:1; SRVR:CY1PR0301MB0716;
+	H:tx30smr01.am.freescale.net; FPR:; MLV:ovrnspm;
+	PTR:InfoDomainNonexistent; MX:1; LANG:en; 
+MIME-Version: 1.0
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:
+X-Forefront-PRVS: 0274272F87
+Received-SPF: Fail (: domain of freescale.com does not designate 192.88.168.50
+	as permitted sender) receiver=; client-ip=192.88.168.50;
+	helo=tx30smr01.am.freescale.net;
+Authentication-Results: spf=fail (sender IP is 192.88.168.50)
+	smtp.mailfrom=ting.liu@freescale.com; 
+X-OriginatorOrg: freescale.com
+X-Mailman-Approved-At: Fri, 18 Jul 2014 13:06:08 +0000
+Subject: [PATCH] bitbake fetch2/file: fix symlink not created issue
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,134 +56,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 18 Jul 2014 12:15:08 -0000
+X-List-Received-Date: Wed, 16 Jul 2014 10:33:20 -0000
+Content-Type: text/plain
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Ting Liu <ting.liu@freescale.com>
 
-This patch fixes a name collision on the event.data
-in the MetadataEvent class. event.data is used in the
-event system as a copy of "d" in certain situations,
-and this collision triggered a bug leading to data loss.
-
-[YOCTO #6332]
-
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+Signed-off-by: Ting Liu <ting.liu@freescale.com>
 ---
- lib/bb/event.py              |  2 +-
- lib/bb/ui/buildinfohelper.py | 30 +++++++++++++++---------------
- 2 files changed, 16 insertions(+), 16 deletions(-)
+ bitbake/lib/bb/fetch2/__init__.py |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
 
-diff --git a/lib/bb/event.py b/lib/bb/event.py
-index 8b47ae5..e2f6b9c 100644
---- a/lib/bb/event.py
-+++ b/lib/bb/event.py
-@@ -594,7 +594,7 @@ class MetadataEvent(Event):
-     def __init__(self, eventtype, eventdata):
-         Event.__init__(self)
-         self.type = eventtype
--        self.data = eventdata
-+        self._localdata = eventdata
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index dcada12..7a4e43b 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -835,7 +835,10 @@ def try_mirror_url(origud, ud, ld, check = False):
+                 # Broken symbolic link
+                 os.unlink(origud.localpath)
  
- class SanityCheck(Event):
-     """
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index 29cfc81..f64423b 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -596,8 +596,8 @@ class BuildInfoHelper(object):
-     ## external available methods to store information
+-            os.symlink(ud.localpath, origud.localpath)
++            bb.utils.mkdirhier(os.path.dirname(origud.localpath))
++            src = os.path.join(dldir, ud.localpath)
++            os.symlink(src, origud.localpath)
++
+         update_stamp(origud, ld)
+         return ud.localpath
  
-     def store_layer_info(self, event):
--        assert 'data' in vars(event)
--        layerinfos = event.data
-+        assert '_localdata' in vars(event)
-+        layerinfos = event._localdata
-         self.internal_state['lvs'] = {}
-         for layer in layerinfos:
-             self.internal_state['lvs'][self.orm_wrapper.get_update_layer_object(layerinfos[layer])] = layerinfos[layer]['version']
-@@ -636,10 +636,10 @@ class BuildInfoHelper(object):
-         image_fstypes = self.server.runCommand(["getVariable", "IMAGE_FSTYPES"])[0]
-         for t in self.internal_state['targets']:
-             if t.is_image == True:
--                output_files = list(event.data.viewkeys())
-+                output_files = list(event._localdata.viewkeys())
-                 for output in output_files:
-                     if t.target in output and output.split('.rootfs.')[1] in image_fstypes:
--                        self.orm_wrapper.save_target_image_file_information(t, output, event.data[output])
-+                        self.orm_wrapper.save_target_image_file_information(t, output, event._localdata[output])
- 
-     def update_build_information(self, event, errors, warnings, taskfailures):
-         if 'build' in self.internal_state:
-@@ -647,8 +647,8 @@ class BuildInfoHelper(object):
- 
- 
-     def store_license_manifest_path(self, event):
--        deploy_dir = event.data['deploy_dir']
--        image_name =  event.data['image_name']
-+        deploy_dir = event._localdata['deploy_dir']
-+        image_name =  event._localdata['image_name']
-         path = deploy_dir + "/licenses/" + image_name + "/"
-         for target in self.internal_state['targets']:
-             if target.target in image_name:
-@@ -696,7 +696,7 @@ class BuildInfoHelper(object):
- 
- 
-     def store_tasks_stats(self, event):
--        for (taskfile, taskname, taskstats, recipename) in event.data:
-+        for (taskfile, taskname, taskstats, recipename) in event._localdata:
-             localfilepath = taskfile.split(":")[-1]
-             assert localfilepath.startswith("/")
- 
-@@ -768,7 +768,7 @@ class BuildInfoHelper(object):
- 
- 
-     def store_missed_state_tasks(self, event):
--        for (fn, taskname, taskhash, sstatefile) in event.data['missed']:
-+        for (fn, taskname, taskhash, sstatefile) in event._localdata['missed']:
- 
-             identifier = fn + taskname + "_setscene"
-             recipe_information = self._get_recipe_information_from_taskfile(fn)
-@@ -787,7 +787,7 @@ class BuildInfoHelper(object):
- 
-             self.orm_wrapper.get_update_task_object(task_information)
- 
--        for (fn, taskname, taskhash, sstatefile) in event.data['found']:
-+        for (fn, taskname, taskhash, sstatefile) in event._localdata['found']:
- 
-             identifier = fn + taskname + "_setscene"
-             recipe_information = self._get_recipe_information_from_taskfile(fn)
-@@ -804,15 +804,15 @@ class BuildInfoHelper(object):
- 
- 
-     def store_target_package_data(self, event):
--        assert 'data' in vars(event)
-+        assert '_localdata' in vars(event)
-         # for all image targets
-         for target in self.internal_state['targets']:
-             if target.is_image:
-                 try:
--                    pkgdata = event.data['pkgdata']
--                    imgdata = event.data['imgdata'][target.target]
-+                    pkgdata = event._localdata['pkgdata']
-+                    imgdata = event._localdata['imgdata'][target.target]
-                     self.orm_wrapper.save_target_package_information(self.internal_state['build'], target, imgdata, pkgdata, self.internal_state['recipes'])
--                    filedata = event.data['filedata'][target.target]
-+                    filedata = event._localdata['filedata'][target.target]
-                     self.orm_wrapper.save_target_file_information(self.internal_state['build'], target, filedata)
-                 except KeyError:
-                     # we must have not got the data for this image, nothing to save
-@@ -922,8 +922,8 @@ class BuildInfoHelper(object):
- 
- 
-     def store_build_package_information(self, event):
--        assert 'data' in vars(event)
--        package_info = event.data
-+        assert '_localdata' in vars(event)
-+        package_info = event._localdata
-         self.orm_wrapper.save_build_package_information(self.internal_state['build'],
-                             package_info,
-                             self.internal_state['recipes'],
 -- 
-1.9.1
+1.7.3.4
 
 
