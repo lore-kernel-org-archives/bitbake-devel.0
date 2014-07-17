@@ -1,46 +1,25 @@
-Return-Path: <ting.liu@freescale.com>
-Received: from na01-bn1-obe.outbound.protection.outlook.com
-	(mail-bn1blp0181.outbound.protection.outlook.com [207.46.163.181])
-	by mail.openembedded.org (Postfix) with ESMTP id 6CFF370332
+Return-Path: <meier.dennis@siemens.com>
+X-Greylist: delayed 726 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 17 Jul 2014 09:36:34 UTC
+Received: from goliath.siemens.de (goliath.siemens.de [192.35.17.28])
+	by mail.openembedded.org (Postfix) with ESMTP id 7ACBB6E608
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 16 Jul 2014 10:37:33 +0000 (UTC)
-Received: from BN3PR0301CA0053.namprd03.prod.outlook.com (25.160.152.149) by
-	BLUPR03MB151.namprd03.prod.outlook.com (10.255.212.25) with Microsoft
-	SMTP Server (TLS) id 15.0.990.7; Wed, 16 Jul 2014 10:37:33 +0000
-Received: from BY2FFO11FD049.protection.gbl (2a01:111:f400:7c0c::131) by
-	BN3PR0301CA0053.outlook.office365.com (2a01:111:e400:401e::21) with
-	Microsoft
-	SMTP Server (TLS) id 15.0.990.7 via Frontend Transport; Wed, 16 Jul 2014
-	10:37:32 +0000
-Received: from tx30smr01.am.freescale.net (192.88.168.50) by
-	BY2FFO11FD049.mail.protection.outlook.com (10.1.15.186) with Microsoft
-	SMTP Server (TLS) id 15.0.980.11 via Frontend Transport;
-	Wed, 16 Jul 2014 10:37:32 +0000
-Received: from b28495.ap.freescale.net (b28495.ap.freescale.net [10.193.20.99])
-	by tx30smr01.am.freescale.net (8.14.3/8.14.0) with ESMTP id
-	s6GAbT1h020429; Wed, 16 Jul 2014 03:37:30 -0700
-From: <b28495@freescale.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 16 Jul 2014 18:38:27 +0800
-Message-ID: <1405507107-30079-1-git-send-email-b28495@freescale.com>
-X-Mailer: git-send-email 1.7.3.4
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:192.88.168.50; CTRY:US; IPV:CAL; IPV:NLI;
-	EFV:NLI; SFV:NSPM;
-	SFS:(6009001)(189002)(199002)(105606002)(95666004)(26826002)(21056001)(77982001)(93916002)(85306003)(33646002)(102836001)(106466001)(104016003)(110136001)(89996001)(88136002)(97736001)(31966008)(81342001)(64706001)(47776003)(107046002)(4396001)(20776003)(92566001)(6806004)(86152002)(77156001)(83072002)(85852003)(50466002)(46102001)(87936001)(92726001)(48376002)(81542001)(83322001)(44976005)(74662001)(68736004)(87286001)(2351001)(19580405001)(84676001)(36756003)(50226001)(50986999)(80022001)(62966002)(76482001)(19580395003)(104166001)(79102001)(229853001)(74502001)(99396002);
-	DIR:OUT; SFP:; SCL:1; SRVR:BLUPR03MB151;
-	H:tx30smr01.am.freescale.net; FPR:; MLV:ovrnspm;
-	PTR:InfoDomainNonexistent; MX:1; LANG:en; 
-MIME-Version: 1.0
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:
-X-Forefront-PRVS: 0274272F87
-Received-SPF: Fail (: domain of freescale.com does not designate 192.88.168.50
-	as permitted sender) receiver=; client-ip=192.88.168.50;
-	helo=tx30smr01.am.freescale.net;
-Authentication-Results: spf=fail (sender IP is 192.88.168.50)
-	smtp.mailfrom=ting.liu@freescale.com; 
-X-OriginatorOrg: freescale.com
-Subject: [PATCH] bitbake fetch2/file: fix symlink not created issue
+	Thu, 17 Jul 2014 09:36:34 +0000 (UTC)
+Received: from mail1.siemens.de (localhost [127.0.0.1])
+	by goliath.siemens.de (8.14.3/8.14.3) with ESMTP id s6H9OSxn020881
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 17 Jul 2014 11:24:28 +0200
+Received: from localhost.localdomain ([139.16.76.244])
+	by mail1.siemens.de (8.14.3/8.14.3) with ESMTP id s6H9OSPm015276;
+	Thu, 17 Jul 2014 11:24:28 +0200
+From: Dennis Meier <meier.dennis@siemens.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 17 Jul 2014 11:23:45 +0200
+Message-Id: <1405589025-26527-1-git-send-email-meier.dennis@siemens.com>
+X-Mailer: git-send-email 1.7.10.4
+Cc: henrique.mendonca@siemens.com, pascal.bach@siemens.com,
+	christian.liechti@siemens.com, r.meier@siemens.com
+Subject: [PATCH] fetch2: Add module for ClearCase (ccrc://)
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,33 +32,356 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 16 Jul 2014 10:37:42 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 17 Jul 2014 09:36:40 -0000
 
-From: Ting Liu <ting.liu@freescale.com>
+I sumbitted this patch as a pull request on github this morning (https://github.com/openembedded/bitbake/pull/6). After consulting Richard Purdie on IRC I'm resubmitting here. I hope to comply with all the formalities :). We are looking forward to hearing from you.
 
-Signed-off-by: Ting Liu <ting.liu@freescale.com>
+Kind Regards,
+Dennis
+
+
+
+The clearcase fetcher is used to retrieve files from a ClearCase (http://en.wikipedia.org/wiki/Rational_ClearCase) repository.
+
+Usage in the recipe:
+
+    SRC_URI = "ccrc://cc.example.org/ccrc;vob=/example_vob;module=/example_module"
+    SRCREV = "EXAMPLE_CLEARCASE_TAG"
+    PV = "${@d.getVar("SRCREV").replace("/", "+")}"
+
+The fetcher uses the rcleartool or cleartool remote client, depending on which one is available.
+
+Supported SRC_URI options are:
+
+- vob
+    (required) The name of the clearcase VOB (with prepending "/")
+
+- module
+    The module in the selected VOB (with prepending "/")
+
+    The module and vob parameters are combined to create
+    the following load rule in the view config spec:
+                load <vob><module>
+
+- proto
+    http or https
+
+Related variables:
+
+    CCASE_CUSTOM_CONFIG_SPEC
+            Write a config spec to this variable in your recipe to use it instead
+            of the default config spec generated by this fetcher.
+            Please note that the SRCREV loses its functionality if you specify
+            this variable. SRCREV is still used to label the archive after a fetch,
+            but it doesn't define what's fetched.
+
+User credentials:
+
+    When using cleartool:
+            The login of cleartool is handled by the system. No special steps needed.
+
+    When using rcleartool:
+            In order to use rcleartool with authenticated users an `rcleartool login` is
+            necessary before using the fetcher.
+
+Signed-off-by: Dennis Meier <meier.dennis@siemens.com>
+Reviewed-by: Roger Meier <r.meier@siemens.com>
+Reviewed-by: Christian Liechti <christian.liechti@siemens.com>
+Reviewed-by: Henrique Mendonca <henrique.mendonca@siemens.com>
+Reviewed-by: Pascal Bach <pascal.bach@siemens.com>
 ---
- bitbake/lib/bb/fetch2/__init__.py |    5 ++++-
- 1 files changed, 4 insertions(+), 1 deletions(-)
+ lib/bb/fetch2/__init__.py  |    2 +
+ lib/bb/fetch2/clearcase.py |  263 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 265 insertions(+)
+ create mode 100644 lib/bb/fetch2/clearcase.py
 
-diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
-index dcada12..7a4e43b 100644
---- a/bitbake/lib/bb/fetch2/__init__.py
-+++ b/bitbake/lib/bb/fetch2/__init__.py
-@@ -835,7 +835,10 @@ def try_mirror_url(origud, ud, ld, check = False):
-                 # Broken symbolic link
-                 os.unlink(origud.localpath)
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index dcada12..df2f2b0 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1560,6 +1560,7 @@ from . import bzr
+ from . import hg
+ from . import osc
+ from . import repo
++from . import clearcase
  
--            os.symlink(ud.localpath, origud.localpath)
-+            bb.utils.mkdirhier(os.path.dirname(origud.localpath))
-+            src = os.path.join(dldir, ud.localpath)
-+            os.symlink(src, origud.localpath)
+ methods.append(local.Local())
+ methods.append(wget.Wget())
+@@ -1575,3 +1576,4 @@ methods.append(bzr.Bzr())
+ methods.append(hg.Hg())
+ methods.append(osc.Osc())
+ methods.append(repo.Repo())
++methods.append(clearcase.ClearCase())
+diff --git a/lib/bb/fetch2/clearcase.py b/lib/bb/fetch2/clearcase.py
+new file mode 100644
+index 0000000..bfca2f7
+--- /dev/null
++++ b/lib/bb/fetch2/clearcase.py
+@@ -0,0 +1,263 @@
++# ex:ts=4:sw=4:sts=4:et
++# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
++"""
++BitBake 'Fetch' clearcase implementation
 +
-         update_stamp(origud, ld)
-         return ud.localpath
- 
++The clearcase fetcher is used to retrieve files from a ClearCase repository.
++
++Usage in the recipe:
++
++    SRC_URI = "ccrc://cc.example.org/ccrc;vob=/example_vob;module=/example_module"
++    SRCREV = "EXAMPLE_CLEARCASE_TAG"
++    PV = "${@d.getVar("SRCREV").replace("/", "+")}"
++
++The fetcher uses the rcleartool or cleartool remote client, depending on which one is available.
++
++Supported SRC_URI options are:
++
++- vob
++    (required) The name of the clearcase VOB (with prepending "/")
++
++- module
++    The module in the selected VOB (with prepending "/")
++
++    The module and vob parameters are combined to create
++    the following load rule in the view config spec:
++                load <vob><module>
++
++- proto
++    http or https
++
++Related variables:
++
++    CCASE_CUSTOM_CONFIG_SPEC
++            Write a config spec to this variable in your recipe to use it instead
++            of the default config spec generated by this fetcher.
++            Please note that the SRCREV loses its functionality if you specify
++            this variable. SRCREV is still used to label the archive after a fetch,
++            but it doesn't define what's fetched.
++
++User credentials:
++    cleartool:
++            The login of cleartool is handled by the system. No special steps needed.
++
++    rcleartool:
++            In order to use rcleartool with authenticated users an `rcleartool login` is
++            necessary before using the fetcher.
++"""
++# Copyright (C) 2014 Siemens AG
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License version 2 as
++# published by the Free Software Foundation.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License along
++# with this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++#
++
++import os
++import sys
++import shutil
++import bb
++from   bb import data
++from   bb.fetch2 import FetchMethod
++from   bb.fetch2 import FetchError
++from   bb.fetch2 import runfetchcmd
++from   bb.fetch2 import logger
++from   distutils import spawn
++
++class ClearCase(FetchMethod):
++    """Class to fetch urls via 'clearcase'"""
++    def init(self, d):
++        pass
++
++    def supports(self, ud, d):
++        """
++        Check to see if a given url can be fetched with Clearcase.
++        """
++        return ud.type in ['ccrc']
++
++    def debug(self, msg):
++        logger.debug(1, "ClearCase: %s", msg)
++
++    def urldata_init(self, ud, d):
++        """
++        init ClearCase specific variable within url data
++        """
++        ud.proto = "https"
++        if 'protocol' in ud.parm:
++            ud.proto = ud.parm['protocol']
++        if not ud.proto in ('http', 'https'):
++            raise fetch2.ParameterError("Invalid protocol type", ud.url)
++
++        ud.vob = ''
++        if 'vob' in ud.parm:
++            ud.vob = ud.parm['vob']
++        else:
++            msg = ud.url+": vob must be defined so the fetcher knows what to get."
++            raise MissingParameterError('vob', msg)
++
++        if 'module' in ud.parm:
++            ud.module = ud.parm['module']
++        else:
++            ud.module = ""
++
++        ud.basecmd = d.getVar("FETCHCMD_ccrc", True) or spawn.find_executable("cleartool") or spawn.find_executable("rcleartool")
++
++        if data.getVar("SRCREV", d, True) == "INVALID":
++          raise FetchError("Set a valid SRCREV for the clearcase fetcher in your recipe, e.g. SRCREV = \"/main/LATEST\" or any other label of your choice.")
++
++        ud.label = d.getVar("SRCREV")
++        ud.customspec = d.getVar("CCASE_CUSTOM_CONFIG_SPEC", True)
++
++        ud.server     = "%s://%s%s" % (ud.proto, ud.host, ud.path)
++
++        ud.identifier = "clearcase-%s%s-%s" % ( ud.vob.replace("/", ""),
++                                                ud.module.replace("/", "."),
++                                                ud.label.replace("/", "."))
++
++        ud.viewname         = "%s-view%s" % (ud.identifier, d.getVar("DATETIME", d, True))
++        ud.csname           = "%s-config-spec" % (ud.identifier)
++        ud.ccasedir         = os.path.join(data.getVar("DL_DIR", d, True), ud.type)
++        ud.viewdir          = os.path.join(ud.ccasedir, ud.viewname)
++        ud.configspecfile   = os.path.join(ud.ccasedir, ud.csname)
++        ud.localfile        = "%s.tar.gz" % (ud.identifier)
++
++        self.debug("host            = %s" % ud.host)
++        self.debug("path            = %s" % ud.path)
++        self.debug("server          = %s" % ud.server)
++        self.debug("proto           = %s" % ud.proto)
++        self.debug("type            = %s" % ud.type)
++        self.debug("vob             = %s" % ud.vob)
++        self.debug("module          = %s" % ud.module)
++        self.debug("basecmd         = %s" % ud.basecmd)
++        self.debug("label           = %s" % ud.label)
++        self.debug("ccasedir        = %s" % ud.ccasedir)
++        self.debug("viewdir         = %s" % ud.viewdir)
++        self.debug("viewname        = %s" % ud.viewname)
++        self.debug("configspecfile  = %s" % ud.configspecfile)
++        self.debug("localfile       = %s" % ud.localfile)
++
++        ud.localfile = os.path.join(data.getVar("DL_DIR", d, True), ud.localfile)
++
++    def _build_ccase_command(self, ud, command):
++        """
++        Build up a commandline based on ud
++        command is: mkview, setcs, rmview
++        """
++        options = []
++
++        if "rcleartool" in ud.basecmd:
++            options.append("-server %s" % ud.server)
++
++        basecmd = "%s %s" % (ud.basecmd, command)
++
++        if command is 'mkview':
++            if not "rcleartool" in ud.basecmd:
++                # Cleartool needs a -snapshot view
++                options.append("-snapshot")
++            options.append("-tag %s" % ud.viewname)
++            options.append(ud.viewdir)
++
++        elif command is 'rmview':
++            options.append("-force")
++            options.append("%s" % ud.viewdir)
++
++        elif command is 'setcs':
++            options.append("-overwrite")
++            options.append(ud.configspecfile)
++
++        else:
++            raise FetchError("Invalid ccase command %s" % command)
++
++        ccasecmd = "%s %s" % (basecmd, " ".join(options))
++        self.debug("ccasecmd = %s" % ccasecmd)
++        return ccasecmd
++
++    def _write_configspec(self, ud, d):
++        """
++        Create config spec file (ud.configspecfile) for ccase view
++        """
++        config_spec = ""
++        custom_config_spec = d.getVar("CCASE_CUSTOM_CONFIG_SPEC", d)
++        if custom_config_spec is not None:
++            for line in custom_config_spec.split("\\n"):
++                config_spec += line+"\n"
++            bb.warn("A custom config spec has been set, SRCREV is only relevant for the tarball name.")
++        else:
++            config_spec += "element * CHECKEDOUT\n"
++            config_spec += "element * %s\n" % ud.label
++            config_spec += "load %s%s\n" % (ud.vob, ud.module)
++
++        logger.info("Using config spec: \n%s" % config_spec)
++
++        with open(ud.configspecfile, 'w') as f:
++            f.write(config_spec)
++
++    def _remove_view(self, ud, d):
++        if os.path.exists(ud.viewdir):
++            os.chdir(ud.ccasedir)
++            cmd = self._build_ccase_command(ud, 'rmview');
++            logger.info("cleaning up [VOB=%s label=%s view=%s]", ud.vob, ud.label, ud.viewname)
++            bb.fetch2.check_network_access(d, cmd, ud.url)
++            output = runfetchcmd(cmd, d)
++            logger.info("rmview output: %s", output)
++
++    def need_update(self, ud, d):
++        if ("LATEST" in ud.label) or (ud.customspec and "LATEST" in ud.customspec):
++            ud.identifier += "-%s" % d.getVar("DATETIME",d, True)
++            return True
++        if os.path.exists(ud.localpath):
++            return False
++        return True
++
++    def supports_srcrev(self):
++        return True
++
++    def sortable_revision(self, ud, d, name):
++        return False, ud.identifier
++
++    def download(self, ud, d):
++        """Fetch url"""
++
++        # Make a fresh view
++        bb.utils.mkdirhier(ud.ccasedir)
++        self._write_configspec(ud, d)
++        cmd = self._build_ccase_command(ud, 'mkview')
++        logger.info("creating view [VOB=%s label=%s view=%s]", ud.vob, ud.label, ud.viewname)
++        bb.fetch2.check_network_access(d, cmd, ud.url)
++        try:
++            runfetchcmd(cmd, d)
++        except FetchError as e:
++            if "CRCLI2008E" in e.msg:
++                raise FetchError("%s\n%s\n" % (e.msg, "Call `rcleartool login` in your console to authenticate to the clearcase server before running bitbake."))
++            else:
++                raise e
++
++        # Set configspec: Setting the configspec effectively fetches the files as defined in the configspec
++        os.chdir(ud.viewdir)
++        cmd = self._build_ccase_command(ud, 'setcs');
++        logger.info("fetching data [VOB=%s label=%s view=%s]", ud.vob, ud.label, ud.viewname)
++        bb.fetch2.check_network_access(d, cmd, ud.url)
++        output = runfetchcmd(cmd, d)
++        logger.info("%s", output)
++
++        # Copy the configspec to the viewdir so we have it in our source tarball later
++        shutil.copyfile(ud.configspecfile, os.path.join(ud.viewdir, ud.csname))
++
++        # Clean clearcase meta-data before tar
++
++        runfetchcmd('tar -czf "%s" .' % (ud.localpath), d, cleanup = [ud.localpath])
++
++        # Clean up so we can create a new view next time
++        self.clean(ud, d);
++
++    def clean(self, ud, d):
++        self._remove_view(ud, d)
++        bb.utils.remove(ud.configspecfile)
 -- 
-1.7.3.4
+1.7.10.4
 
 
