@@ -1,45 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f176.google.com (mail-wi0-f176.google.com
-	[209.85.212.176])
-	by mail.openembedded.org (Postfix) with ESMTP id 7AAB17061F
+Received: from mail-wg0-f51.google.com (mail-wg0-f51.google.com [74.125.82.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 0EF2B7061F
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Jul 2014 12:15:04 +0000 (UTC)
-Received: by mail-wi0-f176.google.com with SMTP id bs8so754358wib.15
+	Fri, 18 Jul 2014 12:15:05 +0000 (UTC)
+Received: by mail-wg0-f51.google.com with SMTP id b13so3409686wgh.10
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Jul 2014 05:15:04 -0700 (PDT)
+	Fri, 18 Jul 2014 05:15:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=IiA8DZl+Ec3cc3EHteUVZYektgyOcl/SyYl3LlmT9ps=;
-	b=RktAIq0ElwyVJa10SnpA85HOp9w2fnjyCddMt6ouaPsNmNaTuV4XHwYbVrN/4s0uig
-	ryAGJ14lNYKvpnim6SxTsz3dsL7buSo1tZj9bfhzkqSmT2WCd54MzLmkoijQvw0y3tRk
-	szM8gedZJ7yqmFUOn5fEbogdyM9OcofjDegDLHVvhjTuRBNP/KCh3pfgDEe72QZ6Op6m
-	Yc2+SdA8wNtia/WLeJ91dvdbOuMNlMmLUB80nKBErFlA5vqLtgYFvDieEzk+f9tQdwWS
-	9OeaYwx22pCYuF600JqaCxoZ4ohIUAkbclnLeGjyUyYaCeilNB0UGmXJSIwYN9Y5j8pq
-	nqIg==
-X-Gm-Message-State: ALoCoQnbKCRq+2ZmNOVQfvtEtyqcpuyIFJHhvinvs0jB0Gy8n1v0PEXec2SNUAsNYGtktUT7WV6N
-X-Received: by 10.180.20.105 with SMTP id m9mr4720961wie.6.1405685704334;
-	Fri, 18 Jul 2014 05:15:04 -0700 (PDT)
+	bh=WH77oIsA/sft9BaeFNaVTgltDwtAXW1KwAKP5ISct1Q=;
+	b=VeC2XF90AJBEc7oLL/hRS6oJGJ4Ry/gUlAt+QKSz7rP2r+cQMQI7pnrpIyv2TsDvY4
+	piHI/gIvaBbUBnRbjseLvoWSDq2WwNdDnTDRCG06iS/VLhbmOHvIzsh7B+xFRjZRyiJo
+	hfW2SXnxQpQ17C51YHaM1Jok+AOX5cvhfgGkfiINhPqxp0ftjLWroZ6LWowIa5IhBSIx
+	uXmg4e7jxepG29lM93eL+vgElMjXXzitZyyAVtO6h5a+5SbyP8FRCiQw6xAt5k7E7w8E
+	zuTTdFdlLH94qxHLFRw4liltPGMnXtyT6chbCn7viYauqFCt8uObcYogG3du42pGrn1g
+	dI5g==
+X-Gm-Message-State: ALoCoQncobKZCNeQZPqteuHfbkt/W8frH4c6Lg3/kXWJc8WWaeFqtrsMifcTbFTmI6LaPCOZAa5D
+X-Received: by 10.180.98.130 with SMTP id ei2mr31496214wib.24.1405685706216;
+	Fri, 18 Jul 2014 05:15:06 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id
-	fs17sm13838895wjc.6.2014.07.18.05.15.01 for <multiple recipients>
+	by mx.google.com with ESMTPSA id fu7sm6158596wib.2.2014.07.18.05.15.04
+	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 18 Jul 2014 05:15:02 -0700 (PDT)
+	Fri, 18 Jul 2014 05:15:05 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id D09915602D5; Fri, 18 Jul 2014 13:15:02 +0100 (BST)
+	id D82585603FC; Fri, 18 Jul 2014 13:15:02 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org,
 	toaster@yoctoproject.org
-Date: Fri, 18 Jul 2014 13:14:57 +0100
-Message-Id: <6a0406d1c5cc0a63334888d945835e96c1555ec3.1405685308.git.alexandru.damian@intel.com>
+Date: Fri, 18 Jul 2014 13:15:00 +0100
+Message-Id: <e8009c53f28f125139ac04f7ae720d22b2a05e9e.1405685308.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <a487f31bcfa47e1a48cb4bc122017ccb5e8b8f1a.1405685308.git.alexandru.damian@intel.com>
 References: <a487f31bcfa47e1a48cb4bc122017ccb5e8b8f1a.1405685308.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1405685308.git.alexandru.damian@intel.com>
 References: <cover.1405685308.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 3/8] toaster: move bldcontrol initial_data fixture to code
+Subject: [PATCH 6/8] document requirements for the python environment
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,174 +51,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 18 Jul 2014 12:15:05 -0000
+X-List-Received-Date: Fri, 18 Jul 2014 12:15:06 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-We move the initial_data fixture to a code migration,
-in order to make sure that we don't overwrite modified data.
+Since Toaster adds a number of specific requirements managed
+by pip, we document these requirements in order to be able
+to run bitbake and toaster under virtualenv. The target here
+is to break the dependency on distro packages for specific
+python libraries.
+
+In order to start bitbake/Toaster in a distro-independent manner,
+we use virtualenv and pip. We add venv to the .gitignore list
+to make room for the virtualenv deployment in this directory.
+
+Use this command sequence to setup the virtualenv:
+
+$ virtualenv venv
+$ . venv/bin/activate
+$ cat requirements.txt | xargs pip install
+
+bitbake and Toaster will then run normally under virtualenv.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bin/toaster                                        |   2 +-
- lib/toaster/bldcontrol/fixtures/initial_data.json  |   1 -
- .../management/commands/checksettings.py           |   8 +-
- .../bldcontrol/migrations/0004_loadinitialdata.py  | 104 +++++++++++++++++++++
- 4 files changed, 109 insertions(+), 6 deletions(-)
- delete mode 100644 lib/toaster/bldcontrol/fixtures/initial_data.json
- create mode 100644 lib/toaster/bldcontrol/migrations/0004_loadinitialdata.py
+ .gitignore       | 2 ++
+ requirements.txt | 4 ++++
+ 2 files changed, 6 insertions(+)
+ create mode 100644 requirements.txt
 
-diff --git a/bin/toaster b/bin/toaster
-index 1f90362..78fbfa5 100755
---- a/bin/toaster
-+++ b/bin/toaster
-@@ -65,7 +65,7 @@ function webserverStartAll()
-         fi
-         python $BBBASEDIR/lib/toaster/manage.py migrate bldcontrol || retval=1
- 	python $BBBASEDIR/lib/toaster/manage.py checksettings  || retval=1
--
-+	echo "Starting webserver"
-         if [ $retval -eq 0 ]; then
-             python $BBBASEDIR/lib/toaster/manage.py runserver 0.0.0.0:8000 </dev/null >${BUILDDIR}/toaster_web.log 2>&1 & echo $! >${BUILDDIR}/.toastermain.pid
-             sleep 1
-diff --git a/lib/toaster/bldcontrol/fixtures/initial_data.json b/lib/toaster/bldcontrol/fixtures/initial_data.json
-deleted file mode 100644
-index b2f12b3..0000000
---- a/lib/toaster/bldcontrol/fixtures/initial_data.json
-+++ /dev/null
-@@ -1 +0,0 @@
--[{"pk": 1, "model": "bldcontrol.buildenvironment", "fields": {"updated": "2014-05-20T12:17:30Z", "created": "2014-05-20T12:17:30Z", "lock": 0, "bbstate": 0, "bbaddress": "", "betype": 0, "bbtoken": "", "address": "", "bbport": -1}}]
-diff --git a/lib/toaster/bldcontrol/management/commands/checksettings.py b/lib/toaster/bldcontrol/management/commands/checksettings.py
-index da1c3b7..a91dd15 100644
---- a/lib/toaster/bldcontrol/management/commands/checksettings.py
-+++ b/lib/toaster/bldcontrol/management/commands/checksettings.py
-@@ -27,12 +27,12 @@ class Command(NoArgsCommand):
-                 if not be.builddir.startswith("/"):
-                     be.builddir = raw_input(" -- builddir must be an absolute path:")
-                     is_changed = True
-+                if is_changed:
-+                    print "saved"
-+                    be.save()
-                 return is_changed
- 
-             while (_verify_be()):
-                 pass
--        
--
--            
--            
- 
-+            return 0
-diff --git a/lib/toaster/bldcontrol/migrations/0004_loadinitialdata.py b/lib/toaster/bldcontrol/migrations/0004_loadinitialdata.py
+diff --git a/.gitignore b/.gitignore
+index 5d9bc50..5adf4d1 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -7,6 +7,8 @@ pyshtables.py
+ /bin/bitbakec
+ *.swp
+ tags
++*.sqlite
++venv/
+ doc/bitbake-user-manual/bitbake-user-manual.html
+ doc/bitbake-user-manual/bitbake-user-manual.pdf
+ doc/bitbake-user-manual/bitbake-user-manual.tgz
+diff --git a/requirements.txt b/requirements.txt
 new file mode 100644
-index 0000000..d908578
+index 0000000..2bb07e6
 --- /dev/null
-+++ b/lib/toaster/bldcontrol/migrations/0004_loadinitialdata.py
-@@ -0,0 +1,104 @@
-+# -*- coding: utf-8 -*-
-+from south.utils import datetime_utils as datetime
-+from south.db import db
-+from south.v2 import DataMigration
-+from django.db import models
-+
-+class Migration(DataMigration):
-+
-+    def forwards(self, orm):
-+        "Write your forwards methods here."
-+        # Note: Don't use "from appname.models import ModelName".
-+        # Use orm.ModelName to refer to models in this application,
-+        # and orm['appname.ModelName'] for models in other applications.
-+        try:
-+            orm.BuildEnvironment.objects.get(pk = 1)
-+        except:
-+            from django.utils import timezone
-+            orm.BuildEnvironment.objects.create(pk = 1,
-+                created = timezone.now(),
-+                updated = timezone.now(),
-+                betype = 0)
-+
-+    def backwards(self, orm):
-+        "Write your backwards methods here."
-+
-+    models = {
-+        u'bldcontrol.brlayer': {
-+            'Meta': {'object_name': 'BRLayer'},
-+            'commit': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
-+            'dirpath': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
-+            'giturl': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'req': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildRequest']"})
-+        },
-+        u'bldcontrol.brtarget': {
-+            'Meta': {'object_name': 'BRTarget'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'req': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildRequest']"}),
-+            'target': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'task': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'})
-+        },
-+        u'bldcontrol.brvariable': {
-+            'Meta': {'object_name': 'BRVariable'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'req': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildRequest']"}),
-+            'value': ('django.db.models.fields.TextField', [], {'blank': 'True'})
-+        },
-+        u'bldcontrol.buildenvironment': {
-+            'Meta': {'object_name': 'BuildEnvironment'},
-+            'address': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
-+            'bbaddress': ('django.db.models.fields.CharField', [], {'max_length': '254', 'blank': 'True'}),
-+            'bbport': ('django.db.models.fields.IntegerField', [], {'default': '-1'}),
-+            'bbstate': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'bbtoken': ('django.db.models.fields.CharField', [], {'max_length': '126', 'blank': 'True'}),
-+            'betype': ('django.db.models.fields.IntegerField', [], {}),
-+            'builddir': ('django.db.models.fields.CharField', [], {'max_length': '512', 'blank': 'True'}),
-+            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'lock': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'sourcedir': ('django.db.models.fields.CharField', [], {'max_length': '512', 'blank': 'True'}),
-+            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
-+        },
-+        u'bldcontrol.buildrequest': {
-+            'Meta': {'object_name': 'BuildRequest'},
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Build']", 'null': 'True'}),
-+            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']"}),
-+            'state': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
-+        },
-+        u'orm.build': {
-+            'Meta': {'object_name': 'Build'},
-+            'bitbake_version': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-+            'build_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'completed_on': ('django.db.models.fields.DateTimeField', [], {}),
-+            'cooker_log_path': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-+            'distro': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'distro_version': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'errors_no': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'machine': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'outcome': ('django.db.models.fields.IntegerField', [], {'default': '2'}),
-+            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']", 'null': 'True'}),
-+            'started_on': ('django.db.models.fields.DateTimeField', [], {}),
-+            'timespent': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'warnings_no': ('django.db.models.fields.IntegerField', [], {'default': '0'})
-+        },
-+        u'orm.project': {
-+            'Meta': {'object_name': 'Project'},
-+            'branch': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-+            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'short_description': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
-+            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-+            'user_id': ('django.db.models.fields.IntegerField', [], {'null': 'True'})
-+        }
-+    }
-+
-+    complete_apps = ['bldcontrol']
-+    symmetrical = True
++++ b/requirements.txt
+@@ -0,0 +1,4 @@
++Django==1.5
++South==0.8.4
++argparse==1.2.1
++wsgiref==0.1.2
 -- 
 1.9.1
 
