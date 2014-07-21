@@ -1,30 +1,35 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 94A8870534
+	by mail.openembedded.org (Postfix) with ESMTP id 6C6EF70206
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Jul 2014 08:36:07 +0000 (UTC)
+	Mon, 21 Jul 2014 18:19:21 +0000 (UTC)
 Received: from localhost (dan.rpsys.net [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s6L8Z4lD028222 for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Jul 2014 09:36:03 +0100
+	s6LIJ7cx022105; Mon, 21 Jul 2014 19:19:07 +0100
 X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id h6_f7jkV5yPQ for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Jul 2014 09:36:02 +0100 (BST)
+	with LMTP id GUo_oG2L3fvG; Mon, 21 Jul 2014 19:19:06 +0100 (BST)
 Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s6L8ZwHE028240
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Jul 2014 09:36:00 +0100
-Message-ID: <1405931753.22985.93.camel@ted>
+	s6LIIvgA022086
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
+	Mon, 21 Jul 2014 19:18:59 +0100
+Message-ID: <1405966732.22985.104.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 21 Jul 2014 09:35:53 +0100
+To: "Rifenbark, Scott M" <scott.m.rifenbark@intel.com>
+Date: Mon, 21 Jul 2014 19:18:52 +0100
+In-Reply-To: <41DEA4B02DBDEF40A0F3B6D0DDB1237983FB63CD@ORSMSX101.amr.corp.intel.com>
+References: <cover.1404452300.git.liezhi.yang@windriver.com>
+	<29052f940ce9526083a09d3ce4e665a5aa9e0db1.1404452300.git.liezhi.yang@windriver.com>
+	<41DEA4B02DBDEF40A0F3B6D0DDB1237983FB63A9@ORSMSX101.amr.corp.intel.com>
+	<53BA3B26.4050407@windriver.com>
+	<41DEA4B02DBDEF40A0F3B6D0DDB1237983FB63CD@ORSMSX101.amr.corp.intel.com>
 X-Mailer: Evolution 3.8.4-0ubuntu1 
 Mime-Version: 1.0
-Subject: [PATCH] command/runqueue: Fix shutdown logic
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH 2/2] bitbake-user-manual-intro.xml: update for dump-signatures
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,57 +42,23 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 21 Jul 2014 08:36:10 -0000
+X-List-Received-Date: Mon, 21 Jul 2014 18:19:23 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-If you hit Ctrl+C at the right point, the system processes the request
-but merrily continues building. It turns out finish_runqueue() is called
-but this doesn't stop the later generation and execution of the
-runqueue.
+On Mon, 2014-07-07 at 06:18 +0000, Rifenbark, Scott M wrote:
+> Ok - if there is a problem or changes then let me know.  I have the
+> doc changes pushed to poky-contrib/srifenbark/bb-manual only.  Richard
+> would have to merge them from there into the upstream bitbake
+> repository.
 
-This patch adjusts some of the conditionals to ensure the build really
-does stop.
+I modified Roberts patch a bit. Could you update the manual based on
+that patch? I didn't take the change for the manual you have queued for
+this, I'd suggest we create a new one. I did merge everything else in
+your bitbake manual branch.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cheers,
 
-diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
-index 84fcdf9..d797fcf 100644
---- a/bitbake/lib/bb/command.py
-+++ b/bitbake/lib/bb/command.py
-@@ -86,7 +86,7 @@ class Command:
- 
-     def runAsyncCommand(self):
-         try:
--            if self.cooker.state == bb.cooker.state.error:
-+            if self.cooker.state in (bb.cooker.state.error, bb.cooker.state.shutdown, bb.cooker.state.forceshutdown):
-                 return False
-             if self.currentAsyncCommand is not None:
-                 (command, options) = self.currentAsyncCommand
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 4ea4970..f68a11d 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1065,7 +1065,7 @@ class RunQueue:
-         if self.state is runQueueCleanUp:
-            self.rqexe.finish()
- 
--        if self.state is runQueueComplete or self.state is runQueueFailed:
-+        if (self.state is runQueueComplete or self.state is runQueueFailed) and self.rqexe:
-             self.teardown_workers()
-             if self.rqexe.stats.failed:
-                 logger.info("Tasks Summary: Attempted %d tasks of which %d didn't need to be rerun and %d failed.", self.rqexe.stats.completed + self.rqexe.stats.failed, self.rqexe.stats.skipped, self.rqexe.stats.failed)
-@@ -1106,6 +1106,7 @@ class RunQueue:
- 
-     def finish_runqueue(self, now = False):
-         if not self.rqexe:
-+            self.state = runQueueComplete
-             return
- 
-         if now:
--- 
-cgit v0.10.1
-
-
+Richard
 
 
