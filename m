@@ -1,40 +1,36 @@
-Return-Path: <martin.jansa@gmail.com>
-Received: from mail-we0-f171.google.com (mail-we0-f171.google.com
-	[74.125.82.171])
-	by mail.openembedded.org (Postfix) with ESMTP id 2E91C65C83
+Return-Path: <kergoth@gmail.com>
+Received: from mail-la0-f52.google.com (mail-la0-f52.google.com
+	[209.85.215.52])
+	by mail.openembedded.org (Postfix) with ESMTP id D1ABF706AE
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 22 Jul 2014 14:45:53 +0000 (UTC)
-Received: by mail-we0-f171.google.com with SMTP id p10so9344778wes.2
+	Tue, 22 Jul 2014 15:13:51 +0000 (UTC)
+Received: by mail-la0-f52.google.com with SMTP id e16so6036191lan.25
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 22 Jul 2014 07:45:52 -0700 (PDT)
+	Tue, 22 Jul 2014 08:13:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:date:to:cc:subject:message-id:references:mime-version
-	:content-type:content-disposition:in-reply-to:user-agent;
-	bh=zB+Ivcg4VzNs9w5BZh8nj4R0wq5ijPd0HW8y62VbGeU=;
-	b=T3Z4zH7i/+ntgDxVK5FO5RnCJku/7DGoIy7tQXegahax6hZY3kzA1V1jfObxIAt3A/
-	Qr2EYlPF4//25nVmclegGeXfLboruOyl7C0H9z6/3f7Hj4RlKkrrP4bSI0eycQNDFJ3B
-	YRvcExI3Gg0X8vuN0Uhef2BMCp1FezxZLcpOmm5ycnn9pgHnztrawwtLRer1v6Y5Wboo
-	Zb7m+x3UHJXoZjQD7Uo7Mi9C5fV5tQ5K4Yw9IYSe4Q9lTIDKQtr1tSZg2UOUeyAKDh9c
-	BEa1VJWOAcb8/RL4+H8LiqM3sPKH0JU9PhWv4ayduuUlhVMprnTvBEvm1DIWtnavXA08
-	cKww==
-X-Received: by 10.180.73.115 with SMTP id k19mr7266201wiv.35.1406040351165;
-	Tue, 22 Jul 2014 07:45:51 -0700 (PDT)
-Received: from localhost (ip-89-176-104-3.net.upcbroadband.cz. [89.176.104.3])
-	by mx.google.com with ESMTPSA id
-	es1sm3400052wib.16.2014.07.22.07.45.49 for <multiple recipients>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 22 Jul 2014 07:45:49 -0700 (PDT)
-From: Martin Jansa <martin.jansa@gmail.com>
-X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
-Date: Tue, 22 Jul 2014 16:46:05 +0200
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Message-ID: <20140722144605.GT22875@jama>
-References: <1405931753.22985.93.camel@ted>
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=x+ajUOBCnqpinn9URm8xH87Ayugx1o4uV73N7j+YDlA=;
+	b=dhCpjmRfySvq5b1Q8RwcNs4sa5B00uZH24geAGw+3kG4vorz3omN/AA5FZdXjJdehE
+	LoCQWLIQ1ninAz7i0KWWoBulESaa9IaCJ8Xkb0SB1GpyJ05CJsfvPwonrpsnbklLtut6
+	bSN2hfeBBlQQhRL9SbnmUfH+DBZf2eNfQ8Nqr9gApdwrMUnyOBkWCU3V917uzlcjp4Ha
+	/ncOEiOnpRNzTs2zNj5uvqoDIV7ZPDV9KPtfz5AoNnW0PcBLxAiYgMnrwrA5DhTF1sVU
+	2Eyt9qk3rw3KFslcHAcc8zRgsYxzgZuAn0VYU/tF2UUNRFSAa5jFx6Rpy81dziAxNNmJ
+	ulKg==
+X-Received: by 10.153.4.6 with SMTP id ca6mr4382061lad.32.1406042031753; Tue,
+	22 Jul 2014 08:13:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1405931753.22985.93.camel@ted>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] command/runqueue: Fix shutdown logic
+Sender: kergoth@gmail.com
+Received: by 10.112.63.72 with HTTP; Tue, 22 Jul 2014 08:13:31 -0700 (PDT)
+In-Reply-To: <alpine.LFD.2.11.1407220618060.25977@localhost>
+References: <alpine.LFD.2.11.1407220618060.25977@localhost>
+From: Christopher Larson <clarson@kergoth.com>
+Date: Tue, 22 Jul 2014 08:13:31 -0700
+X-Google-Sender-Auth: csysHs9ovNpzVSZ2mUAXB_0NHQA
+Message-ID: <CABcZAN=nRqo7sYm9=MkAT0r0uAnR_oVBMEnMYGJz_=h-mZ6p2Q@mail.gmail.com>
+To: "Robert P. J. Day" <rpjday@crashcourse.ca>
+Cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
+Subject: Re: should "bitbake -e" refer to per-recipe, not per-package?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,130 +43,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 22 Jul 2014 14:46:04 -0000
-X-Groupsio-MsgNum: 4932
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FhxWStFQ84VXWhXs"
-Content-Disposition: inline
+X-List-Received-Date: Tue, 22 Jul 2014 15:13:52 -0000
+Content-Type: multipart/alternative; boundary=001a1133ee5ad790e304fec9abf8
 
---FhxWStFQ84VXWhXs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--001a1133ee5ad790e304fec9abf8
+Content-Type: text/plain; charset=UTF-8
+
+On Tue, Jul 22, 2014 at 3:19 AM, Robert P. J. Day <rpjday@crashcourse.ca>
+wrote:
+
+>   i notice that, in "bitbake -h", the explanation of "bibake -e" is
+> that it potentially allows the display of "per-package" environment
+> info. should that not more accurately say "per-recipe"?
+>
+
+Yep.
+-- 
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
+
+--001a1133ee5ad790e304fec9abf8
+Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 21, 2014 at 09:35:53AM +0100, Richard Purdie wrote:
-> If you hit Ctrl+C at the right point, the system processes the request
-> but merrily continues building. It turns out finish_runqueue() is called
-> but this doesn't stop the later generation and execution of the
-> runqueue.
->=20
-> This patch adjusts some of the conditionals to ensure the build really
-> does stop.
+<div dir=3D"ltr"><div class=3D"gmail_extra">On Tue, Jul 22, 2014 at 3:19 AM=
+, Robert P. J. Day <span dir=3D"ltr">&lt;<a href=3D"mailto:rpjday@crashcour=
+se.ca" target=3D"_blank">rpjday@crashcourse.ca</a>&gt;</span> wrote:<br><di=
+v class=3D"gmail_quote">
 
-Great, I've included this change in my world builds to see if it fixes
-bitbake still running after jenkins job is aborted.
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div id=3D":18j" class=3D"a3s" style=3D"over=
+flow:hidden">=C2=A0 i notice that, in &quot;bitbake -h&quot;, the explanati=
+on of &quot;bibake -e&quot; is<br>
 
-I don't think it's caused by this change and I don't know how much we
-can do about it, but today I was testing snort build (which eats all
-memory in m4 call until OOMK kills it) and when I wanted to interrupt
-the build it failed with 2 tracebacks:
 
-NOTE: Preparing runqueue
-NOTE: Executing SetScene Tasks
-NOTE: Executing RunQueue Tasks
-NOTE: Running task 569 of 610 (ID: 5, /OE/build/oe-core/meta-openembedded/m=
-eta-networking/recipes-connectivity/snort/snort_2.9.6.0.bb, do_configure)
-NOTE: recipe snort-2.9.6.0-r0: task do_configure: Started
-^C^C^C^C^C^C^C^C^C^C^C^C^C^CTraceback (most recent call last):
-  File "/OE/build/oe-core/bitbake/bin/bitbake", line 382, in <module>
-    ret =3D main()
-  File "/OE/build/oe-core/bitbake/bin/bitbake", line 372, in main
-    bb.event.ui_queue =3D []
-KeyboardInterrupt
-^CException KeyboardInterrupt in <module 'threading' from '/usr/lib64/pytho=
-n2.7/threading.pyc'> ignored
+that it potentially allows the display of &quot;per-package&quot; environme=
+nt<br>
+info. should that not more accurately say &quot;per-recipe&quot;?</div></bl=
+ockquote></div><br></div><div class=3D"gmail_extra">Yep.<br>-- <br>Christop=
+her Larson<br>clarson at kergoth dot com<br>Founder - BitBake, OpenEmbedded=
+, OpenZaurus<br>
 
-^CError in atexit._run_exitfuncs:
-^CError in sys.exitfunc:
-Traceback (most recent call last):
-  File "/usr/lib64/python2.7/atexit.py", line 30, in _run_exitfuncs
-    traceback.print_exc()
-  File "/usr/lib64/python2.7/traceback.py", line 233, in print_exc
-    print_exception(etype, value, tb, limit, file)
-  File "/usr/lib64/python2.7/traceback.py", line 110, in print_exception
-    def print_exception(etype, value, tb, limit=3DNone, file=3DNone):
-KeyboardInterrupt
+Maintainer - Tslib<br>Senior Software Engineer, Mentor Graphics
+</div></div>
 
-There was also about 5 minute delay between first 2 Ctrl+C and actual
-exit, but that could be caused by huge load caused by that faulty m4.
-
-Regards,
-
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
->=20
-> diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
-> index 84fcdf9..d797fcf 100644
-> --- a/bitbake/lib/bb/command.py
-> +++ b/bitbake/lib/bb/command.py
-> @@ -86,7 +86,7 @@ class Command:
-> =20
->      def runAsyncCommand(self):
->          try:
-> -            if self.cooker.state =3D=3D bb.cooker.state.error:
-> +            if self.cooker.state in (bb.cooker.state.error, bb.cooker.st=
-ate.shutdown, bb.cooker.state.forceshutdown):
->                  return False
->              if self.currentAsyncCommand is not None:
->                  (command, options) =3D self.currentAsyncCommand
-> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-> index 4ea4970..f68a11d 100644
-> --- a/bitbake/lib/bb/runqueue.py
-> +++ b/bitbake/lib/bb/runqueue.py
-> @@ -1065,7 +1065,7 @@ class RunQueue:
->          if self.state is runQueueCleanUp:
->             self.rqexe.finish()
-> =20
-> -        if self.state is runQueueComplete or self.state is runQueueFaile=
-d:
-> +        if (self.state is runQueueComplete or self.state is runQueueFail=
-ed) and self.rqexe:
->              self.teardown_workers()
->              if self.rqexe.stats.failed:
->                  logger.info("Tasks Summary: Attempted %d tasks of which =
-%d didn't need to be rerun and %d failed.", self.rqexe.stats.completed + se=
-lf.rqexe.stats.failed, self.rqexe.stats.skipped, self.rqexe.stats.failed)
-> @@ -1106,6 +1106,7 @@ class RunQueue:
-> =20
->      def finish_runqueue(self, now =3D False):
->          if not self.rqexe:
-> +            self.state =3D runQueueComplete
->              return
-> =20
->          if now:
-> --=20
-> cgit v0.10.1
->=20
->=20
->=20
-> --=20
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
-
---=20
-Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
-
---FhxWStFQ84VXWhXs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEARECAAYFAlPOeS0ACgkQN1Ujt2V2gByEmQCfSeVFeuKnuJ8P6YIzWHuabnQr
-7aAAn10xaJTkprxAS0HONHUMIZao94TR
-=oXe5
------END PGP SIGNATURE-----
-
---FhxWStFQ84VXWhXs--
+--001a1133ee5ad790e304fec9abf8--
