@@ -1,34 +1,41 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-la0-f52.google.com (mail-la0-f52.google.com
-	[209.85.215.52])
-	by mail.openembedded.org (Postfix) with ESMTP id D1ABF706AE
+Return-Path: <rpjday@crashcourse.ca>
+X-Greylist: delayed 433 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 22 Jul 2014 16:44:17 UTC
+Received: from smtp684.redcondor.net (smtp684.redcondor.net [208.80.206.84])
+	by mail.openembedded.org (Postfix) with ESMTP id 1EA3E70727
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 22 Jul 2014 15:13:51 +0000 (UTC)
-Received: by mail-la0-f52.google.com with SMTP id e16so6036191lan.25
+	Tue, 22 Jul 2014 16:44:17 +0000 (UTC)
+Received: from astoria.ccjclearline.com ([64.235.106.9])
+	by smtp684.redcondor.net ({700db0a8-6fb7-4c8b-9b2a-6812225182d8})
+	via TCP (outbound) with ESMTPS id 20140722163704239
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 22 Jul 2014 08:13:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=x+ajUOBCnqpinn9URm8xH87Ayugx1o4uV73N7j+YDlA=;
-	b=dhCpjmRfySvq5b1Q8RwcNs4sa5B00uZH24geAGw+3kG4vorz3omN/AA5FZdXjJdehE
-	LoCQWLIQ1ninAz7i0KWWoBulESaa9IaCJ8Xkb0SB1GpyJ05CJsfvPwonrpsnbklLtut6
-	bSN2hfeBBlQQhRL9SbnmUfH+DBZf2eNfQ8Nqr9gApdwrMUnyOBkWCU3V917uzlcjp4Ha
-	/ncOEiOnpRNzTs2zNj5uvqoDIV7ZPDV9KPtfz5AoNnW0PcBLxAiYgMnrwrA5DhTF1sVU
-	2Eyt9qk3rw3KFslcHAcc8zRgsYxzgZuAn0VYU/tF2UUNRFSAa5jFx6Rpy81dziAxNNmJ
-	ulKg==
-X-Received: by 10.153.4.6 with SMTP id ca6mr4382061lad.32.1406042031753; Tue,
-	22 Jul 2014 08:13:51 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.63.72 with HTTP; Tue, 22 Jul 2014 08:13:31 -0700 (PDT)
-In-Reply-To: <alpine.LFD.2.11.1407220618060.25977@localhost>
+	Tue, 22 Jul 2014 16:37:04 +0000
+X-RC-FROM: <rpjday@crashcourse.ca>
+X-RC-RCPT: <bitbake-devel@lists.openembedded.org>
+Received: from [64.102.254.34] (port=36479 helo=crashcourse.ca)
+	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES128-SHA:128)
+	(Exim 4.80) (envelope-from <rpjday@crashcourse.ca>)
+	id 1X9d3j-0008W5-80; Tue, 22 Jul 2014 12:36:59 -0400
+Date: Tue, 22 Jul 2014 12:36:52 -0400 (EDT)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+X-X-Sender: rpjday@localhost
+To: Christopher Larson <clarson@kergoth.com>
+In-Reply-To: <CABcZAN=nRqo7sYm9=MkAT0r0uAnR_oVBMEnMYGJz_=h-mZ6p2Q@mail.gmail.com>
+Message-ID: <alpine.LFD.2.11.1407221236210.8695@localhost>
 References: <alpine.LFD.2.11.1407220618060.25977@localhost>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Tue, 22 Jul 2014 08:13:31 -0700
-X-Google-Sender-Auth: csysHs9ovNpzVSZ2mUAXB_0NHQA
-Message-ID: <CABcZAN=nRqo7sYm9=MkAT0r0uAnR_oVBMEnMYGJz_=h-mZ6p2Q@mail.gmail.com>
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>
+	<CABcZAN=nRqo7sYm9=MkAT0r0uAnR_oVBMEnMYGJz_=h-mZ6p2Q@mail.gmail.com>
+User-Agent: Alpine 2.11 (LFD 23 2013-08-11)
+MIME-Version: 1.0
+X-AntiAbuse: This header was added to track abuse,
+	please include it with any abuse report
+X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-MAG-OUTBOUND: ccj.redcondor.net@64.235.106.9/32
 Cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
 Subject: Re: should "bitbake -e" refer to per-recipe, not per-package?
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -43,51 +50,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 22 Jul 2014 15:13:52 -0000
-Content-Type: multipart/alternative; boundary=001a1133ee5ad790e304fec9abf8
+X-List-Received-Date: Tue, 22 Jul 2014 16:44:18 -0000
+Content-Type: MULTIPART/MIXED; BOUNDARY="8323328-877131170-1406047018=:8695"
 
---001a1133ee5ad790e304fec9abf8
-Content-Type: text/plain; charset=UTF-8
+--8323328-877131170-1406047018=:8695
+Content-Type: TEXT/PLAIN; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-On Tue, Jul 22, 2014 at 3:19 AM, Robert P. J. Day <rpjday@crashcourse.ca>
-wrote:
+On Tue, 22 Jul 2014, Christopher Larson wrote:
 
->   i notice that, in "bitbake -h", the explanation of "bibake -e" is
-> that it potentially allows the display of "per-package" environment
-> info. should that not more accurately say "per-recipe"?
+> On Tue, Jul 22, 2014 at 3:19 AM, Robert P. J. Day <rpjday@crashcourse.ca> wrote:
+>         i notice that, in "bitbake -h", the explanation of "bibake -e" is
+>       that it potentially allows the display of "per-package" environment
+>       info. should that not more accurately say "per-recipe"?
 >
+>
+> Yep.
 
-Yep.
+  ok, i'll submit patch for that tonight.
+
+rday
+
 -- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
 
---001a1133ee5ad790e304fec9abf8
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                        http://crashcourse.ca
 
-<div dir=3D"ltr"><div class=3D"gmail_extra">On Tue, Jul 22, 2014 at 3:19 AM=
-, Robert P. J. Day <span dir=3D"ltr">&lt;<a href=3D"mailto:rpjday@crashcour=
-se.ca" target=3D"_blank">rpjday@crashcourse.ca</a>&gt;</span> wrote:<br><di=
-v class=3D"gmail_quote">
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
 
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div id=3D":18j" class=3D"a3s" style=3D"over=
-flow:hidden">=C2=A0 i notice that, in &quot;bitbake -h&quot;, the explanati=
-on of &quot;bibake -e&quot; is<br>
-
-
-that it potentially allows the display of &quot;per-package&quot; environme=
-nt<br>
-info. should that not more accurately say &quot;per-recipe&quot;?</div></bl=
-ockquote></div><br></div><div class=3D"gmail_extra">Yep.<br>-- <br>Christop=
-her Larson<br>clarson at kergoth dot com<br>Founder - BitBake, OpenEmbedded=
-, OpenZaurus<br>
-
-Maintainer - Tslib<br>Senior Software Engineer, Mentor Graphics
-</div></div>
-
---001a1133ee5ad790e304fec9abf8--
+--8323328-877131170-1406047018=:8695--
