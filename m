@@ -1,38 +1,36 @@
-Return-Path: <rpjday@crashcourse.ca>
-Received: from smtp486.redcondor.net (smtp486.redcondor.net [208.80.204.86])
-	by mail.openembedded.org (Postfix) with ESMTP id B412F6FE27
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-oa0-f52.google.com (mail-oa0-f52.google.com
+	[209.85.219.52])
+	by mail.openembedded.org (Postfix) with ESMTP id 612A070684
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 22 Jul 2014 21:54:53 +0000 (UTC)
-Received: from astoria.ccjclearline.com ([64.235.106.9])
-	by smtp486.redcondor.net ({6695537a-536a-45f9-a249-877c85428649})
-	via TCP (outbound) with ESMTPS id 20140722215453230
+	Wed, 23 Jul 2014 17:17:04 +0000 (UTC)
+Received: by mail-oa0-f52.google.com with SMTP id o6so2034918oag.39
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 22 Jul 2014 21:54:53 +0000
-X-RC-FROM: <rpjday@crashcourse.ca>
-X-RC-RCPT: <bitbake-devel@lists.openembedded.org>
-Received: from [64.134.185.139] (port=55971 helo=crashcourse.ca)
-	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES128-SHA:128)
-	(Exim 4.80) (envelope-from <rpjday@crashcourse.ca>)
-	id 1X9i1H-00030S-2K for bitbake-devel@lists.openembedded.org;
-	Tue, 22 Jul 2014 17:54:47 -0400
-Date: Tue, 22 Jul 2014 17:54:42 -0400 (EDT)
-From: "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@localhost
-To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Message-ID: <alpine.LFD.2.11.1407221753510.15822@localhost>
-User-Agent: Alpine 2.11 (LFD 23 2013-08-11)
+	Wed, 23 Jul 2014 10:17:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+	:content-type;
+	bh=VaOuvzSgjKNp4YY6hQ0MPTQGAdGLzTUCqGQqCwAZAMc=;
+	b=aIdHfoJPXva+600EcHK+hn0eryrS67rbZQRvIZMAXTIIESx2uc8m8MThXOLEJzkEyD
+	e2KvWAr0+IFE7j/1geyKkHxhrHj0AeHnOqQE2alieFui1HTs9Q2MR6e4EbF/iLDc2uHz
+	Q0xd5tHS9teW9+RBDPqXGZ5UUH7ekASdbQgPMb0+pcBrtO3DAo/YFuZtXi068zuWYN2C
+	2F4/HBVohOFCeGI1PtHVdxbGX+70w3HPunX0YXB5wSAzCPztdLkv6GSqxdo0s86rIxvv
+	nwG6eGtkPQRhMPBl3kVcodgMiIZRvVw7CjItNgygSLWlBwjfJR2LaL+rJuuqgqlq537+
+	b+fA==
+X-Gm-Message-State: ALoCoQknNFguKF/1EHa3qb4lSly4sh/cYQmkcvyRQTE/BnUIQTmzz+8kXkz7Cz6wY97YoWYmA3xe
+X-Received: by 10.60.52.5 with SMTP id p5mr3913489oeo.55.1406135825452; Wed,
+	23 Jul 2014 10:17:05 -0700 (PDT)
 MIME-Version: 1.0
-X-AntiAbuse: This header was added to track abuse,
-	please include it with any abuse report
-X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
-X-AntiAbuse: Original Domain - lists.openembedded.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-MAG-OUTBOUND: ccj.redcondor.net@64.235.106.9/32
-Subject: [PATCH] "per-package" should say "per-recipe"
+Received: by 10.76.122.204 with HTTP; Wed, 23 Jul 2014 10:16:45 -0700 (PDT)
+From: "Damian, Alexandru" <alexandru.damian@intel.com>
+Date: Wed, 23 Jul 2014 18:16:45 +0100
+Message-ID: <CAJ2CSBuuD9Qv=YdkGmzRY3ev9zJ=cESm_-Bg8BdDTnOvkOm+dQ@mail.gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>, 
+	Paul Eggleton <paul.eggleton@linux.intel.com>, 
+	bitbake-devel <bitbake-devel@lists.openembedded.org>, 
+	"toaster@yoctoproject.org" <toaster@yoctoproject.org>
+Subject: Toaster patchset for merging
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,75 +43,79 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 22 Jul 2014 21:54:57 -0000
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-List-Received-Date: Wed, 23 Jul 2014 17:17:08 -0000
+Content-Type: multipart/alternative; boundary=001a11332c8e61e72e04fedf8206
 
+--001a11332c8e61e72e04fedf8206
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
+Hi Richard,
 
----
+Thanks for the test push on master-next.
 
-diff --git a/bin/bitbake b/bin/bitbake
-index e31a636..39aa3ec 100755
---- a/bin/bitbake
-+++ b/bin/bitbake
-@@ -148,7 +148,7 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
-         parser.add_option("-s", "--show-versions", help = "Show current and preferred versions of all recipes.",
-                    action = "store_true", dest = "show_versions", default = False)
+I tested master-next and it works fine !
 
--        parser.add_option("-e", "--environment", help = "Show the global or per-package environment complete with information about where variables were set/changed.",
-+        parser.add_option("-e", "--environment", help = "Show the global or per-recipe environment complete with information about where variables were set/changed.",
-                    action = "store_true", dest = "show_environment", default = False)
+However, on prompt from Paul, I refactored the patchset to proper spell out
+changes in the commit messages.
 
-         parser.add_option("-g", "--graphviz", help = "Save dependency tree information for the specified targets in the dot syntax.",
-diff --git a/doc/bitbake-user-manual/bitbake-user-manual-intro.xml b/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
-index ade91e9..d348bc9 100644
---- a/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
-+++ b/doc/bitbake-user-manual/bitbake-user-manual-intro.xml
-@@ -515,7 +515,7 @@
-                              handler is required.
-        -p, --parse-only      Quit after parsing the BB recipes.
-        -s, --show-versions   Show current and preferred versions of all recipes.
--       -e, --environment     Show the global or per-package environment complete
-+       -e, --environment     Show the global or per-recipe environment complete
-                              with information about where variables were
-                              set/changed.
-        -g, --graphviz        Save dependency tree information for the specified
-diff --git a/doc/bitbake.1 b/doc/bitbake.1
-index 15a7f20..a6c8d97 100644
---- a/doc/bitbake.1
-+++ b/doc/bitbake.1
-@@ -89,7 +89,7 @@ quit after parsing the BB files (developers only)
- show current and preferred versions of all packages
- .TP
- .B \-e, \-\-environment
--show the global or per-package environment (this is what used to be bbread)
-+show the global or per-recipe environment (this is what used to be bbread)
- .TP
- .B \-g, \-\-graphviz
- emit the dependency trees of the specified packages in the dot syntax
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index f44a088..ecb3f9b 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -402,7 +402,7 @@ class BBCooker:
+Can you please pull:
 
-     def showEnvironment(self, buildfile = None, pkgs_to_build = []):
-         """
--        Show the outer or per-package environment
-+        Show the outer or per-recipe environment
-         """
-         fn = None
-         envdata = None
+poky-contrib: adamian/20140723-master-next-refactored
+=E2=80=8B
+The final diff between this new branch and master-next is NIL, but the
+commit messages are updated.
 
--- 
+Cheers,
+Alex
+=E2=80=8B
 
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                        http://crashcourse.ca
+--=20
+Alex Damian
+Yocto Project
+SSG / OTC
 
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
+--001a11332c8e61e72e04fedf8206
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-family:tahoma,s=
+ans-serif">Hi Richard,</div><div class=3D"gmail_default" style=3D"font-fami=
+ly:tahoma,sans-serif"><br></div><div class=3D"gmail_default" style=3D"font-=
+family:tahoma,sans-serif">
 
+Thanks for the test push on master-next.</div><div class=3D"gmail_default" =
+style=3D"font-family:tahoma,sans-serif"><br></div><div class=3D"gmail_defau=
+lt" style=3D"font-family:tahoma,sans-serif">I tested master-next and it wor=
+ks fine !</div>
+
+<div class=3D"gmail_default" style=3D"font-family:tahoma,sans-serif"><br></=
+div><div class=3D"gmail_default" style=3D"font-family:tahoma,sans-serif">Ho=
+wever, on prompt from Paul, I refactored the patchset to proper spell out c=
+hanges in the commit messages.</div>
+
+<div class=3D"gmail_default" style=3D"font-family:tahoma,sans-serif"><br></=
+div><div class=3D"gmail_default" style=3D"font-family:tahoma,sans-serif">Ca=
+n you please pull:</div><div class=3D"gmail_default" style=3D"font-family:t=
+ahoma,sans-serif">
+
+<br></div><div class=3D"gmail_default" style><font face=3D"tahoma, sans-ser=
+if">poky-contrib: adamian/20140723-master-next-refactored</font><br></div><=
+div><div class=3D"gmail_default" style=3D"font-family:tahoma,sans-serif">=
+=E2=80=8B</div>
+
+<div class=3D"gmail_default" style=3D"font-family:tahoma,sans-serif">The fi=
+nal diff between this new branch and master-next is NIL, but the commit mes=
+sages are updated.<br></div><div class=3D"gmail_default" style=3D"font-fami=
+ly:tahoma,sans-serif">
+
+<br></div><div class=3D"gmail_default" style=3D"font-family:tahoma,sans-ser=
+if">Cheers,</div><div class=3D"gmail_default" style=3D"font-family:tahoma,s=
+ans-serif">Alex</div><div class=3D"gmail_default" style=3D"font-family:taho=
+ma,sans-serif">
+
+=E2=80=8B</div><br></div>-- <br><div dir=3D"ltr">Alex Damian<div>Yocto Proj=
+ect<br></div><div>SSG / OTC=C2=A0</div></div>
+</div>
+
+--001a11332c8e61e72e04fedf8206--
