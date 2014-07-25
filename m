@@ -1,26 +1,30 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id B164F707D4
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id D052E70684
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Jul 2014 08:22:43 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.14.5/8.14.5) with ESMTP id s6O8MhjV022241
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	Fri, 25 Jul 2014 13:50:57 +0000 (UTC)
+Received: from localhost (dan.rpsys.net [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
+	s6PDoroO023623 for <bitbake-devel@lists.openembedded.org>;
+	Fri, 25 Jul 2014 14:50:53 +0100
+X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id G8yva7QIHWwe for <bitbake-devel@lists.openembedded.org>;
+	Fri, 25 Jul 2014 14:50:53 +0100 (BST)
+Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
+	s6PDonZw023620
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 24 Jul 2014 01:22:44 -0700 (PDT)
-Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.169.1;
-	Thu, 24 Jul 2014 01:22:43 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 24 Jul 2014 01:22:42 -0700
-Message-ID: <43deea90c1d8d3d4a1e41b61fbbe1412951f1eb0.1406189837.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1406189837.git.liezhi.yang@windriver.com>
-References: <cover.1406189837.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/1] bitbake: remove choices for dump-signatures
+	Fri, 25 Jul 2014 14:50:50 +0100
+Message-ID: <1406296243.27697.23.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Fri, 25 Jul 2014 14:50:43 +0100
+X-Mailer: Evolution 3.8.4-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] cache: Don't reload the cache file since we already have this data in memory
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,30 +37,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 24 Jul 2014 08:22:52 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 25 Jul 2014 13:50:59 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-The SIGNATURE_HANDLER can be defined by the user, so we can't use choices.
+If we're writing out merged data to disk, its safe to assume that either 
+we loaded the data or couldn't. Loading it again is relatively pointless
+and time consuming.
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/bin/bitbake |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-diff --git a/bitbake/bin/bitbake b/bitbake/bin/bitbake
-index 39aa3ec..b8acd6e 100755
---- a/bitbake/bin/bitbake
-+++ b/bitbake/bin/bitbake
-@@ -140,7 +140,7 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
-                    action = "store_true", dest = "dry_run", default = False)
+diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
+index 936829b..6dedd4d 100644
+--- a/bitbake/lib/bb/cache.py
++++ b/bitbake/lib/bb/cache.py
+@@ -814,15 +814,7 @@ class MultiProcessCache(object):
  
-         parser.add_option("-S", "--dump-signatures", help = "Dump out the signature construction information, with no task execution. The SIGNATURE_HANDLER parameter is passed to the handler. Two common values are none and printdiff but the handler may define more/less. none means only dump the signature, printdiff means compare the dumped signature with the cached one.",
--                   action = "append", dest = "dump_signatures", default = [], type="choice", choices=("none", "printdiff"), metavar="SIGNATURE_HANDLER")
-+                   action = "append", dest = "dump_signatures", default = [], metavar="SIGNATURE_HANDLER")
+         glf = bb.utils.lockfile(self.cachefile + ".lock")
  
-         parser.add_option("-p", "--parse-only", help = "Quit after parsing the BB recipes.",
-                    action = "store_true", dest = "parse_only", default = False)
--- 
-1.7.9.5
+-        try:
+-            with open(self.cachefile, "rb") as f:
+-                p = pickle.Unpickler(f)
+-                data, version = p.load()
+-        except (IOError, EOFError):
+-            data, version = None, None
+-
+-        if version != self.__class__.CACHE_VERSION:
+-            data = self.create_cachedata()
++        data = self.cachedata
+ 
+         for f in [y for y in os.listdir(os.path.dirname(self.cachefile)) if y.startswith(os.path.basename(self.cachefile) + '-')]:
+             f = os.path.join(os.path.dirname(self.cachefile), f)
+
 
 
