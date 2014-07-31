@@ -1,18 +1,38 @@
-Return-Path: <namhyung@gmail.com>
-Received: from lgeamrelo01.lge.com (lgeamrelo01.lge.com [156.147.1.125])
-	by mail.openembedded.org (Postfix) with ESMTP id 33720708AA
+Return-Path: <rpjday@crashcourse.ca>
+Received: from smtp684.redcondor.net (smtp684.redcondor.net [208.80.206.84])
+	by mail.openembedded.org (Postfix) with ESMTP id 632DD65DB3
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 30 Jul 2014 02:17:21 +0000 (UTC)
-Received: from unknown (HELO sejong.aot.lge.com) (10.177.220.181)
-	by 156.147.1.125 with ESMTP; 30 Jul 2014 11:17:20 +0900
-X-Original-SENDERIP: 10.177.220.181
-X-Original-MAILFROM: namhyung@gmail.com
-From: Namhyung Kim <namhyung@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 30 Jul 2014 11:17:20 +0900
-Message-Id: <1406686640-8785-1-git-send-email-namhyung@gmail.com>
-X-Mailer: git-send-email 2.0.0
-Subject: [PATCH] cooker: Get rid of duplicate 'import re'
+	Thu, 31 Jul 2014 16:32:48 +0000 (UTC)
+Received: from astoria.ccjclearline.com ([64.235.106.9])
+	by smtp684.redcondor.net ({700db0a8-6fb7-4c8b-9b2a-6812225182d8})
+	via TCP (outbound) with ESMTPS id 20140731163247897
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 31 Jul 2014 16:32:47 +0000
+X-RC-FROM: <rpjday@crashcourse.ca>
+X-RC-RCPT: <bitbake-devel@lists.openembedded.org>
+Received: from [99.240.204.5] (port=55673 helo=crashcourse.ca)
+	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES128-SHA:128)
+	(Exim 4.80) (envelope-from <rpjday@crashcourse.ca>)
+	id 1XCtHW-0004Hs-MA for bitbake-devel@lists.openembedded.org;
+	Thu, 31 Jul 2014 12:32:42 -0400
+Date: Thu, 31 Jul 2014 12:32:38 -0400 (EDT)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+X-X-Sender: rpjday@localhost
+To: BitBake developer list <bitbake-devel@lists.openembedded.org>
+Message-ID: <alpine.LFD.2.11.1407311232130.12811@localhost>
+User-Agent: Alpine 2.11 (LFD 23 2013-08-11)
+MIME-Version: 1.0
+X-AntiAbuse: This header was added to track abuse,
+	please include it with any abuse report
+X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-MAG-OUTBOUND: ccj.redcondor.net@64.235.106.9/32
+Subject: what is the "official" bitbake home page these days?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -25,36 +45,20 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 30 Jul 2014 02:17:23 -0000
+X-List-Received-Date: Thu, 31 Jul 2014 16:32:52 -0000
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 
-The re module was imported at the top, no need to do it again.
 
-Signed-off-by: Namhyung Kim <namhyung@gmail.com>
----
- lib/bb/cooker.py | 2 --
- 1 file changed, 2 deletions(-)
+rday
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index ecb3f9b..2c7788e 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -818,7 +818,6 @@ class BBCooker:
-         or to find all machine configuration files one could call:
-         findFilesMatchingInDir(self, 'conf/machines', 'conf')
-         """
--        import re
- 
-         matches = []
-         p = re.compile(re.escape(filepattern))
-@@ -1228,7 +1227,6 @@ class BBCooker:
-         '''
-         Create a new image with a "require"/"inherit" base_image statement
-         '''
--        import re
-         if timestamp:
-             image_name = os.path.splitext(image)[0]
-             timestr = time.strftime("-%Y%m%d-%H%M%S")
 -- 
-2.0.0
+
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                        http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
 
 
