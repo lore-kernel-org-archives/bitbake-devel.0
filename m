@@ -1,30 +1,30 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id B34EB65DB1
+	by mail.openembedded.org (Postfix) with ESMTP id CE97165F37
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  1 Aug 2014 10:07:17 +0000 (UTC)
+	Sat,  2 Aug 2014 08:51:04 +0000 (UTC)
 Received: from localhost (dan.rpsys.net [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu4) with ESMTP id
-	s71A76g3000875; Fri, 1 Aug 2014 11:07:07 +0100
+	s728p5S3013357 for <bitbake-devel@lists.openembedded.org>;
+	Sat, 2 Aug 2014 09:51:05 +0100
 X-Virus-Scanned: Debian amavisd-new at dan.rpsys.net
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id ZmkTgA0HE60b; Fri,  1 Aug 2014 11:07:06 +0100 (BST)
+	with LMTP id 5SfIADsc0o8l for <bitbake-devel@lists.openembedded.org>;
+	Sat,  2 Aug 2014 09:51:05 +0100 (BST)
 Received: from [192.168.3.10] (rpvlan0 [192.168.3.10]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-2.1ubuntu1) with ESMTP id
-	s71A71Ac000616
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
-	Fri, 1 Aug 2014 11:07:03 +0100
-Message-ID: <1406887621.13346.202.camel@ted>
+	s728p0B5013125
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 2 Aug 2014 09:51:02 +0100
+Message-ID: <1406969460.6981.18.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>
-Date: Fri, 01 Aug 2014 11:07:01 +0100
-In-Reply-To: <alpine.LFD.2.11.1407311232130.12811@localhost>
-References: <alpine.LFD.2.11.1407311232130.12811@localhost>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Sat, 02 Aug 2014 09:51:00 +0100
 X-Mailer: Evolution 3.8.4-0ubuntu1 
 Mime-Version: 1.0
-Cc: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Subject: Re: what is the "official" bitbake home page these days?
+Subject: runqueue: Add sceneQueueComplete event
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,14 +37,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 01 Aug 2014 10:07:22 -0000
-Content-Type: text/plain
+X-List-Received-Date: Sat, 02 Aug 2014 08:51:05 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-It doesn't have one.
+Its useful to have an event emitted when all of the sceneQueue tasks
+have completed since the metadata can hook this for processing.
+Therefore add such an event.
 
-Cheers,
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Richard
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index f68a11d..baaac44 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1985,6 +1985,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+         logger.debug(1, 'We can skip tasks %s', sorted(self.rq.scenequeue_covered))
+ 
+         self.rq.state = runQueueRunInit
++
++        completeevent = sceneQueueComplete(self.stats, self.rq)
++        bb.event.fire(completeevent, self.cfgData)
++
+         return True
+ 
+     def runqueue_process_waitpid(self, task, status):
+@@ -2067,6 +2071,14 @@ class sceneQueueTaskFailed(sceneQueueEvent):
+         sceneQueueEvent.__init__(self, task, stats, rq)
+         self.exitcode = exitcode
+ 
++class sceneQueueComplete(sceneQueueEvent):
++    """
++    Event when all the sceneQueue tasks are complete
++    """
++    def __init__(self, stats, rq):
++        self.stats = stats.copy()
++        bb.event.Event.__init__(self)
++
+ class runQueueTaskCompleted(runQueueEvent):
+     """
+     Event notifing a task completed
+
 
 
