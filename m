@@ -1,36 +1,26 @@
-Return-Path: <dmtkatsa@gmail.com>
-Received: from mail-la0-f66.google.com (mail-la0-f66.google.com
-	[209.85.215.66])
-	by mail.openembedded.org (Postfix) with ESMTP id E6EFD65CD8;
-	Tue,  5 Aug 2014 15:29:46 +0000 (UTC)
-Received: by mail-la0-f66.google.com with SMTP id mc6so424786lab.1
-	for <multiple recipients>; Tue, 05 Aug 2014 08:29:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=sender:from:to:cc:subject:date:message-id;
-	bh=Uev8KHFCnjcL+OE0YXYJNFv98kiNLsYsUTwCiHgrNIU=;
-	b=s20aaJxmOzl4hcSauadK6bTRRY+qSeY6jtEpyJncGPg1GFXrWFqOBLx8LIkfXxtKHl
-	YYGUr7sGC0yyFntD9DPh5kTAkz9+dgLD1/uuFYqCtgItBBDogPR1FQ6ICHmxIXVsZeRE
-	7eGu9mVp3plxaQJFhfp5IT2ir2K70O9XzKEyweYAaulu5VmX7ww2FWatRP2ZEI9dI/Ox
-	g/sxYdBgGzDgT31D3XfplrhDx4P3tm+fdHg+x8DAc69BwV1q6zQiV9xHNiUQviYPhWgp
-	Nelv6za4GHu7RjjoU5MiomIq+9TUOvWoWje+o2BFBQJpMPquCrC/1bq3vdlhPCqTbpi2
-	qdbA==
-X-Received: by 10.152.19.65 with SMTP id c1mr4962769lae.88.1407252586812;
-	Tue, 05 Aug 2014 08:29:46 -0700 (PDT)
-Received: from localhost (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net.
-	[80.197.57.18])
-	by mx.google.com with ESMTPSA id e5sm1072792laf.3.2014.08.05.08.29.44
-	for <multiple recipients>
-	(version=TLSv1.2 cipher=RC4-SHA bits=128/128);
-	Tue, 05 Aug 2014 08:29:45 -0700 (PDT)
-Sender: Dimitrios Katsaros <patcherwork@gmail.com>
-From: Dimitrios Katsaros <dmtkatsa@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue,  5 Aug 2014 17:29:26 +0200
-Message-Id: <1407252566-9146-1-git-send-email-dmtkatsa@gmail.com>
-X-Mailer: git-send-email 1.9.1
-Cc: ricardo.ribalda@gmail.com, Dimitrios Katsaros <dmtkatsa@gmail.com>,
-	openembedded-core@lists.openembedded.org
-Subject: [PATCH] PR_Service: Improvement of persistance of PR service
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 4983C65CC1
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed,  6 Aug 2014 16:51:42 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga103.fm.intel.com with ESMTP; 06 Aug 2014 09:44:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.01,812,1400050800"; d="scan'208";a="572619887"
+Received: from cgwithan-mobl.gar.corp.intel.com (HELO
+	peggleto-mobl5.ger.corp.intel.com) ([10.252.123.26])
+	by fmsmga001.fm.intel.com with ESMTP; 06 Aug 2014 09:51:20 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: "Robert P. J. Day" <rpjday@crashcourse.ca>
+Date: Wed, 06 Aug 2014 17:51:19 +0100
+Message-ID: <5235357.yFAteX2b5M@peggleto-mobl5.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.13.3 (Linux/3.15.7-200.fc20.x86_64; KDE/4.13.3; x86_64; ; )
+In-Reply-To: <alpine.LFD.2.11.1406201322310.28485@localhost>
+References: <alpine.LFD.2.11.1406201322310.28485@localhost>
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: is there a TODO/issues list for bitbake user manual enhancements?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,91 +33,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Aug 2014 15:29:48 -0000
+X-List-Received-Date: Wed, 06 Aug 2014 16:51:53 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-The current implementation only commits database changes
-after database exceptions or daemon shutdown. This patch adds
-a delayed commit after every request finish, defaulting to 20 seconds.
-I chose to make the sync on the consumer thread rather than the
-producer. This is to avoid simultaneous access to the database.
-I chose to use a separate timeout than the timeout defined for handle_request
-in work_forever. This is because the consumer thread would reach the
-handle_request before the quit flag was set. Thus for long timeouts
-the stop_daemon function would have to wait for an equally long
-amount of time.
+Hi Robert,
 
-This solution is based on this discussion :
-https://www.mail-archive.com/openembedded-core@lists.openembedded.org/msg52932.html
+On Friday 20 June 2014 13:26:08 Robert P. J. Day wrote:
+>   is there anywhere to track proposed changes to the bitbake user
+> manual? one of the things i've already noted is that the variable
+> glossary is somewhat incomplete. for example, at the very least, it
+> should include the following variables that are explicitly set in
+> bitbake's own bitbake.conf file:
+> 
+>  CVSDIR
+>  DEPLOY_DIR
+>  DEPLOY_DIR_IMAGE
+>  FILE_DIRNAME
+>  GITDIR
+>  IMAGE_CMD
+>  IMAGE_ROOTFS
+>  P
+>  S
+>  SVNDIR
+>  TARGET_ARCH
+>  TMPDIR
+>  WORKDIR
 
-NOTE: I made a mistake with the previous patch I posted in this post:
-http://lists.openembedded.org/pipermail/openembedded-core/2014-July/095133.html
+This may seem logical at face value, but almost all of these variables aren't 
+actually intrinsically understood by BitBake, they are just being provided 
+there as an example of how to build something on top of BitBake (based on a 
+very small subset of what OE looked like years ago). Thus, it wouldn't make 
+sense to add these to the reference section of the BitBake manual.
 
-I was using the wrong repository. This time it should be correct.
+Cheers,
+Paul
 
-Signed-off-by: Dimitrios Katsaros <dmtkatsa@gmail.com>
----
- lib/prserv/serv.py | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
-
-diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-index 1e170ce..9c37339 100644
---- a/lib/prserv/serv.py
-+++ b/lib/prserv/serv.py
-@@ -1,4 +1,4 @@
--import os,sys,logging
-+import os,sys,logging, time
- import signal, time, atexit, threading
- from SimpleXMLRPCServer import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
- import xmlrpclib
-@@ -36,7 +36,7 @@ singleton = None
- 
- 
- class PRServer(SimpleXMLRPCServer):
--    def __init__(self, dbfile, logfile, interface, daemon=True):
-+    def __init__(self, dbfile, logfile, interface, daemon=True, sync_timeout=20):
-         ''' constructor '''
-         SimpleXMLRPCServer.__init__(self, interface,
-                                     logRequests=False, allow_none=True)
-@@ -46,6 +46,8 @@ class PRServer(SimpleXMLRPCServer):
-         self.working_thread=None
-         self.host, self.port = self.socket.getsockname()
-         self.pidfile=PIDPREFIX % (self.host, self.port)
-+        self.dirty = False
-+        self.sync_timeout = sync_timeout
- 
-         self.register_function(self.getPR, "getPR")
-         self.register_function(self.quit, "quit")
-@@ -70,8 +72,13 @@ class PRServer(SimpleXMLRPCServer):
-         while True:
-             (request, client_address) = self.requestqueue.get()
-             try:
--                self.finish_request(request, client_address)
--                self.shutdown_request(request)
-+                if request == "Sync":
-+                    self.table.sync()
-+                else:
-+                    self.finish_request(request, client_address)
-+                    self.shutdown_request(request)
-+                    self.time_from_dirty = time.time()
-+                    self.dirty = True
-             except:
-                 self.handle_error(request, client_address)
-                 self.shutdown_request(request)
-@@ -126,6 +133,13 @@ class PRServer(SimpleXMLRPCServer):
-         self.server_close()
-         return
- 
-+    def handle_timeout(self):
-+        if self.dirty:
-+            # making the consumer thead perform sync to ensure thread safty
-+            if time.time() - self.time_from_dirty > self.sync_timeout:
-+                self.requestqueue.put(("Sync", None))
-+                self.dirty = False
-+
-     def start(self):
-         pid = self.daemonize()
-         # Ensure both the parent sees this and the child from the work_forever log entry above
 -- 
-1.9.1
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
