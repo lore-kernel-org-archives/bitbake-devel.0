@@ -1,26 +1,31 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 4983C65CC1
+Return-Path: <kvserr@gmail.com>
+Received: from mail-ie0-f177.google.com (mail-ie0-f177.google.com
+	[209.85.223.177])
+	by mail.openembedded.org (Postfix) with ESMTP id CB4CA61585
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  6 Aug 2014 16:51:42 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga103.fm.intel.com with ESMTP; 06 Aug 2014 09:44:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.01,812,1400050800"; d="scan'208";a="572619887"
-Received: from cgwithan-mobl.gar.corp.intel.com (HELO
-	peggleto-mobl5.ger.corp.intel.com) ([10.252.123.26])
-	by fmsmga001.fm.intel.com with ESMTP; 06 Aug 2014 09:51:20 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>
-Date: Wed, 06 Aug 2014 17:51:19 +0100
-Message-ID: <5235357.yFAteX2b5M@peggleto-mobl5.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.13.3 (Linux/3.15.7-200.fc20.x86_64; KDE/4.13.3; x86_64; ; )
-In-Reply-To: <alpine.LFD.2.11.1406201322310.28485@localhost>
-References: <alpine.LFD.2.11.1406201322310.28485@localhost>
+	Thu,  7 Aug 2014 10:21:04 +0000 (UTC)
+Received: by mail-ie0-f177.google.com with SMTP id at20so4146165iec.8
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 07 Aug 2014 03:21:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:from:date:message-id:subject:to:content-type;
+	bh=Ag30sHH4ozjWyKR7M1d/RPvN0ogNVrNCuXBgA3te20I=;
+	b=Un+P0c7sDgHcZj7U9M4SEBYIe882g9DexYcO4NhQCRyF1vMBhcvClZsPkMUa/XT4wN
+	PazpbiCje3XUhIYwOwPk38OTVH2y3QWUyF3trewzhmzcUEXMC0cfnH0EJjEc2JOQshVF
+	iSUjRb6bWhoUA+dZ5+1pIUVpAimlVn1sgefgWLI+jKZejjSIsUMcvKE/pPQQuO+axyLE
+	WBm1aV1hVz8mUi6jqKlVYAD7sLfByMKZlE5aU8MUFb42TSmldfdMs4nr1vN3P2OsZMCz
+	s6JVswroCRNuE1qG/c9qz/spUtFiZmpVRCYg0fdWuPRML1ujr72AkxNry3ILNG6RAVWd
+	/tiA==
+X-Received: by 10.50.32.10 with SMTP id e10mr27398927igi.7.1407406865904; Thu,
+	07 Aug 2014 03:21:05 -0700 (PDT)
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: is there a TODO/issues list for bitbake user manual enhancements?
+Received: by 10.50.38.172 with HTTP; Thu, 7 Aug 2014 03:20:45 -0700 (PDT)
+From: Vitaliy Kharin <kvserr@gmail.com>
+Date: Thu, 7 Aug 2014 14:20:45 +0400
+Message-ID: <CAMCLREo7+RwEfZr-nqckPT9kEA71PVafGf+NiVkDTaaG_KdtwQ@mail.gmail.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Need to clarify process of submitting and merging patches
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,44 +38,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Aug 2014 16:51:53 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Thu, 07 Aug 2014 10:21:07 -0000
+Content-Type: multipart/alternative; boundary=047d7b11198f4c20d7050007722c
 
-Hi Robert,
+--047d7b11198f4c20d7050007722c
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Friday 20 June 2014 13:26:08 Robert P. J. Day wrote:
->   is there anywhere to track proposed changes to the bitbake user
-> manual? one of the things i've already noted is that the variable
-> glossary is somewhat incomplete. for example, at the very least, it
-> should include the following variables that are explicitly set in
-> bitbake's own bitbake.conf file:
-> 
->  CVSDIR
->  DEPLOY_DIR
->  DEPLOY_DIR_IMAGE
->  FILE_DIRNAME
->  GITDIR
->  IMAGE_CMD
->  IMAGE_ROOTFS
->  P
->  S
->  SVNDIR
->  TARGET_ARCH
->  TMPDIR
->  WORKDIR
+Hello bitbakers!
+Some time ago I sent patch to this mail list
+http://lists.openembedded.org/pipermail/bitbake-devel/2014-July/004886.html
+Since then, the patch has not yet been accepted and merged into bitbake's
+repo.
+What should I do to get the patch accepted?
 
-This may seem logical at face value, but almost all of these variables aren't 
-actually intrinsically understood by BitBake, they are just being provided 
-there as an example of how to build something on top of BitBake (based on a 
-very small subset of what OE looked like years ago). Thus, it wouldn't make 
-sense to add these to the reference section of the BitBake manual.
+The patch's intent is to prevent find directory instead of a regular file.
+=E2=80=8BFor example,
+=E2=80=8BIn case =E2=80=8Bof `export PATH=3D=E2=80=8Bhome/icecc:/usr/bin/` =
+bitbake's utils.which
+function returns directory 'home/icecc' instead of executable file 'icecc'
+in '/usr/bin/'
 
-Cheers,
-Paul
 
--- 
+-----------------------
+Best regards,
+Vitaliy Kharin
 
-Paul Eggleton
-Intel Open Source Technology Centre
+--047d7b11198f4c20d7050007722c
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-size:large">Hel=
+lo bitbakers!</div><div class=3D"gmail_default" style=3D"font-size:large">S=
+ome time ago I sent patch to this mail list =C2=A0<a href=3D"http://lists.o=
+penembedded.org/pipermail/bitbake-devel/2014-July/004886.html">http://lists=
+.openembedded.org/pipermail/bitbake-devel/2014-July/004886.html</a></div>
+
+<div class=3D"gmail_default" style=3D"font-size:large">Since then, the patc=
+h has not yet been accepted and merged into bitbake&#39;s repo.=C2=A0</div>=
+<div class=3D"gmail_default" style=3D"font-size:large">What should=C2=A0I d=
+o to get the patch accepted?<br>
+
+</div>=C2=A0<div><div class=3D"gmail_default" style=3D"font-size:large">The=
+ patch&#39;s intent is to prevent find directory instead of a regular file.=
+</div><div class=3D"gmail_default" style=3D"font-size:large">=E2=80=8BFor e=
+xample,</div><div class=3D"gmail_default" style=3D"font-size:large">
+
+=E2=80=8BIn case =E2=80=8Bof `export PATH=3D=E2=80=8Bhome/icecc:/usr/bin/` =
+bitbake&#39;s utils.which function returns directory &#39;home/icecc&#39; i=
+nstead of executable file &#39;icecc&#39; in &#39;/usr/bin/&#39;<br></div><=
+br></div><div><br>-----------------------<br>
+
+Best regards,<br>Vitaliy Kharin
+</div></div>
+
+--047d7b11198f4c20d7050007722c--
