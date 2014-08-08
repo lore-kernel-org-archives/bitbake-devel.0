@@ -1,31 +1,30 @@
-Return-Path: <kvserr@gmail.com>
-Received: from mail-ie0-f177.google.com (mail-ie0-f177.google.com
-	[209.85.223.177])
-	by mail.openembedded.org (Postfix) with ESMTP id CB4CA61585
+Return-Path: <sergio.almendros.diaz@gmail.com>
+Received: from mail-we0-f175.google.com (mail-we0-f175.google.com
+	[74.125.82.175])
+	by mail.openembedded.org (Postfix) with ESMTP id 333B2701A6
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Aug 2014 10:21:04 +0000 (UTC)
-Received: by mail-ie0-f177.google.com with SMTP id at20so4146165iec.8
+	Fri,  8 Aug 2014 12:41:48 +0000 (UTC)
+Received: by mail-we0-f175.google.com with SMTP id t60so5453934wes.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 07 Aug 2014 03:21:06 -0700 (PDT)
+	Fri, 08 Aug 2014 05:41:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:from:date:message-id:subject:to:content-type;
-	bh=Ag30sHH4ozjWyKR7M1d/RPvN0ogNVrNCuXBgA3te20I=;
-	b=Un+P0c7sDgHcZj7U9M4SEBYIe882g9DexYcO4NhQCRyF1vMBhcvClZsPkMUa/XT4wN
-	PazpbiCje3XUhIYwOwPk38OTVH2y3QWUyF3trewzhmzcUEXMC0cfnH0EJjEc2JOQshVF
-	iSUjRb6bWhoUA+dZ5+1pIUVpAimlVn1sgefgWLI+jKZejjSIsUMcvKE/pPQQuO+axyLE
-	WBm1aV1hVz8mUi6jqKlVYAD7sLfByMKZlE5aU8MUFb42TSmldfdMs4nr1vN3P2OsZMCz
-	s6JVswroCRNuE1qG/c9qz/spUtFiZmpVRCYg0fdWuPRML1ujr72AkxNry3ILNG6RAVWd
-	/tiA==
-X-Received: by 10.50.32.10 with SMTP id e10mr27398927igi.7.1407406865904; Thu,
-	07 Aug 2014 03:21:05 -0700 (PDT)
+	h=mime-version:date:message-id:subject:from:to:content-type;
+	bh=/6Ku3T1e9Y82H2zNDjmoQz02tWCCxBFSspoDITBDquM=;
+	b=PmNAzNBfoq4OBYfWnkTKwRktDSjwNtQnxjfEoiz5Li2z22SizBOmO7RSiRkx6u474v
+	TyTWC3mjOtrwbsjjUI2/0FluBRgsGomEdeOCgQ2LuttetG1bXT8A56ygWJ4toEmSJXCR
+	x9ZW43BlO0unYNeuAN0/hYNTr10kN/btJ7yaCw7wv2/qsUHWYbLq2GvAZQ/XtvzfNzLQ
+	Yxm3Mxo9c8K3mP0f2AzNYfazyBfGVKzxK+pzxnkF6rM229puOUHk3HYED2Nlo8A76LbI
+	D7tAfCGHalDC7DnPb+aAcBJHYvjHKxaGgoR6hDacQD/NkTymPcvSNGithDuetLHrts/N
+	taLw==
 MIME-Version: 1.0
-Received: by 10.50.38.172 with HTTP; Thu, 7 Aug 2014 03:20:45 -0700 (PDT)
-From: Vitaliy Kharin <kvserr@gmail.com>
-Date: Thu, 7 Aug 2014 14:20:45 +0400
-Message-ID: <CAMCLREo7+RwEfZr-nqckPT9kEA71PVafGf+NiVkDTaaG_KdtwQ@mail.gmail.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Need to clarify process of submitting and merging patches
+X-Received: by 10.194.59.42 with SMTP id w10mr31905605wjq.15.1407501709504;
+	Fri, 08 Aug 2014 05:41:49 -0700 (PDT)
+Received: by 10.216.158.74 with HTTP; Fri, 8 Aug 2014 05:41:49 -0700 (PDT)
+Date: Fri, 8 Aug 2014 14:41:49 +0200
+Message-ID: <CAEDEsJKfdQ+4kGQ8vN_pFZMgZPUX8HA0rDzdq9x-0VPagh7j9A@mail.gmail.com>
+From: Sergio Almendros <sergio.almendros.diaz@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: Chromium and Java for Yocto
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,58 +37,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 07 Aug 2014 10:21:07 -0000
-Content-Type: multipart/alternative; boundary=047d7b11198f4c20d7050007722c
+X-List-Received-Date: Fri, 08 Aug 2014 12:41:51 -0000
+Content-Type: multipart/alternative; boundary=047d7b86dde06a758e05001d8752
 
---047d7b11198f4c20d7050007722c
+--047d7b86dde06a758e05001d8752
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-Hello bitbakers!
-Some time ago I sent patch to this mail list
-http://lists.openembedded.org/pipermail/bitbake-devel/2014-July/004886.html
-Since then, the patch has not yet been accepted and merged into bitbake's
-repo.
-What should I do to get the patch accepted?
+Hi,
 
-The patch's intent is to prevent find directory instead of a regular file.
-=E2=80=8BFor example,
-=E2=80=8BIn case =E2=80=8Bof `export PATH=3D=E2=80=8Bhome/icecc:/usr/bin/` =
-bitbake's utils.which
-function returns directory 'home/icecc' instead of executable file 'icecc'
-in '/usr/bin/'
+I'm working for the first time with an i.MX6, yocto, and bitbake and I'm a
+little bit lost. My goals are to install openjdk7 and chromium 36+, and all
+I found is using bitbake, but it is really complicated to me to make it
+work. Could someone give me some kind of guide on how to proceed?
 
+Thanks,
+Sergio.
 
------------------------
-Best regards,
-Vitaliy Kharin
-
---047d7b11198f4c20d7050007722c
+--047d7b86dde06a758e05001d8752
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-size:large">Hel=
-lo bitbakers!</div><div class=3D"gmail_default" style=3D"font-size:large">S=
-ome time ago I sent patch to this mail list =C2=A0<a href=3D"http://lists.o=
-penembedded.org/pipermail/bitbake-devel/2014-July/004886.html">http://lists=
-.openembedded.org/pipermail/bitbake-devel/2014-July/004886.html</a></div>
+<div dir=3D"ltr">Hi,<div><br></div><div>I&#39;m working for the first time =
+with an i.MX6, yocto, and bitbake and I&#39;m a little bit lost. My goals a=
+re to install openjdk7 and chromium 36+, and all I found is using bitbake, =
+but it is really complicated to me to make it work. Could someone give me s=
+ome kind of guide on how to proceed?</div>
+<div><br></div><div>Thanks,</div><div>Sergio.</div></div>
 
-<div class=3D"gmail_default" style=3D"font-size:large">Since then, the patc=
-h has not yet been accepted and merged into bitbake&#39;s repo.=C2=A0</div>=
-<div class=3D"gmail_default" style=3D"font-size:large">What should=C2=A0I d=
-o to get the patch accepted?<br>
-
-</div>=C2=A0<div><div class=3D"gmail_default" style=3D"font-size:large">The=
- patch&#39;s intent is to prevent find directory instead of a regular file.=
-</div><div class=3D"gmail_default" style=3D"font-size:large">=E2=80=8BFor e=
-xample,</div><div class=3D"gmail_default" style=3D"font-size:large">
-
-=E2=80=8BIn case =E2=80=8Bof `export PATH=3D=E2=80=8Bhome/icecc:/usr/bin/` =
-bitbake&#39;s utils.which function returns directory &#39;home/icecc&#39; i=
-nstead of executable file &#39;icecc&#39; in &#39;/usr/bin/&#39;<br></div><=
-br></div><div><br>-----------------------<br>
-
-Best regards,<br>Vitaliy Kharin
-</div></div>
-
---047d7b11198f4c20d7050007722c--
+--047d7b86dde06a758e05001d8752--
