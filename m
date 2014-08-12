@@ -1,25 +1,25 @@
 Return-Path: <rpjday@crashcourse.ca>
-Received: from smtp484.redcondor.net (smtp484.redcondor.net [208.80.204.84])
-	by mail.openembedded.org (Postfix) with ESMTP id 39D9065E03
+Received: from smtp684.redcondor.net (smtp684.redcondor.net [208.80.206.84])
+	by mail.openembedded.org (Postfix) with ESMTP id D18F365CF7
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Aug 2014 19:12:13 +0000 (UTC)
+	Tue, 12 Aug 2014 08:53:26 +0000 (UTC)
 Received: from astoria.ccjclearline.com ([64.235.106.9])
-	by smtp484.redcondor.net ({c48374e7-08df-40d9-a0de-96cc9883a037})
-	via TCP (outbound) with ESMTPS id 20140811191213597
+	by smtp684.redcondor.net ({700db0a8-6fb7-4c8b-9b2a-6812225182d8})
+	via TCP (outbound) with ESMTPS id 20140812085326220
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Aug 2014 19:12:13 +0000
+	Tue, 12 Aug 2014 08:53:26 +0000
 X-RC-FROM: <rpjday@crashcourse.ca>
 X-RC-RCPT: <bitbake-devel@lists.openembedded.org>
-Received: from [99.240.204.5] (port=57701 helo=crashcourse.ca)
+Received: from [99.240.204.5] (port=33463 helo=crashcourse.ca)
 	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES128-SHA:128)
 	(Exim 4.80) (envelope-from <rpjday@crashcourse.ca>)
-	id 1XGv0q-0000qw-Ix for bitbake-devel@lists.openembedded.org;
-	Mon, 11 Aug 2014 15:12:08 -0400
-Date: Mon, 11 Aug 2014 15:12:04 -0400 (EDT)
+	id 1XH7pZ-0008WN-B4 for bitbake-devel@lists.openembedded.org;
+	Tue, 12 Aug 2014 04:53:21 -0400
+Date: Tue, 12 Aug 2014 04:53:16 -0400 (EDT)
 From: "Robert P. J. Day" <rpjday@crashcourse.ca>
 X-X-Sender: rpjday@localhost
 To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Message-ID: <alpine.LFD.2.11.1408111504230.9626@localhost>
+Message-ID: <alpine.LFD.2.11.1408120451580.17954@localhost>
 User-Agent: Alpine 2.11 (LFD 23 2013-08-11)
 MIME-Version: 1.0
 X-AntiAbuse: This header was added to track abuse,
@@ -32,7 +32,7 @@ X-Source:
 X-Source-Args: 
 X-Source-Dir: 
 X-MAG-OUTBOUND: ccj.redcondor.net@64.235.106.9/32
-Subject: some (admittedly dopey) questions about dependencies
+Subject: [PATCH] runqueue.py: Fix typoes/grammar in comments.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,39 +45,68 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 11 Aug 2014 19:12:21 -0000
+X-List-Received-Date: Tue, 12 Aug 2014 08:53:29 -0000
 Content-Type: TEXT/PLAIN; charset=US-ASCII
 
 
-  digging thru bitbake manual, as well as the code in runqueue.py, so
-some questions about the niggling details regarding dependencies.
+Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
 
-  first, what does "recrdeptask" stand for? yes, i realize it refers
-to "recursive" dependencies, but what's with the leading "recr"? does
-that represent recursive "recr" deptasks, or recursive "rec"
-rdeptasks? or what? knowing what it's short for always helps.
+---
 
-  next, i see five types of dependencies being processed in that code
-in the prepare() method:
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index baaac44..19bce3e 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -97,7 +97,7 @@ class RunQueueScheduler(object):
+     def __init__(self, runqueue, rqdata):
+         """
+         The default scheduler just returns the first buildable task (the
+-        priority map is sorted by task numer)
++        priority map is sorted by task number)
+         """
+         self.rq = runqueue
+         self.rqdata = rqdata
+@@ -186,7 +186,7 @@ class RunQueueSchedulerCompletion(RunQueueSchedulerSpeed):
+     """
+     A scheduler optimised to complete .bb files are quickly as possible. The
+     priority map is sorted by task weight, but then reordered so once a given
+-    .bb file starts to build, its completed as quickly as possible. This works
++    .bb file starts to build, it's completed as quickly as possible. This works
+     well where disk space is at a premium and classes like OE's rm_work are in
+     force.
+     """
+@@ -795,7 +795,7 @@ class RunQueueData:
+                 for st in self.cooker.configuration.invalidate_stamp.split(','):
+                     invalidate_task(fn, "do_%s" % st, True)
 
-  * tdepends: internal task dependencies (based on addtask)
-  * deptask: build-time dependencies
-  * rdeptask: run-time dependencies
-  * idepends: inter-task dependencies
-  * recrdeptask: recursive dependencies
+-        # Interate over the task list and call into the siggen code
++        # Iterate over the task list and call into the siggen code
+         dealtwith = set()
+         todeal = set(range(len(self.runq_fnid)))
+         while len(todeal) > 0:
+@@ -967,11 +967,11 @@ class RunQueue:
 
-and i am still unclear on what recrdeptask represents: the comment in
-that file reads:
+         stampfile = bb.build.stampfile(taskname, self.rqdata.dataCache, fn)
 
-  # e.g. do_sometask[recrdeptask] = "do_someothertask"
-  # (makes sure sometask runs after someothertask of all DEPENDS,
-    RDEPENDS and intertask dependencies, recursively)
+-        # If the stamp is missing its not current
++        # If the stamp is missing, it's not current
+         if not os.access(stampfile, os.F_OK):
+             logger.debug(2, "Stampfile %s not available", stampfile)
+             return False
+-        # If its a 'nostamp' task, it's not current
++        # If it's a 'nostamp' task, it's not current
+         taskdep = self.rqdata.dataCache.task_deps[fn]
+         if 'nostamp' in taskdep and taskname in taskdep['nostamp']:
+             logger.debug(2, "%s.%s is nostamp\n", fn, taskname)
+@@ -1688,7 +1688,7 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
 
-is that description correct? how does it relate to inter-task
-dependencies, which explicitly list the name of the other task?
-anyway, if someone can clarify that, that would be ducky.
+         process_endpoints(endpoints)
 
-rday
+-        # Build a list of setscene tasks which as "unskippable"
++        # Build a list of setscene tasks which are "unskippable"
+         # These are direct endpoints referenced by the build
+         endpoints2 = {}
+         sq_revdeps2 = []
 
 -- 
 
