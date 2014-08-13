@@ -1,35 +1,38 @@
-Return-Path: <armccurdy@gmail.com>
-Received: from mail-pd0-f181.google.com (mail-pd0-f181.google.com
-	[209.85.192.181])
-	by mail.openembedded.org (Postfix) with ESMTP id EB04961585
+Return-Path: <rpjday@crashcourse.ca>
+Received: from smtp685.redcondor.net (smtp685.redcondor.net [208.80.206.85])
+	by mail.openembedded.org (Postfix) with ESMTP id E9B3860424
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 Aug 2014 23:41:55 +0000 (UTC)
-Received: by mail-pd0-f181.google.com with SMTP id g10so13433659pdj.12
+	Wed, 13 Aug 2014 09:19:04 +0000 (UTC)
+Received: from astoria.ccjclearline.com ([64.235.106.9])
+	by smtp685.redcondor.net ({20c8e40f-6b6c-4c9e-abff-1640ea7bf404})
+	via TCP (outbound) with ESMTPS id 20140813091903785
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 Aug 2014 16:41:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id;
-	bh=qKkawLxVdqIXV7+R8GbH3uI8MYm1R5yCq0dhpZWTJLI=;
-	b=MA8FTlfw/bjFFAjqHjY1RN8rhqNVPrrAi1o14f/UUV6iCQUJ0GSyHjdNMOQpoeRWm3
-	FYtj9rZWbrMKS5wp6CnDZsTz5JqLJIF71cKCGDhg0lkDdetEMuY+n8DSHRYZqJJ2w9yC
-	IsdxY1v5QZ/wjduPdThca0uYIrPSOHlE59Njf8luGrxJVsa/kKiUVqm27SmD4shaNUBW
-	8gYzw4HGQJRfR66jkuS0LV3Qrvu2kXlnkNz/Pef9Oh/5+X+s7DsEwHO22NtqsZzgdbh2
-	zrOoG9576hc4JNS7viB7zvK4JkTpqDdEffgcXFfZ0QttJ0iSA3RqkqDxwO0hv5B3CWRm
-	0rtw==
-X-Received: by 10.68.125.202 with SMTP id ms10mr712766pbb.71.1407886916806;
-	Tue, 12 Aug 2014 16:41:56 -0700 (PDT)
-Received: from localhost.localdomain (c-73-162-180-210.hsd1.ca.comcast.net.
-	[73.162.180.210])
-	by mx.google.com with ESMTPSA id og3sm114829pbc.48.2014.08.12.16.41.55
-	for <multiple recipients>
-	(version=TLSv1.1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-	Tue, 12 Aug 2014 16:41:56 -0700 (PDT)
-From: Andre McCurdy <armccurdy@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 12 Aug 2014 16:41:48 -0700
-Message-Id: <1407886908-6918-1-git-send-email-armccurdy@gmail.com>
-X-Mailer: git-send-email 1.8.1.2
-Subject: [PATCH] fetch2/local.py: fix first line indent of search path debug output
+	Wed, 13 Aug 2014 09:19:03 +0000
+X-RC-FROM: <rpjday@crashcourse.ca>
+X-RC-RCPT: <bitbake-devel@lists.openembedded.org>
+Received: from [99.240.204.5] (port=48044 helo=crashcourse.ca)
+	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES128-SHA:128)
+	(Exim 4.80) (envelope-from <rpjday@crashcourse.ca>)
+	id 1XHUhv-0002sX-KG for bitbake-devel@lists.openembedded.org;
+	Wed, 13 Aug 2014 05:18:59 -0400
+Date: Wed, 13 Aug 2014 05:18:50 -0400 (EDT)
+From: "Robert P. J. Day" <rpjday@crashcourse.ca>
+X-X-Sender: rpjday@localhost
+To: BitBake developer list <bitbake-devel@lists.openembedded.org>
+Message-ID: <alpine.LFD.2.11.1408130517380.5574@localhost>
+User-Agent: Alpine 2.11 (LFD 23 2013-08-11)
+MIME-Version: 1.0
+X-AntiAbuse: This header was added to track abuse,
+	please include it with any abuse report
+X-AntiAbuse: Primary Hostname - astoria.ccjclearline.com
+X-AntiAbuse: Original Domain - lists.openembedded.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - crashcourse.ca
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-MAG-OUTBOUND: ccj.redcondor.net@64.235.106.9/32
+Subject: [PATCH] runqueue.py: Correct several misspellings of "notifing".
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,29 +45,84 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 12 Aug 2014 23:41:58 -0000
+X-List-Received-Date: Wed, 13 Aug 2014 09:19:05 -0000
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 
-Make OE do_unpack logs slightly prettier.
 
-Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
+Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
+
 ---
- lib/bb/fetch2/local.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/bb/fetch2/local.py b/lib/bb/fetch2/local.py
-index 5c4e42a..6fa188f 100644
---- a/lib/bb/fetch2/local.py
-+++ b/lib/bb/fetch2/local.py
-@@ -56,7 +56,7 @@ class Local(FetchMethod):
-         if path[0] != "/":
-             filespath = data.getVar('FILESPATH', d, True)
-             if filespath:
--                logger.debug(2, "Searching for %s in paths:    \n%s" % (path, "\n    ".join(filespath.split(":"))))
-+                logger.debug(2, "Searching for %s in paths:\n    %s" % (path, "\n    ".join(filespath.split(":"))))
-                 newpath = bb.utils.which(filespath, path)
-             if not newpath:
-                 filesdir = data.getVar('FILESDIR', d, True)
+diff --git a/lib/bb/runqueue.py b/lib/bb/runqueue.py
+index baaac44..46dca58 100644
+--- a/lib/bb/runqueue.py
++++ b/lib/bb/runqueue.py
+@@ -2041,7 +2041,7 @@ class sceneQueueEvent(runQueueEvent):
+
+ class runQueueTaskStarted(runQueueEvent):
+     """
+-    Event notifing a task was started
++    Event notifying a task was started
+     """
+     def __init__(self, task, stats, rq, noexec=False):
+         runQueueEvent.__init__(self, task, stats, rq)
+@@ -2049,7 +2049,7 @@ class runQueueTaskStarted(runQueueEvent):
+
+ class sceneQueueTaskStarted(sceneQueueEvent):
+     """
+-    Event notifing a setscene task was started
++    Event notifying a setscene task was started
+     """
+     def __init__(self, task, stats, rq, noexec=False):
+         sceneQueueEvent.__init__(self, task, stats, rq)
+@@ -2057,7 +2057,7 @@ class sceneQueueTaskStarted(sceneQueueEvent):
+
+ class runQueueTaskFailed(runQueueEvent):
+     """
+-    Event notifing a task failed
++    Event notifying a task failed
+     """
+     def __init__(self, task, stats, exitcode, rq):
+         runQueueEvent.__init__(self, task, stats, rq)
+@@ -2065,7 +2065,7 @@ class runQueueTaskFailed(runQueueEvent):
+
+ class sceneQueueTaskFailed(sceneQueueEvent):
+     """
+-    Event notifing a setscene task failed
++    Event notifying a setscene task failed
+     """
+     def __init__(self, task, stats, exitcode, rq):
+         sceneQueueEvent.__init__(self, task, stats, rq)
+@@ -2081,17 +2081,17 @@ class sceneQueueComplete(sceneQueueEvent):
+
+ class runQueueTaskCompleted(runQueueEvent):
+     """
+-    Event notifing a task completed
++    Event notifying a task completed
+     """
+
+ class sceneQueueTaskCompleted(sceneQueueEvent):
+     """
+-    Event notifing a setscene task completed
++    Event notifying a setscene task completed
+     """
+
+ class runQueueTaskSkipped(runQueueEvent):
+     """
+-    Event notifing a task was skipped
++    Event notifying a task was skipped
+     """
+     def __init__(self, task, stats, rq, reason):
+         runQueueEvent.__init__(self, task, stats, rq)
+
 -- 
-1.8.1.2
+
+========================================================================
+Robert P. J. Day                                 Ottawa, Ontario, CANADA
+                        http://crashcourse.ca
+
+Twitter:                                       http://twitter.com/rpjday
+LinkedIn:                               http://ca.linkedin.com/in/rpjday
+========================================================================
 
 
