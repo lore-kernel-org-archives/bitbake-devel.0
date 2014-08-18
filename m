@@ -1,25 +1,27 @@
-Return-Path: <info@sd-kyber.com>
-X-Greylist: delayed 906 seconds by postgrey-1.34 at layers.openembedded.org;
-	Wed, 13 Aug 2014 18:21:17 UTC
-Received: from relais.videotron.net (relais.videotron.net [24.201.245.25])
-	by mail.openembedded.org (Postfix) with ESMTP id 2A75965CA8
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 78A8B610F5
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 13 Aug 2014 18:21:17 +0000 (UTC)
-MIME-version: 1.0
-Received: from [192.168.1.151]
-	(modemcable250.171-70-69.static.videotron.ca [69.70.171.250])
-	by VL-VM-MRA001.ip.videotron.ca
-	(Oracle Communications Messaging Exchange Server 7u4-18.01 64bit (built
-	Jul 15
-	2010)) with ESMTPA id <0NA900LTUBMB5M20@VL-VM-MRA001.ip.videotron.ca>
-	for bitbake-devel@lists.openembedded.org;
-	Wed, 13 Aug 2014 14:06:12 -0400 (EDT)
-From: info@sd-kyber.com
-Message-id: <0D8F1464-990E-47E6-A965-C3BF6F020BE2@sd-kyber.com>
-Date: Wed, 13 Aug 2014 14:06:11 -0400
-To: bitbake-devel@lists.openembedded.org
-X-Mailer: Apple Mail (2.1972.3)
-Subject: bitbake debugging...
+	Mon, 18 Aug 2014 10:59:31 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 18 Aug 2014 03:59:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.01,885,1400050800"; d="scan'208";a="589604475"
+Received: from sdoherty-mobl.ger.corp.intel.com (HELO
+	peggleto-mobl5.ger.corp.intel.com) ([10.252.123.63])
+	by orsmga002.jf.intel.com with ESMTP; 18 Aug 2014 03:59:30 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: info@sd-kyber.com
+Date: Mon, 18 Aug 2014 11:59:29 +0100
+Message-ID: <3739004.e7d85eEqT1@peggleto-mobl5.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.13.3 (Linux/3.15.10-200.fc20.x86_64; KDE/4.13.3; x86_64; ;
+	)
+In-Reply-To: <0D8F1464-990E-47E6-A965-C3BF6F020BE2@sd-kyber.com>
+References: <0D8F1464-990E-47E6-A965-C3BF6F020BE2@sd-kyber.com>
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: bitbake debugging...
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,30 +34,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 13 Aug 2014 18:21:27 -0000
-Content-type: text/plain; charset=utf-8
-Content-transfer-encoding: quoted-printable
+X-List-Received-Date: Mon, 18 Aug 2014 10:59:36 -0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Hi,
-I have a question regarding the practice of debugging bitbake itself:
+Hi Michael,
 
-Is there any document, suggestion what is the best practice to trace / =
-step through the bitbake  execution?=20
+On Wednesday 13 August 2014 14:06:11 info@sd-kyber.com wrote:
+> Is there any document, suggestion what is the best practice to trace =
+/ step
+> through the bitbake  execution?
+>=20
+> For example, is it possible to put =E2=80=98the break point=E2=80=99 =
+ at the moment the
+> fetcher module I=E2=80=99m specifying is called? If that possible =E2=
+=80=94 and I think it
+> is - what python environments are common to be used? ActiveSense, som=
+ething
+> else?
+>=20
+> Is there any document describing how to set such a =E2=80=98bitbake d=
+evelopment=E2=80=99
+> environment?
 
-For example, is it possible to put =E2=80=98the break point=E2=80=99  at =
-the moment the fetcher module I=E2=80=99m specifying is called?=20
-If that possible =E2=80=94 and I think it is - what python environments =
-are common to be used? ActiveSense, something else?=20
+I think the answer is that we don't really have such a method, at least=
+ not=20
+that BitBake developers themselves use. Speaking for myself, I usually =
+just=20
+add print / bb.warn() statements into the code where I need to see the =
+value=20
+of something or know when that part of the code is executed. It's defin=
+itely=20
+crude, but it works.
 
-Is there any document describing how to set such a =E2=80=98bitbake =
-development=E2=80=99 environment?
+Cheers,
+Paul
 
-I would appreciate all advices and help.=20
-(I=E2=80=99m planning to do it on Linux Machine, running Fedora).
+--=20
 
-Thanks,=20
-Michael.
-
-
-
+Paul Eggleton
+Intel Open Source Technology Centre
 
