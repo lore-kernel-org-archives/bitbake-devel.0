@@ -1,45 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f172.google.com (mail-wi0-f172.google.com
-	[209.85.212.172])
-	by mail.openembedded.org (Postfix) with ESMTP id 7A20D71194
+Received: from mail-wg0-f49.google.com (mail-wg0-f49.google.com [74.125.82.49])
+	by mail.openembedded.org (Postfix) with ESMTP id 6045571190
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Aug 2014 17:23:51 +0000 (UTC)
-Received: by mail-wi0-f172.google.com with SMTP id n3so6193338wiv.17
+	Wed, 27 Aug 2014 17:23:50 +0000 (UTC)
+Received: by mail-wg0-f49.google.com with SMTP id k14so544098wgh.32
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Aug 2014 10:23:50 -0700 (PDT)
+	Wed, 27 Aug 2014 10:23:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=reY4QCztKqn5qqfs3vWlqrEbAqMG7NRjrcgtNYXPUNY=;
-	b=UqiaQoVwPH/06+/BW5D9EvJedH8fEI9CFL2+sQgoBLvAS17VhiF2q9MiHESsWzC3g4
-	GSuVkUOVOCrpkR8aX6Lv9T+8rHyhiMLMZdqVgqkNIzuhQnYP3uFwMUMjm/yQ/OKkEghx
-	Co+CJgjzYwPIW2oDsJOiJbRTUpYbIE0milXDP8fshwmrnDZMv1oRHOg838QyVIONMykE
-	g76pThTChapaZ5tZYzQpxBsxlPT6tGxBXOU89nzUN9pjTG8Gfi5eSbSKqVnYFxcDJa8j
-	chwBneZMvV6kvlun1XvKjiGOZI5DPr4W6WJ7B2SzlbnfBSgLZxBiEjGfynEqdTjhELjy
-	JGjw==
-X-Gm-Message-State: ALoCoQn5zOH31/SqjkjPt5aHT+kkJTijpwnVYlLtcjWLcGQbiyprGzzE51uCL/3jvxZYeL5qsUs4
-X-Received: by 10.194.243.230 with SMTP id xb6mr5394244wjc.100.1409160229754; 
-	Wed, 27 Aug 2014 10:23:49 -0700 (PDT)
+	bh=aCETpmPAFAwZuNK2dekWd6yJISTAuyZJnCZQH0otYCs=;
+	b=OS/lFM8jAl48OkZ9AqsLG6gNds+oEgdQ6I7oOY3+lN70Lp1SlgZt0Otvs3kMHDE4mG
+	QcGUPkdbLsh4y9hwQkdQF+p/bBdber9iHT0hiD+L2Bxp0mDseN+BCKp/EyAGfrH9b+1H
+	dHMDlAf1tXMKVreg0VM20LZWunhyv6gKBLfVILK1IhyrCD3uDcJkfm6kcvKC5tYGbkKx
+	ezTJVOf7yyhOYSGVa/ijPHagdQhdajOTxYmvxU/9IBqAFUvAdnL6nEKL2KFBk2gotiIL
+	GqVouCKSuAP1XBd/Qj6Qz7EGs2uetjk+nx/AN+lT3uhBRywmH74UQJTUi2Nelr0OcAca
+	AY/w==
+X-Gm-Message-State: ALoCoQn5M2oYz14KsJQwSwKoVnLjoCvNEs27qvrvglRO2LqbasemJbkWVFdUtOEBO73/UoO6dV5Z
+X-Received: by 10.194.78.100 with SMTP id a4mr5129517wjx.106.1409160231187;
+	Wed, 27 Aug 2014 10:23:51 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id v4sm2708967wjv.6.2014.08.27.10.23.48
+	by mx.google.com with ESMTPSA id ky3sm2596616wjb.39.2014.08.27.10.23.48
 	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 27 Aug 2014 10:23:48 -0700 (PDT)
+	Wed, 27 Aug 2014 10:23:49 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id B54EF5611DF; Wed, 27 Aug 2014 18:23:45 +0100 (BST)
+	id 95F9E5611B0; Wed, 27 Aug 2014 18:23:45 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: toaster@yoctoproject.org,
 	bitbake-devel@lists.openembedded.org
-Date: Wed, 27 Aug 2014 18:23:41 +0100
-Message-Id: <bd9b522d8938ee3c4bbeb7cb586e56051da94dd9.1409159626.git.alexandru.damian@intel.com>
+Date: Wed, 27 Aug 2014 18:23:39 +0100
+Message-Id: <2c5d8c6cc34447e29fe7408a4098bc762b14c607.1409159626.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <21a46e29c3a9df56db7ad81106a23e7284584afe.1409159626.git.alexandru.damian@intel.com>
 References: <21a46e29c3a9df56db7ad81106a23e7284584afe.1409159626.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1409159626.git.alexandru.damian@intel.com>
 References: <cover.1409159626.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 09/11] toatergui: update pages to match project models
+Subject: [PATCH 07/11] toaster: update checksettings command for auto-detection
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,115 +51,280 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Aug 2014 17:23:52 -0000
+X-List-Received-Date: Wed, 27 Aug 2014 17:23:53 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-We update pages and queries to match the new project
-models.
+We enhance the checksettings command to try to automatically
+detect settings for running on localhost.
+
+The checksettings will look for a nearby poky layer source,
+for a nearby build directory, and will try to import settings
+from "toasterconf.json" files found in the local layer.
+
+On new configuration, it will also perform updates from the
+layer source.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/templates/newproject.html |  4 ++--
- lib/toaster/toastergui/templates/project.html    |  4 ++--
- lib/toaster/toastergui/views.py                  | 13 ++++++-------
- 3 files changed, 10 insertions(+), 11 deletions(-)
+ bin/toaster                                        |   9 +-
+ .../management/commands/checksettings.py           | 190 ++++++++++++++++++++-
+ 2 files changed, 188 insertions(+), 11 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/newproject.html b/lib/toaster/toastergui/templates/newproject.html
-index 6ee27d1..12c4e9f 100644
---- a/lib/toaster/toastergui/templates/newproject.html
-+++ b/lib/toaster/toastergui/templates/newproject.html
-@@ -28,8 +28,8 @@
- 								<i class="icon-question-sign get-help" title="This sets the branch for the Yocto Project core layers (meta, meta-yocto and meta-yocto-bsp), and for the layers you use from the OpenEmbedded Metadata Index"></i>
- 							</label>
- 							<select name="projectversion" id="projectversion">
--	{% for br in branches %}
--		<option value="{{br.id}}"{%if projectversion == br.id %} selected{%endif%}>{{br.name}} ({{br.short_description}})</option>
-+	{% for release in releases %}
-+		<option value="{{release.id}}"{%if projectversion == release.id %} selected{%endif%}>{{release.name}} ({{release.description}})</option>
- 	{% endfor %}
- 							</select>
- 						</fieldset>
-diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
-index 0ddfeb3..3c59fcf 100644
---- a/lib/toaster/toastergui/templates/project.html
-+++ b/lib/toaster/toastergui/templates/project.html
-@@ -269,7 +269,7 @@ $(document).ready(function () {
-                     <ul class="unstyled configuration-list">
-             {% for pl in project.projectlayer_set.all %}
-                         <li>
--                            <a href="#">{{pl.name}} (<span class="layer-version">{{pl.giturl}}</span>)</a>
-+                            <a href="#">{{pl.layercommit.layer.name}} (<span class="layer-version">{{pl.layercommit.layer.layer_index_url}}</span>)</a>
-                 {% if pl.optional %}
-                             <i title="" data-original-title="" class="icon-trash" id="del-layer-icon" x-data="{{pl.pk}}"></i>
-                 {% endif %}
-@@ -358,7 +358,7 @@ $(document).ready(function () {
-                 </p>
-                 <h3>Yocto Project version</h3>
-                 <p class="lead">
--                    {{project.branch}} - {{project.short_description}}
-+                    {{project.release}} - {{project.short_description}}
-                     <i title="" data-original-title="" class="icon-pencil"></i>
-                 </p>
-             </div>
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 5b23365..e68f8b0 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -1772,7 +1772,7 @@ if toastermain.settings.MANAGED:
-     from django.contrib.auth.decorators import login_required
+diff --git a/bin/toaster b/bin/toaster
+index ce16de6..2fabe5c 100755
+--- a/bin/toaster
++++ b/bin/toaster
+@@ -65,10 +65,10 @@ function webserverStartAll()
+         fi
+ 	if [ "x$TOASTER_MANAGED" == "x1" ]; then
+ 	        python $BBBASEDIR/lib/toaster/manage.py migrate bldcontrol || retval=1
+-		python $BBBASEDIR/lib/toaster/manage.py checksettings  || retval=1
++		python $BBBASEDIR/lib/toaster/manage.py checksettings  --traceback || retval=1
+ 	fi
+-	echo "Starting webserver"
+         if [ $retval -eq 0 ]; then
++	    echo "Starting webserver"
+             python $BBBASEDIR/lib/toaster/manage.py runserver 0.0.0.0:8000 </dev/null >${BUILDDIR}/toaster_web.log 2>&1 & echo $! >${BUILDDIR}/.toastermain.pid
+             sleep 1
+             if ! cat "${BUILDDIR}/.toastermain.pid" | xargs -I{} kill -0 {} ; then
+@@ -144,7 +144,10 @@ if [ -z "$ZSH_NAME" ] && [ `basename \"$0\"` = `basename \"$BASH_SOURCE\"` ]; th
+     }
+     TOASTER_MANAGED=1
+     export TOASTER_MANAGED=1
+-    webserverStartAll || (echo "Fail to start the web server, stopping" 1>&2 && exit 1)
++    if ! webserverStartAll; then
++        echo "Failed to start the web server, stopping" 1>&2;
++        exit 1;
++    fi
+     xdg-open http://0.0.0.0:8000/ >/dev/null 2>&1 &
+     trap trap_ctrlc SIGINT
+     echo "Running. Stop with Ctrl-C"
+diff --git a/lib/toaster/bldcontrol/management/commands/checksettings.py b/lib/toaster/bldcontrol/management/commands/checksettings.py
+index a91dd15..4f6a66e 100644
+--- a/lib/toaster/bldcontrol/management/commands/checksettings.py
++++ b/lib/toaster/bldcontrol/management/commands/checksettings.py
+@@ -1,38 +1,212 @@
+ from django.core.management.base import NoArgsCommand, CommandError
+ from django.db import transaction
+-from orm.models import Build
++from orm.models import LayerSource, ToasterSetting, Branch, Layer, Layer_Version
++from orm.models import BitbakeVersion, Release, ReleaseDefaultLayer
+ from bldcontrol.bbcontroller import getBuildEnvironmentController, ShellCmdException
+ from bldcontrol.models import BuildRequest, BuildEnvironment
+ import os
  
-     from orm.models import Project, ProjectLayer, ProjectTarget, ProjectVariable
--    from orm.models import Branch, LayerSource, ToasterSetting
-+    from orm.models import Branch, LayerSource, ToasterSetting, Release
-     from bldcontrol.models import BuildRequest
++def DN(path):
++    if path is None:
++        return ""
++    else:
++        return os.path.dirname(path)
++
++
+ class Command(NoArgsCommand):
+     args = ""
+-    help = "Verifies thid %dthe configured settings are valid and usable, or prompts the user to fix the settings."
++    help = "Verifies that the configured settings are valid and usable, or prompts the user to fix the settings."
++
++    def _reduce_canon_path(self, path):
++        components = []
++        for c in path.split("/"):
++            if c == "..":
++                del components[-1]
++            elif c == ".":
++                pass
++            else:
++                components.append(c)
++        return "/".join(components)
++
++    def _find_first_path_for_file(self, startdirectory, filename, level = 0):
++        if level < 0:
++            return None
++        dirs = []
++        for i in os.listdir(startdirectory):
++            j = os.path.join(startdirectory, i)
++            if os.path.isfile(j):
++                if i == filename:
++                    return startdirectory
++            elif os.path.isdir(j):
++                dirs.append(j)
++        for j in dirs:
++            ret = self._find_first_path_for_file(j, filename, level - 1)
++            if ret is not None:
++                return ret
++        return None
++
++    def _get_suggested_sourcedir(self, be):
++        if be.betype != BuildEnvironment.TYPE_LOCAL:
++            return ""
++        return DN(DN(DN(self._find_first_path_for_file(self.guesspath, "toasterconf.json", 4))))
++
++    def _get_suggested_builddir(self, be):
++        if be.betype != BuildEnvironment.TYPE_LOCAL:
++            return ""
++        return DN(self._find_first_path_for_file(self.guesspath, "bblayers.conf", 3))
++
++    def _import_layer_config(self, baselayerdir):
++        filepath = os.path.join(baselayerdir, "meta/conf/toasterconf.json")
++        if not os.path.exists(filepath) or not os.path.isfile(filepath):
++            raise Exception("Failed to find toaster config file %s ." % filepath)
++
++        import json, pprint
++        data = json.loads(open(filepath, "r").read())
++
++        # verify config file validity before updating settings
++        for i in ['bitbake', 'releases', 'defaultrelease', 'config', 'layersources']:
++            assert i in data
++
++        # import bitbake data
++        for bvi in data['bitbake']:
++            bvo, created = BitbakeVersion.objects.get_or_create(name=bvi['name'])
++            bvo.giturl = bvi['giturl']
++            bvo.branch = bvi['branch']
++            bvo.dirpath = bvi['dirpath']
++            bvo.save()
++
++        # set the layer sources
++        for lsi in data['layersources']:
++            assert 'sourcetype' in lsi
++            assert 'apiurl' in lsi
++            assert 'name' in lsi
++            assert 'branches' in lsi
++
++            if lsi['sourcetype'] == LayerSource.TYPE_LAYERINDEX or lsi['apiurl'].startswith("/"):
++                apiurl = lsi['apiurl']
++            else:
++                apiurl = self._reduce_canon_path(os.path.join(DN(filepath), lsi['apiurl']))
++
++            try:
++                ls = LayerSource.objects.get(sourcetype = lsi['sourcetype'], apiurl = apiurl)
++            except LayerSource.DoesNotExist:
++                ls = LayerSource.objects.create(
++                    name = lsi['name'],
++                    sourcetype = lsi['sourcetype'],
++                    apiurl = apiurl
++                )
++
++            layerbranches = []
++            for branchname in lsi['branches']:
++                bo, created = Branch.objects.get_or_create(layer_source = ls, name = branchname)
++                layerbranches.append(bo)
++
++            if 'layers' in lsi:
++                for layerinfo in lsi['layers']:
++                    lo, created = Layer.objects.get_or_create(layer_source = ls, name = layerinfo['name'])
++                    if layerinfo['local_path'].startswith("/"):
++                        lo.local_path = layerinfo['local_path']
++                    else:
++                        lo.local_path = self._reduce_canon_path(os.path.join(DN(filepath), layerinfo['local_path']))
++                    lo.layer_index_url = layerinfo['layer_index_url']
++                    if 'vcs_url' in layerinfo:
++                        lo.vcs_url = layerinfo['vcs_url']
++                    lo.save()
++
++                    for branch in layerbranches:
++                        lvo, created = Layer_Version.objects.get_or_create(layer_source = ls,
++                                up_branch = branch,
++                                commit = branch.name,
++                                layer = lo)
++                        lvo.dirpath = layerinfo['dirpath']
++                        lvo.save()
++        # set releases
++        for ri in data['releases']:
++            bvo = BitbakeVersion.objects.get(name = ri['bitbake'])
++            assert bvo is not None
++
++            ro, created = Release.objects.get_or_create(name = ri['name'], bitbake_version = bvo)
++            ro.description = ri['description']
++            ro.branch = ri['branch']
++            ro.save()
++
++            for dli in ri['defaultlayers']:
++                lsi, layername = dli.split(":")
++                layer, created = Layer.objects.get_or_create( 
++                        layer_source = LayerSource.objects.get(name = lsi),
++                        name = layername
++                    )
++                ReleaseDefaultLayer.objects.get_or_create( release = ro, layer = layer)
++
++        # set default release
++        if ToasterSetting.objects.filter(name = "DEFAULT_RELEASE").count() > 0:
++            ToasterSetting.objects.filter(name = "DEFAULT_RELEASE").update(value = data['defaultrelease'])
++        else:
++            ToasterSetting.objects.create(name = "DEFAULT_RELEASE", value = data['defaultrelease'])
++
++        # set default config variables
++        for configname in data['config']:
++            if ToasterSetting.objects.filter(name = "DEFCONF_" + configname).count() > 0:
++                ToasterSetting.objects.filter(name = "DEFCONF_" + configname).update(value = data['config'][configname])
++            else:
++                ToasterSetting.objects.create(name = "DEFCONF_" + configname, value = data['config'][configname])
  
-     import traceback
-@@ -1792,7 +1792,7 @@ if toastermain.settings.MANAGED:
-         context = {
-             'email': request.user.email if request.user.is_authenticated() else '',
-             'username': request.user.username if request.user.is_authenticated() else '',
--            'branches': Branch.objects.order_by("-up_id"),
-+            'releases': Release.objects.order_by("id"),
-             'defaultbranch': ToasterSetting.objects.get(name = "DEFAULT_RELEASE").value,
-         }
+     def handle(self, **options):
++        self.guesspath = DN(DN(DN(DN(DN(DN(DN(__file__)))))))
++
+         # we make sure we have builddir and sourcedir for all defined build envionments
+         for be in BuildEnvironment.objects.all():
+             def _verify_be():
+                 is_changed = False
+                 print("Verifying the Build Environment type %s id %d." % (be.get_betype_display(), be.pk))
+                 if len(be.sourcedir) == 0:
+-                    be.sourcedir = raw_input(" -- sourcedir may not be empty:")
++                    suggesteddir = self._get_suggested_sourcedir(be)
++                    be.sourcedir = raw_input(" -- Layer sources checkout directory may not be empty [guessed \"%s\"]:" % suggesteddir)
++                    if len(be.sourcedir) == 0 and len(suggesteddir) > 0:
++                        be.sourcedir = suggesteddir
+                     is_changed = True
++
+                 if not be.sourcedir.startswith("/"):
+-                    be.sourcedir = raw_input(" -- sourcedir must be an absolute path:")
++                    be.sourcedir = raw_input(" -- Layer sources checkout directory must be an absolute path:")
+                     is_changed = True
++
+                 if len(be.builddir) == 0:
+-                    be.builddir = raw_input(" -- builddir may not be empty:")
++                    suggesteddir = self._get_suggested_builddir(be)
++                    be.builddir = raw_input(" -- Build directory may not be empty [guessed \"%s\"]:" % suggesteddir)
++                    if len(be.builddir) == 0 and len(suggesteddir) > 0:
++                        be.builddir = suggesteddir
+                     is_changed = True
++
+                 if not be.builddir.startswith("/"):
+-                    be.builddir = raw_input(" -- builddir must be an absolute path:")
++                    be.builddir = raw_input(" -- Build directory must be an absolute path:")
+                     is_changed = True
++
++
++
+                 if is_changed:
+-                    print "saved"
++                    print "Build configuration saved"
+                     be.save()
++
++                if is_changed and be.betype == BuildEnvironment.TYPE_LOCAL:
++                    baselayerdir = DN(DN(self._find_first_path_for_file(be.sourcedir, "toasterconf.json", 3)))
++                    if baselayerdir:
++                        i = raw_input(" -- Do you want to import basic layer configuration from \"%s\" ? (y/N):" % baselayerdir)
++                        if len(i) and i.upper()[0] == 'Y':
++                            self._import_layer_config(baselayerdir)
++                            # we run lsupdates after config update
++                            print "Updating information from the layer source, please wait."
++                            from django.core.management import call_command
++                            call_command("lsupdates")
++                        pass
++
+                 return is_changed
  
-@@ -1819,15 +1819,14 @@ if toastermain.settings.MANAGED:
+             while (_verify_be()):
+                 pass
  
-                 #  save the project
-                 prj = Project.objects.create_project(name = request.POST['projectname'],
--                    branch = Branch.objects.get(pk = request.POST['projectversion'].split(" ")[0]),
--                    short_description=request.POST['projectversion'].split(" ")[1:])
-+                    release = Release.objects.get(pk = request.POST['projectversion']))
-                 prj.user_id = request.user.pk
-                 prj.save()
-                 return redirect(reverse(project, args = (prj.pk,)))
- 
-             except (IntegrityError, BadParameterException) as e:
-                 # fill in page with previously submitted values
--                map(lambda x: context.__setitem__(x, request.POST[x]), mandatory_fields)
-+                map(lambda x: context.__setitem__(x, request.POST.get(x, "-- missing")), mandatory_fields)
-                 if isinstance(e, IntegrityError) and "username" in str(e):
-                     context['alert'] = "Your chosen username is already used"
-                 else:
-@@ -1917,7 +1916,7 @@ if toastermain.settings.MANAGED:
-             # return all project settings
-             return HttpResponse(json.dumps( {
-                 "error": "ok",
--                "layers": map(lambda x: (x.name, x.giturl), prj.projectlayer_set.all()),
-+                "layers": map(lambda x: (x.layercommit.layer.name, x.layercommit.layer.layer_index_url), prj.projectlayer_set.all()),
-                 "targets" : map(lambda x: {"target" : x.target, "task" : x.task, "pk": x.pk}, prj.projecttarget_set.all()),
-                 "variables": map(lambda x: (x.name, x.value), prj.projectvariable_set.all()),
-                 }), content_type = "application/json")
-@@ -1945,7 +1944,7 @@ if toastermain.settings.MANAGED:
- 
-         queryset_all = Layer_Version.objects.all()
-         if 'project' in request.session:
--            queryset_all = queryset_all.filter(up_branch = request.session['project'].branch)
-+            queryset_all = queryset_all.filter(up_branch__in = Branch.objects.filter(name = request.session['project'].release.name))
- 
-         queryset_with_search = _get_queryset(Layer_Version, queryset_all, None, search_term, ordering_string, '-layer__name')
-         queryset = _get_queryset(Layer_Version, queryset_all, filter_string, search_term, ordering_string, '-layer__name')
+-            return 0
++        # verify that default settings are there
++        if ToasterSetting.objects.filter(name = 'DEFAULT_RELEASE').count() != 1:
++            ToasterSetting.objects.filter(name = 'DEFAULT_RELEASE').delete()
++            ToasterSetting.objects.get_or_create(name = 'DEFAULT_RELEASE', value = '')
++
++        return 0
 -- 
 1.9.1
 
