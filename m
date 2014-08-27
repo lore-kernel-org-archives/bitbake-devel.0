@@ -1,25 +1,39 @@
-Return-Path: <Hongxu.Jia@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 5268671154
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-wg0-f46.google.com (mail-wg0-f46.google.com [74.125.82.46])
+	by mail.openembedded.org (Postfix) with ESMTP id E54056FE3B
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Aug 2014 15:38:53 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail1.windriver.com (8.14.9/8.14.5) with ESMTP id s7RFcXp7026782
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Wed, 27 Aug 2014 08:38:34 -0700 (PDT)
-Received: from pek-hjia-d1.corp.ad.wrs.com (128.224.162.194) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
-	14.3.174.1; Wed, 27 Aug 2014 08:38:33 -0700
-From: Hongxu Jia <hongxu.jia@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>,
-	<richard.purdie@linuxfoundation.org>
-Date: Wed, 27 Aug 2014 23:38:24 +0800
-Message-ID: <cover.1409153318.git.hongxu.jia@windriver.com>
+	Wed, 27 Aug 2014 17:23:38 +0000 (UTC)
+Received: by mail-wg0-f46.google.com with SMTP id m15so511501wgh.17
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 27 Aug 2014 10:23:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=OwNjP8cEGs9ejTIbZrFyqHUjHjqGtRcYuNd3mtioWRU=;
+	b=FKofNoE8DB0yi4ioa9pqzycxI7PXgWltZvkVt7R9l0dPLXlYmpRJtLuSPHX1iZcW9c
+	jF1V4rEqZFATY28RzJunhV+Oqu8FWcvQo2dvaYR2Etc7xs70E5unH3oTazxmO1XkbUwS
+	YaOqJlRx3XbD0QBwGMbWHdtl030tdEiYx1u56PiOyNnlzNWspAnxNOuhGt+0eI2MJ28z
+	Md7izBAGK6fgkr2SzsEVtTTv2loy0jQW5S6/v6Aby9G9Ycq6HoiAXJoEEoEQMkEK6ybL
+	PIPN0K1wS3qJf67Sxgu+5ijPcMaGGYQXvkCStEVND1aDyPM5cP6HL30RIFEfJtKyhXmr
+	Uzkg==
+X-Gm-Message-State: ALoCoQl7XdDFF2+DYMWgWrpgf6VyRGDCW6+Xre7jUTNj0IZwHi0AGTvPjs2dBpeRNfBsYzThYzSQ
+X-Received: by 10.180.219.37 with SMTP id pl5mr30528035wic.26.1409160215272;
+	Wed, 27 Aug 2014 10:23:35 -0700 (PDT)
+Received: from adamian-desk.corp.intel.com ([83.217.123.106])
+	by mx.google.com with ESMTPSA id
+	cy9sm25833444wib.18.2014.08.27.10.23.33 for <multiple recipients>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Wed, 27 Aug 2014 10:23:34 -0700 (PDT)
+Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
+	id 4583E560F4F; Wed, 27 Aug 2014 18:23:32 +0100 (BST)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: toaster@yoctoproject.org,
+	bitbake-devel@lists.openembedded.org
+Date: Wed, 27 Aug 2014 18:23:30 +0100
+Message-Id: <cover.1409159626.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
-MIME-Version: 1.0
-Cc: Zhangle.Yang@windriver.com
-Subject: [PATCH V5 0/1] bitbake: runqueue/cooker: catch hashvalidate error in RunQueueExecuteScenequeue
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 00/11] toaster update database models patchset
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,39 +46,81 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Aug 2014 15:39:01 -0000
-Content-Type: text/plain
+X-List-Received-Date: Wed, 27 Aug 2014 17:23:41 -0000
 
-Changed in V5:
-- Tweak execute_runqueue's exception process order.
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Changed in V4:
-- Use bb.BBHandledException to instead of custom exception HashValidateFailure
+This patchset adds changes to the database that allow compatibility with
+the layerindex application. The functionality include:
 
-Changed in V3:
-- Add exception HashValidateFailure for the specific error
+ * update layer information from the layer index application
+ * loading poky configuration file
+ * updates to UI to allow use of the new data
 
-Changed in V2: 
-- Strip the commit message within 80 characters a line
+The information contained in this model suffices for displaying data
+in the designed 1.7 version.
 
-//Hongxu
+Can you please review and pull at your convenience ?
 
-The following changes since commit 52b788c6df9201764130ab744bf67b770b24b896:
+Cheers,
+Alex
 
-  autogen-native: inherit pkgconfig to fix a build failure (2014-08-25 10:26:00 +0100)
+
+The following changes since commit 5d858e23de8b15badc3ab7f56ad5160a76a89de1:
+
+  bitbake.conf: Drop unused MKTEMP* variables (2014-08-24 10:09:53 +0100)
 
 are available in the git repository at:
 
-  git://git.pokylinux.org/poky-contrib hongxu/bitbake
-  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=hongxu/bitbake
+  git://git.yoctoproject.org/poky-contrib adamian/20140827-submission-bb
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20140827-submission-bb
 
-Hongxu Jia (1):
-  bitbake: runqueue/cooker: catch hashvalidate error in
-    RunQueueExecuteScenequeue
+Alexandru DAMIAN (11):
+  toasterui: refactor log saving and save out-of-build errors
+  toaster: fix application discovery in settings.py
+  toaster: update orm models for layerindex compatibility
+  toaster: enable admin interface on select models
+  toaster: create project section navigation structure
+  toaster: add all layers page
+  toaster: update checksettings command for auto-detection
+  toaster: update the bldcontrol to the new orm models
+  toatergui:  update pages to match project models
+  buildinfohelper: BuildRequest project file update soft linked
+  toaster: create Build methods for calculating progress and ETA
 
- bitbake/lib/bb/cooker.py   |  4 ++--
- bitbake/lib/bb/runqueue.py | 14 ++++++++------
- 2 files changed, 10 insertions(+), 8 deletions(-)
+ bin/toaster                                        |   9 +-
+ lib/bb/ui/buildinfohelper.py                       |  81 ++-
+ lib/bb/ui/toasterui.py                             |  10 +-
+ lib/toaster/bldcontrol/admin.py                    |   8 +
+ lib/toaster/bldcontrol/bbcontroller.py             |  35 +-
+ .../management/commands/checksettings.py           | 190 +++++-
+ .../bldcontrol/management/commands/runbuilds.py    |   2 +-
+ .../migrations/0006_auto__add_brbitbake.py         | 128 ++++
+ lib/toaster/bldcontrol/models.py                   |   5 +
+ lib/toaster/orm/admin.py                           |  17 +
+ lib/toaster/orm/management/__init__.py             |   0
+ lib/toaster/orm/management/commands/__init__.py    |   0
+ lib/toaster/orm/management/commands/lsupdates.py   |  12 +
+ ...erversiondependency__add_unique_layerversion.py | 710 +++++++++++++++++++++
+ lib/toaster/orm/models.py                          | 395 ++++++++++--
+ lib/toaster/orm/tests.py                           |  33 +
+ lib/toaster/toastergui/templates/layers.html       | 173 +++++
+ lib/toaster/toastergui/templates/newproject.html   |   5 +-
+ lib/toaster/toastergui/templates/project.html      |  51 +-
+ lib/toaster/toastergui/urls.py                     |  11 +-
+ lib/toaster/toastergui/views.py                    | 138 +++-
+ lib/toaster/toastermain/settings.py                |  16 +-
+ lib/toaster/toastermain/urls.py                    |  18 +-
+ 23 files changed, 1891 insertions(+), 156 deletions(-)
+ create mode 100644 lib/toaster/bldcontrol/admin.py
+ create mode 100644 lib/toaster/bldcontrol/migrations/0006_auto__add_brbitbake.py
+ create mode 100644 lib/toaster/orm/admin.py
+ create mode 100644 lib/toaster/orm/management/__init__.py
+ create mode 100644 lib/toaster/orm/management/commands/__init__.py
+ create mode 100644 lib/toaster/orm/management/commands/lsupdates.py
+ create mode 100644 lib/toaster/orm/migrations/0013_auto__add_release__add_layerversiondependency__add_unique_layerversion.py
+ create mode 100644 lib/toaster/orm/tests.py
+ create mode 100755 lib/toaster/toastergui/templates/layers.html
 
 -- 
 1.9.1
