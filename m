@@ -1,29 +1,44 @@
-Return-Path: <Hongxu.Jia@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 4B02C710CD
+Return-Path: <V.Vogelhuber@DigitalEndoscopy.de>
+X-Greylist: delayed 2379 seconds by postgrey-1.34 at layers.openembedded.org;
+	Wed, 27 Aug 2014 11:27:28 UTC
+Received: from mxout51.expurgate.net (mxout51.expurgate.net [91.198.224.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 2DECF71157
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Aug 2014 11:03:30 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail.windriver.com (8.14.9/8.14.5) with ESMTP id s7RB2tia014258
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Wed, 27 Aug 2014 04:02:55 -0700 (PDT)
-Received: from [128.224.162.194] (128.224.162.194) by ALA-HCB.corp.ad.wrs.com
-	(147.11.189.41) with Microsoft SMTP Server id 14.3.174.1;
-	Wed, 27 Aug 2014 04:02:55 -0700
-Message-ID: <53FDBAD7.9010403@windriver.com>
-Date: Wed, 27 Aug 2014 19:02:47 +0800
-From: Hongxu Jia <hongxu.jia@windriver.com>
+	Wed, 27 Aug 2014 11:27:28 +0000 (UTC)
+Received: from [127.0.0.1] (helo=localhost)
+	by relay.expurgate.net with smtp (Exim 4.80.1)
+	(envelope-from <V.Vogelhuber@DigitalEndoscopy.de>)
+	id 1XMalZ-0000Cb-JL for bitbake-devel@lists.openembedded.org;
+	Wed, 27 Aug 2014 12:47:49 +0200
+Received: from [80.81.19.29] (helo=SRV-MSX01.digitendos.local)
+	by relay.expurgate.net with esmtp (Exim 4.80.1)
+	(envelope-from <V.Vogelhuber@DigitalEndoscopy.de>)
+	id 1XMalZ-0007PZ-1f for bitbake-devel@lists.openembedded.org;
+	Wed, 27 Aug 2014 12:47:49 +0200
+Received: from [192.168.10.111] (192.168.10.111) by SRV-MSX01.digitendos.local
+	(192.168.10.14) with Microsoft SMTP Server (TLS) id 14.2.347.0;
+	Wed, 27 Aug 2014 12:47:47 +0200
+Message-ID: <53FDB74E.8000600@digitalendoscopy.de>
+Date: Wed, 27 Aug 2014 12:47:42 +0200
+From: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
 User-Agent: Mozilla/5.0 (X11; Linux x86_64;
 	rv:31.0) Gecko/20100101 Thunderbird/31.0
 MIME-Version: 1.0
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-References: <cover.1409136202.git.hongxu.jia@windriver.com>	
-	<4ce3cc607c61c23904de8f3844e7e8b360375557.1409136202.git.hongxu.jia@windriver.com>
-	<1409136574.5772.37.camel@ted>
-In-Reply-To: <1409136574.5772.37.camel@ted>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] bitbake: runqueue: terminate build safely while RunQueueExecuteScenequeue init failed
+To: <bitbake-devel@lists.openembedded.org>
+X-Originating-IP: [192.168.10.111]
+X-TM-AS-Product-Ver: SMEX-10.1.0.2244-7.500.1018-20910.002
+X-TM-AS-Result: No--7.654500-0.000000-31
+X-TM-AS-User-Approved-Sender: Yes
+X-TM-AS-User-Blocked-Sender: No
+X-purgate-relay-fid: relay-b62ce8
+X-purgate-sourceid: 1XMalZ-0007PZ-1f
+X-purgate-Ad: Checked for spam and viruses by eXpurgate(R),
+	see www.eleven.de for details.
+X-purgate-ID: 151534::1409136469-00001D43-B91C73F8/0/0
+X-purgate: clean
+X-purgate-type: clean
+X-purgate-relay-bid: relay-f3ed12
+Subject: HG clone using subrepositories with username and password in url
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,80 +51,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Aug 2014 11:03:33 -0000
-Content-Type: text/plain; charset="utf-8"; format=flowed
+X-List-Received-Date: Wed, 27 Aug 2014 11:27:36 -0000
+X-Groupsio-MsgNum: 5002
+Content-Type: multipart/mixed; boundary="------------050709060104050905030107"
+
+--------------050709060104050905030107
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 08/27/2014 06:49 PM, Richard Purdie wrote:
-> On Wed, 2014-08-27 at 18:44 +0800, Hongxu Jia wrote:
->> While RunQueueExecuteScenequeue init failed, the exit of build is mess.
->> Here is the example while bb.fatal invoked in RunQueueExecuteScenequeue:
->> ...
->> Traceback (most recent call last):
->> |  File "/home/jiahongxu/yocto/poky/bitbake/lib/bb/runqueue.py",
->>    line 1824, in RunQueueExecuteScenequeue.__init__(rq=<bb.runqueue.RunQueue
->>    instance at 0x7f87dd7d5050>):
->> |                 locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname,
->>    "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "d" : self.cooker.data }
->> |    >            valid = bb.utils.better_eval(call, locs)
->>
->> |    def better_eval(source, locals):
->> |    >    return eval(source, get_context(), locals)
->>
->> |  File "<string>", line 1, in <module>
->> |  File "/home/jiahongxu/yocto/poky/bitbake/lib/bb/__init__.py", line 102,
->>    in fatal:
->> |         logger.critical(''.join(args))
->> |    >    raise BBHandledException()
->>
->> BBHandledException
->> ...
->>
->> We should terminate build safely while RunQueueExecuteScenequeue init failed.
->>
->> Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
->> ---
->>   bitbake/lib/bb/runqueue.py | 7 ++++++-
->>   1 file changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
->> index e13dc57..c7b1dc0 100644
->> --- a/bitbake/lib/bb/runqueue.py
->> +++ b/bitbake/lib/bb/runqueue.py
->> @@ -1046,7 +1046,12 @@ class RunQueue:
->>                   self.state = runQueueComplete
->>               else:
->>                   self.start_worker()
->> -                self.rqexe = RunQueueExecuteScenequeue(self)
->> +                try:
->> +                    self.rqexe = RunQueueExecuteScenequeue(self)
->> +                except:
->> +                    # The RunQueueExecuteScenequeue init failure
->> +                    # terminated the build safely
->> +                    self.state = runQueueComplete
->>   
-> If the init fails, shouldn't we show a traceback and exit with an error
-> status? Does this happen in a normal build and if so, is there an
-> underlying cause we should fix?
-
-In my case, I want to catch the failure of self.rq.hashvalidate which
-invoked in RunQueueExecuteScenequeue, and exit in a normal build.
-
->
-> I'm worried this would let errors go unnoticed. Except clauses in
-> general should catch specific errors not every exception so this really
-> can't merge in this form, sorry.
-
-Got it, I will add condition to catch the failure of self.rq.hashvalidate,
-and don't affect other errors.
-
-Thanks,
-//Hongxu
-
-> Cheers,
->
-> Richard
->
->
+In case one uses mercurial subrepositories, updating to a specific 
+revision may need an additional authentication for the subrepository. So 
+the attached patch adds the missing authentication parameters to the hg 
+update call.
 
 
+
+
+
+--------------050709060104050905030107
+Content-Type: text/x-patch;
+	name="0001-Fixed-authentication-during-update-in-case-of-using-.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename*0="0001-Fixed-authentication-during-update-in-case-of-using-.pa";
+	filename*1="tch"
+
+From 45f7226b02e0911f7a612ab208b2139cbd03ec56 Mon Sep 17 00:00:00 2001
+From: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
+Date: Wed, 27 Aug 2014 12:41:35 +0200
+Subject: [PATCH 1/1] Fixed authentication during update in case of using
+ subrepositories
+
+Signed-off-by: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
+---
+ bitbake/lib/bb/fetch2/hg.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/bitbake/lib/bb/fetch2/hg.py b/bitbake/lib/bb/fetch2/hg.py
+index cf21481..ab7b5f8 100644
+--- a/bitbake/lib/bb/fetch2/hg.py
++++ b/bitbake/lib/bb/fetch2/hg.py
+@@ -120,7 +120,10 @@ class Hg(FetchMethod):
+             else:
+                 cmd = "%s pull" % (basecmd)
+         elif command == "update":
+-            cmd = "%s update -C %s" % (basecmd, " ".join(options))
++            if ud.user and ud.pswd:
++                cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" update -C %s" % (basecmd, ud.user, ud.pswd, proto, " ".join(options))
++            else:
++                cmd = "%s update -C %s" % (basecmd, " ".join(options))
+         else:
+             raise FetchError("Invalid hg command %s" % command, ud.url)
+ 
+-- 
+1.9.1
+
+
+--------------050709060104050905030107--
