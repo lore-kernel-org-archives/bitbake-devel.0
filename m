@@ -1,40 +1,29 @@
-Return-Path: <martin.jansa@gmail.com>
-Received: from mail-lb0-f169.google.com (mail-lb0-f169.google.com
-	[209.85.217.169])
-	by mail.openembedded.org (Postfix) with ESMTP id C34A265D34
+Return-Path: <Hongxu.Jia@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 4B02C710CD
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Aug 2014 11:03:00 +0000 (UTC)
-Received: by mail-lb0-f169.google.com with SMTP id n15so47697lbi.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Aug 2014 04:03:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:date:to:cc:subject:message-id:references:mime-version
-	:content-type:content-disposition:in-reply-to:user-agent;
-	bh=jgYXb9VlmiLNOXPDTsgyGjdbyhA8aXKdDxkGzWZM/wI=;
-	b=T98izMJrSDIzm6OmAIFY3cv3AFS/UPud+L5iUYYeTTAufGekTxevNUP2d+T5WUxIIE
-	+Bcw/DsqNEDj6YUCrJWqk6TPN8mLY6Y7M6hQeNuhBE/pneOY6CHSFEgSCg1coh9TaZQl
-	2NvZHZI7eqLoUPikdjUPpzJE02/t+4S3RSB4N2df4kBiCgLex7gKq9qartwIg24kKCBc
-	96WJ0yYw1rIAvDRny5ILTAyX1UR+4Lj/DM3vtZCnwRa60eX1ML0I1AxR5FstB2ZND5zz
-	sPEt+AFfNsxqA9rEAA0OQwROlCvPgXBIB/THzvNuR0SNABBvZVBFNI6bLGAxJqPCVwxP
-	it0g==
-X-Received: by 10.112.205.200 with SMTP id li8mr31472076lbc.70.1409137380121; 
-	Wed, 27 Aug 2014 04:03:00 -0700 (PDT)
-Received: from localhost (ip-89-176-104-3.net.upcbroadband.cz. [89.176.104.3])
-	by mx.google.com with ESMTPSA id i5sm70634lbd.27.2014.08.27.04.02.58
-	for <multiple recipients>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 27 Aug 2014 04:02:58 -0700 (PDT)
-From: Martin Jansa <martin.jansa@gmail.com>
-X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
-Date: Wed, 27 Aug 2014 13:03:07 +0200
-To: Hongxu Jia <hongxu.jia@windriver.com>
-Message-ID: <20140827110307.GC20524@jama>
-References: <cover.1409136202.git.hongxu.jia@windriver.com>
+	Wed, 27 Aug 2014 11:03:30 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail.windriver.com (8.14.9/8.14.5) with ESMTP id s7RB2tia014258
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Wed, 27 Aug 2014 04:02:55 -0700 (PDT)
+Received: from [128.224.162.194] (128.224.162.194) by ALA-HCB.corp.ad.wrs.com
+	(147.11.189.41) with Microsoft SMTP Server id 14.3.174.1;
+	Wed, 27 Aug 2014 04:02:55 -0700
+Message-ID: <53FDBAD7.9010403@windriver.com>
+Date: Wed, 27 Aug 2014 19:02:47 +0800
+From: Hongxu Jia <hongxu.jia@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:31.0) Gecko/20100101 Thunderbird/31.0
 MIME-Version: 1.0
-In-Reply-To: <cover.1409136202.git.hongxu.jia@windriver.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <cover.1409136202.git.hongxu.jia@windriver.com>	
+	<4ce3cc607c61c23904de8f3844e7e8b360375557.1409136202.git.hongxu.jia@windriver.com>
+	<1409136574.5772.37.camel@ted>
+In-Reply-To: <1409136574.5772.37.camel@ted>
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH V2 0/1] bitbake: runqueue: terminate build safely while RunQueueExecuteScenequeue init failed
+Subject: Re: [PATCH 1/1] bitbake: runqueue: terminate build safely while RunQueueExecuteScenequeue init failed
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,66 +36,80 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Aug 2014 11:03:06 -0000
-X-Groupsio-MsgNum: 5000
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hEk4XxIzAisM6naS"
-Content-Disposition: inline
+X-List-Received-Date: Wed, 27 Aug 2014 11:03:33 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
---hEk4XxIzAisM6naS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 08/27/2014 06:49 PM, Richard Purdie wrote:
+> On Wed, 2014-08-27 at 18:44 +0800, Hongxu Jia wrote:
+>> While RunQueueExecuteScenequeue init failed, the exit of build is mess.
+>> Here is the example while bb.fatal invoked in RunQueueExecuteScenequeue:
+>> ...
+>> Traceback (most recent call last):
+>> |  File "/home/jiahongxu/yocto/poky/bitbake/lib/bb/runqueue.py",
+>>    line 1824, in RunQueueExecuteScenequeue.__init__(rq=<bb.runqueue.RunQueue
+>>    instance at 0x7f87dd7d5050>):
+>> |                 locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname,
+>>    "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "d" : self.cooker.data }
+>> |    >            valid = bb.utils.better_eval(call, locs)
+>>
+>> |    def better_eval(source, locals):
+>> |    >    return eval(source, get_context(), locals)
+>>
+>> |  File "<string>", line 1, in <module>
+>> |  File "/home/jiahongxu/yocto/poky/bitbake/lib/bb/__init__.py", line 102,
+>>    in fatal:
+>> |         logger.critical(''.join(args))
+>> |    >    raise BBHandledException()
+>>
+>> BBHandledException
+>> ...
+>>
+>> We should terminate build safely while RunQueueExecuteScenequeue init failed.
+>>
+>> Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+>> ---
+>>   bitbake/lib/bb/runqueue.py | 7 ++++++-
+>>   1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+>> index e13dc57..c7b1dc0 100644
+>> --- a/bitbake/lib/bb/runqueue.py
+>> +++ b/bitbake/lib/bb/runqueue.py
+>> @@ -1046,7 +1046,12 @@ class RunQueue:
+>>                   self.state = runQueueComplete
+>>               else:
+>>                   self.start_worker()
+>> -                self.rqexe = RunQueueExecuteScenequeue(self)
+>> +                try:
+>> +                    self.rqexe = RunQueueExecuteScenequeue(self)
+>> +                except:
+>> +                    # The RunQueueExecuteScenequeue init failure
+>> +                    # terminated the build safely
+>> +                    self.state = runQueueComplete
+>>   
+> If the init fails, shouldn't we show a traceback and exit with an error
+> status? Does this happen in a normal build and if so, is there an
+> underlying cause we should fix?
 
-On Wed, Aug 27, 2014 at 06:44:40PM +0800, Hongxu Jia wrote:
-> Changed in V2:=20
-> - Strip the commit message within 80 characters a line
->=20
-> //Hongxu
->=20
-> The following changes since commit 52b788c6df9201764130ab744bf67b770b24b8=
-96:
->=20
->   autogen-native: inherit pkgconfig to fix a build failure (2014-08-25 10=
-:26:00 +0100)
->=20
-> are available in the git repository at:
->=20
->   git://git.pokylinux.org/poky-contrib hongxu/bitbake
->   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=3Dhongxu/bitbake
+In my case, I want to catch the failure of self.rq.hashvalidate which
+invoked in RunQueueExecuteScenequeue, and exit in a normal build.
 
-It would be nice to have patches for bitbake repository on bitbake-devel
-ML.
+>
+> I'm worried this would let errors go unnoticed. Except clauses in
+> general should catch specific errors not every exception so this really
+> can't merge in this form, sorry.
 
-> Hongxu Jia (1):
->   bitbake: runqueue: terminate build safely while
->     RunQueueExecuteScenequeue init failed
->=20
->  bitbake/lib/bb/runqueue.py | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->=20
-> --=20
-> 1.9.1
->=20
-> --=20
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+Got it, I will add condition to catch the failure of self.rq.hashvalidate,
+and don't affect other errors.
 
---=20
-Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
+Thanks,
+//Hongxu
 
---hEk4XxIzAisM6naS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> Cheers,
+>
+> Richard
+>
+>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
 
-iEYEARECAAYFAlP9uusACgkQN1Ujt2V2gBxw5gCfag2L+nj8tBCSfhzkmJ9DJFbz
-NGUAoIXlFlMFt/jyypYyFz4JTnLC2zlp
-=zhYe
------END PGP SIGNATURE-----
-
---hEk4XxIzAisM6naS--
