@@ -1,45 +1,45 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f179.google.com (mail-wi0-f179.google.com
-	[209.85.212.179])
-	by mail.openembedded.org (Postfix) with ESMTP id 695BB71187
+Received: from mail-wi0-f170.google.com (mail-wi0-f170.google.com
+	[209.85.212.170])
+	by mail.openembedded.org (Postfix) with ESMTP id B02396FE3B
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Aug 2014 17:23:49 +0000 (UTC)
-Received: by mail-wi0-f179.google.com with SMTP id f8so808923wiw.6
+	Wed, 27 Aug 2014 17:23:51 +0000 (UTC)
+Received: by mail-wi0-f170.google.com with SMTP id f8so6986794wiw.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Aug 2014 10:23:50 -0700 (PDT)
+	Wed, 27 Aug 2014 10:23:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=ZMdD5rFIm9PLOu3t3uFaoQ5nByCSRtn1BVnc72WWzLw=;
-	b=J78yfVAyVt30umUUS3Nr4DgcN/TYnn7wlfdaKRuYbzZGr6+nZ1hiL8IUsNycNR7g5p
-	QpEY5IRRP4+peLoOP6DIQOovRaIF0Q++JMs/USfgavqpthK2bv9q3CkO7qrpbAtgDzul
-	mPGIDFiWIpnUdS5fpBdOqL4dF9y0yXaI218ZGcatZjCFtwQYA+TnwayZvHfvfg6H/4Rd
-	se+i/kxbR0y4yDaI/l2YGISo7hnOZTS5hoWLAN5aO3qrdYg5eoJFfGV+vi5S3vNEUFUK
-	Ho2x02qRXqBPTOuUv+MU5hAry9Z3wcehSXyLpBZW74ueqJJcGyx6lHCdSaqDqJs4c77w
-	3HDw==
-X-Gm-Message-State: ALoCoQkISfBUyzBw8ldffNs6bcY/Fv1xsckP1uFfx4kfE9+gAVPtfgsWF4KZc6x5lP9x5mcw5edp
-X-Received: by 10.180.37.77 with SMTP id w13mr30130488wij.78.1409160230266;
-	Wed, 27 Aug 2014 10:23:50 -0700 (PDT)
+	bh=7wE3pEtIYjIxMTSACWKMaToTASM8v7oQBprscJg3ILI=;
+	b=JJ/8P0QUK5ctJiQQGTei5GXDhONED+/wIrYNwPIaoInOdTfb6jUgkoFuxpRY92sTuS
+	+1i8pnrxZluQh4bEbEkXXX85Di+KWuQP/xqiGqoanOkj5XU1LAzAC3YLqWtswa/vQ34U
+	HgmXZA8HomHc27dGZ0E+dc5chKMaO1tdnIQyaiXycj7qOsPF8R1STzKrphhZzO3bowbu
+	phJvdExcYC0luaP9LRf5OXhJpWaYfoC60T/yC+a9H3r6xQJR8Z5RnXoVh3zEZOxRK4g8
+	iKIasfMJXOUQdiMu1S5aWoGBPuTqVTbggHfKB3RBUmeCV5yiV38pvyMtD484Z+GY25lC
+	cJIw==
+X-Gm-Message-State: ALoCoQmS9gbq3B5KSHzifnnTruB2oVHSj6BcfvtzApOc1NTqukkSXi4U62O3MdUsryymd/DMj0a9
+X-Received: by 10.194.205.196 with SMTP id li4mr37722640wjc.46.1409160231670; 
+	Wed, 27 Aug 2014 10:23:51 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id h3sm2647616wjz.24.2014.08.27.10.23.47
-	for <multiple recipients>
+	by mx.google.com with ESMTPSA id
+	gr3sm25882230wib.12.2014.08.27.10.23.48 for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 27 Aug 2014 10:23:48 -0700 (PDT)
+	Wed, 27 Aug 2014 10:23:50 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id 8465A56119B; Wed, 27 Aug 2014 18:23:45 +0100 (BST)
+	id A6ABF5611B1; Wed, 27 Aug 2014 18:23:45 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: toaster@yoctoproject.org,
 	bitbake-devel@lists.openembedded.org
-Date: Wed, 27 Aug 2014 18:23:38 +0100
-Message-Id: <018442e53d2f0eb6acef23464a7d8a2bb586cef3.1409159626.git.alexandru.damian@intel.com>
+Date: Wed, 27 Aug 2014 18:23:40 +0100
+Message-Id: <ea0895d832aabc2f83306f43dc6d45f5dce9ba2a.1409159626.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <21a46e29c3a9df56db7ad81106a23e7284584afe.1409159626.git.alexandru.damian@intel.com>
 References: <21a46e29c3a9df56db7ad81106a23e7284584afe.1409159626.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1409159626.git.alexandru.damian@intel.com>
 References: <cover.1409159626.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 06/11] toaster: add all layers page
+Subject: [PATCH 08/11] toaster: update the bldcontrol to the new orm models
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,294 +52,289 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Aug 2014 17:23:51 -0000
+X-List-Received-Date: Wed, 27 Aug 2014 17:23:52 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-We add a page where the user can browse
-and import layers from all the layers known
-by Toaster.
+We update the build controller application to make proper
+use of the bitbake specification in project settings.
 
-[YOCTO #6590]
+Added heuristic to detect when the meta* layers and bitbake
+are checked out from Yocto Project poky, and use a single
+git checkout.
+
+Building without a proper oe-init-build-env is not yet supported.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/templates/layers.html | 173 +++++++++++++++++++++++++++
- lib/toaster/toastergui/views.py              |  74 +++++++++++-
- 2 files changed, 246 insertions(+), 1 deletion(-)
- create mode 100755 lib/toaster/toastergui/templates/layers.html
+ lib/toaster/bldcontrol/bbcontroller.py             |  35 ++++--
+ .../bldcontrol/management/commands/runbuilds.py    |   2 +-
+ .../migrations/0006_auto__add_brbitbake.py         | 128 +++++++++++++++++++++
+ lib/toaster/bldcontrol/models.py                   |   5 +
+ 4 files changed, 158 insertions(+), 12 deletions(-)
+ create mode 100644 lib/toaster/bldcontrol/migrations/0006_auto__add_brbitbake.py
 
-diff --git a/lib/toaster/toastergui/templates/layers.html b/lib/toaster/toastergui/templates/layers.html
-new file mode 100755
-index 0000000..d7d159e
+diff --git a/lib/toaster/bldcontrol/bbcontroller.py b/lib/toaster/bldcontrol/bbcontroller.py
+index 1e58c67..bf9cdf9 100644
+--- a/lib/toaster/bldcontrol/bbcontroller.py
++++ b/lib/toaster/bldcontrol/bbcontroller.py
+@@ -25,7 +25,7 @@ import sys
+ import re
+ from django.db import transaction
+ from django.db.models import Q
+-from bldcontrol.models import BuildEnvironment, BRLayer, BRVariable, BRTarget
++from bldcontrol.models import BuildEnvironment, BRLayer, BRVariable, BRTarget, BRBitbake
+ import subprocess
+ 
+ from toastermain import settings
+@@ -123,8 +123,10 @@ class BuildEnvironmentController(object):
+             self.connection must be none.
+         """
+ 
+-    def setLayers(self,ls):
+-        """ Sets the layer variables in the config file, after validating local layer paths.
++    def setLayers(self, bbs, ls):
++        """ Checks-out bitbake executor and layers from git repositories.
++            Sets the layer variables in the config file, after validating local layer paths.
++            The bitbakes must be a 1-length list of BRBitbake
+             The layer paths must be in a list of BRLayer object
+ 
+             a word of attention: by convention, the first layer for any build will be poky!
+@@ -230,15 +232,22 @@ class LocalhostBEController(BuildEnvironmentController):
+         self.be.save()
+         print "Stopped server"
+ 
+-    def setLayers(self, layers):
++    def setLayers(self, bitbakes, layers):
+         """ a word of attention: by convention, the first layer for any build will be poky! """
+ 
+         assert self.be.sourcedir is not None
++        assert len(bitbakes) == 1
+         # set layers in the layersource
+ 
+         # 1. get a list of repos, and map dirpaths for each layer
+         gitrepos = {}
++        gitrepos[bitbakes[0].giturl] = []
++        gitrepos[bitbakes[0].giturl].append( ("bitbake", bitbakes[0].dirpath, bitbakes[0].commit) )
++        
+         for layer in layers:
++            # we don't process local URLs
++            if layer.giturl.startswith("file://"):
++                continue
+             if not layer.giturl in gitrepos:
+                 gitrepos[layer.giturl] = []
+             gitrepos[layer.giturl].append( (layer.name, layer.dirpath, layer.commit))
+@@ -250,7 +259,7 @@ class LocalhostBEController(BuildEnvironmentController):
+ 
+         def _getgitdirectoryname(url):
+             import re
+-            components = re.split(r'[\.\/]', url)
++            components = re.split(r'[:\.\/]', url)
+             return components[-2] if components[-1] == "git" else components[-1]
+ 
+         layerlist = []
+@@ -258,7 +267,7 @@ class LocalhostBEController(BuildEnvironmentController):
+         # 2. checkout the repositories
+         for giturl in gitrepos.keys():
+             localdirname = os.path.join(self.be.sourcedir, _getgitdirectoryname(giturl))
+-            print "DEBUG: giturl checking out in current directory", localdirname
++            print "DEBUG: giturl ", giturl ,"checking out in current directory", localdirname
+ 
+             # make sure our directory is a git repository
+             if os.path.exists(localdirname):
+@@ -268,11 +277,14 @@ class LocalhostBEController(BuildEnvironmentController):
+                 self._shellcmd("git clone \"%s\" \"%s\"" % (giturl, localdirname))
+             # checkout the needed commit
+             commit = gitrepos[giturl][0][2]
+-            self._shellcmd("git fetch --all && git checkout \"%s\"" % commit , localdirname)
+-            print "DEBUG: checked out commit ", commit, "to", localdirname
+ 
+-            # if this is the first checkout, take the localdirname as poky dir
+-            if self.pokydirname is None:
++            # branch magic name "HEAD" will inhibit checkout
++            if commit != "HEAD":
++                print "DEBUG: checking out commit ", commit, "to", localdirname
++                self._shellcmd("git fetch --all && git checkout \"%s\"" % commit , localdirname)
++
++            # take the localdirname as poky dir if we can find the oe-init-build-env
++            if self.pokydirname is None and os.path.exists(os.path.join(localdirname, "oe-init-build-env")):
+                 print "DEBUG: selected poky dir name", localdirname
+                 self.pokydirname = localdirname
+ 
+@@ -282,7 +294,8 @@ class LocalhostBEController(BuildEnvironmentController):
+                 if not os.path.exists(localdirpath):
+                     raise BuildSetupException("Cannot find layer git path '%s' in checked out repository '%s:%s'. Aborting." % (localdirpath, giturl, commit))
+ 
+-                layerlist.append(localdirpath)
++                if name != "bitbake":
++                    layerlist.append(localdirpath)
+ 
+         print "DEBUG: current layer list ", layerlist
+ 
+diff --git a/lib/toaster/bldcontrol/management/commands/runbuilds.py b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+index fa8c1a9..8efe8e6 100644
+--- a/lib/toaster/bldcontrol/management/commands/runbuilds.py
++++ b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+@@ -43,7 +43,7 @@ class Command(NoArgsCommand):
+ 
+             # set up the buid environment with the needed layers
+             print "Build %s, Environment %s" % (br, bec.be)
+-            bec.setLayers(br.brlayer_set.all())
++            bec.setLayers(br.brbitbake_set.all(), br.brlayer_set.all())
+ 
+             # get the bb server running
+             bbctrl = bec.getBBController()
+diff --git a/lib/toaster/bldcontrol/migrations/0006_auto__add_brbitbake.py b/lib/toaster/bldcontrol/migrations/0006_auto__add_brbitbake.py
+new file mode 100644
+index 0000000..74388f8
 --- /dev/null
-+++ b/lib/toaster/toastergui/templates/layers.html
-@@ -0,0 +1,173 @@
-+{% extends "base.html" %}
-+{% load projecttags %}
-+{% load humanize %}
-+{% block pagecontent %}
-+                <div class="page-header">
-+                    <h1>
-+                        All layers
-+                        <i class="icon-question-sign get-help heading-help" title="This page lists all the layers compatible with Yocto Project 1.7 'Dxxxx' that Toaster knows about. They include community-created layers suitable for use on top of OpenEmbedded Core and any layers you have imported"></i>
-+                     </h1>
-+                </div>
-+                <!--div class="alert">
-+                    <div class="input-append" style="margin-bottom:0px;">
-+                        <input class="input-xxlarge" type="text" placeholder="Search layers" value="browser" />
-+                        <a class="add-on btn">
-+                            <i class="icon-remove"></i>
-+                        </a>
-+                        <button class="btn" type="button">Search</button>
-+                        <a class="btn btn-link" href="#">Show all layers</a>
-+                    </div>
-+                </div-->
-+                <div id="layer-added" class="alert alert-info lead" style="display:none;"></div>
-+                <div id="layer-removed" class="alert alert-info lead" style="display:none;">
-+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-+                    <strong>1</strong> layer deleted from <a href="project-with-targets.html">your project</a>: <a href="#">meta-aarch64</a>
-+                </div>
++++ b/lib/toaster/bldcontrol/migrations/0006_auto__add_brbitbake.py
+@@ -0,0 +1,128 @@
++# -*- coding: utf-8 -*-
++from south.utils import datetime_utils as datetime
++from south.db import db
++from south.v2 import SchemaMigration
++from django.db import models
 +
 +
-+{% include "basetable_top.html" %}
-+    {% for lv in objects %}
-+    <tr class="data">
-+            <td class="layer">{{lv.layer.name}}</td>
-+            <td class="description">{{lv.layer.summary}}</td>
-+            <td class="source"><a href="{% url 'layerdetails' lv.pk %}">{{lv.layer_source.name}}</a></td>
-+            <td class="git-repo"><a href="{% url 'layerdetails' lv.pk %}"><code>{{lv.layer.layer_index_url}}</code></a></td>
-+            <td class="git-subdir" style="display: table-cell;"><a href="{% url 'layerdetails' lv.pk %}"><code>{{lv.dirpath}}</code></a></td>
-+            <td class="branch">{% if lv.branch %}{{lv.branch}}{% else %}{{lv.up_branch.name}}{% endif %}</td>
-+            <td class="dependencies">{% for lvs in lv.dependencies.all %}{{lvs.layer.name}}<br/>{%endfor%}</td>
-+            <td class="add-layers">
-+                <button id="remove-layer-{{lv.pk}}" class="btn btn-danger btn-block remove-layer" title="1 layer deleted" style="display:none;">
-+                    <i class="icon-trash"></i>
-+                    Delete layer
-+                </button>
-+                <button id="add-layer-{{lv.pk}}" class="btn  btn-block add-layer" title="1 layer added">
-+                    <i class="icon-plus"></i>
-+                    Add layer
-+                </button>
-+            </td>
-+     </tr>
-+    {% endfor %}
-+{% include "basetable_bottom.html" %}
++class Migration(SchemaMigration):
 +
-+    <!-- Modals -->
-+
-+    <!-- 'Layer dependencies modal' -->
-+    <div id="dependencies-message" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
-+        <div class="modal-header">
-+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-+            <h3>meta-acer dependencies</h3>
-+        </div>
-+        <div class="modal-body">
-+            <p><strong>meta-acer</strong> depends on some layers that are not added to your project. Select the ones you want to add:</p>
-+            <ul class="unstyled">
-+                <li>
-+                    <label class="checkbox">
-+                        <input type="checkbox" checked="checked">
-+                        meta-android
-+                    </label>
-+                </li>
-+                <li>
-+                    <label class="checkbox">
-+                        <input type="checkbox" checked="checked">
-+                        meta-oe
-+                    </label>
-+                </li>
-+            </ul>
-+        </div>
-+        <div class="modal-footer">
-+            <button id="add-layer-dependencies" type="submit" class="btn btn-primary" data-dismiss="modal" >Add layers</button>
-+            <button class="btn" data-dismiss="modal">Cancel</button>
-+        </div>
-+    </div>
-+
-+    <script src="assets/js/jquery-1.9.1.min.js" type='text/javascript'></script>
-+    <script src="assets/js/jquery.tablesorter.min.js" type='text/javascript'></script>
-+    <script src="assets/js/jquery-ui-1.10.3.custom.min.js"></script>
-+    <script src="assets/js/bootstrap.min.js" type='text/javascript'></script>
-+    <script src="assets/js/prettify.js" type='text/javascript'></script>
-+    <script src="assets/js/jit.js" type='text/javascript'></script>
-+    <script src="assets/js/main.js" type='text/javascript'></script>
-+
-+    <script>
-+     $(document).ready(function() {
-+
-+        //show or hide selected columns on load
-+        $("input:checkbox").each(function(){
-+            var selectedType = $(this).val();
-+            if($(this).is(":checked")){
-+                $("."+selectedType).show();
-+            }
-+            else{
-+                $("."+selectedType).hide();
-+            }
-+        });
-+
-+        // enable add layer button
-+        $('#add-layer-with-deps').removeAttr('disabled');
-+
-+        //edit columns functionality (show / hide table columns)
-+        $("input:checkbox").change();
-+            $("input:checkbox").change(function(){
-+                var selectedType = $(this).val();
-+                    if($(this).is(":checked")){
-+                        $("."+selectedType).show();
-+                    }
-+                    else{
-+                        $("."+selectedType).hide();
-+                    }
-+            });
-+
-+        //turn edit columns dropdown into a multi-select menu
-+        $('.dropdown-menu input, .dropdown-menu label').click(function(e) {
-+            e.stopPropagation();
-+        });
-+
-+        //show tooltip with applied filter
-+        $('#filtered').tooltip({container:'table', placement:'bottom', delay:{hide:1500}, html:true});
-+
-+        $('#filtered').click(function() {
-+            $(this).tooltip('hide');
-+        });
-+
-+        //show layer added tooltip
-+        $("#remove-layer, #add-layer, #add-layer-with-deps2").tooltip({ trigger: 'manual' });
-+
-+        // add layer without dependencies
-+        $("#add-layer").click(function(){
-+            $('#layer-removed').hide();
-+            $('#layer-added').html('<button type="button" class="close" data-dismiss="alert">&times;</button><strong>1</strong> layer added to <a href="project-with-targets.html">your project</a>: <a href="#">meta-aarch64</a>').fadeIn();
-+            $('#add-layer').tooltip('show');
-+            $("#add-layer").hide();
-+            $(".add-layers .tooltip").delay(2000).fadeOut(function(){
-+                $("#remove-layer").delay(300).fadeIn();
-+            });
-+        });
-+
-+        // add layer with dependencies
-+        $(document).on("click", "#add-layer-dependencies", function() {
-+            $('#layer-removed').hide();
-+            $('#layer-added').html('<button type="button" class="close" data-dismiss="alert">&times;</button><strong>3</strong> layers added to <a href="project-with-targets.html">your project</a>: <a href="#">meta-acer</a> and its dependencies <a href="#">meta-android</a> and <a href="#">meta-oe</a>').delay(400).fadeIn(function(){
-+                $('#add-layer-with-deps').tooltip('show');
-+                $("#add-layer-with-deps, #add-layer-with-deps").hide();
-+                $(".add-layers .tooltip").delay(2000).fadeOut(function(){
-+                    $("#remove-layer-with-deps").delay(300).fadeIn();
-+                });
-+            });
-+        });
-+
-+        // delete layer
-+        $("#remove-layer").click(function(){
-+            $('#layer-added').hide();
-+            $('#layer-removed').show();
-+            $('#remove-layer').tooltip('show');
-+            $("#remove-layer").hide();
-+            $(".add-layers .tooltip").delay(2000).fadeOut(function(){
-+                $("#add-layer").delay(300).fadeIn();
-+            });
-+        });
-+
-+     });
-+
-+</script>
-+
-+{% endblock %}
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index cad2357..5b23365 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -1849,6 +1849,9 @@ if toastermain.settings.MANAGED:
-         except User.DoesNotExist:
-             puser = None
- 
-+        # we use implicit knowledge of the current user's project to filter layer information, e.g.
-+        request.session['project'] = prj
-+
-         context = {
-             "project" : prj,
-             #"buildrequests" : prj.buildrequest_set.filter(state=BuildRequest.REQ_QUEUED),
-@@ -1926,7 +1929,76 @@ if toastermain.settings.MANAGED:
-         raise Exception("TODO: implement page #6595")
- 
-     def layers(request):
--        raise Exception("TODO: implement page #6590")
-+        # "TODO: implement page #6590"
-+        template = "layers.html"
-+        # define here what parameters the view needs in the GET portion in order to
-+        # be able to display something.  'count' and 'page' are mandatory for all views
-+        # that use paginators.
-+        mandatory_parameters = { 'count': 10,  'page' : 1, 'orderby' : 'layer__name:-' };
-+        retval = _verify_parameters( request.GET, mandatory_parameters )
-+        if retval:
-+            return _redirect_parameters( 'layers', request.GET, mandatory_parameters)
-+
-+        # boilerplate code that takes a request for an object type and returns a queryset
-+        # for that object type. copypasta for all needed table searches
-+        (filter_string, search_term, ordering_string) = _search_tuple(request, Layer_Version)
-+
-+        queryset_all = Layer_Version.objects.all()
-+        if 'project' in request.session:
-+            queryset_all = queryset_all.filter(up_branch = request.session['project'].branch)
-+
-+        queryset_with_search = _get_queryset(Layer_Version, queryset_all, None, search_term, ordering_string, '-layer__name')
-+        queryset = _get_queryset(Layer_Version, queryset_all, filter_string, search_term, ordering_string, '-layer__name')
-+
-+        # retrieve the objects that will be displayed in the table; layers a paginator and gets a page range to display
-+        layer_info = _build_page_range(Paginator(queryset, request.GET.get('count', 10)),request.GET.get('page', 1))
++    def forwards(self, orm):
++        # Adding model 'BRBitbake'
++        db.create_table(u'bldcontrol_brbitbake', (
++            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
++            ('req', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['bldcontrol.BuildRequest'], unique=True)),
++            ('giturl', self.gf('django.db.models.fields.CharField')(max_length=254)),
++            ('commit', self.gf('django.db.models.fields.CharField')(max_length=254)),
++            ('dirpath', self.gf('django.db.models.fields.CharField')(max_length=254)),
++        ))
++        db.send_create_signal(u'bldcontrol', ['BRBitbake'])
 +
 +
-+        context = {
-+            'objects' : layer_info,
-+            'objectname' : "layers",
-+            'default_orderby' : 'completed_on:-',
++    def backwards(self, orm):
++        # Deleting model 'BRBitbake'
++        db.delete_table(u'bldcontrol_brbitbake')
 +
-+            'tablecols' : [
-+                {   'name': 'Layer',
-+                    'orderfield': _get_toggle_order(request, "layer__name"),
-+                    'ordericon' : _get_toggle_order_icon(request, "layer__name"),
-+                },
-+                {   'name': 'Description',
-+                    'dclass': 'span4',
-+                },
-+                {   'name': 'Layer source',
-+                    'qhelp': "Where the layer is coming from, for example, if it's part of the OpenEmbedded collection of layers or if it's a layer you have imported",
-+                    'orderfield': _get_toggle_order(request, "layer_source__name"),
-+                    'ordericon': _get_toggle_order_icon(request, "layer_source__name"),
-+                    'filter': {
-+                        'class': 'layer',
-+                        'label': 'Show:',
-+                        'options': map(lambda x: (x.name, 'layer_source__pk:' + str(x.id), queryset_with_search.filter(layer_source__pk = x.id).count() ), LayerSource.objects.all()),
-+                    }
-+                },
-+                {   'name': 'Git repository URL',
-+                    'dclass': 'span6',
-+                    'qhelp': "The Git repository for the layer source code",
-+                },
-+                {   'name': 'Subdirectory',
-+                    'qhelp': "The layer directory within the Git repository",
-+                },
-+                {   'name': 'Branch, tag o commit',
-+                    'qhelp': "The Git branch of the layer. For the layers from the OpenEmbedded source, the branch matches the Yocto Project version you selected for this project",
-+                },
-+                {   'name': 'Dependencies',
-+                    'qhelp': "Other layers a layer depends upon",
-+                },
-+                {   'name': 'Add | Delete',
-+                    'dclass': 'span2',
-+                    'qhelp': "Add or delete layers to / from your project ",
-+                },
 +
-+            ]
++    models = {
++        u'bldcontrol.brbitbake': {
++            'Meta': {'object_name': 'BRBitbake'},
++            'commit': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
++            'dirpath': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
++            'giturl': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'req': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildRequest']", 'unique': 'True'})
++        },
++        u'bldcontrol.brerror': {
++            'Meta': {'object_name': 'BRError'},
++            'errmsg': ('django.db.models.fields.TextField', [], {}),
++            'errtype': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'req': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildRequest']"}),
++            'traceback': ('django.db.models.fields.TextField', [], {})
++        },
++        u'bldcontrol.brlayer': {
++            'Meta': {'object_name': 'BRLayer'},
++            'commit': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
++            'dirpath': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
++            'giturl': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'req': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildRequest']"})
++        },
++        u'bldcontrol.brtarget': {
++            'Meta': {'object_name': 'BRTarget'},
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'req': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildRequest']"}),
++            'target': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'task': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'})
++        },
++        u'bldcontrol.brvariable': {
++            'Meta': {'object_name': 'BRVariable'},
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'req': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildRequest']"}),
++            'value': ('django.db.models.fields.TextField', [], {'blank': 'True'})
++        },
++        u'bldcontrol.buildenvironment': {
++            'Meta': {'object_name': 'BuildEnvironment'},
++            'address': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
++            'bbaddress': ('django.db.models.fields.CharField', [], {'max_length': '254', 'blank': 'True'}),
++            'bbport': ('django.db.models.fields.IntegerField', [], {'default': '-1'}),
++            'bbstate': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
++            'bbtoken': ('django.db.models.fields.CharField', [], {'max_length': '126', 'blank': 'True'}),
++            'betype': ('django.db.models.fields.IntegerField', [], {}),
++            'builddir': ('django.db.models.fields.CharField', [], {'max_length': '512', 'blank': 'True'}),
++            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'lock': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
++            'sourcedir': ('django.db.models.fields.CharField', [], {'max_length': '512', 'blank': 'True'}),
++            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
++        },
++        u'bldcontrol.buildrequest': {
++            'Meta': {'object_name': 'BuildRequest'},
++            'build': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Build']", 'null': 'True'}),
++            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']"}),
++            'state': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
++            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
++        },
++        u'orm.bitbakeversion': {
++            'Meta': {'object_name': 'BitbakeVersion'},
++            'branch': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
++            'dirpath': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
++            'giturl': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '32'})
++        },
++        u'orm.build': {
++            'Meta': {'object_name': 'Build'},
++            'bitbake_version': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
++            'build_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'completed_on': ('django.db.models.fields.DateTimeField', [], {}),
++            'cooker_log_path': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
++            'distro': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'distro_version': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'errors_no': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'machine': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'outcome': ('django.db.models.fields.IntegerField', [], {'default': '2'}),
++            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']", 'null': 'True'}),
++            'started_on': ('django.db.models.fields.DateTimeField', [], {}),
++            'timespent': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
++            'warnings_no': ('django.db.models.fields.IntegerField', [], {'default': '0'})
++        },
++        u'orm.project': {
++            'Meta': {'object_name': 'Project'},
++            'bitbake_version': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.BitbakeVersion']"}),
++            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'short_description': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
++            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
++            'user_id': ('django.db.models.fields.IntegerField', [], {'null': 'True'})
 +        }
++    }
 +
-+        return render(request, template, context)
++    complete_apps = ['bldcontrol']
+\ No newline at end of file
+diff --git a/lib/toaster/bldcontrol/models.py b/lib/toaster/bldcontrol/models.py
+index 8c271ff..4c54a59 100644
+--- a/lib/toaster/bldcontrol/models.py
++++ b/lib/toaster/bldcontrol/models.py
+@@ -75,6 +75,11 @@ class BRLayer(models.Model):
+     commit      = models.CharField(max_length = 254)
+     dirpath     = models.CharField(max_length = 254)
  
-     def layerdetails(request, layerid):
-         raise Exception("TODO: implement page #6591")
++class BRBitbake(models.Model):
++    req         = models.ForeignKey(BuildRequest, unique = True)    # only one bitbake for a request
++    giturl      = models.CharField(max_length =254)
++    commit      = models.CharField(max_length = 254)
++    dirpath     = models.CharField(max_length = 254)
+ 
+ class BRVariable(models.Model):
+     req         = models.ForeignKey(BuildRequest)
 -- 
 1.9.1
 
