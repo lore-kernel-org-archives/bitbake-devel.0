@@ -1,45 +1,45 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f179.google.com (mail-wi0-f179.google.com
-	[209.85.212.179])
-	by mail.openembedded.org (Postfix) with ESMTP id 28D6A71183
+Received: from mail-wi0-f172.google.com (mail-wi0-f172.google.com
+	[209.85.212.172])
+	by mail.openembedded.org (Postfix) with ESMTP id 7A20D71194
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed, 27 Aug 2014 17:23:51 +0000 (UTC)
-Received: by mail-wi0-f179.google.com with SMTP id f8so800604wiw.12
+Received: by mail-wi0-f172.google.com with SMTP id n3so6193338wiv.17
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed, 27 Aug 2014 10:23:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=2Kq0z8MwWDmwoT4G4uBp/KbYAM8BsR3UpDwlW9sUdlo=;
-	b=RqlP0ByFlkBooGNhhv/sUoB/kkamlFkBryF64kCK7wyLLWOqxcsIOuVI18mjBf7dvQ
-	Jhtm/kwYoCzWgynO/kUxTQ0Zz8k0Yg+yy2m3TCx7s1iadqK/9uGqg4o+Jc7kzJcQY4d2
-	aaIzmdXY5e/dPASr2UYpj0/SgMlcMDCWg1CI4dJTftgDAJj4nk9l915EaP20t4uXdCkq
-	A9onw1F4cZmPqkUDm8JwNG943fSZrLwk4TX7/O6AXcW5UHRAvwnmlwvq/17lsRh6ifYi
-	c2ZJulUg1pB1C1AxlJfWHu0Xb7limKJgf6ppJ+y7Gaob+hARVfJ8PXMVCV8LwjQr9PBO
-	Dvmg==
-X-Gm-Message-State: ALoCoQkhXtzNR0oqxw9vkVW+FRnZrzdaammiUxoBuY4NEHVCbUh5GUIPcbB5/3tmjYjYUEdZsmtM
-X-Received: by 10.180.10.166 with SMTP id j6mr30849684wib.73.1409160230780;
-	Wed, 27 Aug 2014 10:23:50 -0700 (PDT)
+	bh=reY4QCztKqn5qqfs3vWlqrEbAqMG7NRjrcgtNYXPUNY=;
+	b=UqiaQoVwPH/06+/BW5D9EvJedH8fEI9CFL2+sQgoBLvAS17VhiF2q9MiHESsWzC3g4
+	GSuVkUOVOCrpkR8aX6Lv9T+8rHyhiMLMZdqVgqkNIzuhQnYP3uFwMUMjm/yQ/OKkEghx
+	Co+CJgjzYwPIW2oDsJOiJbRTUpYbIE0milXDP8fshwmrnDZMv1oRHOg838QyVIONMykE
+	g76pThTChapaZ5tZYzQpxBsxlPT6tGxBXOU89nzUN9pjTG8Gfi5eSbSKqVnYFxcDJa8j
+	chwBneZMvV6kvlun1XvKjiGOZI5DPr4W6WJ7B2SzlbnfBSgLZxBiEjGfynEqdTjhELjy
+	JGjw==
+X-Gm-Message-State: ALoCoQn5zOH31/SqjkjPt5aHT+kkJTijpwnVYlLtcjWLcGQbiyprGzzE51uCL/3jvxZYeL5qsUs4
+X-Received: by 10.194.243.230 with SMTP id xb6mr5394244wjc.100.1409160229754; 
+	Wed, 27 Aug 2014 10:23:49 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id kr8sm2660849wjb.20.2014.08.27.10.23.48
+	by mx.google.com with ESMTPSA id v4sm2708967wjv.6.2014.08.27.10.23.48
 	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 27 Aug 2014 10:23:49 -0700 (PDT)
+	Wed, 27 Aug 2014 10:23:48 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id D966656120C; Wed, 27 Aug 2014 18:23:45 +0100 (BST)
+	id B54EF5611DF; Wed, 27 Aug 2014 18:23:45 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: toaster@yoctoproject.org,
 	bitbake-devel@lists.openembedded.org
-Date: Wed, 27 Aug 2014 18:23:43 +0100
-Message-Id: <401010068b591071af980fe6cf42ae36af118097.1409159626.git.alexandru.damian@intel.com>
+Date: Wed, 27 Aug 2014 18:23:41 +0100
+Message-Id: <bd9b522d8938ee3c4bbeb7cb586e56051da94dd9.1409159626.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <21a46e29c3a9df56db7ad81106a23e7284584afe.1409159626.git.alexandru.damian@intel.com>
 References: <21a46e29c3a9df56db7ad81106a23e7284584afe.1409159626.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1409159626.git.alexandru.damian@intel.com>
 References: <cover.1409159626.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 11/11] toaster: create Build methods for calculating progress and ETA
+Subject: [PATCH 09/11] toatergui: update pages to match project models
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,76 +56,111 @@ X-List-Received-Date: Wed, 27 Aug 2014 17:23:52 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-We move the code to calculate build progress as percent
-and the ETA of the build to the model, so that they can be
-reused across different pages.
+We update pages and queries to match the new project
+models.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/orm/models.py       | 18 ++++++++++++++++++
- lib/toaster/toastergui/views.py | 13 +------------
- 2 files changed, 19 insertions(+), 12 deletions(-)
+ lib/toaster/toastergui/templates/newproject.html |  4 ++--
+ lib/toaster/toastergui/templates/project.html    |  4 ++--
+ lib/toaster/toastergui/views.py                  | 13 ++++++-------
+ 3 files changed, 10 insertions(+), 11 deletions(-)
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 5a6dcd7..bb921fc 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -120,6 +120,24 @@ class Build(models.Model):
-     build_name = models.CharField(max_length=100)
-     bitbake_version = models.CharField(max_length=50)
- 
-+    def completeper(self):
-+        tf = Task.objects.filter(build = self)
-+        tfc = tf.count()
-+        if tfc > 0:
-+            completeper = tf.exclude(order__isnull=True).count()*100/tf.count()
-+        else:
-+            completeper = 0
-+        return completeper
-+
-+    def eta(self):
-+        from django.utils import timezone
-+        eta = 0
-+        completeper = self.completeper()
-+        if self.completeper() > 0:
-+            eta = timezone.now() + ((timezone.now() - self.started_on)*(100-completeper)/completeper)
-+        return eta
-+
-+
-     def get_sorted_target_list(self):
-         tgts = Target.objects.filter(build_id = self.id).order_by( 'target' );
-         return( tgts );
+diff --git a/lib/toaster/toastergui/templates/newproject.html b/lib/toaster/toastergui/templates/newproject.html
+index 6ee27d1..12c4e9f 100644
+--- a/lib/toaster/toastergui/templates/newproject.html
++++ b/lib/toaster/toastergui/templates/newproject.html
+@@ -28,8 +28,8 @@
+ 								<i class="icon-question-sign get-help" title="This sets the branch for the Yocto Project core layers (meta, meta-yocto and meta-yocto-bsp), and for the layers you use from the OpenEmbedded Metadata Index"></i>
+ 							</label>
+ 							<select name="projectversion" id="projectversion">
+-	{% for br in branches %}
+-		<option value="{{br.id}}"{%if projectversion == br.id %} selected{%endif%}>{{br.name}} ({{br.short_description}})</option>
++	{% for release in releases %}
++		<option value="{{release.id}}"{%if projectversion == release.id %} selected{%endif%}>{{release.name}} ({{release.description}})</option>
+ 	{% endfor %}
+ 							</select>
+ 						</fieldset>
+diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
+index 0ddfeb3..3c59fcf 100644
+--- a/lib/toaster/toastergui/templates/project.html
++++ b/lib/toaster/toastergui/templates/project.html
+@@ -269,7 +269,7 @@ $(document).ready(function () {
+                     <ul class="unstyled configuration-list">
+             {% for pl in project.projectlayer_set.all %}
+                         <li>
+-                            <a href="#">{{pl.name}} (<span class="layer-version">{{pl.giturl}}</span>)</a>
++                            <a href="#">{{pl.layercommit.layer.name}} (<span class="layer-version">{{pl.layercommit.layer.layer_index_url}}</span>)</a>
+                 {% if pl.optional %}
+                             <i title="" data-original-title="" class="icon-trash" id="del-layer-icon" x-data="{{pl.pk}}"></i>
+                 {% endif %}
+@@ -358,7 +358,7 @@ $(document).ready(function () {
+                 </p>
+                 <h3>Yocto Project version</h3>
+                 <p class="lead">
+-                    {{project.branch}} - {{project.short_description}}
++                    {{project.release}} - {{project.short_description}}
+                     <i title="" data-original-title="" class="icon-pencil"></i>
+                 </p>
+             </div>
 diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index e68f8b0..86a34ad 100755
+index 5b23365..e68f8b0 100755
 --- a/lib/toaster/toastergui/views.py
 +++ b/lib/toaster/toastergui/views.py
-@@ -224,17 +224,6 @@ def builds(request):
+@@ -1772,7 +1772,7 @@ if toastermain.settings.MANAGED:
+     from django.contrib.auth.decorators import login_required
  
-     # build view-specific information; this is rendered specifically in the builds page, at the top of the page (i.e. Recent builds)
-     build_mru = Build.objects.filter(completed_on__gte=(timezone.now()-timedelta(hours=24))).order_by("-started_on")[:3]
--    for b in [ x for x in build_mru if x.outcome == Build.IN_PROGRESS ]:
--        tf = Task.objects.filter(build = b)
--        tfc = tf.count()
--        if tfc > 0:
--            b.completeper = tf.exclude(order__isnull=True).count()*100/tf.count()
--        else:
--            b.completeper = 0
--
--        b.eta = 0
--        if b.completeper > 0:
--            b.eta = timezone.now() + ((timezone.now() - b.started_on)*(100-b.completeper)/b.completeper)
+     from orm.models import Project, ProjectLayer, ProjectTarget, ProjectVariable
+-    from orm.models import Branch, LayerSource, ToasterSetting
++    from orm.models import Branch, LayerSource, ToasterSetting, Release
+     from bldcontrol.models import BuildRequest
  
-     # set up list of fstypes for each build
-     fstypes_map = {};
-@@ -1854,7 +1843,7 @@ if toastermain.settings.MANAGED:
+     import traceback
+@@ -1792,7 +1792,7 @@ if toastermain.settings.MANAGED:
          context = {
-             "project" : prj,
-             #"buildrequests" : prj.buildrequest_set.filter(state=BuildRequest.REQ_QUEUED),
--            "buildrequests" : map(lambda x: (x, {"machine" : x.brvariable_set.filter(name="MACHINE")[0]}), prj.buildrequest_set.order_by("-pk")),
-+            "buildrequests" : map(lambda x: (x, {"machine" : x.brvariable_set.filter(name="MACHINE")[0]}), prj.buildrequest_set.filter(state__lt = BuildRequest.REQ_INPROGRESS).order_by("-pk")),
-             "builds" : prj.build_set.all(),
-             "puser": puser,
+             'email': request.user.email if request.user.is_authenticated() else '',
+             'username': request.user.username if request.user.is_authenticated() else '',
+-            'branches': Branch.objects.order_by("-up_id"),
++            'releases': Release.objects.order_by("id"),
+             'defaultbranch': ToasterSetting.objects.get(name = "DEFAULT_RELEASE").value,
          }
+ 
+@@ -1819,15 +1819,14 @@ if toastermain.settings.MANAGED:
+ 
+                 #  save the project
+                 prj = Project.objects.create_project(name = request.POST['projectname'],
+-                    branch = Branch.objects.get(pk = request.POST['projectversion'].split(" ")[0]),
+-                    short_description=request.POST['projectversion'].split(" ")[1:])
++                    release = Release.objects.get(pk = request.POST['projectversion']))
+                 prj.user_id = request.user.pk
+                 prj.save()
+                 return redirect(reverse(project, args = (prj.pk,)))
+ 
+             except (IntegrityError, BadParameterException) as e:
+                 # fill in page with previously submitted values
+-                map(lambda x: context.__setitem__(x, request.POST[x]), mandatory_fields)
++                map(lambda x: context.__setitem__(x, request.POST.get(x, "-- missing")), mandatory_fields)
+                 if isinstance(e, IntegrityError) and "username" in str(e):
+                     context['alert'] = "Your chosen username is already used"
+                 else:
+@@ -1917,7 +1916,7 @@ if toastermain.settings.MANAGED:
+             # return all project settings
+             return HttpResponse(json.dumps( {
+                 "error": "ok",
+-                "layers": map(lambda x: (x.name, x.giturl), prj.projectlayer_set.all()),
++                "layers": map(lambda x: (x.layercommit.layer.name, x.layercommit.layer.layer_index_url), prj.projectlayer_set.all()),
+                 "targets" : map(lambda x: {"target" : x.target, "task" : x.task, "pk": x.pk}, prj.projecttarget_set.all()),
+                 "variables": map(lambda x: (x.name, x.value), prj.projectvariable_set.all()),
+                 }), content_type = "application/json")
+@@ -1945,7 +1944,7 @@ if toastermain.settings.MANAGED:
+ 
+         queryset_all = Layer_Version.objects.all()
+         if 'project' in request.session:
+-            queryset_all = queryset_all.filter(up_branch = request.session['project'].branch)
++            queryset_all = queryset_all.filter(up_branch__in = Branch.objects.filter(name = request.session['project'].release.name))
+ 
+         queryset_with_search = _get_queryset(Layer_Version, queryset_all, None, search_term, ordering_string, '-layer__name')
+         queryset = _get_queryset(Layer_Version, queryset_all, filter_string, search_term, ordering_string, '-layer__name')
 -- 
 1.9.1
 
