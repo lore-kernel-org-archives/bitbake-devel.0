@@ -1,29 +1,30 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 3107162252
+	by mail.openembedded.org (Postfix) with ESMTP id 2C89270EE2
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Aug 2014 12:07:27 +0000 (UTC)
+	Wed, 27 Aug 2014 12:51:44 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	s7RC7QgK029205 for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Aug 2014 13:07:26 +0100
+	s7RCphmg031109; Wed, 27 Aug 2014 13:51:43 +0100
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id fW9zFsXIqc5u for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Aug 2014 13:07:26 +0100 (BST)
+	with LMTP id tFzFLCbmFEat; Wed, 27 Aug 2014 13:51:43 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	s7RC7NOG029202
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Aug 2014 13:07:24 +0100
-Message-ID: <1409141244.5772.42.camel@ted>
+	s7RCpa6H031103
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
+	Wed, 27 Aug 2014 13:51:38 +0100
+Message-ID: <1409143898.5772.46.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Wed, 27 Aug 2014 13:07:24 +0100
+To: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Wed, 27 Aug 2014 13:51:38 +0100
+In-Reply-To: <6f9c2a0b17e91a37bc1083c799c3820f50bdf926.1409140298.git.hongxu.jia@windriver.com>
+References: <cover.1409140298.git.hongxu.jia@windriver.com>
+	<6f9c2a0b17e91a37bc1083c799c3820f50bdf926.1409140298.git.hongxu.jia@windriver.com>
 X-Mailer: Evolution 3.10.4-0ubuntu2 
 Mime-Version: 1.0
-Subject: [PATCH] runqueue: Fix setscene tasks not running
+Cc: bitbake-devel@lists.openembedded.org, Zhangle.Yang@windriver.com
+Subject: Re: [PATCH 1/1] bitbake: runqueue: catch HashValidateFailure errors in RunQueueExecuteScenequeue
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,41 +37,87 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Aug 2014 12:07:29 -0000
+X-List-Received-Date: Wed, 27 Aug 2014 12:51:50 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-Currently, if you have hard dependencies between setscene tasks (like avahi on
-base-passwd through useradd.bbclass), other dependencies may not be installed
-even if these exist in sstate. For example, avahi -> expat -> pigz-native
-(and avahi -> base-passwd) yet if you cleansstate base-passwd:
+On Wed, 2014-08-27 at 19:54 +0800, Hongxu Jia wrote:
+> We need to catch the failure of self.rq.hashvalidate which invoked
+> in RunQueueExecuteScenequeue, and exit in a normal build.
+> 
+> So we add exception HashValidateFailure for this specific error.
+> 
+> Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+> ---
+>  bitbake/lib/bb/runqueue.py | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+> index e13dc57..b48b02b 100644
+> --- a/bitbake/lib/bb/runqueue.py
+> +++ b/bitbake/lib/bb/runqueue.py
+> @@ -1046,7 +1046,15 @@ class RunQueue:
+>                  self.state = runQueueComplete
+>              else:
+>                  self.start_worker()
+> -                self.rqexe = RunQueueExecuteScenequeue(self)
+> +                try:
+> +                    self.rqexe = RunQueueExecuteScenequeue(self)
+> +                except bb.runqueue.HashValidateFailure:
+> +                    # While HashValidateFailure, we need exit the normal build.
+> +                    logger.error("Hash validatation failed in RunQueueExecuteScenequeue")
+> +                    self.state = runQueueComplete
+> +                except:
+> +                    logger.error("RunQueueExecuteScenequeue init failed")
+> +                    raise
+>  
+>          if self.state in [runQueueSceneRun, runQueueRunning, runQueueCleanUp]:
+>              self.dm.check(self)
+> @@ -1821,7 +1829,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+>                  sq_task.append(task)
+>              call = self.rq.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, d)"
+>              locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "d" : self.cooker.data }
+> -            valid = bb.utils.better_eval(call, locs)
+> +            try:
+> +                valid = bb.utils.better_eval(call, locs)
+> +            except:
+> +                raise bb.runqueue.HashValidateFailure()
 
-bitbake gzip-native:do_clean avahi:do_clean expat:do_clean pigz-native:do_clean base-passwd:do_cleansstate
-bitbake avahi | tee
+How about:
 
-you will currently see pigz-native being rebuilt even though it was in
-sstate. The fix for this is to continue to iterate dependency chains
-around hard blocked dependencies as per this patch.
+except Exception as e:
+	logger.error("Hash validation failed in RunQueueExecuteScenequeue %s" % str(e))
+        raise BBHandledException
 
-After this patch is applied, you will see pigz-native installed from sstate.
+Raising the HandledException error should shut down the system
+gracefully from there. Adding a custom exception here doesn't help much
+other than warning about the exact point of failure as we can do that in
+the logger.error message.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+I think if you made this:
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index e13dc57..e32f81a 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1844,6 +1844,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-                 realtask = self.rqdata.runq_setscene[task]
-                 realdep = self.rqdata.runq_setscene[dep]
-                 logger.debug(2, "%s was unavailable and is a hard dependency of %s so skipping" % (self.rqdata.get_user_idstring(realtask), self.rqdata.get_user_idstring(realdep)))
-+                self.scenequeue_updatecounters(dep, fail)
-+                continue
-+            if task not in self.sq_revdeps2[dep]:
-+                # May already have been removed by the fail case above
-                 continue
-             self.sq_revdeps2[dep].remove(task)
-             if len(self.sq_revdeps2[dep]) == 0:
+except Exception as e:
+	logger.critial("Hash validation failed in RunQueueExecuteScenequeue %s" % str(e))
+
+then we'd not even need to BBHandledException as logger.critical does
+that internally but I could be wrong, I'm going from memory.
+
+Cheers,
+
+Richard
+
+
+>              valid_new = stamppresent
+>              for v in valid:
+> @@ -2003,6 +2014,8 @@ class TaskFailure(Exception):
+>      def __init__(self, x):
+>          self.args = x
+>  
+> +# Exception raised for a hash validation error
+> +class HashValidateFailure(Exception): pass
+>  
+>  class runQueueExitWait(bb.event.Event):
+>      """
 
 
 
