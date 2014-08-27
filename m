@@ -1,30 +1,29 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 2C89270EE2
+	by mail.openembedded.org (Postfix) with ESMTP id 8A146617B8
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Aug 2014 12:51:44 +0000 (UTC)
+	Wed, 27 Aug 2014 13:24:57 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	s7RCphmg031109; Wed, 27 Aug 2014 13:51:43 +0100
+	s7RDOuUY032730 for <bitbake-devel@lists.openembedded.org>;
+	Wed, 27 Aug 2014 14:24:56 +0100
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id tFzFLCbmFEat; Wed, 27 Aug 2014 13:51:43 +0100 (BST)
+	with LMTP id cM6wTPmf-i6y for <bitbake-devel@lists.openembedded.org>;
+	Wed, 27 Aug 2014 14:24:56 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	s7RCpa6H031103
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
-	Wed, 27 Aug 2014 13:51:38 +0100
-Message-ID: <1409143898.5772.46.camel@ted>
+	s7RDOpG5032726
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 27 Aug 2014 14:24:52 +0100
+Message-ID: <1409145892.5772.49.camel@ted>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Hongxu Jia <hongxu.jia@windriver.com>
-Date: Wed, 27 Aug 2014 13:51:38 +0100
-In-Reply-To: <6f9c2a0b17e91a37bc1083c799c3820f50bdf926.1409140298.git.hongxu.jia@windriver.com>
-References: <cover.1409140298.git.hongxu.jia@windriver.com>
-	<6f9c2a0b17e91a37bc1083c799c3820f50bdf926.1409140298.git.hongxu.jia@windriver.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Wed, 27 Aug 2014 14:24:52 +0100
 X-Mailer: Evolution 3.10.4-0ubuntu2 
 Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org, Zhangle.Yang@windriver.com
-Subject: Re: [PATCH 1/1] bitbake: runqueue: catch HashValidateFailure errors in RunQueueExecuteScenequeue
+Subject: [PATCH] build/data: Write out more complete python run files
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,87 +36,78 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Aug 2014 12:51:50 -0000
+X-List-Received-Date: Wed, 27 Aug 2014 13:25:12 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Wed, 2014-08-27 at 19:54 +0800, Hongxu Jia wrote:
-> We need to catch the failure of self.rq.hashvalidate which invoked
-> in RunQueueExecuteScenequeue, and exit in a normal build.
-> 
-> So we add exception HashValidateFailure for this specific error.
-> 
-> Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-> ---
->  bitbake/lib/bb/runqueue.py | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-> index e13dc57..b48b02b 100644
-> --- a/bitbake/lib/bb/runqueue.py
-> +++ b/bitbake/lib/bb/runqueue.py
-> @@ -1046,7 +1046,15 @@ class RunQueue:
->                  self.state = runQueueComplete
->              else:
->                  self.start_worker()
-> -                self.rqexe = RunQueueExecuteScenequeue(self)
-> +                try:
-> +                    self.rqexe = RunQueueExecuteScenequeue(self)
-> +                except bb.runqueue.HashValidateFailure:
-> +                    # While HashValidateFailure, we need exit the normal build.
-> +                    logger.error("Hash validatation failed in RunQueueExecuteScenequeue")
-> +                    self.state = runQueueComplete
-> +                except:
-> +                    logger.error("RunQueueExecuteScenequeue init failed")
-> +                    raise
->  
->          if self.state in [runQueueSceneRun, runQueueRunning, runQueueCleanUp]:
->              self.dm.check(self)
-> @@ -1821,7 +1829,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
->                  sq_task.append(task)
->              call = self.rq.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, d)"
->              locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "d" : self.cooker.data }
-> -            valid = bb.utils.better_eval(call, locs)
-> +            try:
-> +                valid = bb.utils.better_eval(call, locs)
-> +            except:
-> +                raise bb.runqueue.HashValidateFailure()
+Currently the output in the python task/function run files is rather
+incomplete and effectively useless. This enhances the code to take
+advantage of the bitbake's dependency tracking and extend the output to
+include dependencies. This makes the files more usable for debugging
+purposes. Since this only happens at python function execution time, the
+overhead is minimal in the grand scheme of things.
 
-How about:
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-except Exception as e:
-	logger.error("Hash validation failed in RunQueueExecuteScenequeue %s" % str(e))
-        raise BBHandledException
-
-Raising the HandledException error should shut down the system
-gracefully from there. Adding a custom exception here doesn't help much
-other than warning about the exact point of failure as we can do that in
-the logger.error message.
-
-I think if you made this:
-
-except Exception as e:
-	logger.critial("Hash validation failed in RunQueueExecuteScenequeue %s" % str(e))
-
-then we'd not even need to BBHandledException as logger.critical does
-that internally but I could be wrong, I'm going from memory.
-
-Cheers,
-
-Richard
-
-
->              valid_new = stamppresent
->              for v in valid:
-> @@ -2003,6 +2014,8 @@ class TaskFailure(Exception):
->      def __init__(self, x):
->          self.args = x
->  
-> +# Exception raised for a hash validation error
-> +class HashValidateFailure(Exception): pass
->  
->  class runQueueExitWait(bb.event.Event):
->      """
+diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+index f2922f3..65cc851 100644
+--- a/bitbake/lib/bb/build.py
++++ b/bitbake/lib/bb/build.py
+@@ -227,7 +227,7 @@ def exec_func_python(func, d, runfile, cwd=None):
+     code = _functionfmt.format(function=func, body=d.getVar(func, True))
+     bb.utils.mkdirhier(os.path.dirname(runfile))
+     with open(runfile, 'w') as script:
+-        script.write(code)
++        bb.data.emit_func_python(func, script, d)
+ 
+     if cwd:
+         try:
+diff --git a/bitbake/lib/bb/data.py b/bitbake/lib/bb/data.py
+index 3d776b3..91b1eb1 100644
+--- a/bitbake/lib/bb/data.py
++++ b/bitbake/lib/bb/data.py
+@@ -281,6 +281,41 @@ def emit_func(func, o=sys.__stdout__, d = init()):
+                newdeps |= set((d.getVarFlag(dep, "vardeps", True) or "").split())
+         newdeps -= seen
+ 
++_functionfmt = """
++def {function}(d):
++{body}"""
++
++def emit_func_python(func, o=sys.__stdout__, d = init()):
++    """Emits all items in the data store in a format such that it can be sourced by a shell."""
++
++    def write_func(func, o, call = False):
++        body = d.getVar(func, True)
++        if not body.startswith("def"):
++            body = _functionfmt.format(function=func, body=body)
++
++        o.write(body.strip() + "\n\n")
++        if call:
++            o.write(func + "(d)" + "\n\n")
++
++    write_func(func, o, True)
++    pp = bb.codeparser.PythonParser(func, logger)
++    pp.parse_python(d.getVar(func, True))
++    newdeps = pp.execs
++    newdeps |= set((d.getVarFlag(func, "vardeps", True) or "").split())
++    seen = set()
++    while newdeps:
++        deps = newdeps
++        seen |= deps
++        newdeps = set()
++        for dep in deps:
++            if d.getVarFlag(dep, "func") and d.getVarFlag(dep, "python"):
++               write_func(dep, o)
++               pp = bb.codeparser.PythonParser(dep, logger)
++               pp.parse_python(d.getVar(dep, True))
++               newdeps |= pp.execs
++               newdeps |= set((d.getVarFlag(dep, "vardeps", True) or "").split())
++        newdeps -= seen
++
+ def update_data(d):
+     """Performs final steps upon the datastore, including application of overrides"""
+     d.finalize(parent = True)
 
 
 
