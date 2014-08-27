@@ -1,44 +1,27 @@
-Return-Path: <V.Vogelhuber@DigitalEndoscopy.de>
-X-Greylist: delayed 2379 seconds by postgrey-1.34 at layers.openembedded.org;
-	Wed, 27 Aug 2014 11:27:28 UTC
-Received: from mxout51.expurgate.net (mxout51.expurgate.net [91.198.224.51])
-	by mail.openembedded.org (Postfix) with ESMTP id 2DECF71157
+Return-Path: <Hongxu.Jia@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id D486E65D56
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Aug 2014 11:27:28 +0000 (UTC)
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.80.1)
-	(envelope-from <V.Vogelhuber@DigitalEndoscopy.de>)
-	id 1XMalZ-0000Cb-JL for bitbake-devel@lists.openembedded.org;
-	Wed, 27 Aug 2014 12:47:49 +0200
-Received: from [80.81.19.29] (helo=SRV-MSX01.digitendos.local)
-	by relay.expurgate.net with esmtp (Exim 4.80.1)
-	(envelope-from <V.Vogelhuber@DigitalEndoscopy.de>)
-	id 1XMalZ-0007PZ-1f for bitbake-devel@lists.openembedded.org;
-	Wed, 27 Aug 2014 12:47:49 +0200
-Received: from [192.168.10.111] (192.168.10.111) by SRV-MSX01.digitendos.local
-	(192.168.10.14) with Microsoft SMTP Server (TLS) id 14.2.347.0;
-	Wed, 27 Aug 2014 12:47:47 +0200
-Message-ID: <53FDB74E.8000600@digitalendoscopy.de>
-Date: Wed, 27 Aug 2014 12:47:42 +0200
-From: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:31.0) Gecko/20100101 Thunderbird/31.0
+	Wed, 27 Aug 2014 11:54:59 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.14.9/8.14.5) with ESMTP id s7RBsw6b019736
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Wed, 27 Aug 2014 04:54:58 -0700 (PDT)
+Received: from pek-hjia-d1.corp.ad.wrs.com (128.224.162.194) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+	14.3.174.1; Wed, 27 Aug 2014 04:54:58 -0700
+From: Hongxu Jia <hongxu.jia@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>,
+	<richard.purdie@linuxfoundation.org>
+Date: Wed, 27 Aug 2014 19:54:48 +0800
+Message-ID: <6f9c2a0b17e91a37bc1083c799c3820f50bdf926.1409140298.git.hongxu.jia@windriver.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1409140298.git.hongxu.jia@windriver.com>
+References: <cover.1409140298.git.hongxu.jia@windriver.com>
 MIME-Version: 1.0
-To: <bitbake-devel@lists.openembedded.org>
-X-Originating-IP: [192.168.10.111]
-X-TM-AS-Product-Ver: SMEX-10.1.0.2244-7.500.1018-20910.002
-X-TM-AS-Result: No--7.654500-0.000000-31
-X-TM-AS-User-Approved-Sender: Yes
-X-TM-AS-User-Blocked-Sender: No
-X-purgate-relay-fid: relay-b62ce8
-X-purgate-sourceid: 1XMalZ-0007PZ-1f
-X-purgate-Ad: Checked for spam and viruses by eXpurgate(R),
-	see www.eleven.de for details.
-X-purgate-ID: 151534::1409136469-00001D43-B91C73F8/0/0
-X-purgate: clean
-X-purgate-type: clean
-X-purgate-relay-bid: relay-f3ed12
-Subject: HG clone using subrepositories with username and password in url
+Cc: Zhangle.Yang@windriver.com
+Subject: [PATCH 1/1] bitbake: runqueue: catch HashValidateFailure errors in RunQueueExecuteScenequeue
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,60 +34,62 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Aug 2014 11:27:36 -0000
-X-Groupsio-MsgNum: 5002
-Content-Type: multipart/mixed; boundary="------------050709060104050905030107"
+X-List-Received-Date: Wed, 27 Aug 2014 11:55:05 -0000
+Content-Type: text/plain
 
---------------050709060104050905030107
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+We need to catch the failure of self.rq.hashvalidate which invoked
+in RunQueueExecuteScenequeue, and exit in a normal build.
 
-In case one uses mercurial subrepositories, updating to a specific 
-revision may need an additional authentication for the subrepository. So 
-the attached patch adds the missing authentication parameters to the hg 
-update call.
+So we add exception HashValidateFailure for this specific error.
 
-
-
-
-
---------------050709060104050905030107
-Content-Type: text/x-patch;
-	name="0001-Fixed-authentication-during-update-in-case-of-using-.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename*0="0001-Fixed-authentication-during-update-in-case-of-using-.pa";
-	filename*1="tch"
-
-From 45f7226b02e0911f7a612ab208b2139cbd03ec56 Mon Sep 17 00:00:00 2001
-From: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
-Date: Wed, 27 Aug 2014 12:41:35 +0200
-Subject: [PATCH 1/1] Fixed authentication during update in case of using
- subrepositories
-
-Signed-off-by: Volker Vogelhuber <v.vogelhuber@digitalendoscopy.de>
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
- bitbake/lib/bb/fetch2/hg.py | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ bitbake/lib/bb/runqueue.py | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/fetch2/hg.py b/bitbake/lib/bb/fetch2/hg.py
-index cf21481..ab7b5f8 100644
---- a/bitbake/lib/bb/fetch2/hg.py
-+++ b/bitbake/lib/bb/fetch2/hg.py
-@@ -120,7 +120,10 @@ class Hg(FetchMethod):
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index e13dc57..b48b02b 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1046,7 +1046,15 @@ class RunQueue:
+                 self.state = runQueueComplete
              else:
-                 cmd = "%s pull" % (basecmd)
-         elif command == "update":
--            cmd = "%s update -C %s" % (basecmd, " ".join(options))
-+            if ud.user and ud.pswd:
-+                cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" update -C %s" % (basecmd, ud.user, ud.pswd, proto, " ".join(options))
-+            else:
-+                cmd = "%s update -C %s" % (basecmd, " ".join(options))
-         else:
-             raise FetchError("Invalid hg command %s" % command, ud.url)
+                 self.start_worker()
+-                self.rqexe = RunQueueExecuteScenequeue(self)
++                try:
++                    self.rqexe = RunQueueExecuteScenequeue(self)
++                except bb.runqueue.HashValidateFailure:
++                    # While HashValidateFailure, we need exit the normal build.
++                    logger.error("Hash validatation failed in RunQueueExecuteScenequeue")
++                    self.state = runQueueComplete
++                except:
++                    logger.error("RunQueueExecuteScenequeue init failed")
++                    raise
  
+         if self.state in [runQueueSceneRun, runQueueRunning, runQueueCleanUp]:
+             self.dm.check(self)
+@@ -1821,7 +1829,10 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+                 sq_task.append(task)
+             call = self.rq.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, d)"
+             locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "d" : self.cooker.data }
+-            valid = bb.utils.better_eval(call, locs)
++            try:
++                valid = bb.utils.better_eval(call, locs)
++            except:
++                raise bb.runqueue.HashValidateFailure()
+ 
+             valid_new = stamppresent
+             for v in valid:
+@@ -2003,6 +2014,8 @@ class TaskFailure(Exception):
+     def __init__(self, x):
+         self.args = x
+ 
++# Exception raised for a hash validation error
++class HashValidateFailure(Exception): pass
+ 
+ class runQueueExitWait(bb.event.Event):
+     """
 -- 
 1.9.1
 
 
---------------050709060104050905030107--
