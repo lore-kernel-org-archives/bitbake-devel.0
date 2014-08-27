@@ -1,24 +1,24 @@
 Return-Path: <Hongxu.Jia@windriver.com>
 Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 0559D710C3
+	by mail.openembedded.org (Postfix) with ESMTP id EA52C7070B
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Aug 2014 10:27:48 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.9/8.14.5) with ESMTP id s7RARnde010047
+	Wed, 27 Aug 2014 10:44:47 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail.windriver.com (8.14.9/8.14.5) with ESMTP id s7RAintt011978
 	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 27 Aug 2014 03:27:49 -0700 (PDT)
+	Wed, 27 Aug 2014 03:44:49 -0700 (PDT)
 Received: from pek-hjia-d1.corp.ad.wrs.com (128.224.162.194) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
-	14.3.174.1; Wed, 27 Aug 2014 03:27:49 -0700
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+	14.3.174.1; Wed, 27 Aug 2014 03:44:48 -0700
 From: Hongxu Jia <hongxu.jia@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 27 Aug 2014 18:27:40 +0800
-Message-ID: <cover.1409135111.git.hongxu.jia@windriver.com>
+Date: Wed, 27 Aug 2014 18:44:40 +0800
+Message-ID: <cover.1409136202.git.hongxu.jia@windriver.com>
 X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Subject: [PATCH 0/1] bitbake: runqueue: terminate build safely while RunQueueExecuteScenequeue init failed
+Subject: [PATCH V2 0/1] bitbake: runqueue: terminate build safely while RunQueueExecuteScenequeue init failed
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,8 +31,13 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 27 Aug 2014 10:27:50 -0000
+X-List-Received-Date: Wed, 27 Aug 2014 10:44:49 -0000
 Content-Type: text/plain
+
+Changed in V2: 
+- Strip the commit message within 80 characters a line
+
+//Hongxu
 
 The following changes since commit 52b788c6df9201764130ab744bf67b770b24b896:
 
@@ -41,7 +46,7 @@ The following changes since commit 52b788c6df9201764130ab744bf67b770b24b896:
 are available in the git repository at:
 
   git://git.pokylinux.org/poky-contrib hongxu/bitbake
-  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=hongxu/readonly-sstatecache
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=hongxu/bitbake
 
 Hongxu Jia (1):
   bitbake: runqueue: terminate build safely while
