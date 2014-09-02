@@ -1,37 +1,48 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-la0-f54.google.com (mail-la0-f54.google.com
-	[209.85.215.54])
-	by mail.openembedded.org (Postfix) with ESMTP id 312B070E45
+Return-Path: <olof.johansson@axis.com>
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id A5A1C65C7B
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 29 Aug 2014 21:28:04 +0000 (UTC)
-Received: by mail-la0-f54.google.com with SMTP id b17so3404325lan.13
+	Tue,  2 Sep 2014 08:21:01 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bastet.se.axis.com (Postfix) with ESMTP id 47669180B8
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 29 Aug 2014 14:28:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=LssN02U6kqUWKNvv2oYb2Op1PCXTSpdhC+0yBsb7N0A=;
-	b=uFBErEZTaVlwLQ8+aWUQEkGg6mrwQ9LkhOUF+VmYYfalbTxVG3VBU7pLMEiEjePP7v
-	gN8w9OiyybVscXsAkZsiDAAaORcFSjU+I+dPCz6Ev/9iYwgNakX6+YuY6rOOOT7/CJkC
-	OCub6KqtAff8Uh7h8OQq70RqiOwmArN0819IWR3xS8trTBRW26JrXLZFWkUbSiDcEwX8
-	IUw9vLoLsbvSM5CW4lwj2ebkVF0MLJVe/WONM+V3qaKLdcyy0CCy0F8vXNKc0rxXSjsp
-	i+kxdmDyNo4NbT2DCuWGGb2ZiRYBYzgY09vurnw2zflHnwIvCzg52da/8iTBeFNB770P
-	5uYA==
-X-Received: by 10.152.30.100 with SMTP id r4mr13316938lah.87.1409347685365;
-	Fri, 29 Aug 2014 14:28:05 -0700 (PDT)
+	Tue,  2 Sep 2014 10:20:58 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id YEdxtARaH3Nq for <bitbake-devel@lists.openembedded.org>;
+	Tue,  2 Sep 2014 10:20:52 +0200 (CEST)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by bastet.se.axis.com (Postfix) with ESMTP id E6CC5180C7
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue,  2 Sep 2014 10:20:52 +0200 (CEST)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id C97E51028
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue,  2 Sep 2014 10:20:52 +0200 (CEST)
+Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
+	by boulder.se.axis.com (Postfix) with ESMTP id BE362C31
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue,  2 Sep 2014 10:20:52 +0200 (CEST)
+Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
+	by seth.se.axis.com (Postfix) with ESMTP id BC0B43E048
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue,  2 Sep 2014 10:20:52 +0200 (CEST)
+Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
+	(10.0.5.74) with Microsoft SMTP Server id 8.3.342.0;
+	Tue, 2 Sep 2014 10:20:52 +0200
+Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id 856AF9C552; 
+	Tue,  2 Sep 2014 10:20:52 +0200 (CEST)
+Date: Tue, 2 Sep 2014 10:20:52 +0200
+From: Olof Johansson <olof.johansson@axis.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Message-ID: <20140902082052.GB21392@axis.com>
+References: <1409145892.5772.49.camel@ted>
 MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.43.42 with HTTP; Fri, 29 Aug 2014 14:27:45 -0700 (PDT)
-In-Reply-To: <CACS+7ZSnwyCS0YnEd7X=3oHtVmhc3u80GbfMd85UfEYoznVz2Q@mail.gmail.com>
-References: <CACS+7ZSnwyCS0YnEd7X=3oHtVmhc3u80GbfMd85UfEYoznVz2Q@mail.gmail.com>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Fri, 29 Aug 2014 14:27:45 -0700
-X-Google-Sender-Auth: a2y04pDbi04__X53BwCUx4ns9IQ
-Message-ID: <CABcZANkcGjMrXtO5Ew2p9ODJb+KT2rmvAmE_yh+45Fut50n5jA@mail.gmail.com>
-To: Dan McGregor <danismostlikely@gmail.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] knotty: ignore interrupted system calls
+In-Reply-To: <1409145892.5772.49.camel@ted>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+Subject: Re: [PATCH] build/data: Write out more complete python run files
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,53 +55,73 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 29 Aug 2014 21:28:09 -0000
-Content-Type: multipart/alternative; boundary=089e0158cba026bc530501cb5431
+X-List-Received-Date: Tue, 02 Sep 2014 08:21:06 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
---089e0158cba026bc530501cb5431
-Content-Type: text/plain; charset=UTF-8
+On 14-08-27 15:24 +0200, Richard Purdie wrote:
+> Currently the output in the python task/function run files is rather
+> incomplete and effectively useless. This enhances the code to take
+> advantage of the bitbake's dependency tracking and extend the output to
+> include dependencies. This makes the files more usable for debugging
+> purposes. Since this only happens at python function execution time, the
+> overhead is minimal in the grand scheme of things.
+> 
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> 
+....
+> diff --git a/bitbake/lib/bb/data.py b/bitbake/lib/bb/data.py
+> index 3d776b3..91b1eb1 100644
+> --- a/bitbake/lib/bb/data.py
+> +++ b/bitbake/lib/bb/data.py
+....
+> +def emit_func_python(func, o=sys.__stdout__, d = init()):
+> +    """Emits all items in the data store in a format such that it can be sourced by a shell."""
+> +
+> +    def write_func(func, o, call = False):
+> +        body = d.getVar(func, True)
+> +        if not body.startswith("def"):
+> +            body = _functionfmt.format(function=func, body=body)
+....
 
-On Fri, Aug 29, 2014 at 12:46 PM, Dan McGregor <danismostlikely@gmail.com>
-wrote:
+With this change, we are seeing problems in certain cases when a python
+function (def foo():) is being resolved. d.getVar("foo") would return None
+and then fail from not having a startswith() method:
 
-> From: Dan McGregor <dan.mcgregor@usask.ca>
->
-> With the improved exception handling added in an earlier commit bitbake
-> now stops when recieving a SIGWINCH. This happens frequently when
-> disconnecting and reconnecting tmux sessions and bitbake didn't survive.
-> Restore old behaviour of ignoring interrupted system calls but keep
-> proper exception handling for other errors.
->
-> Signed-off-by: Dan McGregor <dan.mcgregor@usask.ca>
->
+ERROR: Build of do_unpack failed
+ERROR: Traceback (most recent call last):
+  File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/build.py", line 497, in exec_task
+    return _exec_task(fn, task, d, quieterr)
+  File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/build.py", line 438, in _exec_task
+    exec_func(task, localdata)
+  File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/build.py", line 212, in exec_func
+    exec_func_python(func, d, runfile, cwd=adir)
+  File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/build.py", line 230, in exec_func_python
+    bb.data.emit_func_python(func, script, d)
+  File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/data.py", line 313, in emit_func_python
+    write_func(dep, o)
+  File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/data.py", line 294, in write_func
+    if not body.startswith("def"):
+AttributeError: 'NoneType' object has no attribute 'startswith'
 
-Oh thank goodness, this has been biting me repeatedly over the past day.
-Thanks.
+
+Our qemu_%.bbappend contains the following:
+
+    def _remove_git_submodule_file(filename):
+        import os
+    
+        if not os.path.isfile(filename):
+            return
+    
+        os.unlink(filename)
+    
+    do_unpack_append() {
+        _remove_git_submodule_file(d.getVar("S", True) + "/dtc/.git")
+        _remove_git_submodule_file(d.getVar("S", True) + "/pixman/.git")
+    }
+
+Moving the function to within do_unpack_append would solve the problem.
+
 -- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+olofjn
 
---089e0158cba026bc530501cb5431
-Content-Type: text/html; charset=UTF-8
-
-<div dir="ltr"><div class="gmail_extra"><br><div class="gmail_quote">On Fri, Aug 29, 2014 at 12:46 PM, Dan McGregor <span dir="ltr">&lt;<a href="mailto:danismostlikely@gmail.com" target="_blank">danismostlikely@gmail.com</a>&gt;</span> wrote:<br>
-
-<blockquote class="gmail_quote" style="margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=":mo" class="a3s" style="overflow:hidden">From: Dan McGregor &lt;<a href="mailto:dan.mcgregor@usask.ca">dan.mcgregor@usask.ca</a>&gt;<br>
-
-
-<br>
-With the improved exception handling added in an earlier commit bitbake<br>
-now stops when recieving a SIGWINCH. This happens frequently when<br>
-disconnecting and reconnecting tmux sessions and bitbake didn&#39;t survive.<br>
-Restore old behaviour of ignoring interrupted system calls but keep<br>
-proper exception handling for other errors.<br>
-<br>
-Signed-off-by: Dan McGregor &lt;<a href="mailto:dan.mcgregor@usask.ca">dan.mcgregor@usask.ca</a>&gt;</div></blockquote></div><br></div><div class="gmail_extra">Oh thank goodness, this has been biting me repeatedly over the past day. Thanks.<br>
-
--- <br>Christopher Larson<br>clarson at kergoth dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software Engineer, Mentor Graphics
-</div></div>
-
---089e0158cba026bc530501cb5431--
