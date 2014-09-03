@@ -1,25 +1,29 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id A70F271353
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 36A7671395
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  3 Sep 2014 16:07:32 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 03 Sep 2014 09:06:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.04,458,1406617200"; d="scan'208";a="597376818"
-Received: from svgunawa-mobl.gar.corp.intel.com (HELO
-	peggleto-mobl5.ger.corp.intel.com) ([10.252.120.16])
-	by orsmga002.jf.intel.com with ESMTP; 03 Sep 2014 09:06:52 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  3 Sep 2014 17:06:42 +0100
-Message-Id: <b9b5e21c8bcf28766bc6804639e69f0e527d4286.1409760364.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.9.3
-In-Reply-To: <cover.1409760364.git.paul.eggleton@linux.intel.com>
-References: <cover.1409760364.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1409760364.git.paul.eggleton@linux.intel.com>
-References: <cover.1409760364.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 1/1] tinfoil: add a means of enabling variable history tracking
+	Wed,  3 Sep 2014 22:08:31 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	s83M8RO4001870; Wed, 3 Sep 2014 23:08:27 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id yC1S8lJgSRnm; Wed,  3 Sep 2014 23:08:27 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	s83M8MnM001863
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
+	Wed, 3 Sep 2014 23:08:23 +0100
+Message-ID: <1409782104.12482.15.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Olof Johansson <olof.johansson@axis.com>
+Date: Wed, 03 Sep 2014 23:08:24 +0100
+In-Reply-To: <20140902082052.GB21392@axis.com>
+References: <1409145892.5772.49.camel@ted> <20140902082052.GB21392@axis.com>
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+Mime-Version: 1.0
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] build/data: Write out more complete python run files
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,53 +36,81 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 03 Sep 2014 16:07:32 -0000
+X-List-Received-Date: Wed, 03 Sep 2014 22:08:39 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Unfortunately it seems like the external use of the cooker
-enableDataTracking() function broke at some point since the code that
-reads it now runs within BBCooker's constructor. Since this now has to
-be done early, add a parameter to Tinfoil's constructor to allow
-enabling variable history tracking.
+On Tue, 2014-09-02 at 10:20 +0200, Olof Johansson wrote:
+> On 14-08-27 15:24 +0200, Richard Purdie wrote:
+> > Currently the output in the python task/function run files is rather
+> > incomplete and effectively useless. This enhances the code to take
+> > advantage of the bitbake's dependency tracking and extend the output to
+> > include dependencies. This makes the files more usable for debugging
+> > purposes. Since this only happens at python function execution time, the
+> > overhead is minimal in the grand scheme of things.
+> > 
+> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> > 
+> ....
+> > diff --git a/bitbake/lib/bb/data.py b/bitbake/lib/bb/data.py
+> > index 3d776b3..91b1eb1 100644
+> > --- a/bitbake/lib/bb/data.py
+> > +++ b/bitbake/lib/bb/data.py
+> ....
+> > +def emit_func_python(func, o=sys.__stdout__, d = init()):
+> > +    """Emits all items in the data store in a format such that it can be sourced by a shell."""
+> > +
+> > +    def write_func(func, o, call = False):
+> > +        body = d.getVar(func, True)
+> > +        if not body.startswith("def"):
+> > +            body = _functionfmt.format(function=func, body=body)
+> ....
+> 
+> With this change, we are seeing problems in certain cases when a python
+> function (def foo():) is being resolved. d.getVar("foo") would return None
+> and then fail from not having a startswith() method:
+> 
+> ERROR: Build of do_unpack failed
+> ERROR: Traceback (most recent call last):
+>   File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/build.py", line 497, in exec_task
+>     return _exec_task(fn, task, d, quieterr)
+>   File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/build.py", line 438, in _exec_task
+>     exec_func(task, localdata)
+>   File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/build.py", line 212, in exec_func
+>     exec_func_python(func, d, runfile, cwd=adir)
+>   File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/build.py", line 230, in exec_func_python
+>     bb.data.emit_func_python(func, script, d)
+>   File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/data.py", line 313, in emit_func_python
+>     write_func(dep, o)
+>   File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/data.py", line 294, in write_func
+>     if not body.startswith("def"):
+> AttributeError: 'NoneType' object has no attribute 'startswith'
+> 
+> 
+> Our qemu_%.bbappend contains the following:
+> 
+>     def _remove_git_submodule_file(filename):
+>         import os
+>     
+>         if not os.path.isfile(filename):
+>             return
+>     
+>         os.unlink(filename)
+>     
+>     do_unpack_append() {
+>         _remove_git_submodule_file(d.getVar("S", True) + "/dtc/.git")
+>         _remove_git_submodule_file(d.getVar("S", True) + "/pixman/.git")
+>     }
+> 
+> Moving the function to within do_unpack_append would solve the problem.
 
-Fixes [YOCTO #6676].
+We should probably put a safeguard in that code, if the function isn't
+in the datastore, not to try and write it out, just pass over it. Its
+either that, or pull it from the methodpool, which thinking about it,
+may not be a bad idea since it is in there somewhere...
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- lib/bb/tinfoil.py | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Cheers,
 
-diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
-index 751a2d7..6bcbd47 100644
---- a/lib/bb/tinfoil.py
-+++ b/lib/bb/tinfoil.py
-@@ -25,12 +25,12 @@ import bb.cache
- import bb.cooker
- import bb.providers
- import bb.utils
--from bb.cooker import state, BBCooker
-+from bb.cooker import state, BBCooker, CookerFeatures
- from bb.cookerdata import CookerConfiguration, ConfigParameters
- import bb.fetch2
- 
- class Tinfoil:
--    def __init__(self, output=sys.stdout):
-+    def __init__(self, output=sys.stdout, tracking=False):
-         # Needed to avoid deprecation warnings with python 2.6
-         warnings.filterwarnings("ignore", category=DeprecationWarning)
- 
-@@ -48,7 +48,10 @@ class Tinfoil:
-         configparams = TinfoilConfigParameters(parse_only=True)
-         self.config.setConfigParameters(configparams)
-         self.config.setServerRegIdleCallback(self.register_idle_function)
--        self.cooker = BBCooker(self.config)
-+        features = []
-+        if tracking:
-+            features.append(CookerFeatures.BASEDATASTORE_TRACKING)
-+        self.cooker = BBCooker(self.config, features)
-         self.config_data = self.cooker.data
-         bb.providers.logger.setLevel(logging.ERROR)
-         self.cooker_data = None
--- 
-1.9.3
+Richard
 
 
