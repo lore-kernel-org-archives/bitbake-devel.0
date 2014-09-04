@@ -1,45 +1,45 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f176.google.com (mail-we0-f176.google.com
-	[74.125.82.176])
-	by mail.openembedded.org (Postfix) with ESMTP id 4C9037149B
+Received: from mail-we0-f171.google.com (mail-we0-f171.google.com
+	[74.125.82.171])
+	by mail.openembedded.org (Postfix) with ESMTP id A69B2714A0
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  4 Sep 2014 16:45:18 +0000 (UTC)
-Received: by mail-we0-f176.google.com with SMTP id q59so10532617wes.7
+	Thu,  4 Sep 2014 16:45:20 +0000 (UTC)
+Received: by mail-we0-f171.google.com with SMTP id u56so10583948wes.16
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 04 Sep 2014 09:45:19 -0700 (PDT)
+	Thu, 04 Sep 2014 09:45:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=SM5Mme37xgNrHey8HMONtK2139dqLNFMFLTn3LhMjXQ=;
-	b=EZPzA3rQ5yVsOyMaBu7vTSQA8jgEaNrEAo8ygJljMgxSH5gVp0xsbPiTSs4oLAqxlo
-	Hv6vUG/Lh4cgDnPzCRriF8z54yRtPBmqFtu0MoIgpO9YQqTmDb1a2X4CVNIb+BVJ6ePH
-	FrUOm67PKUs/hnEkfxvHBT8XICpxMiB6yUnFs0Zuh6m0jkAKuBIFypxNref9++QouQVP
-	xNoVbn7J5CgFKUq7qtNkINNo1+J9tMgdiPmm6FBMkc6fNXivGsA6T52Z2+4EhZNGhC58
-	JeY2RPI2JML7ewWDKM1TMM5lprlCkHm01Ou67fCqDhu1+v4XHVwCP1BVw1dymLNLAlY4
-	xvYQ==
-X-Gm-Message-State: ALoCoQkMgZsPiUYaHFKXAJdH+gB9V8lFippkNAbkFSov2OUA8vYpr1Fe5/6OAGSi2V3EJgA2Q3W/
-X-Received: by 10.194.236.35 with SMTP id ur3mr7335281wjc.127.1409849119761;
-	Thu, 04 Sep 2014 09:45:19 -0700 (PDT)
+	bh=GuRXgMwb+GY35mBN+jNCUXQWweRtyqN9Na1Jt0QQm6k=;
+	b=l6RSMWSodDEjX1uEpnp9WqRbqz1QM4o8r8DpYPydp9efxSlstBMdd0R256Boqx9RrJ
+	91e0yMZK5taORbNZNHY3gaUNK1/S8BSwbqAucbxWCLdiP2xCnL7j54VyuqDzjzv1MkmI
+	OYaeqe8WRVZAHrITB/qr/T+zWvb8XWSIghp0JDtGbrCMNZFcOQBKGLcz4TjUlfS+GN7/
+	5f5Pj5tgwrxXFKVE1ZfDYuaVJn7fTemfqbXP1WoMCC8jd5ZtCdyAwKBddS8vGWDux5c8
+	vrE+HaZiJuNrfiZkBc2i2Vwc+FNy+GBCTgvsen8u4z77QxzrN2TgZ/t/fYB4PHGmtYow
+	TpqQ==
+X-Gm-Message-State: ALoCoQmXJr5eiaDl0bHN70Mj5Dh3xH3jKDXrIByWiaMJ0FrOD0Rrro6SI2yI5ck7lIOrQi0WIhxk
+X-Received: by 10.194.19.200 with SMTP id h8mr7444136wje.40.1409849120564;
+	Thu, 04 Sep 2014 09:45:20 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
 	by mx.google.com with ESMTPSA id
-	ys5sm19974897wjc.25.2014.09.04.09.45.18 for <multiple recipients>
+	au4sm20002911wjc.15.2014.09.04.09.45.18 for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 04 Sep 2014 09:45:18 -0700 (PDT)
+	Thu, 04 Sep 2014 09:45:19 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id 3EC59561F7E; Thu,  4 Sep 2014 17:45:19 +0100 (BST)
+	id 61A605624B8; Thu,  4 Sep 2014 17:45:19 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: toaster@yoctoproject.org,
 	bitbake-devel@lists.openembedded.org
-Date: Thu,  4 Sep 2014 17:45:13 +0100
-Message-Id: <137179eafca8d1a5a69b6302f8cc8961be3b45c4.1409848901.git.alexandru.damian@intel.com>
+Date: Thu,  4 Sep 2014 17:45:15 +0100
+Message-Id: <39d0f0c2e87d4b161f1eeaa2657e61b5a6bc9ee2.1409848901.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <a37f2c194d7e59611177cb8755524b7ad702fe91.1409848901.git.alexandru.damian@intel.com>
 References: <a37f2c194d7e59611177cb8755524b7ad702fe91.1409848901.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1409848901.git.alexandru.damian@intel.com>
 References: <cover.1409848901.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 2/6] toaster: bitbake server listen on all interface
+Subject: [PATCH 4/6] toaster: do not save objects in session
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,49 +52,80 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 04 Sep 2014 16:45:20 -0000
+X-List-Received-Date: Thu, 04 Sep 2014 16:45:21 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-We change the toaster starting script to make the
-bitbake server listen on all interfaces on the local machine.
+In order to avoid problems when using JSON serializer for
+saving sessions, we move from storing the objects themselves
+in the session to storing the object id and reloading the
+object when retrieved.
 
-This is needed to be able to receive a controlling client
-running on a remote machine.
+This allows, for example, to use cookie-storage sessions if the
+infrastructure owner so desires.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bin/toaster | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ lib/toaster/toastergui/views.py | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/bin/toaster b/bin/toaster
-index 2fabe5c..75c7a07 100755
---- a/bin/toaster
-+++ b/bin/toaster
-@@ -99,7 +99,7 @@ function stop_system()
-         kill $(< ${BUILDDIR}/.toasterui.pid ) 2>/dev/null
-         rm ${BUILDDIR}/.toasterui.pid
-     fi
--    BBSERVER=localhost:8200 bitbake -m
-+    BBSERVER=0.0.0.0:8200 bitbake -m
-     unset BBSERVER
-     webserverKillAll
-     # force stop any misbehaving bitbake server
-@@ -234,12 +234,12 @@ case $CMD in
-             return 4
-         fi
-         unset BBSERVER
--        bitbake --postread conf/toaster.conf --server-only -t xmlrpc -B localhost:8200
-+        bitbake --postread conf/toaster.conf --server-only -t xmlrpc -B 0.0.0.0:8200
-         if [ $? -ne 0 ]; then
-             start_success=0
-             echo "Bitbake server start failed"
-         else
--            export BBSERVER=localhost:8200
-+            export BBSERVER=0.0.0.0:8200
-             if [ $NOTOASTERUI == 0 ]; then        # we start the TOASTERUI only if not inhibited
-                 bitbake --observe-only -u toasterui >${BUILDDIR}/toaster_ui.log 2>&1 & echo $! >${BUILDDIR}/.toasterui.pid
-             fi
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 13788b0..22b26d0 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -1774,8 +1774,8 @@ if toastermain.settings.MANAGED:
+             "projects": Project.objects.all(),
+             "MANAGED" : toastermain.settings.MANAGED
+         }
+-        if 'project' in request.session:
+-            ret['project'] = request.session['project']
++        if 'project_id' in request.session:
++            ret['project'] = Project.objects.get(pk = request.session['project_id'])
+         return ret
+ 
+     # new project
+@@ -1841,7 +1841,7 @@ if toastermain.settings.MANAGED:
+             puser = None
+ 
+         # we use implicit knowledge of the current user's project to filter layer information, e.g.
+-        request.session['project'] = prj
++        request.session['project_id'] = prj.id
+ 
+         context = {
+             "project" : prj,
+@@ -1937,8 +1937,8 @@ if toastermain.settings.MANAGED:
+         (filter_string, search_term, ordering_string) = _search_tuple(request, Layer_Version)
+ 
+         queryset_all = Layer_Version.objects.all()
+-        if 'project' in request.session:
+-            queryset_all = queryset_all.filter(up_branch__in = Branch.objects.filter(name = request.session['project'].release.name))
++        if 'project_id' in request.session:
++            queryset_all = queryset_all.filter(up_branch__in = Branch.objects.filter(name = Project.objects.get(pk = request.session['project_id']).release.name))
+ 
+         queryset_with_search = _get_queryset(Layer_Version, queryset_all, None, search_term, ordering_string, '-layer__name')
+         queryset = _get_queryset(Layer_Version, queryset_all, filter_string, search_term, ordering_string, '-layer__name')
+@@ -2023,8 +2023,8 @@ if toastermain.settings.MANAGED:
+         (filter_string, search_term, ordering_string) = _search_tuple(request, Recipe)
+ 
+         queryset_all = Recipe.objects.all()
+-        if 'project' in request.session:
+-            queryset_all = queryset_all.filter(Q(layer_version__up_branch__in = Branch.objects.filter(name = request.session['project'].release.name)) | Q(layer_version__build__in = request.session['project'].build_set.all()))
++        if 'project_id' in request.session:
++            queryset_all = queryset_all.filter(Q(layer_version__up_branch__in = Branch.objects.filter(name = Project.objects.get(pk=request.session['project_id']).release.name)) | Q(layer_version__build__in = Project.objects.get(pk = request.session['project_id']).build_set.all()))
+ 
+         queryset_with_search = _get_queryset(Recipe, queryset_all, None, search_term, ordering_string, '-name')
+         queryset = _get_queryset(Recipe, queryset_all, filter_string, search_term, ordering_string, '-name')
+@@ -2107,8 +2107,8 @@ if toastermain.settings.MANAGED:
+         (filter_string, search_term, ordering_string) = _search_tuple(request, Machine)
+ 
+         queryset_all = Machine.objects.all()
+-#        if 'project' in request.session:
+-#            queryset_all = queryset_all.filter(Q(layer_version__up_branch__in = Branch.objects.filter(name = request.session['project'].release.name)) | Q(layer_version__build__in = request.session['project'].build_set.all()))
++#        if 'project_id' in request.session:
++#            queryset_all = queryset_all.filter(Q(layer_version__up_branch__in = Branch.objects.filter(name = Project.objects.get(request.session['project_id']).release.name)) | Q(layer_version__build__in = Project.objects.get(request.session['project_id']).build_set.all()))
+ 
+         queryset_with_search = _get_queryset(Machine, queryset_all, None, search_term, ordering_string, '-name')
+         queryset = _get_queryset(Machine, queryset_all, filter_string, search_term, ordering_string, '-name')
 -- 
 1.9.1
 
