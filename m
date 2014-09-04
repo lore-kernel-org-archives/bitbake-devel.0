@@ -1,44 +1,45 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f179.google.com (mail-we0-f179.google.com
-	[74.125.82.179])
-	by mail.openembedded.org (Postfix) with ESMTP id D7A3A7149B
+Received: from mail-wi0-f179.google.com (mail-wi0-f179.google.com
+	[209.85.212.179])
+	by mail.openembedded.org (Postfix) with ESMTP id DCA5F714A1
 	for <bitbake-devel@lists.openembedded.org>;
 	Thu,  4 Sep 2014 16:45:20 +0000 (UTC)
-Received: by mail-we0-f179.google.com with SMTP id t60so10431290wes.38
+Received: by mail-wi0-f179.google.com with SMTP id q5so1506708wiv.0
 	for <bitbake-devel@lists.openembedded.org>;
 	Thu, 04 Sep 2014 09:45:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=oJzDEx8Nb2foYm8Tccrj5Llpm5HD9VXY/x/mOT3GbZo=;
-	b=FGSvUS1/Q7kXld8bSAeuZCG3fGBNUa7V3KSfgGTDVA1QiVa+EsvVptAnr87KHlfSPZ
-	dNFKGNIa9YQnz74p7fJm4PNUesEmB8eKbKnJ/lx7c1G1QepydqwJI/S0gYZZjE75+xxJ
-	vhBtxsoGEgS32q/heuCc3yjLeIr5KyiDyQ4xTH1zboEnJLUSS+3dlh8aAoXt7WwPy4n9
-	8TQqy2Ua78zpNASY+VQCxeUcXpTLJCdfyXUpMLxa9yv+qq3uV8NKEKUNuoY9Vo+TV04a
-	NTKjBYa0eFmym32lTb331HQyLIBw/SzUdkXKxDG/ywPfjCH9hxYg7tWNi0aAPphc+dTX
-	RKpA==
-X-Gm-Message-State: ALoCoQkQJBu/dyBtWdF7Lws1JJgBdYIJWbNti92okRTb7xSKZs6ZaUNzwdrtHLMouo6hfjsL7QXN
-X-Received: by 10.194.78.170 with SMTP id c10mr7746516wjx.22.1409849121331;
-	Thu, 04 Sep 2014 09:45:21 -0700 (PDT)
+	bh=JF0KJLtYNjim1sZEp1E+BBUU8Za5HlhJGOuwujonRK0=;
+	b=lJLzvIAySsAi9hB/mRNYbt9UlNPpuv7lot5fHihpLrb+NDjAW+eeWopQ401on8NtMV
+	kvsS8qJI1aOZMo7eMxFcvepzoRSTKO09T5l19O4e8slpL/Yp7xU5AD3ULFu08neJ4iDI
+	GpVJJGMuhY/x1wpGxnUddcxmVpLlx2zrVRpiBUGoicQA4Jm/UQGvkap7Mt+kKt7PJGbE
+	Aak9Xze7DSnNRpitASSgcNNNK7TwR5713H6+Bb/89aZkDYjvIV8oOjPoLivK587I0PS6
+	/vz/pZ1jMx8ZOtrDQz1rYDd+20qQgj5C2dtPFGOR1BCmUIE81Rq3MdykLVL+yhBRfCWE
+	kOhA==
+X-Gm-Message-State: ALoCoQn2oqIEsFpsGhKcj+eLDN9I47igI8GYFwh21cqyxtdjb0k46LH+GaX2mMWKyeu+gNhhUX4g
+X-Received: by 10.194.5.234 with SMTP id v10mr7514308wjv.45.1409849120965;
+	Thu, 04 Sep 2014 09:45:20 -0700 (PDT)
 Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id h3sm19977904wjz.24.2014.09.04.09.45.18
+	by mx.google.com with ESMTPSA id gl10sm2433652wib.1.2014.09.04.09.45.18
 	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Thu, 04 Sep 2014 09:45:19 -0700 (PDT)
 Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id 733005626B1; Thu,  4 Sep 2014 17:45:19 +0100 (BST)
+	id 50222562457; Thu,  4 Sep 2014 17:45:19 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: toaster@yoctoproject.org,
 	bitbake-devel@lists.openembedded.org
-Date: Thu,  4 Sep 2014 17:45:16 +0100
-Message-Id: <880b58c845e3a501fa90d24e1bd89c87ca84b709.1409848901.git.alexandru.damian@intel.com>
+Date: Thu,  4 Sep 2014 17:45:14 +0100
+Message-Id: <c2ad9c9bb83f61c171434324df8c4d5ee655a556.1409848901.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <a37f2c194d7e59611177cb8755524b7ad702fe91.1409848901.git.alexandru.damian@intel.com>
 References: <a37f2c194d7e59611177cb8755524b7ad702fe91.1409848901.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1409848901.git.alexandru.damian@intel.com>
 References: <cover.1409848901.git.alexandru.damian@intel.com>
-Subject: [PATCH 5/6] toaster: use cookies for count and sorting in templates tables
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 3/6] toaster: enable SSH-based remote build support
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,453 +54,781 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Thu, 04 Sep 2014 16:45:21 -0000
 
-From: Marius Avram <marius.avram@intel.com>
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Until now cookies were used to save which columns were shown and which
-were hidden in toaster tables. The tables from the templates also have
-functionalities like sorting the entries on a certain column and
-limiting the number of entries displayed on a page. The later however
-were not saved using cookies. This patch brings this new feature.
+We enable support for starting builds on remote machines
+through SSH. The support is limited to poky-based distributions.
 
-The cookies are not saved only in the front-end. They are saved both
-in the frontend in case the user uses the inputs/buttons to change
-a parameter and also in the backend in case the user specifies manually
-using GET variables the value of the parameters.
+We refactor localhost build support and we update
+bldcontrol application tests to uniformely test the APIs
+of localhost and SSH build controllers.
 
-When no GET parameters are given the views will redirect the url to one
-containg the parameters saved as cookies. When no cookies exist, default
-values will be used.
+[YOCTO #6240]
 
-[YOCTO #6126]
-
-Signed-off-by: Marius Avram <marius.avram@intel.com>
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- .../toastergui/templates/basetable_bottom.html     |  15 ++-
- .../toastergui/templates/basetable_top.html        |  11 +-
- lib/toaster/toastergui/views.py                    | 122 ++++++++++++++-------
- 3 files changed, 102 insertions(+), 46 deletions(-)
+ lib/toaster/bldcontrol/bbcontroller.py          | 170 ++-------------------
+ lib/toaster/bldcontrol/localhostbecontroller.py | 191 +++++++++++++++++++++++
+ lib/toaster/bldcontrol/sshbecontroller.py       | 193 ++++++++++++++++++++++++
+ lib/toaster/bldcontrol/tests.py                 | 116 +++++++++++---
+ 4 files changed, 488 insertions(+), 182 deletions(-)
+ create mode 100644 lib/toaster/bldcontrol/localhostbecontroller.py
+ create mode 100644 lib/toaster/bldcontrol/sshbecontroller.py
 
-diff --git a/lib/toaster/toastergui/templates/basetable_bottom.html b/lib/toaster/toastergui/templates/basetable_bottom.html
-index ac14363..cbdc164 100644
---- a/lib/toaster/toastergui/templates/basetable_bottom.html
-+++ b/lib/toaster/toastergui/templates/basetable_bottom.html
-@@ -26,7 +26,7 @@
-                             <span class="help-inline" style="padding-top:5px;">Show rows:</span>
-                             <select style="margin-top:5px;margin-bottom:0px;" class="pagesize">
-   {% with "2 5 10 25 50 100" as list%}
--    {% for i in list.split %}<option{%if i == request.GET.count %} selected{%endif%}>{{i}}</option>
-+    {% for i in list.split %}<option value="{{i}}">{{i}}</option>
-     {% endfor %}
-   {% endwith %}
-                             </select>
-@@ -56,6 +56,14 @@
-     }
-     }
- 
-+    // load cookie for number of entries to be displayed on page
-+    pagesize = $.cookie('count');
-+    if (!pagesize)
-+        pagesize = 10;
-+    $('.pagesize option').prop('selected', false)
-+                         .filter('[value="' + pagesize + '"]')
-+                         .attr('selected', true);
-+
-     $('.chbxtoggle').each(function () {
-         showhideTableColumn($(this).attr('id'), $(this).is(':checked'))
-     });
-@@ -72,8 +80,9 @@
-     $('.progress, .lead span').tooltip({container:'table', placement:'top'});
- 
-     $(".pagesize").change(function () {
--        console.log("page size change");
--        reload_params({"count":$(this).val()}); ;
-+        reload_params({"count":$(this).val()});
-+        // save cookie with pagesize
-+        $.cookie("count", $(this).val(), { path : $(location).attr('pathname') });
-     });
- });
- </script>
-diff --git a/lib/toaster/toastergui/templates/basetable_top.html b/lib/toaster/toastergui/templates/basetable_top.html
-index 1231e1f..037554b 100644
---- a/lib/toaster/toastergui/templates/basetable_top.html
-+++ b/lib/toaster/toastergui/templates/basetable_top.html
-@@ -156,6 +156,13 @@
-         showhideImmediateTableAction( clname, sh, orderkey );
-     }
- 
-+    //
-+    // saves a cookie with selected order field
-+    //
-+    function saveOrderCookie( orderfield ) {
-+        $.cookie("orderby", orderfield, { path: $(location).attr('pathname') });
-+    }
-+
-     </script>
- 
- <!-- control header -->
-@@ -205,7 +212,7 @@
-                 <span class="help-inline" style="padding-top:5px;">Show rows:</span>
-                 <select style="margin-top:5px;margin-bottom:0px;" class="pagesize">
-   {% with "2 5 10 25 50 100" as list%}
--{% for i in list.split %}                    <option{%if i == request.GET.count %} selected{%endif%}>{{i}}</option>
-+{% for i in list.split %}                    <option value="{{i}}">{{i}}</option>
-     {% endfor %}
-   {% endwith %}
-                 </select>
-@@ -221,7 +228,7 @@
-         <tr>
-             {% for tc in tablecols %}<th class="{{tc.dclass}} {{tc.clclass}}">
-                 {%if tc.qhelp%}<i class="icon-question-sign get-help" title="{{tc.qhelp}}"></i>{%endif%}
--                {%if tc.orderfield%}<a {%if tc.ordericon%} class="sorted" {%endif%}href="javascript:reload_params({'page': 1, 'orderby' : '{{tc.orderfield}}' })" >{{tc.name}}</a>{%else%}<span class="muted">{{tc.name}}</span>{%endif%}
-+                {%if tc.orderfield%}<a {%if tc.ordericon%} class="sorted" {%endif%}href="javascript:reload_params({'page': 1, 'orderby' : '{{tc.orderfield}}' })" onclick="saveOrderCookie('{{tc.orderfield}}')">{{tc.name}}</a>{%else%}<span class="muted">{{tc.name}}</span>{%endif%}
-                 {%if tc.ordericon%} <i class="icon-caret-{{tc.ordericon}}"></i>{%endif%}
-                 {%if tc.filter%}<div class="btn-group pull-right">
-                     <a href="#filter_{{tc.filter.class}}" role="button" class="btn btn-mini {%if request.GET.filter%}{{tc.filter.options|filtered_icon:request.GET.filter}} {%endif%}" {%if request.GET.filter and tc.filter.options|filtered_tooltip:request.GET.filter %} title="<p>{{tc.filter.options|filtered_tooltip:request.GET.filter}}</p><p><a class='btn btn-small btn-primary' href=javascript:reload_params({'filter':''})>Show all {% if filter_search_display %}{{filter_search_display}}{% else %}{{objectname}}{% endif %}</a></p>" {%endif%} data-toggle="modal"> <i class="icon-filter filtered"></i> </a>
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 22b26d0..defbbbf 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -20,6 +20,7 @@
- # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- 
- import operator,re
-+import HTMLParser
- 
- from django.db.models import Q, Sum
- from django.db import IntegrityError
-@@ -32,6 +33,7 @@ from django.core.urlresolvers import reverse
- from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
- from django.http import HttpResponseBadRequest, HttpResponseNotFound
- from django.utils import timezone
-+from django.utils.html import escape
- from datetime import timedelta
- from django.utils import formats
- import json
-@@ -200,6 +202,22 @@ def _get_queryset(model, queryset, filter_string, search_term, ordering_string,
-     # insure only distinct records (e.g. from multiple search hits) are returned
-     return queryset.distinct()
- 
-+# returns the value of entries per page and the name of the applied sorting field.
-+# if the value is given explicitly as a GET parameter it will be the first selected,
-+# otherwise the cookie value will be used.
-+def _get_parameters_values(request, default_count, default_order):
-+    pagesize = request.GET.get('count', request.COOKIES.get('count', default_count))
-+    orderby = request.GET.get('orderby', request.COOKIES.get('orderby', default_order))
-+    return (pagesize, orderby)
-+
-+
-+# set cookies for parameters. this is usefull in case parameters are set
-+# manually from the GET values of the link
-+def _save_parameters_cookies(response, pagesize, orderby, request):
-+    html_parser = HTMLParser.HTMLParser()
-+    response.set_cookie(key='count', value=pagesize, path=request.path)
-+    response.set_cookie(key='orderby', value=html_parser.unescape(orderby), path=request.path)
-+    return response
- 
- # shows the "all builds" page
- def builds(request):
-@@ -207,7 +225,8 @@ def builds(request):
-     # define here what parameters the view needs in the GET portion in order to
-     # be able to display something.  'count' and 'page' are mandatory for all views
-     # that use paginators.
--    mandatory_parameters = { 'count': 10,  'page' : 1, 'orderby' : 'completed_on:-' };
-+    (pagesize, orderby) = _get_parameters_values(request, 10, 'completed_on:-')
-+    mandatory_parameters = { 'count': pagesize,  'page' : 1, 'orderby' : orderby }
-     retval = _verify_parameters( request.GET, mandatory_parameters )
-     if retval:
-         return _redirect_parameters( 'all-builds', request.GET, mandatory_parameters)
-@@ -220,7 +239,7 @@ def builds(request):
-     queryset = _get_queryset(Build, queryset_all, filter_string, search_term, ordering_string, '-completed_on')
- 
-     # retrieve the objects that will be displayed in the table; builds a paginator and gets a page range to display
--    build_info = _build_page_range(Paginator(queryset, request.GET.get('count', 10)),request.GET.get('page', 1))
-+    build_info = _build_page_range(Paginator(queryset, pagesize), request.GET.get('page', 1))
- 
-     # build view-specific information; this is rendered specifically in the builds page, at the top of the page (i.e. Recent builds)
-     build_mru = Build.objects.filter(completed_on__gte=(timezone.now()-timedelta(hours=24))).order_by("-started_on")[:3]
-@@ -368,7 +387,9 @@ def builds(request):
-                 ]
-             }
- 
--    return render(request, template, context)
-+    response = render(request, template, context)
-+    _save_parameters_cookies(response, pagesize, orderby, request)
-+    return response
- 
- 
- ##
-@@ -537,8 +558,8 @@ def recipe(request, build_id, recipe_id):
- 
- def target_common( request, build_id, target_id, variant ):
-     template = "target.html"
--    default_orderby = 'name:+';
--    mandatory_parameters = { 'count': 25,  'page' : 1, 'orderby':'name:+'};
-+    (pagesize, orderby) = _get_parameters_values(request, 25, 'name:+')
-+    mandatory_parameters = { 'count': pagesize,  'page' : 1, 'orderby': orderby }
-     retval = _verify_parameters( request.GET, mandatory_parameters )
-     if retval:
-         return _redirect_parameters(
-@@ -554,8 +575,7 @@ def target_common( request, build_id, target_id, variant ):
-     packages_sum =  queryset.aggregate( Sum( 'installed_size' ))
-     queryset = _get_queryset(
-             Package, queryset, filter_string, search_term, ordering_string, 'name' )
--    packages = _build_page_range( Paginator(
--            queryset, request.GET.get( 'count', 25 )),request.GET.get( 'page', 1 ))
-+    packages = _build_page_range( Paginator(queryset, pagesize), request.GET.get( 'page', 1 ))
- 
-     # bring in package dependencies
-     for p in packages.object_list:
-@@ -679,7 +699,7 @@ his package',
-         'objects'              : packages,
-         'packages_sum'         : packages_sum[ 'installed_size__sum' ],
-         'object_search_display': "packages included",
--        'default_orderby'      : default_orderby,
-+        'default_orderby'      : orderby,
-         'tablecols'            : [
-                     tc_package,
-                     tc_packageVersion,
-@@ -696,7 +716,10 @@ his package',
-                     tc_layerDir,
-                 ]
-         }
--    return( render( request, template, context ))
-+
-+    response = render(request, template, context)
-+    _save_parameters_cookies(response, pagesize, orderby, request)
-+    return response
- 
- def target( request, build_id, target_id ):
-     return( target_common( request, build_id, target_id, "target" ))
-@@ -878,26 +901,25 @@ def tasks_common(request, build_id, variant, task_anchor):
-         title_variant='Time'
-         object_search_display="time data"
-         filter_search_display="tasks"
--        mandatory_parameters = { 'count': 25,  'page' : 1, 'orderby':'elapsed_time:-'};
--        default_orderby = 'elapsed_time:-';
-+        (pagesize, orderby) = _get_parameters_values(request, 25, 'elapsed_time:-')
-     elif 'diskio'    == variant:
-         title_variant='Disk I/O'
-         object_search_display="disk I/O data"
-         filter_search_display="tasks"
--        mandatory_parameters = { 'count': 25,  'page' : 1, 'orderby':'disk_io:-'};
--        default_orderby = 'disk_io:-';
-+        (pagesize, orderby) = _get_parameters_values(request, 25, 'disk_io:-')
-     elif 'cpuusage'  == variant:
-         title_variant='CPU usage'
-         object_search_display="CPU usage data"
-         filter_search_display="tasks"
--        mandatory_parameters = { 'count': 25,  'page' : 1, 'orderby':'cpu_usage:-'};
--        default_orderby = 'cpu_usage:-';
-+        (pagesize, orderby) = _get_parameters_values(request, 25, 'cpu_usage:-')
-     else :
-         title_variant='Tasks'
-         object_search_display="tasks"
-         filter_search_display="tasks"
--        mandatory_parameters = { 'count': 25,  'page' : 1, 'orderby':'order:+'};
--        default_orderby = 'order:+';
-+        (pagesize, orderby) = _get_parameters_values(request, 25, 'order:+')
-+
-+
-+    mandatory_parameters = { 'count': pagesize,  'page' : 1, 'orderby': orderby }
- 
-     template = 'tasks.html'
-     retval = _verify_parameters( request.GET, mandatory_parameters )
-@@ -923,7 +945,7 @@ def tasks_common(request, build_id, variant, task_anchor):
-         del request.GET['anchor']
-         i=0
-         a=int(anchor)
--        count_per_page=int(request.GET.get('count', 100))
-+        count_per_page=int(pagesize)
-         for task in queryset.iterator():
-             if a == task.order:
-                 new_page= (i / count_per_page ) + 1
-@@ -932,7 +954,7 @@ def tasks_common(request, build_id, variant, task_anchor):
-                 return _redirect_parameters( variant, request.GET, mandatory_parameters, build_id = build_id)
-             i += 1
- 
--    tasks = _build_page_range(Paginator(queryset, request.GET.get('count', 100)),request.GET.get('page', 1))
-+    tasks = _build_page_range(Paginator(queryset, pagesize),request.GET.get('page', 1))
- 
-     # define (and modify by variants) the 'tablecols' members
-     tc_order={
-@@ -1063,7 +1085,7 @@ def tasks_common(request, build_id, variant, task_anchor):
-                 'title': title_variant,
-                 'build': Build.objects.filter(pk=build_id)[0],
-                 'objects': tasks,
--                'default_orderby' : default_orderby,
-+                'default_orderby' : orderby,
-                 'search_term': search_term,
-                 'total_count': queryset_with_search.count(),
-                 'tablecols':[
-@@ -1080,7 +1102,9 @@ def tasks_common(request, build_id, variant, task_anchor):
-                     tc_log,
-                 ]}
- 
--    return render(request, template, context)
-+    response = render(request, template, context)
-+    _save_parameters_cookies(response, pagesize, orderby, request)
-+    return response
- 
- def tasks(request, build_id):
-     return tasks_common(request, build_id, 'tasks', '')
-@@ -1100,7 +1124,8 @@ def cpuusage(request, build_id):
- 
- def recipes(request, build_id):
-     template = 'recipes.html'
--    mandatory_parameters = { 'count': 100,  'page' : 1, 'orderby':'name:+'};
-+    (pagesize, orderby) = _get_parameters_values(request, 100, 'name:+')
-+    mandatory_parameters = { 'count': pagesize,  'page' : 1, 'orderby' : orderby }
-     retval = _verify_parameters( request.GET, mandatory_parameters )
-     if retval:
-         return _redirect_parameters( 'recipes', request.GET, mandatory_parameters, build_id = build_id)
-@@ -1108,7 +1133,7 @@ def recipes(request, build_id):
-     queryset = Recipe.objects.filter(layer_version__id__in=Layer_Version.objects.filter(build=build_id))
-     queryset = _get_queryset(Recipe, queryset, filter_string, search_term, ordering_string, 'name')
- 
--    recipes = _build_page_range(Paginator(queryset, request.GET.get('count', 100)),request.GET.get('page', 1))
-+    recipes = _build_page_range(Paginator(queryset, pagesize),request.GET.get('page', 1))
- 
-     # prefetch the forward and reverse recipe dependencies
-     deps = { }; revs = { }
-@@ -1207,8 +1232,9 @@ def recipes(request, build_id):
-             ]
-         }
- 
--    return render(request, template, context)
+diff --git a/lib/toaster/bldcontrol/bbcontroller.py b/lib/toaster/bldcontrol/bbcontroller.py
+index bf9cdf9..6812ae3 100644
+--- a/lib/toaster/bldcontrol/bbcontroller.py
++++ b/lib/toaster/bldcontrol/bbcontroller.py
+@@ -26,10 +26,6 @@ import re
+ from django.db import transaction
+ from django.db.models import Q
+ from bldcontrol.models import BuildEnvironment, BRLayer, BRVariable, BRTarget, BRBitbake
+-import subprocess
 -
-+    response = render(request, template, context)
-+    _save_parameters_cookies(response, pagesize, orderby, request)
-+    return response
- 
- def configuration(request, build_id):
-     template = 'configuration.html'
-@@ -1247,7 +1273,8 @@ def configuration(request, build_id):
- 
- def configvars(request, build_id):
-     template = 'configvars.html'
--    mandatory_parameters = { 'count': 100,  'page' : 1, 'orderby':'variable_name:+', 'filter':'description__regex:.+'};
-+    (pagesize, orderby) = _get_parameters_values(request, 100, 'variable_name:+')
-+    mandatory_parameters = { 'count': pagesize,  'page' : 1, 'orderby' : orderby, 'filter' : 'description__regex:.+' }
-     retval = _verify_parameters( request.GET, mandatory_parameters )
-     (filter_string, search_term, ordering_string) = _search_tuple(request, Variable)
-     if retval:
-@@ -1262,7 +1289,7 @@ def configvars(request, build_id):
-     # remove records where the value is empty AND there are no history files
-     queryset = queryset.exclude(variable_value='',vhistory__file_name__isnull=True)
- 
--    variables = _build_page_range(Paginator(queryset, request.GET.get('count', 50)), request.GET.get('page', 1))
-+    variables = _build_page_range(Paginator(queryset, pagesize), request.GET.get('page', 1))
- 
-     # show all matching files (not just the last one)
-     file_filter= search_term + ":"
-@@ -1328,12 +1355,14 @@ def configvars(request, build_id):
-                 ],
-             }
- 
--    return render(request, template, context)
+-from toastermain import settings
 -
-+    response = render(request, template, context)
-+    _save_parameters_cookies(response, pagesize, orderby, request)
-+    return response
  
- def bpackage(request, build_id):
-     template = 'bpackage.html'
--    mandatory_parameters = { 'count': 100,  'page' : 1, 'orderby':'name:+'};
-+    (pagesize, orderby) = _get_parameters_values(request, 100, 'name:+')
-+    mandatory_parameters = { 'count' : pagesize,  'page' : 1, 'orderby' : orderby }
-     retval = _verify_parameters( request.GET, mandatory_parameters )
-     if retval:
-         return _redirect_parameters( 'packages', request.GET, mandatory_parameters, build_id = build_id)
-@@ -1341,7 +1370,7 @@ def bpackage(request, build_id):
-     queryset = Package.objects.filter(build = build_id).filter(size__gte=0)
-     queryset = _get_queryset(Package, queryset, filter_string, search_term, ordering_string, 'name')
+ # load Bitbake components
+ path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+@@ -72,6 +68,10 @@ def getBuildEnvironmentController(**kwargs):
  
--    packages = _build_page_range(Paginator(queryset, request.GET.get('count', 100)),request.GET.get('page', 1))
-+    packages = _build_page_range(Paginator(queryset, pagesize),request.GET.get('page', 1))
- 
-     context = {
-         'objectname': 'packages built',
-@@ -1421,7 +1450,9 @@ def bpackage(request, build_id):
-             ]
-         }
- 
--    return render(request, template, context)
-+    response = render(request, template, context)
-+    _save_parameters_cookies(response, pagesize, orderby, request)
-+    return response
- 
- def bfile(request, build_id, package_id):
-     template = 'bfile.html'
-@@ -1576,7 +1607,8 @@ def package_built_detail(request, build_id, package_id):
- 
-     # follow convention for pagination w/ search although not used for this view
-     queryset = Package_File.objects.filter(package_id__exact=package_id)
--    mandatory_parameters = { 'count': 25,  'page' : 1, 'orderby':'path:+'};
-+    (pagesize, orderby) = _get_parameters_values(request, 25, 'path:+')
-+    mandatory_parameters = { 'count': pagesize,  'page' : 1, 'orderby' : orderby }
-     retval = _verify_parameters( request.GET, mandatory_parameters )
-     if retval:
-         return _redirect_parameters( 'package_built_detail', request.GET, mandatory_parameters, build_id = build_id, package_id = package_id)
-@@ -1607,7 +1639,10 @@ def package_built_detail(request, build_id, package_id):
-     }
-     if paths.all().count() < 2:
-         context['disable_sort'] = True;
--    return render(request, template, context)
+         The return object MUST always be a BuildEnvironmentController.
+     """
 +
-+    response = render(request, template, context)
-+    _save_parameters_cookies(response, pagesize, orderby, request)
-+    return response
++    from localhostbecontroller import LocalhostBEController
++    from sshbecontroller    import SSHBEController
++
+     be = BuildEnvironment.objects.filter(Q(**kwargs))[0]
+     if be.betype == BuildEnvironment.TYPE_LOCAL:
+         return LocalhostBEController(be)
+@@ -81,6 +81,13 @@ def getBuildEnvironmentController(**kwargs):
+         raise Exception("FIXME: Implement BEC for type %s" % str(be.betype))
  
- def package_built_dependencies(request, build_id, package_id):
-     template = "package_built_dependencies.html"
-@@ -1632,9 +1667,9 @@ def package_included_detail(request, build_id, target_id, package_id):
-     if Build.objects.filter(pk=build_id).count() == 0 :
-         return redirect(builds)
  
++def _getgitcheckoutdirectoryname(url):
++    """ Utility that returns the last component of a git path as directory
++    """
++    import re
++    components = re.split(r'[:\.\/]', url)
++    return components[-2] if components[-1] == "git" else components[-1]
++
+ 
+ class BuildEnvironmentController(object):
+     """ BuildEnvironmentController (BEC) is the abstract class that defines the operations that MUST
+@@ -110,6 +117,7 @@ class BuildEnvironmentController(object):
+         self.be = be
+         self.connection = None
+ 
++
+     def startBBServer(self):
+         """ Starts a  BB server with Toaster toasterui set up to record the builds, an no controlling UI.
+             After this method executes, self.be bbaddress/bbport MUST point to a running and free server,
+@@ -173,157 +181,3 @@ class ShellCmdException(Exception):
+ class BuildSetupException(Exception):
+     pass
+ 
+-class LocalhostBEController(BuildEnvironmentController):
+-    """ Implementation of the BuildEnvironmentController for the localhost;
+-        this controller manages the default build directory,
+-        the server setup and system start and stop for the localhost-type build environment
 -
-     # follow convention for pagination w/ search although not used for this view
--    mandatory_parameters = { 'count': 25,  'page' : 1, 'orderby':'path:+'};
-+    (pagesize, orderby) = _get_parameters_values(request, 25, 'path:+')
-+    mandatory_parameters = { 'count': pagesize,  'page' : 1, 'orderby' : orderby }
-     retval = _verify_parameters( request.GET, mandatory_parameters )
-     if retval:
-         return _redirect_parameters( 'package_included_detail', request.GET, mandatory_parameters, build_id = build_id, target_id = target_id, package_id = package_id)
-@@ -1669,8 +1704,10 @@ def package_included_detail(request, build_id, target_id, package_id):
-             ]
-     }
-     if paths.all().count() < 2:
--        context['disable_sort'] = True;
--    return render(request, template, context)
-+        context['disable_sort'] = True
-+    response = render(request, template, context)
-+    _save_parameters_cookies(response, pagesize, orderby, request)
-+    return response
+-    """
+-
+-    def __init__(self, be):
+-        super(LocalhostBEController, self).__init__(be)
+-        self.dburl = settings.getDATABASE_URL()
+-        self.pokydirname = None
+-
+-    def _shellcmd(self, command, cwd = None):
+-        if cwd is None:
+-            cwd = self.be.sourcedir
+-
+-        p = subprocess.Popen(command, cwd = cwd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+-        (out,err) = p.communicate()
+-        if p.returncode:
+-            if len(err) == 0:
+-                err = "command: %s \n%s" % (command, out)
+-            else:
+-                err = "command: %s \n%s" % (command, err)
+-            raise ShellCmdException(err)
+-        else:
+-            return out
+-
+-    def _createdirpath(self, path):
+-        from os.path import dirname as DN
+-        if not os.path.exists(DN(path)):
+-            self._createdirpath(DN(path))
+-        if not os.path.exists(path):
+-            os.mkdir(path, 0755)
+-
+-    def _startBE(self):
+-        assert self.pokydirname and os.path.exists(self.pokydirname)
+-        self._createdirpath(self.be.builddir)
+-        self._shellcmd("bash -c \"source %s/oe-init-build-env %s\"" % (self.pokydirname, self.be.builddir))
+-
+-    def startBBServer(self):
+-        assert self.pokydirname and os.path.exists(self.pokydirname)
+-        print self._shellcmd("bash -c \"source %s/oe-init-build-env %s && DATABASE_URL=%s source toaster start noweb && sleep 1\"" % (self.pokydirname, self.be.builddir, self.dburl))
+-        # FIXME unfortunate sleep 1 - we need to make sure that bbserver is started and the toaster ui is connected
+-        # but since they start async without any return, we just wait a bit
+-        print "Started server"
+-        assert self.be.sourcedir and os.path.exists(self.be.builddir)
+-        self.be.bbaddress = "localhost"
+-        self.be.bbport = "8200"
+-        self.be.bbstate = BuildEnvironment.SERVER_STARTED
+-        self.be.save()
+-
+-    def stopBBServer(self):
+-        assert self.be.sourcedir
+-        print self._shellcmd("bash -c \"source %s/oe-init-build-env %s && %s source toaster stop\"" %
+-            (self.be.sourcedir, self.be.builddir, (lambda: "" if self.be.bbtoken is None else "BBTOKEN=%s" % self.be.bbtoken)()))
+-        self.be.bbstate = BuildEnvironment.SERVER_STOPPED
+-        self.be.save()
+-        print "Stopped server"
+-
+-    def setLayers(self, bitbakes, layers):
+-        """ a word of attention: by convention, the first layer for any build will be poky! """
+-
+-        assert self.be.sourcedir is not None
+-        assert len(bitbakes) == 1
+-        # set layers in the layersource
+-
+-        # 1. get a list of repos, and map dirpaths for each layer
+-        gitrepos = {}
+-        gitrepos[bitbakes[0].giturl] = []
+-        gitrepos[bitbakes[0].giturl].append( ("bitbake", bitbakes[0].dirpath, bitbakes[0].commit) )
+-        
+-        for layer in layers:
+-            # we don't process local URLs
+-            if layer.giturl.startswith("file://"):
+-                continue
+-            if not layer.giturl in gitrepos:
+-                gitrepos[layer.giturl] = []
+-            gitrepos[layer.giturl].append( (layer.name, layer.dirpath, layer.commit))
+-        for giturl in gitrepos.keys():
+-            commitid = gitrepos[giturl][0][2]
+-            for e in gitrepos[giturl]:
+-                if commitid != e[2]:
+-                    raise BuildSetupException("More than one commit per git url, unsupported configuration")
+-
+-        def _getgitdirectoryname(url):
+-            import re
+-            components = re.split(r'[:\.\/]', url)
+-            return components[-2] if components[-1] == "git" else components[-1]
+-
+-        layerlist = []
+-
+-        # 2. checkout the repositories
+-        for giturl in gitrepos.keys():
+-            localdirname = os.path.join(self.be.sourcedir, _getgitdirectoryname(giturl))
+-            print "DEBUG: giturl ", giturl ,"checking out in current directory", localdirname
+-
+-            # make sure our directory is a git repository
+-            if os.path.exists(localdirname):
+-                if not giturl in self._shellcmd("git remote -v", localdirname):
+-                    raise BuildSetupException("Existing git repository at %s, but with different remotes (not '%s'). Aborting." % (localdirname, giturl))
+-            else:
+-                self._shellcmd("git clone \"%s\" \"%s\"" % (giturl, localdirname))
+-            # checkout the needed commit
+-            commit = gitrepos[giturl][0][2]
+-
+-            # branch magic name "HEAD" will inhibit checkout
+-            if commit != "HEAD":
+-                print "DEBUG: checking out commit ", commit, "to", localdirname
+-                self._shellcmd("git fetch --all && git checkout \"%s\"" % commit , localdirname)
+-
+-            # take the localdirname as poky dir if we can find the oe-init-build-env
+-            if self.pokydirname is None and os.path.exists(os.path.join(localdirname, "oe-init-build-env")):
+-                print "DEBUG: selected poky dir name", localdirname
+-                self.pokydirname = localdirname
+-
+-            # verify our repositories
+-            for name, dirpath, commit in gitrepos[giturl]:
+-                localdirpath = os.path.join(localdirname, dirpath)
+-                if not os.path.exists(localdirpath):
+-                    raise BuildSetupException("Cannot find layer git path '%s' in checked out repository '%s:%s'. Aborting." % (localdirpath, giturl, commit))
+-
+-                if name != "bitbake":
+-                    layerlist.append(localdirpath)
+-
+-        print "DEBUG: current layer list ", layerlist
+-
+-        # 3. configure the build environment, so we have a conf/bblayers.conf
+-        assert self.pokydirname is not None
+-        self._startBE()
+-
+-        # 4. update the bblayers.conf
+-        bblayerconf = os.path.join(self.be.builddir, "conf/bblayers.conf")
+-        if not os.path.exists(bblayerconf):
+-            raise BuildSetupException("BE is not consistent: bblayers.conf file missing at %s" % bblayerconf)
+-
+-        conflines = open(bblayerconf, "r").readlines()
+-
+-        bblayerconffile = open(bblayerconf, "w")
+-        for i in xrange(len(conflines)):
+-            if conflines[i].startswith("# line added by toaster"):
+-                i += 2
+-            else:
+-                bblayerconffile.write(conflines[i])
+-
+-        bblayerconffile.write("\n# line added by toaster build control\nBBLAYERS = \"" + " ".join(layerlist) + "\"")
+-        bblayerconffile.close()
+-
+-        return True
+-
+-    def release(self):
+-        assert self.be.sourcedir and os.path.exists(self.be.builddir)
+-        import shutil
+-        shutil.rmtree(os.path.join(self.be.sourcedir, "build"))
+-        assert not os.path.exists(self.be.builddir)
+diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
+new file mode 100644
+index 0000000..fe7fd81
+--- /dev/null
++++ b/lib/toaster/bldcontrol/localhostbecontroller.py
+@@ -0,0 +1,191 @@
++#
++# ex:ts=4:sw=4:sts=4:et
++# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
++#
++# BitBake Toaster Implementation
++#
++# Copyright (C) 2014        Intel Corporation
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License version 2 as
++# published by the Free Software Foundation.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License along
++# with this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++
++
++import os
++import sys
++import re
++from django.db import transaction
++from django.db.models import Q
++from bldcontrol.models import BuildEnvironment, BRLayer, BRVariable, BRTarget, BRBitbake
++import subprocess
++
++from toastermain import settings
++
++from bbcontroller import BuildEnvironmentController, ShellCmdException, BuildSetupException, _getgitcheckoutdirectoryname
++
++class LocalhostBEController(BuildEnvironmentController):
++    """ Implementation of the BuildEnvironmentController for the localhost;
++        this controller manages the default build directory,
++        the server setup and system start and stop for the localhost-type build environment
++
++    """
++
++    def __init__(self, be):
++        super(LocalhostBEController, self).__init__(be)
++        self.dburl = settings.getDATABASE_URL()
++        self.pokydirname = None
++        self.islayerset = False
++
++    def _shellcmd(self, command, cwd = None):
++        if cwd is None:
++            cwd = self.be.sourcedir
++
++        p = subprocess.Popen(command, cwd = cwd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
++        (out,err) = p.communicate()
++        if p.returncode:
++            if len(err) == 0:
++                err = "command: %s \n%s" % (command, out)
++            else:
++                err = "command: %s \n%s" % (command, err)
++            raise ShellCmdException(err)
++        else:
++            return out
++
++    def _createdirpath(self, path):
++        from os.path import dirname as DN
++        if path == "":
++            raise Exception("Invalid path creation specified.")
++        if not os.path.exists(DN(path)):
++            self._createdirpath(DN(path))
++        if not os.path.exists(path):
++            os.mkdir(path, 0755)
++
++    def _setupBE(self):
++        assert self.pokydirname and os.path.exists(self.pokydirname)
++        self._createdirpath(self.be.builddir)
++        self._shellcmd("bash -c \"source %s/oe-init-build-env %s\"" % (self.pokydirname, self.be.builddir))
++
++    def startBBServer(self):
++        assert self.pokydirname and os.path.exists(self.pokydirname)
++        assert self.islayerset
++        print("DEBUG: executing ", "bash -c \"source %s/oe-init-build-env %s && DATABASE_URL=%s source toaster start noweb && sleep 1\"" % (self.pokydirname, self.be.builddir, self.dburl))
++        print self._shellcmd("bash -c \"source %s/oe-init-build-env %s && DATABASE_URL=%s source toaster start noweb && sleep 1\"" % (self.pokydirname, self.be.builddir, self.dburl))
++        # FIXME unfortunate sleep 1 - we need to make sure that bbserver is started and the toaster ui is connected
++        # but since they start async without any return, we just wait a bit
++        print "Started server"
++        assert self.be.sourcedir and os.path.exists(self.be.builddir)
++        self.be.bbaddress = "localhost"
++        self.be.bbport = "8200"
++        self.be.bbstate = BuildEnvironment.SERVER_STARTED
++        self.be.save()
++
++    def stopBBServer(self):
++        assert self.pokydirname and os.path.exists(self.pokydirname)
++        assert self.islayerset
++        print self._shellcmd("bash -c \"source %s/oe-init-build-env %s && %s source toaster stop\"" %
++            (self.pokydirname, self.be.builddir, (lambda: "" if self.be.bbtoken is None else "BBTOKEN=%s" % self.be.bbtoken)()))
++        self.be.bbstate = BuildEnvironment.SERVER_STOPPED
++        self.be.save()
++        print "Stopped server"
++
++    def setLayers(self, bitbakes, layers):
++        """ a word of attention: by convention, the first layer for any build will be poky! """
++
++        assert self.be.sourcedir is not None
++        assert len(bitbakes) == 1
++        # set layers in the layersource
++
++        # 1. get a list of repos, and map dirpaths for each layer
++        gitrepos = {}
++        gitrepos[bitbakes[0].giturl] = []
++        gitrepos[bitbakes[0].giturl].append( ("bitbake", bitbakes[0].dirpath, bitbakes[0].commit) )
++        
++        for layer in layers:
++            # we don't process local URLs
++            if layer.giturl.startswith("file://"):
++                continue
++            if not layer.giturl in gitrepos:
++                gitrepos[layer.giturl] = []
++            gitrepos[layer.giturl].append( (layer.name, layer.dirpath, layer.commit))
++        for giturl in gitrepos.keys():
++            commitid = gitrepos[giturl][0][2]
++            for e in gitrepos[giturl]:
++                if commitid != e[2]:
++                    raise BuildSetupException("More than one commit per git url, unsupported configuration")
++
++
++        layerlist = []
++
++        # 2. checkout the repositories
++        for giturl in gitrepos.keys():
++            localdirname = os.path.join(self.be.sourcedir, _getgitcheckoutdirectoryname(giturl))
++            print "DEBUG: giturl ", giturl ,"checking out in current directory", localdirname
++
++            # make sure our directory is a git repository
++            if os.path.exists(localdirname):
++                if not giturl in self._shellcmd("git remote -v", localdirname):
++                    raise BuildSetupException("Existing git repository at %s, but with different remotes (not '%s'). Aborting." % (localdirname, giturl))
++            else:
++                self._shellcmd("git clone \"%s\" \"%s\"" % (giturl, localdirname))
++            # checkout the needed commit
++            commit = gitrepos[giturl][0][2]
++
++            # branch magic name "HEAD" will inhibit checkout
++            if commit != "HEAD":
++                print "DEBUG: checking out commit ", commit, "to", localdirname
++                self._shellcmd("git fetch --all && git checkout \"%s\"" % commit , localdirname)
++
++            # take the localdirname as poky dir if we can find the oe-init-build-env
++            if self.pokydirname is None and os.path.exists(os.path.join(localdirname, "oe-init-build-env")):
++                print "DEBUG: selected poky dir name", localdirname
++                self.pokydirname = localdirname
++
++            # verify our repositories
++            for name, dirpath, commit in gitrepos[giturl]:
++                localdirpath = os.path.join(localdirname, dirpath)
++                if not os.path.exists(localdirpath):
++                    raise BuildSetupException("Cannot find layer git path '%s' in checked out repository '%s:%s'. Aborting." % (localdirpath, giturl, commit))
++
++                if name != "bitbake":
++                    layerlist.append(localdirpath)
++
++        print "DEBUG: current layer list ", layerlist
++
++        # 3. configure the build environment, so we have a conf/bblayers.conf
++        assert self.pokydirname is not None
++        self._setupBE()
++
++        # 4. update the bblayers.conf
++        bblayerconf = os.path.join(self.be.builddir, "conf/bblayers.conf")
++        if not os.path.exists(bblayerconf):
++            raise BuildSetupException("BE is not consistent: bblayers.conf file missing at %s" % bblayerconf)
++
++        conflines = open(bblayerconf, "r").readlines()
++
++        bblayerconffile = open(bblayerconf, "w")
++        for i in xrange(len(conflines)):
++            if conflines[i].startswith("# line added by toaster"):
++                i += 2
++            else:
++                bblayerconffile.write(conflines[i])
++
++        bblayerconffile.write("\n# line added by toaster build control\nBBLAYERS = \"" + " ".join(layerlist) + "\"")
++        bblayerconffile.close()
++
++        self.islayerset = True
++        return True
++
++    def release(self):
++        assert self.be.sourcedir and os.path.exists(self.be.builddir)
++        import shutil
++        shutil.rmtree(os.path.join(self.be.sourcedir, "build"))
++        assert not os.path.exists(self.be.builddir)
+diff --git a/lib/toaster/bldcontrol/sshbecontroller.py b/lib/toaster/bldcontrol/sshbecontroller.py
+new file mode 100644
+index 0000000..6467495
+--- /dev/null
++++ b/lib/toaster/bldcontrol/sshbecontroller.py
+@@ -0,0 +1,193 @@
++#
++# ex:ts=4:sw=4:sts=4:et
++# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
++#
++# BitBake Toaster Implementation
++#
++# Copyright (C) 2014        Intel Corporation
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License version 2 as
++# published by the Free Software Foundation.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License along
++# with this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++
++
++import sys
++import re
++from django.db import transaction
++from django.db.models import Q
++from bldcontrol.models import BuildEnvironment, BRLayer, BRVariable, BRTarget, BRBitbake
++import subprocess
++
++from toastermain import settings
++
++from bbcontroller import BuildEnvironmentController, ShellCmdException, BuildSetupException, _getgitcheckoutdirectoryname
++
++def DN(path):
++    return "/".join(path.split("/")[0:-1])
++
++class SSHBEController(BuildEnvironmentController):
++    """ Implementation of the BuildEnvironmentController for the localhost;
++        this controller manages the default build directory,
++        the server setup and system start and stop for the localhost-type build environment
++
++    """
++
++    def __init__(self, be):
++        super(SSHBEController, self).__init__(be)
++        self.dburl = settings.getDATABASE_URL()
++        self.pokydirname = None
++        self.islayerset = False
++
++    def _shellcmd(self, command, cwd = None):
++        if cwd is None:
++            cwd = self.be.sourcedir
++
++        p = subprocess.Popen("ssh %s 'cd %s && %s'" % (self.be.address, cwd, command), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
++        (out,err) = p.communicate()
++        if p.returncode:
++            if len(err) == 0:
++                err = "command: %s \n%s" % (command, out)
++            else:
++                err = "command: %s \n%s" % (command, err)
++            raise ShellCmdException(err)
++        else:
++            return out.strip()
++
++    def _pathexists(self, path):
++        try:
++            self._shellcmd("test -e \"%s\"" % path)
++            return True
++        except ShellCmdException as e:
++            return False
++
++    def _pathcreate(self, path):
++        self._shellcmd("mkdir -p \"%s\"" % path)
++
++    def _setupBE(self):
++        assert self.pokydirname and self._pathexists(self.pokydirname)
++        self._pathcreate(self.be.builddir)
++        self._shellcmd("bash -c \"source %s/oe-init-build-env %s\"" % (self.pokydirname, self.be.builddir))
++
++    def startBBServer(self):
++        assert self.pokydirname and self._pathexists(self.pokydirname)
++        assert self.islayerset
++        print self._shellcmd("bash -c \"source %s/oe-init-build-env %s && DATABASE_URL=%s source toaster start noweb && sleep 1\"" % (self.pokydirname, self.be.builddir, self.dburl))
++        # FIXME unfortunate sleep 1 - we need to make sure that bbserver is started and the toaster ui is connected
++        # but since they start async without any return, we just wait a bit
++        print "Started server"
++        assert self.be.sourcedir and self._pathexists(self.be.builddir)
++        self.be.bbaddress = self.be.address.split("@")[-1]
++        self.be.bbport = "8200"
++        self.be.bbstate = BuildEnvironment.SERVER_STARTED
++        self.be.save()
++
++    def stopBBServer(self):
++        assert self.pokydirname and self._pathexists(self.pokydirname)
++        assert self.islayerset
++        print self._shellcmd("bash -c \"source %s/oe-init-build-env %s && %s source toaster stop\"" %
++            (self.pokydirname, self.be.builddir, (lambda: "" if self.be.bbtoken is None else "BBTOKEN=%s" % self.be.bbtoken)()))
++        self.be.bbstate = BuildEnvironment.SERVER_STOPPED
++        self.be.save()
++        print "Stopped server"
++
++    def setLayers(self, bitbakes, layers):
++        """ a word of attention: by convention, the first layer for any build will be poky! """
++
++        assert self.be.sourcedir is not None
++        assert len(bitbakes) == 1
++        # set layers in the layersource
++
++        # 1. get a list of repos, and map dirpaths for each layer
++        gitrepos = {}
++        gitrepos[bitbakes[0].giturl] = []
++        gitrepos[bitbakes[0].giturl].append( ("bitbake", bitbakes[0].dirpath, bitbakes[0].commit) )
++        
++        for layer in layers:
++            # we don't process local URLs
++            if layer.giturl.startswith("file://"):
++                continue
++            if not layer.giturl in gitrepos:
++                gitrepos[layer.giturl] = []
++            gitrepos[layer.giturl].append( (layer.name, layer.dirpath, layer.commit))
++        for giturl in gitrepos.keys():
++            commitid = gitrepos[giturl][0][2]
++            for e in gitrepos[giturl]:
++                if commitid != e[2]:
++                    raise BuildSetupException("More than one commit per git url, unsupported configuration")
++
++        layerlist = []
++
++        # 2. checkout the repositories
++        for giturl in gitrepos.keys():
++            import os
++            localdirname = os.path.join(self.be.sourcedir, _getgitcheckoutdirectoryname(giturl))
++            print "DEBUG: giturl ", giturl ,"checking out in current directory", localdirname
++
++            # make sure our directory is a git repository
++            if self._pathexists(localdirname):
++                if not giturl in self._shellcmd("git remote -v", localdirname):
++                    raise BuildSetupException("Existing git repository at %s, but with different remotes (not '%s'). Aborting." % (localdirname, giturl))
++            else:
++                self._shellcmd("git clone \"%s\" \"%s\"" % (giturl, localdirname))
++            # checkout the needed commit
++            commit = gitrepos[giturl][0][2]
++
++            # branch magic name "HEAD" will inhibit checkout
++            if commit != "HEAD":
++                print "DEBUG: checking out commit ", commit, "to", localdirname
++                self._shellcmd("git fetch --all && git checkout \"%s\"" % commit , localdirname)
++
++            # take the localdirname as poky dir if we can find the oe-init-build-env
++            if self.pokydirname is None and self._pathexists(os.path.join(localdirname, "oe-init-build-env")):
++                print "DEBUG: selected poky dir name", localdirname
++                self.pokydirname = localdirname
++
++            # verify our repositories
++            for name, dirpath, commit in gitrepos[giturl]:
++                localdirpath = os.path.join(localdirname, dirpath)
++                if not self._pathexists(localdirpath):
++                    raise BuildSetupException("Cannot find layer git path '%s' in checked out repository '%s:%s'. Aborting." % (localdirpath, giturl, commit))
++
++                if name != "bitbake":
++                    layerlist.append(localdirpath)
++
++        print "DEBUG: current layer list ", layerlist
++
++        # 3. configure the build environment, so we have a conf/bblayers.conf
++        assert self.pokydirname is not None
++        self._setupBE()
++
++        # 4. update the bblayers.conf
++        bblayerconf = os.path.join(self.be.builddir, "conf/bblayers.conf")
++        if not self._pathexists(bblayerconf):
++            raise BuildSetupException("BE is not consistent: bblayers.conf file missing at %s" % bblayerconf)
++
++        conflines = open(bblayerconf, "r").readlines()
++
++        bblayerconffile = open(bblayerconf, "w")
++        for i in xrange(len(conflines)):
++            if conflines[i].startswith("# line added by toaster"):
++                i += 2
++            else:
++                bblayerconffile.write(conflines[i])
++
++        bblayerconffile.write("\n# line added by toaster build control\nBBLAYERS = \"" + " ".join(layerlist) + "\"")
++        bblayerconffile.close()
++
++        self.islayerset = True
++        return True
++
++    def release(self):
++        assert self.be.sourcedir and self._pathexists(self.be.builddir)
++        import shutil
++        shutil.rmtree(os.path.join(self.be.sourcedir, "build"))
++        assert not self._pathexists(self.be.builddir)
+diff --git a/lib/toaster/bldcontrol/tests.py b/lib/toaster/bldcontrol/tests.py
+index ebe477d..4577c3f 100644
+--- a/lib/toaster/bldcontrol/tests.py
++++ b/lib/toaster/bldcontrol/tests.py
+@@ -7,46 +7,114 @@ Replace this with more appropriate tests for your application.
  
- def package_included_dependencies(request, build_id, target_id, package_id):
-     template = "package_included_dependencies.html"
-@@ -1699,7 +1736,8 @@ def package_included_reverse_dependencies(request, build_id, target_id, package_
-     if Build.objects.filter(pk=build_id).count() == 0 :
-         return redirect(builds)
+ from django.test import TestCase
  
--    mandatory_parameters = { 'count': 25,  'page' : 1, 'orderby':'package__name:+'};
-+    (pagesize, orderby) = _get_parameters_values(request, 25, 'package__name:+')
-+    mandatory_parameters = { 'count': pagesize,  'page' : 1, 'orderby': orderby }
-     retval = _verify_parameters( request.GET, mandatory_parameters )
-     if retval:
-         return _redirect_parameters( 'package_included_reverse_dependencies', request.GET, mandatory_parameters, build_id = build_id, target_id = target_id, package_id = package_id)
-@@ -1741,8 +1779,10 @@ def package_included_reverse_dependencies(request, build_id, target_id, package_
-             ]
-     }
-     if objects.all().count() < 2:
--        context['disable_sort'] = True;
--    return render(request, template, context)
-+        context['disable_sort'] = True
-+    response = render(request, template, context)
-+    _save_parameters_cookies(response, pagesize, orderby, request)
-+    return response
+-from bldcontrol.bbcontroller import LocalhostBEController, BitbakeController
++from bldcontrol.bbcontroller import BitbakeController
++from bldcontrol.localhostbecontroller import LocalhostBEController
++from bldcontrol.sshbecontroller import SSHBEController
+ from bldcontrol.models import BuildEnvironment, BuildRequest
+ from bldcontrol.management.commands.runbuilds import Command
  
- def image_information_dir(request, build_id, target_id, packagefile_id):
-     # stubbed for now
+ import socket
+ import subprocess
+ 
+-class LocalhostBEControllerTests(TestCase):
+-    def test_StartAndStopServer(self):
+-        obe = BuildEnvironment.objects.create(lock = BuildEnvironment.LOCK_FREE, betype = BuildEnvironment.TYPE_LOCAL)
+-        lbc = LocalhostBEController(obe)
++# standard poky data hardcoded for testing
++BITBAKE_LAYERS = [type('bitbake_info', (object,), { "giturl": "git://git.yoctoproject.org/poky.git", "dirpath": "", "commit": "HEAD"})]
++POKY_LAYERS = [
++    type('poky_info', (object,), { "name": "meta", "giturl": "git://git.yoctoproject.org/poky.git", "dirpath": "meta", "commit": "HEAD"}),
++    type('poky_info', (object,), { "name": "meta-yocto", "giturl": "git://git.yoctoproject.org/poky.git", "dirpath": "meta-yocto", "commit": "HEAD"}),
++    type('poky_info', (object,), { "name": "meta-yocto-bsp", "giturl": "git://git.yoctoproject.org/poky.git", "dirpath": "meta-yocto-bsp", "commit": "HEAD"}),
++    ]
++
+ 
+-        # test start server and stop
+-        self.assertTrue(socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect_ex(('localhost', 8200)), "Port already occupied")
+-        lbc.startBBServer()
+-        self.assertFalse(socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect_ex(('localhost', 8200)), "Server not answering")
+ 
+-        lbc.stopBBServer()
+-        self.assertTrue(socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect_ex(('localhost', 8200)), "Server not stopped")
++# we have an abstract test class designed to ensure that the controllers use a single interface
++# specific controller tests only need to override the _getBuildEnvironment() method
+ 
+-        # clean up
+-        import subprocess
+-        out, err = subprocess.Popen("netstat  -tapn 2>/dev/null | grep 8200 | awk '{print $7}' | sort -fu | cut -d \"/\" -f 1 | grep -v -- - | tee /dev/fd/2 | xargs -r kill", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
++class BEControllerTests(object):
+ 
++    def _serverForceStop(self, bc):
++        err = bc._shellcmd("netstat  -tapn 2>/dev/null | grep 8200 | awk '{print $7}' | sort -fu | cut -d \"/\" -f 1 | grep -v -- - | tee /dev/fd/2 | xargs -r kill")
+         self.assertTrue(err == '', "bitbake server pid %s not stopped" % err)
+ 
+-        obe = BuildEnvironment.objects.create(lock = BuildEnvironment.LOCK_FREE, betype = BuildEnvironment.TYPE_LOCAL)
+-        lbc = LocalhostBEController(obe)
++    def test_serverStartAndStop(self):
++        obe =  self._getBuildEnvironment()
++        bc = self._getBEController(obe)
++        bc.setLayers(BITBAKE_LAYERS, POKY_LAYERS) # setting layers, skip any layer info
++
++        hostname = self.test_address.split("@")[-1]
+ 
+-        bbc = lbc.getBBController()
++        # test start server and stop
++        self.assertTrue(socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect_ex((hostname, 8200)), "Port already occupied")
++        bc.startBBServer()
++        self.assertFalse(socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect_ex((hostname, 8200)), "Server not answering")
++
++        bc.stopBBServer()
++        self.assertTrue(socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect_ex((hostname, 8200)), "Server not stopped")
++
++        self._serverForceStop(bc)
++
++    def test_getBBController(self):
++        obe = self._getBuildEnvironment()
++        bc = self._getBEController(obe)
++        bc.setLayers(BITBAKE_LAYERS, POKY_LAYERS) # setting layers, skip any layer info
++
++        bbc = bc.getBBController()
+         self.assertTrue(isinstance(bbc, BitbakeController))
+-        # test set variable
++        # test set variable, use no build marker -1 for BR value
+         try:
+-            bbc.setVariable
++            bbc.setVariable("TOASTER_BRBE", "%d:%d" % (-1, obe.pk))
+         except Exception as e :
+             self.fail("setVariable raised %s", e)
+ 
+-        lbc.stopBBServer()
+-        out, err = subprocess.Popen("netstat  -tapn 2>/dev/null | grep 8200 | awk '{print $7}' | sort -fu | cut -d \"/\" -f 1 | grep -v -- - | tee /dev/fd/2 | xargs -r kill", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+-        self.assertTrue(err == '', "bitbake server pid %s not stopped" % err)
++        bc.stopBBServer()
++
++        self._serverForceStop(bc)
++
++class LocalhostBEControllerTests(TestCase, BEControllerTests):
++    def __init__(self, *args):
++        super(LocalhostBEControllerTests, self).__init__(*args)
++        # hardcoded for Alex's machine; since the localhost BE is machine-dependent,
++        # I found no good way to abstractize this
++        self.test_sourcedir = "/home/ddalex/ssd/yocto"
++        self.test_builddir = "/home/ddalex/ssd/yocto/build"
++        self.test_address = "localhost"
++
++    def _getBuildEnvironment(self):
++        return BuildEnvironment.objects.create(
++                lock = BuildEnvironment.LOCK_FREE,
++                betype = BuildEnvironment.TYPE_LOCAL,
++                address = self.test_address,
++                sourcedir = self.test_sourcedir,
++                builddir = self.test_builddir )
++
++    def _getBEController(self, obe):
++        return LocalhostBEController(obe)
++
++class SSHBEControllerTests(TestCase, BEControllerTests):
++    def __init__(self, *args):
++        super(SSHBEControllerTests, self).__init__(*args)
++        self.test_address = "ddalex-desktop.local"
++        # hardcoded for ddalex-desktop.local machine; since the localhost BE is machine-dependent,
++        # I found no good way to abstractize this
++        self.test_sourcedir = "/home/ddalex/ssd/yocto"
++        self.test_builddir = "/home/ddalex/ssd/yocto/build"
++
++    def _getBuildEnvironment(self):
++        return BuildEnvironment.objects.create(
++                lock = BuildEnvironment.LOCK_FREE,
++                betype = BuildEnvironment.TYPE_SSH,
++                address = self.test_address,
++                sourcedir = self.test_sourcedir,
++                builddir = self.test_builddir )
++
++    def _getBEController(self, obe):
++        return SSHBEController(obe)
++
++    def test_pathExists(self):
++        obe = BuildEnvironment.objects.create(betype = BuildEnvironment.TYPE_SSH, address= self.test_address)
++        sbc = SSHBEController(obe)
++        self.assertTrue(sbc._pathexists("/"))
++        self.assertFalse(sbc._pathexists("/.deadbeef"))
++        self.assertTrue(sbc._pathexists(sbc._shellcmd("pwd")))
+ 
+ 
+ class RunBuildsCommandTests(TestCase):
+@@ -67,8 +135,8 @@ class RunBuildsCommandTests(TestCase):
+         self.assertRaises(IndexError, command._selectBuildEnvironment)
+ 
+     def test_br_select(self):
+-        from orm.models import Project
+-        p, created = Project.objects.get_or_create(pk=1)
++        from orm.models import Project, Release, BitbakeVersion
++        p = Project.objects.create_project("test", Release.objects.get_or_create(name = "HEAD", bitbake_version = BitbakeVersion.objects.get_or_create(name="HEAD", branch="HEAD")[0])[0])
+         obr = BuildRequest.objects.create(state = BuildRequest.REQ_QUEUED, project = p)
+         command = Command()
+         br = command._selectBuildRequest()
 -- 
 1.9.1
 
