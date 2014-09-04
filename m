@@ -1,29 +1,40 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 36A7671395
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-wi0-f172.google.com (mail-wi0-f172.google.com
+	[209.85.212.172])
+	by mail.openembedded.org (Postfix) with ESMTP id 2D28F71498
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  3 Sep 2014 22:08:31 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	s83M8RO4001870; Wed, 3 Sep 2014 23:08:27 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id yC1S8lJgSRnm; Wed,  3 Sep 2014 23:08:27 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	s83M8MnM001863
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
-	Wed, 3 Sep 2014 23:08:23 +0100
-Message-ID: <1409782104.12482.15.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Olof Johansson <olof.johansson@axis.com>
-Date: Wed, 03 Sep 2014 23:08:24 +0100
-In-Reply-To: <20140902082052.GB21392@axis.com>
-References: <1409145892.5772.49.camel@ted> <20140902082052.GB21392@axis.com>
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-Mime-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] build/data: Write out more complete python run files
+	Thu,  4 Sep 2014 16:45:08 +0000 (UTC)
+Received: by mail-wi0-f172.google.com with SMTP id n3so1477812wiv.5
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 04 Sep 2014 09:45:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=DBzI57k483BJvBzU3B2vYE+UnZJmWw6mhbQ5Y1ckFE8=;
+	b=gSZX40VrVJ36vEeldYsjbX4HsuoZiue913NOvmMTqjW75QgI4M8vJsOwtUkJmURL4L
+	jmzsMBjnqgoA4igyNtkHBuztZ+6slkQBhScrWgoI4fAHkvQV5JjMpJLjdFs4eZ7fqLgT
+	rIMZvBIY19wNMlO11SM1gYs9XJ9Uz4YaOtAvHDOm8XjMKFA8xC2F1L1OP3oXX4QrfNhj
+	pRDytP1qU2KVF3MsqvAjqIi6Mr2DxN19LmHqk13EH89iGeWuZeV9WITQm7wV0N42laR4
+	/dqQP0Q/v+XhA0WpAyScJtJT6AMWGCL6Qb5sT8FxJPNYyEz3J88T5OrCRGrh4sTrShtz
+	hNOA==
+X-Gm-Message-State: ALoCoQkvWqHKx/yIl+iC4+Elag7BOuxXS8kFOyRGo+pgWW2aiowNEY0WLB577l0avaBTF4yIQx/A
+X-Received: by 10.194.94.196 with SMTP id de4mr7933055wjb.86.1409849109300;
+	Thu, 04 Sep 2014 09:45:09 -0700 (PDT)
+Received: from adamian-desk.corp.intel.com ([83.217.123.106])
+	by mx.google.com with ESMTPSA id
+	hi4sm19912453wjb.46.2014.09.04.09.45.07 for <multiple recipients>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 04 Sep 2014 09:45:08 -0700 (PDT)
+Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
+	id 49E8A5616CF; Thu,  4 Sep 2014 17:45:08 +0100 (BST)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: toaster@yoctoproject.org,
+	bitbake-devel@lists.openembedded.org
+Date: Thu,  4 Sep 2014 17:44:56 +0100
+Message-Id: <cover.1409848901.git.alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.9.1
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 0/6] bug fixes patchset
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,81 +47,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 03 Sep 2014 22:08:39 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 04 Sep 2014 16:45:11 -0000
 
-On Tue, 2014-09-02 at 10:20 +0200, Olof Johansson wrote:
-> On 14-08-27 15:24 +0200, Richard Purdie wrote:
-> > Currently the output in the python task/function run files is rather
-> > incomplete and effectively useless. This enhances the code to take
-> > advantage of the bitbake's dependency tracking and extend the output to
-> > include dependencies. This makes the files more usable for debugging
-> > purposes. Since this only happens at python function execution time, the
-> > overhead is minimal in the grand scheme of things.
-> > 
-> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > 
-> ....
-> > diff --git a/bitbake/lib/bb/data.py b/bitbake/lib/bb/data.py
-> > index 3d776b3..91b1eb1 100644
-> > --- a/bitbake/lib/bb/data.py
-> > +++ b/bitbake/lib/bb/data.py
-> ....
-> > +def emit_func_python(func, o=sys.__stdout__, d = init()):
-> > +    """Emits all items in the data store in a format such that it can be sourced by a shell."""
-> > +
-> > +    def write_func(func, o, call = False):
-> > +        body = d.getVar(func, True)
-> > +        if not body.startswith("def"):
-> > +            body = _functionfmt.format(function=func, body=body)
-> ....
-> 
-> With this change, we are seeing problems in certain cases when a python
-> function (def foo():) is being resolved. d.getVar("foo") would return None
-> and then fail from not having a startswith() method:
-> 
-> ERROR: Build of do_unpack failed
-> ERROR: Traceback (most recent call last):
->   File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/build.py", line 497, in exec_task
->     return _exec_task(fn, task, d, quieterr)
->   File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/build.py", line 438, in _exec_task
->     exec_func(task, localdata)
->   File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/build.py", line 212, in exec_func
->     exec_func_python(func, d, runfile, cwd=adir)
->   File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/build.py", line 230, in exec_func_python
->     bb.data.emit_func_python(func, script, d)
->   File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/data.py", line 313, in emit_func_python
->     write_func(dep, o)
->   File "/var/opt/builds/olofjn/oe/master/bitbake/lib/bb/data.py", line 294, in write_func
->     if not body.startswith("def"):
-> AttributeError: 'NoneType' object has no attribute 'startswith'
-> 
-> 
-> Our qemu_%.bbappend contains the following:
-> 
->     def _remove_git_submodule_file(filename):
->         import os
->     
->         if not os.path.isfile(filename):
->             return
->     
->         os.unlink(filename)
->     
->     do_unpack_append() {
->         _remove_git_submodule_file(d.getVar("S", True) + "/dtc/.git")
->         _remove_git_submodule_file(d.getVar("S", True) + "/pixman/.git")
->     }
-> 
-> Moving the function to within do_unpack_append would solve the problem.
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-We should probably put a safeguard in that code, if the function isn't
-in the datastore, not to try and write it out, just pass over it. Its
-either that, or pull it from the methodpool, which thinking about it,
-may not be a bad idea since it is in there somewhere...
+This is a bugfix patchset that fixes two critical issues preventing normal
+operation of Toaster, and four bugs that break pieces of functionality
+or self-testing in the project.
+
+Can you please merge them at your convenience ?
 
 Cheers,
+Alex
 
-Richard
+The following changes since commit 8f5c1cdae1ee6ce04ae0d04d0b95bd80efbf7534:
+
+  process: Ensure abnormal exits set an error level (2014-09-02 18:10:17 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib adamian/20140904-submission-bb
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20140904-submission-bb
+
+Alexandru DAMIAN (4):
+  toaster: rename bldviewer projecttags custom tagset
+  toaster: bitbake server listen on all interface
+  toaster: enable SSH-based remote build support
+  toaster: do not save objects in session
+
+Marius Avram (2):
+  toaster: use cookies for count and sorting in templates tables
+  toaster: fix some code spacing issues
+
+ bin/toaster                                        |   6 +-
+ lib/toaster/bldcontrol/bbcontroller.py             | 170 ++----------------
+ lib/toaster/bldcontrol/localhostbecontroller.py    | 191 ++++++++++++++++++++
+ lib/toaster/bldcontrol/sshbecontroller.py          | 193 +++++++++++++++++++++
+ lib/toaster/bldcontrol/tests.py                    | 116 ++++++++++---
+ lib/toaster/bldviewer/templates/simple_build.html  |   2 +-
+ lib/toaster/bldviewer/templates/simple_layer.html  |   2 +-
+ lib/toaster/bldviewer/templates/simple_recipe.html |   2 +-
+ .../{projecttags.py => simple_projecttags.py}      |   0
+ .../toastergui/templates/basetable_bottom.html     |  52 +++---
+ .../toastergui/templates/basetable_top.html        |  18 +-
+ lib/toaster/toastergui/views.py                    | 140 +++++++++------
+ 12 files changed, 628 insertions(+), 264 deletions(-)
+ create mode 100644 lib/toaster/bldcontrol/localhostbecontroller.py
+ create mode 100644 lib/toaster/bldcontrol/sshbecontroller.py
+ rename lib/toaster/bldviewer/templatetags/{projecttags.py => simple_projecttags.py} (100%)
+
+-- 
+1.9.1
 
 
