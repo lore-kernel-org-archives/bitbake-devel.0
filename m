@@ -1,43 +1,29 @@
-Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f51.google.com (mail-wg0-f51.google.com [74.125.82.51])
-	by mail.openembedded.org (Postfix) with ESMTP id 1DE65714C0
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 3390E71388
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  4 Sep 2014 16:45:24 +0000 (UTC)
-Received: by mail-wg0-f51.google.com with SMTP id l18so10258907wgh.34
+	Fri,  5 Sep 2014 09:34:48 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	s859Yk7M004278 for <bitbake-devel@lists.openembedded.org>;
+	Fri, 5 Sep 2014 10:34:46 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 0eqY8OfLhSer for <bitbake-devel@lists.openembedded.org>;
+	Fri,  5 Sep 2014 10:34:46 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	s859YeGF004275
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 04 Sep 2014 09:45:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=/sXCx4zudtIo5omuq9WoRlww7jqtykrTdzvQtXp1neM=;
-	b=T9rW3pEC1elnBZfFE+tUOsZK0PdHmt5UnhrtCJnmh0hHFemnlkBgop/o/Y1yIp1KGb
-	9hO1urhv2y1PlMvjfEuG99qx+siOhRIwQu25hIbMjuf3n0/ZRGxKHeFNvE4u+rlJgFql
-	ulS+m9cOH7EtfwLB4t1UUA8h9WmKWz78TeWd5BJB+xPEHuh3DoyEtujMcp8ZOLZx9re3
-	GewCxLSll5DjiqvaDUc53TpgbJxswnx6wdNUBWXQZfPWr13SntFWrATLvjGQg66jK0ov
-	LZa3kGCNs58ac8JwFoMq+q49+xxcjSTcn2QAgj5Ra2F40EZWHOPViy5Ns+X9icdN3gBU
-	/PKQ==
-X-Gm-Message-State: ALoCoQmt5jbjbtEcH3a932tfXEyPQmGOsG8X0FtWjbIJZHW1cvtHHjMtE3qsAINOEWRQG7IW2a7I
-X-Received: by 10.180.184.20 with SMTP id eq20mr7061889wic.61.1409849122233;
-	Thu, 04 Sep 2014 09:45:22 -0700 (PDT)
-Received: from adamian-desk.corp.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id ua8sm20025520wjc.7.2014.09.04.09.45.20
-	for <multiple recipients>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 04 Sep 2014 09:45:21 -0700 (PDT)
-Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
-	id 87B355626C4; Thu,  4 Sep 2014 17:45:19 +0100 (BST)
-From: Alex DAMIAN <alexandru.damian@intel.com>
-To: toaster@yoctoproject.org,
-	bitbake-devel@lists.openembedded.org
-Date: Thu,  4 Sep 2014 17:45:17 +0100
-Message-Id: <cdaea8951df6b707afd1fefbf22295088256dd6f.1409848901.git.alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <a37f2c194d7e59611177cb8755524b7ad702fe91.1409848901.git.alexandru.damian@intel.com>
-References: <a37f2c194d7e59611177cb8755524b7ad702fe91.1409848901.git.alexandru.damian@intel.com>
-In-Reply-To: <cover.1409848901.git.alexandru.damian@intel.com>
-References: <cover.1409848901.git.alexandru.damian@intel.com>
-Subject: [PATCH 6/6] toaster: fix some code spacing issues
+	Fri, 5 Sep 2014 10:34:42 +0100
+Message-ID: <1409909681.12482.58.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Fri, 05 Sep 2014 10:34:41 +0100
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+Mime-Version: 1.0
+Subject: [PATCH] siggen/runqueue/bitbake-worker: Improve siggen data transfer interface
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,101 +36,67 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 04 Sep 2014 16:45:25 -0000
+X-List-Received-Date: Fri, 05 Sep 2014 09:34:59 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Marius Avram <marius.avram@intel.com>
+We need to transfer some of the siggen data from the core/cooker into
+the worker instances. There was a partial API created for this but
+its ugly and its not possible to extend it from the siggen class.
 
-Code is related to the basetable templates files.
-It had mixed tabs and spaces and was miss aligned in various places,
-making it hard to read.
+This patch completes the interface/abstraction for the data and
+means the class can extend/customise it in any siggen class.
 
-Signed-off-by: Marius Avram <marius.avram@intel.com>
----
- .../toastergui/templates/basetable_bottom.html     | 39 +++++++++++-----------
- .../toastergui/templates/basetable_top.html        |  9 ++---
- 2 files changed, 25 insertions(+), 23 deletions(-)
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-diff --git a/lib/toaster/toastergui/templates/basetable_bottom.html b/lib/toaster/toastergui/templates/basetable_bottom.html
-index cbdc164..e6b9506 100644
---- a/lib/toaster/toastergui/templates/basetable_bottom.html
-+++ b/lib/toaster/toastergui/templates/basetable_bottom.html
-@@ -23,13 +23,14 @@
- {%endif%}
-   </ul>
-   <div class="pull-right">
--                            <span class="help-inline" style="padding-top:5px;">Show rows:</span>
--                            <select style="margin-top:5px;margin-bottom:0px;" class="pagesize">
--  {% with "2 5 10 25 50 100" as list%}
--    {% for i in list.split %}<option value="{{i}}">{{i}}</option>
--    {% endfor %}
--  {% endwith %}
--                            </select>
-+    <span class="help-inline" style="padding-top:5px;">Show rows:</span>
-+    <select style="margin-top:5px;margin-bottom:0px;" class="pagesize">
-+      {% with "2 5 10 25 50 100" as list%}
-+        {% for i in list.split %}
-+            <option value="{{i}}">{{i}}</option>
-+        {% endfor %}
-+      {% endwith %}
-+    </select>
-    </div>
- </div>
+diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
+index c7992f7..b2935f6 100755
+--- a/bitbake/bin/bitbake-worker
++++ b/bitbake/bin/bitbake-worker
+@@ -168,7 +168,7 @@ def fork_off_task(cfg, data, workerdata, fn, task, taskname, appends, taskdepdat
+             data.setVar("BUILDNAME", workerdata["buildname"])
+             data.setVar("DATE", workerdata["date"])
+             data.setVar("TIME", workerdata["time"])
+-            bb.parse.siggen.set_taskdata(workerdata["hashes"], workerdata["hash_deps"], workerdata["sigchecksums"])
++            bb.parse.siggen.set_taskdata(workerdata["sigdata"])
+             ret = 0
+             try:
+                 the_data = bb.cache.Cache.loadDataFull(fn, appends, data)
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 39df794..6d9cf3f 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -879,9 +879,7 @@ class RunQueue:
+             "fakerootenv" : self.rqdata.dataCache.fakerootenv,
+             "fakerootdirs" : self.rqdata.dataCache.fakerootdirs,
+             "fakerootnoenv" : self.rqdata.dataCache.fakerootnoenv,
+-            "hashes" : bb.parse.siggen.taskhash,
+-            "hash_deps" : bb.parse.siggen.runtaskdeps,
+-            "sigchecksums" : bb.parse.siggen.file_checksum_values,
++            "sigdata" : bb.parse.siggen.get_taskdata(),
+             "runq_hash" : self.rqdata.runq_hash,
+             "logdefaultdebug" : bb.msg.loggerDefaultDebugLevel,
+             "logdefaultverbose" : bb.msg.loggerDefaultVerbose,
+diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
+index 548f50d..86d9ca0 100644
+--- a/bitbake/lib/bb/siggen.py
++++ b/bitbake/lib/bb/siggen.py
+@@ -197,10 +197,11 @@ class SignatureGeneratorBasic(SignatureGenerator):
+         #d.setVar("BB_TASKHASH_task-%s" % task, taskhash[task])
+         return h
  
-@@ -40,21 +41,21 @@
+-    def set_taskdata(self, hashes, deps, checksums):
+-        self.runtaskdeps = deps
+-        self.taskhash = hashes
+-        self.file_checksum_values = checksums
++    def get_taskdata(self):
++       return (self.runtaskdeps, self.taskhash, self.file_checksum_values)
++
++    def set_taskdata(self, data):
++        self.runtaskdeps, self.taskhash, self.file_checksum_values = data
  
-     // we load cookies for the column display
-     save = $.cookie('_displaycols_{{objectname}}');
--		if (save != undefined) {
--    setting = save.split(';');
--    for ( i = 0; i < setting.length; i++) {
--        if (setting[i].length > 0) {
--            splitlist = setting[i].split(':');
--            id = splitlist[0], v = splitlist[1];
--            if (v == 'true') {
--                $('.chbxtoggle#'+id).prop('checked', true);
--            }
--            else {
--                $('.chbxtoggle#'+id).prop('checked', false);
-+    if (save != undefined) {
-+        setting = save.split(';');
-+        for ( i = 0; i < setting.length; i++) {
-+            if (setting[i].length > 0) {
-+                splitlist = setting[i].split(':');
-+                id = splitlist[0], v = splitlist[1];
-+                if (v == 'true') {
-+                    $('.chbxtoggle#'+id).prop('checked', true);
-+                }
-+                else {
-+                    $('.chbxtoggle#'+id).prop('checked', false);
-+                }
-             }
-         }
-     }
--    }
- 
-     // load cookie for number of entries to be displayed on page
-     pagesize = $.cookie('count');
-diff --git a/lib/toaster/toastergui/templates/basetable_top.html b/lib/toaster/toastergui/templates/basetable_top.html
-index 037554b..e43eb2c 100644
---- a/lib/toaster/toastergui/templates/basetable_top.html
-+++ b/lib/toaster/toastergui/templates/basetable_top.html
-@@ -211,10 +211,11 @@
-                 <span class="divider-vertical"></span>
-                 <span class="help-inline" style="padding-top:5px;">Show rows:</span>
-                 <select style="margin-top:5px;margin-bottom:0px;" class="pagesize">
--  {% with "2 5 10 25 50 100" as list%}
--{% for i in list.split %}                    <option value="{{i}}">{{i}}</option>
--    {% endfor %}
--  {% endwith %}
-+                  {% with "2 5 10 25 50 100" as list%}
-+                    {% for i in list.split %}
-+                        <option value="{{i}}">{{i}}</option>
-+                    {% endfor %}
-+                  {% endwith %}
-                 </select>
-            </div>
-         </div>
--- 
-1.9.1
+     def dump_sigtask(self, fn, task, stampbase, runtime):
+         k = fn + "." + task
+
 
 
