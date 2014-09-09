@@ -1,29 +1,31 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 3390E71388
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  5 Sep 2014 09:34:48 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	s859Yk7M004278 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 5 Sep 2014 10:34:46 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 0eqY8OfLhSer for <bitbake-devel@lists.openembedded.org>;
-	Fri,  5 Sep 2014 10:34:46 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	s859YeGF004275
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 5 Sep 2014 10:34:42 +0100
-Message-ID: <1409909681.12482.58.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Fri, 05 Sep 2014 10:34:41 +0100
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-Mime-Version: 1.0
-Subject: [PATCH] siggen/runqueue/bitbake-worker: Improve siggen data transfer interface
+Return-Path: <just4tech83@gmail.com>
+Received: from mail-qa0-f53.google.com (mail-qa0-f53.google.com
+	[209.85.216.53])
+	by mail.openembedded.org (Postfix) with ESMTP id 8EC4D7130F;
+	Tue,  9 Sep 2014 12:53:23 +0000 (UTC)
+Received: by mail-qa0-f53.google.com with SMTP id w8so15702369qac.12
+	for <multiple recipients>; Tue, 09 Sep 2014 05:53:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:date:message-id:subject:from:to:content-type;
+	bh=ss1njvrB4ULb7QCD7xNzg/KAnkk/peFNtz5MyZIbEd4=;
+	b=QYmen1aBKs/GB77qN7PeuiQSFrMMS3rR+TZUXzGEW+C4jH3+i2aZ+3/L3+zfKLVsdm
+	1WdsTy3/JtsFTOAuh0pzQf4ztNhlr2VFx1u/eg1RVg1bB/hBNDsAKexVN85ELFSkhir1
+	NMYM62SpWzF7aokZsRQvsm0L2+NhnRnT9P1HoVpBt/EJevRWI/6Jdyb1n5adVoL8hd2G
+	vh6202IanKnRKsyBFiFLrzkCr/9AT940dhDZGio4ZlYH72I1h4dE+wKGoSjjtgM+BP1L
+	ZyYtSwqEmTv8PZpevrwk4uQeTQplHH0PZbZA2Gy6N9v6pq82ubMnTn3URurac5WE5bwM
+	FOtQ==
+MIME-Version: 1.0
+X-Received: by 10.224.47.67 with SMTP id m3mr4702356qaf.28.1410267204444; Tue,
+	09 Sep 2014 05:53:24 -0700 (PDT)
+Received: by 10.140.16.144 with HTTP; Tue, 9 Sep 2014 05:53:24 -0700 (PDT)
+Received: by 10.140.16.144 with HTTP; Tue, 9 Sep 2014 05:53:24 -0700 (PDT)
+Date: Tue, 9 Sep 2014 18:23:24 +0530
+Message-ID: <CAD2C2VTOgCMRsq4em2Bd0hQ4Nz2Zq=B2vXezAw7QXQmhkQOsRQ@mail.gmail.com>
+From: Bryan <just4tech83@gmail.com>
+To: openembedded-devel@lists.openembedded.org, 
+	openembedded-core@lists.openembedded.org, 
+	bitbake-devel@lists.openembedded.org
+Subject: Backporting of latest recipes on oe-classic
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,67 +38,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 05 Sep 2014 09:34:59 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 09 Sep 2014 12:53:25 -0000
+Content-Type: multipart/alternative; boundary=001a1134ab00c26b650502a16b4c
 
-We need to transfer some of the siggen data from the core/cooker into
-the worker instances. There was a partial API created for this but
-its ugly and its not possible to extend it from the siggen class.
+--001a1134ab00c26b650502a16b4c
+Content-Type: text/plain; charset=UTF-8
 
-This patch completes the interface/abstraction for the data and
-means the class can extend/customise it in any siggen class.
+Hi,
+   We have some queries regarding OE-Classic.
+1. Where can we find latest recipes for oe-classic. Does oe-classic is
+still get updation for latest package support?
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+2. How can we compile latest recipes of oe-core on oe-classic and ofcourse
+there bitbake version would be different.Basically, we can say we need to
+backport the recipe to classic.
+e.g. gtk+2.20.1 & above, glibc-2.11.3 & above
 
-diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
-index c7992f7..b2935f6 100755
---- a/bitbake/bin/bitbake-worker
-+++ b/bitbake/bin/bitbake-worker
-@@ -168,7 +168,7 @@ def fork_off_task(cfg, data, workerdata, fn, task, taskname, appends, taskdepdat
-             data.setVar("BUILDNAME", workerdata["buildname"])
-             data.setVar("DATE", workerdata["date"])
-             data.setVar("TIME", workerdata["time"])
--            bb.parse.siggen.set_taskdata(workerdata["hashes"], workerdata["hash_deps"], workerdata["sigchecksums"])
-+            bb.parse.siggen.set_taskdata(workerdata["sigdata"])
-             ret = 0
-             try:
-                 the_data = bb.cache.Cache.loadDataFull(fn, appends, data)
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 39df794..6d9cf3f 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -879,9 +879,7 @@ class RunQueue:
-             "fakerootenv" : self.rqdata.dataCache.fakerootenv,
-             "fakerootdirs" : self.rqdata.dataCache.fakerootdirs,
-             "fakerootnoenv" : self.rqdata.dataCache.fakerootnoenv,
--            "hashes" : bb.parse.siggen.taskhash,
--            "hash_deps" : bb.parse.siggen.runtaskdeps,
--            "sigchecksums" : bb.parse.siggen.file_checksum_values,
-+            "sigdata" : bb.parse.siggen.get_taskdata(),
-             "runq_hash" : self.rqdata.runq_hash,
-             "logdefaultdebug" : bb.msg.loggerDefaultDebugLevel,
-             "logdefaultverbose" : bb.msg.loggerDefaultVerbose,
-diff --git a/bitbake/lib/bb/siggen.py b/bitbake/lib/bb/siggen.py
-index 548f50d..86d9ca0 100644
---- a/bitbake/lib/bb/siggen.py
-+++ b/bitbake/lib/bb/siggen.py
-@@ -197,10 +197,11 @@ class SignatureGeneratorBasic(SignatureGenerator):
-         #d.setVar("BB_TASKHASH_task-%s" % task, taskhash[task])
-         return h
- 
--    def set_taskdata(self, hashes, deps, checksums):
--        self.runtaskdeps = deps
--        self.taskhash = hashes
--        self.file_checksum_values = checksums
-+    def get_taskdata(self):
-+       return (self.runtaskdeps, self.taskhash, self.file_checksum_values)
-+
-+    def set_taskdata(self, data):
-+        self.runtaskdeps, self.taskhash, self.file_checksum_values = data
- 
-     def dump_sigtask(self, fn, task, stampbase, runtime):
-         k = fn + "." + task
+3. Does anybody have latest bitbake recipe for ICAClient(Citrix Receiver)
+13 version.
+Though we have created one but not sure whether it is installing all
+components properly.
 
+4. How can we install package like libwebkit or libwebkitgtk 1.0 on
+oe-classic.
 
+Thanks in advance
+Bryan
 
+--001a1134ab00c26b650502a16b4c
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<p dir=3D"ltr">Hi, <br>
+=C2=A0=C2=A0 We have some queries regarding OE-Classic. <br>
+1. Where can we find latest recipes for oe-classic. Does oe-classic is stil=
+l get updation for latest package support?</p>
+<p dir=3D"ltr">2. How can we compile latest recipes of oe-core on oe-classi=
+c and ofcourse there bitbake version would be different.Basically, we can s=
+ay we need to backport the recipe to classic.<br>
+e.g. gtk+2.20.1 &amp; above, glibc-2.11.3 &amp; above</p>
+<p dir=3D"ltr">3. Does anybody have latest bitbake recipe for ICAClient(Cit=
+rix Receiver) 13 version.<br>
+Though we have created one but not sure whether it is installing all compon=
+ents properly.</p>
+<p dir=3D"ltr">4. How can we install package like libwebkit or libwebkitgtk=
+ 1.0 on oe-classic. </p>
+<p dir=3D"ltr">Thanks in advance <br>
+Bryan</p>
+
+--001a1134ab00c26b650502a16b4c--
