@@ -1,30 +1,29 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (unknown [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id CB85B6FC4C
+Return-Path: <harshjain32@gmail.com>
+Received: from mail-wg0-f42.google.com (mail-wg0-f42.google.com [74.125.82.42])
+	by mail.openembedded.org (Postfix) with ESMTP id 6DF2560809
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Sep 2014 10:15:13 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	s8FAF2Y5009560; Mon, 15 Sep 2014 11:15:02 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id b9Nd1LfwNyKe; Mon, 15 Sep 2014 11:15:02 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	s8FAEu6e009556
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
-	Mon, 15 Sep 2014 11:14:58 +0100
-Message-ID: <1410776098.14624.19.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Burton, Ross" <ross.burton@intel.com>
-Date: Mon, 15 Sep 2014 11:14:58 +0100
-In-Reply-To: <CAJTo0LYab+y-sTjj414sR3LCW49bK2LLE1c67OYV23Q_8TW_pQ@mail.gmail.com>
-References: <1410594626.14624.2.camel@ted>
-	<CAJTo0LYab+y-sTjj414sR3LCW49bK2LLE1c67OYV23Q_8TW_pQ@mail.gmail.com>
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-Mime-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] data_smart: Fix remove operator and its interaction with data expansion
+	Fri, 19 Sep 2014 18:31:31 +0000 (UTC)
+Received: by mail-wg0-f42.google.com with SMTP id a1so119434wgh.13
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 19 Sep 2014 11:31:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:date:message-id:subject:from:to:content-type;
+	bh=+IWX2l4U44Ad3Yn1EKHUAiP0kSV8sZCP4Rgm1GP55uA=;
+	b=RxDT9O2bkkYZPGY06W64rnMSBMlLRvqD9dRkMIodgxwjJm8OkRYltPLnJUByzecpZe
+	wCBoc+kzKFhzq5KwDfS/gGcbkUYL/w4vPGWfcykoGQbYUXpQZEaxM+sYNIU6iFgg08RL
+	SxPAcr6mow30R4+MTTu4urKd2b+4qyblCdlCtZwxpUMHv9tVGQGldRRMtZc7OZ2n+PNA
+	iQ6BNcD6wwjAKJDwa1DV3h7QHLexUmsfh8MjJvbzwCulUxMGX+8C5N2+Zqvx6DQFruX0
+	LRcJS0PqMhA8hS1uc05i/r0NuTU1iCBJJBnL5VyiZErFD19R63UqAC+C7Hq5R9+Vf+Ic
+	z2Yg==
+MIME-Version: 1.0
+X-Received: by 10.180.212.78 with SMTP id ni14mr121685wic.44.1411151491946;
+	Fri, 19 Sep 2014 11:31:31 -0700 (PDT)
+Received: by 10.216.96.11 with HTTP; Fri, 19 Sep 2014 11:31:31 -0700 (PDT)
+Date: Sat, 20 Sep 2014 00:01:31 +0530
+Message-ID: <CAKuL1XTTbrXNyoVyexg=BDN=jEO_nvnSJdg5kFsYzX8Bvf_1Jg@mail.gmail.com>
+From: harsh jain <harshjain32@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: Update recipe file to avoid conflict with other dependant packages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,54 +36,14 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 15 Sep 2014 10:15:22 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 19 Sep 2014 18:31:39 -0000
+Content-Type: text/plain; charset=UTF-8
 
-On Sun, 2014-09-14 at 21:17 +0100, Burton, Ross wrote:
-> On 13 September 2014 08:50, Richard Purdie
-> <richard.purdie@linuxfoundation.org> wrote:
-> > If you have:
-> >
-> > FOO = "${bindir}/X Y"
-> > FOO_remove = "${bindir}/X"
-> >
-> > the expected result is "Y". Currently this doesn't work since the removed
-> > expressions are not expanded first. This patch adjusts things so the
-> > expressions are expanded before being processed for removal.
-> 
-> Whilst the actual expansion works as expected now (consider this a
-> tested-by), the output in bitbake -e doesn't make sense:
-> 
-> i.e. with PACKAGES_remove = "${PN}-staticdev ${PN}-locale" in a distro config:
-> 
-> # $PACKAGES [5 operations]
-> #   set /home/ross/foo/poky/meta/conf/bitbake.conf:264
-> #     "${PN}-dbg ${PN}-staticdev ${PN}-dev ${PN}-doc ${PN}-locale
-> ${PACKAGE_BEFORE_PN} ${PN}"
-> #   _remove /home/ross/foo/meta-foo/conf/distro/foo.conf:201
-> #     "${PN}-staticdev ${PN}-locale"
-> #   set /home/ross/foo/poky/meta/conf/documentation.conf:308
-> #     [doc] "The list of packages to be created from the recipe."
-> #   prepend /home/ross/foo/poky/meta/recipes-support/curl/curl_7.37.1.bb:43
-> #     "lib${BPN} lib${BPN}-dev lib${BPN}-staticdev lib${BPN}-doc"
-> #   _remove /home/ross/foo/meta-foo/recipes-support/curl/curl_%.bbappend:1
-> #     "${PN}-dev"
-> # computed:
-> #   "lib${BPN} lib${BPN}-dev lib${BPN}-staticdev lib${BPN}-doc
-> ${PN}-dbg ${PN}-staticdev ${PN}-dev ${PN}-doc ${PN}-locale
-> ${PACKAGE_BEFORE_PN} ${PN}"
-> PACKAGES="libcurl libcurl-dev libcurl-staticdev libcurl-doc curl-dbg
-> curl-doc  curl"
-> 
-> The PACKAGES value is right, but the "computed" value displayed by -e isn't.
-
-This is the "pre expansion" value, so its right but the comment needs
-improving...
-
-Cheers,
-
-Richard
-
-
+I am trying to install python version 2.7.4 after updating recipe file
+of version 2.7.3.There are several other packages in my build system
+which depends upon Python version 2.7.3.When I try to make build these
+dependant packages give warning.
+What I needs to update in build environment so that these packages can
+also included.I am assuming that these dependants packages are also
+compatible with python verson 2.7.4.
 
