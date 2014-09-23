@@ -1,41 +1,29 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-qa0-f50.google.com (mail-qa0-f50.google.com
-	[209.85.216.50])
-	by mail.openembedded.org (Postfix) with ESMTP id 77700610F5
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 813AD60167
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 22 Sep 2014 22:20:36 +0000 (UTC)
-Received: by mail-qa0-f50.google.com with SMTP id j7so818004qaq.23
+	Tue, 23 Sep 2014 11:58:23 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	s8NBwLPb016641 for <bitbake-devel@lists.openembedded.org>;
+	Tue, 23 Sep 2014 12:58:21 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 5Cmx7ioU48pZ for <bitbake-devel@lists.openembedded.org>;
+	Tue, 23 Sep 2014 12:58:21 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	s8NBwJqW016638
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 22 Sep 2014 15:20:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-type;
-	bh=58Q+nN7/WIppeIhsp2HjAOoiufVmbQw2WvqxmKz0Ifo=;
-	b=OteRmet1gq2+L7yaJR0iE/W3lh+WZ2fW6z31l5NXFXGtIAcYNi30A0qGoAvFa/A3Lg
-	hWHArUUPNDA+P5hXYbH4r5aprNP7WcBxOA6Y50YtyEJ7oBovtG63dTlEy3zRgP9+mctN
-	vhnG/rWwigx9jhB5tkSG9nEfKj2EULhSjunPJaMIgp+IkmjXEMGMhRs6yNFGeGIFqyp1
-	rcrEOhz+KO4yQZ4ygOM5ObyTSM4Om0uKvKrQWnjW73KgclW95eeyvvYocrPOsbeoneGQ
-	fB+mVrzg36TAshteL8FFeS7ASO5xWBJsbTEe7X9dMNLIv8IODHFNYp/EzzgTYrGB6CU3
-	Wu/w==
-X-Gm-Message-State: ALoCoQmlo3SkbBou67jWB9Hcz/kXKiOFzdScIOH/vnzI6I25tIdkSYjBy8IQgqmjUcNnvo7RLMW6
-X-Received: by 10.140.94.144 with SMTP id g16mr25857954qge.77.1411424437800;
-	Mon, 22 Sep 2014 15:20:37 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.140.34.180 with HTTP; Mon, 22 Sep 2014 15:20:17 -0700 (PDT)
-In-Reply-To: <54207A81.9070102@sonatest.com>
-References: <54203B56.5030607@sonatest.com>
-	<CAJTo0LYScX=1iJDcxy1ff_TBR6ueJOQ-7Twcbdy-kBQsCBfLvQ@mail.gmail.com>
-	<CAJTo0LZgRQNZF1_gjOvrMfNCaaServst1FiU9tjrDE5CbHEBKQ@mail.gmail.com>
-	<54205685.2060104@sonatest.com>
-	<CAJTo0Lbfg7nz7vYLOhT2VuxDCCeO0eBVtmer+ODFQTwfgncTrA@mail.gmail.com>
-	<54207A81.9070102@sonatest.com>
-From: "Burton, Ross" <ross.burton@intel.com>
-Date: Mon, 22 Sep 2014 23:20:17 +0100
-Message-ID: <CAJTo0LaXAVpDvEka7wH5wLJzbR5NqdMG_+oTUsSV=qXKVh6Rzw@mail.gmail.com>
-To: Olivier Dugas <dugaso@sonatest.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: Bitbake do_unpack checksum?
+	Tue, 23 Sep 2014 12:58:20 +0100
+Message-ID: <1411473502.15825.31.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Tue, 23 Sep 2014 12:58:22 +0100
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+Mime-Version: 1.0
+Subject: [PATCH] knotty: Ensure commandline parameters are updated in memres server
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,35 +36,86 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 22 Sep 2014 22:20:40 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Tue, 23 Sep 2014 11:58:26 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On 22 September 2014 20:37, Olivier Dugas <dugaso@sonatest.com> wrote:
-> I know that no journal and high write delay could corrupt my disk. In this
-> event I would reformat and rebuild the image, no big deal. What seem to me
-> like a big deal though is to have a healthy hard drive that will once every
-> 2 year flip a bit randomly on one of my downloaded tarball, and not having
-> bitbake verify the checksum just in case.
->
-> When I say it this way, I realize having bitbake doing checksum for every
-> already downloaded tarball in the system could indeed add significant
-> overhead, like said by Richard Purdie, even if I thought that a checksum was
-> a fast operation... So I'm stuck. What would be the best solution then? I
-> can't see any other simple solution then the one you proposed in #5571.
+When using options like -k, -f, -v and so on with the memory resident
+server, they'd currently only be set on the initial values passed to
+the original command. This ensures they now match those specified
+on the commandline for the options where this makes sense.
 
-I think that if you're worrying about a bit flipping once in two years
-then there are far more important places it could flip than the source
-tarball archives.  tarballs/zip files etc have CRCs internally so a
-flipped bit will be detected.  A bit flipping inside a compiled object
-before it reaches a CRC'd package won't be detected until it crashes
-or executes incorrectly.
+To make this work, a command to update the options on the server side
+is required so this is added.
 
-As far as I'm aware this is mostly a hypothetical problem: hard drives
-employ CRC to detect errors when reading sectors and will remap as bad
-sectors appears.  Wikipedia says "10 non-recoverable read errors in
-every 10^16 bits" and they'll be reported to the operating system as a
-bad sector error and not silent corruption.  I'm happy to live with
-that error rate.
+[YOCTO #5292]
 
-Ross
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
+index 0cfed0a..60f9ac0 100644
+--- a/bitbake/lib/bb/command.py
++++ b/bitbake/lib/bb/command.py
+@@ -271,6 +271,10 @@ class CommandsSync:
+     # we always take and leave the cooker in state.initial
+     setFeatures.readonly = True
+ 
++    def updateConfig(self, command, params):
++        options = params[0]
++        command.cooker.updateConfigOpts(options)
++
+ class CommandsAsync:
+     """
+     A class of asynchronous commands
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index f463603..c6c69c3 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -371,6 +371,10 @@ class BBCooker:
+ 
+         self.handleCollections( self.data.getVar("BBFILE_COLLECTIONS", True) )
+ 
++    def updateConfigOpts(self,options):
++        for o in options:
++            setattr(self.configuration, o, options[o])
++
+     def runCommands(self, server, data, abort):
+         """
+         Run any queued asynchronous command
+diff --git a/bitbake/lib/bb/cookerdata.py b/bitbake/lib/bb/cookerdata.py
+index 60a6d51..470d538 100644
+--- a/bitbake/lib/bb/cookerdata.py
++++ b/bitbake/lib/bb/cookerdata.py
+@@ -69,6 +69,17 @@ class ConfigParameters(object):
+             if bbpkgs:
+                 self.options.pkgs_to_build.extend(bbpkgs.split())
+ 
++    def updateToServer(self, server):
++        options = {}
++        for o in ["abort", "tryaltconfigs", "force", "invalidate_stamp", 
++                  "verbose", "debug", "dry_run", "dump_signatures", 
++                  "debug_domains", "extra_assume_provided", "profile"]:
++            options[o] = getattr(self.options, o)
++
++        ret, error = server.runCommand(["updateConfig", options])
++        if error:
++                raise Exception("Unable to update the server configuration with local parameters: %s" % error)
++
+     def parseActions(self):
+         # Parse any commandline into actions
+         action = {'action':None, 'msg':None}
+diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
+index 33d78fc..ebb9331 100644
+--- a/bitbake/lib/bb/ui/knotty.py
++++ b/bitbake/lib/bb/ui/knotty.py
+@@ -284,6 +284,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
+ 
+     if not params.observe_only:
+         params.updateFromServer(server)
++        params.updateToServer(server)
+         cmdline = params.parseActions()
+         if not cmdline:
+             print("Nothing to do.  Use 'bitbake world' to build everything, or run 'bitbake --help' for usage information.")
+
+
 
