@@ -1,36 +1,28 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-lb0-f177.google.com (mail-lb0-f177.google.com
-	[209.85.217.177])
-	by mail.openembedded.org (Postfix) with ESMTP id 20E44609B2
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 08D8460167
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 25 Sep 2014 23:47:09 +0000 (UTC)
-Received: by mail-lb0-f177.google.com with SMTP id z12so13344897lbi.22
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 25 Sep 2014 16:47:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=hEbjsdbgLQRf8rshtUmkJXld3MS4m9Y5yP1UYNcdUmA=;
-	b=La76tsVx289zNzS92SqRvvM+VJUNtXvVN5pg6EevQ6bSxXjDHo5LkhFBfHqWHxIddi
-	aVqVeee50gvfGpxFACNNW++IOX94HtHFojEvxAH1Fo4TnLXll+5XwZx3yqpc2FUbSseC
-	f0pVJKSxhCON8rAXk1jOBxIxJ08n7vRRJCQtL7wHaq8rbj4yfbJ9jJykLS77dZ5SyOnq
-	3Jk2taoSz08RYwPXacoxI9R1niYgzMLh5t+PAFmsnAhOOuvJis/oXQ6It1VBI1eXCP+l
-	NjMHWQ13ZV5lLOsBHSvkBHFVaZ9j7nY4jtFd3hLYC8AJ3417qekSlO3ZkkEKAF80063O
-	X+XQ==
-X-Received: by 10.152.21.6 with SMTP id r6mr16705784lae.6.1411688829994; Thu,
-	25 Sep 2014 16:47:09 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.97.194 with HTTP; Thu, 25 Sep 2014 16:46:49 -0700 (PDT)
+	Fri, 26 Sep 2014 12:10:27 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	s8QCALnA007766; Fri, 26 Sep 2014 13:10:21 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id j70OCYtB4IsY; Fri, 26 Sep 2014 13:10:21 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	s8QCAF8l007763
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NOT);
+	Fri, 26 Sep 2014 13:10:16 +0100
+Message-ID: <1411733418.4189.116.camel@ted>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
+Date: Fri, 26 Sep 2014 13:10:18 +0100
 In-Reply-To: <1411686885-8169-1-git-send-email-alejandro.hernandez@linux.intel.com>
 References: <1411686885-8169-1-git-send-email-alejandro.hernandez@linux.intel.com>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Thu, 25 Sep 2014 16:46:49 -0700
-X-Google-Sender-Auth: MZ3ib5AED7P1YJAmXiwvZ83JmdY
-Message-ID: <CABcZANkxTDWv2AQU=0WD9p27EF-4RT5iWTvj_S8bBcu6MASQ_A@mail.gmail.com>
-To: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH] fetcher: fix BB_STRICT_CHECKSUM datatype check
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -44,48 +36,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 25 Sep 2014 23:47:13 -0000
-Content-Type: multipart/alternative; boundary=089e014941ec3ecdf20503ec6bce
+X-List-Received-Date: Fri, 26 Sep 2014 12:10:28 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---089e014941ec3ecdf20503ec6bce
-Content-Type: text/plain; charset=UTF-8
-
-On Thu, Sep 25, 2014 at 4:14 PM, Alejandro Hernandez <
-alejandro.hernandez@linux.intel.com> wrote:
-
+On Thu, 2014-09-25 at 18:14 -0500, Alejandro Hernandez wrote:
+> [YOCTO #6762]
+> 
+> Signed-off-by: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
+> ---
+>  lib/bb/fetch2/__init__.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+> index df2f2b0..e182a9d 100644
+> --- a/lib/bb/fetch2/__init__.py
+> +++ b/lib/bb/fetch2/__init__.py
+> @@ -544,7 +544,7 @@ def verify_checksum(ud, d):
+>      if ud.method.recommends_checksum(ud):
+>          # If strict checking enabled and neither sum defined, raise error
+>          strict = d.getVar("BB_STRICT_CHECKSUM", True) or None
 > -        if strict and not (ud.md5_expected or ud.sha256_expected):
 > +        if (strict == 1) and not (ud.md5_expected or ud.sha256_expected):
->
+>              logger.error('No checksum specified for %s, please add at least one to the recipe:\n'
+>                               'SRC_URI[%s] = "%s"\nSRC_URI[%s] = "%s"' %
+>                               (ud.localpath, ud.md5_name, md5data,
 
-I realize python allows it, but I think it's pretty amusing that the
-subject line mentions correcting the data type, and then you compare a
-string to an integer ;)
--- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+This gets slightly tricky since the value can be a string or an integer
+or "None". This needs to work if strict = "1" as well as strict = 1 for
+example.
 
---089e014941ec3ecdf20503ec6bce
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+I'm thinking we should perhaps import the boolean function from
+meta/lib/oe/types.py in OE-Core into a new types module in bitbake, as
+well as perhaps allowing the function to accept integers of 0 (False)
+and other than 0 (True) and accepting "None" as False.
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On T=
-hu, Sep 25, 2014 at 4:14 PM, Alejandro Hernandez <span dir=3D"ltr">&lt;<a h=
-ref=3D"mailto:alejandro.hernandez@linux.intel.com" target=3D"_blank">alejan=
-dro.hernandez@linux.intel.com</a>&gt;</span> wrote:<br><blockquote class=3D=
-"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding=
--left:1ex"><div id=3D":sc" class=3D"a3s" style=3D"overflow:hidden">-=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 if strict and not (ud.md5_expected or ud.sha256_expect=
-ed):<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (strict =3D=3D 1) and not (ud.md5_expected =
-or ud.sha256_expected):</div></blockquote></div><br>I realize python allows=
- it, but I think it&#39;s pretty amusing that the subject line mentions cor=
-recting the data type, and then you compare a string to an integer ;)<br>--=
- <br>Christopher Larson<br>clarson at kergoth dot com<br>Founder - BitBake,=
- OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software Engineer=
-, Mentor Graphics
-</div></div>
+We could then use this function here to get a "good" value for the
+field. There are a number of other places we should really start using a
+standardised function too...
 
---089e014941ec3ecdf20503ec6bce--
+From the bigger picture perspective, we've long since wanted to have
+better typed variables, there is a bit more planning needed for that
+however this would be a good step towards it IMO.
+
+Cheers,
+
+Richard
+
+
