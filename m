@@ -1,37 +1,35 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-lb0-f169.google.com (mail-lb0-f169.google.com
-	[209.85.217.169])
-	by mail.openembedded.org (Postfix) with ESMTP id D8C7660167
+Return-Path: <succes.incorporated@gmail.com>
+Received: from mail-la0-f44.google.com (mail-la0-f44.google.com
+	[209.85.215.44])
+	by mail.openembedded.org (Postfix) with ESMTP id 17A026A9D4
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  8 Oct 2014 16:21:39 +0000 (UTC)
-Received: by mail-lb0-f169.google.com with SMTP id 10so8497949lbg.14
+	Thu,  9 Oct 2014 12:43:42 +0000 (UTC)
+Received: by mail-la0-f44.google.com with SMTP id hs14so1096701lab.17
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 08 Oct 2014 09:21:40 -0700 (PDT)
+	Thu, 09 Oct 2014 05:43:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=AU2w2444Y1tmNevAvvcxmZ/uKq60Bp2rRetXJ4sjw9I=;
-	b=k2WuAkF8/uKIPB42cvBACZBbynXk48LbvGCjPEMIy6VZqn1sLw5im52M2Q0eHhrK60
-	MGACDd51sKqZdNfrG7UAnTGuFKM+k3ahbmNQTFhUEnxZK+dPbFCzTETxpbSrVKIiF61L
-	QH2fQOlQ/Ej6Kj7tJNOd0SQf8mEr50JkU0/oFvsgqDJ+6i5yZh0p6ljwKu/7CMXqGFEI
-	YhCpaoURXaL1CGQUe4JekbrmwYs7wz8Lbwz14m91bCu1/jXBsecxFl6agVs2IJdF3+rb
-	eSW+cJRqt6dzV8vMHn3DSy2JM0uiUR4SbVIqtnbg3vaiAS8lFbk05+OCH1ea8INN3U1D
-	/woA==
-X-Received: by 10.152.87.170 with SMTP id az10mr12553648lab.20.1412784812794; 
-	Wed, 08 Oct 2014 09:13:32 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.112.97.200 with HTTP; Wed, 8 Oct 2014 09:13:12 -0700 (PDT)
-In-Reply-To: <1412094118-27406-1-git-send-email-alejandro.hernandez@linux.intel.com>
-References: <1412094118-27406-1-git-send-email-alejandro.hernandez@linux.intel.com>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Wed, 8 Oct 2014 09:13:12 -0700
-X-Google-Sender-Auth: H6gSX-Oh8lV5iqexEorAberTryE
-Message-ID: <CABcZAN=+nJjhKpGXnshy-VuFdW85oXwG5V9KsPMe79qm5cWXsQ@mail.gmail.com>
-To: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH v2] fetcher: fix BB_STRICT_CHECKSUM datatype check
+	h=from:content-type:subject:message-id:date:to:mime-version;
+	bh=KFCPUqEI6sLo5QZbcdUKT/ZOH6eoBKofwIPAMY7/Y34=;
+	b=AfOhbDWldgh0kxb/Sfd4em0gOMNIemGgok2K2G6HzTNmIcQPLt0OzA5DUqfVaMIc+D
+	RWUgqMtWw/z7SrNf1eKYB4RaZA4MmgAmc5IS8icgQ09PSCUqtA5uRJyl02nzwbddptKH
+	apDsa3BsPOxz4PyoyUnK57yP22/u7br7wkkpHLpYibmazYGHr34h1Jvh4Z+uXTwi7dm9
+	jQ/Harf2wqZNp1fNJ9ouqt7SIG5EzQ0Ba9YTbZbCRP3vfZDqb8zOKdcUVXa5FJaMgODf
+	AdHAVJ6FA1r23hrwRSG/MCu8GlZ0yobHQtcYedTLYSB7rSrrAvDpeIpt0Qi/iAF2t44R
+	di4g==
+X-Received: by 10.112.73.4 with SMTP id h4mr17404180lbv.19.1412858622710;
+	Thu, 09 Oct 2014 05:43:42 -0700 (PDT)
+Received: from [10.192.96.130] ([192.38.33.17])
+	by mx.google.com with ESMTPSA id q17sm933548lal.42.2014.10.09.05.43.41
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Thu, 09 Oct 2014 05:43:41 -0700 (PDT)
+From: Manuel Piroz <succes.incorporated@gmail.com>
+Message-Id: <C62CE9D6-CFC7-4D06-A28F-FA3536E9A2D6@gmail.com>
+Date: Thu, 9 Oct 2014 14:43:39 +0200
+To: bitbake-devel@lists.openembedded.org
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+X-Mailer: Apple Mail (2.1878.6)
+Subject: help
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,92 +42,203 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 08 Oct 2014 16:21:41 -0000
-Content-Type: multipart/alternative; boundary=001a11c223b6e9286b0504eb984a
+X-List-Received-Date: Thu, 09 Oct 2014 12:43:44 -0000
+X-Groupsio-MsgNum: 5076
+Content-Type: multipart/signed;
+	boundary="Apple-Mail=_E0F9146D-B217-4E34-A8E9-12F91ABEC30E";
+	protocol="application/pgp-signature"; micalg=pgp-sha512
 
---001a11c223b6e9286b0504eb984a
-Content-Type: text/plain; charset=UTF-8
+--Apple-Mail=_E0F9146D-B217-4E34-A8E9-12F91ABEC30E
+Content-Type: multipart/alternative;
+	boundary="Apple-Mail=_BECC8BCE-0016-4114-ADF6-F6687F63FA75"
 
-On Tue, Sep 30, 2014 at 9:21 AM, Alejandro Hernandez <
-alejandro.hernandez@linux.intel.com> wrote:
-
-> Forcing strict to be a string, to avoid problems when performing
-> comparisons
->
-> [YOCTO #6762]
->
-> Signed-off-by: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
-> ---
->  lib/bb/fetch2/__init__.py | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-> index df2f2b0..10c3346 100644
-> --- a/lib/bb/fetch2/__init__.py
-> +++ b/lib/bb/fetch2/__init__.py
-> @@ -543,8 +543,8 @@ def verify_checksum(ud, d):
->
->      if ud.method.recommends_checksum(ud):
->          # If strict checking enabled and neither sum defined, raise error
-> -        strict = d.getVar("BB_STRICT_CHECKSUM", True) or None
-> -        if strict and not (ud.md5_expected or ud.sha256_expected):
-> +        strict = d.getVar("BB_STRICT_CHECKSUM", "1") or "0"
-> +        if (strict == "1") and not (ud.md5_expected or
-> ud.sha256_expected):
->
-
-Why was True (second argument of getVar) changed to "1" here? It violates
-our conventions and doesn't actually change anything in the behavior.
--- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
-
---001a11c223b6e9286b0504eb984a
-Content-Type: text/html; charset=UTF-8
+--Apple-Mail=_BECC8BCE-0016-4114-ADF6-F6687F63FA75
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=windows-1252
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Tue, Sep 30, 2014 at 9:21 AM, Alejandro Hernandez <span dir=3D"ltr">&lt;=
-<a href=3D"mailto:alejandro.hernandez@linux.intel.com" target=3D"_blank">al=
-ejandro.hernandez@linux.intel.com</a>&gt;</span> wrote:<br><blockquote clas=
-s=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;pad=
-ding-left:1ex"><div id=3D":b1" class=3D"a3s" style=3D"overflow:hidden">Forc=
-ing <span class=3D"il">strict</span> to be a string, to avoid problems when=
- performing comparisons<br>
-<br>
-[YOCTO #6762]<br>
-<br>
-Signed-off-by: Alejandro Hernandez &lt;<a href=3D"mailto:alejandro.hernande=
-z@linux.intel.com">alejandro.hernandez@linux.intel.com</a>&gt;<br>
----<br>
-=C2=A0lib/bb/fetch2/__init__.py | 4 ++--<br>
-=C2=A01 file changed, 2 insertions(+), 2 deletions(-)<br>
-<br>
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py<br>
-index df2f2b0..10c3346 100644<br>
---- a/lib/bb/fetch2/__init__.py<br>
-+++ b/lib/bb/fetch2/__init__.py<br>
-@@ -543,8 +543,8 @@ def verify_checksum(ud, d):<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0if ud.method.recommends_checksum(ud):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# If <span class=3D"il">strict</span> che=
-cking enabled and neither sum defined, raise error<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 <span class=3D"il">strict</span> =3D d.getVar(=
-&quot;BB_STRICT_CHECKSUM&quot;, True) or None<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 if <span class=3D"il">strict</span> and not (u=
-d.md5_expected or ud.sha256_expected):<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 <span class=3D"il">strict</span> =3D d.getVar(=
-&quot;BB_STRICT_CHECKSUM&quot;, &quot;1&quot;) or &quot;0&quot;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (<span class=3D"il">strict</span> =3D=3D &q=
-uot;1&quot;) and not (ud.md5_expected or ud.sha256_expected):</div></blockq=
-uote></div><br>Why was True (second argument of getVar) changed to &quot;1&=
-quot; here? It violates our conventions and doesn&#39;t actually change any=
-thing in the behavior.<br>-- <br>Christopher Larson<br>clarson at kergoth d=
-ot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib=
-<br>Senior Software Engineer, Mentor Graphics
-</div></div>
+Hello All
+I=92m new to the community and i just started building
+i have a bit of a problem trying to build an image i have searched the =
+WWW for answers and no luck. I=92m running the command=20
+=93bitbake core-image-minimal=94=20
 
---001a11c223b6e9286b0504eb984a--
+Loading cache: 100% =
+|#########################################################################=
+##############################################| ETA:  00:00:00
+Loaded 1222 entries from dependency cache.
+NOTE: Resolving any missing task queue dependencies
+
+Build Configuration:
+BB_VERSION        =3D "1.22.0"
+BUILD_SYS         =3D "x86_64-linux"
+NATIVELSBSTRING   =3D "Fedora-20"
+TARGET_SYS        =3D "i586-poky-linux"
+MACHINE           =3D "qemux86"
+DISTRO            =3D "poky"
+DISTRO_VERSION    =3D "1.6.1"
+TUNE_FEATURES     =3D "m32 i586"
+TARGET_FPU        =3D ""
+meta             =20
+meta-yocto       =20
+meta-yocto-bsp    =3D "daisy:7a12eda78555a78ad33c6e38c1ed2b29982b165f"
+
+NOTE: Preparing runqueue
+NOTE: Executing SetScene Tasks
+NOTE: Executing RunQueue Tasks
+Currently 15 running tasks (624 of 1791):
+
+// This is The beginning of the build
+
+
+
+
+
+
+// this is the END
+Summary: 1 task failed:
+  =
+virtual:native:/home/Yocto/Mano/poky/meta/recipes-core/ncurses/ncurses_5.9=
+.bb, do_install
+Summary: There was 1 WARNING message shown.
+Summary: There were 2 ERROR messages shown, returning a non-zero exit =
+code.
+[UNITdaMERCENARY@YoctoBuild 4]$=20
+
+
+
+--Apple-Mail=_BECC8BCE-0016-4114-ADF6-F6687F63FA75
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=windows-1252
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html =
+charset=3Dwindows-1252"></head><body style=3D"word-wrap: break-word; =
+-webkit-nbsp-mode: space; -webkit-line-break: after-white-space;">Hello =
+All<div>I=92m new to the community and i just started =
+building</div><div>i have a bit of a problem trying to build an image i =
+have searched the WWW for answers and no luck. I=92m running the =
+command&nbsp;</div><div>=93bitbake =
+core-image-minimal=94&nbsp;</div><div><br></div><div><div style=3D"margin:=
+ 0px; font-size: 13px; font-family: Menlo; color: rgb(0, 237, 15); =
+background-color: rgb(0, 0, 0);">Loading cache: 100% =
+|#########################################################################=
+##############################################| ETA:&nbsp; =
+00:00:00</div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, 0);">Loaded =
+1222 entries from dependency cache.</div><div style=3D"margin: 0px; =
+font-size: 13px; font-family: Menlo; color: rgb(0, 237, 15); =
+background-color: rgb(0, 0, 0);"><span style=3D"color: =
+#000000"><b>NOTE</b></span>: Resolving any missing task queue =
+dependencies</div><div style=3D"margin: 0px; font-size: 13px; =
+font-family: Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0); min-height: 15px;"><br></div><div style=3D"margin: 0px; font-size: =
+13px; font-family: Menlo; color: rgb(0, 237, 15); background-color: =
+rgb(0, 0, 0);">Build Configuration:</div><div style=3D"margin: 0px; =
+font-size: 13px; font-family: Menlo; color: rgb(0, 237, 15); =
+background-color: rgb(0, 0, 0);">BB_VERSION&nbsp; &nbsp; &nbsp; &nbsp; =3D=
+ "1.22.0"</div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);">BUILD_SYS &nbsp; &nbsp; &nbsp; &nbsp; =3D "x86_64-linux"</div><div =
+style=3D"margin: 0px; font-size: 13px; font-family: Menlo; color: rgb(0, =
+237, 15); background-color: rgb(0, 0, 0);">NATIVELSBSTRING &nbsp; =3D =
+"Fedora-20"</div><div style=3D"margin: 0px; font-size: 13px; =
+font-family: Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);">TARGET_SYS&nbsp; &nbsp; &nbsp; &nbsp; =3D =
+"i586-poky-linux"</div><div style=3D"margin: 0px; font-size: 13px; =
+font-family: Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);">MACHINE &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =3D "qemux86"</div><div =
+style=3D"margin: 0px; font-size: 13px; font-family: Menlo; color: rgb(0, =
+237, 15); background-color: rgb(0, 0, 0);">DISTRO&nbsp; &nbsp; &nbsp; =
+&nbsp; &nbsp; &nbsp; =3D "poky"</div><div style=3D"margin: 0px; =
+font-size: 13px; font-family: Menlo; color: rgb(0, 237, 15); =
+background-color: rgb(0, 0, 0);">DISTRO_VERSION&nbsp; &nbsp; =3D =
+"1.6.1"</div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);">TUNE_FEATURES &nbsp; &nbsp; =3D "m32 i586"</div><div style=3D"margin:=
+ 0px; font-size: 13px; font-family: Menlo; color: rgb(0, 237, 15); =
+background-color: rgb(0, 0, 0);">TARGET_FPU&nbsp; &nbsp; &nbsp; &nbsp; =3D=
+ ""</div><div style=3D"margin: 0px; font-size: 13px; font-family: Menlo; =
+color: rgb(0, 237, 15); background-color: rgb(0, 0, 0);">meta &nbsp; =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</div><div style=3D"margin: =
+0px; font-size: 13px; font-family: Menlo; color: rgb(0, 237, 15); =
+background-color: rgb(0, 0, 0);">meta-yocto &nbsp; &nbsp; &nbsp; =
+&nbsp;</div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);">meta-yocto-bsp&nbsp; &nbsp; =3D =
+"daisy:7a12eda78555a78ad33c6e38c1ed2b29982b165f"</div><div =
+style=3D"margin: 0px; font-size: 13px; font-family: Menlo; color: rgb(0, =
+237, 15); background-color: rgb(0, 0, 0); min-height: =
+15px;"><br></div><div style=3D"margin: 0px; font-size: 13px; =
+font-family: Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);"><span style=3D"color: #000000"><b>NOTE</b></span>: Preparing =
+runqueue</div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, 0);"><span =
+style=3D"color: #000000"><b>NOTE</b></span>: Executing SetScene =
+Tasks</div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, 0);"><span =
+style=3D"color: #000000"><b>NOTE</b></span>: Executing RunQueue =
+Tasks</div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);">Currently 15 running tasks (624 of 1791):</div></div><div =
+style=3D"margin: 0px; font-size: 13px; font-family: Menlo; color: rgb(0, =
+237, 15); background-color: rgb(0, 0, 0);"><br></div><div style=3D"margin:=
+ 0px; font-size: 13px; font-family: Menlo; color: rgb(0, 237, 15); =
+background-color: rgb(0, 0, 0);">// This is The beginning of the =
+build</div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);"><br></div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);"><br></div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);"><br></div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);"><br></div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);"><br></div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);"><br></div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, 0);">// this =
+is the END</div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, 0);">Summary: =
+1 task failed:</div><div style=3D"margin: 0px; font-size: 13px; =
+font-family: Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);">&nbsp; =
+virtual:native:/home/Yocto/Mano/poky/meta/recipes-core/ncurses/ncurses_5.9=
+.bb, do_install</div><div style=3D"margin: 0px; font-size: 13px; =
+font-family: Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);">Summary: There was 1 WARNING message shown.</div><div =
+style=3D"margin: 0px; font-size: 13px; font-family: Menlo; color: rgb(0, =
+237, 15); background-color: rgb(0, 0, 0);">Summary: There were 2 ERROR =
+messages shown, returning a non-zero exit code.</div><div style=3D"margin:=
+ 0px; font-size: 13px; font-family: Menlo; color: rgb(0, 237, 15); =
+background-color: rgb(0, 0, 0);">[UNITdaMERCENARY@YoctoBuild =
+4]$&nbsp;</div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);"><br></div><div style=3D"margin: 0px; font-size: 13px; font-family: =
+Menlo; color: rgb(0, 237, 15); background-color: rgb(0, 0, =
+0);"><br></div></body></html>=
+
+--Apple-Mail=_BECC8BCE-0016-4114-ADF6-F6687F63FA75--
+
+--Apple-Mail=_E0F9146D-B217-4E34-A8E9-12F91ABEC30E
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP using GPGMail
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - https://gpgtools.org
+
+iQEcBAEBCgAGBQJUNoL7AAoJEJ1TlXF66+4YRmwH/RGYzG9rc9h0rR3TDntVBmXH
+dd8hif11Db12t8RaZJi5jyhRQb1QA6Z+OodRjsqlTkljX0zpQKdz5nKr7GI+Tt0N
+8bgc2vlIMX6mMvjq75lPqdWIS0Sup+0sZfXlhRudsIull2WkpXnAWJUs8YaW7hsD
+xHPTed/TSGbq7gm5Jjx3IkEpXG/FRg8PIX16TpsFpcKAthIx7torEfbMWXeyK8lg
+CELhfKZUXadLyuU5oWxMwNBzcFjdWb9tk0kYlILWo+ciFYIWUwkc7oDBi8o9GxxK
+mFKepqw89YPPgPA6Hs0Z7YB2YH67fXWi2mYpyNpr3ND6xCnZjjsTpIJrxr95sJA=
+=I40D
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_E0F9146D-B217-4E34-A8E9-12F91ABEC30E--
