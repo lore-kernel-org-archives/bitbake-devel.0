@@ -1,36 +1,39 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-qg0-f54.google.com (mail-qg0-f54.google.com
-	[209.85.192.54])
-	by mail.openembedded.org (Postfix) with ESMTP id 045BB65C87
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-wi0-f177.google.com (mail-wi0-f177.google.com
+	[209.85.212.177])
+	by mail.openembedded.org (Postfix) with ESMTP id 7E99C706B3
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun,  2 Nov 2014 21:01:01 +0000 (UTC)
-Received: by mail-qg0-f54.google.com with SMTP id q108so7787016qgd.41
+	Mon,  3 Nov 2014 10:27:28 +0000 (UTC)
+Received: by mail-wi0-f177.google.com with SMTP id ex7so5922927wid.16
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 02 Nov 2014 13:01:02 -0800 (PST)
+	Mon, 03 Nov 2014 02:27:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-type;
-	bh=b3yhYrsg7ewvPFotqltcbykNbIJyWn9i67DEWyxgeQc=;
-	b=hnTrMZqezaJQc9RDVv0bF0ZZcVkbAzO0pcq8a2J6uEkq43i7fKJHS+zksikgZlPqDN
-	BlHV88X/z6/lTu5D8dGE81GYzf9DIiH9rGOtIn7xm4Dp3+9MlsTIe8jyq39nFYScZ/e3
-	pnvrPza/SufpJkIUvBGhm2Ro8Y0kAWMzZOGfoO5vlbpsib+OUNvfBdD1fz8fNVP8vDSu
-	sgZbO8D2MBAC+4jZYkWHVKe2FGExZWG67SRZixZaxMmJd60dUsrxuTvatmEP9UX9BpT4
-	erV47Oag1WCrwiq2BcWxWSMNScT2/JIGqxM3GFBPTHmlCteh/TAf+BeN3WHqLflKkiN5
-	N5ng==
-X-Gm-Message-State: ALoCoQkcHAO0LVBzveWOgquofZbRAo2B7H7p6QuRTkdcGin3fcioQdLDj99sSQv0RuE0gZ6q1unm
-X-Received: by 10.229.224.201 with SMTP id ip9mr58593677qcb.5.1414962062166;
-	Sun, 02 Nov 2014 13:01:02 -0800 (PST)
-MIME-Version: 1.0
-Received: by 10.140.98.213 with HTTP; Sun, 2 Nov 2014 13:00:41 -0800 (PST)
-In-Reply-To: <1414430843-27307-1-git-send-email-ben.shelton@ni.com>
-References: <1414430843-27307-1-git-send-email-ben.shelton@ni.com>
-From: "Burton, Ross" <ross.burton@intel.com>
-Date: Sun, 2 Nov 2014 21:00:41 +0000
-Message-ID: <CAJTo0LbVu4NGfLMOPqV1uSfnL3QLS0=cZCcAd-9ScxxxvTY8zw@mail.gmail.com>
-To: Ben Shelton <ben.shelton@ni.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] prserv: don't wait until exit to sync
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=kcUpYptvI8X9BxVDxttmNzy0zsikEXUVb6FGNMHWIKw=;
+	b=TSha6Slkgc2CPLInoRTncrhhAErJRuT4uUd50Fs9dTS8TfieT4kpRp7RftJbNC4PTn
+	3mv3P5L7R2br7FcqGJ+AbSEvUzuhn64T10pE/U/RZkeEP43LCEesMTHCU+JifHtjkkr/
+	BpxVDmySOgM9x0f3o9Z5/WzswnZ7JecxHEqxOAKkrIoJXcgfY5fv5muImkx8OvFAdUqK
+	zEHPJvcMRi9DYFmi+aiKHnbbhtgmWhkljzuifEl3mgvZmJp6FJLTjX99J+cwj9mouJY7
+	C1yCJmNRtBN/70EuipAgkjTb5a19Ufpozt+4ae0GZ4dIeGP8BSJYU4lctrHtAtmGelJk
+	1QgA==
+X-Gm-Message-State: ALoCoQnqxwkEKvfNWQW9ccK14Tap8XqpzO5ORWwB4XDoM/s0p45vgmkPYYb8Y/w/bVEi8dRies6v
+X-Received: by 10.180.219.106 with SMTP id pn10mr15396360wic.63.1415010448921; 
+	Mon, 03 Nov 2014 02:27:28 -0800 (PST)
+Received: from adamian-desk.corp.intel.com ([83.217.123.106])
+	by mx.google.com with ESMTPSA id f1sm5771043wiy.17.2014.11.03.02.27.26
+	for <multiple recipients>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Mon, 03 Nov 2014 02:27:26 -0800 (PST)
+Received: by adamian-desk.corp.intel.com (Postfix, from userid 1000)
+	id 25A54560E98; Fri, 31 Oct 2014 19:16:55 +0000 (GMT)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 31 Oct 2014 19:16:54 +0000
+Message-Id: <cover.1414779051.git.alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.9.1
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 0/2] Patches fixing bugs in 1.6 mode
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,60 +46,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 02 Nov 2014 21:01:04 -0000
-Content-Type: multipart/alternative; boundary=001a1135ef1e1625350506e6874b
+X-List-Received-Date: Mon, 03 Nov 2014 10:27:30 -0000
 
---001a1135ef1e1625350506e6874b
-Content-Type: text/plain; charset=UTF-8
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-On 27 October 2014 17:27, Ben Shelton <ben.shelton@ni.com> wrote:
+These patches fix issues related to 1.6 toaster running mode, in regards
+to data collection, and displaying pages that have 1.7-mode content in them
+(currently causing the UI to be innacessible).
 
-> In the commit 'prserv: Ensure data is committed', the PR server moved to
-> only committing transactions to the database when the PR server is
-> stopped.  This improves performance, but it means that if the machine
-> running the PR server loses power unexpectedly or if the PR server
-> process gets SIGKILL, the uncommitted package revision data is lost.
->
-> To fix this issue, sync the database periodically, once per 30 seconds
-> by default, if it has been marked as dirty.  To be safe, continue to
-> sync the database at exit regardless of its status.
->
+Can you please pull in sync with the toaster.bbclass patch
 
-This appears to be causing random problems for me where bitbake will
-timeout attempting to access the PR database, my hunch is that it's
-blocking on disk I/O.  Are there any tricks we can do with sqlite to reduce
-the overhead of committing? (assuming that sqlite isn't causing a full
-filesystem sync).
+	toaster.bbclass: read elapsed time from the stats file
 
-Ross
+Thank you,
+Alex
 
---001a1135ef1e1625350506e6874b
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+The following changes since commit 26d601ab2a677a422bab425696a2cf6357ff3576:
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On 27 October 2014 17:27, Ben Shelton <span dir=3D"ltr">&lt;<a href=3D"mail=
-to:ben.shelton@ni.com" target=3D"_blank">ben.shelton@ni.com</a>&gt;</span> =
-wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;bord=
-er-left:1px #ccc solid;padding-left:1ex"><div id=3D":2ac" class=3D"a3s" sty=
-le=3D"overflow:hidden">In the commit &#39;prserv: Ensure data is committed&=
-#39;, the PR server moved to<br>
-only committing transactions to the database when the PR server is<br>
-stopped.=C2=A0 This improves performance, but it means that if the machine<=
-br>
-running the PR server loses power unexpectedly or if the PR server<br>
-process gets SIGKILL, the uncommitted package revision data is lost.<br>
-<br>
-To fix this issue, <span class=3D"il">sync</span> the database periodically=
-, once per 30 seconds<br>
-by default, if it has been marked as dirty.=C2=A0 To be safe, continue to<b=
-r>
-<span class=3D"il">sync</span> the database at exit regardless of its statu=
-s.</div></blockquote></div><br>This appears to be causing random problems f=
-or me where bitbake will timeout attempting to access the PR database, my h=
-unch is that it&#39;s blocking on disk I/O.=C2=A0 Are there any tricks we c=
-an do with sqlite to reduce the overhead of committing? (assuming that sqli=
-te isn&#39;t causing a full filesystem sync).</div><div class=3D"gmail_extr=
-a"><br></div><div class=3D"gmail_extra">Ross</div></div>
+  bitbake: clarify startup message (2014-10-30 13:39:37 +0000)
 
---001a1135ef1e1625350506e6874b--
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib adamian/20141031-bb-submission
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20141031-bb-submission
+
+Alexandru DAMIAN (2):
+  toasterui: improvements in data reading
+  toastergui: fix invalid build url usage
+
+ lib/bb/ui/buildinfohelper.py                      | 22 +++++++++++++---------
+ lib/bb/ui/toasterui.py                            |  6 ++++--
+ lib/toaster/toastergui/templates/mrb_section.html | 10 +++++-----
+ 3 files changed, 22 insertions(+), 16 deletions(-)
+
+-- 
+1.9.1
+
+
