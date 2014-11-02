@@ -1,35 +1,36 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wg0-f43.google.com (mail-wg0-f43.google.com [74.125.82.43])
-	by mail.openembedded.org (Postfix) with ESMTP id 3BAE960557
+Return-Path: <ross.burton@intel.com>
+Received: from mail-qg0-f54.google.com (mail-qg0-f54.google.com
+	[209.85.192.54])
+	by mail.openembedded.org (Postfix) with ESMTP id 045BB65C87
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 Oct 2014 17:48:04 +0000 (UTC)
-Received: by mail-wg0-f43.google.com with SMTP id n12so1481232wgh.2
+	Sun,  2 Nov 2014 21:01:01 +0000 (UTC)
+Received: by mail-qg0-f54.google.com with SMTP id q108so7787016qgd.41
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 Oct 2014 10:48:03 -0700 (PDT)
+	Sun, 02 Nov 2014 13:01:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=hFxc+wSV2TPDXITviOWfORrRxNQcxhIiiy4vvw2ST1c=;
-	b=DbrYBex9MIuxkD6IOA/2HMbuEjJURTtifNDUYy2aJy3duE58WL9qLeSodbAOs6/6P6
-	PV3R+UwHU/qb6vdEL3eH6IYFRSkTmBwoAaXwLz5JmJxIEYOHPo+rp8x2+eHOR2vN4NO6
-	l9iXlEDaJlByUBjWt5f/BJWn7JVlx20dapSs8diuuoWXcZ0WD4tsPLYv3Xfj6CxKdYBK
-	Ofl1c0Y+r/hmxUdDCjLAsbFrhs2TpiUJNKNoY/+zYbb/YYFZSgD7lBt0SKhnfbPhi+XE
-	4t94nCva78U4inHU4HuiKy8B+e+wnbIPuK36MDmhQ3kxO7fvXKXktFGAHFG7y3nPGnlQ
-	uL9w==
-X-Gm-Message-State: ALoCoQm+Pu/Kbu0D6rw45PPscrr7EiZdjJOdYPZ7jvSH8tBjxG5WECAP8FJm3cClplFDYJQrh5KZ
-X-Received: by 10.180.88.102 with SMTP id bf6mr29635433wib.43.1414518482821;
-	Tue, 28 Oct 2014 10:48:02 -0700 (PDT)
-Received: from draco.icx.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id
-	fa16sm16157296wid.5.2014.10.28.10.48.02 for <multiple recipients>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 28 Oct 2014 10:48:02 -0700 (PDT)
-From: Michael Wood <michael.g.wood@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 28 Oct 2014 17:47:12 +0000
-Message-Id: <1414518432-28450-1-git-send-email-michael.g.wood@intel.com>
-X-Mailer: git-send-email 1.9.1
-Subject: [PATCH] bitbake: buildinfohelper: Make sure we use the orm defined value for loglevel
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc:content-type;
+	bh=b3yhYrsg7ewvPFotqltcbykNbIJyWn9i67DEWyxgeQc=;
+	b=hnTrMZqezaJQc9RDVv0bF0ZZcVkbAzO0pcq8a2J6uEkq43i7fKJHS+zksikgZlPqDN
+	BlHV88X/z6/lTu5D8dGE81GYzf9DIiH9rGOtIn7xm4Dp3+9MlsTIe8jyq39nFYScZ/e3
+	pnvrPza/SufpJkIUvBGhm2Ro8Y0kAWMzZOGfoO5vlbpsib+OUNvfBdD1fz8fNVP8vDSu
+	sgZbO8D2MBAC+4jZYkWHVKe2FGExZWG67SRZixZaxMmJd60dUsrxuTvatmEP9UX9BpT4
+	erV47Oag1WCrwiq2BcWxWSMNScT2/JIGqxM3GFBPTHmlCteh/TAf+BeN3WHqLflKkiN5
+	N5ng==
+X-Gm-Message-State: ALoCoQkcHAO0LVBzveWOgquofZbRAo2B7H7p6QuRTkdcGin3fcioQdLDj99sSQv0RuE0gZ6q1unm
+X-Received: by 10.229.224.201 with SMTP id ip9mr58593677qcb.5.1414962062166;
+	Sun, 02 Nov 2014 13:01:02 -0800 (PST)
+MIME-Version: 1.0
+Received: by 10.140.98.213 with HTTP; Sun, 2 Nov 2014 13:00:41 -0800 (PST)
+In-Reply-To: <1414430843-27307-1-git-send-email-ben.shelton@ni.com>
+References: <1414430843-27307-1-git-send-email-ben.shelton@ni.com>
+From: "Burton, Ross" <ross.burton@intel.com>
+Date: Sun, 2 Nov 2014 21:00:41 +0000
+Message-ID: <CAJTo0LbVu4NGfLMOPqV1uSfnL3QLS0=cZCcAd-9ScxxxvTY8zw@mail.gmail.com>
+To: Ben Shelton <ben.shelton@ni.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] prserv: don't wait until exit to sync
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,42 +43,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 28 Oct 2014 17:48:08 -0000
+X-List-Received-Date: Sun, 02 Nov 2014 21:01:04 -0000
+Content-Type: multipart/alternative; boundary=001a1135ef1e1625350506e6874b
 
-We need to consistently use LogMessage.INFO/WARNING/ERROR to make sure toaster knows
-how to categories these rather than passing in the "raw" loglevel value
-which in best case comes from python logging but worst case any value.
+--001a1135ef1e1625350506e6874b
+Content-Type: text/plain; charset=UTF-8
 
-[YOCTO 6885]
+On 27 October 2014 17:27, Ben Shelton <ben.shelton@ni.com> wrote:
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
----
- bitbake/lib/bb/ui/buildinfohelper.py | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+> In the commit 'prserv: Ensure data is committed', the PR server moved to
+> only committing transactions to the database when the PR server is
+> stopped.  This improves performance, but it means that if the machine
+> running the PR server loses power unexpectedly or if the PR server
+> process gets SIGKILL, the uncommitted package revision data is lost.
+>
+> To fix this issue, sync the database periodically, once per 30 seconds
+> by default, if it has been marked as dirty.  To be safe, continue to
+> sync the database at exit regardless of its status.
+>
 
-diff --git a/bitbake/lib/bb/ui/buildinfohelper.py b/bitbake/lib/bb/ui/buildinfohelper.py
-index 3800626..fcef53b 100644
---- a/bitbake/lib/bb/ui/buildinfohelper.py
-+++ b/bitbake/lib/bb/ui/buildinfohelper.py
-@@ -983,14 +983,12 @@ class BuildInfoHelper(object):
- 
-         log_information = {}
-         log_information['build'] = self.internal_state['build']
--        if event.levelno >= format.ERROR:
--            log_information['level'] = event.levelno
-+        if event.levelno == format.ERROR:
-+            log_information['level'] = LogMessage.ERROR
-         elif event.levelno == format.WARNING:
-             log_information['level'] = LogMessage.WARNING
--        elif event.levelno == format.INFO:
--            log_information['level'] = LogMessage.INFO
-         else:
--            log_information['level'] = event.levelno
-+            log_information['level'] = LogMessage.INFO
- 
-         log_information['message'] = event.msg
-         log_information['pathname'] = event.pathname
--- 
-1.9.1
+This appears to be causing random problems for me where bitbake will
+timeout attempting to access the PR database, my hunch is that it's
+blocking on disk I/O.  Are there any tricks we can do with sqlite to reduce
+the overhead of committing? (assuming that sqlite isn't causing a full
+filesystem sync).
 
+Ross
 
+--001a1135ef1e1625350506e6874b
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On 27 October 2014 17:27, Ben Shelton <span dir=3D"ltr">&lt;<a href=3D"mail=
+to:ben.shelton@ni.com" target=3D"_blank">ben.shelton@ni.com</a>&gt;</span> =
+wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;bord=
+er-left:1px #ccc solid;padding-left:1ex"><div id=3D":2ac" class=3D"a3s" sty=
+le=3D"overflow:hidden">In the commit &#39;prserv: Ensure data is committed&=
+#39;, the PR server moved to<br>
+only committing transactions to the database when the PR server is<br>
+stopped.=C2=A0 This improves performance, but it means that if the machine<=
+br>
+running the PR server loses power unexpectedly or if the PR server<br>
+process gets SIGKILL, the uncommitted package revision data is lost.<br>
+<br>
+To fix this issue, <span class=3D"il">sync</span> the database periodically=
+, once per 30 seconds<br>
+by default, if it has been marked as dirty.=C2=A0 To be safe, continue to<b=
+r>
+<span class=3D"il">sync</span> the database at exit regardless of its statu=
+s.</div></blockquote></div><br>This appears to be causing random problems f=
+or me where bitbake will timeout attempting to access the PR database, my h=
+unch is that it&#39;s blocking on disk I/O.=C2=A0 Are there any tricks we c=
+an do with sqlite to reduce the overhead of committing? (assuming that sqli=
+te isn&#39;t causing a full filesystem sync).</div><div class=3D"gmail_extr=
+a"><br></div><div class=3D"gmail_extra">Ross</div></div>
+
+--001a1135ef1e1625350506e6874b--
