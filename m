@@ -1,32 +1,44 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id C55B265C91
+Return-Path: <fredrik.svensson@axis.com>
+X-Greylist: delayed 461 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 04 Nov 2014 11:37:21 UTC
+Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
+	by mail.openembedded.org (Postfix) with ESMTP id A5C7265DEB
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  4 Nov 2014 10:51:47 +0000 (UTC)
+	Tue,  4 Nov 2014 11:37:21 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	sA4ApBMZ005878; Tue, 4 Nov 2014 10:51:11 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 4OftmVVAG3Qk; Tue,  4 Nov 2014 10:51:11 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	sA4Ap5aW005858
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-GCM-SHA256 bits=128
-	verify=NOT); Tue, 4 Nov 2014 10:51:06 GMT
-Message-ID: <1415098299.23396.16.camel@ted>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Gary Thomas <gary@mlbassoc.com>
-Date: Tue, 04 Nov 2014 10:51:39 +0000
-In-Reply-To: <1415090528.23396.4.camel@ted>
-References: <1414430843-27307-1-git-send-email-ben.shelton@ni.com>
-	<CAJTo0LbVu4NGfLMOPqV1uSfnL3QLS0=cZCcAd-9ScxxxvTY8zw@mail.gmail.com>
-	<20141103154726.GA9716@bshelton-desktop> <1415035858.5111.45.camel@ted>
-	<5457C903.2030703@mlbassoc.com> <1415090528.23396.4.camel@ted>
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] prserv: don't wait until exit to sync
+	by bes.se.axis.com (Postfix) with ESMTP id 6470F2E40D
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue,  4 Nov 2014 12:29:39 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id vUgX-2zXai0w for <bitbake-devel@lists.openembedded.org>;
+	Tue,  4 Nov 2014 12:29:35 +0100 (CET)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by bes.se.axis.com (Postfix) with ESMTP id E60D82E40E
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue,  4 Nov 2014 12:29:34 +0100 (CET)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id CBB20C94
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue,  4 Nov 2014 12:29:34 +0100 (CET)
+Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
+	by boulder.se.axis.com (Postfix) with ESMTP id BE087C6C
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue,  4 Nov 2014 12:29:34 +0100 (CET)
+Received: from lnxfredriks.se.axis.com (lnxfredriks.se.axis.com [10.94.158.6])
+	by seth.se.axis.com (Postfix) with ESMTP id BB2DE166001;
+	Tue,  4 Nov 2014 12:29:34 +0100 (CET)
+Received: by lnxfredriks.se.axis.com (Postfix, from userid 272)
+	id B134EC069; Tue,  4 Nov 2014 12:29:34 +0100 (CET)
+From: Fredrik Svensson <fredrik.svensson@axis.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue,  4 Nov 2014 12:29:32 +0100
+Message-Id: <1415100572-2314-1-git-send-email-fredrik.svensson@axis.com>
+X-Mailer: git-send-email 1.7.10.4
+Cc: Fredrik Svensson <fredriks@axis.com>
+Subject: [PATCH] fetch2/git: Allow other namespaces than refs/heads to be searched.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,40 +51,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 04 Nov 2014 10:51:56 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 04 Nov 2014 11:37:27 -0000
 
-On Tue, 2014-11-04 at 08:42 +0000, Richard Purdie wrote:
-> We're still figuring out what is going on but it is roughly that:
-> 
-> a) The build generates a ton of IO
-> b) That IO builds up into a queue
-> c) The PR service decides it needs to sync to disk
-> d) The PR service hits an fsync() of some kind in sqlite whilst writing 
-> e) The PR service is blocked for its clients until the sync() finishes
-> f) Connections to the PR service timeout.
-> 
-> It would be nice if we could write the sqlite data in a separate thread
-> whilst the readers continue. There is an asynchronous module but its
-> deprecated:
-> 
-> http://www.sqlite.org/asyncvfs.html
-> 
-> WAL is recommended instead:
-> 
-> http://www.sqlite.org/wal.html
-> 
-> so we probably need to look at that.
+This makes it possble to fetch Gerrit review references which are
+normally stored under refs/changes.
 
-FWIW,
+Please disregard previous patch with the same topic.
 
-http://git.yoctoproject.org/cgit.cgi/poky-contrib/commit/?h=rpurdie/t222&id=df0dabbf90f3da7153295adb83e51c41ae4d9375
+Signed-off-by: Fredrik Svensson <fredrik.svensson@axis.com>
+---
+ lib/bb/fetch2/git.py |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-is a patch Ross is kindly testing for me...
-
-Cheers,
-
-Richard
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 799fb6c..66a77a8 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -339,7 +339,10 @@ class Git(FetchMethod):
+         """
+         Compute the HEAD revision for the url
+         """
+-        search = "refs/heads/%s refs/tags/%s^{}" % (ud.unresolvedrev[name], ud.unresolvedrev[name])
++        if ud.unresolvedrev[name][:5] == "refs/":
++            search = "%s %s^{}" % (ud.unresolvedrev[name], ud.unresolvedrev[name])
++        else:
++            search = "refs/heads/%s refs/tags/%s^{}" % (ud.unresolvedrev[name], ud.unresolvedrev[name])
+         output = self._lsremote(ud, d, search)
+         return output.split()[0]
+ 
+-- 
+1.7.10.4
 
 
