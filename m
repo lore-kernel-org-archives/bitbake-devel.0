@@ -1,22 +1,24 @@
 Return-Path: <anibal.limon@linux.intel.com>
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 77F8D71F50
+	by mail.openembedded.org (Postfix) with ESMTP id 3917865E94
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  5 Nov 2014 16:51:08 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 05 Nov 2014 08:49:10 -0800
+	Wed,  5 Nov 2014 18:12:41 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 05 Nov 2014 10:10:03 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.07,320,1413270000"; d="scan'208";a="617654735"
+X-IronPort-AV: E=Sophos;i="5.07,321,1413270000"; d="scan'208";a="627137520"
 Received: from alimon-thinkpad-w540.zpn.intel.com ([10.219.4.154])
-	by fmsmga001.fm.intel.com with ESMTP; 05 Nov 2014 08:48:36 -0800
+	by fmsmga002.fm.intel.com with ESMTP; 05 Nov 2014 10:09:53 -0800
 From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  5 Nov 2014 10:49:11 -0600
-Message-Id: <1415206153-22597-1-git-send-email-anibal.limon@linux.intel.com>
+Date: Wed,  5 Nov 2014 12:10:27 -0600
+Message-Id: <1415211029-25352-2-git-send-email-anibal.limon@linux.intel.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1415211029-25352-1-git-send-email-anibal.limon@linux.intel.com>
+References: <1415211029-25352-1-git-send-email-anibal.limon@linux.intel.com>
 MIME-Version: 1.0
 X-Mailman-Approved-At: Thu, 06 Nov 2014 11:33:24 +0000
-Subject: [PATCHv2 1/3] bitbake: Add beautifulsoup 4.3.2
+Subject: [PATCHv3 1/3] bitbake: bs4: Add beautifulsoup 4.3.2
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,15 +31,15 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 05 Nov 2014 16:51:27 -0000
+X-List-Received-Date: Wed, 05 Nov 2014 18:12:53 -0000
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-bitbake: Add beutifulsoup 4.3.2 builder module
+Added Beautifulsoup module because fetch/wget latest_versionstring
+method depends on it.
 
-Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
-
-bitbake: Add beautifulsoup 4.3.2
+This provides support to fetch/wget.py module for search new package
+versions in upstream sites.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
