@@ -1,37 +1,27 @@
-Return-Path: <Nishanth.S@Altiux.com>
-X-Greylist: delayed 949 seconds by postgrey-1.34 at layers.openembedded.org;
-	Tue, 18 Nov 2014 06:46:22 UTC
-Received: from APAC01-HK1-obe.outbound.protection.outlook.com
-	(mail-hk1on0076.outbound.protection.outlook.com [134.170.140.76])
-	by mail.openembedded.org (Postfix) with ESMTP id 03D10718EA
+Return-Path: <yocto@mindchasers.com>
+X-Greylist: delayed 1223 seconds by postgrey-1.34 at layers.openembedded.org;
+	Wed, 19 Nov 2014 03:22:20 UTC
+Received: from smtp.webfaction.com (mail6.webfaction.com [74.55.86.74])
+	by mail.openembedded.org (Postfix) with ESMTP id E398872041
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Nov 2014 06:46:22 +0000 (UTC)
-Received: from [172.16.0.96] (111.93.235.83) by
-	SIXPR06MB0575.apcprd06.prod.outlook.com (25.160.238.18) with Microsoft
-	SMTP Server (TLS) id 15.1.16.15; Tue, 18 Nov 2014 06:30:29 +0000
-Message-ID: <546AE780.7070208@altiux.com>
-Date: Tue, 18 Nov 2014 12:00:24 +0530
-From: Nishanth S <Nishanth.S@altiux.com>
+	Wed, 19 Nov 2014 03:22:20 +0000 (UTC)
+Received: from [192.168.1.10] (unknown [68.38.40.177])
+	by smtp.webfaction.com (Postfix) with ESMTP id CCD03207CC72;
+	Wed, 19 Nov 2014 03:01:56 +0000 (UTC)
+Message-ID: <546C0823.6060808@mindchasers.com>
+Date: Tue, 18 Nov 2014 22:01:55 -0500
+From: Bob Cochran <yocto@mindchasers.com>
 User-Agent: Mozilla/5.0 (X11; Linux x86_64;
 	rv:31.0) Gecko/20100101 Thunderbird/31.2.0
 MIME-Version: 1.0
-To: <bitbake-devel@lists.openembedded.org>
-X-Originating-IP: [111.93.235.83]
-X-ClientProxiedBy: SG2PR03CA0030.apcprd03.prod.outlook.com (25.160.233.40) To
-	SIXPR06MB0575.apcprd06.prod.outlook.com (25.160.238.18)
-X-Microsoft-Antispam: UriScan:;
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:;SRVR:SIXPR06MB0575;
-X-Exchange-Antispam-Report-Test: UriScan:;
-X-Exchange-Antispam-Report-CFA-Test: BCL:0;PCL:0;RULEID:;SRVR:SIXPR06MB0575;
-X-Forefront-PRVS: 039975700A
-X-Forefront-Antispam-Report: SFV:NSPM;
-	SFS:(10009020)(6009001)(6049001)(199003)(189002)(50986999)(59896002)(54356999)(87976001)(23676002)(110136001)(102836001)(19580395003)(31966008)(92566001)(101416001)(21056001)(80316001)(4396001)(83506001)(87266999)(65816999)(106356001)(122386002)(97736003)(2351001)(105586002)(33656002)(46102003)(99396003)(120916001)(107046002)(66066001)(65956001)(20776003)(107886001)(47776003)(86362001)(92726001)(64126003)(64706001)(42186005)(40100003)(62966003)(450100001)(229853001)(95666004)(50466002)(77156002)(77096003)(65806001)(36756003)(7099021);
-	DIR:OUT; SFP:1101; SCL:1; SRVR:SIXPR06MB0575; H:[172.16.0.96];
-	FPR:; MLV:ovrnspm; PTR:InfoNoRecords; A:1; MX:1; LANG:en; 
-X-Exchange-Antispam-Report-CFA-Test: BCL:0;PCL:0;RULEID:;SRVR:SIXPR06MB0575;
-X-OriginatorOrg: Altiux.com
+To: "Rifenbark, Scott M" <scott.m.rifenbark@intel.com>, 
+	Yocto discussion list <yocto@yoctoproject.org>
+References: <545FD907.2070003@mindchasers.com>
+	<41DEA4B02DBDEF40A0F3B6D0DDB1237988E52758@ORSMSX101.amr.corp.intel.com>
+In-Reply-To: <41DEA4B02DBDEF40A0F3B6D0DDB1237988E52758@ORSMSX101.amr.corp.intel.com>
 X-Mailman-Approved-At: Sun, 23 Nov 2014 21:58:57 +0000
-Subject: how to update a package on yocto project
+Cc: paul@paulbarker.me.uk, bitbake-dev <bitbake-devel@lists.openembedded.org>
+Subject: Re: [yocto] newbb.vim vs skeleton recipe in yocto-docs dev manual....
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,29 +34,128 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 18 Nov 2014 06:46:26 -0000
-Content-Type: text/plain; charset="utf-8"; format=flowed
+X-List-Received-Date: Wed, 19 Nov 2014 03:22:28 -0000
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi
-
-board : Intel Galileo Gen 1
-
-I use yocto project for build image/tarball for the board.
-
-How to update a existing package???
-
-I mean, I use openjdk-6 on my board.
-
-But I need to change it to openjdk-7.
-
-I edited local.conf by adding following line.
-
-preferred_version_openjdkXXXX = XXXX
+On 11/10/2014 09:28 AM, Rifenbark, Scott M wrote:
+> newbb.vim needs to be patched.
 
 
--- 
-Regards,
-Nishanth.S
+I have a patch ready to bring newbb.vim in line with Section 5.3.2 of 
+the Yocto Project Dev Manual.   However, I'm wondering whether I can 
+drop the initial two lines of the generated file (I think I should):
+
+
+# Copyright (C) 2014 <user_name> <user_email>
+# Released under the MIT license (see COPYING.MIT for the terms)
+
+
+This seems inconsistent with the recipes I see in the Yocto / OE layers 
+and the Yocto documentation.
+
+The patch I created, which is provided below for reference, comments out 
+the generation of these first two lines:
+
+
+--- a/bitbake/contrib/vim/plugin/newbb.vim
++++ b/bitbake/contrib/vim/plugin/newbb.vim
+@@ -44,21 +44,31 @@ fun! NewBBTemplate()
+      let l:paste = &paste
+      set nopaste
+
+-    " Get the header
+-    call BBHeader()
++    " Uncomment the line below to enable header generation
++    "call BBHeader()
+
+      " New the bb template
++    0 put ='SUMMARY = \"\"'
+      put ='DESCRIPTION = \"\"'
+      put ='HOMEPAGE = \"\"'
+      put ='LICENSE = \"\"'
+-    put ='SECTION = \"\"'
++    put ='LIC_FILES_CHKSUM = \"\"'
++    put =''
+      put ='DEPENDS = \"\"'
+      put =''
+      put ='SRC_URI = \"\"'
++    put ='SRC_URI[md5sum] = \"\"'
++    put ='SRC_URI[sha256sum] = \"\"'
++    put =''
++    put ='S = \"${WORKDIR}/${PN}-${PV}\"'
++    put =''
++    put ='#inherit <classes>'
++
++
+
+      " Go to the first place to edit
+      0
+-    /^DESCRIPTION =/
++    /^SUMMARY =/
+      exec "normal 2f\""
+
+      if paste == 1
+
+
+
+thanks
+
+Bob
+
+
+
+
+>
+> Scott
+>
+>> -----Original Message-----
+>> From: yocto-bounces@yoctoproject.org [mailto:yocto-
+>> bounces@yoctoproject.org] On Behalf Of Bob Cochran
+>> Sent: Sunday, November 09, 2014 1:14 PM
+>> To: Yocto discussion list
+>> Subject: [yocto] newbb.vim vs skeleton recipe in yocto-docs dev manual....
+>>
+>> Hi,
+>>
+>> I just noticed that newbb.vim in bitbake/contrib is notably different from the
+>> skeleton recipe proposed in the latest Dev Manual.
+>>
+>> I'll submit a patch if someone can give me some guidance on what should be
+>> in newbb.vim (or maybe it's the manual that needs to be patched).
+>>
+>> Bob
+>>
+>>
+>>  From yocto-docs: Dev Manual (modify the following skeleton recipe):
+>>
+>> SUMMARY = ""
+>> HOMEPAGE = ""
+>> LICENSE = ""
+>> LIC_FILES_CHKSUM = ""
+>> SRC_URI = ""
+>> SRC_URI[md5sum] = ""
+>> SRC_URI[sha256sum] = ""
+>> S = "${WORKDIR}/${PN}-${PV}"
+>>
+>>
+>>
+>>  From newbb.vim:
+>>
+>> DESCRIPTION = ""
+>> HOMEPAGE = ""
+>> LICENSE = ""
+>> SECTION = ""
+>> DEPENDS = ""
+>>
+>> SRC_URI = ""
+>>
+>>
+>> --
+>> _______________________________________________
+>> yocto mailing list
+>> yocto@yoctoproject.org
+>> https://lists.yoctoproject.org/listinfo/yocto
+>
 
 
