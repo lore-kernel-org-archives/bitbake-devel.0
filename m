@@ -1,44 +1,45 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-pa0-f41.google.com (mail-pa0-f41.google.com
-	[209.85.220.41])
-	by mail.openembedded.org (Postfix) with ESMTP id D6B1D6B7CA
+Received: from mail-pd0-f174.google.com (mail-pd0-f174.google.com
+	[209.85.192.174])
+	by mail.openembedded.org (Postfix) with ESMTP id EE354721CA
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 20 Nov 2014 16:27:37 +0000 (UTC)
-Received: by mail-pa0-f41.google.com with SMTP id rd3so2883789pab.0
+	Thu, 20 Nov 2014 16:27:38 +0000 (UTC)
+Received: by mail-pd0-f174.google.com with SMTP id w10so3329440pde.5
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 20 Nov 2014 08:27:38 -0800 (PST)
+	Thu, 20 Nov 2014 08:27:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=8q7X6wK6HxPGhQUA1s8kb6BZeHcgAbdANrGl03MdF1Q=;
-	b=hYGNNmc5pYiRwdEFFEsLZSizoMBrjhfJWh44BO39+PcE97lwcL5zcK8tXo+b4RrRll
-	l8WvTo30An7rmhCxaoxYoUPvvowx4ZkaK4+vMpbFPSF/s2fnSnqntQCgX2FcteLK5EWm
-	Vyh3eyIoEKc4+0D4hiM4QpQYBOX2ehrcsvJSafPchqVeECZzVw68pjV7LQ5IDJQtOr/y
-	XIAXEZa8/Or7U5OHyK2KRayucVGds8f7PhmTlessD30mKYPzTMmaOZFuJK//6cwRgyk6
-	G6mcCvN2zJLQ4FcR6fVpsASVZF8ybCKzlIrwaWqBEFpoba/13f3UVagBn+9w0vhdVSDA
-	VzUA==
-X-Gm-Message-State: ALoCoQmyDBzgX7qp/3jdwSqdlAfe2O2KY5MsmfbBrQZAmkjdL+gNVxQroe184seIffcm0sYwwY1v
-X-Received: by 10.70.45.233 with SMTP id q9mr57927481pdm.24.1416500858573;
-	Thu, 20 Nov 2014 08:27:38 -0800 (PST)
+	bh=Ke6Jz3tgUyDwwpqMcdFWcU2MoCKknp42kAqXjMT/Z8Q=;
+	b=FhyJ/lKijxlKG8WHMIvrQIy2Ljbq/P3zOMgiEK0dYgPXIQqsF86hnMwdxdbik8h5Xs
+	69G67fOaE4QjiFc9vogWG+sXSz8Rbm3PM9feGfVQZ2gr2AEuv7qwLwZNfamp7uZfvMJp
+	a7g+fuyxy3rDMu5Nt0yEkI0vWHN5Q36sFLRs6LQWX4oyTZM25TsXNH4WSvLO27ZS3Jxg
+	Q2NxLkMUF0juiH2I4ht9XuAud/Xl24iROb0yfvnV9s1wjD1MlqHwOa3vc5IQEU796A/F
+	oC3duLafz7rld9XonHC/BKJh73DgKStpyJiIzVaJPrVI3hz8GVeHfSeiXWqCssB67RW3
+	ah1Q==
+X-Gm-Message-State: ALoCoQnJq7GFAk1418ZhdqVqQrI/Wy7u0y6d+luBALfRlmPASVGXov1CIKiK1JnyLH6ERVZP6Ies
+X-Received: by 10.69.0.138 with SMTP id ay10mr57022407pbd.110.1416500859115;
+	Thu, 20 Nov 2014 08:27:39 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id y10sm2500432pdq.15.2014.11.20.08.27.35
+	by mx.google.com with ESMTPSA id ub7sm2483881pbc.30.2014.11.20.08.27.35
 	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 20 Nov 2014 08:27:36 -0800 (PST)
+	Thu, 20 Nov 2014 08:27:37 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 853035641E5; Thu, 20 Nov 2014 16:27:29 +0000 (GMT)
+	id 88343561F6D; Thu, 20 Nov 2014 16:27:29 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 20 Nov 2014 16:27:24 +0000
-Message-Id: <83af0db872ea28965cd6007ad72ff210f67a4f30.1416500715.git.alexandru.damian@intel.com>
+Date: Thu, 20 Nov 2014 16:27:26 +0000
+Message-Id: <dc9b4a4ab06ed49f3fcab4f644b8bc136f19fdb0.1416500715.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <d4a47bc84f762666a847f1152cc2e75c9ef36092.1416500715.git.alexandru.damian@intel.com>
 References: <d4a47bc84f762666a847f1152cc2e75c9ef36092.1416500715.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1416500715.git.alexandru.damian@intel.com>
 References: <cover.1416500715.git.alexandru.damian@intel.com>
-Cc: Belen Barros Pena <belen.barros.pena@linux.intel.com>
-Subject: [PATCH 08/11] toaster: Tiny refinements to the new build button dialog
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>,
+	Belen Barros Pena <belen.barros.pena@linux.intel.com>
+Subject: [PATCH 10/11] toaster: fix dependencies dialog layout
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,56 +52,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 20 Nov 2014 16:27:38 -0000
+X-List-Received-Date: Thu, 20 Nov 2014 16:27:39 -0000
 
 From: Belen Barros Pena <belen.barros.pena@linux.intel.com>
 
-* Get rid of the display:block attribute for the "View
-all projects" link, to stop it from firing when you
-click outside (but next to) the link
-
-* Give some margin to the incomplete configuration
-alert
+Remove the bottom margin of forms inside dependencies
+modal dialogs.
 
 Signed-off-by: Belen Barros Pena <belen.barros.pena@linux.intel.com>
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/static/css/default.css | 3 ++-
- lib/toaster/toastergui/templates/base.html    | 4 ++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ lib/toaster/toastergui/static/css/default.css | 3 +++
+ lib/toaster/toastergui/templates/layers.html  | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/lib/toaster/toastergui/static/css/default.css b/lib/toaster/toastergui/static/css/default.css
-index 6194c97..902a2bd 100644
+index 902a2bd..dcb8e34 100644
 --- a/lib/toaster/toastergui/static/css/default.css
 +++ b/lib/toaster/toastergui/static/css/default.css
-@@ -133,7 +133,8 @@ select { width: auto; }
+@@ -136,6 +136,9 @@ select { width: auto; }
+ .new-build .alert { margin-top: 10px; }
+ .new-build .alert p { margin-top: 10px; }
  
- /* styles for the new build button */
- .new-build .btn-primary { padding: 4px 30px; }
--#view-all-projects { display: block; }
-+.new-build .alert { margin-top: 10px; }
-+.new-build .alert p { margin-top: 10px; }
- 
++/* Remove bottom margin for forms inside modal dialogs */
++#dependencies_modal_form { margin-bottom: 0px; }
++
  /* Configuration styles */
  .icon-trash { color: #B94A48; font-size: 16px; padding-left: 2px; }
-diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
-index 87746bf..734d2ad 100644
---- a/lib/toaster/toastergui/templates/base.html
-+++ b/lib/toaster/toastergui/templates/base.html
-@@ -81,12 +81,12 @@
-                         <button id="save-project-button" class="btn" type="button">Save</button>
-                         <a href="#" id="cancel-change-project" class="btn btn-link">Cancel</a>
-                       </div>
--                      <a id="view-all-projects" href="{% url 'all-projects' %}">View all projects</a>
-+                      <p><a id="view-all-projects" href="{% url 'all-projects' %}">View all projects</a></p>
-                     </form>
-                   </li>
-                   <div class="alert" style="display:none">
-                     This project's configuration is incomplete,<br/>so you cannot run builds.<br/>
--                    <a href="{% if project.id %}{% url 'project' project.id %}{% endif %}">View project configuration</a>
-+                    <p><a href="{% if project.id %}{% url 'project' project.id %}{% endif %}">View project configuration</a></p>
-                   </div>
-                   <li id="targets-form">
-                     <h6>Target(s):</h6>
+ .icon-trash:hover { color: #943A38; text-decoration: none; cursor: pointer; }
+diff --git a/lib/toaster/toastergui/templates/layers.html b/lib/toaster/toastergui/templates/layers.html
+index e9f910f..4e92332 100644
+--- a/lib/toaster/toastergui/templates/layers.html
++++ b/lib/toaster/toastergui/templates/layers.html
+@@ -89,7 +89,7 @@
+ 
+     <!-- 'Layer dependencies modal' -->
+     <div id="dependencies_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+-        <form id="dependencies_modal_form" style="margin: 0px">
++        <form id="dependencies_modal_form">
+         <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+             <h3><span class="layer-name"></span> dependencies</h3>
 -- 
 1.9.1
 
