@@ -1,45 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-pd0-f174.google.com (mail-pd0-f174.google.com
-	[209.85.192.174])
-	by mail.openembedded.org (Postfix) with ESMTP id EE354721CA
+Received: from mail-pa0-f47.google.com (mail-pa0-f47.google.com
+	[209.85.220.47])
+	by mail.openembedded.org (Postfix) with ESMTP id 1567B6B7CA
 	for <bitbake-devel@lists.openembedded.org>;
 	Thu, 20 Nov 2014 16:27:38 +0000 (UTC)
-Received: by mail-pd0-f174.google.com with SMTP id w10so3329440pde.5
+Received: by mail-pa0-f47.google.com with SMTP id kq14so2846875pab.34
 	for <bitbake-devel@lists.openembedded.org>;
 	Thu, 20 Nov 2014 08:27:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=Ke6Jz3tgUyDwwpqMcdFWcU2MoCKknp42kAqXjMT/Z8Q=;
-	b=FhyJ/lKijxlKG8WHMIvrQIy2Ljbq/P3zOMgiEK0dYgPXIQqsF86hnMwdxdbik8h5Xs
-	69G67fOaE4QjiFc9vogWG+sXSz8Rbm3PM9feGfVQZ2gr2AEuv7qwLwZNfamp7uZfvMJp
-	a7g+fuyxy3rDMu5Nt0yEkI0vWHN5Q36sFLRs6LQWX4oyTZM25TsXNH4WSvLO27ZS3Jxg
-	Q2NxLkMUF0juiH2I4ht9XuAud/Xl24iROb0yfvnV9s1wjD1MlqHwOa3vc5IQEU796A/F
-	oC3duLafz7rld9XonHC/BKJh73DgKStpyJiIzVaJPrVI3hz8GVeHfSeiXWqCssB67RW3
-	ah1Q==
-X-Gm-Message-State: ALoCoQnJq7GFAk1418ZhdqVqQrI/Wy7u0y6d+luBALfRlmPASVGXov1CIKiK1JnyLH6ERVZP6Ies
-X-Received: by 10.69.0.138 with SMTP id ay10mr57022407pbd.110.1416500859115;
+	bh=2uP0/wpV+D9GOlHcttKe7a+XRGlnAb0SdiiJscDb010=;
+	b=PmzcEzrgf4/J1OaltAGlydtTv0m7rQVj8cC8gAzQ43CocXiE5O9NtJk7YDru8KB8F2
+	A5tdShPmoFyibrX9ityoRJnsPnIDYhLwoRLpE1XwEw07W7z/mR0i9Qtvw9GveQ4aL13k
+	7BBgArv/AErwUKIKCY5Kw5hPrt1m8YycZgBoNcQRlz661hbgBCxGJC+H1AvqDnxBv6Sq
+	6eEM4M7utw/X/GTK82V/wbiy6HX4CgnERk/vqHnlISyta7VoGyjtyW4q89QjYThEKPyF
+	P0LfqVsQBsl2D1GWwCfo2j4geT53sRDRscfO3qXCIiBJMGbML/6g69ExMN1M26H6ONMR
+	OGtg==
+X-Gm-Message-State: ALoCoQlUYcjufHyTJM+QM9a5o/CNEliVcvrNs386XGR7PAN8J5R1Rq2wtkzDKXbSO11hbXiWithe
+X-Received: by 10.68.68.197 with SMTP id y5mr40614641pbt.82.1416500859670;
 	Thu, 20 Nov 2014 08:27:39 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id ub7sm2483881pbc.30.2014.11.20.08.27.35
+	by mx.google.com with ESMTPSA id u8sm2503655pdr.10.2014.11.20.08.27.36
 	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 20 Nov 2014 08:27:37 -0800 (PST)
+	Thu, 20 Nov 2014 08:27:38 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 88343561F6D; Thu, 20 Nov 2014 16:27:29 +0000 (GMT)
+	id 86A60564120; Thu, 20 Nov 2014 16:27:29 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 20 Nov 2014 16:27:26 +0000
-Message-Id: <dc9b4a4ab06ed49f3fcab4f644b8bc136f19fdb0.1416500715.git.alexandru.damian@intel.com>
+Date: Thu, 20 Nov 2014 16:27:25 +0000
+Message-Id: <c67a5dd8026833e167c58a17643febee130dbb35.1416500715.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <d4a47bc84f762666a847f1152cc2e75c9ef36092.1416500715.git.alexandru.damian@intel.com>
 References: <d4a47bc84f762666a847f1152cc2e75c9ef36092.1416500715.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1416500715.git.alexandru.damian@intel.com>
 References: <cover.1416500715.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>,
-	Belen Barros Pena <belen.barros.pena@linux.intel.com>
-Subject: [PATCH 10/11] toaster: fix dependencies dialog layout
+Cc: Belen Barros Pena <belen.barros.pena@linux.intel.com>
+Subject: [PATCH 09/11] toaster: add no results state to all layers page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,43 +55,45 @@ X-List-Received-Date: Thu, 20 Nov 2014 16:27:39 -0000
 
 From: Belen Barros Pena <belen.barros.pena@linux.intel.com>
 
-Remove the bottom margin of forms inside dependencies
-modal dialogs.
+When you search for a layer and your search returns no results,
+we should show you an alert and a link to show back all layers,
+as we do in all other tables.
 
 Signed-off-by: Belen Barros Pena <belen.barros.pena@linux.intel.com>
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/static/css/default.css | 3 +++
- lib/toaster/toastergui/templates/layers.html  | 2 +-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ lib/toaster/toastergui/templates/layers.html | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/lib/toaster/toastergui/static/css/default.css b/lib/toaster/toastergui/static/css/default.css
-index 902a2bd..dcb8e34 100644
---- a/lib/toaster/toastergui/static/css/default.css
-+++ b/lib/toaster/toastergui/static/css/default.css
-@@ -136,6 +136,9 @@ select { width: auto; }
- .new-build .alert { margin-top: 10px; }
- .new-build .alert p { margin-top: 10px; }
- 
-+/* Remove bottom margin for forms inside modal dialogs */
-+#dependencies_modal_form { margin-bottom: 0px; }
-+
- /* Configuration styles */
- .icon-trash { color: #B94A48; font-size: 16px; padding-left: 2px; }
- .icon-trash:hover { color: #943A38; text-decoration: none; cursor: pointer; }
 diff --git a/lib/toaster/toastergui/templates/layers.html b/lib/toaster/toastergui/templates/layers.html
-index e9f910f..4e92332 100644
+index 2bca84b..e9f910f 100644
 --- a/lib/toaster/toastergui/templates/layers.html
 +++ b/lib/toaster/toastergui/templates/layers.html
-@@ -89,7 +89,7 @@
+@@ -23,6 +23,18 @@
+   <div id="zone1alerts">
+   </div>
  
-     <!-- 'Layer dependencies modal' -->
-     <div id="dependencies_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
--        <form id="dependencies_modal_form" style="margin: 0px">
-+        <form id="dependencies_modal_form">
-         <div class="modal-header">
-             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-             <h3><span class="layer-name"></span> dependencies</h3>
++{% if objects.paginator.count == 0 %}
++  <div class="row-fluid">
++      <div class="alert">
++        <form class="no-results input-append" id="searchform">
++            <input id="search" name="search" class="input-xxlarge" type="text" value="{{request.GET.search}}"/>{% if request.GET.search %}<a href="javascript:$('#search').val('');searchform.submit()" class="add-on btn" tabindex="-1"><i class="icon-remove"></i></a>{% endif %}
++            <button class="btn" type="submit" value="Search">Search</button>
++            <button class="btn btn-link" onclick="javascript:$('#search').val('');searchform.submit()">Show all layers</button>
++        </form>
++      </div>
++  </div>
++
++{% else %}
+ 
+ {% include "basetable_top_layers.html" %}
+     {% for o in objects %}
+@@ -264,4 +276,6 @@ $(document).ready(function (){
+ </script>
+ {%endif%}
+ 
++{%endif%}
++
+ {% endblock %}
 -- 
 1.9.1
 
