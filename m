@@ -1,43 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-pd0-f173.google.com (mail-pd0-f173.google.com
-	[209.85.192.173])
-	by mail.openembedded.org (Postfix) with ESMTP id 06C1265C78
+Received: from mail-pa0-f52.google.com (mail-pa0-f52.google.com
+	[209.85.220.52])
+	by mail.openembedded.org (Postfix) with ESMTP id 0C1666B7CA
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 20 Nov 2014 16:27:33 +0000 (UTC)
-Received: by mail-pd0-f173.google.com with SMTP id ft15so3357238pdb.4
+	Thu, 20 Nov 2014 16:27:35 +0000 (UTC)
+Received: by mail-pa0-f52.google.com with SMTP id eu11so2849998pac.11
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 20 Nov 2014 08:27:34 -0800 (PST)
+	Thu, 20 Nov 2014 08:27:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=HouocGPQw7kYF4ZpwBal9RZghME65nLTwATopsQynOA=;
-	b=CGYCx6PbsWZP7y5Lher3wGeIDra5jFMFMXzSS4955X/lbXjq+PDARjyjdojl2mog8N
-	p7EqsqBV5Jyc6x1txOZCE98WEfrtMpqQthRHaeSWs7hBj+2/daLqv7Lsu7hDt566xcvU
-	k2iDCOG5EUE1ycwx8H4nAjdgTRrzRvH0/xa3F6DhhFERbtVgmdEiu1yizxDVZYeBEoEy
-	vj3jWxTVTHIst16PY1yuD1wULDTiqL149CT/WjNuJTBbiUCKugUsjKOWLDbjT74TtFKV
-	nf5uL/uwz3KAWXnkamSI/nY8n2yV6B44eC/yrkWs5m9qfTL3Z4OJ1LqYKoIyZ8l1QnnY
-	w1UQ==
-X-Gm-Message-State: ALoCoQlbNa8CZlvC6U5kE0rnOxb2F/sIo0lLQwGQfn2rMUx2Lab4flaF+oNszx6ikEMt1NkrnoeA
-X-Received: by 10.68.190.229 with SMTP id gt5mr8912246pbc.119.1416500853875;
-	Thu, 20 Nov 2014 08:27:33 -0800 (PST)
+	bh=pql2vR5JnTwmislLMHKX1eQvMaOassiE2FCR3wfbK8w=;
+	b=Z5zoRk0HGzsFWAy3ZU5H/t3kmoypchEpoOfc6jI2/L1XaWJ+Mhu1VGKWMZD/pIQKt5
+	0Wltw+pzxPiBwOVELQL2CQK4JlM3GOTkBC/yfU9tZxEhVtU39/JUeq8npzq8R5M6ku9h
+	j+eWV2b2yLgV+MZsF3a+QAKADr/2bHbgel7tLSWuV//eIxfumAULkjKBCA7ls5uaGupI
+	DRrUb2uPCWxompynWyGfJID4IXh4cCRn1UnJTXG8ks6Sq7bFg3VzUcN5sNHtP5MgSZl+
+	cEm3M84c0tisljy/nIYgBOgkV9f2xvoS3w57mNDom4k6D1yeXzDFLWFEh7i+ZtvUlVxJ
+	w9rg==
+X-Gm-Message-State: ALoCoQk0vMSErJmrRmi/H5SJVL5xRG4DMUTNFFuNzvTBF0vlO8leqdsbLMjQJSNiw+36+0KAoYri
+X-Received: by 10.66.169.209 with SMTP id ag17mr7043955pac.62.1416500855757;
+	Thu, 20 Nov 2014 08:27:35 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id ny9sm2501985pab.25.2014.11.20.08.27.32
+	by mx.google.com with ESMTPSA id kk7sm2499778pab.31.2014.11.20.08.27.34
 	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 20 Nov 2014 08:27:32 -0800 (PST)
+	Thu, 20 Nov 2014 08:27:35 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 78D4A56410C; Thu, 20 Nov 2014 16:27:29 +0000 (GMT)
+	id 80A335641C4; Thu, 20 Nov 2014 16:27:29 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 20 Nov 2014 16:27:18 +0000
-Message-Id: <3f614295d688c33b690f63ff7eb28e6988707919.1416500715.git.alexandru.damian@intel.com>
+Date: Thu, 20 Nov 2014 16:27:21 +0000
+Message-Id: <af42ea5f006c5cf55a7c57a42904f412639d261f.1416500715.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <d4a47bc84f762666a847f1152cc2e75c9ef36092.1416500715.git.alexandru.damian@intel.com>
 References: <d4a47bc84f762666a847f1152cc2e75c9ef36092.1416500715.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1416500715.git.alexandru.damian@intel.com>
 References: <cover.1416500715.git.alexandru.damian@intel.com>
-Subject: [PATCH 02/11] toaster: skip virtualenv when searching for django apps
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 05/11] toaster: libtoaster: Add getProjectInfo utility function
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,53 +51,88 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 20 Nov 2014 16:27:34 -0000
+X-List-Received-Date: Thu, 20 Nov 2014 16:27:37 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-If we are using a virtualenv in the current search path we end up trying
-to add modules to the django apps list which do not have the correct
-load path or are internal to other modules. Fix this by skipping the
-virtualenv path.
-
-[YOCTO #6896]
+Add a utility function to return a specified project's info/config
+This re-uses the existing server code path for the project edit
+except that it allows any project id to be used as a parameter
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/toastermain/settings.py | 4 ++++
- lib/toaster/toastermain/urls.py     | 4 ++++
- 2 files changed, 8 insertions(+)
+ lib/toaster/toastergui/static/js/libtoaster.js | 22 ++++++++++++++++++++++
+ lib/toaster/toastergui/urls.py                 |  1 +
+ lib/toaster/toastergui/views.py                |  5 ++++-
+ 3 files changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/lib/toaster/toastermain/settings.py b/lib/toaster/toastermain/settings.py
-index 8de3b52..0974b90 100644
---- a/lib/toaster/toastermain/settings.py
-+++ b/lib/toaster/toastermain/settings.py
-@@ -264,6 +264,10 @@ import os
- currentdir = os.path.dirname(__file__)
- for t in os.walk(os.path.dirname(currentdir)):
-     modulename = os.path.basename(t[0])
-+    #if we have a virtualenv skip it to avoid incorrect imports
-+    if os.environ.has_key('VIRTUAL_ENV') and os.environ['VIRTUAL_ENV'] in t[0]:
-+        continue
-+
-     if ("views.py" in t[2] or "models.py" in t[2]) and not modulename in INSTALLED_APPS:
-         INSTALLED_APPS = INSTALLED_APPS + (modulename,)
+diff --git a/lib/toaster/toastergui/static/js/libtoaster.js b/lib/toaster/toastergui/static/js/libtoaster.js
+index b899b8d..4983ef6 100644
+--- a/lib/toaster/toastergui/static/js/libtoaster.js
++++ b/lib/toaster/toastergui/static/js/libtoaster.js
+@@ -88,10 +88,32 @@ var libtoaster = (function (){
+     } });
+   };
  
-diff --git a/lib/toaster/toastermain/urls.py b/lib/toaster/toastermain/urls.py
-index 1ae6245..549fda1 100644
---- a/lib/toaster/toastermain/urls.py
-+++ b/lib/toaster/toastermain/urls.py
-@@ -55,6 +55,10 @@ if toastermain.settings.MANAGED:
- import os
- currentdir = os.path.dirname(__file__)
- for t in os.walk(os.path.dirname(currentdir)):
-+    #if we have a virtualenv skip it to avoid incorrect imports
-+    if os.environ.has_key('VIRTUAL_ENV') and os.environ['VIRTUAL_ENV'] in t[0]:
-+        continue
++  /* Get a project's configuration info */
++  function _getProjectInfo(url, projectId, onsuccess, onfail){
++    $.ajax({
++        type: "POST",
++        url: url,
++        data: { project_id : projectId },
++        headers: { 'X-CSRFToken' : $.cookie('csrftoken')},
++        success: function (_data) {
++          if (_data.error != "ok") {
++            console.log(_data.error);
++          } else {
++            if (onsuccess != undefined) onsuccess(_data);
++          }
++        },
++        error: function (_data) {
++          console.log(_data);
++          if (onfail) onfail(data);
++        }
++    });
++  };
 +
-     if "urls.py" in t[2] and t[0] != currentdir:
-         modulename = os.path.basename(t[0])
-         urlpatterns.append( url(r'^' + modulename + '/', include ( modulename + '.urls')))
+   return {
+     reload_params : reload_params,
+     startABuild : _startABuild,
+     makeTypeahead : _makeTypeahead,
++    getProjectInfo: _getProjectInfo,
+   }
+ })();
+ 
+diff --git a/lib/toaster/toastergui/urls.py b/lib/toaster/toastergui/urls.py
+index f43bb64..bae7103 100644
+--- a/lib/toaster/toastergui/urls.py
++++ b/lib/toaster/toastergui/urls.py
+@@ -85,6 +85,7 @@ urlpatterns = patterns('toastergui.views',
+         url(r'^project/(?P<pid>\d+)/builds$', 'projectbuilds', name='projectbuilds'),
+ 
+         url(r'^xhr_projectbuild/(?P<pid>\d+)/$', 'xhr_projectbuild', name='xhr_projectbuild'),
++        url(r'^xhr_projectinfo/$', 'xhr_projectinfo', name='xhr_projectinfo'),
+         url(r'^xhr_projectedit/(?P<pid>\d+)/$', 'xhr_projectedit', name='xhr_projectedit'),
+ 
+         url(r'^xhr_datatypeahead/$', 'xhr_datatypeahead', name='xhr_datatypeahead'),
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 1b4bb9f..9f214bb 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -2057,8 +2057,11 @@ if toastermain.settings.MANAGED:
+         except Exception as e:
+             return HttpResponse(jsonfilter({"error":str(e) + "\n" + traceback.format_exc()}), content_type = "application/json")
+ 
++    def xhr_projectinfo(request):
++        if request.POST.has_key("project_id") == False:
++            raise BadParameterException("invalid project id")
+ 
+-
++        return xhr_projectedit(request, request.POST['project_id'])
+ 
+     def xhr_projectedit(request, pid):
+         try:
 -- 
 1.9.1
 
