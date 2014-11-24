@@ -1,27 +1,32 @@
-Return-Path: <yocto@mindchasers.com>
-X-Greylist: delayed 1223 seconds by postgrey-1.34 at layers.openembedded.org;
-	Wed, 19 Nov 2014 03:22:20 UTC
-Received: from smtp.webfaction.com (mail6.webfaction.com [74.55.86.74])
-	by mail.openembedded.org (Postfix) with ESMTP id E398872041
+Return-Path: <cristian.iorga@intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id B66FB60CFC
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Nov 2014 03:22:20 +0000 (UTC)
-Received: from [192.168.1.10] (unknown [68.38.40.177])
-	by smtp.webfaction.com (Postfix) with ESMTP id CCD03207CC72;
-	Wed, 19 Nov 2014 03:01:56 +0000 (UTC)
-Message-ID: <546C0823.6060808@mindchasers.com>
-Date: Tue, 18 Nov 2014 22:01:55 -0500
-From: Bob Cochran <yocto@mindchasers.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:31.0) Gecko/20100101 Thunderbird/31.2.0
+	Mon, 24 Nov 2014 05:56:30 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga103.fm.intel.com with ESMTP; 23 Nov 2014 21:49:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.07,447,1413270000"; d="scan'208";a="627206907"
+Received: from irsmsx154.ger.corp.intel.com ([163.33.192.96])
+	by fmsmga001.fm.intel.com with ESMTP; 23 Nov 2014 21:56:08 -0800
+Received: from irsmsx105.ger.corp.intel.com ([169.254.7.144]) by
+	IRSMSX154.ger.corp.intel.com ([169.254.12.166]) with mapi id
+	14.03.0195.001; Mon, 24 Nov 2014 05:56:08 +0000
+From: "Iorga, Cristian" <cristian.iorga@intel.com>
+To: Nishanth S <Nishanth.S@altiux.com>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] how to update a package on yocto project
+Thread-Index: AQHQB2jFTicI7alinkq+GZivd1400JxvRvxw
+Date: Mon, 24 Nov 2014 05:56:07 +0000
+Message-ID: <969F26A8BAB325438E7EB80D3C3134FB2F3BE196@IRSMSX105.ger.corp.intel.com>
+References: <546AE780.7070208@altiux.com>
+In-Reply-To: <546AE780.7070208@altiux.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [163.33.239.181]
 MIME-Version: 1.0
-To: "Rifenbark, Scott M" <scott.m.rifenbark@intel.com>, 
-	Yocto discussion list <yocto@yoctoproject.org>
-References: <545FD907.2070003@mindchasers.com>
-	<41DEA4B02DBDEF40A0F3B6D0DDB1237988E52758@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: <41DEA4B02DBDEF40A0F3B6D0DDB1237988E52758@ORSMSX101.amr.corp.intel.com>
-X-Mailman-Approved-At: Sun, 23 Nov 2014 21:58:57 +0000
-Cc: paul@paulbarker.me.uk, bitbake-dev <bitbake-devel@lists.openembedded.org>
-Subject: Re: [yocto] newbb.vim vs skeleton recipe in yocto-docs dev manual....
+Subject: Re: how to update a package on yocto project
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,128 +39,57 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 19 Nov 2014 03:22:28 -0000
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 24 Nov 2014 05:56:34 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-On 11/10/2014 09:28 AM, Rifenbark, Scott M wrote:
-> newbb.vim needs to be patched.
+Hi,
 
+Try with something like this added to the build's conf/local.conf:
 
-I have a patch ready to bring newbb.vim in line with Section 5.3.2 of 
-the Yocto Project Dev Manual.   However, I'm wondering whether I can 
-drop the initial two lines of the generated file (I think I should):
+PREFERRED_VERSION_openjdk-7-jre =3D "25b30-2.3.12"
+PREFERRED_PROVIDER_openjdk-7-jre =3D "openjdk-7-jre"
 
+Of course, substitute PREFERRED_VERSION_openjdk-7-jre with your exact versi=
+on of openjdk-7-jre that you have and want to use.
 
-# Copyright (C) 2014 <user_name> <user_email>
-# Released under the MIT license (see COPYING.MIT for the terms)
+Regards,
+Cristian Iorga
+Yocto Project
+Intel Corporation
 
+-----Original Message-----
+From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-devel-bo=
+unces@lists.openembedded.org] On Behalf Of Nishanth S
+Sent: Tuesday, November 18, 2014 8:30 AM
+To: bitbake-devel@lists.openembedded.org
+Subject: [bitbake-devel] how to update a package on yocto project
 
-This seems inconsistent with the recipes I see in the Yocto / OE layers 
-and the Yocto documentation.
+Hi
 
-The patch I created, which is provided below for reference, comments out 
-the generation of these first two lines:
+board : Intel Galileo Gen 1
 
+I use yocto project for build image/tarball for the board.
 
---- a/bitbake/contrib/vim/plugin/newbb.vim
-+++ b/bitbake/contrib/vim/plugin/newbb.vim
-@@ -44,21 +44,31 @@ fun! NewBBTemplate()
-      let l:paste = &paste
-      set nopaste
+How to update a existing package???
 
--    " Get the header
--    call BBHeader()
-+    " Uncomment the line below to enable header generation
-+    "call BBHeader()
+I mean, I use openjdk-6 on my board.
 
-      " New the bb template
-+    0 put ='SUMMARY = \"\"'
-      put ='DESCRIPTION = \"\"'
-      put ='HOMEPAGE = \"\"'
-      put ='LICENSE = \"\"'
--    put ='SECTION = \"\"'
-+    put ='LIC_FILES_CHKSUM = \"\"'
-+    put =''
-      put ='DEPENDS = \"\"'
-      put =''
-      put ='SRC_URI = \"\"'
-+    put ='SRC_URI[md5sum] = \"\"'
-+    put ='SRC_URI[sha256sum] = \"\"'
-+    put =''
-+    put ='S = \"${WORKDIR}/${PN}-${PV}\"'
-+    put =''
-+    put ='#inherit <classes>'
-+
-+
+But I need to change it to openjdk-7.
 
-      " Go to the first place to edit
-      0
--    /^DESCRIPTION =/
-+    /^SUMMARY =/
-      exec "normal 2f\""
+I edited local.conf by adding following line.
 
-      if paste == 1
+preferred_version_openjdkXXXX =3D XXXX
 
 
+--=20
+Regards,
+Nishanth.S
 
-thanks
-
-Bob
-
-
-
-
->
-> Scott
->
->> -----Original Message-----
->> From: yocto-bounces@yoctoproject.org [mailto:yocto-
->> bounces@yoctoproject.org] On Behalf Of Bob Cochran
->> Sent: Sunday, November 09, 2014 1:14 PM
->> To: Yocto discussion list
->> Subject: [yocto] newbb.vim vs skeleton recipe in yocto-docs dev manual....
->>
->> Hi,
->>
->> I just noticed that newbb.vim in bitbake/contrib is notably different from the
->> skeleton recipe proposed in the latest Dev Manual.
->>
->> I'll submit a patch if someone can give me some guidance on what should be
->> in newbb.vim (or maybe it's the manual that needs to be patched).
->>
->> Bob
->>
->>
->>  From yocto-docs: Dev Manual (modify the following skeleton recipe):
->>
->> SUMMARY = ""
->> HOMEPAGE = ""
->> LICENSE = ""
->> LIC_FILES_CHKSUM = ""
->> SRC_URI = ""
->> SRC_URI[md5sum] = ""
->> SRC_URI[sha256sum] = ""
->> S = "${WORKDIR}/${PN}-${PV}"
->>
->>
->>
->>  From newbb.vim:
->>
->> DESCRIPTION = ""
->> HOMEPAGE = ""
->> LICENSE = ""
->> SECTION = ""
->> DEPENDS = ""
->>
->> SRC_URI = ""
->>
->>
->> --
->> _______________________________________________
->> yocto mailing list
->> yocto@yoctoproject.org
->> https://lists.yoctoproject.org/listinfo/yocto
->
-
+--=20
+_______________________________________________
+bitbake-devel mailing list
+bitbake-devel@lists.openembedded.org
+http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
