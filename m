@@ -1,40 +1,43 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f171.google.com (mail-wi0-f171.google.com
-	[209.85.212.171])
-	by mail.openembedded.org (Postfix) with ESMTP id B049E72397
+Received: from mail-wi0-f174.google.com (mail-wi0-f174.google.com
+	[209.85.212.174])
+	by mail.openembedded.org (Postfix) with ESMTP id 4059E7239A
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Nov 2014 17:08:02 +0000 (UTC)
-Received: by mail-wi0-f171.google.com with SMTP id bs8so16372404wib.4
+	Thu, 27 Nov 2014 17:08:08 +0000 (UTC)
+Received: by mail-wi0-f174.google.com with SMTP id h11so16402282wiw.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Nov 2014 09:08:03 -0800 (PST)
+	Thu, 27 Nov 2014 09:08:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=Oyp+IRd9zSeqVrd3+9/Idf6SnlzNfDSxW9HaIDLixTM=;
-	b=XKGiCbObbxVnlJdPDjDaOx9seyYJHIT6ur1u6xKWzQsTJh31l1V+1sF5tL/fCx/BUd
-	LCAY/wdSQlIRilcvqiq8cGhszZxjgpn4b0xxBr2KqAIjKPaSj436LjF5ETLSWrLps3cT
-	NWFlqrGoPoW7bgJp32+zFQ7wfer+ga92joCr0J+MFfm33KGPcNEceJEDmH3ng9JVzUhm
-	1B1qLFg9ux1o7hpZyiJGcUxSytM91j6EP+RdbdXMVM8k61yVBCMleYqUMzBH8SBS6We6
-	SuAz0vLNlG7fTEo8S+26pW2mW8QefWYiJhQNC8v34UHFmp5J/ugQEBiVp93TUUGtvSxB
-	RdmA==
-X-Gm-Message-State: ALoCoQmLbaN1whA/5KTxUYH45IdXJp9wYFicUFVsiV1OTTa9NgmCihK63M4KqtGYj9whfg3bBYl9
-X-Received: by 10.180.73.175 with SMTP id m15mr53745071wiv.0.1417108083236;
-	Thu, 27 Nov 2014 09:08:03 -0800 (PST)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references:in-reply-to:references;
+	bh=ELDpHRoaVeb68TT1PY5SE/zkg1eaNOsU6VqHT9S6Qnc=;
+	b=hRpXhAFC1wU/fIHIQX7EGng7g2f3EuBR9PeUdyHBUx3n7/zx/R2Zx2bLZvH/DONCbk
+	sjUjaQOZDrnMNPeJSlNmWyRHiUBaBOOvkEW5FshDgN6JPhgUrIfjF6L73o9cgYrPMsfZ
+	6jvntrNwpeOvF8LJgDX2uiRTZptnyfGxuO74XqA6CI4YEFuv+YuaWFNAj+3cAICVYYw8
+	TEg2PF6gLlX+miBF/Ss8SqqH9wkC7Kbau6cNuNudWgTkP/F/fOMabRaVf1abqk0flsns
+	k5PmxyBFz1UzbuETbLpAgv6XbvWUwGZizOvsHF9Hnc3E8fpir/7/MQwJtToZZA3elJl/
+	8vhQ==
+X-Gm-Message-State: ALoCoQnn9sosKS3M1wxXIIMhHLx7qBQz/udQyWKcFNYcKm32zLPPVN2sP6psOO4VqfQSlxy3j/A5
+X-Received: by 10.194.235.193 with SMTP id uo1mr59713982wjc.105.1417108089263; 
+	Thu, 27 Nov 2014 09:08:09 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id v6sm11498724wjz.40.2014.11.27.09.08.01
-	for <multiple recipients>
+	by mx.google.com with ESMTPSA id
+	cz3sm11511830wjb.23.2014.11.27.09.08.07 for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 27 Nov 2014 09:08:02 -0800 (PST)
+	Thu, 27 Nov 2014 09:08:07 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 67980563B9C; Thu, 27 Nov 2014 17:08:01 +0000 (GMT)
+	id F1663563BB6; Thu, 27 Nov 2014 17:08:06 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 27 Nov 2014 17:07:59 +0000
-Message-Id: <cover.1417107946.git.alexandru.damian@intel.com>
+Date: Thu, 27 Nov 2014 17:07:53 +0000
+Message-Id: <6daada59ee846c4e957bba3574dc262a0c79854d.1417107946.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>,
-	Belen Barros Pena <belen.barros.pena@linux.intel.com>
-Subject: [PATCH 00/14] please pull toaster patchset
+In-Reply-To: <9f3cf52b3a96768e5b9764dde02833b078fe61e4.1417107946.git.alexandru.damian@intel.com>
+References: <9f3cf52b3a96768e5b9764dde02833b078fe61e4.1417107946.git.alexandru.damian@intel.com>
+In-Reply-To: <cover.1417107946.git.alexandru.damian@intel.com>
+References: <cover.1417107946.git.alexandru.damian@intel.com>
+Subject: [PATCH 02/14] toaster: base Only show New Build button when there are > 0 projects
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,71 +52,61 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Thu, 27 Nov 2014 17:08:11 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Michael Wood <michael.g.wood@intel.com>
 
-Hi,
+Only show new build button if we have defined at least one project as we
+can't select a project to build against if there are no projects created
+yet.
 
-This is a toaster patchset consisting of new features (New Project page), and bug fixes
-in toasterui data gathering, better layer identification, ability to use http_proxy
-to fetch data, and other fixes.
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+---
+ lib/toaster/toastergui/static/js/base.js   | 13 +++++++++----
+ lib/toaster/toastergui/templates/base.html |  1 +
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-This patch has been reviewed on "toaster/master" poky contrib.
-
-Can you please pull at your convenience ?
-
-Cheers,
-Alex
-
-The following changes since commit 27023ce2d264ce05008ef9af33982b054c6a87b5:
-
-  toaster: do not show target if target name is empty (2014-11-20 15:43:57 +0000)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib adamian/20141127-submission-bb
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20141127-submission-bb
-
-Alexandru DAMIAN (8):
-  toaster: use http proxies to fetch data
-  toastergui: update layer search criteria
-  toastergui: do not show project info in interactive mode
-  toaster: display Toaster exceptions and other fixes
-  toasterui: fix layer identification for managed builds
-  toaster: fix loadconf path calculation
-  toastergui: new project page
-  toasterui: Compatibility patch for daisy and dizzy
-
-Belen Barros Pena (5):
-  toaster: fix errors and warnings display
-  toaster: make 'latest builds' section consistent across pages
-  toaster: fix padding of build notifications
-  toaster: release name consistency
-  toaster: remove the word 'project' from layers and machine
-
-Michael Wood (1):
-  toaster: base Only show New Build button when there are > 0 projects
-
- lib/bb/ui/buildinfohelper.py                       |  96 ++++--
- lib/bb/ui/toasterui.py                             |   8 +-
- .../management/commands/checksettings.py           |   8 +
- .../bldcontrol/management/commands/loadconf.py     |  42 +--
- lib/toaster/bldcontrol/tests.py                    |  19 ++
- .../0018_auto__add_field_layer_version_project.py  | 331 +++++++++++++++++++++
- lib/toaster/orm/models.py                          |  58 +++-
- lib/toaster/toastergui/static/css/default.css      |   4 +
- lib/toaster/toastergui/static/js/base.js           |  13 +-
- lib/toaster/toastergui/static/js/libtoaster.js     |   7 +
- lib/toaster/toastergui/templates/base.html         |   5 +-
- .../toastergui/templates/builddashboard.html       |  35 +++
- lib/toaster/toastergui/templates/layers.html       |   9 +-
- lib/toaster/toastergui/templates/mrb_section.html  |  25 +-
- lib/toaster/toastergui/templates/newproject.html   | 116 ++++++--
- lib/toaster/toastergui/templates/project.html      |  28 +-
- lib/toaster/toastergui/templatetags/projecttags.py |   8 +
- lib/toaster/toastergui/views.py                    |  70 +++--
- 18 files changed, 736 insertions(+), 146 deletions(-)
- create mode 100644 lib/toaster/orm/migrations/0018_auto__add_field_layer_version_project.py
-
+diff --git a/lib/toaster/toastergui/static/js/base.js b/lib/toaster/toastergui/static/js/base.js
+index 864130d..fac59e6 100644
+--- a/lib/toaster/toastergui/static/js/base.js
++++ b/lib/toaster/toastergui/static/js/base.js
+@@ -3,10 +3,12 @@
+ function basePageInit (ctx) {
+ 
+   var newBuildButton = $("#new-build-button");
+-  /* Hide the button if we're on the project,newproject or importlyaer page */
+-  if (ctx.currentUrl.search('newproject|project/\\d/$|importlayer/$') > 0){
+-    newBuildButton.hide();
+-    return;
++  /* Hide the button if we're on the project,newproject or importlyaer page
++   * or if there are no projects yet defined
++   */
++  if (ctx.numProjects == 0 || ctx.currentUrl.search('newproject|project/\\d/$|importlayer/$') > 0){
++      newBuildButton.hide();
++      return;
+   }
+ 
+ 
+@@ -17,6 +19,9 @@ function basePageInit (ctx) {
+ 
+ 
+   function _checkProjectBuildable(){
++    if (ctx.projectId == undefined)
++      return;
++
+     libtoaster.getProjectInfo(ctx.projectInfoUrl, ctx.projectId,
+       function(data){
+         if (data.machine.name == undefined || data.layers.length == 0) {
+diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
+index 734d2ad..f457b91 100644
+--- a/lib/toaster/toastergui/templates/base.html
++++ b/lib/toaster/toastergui/templates/base.html
+@@ -31,6 +31,7 @@
+     ctx.projectBuildUrl = "{% url 'xhr_build' %}";
+     ctx.projectPageUrl = "{% url 'project' %}";
+     ctx.projectInfoUrl = "{% url 'xhr_projectinfo' %}";
++    ctx.numProjects = {{projects|length}};
+     {% if project %}
+       ctx.projectId = {{project.id}};
+     {% endif %}
 -- 
 1.9.1
 
