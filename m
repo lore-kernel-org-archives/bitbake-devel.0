@@ -1,42 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f170.google.com (mail-wi0-f170.google.com
-	[209.85.212.170])
-	by mail.openembedded.org (Postfix) with ESMTP id 5C7327239E
+Received: from mail-wi0-f169.google.com (mail-wi0-f169.google.com
+	[209.85.212.169])
+	by mail.openembedded.org (Postfix) with ESMTP id 488897239D
 	for <bitbake-devel@lists.openembedded.org>;
 	Thu, 27 Nov 2014 17:08:09 +0000 (UTC)
-Received: by mail-wi0-f170.google.com with SMTP id bs8so19051647wib.5
+Received: by mail-wi0-f169.google.com with SMTP id r20so18921177wiv.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Nov 2014 09:08:09 -0800 (PST)
+	Thu, 27 Nov 2014 09:08:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=1UmijyWjyN2xy3Y5hzqVCZXeTYKE620WlfrJLh6Vpr4=;
-	b=mPdW6tmwy+R5SC2PLT2rAzBkqBsm1fSn/o64lAftKoeiGYKs/mCW9JnE2ZKleD6uw/
-	e5Rhr5tZyi8aKTsAVKNfDf3WXAnAn6vqV10WYDYFldeyTIjWhnfeh6/7yctbUACDYdt7
-	r+QdP6ivAWiVZX7iWCsHRioD1/II/R+xE3G4CPcBebRImogHJMWFsr9c9/8y6PjpzV2/
-	y6glW5GLHgcakMEZoOrSR/I1k5aByzS7rWr7mmb/Qsblaemld6ROCpx08aD34sL6TcQu
-	Q7u/U3jG0c5D4lGxkXmI5O63hDEZUhqL+xoT8/IG/WkuEtDc+SkLCKk2ehp0Zy3/tlL8
-	XUgw==
-X-Gm-Message-State: ALoCoQmJBB5hlGejNlEko6I5ru6Ik5TMbdyTOWLMhSyEU4Xd2APlsty3D/xoqGp6eNY3zpsI2YbO
-X-Received: by 10.180.92.234 with SMTP id cp10mr53762543wib.16.1417108089867; 
-	Thu, 27 Nov 2014 09:08:09 -0800 (PST)
+	:references:in-reply-to:references;
+	bh=4LB1KzTWY6yDD+cXdxmXbHVsH8YorsZYSNTP1pjKAY4=;
+	b=kcpVn/lNv0VY5mgIK63xEJaGE+TOAycDtictZdk/uVyECRzGve4uEU4nA3S1VG7pym
+	m6taXj3UchKbBop3b5OaVASHYdNrtzXQut32tpyKaIDGj2A6OtN2pmgaDSOB+lQv/ApW
+	TTwRaGW+uf/h4JjBJujugHBxG+TPWeGntA//f1cdwHcOV0FB+MSuX2Dg+S4q8X88um8R
+	AZ+AlBZv2rCChY1++7EXEANE/RZK/fQWW38/NFWZii/V9e7pVU4Bt1hZZAndqhk+FEi8
+	NMtHPPYMusNQPBzSrI8JYetL5jZxvUeBCdSmKGbH2OKZ5i64+KqgC1r9iyjzh8yN748t
+	taKg==
+X-Gm-Message-State: ALoCoQkr4YB1KKrhfJ5iY5L3VIpInsmVgWXkyAfwCKTYT44IrSl/30jzvpP5EgR4q6ejQ9A+DSFS
+X-Received: by 10.194.92.176 with SMTP id cn16mr59445702wjb.62.1417108090331; 
+	Thu, 27 Nov 2014 09:08:10 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id
-	mw7sm12411522wib.14.2014.11.27.09.08.07 for <multiple recipients>
+	by mx.google.com with ESMTPSA id e7sm11505437wjx.31.2014.11.27.09.08.07
+	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Thu, 27 Nov 2014 09:08:07 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id EFB57563B9C; Thu, 27 Nov 2014 17:08:06 +0000 (GMT)
+	id 01EA25604B7; Thu, 27 Nov 2014 17:08:06 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 27 Nov 2014 17:07:52 +0000
-Message-Id: <9f3cf52b3a96768e5b9764dde02833b078fe61e4.1417107946.git.alexandru.damian@intel.com>
+Date: Thu, 27 Nov 2014 17:07:55 +0000
+Message-Id: <86dced90db666aa73ebb7ebb48d64fc08f66e7e2.1417107946.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <9f3cf52b3a96768e5b9764dde02833b078fe61e4.1417107946.git.alexandru.damian@intel.com>
+References: <9f3cf52b3a96768e5b9764dde02833b078fe61e4.1417107946.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1417107946.git.alexandru.damian@intel.com>
 References: <cover.1417107946.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 01/14] toaster: use http proxies to fetch data
+Subject: [PATCH 04/14] toastergui: do not show project info in interactive mode
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,84 +55,44 @@ X-List-Received-Date: Thu, 27 Nov 2014 17:08:12 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Under some network configurations http proxies are used
-for Internet access. This patch makes Toaster obey
-the http_proxy environment variable when fetching
-information from layer indexes.
+The most recent builds section showed the project name and the Run Again
+buttons regardless whenever the Toaster was in interactive or managed
+modes. These widgets have no meaning in interactive mode, and this
+patch disables the widgets if toaster is not running in Managed mode.
+
+[YOCTO #6776]
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/orm/models.py | 45 ++++++++++++++++++++++++++++++++-------------
- 1 file changed, 32 insertions(+), 13 deletions(-)
+ lib/toaster/toastergui/templates/mrb_section.html | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index c90e047..99cc695 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -599,24 +599,41 @@ class LayerIndexLayerSource(LayerSource):
-         assert self.apiurl is not None
-         from django.db import IntegrityError
+diff --git a/lib/toaster/toastergui/templates/mrb_section.html b/lib/toaster/toastergui/templates/mrb_section.html
+index 586c47b..4237980 100644
+--- a/lib/toaster/toastergui/templates/mrb_section.html
++++ b/lib/toaster/toastergui/templates/mrb_section.html
+@@ -13,7 +13,7 @@
+   <div id="latest-builds">
+   {% for build in mru %}
+     <div class="alert {%if build.outcome == build.SUCCEEDED%}alert-success{%elif build.outcome == build.FAILED%}alert-error{%else%}alert-info{%endif%}" style="padding-top: 0;">
+-    {% if build.project %}
++    {% if MANAGED and build.project %}
+        <span class="label {%if build.outcome == build.SUCCEEDED%}label-success{%elif build.outcome == build.FAILED%}label-danger{%else%}label-info{%endif%}" style="font-weight: normal; margin-bottom: 5px; margin-left:-15px; padding-top:5px;"> {{build.project.name}} </span>
+     {% endif %}
  
-+        import httplib, urlparse, json
-+        import os
-+        proxy_settings = os.environ.get("http_proxy", None)
-+
-         def _get_json_response(apiurl = self.apiurl):
--            import httplib, urlparse, json
--            parsedurl = urlparse.urlparse(apiurl)
--            try:
--                (host, port) = parsedurl.netloc.split(":")
--            except ValueError:
--                host = parsedurl.netloc
--                port = None
-+            conn = None
-+            _parsedurl = urlparse.urlparse(apiurl)
-+            path = _parsedurl.path
-+            query = _parsedurl.query
-+            def parse_url(url):
-+                parsedurl = urlparse.urlparse(url)
-+                try:
-+                    (host, port) = parsedurl.netloc.split(":")
-+                except ValueError:
-+                    host = parsedurl.netloc
-+                    port = None
-+
-+                if port is None:
-+                    port = 80
-+                else:
-+                    port = int(port)
-+                return (host, port)
- 
--            if port is None:
--                port = 80
-+            if proxy_settings is None:
-+                host, port = parse_url(apiurl)
-+                conn = httplib.HTTPConnection(host, port)
-+                conn.request("GET", path + "?" + query)
-             else:
--                port = int(port)
--            conn = httplib.HTTPConnection(host, port)
--            conn.request("GET", parsedurl.path + "?" + parsedurl.query)
-+                host, port = parse_url(proxy_settings)
-+                conn = httplib.HTTPConnection(host, port)
-+                conn.request("GET", apiurl)
-+
-             r = conn.getresponse()
-             if r.status != 200:
--                raise Exception("Failed to read " + parsedurl.path + ": %d %s" % (r.status, r.reason))
-+                raise Exception("Failed to read " + path + ": %d %s" % (r.status, r.reason))
-             return json.loads(r.read())
- 
-         # verify we can get the basic api
-@@ -624,6 +641,8 @@ class LayerIndexLayerSource(LayerSource):
-             apilinks = _get_json_response()
-         except Exception as e:
-             import traceback
-+            if proxy_settings is not None:
-+                print "EE: Using proxy ", proxy_settings
-             print "EE: could not connect to %s, skipping update: %s\n%s" % (self.apiurl, e, traceback.format_exc(e))
-             return
- 
+@@ -40,10 +40,10 @@
+       {% endif %}
+             </div>
+             <div class="lead ">
+-              <span class="lead{%if not build.project%} pull-right{%endif%}">
++              <span class="lead{%if not MANAGED or not build.project%} pull-right{%endif%}">
+                 Build time: <a href="{% url 'buildtime' build.pk %}">{{ build.timespent|sectohms }}</a>
+               </span>
+-          {% if build.project %}
++          {% if MANAGED and build.project %}
+               <a class="btn {%if build.outcome == build.SUCCEEDED%}btn-success{%elif build.outcome == build.FAILED%}btn-danger{%else%}btn-info{%endif%} pull-right" onclick="scheduleBuild({% url 'xhr_projectbuild' build.project.id as bpi%}{{bpi|json}}, {{build.project.name|json}}, {{build.get_sorted_target_list|mapselect:'target'|json}})">Run again</a>
+           {% endif %}
+             </div>
 -- 
 1.9.1
 
