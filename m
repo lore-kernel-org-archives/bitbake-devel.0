@@ -1,36 +1,36 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f45.google.com (mail-wg0-f45.google.com [74.125.82.45])
-	by mail.openembedded.org (Postfix) with ESMTP id F2B3B723AA
+Received: from mail-wg0-f44.google.com (mail-wg0-f44.google.com [74.125.82.44])
+	by mail.openembedded.org (Postfix) with ESMTP id 066E3723AC
 	for <bitbake-devel@lists.openembedded.org>;
 	Thu, 27 Nov 2014 17:08:13 +0000 (UTC)
-Received: by mail-wg0-f45.google.com with SMTP id b13so6966267wgh.32
+Received: by mail-wg0-f44.google.com with SMTP id b13so6981887wgh.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Nov 2014 09:08:14 -0800 (PST)
+	Thu, 27 Nov 2014 09:08:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=jTXSkINN5beImHvGarrM26TgWhBnNorljuZ27SgMu90=;
-	b=Fs/2S+4AphJ72dFeiDLC4ucyXg7AEXQwrRYt+miWK4XgKhO1/WhQNarnbZJViTWoiK
-	uX3+/BXCG1MlqUwY9D7gBPB8nwrQGRRBJZ2rN93wpq41qsaShDzl3qwCnBjpI1qcvlha
-	vHQnVJ8KB/Ia7YI9ZwdDPAICwq67U8lJ2wjfLMaIs9MRABwBCgSslnb2AaGWhj8Ovk5F
-	1XkuhevnQAirnigPoXU/K62nsmIRgMcLB02+H5O0GO98pLMeSFB2PuetCChOCXuoM0we
-	nj9jxSoEl6rMYn6fthcMwPyFapjU3WYZV/skCQTo9MpLyHsX0YtE1DoxtR3Im9+83WC+
-	6HSg==
-X-Gm-Message-State: ALoCoQkjNmLiNR/JF35X7NpVOS87wWs7ZqSZcH0lIPWV4LvwAvjn3jNyHeIYMXdVLlwUfY6dwHwH
-X-Received: by 10.194.150.148 with SMTP id ui20mr60408398wjb.90.1417108094046; 
-	Thu, 27 Nov 2014 09:08:14 -0800 (PST)
+	bh=4vEClwX0cLppZTuNEdLlYVmg9nTJgyW20GIgmQWvIZY=;
+	b=LiBE1Z94bLU8mg7rCLrhfK3dhGNfqSC6NAuqjSTupWX8BcFDg16DkcpW6tczALWImb
+	J9da1yIaTbFf9TFz3Cx6CSPu4VRgdVUytBtm+U+rVO2daa+lea2hh9a+T9r7LbJPEFIF
+	xP0SW0uCtHkRzTMewJ00QIWD1E21g00zFawtBtlA2FhVnZeu0fFqoW0XhNViEjlNrhe+
+	/wN/alKgimi0kgxdJoMMDlNDwc9OkqtL1Y0iqjbHKJHk5yGjZAJMJIG/rCt07z3+kNmQ
+	F3L39GuIHtl8R2rbgG3MqFOKrq+6YyyPGcWBImk2EeDJcmsHVlCLY9fXgnzcCHNTI6zV
+	kwWA==
+X-Gm-Message-State: ALoCoQmOJv8I7oC0iL5oh2vwLRHxb+HxcOkhRI8CZ1TJbxsuvfv/cemYOtrZJw2iINBJWCffhRW2
+X-Received: by 10.180.96.10 with SMTP id do10mr53744155wib.16.1417108093661;
+	Thu, 27 Nov 2014 09:08:13 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id hs1sm26086627wib.1.2014.11.27.09.08.09
+	by mx.google.com with ESMTPSA id ef6sm12187021wic.1.2014.11.27.09.08.10
 	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Thu, 27 Nov 2014 09:08:10 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 0A5ED5641DA; Thu, 27 Nov 2014 17:08:07 +0000 (GMT)
+	id 0BF1C5641D7; Thu, 27 Nov 2014 17:08:07 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 27 Nov 2014 17:08:00 +0000
-Message-Id: <3f6b33472820e339c0f057c2e30f25ec2a04366b.1417107946.git.alexandru.damian@intel.com>
+Date: Thu, 27 Nov 2014 17:08:01 +0000
+Message-Id: <99ac7379e5df6c5cc491c2be591b15ad7ec04caa.1417107946.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <9f3cf52b3a96768e5b9764dde02833b078fe61e4.1417107946.git.alexandru.damian@intel.com>
 References: <9f3cf52b3a96768e5b9764dde02833b078fe61e4.1417107946.git.alexandru.damian@intel.com>
@@ -38,7 +38,7 @@ In-Reply-To: <cover.1417107946.git.alexandru.damian@intel.com>
 References: <cover.1417107946.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>,
 	Belen Barros Pena <belen.barros.pena@linux.intel.com>
-Subject: [PATCH 09/14] toaster: fix errors and warnings display
+Subject: [PATCH 10/14] toaster: make 'latest builds' section consistent across pages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,47 +55,77 @@ X-List-Received-Date: Thu, 27 Nov 2014 17:08:14 -0000
 
 From: Belen Barros Pena <belen.barros.pena@linux.intel.com>
 
-In the 'Latest builds' section of the project page,
-show number of errors and number of warnings as we
-show them in the all builds page.
+Make sure that the 'latest builds' sections in the all builds
+page and the project page are identical:
+
+* no icon to represent build outcome
+* remove machine name
+* show date only when the build is more than 24 hours old
+* same date and time format
 
 Signed-off-by: Belen Barros Pena <belen.barros.pena@linux.intel.com>
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/templates/project.html | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ lib/toaster/toastergui/templates/mrb_section.html  | 15 +++++++++++----
+ lib/toaster/toastergui/templatetags/projecttags.py |  8 ++++++++
+ 2 files changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
-index 18a52bf..0b2821c 100644
---- a/lib/toaster/toastergui/templates/project.html
-+++ b/lib/toaster/toastergui/templates/project.html
-@@ -178,8 +178,24 @@ vim: expandtab tabstop=2
-                  {[b.build[0].completed_on|date:'dd/MM/yy HH:mm']}
-               </ngif>
+diff --git a/lib/toaster/toastergui/templates/mrb_section.html b/lib/toaster/toastergui/templates/mrb_section.html
+index 4237980..33afb7b 100644
+--- a/lib/toaster/toastergui/templates/mrb_section.html
++++ b/lib/toaster/toastergui/templates/mrb_section.html
+@@ -7,7 +7,7 @@
+ 
+   <div class="page-header top-air">
+       <h1>
+-          Latest Builds
++          Latest builds
+        </h1>
+   </div>
+   <div id="latest-builds">
+@@ -18,16 +18,23 @@
+     {% endif %}
+ 
+         <div class="row-fluid">
+-            <div class="span4 lead">
+-                {%if build.outcome == build.SUCCEEDED%}<i class="icon-ok-sign success"></i>{%elif build.outcome == build.FAILED%}<i class="icon-minus-sign error"></i>{%else%}{%endif%}
++            <div class="span3 lead">
+     {%if build.outcome == build.SUCCEEDED or build.outcome == build.FAILED %}
+                 <a href="{%url 'builddashboard' build.pk%}" class="{%if build.outcome == build.SUCCEEDED %}success{%else%}error{%endif%}">
+     {% endif %}
+-                <span data-toggle="tooltip" {%if build.target_set.all.count > 1%}title="Targets: {%for target in build.target_set.all%}{{target.target}} {%endfor%}"{%endif%}>{{build.target_set.all.0.target}} {%if build.target_set.all.count > 1%}(+ {{build.target_set.all.count|add:"-1"}}){%endif%} {{build.machine}} ({{build.completed_on|naturaltime}})</span>
++                <span data-toggle="tooltip" {%if build.target_set.all.count > 1%}title="Targets: {%for target in build.target_set.all%}{{target.target}} {%endfor%}"{%endif%}>{{build.target_set.all.0.target}} {%if build.target_set.all.count > 1%}(+ {{build.target_set.all.count|add:"-1"}}){%endif%}
++		        </span>
+     {%if build.outcome == build.SUCCEEDED or build.outcome == build.FAILED %}
+                 </a>
+     {% endif %}
              </div>
--            <div class="span2"><span><a href="{[b.build[0].build_page_url]}#errors" class="lead error" ng-if="b.build[0].errors">{[b.build[0].errors]}</a></span></div>
--            <div class="span2"><span><a href="{[b.build[0].build_page_url]}#warnings" class="lead warning" ng-if="b.build[0].warnings">{[b.build[0].warnings]}</a></span></div>
-+            <div class="span2">
-+              <ngif ng-if="b.build[0].errors">
-+                <span>
-+                  <i class="icon-minus-sign red lead"></i>
-+                  <a href="{[b.build[0].build_page_url]}#errors" class="lead error">{[b.build[0].errors]}
-+                  <ng-pluralize count="b.build[0].errors" when="{'1':'error','other':'errors'}"></ng-pluralize></a>
-+                </span>
-+              </ngif>
++            <div class="span2 lead">
++                {% if build.completed_on|format_build_date  %}
++                    {{ build.completed_on|date:'d/m/y H:i' }}
++                {% else %}
++                    {{ build.completed_on|date:'H:i' }}
++                {% endif %}
 +            </div>
-+            <div class="span2">
-+              <ngif ng-if="b.build[0].warnings">
-+                <span>
-+                  <i class="icon-warning-sign yellow lead"></i>
-+                  <a href="{[b.build[0].build_page_url]}#warnings" class="lead warning">{[b.build[0].warnings]}
-+                  <ng-pluralize count="b.build[0].warnings" when="{'1':'warning','other':'warnings'}"></ng-pluralize></a>
-+                </span>
-+              </ngif>
-+            </div>
-             <div> <span class="lead">Build time: <a href="{[b.build[0].build_time_page_url]}">{[b.build[0].build_time|timediff]}</a></span>
-                 <button class="btn pull-right" ng-class="{'Succeeded':  'btn-success', 'Failed': 'btn-danger'}[b.build[0].status]"
-                     ng-click="targetExistingBuild(b.targets)">Run again</button>
+     {%if build.outcome == build.SUCCEEDED or build.outcome == build.FAILED %}
+             <div class="span2 lead">
+       {% if  build.errors_no %}
+diff --git a/lib/toaster/toastergui/templatetags/projecttags.py b/lib/toaster/toastergui/templatetags/projecttags.py
+index 99fd4cf..f564edf 100644
+--- a/lib/toaster/toastergui/templatetags/projecttags.py
++++ b/lib/toaster/toastergui/templatetags/projecttags.py
+@@ -268,3 +268,11 @@ def get_dict_value(dictionary, key):
+         return dictionary[key]
+     except (KeyError, IndexError):
+         return ''
++
++@register.filter
++def format_build_date(completed_on):
++    now = timezone.now()
++    delta = now - completed_on
++
++    if delta.days >= 1:
++        return True
 -- 
 1.9.1
 
