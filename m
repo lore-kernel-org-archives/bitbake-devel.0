@@ -1,44 +1,43 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f173.google.com (mail-wi0-f173.google.com
-	[209.85.212.173])
-	by mail.openembedded.org (Postfix) with ESMTP id C9610723AC
+Received: from mail-wg0-f50.google.com (mail-wg0-f50.google.com [74.125.82.50])
+	by mail.openembedded.org (Postfix) with ESMTP id D2FB0723AD
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 27 Nov 2014 17:08:12 +0000 (UTC)
-Received: by mail-wi0-f173.google.com with SMTP id r20so16393496wiv.0
+	Thu, 27 Nov 2014 17:08:11 +0000 (UTC)
+Received: by mail-wg0-f50.google.com with SMTP id k14so6960700wgh.9
 	for <bitbake-devel@lists.openembedded.org>;
 	Thu, 27 Nov 2014 09:08:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=kxs/rz/lfwWF5O8u4m2hkexTASlsgwzDigNxJm/MwN8=;
-	b=P2Uk/JSZVqH/tVHcmiLnw7nWw6WetM18aiSL1R0nzjz1VNPiHua3rW+lfBrPDlWZ5e
-	S+J3Is24jnKGFPm117/YTa7EmmiyEdSzUoSNDXthJ8HfTcSliLXlL2q0QuvdL3OXuCE5
-	hH9MaSLdzLDDXVPkpKsAuI8GXCiMFNAmzYZSSFLOGAVLYWyTdm3HWYJQrTEMoikDbxn5
-	hLouT5eyL74MKf8Gh/dctwwQ28UDGLA8T+XSozFQKdY/o1XfxVvkVs5WG0yZy4VHbjHN
-	ozR+44eDePAZaEYr/d2GYhY0ZmEInopNgg354hacV9vomRW80hW8wLSZWogwIYL5ek+D
-	g98A==
-X-Gm-Message-State: ALoCoQl1hqHysWNCRyKBDH1i/SDUDmcNHgucKy9ZJTBtvqfh0SjPZH4+ToWnxNj3T/DvRSFrSkGD
-X-Received: by 10.180.90.241 with SMTP id bz17mr53710931wib.41.1417108092769; 
+	bh=U2PG0yFsOkSmgKyQYH/2PscLbpX9AaOp7SDtLzOAeXc=;
+	b=P9uEX1s/tRTktJIuO1JYFBqNgmmm3/KpH/JWl4odjXd57QBV5y5TT+jzlHBsVR3KTm
+	3X7mtTUSpmgkIZME46nX61OBsGa3War8ImVf2V4o7JLfQ4MH/J37N6W2ouJI3azL7Bhp
+	aM8cZjg+Jcii9ir1EpqOUqD0sC+h6Dy3ts1pJJBCtGxwoI0VkTQAxLbdAYMFymSQuuZz
+	7Sisq7R+vMcAnWGCaCKuT/Mec9SQXJ7/wVjBP1/PsHbr1yxZIoLueZH1OJmqn6mP4bGs
+	/HZDKB3mK5I6MIeEdPF+bNBzfV3EGMHBvHW9FcEujJEGsbghrLLtIMZAdzCKb9QNLKpJ
+	xo+w==
+X-Gm-Message-State: ALoCoQkP6woo9xepAwKQemRLCHSVlEaSiGlnhOqe70nW3jJoMEwtYbjFe1jAexC0Rd5DFCzqBXIJ
+X-Received: by 10.194.58.8 with SMTP id m8mr16397691wjq.43.1417108092207;
 	Thu, 27 Nov 2014 09:08:12 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id c5sm12429100wik.3.2014.11.27.09.08.09
+	by mx.google.com with ESMTPSA id i3sm26091281wix.0.2014.11.27.09.08.09
 	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Thu, 27 Nov 2014 09:08:10 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 087A556410C; Thu, 27 Nov 2014 17:08:07 +0000 (GMT)
+	id 06F49564130; Thu, 27 Nov 2014 17:08:07 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 27 Nov 2014 17:07:59 +0000
-Message-Id: <be357d147d525ac3d6b7bd33ca0aa594728ffedd.1417107946.git.alexandru.damian@intel.com>
+Date: Thu, 27 Nov 2014 17:07:58 +0000
+Message-Id: <e764834f3c7c7da9356fa11b62e1fa8f643986fc.1417107946.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <9f3cf52b3a96768e5b9764dde02833b078fe61e4.1417107946.git.alexandru.damian@intel.com>
 References: <9f3cf52b3a96768e5b9764dde02833b078fe61e4.1417107946.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1417107946.git.alexandru.damian@intel.com>
 References: <cover.1417107946.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 08/14] toastergui: new project page
+Subject: [PATCH 07/14] toaster: fix loadconf path calculation
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,183 +54,126 @@ X-List-Received-Date: Thu, 27 Nov 2014 17:08:13 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Patch that brings in to new project page according to specifications.
+Fixing the path calculation for local layer sources, as the
+path need to be absolute.
 
-[YOCTO #6596]
+Added tests for pieces of code.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/templates/base.html       |   2 +-
- lib/toaster/toastergui/templates/newproject.html | 116 +++++++++++++++++------
- lib/toaster/toastergui/views.py                  |   7 +-
- 3 files changed, 92 insertions(+), 33 deletions(-)
+ .../bldcontrol/management/commands/loadconf.py     | 42 +++++++++++++---------
+ lib/toaster/bldcontrol/tests.py                    | 19 ++++++++++
+ 2 files changed, 44 insertions(+), 17 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
-index 8170a3d..594c495 100644
---- a/lib/toaster/toastergui/templates/base.html
-+++ b/lib/toaster/toastergui/templates/base.html
-@@ -60,7 +60,7 @@
-             </a>
-             {%if MANAGED %}
-             <div class="btn-group pull-right">
--              <a class="btn" href="{% url 'newproject' %}">New project</a>
-+                  <a class="btn" id="new-project-button" href="{% url 'newproject' %}">New project</a>
-             </div>
-             <!-- New build popover -->
-             <div class="btn-group pull-right" id="new-build-button">
-diff --git a/lib/toaster/toastergui/templates/newproject.html b/lib/toaster/toastergui/templates/newproject.html
-index 43c4e28..5a5e1e6 100644
---- a/lib/toaster/toastergui/templates/newproject.html
-+++ b/lib/toaster/toastergui/templates/newproject.html
-@@ -3,35 +3,91 @@
- {% load humanize %}
- {% block pagecontent %}
- <div class="row-fluid">
--				<div class="span6">
--				<div class="page-header">
--					<h1>Create a new project</h1>
--				</div>
--				<div class="container-fluid">
--		{% if alert %}
--			<div class="alert alert-error row-fluid" role="alert">{{alert}}</div>
--		{% endif %}
--				</div>
--					<form method="POST">{% csrf_token %}
--						<fieldset>
--							<label>Project name <span class="muted">(required)</span></label>
--							<input type="text" class="input-xlarge" required name="projectname" value="{{projectname}}">
--							<label class="project-form">
--								Yocto Project version
--								<i class="icon-question-sign get-help" title="This sets the branch for the Yocto Project core layers (meta, meta-yocto and meta-yocto-bsp), and for the layers you use from the OpenEmbedded Metadata Index"></i>
--							</label>
--							<select name="projectversion" id="projectversion">
--	{% for release in releases %}
--		<option value="{{release.id}}"{%if projectversion == release.id %} selected{%endif%}>{{release.name}} ({{release.description}})</option>
--	{% endfor %}
--							</select>
--						</fieldset>
-+    <div class="page-header">
-+          <h1>Create a new project</h1>
-+        </div>
-+        <div class="container-fluid">
-+    {% if alert %}
-+      <div class="alert alert-error row-fluid" role="alert">{{alert}}</div>
-+    {% endif %}
-+        </div>
-+    {% if releases.count > 0 %}
-+        <form method="POST">{% csrf_token %}
-+            <fieldset>
-+              <label>Project name <span class="muted">(required)</span></label>
-+              <input type="text" class="input-xlarge" required id="new-project-name" name="projectname">
-+       {% if releases.count > 1 %}
-+              <label class="project-form">
-+                Release version
-+                <i class="icon-question-sign get-help" title="The version of the build system you want to use"></i>
-+              </label>
-+              <select name="projectversion" id="projectversion">
-+  {% for release in releases %}
-+    <option value="{{release.id}}"{%if projectversion == release.id %} selected{%endif%}>{{release.description}} ({{release.name}})</option>
-+  {% endfor %}
-+              </select>
-+  {% for release in releases %}
-+    <div class="row-fluid helptext" id="description-{{release.id}}" style="display: none">
-+        <span class="help-block span5">{{release.helptext|safe}}</span>
-+    </div>
-+  {% endfor %}
-+       {% else %}
-+    <input type="hidden" name="projectversion" value="{{releases.0.id}}"/>
-+       {% endif %}
-+            </fieldset>
+diff --git a/lib/toaster/bldcontrol/management/commands/loadconf.py b/lib/toaster/bldcontrol/management/commands/loadconf.py
+index 6e1f97a..2257a71 100644
+--- a/lib/toaster/bldcontrol/management/commands/loadconf.py
++++ b/lib/toaster/bldcontrol/management/commands/loadconf.py
+@@ -5,20 +5,29 @@ import os
  
--						<div class="form-actions">
--							<input type="submit" class="btn btn-primary btn-large" value="Create project"/>
--						</div>
--					</form>
--				</div>
--			</div>
--		</div>
-+            <div class="form-actions">
-+              <input type="submit" class="btn btn-primary btn-large" value="Create project"></input>
-+              <span class="help-inline" style="vertical-align:middle;">To create a project, you need to enter a project name</span>
-+            </div>
-+        </form>
-+    {% else %}
-+    <br/>
-+    <div class="alert alert-warning row-fluid span6">
-+    <h3>No releases configured</h3>
-+    <p>
-+    It looks like Toaster releases have not been configured properly. Contact the person who set up Toaster, and tell them about it.
-+    </p>
-+    <p>
-+    If you are the Toaster administrator, we are sorry: setting up Toaster is not easy.
-+    <ul>
-+    <li><a href="{% url 'admin:orm_release_changelist' %}">Log in to the Django administration interface</a> and check  the "Releases" section.</li>
-+    <li>Check out the <a href="https://wiki.yoctoproject.org/wiki/Setting_up_a_hosted_managed_mode_for_Toaster#Releases">documentation about configuring releases</a></li>
-+    </ul>
-+    </p>
-+    </div>
-+    {% endif %}
-+
-+    </div>
-+    <script type="text/javascript">
-+        $(document).ready(function () {
-+            // hide the new project button
-+            $("#new-project-button").hide();
-+            $('.btn-primary').attr('disabled', 'disabled');
-+
-+            // enable submit button when all required fields are populated
-+            $("input#new-project-name").keyup(function() {
-+                if ($("input#new-project-name").val().length > 0 ){
-+                    $('.btn-primary').removeAttr('disabled');
-+                    $(".help-inline").css('visibility','hidden');
-+                }
-+                else {
-+                    $('.btn-primary').attr('disabled', 'disabled');
-+                    $(".help-inline").css('visibility','visible');
-+                }
-+            });
-+
-+            // show relevant help text for the selected release
-+            var selected_release = $('select').val();
-+            $("#description-" + selected_release).show();
-+
-+
-+			$('select').change(function(){
-+				var new_release = $('select').val();
-+                $(".helptext").hide();
-+				$('#description-' + new_release).fadeIn();
-+			});
-+        })
-+    </script>
-+</div>
- {% endblock %}
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index b13f3e8..49a7769 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -1894,9 +1894,12 @@ if toastermain.settings.MANAGED:
-             'email': request.user.email if request.user.is_authenticated() else '',
-             'username': request.user.username if request.user.is_authenticated() else '',
-             'releases': Release.objects.order_by("id"),
--            'defaultbranch': ToasterSetting.objects.get(name = "DEFAULT_RELEASE").value,
-         }
+ from checksettings import DN
  
-+        try:
-+            context['defaultbranch'] = ToasterSetting.objects.get(name = "DEFAULT_RELEASE").value
-+        except ToasterSetting.DoesNotExist:
++def _reduce_canon_path(path):
++    components = []
++    for c in path.split("/"):
++        if c == "..":
++            del components[-1]
++        elif c == ".":
 +            pass
++        else:
++            components.append(c)
++    if len(components) < 2:
++        components.append('')
++    return "/".join(components)
++
++def _get_id_for_sourcetype(s):
++    for i in LayerSource.SOURCE_TYPE:
++        if s == i[1]:
++            return i[0]
++    raise Exception("Could not find definition for sourcetype " + s)
++
+ class Command(BaseCommand):
+     help = "Loads a toasterconf.json file in the database"
+     args = "filepath"
  
-         if request.method == "GET":
-             # render new project page
-@@ -2156,7 +2159,7 @@ if toastermain.settings.MANAGED:
+-    def _reduce_canon_path(self, path):
+-        components = []
+-        for c in path.split("/"):
+-            if c == "..":
+-                del components[-1]
+-            elif c == ".":
+-                pass
+-            else:
+-                components.append(c)
+-        return "/".join(components)
  
  
-             def _lv_to_dict(x):
--                return {"id": x.pk, "name": x.layer.name, 
-+                return {"id": x.pk, "name": x.layer.name,
-                         "detail": "(" + x.layer.vcs_url + (")" if x.up_branch == None else " | "+x.up_branch.name+")"),
-                         "giturl": x.layer.vcs_url, "layerdetailurl" : reverse('layerdetails', args=(x.pk,))}
+     def _import_layer_config(self, filepath):
+@@ -71,16 +80,13 @@ class Command(BaseCommand):
+             assert 'name' in lsi
+             assert 'branches' in lsi
  
+-            def _get_id_for_sourcetype(s):
+-                for i in LayerSource.SOURCE_TYPE:
+-                    if s == i[1]:
+-                        return i[0]
+-                raise Exception("Could not find definition for sourcetype " + s)
+ 
+             if _get_id_for_sourcetype(lsi['sourcetype']) == LayerSource.TYPE_LAYERINDEX or lsi['apiurl'].startswith("/"):
+                 apiurl = lsi['apiurl']
+             else:
+-                apiurl = self._reduce_canon_path(os.path.join(DN(filepath), lsi['apiurl']))
++                apiurl = _reduce_canon_path(os.path.join(DN(os.path.abspath(filepath)), lsi['apiurl']))
++
++            assert ((_get_id_for_sourcetype(lsi['sourcetype']) == LayerSource.TYPE_LAYERINDEX) or apiurl.startswith("/")), (lsi['sourcetype'],apiurl)
+ 
+             try:
+                 ls = LayerSource.objects.get(sourcetype = _get_id_for_sourcetype(lsi['sourcetype']), apiurl = apiurl)
+@@ -102,7 +108,7 @@ class Command(BaseCommand):
+                     if layerinfo['local_path'].startswith("/"):
+                         lo.local_path = layerinfo['local_path']
+                     else:
+-                        lo.local_path = self._reduce_canon_path(os.path.join(DN(DN(DN(filepath))), layerinfo['local_path']))
++                        lo.local_path = _reduce_canon_path(os.path.join(ls.apiurl, layerinfo['local_path']))
+ 
+                     if not os.path.exists(lo.local_path):
+                         raise Exception("Local layer path %s must exists." % lo.local_path)
+@@ -110,6 +116,8 @@ class Command(BaseCommand):
+                     lo.vcs_url = layerinfo['vcs_url']
+                     if layerinfo['vcs_url'].startswith("remote:"):
+                         lo.vcs_url = _read_git_url_from_local_repository(layerinfo['vcs_url'])
++                    else:
++                        lo.vcs_url = layerinfo['vcs_url']
+ 
+                     if 'layer_index_url' in layerinfo:
+                         lo.layer_index_url = layerinfo['layer_index_url']
+diff --git a/lib/toaster/bldcontrol/tests.py b/lib/toaster/bldcontrol/tests.py
+index 37d6524..5a9d1df 100644
+--- a/lib/toaster/bldcontrol/tests.py
++++ b/lib/toaster/bldcontrol/tests.py
+@@ -141,3 +141,22 @@ class RunBuildsCommandTests(TestCase):
+         self.assertTrue(br.state == BuildRequest.REQ_INPROGRESS, "Request is not updated")
+         # no more selections possible here
+         self.assertRaises(IndexError, command._selectBuildRequest)
++
++
++class UtilityTests(TestCase):
++    def test_reduce_path(self):
++        from bldcontrol.management.commands.loadconf import _reduce_canon_path, _get_id_for_sourcetype
++
++        self.assertTrue( _reduce_canon_path("/") == "/")
++        self.assertTrue( _reduce_canon_path("/home/..") == "/")
++        self.assertTrue( _reduce_canon_path("/home/../ana") == "/ana")
++        self.assertTrue( _reduce_canon_path("/home/../ana/..") == "/")
++        self.assertTrue( _reduce_canon_path("/home/ana/mihai/../maria") == "/home/ana/maria")
++
++    def test_get_id_for_sorucetype(self):
++        from bldcontrol.management.commands.loadconf import _reduce_canon_path, _get_id_for_sourcetype
++        self.assertTrue( _get_id_for_sourcetype("layerindex") == 1)
++        self.assertTrue( _get_id_for_sourcetype("local") == 0)
++        self.assertTrue( _get_id_for_sourcetype("imported") == 2)
++        with self.assertRaises(Exception):
++            _get_id_for_sourcetype("unknown")
 -- 
 1.9.1
 
