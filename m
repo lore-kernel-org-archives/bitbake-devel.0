@@ -1,25 +1,23 @@
 Return-Path: <anibal.limon@linux.intel.com>
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id D24DE72318
+	by mail.openembedded.org (Postfix) with ESMTP id C09A5722FA
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Nov 2014 15:37:21 +0000 (UTC)
+	Fri, 28 Nov 2014 15:37:20 +0000 (UTC)
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 28 Nov 2014 07:34:50 -0800
+	by orsmga102.jf.intel.com with ESMTP; 28 Nov 2014 07:34:49 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.07,477,1413270000"; d="scan'208";a="615532369"
+X-IronPort-AV: E=Sophos;i="5.07,477,1413270000"; d="scan'208";a="615532361"
 Received: from alimon-thinkpad-w540.zpn.intel.com ([10.219.4.148])
-	by orsmga001.jf.intel.com with ESMTP; 28 Nov 2014 07:37:21 -0800
+	by orsmga001.jf.intel.com with ESMTP; 28 Nov 2014 07:37:20 -0800
 From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 28 Nov 2014 09:37:19 -0600
-Message-Id: <d4fffe492923c1102334251cf872ce7d30346a90.1417134564.git.anibal.limon@linux.intel.com>
+Date: Fri, 28 Nov 2014 09:37:17 -0600
+Message-Id: <c93c67ae299dadff6103e722327e053697afeab7.1417134564.git.anibal.limon@linux.intel.com>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <c93c67ae299dadff6103e722327e053697afeab7.1417134564.git.anibal.limon@linux.intel.com>
-References: <c93c67ae299dadff6103e722327e053697afeab7.1417134564.git.anibal.limon@linux.intel.com>
 In-Reply-To: <cover.1417134564.git.anibal.limon@linux.intel.com>
 References: <cover.1417134564.git.anibal.limon@linux.intel.com>
 MIME-Version: 1.0
-Subject: [PATCH 12/12] fetch2/wget.py: latest_versionstring clean improvments minor
+Subject: [PATCH 10/12] fetch/wget.py: latest_versionstring remove newuri set because is previous set
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,50 +30,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 28 Nov 2014 15:37:21 -0000
+X-List-Received-Date: Fri, 28 Nov 2014 15:37:22 -0000
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Update documentation strings in _check_latest_dir and _check_latest_version
-methods with  the correct return types.
-
-_check_latest_version method remove unused testversion variable.
-
 Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
 ---
- bitbake/lib/bb/fetch2/wget.py | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ bitbake/lib/bb/fetch2/wget.py | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index 7841553..d82e78c 100644
+index f5bdfc7..7841553 100644
 --- a/bitbake/lib/bb/fetch2/wget.py
 +++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -192,7 +192,7 @@ class Wget(FetchMethod):
-     def _check_latest_dir(self, url, versionstring, ud, d):
-         """
-         Return the name of the directory with the greatest package version
--        If error or no version, return ""
-+        If error or no version, return None
-         """
-         bb.debug(3, "DirURL: %s, %s" % (url, versionstring))
-         soup = BeautifulSoup(self._fetch_index(url, ud, d))
-@@ -230,7 +230,7 @@ class Wget(FetchMethod):
-     def _check_latest_version(self, url, package, current_version, ud, d):
-         """
-         Return the latest version of a package inside a given directory path
--        If error or no version, return ""
-+        If error or no version, return None
-         """
-         valid = 0
-         version = ('', '', '')
-@@ -243,7 +243,6 @@ class Wget(FetchMethod):
+@@ -365,8 +365,6 @@ class Wget(FetchMethod):
+         else:
+             newuri = newpath
  
-         pn_regex = d.getVar('REGEX', True)
-         if pn_regex:
--            testversion = version
-             pn_regex = re.compile(pn_regex)
-             bb.debug(3, "pn_regex = '%s'" % (pn_regex.pattern))
-             
+-        # generate the new uri with the appropriate latest directory
+-        newuri = regex_uri or bb.fetch.encodeurl([ud.type, ud.host, newpath, ud.user, ud.pswd, {}])
+         newversion = self._check_latest_version(newuri, package,
+                         current_version, ud, d)
+         while not newversion:
 -- 
 1.9.1
 
