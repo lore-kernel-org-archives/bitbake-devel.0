@@ -1,26 +1,29 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 06E03601A0
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 86B43723C6
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  8 Dec 2014 18:10:33 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 08 Dec 2014 10:09:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.07,539,1413270000"; d="scan'208";a="634551591"
-Received: from apwitke-mobl2.ger.corp.intel.com (HELO
-	peggleto-mobl5.ger.corp.intel.com) ([10.252.30.33])
-	by fmsmga001.fm.intel.com with ESMTP; 08 Dec 2014 10:09:23 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date: Mon, 08 Dec 2014 18:09:22 +0000
-Message-ID: <2231153.eUgzP4WL77@peggleto-mobl5.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.14.3 (Linux/3.17.4-200.fc20.x86_64; KDE/4.14.3; x86_64; ; )
+	Mon,  8 Dec 2014 20:58:07 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	sB8KvR2N015692; Mon, 8 Dec 2014 20:57:27 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 3HryMPW61fi7; Mon,  8 Dec 2014 20:57:27 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	sB8KvBij015674
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 8 Dec 2014 20:57:22 GMT
+Message-ID: <1418072268.22903.27.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+Date: Mon, 08 Dec 2014 20:57:48 +0000
 In-Reply-To: <1418060539.22903.24.camel@linuxfoundation.org>
 References: <cover.1418034514.git.paul.eggleton@linux.intel.com>
 	<bd4a209b8fd5adb0bc35d8a44b57c03aea07f099.1418034514.git.paul.eggleton@linux.intel.com>
 	<1418060539.22903.24.camel@linuxfoundation.org>
-MIME-Version: 1.0
+X-Mailer: Evolution 3.12.7-0ubuntu1 
+Mime-Version: 1.0
 Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH 4/4] event: fix resetting class handlers object
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -35,11 +38,11 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 08 Dec 2014 18:10:37 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Mon, 08 Dec 2014 20:58:11 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Monday 08 December 2014 17:42:19 Richard Purdie wrote:
+On Mon, 2014-12-08 at 17:42 +0000, Richard Purdie wrote:
 > On Mon, 2014-12-08 at 10:50 +0000, Paul Eggleton wrote:
 > > If you don't explicitly specify to use a global variable when doing an
 > > assignment, you will be setting a local variable instead, which means
@@ -49,7 +52,6 @@ On Monday 08 December 2014 17:42:19 Richard Purdie wrote:
 > > 
 > > Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 > > ---
-> > 
 > >  lib/bb/event.py | 1 +
 > >  1 file changed, 1 insertion(+)
 > > 
@@ -57,26 +59,19 @@ On Monday 08 December 2014 17:42:19 Richard Purdie wrote:
 > > index 9645476..8bc6b80 100644
 > > --- a/lib/bb/event.py
 > > +++ b/lib/bb/event.py
-> > 
 > > @@ -55,6 +55,7 @@ def get_class_handlers():
 > >      return _handlers
 > >  
 > >  def set_class_handlers(h):
 > > +    global handlers
-> > 
 > >      _handlers = h
 > 
 > Er, shouldn't this be _handlers?
 
-Oh dear. Yes, it should. I've fixed that on the branch, but I'll do a bit more 
-testing just to make sure it isn't breaking anything since the previous change 
-wouldn't have made any impact at all.
+I put the patch in master-next and tweaked this.
 
 Cheers,
-Paul
 
--- 
+Richard
 
-Paul Eggleton
-Intel Open Source Technology Centre
 
