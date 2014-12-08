@@ -1,28 +1,30 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id D3EAF71F47
+	by mail.openembedded.org (Postfix) with ESMTP id EDE63724B4
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  8 Dec 2014 16:38:27 +0000 (UTC)
+	Mon,  8 Dec 2014 17:42:37 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	sB8GbpJj005097
-	for <bitbake-devel@lists.openembedded.org>; Mon, 8 Dec 2014 16:37:51 GMT
+	sB8HfwGx008264; Mon, 8 Dec 2014 17:41:58 GMT
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id qySNTMRPAn97 for <bitbake-devel@lists.openembedded.org>;
-	Mon,  8 Dec 2014 16:37:51 +0000 (GMT)
+	with LMTP id 47nYRIOL91zu; Mon,  8 Dec 2014 17:41:58 +0000 (GMT)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	sB8Gbb1g005094
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Mon, 8 Dec 2014 16:37:48 GMT
-Message-ID: <1418056694.22903.21.camel@linuxfoundation.org>
+	sB8HfgAn008250
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 8 Dec 2014 17:41:54 GMT
+Message-ID: <1418060539.22903.24.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 08 Dec 2014 16:38:14 +0000
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+Date: Mon, 08 Dec 2014 17:42:19 +0000
+In-Reply-To: <bd4a209b8fd5adb0bc35d8a44b57c03aea07f099.1418034514.git.paul.eggleton@linux.intel.com>
+References: <cover.1418034514.git.paul.eggleton@linux.intel.com>
+	<bd4a209b8fd5adb0bc35d8a44b57c03aea07f099.1418034514.git.paul.eggleton@linux.intel.com>
 X-Mailer: Evolution 3.12.7-0ubuntu1 
 Mime-Version: 1.0
-Subject: [PATCH] runqueue: Fix 100% cpu use after keyboard interrupt
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 4/4] event: fix resetting class handlers object
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,48 +37,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 08 Dec 2014 16:38:28 -0000
+X-List-Received-Date: Mon, 08 Dec 2014 17:42:44 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-After Ctrl+C is pressed to interrupt bitbake, it loops continually, running
-at 100% cpu. This patch selects on the correct file descriptors resolving
-the excess cpu usage.
+On Mon, 2014-12-08 at 10:50 +0000, Paul Eggleton wrote:
+> If you don't explicitly specify to use a global variable when doing an
+> assignment, you will be setting a local variable instead, which means
+> this function wasn't working at all. It explains some odd behaviour we
+> have seen in the layer index where event handlers were sometimes
+> bleeding into other contexts where they should not have been.
+> 
+> Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+> ---
+>  lib/bb/event.py | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/lib/bb/event.py b/lib/bb/event.py
+> index 9645476..8bc6b80 100644
+> --- a/lib/bb/event.py
+> +++ b/lib/bb/event.py
+> @@ -55,6 +55,7 @@ def get_class_handlers():
+>      return _handlers
+>  
+>  def set_class_handlers(h):
+> +    global handlers
+>      _handlers = h
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Er, shouldn't this be _handlers?
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index a4d86ef..a6da72b 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1078,7 +1078,7 @@ class RunQueue:
-             retval = self.rqexe.execute()
- 
-         if self.state is runQueueCleanUp:
--           self.rqexe.finish()
-+            retval = self.rqexe.finish()
- 
-         if (self.state is runQueueComplete or self.state is runQueueFailed) and self.rqexe:
-             self.teardown_workers()
-@@ -1320,15 +1320,14 @@ class RunQueueExecute:
-         if self.stats.active > 0:
-             bb.event.fire(runQueueExitWait(self.stats.active), self.cfgData)
-             self.rq.read_workers()
--
--            return
-+            return self.rq.active_fds()
- 
-         if len(self.failed_fnids) != 0:
-             self.rq.state = runQueueFailed
--            return
-+            return True
- 
-         self.rq.state = runQueueComplete
--        return
-+        return True
- 
-     def check_dependencies(self, task, taskdeps, setscene = False):
-         if not self.rq.depvalidate:
+Cheers,
+
+Richard
+
+>  def clean_class_handlers():
+> -- 
+> 1.9.3
+> 
 
 
 
