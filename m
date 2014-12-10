@@ -1,44 +1,43 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f181.google.com (mail-wi0-f181.google.com
-	[209.85.212.181])
-	by mail.openembedded.org (Postfix) with ESMTP id E7FEB7101A
+Received: from mail-wg0-f43.google.com (mail-wg0-f43.google.com [74.125.82.43])
+	by mail.openembedded.org (Postfix) with ESMTP id 18BD272341
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Dec 2014 15:12:19 +0000 (UTC)
-Received: by mail-wi0-f181.google.com with SMTP id r20so5479400wiv.14
+	Wed, 10 Dec 2014 15:12:18 +0000 (UTC)
+Received: by mail-wg0-f43.google.com with SMTP id l18so3918255wgh.16
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Dec 2014 07:12:19 -0800 (PST)
+	Wed, 10 Dec 2014 07:12:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=5pkposyHC/oiHEY0zzydqt1ujrz6CtTu6D3wF7ZKhKc=;
-	b=Lzj4JKBx46yUoNusxt4CmoLJcY1lRBlLu6MW/h/YvhY7N/yasRGxkjh2Ljt17S8Roz
-	QOfOOrxjFXPS33NX7uOvt1shene/QiPsS03EXCj3QrxUV+E5vVxbjC0P2tkLPufaBf/a
-	ulMXh87OrCiqHpUbmyqQoThPmhvAO8s5wiuBJ4okIXQ8UjSaVhjL1LuiERQUzZkIJt0F
-	HCxQQ/4nu74Nc0kmr106/dNkca+K3DwkHVm09BlwMU3Rf+qbfGUL/UHfrjdzf5m9PRR4
-	YR0V8N8Fwwu5MoJUHw/fwmMYk+lPbAMXfdcSXjso8zOlMk2XAKEQk8wGr1Dt5SSBlV+x
-	kKyQ==
-X-Gm-Message-State: ALoCoQn9tLhxVxJDcsqNLq8INSLeJQy4tCuUMXJG71bA1W9NzfBrbPbBYsGMjMd7GwQfrwptoWuK
-X-Received: by 10.194.90.193 with SMTP id by1mr7982548wjb.12.1418224339613;
-	Wed, 10 Dec 2014 07:12:19 -0800 (PST)
+	bh=GQ7OJnhqnNPiSLqlH1/yZGo0/h/ZcTvZWBT6ABb4REw=;
+	b=Z4dW8HDyyTo1CdYlg9DtaiqMeKN1LZb7qE0ZSG9QtYC93oTF4B+IUSx7bQwy45GdvW
+	mZofvpGhsTIxeTuHeS9pPPOc1bIptLKv1Cd1GWyyHsB7gGCLu2h/wkBVAdYtLQwLIdB9
+	TaNyN4bLpp106Pq5lKPvikD/VbNQ4kAFeZCXrpT969fe6UUVdm203B7reITNYQd8Ttwv
+	DqCK7fumBwPk7WjCTWaSg+fIK4SsxKTaelZTYi9itKkP4cHiAwXTwiZWj0psz5Ftioau
+	eZL8YA2QW7JV1fqbC6rM7q3K6aeryUvXaxFLRTsQfLQISglnmFQMuuF0tQGQ0EzfNZe6
+	QVGQ==
+X-Gm-Message-State: ALoCoQkWi7ZPGqkQTHsSwAoez2Du52BXbOdIoXcJaMq/Nc3B6FVem971iEXEl02m6GtYJhpq04rk
+X-Received: by 10.194.83.42 with SMTP id n10mr7172766wjy.133.1418224338861;
+	Wed, 10 Dec 2014 07:12:18 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
 	by mx.google.com with ESMTPSA id
-	be4sm18281492wib.16.2014.12.10.07.12.17 for <multiple recipients>
+	dm10sm18278271wib.18.2014.12.10.07.12.17 for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 10 Dec 2014 07:12:18 -0800 (PST)
+	Wed, 10 Dec 2014 07:12:17 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 694B25646B4; Wed, 10 Dec 2014 15:12:17 +0000 (GMT)
+	id 6B6865646B9; Wed, 10 Dec 2014 15:12:17 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 10 Dec 2014 15:12:08 +0000
-Message-Id: <82b8e99c92ccf26b9e899c5c82d7a4b5ee638c33.1418224064.git.alexandru.damian@intel.com>
+Date: Wed, 10 Dec 2014 15:12:10 +0000
+Message-Id: <fd98d0bf2e915ae681bdde5a0de9579ea91da33c.1418224064.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <879045f69bd20c11f83ed36f88482dd500d71592.1418224064.git.alexandru.damian@intel.com>
 References: <879045f69bd20c11f83ed36f88482dd500d71592.1418224064.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1418224064.git.alexandru.damian@intel.com>
 References: <cover.1418224064.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 03/11] add option to write offline event log file
+Subject: [PATCH 05/11] toasterui: add extra debug and development infos
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,465 +54,403 @@ X-List-Received-Date: Wed, 10 Dec 2014 15:12:23 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-This patch adds a "-w/--write-log" option to bitbake
-that writes an event log file for the current build.
+We update and add logs throughout the code in order to help
+with development. The extra logging is turned off by default,
+but it can be enabled by using environment variables.
 
-The name of the file is hardcoded to "bitbake_eventlog.json"
+All logging happens through the Python logging facilities.
 
-We add a script, toater-eventreplay, that reads an event
-log file and loads the data into a Toaster database, creating
-a build entry.
+The toaster UI will save a log of all incoming events if the
+TOASTER_EVENTLOG variable is set.
 
-We modify the toasterui to fix minor issues with reading
-events from an event log file.
+If TOASTER_SQLDEBUG is set all DB queries will be logged.
 
-Performance impact is undetectable under no-task executed builds.
+If TOASTER_DEVEL is set and the django-fresh module is available,
+the module is enabled to allow auto-reload of pages when the
+source is changed.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bin/bitbake                  |   7 +-
- bin/toaster-eventreplay      | 179 +++++++++++++++++++++++++++++++++++++++++++
- lib/bb/cooker.py             |  75 +++++++++++++++++-
- lib/bb/cookerdata.py         |   1 +
- lib/bb/ui/buildinfohelper.py |  45 +++++++----
- lib/bb/ui/toasterui.py       |   2 +-
- 6 files changed, 290 insertions(+), 19 deletions(-)
- create mode 100755 bin/toaster-eventreplay
+ lib/bb/ui/buildinfohelper.py                       | 12 ++++++++--
+ lib/bb/ui/toasterui.py                             | 19 +++++++--------
+ lib/toaster/bldcontrol/localhostbecontroller.py    | 27 ++++++++++++++--------
+ .../management/commands/checksettings.py           |  2 +-
+ .../bldcontrol/management/commands/runbuilds.py    | 13 +++++++----
+ lib/toaster/toastermain/settings.py                | 27 ++++++++++++++++++++--
+ lib/toaster/toastermain/urls.py                    | 10 +++++---
+ 7 files changed, 79 insertions(+), 31 deletions(-)
 
-diff --git a/bin/bitbake b/bin/bitbake
-index 7f8449c..52a4d2b 100755
---- a/bin/bitbake
-+++ b/bin/bitbake
-@@ -196,6 +196,9 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
-         parser.add_option("", "--status-only", help = "Check the status of the remote bitbake server.",
-                    action = "store_true", dest = "status_only", default = False)
- 
-+        parser.add_option("-w", "--write-log", help = "Writes the event log of the build to the bitbake_eventlog.json file.",
-+                   action = "store_true", dest = "writeeventlog", default = False)
-+
-         options, targets = parser.parse_args(sys.argv)
- 
-         # some environmental variables set also configuration options
-@@ -206,6 +209,9 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
-         if "BBTOKEN" in os.environ:
-             options.xmlrpctoken = os.environ["BBTOKEN"]
- 
-+        if "TOASTER_EVENTLOG" is os.environ:
-+            options.writeeventlog = True
-+
-         # if BBSERVER says to autodetect, let's do that
-         if options.remote_server:
-             [host, port] = options.remote_server.split(":", 2)
-@@ -266,7 +272,6 @@ def start_server(servermodule, configParams, configuration, features):
-     return server
- 
- 
--
- def main():
- 
-     configParams = BitBakeConfigParameters()
-diff --git a/bin/toaster-eventreplay b/bin/toaster-eventreplay
-new file mode 100755
-index 0000000..624829a
---- /dev/null
-+++ b/bin/toaster-eventreplay
-@@ -0,0 +1,179 @@
-+#!/usr/bin/env python
-+# ex:ts=4:sw=4:sts=4:et
-+# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
-+#
-+# Copyright (C) 2014        Alex Damian
-+#
-+# This file re-uses code spread throughout other Bitbake source files.
-+# As such, all other copyrights belong to their own right holders.
-+#
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+# This program is distributed in the hope that it will be useful,
-+# but WITHOUT ANY WARRANTY; without even the implied warranty of
-+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+# GNU General Public License for more details.
-+#
-+# You should have received a copy of the GNU General Public License along
-+# with this program; if not, write to the Free Software Foundation, Inc.,
-+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+
-+
-+# This command takes a filename as a single parameter. The filename is read
-+# as a build eventlog, and the ToasterUI is used to process events in the file
-+# and log data in the database
-+
-+import os
-+import sys, logging
-+
-+# mangle syspath to allow easy import of modules
-+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-+                                'lib'))
-+
-+
-+import bb.cooker
-+from bb.ui import toasterui
-+import sys
-+import logging
-+
-+logger = logging.getLogger(__name__)
-+console = logging.StreamHandler(sys.stdout)
-+format_str = "%(levelname)s: %(message)s"
-+logging.basicConfig(format=format_str)
-+
-+
-+import json, pickle
-+
-+
-+class FileReadEventsServerConnection():
-+    """  Emulates a connection to a bitbake server that feeds
-+        events coming actually read from a saved log file.
-+    """
-+
-+    class MockConnection():
-+        """ fill-in for the proxy to the server. we just return generic data
-+        """
-+        def __init__(self, sc):
-+            self._sc = sc
-+
-+        def runCommand(self, commandArray):
-+            """ emulates running a command on the server; only read-only commands are accepted """
-+            command_name = commandArray[0]
-+
-+            if command_name == "getVariable":
-+                if commandArray[1] in self._sc._variables:
-+                    return (self._sc._variables[commandArray[1]]['v'], None)
-+                return (None, "Missing variable")
-+
-+            elif command_name == "getAllKeysWithFlags":
-+                dump = {}
-+                flaglist = commandArray[1]
-+                for k in self._sc._variables.keys():
-+                    try:
-+                        if not k.startswith("__"):
-+                            v = self._sc._variables[k]['v']
-+                            dump[k] = {
-+                                'v' : v ,
-+                                'history' : self._sc._variables[k]['history'],
-+                            }
-+                            for d in flaglist:
-+                                dump[k][d] = self._sc._variables[k][d]
-+                    except Exception as e:
-+                        print(e)
-+                return (dump, None)
-+            else:
-+                raise Exception("Command %s not implemented" % commandArray[0])
-+
-+        def terminateServer(self):
-+            """ do not do anything """
-+            pass
-+
-+
-+
-+    class EventReader():
-+        def __init__(self, sc):
-+            self._sc = sc
-+            self.firstraise = 0
-+
-+        def _create_event(self, line):
-+            def _import_class(name):
-+                assert len(name) > 0
-+                assert "." in name, name
-+
-+                components = name.strip().split(".")
-+                modulename = ".".join(components[:-1])
-+                moduleklass = components[-1]
-+
-+                module = __import__(modulename, fromlist=[str(moduleklass)])
-+                return getattr(module, moduleklass)
-+
-+            # we build a toaster event out of current event log line
-+            try:
-+                event_data = json.loads(line.strip())
-+                event_class = _import_class(event_data['class'])
-+                event_object = pickle.loads(json.loads(event_data['vars']))
-+            except ValueError as e:
-+                print("Failed loading ", line)
-+                raise e
-+
-+            if not isinstance(event_object, event_class):
-+                raise Exception("Error loading objects %s class %s ", event_object, event_class)
-+
-+            return event_object
-+
-+        def waitEvent(self, timeout):
-+
-+            nextline = self._sc._eventfile.readline()
-+            if len(nextline) == 0:
-+                # the build data ended, while toasterui still waits for events.
-+                # this happens when the server was abruptly stopped, so we simulate this
-+                self.firstraise += 1
-+                if self.firstraise == 1:
-+                    raise KeyboardInterrupt()
-+                else:
-+                    return None
-+            else:
-+                self._sc.lineno += 1
-+            return self._create_event(nextline)
-+
-+
-+    def _readVariables(self, variableline):
-+        self._variables = json.loads(variableline.strip())['allvariables']
-+
-+
-+    def __init__(self, file_name):
-+        self.connection = FileReadEventsServerConnection.MockConnection(self)
-+        self._eventfile = open(file_name, "r")
-+
-+        # we expect to have the variable dump at the start of the file
-+        self.lineno = 1
-+        self._readVariables(self._eventfile.readline())
-+
-+        self.events = FileReadEventsServerConnection.EventReader(self)
-+
-+
-+
-+
-+
-+class MockConfigParameters():
-+    """ stand-in for cookerdata.ConfigParameters; as we don't really config a cooker, this
-+        serves just to supply needed interfaces for the toaster ui to work """
-+    def __init__(self):
-+        self.observe_only = True            # we can only read files
-+
-+
-+# run toaster ui on our mock bitbake class
-+if __name__ == "__main__":
-+    if len(sys.argv) < 2:
-+        logger.error("Usage: %s event.log " % sys.argv[0])
-+        sys.exit(1)
-+
-+    file_name = sys.argv[-1]
-+    mock_connection = FileReadEventsServerConnection(file_name)
-+    configParams = MockConfigParameters()
-+
-+    # run the main program
-+    toasterui.main(mock_connection.connection, mock_connection.events, configParams)
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index df9a0ca..468d06d 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -205,6 +205,75 @@ class BBCooker:
-         self.data = self.databuilder.data
-         self.data_hash = self.databuilder.data_hash
- 
-+
-+        # we log all events to a file if so directed
-+        if self.configuration.writeeventlog:
-+            import json, pickle
-+            DEFAULT_EVENTFILE = "bitbake_eventlog.json"
-+            class EventLogWriteHandler():
-+
-+                class EventWriter():
-+                    def __init__(self, cooker):
-+                        self.file_inited = None
-+                        self.cooker = cooker
-+                        self.event_queue = []
-+
-+                    def init_file(self):
-+                        try:
-+                            # delete the old log
-+                            os.remove(DEFAULT_EVENTFILE)
-+                        except:
-+                            pass
-+
-+                        # write current configuration data
-+                        with open(DEFAULT_EVENTFILE, "w") as f:
-+                            f.write("%s\n" % json.dumps({ "allvariables" : self.cooker.getAllKeysWithFlags(["doc", "func"])}))
-+
-+                    def write_event(self, event):
-+                        with open(DEFAULT_EVENTFILE, "a") as f:
-+                            try:
-+                                f.write("%s\n" % json.dumps({"class":event.__module__ + "." + event.__class__.__name__, "vars":json.dumps(pickle.dumps(event)) }))
-+                            except Exception as e:
-+                                import traceback
-+                                print(e, traceback.format_exc(e))
-+
-+
-+                    def send(self, event):
-+                        event_class = event.__module__ + "." + event.__class__.__name__
-+
-+                        # init on bb.event.BuildStarted
-+                        if self.file_inited is None:
-+                            if  event_class == "bb.event.BuildStarted":
-+                                self.init_file()
-+                                self.file_inited = True
-+
-+                                # write pending events
-+                                for e in self.event_queue:
-+                                    self.write_event(e)
-+
-+                                # also write the current event
-+                                self.write_event(event)
-+
-+                            else:
-+                                # queue all events until the file is inited
-+                                self.event_queue.append(event)
-+
-+                        else:
-+                            # we have the file, just write the event
-+                            self.write_event(event)
-+
-+                # set our handler's event processor
-+                event = EventWriter(self)       # self is the cooker here
-+
-+
-+            # set up cooker features for this mock UI handler
-+
-+            # we need to write the dependency tree in the log
-+            self.featureset.setFeature(CookerFeatures.SEND_DEPENDS_TREE)
-+            # register the log file writer as UI Handler
-+            bb.event.register_UIHhandler(EventLogWriteHandler())
-+
-+
-         #
-         # Special updated configuration we use for firing events
-         #
-@@ -505,7 +574,7 @@ class BBCooker:
-         taskdata, runlist, pkgs_to_build = self.buildTaskData(pkgs_to_build, task, False)
- 
-         return runlist, taskdata
--    
-+
-     ######## WARNING : this function requires cache_extra to be enabled ########
- 
-     def generateTaskDepTreeData(self, pkgs_to_build, task):
-@@ -1550,10 +1619,10 @@ class CookerCollectFiles(object):
-         for p in pkgfns:
-             realfn, cls = bb.cache.Cache.virtualfn2realfn(p)
-             priorities[p] = self.calc_bbfile_priority(realfn, matched)
-- 
-+
-         # Don't show the warning if the BBFILE_PATTERN did match .bbappend files
-         unmatched = set()
--        for _, _, regex, pri in self.bbfile_config_priorities:        
-+        for _, _, regex, pri in self.bbfile_config_priorities:
-             if not regex in matched:
-                 unmatched.add(regex)
- 
-diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
-index 470d538..2ceed2d 100644
---- a/lib/bb/cookerdata.py
-+++ b/lib/bb/cookerdata.py
-@@ -139,6 +139,7 @@ class CookerConfiguration(object):
-         self.dry_run = False
-         self.tracking = False
-         self.interface = []
-+        self.writeeventlog = False
- 
-         self.env = {}
- 
 diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index 6f4f568..e6ea7cd 100644
+index e6ea7cd..85d7b28 100644
 --- a/lib/bb/ui/buildinfohelper.py
 +++ b/lib/bb/ui/buildinfohelper.py
-@@ -549,7 +549,6 @@ class ORMWrapper(object):
-         assert isinstance(build_obj, Build)
- 
-         helptext_objects = []
--
-         for k in vardump:
-             desc = vardump[k]['doc']
-             if desc is None:
-@@ -724,7 +723,6 @@ class BuildInfoHelper(object):
- 
-     def store_started_build(self, event):
-         assert '_pkgs' in vars(event)
--        assert 'lvs' in self.internal_state, "Layer version information not found; Check if the bitbake server was configured to inherit toaster.bbclass."
-         build_information = self._get_build_information()
- 
-         build_obj = self.orm_wrapper.create_build_object(build_information, self.brbe)
-@@ -732,10 +730,13 @@ class BuildInfoHelper(object):
-         self.internal_state['build'] = build_obj
- 
-         # save layer version information for this build
--        for layer_obj in self.internal_state['lvs']:
--            self.orm_wrapper.get_update_layer_version_object(build_obj, layer_obj, self.internal_state['lvs'][layer_obj])
-+        if not 'lvs' in self.internal_state:
-+            logger.error("Layer version information not found; Check if the bitbake server was configured to inherit toaster.bbclass.")
-+        else:
-+            for layer_obj in self.internal_state['lvs']:
-+                self.orm_wrapper.get_update_layer_version_object(build_obj, layer_obj, self.internal_state['lvs'][layer_obj])
- 
--        del self.internal_state['lvs']
-+            del self.internal_state['lvs']
- 
-         # create target information
-         target_information = {}
-@@ -745,7 +746,8 @@ class BuildInfoHelper(object):
-         self.internal_state['targets'] = self.orm_wrapper.create_target_objects(target_information)
- 
-         # Save build configuration
--        self.orm_wrapper.save_build_variables(build_obj, self.server.runCommand(["getAllKeysWithFlags", ["doc", "func"]])[0])
-+        data = self.server.runCommand(["getAllKeysWithFlags", ["doc", "func"]])[0]
-+        self.orm_wrapper.save_build_variables(build_obj, [])
- 
-         return self.brbe
- 
-@@ -972,14 +974,29 @@ class BuildInfoHelper(object):
- 
-             recipe_info = {}
-             recipe_info['name'] = pn
--            recipe_info['version'] = event._depgraph['pn'][pn]['version'].lstrip(":")
-             recipe_info['layer_version'] = layer_version_obj
--            recipe_info['summary'] = event._depgraph['pn'][pn]['summary']
--            recipe_info['license'] = event._depgraph['pn'][pn]['license']
--            recipe_info['description'] = event._depgraph['pn'][pn]['description']
--            recipe_info['section'] = event._depgraph['pn'][pn]['section']
--            recipe_info['homepage'] = event._depgraph['pn'][pn]['homepage']
--            recipe_info['bugtracker'] = event._depgraph['pn'][pn]['bugtracker']
+@@ -33,6 +33,11 @@ from toaster.orm.models import Task_Dependency, Package_Dependency
+ from toaster.orm.models import Recipe_Dependency
+ from bb.msg import BBLogFormatter as format
+ from django.db import models
++import logging
 +
-+            if 'version' in event._depgraph['pn'][pn]:
-+                recipe_info['version'] = event._depgraph['pn'][pn]['version'].lstrip(":")
 +
-+            if 'summary' in event._depgraph['pn'][pn]:
-+                recipe_info['summary'] = event._depgraph['pn'][pn]['summary']
++logger = logging.getLogger("BitBake")
 +
-+            if 'license' in event._depgraph['pn'][pn]:
-+                recipe_info['license'] = event._depgraph['pn'][pn]['license']
-+
-+            if 'description' in event._depgraph['pn'][pn]:
-+                recipe_info['description'] = event._depgraph['pn'][pn]['description']
-+
-+            if 'section' in event._depgraph['pn'][pn]:
-+                recipe_info['section'] = event._depgraph['pn'][pn]['section']
-+
-+            if 'homepage' in event._depgraph['pn'][pn]:
-+                recipe_info['homepage'] = event._depgraph['pn'][pn]['homepage']
-+
-+            if 'bugtracker' in event._depgraph['pn'][pn]:
-+                recipe_info['bugtracker'] = event._depgraph['pn'][pn]['bugtracker']
-+
-             recipe_info['file_path'] = file_name
-             recipe = self.orm_wrapper.get_update_recipe_object(recipe_info)
-             recipe.is_image = False
-@@ -1138,4 +1155,4 @@ class BuildInfoHelper(object):
  
-         if 'backlog' in self.internal_state:
-             for event in self.internal_state['backlog']:
--                   print "NOTE: Unsaved log: ", event.msg
-+                   logger.error("Unsaved log: %s", event.msg)
+ class NotExisting(Exception):
+     pass
+@@ -115,7 +120,9 @@ class ORMWrapper(object):
+                                     build_name=build_info['build_name'],
+                                     bitbake_version=build_info['bitbake_version'])
+ 
++        logger.debug(1, "buildinfohelper: build is created %s" % build)
+         if brbe is not None:
++            logger.debug(1, "buildinfohelper: brbe is %s" % brbe)
+             from bldcontrol.models import BuildEnvironment, BuildRequest
+             br, be = brbe.split(":")
+ 
+@@ -604,6 +611,7 @@ class BuildInfoHelper(object):
+         self.has_build_history = has_build_history
+         self.tmp_dir = self.server.runCommand(["getVariable", "TMPDIR"])[0]
+         self.brbe    = self.server.runCommand(["getVariable", "TOASTER_BRBE"])[0]
++        logger.debug(1, "buildinfohelper: Build info helper inited %s" % vars(self))
+ 
+ 
+     def _configure_django(self):
+@@ -1127,10 +1135,10 @@ class BuildInfoHelper(object):
+         if 'build' in self.internal_state and 'backlog' in self.internal_state:
+             if len(self.internal_state['backlog']):
+                 tempevent = self.internal_state['backlog'].pop()
+-                print "DEBUG: Saving stored event ", tempevent
++                logger.debug(1, "buildinfohelper: Saving stored event %s " % tempevent)
+                 self.store_log_event(tempevent)
+             else:
+-                print "ERROR: Events not saved: \n", self.internal_state['backlog']
++                logger.error("buildinfohelper: Events not saved: %s" % self.internal_state['backlog'])
+                 del self.internal_state['backlog']
+ 
+         log_information = {}
 diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
-index 9aff489..d84b256 100644
+index d84b256..a85ad5a 100644
 --- a/lib/bb/ui/toasterui.py
 +++ b/lib/bb/ui/toasterui.py
-@@ -308,7 +308,7 @@ def main(server, eventHandler, params ):
+@@ -62,15 +62,6 @@ def _log_settings_from_server(server):
+ 
+ def main(server, eventHandler, params ):
+ 
+-    includelogs, loglines = _log_settings_from_server(server)
+-
+-    # verify and warn
+-    build_history_enabled = True
+-    inheritlist, error = server.runCommand(["getVariable", "INHERIT"])
+-    if not "buildhistory" in inheritlist.split(" "):
+-        logger.warn("buildhistory is not enabled. Please enable INHERIT += \"buildhistory\" to see image details.")
+-        build_history_enabled = False
+-
+     helper = uihelper.BBUIHelper()
+ 
+     console = logging.StreamHandler(sys.stdout)
+@@ -80,6 +71,16 @@ def main(server, eventHandler, params ):
+     console.setFormatter(format)
+     logger.addHandler(console)
+ 
++    includelogs, loglines = _log_settings_from_server(server)
++
++    # verify and warn
++    build_history_enabled = True
++    inheritlist, error = server.runCommand(["getVariable", "INHERIT"])
++
++    if not "buildhistory" in inheritlist.split(" "):
++        logger.warn("buildhistory is not enabled. Please enable INHERIT += \"buildhistory\" to see image details.")
++        build_history_enabled = False
++
+     if not params.observe_only:
+         logger.error("ToasterUI can only work in observer mode")
+         return
+diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
+index ebf2b4f..22d31e3 100644
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py
++++ b/lib/toaster/bldcontrol/localhostbecontroller.py
+@@ -32,6 +32,10 @@ from toastermain import settings
+ 
+ from bbcontroller import BuildEnvironmentController, ShellCmdException, BuildSetupException, _getgitcheckoutdirectoryname
+ 
++import logging
++logger = logging.getLogger("toaster")
++
++
+ class LocalhostBEController(BuildEnvironmentController):
+     """ Implementation of the BuildEnvironmentController for the localhost;
+         this controller manages the default build directory,
+@@ -56,8 +60,10 @@ class LocalhostBEController(BuildEnvironmentController):
+                 err = "command: %s \n%s" % (command, out)
+             else:
+                 err = "command: %s \n%s" % (command, err)
++            logger.debug("localhostbecontroller: shellcmd error %s" % err)
+             raise ShellCmdException(err)
+         else:
++            logger.debug("localhostbecontroller: shellcmd success")
+             return out
+ 
+     def _createdirpath(self, path):
+@@ -90,7 +96,7 @@ class LocalhostBEController(BuildEnvironmentController):
+         for i in self._shellcmd(cmd).split("\n"):
+             if i.startswith("Bitbake server address"):
+                 port = i.split(" ")[-1]
+-                print "Found bitbake server port ", port
++                logger.debug("localhostbecontroller: Found bitbake server port %s" % port)
+ 
+         def _toaster_ui_started(filepath):
+             if not os.path.exists(filepath):
+@@ -103,10 +109,10 @@ class LocalhostBEController(BuildEnvironmentController):
+ 
+         while not _toaster_ui_started(os.path.join(self.be.builddir, "toaster_ui.log")):
+             import time
+-            print "DEBUG: Waiting server to start"
++            logger.debug("localhostbecontroller: Waiting bitbake server to start")
+             time.sleep(0.5)
+ 
+-        print("DEBUG: Started server")
++        logger.debug("localhostbecontroller: Started bitbake server")
+         assert self.be.sourcedir and os.path.exists(self.be.builddir)
+         self.be.bbaddress = "localhost"
+         self.be.bbport = port
+@@ -116,11 +122,11 @@ class LocalhostBEController(BuildEnvironmentController):
+     def stopBBServer(self):
+         assert self.pokydirname and os.path.exists(self.pokydirname)
+         assert self.islayerset
+-        print self._shellcmd("bash -c \"source %s/oe-init-build-env %s && %s source toaster stop\"" %
++        self._shellcmd("bash -c \"source %s/oe-init-build-env %s && %s source toaster stop\"" %
+             (self.pokydirname, self.be.builddir, (lambda: "" if self.be.bbtoken is None else "BBTOKEN=%s" % self.be.bbtoken)()))
+         self.be.bbstate = BuildEnvironment.SERVER_STOPPED
+         self.be.save()
+-        print "Stopped server"
++        logger.debug("localhostbecontroller: Stopped bitbake server")
+ 
+     def setLayers(self, bitbakes, layers):
+         """ a word of attention: by convention, the first layer for any build will be poky! """
+@@ -149,12 +155,13 @@ class LocalhostBEController(BuildEnvironmentController):
+                     raise BuildSetupException("More than one commit per git url, unsupported configuration: \n%s" % pprint.pformat(gitrepos))
+ 
+ 
++        logger.debug("localhostbecontroller, our git repos are %s" % gitrepos)
+         layerlist = []
+ 
+         # 2. checkout the repositories
+         for giturl in gitrepos.keys():
+             localdirname = os.path.join(self.be.sourcedir, _getgitcheckoutdirectoryname(giturl))
+-            print "DEBUG: giturl ", giturl ,"checking out in current directory", localdirname
++            logger.debug("localhostbecontroller: giturl %s checking out in current directory %s" % (giturl, localdirname))
+ 
+             # make sure our directory is a git repository
+             if os.path.exists(localdirname):
+@@ -167,17 +174,17 @@ class LocalhostBEController(BuildEnvironmentController):
+ 
+             # branch magic name "HEAD" will inhibit checkout
+             if commit != "HEAD":
+-                print "DEBUG: checking out commit ", commit, "to", localdirname
++                logger.debug("localhostbecontroller: checking out commit %s to %s " % (commit, localdirname))
+                 self._shellcmd("git fetch --all && git checkout \"%s\"" % commit , localdirname)
+ 
+             # take the localdirname as poky dir if we can find the oe-init-build-env
+             if self.pokydirname is None and os.path.exists(os.path.join(localdirname, "oe-init-build-env")):
+-                print "DEBUG: selected poky dir name", localdirname
++                logger.debug("localhostbecontroller: selected poky dir name %s" % localdirname)
+                 self.pokydirname = localdirname
+ 
+                 # make sure we have a working bitbake
+                 if not os.path.exists(os.path.join(self.pokydirname, 'bitbake')):
+-                    print "DEBUG: checking bitbake into the poky dirname %s " % self.pokydirname
++                    logger.debug("localhostbecontroller: checking bitbake into the poky dirname %s " % self.pokydirname)
+                     self._shellcmd("git clone -b \"%s\" \"%s\" \"%s\" " % (bitbakes[0].commit, bitbakes[0].giturl, os.path.join(self.pokydirname, 'bitbake')))
+ 
+             # verify our repositories
+@@ -189,7 +196,7 @@ class LocalhostBEController(BuildEnvironmentController):
+                 if name != "bitbake":
+                     layerlist.append(localdirpath.rstrip("/"))
+ 
+-        print "DEBUG: current layer list ", layerlist
++        logger.debug("localhostbecontroller: current layer list %s " % layerlist)
+ 
+         # 3. configure the build environment, so we have a conf/bblayers.conf
+         assert self.pokydirname is not None
+diff --git a/lib/toaster/bldcontrol/management/commands/checksettings.py b/lib/toaster/bldcontrol/management/commands/checksettings.py
+index 96d2d51..55f118c 100644
+--- a/lib/toaster/bldcontrol/management/commands/checksettings.py
++++ b/lib/toaster/bldcontrol/management/commands/checksettings.py
+@@ -1,7 +1,7 @@
+ from django.core.management.base import NoArgsCommand, CommandError
+ from django.db import transaction
+ from bldcontrol.bbcontroller import getBuildEnvironmentController, ShellCmdException
+-from bldcontrol.models import BuildRequest, BuildEnvironment
++from bldcontrol.models import BuildRequest, BuildEnvironment, BRError
+ from orm.models import ToasterSetting
+ import os
+ 
+diff --git a/lib/toaster/bldcontrol/management/commands/runbuilds.py b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+index 5e253e0..56c989c 100644
+--- a/lib/toaster/bldcontrol/management/commands/runbuilds.py
++++ b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+@@ -4,6 +4,9 @@ from orm.models import Build
+ from bldcontrol.bbcontroller import getBuildEnvironmentController, ShellCmdException, BuildSetupException
+ from bldcontrol.models import BuildRequest, BuildEnvironment, BRError
+ import os
++import logging
++
++logger = logging.getLogger("toaster")
+ 
+ class Command(NoArgsCommand):
+     args    = ""
+@@ -32,6 +35,7 @@ class Command(NoArgsCommand):
+                 # select the build environment and the request to build
+                 br = self._selectBuildRequest()
+             except IndexError as e:
++                # logger.debug("runbuilds: No build request")
+                 return
              try:
-                 buildinfohelper.store_log_exception("%s\n%s" % (str(e), exception_data))
-             except Exception as ce:
--                print("CRITICAL: failed to to save toaster exception to the database: %s" % str(ce))
-+                logger.error("CRITICAL - Failed to to save toaster exception to the database: %s" % str(ce))
+                 bec = self._selectBuildEnvironment()
+@@ -39,10 +43,10 @@ class Command(NoArgsCommand):
+                 # we could not find a BEC; postpone the BR
+                 br.state = BuildRequest.REQ_QUEUED
+                 br.save()
+-                print "No build env"
++                logger.debug("runbuilds: No build env")
+                 return
  
-             pass
+-            print "Build %s, Environment %s" % (br, bec.be)
++            logger.debug("runbuilds: starting build %s, environment %s" % (br, bec.be))
+             # let the build request know where it is being executed
+             br.environment = bec.be
+             br.save()
+@@ -63,7 +67,7 @@ class Command(NoArgsCommand):
+                 task = None
+             bbctrl.build(list(map(lambda x:x.target, br.brtarget_set.all())), task)
  
+-            print "Build launched, exiting"
++            logger.debug("runbuilds: Build launched, exiting")
+             # disconnect from the server
+             bbctrl.disconnect()
+ 
+@@ -71,7 +75,7 @@ class Command(NoArgsCommand):
+ 
+ 
+         except Exception as e:
+-            print " EE Error executing shell command\n", e
++            logger.error("runbuilds: Error executing shell command %s" % e)
+             traceback.print_exc(e)
+             BRError.objects.create(req = br,
+                 errtype = str(type(e)),
+@@ -83,6 +87,7 @@ class Command(NoArgsCommand):
+             bec.be.save()
+ 
+ 
++
+     def cleanup(self):
+         from django.utils import timezone
+         from datetime import timedelta
+diff --git a/lib/toaster/toastermain/settings.py b/lib/toaster/toastermain/settings.py
+index 0974b90..acc20cc 100644
+--- a/lib/toaster/toastermain/settings.py
++++ b/lib/toaster/toastermain/settings.py
+@@ -21,11 +21,15 @@
+ 
+ # Django settings for Toaster project.
+ 
++import os, re
++
+ DEBUG = True
+ TEMPLATE_DEBUG = DEBUG
+ 
+ # Set to True to see the SQL queries in console
+ SQL_DEBUG = False
++if os.environ.get("TOASTER_SQLDEBUG", None) is not None:
++    SQL_DEBUG = True
+ 
+ 
+ ADMINS = (
+@@ -46,7 +50,6 @@ DATABASES = {
+ }
+ 
+ # Reinterpret database settings if we have DATABASE_URL environment variable defined
+-import os, re
+ 
+ if 'DATABASE_URL' in os.environ:
+     dburl = os.environ['DATABASE_URL']
+@@ -212,6 +215,9 @@ MIDDLEWARE_CLASSES = (
+     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+ )
+ 
++from os.path import dirname as DN
++SITE_ROOT=DN(DN(os.path.abspath(__file__)))
++
+ ROOT_URLCONF = 'toastermain.urls'
+ 
+ # Python dotted path to the WSGI application used by Django's runserver.
+@@ -245,6 +251,19 @@ INSTALLED_APPS = (
+     'south',
+ )
+ 
++
++# Load django-fresh is TOASTER_DEVEL is set, and the module is available
++FRESH_ENABLED = False
++if os.environ.get('TOASTER_DEVEL', None) is not None:
++    try:
++        import fresh
++        MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES + ("fresh.middleware.FreshMiddleware",)
++        INSTALLED_APPS = INSTALLED_APPS + ('fresh',)
++        FRESH_ENABLED = True
++    except:
++        pass
++
++
+ SOUTH_TESTS_MIGRATE = False
+ 
+ # if we run in managed mode, we need user support
+@@ -286,7 +305,7 @@ LOGGING = {
+     },
+     'formatters': {
+         'datetime': {
+-            'format': 'DB %(asctime)s %(message)s'
++            'format': '%(levelname)s %(asctime)s %(message)s'
+         }
+     },
+     'handlers': {
+@@ -302,6 +321,10 @@ LOGGING = {
+         }
+     },
+     'loggers': {
++        'toaster' : {
++            'handlers': ['console'],
++            'level': 'DEBUG',
++        },
+         'django.request': {
+             'handlers': ['mail_admins'],
+             'level': 'ERROR',
+diff --git a/lib/toaster/toastermain/urls.py b/lib/toaster/toastermain/urls.py
+index 549fda1..a2916e2 100644
+--- a/lib/toaster/toastermain/urls.py
++++ b/lib/toaster/toastermain/urls.py
+@@ -44,11 +44,15 @@ urlpatterns = patterns('',
+ )
+ 
+ import toastermain.settings
++
++if toastermain.settings.FRESH_ENABLED:
++    urlpatterns.insert(1, url(r'', include('fresh.urls')))
++
+ if toastermain.settings.MANAGED:
+-    urlpatterns = urlpatterns + [
++    urlpatterns = [
+         # Uncomment the next line to enable the admin:
+         url(r'^admin/', include(admin.site.urls)),
+-    ]
++    ] + urlpatterns
+ # Automatically discover urls.py in various apps, beside our own
+ # and map module directories to the patterns
+ 
+@@ -61,4 +65,4 @@ for t in os.walk(os.path.dirname(currentdir)):
+ 
+     if "urls.py" in t[2] and t[0] != currentdir:
+         modulename = os.path.basename(t[0])
+-        urlpatterns.append( url(r'^' + modulename + '/', include ( modulename + '.urls')))
++        urlpatterns.insert(0, url(r'^' + modulename + '/', include ( modulename + '.urls')))
 -- 
 1.9.1
 
