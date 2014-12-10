@@ -1,44 +1,42 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f174.google.com (mail-wi0-f174.google.com
-	[209.85.212.174])
-	by mail.openembedded.org (Postfix) with ESMTP id 059E5725CD
+Received: from mail-wg0-f41.google.com (mail-wg0-f41.google.com [74.125.82.41])
+	by mail.openembedded.org (Postfix) with ESMTP id 8336172341
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Dec 2014 15:12:20 +0000 (UTC)
-Received: by mail-wi0-f174.google.com with SMTP id h11so11529230wiw.13
+	Wed, 10 Dec 2014 15:12:22 +0000 (UTC)
+Received: by mail-wg0-f41.google.com with SMTP id y19so3923614wgg.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Dec 2014 07:12:20 -0800 (PST)
+	Wed, 10 Dec 2014 07:12:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=diD/w+ktC9/QJPjmblWgnfNfkz9wNZ1DZTw0my9SucQ=;
-	b=BxjCrL+BasoJc94MiX4IacqTLRuANTq752aN8wZEt0zH14ee2SNsyn6dbLALONP+ru
-	3JB+pGnLphtU9FOHhoeRA7C3U97XhTeQY4eDjgbhlsokWy8glyIVlfVGCjjX+W6n7Fkg
-	OYxCVfyDMVw4t4YSy6uXJ6qrLvT+b5W7nQwFqgtS76VX+O94bDzZpTC5hsGqZ0KUiSWW
-	I4UPbbj8jl9FEZaQ1wLI6XzTzovnE8soJDxPl3wwNC/p+qukKcgbhxptyZKrGMjAKXjU
-	QHkN3XMwDdR/hPZv+YbDfnLpbEKW1sFKT224peEC0wATej3mNrsbqMYj+JFw7WSuoYyM
-	2FQA==
-X-Gm-Message-State: ALoCoQluTiIocR4Oh3vj+IjyCMVoNstof+9839bXOlSRNN/g9jPv0/tYSM+kphDBTcJq+hkIWaIV
-X-Received: by 10.194.175.202 with SMTP id cc10mr7685117wjc.27.1418224340469; 
-	Wed, 10 Dec 2014 07:12:20 -0800 (PST)
+	bh=d2w1qJGJIU12h/x161GZv0+jZpBOxzg250iBZN/yyus=;
+	b=Wc8eLJVfM9NObLlzKfn6L21pFKDpSWFE5D8ToCtUVtO9gnrSlYxAL8FSfaaaOubKyX
+	RuoGM0F3omWnqDWtaJQsiIJr0u7ZQI+KamUz5JQWc39k0UGeGvOUfh29Mn6iN4itaKjZ
+	vgc28z3MVYqBu64aucVrfhu8S7lQNSvBYoLtCRPr4/JnWe6y7hzgnfDAtKZYTHwledsZ
+	ffCp/zhpT8GHTV84RtoPZLzb5WAvsub4T+O5S4LvxQ7il37zomXVRww5CeZXxEzWOhV0
+	uYL9e00cnGSIWMNysRQBQzZn02ZsoO+FjBaS2NYWdo6D4CmTGjhedpwb7HXf5x7asx0t
+	J0mw==
+X-Gm-Message-State: ALoCoQng10HRhtnulX7iSSAnH0Kn4+7AaA3xcDI4j57IFXRxevWjo64JHo8G0/eX3Lq6nkgkw78p
+X-Received: by 10.194.174.72 with SMTP id bq8mr7360146wjc.120.1418224343235;
+	Wed, 10 Dec 2014 07:12:23 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id nb8sm6698241wic.7.2014.12.10.07.12.17
-	for <multiple recipients>
+	by mx.google.com with ESMTPSA id
+	t10sm18283801wix.15.2014.12.10.07.12.20 for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 10 Dec 2014 07:12:18 -0800 (PST)
+	Wed, 10 Dec 2014 07:12:20 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 646FF5645D6; Wed, 10 Dec 2014 15:12:17 +0000 (GMT)
+	id 733BD564715; Wed, 10 Dec 2014 15:12:17 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 10 Dec 2014 15:12:07 +0000
-Message-Id: <dee767394c365f05158efe02d31ea664cf2a57e7.1418224064.git.alexandru.damian@intel.com>
+Date: Wed, 10 Dec 2014 15:12:16 +0000
+Message-Id: <b6ac1b85f5fb1acdc1c73b873652520bc9bfc168.1418224064.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <879045f69bd20c11f83ed36f88482dd500d71592.1418224064.git.alexandru.damian@intel.com>
 References: <879045f69bd20c11f83ed36f88482dd500d71592.1418224064.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1418224064.git.alexandru.damian@intel.com>
 References: <cover.1418224064.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 02/11] toastergui: implement UI changes to allow file download
+Subject: [PATCH 11/11] toaster: Add import layer feature.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,861 +51,547 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 10 Dec 2014 15:12:24 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Michael Wood <michael.g.wood@intel.com>
 
-This patchset adds download links in the build analisys pages
-if toaster runs in managed mode. This allows the user to access
-data directly from the web interface.
+This feature allows users to import layers from git into their current
+project and associate it with the release of the current project and the
+dependencies for the newly imported layer with existing layers.
+It will also resolve the child dependencies of the dependencies added.
 
-[YOCTO #6837]
+[YOCTO #6595]
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/toastergui/templates/base.html         |  18 +--
- lib/toaster/toastergui/templates/build.html        |  29 +++-
- .../toastergui/templates/builddashboard.html       | 131 +++++++++++-----
- .../toastergui/templates/configuration.html        |   6 +-
- .../toastergui/templates/package_detail_base.html  |   3 +
- lib/toaster/toastergui/templates/recipe.html       |  11 +-
- lib/toaster/toastergui/templates/recipes.html      |   7 +-
- lib/toaster/toastergui/templates/target.html       |   8 +-
- lib/toaster/toastergui/templates/task.html         |  18 ++-
- lib/toaster/toastergui/templates/tasks.html        |  12 +-
- lib/toaster/toastergui/views.py                    | 168 +++++++++++++--------
- 11 files changed, 276 insertions(+), 135 deletions(-)
+ lib/toaster/toastergui/static/js/importlayer.js    | 190 +++++++++++++++++++++
+ lib/toaster/toastergui/static/js/projectapp.js     |   6 +
+ lib/toaster/toastergui/templates/importlayer.html  |  80 ++++++---
+ .../toastergui/templates/layers_dep_modal.html     |  68 ++++++++
+ lib/toaster/toastergui/urls.py                     |   2 +
+ lib/toaster/toastergui/views.py                    |  76 +++++++++
+ 6 files changed, 395 insertions(+), 27 deletions(-)
+ create mode 100644 lib/toaster/toastergui/static/js/importlayer.js
+ create mode 100644 lib/toaster/toastergui/templates/layers_dep_modal.html
 
-diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
-index 594c495..bc7a0ee 100644
---- a/lib/toaster/toastergui/templates/base.html
-+++ b/lib/toaster/toastergui/templates/base.html
-@@ -3,14 +3,14 @@
- <html lang="en">
-     <head>
-         <title>{% if objectname %} {{objectname|title}} - {% endif %}Toaster</title>
--<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
--<link rel="stylesheet" href="{% static 'css/bootstrap-responsive.min.css' %}" type='text/css'>
--<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type='text/css'>
--<link rel="stylesheet" href="{% static 'css/prettify.css' %}" type='text/css'>
--<link rel="stylesheet" href="{% static 'css/default.css' %}" type='text/css'>
-+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css"/>
-+<link rel="stylesheet" href="{% static 'css/bootstrap-responsive.min.css' %}" type='text/css'/>
-+<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type='text/css'/>
-+<link rel="stylesheet" href="{% static 'css/prettify.css' %}" type='text/css'/>
-+<link rel="stylesheet" href="{% static 'css/default.css' %}" type='text/css'/>
+diff --git a/lib/toaster/toastergui/static/js/importlayer.js b/lib/toaster/toastergui/static/js/importlayer.js
+new file mode 100644
+index 0000000..e3a0096
+--- /dev/null
++++ b/lib/toaster/toastergui/static/js/importlayer.js
+@@ -0,0 +1,190 @@
++"use strict"
++
++function importLayerPageInit (ctx) {
++
++  var layerDepBtn = $("#add-layer-dependency-btn");
++  var importAndAddBtn = $("#import-and-add-btn");
++  var layerNameInput = $("#layer-name");
++  var vcsURLInput = $("#layer-git-repo-url");
++  var gitRefInput = $("#layer-git-ref");
++  var summaryInput = $("#layer-summary");
++  var layerDepInput = $("#layer-dependency");
++
++  var layerDeps = {};
++  var currentLayerDepSelection;
++  var validLayerName = /^(\w|-)+$/;
++
++  libtoaster.makeTypeahead(layerDepInput, ctx.xhrDataTypeaheadUrl, { type : "layers", project_id: ctx.projectId }, function(item){
++    currentLayerDepSelection = item;
++
++    layerDepBtn.removeAttr("disabled");
++  });
++
++  layerDepBtn.click(function() {
++    if (currentLayerDepSelection == undefined)
++      return;
++
++    layerDeps[currentLayerDepSelection.id] = currentLayerDepSelection;
++
++    /* Make a list item for the new layer dependency */
++    var newLayerDep = $("<li><a></a><i class=\"icon-trash\"></i></li>");
++
++    newLayerDep.data('layer-id', currentLayerDepSelection.id);
++
++    var link = newLayerDep.children("a");
++    link.attr("href", ctx.layerDetailsUrl+String(currentLayerDepSelection.id));
++    link.text(currentLayerDepSelection.name);
++    link.tooltip({title: currentLayerDepSelection.detail});
++
++    var trashItem = newLayerDep.children("i");
++    trashItem.click(function () {
++      var toRemove = $(this).parent().data('layer-id');
++      delete layerDeps[toRemove];
++      /* also remove from db / system */
++      $(this).parent().remove();
++    });
++
++    $("#layer-deps-list").append(newLayerDep);
++
++    libtoaster.getLayerDepsForProject(ctx.xhrDataTypeaheadUrl, ctx.projectId, currentLayerDepSelection.id, function (data){
++        /* These are the layers needed to be added */
++        if (data.list.length > 0) {
++          currentLayerDepSelection.url = ctx.layerDetailsUrl+currentLayerDepSelection.id;
++          show_layer_deps_modal(ctx.projectId, currentLayerDepSelection, data.list, null);
++        }
++
++        /* Clear the current selection */
++        layerDepInput.val("");
++        currentLayerDepSelection = undefined;
++        layerDepBtn.attr("disabled","disabled");
++      }, null);
++  });
++
++  importAndAddBtn.click(function(){
++    check_layer_name_unique(layerNameInput.val(),function (isUnique){
++      if (!isUnique){
++        console.log("Error layer name not unique");
++        $("#duplicate-layer-name-hint").show();
++        importAndAddBtn.attr("disabled", "disabled");
++        return;
++      }
++
++      var layerDepsCsv = "";
++
++      /* Iter through the properties and convert to a csv */
++      for (var key in layerDeps){
++        layerDepsCsv += ','+key.toString();
++      }
++
++      /* Remove leading comma */
++      layerDepsCsv = layerDepsCsv.substr(1);
++
++      var layerData = {
++        name: layerNameInput.val(),
++        vcs_url: vcsURLInput.val(),
++        git_ref: gitRefInput.val(),
++        summary: summaryInput.val(),
++        project_id: ctx.projectId,
++        layer_deps: layerDepsCsv,
++      };
++
++      $.ajax({
++          type: "POST",
++          url: ctx.xhrImportLayerUrl,
++          data: layerData,
++          headers: { 'X-CSRFToken' : $.cookie('csrftoken')},
++          success: function (data) {
++            if (data.error != "ok") {
++              console.log(data.error);
++            } else {
++              /* Success layer now added to the project */
++              console.log("Layer added");
++              window.location.replace(ctx.projectPageUrl+'#/layerimported='+layerData.name);
++            }
++          },
++          error: function (data) {
++            console.log("Call failed");
++            console.log(data);
++          }
++      });
++    });
++  });
++
++  function check_layer_name_unique(layerName, checkDone){
++    var isUnique = false;
++
++    $.getJSON(ctx.xhrDataTypeaheadUrl, { type: "layers", value: layerName},
++      function(data){
++        console.log(data);
++
++        if (data.error != "ok") {
++          console.log(data.error);
++          checkDone(isUnique);
++          return;
++        }
++        if (data.list.length > 0){
++          /* check through the fuzzy matches for an exact match */
++          for (var layer in data.list){
++            if (data.list[layer].name == layerName){
++              isUnique = false;
++              break;
++            }
++          }
++        } else {
++          isUnique = true;
++        }
++        checkDone(isUnique);
++    });
++  }
++
++  function check_form(){
++    var valid = false;
++    var inputs = $("input:required");
++
++    for (var i=0; i<inputs.length; i++){
++      if (!(valid = inputs[i].value)){
++        importAndAddBtn.attr("disabled", "disabled");
++        break;
++      }
++    }
++
++    if (valid)
++      importAndAddBtn.removeAttr("disabled");
++  }
++
++  vcsURLInput.keyup(function() {
++    check_form();
++  });
++
++  gitRefInput.keyup(function() {
++    check_form();
++  });
++
++  layerNameInput.keyup(function() {
++    if ($(this).val() && !validLayerName.test($(this).val())){
++      $("#invalid-layer-name-hint").show();
++      importAndAddBtn.attr("disabled", "disabled");
++      return;
++    }
++
++    $("#duplicate-layer-name-hint").hide();
++    $("#invalid-layer-name-hint").hide();
++    check_form();
++  });
++
++  /* Have a guess at the layer name */
++  vcsURLInput.focusout(function (){
++    /* If we a layer name specified don't overwrite it or if there isn't a
++     * url typed in yet return
++     */
++    if (layerNameInput.val() || !$(this).val())
++      return;
++
++    if ($(this).val().search("/")){
++      var urlPts = $(this).val().split("/");
++      var suggestion = urlPts[urlPts.length-1].replace(".git","");
++      layerNameInput.val(suggestion);
++    }
++  });
++
++}
+diff --git a/lib/toaster/toastergui/static/js/projectapp.js b/lib/toaster/toastergui/static/js/projectapp.js
+index e9b07c7..99a61c1 100644
+--- a/lib/toaster/toastergui/static/js/projectapp.js
++++ b/lib/toaster/toastergui/static/js/projectapp.js
+@@ -571,6 +571,12 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
+                     "\">select targets</a> you want to build.", "alert-success");
+         });
  
- <meta name="viewport" content="width=device-width, initial-scale=1.0" />
--<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
- <script src="{% static 'js/jquery-2.0.3.min.js' %}">
- </script>
- <script src="{% static 'js/jquery.cookie.js' %}">
-@@ -64,7 +64,7 @@
-             </div>
-             <!-- New build popover -->
-             <div class="btn-group pull-right" id="new-build-button">
--              <button class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-+              <button class="btn dropdown-toggle" data-toggle="dropdown">
-                 New build
-                 <i class="icon-caret-down"></i>
-               </button>
-@@ -78,7 +78,7 @@
-                   </span>
-                   <form id="change-project-form" style="display:none;">
-                     <div class="input-append">
--                      <input type="text" class="input-medium" id="project-name-input" placeholder="Type a project name" autocomplete="off" data-minLength="1" data-autocomplete="off" data-provide="typeahead">
-+                      <input type="text" class="input-medium" id="project-name-input" placeholder="Type a project name" autocomplete="off" data-minLength="1" data-autocomplete="off" data-provide="typeahead"/>
-                         <button id="save-project-button" class="btn" type="button">Save</button>
-                         <a href="#" id="cancel-change-project" class="btn btn-link">Cancel</a>
-                       </div>
-@@ -92,7 +92,7 @@
-                   <li id="targets-form">
-                     <h6>Target(s):</h6>
-                     <form>
--                      <input type="text" class="input-xlarge" id="build-target-input" placeholder="Type a target name" autocomplete="off" data-minLength="1" data-autocomplete="off" data-provide="typeahead" >
-+                      <input type="text" class="input-xlarge" id="build-target-input" placeholder="Type a target name" autocomplete="off" data-minLength="1" data-autocomplete="off" data-provide="typeahead" />
-                       <div>
-                         <a class="btn btn-primary" id="build-button" disabled="disabled" data-project-id="{{project.id}}">Build</a>
-                       </div>
-diff --git a/lib/toaster/toastergui/templates/build.html b/lib/toaster/toastergui/templates/build.html
-index f20f041..e71e38f 100644
---- a/lib/toaster/toastergui/templates/build.html
-+++ b/lib/toaster/toastergui/templates/build.html
-@@ -45,11 +45,34 @@
-             <td class="machine"><a href="{% url "builddashboard" build.id %}">{{build.machine}}</a></td>
-             <td class="started_on"><a href="{% url "builddashboard" build.id %}">{{build.started_on|date:"d/m/y H:i"}}</a></td>
-             <td class="completed_on"><a href="{% url "builddashboard" build.id %}">{{build.completed_on|date:"d/m/y H:i"}}</a></td>
--            <td class="failed_tasks error">{% query build.task_build outcome=4 order__gt=0 as exectask%}{% if exectask.count == 1 %}<a href="{% url "task" build.id exectask.0.id %}">{{exectask.0.recipe.name}}.{{exectask.0.task_name}}</a>{% elif exectask.count > 1%}<a href="{% url "tasks" build.id %}?filter=outcome%3A4">{{exectask.count}}</a>{%endif%}</td>
--            <td class="errors_no">{% if  build.errors_no %}<a class="errors_no error" href="{% url "builddashboard" build.id %}#errors">{{build.errors_no}} error{{build.errors_no|pluralize}}</a>{%endif%}</td>
-+            <td class="failed_tasks error">
-+                {% query build.task_build outcome=4 order__gt=0 as exectask%}
-+                    {% if exectask.count == 1 %}
-+                        <a href="{% url "task" build.id exectask.0.id %}">{{exectask.0.recipe.name}}.{{exectask.0.task_name}}</a>
-+                      {% if MANAGED and build.project %}
-+                        <a href="{% url 'build_artifact' build.id "tasklogfile" exectask.0.id %}">
-+                            <i class="icon-download-alt" title="" data-original-title="Download task log file"></i>
-+                        </a>
-+                      {% endif %}
-+                    {% elif exectask.count > 1%}
-+                        <a href="{% url "tasks" build.id %}?filter=outcome%3A4">{{exectask.count}} task{{exectask.count|pluralize}}</a>
-+                    {%endif%}
-+            </td>
-+            <td class="errors_no">
-+                {% if  build.errors_no %}
-+                    <a class="errors_no error" href="{% url "builddashboard" build.id %}#errors">{{build.errors_no}} error{{build.errors_no|pluralize}}</a>
-+                    {% if MANAGED and build.project %}
-+                        <a href="{% url 'build_artifact' build.id "cookerlog" build.id %}">
-+                            <i class="icon-download-alt" title="" data-original-title="Download build log"></i>
-+                        </a>
-+                    {% endif %}
-+                {%endif%}
-+            </td>
-             <td class="warnings_no">{% if  build.warnings_no %}<a class="warnings_no warning" href="{% url "builddashboard" build.id %}#warnings">{{build.warnings_no}} warning{{build.warnings_no|pluralize}}</a>{%endif%}</td>
-             <td class="time"><a href="{% url "buildtime" build.id %}">{{build.timespent|sectohms}}</a></td>
--            <td class="log">{{build.cooker_log_path}}</td>
-+            {% if not MANAGED or not build.project %}
-+                <td class="log">{{build.cooker_log_path}}</td>
-+            {% endif %}
-             <td class="output">
-               {% if build.outcome == build.SUCCEEDED %}
-               <a href="{%url "builddashboard" build.id%}#images">{{fstypes|get_dict_value:build.id}}</a>
-diff --git a/lib/toaster/toastergui/templates/builddashboard.html b/lib/toaster/toastergui/templates/builddashboard.html
-index e682094..2458cdb 100644
---- a/lib/toaster/toastergui/templates/builddashboard.html
-+++ b/lib/toaster/toastergui/templates/builddashboard.html
-@@ -42,9 +42,9 @@
-     {% if build.toaster_exceptions.count > 0 %}
-     <div class="row">
-         <small class="pull-right">
--		<i class="icon-question-sign get-help get-help-blue" title="" data-original-title="Toaster exceptions do not affect your build: only the operation of Toaster"></i>
--		<a class="show-exceptions" href="#exceptions">Toaster threw {{build.toaster_exceptions.count}} exception{{build.toaster_exceptions.count|pluralize}}</a>
--	</small>
-+        <i class="icon-question-sign get-help get-help-blue" title="" data-original-title="Toaster exceptions do not affect your build: only the operation of Toaster"></i>
-+        <a class="show-exceptions" href="#exceptions">Toaster threw {{build.toaster_exceptions.count}} exception{{build.toaster_exceptions.count|pluralize}}</a>
-+    </small>
-     </div>
-     {% endif %}
-   </div>
-@@ -54,6 +54,9 @@
- <div class="accordion span10 pull-right" id="errors">
-   <div class="accordion-group">
-     <div class="accordion-heading">
-+      {% if MANAGED and build.project %}
-+          <a class="btn btn-large pull-right" href="{% url 'build_artifact' build.id "cookerlog" build.id %}" style="margin:15px;">Download build log</a>
-+      {% endif %}
-       <a class="accordion-toggle error toggle-errors">
-          <h2 id="error-toggle">
-            <i class="icon-minus-sign"></i>
-@@ -66,13 +69,10 @@
-         <div class="span10">
-           {% for error in logmessages %}{% if error.level == 2 %}
-             <div class="alert alert-error">
--	    {% if MANAGED and error.pathname %}
--	      <pre><a href="{% url 'build_artifact' build.pk 'logmessagefile' error.pk %}" target="_blanc">{{error.message}}</pre>
--	    {% else %}
-               <pre>{{error.message}}</pre>
--	    {% endif %}
-             </div>
--          {% endif %}{% endfor %}
-+          {% endif %}
-+          {% endfor %}
-         </div>
-       </div>
-     </div>
-@@ -84,21 +84,21 @@
- <!-- built images -->
- {% if hasImages %}
- <div class="row-fluid span10 pull-right">
--	<h2>Images</h2>
--	{% for target in targets %}
-+    <h2>Images</h2>
-+    {% for target in targets %}
-         {% if target.target.is_image %}
--	<div class="well dashboard-section">
--		<h3><a href="{% url 'target' build.pk target.target.pk %}">{{target.target}}</a>
-+    <div class="well dashboard-section">
-+        <h3><a href="{% url 'target' build.pk target.target.pk %}">{{target.target}}</a>
-                 </h3>
--		<dl class="dl-horizontal">
--			<dt>Packages included</dt>
--			<dd><a href="{% url 'target' build.pk target.target.pk %}">{{target.npkg}}</a></dd>
--			<dt>Total package size</dt>
--			<dd>{{target.pkgsz|filtered_filesizeformat}}</dd>
-+        <dl class="dl-horizontal">
-+            <dt>Packages included</dt>
-+            <dd><a href="{% url 'target' build.pk target.target.pk %}">{{target.npkg}}</a></dd>
-+            <dt>Total package size</dt>
-+            <dd>{{target.pkgsz|filtered_filesizeformat}}</dd>
-                         {% if target.targetHasNoImages %}
--				</dl>
--				<div class="row-fluid">
--					<div class="alert alert-info span7">
-+                </dl>
-+                <div class="row-fluid">
-+                    <div class="alert alert-info span7">
-                     <p>
-                                     <b>This build did not create any image files</b>
-                                   </p>
-@@ -111,30 +111,45 @@
-                                       license manifest information</a> in Toaster.
-                                   </p>
++        _cmdExecuteWithParam("/layerimported", function (layer) {
++            $scope.displayAlert($scope.zone1alerts,
++                    "You have imported <strong>" + layer +
++                    "</strong> and added it to your project.", "alert-success");
++        });
++
+         _cmdExecuteWithParam("/targetbuild=", function (targets) {
+             var oldTargetName = $scope.targetName;
+             $scope.targetName = targets.split(",").join(" ");
+diff --git a/lib/toaster/toastergui/templates/importlayer.html b/lib/toaster/toastergui/templates/importlayer.html
+index 7e48eac..ac77fb6 100644
+--- a/lib/toaster/toastergui/templates/importlayer.html
++++ b/lib/toaster/toastergui/templates/importlayer.html
+@@ -1,68 +1,94 @@
+ {% extends "baseprojectpage.html" %}
+ {% load projecttags %}
+ {% load humanize %}
++{% load static %}
+ 
+ {% block localbreadcrumb %}
+-<li>Layers</li>
++<li>Import layer</li>
+ {% endblock %}
+ 
+ {% block projectinfomain %}
++
++                  <script src="{% static 'js/importlayer.js' %}"></script>
++                  <script>
++                    $(document).ready(function (){
++                      var ctx = {};
++                      ctx.xhrDataTypeaheadUrl = "{% url 'xhr_datatypeahead' %}";
++                      ctx.layerDetailsUrl = "{% url 'layerdetails' %}";
++                      ctx.xhrImportLayerUrl = "{% url 'xhr_importlayer' %}";
++                      ctx.xhrEditProjectUrl = "{% url 'xhr_projectedit' project.id %}";
++                      ctx.projectPageUrl = "{% url 'project' project.id %}";
++                      ctx.projectId = {{project.id}};
++
++                      importLayerPageInit(ctx);
++                    });
++                  </script>
++
+                 <div class="page-header">
+                     <h1>Import layer</h1>
+                 </div>
++
++                {% include "layers_dep_modal.html" %}
+                 <form>
+         {% if project %}
+                     <span class="help-block" style="padding-left:19px;">The layer you are importing must be compatible with {{project.release.name}} ({{project.release.description}}), which is the release you are using in this project.</span>
+           {% endif %}
+-                    <fieldset class="air">
+-                        <legend>Layer repository information</legend>
++                   <fieldset class="air">
++                      <legend>Layer repository information</legend>
+                         <label>
+                             Git repository URL
+-                            <i class="icon-question-sign get-help" title="Fetch/clone URL of the repository. Currently, Toaster only supports Git repositories."></i>
++                            <span class="icon-question-sign get-help" title="Fetch/clone URL of the repository. Currently, Toaster only supports Git repositories." />
+                         </label>
+-                        <input id="repo" type="text" class="input-xxlarge" required>
+-                        <label class="project-form">
++
++                        <input type="text" id="layer-git-repo-url" class="input-xxlarge" required autofocus>
++                        <label class="project-form" for="layer-subdir">
+                             Repository subdirectory
+                             <span class="muted">(optional)</span>
+-                            <i class="icon-question-sign get-help" title="Subdirectory within the repository where the layer is located, if not in the root (usually only used if the repository contains more than one layer)"></i>
++                            <span class="icon-question-sign get-help" title="Subdirectory within the repository where the layer is located, if not in the root (usually only used if the repository contains more than one layer)" />
+                         </label>
+-                        <input type="text"  id="subdir">
+-                        <label class="project-form">Branch, tag or commit</label>
+-                        <input type="text" class="span4" id="layer-version" required>
+-                        <label class="project-form">
++                        <input type="text"  id="layer-subdir">
++
++                        <label class="project-form" for="layer-git-ref">Branch, tag or commit</label>
++                        <input type="text" class="span4" id="layer-git-ref" required>
++
++                        <label class="project-form" for="layer-name">
+                             Layer name
+-                            <i class="icon-question-sign get-help" title="Something like 'meta-mylayer'. Your layer name must be unique and can only include letters, numbers and dashes"></i>
++                            <span class="icon-question-sign get-help" title="Something like 'meta-mylayer'. Your layer name must be unique and can only include letters, numbers and dashes" />
+                         </label>
++
+                         <input id="layer-name" type="text" required>
++                          <p class="help-inline" style="color: #b94a48; display: none;" id="invalid-layer-name-hint">A valid layer name can only include letters, numbers and dashes</p>
++                          <p class="help-inline" style="color: #b94a48; display: none;" id="duplicate-layer-name-hint">This layer name already exists. Your layer name must be unique.</p>
++
++
++
++                          <label class="project-form" for="layer-description">Layer description
++                            <span class="muted">(optional)</span>
++                            <span class="icon-question-sign get-help" title="Short description for for the layer" />
++                          </label>
++                          <input id="layer-description" type="text" class="input-xxlarge" />
++
+                     </fieldset>
+                     <fieldset class="air">
+                         <legend>
+                             Layer dependencies
+                             <span class="muted">(optional)</span>
+-                            <i class="icon-question-sign get-help heading-help" title="Other layers this layer depends upon"></i>
++                            <span class="icon-question-sign get-help heading-help" title="Other layers this layer depends upon" />
+                         </legend>
+-                        <ul class="unstyled configuration-list">
+-                            <li>
+-                                <a href="" class="layer-info" title="OpenEmbedded | daisy">openembedded-core (meta)</a>
+-                                <i class="icon-trash"></i>
+-                            </li>
++                        <ul class="unstyled configuration-list" id="layer-deps-list">
+                         </ul>
+                         <div class="input-append">
+-                            <input type="text" autocomplete="off" data-minLength="1" data-autocomplete="off"
+-                            data-provide="typeahead"  data-source='
+-                []
+-                ' placeholder="Type a layer name" id="layer-dependency" class="input-xlarge">
+-                            <a class="btn" type="button" id="add-layer-dependency" disabled>
++                            <input type="text" autocomplete="off" data-minLength="1" data-autocomplete="off" data-provide="typeahead" placeholder="Type a layer name" id="layer-dependency" class="input-xlarge">
++                            <a class="btn" type="button" id="add-layer-dependency-btn" disabled>
+                                 Add layer
+                             </a>
+                         </div>
+                         <span class="help-inline">You can only add layers Toaster knows about</span>
+                     </fieldset>
+-                    <div class="form-actions">
+-                        <a href="#dependencies-message" class="btn btn-primary btn-large" data-toggle="modal" data-target="#dependencies-message" disabled>Import and add to project</a>
+-                        <a href="layer-details-just-imported.html" class="btn btn-large" disabled>Just import for the moment</a>
++                    <div class="form-actions" id="form-actions">
++                      <button class="btn btn-primary btn-large" data-toggle="modal" id="import-and-add-btn" data-target="#dependencies-message" disabled>Import and add to project</button>
+                         <span class="help-inline" style="vertical-align: middle;">To import a layer, you need to enter a repository URL, a branch, tag or commit and a layer name</span>
                      </div>
--				</div>
-+                </div>
-                         {% else %}
--			<dt>
--				<i class="icon-question-sign get-help" title="The location in disk of the license manifest, a document listing all packages installed in your image and their licenses"></i>
--				<a href="{% url 'targetpkg' build.pk target.target.pk %}">License manifest</a>
--			</dt>
--			<dd><code>{{target.target.license_manifest_path}}</code></dd>
--			<dt>
--				<i class="icon-question-sign get-help" title="Image files are stored in <code>/build/tmp/deploy/images/</code>"></i>
--				Image files
--			</dt>
--			<dd>
--				<ul>
-+            <dt>
-+                <i class="icon-question-sign get-help" title="The location in disk of the license manifest, a document listing all packages installed in your image and their licenses"></i>
-+
-+            {% if MANAGED and build.project %}
-+                License manifest
-+            {% else %}
-+                <a href="{% url 'targetpkg' build.pk target.target.pk %}">License manifest</a>
-+            {% endif %}
-+            </dt>
-+            {% if MANAGED and build.project %}
-+            <dd>
-+                <a href="{% url 'targetpkg' build.pk target.target.pk %}">View in Toaster</a> |
-+                <a href="{% url 'build_artifact' build.pk 'licensemanifest' target.target.pk %}">Download</a></dd>
-+            {% else %}
-+            <dd><code>{{target.target.license_manifest_path}}</code></dd>
-+            {% endif %}
-+            <dt>
-+                <i class="icon-question-sign get-help" title="Image files are stored in <code>/build/tmp/deploy/images/</code>"></i>
-+                Image files
-+            </dt>
-+            <dd>
-+                <ul>
-                                   {% for i in target.imageFiles %}
--					<li>{{i.path}}
--					({{i.size|filtered_filesizeformat}})</li>
-+            {% if build.project %}
-+                    <li><a href="{% url 'build_artifact' build.pk 'imagefile' i.id %}">{{i.path}}</a>
-+            {% else %}
-+                    <li>{{i.path}}
-+            {% endif %}
-+                    ({{i.size|filtered_filesizeformat}})</li>
-                                   {% endfor %}
--				</ul>
--			</dd>
--		</dl>
-+                </ul>
-+            </dd>
-+        </dl>
-                         {% endif %}
--	</div>
-+    </div>
-         {% endif %}
--	{% endfor %}
-+    {% endfor %}
- </div>
- {% endif %}
- 
-@@ -142,6 +157,35 @@
- <!-- error dump -->
- {%endif%}
- 
-+<!-- other artifacts -->
-+{% if build.buildartifact_set.all.count > 0 %}
-+<div class="row-fluid span10 pull-right">
-+<h2>Other artifacts</h2>
-+
-+    <div class="well dashboard-section">
-+        <dl class="dl-horizontal">
-+            <dt>
-+                <i class="icon-question-sign get-help" title="Build artifacts discovered in <i>tmp/deploy/images</i>. Usually kernel images and kernel modules."></i>
-+                Other artifacts</dt>
-+            <dd><div>
-+              {% for ba in build.buildartifact_set.all|dictsort:"file_name" %}
-+                {% if MANAGED and build.project %}
-+                <a href="{%url 'build_artifact' build.id 'buildartifact' ba.id %}">
-+                {% endif %}
-+                    {{ba.get_local_file_name}}
-+                {% if MANAGED and build.project %}
-+                </a>
-+                {% endif %}
-+
-+                ({{ba.file_size|filtered_filesizeformat}}) <br/>
-+              {% endfor %}
-+                </div>
-+            </dd>
-+
-+    </div>
-+
-+</div>
-+{% endif %}
- <!-- build summary -->
- <div class="row-fluid span10 pull-right">
- <h2>Build summary</h2>
-@@ -158,12 +202,19 @@
-             <dl>
-             {% query build.task_build outcome=4 order__gt=0 as exectask%}
-             {% if exectask.count > 0 %}
--                <dt>Failed tasks</td>
-+                <dt>Failed tasks</dt>
-                 <dd>
-                 {% if exectask.count == 1 %}
-                     <a class="error" href="{% url "task" build.id exectask.0.id %}">
-                         {{exectask.0.recipe.name}}
-                         <span class="task-name">{{exectask.0.task_name}}</span>
-+
-+                      {% if MANAGED and build.project %}
-+                        <a href="{% url 'build_artifact' build.id "tasklogfile" exectask.0.id %}">
-+                            <i class="icon-download-alt" title="" data-original-title="Download task log file"></i>
-+                        </a>
-+                      {% endif %}
-+
-                     </a>
-                 {% elif exectask.count > 1%}
-                     <a class="error" href="{% url "tasks" build.id %}?filter=outcome%3A4">{{exectask.count}}</a>
-diff --git a/lib/toaster/toastergui/templates/configuration.html b/lib/toaster/toastergui/templates/configuration.html
-index 49a6a89..d3b34a2 100644
---- a/lib/toaster/toastergui/templates/configuration.html
-+++ b/lib/toaster/toastergui/templates/configuration.html
-@@ -50,7 +50,9 @@
-           <th>Layer</th>
-           <th>Layer branch</th>
-           <th>Layer commit</th>
--          <th>Layer directory</th>
-+          {% if not MANAGED or not build.project %}
-+              <th>Layer directory</th>
-+          {% endif %}
-         </tr>
-       </thead>
-       <tbody>{% for lv in build.layer_version_build.all|dictsort:"layer.name" %}
-@@ -61,7 +63,9 @@
-                 <li>{{lv.commit}}</li> </ul>">
-                     {{lv.commit|truncatechars:13}}
-                 </a></td>
-+          {% if not MANAGED or not build.project %}
-             <td>{{lv.layer.local_path}}</td>
-+          {% endif %}
-         </tr>{% endfor %}
-       </tbody>
-     </table>
-diff --git a/lib/toaster/toastergui/templates/package_detail_base.html b/lib/toaster/toastergui/templates/package_detail_base.html
-index cd015d3..dfeba55 100644
---- a/lib/toaster/toastergui/templates/package_detail_base.html
-+++ b/lib/toaster/toastergui/templates/package_detail_base.html
-@@ -135,11 +135,14 @@
-             </dt>
- 
-             <dd class="iscommit">{{package.recipe.layer_version.commit}}</dd>
-+
-+          {% if not MANAGED or not build.project %}
-             <dt>
-                 Layer directory
-                 <i class="icon-question-sign get-help" title="Path to the layer providing the recipe that builds this package"></i>
-             </dt>
-             <dd><code>{{package.recipe.layer_version.layer.local_path}}</code></dd>
-+          {% endif %}
-         </dl>
-     </div> <!-- row4 well -->
-     {% endblock twocolumns %}
-diff --git a/lib/toaster/toastergui/templates/recipe.html b/lib/toaster/toastergui/templates/recipe.html
-index a830ba9..b20c65e 100644
---- a/lib/toaster/toastergui/templates/recipe.html
-+++ b/lib/toaster/toastergui/templates/recipe.html
-@@ -52,16 +52,19 @@
-                     Layer
-                 </dt>
-                 <dd>{{layer.name}}</dd>
-+
-+          {% if not MANAGED or not build.project %}
-                 <dt>
-                     <i class="icon-question-sign get-help" title="Path to the layer providing the recipe"></i>
-                     Layer directory
-                 </dt>
-                 <dd><code>{{layer.local_path}}</code></dd>
-+          {% endif %}
-                 <dt>
-                     <i class="icon-question-sign get-help" title="Path to the recipe .bb file"></i>
-                     Recipe file
-                 </dt>
--                <dd><code>{{object.file_path}}</code></dd>
-+                <dd><code>{{object.get_local_path}}</code></dd>
-                 {% if layer_version.branch %}
-                 <dt>
-                     <i class="icon-question-sign get-help" title="The Git branch of the layer providing the recipe"></i>
-@@ -126,6 +129,12 @@
-                     <td>
-                         {% ifnotequal task.sstate_result task.SSTATE_NA %}
-                         <a {{ task|task_color }} href="{% url "task" build.pk task.pk %}">{{task.get_sstate_result_display}}</a>
-+                    {% if MANAGED and build.project and task.outcome = task.OUTCOME_FAILED %}
-+                        <a href="{% url 'build_artifact' build.pk "tasklogfile" task.pk %}">
-+                            <i class="icon-download-alt" title="" data-original-title="Download task log file"></i>
-+                        </a>
-+                    {% endif %}
-+
-                         {% endifnotequal %}
-                     </td>
- 
-diff --git a/lib/toaster/toastergui/templates/recipes.html b/lib/toaster/toastergui/templates/recipes.html
-index 791a487..889e676 100644
---- a/lib/toaster/toastergui/templates/recipes.html
-+++ b/lib/toaster/toastergui/templates/recipes.html
-@@ -98,8 +98,11 @@
-                 {{recipe.layer_version.commit|truncatechars:13}}
-             </a>
-         </td>
--        <!-- Layer directory -->
--        <td class="layer_version__layer__local_path">{{recipe.layer_version.layer.local_path}}</td>
-+
-+        {% if not MANAGED or not build.project %}
-+            <!-- Layer directory -->
-+            <td class="layer_version__layer__local_path">{{recipe.layer_version.layer.local_path}}</td>
-+        {% endif %}
-     </tr>
- 
-     {% endfor %}
-diff --git a/lib/toaster/toastergui/templates/target.html b/lib/toaster/toastergui/templates/target.html
-index c879c39d..1309b52 100644
---- a/lib/toaster/toastergui/templates/target.html
-+++ b/lib/toaster/toastergui/templates/target.html
-@@ -152,9 +152,11 @@
-                 {{package.recipe.layer_version.commit|truncatechars:13}}
-             </a>
-         </td>
--        <td class="layer_directory">
--            {{ package.recipe.layer_version.layer.local_path }}
--        </td>
-+        {% if not MANAGED or not build.project %}
-+            <td class="layer_directory">
-+                {{ package.recipe.layer_version.layer.local_path }}
-+            </td>
-+        {% endif %}
-     </tr>
-     {% endfor %}
- 
-diff --git a/lib/toaster/toastergui/templates/task.html b/lib/toaster/toastergui/templates/task.html
-index 1b27042..09fd25b 100644
---- a/lib/toaster/toastergui/templates/task.html
-+++ b/lib/toaster/toastergui/templates/task.html
-@@ -24,17 +24,17 @@
-     {# executed tasks outcome #}
-     <dl class="dl-horizontal">
- 	{% if task.logfile %}
-+	{% if MANAGED and build.project %}
-+            <a class="btn btn-large" href="{% url 'build_artifact' build.id "tasklogfile" task.pk %}" style="margin:15px;">Download task log</a>
-+	{% else %}
-         <dt>
-             <i class="icon-question-sign get-help" title="Path the task log file"></i> Log file
-         </dt>
-         <dd>
--	{% if MANAGED %}
--            <code><a href="{% url 'build_artifact' build.pk 'tasklogfile' task.pk %}" target="_blanc">{{task.logfile}}</a></code>
--	{% else %}
--            <code>{{task.logfile}}</code>
--	{% endif %}
-+             <code>{{task.logfile}}</code>
-         </dd>
- 	{% endif %}
-+	{% endif %}
-         {# show stack trace for failed task #}
-         {% if task.outcome == task.OUTCOME_FAILED and log_head %}
-             <h3>Python stack trace</h3>
-@@ -191,6 +191,9 @@
-             <strong>Failed</strong> to restore output from sstate cache. The file was found but could not be unpacked.
-         </div>
-         <dl class="dl-horizontal">
-+          {% if MANAGED and build.project %}
-+            <a href="{% url 'build_artifact' build.id "tasklogfile" task.pk %}" style="margin:15px;">Download log</a>
-+          {% else %}
-             <dt>
-                 <i class="icon-question-sign get-help" title="Path to the cache attempt log file"></i>
-                 Log file
-@@ -201,6 +204,7 @@
-                 Time (secs)
-             </dt>
-             <dd>{{task.elapsed_time|format_none_and_zero}}</dd>
-+          {% endif %}
-         </dl>
-         <div class="alert alert-info">
-             Running the real task instead.
-@@ -268,8 +272,8 @@
-             Time (secs)
-         </dt>
-         <dd>{{task.elapsed_time|format_none_and_zero|floatformat:2}}</dd>
--		{% endif %}	
--		{% if task.cpu_usage > 0 %}	
-+		{% endif %}
-+		{% if task.cpu_usage > 0 %}
-         <dt>
-             <i class="icon-question-sign get-help" title="The percentage of task CPU utilization"></i>
-             CPU usage
-diff --git a/lib/toaster/toastergui/templates/tasks.html b/lib/toaster/toastergui/templates/tasks.html
-index d0c6f4e..4cbcc5e 100644
---- a/lib/toaster/toastergui/templates/tasks.html
-+++ b/lib/toaster/toastergui/templates/tasks.html
-@@ -94,6 +94,11 @@
-             <td class="outcome">
-                 <a href="{%url "task" build.pk task.pk%} ">{{task.get_outcome_display}} </a>
-                 <i class="icon-question-sign get-help hover-help" title="{{task.get_outcome_help}}"></i>
-+                    {% if MANAGED and build.project and task.outcome = task.OUTCOME_FAILED %}
-+                        <a href="{% url 'build_artifact' build.pk "tasklogfile" task.pk %}">
-+                            <i class="icon-download-alt" title="" data-original-title="Download task log file"></i>
-+                        </a>
-+                    {% endif %}
-             </td>
-             <td class="cache_attempt">
-                 <a href="{%url "task" build.pk task.pk%} ">{{task.get_sstate_result_display|format_none_and_zero}}</a>
-@@ -107,9 +112,12 @@
-             <td class="disk_io">
-                 {{task.disk_io|format_none_and_zero}}
-             </td>
-+
-+        {% if not MANAGED or not build.project %}
-             <td class="task_log">
-                 {{task.logfile}}
-             </td>
-+        {% endif %}
-         </tr>
-     {% endfor %}
- 
-@@ -124,10 +132,10 @@
-         // enable blue hightlight animation for the order link
-         if (location.href.search('#') > -1) {
-             var task_order = location.href.split('#')[1];
--            $("#" + task_order).addClass("highlight"); 
-+            $("#" + task_order).addClass("highlight");
-         }
-     });
--    
-+
- </script>
+-                </form>
++                  </form>
  
  {% endblock %}
+diff --git a/lib/toaster/toastergui/templates/layers_dep_modal.html b/lib/toaster/toastergui/templates/layers_dep_modal.html
+new file mode 100644
+index 0000000..821bbda
+--- /dev/null
++++ b/lib/toaster/toastergui/templates/layers_dep_modal.html
+@@ -0,0 +1,68 @@
++<!-- 'Layer dependencies modal' -->
++    <div id="dependencies_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
++        <form id="dependencies_modal_form">
++        <div class="modal-header">
++            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
++            <h3><span class="layer-name"></span> dependencies</h3>
++        </div>
++        <div class="modal-body">
++            <p><strong class="layer-name"></strong> depends on some layers that are not added to your project. Select the ones you want to add:</p>
++            <ul class="unstyled" id="dependencies_list">
++            </ul>
++        </div>
++        <div class="modal-footer">
++            <button class="btn btn-primary" type="submit">Add layers</button>
++            <button class="btn" type="reset" data-dismiss="modal">Cancel</button>
++        </div>
++        </form>
++    </div>
++
++<script>
++function show_layer_deps_modal(projectId, layer, dependencies, successAdd) {
++    // update layer name
++    $('.layer-name').text(layer.name);
++    var deplistHtml = "";
++    for (var i = 0; i < dependencies.length; i++) {
++      deplistHtml += "<li><label class=\"checkbox\"><input name=\"dependencies\" value=\"";
++        deplistHtml += dependencies[i].id;
++        deplistHtml +="\" type=\"checkbox\" checked=\"checked\"/>";
++        deplistHtml += dependencies[i].name;
++        deplistHtml += "</label></li>";
++    }
++    $('#dependencies_list').html(deplistHtml);
++
++    var selected = [layer.id];
++    var layer_link_list = "<a href='"+layer.url+"'>"+layer.name+"</a>";
++
++    $("#dependencies_modal_form").submit(function (e) {
++        e.preventDefault();
++        $("input[name='dependencies']:checked").map(function () { selected.push(parseInt($(this).val()))});
++        if (selected.length > 1) {
++            tooltipUpdateText = "" + selected.length + " layers added";
++        } else {
++            tooltipUpdateText = "1 layer added";
++        }
++
++        for (var i = 0; i < selected.length; i++) {
++            for (var j = 0; j < dependencies.length; j++) {
++                if (dependencies[j].id == selected[i]) {
++                    layer_link_list+= ", <a href='"+dependencies[j].layerdetailurl+"'>"+dependencies[j].name+"</a>"
++                    break;
++                }
++            }
++        }
++
++        $('#dependencies_modal').modal('hide');
++
++        var editProjectUrl  = "{% url 'xhr_projectedit' project.id %}";
++        libtoaster.editProject(editProjectUrl, projectId, { 'layerAdd': selected.join(",") }, function () {
++          if (successAdd) {
++            successAdd(selected);
++          }
++        }, function () {
++          console.log ("Adding layers to project failed");
++        });
++    });
++    $('#dependencies_modal').modal('show');
++}
++</script>
+diff --git a/lib/toaster/toastergui/urls.py b/lib/toaster/toastergui/urls.py
+index b60f761..6e1b0ab 100644
+--- a/lib/toaster/toastergui/urls.py
++++ b/lib/toaster/toastergui/urls.py
+@@ -76,6 +76,7 @@ urlpatterns = patterns('toastergui.views',
+ 
+         url(r'^layers/$', 'layers', name='layers'),
+         url(r'^layer/(?P<layerid>\d+)/$', 'layerdetails', name='layerdetails'),
++        url(r'^layer/$', 'layerdetails', name='layerdetails'),
+         url(r'^targets/$', 'targets', name='targets'),
+         url(r'^machines/$', 'machines', name='machines'),
+ 
+@@ -92,6 +93,7 @@ urlpatterns = patterns('toastergui.views',
+         url(r'^xhr_projectedit/(?P<pid>\d+)/$', 'xhr_projectedit', name='xhr_projectedit'),
+ 
+         url(r'^xhr_datatypeahead/$', 'xhr_datatypeahead', name='xhr_datatypeahead'),
++        url(r'^xhr_importlayer/$', 'xhr_importlayer', name='xhr_importlayer'),
+ 
+ 
+         # default redirection
 diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 8301f6c..736de78 100755
+index 434e118..9877e27 100755
 --- a/lib/toaster/toastergui/views.py
 +++ b/lib/toaster/toastergui/views.py
-@@ -27,7 +27,7 @@ from django.db import IntegrityError
- from django.shortcuts import render, redirect
- from orm.models import Build, Target, Task, Layer, Layer_Version, Recipe, LogMessage, Variable
- from orm.models import Task_Dependency, Recipe_Dependency, Package, Package_File, Package_Dependency
--from orm.models import Target_Installed_Package, Target_File, Target_Image_File
-+from orm.models import Target_Installed_Package, Target_File, Target_Image_File, BuildArtifact
- from django.views.decorators.cache import cache_control
- from django.core.urlresolvers import reverse
- from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-@@ -421,30 +421,36 @@ def builds(request):
-                  'ordericon':_get_toggle_order_icon(request, "timespent"),
-                  'orderkey' : 'timespent',
-                 },
--                {'name': 'Log',
-+                {'name': 'Image files', 'clclass': 'output',
-+                 'qhelp': "The root file system types produced by the build. You can find them in your <code>/build/tmp/deploy/images/</code> directory",
-+                    # TODO: compute image fstypes from Target_Image_File
-+                },
-+                ]
-+            }
-+
-+    if not toastermain.settings.MANAGED:
-+        context['tablecols'].insert(-2,
-+                {'name': 'Log1',
-                  'dclass': "span4",
-                  'qhelp': "Path to the build main log file",
-                  'clclass': 'log', 'hidden': 1,
-                  'orderfield': _get_toggle_order(request, "cooker_log_path"),
-                  'ordericon':_get_toggle_order_icon(request, "cooker_log_path"),
-                  'orderkey' : 'cooker_log_path',
--                },
--                {'name': 'Output', 'clclass': 'output',
--                 'qhelp': "The root file system types produced by the build. You can find them in your <code>/build/tmp/deploy/images/</code> directory",
--                    # TODO: compute image fstypes from Target_Image_File
--                },
--                ]
--            }
-+                }
-+        )
-+
- 
-     if toastermain.settings.MANAGED:
-         context['tablecols'].append(
--            {'name': 'Project', 'clclass': 'project',
--             'filter': {'class': 'project',
-+                {'name': 'Project', 'clclass': 'project',
-+                 'filter': {'class': 'project',
-                         'label': 'Project:',
-                         'options':  map(lambda x: (x.name,'',x.build_set.filter(outcome__lt=Build.IN_PROGRESS).count()), Project.objects.all()),
- 
-                        }
--            })
-+                }
-+        )
+@@ -2243,6 +2243,82 @@ if toastermain.settings.MANAGED:
+             return HttpResponse(jsonfilter({"error":str(e) + "\n" + traceback.format_exc()}), content_type = "application/json")
  
  
-     response = render(request, template, context)
-@@ -481,12 +487,8 @@ def builddashboard( request, build_id ):
-             hasImages = True
-         npkg = 0
-         pkgsz = 0
--        pid= 0
--        tp = Target_Installed_Package.objects.filter( target_id = t.id )
-         package = None
--        for p in tp:
--            pid = p.package_id
--            package = Package.objects.get( pk = p.package_id )
-+        for package in Package.objects.filter(id__in = [x.package_id for x in t.target_installed_package_set.all()]):
-             pkgsz = pkgsz + package.size
-             if ( package.installed_name ):
-                 npkg = npkg + 1
-@@ -499,7 +501,7 @@ def builddashboard( request, build_id ):
-             if ( ndx < 0 ):
-                 ndx = 0;
-             f = i.file_name[ ndx + 1: ]
--            imageFiles.append({ 'path': f, 'size' : i.file_size })
-+            imageFiles.append({ 'id': i.id, 'path': f, 'size' : i.file_size })
-         if ( t.is_image and
-              (( len( imageFiles ) <= 0 ) or ( len( t.license_manifest_path ) <= 0 ))):
-             targetHasNoImages = True
-@@ -517,6 +519,8 @@ def builddashboard( request, build_id ):
-         if ( p.installed_name ):
-             packageCount = packageCount + 1
- 
-+    logmessages = list(LogMessage.objects.filter( build = build_id ))
-+
-     context = {
-             'build'           : build,
-             'hasImages'       : hasImages,
-@@ -524,7 +528,7 @@ def builddashboard( request, build_id ):
-             'targets'         : targets,
-             'recipecount'     : recipeCount,
-             'packagecount'    : packageCount,
--            'logmessages'     : LogMessage.objects.filter( build = build_id ),
-+            'logmessages'     : logmessages,
-     }
-     return render( request, template, context )
- 
-@@ -637,6 +641,9 @@ def target_common( request, build_id, target_id, variant ):
-             Package, queryset, filter_string, search_term, ordering_string, 'name' )
-     packages = _build_page_range( Paginator(queryset, pagesize), request.GET.get( 'page', 1 ))
- 
-+
-+    build = Build.objects.get( pk = build_id )
-+
-     # bring in package dependencies
-     for p in packages.object_list:
-         p.runtime_dependencies = p.package_dependencies_source.filter(
-@@ -697,8 +704,7 @@ eans multiple licenses exist that cover different parts of the source',
-         tc_dependencies[ "hidden" ] = 1
-     tc_rdependencies = {
-         'name'       : 'Reverse dependencies',
--        'qhelp'      : 'Package run-time reverse dependencies (i.e. which other packages depend on t\
--his package',
-+        'qhelp'      : 'Package run-time reverse dependencies (i.e. which other packages depend on this package',
-         'clclass'    : 'brought_in_by',
-         }
-     if ( variant == 'target' ):
-@@ -741,18 +747,10 @@ his package',
-         'clclass'    : 'layer_commit',
-         'hidden'     : 1,
-         }
--    tc_layerDir = {
--        'name':'Layer directory',
--        'qhelp':'Location in disk of the layer providing the recipe that builds the package',
--        'orderfield' : _get_toggle_order( request, "recipe__layer_version__layer__local_path" ),
--        'ordericon'  : _get_toggle_order_icon( request, "recipe__layer_version__layer__local_path" )\
--,
--        'clclass'    : 'layer_directory',
--        'hidden'     : 1,
--        }
-+
-     context = {
-         'objectname': variant,
--        'build'                : Build.objects.filter( pk = build_id )[ 0 ],
-+        'build'                : build,
-         'target'               : Target.objects.filter( pk = target_id )[ 0 ],
-         'objects'              : packages,
-         'packages_sum'         : packages_sum[ 'installed_size__sum' ],
-@@ -771,10 +769,21 @@ his package',
-                     tc_layer,
-                     tc_layerBranch,
-                     tc_layerCommit,
--                    tc_layerDir,
-                 ]
-         }
- 
-+    if not toastermain.settings.MANAGED or build.project is None:
-+
-+        tc_layerDir = {
-+            'name':'Layer directory',
-+            'qhelp':'Location in disk of the layer providing the recipe that builds the package',
-+            'orderfield' : _get_toggle_order( request, "recipe__layer_version__layer__local_path" ),
-+            'ordericon'  : _get_toggle_order_icon( request, "recipe__layer_version__layer__local_path" ),
-+            'clclass'    : 'layer_directory',
-+            'hidden'     : 1,
-+        }
-+        context['tablecols'].append(tc_layerDir)
-+
-     response = render(request, template, context)
-     _save_parameters_cookies(response, pagesize, orderby, request)
-     return response
-@@ -1136,12 +1145,13 @@ def tasks_common(request, build_id, variant, task_anchor):
-     }
-     if   'diskio' == variant: tc_diskio['hidden']='0'; del tc_diskio['clclass']; tc_cache['hidden']='1';
- 
-+    build = Build.objects.get(pk=build_id)
- 
-     context = { 'objectname': variant,
-                 'object_search_display': object_search_display,
-                 'filter_search_display': filter_search_display,
-                 'title': title_variant,
--                'build': Build.objects.get(pk=build_id),
-+                'build': build,
-                 'objects': tasks,
-                 'default_orderby' : orderby,
-                 'search_term': search_term,
-@@ -1157,9 +1167,12 @@ def tasks_common(request, build_id, variant, task_anchor):
-                     tc_time,
-                     tc_cpu,
-                     tc_diskio,
--                    tc_log,
-                 ]}
- 
-+
-+    if not toastermain.settings.MANAGED or build.project is None:
-+        context['tablecols'].append(tc_log)
-+
-     response = render(request, template, context)
-     _save_parameters_cookies(response, pagesize, orderby, request)
-     return response
-@@ -1206,9 +1219,11 @@ def recipes(request, build_id):
-             revlist.append(recipe_dep)
-         revs[recipe.id] = revlist
- 
-+    build = Build.objects.get(pk=build_id)
-+
-     context = {
-         'objectname': 'recipes',
--        'build': Build.objects.get(pk=build_id),
-+        'build': build,
-         'objects': recipes,
-         'default_orderby' : 'name:+',
-         'recipe_deps' : deps,
-@@ -1279,6 +1294,11 @@ def recipes(request, build_id):
-                 'qhelp':'The Git commit of the layer providing the recipe',
-                 'clclass': 'layer_version__layer__commit', 'hidden': 1,
-             },
-+            ]
-+        }
-+
-+    if not toastermain.settings.MANAGED or build.project is None:
-+        context['tablecols'].append(
-             {
-                 'name':'Layer directory',
-                 'qhelp':'Path to the layer prodiving the recipe',
-@@ -1286,9 +1306,8 @@ def recipes(request, build_id):
-                 'ordericon':_get_toggle_order_icon(request, "layer_version__layer__local_path"),
-                 'orderkey' : 'layer_version__layer__local_path',
-                 'clclass': 'layer_version__layer__local_path', 'hidden': 1,
--            },
--            ]
--        }
-+            })
-+
- 
-     response = render(request, template, context)
-     _save_parameters_cookies(response, pagesize, orderby, request)
-@@ -2685,41 +2704,53 @@ if toastermain.settings.MANAGED:
-         return render(request, template, context)
- 
- 
-+    def _file_name_for_artifact(b, artifact_type, artifact_id):
-+        file_name = None
-+        # Target_Image_File file_name
-+        if artifact_type == "imagefile":
-+            file_name = Target_Image_File.objects.get(target__build = b, pk = artifact_id).file_name
- 
--    def build_artifact(request, build_id, artifact_type, artifact_id):
--        try:
--            b = Build.objects.get(pk=build_id)
--            if b.buildrequest is None or b.buildrequest.environment is None:
--                raise Exception("Cannot download file")
-+        elif artifact_type == "cookerlog":
-+            file_name = b.cooker_log_path
-+
-+        elif artifact_type == "buildartifact":
-+            file_name = BuildArtifact.objects.get(build = b, pk = artifact_id).file_name
- 
--            file_name = None
--            fsock = None
--            content_type='application/force-download'
--            # Target_Image_File file_name
--            # Task logfile
--            if artifact_type == "tasklogfile":
--                file_name = Task.objects.get(build = b, pk = artifact_id).logfile
-+        elif artifact_type ==  "licensemanifest":
-+            file_name = Target.objects.get(build = b, pk = artifact_id).license_manifest_path
- 
--            # Task path_to_sstate_obj
--            # Package_File path
--            # Recipe file_path
--            # VariableHistory file_name
--            # LogMessage pathname
--            if artifact_type == "logmessagefile":
--                file_name = LogMessage.objects.get(build = b, pk = artifact_id).pathname
-+        elif artifact_type == "tasklogfile":
-+            file_name = Task.objects.get(build = b, pk = artifact_id).logfile
- 
--            if file_name is not None:
--                content_type = b.buildrequest.environment.get_artifact_type(file_name)
--                fsock = b.buildrequest.environment.get_artifact(file_name)
--                file_name = os.path.basename(file_name)
-+        elif artifact_type == "logmessagefile":
-+            file_name = LogMessage.objects.get(build = b, pk = artifact_id).pathname
-+        else:
-+            raise Exception("FIXME: artifact type %s not implemented" % (artifact_type))
- 
--            response = HttpResponse(fsock, content_type = content_type)
-+        return file_name
- 
--            # returns a file from the environment
--            response['Content-Disposition'] = 'attachment; filename=' + file_name
--            return response
--        except:
--            raise
-+
-+    def build_artifact(request, build_id, artifact_type, artifact_id):
-+        b = Build.objects.get(pk=build_id)
-+        if b.buildrequest is None or b.buildrequest.environment is None:
-+            raise Exception("Artifact not available for download (missing build request or build environment)")
-+
-+        file_name = _file_name_for_artifact(b, artifact_type, artifact_id)
-+        fsock = None
-+        content_type='application/force-download'
-+
-+        if file_name is None:
-+            raise Exception("Could not handle artifact %s id %s" % (artifact_type, artifact_id))
-+        else:
-+            content_type = b.buildrequest.environment.get_artifact_type(file_name)
-+            fsock = b.buildrequest.environment.get_artifact(file_name)
-+            file_name = os.path.basename(file_name) # we assume that the build environment system has the same path conventions as host
-+
-+        response = HttpResponse(fsock, content_type = content_type)
-+
-+        # returns a file from the environment
-+        response['Content-Disposition'] = 'attachment; filename=' + file_name
-+        return response
- 
- 
- 
-@@ -2856,3 +2887,6 @@ else:
- 
-     def projects(request):
-         raise Exception("page not available in interactive mode")
-+
 +    def xhr_importlayer(request):
-+        raise Exception("page not available in interactive mode")
++        if (not request.POST.has_key('vcs_url') or
++            not request.POST.has_key('name') or
++            not request.POST.has_key('git_ref') or
++            not request.POST.has_key('project_id')):
++          return HttpResponse(jsonfilter({"error": "missing parameters requires vcs_url, name, git_ref and project_id"}), content_type = "application/json")
++
++        # Rudimentary check for any possible html tags
++        if "<" in request.POST:
++          return HttpResponse(jsonfilter({"error": "invalid character <"}), content_type = "application/json")
++
++        prj = Project.objects.get(pk=request.POST['project_id'])
++        # Strip trailing/leading whitespace from all values
++        # put into a new dict because POST one is immutable
++        post_data = dict()
++        for key,val in request.POST.iteritems():
++          post_data[key] = val.strip()
++
++        layer_source = LayerSource.objects.get(sourcetype=LayerSource.TYPE_IMPORTED)
++        layer, layer_created = Layer.objects.get_or_create(layer_source=layer_source, name=post_data['name'])
++
++        if layer_created is False and layer:
++          return HttpResponse(jsonfilter({"error": "layer exists"}), content_type = "application/json")
++
++        if layer_created and layer:
++          layer.vcs_url = post_data['vcs_url']
++          if post_data.has_key('summary'):
++            layer.summary = layers.description = post_data['summary']
++
++          layer.up_date = timezone.now()
++
++          layer.save()
++
++          layer_version, version_created = Layer_Version.objects.get_or_create(layer_source=layer_source, layer=layer, project=prj)
++          layer_version.branch = layer_version.commit = post_data['git_ref']
++
++          if version_created:
++            if post_data.has_key('dir_path'):
++              layer_version.dirpath = post_data['dir_path']
++
++            # We need to know what release the current project is so that we
++            # can set the imported layer's up_branch_id
++            branch_name = Release.objects.get(pk=prj.release_id).branch_name
++            branch, branch_created = Branch.objects.get_or_create(name=branch_name, layer_source_id=LayerSource.TYPE_IMPORTED)
++            layer_version.up_branch_id = branch.id
++
++            layer_version.up_date = layer.up_date
++
++            layer_version.save()
++
++            # Add the dependencies specified for this new layer
++            if (post_data.has_key("layer_deps") and
++                version_created and
++                len(post_data["layer_deps"]) > 0):
++              for layer_dep_id in post_data["layer_deps"].split(","):
++                layer_dep_obj = Layer_Version.objects.get(pk=layer_dep_id)
++                LayerVersionDependency.objects.get_or_create(layer_version=layer_version, depends_on=layer_dep_obj)
++                # Now add them to the project
++                # Their own dependencies were satisfied at the time of adding
++                # them to this list. The project could have them already hence
++                # get_or_create.
++                ProjectLayer.objects.get_or_create(layercommit=layer_dep_obj, project=prj, optional=1)
++
++
++
++            # finally add the imported layer (version id) to the project
++            ProjectLayer.objects.create(layercommit=layer_version, project=prj,optional=1)
++
++          else:
++            # We didn't create a layer version so back out now and clean up.
++            layer.delete()
++            return HttpResponse(jsonfilter({"error": "Could not create layer version"}), content_type = "application/json")
++
++
++          return HttpResponse(jsonfilter({"error": "ok"}), content_type = "application/json")
++
+ 
+     def importlayer(request):
+         template = "importlayer.html"
 -- 
 1.9.1
 
