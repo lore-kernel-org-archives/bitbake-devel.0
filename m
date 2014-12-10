@@ -1,28 +1,38 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 70BB6724B3
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-wg0-f48.google.com (mail-wg0-f48.google.com [74.125.82.48])
+	by mail.openembedded.org (Postfix) with ESMTP id 1F26260809
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  8 Dec 2014 21:39:18 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	sB8LcfVK018314
-	for <bitbake-devel@lists.openembedded.org>; Mon, 8 Dec 2014 21:38:41 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id jHSfxHuZUECk for <bitbake-devel@lists.openembedded.org>;
-	Mon,  8 Dec 2014 21:38:41 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	sB8LcPoJ018298
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>; Mon, 8 Dec 2014 21:38:36 GMT
-Message-ID: <1418074742.22903.30.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 08 Dec 2014 21:39:02 +0000
-X-Mailer: Evolution 3.12.7-0ubuntu1 
-Mime-Version: 1.0
-Subject: [PATCH] bitbake-worker: Use setsid() rather than setpgid()
+	Wed, 10 Dec 2014 15:12:13 +0000 (UTC)
+Received: by mail-wg0-f48.google.com with SMTP id y19so3878214wgg.35
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 10 Dec 2014 07:12:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=FdNug2vo8qkfP/CmSKR+3iqljhUreuyOPNTRhvG4VYE=;
+	b=fE879NjtlRrHCJIZeV0HIVwWO0kXj8sIaQBoHFx/CjxsdgsoRjtUCtvfyDCMeAkw0D
+	reWHrKPFkUBxJbuH/nGDyi/S23kYw+ODSBLyGYFnoPKtTNuSJIaYi3VFUvJBCkJTKWV7
+	0SYlu0sLeFeKVC1dWO5d5E61kKaXz9ydMVsGv21kLMzuo94EXVPYaIZfXno3YfXGTjh4
+	FAHglbL8pi9n1wD+BBccgXTb+NvDBnyNUy2db9IDZaOm1Al7/SIfip8K3WUhiXX3Xw6N
+	EOmFG3QQbNFj7Lqk2PAQM2GONMv3EgZgVvx5UfclcLEdFgXmDdnVT6i7joDd0SKpGgBe
+	OhZQ==
+X-Gm-Message-State: ALoCoQnLC0dX6y+BBExxYuUuaM82Ngzt4r4/UyNwqTN1fXY+0wO90O+lEGSRl0C8jyz8CZK9tPcA
+X-Received: by 10.180.93.37 with SMTP id cr5mr14237119wib.76.1418224333697;
+	Wed, 10 Dec 2014 07:12:13 -0800 (PST)
+Received: from adamian-desk.local ([83.217.123.106])
+	by mx.google.com with ESMTPSA id j1sm6213026wjw.25.2014.12.10.07.12.12
+	for <multiple recipients>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Wed, 10 Dec 2014 07:12:12 -0800 (PST)
+Received: by adamian-desk.local (Postfix, from userid 1000)
+	id 2539D561166; Wed, 10 Dec 2014 15:12:12 +0000 (GMT)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 10 Dec 2014 15:12:10 +0000
+Message-Id: <cover.1418224064.git.alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.9.1
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 00/11] Toaster patchset with new features and bugfixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,46 +45,95 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 08 Dec 2014 21:39:18 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 10 Dec 2014 15:12:23 -0000
 
-The bug has a long discussion of this. Basically, in some environments,
-the exact details of which aren't understood, a Ctrl+C signal to the
-UI is being transmitted to all the process children. Looking at the output
-of "ps ax -O tpgid", its clear the main process is still the terminal
-owner of these processes.
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-stty -a on a problematic system shows: "-ignbrk brkint"
-and on a working system shows: "-ignbrk -brkint"
+Hello,
 
-The description of brkint would suggest this is the problem, setting up
-that terminal environment wasn't able to reproduce the problem though.
-It was confirmed that using setsid() caused the problem to be resolved
-and is probably the right thing to be doing anyway, so lets do it.
+This is a patchset with new features and bug fixes. Patches have been individually
+reviewed on the toaster mailing list.
 
-[YOCTO #6949]
+Among the features submitted, we have the import layers pages, the download artifacts
+patchset, a new command line option for bitbake to write event log files, and corresponding
+command to import log files into toaster, as well as new debug options.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+We also have fixes around the layout and refactoring to make code cleaner.
 
-diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
-index 371c99a..8a24161 100755
---- a/bitbake/bin/bitbake-worker
-+++ b/bitbake/bin/bitbake-worker
-@@ -156,8 +156,11 @@ def fork_off_task(cfg, data, workerdata, fn, task, taskname, appends, taskdepdat
-             bb.event.worker_fire = worker_child_fire
-             worker_pipe = pipeout
- 
--            # Make the child the process group leader
--            os.setpgid(0, 0)
-+            # Make the child the process group leader and ensure no
-+            # child process will be controlled by the current terminal
-+            # This ensures signals sent to the controlling terminal like Ctrl+C
-+            # don't stop the child processes.
-+            os.setsid()
-             # No stdin
-             newsi = os.open(os.devnull, os.O_RDWR)
-             os.dup2(newsi, sys.stdin.fileno())
+Can you please pull at your convenience ?
 
+Thanks,
+Alex
+
+The following changes since commit 9e27bb2869e8ec6781d2f68d0585ebbf9ca6f3d8:
+
+  bitbake-user-manual-metadata.xml: Updated do_package_write example (2014-12-09 22:25:11 +0000)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib adamian/20141210-submission
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20141210-submission
+
+Alexandru DAMIAN (6):
+  add build artifacts table and other improvements
+  toastergui: implement UI changes to allow file download
+  add option to write offline event log file
+  add POST endpoint for uploading eventlog files
+  toasterui: add extra debug and development infos
+  toasterui: refactor project layer finding logic
+
+Belen Barros Pena (2):
+  toaster: base Only show change project icon when > one project
+  toaster: Initialise the 'change' icon tooltips
+
+Michael Wood (3):
+  toaster: libtoaster Add a error handler to GET in makeTypehead
+  toaster: libtoaster Add editProject and getLayerDepsForProject
+  toaster: Add import layer feature.
+
+ bin/bitbake                                        |   7 +-
+ bin/toaster-eventreplay                            | 179 +++++++++++
+ lib/bb/cooker.py                                   |  75 ++++-
+ lib/bb/cookerdata.py                               |   1 +
+ lib/bb/ui/buildinfohelper.py                       |  83 +++--
+ lib/bb/ui/toasterui.py                             |  25 +-
+ lib/toaster/bldcontrol/localhostbecontroller.py    |  27 +-
+ .../management/commands/checksettings.py           |   2 +-
+ .../bldcontrol/management/commands/runbuilds.py    |  13 +-
+ lib/toaster/bldcontrol/models.py                   |  10 +-
+ .../orm/migrations/0019_auto__add_buildartifact.py | 342 +++++++++++++++++++++
+ lib/toaster/orm/models.py                          |  50 ++-
+ lib/toaster/orm/urls.py                            |  27 ++
+ lib/toaster/orm/views.py                           |  60 ++++
+ lib/toaster/toastergui/static/js/base.js           |   4 +
+ lib/toaster/toastergui/static/js/importlayer.js    | 190 ++++++++++++
+ lib/toaster/toastergui/static/js/libtoaster.js     |  57 ++++
+ lib/toaster/toastergui/static/js/projectapp.js     |   6 +
+ lib/toaster/toastergui/templates/base.html         |  18 +-
+ lib/toaster/toastergui/templates/build.html        |  29 +-
+ .../toastergui/templates/builddashboard.html       | 131 +++++---
+ .../toastergui/templates/configuration.html        |   6 +-
+ lib/toaster/toastergui/templates/importlayer.html  |  80 +++--
+ .../toastergui/templates/layers_dep_modal.html     |  68 ++++
+ .../toastergui/templates/package_detail_base.html  |   3 +
+ lib/toaster/toastergui/templates/recipe.html       |  11 +-
+ lib/toaster/toastergui/templates/recipes.html      |   7 +-
+ lib/toaster/toastergui/templates/target.html       |   8 +-
+ lib/toaster/toastergui/templates/task.html         |  18 +-
+ lib/toaster/toastergui/templates/tasks.html        |  12 +-
+ lib/toaster/toastergui/urls.py                     |   2 +
+ lib/toaster/toastergui/views.py                    | 293 ++++++++++++------
+ lib/toaster/toastermain/settings.py                |  27 +-
+ lib/toaster/toastermain/urls.py                    |  10 +-
+ 34 files changed, 1630 insertions(+), 251 deletions(-)
+ create mode 100755 bin/toaster-eventreplay
+ create mode 100644 lib/toaster/orm/migrations/0019_auto__add_buildartifact.py
+ create mode 100644 lib/toaster/orm/urls.py
+ create mode 100644 lib/toaster/orm/views.py
+ create mode 100644 lib/toaster/toastergui/static/js/importlayer.js
+ create mode 100644 lib/toaster/toastergui/templates/layers_dep_modal.html
+
+-- 
+1.9.1
 
 
