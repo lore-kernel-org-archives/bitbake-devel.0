@@ -1,44 +1,43 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f178.google.com (mail-wi0-f178.google.com
-	[209.85.212.178])
-	by mail.openembedded.org (Postfix) with ESMTP id 6EBDA72617
+Received: from mail-wi0-f172.google.com (mail-wi0-f172.google.com
+	[209.85.212.172])
+	by mail.openembedded.org (Postfix) with ESMTP id 1EEA47260C
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Dec 2014 15:12:22 +0000 (UTC)
-Received: by mail-wi0-f178.google.com with SMTP id em10so5487744wid.5
+	Wed, 10 Dec 2014 15:12:21 +0000 (UTC)
+Received: by mail-wi0-f172.google.com with SMTP id n3so11538573wiv.5
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Dec 2014 07:12:22 -0800 (PST)
+	Wed, 10 Dec 2014 07:12:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=lTs8ZgOPeKfsMKfmlZeLwYA4aM9HA4vw7dUB8S84N7I=;
-	b=UITN5eP0WupSO6jFBSEULbl9MKULTXCt8OKUBNkW8nEXjdDMWvCwhOzyCWgv8aZcMm
-	RfNAaam4AcFk5MqQGZnQ3pGEWqFhe+r0jT1q490gmj3Uv43NKLE69xQafGvfM7J5jt7h
-	1M/ewaQoRELu5PNu2/LbGmCjhrIP5c4iJKpvvTimNp65hhslN+iCQPBYAMu0XiP/0NNY
-	ZFkXsCe4yeNsoMnZr2wrYd3EGJKTSk9XupuixJLxKw7Cj2AwECiJMpHPxlEwmQkzqwbC
-	vpeNqR27rN18+eScVh+Dn1BN1ikjp/lXJLKVI2F7AsE+REbGL/Mlky3SK9Xfp4iGxPIq
-	mfWg==
-X-Gm-Message-State: ALoCoQluiN0eMKqbQhBaWgMGU8KgOiGqQ9dvg/CCp78Zo25mwEHq59a2H6M/0zVhqeRuimajTy6e
-X-Received: by 10.180.75.42 with SMTP id z10mr14029442wiv.70.1418224342501;
-	Wed, 10 Dec 2014 07:12:22 -0800 (PST)
+	bh=5ArIDNhf78mwjRkonnGMDvV3xh5cif3/AHg+fFBVby4=;
+	b=JPk3pj0QJL3t9Iva2ZPgSKsQBgxqxEfDe20X2jBhbN8RF4YIN4qnJtJu5OJ/8jGCQW
+	LY63/GNyvk/8hAGvqNLM7d7Wd+Jlcrf2eFT+aAzk3t6Ds+Kfrzz2VsD2RIkMEyeBqhCk
+	ySNNjvgevm9b/7jqfNpCX10+mO2KzK27d2+rd9MzLw8uNBcaTP1oMECM3HGMJHoVRaCP
+	ZrWBspCuugkyC6dq3Y+T9lzm6OYURauV0qpPnxbgcx8M4JMLBTTzv+w4DPoLIBvqquDi
+	gr+swjan0mub6ip26zhABaroN7AAf6vpdcoovELW1l1Tt8JjrzMPtkmz0S3iHsqcZe2r
+	WIMw==
+X-Gm-Message-State: ALoCoQk1bCRhFFRB5wyCllXbBL/Pj89N1eS8dKynx3Ki8vy/xeBr6yubK4550fB14n0TtJ4wHUgo
+X-Received: by 10.180.228.101 with SMTP id sh5mr13800500wic.62.1418224341606; 
+	Wed, 10 Dec 2014 07:12:21 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id u9sm6205887wjy.37.2014.12.10.07.12.20
+	by mx.google.com with ESMTPSA id ce1sm6236603wjc.2.2014.12.10.07.12.19
 	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Wed, 10 Dec 2014 07:12:20 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 75AAB564791; Wed, 10 Dec 2014 15:12:17 +0000 (GMT)
+	id 6D541564225; Wed, 10 Dec 2014 15:12:17 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 10 Dec 2014 15:12:15 +0000
-Message-Id: <ac30d62b2b710d528fa8310084355182b7104564.1418224064.git.alexandru.damian@intel.com>
+Date: Wed, 10 Dec 2014 15:12:11 +0000
+Message-Id: <6c17f94dafad053e292705dbb646d9e24f19fb97.1418224064.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <879045f69bd20c11f83ed36f88482dd500d71592.1418224064.git.alexandru.damian@intel.com>
 References: <879045f69bd20c11f83ed36f88482dd500d71592.1418224064.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1418224064.git.alexandru.damian@intel.com>
 References: <cover.1418224064.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 10/11] toasterui: refactor project layer finding logic
+Subject: [PATCH 06/11] toaster: base Only show change project icon when > one project
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,172 +52,33 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 10 Dec 2014 15:12:23 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-This is a basic refactoring of the code computing
-the layer equivalence classes for a project, in order to
-bring common bits of logic in a single place.
+In the new build button, it only makes sense to change
+the selected project when there is more than one project
+in the Toaster instance. If the number of projects is 1,
+we hide the change project icon.
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
 ---
- lib/toaster/orm/models.py       | 21 +++++++++++++++++-
- lib/toaster/toastergui/views.py | 49 +++++++++++++++--------------------------
- 2 files changed, 38 insertions(+), 32 deletions(-)
+ lib/toaster/toastergui/static/js/base.js | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index f5c600b..46b704c 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -20,7 +20,7 @@
- # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+diff --git a/lib/toaster/toastergui/static/js/base.js b/lib/toaster/toastergui/static/js/base.js
+index fac59e6..619ad28 100644
+--- a/lib/toaster/toastergui/static/js/base.js
++++ b/lib/toaster/toastergui/static/js/base.js
+@@ -11,6 +11,10 @@ function basePageInit (ctx) {
+       return;
+   }
  
- from django.db import models
--from django.db.models import F
-+from django.db.models import F, Q
- from django.utils import timezone
++  /* Hide the change project icon when there is only one project */
++  if (ctx.numProjects == 1){
++     $('#project .icon-pencil').hide(); 
++  }
  
+   newBuildButton.show().removeAttr("disabled");
  
-@@ -98,6 +98,25 @@ class Project(models.Model):
-     def __unicode__(self):
-         return "%s (%s, %s)" % (self.name, self.release, self.bitbake_version)
- 
-+    # returns a queryset of compatible layers for a project
-+    def compatible_layerversions(self, release = None, layer_name = None):
-+        if release == None:
-+            release = self.release
-+        # layers on the same branch or layers specifically set for this project
-+        queryset = Layer_Version.objects.filter((Q(up_branch__name = release.branch_name) & Q(project = None)) | Q(project = self))
-+        if layer_name is not None:
-+            # we select only a layer name
-+            queryset = queryset.filter(layer__name = layer_name)
-+
-+        # order by layer version priority
-+        queryset = queryset.filter(layer_source__releaselayersourcepriority__release = release).order_by("-layer_source__releaselayersourcepriority__priority")
-+
-+        return queryset
-+
-+    # returns a set of layer-equivalent set of layers already in project
-+    def projectlayer_equivalent_set(self):
-+        return [j for i in [x.layercommit.get_equivalents_wpriority(self) for x in self.projectlayer_set.all()] for j in i]
-+
-     def schedule_build(self):
-         from bldcontrol.models import BuildRequest, BRTarget, BRLayer, BRVariable, BRBitbake
-         br = BuildRequest.objects.create(project = self)
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 736de78..434e118 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -1957,20 +1957,6 @@ if toastermain.settings.MANAGED:
- 
-         raise Exception("Invalid HTTP method for this page")
- 
--    # returns a queryset of compatible layers for a project
--    def _compatible_layerversions_for_project(prj, release = None, layer_name = None):
--        if release == None:
--            release = prj.release
--        # layers on the same branch or layers specifically set for this project
--        return Layer_Version.objects.filter((Q(up_branch__name = release.branch_name) & Q(project = None)) | Q(project = prj))
--
--
--    # returns the equivalence group for all the layers currently set in the project
--    def _project_equivalent_layerversions(prj):
--        return reduce(lambda x, y: list(x) + list(y),
--                    # take all equivalent layers for each entry
--                    map(lambda x: x.layercommit.get_equivalents_wpriority(prj), prj.projectlayer_set.all()) , [])
--
-     # returns a list for most recent builds; for use in the Project page, xhr_ updates,  and other places, as needed
-     def _project_recent_build_list(prj):
-         return map(lambda x: {
-@@ -2137,7 +2123,7 @@ if toastermain.settings.MANAGED:
-                 for i in prj.projectlayer_set.all():
-                     # find and add a similarly-named layer on the new branch
-                     try:
--                        lv = _compatible_layerversions_for_project(prj).filter(layer__name = i.layer.name).get_equivalents_wpriority(prj)[0]
-+                        lv = prj.compatible_layerversions(layer_name = i.layercommit.layer.name)[0]
-                         ProjectLayer.objects.get_or_create(project = prj, layercommit = lv)
-                     except IndexError:
-                         pass
-@@ -2185,24 +2171,25 @@ if toastermain.settings.MANAGED:
- 
-             # returns layers for current project release that are not in the project set, matching the name
-             if request.GET['type'] == "layers":
--                queryset_all = _compatible_layerversions_for_project(prj).filter(layer__name__icontains=request.GET.get('value',''))
-+                # all layers for the current project
-+                queryset_all = prj.compatible_layerversions().filter(layer__name__icontains=request.GET.get('value',''))
- 
--                queryset_all = queryset_all.exclude(pk__in = [x.id for x in _project_equivalent_layerversions(prj)])
-+                # but not layers with equivalent layers already in project
-+                queryset_all = queryset_all.exclude(pk__in = [x.id for x in prj.projectlayer_equivalent_set()])[:8]
- 
--                queryset_all = set([x.get_equivalents_wpriority(prj)[0] for x in queryset_all[:8]])
-+                # and show only the selected layers for this project
-+                final_list = set([x.get_equivalents_wpriority(prj)[0] for x in queryset_all])
- 
--                return HttpResponse(jsonfilter( { "error":"ok",  "list" : map( _lv_to_dict, queryset_all) }), content_type = "application/json")
-+                return HttpResponse(jsonfilter( { "error":"ok",  "list" : map( _lv_to_dict, final_list) }), content_type = "application/json")
- 
- 
-             # returns layer dependencies for a layer, excluding current project layers
-             if request.GET['type'] == "layerdeps":
--                queryset_all = LayerVersionDependency.objects.filter(layer_version_id = request.GET['value'])
--                queryset_all = queryset_all.exclude(depends_on__in = _project_equivalent_layerversions(prj))
--                queryset_all.order_by("-up_id");
-+                queryset = prj.compatible_layerversions().exclude(pk__in = [x.id for x in prj.projectlayer_equivalent_set()]).filter(
-+                    layer__name__in = [ x.depends_on.layer.name for x in LayerVersionDependency.objects.filter(layer_version_id = request.GET['value'])])
-+
-+                return HttpResponse(jsonfilter( { "error":"ok", "list" : map( _lv_to_dict, queryset) }), content_type = "application/json")
- 
--                return HttpResponse(jsonfilter( { "error":"ok",
--                    "list" : map( _lv_to_dict,  map(lambda x: x.depends_on.get_equivalents_wpriority(prj)[0], queryset_all))
--                    }), content_type = "application/json")
- 
- 
-             # returns layer versions that would be deleted on the new release__pk
-@@ -2212,7 +2199,7 @@ if toastermain.settings.MANAGED:
- 
-                 retval = []
-                 for i in prj.projectlayer_set.all():
--                    lv = _compatible_layerversions_for_project(prj, release = Release.objects.get(pk=request.GET['value']))
-+                    lv = prj.compatible_layerversions(release = Release.objects.get(pk=request.GET['value'])).filter(layer__name = i.layercommit.layer.name)
-                     # there is no layer_version with the new release id, and the same name
-                     if lv.count() < 1:
-                         retval.append(i)
-@@ -2225,7 +2212,7 @@ if toastermain.settings.MANAGED:
-             # returns targets provided by current project layers
-             if request.GET['type'] == "targets":
-                 queryset_all = Recipe.objects.all()
--                queryset_all = queryset_all.filter(layer_version__in = reduce(lambda x, y: list(x) + list(y), map(lambda x: x.layercommit.get_equivalents_wpriority(prj), prj.projectlayer_set.all()), []))
-+                queryset_all = queryset_all.filter(layer_version__in =  prj.projectlayer_equivalent_set())
-                 return HttpResponse(jsonfilter({ "error":"ok",
-                     "list" : map ( lambda x: {"id": x.pk, "name": x.name, "detail":"[" + x.layer_version.layer.name+ (" | " + x.layer_version.up_branch.name + "]" if x.layer_version.up_branch is not None else "]")},
-                         queryset_all.filter(name__icontains=request.GET.get('value',''))[:8]),
-@@ -2235,7 +2222,8 @@ if toastermain.settings.MANAGED:
-             if request.GET['type'] == "machines":
-                 queryset_all = Machine.objects.all()
-                 if 'project_id' in request.session:
--                    queryset_all = queryset_all.filter(layer_version__layer__in = map(lambda x: x.layercommit.layer, ProjectLayer.objects.filter(project_id=request.session['project_id'])))
-+                    queryset_all = queryset_all.filter(layer_version__in =  prj.projectlayer_equivalent_set())
-+
-                 return HttpResponse(jsonfilter({ "error":"ok",
-                     "list" : map ( lambda x: {"id": x.pk, "name": x.name, "detail":"[" + x.layer_version.layer.name+ (" | " + x.layer_version.up_branch.name + "]" if x.layer_version.up_branch is not None else "]")},
-                         queryset_all.filter(name__icontains=request.GET.get('value',''))[:8]),
-@@ -2283,14 +2271,13 @@ if toastermain.settings.MANAGED:
- 
-         prj = Project.objects.get(pk = request.session['project_id'])
- 
--        queryset_all = _compatible_layerversions_for_project(prj)
-+        queryset_all = prj.compatible_layerversions()
- 
-         queryset_all = _get_queryset(Layer_Version, queryset_all, filter_string, search_term, ordering_string, '-layer__name')
- 
--        objects_all= list(set([x.get_equivalents_wpriority(prj)[0] for x in queryset_all[:pagesize]]))
- 
-         # retrieve the objects that will be displayed in the table; layers a paginator and gets a page range to display
--        layer_info = _build_page_range(Paginator(objects_all, request.GET.get('count', 10)),request.GET.get('page', 1))
-+        layer_info = _build_page_range(Paginator(queryset_all, request.GET.get('count', 10)),request.GET.get('page', 1))
- 
- 
-         context = {
 -- 
 1.9.1
 
