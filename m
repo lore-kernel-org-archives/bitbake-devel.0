@@ -1,41 +1,43 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f53.google.com (mail-wg0-f53.google.com [74.125.82.53])
-	by mail.openembedded.org (Postfix) with ESMTP id EA88F7250F
+Received: from mail-wi0-f172.google.com (mail-wi0-f172.google.com
+	[209.85.212.172])
+	by mail.openembedded.org (Postfix) with ESMTP id 65B4172513
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Dec 2014 11:45:28 +0000 (UTC)
-Received: by mail-wg0-f53.google.com with SMTP id l18so8830946wgh.40
+	Fri, 12 Dec 2014 11:45:27 +0000 (UTC)
+Received: by mail-wi0-f172.google.com with SMTP id n3so2188149wiv.17
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Dec 2014 03:45:29 -0800 (PST)
+	Fri, 12 Dec 2014 03:45:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=XZbrhG0sWKzdrX04a52qbpFnUK/7fUii6vPx3C/hydM=;
-	b=N2vDPDcBvPdE3Bw3Zm+7iqjj3q2v0YaOzmV0SrXU2afSiI2GDz+bdJZFLmj0NRQjoi
-	limx4XJEK2j/ZnlyyGIKGpTZwiLL5jSJT7NA7/owPjbRsdHpOxXBW6LQ6GVVqqph33HI
-	zybnqgHXbm0BwaDReGsXHcxpegmg9M92mKDZ+51U7FwuCvoZDzIgb3WhNdNBIoia4WOC
-	lEKM0k8TQvzFzUrRRVqtDAB81YEH7V39M5gB3CKuKxNCSWslX9yK4Wgv0dg9n29tEOxQ
-	1asYeAXPnWejxEmZXCJMDpdR1HtrGtip/PCTqyWOwvwSECc83eQC1+hMOOl7x1zqxhJC
-	J+1g==
-X-Gm-Message-State: ALoCoQl5z+q7p/lpRg4tIH8mvZ5lva0afN50TMJyZD1ETSpbcKDWOLHo9HZNe6ywJof14nXtEO24
-X-Received: by 10.180.20.209 with SMTP id p17mr6888103wie.13.1418384729366;
-	Fri, 12 Dec 2014 03:45:29 -0800 (PST)
+	bh=hwzXwUgGtVZWqN5GyO6oFCaInLw8jxQ26BV2icIPwMM=;
+	b=efTbS1anfHuBTYhCg5E7JHdmjm06/LF39QRTeSkt8m3jr5vsDFc36GAtwCjTpJqGow
+	eg5oT2C5ho4pUM5BaJMQpbDWOK1G2syYu5yOx7NyuincBLoWV0n+uVfxXchxHMKRHUkV
+	d0USGHt3w5oNH2I12KIe3SlH4/ftSlNPizx+4aDTQxUTBOHATN8GZZRy0mTNtO9j/7Ip
+	2jUMcYdWEQr08TWaSe4Oka2cYnhDPTVkVnGIuczlY3TsBI3kD12tgmtiw9SI58lLDriK
+	IlnMVFDeq/GxaUvIfnyL1yM5GTdABx3/IVHgHIhz6PA7VlK/ImhdCUpMnArWNBQGXk9J
+	gIOA==
+X-Gm-Message-State: ALoCoQmLtHIIhSAu5vKbovzVR9h2v6Ak31NlQuw9eABRXPPxhbiDye6LJ3AWuX8XTuVPSYTU7B6k
+X-Received: by 10.194.24.103 with SMTP id t7mr26391314wjf.15.1418384727842;
+	Fri, 12 Dec 2014 03:45:27 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id a14sm1619944wib.22.2014.12.12.03.45.24
+	by mx.google.com with ESMTPSA id h2sm1750801wix.5.2014.12.12.03.45.22
+	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 12 Dec 2014 03:45:26 -0800 (PST)
+	Fri, 12 Dec 2014 03:45:25 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 5069E566259; Fri, 12 Dec 2014 11:45:19 +0000 (GMT)
+	id 4C46A56626C; Fri, 12 Dec 2014 11:45:19 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 12 Dec 2014 11:45:16 +0000
-Message-Id: <c23736003b788f2b45ae7cbcd7c7250ead2e5724.1418384609.git.alexandru.damian@intel.com>
+Date: Fri, 12 Dec 2014 11:45:13 +0000
+Message-Id: <54165dd929ef304357806411cd70caf85b6132f0.1418384609.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <bbe24d912869312d561be199b2c029b0c898e049.1418384609.git.alexandru.damian@intel.com>
 References: <bbe24d912869312d561be199b2c029b0c898e049.1418384609.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1418384609.git.alexandru.damian@intel.com>
 References: <cover.1418384609.git.alexandru.damian@intel.com>
-Subject: [PATCH 17/18] toaster: Change the full stop to a colon
+Subject: [PATCH 14/18] toaster: importlayer Avoid namespace clash with layer name
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,29 +52,49 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 12 Dec 2014 11:45:29 -0000
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
+From: Michael Wood <michael.g.wood@intel.com>
 
-In the import layers notification for multiple layers
-there was a full stop where there should be a colon.
+This was causing validation issues as the layer name was being picked up
+from a different location in the dom.
 
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/toastergui/static/js/projectapp.js | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/toaster/toastergui/static/js/importlayer.js   | 2 +-
+ lib/toaster/toastergui/templates/importlayer.html | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/lib/toaster/toastergui/static/js/projectapp.js b/lib/toaster/toastergui/static/js/projectapp.js
-index 741038d..bb97f32 100644
---- a/lib/toaster/toastergui/static/js/projectapp.js
-+++ b/lib/toaster/toastergui/static/js/projectapp.js
-@@ -599,7 +599,7 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
-             text = "You have imported <strong><a href=\""+$scope.urls.layer+
-               imported.imported_layer.id+"\">"+imported.imported_layer.name+
-               "</a></strong> and added <strong>"+(imported.deps_added.length+1)+
--              "</strong> layers to your project. <strong>"+links+"</strong>";
-+              "</strong> layers to your project: <strong>"+links+"</strong>";
-           }
+diff --git a/lib/toaster/toastergui/static/js/importlayer.js b/lib/toaster/toastergui/static/js/importlayer.js
+index 15830dd..34dbcd9 100644
+--- a/lib/toaster/toastergui/static/js/importlayer.js
++++ b/lib/toaster/toastergui/static/js/importlayer.js
+@@ -4,7 +4,7 @@ function importLayerPageInit (ctx) {
  
-             $scope.displayAlert($scope.zone2alerts, text, "alert-info");
+   var layerDepBtn = $("#add-layer-dependency-btn");
+   var importAndAddBtn = $("#import-and-add-btn");
+-  var layerNameInput = $("#layer-name");
++  var layerNameInput = $("#import-layer-name");
+   var vcsURLInput = $("#layer-git-repo-url");
+   var gitRefInput = $("#layer-git-ref");
+   var layerDepInput = $("#layer-dependency");
+diff --git a/lib/toaster/toastergui/templates/importlayer.html b/lib/toaster/toastergui/templates/importlayer.html
+index 00fd694..c59247f 100644
+--- a/lib/toaster/toastergui/templates/importlayer.html
++++ b/lib/toaster/toastergui/templates/importlayer.html
+@@ -48,12 +48,12 @@
+                       </div>
+ 
+                       <div class="control-group" id="layer-name-ctrl">
+-                        <label class="control-label" for="layer-name">
++                        <label class="control-label" for="import-layer-name">
+                             Layer name
+                             <span class="icon-question-sign get-help" title="Something like 'meta-mylayer'. Your layer name must be unique and can only include letters, numbers and dashes" />
+                         </label>
+                         <div class="controls">
+-                          <input id="layer-name" type="text" required autofocus>
++                          <input id="import-layer-name" type="text" required autofocus>
+                           <span class="help-inline" style="display: none;" id="invalid-layer-name-hint">A valid layer name can only include letters, numbers and dashes</span>
+                           <span class="help-inline" style="display: none;" id="duplicated-layer-name-hint"></span>
+                         </div>
 -- 
 1.9.1
 
