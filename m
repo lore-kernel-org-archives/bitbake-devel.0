@@ -1,43 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f54.google.com (mail-wg0-f54.google.com [74.125.82.54])
-	by mail.openembedded.org (Postfix) with ESMTP id 0CCAC7249A
+Received: from mail-wi0-f169.google.com (mail-wi0-f169.google.com
+	[209.85.212.169])
+	by mail.openembedded.org (Postfix) with ESMTP id 3758C724AF
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 12 Dec 2014 11:45:21 +0000 (UTC)
-Received: by mail-wg0-f54.google.com with SMTP id l2so8901915wgh.41
+Received: by mail-wi0-f169.google.com with SMTP id r20so4248265wiv.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Dec 2014 03:45:22 -0800 (PST)
+	Fri, 12 Dec 2014 03:45:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=diD/w+ktC9/QJPjmblWgnfNfkz9wNZ1DZTw0my9SucQ=;
-	b=S/qQwJ0amIjTXOf8LrtNvZkrVB8kAijOZfdIe8mq6EyEC65v1deqS56VaCGTCTgYBF
-	zMgvy62/ypDWk/Lbjq+eTYfK8YQ6TotVySwt8XwndLDEGTKx4FnrNnqe707nalHJUQ46
-	dp9cGb1iAtLHdgg+AZRU1FjwqSiAqX+igm2pmdWTmR6mjmgGEHniP1STpCIJmdNiruGD
-	3YqgAJ6q8TxO8zftmSAz6njhGCKwREgEbc5H1S3yPGqtxmFSkOBqkXpKMk8N5LWMteWK
-	YiQ1C6AnVvpeTxcooM5EQuS8rzW4/eu3lhCk6tUQGNl/baa2InXaCSrdFb1ZnE38eCP2
-	RHPw==
-X-Gm-Message-State: ALoCoQlvuvq0bh0A4TA5+cPFwJ+yHZf+2Qo+/r2T3+Qny4WTgp47drZA70ChttzHxhUgVrDfBd16
-X-Received: by 10.180.84.198 with SMTP id b6mr6878172wiz.41.1418384722299;
-	Fri, 12 Dec 2014 03:45:22 -0800 (PST)
+	bh=zyV7UpRyNiYmrU6eTQM3DVP9jEzpaooggNS+4pyJzTk=;
+	b=Thz3Fxgdlv34m2wMmW90PiVdZ5CW17M2NltD1wp9LSn+pZ8DNBIO77fJzFe3prV/KO
+	K7EnTHqxyoj3OEGwEppWv0/z/j4Q/l3PsD0fPFTLnJROCJJLRKFkX8HrbANSS1HXt+Jd
+	tzPXX/u2w1XeA6xp3zoqjb2p3r1H3Ch75EjPzmRJw3v1DAfX+hfp8wAkK5Z58LsDEY0f
+	aTyl3fw07NMP4PZd/RVU78zdP5ZhQNg8WfJYXUe1ltepKwYnF5cbyX/eopKpZqOmtAj1
+	DJOty/Zad6Fi2fe56Owm4wD3DT2bduLmlyzU1ZnQJccrNIMemOV7qyD7bkCqR5eUz1aB
+	aLCQ==
+X-Gm-Message-State: ALoCoQn8k1KE64wG9AKQjYiQnjPO6iLc2eujF8vGzGLP9aLiq+Ifj7ph2kYRwmaeTUZe2fCLCTqr
+X-Received: by 10.194.94.132 with SMTP id dc4mr27135421wjb.56.1418384721836;
+	Fri, 12 Dec 2014 03:45:21 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id k5sm1525806wjn.1.2014.12.12.03.45.18
+	by mx.google.com with ESMTPSA id w10sm1516094wje.10.2014.12.12.03.45.19
 	for <multiple recipients>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Fri, 12 Dec 2014 03:45:19 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 38583565776; Fri, 12 Dec 2014 11:45:19 +0000 (GMT)
+	id 3626F565191; Fri, 12 Dec 2014 11:45:19 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 12 Dec 2014 11:45:03 +0000
-Message-Id: <6000e1ae5c846e51932ecd0dc21e0fa02eb10357.1418384609.git.alexandru.damian@intel.com>
+Date: Fri, 12 Dec 2014 11:45:02 +0000
+Message-Id: <1befb4a783bb7b7b387d4b5ee08830d9516f1ac2.1418384609.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <bbe24d912869312d561be199b2c029b0c898e049.1418384609.git.alexandru.damian@intel.com>
 References: <bbe24d912869312d561be199b2c029b0c898e049.1418384609.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1418384609.git.alexandru.damian@intel.com>
 References: <cover.1418384609.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 04/18] toastergui: implement UI changes to allow file download
+Subject: [PATCH 03/18] add option to write offline event log file
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,859 +55,491 @@ X-List-Received-Date: Fri, 12 Dec 2014 11:45:23 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-This patchset adds download links in the build analisys pages
-if toaster runs in managed mode. This allows the user to access
-data directly from the web interface.
+This patch adds a "-w/--write-log" option to bitbake
+that writes an event log file for the current build.
 
-[YOCTO #6837]
+The name of the file is passed as a parameter to the "-w"
+argument. If the parameter is the empty string '', the file
+name is generated in the form bitbake_eventlog_DATE.json,
+where DATE is the current date and time, with second precision.
+
+The "-w" option can also be supplied as the BBEVENTLOG
+environment variable.
+
+We add a script, toater-eventreplay, that reads an event
+log file and loads the data into a Toaster database, creating
+a build entry.
+
+We modify the toasterui to fix minor issues with reading
+events from an event log file.
+
+Performance impact is undetectable under no-task executed builds.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/templates/base.html         |  18 +--
- lib/toaster/toastergui/templates/build.html        |  29 +++-
- .../toastergui/templates/builddashboard.html       | 131 +++++++++++-----
- .../toastergui/templates/configuration.html        |   6 +-
- .../toastergui/templates/package_detail_base.html  |   3 +
- lib/toaster/toastergui/templates/recipe.html       |  11 +-
- lib/toaster/toastergui/templates/recipes.html      |   7 +-
- lib/toaster/toastergui/templates/target.html       |   8 +-
- lib/toaster/toastergui/templates/task.html         |  18 ++-
- lib/toaster/toastergui/templates/tasks.html        |  12 +-
- lib/toaster/toastergui/views.py                    | 168 +++++++++++++--------
- 11 files changed, 276 insertions(+), 135 deletions(-)
+ bin/bitbake                  |  12 ++-
+ bin/toaster-eventreplay      | 179 +++++++++++++++++++++++++++++++++++++++++++
+ lib/bb/cooker.py             |  75 +++++++++++++++++-
+ lib/bb/cookerdata.py         |   1 +
+ lib/bb/ui/buildinfohelper.py |  53 +++++++++----
+ lib/bb/ui/toasterui.py       |   2 +-
+ 6 files changed, 300 insertions(+), 22 deletions(-)
+ create mode 100755 bin/toaster-eventreplay
 
-diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
-index 594c495..bc7a0ee 100644
---- a/lib/toaster/toastergui/templates/base.html
-+++ b/lib/toaster/toastergui/templates/base.html
-@@ -3,14 +3,14 @@
- <html lang="en">
-     <head>
-         <title>{% if objectname %} {{objectname|title}} - {% endif %}Toaster</title>
--<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
--<link rel="stylesheet" href="{% static 'css/bootstrap-responsive.min.css' %}" type='text/css'>
--<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type='text/css'>
--<link rel="stylesheet" href="{% static 'css/prettify.css' %}" type='text/css'>
--<link rel="stylesheet" href="{% static 'css/default.css' %}" type='text/css'>
-+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css"/>
-+<link rel="stylesheet" href="{% static 'css/bootstrap-responsive.min.css' %}" type='text/css'/>
-+<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type='text/css'/>
-+<link rel="stylesheet" href="{% static 'css/prettify.css' %}" type='text/css'/>
-+<link rel="stylesheet" href="{% static 'css/default.css' %}" type='text/css'/>
+diff --git a/bin/bitbake b/bin/bitbake
+index 7f8449c..d46c3dd 100755
+--- a/bin/bitbake
++++ b/bin/bitbake
+@@ -196,6 +196,9 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+         parser.add_option("", "--status-only", help = "Check the status of the remote bitbake server.",
+                    action = "store_true", dest = "status_only", default = False)
  
- <meta name="viewport" content="width=device-width, initial-scale=1.0" />
--<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
- <script src="{% static 'js/jquery-2.0.3.min.js' %}">
- </script>
- <script src="{% static 'js/jquery.cookie.js' %}">
-@@ -64,7 +64,7 @@
-             </div>
-             <!-- New build popover -->
-             <div class="btn-group pull-right" id="new-build-button">
--              <button class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-+              <button class="btn dropdown-toggle" data-toggle="dropdown">
-                 New build
-                 <i class="icon-caret-down"></i>
-               </button>
-@@ -78,7 +78,7 @@
-                   </span>
-                   <form id="change-project-form" style="display:none;">
-                     <div class="input-append">
--                      <input type="text" class="input-medium" id="project-name-input" placeholder="Type a project name" autocomplete="off" data-minLength="1" data-autocomplete="off" data-provide="typeahead">
-+                      <input type="text" class="input-medium" id="project-name-input" placeholder="Type a project name" autocomplete="off" data-minLength="1" data-autocomplete="off" data-provide="typeahead"/>
-                         <button id="save-project-button" class="btn" type="button">Save</button>
-                         <a href="#" id="cancel-change-project" class="btn btn-link">Cancel</a>
-                       </div>
-@@ -92,7 +92,7 @@
-                   <li id="targets-form">
-                     <h6>Target(s):</h6>
-                     <form>
--                      <input type="text" class="input-xlarge" id="build-target-input" placeholder="Type a target name" autocomplete="off" data-minLength="1" data-autocomplete="off" data-provide="typeahead" >
-+                      <input type="text" class="input-xlarge" id="build-target-input" placeholder="Type a target name" autocomplete="off" data-minLength="1" data-autocomplete="off" data-provide="typeahead" />
-                       <div>
-                         <a class="btn btn-primary" id="build-button" disabled="disabled" data-project-id="{{project.id}}">Build</a>
-                       </div>
-diff --git a/lib/toaster/toastergui/templates/build.html b/lib/toaster/toastergui/templates/build.html
-index f20f041..e71e38f 100644
---- a/lib/toaster/toastergui/templates/build.html
-+++ b/lib/toaster/toastergui/templates/build.html
-@@ -45,11 +45,34 @@
-             <td class="machine"><a href="{% url "builddashboard" build.id %}">{{build.machine}}</a></td>
-             <td class="started_on"><a href="{% url "builddashboard" build.id %}">{{build.started_on|date:"d/m/y H:i"}}</a></td>
-             <td class="completed_on"><a href="{% url "builddashboard" build.id %}">{{build.completed_on|date:"d/m/y H:i"}}</a></td>
--            <td class="failed_tasks error">{% query build.task_build outcome=4 order__gt=0 as exectask%}{% if exectask.count == 1 %}<a href="{% url "task" build.id exectask.0.id %}">{{exectask.0.recipe.name}}.{{exectask.0.task_name}}</a>{% elif exectask.count > 1%}<a href="{% url "tasks" build.id %}?filter=outcome%3A4">{{exectask.count}}</a>{%endif%}</td>
--            <td class="errors_no">{% if  build.errors_no %}<a class="errors_no error" href="{% url "builddashboard" build.id %}#errors">{{build.errors_no}} error{{build.errors_no|pluralize}}</a>{%endif%}</td>
-+            <td class="failed_tasks error">
-+                {% query build.task_build outcome=4 order__gt=0 as exectask%}
-+                    {% if exectask.count == 1 %}
-+                        <a href="{% url "task" build.id exectask.0.id %}">{{exectask.0.recipe.name}}.{{exectask.0.task_name}}</a>
-+                      {% if MANAGED and build.project %}
-+                        <a href="{% url 'build_artifact' build.id "tasklogfile" exectask.0.id %}">
-+                            <i class="icon-download-alt" title="" data-original-title="Download task log file"></i>
-+                        </a>
-+                      {% endif %}
-+                    {% elif exectask.count > 1%}
-+                        <a href="{% url "tasks" build.id %}?filter=outcome%3A4">{{exectask.count}} task{{exectask.count|pluralize}}</a>
-+                    {%endif%}
-+            </td>
-+            <td class="errors_no">
-+                {% if  build.errors_no %}
-+                    <a class="errors_no error" href="{% url "builddashboard" build.id %}#errors">{{build.errors_no}} error{{build.errors_no|pluralize}}</a>
-+                    {% if MANAGED and build.project %}
-+                        <a href="{% url 'build_artifact' build.id "cookerlog" build.id %}">
-+                            <i class="icon-download-alt" title="" data-original-title="Download build log"></i>
-+                        </a>
-+                    {% endif %}
-+                {%endif%}
-+            </td>
-             <td class="warnings_no">{% if  build.warnings_no %}<a class="warnings_no warning" href="{% url "builddashboard" build.id %}#warnings">{{build.warnings_no}} warning{{build.warnings_no|pluralize}}</a>{%endif%}</td>
-             <td class="time"><a href="{% url "buildtime" build.id %}">{{build.timespent|sectohms}}</a></td>
--            <td class="log">{{build.cooker_log_path}}</td>
-+            {% if not MANAGED or not build.project %}
-+                <td class="log">{{build.cooker_log_path}}</td>
-+            {% endif %}
-             <td class="output">
-               {% if build.outcome == build.SUCCEEDED %}
-               <a href="{%url "builddashboard" build.id%}#images">{{fstypes|get_dict_value:build.id}}</a>
-diff --git a/lib/toaster/toastergui/templates/builddashboard.html b/lib/toaster/toastergui/templates/builddashboard.html
-index e682094..2458cdb 100644
---- a/lib/toaster/toastergui/templates/builddashboard.html
-+++ b/lib/toaster/toastergui/templates/builddashboard.html
-@@ -42,9 +42,9 @@
-     {% if build.toaster_exceptions.count > 0 %}
-     <div class="row">
-         <small class="pull-right">
--		<i class="icon-question-sign get-help get-help-blue" title="" data-original-title="Toaster exceptions do not affect your build: only the operation of Toaster"></i>
--		<a class="show-exceptions" href="#exceptions">Toaster threw {{build.toaster_exceptions.count}} exception{{build.toaster_exceptions.count|pluralize}}</a>
--	</small>
-+        <i class="icon-question-sign get-help get-help-blue" title="" data-original-title="Toaster exceptions do not affect your build: only the operation of Toaster"></i>
-+        <a class="show-exceptions" href="#exceptions">Toaster threw {{build.toaster_exceptions.count}} exception{{build.toaster_exceptions.count|pluralize}}</a>
-+    </small>
-     </div>
-     {% endif %}
-   </div>
-@@ -54,6 +54,9 @@
- <div class="accordion span10 pull-right" id="errors">
-   <div class="accordion-group">
-     <div class="accordion-heading">
-+      {% if MANAGED and build.project %}
-+          <a class="btn btn-large pull-right" href="{% url 'build_artifact' build.id "cookerlog" build.id %}" style="margin:15px;">Download build log</a>
-+      {% endif %}
-       <a class="accordion-toggle error toggle-errors">
-          <h2 id="error-toggle">
-            <i class="icon-minus-sign"></i>
-@@ -66,13 +69,10 @@
-         <div class="span10">
-           {% for error in logmessages %}{% if error.level == 2 %}
-             <div class="alert alert-error">
--	    {% if MANAGED and error.pathname %}
--	      <pre><a href="{% url 'build_artifact' build.pk 'logmessagefile' error.pk %}" target="_blanc">{{error.message}}</pre>
--	    {% else %}
-               <pre>{{error.message}}</pre>
--	    {% endif %}
-             </div>
--          {% endif %}{% endfor %}
-+          {% endif %}
-+          {% endfor %}
-         </div>
-       </div>
-     </div>
-@@ -84,21 +84,21 @@
- <!-- built images -->
- {% if hasImages %}
- <div class="row-fluid span10 pull-right">
--	<h2>Images</h2>
--	{% for target in targets %}
-+    <h2>Images</h2>
-+    {% for target in targets %}
-         {% if target.target.is_image %}
--	<div class="well dashboard-section">
--		<h3><a href="{% url 'target' build.pk target.target.pk %}">{{target.target}}</a>
-+    <div class="well dashboard-section">
-+        <h3><a href="{% url 'target' build.pk target.target.pk %}">{{target.target}}</a>
-                 </h3>
--		<dl class="dl-horizontal">
--			<dt>Packages included</dt>
--			<dd><a href="{% url 'target' build.pk target.target.pk %}">{{target.npkg}}</a></dd>
--			<dt>Total package size</dt>
--			<dd>{{target.pkgsz|filtered_filesizeformat}}</dd>
-+        <dl class="dl-horizontal">
-+            <dt>Packages included</dt>
-+            <dd><a href="{% url 'target' build.pk target.target.pk %}">{{target.npkg}}</a></dd>
-+            <dt>Total package size</dt>
-+            <dd>{{target.pkgsz|filtered_filesizeformat}}</dd>
-                         {% if target.targetHasNoImages %}
--				</dl>
--				<div class="row-fluid">
--					<div class="alert alert-info span7">
-+                </dl>
-+                <div class="row-fluid">
-+                    <div class="alert alert-info span7">
-                     <p>
-                                     <b>This build did not create any image files</b>
-                                   </p>
-@@ -111,30 +111,45 @@
-                                       license manifest information</a> in Toaster.
-                                   </p>
-                     </div>
--				</div>
-+                </div>
-                         {% else %}
--			<dt>
--				<i class="icon-question-sign get-help" title="The location in disk of the license manifest, a document listing all packages installed in your image and their licenses"></i>
--				<a href="{% url 'targetpkg' build.pk target.target.pk %}">License manifest</a>
--			</dt>
--			<dd><code>{{target.target.license_manifest_path}}</code></dd>
--			<dt>
--				<i class="icon-question-sign get-help" title="Image files are stored in <code>/build/tmp/deploy/images/</code>"></i>
--				Image files
--			</dt>
--			<dd>
--				<ul>
-+            <dt>
-+                <i class="icon-question-sign get-help" title="The location in disk of the license manifest, a document listing all packages installed in your image and their licenses"></i>
++        parser.add_option("-w", "--write-log", help = "Writes the event log of the build to a bitbake event json file. Use '' (empty string) to assign the name automatically.",
++                   action = "store", dest = "writeeventlog")
 +
-+            {% if MANAGED and build.project %}
-+                License manifest
-+            {% else %}
-+                <a href="{% url 'targetpkg' build.pk target.target.pk %}">License manifest</a>
-+            {% endif %}
-+            </dt>
-+            {% if MANAGED and build.project %}
-+            <dd>
-+                <a href="{% url 'targetpkg' build.pk target.target.pk %}">View in Toaster</a> |
-+                <a href="{% url 'build_artifact' build.pk 'licensemanifest' target.target.pk %}">Download</a></dd>
-+            {% else %}
-+            <dd><code>{{target.target.license_manifest_path}}</code></dd>
-+            {% endif %}
-+            <dt>
-+                <i class="icon-question-sign get-help" title="Image files are stored in <code>/build/tmp/deploy/images/</code>"></i>
-+                Image files
-+            </dt>
-+            <dd>
-+                <ul>
-                                   {% for i in target.imageFiles %}
--					<li>{{i.path}}
--					({{i.size|filtered_filesizeformat}})</li>
-+            {% if build.project %}
-+                    <li><a href="{% url 'build_artifact' build.pk 'imagefile' i.id %}">{{i.path}}</a>
-+            {% else %}
-+                    <li>{{i.path}}
-+            {% endif %}
-+                    ({{i.size|filtered_filesizeformat}})</li>
-                                   {% endfor %}
--				</ul>
--			</dd>
--		</dl>
-+                </ul>
-+            </dd>
-+        </dl>
-                         {% endif %}
--	</div>
-+    </div>
-         {% endif %}
--	{% endfor %}
-+    {% endfor %}
- </div>
- {% endif %}
+         options, targets = parser.parse_args(sys.argv)
  
-@@ -142,6 +157,35 @@
- <!-- error dump -->
- {%endif%}
+         # some environmental variables set also configuration options
+@@ -206,6 +209,14 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+         if "BBTOKEN" in os.environ:
+             options.xmlrpctoken = os.environ["BBTOKEN"]
  
-+<!-- other artifacts -->
-+{% if build.buildartifact_set.all.count > 0 %}
-+<div class="row-fluid span10 pull-right">
-+<h2>Other artifacts</h2>
++        if "BBEVENTLOG" is os.environ:
++            options.writeeventlog = os.environ["BBEVENTLOG"]
 +
-+    <div class="well dashboard-section">
-+        <dl class="dl-horizontal">
-+            <dt>
-+                <i class="icon-question-sign get-help" title="Build artifacts discovered in <i>tmp/deploy/images</i>. Usually kernel images and kernel modules."></i>
-+                Other artifacts</dt>
-+            <dd><div>
-+              {% for ba in build.buildartifact_set.all|dictsort:"file_name" %}
-+                {% if MANAGED and build.project %}
-+                <a href="{%url 'build_artifact' build.id 'buildartifact' ba.id %}">
-+                {% endif %}
-+                    {{ba.get_local_file_name}}
-+                {% if MANAGED and build.project %}
-+                </a>
-+                {% endif %}
++        # fill in proper log name if not supplied
++        if options.writeeventlog is not None and len(options.writeeventlog) == 0:
++            import datetime
++            options.writeeventlog = "bitbake_eventlog_%s.json" % datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 +
-+                ({{ba.file_size|filtered_filesizeformat}}) <br/>
-+              {% endfor %}
-+                </div>
-+            </dd>
-+
-+    </div>
-+
-+</div>
-+{% endif %}
- <!-- build summary -->
- <div class="row-fluid span10 pull-right">
- <h2>Build summary</h2>
-@@ -158,12 +202,19 @@
-             <dl>
-             {% query build.task_build outcome=4 order__gt=0 as exectask%}
-             {% if exectask.count > 0 %}
--                <dt>Failed tasks</td>
-+                <dt>Failed tasks</dt>
-                 <dd>
-                 {% if exectask.count == 1 %}
-                     <a class="error" href="{% url "task" build.id exectask.0.id %}">
-                         {{exectask.0.recipe.name}}
-                         <span class="task-name">{{exectask.0.task_name}}</span>
-+
-+                      {% if MANAGED and build.project %}
-+                        <a href="{% url 'build_artifact' build.id "tasklogfile" exectask.0.id %}">
-+                            <i class="icon-download-alt" title="" data-original-title="Download task log file"></i>
-+                        </a>
-+                      {% endif %}
-+
-                     </a>
-                 {% elif exectask.count > 1%}
-                     <a class="error" href="{% url "tasks" build.id %}?filter=outcome%3A4">{{exectask.count}}</a>
-diff --git a/lib/toaster/toastergui/templates/configuration.html b/lib/toaster/toastergui/templates/configuration.html
-index 49a6a89..d3b34a2 100644
---- a/lib/toaster/toastergui/templates/configuration.html
-+++ b/lib/toaster/toastergui/templates/configuration.html
-@@ -50,7 +50,9 @@
-           <th>Layer</th>
-           <th>Layer branch</th>
-           <th>Layer commit</th>
--          <th>Layer directory</th>
-+          {% if not MANAGED or not build.project %}
-+              <th>Layer directory</th>
-+          {% endif %}
-         </tr>
-       </thead>
-       <tbody>{% for lv in build.layer_version_build.all|dictsort:"layer.name" %}
-@@ -61,7 +63,9 @@
-                 <li>{{lv.commit}}</li> </ul>">
-                     {{lv.commit|truncatechars:13}}
-                 </a></td>
-+          {% if not MANAGED or not build.project %}
-             <td>{{lv.layer.local_path}}</td>
-+          {% endif %}
-         </tr>{% endfor %}
-       </tbody>
-     </table>
-diff --git a/lib/toaster/toastergui/templates/package_detail_base.html b/lib/toaster/toastergui/templates/package_detail_base.html
-index cd015d3..dfeba55 100644
---- a/lib/toaster/toastergui/templates/package_detail_base.html
-+++ b/lib/toaster/toastergui/templates/package_detail_base.html
-@@ -135,11 +135,14 @@
-             </dt>
+         # if BBSERVER says to autodetect, let's do that
+         if options.remote_server:
+             [host, port] = options.remote_server.split(":", 2)
+@@ -266,7 +277,6 @@ def start_server(servermodule, configParams, configuration, features):
+     return server
  
-             <dd class="iscommit">{{package.recipe.layer_version.commit}}</dd>
-+
-+          {% if not MANAGED or not build.project %}
-             <dt>
-                 Layer directory
-                 <i class="icon-question-sign get-help" title="Path to the layer providing the recipe that builds this package"></i>
-             </dt>
-             <dd><code>{{package.recipe.layer_version.layer.local_path}}</code></dd>
-+          {% endif %}
-         </dl>
-     </div> <!-- row4 well -->
-     {% endblock twocolumns %}
-diff --git a/lib/toaster/toastergui/templates/recipe.html b/lib/toaster/toastergui/templates/recipe.html
-index a830ba9..b20c65e 100644
---- a/lib/toaster/toastergui/templates/recipe.html
-+++ b/lib/toaster/toastergui/templates/recipe.html
-@@ -52,16 +52,19 @@
-                     Layer
-                 </dt>
-                 <dd>{{layer.name}}</dd>
-+
-+          {% if not MANAGED or not build.project %}
-                 <dt>
-                     <i class="icon-question-sign get-help" title="Path to the layer providing the recipe"></i>
-                     Layer directory
-                 </dt>
-                 <dd><code>{{layer.local_path}}</code></dd>
-+          {% endif %}
-                 <dt>
-                     <i class="icon-question-sign get-help" title="Path to the recipe .bb file"></i>
-                     Recipe file
-                 </dt>
--                <dd><code>{{object.file_path}}</code></dd>
-+                <dd><code>{{object.get_local_path}}</code></dd>
-                 {% if layer_version.branch %}
-                 <dt>
-                     <i class="icon-question-sign get-help" title="The Git branch of the layer providing the recipe"></i>
-@@ -126,6 +129,12 @@
-                     <td>
-                         {% ifnotequal task.sstate_result task.SSTATE_NA %}
-                         <a {{ task|task_color }} href="{% url "task" build.pk task.pk %}">{{task.get_sstate_result_display}}</a>
-+                    {% if MANAGED and build.project and task.outcome = task.OUTCOME_FAILED %}
-+                        <a href="{% url 'build_artifact' build.pk "tasklogfile" task.pk %}">
-+                            <i class="icon-download-alt" title="" data-original-title="Download task log file"></i>
-+                        </a>
-+                    {% endif %}
-+
-                         {% endifnotequal %}
-                     </td>
  
-diff --git a/lib/toaster/toastergui/templates/recipes.html b/lib/toaster/toastergui/templates/recipes.html
-index 791a487..889e676 100644
---- a/lib/toaster/toastergui/templates/recipes.html
-+++ b/lib/toaster/toastergui/templates/recipes.html
-@@ -98,8 +98,11 @@
-                 {{recipe.layer_version.commit|truncatechars:13}}
-             </a>
-         </td>
--        <!-- Layer directory -->
--        <td class="layer_version__layer__local_path">{{recipe.layer_version.layer.local_path}}</td>
+-
+ def main():
+ 
+     configParams = BitBakeConfigParameters()
+diff --git a/bin/toaster-eventreplay b/bin/toaster-eventreplay
+new file mode 100755
+index 0000000..624829a
+--- /dev/null
++++ b/bin/toaster-eventreplay
+@@ -0,0 +1,179 @@
++#!/usr/bin/env python
++# ex:ts=4:sw=4:sts=4:et
++# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
++#
++# Copyright (C) 2014        Alex Damian
++#
++# This file re-uses code spread throughout other Bitbake source files.
++# As such, all other copyrights belong to their own right holders.
++#
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License version 2 as
++# published by the Free Software Foundation.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License along
++# with this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 +
-+        {% if not MANAGED or not build.project %}
-+            <!-- Layer directory -->
-+            <td class="layer_version__layer__local_path">{{recipe.layer_version.layer.local_path}}</td>
-+        {% endif %}
-     </tr>
- 
-     {% endfor %}
-diff --git a/lib/toaster/toastergui/templates/target.html b/lib/toaster/toastergui/templates/target.html
-index c879c39d..1309b52 100644
---- a/lib/toaster/toastergui/templates/target.html
-+++ b/lib/toaster/toastergui/templates/target.html
-@@ -152,9 +152,11 @@
-                 {{package.recipe.layer_version.commit|truncatechars:13}}
-             </a>
-         </td>
--        <td class="layer_directory">
--            {{ package.recipe.layer_version.layer.local_path }}
--        </td>
-+        {% if not MANAGED or not build.project %}
-+            <td class="layer_directory">
-+                {{ package.recipe.layer_version.layer.local_path }}
-+            </td>
-+        {% endif %}
-     </tr>
-     {% endfor %}
- 
-diff --git a/lib/toaster/toastergui/templates/task.html b/lib/toaster/toastergui/templates/task.html
-index 1b27042..09fd25b 100644
---- a/lib/toaster/toastergui/templates/task.html
-+++ b/lib/toaster/toastergui/templates/task.html
-@@ -24,17 +24,17 @@
-     {# executed tasks outcome #}
-     <dl class="dl-horizontal">
- 	{% if task.logfile %}
-+	{% if MANAGED and build.project %}
-+            <a class="btn btn-large" href="{% url 'build_artifact' build.id "tasklogfile" task.pk %}" style="margin:15px;">Download task log</a>
-+	{% else %}
-         <dt>
-             <i class="icon-question-sign get-help" title="Path the task log file"></i> Log file
-         </dt>
-         <dd>
--	{% if MANAGED %}
--            <code><a href="{% url 'build_artifact' build.pk 'tasklogfile' task.pk %}" target="_blanc">{{task.logfile}}</a></code>
--	{% else %}
--            <code>{{task.logfile}}</code>
--	{% endif %}
-+             <code>{{task.logfile}}</code>
-         </dd>
- 	{% endif %}
-+	{% endif %}
-         {# show stack trace for failed task #}
-         {% if task.outcome == task.OUTCOME_FAILED and log_head %}
-             <h3>Python stack trace</h3>
-@@ -191,6 +191,9 @@
-             <strong>Failed</strong> to restore output from sstate cache. The file was found but could not be unpacked.
-         </div>
-         <dl class="dl-horizontal">
-+          {% if MANAGED and build.project %}
-+            <a href="{% url 'build_artifact' build.id "tasklogfile" task.pk %}" style="margin:15px;">Download log</a>
-+          {% else %}
-             <dt>
-                 <i class="icon-question-sign get-help" title="Path to the cache attempt log file"></i>
-                 Log file
-@@ -201,6 +204,7 @@
-                 Time (secs)
-             </dt>
-             <dd>{{task.elapsed_time|format_none_and_zero}}</dd>
-+          {% endif %}
-         </dl>
-         <div class="alert alert-info">
-             Running the real task instead.
-@@ -268,8 +272,8 @@
-             Time (secs)
-         </dt>
-         <dd>{{task.elapsed_time|format_none_and_zero|floatformat:2}}</dd>
--		{% endif %}	
--		{% if task.cpu_usage > 0 %}	
-+		{% endif %}
-+		{% if task.cpu_usage > 0 %}
-         <dt>
-             <i class="icon-question-sign get-help" title="The percentage of task CPU utilization"></i>
-             CPU usage
-diff --git a/lib/toaster/toastergui/templates/tasks.html b/lib/toaster/toastergui/templates/tasks.html
-index d0c6f4e..4cbcc5e 100644
---- a/lib/toaster/toastergui/templates/tasks.html
-+++ b/lib/toaster/toastergui/templates/tasks.html
-@@ -94,6 +94,11 @@
-             <td class="outcome">
-                 <a href="{%url "task" build.pk task.pk%} ">{{task.get_outcome_display}} </a>
-                 <i class="icon-question-sign get-help hover-help" title="{{task.get_outcome_help}}"></i>
-+                    {% if MANAGED and build.project and task.outcome = task.OUTCOME_FAILED %}
-+                        <a href="{% url 'build_artifact' build.pk "tasklogfile" task.pk %}">
-+                            <i class="icon-download-alt" title="" data-original-title="Download task log file"></i>
-+                        </a>
-+                    {% endif %}
-             </td>
-             <td class="cache_attempt">
-                 <a href="{%url "task" build.pk task.pk%} ">{{task.get_sstate_result_display|format_none_and_zero}}</a>
-@@ -107,9 +112,12 @@
-             <td class="disk_io">
-                 {{task.disk_io|format_none_and_zero}}
-             </td>
 +
-+        {% if not MANAGED or not build.project %}
-             <td class="task_log">
-                 {{task.logfile}}
-             </td>
-+        {% endif %}
-         </tr>
-     {% endfor %}
++# This command takes a filename as a single parameter. The filename is read
++# as a build eventlog, and the ToasterUI is used to process events in the file
++# and log data in the database
++
++import os
++import sys, logging
++
++# mangle syspath to allow easy import of modules
++sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
++                                'lib'))
++
++
++import bb.cooker
++from bb.ui import toasterui
++import sys
++import logging
++
++logger = logging.getLogger(__name__)
++console = logging.StreamHandler(sys.stdout)
++format_str = "%(levelname)s: %(message)s"
++logging.basicConfig(format=format_str)
++
++
++import json, pickle
++
++
++class FileReadEventsServerConnection():
++    """  Emulates a connection to a bitbake server that feeds
++        events coming actually read from a saved log file.
++    """
++
++    class MockConnection():
++        """ fill-in for the proxy to the server. we just return generic data
++        """
++        def __init__(self, sc):
++            self._sc = sc
++
++        def runCommand(self, commandArray):
++            """ emulates running a command on the server; only read-only commands are accepted """
++            command_name = commandArray[0]
++
++            if command_name == "getVariable":
++                if commandArray[1] in self._sc._variables:
++                    return (self._sc._variables[commandArray[1]]['v'], None)
++                return (None, "Missing variable")
++
++            elif command_name == "getAllKeysWithFlags":
++                dump = {}
++                flaglist = commandArray[1]
++                for k in self._sc._variables.keys():
++                    try:
++                        if not k.startswith("__"):
++                            v = self._sc._variables[k]['v']
++                            dump[k] = {
++                                'v' : v ,
++                                'history' : self._sc._variables[k]['history'],
++                            }
++                            for d in flaglist:
++                                dump[k][d] = self._sc._variables[k][d]
++                    except Exception as e:
++                        print(e)
++                return (dump, None)
++            else:
++                raise Exception("Command %s not implemented" % commandArray[0])
++
++        def terminateServer(self):
++            """ do not do anything """
++            pass
++
++
++
++    class EventReader():
++        def __init__(self, sc):
++            self._sc = sc
++            self.firstraise = 0
++
++        def _create_event(self, line):
++            def _import_class(name):
++                assert len(name) > 0
++                assert "." in name, name
++
++                components = name.strip().split(".")
++                modulename = ".".join(components[:-1])
++                moduleklass = components[-1]
++
++                module = __import__(modulename, fromlist=[str(moduleklass)])
++                return getattr(module, moduleklass)
++
++            # we build a toaster event out of current event log line
++            try:
++                event_data = json.loads(line.strip())
++                event_class = _import_class(event_data['class'])
++                event_object = pickle.loads(json.loads(event_data['vars']))
++            except ValueError as e:
++                print("Failed loading ", line)
++                raise e
++
++            if not isinstance(event_object, event_class):
++                raise Exception("Error loading objects %s class %s ", event_object, event_class)
++
++            return event_object
++
++        def waitEvent(self, timeout):
++
++            nextline = self._sc._eventfile.readline()
++            if len(nextline) == 0:
++                # the build data ended, while toasterui still waits for events.
++                # this happens when the server was abruptly stopped, so we simulate this
++                self.firstraise += 1
++                if self.firstraise == 1:
++                    raise KeyboardInterrupt()
++                else:
++                    return None
++            else:
++                self._sc.lineno += 1
++            return self._create_event(nextline)
++
++
++    def _readVariables(self, variableline):
++        self._variables = json.loads(variableline.strip())['allvariables']
++
++
++    def __init__(self, file_name):
++        self.connection = FileReadEventsServerConnection.MockConnection(self)
++        self._eventfile = open(file_name, "r")
++
++        # we expect to have the variable dump at the start of the file
++        self.lineno = 1
++        self._readVariables(self._eventfile.readline())
++
++        self.events = FileReadEventsServerConnection.EventReader(self)
++
++
++
++
++
++class MockConfigParameters():
++    """ stand-in for cookerdata.ConfigParameters; as we don't really config a cooker, this
++        serves just to supply needed interfaces for the toaster ui to work """
++    def __init__(self):
++        self.observe_only = True            # we can only read files
++
++
++# run toaster ui on our mock bitbake class
++if __name__ == "__main__":
++    if len(sys.argv) < 2:
++        logger.error("Usage: %s event.log " % sys.argv[0])
++        sys.exit(1)
++
++    file_name = sys.argv[-1]
++    mock_connection = FileReadEventsServerConnection(file_name)
++    configParams = MockConfigParameters()
++
++    # run the main program
++    toasterui.main(mock_connection.connection, mock_connection.events, configParams)
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index df9a0ca..16fd4ad 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -205,6 +205,75 @@ class BBCooker:
+         self.data = self.databuilder.data
+         self.data_hash = self.databuilder.data_hash
  
-@@ -124,10 +132,10 @@
-         // enable blue hightlight animation for the order link
-         if (location.href.search('#') > -1) {
-             var task_order = location.href.split('#')[1];
--            $("#" + task_order).addClass("highlight"); 
-+            $("#" + task_order).addClass("highlight");
-         }
-     });
++
++        # we log all events to a file if so directed
++        if self.configuration.writeeventlog:
++            import json, pickle
++            DEFAULT_EVENTFILE = self.configuration.writeeventlog
++            class EventLogWriteHandler():
++
++                class EventWriter():
++                    def __init__(self, cooker):
++                        self.file_inited = None
++                        self.cooker = cooker
++                        self.event_queue = []
++
++                    def init_file(self):
++                        try:
++                            # delete the old log
++                            os.remove(DEFAULT_EVENTFILE)
++                        except:
++                            pass
++
++                        # write current configuration data
++                        with open(DEFAULT_EVENTFILE, "w") as f:
++                            f.write("%s\n" % json.dumps({ "allvariables" : self.cooker.getAllKeysWithFlags(["doc", "func"])}))
++
++                    def write_event(self, event):
++                        with open(DEFAULT_EVENTFILE, "a") as f:
++                            try:
++                                f.write("%s\n" % json.dumps({"class":event.__module__ + "." + event.__class__.__name__, "vars":json.dumps(pickle.dumps(event)) }))
++                            except Exception as e:
++                                import traceback
++                                print(e, traceback.format_exc(e))
++
++
++                    def send(self, event):
++                        event_class = event.__module__ + "." + event.__class__.__name__
++
++                        # init on bb.event.BuildStarted
++                        if self.file_inited is None:
++                            if  event_class == "bb.event.BuildStarted":
++                                self.init_file()
++                                self.file_inited = True
++
++                                # write pending events
++                                for e in self.event_queue:
++                                    self.write_event(e)
++
++                                # also write the current event
++                                self.write_event(event)
++
++                            else:
++                                # queue all events until the file is inited
++                                self.event_queue.append(event)
++
++                        else:
++                            # we have the file, just write the event
++                            self.write_event(event)
++
++                # set our handler's event processor
++                event = EventWriter(self)       # self is the cooker here
++
++
++            # set up cooker features for this mock UI handler
++
++            # we need to write the dependency tree in the log
++            self.featureset.setFeature(CookerFeatures.SEND_DEPENDS_TREE)
++            # register the log file writer as UI Handler
++            bb.event.register_UIHhandler(EventLogWriteHandler())
++
++
+         #
+         # Special updated configuration we use for firing events
+         #
+@@ -505,7 +574,7 @@ class BBCooker:
+         taskdata, runlist, pkgs_to_build = self.buildTaskData(pkgs_to_build, task, False)
+ 
+         return runlist, taskdata
 -    
 +
- </script>
+     ######## WARNING : this function requires cache_extra to be enabled ########
  
- {% endblock %}
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 8301f6c..736de78 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -27,7 +27,7 @@ from django.db import IntegrityError
- from django.shortcuts import render, redirect
- from orm.models import Build, Target, Task, Layer, Layer_Version, Recipe, LogMessage, Variable
- from orm.models import Task_Dependency, Recipe_Dependency, Package, Package_File, Package_Dependency
--from orm.models import Target_Installed_Package, Target_File, Target_Image_File
-+from orm.models import Target_Installed_Package, Target_File, Target_Image_File, BuildArtifact
- from django.views.decorators.cache import cache_control
- from django.core.urlresolvers import reverse
- from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-@@ -421,30 +421,36 @@ def builds(request):
-                  'ordericon':_get_toggle_order_icon(request, "timespent"),
-                  'orderkey' : 'timespent',
-                 },
--                {'name': 'Log',
-+                {'name': 'Image files', 'clclass': 'output',
-+                 'qhelp': "The root file system types produced by the build. You can find them in your <code>/build/tmp/deploy/images/</code> directory",
-+                    # TODO: compute image fstypes from Target_Image_File
-+                },
-+                ]
-+            }
+     def generateTaskDepTreeData(self, pkgs_to_build, task):
+@@ -1550,10 +1619,10 @@ class CookerCollectFiles(object):
+         for p in pkgfns:
+             realfn, cls = bb.cache.Cache.virtualfn2realfn(p)
+             priorities[p] = self.calc_bbfile_priority(realfn, matched)
+- 
 +
-+    if not toastermain.settings.MANAGED:
-+        context['tablecols'].insert(-2,
-+                {'name': 'Log1',
-                  'dclass': "span4",
-                  'qhelp': "Path to the build main log file",
-                  'clclass': 'log', 'hidden': 1,
-                  'orderfield': _get_toggle_order(request, "cooker_log_path"),
-                  'ordericon':_get_toggle_order_icon(request, "cooker_log_path"),
-                  'orderkey' : 'cooker_log_path',
--                },
--                {'name': 'Output', 'clclass': 'output',
--                 'qhelp': "The root file system types produced by the build. You can find them in your <code>/build/tmp/deploy/images/</code> directory",
--                    # TODO: compute image fstypes from Target_Image_File
--                },
--                ]
--            }
-+                }
-+        )
+         # Don't show the warning if the BBFILE_PATTERN did match .bbappend files
+         unmatched = set()
+-        for _, _, regex, pri in self.bbfile_config_priorities:        
++        for _, _, regex, pri in self.bbfile_config_priorities:
+             if not regex in matched:
+                 unmatched.add(regex)
+ 
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index 470d538..2ceed2d 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -139,6 +139,7 @@ class CookerConfiguration(object):
+         self.dry_run = False
+         self.tracking = False
+         self.interface = []
++        self.writeeventlog = False
+ 
+         self.env = {}
+ 
+diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
+index 533f4ce..f825b57 100644
+--- a/lib/bb/ui/buildinfohelper.py
++++ b/lib/bb/ui/buildinfohelper.py
+@@ -556,7 +556,6 @@ class ORMWrapper(object):
+         assert isinstance(build_obj, Build)
+ 
+         helptext_objects = []
+-
+         for k in vardump:
+             desc = vardump[k]['doc']
+             if desc is None:
+@@ -667,9 +666,11 @@ class BuildInfoHelper(object):
+             if (path.startswith(bl.layer.local_path)):
+                 return bl
+ 
+-        #TODO: if we get here, we didn't read layers correctly
+-        assert False
+-        return None
++        #if we get here, we didn't read layers correctly; mockup the new layer
++        unknown_layer, created = Layer.objects.get_or_create(name="unknown", local_path="/", layer_index_url="")
++        unknown_layer_version_obj, created = Layer_Version.objects.get_or_create(layer = unknown_layer, build = self.internal_state['build'])
 +
++        return unknown_layer_version_obj
  
-     if toastermain.settings.MANAGED:
-         context['tablecols'].append(
--            {'name': 'Project', 'clclass': 'project',
--             'filter': {'class': 'project',
-+                {'name': 'Project', 'clclass': 'project',
-+                 'filter': {'class': 'project',
-                         'label': 'Project:',
-                         'options':  map(lambda x: (x.name,'',x.build_set.filter(outcome__lt=Build.IN_PROGRESS).count()), Project.objects.all()),
+     def _get_recipe_information_from_taskfile(self, taskfile):
+         localfilepath = taskfile.split(":")[-1]
+@@ -732,7 +733,6 @@ class BuildInfoHelper(object):
  
-                        }
--            })
-+                }
-+        )
+     def store_started_build(self, event):
+         assert '_pkgs' in vars(event)
+-        assert 'lvs' in self.internal_state, "Layer version information not found; Check if the bitbake server was configured to inherit toaster.bbclass."
+         build_information = self._get_build_information()
  
+         build_obj = self.orm_wrapper.create_build_object(build_information, self.brbe)
+@@ -740,10 +740,13 @@ class BuildInfoHelper(object):
+         self.internal_state['build'] = build_obj
  
-     response = render(request, template, context)
-@@ -481,12 +487,8 @@ def builddashboard( request, build_id ):
-             hasImages = True
-         npkg = 0
-         pkgsz = 0
--        pid= 0
--        tp = Target_Installed_Package.objects.filter( target_id = t.id )
-         package = None
--        for p in tp:
--            pid = p.package_id
--            package = Package.objects.get( pk = p.package_id )
-+        for package in Package.objects.filter(id__in = [x.package_id for x in t.target_installed_package_set.all()]):
-             pkgsz = pkgsz + package.size
-             if ( package.installed_name ):
-                 npkg = npkg + 1
-@@ -499,7 +501,7 @@ def builddashboard( request, build_id ):
-             if ( ndx < 0 ):
-                 ndx = 0;
-             f = i.file_name[ ndx + 1: ]
--            imageFiles.append({ 'path': f, 'size' : i.file_size })
-+            imageFiles.append({ 'id': i.id, 'path': f, 'size' : i.file_size })
-         if ( t.is_image and
-              (( len( imageFiles ) <= 0 ) or ( len( t.license_manifest_path ) <= 0 ))):
-             targetHasNoImages = True
-@@ -517,6 +519,8 @@ def builddashboard( request, build_id ):
-         if ( p.installed_name ):
-             packageCount = packageCount + 1
- 
-+    logmessages = list(LogMessage.objects.filter( build = build_id ))
-+
-     context = {
-             'build'           : build,
-             'hasImages'       : hasImages,
-@@ -524,7 +528,7 @@ def builddashboard( request, build_id ):
-             'targets'         : targets,
-             'recipecount'     : recipeCount,
-             'packagecount'    : packageCount,
--            'logmessages'     : LogMessage.objects.filter( build = build_id ),
-+            'logmessages'     : logmessages,
-     }
-     return render( request, template, context )
- 
-@@ -637,6 +641,9 @@ def target_common( request, build_id, target_id, variant ):
-             Package, queryset, filter_string, search_term, ordering_string, 'name' )
-     packages = _build_page_range( Paginator(queryset, pagesize), request.GET.get( 'page', 1 ))
- 
-+
-+    build = Build.objects.get( pk = build_id )
-+
-     # bring in package dependencies
-     for p in packages.object_list:
-         p.runtime_dependencies = p.package_dependencies_source.filter(
-@@ -697,8 +704,7 @@ eans multiple licenses exist that cover different parts of the source',
-         tc_dependencies[ "hidden" ] = 1
-     tc_rdependencies = {
-         'name'       : 'Reverse dependencies',
--        'qhelp'      : 'Package run-time reverse dependencies (i.e. which other packages depend on t\
--his package',
-+        'qhelp'      : 'Package run-time reverse dependencies (i.e. which other packages depend on this package',
-         'clclass'    : 'brought_in_by',
-         }
-     if ( variant == 'target' ):
-@@ -741,18 +747,10 @@ his package',
-         'clclass'    : 'layer_commit',
-         'hidden'     : 1,
-         }
--    tc_layerDir = {
--        'name':'Layer directory',
--        'qhelp':'Location in disk of the layer providing the recipe that builds the package',
--        'orderfield' : _get_toggle_order( request, "recipe__layer_version__layer__local_path" ),
--        'ordericon'  : _get_toggle_order_icon( request, "recipe__layer_version__layer__local_path" )\
--,
--        'clclass'    : 'layer_directory',
--        'hidden'     : 1,
--        }
-+
-     context = {
-         'objectname': variant,
--        'build'                : Build.objects.filter( pk = build_id )[ 0 ],
-+        'build'                : build,
-         'target'               : Target.objects.filter( pk = target_id )[ 0 ],
-         'objects'              : packages,
-         'packages_sum'         : packages_sum[ 'installed_size__sum' ],
-@@ -771,10 +769,21 @@ his package',
-                     tc_layer,
-                     tc_layerBranch,
-                     tc_layerCommit,
--                    tc_layerDir,
-                 ]
-         }
- 
-+    if not toastermain.settings.MANAGED or build.project is None:
-+
-+        tc_layerDir = {
-+            'name':'Layer directory',
-+            'qhelp':'Location in disk of the layer providing the recipe that builds the package',
-+            'orderfield' : _get_toggle_order( request, "recipe__layer_version__layer__local_path" ),
-+            'ordericon'  : _get_toggle_order_icon( request, "recipe__layer_version__layer__local_path" ),
-+            'clclass'    : 'layer_directory',
-+            'hidden'     : 1,
-+        }
-+        context['tablecols'].append(tc_layerDir)
-+
-     response = render(request, template, context)
-     _save_parameters_cookies(response, pagesize, orderby, request)
-     return response
-@@ -1136,12 +1145,13 @@ def tasks_common(request, build_id, variant, task_anchor):
-     }
-     if   'diskio' == variant: tc_diskio['hidden']='0'; del tc_diskio['clclass']; tc_cache['hidden']='1';
- 
-+    build = Build.objects.get(pk=build_id)
- 
-     context = { 'objectname': variant,
-                 'object_search_display': object_search_display,
-                 'filter_search_display': filter_search_display,
-                 'title': title_variant,
--                'build': Build.objects.get(pk=build_id),
-+                'build': build,
-                 'objects': tasks,
-                 'default_orderby' : orderby,
-                 'search_term': search_term,
-@@ -1157,9 +1167,12 @@ def tasks_common(request, build_id, variant, task_anchor):
-                     tc_time,
-                     tc_cpu,
-                     tc_diskio,
--                    tc_log,
-                 ]}
- 
-+
-+    if not toastermain.settings.MANAGED or build.project is None:
-+        context['tablecols'].append(tc_log)
-+
-     response = render(request, template, context)
-     _save_parameters_cookies(response, pagesize, orderby, request)
-     return response
-@@ -1206,9 +1219,11 @@ def recipes(request, build_id):
-             revlist.append(recipe_dep)
-         revs[recipe.id] = revlist
- 
-+    build = Build.objects.get(pk=build_id)
-+
-     context = {
-         'objectname': 'recipes',
--        'build': Build.objects.get(pk=build_id),
-+        'build': build,
-         'objects': recipes,
-         'default_orderby' : 'name:+',
-         'recipe_deps' : deps,
-@@ -1279,6 +1294,11 @@ def recipes(request, build_id):
-                 'qhelp':'The Git commit of the layer providing the recipe',
-                 'clclass': 'layer_version__layer__commit', 'hidden': 1,
-             },
-+            ]
-+        }
-+
-+    if not toastermain.settings.MANAGED or build.project is None:
-+        context['tablecols'].append(
-             {
-                 'name':'Layer directory',
-                 'qhelp':'Path to the layer prodiving the recipe',
-@@ -1286,9 +1306,8 @@ def recipes(request, build_id):
-                 'ordericon':_get_toggle_order_icon(request, "layer_version__layer__local_path"),
-                 'orderkey' : 'layer_version__layer__local_path',
-                 'clclass': 'layer_version__layer__local_path', 'hidden': 1,
--            },
--            ]
--        }
-+            })
-+
- 
-     response = render(request, template, context)
-     _save_parameters_cookies(response, pagesize, orderby, request)
-@@ -2685,41 +2704,53 @@ if toastermain.settings.MANAGED:
-         return render(request, template, context)
- 
- 
-+    def _file_name_for_artifact(b, artifact_type, artifact_id):
-+        file_name = None
-+        # Target_Image_File file_name
-+        if artifact_type == "imagefile":
-+            file_name = Target_Image_File.objects.get(target__build = b, pk = artifact_id).file_name
- 
--    def build_artifact(request, build_id, artifact_type, artifact_id):
--        try:
--            b = Build.objects.get(pk=build_id)
--            if b.buildrequest is None or b.buildrequest.environment is None:
--                raise Exception("Cannot download file")
-+        elif artifact_type == "cookerlog":
-+            file_name = b.cooker_log_path
-+
-+        elif artifact_type == "buildartifact":
-+            file_name = BuildArtifact.objects.get(build = b, pk = artifact_id).file_name
- 
--            file_name = None
--            fsock = None
--            content_type='application/force-download'
--            # Target_Image_File file_name
--            # Task logfile
--            if artifact_type == "tasklogfile":
--                file_name = Task.objects.get(build = b, pk = artifact_id).logfile
-+        elif artifact_type ==  "licensemanifest":
-+            file_name = Target.objects.get(build = b, pk = artifact_id).license_manifest_path
- 
--            # Task path_to_sstate_obj
--            # Package_File path
--            # Recipe file_path
--            # VariableHistory file_name
--            # LogMessage pathname
--            if artifact_type == "logmessagefile":
--                file_name = LogMessage.objects.get(build = b, pk = artifact_id).pathname
-+        elif artifact_type == "tasklogfile":
-+            file_name = Task.objects.get(build = b, pk = artifact_id).logfile
- 
--            if file_name is not None:
--                content_type = b.buildrequest.environment.get_artifact_type(file_name)
--                fsock = b.buildrequest.environment.get_artifact(file_name)
--                file_name = os.path.basename(file_name)
-+        elif artifact_type == "logmessagefile":
-+            file_name = LogMessage.objects.get(build = b, pk = artifact_id).pathname
+         # save layer version information for this build
+-        for layer_obj in self.internal_state['lvs']:
+-            self.orm_wrapper.get_update_layer_version_object(build_obj, layer_obj, self.internal_state['lvs'][layer_obj])
++        if not 'lvs' in self.internal_state:
++            logger.error("Layer version information not found; Check if the bitbake server was configured to inherit toaster.bbclass.")
 +        else:
-+            raise Exception("FIXME: artifact type %s not implemented" % (artifact_type))
++            for layer_obj in self.internal_state['lvs']:
++                self.orm_wrapper.get_update_layer_version_object(build_obj, layer_obj, self.internal_state['lvs'][layer_obj])
  
--            response = HttpResponse(fsock, content_type = content_type)
-+        return file_name
+-        del self.internal_state['lvs']
++            del self.internal_state['lvs']
  
--            # returns a file from the environment
--            response['Content-Disposition'] = 'attachment; filename=' + file_name
--            return response
--        except:
--            raise
-+
-+    def build_artifact(request, build_id, artifact_type, artifact_id):
-+        b = Build.objects.get(pk=build_id)
-+        if b.buildrequest is None or b.buildrequest.environment is None:
-+            raise Exception("Artifact not available for download (missing build request or build environment)")
-+
-+        file_name = _file_name_for_artifact(b, artifact_type, artifact_id)
-+        fsock = None
-+        content_type='application/force-download'
-+
-+        if file_name is None:
-+            raise Exception("Could not handle artifact %s id %s" % (artifact_type, artifact_id))
-+        else:
-+            content_type = b.buildrequest.environment.get_artifact_type(file_name)
-+            fsock = b.buildrequest.environment.get_artifact(file_name)
-+            file_name = os.path.basename(file_name) # we assume that the build environment system has the same path conventions as host
-+
-+        response = HttpResponse(fsock, content_type = content_type)
-+
-+        # returns a file from the environment
-+        response['Content-Disposition'] = 'attachment; filename=' + file_name
-+        return response
+         # create target information
+         target_information = {}
+@@ -753,7 +756,8 @@ class BuildInfoHelper(object):
+         self.internal_state['targets'] = self.orm_wrapper.create_target_objects(target_information)
  
+         # Save build configuration
+-        self.orm_wrapper.save_build_variables(build_obj, self.server.runCommand(["getAllKeysWithFlags", ["doc", "func"]])[0])
++        data = self.server.runCommand(["getAllKeysWithFlags", ["doc", "func"]])[0]
++        self.orm_wrapper.save_build_variables(build_obj, [])
  
+         return self.brbe
  
-@@ -2856,3 +2887,6 @@ else:
+@@ -980,14 +984,29 @@ class BuildInfoHelper(object):
  
-     def projects(request):
-         raise Exception("page not available in interactive mode")
+             recipe_info = {}
+             recipe_info['name'] = pn
+-            recipe_info['version'] = event._depgraph['pn'][pn]['version'].lstrip(":")
+             recipe_info['layer_version'] = layer_version_obj
+-            recipe_info['summary'] = event._depgraph['pn'][pn]['summary']
+-            recipe_info['license'] = event._depgraph['pn'][pn]['license']
+-            recipe_info['description'] = event._depgraph['pn'][pn]['description']
+-            recipe_info['section'] = event._depgraph['pn'][pn]['section']
+-            recipe_info['homepage'] = event._depgraph['pn'][pn]['homepage']
+-            recipe_info['bugtracker'] = event._depgraph['pn'][pn]['bugtracker']
 +
-+    def xhr_importlayer(request):
-+        raise Exception("page not available in interactive mode")
++            if 'version' in event._depgraph['pn'][pn]:
++                recipe_info['version'] = event._depgraph['pn'][pn]['version'].lstrip(":")
++
++            if 'summary' in event._depgraph['pn'][pn]:
++                recipe_info['summary'] = event._depgraph['pn'][pn]['summary']
++
++            if 'license' in event._depgraph['pn'][pn]:
++                recipe_info['license'] = event._depgraph['pn'][pn]['license']
++
++            if 'description' in event._depgraph['pn'][pn]:
++                recipe_info['description'] = event._depgraph['pn'][pn]['description']
++
++            if 'section' in event._depgraph['pn'][pn]:
++                recipe_info['section'] = event._depgraph['pn'][pn]['section']
++
++            if 'homepage' in event._depgraph['pn'][pn]:
++                recipe_info['homepage'] = event._depgraph['pn'][pn]['homepage']
++
++            if 'bugtracker' in event._depgraph['pn'][pn]:
++                recipe_info['bugtracker'] = event._depgraph['pn'][pn]['bugtracker']
++
+             recipe_info['file_path'] = file_name
+             recipe = self.orm_wrapper.get_update_recipe_object(recipe_info)
+             recipe.is_image = False
+@@ -1146,4 +1165,4 @@ class BuildInfoHelper(object):
+ 
+         if 'backlog' in self.internal_state:
+             for event in self.internal_state['backlog']:
+-                   print "NOTE: Unsaved log: ", event.msg
++                   logger.error("Unsaved log: %s", event.msg)
+diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
+index 7a316be..a85ad5a 100644
+--- a/lib/bb/ui/toasterui.py
++++ b/lib/bb/ui/toasterui.py
+@@ -309,7 +309,7 @@ def main(server, eventHandler, params ):
+             try:
+                 buildinfohelper.store_log_exception("%s\n%s" % (str(e), exception_data))
+             except Exception as ce:
+-                print("CRITICAL: failed to to save toaster exception to the database: %s" % str(ce))
++                logger.error("CRITICAL - Failed to to save toaster exception to the database: %s" % str(ce))
+ 
+             pass
+ 
 -- 
 1.9.1
 
