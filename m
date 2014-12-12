@@ -1,43 +1,42 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f174.google.com (mail-wi0-f174.google.com
-	[209.85.212.174])
-	by mail.openembedded.org (Postfix) with ESMTP id 672D57250C
+Received: from mail-wi0-f171.google.com (mail-wi0-f171.google.com
+	[209.85.212.171])
+	by mail.openembedded.org (Postfix) with ESMTP id CD62B7250C
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 12 Dec 2014 11:45:26 +0000 (UTC)
-Received: by mail-wi0-f174.google.com with SMTP id h11so2241172wiw.1
+Received: by mail-wi0-f171.google.com with SMTP id bs8so2235337wib.4
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Dec 2014 03:45:26 -0800 (PST)
+	Fri, 12 Dec 2014 03:45:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=nN/xZ0Vc+2q1rugnvLVUzbafr41IneuPDAryiSzoBsI=;
-	b=mIJj+ktDSjrLEuRx81ZxmWsut2JP6nBUELxV1xB68vhbcQJe6D2TYYJs3s9+px0h0J
-	ciJ5BQpTS9cc3KZh38FMH6XJ7DdsFkn/Xx/i2JvbYH9SmXeEiiXLVrbL6svFo4ltBknJ
-	KXYc/QEV1RDPjaJvt+MZoyhYxcGkDhDkXxnSEts//Bg1r5Kqy5IDrNA+voQ1hTZvFUCA
-	qcIwv+gAqi6B8NVVz185ybksPacX4ixRbuS/4vZGQRP55khZGCCdorhil33q3MEm1pcW
-	5uNqZTGAF3Rpf5ifZsajdV48BNkO37gbAZA5gKB61siLtj+/OF66+3edNxYh35w/MK3m
-	JWxQ==
-X-Gm-Message-State: ALoCoQlxR1bzfq2O7XcIKZhlHD5hWW37n9u5JzCof1KLVM++A+7mOrVfmgXXsyudIioOTfx3JIk7
-X-Received: by 10.180.109.46 with SMTP id hp14mr7023233wib.54.1418384726733;
-	Fri, 12 Dec 2014 03:45:26 -0800 (PST)
+	bh=0JCjFMuxpgNJ9jWVjWVgc8uoB3zK+7RchvaaGeHrwC0=;
+	b=THw6iZmOf3THEqvpIwNpViVQAfKLjLQPAuTMaLz4rplQL8yGergHNtpwXrMHih+Dq5
+	UOncQHfkI+sHU+XAFoeqJHjEPoOGIA2jRVCpe0aaiAbbgiQh4zAU8qJ2J1ByFptccU8+
+	ch4jb9lVQATaA2AdRwRuYBYdI/XhRYF3RTxg3U5DJGgpKPFzqA/RXOjwWx0Xm0iCXsMh
+	2vh18SbxdJZqGwoxoUN1X7Fk/HxC66jwYruI5LGAvxfaUYZZGCfBiLTmoZxs5vJcEFb5
+	wMBGZ3IHR7tsB7G8cLmjqDXZxI8hfzbluVLatmqjZb1Cn9/zedtDHrnV36MXIMlV5knB
+	WJzQ==
+X-Gm-Message-State: ALoCoQmiPEiI8qGZQLG1rAnVteOfIV0UClEHZTJgfoB3N9C7G2zDaOVHPy6mLIykc+AyPHrZ1odZ
+X-Received: by 10.194.2.164 with SMTP id 4mr25451195wjv.55.1418384727230;
+	Fri, 12 Dec 2014 03:45:27 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id h8sm1735108wiy.17.2014.12.12.03.45.23
-	for <multiple recipients>
+	by mx.google.com with ESMTPSA id h13sm1645291wiw.4.2014.12.12.03.45.22
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Fri, 12 Dec 2014 03:45:25 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 4F2D656625C; Fri, 12 Dec 2014 11:45:19 +0000 (GMT)
+	id 4A9A056625D; Fri, 12 Dec 2014 11:45:19 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 12 Dec 2014 11:45:17 +0000
-Message-Id: <3a5b78af4f3cab203824d933a73e82a41ab377e3.1418384609.git.alexandru.damian@intel.com>
+Date: Fri, 12 Dec 2014 11:45:14 +0000
+Message-Id: <07e5c7c82519604501feb7d892db330c610978e9.1418384609.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <bbe24d912869312d561be199b2c029b0c898e049.1418384609.git.alexandru.damian@intel.com>
 References: <bbe24d912869312d561be199b2c029b0c898e049.1418384609.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1418384609.git.alexandru.damian@intel.com>
 References: <cover.1418384609.git.alexandru.damian@intel.com>
-Subject: [PATCH 18/18] toaster: importlayer Tidy up the page initialisation
+Subject: [PATCH 15/18] toaster: projectapp Add links to the imported layers notify
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,53 +49,116 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 Dec 2014 11:45:28 -0000
+X-List-Received-Date: Fri, 12 Dec 2014 11:45:29 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-Tidy up the page initialisation and change the error logging so that
-it's consistent with other pages.
+Adds links to layer details for each of the layers that has been added
+to the project.
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/toastergui/templates/importlayer.html | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ lib/toaster/toastergui/static/js/importlayer.js |  3 +--
+ lib/toaster/toastergui/static/js/projectapp.js  | 29 ++++++++++++++++++-------
+ lib/toaster/toastergui/templates/project.html   |  3 ++-
+ lib/toaster/toastergui/views.py                 |  4 ++--
+ 4 files changed, 26 insertions(+), 13 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/importlayer.html b/lib/toaster/toastergui/templates/importlayer.html
-index c92e552..a4d8ee1 100644
---- a/lib/toaster/toastergui/templates/importlayer.html
-+++ b/lib/toaster/toastergui/templates/importlayer.html
-@@ -12,19 +12,20 @@
-                   <script src="{% static 'js/importlayer.js' %}"></script>
-                   <script>
-                     $(document).ready(function (){
--                      var ctx = {};
--                      ctx.xhrDataTypeaheadUrl = "{% url 'xhr_datatypeahead' %}";
--                      ctx.layerDetailsUrl = "{% url 'layerdetails' %}";
--                      ctx.xhrImportLayerUrl = "{% url 'xhr_importlayer' %}";
--                      ctx.xhrEditProjectUrl = "{% url 'xhr_projectedit' project.id %}";
--                      ctx.projectPageUrl = "{% url 'project' project.id %}";
--                      ctx.projectId = {{project.id}};
-+                      var ctx = {
-+                        xhrDataTypeaheadUrl : "{% url 'xhr_datatypeahead' %}",
-+                        layerDetailsUrl : "{% url 'layerdetails' %}",
-+                        xhrImportLayerUrl : "{% url 'xhr_importlayer' %}",
-+                        xhrEditProjectUrl : "{% url 'xhr_projectedit' project.id %}",
-+                        projectPageUrl : "{% url 'project' project.id %}",
-+                        projectId : {{project.id}}
-+                      };
+diff --git a/lib/toaster/toastergui/static/js/importlayer.js b/lib/toaster/toastergui/static/js/importlayer.js
+index 34dbcd9..5748efd 100644
+--- a/lib/toaster/toastergui/static/js/importlayer.js
++++ b/lib/toaster/toastergui/static/js/importlayer.js
+@@ -152,9 +152,8 @@ function importLayerPageInit (ctx) {
+               show_error_message(data, layerData);
+               console.log(data.error);
+             } else {
+-              layerData.layersAdded = data.layers_added;
+               /* Success layer import now go to the project page */
+-              $.cookie('layer-imported-alert', JSON.stringify(layerData), { path: '/'});
++              $.cookie('layer-imported-alert', JSON.stringify(data), { path: '/'});
+               window.location.replace(ctx.projectPageUrl+'#/layerimported');
+             }
+           },
+diff --git a/lib/toaster/toastergui/static/js/projectapp.js b/lib/toaster/toastergui/static/js/projectapp.js
+index 94c24f4..741038d 100644
+--- a/lib/toaster/toastergui/static/js/projectapp.js
++++ b/lib/toaster/toastergui/static/js/projectapp.js
+@@ -578,18 +578,31 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
+           if (!imported)
+             return;
  
-                       try {
-                         importLayerPageInit(ctx);
--                      } catch(e) {
--                        document.write(e.stack);
--                        console.log(e);
-+                      } catch (e) {
-+                        document.write("Sorry, An error has occurred loading this page");
-+                        console.warn(e);
-                       }
-                     });
-                   </script>
+-          if (imported.layersAdded.length == 0) {
+-            text = "You have imported <strong>"+imported.name+
+-              "</strong> and added it to your project.";
++          if (imported.deps_added.length == 0) {
++            text = "You have imported <strong><a href=\""+$scope.urls.layer+
++              imported.imported_layer.id+"\">"+imported.imported_layer.name+
++              "</a></strong> and added it to your project.";
+           } else {
+-            text = "You have imported <strong>"+imported.name+
+-              "</strong> and added <strong>"+imported.layersAdded.length+
+-              "</strong> layers to your project. <strong>"+
+-              imported.layersAdded.join(", ")+"</strong>";
++            var links = "<a href=\""+$scope.urls.layer+
++              imported.imported_layer.id+"\">"+imported.imported_layer.name+
++              "</a>, ";
++
++            imported.deps_added.map (function(item, index){
++              links +="<a href=\""+$scope.urls.layer+item.id+"\" >"+item.name+
++                "</a>";
++              /*If we're at the last element we don't want the trailing comma */
++              if (imported.deps_added[index+1] != undefined)
++                links += ", ";
++            });
++
++            /* Length + 1 here to do deps + the imported layer */
++            text = "You have imported <strong><a href=\""+$scope.urls.layer+
++              imported.imported_layer.id+"\">"+imported.imported_layer.name+
++              "</a></strong> and added <strong>"+(imported.deps_added.length+1)+
++              "</strong> layers to your project. <strong>"+links+"</strong>";
+           }
+ 
+             $scope.displayAlert($scope.zone2alerts, text, "alert-info");
+-
+             // This doesn't work
+             $cookieStore.remove("layer-imported-alert");
+             //use jquery plugin instead
+diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
+index 113e382..2979db7 100644
+--- a/lib/toaster/toastergui/templates/project.html
++++ b/lib/toaster/toastergui/templates/project.html
+@@ -382,7 +382,8 @@ angular.element(document).ready(function() {
+   scope.urls.xhr_datatypeahead = "{% url 'xhr_datatypeahead' %}";
+   scope.urls.layers = "{% url 'layers' %}";
+   scope.urls.targets = "{% url 'targets' %}";
+-  scope.urls.importlayer = "{% url 'importlayer'%}"
++  scope.urls.importlayer = "{% url 'importlayer'%}";
++  scope.urls.layer = "{% url 'layerdetails' %}";
+   scope.project = {{prj|json}};
+   scope.builds = {{builds|json}};
+   scope.layers = {{layers|json}};
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index dd43080..679c1e9 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -2322,7 +2322,7 @@ if toastermain.settings.MANAGED:
+                             continue
+ 
+                         if prj_layer_created:
+-                            layers_added.append(Layer.objects.get(id=layer_dep_obj.layer_id).name)
++                            layers_added.append({'id': layer_dep_obj.id, 'name': Layer.objects.get(id=layer_dep_obj.layer_id).name})
+ 
+ 
+                 # If an old layer version exists in our project then remove it
+@@ -2342,7 +2342,7 @@ if toastermain.settings.MANAGED:
+                 return HttpResponse(jsonfilter({"error": "Uncaught error: Could not create layer version"}), content_type = "application/json")
+ 
+ 
+-        return HttpResponse(jsonfilter({"error": "ok", "layers_added": layers_added}), content_type = "application/json")
++        return HttpResponse(jsonfilter({"error": "ok", "imported_layer" : { "name" : layer.name, "id": layer_version.id },  "deps_added": layers_added }), content_type = "application/json")
+ 
+ 
+ 
 -- 
 1.9.1
 
