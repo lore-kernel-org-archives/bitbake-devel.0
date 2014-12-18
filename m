@@ -1,36 +1,29 @@
-Return-Path: <rich.tollerton@ni.com>
-X-Greylist: delayed 1952 seconds by postgrey-1.34 at layers.openembedded.org;
-	Thu, 18 Dec 2014 01:43:56 UTC
-Received: from ni.com (skprod2.natinst.com [130.164.80.23])
-	by mail.openembedded.org (Postfix) with ESMTP id 6382D72503
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id F2B2072795
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 18 Dec 2014 01:43:56 +0000 (UTC)
-Received: from us-aus-mgwout2.amer.corp.natinst.com (nb-snip2-1338.natinst.com
-	[130.164.19.135])
-	by us-aus-skprod2.natinst.com (8.14.5/8.14.5) with ESMTP id
-	sBI1BPZs011355 for <bitbake-devel@lists.openembedded.org>;
-	Wed, 17 Dec 2014 19:11:25 -0600
-Received: from weregild.amer.corp.natinst.com ([130.164.14.198])
-	by us-aus-mgwout2.amer.corp.natinst.com (Lotus Domino Release 8.5.3FP6)
-	with ESMTP id 2014121719112517-1243305 ;
-	Wed, 17 Dec 2014 19:11:25 -0600 
-From: Richard Tollerton <rich.tollerton@ni.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 17 Dec 2014 19:11:18 -0600
-Message-Id: <1418865078-10484-2-git-send-email-rich.tollerton@ni.com>
-X-Mailer: git-send-email 2.1.3
+	Thu, 18 Dec 2014 10:29:37 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	sBIASrt4013011; Thu, 18 Dec 2014 10:29:01 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id KiMrnsyRKPCJ; Thu, 18 Dec 2014 10:29:01 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	sBIASnHO012989
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 18 Dec 2014 10:29:00 GMT
+Message-ID: <1418898565.5106.19.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Richard Tollerton <rich.tollerton@ni.com>
+Date: Thu, 18 Dec 2014 10:29:25 +0000
 In-Reply-To: <1418865078-10484-1-git-send-email-rich.tollerton@ni.com>
 References: <1418865078-10484-1-git-send-email-rich.tollerton@ni.com>
-X-MIMETrack: Itemize by SMTP Server on US-AUS-MGWOut2/AUS/H/NIC(Release
-	8.5.3FP6|November 21, 2013) at 12/17/2014 07:11:25 PM,
-	Serialize by Router on US-AUS-MGWOut2/AUS/H/NIC(Release
-	8.5.3FP6|November 21, 2013) at 12/17/2014 07:11:25 PM,
-	Serialize complete at 12/17/2014 07:11:25 PM
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10432:5.13.68, 1.0.33,
-	0.0.0000
-	definitions=2014-12-17_07:2014-12-17, 2014-12-17,
-	1970-01-01 signatures=0
-Subject: [PATCH] data: escape '$' in shell variable assignment
+X-Mailer: Evolution 3.12.7-0ubuntu1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] data: Avoid attempting to assign readonly shell vars
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,32 +36,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 18 Dec 2014 01:44:04 -0000
+X-List-Received-Date: Thu, 18 Dec 2014 10:29:39 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Running bitbake inside make results in the exported environment variable
-MAKEOVERRIDES="${-*-command-variables-*-}", which the shell chokes on
-when trying to expand it. But of course, it probably shouldn't have been
-trying to expand it in the first place -- so just escape the dollar
-sign.
+On Wed, 2014-12-17 at 19:11 -0600, Richard Tollerton wrote:
+> Attempting to set a read-only shell variable kills the shell. This is
+> required POSIX behavior, it can't be disabled, and it's implemented by
+> both dash and bash (although it seems to have only started happening in
+> bash 4.3 and later, and only when run as /bin/sh).
+> 
+> This breaks `bitbake -c devshell` if bash 4.3 is installed, because
+> BASHOPTS (and a boatload of other shell variables) are readonly.
+> 
+> The fix is to attempt to modify the variable in a subshell before doing
+> the assignment.
 
-Signed-off-by: Richard Tollerton <rich.tollerton@ni.com>
----
- lib/bb/data.py | 1 +
- 1 file changed, 1 insertion(+)
+Isn't this going to involve fork() calls for every single shell
+variable? There must be a better way to do this?
 
-diff --git a/lib/bb/data.py b/lib/bb/data.py
-index 6c8d644..e9d8290 100644
---- a/lib/bb/data.py
-+++ b/lib/bb/data.py
-@@ -242,6 +242,7 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
-     # to a shell, we need to escape the quotes in the var
-     alter = re.sub('"', '\\"', val)
-     alter = re.sub('\n', ' \\\n', alter)
-+    alter = re.sub('\\$', '\\\\$', alter)
-     o.write('%s="%s"\n' % (varExpanded, alter))
-     return 0
- 
--- 
-2.1.3
+Cheers,
+
+Richard
+
 
 
