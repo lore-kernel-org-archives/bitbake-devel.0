@@ -1,43 +1,32 @@
-Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f172.google.com (mail-wi0-f172.google.com
-	[209.85.212.172])
-	by mail.openembedded.org (Postfix) with ESMTP id 65B4172513
+Return-Path: <rich.tollerton@ni.com>
+Received: from ni.com (skprod3.natinst.com [130.164.80.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 1FCE572726
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Dec 2014 11:45:27 +0000 (UTC)
-Received: by mail-wi0-f172.google.com with SMTP id n3so2188149wiv.17
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Dec 2014 03:45:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=hwzXwUgGtVZWqN5GyO6oFCaInLw8jxQ26BV2icIPwMM=;
-	b=efTbS1anfHuBTYhCg5E7JHdmjm06/LF39QRTeSkt8m3jr5vsDFc36GAtwCjTpJqGow
-	eg5oT2C5ho4pUM5BaJMQpbDWOK1G2syYu5yOx7NyuincBLoWV0n+uVfxXchxHMKRHUkV
-	d0USGHt3w5oNH2I12KIe3SlH4/ftSlNPizx+4aDTQxUTBOHATN8GZZRy0mTNtO9j/7Ip
-	2jUMcYdWEQr08TWaSe4Oka2cYnhDPTVkVnGIuczlY3TsBI3kD12tgmtiw9SI58lLDriK
-	IlnMVFDeq/GxaUvIfnyL1yM5GTdABx3/IVHgHIhz6PA7VlK/ImhdCUpMnArWNBQGXk9J
-	gIOA==
-X-Gm-Message-State: ALoCoQmLtHIIhSAu5vKbovzVR9h2v6Ak31NlQuw9eABRXPPxhbiDye6LJ3AWuX8XTuVPSYTU7B6k
-X-Received: by 10.194.24.103 with SMTP id t7mr26391314wjf.15.1418384727842;
-	Fri, 12 Dec 2014 03:45:27 -0800 (PST)
-Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id h2sm1750801wix.5.2014.12.12.03.45.22
-	for <multiple recipients>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 12 Dec 2014 03:45:25 -0800 (PST)
-Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 4C46A56626C; Fri, 12 Dec 2014 11:45:19 +0000 (GMT)
-From: Alex DAMIAN <alexandru.damian@intel.com>
+	Thu, 18 Dec 2014 01:11:24 +0000 (UTC)
+Received: from us-aus-mgwout2.amer.corp.natinst.com (nb-snip2-1338.natinst.com
+	[130.164.19.135])
+	by us-aus-skprod3.natinst.com (8.14.5/8.14.5) with ESMTP id
+	sBI1BP8X006005 for <bitbake-devel@lists.openembedded.org>;
+	Wed, 17 Dec 2014 19:11:25 -0600
+Received: from weregild.amer.corp.natinst.com ([130.164.14.198])
+	by us-aus-mgwout2.amer.corp.natinst.com (Lotus Domino Release 8.5.3FP6)
+	with ESMTP id 2014121719112517-1243304 ;
+	Wed, 17 Dec 2014 19:11:25 -0600 
+From: Richard Tollerton <rich.tollerton@ni.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 12 Dec 2014 11:45:13 +0000
-Message-Id: <54165dd929ef304357806411cd70caf85b6132f0.1418384609.git.alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <bbe24d912869312d561be199b2c029b0c898e049.1418384609.git.alexandru.damian@intel.com>
-References: <bbe24d912869312d561be199b2c029b0c898e049.1418384609.git.alexandru.damian@intel.com>
-In-Reply-To: <cover.1418384609.git.alexandru.damian@intel.com>
-References: <cover.1418384609.git.alexandru.damian@intel.com>
-Subject: [PATCH 14/18] toaster: importlayer Avoid namespace clash with layer name
+Date: Wed, 17 Dec 2014 19:11:17 -0600
+Message-Id: <1418865078-10484-1-git-send-email-rich.tollerton@ni.com>
+X-Mailer: git-send-email 2.1.3
+X-MIMETrack: Itemize by SMTP Server on US-AUS-MGWOut2/AUS/H/NIC(Release
+	8.5.3FP6|November 21, 2013) at 12/17/2014 07:11:25 PM,
+	Serialize by Router on US-AUS-MGWOut2/AUS/H/NIC(Release
+	8.5.3FP6|November 21, 2013) at 12/17/2014 07:11:25 PM,
+	Serialize complete at 12/17/2014 07:11:25 PM
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10432:5.13.68, 1.0.33,
+	0.0.0000
+	definitions=2014-12-17_07:2014-12-17, 2014-12-17,
+	1970-01-01 signatures=0
+Subject: [PATCH] data: Avoid attempting to assign readonly shell vars
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,52 +39,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 Dec 2014 11:45:29 -0000
+X-List-Received-Date: Thu, 18 Dec 2014 01:11:32 -0000
 
-From: Michael Wood <michael.g.wood@intel.com>
+Attempting to set a read-only shell variable kills the shell. This is
+required POSIX behavior, it can't be disabled, and it's implemented by
+both dash and bash (although it seems to have only started happening in
+bash 4.3 and later, and only when run as /bin/sh).
 
-This was causing validation issues as the layer name was being picked up
-from a different location in the dom.
+This breaks `bitbake -c devshell` if bash 4.3 is installed, because
+BASHOPTS (and a boatload of other shell variables) are readonly.
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+The fix is to attempt to modify the variable in a subshell before doing
+the assignment.
+
+Signed-off-by: Richard Tollerton <rich.tollerton@ni.com>
 ---
- lib/toaster/toastergui/static/js/importlayer.js   | 2 +-
- lib/toaster/toastergui/templates/importlayer.html | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ lib/bb/data.py | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/lib/toaster/toastergui/static/js/importlayer.js b/lib/toaster/toastergui/static/js/importlayer.js
-index 15830dd..34dbcd9 100644
---- a/lib/toaster/toastergui/static/js/importlayer.js
-+++ b/lib/toaster/toastergui/static/js/importlayer.js
-@@ -4,7 +4,7 @@ function importLayerPageInit (ctx) {
+diff --git a/lib/bb/data.py b/lib/bb/data.py
+index eb628c7..6c8d644 100644
+--- a/lib/bb/data.py
++++ b/lib/bb/data.py
+@@ -231,6 +231,10 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
+         o.write("%s() {\n%s\n}\n" % (varExpanded, val))
+         return 1
  
-   var layerDepBtn = $("#add-layer-dependency-btn");
-   var importAndAddBtn = $("#import-and-add-btn");
--  var layerNameInput = $("#layer-name");
-+  var layerNameInput = $("#import-layer-name");
-   var vcsURLInput = $("#layer-git-repo-url");
-   var gitRefInput = $("#layer-git-ref");
-   var layerDepInput = $("#layer-dependency");
-diff --git a/lib/toaster/toastergui/templates/importlayer.html b/lib/toaster/toastergui/templates/importlayer.html
-index 00fd694..c59247f 100644
---- a/lib/toaster/toastergui/templates/importlayer.html
-+++ b/lib/toaster/toastergui/templates/importlayer.html
-@@ -48,12 +48,12 @@
-                       </div>
++    # If the variable is readonly, attempting to set it will KILL THE SCRIPT.
++    # Avoid this by attempting to modify the variable in a subshell.
++    o.write('(unset %s 2>/dev/null) &&' % (varExpanded))
++
+     if export:
+         o.write('export ')
  
-                       <div class="control-group" id="layer-name-ctrl">
--                        <label class="control-label" for="layer-name">
-+                        <label class="control-label" for="import-layer-name">
-                             Layer name
-                             <span class="icon-question-sign get-help" title="Something like 'meta-mylayer'. Your layer name must be unique and can only include letters, numbers and dashes" />
-                         </label>
-                         <div class="controls">
--                          <input id="layer-name" type="text" required autofocus>
-+                          <input id="import-layer-name" type="text" required autofocus>
-                           <span class="help-inline" style="display: none;" id="invalid-layer-name-hint">A valid layer name can only include letters, numbers and dashes</span>
-                           <span class="help-inline" style="display: none;" id="duplicated-layer-name-hint"></span>
-                         </div>
 -- 
-1.9.1
+2.1.3
 
 
