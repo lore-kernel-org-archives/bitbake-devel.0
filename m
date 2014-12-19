@@ -1,25 +1,25 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 5E8BF72905
+	by mail.openembedded.org (Postfix) with ESMTP id 9F07972909
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 19 Dec 2014 10:20:52 +0000 (UTC)
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 19 Dec 2014 02:20:52 -0800
+	by fmsmga101.fm.intel.com with ESMTP; 19 Dec 2014 02:20:53 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.07,606,1413270000"; d="scan'208";a="640218086"
+X-IronPort-AV: E=Sophos;i="5.07,606,1413270000"; d="scan'208";a="640218087"
 Received: from khamid-mobl1.ger.corp.intel.com (HELO
 	peggleto-mobl5.ger.corp.intel.com) ([10.252.31.61])
-	by fmsmga001.fm.intel.com with ESMTP; 19 Dec 2014 02:20:51 -0800
+	by fmsmga001.fm.intel.com with ESMTP; 19 Dec 2014 02:20:52 -0800
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 19 Dec 2014 10:20:31 +0000
-Message-Id: <4e5917581766cc0584ba0119e01333421c11c360.1418984377.git.paul.eggleton@linux.intel.com>
+Date: Fri, 19 Dec 2014 10:20:32 +0000
+Message-Id: <a7b33001c50e9fed2059de049e6511f5c7baa331.1418984377.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 1.9.3
 In-Reply-To: <cover.1418984377.git.paul.eggleton@linux.intel.com>
 References: <cover.1418984377.git.paul.eggleton@linux.intel.com>
 In-Reply-To: <cover.1418984377.git.paul.eggleton@linux.intel.com>
 References: <cover.1418984377.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 3/4] bitbake-layers: add commands for adding and removing layers
+Subject: [PATCH 4/4] cooker: add ability to ignore unmatched regexes in BBFILE_PATTERN
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,79 +34,49 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 19 Dec 2014 10:20:53 -0000
 
-Add add-layer and remove-layer commands for easily adding and removing
-layers to/from bblayers.conf.
+Add a BBFILE_PATTERN_IGNORE_EMPTY variable to allow ignoring the fact
+that a regex specified in BBFILE_PATTERN for a particular collection
+doesn't match any recipes. This will be used in OpenEmbedded in the
+workspace layers created by "devtool" which may not always contain any
+recipes (which is not cause for warning the user).
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- bin/bitbake-layers | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ lib/bb/cooker.py | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/bin/bitbake-layers b/bin/bitbake-layers
-index 9964040..edb4d2f 100755
---- a/bin/bitbake-layers
-+++ b/bin/bitbake-layers
-@@ -103,6 +103,60 @@ class Commands(cmd.Cmd):
-             logger.plain("%s  %s  %d" % (layername.ljust(20), layerdir.ljust(40), layerpri))
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index 16fd4ad..0d9b85e 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1385,7 +1385,7 @@ class BBCooker:
+                 raise bb.BBHandledException()
+             self.show_appends_with_no_recipes()
+             self.handlePrefProviders()
+-            self.recipecache.bbfile_priority = self.collection.collection_priorities(self.recipecache.pkg_fn)
++            self.recipecache.bbfile_priority = self.collection.collection_priorities(self.recipecache.pkg_fn, self.data)
+             self.state = state.running
+             return None
  
+@@ -1610,7 +1610,7 @@ class CookerCollectFiles(object):
+                     filelist.append(filename)
+         return filelist
  
-+    def do_add_layer(self, dirname):
-+        """Add a layer to bblayers.conf
-+
-+usage: add-layer <layerdir>
-+"""
-+        if not dirname:
-+            sys.stderr.write("Please specify the layer directory to add\n")
-+            return
-+
-+        layerdir = os.path.abspath(dirname)
-+        if not os.path.exists(layerdir):
-+            sys.stderr.write("Specified layer directory doesn't exist\n")
-+            return
-+
-+        layer_conf = os.path.join(layerdir, 'conf', 'layer.conf')
-+        if not os.path.exists(layer_conf):
-+            sys.stderr.write("Specified layer directory doesn't contain a conf/layer.conf file\n")
-+            return
-+
-+        bblayers_conf = os.path.join('conf', 'bblayers.conf')
-+        if not os.path.exists(bblayers_conf):
-+            sys.stderr.write("Unable to find bblayers.conf\n")
-+            return
-+
-+        (notadded, _) = bb.utils.edit_bblayers_conf(bblayers_conf, layerdir, None)
-+        if notadded:
-+            for item in notadded:
-+                sys.stderr.write("Specified layer %s not in BBLAYERS\n" % item)
-+
-+
-+    def do_remove_layer(self, dirname):
-+        """Remove a layer from bblayers.conf
-+
-+usage: remove-layer <layerdir>
-+"""
-+        if not dirname:
-+            sys.stderr.write("Please specify the layer directory to remove\n")
-+            return
-+
-+        bblayers_conf = os.path.join('conf', 'bblayers.conf')
-+        if not os.path.exists(bblayers_conf):
-+            sys.stderr.write("Unable to find bblayers.conf\n")
-+            return
-+
-+        if dirname.startswith('*'):
-+            layerdir = dirname
-+        else:
-+            layerdir = os.path.abspath(dirname)
-+        (_, notremoved) = bb.utils.edit_bblayers_conf(bblayers_conf, None, layerdir)
-+        if notremoved:
-+            for item in notremoved:
-+                sys.stderr.write("No layers matching %s found in BBLAYERS\n" % item)
-+
-+
-     def version_str(self, pe, pv, pr = None):
-         verstr = "%s" % pv
-         if pr:
+-    def collection_priorities(self, pkgfns):
++    def collection_priorities(self, pkgfns, d):
+ 
+         priorities = {}
+ 
+@@ -1639,7 +1639,8 @@ class CookerCollectFiles(object):
+ 
+         for collection, pattern, regex, _ in self.bbfile_config_priorities:
+             if regex in unmatched:
+-                collectlog.warn("No bb files matched BBFILE_PATTERN_%s '%s'" % (collection, pattern))
++                if d.getVar('BBFILE_PATTERN_IGNORE_EMPTY_%s' % collection, True) != '1':
++                    collectlog.warn("No bb files matched BBFILE_PATTERN_%s '%s'" % (collection, pattern))
+ 
+         return priorities
+ 
 -- 
 1.9.3
 
