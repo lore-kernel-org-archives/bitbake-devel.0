@@ -1,25 +1,23 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 9F07972909
+Return-Path: <andy.voltz@timesys.com>
+X-Greylist: delayed 309 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 19 Dec 2014 16:36:45 UTC
+Received: from exchange07.timesys.com (exchange07.timesys.com
+	[209.114.137.116])
+	by mail.openembedded.org (Postfix) with ESMTP id 337B57291F
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 19 Dec 2014 10:20:52 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 19 Dec 2014 02:20:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.07,606,1413270000"; d="scan'208";a="640218087"
-Received: from khamid-mobl1.ger.corp.intel.com (HELO
-	peggleto-mobl5.ger.corp.intel.com) ([10.252.31.61])
-	by fmsmga001.fm.intel.com with ESMTP; 19 Dec 2014 02:20:52 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 19 Dec 2014 10:20:32 +0000
-Message-Id: <a7b33001c50e9fed2059de049e6511f5c7baa331.1418984377.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.9.3
-In-Reply-To: <cover.1418984377.git.paul.eggleton@linux.intel.com>
-References: <cover.1418984377.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1418984377.git.paul.eggleton@linux.intel.com>
-References: <cover.1418984377.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 4/4] cooker: add ability to ignore unmatched regexes in BBFILE_PATTERN
+	Fri, 19 Dec 2014 16:36:45 +0000 (UTC)
+Received: from smarf.timesys.com (192.168.3.76) by exchange07.timesys.com
+	(192.168.1.221) with Microsoft SMTP Server id 8.1.436.0;
+	Fri, 19 Dec 2014 11:31:38 -0500
+From: Andy Voltz <andy.voltz@timesys.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Fri, 19 Dec 2014 11:31:37 -0500
+Message-ID: <1419006697-2588-2-git-send-email-andy.voltz@timesys.com>
+X-Mailer: git-send-email 2.1.3
+In-Reply-To: <1419006697-2588-1-git-send-email-andy.voltz@timesys.com>
+References: <1419006697-2588-1-git-send-email-andy.voltz@timesys.com>
+MIME-Version: 1.0
+Subject: [PATCH] update ncurses ui to accept configParams
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,52 +30,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 19 Dec 2014 10:20:53 -0000
+X-List-Received-Date: Fri, 19 Dec 2014 16:36:46 -0000
+Content-Type: text/plain
 
-Add a BBFILE_PATTERN_IGNORE_EMPTY variable to allow ignoring the fact
-that a regex specified in BBFILE_PATTERN for a particular collection
-doesn't match any recipes. This will be used in OpenEmbedded in the
-workspace layers created by "devtool" which may not always contain any
-recipes (which is not cause for warning the user).
-
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+Signed-off-by: Andy Voltz <andy.voltz@timesys.com>
 ---
- lib/bb/cooker.py | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ lib/bb/ui/ncurses.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 16fd4ad..0d9b85e 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1385,7 +1385,7 @@ class BBCooker:
-                 raise bb.BBHandledException()
-             self.show_appends_with_no_recipes()
-             self.handlePrefProviders()
--            self.recipecache.bbfile_priority = self.collection.collection_priorities(self.recipecache.pkg_fn)
-+            self.recipecache.bbfile_priority = self.collection.collection_priorities(self.recipecache.pkg_fn, self.data)
-             self.state = state.running
-             return None
+diff --git a/lib/bb/ui/ncurses.py b/lib/bb/ui/ncurses.py
+index b6c20ec..9589a77 100644
+--- a/lib/bb/ui/ncurses.py
++++ b/lib/bb/ui/ncurses.py
+@@ -361,13 +361,13 @@ class NCursesUI:
+                 shutdown = shutdown + 1
+                 pass
  
-@@ -1610,7 +1610,7 @@ class CookerCollectFiles(object):
-                     filelist.append(filename)
-         return filelist
- 
--    def collection_priorities(self, pkgfns):
-+    def collection_priorities(self, pkgfns, d):
- 
-         priorities = {}
- 
-@@ -1639,7 +1639,8 @@ class CookerCollectFiles(object):
- 
-         for collection, pattern, regex, _ in self.bbfile_config_priorities:
-             if regex in unmatched:
--                collectlog.warn("No bb files matched BBFILE_PATTERN_%s '%s'" % (collection, pattern))
-+                if d.getVar('BBFILE_PATTERN_IGNORE_EMPTY_%s' % collection, True) != '1':
-+                    collectlog.warn("No bb files matched BBFILE_PATTERN_%s '%s'" % (collection, pattern))
- 
-         return priorities
- 
+-def main(server, eventHandler):
++def main(server, eventHandler, params):
+     if not os.isatty(sys.stdout.fileno()):
+         print("FATAL: Unable to run 'ncurses' UI without a TTY.")
+         return
+     ui = NCursesUI()
+     try:
+-        curses.wrapper(ui.main, server, eventHandler)
++        curses.wrapper(ui.main, server, eventHandler, params)
+     except:
+         import traceback
+         traceback.print_exc()
 -- 
-1.9.3
+2.1.3
 
 
