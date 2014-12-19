@@ -1,21 +1,40 @@
-Return-Path: <anibal.limon@linux.intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id 5034C728B6
+Return-Path: <rich.tollerton@ni.com>
+Received: from ni.com (skprod3.natinst.com [130.164.80.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 6D0D6728AC
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 18 Dec 2014 23:58:39 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by fmsmga102.fm.intel.com with ESMTP; 18 Dec 2014 15:58:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="4.97,862,1389772800"; d="scan'208";a="430956959"
-Received: from alimon-thinkpad-w540.zpn.intel.com ([10.219.4.60])
-	by FMSMGA003.fm.intel.com with ESMTP; 18 Dec 2014 15:47:26 -0800
-From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 18 Dec 2014 17:58:57 -0600
-Message-Id: <1418947137-18813-1-git-send-email-anibal.limon@linux.intel.com>
-X-Mailer: git-send-email 1.9.1
+	Fri, 19 Dec 2014 00:03:36 +0000 (UTC)
+Received: from us-aus-mgwout1.amer.corp.natinst.com (nb-chan1-1338.natinst.com
+	[130.164.19.134])
+	by us-aus-skprod3.natinst.com (8.14.5/8.14.5) with ESMTP id
+	sBJ03ZkZ009452; Thu, 18 Dec 2014 18:03:35 -0600
+Received: from weregild ([130.164.14.198])
+	by us-aus-mgwout1.amer.corp.natinst.com (Lotus Domino Release 8.5.3FP6)
+	with ESMTP id 2014121818033552-238921 ;
+	Thu, 18 Dec 2014 18:03:35 -0600 
+From: Richard Tollerton <rich.tollerton@ni.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+In-Reply-To: <87r3vwttad.fsf@weregild.i-did-not-set--mail-host-address--so-tickle-me>
+References: <1418865078-10484-1-git-send-email-rich.tollerton@ni.com>
+	<1418898565.5106.19.camel@linuxfoundation.org>
+	<87tx0su2ys.fsf@weregild.i-did-not-set--mail-host-address--so-tickle-me>
+	<1418941736.13316.4.camel@linuxfoundation.org>
+	<87r3vwttad.fsf@weregild.i-did-not-set--mail-host-address--so-tickle-me>
+User-Agent: Notmuch/0.18.1 (http://notmuchmail.org) Emacs/24.4.1
+	(x86_64-unknown-linux-gnu)
+Date: Thu, 18 Dec 2014 18:03:35 -0600
+Message-ID: <87oar0tsiw.fsf@weregild.i-did-not-set--mail-host-address--so-tickle-me>
 MIME-Version: 1.0
-Subject: [PATCH] bb/fetch2/wget.py: latest_versionstring fix multithread and remove deprecated code
+X-MIMETrack: Itemize by SMTP Server on US-AUS-MGWOut1/AUS/H/NIC(Release
+	8.5.3FP6|November 21, 2013) at 12/18/2014 06:03:35 PM,
+	Serialize by Router on US-AUS-MGWOut1/AUS/H/NIC(Release
+	8.5.3FP6|November 21, 2013) at 12/18/2014 06:03:35 PM,
+	Serialize complete at 12/18/2014 06:03:35 PM
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10432:5.13.68, 1.0.33,
+	0.0.0000
+	definitions=2014-12-18_07:2014-12-18, 2014-12-18,
+	1970-01-01 signatures=0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] data: Avoid attempting to assign readonly shell vars
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,94 +47,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 18 Dec 2014 23:58:44 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Fri, 19 Dec 2014 00:03:38 -0000
+Content-Type: text/plain
 
-In order to fix multithread usage of latest_versionstring moves package_custom_regex_comp
-from class to method level because need to be defined by package.
+Richard Tollerton <rich.tollerton@ni.com> writes:
 
-Remove code for build url's with /download suffix because it's deprecated since you can
-specify the download directory using package_regex.inc file.
+> What do you think about this for a fix:
+>
+> This only appears to be an issue with code that's using bb.data as a
+> part of a shell script generation, which AFAIK is only done from
+> terminal.py to build a run.do_terminal. (Otherwise, nothing would be
+> building right now.) What if we run e.g. `env -i run.do_terminal`
+> instead of `run.do_terminal`? That will completely clear the environment
+> prior to execution.
+>
+> I'll try to take a stab at implementing this.
 
-Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
----
- lib/bb/fetch2/wget.py | 30 +++++++++++++-----------------
- 1 file changed, 13 insertions(+), 17 deletions(-)
+Never mind, this was a stupid idea -- bash in POSIX mode continues to set
+BASHOPTS under `env -i`, so this buys us nothing.
 
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index d82e78c..2e6da48 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -227,7 +227,7 @@ class Wget(FetchMethod):
-             bb.debug(3, "Not Valid")
-             return None
- 
--    def _check_latest_version(self, url, package, current_version, ud, d):
-+    def _check_latest_version(self, url, package, package_regex, current_version, ud, d):
-         """
-         Return the latest version of a package inside a given directory path
-         If error or no version, return None
-@@ -260,9 +260,9 @@ class Wget(FetchMethod):
-                         bb.debug(3, "Pver = '%s'" % (m.group('pver')))
-                         newver = ('', m.group('pver'), '')
-             else:
--                newver = self._parse_path(self.package_custom_regex_comp, line['href'])
-+                newver = self._parse_path(package_regex, line['href'])
-                 if not newver:
--                    newver = self._parse_path(self.package_custom_regex_comp, str(line))
-+                    newver = self._parse_path(package_regex, str(line))
- 
-             if newver:
-                 bb.debug(3, "Upstream version found: %s" % newver[1])
-@@ -323,13 +323,16 @@ class Wget(FetchMethod):
-         # "5.7" in http://download.gnome.org/sources/${PN}/5.7/${PN}-${PV}.tar.gz
-         self.dirver_regex_comp = re.compile("(?P<dirver>[^/]*(\d+\.)*\d+([\-_]r\d+)*)/")
- 
--        # get current version and make custom regex for search in uri's
-+        # make custom regex for search in uri's
-+        package_custom_regex_comp = None
-         version = self._parse_path(self.package_regex_comp, package)
-         if version:
--            self.package_custom_regex_comp = re.compile(
-+            package_custom_regex_comp = re.compile(
-                 "(?P<name>%s)(?P<ver>%s)(?P<arch>%s)?[\.\-](?P<type>%s)$" %
-                 (version[0], pver_regex, parch_regex, psuffix_regex))
- 
-+        return package_custom_regex_comp
-+
-     def latest_versionstring(self, ud, d):
-         """
-         Manipulate the URL and try to obtain the latest package version
-@@ -341,7 +344,8 @@ class Wget(FetchMethod):
-         newpath = regex_uri or ud.path
-         pupver = ""
- 
--        self._init_regexes(package)
-+        package_custom_regex_comp = self._init_regexes(package)
-+
-         current_version = ('', d.getVar('PV', True), '')
- 
-         """possible to have no version in pkg name, such as spectrum-fw"""
-@@ -364,14 +368,6 @@ class Wget(FetchMethod):
-         else:
-             newuri = newpath
- 
--        newversion = self._check_latest_version(newuri, package,
--                        current_version, ud, d)
--        while not newversion:
--            # maybe it's hiding in a download directory so try there
--            newuri = "/".join(newuri.split("/")[0:-2]) + "/download"
--            if newuri == "/download" or newuri == "http://download":
--                break
--            newversion = self._check_latest_version(newuri, package,
--                            current_version, ud, d)
--
--        return newversion or ""
-+        return self._check_latest_version(newuri, package,
-+                        package_custom_regex_comp or package_regex_comp,
-+                        current_version, ud, d) or ""
+New idea: Terminal allows passing in an environment directly, which is
+currently unused. What if we passed the execution environment in through
+that, instead of encoding it into the script?
+
+(Yes, this probably belongs in oe-core more than bitbake-devel at this
+point...)
+
+
 -- 
-1.9.1
-
+Richard Tollerton <rich.tollerton@ni.com>
 
