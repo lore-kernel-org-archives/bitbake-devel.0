@@ -1,25 +1,25 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 5E96B72908
+	by mail.openembedded.org (Postfix) with ESMTP id 5E8BF72905
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 19 Dec 2014 10:20:52 +0000 (UTC)
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 19 Dec 2014 02:20:51 -0800
+	by fmsmga101.fm.intel.com with ESMTP; 19 Dec 2014 02:20:52 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.07,606,1413270000"; d="scan'208";a="640218085"
+X-IronPort-AV: E=Sophos;i="5.07,606,1413270000"; d="scan'208";a="640218086"
 Received: from khamid-mobl1.ger.corp.intel.com (HELO
 	peggleto-mobl5.ger.corp.intel.com) ([10.252.31.61])
-	by fmsmga001.fm.intel.com with ESMTP; 19 Dec 2014 02:20:50 -0800
+	by fmsmga001.fm.intel.com with ESMTP; 19 Dec 2014 02:20:51 -0800
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 19 Dec 2014 10:20:30 +0000
-Message-Id: <d757b12a7919de4df3b525e99631790f1ea02546.1418984377.git.paul.eggleton@linux.intel.com>
+Date: Fri, 19 Dec 2014 10:20:31 +0000
+Message-Id: <4e5917581766cc0584ba0119e01333421c11c360.1418984377.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 1.9.3
 In-Reply-To: <cover.1418984377.git.paul.eggleton@linux.intel.com>
 References: <cover.1418984377.git.paul.eggleton@linux.intel.com>
 In-Reply-To: <cover.1418984377.git.paul.eggleton@linux.intel.com>
 References: <cover.1418984377.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 2/4] utils: add basic metadata manipulation functions
+Subject: [PATCH 3/4] bitbake-layers: add commands for adding and removing layers
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,153 +34,79 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 19 Dec 2014 10:20:53 -0000
 
-* Add a generic edit_metadata_file() function to modify variable
-  assignments in any metadata file (conf, bb, bbappend) using a callback
-  for flexibility
-* Add a specific edit_bblayers_conf() function to modify
-  conf/bblayers.conf and add and/or remove layers from the BBLAYERS
-  value within it.
+Add add-layer and remove-layer commands for easily adding and removing
+layers to/from bblayers.conf.
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- lib/bb/utils.py | 127 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 127 insertions(+)
+ bin/bitbake-layers | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index d7c5067..f26349f 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -915,3 +915,130 @@ def exec_flat_python_func(func, *args, **kwargs):
-     comp = bb.utils.better_compile(code, '<string>', '<string>')
-     bb.utils.better_exec(comp, context, code, '<string>')
-     return context['retval']
+diff --git a/bin/bitbake-layers b/bin/bitbake-layers
+index 9964040..edb4d2f 100755
+--- a/bin/bitbake-layers
++++ b/bin/bitbake-layers
+@@ -103,6 +103,60 @@ class Commands(cmd.Cmd):
+             logger.plain("%s  %s  %d" % (layername.ljust(20), layerdir.ljust(40), layerpri))
+ 
+ 
++    def do_add_layer(self, dirname):
++        """Add a layer to bblayers.conf
 +
-+def edit_metadata_file(meta_file, variables, func):
-+    """Edit a recipe or config file and modify one or more specified
-+    variable values set in the file using a specified callback function.
-+    The file is only written to if the value(s) actually change.
-+    """
-+    var_res = {}
-+    for var in variables:
-+        var_res[var] = re.compile(r'^%s[ \t]*[?=]+' % var)
++usage: add-layer <layerdir>
++"""
++        if not dirname:
++            sys.stderr.write("Please specify the layer directory to add\n")
++            return
 +
-+    updated = False
-+    varset_start = ''
-+    newlines = []
-+    in_var = None
-+    full_value = ''
++        layerdir = os.path.abspath(dirname)
++        if not os.path.exists(layerdir):
++            sys.stderr.write("Specified layer directory doesn't exist\n")
++            return
 +
-+    def handle_var_end():
-+        (newvalue, indent, minbreak) = func(in_var, full_value)
-+        if newvalue != full_value:
-+            if isinstance(newvalue, list):
-+                intentspc = ' ' * indent
-+                if minbreak:
-+                    # First item on first line
-+                    if len(newvalue) == 1:
-+                        newlines.append('%s "%s"\n' % (varset_start, newvalue[0]))
-+                    else:
-+                        newlines.append('%s "%s\\\n' % (varset_start, newvalue[0]))
-+                        for item in newvalue[1:]:
-+                            newlines.append('%s%s \\\n' % (intentspc, item))
-+                        newlines.append('%s"\n' % indentspc)
-+                else:
-+                    # No item on first line
-+                    newlines.append('%s " \\\n' % varset_start)
-+                    for item in newvalue:
-+                        newlines.append('%s%s \\\n' % (intentspc, item))
-+                    newlines.append('%s"\n' % intentspc)
-+            else:
-+                newlines.append('%s "%s"\n' % (varset_start, newvalue))
-+            return True
-+        return False
++        layer_conf = os.path.join(layerdir, 'conf', 'layer.conf')
++        if not os.path.exists(layer_conf):
++            sys.stderr.write("Specified layer directory doesn't contain a conf/layer.conf file\n")
++            return
 +
-+    with open(meta_file, 'r') as f:
-+        for line in f:
-+            if in_var:
-+                value = line.rstrip()
-+                full_value += value[:-1]
-+                if value.endswith('"') or value.endswith("'"):
-+                    if handle_var_end():
-+                        updated = True
-+                    in_var = None
-+            else:
-+                matched = False
-+                for (varname, var_re) in var_res.iteritems():
-+                    if var_re.match(line):
-+                        splitvalue = line.split('"', 1)
-+                        varset_start = splitvalue[0].rstrip()
-+                        value = splitvalue[1].rstrip()
-+                        if value.endswith('\\'):
-+                            value = value[:-1]
-+                        full_value = value
-+                        if value.endswith('"') or value.endswith("'"):
-+                            if handle_var_end():
-+                                updated = True
-+                        else:
-+                            in_var = varname
-+                        matched = True
-+                        break
-+                if not matched:
-+                    newlines.append(line)
-+    if updated:
-+        with open(meta_file, 'w') as f:
-+            f.writelines(newlines)
++        bblayers_conf = os.path.join('conf', 'bblayers.conf')
++        if not os.path.exists(bblayers_conf):
++            sys.stderr.write("Unable to find bblayers.conf\n")
++            return
 +
-+def edit_bblayers_conf(bblayers_conf, add, remove):
-+    """Edit bblayers.conf, adding and/or removing layers"""
++        (notadded, _) = bb.utils.edit_bblayers_conf(bblayers_conf, layerdir, None)
++        if notadded:
++            for item in notadded:
++                sys.stderr.write("Specified layer %s not in BBLAYERS\n" % item)
 +
-+    import fnmatch
 +
-+    def remove_trailing_sep(pth):
-+        if pth and pth[-1] == os.sep:
-+            pth = pth[:-1]
-+        return pth
++    def do_remove_layer(self, dirname):
++        """Remove a layer from bblayers.conf
 +
-+    def layerlist_param(value):
-+        if not value:
-+            return []
-+        elif isinstance(value, list):
-+            return [remove_trailing_sep(x) for x in value]
++usage: remove-layer <layerdir>
++"""
++        if not dirname:
++            sys.stderr.write("Please specify the layer directory to remove\n")
++            return
++
++        bblayers_conf = os.path.join('conf', 'bblayers.conf')
++        if not os.path.exists(bblayers_conf):
++            sys.stderr.write("Unable to find bblayers.conf\n")
++            return
++
++        if dirname.startswith('*'):
++            layerdir = dirname
 +        else:
-+            return [remove_trailing_sep(value)]
++            layerdir = os.path.abspath(dirname)
++        (_, notremoved) = bb.utils.edit_bblayers_conf(bblayers_conf, None, layerdir)
++        if notremoved:
++            for item in notremoved:
++                sys.stderr.write("No layers matching %s found in BBLAYERS\n" % item)
 +
-+    notadded = []
-+    notremoved = []
 +
-+    addlayers = layerlist_param(add)
-+    removelayers = layerlist_param(remove)
-+
-+    def handle_bblayers(varname, origvalue):
-+        updated = False
-+        bblayers = [remove_trailing_sep(x) for x in origvalue.split()]
-+        if removelayers:
-+            for removelayer in removelayers:
-+                matched = False
-+                for layer in bblayers:
-+                    if fnmatch.fnmatch(layer, removelayer):
-+                        updated = True
-+                        matched = True
-+                        bblayers.remove(layer)
-+                        break
-+                if not matched:
-+                    notremoved.append(removelayer)
-+        if addlayers:
-+            for addlayer in addlayers:
-+                if addlayer not in bblayers:
-+                    updated = True
-+                    bblayers.append(addlayer)
-+                else:
-+                    notadded.append(addlayer)
-+
-+        if updated:
-+            return (bblayers, 2, False)
-+        else:
-+            return (origvalue, 2, False)
-+
-+    edit_metadata_file(bblayers_conf, ['BBLAYERS'], handle_bblayers)
-+    return (notadded, notremoved)
-+
+     def version_str(self, pe, pv, pr = None):
+         verstr = "%s" % pv
+         if pr:
 -- 
 1.9.3
 
