@@ -1,40 +1,37 @@
-Return-Path: <rich.tollerton@ni.com>
-Received: from ni.com (skprod3.natinst.com [130.164.80.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 6D0D6728AC
+Return-Path: <ross.burton@intel.com>
+Received: from mail-qc0-f176.google.com (mail-qc0-f176.google.com
+	[209.85.216.176])
+	by mail.openembedded.org (Postfix) with ESMTP id 763EF728CF
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 19 Dec 2014 00:03:36 +0000 (UTC)
-Received: from us-aus-mgwout1.amer.corp.natinst.com (nb-chan1-1338.natinst.com
-	[130.164.19.134])
-	by us-aus-skprod3.natinst.com (8.14.5/8.14.5) with ESMTP id
-	sBJ03ZkZ009452; Thu, 18 Dec 2014 18:03:35 -0600
-Received: from weregild ([130.164.14.198])
-	by us-aus-mgwout1.amer.corp.natinst.com (Lotus Domino Release 8.5.3FP6)
-	with ESMTP id 2014121818033552-238921 ;
-	Thu, 18 Dec 2014 18:03:35 -0600 
-From: Richard Tollerton <rich.tollerton@ni.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-In-Reply-To: <87r3vwttad.fsf@weregild.i-did-not-set--mail-host-address--so-tickle-me>
-References: <1418865078-10484-1-git-send-email-rich.tollerton@ni.com>
-	<1418898565.5106.19.camel@linuxfoundation.org>
-	<87tx0su2ys.fsf@weregild.i-did-not-set--mail-host-address--so-tickle-me>
-	<1418941736.13316.4.camel@linuxfoundation.org>
-	<87r3vwttad.fsf@weregild.i-did-not-set--mail-host-address--so-tickle-me>
-User-Agent: Notmuch/0.18.1 (http://notmuchmail.org) Emacs/24.4.1
-	(x86_64-unknown-linux-gnu)
-Date: Thu, 18 Dec 2014 18:03:35 -0600
-Message-ID: <87oar0tsiw.fsf@weregild.i-did-not-set--mail-host-address--so-tickle-me>
+	Fri, 19 Dec 2014 00:15:13 +0000 (UTC)
+Received: by mail-qc0-f176.google.com with SMTP id i17so1988qcy.7
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 18 Dec 2014 16:15:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc:content-type;
+	bh=wkEiJKQt16rkpHqfguwBkxe48w9dmLdwMWRUpyEpkak=;
+	b=PBtvqcqnn65YIY7SJmVdKjSzbtc1F35fcaRD/KsoEBDcuyRqJ8ITYvfKT4R+K0EmsU
+	ZqUD84xuo9+ApWqxhO9YRkW6cvKI9FvEcz84LeY9fuUVk0kk1WTaqu2F0Eejt0KJdRMl
+	kegaTk6Nn5+12ZzXmBmt+ZDkJWaRIDwtrHvXOQQWowb9ABM+do5e+OZVcYIFroU0i7hP
+	1Q7N10Kio+Zy50F9gAS3BqiJ4lzkfnIeIbN2Cr5J2AhzKj/+eGxjw5lQFLeGIeUDUiPd
+	AKmq1NTlJ6qvElDvwicYAjNdy//f24VhaPR1XAcG45DMjHZxiksT8dzEgJJhIlamKIox
+	ca+w==
+X-Gm-Message-State: ALoCoQnMnLSGGbQbmz9KmIrdhvaia80op1bKGLNherKaatFYqH9gJv7uidTXiizXcpcwWEMx8Kfj
+X-Received: by 10.140.102.144 with SMTP id w16mr8406796qge.59.1418948113953;
+	Thu, 18 Dec 2014 16:15:13 -0800 (PST)
 MIME-Version: 1.0
-X-MIMETrack: Itemize by SMTP Server on US-AUS-MGWOut1/AUS/H/NIC(Release
-	8.5.3FP6|November 21, 2013) at 12/18/2014 06:03:35 PM,
-	Serialize by Router on US-AUS-MGWOut1/AUS/H/NIC(Release
-	8.5.3FP6|November 21, 2013) at 12/18/2014 06:03:35 PM,
-	Serialize complete at 12/18/2014 06:03:35 PM
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10432:5.13.68, 1.0.33,
-	0.0.0000
-	definitions=2014-12-18_07:2014-12-18, 2014-12-18,
-	1970-01-01 signatures=0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] data: Avoid attempting to assign readonly shell vars
+Received: by 10.140.96.166 with HTTP; Thu, 18 Dec 2014 16:14:53 -0800 (PST)
+In-Reply-To: <1418914454-24213-1-git-send-email-Martin.Jansa@gmail.com>
+References: <1418914454-24213-1-git-send-email-Martin.Jansa@gmail.com>
+From: "Burton, Ross" <ross.burton@intel.com>
+Date: Fri, 19 Dec 2014 00:14:53 +0000
+Message-ID: <CAJTo0Lbpe2RCpUh1pE=a1Saq2CGqszWF5gnDsGHnfE8icMVEKw@mail.gmail.com>
+To: Martin Jansa <martin.jansa@gmail.com>, 
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+Cc: OE-core <openembedded-core@lists.openembedded.org>
+Subject: Re: [OE-core] [PATCH] powertop: Fix build for !uclibc
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,33 +44,48 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 19 Dec 2014 00:03:38 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 19 Dec 2014 00:15:16 -0000
+Content-Type: multipart/alternative; boundary=001a11c16bc2498b5f050a869a0e
 
-Richard Tollerton <rich.tollerton@ni.com> writes:
+--001a11c16bc2498b5f050a869a0e
+Content-Type: text/plain; charset=UTF-8
 
-> What do you think about this for a fix:
+On 18 December 2014 at 14:54, Martin Jansa <martin.jansa@gmail.com> wrote:
 >
-> This only appears to be an issue with code that's using bb.data as a
-> part of a shell script generation, which AFAIK is only done from
-> terminal.py to build a run.do_terminal. (Otherwise, nothing would be
-> building right now.) What if we run e.g. `env -i run.do_terminal`
-> instead of `run.do_terminal`? That will completely clear the environment
-> prior to execution.
+>   i586-oe-linux-gcc: error: ${EXTRA_LDFLAGS}: No such file or directory
 >
-> I'll try to take a stab at implementing this.
 
-Never mind, this was a stupid idea -- bash in POSIX mode continues to set
-BASHOPTS under `env -i`, so this buys us nothing.
+I'm also seeing cups fail on builds with similar errors:
 
-New idea: Terminal allows passing in an environment directly, which is
-currently unused. What if we passed the execution environment in through
-that, instead of encoding it into the script?
+i586-poky-linux-gcc: error: ${SECURITY_NO_PIE_CLAGS}: No such file or
+directory
 
-(Yes, this probably belongs in oe-core more than bitbake-devel at this
-point...)
+This appears to be down to the recent bitbake merge to master (18cd0)
+"data: escape $ in shell variable assignment".  As this is a fairly drastic
+change of behaviour to bitbake I think we should revert and revisit the
+problem.
 
+Ross
 
--- 
-Richard Tollerton <rich.tollerton@ni.com>
+--001a11c16bc2498b5f050a869a0e
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On 18 December 2014 at 14:54, Martin Jansa <span dir=3D"ltr">&lt;<a href=3D=
+"mailto:martin.jansa@gmail.com" target=3D"_blank">martin.jansa@gmail.com</a=
+>&gt;</span> wrote:<blockquote class=3D"gmail_quote" style=3D"margin:0px 0p=
+x 0px 0.8ex;border-left-width:1px;border-left-color:rgb(204,204,204);border=
+-left-style:solid;padding-left:1ex"><div id=3D":2ps" class=3D"" style=3D"ov=
+erflow:hidden">=C2=A0 i586-oe-linux-gcc: error: ${EXTRA_LDFLAGS}: No such f=
+ile or directory<br></div></blockquote></div><br>I&#39;m also seeing cups f=
+ail on builds with similar errors:</div><div class=3D"gmail_extra"><br></di=
+v><div class=3D"gmail_extra">i586-poky-linux-gcc: error: ${SECURITY_NO_PIE_=
+CLAGS}: No such file or directory<br></div><div class=3D"gmail_extra"><br><=
+/div><div class=3D"gmail_extra">This appears to be down to the recent bitba=
+ke merge to master (18cd0) &quot;data: escape $ in shell variable assignmen=
+t&quot;.=C2=A0 As this is a fairly drastic change of behaviour to bitbake I=
+ think we should revert and revisit the problem.</div><div class=3D"gmail_e=
+xtra"><br></div><div class=3D"gmail_extra">Ross</div></div>
+
+--001a11c16bc2498b5f050a869a0e--
