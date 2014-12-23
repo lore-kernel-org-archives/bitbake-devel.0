@@ -1,19 +1,29 @@
-Return-Path: <andy.voltz@timesys.com>
-Received: from exchange07.timesys.com (exchange07.timesys.com
-	[209.114.137.116])
-	by mail.openembedded.org (Postfix) with ESMTP id 6B2EA7292A
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 6477772591
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 19 Dec 2014 16:36:45 +0000 (UTC)
-Received: from smarf.timesys.com (192.168.3.76) by exchange07.timesys.com
-	(192.168.1.221) with Microsoft SMTP Server id 8.1.436.0;
-	Fri, 19 Dec 2014 11:31:36 -0500
-From: Andy Voltz <andy.voltz@timesys.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 19 Dec 2014 11:31:36 -0500
-Message-ID: <1419006697-2588-1-git-send-email-andy.voltz@timesys.com>
-X-Mailer: git-send-email 2.1.3
-MIME-Version: 1.0
-Subject: fix ncurses ui
+	Tue, 23 Dec 2014 12:32:21 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	sBNCVi52015744 for <bitbake-devel@lists.openembedded.org>;
+	Tue, 23 Dec 2014 12:31:44 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id abpIfEHEiBgH for <bitbake-devel@lists.openembedded.org>;
+	Tue, 23 Dec 2014 12:31:44 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	sBNCVTFq015710
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 23 Dec 2014 12:31:40 GMT
+Message-ID: <1419337926.6428.0.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Tue, 23 Dec 2014 12:32:06 +0000
+X-Mailer: Evolution 3.12.7-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] data_smart: Ensure d.keys() doesn't list deleted variables
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -26,12 +36,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 19 Dec 2014 16:36:46 -0000
-Content-Type: text/plain
+X-List-Received-Date: Tue, 23 Dec 2014 12:32:28 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-I decided to give the ncurses ui a try, but found it was broken.
+If you copy the datastore, then delete a variable, it still shows up
+in d.keys() when it should not. This patch addresses the issue.
 
-The following patch updates the ncurses module main function to
-accept the configParams arg passed from bitbake.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
+index 31ce9a5..68d273b 100644
+--- a/bitbake/lib/bb/data_smart.py
++++ b/bitbake/lib/bb/data_smart.py
+@@ -740,12 +740,16 @@ class DataSmart(MutableMapping):
+                 yield key
+ 
+     def __iter__(self):
++        deleted = set()
+         def keylist(d):        
+             klist = set()
+             for key in d:
+                 if key == "_data":
+                     continue
++                if key in deleted:
++                    continue
+                 if not d[key]:
++                    deleted.add(key)
+                     continue
+                 klist.add(key)
+ 
+
 
 
