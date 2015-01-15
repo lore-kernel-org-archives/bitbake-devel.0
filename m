@@ -1,40 +1,29 @@
-Return-Path: <akuster808@gmail.com>
-Received: from mail-pd0-f174.google.com (mail-pd0-f174.google.com
-	[209.85.192.174])
-	by mail.openembedded.org (Postfix) with ESMTP id 47854721E2
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 0364871637
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Jan 2015 18:04:51 +0000 (UTC)
-Received: by mail-pd0-f174.google.com with SMTP id fp1so11101671pdb.5
+	Thu, 15 Jan 2015 09:39:47 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t0F9dlBp032391 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 15 Jan 2015 09:39:47 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id BAmyEKbC_eck for <bitbake-devel@lists.openembedded.org>;
+	Thu, 15 Jan 2015 09:39:47 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t0F9dY30032387
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Jan 2015 10:04:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=message-id:date:from:user-agent:mime-version:to:subject:references
-	:in-reply-to:content-type:content-transfer-encoding;
-	bh=rnct6UVfTpyBk8ZYKjJzN/LpPTC1AaqMMvXqW9ElxO8=;
-	b=dGdkrvE4DyS8MTibgxVzV+U4SESxomVIqe897zHsaLp36ctlp2gl9W22ix0ZRXBzC9
-	Ly4ZgvUyoCIVQSqI1sFPYYmYx4agvFgm2dXtX+x9BoUNG58yifvt8H66pbVL3Q4FJJWF
-	tFjFduyvBKGgydIrqjRdVbn7lv0ELd5dZDR+mVvkEiIHY62YQwncjrTSrldu9+VuGS2a
-	CuGcAtu0dbX/AjG7dykZfknSyOIr77tjOBbfCqKYWMFi02MHWrrjw5N1uHg4JEyi1KvW
-	hAOxo68w6negFLDor8jc3NltZIRdW3ehSFYAAUCNT9mdkFXlzH/0eg0JTmZIIyrXc9D9
-	h1dw==
-X-Received: by 10.70.89.174 with SMTP id bp14mr7572527pdb.136.1421258692657;
-	Wed, 14 Jan 2015 10:04:52 -0800 (PST)
-Received: from [10.43.100.29] (64.2.3.194.ptr.us.xo.net. [64.2.3.194])
-	by mx.google.com with ESMTPSA id
-	ws4sm20234882pbc.53.2015.01.14.10.04.50
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 14 Jan 2015 10:04:51 -0800 (PST)
-Message-ID: <54B6AFC2.30605@gmail.com>
-Date: Wed, 14 Jan 2015 10:04:50 -0800
-From: akuster808 <akuster808@gmail.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:31.0) Gecko/20100101 Thunderbird/31.3.0
-MIME-Version: 1.0
-To: Alex DAMIAN <alexandru.damian@intel.com>, 
-	bitbake-devel@lists.openembedded.org
-References: <cover.1421239131.git.alexandru.damian@intel.com>
-In-Reply-To: <cover.1421239131.git.alexandru.damian@intel.com>
-Subject: Re: [PATCH 0/4] Toaster feature / bugfix patchset
+	Thu, 15 Jan 2015 09:39:46 GMT
+Message-ID: <1421314774.31262.44.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 15 Jan 2015 09:39:34 +0000
+X-Mailer: Evolution 3.12.7-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] cooker: Improve pyinotify performance
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,60 +36,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 14 Jan 2015 18:05:02 -0000
-Content-Type: text/plain; charset=windows-1252; format=flowed
+X-List-Received-Date: Thu, 15 Jan 2015 09:39:56 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-are any of these needed for dizzy?
+Benchmarks show that the introduction of pyinotify regressed
+performance. This patch ensures we only call the add_watch() function
+for new entries, not ones we've already processed which does improve
+performance as measured by "time bitbake -p".
 
-- armin
+This doesn't completely remove the overhead but it does substantially
+reduce it.
 
-On 01/14/2015 04:46 AM, Alex DAMIAN wrote:
-> From: Alexandru DAMIAN <alexandru.damian@intel.com>
->
-> This patchset brings in the layer details page, and the managed version
-> of the "all builds" page.
->
-> The patches have been reviewed on the Toaster mailing list.
->
-> Can you please pull at your convenience ?
->
->
-> Cheers,
-> Alex
->
->
-> The following changes since commit 0557d03c170fba8d7efe82be1b9641d0eb229213:
->
->    cooker/cache/parse: Implement pyinofity based reconfigure (2015-01-13 22:23:21 +0000)
->
-> are available in the git repository at:
->
->    git://git.yoctoproject.org/poky-contrib adamian/20150114-submission-bb
->    http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20150114-submission-bb
->
-> Alexandru DAMIAN (2):
->    toastergui: all builds page lists failed build requests
->    toasterui: fix variable data error
->
-> Michael Wood (2):
->    toaster: Add layer details page feature
->    toaster: layerdetails Remove compatibility setting
->
->   lib/bb/ui/buildinfohelper.py                       |   2 +-
->   lib/toaster/toastergui/static/css/default.css      |   1 +
->   lib/toaster/toastergui/static/js/layerdetails.js   | 398 ++++++++++++
->   lib/toaster/toastergui/static/js/libtoaster.js     |  35 +
->   lib/toaster/toastergui/templates/layerdetails.html | 625 +++++++++++++-----
->   .../toastergui/templates/layers_dep_modal.html     |   9 +
->   .../toastergui/templates/managed_builds.html       | 135 ++++
->   .../toastergui/templates/managed_mrb_section.html  | 172 +++++
->   lib/toaster/toastergui/templatetags/projecttags.py |  19 +
->   lib/toaster/toastergui/urls.py                     |   1 +
->   lib/toaster/toastergui/views.py                    | 708 +++++++++++++++------
->   11 files changed, 1755 insertions(+), 350 deletions(-)
->   create mode 100644 lib/toaster/toastergui/static/js/layerdetails.js
->   create mode 100644 lib/toaster/toastergui/templates/managed_builds.html
->   create mode 100644 lib/toaster/toastergui/templates/managed_mrb_section.html
->
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 594dbd5..61cc1b7 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -122,11 +122,13 @@ class BBCooker:
+         self.configuration = configuration
+ 
+         self.configwatcher = pyinotify.WatchManager()
++        self.configwatcher.bbseen = []
+         self.confignotifier = pyinotify.Notifier(self.configwatcher, self.config_notifications)
+         self.watchmask = pyinotify.IN_CLOSE_WRITE | pyinotify.IN_CREATE | pyinotify.IN_DELETE | \
+                          pyinotify.IN_DELETE_SELF | pyinotify.IN_MODIFY | pyinotify.IN_MOVE_SELF | \
+                          pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO 
+         self.watcher = pyinotify.WatchManager()
++        self.watcher.bbseen = []
+         self.notifier = pyinotify.Notifier(self.watcher, self.notifications)
+ 
+ 
+@@ -181,6 +183,9 @@ class BBCooker:
+             watcher = self.watcher
+         for i in deps:
+             f = i[0]
++            if f in watcher.bbseen:
++                continue
++            watcher.bbseen.append(f)
+             while True:
+                 #bb.warn(f)
+                 # We try and add watches for files that don't exist but if they did, would influence
+@@ -192,6 +197,7 @@ class BBCooker:
+                 except pyinotify.WatchManagerError as e:
+                     if 'ENOENT' in str(e):
+                         f = os.path.dirname(f)
++                        watcher.bbseen.append(f)
+                         continue
+                     raise
+ 
+
+
 
