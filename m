@@ -1,44 +1,41 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f175.google.com (mail-wi0-f175.google.com
-	[209.85.212.175])
-	by mail.openembedded.org (Postfix) with ESMTP id 530567226D
+Received: from mail-we0-f170.google.com (mail-we0-f170.google.com
+	[74.125.82.170])
+	by mail.openembedded.org (Postfix) with ESMTP id C0AA972C08
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Jan 2015 16:42:41 +0000 (UTC)
-Received: by mail-wi0-f175.google.com with SMTP id l15so5414413wiw.2
+	Fri, 16 Jan 2015 16:42:45 +0000 (UTC)
+Received: by mail-we0-f170.google.com with SMTP id w61so21261374wes.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Jan 2015 08:42:42 -0800 (PST)
+	Fri, 16 Jan 2015 08:42:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=c55V2+6h+3yoLuu8Bmhw/Rfbt7ZhSRLh8NVl5xtJPRM=;
-	b=A9b5mc8OGQgUY+lhWo0KBUUlsNfIZaLE8RHzNfVUv0DfqEo0qp7ts6+erPWCtSybe+
-	zN2arjebtN2wXGuLVi5tqCu0ktlJiv6jSvxMkrD+4LA1D1jE2wkko10l5adpbT79Xrju
-	L3cu8t8ofgc0frP8q/I6+mvs4dpPgq5QLDZxONemYjlfKACM1od3HB06iUzcF/09SriD
-	55U4xPXLcisajjRZBBmVtkK75mlj3FzIMysrH1uz7TnASBs/Jnx/Zk2KJBWJJRC2oEhg
-	lAshnm2JIzAudjEhD/nMma1gb9/Hv2UdaSnj+5KFAv2Z35wHZGl5Iaq+vzEk/XTqG/nX
-	sUTg==
-X-Gm-Message-State: ALoCoQmUkXlAlSHCTDulyWK+Cu1uV/F7zD+AEiBDxDlSP/XSdWvd3irjeKZUKAagdOtgSMXSiI2i
-X-Received: by 10.180.72.199 with SMTP id f7mr7982777wiv.53.1421426561963;
-	Fri, 16 Jan 2015 08:42:41 -0800 (PST)
+	:references;
+	bh=hQjBx9CpZ8xMAqmVBE+EgexsZsVlPPVACEdz7xtTAtE=;
+	b=RJLh+H1YM1+VuiVwOiH5ZD37EmSCN/IgWxkXw6RuMsWGEjrwQ8CCVdQ7yH+hBGldj7
+	2z6Dh3hymz/n5cPUzUjxzPui8q8WmRjZ2MCV3X7wCtAMyGIVlJJoe+dGEnoPb/4pvZDZ
+	9jisC8RSEfVQ0hTupC/mZxts603LqazBEQ0KCPBOS+W6JVjvCy/Fy/GFCbN8EJa3HPCD
+	wPmKfijWV1dJDNavgsZtAQbOKwr5yrdhsj8LVmo6JwLE/5asYshyBKpXGHlKklfVtLbi
+	yZ0O7C+sIuarKQxx/XB4zPRBZg5/mpMGyMTjY5RTdh9Ah30iUHFJpAJVYr6mcB6+vG0x
+	Vq/Q==
+X-Gm-Message-State: ALoCoQljpqbul3RTjHsgtKrRFwzjYxz7emLf5oFfvuaxvgWpVjNFqzd+aQUFlP2LmpQo5R6SXDaX
+X-Received: by 10.180.19.138 with SMTP id f10mr7936233wie.56.1421426562412;
+	Fri, 16 Jan 2015 08:42:42 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id w3sm6745836wjf.3.2015.01.16.08.42.40
+	by mx.google.com with ESMTPSA id jp3sm3663091wid.9.2015.01.16.08.42.40
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 16 Jan 2015 08:42:40 -0800 (PST)
+	Fri, 16 Jan 2015 08:42:41 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id C56A4560E42; Fri, 16 Jan 2015 16:42:41 +0000 (GMT)
+	id C34B3560DB7; Fri, 16 Jan 2015 16:42:41 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 16 Jan 2015 16:42:41 +0000
-Message-Id: <31f0882a71fc0f8160b794a7ab0031f3302dd237.1421426452.git.alexandru.damian@intel.com>
+Date: Fri, 16 Jan 2015 16:42:40 +0000
+Message-Id: <2b40432da9df3a1b35a4ddb5500c8bcaeb0c2285.1421426452.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <2b40432da9df3a1b35a4ddb5500c8bcaeb0c2285.1421426452.git.alexandru.damian@intel.com>
-References: <2b40432da9df3a1b35a4ddb5500c8bcaeb0c2285.1421426452.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1421426452.git.alexandru.damian@intel.com>
 References: <cover.1421426452.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>,
-	David Reyna <David.Reyna@windriver.com>
-Subject: [PATCH 2/2] toaster: project configuration variables page
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 1/2] toaster: project builds page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,853 +48,551 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Jan 2015 16:42:42 -0000
+X-List-Received-Date: Fri, 16 Jan 2015 16:42:48 -0000
 
-From: David Reyna <David.Reyna@windriver.com>
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Implement the project configuration variables page.
+This is a complete re-write of the "Project builds" page
+based on the "All builds" page in managed mode.
 
-AlexD made whitespace changes and a minor fix.
+[YOCTO #6589]
 
-[YOCTO #6588]
-
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/templates/projectconf.html | 649 +++++++++++++++++++++-
- lib/toaster/toastergui/urls.py                    |   1 +
- lib/toaster/toastergui/views.py                   | 106 +++-
- 3 files changed, 730 insertions(+), 26 deletions(-)
+ lib/toaster/bldcontrol/models.py                   |   2 +
+ .../toastergui/templates/projectbuilds.html        | 118 +++++++--
+ lib/toaster/toastergui/views.py                    | 270 +++++----------------
+ 3 files changed, 160 insertions(+), 230 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/projectconf.html b/lib/toaster/toastergui/templates/projectconf.html
-index e8b0c39..edcad18 100644
---- a/lib/toaster/toastergui/templates/projectconf.html
-+++ b/lib/toaster/toastergui/templates/projectconf.html
-@@ -3,60 +3,659 @@
- {% load humanize %}
+diff --git a/lib/toaster/bldcontrol/models.py b/lib/toaster/bldcontrol/models.py
+index cab4463..2386d23 100644
+--- a/lib/toaster/bldcontrol/models.py
++++ b/lib/toaster/bldcontrol/models.py
+@@ -104,6 +104,8 @@ class BuildRequest(models.Model):
+         (REQ_DELETED, "deleted"),
+     )
  
- {% block localbreadcrumb %}
--<li>Project configuration</li>
-+<li>Configuration variables</li>
- {% endblock %}
- 
++    search_allowed_fields = ("brtarget__target",)
++
+     project     = models.ForeignKey(Project)
+     build       = models.OneToOneField(Build, null = True)     # TODO: toasterui should set this when Build is created
+     environment = models.ForeignKey(BuildEnvironment, null = True)
+diff --git a/lib/toaster/toastergui/templates/projectbuilds.html b/lib/toaster/toastergui/templates/projectbuilds.html
+index 8c5942c..8f9172c 100644
+--- a/lib/toaster/toastergui/templates/projectbuilds.html
++++ b/lib/toaster/toastergui/templates/projectbuilds.html
+@@ -9,40 +9,72 @@
  {% block projectinfomain %}
-     <div class="page-header">
--        <h1>Configuration Variables</h1>
-+        <h1>Configuration variables</h1>
-     </div>
- 
-     <div style="padding-left:19px;">
- 
-         <dl class="dl-vertical">
--        {% for c in configvars %}
-             <dt>
--                {{c.name}}
--                <i class="icon-question-sign get-help" title="{{c.desc}}"></i>
-+                <span class="js-config-var-name js-config-var-managed-name">DISTRO</span>
-+                <i class="icon-question-sign get-help" title="The short name of the distribution. If the variable is blank, meta/conf/distro/defaultsetup.conf will be used. <br /><a href='http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-DISTRO' target='_blank'>Read more in the manual</a>"></i>
-             </dt>
-             <dd class="lead">
--                <span id="distro">{{c.value}}</span>
-+                <span id="distro">{{distro}}</span>
-                 <i class="icon-pencil" id="change-distro-icon"></i>
-                 <form id="change-distro-form" style="display:none;">
-                     <div class="input-append">
--                        <input type="text" id="new-distro" value="poky tiny">
-+                        <input type="text" id="new-distro" value="{{distro}}">
-                         <button id="apply-change-distro" class="btn" type="button">Save</button>
-                         <button id="cancel-change-distro" type="button" class="btn btn-link">Cancel</button>
-                     </div>
-                 </form>
-             </dd>
--        {% endfor %}
-+            <dt>
-+                <span class="js-config-var-name js-config-var-managed-name">IMAGE_FSTYPES</span>
-+                <i class="icon-question-sign get-help" title="Formats of root file system images that you want to have created <br /><a href='http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-IMAGE_FSTYPES' target='_blank'>Read more in the manual</a>"></i>
-+            </dt>
-+            <dd class="lead">
-+                <span id="image_fstypes">{{fstypes}}</span>
-+                <i class="icon-pencil" id="change-image_fstypes-icon"></i>
-+                <form id="change-image_fstypes-form" style="display:none;">
-+                    <input id="filter-image_fstypes" type="text" placeholder="Search image types" class="span4">
-+                    <div id="all-image_fstypes" class="scrolling">
-+                    </div>
-+                    <button id="apply-change-image_fstypes" type="button" class="btn">Save</button>
-+                    <button id="cancel-change-image_fstypes" type="button" class="btn btn-link">Cancel</button>
-+                </form>
-+            </dd>
-+            <dt>
-+                <span class="js-config-var-name js-config-var-managed-name">IMAGE_INSTALL_append</span>
-+                <i class="icon-question-sign get-help" title="Specifies additional packages to install into an image. If your build creates more than one image, the packages will be installed in <strong>all of them</strong> <br /><a href='http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-IMAGE_INSTALL' target='_blank'>Read more in the manual</a>"></i>
-+            </dt>
-+            <dd class="lead muted">
-+                <span id="image_install">{% if image_install_append %}{{image_install_append}}{%else%}Not set{%endif%}</span>
-+                <i class="icon-pencil" id="change-image_install-icon"></i>
-+                <i class="icon-trash" id="delete-image_install-icon" style="display:none;"></i>
-+                <form id="change-image_install-form" style="display:none;">
-+                    <div class="row-fluid">
-+                        <span class="help-block span4">To set IMAGE_INSTALL_append to more than one package, type the package names separated by a space.</span>
-+                    </div>
-+                    <div class="input-append">
-+                        <input type="text" class="input-xlarge" id="new-image_install" placeholder="Type one or more package names">
-+                        <button id="apply-change-image_install" class="btn" type="button">Save</button>
-+                        <button id="cancel-change-image_install" type="button" class="btn btn-link">Cancel</button>
-+                    </div>
-+                </form>
-+            </dd>
-+            <dt>
-+                <span class="js-config-var-name js-config-var-managed-name">PACKAGE_CLASSES</span>
-+                <i class="icon-question-sign get-help" title="Specifies the package manager to use when packaging data <br /><a href='http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-PACKAGE_CLASSES' target='_blank'>Read more in the manual</a>"></i>
-+            </dt>
-+            <dd class="lead">
-+                <span id="package_classes">{{package_classes}}</span>
-+                <i id="change-package_classes-icon" class="icon-pencil"></i>
-+                <form id="change-package_classes-form" style="display:none;">
-+                    <label>
-+                        Root file system package format
-+                        <i class="icon-question-sign get-help" title="The package format used to generate the root file system. Options are <code>dev</code>, <code>ipk</code> and <code>rpm</code>"></i>
-+                    </label>
-+                    <select id="package_classes-select">
-+                        <option>package_dev</option>
-+                        <option>package_ipk</option>
-+                        <option>package_rpm</option>
-+                    </select>
-+                    <label>
-+                        Additional package formats
-+                        <i class="icon-question-sign get-help" title="Extra package formats to build"></i>
-+                    </label>
-+                    <label class="checkbox" id="package_class_1">
-+                        <input type="checkbox" id="package_class_1_input"> package_dev
-+                    </label>
-+                    <label class="checkbox" id="package_class_2">
-+                        <input type="checkbox" id="package_class_2_input"> package_ipk
-+                    </label>
-+                    <div style="padding-top:10px;">
-+                        <button id="apply-change-package_classes" type="button" class="btn">Save</button>
-+                        <button id="cancel-change-package_classes" type="button" class="btn btn-link">Cancel</button>
-+                    </div>
-+                </form>
-+            </dd>
-+            <dt>
-+                <span class="js-config-var-name js-config-var-managed-name">SDKMACHINE</span>
-+                <i class="icon-question-sign get-help" title="Specifies the architecture (i.e. i686 or x86_64) for which to build SDK and ADT items <br /><a href='http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-SDKMACHINE' target='_blank'>Read more in the manual</a>"></i>
-+            </dt>
-+            <dd class="lead">
-+                <span id="sdkmachine">{{sdk_machine}}</span>
-+                <i id="change-sdkmachine-icon" class="icon-pencil"></i>
-+                <form id="change-sdkmachine-form" style="display:none;">
-+                    <label class="radio">
-+                        <input type="radio" name="sdkmachine" value="i686">
-+                        i686
-+                    </label>
-+                    <label class="radio">
-+                        <input type="radio" name="sdkmachine" value="x86_64">
-+                        x86_64
-+                    </label>
-+                    <div style="padding-top:10px;">
-+                        <button id="apply-change-sdkmachine" type="button" class="btn">Save</button>
-+                        <button id="cancel-change-sdkmachine" type="button" class="btn btn-link">Cancel</button>
-+                    </div>
-+                </form>
-+            </dd>
- 
-+        </dl>
- 
-+        <!-- <ul class="unstyled configuration-list" id="configvar-list"> -->
-+        <dl id="configvar-list">
-+            <!-- the added configuration variables are inserted here -->
-         </dl>
--        <form id="variable-form">
+                 <div class="page-header">
+                     <h1>
+-                        All builds
+-                        <i class="icon-question-sign get-help heading-help" title="This page lists all the layers compatible with Yocto Project 1.7 'Dxxxx' that Toaster knows about. They include community-created layers suitable for use on top of OpenEmbedded Core and any layers you have imported"></i>
+-                     </h1>
+-                </div>
+-                <!--div class="alert">
+-                    <div class="input-append" style="margin-bottom:0px;">
+-                        <input class="input-xxlarge" type="text" placeholder="Search layers" value="browser" />
+-                        <a class="add-on btn">
+-                            <i class="icon-remove"></i>
+-                        </a>
+-                        <button class="btn" type="button">Search</button>
+-                        <a class="btn btn-link" href="#">Show all layers</a>
+-                    </div>
+-                </div-->
+-                <div id="layer-added" class="alert alert-info lead" style="display:none;"></div>
+-                <div id="layer-removed" class="alert alert-info lead" style="display:none;">
+-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+-                    <strong>1</strong> layer deleted from <a href="project-with-targets.html">your project</a>: <a href="#">meta-aarch64</a>
++ {% if objects.paginator.count == 0 %}
++                     No builds found
 +
-+        <!-- pass the fstypes list, black list, and externally managed variables here -->
-+        {% for fstype in vars_fstypes %}
-+            <input type="hidden" class="js-checkbox-fstypes-list" value="{{fstype}}">
-+        {% endfor %}
-+        {% for b in vars_blacklist %}
-+            <input type="hidden" class="js-config-blacklist-name" value="{{b}}">
-+        {% endfor %}
-+        {% for b in vars_managed %}
-+            <input type="hidden" class="js-config-var-managed-name" value="{{b}}">
-+        {% endfor %}
-+
-+        <div class="row-fluid">
-+          <form id="variable-form">
-             <fieldset style="padding-left:0px;">
-                 <legend>Add variable</legend>
--                <label>
--                    Variable
--                    <i class="icon-question-sign get-help" title="Variable names are case sensitive, cannot have spaces, and can only include letters, numbers, underscores and dashes"></i>
--                </label>
--                <input id="variable" type="text" placeholder="Type variable name">
--                <label>Value</label>
--                <input id="value" type="text" placeholder="Type variable value">
--                <div style="display:block;margin-top:10px;">
--                    <a href="#" class="btn save" disabled>
--                        Add variable
--                    </a>
-+                <div class="span3" style="margin-left:0px;">
-+                    <span  id="add-configvar-name-div" class="control-group">
-+                      <label>
-+                        Variable
-+                        <i title="" class="icon-question-sign get-help"
-+                           data-original-title="Variable names are case sensitive,
-+                           cannot have spaces, and can only include letters, numbers, underscores
-+                           and dashes"></i>
-+                      </label>
-+                      <input type="text" placeholder="Type variable name" id="variable">
-+                      <span class="help-block error" id="new-variable-error-message"></span>
-+                    </span>
-+                    <label>Value</label>
-+                    <input id="value" type="text" placeholder="Type variable value"><p>
-+                    <div class="input-append" style="display:block;margin-top:10px;">
-+                        <button id="add-configvar-button" class="btn save" type="button" disabled>Add variable</button>
-+                    </div>
-+                </div>
-+                <div class="span5 help-block">
-+                    <h5>Some variables are reserved from Toaster</h5>
-+                    <p>Toaster cannot set any variables that impact 1) the configuration of the build servers,
-+                    or 2) where artifacts produced by the build are stored. Such variables include: </p>
-+                    <p>
-+                    <code><a href="http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-BB_DISKMON_DIRS" target="_blank">BB_DISKMON_DIRS</a></code>
-+                    <code><a href="http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-BB_NUMBER_THREADS" target="_blank">BB_NUMBER_THREADS</a></code>
-+                    <code>CVS_PROXY_HOST</code>
-+                    <code>CVS_PROXY_PORT</code>
-+                    <code><a href="http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-DL_DIR" target="_blank">DL_DIR</a></code>
-+                    <code><a href="http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-PARALLEL_MAKE" target="_blank">PARALLEL_MAKE</a></code>
-+                    <code><a href="http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-SSTATE_DIR" target="_blank">SSTATE_DIR</a></code>
-+                    <code><a href="http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-SSTATE_MIRRORS" target="_blank">SSTATE_MIRRORS</a></code>
-+                    <code><a href="http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-TMPDIR" target="_blank">TMPDIR</a></code></p>
-+                    <p>Plus the following standard shell environment variables:</p>
-+                    <p><code>http_proxy</code> <code>ftp_proxy</code> <code>https_proxy</code> <code>all_proxy</code></p>
++ {% else %}
++	{% if  request.GET.filter or request.GET.search  %}
++			{{objects.paginator.count}} builds found
++	{% else %}
++                        Project builds <small>({{objects.paginator.count}})</small>
++	{% endif %}
++ {% endif %}
++                        <i class="icon-question-sign get-help heading-help" title="This page lists all the builds for the current project"></i>
++                    </h1>
                  </div>
-             </fieldset>
--        </form>
--        <!--button id="add-variable" class="btn air">
--            <i class="icon-plus"></i>
--            Add variable
--        </button-->
-+          </form>
-+        </div>
  
-     </div>
  
-+    <script>
-+
-+        // validate new variable name
-+        function validate_new_variable_name() {
-+            var variable = $("input#variable")[0].value;
-+            var value    = $("input#value")[0].value;
-+
-+            // presumed innocence
-+            $('#new-variable-error-message').html("");
-+            var error_msg = ""
-+
-+            var existing_configvars = document.getElementsByClassName('js-config-var-name');
-+            for (var i = 0, length = existing_configvars.length; i < length; i++) {
-+                if (existing_configvars[i].innerHTML == variable) {
-+                    error_msg = "This variable is already set in this page, edit its value instead";
-+                }
-+            }
-+
-+            var blacklist_configvars = document.getElementsByClassName('js-config-blacklist-name');
-+            for (var i = 0, length = blacklist_configvars.length; i < length; i++) {
-+                if (blacklist_configvars[i].value == variable) {
-+                    error_msg = "You cannot edit this variable in Toaster because it is set by the build servers";
-+                }
-+            }
-+
-+            var bad_chars  = /[^a-zA-Z0-9\-_]/.test(variable);
-+            var has_spaces = (0 <= variable.indexOf(" "));
-+            var only_spaces = (0 < variable.length) && (0 == variable.trim().length);
-+
-+            if (only_spaces) {
-+                error_msg = "A valid variable name cannot include spaces";
-+            } else if (bad_chars && has_spaces) {
-+                error_msg = "A valid variable name can only include letters, numbers, underscores, dashes, and cannot include spaces";
-+            } else if (bad_chars) {
-+                error_msg = "A valid variable name can only include letters, numbers, underscores, and dashes";
-+            }
-+
-+            if ("" != error_msg) {
-+                $('#new-variable-error-message').html(error_msg);
-+                $(".save").attr("disabled","disabled");
-+
-+                var d = document.getElementById("add-configvar-name-div");
-+                d.className = d.className + " control-group error";
-+
-+                return false;
-+            }
-+
-+            var d = document.getElementById("add-configvar-name-div");
-+            d.className = d.className.replace(" control-group error","");
-+            return true;
-+        }
-+
-+        // Preset or reset the Package Class checkbox labels
-+        function updatePackageClassCheckboxes() {
-+            if ($('select').val() == 'package_dev') {
-+                $('#package_class_1').html('<input type="checkbox" id="package_class_1_input"> package_ipk');
-+                $('#package_class_2').html('<input type="checkbox" id="package_class_2_input"> package_rpm');
-+            }
-+            if ($('select').val() == 'package_ipk') {
-+                $('#package_class_1').html('<input type="checkbox" id="package_class_1_input"> package_dev');
-+                $('#package_class_2').html('<input type="checkbox" id="package_class_2_input"> package_rpm');
-+            }
-+            if ($('select').val() == 'package_rpm') {
-+                $('#package_class_1').html('<input type="checkbox" id="package_class_1_input"> package_dev');
-+                $('#package_class_2').html('<input type="checkbox" id="package_class_2_input"> package_ipk');
-+            }
-+        }
-+
-+        // Re-assert handlers when the page is served and/or refreshed via Ajax
-+        function setEventHandlersForDynamicElements() {
-+
-+            // change variable value
-+            $('.js-icon-pencil-config_var').click(function (evt) {
-+                var pk = evt.target.attributes["x-data"].value;
-+                var current_val = $("span#config_var_"+pk).html();
-+                $('.js-icon-pencil-config_var, .js-icon-trash-config_var, #config_var_'+pk).hide();
-+                $("#change-config_var-form_"+pk).slideDown();
-+                $("input#new-config_var_"+pk)[0].value = current_val;
-+            });
-+
-+            $('.js-cancel-change-config_var').click(function (evt) {
-+                var pk = evt.target.attributes["x-data"].value;
-+                $("#change-config_var-form_"+pk).slideUp(function() {
-+                    $('.js-icon-pencil-config_var, .js-icon-trash-config_var, #config_var_'+pk).show();
-+                });
-+            });
-+
-+            $(".js-new-config_var").keyup(function(){
-+                if ($(this).val().length == 0) {
-+                    $(".js-apply-change-config_var").attr("disabled","disabled");
-+                }
-+                else {
-+                    $(".js-apply-change-config_var").removeAttr("disabled");
-+                }
-+            });
-+
-+            $('.js-apply-change-config_var').click(function (evt) {
-+                var xdata    = evt.target.attributes["x-data"].value.split(":");
-+                var pk       = xdata[0];
-+                var variable = xdata[1];
-+                var val      = $('#new-config_var_'+pk).val();
-+                postEditAjaxRequest({"configvarChange" : variable+':'+val});
-+                $('#config_var_'+pk).parent().removeClass('muted');
-+                $("#change-config_var-form_"+pk).slideUp(function() {
-+                    $('.js-icon-pencil-config_var, .js-icon-trash-config_var, #config_var_'+pk).show();
-+                });
-+            });
-+
-+            // delete variable
-+              $(".js-icon-trash-config_var").click(function (evt) {
-+                    var xdata    = evt.target.attributes["x-data"].value.split(":");
-+                    var pk       = xdata[0];
-+                    $('#config_var_entry_'+pk).slideUp(function() {
-+                        //$('#config_var_entry_'+pk).show();
-+                    });
-+                    postEditAjaxRequest({"configvarDel": evt.target.attributes["x-data"].value});
-+            });
-+
-+        }
-+
-+        function onEditPageUpdate(data) {
-+            // update targets
-+            var i; var orightml = "";
-+
-+            var configvars_sorted = data.configvars.sort(function(a, b){return a[0] > b[0]});
-+
-+            var managed_configvars = document.getElementsByClassName('js-config-var-managed-name');
-+
-+            for (i = 0; i < configvars_sorted.length; i++) {
-+                // skip if the variable name has a special context (not user defined)
-+                var var_context=undefined;
-+                for (var j = 0, length = managed_configvars.length; j < length; j++) {
-+                    if ((managed_configvars[j].innerHTML == configvars_sorted[i][0]) ||
-+                        (managed_configvars[j].value     == configvars_sorted[i][0]) ) {
-+                        var_context='m';
-+                    }
-+                }
-+                if (var_context == undefined) {
-+                    orightml += '<dt id="config_var_entry_'+configvars_sorted[i][2]+'"><span class="js-config-var-name">'+configvars_sorted[i][0]+'</span><i class="icon-trash js-icon-trash-config_var" x-data="'+configvars_sorted[i][2]+'"></i> </dt>'
-+                    orightml += '<dd class="lead">'
-+                    orightml += '    <span id="config_var_'+configvars_sorted[i][2]+'">'+configvars_sorted[i][1]+'</span>'
-+                    orightml += '    <i class="icon-pencil js-icon-pencil-config_var" x-data="'+configvars_sorted[i][2]+'"></i>'
-+                    orightml += '    <form id="change-config_var-form_'+configvars_sorted[i][2]+'" style="display:none;">'
-+                    orightml += '        <div class="input-append">'
-+                    orightml += '            <input type="text" class="input-xlarge js-new-config_var" id="new-config_var_'+configvars_sorted[i][2]+'" value="">'
-+                    orightml += '            <button class="btn js-apply-change-config_var" type="button" x-data="'+configvars_sorted[i][2]+':'+configvars_sorted[i][0]+'" disabled>Save</button>'
-+                    orightml += '            <button type="button" class="btn btn-link js-cancel-change-config_var" x-data="'+configvars_sorted[i][2]+'">Cancel</button>'
-+                    orightml += '        </div>'
-+                    orightml += '    </form>'
-+                    orightml += '</dd>'
-+                }
-+            }
-+
-+            // update configvars list
-+            $("dl#configvar-list").html(orightml);
-+
-+            // re-assert these event handlers
-+            setEventHandlersForDynamicElements();
-+        }
-+
-+        function onEditAjaxSuccess(data, textstatus) {
-+            // console.log("XHR returned:", data, "(" + textstatus + ")");
-+            if (data.error != "ok") {
-+                alert("error on request:\n" + data.error);
-+                return;
-+            }
-+            onEditPageUpdate(data);
-+        }
-+
-+        function onEditAjaxError(jqXHR, textstatus, error) {
-+            alert("XHR errored:\n" + error + "\n(" + textstatus + ")");
-+            // re-assert the event handlers
-+        }
-+
-+        function postEditAjaxRequest(reqdata) {
-+            var ajax = $.ajax({
-+                    type:"POST",
-+                    data: $.param(reqdata),
-+                    url:"{% url 'xhr_configvaredit' project.id%}",
-+                    headers: { 'X-CSRFToken': $.cookie("csrftoken")},
-+                    success: onEditAjaxSuccess,
-+                    error: onEditAjaxError,
-+                })
-+        }
-+
-+
-+        $(document).ready(function() {
-+
-+             //
-+            // Register handlers for static elements
-+            //
-+
-+            // change distro variable
-+            $('#change-distro-icon').click(function() {
-+                $('#change-distro-icon, #distro').hide();
-+                $("#change-distro-form").slideDown();
-+            });
-+
-+            $('#cancel-change-distro').click(function(){
-+                $("#change-distro-form").slideUp(function() {
-+                    $('#distro, #change-distro-icon').show();
-+                });
-+            });
-+
-+            $("#new-distro").keyup(function(){
-+                if ($(this).val().length == 0) {
-+                    $("#apply-change-distro").attr("disabled","disabled");
-+                }
-+                else {
-+                    $("#apply-change-distro").removeAttr("disabled");
-+                }
-+            });
-+
-+            $('#apply-change-distro').click(function(){
-+                //$('#repo').parent().removeClass('highlight-go');
-+                var name = $('#new-distro').val();
-+                postEditAjaxRequest({"configvarChange" : 'DISTRO:'+name});
-+                $('#distro').html(name);
-+                $("#change-distro-form").slideUp(function () {
-+                    $('#distro, #change-distro-icon').show();
-+                });
-+            });
-+
-+
-+            // change IMAGE_FSTYPES variable
-+            $('#change-image_fstypes-icon').click(function() {
-+                $('#change-image_fstypes-icon, #image_fstypes').hide();
-+                $("#change-image_fstypes-form").slideDown();
-+                // avoid false substring matches by including space separators
-+                var html         = "";
-+                var fstypes      = " " + document.getElementById("image_fstypes").innerHTML + " ";
-+                var fstypes_list = document.getElementsByClassName('js-checkbox-fstypes-list');
-+                // Add the checked boxes first
-+                if ("  " != fstypes) {
-+                    for (var i = 0, length = fstypes_list.length; i < length; i++) {
-+                        if (0 <= fstypes.indexOf(" "+fstypes_list[i].value+" ")) {
-+                             html += '<label class="checkbox"><input type="checkbox" class="fs-checkbox-fstypes" value="'+fstypes_list[i].value+'" checked="checked">'+fstypes_list[i].value+'</label>\n';
-+                        }
-+                    }
-+                }
-+                // Add the un-checked boxes second
-+                for (var i = 0, length = fstypes_list.length; i < length; i++) {
-+                    if (0  > fstypes.indexOf(" "+fstypes_list[i].value+" ")) {
-+                            html += '<label class="checkbox"><input type="checkbox" class="fs-checkbox-fstypes" value="'+fstypes_list[i].value+'">'+fstypes_list[i].value+'</label>\n';
-+                    }
-+                }
-+                document.getElementById("all-image_fstypes").innerHTML = html;
-+            });
-+
-+            $('#cancel-change-image_fstypes').click(function(){
-+                $("#change-image_fstypes-form").slideUp(function() {
-+                    $('#image_fstypes, #change-image_fstypes-icon').show();
-+                });
-+            });
-+
-+            $('#apply-change-image_fstypes').click(function(){
-+                var fstypes = '';
-+                var checkboxes = document.getElementsByClassName('fs-checkbox-fstypes');
-+                for (var i = 0, length = checkboxes.length; i < length; i++) {
-+                    if (checkboxes[i].checked) {
-+                        fstypes += checkboxes[i].value + ' ';
-+                    }
-+                }
-+                fstypes = fstypes.trim();
-+
-+                postEditAjaxRequest({"configvarChange" : 'IMAGE_FSTYPES:'+fstypes});
-+                $('#image_fstypes').html(fstypes);
-+                $('#image_fstypes').parent().removeClass('muted');
-+
-+                $("#change-image_fstypes-form").slideUp(function() {
-+                    $('#image_fstypes, #change-image_fstypes-icon').show();
-+                });
-+            });
-+
-+
-+            // change IMAGE_INSTALL_append variable
-+            $('#change-image_install-icon').click(function() {
-+                $('#change-image_install-icon, #delete-image_install-icon, #image_install').hide();
-+                $("#change-image_install-form").slideDown();
-+            });
-+
-+            $('#cancel-change-image_install').click(function(){
-+                $("#change-image_install-form").slideUp(function() {
-+                    $('#image_install, #change-image_install-icon').show();
-+                });
-+            });
-+
-+            $("#new-image_install").keyup(function(){
-+                if ($(this).val().length == 0) {
-+                    $("#apply-change-image_install").attr("disabled","disabled");
-+                }
-+                else {
-+                    $("#apply-change-image_install").removeAttr("disabled");
-+                }
-+            });
-+
-+            $('#apply-change-image_install').click(function(){
-+                var name = $('#new-image_install').val();
-+                postEditAjaxRequest({"configvarChange" : 'IMAGE_INSTALL_append:'+name});
-+                $('#image_install').html(name);
-+                $('#image_install').parent().removeClass('muted');
-+                $("#change-image_install-form").slideUp(function () {
-+                    $('#image_install, #change-image_install-icon').show();
-+                    if (name.length > -1) {
-+                        $('#delete-image_install-icon').show();
-+                    }
-+               });
-+            });
-+
-+            // delete IMAGE_INSTALL_append variable value
-+            $('#delete-image_install-icon').click(function(){
-+                $(this).tooltip('hide');
-+                postEditAjaxRequest({"configvarChange" : 'IMAGE_INSTALL_append:'+''});
-+                $('#image_install').parent().fadeOut(1000, function(){
-+                    $('#image_install').parent().addClass('muted');
-+                    $('#image_install').html('Not set');
-+                    $('#delete-image_install-icon').hide();
-+                    $('#image_install').parent().fadeIn(1000);
-+                });
-+            });
-+
-+
-+            // change PACKAGE_CLASSES variable
-+            $('#change-package_classes-icon').click(function() {
-+                $('#change-package_classes-icon, #package_classes').hide();
-+                $("#change-package_classes-form").slideDown();
-+
-+                // initialize the pulldown and checkboxes
-+                var value = document.getElementById("package_classes").innerHTML;
-+                if (0 == value.indexOf("package_dev")) {
-+                    $('select').selectedIndex = 0;
-+                    updatePackageClassCheckboxes();
-+                    if (0 < value.indexOf("package_ipk")) {document.getElementById("package_class_1_input").checked = true};
-+                    if (0 < value.indexOf("package_rpm")) {document.getElementById("package_class_2_input").checked = true};
-+                }
-+                if (0 == value.indexOf("package_ipk")) {
-+                    $('select').selectedIndex = 1;
-+                    updatePackageClassCheckboxes();
-+                    if (0 < value.indexOf("package_dev")) {document.getElementById("package_class_1_input").checked = true;};
-+                    if (0 < value.indexOf("package_rpm")) {document.getElementById("package_class_2_input").checked = true;};
-+                }
-+                if (0 == value.indexOf("package_rpm")) {
-+                    $('select').selectedIndex = 2;
-+                    updatePackageClassCheckboxes();
-+                    if (0 < value.indexOf("package_dev")) {document.getElementById("#package_class_1_input").checked = true;};
-+                    if (0 < value.indexOf("package_ipk")) {document.getElementById("#package_class_2_input").checked = true;};
-+                }
-+            });
-+
-+            $('#cancel-change-package_classes').click(function(){
-+                $("#change-package_classes-form").slideUp(function() {
-+                    $('#package_classes, #change-package_classes-icon').show();
-+                });
-+            });
-+
-+            $('select').change(function() {
-+                updatePackageClassCheckboxes();
-+            });
-+
-+            $('#apply-change-package_classes').click(function(){
-+                var e   = document.getElementById("package_classes-select");
-+                var val = e.options[e.selectedIndex].text;
-+
-+                pc1_checked = document.getElementById("package_class_1_input").checked;
-+                pc2_checked = document.getElementById("package_class_2_input").checked;
-+                if (val == "package_dev") {
-+                    if (pc1_checked) val = val + " package_ipk";
-+                    if (pc2_checked) val = val + " package_rpm";
-+                }
-+                if (val == "package_ipk") {
-+                    if (pc1_checked) val = val + " package_dev";
-+                    if (pc2_checked) val = val + " package_rpm";
-+                }
-+                if (val == "package_rpm") {
-+                    if (pc1_checked) val = val + " package_dev";
-+                    if (pc2_checked) val = val + " package_ipk";
-+                }
-+
-+                $('#package_classes').html(val);
-+                //$('#package_classes').parent().removeClass('muted');
-+                postEditAjaxRequest({"configvarChange" : 'PACKAGE_CLASSES:'+val});
-+                $("#change-package_classes-form").slideUp(function() {
-+                    $('#package_classes, #change-package_classes-icon').show();
-+                });
-+            });
-+
-+
-+            // change SDKMACHINE variable
-+            $('#change-sdkmachine-icon').click(function() {
-+                var current_value = document.getElementById("sdkmachine").innerHTML;
-+                var radios = document.getElementsByName('sdkmachine');
-+                for (var i = 0, length = radios.length; i < length; i++) {
-+                    radios[i].checked = false;
-+                    if (radios[i].value == current_value) {
-+                        radios[i].checked = true;
-+                    }
-+                }
-+                $('#change-sdkmachine-icon, #sdkmachine').hide();
-+                $("#change-sdkmachine-form").slideDown();
-+            });
-+
-+            $('#cancel-change-sdkmachine').click(function(){
-+                $("#change-sdkmachine-form").slideUp(function() {
-+                    $('#sdkmachine, #change-sdkmachine-icon').show();
-+                });
-+            });
-+
-+            $('#apply-change-sdkmachine').click(function(){
-+                var value="";
-+                var radios = document.getElementsByName('sdkmachine');
-+                for (var i = 0, length = radios.length; i < length; i++) {
-+                    if (radios[i].checked) {
-+                        // do whatever you want with the checked radio
-+                        value=radios[i].value;
-+                        break;
-+                    }
-+                }
-+                postEditAjaxRequest({"configvarChange" : 'SDKMACHINE:'+value});
-+                $('#sdkmachine').html(value);
-+                $("#change-sdkmachine-form").slideUp(function() {
-+                    $('#sdkmachine, #change-sdkmachine-icon').show();
-+                });
-+
-+            });
-+
-+
-+            // add new variable
-+            $("button#add-configvar-button").click( function (evt) {
-+                var variable = $("input#variable")[0].value;
-+                var value    = $("input#value")[0].value;
-+
-+                if (validate_new_variable_name()) {
-+                    postEditAjaxRequest({"configvarAdd" : variable+':'+value});
-+
-+                    // clear the previous values
-+                    $("input#variable")[0].value = "";
-+                    $("input#value")[0].value    = "";
-+
-+                }
-+            });
-+
-+            // validate new variable name
-+            $("input#variable").focusout( function (evt) {
-+                validate_new_variable_name();
-+            });
-+
-+            //activate / deactivate save added variable button
-+            $("#variable, #value").keyup(function() {
-+                if ( $("#variable").val().length > 0  && $("#value").val().trim().length > 0 ) {
-+                    $(".save").removeAttr("disabled");
-+                }
-+                else {
-+                    $(".save").attr("disabled","disabled");
-+                }
-+            });
-+
-+            //
-+            // draw and register the dynamic configuration variables and handlers
-+            //
-+
-+            var data = {
-+                configvars : []
-+            };
-+            {% for c in configvars %}
-+                data.configvars.push([ "{{c.name}}","{{c.value}}","{{c.pk}}" ]);
-+                {% if '' != vars_context|get_dict_value:c.name %}
-+                    data.vars_context[ "{{c.name}}" ] = "{{vars_context|get_dict_value:c.name }}";
-+                {% endif %}
-+            {% endfor %}
-+
-+            // draw these elements and assert their event handlers
-+            onEditPageUpdate(data);
-+        });
-+
-+    </script>
+-{% include "basetable_top.html" %}
+-    {% for build in objects %}
++ {% if objects.paginator.count == 0 %}
++    <div class="row-fluid">
++      <div class="alert">
++        <form class="no-results input-append" id="searchform">
++            <input id="search" name="search" class="input-xxlarge" type="text" value="{{request.GET.search}}"/>{% if request.GET.search %}<a href="javascript:$('#search').val('');searchform.submit()" class="add-on btn" tabindex="-1"><i class="icon-remove"></i></a>{% endif %}
++            <button class="btn" type="submit" value="Search">Search</button>
++            <button class="btn btn-link" onclick="javascript:$('#search').val('');searchform.submit()">Show all builds</button>
++        </form>
++      </div>
++    </div>
++
++
++ {% else %}
++
++  {% include "basetable_top.html" %}
++        <!-- Table data rows; the order needs to match the order of "tablecols" definitions; and the <td class value needs to match the tablecols clclass value for show/hide buttons to work -->
++        {% for br in objects %}{% if br.build %}  {% with build=br.build %} {# if we have a build, just display it #}
+         <tr class="data">
+             <td class="outcome"><a href="{% url "builddashboard" build.id %}">{%if build.outcome == build.SUCCEEDED%}<i class="icon-ok-sign success"></i>{%elif build.outcome == build.FAILED%}<i class="icon-minus-sign error"></i>{%else%}{%endif%}</a></td>
+             <td class="target">{% for t in build.target_set.all %} <a href="{% url "builddashboard" build.id %}"> {{t.target}} </a> <br />{% endfor %}</td>
+             <td class="machine"><a href="{% url "builddashboard" build.id %}">{{build.machine}}</a></td>
+             <td class="started_on"><a href="{% url "builddashboard" build.id %}">{{build.started_on|date:"d/m/y H:i"}}</a></td>
+             <td class="completed_on"><a href="{% url "builddashboard" build.id %}">{{build.completed_on|date:"d/m/y H:i"}}</a></td>
+-            <td class="failed_tasks error">{% query build.task_build outcome=4 order__gt=0 as exectask%}{% if exectask.count == 1 %}<a href="{% url "task" build.id exectask.0.id %}">{{exectask.0.recipe.name}}.{{exectask.0.task_name}}</a>{% elif exectask.count > 1%}<a href="{% url "tasks" build.id %}?filter=outcome%3A4">{{exectask.count}}</a>{%endif%}</td>
+-            <td class="errors_no">{% if  build.errors_no %}<a class="errors_no error" href="{% url "builddashboard" build.id %}#errors">{{build.errors_no}} error{{build.errors_no|pluralize}}</a>{%endif%}</td>
++            <td class="failed_tasks error">
++                {% query build.task_build outcome=4 order__gt=0 as exectask%}
++                    {% if exectask.count == 1 %}
++                        <a href="{% url "task" build.id exectask.0.id %}">{{exectask.0.recipe.name}}.{{exectask.0.task_name}}</a>
++                      {% if MANAGED and build.project %}
++                        <a href="{% url 'build_artifact' build.id "tasklogfile" exectask.0.id %}">
++                            <i class="icon-download-alt" title="" data-original-title="Download task log file"></i>
++                        </a>
++                      {% endif %}
++                    {% elif exectask.count > 1%}
++                        <a href="{% url "tasks" build.id %}?filter=outcome%3A4">{{exectask.count}} task{{exectask.count|pluralize}}</a>
++                    {%endif%}
++            </td>
++            <td class="errors_no">
++                {% if  build.errors_no %}
++                    <a class="errors_no error" href="{% url "builddashboard" build.id %}#errors">{{build.errors_no}} error{{build.errors_no|pluralize}}</a>
++                    {% if MANAGED and build.project %}
++                        <a href="{% url 'build_artifact' build.id "cookerlog" build.id %}">
++                            <i class="icon-download-alt" title="" data-original-title="Download build log"></i>
++                        </a>
++                    {% endif %}
++                {%endif%}
++            </td>
+             <td class="warnings_no">{% if  build.warnings_no %}<a class="warnings_no warning" href="{% url "builddashboard" build.id %}#warnings">{{build.warnings_no}} warning{{build.warnings_no|pluralize}}</a>{%endif%}</td>
+             <td class="time"><a href="{% url "buildtime" build.id %}">{{build.timespent|sectohms}}</a></td>
+-            <td class="log">{{build.cooker_log_path}}</td>
++            {% if not MANAGED or not build.project %}
++                <td class="log">{{build.cooker_log_path}}</td>
++            {% endif %}
+             <td class="output">
+               {% if build.outcome == build.SUCCEEDED %}
+               <a href="{%url "builddashboard" build.id%}#images">{{fstypes|get_dict_value:build.id}}</a>
+@@ -50,10 +82,44 @@
+             </td>
+         </tr>
+ 
+-    {% endfor %}
+-{% include "basetable_bottom.html" %}
+ 
+-    <!-- Modals -->
++              {%endwith%}
++      {% else %} {# we don't have a build for this build request, mask the data with build request data #}
++
++
++
++        <tr class="data">
++            <td class="outcome">{% if buildrequest.state == buildrequest.REQ_FAILED %}<i class="icon-minus-sign error"></i>{%else%}FIXME_build_request_state{%endif%}</td>
++            <td class="target">
++                <span data-toggle="tooltip" {%if br.brtarget_set.all.count > 1%}title="Targets: {%for target in br.brtarget_set.all%}{{target.target}} {%endfor%}"{%endif%}>{{br.brtarget_set.all.0.target}} {%if br.brtarget_set.all.count > 1%}(+ {{br.brtarget_set.all.count|add:"-1"}}){%endif%} </span>
++            </td>
++            <td class="machine">
++                {{br.machine}}
++            </td>
++            <td class="started_on">
++                {{br.created|date:"d/m/y H:i"}}
++            </td>
++            <td class="completed_on">
++                {{br.updated|date:"d/m/y H:i"}}
++            </td>
++            <td class="failed_tasks error">
++                {{br.brerror_set.all.0.errmsg|whitespace_slice:":32"}}
++            </td>
++            <td class="errors_no">
++            </td>
++            <td class="warnings_no">
++            </td>
++            <td class="time">
++                {{br.timespent.total_seconds|sectohms}}
++            </td>
++            <td class="output"> {# we have no output here #}
++            </td>
++        </tr>
++          {%endif%}
++        {% endfor %}
++
+ 
++  {% include "basetable_bottom.html" %}
++{% endif %}
  
  {% endblock %}
-diff --git a/lib/toaster/toastergui/urls.py b/lib/toaster/toastergui/urls.py
-index 5c969f8..c74c7a6 100644
---- a/lib/toaster/toastergui/urls.py
-+++ b/lib/toaster/toastergui/urls.py
-@@ -91,6 +91,7 @@ urlpatterns = patterns('toastergui.views',
-         url(r'^xhr_projectbuild/(?P<pid>\d+)/$', 'xhr_projectbuild', name='xhr_projectbuild'),
-         url(r'^xhr_projectinfo/$', 'xhr_projectinfo', name='xhr_projectinfo'),
-         url(r'^xhr_projectedit/(?P<pid>\d+)/$', 'xhr_projectedit', name='xhr_projectedit'),
-+        url(r'^xhr_configvaredit/(?P<pid>\d+)/$', 'xhr_configvaredit', name='xhr_configvaredit'),
- 
-         url(r'^xhr_datatypeahead/$', 'xhr_datatypeahead', name='xhr_datatypeahead'),
-         url(r'^xhr_importlayer/$', 'xhr_importlayer', name='xhr_importlayer'),
 diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 4fae70b..5fcad63 100755
+index e8e4927..4fae70b 100755
 --- a/lib/toaster/toastergui/views.py
 +++ b/lib/toaster/toastergui/views.py
-@@ -2270,6 +2270,55 @@ if toastermain.settings.MANAGED:
-             return HttpResponse(jsonfilter({"error":str(e) + "\n" + traceback.format_exc()}), content_type = "application/json")
+@@ -1705,6 +1705,11 @@ if toastermain.settings.MANAGED:
+         return ret
  
  
-+    def xhr_configvaredit(request, pid):
-+        try:
-+            prj = Project.objects.get(id = pid)
-+            # add conf variables
-+            if 'configvarAdd' in request.POST:
-+                t=request.POST['configvarAdd'].strip()
-+                if ":" in t:
-+                    variable, value = t.split(":")
-+                else:
-+                    variable = t
-+                    value = ""
-+
-+                pt, created = ProjectVariable.objects.get_or_create(project = prj, name = variable, value = value)
-+            # change conf variables
-+            if 'configvarChange' in request.POST:
-+                t=request.POST['configvarChange'].strip()
-+                if ":" in t:
-+                    variable, value = t.split(":")
-+                else:
-+                    variable = t
-+                    value = ""
-+
-+                try:
-+                    pt = ProjectVariable.objects.get(project = prj, name = variable)
-+                    pt.value=value
-+                    pt.save()
-+                except ObjectDoesNotExist:
-+                    print("the entry doesn't exist.")
-+            # remove conf variables
-+            if 'configvarDel' in request.POST:
-+                t=request.POST['configvarDel'].strip()
-+                pt = ProjectVariable.objects.get(pk = int(t)).delete()
-+
-+            # return all project settings
-+            vars_managed,vars_fstypes,vars_blacklist = get_project_configvars_context()
-+            return HttpResponse(json.dumps( {
-+                "error": "ok",
-+                'configvars'   : map(lambda x: (x.name, x.value, x.pk), ProjectVariable.objects.filter(project_id = pid).all()),
-+                'distro'       : ProjectVariable.objects.get(project = prj, name = "DISTRO").value,
-+                'fstypes'      : ProjectVariable.objects.get(project = prj, name = "IMAGE_FSTYPES").value,
-+                'image_install_append': ProjectVariable.objects.get(project = prj, name = "IMAGE_INSTALL_append").value,
-+                'package_classes': ProjectVariable.objects.get(project = prj, name = "PACKAGE_CLASSES").value,
-+                'sdk_machine'  : ProjectVariable.objects.get(project = prj, name = "SDKMACHINE").value,
-+               }), content_type = "application/json")
-+
-+        except Exception as e:
-+            return HttpResponse(json.dumps({"error":str(e) + "\n" + traceback.format_exc()}), content_type = "application/json")
++    class InvalidRequestException(Exception):
++        def __init__(self, response):
++            self.response = response
 +
 +
-     def xhr_importlayer(request):
-         if (not request.POST.has_key('vcs_url') or
-             not request.POST.has_key('name') or
-@@ -2737,11 +2786,66 @@ if toastermain.settings.MANAGED:
+     # shows the "all builds" page for managed mode; it displays build requests (at least started!) instead of actual builds
+     def builds(request):
+         template = 'managed_builds.html'
+@@ -1712,19 +1717,53 @@ if toastermain.settings.MANAGED:
+         # be able to display something.  'count' and 'page' are mandatory for all views
+         # that use paginators.
  
-         return render(request, template, context)
++        buildrequests = BuildRequest.objects.exclude(state__lte = BuildRequest.REQ_INPROGRESS).exclude(state=BuildRequest.REQ_DELETED)
++
++        try:
++            context, pagesize, orderby = _build_list_helper(request, buildrequests)
++        except InvalidRequestException as e:
++            return _redirect_parameters( builds, request.GET, e.response)
++
++        context['tablecols'].append(
++                    {'name': 'Project', 'clclass': 'project',
++                     'filter': {'class': 'project',
++                            'label': 'Project:',
++                            'options':  map(lambda x: (x.name,'',x.build_set.filter(outcome__lt=BuildRequest.REQ_INPROGRESS).count()), Project.objects.all()),
++
++                           }
++                    }
++            )
++
++        response = render(request, template, context)
++        _save_parameters_cookies(response, pagesize, orderby, request)
++        return response
++
++
++
++    # helper function, to be used on "all builds" and "project builds" pages
++    def _build_list_helper(request, buildrequests):
+         # ATTN: we use here the ordering parameters for interactive mode; the translation for BuildRequest fields will happen below
+         (pagesize, orderby) = _get_parameters_values(request, 10, 'completed_on:-')
+         mandatory_parameters = { 'count': pagesize,  'page' : 1, 'orderby' : orderby }
+         retval = _verify_parameters( request.GET, mandatory_parameters )
+         if retval:
+-            return _redirect_parameters( 'all-builds', request.GET, mandatory_parameters)
++            raise InvalidRequestException(mandatory_parameters)
  
-+
-+    def get_project_configvars_context():
-+        # Vars managed outside of this view
-+        vars_managed = {
-+            'MACHINE'
-+        }
-+
-+        vars_blacklist  = {
-+            'DL_DR','PARALLEL_MAKE','BB_NUMBER_THREADS','SSTATE_DIR',
-+			'BB_DISKMON_DIRS','BB_NUMBER_THREADS','CVS_PROXY_HOST','CVS_PROXY_PORT',
-+			'DL_DIR','PARALLEL_MAKE','SSTATE_DIR','SSTATE_DIR','SSTATE_MIRRORS','TMPDIR',
-+			'all_proxy','ftp_proxy','http_proxy ','https_proxy'
-+			}
-+
-+        vars_fstypes  = {
-+            'btrfs','cpio','cpio.gz','cpio.lz4','cpio.lzma','cpio.xz','cramfs',
-+            'elf','ext2','ext2.bz2','ext2.gz','ext2.lzma' 'ext3','ext3.gz','hddimg',
-+            'iso','jffs2','jffs2.sum','squashfs','squashfs-lzo','squashfs-xz','tar.bz2',
-+            'tar.lz4','tar.xz','tartar.gz','ubi','ubifs','vmdk'
-+        }
-+
-+        return(vars_managed,sorted(vars_fstypes),vars_blacklist)
-+
-     def projectconf(request, pid):
-         template = "projectconf.html"
-+
-+        try:
-+            prj = Project.objects.get(id = pid)
-+        except Project.DoesNotExist:
-+            return HttpResponseNotFound("<h1>Project id " + pid + " is unavailable</h1>")
-+
-+        vars_managed,vars_fstypes,vars_blacklist = get_project_configvars_context()
-         context = {
--            'configvars': ProjectVariable.objects.filter(project_id = pid),
-+            'configvars':       ProjectVariable.objects.filter(project_id = pid).all(),
-+            'vars_managed':     vars_managed,
-+            'vars_fstypes':     vars_fstypes,
-+            'vars_blacklist':   vars_blacklist,
-         }
-+
-+        try:
-+            context['distro'] =  ProjectVariable.objects.get(project = prj, name = "DISTRO").value
-+        except ProjectVariable.DoesNotExist:
-+            pass
-+        try:
-+            context['fstypes'] =  ProjectVariable.objects.get(project = prj, name = "IMAGE_FSTYPES").value
-+        except ProjectVariable.DoesNotExist:
-+            pass
-+        try:
-+            context['image_install_append'] =  ProjectVariable.objects.get(project = prj, name = "IMAGE_INSTALL_append").value
-+        except ProjectVariable.DoesNotExist:
-+            pass
-+        try:
-+            context['package_classes'] =  ProjectVariable.objects.get(project = prj, name = "PACKAGE_CLASSES").value
-+        except ProjectVariable.DoesNotExist:
-+            pass
-+        try:
-+            context['sdk_machine'] =  ProjectVariable.objects.get(project = prj, name = "SDKMACHINE").value
-+        except ProjectVariable.DoesNotExist:
-+            pass
-+
-         return render(request, template, context)
++        orig_orderby = orderby
+         # translate interactive mode ordering to managed mode ordering
+         ordering_params = orderby.split(":")
+         if ordering_params[0] == "completed_on":
+             ordering_params[0] = "updated"
+         if ordering_params[0] == "started_on":
+-            ordering_params = "created"
++            ordering_params[0] = "created"
++        if ordering_params[0] == "errors_no":
++            ordering_params[0] = "build__errors_no"
++        if ordering_params[0] == "warnings_no":
++            ordering_params[0] = "build__warnings_no"
++        if ordering_params[0] == "machine":
++            ordering_params[0] = "build__machine"
++        if ordering_params[0] == "target__target":
++            ordering_params[0] = "brtarget__target"
+ 
+         request.GET = request.GET.copy()        # get a mutable copy of the GET QueryDict
+         request.GET['orderby'] = ":".join(ordering_params)
+@@ -1733,7 +1772,7 @@ if toastermain.settings.MANAGED:
+         # for that object type. copypasta for all needed table searches
+         (filter_string, search_term, ordering_string) = _search_tuple(request, BuildRequest)
+         # we don't display in-progress or deleted builds
+-        queryset_all = BuildRequest.objects.exclude(state__lte = BuildRequest.REQ_INPROGRESS).exclude(state=BuildRequest.REQ_DELETED)
++        queryset_all = buildrequests
+         queryset_with_search = _get_queryset(BuildRequest, queryset_all, None, search_term, ordering_string, '-updated')
+         queryset = _get_queryset(BuildRequest, queryset_all, filter_string, search_term, ordering_string, '-updated')
+ 
+@@ -1802,13 +1841,13 @@ if toastermain.settings.MANAGED:
+                     },
+                     {'name': 'Target',                                                 # default column, disabled box, with just the name in the list
+                      'qhelp': "This is the build target or build targets (i.e. one or more recipes or image recipes)",
+-                     'orderfield': _get_toggle_order(request, "target__target"),
+-                     'ordericon':_get_toggle_order_icon(request, "target__target"),
++                     'orderfield': _get_toggle_order(request, "brtarget__target"),
++                     'ordericon':_get_toggle_order_icon(request, "brtarget__target"),
+                     },
+                     {'name': 'Machine',
+                      'qhelp': "The machine is the hardware for which you are building a recipe or image recipe",
+-                     'orderfield': _get_toggle_order(request, "machine"),
+-                     'ordericon':_get_toggle_order_icon(request, "machine"),
++                     'orderfield': _get_toggle_order(request, "build__machine"),
++                     'ordericon':_get_toggle_order_icon(request, "build__machine"),
+                      'dclass': 'span3'
+                     },                           # a slightly wider column
+                     {'name': 'Started on', 'clclass': 'started_on', 'hidden' : 1,      # this is an unchecked box, which hides the column
+@@ -1843,21 +1882,21 @@ if toastermain.settings.MANAGED:
+                      'filter' : {'class' : 'failed_tasks',
+                                  'label': 'Show:',
+                                  'options' : [
+-                                             ('BuildRequests with failed tasks', 'build__task_build__outcome:4', queryset_with_search.filter(build__task_build__outcome=4).count()),
+-                                             ('BuildRequests without failed tasks', 'build__task_build__outcome:NOT4', queryset_with_search.filter(~Q(build__task_build__outcome=4)).count()),
++                                             ('Build with failed tasks', 'build__task_build__outcome:4', queryset_with_search.filter(build__task_build__outcome=4).count()),
++                                             ('Build without failed tasks', 'build__task_build__outcome:NOT4', queryset_with_search.filter(~Q(build__task_build__outcome=4)).count()),
+                                              ]
+                                 }
+                     },
+                     {'name': 'Errors', 'clclass': 'errors_no',
+                      'qhelp': "How many errors were encountered during the build (if any)",
+-                     'orderfield': _get_toggle_order(request, "errors_no", True),
+-                     'ordericon':_get_toggle_order_icon(request, "errors_no"),
++                     'orderfield': _get_toggle_order(request, "build__errors_no", True),
++                     'ordericon':_get_toggle_order_icon(request, "build__errors_no"),
+                      'orderkey' : 'errors_no',
+                      'filter' : {'class' : 'errors_no',
+                                  'label': 'Show:',
+                                  'options' : [
+-                                             ('BuildRequests with errors', 'errors_no__gte:1', queryset_with_search.filter(build__errors_no__gte=1).count()),
+-                                             ('BuildRequests without errors', 'errors_no:0', queryset_with_search.filter(build__errors_no=0).count()),
++                                             ('Build with errors', 'build__errors_no__gte:1', queryset_with_search.filter(build__errors_no__gte=1).count()),
++                                             ('Build without errors', 'build__errors_no:0', queryset_with_search.filter(build__errors_no=0).count()),
+                                              ]
+                                 }
+                     },
+@@ -1869,15 +1908,15 @@ if toastermain.settings.MANAGED:
+                      'filter' : {'class' : 'build__warnings_no',
+                                  'label': 'Show:',
+                                  'options' : [
+-                                             ('BuildRequests with warnings','build__warnings_no__gte:1', queryset_with_search.filter(build__warnings_no__gte=1).count()),
+-                                             ('BuildRequests without warnings','build__warnings_no:0', queryset_with_search.filter(build__warnings_no=0).count()),
++                                             ('Build with warnings','build__warnings_no__gte:1', queryset_with_search.filter(build__warnings_no__gte=1).count()),
++                                             ('Build without warnings','build__warnings_no:0', queryset_with_search.filter(build__warnings_no=0).count()),
+                                              ]
+                                 }
+                     },
+                     {'name': 'Time', 'clclass': 'time', 'hidden' : 1,
+                      'qhelp': "How long it took the build to finish",
+-                     'orderfield': _get_toggle_order(request, "timespent", True),
+-                     'ordericon':_get_toggle_order_icon(request, "timespent"),
++#                     'orderfield': _get_toggle_order(request, "timespent", True),
++#                     'ordericon':_get_toggle_order_icon(request, "timespent"),
+                      'orderkey' : 'timespent',
+                     },
+                     {'name': 'Image files', 'clclass': 'output',
+@@ -1886,38 +1925,7 @@ if toastermain.settings.MANAGED:
+                     },
+                     ]
+                 }
+-
+-        if not toastermain.settings.MANAGED:
+-            context['tablecols'].insert(-2,
+-                    {'name': 'Log1',
+-                     'dclass': "span4",
+-                     'qhelp': "Path to the build main log file",
+-                     'clclass': 'log', 'hidden': 1,
+-                     'orderfield': _get_toggle_order(request, "cooker_log_path"),
+-                     'ordericon':_get_toggle_order_icon(request, "cooker_log_path"),
+-                     'orderkey' : 'cooker_log_path',
+-                    }
+-            )
+-
+-
+-        if toastermain.settings.MANAGED:
+-            context['tablecols'].append(
+-                    {'name': 'Project', 'clclass': 'project',
+-                     'filter': {'class': 'project',
+-                            'label': 'Project:',
+-                            'options':  map(lambda x: (x.name,'',x.build_set.filter(outcome__lt=BuildRequest.REQ_INPROGRESS).count()), Project.objects.all()),
+-
+-                           }
+-                    }
+-            )
+-
+-
+-        response = render(request, template, context)
+-        _save_parameters_cookies(response, pagesize, orderby, request)
+-        return response
+-
+-
+-
++        return context, pagesize, orderby
+ 
+     # new project
+     def newproject(request):
+@@ -1957,7 +1965,7 @@ if toastermain.settings.MANAGED:
+                 prj = Project.objects.create_project(name = request.POST['projectname'], release = Release.objects.get(pk = request.POST['projectversion']))
+                 prj.user_id = request.user.pk
+                 prj.save()
+-                return redirect(reverse(project, args = (prj.pk,)) + "#/newproject")
++                return redirect(reverse(project, args=(prj.pk,)) + "#/newproject")
+ 
+             except (IntegrityError, BadParameterException) as e:
+                 # fill in page with previously submitted values
+@@ -2738,163 +2746,17 @@ if toastermain.settings.MANAGED:
  
      def projectbuilds(request, pid):
+         template = 'projectbuilds.html'
+-        # define here what parameters the view needs in the GET portion in order to
+-        # be able to display something.  'count' and 'page' are mandatory for all views
+-        # that use paginators.
+-        mandatory_parameters = { 'count': 10,  'page' : 1, 'orderby' : 'completed_on:-' };
+-        retval = _verify_parameters( request.GET, mandatory_parameters )
+-
+-        # boilerplate code that takes a request for an object type and returns a queryset
+-        # for that object type. copypasta for all needed table searches
+-        (filter_string, search_term, ordering_string) = _search_tuple(request, Build)
+-        queryset_all = Build.objects.all().exclude(outcome = Build.IN_PROGRESS)
+-        queryset_with_search = _get_queryset(Build, queryset_all, None, search_term, ordering_string, '-completed_on')
+-        queryset = _get_queryset(Build, queryset_all, filter_string, search_term, ordering_string, '-completed_on')
++        buildrequests = BuildRequest.objects.exclude(project_id = pid, state__lte = BuildRequest.REQ_INPROGRESS).exclude(state=BuildRequest.REQ_DELETED)
+ 
+-        # retrieve the objects that will be displayed in the table; builds a paginator and gets a page range to display
+-        build_info = _build_page_range(Paginator(queryset, request.GET.get('count', 10)),request.GET.get('page', 1))
+-
+-
+-        # set up list of fstypes for each build
+-        fstypes_map = {};
+-        for build in build_info:
+-            targets = Target.objects.filter( build_id = build.id )
+-            comma = "";
+-            extensions = "";
+-            for t in targets:
+-                if ( not t.is_image ):
+-                    continue
+-                tif = Target_Image_File.objects.filter( target_id = t.id )
+-                for i in tif:
+-                    s=re.sub('.*tar.bz2', 'tar.bz2', i.file_name)
+-                    if s == i.file_name:
+-                        s=re.sub('.*\.', '', i.file_name)
+-                    if None == re.search(s,extensions):
+-                        extensions += comma + s
+-                        comma = ", "
+-            fstypes_map[build.id]=extensions
++        try:
++            context, pagesize, orderby = _build_list_helper(request, buildrequests)
++        except InvalidRequestException as e:
++            return _redirect_parameters(projectbuilds, request.GET, e.response, pid = pid)
+ 
+-        # send the data to the template
+-        context = {
+-                    'objects' : build_info,
+-                    'objectname' : "builds",
+-                    'default_orderby' : 'completed_on:-',
+-                    'fstypes' : fstypes_map,
+-                    'search_term' : search_term,
+-                    'total_count' : queryset_with_search.count(),
+-                # Specifies the display of columns for the table, appearance in "Edit columns" box, toggling default show/hide, and specifying filters for columns
+-                    'tablecols' : [
+-                    {'name': 'Outcome',                                                # column with a single filter
+-                     'qhelp' : "The outcome tells you if a build successfully completed or failed",     # the help button content
+-                     'dclass' : "span2",                                                # indication about column width; comes from the design
+-                     'orderfield': _get_toggle_order(request, "outcome"),               # adds ordering by the field value; default ascending unless clicked from ascending into descending
+-                     'ordericon':_get_toggle_order_icon(request, "outcome"),
+-                      # filter field will set a filter on that column with the specs in the filter description
+-                      # the class field in the filter has no relation with clclass; the control different aspects of the UI
+-                      # still, it is recommended for the values to be identical for easy tracking in the generated HTML
+-                     'filter' : {'class' : 'outcome',
+-                                 'label': 'Show:',
+-                                 'options' : [
+-                                             ('Successful builds', 'outcome:' + str(Build.SUCCEEDED), queryset_with_search.filter(outcome=str(Build.SUCCEEDED)).count()),  # this is the field search expression
+-                                             ('Failed builds', 'outcome:'+ str(Build.FAILED), queryset_with_search.filter(outcome=str(Build.FAILED)).count()),
+-                                             ]
+-                                }
+-                    },
+-                    {'name': 'Target',                                                 # default column, disabled box, with just the name in the list
+-                     'qhelp': "This is the build target or build targets (i.e. one or more recipes or image recipes)",
+-                     'orderfield': _get_toggle_order(request, "target__target"),
+-                     'ordericon':_get_toggle_order_icon(request, "target__target"),
+-                    },
+-                    {'name': 'Machine',
+-                     'qhelp': "The machine is the hardware for which you are building a recipe or image recipe",
+-                     'orderfield': _get_toggle_order(request, "machine"),
+-                     'ordericon':_get_toggle_order_icon(request, "machine"),
+-                     'dclass': 'span3'
+-                    },                           # a slightly wider column
+-                    {'name': 'Started on', 'clclass': 'started_on', 'hidden' : 1,      # this is an unchecked box, which hides the column
+-                     'qhelp': "The date and time you started the build",
+-                     'orderfield': _get_toggle_order(request, "started_on", True),
+-                     'ordericon':_get_toggle_order_icon(request, "started_on"),
+-                     'filter' : {'class' : 'started_on',
+-                                 'label': 'Show:',
+-                                 'options' : [
+-                                             ("Today's builds" , 'started_on__gte:'+timezone.now().strftime("%Y-%m-%d"), queryset_with_search.filter(started_on__gte=timezone.now()).count()),
+-                                             ("Yesterday's builds", 'started_on__gte:'+(timezone.now()-timedelta(hours=24)).strftime("%Y-%m-%d"), queryset_with_search.filter(started_on__gte=(timezone.now()-timedelta(hours=24))).count()),
+-                                             ("This week's builds", 'started_on__gte:'+(timezone.now()-timedelta(days=7)).strftime("%Y-%m-%d"), queryset_with_search.filter(started_on__gte=(timezone.now()-timedelta(days=7))).count()),
+-                                             ]
+-                                }
+-                    },
+-                    {'name': 'Completed on',
+-                     'qhelp': "The date and time the build finished",
+-                     'orderfield': _get_toggle_order(request, "completed_on", True),
+-                     'ordericon':_get_toggle_order_icon(request, "completed_on"),
+-                     'orderkey' : 'completed_on',
+-                     'filter' : {'class' : 'completed_on',
+-                                 'label': 'Show:',
+-                                 'options' : [
+-                                             ("Today's builds", 'completed_on__gte:'+timezone.now().strftime("%Y-%m-%d"), queryset_with_search.filter(completed_on__gte=timezone.now()).count()),
+-                                             ("Yesterday's builds", 'completed_on__gte:'+(timezone.now()-timedelta(hours=24)).strftime("%Y-%m-%d"), queryset_with_search.filter(completed_on__gte=(timezone.now()-timedelta(hours=24))).count()),
+-                                             ("This week's builds", 'completed_on__gte:'+(timezone.now()-timedelta(days=7)).strftime("%Y-%m-%d"), queryset_with_search.filter(completed_on__gte=(timezone.now()-timedelta(days=7))).count()),
+-                                             ]
+-                                }
+-                    },
+-                    {'name': 'Failed tasks', 'clclass': 'failed_tasks',                # specifing a clclass will enable the checkbox
+-                     'qhelp': "How many tasks failed during the build",
+-                     'filter' : {'class' : 'failed_tasks',
+-                                 'label': 'Show:',
+-                                 'options' : [
+-                                             ('Builds with failed tasks', 'build__task_build__outcome:4', queryset_with_search.filter(build__task_build__outcome=4).count()),
+-                                             ('Builds without failed tasks', 'build__task_build__outcome:NOT4', queryset_with_search.filter(~Q(build__task_build__outcome=4)).count()),
+-                                             ]
+-                                }
+-                    },
+-                    {'name': 'Errors', 'clclass': 'errors_no',
+-                     'qhelp': "How many errors were encountered during the build (if any)",
+-                     'orderfield': _get_toggle_order(request, "build__errors_no", True),
+-                     'ordericon':_get_toggle_order_icon(request, "build__errors_no"),
+-                     'orderkey' : 'build__errors_no',
+-                     'filter' : {'class' : 'build__errors_no',
+-                                 'label': 'Show:',
+-                                 'options' : [
+-                                             ('Builds with errors', 'build__errors_no__gte:1', queryset_with_search.filter(build__errors_no__gte=1).count()),
+-                                             ('Builds without errors', 'build__errors_no:0', queryset_with_search.filter(build__errors_no=0).count()),
+-                                             ]
+-                                }
+-                    },
+-                    {'name': 'Warnings', 'clclass': 'warnings_no',
+-                     'qhelp': "How many warnings were encountered during the build (if any)",
+-                     'orderfield': _get_toggle_order(request, "warnings_no", True),
+-                     'ordericon':_get_toggle_order_icon(request, "warnings_no"),
+-                     'orderkey' : 'warnings_no',
+-                     'filter' : {'class' : 'warnings_no',
+-                                 'label': 'Show:',
+-                                 'options' : [
+-                                             ('Builds with warnings','warnings_no__gte:1', queryset_with_search.filter(warnings_no__gte=1).count()),
+-                                             ('Builds without warnings','warnings_no:0', queryset_with_search.filter(warnings_no=0).count()),
+-                                             ]
+-                                }
+-                    },
+-                    {'name': 'Time', 'clclass': 'time', 'hidden' : 1,
+-                     'qhelp': "How long it took the build to finish",
+-                     'orderfield': _get_toggle_order(request, "timespent", True),
+-                     'ordericon':_get_toggle_order_icon(request, "timespent"),
+-                     'orderkey' : 'timespent',
+-                    },
+-                    {'name': 'Log',
+-                     'dclass': "span4",
+-                     'qhelp': "Path to the build main log file",
+-                     'clclass': 'log', 'hidden': 1,
+-                     'orderfield': _get_toggle_order(request, "cooker_log_path"),
+-                     'ordericon':_get_toggle_order_icon(request, "cooker_log_path"),
+-                     'orderkey' : 'cooker_log_path',
+-                    },
+-                    {'name': 'Output', 'clclass': 'output',
+-                     'qhelp': "The root file system types produced by the build. You can find them in your <code>/build/tmp/deploy/images/</code> directory",
+-                    },
+-                    ]
+-                }
++        response = render(request, template, context)
++        _save_parameters_cookies(response, pagesize, orderby, request)
+ 
+-        return render(request, template, context)
++        return response
+ 
+ 
+     def _file_name_for_artifact(b, artifact_type, artifact_id):
 -- 
 1.9.1
 
