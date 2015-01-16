@@ -1,29 +1,39 @@
-Return-Path: <gary@mlbassoc.com>
-Received: from mail.chez-thomas.org (mail.mlbassoc.com [65.100.170.105])
-	by mail.openembedded.org (Postfix) with ESMTP id 6E67F722C3
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-we0-f182.google.com (mail-we0-f182.google.com
+	[74.125.82.182])
+	by mail.openembedded.org (Postfix) with ESMTP id D80C27226D
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Jan 2015 11:52:59 +0000 (UTC)
-Received: by mail.chez-thomas.org (Postfix, from userid 1998)
-	id 07742F811E5; Fri, 16 Jan 2015 04:52:59 -0700 (MST)
-X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
-	hermes.chez-thomas.org
-X-Spam-Level: 
-X-Spam-Status: No, score=0.8 required=4.0 tests=ALL_TRUSTED,BAYES_00,
-	DNS_FROM_AHBL_RHSBL autolearn=no version=3.3.2
-Received: from [192.168.1.114] (zeus [192.168.1.114])
-	by mail.chez-thomas.org (Postfix) with ESMTP id 649C2F811E4;
-	Fri, 16 Jan 2015 04:52:59 -0700 (MST)
-Message-ID: <54B8FBA2.1060904@mlbassoc.com>
-Date: Fri, 16 Jan 2015 04:53:06 -0700
-From: Gary Thomas <gary@mlbassoc.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:31.0) Gecko/20100101 Thunderbird/31.3.0
-MIME-Version: 1.0
+	Fri, 16 Jan 2015 16:42:37 +0000 (UTC)
+Received: by mail-we0-f182.google.com with SMTP id w62so21140764wes.13
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 16 Jan 2015 08:42:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=sXxntnaqSvQ5oEc3ntxnh+JdZYgz+vRLDgP4NwrDjOE=;
+	b=gVe6cMCsNmTaufg8zzKcf2dS2i0sjvMllelJribUlv9VEIPxJ+nXfD7/K1NX0MtYAz
+	2W33ZLgkFS3rpOEkcgfks1TOtVP/bjH8nY6Me036DHOWP990GGQTyabKF3K3d+Ma6oJ8
+	Jo4Yc0c/FHTPlkx8P4jLNzcRrzZ8tZbpPfIwpvuzf/KPed/qpROZMmYPHdUSrRZdqUIP
+	rqlMC2pCGzzGg+uh+clDcYGurDzk66zYejoDEcV1SWcGxTrgTtJ/JtWAJzbm/oeLJZn4
+	Xa8JKBRo8hVMRjRUpF9okxPVbt48R99rmxx3vllO0QnWLYH8ukB6U1WwtOGzAg87bDeR
+	8AtQ==
+X-Gm-Message-State: ALoCoQksRSrgenFvNSWfPFtH99bb5MkF528/9CMXsV+zVw9HISoiWOqy2HnY5FBzJbu8vAZhxoVE
+X-Received: by 10.180.109.79 with SMTP id hq15mr6107577wib.47.1421426557651;
+	Fri, 16 Jan 2015 08:42:37 -0800 (PST)
+Received: from adamian-desk.local ([83.217.123.106])
+	by mx.google.com with ESMTPSA id g2sm6738664wjn.11.2015.01.16.08.42.36
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 16 Jan 2015 08:42:36 -0800 (PST)
+Received: by adamian-desk.local (Postfix, from userid 1000)
+	id A6584560DB7; Fri, 16 Jan 2015 16:42:37 +0000 (GMT)
+From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-References: <54B80569.5030507@mlbassoc.com>
-	<1421396904.1798.5.camel@linuxfoundation.org>
-In-Reply-To: <1421396904.1798.5.camel@linuxfoundation.org>
-Subject: Re: Parsing recipes progress bar doesn't show incremental progress
+Date: Fri, 16 Jan 2015 16:42:35 +0000
+Message-Id: <cover.1421426452.git.alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.9.1
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>,
+	David Reyna <David.Reyna@windriver.com>
+Subject: [PATCH 0/2] Toaster feature patchset
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,50 +46,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Jan 2015 11:53:05 -0000
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 16 Jan 2015 16:42:42 -0000
 
-On 2015-01-16 01:28, Richard Purdie wrote:
-> On Thu, 2015-01-15 at 11:22 -0700, Gary Thomas wrote:
->> I think there has been a recent change in behaviour.  When
->> you start up bitbake there is a progress bar during the recipe
->> parsing:
->>     Parsing recipes: 100% |##########################################| Time: 00:00:05
->>
->> I used to see this bar fill as it went, but now it sits there
->> at 0% until it is completely done and then BAM goes to 100%
->>
->> Has anyone else seen this?  I'm running Poky/Yocto updated
->> to 2b925045877aeb44d9823a8c9515e8ab8fca1e52 as of 2015-01-15
->
-> My guess is that the delay introduced after parsing from pyinotify is
-> causing the bar to be visible at 100% for a while. I've just merged the
-> performance fix for pyinotify, can you see if its still doing what you
-> describe after that?
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-It may be better, certainly less of the "pregnant pause" now.
+Hello,
 
-The progress bar for 'parsing recipes' seems to work fine when it's
-actually parsing a lot of recipes.  The behaviour I was seeing happens
-when bitbake is able to use cached data, e.g.
-   Loading cache: 100% |####################################################################################| ETA:  00:00:00
-   Loaded 1587 entries from dependency cache.
-   Parsing recipes: 100% |##################################################################################| Time: 00:00:01
-   Parsing of 1165 .bb files complete (1164 cached, 1 parsed). 1586 targets, 115 skipped, 0 masked, 0 errors.
+This is a toaster feature patchset, bringing in the last two features needed
+for Toaster managed-mode release with M2. The patches have been reviewed 
+on toaster mailinglist.
 
-In this case, the second progress bar was empty for the one second that
-phase took and there were no intermediate changes to it.
+Can you please merge at your own convenience ?
 
-Maybe it's just an impression I got yesterday when that second
-progress bar sat empty for 5 seconds.  Today it took only one
-(for the same build tree), so perhaps you did improve it.
+Cheers,
+Alex
 
-Thanks for looking at this.
+The following changes since commit 8118f465b9f87c66b2a741008f69198ac5fea901:
+
+  toasterui: fix variable data error (2015-01-15 12:13:10 +0000)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib adamian/20150116-submission
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20150116-submission
+
+Alexandru DAMIAN (1):
+  toaster: project builds page
+
+David Reyna (1):
+  toaster: project configuration variables page
+
+ lib/toaster/bldcontrol/models.py                   |   2 +
+ .../toastergui/templates/projectbuilds.html        | 118 +++-
+ lib/toaster/toastergui/templates/projectconf.html  | 649 ++++++++++++++++++++-
+ lib/toaster/toastergui/urls.py                     |   1 +
+ lib/toaster/toastergui/views.py                    | 376 ++++++------
+ 5 files changed, 890 insertions(+), 256 deletions(-)
 
 -- 
-------------------------------------------------------------
-Gary Thomas                 |  Consulting for the
-MLB Associates              |    Embedded world
-------------------------------------------------------------
+1.9.1
+
 
