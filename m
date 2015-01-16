@@ -1,24 +1,26 @@
 Return-Path: <Chong.Lu@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id F180572BCE
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id DD98D72332
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Jan 2015 09:38:15 +0000 (UTC)
+	Fri, 16 Jan 2015 09:38:16 +0000 (UTC)
 Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
 	[147.11.189.41])
-	by mail.windriver.com (8.14.9/8.14.5) with ESMTP id t0G9cE8f010116
+	by mail1.windriver.com (8.14.9/8.14.5) with ESMTP id t0G9cGfN026693
 	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Jan 2015 01:38:15 -0800 (PST)
+	Fri, 16 Jan 2015 01:38:17 -0800 (PST)
 Received: from pek-hostel-deb02.wrs.com (128.224.153.152) by
 	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
-	14.3.174.1; Fri, 16 Jan 2015 01:38:14 -0800
+	14.3.174.1; Fri, 16 Jan 2015 01:38:16 -0800
 From: Chong Lu <Chong.Lu@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 16 Jan 2015 17:33:56 +0800
-Message-ID: <1421400837-10632-1-git-send-email-Chong.Lu@windriver.com>
+Date: Fri, 16 Jan 2015 17:33:57 +0800
+Message-ID: <11681bae97a459ce186f80489311cbd82de550d4.1421400193.git.Chong.Lu@windriver.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1421400193.git.Chong.Lu@windriver.com>
+References: <cover.1421400193.git.Chong.Lu@windriver.com>
 MIME-Version: 1.0
-Subject: [RFC][PATCH 0/1] bitbake: cooker: wait seconds to unlock bitbake.lock
+Subject: [RFC][PATCH 1/1] bitbake: cooker: wait seconds to unlock bitbake.lock
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,32 +36,37 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 X-List-Received-Date: Fri, 16 Jan 2015 09:38:24 -0000
 Content-Type: text/plain
 
-I get errors when using prserver on ubuntu 12.04:
+Sometimes, we get following error when bitbake command is executed continuously
 
-$ bitbake-prserv-tool export export.inc
-ERROR: Only one copy of bitbake should be run against a build directory
+    "ERROR: Only one copy of bitbake should be run against a build directory"
 
-$ bitbake-prserv-tool import export.inc 
-ERROR: Only one copy of bitbake should be run against a build directory
-Importing from file export.inc failed!
+For example, "bitbake -p m4 && bitbake -e".
+Add seconds to wait unlock after first bitbake command exit.
 
-Try to add seconds between two bitbake commands.
-
-The following changes since commit 4e20211090d2b193250edaa64f84e355a1c31fe5:
-
-  bitbake: toasterui: fix variable data error (2015-01-16 08:25:31 +0000)
-
-are available in the git repository at:
-
-  git://git.pokylinux.org/poky-contrib chonglu/unlock
-  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=chonglu/unlock
-
-Chong Lu (1):
-  bitbake: cooker: wait seconds to unlock bitbake.lock
-
+Signed-off-by: Chong Lu <Chong.Lu@windriver.com>
+---
  bitbake/lib/bb/cooker.py | 8 ++++++++
  1 file changed, 8 insertions(+)
 
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 95f65ac..8ebb335 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -140,6 +140,14 @@ class BBCooker:
+         # directory at a time
+         lockfile = self.data.expand("${TOPDIR}/bitbake.lock")
+         self.lock = bb.utils.lockfile(lockfile, False, False)
++        n = 0
++        while n < 3:
++            if not self.lock:
++                time.sleep(0.5)
++                self.lock = bb.utils.lockfile(lockfile, False, False)
++                n += 1
++            else:
++                break
+         if not self.lock:
+             bb.fatal("Only one copy of bitbake should be run against a build directory")
+         try:
 -- 
 1.9.1
 
