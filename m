@@ -1,29 +1,21 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id B6BD57178A
+Return-Path: <anibal.limon@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id B0F94725F0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 19 Jan 2015 22:53:18 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.9/8.14.5) with ESMTP id t0JMrGXk003462
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-	Mon, 19 Jan 2015 14:53:16 -0800 (PST)
-Received: from [128.224.162.174] (128.224.162.174) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.3.174.1;
-	Mon, 19 Jan 2015 14:53:16 -0800
-Message-ID: <54BD8ADB.1090600@windriver.com>
-Date: Tue, 20 Jan 2015 06:53:15 +0800
-From: Robert Yang <liezhi.yang@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
-	rv:31.0) Gecko/20100101 Thunderbird/31.3.0
+	Mon, 19 Jan 2015 23:34:22 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by fmsmga101.fm.intel.com with ESMTP; 19 Jan 2015 15:34:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.09,430,1418112000"; d="scan'208";a="672493699"
+Received: from alimon-thinkpad-w540.zpn.intel.com ([10.219.4.161])
+	by orsmga002.jf.intel.com with ESMTP; 19 Jan 2015 15:34:22 -0800
+From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 19 Jan 2015 17:34:25 -0600
+Message-Id: <1421710465-16610-1-git-send-email-anibal.limon@linux.intel.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-References: <1421158296.31262.17.camel@linuxfoundation.org>	
-	<54BCBBF6.4020904@windriver.com>
-	<1421663325.1798.31.camel@linuxfoundation.org>
-In-Reply-To: <1421663325.1798.31.camel@linuxfoundation.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] bitbake: Add pyinotify to lib/
+Subject: [PATCH] bb/fetch2/wget.py: latest_versionstring escape packagename when built regex
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,47 +28,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 19 Jan 2015 22:53:21 -0000
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 19 Jan 2015 23:34:31 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+When built package regex for use in searching upstream version in sites,
+the package name need to be escaped to avoid usage of special regex
+char.
 
+For example when search for gtk+, '+' need to be escaped.
 
-On 01/19/2015 06:28 PM, Richard Purdie wrote:
-> On Mon, 2015-01-19 at 16:10 +0800, Robert Yang wrote:
->> The inotify watcher numbers need less than "sysctl -n fs.inotify.max_user_watches",
->> otherwise we may get the errors like:
->> WatchManagerError: add_watch: cannot watch /path/to/build/conf/bblayers.conf
->> WD=-1, Errno=No space left on device (ENOSPC),
->>
->> It's easy to meet this error if we run many builds at the same time,
->> On Ubuntu Ubuntu 12.04.3 x86_64, the default value is "8192".
->>
->> Can we add some counters in cooker.py (or other files) to check the
->> value and print ERRORS/WARNINGS, please ? Ther current "ENOSPC" errors
->> is not easy to debug.
->>
->> I'd like to work on it if that make sense.
->
-> Surely we should just trap the ENOSPC error and translate it into a
-> human readable error message? I don't like the idea of adding counters
-> into the system.
->
-> To improve the situation from a variety of perspectives, I'm thinking we
-> should perhaps just place watches on the directories containing the
-> files rather than the files themselves since this would drastically
-> reduce the number of watches we need. The downside is we may have to be
-> more careful about how we invalidate the caches.
+Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
+---
+ lib/bb/fetch2/wget.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks, watch dirs seems reasonable, I will do more investigations on it.
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index b081b76..9e4b443 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -328,7 +328,7 @@ class Wget(FetchMethod):
+         if version:
+             package_custom_regex_comp = re.compile(
+                 "(?P<name>%s)(?P<ver>%s)(?P<arch>%s)?[\.\-](?P<type>%s)$" %
+-                (version[0], pver_regex, parch_regex, psuffix_regex))
++                (re.escape(version[0]), pver_regex, parch_regex, psuffix_regex))
+ 
+         return package_custom_regex_comp
+ 
+-- 
+1.9.1
 
-// Robert
-
->
-> Cheers,
->
-> Richard
->
->
->
 
