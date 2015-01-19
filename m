@@ -1,26 +1,30 @@
-Return-Path: <Chong.Lu@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 442ED65D59
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 3E3F07162E
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 19 Jan 2015 08:52:54 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail.windriver.com (8.14.9/8.14.5) with ESMTP id t0J8qtUV005196
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 19 Jan 2015 00:52:55 -0800 (PST)
-Received: from pek-hostel-deb02.wrs.com (128.224.153.152) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
-	14.3.174.1; Mon, 19 Jan 2015 00:52:54 -0800
-From: Chong Lu <Chong.Lu@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 19 Jan 2015 16:48:23 +0800
-Message-ID: <dcc1cd29cdf4dbcf242fda70bbd03fe9a2e84263.1421657244.git.Chong.Lu@windriver.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1421657244.git.Chong.Lu@windriver.com>
-References: <cover.1421657244.git.Chong.Lu@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/1] bitbake: prserv/serv: sync database after thead quit
+	Mon, 19 Jan 2015 10:29:01 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t0JAT0nw006718; Mon, 19 Jan 2015 10:29:00 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id choYWIEe1rYj; Mon, 19 Jan 2015 10:29:00 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t0JASjBK006693
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 19 Jan 2015 10:28:57 GMT
+Message-ID: <1421663325.1798.31.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Robert Yang <liezhi.yang@windriver.com>
+Date: Mon, 19 Jan 2015 10:28:45 +0000
+In-Reply-To: <54BCBBF6.4020904@windriver.com>
+References: <1421158296.31262.17.camel@linuxfoundation.org>
+	<54BCBBF6.4020904@windriver.com>
+X-Mailer: Evolution 3.12.7-0ubuntu1 
+Mime-Version: 1.0
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] bitbake: Add pyinotify to lib/
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,33 +37,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 19 Jan 2015 08:52:56 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 19 Jan 2015 10:29:02 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-We need sync database after thread quit, else we may get a empty table
-after import a PR database.
+On Mon, 2015-01-19 at 16:10 +0800, Robert Yang wrote:
+> The inotify watcher numbers need less than "sysctl -n fs.inotify.max_user_watches",
+> otherwise we may get the errors like:
+> WatchManagerError: add_watch: cannot watch /path/to/build/conf/bblayers.conf 
+> WD=-1, Errno=No space left on device (ENOSPC),
+> 
+> It's easy to meet this error if we run many builds at the same time,
+> On Ubuntu Ubuntu 12.04.3 x86_64, the default value is "8192".
+> 
+> Can we add some counters in cooker.py (or other files) to check the
+> value and print ERRORS/WARNINGS, please ? Ther current "ENOSPC" errors
+> is not easy to debug.
+> 
+> I'd like to work on it if that make sense.
 
-[YOCTO #6752]
+Surely we should just trap the ENOSPC error and translate it into a
+human readable error message? I don't like the idea of adding counters
+into the system.
 
-Signed-off-by: Chong Lu <Chong.Lu@windriver.com>
----
- bitbake/lib/prserv/serv.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+To improve the situation from a variety of perspectives, I'm thinking we
+should perhaps just place watches on the directories containing the
+files rather than the files themselves since this would drastically
+reduce the number of watches we need. The downside is we may have to be
+more careful about how we invalidate the caches.
 
-diff --git a/bitbake/lib/prserv/serv.py b/bitbake/lib/prserv/serv.py
-index 25eb46a..c774c5e 100644
---- a/bitbake/lib/prserv/serv.py
-+++ b/bitbake/lib/prserv/serv.py
-@@ -87,7 +87,7 @@ class PRServer(SimpleXMLRPCServer):
-                 self.finish_request(request, client_address)
-                 self.shutdown_request(request)
-                 iter_count = (iter_count + 1) % iterations_between_sync
--                if iter_count == 0:
-+                if iter_count == 0 or self.quit:
-                     self.table.sync_if_dirty()
-             except:
-                 self.handle_error(request, client_address)
--- 
-1.9.1
+Cheers,
+
+Richard
 
 
