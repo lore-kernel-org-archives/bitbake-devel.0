@@ -1,26 +1,32 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id EFB547229E
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 342467229E
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Jan 2015 07:29:17 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.14.9/8.14.5) with ESMTP id t0K7THkX019315
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 19 Jan 2015 23:29:18 -0800 (PST)
-Received: from ala-blade48.wrs.com (147.11.105.68) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.174.1;
-	Mon, 19 Jan 2015 23:29:17 -0800
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 19 Jan 2015 23:29:16 -0800
-Message-ID: <565b6f79717a7dec0d36bc0df94ef54dfa0db0ce.1421738928.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1421738928.git.liezhi.yang@windriver.com>
-References: <cover.1421738928.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/1] cooker.py: trap the ENOSPC error and translate it
+	Tue, 20 Jan 2015 08:56:03 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t0K8u2Oc006337; Tue, 20 Jan 2015 08:56:02 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id XjYBScv-3yjU; Tue, 20 Jan 2015 08:56:02 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t0K8tlrB006321
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 20 Jan 2015 08:55:59 GMT
+Message-ID: <1421744147.1798.39.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Robert Yang <liezhi.yang@windriver.com>
+Date: Tue, 20 Jan 2015 08:55:47 +0000
+In-Reply-To: <54BDBC83.9030007@windriver.com>
+References: <1421158296.31262.17.camel@linuxfoundation.org>
+	<54BCBBF6.4020904@windriver.com>
+	<1421663325.1798.31.camel@linuxfoundation.org>
+	<54BDBC83.9030007@windriver.com>
+X-Mailer: Evolution 3.12.7-0ubuntu1 
+Mime-Version: 1.0
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] bitbake: Add pyinotify to lib/
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,34 +39,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Jan 2015 07:29:18 -0000
-Content-Type: text/plain
+X-List-Received-Date: Tue, 20 Jan 2015 08:56:05 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Trap the ENOSPC error and translate it into a human readable error
-message, which is good for debugging.
+On Tue, 2015-01-20 at 10:25 +0800, Robert Yang wrote:
+> Hello RP,
+> 
+> I've got several errors like the following when the system's load is high,
+> not sure whether related to pyinotify.
+> 
+> for example, when do_configure:
+> sh: 0: Cannot fork
+> 
+> when do_package or others:
+> Exception: OSError: [Errno 11] Resource temporarily unavailable
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/cooker.py |    5 +++++
- 1 file changed, 5 insertions(+)
+We've seen this on the autobuilders too. I don't think this should be
+from the pyinotify changes since the worker process is spawned
+separately and shouldn't hold watches. Its more likely with the kernel
+changes, we created more contention with the performance improvements
+and pushed things "over the edge" to the point where configurations
+which used to work, are now too contented.
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 95f65ac..011f069 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -198,6 +198,11 @@ class BBCooker:
-                         f = os.path.dirname(f)
-                         watcher.bbseen.append(f)
-                         continue
-+                    if 'ENOSPC' in str(e):
-+                        providerlog.error("No space left on device or exceeds fs.inotify.max_user_watches?")
-+                        providerlog.error("To check max_user_watches: sysctl -n fs.inotify.max_user_watches.")
-+                        providerlog.error("To modify max_user_watches: sysctl -n -w fs.inotify.max_user_watches=<value>.")
-+                        providerlog.error("Root privilege is required to modify max_user_watches.")
-                     raise
- 
-     def sigterm_exception(self, signum, stackframe):
--- 
-1.7.9.5
+Can we install monitoring on these systems and figure out which
+resources are unavailable?
+
+Cheers,
+
+Richard
 
 
