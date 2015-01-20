@@ -1,30 +1,29 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 342467229E
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 441737229E
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 20 Jan 2015 08:56:03 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t0K8u2Oc006337; Tue, 20 Jan 2015 08:56:02 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id XjYBScv-3yjU; Tue, 20 Jan 2015 08:56:02 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t0K8tlrB006321
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 20 Jan 2015 08:55:59 GMT
-Message-ID: <1421744147.1798.39.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Robert Yang <liezhi.yang@windriver.com>
-Date: Tue, 20 Jan 2015 08:55:47 +0000
-In-Reply-To: <54BDBC83.9030007@windriver.com>
-References: <1421158296.31262.17.camel@linuxfoundation.org>
-	<54BCBBF6.4020904@windriver.com>
-	<1421663325.1798.31.camel@linuxfoundation.org>
+	Tue, 20 Jan 2015 09:06:41 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.14.9/8.14.5) with ESMTP id t0K96epc020455
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+	Tue, 20 Jan 2015 01:06:40 -0800 (PST)
+Received: from [128.224.162.174] (128.224.162.174) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.40) with Microsoft SMTP Server id 14.3.174.1;
+	Tue, 20 Jan 2015 01:06:39 -0800
+Message-ID: <54BE1A9E.90701@windriver.com>
+Date: Tue, 20 Jan 2015 17:06:38 +0800
+From: Robert Yang <liezhi.yang@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux i686;
+	rv:31.0) Gecko/20100101 Thunderbird/31.3.0
+MIME-Version: 1.0
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <1421158296.31262.17.camel@linuxfoundation.org>		
+	<54BCBBF6.4020904@windriver.com>	
+	<1421663325.1798.31.camel@linuxfoundation.org>	
 	<54BDBC83.9030007@windriver.com>
-X-Mailer: Evolution 3.12.7-0ubuntu1 
-Mime-Version: 1.0
+	<1421744147.1798.39.camel@linuxfoundation.org>
+In-Reply-To: <1421744147.1798.39.camel@linuxfoundation.org>
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH] bitbake: Add pyinotify to lib/
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -39,34 +38,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 20 Jan 2015 08:56:05 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Tue, 20 Jan 2015 09:06:49 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2015-01-20 at 10:25 +0800, Robert Yang wrote:
-> Hello RP,
-> 
-> I've got several errors like the following when the system's load is high,
-> not sure whether related to pyinotify.
-> 
-> for example, when do_configure:
-> sh: 0: Cannot fork
-> 
-> when do_package or others:
-> Exception: OSError: [Errno 11] Resource temporarily unavailable
 
-We've seen this on the autobuilders too. I don't think this should be
-from the pyinotify changes since the worker process is spawned
-separately and shouldn't hold watches. Its more likely with the kernel
-changes, we created more contention with the performance improvements
-and pushed things "over the edge" to the point where configurations
-which used to work, are now too contented.
 
-Can we install monitoring on these systems and figure out which
-resources are unavailable?
+On 01/20/2015 04:55 PM, Richard Purdie wrote:
+> On Tue, 2015-01-20 at 10:25 +0800, Robert Yang wrote:
+>> Hello RP,
+>>
+>> I've got several errors like the following when the system's load is high,
+>> not sure whether related to pyinotify.
+>>
+>> for example, when do_configure:
+>> sh: 0: Cannot fork
+>>
+>> when do_package or others:
+>> Exception: OSError: [Errno 11] Resource temporarily unavailable
+>
+> We've seen this on the autobuilders too. I don't think this should be
+> from the pyinotify changes since the worker process is spawned
+> separately and shouldn't hold watches. Its more likely with the kernel
+> changes, we created more contention with the performance improvements
+> and pushed things "over the edge" to the point where configurations
+> which used to work, are now too contented.
+>
+> Can we install monitoring on these systems and figure out which
+> resources are unavailable?
 
-Cheers,
+Yes, I can install tools on the host, but I don't know which tools can
+do this kind of monitoring.
 
-Richard
+// Robert
 
+>
+> Cheers,
+>
+> Richard
+>
+>
+>
 
