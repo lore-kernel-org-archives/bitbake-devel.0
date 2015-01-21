@@ -1,38 +1,42 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f178.google.com (mail-we0-f178.google.com
-	[74.125.82.178])
-	by mail.openembedded.org (Postfix) with ESMTP id DEC5072CD0
+Received: from mail-wg0-f51.google.com (mail-wg0-f51.google.com [74.125.82.51])
+	by mail.openembedded.org (Postfix) with ESMTP id E8AB272CED
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 18:22:20 +0000 (UTC)
-Received: by mail-we0-f178.google.com with SMTP id p10so44658925wes.9
+	Wed, 21 Jan 2015 18:22:19 +0000 (UTC)
+Received: by mail-wg0-f51.google.com with SMTP id l18so19271400wgh.10
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 10:22:21 -0800 (PST)
+	Wed, 21 Jan 2015 10:22:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=tyUz23CgNv4l55tEX92NE+XOt53VQtN6M6llY7hnkl0=;
-	b=LoToVZcLBmpCeLEmAwkynMaHsu0meipy/7YamDRIzkKS9Xp9KSU504Jb01wgfmVn0e
-	cEQKPE/2OEcWO1s3GulAzbIR5qzIahfse1LvpJtLKXfd0wBl37X1Y0UZ8/Y7v6A8eP3D
-	06KBEjcNYM7HITurYcIPFCnJY2GQmIaLh/i57S9pvYI+QIDyWxTUz805HyaIxCpFGnmc
-	yiwS0625jWg86eJrqNK8FIcWIV0/D7UydVhmRY8EvLn0BPxSb9hUnVNmhOTAHcHAKOKU
-	KAOFri7hG9yPBcAgcg+XcEFlWAHXSqwvte3YUKHeaits0WVjFa6lFFsfsw7BcDFppixf
-	f7Fw==
-X-Gm-Message-State: ALoCoQk7/VnfUe3MwZtonD2s+HfrkjqjSJ7umErTCQu7u5I+cy9ov/AN54N+J1GHPkE0cQ9y37vy
-X-Received: by 10.181.13.105 with SMTP id ex9mr58269048wid.69.1421864540950;
-	Wed, 21 Jan 2015 10:22:20 -0800 (PST)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references:in-reply-to:references;
+	bh=qBtl3JcFnaPXHZgx1i++j48QoixG0qWq7MXdBp/cP7Q=;
+	b=jINaznTGSvP1RvpjSMLE/O2KOgG2RAbP1YlX+E5gDK+aI8aMEcFvj7g8zjeUQ7WR1x
+	rEMSpvIWVzk9pa1fwKfQxvabW3s/xSOOcEFWz5c0Mb45Tf9hFlnqUmt2cgsq7kcU2wPJ
+	a+mISWSa9guGV5s9uOZ4zCsvWK1y8xv4Gg77yOFQTq3D41CuoeJlJ9BacGcrCPfa2GK3
+	763ZlXOrOStSeRUqeEZOy5Y4Fa8Fq0RCC6Eoi/lhBy7Wo/iR0+CGxUpeBQQodhcEZKTC
+	Y0Hl2yUwQQgeWZfaMu4OBALc5AMcfh3Xz91J32JH6jKNVD3x0i2UJH/94Qp43rWS/+y+
+	yJXQ==
+X-Gm-Message-State: ALoCoQk5m9vDi0bE8sUSuV73tg4RzW84+Y5ribrdJzhJXrSE0GCurukv5OCHFFroP6nfOoHvg3iX
+X-Received: by 10.180.212.113 with SMTP id nj17mr3434853wic.54.1421864539733; 
+	Wed, 21 Jan 2015 10:22:19 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id h13sm8304207wiw.4.2015.01.21.10.22.16
+	by mx.google.com with ESMTPSA id cs8sm8313933wib.1.2015.01.21.10.22.16
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 21 Jan 2015 10:22:18 -0800 (PST)
+	Wed, 21 Jan 2015 10:22:17 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 9EE50563F94; Wed, 21 Jan 2015 17:01:39 +0000 (GMT)
+	id E5FE9564071; Wed, 21 Jan 2015 17:01:42 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 21 Jan 2015 17:01:38 +0000
-Message-Id: <cover.1421859619.git.alexandru.damian@intel.com>
+Date: Wed, 21 Jan 2015 17:01:34 +0000
+Message-Id: <2e2776b288ff58e0f09d3fa7d15c1d975414e585.1421859619.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <811689481bc2a4d6361692c6a5d99bdbab8665ff.1421859619.git.alexandru.damian@intel.com>
+References: <811689481bc2a4d6361692c6a5d99bdbab8665ff.1421859619.git.alexandru.damian@intel.com>
+In-Reply-To: <cover.1421859619.git.alexandru.damian@intel.com>
+References: <cover.1421859619.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 00/12] Toaster patchset
+Subject: [PATCH 04/12] toastergui: "Run again" button in build pages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,52 +53,44 @@ X-List-Received-Date: Wed, 21 Jan 2015 18:22:21 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Hello,
+This patch fixes the "Run again" button for the completed builds.
 
-This is a Toaster patchset with bugfixes in the UI.
-The patches have been reviewed on the toaster mailing list.
+[YOCTO #7173]
 
-Can you please pull at your own convenience ?
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+---
+ lib/toaster/toastergui/static/js/projectapp.js            | 2 +-
+ lib/toaster/toastergui/templates/managed_mrb_section.html | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Cheers,
-Alex
-
-The following changes since commit 909fa19f20e909820aa484967b7fe2a34d89ab49:
-
-  toaster: project configuration variables page (2015-01-21 14:20:55 +0000)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib adamian/20150121-submission-bb
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20150121-submission-bb
-
-Alexandru DAMIAN (11):
-  toastergui: save cookie for orderby/page size settings
-  toasterui: save event backlog to build
-  toastergui: fix duplicate IDs all builds page
-  toastergui: "Run again" button in build pages
-  toaster: newproject default release selection fix
-  toastergui: fix all-targets redirect
-  toastergui: fix all targets page search
-  toastegui: project page build selected targets
-  toastergui: minor fixes
-  toastergui: all projects column show/hide
-  toastergui: enable re-ordering when columns are hidden
-
-Belen Barros Pena (1):
-  toastergui: fix the second 'view all targets' link
-
- lib/bb/ui/buildinfohelper.py                       | 11 ++-
- lib/toaster/toastergui/static/js/projectapp.js     | 27 ++++++--
- .../toastergui/templates/managed_mrb_section.html  |  4 +-
- lib/toaster/toastergui/templates/newproject.html   | 32 +++++----
- lib/toaster/toastergui/templates/project.html      | 11 +--
- lib/toaster/toastergui/templates/projects.html     | 12 ++--
- lib/toaster/toastergui/templates/targets.html      |  2 -
- lib/toaster/toastergui/urls.py                     |  2 +-
- lib/toaster/toastergui/views.py                    | 80 ++++++++++++----------
- 9 files changed, 111 insertions(+), 70 deletions(-)
-
+diff --git a/lib/toaster/toastergui/static/js/projectapp.js b/lib/toaster/toastergui/static/js/projectapp.js
+index 0bdc55a..74471a1 100644
+--- a/lib/toaster/toastergui/static/js/projectapp.js
++++ b/lib/toaster/toastergui/static/js/projectapp.js
+@@ -339,7 +339,7 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
+     $scope.buildExistingTarget = function(targets) {
+         var oldTargetName = $scope.targetName;
+         $scope.targetName = targets.map(function(v,i,a){return v.target}).join(' ');
+-        $scope.targetNamedBuild();
++        $scope.buildNamedTarget();
+         $scope.targetName = oldTargetName;
+     }
+ 
+diff --git a/lib/toaster/toastergui/templates/managed_mrb_section.html b/lib/toaster/toastergui/templates/managed_mrb_section.html
+index d4959a0..da5a3f7 100644
+--- a/lib/toaster/toastergui/templates/managed_mrb_section.html
++++ b/lib/toaster/toastergui/templates/managed_mrb_section.html
+@@ -53,8 +53,8 @@
+               <span class="lead{%if not MANAGED or not build.project%} pull-right{%endif%}">
+                 Build time: <a href="{% url 'buildtime' build.pk %}">{{ build.timespent|sectohms }}</a>
+               </span>
+-          {% if MANAGED and build.project %}
+-              <a class="btn {%if build.outcome == build.SUCCEEDED%}btn-success{%elif build.outcome == build.FAILED%}btn-danger{%else%}btn-info{%endif%} pull-right" onclick="scheduleBuild({% url 'xhr_projectbuild' build.project.id as bpi%}{{bpi|json}}, {{build.project.name|json}}, {{build.get_sorted_target_list|mapselect:'target'|json}})">Run again</a>
++          {% if build.project %}
++              <button class="btn {%if build.outcome == build.SUCCEEDED%}btn-success{%elif build.outcome == build.FAILED%}btn-danger{%else%}btn-info{%endif%} pull-right" onclick='scheduleBuild({% url 'xhr_projectbuild' build.project.id as bpi%}{{bpi|json}}, {{build.project.name|json}}, {{build.get_sorted_target_list|mapselect:'target'|json}})'>Run again</button>
+           {% endif %}
+             </div>
+     {%endif%}
 -- 
 1.9.1
 
