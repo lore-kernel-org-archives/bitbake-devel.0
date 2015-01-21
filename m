@@ -1,38 +1,41 @@
-Return-Path: <twoerner@gmail.com>
-Received: from mail-ig0-f173.google.com (mail-ig0-f173.google.com
-	[209.85.213.173])
-	by mail.openembedded.org (Postfix) with ESMTP id 7461772CC9
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-we0-f174.google.com (mail-we0-f174.google.com
+	[74.125.82.174])
+	by mail.openembedded.org (Postfix) with ESMTP id B7F0172CF2
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed, 21 Jan 2015 18:22:17 +0000 (UTC)
-Received: by mail-ig0-f173.google.com with SMTP id a13so23848472igq.0
+Received: by mail-we0-f174.google.com with SMTP id x3so11153461wes.5
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 10:22:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=message-id:date:from:user-agent:mime-version:to:subject:references
-	:in-reply-to:content-type:content-transfer-encoding;
-	bh=gEoEHM6ktJKbaYGQubxaBuN/y3rBIaeX6OCQ+vIhq3U=;
-	b=qxvJMkhQvZb6mNxHxZVwOCpT8shsUYicl8ktCYHEdYUk3qtCxXMIF3SHoBU80SRR/9
-	CLwls7ex+N8ZdAS+jIrstRGXM3OCSeCbL91RhyLUb4MWrXwVp0PnAb+rdE6HkL2fowOp
-	U4jELwcnJffha5sZDfSyW0wh7N+GloX9vN1YvViPTpp0pH2776i0QfZ3GSyZU5r6gSAx
-	7BDPF375eJytN14zbuFtqpVaIA/Wn3Cxou2kfDSkY1ijiiy5cL4cBmbH6lcqbMs/ZQ+3
-	lNqpTCeYTym9uBqvxo32604dyfRzwXNo/4SCpTHL8sLil2bbvMccq3t6gaq7rJ3v7eOi
-	aVZA==
-X-Received: by 10.50.137.99 with SMTP id qh3mr36896508igb.7.1421864537959;
 	Wed, 21 Jan 2015 10:22:17 -0800 (PST)
-Received: from [192.168.141.85] ([66.49.180.141])
-	by mx.google.com with ESMTPSA id kt1sm6424143igb.20.2015.01.21.10.22.16
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references;
+	bh=FXUQGwq8+9VKshdJr7q8+Sj4QCuoz64u0LATBn2BjKQ=;
+	b=a0P8fKqx3k1KDsecRSMmSpHCJO1eb5elWkuERWkuM3G5zxlH4E7kjud+liyXCjBdXZ
+	bDo96WTi0sosmbPV4CQNHVUHccvlWsbpATCtI+5+nwEdJCyYUoh95LLUy3Ha4FHkrCpC
+	OCQD0MTsKzHkatiYquoJybb/FJ5oSClayiFTInV4upuhOBTCsENgnhWPU9Sij432txnx
+	KzLX5fmZQFQmBs5QC5f/y2jrmjf1HzKUgP9nM1Wx1XfMQIWIIlRR4Fbi09xLs0bXga/i
+	bryOk1UHrv63rLIwg8CxvKKbItlH0bEi+eVOOKijOie0VHcvYB08wfl5HaSkYjbN0h6m
+	nlHg==
+X-Gm-Message-State: ALoCoQnUtdZrZLJtZisUv7FzwwG1WJWORg4BuC7sgRj8tS4rcW1gV45kHcQT09vLyOUaexUBZSTU
+X-Received: by 10.180.91.107 with SMTP id cd11mr59551269wib.58.1421864537338; 
+	Wed, 21 Jan 2015 10:22:17 -0800 (PST)
+Received: from adamian-desk.local ([83.217.123.106])
+	by mx.google.com with ESMTPSA id ud4sm8304179wib.0.2015.01.21.10.22.15
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 21 Jan 2015 10:22:17 -0800 (PST)
-Message-ID: <54BFEE55.5040402@gmail.com>
-Date: Wed, 21 Jan 2015 13:22:13 -0500
-From: Trevor Woerner <twoerner@gmail.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:31.0) Gecko/20100101 Thunderbird/31.4.0
-MIME-Version: 1.0
-To: Ross Burton <ross.burton@intel.com>, bitbake-devel@lists.openembedded.org
-References: <1421849618-28332-1-git-send-email-ross.burton@intel.com>
-In-Reply-To: <1421849618-28332-1-git-send-email-ross.burton@intel.com>
-Subject: Re: [PATCH] bitbake: only check that /dev/shm is writable on Linux
+	Wed, 21 Jan 2015 10:22:16 -0800 (PST)
+Received: by adamian-desk.local (Postfix, from userid 1000)
+	id E12EC563FA9; Wed, 21 Jan 2015 17:01:42 +0000 (GMT)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 21 Jan 2015 17:01:31 +0000
+Message-Id: <811689481bc2a4d6361692c6a5d99bdbab8665ff.1421859619.git.alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1421859619.git.alexandru.damian@intel.com>
+References: <cover.1421859619.git.alexandru.damian@intel.com>
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 01/12] toastergui: save cookie for orderby/page size settings
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,16 +48,91 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 21 Jan 2015 18:22:17 -0000
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 21 Jan 2015 18:22:18 -0000
 
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-On 01/21/15 09:13, Ross Burton wrote:
-> -# Python multiprocessing requires /dev/shm
-> -if not os.access('/dev/shm', os.W_OK | os.X_OK):
-> +# Python multiprocessing requires /dev/shm on Linux
-> +if sys.platform.startswith('linux') and not os.access('/dev/shm', os.W_OK | os.X_OK):
+We save the current settings as cookies on the server side
+for the layers, targets and machines pages under Project pages.
 
-Cool! On what other platforms does bitbake work?
+[YOCTO #6961]
+
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+---
+ lib/toaster/toastergui/templates/targets.html |  2 --
+ lib/toaster/toastergui/views.py               | 15 +++++++++++----
+ 2 files changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/lib/toaster/toastergui/templates/targets.html b/lib/toaster/toastergui/templates/targets.html
+index cc339fb..590ecb9 100644
+--- a/lib/toaster/toastergui/templates/targets.html
++++ b/lib/toaster/toastergui/templates/targets.html
+@@ -39,7 +39,6 @@
+ 
+ {% include "basetable_top.html" %}
+     {% for o in objects %}
+-    {% if o.name %}
+     <tr class="data">
+         <td class="target">
+                 {{o.name}}
+@@ -79,7 +78,6 @@
+             </a>
+         </td>
+     </tr>
+-    {% endif %}
+     {% endfor %}
+ {% include "basetable_bottom.html" %}
+ 
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 5fcad63..4d00fbd 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -2560,7 +2560,10 @@ if toastermain.settings.MANAGED:
+             ]
+         }
+ 
+-        return render(request, template, context)
++        response = render(request, template, context)
++        _save_parameters_cookies(response, pagesize, orderby, request)
++
++        return response
+ 
+     def layerdetails(request, layerid):
+         template = "layerdetails.html"
+@@ -2626,7 +2629,7 @@ if toastermain.settings.MANAGED:
+         (filter_string, search_term, ordering_string) = _search_tuple(request, Recipe)
+ 
+         prj = Project.objects.get(pk = request.session['project_id'])
+-        queryset_all = Recipe.objects.filter(Q(layer_version__up_branch__name= prj.release.name) | Q(layer_version__build__in = prj.build_set.all()))
++        queryset_all = Recipe.objects.filter(Q(layer_version__up_branch__name= prj.release.name) | Q(layer_version__build__in = prj.build_set.all())).filter(name__regex=r'.{1,}.*')
+ 
+         queryset_with_search = _get_queryset(Recipe, queryset_all, None, search_term, ordering_string, '-name')
+ 
+@@ -2711,8 +2714,10 @@ if toastermain.settings.MANAGED:
+                     }
+                 }, ]
+ 
++        response = render(request, template, context)
++        _save_parameters_cookies(response, pagesize, orderby, request)
+ 
+-        return render(request, template, context)
++        return response
+ 
+     def machines(request):
+         template = "machines.html"
+@@ -2783,8 +2788,10 @@ if toastermain.settings.MANAGED:
+ 
+             ]
+         }
++        response = render(request, template, context)
++        _save_parameters_cookies(response, pagesize, orderby, request)
+ 
+-        return render(request, template, context)
++        return response
+ 
+ 
+     def get_project_configvars_context():
+-- 
+1.9.1
+
 
