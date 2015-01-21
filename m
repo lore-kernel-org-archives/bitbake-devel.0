@@ -1,36 +1,29 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-wg0-f42.google.com (mail-wg0-f42.google.com [74.125.82.42])
-	by mail.openembedded.org (Postfix) with ESMTP id 897347231B
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id AB63F71633
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 14:15:13 +0000 (UTC)
-Received: by mail-wg0-f42.google.com with SMTP id k14so40028252wgh.1
+	Wed, 21 Jan 2015 16:07:36 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t0LG7a1u000670 for <bitbake-devel@lists.openembedded.org>;
+	Wed, 21 Jan 2015 16:07:36 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 6ZpDUx4oI7oa for <bitbake-devel@lists.openembedded.org>;
+	Wed, 21 Jan 2015 16:07:36 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t0LG7JO0000640
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 06:15:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=jOyo92VYzlTbjI93fE1NwKrLIGpJHqLYZrTWYG64Iuc=;
-	b=FQ+u1LVir0RzhUBpxrw1xgq0CryQM/PGohCFkW/EZ+w+hd83LKHBPyZWoOvpgeO5ut
-	kskQl/D1yzy79nVokTKpRyhbcbS41po+912czsmzrv/K2XEYOXpgyLIh4spFLwyn2ubs
-	ocFKSgyvT1HfXF9Pk3MlD2teiWHLnVcbX3cSnWR/uLD8//07knP3HfAkae5ZzN0hAcYl
-	bbssSNZQZZyjUHa6cTOTwvFy/7w7mJZrV6ja7D3Nv1jaj9mepHwizuj7zcWI7Gbwl9Vg
-	6RA5m7HyXS88ShoSKUBMMhOx+if0/xMdj5cuAV5jKHISny1SP5W3G9ydo/Pqiubqkdg8
-	Tolw==
-X-Gm-Message-State: ALoCoQl4fvmuirRT6WMqU5b0eFOrnxepJNDMiI2XuTwemZkJWZoGbo1Dr6viu5naiG4zGIfij3+c
-X-Received: by 10.194.108.162 with SMTP id hl2mr50276797wjb.134.1421849713658; 
-	Wed, 21 Jan 2015 06:15:13 -0800 (PST)
-Received: from flashheart.burtonini.com (35.106.2.81.in-addr.arpa.
-	[81.2.106.35])
-	by mx.google.com with ESMTPSA id 18sm25696672wjr.46.2015.01.21.06.15.12
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 21 Jan 2015 06:15:12 -0800 (PST)
-From: Ross Burton <ross.burton@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 21 Jan 2015 14:13:38 +0000
-Message-Id: <1421849618-28332-1-git-send-email-ross.burton@intel.com>
-X-Mailer: git-send-email 1.7.10.4
-Subject: [PATCH] bitbake: only check that /dev/shm is writable on Linux
+	Wed, 21 Jan 2015 16:07:31 GMT
+Message-ID: <1421856439.19798.0.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Wed, 21 Jan 2015 16:07:19 +0000
+X-Mailer: Evolution 3.12.7-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] cooker: Rename event_data -> expanded_data
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,29 +36,116 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 21 Jan 2015 14:15:19 -0000
+X-List-Received-Date: Wed, 21 Jan 2015 16:07:45 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Ross Burton <ross.burton@intel.com>
----
- bitbake/bin/bitbake |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+event_data would be better named expanded_data, then we can widen its scope
+to other places in cooker where we need to access an expanded data store.
+We certainly don't want multiple expanded data stores.
 
-diff --git a/bitbake/bin/bitbake b/bitbake/bin/bitbake
-index d46c3dd..49efdf1 100755
---- a/bitbake/bin/bitbake
-+++ b/bitbake/bin/bitbake
-@@ -44,8 +44,8 @@ from bb import cookerdata
- __version__ = "1.25.0"
- logger = logging.getLogger("BitBake")
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+diff --git a/bitbake/lib/bb/command.py b/bitbake/lib/bb/command.py
+index 29b0a53..24ff341 100644
+--- a/bitbake/lib/bb/command.py
++++ b/bitbake/lib/bb/command.py
+@@ -123,11 +123,11 @@ class Command:
  
--# Python multiprocessing requires /dev/shm
--if not os.access('/dev/shm', os.W_OK | os.X_OK):
-+# Python multiprocessing requires /dev/shm on Linux
-+if sys.platform.startswith('linux') and not os.access('/dev/shm', os.W_OK | os.X_OK):
-     sys.exit("FATAL: /dev/shm does not exist or is not writable")
+     def finishAsyncCommand(self, msg=None, code=None):
+         if msg or msg == "":
+-            bb.event.fire(CommandFailed(msg), self.cooker.event_data)
++            bb.event.fire(CommandFailed(msg), self.cooker.expanded_data)
+         elif code:
+-            bb.event.fire(CommandExit(code), self.cooker.event_data)
++            bb.event.fire(CommandExit(code), self.cooker.expanded_data)
+         else:
+-            bb.event.fire(CommandCompleted(), self.cooker.event_data)
++            bb.event.fire(CommandCompleted(), self.cooker.expanded_data)
+         self.currentAsyncCommand = None
+         self.cooker.finishcommand()
  
- # Unbuffer stdout to avoid log truncation in the event
--- 
-1.7.10.4
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index d9b200e..a7560a1 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -324,11 +324,12 @@ class BBCooker:
+ 
+ 
+         #
+-        # Special updated configuration we use for firing events
++        # Copy of the data store which has been expanded.
++        # Used for firing events and accessing variables where expansion needs to be accounted for
+         #
+-        self.event_data = bb.data.createCopy(self.data)
+-        bb.data.update_data(self.event_data)
+-        bb.parse.init_parser(self.event_data)
++        self.expanded_data = bb.data.createCopy(self.data)
++        bb.data.update_data(self.expanded_data)
++        bb.parse.init_parser(self.expanded_data)
+ 
+         if CookerFeatures.BASEDATASTORE_TRACKING in self.featureset:
+             self.disableDataTracking()
+@@ -1182,7 +1183,7 @@ class BBCooker:
+             bf = os.path.abspath(bf)
+ 
+         self.collection = CookerCollectFiles(self.recipecache.bbfile_config_priorities)
+-        filelist, masked = self.collection.collect_bbfiles(self.data, self.event_data)
++        filelist, masked = self.collection.collect_bbfiles(self.data, self.expanded_data)
+         try:
+             os.stat(bf)
+             bf = os.path.abspath(bf)
+@@ -1272,7 +1273,7 @@ class BBCooker:
+         taskdata.add_provider(self.data, self.recipecache, item)
+ 
+         buildname = self.data.getVar("BUILDNAME")
+-        bb.event.fire(bb.event.BuildStarted(buildname, [item]), self.event_data)
++        bb.event.fire(bb.event.BuildStarted(buildname, [item]), self.expanded_data)
+ 
+         # Execute the runqueue
+         runlist = [[item, "do_%s" % task]]
+@@ -1299,7 +1300,7 @@ class BBCooker:
+                 return False
+ 
+             if not retval:
+-                bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runq_fnid), buildname, item, failures), self.event_data)
++                bb.event.fire(bb.event.BuildCompleted(len(rq.rqdata.runq_fnid), buildname, item, failures), self.expanded_data)
+                 self.command.finishAsyncCommand(msg)
+                 return False
+             if retval is True:
+@@ -1446,14 +1447,14 @@ class BBCooker:
+             if CookerFeatures.SEND_SANITYEVENTS in self.featureset:
+                 bb.event.fire(bb.event.SanityCheck(False), self.data)
+ 
+-            ignore = self.data.getVar("ASSUME_PROVIDED", True) or ""
++            ignore = self.expanded_data.getVar("ASSUME_PROVIDED", True) or ""
+             self.recipecache.ignored_dependencies = set(ignore.split())
+ 
+             for dep in self.configuration.extra_assume_provided:
+                 self.recipecache.ignored_dependencies.add(dep)
+ 
+             self.collection = CookerCollectFiles(self.recipecache.bbfile_config_priorities)
+-            (filelist, masked) = self.collection.collect_bbfiles(self.data, self.event_data)
++            (filelist, masked) = self.collection.collect_bbfiles(self.data, self.expanded_data)
+ 
+             self.data.renameVar("__depends", "__base_depends")
+             self.add_filewatch(self.data.getVar("__base_depends"), self.configwatcher)
+@@ -1513,13 +1514,13 @@ class BBCooker:
+         try:
+             self.prhost = prserv.serv.auto_start(self.data)
+         except prserv.serv.PRServiceConfigError:
+-            bb.event.fire(CookerExit(), self.event_data)
++            bb.event.fire(CookerExit(), self.expanded_data)
+             self.state = state.error
+         return
+ 
+     def post_serve(self):
+         prserv.serv.auto_shutdown(self.data)
+-        bb.event.fire(CookerExit(), self.event_data)
++        bb.event.fire(CookerExit(), self.expanded_data)
+ 
+     def shutdown(self, force = False):
+         if force:
+
 
 
