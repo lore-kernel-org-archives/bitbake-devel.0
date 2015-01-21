@@ -1,41 +1,42 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f174.google.com (mail-we0-f174.google.com
-	[74.125.82.174])
-	by mail.openembedded.org (Postfix) with ESMTP id B7F0172CF2
+Received: from mail-we0-f169.google.com (mail-we0-f169.google.com
+	[74.125.82.169])
+	by mail.openembedded.org (Postfix) with ESMTP id 799E772CB7
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 18:22:17 +0000 (UTC)
-Received: by mail-we0-f174.google.com with SMTP id x3so11153461wes.5
+	Wed, 21 Jan 2015 18:22:18 +0000 (UTC)
+Received: by mail-we0-f169.google.com with SMTP id p10so21216750wes.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 10:22:17 -0800 (PST)
+	Wed, 21 Jan 2015 10:22:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=FXUQGwq8+9VKshdJr7q8+Sj4QCuoz64u0LATBn2BjKQ=;
-	b=a0P8fKqx3k1KDsecRSMmSpHCJO1eb5elWkuERWkuM3G5zxlH4E7kjud+liyXCjBdXZ
-	bDo96WTi0sosmbPV4CQNHVUHccvlWsbpATCtI+5+nwEdJCyYUoh95LLUy3Ha4FHkrCpC
-	OCQD0MTsKzHkatiYquoJybb/FJ5oSClayiFTInV4upuhOBTCsENgnhWPU9Sij432txnx
-	KzLX5fmZQFQmBs5QC5f/y2jrmjf1HzKUgP9nM1Wx1XfMQIWIIlRR4Fbi09xLs0bXga/i
-	bryOk1UHrv63rLIwg8CxvKKbItlH0bEi+eVOOKijOie0VHcvYB08wfl5HaSkYjbN0h6m
-	nlHg==
-X-Gm-Message-State: ALoCoQnUtdZrZLJtZisUv7FzwwG1WJWORg4BuC7sgRj8tS4rcW1gV45kHcQT09vLyOUaexUBZSTU
-X-Received: by 10.180.91.107 with SMTP id cd11mr59551269wib.58.1421864537338; 
-	Wed, 21 Jan 2015 10:22:17 -0800 (PST)
+	:references:in-reply-to:references;
+	bh=FJV7D7aWJ9JUcdr0gFCZIAmLtxOEv/pMVyMxu+Z4J68=;
+	b=Whcq0cDVHB4E9zAI4la+q2MO511HChrk53SxorrJd57uoaTyJkR4fVOf27yj0ANCco
+	MtMByOoybc1vNwo95ltVQ6qL5kjSBtL5tIDtb5XBmFQt9YbmaEHP6bqQzOmLJjeqVIDs
+	QQ160Unf6cgcBbrSJ3+roUnGhr83OvzEH7piA0G0iKRS6NvlCtqReEP/qB5lyFuJRTrR
+	LT+Ch/AkYoI1gXlMd2yTBesfDPow6dFf8O+4tfi+mTLL14/yPqdBeyxzoRRzofzCxhZM
+	5P4HJb8yhV+XDtYz1+XvPFHIUujzSvB0kGWbpTI9f11aelGz3nk0pcZMTYNUI1v4yNjb
+	dDgQ==
+X-Gm-Message-State: ALoCoQlk6Ox0JwjQG7oyhDmANagq0j9h0fc+0kM2pPN8MzaGfEg+/32ZWl/QuawvKAO03dBwrljR
+X-Received: by 10.180.37.77 with SMTP id w13mr59904014wij.66.1421864538858;
+	Wed, 21 Jan 2015 10:22:18 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id ud4sm8304179wib.0.2015.01.21.10.22.15
+	by mx.google.com with ESMTPSA id p6sm767044wjf.39.2015.01.21.10.22.16
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Wed, 21 Jan 2015 10:22:16 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id E12EC563FA9; Wed, 21 Jan 2015 17:01:42 +0000 (GMT)
+	id EF7F6564115; Wed, 21 Jan 2015 17:01:42 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 21 Jan 2015 17:01:31 +0000
-Message-Id: <811689481bc2a4d6361692c6a5d99bdbab8665ff.1421859619.git.alexandru.damian@intel.com>
+Date: Wed, 21 Jan 2015 17:01:40 +0000
+Message-Id: <5f904c0945d20dcf563efcc26bcb486426aa7711.1421859619.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <811689481bc2a4d6361692c6a5d99bdbab8665ff.1421859619.git.alexandru.damian@intel.com>
+References: <811689481bc2a4d6361692c6a5d99bdbab8665ff.1421859619.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1421859619.git.alexandru.damian@intel.com>
 References: <cover.1421859619.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 01/12] toastergui: save cookie for orderby/page size settings
+Subject: [PATCH 10/12] toastergui: fix the second 'view all targets' link
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,88 +51,33 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 21 Jan 2015 18:22:18 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-We save the current settings as cookies on the server side
-for the layers, targets and machines pages under Project pages.
+The project page has 2 links to the all targets page.
+The one at the top of the page is working, but not
+the one further down. This patch sorts that out.
 
-[YOCTO #6961]
+[YOCTO #7147]
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
 ---
- lib/toaster/toastergui/templates/targets.html |  2 --
- lib/toaster/toastergui/views.py               | 15 +++++++++++----
- 2 files changed, 11 insertions(+), 6 deletions(-)
+ lib/toaster/toastergui/templates/project.html | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/lib/toaster/toastergui/templates/targets.html b/lib/toaster/toastergui/templates/targets.html
-index cc339fb..590ecb9 100644
---- a/lib/toaster/toastergui/templates/targets.html
-+++ b/lib/toaster/toastergui/templates/targets.html
-@@ -39,7 +39,6 @@
- 
- {% include "basetable_top.html" %}
-     {% for o in objects %}
--    {% if o.name %}
-     <tr class="data">
-         <td class="target">
-                 {{o.name}}
-@@ -79,7 +78,6 @@
-             </a>
-         </td>
-     </tr>
--    {% endif %}
-     {% endfor %}
- {% include "basetable_bottom.html" %}
- 
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 5fcad63..4d00fbd 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -2560,7 +2560,10 @@ if toastermain.settings.MANAGED:
-             ]
-         }
- 
--        return render(request, template, context)
-+        response = render(request, template, context)
-+        _save_parameters_cookies(response, pagesize, orderby, request)
-+
-+        return response
- 
-     def layerdetails(request, layerid):
-         template = "layerdetails.html"
-@@ -2626,7 +2629,7 @@ if toastermain.settings.MANAGED:
-         (filter_string, search_term, ordering_string) = _search_tuple(request, Recipe)
- 
-         prj = Project.objects.get(pk = request.session['project_id'])
--        queryset_all = Recipe.objects.filter(Q(layer_version__up_branch__name= prj.release.name) | Q(layer_version__build__in = prj.build_set.all()))
-+        queryset_all = Recipe.objects.filter(Q(layer_version__up_branch__name= prj.release.name) | Q(layer_version__build__in = prj.build_set.all())).filter(name__regex=r'.{1,}.*')
- 
-         queryset_with_search = _get_queryset(Recipe, queryset_all, None, search_term, ordering_string, '-name')
- 
-@@ -2711,8 +2714,10 @@ if toastermain.settings.MANAGED:
-                     }
-                 }, ]
- 
-+        response = render(request, template, context)
-+        _save_parameters_cookies(response, pagesize, orderby, request)
- 
--        return render(request, template, context)
-+        return response
- 
-     def machines(request):
-         template = "machines.html"
-@@ -2783,8 +2788,10 @@ if toastermain.settings.MANAGED:
- 
-             ]
-         }
-+        response = render(request, template, context)
-+        _save_parameters_cookies(response, pagesize, orderby, request)
- 
--        return render(request, template, context)
-+        return response
- 
- 
-     def get_project_configvars_context():
+diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
+index fe3bcf2..b8579e4 100644
+--- a/lib/toaster/toastergui/templates/project.html
++++ b/lib/toaster/toastergui/templates/project.html
+@@ -294,7 +294,8 @@ vim: expandtab tabstop=2
+           </div>
+           {% csrf_token %}
+         </form>
+-        <p><a href="{% url 'targets' %}">View all targets</a></p>
++        <p>
++          <a href="{% url 'all-targets' %}">View all targets</a></p>
+         <div ng-if="frequenttargets.length">
+         <h4 class="air">
+             Most built targets
 -- 
 1.9.1
 
