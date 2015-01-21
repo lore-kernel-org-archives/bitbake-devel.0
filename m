@@ -1,42 +1,38 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f41.google.com (mail-wg0-f41.google.com [74.125.82.41])
-	by mail.openembedded.org (Postfix) with ESMTP id F2CB572CC9
+Received: from mail-we0-f178.google.com (mail-we0-f178.google.com
+	[74.125.82.178])
+	by mail.openembedded.org (Postfix) with ESMTP id DEC5072CD0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 18:22:19 +0000 (UTC)
-Received: by mail-wg0-f41.google.com with SMTP id a1so19300328wgh.0
+	Wed, 21 Jan 2015 18:22:20 +0000 (UTC)
+Received: by mail-we0-f178.google.com with SMTP id p10so44658925wes.9
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 10:22:20 -0800 (PST)
+	Wed, 21 Jan 2015 10:22:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=xNGPdZAK9MOVUpCoeBA/rAHx8+lYJw+0XuTRKU4Yv/A=;
-	b=k367PvvWc/jl92l4V3vzHWH3vz28+KIbKroDc2KlTlw3YROoBNSOc0/PRax8dyf4sl
-	9OUU3BoNAEV2rbqNZCY68k54a+iveB2V7jTndPmI4D2MhKir0/4McLLOpR6OBVLTAQuR
-	VSZn97yMwybJ+XAN/Vuyhfc+U0ODBGdM2ylx2gcU+QcxxJnhmwoez9O4DyT73HD9Zljm
-	OtBPPlcoZs7wuVkiftVZcWp7Y95oyNN31B7z3cjUak2vNFRbNQHniRjn2bSMMufaGnF8
-	P8aVzYSfplVEZZCvIernPpWlsEJTxok6ITz7XoxNf1lSnbmbiBhdz9ZZvxjtFcRyEL1F
-	dGQQ==
-X-Gm-Message-State: ALoCoQlxShjdoZJ3XPW4536Tc7k0W94XpyyxeAQ/qJamovMLWfR4gzLSVdCY3PeRXcTyGTtrfqTK
-X-Received: by 10.181.9.107 with SMTP id dr11mr59903439wid.22.1421864539353;
-	Wed, 21 Jan 2015 10:22:19 -0800 (PST)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=tyUz23CgNv4l55tEX92NE+XOt53VQtN6M6llY7hnkl0=;
+	b=LoToVZcLBmpCeLEmAwkynMaHsu0meipy/7YamDRIzkKS9Xp9KSU504Jb01wgfmVn0e
+	cEQKPE/2OEcWO1s3GulAzbIR5qzIahfse1LvpJtLKXfd0wBl37X1Y0UZ8/Y7v6A8eP3D
+	06KBEjcNYM7HITurYcIPFCnJY2GQmIaLh/i57S9pvYI+QIDyWxTUz805HyaIxCpFGnmc
+	yiwS0625jWg86eJrqNK8FIcWIV0/D7UydVhmRY8EvLn0BPxSb9hUnVNmhOTAHcHAKOKU
+	KAOFri7hG9yPBcAgcg+XcEFlWAHXSqwvte3YUKHeaits0WVjFa6lFFsfsw7BcDFppixf
+	f7Fw==
+X-Gm-Message-State: ALoCoQk7/VnfUe3MwZtonD2s+HfrkjqjSJ7umErTCQu7u5I+cy9ov/AN54N+J1GHPkE0cQ9y37vy
+X-Received: by 10.181.13.105 with SMTP id ex9mr58269048wid.69.1421864540950;
+	Wed, 21 Jan 2015 10:22:20 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id fp2sm8297817wib.8.2015.01.21.10.22.16
+	by mx.google.com with ESMTPSA id h13sm8304207wiw.4.2015.01.21.10.22.16
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 21 Jan 2015 10:22:17 -0800 (PST)
+	Wed, 21 Jan 2015 10:22:18 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id E463856404A; Wed, 21 Jan 2015 17:01:42 +0000 (GMT)
+	id 9EE50563F94; Wed, 21 Jan 2015 17:01:39 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 21 Jan 2015 17:01:33 +0000
-Message-Id: <57577d3532d949ba993ac0eccec3e315da4b3b5c.1421859619.git.alexandru.damian@intel.com>
+Date: Wed, 21 Jan 2015 17:01:38 +0000
+Message-Id: <cover.1421859619.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <811689481bc2a4d6361692c6a5d99bdbab8665ff.1421859619.git.alexandru.damian@intel.com>
-References: <811689481bc2a4d6361692c6a5d99bdbab8665ff.1421859619.git.alexandru.damian@intel.com>
-In-Reply-To: <cover.1421859619.git.alexandru.damian@intel.com>
-References: <cover.1421859619.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 03/12] toastergui: fix duplicate IDs all builds page
+Subject: [PATCH 00/12] Toaster patchset
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,84 +45,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 21 Jan 2015 18:22:20 -0000
+X-List-Received-Date: Wed, 21 Jan 2015 18:22:21 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-This patch fixes the duplicate IDs found in the all builds page,
-originating in the "Project" column filter.
+Hello,
 
-Also fix misspell "Log1" instead of "Log".
+This is a Toaster patchset with bugfixes in the UI.
+The patches have been reviewed on the toaster mailing list.
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
----
- lib/toaster/toastergui/views.py | 37 ++++++++++---------------------------
- 1 file changed, 10 insertions(+), 27 deletions(-)
+Can you please pull at your own convenience ?
 
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 4d00fbd..7a11bbd 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -1725,10 +1725,10 @@ if toastermain.settings.MANAGED:
-             return _redirect_parameters( builds, request.GET, e.response)
- 
-         context['tablecols'].append(
--                    {'name': 'Project', 'clclass': 'project',
-+                    {'name': 'Project', 'clclass': 'projectx',
-                      'filter': {'class': 'project',
-                             'label': 'Project:',
--                            'options':  map(lambda x: (x.name,'',x.build_set.filter(outcome__lt=BuildRequest.REQ_INPROGRESS).count()), Project.objects.all()),
-+                            'options':  map(lambda x: (x.name,'project:%d' % x.id,x.build_set.filter(outcome__lt=BuildRequest.REQ_INPROGRESS).count()), Project.objects.all()),
- 
-                            }
-                     }
-@@ -3152,6 +3152,14 @@ else:
-                                              ]
-                                 }
-                     },
-+                    {'name': 'Log',
-+                     'dclass': "span4",
-+                     'qhelp': "Path to the build main log file",
-+                     'clclass': 'log', 'hidden': 1,
-+                     'orderfield': _get_toggle_order(request, "cooker_log_path"),
-+                     'ordericon':_get_toggle_order_icon(request, "cooker_log_path"),
-+                     'orderkey' : 'cooker_log_path',
-+                    },
-                     {'name': 'Time', 'clclass': 'time', 'hidden' : 1,
-                      'qhelp': "How long it took the build to finish",
-                      'orderfield': _get_toggle_order(request, "timespent", True),
-@@ -3165,31 +3173,6 @@ else:
-                     ]
-                 }
- 
--        if not toastermain.settings.MANAGED:
--            context['tablecols'].insert(-2,
--                    {'name': 'Log1',
--                     'dclass': "span4",
--                     'qhelp': "Path to the build main log file",
--                     'clclass': 'log', 'hidden': 1,
--                     'orderfield': _get_toggle_order(request, "cooker_log_path"),
--                     'ordericon':_get_toggle_order_icon(request, "cooker_log_path"),
--                     'orderkey' : 'cooker_log_path',
--                    }
--            )
--
--
--        if toastermain.settings.MANAGED:
--            context['tablecols'].append(
--                    {'name': 'Project', 'clclass': 'project',
--                     'filter': {'class': 'project',
--                            'label': 'Project:',
--                            'options':  map(lambda x: (x.name,'',x.build_set.filter(outcome__lt=Build.IN_PROGRESS).count()), Project.objects.all()),
--
--                           }
--                    }
--            )
--
--
-         response = render(request, template, context)
-         _save_parameters_cookies(response, pagesize, orderby, request)
-         return response
+Cheers,
+Alex
+
+The following changes since commit 909fa19f20e909820aa484967b7fe2a34d89ab49:
+
+  toaster: project configuration variables page (2015-01-21 14:20:55 +0000)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib adamian/20150121-submission-bb
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20150121-submission-bb
+
+Alexandru DAMIAN (11):
+  toastergui: save cookie for orderby/page size settings
+  toasterui: save event backlog to build
+  toastergui: fix duplicate IDs all builds page
+  toastergui: "Run again" button in build pages
+  toaster: newproject default release selection fix
+  toastergui: fix all-targets redirect
+  toastergui: fix all targets page search
+  toastegui: project page build selected targets
+  toastergui: minor fixes
+  toastergui: all projects column show/hide
+  toastergui: enable re-ordering when columns are hidden
+
+Belen Barros Pena (1):
+  toastergui: fix the second 'view all targets' link
+
+ lib/bb/ui/buildinfohelper.py                       | 11 ++-
+ lib/toaster/toastergui/static/js/projectapp.js     | 27 ++++++--
+ .../toastergui/templates/managed_mrb_section.html  |  4 +-
+ lib/toaster/toastergui/templates/newproject.html   | 32 +++++----
+ lib/toaster/toastergui/templates/project.html      | 11 +--
+ lib/toaster/toastergui/templates/projects.html     | 12 ++--
+ lib/toaster/toastergui/templates/targets.html      |  2 -
+ lib/toaster/toastergui/urls.py                     |  2 +-
+ lib/toaster/toastergui/views.py                    | 80 ++++++++++++----------
+ 9 files changed, 111 insertions(+), 70 deletions(-)
+
 -- 
 1.9.1
 
