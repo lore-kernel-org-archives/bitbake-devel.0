@@ -1,43 +1,42 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f169.google.com (mail-we0-f169.google.com
-	[74.125.82.169])
-	by mail.openembedded.org (Postfix) with ESMTP id 927B172C34
+Received: from mail-wg0-f53.google.com (mail-wg0-f53.google.com [74.125.82.53])
+	by mail.openembedded.org (Postfix) with ESMTP id E06AC72C9C
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 18:22:00 +0000 (UTC)
-Received: by mail-we0-f169.google.com with SMTP id p10so21215432wes.0
+	Wed, 21 Jan 2015 18:21:59 +0000 (UTC)
+Received: by mail-wg0-f53.google.com with SMTP id a1so4136015wgh.12
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 10:22:01 -0800 (PST)
+	Wed, 21 Jan 2015 10:22:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=/whzxfEBHhiQdTqflOxgkyKFZH4fOOhgcvgy+1dNqmU=;
-	b=Uo6LX76ycXpeDcY9SBNd4PLmAa6YzZXNk/tAuRfZ+YBo9WEzjvol+4IkGcurQC/qIT
-	2U7qi7Gd28XUzbg5JzSNuptCfeGdispL5ZdwgL/kMI8Weayi+xGkyQI6j0c5Qk7AAwwR
-	UuLt3nKx1qxYu3pr2e8OlaqD4feS0ApwfdNyKSAuBPWjSS1lVxQ8iRfMhChfMb3liIrR
-	nrXDlYSHBJYe0WFSeMmcp/XtDdrEsdC9GPYAAeRTyHK2toGbJ4pOi5SvJdQ6jFivFazn
-	YSmWXYURDdi/r/ptE20DaZdWaOdttgXEgr5tQCtdW0Hy3WjxqmRW87O6qsVzn6Gihccq
-	NUVA==
-X-Gm-Message-State: ALoCoQmLASHvq/mjwImmdCghcEkxKU8/JCjTjK8cIaXrCHust35LBe5RNvaR32i3xg/t1MzO/Q6D
-X-Received: by 10.180.103.231 with SMTP id fz7mr57094208wib.49.1421864519533; 
+	bh=ME+dCmvSloHbnTJ5rRKBrZGonedwFc5FvJbzcKj0XDU=;
+	b=afFubA8ojsfpAljAlelb1uqt+buu9A7nUhsvSIxChvineNnWHyE02ip8AQ2O/aj4hI
+	6uP4OXZhbO31FaoxLEsd/cwvZRdXy8blaWaeEAaXQNem2Kao0YKD7k/FjFs0bFq0V0AS
+	nP3WHIH7ZMQH3xlKr5ksOM7S4aGAeERCB+lj3bSezRBN6GNuyAIiR281S+ymZ+3icJ/X
+	iMi891Ull17O7b6azSN9I5zIKZG4MjJuJIXfWEwUXwJfIaJj6XbgOo6p6jA7lgbzkA33
+	lIEl3VNgbdJuasSCxlh3G4PyuBaDBXDjdUJaUslTGdyqW5d/ynwla/Ro6UIaShrLIN1G
+	rNfw==
+X-Gm-Message-State: ALoCoQld40jZ573BUfHci/zZaU+e/zxks9bM7QAoJ7DYeVY/TQYvZ3Ynxzvn5ziDpmLUhUgMKX1m
+X-Received: by 10.180.210.167 with SMTP id mv7mr58459393wic.78.1421864519931; 
 	Wed, 21 Jan 2015 10:21:59 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id c10sm825206wjy.4.2015.01.21.10.21.56
+	by mx.google.com with ESMTPSA id be2sm767438wjb.38.2015.01.21.10.21.56
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Wed, 21 Jan 2015 10:21:57 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id EC5725640FA; Wed, 21 Jan 2015 17:01:42 +0000 (GMT)
+	id E93E45640DA; Wed, 21 Jan 2015 17:01:42 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 21 Jan 2015 17:01:38 +0000
-Message-Id: <1aef19f67a2a5382128ba9207b516c3f7a053ef3.1421859619.git.alexandru.damian@intel.com>
+Date: Wed, 21 Jan 2015 17:01:36 +0000
+Message-Id: <027daf3a01682880d1cda3fef98070f38f483818.1421859619.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <811689481bc2a4d6361692c6a5d99bdbab8665ff.1421859619.git.alexandru.damian@intel.com>
 References: <811689481bc2a4d6361692c6a5d99bdbab8665ff.1421859619.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1421859619.git.alexandru.damian@intel.com>
 References: <cover.1421859619.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 08/12] toastegui: project page build selected targets
+Subject: [PATCH 06/12] toastergui: fix all-targets redirect
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,96 +53,56 @@ X-List-Received-Date: Wed, 21 Jan 2015 18:22:05 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Fixing the action on the "Build selected targets" button.
-Remove "build-button" duplicate id from the build page.
+Fixes the all targets redirect to /api/1.0/targets.
 
-[YOCTO #7047]
+[YOCTO #7147]
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/static/js/projectapp.js | 25 ++++++++++++++++++++++---
- lib/toaster/toastergui/templates/project.html  |  6 +++---
- 2 files changed, 25 insertions(+), 6 deletions(-)
+ lib/toaster/toastergui/templates/project.html | 2 +-
+ lib/toaster/toastergui/urls.py                | 2 +-
+ lib/toaster/toastergui/views.py               | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/lib/toaster/toastergui/static/js/projectapp.js b/lib/toaster/toastergui/static/js/projectapp.js
-index 74471a1..bee3c56 100644
---- a/lib/toaster/toastergui/static/js/projectapp.js
-+++ b/lib/toaster/toastergui/static/js/projectapp.js
-@@ -337,8 +337,12 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
-     }
- 
-     $scope.buildExistingTarget = function(targets) {
-+         $scope.buildTargetList(targets.map(function(v,i,a){return v.target}));
-+    }
-+
-+    $scope.buildTargetList = function(targetlist) {
-         var oldTargetName = $scope.targetName;
--        $scope.targetName = targets.map(function(v,i,a){return v.target}).join(' ');
-+        $scope.targetName = targetlist.join(' ');
-         $scope.buildNamedTarget();
-         $scope.targetName = oldTargetName;
-     }
-@@ -733,12 +737,27 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
-         angular.element(id+"-opposite").toggle();
-     }
- 
--    $scope.selectedMostBuildTargets = function () {
--        keys = Object.keys($scope.mostBuiltTargets);
-+    /**
-+     * Functionality related to "Most build targets"
-+     */
-+
-+    $scope.enableBuildSelectedTargets = function () {
-+        var keys = Object.keys($scope.mostBuiltTargets);
-         keys = keys.filter(function (e) { if ($scope.mostBuiltTargets[e]) return e });
-         return keys.length == 0;
-     }
- 
-+    $scope.buildSelectedTargets = function () {
-+        var keys = Object.keys($scope.mostBuiltTargets);
-+        keys = keys.filter(function (e) { if ($scope.mostBuiltTargets[e]) return e });
-+
-+        $scope.buildTargetList(keys);
-+        for (var i = 0; i < keys.length; i++)
-+        {
-+            $scope.mostBuiltTargets[keys[i]] = 0;
-+        }
-+    }
-+
-     /**
-      * Helper function to deal with error string recognition and manipulation
-      */
 diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
-index 815c24c..fe3bcf2 100644
+index 67b2672..815c24c 100644
 --- a/lib/toaster/toastergui/templates/project.html
 +++ b/lib/toaster/toastergui/templates/project.html
-@@ -92,7 +92,7 @@ vim: expandtab tabstop=2
-     <form class="build-form" ng-submit="buildNamedTarget()">
-       <div class="input-append controls">
-         <input type="text" class="huge span7" placeholder="Type the target(s) you want to build" autocomplete="off" ng-model="targetName" typeahead="e.name for e in getAutocompleteSuggestions('targets', $viewValue)|filter:$viewValue" typeahead-template-url="suggestion_details" ng-disabled="!layers.length"/>
--        <button type="submit" id="build-button" class="btn btn-large btn-primary" ng-disabled="!targetName.length">
-+        <button type="submit" class="btn btn-large btn-primary" ng-disabled="!targetName.length">
-         Build
-         </button>
+@@ -98,7 +98,7 @@ vim: expandtab tabstop=2
        </div>
-@@ -289,7 +289,7 @@ vim: expandtab tabstop=2
-         <form ng-submit="buildNamedTarget()">
-           <div class="input-append">
-             <input type="text" class="input-xlarge" placeholder="Type the target(s) you want to build" autocomplete="off" data-minLength="1"  ng-model="targetName1" typeahead="e.name for e in getAutocompleteSuggestions('targets', $viewValue)|filter:$viewValue" typeahead-template-url="suggestion_details" ng-disabled="!layers.length">
--            <button type="submit" id="build-button" class="btn btn-primary" ng-disabled="!targetName1.length">
-+            <button type="submit" class="btn btn-primary" ng-disabled="!targetName1.length">
-               Build </button>
-           </div>
-           {% csrf_token %}
-@@ -306,7 +306,7 @@ vim: expandtab tabstop=2
-             </label>
-           </li>
-         </ul>
--        <button class="btn btn-large btn-primary" ng-disabled="selectedMostBuildTargets()">Build selected targets</button>
-+        <button class="btn btn-large btn-primary" ng-disabled="enableBuildSelectedTargets()" ng-click="buildSelectedTargets()">Build selected targets</button>
-         </div>
-     </div>
+       <i class="icon-question-sign get-help get-help-blue" title="Type the name of one or more targets you want to build, separated by a space. You can also specify a task by appending a semicolon and a task name to a target name, like so: <code>core-image-minimal:do_build</code>"></i>
+       <p>
+-        <a href="{% url 'targets' %}">
++        <a href="{% url 'all-targets' %}">
+           View all targets
+         </a>
+         {% if completedbuilds.count %}
+diff --git a/lib/toaster/toastergui/urls.py b/lib/toaster/toastergui/urls.py
+index c74c7a6..8c3b5a8 100644
+--- a/lib/toaster/toastergui/urls.py
++++ b/lib/toaster/toastergui/urls.py
+@@ -77,7 +77,7 @@ urlpatterns = patterns('toastergui.views',
+         url(r'^layers/$', 'layers', name='layers'),
+         url(r'^layer/(?P<layerid>\d+)/$', 'layerdetails', name='layerdetails'),
+         url(r'^layer/$', 'layerdetails', name='layerdetails'),
+-        url(r'^targets/$', 'targets', name='targets'),
++        url(r'^targets/$', 'targets', name='all-targets'),
+         url(r'^machines/$', 'machines', name='machines'),
  
+         url(r'^projects/$', 'projects', name='all-projects'),
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 7a11bbd..6b4b5d9 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -2625,7 +2625,7 @@ if toastermain.settings.MANAGED:
+         mandatory_parameters = { 'count': pagesize,  'page' : 1, 'orderby' : orderby }
+         retval = _verify_parameters( request.GET, mandatory_parameters )
+         if retval:
+-            return _redirect_parameters( 'targets', request.GET, mandatory_parameters)
++            return _redirect_parameters( 'all-targets', request.GET, mandatory_parameters)
+         (filter_string, search_term, ordering_string) = _search_tuple(request, Recipe)
+ 
+         prj = Project.objects.get(pk = request.session['project_id'])
 -- 
 1.9.1
 
