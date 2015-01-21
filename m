@@ -1,43 +1,38 @@
-Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f182.google.com (mail-wi0-f182.google.com
-	[209.85.212.182])
-	by mail.openembedded.org (Postfix) with ESMTP id A895460670
+Return-Path: <twoerner@gmail.com>
+Received: from mail-ig0-f173.google.com (mail-ig0-f173.google.com
+	[209.85.213.173])
+	by mail.openembedded.org (Postfix) with ESMTP id 7461772CC9
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 18:22:16 +0000 (UTC)
-Received: by mail-wi0-f182.google.com with SMTP id n3so33675899wiv.3
+	Wed, 21 Jan 2015 18:22:17 +0000 (UTC)
+Received: by mail-ig0-f173.google.com with SMTP id a13so23848472igq.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 10:22:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=+FXvUYIxSiTZjZITBiruBjdXH+Gl3fnUAeiynQdHycc=;
-	b=jLeEZP0+sHsEev2ywp/mHVqQDG/1DgIMsN77bt8svW7a/lad2VDCqtMnUaavyR5FMx
-	olt9M1i/NlUA8IPuGo5L3JSPb+cPGBoZS2u0IskyoRQqVvvy5poVVlXIUtAORl3oJ7Ih
-	piQVxAQuseI9KO1BO9RB4jHUOfEMerLIDVuswjdlv1gWObyWpMT+pK7cvhFPJQXTc8yo
-	3SQy5X2OgNVH8wGSuXXs6aM26s262Z5PE2J1KbSb3+E8KpyOT7SrUucf9pRFeKCC+JwF
-	FP12VUyim6g6EAMCrh6eostWUlDRJSrDWBjL9Sy9hUPQLORcjXz0nYnmQn0vqjMiCN16
-	XT+Q==
-X-Gm-Message-State: ALoCoQno5D2uyU+D84QdG3A5377/nq20A0nq/nrzP1bM3xuisotnxmKEZz+QPKur8XKU5eLWO2mh
-X-Received: by 10.194.161.170 with SMTP id xt10mr6769625wjb.4.1421864536389;
-	Wed, 21 Jan 2015 10:22:16 -0800 (PST)
-Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id r3sm8293376wic.10.2015.01.21.10.22.15
+	Wed, 21 Jan 2015 10:22:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=message-id:date:from:user-agent:mime-version:to:subject:references
+	:in-reply-to:content-type:content-transfer-encoding;
+	bh=gEoEHM6ktJKbaYGQubxaBuN/y3rBIaeX6OCQ+vIhq3U=;
+	b=qxvJMkhQvZb6mNxHxZVwOCpT8shsUYicl8ktCYHEdYUk3qtCxXMIF3SHoBU80SRR/9
+	CLwls7ex+N8ZdAS+jIrstRGXM3OCSeCbL91RhyLUb4MWrXwVp0PnAb+rdE6HkL2fowOp
+	U4jELwcnJffha5sZDfSyW0wh7N+GloX9vN1YvViPTpp0pH2776i0QfZ3GSyZU5r6gSAx
+	7BDPF375eJytN14zbuFtqpVaIA/Wn3Cxou2kfDSkY1ijiiy5cL4cBmbH6lcqbMs/ZQ+3
+	lNqpTCeYTym9uBqvxo32604dyfRzwXNo/4SCpTHL8sLil2bbvMccq3t6gaq7rJ3v7eOi
+	aVZA==
+X-Received: by 10.50.137.99 with SMTP id qh3mr36896508igb.7.1421864537959;
+	Wed, 21 Jan 2015 10:22:17 -0800 (PST)
+Received: from [192.168.141.85] ([66.49.180.141])
+	by mx.google.com with ESMTPSA id kt1sm6424143igb.20.2015.01.21.10.22.16
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 21 Jan 2015 10:22:15 -0800 (PST)
-Received: by adamian-desk.local (Postfix, from userid 1000)
-	id E2B7B563FBF; Wed, 21 Jan 2015 17:01:42 +0000 (GMT)
-From: Alex DAMIAN <alexandru.damian@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 21 Jan 2015 17:01:32 +0000
-Message-Id: <5eba597f5ac09ddb57d0c5b0fe8b8923286ee5a5.1421859619.git.alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <811689481bc2a4d6361692c6a5d99bdbab8665ff.1421859619.git.alexandru.damian@intel.com>
-References: <811689481bc2a4d6361692c6a5d99bdbab8665ff.1421859619.git.alexandru.damian@intel.com>
-In-Reply-To: <cover.1421859619.git.alexandru.damian@intel.com>
-References: <cover.1421859619.git.alexandru.damian@intel.com>
-Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 02/12] toasterui: save event backlog to build
+	Wed, 21 Jan 2015 10:22:17 -0800 (PST)
+Message-ID: <54BFEE55.5040402@gmail.com>
+Date: Wed, 21 Jan 2015 13:22:13 -0500
+From: Trevor Woerner <twoerner@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:31.0) Gecko/20100101 Thunderbird/31.4.0
+MIME-Version: 1.0
+To: Ross Burton <ross.burton@intel.com>, bitbake-devel@lists.openembedded.org
+References: <1421849618-28332-1-git-send-email-ross.burton@intel.com>
+In-Reply-To: <1421849618-28332-1-git-send-email-ross.burton@intel.com>
+Subject: Re: [PATCH] bitbake: only check that /dev/shm is writable on Linux
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,45 +46,15 @@ List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 21 Jan 2015 18:22:17 -0000
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-We add a call that saves any queued events to the build
+On 01/21/15 09:13, Ross Burton wrote:
+> -# Python multiprocessing requires /dev/shm
+> -if not os.access('/dev/shm', os.W_OK | os.X_OK):
+> +# Python multiprocessing requires /dev/shm on Linux
+> +if sys.platform.startswith('linux') and not os.access('/dev/shm', os.W_OK | os.X_OK):
 
-[YOCTO #7021]
-
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
----
- lib/bb/ui/buildinfohelper.py | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index 9e801ac..be0de6b 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -1135,6 +1135,7 @@ class BuildInfoHelper(object):
-             return
- 
-         if 'build' in self.internal_state and 'backlog' in self.internal_state:
-+            # if we have a backlog of events, do our best to save them here
-             if len(self.internal_state['backlog']):
-                 tempevent = self.internal_state['backlog'].pop()
-                 logger.debug(1, "buildinfohelper: Saving stored event %s " % tempevent)
-@@ -1164,5 +1165,11 @@ class BuildInfoHelper(object):
-             self._store_build_done(errorcode)
- 
-         if 'backlog' in self.internal_state:
--            for event in self.internal_state['backlog']:
--                   logger.error("Unsaved log: %s", event.msg)
-+            if 'build' in self.internal_state:
-+                # we save missed events in the database for the current build
-+                tempevent = self.internal_state['backlog'].pop()
-+                self.store_log_event(tempevent)
-+            else:
-+                # we have no build, and we still have events; something amazingly wrong happend
-+                for event in self.internal_state['backlog']:
-+                   logger.error("UNSAVED log: %s", event.msg)
--- 
-1.9.1
-
+Cool! On what other platforms does bitbake work?
 
