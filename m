@@ -1,42 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f53.google.com (mail-wg0-f53.google.com [74.125.82.53])
-	by mail.openembedded.org (Postfix) with ESMTP id E06AC72C9C
+Received: from mail-wi0-f170.google.com (mail-wi0-f170.google.com
+	[209.85.212.170])
+	by mail.openembedded.org (Postfix) with ESMTP id AB93672CA5
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 18:21:59 +0000 (UTC)
-Received: by mail-wg0-f53.google.com with SMTP id a1so4136015wgh.12
+	Wed, 21 Jan 2015 18:22:16 +0000 (UTC)
+Received: by mail-wi0-f170.google.com with SMTP id em10so16856062wid.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 10:22:00 -0800 (PST)
+	Wed, 21 Jan 2015 10:22:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=ME+dCmvSloHbnTJ5rRKBrZGonedwFc5FvJbzcKj0XDU=;
-	b=afFubA8ojsfpAljAlelb1uqt+buu9A7nUhsvSIxChvineNnWHyE02ip8AQ2O/aj4hI
-	6uP4OXZhbO31FaoxLEsd/cwvZRdXy8blaWaeEAaXQNem2Kao0YKD7k/FjFs0bFq0V0AS
-	nP3WHIH7ZMQH3xlKr5ksOM7S4aGAeERCB+lj3bSezRBN6GNuyAIiR281S+ymZ+3icJ/X
-	iMi891Ull17O7b6azSN9I5zIKZG4MjJuJIXfWEwUXwJfIaJj6XbgOo6p6jA7lgbzkA33
-	lIEl3VNgbdJuasSCxlh3G4PyuBaDBXDjdUJaUslTGdyqW5d/ynwla/Ro6UIaShrLIN1G
-	rNfw==
-X-Gm-Message-State: ALoCoQld40jZ573BUfHci/zZaU+e/zxks9bM7QAoJ7DYeVY/TQYvZ3Ynxzvn5ziDpmLUhUgMKX1m
-X-Received: by 10.180.210.167 with SMTP id mv7mr58459393wic.78.1421864519931; 
-	Wed, 21 Jan 2015 10:21:59 -0800 (PST)
+	bh=hEodIOkypoYuFrHtlih/KurIrZrMQOge4NLJQO8OheQ=;
+	b=jjSOFhp/qXBnNHBRAIVQDD3lpyafq7th48cTxUeCNuw92EusKhYD2D6afWf3gv+Yp1
+	KrEB9+XMYh18rkZOmdi0urEk4K4X4x2OoOFZv5oMak0eTVEW4POPpwY4dj6tgkkkMONn
+	he109cY7wHMPOCV2o86vrv2ydo9/oeluzespnUP/IG2dDrdVXBViVc2aMVKmGv1ZJJqE
+	nNws0+CkEMGVx6C/5qundP6mWZF7qukkYqJQlfqZJYgZuksCjFoz/UIIX7ZTueLHAjWk
+	DsLlfz8FbKXfx2uCp4Bv0t2Sa0Ovxns8PN2hzIB1ZNVDWgNjHjQOr81ePwTuRwK5Hrld
+	47CA==
+X-Gm-Message-State: ALoCoQn7/TW5bdanMCaPvQi4d93Qlvu7MkgSHqglZiYpQWg6Q0mU/LpX5pue506v6DvuogBpixIC
+X-Received: by 10.180.7.198 with SMTP id l6mr59664688wia.26.1421864536823;
+	Wed, 21 Jan 2015 10:22:16 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id be2sm767438wjb.38.2015.01.21.10.21.56
+	by mx.google.com with ESMTPSA id
+	fi10sm8290688wib.13.2015.01.21.10.22.15
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 21 Jan 2015 10:21:57 -0800 (PST)
+	Wed, 21 Jan 2015 10:22:15 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id E93E45640DA; Wed, 21 Jan 2015 17:01:42 +0000 (GMT)
+	id E798556408F; Wed, 21 Jan 2015 17:01:42 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 21 Jan 2015 17:01:36 +0000
-Message-Id: <027daf3a01682880d1cda3fef98070f38f483818.1421859619.git.alexandru.damian@intel.com>
+Date: Wed, 21 Jan 2015 17:01:35 +0000
+Message-Id: <53388c23bef3544ccf3454eea770e0caed65a092.1421859619.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <811689481bc2a4d6361692c6a5d99bdbab8665ff.1421859619.git.alexandru.damian@intel.com>
 References: <811689481bc2a4d6361692c6a5d99bdbab8665ff.1421859619.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1421859619.git.alexandru.damian@intel.com>
 References: <cover.1421859619.git.alexandru.damian@intel.com>
 Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
-Subject: [PATCH 06/12] toastergui: fix all-targets redirect
+Subject: [PATCH 05/12] toaster: newproject default release selection fix
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,60 +51,74 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 21 Jan 2015 18:22:05 -0000
+X-List-Received-Date: Wed, 21 Jan 2015 18:22:17 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Fixes the all targets redirect to /api/1.0/targets.
+This patch fixes the default project release selection to
+obey the DEFAULT_RELEASE name set in ToasterSettings.
 
-[YOCTO #7147]
+[YOCTO #7035]
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/templates/project.html | 2 +-
- lib/toaster/toastergui/urls.py                | 2 +-
- lib/toaster/toastergui/views.py               | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ lib/toaster/toastergui/templates/newproject.html | 32 ++++++++++++++----------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
-index 67b2672..815c24c 100644
---- a/lib/toaster/toastergui/templates/project.html
-+++ b/lib/toaster/toastergui/templates/project.html
-@@ -98,7 +98,7 @@ vim: expandtab tabstop=2
-       </div>
-       <i class="icon-question-sign get-help get-help-blue" title="Type the name of one or more targets you want to build, separated by a space. You can also specify a task by appending a semicolon and a task name to a target name, like so: <code>core-image-minimal:do_build</code>"></i>
-       <p>
--        <a href="{% url 'targets' %}">
-+        <a href="{% url 'all-targets' %}">
-           View all targets
-         </a>
-         {% if completedbuilds.count %}
-diff --git a/lib/toaster/toastergui/urls.py b/lib/toaster/toastergui/urls.py
-index c74c7a6..8c3b5a8 100644
---- a/lib/toaster/toastergui/urls.py
-+++ b/lib/toaster/toastergui/urls.py
-@@ -77,7 +77,7 @@ urlpatterns = patterns('toastergui.views',
-         url(r'^layers/$', 'layers', name='layers'),
-         url(r'^layer/(?P<layerid>\d+)/$', 'layerdetails', name='layerdetails'),
-         url(r'^layer/$', 'layerdetails', name='layerdetails'),
--        url(r'^targets/$', 'targets', name='targets'),
-+        url(r'^targets/$', 'targets', name='all-targets'),
-         url(r'^machines/$', 'machines', name='machines'),
+diff --git a/lib/toaster/toastergui/templates/newproject.html b/lib/toaster/toastergui/templates/newproject.html
+index 512a8fa..0265564 100644
+--- a/lib/toaster/toastergui/templates/newproject.html
++++ b/lib/toaster/toastergui/templates/newproject.html
+@@ -22,18 +22,24 @@
+                 <i class="icon-question-sign get-help" title="The version of the build system you want to use"></i>
+               </label>
+               <select name="projectversion" id="projectversion">
+-  {% for release in releases %}
+-    <option value="{{release.id}}"{%if projectversion == release.id %} selected{%endif%}>{{release.description}}</option>
+-  {% endfor %}
++          {% for release in releases %}
++            <option value="{{release.id}}"
++                {%if defaultbranch == release.name %}
++                selected
++            {%endif%}
++
++             >{{release.description}}</option>
++          {% endfor %}
+               </select>
+-  {% for release in releases %}
+-    <div class="row-fluid helptext" id="description-{{release.id}}" style="display: none">
+-        <span class="help-block span5">{{release.helptext|safe}}</span>
+-    </div>
+-  {% endfor %}
++         {% for release in releases %}
++             <div class="row-fluid helptext" id="description-{{release.id}}" style="display: none">
++                <span class="help-block span5">{{release.helptext|safe}}</span>
++           </div>
++         {% endfor %}
+        {% else %}
+-    <input type="hidden" name="projectversion" value="{{releases.0.id}}"/>
++        <input type="hidden" name="projectversion" value="{{releases.0.id}}"/>
+        {% endif %}
++
+             </fieldset>
  
-         url(r'^projects/$', 'projects', name='all-projects'),
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 7a11bbd..6b4b5d9 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -2625,7 +2625,7 @@ if toastermain.settings.MANAGED:
-         mandatory_parameters = { 'count': pagesize,  'page' : 1, 'orderby' : orderby }
-         retval = _verify_parameters( request.GET, mandatory_parameters )
-         if retval:
--            return _redirect_parameters( 'targets', request.GET, mandatory_parameters)
-+            return _redirect_parameters( 'all-targets', request.GET, mandatory_parameters)
-         (filter_string, search_term, ordering_string) = _search_tuple(request, Recipe)
+             <div class="form-actions">
+@@ -82,11 +88,11 @@
+             $("#description-" + selected_release).show();
  
-         prj = Project.objects.get(pk = request.session['project_id'])
+ 
+-			$('select').change(function(){
+-				var new_release = $('select').val();
++            $('select').change(function(){
++                var new_release = $('select').val();
+                 $(".helptext").hide();
+-				$('#description-' + new_release).fadeIn();
+-			});
++                $('#description-' + new_release).fadeIn();
++            });
+         })
+     </script>
+ </div>
 -- 
 1.9.1
 
