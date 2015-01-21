@@ -1,39 +1,42 @@
-Return-Path: <twoerner@gmail.com>
-Received: from mail-ie0-f171.google.com (mail-ie0-f171.google.com
-	[209.85.223.171])
-	by mail.openembedded.org (Postfix) with ESMTP id 9483D60670
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-wg0-f48.google.com (mail-wg0-f48.google.com [74.125.82.48])
+	by mail.openembedded.org (Postfix) with ESMTP id 6EBBE72BCE
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 18:19:11 +0000 (UTC)
-Received: by mail-ie0-f171.google.com with SMTP id tr6so13601272ieb.2
+	Wed, 21 Jan 2015 18:21:58 +0000 (UTC)
+Received: by mail-wg0-f48.google.com with SMTP id x12so12910097wgg.7
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 10:19:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=message-id:date:from:user-agent:mime-version:to:subject:references
-	:in-reply-to:content-type:content-transfer-encoding;
-	bh=fEnBFRtM73G+IWca/boKEAEBl4rpm/PYvAR0Abe5JQo=;
-	b=ZJAJUTsulMy9PLOwsuxRiWZbjnvM0oGWzhCm3dEK5PhwRI1kkpMlatMFW5tMFNMKtP
-	KIBTql9jDFe/zTs3thvNSXyyN08+FsiyGo6DRsD/mePGwaPZvPAE+Fcv5OXYpct2Phlv
-	jxMYfUw1JN6NCtYiV75hzrccizV0ir/x9MwzxojhyKVTNrpEZ5SzZbC0WYDGTnRLzLzA
-	BEW0LTgoHkCGND84F0mNGmPpQB6Np/39pQMMFjHEnvkCn7wnr8aZhMYu8n00O+cJyFeF
-	L3haUDnnfnyVp5pomY0DBlZpc3g94R1pMSJK6Sii7IKVIvUnkul4fs1kxv1OF6d1rRph
-	cWBA==
-X-Received: by 10.50.30.3 with SMTP id o3mr6278267igh.44.1421864352392;
-	Wed, 21 Jan 2015 10:19:12 -0800 (PST)
-Received: from [192.168.141.85] ([66.49.180.141])
-	by mx.google.com with ESMTPSA id qj3sm6424194igc.17.2015.01.21.10.19.11
+	Wed, 21 Jan 2015 10:21:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references:in-reply-to:references;
+	bh=cnkxSAE7L9SCuD8VZ8xXH/Lfg7dFgZNYYgkEWq+1yCM=;
+	b=B7mmcgnpb0THaeZ9qVnWGhgo9oxCTIQ5FghQFERk8HF/E9MTweUrYLDvm8DZSUdBp7
+	UbExwEwv5pxqgJJApJgu+LX2rx8lQzM+1xOLJDvEZQN7FGVurI/7jfadhtA4tP8XF0MU
+	gLw3txrbdMRbS8QEr7HAM2lqvdCin8ANpQn0M0Wkr1VYK5wVc/fCbJ8C8Q+gltrSlsiT
+	IZrF/cUMxNwtFPpQ1ufuYe1oLEyQ452Q43rNfnsekpAa/OQ0pZd5sARUYc9/OoVJju5u
+	iNh2x4xNn3lHdgSYtWb/RLS/s1osIA8Yo4gp4VPwgo37pDavh1nPHNV4ED8OE+a33tWE
+	9fMA==
+X-Gm-Message-State: ALoCoQnijpMQ86susNxPQDIAR4j3xZ/rjVv6x2lJ3bVqmgJhtc8yW6BtD699VmGrzeGO6tgHt/DA
+X-Received: by 10.194.237.41 with SMTP id uz9mr15903430wjc.80.1421864519142;
+	Wed, 21 Jan 2015 10:21:59 -0800 (PST)
+Received: from adamian-desk.local ([83.217.123.106])
+	by mx.google.com with ESMTPSA id ei5sm8308033wid.2.2015.01.21.10.21.56
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 21 Jan 2015 10:19:11 -0800 (PST)
-Message-ID: <54BFED9D.50701@gmail.com>
-Date: Wed, 21 Jan 2015 13:19:09 -0500
-From: Trevor Woerner <twoerner@gmail.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:31.0) Gecko/20100101 Thunderbird/31.4.0
-MIME-Version: 1.0
-To: Chong Lu <Chong.Lu@windriver.com>, 
- bitbake-devel@lists.openembedded.org
-References: <cover.1421827025.git.Chong.Lu@windriver.com>
-In-Reply-To: <cover.1421827025.git.Chong.Lu@windriver.com>
-Subject: Re: [PATCH 0/2] bitbake-layers: add a ability to query layer dependencies from layer index
+	Wed, 21 Jan 2015 10:21:57 -0800 (PST)
+Received: by adamian-desk.local (Postfix, from userid 1000)
+	id EDDDF56410E; Wed, 21 Jan 2015 17:01:42 +0000 (GMT)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 21 Jan 2015 17:01:39 +0000
+Message-Id: <c8683b74579b999d9cfa4017b9cae5232517c63b.1421859619.git.alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <811689481bc2a4d6361692c6a5d99bdbab8665ff.1421859619.git.alexandru.damian@intel.com>
+References: <811689481bc2a4d6361692c6a5d99bdbab8665ff.1421859619.git.alexandru.damian@intel.com>
+In-Reply-To: <cover.1421859619.git.alexandru.damian@intel.com>
+References: <cover.1421859619.git.alexandru.damian@intel.com>
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 09/12] toastergui: minor fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -46,31 +49,55 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 21 Jan 2015 18:19:15 -0000
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 21 Jan 2015 18:22:05 -0000
 
-On 01/21/15 03:02, Chong Lu wrote:
-> $ bitbake-layers show-layer-deps errorlayer,meta-openstack
-> Parsing recipes..done.
-> Layer                 Dependencies          Git repository                                           Subdirectory
-> ===================================================================================================================
-> meta-openstack        meta-ruby             git://git.openembedded.org/meta-openembedded             meta-ruby
-> meta-openstack        meta-networking       git://git.openembedded.org/meta-openembedded             meta-networking
-> meta-openstack        meta-virtualization   git://git.yoctoproject.org/meta-virtualization           
-> meta-openstack        openembedded-core     git://git.openembedded.org/openembedded-core             meta
-> meta-openstack        meta-oe               git://git.openembedded.org/meta-openembedded             meta-oe
-> WARNING: errorlayer is not found in layer index.
-> Cloning into '/buildarea2/clu1/source/poky/meta-cloud-services'...
-> Add "meta-openstack" to conf/bblayers.conf
-> Cloning into '/buildarea2/clu1/source/poky/meta-openembedded'...
-> Add "meta-ruby" to conf/bblayers.conf
-> Add "meta-networking" to conf/bblayers.conf
-> Cloning into '/buildarea2/clu1/source/poky/meta-virtualization'...
-> Add "meta-virtualization" to conf/bblayers.conf
-> Add "meta-oe" to conf/bblayers.conf
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-I wouldn't expect a sub-command called "show-layer-deps" to go ahead and
-add the shown dependencies to my configuration. Maybe either an explicit
-switch or separate "add-layer-deps" command should be added instead?
+This is a minor fixes patch.
+
+- legacy sorting by "timespent" does not crash the builds pages
+- missing xhr_configvaredit view in observer mode is added
+
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+---
+ lib/toaster/toastergui/views.py | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 616b57c..f84b120 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -1743,7 +1743,8 @@ if toastermain.settings.MANAGED:
+     # helper function, to be used on "all builds" and "project builds" pages
+     def _build_list_helper(request, buildrequests):
+         # ATTN: we use here the ordering parameters for interactive mode; the translation for BuildRequest fields will happen below
+-        (pagesize, orderby) = _get_parameters_values(request, 10, 'completed_on:-')
++        default_orderby = 'completed_on:-'
++        (pagesize, orderby) = _get_parameters_values(request, 10, default_orderby)
+         mandatory_parameters = { 'count': pagesize,  'page' : 1, 'orderby' : orderby }
+         retval = _verify_parameters( request.GET, mandatory_parameters )
+         if retval:
+@@ -1764,6 +1765,9 @@ if toastermain.settings.MANAGED:
+             ordering_params[0] = "build__machine"
+         if ordering_params[0] == "target__target":
+             ordering_params[0] = "brtarget__target"
++        if ordering_params[0] == "timespent":
++            ordering_params[0] = "id"
++            orderby = default_orderby
+ 
+         request.GET = request.GET.copy()        # get a mutable copy of the GET QueryDict
+         request.GET['orderby'] = ":".join(ordering_params)
+@@ -3204,6 +3208,9 @@ else:
+     def xhr_datatypeahead(request):
+         raise Exception("page not available in interactive mode")
+ 
++    def xhr_configvaredit(request):
++        raise Exception("page not available in interactive mode")
++
+     def importlayer(request):
+         raise Exception("page not available in interactive mode")
+ 
+-- 
+1.9.1
+
 
