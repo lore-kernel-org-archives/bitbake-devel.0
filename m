@@ -1,37 +1,30 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-qc0-f182.google.com (mail-qc0-f182.google.com
-	[209.85.216.182])
-	by mail.openembedded.org (Postfix) with ESMTP id 67F3660670
+Return-Path: <Chong.Lu@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 6E4DA65C7B
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 21:07:34 +0000 (UTC)
-Received: by mail-qc0-f182.google.com with SMTP id l6so34129738qcy.13
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 21 Jan 2015 13:07:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-type;
-	bh=Vx7McLVCB5lcpgjO5BVo4fLwphtTTzg5JaRGFLQXMc8=;
-	b=gSnr1Oh9JsopRmpyCoxplGfzexF5VN8vC6+l7Ia46AxmILguCKKQMgEuub/DCS4KKT
-	T4vUXQLSxO/GDinsWRn+1i7gHbCYcTQAHqyiBP3bXRscqXGXLrR8W+xDBo8ZgfRPQ2uc
-	cwV5kftzpVlw5kPLpyeng8uVMNi4KKh5ljaSvryddFpVFrAJ8vq31YYNyqHNRfi8jGVs
-	QlSFSOhmYuRs0OVgUiAgT/kW/6xtSfshPMc1XF+SOw8PuniW712wN6K2V8UqaAPmE5tS
-	kyddM87LBM+TRbqT4Nl//vKEDVBame0Uxl6aGZK0iuZi3v3+qk4m/uG67XkoGWoFopN0
-	aFvw==
-X-Gm-Message-State: ALoCoQmF46voZJCupshL4QOE0gRFkdbJStESkR9na/NtINXC9yGclW0wRisLOvSiLkyUPIxJ2s3h
-X-Received: by 10.140.49.5 with SMTP id p5mr68581177qga.15.1421874455470; Wed,
-	21 Jan 2015 13:07:35 -0800 (PST)
+	Thu, 22 Jan 2015 01:36:11 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.14.9/8.14.5) with ESMTP id t0M1aAGe020204
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+	Wed, 21 Jan 2015 17:36:10 -0800 (PST)
+Received: from [128.224.162.204] (128.224.162.204) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.174.1;
+	Wed, 21 Jan 2015 17:36:09 -0800
+Message-ID: <54C05406.80103@windriver.com>
+Date: Thu, 22 Jan 2015 09:36:06 +0800
+From: Chong Lu <Chong.Lu@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:24.0) Gecko/20100101 Thunderbird/24.0
 MIME-Version: 1.0
-Received: by 10.140.96.166 with HTTP; Wed, 21 Jan 2015 13:07:15 -0800 (PST)
-In-Reply-To: <54BFEE55.5040402@gmail.com>
-References: <1421849618-28332-1-git-send-email-ross.burton@intel.com>
-	<54BFEE55.5040402@gmail.com>
-From: "Burton, Ross" <ross.burton@intel.com>
-Date: Wed, 21 Jan 2015 21:07:15 +0000
-Message-ID: <CAJTo0LbAWxaq9bin3LkmbSM_8nvfHYAec99fZ41aL-NPp-aq=g@mail.gmail.com>
-To: Trevor Woerner <twoerner@gmail.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] bitbake: only check that /dev/shm is writable on Linux
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <cover.1421657244.git.Chong.Lu@windriver.com>	
+	<dcc1cd29cdf4dbcf242fda70bbd03fe9a2e84263.1421657244.git.Chong.Lu@windriver.com>
+	<1421848488.1798.55.camel@linuxfoundation.org>
+In-Reply-To: <1421848488.1798.55.camel@linuxfoundation.org>
+X-Originating-IP: [128.224.162.204]
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/1] bitbake: prserv/serv: sync database after thead quit
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,38 +37,53 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 21 Jan 2015 21:07:46 -0000
-Content-Type: multipart/alternative; boundary=001a11351944d581a7050d2ff117
+X-List-Received-Date: Thu, 22 Jan 2015 01:36:19 -0000
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
---001a11351944d581a7050d2ff117
-Content-Type: text/plain; charset=UTF-8
 
-On 21 January 2015 at 18:22, Trevor Woerner <twoerner@gmail.com> wrote:
-
-> Cool! On what other platforms does bitbake work?
+On 01/21/2015 09:54 PM, Richard Purdie wrote:
+> On Mon, 2015-01-19 at 16:48 +0800, Chong Lu wrote:
+>> We need sync database after thread quit, else we may get a empty table
+>> after import a PR database.
+>>
+>> [YOCTO #6752]
+>>
+>> Signed-off-by: Chong Lu <Chong.Lu@windriver.com>
+>> ---
+>>   bitbake/lib/prserv/serv.py | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/bitbake/lib/prserv/serv.py b/bitbake/lib/prserv/serv.py
+>> index 25eb46a..c774c5e 100644
+>> --- a/bitbake/lib/prserv/serv.py
+>> +++ b/bitbake/lib/prserv/serv.py
+>> @@ -87,7 +87,7 @@ class PRServer(SimpleXMLRPCServer):
+>>                   self.finish_request(request, client_address)
+>>                   self.shutdown_request(request)
+>>                   iter_count = (iter_count + 1) % iterations_between_sync
+>> -                if iter_count == 0:
+>> +                if iter_count == 0 or self.quit:
+>>                       self.table.sync_if_dirty()
+>>               except:
+>>                   self.handle_error(request, client_address)
+> Thanks for the patch. I had a look at this problem and I think there are
+> bigger problems with the code. Can you take a look at the patch I've
+> just posted, it should solve this issue as well as several others.
+>
+> Cheers,
+>
+> Richard
 >
 
-I've been experimenting with OS X.  I'm not sure I'd use the word "work".
-Well, bitbake works - but oe-core can't bootstrap the toolchain.
+Hi Richard,
 
-(poky-contrib:ross/darwin)
+I try your patch in my environment, it can fix [YOCTO #6752].
+Thanks for your improve.
 
-Ross
+Best Regards
+Chong
 
---001a11351944d581a7050d2ff117
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+>
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On 21 January 2015 at 18:22, Trevor Woerner <span dir=3D"ltr">&lt;<a href=
-=3D"mailto:twoerner@gmail.com" target=3D"_blank">twoerner@gmail.com</a>&gt;=
-</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .=
-8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":6gp" class=3D"=
-a3s" style=3D"overflow:hidden">Cool! On what other platforms does bitbake w=
-ork?</div></blockquote><div><br></div><div>I&#39;ve been experimenting with=
- OS X.=C2=A0 I&#39;m not sure I&#39;d use the word &quot;work&quot;.=C2=A0 =
-Well, bitbake works - but oe-core can&#39;t bootstrap the toolchain.</div><=
-div><br></div><div>(poky-contrib:ross/darwin)</div><div><br></div><div>Ross=
-=C2=A0</div></div></div></div>
 
---001a11351944d581a7050d2ff117--
