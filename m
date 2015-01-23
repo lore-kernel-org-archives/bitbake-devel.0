@@ -1,25 +1,26 @@
-Return-Path: <Chong.Lu@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id B286F65C7B
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 0765B65C7B
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 23 Jan 2015 05:33:26 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.14.9/8.14.5) with ESMTP id t0N5XNwS008972
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-	Thu, 22 Jan 2015 21:33:23 -0800 (PST)
-Received: from pek-hostel-deb02.wrs.com (128.224.153.152) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
-	14.3.174.1; Thu, 22 Jan 2015 21:33:22 -0800
-From: Chong Lu <Chong.Lu@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>, <paul.eggleton@linux.intel.com>
-Date: Fri, 23 Jan 2015 13:28:33 +0800
-Message-ID: <f73b94aaf542e5b7039cb573b6beba2f990b9c2e.1421990461.git.Chong.Lu@windriver.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1421990461.git.Chong.Lu@windriver.com>
-References: <cover.1421990461.git.Chong.Lu@windriver.com>
+	Fri, 23 Jan 2015 10:34:00 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by orsmga102.jf.intel.com with ESMTP; 23 Jan 2015 02:30:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.09,453,1418112000"; d="scan'208";a="666401605"
+Received: from vvatula-mobl2.ger.corp.intel.com (HELO
+	peggleto-mobl5.ger.corp.intel.com) ([10.252.22.114])
+	by fmsmga002.fm.intel.com with ESMTP; 23 Jan 2015 02:33:59 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Fri, 23 Jan 2015 10:33:58 +0000
+Message-ID: <3577015.nPVb6vKuGn@peggleto-mobl5.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.14.3 (Linux/3.17.8-200.fc20.x86_64; KDE/4.14.3; x86_64; ; )
+In-Reply-To: <1421938639.19798.17.camel@linuxfoundation.org>
+References: <1421938639.19798.17.camel@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH V3 1/2] bitbake.conf: Add two variables for layer index
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: Lifecycle issues in Bitbake
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,37 +33,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 23 Jan 2015 05:33:26 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 23 Jan 2015 10:34:08 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Add BITBAKE_LAYERINDEX_URL variable that bitbake-layers can use to find layer index.
-Add LAYER_FETCH_DIR variable that bitbake-layers can use to specify fetch directory.
+Hi Richard,
 
-[YOCTO #5348]
+On Thursday 22 January 2015 14:57:19 Richard Purdie wrote:
+> Looking at and thinking about:
+> 
+> https://bugzilla.yoctoproject.org/show_bug.cgi?id=5187
+> 
+> We have several issues. Firstly, DATE and TIME are locked in stone when
+> the base configuration is parsed. This may cause images to overwrite
+> previous versions for example if DATE and TIME are not re-evaluated. We
+> could fix this by specifically setting DATE and TIME in bitbake at
+> BuildStart?
 
-Signed-off-by: Chong Lu <Chong.Lu@windriver.com>
----
- meta/conf/bitbake.conf | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/meta/conf/bitbake.conf b/meta/conf/bitbake.conf
-index d22e9e8..a8f4dc9 100644
---- a/meta/conf/bitbake.conf
-+++ b/meta/conf/bitbake.conf
-@@ -549,6 +549,12 @@ SELECTED_OPTIMIZATION[vardeps] += "FULL_OPTIMIZATION DEBUG_OPTIMIZATION"
- BUILD_OPTIMIZATION = "-O2 -pipe"
+We could certainly do this. Another mechanism I did think about was to have 
+some way of indicating to BitBake that on buildstart the value should be reset 
+to the immediate evaluation of an expression; perhaps a varflag. At least that 
+way we could handle other such variables, although it's conceivable that 
+having built-in DATE and TIME in BitBake wouldn't be the worst thing in the 
+world.
  
- ##################################################################
-+# The OE layer index.
-+##################################################################
-+BITBAKE_LAYERINDEX_URL ??= "http://layers.openembedded.org/layerindex/api/"
-+LAYER_FETCH_DIR ??= "${COREBASE}"
-+
-+##################################################################
- # Download locations and utilities.
- ##################################################################
- 
+> Secondly, there is one cooker log file opened for the duration of the
+> cooker lifecycle. This is a cooker log, not a log of each build so that
+> is perhaps not surprising (and is the core problem in the above bug).
+> There is no overwriting of the log file, it just keeps growing with each
+> build.
+> 
+> We could trigger knotty to write out build specific log files based on
+> the BuildStart/Finish events?
+
+Yes I think we should do this.
+
+Cheers,
+Paul
+
 -- 
-1.9.1
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
