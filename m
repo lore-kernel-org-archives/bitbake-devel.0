@@ -1,41 +1,31 @@
-Return-Path: <rep.dot.nop@gmail.com>
-Received: from mail-wi0-f171.google.com (mail-wi0-f171.google.com
-	[209.85.212.171])
-	by mail.openembedded.org (Postfix) with ESMTP id 533FA71144
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id ECDA672718
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 22 Jan 2015 21:09:20 +0000 (UTC)
-Received: by mail-wi0-f171.google.com with SMTP id l15so36622325wiw.4
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 22 Jan 2015 13:09:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=user-agent:in-reply-to:references:mime-version
-	:content-transfer-encoding:content-type:subject:from:date:to
-	:message-id; bh=7gftdQENpTTKhgrrrI1ktb9r0AmQzYz7sMPEamSo9Eo=;
-	b=Ts4u1efdktymxVkaAHNrsGOArIP2sflVQbBNWsPK521o5rsSEsg/pdI0QCG85RctU9
-	6RAbZkyNQ88rg51PUMi3UJK4lLDbj6iA692y5QN/dteI7XtyRL+EAqqPWj+u1bFlmjCj
-	FMr6YzWEvU/xiXo+lcDA4fmGtoCVZvtQ3o6LUp9W6B20QmzEPGmz+E5VtRhtskKApCWh
-	J1p+C9sVAlQnPMLfKyOXadzW2axRD7ce09qDW1BRBICoWzIv6XK+h8eaX04svJn9ogc0
-	j0TX9iWomw4VtNgik17146PYnik+KW5MF7nFN2wyKGGWDLAUNfikrJ3mvpsQrKPJLAho
-	xx8w==
-X-Received: by 10.194.57.43 with SMTP id f11mr7066241wjq.6.1421960960737;
-	Thu, 22 Jan 2015 13:09:20 -0800 (PST)
-Received: from 046207038239.atmpu0026.highway.a1.net
-	(046207038239.atmpu0026.highway.a1.net. [46.207.38.239])
-	by mx.google.com with ESMTPSA id dc1sm4535908wib.18.2015.01.22.13.09.19
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 22 Jan 2015 13:09:20 -0800 (PST)
-User-Agent: K-9 Mail for Android
-In-Reply-To: <77A8CA6E-0A1D-4E38-B4C0-98EAA4711824@gmail.com>
-References: <cover.1421895046.git.Chong.Lu@windriver.com>
-	<a04905e3262a83cb0c00fcfc9609077200af2da2.1421895046.git.Chong.Lu@windriver.com>
-	<77A8CA6E-0A1D-4E38-B4C0-98EAA4711824@gmail.com>
+	Fri, 23 Jan 2015 00:54:41 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail1.windriver.com (8.14.9/8.14.5) with ESMTP id t0N0sc6T006785
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+	Thu, 22 Jan 2015 16:54:38 -0800 (PST)
+Received: from [128.224.162.174] (128.224.162.174) by ALA-HCB.corp.ad.wrs.com
+	(147.11.189.41) with Microsoft SMTP Server id 14.3.174.1;
+	Thu, 22 Jan 2015 16:54:37 -0800
+Message-ID: <54C19BCC.7080102@windriver.com>
+Date: Fri, 23 Jan 2015 08:54:36 +0800
+From: Robert Yang <liezhi.yang@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux i686;
+	rv:31.0) Gecko/20100101 Thunderbird/31.3.0
 MIME-Version: 1.0
-From: Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
-Date: Thu, 22 Jan 2015 22:09:13 +0100
-To: Chong Lu <Chong.Lu@windriver.com>, bitbake-devel@lists.openembedded.org,
-	paul.eggleton@linux.intel.com
-Message-ID: <C0BC539D-E32D-478B-8E62-2EE9EEB70C55@gmail.com>
-Subject: Re: [PATCH V2 2/2] bitbake-layers: add a ability to	query layer dependencies from layer index
+To: "Burton, Ross" <ross.burton@intel.com>
+References: <1421158296.31262.17.camel@linuxfoundation.org>
+	<54BCBBF6.4020904@windriver.com>
+	<1421663325.1798.31.camel@linuxfoundation.org>
+	<54BDBC83.9030007@windriver.com> <54C0BE76.7030601@windriver.com>
+	<CAJTo0LboyFeOwwSJANbXjwfQ88C_SeaFq1EMUn2xRwu6Byi+ug@mail.gmail.com>
+In-Reply-To: <CAJTo0LboyFeOwwSJANbXjwfQ88C_SeaFq1EMUn2xRwu6Byi+ug@mail.gmail.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] bitbake: Add pyinotify to lib/
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,40 +38,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 22 Jan 2015 21:09:21 -0000
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain;
- charset=UTF-8
+X-List-Received-Date: Fri, 23 Jan 2015 00:54:50 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On January 22, 2015 6:05:36 PM GMT+01:00, Bernhard Reutner-Fischer <rep.dot.nop@gmail.com> wrote:
->> (host, port) = parsedurl.netloc.split(":")
+
+
+On 01/22/2015 08:50 PM, Burton, Ross wrote:
 >
->Please rsplit, don't add more of these bugs..
->http://lists.openembedded.org/pipermail/bitbake-devel/2013-June/003533.html
+> On 22 January 2015 at 09:10, Robert Yang <liezhi.yang@windriver.com
+> <mailto:liezhi.yang@windriver.com>> wrote:
+>
+>     I run 5 builds on the same host, each of them is BB_NUMBER_THREADS=32 and
+>     PARALLEL_MAKE="-j32", I can get the error every time when "bitbake image".
+>     Then I use "ulimit -u 10000", the "bitbake image" works well, and the
+>     world is in building.
+>
+>
+> I'd suggest option (3), reducing the amount of parallelism. If you're expecting
+> five builds on the machine, then reducing those values would reduce wasted
+> parallelism - after all you've got over 3000 tasks sleeping.
 
-Something like
+But I've never seen this error before 2015/01/02, do you know anything about
+what changes cause this issue recently, please ?
 
-def splitport(host):
-   """splitport('host:port') --> 'host', 'port'.""" 
-   if host[0] == '[':
-     # Escaped IPv6 
-     host, port = host[1:].split(']', 1)
-     if ':' in port:
-       port = port.rsplit(':', 1)[1]
-     else:
-       port = None
-   else:
-      if host.count(':') == 1:
-        # IPv4
-        host, port = host.split(':')
-      else:
-        # unescaped IPv6 hosts with port are a no go
-        port = None
-   return (host, None if port is None else int(port)) 
+// Robert
 
-And fixup all callers.
-I don't have a real keyboard at hand ATM..
-
-Thanks,
-
+>
+> Ross
 
