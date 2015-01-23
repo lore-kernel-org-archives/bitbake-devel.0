@@ -1,26 +1,36 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 0765B65C7B
+Return-Path: <rep.dot.nop@gmail.com>
+Received: from mail-la0-f45.google.com (mail-la0-f45.google.com
+	[209.85.215.45])
+	by mail.openembedded.org (Postfix) with ESMTP id 5BB3465C7B
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 23 Jan 2015 10:34:00 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by orsmga102.jf.intel.com with ESMTP; 23 Jan 2015 02:30:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.09,453,1418112000"; d="scan'208";a="666401605"
-Received: from vvatula-mobl2.ger.corp.intel.com (HELO
-	peggleto-mobl5.ger.corp.intel.com) ([10.252.22.114])
-	by fmsmga002.fm.intel.com with ESMTP; 23 Jan 2015 02:33:59 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Date: Fri, 23 Jan 2015 10:33:58 +0000
-Message-ID: <3577015.nPVb6vKuGn@peggleto-mobl5.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.14.3 (Linux/3.17.8-200.fc20.x86_64; KDE/4.14.3; x86_64; ; )
-In-Reply-To: <1421938639.19798.17.camel@linuxfoundation.org>
-References: <1421938639.19798.17.camel@linuxfoundation.org>
+	Fri, 23 Jan 2015 13:30:53 +0000 (UTC)
+Received: by mail-la0-f45.google.com with SMTP id gd6so7267392lab.4
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 23 Jan 2015 05:30:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	:cc:content-type;
+	bh=5D2G/DBqZsedsyipLOzxRreXPk2t1Opw0mSPNBgcNn4=;
+	b=TpMeUbOS84IPmGRNpOru7nMVmhUXwErMLs+ZFR0++aO+ci0epAERRA8Y0BtXPrS5FZ
+	/VAhsbBOs+CazlIqwhKQSWOoTaiN1yqnEEbmqFT/6/tOc9vLyRjWNYEvf+fbW49BVVNR
+	wyXWe9FsBcAPVAQiYt9piwNa3T9+cZOitbXsB9T25OQSmSrrDQolu+BSW4bfx+Pg4df4
+	+afuFqEg5LHfo+8CK+Gh+l3BrQ3ThikypXFx+z0NnDD22giQSq1vGps2x3DU+SiGZSkZ
+	aMb7D+oxvjcN+KzUXxix064jvzbSD7afoSWfyTmg3t4WlgWRoUC+wYZhQQcLHn5K+9/f
+	g3UQ==
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: Lifecycle issues in Bitbake
+X-Received: by 10.152.23.164 with SMTP id n4mr5271692laf.77.1422019852367;
+	Fri, 23 Jan 2015 05:30:52 -0800 (PST)
+Received: by 10.152.30.67 with HTTP; Fri, 23 Jan 2015 05:30:52 -0800 (PST)
+In-Reply-To: <66552bf6a037bb239ee968038dc932595d294bdd.1421990462.git.Chong.Lu@windriver.com>
+References: <cover.1421990461.git.Chong.Lu@windriver.com>
+	<66552bf6a037bb239ee968038dc932595d294bdd.1421990462.git.Chong.Lu@windriver.com>
+Date: Fri, 23 Jan 2015 14:30:52 +0100
+Message-ID: <CAC1BbcS9Dw15zPQa3vQoc54+HN=G9Mqt3jyp6Uwye=LH_79=vQ@mail.gmail.com>
+From: Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
+To: Chong Lu <Chong.Lu@windriver.com>
+Cc: paul.eggleton@linux.intel.com,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH V3 2/2] bitbake-layers: add a ability to query layer dependencies from layer index
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,46 +43,59 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 23 Jan 2015 10:34:08 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Fri, 23 Jan 2015 13:30:59 -0000
+Content-Type: text/plain; charset=UTF-8
 
-Hi Richard,
+On 23 January 2015 at 06:28, Chong Lu <Chong.Lu@windriver.com> wrote:
+> Add a command to query layer dependencies from layer index. Fetch layer and its
+> dependency layers and add them into conf/bblayers.conf.
+>
+> [YOCTO #5348]
+>
+> Signed-off-by: Chong Lu <Chong.Lu@windriver.com>
+> ---
+>  bitbake/bin/bitbake-layers | 190 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 190 insertions(+)
+>
+> diff --git a/bitbake/bin/bitbake-layers b/bitbake/bin/bitbake-layers
+> index 9879498..222f685 100755
+> --- a/bitbake/bin/bitbake-layers
+> +++ b/bitbake/bin/bitbake-layers
+> @@ -27,6 +27,8 @@ import sys
+>  import fnmatch
+>  from collections import defaultdict
+>  import re
+> +import httplib, urlparse, json
+> +import subprocess
+>
+>  bindir = os.path.dirname(__file__)
+>  topdir = os.path.dirname(bindir)
+> @@ -157,6 +159,194 @@ usage: remove-layer <layerdir>
+>                  sys.stderr.write("No layers matching %s found in BBLAYERS\n" % item)
+>
+>
+> +    def get_json_data(self, apiurl):
+> +        proxy_settings = os.environ.get("http_proxy", None)
+> +        conn = None
+> +        _parsedurl = urlparse.urlparse(apiurl)
+> +        path = _parsedurl.path
+> +        query = _parsedurl.query
+> +        def parse_url(url):
+> +            parsedurl = urlparse.urlparse(url)
+> +            if parsedurl.netloc[0] == '[':
+> +                host, port = parsedurl.netloc[1:].split(']', 1)
+> +                if ':' in port:
+> +                    port = port.rsplit(':', 1)[1]
+> +                else:
+> +                    port = None
+> +            else:
+> +                if parsedurl.netloc.count(':') == 1:
+> +                    (host, port) = parsedurl.netloc.split(":")
+> +                else:
+> +                    host = parsedurl.netloc
+> +                    port = None
+> +            return (host, 80 if port is None else int(port))
 
-On Thursday 22 January 2015 14:57:19 Richard Purdie wrote:
-> Looking at and thinking about:
-> 
-> https://bugzilla.yoctoproject.org/show_bug.cgi?id=5187
-> 
-> We have several issues. Firstly, DATE and TIME are locked in stone when
-> the base configuration is parsed. This may cause images to overwrite
-> previous versions for example if DATE and TIME are not re-evaluated. We
-> could fix this by specifically setting DATE and TIME in bitbake at
-> BuildStart?
-
-We could certainly do this. Another mechanism I did think about was to have 
-some way of indicating to BitBake that on buildstart the value should be reset 
-to the immediate evaluation of an expression; perhaps a varflag. At least that 
-way we could handle other such variables, although it's conceivable that 
-having built-in DATE and TIME in BitBake wouldn't be the worst thing in the 
-world.
- 
-> Secondly, there is one cooker log file opened for the duration of the
-> cooker lifecycle. This is a cooker log, not a log of each build so that
-> is perhaps not surprising (and is the core problem in the above bug).
-> There is no overwriting of the log file, it just keeps growing with each
-> build.
-> 
-> We could trigger knotty to write out build specific log files based on
-> the BuildStart/Finish events?
-
-Yes I think we should do this.
-
-Cheers,
-Paul
-
--- 
-
-Paul Eggleton
-Intel Open Source Technology Centre
+well yea, except that does not help code-reuse to fix the
+wrong splitport patterns used elsewhere in bitbake, unfortunately..
 
