@@ -1,37 +1,37 @@
-Return-Path: <merics@wirespring.com>
-X-Greylist: delayed 412 seconds by postgrey-1.34 at layers.openembedded.org;
-	Fri, 16 Jan 2015 19:37:02 UTC
-Received: from smtp145.dfw.emailsrvr.com (smtp145.dfw.emailsrvr.com
-	[67.192.241.145])
-	by mail.openembedded.org (Postfix) with ESMTP id B62FF722C3
+Return-Path: <gcsb-bitbake-dev@m.gmane.org>
+X-Greylist: delayed 907 seconds by postgrey-1.34 at layers.openembedded.org;
+	Sat, 24 Jan 2015 20:35:13 UTC
+Received: from plane.gmane.org (plane.gmane.org [80.91.229.3])
+	by mail.openembedded.org (Postfix) with ESMTP id A540171708
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Jan 2015 19:37:02 +0000 (UTC)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp23.relay.dfw1a.emailsrvr.com (SMTP Server) with ESMTP id
-	8E193380293 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Jan 2015 14:30:10 -0500 (EST)
-X-Virus-Scanned: OK
-Received: by smtp23.relay.dfw1a.emailsrvr.com (Authenticated sender:
-	merics-AT-wirespring.com) with ESMTPSA id 5F38F38028E
+	Sat, 24 Jan 2015 20:35:13 +0000 (UTC)
+Received: from list by plane.gmane.org with local (Exim 4.69)
+	(envelope-from <gcsb-bitbake-dev@m.gmane.org>) id 1YF7Bb-0008Vs-MN
+	for bitbake-devel@lists.openembedded.org;
+	Sat, 24 Jan 2015 21:20:03 +0100
+Received: from client-199.115.184.47.tlo.skybeamtx.com
+	([client-199.115.184.47.tlo.skybeamtx.com])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00 for <bitbake-devel@lists.openembedded.org>;
+	Sat, 24 Jan 2015 21:20:03 +0100
+Received: from walt by client-199.115.184.47.tlo.skybeamtx.com with local
+	(Gmexim 0.1 (Debian)) id 1AlnuQ-0007hv-00
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Jan 2015 14:30:10 -0500 (EST)
-X-Sender-Id: merics@wirespring.com
-Received: from mail-pd0-f178.google.com (mail-pd0-f178.google.com
-	[209.85.192.178]) (using TLSv1 with cipher RC4-SHA)
-	by 0.0.0.0:587 (trex/5.4.2); Fri, 16 Jan 2015 19:30:10 GMT
-Received: by mail-pd0-f178.google.com with SMTP id r10so24357288pdi.9
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Jan 2015 11:30:09 -0800 (PST)
-MIME-Version: 1.0
-X-Received: by 10.66.102.1 with SMTP id fk1mr25491194pab.16.1421436609850;
-	Fri, 16 Jan 2015 11:30:09 -0800 (PST)
-Received: by 10.66.84.170 with HTTP; Fri, 16 Jan 2015 11:30:09 -0800 (PST)
-Date: Fri, 16 Jan 2015 21:30:09 +0200
-Message-ID: <CAHwPOGvszHu1LbioEyXBZEbpUJ4K2Fv78Tkdpjki7PHsJzcdnQ@mail.gmail.com>
-From: Meric Sentunali <merics@wirespring.com>
+	Sat, 24 Jan 2015 21:20:03 +0100
+X-Injected-Via-Gmane: http://gmane.org/
 To: bitbake-devel@lists.openembedded.org
+From: Walt <walt@giroir.com>
+Date: Sat, 24 Jan 2015 20:14:34 +0000 (UTC)
+Message-ID: <loom.20150124T211225-641@post.gmane.org>
+Mime-Version: 1.0
+X-Complaints-To: usenet@ger.gmane.org
+X-Gmane-NNTP-Posting-Host: sea.gmane.org
+User-Agent: Loom/3.14 (http://gmane.org/)
+X-Loom-IP: 199.115.184.47 (Mozilla/5.0 (Macintosh;
+	Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko)
+	Chrome/39.0.2171.99 Safari/537.36)
 X-Mailman-Approved-At: Thu, 29 Jan 2015 22:13:57 +0000
-Subject: [PATCH] add basic branch support to fetch2/hg
+Subject: create_image() fails with cannot concatenate 'str' and 'NoneType'error
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,108 +44,85 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Jan 2015 19:37:11 -0000
-Content-Type: multipart/alternative; boundary=047d7bf18b1c337666050cca0041
+X-List-Received-Date: Sat, 24 Jan 2015 20:35:16 -0000
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
---047d7bf18b1c337666050cca0041
-Content-Type: text/plain; charset=UTF-8
+Posted this earlier to a different group but I believe this
+group is better targeted
 
-following patch adds basic support to make AUTOREV work for a specific
-branch for mercurial.
 
-Signed-off-by: Meric Sentunali <merics@wirespring.com>
----
- bitbake/lib/bb/fetch2/hg.py | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+------
+I have search the web and found a few references to this problem but I have 
+not yet found a solution.
 
-diff --git a/bitbake/lib/bb/fetch2/hg.py b/bitbake/lib/bb/fetch2/hg.py
-index 5760fcd..ef00729 100644
---- a/bitbake/lib/bb/fetch2/hg.py
-+++ b/bitbake/lib/bb/fetch2/hg.py
-@@ -51,6 +51,7 @@ class Hg(FetchMethod):
-             raise MissingParameterError('module', ud.url)
+This is the latest commit.
+--------
+commit 745cebd635002618d7edd0a109ff07dd2953621a
+Author: Richard Purdie <richard.purdie@...>
+Date:   Fri Jan 23 14:38:12 2015 +0000
 
-         ud.module = ud.parm["module"]
-+        ud.branch = ud.parm.get('branch', 'default')
+    bitbake: siggen: Ensure taskdata default functions exist in base class
 
-         # Create paths to mercurial checkouts
-         relpath = self._strip_leading_slashes(ud.path)
-@@ -98,7 +99,7 @@ class Hg(FetchMethod):
-                 hgroot = ud.user + "@" + host + ud.path
+    The get/set_taskdata functions are now part of the API of the class,
+    ensure they exist in the base class definition so the noop handler
+    works.
 
-         if command == "info":
--            return "%s identify -i %s://%s/%s" % (basecmd, proto, hgroot,
-ud.module)
-+            return "%s identify -i -r %s %s://%s/%s" % (basecmd,
-ud.branch, proto, hgroot, ud.module)
+    [YOCTO #7233]
 
-         options = [];
+    (Bitbake rev: 9b5b1bd7d77e3f5886f6c557d3b750de1f6d6025)
 
-@@ -113,7 +114,7 @@ class Hg(FetchMethod):
-             if ud.user and ud.pswd:
-                 cmd = "%s --config auth.default.prefix=* --config
-auth.default.username=%s --config auth.default.password=%s --config
-\"auth.default.schemes=%s\" clone %s %s://%s/%s %s" % (basecmd, ud.user,
-ud.pswd, proto, " ".join(options), proto, hgroot, ud.module, ud.module)
-             else:
--                cmd = "%s clone %s %s://%s/%s %s" % (basecmd, "
-".join(options), proto, hgroot, ud.module, ud.module)
-+                cmd = "%s clone %s %s://%s/%s %s" % (basecmd, "
-".join(options), proto, hgroot, ud.module, ud.module)
-         elif command == "pull":
-             # do not pass options list; limiting pull to rev causes the
-local
-             # repo not to contain it and immediately following "update"
-command
+    Signed-off-by: Richard Purdie <richard.purdie@...>
+
+And here is the error
+=====================
+File: '/home/walt/workspace/wwrelay-rootfs/yocto/meta/lib/oe/image.py', 
+lineno: 355, function: create_image
+     0351:        execute_pre_post_process(self.d, post_process_cmds)
+     0352:
+     0353:
+     0354:def create_image(d):
+ *** 0355:    Image(d).create()
+     0356:
+     0357:if __name__ == "__main__":
+     0358:    """
+     0359:    Image creation can be called independent from bitbake 
+environment.
+File: '/home/walt/workspace/wwrelay-rootfs/yocto/meta/lib/oe/image.py', 
+lineno: 333, function: create
+     0329:        execute_pre_post_process(self.d, pre_process_cmds)
+     0330:
+     0331:        self._remove_old_symlinks()
+     0332:
+ *** 0333:        image_cmd_groups = self._get_imagecmds()
+     0334:
+     0335:        for image_cmds in image_cmd_groups:
+     0336:            # create the images in parallel
+     0337:            nproc = multiprocessing.cpu_count()
+File: '/home/walt/workspace/wwrelay-rootfs/yocto/meta/lib/oe/image.py', 
+lineno: 303, function: _get_imagecmds
+     0299:                print "************************"
+     0300:                print localdata.getVar("IMAGE_CMD", True)
+     0301:                print "************************"
+     0302:                print "************************"
+ *** 0303:                cmds.append("\t" + localdata.getVar("IMAGE_CMD", True))
+     0304:                cmds.append(localdata.expand("\tcd 
+${DEPLOY_DIR_IMAGE}"))
+     0305:
+     0306:                if type in cimages:
+     0307:                    for ctype in cimages[type]:
+Exception: TypeError: cannot concatenate 'str' and 'NoneType' objects
+
+ERROR: Function failed: do_rootfs
+ERROR: Logfile of failure stored in: /home/walt/workspace/wwrelay-
+rootfs/yocto/build/tmp/work/cubietruck-poky-linux-gnueabi/wigwag-prod-
+lsb/1.0-r0/temp/log.do_rootfs.13308
+ERROR: Task 6 (/home/walt/workspace/wwrelay-
+rootfs/yocto/build/recipes/images/wigwag-prod-lsb.bb, do_rootfs) failed with 
+exit code '1'
+NOTE: Tasks Summary: Attempted 3977 tasks of which 3976 didn't need to be 
+rerun and 1 failed.
+
 -- 
-2.1.0
 
---047d7bf18b1c337666050cca0041
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">following patch adds basic support to make AUTOREV work fo=
-r a specific branch for mercurial.<div><br></div><div><div>Signed-off-by: M=
-eric Sentunali &lt;<a href=3D"mailto:merics@wirespring.com">merics@wirespri=
-ng.com</a>&gt;</div><div>---</div><div>=C2=A0bitbake/lib/bb/fetch2/hg.py | =
-5 +++--</div><div>=C2=A01 file changed, 3 insertions(+), 2 deletions(-)</di=
-v><div><br></div><div>diff --git a/bitbake/lib/bb/fetch2/hg.py b/bitbake/li=
-b/bb/fetch2/hg.py</div><div>index 5760fcd..ef00729 100644</div><div>--- a/b=
-itbake/lib/bb/fetch2/hg.py</div><div>+++ b/bitbake/lib/bb/fetch2/hg.py</div=
-><div>@@ -51,6 +51,7 @@ class Hg(FetchMethod):</div><div>=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0raise MissingParameterError(&#39;module&#39;=
-, ud.url)</div><div>=C2=A0</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ud.m=
-odule =3D ud.parm[&quot;module&quot;]</div><div>+ =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0ud.branch =3D ud.parm.get(&#39;branch&#39;, &#39;default&#39;)</div><div=
->=C2=A0</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# Create paths to mercu=
-rial checkouts</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0relpath =3D self=
-._strip_leading_slashes(ud.path)</div><div>@@ -98,7 +99,7 @@ class Hg(Fetch=
-Method):</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0hgroot =3D ud.user + &quot;@&quot; + host + ud.path</div><div>=C2=A0<=
-/div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if command =3D=3D &quot;info&qu=
-ot;:</div><div>- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return &quot;%s i=
-dentify -i %s://%s/%s&quot; % (basecmd, proto, hgroot, ud.module)</div><div=
->+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return &quot;%s identify -i -r =
-%s %s://%s/%s&quot; % (basecmd, ud.branch, proto, hgroot, ud.module)</div><=
-div>=C2=A0</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0options =3D [];</div=
-><div>=C2=A0</div><div>@@ -113,7 +114,7 @@ class Hg(FetchMethod):</div><div=
->=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if ud.user and ud.pswd:</d=
-iv><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cmd =
-=3D &quot;%s --config auth.default.prefix=3D* --config auth.default.usernam=
-e=3D%s --config auth.default.password=3D%s --config \&quot;auth.default.sch=
-emes=3D%s\&quot; clone %s %s://%s/%s %s&quot; % (basecmd, ud.user, ud.pswd,=
- proto, &quot; &quot;.join(options), proto, hgroot, ud.module, ud.module)</=
-div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0else:</div><div>- =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cmd =3D &quot;%s clo=
-ne %s %s://%s/%s %s&quot; % (basecmd, &quot; &quot;.join(options), proto, h=
-groot, ud.module, ud.module) =C2=A0 =C2=A0 =C2=A0 =C2=A0</div><div>+ =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cmd =3D &quot;%s clone %s =
-%s://%s/%s %s&quot; % (basecmd, &quot; &quot;.join(options), proto, hgroot,=
- ud.module, ud.module)</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0elif com=
-mand =3D=3D &quot;pull&quot;:</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0# do not pass options list; limiting pull to rev causes the lo=
-cal</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# repo not to=
- contain it and immediately following &quot;update&quot; command</div><div>=
---=C2=A0</div><div>2.1.0</div><div><br></div></div></div>
-
---047d7bf18b1c337666050cca0041--
