@@ -1,41 +1,42 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f46.google.com (mail-wg0-f46.google.com [74.125.82.46])
-	by mail.openembedded.org (Postfix) with ESMTP id C47F572C60
+Received: from mail-wi0-f173.google.com (mail-wi0-f173.google.com
+	[209.85.212.173])
+	by mail.openembedded.org (Postfix) with ESMTP id 900F772D09
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Jan 2015 14:27:36 +0000 (UTC)
-Received: by mail-wg0-f46.google.com with SMTP id l2so15078503wgh.5
+	Tue, 27 Jan 2015 14:27:34 +0000 (UTC)
+Received: by mail-wi0-f173.google.com with SMTP id r20so5205905wiv.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Jan 2015 06:27:36 -0800 (PST)
+	Tue, 27 Jan 2015 06:27:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=bPORAQvOdA2oCc8KkwsCz/eZtzIijvIDHebHAo8HLqA=;
-	b=ONzx/vsd8MuskYT6H62R+Xjm0salCj0hzbq+RN9/yMspPCV1rJ1FjduKbWKD/nyT37
-	JRkLVExQWJW5epQX6GAqIpw58ipL+qOIqD6i/4NUg9ULqtHC+83mnpRXtvqkOaY+hXel
-	cVk/+X0DVWdyh4aprttrDn/+S7y/3F2UHd6XfuiRzlJ3/8VKg2DByQmqiCi4DxTqftKK
-	VTFikCdTRAZBsBz7iFK/+jLmhjU4JrUqYGpWFt+3v66KCBtg2pVxYPwyoFhS4k0kN/y0
-	EXSXkKLRM++gw9Fv146dwOXe8U5VmOS29zYO7nkckt6SfhRsBZXGVyGVB4b/fe7tK5m9
-	iC1A==
-X-Gm-Message-State: ALoCoQlpNAh1XR7EBW7v8yhwhVv6y8D7CjQRz2/WNa81a8+qR4g54QzOY4BaehYQfyYnIpQyEP5W
-X-Received: by 10.194.52.66 with SMTP id r2mr3121286wjo.61.1422368856507;
-	Tue, 27 Jan 2015 06:27:36 -0800 (PST)
-Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id k1sm2048734wjn.9.2015.01.27.06.27.34
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	bh=Tt5AGB+iXi92CieDEjK06u0A0h7CLGSn9Lc5gPrsSTY=;
+	b=UQEW3wALIm1Zo/z0SRc72OI2g7nRVCn0lV8/Dl52hV/HaYPW3Dsy6G4ft8D7tlS5/o
+	AwvaGmBw3uL8AKFSuA4RuAhJPRsRZgXZL1WS7AMpyR4E7gbOtd9BdsUNXH/eXM/q7zPA
+	YydKrZs0QNq1cWLMokGQ7DgJOS9TgB10iulPC9+sXFW/Se+UldOHEUlyxUNFRufU60DY
+	kw1zeUiRvHMtlqJ3MD7f+VTVYepw9CA1s9F8dvzNFNolXbylFwTkgiZbkjDlfcE6rPov
+	XmBxvzhJ+Tw/b/i60iecVlri5uuaiqou9SYTEZIhmFcz7mQ0GSkqHkkVrcs3TjMRCWCo
+	lGgQ==
+X-Gm-Message-State: ALoCoQl3+iSYrtbtPWFOq/3rvPAb+02fLNNxSIj49OQdkfo982LN3kSf9VTI4Cqffp4DHZOiIuS6
+X-Received: by 10.194.242.6 with SMTP id wm6mr306522wjc.7.1422368855433;
 	Tue, 27 Jan 2015 06:27:35 -0800 (PST)
+Received: from adamian-desk.local ([83.217.123.106])
+	by mx.google.com with ESMTPSA id cm7sm18351324wib.6.2015.01.27.06.27.32
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Tue, 27 Jan 2015 06:27:33 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id AC82056257B; Tue, 27 Jan 2015 14:27:36 +0000 (GMT)
+	id A5424562162; Tue, 27 Jan 2015 14:27:36 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 27 Jan 2015 14:27:28 +0000
-Message-Id: <70486fc36c5b6bd6b7b8e846e23ad4062d583877.1422368757.git.alexandru.damian@intel.com>
+Date: Tue, 27 Jan 2015 14:27:23 +0000
+Message-Id: <aed92feac017c967834575344faa3bad7a905b18.1422368757.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <49d56fcbbf6b7d0c0c589b93182e4c73071b3fcf.1422368757.git.alexandru.damian@intel.com>
 References: <49d56fcbbf6b7d0c0c589b93182e4c73071b3fcf.1422368757.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1422368757.git.alexandru.damian@intel.com>
 References: <cover.1422368757.git.alexandru.damian@intel.com>
-Subject: [PATCH 07/14] toastergui: add 'show all' link to no results page
+Subject: [PATCH 02/14] toaster: apply common styles to right hand column of detail pages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,74 +53,89 @@ X-List-Received-Date: Tue, 27 Jan 2015 14:27:39 -0000
 
 From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-When you search for targets or machines in the layer details
-page and your search returns no results, you should
-see a 'show all' link that you can click to clear the
-search and display all table entries.
-
-[YOCTO #7218]
+Layer, recipe and package details pages have a right column
+with additional information. This commit standardises the
+formatting of the content in that right column across
+all these pages by creating a new css class .item-info
+in default.css
 
 Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
 ---
- lib/toaster/toastergui/static/js/layerdetails.js   |  4 ++--
- lib/toaster/toastergui/templates/layerdetails.html | 10 ++++++++--
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ lib/toaster/toastergui/static/css/default.css             | 3 +--
+ lib/toaster/toastergui/templates/layerdetails.html        | 2 +-
+ lib/toaster/toastergui/templates/package_detail_base.html | 2 +-
+ lib/toaster/toastergui/templates/recipe.html              | 6 +++---
+ 4 files changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/lib/toaster/toastergui/static/js/layerdetails.js b/lib/toaster/toastergui/static/js/layerdetails.js
-index 2addecd..2793225 100644
---- a/lib/toaster/toastergui/static/js/layerdetails.js
-+++ b/lib/toaster/toastergui/static/js/layerdetails.js
-@@ -381,12 +381,12 @@ function layerDetailsPageInit (ctx) {
-   });
+diff --git a/lib/toaster/toastergui/static/css/default.css b/lib/toaster/toastergui/static/css/default.css
+index a3fa0dd..5eeeea4 100644
+--- a/lib/toaster/toastergui/static/css/default.css
++++ b/lib/toaster/toastergui/static/css/default.css
+@@ -38,7 +38,7 @@ dd code, .alert code { white-space: pre-wrap; word-break: break-all; word-wrap:
+ dd ul { list-style-type: none; margin: 0px; }
+ dt, dd  {line-height: 25px; }
+ dd li { line-height: 25px; }
+-dd p { line-height: 20px; }
++.item-info dd { line-height: 20px; margin-bottom: 10px; }
  
-   /* Clear the current search selection and reload the results */
--  $("#target-search-clear").click(function(){
-+  $(".target-search-clear").click(function(){
-     $("#target-search").val("");
-     $(this).parents("form").submit();
-   });
- 
--  $("#machine-search-clear").click(function(){
-+  $(".machine-search-clear").click(function(){
-     $("#machine-search").val("");
-     $(this).parents("form").submit();
-   });
+ /* Style the filter modal dialogs */
+ .modal { width: 800px; margin-left: -400px; }
+@@ -200,7 +200,6 @@ dl textarea { resize: vertical; }
+ .lead .help-block { font-size: 14px; line-height: 20px; font-weight: normal; }
+ .button-place  .btn { margin: 0 0 20px 0; }
+ .tooltip-inner { max-width: 250px; }
+-dd > span { line-height: 20px; }
+ .new-build { padding: 20px; }
+ .new-build li { line-height: 30px; }
+ .new-build h6 { margin: 10px 0 0 0; color: #5a5a5a; }
 diff --git a/lib/toaster/toastergui/templates/layerdetails.html b/lib/toaster/toastergui/templates/layerdetails.html
-index a89ffb0..f8f2d7a 100644
+index 22e99e0..9286df6 100644
 --- a/lib/toaster/toastergui/templates/layerdetails.html
 +++ b/lib/toaster/toastergui/templates/layerdetails.html
-@@ -205,11 +205,14 @@
+@@ -431,7 +431,7 @@
+             </div>
+             <div class="row-fluid span4 well">
+               <h2>About {{layerversion.layer.name}}</h2>
+-              <dl>
++              <dl class="item-info">
  
-                       <input type="text" id="target-search" name="targets_search" placeholder="Search targets" class="input-xlarge" value="{{request.GET.targets_search}}">
-                         {% if request.GET.targets_search %}
--                        <a class="add-on btn" id="target-search-clear">
-+                        <a class="add-on btn target-search-clear">
-                           <i class="icon-remove"></i>
-                         </a>
-                         {% endif %}
-                         <button type="submit" class="btn">Search</button>
-+                        {% if targets.paginator.count == 0 %}
-+                            <button type="submit" class="btn btn-link target-search-clear">Show all targets</a>
-+                        {% endif %}
-                       </form>
-                     {% endif %}
+                 <dt>
+                   Summary
+diff --git a/lib/toaster/toastergui/templates/package_detail_base.html b/lib/toaster/toastergui/templates/package_detail_base.html
+index dfeba55..ad75454 100644
+--- a/lib/toaster/toastergui/templates/package_detail_base.html
++++ b/lib/toaster/toastergui/templates/package_detail_base.html
+@@ -54,7 +54,7 @@
+         <h2>Package information</h2>
  
-@@ -332,11 +335,14 @@
+         <!-- info presented as definition list -->
+-        <dl>
++        <dl class="item-info">
+             <dt>
+                 Size
+                 <i class="icon-question-sign get-help" title="The size of the package"></i>
+diff --git a/lib/toaster/toastergui/templates/recipe.html b/lib/toaster/toastergui/templates/recipe.html
+index b20c65e..d91768d 100644
+--- a/lib/toaster/toastergui/templates/recipe.html
++++ b/lib/toaster/toastergui/templates/recipe.html
+@@ -250,14 +250,14 @@
  
-                       <input type="text" id="machine-search" name="machines_search" placeholder="Search machines" class="input-xlarge" value="{{request.GET.machines_search}}">
-                         {% if request.GET.machines_search %}
--                        <a class="add-on btn" id="machine-search-clear">
-+                        <a class="add-on btn machine-search-clear">
-                           <i class="icon-remove"></i>
-                         </a>
-                         {% endif %}
-                         <button type="submit" class="btn">Search</button>
-+                        {% if machines.paginator.count == 0 %}
-+                            <button type="submit" class="btn btn-link machine-search-clear">Show all machines</a>
-+                        {% endif %}
-                       </form>
-                     {% endif %}
- 
+ <div class="row span4 well">
+     <h2>About {{object.name}}</h2>
+-    <dl>
++    <dl class="item-info">
+         {% if object.summary %}
+             <dt>Summary</dt>
+-            <dd><p>{{object.summary}}</p></dd>
++            <dd>{{object.summary}}</dd>
+         {% endif %}
+         {% if object.description %}
+             <dt>Description</dt>
+-            <dd><p>{{object.description}}</dd>
++            <dd>{{object.description}}</dd>
+         {% endif %}
+         {% if object.homepage %}
+             <dt>Homepage</dt>
 -- 
 1.9.1
 
