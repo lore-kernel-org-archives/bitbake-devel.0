@@ -1,29 +1,37 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 2CDCF60670
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wi0-f181.google.com (mail-wi0-f181.google.com
+	[209.85.212.181])
+	by mail.openembedded.org (Postfix) with ESMTP id DF5186A9FE
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 25 Jan 2015 21:50:36 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t0PLoZlf008872 for <bitbake-devel@lists.openembedded.org>;
-	Sun, 25 Jan 2015 21:50:35 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 9bzzvKqJZAyK for <bitbake-devel@lists.openembedded.org>;
-	Sun, 25 Jan 2015 21:50:35 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t0PLoM60008869
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	Tue, 27 Jan 2015 13:35:40 +0000 (UTC)
+Received: by mail-wi0-f181.google.com with SMTP id fb4so5014973wid.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 25 Jan 2015 21:50:34 GMT
-Message-ID: <1422222622.19798.37.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Sun, 25 Jan 2015 21:50:22 +0000
-X-Mailer: Evolution 3.12.7-0ubuntu1 
-Mime-Version: 1.0
-Subject: Broken COW? Any python gurus who fancy an odd problem to debug?
+	Tue, 27 Jan 2015 05:35:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=ac0DGUOl/vJUHXmpXYpY+0yGHzOGrdchcGTd86Tsg/M=;
+	b=IdmFgMtcA0D52bnE/4SDoyk9Sj0qWoclMcEzy+glrS6hmvqONXi8nr7WwHOXbwv0/g
+	L0aMrGPxm7Xfj2CDBhYRAtjvJxfE9Flfxa6tODS0qZaDgO1NMNBmDcPVbgmE5/xoYnUN
+	Jxl21XjPwbuakeTWWcGPx3JEuuP3a26WeXNJdzaf4abtxn8dJN/ZuccfH1IZZQekiUGt
+	5USkDd78mqJBV6MqoemsSUAWk86v4DprQ54dAQA2ZYVl/Tv4x5ajBsxuy+TWPfNFkS3r
+	ItbpfTrW6ou2Z5jZXANMu8pp0kC855BwQfBEFZF4pBP0jWNkW5dN31NUQh01J9KkDDiO
+	IuaA==
+X-Gm-Message-State: ALoCoQniLg5Lu9fgwDVQOe0B7iJzSCCdZtFdVRlPy9KQckQBlONjkdvlBqcwUOHJpInADT0bKaLr
+X-Received: by 10.180.221.201 with SMTP id qg9mr7241194wic.29.1422365740624;
+	Tue, 27 Jan 2015 05:35:40 -0800 (PST)
+Received: from flashheart.burtonini.com (35.106.2.81.in-addr.arpa.
+	[81.2.106.35]) by mx.google.com with ESMTPSA id
+	mz10sm10364549wic.9.2015.01.27.05.35.39
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Tue, 27 Jan 2015 05:35:39 -0800 (PST)
+From: Ross Burton <ross.burton@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 27 Jan 2015 13:33:56 +0000
+Message-Id: <1422365636-7574-1-git-send-email-ross.burton@intel.com>
+X-Mailer: git-send-email 1.7.10.4
+Subject: [PATCH] bitbake/fetch2: specify recipe name when reporting SRCREV error
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,68 +44,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 25 Jan 2015 21:50:43 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 27 Jan 2015 13:35:50 -0000
 
-Whilst playing with the datastore I noticed something very odd, a
-supposedly empty datastore had shadows of "things" in it. The selftests
-are a great way to show this. To demo, apply the patch below, then run:
+The "SRCREV was used but no SCM found" error isn't that helpful when it doesn't
+indicate *what* recipe does this, so add the filename to the message.
 
-BB_SKIP_NETTESTS=yes bitbake-selftest
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ bitbake/lib/bb/fetch2/__init__.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-and you will see the output:
-
-here 0 <COWDict Level: 1 Current Keys: 11> libinstall__mutable__ __module__ UTMPDIR__mutable__ foo__mutable__ __count__ BASE_NAME__mutable__ LOGDIR__mutable__ NAME__mutable__ MAILFILE__mutable__ of_foo__mutable__ MAILDIR__mutable__ something__mutable__ __hasmutable__ __doc__
-
-The odd part is this is an empty data store so where did libinstall,
-UTMPDIR, BASE_NAME, LOGDIR and so on come from? The answer is other data
-stores :(.
-
-in data.py, if you change init() to be:
-
-- return _dict_type()
-+ return _dict_type(special = COWDictBase.copy(), seen = COWDictBase.copy())
-
-then it "works". Why? I've no idea but I'd love to understand it.
-
-Cheers,
-
-Richard
-
-diff --git a/bitbake/lib/bb/COW.py b/bitbake/lib/bb/COW.py
-index 6917ec3..29ecbc2 100644
---- a/bitbake/lib/bb/COW.py
-+++ b/bitbake/lib/bb/COW.py
-@@ -50,7 +50,11 @@ class COWDictMeta(COWMeta):
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 599ea8c..a24337c 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -637,7 +637,7 @@ def get_srcrev(d):
+             scms.append(u)
  
-     def __str__(cls):
-         # FIXME: I have magic numbers!
--        return "<COWDict Level: %i Current Keys: %i>" % (cls.__count__, len(cls.__dict__) - 3)
-+        r = ""
-+        for k in cls.__dict__:
-+            r = r + " " + str(k)
-+
-+        return "<COWDict Level: %i Current Keys: %i>" % (cls.__count__, len(cls.__dict__) - 3) + r
-     __repr__ = __str__
+     if len(scms) == 0:
+-        raise FetchError("SRCREV was used yet no valid SCM was found in SRC_URI")
++        raise FetchError("SRCREV was used yet no valid SCM was found in SRC_URI in %s" % d.getVar("FILE"))
  
-     def cow(cls):
-diff --git a/bitbake/lib/bb/tests/data.py b/bitbake/lib/bb/tests/data.py
-index 81e4091..1c8c1f9 100644
---- a/bitbake/lib/bb/tests/data.py
-+++ b/bitbake/lib/bb/tests/data.py
-@@ -294,6 +294,11 @@ class TestOverrides(unittest.TestCase):
-         bb.data.update_data(self.d)
-         self.assertEqual(self.d.getVar("TEST", True), "testvalue3")
- 
-+class TestCOW(unittest.TestCase):
-+    def test_cow(self):
-+        self.d = bb.data.init()
-+        self.d.setVar("OVERRIDES", "foo:bar:local")
-+        print("here 0 %s" % str(self.d._seen_overrides))
- 
- class TestFlags(unittest.TestCase):
-     def setUp(self):
-
+     if len(scms) == 1 and len(urldata[scms[0]].names) == 1:
+         autoinc, rev = urldata[scms[0]].method.sortable_revision(urldata[scms[0]], d, urldata[scms[0]].names[0])
+-- 
+1.7.10.4
 
 
