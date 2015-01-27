@@ -1,41 +1,43 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f51.google.com (mail-wg0-f51.google.com [74.125.82.51])
-	by mail.openembedded.org (Postfix) with ESMTP id 153F76A9FE
+Received: from mail-we0-f176.google.com (mail-we0-f176.google.com
+	[74.125.82.176])
+	by mail.openembedded.org (Postfix) with ESMTP id 3F96D72C83
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Jan 2015 14:27:36 +0000 (UTC)
-Received: by mail-wg0-f51.google.com with SMTP id k14so15031872wgh.10
+	Tue, 27 Jan 2015 14:27:38 +0000 (UTC)
+Received: by mail-we0-f176.google.com with SMTP id w62so15199988wes.7
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Jan 2015 06:27:37 -0800 (PST)
+	Tue, 27 Jan 2015 06:27:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=nkGtwq2obTl2SufQ4lhgv3yHYpht7jbc845u7Isw3Ok=;
-	b=KlYV/TN9y8RSKeN2TcLUC7rrv5OWrrjGBiUj9KW0gVEesN/vhCN1jy9H8prR1hlA/o
-	RYwITaXKZs0CeJ6hLPl6Jj1AphdYK50NvxNHxR2zufdAT8fb2dPih1p3M0WBvi6Sp3JI
-	Q/UTaQhoNI1c4LNiJMNZ1hcYDHsC2fsfTM+ZeaZEmluybqXPEcBH3/0mhATMWuWLzFH5
-	o6wxa/1H+5zyGM3afnD7cAiquP1iRat+d65MHSug+9a9qyQ6ohKZqL3PBQHKxTzijcoI
-	/eurxO9VstodbG01NUsZTy0fj/cBcg6BRMPKwXULXRgcihAri3Iqx3f4VhYYq0G7lAF8
-	t4Bw==
-X-Gm-Message-State: ALoCoQk8Iuo5VcAcxM59iM8nYLm8pZuBuQvpSLPAq3wjlbrkiqNjwJinu2adHxgeYxrLC4cBGHDy
-X-Received: by 10.181.13.42 with SMTP id ev10mr6410569wid.78.1422368857235;
-	Tue, 27 Jan 2015 06:27:37 -0800 (PST)
+	bh=nmcSj14wI/kuNRa8Fm2PL6KFvscec85DiD7HPT7C3CU=;
+	b=XNIOAon5gmzcIF0kKp8GmIcraBRpnhbzgR3A+NX8xmm+vczNaHiJSFExTz26LPBrLp
+	sNQQO5g07WEz7M3U5BQQtAd43vAYfx9TvFV1HlluaiwDkFIeGu1YPIRcO424uspv5mci
+	DZKfP0n89jsZwdUmcZy1FbsYBiwpwJlggil9/K6NMKNI9Stl/+L/V/xSXghN/dNMakJ4
+	5NqI6cNugciVC4gVxHUSHwOMKrbuwD0PTfF5RrruDrQ6skRfLYFHSWzr+399K3Ihy8bq
+	s2+9wMDhB1jd7x1mBRrwnCsLOc83lYmBw5yoKy7a7NNQjQ0pavVg9dR1QNj8E4a0gBZ8
+	P1jg==
+X-Gm-Message-State: ALoCoQnhiSRPeRIimZPe9tQY/Lm6Uk9Hdy522RVN+R1WjIXFjBsIneNqQk5yovBpYpArKPq3zE32
+X-Received: by 10.180.206.19 with SMTP id lk19mr6398127wic.83.1422368859212;
+	Tue, 27 Jan 2015 06:27:39 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id q10sm2016423wjr.41.2015.01.27.06.27.34
+	by mx.google.com with ESMTPSA id ku8sm2035361wjb.23.2015.01.27.06.27.36
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 27 Jan 2015 06:27:35 -0800 (PST)
+	Tue, 27 Jan 2015 06:27:37 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id ADDF1562594; Tue, 27 Jan 2015 14:27:36 +0000 (GMT)
+	id B4F86562722; Tue, 27 Jan 2015 14:27:36 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 27 Jan 2015 14:27:29 +0000
-Message-Id: <4282a92fe3652c52448dba3d5f3fc4e1de28be63.1422368757.git.alexandru.damian@intel.com>
+Date: Tue, 27 Jan 2015 14:27:34 +0000
+Message-Id: <b11e8bd626e0212ee72914529c3d92d1dd718674.1422368757.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <49d56fcbbf6b7d0c0c589b93182e4c73071b3fcf.1422368757.git.alexandru.damian@intel.com>
 References: <49d56fcbbf6b7d0c0c589b93182e4c73071b3fcf.1422368757.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1422368757.git.alexandru.damian@intel.com>
 References: <cover.1422368757.git.alexandru.damian@intel.com>
-Subject: [PATCH 08/14] toastergui: set column width in layer details page
+Cc: Alexandru Damian <alexandru.damian@intel.com>
+Subject: [PATCH 13/14] toasterui: do not filter images by extension
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,38 +52,37 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 27 Jan 2015 14:27:39 -0000
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
+From: Alexandru Damian <alexandru.damian@intel.com>
 
-Set the width of the action columns to span2 to stop
-the buttons from wrapping as much as possible.
+ToasterUI filters build artifacts by extension in order
+to determine if a build artifact is an image or not.
 
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
+Using IMAGE_FSTYPES for this purpose is not correct as
+the varible value holding image extensions is just a coincidence.
+
+So we just look if the filename contains the "rootfs" magic
+string, which is a pretty good approximation.
+
+[YOCTO #7213]
+
+Signed-off-by: Alexandru Damian <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/templates/layerdetails.html | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/bb/ui/buildinfohelper.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/toaster/toastergui/templates/layerdetails.html b/lib/toaster/toastergui/templates/layerdetails.html
-index f8f2d7a..6c5e785 100644
---- a/lib/toaster/toastergui/templates/layerdetails.html
-+++ b/lib/toaster/toastergui/templates/layerdetails.html
-@@ -254,7 +254,7 @@
-                           Target version
-                         </th>
-                         <th class="span4">Description</th>
--                        <th>Build target</th>
-+                        <th class="span2">Build target</th>
-                       </tr>
-                     </thead>
-                     <tbody>
-@@ -380,7 +380,7 @@
-                           {% endif %}
-                         </th>
-                         <th>Description</th>
--                        <th>Select machine</th>
-+                        <th class="span2">Select machine</th>
-                       </tr>
-                     </thead>
-                     <tbody>
+diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
+index be0de6b..4e2d4a7 100644
+--- a/lib/bb/ui/buildinfohelper.py
++++ b/lib/bb/ui/buildinfohelper.py
+@@ -770,7 +770,7 @@ class BuildInfoHelper(object):
+             if t.is_image == True:
+                 output_files = list(evdata.viewkeys())
+                 for output in output_files:
+-                    if t.target in output and output.split('.rootfs.')[1] in image_fstypes:
++                    if t.target in output and 'rootfs' in output and not output.endswith(".manifest"):
+                         self.orm_wrapper.save_target_image_file_information(t, output, evdata[output])
+ 
+     def update_artifact_image_file(self, event):
 -- 
 1.9.1
 
