@@ -1,21 +1,29 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 5CA4760034;
-	Thu, 29 Jan 2015 13:50:14 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga102.jf.intel.com with ESMTP; 29 Jan 2015 05:46:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.09,486,1418112000"; d="scan'208";a="644478595"
-Received: from jamiewei-mobl.ger.corp.intel.com (HELO
-	peggleto-mobl5.ger.corp.intel.com) ([10.252.23.125])
-	by orsmga001.jf.intel.com with ESMTP; 29 Jan 2015 05:50:14 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 29 Jan 2015 13:49:51 +0000
-Message-Id: <cover.1422539142.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 1.9.3
-Cc: openembedded-core@lists.openembedded.org
-Subject: [bitbake][RFC PATCH 0/1] Proposed fix for layer branch mismatch issue
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 1A55D60034
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 29 Jan 2015 14:35:51 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t0TEZkNf021470 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 29 Jan 2015 14:35:52 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id cn_jEDRWUjMZ for <bitbake-devel@lists.openembedded.org>;
+	Thu, 29 Jan 2015 14:35:52 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t0TEZbdK021446
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 29 Jan 2015 14:35:49 GMT
+Message-ID: <1422542137.5312.6.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 29 Jan 2015 14:35:37 +0000
+X-Mailer: Evolution 3.12.7-0ubuntu1 
+Mime-Version: 1.0
+Subject: [PATCH] data_smart: Don't use mutable objects as default args
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,39 +36,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 29 Jan 2015 13:50:23 -0000
+X-List-Received-Date: Thu, 29 Jan 2015 14:35:52 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-RFC - ccing the OE-Core list for review. If we apply this, do people
-think we can commit to updating the LAYERVERSION in OE-Core at least on
-every release and setting versioned LAYERDEPENDS in other layers so that
-users get a sensible error if they use incompatible branches? (This also
-provides us with a mechanism to handle these types of issues across
-changes in master, as well.)
+These only have one instance created which means your subsequent datastores
+can contain echos of previous ones. Obviously this is not the behaviour
+we want/expect. It doesn't affect bitbake too badly as we only have one
+datastore, it does massively potentially break our selftests though.
 
-Thoughts?
+Thanks to Tim Amsell for pointing out the now obvious problem!
 
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Please review the following changes for suitability for inclusion. If you have
-any objections or suggestions for improvement, please respond to the patches. If
-you agree with the changes, please provide your Acked-by.
+diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
+index 68d273b..b1ea33f 100644
+--- a/bitbake/lib/bb/data_smart.py
++++ b/bitbake/lib/bb/data_smart.py
+@@ -296,9 +296,14 @@ class VariableHistory(object):
+                 self.variables[var] = []
+ 
+ class DataSmart(MutableMapping):
+-    def __init__(self, special = COWDictBase.copy(), seen = COWDictBase.copy() ):
++    def __init__(self, special = None, seen = None ):
+         self.dict = {}
+ 
++        if special is None:
++            special = COWDictBase.copy()
++        if seen is None:
++            seen = COWDictBase.copy()
++
+         self.inchistory = IncludeHistory()
+         self.varhistory = VariableHistory(self)
+         self._tracking = False
 
-The following changes since commit 9b5b1bd7d77e3f5886f6c557d3b750de1f6d6025:
-
-  siggen: Ensure taskdata default functions exist in base class (2015-01-23 14:39:40 +0000)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib paule/layerdepends
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/layerdepends
-
-Paul Eggleton (1):
-  cooker: rework LAYERDEPENDS versioning so that it is actually useful
-
- lib/bb/cooker.py | 36 +++++++++---------------------------
- lib/bb/utils.py  | 22 ++++++++++++++++++++++
- 2 files changed, 31 insertions(+), 27 deletions(-)
-
--- 
-1.9.3
 
 
