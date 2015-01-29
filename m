@@ -1,36 +1,29 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-yk0-f170.google.com (mail-yk0-f170.google.com
-	[209.85.160.170])
-	by mail.openembedded.org (Postfix) with ESMTP id EC74A601DC
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 29 Jan 2015 16:10:38 +0000 (UTC)
-Received: by mail-yk0-f170.google.com with SMTP id q9so14042084ykb.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 29 Jan 2015 08:10:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=76ZzUcHkhwoaepBzoYPIdLuZ4U4r6QS+F8sAocj13hI=;
-	b=w2mOKSL/I7C2aVsl7zyBlyt5886VpIURynjKMpjOOrQvwQduGydfwYhJvUyG5eaSZW
-	tUIfyqnox4XdDcWp4scc3yIJwsQptTSRG4SOLFxe926fRIL5nV3i5QmYfqTlVw/Iy4VW
-	Bd4cc22R31KpM4rrDGr4omiTW/i9a26n24+7QCBt/M5VjxAVhhrqR+RY1wTFXFwMwfCM
-	O3gRV7vY5Xlu3i1U1imfFzLhgA4Q8NdLlgTrGnYEVgUHSXnUODR5onsocPqWw5RyQ+XM
-	y3jidzv02U2WQUWZsvUk6IfS8qpDFrPHYy8Vo7lZhkIsAB2VG2+3bgN1HqXZX/WnKuEK
-	8Pvg==
-X-Received: by 10.170.174.197 with SMTP id q188mr958107ykd.110.1422547839547; 
-	Thu, 29 Jan 2015 08:10:39 -0800 (PST)
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id CFA9F605F1;
+	Thu, 29 Jan 2015 17:25:53 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.14.9/8.14.5) with ESMTP id t0THPrI2023577
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Thu, 29 Jan 2015 09:25:54 -0800 (PST)
+Received: from Marks-MacBook-Pro.local (172.25.36.231) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+	14.3.174.1; Thu, 29 Jan 2015 09:25:53 -0800
+Message-ID: <54CA6D20.4010604@windriver.com>
+Date: Thu, 29 Jan 2015 11:25:52 -0600
+From: Mark Hatle <mark.hatle@windriver.com>
+Organization: Wind River Systems
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10;
+	rv:31.0) Gecko/20100101 Thunderbird/31.4.0
 MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.170.205.88 with HTTP; Thu, 29 Jan 2015 08:10:18 -0800 (PST)
-In-Reply-To: <1422542137.5312.6.camel@linuxfoundation.org>
-References: <1422542137.5312.6.camel@linuxfoundation.org>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Thu, 29 Jan 2015 09:10:18 -0700
-X-Google-Sender-Auth: ZQR-WrqvxvcYBPBaVpZJxsmRUt0
-Message-ID: <CABcZANkTwKvtY_HvrL8AnZOni_Z-BT6HWAbZ0TzYaSFPCQyMbQ@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] data_smart: Don't use mutable objects as default args
+To: Paul Eggleton <paul.eggleton@linux.intel.com>,
+	<bitbake-devel@lists.openembedded.org>
+References: <cover.1422539142.git.paul.eggleton@linux.intel.com>
+	<e1f6bd9ed8e0a1b89277af10e0d9af17ec8efd86.1422539142.git.paul.eggleton@linux.intel.com>
+In-Reply-To: <e1f6bd9ed8e0a1b89277af10e0d9af17ec8efd86.1422539142.git.paul.eggleton@linux.intel.com>
+Cc: openembedded-core@lists.openembedded.org
+Subject: Re: [RFC bitbake][RFC PATCH 1/1] cooker: rework LAYERDEPENDS versioning so that it is actually useful
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,57 +36,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 29 Jan 2015 16:10:41 -0000
-Content-Type: multipart/alternative; boundary=001a113aba02a6feb7050dccba7f
+X-List-Received-Date: Thu, 29 Jan 2015 17:26:02 -0000
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 
---001a113aba02a6feb7050dccba7f
-Content-Type: text/plain; charset=UTF-8
+On 1/29/15 7:49 AM, Paul Eggleton wrote:
+> We've had versioned dependency support in LAYERDEPENDS for quite a long
+> time, but I can say with pretty good certainty that almost nobody has
+> used it because it was too strict - the specified version had to exactly
+> match the version in your configuration or you would get an error; there
+> was no "greater than or equal" option, which is usually what you will
+> want given that LAYERVERSION does get bumped.
+> 
+> However, users mismatching layer branches and then having their builds
+> fail later on with some incomprehensible error is still a pretty common
+> problem. To address this, I have reworked LAYERDEPENDS version
+> specifications to use the more familiar "dependency (>= version)" syntax
+> as used with package dependencies, support non-integer versions, and
+> clarified the error message a little. If we then take care to bump the
+> version on every breaking change, it is at least possible to have layers
+> depend on these changes when they update to match; we can now even
+> support a major.minor scheme to allow retrospectively adding a version
+> limiter to old branches when a new branch is created and yet still allow
+> the old branch minor version to be bumped if needed.
+> 
+> Fixes [YOCTO #5991].
+> 
+> Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 
-On Thu, Jan 29, 2015 at 7:35 AM, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+I've run into this exact support situation as well.  I think we need to do
+something like this >, =, <, etc.. so that we can add the necessary keys to
+layers to more clearly indicate what is and isn't supported (combination wise.)
 
-> These only have one instance created which means your subsequent datastores
-> can contain echos of previous ones. Obviously this is not the behaviour
-> we want/expect. It doesn't affect bitbake too badly as we only have one
-> datastore, it does massively potentially break our selftests though.
->
-> Thanks to Tim Amsell for pointing out the now obvious problem!
->
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
->
+I'm all for this!
 
-Wow, obvious indeed, once you look at it. Nicely spotted, Tim.
--- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+--Mark
 
---001a113aba02a6feb7050dccba7f
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Thu, Jan 29, 2015 at 7:35 AM, Richard Purdie <span dir=3D"ltr">&lt;<a hr=
-ef=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.=
-purdie@linuxfoundation.org</a>&gt;</span> wrote:<br><blockquote class=3D"gm=
-ail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-le=
-ft:1ex">These only have one instance created which means your subsequent da=
-tastores<br>
-can contain echos of previous ones. Obviously this is not the behaviour<br>
-we want/expect. It doesn&#39;t affect bitbake too badly as we only have one=
-<br>
-datastore, it does massively potentially break our selftests though.<br>
-<br>
-Thanks to Tim Amsell for pointing out the now obvious problem!<br>
-<br>
-Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
-ndation.org">richard.purdie@linuxfoundation.org</a>&gt;<br></blockquote><di=
-v><br></div><div>Wow, obvious indeed, once you look at it. Nicely spotted, =
-Tim.</div></div>-- <br><div class=3D"gmail_signature">Christopher Larson<br=
->clarson at kergoth dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<=
-br>Maintainer - Tslib<br>Senior Software Engineer, Mentor Graphics</div>
-</div></div>
-
---001a113aba02a6feb7050dccba7f--
