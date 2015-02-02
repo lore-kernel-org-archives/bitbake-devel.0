@@ -1,40 +1,37 @@
-Return-Path: <akuster808@gmail.com>
-Received: from mail-pa0-f43.google.com (mail-pa0-f43.google.com
-	[209.85.220.43])
-	by mail.openembedded.org (Postfix) with ESMTP id E117760132
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-wg0-f43.google.com (mail-wg0-f43.google.com [74.125.82.43])
+	by mail.openembedded.org (Postfix) with ESMTP id A25B061486
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 30 Jan 2015 16:04:14 +0000 (UTC)
-Received: by mail-pa0-f43.google.com with SMTP id eu11so53898786pac.2
+	Mon,  2 Feb 2015 12:14:01 +0000 (UTC)
+Received: by mail-wg0-f43.google.com with SMTP id y19so38380546wgg.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 30 Jan 2015 08:04:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=message-id:date:from:user-agent:mime-version:to:subject:references
-	:in-reply-to:content-type:content-transfer-encoding;
-	bh=U9nFYofFFCJIy3SVUkvmaKgvNmOIb41x46PZEkeJTJQ=;
-	b=obPlWC+D7NbILM9+2PyILYnxMYJ8175mEnid3gXkjeXax3X+ido3sn2PrswoxpGz3o
-	jQnnb6CzlY2p/ZJBJwdIFKqV+A42UyYkIo/JHNd5V5EB1clssd1RqpHuGfjAMmkegkCk
-	CjI2WO73hYriW/BOqlIw19NJbxkypKuFAZIZjnr9ZFxtD38+pC99UQXRigdnQbLXnUSs
-	6WT7mg5NZ2XR477GRISvU4LPOMnkr/Ub0m+qFVu8C1vN+oQrifibY2I/vHpvoCXGa0cd
-	nxmLLLzBH/kTf24QJFTnLx9rs7jBKBtdBYjG8Bzr4TGvbDFVoEb6VUAs3LFq2z+dOI/I
-	zJuw==
-X-Received: by 10.68.136.194 with SMTP id qc2mr10013862pbb.92.1422633855724;
-	Fri, 30 Jan 2015 08:04:15 -0800 (PST)
-Received: from ?IPv6:2601:c:a700:272f:eda6:338:1977:847?
-	([2601:c:a700:272f:eda6:338:1977:847])
-	by mx.google.com with ESMTPSA id c9sm11198268pdj.52.2015.01.30.08.04.13
-	for <bitbake-devel@lists.openembedded.org>
+	Mon, 02 Feb 2015 04:14:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=8METslhMFA7sOcgh78SRmIEOxNMG9XbTJhMpwVrIqu4=;
+	b=AwUblPYAfNOeYA7Ry34bnDn+j0138asLBEiZlzTjAoBEgUB5rjmsC/OkyGGxK0Hgjd
+	/EfbPjJ+7Kpu7/dNOk+Hf47OYMYU9ZA9PGCf/z5XJD5EGBJ22vGnArDj45AS4TG6/nwI
+	2HU71xpMNx+z5GXKXyATVZWqW3jfhNalYXw99iItLl16dJLwLyhvhURwgPpVJj98F64a
+	UsUh3pK2pY571YcyqA/HN1f4g12fduBpnaFamqYUiJwOsFCxONTJRfsbwOZOa044TMp2
+	8NyrvxxAq3BpcxE8hIi64SRULHDvpXshKb6kgfOk+fVFKcHiy7RdDSJwJahzxVQ4SIex
+	oQkg==
+X-Gm-Message-State: ALoCoQndp0bdWAkpcJpCBbsKHveW2BqTAG9o4P5v1JjFHvY8WeHUvz9Eu2OE59NFkCYAGVdZaOds
+X-Received: by 10.194.60.205 with SMTP id j13mr42911609wjr.42.1422879242203;
+	Mon, 02 Feb 2015 04:14:02 -0800 (PST)
+Received: from adamian-desk.local ([83.217.123.106])
+	by mx.google.com with ESMTPSA id 18sm27611249wjr.46.2015.02.02.04.14.00
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 30 Jan 2015 08:04:14 -0800 (PST)
-Message-ID: <54CBAB7A.5030407@gmail.com>
-Date: Fri, 30 Jan 2015 08:04:10 -0800
-From: akuster808 <akuster808@gmail.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:31.0) Gecko/20100101 Thunderbird/31.4.0
-MIME-Version: 1.0
+	Mon, 02 Feb 2015 04:14:01 -0800 (PST)
+Received: by adamian-desk.local (Postfix, from userid 1000)
+	id 0214A561796; Mon,  2 Feb 2015 12:13:59 +0000 (GMT)
+From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-References: <cover.1422627985.git.alexandru.damian@intel.com>
-In-Reply-To: <cover.1422627985.git.alexandru.damian@intel.com>
-Subject: Re: [PATCH 0/2] Toaster patchset
+Date: Mon,  2 Feb 2015 12:13:58 +0000
+Message-Id: <1422879238-20984-1-git-send-email-alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.9.1
+Cc: Alexandru DAMIAN <alexandru.damian@intel.com>
+Subject: [PATCH 1/1] toaster: proper setup for build configuration
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,46 +44,125 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 30 Jan 2015 16:04:16 -0000
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 02 Feb 2015 12:14:02 -0000
 
-does Dizzy need this?
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-- Armin
+This patch makes sure that all the toaster conf files are actually
+written from the build enviroment controllers.
 
-On 01/30/2015 06:28 AM, Alex DAMIAN wrote:
-> From: Alexandru DAMIAN <alexandru.damian@intel.com>
->
-> Hi,
->
-> This is a small patchset for toaster for fixing the startup sequence, and some build issues.
->
-> It has been reviewed on toaster mailing list, can you please pull when you can ?
->
-> Cheers,
-> Alex
->
-> The following changes since commit 9facf3604759b00e8fe99f929353d46f8b8ba5cb:
->
->    data_smart: Don't use mutable objects as default args (2015-01-29 22:10:53 +0000)
->
-> are available in the git repository at:
->
->    git://git.yoctoproject.org/poky-contrib adamian/20150130-submission-bb
->    http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20150130-submission-bb
->
-> Alexandru DAMIAN (2):
->    toaster: update texts for the startup sequence
->    toaster: new layer checkout logic
->
->   bin/toaster                                        |   6 +-
->   lib/toaster/bldcontrol/bbcontroller.py             |  13 ++-
->   lib/toaster/bldcontrol/localhostbecontroller.py    | 107 +++++++++++++++------
->   .../management/commands/checksettings.py           |  21 ++--
->   .../bldcontrol/management/commands/loadconf.py     |   2 +-
->   .../bldcontrol/management/commands/runbuilds.py    |   7 +-
->   lib/toaster/bldcontrol/sshbecontroller.py          |  58 +----------
->   7 files changed, 110 insertions(+), 104 deletions(-)
->
+Additionally, toaster checks that the 'daemon' program, which is used
+to start the build system, is available (currently for localhost).
+
+[YOCTO #7171]
+
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+---
+ bin/toaster                                             |  5 +++++
+ lib/toaster/bldcontrol/bbcontroller.py                  | 16 ++++++++--------
+ lib/toaster/bldcontrol/localhostbecontroller.py         | 11 +++++++++++
+ lib/toaster/bldcontrol/management/commands/runbuilds.py |  3 ++-
+ 4 files changed, 26 insertions(+), 9 deletions(-)
+
+diff --git a/bin/toaster b/bin/toaster
+index 4f25293..85a2575 100755
+--- a/bin/toaster
++++ b/bin/toaster
+@@ -175,6 +175,11 @@ if [ -z "$ZSH_NAME" ] && [ `basename \"$0\"` = `basename \"$BASH_SOURCE\"` ]; th
+         exit 1;
+     fi
+ 
++    if [ "x`which daemon`" == "x" ]; then
++        echo -e "Failed dependency; toaster needs the 'daemon' program in order to be able to start builds'. Please install the 'daemon' program." 1>&2;
++	exit 1;
++    fi
++
+     # Define a fake builddir where only the pid files are actually created. No real builds will take place here.
+     BUILDDIR=/tmp
+     RUNNING=1
+diff --git a/lib/toaster/bldcontrol/bbcontroller.py b/lib/toaster/bldcontrol/bbcontroller.py
+index dbfb2f3..cf3f1fd 100644
+--- a/lib/toaster/bldcontrol/bbcontroller.py
++++ b/lib/toaster/bldcontrol/bbcontroller.py
+@@ -140,25 +140,25 @@ class BuildEnvironmentController(object):
+         bblayerconffile.write("# line added by toaster build control\nBBLAYERS = \"" + " ".join(layerlist) + "\"")
+         bblayerconffile.close()
+ 
+-    def writePreConfFile(self, variable_list):
+-        prefilepath = os.path.join(self.be.builddir, "conf/toaster-pre.conf")
+-        with open(prefilepath, "w") as prefile:
+-            for i in variable_list:
+-                prefile.write("%s=\"%s\"\n" % (i.name, i.value))
+ 
++    def writeConfFile(self, variable_list = None, raw = None):
++        """ Writes a configuration file in the build directory. Override with buildenv-specific implementation. """
++        raise Exception("FIXME: Must override to actually write a configuration file")
+ 
+-    def startBBServer(self, brbe):
++
++    def startBBServer(self):
+         """ Starts a  BB server with Toaster toasterui set up to record the builds, an no controlling UI.
+             After this method executes, self.be bbaddress/bbport MUST point to a running and free server,
+             and the bbstate MUST be  updated to "started".
+         """
+-        raise Exception("Must override in order to actually start the BB server")
++        raise Exception("FIXME: Must override in order to actually start the BB server")
+ 
+     def stopBBServer(self):
+         """ Stops the currently running BB server.
+             The bbstate MUST be updated to "stopped".
+             self.connection must be none.
+         """
++        raise Exception("FIXME: Must override stoBBServer")
+ 
+     def setLayers(self, bbs, ls):
+         """ Checks-out bitbake executor and layers from git repositories.
+@@ -168,7 +168,7 @@ class BuildEnvironmentController(object):
+ 
+             a word of attention: by convention, the first layer for any build will be poky!
+         """
+-        raise Exception("Must override setLayers")
++        raise Exception("FIXME: Must override setLayers")
+ 
+ 
+     def getBBController(self):
+diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
+index 980751f..47708d1 100644
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py
++++ b/lib/toaster/bldcontrol/localhostbecontroller.py
+@@ -82,6 +82,17 @@ class LocalhostBEController(BuildEnvironmentController):
+         self._createdirpath(self.be.builddir)
+         self._shellcmd("bash -c \"source %s/oe-init-build-env %s\"" % (self.pokydirname, self.be.builddir))
+ 
++
++    def writeConfFile(self, file_name, variable_list = None, raw = None):
++        filepath = os.path.join(self.be.builddir, file_name)
++        with open(filepath, "w") as conffile:
++            if variable_list is not None:
++                for i in variable_list:
++                    conffile.write("%s=\"%s\"\n" % (i.name, i.value))
++            if raw is not None:
++                conffile.write(raw)
++
++
+     def startBBServer(self):
+         assert self.pokydirname and os.path.exists(self.pokydirname)
+         assert self.islayerset
+diff --git a/lib/toaster/bldcontrol/management/commands/runbuilds.py b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+index 23ee855..3b539b5 100644
+--- a/lib/toaster/bldcontrol/management/commands/runbuilds.py
++++ b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+@@ -56,7 +56,8 @@ class Command(NoArgsCommand):
+ 
+             # set up the buid environment with the needed layers
+             bec.setLayers(br.brbitbake_set.all(), br.brlayer_set.all())
+-            bec.writePreConfFile(br.brvariable_set.all())
++            bec.writeConfFile("conf/toaster-pre.conf", br.brvariable_set.all())
++            bec.writeConfFile("conf/toaster.conf", raw = "INHERIT+=\"toaster buildhistory\"")
+ 
+             # get the bb server running with the build req id and build env id
+             bbctrl = bec.getBBController()
+-- 
+1.9.1
+
 
