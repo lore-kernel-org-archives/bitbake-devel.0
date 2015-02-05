@@ -1,27 +1,30 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 32DBD6E5D7
+Return-Path: <gmstima@gmail.com>
+Received: from mail-lb0-f175.google.com (mail-lb0-f175.google.com
+	[209.85.217.175])
+	by mail.openembedded.org (Postfix) with ESMTP id AE5BD60557
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  3 Feb 2015 10:12:20 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga101.jf.intel.com with ESMTP; 03 Feb 2015 02:12:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.09,511,1418112000"; d="scan'208";a="660764963"
-Received: from unknown (HELO peggleto-mobl5.ger.corp.intel.com)
-	([10.252.17.39])
-	by fmsmga001.fm.intel.com with ESMTP; 03 Feb 2015 02:12:20 -0800
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: Chong Lu <Chong.Lu@windriver.com>
-Date: Tue, 03 Feb 2015 10:12:19 +0000
-Message-ID: <1728669.U1IcW4V3Z6@peggleto-mobl5.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.14.4 (Linux/3.17.8-200.fc20.x86_64; KDE/4.14.4; x86_64; ; )
-In-Reply-To: <1584081.qrVQXzTzW7@peggleto-mobl5.ger.corp.intel.com>
-References: <cover.1421990461.git.Chong.Lu@windriver.com>
-	<1584081.qrVQXzTzW7@peggleto-mobl5.ger.corp.intel.com>
+	Thu,  5 Feb 2015 12:29:26 +0000 (UTC)
+Received: by mail-lb0-f175.google.com with SMTP id n10so2425983lbv.6
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 05 Feb 2015 04:29:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:date:message-id:subject:from:to:content-type;
+	bh=+SQLgJeT7zBgm4F3i6hKow7beIBFDSND0W37aIdc42E=;
+	b=spWLEVarunGsgzZPhCG+AVegrsiew2lf/b8tQ6DyFEhRmlu0inPvxgCar0TwgGqmKb
+	XYCgl1xZTP4AEx/oI17An32IxivgLdNjlY+hRKqxotPfavTvCR6s44oH2X9/5cZY5snk
+	KN0NoYEk3O9/SrEZpVJiI0UQlnrGrVu2aA1PxlqNRrMCnzZ3p+xkCRLDdLfahIaJBQrX
+	8tJobe2UUSeY1MWkdtzBSsE32SMrWlNjuYcTmLVklo+GyPaLNL4W08WiMYNEYSnSK3ph
+	AqdjNr7Ags8uNl7nY/dD3rQGv166J8rbaGD8/rAAbmp29HtHwR9fsneMZuquRbXIg9PD
+	JiHg==
 MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH V3 0/2] bitbake-layers: add a ability to query layer dependencies from layer index
+X-Received: by 10.112.224.133 with SMTP id rc5mr3127669lbc.31.1423139366568;
+	Thu, 05 Feb 2015 04:29:26 -0800 (PST)
+Received: by 10.152.191.139 with HTTP; Thu, 5 Feb 2015 04:29:26 -0800 (PST)
+Date: Thu, 5 Feb 2015 14:29:26 +0200
+Message-ID: <CAGpdKUKoy9MG_N6zLu54Lnh8TUmvogAQHvWPPrT_FAi6mO4sBg@mail.gmail.com>
+From: Roman Savchenko <gmstima@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: Specify files to package for subpackages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,82 +37,23 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 03 Feb 2015 10:12:28 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Thu, 05 Feb 2015 12:29:29 -0000
+Content-Type: multipart/alternative; boundary=001a11360522690736050e567499
 
-On Monday 02 February 2015 16:05:52 Paul Eggleton wrote:
-> Hi Chong,
-> 
-> On Friday 23 January 2015 13:28:32 Chong Lu wrote:
-> > Change since V2:
-> > re-split for IPv6 URL parsing
-> > 
-> > The following changes since commit 
-35c9fa0588ed8e88b541a6c80cc1517324616cea:
-> >   maintainers: Update for non-maintained recipes (2015-01-20 21:39:41
-> >   +0000)
-> > 
-> > are available in the git repository at:
-> >   git://git.pokylinux.org/poky-contrib chonglu/layerindex
-> >   http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=chonglu/layerindex
-> > 
-> > Chong Lu (2):
-> >   bitbake.conf: Add two variables for layer index
-> >   bitbake-layers: add a ability to query layer dependencies from layer
-> >   index
-> 
-> Apologies for the delay in getting back to you. This is definitely
-> improving, some feedback though:
-> 
-> * I think the new subcommand would make more sense if it were switched
-> around so that it was fetching by default (and renamed as appropriate).
-> Perhaps "layerindex-fetch" (with -n to avoid fetching and just report what
-> it would fetch).
-> 
-> * I think the layer index URL specified in the OE variable should be to the
-> root rather than to /api - instead have that suffix added by the code that
-> does the API calls. This makes it usable as a URL for the index for
-> presenting to the user if needed.
-> 
-> * Can you rename the two variables to BBLAYERS_LAYERINDEX_URL and
-> BBLAYERS_FETCH_DIR (sorry I didn't think of this earlier).
-> 
-> * Please mention bitbake-layers in the comment above the settings in
-> bitbake.conf so it's clear where these variables are used.
-> 
-> * By using -q with git you lose the status output which can be very useful
-> given how long it can take to fetch some layers e.g. meta-oe, so can you
-> drop this?
-> 
-> * Can you add a check to see if the layer has already been fetched before
-> fetching it and skip the fetch if it does (but not skip the add)?
-> 
-> * If I run "bitbake-layers show-layer-deps meta-security" I get an error:
-> ERROR: Can NOT get meta-security git repo and subdir
-> (The code currently expects there to be a subdir, but this is an optional
-> field, not all layers have a subdirectory, meta-security is one example.)
-> 
-> * I think you may be able to get away with skipping the initial parse by
-> passing config_only=True to init_bbhandler(). If you can, this will save a
-> bit of time each time you run the command.
+--001a11360522690736050e567499
+Content-Type: text/plain; charset=UTF-8
 
-I just noticed another issue - dependencies-of-dependencies aren't handled 
-here either; e.g. meta-security's dependencies have just been updated so that 
-it now depends on meta-networking, and meta-networking depends on meta-python 
-but that's not listed when I run bitbake-layers show-layer-deps meta-security. 
-I think maybe this is a deficiency in the layer index API - it would be faster 
-if there was one call we could make to get the entire list of dependencies, 
-URLs and subdirectories for the entire dependency chain.
+How can i specify files to package for subpackages in general way,
+something like:
+FILES_${PN}-*
 
-I know this is probably further than you expected to go with this bug, but is 
-that API enhancement something you could look into adding?
+or
 
-Cheers,
-Paul
+d.setVar("FILES_" + pkg)
 
--- 
+--001a11360522690736050e567499
+Content-Type: text/html; charset=UTF-8
 
-Paul Eggleton
-Intel Open Source Technology Centre
+<div dir="ltr"><div>How can i specify files to package for subpackages in general way, something like:<br>FILES_${PN}-*<br><br></div><div>or<br><br></div><div>d.setVar(&quot;FILES_&quot; + pkg)<br></div></div>
 
+--001a11360522690736050e567499--
