@@ -1,34 +1,24 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-yh0-f45.google.com (mail-yh0-f45.google.com
-	[209.85.213.45])
-	by mail.openembedded.org (Postfix) with ESMTP id 1F0E3606E9
+Return-Path: <Maxin.John@enea.com>
+Received: from mx-3.enea.com (sestofw01.enea.se [192.36.1.252])
+	by mail.openembedded.org (Postfix) with SMTP id 5FD87606E8
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 Feb 2015 12:20:53 +0000 (UTC)
-Received: by mail-yh0-f45.google.com with SMTP id a41so7272905yho.4
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 09 Feb 2015 04:20:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=2AE7Hn6h3blq7RT4bHEHhw3uSisfPq0KwJXgyftxcfo=;
-	b=D+2CK8w5a5jUtE1vWC3/1aUCDcKB4TR+hz7qsoAqNn0CAvLBZ8hVdazI7eIVg9xmy3
-	9K5hcAcDp/apKA69Q8qW+LX6+sl5x3bS4SKkfsmVWgfNmPZ5Cq1OjkYIGP02lIxU3q7K
-	2bPRuwV5RfaEEFSEvEA1NOwhuQVO2gElHDLqmZRkPLBt297lO6mrwmRNDJIJ9lajTMxS
-	CBYw/lWfl1QNsMbblpXftooI46PUNipEPMhRG/Y2+QrlVUkcIfbFXfUiWbDhTUaqDoSu
-	YdlLqH8MhiwuOQqdJtY1bIR4hMGG4IxI9tRnL8pfGniQHabrrhO9ZuWuDMtIWugD40B1
-	zIRw==
-X-Received: by 10.170.209.14 with SMTP id a14mr6567990ykf.11.1423484454505;
-	Mon, 09 Feb 2015 04:20:54 -0800 (PST)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.170.205.88 with HTTP; Mon, 9 Feb 2015 04:20:34 -0800 (PST)
-In-Reply-To: <1423481849-5774-1-git-send-email-maxin.john@enea.com>
+	Mon,  9 Feb 2015 13:06:34 +0000 (UTC)
+Received: from sestofb10.enea.se (172.21.3.145) by smtp.enea.com
+	(172.21.1.209) with Microsoft SMTP Server id 14.3.224.2; Mon, 9 Feb 2015
+	14:06:34 +0100
+Received: by sestofb10.enea.se (Postfix, from userid 4454)	id 5D4F12800CB;
+	Mon,  9 Feb 2015 14:06:34 +0100 (CET)
+Date: Mon, 9 Feb 2015 14:06:34 +0100
+From: "Maxin B. John" <maxin.john@enea.com>
+To: Christopher Larson <clarson@kergoth.com>
+Message-ID: <20150209130634.GA65302@sestofb10.enea.se>
 References: <1423481849-5774-1-git-send-email-maxin.john@enea.com>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Mon, 9 Feb 2015 05:20:34 -0700
-X-Google-Sender-Auth: SsaYjzXQagCMe6Bb9vn7dVLpbJ4
-Message-ID: <CABcZAN=GvNVLJgN=vWoor11rbBqYvg8EGPJt-okZyHs3+pvaEw@mail.gmail.com>
-To: "Maxin B. John" <maxin.john@enea.com>
+	<CABcZAN=GvNVLJgN=vWoor11rbBqYvg8EGPJt-okZyHs3+pvaEw@mail.gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <CABcZAN=GvNVLJgN=vWoor11rbBqYvg8EGPJt-okZyHs3+pvaEw@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Received-SPF: None (SESTOEX03.enea.se: maxin.john@enea.com does not
+	designate permitted sender hosts)
 Cc: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH] depexp.py: Fix segfault if DISPLAY is not set
@@ -44,55 +34,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Feb 2015 12:21:00 -0000
-Content-Type: multipart/alternative; boundary=001a11398f62412c51050ea6cde9
+X-List-Received-Date: Mon, 09 Feb 2015 13:06:40 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
---001a11398f62412c51050ea6cde9
-Content-Type: text/plain; charset=UTF-8
+Hi,
 
-On Mon, Feb 9, 2015 at 4:37 AM, Maxin B. John <maxin.john@enea.com> wrote:
+On Mon, Feb 09, 2015 at 05:20:34AM -0700, Christopher Larson wrote:
+> 
+> On Mon, Feb 9, 2015 at 4:37 AM, Maxin B. John <maxin.john@enea.com> wrote:
+> 
+>     +    try:
+>     +        gtk.init_check()
+>     +    except:
+>     +        print "Please set DISPLAY variable before running this command."
+>     +        sys.exit(1)
+>     +
+> 
+> 
+> It's good that you're fixing this, but 1) this uses the old style non-function
+> print, which isn't supported in new python, and 2) it outputs the error message
+> to stdout rather than stderr, and 3) it looks like just returning rather than
+> exiting is likely the best move.
 
-> +    try:
-> +        gtk.init_check()
-> +    except:
-> +        print "Please set DISPLAY variable before running this command."
-> +        sys.exit(1)
-> +
->
+Thank you very much for the review comments. I will update it as per
+your suggestions and send the v2 soon.
 
-It's good that you're fixing this, but 1) this uses the old style
-non-function print, which isn't supported in new python, and 2) it outputs
-the error message to stdout rather than stderr, and 3) it looks like just
-returning rather than exiting is likely the best move.
--- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
 
---001a11398f62412c51050ea6cde9
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+> Christopher Larson
+> clarson at kergoth dot com
+> Founder - BitBake, OpenEmbedded, OpenZaurus
+> Maintainer - Tslib
+> Senior Software Engineer, Mentor Graphics
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Mon, Feb 9, 2015 at 4:37 AM, Maxin B. John <span dir=3D"ltr">&lt;<a href=
-=3D"mailto:maxin.john@enea.com" target=3D"_blank">maxin.john@enea.com</a>&g=
-t;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0=
- .8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":1ax" class=
-=3D"a3s" style=3D"overflow:hidden">+=C2=A0 =C2=A0 try:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 gtk.init_check()<br>
-+=C2=A0 =C2=A0 except:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 print &quot;Please set DISPLAY variable before=
- running this command.&quot;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 sys.exit(1)<br>
-+</div></blockquote></div><br>It&#39;s good that you&#39;re fixing this, bu=
-t 1) this uses the old style non-function print, which isn&#39;t supported =
-in new python, and 2) it outputs the error message to stdout rather than st=
-derr, and 3) it looks like just returning rather than exiting is likely the=
- best move.<br>-- <br><div class=3D"gmail_signature">Christopher Larson<br>=
-clarson at kergoth dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<b=
-r>Maintainer - Tslib<br>Senior Software Engineer, Mentor Graphics</div>
-</div></div>
+Thanks and Regards,
+Maxin
 
---001a11398f62412c51050ea6cde9--
