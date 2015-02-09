@@ -1,42 +1,42 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-pd0-f182.google.com (mail-pd0-f182.google.com
-	[209.85.192.182])
-	by mail.openembedded.org (Postfix) with ESMTP id 21F8E732A2
+Received: from mail-pa0-f47.google.com (mail-pa0-f47.google.com
+	[209.85.220.47])
+	by mail.openembedded.org (Postfix) with ESMTP id 77961732E3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 Feb 2015 18:02:10 +0000 (UTC)
-Received: by pdjg10 with SMTP id g10so26636547pdj.1
+	Mon,  9 Feb 2015 18:02:11 +0000 (UTC)
+Received: by mail-pa0-f47.google.com with SMTP id lj1so35230825pab.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 09 Feb 2015 10:02:12 -0800 (PST)
+	Mon, 09 Feb 2015 10:02:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=08ZxXgGLa2kJ86D2lQx7TSmJYgalMbu70fL0LYK0c48=;
-	b=Q3nWU4X3SI7FlarFDQVKJQ/CrPDs1Pdmvb5dQO/aBYlgTlcxAE2l8X8DHjqTBkeu0U
-	FiRHPJ1t/yJV0V4aRuDOAqh56zBmKFvZsJePxr83lnVZvJpZn5naFkDdtiu98x1cDPRO
-	DUvPp5WPvASdX/8EN2wgK6pxH6ttiuKzJEOm4Agwpw20yZly4GYz3xeJNNpCGi67rOqu
-	v8R7zAvcZP2Kyj883G4LqfVaYFpgAavRacvHXmSRFYQHN0o6QwmrNGPWpPHMWXdlF+bE
-	lYhV1u8mAMgDnbFKSboFWrm/fvTi6bRTxADjRn95xG5vT2fxCqbLSkSRS6kFn9AVSOdq
-	jrWA==
-X-Gm-Message-State: ALoCoQnh9jh8dNsy5PhBDZa5ojIcsm9t5bkS0+Gyo0qiRfH5HVA3VU8jKUeiKhP6fJkKZu58LaH3
-X-Received: by 10.66.136.17 with SMTP id pw17mr31304985pab.33.1423504932122;
+	bh=3OMUTJx+0ZQirdRPcYGuQ0bK8wBIMAStKFXkz7X21uo=;
+	b=O4jSLvhlDGwwDPYJub0nomJLeQnkSMYlx5eaNTh6mJmcSRISxj1QCoqkrQzVIQvXKE
+	9pctKUgkkHgy6MG2kmN3apiMogNjPFDIZapIvKMUVhcMWol6KQHSuoO1wBAJ9nsQjAqI
+	JLzHtKr5K/Lm6FA+jzLUtNf7yUgpcbPqyR8Zkfrbvk0NPNRhHOOM+8U0NfeLxrz+2Iie
+	RV/2QEkV9aMEY0saEjQUIH9TCA+0L9HKRGQxnigXqn2yyxJPwckDqDTCdIb3OusRApOj
+	Og9Yf9b61CrgNr05Q90GoJS7uHJMHQuyUIhd1MrRv/Wq2dJMe3fyS1PXcukl5d71Jv9k
+	N4sA==
+X-Gm-Message-State: ALoCoQkLr1Waho1g1FHHMirsfg75hHVisUb/VLohbmtYKNFW+zXR/sljUA+FzP+AhdoJOnZ4ZVy1
+X-Received: by 10.66.139.167 with SMTP id qz7mr31491593pab.50.1423504932928;
 	Mon, 09 Feb 2015 10:02:12 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id di5sm3896290pbc.36.2015.02.09.10.02.09
+	by mx.google.com with ESMTPSA id rf9sm17123789pab.0.2015.02.09.10.02.10
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 09 Feb 2015 10:02:10 -0800 (PST)
+	Mon, 09 Feb 2015 10:02:11 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 633325661B7; Mon,  9 Feb 2015 18:01:58 +0000 (GMT)
+	id 65E415661BF; Mon,  9 Feb 2015 18:01:58 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  9 Feb 2015 18:01:49 +0000
-Message-Id: <8fffd7b5fd53bd66ed7621595f57e2cae416e80d.1423504574.git.alexandru.damian@intel.com>
+Date: Mon,  9 Feb 2015 18:01:51 +0000
+Message-Id: <0a2e0194fe7d949f1e9e01f7b42a7e0dc7a223f5.1423504574.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <b7b1e64f650c9ea676714209b9d6e7efeca992be.1423504574.git.alexandru.damian@intel.com>
 References: <b7b1e64f650c9ea676714209b9d6e7efeca992be.1423504574.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1423504574.git.alexandru.damian@intel.com>
 References: <cover.1423504574.git.alexandru.damian@intel.com>
-Subject: [PATCH 19/27] toaster: All machines Add layer name order by functions
+Subject: [PATCH 21/27] toaster: models Allow the machine's layer name to be searched
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,50 +53,28 @@ X-List-Received-Date: Mon, 09 Feb 2015 18:02:11 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-Allow the layer name to be sorted alphabetically in the machines table.
-Also fix the default ordering to be machine name
+Make the layer name searchable. If you know the name of the layer you are
+interested in, searching for it is a fast way of getting the list of
+machines provided by it.
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/toastergui/templates/machines.html | 2 +-
- lib/toaster/toastergui/views.py                | 4 +++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ lib/toaster/orm/models.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/toaster/toastergui/templates/machines.html b/lib/toaster/toastergui/templates/machines.html
-index 487d6b7..650c47b 100644
---- a/lib/toaster/toastergui/templates/machines.html
-+++ b/lib/toaster/toastergui/templates/machines.html
-@@ -31,7 +31,7 @@
- <div class="page-header">
-   <h1>
-     All machines
--    <i class="icon-question-sign get-help heading-help" title="This page lists all the machines compatible with Yocto Project 1.7 'Dxxxx' that Toaster knows about. They include community-created targets suitable for use on top of OpenEmbedded Core and any targets you have imported"></i>
-+    <i class="icon-question-sign get-help heading-help" title="This page lists all the machines compatible with the current project that Toaster knows about. They include community-created targets suitable for use on top of OpenEmbedded Core and any targets you have imported"></i>
-   </h1>
- </div>
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index ad7a856..4bb84bd 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -529,7 +529,7 @@ class Recipe_Dependency(models.Model):
  
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index c89b67b..2e52d2b 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -2777,7 +2777,7 @@ if toastermain.settings.MANAGED:
-         # define here what parameters the view needs in the GET portion in order to
-         # be able to display something.  'count' and 'page' are mandatory for all views
-         # that use paginators.
--        (pagesize, orderby) = _get_parameters_values(request, 10, 'updated:+')
-+        (pagesize, orderby) = _get_parameters_values(request, 10, 'name:+')
-         mandatory_parameters = { 'count': pagesize,  'page' : 1, 'orderby' : orderby };
-         retval = _verify_parameters( request.GET, mandatory_parameters )
-         if retval:
-@@ -2815,6 +2815,8 @@ if toastermain.settings.MANAGED:
-                 },
-                 {   'name': 'Layer',
-                     'clclass': 'layer',
-+                    'orderfield': _get_toggle_order(request, "layer_version__layer__name"),
-+                    'ordericon' : _get_toggle_order_icon(request, "layer_version__layer__name"),
-                 },
-                 {   'name': 'Layer source',
-                     'clclass': 'source',
+ 
+ class Machine(models.Model):
+-    search_allowed_fields = ["name", "description"]
++    search_allowed_fields = ["name", "description", "layer_version__layer__name"]
+     layer_source = models.ForeignKey('LayerSource', default = None, null = True)  # from where did we get this machine
+     up_id = models.IntegerField(null = True, default = None)                      # id of entry in the source
+     up_date = models.DateTimeField(null = True, default = None)
 -- 
 1.9.1
 
