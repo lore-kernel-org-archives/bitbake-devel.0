@@ -1,43 +1,42 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-pa0-f54.google.com (mail-pa0-f54.google.com
-	[209.85.220.54])
-	by mail.openembedded.org (Postfix) with ESMTP id 3EBA3606E9
+Received: from mail-pd0-f172.google.com (mail-pd0-f172.google.com
+	[209.85.192.172])
+	by mail.openembedded.org (Postfix) with ESMTP id 487F17325C
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  9 Feb 2015 18:02:01 +0000 (UTC)
-Received: by mail-pa0-f54.google.com with SMTP id kx10so20129525pab.13
+	Mon,  9 Feb 2015 18:01:59 +0000 (UTC)
+Received: by pdjp10 with SMTP id p10so22762537pdj.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 09 Feb 2015 10:02:02 -0800 (PST)
+	Mon, 09 Feb 2015 10:02:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=OFTxyEVatDRUHq5QSY/5AG65KNfYRWcLCyyH28zSwGE=;
-	b=YV+Q6vBB74o4FuQ5J0fZk1UIXl+Fhx8b21DDdOuXArhK9pDmqSrttbMV1MuaOj4Wsa
-	TVy/8cd5aaFELBcZ78PamTSFhQXUlcM0t4HjOJJZwVNaazYBtZw221IkPg5ok1moGYtT
-	X6ghrvEVGZRAtd0hKwiiT6G2hwXTg1IHr2ve1DBfju3QiklfQpeNGl6DpYp4YF/Nu5iw
-	+AT6mzV4ZjdfgZnOw8Rj/VB/jQGp5nr3EbFW06U1b3d6hblZbka2HOxFXDdz+xqzif5D
-	eEdU4avu3Qh/IDv/1co7hRTiiDO4LXC9ucPzDsLIWdYNjoTulm1if4+8Gqon6wVIbGjp
-	z/zg==
-X-Gm-Message-State: ALoCoQl8clZMikVOVTQ3vMDIYodeXDZ/pvAmzX2r3DmjywZ/Ss/OSGrfSE89GiS+FtrzE9PxJ6cm
-X-Received: by 10.70.42.11 with SMTP id j11mr30592989pdl.21.1423504922422;
-	Mon, 09 Feb 2015 10:02:02 -0800 (PST)
+	bh=X3Ea5/yAx5uIObnzJkVAdCVgh3m1xAUrSrHeQMa2ssY=;
+	b=GKYStXVIXgWbAZ0O+gHVCUKmA/D9QlDV1lEBZitLSpD+/5IH7eaO49vKYKJvLjyVin
+	zG1O/zNR1EFIEXXpMIdAT+UeWfKl5BpmVPiJN1BjVh2e3CfU+bDZtRaBtpUwd+sR9y4l
+	g4WO0Am8cEEDoRvb2biDGPdREZC2Qse2sNT4AEu83NbrXlphWTeTKBNOaYZ9aQDGIwBJ
+	xzsUToKlvnsZza5T9gbqf9qJa72vNX+z5HNux85q1ENclKQ+8qAkpYV7XrQwwEF18K9J
+	FBq7wjfAvbhF1w0OFZDgh6FJfkpZ8CnpUTkc1m42K3ciPZ55TOGrhzPrunOW4B8OPIeg
+	pmuQ==
+X-Gm-Message-State: ALoCoQnpqxDk8cKMm19p5gEy42jtoBTgqiT7PmuXhXOTQBViRai2WvhfiIfXi3NVuQXp1oEeEgev
+X-Received: by 10.70.34.65 with SMTP id x1mr30501718pdi.120.1423504920883;
+	Mon, 09 Feb 2015 10:02:00 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id
-	kp1sm16959910pbd.54.2015.02.09.10.02.00
+	by mx.google.com with ESMTPSA id ca4sm4084554pbb.24.2015.02.09.10.01.59
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 09 Feb 2015 10:02:01 -0800 (PST)
+	Mon, 09 Feb 2015 10:02:00 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 4BA24566192; Mon,  9 Feb 2015 18:01:58 +0000 (GMT)
+	id 4858B56618B; Mon,  9 Feb 2015 18:01:58 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  9 Feb 2015 18:01:34 +0000
-Message-Id: <2a18952a525d15814389584817674f6c3aee12d6.1423504574.git.alexandru.damian@intel.com>
+Date: Mon,  9 Feb 2015 18:01:32 +0000
+Message-Id: <b96457870b40ba60dd5c86d83c43093d09b70aea.1423504574.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <b7b1e64f650c9ea676714209b9d6e7efeca992be.1423504574.git.alexandru.damian@intel.com>
 References: <b7b1e64f650c9ea676714209b9d6e7efeca992be.1423504574.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1423504574.git.alexandru.damian@intel.com>
 References: <cover.1423504574.git.alexandru.damian@intel.com>
-Subject: [PATCH 04/27] toastergui: fix loadconf error message
+Subject: [PATCH 02/27] toasterui: use text() instead of html()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,33 +49,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 09 Feb 2015 18:02:03 -0000
+X-List-Received-Date: Mon, 09 Feb 2015 18:02:04 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-Toaster crashes in loadconf if it needs to raise an Exception due
-to poorly formatted error message. This patch fixes the formatting
+Use the text() jQuery function instead of the html()
+one for security reasons.
 
-[YOCTO #7276]
-
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
 ---
- lib/toaster/bldcontrol/management/commands/loadconf.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/toaster/toastergui/static/js/layerdetails.js | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/toaster/bldcontrol/management/commands/loadconf.py b/lib/toaster/bldcontrol/management/commands/loadconf.py
-index e2f61e4..9163e9b 100644
---- a/lib/toaster/bldcontrol/management/commands/loadconf.py
-+++ b/lib/toaster/bldcontrol/management/commands/loadconf.py
-@@ -59,7 +59,7 @@ class Command(BaseCommand):
-                 except ValueError:
-                     pass
-             if url == None:
--                raise Exception("Error while looking for remote \"%s\" in \"s\"" % (remote_name, lo.local_path))
-+                raise Exception("Error while looking for remote \"%s\" in \"%s\"" % (remote_name, out))
-             return url
+diff --git a/lib/toaster/toastergui/static/js/layerdetails.js b/lib/toaster/toastergui/static/js/layerdetails.js
+index 2793225..9339ae8 100644
+--- a/lib/toaster/toastergui/static/js/layerdetails.js
++++ b/lib/toaster/toastergui/static/js/layerdetails.js
+@@ -252,10 +252,10 @@ function layerDetailsPageInit (ctx) {
+           break;
+       }
  
+-      alertMsg.append("You have deleted <strong>1</strong> layer from <a id=\"project-affected-name\"></a>: <span id=\"layer-affected-name\"></span>");
++      alertMsg.append("You have deleted <strong>1</strong> layer from <a id=\"project-affected-name\"></a>: <strong id=\"layer-affected-name\"></strong>");
+     }
  
+-    alertMsg.children("#layer-affected-name").html("<strong>" + ctx.layerVersion.name + "</strong>");
++    alertMsg.children("#layer-affected-name").text(ctx.layerVersion.name);
+     alertMsg.children("#project-affected-name").text(ctx.projectName);
+     alertMsg.children("#project-affected-name").attr("href", ctx.projectPageUrl);
+     $("#alert-area").show();
 -- 
 1.9.1
 
