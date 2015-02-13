@@ -1,23 +1,28 @@
-Return-Path: <Maxin.John@enea.com>
-Received: from mx-3.enea.com (sestofw01.enea.se [192.36.1.252])
-	by mail.openembedded.org (Postfix) with SMTP id A315C72374
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 5D598733CB
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Feb 2015 11:53:20 +0000 (UTC)
-Received: from sestofb10.enea.se (172.21.3.145) by smtp.enea.com
-	(172.21.1.209) with Microsoft SMTP Server id 14.3.224.2;
-	Thu, 12 Feb 2015 12:53:16 +0100
-Received: by sestofb10.enea.se (Postfix, from userid 4454)	id 9F9C32800CB;
-	Thu, 12 Feb 2015 12:53:16 +0100 (CET)
-Date: Thu, 12 Feb 2015 12:53:16 +0100
-From: "Maxin B. John" <maxin.john@enea.com>
-To: <bitbake-devel@lists.openembedded.org>
-Message-ID: <20150212115316.GA8327@sestofb10.enea.se>
-References: <1423489277-7774-1-git-send-email-maxin.john@enea.com>
-MIME-Version: 1.0
+	Fri, 13 Feb 2015 17:03:03 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t1DH1t1M004449; Fri, 13 Feb 2015 17:03:00 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id YLNikqBfYv8S; Fri, 13 Feb 2015 17:03:00 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t1DH2jdO004505
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 13 Feb 2015 17:02:56 GMT
+Message-ID: <1423846965.20217.95.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: "Maxin B. John" <maxin.john@enea.com>
+Date: Fri, 13 Feb 2015 17:02:45 +0000
 In-Reply-To: <1423489277-7774-1-git-send-email-maxin.john@enea.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-Received-SPF: None (SESTOEX03.enea.se: maxin.john@enea.com does not
-	designate permitted sender hosts)
+References: <1423489277-7774-1-git-send-email-maxin.john@enea.com>
+X-Mailer: Evolution 3.12.7-0ubuntu1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH v2] depexp.py: Fix segfault if DISPLAY is not set
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -31,13 +36,11 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 Feb 2015 11:53:22 -0000
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+X-List-Received-Date: Fri, 13 Feb 2015 17:03:04 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-gentle ping..
-
-On Mon, Feb 09, 2015 at 02:41:17PM +0100, Maxin B. John wrote:
+On Mon, 2015-02-09 at 14:41 +0100, Maxin B. John wrote:
 > bitbake -g -u depexp <package> segfaults when DISPLAY is not set
 > properly. Fix it with a proper check.
 > 
@@ -69,10 +72,13 @@ On Mon, Feb 09, 2015 at 02:41:17PM +0100, Maxin B. John wrote:
 > +    except:
 > +        sys.stderr.write("Please set DISPLAY variable before running this command \n")
 > +        return
-> +
->      shutdown = 0
->  
->      gtkgui = gtkthread(shutdown)
-> -- 
-> 1.9.1
+
+Sorry about the delay in replying. Its usually bad form to put generic
+except clauses into python. Is there a specific exception we should be
+trapping here?
+
+Cheers,
+
+Richard
+
 
