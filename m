@@ -1,24 +1,26 @@
-Return-Path: <anibal.limon@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 1EAB173472
+Return-Path: <Maxin.John@enea.com>
+Received: from mx-3.enea.com (sestofw01.enea.se [192.36.1.252])
+	by mail.openembedded.org (Postfix) with SMTP id 3720765C85
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 13 Feb 2015 21:58:20 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by orsmga102.jf.intel.com with ESMTP; 13 Feb 2015 13:54:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.09,573,1418112000"; d="scan'208";a="677724308"
-Received: from unknown (HELO alimon-ThinkPad-W540.zpn.intel.com)
-	([10.219.4.49])
-	by fmsmga002.fm.intel.com with ESMTP; 13 Feb 2015 13:58:17 -0800
-From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 13 Feb 2015 15:58:13 -0600
-Message-Id: <1423864694-24940-7-git-send-email-anibal.limon@linux.intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1423864694-24940-1-git-send-email-anibal.limon@linux.intel.com>
-References: <1423864694-24940-1-git-send-email-anibal.limon@linux.intel.com>
+	Mon, 16 Feb 2015 08:24:47 +0000 (UTC)
+Received: from sestofb10.enea.se (172.21.3.145) by smtp.enea.com
+	(172.21.1.209) with Microsoft SMTP Server id 14.3.224.2;
+	Mon, 16 Feb 2015 09:24:45 +0100
+Received: by sestofb10.enea.se (Postfix, from userid 4454)	id 0E3552800CB;
+	Mon, 16 Feb 2015 09:24:46 +0100 (CET)
+Date: Mon, 16 Feb 2015 09:24:45 +0100
+From: "Maxin B. John" <maxin.john@enea.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Message-ID: <20150216082445.GA16771@sestofb10.enea.se>
+References: <1423489277-7774-1-git-send-email-maxin.john@enea.com>
+	<1423846965.20217.95.camel@linuxfoundation.org>
 MIME-Version: 1.0
-Subject: [PATCH 6/7] fetch2: wget remove scape of - in regexes don't needed
+In-Reply-To: <1423846965.20217.95.camel@linuxfoundation.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Received-SPF: None (SESTOEX03.enea.se: maxin.john@enea.com does not
+	designate permitted sender hosts)
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH v2] depexp.py: Fix segfault if DISPLAY is not set
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,88 +33,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 13 Feb 2015 21:58:21 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Mon, 16 Feb 2015 08:24:50 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
----
- lib/bb/fetch2/wget.py | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+Hi,
 
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index 570bd47..162a6bd 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -141,7 +141,7 @@ class Wget(FetchMethod):
-             else:
-                 version = version[1:len(version)]
- 
--        version = re.sub('\-', '.', version)
-+        version = re.sub('-', '.', version)
-         version = re.sub('_', '.', version)
-         version = re.sub('(rc)+', '.1000.', version)
-         version = re.sub('(beta)+', '.100.', version)
-@@ -246,7 +246,7 @@ class Wget(FetchMethod):
-         version_dir = ['', '', '']
-         version = ['', '', '']
- 
--        dirver_regex = re.compile("(\D*)((\d+[\.\-_])+(\d+))")
-+        dirver_regex = re.compile("(\D*)((\d+[\.-_])+(\d+))")
-         s = dirver_regex.search(dirver)
-         if s:
-             version_dir[1] = s.group(2)
-@@ -296,26 +296,26 @@ class Wget(FetchMethod):
-                 gst-fluendo-mp3
-         """
-         # match most patterns which uses "-" as separator to version digits
--        pn_prefix1 = "[a-zA-Z][a-zA-Z0-9]*([\-_][a-zA-Z]\w+)*\+?[\-_]"
-+        pn_prefix1 = "[a-zA-Z][a-zA-Z0-9]*([-_][a-zA-Z]\w+)*\+?[-_]"
-         # a loose pattern such as for unzip552.tar.gz
-         pn_prefix2 = "[a-zA-Z]+"
-         # a loose pattern such as for 80325-quicky-0.4.tar.gz
--        pn_prefix3 = "[0-9]+[\-]?[a-zA-Z]+"
-+        pn_prefix3 = "[0-9]+[-]?[a-zA-Z]+"
-         # Save the Package Name (pn) Regex for use later
-         pn_regex = "(%s|%s|%s)" % (pn_prefix1, pn_prefix2, pn_prefix3)
- 
-         # match version
--        pver_regex = "(([A-Z]*\d+[a-zA-Z]*[\.\-_]*)+)"
-+        pver_regex = "(([A-Z]*\d+[a-zA-Z]*[\.-_]*)+)"
- 
-         # match arch
--        parch_regex = "\-source|_all_"
-+        parch_regex = "-source|_all_"
- 
-         # src.rpm extension was added only for rpm package. Can be removed if the rpm
-         # packaged will always be considered as having to be manually upgraded
-         psuffix_regex = "(tar\.gz|tgz|tar\.bz2|zip|xz|rpm|bz2|orig\.tar\.gz|tar\.xz|src\.tar\.gz|src\.tgz|svnr\d+\.tar\.bz2|stable\.tar\.gz|src\.rpm)"
- 
-         # match name, version and archive type of a package
--        package_regex_comp = re.compile("(?P<name>%s?\.?v?)(?P<pver>%s)(?P<arch>%s)?[\.\-](?P<type>%s$)"
-+        package_regex_comp = re.compile("(?P<name>%s?\.?v?)(?P<pver>%s)(?P<arch>%s)?[\.-](?P<type>%s$)"
-                                                     % (pn_regex, pver_regex, parch_regex, psuffix_regex))
-         self.suffix_regex_comp = re.compile(psuffix_regex)
- 
-@@ -327,7 +327,7 @@ class Wget(FetchMethod):
-             version = self._parse_path(package_regex_comp, package)
-             if version:
-                 package_custom_regex_comp = re.compile(
--                    "(?P<name>%s)(?P<pver>%s)(?P<arch>%s)?[\.\-](?P<type>%s)" %
-+                    "(?P<name>%s)(?P<pver>%s)(?P<arch>%s)?[\.-](?P<type>%s)" %
-                     (re.escape(version[0]), pver_regex, parch_regex, psuffix_regex))
-             else:
-                 package_custom_regex_comp = None
-@@ -362,7 +362,7 @@ class Wget(FetchMethod):
- 
-             # search for version matches on folders inside the path, like:
-             # "5.7" in http://download.gnome.org/sources/${PN}/5.7/${PN}-${PV}.tar.gz
--            dirver_regex = re.compile("(?P<dirver>[^/]*(\d+\.)*\d+([\-_]r\d+)*)/")
-+            dirver_regex = re.compile("(?P<dirver>[^/]*(\d+\.)*\d+([-_]r\d+)*)/")
-             m = dirver_regex.search(path)
-             if m:
-                 pn = d.getVar('PN', True)
--- 
-1.9.1
+On Fri, Feb 13, 2015 at 05:02:45PM +0000, Richard Purdie wrote:
+> On Mon, 2015-02-09 at 14:41 +0100, Maxin B. John wrote:
+> > bitbake -g -u depexp <package> segfaults when DISPLAY is not set
+> > properly. Fix it with a proper check.
+> > 
+> > [YOCTO #7299]
+> > 
+> > Signed-off-by: Maxin B. John <maxin.john@enea.com>
+> > ---
+> >  bitbake/lib/bb/ui/depexp.py | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/bitbake/lib/bb/ui/depexp.py b/bitbake/lib/bb/ui/depexp.py
+> > index 0c71a3e..1b8f0b2 100644
+> > --- a/bitbake/lib/bb/ui/depexp.py
+> > +++ b/bitbake/lib/bb/ui/depexp.py
+> > @@ -17,6 +17,7 @@
+> >  # with this program; if not, write to the Free Software Foundation, Inc.,
+> >  # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+> >  
+> > +import sys
+> >  import gobject
+> >  import gtk
+> >  import Queue
+> > @@ -215,6 +216,12 @@ def main(server, eventHandler, params):
+> >          print("XMLRPC Fault getting commandline:\n %s" % x)
+> >          return
+> >  
+> > +    try:
+> > +        gtk.init_check()
+> > +    except:
+> > +        sys.stderr.write("Please set DISPLAY variable before running this command \n")
+> > +        return
+> 
+> Sorry about the delay in replying. Its usually bad form to put generic
+> except clauses into python. Is there a specific exception we should be
+> trapping here?
 
+The exception should be the RuntimeError here. I will update and send
+the v3.
+ 
+> Cheers,
+> Richard
+
+Best Regards,
+Maxin
 
