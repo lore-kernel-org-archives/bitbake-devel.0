@@ -1,44 +1,42 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f179.google.com (mail-we0-f179.google.com
-	[74.125.82.179])
-	by mail.openembedded.org (Postfix) with ESMTP id 24DB2735C7
+Received: from mail-wg0-f46.google.com (mail-wg0-f46.google.com [74.125.82.46])
+	by mail.openembedded.org (Postfix) with ESMTP id BF78B735C5
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed, 18 Feb 2015 19:11:07 +0000 (UTC)
-Received: by wesx3 with SMTP id x3so3068956wes.6
+Received: by mail-wg0-f46.google.com with SMTP id a1so3057163wgh.5
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Feb 2015 11:11:08 -0800 (PST)
+	Wed, 18 Feb 2015 11:11:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=g7cMSqTitxdQ++JNyxsqFXGZ9vEnFu28B4kyHKPfRxA=;
-	b=hOEVl6AFPUu/DQUKeAgykrAVNeM9Fb9dwpv4GFb9Ya/m9lIpWQ0R+jm0MvoL0e+OK6
-	cHMS75cF7WukJCWR0AzIbjrz9mawKAzSxuWG/7E/qdZ6TPyp1gUvpHi8YUf/ep7q2vad
-	jTIBLMGP3m13pddcNeDA/vfp/JhEQCQuZ1tzfUs+WKOJn0QWslfyMI9rFD+QHLSgOz3u
-	7PaIL8kB5eubUoDsVuGq0Eq5EVpJdgAhmJMUAyWZVDG8qfPm+bRzUnWG+CHqUSFWahhg
-	w8qGjatexd4nnUuioJwMzBOIMo64WtQos/3UW2LQSF8buYw8Lo0Ak4LRcmqKOxQ9IRv6
-	yOCg==
-X-Gm-Message-State: ALoCoQlBfg9rGYRO0kTiu4RlNp2HioTk6mrNg+Ga1lt48UJS/lM0Usu8DdvT9orXv7YkcHkEABYG
-X-Received: by 10.180.109.193 with SMTP id hu1mr5849106wib.25.1424286668699;
-	Wed, 18 Feb 2015 11:11:08 -0800 (PST)
+	bh=NCnDgvOAnlagujha1eMXisRC+S2q8i1x228MXy/OJjI=;
+	b=Uh1fkdTuPVx9dpHSmwCWLmh7GmmJ0uMgF5uxIFpqlg4BLZldh14Vh92DNPhW+BXBfA
+	GVuAGID9kOKQpDN0sUmTGrzWBB2E6oJAH/3QMjPoGtibn7sOz1aAMEZZ06M3+Q42P6pG
+	BiifSc40ylO0CO5JYpXPCmxAfhztDtbx8yvzXEsoOqL8ImhhbJvkiZKJDSnrvNoSJC85
+	6of5WrbmlZhEu/wu9MDltBczW+Wptn0liRYAdPoftc2Qhgfmtsu3V2FIo5EpNmyaPOfk
+	K3IoXAZNQRDeOlbrv7DKKgHEMJvk9HRx4dEjSVAVve5QDaD4FQOpX42xbBRmRnGs5FZE
+	n9rg==
+X-Gm-Message-State: ALoCoQlUkTS2VvMQobdisaan5DCRnwssHykg7J7gTuzH9MYYml0X1ZZYdhIGPw88fs8wjUV8Dit4
+X-Received: by 10.180.73.205 with SMTP id n13mr3043665wiv.64.1424286669087;
+	Wed, 18 Feb 2015 11:11:09 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
 	by mx.google.com with ESMTPSA id
-	pp10sm33936418wjc.31.2015.02.18.11.11.06
+	mb20sm26075575wic.18.2015.02.18.11.11.06
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Wed, 18 Feb 2015 11:11:07 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 49ECB561F59; Wed, 18 Feb 2015 19:11:07 +0000 (GMT)
+	id 4D2EC561F97; Wed, 18 Feb 2015 19:11:07 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 18 Feb 2015 19:11:00 +0000
-Message-Id: <6618a0a71cc9ea5426238549094ab9e05ae61649.1424286571.git.alexandru.damian@intel.com>
+Date: Wed, 18 Feb 2015 19:11:02 +0000
+Message-Id: <8365f19191d0ec5901c79b7afd5005f7a546fe74.1424286571.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <fad80e36c9da663b000cdf2cb3c75440c6431d84.1424286571.git.alexandru.damian@intel.com>
 References: <fad80e36c9da663b000cdf2cb3c75440c6431d84.1424286571.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1424286571.git.alexandru.damian@intel.com>
 References: <cover.1424286571.git.alexandru.damian@intel.com>
-Cc: David Reyna <David.Reyna@windriver.com>
-Subject: [PATCH 06/10] toaster: landing page when no build module
+Subject: [PATCH 08/10] toasterui: style the Toaster version information
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,152 +49,77 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 18 Feb 2015 19:11:09 -0000
+X-List-Received-Date: Wed, 18 Feb 2015 19:11:10 -0000
 
-From: David Reyna <David.Reyna@windriver.com>
+From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-Add landing page for managed build pages when build module not installed.
+In debug mode, we show the Toaster version and mode in the
+top bar. Display them inside a tooltip that appears when
+you hover over a nice info icon to make them less conspicuous.
 
-Some wording and whitespace changed.
-
-[YOCTO #6483]
-
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
 ---
- .../toastergui/templates/landing_not_managed.html  | 32 +++++++++++++++++
- lib/toaster/toastergui/views.py                    | 42 +++++++++++-----------
- 2 files changed, 53 insertions(+), 21 deletions(-)
- create mode 100644 lib/toaster/toastergui/templates/landing_not_managed.html
+ lib/toaster/toastergui/static/css/default.css | 22 ++++------------------
+ lib/toaster/toastergui/templates/base.html    | 13 ++++++-------
+ 2 files changed, 10 insertions(+), 25 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/landing_not_managed.html b/lib/toaster/toastergui/templates/landing_not_managed.html
-new file mode 100644
-index 0000000..fe56655
---- /dev/null
-+++ b/lib/toaster/toastergui/templates/landing_not_managed.html
-@@ -0,0 +1,32 @@
-+{% extends "base.html" %}
-+
-+{% load static %}
-+{% load projecttags %}
-+{% load humanize %}
-+
-+{% block pagecontent %}
-+
-+  <div class="container-fluid">
-+   <div class="row-fluid">
-+    <!-- Empty - no build module -->
-+    <div class="page-header top-air">
-+     <h1>
-+       This page only works with the Toaster 'Build' mode
-+     </h1>
-+    </div>
-+    <div class="alert alert-info">
-+     <p class="lead">
-+     The 'Build' mode allows you to configure and run your Yocto Project builds from Toaster
-+     <ul>
-+       <li class="lead"><a href="https://wiki.yoctoproject.org/wiki/Toaster#Modes">
-+       Read about the 'Build' mode
-+       </a></li>
-+       <li class="lead"><a href="/">
-+       View your builds
-+       </a></li>
-+     </ul>
-+     </p>
-+    </div>
-+   </div>
-+
-+{% endblock %}
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index a2e9206..70241dc 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -3290,64 +3290,64 @@ else:
+diff --git a/lib/toaster/toastergui/static/css/default.css b/lib/toaster/toastergui/static/css/default.css
+index 41b73cc..86cf67a 100644
+--- a/lib/toaster/toastergui/static/css/default.css
++++ b/lib/toaster/toastergui/static/css/default.css
+@@ -2,24 +2,10 @@
+ .logo img { height: 30px; width: auto !important; }
+ .logo { padding-top: 4px !important; padding-bottom:0px !important; }
  
+-/* style the version text */
+-.version-text {
+-	color: #AAA;
+-	font-size: 0.6em;
+-	display: table-footer-group;
+-	padding: 0px;
+-	margin: 1px 1px 1px 1px;
+-}
+-
+-.version-brand, .version-brand:hover, a.version-brand:focus  {
+-    color: #777;
+-    display: block;
+-    float: left;
+-    font-size: 20px;
+-    font-weight: 200;
+-    padding: 00px 0px;
+-    text-shadow: 0 1px 0 #fff;
+-}
++/* style the version information */
++.brand > a { color: #777; }
++.brand > a:hover { color: #999; text-decoration: none; }
++.icon-info-sign.get-help { color: #777; font-size: 16px; margin-left: 5px;}
  
-     def newproject(request):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def project(request, pid):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def xhr_projectbuild(request, pid):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def xhr_build(request, pid):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def xhr_projectinfo(request):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def xhr_projectedit(request, pid):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def xhr_datatypeahead(request):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def xhr_configvaredit(request):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def importlayer(request):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def layers(request):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def layerdetails(request):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def targets(request):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def targetdetails(request):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def machines(request):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def projectconf(request):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def projectbuilds(request):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def build_artifact(request, build_id, artifact_type, artifact_id):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def projects(request):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def xhr_importlayer(request):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def xhr_updatelayer(request):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
- 
-     def buildrequestdetails(request, pid, brid):
--        raise Exception("page not available in interactive mode")
-+        return render(request, 'landing_not_managed.html')
+ /* Style the breadcrumb */
+ .breadcrumb { display: inline-block; background-color: transparent; }
+diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
+index 6f249bc..695ca5d 100644
+--- a/lib/toaster/toastergui/templates/base.html
++++ b/lib/toaster/toastergui/templates/base.html
+@@ -58,13 +58,12 @@
+ <div class="navbar navbar-static-top">
+     <div class="navbar-inner">
+             <a class="brand logo" href="#"><img src="{% static 'img/logo.png' %}" class="" alt="Yocto logo project"/></a>
+-            <a class="brand" href="/">Toaster</a>
+-            {% if DEBUG %}
+-            <div style="display: inline;" class="version-brand">
+-              <p class="version-text">version {{TOASTER_VERSION}}</p>
+-              <p class="version-text">{%if MANAGED%}managed{%else%}interactive{%endif%} mode</p>
+-            </div>
+-            {% endif %}
++            <span class="brand">
++                <a href="/">Toaster</a>
++                {% if DEBUG %}
++                    <i class="icon-info-sign get-help heading-help" data-placement="bottom" title="Version: {{TOASTER_VERSION}} <br /> Mode: {%if MANAGED%}build{%else%}analysis{%endif%}"></i>
++                {% endif %}
++            </span>
+             <a class="pull-right manual" target="_blank" href="http://www.yoctoproject.org/documentation/toaster-manual">
+                 <i class="icon-book"></i>
+                 Toaster manual
 -- 
 1.9.1
 
