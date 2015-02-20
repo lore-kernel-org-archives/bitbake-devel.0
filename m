@@ -1,21 +1,25 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id E1E4171F1B
+	by mail.openembedded.org (Postfix) with ESMTP id 232B571F1B
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Feb 2015 17:52:57 +0000 (UTC)
+	Fri, 20 Feb 2015 17:52:58 +0000 (UTC)
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
 	by fmsmga103.fm.intel.com with ESMTP; 20 Feb 2015 09:45:16 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.09,616,1418112000"; d="scan'208";a="680980786"
+X-IronPort-AV: E=Sophos;i="5.09,616,1418112000"; d="scan'208";a="680980812"
 Received: from marazel-mobl2.ger.corp.intel.com (HELO
 	peggleto-mobl5.ger.corp.intel.com) ([10.252.23.180])
-	by fmsmga002.fm.intel.com with ESMTP; 20 Feb 2015 09:52:52 -0800
+	by fmsmga002.fm.intel.com with ESMTP; 20 Feb 2015 09:52:54 -0800
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 20 Feb 2015 17:52:40 +0000
-Message-Id: <cover.1424454574.git.paul.eggleton@linux.intel.com>
+Date: Fri, 20 Feb 2015 17:52:42 +0000
+Message-Id: <0dc9f92c9ecd76d98688a15ed09ba4002eefd428.1424454574.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 1.9.3
-Subject: [PATCH 0/3] bitbake-layers layer index fetching support & refactoring
+In-Reply-To: <cover.1424454574.git.paul.eggleton@linux.intel.com>
+References: <cover.1424454574.git.paul.eggleton@linux.intel.com>
+In-Reply-To: <cover.1424454574.git.paul.eggleton@linux.intel.com>
+References: <cover.1424454574.git.paul.eggleton@linux.intel.com>
+Subject: [PATCH 2/3] bitbake-layers: fix logging
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,34 +34,38 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 20 Feb 2015 17:52:58 -0000
 
-Refactor bitbake-layers, fix logging, and allow fetching layers from
-the OE layer index and adding them to bblayers.conf with a single
-command.
+Logging output was simply not getting printed.
 
-Note - there's an additional set of patches that should be applied to
-OE-Core to make this work fully.
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+---
+ bin/bitbake-layers | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-
-The following changes since commit 605298ff3ce919127003dadef95798472327f943:
-
-  toaster: importlayer Remove description input field (2015-02-18 19:08:41 +0000)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib paule/bblayers-layerindex
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bblayers-layerindex
-
-Chong Lu (1):
-  bitbake-layers: add ability to fetch layers and their dependencies
-    from layer index
-
-Paul Eggleton (2):
-  bitbake-layers: refactor to use argparse instead of cmd
-  bitbake-layers: fix logging
-
- bin/bitbake-layers | 525 +++++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 373 insertions(+), 152 deletions(-)
-
+diff --git a/bin/bitbake-layers b/bin/bitbake-layers
+index 2622bc0..fc62386 100755
+--- a/bin/bitbake-layers
++++ b/bin/bitbake-layers
+@@ -39,8 +39,18 @@ import bb.utils
+ import bb.tinfoil
+ 
+ 
+-logger = logging.getLogger('BitBake')
+-
++def logger_create(name, output=sys.stderr):
++    logger = logging.getLogger(name)
++    console = logging.StreamHandler(output)
++    format = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
++    if output.isatty():
++        format.enable_color()
++    console.setFormatter(format)
++    logger.addHandler(console)
++    logger.setLevel(logging.INFO)
++    return logger
++
++logger = logger_create('bitbake-layers')
+ 
+ 
+ class Commands():
 -- 
 1.9.3
 
