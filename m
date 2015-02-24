@@ -1,43 +1,43 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-pa0-f45.google.com (mail-pa0-f45.google.com
-	[209.85.220.45])
-	by mail.openembedded.org (Postfix) with ESMTP id D0A0673643
+Received: from mail-pd0-f180.google.com (mail-pd0-f180.google.com
+	[209.85.192.180])
+	by mail.openembedded.org (Postfix) with ESMTP id 5831E73746
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 Feb 2015 17:21:07 +0000 (UTC)
-Received: by padfa1 with SMTP id fa1so37572099pad.2
+	Tue, 24 Feb 2015 17:21:08 +0000 (UTC)
+Received: by pdev10 with SMTP id v10so34681207pde.10
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 Feb 2015 09:21:09 -0800 (PST)
+	Tue, 24 Feb 2015 09:21:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=7zKjjB7jg1YOHP7pJpZNElidZMuGxQt1oSHJM2kuF6U=;
-	b=iuQQB0S3rZlZkHrp5te8cmtuftr9cRQ53Ryj/Mvr/WE/MaoPZ6MgGbE3hOlnXoW/lr
-	erCITtZI3Myr7GvAxqOv3lHH/p0A+LaKanXI4D6hKdB1y7+eB6MWS+3SLB9XRhzE9oCy
-	v5qICDCU1THgxfmQV8wzlhXJkPWqHVbnz/nibTuBmC1fVf5fOht3177+dDOsmxCE95DZ
-	y94S76NAPKzBXNy+IFbwSvhpkZ8xYUs9f2C068tdkGo9rchT3uIDkwk9SxD7pQW0SU7N
-	yT0zBF+OL+/neLsoPVA8IHGNMsS9RW1gXlQq51TsWHNl3hh/VCzBZs/3RNkkA4HtgV73
-	4O2A==
-X-Gm-Message-State: ALoCoQlO0yCdmCFEqyWTXsbRwp6aM4UlyZMCQXqZNNgWELD6gYK7i6DbyGMgviM94ZSSTp9k3Fji
-X-Received: by 10.68.195.10 with SMTP id ia10mr5241543pbc.113.1424798468912;
-	Tue, 24 Feb 2015 09:21:08 -0800 (PST)
+	bh=OzVIdA6xnUMr8ooV3buix1H6tdYbxrCZhbjVmFRL12M=;
+	b=WYcB8AQ1HI4b+hdS2m13LXmpAfOi4SnBHh99icnsUZVcc7jTuqEJgF10FBI3BBt6z3
+	22oliZdGm463VHB3rJVc4+Viul6MeAQQ6w5L85CkRT68iU7C1PjrgWhDevRH++wCOZRx
+	RDMexefUyEWnWCOirLiPw72YsMAiIbRU3bNBp0y9gpPdpv8NhkryhF8HHoipmnZpqFJL
+	Ax1JpfYCSK6g6YbviWxT7UV+hY+EabAHzRRmURZk7mx/QlitjYFzwrnnZmxJpRfi0LVx
+	OtQ3aiPGlT7cbGAf5rA6lnQ4B2ITN2FwhDUMueDgWkU6Dyr5L5Ib6ehGl9Q5Acv0Kgni
+	cF3Q==
+X-Gm-Message-State: ALoCoQkF3xkhMkErmgw65w+GTA9RjpKefxyquVafLXWLtzudLyJyH+lMTpHEJJd7nYZQkrqugmBk
+X-Received: by 10.66.164.200 with SMTP id ys8mr30521355pab.130.1424798469964; 
+	Tue, 24 Feb 2015 09:21:09 -0800 (PST)
 Received: from adamian-desk.local ([83.217.123.106])
 	by mx.google.com with ESMTPSA id
-	oq4sm25612174pdb.73.2015.02.24.09.21.07
+	ku12sm39897839pab.39.2015.02.24.09.21.07
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Tue, 24 Feb 2015 09:21:08 -0800 (PST)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 977375618C2; Tue, 24 Feb 2015 17:21:01 +0000 (GMT)
+	id 9A4A8561980; Tue, 24 Feb 2015 17:21:01 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Feb 2015 17:20:54 +0000
-Message-Id: <dbadecbdecc12ac7428f1a7485298d1bf189d7d7.1424798369.git.alexandru.damian@intel.com>
+Date: Tue, 24 Feb 2015 17:20:56 +0000
+Message-Id: <c35ff31bd681dca6a84bf3c10cf3ad6356ec7181.1424798369.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <50c0fc6c7d6afead28271d2f2501f025eb0b160e.1424798369.git.alexandru.damian@intel.com>
 References: <50c0fc6c7d6afead28271d2f2501f025eb0b160e.1424798369.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1424798369.git.alexandru.damian@intel.com>
 References: <cover.1424798369.git.alexandru.damian@intel.com>
-Subject: [PATCH 06/12] toaster: Add machine selection notification
+Subject: [PATCH 08/12] toaster: update requirement for Django 1.6
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,88 +52,34 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 24 Feb 2015 17:21:08 -0000
 
-From: Michael Wood <michael.g.wood@intel.com>
+From: Alexandru Damian <alexandru.damian@intel.com>
 
-This adds a notification to the project page to notify users of the
-change in project configuration.
+In order to bring in transaction.set_commit support,
+we need Django 1.6, discarding support for Django 1.5
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+This patch removes 1.5 from the list of acceptable Django
+versions.
+
+Signed-off-by: Alexandru Damian <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/static/css/default.css    | 6 ++++++
- lib/toaster/toastergui/static/js/layerdetails.js | 2 +-
- lib/toaster/toastergui/static/js/machines.js     | 3 +--
- lib/toaster/toastergui/static/js/projectapp.js   | 9 +++++++++
- 4 files changed, 17 insertions(+), 3 deletions(-)
+ bin/toaster | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/toaster/toastergui/static/css/default.css b/lib/toaster/toastergui/static/css/default.css
-index f97e6c4..277888b 100644
---- a/lib/toaster/toastergui/static/css/default.css
-+++ b/lib/toaster/toastergui/static/css/default.css
-@@ -237,4 +237,10 @@ div.add-deps { margin-top: 15px; }
- .animate-repeat.ng-enter.ng-enter-active {
-   opacity:1;
- }
-+
-+@keyframes machines-fade { 0% { background-color: #D9EDF7; } 25% { background-color: #D9EDF7; } 100% { background-color: white; } }
-+@-webkit-keyframes machines-fade { 0% { background-color: #D9EDF7; } 25% { background-color: #D9EDF7; } 100% { background-color: white; } }
-+
-+.machines-highlight { -webkit-animation: machines-fade 7s 1; -moz-animation: machines-fade 7s 1; animation: machines-fade 7s 1; }
-+
- .tab-pane table { margin-top: 10px; }
-diff --git a/lib/toaster/toastergui/static/js/layerdetails.js b/lib/toaster/toastergui/static/js/layerdetails.js
-index 2e713d5..22c40d9 100644
---- a/lib/toaster/toastergui/static/js/layerdetails.js
-+++ b/lib/toaster/toastergui/static/js/layerdetails.js
-@@ -133,7 +133,7 @@ function layerDetailsPageInit (ctx) {
-     var data =  { machineName : $(this).data('machine-name') };
-     libtoaster.editProject(ctx.xhrEditProjectUrl, ctx.projectId, data,
-       function (){
--        window.location.replace(ctx.projectPageUrl);
-+        window.location.replace(ctx.projectPageUrl+"#/machineselected");
-     }, null);
-   });
+diff --git a/bin/toaster b/bin/toaster
+index 04f2e99..7907b57 100755
+--- a/bin/toaster
++++ b/bin/toaster
+@@ -129,8 +129,8 @@ function notify_chldexit() {
+ function verify_prereq() {
+ 	# Verify prerequisites
  
-diff --git a/lib/toaster/toastergui/static/js/machines.js b/lib/toaster/toastergui/static/js/machines.js
-index ee8c980..973a037 100644
---- a/lib/toaster/toastergui/static/js/machines.js
-+++ b/lib/toaster/toastergui/static/js/machines.js
-@@ -77,7 +77,6 @@ function machinesPageInit (ctx) {
-           show_layer_deps_modal(ctx.projectId, layer, data.list, null, null, true, function () {
-             /* Success add deps and layer */
-             setLayerInCurrentPrj(btn, data.list);
--            console.log ("TODO SUCCESS");
-           });
-         }
-       }, null);
-@@ -87,7 +86,7 @@ function machinesPageInit (ctx) {
-     var data =  { machineName : $(this).data('machine-name') };
-     libtoaster.editProject(ctx.xhrEditProjectUrl, ctx.projectId, data,
-       function (){
--        window.location.replace(ctx.projectPageUrl);
-+        window.location.replace(ctx.projectPageUrl+"#/machineselected");
-     }, null);
-   });
+-    if ! echo "import django; print (1,) == django.VERSION[0:1] and django.VERSION[1:2][0] in (5,6)" | python 2>/dev/null | grep True >/dev/null; then
+-        echo -e "This program needs Django 1.5 or 1.6. Please install with\n\npip install django==1.6\n"
++    if ! echo "import django; print (1,) == django.VERSION[0:1] and django.VERSION[1:2][0] in (6,)" | python 2>/dev/null | grep True >/dev/null; then
++        echo -e "This program needs Django 1.6. Please install with\n\npip install django==1.6\n"
+         return 2
+     fi
  
-diff --git a/lib/toaster/toastergui/static/js/projectapp.js b/lib/toaster/toastergui/static/js/projectapp.js
-index 4d00f40..df811fb 100644
---- a/lib/toaster/toastergui/static/js/projectapp.js
-+++ b/lib/toaster/toastergui/static/js/projectapp.js
-@@ -665,6 +665,15 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
-                     "\">select targets</a> you want to build.", "alert-success");
-         });
- 
-+        _cmdExecuteWithParam("/machineselected", function () {
-+            $scope.displayAlert($scope.zone2alerts, "You have changed the machine to: <strong>" + $scope.machine.name + "</strong>", "alert-info");
-+            var machineDistro = angular.element("#machine-distro");
-+
-+            angular.element("html, body").animate({ scrollTop: machineDistro.position().top }, 700).promise().done(function() {
-+              $animate.addClass(machineDistro, "machines-highlight");
-+            });
-+        });
-+
-         _cmdExecuteWithParam("/layerimported", function (layer) {
-           var imported = $cookieStore.get("layer-imported-alert");
-           var text;
 -- 
 1.9.1
 
