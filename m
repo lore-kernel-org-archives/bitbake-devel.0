@@ -1,43 +1,21 @@
-Return-Path: <alexandru.damian@intel.com>
-Received: from mail-pd0-f171.google.com (mail-pd0-f171.google.com
-	[209.85.192.171])
-	by mail.openembedded.org (Postfix) with ESMTP id E307A71633
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id C9AE171F1B
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 Feb 2015 17:21:09 +0000 (UTC)
-Received: by pdjz10 with SMTP id z10so34828207pdj.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 Feb 2015 09:21:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=va+S/lMrHzCv5NLRF6rjp7X1TCSQ9ATWvLii6isaWu4=;
-	b=AyakrRUV9nZg6DuO29gOubchCfOVEN6bt+UcFBCbqVhS6Bgbb21EYt8VP9Grs9VpBs
-	2gYDu4cFjn5GKoCPdTTRqtOVbUWzRFpyaqvixsabZBk/D4pNbrysktLj7Ymoa1JYUje/
-	HJ3dFwtSbZ+Ag4QdSae8peRVapezeVNsG8bYqACdZOhoKBtmU0bjfwbOC6AsI+asMiGx
-	JZIhEijZ7QutbDIyt+mEWkKGmYhiDv7djIhAeLseA5HuQ8Yx6/rhyg1A98pp3YiJrjQ5
-	7R3AeaSx14kct6TXSZB5igxHMRHTwNdtvnFgJ7TXcY9l4SFeCb4yLza7iNew/uVs1grk
-	DHpg==
-X-Gm-Message-State: ALoCoQlRNg+ezxVoc2xK61deB0+DMfL9ARHjdM53xloPuI6wqEGaMp08PV6cB6Lvpx2AsFUCE0Ur
-X-Received: by 10.66.65.138 with SMTP id x10mr29574791pas.152.1424798471276;
-	Tue, 24 Feb 2015 09:21:11 -0800 (PST)
-Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id
-	tn2sm38760105pbc.15.2015.02.24.09.21.09
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 24 Feb 2015 09:21:10 -0800 (PST)
-Received: by adamian-desk.local (Postfix, from userid 1000)
-	id A1406561ABB; Tue, 24 Feb 2015 17:21:01 +0000 (GMT)
-From: Alex DAMIAN <alexandru.damian@intel.com>
+	Wed, 25 Feb 2015 15:30:11 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 25 Feb 2015 07:30:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.09,645,1418112000"; d="scan'208";a="683267056"
+Received: from gcattani-mobl.ger.corp.intel.com (HELO
+	peggleto-mobl5.ger.corp.intel.com) ([10.252.20.5])
+	by fmsmga002.fm.intel.com with ESMTP; 25 Feb 2015 07:30:01 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 24 Feb 2015 17:21:00 +0000
-Message-Id: <04cf7d5f5e5b75d901a3f989056523d126d09964.1424798369.git.alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <50c0fc6c7d6afead28271d2f2501f025eb0b160e.1424798369.git.alexandru.damian@intel.com>
-References: <50c0fc6c7d6afead28271d2f2501f025eb0b160e.1424798369.git.alexandru.damian@intel.com>
-In-Reply-To: <cover.1424798369.git.alexandru.damian@intel.com>
-References: <cover.1424798369.git.alexandru.damian@intel.com>
-Subject: [PATCH 12/12] toasterui: fix ETA calculation
+Date: Wed, 25 Feb 2015 15:29:57 +0000
+Message-Id: <cover.1424878172.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 1.9.3
+Subject: [PATCH 0/1] bitbake-layers fix
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,33 +28,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 24 Feb 2015 17:21:11 -0000
+X-List-Received-Date: Wed, 25 Feb 2015 15:30:12 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+The following change since commit 8a5c83c953c1e541704fe979e90d9d3be66e9ffd:
 
-This patch fixes the ETA calculation.
+  toasterui: fix ETA calculation (2015-02-24 23:35:39 +0000)
 
-[YOCTO 7349]
+is available in the git repository at:
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
----
- lib/toaster/orm/models.py | 2 +-
+  git://git.yoctoproject.org/poky-contrib paule/bitbake-layers-fix
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bitbake-layers-fix
+
+Paul Eggleton (1):
+  bitbake-layers: fix wildcard support in remove-layer
+
+ bin/bitbake-layers | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 01ad16e..d2b579f 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -194,7 +194,7 @@ class Build(models.Model):
-         eta = timezone.now()
-         completeper = self.completeper()
-         if self.completeper() > 0:
--            eta += ((eta - self.started_on)*100)/completeper
-+            eta += ((eta - self.started_on)*(100-completeper))/completeper
-         return eta
- 
- 
 -- 
-1.9.1
+1.9.3
 
 
