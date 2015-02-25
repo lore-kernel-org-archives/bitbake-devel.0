@@ -1,21 +1,25 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id C9AE171F1B
+	by mail.openembedded.org (Postfix) with ESMTP id 159D2736E7
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 25 Feb 2015 15:30:11 +0000 (UTC)
+	Wed, 25 Feb 2015 15:30:12 +0000 (UTC)
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 25 Feb 2015 07:30:02 -0800
+	by fmsmga101.fm.intel.com with ESMTP; 25 Feb 2015 07:30:03 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.09,645,1418112000"; d="scan'208";a="683267056"
+X-IronPort-AV: E=Sophos;i="5.09,645,1418112000"; d="scan'208";a="683267077"
 Received: from gcattani-mobl.ger.corp.intel.com (HELO
 	peggleto-mobl5.ger.corp.intel.com) ([10.252.20.5])
-	by fmsmga002.fm.intel.com with ESMTP; 25 Feb 2015 07:30:01 -0800
+	by fmsmga002.fm.intel.com with ESMTP; 25 Feb 2015 07:30:02 -0800
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 25 Feb 2015 15:29:57 +0000
-Message-Id: <cover.1424878172.git.paul.eggleton@linux.intel.com>
+Date: Wed, 25 Feb 2015 15:29:58 +0000
+Message-Id: <84e8e8c2bfba2e7ce5200be7c7a78e543d601a68.1424878172.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 1.9.3
-Subject: [PATCH 0/1] bitbake-layers fix
+In-Reply-To: <cover.1424878172.git.paul.eggleton@linux.intel.com>
+References: <cover.1424878172.git.paul.eggleton@linux.intel.com>
+In-Reply-To: <cover.1424878172.git.paul.eggleton@linux.intel.com>
+References: <cover.1424878172.git.paul.eggleton@linux.intel.com>
+Subject: [PATCH 1/1] bitbake-layers: fix wildcard support in remove-layer
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,21 +34,29 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 25 Feb 2015 15:30:12 -0000
 
-The following change since commit 8a5c83c953c1e541704fe979e90d9d3be66e9ffd:
+The recent refactoring caused use of wildcards to trigger a traceback
+because the old variable name was being used.
 
-  toasterui: fix ETA calculation (2015-02-24 23:35:39 +0000)
+Fixes [YOCTO #7367].
 
-is available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib paule/bitbake-layers-fix
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bitbake-layers-fix
-
-Paul Eggleton (1):
-  bitbake-layers: fix wildcard support in remove-layer
-
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+---
  bin/bitbake-layers | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/bin/bitbake-layers b/bin/bitbake-layers
+index a86ad1c..89662c7 100755
+--- a/bin/bitbake-layers
++++ b/bin/bitbake-layers
+@@ -119,7 +119,7 @@ Removes the specified layer from bblayers.conf
+             return 1
+ 
+         if args.layerdir.startswith('*'):
+-            layerdir = dirname
++            layerdir = args.layerdir
+         else:
+             layerdir = os.path.abspath(args.layerdir)
+         (_, notremoved) = bb.utils.edit_bblayers_conf(bblayers_conf, None, layerdir)
 -- 
 1.9.3
 
