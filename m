@@ -1,43 +1,26 @@
-Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f182.google.com (mail-we0-f182.google.com
-	[74.125.82.182])
-	by mail.openembedded.org (Postfix) with ESMTP id B9DDB7378C
+Return-Path: <clemens.lang@bmw-carit.de>
+X-Greylist: delayed 330 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 27 Feb 2015 12:05:59 UTC
+Received: from mail.bmw-carit.de (mail.bmw-carit.de [62.245.222.98])
+	by mail.openembedded.org (Postfix) with ESMTP id 83117737A3
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 26 Feb 2015 21:42:26 +0000 (UTC)
-Received: by wesu56 with SMTP id u56so15033657wes.10
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 26 Feb 2015 13:42:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=AmlgEwhrxA4GkCo1uiitZ1egK/YTczB110wU6CsHmCI=;
-	b=FWKKm9guNkLjvABO4QL+gPOpjk4qIvh3UZ5mSnLWe975opEG/+Gs1fIIsBmNsT0WjA
-	QzfiPT4b5KKJX8dY64rIh/FpRJ9OnoGcUWhfZTVlMbC1qYXwTeg0sTYgEuOHiiYl3NWB
-	SkdslmX2TfCV0MUx0J1tfVMxTS0SmaO+n4FCxpOyLccuEJdKXFqAWLf9kHISumFbsc2N
-	xy7An061oIkZhs9zE0J0Ulrpg8xNhRJF/tE1w8pYoMBQx+2IpQOHVMA1S3z0eC5WekEg
-	ajLjIPJd3Xhd7vRKxp/SiUOfkSOsgkRx0geREnCEWXQ9MwXH8iGva4YmUO1QbPVnLJcD
-	WbQA==
-X-Gm-Message-State: ALoCoQmkYNcEG7iRqTWNYTl1PhEy6G323fHDcVM/2O2uqU7UpasFja5JZVne8uGLJG4oOvDY0iQ6
-X-Received: by 10.180.206.14 with SMTP id lk14mr54410735wic.71.1424986947185; 
-	Thu, 26 Feb 2015 13:42:27 -0800 (PST)
-Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id hd5sm19492wib.21.2015.02.26.13.42.24
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 26 Feb 2015 13:42:25 -0800 (PST)
-Received: by adamian-desk.local (Postfix, from userid 1000)
-	id C83B956180A; Thu, 26 Feb 2015 21:42:02 +0000 (GMT)
-From: Alex DAMIAN <alexandru.damian@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 26 Feb 2015 21:42:01 +0000
-Message-Id: <a6e7f3f18be36fe837ec0f646bb703a87b8a9ffa.1424986746.git.alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <21cb6ea0acdaec4a3aa133790a17c7055b9a1348.1424986746.git.alexandru.damian@intel.com>
-References: <21cb6ea0acdaec4a3aa133790a17c7055b9a1348.1424986746.git.alexandru.damian@intel.com>
-In-Reply-To: <cover.1424986746.git.alexandru.damian@intel.com>
-References: <cover.1424986746.git.alexandru.damian@intel.com>
-Cc: David Reyna <David.Reyna@windriver.com>
-Subject: [PATCH 8/8] toaster: config var layout fixes
+	Fri, 27 Feb 2015 12:05:59 +0000 (UTC)
+Received: from exchange2010.bmw-carit.intra ([192.168.100.28]:42644
+	helo=mail.bmw-carit.de)
+	by mail.bmw-carit.de with esmtps (TLSv1:AES128-SHA:128)
+	(Exim 4.82_1-5b7a7c0-XX) (envelope-from <Clemens.Lang@bmw-carit.de>)
+	id 1YRJam-0005D7-1W; Fri, 27 Feb 2015 13:00:28 +0100
+Received: from localhost (10.242.6.42) by Exchange2010.bmw-carit.intra
+	(192.168.100.28) with Microsoft SMTP Server (TLS) id 14.1.218.12;
+	Fri, 27 Feb 2015 13:00:27 +0100
+Date: Fri, 27 Feb 2015 13:00:26 +0100
+From: Clemens Lang <clemens.lang@bmw-carit.de>
+To: <bitbake-devel@lists.openembedded.org>
+Message-ID: <20150227120026.GA13973@ulm-bmuc496424.bmw-carit.de>
+MIME-Version: 1.0
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Originating-IP: [10.242.6.42]
+Subject: [PATCH] bitbake: fetch2: Revalidate checksums, YOCTO #5571
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,110 +33,241 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 26 Feb 2015 21:42:26 -0000
+X-List-Received-Date: Fri, 27 Feb 2015 12:06:00 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-From: David Reyna <David.Reyna@windriver.com>
+Hi,
 
-Block duplicates of custom variables regardless of case, fix spacing of
-delete icon, no extra error msg on blank DISTRO name
+I wrote a patch to implement checksum verification after the initial
+download to catch the case of modified checksums in the recipe while the
+cached download and done stamp are unmodified.
 
-[YOCTO #7359]
+The change imports cPickle, but I don't think that's an issue, because
+it is already used in other parts of bitbake. The use of cPickle avoids
+recomputing the checksums each time do_fetch runs, which could take a
+while for large downloads.
 
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
+Here's the patch, please review and consider applying:
+
+From 30a168607be0b66a6310b1104738b839bc119898 Mon Sep 17 00:00:00 2001
+From: Clemens Lang <clemens.lang@bmw-carit.de>
+Date: Fri, 6 Feb 2015 16:23:01 +0100
+Subject: [PATCH] bitbake: fetch2: Revalidate checksums, YOCTO #5571
+
+[YOCTO #5571] -- https://bugzilla.yoctoproject.org/show_bug.cgi?id=5571
+
+The following workflow (whether accidentally or deliberately) would
+previously not result in a checksum error, but would be helpful to do
+so:
+ - Write a recipe with correct checksums
+ - Fetch the sources for this recipe using bitbake
+ - Change the checksums
+Since the bitbake fetcher writes a done stamp after the initial download
+and does not verify the checksums again (even if they are changed in the
+recipe afterwards), the change of checksums is silently ignored.
+
+Fix this without the overhead of computing the checksums from scratch on
+every do_fetch by storing them in pickled format in the done stamp and
+verifying that they still match those in the recipe.
+
+Signed-off-by: Clemens Lang <clemens.lang@bmw-carit.de>
 ---
- lib/toaster/toastergui/static/css/default.css     |  2 +-
- lib/toaster/toastergui/templates/projectconf.html | 22 +++++++++++-----------
- 2 files changed, 12 insertions(+), 12 deletions(-)
+ bitbake/lib/bb/fetch2/__init__.py | 106 ++++++++++++++++++++++++++++++++++----
+ 1 file changed, 96 insertions(+), 10 deletions(-)
 
-diff --git a/lib/toaster/toastergui/static/css/default.css b/lib/toaster/toastergui/static/css/default.css
-index 0cf0f19..dc1b92a 100644
---- a/lib/toaster/toastergui/static/css/default.css
-+++ b/lib/toaster/toastergui/static/css/default.css
-@@ -151,7 +151,7 @@ select { width: auto; }
- #dependencies_modal_form { margin-bottom: 0px; }
+diff --git a/bitbake/lib/bb/fetch2/__init__.py b/bitbake/lib/bb/fetch2/__init__.py
+index 599ea8c..c0c8312 100644
+--- a/bitbake/lib/bb/fetch2/__init__.py
++++ b/bitbake/lib/bb/fetch2/__init__.py
+@@ -45,6 +45,13 @@ _checksum_cache = bb.checksum.FileChecksumCache()
  
- /* Configuration styles */
--.icon-trash { color: #B94A48; font-size: 16px; padding-left: 2px; }
-+.icon-trash { color: #B94A48; font-size: 16px; padding-left: 5px; }
- .icon-trash:hover { color: #943A38; text-decoration: none; cursor: pointer; }
- .icon-pencil, .icon-download-alt, .icon-refresh, .icon-star-empty, .icon-star, .icon-tasks { font-size: 16px; color: #0088CC; padding-left: 2px; }
- .icon-pencil:hover, .icon-download-alt:hover, .icon-refresh:hover, .icon-star-empty:hover, .icon-star:hover, .icon-tasks:hover { color: #005580; text-decoration: none; cursor: pointer; }
-diff --git a/lib/toaster/toastergui/templates/projectconf.html b/lib/toaster/toastergui/templates/projectconf.html
-index dde8a11..774e9ea 100644
---- a/lib/toaster/toastergui/templates/projectconf.html
-+++ b/lib/toaster/toastergui/templates/projectconf.html
-@@ -23,12 +23,12 @@
-                 <i class="icon-pencil" id="change-distro-icon"></i>
-                 <form id="change-distro-form" style="display:none;">
-                     <div class="input-append">
--                  <span  id="edit-distro-name-div" class="control-group">
--                        <input type="text" id="new-distro" value="{{distro}}">
--                        <button id="apply-change-distro" class="btn" type="button">Save</button>
--                        <button id="cancel-change-distro" type="button" class="btn btn-link">Cancel</button>
-+                        <span  id="edit-distro-name-div" class="control-group">
-+                            <input type="text" id="new-distro" value="{{distro}}">
-+                            <button id="apply-change-distro" class="btn" type="button">Save</button>
-+                            <button id="cancel-change-distro" type="button" class="btn btn-link">Cancel</button>
-+                        </span>
-                         <span class="help-block error" id="distro-error-message"></span>
--                  </span>
-                     </div>
-                 </form>
-             </dd>
-@@ -52,7 +52,7 @@
-                 <i class="icon-question-sign get-help" title="Specifies additional packages to install into an image. If your build creates more than one image, the packages will be installed in <strong>all of them</strong> <br /><a href='http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-IMAGE_INSTALL' target='_blank'>Read more in the manual</a>"></i>
-             </dt>
-             <dd class="lead">
--                <span id="image_install">{% if image_install_append %}{{image_install_append}}{%else%}<i>Not set</i>{%endif%}</span>
-+                <span id="image_install"{% if image_install_append %}{%else%} class="muted"{%endif%}>{% if image_install_append %}{{image_install_append}}{%else%}Not set{%endif%}</span>
-                 <i class="icon-pencil" id="change-image_install-icon"></i>
-                 <i class="icon-trash" id="delete-image_install-icon" {% if image_install_append %}{%else%}style="display:none;"{%endif%}></i>
-                 <form id="change-image_install-form" style="display:none;">
-@@ -198,14 +198,14 @@
+ logger = logging.getLogger("BitBake.Fetcher")
  
-             var existing_configvars = document.getElementsByClassName('js-config-var-name');
-             for (var i = 0, length = existing_configvars.length; i < length; i++) {
--                if (existing_configvars[i].innerHTML == variable) {
-+                if (existing_configvars[i].innerHTML.toUpperCase() == variable.toUpperCase()) {
-                     error_msg = "This variable is already set in this page, edit its value instead";
-                 }
-             }
++try:
++    import cPickle as pickle
++except ImportError:
++    import pickle
++    logger.info("Importing cPickle failed. "
++                "Falling back to a very slow implementation.")
++
+ class BBFetchException(Exception):
+     """Class all fetch exceptions inherit from"""
+     def __init__(self, message):
+@@ -525,7 +532,7 @@ def fetcher_compare_revisions(d):
+ def mirror_from_string(data):
+     return [ i.split() for i in (data or "").replace('\\n','\n').split('\n') if i ]
  
-             var blacklist_configvars = document.getElementsByClassName('js-config-blacklist-name');
-             for (var i = 0, length = blacklist_configvars.length; i < length; i++) {
--                if (blacklist_configvars[i].value == variable.toUpperCase()) {
-+                if (blacklist_configvars[i].value.toUpperCase() == variable.toUpperCase()) {
-                     error_msg = "You cannot edit this variable in Toaster because it is set by the build servers";
-                 }
-             }
-@@ -257,7 +257,7 @@
-             if (has_spaces) {
-                 error_msg = "A valid distro name cannot include spaces";
-             } else if (0 == value.length) {
--                error_msg = "A valid distro name cannot be empty";
-+                error_msg = " ";
-             }
+-def verify_checksum(ud, d):
++def verify_checksum(ud, d, precomputed={}):
+     """
+     verify the MD5 and SHA256 checksum for downloaded src
  
-             if ("" != error_msg) {
-@@ -609,7 +609,7 @@
-                 var name = $('#new-image_install').val();
-                 postEditAjaxRequest({"configvarChange" : 'IMAGE_INSTALL_append:'+name});
-                 $('#image_install').text(name);
--                $('#image_install').parent().removeClass('muted');
-+                $('#image_install').removeClass('muted');
-                 $("#change-image_install-form").slideUp(function () {
-                     $('#image_install, #change-image_install-icon').show();
-                     if (name.length > -1) {
-@@ -624,7 +624,7 @@
-                 $(this).tooltip('hide');
-                 postEditAjaxRequest({"configvarChange" : 'IMAGE_INSTALL_append:'+''});
-                 $('#image_install').parent().fadeOut(1000, function(){
--                    $('#image_install').parent().addClass('muted');
-+                    $('#image_install').addClass('muted');
-                     $('#image_install').text('Not set');
-                     $('#delete-image_install-icon').hide();
-                     $('#image_install').parent().fadeIn(1000);
+@@ -533,13 +540,28 @@ def verify_checksum(ud, d):
+     the downloaded file, or if BB_STRICT_CHECKSUM is set and there are no
+     checksums specified.
+ 
++    Returns a dict of checksums that can be stored in a done stamp file and
++    passed in as precomputed parameter in a later call to avoid re-computing
++    the checksums from the file. This allows verifying the checksums of the
++    file against those in the recipe each time, rather than only after
++    downloading. See https://bugzilla.yoctoproject.org/show_bug.cgi?id=5571.
+     """
+ 
++    _MD5_KEY = "md5"
++    _SHA256_KEY = "sha256"
++
+     if ud.ignore_checksums or not ud.method.supports_checksum(ud):
+-        return
++        return {}
+ 
+-    md5data = bb.utils.md5_file(ud.localpath)
+-    sha256data = bb.utils.sha256_file(ud.localpath)
++    if _MD5_KEY in precomputed:
++        md5data = precomputed[_MD5_KEY]
++    else:
++        md5data = bb.utils.md5_file(ud.localpath)
++
++    if _SHA256_KEY in precomputed:
++        sha256data = precomputed[_SHA256_KEY]
++    else:
++        sha256data = bb.utils.sha256_file(ud.localpath)
+ 
+     if ud.method.recommends_checksum(ud):
+         # If strict checking enabled and neither sum defined, raise error
+@@ -589,6 +611,66 @@ def verify_checksum(ud, d):
+     if len(msg):
+         raise ChecksumError('Checksum mismatch!%s' % msg, ud.url, md5data)
+ 
++    return {
++        _MD5_KEY: md5data,
++        _SHA256_KEY: sha256data
++    }
++
++
++def verify_donestamp(ud, d):
++    """
++    Check whether the done stamp file has the right checksums (if the fetch
++    method supports them). If it doesn't, delete the done stamp and force
++    a re-download.
++
++    Returns True, if the donestamp exists and is valid, False otherwise. When
++    returning False, any existing done stamps are removed.
++    """
++    if not os.path.exists(ud.donestamp):
++        return False
++
++    if not ud.method.supports_checksum(ud):
++        # done stamp exists, checksums not supported; assume the local file is
++        # current
++        return True
++
++    if not os.path.exists(ud.localpath):
++        # done stamp exists, but the downloaded file does not; the done stamp
++        # must be incorrect, re-trigger the download
++        bb.utils.remove(ud.donestamp)
++        return False
++
++    precomputed_checksums = {}
++    try:
++        with open(ud.donestamp, "rb") as cachefile:
++            pickled = pickle.Unpickler(cachefile)
++            precomputed_checksums.update(pickled.load())
++    except Exception as e:
++        # Avoid the warnings on the upgrade path from emtpy done stamp files to
++        # those containing the checksums.
++        if not isinstance(e, EOFError):
++            # Ignore errors, they aren't fatal
++            logger.warn("Couldn't load checksums from donestamp %s: %s "
++                        "(msg: %s)" % (ud.donestamp, type(e).__name__, str(e)))
++
++    try:
++        checksums = verify_checksum(ud, d, precomputed_checksums)
++        # If the cache file did not have the checksums, compute and store them
++        # as an upgrade path from the previous done stamp file format.
++        if checksums != precomputed_checksums:
++            with open(ud.donestamp, "wb") as cachefile:
++                p = pickle.Pickler(cachefile, pickle.HIGHEST_PROTOCOL)
++                p.dump(checksums)
++        return True
++    except ChecksumError as e:
++        # Checksums failed to verify, trigger re-download and remove the
++        # incorrect stamp file.
++        logger.warn("Checksum mismatch for local file %s\n"
++                    "Cleaning and trying again." % ud.localpath)
++        rename_bad_checksum(ud, e.checksum)
++        bb.utils.remove(ud.donestamp)
++    return False
++
+ 
+ def update_stamp(ud, d):
+     """
+@@ -603,8 +685,11 @@ def update_stamp(ud, d):
+             # Errors aren't fatal here
+             pass
+     else:
+-        verify_checksum(ud, d)
+-        open(ud.donestamp, 'w').close()
++        checksums = verify_checksum(ud, d)
++        # Store the checksums for later re-verification against the recipe
++        with open(ud.donestamp, "wb") as cachefile:
++            p = pickle.Pickler(cachefile, pickle.HIGHEST_PROTOCOL)
++            p.dump(checksums)
+ 
+ def subprocess_setup():
+     # Python installs a SIGPIPE handler by default. This is usually not what
+@@ -805,7 +890,7 @@ def try_mirror_url(origud, ud, ld, check = False):
+ 
+         os.chdir(ld.getVar("DL_DIR", True))
+ 
+-        if not os.path.exists(ud.donestamp) or ud.method.need_update(ud, ld):
++        if not verify_donestamp(ud, ld) or ud.method.need_update(ud, ld):
+             ud.method.download(ud, ld)
+             if hasattr(ud.method,"build_mirror_data"):
+                 ud.method.build_mirror_data(ud, ld)
+@@ -821,12 +906,13 @@ def try_mirror_url(origud, ud, ld, check = False):
+         dldir = ld.getVar("DL_DIR", True)
+         if origud.mirrortarball and os.path.basename(ud.localpath) == os.path.basename(origud.mirrortarball) \
+                 and os.path.basename(ud.localpath) != os.path.basename(origud.localpath):
++            # Create donestamp in old format to avoid triggering a re-download
+             bb.utils.mkdirhier(os.path.dirname(ud.donestamp))
+             open(ud.donestamp, 'w').close()
+             dest = os.path.join(dldir, os.path.basename(ud.localpath))
+             if not os.path.exists(dest):
+                 os.symlink(ud.localpath, dest)
+-            if not os.path.exists(origud.donestamp) or origud.method.need_update(origud, ld):
++            if not verify_donestamp(origud, ld) or origud.method.need_update(origud, ld):
+                 origud.method.download(origud, ld)
+                 if hasattr(origud.method,"build_mirror_data"):
+                     origud.method.build_mirror_data(origud, ld)
+@@ -1422,7 +1508,7 @@ class Fetch(object):
+             try:
+                 self.d.setVar("BB_NO_NETWORK", network)
+  
+-                if os.path.exists(ud.donestamp) and not m.need_update(ud, self.d):
++                if verify_donestamp(ud, self.d) and not m.need_update(ud, self.d):
+                     localpath = ud.localpath
+                 elif m.try_premirror(ud, self.d):
+                     logger.debug(1, "Trying PREMIRRORS")
+@@ -1435,7 +1521,7 @@ class Fetch(object):
+                 os.chdir(self.d.getVar("DL_DIR", True))
+ 
+                 firsterr = None
+-                if not localpath and ((not os.path.exists(ud.donestamp)) or m.need_update(ud, self.d)):
++                if not localpath and ((not verify_donestamp(ud, self.d)) or m.need_update(ud, self.d)):
+                     try:
+                         logger.debug(1, "Trying Upstream")
+                         m.download(ud, self.d)
 -- 
-1.9.1
+2.1.0
 
+-- 
+Clemens Lang • Development Specialist
+BMW Car IT GmbH • Lise-Meitner-Str. 14 • 89081 Ulm • http://bmw-carit.com
+-------------------------------------------------------------------------
+BMW Car IT GmbH
+Geschäftsführer: Michael Würtenberger und Reinhard Stolle
+Sitz und Registergericht: München HRB 134810
+-------------------------------------------------------------------------
 
