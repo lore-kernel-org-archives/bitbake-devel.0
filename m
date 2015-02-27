@@ -1,26 +1,30 @@
-Return-Path: <Rob.Woolley@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 431AF73745
+Return-Path: <gmstima@gmail.com>
+Received: from mail-lb0-f173.google.com (mail-lb0-f173.google.com
+	[209.85.217.173])
+	by mail.openembedded.org (Postfix) with ESMTP id BB4A1605B3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 27 Feb 2015 14:32:28 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.14.9/8.14.5) with ESMTP id t1REWQlH009968
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	Fri, 27 Feb 2015 15:33:39 +0000 (UTC)
+Received: by lbvn10 with SMTP id n10so18025878lbv.6
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 27 Feb 2015 06:32:26 -0800 (PST)
-Received: from yow-rwoolley-lx.wrs.com (128.224.146.40) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
-	14.3.174.1; Fri, 27 Feb 2015 06:32:26 -0800
-From: Rob Woolley <rob.woolley@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 27 Feb 2015 09:32:22 -0500
-Message-ID: <1425047544-4820-2-git-send-email-rob.woolley@windriver.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1425047544-4820-1-git-send-email-rob.woolley@windriver.com>
-References: <1425047544-4820-1-git-send-email-rob.woolley@windriver.com>
+	Fri, 27 Feb 2015 07:33:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:date:message-id:subject:from:to:content-type;
+	bh=ValbkUC69g2tNOiBZj0R3va2ijSxRhc9kLPgydDZg/A=;
+	b=EchMn4TjoSWkPey3jYQePrYJyk2Ye0qxpU4O7LKiZjczl+moSFd0fSXh2oiX/kt+9L
+	i13RzkXdNPkbWdR27pkWXzAbN1oCUIdwuQTfXOFyzN3Q8sY1GESWBmh02F00ESlaWstP
+	3g9L3isvf13/altrz17km4pwNuhV5+qIITYk5tLbPsAfQdKDL5/NK2dSilbXqVCiy279
+	jIILfajMlWWDDWRwddTjjrmNa/bZuz8Dj+KugivfqiYQwJfqpG7m54frz76ETKdPEVVt
+	Q6rb+VDUj4ZrGebpFb2UldPV3t7yqfoLmJfhK6UjyLn8ZcaNB+rgCdwtJLM/Dm4hYKiI
+	lj+w==
 MIME-Version: 1.0
-Subject: [PATCH 1/3] knotty: Catch exceptions on broken pipes
+X-Received: by 10.152.29.102 with SMTP id j6mr13399523lah.12.1425051218933;
+	Fri, 27 Feb 2015 07:33:38 -0800 (PST)
+Received: by 10.152.25.167 with HTTP; Fri, 27 Feb 2015 07:33:38 -0800 (PST)
+Date: Fri, 27 Feb 2015 17:33:38 +0200
+Message-ID: <CAGpdKUJbZ=hdXW2MLMr3wcK98JYDQnPJ8mxVxzW1v4q2hcK_qg@mail.gmail.com>
+From: Roman Savchenko <gmstima@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: Run postscript
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,77 +37,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 27 Feb 2015 14:32:28 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 27 Feb 2015 15:33:43 -0000
+Content-Type: multipart/alternative; boundary=089e0158c098b0fc8f051013978d
 
-Any exceptions that occur in calls to logging methods are automatically 
-suppressed, including exceptions due to broken pipes.
+--089e0158c098b0fc8f051013978d
+Content-Type: text/plain; charset=UTF-8
 
-However, the knotty summary messages are printed directly to stdout, which
-means that any broken pipes will cause an exception traceback in python.
+Hi all,
 
-By wrapping the summary section in a try / catch block we can check for
-IOError exceptions caused by broken pipes and let them pass.
+does bitbake have post-build-triggers? Where can I read about it?
 
-Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
----
- lib/bb/ui/knotty.py | 43 ++++++++++++++++++++++++-------------------
- 1 file changed, 24 insertions(+), 19 deletions(-)
+Many thanks for help.
 
-diff --git a/lib/bb/ui/knotty.py b/lib/bb/ui/knotty.py
-index ea20ddc..09a4e0c 100644
---- a/lib/bb/ui/knotty.py
-+++ b/lib/bb/ui/knotty.py
-@@ -536,24 +536,29 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-             if not params.observe_only:
-                 _, error = server.runCommand(["stateForceShutdown"])
-             main.shutdown = 2
--    summary = ""
--    if taskfailures:
--        summary += pluralise("\nSummary: %s task failed:",
--                             "\nSummary: %s tasks failed:", len(taskfailures))
--        for failure in taskfailures:
--            summary += "\n  %s" % failure
--    if warnings:
--        summary += pluralise("\nSummary: There was %s WARNING message shown.",
--                             "\nSummary: There were %s WARNING messages shown.", warnings)
--    if return_value and errors:
--        summary += pluralise("\nSummary: There was %s ERROR message shown, returning a non-zero exit code.",
--                             "\nSummary: There were %s ERROR messages shown, returning a non-zero exit code.", errors)
--    if summary:
--        print(summary)
--
--    if interrupted:
--        print("Execution was interrupted, returning a non-zero exit code.")
--        if return_value == 0:
--            return_value = 1
-+    try:
-+         summary = ""
-+         if taskfailures:
-+             summary += pluralise("\nSummary: %s task failed:",
-+                                  "\nSummary: %s tasks failed:", len(taskfailures))
-+             for failure in taskfailures:
-+                 summary += "\n  %s" % failure
-+         if warnings:
-+             summary += pluralise("\nSummary: There was %s WARNING message shown.",
-+                                  "\nSummary: There were %s WARNING messages shown.", warnings)
-+         if return_value and errors:
-+             summary += pluralise("\nSummary: There was %s ERROR message shown, returning a non-zero exit code.",
-+                                  "\nSummary: There were %s ERROR messages shown, returning a non-zero exit code.", errors)
-+         if summary:
-+             print(summary)
-+
-+         if interrupted:
-+             print("Execution was interrupted, returning a non-zero exit code.")
-+             if return_value == 0:
-+                 return_value = 1
-+    except IOError as e:
-+        import errno
-+        if e.errno == errno.EPIPE:
-+            pass
- 
-     return return_value
--- 
-1.8.3.1
+Regards,
+R. Savchnko
 
+--089e0158c098b0fc8f051013978d
+Content-Type: text/html; charset=UTF-8
 
+<div dir="ltr"><div><div><div>Hi all,<br><br></div>does bitbake have post-build-triggers? Where can I read about it?<br><br></div><div>Many thanks for help.<br></div><div><br></div>Regards,<br></div>R. Savchnko<br></div>
+
+--089e0158c098b0fc8f051013978d--
