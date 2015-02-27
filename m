@@ -1,30 +1,28 @@
-Return-Path: <gmstima@gmail.com>
-Received: from mail-lb0-f173.google.com (mail-lb0-f173.google.com
-	[209.85.217.173])
-	by mail.openembedded.org (Postfix) with ESMTP id BB4A1605B3
+Return-Path: <S.Mueller-Klieser@phytec.de>
+X-Greylist: delayed 477 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 27 Feb 2015 16:00:38 UTC
+Received: from root.phytec.de (mail.x-arc.de [217.6.246.34])
+	by mail.openembedded.org (Postfix) with ESMTP id 75D45737E7
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 27 Feb 2015 15:33:39 +0000 (UTC)
-Received: by lbvn10 with SMTP id n10so18025878lbv.6
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 27 Feb 2015 07:33:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:date:message-id:subject:from:to:content-type;
-	bh=ValbkUC69g2tNOiBZj0R3va2ijSxRhc9kLPgydDZg/A=;
-	b=EchMn4TjoSWkPey3jYQePrYJyk2Ye0qxpU4O7LKiZjczl+moSFd0fSXh2oiX/kt+9L
-	i13RzkXdNPkbWdR27pkWXzAbN1oCUIdwuQTfXOFyzN3Q8sY1GESWBmh02F00ESlaWstP
-	3g9L3isvf13/altrz17km4pwNuhV5+qIITYk5tLbPsAfQdKDL5/NK2dSilbXqVCiy279
-	jIILfajMlWWDDWRwddTjjrmNa/bZuz8Dj+KugivfqiYQwJfqpG7m54frz76ETKdPEVVt
-	Q6rb+VDUj4ZrGebpFb2UldPV3t7yqfoLmJfhK6UjyLn8ZcaNB+rgCdwtJLM/Dm4hYKiI
-	lj+w==
+	Fri, 27 Feb 2015 16:00:38 +0000 (UTC)
+Received: from idefix.phytec.de (idefix.phytec.de [172.16.0.10])
+	by root.phytec.de (Postfix) with ESMTP id 2305AA0010B;
+	Fri, 27 Feb 2015 16:53:33 +0100 (CET)
+In-Reply-To: <CAGpdKUJbZ=hdXW2MLMr3wcK98JYDQnPJ8mxVxzW1v4q2hcK_qg@mail.gmail.com>
+References: <CAGpdKUJbZ=hdXW2MLMr3wcK98JYDQnPJ8mxVxzW1v4q2hcK_qg@mail.gmail.com>
+To: Roman Savchenko <gmstima@gmail.com>
 MIME-Version: 1.0
-X-Received: by 10.152.29.102 with SMTP id j6mr13399523lah.12.1425051218933;
-	Fri, 27 Feb 2015 07:33:38 -0800 (PST)
-Received: by 10.152.25.167 with HTTP; Fri, 27 Feb 2015 07:33:38 -0800 (PST)
-Date: Fri, 27 Feb 2015 17:33:38 +0200
-Message-ID: <CAGpdKUJbZ=hdXW2MLMr3wcK98JYDQnPJ8mxVxzW1v4q2hcK_qg@mail.gmail.com>
-From: Roman Savchenko <gmstima@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: Run postscript
+X-KeepSent: CE633C5D:56550AF3-C1257DF9:0056EE90;
+ type=4; name=$KeepSent
+X-Mailer: IBM Notes Release 9.0.1 October 14, 2013
+Message-ID: <OFCE633C5D.56550AF3-ONC1257DF9.0056EE90-C1257DF9.005738E9@phytec.de>
+From: =?ISO-8859-1?Q?Stefan_M=FCller-Klieser?= <S.Mueller-Klieser@phytec.de>
+Date: Fri, 27 Feb 2015 16:52:42 +0100
+X-MIMETrack: Serialize by Router on Idefix/Phytec(Release 9.0.1FP2
+	HF590|December 11, 2014) at 27.02.2015 16:52:42,
+	Serialize complete at 27.02.2015 16:52:42
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Antwort: Run postscript
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,24 +35,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 27 Feb 2015 15:33:43 -0000
-Content-Type: multipart/alternative; boundary=089e0158c098b0fc8f051013978d
+X-List-Received-Date: Fri, 27 Feb 2015 16:00:40 -0000
+Content-Type: text/plain; charset="US-ASCII"
 
---089e0158c098b0fc8f051013978d
-Content-Type: text/plain; charset=UTF-8
+Hi Roman,
 
-Hi all,
-
-does bitbake have post-build-triggers? Where can I read about it?
-
-Many thanks for help.
+I suppose you work with poky, then maybe this is what you are looking for:
+http://www.yoctoproject.org/docs/latest/mega-manual/mega-manual.html#var-ROOTFS_POSTPROCESS_COMMAND
 
 Regards,
-R. Savchnko
+Stefan
 
---089e0158c098b0fc8f051013978d
-Content-Type: text/html; charset=UTF-8
+bitbake-devel-bounces@lists.openembedded.org wrote on 02/27/2015 04:33:38 
+PM:
 
-<div dir="ltr"><div><div><div>Hi all,<br><br></div>does bitbake have post-build-triggers? Where can I read about it?<br><br></div><div>Many thanks for help.<br></div><div><br></div>Regards,<br></div>R. Savchnko<br></div>
+> Von: Roman Savchenko <gmstima@gmail.com>
+> An: bitbake-devel@lists.openembedded.org
+> Datum: 02/27/2015 04:34 PM
+> Betreff: [bitbake-devel] Run postscript
+> Gesendet von: bitbake-devel-bounces@lists.openembedded.org
+> 
+> Hi all,
 
---089e0158c098b0fc8f051013978d--
+> does bitbake have post-build-triggers? Where can I read about it?
+
+> Many thanks for help.
+> 
+> Regards,
+> R. Savchnko-- 
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+
+
