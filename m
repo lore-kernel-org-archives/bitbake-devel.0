@@ -1,21 +1,19 @@
 Return-Path: <rpjday@crashcourse.ca>
-X-Greylist: delayed 3550 seconds by postgrey-1.34 at layers.openembedded.org;
-	Sat, 07 Mar 2015 17:15:59 UTC
 Received: from astoria.ccjclearline.com (astoria.ccjclearline.com
 	[64.235.106.9])
-	by mail.openembedded.org (Postfix) with ESMTP id 70CE3738ED
+	by mail.openembedded.org (Postfix) with ESMTP id 5C4606AC36
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  7 Mar 2015 17:15:59 +0000 (UTC)
-Received: from [99.240.204.5] (port=41598 helo=crashcourse.ca)
+	Sun,  8 Mar 2015 09:12:12 +0000 (UTC)
+Received: from [99.240.204.5] (port=46373 helo=crashcourse.ca)
 	by astoria.ccjclearline.com with esmtpsa (TLSv1:AES128-SHA:128)
 	(Exim 4.80) (envelope-from <rpjday@crashcourse.ca>)
-	id 1YUHPG-0000kP-EV for bitbake-devel@lists.openembedded.org;
-	Sat, 07 Mar 2015 11:16:50 -0500
-Date: Sat, 7 Mar 2015 11:16:45 -0500 (EST)
+	id 1YUXFv-0000KF-Mr for bitbake-devel@lists.openembedded.org;
+	Sun, 08 Mar 2015 05:12:15 -0400
+Date: Sun, 8 Mar 2015 05:12:11 -0400 (EDT)
 From: "Robert P. J. Day" <rpjday@crashcourse.ca>
 X-X-Sender: rpjday@Device-040570
 To: BitBake developer list <bitbake-devel@lists.openembedded.org>
-Message-ID: <alpine.LFD.2.11.1503071053070.28079@Device-040570>
+Message-ID: <alpine.LFD.2.11.1503080507510.16693@Device-040570>
 User-Agent: Alpine 2.11 (LFD 23 2013-08-11)
 MIME-Version: 1.0
 X-AntiAbuse: This header was added to track abuse,
@@ -27,7 +25,7 @@ X-AntiAbuse: Sender Address Domain - crashcourse.ca
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-Subject: suddenly confused by appends and overrides being used together
+Subject: i think "bitbake -c" needs to be explained more thoroughly
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,102 +38,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 07 Mar 2015 17:16:00 -0000
+X-List-Received-Date: Sun, 08 Mar 2015 09:12:13 -0000
 Content-Type: TEXT/PLAIN; charset=US-ASCII
 
 
-  thought i understood how appending and overrides work together but a
-simple example suggests i have no clue.  from the in-progress bitbake
-user manual here:
+  not sure it's entirely clear from the docs that, if one runs
+"bitbake -c <task>", it is entirely possible that dependent tasks
+might also be run.
 
-http://www.yoctoproject.org/docs/latest/bitbake-user-manual/bitbake-user-manual.html
+  for instance, "bitbake -h" describes it as:
 
-section 3.2.3, this first example looks right (start excerpt):
+  -c CMD, --cmd=CMD     Specify the task to execute. The exact options
+                        available depend on the metadata. Some examples might
+                        be 'compile' or 'populate_sysroot' or 'listtasks' may
+                        give a list of the tasks available.
 
-     OVERRIDES = "foo"
-     A = "Z"
-     A_foo_append = "X"
+and the bitbake user manual, section 1.5.2.2, reads:
 
+"This next example "PROVIDES" the package name and also uses the "-c"
+option to tell BitBake to just execute the do_clean task:
 
-For this case, A is unconditionally set to "Z" and "X" is
-unconditionally and immediately appended to the variable A_foo.
-Because overrides have not been applied yet, A_foo is set to "X" due
-to the append and A simply equals "Z"."  (end of manual excerpt)
+     $ bitbake -c clean foo
 
-  ok, i buy that ... A is set to "Z", and the statement after that
-then appends "X" to the variable (in this case) A_foo. and, if i
-understand this properly, that string "A_foo" has no special override
-processing because it was, in a sense, protected by the _append
-operator. so using chris larson's "bb" utility i can verify:
+  both of these kind of suggest that *only* that task will be run, but
+recently, darren hart explained it more clearly on the YP list:
 
-$ bb show A
-A="Z"
-$ bb show A_foo
-A_foo="X"
-
-  however, i'm confused by the statement above, "Because overrides
-have not been applied yet, ...". well, it's not so much that the
-overrides haven't been applied "yet" as that they will *not* be
-applied in this case, correct? in what way will assigning something to
-the expression "A_foo_append" have any effect on the final value of A?
-
-  the next example in the manual right below that also looks correct,
-as the override is the *last* part of the LHS expression and is
-therefore(?) processed immediately and has an effect:
-
-"This next example changes the order of the override and the append:
-
-     OVERRIDES = "foo"
-     A = "Z"
-     A_append_foo = "X"
+https://lists.yoctoproject.org/pipermail/yocto/2015-February/023822.html
 
 
-For this case, before overrides are handled, A is set to "Z" and
-A_append_foo is set to "X". Once the override for "foo" is applied,
-however, A gets appended with "X". Consequently, A becomes "ZX".
-Notice that spaces are not appended. (end of excerpt)
+"It will run everything necessary up to and including that task. If
+everything, including that task, have already been run, it will run only
+the specified task again.
 
-and i accept all that as well, as shown by "bb":
+You can verify this with:
 
-$ bb show A
-A="ZX"
-$ bb show A_foo
-WARNING: Requested variable 'A_foo' does not exist
+1 $ bitbake virtual/kernel
+2 $ bitbake virtual/kernel -c kernel_configme -f
+3 $ bitbake virtual/kernel -c cleansstate
+4 $ bitbake virtual/kernel -c kernel_configme -f"
 
-  but it's the next example that's confusing:
-
-"This next example has the order of the appends and overrides reversed
-back as in the first example:
-
-     OVERRIDES = "foo"
-     A = "Y"
-     A_foo_append = "Z"
-     A_foo_append += "X"
-
-
-For this case, before any overrides are resolved, A is set to "Y"
-using an immediate assignment. After this immediate assignment, A_foo
-is set to "Z", and then further appended with "X" leaving the variable
-set to "Z X". Finally, applying the override for "foo" results in the
-conditional variable A becoming "Z X" (i.e. A is replaced with A_foo).
-(end of excerpt)
-
-  um ... what? in what way is this any different from the *first*
-example above, for which the final values are:
-
-$ bb show A
-A="Y"
-$ bb show A_foo
-A_foo="Z X"
-
-  so, no, the final value of A is not "Z X" as the above suggests. am
-i misreading this? am i getting misleading answers from "bb"? i'm
-having trouble seeing the value of the expression:
-
-  VAR_<override>_append = ...
-
-where i just don't see how that will have any effect on the final
-value of VAR.
+and i don't think that's necessarily clear from the current docs.
 
 rday
 
