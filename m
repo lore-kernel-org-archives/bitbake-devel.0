@@ -1,29 +1,24 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 8E20473A6D
+Return-Path: <Qi.Chen@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 2A59A73A65
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Mar 2015 14:28:00 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t2AES1ab015149 for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Mar 2015 14:28:01 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id xX6dE4UECVJY for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Mar 2015 14:28:01 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t2AERmcO015140
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	Wed, 11 Mar 2015 03:20:52 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.14.9/8.14.5) with ESMTP id t2B3KrBp020419
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Mar 2015 14:28:00 GMT
-Message-ID: <1425997668.9114.24.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Tue, 10 Mar 2015 14:27:48 +0000
-X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
-Mime-Version: 1.0
-Subject: [PATCH] event: Improve exception handling
+	Tue, 10 Mar 2015 20:20:53 -0700 (PDT)
+Received: from pek-qchen1-d1.corp.ad.wrs.com (128.224.162.236) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+	14.3.224.2; Tue, 10 Mar 2015 20:20:53 -0700
+From: Chen Qi <Qi.Chen@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Wed, 11 Mar 2015 11:21:05 +0800
+Message-ID: <cover.1425969366.git.Qi.Chen@windriver.com>
+X-Mailer: git-send-email 1.9.1
+MIME-Version: 1.0
+Subject: [PATCH 0/1] bitbake-diffsigs: consider the situation where sigdata and siginfo files having the same hash values
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,52 +31,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Mar 2015 14:28:01 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 11 Mar 2015 03:20:54 -0000
+Content-Type: text/plain
 
-Currently, if an exception occurs during an event handler execution, 
-things can get messy and in many cases the system will loop
-indefinitely, particularly if its being triggered through idle handler
-code.
+The following changes since commit 8ce2f2c3549248b2aa1259ceb28ed03be166ac6f:
 
-This patch changes things so that unhandled exceptions print an error
-onto the console/logs, then continue, rather than raising an exception
-into "higher" level code which simply can't handle it.
+  maintainers.inc: Became maintainer of python2 and python3 (2015-03-09 16:01:08 +0000)
 
-In particular this is more in keeping with the meaning of "Handled"
-exceptions. Real world error cases triggering these code paths were much
-more stable after these changes than before (which just looped
-infinitely printing exceptions).
+are available in the git repository at:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+  git://git.pokylinux.org/poky-contrib ChenQi/bitbake-diffsigs-duplicates
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=ChenQi/bitbake-diffsigs-duplicates
 
-diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
-index fec6a05..62a8f4f 100644
---- a/bitbake/lib/bb/event.py
-+++ b/bitbake/lib/bb/event.py
-@@ -74,17 +74,17 @@ def execute_handler(name, handler, event, d):
-     event.data = d
-     try:
-         ret = handler(event)
--    except (bb.parse.SkipRecipe, bb.BBHandledException):
-+    except bb.parse.SkipRecipe:
-         raise
-+    except bb.BBHandledException:
-+        pass
-     except Exception:
-         etype, value, tb = sys.exc_info()
-         logger.error("Execution of event handler '%s' failed" % name,
-                         exc_info=(etype, value, tb.tb_next))
--        raise
-     except SystemExit as exc:
-         if exc.code != 0:
--            logger.error("Execution of event handler '%s' failed" % name)
--        raise
-+            logger.error("Execution of event handler '%s' failed (exit code %s)" % (name, exc.code))
-     finally:
-         del event.data
- 
+Chen Qi (1):
+  bitbake-diffsigs: consider the situation where sigdata and siginfo
+    files having the same hash values
 
+ bitbake/bin/bitbake-diffsigs | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+-- 
+1.9.1
 
 
