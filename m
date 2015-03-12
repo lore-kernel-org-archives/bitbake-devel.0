@@ -1,42 +1,28 @@
-Return-Path: <alexandru.damian@intel.com>
-Received: from mail-we0-f181.google.com (mail-we0-f181.google.com
-	[74.125.82.181])
-	by mail.openembedded.org (Postfix) with ESMTP id 9D12773B45
+Return-Path: <Rob.Woolley@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id EAC5573B40
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Mar 2015 10:46:52 +0000 (UTC)
-Received: by wesq59 with SMTP id q59so15378652wes.9
+	Thu, 12 Mar 2015 15:25:11 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail.windriver.com (8.14.9/8.14.5) with ESMTP id t2CFPCca011485
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Mar 2015 03:46:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=yZ5Nk0zodt5PzPX1NeCLq9zZw3Li50xsUuZqFga587s=;
-	b=XVTGu8vTd/iMrZM/FKyTN6F2TFN0XBAcVdDR50VHZu7vm316Lbkst2PSAoB7xpCkv5
-	sAhHFZ6bu+CwshfRaFUcgpMMopPyDcA/HjUaTg3dOXFWHjJb2AuNQNr0nVozkshq/t94
-	MFhhaHl4bF4sWyZk1GCzZ514UpSqZRCDxYZ+34U2lAfyAFTtdIkkFwAmnJ6kCQlptpJt
-	lMtBuEVNID4Pi9mhviLdOHOPUkPY4RlsHpcbrmwQuAz9i/azjdXqdgh1hBn57nBcRun2
-	GUAkEDI7ZRHYwtT8LZa/czMvU4QXCshdLl3lBeO6jZtiG+kqTAFd91L4Zu4HK8c5PUtv
-	UgeA==
-X-Gm-Message-State: ALoCoQlwQkFR/rtFeUDpbqAybIlSZjgrAxI3MwjeocChvAED7rGhCp26hUgAFLsgwBF9k4YVdCnE
-X-Received: by 10.180.87.33 with SMTP id u1mr85704106wiz.20.1426157214056;
-	Thu, 12 Mar 2015 03:46:54 -0700 (PDT)
-Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id 17sm9393791wjt.45.2015.03.12.03.46.51
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 12 Mar 2015 03:46:52 -0700 (PDT)
-Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 747AB56269A; Thu, 12 Mar 2015 10:46:51 +0000 (GMT)
-From: Alex DAMIAN <alexandru.damian@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 12 Mar 2015 10:46:46 +0000
-Message-Id: <ba71b6d80f84d000b330db1103e059a2bef339c6.1426156963.git.alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <7f2019767b07ed0e1e4b831d2ec10f0708ef1f2f.1426156963.git.alexandru.damian@intel.com>
-References: <7f2019767b07ed0e1e4b831d2ec10f0708ef1f2f.1426156963.git.alexandru.damian@intel.com>
-In-Reply-To: <cover.1426156963.git.alexandru.damian@intel.com>
-References: <cover.1426156963.git.alexandru.damian@intel.com>
-Subject: [PATCH 13/17] toaster: localhost build increase timeout
+	Thu, 12 Mar 2015 08:25:12 -0700 (PDT)
+Received: from yow-rwoolley-lx.wrs.com (128.224.146.40) by
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+	14.3.224.2; Thu, 12 Mar 2015 08:25:12 -0700
+Message-ID: <5501AFD7.40906@windriver.com>
+Date: Thu, 12 Mar 2015 11:25:11 -0400
+From: Rob Woolley <rob.woolley@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:31.0) Gecko/20100101 Thunderbird/31.4.0
+MIME-Version: 1.0
+To: <bitbake-devel@lists.openembedded.org>
+References: <1425047544-4820-1-git-send-email-rob.woolley@windriver.com>
+In-Reply-To: <1425047544-4820-1-git-send-email-rob.woolley@windriver.com>
+X-Originating-IP: [128.224.146.40]
+Subject: Re: [PATCH 0/3] knotty: Add automatic pager support
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,41 +35,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 12 Mar 2015 10:46:57 -0000
+X-List-Received-Date: Thu, 12 Mar 2015 15:25:13 -0000
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+Hi,
 
-We increase the timeout for waiting bitbake to start
-for localhost builds.
+Just wanted to send out a ping to see if this enhancement is desired.
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
----
- lib/toaster/bldcontrol/localhostbecontroller.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It scratches an itch for me, but not sure how others feel about it.
 
-diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
-index aef9b60..374991b 100644
---- a/lib/toaster/bldcontrol/localhostbecontroller.py
-+++ b/lib/toaster/bldcontrol/localhostbecontroller.py
-@@ -136,7 +136,7 @@ class LocalhostBEController(BuildEnvironmentController):
- 
-         retries = 0
-         started = False
--        while not started and retries < 10:
-+        while not started and retries < 30:
-             started = _toaster_ui_started(toaster_ui_log_filepath, toaster_ui_log_filelength)
-             import time
-             logger.debug("localhostbecontroller: Waiting bitbake server to start")
-@@ -144,7 +144,7 @@ class LocalhostBEController(BuildEnvironmentController):
-             retries += 1
- 
-         if not started:
--            raise BuildSetupException("localhostbecontroller: Bitbake server did not start in 5 seconds, aborting (Error: '%s')" % (cmdoutput))
-+            raise BuildSetupException("localhostbecontroller: Bitbake server did not start in 15 seconds, aborting (Error: '%s')" % (cmdoutput))
- 
-         logger.debug("localhostbecontroller: Started bitbake server")
- 
--- 
-1.9.1
+If there are any changes I can make or extra tests I can run, please let 
+me know.
+
+Cheers,
+Rob
+
+On 02/27/2015 09:32 AM, Rob Woolley wrote:
+> The bitbake show_versions (-s) and show_environment (-e) commands provide
+> a lot of non-interactive output.  Even experienced users will sometimes
+> forget to page the output.
+>
+> This series adds a feature to automatically page these commands when
+> using the knotty user interface.  It doesn't affect any other commands
+> and is designed to work in a similar fashion to the auto-paging in git.
+>
+> This was tested with bitbake -s and bitbake -s | less (and -e) to ensure that
+> there were no regressions.  This includes testing broken pipe conditions
+> caused by quitting the pager before the full output has been sent through
+> the pipe.
+>
+> knotty: Catch exceptions on broken pipes
+>   lib/bb/ui/knotty.py |   43 ++++++++++++++++++++++++-------------------
+>   1 file changed, 24 insertions(+), 19 deletions(-)
+>
+> knotty: Do not log show_versions output
+>   lib/bb/ui/knotty.py |    2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> knotty: Add automatic paging for bitbake -s and -e
+>   lib/bb/ui/knotty.py |   46 +++++++++++++++++++++++++++++++++++++++++++---
+>   1 file changed, 43 insertions(+), 3 deletions(-)
 
 
