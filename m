@@ -1,42 +1,41 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f171.google.com (mail-wi0-f171.google.com
-	[209.85.212.171])
-	by mail.openembedded.org (Postfix) with ESMTP id 17EE773B53
+Received: from mail-wg0-f44.google.com (mail-wg0-f44.google.com [74.125.82.44])
+	by mail.openembedded.org (Postfix) with ESMTP id 47DE973B5B
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Mar 2015 10:46:51 +0000 (UTC)
-Received: by wiwh11 with SMTP id h11so36139734wiw.1
+	Thu, 12 Mar 2015 10:46:53 +0000 (UTC)
+Received: by wghk14 with SMTP id k14so15364418wgh.7
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 12 Mar 2015 03:46:52 -0700 (PDT)
+	Thu, 12 Mar 2015 03:46:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=RakWcjARVIH7miIERZGqQguPg/kZT/mSdE+VEE/WLPk=;
-	b=iobxe917aU052pnNPlXPNUhVXx/J0sXcUiVnseKvrAxU6+d+pbU8bBZxbcvxaIfLrV
-	Ra0+tys239wN8wZNP78DQQ5FxIIYd8sLpbHJjRw+WRGUd42Z9Kg+N3ZF9WcZ1pZi/f3T
-	Q0BjMf1GHO4hM0s5GkqgcPAtDQ3EF+3iqDudS8jeZ/V8tB5+J0dAfDXoSSOvwgKjXzgS
-	AvFlEPzEsCEgN9wdepPmlZ23BqUM4pE3bUR+FKXM7wcDl6RXGvKdGCij+3XPoHqhRV0b
-	kMtsS63hz35haTmcH3Huetn2SEKjmENXMmuKKsyuWFeLM4bg8as6K8mqGQ1l6U/PgAx5
-	4tDw==
-X-Gm-Message-State: ALoCoQn7XMJbWPcNcjphps/aitybYcwIaeZ3ZDfH+4fuQnlU7jrEZ6DairDw7znz9gp0W/yyafPp
-X-Received: by 10.180.107.71 with SMTP id ha7mr130881365wib.23.1426157212652; 
-	Thu, 12 Mar 2015 03:46:52 -0700 (PDT)
+	bh=wzAKsUgHQ9Ql8CPS4t1Weh/fr6HhuKM/jQQwoTBMu9U=;
+	b=bDmCftZxAY6IkBOZRcFX2bYcmVStEucmSF5qwLQnuXE6gRjn1j7IdKUNj8XodBEVEz
+	LNU4wb8b2/3AX+v9iRkAQZffw6gk7x2+kpbewk+49OBCP/U1HsaP+hT1jtGwDglyjRBF
+	x7AW/l9JVoPGLrzpZLajaXpSLfBnEyqL4BPeHoi6h1HBU1W7+DnJQPy5PJxGx19V45PL
+	7X7rbjddIIlHDvvCrJtfvlnQmdAWTwsK5Dr1gOVgAgy+nn/tKh10BJLib+TvsfRHpbR7
+	6TGPFVSAfoGAsAYb3HxR1vrhFi7a00xXyjVWpSKSEnw6GiGHO2D6Ts6KY+iJAbenk4Ow
+	ZVyQ==
+X-Gm-Message-State: ALoCoQksfUvkLY2EUvzacovnf/+XWWmLVhr/pg+rcJn7hkAuiBqMYmuCkTb2Tm8cm4KCLeho3Yol
+X-Received: by 10.180.208.107 with SMTP id md11mr44454779wic.10.1426157214433; 
+	Thu, 12 Mar 2015 03:46:54 -0700 (PDT)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id j7sm10127442wix.4.2015.03.12.03.46.50
+	by mx.google.com with ESMTPSA id u16sm9458637wjr.5.2015.03.12.03.46.51
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Thu, 12 Mar 2015 03:46:51 -0700 (PDT)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 6C85456201A; Thu, 12 Mar 2015 10:46:51 +0000 (GMT)
+	id 719C15621D1; Thu, 12 Mar 2015 10:46:51 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 12 Mar 2015 10:46:41 +0000
-Message-Id: <48f11489aca033f76bb9175a4088ba524cfdffc6.1426156963.git.alexandru.damian@intel.com>
+Date: Thu, 12 Mar 2015 10:46:44 +0000
+Message-Id: <409600a7e2291c4b98ed09fd47164551666d05c9.1426156963.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <7f2019767b07ed0e1e4b831d2ec10f0708ef1f2f.1426156963.git.alexandru.damian@intel.com>
 References: <7f2019767b07ed0e1e4b831d2ec10f0708ef1f2f.1426156963.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1426156963.git.alexandru.damian@intel.com>
 References: <cover.1426156963.git.alexandru.damian@intel.com>
-Subject: [PATCH 08/17] toastergui: project app build command fix
+Subject: [PATCH 11/17] toastergui: improve toaster suggestion
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,49 +52,79 @@ X-List-Received-Date: Thu, 12 Mar 2015 10:46:53 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-This patch fixes the build command in the angular
-project for builds triggered from All targets page.
+Improving the suggestions by ordering entries
+based on position of the search string.
+
+Speed improvements in suggestion calls.
+
+[YOCTO #7152]
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/static/js/projectapp.js | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ lib/toaster/toastergui/views.py | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/lib/toaster/toastergui/static/js/projectapp.js b/lib/toaster/toastergui/static/js/projectapp.js
-index 82db107..6b1bbb4 100644
---- a/lib/toaster/toastergui/static/js/projectapp.js
-+++ b/lib/toaster/toastergui/static/js/projectapp.js
-@@ -327,7 +327,7 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
-         }).error(function(_data, _status, _headers, _config) {
-             if (_status === 0) {
-                 // the server has gone away
--                alert("The server is not responding. The application will terminate now");
-+                // alert("The server is not responding. The application will terminate now");
-                 $interval.cancel($scope.pollHandle);
-             }
-             else {
-@@ -652,9 +652,9 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
-      */
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 541b16a..807bf9b 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -2259,7 +2259,7 @@ if toastermain.settings.MANAGED:
+             # return all project settings
+             return HttpResponse(jsonfilter( {
+                 "error": "ok",
+-                "layers" :  map(lambda x: {"id": x.layercommit.pk, "orderid" : x.pk, "name" : x.layercommit.layer.name, "giturl" : x.layercommit.layer.vcs_url, "url": x.layercommit.layer.layer_index_url, "layerdetailurl": reverse("layerdetails", args=(x.layercommit.layer.pk,)), "branch" : { "name" : x.layercommit.get_vcs_reference(), "layersource" : x.layercommit.up_branch.layer_source.name}}, prj.projectlayer_set.all().select_related("layer").order_by("id")),
++                "layers" :  map(lambda x: {"id": x.layercommit.pk, "orderid" : x.pk, "name" : x.layercommit.layer.name, "giturl" : x.layercommit.layer.vcs_url, "url": x.layercommit.layer.layer_index_url, "layerdetailurl": reverse("layerdetails", args=(x.layercommit.pk,)), "branch" : { "name" : x.layercommit.get_vcs_reference(), "layersource" : x.layercommit.up_branch.layer_source.name}}, prj.projectlayer_set.all().select_related("layer").order_by("id")),
+                 "builds" : _project_recent_build_list(prj),
+                 "variables": map(lambda x: (x.name, x.value), prj.projectvariable_set.all()),
+                 "machine": {"name": prj.projectvariable_set.get(name="MACHINE").value},
+@@ -2356,11 +2356,13 @@ if toastermain.settings.MANAGED:
+             # returns targets provided by current project layers
+             if request.GET['type'] == "targets":
+                 search_token = request.GET.get('value','')
+-                queryset_all = Recipe.objects.filter(Q(name__icontains=search_token) | Q(layer_version__layer__name__icontains=search_token) )
+-                layer_equivalent_set = []
+-                for i in prj.projectlayer_set.all():
+-                    layer_equivalent_set += i.layercommit.get_equivalents_wpriority(prj)
+-                queryset_all = queryset_all.filter(layer_version__in =  layer_equivalent_set)
++                queryset_all = Recipe.objects.filter(layer_version__layer__name__in = [x.layercommit.layer.name for x in prj.projectlayer_set.all().select_related("layercommit__layer")]).filter(Q(name__icontains=search_token) | Q(layer_version__layer__name__icontains=search_token))
++
++#                layer_equivalent_set = []
++#                for i in prj.projectlayer_set.all().select_related("layercommit__up_branch", "layercommit__layer"):
++#                    layer_equivalent_set += i.layercommit.get_equivalents_wpriority(prj)
++
++#                queryset_all = queryset_all.filter(layer_version__in =  layer_equivalent_set)
  
-     $scope.updateDisplayWithCommands = function() {
--        cmd = $location.path();
+                 # if we have more than one hit here (for distinct name and version), max the id it out
+                 queryset_all_maxids = queryset_all.values('name').distinct().annotate(max_id=Max('id')).values_list('max_id')
+@@ -2368,8 +2370,13 @@ if toastermain.settings.MANAGED:
  
-         function _cmdExecuteWithParam(param, f) {
-+            var cmd = $location.path();
-             if (cmd.indexOf(param) === 0) {
-                 if (cmd.indexOf("=") > -1) {
-                     var parameter = cmd.split("=", 2)[1];
-@@ -725,8 +725,9 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
-         _cmdExecuteWithParam("/targetbuild=", function (targets) {
-             var oldTargetName = $scope.targetName;
-             $scope.targetName = targets.split(",").join(" ");
--            $scope.targetNamedBuild();
-+            $scope.buildNamedTarget();
-             $scope.targetName = oldTargetName;
-+            $location.path('');
-         });
  
-         _cmdExecuteWithParam("/machineselect=", function (machine) {
+                 return HttpResponse(jsonfilter({ "error":"ok",
+-                    "list" : map ( lambda x: {"id": x.pk, "name": x.name, "detail":"[" + x.layer_version.layer.name +"]"},
++                    "list" :
++                        # 7152 - sort by token position
++                        sorted (
++                            map ( lambda x: {"id": x.pk, "name": x.name, "detail":"[" + x.layer_version.layer.name +"]"},
+                         queryset_all[:8]),
++                            key = lambda i: i["name"].find(search_token) if i["name"].find(search_token) > -1 else 9999,
++                        )
+ 
+                     }), content_type = "application/json")
+ 
+@@ -2383,7 +2390,12 @@ if toastermain.settings.MANAGED:
+                 queryset_all = queryset_all.filter(Q(name__icontains=search_token) | Q(description__icontains=search_token))
+ 
+                 return HttpResponse(jsonfilter({ "error":"ok",
+-                        "list" : map ( lambda x: {"id": x.pk, "name": x.name, "detail":"[" + x.layer_version.layer.name+ "]"}, queryset_all[:8])
++                        "list" :
++                        # 7152 - sort by the token position
++                        sorted (
++                            map ( lambda x: {"id": x.pk, "name": x.name, "detail":"[" + x.layer_version.layer.name+ "]"}, queryset_all[:8]),
++                            key = lambda i: i["name"].find(search_token) if i["name"].find(search_token) > -1 else 9999,
++                        )
+                     }), content_type = "application/json")
+ 
+             # returns all projects
 -- 
 1.9.1
 
