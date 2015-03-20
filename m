@@ -1,26 +1,42 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id CD7C16013D
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-pd0-f182.google.com (mail-pd0-f182.google.com
+	[209.85.192.182])
+	by mail.openembedded.org (Postfix) with ESMTP id E9EEA73919
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Mar 2015 08:59:47 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 20 Mar 2015 01:59:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.11,435,1422950400"; d="scan'208";a="701555117"
-Received: from fmarott-mobl10.ger.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.252.10.101])
-	by orsmga002.jf.intel.com with ESMTP; 20 Mar 2015 01:59:47 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: "Robert P. J. Day" <rpjday@crashcourse.ca>
-Date: Fri, 20 Mar 2015 08:59:45 +0000
-Message-ID: <2428587.0qHGqDTWeo@peggleto-mobl.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.14.4 (Linux/3.18.9-200.fc21.x86_64; KDE/4.14.4; x86_64; ; )
-In-Reply-To: <alpine.LFD.2.11.1503110447450.28973@localhost>
-References: <alpine.LFD.2.11.1503110447450.28973@localhost>
-MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: what happens if i set up a class function for exporting, but don't export?
+	Fri, 20 Mar 2015 10:25:34 +0000 (UTC)
+Received: by pdbni2 with SMTP id ni2so105049062pdb.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 20 Mar 2015 03:25:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references:in-reply-to:references;
+	bh=ZoFAR9TuombThzp/kR6W9y/ML6PABF7lRexhrumuy0w=;
+	b=EelXcJhySn7S3Cav/0eKRaYQ6BZnxhRMOhrpNGNCsNS1NmiNtIyGxb6ysqgJ23e9cu
+	s1epU6VcC3HK+b2EOHa5sK9lIytmeXDMfDELWX8cKyS4BhQ/hTMWueq91feQ0NGHZ2lU
+	qSGnLcJpW9sPAh2nY0FEQU4co9JCQE41zcszjxBKpxywKThwqpmEOKckdNmytYO9kukU
+	GarfuFBQDHxQfqwNem5t1aUKdgK1btpfK/6rA0XG3R5DGYQD/MI7dLHr3j7setdWhNp7
+	6XQuYndDnpJtw12RavCTOABsjd4a5xWLn2Sh1Ayelg9dO8wZVjq51WMbBLFxOlxL+ZHX
+	xkSw==
+X-Gm-Message-State: ALoCoQltDIFxTRkKayMq5shJqMQweTBUGvO6S5AsQO3tQbJquAiJb2Z29cRDkLeygxCM5VFUhjx3
+X-Received: by 10.66.102.34 with SMTP id fl2mr184682447pab.40.1426847135471;
+	Fri, 20 Mar 2015 03:25:35 -0700 (PDT)
+Received: from adamian-desk.local ([83.217.123.106])
+	by mx.google.com with ESMTPSA id y9sm7328599pdj.90.2015.03.20.03.25.34
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 20 Mar 2015 03:25:34 -0700 (PDT)
+Received: by adamian-desk.local (Postfix, from userid 1000)
+	id AC0665640FC; Fri, 20 Mar 2015 10:25:32 +0000 (GMT)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 20 Mar 2015 10:25:19 +0000
+Message-Id: <ca8062627886484f8897ec09fb489bd78abde29e.1426598797.git.alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <dae2559f8e6d87d54939bc73f4044916df29d93c.1426598797.git.alexandru.damian@intel.com>
+References: <dae2559f8e6d87d54939bc73f4044916df29d93c.1426598797.git.alexandru.damian@intel.com>
+In-Reply-To: <cover.1426598797.git.alexandru.damian@intel.com>
+References: <cover.1426598797.git.alexandru.damian@intel.com>
+Subject: [PATCH 02/14] toaster: targets page performance improvement
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,29 +49,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 20 Mar 2015 08:59:48 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Fri, 20 Mar 2015 10:25:35 -0000
 
-On Wednesday 11 March 2015 04:50:14 Robert P. J. Day wrote:
->   reading bitbake user manual, section 3.4.5, "Flexible Inheritance
-> for Class Functions", and i know how it works, but what happens if
-> you're writing a .bbclass file, define a function with the format such
-> that it's ready for exporting:
-> 
->   <classname>_<functionmame>
-> 
-> but subsequently don't export it with EXPORT_FUNCTIONS? by what name
-> will it still be available to inheriting files?
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Whether EXPORT_FUNCTIONS is used or not, the function will always be callable 
-as <classname>_<functionname> (since that's how you have defined it).
+Yet another performance improvement, this time by forcing
+two-step evaluation instead of using subqueries to select data.
 
-Cheers,
-Paul
+This avoid using full-table lookups on un-indexed temporary
+tables.
 
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+---
+ lib/toaster/toastergui/views.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index fe016cc..439c068 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -2767,7 +2767,10 @@ if toastermain.settings.MANAGED:
+         queryset_with_search = _get_queryset(Recipe, queryset_all, None, search_term, ordering_string, '-name')
+ 
+         # get unique values for 'name', and select the maximum ID for each entry (the max id is the newest one)
+-        queryset_with_search_maxids = queryset_with_search.values('name').distinct().annotate(max_id=Max('id')).values_list('max_id')
++
++        # force evaluation of the query here; to process the MAX/GROUP BY, a temporary table is used, on which indexing is very slow
++        # by forcing the evaluation here we also prime the caches
++        queryset_with_search_maxids = map(lambda i: i[0], list(queryset_with_search.values('name').distinct().annotate(max_id=Max('id')).values_list('max_id')))
+ 
+         queryset_with_search = queryset_with_search.filter(id__in=queryset_with_search_maxids).select_related('layer_version', 'layer_version__layer', 'layer_version__up_branch', 'layer_source')
+ 
 -- 
+1.9.1
 
-Paul Eggleton
-Intel Open Source Technology Centre
 
