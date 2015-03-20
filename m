@@ -1,24 +1,26 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 3A9E965CD0
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id CD7C16013D
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Mar 2015 05:27:35 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.9/8.14.5) with ESMTP id t2J5RaJ8015935
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 18 Mar 2015 22:27:37 -0700 (PDT)
-Received: from ala-blade48.wrs.com (147.11.105.68) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.224.2;
-	Wed, 18 Mar 2015 22:27:36 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 18 Mar 2015 22:27:35 -0700
-Message-ID: <cover.1426742824.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.9.5
+	Fri, 20 Mar 2015 08:59:47 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 20 Mar 2015 01:59:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.11,435,1422950400"; d="scan'208";a="701555117"
+Received: from fmarott-mobl10.ger.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.252.10.101])
+	by orsmga002.jf.intel.com with ESMTP; 20 Mar 2015 01:59:47 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: "Robert P. J. Day" <rpjday@crashcourse.ca>
+Date: Fri, 20 Mar 2015 08:59:45 +0000
+Message-ID: <2428587.0qHGqDTWeo@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.14.4 (Linux/3.18.9-200.fc21.x86_64; KDE/4.14.4; x86_64; ; )
+In-Reply-To: <alpine.LFD.2.11.1503110447450.28973@localhost>
+References: <alpine.LFD.2.11.1503110447450.28973@localhost>
 MIME-Version: 1.0
-Subject: [PATCH 0/1] knotty.py: fix indent
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: what happens if i set up a class function for exporting, but don't export?
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,25 +33,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 19 Mar 2015 05:27:38 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 20 Mar 2015 08:59:48 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-The following changes since commit df0672b038e6942c97d266af9ca175a06f2b0423:
+On Wednesday 11 March 2015 04:50:14 Robert P. J. Day wrote:
+>   reading bitbake user manual, section 3.4.5, "Flexible Inheritance
+> for Class Functions", and i know how it works, but what happens if
+> you're writing a .bbclass file, define a function with the format such
+> that it's ready for exporting:
+> 
+>   <classname>_<functionmame>
+> 
+> but subsequently don't export it with EXPORT_FUNCTIONS? by what name
+> will it still be available to inheriting files?
 
-  bitbake: toaster: Fix the orderkey to match the column (2015-03-16 17:44:13 +0000)
+Whether EXPORT_FUNCTIONS is used or not, the function will always be callable 
+as <classname>_<functionname> (since that's how you have defined it).
 
-are available in the git repository at:
-
-  git://git.pokylinux.org/poky-contrib rbt/knotty
-  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=rbt/knotty
-
-Robert Yang (1):
-  knotty.py: fix indent
-
- bitbake/lib/bb/ui/knotty.py |   38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+Cheers,
+Paul
 
 -- 
-1.7.9.5
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
