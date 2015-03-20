@@ -1,42 +1,43 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-pd0-f169.google.com (mail-pd0-f169.google.com
-	[209.85.192.169])
-	by mail.openembedded.org (Postfix) with ESMTP id 8B04F739C9
+Received: from mail-pd0-f170.google.com (mail-pd0-f170.google.com
+	[209.85.192.170])
+	by mail.openembedded.org (Postfix) with ESMTP id D1FBD728C2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Mar 2015 10:25:38 +0000 (UTC)
-Received: by pdbop1 with SMTP id op1so104946301pdb.2
+	Fri, 20 Mar 2015 10:25:40 +0000 (UTC)
+Received: by pdnc3 with SMTP id c3so105086274pdn.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Mar 2015 03:25:39 -0700 (PDT)
+	Fri, 20 Mar 2015 03:25:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=TydRohuNOu4aeXKJcbTB1JRhxixCA3uO5eVdiM0HXGw=;
-	b=LEH0qZnX43aFKpIDqcf7+HKJuRb3aWV+9TLz+/IIRBys/TbZw7UTtXKcjqfLC1EUpd
-	xQuiGDVlIpyxf2Rlq7TAZTq8EtgB5vlQ61xkNc7YnekpuoWcByOXshsjr6q4MXc61wLe
-	/zk8CBpMeP8kOG35psw//sNOVnzijVL9MgLx51k2f944aNQOdGCT/oc2SFMdIwQNgqsP
-	N3lU+Xq01DsOPskcOmjl/LaeK1RzBKUPMOYtgBGG9BcE7ErMToY12qWiuf1BJFB4S6Rf
-	kepxupSVimeGJYuZZI73IoVjMzxQ1Bi9fsI+SGWOJorBuG+DnJHMY0jhmJcjdJOf/D5D
-	SJ6A==
-X-Gm-Message-State: ALoCoQnpsSQl9XLQPd8r/iQjQOx2bFQNU5M21hrsdUKoEUMVlS+1qdpskyvCMPmrGBQXZJ6uv6ZU
-X-Received: by 10.70.91.201 with SMTP id cg9mr18477210pdb.144.1426847139516;
-	Fri, 20 Mar 2015 03:25:39 -0700 (PDT)
+	bh=wXu9HfMQIWl4dT4DHE81BKXJyXKwx3sFt1MyVDA7rvo=;
+	b=k7OXh+90GOm9AAqSAsPyfOq4D+zQ5Ct/mCh+H9jwip9mG8x6VbDZPbcKFyjrojcqKz
+	ykcNd1/zuRkkR5j0mNqteYSpTM8KzktCxCk/52zjy3M9PQILypf6FFPjL3diunfP8Qm+
+	ne0SBOzjNt4MlWFWnl7/N74CgjcCKBQiu8Y7Jp9t8clVI7gv3+7OwRi/zZ3ijy3+qKgl
+	ghzyQfH/4kWkBeFQf0qQh4WjUjq8NlVog+Ex4HeGEthk5FZHDiGxKAtwfhva5GFHyKA4
+	ysQ/40C4BrOzUw6stpdFTU9jzXadxRjPcqn5O2CjouM4n2S4t/xxfAt1E/ZDach/sUug
+	QyPw==
+X-Gm-Message-State: ALoCoQmXzTYnWSEDVwWov/nQ1QjJKi5UKC6A6sFl2me72suR5s86kha5D5Dr+hbuDoxqgfWD4oAz
+X-Received: by 10.70.48.239 with SMTP id p15mr126286484pdn.123.1426847142084; 
+	Fri, 20 Mar 2015 03:25:42 -0700 (PDT)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id v5sm7403364pdc.41.2015.03.20.03.25.38
+	by mx.google.com with ESMTPSA id x3sm7465954pdo.0.2015.03.20.03.25.41
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 20 Mar 2015 03:25:38 -0700 (PDT)
+	Fri, 20 Mar 2015 03:25:41 -0700 (PDT)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id B288B56428F; Fri, 20 Mar 2015 10:25:32 +0000 (GMT)
+	id B6B3856444D; Fri, 20 Mar 2015 10:25:32 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 20 Mar 2015 10:25:23 +0000
-Message-Id: <fd165835b00bd5bd9f603322fc5491dacd6bc4da.1426598797.git.alexandru.damian@intel.com>
+Date: Fri, 20 Mar 2015 10:25:26 +0000
+Message-Id: <5cde1c2e86c0df97f367e543a5856e3a2ee34ff6.1426598797.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <dae2559f8e6d87d54939bc73f4044916df29d93c.1426598797.git.alexandru.damian@intel.com>
 References: <dae2559f8e6d87d54939bc73f4044916df29d93c.1426598797.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1426598797.git.alexandru.damian@intel.com>
 References: <cover.1426598797.git.alexandru.damian@intel.com>
-Subject: [PATCH 06/14] toaster: do not throw exception on misconfigured data
+Cc: Dave Lerner <dave.lerner@windriver.com>
+Subject: [PATCH 09/14] toaster: leave cancel enabled for release change
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,32 +50,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 20 Mar 2015 10:25:39 -0000
+X-List-Received-Date: Fri, 20 Mar 2015 10:25:41 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Dave Lerner <dave.lerner@windriver.com>
 
-We do not want to throw an exception while handling exceptions
-that may print information, so replace the exception throwing
-with returning data.
+When you click the 'change' icon to edit the project release, the
+"cancel" button, should always be enabled so that the user can
+return to the 'not editable' state at any time.
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+[YOCTO #7151]
+
+Signed-off-by: Dave Lerner <dave.lerner@windriver.com>
 ---
- lib/toaster/orm/models.py | 2 +-
+ lib/toaster/toastergui/templates/project.html | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index eea98b5..625eb1e 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -1080,7 +1080,7 @@ class Layer_Version(models.Model):
-             return self.branch
-         if self.up_branch is not None:
-             return self.up_branch.name
--        raise Exception("Cannot determine the vcs_reference for layer version %s" % vars(self))
-+        return ("Cannot determine the vcs_reference for layer version %s" % vars(self))
+diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
+index badc8a6..35147c0 100644
+--- a/lib/toaster/toastergui/templates/project.html
++++ b/lib/toaster/toastergui/templates/project.html
+@@ -412,7 +412,7 @@ vim: expandtab tabstop=2
+           <option ng-repeat="r in releases" value="{[r.id]}" ng-selected="r.id == project.release.id">{[r.description]}</option>
+         </select>
+         <input type="submit" class="btn" style="margin-left:5px;" value="Save" ng-disabled="project.release.id == projectVersion"/>
+-        <input type="reset"  class="btn btn-link" value="Cancel" ng-click="toggle('#change-project-version')" ng-disabled="project.release.id == projectVersion"/>
++        <input type="reset"  class="btn btn-link" value="Cancel" ng-click="toggle('#change-project-version')"/>
  
-     def __unicode__(self):
-         return "%d %s (VCS %s, Project %s)" % (self.pk, str(self.layer), self.get_vcs_reference(), self.build.project if self.build is not None else "No project")
+       </form>
+     </div>
 -- 
 1.9.1
 
