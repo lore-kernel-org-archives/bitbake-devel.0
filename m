@@ -1,42 +1,23 @@
-Return-Path: <alexandru.damian@intel.com>
-Received: from mail-pa0-f46.google.com (mail-pa0-f46.google.com
-	[209.85.220.46])
-	by mail.openembedded.org (Postfix) with ESMTP id CEB84739BB
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 30F8E73AD4
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Mar 2015 10:25:42 +0000 (UTC)
-Received: by pabxg6 with SMTP id xg6so92234393pab.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Mar 2015 03:25:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=YULrEJydtRXKVJuKAPHUhL6/L9pRdHnxNyo4v11TTAY=;
-	b=FQsss4jdkZKuN+y0IbQarLj63DTiDEcuOozX3aOeyFEfqrMpLVdYP42DTILGccBxGv
-	yWmo4R1Dy2pQpHDWGpreBeSYNmgVwckb96M8QnuXOWFhoKhZGEwWMPL0rUBP3q2ROpUA
-	D04/YOjBHko/qw0/Kxq+4MXPxYFZ38sFt0oWHf7PQyyqVYSuXMYk6SEq1ac9UjFCTf3P
-	czjcn47+PMgnv0wIsgG8l5/F4ya+3BaHw6BofKOZMWT/aISShDm8P8MaqNuXsNiHIGLx
-	6h+W/j4A+3OVbkpe4INu6lcBTYeoFR+0KQC5nvbTFJ1j1L8MpIW1iEIIXnXmMpVECqos
-	V7GA==
-X-Gm-Message-State: ALoCoQlUG24Z3lti/rMy6Zao7D7GL6ZrtLnR5qbadIXd5W8yWzDi2sm7bcmKA2XkVRBhTkXuYmHZ
-X-Received: by 10.70.65.105 with SMTP id w9mr9556222pds.129.1426847143859;
-	Fri, 20 Mar 2015 03:25:43 -0700 (PDT)
-Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id g3sm7405213pdg.39.2015.03.20.03.25.41
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 20 Mar 2015 03:25:42 -0700 (PDT)
-Received: by adamian-desk.local (Postfix, from userid 1000)
-	id B9C9E564557; Fri, 20 Mar 2015 10:25:32 +0000 (GMT)
-From: Alex DAMIAN <alexandru.damian@intel.com>
+	Fri, 20 Mar 2015 13:13:10 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by orsmga102.jf.intel.com with ESMTP; 20 Mar 2015 06:13:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.11,436,1422950400"; d="scan'208";a="543801903"
+Received: from linux.intel.com ([10.23.219.25])
+	by orsmga003.jf.intel.com with ESMTP; 20 Mar 2015 06:13:11 -0700
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.65])
+	by linux.intel.com (Postfix) with ESMTP id DE3E46A408F;
+	Fri, 20 Mar 2015 06:12:51 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 20 Mar 2015 10:25:28 +0000
-Message-Id: <e335f36beb5e4b30535492b5cfb273f81bd1a3c3.1426598797.git.alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <dae2559f8e6d87d54939bc73f4044916df29d93c.1426598797.git.alexandru.damian@intel.com>
-References: <dae2559f8e6d87d54939bc73f4044916df29d93c.1426598797.git.alexandru.damian@intel.com>
-In-Reply-To: <cover.1426598797.git.alexandru.damian@intel.com>
-References: <cover.1426598797.git.alexandru.damian@intel.com>
-Subject: [PATCH 11/14] toaster: Add cancel build to latest build section
+Date: Fri, 20 Mar 2015 15:13:05 +0200
+Message-Id: <1426857185-13398-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH] bin/bitbake: Create bitbake_main API
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,249 +30,838 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 20 Mar 2015 10:25:43 -0000
+X-List-Received-Date: Fri, 20 Mar 2015 13:13:11 -0000
 
-From: Michael Wood <michael.g.wood@intel.com>
+Moved most of functionality of bin/bitbake to lib/bb/main.py
+to be able to call bitbake from python code.
 
-Add this functionality to the common managed_mrb_section
-Make sure we are using the correct version of this template in the
-projects template and remove now redundant code.
-
-[YOCTO #7351]
-
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- lib/toaster/toastergui/static/js/libtoaster.js     | 28 +++++++++++++++
- .../toastergui/templates/managed_mrb_section.html  | 42 +++++++++-------------
- lib/toaster/toastergui/templates/mrb_section.html  | 39 --------------------
- lib/toaster/toastergui/templates/projects.html     |  2 +-
- lib/toaster/toastergui/views.py                    | 11 ++++--
- 5 files changed, 53 insertions(+), 69 deletions(-)
+ bin/bitbake          | 363 +----------------------------------------------
+ lib/bb/cookerdata.py |   6 +-
+ lib/bb/main.py       | 390 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ lib/bb/tinfoil.py    |   2 +-
+ 4 files changed, 400 insertions(+), 361 deletions(-)
+ create mode 100755 lib/bb/main.py
 
-diff --git a/lib/toaster/toastergui/static/js/libtoaster.js b/lib/toaster/toastergui/static/js/libtoaster.js
-index 3832066..fcf82ac 100644
---- a/lib/toaster/toastergui/static/js/libtoaster.js
-+++ b/lib/toaster/toastergui/static/js/libtoaster.js
-@@ -93,6 +93,33 @@ var libtoaster = (function (){
-     } });
-   }
+diff --git a/bin/bitbake b/bin/bitbake
+index 49efdf1..af91507 100755
+--- a/bin/bitbake
++++ b/bin/bitbake
+@@ -23,373 +23,22 @@
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  
-+  /* cancelABuild:
-+   * url: xhr_projectbuild
-+   * builds_ids: space separated list of build request ids
-+   * onsuccess: callback for successful execution
-+   * onfail: callback for failed execution
-+   */
-+  function _cancelABuild(url, build_ids, onsuccess, onfail){
-+    $.ajax( {
-+        type: "POST",
-+        url: url,
-+        data: { 'buildCancel': build_ids },
-+        headers: { 'X-CSRFToken' : $.cookie('csrftoken')},
-+        success: function (_data) {
-+          if (_data.error !== "ok") {
-+            console.warn(_data.error);
-+          } else {
-+            if (onsuccess !== undefined) onsuccess(_data);
-+          }
-+        },
-+        error: function (_data) {
-+          console.warn("Call failed");
-+          console.warn(_data);
-+          if (onfail) onfail(data);
-+        }
-+    });
-+  }
+ import os
+-import sys, logging
++import sys
 +
-   /* Get a project's configuration info */
-   function _getProjectInfo(url, projectId, onsuccess, onfail){
-     $.ajax({
-@@ -197,6 +224,7 @@ var libtoaster = (function (){
-   return {
-     reload_params : reload_params,
-     startABuild : _startABuild,
-+    cancelABuild : _cancelABuild,
-     makeTypeahead : _makeTypeahead,
-     getProjectInfo: _getProjectInfo,
-     getLayerDepsForProject : _getLayerDepsForProject,
-diff --git a/lib/toaster/toastergui/templates/managed_mrb_section.html b/lib/toaster/toastergui/templates/managed_mrb_section.html
-index 51610e4..a6d4ac6 100644
---- a/lib/toaster/toastergui/templates/managed_mrb_section.html
-+++ b/lib/toaster/toastergui/templates/managed_mrb_section.html
-@@ -3,6 +3,7 @@
- {% load humanize %}
- 
- {%if mru|length > 0%}
-+{# Template provides the latest builds section requires mru in the context which can be added from _managed_get_latest_builds #}
-   <div class="page-header top-air">
-       <h1>
-           Latest builds
-@@ -118,6 +119,7 @@
-             <div class="span4 lead">Build queued
-               <i title="This build will start as soon as a build server is available" class="icon-question-sign get-help get-help-blue heading-help" data-toggle="tooltip"></i>
-             </div>
-+            <button class="btn btn-info pull-right cancel-build-btn" data-build-id="{{buildrequest.id}}" data-request-url="{% url 'xhr_projectbuild' buildrequest.project.id %}" >Cancel</button>
- 
-          {% elif buildrequest.state == buildrequest.REQ_CREATED %}
- 
-@@ -155,37 +157,25 @@
- 
- <script>
- 
--/* ensure csrf cookie exists {% csrf_token %} */
--function _makeXHRBuildCall(url, data, onsuccess, onfail) {
--    $.ajax( {
--        type: "POST",
--        url: url,
--        data: data,
--        headers: { 'X-CSRFToken' : $.cookie('csrftoken')},
--        success: function (_data) {
--            if (_data.error != "ok") {
--                alert(_data.error);
--            } else {
--                if (onsuccess != undefined) onsuccess(_data);
--            }
--        },
--        error: function (_data) {
--            alert("Call failed");
--            console.log(_data);
--            if (onfail) onfail(data);
--        } });
-+function scheduleBuild(url, projectName, projectUrl, buildlist) {
-+  console.log("scheduleBuild");
-+  libtoaster.startABuild(url, null, buildlist.join(" "), function(){
-+    window.location.reload();
-+  }, null);
- }
- 
-+$(document).ready(function(){
- 
--function scheduleBuild(url, projectName, projectUrl, buildlist) {
--  console.log("scheduleBuild");
--  _makeXHRBuildCall(url, {targets: buildlist.join(" ")}, function (_data) {
-+  $(".cancel-build-btn").click(function (){
-+    var url = $(this).data('request-url');
-+    var buildIds = $(this).data('build-id');
-+    var btn = $(this);
- 
--      $('#latest-builds').prepend("<div class=\"alert alert-info project-name\"><span class=\"label label-info\"><a href=\""+projectUrl+"\">"+projectName+"</a></span><div class=\"row-fluid\">" +
--  "<div class=\"span5 lead\">" + buildlist.join(" ") +
--  "</div><div class=\"span4 lead\">Build queued <i title=\"This build will start as soon as a build server is available\" class=\"icon-question-sign get-help get-help-blue heading-help\"></i></div></div></div>");
-+    libtoaster.cancelABuild(url, buildIds, function(){
-+      btn.parents(".alert").fadeOut();
-+    }, null);
-   });
--}
-+});
- 
- </script>
- 
-diff --git a/lib/toaster/toastergui/templates/mrb_section.html b/lib/toaster/toastergui/templates/mrb_section.html
-index 432955a..c7bddf0 100644
---- a/lib/toaster/toastergui/templates/mrb_section.html
-+++ b/lib/toaster/toastergui/templates/mrb_section.html
-@@ -50,9 +50,6 @@
-               <span class="lead{%if not MANAGED or not build.project%} pull-right{%endif%}">
-                 Build time: <a href="{% url 'buildtime' build.pk %}">{{ build.timespent|sectohms }}</a>
-               </span>
--          {% if MANAGED and build.project %}
--              <a class="btn {%if build.outcome == build.SUCCEEDED%}btn-success{%elif build.outcome == build.FAILED%}btn-danger{%else%}btn-info{%endif%} pull-right" onclick="scheduleBuild({% url 'xhr_projectbuild' build.project.id as bpi%}{{bpi|json}}, {{build.project.name|json}}, {{build.get_sorted_target_list|mapselect:'target'|json}})">Run again</a>
--          {% endif %}
-             </div>
-     {%endif%}
-     {%if build.outcome == build.IN_PROGRESS %}
-@@ -68,41 +65,5 @@
- 
-   {% endfor %}
-   </div>
+ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                                 'lib'))
 -
--<script>
+-import optparse
+-import warnings
+-from traceback import format_exception
+ try:
+     import bb
+ except RuntimeError as exc:
+     sys.exit(str(exc))
+-from bb import event
+-import bb.msg
+-from bb import cooker
+-from bb import ui
+-from bb import server
+-from bb import cookerdata
 -
--function _makeXHRBuildCall(url, data, onsuccess, onfail) {
--    $.ajax( {
--        type: "POST",
--        url: url,
--        data: data,
--        headers: { 'X-CSRFToken' : $.cookie('csrftoken')},
--        success: function (_data) {
--            if (_data.error != "ok") {
--                console.warn(_data.error);
--            } else {
--                if (onsuccess != undefined) onsuccess(_data);
--            }
--        },
--        error: function (_data) {
--            console.warn("Call failed");
--            console.warn(_data);
--            if (onfail) onfail(data);
--        } });
--}
+-__version__ = "1.25.0"
+-logger = logging.getLogger("BitBake")
+-
+-# Python multiprocessing requires /dev/shm on Linux
+-if sys.platform.startswith('linux') and not os.access('/dev/shm', os.W_OK | os.X_OK):
+-    sys.exit("FATAL: /dev/shm does not exist or is not writable")
+-
+-# Unbuffer stdout to avoid log truncation in the event
+-# of an unorderly exit as well as to provide timely
+-# updates to log files for use with tail
+-try:
+-    if sys.stdout.name == '<stdout>':
+-        sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+-except:
+-    pass
 -
 -
--function scheduleBuild(url, projectName, buildlist) {
--  console.warn("scheduleBuild");
--  _makeXHRBuildCall(url, {targets: buildlist.join(" ")}, function (_data) {
+-def get_ui(config):
+-    if not config.ui:
+-        # modify 'ui' attribute because it is also read by cooker
+-        config.ui = os.environ.get('BITBAKE_UI', 'knotty')
 -
--      $('#latest-builds').prepend('<div class="alert alert-info" style="padding-top:0px">' + '<span class="label label-info" style="font-weight: normal; margin-bottom: 5px; margin-left:-15px; padding-top:5px;">'+projectName+'</span><div class="row-fluid">' +
--  '<div class="span4 lead">' + buildlist.join(" ") +
--  '</div><div class="span4 lead pull-right">Build queued. Your build will start shortly.</div></div></div>');
--  });
--}
+-    interface = config.ui
 -
--</script>
+-    try:
+-        # Dynamically load the UI based on the ui name. Although we
+-        # suggest a fixed set this allows you to have flexibility in which
+-        # ones are available.
+-        module = __import__("bb.ui", fromlist = [interface])
+-        return getattr(module, interface)
+-    except AttributeError:
+-        sys.exit("FATAL: Invalid user interface '%s' specified.\n"
+-                 "Valid interfaces: depexp, goggle, ncurses, hob, knotty [default]." % interface)
 -
- {%endif%}
+-
+-# Display bitbake/OE warnings via the BitBake.Warnings logger, ignoring others"""
+-warnlog = logging.getLogger("BitBake.Warnings")
+-_warnings_showwarning = warnings.showwarning
+-def _showwarning(message, category, filename, lineno, file=None, line=None):
+-    if file is not None:
+-        if _warnings_showwarning is not None:
+-            _warnings_showwarning(message, category, filename, lineno, file, line)
+-    else:
+-        s = warnings.formatwarning(message, category, filename, lineno)
+-        warnlog.warn(s)
+-
+-warnings.showwarning = _showwarning
+-warnings.filterwarnings("ignore")
+-warnings.filterwarnings("default", module="(<string>$|(oe|bb)\.)")
+-warnings.filterwarnings("ignore", category=PendingDeprecationWarning)
+-warnings.filterwarnings("ignore", category=ImportWarning)
+-warnings.filterwarnings("ignore", category=DeprecationWarning, module="<string>$")
+-warnings.filterwarnings("ignore", message="With-statements now directly support multiple context managers")
+-
+-class BitBakeConfigParameters(cookerdata.ConfigParameters):
+-
+-    def parseCommandLine(self):
+-        parser = optparse.OptionParser(
+-            version = "BitBake Build Tool Core version %s, %%prog version %s" % (bb.__version__, __version__),
+-            usage = """%prog [options] [recipename/target ...]
+-
+-    Executes the specified task (default is 'build') for a given set of target recipes (.bb files).
+-    It is assumed there is a conf/bblayers.conf available in cwd or in BBPATH which
+-    will provide the layer, BBFILES and other configuration information.""")
+-
+-        parser.add_option("-b", "--buildfile", help = "Execute tasks from a specific .bb recipe directly. WARNING: Does not handle any dependencies from other recipes.",
+-                   action = "store", dest = "buildfile", default = None)
+-
+-        parser.add_option("-k", "--continue", help = "Continue as much as possible after an error. While the target that failed and anything depending on it cannot be built, as much as possible will be built before stopping.",
+-                   action = "store_false", dest = "abort", default = True)
+-
+-        parser.add_option("-a", "--tryaltconfigs", help = "Continue with builds by trying to use alternative providers where possible.",
+-                   action = "store_true", dest = "tryaltconfigs", default = False)
+-
+-        parser.add_option("-f", "--force", help = "Force the specified targets/task to run (invalidating any existing stamp file).",
+-                   action = "store_true", dest = "force", default = False)
+-
+-        parser.add_option("-c", "--cmd", help = "Specify the task to execute. The exact options available depend on the metadata. Some examples might be 'compile' or 'populate_sysroot' or 'listtasks' may give a list of the tasks available.",
+-                   action = "store", dest = "cmd")
+-
+-        parser.add_option("-C", "--clear-stamp", help = "Invalidate the stamp for the specified task such as 'compile' and then run the default task for the specified target(s).",
+-                    action = "store", dest = "invalidate_stamp")
+-
+-        parser.add_option("-r", "--read", help = "Read the specified file before bitbake.conf.",
+-                   action = "append", dest = "prefile", default = [])
+-
+-        parser.add_option("-R", "--postread", help = "Read the specified file after bitbake.conf.",
+-                          action = "append", dest = "postfile", default = [])
+-
+-        parser.add_option("-v", "--verbose", help = "Output more log message data to the terminal.",
+-                   action = "store_true", dest = "verbose", default = False)
+-
+-        parser.add_option("-D", "--debug", help = "Increase the debug level. You can specify this more than once.",
+-                   action = "count", dest="debug", default = 0)
+-
+-        parser.add_option("-n", "--dry-run", help = "Don't execute, just go through the motions.",
+-                   action = "store_true", dest = "dry_run", default = False)
+-
+-        parser.add_option("-S", "--dump-signatures", help = "Dump out the signature construction information, with no task execution. The SIGNATURE_HANDLER parameter is passed to the handler. Two common values are none and printdiff but the handler may define more/less. none means only dump the signature, printdiff means compare the dumped signature with the cached one.",
+-                   action = "append", dest = "dump_signatures", default = [], metavar="SIGNATURE_HANDLER")
+-
+-        parser.add_option("-p", "--parse-only", help = "Quit after parsing the BB recipes.",
+-                   action = "store_true", dest = "parse_only", default = False)
+-
+-        parser.add_option("-s", "--show-versions", help = "Show current and preferred versions of all recipes.",
+-                   action = "store_true", dest = "show_versions", default = False)
+-
+-        parser.add_option("-e", "--environment", help = "Show the global or per-recipe environment complete with information about where variables were set/changed.",
+-                   action = "store_true", dest = "show_environment", default = False)
+-
+-        parser.add_option("-g", "--graphviz", help = "Save dependency tree information for the specified targets in the dot syntax.",
+-                    action = "store_true", dest = "dot_graph", default = False)
+-
+-        parser.add_option("-I", "--ignore-deps", help = """Assume these dependencies don't exist and are already provided (equivalent to ASSUME_PROVIDED). Useful to make dependency graphs more appealing""",
+-                    action = "append", dest = "extra_assume_provided", default = [])
+-
+-        parser.add_option("-l", "--log-domains", help = """Show debug logging for the specified logging domains""",
+-                    action = "append", dest = "debug_domains", default = [])
+-
+-        parser.add_option("-P", "--profile", help = "Profile the command and save reports.",
+-                   action = "store_true", dest = "profile", default = False)
+-
+-        parser.add_option("-u", "--ui", help = "The user interface to use (e.g. knotty, hob, depexp).",
+-                   action = "store", dest = "ui")
+-
+-        parser.add_option("-t", "--servertype", help = "Choose which server to use, process or xmlrpc.",
+-                   action = "store", dest = "servertype")
+-
+-        parser.add_option("", "--token", help = "Specify the connection token to be used when connecting to a remote server.",
+-                   action = "store", dest = "xmlrpctoken")
+-
+-        parser.add_option("", "--revisions-changed", help = "Set the exit code depending on whether upstream floating revisions have changed or not.",
+-                   action = "store_true", dest = "revisions_changed", default = False)
+-
+-        parser.add_option("", "--server-only", help = "Run bitbake without a UI, only starting a server (cooker) process.",
+-                   action = "store_true", dest = "server_only", default = False)
+-
+-        parser.add_option("-B", "--bind", help = "The name/address for the bitbake server to bind to.",
+-                   action = "store", dest = "bind", default = False)
+-
+-        parser.add_option("", "--no-setscene", help = "Do not run any setscene tasks. sstate will be ignored and everything needed, built.",
+-                   action = "store_true", dest = "nosetscene", default = False)
+-
+-        parser.add_option("", "--remote-server", help = "Connect to the specified server.",
+-                   action = "store", dest = "remote_server", default = False)
  
-diff --git a/lib/toaster/toastergui/templates/projects.html b/lib/toaster/toastergui/templates/projects.html
-index 88d5bd3..88ee4bc 100644
---- a/lib/toaster/toastergui/templates/projects.html
-+++ b/lib/toaster/toastergui/templates/projects.html
-@@ -7,7 +7,7 @@
- {% block pagecontent %}
+-        parser.add_option("-m", "--kill-server", help = "Terminate the remote server.",
+-                    action = "store_true", dest = "kill_server", default = False)
+-
+-        parser.add_option("", "--observe-only", help = "Connect to a server as an observing-only client.",
+-                   action = "store_true", dest = "observe_only", default = False)
+-
+-        parser.add_option("", "--status-only", help = "Check the status of the remote bitbake server.",
+-                   action = "store_true", dest = "status_only", default = False)
+-
+-        parser.add_option("-w", "--write-log", help = "Writes the event log of the build to a bitbake event json file. Use '' (empty string) to assign the name automatically.",
+-                   action = "store", dest = "writeeventlog")
+-
+-        options, targets = parser.parse_args(sys.argv)
+-
+-        # some environmental variables set also configuration options
+-        if "BBSERVER" in os.environ:
+-            options.servertype = "xmlrpc"
+-            options.remote_server = os.environ["BBSERVER"]
+-
+-        if "BBTOKEN" in os.environ:
+-            options.xmlrpctoken = os.environ["BBTOKEN"]
+-
+-        if "BBEVENTLOG" is os.environ:
+-            options.writeeventlog = os.environ["BBEVENTLOG"]
+-
+-        # fill in proper log name if not supplied
+-        if options.writeeventlog is not None and len(options.writeeventlog) == 0:
+-            import datetime
+-            options.writeeventlog = "bitbake_eventlog_%s.json" % datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+-
+-        # if BBSERVER says to autodetect, let's do that
+-        if options.remote_server:
+-            [host, port] = options.remote_server.split(":", 2)
+-            port = int(port)
+-            # use automatic port if port set to -1, means read it from
+-            # the bitbake.lock file; this is a bit tricky, but we always expect
+-            # to be in the base of the build directory if we need to have a
+-            # chance to start the server later, anyway
+-            if port == -1:
+-                lock_location = "./bitbake.lock"
+-                # we try to read the address at all times; if the server is not started,
+-                # we'll try to start it after the first connect fails, below
+-                try:
+-                    lf = open(lock_location, 'r')
+-                    remotedef = lf.readline()
+-                    [host, port] = remotedef.split(":")
+-                    port = int(port)
+-                    lf.close()
+-                    options.remote_server = remotedef
+-                except Exception as e:
+-                    sys.exit("Failed to read bitbake.lock (%s), invalid port" % str(e))
+-
+-        return options, targets[1:]
+-
+-
+-def start_server(servermodule, configParams, configuration, features):
+-    server = servermodule.BitBakeServer()
+-    if configParams.bind:
+-        (host, port) = configParams.bind.split(':')
+-        server.initServer((host, int(port)))
+-        configuration.interface = [ server.serverImpl.host, server.serverImpl.port ]
+-    else:
+-        server.initServer()
+-        configuration.interface = []
+-
+-    try:
+-        configuration.setServerRegIdleCallback(server.getServerIdleCB())
+-
+-        cooker = bb.cooker.BBCooker(configuration, features)
+-
+-        server.addcooker(cooker)
+-        server.saveConnectionDetails()
+-    except Exception as e:
+-        exc_info = sys.exc_info()
+-        while hasattr(server, "event_queue"):
+-            try:
+-                import queue
+-            except ImportError:
+-                import Queue as queue
+-            try:
+-                event = server.event_queue.get(block=False)
+-            except (queue.Empty, IOError):
+-                break
+-            if isinstance(event, logging.LogRecord):
+-                logger.handle(event)
+-        raise exc_info[1], None, exc_info[2]
+-    server.detach()
+-    return server
+-
+-
+-def main():
+-
+-    configParams = BitBakeConfigParameters()
+-    configuration = cookerdata.CookerConfiguration()
+-    configuration.setConfigParameters(configParams)
+-
+-    ui_module = get_ui(configParams)
+-
+-    # Server type can be xmlrpc or process currently, if nothing is specified,
+-    # the default server is process
+-    if configParams.servertype:
+-        server_type = configParams.servertype
+-    else:
+-        server_type = 'process'
+-
+-    try:
+-        module = __import__("bb.server", fromlist = [server_type])
+-        servermodule = getattr(module, server_type)
+-    except AttributeError:
+-        sys.exit("FATAL: Invalid server type '%s' specified.\n"
+-                 "Valid interfaces: xmlrpc, process [default]." % server_type)
+-
+-    if configParams.server_only:
+-        if configParams.servertype != "xmlrpc":
+-            sys.exit("FATAL: If '--server-only' is defined, we must set the servertype as 'xmlrpc'.\n")
+-        if not configParams.bind:
+-            sys.exit("FATAL: The '--server-only' option requires a name/address to bind to with the -B option.\n")
+-        if configParams.remote_server:
+-            sys.exit("FATAL: The '--server-only' option conflicts with %s.\n" % 
+-                ("the BBSERVER environment variable" if "BBSERVER" in os.environ else "the '--remote-server' option" ))
+-
+-    if configParams.bind and configParams.servertype != "xmlrpc":
+-        sys.exit("FATAL: If '-B' or '--bind' is defined, we must set the servertype as 'xmlrpc'.\n")
+-
+-    if configParams.remote_server and configParams.servertype != "xmlrpc":
+-        sys.exit("FATAL: If '--remote-server' is defined, we must set the servertype as 'xmlrpc'.\n")
+-
+-    if configParams.observe_only and (not configParams.remote_server or configParams.bind):
+-        sys.exit("FATAL: '--observe-only' can only be used by UI clients connecting to a server.\n")
+-
+-    if configParams.kill_server and not configParams.remote_server:
+-        sys.exit("FATAL: '--kill-server' can only be used to terminate a remote server")
+-
+-    if "BBDEBUG" in os.environ:
+-        level = int(os.environ["BBDEBUG"])
+-        if level > configuration.debug:
+-            configuration.debug = level
+-
+-    bb.msg.init_msgconfig(configParams.verbose, configuration.debug,
+-                         configuration.debug_domains)
+-
+-    # Ensure logging messages get sent to the UI as events
+-    handler = bb.event.LogHandler()
+-    if not configParams.status_only:
+-        # In status only mode there are no logs and no UI
+-        logger.addHandler(handler)
+-
+-    # Clear away any spurious environment variables while we stoke up the cooker
+-    cleanedvars = bb.utils.clean_environment()
+-
+-    featureset = []
+-    if not configParams.server_only:
+-        # Collect the feature set for the UI
+-        featureset = getattr(ui_module, "featureSet", [])
+-
+-    if not configParams.remote_server:
+-        # we start a server with a given configuration
+-        server = start_server(servermodule, configParams, configuration, featureset)
+-        bb.event.ui_queue = []
+-    else:
+-        # we start a stub server that is actually a XMLRPClient that connects to a real server
+-        server = servermodule.BitBakeXMLRPCClient(configParams.observe_only, configParams.xmlrpctoken)
+-        server.saveConnectionDetails(configParams.remote_server)
+-
+-
+-    if not configParams.server_only:
+-        try:
+-            server_connection = server.establishConnection(featureset)
+-        except Exception as e:
+-            if configParams.kill_server:
+-                sys.exit(0)
+-            bb.fatal("Could not connect to server %s: %s" % (configParams.remote_server, str(e)))
+-
+-        # Restore the environment in case the UI needs it
+-        for k in cleanedvars:
+-            os.environ[k] = cleanedvars[k]
+-
+-        logger.removeHandler(handler)
+-
+-
+-        if configParams.status_only:
+-            server_connection.terminate()
+-            sys.exit(0)
+-
+-        if configParams.kill_server:
+-            server_connection.connection.terminateServer()
+-            bb.event.ui_queue = []
+-            sys.exit(0)
+-
+-        try:
+-            return ui_module.main(server_connection.connection, server_connection.events, configParams)
+-        finally:
+-            bb.event.ui_queue = []
+-            server_connection.terminate()
+-    else:
+-        print("Bitbake server address: %s, server port: %s" % (server.serverImpl.host, server.serverImpl.port))
+-        return 0
+-
+-    return 1
++from bb import cookerdata
++from bb.main import bitbake_main, BitBakeConfigParameters
  
+ if __name__ == "__main__":
+     try:
+-        ret = main()
++        ret = bitbake_main(BitBakeConfigParameters(sys.argv),
++                           cookerdata.CookerConfiguration())
+     except bb.BBHandledException:
+         ret = 1
+     except Exception:
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index 7eae761..6c11a60 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -33,8 +33,8 @@ logger      = logging.getLogger("BitBake")
+ parselog    = logging.getLogger("BitBake.Parsing")
  
--  {% include "mrb_section.html" %}
-+  {% include "managed_mrb_section.html" %}
+ class ConfigParameters(object):
+-    def __init__(self):
+-        self.options, targets = self.parseCommandLine()
++    def __init__(self, argv=sys.argv):
++        self.options, targets = self.parseCommandLine(argv)
+         self.environment = self.parseEnvironment()
  
+         self.options.pkgs_to_build = targets or []
+@@ -46,7 +46,7 @@ class ConfigParameters(object):
+         for key, val in self.options.__dict__.items():
+             setattr(self, key, val)
  
-   <div class="page-header top-air">
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 661023e..26c8760 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -1871,8 +1871,7 @@ if toastermain.settings.MANAGED:
+-    def parseCommandLine(self):
++    def parseCommandLine(self, argv=sys.argv):
+         raise Exception("Caller must implement commandline option parsing")
  
-         # build view-specific information; this is rendered specifically in the builds page, at the top of the page (i.e. Recent builds)
-         # most recent build is like projects' most recent builds, but across all projects
--        build_mru = BuildRequest.objects.all()
--        build_mru = list(build_mru.filter(Q(state__lt=BuildRequest.REQ_COMPLETED) or Q(state=BuildRequest.REQ_DELETED)).order_by("-pk")) + list(build_mru.filter(state__in=[BuildRequest.REQ_COMPLETED, BuildRequest.REQ_FAILED]).order_by("-pk")[:3])
-+        build_mru = _managed_get_latest_builds()
+     def parseEnvironment(self):
+diff --git a/lib/bb/main.py b/lib/bb/main.py
+new file mode 100755
+index 0000000..591f32b
+--- /dev/null
++++ b/lib/bb/main.py
+@@ -0,0 +1,390 @@
++#!/usr/bin/env python
++# ex:ts=4:sw=4:sts=4:et
++# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
++#
++# Copyright (C) 2003, 2004  Chris Larson
++# Copyright (C) 2003, 2004  Phil Blundell
++# Copyright (C) 2003 - 2005 Michael 'Mickey' Lauer
++# Copyright (C) 2005        Holger Hans Peter Freyther
++# Copyright (C) 2005        ROAD GmbH
++# Copyright (C) 2006        Richard Purdie
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License version 2 as
++# published by the Free Software Foundation.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License along
++# with this program; if not, write to the Free Software Foundation, Inc.,
++# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++
++import os
++import sys
++import logging
++import optparse
++import warnings
++
++import bb
++from bb import event
++import bb.msg
++from bb import cooker
++from bb import ui
++from bb import server
++from bb import cookerdata
++
++__version__ = "1.25.0"
++logger = logging.getLogger("BitBake")
++
++class BBMainException(bb.BBHandledException):
++    pass
++
++def get_ui(config):
++    if not config.ui:
++        # modify 'ui' attribute because it is also read by cooker
++        config.ui = os.environ.get('BITBAKE_UI', 'knotty')
++
++    interface = config.ui
++
++    try:
++        # Dynamically load the UI based on the ui name. Although we
++        # suggest a fixed set this allows you to have flexibility in which
++        # ones are available.
++        module = __import__("bb.ui", fromlist = [interface])
++        return getattr(module, interface)
++    except AttributeError:
++        raise BBMainException("FATAL: Invalid user interface '%s' specified.\n"
++                 "Valid interfaces: depexp, goggle, ncurses, hob, knotty [default]." % interface)
++
++
++# Display bitbake/OE warnings via the BitBake.Warnings logger, ignoring others"""
++warnlog = logging.getLogger("BitBake.Warnings")
++_warnings_showwarning = warnings.showwarning
++def _showwarning(message, category, filename, lineno, file=None, line=None):
++    if file is not None:
++        if _warnings_showwarning is not None:
++            _warnings_showwarning(message, category, filename, lineno, file, line)
++    else:
++        s = warnings.formatwarning(message, category, filename, lineno)
++        warnlog.warn(s)
++
++warnings.showwarning = _showwarning
++warnings.filterwarnings("ignore")
++warnings.filterwarnings("default", module="(<string>$|(oe|bb)\.)")
++warnings.filterwarnings("ignore", category=PendingDeprecationWarning)
++warnings.filterwarnings("ignore", category=ImportWarning)
++warnings.filterwarnings("ignore", category=DeprecationWarning, module="<string>$")
++warnings.filterwarnings("ignore", message="With-statements now directly support multiple context managers")
++
++class BitBakeConfigParameters(cookerdata.ConfigParameters):
++
++    def parseCommandLine(self, argv=sys.argv):
++        parser = optparse.OptionParser(
++            version = "BitBake Build Tool Core version %s, %%prog version %s" % (bb.__version__, __version__),
++            usage = """%prog [options] [recipename/target ...]
++
++    Executes the specified task (default is 'build') for a given set of target recipes (.bb files).
++    It is assumed there is a conf/bblayers.conf available in cwd or in BBPATH which
++    will provide the layer, BBFILES and other configuration information.""")
++
++        parser.add_option("-b", "--buildfile", help = "Execute tasks from a specific .bb recipe directly. WARNING: Does not handle any dependencies from other recipes.",
++                   action = "store", dest = "buildfile", default = None)
++
++        parser.add_option("-k", "--continue", help = "Continue as much as possible after an error. While the target that failed and anything depending on it cannot be built, as much as possible will be built before stopping.",
++                   action = "store_false", dest = "abort", default = True)
++
++        parser.add_option("-a", "--tryaltconfigs", help = "Continue with builds by trying to use alternative providers where possible.",
++                   action = "store_true", dest = "tryaltconfigs", default = False)
++
++        parser.add_option("-f", "--force", help = "Force the specified targets/task to run (invalidating any existing stamp file).",
++                   action = "store_true", dest = "force", default = False)
++
++        parser.add_option("-c", "--cmd", help = "Specify the task to execute. The exact options available depend on the metadata. Some examples might be 'compile' or 'populate_sysroot' or 'listtasks' may give a list of the tasks available.",
++                   action = "store", dest = "cmd")
++
++        parser.add_option("-C", "--clear-stamp", help = "Invalidate the stamp for the specified task such as 'compile' and then run the default task for the specified target(s).",
++                    action = "store", dest = "invalidate_stamp")
++
++        parser.add_option("-r", "--read", help = "Read the specified file before bitbake.conf.",
++                   action = "append", dest = "prefile", default = [])
++
++        parser.add_option("-R", "--postread", help = "Read the specified file after bitbake.conf.",
++                          action = "append", dest = "postfile", default = [])
++
++        parser.add_option("-v", "--verbose", help = "Output more log message data to the terminal.",
++                   action = "store_true", dest = "verbose", default = False)
++
++        parser.add_option("-D", "--debug", help = "Increase the debug level. You can specify this more than once.",
++                   action = "count", dest="debug", default = 0)
++
++        parser.add_option("-n", "--dry-run", help = "Don't execute, just go through the motions.",
++                   action = "store_true", dest = "dry_run", default = False)
++
++        parser.add_option("-S", "--dump-signatures", help = "Dump out the signature construction information, with no task execution. The SIGNATURE_HANDLER parameter is passed to the handler. Two common values are none and printdiff but the handler may define more/less. none means only dump the signature, printdiff means compare the dumped signature with the cached one.",
++                   action = "append", dest = "dump_signatures", default = [], metavar="SIGNATURE_HANDLER")
++
++        parser.add_option("-p", "--parse-only", help = "Quit after parsing the BB recipes.",
++                   action = "store_true", dest = "parse_only", default = False)
++
++        parser.add_option("-s", "--show-versions", help = "Show current and preferred versions of all recipes.",
++                   action = "store_true", dest = "show_versions", default = False)
++
++        parser.add_option("-e", "--environment", help = "Show the global or per-recipe environment complete with information about where variables were set/changed.",
++                   action = "store_true", dest = "show_environment", default = False)
++
++        parser.add_option("-g", "--graphviz", help = "Save dependency tree information for the specified targets in the dot syntax.",
++                    action = "store_true", dest = "dot_graph", default = False)
++
++        parser.add_option("-I", "--ignore-deps", help = """Assume these dependencies don't exist and are already provided (equivalent to ASSUME_PROVIDED). Useful to make dependency graphs more appealing""",
++                    action = "append", dest = "extra_assume_provided", default = [])
++
++        parser.add_option("-l", "--log-domains", help = """Show debug logging for the specified logging domains""",
++                    action = "append", dest = "debug_domains", default = [])
++
++        parser.add_option("-P", "--profile", help = "Profile the command and save reports.",
++                   action = "store_true", dest = "profile", default = False)
++
++        parser.add_option("-u", "--ui", help = "The user interface to use (e.g. knotty, hob, depexp).",
++                   action = "store", dest = "ui")
++
++        parser.add_option("-t", "--servertype", help = "Choose which server to use, process or xmlrpc.",
++                   action = "store", dest = "servertype")
++
++        parser.add_option("", "--token", help = "Specify the connection token to be used when connecting to a remote server.",
++                   action = "store", dest = "xmlrpctoken")
++
++        parser.add_option("", "--revisions-changed", help = "Set the exit code depending on whether upstream floating revisions have changed or not.",
++                   action = "store_true", dest = "revisions_changed", default = False)
++
++        parser.add_option("", "--server-only", help = "Run bitbake without a UI, only starting a server (cooker) process.",
++                   action = "store_true", dest = "server_only", default = False)
++
++        parser.add_option("-B", "--bind", help = "The name/address for the bitbake server to bind to.",
++                   action = "store", dest = "bind", default = False)
++
++        parser.add_option("", "--no-setscene", help = "Do not run any setscene tasks. sstate will be ignored and everything needed, built.",
++                   action = "store_true", dest = "nosetscene", default = False)
++
++        parser.add_option("", "--remote-server", help = "Connect to the specified server.",
++                   action = "store", dest = "remote_server", default = False)
++
++        parser.add_option("-m", "--kill-server", help = "Terminate the remote server.",
++                    action = "store_true", dest = "kill_server", default = False)
++
++        parser.add_option("", "--observe-only", help = "Connect to a server as an observing-only client.",
++                   action = "store_true", dest = "observe_only", default = False)
++
++        parser.add_option("", "--status-only", help = "Check the status of the remote bitbake server.",
++                   action = "store_true", dest = "status_only", default = False)
++
++        parser.add_option("-w", "--write-log", help = "Writes the event log of the build to a bitbake event json file. Use '' (empty string) to assign the name automatically.",
++                   action = "store", dest = "writeeventlog")
++
++        options, targets = parser.parse_args(argv)
++
++        # some environmental variables set also configuration options
++        if "BBSERVER" in os.environ:
++            options.servertype = "xmlrpc"
++            options.remote_server = os.environ["BBSERVER"]
++
++        if "BBTOKEN" in os.environ:
++            options.xmlrpctoken = os.environ["BBTOKEN"]
++
++        if "BBEVENTLOG" is os.environ:
++            options.writeeventlog = os.environ["BBEVENTLOG"]
++
++        # fill in proper log name if not supplied
++        if options.writeeventlog is not None and len(options.writeeventlog) == 0:
++            import datetime
++            options.writeeventlog = "bitbake_eventlog_%s.json" % datetime.datetime.now().strftime("%Y%m%d%H%M%S")
++
++        # if BBSERVER says to autodetect, let's do that
++        if options.remote_server:
++            [host, port] = options.remote_server.split(":", 2)
++            port = int(port)
++            # use automatic port if port set to -1, means read it from
++            # the bitbake.lock file; this is a bit tricky, but we always expect
++            # to be in the base of the build directory if we need to have a
++            # chance to start the server later, anyway
++            if port == -1:
++                lock_location = "./bitbake.lock"
++                # we try to read the address at all times; if the server is not started,
++                # we'll try to start it after the first connect fails, below
++                try:
++                    lf = open(lock_location, 'r')
++                    remotedef = lf.readline()
++                    [host, port] = remotedef.split(":")
++                    port = int(port)
++                    lf.close()
++                    options.remote_server = remotedef
++                except Exception as e:
++                    raise BBMainException("Failed to read bitbake.lock (%s), invalid port" % str(e))
++
++        return options, targets[1:]
++
++
++def start_server(servermodule, configParams, configuration, features):
++    server = servermodule.BitBakeServer()
++    if configParams.bind:
++        (host, port) = configParams.bind.split(':')
++        server.initServer((host, int(port)))
++        configuration.interface = [ server.serverImpl.host, server.serverImpl.port ]
++    else:
++        server.initServer()
++        configuration.interface = []
++
++    try:
++        configuration.setServerRegIdleCallback(server.getServerIdleCB())
++
++        cooker = bb.cooker.BBCooker(configuration, features)
++
++        server.addcooker(cooker)
++        server.saveConnectionDetails()
++    except Exception as e:
++        exc_info = sys.exc_info()
++        while hasattr(server, "event_queue"):
++            try:
++                import queue
++            except ImportError:
++                import Queue as queue
++            try:
++                event = server.event_queue.get(block=False)
++            except (queue.Empty, IOError):
++                break
++            if isinstance(event, logging.LogRecord):
++                logger.handle(event)
++        raise exc_info[1], None, exc_info[2]
++    server.detach()
++    return server
++
++
++def bitbake_main(configParams, configuration):
++
++    # Python multiprocessing requires /dev/shm on Linux
++    if sys.platform.startswith('linux') and not os.access('/dev/shm', os.W_OK | os.X_OK):
++        raise BBMainException("FATAL: /dev/shm does not exist or is not writable")
++
++    # Unbuffer stdout to avoid log truncation in the event
++    # of an unorderly exit as well as to provide timely
++    # updates to log files for use with tail
++    try:
++        if sys.stdout.name == '<stdout>':
++            sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
++    except:
++        pass
++
++
++    configuration.setConfigParameters(configParams)
++
++    ui_module = get_ui(configParams)
++
++    # Server type can be xmlrpc or process currently, if nothing is specified,
++    # the default server is process
++    if configParams.servertype:
++        server_type = configParams.servertype
++    else:
++        server_type = 'process'
++
++    try:
++        module = __import__("bb.server", fromlist = [server_type])
++        servermodule = getattr(module, server_type)
++    except AttributeError:
++        raise BBMainException("FATAL: Invalid server type '%s' specified.\n"
++                              "Valid interfaces: xmlrpc, process [default]." % server_type)
++
++    if configParams.server_only:
++        if configParams.servertype != "xmlrpc":
++            raise BBMainException("FATAL: If '--server-only' is defined, we must set the "
++                                  "servertype as 'xmlrpc'.\n")
++        if not configParams.bind:
++            raise BBMainException("FATAL: The '--server-only' option requires a name/address "
++                                  "to bind to with the -B option.\n")
++        if configParams.remote_server:
++            raise BBMainException("FATAL: The '--server-only' option conflicts with %s.\n" %
++                                  ("the BBSERVER environment variable" if "BBSERVER" in os.environ \
++                                   else "the '--remote-server' option" ))
++
++    if configParams.bind and configParams.servertype != "xmlrpc":
++        raise BBMainException("FATAL: If '-B' or '--bind' is defined, we must "
++                              "set the servertype as 'xmlrpc'.\n")
++
++    if configParams.remote_server and configParams.servertype != "xmlrpc":
++        raise BBMainException("FATAL: If '--remote-server' is defined, we must "
++                              "set the servertype as 'xmlrpc'.\n")
++
++    if configParams.observe_only and (not configParams.remote_server or configParams.bind):
++        raise BBMainException("FATAL: '--observe-only' can only be used by UI clients "
++                              "connecting to a server.\n")
++
++    if configParams.kill_server and not configParams.remote_server:
++        raise BBMainException("FATAL: '--kill-server' can only be used to terminate a remote server")
++
++    if "BBDEBUG" in os.environ:
++        level = int(os.environ["BBDEBUG"])
++        if level > configuration.debug:
++            configuration.debug = level
++
++    bb.msg.init_msgconfig(configParams.verbose, configuration.debug,
++                         configuration.debug_domains)
++
++    # Ensure logging messages get sent to the UI as events
++    handler = bb.event.LogHandler()
++    if not configParams.status_only:
++        # In status only mode there are no logs and no UI
++        logger.addHandler(handler)
++
++    # Clear away any spurious environment variables while we stoke up the cooker
++    cleanedvars = bb.utils.clean_environment()
++
++    featureset = []
++    if not configParams.server_only:
++        # Collect the feature set for the UI
++        featureset = getattr(ui_module, "featureSet", [])
++
++    if not configParams.remote_server:
++        # we start a server with a given configuration
++        server = start_server(servermodule, configParams, configuration, featureset)
++        bb.event.ui_queue = []
++    else:
++        # we start a stub server that is actually a XMLRPClient that connects to a real server
++        server = servermodule.BitBakeXMLRPCClient(configParams.observe_only, configParams.xmlrpctoken)
++        server.saveConnectionDetails(configParams.remote_server)
++
++
++    if not configParams.server_only:
++        try:
++            server_connection = server.establishConnection(featureset)
++        except Exception as e:
++            if configParams.kill_server:
++                return 0
++            bb.fatal("Could not connect to server %s: %s" % (configParams.remote_server, str(e)))
++
++        # Restore the environment in case the UI needs it
++        for k in cleanedvars:
++            os.environ[k] = cleanedvars[k]
++
++        logger.removeHandler(handler)
++
++
++        if configParams.status_only:
++            server_connection.terminate()
++            return 0
++
++        if configParams.kill_server:
++            server_connection.connection.terminateServer()
++            bb.event.ui_queue = []
++            return 0
++
++        try:
++            return ui_module.main(server_connection.connection, server_connection.events, configParams)
++        finally:
++            bb.event.ui_queue = []
++            server_connection.terminate()
++    else:
++        print("Bitbake server address: %s, server port: %s" % (server.serverImpl.host, server.serverImpl.port))
++        return 0
++
++    return 1
+diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
+index 6bcbd47..8fc9be3 100644
+--- a/lib/bb/tinfoil.py
++++ b/lib/bb/tinfoil.py
+@@ -90,7 +90,7 @@ class TinfoilConfigParameters(ConfigParameters):
+         self.initial_options = options
+         super(TinfoilConfigParameters, self).__init__()
  
-         fstypes_map = {};
-         for build_request in build_info:
-@@ -3130,6 +3129,12 @@ if toastermain.settings.MANAGED:
-             }
-             return render(request, "unavailable_artifact.html", context)
- 
-+    # This returns the mru object that is needed for the
-+    # managed_mrb_section.html template
-+    def _managed_get_latest_builds():
-+        build_mru = BuildRequest.objects.all()
-+        build_mru = list(build_mru.filter(Q(state__lt=BuildRequest.REQ_COMPLETED) or Q(state=BuildRequest.REQ_DELETED)).order_by("-pk")) + list(build_mru.filter(state__in=[BuildRequest.REQ_COMPLETED, BuildRequest.REQ_FAILED]).order_by("-pk")[:3])
-+        return build_mru
- 
- 
-     def projects(request):
-@@ -3153,7 +3158,7 @@ if toastermain.settings.MANAGED:
-         project_info = _build_page_range(Paginator(queryset, pagesize), request.GET.get('page', 1))
- 
-         # build view-specific information; this is rendered specifically in the builds page, at the top of the page (i.e. Recent builds)
--        build_mru = Build.objects.order_by("-started_on")[:3]
-+        build_mru = _managed_get_latest_builds()
- 
-         # translate the project's build target strings
-         fstypes_map = {};
+-    def parseCommandLine(self):
++    def parseCommandLine(self, argv=sys.argv):
+         class DummyOptions:
+             def __init__(self, initial_options):
+                 for key, val in initial_options.items():
 -- 
-1.9.1
+2.1.4
 
 
