@@ -1,43 +1,44 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-pd0-f170.google.com (mail-pd0-f170.google.com
-	[209.85.192.170])
-	by mail.openembedded.org (Postfix) with ESMTP id D1FBD728C2
+Received: from mail-pa0-f53.google.com (mail-pa0-f53.google.com
+	[209.85.220.53])
+	by mail.openembedded.org (Postfix) with ESMTP id 22ADF728C2
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 20 Mar 2015 10:25:40 +0000 (UTC)
-Received: by pdnc3 with SMTP id c3so105086274pdn.0
+Received: by pabxg6 with SMTP id xg6so92233773pab.0
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 20 Mar 2015 03:25:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=wXu9HfMQIWl4dT4DHE81BKXJyXKwx3sFt1MyVDA7rvo=;
-	b=k7OXh+90GOm9AAqSAsPyfOq4D+zQ5Ct/mCh+H9jwip9mG8x6VbDZPbcKFyjrojcqKz
-	ykcNd1/zuRkkR5j0mNqteYSpTM8KzktCxCk/52zjy3M9PQILypf6FFPjL3diunfP8Qm+
-	ne0SBOzjNt4MlWFWnl7/N74CgjcCKBQiu8Y7Jp9t8clVI7gv3+7OwRi/zZ3ijy3+qKgl
-	ghzyQfH/4kWkBeFQf0qQh4WjUjq8NlVog+Ex4HeGEthk5FZHDiGxKAtwfhva5GFHyKA4
-	ysQ/40C4BrOzUw6stpdFTU9jzXadxRjPcqn5O2CjouM4n2S4t/xxfAt1E/ZDach/sUug
-	QyPw==
-X-Gm-Message-State: ALoCoQmXzTYnWSEDVwWov/nQ1QjJKi5UKC6A6sFl2me72suR5s86kha5D5Dr+hbuDoxqgfWD4oAz
-X-Received: by 10.70.48.239 with SMTP id p15mr126286484pdn.123.1426847142084; 
+	bh=edCvcpxwaedbm/6NZIaQCdsp8c7adWcXnv9JF6QxrKc=;
+	b=leUDS8qt/XhndZhqyluKSlibY2+qFL7mPEmmsjJk+7ZbIasaa3Q2fwbKJCMyYH38la
+	pTKzPM5b1bRoNDk3fZbsIua65nCS7HmmJ2GAF9jRQJMZWCqE1oGgRaJQFVpjUCkao3a4
+	q1voyoMAaJQR5BWHwyoqhTnd06gApY5bYep4CYamHlU+mqq0g73D2z9mMOobtgRQ+kp/
+	us+W0EprvLemrjH1Grd22km2EsgiAVLLmdr1f6b+a6x7dG0aKhAdAd+AvrnPB+TA2C6Y
+	VdLeThdzjQysuQ3yZyocURkVaDjQpo+Y/KQwHttRFYAAmVloJ/222JNOZNFNxu3MuYqk
+	4sjw==
+X-Gm-Message-State: ALoCoQmFJx2nOoKWV3G79DyqQSGubaoJrkFaudM25Y0UbAPbJG+vO0Qlp7PqC+F3vohfiwdqW++s
+X-Received: by 10.66.118.198 with SMTP id ko6mr188495093pab.16.1426847142375; 
 	Fri, 20 Mar 2015 03:25:42 -0700 (PDT)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id x3sm7465954pdo.0.2015.03.20.03.25.41
+	by mx.google.com with ESMTPSA id
+	ca17sm7324189pdb.95.2015.03.20.03.25.41
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Fri, 20 Mar 2015 03:25:41 -0700 (PDT)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id B6B3856444D; Fri, 20 Mar 2015 10:25:32 +0000 (GMT)
+	id B832356448F; Fri, 20 Mar 2015 10:25:32 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 20 Mar 2015 10:25:26 +0000
-Message-Id: <5cde1c2e86c0df97f367e543a5856e3a2ee34ff6.1426598797.git.alexandru.damian@intel.com>
+Date: Fri, 20 Mar 2015 10:25:27 +0000
+Message-Id: <6fa0417a35de856d56418e9ac3f4b44f3a61b00d.1426598797.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <dae2559f8e6d87d54939bc73f4044916df29d93c.1426598797.git.alexandru.damian@intel.com>
 References: <dae2559f8e6d87d54939bc73f4044916df29d93c.1426598797.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1426598797.git.alexandru.damian@intel.com>
 References: <cover.1426598797.git.alexandru.damian@intel.com>
-Cc: Dave Lerner <dave.lerner@windriver.com>
-Subject: [PATCH 09/14] toaster: leave cancel enabled for release change
+Cc: David Reyna <David.Reyna@windriver.com>
+Subject: [PATCH 10/14] toaster: Incorrect breadcrumb behaviour in the project page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,32 +53,51 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 20 Mar 2015 10:25:41 -0000
 
-From: Dave Lerner <dave.lerner@windriver.com>
+From: David Reyna <David.Reyna@windriver.com>
 
-When you click the 'change' icon to edit the project release, the
-"cancel" button, should always be enabled so that the user can
-return to the 'not editable' state at any time.
+The last item in the breadcrumb for the project page should not be a link.
 
-[YOCTO #7151]
+[YOCTO #7157]
 
-Signed-off-by: Dave Lerner <dave.lerner@windriver.com>
+Signed-off-by: David Reyna <David.Reyna@windriver.com>
 ---
- lib/toaster/toastergui/templates/project.html | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/toaster/toastergui/templates/baseprojectpage.html | 6 ++++++
+ lib/toaster/toastergui/views.py                       | 1 +
+ 2 files changed, 7 insertions(+)
 
-diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
-index badc8a6..35147c0 100644
---- a/lib/toaster/toastergui/templates/project.html
-+++ b/lib/toaster/toastergui/templates/project.html
-@@ -412,7 +412,7 @@ vim: expandtab tabstop=2
-           <option ng-repeat="r in releases" value="{[r.id]}" ng-selected="r.id == project.release.id">{[r.description]}</option>
-         </select>
-         <input type="submit" class="btn" style="margin-left:5px;" value="Save" ng-disabled="project.release.id == projectVersion"/>
--        <input type="reset"  class="btn btn-link" value="Cancel" ng-click="toggle('#change-project-version')" ng-disabled="project.release.id == projectVersion"/>
-+        <input type="reset"  class="btn btn-link" value="Cancel" ng-click="toggle('#change-project-version')"/>
- 
-       </form>
-     </div>
+diff --git a/lib/toaster/toastergui/templates/baseprojectpage.html b/lib/toaster/toastergui/templates/baseprojectpage.html
+index e140925..0807f4c 100644
+--- a/lib/toaster/toastergui/templates/baseprojectpage.html
++++ b/lib/toaster/toastergui/templates/baseprojectpage.html
+@@ -11,10 +11,16 @@
+             <li><a href="{% url 'all-builds' %}">All builds</a></li>
+             {% block parentbreadcrumb %}
+         {% if project %}
++          {% if project_html %}
++            <li>
++                {{project.name}}
++            </li>
++          {% else %}
+             <li>
+                 <a href="{%url 'project' project.id %}"><span id="project_name">{{project.name}}</span>
+                 </a>
+             </li>
++          {% endif %}
+         {% endif %}
+             {% endblock %}
+             {% block localbreadcrumb %}{% endblock %}
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index e87c9f2..661023e 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -2142,6 +2142,7 @@ if toastermain.settings.MANAGED:
+             "targets" : map(lambda x: {"target" : x.target, "task" : x.task, "pk": x.pk}, prj.projecttarget_set.all()),
+             "freqtargets": freqtargets,
+             "releases": map(lambda x: {"id": x.pk, "name": x.name, "description":x.description}, Release.objects.all()),
++            "project_html": 1,
+         }
+         try:
+             context["machine"] = {"name": prj.projectvariable_set.get(name="MACHINE").value}
 -- 
 1.9.1
 
