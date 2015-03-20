@@ -1,42 +1,43 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-pa0-f54.google.com (mail-pa0-f54.google.com
-	[209.85.220.54])
-	by mail.openembedded.org (Postfix) with ESMTP id 4F655728C2
+Received: from mail-pa0-f48.google.com (mail-pa0-f48.google.com
+	[209.85.220.48])
+	by mail.openembedded.org (Postfix) with ESMTP id 5C88C739BB
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Mar 2015 10:25:41 +0000 (UTC)
-Received: by pacwe9 with SMTP id we9so105075966pac.1
+	Fri, 20 Mar 2015 10:25:42 +0000 (UTC)
+Received: by padcy3 with SMTP id cy3so105005141pad.3
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 20 Mar 2015 03:25:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=xgOvWHy24ajdBC383kvBIPRBhYlISF0HP1fYhu3qjww=;
-	b=aWImF0QqDPklgMyjADGZtLjkGCNOrPbNvoXx19xqXWuRvXs3/206CK3eUdl4JMiD1T
-	fsx7JrbrHHN2bnoku9EzqQnGrVDQnjodgIHnLMgVm8fLWDObDYYlCRDeR/h1G6EftvlN
-	DKehzW0w8WWYLo9VyQnK7bYpjqXUkrK3O2HQ4ohdzkeZ8wv5a0f0KBCnnWhG7GUkmTaH
-	PMPRimsbs+Xfqqa6NIidU60lOOi8zCn7gjPJ1r7pN2ooDjV8TDcIoKlvC/SviWfO6gpH
-	uI/Z49HsPPsKplB1odOUGKNkszxrkaQjRq6fVqxMVhT4CdCnc/xoTKKDdGck380fN/sX
-	6aSQ==
-X-Gm-Message-State: ALoCoQljhzLHqEaoHGTfD0DU9nxlXRm0uZdCFYiBG11+FNVW8VQ02+3fcBj2j9cHxfsuEsc5RJFe
-X-Received: by 10.70.64.193 with SMTP id q1mr123259706pds.94.1426847143326;
+	bh=kMMn1dQp6sjzEIZkzg/e1EDhqXsxjkSzJWmPpjzWWR4=;
+	b=JBrFSua9mfC06mYGon12LxW4OnzUlKRLSu05yiweMD3E1NEcbsHCCimEL4RH8aikro
+	UA1YB5Bz3fDhlJoeSkt1YwhAP/tXo1qYCz7ZgfvG4Pm+Lr0KEL3vpW86SR47Le4QbD+J
+	Ps7vNK3q9WulyhTDpa31Iaiq1FA05flKlb6Kf+JTGz3VAxgaPL4UQImVo4gdu/F8AFmU
+	Uk2tXfYOXaBK1R6KkNOQiOWRHGEAb3uTD0/aY6hFfYZZtNFzhVZrteKGiupmu7gPPgua
+	ueCZscU4PExMHcwRGJoO6zb9nGvZoyKL2giAL74W1mYmuB2KBc5MOObZ9WTH8te8eV8Q
+	v19g==
+X-Gm-Message-State: ALoCoQldwNM83NTdGaw3JLkbkkulRKqLGrArZNaz6PjbUk1rmIgYlB3R6kNIBocPn5nV0mgcYRAs
+X-Received: by 10.70.53.40 with SMTP id y8mr156401554pdo.61.1426847143591;
 	Fri, 20 Mar 2015 03:25:43 -0700 (PDT)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id f12sm7401985pat.43.2015.03.20.03.25.41
+	by mx.google.com with ESMTPSA id fx13sm7449394pdb.7.2015.03.20.03.25.41
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Fri, 20 Mar 2015 03:25:42 -0700 (PDT)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id BB3175645AE; Fri, 20 Mar 2015 10:25:32 +0000 (GMT)
+	id BC9CF5645C6; Fri, 20 Mar 2015 10:25:32 +0000 (GMT)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 20 Mar 2015 10:25:29 +0000
-Message-Id: <e97cc826f065482302cde9a5c18f2e41510a19c8.1426598797.git.alexandru.damian@intel.com>
+Date: Fri, 20 Mar 2015 10:25:30 +0000
+Message-Id: <3592c738d9810afb79c447d6bc48ff3a5c754f2d.1426598797.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <dae2559f8e6d87d54939bc73f4044916df29d93c.1426598797.git.alexandru.damian@intel.com>
 References: <dae2559f8e6d87d54939bc73f4044916df29d93c.1426598797.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1426598797.git.alexandru.damian@intel.com>
 References: <cover.1426598797.git.alexandru.damian@intel.com>
-Subject: [PATCH 12/14] toaster: tasks trigger the select related tables before ordering
+Cc: David Reyna <David.Reyna@windriver.com>
+Subject: [PATCH 13/14] toaster: display machine and project values in input fields
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,42 +52,40 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 20 Mar 2015 10:25:42 -0000
 
-From: Michael Wood <michael.g.wood@intel.com>
+From: David Reyna <David.Reyna@windriver.com>
 
-In two of the cases the data is changed from a QuerySet to a sorted list
-so we aren't able to use the QuerySet api at this point, moving it
-before the data type is changed fixes this.
+Explicitly preset the machine and project values in their respective
+input fields.
 
-[YOCTO #7404]
+[YOCTO #7170]
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: David Reyna <David.Reyna@windriver.com>
 ---
- lib/toaster/toastergui/views.py | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ lib/toaster/toastergui/templates/project.html | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 26c8760..ea47d96 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -877,7 +877,10 @@ def tasks_common(request, build_id, variant, task_anchor):
-         return _redirect_parameters( variant, request.GET, mandatory_parameters, build_id = build_id)
-     (filter_string, search_term, ordering_string) = _search_tuple(request, Task)
-     queryset_all = Task.objects.filter(build=build_id).exclude(order__isnull=True).exclude(outcome=Task.OUTCOME_NA)
-+    queryset_all = queryset_all.select_related("recipe", "build")
-+
-     queryset_with_search = _get_queryset(Task, queryset_all, None , search_term, ordering_string, 'order')
-+
-     if ordering_string.startswith('outcome'):
-         queryset = _get_queryset(Task, queryset_all, filter_string, search_term, 'order:+', 'order')
-         queryset = sorted(queryset, key=lambda ur: (ur.outcome_text), reverse=ordering_string.endswith('-'))
-@@ -887,7 +890,6 @@ def tasks_common(request, build_id, variant, task_anchor):
-     else:
-         queryset = _get_queryset(Task, queryset_all, filter_string, search_term, ordering_string, 'order')
- 
--    queryset = queryset.select_related("recipe", "build")
- 
-     # compute the anchor's page
-     if anchor:
+diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
+index 35147c0..0f538b9 100644
+--- a/lib/toaster/toastergui/templates/project.html
++++ b/lib/toaster/toastergui/templates/project.html
+@@ -355,7 +355,7 @@ vim: expandtab tabstop=2
+               You cannot really compare the builds for the new machine with the previous ones.
+         </div>
+         <form ng-submit="editProjectSettings('#select-machine')" class="input-append">
+-              <input type="text" id="machine" autocomplete="off" ng-model="machineName" typeahead="m.name for m in getAutocompleteSuggestions('machines', $viewValue)" typeahead-template-url="suggestion_details" />
++              <input type="text" id="machine" autocomplete="off" ng-model="machineName" value="{[machine.name]}" typeahead="m.name for m in getAutocompleteSuggestions('machines', $viewValue)" typeahead-template-url="suggestion_details" />
+               <input type="submit" id="apply-change-machine" class="btn" type="button" ng-disabled="machineName == machine.name || machineName.length == 0" value="Save"></input>
+               <input type="reset" id="cancel-machine" class="btn btn-link" ng-click="toggle('#select-machine')" value="Cancel"></input>
+               {% csrf_token %}
+@@ -391,7 +391,7 @@ vim: expandtab tabstop=2
+     </p>
+     <div id="change-project-name" style="display:none;">
+       <form ng-submit="editProjectSettings('#change-project-name')" class="input-append">
+-        <input type="text" class="input-xlarge" id="type-project-name" ng-model="projectName">
++        <input type="text" class="input-xlarge" id="type-project-name" ng-model="projectName" value="{[project.name]}">
+         <input type="submit" class="btn" value="Save" ng-disabled="project.name == projectName"/>
+         <input type="reset" class="btn btn-link" value="Cancel" ng-click="toggle('#change-project-name')">
+      </form>
 -- 
 1.9.1
 
