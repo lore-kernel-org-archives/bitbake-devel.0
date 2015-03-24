@@ -1,32 +1,39 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-oi0-f51.google.com (mail-oi0-f51.google.com
-	[209.85.218.51])
-	by mail.openembedded.org (Postfix) with ESMTP id 3110273A99
+Received: from mail-wi0-f174.google.com (mail-wi0-f174.google.com
+	[209.85.212.174])
+	by mail.openembedded.org (Postfix) with ESMTP id AB3FD723B3
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 Mar 2015 19:03:35 +0000 (UTC)
-Received: by oier21 with SMTP id r21so2195942oie.1
+	Wed, 25 Mar 2015 08:58:29 +0000 (UTC)
+Received: by wixw10 with SMTP id w10so28424294wix.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 24 Mar 2015 12:03:36 -0700 (PDT)
+	Wed, 25 Mar 2015 01:58:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-	:content-type;
-	bh=WMZLhkbsSenKxXnqV3XLuPTRFTm8n1i0XeOP7FEISEo=;
-	b=i7gPgUN3UyH2W0Tt+PnEYQcC7fs5PhYVwogjbc/u11B79iG4NkbdOIB9kNQv2h6wuZ
-	VHTQcg7Qj46G7zM87WLx0OLeUDlTNpi5E4oUIniRQjryT0fGbJyVkWsdBjnSi6nvtbb/
-	v5X/QxZHRvcICcD8EQrZSBKf8kZRiFz441yKHhiHe324gJZ4XFV7zVdU/R6F27+Dg9Kv
-	Aj74khV/uSWSeikgnmGEQNOp0lY4PSiIU9gnloZw91AWWTX15kPWISqRiLQOy057iYxQ
-	yByu77s/0g1hm5mAD58Vi5fohW8jjdX6Eq/cuVU+yxQAWhSzWfoV3WihwUi4xXpCZmbD
-	6OaA==
-X-Gm-Message-State: ALoCoQmWvD77oxWocs6Wexw3pbi0bbLjtda6JdF4NoXdWpLZUOtLzf6bb2dHRLqb+f9/RTd/b6Jf
-X-Received: by 10.202.231.85 with SMTP id e82mr4227672oih.104.1427223816690;
-	Tue, 24 Mar 2015 12:03:36 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.76.131.135 with HTTP; Tue, 24 Mar 2015 12:03:16 -0700 (PDT)
-From: "Damian, Alexandru" <alexandru.damian@intel.com>
-Date: Tue, 24 Mar 2015 19:03:16 +0000
-Message-ID: <CAJ2CSBtRVbj6n2vu5PfCir0eWEBsRAfQPhNhTQHFeOK1rSMjmw@mail.gmail.com>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=Dl79cyjXWbFXKxEc2exE64nm0ptIOWRwnAQOAsKz1kM=;
+	b=AqI0xE4lAniyB68+ksYlB96GtBHBTOIGwybheYe4RCsB3GoYcRxmnUznNzhA0J92E5
+	D9EYEz3y5mSEXHxY3t/u50NrK3uCiAUG2IOOAbg16lGOQqJTf3ue2x7O89DpPK10FOOS
+	m56gOzIXtPykHV+VheJYdd6Kh0MlbBw4ir1n7yPuwSSD6M/E9eLuK4WJoVx886wP1plW
+	tZDsXJs4noyptTHkzOSgDFeCVtTBUL/YBTt+5mBTZxBG6qTF8hQCzCNnvwFNmbZkq127
+	uuZWtPtrW/TjRIQag2ubtHOMnLMgJnOxL3Sx9RPKO/nw4l23o9mUgI0zyMckFLF+vPul
+	jAFg==
+X-Gm-Message-State: ALoCoQlnFKqmm+Gytb1ypokLUCOJ3ZRxqXkgz803hBRsvdKZRKdzDUVq7lItMdxvjla/H2P7fL85
+X-Received: by 10.180.240.172 with SMTP id wb12mr13490202wic.55.1427273910556; 
+	Wed, 25 Mar 2015 01:58:30 -0700 (PDT)
+Received: from adamian-desk.local ([83.217.123.106])
+	by mx.google.com with ESMTPSA id l6sm2622662wjx.33.2015.03.25.01.58.28
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Wed, 25 Mar 2015 01:58:28 -0700 (PDT)
+Received: by adamian-desk.local (Postfix, from userid 1000)
+	id 6824D561555; Tue, 24 Mar 2015 18:59:57 +0000 (GMT)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 24 Mar 2015 18:59:55 +0000
+Message-Id: <cover.1427223502.git.alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.9.1
+Cc: Belen Barros Pena <belen.barros.pena@linux.intel.com>,
+	Dave Lerner <dave.lerner@windriver.com>,
+	David Reyna <David.Reyna@windriver.com>
 Subject: [PATCH 00/18] Toaster bugfixing patchset
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -40,45 +47,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 24 Mar 2015 19:03:36 -0000
-Content-Type: multipart/alternative; boundary=001a11417b209bf41d05120d701a
+X-List-Received-Date: Wed, 25 Mar 2015 08:58:31 -0000
 
---001a11417b209bf41d05120d701a
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
 Hello,
 
-This is a toaster bugfixing patchset - the patches have been reviewed and
-tested on the mailing list.
+This is a toaster bugfixing patchset - the patches have been reviewed and tested on
+the mailing list. 
 
-The patches contain long-lines and binary files that sendmail refuses to
-send,
-
-Can you please pull from
-
-http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=3Dadamian/201=
-50324-submission-bb
-
-
-before the 1.8 merge window closes ?
+Can you please pull before the 1.8 merge window closes ?
 
 Thank you,
 Alex
 
 
-The following changes since commit fc0cec1f38aa6f2d09434cc008a429d350a5706f=
-:
+The following changes since commit fc0cec1f38aa6f2d09434cc008a429d350a5706f:
 
-  toaster: insure IMAGE_INSTALL_append values have a space prefix
-(2015-03-21 00:00:02 +0000)
+  toaster: insure IMAGE_INSTALL_append values have a space prefix (2015-03-21 00:00:02 +0000)
 
 are available in the git repository at:
 
   git://git.yoctoproject.org/poky-contrib adamian/20150324-submission-bb
-
-http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=3Dadamian/20150324=
--submission-bb
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20150324-submission-bb
 
 Alexandru DAMIAN (2):
   uievent: catch and log exceptions in receiving events
@@ -149,187 +140,29 @@ Michael Wood (1):
  lib/toaster/toastergui/templates/projects.html     |   3 +-
  lib/toaster/toastergui/templates/targets.html      |  14 +-
  lib/toaster/toastergui/templatetags/projecttags.py |  19 +++
- lib/toaster/toastergui/views.py                    | 166
-+++++++++++++++++----
+ lib/toaster/toastergui/views.py                    | 166 +++++++++++++++++----
  41 files changed, 521 insertions(+), 168 deletions(-)
- create mode 100755
-lib/toaster/toastergui/static/css/images/ui-bg_diagonals-thick_18_b81900_40=
-x40.png
- create mode 100755
-lib/toaster/toastergui/static/css/images/ui-bg_diagonals-thick_20_666666_40=
-x40.png
- create mode 100755
-lib/toaster/toastergui/static/css/images/ui-bg_flat_10_000000_40x100.png
- create mode 100755
-lib/toaster/toastergui/static/css/images/ui-bg_glass_100_f6f6f6_1x400.png
- create mode 100755
-lib/toaster/toastergui/static/css/images/ui-bg_glass_100_fdf5ce_1x400.png
- create mode 100755
-lib/toaster/toastergui/static/css/images/ui-bg_glass_65_ffffff_1x400.png
- create mode 100644
-lib/toaster/toastergui/static/css/images/ui-bg_gloss-wave_35_f6a828_500x100=
-.png
- create mode 100755
-lib/toaster/toastergui/static/css/images/ui-bg_highlight-soft_100_eeeeee_1x=
-100.png
- create mode 100755
-lib/toaster/toastergui/static/css/images/ui-bg_highlight-soft_75_ffe45c_1x1=
-00.png
- create mode 100644
-lib/toaster/toastergui/static/css/images/ui-icons_222222_256x240.png
- create mode 100644
-lib/toaster/toastergui/static/css/images/ui-icons_228ef1_256x240.png
- create mode 100644
-lib/toaster/toastergui/static/css/images/ui-icons_ef8c08_256x240.png
- create mode 100644
-lib/toaster/toastergui/static/css/images/ui-icons_ffd27a_256x240.png
- create mode 100644
-lib/toaster/toastergui/static/css/images/ui-icons_ffffff_256x240.png
+ create mode 100755 lib/toaster/toastergui/static/css/images/ui-bg_diagonals-thick_18_b81900_40x40.png
+ create mode 100755 lib/toaster/toastergui/static/css/images/ui-bg_diagonals-thick_20_666666_40x40.png
+ create mode 100755 lib/toaster/toastergui/static/css/images/ui-bg_flat_10_000000_40x100.png
+ create mode 100755 lib/toaster/toastergui/static/css/images/ui-bg_glass_100_f6f6f6_1x400.png
+ create mode 100755 lib/toaster/toastergui/static/css/images/ui-bg_glass_100_fdf5ce_1x400.png
+ create mode 100755 lib/toaster/toastergui/static/css/images/ui-bg_glass_65_ffffff_1x400.png
+ create mode 100644 lib/toaster/toastergui/static/css/images/ui-bg_gloss-wave_35_f6a828_500x100.png
+ create mode 100755 lib/toaster/toastergui/static/css/images/ui-bg_highlight-soft_100_eeeeee_1x100.png
+ create mode 100755 lib/toaster/toastergui/static/css/images/ui-bg_highlight-soft_75_ffe45c_1x100.png
+ create mode 100644 lib/toaster/toastergui/static/css/images/ui-icons_222222_256x240.png
+ create mode 100644 lib/toaster/toastergui/static/css/images/ui-icons_228ef1_256x240.png
+ create mode 100644 lib/toaster/toastergui/static/css/images/ui-icons_ef8c08_256x240.png
+ create mode 100644 lib/toaster/toastergui/static/css/images/ui-icons_ffd27a_256x240.png
+ create mode 100644 lib/toaster/toastergui/static/css/images/ui-icons_ffffff_256x240.png
  create mode 100755 lib/toaster/toastergui/static/css/jquery-ui.min.css
- create mode 100755
-lib/toaster/toastergui/static/css/jquery-ui.structure.min.css
- create mode 100755
-lib/toaster/toastergui/static/css/jquery-ui.theme.min.css
+ create mode 100755 lib/toaster/toastergui/static/css/jquery-ui.structure.min.css
+ create mode 100755 lib/toaster/toastergui/static/css/jquery-ui.theme.min.css
  create mode 100755 lib/toaster/toastergui/static/js/filtersnippet.js
  create mode 100755 lib/toaster/toastergui/static/js/jquery-ui.min.js
 
---=20
+-- 
 1.9.1
-=E2=80=8B
 
---=20
-Alex Damian
-Yocto Project
-SSG / OTC
 
---001a11417b209bf41d05120d701a
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-family:tahoma,s=
-ans-serif"><br clear=3D"all"></div><div class=3D"gmail_default" style=3D"fo=
-nt-family:tahoma,sans-serif">Hello,<br><br>This is a toaster bugfixing patc=
-hset - the patches have been reviewed and tested on the mailing list. <br><=
-br></div><div class=3D"gmail_default" style=3D"font-family:tahoma,sans-seri=
-f">The patches contain long-lines and binary files that sendmail refuses to=
- send,<br><br></div><div class=3D"gmail_default" style=3D"font-family:tahom=
-a,sans-serif">Can you please pull from <br><br><a href=3D"http://git.yoctop=
-roject.org/cgit/cgit.cgi/poky-contrib/log/?h=3Dadamian/20150324-submission-=
-bb">http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=3Dadamian=
-/20150324-submission-bb</a><br></div><div class=3D"gmail_default" style=3D"=
-font-family:tahoma,sans-serif"><br><br>before the 1.8 merge window closes ?=
-<br><br>Thank you,<br>Alex<br><br><br>The following changes since commit fc=
-0cec1f38aa6f2d09434cc008a429d350a5706f:<br><br>=C2=A0 toaster: insure IMAGE=
-_INSTALL_append values have a space prefix (2015-03-21 00:00:02 +0000)<br><=
-br>are available in the git repository at:<br><br>=C2=A0 git://<a href=3D"h=
-ttp://git.yoctoproject.org/poky-contrib">git.yoctoproject.org/poky-contrib<=
-/a> adamian/20150324-submission-bb<br>=C2=A0 <a href=3D"http://git.yoctopro=
-ject.org/cgit.cgi/poky-contrib/log/?h=3Dadamian/20150324-submission-bb">htt=
-p://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=3Dadamian/20150324-su=
-bmission-bb</a><br><br>Alexandru DAMIAN (2):<br>=C2=A0 uievent: catch and l=
-og exceptions in receiving events<br>=C2=A0 toasterui: enable sanity checke=
-r<br><br>Belen Barros Pena (8):<br>=C2=A0 toastergui: give button nice roun=
-ded corners<br>=C2=A0 toastergui: changes to the all projects table<br>=C2=
-=A0 toastergui: changes to release change notifications<br>=C2=A0 toasterui=
-: update links to Toaster manual<br>=C2=A0 toasterui: hide release when onl=
-y one exists<br>=C2=A0 toasterui: Improve messaging for empty layer details=
-<br>=C2=A0 toasterui: hide right column if empty<br>=C2=A0 toasterui: small=
- changes to empty states<br><br>Dave Lerner (3):<br>=C2=A0 toaster: layer-r=
-elative paths for config files<br>=C2=A0 toaster: alert fixes for project r=
-elease change<br>=C2=A0 toaster: most-build-targets bug fixes<br><br>David =
-Reyna (4):<br>=C2=A0 toaster: machine not searchable in all builds/projects=
-<br>=C2=A0 toaster: build date range selections static sources<br>=C2=A0 to=
-aster: build date range selections<br>=C2=A0 toaster: PACKAGE_CLASSES varia=
-ble does not show current value when<br>=C2=A0=C2=A0=C2=A0 editing<br><br>M=
-ichael Wood (1):<br>=C2=A0 toaster: Project page fix targets url and toolti=
-p placement<br><br>=C2=A0lib/bb/ui/toasterui.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=
-=C2=A0 2 +-<br>=C2=A0lib/bb/ui/uievent.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0=C2=A0 7 +-<br>=C2=A0lib/toaster/bldcontrol/models.py=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-<br>=C2=A0lib/toaster/toastergui/stati=
-c/css/default.css=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 12 +-<br>=C2=A0.../=
-ui-bg_diagonals-thick_18_b81900_40x40.png=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | B=
-in 0 -&gt; 418 bytes<br>=C2=A0.../ui-bg_diagonals-thick_20_666666_40x40.png=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | Bin 0 -&gt; 312 bytes<br>=C2=A0.../css/ima=
-ges/ui-bg_flat_10_000000_40x100.png=C2=A0=C2=A0=C2=A0=C2=A0 | Bin 0 -&gt; 2=
-05 bytes<br>=C2=A0.../css/images/ui-bg_glass_100_f6f6f6_1x400.png=C2=A0=C2=
-=A0=C2=A0 | Bin 0 -&gt; 262 bytes<br>=C2=A0.../css/images/ui-bg_glass_100_f=
-df5ce_1x400.png=C2=A0=C2=A0=C2=A0 | Bin 0 -&gt; 348 bytes<br>=C2=A0.../css/=
-images/ui-bg_glass_65_ffffff_1x400.png=C2=A0=C2=A0=C2=A0=C2=A0 | Bin 0 -&gt=
-; 207 bytes<br>=C2=A0.../images/ui-bg_gloss-wave_35_f6a828_500x100.png=C2=
-=A0 | Bin 0 -&gt; 5815 bytes<br>=C2=A0.../ui-bg_highlight-soft_100_eeeeee_1=
-x100.png=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | Bin 0 -&gt; 278 bytes<br>=C2=A0...=
-/ui-bg_highlight-soft_75_ffe45c_1x100.png=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | Bin 0 -&gt; 328 bytes<br>=C2=A0.../static/css/images/ui-icons_222222_=
-256x240.png=C2=A0 | Bin 0 -&gt; 6922 bytes<br>=C2=A0.../static/css/images/u=
-i-icons_228ef1_256x240.png=C2=A0 | Bin 0 -&gt; 4549 bytes<br>=C2=A0.../stat=
-ic/css/images/ui-icons_ef8c08_256x240.png=C2=A0 | Bin 0 -&gt; 4549 bytes<br=
->=C2=A0.../static/css/images/ui-icons_ffd27a_256x240.png=C2=A0 | Bin 0 -&gt=
-; 4549 bytes<br>=C2=A0.../static/css/images/ui-icons_ffffff_256x240.png=C2=
-=A0 | Bin 0 -&gt; 6299 bytes<br>=C2=A0.../toastergui/static/css/jquery-ui.m=
-in.css=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 7 +<br>=C2=
-=A0.../static/css/jquery-ui.structure.min.css=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 5 +<br>=C2=A0.../toastergui/static/css/jqu=
-ery-ui.theme.min.css=C2=A0 |=C2=A0=C2=A0 5 +<br>=C2=A0lib/toaster/toastergu=
-i/static/js/filtersnippet.js=C2=A0 |=C2=A0 95 ++++++++++++<br>=C2=A0lib/toa=
-ster/toastergui/static/js/jquery-ui.min.js=C2=A0 |=C2=A0=C2=A0 7 +<br>=C2=
-=A0lib/toaster/toastergui/static/js/layerdetails.js=C2=A0=C2=A0 |=C2=A0=C2=
-=A0 5 +<br>=C2=A0lib/toaster/toastergui/static/js/projectapp.js=C2=A0=C2=A0=
-=C2=A0=C2=A0 |=C2=A0 38 ++++-<br>=C2=A0lib/toaster/toastergui/templates/bas=
-e.html=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-<b=
-r>=C2=A0lib/toaster/toastergui/templates/build.html=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0 17 +++<br>=C2=A0lib/toaster/toastergui/templates=
-/configvars.html=C2=A0=C2=A0 |=C2=A0=C2=A0 4 +-<br>=C2=A0.../toastergui/tem=
-plates/filtersnippet.html=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=
- 34 +++--<br>=C2=A0lib/toaster/toastergui/templates/landing.html=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 | 100 ++++++-------<br>=C2=A0.../toastergui/templates=
-/landing_not_managed.html=C2=A0 |=C2=A0 12 +-<br>=C2=A0lib/toaster/toasterg=
-ui/templates/layerdetails.html |=C2=A0=C2=A0 6 +-<br>=C2=A0lib/toaster/toas=
-tergui/templates/layers.html=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 16=
- +-<br>=C2=A0lib/toaster/toastergui/templates/machines.html=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0 6 +-<br>=C2=A0.../toastergui/templates/managed_buil=
-ds.html=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 19 ++-<br>=C2=A0lib/toa=
-ster/toastergui/templates/project.html=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 44 +++---<br>=C2=A0lib/toaster/toastergui/templates/projectconf.html=C2=
-=A0 |=C2=A0 42 ++++--<br>=C2=A0lib/toaster/toastergui/templates/projects.ht=
-ml=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-<br>=C2=A0lib/toaster/toasterg=
-ui/templates/targets.html=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 14 +-<br>=
-=C2=A0lib/toaster/toastergui/templatetags/projecttags.py |=C2=A0 19 +++<br>=
-=C2=A0lib/toaster/toastergui/views.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 166 +++++++++++++++++----<br>=C2=A041 files changed, 521 insertions(+=
-), 168 deletions(-)<br>=C2=A0create mode 100755 lib/toaster/toastergui/stat=
-ic/css/images/ui-bg_diagonals-thick_18_b81900_40x40.png<br>=C2=A0create mod=
-e 100755 lib/toaster/toastergui/static/css/images/ui-bg_diagonals-thick_20_=
-666666_40x40.png<br>=C2=A0create mode 100755 lib/toaster/toastergui/static/=
-css/images/ui-bg_flat_10_000000_40x100.png<br>=C2=A0create mode 100755 lib/=
-toaster/toastergui/static/css/images/ui-bg_glass_100_f6f6f6_1x400.png<br>=
-=C2=A0create mode 100755 lib/toaster/toastergui/static/css/images/ui-bg_gla=
-ss_100_fdf5ce_1x400.png<br>=C2=A0create mode 100755 lib/toaster/toastergui/=
-static/css/images/ui-bg_glass_65_ffffff_1x400.png<br>=C2=A0create mode 1006=
-44 lib/toaster/toastergui/static/css/images/ui-bg_gloss-wave_35_f6a828_500x=
-100.png<br>=C2=A0create mode 100755 lib/toaster/toastergui/static/css/image=
-s/ui-bg_highlight-soft_100_eeeeee_1x100.png<br>=C2=A0create mode 100755 lib=
-/toaster/toastergui/static/css/images/ui-bg_highlight-soft_75_ffe45c_1x100.=
-png<br>=C2=A0create mode 100644 lib/toaster/toastergui/static/css/images/ui=
--icons_222222_256x240.png<br>=C2=A0create mode 100644 lib/toaster/toastergu=
-i/static/css/images/ui-icons_228ef1_256x240.png<br>=C2=A0create mode 100644=
- lib/toaster/toastergui/static/css/images/ui-icons_ef8c08_256x240.png<br>=
-=C2=A0create mode 100644 lib/toaster/toastergui/static/css/images/ui-icons_=
-ffd27a_256x240.png<br>=C2=A0create mode 100644 lib/toaster/toastergui/stati=
-c/css/images/ui-icons_ffffff_256x240.png<br>=C2=A0create mode 100755 lib/to=
-aster/toastergui/static/css/jquery-ui.min.css<br>=C2=A0create mode 100755 l=
-ib/toaster/toastergui/static/css/jquery-ui.structure.min.css<br>=C2=A0creat=
-e mode 100755 lib/toaster/toastergui/static/css/jquery-ui.theme.min.css<br>=
-=C2=A0create mode 100755 lib/toaster/toastergui/static/js/filtersnippet.js<=
-br>=C2=A0create mode 100755 lib/toaster/toastergui/static/js/jquery-ui.min.=
-js<br><br>-- <br>1.9.1<br>=E2=80=8B</div><br>-- <br><div class=3D"gmail_sig=
-nature"><div dir=3D"ltr">Alex Damian<div>Yocto Project<br></div><div>SSG / =
-OTC=C2=A0</div></div></div>
-</div>
-
---001a11417b209bf41d05120d701a--
