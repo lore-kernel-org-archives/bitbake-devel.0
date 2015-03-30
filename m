@@ -1,29 +1,27 @@
 Return-Path: <richard.purdie@linuxfoundation.org>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id F3C2D73C5A
+	by mail.openembedded.org (Postfix) with ESMTP id 4A46873C0D
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 30 Mar 2015 12:29:47 +0000 (UTC)
+	Mon, 30 Mar 2015 12:56:45 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t2UCTmCk004374 for <bitbake-devel@lists.openembedded.org>;
-	Mon, 30 Mar 2015 13:29:48 +0100
+	t2UCtLFO005410; Mon, 30 Mar 2015 13:56:43 +0100
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id hLZ4rl6htjCb for <bitbake-devel@lists.openembedded.org>;
-	Mon, 30 Mar 2015 13:29:48 +0100 (BST)
+	with LMTP id JJA6i2U4RQy4; Mon, 30 Mar 2015 13:56:43 +0100 (BST)
 Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t2UCTXt1004371
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 30 Mar 2015 13:29:44 +0100
-Message-ID: <1427718573.14020.299.camel@linuxfoundation.org>
+	t2UCuW2f005464
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 30 Mar 2015 13:56:43 +0100
+Message-ID: <1427720192.14020.301.camel@linuxfoundation.org>
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 30 Mar 2015 13:29:33 +0100
+Date: Mon, 30 Mar 2015 13:56:32 +0100
 X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
 Mime-Version: 1.0
-Subject: [PATCH] cooker: Ensure bbappend files are processed in a determistic order
+Cc: "Eggleton, Paul" <paul.eggleton@intel.com>
+Subject: [PATCH WIP] bitbake-layers: Convert flatten to use collections.bbappends
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,77 +34,85 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 30 Mar 2015 12:29:48 -0000
+X-List-Received-Date: Mon, 30 Mar 2015 12:56:49 -0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-self.appendlist is a dict and as such unordered. This can lead to cases
-where appends with different names (e.g. x_%.bbappend vs. x_123.bbappend)
-can be reordered in application which in turn reorders the variables
-that those bbappend files might touch. Reorderd variables changes the sstate
-cache signatures causing real world issues.
+flatten support currently looks broken since it doesn't appear to
+deal with handling "%" support in bbappend file names.
 
-To avoid this, use a list for the append files instead.
+This patch convert it to use collections.get_file_appends() which
+correctly handles "%" support.
 
-This patch is conservative and just adds a new data structure alongside
-the existing one and uses it to resolve the core issue. Later patches
-(post release) can handle some of the wider but less problematic ones
-(e.g. issues in bitbake-layers flatten).
-
-[YOCTO #7511]
+[FIXME: Also converts collections.appendlist -> collections.bbappends
+but this code also appears to be missing "%" support?]
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 68aa532..b0f4e4b 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1576,6 +1576,7 @@ class CookerExit(bb.event.Event):
- class CookerCollectFiles(object):
-     def __init__(self, priorities):
-         self.appendlist = {}
-+        self.bbappends = []
-         self.appliedappendlist = []
-         self.bbfile_config_priorities = priorities
+[Paul: I have to admit I'm struggling to understand what first_append does
+so was struggling to further clean this up]
+
+diff --git a/bitbake/bin/bitbake-layers b/bitbake/bin/bitbake-layers
+index 9824629..e30e0f6 100755
+--- a/bitbake/bin/bitbake-layers
++++ b/bitbake/bin/bitbake-layers
+@@ -622,31 +622,27 @@ build results (as the layer priority order has effectively changed).
+                                     logger.warn('Overwriting file %s', fdest)
+                             bb.utils.copyfile(f1full, fdest)
+                             if ext == '.bb':
+-                                if f1 in self.bbhandler.cooker.collection.appendlist:
+-                                    appends = self.bbhandler.cooker.collection.appendlist[f1]
+-                                    if appends:
+-                                        logger.plain('  Applying appends to %s' % fdest )
+-                                        for appendname in appends:
+-                                            if layer_path_match(appendname):
+-                                                self.apply_append(appendname, fdest)
++                                for append in self.bbhandler.cooker.collection.get_file_appends(f1full):
++                                    if layer_path_match(append):
++                                        logger.plain('  Applying append %s to %s' % (append, fdest))
++                                        self.apply_append(append, fdest)
+                                     appended_recipes.append(f1)
  
-@@ -1670,6 +1671,7 @@ class CookerCollectFiles(object):
-         # Build a list of .bbappend files for each .bb file
-         for f in bbappend:
-             base = os.path.basename(f).replace('.bbappend', '.bb')
-+            self.bbappends.append((base, f))
-             if not base in self.appendlist:
-                self.appendlist[base] = []
-             if f not in self.appendlist[base]:
-@@ -1695,11 +1697,11 @@ class CookerCollectFiles(object):
-         """
-         filelist = []
-         f = os.path.basename(fn)
--        for bbappend in self.appendlist:
-+        for b in self.bbappends:
-+            (bbappend, filename) = b
-             if (bbappend == f) or ('%' in bbappend and bbappend.startswith(f[:bbappend.index('%')])):
-                 self.appliedappendlist.append(bbappend)
--                for filename in self.appendlist[bbappend]:
--                    filelist.append(filename)
-+                filelist.append(filename)
-         return filelist
+         # Take care of when some layers are excluded and yet we have included bbappends for those recipes
+-        for recipename in self.bbhandler.cooker.collection.appendlist.iterkeys():
++        for b in self.bbhandler.cooker.collection.bbappends:
++            (recipename, appendname) = b
+             if recipename not in appended_recipes:
+-                appends = self.bbhandler.cooker.collection.appendlist[recipename]
+                 first_append = None
+-                for appendname in appends:
+-                    layer = layer_path_match(appendname)
+-                    if layer:
+-                        if first_append:
+-                            self.apply_append(appendname, first_append)
+-                        else:
+-                            fdest = appendname[len(layer):]
+-                            fdest = os.path.normpath(os.sep.join([outputdir,fdest]))
+-                            bb.utils.mkdirhier(os.path.dirname(fdest))
+-                            bb.utils.copyfile(appendname, fdest)
+-                            first_append = fdest
++                layer = layer_path_match(appendname)
++                if layer:
++                    if first_append:
++                        self.apply_append(appendname, first_append)
++                    else:
++                        fdest = appendname[len(layer):]
++                        fdest = os.path.normpath(os.sep.join([outputdir,fdest]))
++                        bb.utils.mkdirhier(os.path.dirname(fdest))
++                        bb.utils.copyfile(appendname, fdest)
++                        first_append = fdest
  
-     def collection_priorities(self, pkgfns, d):
-@@ -1719,10 +1721,10 @@ class CookerCollectFiles(object):
-                 unmatched.add(regex)
+         # Get the regex for the first layer in our list (which is where the conf/layer.conf file will
+         # have come from)
+@@ -722,7 +718,7 @@ build results (as the layer priority order has effectively changed).
+ Lists recipes with the bbappends that apply to them as subitems.
+ """
+         self.init_bbhandler()
+-        if not self.bbhandler.cooker.collection.appendlist:
++        if not self.bbhandler.cooker.collection.bbappends:
+             logger.plain('No append files found')
+             return 0
  
-         def findmatch(regex):
--            for bbfile in self.appendlist:
--                for append in self.appendlist[bbfile]:
--                    if regex.match(append):
--                        return True
-+            for b in self.bbappends:
-+                (bbfile, append) = b
-+                if regex.match(append):
-+                    return True
-             return False
- 
-         for unmatch in unmatched.copy():
 
 
 
