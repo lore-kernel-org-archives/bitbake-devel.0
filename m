@@ -1,43 +1,41 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-pa0-f48.google.com (mail-pa0-f48.google.com
-	[209.85.220.48])
-	by mail.openembedded.org (Postfix) with ESMTP id AFA2E7391D
+Received: from mail-pd0-f172.google.com (mail-pd0-f172.google.com
+	[209.85.192.172])
+	by mail.openembedded.org (Postfix) with ESMTP id 10CD873CC3
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue, 31 Mar 2015 14:07:33 +0000 (UTC)
-Received: by pactp5 with SMTP id tp5so20797116pac.1
+Received: by pddn5 with SMTP id n5so21901883pdd.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 31 Mar 2015 07:07:34 -0700 (PDT)
+	Tue, 31 Mar 2015 07:07:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=xWaQhWOe2H4hrT80lUM+9UM9s2uzwshhRR92x63+GZc=;
-	b=De1i2ZACgwnVFRPZRrr+HUDqCOQL6zaya5V97DypzNBz5glCSlnKygNY8UZ4y1KlLV
-	Y4PCvbLVOvEOkFR5GLBz3Unaj9xGr6W89i/nLm6zdodbjMKmZh2IMIEgycCH02uKkDBy
-	OG/5mS7qxLYhn/kDkQqB/72417O4bKHvOX+YJJKxIatf86Nrlw8uhNGZz3C2+JXtHN7k
-	qivZRlrIaBNSob9/TYZO/Wbth3qqlAM63fsk5tRZ/B5f5FERt/Frx1ke+hi4Mo7uZ181
-	HsSAV7m142Z+MQ8tDOLQ9bEkU4LFg1sroIpmww2s0wporpEhuRsObKEGF3lVvQKNH9oJ
-	9geg==
-X-Gm-Message-State: ALoCoQlLQcBhYEzu/Zs8ZvydbIxnSFLqmbyU7sufO6nnLf1k2+JQJcQEgZoZuw/SW91vUnQasb9b
-X-Received: by 10.68.197.201 with SMTP id iw9mr69565158pbc.84.1427810854714;
-	Tue, 31 Mar 2015 07:07:34 -0700 (PDT)
+	:references;
+	bh=OVzw4tH+EcSgNRlaH7kxNm7P4Jv9ljVANCbqWRpD9xg=;
+	b=cX7eqCjL4LXGz7V6IizZEF0hlnoZS143fLcN4fH30IWAMqnVxKeRH4TpxNYkUKELj8
+	2MjVa+EX0EEi1yz70QscZf34Of9o9ms3nOTSXP6KYuHH3SebFHfD92pLBm9IO0ZgaZZ4
+	mco/v6OD5uzOwlYr3+P7yyfB3QNFF3qTbqjXg7I3gMLm+C6yN1exwMmimaxwGjyEzAIl
+	RcPtCv17HUz7cUOBE4+5QyXw1AIz4BhIpCA1MqrBDrgcrgGxbVioqRpizgKLZvH9yr4e
+	YOWe6x8oUCqds0PL+y/wtic3+svC/pz6wg5cg2e5S6MbZyxhwNto9tSWj5jwGaBkju0p
+	hl8g==
+X-Gm-Message-State: ALoCoQlPG2pOxLmModxDY4H+nHMQgVrC6zHhSrRN8NzTWWSQa4z/AyDMJqa5wUiDRrOpMb/UuRYx
+X-Received: by 10.66.140.39 with SMTP id rd7mr67644187pab.25.1427810855211;
+	Tue, 31 Mar 2015 07:07:35 -0700 (PDT)
 Received: from adamian-desk.local ([83.217.123.106])
 	by mx.google.com with ESMTPSA id
-	n10sm14109597pdp.18.2015.03.31.07.07.33
+	xh3sm13479968pab.25.2015.03.31.07.07.33
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Tue, 31 Mar 2015 07:07:33 -0700 (PDT)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 37E5E561EBC; Tue, 31 Mar 2015 15:07:31 +0100 (BST)
+	id 3142F561E66; Tue, 31 Mar 2015 15:07:31 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 31 Mar 2015 15:07:30 +0100
-Message-Id: <32b405d1e44e310dd1a1d04dff36bac3f5e630a7.1427810520.git.alexandru.damian@intel.com>
+Date: Tue, 31 Mar 2015 15:07:27 +0100
+Message-Id: <4b553dbeff7c7bc536669e7fee7d52f962259ebe.1427810520.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <4b553dbeff7c7bc536669e7fee7d52f962259ebe.1427810520.git.alexandru.damian@intel.com>
-References: <4b553dbeff7c7bc536669e7fee7d52f962259ebe.1427810520.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1427810520.git.alexandru.damian@intel.com>
 References: <cover.1427810520.git.alexandru.damian@intel.com>
-Subject: [PATCH 4/4] Revert "toaster: machine not searchable in all builds/projects"
+Subject: [PATCH 1/4] toastergui: prevent error on empty build list
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,34 +48,41 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 31 Mar 2015 14:07:33 -0000
+X-List-Received-Date: Tue, 31 Mar 2015 14:07:39 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-This reverts commit 1a86ed8f95649c5f5a3a66984ce36978d93b0e01.
+This patch prevents errors being thrown on date limit
+computations if the build list is empty.
 
-Bug [YOCTO #7334] was incompletly fixed, and the proper fix is
-not straightfoward. Consequently we revert the partial fix, as
-a incomplete fix is worse than no fix.
+[YOCTO #7513]
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/bldcontrol/models.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/toaster/toastergui/views.py | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/lib/toaster/bldcontrol/models.py b/lib/toaster/bldcontrol/models.py
-index bfb25ee..02cfaf7 100644
---- a/lib/toaster/bldcontrol/models.py
-+++ b/lib/toaster/bldcontrol/models.py
-@@ -106,7 +106,7 @@ class BuildRequest(models.Model):
-         (REQ_ARCHIVE, "archive"),
-     )
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index fdd8022..2f8fb1a 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -334,8 +334,14 @@ def _add_daterange_context(queryset_all, request, daterange_list):
+     context_date['daterange_filter']=''
+     for key in daterange_list:
+         queryset_key = queryset_all.order_by(key)
+-        context_date['dateMin_'+key]=timezone.localtime(getattr(queryset_key.first(),key)).strftime("%d/%m/%Y")
+-        context_date['dateMax_'+key]=timezone.localtime(getattr(queryset_key.last(),key)).strftime("%d/%m/%Y")
++        try:
++            context_date['dateMin_'+key]=timezone.localtime(getattr(queryset_key.first(),key)).strftime("%d/%m/%Y")
++        except AttributeError:
++            context_date['dateMin_'+key]=timezone.localtime(timezone.now())
++        try:
++            context_date['dateMax_'+key]=timezone.localtime(getattr(queryset_key.last(),key)).strftime("%d/%m/%Y")
++        except AttributeError:
++            context_date['dateMax_'+key]=timezone.localtime(timezone.now())
+     return context_date,today_begin,yesterday_begin
  
--    search_allowed_fields = ("brtarget__target", "build__project__name", "build__machine")
-+    search_allowed_fields = ("brtarget__target", "build__project__name")
  
-     project     = models.ForeignKey(Project)
-     build       = models.OneToOneField(Build, null = True)     # TODO: toasterui should set this when Build is created
 -- 
 1.9.1
 
