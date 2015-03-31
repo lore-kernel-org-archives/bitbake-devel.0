@@ -1,27 +1,43 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 4A46873C0D
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-pa0-f48.google.com (mail-pa0-f48.google.com
+	[209.85.220.48])
+	by mail.openembedded.org (Postfix) with ESMTP id AFA2E7391D
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 30 Mar 2015 12:56:45 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t2UCtLFO005410; Mon, 30 Mar 2015 13:56:43 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id JJA6i2U4RQy4; Mon, 30 Mar 2015 13:56:43 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t2UCuW2f005464
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 30 Mar 2015 13:56:43 +0100
-Message-ID: <1427720192.14020.301.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Mon, 30 Mar 2015 13:56:32 +0100
-X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
-Mime-Version: 1.0
-Cc: "Eggleton, Paul" <paul.eggleton@intel.com>
-Subject: [PATCH WIP] bitbake-layers: Convert flatten to use collections.bbappends
+	Tue, 31 Mar 2015 14:07:33 +0000 (UTC)
+Received: by pactp5 with SMTP id tp5so20797116pac.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 31 Mar 2015 07:07:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references:in-reply-to:references;
+	bh=xWaQhWOe2H4hrT80lUM+9UM9s2uzwshhRR92x63+GZc=;
+	b=De1i2ZACgwnVFRPZRrr+HUDqCOQL6zaya5V97DypzNBz5glCSlnKygNY8UZ4y1KlLV
+	Y4PCvbLVOvEOkFR5GLBz3Unaj9xGr6W89i/nLm6zdodbjMKmZh2IMIEgycCH02uKkDBy
+	OG/5mS7qxLYhn/kDkQqB/72417O4bKHvOX+YJJKxIatf86Nrlw8uhNGZz3C2+JXtHN7k
+	qivZRlrIaBNSob9/TYZO/Wbth3qqlAM63fsk5tRZ/B5f5FERt/Frx1ke+hi4Mo7uZ181
+	HsSAV7m142Z+MQ8tDOLQ9bEkU4LFg1sroIpmww2s0wporpEhuRsObKEGF3lVvQKNH9oJ
+	9geg==
+X-Gm-Message-State: ALoCoQlLQcBhYEzu/Zs8ZvydbIxnSFLqmbyU7sufO6nnLf1k2+JQJcQEgZoZuw/SW91vUnQasb9b
+X-Received: by 10.68.197.201 with SMTP id iw9mr69565158pbc.84.1427810854714;
+	Tue, 31 Mar 2015 07:07:34 -0700 (PDT)
+Received: from adamian-desk.local ([83.217.123.106])
+	by mx.google.com with ESMTPSA id
+	n10sm14109597pdp.18.2015.03.31.07.07.33
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Tue, 31 Mar 2015 07:07:33 -0700 (PDT)
+Received: by adamian-desk.local (Postfix, from userid 1000)
+	id 37E5E561EBC; Tue, 31 Mar 2015 15:07:31 +0100 (BST)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 31 Mar 2015 15:07:30 +0100
+Message-Id: <32b405d1e44e310dd1a1d04dff36bac3f5e630a7.1427810520.git.alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <4b553dbeff7c7bc536669e7fee7d52f962259ebe.1427810520.git.alexandru.damian@intel.com>
+References: <4b553dbeff7c7bc536669e7fee7d52f962259ebe.1427810520.git.alexandru.damian@intel.com>
+In-Reply-To: <cover.1427810520.git.alexandru.damian@intel.com>
+References: <cover.1427810520.git.alexandru.damian@intel.com>
+Subject: [PATCH 4/4] Revert "toaster: machine not searchable in all builds/projects"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,85 +50,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 30 Mar 2015 12:56:49 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 31 Mar 2015 14:07:33 -0000
 
-flatten support currently looks broken since it doesn't appear to
-deal with handling "%" support in bbappend file names.
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-This patch convert it to use collections.get_file_appends() which
-correctly handles "%" support.
+This reverts commit 1a86ed8f95649c5f5a3a66984ce36978d93b0e01.
 
-[FIXME: Also converts collections.appendlist -> collections.bbappends
-but this code also appears to be missing "%" support?]
+Bug [YOCTO #7334] was incompletly fixed, and the proper fix is
+not straightfoward. Consequently we revert the partial fix, as
+a incomplete fix is worse than no fix.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+---
+ lib/toaster/bldcontrol/models.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[Paul: I have to admit I'm struggling to understand what first_append does
-so was struggling to further clean this up]
-
-diff --git a/bitbake/bin/bitbake-layers b/bitbake/bin/bitbake-layers
-index 9824629..e30e0f6 100755
---- a/bitbake/bin/bitbake-layers
-+++ b/bitbake/bin/bitbake-layers
-@@ -622,31 +622,27 @@ build results (as the layer priority order has effectively changed).
-                                     logger.warn('Overwriting file %s', fdest)
-                             bb.utils.copyfile(f1full, fdest)
-                             if ext == '.bb':
--                                if f1 in self.bbhandler.cooker.collection.appendlist:
--                                    appends = self.bbhandler.cooker.collection.appendlist[f1]
--                                    if appends:
--                                        logger.plain('  Applying appends to %s' % fdest )
--                                        for appendname in appends:
--                                            if layer_path_match(appendname):
--                                                self.apply_append(appendname, fdest)
-+                                for append in self.bbhandler.cooker.collection.get_file_appends(f1full):
-+                                    if layer_path_match(append):
-+                                        logger.plain('  Applying append %s to %s' % (append, fdest))
-+                                        self.apply_append(append, fdest)
-                                     appended_recipes.append(f1)
+diff --git a/lib/toaster/bldcontrol/models.py b/lib/toaster/bldcontrol/models.py
+index bfb25ee..02cfaf7 100644
+--- a/lib/toaster/bldcontrol/models.py
++++ b/lib/toaster/bldcontrol/models.py
+@@ -106,7 +106,7 @@ class BuildRequest(models.Model):
+         (REQ_ARCHIVE, "archive"),
+     )
  
-         # Take care of when some layers are excluded and yet we have included bbappends for those recipes
--        for recipename in self.bbhandler.cooker.collection.appendlist.iterkeys():
-+        for b in self.bbhandler.cooker.collection.bbappends:
-+            (recipename, appendname) = b
-             if recipename not in appended_recipes:
--                appends = self.bbhandler.cooker.collection.appendlist[recipename]
-                 first_append = None
--                for appendname in appends:
--                    layer = layer_path_match(appendname)
--                    if layer:
--                        if first_append:
--                            self.apply_append(appendname, first_append)
--                        else:
--                            fdest = appendname[len(layer):]
--                            fdest = os.path.normpath(os.sep.join([outputdir,fdest]))
--                            bb.utils.mkdirhier(os.path.dirname(fdest))
--                            bb.utils.copyfile(appendname, fdest)
--                            first_append = fdest
-+                layer = layer_path_match(appendname)
-+                if layer:
-+                    if first_append:
-+                        self.apply_append(appendname, first_append)
-+                    else:
-+                        fdest = appendname[len(layer):]
-+                        fdest = os.path.normpath(os.sep.join([outputdir,fdest]))
-+                        bb.utils.mkdirhier(os.path.dirname(fdest))
-+                        bb.utils.copyfile(appendname, fdest)
-+                        first_append = fdest
+-    search_allowed_fields = ("brtarget__target", "build__project__name", "build__machine")
++    search_allowed_fields = ("brtarget__target", "build__project__name")
  
-         # Get the regex for the first layer in our list (which is where the conf/layer.conf file will
-         # have come from)
-@@ -722,7 +718,7 @@ build results (as the layer priority order has effectively changed).
- Lists recipes with the bbappends that apply to them as subitems.
- """
-         self.init_bbhandler()
--        if not self.bbhandler.cooker.collection.appendlist:
-+        if not self.bbhandler.cooker.collection.bbappends:
-             logger.plain('No append files found')
-             return 0
- 
-
+     project     = models.ForeignKey(Project)
+     build       = models.OneToOneField(Build, null = True)     # TODO: toasterui should set this when Build is created
+-- 
+1.9.1
 
 
