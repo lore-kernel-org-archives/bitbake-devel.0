@@ -1,29 +1,24 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 5EA4973C71
+Return-Path: <Qi.Chen@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 894EA6AC56
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 31 Mar 2015 21:35:41 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t2VLZgpO014020 for <bitbake-devel@lists.openembedded.org>;
-	Tue, 31 Mar 2015 22:35:42 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id pzwZGT21Lt4K for <bitbake-devel@lists.openembedded.org>;
-	Tue, 31 Mar 2015 22:35:42 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t2VLZRde014005
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	Thu,  2 Apr 2015 08:11:00 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.14.9/8.14.9) with ESMTP id t328B2HF002639
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 31 Mar 2015 22:35:39 +0100
-Message-ID: <1427837727.14020.367.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Tue, 31 Mar 2015 22:35:27 +0100
-X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
-Mime-Version: 1.0
-Subject: [PATCH] bin/image-writer: Add ext4 as a deployable image type
+	Thu, 2 Apr 2015 01:11:02 -0700 (PDT)
+Received: from pek-qchen1-d1.corp.ad.wrs.com (128.224.162.236) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+	14.3.224.2; Thu, 2 Apr 2015 01:11:01 -0700
+From: Chen Qi <Qi.Chen@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Thu, 2 Apr 2015 16:11:02 +0800
+Message-ID: <cover.1427962176.git.Qi.Chen@windriver.com>
+X-Mailer: git-send-email 1.9.1
+MIME-Version: 1.0
+Subject: [PATCH 0/1] bitbake-layers: change the behaviour of show-cross-depends
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,32 +31,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 31 Mar 2015 21:35:41 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 02 Apr 2015 08:11:00 -0000
+Content-Type: text/plain
 
-This is particularly problematic since qemu images switched to ext4 by 
-default and now cannot work properly with UIs like hob.
+The following changes since commit 9e4adec98db325112ca7a8b9dd95722d4d0ab642:
 
-This patch adds in ext4 to the appropriate variable fixing this.
+  distro_alias.inc: update/sort alias information. (2015-03-31 22:54:54 +0100)
 
-[YOCTO #7426]
+are available in the git repository at:
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+  git://git.pokylinux.org/poky-contrib ChenQi/bitbake-layers-show-cross-depends
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=ChenQi/bitbake-layers-show-cross-depends
 
-diff --git a/bitbake/bin/image-writer b/bitbake/bin/image-writer
-index 86c38b5..7d71167 100755
---- a/bitbake/bin/image-writer
-+++ b/bitbake/bin/image-writer
-@@ -34,7 +34,7 @@ from bb.ui.crumbs.hig.deployimagedialog import DeployImageDialog
- from bb.ui.crumbs.hig.imageselectiondialog import ImageSelectionDialog
- 
- # I put all the fs bitbake supported here. Need more test.
--DEPLOYABLE_IMAGE_TYPES = ["jffs2", "cramfs", "ext2", "ext3", "btrfs", "squashfs", "ubi", "vmdk"]
-+DEPLOYABLE_IMAGE_TYPES = ["jffs2", "cramfs", "ext2", "ext3", "ext4", "btrfs", "squashfs", "ubi", "vmdk"]
- Title = "USB Image Writer"
- 
- class DeployWindow(gtk.Window):
+Chen Qi (1):
+  bitbake-layers: change the behaviour of show-cross-depends
 
+ bitbake/bin/bitbake-layers | 60 ++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 50 insertions(+), 10 deletions(-)
+
+-- 
+1.9.1
 
 
