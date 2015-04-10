@@ -1,26 +1,30 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id F2AFA72D74
+Return-Path: <gmstima@gmail.com>
+Received: from mail-lb0-f179.google.com (mail-lb0-f179.google.com
+	[209.85.217.179])
+	by mail.openembedded.org (Postfix) with ESMTP id 1B45672D74
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 10 Apr 2015 08:44:25 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.14.9/8.14.9) with ESMTP id t3A8iRH7002599
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	Fri, 10 Apr 2015 08:55:12 +0000 (UTC)
+Received: by lbbqq2 with SMTP id qq2so8691062lbb.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 10 Apr 2015 01:44:27 -0700 (PDT)
-Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.224.2;
-	Fri, 10 Apr 2015 01:44:26 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 10 Apr 2015 01:44:26 -0700
-Message-ID: <81b174ebc7cafc3595164ec8386602e82854a7cc.1428655392.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1428655392.git.liezhi.yang@windriver.com>
-References: <cover.1428655392.git.liezhi.yang@windriver.com>
+	Fri, 10 Apr 2015 01:55:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:date:message-id:subject:from:to:content-type;
+	bh=2w0UOf57FCavN5QjDpZo2+d4E0rQdfxY9kTukKMYxeA=;
+	b=Cn9UqY/v+D/cxh6+cK2XWedWNfO7UFsODtjAVJP9RbkxvXJ09mEd/JnFQ8cn7IAc2k
+	bJmW0MRnqu/ES8fSDduVdyC8diX24cXt9wGA7RYFjwRLUkfRSoWNe7e49Zsly8JcAgyw
+	qAnn7DDDbEiVXjDPFVCB6LptmwwiLIsCV0wI3BkX+pFyhblIDbShYl9pYN64FMOcK818
+	nNy26dDrZQql2ayjhDSP1IzF9P+/xi6CvI9B6rIHZT6vNUZCXrPG2kqf3YHPsICkLshp
+	CmiPM2C8UQ2S+yYHjvDNQPVFWP9Y0AWW9KgH3gxr9p+iAYjsw9+6o7AN4HxkK8LncGul
+	+u2Q==
 MIME-Version: 1.0
-Subject: [PATCH 1/1] bitbake: runqueue/cooker: catch hashvalidate error in RunQueueExecuteScenequeue
+X-Received: by 10.112.173.41 with SMTP id bh9mr437577lbc.107.1428656112953;
+	Fri, 10 Apr 2015 01:55:12 -0700 (PDT)
+Received: by 10.152.181.230 with HTTP; Fri, 10 Apr 2015 01:55:12 -0700 (PDT)
+Date: Fri, 10 Apr 2015 11:55:12 +0300
+Message-ID: <CAGpdKU+Jjgtukyfm7E4rO+azk+wxY+TL22zP24DPh-nsTcjvdA@mail.gmail.com>
+From: Roman Savchenko <gmstima@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: pkg_postinst_${PN}_append
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,87 +37,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 10 Apr 2015 08:44:27 -0000
-Content-Type: text/plain
+X-List-Received-Date: Fri, 10 Apr 2015 08:55:13 -0000
+Content-Type: multipart/alternative; boundary=001a11c2aee61e6f6305135aecab
 
-From: Hongxu Jia <hongxu.jia@windriver.com>
+--001a11c2aee61e6f6305135aecab
+Content-Type: text/plain; charset=UTF-8
 
-We need to catch the failure of self.rq.hashvalidate which invoked
-in RunQueueExecuteScenequeue, and exit in a normal build. So we
-raise bb.BBHandledException for this specific error.
+Hi All,
 
-Tweak execute_runqueue's exception process order. So the build will
-exit peacefully while the above failure occurs.
+Why doesn't pkg_postinst_${PN}_append call if I add `python` to him:
 
-Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/cooker.py   |    4 ++--
- bitbake/lib/bb/runqueue.py |   14 ++++++++------
- 2 files changed, 10 insertions(+), 8 deletions(-)
+pkg_postinst_${PN}_append {
+ //called
+}
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 9c101f2..6762239 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1298,7 +1298,7 @@ class BBCooker:
-             except runqueue.TaskFailure as exc:
-                 failures += len(exc.args)
-                 retval = False
--            except SystemExit as exc:
-+            except (SystemExit, bb.BBHandledException) as exc:
-                 self.command.finishAsyncCommand()
-                 return False
- 
-@@ -1331,7 +1331,7 @@ class BBCooker:
-             except runqueue.TaskFailure as exc:
-                 failures += len(exc.args)
-                 retval = False
--            except SystemExit as exc:
-+            except (SystemExit, bb.BBHandledException) as exc:
-                 self.command.finishAsyncCommand()
-                 return False
- 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index b1fe6b8..cd63ba7 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1094,10 +1094,9 @@ class RunQueue:
-             return self._execute_runqueue()
-         except bb.runqueue.TaskFailure:
-             raise
--        except SystemExit:
--            raise
--        except:
--            logger.error("An uncaught exception occured in runqueue, please see the failure below:")
-+        except BaseException as e:
-+            if not isinstance(e, (SystemExit, bb.BBHandledException)):
-+                logger.error("An uncaught exception occured in runqueue, please see the failure below:")
-             try:
-                 self.teardown_workers()
-             except:
-@@ -1821,7 +1820,11 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-                 sq_task.append(task)
-             call = self.rq.hashvalidate + "(sq_fn, sq_task, sq_hash, sq_hashfn, d)"
-             locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname, "sq_hash" : sq_hash, "sq_hashfn" : sq_hashfn, "d" : self.cooker.expanded_data }
--            valid = bb.utils.better_eval(call, locs)
-+            try:
-+                valid = bb.utils.better_eval(call, locs)
-+            except Exception as e:
-+                logger.error("Hash validation failed in RunQueueExecuteScenequeue %s" % str(e))
-+                raise bb.BBHandledException()
- 
-             valid_new = stamppresent
-             for v in valid:
-@@ -2007,7 +2010,6 @@ class TaskFailure(Exception):
-     def __init__(self, x):
-         self.args = x
- 
--
- class runQueueExitWait(bb.event.Event):
-     """
-     Event when waiting for task processes to exit
--- 
-1.7.9.5
+python pkg_postinst_${PN}_append {
+ //not called
+}
 
+Could any one please help me?
 
+Regards,
+R. Savchenko
+
+--001a11c2aee61e6f6305135aecab
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div><div><div>Hi All,<br><br></div>Why doesn&#39;t pkg_po=
+stinst_${PN}_append call if I add `python` to him:<br></div><br>pkg_postins=
+t_${PN}_append {<br></div>=C2=A0//called<br><div>}<br><br>python pkg_postin=
+st_${PN}_append {<br>=C2=A0//not called<br>}<br><div><div><div><br>Could an=
+y one please help me?<br><br></div><div>Regards,<br></div><div>R. Savchenko=
+<br></div></div></div></div></div>
+
+--001a11c2aee61e6f6305135aecab--
