@@ -1,23 +1,24 @@
-Return-Path: <alejandro.hernandez@linux.intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id AF45372A23
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 0778D6ABF7
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  9 Apr 2015 20:21:47 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by orsmga103.jf.intel.com with ESMTP; 09 Apr 2015 13:21:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.11,552,1422950400"; d="scan'208";a="706462426"
-Received: from carloses-mobl.amr.corp.intel.com (HELO
-	aehernan-DevStation.lar.corp.intel.com) ([10.252.254.35])
-	by fmsmga002.fm.intel.com with ESMTP; 09 Apr 2015 13:21:48 -0700
-From: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu,  9 Apr 2015 15:21:49 -0500
-Message-Id: <1428610909-12661-2-git-send-email-alejandro.hernandez@linux.intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1428610909-12661-1-git-send-email-alejandro.hernandez@linux.intel.com>
-References: <1428610909-12661-1-git-send-email-alejandro.hernandez@linux.intel.com>
-Subject: [PATCH 1/1] [daisy][dizzy] data.py: fixes bad substitution when running devshell
+	Fri, 10 Apr 2015 08:44:25 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.14.9/8.14.9) with ESMTP id t3A8iQFK018324
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 10 Apr 2015 01:44:26 -0700 (PDT)
+Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.224.2;
+	Fri, 10 Apr 2015 01:44:26 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Fri, 10 Apr 2015 01:44:25 -0700
+Message-ID: <cover.1428655392.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 1.7.9.5
+MIME-Version: 1.0
+Subject: [PATCH 0/1] bitbake: runqueue/cooker: catch hashvalidate error
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,39 +31,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 09 Apr 2015 20:21:48 -0000
+X-List-Received-Date: Fri, 10 Apr 2015 08:44:26 -0000
+Content-Type: text/plain
 
-From: Richard Tollerton <rich.tollerton@ni.com>
+*** BLURB HERE ***
+The following changes since commit 6ebeae9b2011050c318a764e980bc47e51cc2d74:
 
-Running bitbake inside make results in the exported environment variable
-MAKEOVERRIDES="${-*-command-variables-*-}", which the shell chokes on
-when trying to expand it. But of course, it probably shouldn't have been
-trying to expand it in the first place -- so just escape the dollar
-sign.
+  tiff: remove extra dev and dbg from PACKAGES (2015-04-10 01:24:01 -0700)
 
-(Bitbake rev: 18cd0ce6a55c9065c3f1bf223b47d817b5efcd8f)
+are available in the git repository at:
 
-Signed-off-by: Richard Tollerton <rich.tollerton@ni.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-Signed-off-by: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
+  git://git.pokylinux.org/poky-contrib rbt/hx
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=rbt/hx
 
----
- bitbake/lib/bb/data.py | 1 +
- 1 file changed, 1 insertion(+)
+Hongxu Jia (1):
+  bitbake: runqueue/cooker: catch hashvalidate error in
+    RunQueueExecuteScenequeue
 
-diff --git a/bitbake/lib/bb/data.py b/bitbake/lib/bb/data.py
-index eb628c7..82eefef 100644
---- a/bitbake/lib/bb/data.py
-+++ b/bitbake/lib/bb/data.py
-@@ -238,6 +238,7 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
-     # to a shell, we need to escape the quotes in the var
-     alter = re.sub('"', '\\"', val)
-     alter = re.sub('\n', ' \\\n', alter)
-+    alter = re.sub('\\$', '\\\\$', alter)
-     o.write('%s="%s"\n' % (varExpanded, alter))
-     return 0
- 
+ bitbake/lib/bb/cooker.py   |    4 ++--
+ bitbake/lib/bb/runqueue.py |   14 ++++++++------
+ 2 files changed, 10 insertions(+), 8 deletions(-)
+
 -- 
-1.9.1
+1.7.9.5
 
 
