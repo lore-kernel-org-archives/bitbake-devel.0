@@ -1,32 +1,32 @@
 Return-Path: <akuster808@gmail.com>
-Received: from mail-pa0-f50.google.com (mail-pa0-f50.google.com
-	[209.85.220.50])
-	by mail.openembedded.org (Postfix) with ESMTP id 4022160017
+Received: from mail-pd0-f182.google.com (mail-pd0-f182.google.com
+	[209.85.192.182])
+	by mail.openembedded.org (Postfix) with ESMTP id 0A3C060017
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 11 Apr 2015 01:47:58 +0000 (UTC)
-Received: by pabtp1 with SMTP id tp1so38247513pab.2
+	Sat, 11 Apr 2015 02:12:49 +0000 (UTC)
+Received: by pdea3 with SMTP id a3so40368511pde.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 10 Apr 2015 18:48:00 -0700 (PDT)
+	Fri, 10 Apr 2015 19:12:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=message-id:date:from:user-agent:mime-version:to:subject:references
 	:in-reply-to:content-type:content-transfer-encoding;
-	bh=t8VYnrMn6GqQ78xCqVumxBLD3DQUbHOwP3pJzOtQMbY=;
-	b=KDSO1fXw/F8wRE9zbJxCpGfIT0H5nTNs4YvvNFXA0Jhbg1A/rG8kWucobnf0W53Zvk
-	bHq78L0WGNPEm6+HhA22JMYDYuUWLF/DRDXGBAivAWuqFI/hsUiJUwrsx4o+OOxYyRm4
-	JtKbD+a0E4fsLAtXcep3lof8G6tQSTVRawssPlhZ7/UAIV5apOYQ8XsaN2NbRmIXcVG+
-	9KRadXQmIjYH59IAOsD+W4Ttdr/HnU60Q2T95oUhl0PUWcQKlxzn8WMdMs93IzcibNL/
-	7imzvNL9C7oFoIhWNL0NPx+pIOsKD500s7Z9zKKCjpmOWC4Q03ZFA1I7EClwFhuK6puj
-	oqxg==
-X-Received: by 10.70.134.198 with SMTP id pm6mr7387548pdb.17.1428716880142;
-	Fri, 10 Apr 2015 18:48:00 -0700 (PDT)
+	bh=O1H6bAKf66xOH6+0EHWKCTV6BtrMF/dBcBChhyq74+g=;
+	b=GheKbVroAPr5bVMOHPMj+jlxNpE6tbmPGJr31PRqeH3tmi9Nvc+YsNcBTU53ltVOHB
+	eK1H1pIn0zAdX2tIlBoFWWfw3Pk7P/sZ6xOIWuiKrxW+nhEnFaZtn9oJ/9EeQHx5s9LY
+	i0oY7nIeb81x5aynK6VMfzTC7Z70XVPiD6fXqqyQb5+foS4Z2DgYVWO/uTNHPbHyhUIX
+	ybrzmpIs0J17q4UGNa5WPcXPXRCaaM6/DgycqhrtQ9AWIAokVL4Cjm0lePFCO8p89R22
+	VaLnpwG4ftjCKVcQONCbXdp9tE8KLuv1dusFA/18aVgSDilymF3cXVK/ovgHqSbd24li
+	Na6w==
+X-Received: by 10.66.120.69 with SMTP id la5mr7643285pab.66.1428718371230;
+	Fri, 10 Apr 2015 19:12:51 -0700 (PDT)
 Received: from ?IPv6:2601:c:a700:3ba7:586e:6bf6:7756:bf6e?
 	([2601:c:a700:3ba7:586e:6bf6:7756:bf6e])
-	by mx.google.com with ESMTPSA id he9sm314994pbc.7.2015.04.10.18.47.58
+	by mx.google.com with ESMTPSA id x4sm333869pdl.55.2015.04.10.19.12.49
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Fri, 10 Apr 2015 18:47:58 -0700 (PDT)
-Message-ID: <55287D4B.9090602@gmail.com>
-Date: Fri, 10 Apr 2015 18:47:55 -0700
+	Fri, 10 Apr 2015 19:12:50 -0700 (PDT)
+Message-ID: <5528831F.2060908@gmail.com>
+Date: Fri, 10 Apr 2015 19:12:47 -0700
 From: akuster808 <akuster808@gmail.com>
 User-Agent: Mozilla/5.0 (X11; Linux x86_64;
 	rv:31.0) Gecko/20100101 Thunderbird/31.6.0
@@ -47,49 +47,13 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 11 Apr 2015 01:48:02 -0000
+X-List-Received-Date: Sat, 11 Apr 2015 02:12:50 -0000
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-Is there a [dizzy 1/7] ?
-
+I found your contrib branch and I will pull the seven changes from there.
 - armin
+
 On 04/10/2015 07:57 AM, Alex DAMIAN wrote:
-> From: Alexandru DAMIAN <alexandru.damian@intel.com>
->
->
-> Hello,
->
-> This is the backport of the inotify patchset that allows the bitbake
-> server to read files (configuration and recipes) modified while it is running.
->
-> This backport allows proper Toaster experience for Yocto Project 1.7 Dizzy users.
->
-> I've tested this patch both functionally and performance-wise, and I could not
-> find any obvious bugs.
->
-> Thank you,
-> Alex
->
-> Alexandru DAMIAN (1):
->    cooker: read file watches on server idle
->
-> Richard Purdie (6):
->    bitbake: Add pyinotify to lib/
->    cooker/cache/parse: Implement pyinofity based reconfigure
->    cooker: Fix pyinotify handling of ENOENT issues
->    cooker: Further optimise pyinotify
->    cooker: Improve pyinotify performance
->    cooker/server: Fix up 100% CPU usage at idle
->
->   lib/bb/cache.py          |    5 +-
->   lib/bb/cooker.py         |   79 +-
->   lib/bb/parse/__init__.py |    5 +
->   lib/bb/server/process.py |    3 +
->   lib/bb/server/xmlrpc.py  |    3 +
->   lib/pyinotify.py         | 2416 ++++++++++++++++++++++++++++++++++++++++++++++
->   6 files changed, 2508 insertions(+), 3 deletions(-)
->   create mode 100644 lib/pyinotify.py
->
+> cooker: read file watches on server idle
 
