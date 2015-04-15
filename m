@@ -1,38 +1,24 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-qk0-f180.google.com (mail-qk0-f180.google.com
-	[209.85.220.180])
-	by mail.openembedded.org (Postfix) with ESMTP id 009366ABF7
+Return-Path: <Qi.Chen@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id D1A0A605D2
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Apr 2015 21:34:00 +0000 (UTC)
-Received: by qkhg7 with SMTP id g7so41248484qkh.2
+	Wed, 15 Apr 2015 08:45:58 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail1.windriver.com (8.14.9/8.14.9) with ESMTP id t3F8jx8n023426
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Apr 2015 14:34:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=AW2voZyk8ZL5Ggk3pl2xjt7GWS+PPKnY9nibHgWf4qw=;
-	b=0HSN1IUM6+QAVV8tVgoTSYifi52L//sHP9B4U5g3VFkE6NQZcDTtM5o5OmLXNXvaXK
-	W6SgudGvXhLJDhu1luSh5Rn6CTNGyLZwM2NNYZSZSYlsNTj6XX0s8/jTDKcDi/ak+zYw
-	ay22EYq4weMrbdYFzyZAxRdYLuRZhlGpPccpr/1l/Gh7R2svbsXLoJomuznIwb1CVwsF
-	cSMUB/h7BzrJztJynJxipQ2N3dsjvsS9Va+2A/jsbHQmTZHlQeqS1WeXCZ+QGTD7AMXr
-	4C8PKz8/1EXeazECRYKPWeoS3relLRmRvzUDVIrjc46WFdoxn1tBUpMcCnEQCjWwRYze
-	q4ug==
-X-Received: by 10.229.26.135 with SMTP id e7mr28461547qcc.5.1429047241208;
-	Tue, 14 Apr 2015 14:34:01 -0700 (PDT)
+	Wed, 15 Apr 2015 01:45:59 -0700 (PDT)
+Received: from pek-qchen1-d1.corp.ad.wrs.com (128.224.162.236) by
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+	14.3.224.2; Wed, 15 Apr 2015 01:45:59 -0700
+From: Chen Qi <Qi.Chen@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Wed, 15 Apr 2015 16:46:04 +0800
+Message-ID: <cover.1429087384.git.Qi.Chen@windriver.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.140.108.34 with HTTP; Tue, 14 Apr 2015 14:33:41 -0700 (PDT)
-In-Reply-To: <41DEA4B02DBDEF40A0F3B6D0DDB1237988ED7477@ORSMSX101.amr.corp.intel.com>
-References: <1429044350-19766-1-git-send-email-ed.bartosh@linux.intel.com>
-	<41DEA4B02DBDEF40A0F3B6D0DDB1237988ED7477@ORSMSX101.amr.corp.intel.com>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Tue, 14 Apr 2015 14:33:41 -0700
-X-Google-Sender-Auth: amYVJTV_Ap4o0mQoGGEBbHHlgWI
-Message-ID: <CABcZANnTuVDDisxj3W1EjE_RN3MAaLnk2-9Wm_rcnq4E1jR=ew@mail.gmail.com>
-To: "Rifenbark, Scott M" <scott.m.rifenbark@intel.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] Allow environment variables and ~ in bbconf paths
+Subject: [PATCH V2 0/1] bitbake-layers: change the behaviour of show-cross-depends
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,81 +31,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 14 Apr 2015 21:34:03 -0000
-Content-Type: multipart/alternative; boundary=001a1134101e2df9b70513b5fd86
+X-List-Received-Date: Wed, 15 Apr 2015 08:46:04 -0000
+Content-Type: text/plain
 
---001a1134101e2df9b70513b5fd86
-Content-Type: text/plain; charset=UTF-8
+Changes in V2:
+Use regex match to determine the layer directory name instead of using the hacky
+method.
 
-On Tue, Apr 14, 2015 at 2:19 PM, Rifenbark, Scott M <
-scott.m.rifenbark@intel.com> wrote:
+The following changes since commit 9e4adec98db325112ca7a8b9dd95722d4d0ab642:
 
-> Ed,
->
-> This worked for me.... Thanks.
->
-> Scott
->
-> >-----Original Message-----
-> >From: Ed Bartosh [mailto:ed.bartosh@linux.intel.com]
-> >Sent: Tuesday, April 14, 2015 1:46 PM
-> >To: bitbake-devel@lists.openembedded.org
-> >Cc: Rifenbark, Scott M; Ed Bartosh
-> >Subject: [PATCH] Allow environment variables and ~ in bbconf paths
-> >
-> >This should allow to use ~, $HOME and other environment variables in
-> bbconf
-> >paths.
-> >
-> >Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
->
+  distro_alias.inc: update/sort alias information. (2015-03-31 22:54:54 +0100)
 
-We already have a mechanism by which environment variables flow into the
-metadata. Is there something wrong with using BB_ENV_EXTRAWHITE to use
-${HOME} in this context?
+are available in the git repository at:
+
+  git://git.pokylinux.org/poky-contrib ChenQi/bitbake-layers-show-cross-depends
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=ChenQi/bitbake-layers-show-cross-depends
+
+Chen Qi (1):
+  bitbake-layers: change the behaviour of show-cross-depends
+
+ bitbake/bin/bitbake-layers | 68 +++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 58 insertions(+), 10 deletions(-)
+
 -- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+1.9.1
 
---001a1134101e2df9b70513b5fd86
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On T=
-ue, Apr 14, 2015 at 2:19 PM, Rifenbark, Scott M <span dir=3D"ltr">&lt;<a hr=
-ef=3D"mailto:scott.m.rifenbark@intel.com" target=3D"_blank">scott.m.rifenba=
-rk@intel.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" sty=
-le=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">Ed,<br=
->
-<br>
-This worked for me.... Thanks.<br>
-<span class=3D"HOEnZb"><font color=3D"#888888"><br>
-Scott<br>
-</font></span><div class=3D"HOEnZb"><div class=3D"h5"><br>
-&gt;-----Original Message-----<br>
-&gt;From: Ed Bartosh [mailto:<a href=3D"mailto:ed.bartosh@linux.intel.com">=
-ed.bartosh@linux.intel.com</a>]<br>
-&gt;Sent: Tuesday, April 14, 2015 1:46 PM<br>
-&gt;To: <a href=3D"mailto:bitbake-devel@lists.openembedded.org">bitbake-dev=
-el@lists.openembedded.org</a><br>
-&gt;Cc: Rifenbark, Scott M; Ed Bartosh<br>
-&gt;Subject: [PATCH] Allow environment variables and ~ in bbconf paths<br>
-&gt;<br>
-&gt;This should allow to use ~, $HOME and other environment variables in bb=
-conf<br>
-&gt;paths.<br>
-&gt;<br>
-&gt;Signed-off-by: Ed Bartosh &lt;<a href=3D"mailto:ed.bartosh@linux.intel.=
-com">ed.bartosh@linux.intel.com</a>&gt;<br></div></div></blockquote><div><b=
-r></div><div>We already have a mechanism by which environment variables flo=
-w into the metadata. Is there something wrong with using BB_ENV_EXTRAWHITE =
-to use ${HOME} in this context?</div></div>-- <br><div class=3D"gmail_signa=
-ture">Christopher Larson<br>clarson at kergoth dot com<br>Founder - BitBake=
-, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software Enginee=
-r, Mentor Graphics</div>
-</div></div>
-
---001a1134101e2df9b70513b5fd86--
