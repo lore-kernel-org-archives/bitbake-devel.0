@@ -1,43 +1,43 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f172.google.com (mail-wi0-f172.google.com
-	[209.85.212.172])
-	by mail.openembedded.org (Postfix) with ESMTP id 668FE73D56
+Received: from mail-wg0-f41.google.com (mail-wg0-f41.google.com [74.125.82.41])
+	by mail.openembedded.org (Postfix) with ESMTP id 676CC73D5B
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 16 Apr 2015 14:47:41 +0000 (UTC)
-Received: by widdi4 with SMTP id di4so197756847wid.0
+	Thu, 16 Apr 2015 14:47:42 +0000 (UTC)
+Received: by wgsk9 with SMTP id k9so83341860wgs.3
 	for <bitbake-devel@lists.openembedded.org>;
 	Thu, 16 Apr 2015 07:47:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=IsWX0omeJNkJOMWplVr0Mmx9hY25EwhmFxFUOAgytoE=;
-	b=FJxkbAoRomfLOHjG30Q6cA1S551PHszAnW1Yfk2c+Zh83JZ7yR1nE6vHv6ZqKH+sNN
-	0sBiSRMm0NV+iBueRrG1y0PMg1BWiI+qMShrdixqCUjKA99k3cZt8iApBxropvS8lLTS
-	Azf4Lk39FmhAqoneX6gpvsKq0Knlq+ExZ6q90hBGBN82p8rPPIHdL/f4BHQw1CLkVzHg
-	DYbUl096qSNCwd5V2d99/Y+XtFcJ6bixdUc/NtlhRN/xJg8Boo1bVbLZzsv2SlVElG2O
-	YMXBtWY2LwVM2BspCVTaUGXuGnCiwEKGKBAYq2iG7k5j0nB7tNeGCVG7ZDiqDtkAdtQd
-	rytQ==
-X-Gm-Message-State: ALoCoQluyNtMRJqqaYdPLBN5hoDhm0Z/oiBi2ZpkWZDCJ1ahXoAbf48F9J+BeEEY8wLI84+cLUcI
-X-Received: by 10.194.61.133 with SMTP id p5mr62394415wjr.132.1429195662766;
-	Thu, 16 Apr 2015 07:47:42 -0700 (PDT)
+	bh=vV0114Kg/oG+zk1ivs2krJUjSPEjid/qvfVZbxpRc+4=;
+	b=PmVo8pmTSzzysTbmcS8QuM+Mkg0hsu15Bi/cqnDEOXtViTJgpBck94xvA8WXzezMsK
+	mUo80e2V+dgO0q9r0F8snVN3g2xiSANEW9/+ZnFdFmmw6nnGHj3LnzB19vXOQBxOT5No
+	mlqcbdDkGhxSK0dW+bq1tNWSEsMjHBtB/nTQJYl7hJivIPdR60aZ5PsWffhuhSY5onn/
+	etnilPB1CkFn+42QbcDKabk9w+pBsjHM1Gn+kI1sjgH0cWBbtNN6Aqw04DQtfe48Ybbu
+	yvLUvJOzHcZ8X+9UMi4gRTEZuJowKQ0t2DCf7yEs0HMj6dAfAWw+9HbKhZ85aOqUh9DN
+	8/Tg==
+X-Gm-Message-State: ALoCoQl/Y3tHjnYH9W4RxufYoBVO3J86P1uYeLtbLqAGPvgaGnAIIxlhHCVb5EVFFU2RZNSFfIh6
+X-Received: by 10.180.86.137 with SMTP id p9mr8343015wiz.47.1429195663117;
+	Thu, 16 Apr 2015 07:47:43 -0700 (PDT)
 Received: from adamian-desk.local ([83.217.123.106])
 	by mx.google.com with ESMTPSA id
-	hw7sm10713230wjb.24.2015.04.16.07.47.41
+	fl14sm10718195wjc.11.2015.04.16.07.47.41
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
 	Thu, 16 Apr 2015 07:47:41 -0700 (PDT)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id BFD7D560A93; Thu, 16 Apr 2015 15:47:41 +0100 (BST)
+	id C2A10560ABA; Thu, 16 Apr 2015 15:47:41 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 16 Apr 2015 15:47:36 +0100
-Message-Id: <bcce829302a69c6b322053d72af741ca97048843.1429195580.git.alexandru.damian@intel.com>
+Date: Thu, 16 Apr 2015 15:47:37 +0100
+Message-Id: <fd1f6fda7a7629f4660235313dc99adb3c190952.1429195580.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <e4e9f956e8370ba543578054ea7e889a9f689632.1429195580.git.alexandru.damian@intel.com>
 References: <e4e9f956e8370ba543578054ea7e889a9f689632.1429195580.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1429195580.git.alexandru.damian@intel.com>
 References: <cover.1429195580.git.alexandru.damian@intel.com>
-Subject: [PATCH 3/8] toasterui: correct terminology in landing page
+Cc: David Reyna <David.Reyna@windriver.com>
+Subject: [PATCH 4/8] toaster: add layer source in admin throws an error
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,31 +52,53 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Thu, 16 Apr 2015 14:47:42 -0000
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
+From: David Reyna <David.Reyna@windriver.com>
 
-Change the introductory description of Toaster
-we provide on first use, to make sure it mentions
-all the bits that make up the build system, and
-not just BitBake.
+Preset uninitialized object members to bootstrap new layer source creation.
 
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
+[YOCTO #7437]
+
+Signed-off-by: David Reyna <David.Reyna@windriver.com>
 ---
- lib/toaster/toastergui/templates/landing.html | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/toaster/orm/models.py | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/landing.html b/lib/toaster/toastergui/templates/landing.html
-index 5bbe694..4af849c 100644
---- a/lib/toaster/toastergui/templates/landing.html
-+++ b/lib/toaster/toastergui/templates/landing.html
-@@ -15,7 +15,7 @@
-        <h1>
-         This is Toaster
-        </h1>
--       <p>A web interface to <a href="http://www.yoctoproject.org/tools-resources/projects/bitbake">BitBake</a>, the <a href="http://www.yoctoproject.org">Yocto Project</a> build system.</p>
-+       <p>A web interface to <a href="http://www.openembedded.org">OpenEmbedded</a> and <a href="http://www.yoctoproject.org/tools-resources/projects/bitbake">BitBake</a>, the <a href="http://www.yoctoproject.org">Yocto Project</a> build system.</p>
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index 625eb1e..4a6ca8f 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -640,17 +640,25 @@ class LayerSource(models.Model):
+         raise Exception("Abstract, update() must be implemented by all LayerSource-derived classes (object is %s)" % str(vars(self)))
  
- 	{% if MANAGED %}
+     def save(self, *args, **kwargs):
+-        if isinstance(self, LocalLayerSource):
+-            self.sourcetype = LayerSource.TYPE_LOCAL
+-        elif isinstance(self, LayerIndexLayerSource):
+-            self.sourcetype = LayerSource.TYPE_LAYERINDEX
+-        elif isinstance(self, ImportedLayerSource):
+-            self.sourcetype = LayerSource.TYPE_IMPORTED
++        if self.sourcetype == LayerSource.TYPE_LOCAL:
++            self.__class__ = LocalLayerSource
++        elif self.sourcetype == LayerSource.TYPE_LAYERINDEX:
++            self.__class__ = LayerIndexLayerSource
++        elif self.sourcetype == LayerSource.TYPE_IMPORTED:
++            self.__class__ = ImportedLayerSource
+         elif self.sourcetype == None:
+             raise Exception("Unknown LayerSource-derived class. If you added a new layer source type, fill out all code stubs.")
+         return super(LayerSource, self).save(*args, **kwargs)
  
+     def get_object(self):
++        # preset an un-initilized object
++        if None == self.name:
++            self.name=""
++        if None == self.apiurl:
++            self.apiurl=""
++        if None == self.sourcetype:
++            self.sourcetype=LayerSource.TYPE_LOCAL
++
+         if self.sourcetype == LayerSource.TYPE_LOCAL:
+             self.__class__ = LocalLayerSource
+         elif self.sourcetype == LayerSource.TYPE_LAYERINDEX:
 -- 
 1.9.1
 
