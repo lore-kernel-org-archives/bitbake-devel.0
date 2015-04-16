@@ -1,31 +1,37 @@
-Return-Path: <Liam.Howlett@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id C2123605D2
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-wg0-f42.google.com (mail-wg0-f42.google.com [74.125.82.42])
+	by mail.openembedded.org (Postfix) with ESMTP id 907F673D45
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 16 Apr 2015 14:16:50 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.9/8.14.9) with ESMTP id t3GEGlha014768
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Thu, 16 Apr 2015 07:16:47 -0700 (PDT)
-Received: from yow-lhowlett-d0.wrs.com (128.224.56.215) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server
-	(TLS) id 14.3.224.2; Thu, 16 Apr 2015 07:16:55 -0700
-Date: Thu, 16 Apr 2015 10:16:44 -0400
-From: "Liam R. Howlett" <Liam.Howlett@windriver.com>
-To: Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
-Message-ID: <20150416141644.GK924@yow-lhowlett-d0.wrs.com>
-References: <1427827190-10442-1-git-send-email-Liam.Howlett@WindRiver.com>
-	<CABcZANkKhGMkjxWj1QcJDLtWZ+B3TKqR_JLSSw3nfze+Qet+3g@mail.gmail.com>
-	<BFA1A96F-292A-434A-8510-E19BE343A6B9@gmail.com>
-MIME-Version: 1.0
-In-Reply-To: <BFA1A96F-292A-434A-8510-E19BE343A6B9@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Originating-IP: [128.224.56.215]
-Cc: Christopher Larson <clarson@kergoth.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] fetch2: Add BB_TRUSTED_NETWORK support
+	Thu, 16 Apr 2015 14:47:38 +0000 (UTC)
+Received: by wgso17 with SMTP id o17so83642448wgs.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 16 Apr 2015 07:47:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=8ZdR53u7YTTuhcYi2AFMAZM4fNR+KgyudPlAwYjkv7k=;
+	b=KG2MAuwtlzw5RcxeQL4xHtG8yM73wbXSUlrNNzifbbS4BE2yLssPDjQrfpfexkUyMI
+	iB6EfFerI5H9XXLUqFH8as+O/FsjnERhs3RsdbbP5uotEEVdhry7cF+bmfl6E/bV4N4k
+	URullflsgPQCMQ+skSKmNnAltnl71OcxJ3K6SAIZ+Q7aynVYUjR1JAwbkPqG3T9QB1eq
+	Q+ZczfSN0b6uaOTXULYVhd8cPip6+6gvBl+n8LtLytYBzWkwSeLV4EJuZ8S9JOYtaxsv
+	yoMchrNSre1Hcz+lRXemrFSFu+rhTThMtXwiUFpfJHVztEJ1iALnSpayWe2qc3CLnRrJ
+	MIGw==
+X-Gm-Message-State: ALoCoQlWlbNORFMA3NAT4S3EocN0MZIFBZBHF/9lKu38/45bws8fhaOKIsz/96oizKO1lbHjvhhl
+X-Received: by 10.180.104.34 with SMTP id gb2mr8147627wib.95.1429195659921;
+	Thu, 16 Apr 2015 07:47:39 -0700 (PDT)
+Received: from adamian-desk.local ([83.217.123.106])
+	by mx.google.com with ESMTPSA id k2sm11939899wix.4.2015.04.16.07.47.38
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 16 Apr 2015 07:47:38 -0700 (PDT)
+Received: by adamian-desk.local (Postfix, from userid 1000)
+	id B3169560A13; Thu, 16 Apr 2015 15:47:38 +0100 (BST)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 16 Apr 2015 15:47:37 +0100
+Message-Id: <cover.1429195580.git.alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.9.1
+Cc: David Reyna <David.Reyna@windriver.com>
+Subject: [PATCH 0/8] Toaster bugfixing patchset
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,62 +44,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 16 Apr 2015 14:16:52 -0000
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+X-List-Received-Date: Thu, 16 Apr 2015 14:47:40 -0000
 
-* Bernhard Reutner-Fischer <rep.dot.nop@gmail.com> [150415 15:43]:
-> On April 15, 2015 9:37:38 PM GMT+02:00, Christopher Larson <clarson@kergoth.com> wrote:
-> >On Tue, Mar 31, 2015 at 11:39 AM, Liam R. Howlett <
-> >Liam.Howlett@windriver.com> wrote:
-> >
-> >> This patch adds support for a new local.conf variable called
-> >> BB_TRUSTED_NETWORK.  BB_TRUSTED_NETWORK holds a list of hostnames
-> >that the
-> >> user
-> >> trusts as a source for downloading content.  If network access is
-> >enabled
-> >> and
-> >> the user has configured trusted hosts, then any hosts that are not in
-> >the
-> >> list
-> >> will cause an error to occur at fetch.  Any mirrors and pre-mirrors
-> >that
-> >> are
-> >> not in the list will result in warnings that these locations will not
-> >be
-> >> used.
-> >>
-> >> The BB_NO_NETWORK variable still stops all network access.
-> >>
-> >> Please see the comments in the patch for more details and example
-> >usage.
-> >>
-> >
-> >Hmm, looks like this might be useful with an internal mirror coupled
-> >with
-> >PREMIRRORS, so fetches from the internal host are allowed, but anything
-> >missing from there would be immediately caught?
-> 
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Yes, limiting to a local mirror is the main driving force behind this
-patch.  It will also catch any packages getting pulled in from undesired
-locations through dependencies, etc.
+Hello,
 
+This is a Toaster bugfixing patchset that has been reviewed on the toaster mailinglist. 
+Can you please pull whenever convenient ?
 
-> That was my thought, too.
-> I would find BB_ALLOWED_NETWORKS more intuitive though.
-> 
-> Cheers,
-> 
-> 
+Cheers,
+Alex
 
-I had BB_LIMITED_NETWORKS before, but I think BB_ALLOWED_NETWORKS is
-better than both of my suggestions.
+The following changes since commit c4172fe33f0c63eda7f4af2bd36a5e9738e13595:
 
-Please note that I did send v2 of this patch with minor cleanup & a fix
-yesterday, 2015-04-15.
+  bitbake-layers: ensure non-extended recipe name is preferred (2015-04-11 16:14:30 +0100)
 
-Thanks,
-Liam
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib adamian/20150416-submission-bb
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20150416-submission-bb
+
+Belen Barros Pena (2):
+  toasterui: correct terminology in landing page
+  toasterui: remove 'targets' from project notification
+
+David Reyna (4):
+  toaster: add layer source in admin throws an error
+  toaster: searching all projects table resets page count
+  toaster: recipe path broken in recipe detail page
+  toaster: date range filter for project builds page
+
+Michael Wood (2):
+  toaster: base.js minor jshint fixes
+  toaster: BuildButton target input allow building targets with tasks
+
+ lib/toaster/orm/models.py                          | 28 ++++++++++++++++------
+ lib/toaster/toastergui/static/js/base.js           | 24 +++++++++----------
+ lib/toaster/toastergui/static/js/libtoaster.js     |  9 ++++---
+ lib/toaster/toastergui/static/js/projectapp.js     |  2 +-
+ lib/toaster/toastergui/templates/landing.html      |  2 +-
+ .../toastergui/templates/projectbuilds.html        | 16 +++++++++++++
+ lib/toaster/toastergui/templates/recipes.html      |  2 +-
+ lib/toaster/toastergui/views.py                    |  5 +++-
+ 8 files changed, 59 insertions(+), 29 deletions(-)
+
+-- 
+1.9.1
+
 
