@@ -1,37 +1,29 @@
-Return-Path: <anders@chargestorm.se>
-Received: from mail-la0-f53.google.com (mail-la0-f53.google.com
-	[209.85.215.53])
-	by mail.openembedded.org (Postfix) with ESMTP id 21AFA73D3A
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id C16EC73D58
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 17 Apr 2015 05:49:49 +0000 (UTC)
-Received: by layy10 with SMTP id y10so72384599lay.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 16 Apr 2015 22:49:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=Xys4yBd69I/TDNwBcGx97m+DGck9jdfR3GfbFFANY2k=;
-	b=UuWVK8f+Cc3N8ymRuBOEeFGOlztPz6iSORIfiYyEVCgf7Mt2yRznL2XgHOS/RPiZAF
-	vLUmN/TjMvEZ+BhSHI0zT4cNFs9/wpwsJAX73zUATf/kwutCc6GgLNq57+E83T/wlnZV
-	JaMJDPd/5SNYhbHl79Pl3lxdaCcnC7CyEF7LE1QWQ/DciRucuKisOwaObcPJJe83qEFo
-	ABDCglgXDgjRfOoEX5Q7Pn/aWjQNsNqmIZWcBtlPAO89yl2BnS3O1x4RkrCtYayu2NXC
-	j9UL/O1XqqTcrQ6GTaDw+jCGWZcxDAN9o8dCpDVXU9hMIVIwi0uZn9vJ6UHnYTEBkJ4H
-	EOhg==
-X-Gm-Message-State: ALoCoQmPvJNVBcYY8vYmJDSouofOsQfevnGMoQh6/O0NS7Ef2fm5jHoKZFZVaoVMryc74mGbmGrp
-X-Received: by 10.152.87.162 with SMTP id az2mr1136523lab.58.1429249789863;
-	Thu, 16 Apr 2015 22:49:49 -0700 (PDT)
-Received: from localhost (213-64-219-84-no126.business.telia.com.
-	[213.64.219.84])
-	by mx.google.com with ESMTPSA id 4sm2169278lal.36.2015.04.16.22.49.49
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 16 Apr 2015 22:49:49 -0700 (PDT)
-From: Anders Darander <anders@chargestorm.se>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 17 Apr 2015 07:49:42 +0200
-Message-Id: <1429249782-21892-1-git-send-email-anders@chargestorm.se>
-X-Mailer: git-send-email 2.1.4
-Cc: Anders Darander <anders@chargestorm.se>
-Subject: [PATCH] Remove a possible trailing '/' in subpath
+	Fri, 17 Apr 2015 10:31:51 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t3HAVofB004261; Fri, 17 Apr 2015 11:31:50 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id MX6JknAuBn_Z; Fri, 17 Apr 2015 11:31:50 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t3HAVa9I004253
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 17 Apr 2015 11:31:47 +0100
+Message-ID: <1429266695.6976.194.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Ed Bartosh <ed.bartosh@linux.intel.com>
+Date: Fri, 17 Apr 2015 11:31:35 +0100
+In-Reply-To: <1429029770-15462-1-git-send-email-ed.bartosh@linux.intel.com>
+References: <1429029770-15462-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] bitbake: invalidate mtime cache if file doesn't exist
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,32 +36,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 17 Apr 2015 05:49:50 -0000
+X-List-Received-Date: Fri, 17 Apr 2015 10:31:53 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-If the subpath parameter to the git fetcher ends with a trailing '/',
- bb.utils.prunedir() will be called on '/'...
+On Tue, 2015-04-14 at 19:42 +0300, Ed Bartosh wrote:
+> Mtime cache is desinged with assumption that files are not
+> removed. Unfortunately it's not always the case for memory-resident
+> bitbake as build/tmp can be removed to perform build from scratch.
+> In this case bitbake crashes when trying to create timestamps if
+> tmp/stamps/ hierarchy doesn't exist.
+> 
+> Simple check of file existance should solve this issue.
+> 
+> [YOCTO: #7562]
+> 
+> Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+> ---
+>  bitbake/lib/bb/parse/__init__.py | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/bitbake/lib/bb/parse/__init__.py b/bitbake/lib/bb/parse/__init__.py
+> index 25effc2..e880732 100644
+> --- a/bitbake/lib/bb/parse/__init__.py
+> +++ b/bitbake/lib/bb/parse/__init__.py
+> @@ -62,6 +62,8 @@ def cached_mtime(f):
+>      return __mtime_cache[f]
+>  
+>  def cached_mtime_noerror(f):
+> +    if not os.path.exists(f):
+> +        return 0
+>      if f not in __mtime_cache:
+>          try:
+>              __mtime_cache[f] = os.stat(f)[stat.ST_MTIME]
 
-Fixes [YOCTO #7620].
+I don't think this is right. The whole idea of this cache is so we don't
+repeatedly hit stat() syscalls and by adding in the exists() check, the
+cache is made worthless and I suspect we'd see a bad performance change.
 
-Signed-off-by: Anders Darander <anders@chargestorm.se>
----
- lib/bb/fetch2/git.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Most of the use of this cache is from cooker/cache.py and there, we use
+inotify to refresh the cache if something in the filesystem changes. We
+probably need to teach the other users of this cache about the need to
+deal with inotify (or simply remove any stamp data from the cache
+entirely at the start of each bitbake invocation).
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 44fc271..0fd9bee 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -246,7 +246,7 @@ class Git(FetchMethod):
-         subdir = ud.parm.get("subpath", "")
-         if subdir != "":
-             readpathspec = ":%s" % (subdir)
--            def_destsuffix = "%s/" % os.path.basename(subdir)
-+            def_destsuffix = "%s/" % os.path.basename(subdir.rstrip('/'))
-         else:
-             readpathspec = ""
-             def_destsuffix = "git/"
--- 
-2.1.4
+Cheers,
+
+Richard
+
+
 
 
