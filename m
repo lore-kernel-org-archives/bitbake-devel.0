@@ -1,38 +1,37 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-pd0-f175.google.com (mail-pd0-f175.google.com
-	[209.85.192.175])
-	by mail.openembedded.org (Postfix) with ESMTP id 3F25A73D24
+Received: from mail-pd0-f177.google.com (mail-pd0-f177.google.com
+	[209.85.192.177])
+	by mail.openembedded.org (Postfix) with ESMTP id E93096E268
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Apr 2015 12:32:04 +0000 (UTC)
-Received: by pdbqd1 with SMTP id qd1so206660994pdb.2
+	Mon, 20 Apr 2015 13:43:05 +0000 (UTC)
+Received: by pdbnk13 with SMTP id nk13so208156922pdb.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Apr 2015 05:32:06 -0700 (PDT)
+	Mon, 20 Apr 2015 06:43:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id;
 	bh=tnn45MniF5Ws+BSRlH/zq/ESj5W33tWfAOt+lmcd7yg=;
-	b=PqUWcQkMnLhEowwsOwelTzTX9Dr5lmXY2/+/qd3OJIzuyRfz3zQx6Udifsaz5iUsRC
-	kiriWvPrhGADbPo/+Mfxcn3sBvww8NU0Cfhi1Z0cQPoPK8JuXUudu5rfKkgh4+kv+rhQ
-	nhqv61KE92X4ri8967LKidhkEWVTIM1FQFeUusr0F6H2S2R17hd4ipOGpiSto1uDhEUw
-	o4gFgup+gjzk4mCnDjHB/LuTJ9MQ5z/c3Moy5jNy5PURiszz1ZkbW8Nb3yQKHdyShw0I
-	2lQTWmvcjBV9P6L1HZN6EheHGdHdfN5QtjGhTCZbA0XCcIrJybSTuqtqdhMPXQEm589S
-	azIA==
-X-Gm-Message-State: ALoCoQnOoh8B7+wdVH9D+zw7itnucEmk5frqAkR5EW/3Gx8zWvMQ5ALafihc717/9BkO6azi13Y3
-X-Received: by 10.66.102.65 with SMTP id fm1mr27787284pab.115.1429533126257;
-	Mon, 20 Apr 2015 05:32:06 -0700 (PDT)
+	b=i1mWhWe1PTWA+eJQgKBVlTci0X9cdcY/LKV0ZfqftqR6ybNDTitavuW9H6cMedbbNp
+	sKKFAAgleBxvs3bs5HGr6AfkLWGBidDbuzuZtf+81u4xInqrLFJhyck7SdT1WJ2Yudu2
+	v5VUcPn27/uqhFMDq/nnmCLq/BSndQIVbLTn6aTU5cq3e/Mr1bzDdb+n6imAzAPPeRwo
+	cqebi9AD/ocS7bUoHHOYmlN+REPJx5F7q0lBIOn9JQz3unPiftpJtna402LNSPN3d4rT
+	yAlBhZX5Z3ej1refsT4l49vqbzd2bMufS00FV6mZwi6wWEiXrRm0RHrk+Nx23ppsX+28
+	JFqg==
+X-Gm-Message-State: ALoCoQkmi44MvnjKi0hC3HrBSlHIHQ1P28q3vIlz/X90XQ3Tyzh4GzDn0wLTrZdWUhl4TLQ7gohq
+X-Received: by 10.70.35.108 with SMTP id g12mr15828568pdj.75.1429537386487;
+	Mon, 20 Apr 2015 06:43:06 -0700 (PDT)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id
-	ve3sm18079458pbc.22.2015.04.20.05.32.04
+	by mx.google.com with ESMTPSA id a5sm5274884pdk.58.2015.04.20.06.43.04
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 20 Apr 2015 05:32:05 -0700 (PDT)
+	Mon, 20 Apr 2015 06:43:05 -0700 (PDT)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 119E9561979; Mon, 20 Apr 2015 13:32:02 +0100 (BST)
+	id D8F36561547; Mon, 20 Apr 2015 13:31:20 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 20 Apr 2015 13:32:01 +0100
-Message-Id: <1429533121-32709-1-git-send-email-alexandru.damian@intel.com>
+Date: Mon, 20 Apr 2015 13:31:19 +0100
+Message-Id: <1429533079-32620-1-git-send-email-alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
-Subject: [1.26 1/1] setup.py update for 1.26 release
+Subject: [PATCH 1/1] setup.py update for 1.26 release
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,7 +44,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 20 Apr 2015 12:32:10 -0000
+X-List-Received-Date: Mon, 20 Apr 2015 13:43:06 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
