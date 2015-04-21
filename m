@@ -1,26 +1,25 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id C042D73D6D
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id E34EC65CF5
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 Apr 2015 09:07:32 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.9/8.14.9) with ESMTP id t3L97XpX015959
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 Apr 2015 02:07:34 -0700 (PDT)
-Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.224.2;
-	Tue, 21 Apr 2015 02:07:33 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Tue, 21 Apr 2015 02:07:33 -0700
-Message-ID: <a76c78db62cc1254387c8d4a556f0d8c54df704f.1429607216.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1429607216.git.liezhi.yang@windriver.com>
-References: <cover.1429607216.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/1] cooker.py: change working dir before use pyinotify
+	Tue, 21 Apr 2015 15:48:54 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga103.jf.intel.com with ESMTP; 21 Apr 2015 08:48:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.11,616,1422950400"; d="scan'208";a="698631808"
+Received: from linux.intel.com ([10.23.219.25])
+	by fmsmga001.fm.intel.com with ESMTP; 21 Apr 2015 08:48:55 -0700
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.65])
+	by linux.intel.com (Postfix) with ESMTP id 7E9E06A4090;
+	Tue, 21 Apr 2015 08:48:29 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 21 Apr 2015 18:48:49 +0300
+Message-Id: <1429631329-15522-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+In-Reply-To: <1429266695.6976.194.camel@linuxfoundation.org>
+References: <1429266695.6976.194.camel@linuxfoundation.org>
+Subject: [PATCH] bitbake: reset build mtime cache before the build
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,74 +32,84 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 21 Apr 2015 09:07:32 -0000
-Content-Type: text/plain
+X-List-Received-Date: Tue, 21 Apr 2015 15:48:55 -0000
 
-Fixed:
-$ cd tmp/work/core2-64-poky-linux/bash/4.3-r1
-$ bitbake bash -cclean
+Introduced build mtime cache structure. Reset it before the build
+to prevent bitbake from crashing when build/tmp/stamps hierarchy
+is removed.
 
-ERROR: Running idle function
-Traceback (most recent call last):
-  File "/buildarea/lyang1/poky/bitbake/lib/pyinotify.py", line 1317, in Notifier.process_events():
-                     continue
-    >            revent = self._sys_proc_fun(raw_event)  # system processings
-                 if watch_ and watch_.proc_fun:
-  File "/buildarea/lyang1/poky/bitbake/lib/pyinotify.py", line 686, in _SysProcessEvent.__call__(event=<_RawEvent cookie=0 mask=0x40000200 name=build wd=5 >):
-             # 3- default call method process_default
-    >        return self.process_default(event)
+[YOCTO: #7562]
 
-  File "/buildarea/lyang1/poky/bitbake/lib/pyinotify.py", line 897, in _SysProcessEvent.process_default(raw_event=<_RawEvent cookie=0 mask=0x40000200 name=build wd=5 >, to_append=None):
-                 dict_.update(to_append)
-    >        return Event(dict_)
-
-  File "/buildarea/lyang1/poky/bitbake/lib/pyinotify.py", line 628, in Event.__init__(raw={'path': '.', 'wd': 5, 'mask': 1073742336, 'name': 'build', 'dir': True}):
-                     self.pathname = os.path.abspath(os.path.join(self.path,
-    >                                                             self.name))
-                 else:
-  File "/usr/lib/python2.7/posixpath.py", line 347, in abspath(path='./build'):
-             else:
-    >            cwd = os.getcwd()
-             path = join(cwd, path)
-OSError: [Errno 2] No such file or directory
-
-And we can't run bitbake again:
-ERROR: Only one copy of bitbake should be run against a build directory
-
-Chaneg working dir to TOPDIR rather than the dir which runs the command
-will fix the problem. Move self.initConfigurationData ahead, otherwise,
-there is no self.data.
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- bitbake/lib/bb/cooker.py |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ bitbake/lib/bb/build.py  | 17 ++++++++++++++++-
+ bitbake/lib/bb/cooker.py |  3 ++-
+ 2 files changed, 18 insertions(+), 2 deletions(-)
 
+diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+index 65cc851..0f6aa1a 100644
+--- a/bitbake/lib/bb/build.py
++++ b/bitbake/lib/bb/build.py
+@@ -31,6 +31,7 @@ import logging
+ import shlex
+ import glob
+ import time
++import stat
+ import bb
+ import bb.msg
+ import bb.process
+@@ -42,6 +43,20 @@ logger = logging.getLogger('BitBake.Build')
+ 
+ NULL = open(os.devnull, 'r+')
+ 
++__mtime_cache = {}
++
++def cached_mtime_noerror(f):
++    if f not in __mtime_cache:
++        try:
++            __mtime_cache[f] = os.stat(f)[stat.ST_MTIME]
++        except OSError:
++            return 0
++    return __mtime_cache[f]
++
++def reset_cache():
++    global __mtime_cache
++    __mtime_cache = {}
++
+ # When we execute a Python function, we'd like certain things
+ # in all namespaces, hence we add them to __builtins__.
+ # If we do not do this and use the exec globals, they will
+@@ -535,7 +550,7 @@ def stamp_internal(taskname, d, file_name, baseonly=False):
+     stamp = bb.parse.siggen.stampfile(stamp, file_name, taskname, extrainfo)
+ 
+     stampdir = os.path.dirname(stamp)
+-    if bb.parse.cached_mtime_noerror(stampdir) == 0:
++    if cached_mtime_noerror(stampdir) == 0:
+         bb.utils.mkdirhier(stampdir)
+ 
+     return stamp
 diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 9c101f2..678a2f7 100644
+index 9c101f2..ddf5fed 100644
 --- a/bitbake/lib/bb/cooker.py
 +++ b/bitbake/lib/bb/cooker.py
-@@ -121,6 +121,9 @@ class BBCooker:
+@@ -35,7 +35,7 @@ from contextlib import closing
+ from functools import wraps
+ from collections import defaultdict
+ import bb, bb.exceptions, bb.command
+-from bb import utils, data, parse, event, cache, providers, taskdata, runqueue
++from bb import utils, data, parse, event, cache, providers, taskdata, runqueue, build
+ import Queue
+ import signal
+ import prserv.serv
+@@ -1343,6 +1343,7 @@ class BBCooker:
+                 return True
+             return retval
  
-         self.configuration = configuration
++        build.reset_cache()
+         self.buildSetVars()
  
-+        self.initConfigurationData()
-+        os.chdir(self.data.expand('${TOPDIR}'))
-+
-         self.configwatcher = pyinotify.WatchManager()
-         self.configwatcher.bbseen = []
-         self.confignotifier = pyinotify.Notifier(self.configwatcher, self.config_notifications)
-@@ -131,9 +134,6 @@ class BBCooker:
-         self.watcher.bbseen = []
-         self.notifier = pyinotify.Notifier(self.watcher, self.notifications)
- 
--
--        self.initConfigurationData()
--
-         self.inotify_modified_files = []
- 
-         def _process_inotify_updates(server, notifier_list, abort):
+         taskdata, runlist, fulltargetlist = self.buildTaskData(targets, task, self.configuration.abort)
 -- 
-1.7.9.5
+2.1.4
 
 
