@@ -1,20 +1,23 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 8AFAD60167
+Return-Path: <mariano.lopez@linux.intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 08449605D2
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 22 Apr 2015 12:43:02 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga102.jf.intel.com with ESMTP; 22 Apr 2015 05:43:03 -0700
+	Thu, 23 Apr 2015 18:17:40 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by fmsmga103.fm.intel.com with ESMTP; 23 Apr 2015 11:17:42 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.11,623,1422950400"; d="scan'208";a="699136696"
-Received: from unknown (HELO peggleto-mobl.ger.corp.intel.com) ([10.252.14.70])
-	by fmsmga001.fm.intel.com with ESMTP; 22 Apr 2015 05:43:01 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="5.11,633,1422950400"; d="scan'208";a="484800010"
+Received: from mlopezva-mobl2.zpn.intel.com (HELO [10.219.18.203])
+	([10.219.18.203])
+	by FMSMGA003.fm.intel.com with ESMTP; 23 Apr 2015 11:17:41 -0700
+Message-ID: <55393749.4050002@linux.intel.com>
+Date: Thu, 23 Apr 2015 13:17:45 -0500
+From: Mariano Lopez <mariano.lopez@linux.intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:31.0) Gecko/20100101 Thunderbird/31.6.0
+MIME-Version: 1.0
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 22 Apr 2015 13:42:47 +0100
-Message-Id: <cover.1429706531.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.1.0
-Subject: [PATCH 0/2] Backport subpath fixes to 1.22 (cover letter only)
+Subject: [PATCH] bitbake: fetch2/git: Add URL when latest_revision generates an exception.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -27,34 +30,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 22 Apr 2015 12:43:02 -0000
+X-List-Received-Date: Thu, 23 Apr 2015 18:17:43 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Patch 2/2 needed minor conflict resolution for the test case but
-otherwise this is just a straight cherry-pick.
+The URL is not sent when _latest_revision generates and exception.
+When performing the sanity checks it is not possible to know the URI 
+that failed.
 
+This add the URL when latest_revision generates an exception.
 
-The following changes since commit 012fb876c1cf0b3aeee3c8c168af0a8947518246:
+[YOCTO: #7592]
 
-  data.py: fixes bad substitution when running devshell (2015-04-11 16:26:53 +0100)
+Signed-off-by: mlopezva <mariano.lopez@linux.intel.com>
+---
+  bitbake/lib/bb/fetch2/git.py | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
 
-are available in the git repository at:
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index 0fd9bee..0d91431 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -352,7 +352,7 @@ class Git(FetchMethod):
+              for l in output.split('\n'):
+                  if s in l:
+                      return l.split()[0]
+-        raise bb.fetch2.FetchError("Unable to resolve '%s' in upstream 
+git repository in git ls-remote output" % ud.unresolvedrev[name])
++        raise bb.fetch2.FetchError("Unable to resolve '%s' in upstream 
+git repository in git ls-remote output for %s" % 
+(ud.unresolvedrev[name], ud.host+ud.path))
 
-  git://git.yoctoproject.org/poky-contrib paule/subpath-fix-1.22
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/subpath-fix-1.22
-
-Anders Darander (1):
-  fetch/git: Remove a possible trailing '/' in subpath
-
-Paul Eggleton (1):
-  lib/bb/utils: add safeguard against recursively deleting things we
-    shouldn't
-
- lib/bb/fetch2/git.py  |  2 +-
- lib/bb/tests/utils.py | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
- lib/bb/utils.py       | 21 +++++++++++++++++++++
- 3 files changed, 72 insertions(+), 1 deletion(-)
-
+      def latest_versionstring(self, ud, d):
+          """
 -- 
-2.1.0
+1.8.4.5
 
 
