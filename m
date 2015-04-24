@@ -1,23 +1,30 @@
-Return-Path: <mariano.lopez@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 6A1ED605D2
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 1CC8A605D2
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 23 Apr 2015 18:20:43 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by fmsmga103.fm.intel.com with ESMTP; 23 Apr 2015 11:20:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.11,633,1422950400"; d="scan'208";a="718251374"
-Received: from mlopezva-mobl2.zpn.intel.com (HELO [10.219.18.203])
-	([10.219.18.203])
-	by orsmga002.jf.intel.com with ESMTP; 23 Apr 2015 11:20:23 -0700
-Message-ID: <553937EB.20104@linux.intel.com>
-Date: Thu, 23 Apr 2015 13:20:27 -0500
-From: Mariano Lopez <mariano.lopez@linux.intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:31.0) Gecko/20100101 Thunderbird/31.6.0
-MIME-Version: 1.0
-To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] bitbake: fetch2/git: Allow HEAD to be searched.
+	Fri, 24 Apr 2015 10:26:10 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t3OAQBqQ004981; Fri, 24 Apr 2015 11:26:11 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id fN5dWgMaCWa4; Fri, 24 Apr 2015 11:26:11 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t3OAPuRc004977
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 24 Apr 2015 11:26:07 +0100
+Message-ID: <1429871156.26983.133.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Robert Yang <liezhi.yang@windriver.com>
+Date: Fri, 24 Apr 2015 11:25:56 +0100
+In-Reply-To: <a76c78db62cc1254387c8d4a556f0d8c54df704f.1429607216.git.liezhi.yang@windriver.com>
+References: <cover.1429607216.git.liezhi.yang@windriver.com>
+	<a76c78db62cc1254387c8d4a556f0d8c54df704f.1429607216.git.liezhi.yang@windriver.com>
+X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/1] cooker.py: change working dir before use pyinotify
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,35 +37,66 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 23 Apr 2015 18:20:45 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
+X-List-Received-Date: Fri, 24 Apr 2015 10:26:14 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-This makes it possble to fetch/search HEAD. This is useful when 
-searching for HEAD doing the sanity check.
+On Tue, 2015-04-21 at 02:07 -0700, Robert Yang wrote:
+> Fixed:
+> $ cd tmp/work/core2-64-poky-linux/bash/4.3-r1
+> $ bitbake bash -cclean
+> 
+> ERROR: Running idle function
+> Traceback (most recent call last):
+>   File "/buildarea/lyang1/poky/bitbake/lib/pyinotify.py", line 1317, in Notifier.process_events():
+>                      continue
+>     >            revent = self._sys_proc_fun(raw_event)  # system processings
+>                  if watch_ and watch_.proc_fun:
+>   File "/buildarea/lyang1/poky/bitbake/lib/pyinotify.py", line 686, in _SysProcessEvent.__call__(event=<_RawEvent cookie=0 mask=0x40000200 name=build wd=5 >):
+>              # 3- default call method process_default
+>     >        return self.process_default(event)
+> 
+>   File "/buildarea/lyang1/poky/bitbake/lib/pyinotify.py", line 897, in _SysProcessEvent.process_default(raw_event=<_RawEvent cookie=0 mask=0x40000200 name=build wd=5 >, to_append=None):
+>                  dict_.update(to_append)
+>     >        return Event(dict_)
+> 
+>   File "/buildarea/lyang1/poky/bitbake/lib/pyinotify.py", line 628, in Event.__init__(raw={'path': '.', 'wd': 5, 'mask': 1073742336, 'name': 'build', 'dir': True}):
+>                      self.pathname = os.path.abspath(os.path.join(self.path,
+>     >                                                             self.name))
+>                  else:
+>   File "/usr/lib/python2.7/posixpath.py", line 347, in abspath(path='./build'):
+>              else:
+>     >            cwd = os.getcwd()
+>              path = join(cwd, path)
+> OSError: [Errno 2] No such file or directory
+> 
+> And we can't run bitbake again:
+> ERROR: Only one copy of bitbake should be run against a build directory
+> 
+> Chaneg working dir to TOPDIR rather than the dir which runs the command
+> will fix the problem. Move self.initConfigurationData ahead, otherwise,
+> there is no self.data.
+> 
+> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+> ---
+>  bitbake/lib/bb/cooker.py |    6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+> index 9c101f2..678a2f7 100644
+> --- a/bitbake/lib/bb/cooker.py
+> +++ b/bitbake/lib/bb/cooker.py
+> @@ -121,6 +121,9 @@ class BBCooker:
+>  
+>          self.configuration = configuration
+>  
+> +        self.initConfigurationData()
+> +        os.chdir(self.data.expand('${TOPDIR}'))
 
-[YOCTO #7592]
+data.getVar("TOPDIR", True) please ;-)
 
-Signed-off-by: mlopezva <mariano.lopez@linux.intel.com>
----
-  bitbake/lib/bb/fetch2/git.py | 3 +++
-  1 file changed, 3 insertions(+)
+Cheers,
 
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 0d91431..12fb6a2 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -345,6 +345,9 @@ class Git(FetchMethod):
-          if ud.unresolvedrev[name][:5] == "refs/":
-              head = ud.unresolvedrev[name]
-              tag = ud.unresolvedrev[name]
-+        elif ud.unresolvedrev[name] == "HEAD":
-+            head = ud.unresolvedrev[name]
-+            tag = ud.unresolvedrev[name]
-          else:
-              head = "refs/heads/%s" % ud.unresolvedrev[name]
-              tag = "refs/tags/%s" % ud.unresolvedrev[name]
--- 
-1.8.4.5
+Richard
 
 
