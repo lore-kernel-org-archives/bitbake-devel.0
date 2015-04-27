@@ -1,38 +1,26 @@
-Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f177.google.com (mail-wi0-f177.google.com
-	[209.85.212.177])
-	by mail.openembedded.org (Postfix) with ESMTP id 6595B65CAC
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 9497565CAC
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 27 Apr 2015 14:24:24 +0000 (UTC)
-Received: by widdi4 with SMTP id di4so101532509wid.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 27 Apr 2015 07:24:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=d3huQufJstKfZ0HyB3CNlshta674SLcOXEnGtsjZuSo=;
-	b=I4yKCQfOigHcBTbyPU4mM+TQ1SKfhYDMlmMtgWqgn4n4UU36xq4Hk3caNpaeo2JDnT
-	RkKAkSpo7ZIVqPyPFP8aiAozA1JoG7KmTxD+F2clMRXej/NwCFaWAVeFLfkGd7vEq4+e
-	h8hUdUt+dIxaPBx87YWpORgV3PqR1w1NIvlt1OPqZdxJgGJ7ij8TGYjQG2fWbOBd53dz
-	KhVA/4dvI9rWFAJ9I3jrIFYC4yW21owsJTF9R/VSsMAK5ebjEDw8wDpoZ1YUJ7vXVmDp
-	Lq0YLVvkUoChbQGtXC2FoQgMKTn1DvyX6uPd10+iEDtuzj5pbOYWSY1C5cdm720hbqIv
-	DHSA==
-X-Gm-Message-State: ALoCoQnhz7T3gHhveZSU0HSUl1Uq6c/TtjzarKXJ1ibOCApkELjZP8rlkl7VsmWEVRrR3CE8iofq
-X-Received: by 10.180.7.134 with SMTP id j6mr21543407wia.9.1430144665883;
-	Mon, 27 Apr 2015 07:24:25 -0700 (PDT)
-Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id
-	dz4sm11849699wib.17.2015.04.27.07.24.24
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 27 Apr 2015 07:24:25 -0700 (PDT)
-Received: by adamian-desk.local (Postfix, from userid 1000)
-	id F37B956133F; Mon, 27 Apr 2015 15:24:25 +0100 (BST)
-From: Alex DAMIAN <alexandru.damian@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 27 Apr 2015 15:24:25 +0100
-Message-Id: <1430144665-17540-1-git-send-email-alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.9.1
-Subject: [PATCH 1/1] Revert "toaster: add layer source in admin throws an error"
+	Mon, 27 Apr 2015 14:29:56 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by orsmga101.jf.intel.com with ESMTP; 27 Apr 2015 07:29:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.11,657,1422950400"; d="scan'208";a="486198871"
+Received: from dmoore26-mobl2.ger.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.252.4.219])
+	by FMSMGA003.fm.intel.com with ESMTP; 27 Apr 2015 07:29:57 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Alex DAMIAN <alexandru.damian@intel.com>
+Date: Mon, 27 Apr 2015 15:29:56 +0100
+Message-ID: <16827531.iyLDU4dcLN@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.14.4 (Linux/3.18.9-200.fc21.x86_64; KDE/4.14.6; x86_64; ; )
+In-Reply-To: <1430144665-17540-1-git-send-email-alexandru.damian@intel.com>
+References: <1430144665-17540-1-git-send-email-alexandru.damian@intel.com>
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/1] Revert "toaster: add layer source in admin throws an error"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,52 +33,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 27 Apr 2015 14:24:25 -0000
+X-List-Received-Date: Mon, 27 Apr 2015 14:29:58 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+Hi Alex,
 
-This reverts commit 4de721aa75a4aaad186312443726e6daa764934b.
----
- lib/toaster/orm/models.py | 20 ++++++--------------
- 1 file changed, 6 insertions(+), 14 deletions(-)
+On Monday 27 April 2015 15:24:25 Alex DAMIAN wrote:
+> From: Alexandru DAMIAN <alexandru.damian@intel.com>
+> 
+> This reverts commit 4de721aa75a4aaad186312443726e6daa764934b.
+> ---
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index b9bb896..cccf7f3 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -646,25 +646,17 @@ class LayerSource(models.Model):
-         raise Exception("Abstract, update() must be implemented by all LayerSource-derived classes (object is %s)" % str(vars(self)))
- 
-     def save(self, *args, **kwargs):
--        if self.sourcetype == LayerSource.TYPE_LOCAL:
--            self.__class__ = LocalLayerSource
--        elif self.sourcetype == LayerSource.TYPE_LAYERINDEX:
--            self.__class__ = LayerIndexLayerSource
--        elif self.sourcetype == LayerSource.TYPE_IMPORTED:
--            self.__class__ = ImportedLayerSource
-+        if isinstance(self, LocalLayerSource):
-+            self.sourcetype = LayerSource.TYPE_LOCAL
-+        elif isinstance(self, LayerIndexLayerSource):
-+            self.sourcetype = LayerSource.TYPE_LAYERINDEX
-+        elif isinstance(self, ImportedLayerSource):
-+            self.sourcetype = LayerSource.TYPE_IMPORTED
-         elif self.sourcetype == None:
-             raise Exception("Unknown LayerSource-derived class. If you added a new layer source type, fill out all code stubs.")
-         return super(LayerSource, self).save(*args, **kwargs)
- 
-     def get_object(self):
--        # preset an un-initilized object
--        if None == self.name:
--            self.name=""
--        if None == self.apiurl:
--            self.apiurl=""
--        if None == self.sourcetype:
--            self.sourcetype=LayerSource.TYPE_LOCAL
--
-         if self.sourcetype == LayerSource.TYPE_LOCAL:
-             self.__class__ = LocalLayerSource
-         elif self.sourcetype == LayerSource.TYPE_LAYERINDEX:
+When we revert patches, we need something in the message explaining why we are 
+doing the revert.
+
+Cheers,
+Paul
+
 -- 
-1.9.1
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
