@@ -1,23 +1,23 @@
-Return-Path: <mariano.lopez@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 6AA2865CAC
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id A612F716CE
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 27 Apr 2015 16:16:47 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by fmsmga103.fm.intel.com with ESMTP; 27 Apr 2015 09:16:48 -0700
+	Tue, 28 Apr 2015 11:27:38 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga103.jf.intel.com with ESMTP; 28 Apr 2015 04:27:40 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.11,658,1422950400"; d="scan'208";a="562547777"
-Received: from mlopezva-mobl2.zpn.intel.com (HELO [10.219.24.81])
-	([10.219.24.81])
-	by orsmga003.jf.intel.com with ESMTP; 27 Apr 2015 09:16:48 -0700
-Message-ID: <553E60F0.5050908@linux.intel.com>
-Date: Mon, 27 Apr 2015 11:16:48 -0500
-From: Mariano Lopez <mariano.lopez@linux.intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:31.0) Gecko/20100101 Thunderbird/31.6.0
-MIME-Version: 1.0
+X-IronPort-AV: E=Sophos;i="5.11,663,1422950400"; d="scan'208";a="702057003"
+Received: from linux.intel.com ([10.23.219.25])
+	by fmsmga001.fm.intel.com with ESMTP; 28 Apr 2015 04:27:39 -0700
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.65])
+	by linux.intel.com (Postfix) with ESMTP id ACC836A4090;
+	Tue, 28 Apr 2015 04:27:12 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Subject: [PATCH] bitbake: fetch2/git: Allow HEAD to be searched.
+Date: Tue, 28 Apr 2015 14:27:34 +0300
+Message-Id: <1430220454-20570-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH] bitbake: Handle BBMainException
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,36 +30,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 27 Apr 2015 16:16:48 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 28 Apr 2015 11:27:39 -0000
 
-This makes it possble to fetch/search HEAD. This is useful when 
-searching for HEAD doing the sanity check.
+Some error messages were lost because BBMainException was
+inherited from bb.BBHandledException. When bb.BBHandledException
+is processed error messages are not printed as they suppose to
+be printed before raising this exception.
 
-Please disregard previous patch with the same topic.
+Stopped to inherit BBMainException from bb.BBHandledException.
+Handled BBMainException in bin/bitbake and printed error message
+to the stderr.
 
-[YOCTO #7592]
-
-Signed-off-by: Mariano Lopez <mariano.lopez@linux.intel.com>
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
-  bitbake/lib/bb/fetch2/git.py | 3 +++
-  1 file changed, 3 insertions(+)
+ bitbake/bin/bitbake    | 5 ++++-
+ bitbake/lib/bb/main.py | 2 +-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 0d91431..12fb6a2 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -345,6 +345,9 @@ class Git(FetchMethod):
-          if ud.unresolvedrev[name][:5] == "refs/":
-              head = ud.unresolvedrev[name]
-              tag = ud.unresolvedrev[name]
-+        elif ud.unresolvedrev[name] == "HEAD":
-+            head = ud.unresolvedrev[name]
-+            tag = ud.unresolvedrev[name]
-          else:
-              head = "refs/heads/%s" % ud.unresolvedrev[name]
-              tag = "refs/tags/%s" % ud.unresolvedrev[name]
+diff --git a/bitbake/bin/bitbake b/bitbake/bin/bitbake
+index af91507..3e1ca62 100755
+--- a/bitbake/bin/bitbake
++++ b/bitbake/bin/bitbake
+@@ -33,12 +33,15 @@ except RuntimeError as exc:
+     sys.exit(str(exc))
+ 
+ from bb import cookerdata
+-from bb.main import bitbake_main, BitBakeConfigParameters
++from bb.main import bitbake_main, BitBakeConfigParameters, BBMainException
+ 
+ if __name__ == "__main__":
+     try:
+         ret = bitbake_main(BitBakeConfigParameters(sys.argv),
+                            cookerdata.CookerConfiguration())
++    except BBMainException as err:
++        print >>sys.stderr, err
++        ret = 1
+     except bb.BBHandledException:
+         ret = 1
+     except Exception:
+diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
+index af067f7..2019d50 100755
+--- a/bitbake/lib/bb/main.py
++++ b/bitbake/lib/bb/main.py
+@@ -39,7 +39,7 @@ from bb import cookerdata
+ __version__ = "1.27.0"
+ logger = logging.getLogger("BitBake")
+ 
+-class BBMainException(bb.BBHandledException):
++class BBMainException(Exception):
+     pass
+ 
+ def get_ui(config):
 -- 
-1.8.4.5
+2.1.4
+
 
