@@ -1,23 +1,30 @@
-Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id BE3B4736BA
+Return-Path: <katutxakurra@gmail.com>
+Received: from mail-yk0-f178.google.com (mail-yk0-f178.google.com
+	[209.85.160.178])
+	by mail.openembedded.org (Postfix) with ESMTP id ACBA472A85
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 Apr 2015 12:52:21 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga102.jf.intel.com with ESMTP; 28 Apr 2015 05:52:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.11,663,1422950400"; d="scan'208";a="702091153"
-Received: from linux.intel.com ([10.23.219.25])
-	by fmsmga001.fm.intel.com with ESMTP; 28 Apr 2015 05:52:23 -0700
-Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.65])
-	by linux.intel.com (Postfix) with ESMTP id D4D656A408F;
-	Tue, 28 Apr 2015 05:51:55 -0700 (PDT)
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+	Tue, 28 Apr 2015 14:43:10 +0000 (UTC)
+Received: by ykeo186 with SMTP id o186so22087581yke.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 28 Apr 2015 07:43:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:date:message-id:subject:from:to:content-type;
+	bh=yCqv4qafgMTA3jr17T7VnkeOofK93t+prW7dxeVbAtA=;
+	b=mJTy2NL71A6ZrOc4tXpaNpgzdR9RKQvXjtTnVCe2nK1MfmoobMyNtZyLV8T0ONbuoA
+	vSC3uOELkkb81+fXY72sMv8e2weTtdgL93YLBoz20g9+Zaw57EahOrJHh3i89NRBX6qh
+	uk8uCkZol6zRl934uaA6lFmHxw2zRowsM7YVJ4KltsMOBhATDocKqWpe/NbTLxHgtFGJ
+	nDyHnvyLWgymiNADPbz74HwLNAlhQ+ZbfRqRMEbgIu9gjwC5MWQEt/GIa4CeJJCaY21/
+	T0/J9u7M3nBO9Pv07gGkHk1Fcm7UeMTl9bSy0OLLdM7AgakSLhORMgy+JymzinYW/NMA
+	aG+w==
+MIME-Version: 1.0
+X-Received: by 10.236.229.202 with SMTP id h70mr23784277yhq.45.1430232192064; 
+	Tue, 28 Apr 2015 07:43:12 -0700 (PDT)
+Received: by 10.129.78.208 with HTTP; Tue, 28 Apr 2015 07:43:12 -0700 (PDT)
+Date: Tue, 28 Apr 2015 15:43:12 +0100
+Message-ID: <CAM1ZcoWg_S6ens4kumJSJzX3fdJio19tw3SUXEPFYpDoR6rAjw@mail.gmail.com>
+From: Katu Txakur <katutxakurra@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 28 Apr 2015 15:52:18 +0300
-Message-Id: <1430225538-15639-1-git-send-email-ed.bartosh@linux.intel.com>
-X-Mailer: git-send-email 2.1.4
-Subject: [PATCH] bitbake: use sys.exit to simplify the code
+Subject: List available kernel modules
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,44 +37,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 28 Apr 2015 12:52:23 -0000
+X-List-Received-Date: Tue, 28 Apr 2015 14:43:11 -0000
+Content-Type: multipart/alternative; boundary=089e0160c646c124ab0514c9e1f0
 
-Used sys.exit instead of assigning exit code to
-variable. This way it's more clear when bitbake
-exists and which exit code is used.
+--089e0160c646c124ab0514c9e1f0
+Content-Type: text/plain; charset=UTF-8
 
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
----
- bitbake/bin/bitbake | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+Hi,
 
-diff --git a/bitbake/bin/bitbake b/bitbake/bin/bitbake
-index 88ac8c3..b6f19ef 100755
---- a/bitbake/bin/bitbake
-+++ b/bitbake/bin/bitbake
-@@ -41,16 +41,13 @@ if __name__ == "__main__":
-     if __version__ != bb.__version__:
-         sys.exit("Bitbake core version and program version mismatch!")
-     try:
--        ret = bitbake_main(BitBakeConfigParameters(sys.argv),
--                           cookerdata.CookerConfiguration())
-+        sys.exit(bitbake_main(BitBakeConfigParameters(sys.argv),
-+                              cookerdata.CookerConfiguration()))
-     except BBMainException as err:
--        print >>sys.stderr, err
--        ret = 1
-+        sys.exit(err)
-     except bb.BBHandledException:
--        ret = 1
-+        sys.exit(1)
-     except Exception:
--        ret = 1
-         import traceback
-         traceback.print_exc()
--    sys.exit(ret)
--
-+        sys.exit(1)
--- 
-2.1.4
+I'm using Yocto to bitbake a kernel and I would like to list the available
+kernel modules to decide which ones should I include. Could somebody please
+point me to the documentation explaining this. I've failed to find it.
 
+I know how to use the menuconfig, but I would like to see the list.
+Something similar to checking the list of packages that a recipe builds
+with
+bitbake -e myrecipe | grep ^PACKAGES=
 
+Thank you for your time.
+
+--089e0160c646c124ab0514c9e1f0
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi,<div><br></div><div>I&#39;m using Yocto to bitbake a ke=
+rnel and I would like to list the available kernel modules to decide which =
+ones should I include. Could somebody please point me to the documentation =
+explaining this. I&#39;ve failed to find it.</div><div><br></div><div>I kno=
+w how to use the menuconfig, but I would like to see the list. Something si=
+milar to checking the list of packages that a recipe builds with=C2=A0</div=
+><div>bitbake -e myrecipe | grep ^PACKAGES=3D</div><div><br></div><div>Than=
+k you for your time.</div></div>
+
+--089e0160c646c124ab0514c9e1f0--
