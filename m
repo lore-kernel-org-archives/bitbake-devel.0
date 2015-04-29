@@ -1,29 +1,29 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 2D50872491
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id C324F7382F
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 Apr 2015 16:51:09 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t3SGp9EB003784; Tue, 28 Apr 2015 17:51:09 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id IvuTYQGnKAc1; Tue, 28 Apr 2015 17:51:09 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t3SGot5O003769
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 28 Apr 2015 17:51:06 +0100
-Message-ID: <1430239855.13022.243.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Katu Txakur <katutxakurra@gmail.com>
-Date: Tue, 28 Apr 2015 17:50:55 +0100
-In-Reply-To: <CAM1ZcoWg_S6ens4kumJSJzX3fdJio19tw3SUXEPFYpDoR6rAjw@mail.gmail.com>
-References: <CAM1ZcoWg_S6ens4kumJSJzX3fdJio19tw3SUXEPFYpDoR6rAjw@mail.gmail.com>
-X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
-Mime-Version: 1.0
+	Wed, 29 Apr 2015 05:41:45 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail.windriver.com (8.14.9/8.14.9) with ESMTP id t3T5fi2T013487
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
+	Tue, 28 Apr 2015 22:41:44 -0700 (PDT)
+Received: from [128.224.162.200] (128.224.162.200) by ALA-HCB.corp.ad.wrs.com
+	(147.11.189.41) with Microsoft SMTP Server id 14.3.224.2;
+	Tue, 28 Apr 2015 22:41:44 -0700
+Message-ID: <55406F17.5030505@windriver.com>
+Date: Wed, 29 Apr 2015 13:41:43 +0800
+From: Robert Yang <liezhi.yang@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux i686;
+	rv:31.0) Gecko/20100101 Thunderbird/31.6.0
+MIME-Version: 1.0
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <cover.1429607216.git.liezhi.yang@windriver.com>	
+	<a76c78db62cc1254387c8d4a556f0d8c54df704f.1429607216.git.liezhi.yang@windriver.com>
+	<1429871156.26983.133.camel@linuxfoundation.org>
+In-Reply-To: <1429871156.26983.133.camel@linuxfoundation.org>
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: List available kernel modules
+Subject: Re: [PATCH 1/1] cooker.py: change working dir before use pyinotify
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,37 +36,105 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 28 Apr 2015 16:51:10 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Wed, 29 Apr 2015 05:41:46 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Tue, 2015-04-28 at 15:43 +0100, Katu Txakur wrote:
-> Hi,
-> 
-> 
-> I'm using Yocto to bitbake a kernel and I would like to list the
-> available kernel modules to decide which ones should I include. Could
-> somebody please point me to the documentation explaining this. I've
-> failed to find it.
-> 
-> 
-> I know how to use the menuconfig, but I would like to see the list.
-> Something similar to checking the list of packages that a recipe
-> builds with 
-> bitbake -e myrecipe | grep ^PACKAGES=
-> 
-This question is more appropriate for the yocto list really. You can see
-the list of build packages by looking at the list of files in
-tmp/deploy/<package manager> and kernel modules are prefixed
-"kernel-module-" so something like:
-
-ls tmp/deploy/ipk/qemux86/kernel-module-*
-
-will give you a list assuming ipk packaging and qemux86 as the machine.
-
-Cheers,
-
-Richard
 
 
+On 04/24/2015 06:25 PM, Richard Purdie wrote:
+> On Tue, 2015-04-21 at 02:07 -0700, Robert Yang wrote:
+>> Fixed:
+>> $ cd tmp/work/core2-64-poky-linux/bash/4.3-r1
+>> $ bitbake bash -cclean
+>>
+>> ERROR: Running idle function
+>> Traceback (most recent call last):
+>>    File "/buildarea/lyang1/poky/bitbake/lib/pyinotify.py", line 1317, in Notifier.process_events():
+>>                       continue
+>>      >            revent = self._sys_proc_fun(raw_event)  # system processings
+>>                   if watch_ and watch_.proc_fun:
+>>    File "/buildarea/lyang1/poky/bitbake/lib/pyinotify.py", line 686, in _SysProcessEvent.__call__(event=<_RawEvent cookie=0 mask=0x40000200 name=build wd=5 >):
+>>               # 3- default call method process_default
+>>      >        return self.process_default(event)
+>>
+>>    File "/buildarea/lyang1/poky/bitbake/lib/pyinotify.py", line 897, in _SysProcessEvent.process_default(raw_event=<_RawEvent cookie=0 mask=0x40000200 name=build wd=5 >, to_append=None):
+>>                   dict_.update(to_append)
+>>      >        return Event(dict_)
+>>
+>>    File "/buildarea/lyang1/poky/bitbake/lib/pyinotify.py", line 628, in Event.__init__(raw={'path': '.', 'wd': 5, 'mask': 1073742336, 'name': 'build', 'dir': True}):
+>>                       self.pathname = os.path.abspath(os.path.join(self.path,
+>>      >                                                             self.name))
+>>                   else:
+>>    File "/usr/lib/python2.7/posixpath.py", line 347, in abspath(path='./build'):
+>>               else:
+>>      >            cwd = os.getcwd()
+>>               path = join(cwd, path)
+>> OSError: [Errno 2] No such file or directory
+>>
+>> And we can't run bitbake again:
+>> ERROR: Only one copy of bitbake should be run against a build directory
+>>
+>> Chaneg working dir to TOPDIR rather than the dir which runs the command
+>> will fix the problem. Move self.initConfigurationData ahead, otherwise,
+>> there is no self.data.
+>>
+>> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+>> ---
+>>   bitbake/lib/bb/cooker.py |    6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+>> index 9c101f2..678a2f7 100644
+>> --- a/bitbake/lib/bb/cooker.py
+>> +++ b/bitbake/lib/bb/cooker.py
+>> @@ -121,6 +121,9 @@ class BBCooker:
+>>
+>>           self.configuration = configuration
+>>
+>> +        self.initConfigurationData()
+>> +        os.chdir(self.data.expand('${TOPDIR}'))
+>
+> data.getVar("TOPDIR", True) please ;-)
+
+Thanks, I updated it in the repo:
+
+   git://git.pokylinux.org/poky-contrib rbt/cwd
+
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 6762239..fbfce6a 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -121,6 +121,9 @@ class BBCooker:
+
+          self.configuration = configuration
+
++        self.initConfigurationData()
++        os.chdir(self.data.getVar("TOPDIR", True))
++
+          self.configwatcher = pyinotify.WatchManager()
+          self.configwatcher.bbseen = []
+          self.confignotifier = pyinotify.Notifier(self.configwatcher, 
+self.config_notifications)
+@@ -131,9 +134,6 @@ class BBCooker:
+          self.watcher.bbseen = []
+          self.notifier = pyinotify.Notifier(self.watcher, self.notifications)
+
+-
+-        self.initConfigurationData()
+-
+          self.inotify_modified_files = []
+
+          def _process_inotify_updates(server, notifier_list, abort):
+
+
+// Robert
+
+>
+> Cheers,
+>
+> Richard
+>
+>
+>
 
