@@ -1,24 +1,29 @@
-Return-Path: <jason.wessel@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id DB1646017E
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  8 May 2015 18:24:41 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail1.windriver.com (8.14.9/8.14.9) with ESMTP id t48IOgXA011326
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 8 May 2015 11:24:42 -0700 (PDT)
-Received: from ord-lpggp3.wrs.com (128.224.149.46) by ALA-HCB.corp.ad.wrs.com
-	(147.11.189.41) with Microsoft SMTP Server id 14.3.224.2;
-	Fri, 8 May 2015 11:24:42 -0700
-From: Jason Wessel <jason.wessel@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Fri, 8 May 2015 13:21:40 -0500
-Message-ID: <1431109300-31794-1-git-send-email-jason.wessel@windriver.com>
-X-Mailer: git-send-email 1.7.9.5
-MIME-Version: 1.0
-Subject: [PATCH] fetch2: Allow git to use a different CA Bundle with private keys
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id CE52473CDC;
+	Sat,  9 May 2015 08:32:14 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t498WDne019204; Sat, 9 May 2015 09:32:13 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id mW2Jzblt-S47; Sat,  9 May 2015 09:32:13 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t498Vr4P019196
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Sat, 9 May 2015 09:32:11 +0100
+Message-ID: <1431160313.8074.342.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Jate Sujjavanich <jatedev@gmail.com>
+Date: Sat, 09 May 2015 09:31:53 +0100
+In-Reply-To: <CAPphmgYj=ARopeoCC+UdcLXcMTfZGO+CH=_YN4Zb7mvdvP==Yw@mail.gmail.com>
+References: <CAPphmgYj=ARopeoCC+UdcLXcMTfZGO+CH=_YN4Zb7mvdvP==Yw@mail.gmail.com>
+X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org,
+	openembedded-core@lists.openembedded.org
+Subject: Re: [0/2] Yocto Bug #6149, #5044
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,38 +36,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 08 May 2015 18:24:42 -0000
-Content-Type: text/plain
+X-List-Received-Date: Sat, 09 May 2015 08:32:22 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Setting BB_ENV_EXTRAWHITE to include GIT_SSL_CAINFO is enough to
-get "git ls-remote" to work for recipe parsing but it is not enough
-to get the fetcher to clone properly.
+On Thu, 2015-05-07 at 19:50 -0400, Jate Sujjavanich wrote:
+> I came across these bugs in poky 1.6.3 (daisy) with multiple package
+> providers. I fixed bug 6149 with just bitbake patch.
+>
+> I came across another bug with this when I tried the bitbake fix on
+> master. With the test case 
+>
+> IMAGE_INSTALL_append = " sshd"
+> PREFERRED_PROVIDER_sshd="dropbear"
+>
+> meta/lib/oe/package_manager.py reported a package not found in the
+> base feeds. The file image.bbclass starts copies IMAGE_INSTALL to
+> PACKAGE_INSTALL and performs fix ups for multilib, etc. I added
+> another function (rootfs_process_preferred_providers) to replace sshd
+> in PACKAGE_INSTALL with dropbear. This eliminated the error.
+>
+> The mega-manual is vague when it describes what can be specified in
+> PREFERRED_PROVIDER: an item. And the code partially supports run-time
+> packages as a valid item on the left. My implementation assumes a
+> package name on the right.
 
-This is because the fetcher has its own idea about what variables
-should be exported in the environment for some operations.
+I'm afraid this assumption is not correct. There are two distinct
+namespaces we have, the "buildtime" recipe names (PN) and the runtime
+package names. PREFERRED_PROVIDER takes recipe names (PN), not runtime
+ones. Mixing the two up is going to cause confusion and problems so the
+patch as it stands cannot be merged for this reason.
 
-It is desirable to use alternate CA Bundles for internal testing prior
-to using public keys for https, so we should allow the GIT_SSL_CAINFO
-to pass through.
+> Yocto bug 5044 suggests traversing from the package name to the
+> virtual/* provider, but I have not thought through how this might
+> work.
+>
+> IMAGE_INSTALL_append = " libasound-module-bluez"
+> PREFERRED_PROVIDER_libasound-module-bluez="bluez4"
+>
+> I got this working on poky 1.6.3, but some changes to the bluez
+> recipes on master seemed to mitigate the original problem.
+> 
+We have several issues with the way PREFERRED_PROVIDER works today and
+the translations between build time and runtime. I suspect that code
+needs rethinking to some extent. I know 5044 is assined to me, as yet
+I've not been able to find the time it needs to properly think through
+the different issues and fix it :(
 
-Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
----
- lib/bb/fetch2/__init__.py |    1 +
- 1 file changed, 1 insertion(+)
+Cheers,
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index b004dae..36c9554 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -783,6 +783,7 @@ def runfetchcmd(cmd, d, quiet = False, cleanup = []):
-                   'NO_PROXY', 'no_proxy',
-                   'ALL_PROXY', 'all_proxy',
-                   'GIT_PROXY_COMMAND',
-+                  'GIT_SSL_CAINFO',
-                   'SSH_AUTH_SOCK', 'SSH_AGENT_PID',
-                   'SOCKS5_USER', 'SOCKS5_PASSWD']
- 
--- 
-1.7.9.5
+Richard
+
 
 
