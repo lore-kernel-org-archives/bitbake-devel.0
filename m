@@ -1,36 +1,41 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f54.google.com (mail-wg0-f54.google.com [74.125.82.54])
-	by mail.openembedded.org (Postfix) with ESMTP id AE2A56013D
+Received: from mail-wi0-f171.google.com (mail-wi0-f171.google.com
+	[209.85.212.171])
+	by mail.openembedded.org (Postfix) with ESMTP id 173026013D
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 May 2015 10:58:39 +0000 (UTC)
-Received: by wgic8 with SMTP id c8so97763806wgi.1
+	Mon, 11 May 2015 10:58:49 +0000 (UTC)
+Received: by wief7 with SMTP id f7so83222127wie.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 May 2015 03:58:39 -0700 (PDT)
+	Mon, 11 May 2015 03:58:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=1fOUE4aVqN8nd6CEV3kf8Zzc0bCZE0+bgKZ/QlFtPVY=;
-	b=I6/OCumIGSVBujQkPnuF+Fife8hq4PgTTme2fM6/3XZEO8XxSRjuhnFM6TQ9uir8Je
-	LkMIE3QL6m+pntKpJMRHpRGzw0KIF3iFu0qd+3HjBjjA3UqOqzioXhSkBX2amty1zgtF
-	iJDc+SVjkc8NlZf8Vr4g8NkNfEK/o2+ZJIZq8B9BvEZm9ScUqzIR0W1F1f7hQokmHGzs
-	3YHUo2/pA0lCLalgdOo8x1qHc257Hc+/BdFcrEFw9K+x67uLTXFfvFWT3JptCN64GfR+
-	i7kxc5DDC/XQ3QRY9PqZk31wPdKK7lt0ut9PD8i17FOISjWZ5ACmWu718GOl7qnLZboT
-	ufgw==
-X-Gm-Message-State: ALoCoQk1o1QwyskeYrc/yP3RCWhWyl0R4tuGL6TSdD2KhyYh1XkmaLfEEfeLYsJ7D+m19A9IaVWU
-X-Received: by 10.194.122.200 with SMTP id lu8mr18976295wjb.30.1431341919509; 
-	Mon, 11 May 2015 03:58:39 -0700 (PDT)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references;
+	bh=rfaTMgYTiRELTJu1lg8CISRG1ZMhmdafUzD1Z25PnTA=;
+	b=mum70UGMjfE0eMkYBkpc30gjV+WI4j83pK0KGJWMDkiYEjmePl3jQ2pCgNFJR8qAf1
+	5DSdB0Hd3W0lU8PeDLODnGE/OLKyjtILTWyKssIFigqJgSkYbmFDz35P4lbxRjF7MYXc
+	Fx3DCf5A2qvCS8EdjO9rM3+fIRMQwvMPTnlhUWXpvaQj3lZKEm0eABDoAtme7f8Oa/O+
+	q1hyBK4mWE4IYj22i8cBzGdjjzOn/93b6TBw+GBo2KwuKzcPYZj91vE+GmBDZHksc9FO
+	8OL9CUJdSioidYmUVD+Uws/0GCKyYI1GHMkh8e7F09ukcedRIZfjsIHIrOI7tJx0NsB/
+	COUg==
+X-Gm-Message-State: ALoCoQll1HWiKEMYZDoWa076WjZplEJhV1deG0aidncIV7yeWJGkKx/XiWjJdU4gHhO+YuhMJtiY
+X-Received: by 10.194.62.132 with SMTP id y4mr19294482wjr.91.1431341930161;
+	Mon, 11 May 2015 03:58:50 -0700 (PDT)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id fm8sm12718899wib.9.2015.05.11.03.58.38
+	by mx.google.com with ESMTPSA id e2sm12706987wix.15.2015.05.11.03.58.49
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 11 May 2015 03:58:38 -0700 (PDT)
+	Mon, 11 May 2015 03:58:49 -0700 (PDT)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 0E0745601A3; Mon, 11 May 2015 11:58:39 +0100 (BST)
+	id DFDE75601A3; Mon, 11 May 2015 11:58:42 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 11 May 2015 11:58:37 +0100
-Message-Id: <cover.1431338029.git.alexandru.damian@intel.com>
+Date: Mon, 11 May 2015 11:58:32 +0100
+Message-Id: <7ffd7ba923c85a735e0dad528f1ab9d50073724b.1431338029.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
-Subject: [PATCH 00/11] Toaster patchset
+In-Reply-To: <cover.1431338029.git.alexandru.damian@intel.com>
+References: <cover.1431338029.git.alexandru.damian@intel.com>
+Cc: Alexander Kanevskiy <alexander.kanevskiy@intel.com>
+Subject: [PATCH 01/11] toaster: clear up toaster shutdown for mac osx
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,74 +48,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 11 May 2015 10:58:43 -0000
+X-List-Received-Date: Mon, 11 May 2015 10:58:54 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Alexander Kanevskiy <alexander.kanevskiy@intel.com>
 
-Hello,
+This patch properly shuts down toaster in interactive mode
+under Mac OSx.
 
-This a bug fixing patchset that cleans up the code and fixes some legacy issues,
-partially refactors the URL structure for a cleaner appliance of REST principles,
-and enables the code to passes tests under TTS.
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+---
+ bin/toaster | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Can you please pull at your convenience ?
-
-Thank you,
-Alex
-
-The following changes since commit 3e12f4e8e3ec66d1df772a64be04b90ec72462ae:
-
-  prserv: serv.py: remove unused and duplicate imports (2015-05-08 17:46:25 +0100)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib adamian/20150511-submission-bb
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20150511-submission-bb
-
-Alexander Kanevskiy (1):
-  toaster: clear up toaster shutdown for mac osx
-
-Alexandru DAMIAN (4):
-  toasterui: URL refactoring
-  toaster: adding art missing from Bootstrap
-  toastergui: fix whitespace after URL
-  toastergui: removing unused views
-
-Ed Bartosh (5):
-  toastergui: decrease load time for configuration page
-  toaster: Make toaster script working in zsh
-  toaster: Code cleanup: indent
-  toaster: fix typo in format string
-  toastergui: Consider task name when restarting a build
-
-Mihail Stanciu (1):
-  toaster: <Add class id to a few columns>
-
- bin/toaster                                        | 149 +++++++++---------
- lib/toaster/orm/models.py                          |   2 +-
- .../static/img/glyphicons-halflings-white.png      | Bin 0 -> 8777 bytes
- .../toastergui/static/img/glyphicons-halflings.png | Bin 0 -> 12799 bytes
- lib/toaster/toastergui/static/js/projectapp.js     |   2 +-
- .../toastergui/templates/basetable_top_layers.html |   2 +-
- lib/toaster/toastergui/templates/bpackage.html     |   4 +-
- lib/toaster/toastergui/templates/importlayer.html  |   2 +-
- lib/toaster/toastergui/templates/layer.html        |  34 -----
- lib/toaster/toastergui/templates/layerdetails.html |   8 +-
- lib/toaster/toastergui/templates/layers.html       |  14 +-
- lib/toaster/toastergui/templates/machines.html     |   4 +-
- lib/toaster/toastergui/templates/package.html      |  36 -----
- lib/toaster/toastergui/templates/project.html      |  24 +--
- lib/toaster/toastergui/templates/recipes.html      |   8 +-
- lib/toaster/toastergui/templates/targets.html      |   6 +-
- lib/toaster/toastergui/templates/tasks.html        |   8 +-
- lib/toaster/toastergui/urls.py                     |  26 ++--
- lib/toaster/toastergui/views.py                    | 169 ++++++---------------
- 19 files changed, 177 insertions(+), 321 deletions(-)
- create mode 100644 lib/toaster/toastergui/static/img/glyphicons-halflings-white.png
- create mode 100644 lib/toaster/toastergui/static/img/glyphicons-halflings.png
- delete mode 100644 lib/toaster/toastergui/templates/layer.html
- delete mode 100644 lib/toaster/toastergui/templates/package.html
-
+diff --git a/bin/toaster b/bin/toaster
+index 7907b57..792fb72 100755
+--- a/bin/toaster
++++ b/bin/toaster
+@@ -37,7 +37,7 @@ function webserverKillAll()
+ 			kill -SIGTERM -$(< ${pidfile}) 2>/dev/null
+ 			sleep 1;
+ 			# Kill processes if they are still running - may happen in interactive shells
+-			ps fux | grep "python.*manage.py runserver" | awk '{print $2}' | xargs kill
++			pkill -U $UID -f "python.*manage.py runserver"
+ 		done;
+ 		rm  ${pidfile}
+ 		fi
 -- 
 1.9.1
 
