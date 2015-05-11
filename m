@@ -1,35 +1,37 @@
 Return-Path: <danismostlikely@gmail.com>
-Received: from mail-ig0-f177.google.com (mail-ig0-f177.google.com
-	[209.85.213.177])
-	by mail.openembedded.org (Postfix) with ESMTP id 37AB973F5B
+Received: from mail-ig0-f169.google.com (mail-ig0-f169.google.com
+	[209.85.213.169])
+	by mail.openembedded.org (Postfix) with ESMTP id 8F8DD73F92
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 May 2015 20:19:06 +0000 (UTC)
-Received: by igbyr2 with SMTP id yr2so81950062igb.0
+	Mon, 11 May 2015 20:26:14 +0000 (UTC)
+Received: by igbyr2 with SMTP id yr2so82146267igb.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 May 2015 13:19:07 -0700 (PDT)
+	Mon, 11 May 2015 13:26:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:subject:date:message-id;
-	bh=Ek8y/lmEnW0AWZnQhT8Jamu8SlgFk9wYzCcAqNydArk=;
-	b=kFRLoJp0lUxneSfF1XuwHPU2XuPW4ZkmA7hW80uBj6dCsb+FMF5aw2gvhKNMxQbjKx
-	32aLDbn6NBnLJsaMmc/oueGwd+Div5lgyzXAQe1co23YQ0loPW0h5A9JiocwBEKGmGX8
-	7SC5L5xicdS70vu9v/1Thjwnel/ta8F7DS/bpvAU7ywRF4EN4VRxEv1iRk5UH6FaIDb9
-	fnFFT59FKzfrKEp/VPO32jWVKt56vBZRPDc/urvUuM7AofiTEwZzprn86Fa0v2Z+ax3G
-	qnuwueOBHvm55CKr9dajXHYtH0o8ntWyhQTPdDVWAm6c5wLcAZYtexWlqiPK6kBBk7c2
-	xnGw==
-X-Received: by 10.107.134.206 with SMTP id q75mr15021114ioi.27.1431375547430; 
-	Mon, 11 May 2015 13:19:07 -0700 (PDT)
+	h=from:to:subject:date:message-id:in-reply-to:references;
+	bh=FcLEEO9Q/pX6xtbY01LTDuCZNtJVak0P3NnLsGh1bJs=;
+	b=sNI3DQ2+IsPrxLz86yK2uTkHFN/GqaaDym6A0dTKRTGQTWJVufjJQ9SM0nF9hhq2xv
+	xje5+QganSwWfT6ElmOGsFzGyKOZaRJBwKzi10K507O63uaoP11cTxL9t+0xEysRc1uP
+	ZLqpFhpza2t0E6RT9zmL0U5dbTqYmDjTr+AlFAH/zSwzyXS2xnk6fOOO8Rgxpbpy0qoE
+	zyCebQo3r/8dkN7jYvxnIuFJimtem9HNNt97g0oS07CmsSM7ozDESD5CuPM/NMwf+dr3
+	p03Gb0Khj464WtnGW4/9SE1iHWjNC/d48n/bzjSZ4HjatzNc/e/r9O31j5On+r6JK+Va
+	xdJA==
+X-Received: by 10.43.60.76 with SMTP id wr12mr12857436icb.83.1431375975444;
+	Mon, 11 May 2015 13:26:15 -0700 (PDT)
 Received: from mediabox.local (71-17-233-74.sktn.hsdb.sasknet.sk.ca.
-	[71.17.233.74])
-	by mx.google.com with ESMTPSA id j20sm590737igt.5.2015.05.11.13.19.06
+	[71.17.233.74]) by mx.google.com with ESMTPSA id
+	p87sm10403659ioi.42.2015.05.11.13.26.14
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 11 May 2015 13:19:06 -0700 (PDT)
+	Mon, 11 May 2015 13:26:14 -0700 (PDT)
 From: Dan McGregor <danismostlikely@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 11 May 2015 14:19:03 -0600
-Message-Id: <1431375543-13831-1-git-send-email-danismostlikely@gmail.com>
+Date: Mon, 11 May 2015 14:26:13 -0600
+Message-Id: <1431375973-16390-1-git-send-email-danismostlikely@gmail.com>
 X-Mailer: git-send-email 2.4.0
-Subject: [PATCH] fetch/hg: support submodules
+In-Reply-To: <1431375543-13831-1-git-send-email-danismostlikely@gmail.com>
+References: <1431375543-13831-1-git-send-email-danismostlikely@gmail.com>
+Subject: [PATCH v2] fetch/hg: support submodules
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,7 +44,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 11 May 2015 20:19:10 -0000
+X-List-Received-Date: Mon, 11 May 2015 20:26:15 -0000
 
 From: Daniel McGregor <daniel.mcgregor@vecima.com>
 
@@ -60,7 +62,7 @@ Signed-off-by: Daniel McGregor <daniel.mcgregor@vecima.com>
  1 file changed, 37 insertions(+), 19 deletions(-)
 
 diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py
-index 81592f6..e09fa57 100644
+index 81592f6..ce755b2 100644
 --- a/lib/bb/fetch2/hg.py
 +++ b/lib/bb/fetch2/hg.py
 @@ -64,7 +64,9 @@ class Hg(FetchMethod):
@@ -163,7 +165,7 @@ index 81592f6..e09fa57 100644
 +                runfetchcmd("%s up -c -C %s" % revflag)
 +            else:
 +                logger.debug(2, "Unpack: cloning source to '" + codir + "'")
-+                runfetchcmd("%s clone %s %s/ %s" % (ud.basecmd, revflag, ud.moddir, codir), d)
++                runfetchcmd("%s clone %s -u %s %s/ %s" % (ud.basecmd, revflag, ud.revision, ud.moddir, codir), d)
 +        else:
 +            logger.debug(2, "Unpack: extracting source to '" + codir + "'")
 +            os.chdir(ud.moddir)
