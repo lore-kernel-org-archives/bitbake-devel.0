@@ -1,29 +1,36 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id CE52473CDC;
-	Sat,  9 May 2015 08:32:14 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t498WDne019204; Sat, 9 May 2015 09:32:13 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id mW2Jzblt-S47; Sat,  9 May 2015 09:32:13 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t498Vr4P019196
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Sat, 9 May 2015 09:32:11 +0100
-Message-ID: <1431160313.8074.342.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Jate Sujjavanich <jatedev@gmail.com>
-Date: Sat, 09 May 2015 09:31:53 +0100
-In-Reply-To: <CAPphmgYj=ARopeoCC+UdcLXcMTfZGO+CH=_YN4Zb7mvdvP==Yw@mail.gmail.com>
-References: <CAPphmgYj=ARopeoCC+UdcLXcMTfZGO+CH=_YN4Zb7mvdvP==Yw@mail.gmail.com>
-X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org,
-	openembedded-core@lists.openembedded.org
-Subject: Re: [0/2] Yocto Bug #6149, #5044
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-wg0-f54.google.com (mail-wg0-f54.google.com [74.125.82.54])
+	by mail.openembedded.org (Postfix) with ESMTP id AE2A56013D
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 11 May 2015 10:58:39 +0000 (UTC)
+Received: by wgic8 with SMTP id c8so97763806wgi.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 11 May 2015 03:58:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=1fOUE4aVqN8nd6CEV3kf8Zzc0bCZE0+bgKZ/QlFtPVY=;
+	b=I6/OCumIGSVBujQkPnuF+Fife8hq4PgTTme2fM6/3XZEO8XxSRjuhnFM6TQ9uir8Je
+	LkMIE3QL6m+pntKpJMRHpRGzw0KIF3iFu0qd+3HjBjjA3UqOqzioXhSkBX2amty1zgtF
+	iJDc+SVjkc8NlZf8Vr4g8NkNfEK/o2+ZJIZq8B9BvEZm9ScUqzIR0W1F1f7hQokmHGzs
+	3YHUo2/pA0lCLalgdOo8x1qHc257Hc+/BdFcrEFw9K+x67uLTXFfvFWT3JptCN64GfR+
+	i7kxc5DDC/XQ3QRY9PqZk31wPdKK7lt0ut9PD8i17FOISjWZ5ACmWu718GOl7qnLZboT
+	ufgw==
+X-Gm-Message-State: ALoCoQk1o1QwyskeYrc/yP3RCWhWyl0R4tuGL6TSdD2KhyYh1XkmaLfEEfeLYsJ7D+m19A9IaVWU
+X-Received: by 10.194.122.200 with SMTP id lu8mr18976295wjb.30.1431341919509; 
+	Mon, 11 May 2015 03:58:39 -0700 (PDT)
+Received: from adamian-desk.local ([83.217.123.106])
+	by mx.google.com with ESMTPSA id fm8sm12718899wib.9.2015.05.11.03.58.38
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Mon, 11 May 2015 03:58:38 -0700 (PDT)
+Received: by adamian-desk.local (Postfix, from userid 1000)
+	id 0E0745601A3; Mon, 11 May 2015 11:58:39 +0100 (BST)
+From: Alex DAMIAN <alexandru.damian@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 11 May 2015 11:58:37 +0100
+Message-Id: <cover.1431338029.git.alexandru.damian@intel.com>
+X-Mailer: git-send-email 1.9.1
+Subject: [PATCH 00/11] Toaster patchset
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,56 +43,75 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 09 May 2015 08:32:22 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 11 May 2015 10:58:43 -0000
 
-On Thu, 2015-05-07 at 19:50 -0400, Jate Sujjavanich wrote:
-> I came across these bugs in poky 1.6.3 (daisy) with multiple package
-> providers. I fixed bug 6149 with just bitbake patch.
->
-> I came across another bug with this when I tried the bitbake fix on
-> master. With the test case 
->
-> IMAGE_INSTALL_append = " sshd"
-> PREFERRED_PROVIDER_sshd="dropbear"
->
-> meta/lib/oe/package_manager.py reported a package not found in the
-> base feeds. The file image.bbclass starts copies IMAGE_INSTALL to
-> PACKAGE_INSTALL and performs fix ups for multilib, etc. I added
-> another function (rootfs_process_preferred_providers) to replace sshd
-> in PACKAGE_INSTALL with dropbear. This eliminated the error.
->
-> The mega-manual is vague when it describes what can be specified in
-> PREFERRED_PROVIDER: an item. And the code partially supports run-time
-> packages as a valid item on the left. My implementation assumes a
-> package name on the right.
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-I'm afraid this assumption is not correct. There are two distinct
-namespaces we have, the "buildtime" recipe names (PN) and the runtime
-package names. PREFERRED_PROVIDER takes recipe names (PN), not runtime
-ones. Mixing the two up is going to cause confusion and problems so the
-patch as it stands cannot be merged for this reason.
+Hello,
 
-> Yocto bug 5044 suggests traversing from the package name to the
-> virtual/* provider, but I have not thought through how this might
-> work.
->
-> IMAGE_INSTALL_append = " libasound-module-bluez"
-> PREFERRED_PROVIDER_libasound-module-bluez="bluez4"
->
-> I got this working on poky 1.6.3, but some changes to the bluez
-> recipes on master seemed to mitigate the original problem.
-> 
-We have several issues with the way PREFERRED_PROVIDER works today and
-the translations between build time and runtime. I suspect that code
-needs rethinking to some extent. I know 5044 is assined to me, as yet
-I've not been able to find the time it needs to properly think through
-the different issues and fix it :(
+This a bug fixing patchset that cleans up the code and fixes some legacy issues,
+partially refactors the URL structure for a cleaner appliance of REST principles,
+and enables the code to passes tests under TTS.
 
-Cheers,
+Can you please pull at your convenience ?
 
-Richard
+Thank you,
+Alex
 
+The following changes since commit 3e12f4e8e3ec66d1df772a64be04b90ec72462ae:
+
+  prserv: serv.py: remove unused and duplicate imports (2015-05-08 17:46:25 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib adamian/20150511-submission-bb
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20150511-submission-bb
+
+Alexander Kanevskiy (1):
+  toaster: clear up toaster shutdown for mac osx
+
+Alexandru DAMIAN (4):
+  toasterui: URL refactoring
+  toaster: adding art missing from Bootstrap
+  toastergui: fix whitespace after URL
+  toastergui: removing unused views
+
+Ed Bartosh (5):
+  toastergui: decrease load time for configuration page
+  toaster: Make toaster script working in zsh
+  toaster: Code cleanup: indent
+  toaster: fix typo in format string
+  toastergui: Consider task name when restarting a build
+
+Mihail Stanciu (1):
+  toaster: <Add class id to a few columns>
+
+ bin/toaster                                        | 149 +++++++++---------
+ lib/toaster/orm/models.py                          |   2 +-
+ .../static/img/glyphicons-halflings-white.png      | Bin 0 -> 8777 bytes
+ .../toastergui/static/img/glyphicons-halflings.png | Bin 0 -> 12799 bytes
+ lib/toaster/toastergui/static/js/projectapp.js     |   2 +-
+ .../toastergui/templates/basetable_top_layers.html |   2 +-
+ lib/toaster/toastergui/templates/bpackage.html     |   4 +-
+ lib/toaster/toastergui/templates/importlayer.html  |   2 +-
+ lib/toaster/toastergui/templates/layer.html        |  34 -----
+ lib/toaster/toastergui/templates/layerdetails.html |   8 +-
+ lib/toaster/toastergui/templates/layers.html       |  14 +-
+ lib/toaster/toastergui/templates/machines.html     |   4 +-
+ lib/toaster/toastergui/templates/package.html      |  36 -----
+ lib/toaster/toastergui/templates/project.html      |  24 +--
+ lib/toaster/toastergui/templates/recipes.html      |   8 +-
+ lib/toaster/toastergui/templates/targets.html      |   6 +-
+ lib/toaster/toastergui/templates/tasks.html        |   8 +-
+ lib/toaster/toastergui/urls.py                     |  26 ++--
+ lib/toaster/toastergui/views.py                    | 169 ++++++---------------
+ 19 files changed, 177 insertions(+), 321 deletions(-)
+ create mode 100644 lib/toaster/toastergui/static/img/glyphicons-halflings-white.png
+ create mode 100644 lib/toaster/toastergui/static/img/glyphicons-halflings.png
+ delete mode 100644 lib/toaster/toastergui/templates/layer.html
+ delete mode 100644 lib/toaster/toastergui/templates/package.html
+
+-- 
+1.9.1
 
 
