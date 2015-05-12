@@ -1,35 +1,31 @@
-Return-Path: <danismostlikely@gmail.com>
-Received: from mail-ie0-f178.google.com (mail-ie0-f178.google.com
-	[209.85.223.178])
-	by mail.openembedded.org (Postfix) with ESMTP id 84C0273EFD
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 7342073F4E
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 May 2015 03:25:20 +0000 (UTC)
-Received: by iepj10 with SMTP id j10so122408301iep.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 May 2015 20:25:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:subject:date:message-id;
-	bh=rZUmwl5Z2E/RvOI9sXqi3ePhJfwVvmismfkGKn09Eeo=;
-	b=FunXgW7L6nQE+6Rfzdk4R/1PLbjt3JR6dYsH6UMJQScxlZqRvrMguzy7GwqwGlPoDB
-	zwXRIPx721WBueu4VUJQLBocLv+u6uUa/ONECiU4KUkBnJ/8Q4B9nK004EHFbRGru3Do
-	pxmUjnG8QhgfEnzEU0SshJxfS0C1aVAhJMf1MARkUr5ogxyrr4EQSG/drA1NuX3rztON
-	AW6NfbvJLFx6+LiFxhRRZ9Qq15K+AvvSd2mwMBPNlxURdlYkpIWANUlJtSwwcbH4d5mF
-	xI/b+nqMOwdAN89lAjP2gXo0lJhJ2v/FUqS0lRzdXiUYXcYGWnGoLHmd9ylAjow5HXyA
-	MHsQ==
-X-Received: by 10.50.36.66 with SMTP id o2mr979214igj.16.1431401121817;
-	Mon, 11 May 2015 20:25:21 -0700 (PDT)
-Received: from mediabox.local (71-17-233-74.sktn.hsdb.sasknet.sk.ca.
-	[71.17.233.74]) by mx.google.com with ESMTPSA id
-	z195sm11130851iod.33.2015.05.11.20.25.20
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 11 May 2015 20:25:21 -0700 (PDT)
-From: Dan McGregor <danismostlikely@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 11 May 2015 21:25:18 -0600
-Message-Id: <1431401118-17064-1-git-send-email-danismostlikely@gmail.com>
-X-Mailer: git-send-email 2.4.0
-Subject: [PATCH v4] fetch/hg: support submodules
+	Tue, 12 May 2015 11:18:11 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t4CBI2sL029375; Tue, 12 May 2015 12:18:09 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id qNZo_j8VsFri; Tue, 12 May 2015 12:18:09 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t4CBHvie029323
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 12 May 2015 12:18:08 +0100
+Message-ID: <1431429477.30971.123.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: "Liam R. Howlett" <Liam.Howlett@windriver.com>, "Rifenbark, Scott M"
+	<scott.m.rifenbark@intel.com>
+Date: Tue, 12 May 2015 12:17:57 +0100
+In-Reply-To: <1429204998-29516-1-git-send-email-Liam.Howlett@WindRiver.com>
+References: <1429121824-31200-2-git-send-email-Liam.Howlett@WindRiver.com>
+	<1429204998-29516-1-git-send-email-Liam.Howlett@WindRiver.com>
+X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH v3] fetch2: Add BB_ALLOWED_NETWORKS support
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,132 +38,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 12 May 2015 03:25:21 -0000
+X-List-Received-Date: Tue, 12 May 2015 11:18:11 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Daniel McGregor <daniel.mcgregor@vecima.com>
+On Thu, 2015-04-16 at 13:23 -0400, Liam R. Howlett wrote:
+> BB_ALLOWED_NETWORKS is a list of hosts that the fetcher will be allowed
+> to use when BB_NO_NETWORK is not set.
+> 
+> If BB_NO_NETWORK is set, then networking is still disabled.
+> 
+> If BB_ALLOWED_NETWORKS is not set, the behaviour remains the same as
+> today.
+> 
+> If BB_NO_NETWORK is NOT set, and BB_ALLOWED_NETWORKS is configured, then
+> only the hosts in the list are usable by the fetcher.
+> 
+> eg:
+> BB_ALLOWED_NETWORKS="yoctoproject.org git.gnu.org"
+> The fetcher will be able to download from yoctoproject.org, git.gnu.org,
+> but not ftp.gnu.org or any other hostname that is not in the list.
+> 
+> There is also limited support for wildcards on the beginning of the
+> hosts, so BB_ALLOWED_NETWORKS="*.gnu.org" with match git.gnu.org and
+> ftp.gnu.org as well as foo.git.gnu.org
+> 
+> Signed-off-by: Liam R. Howlett <Liam.Howlett@WindRiver.com>
+> ---
+>  lib/bb/fetch2/__init__.py | 53 +++++++++++++++++++++++++++++++++++++++++++++++
+>  lib/bb/tests/fetch.py     | 37 +++++++++++++++++++++++++++++++++
+>  2 files changed, 90 insertions(+)
 
-Use hg clone and hg pull to copy the source into the build
-directory rather than taring up the cloned repository and
-untarring in the destination.
+I've merged this, however, one of the things we're trying to do is
+improve the documentation of bitbake. Would you be able to work with
+Scott (cc'd) to ensure this is documented in the manual please?
 
-This allows submodules to be cloned. While here, make the default
-behaviour keep the hg scm data to match the behaviour of the git
-fetcher.
+Cheers,
 
-Signed-off-by: Daniel McGregor <daniel.mcgregor@vecima.com>
----
- lib/bb/fetch2/hg.py | 55 +++++++++++++++++++++++++++++++++++------------------
- 1 file changed, 36 insertions(+), 19 deletions(-)
-
-diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py
-index 81592f6..6547cca 100644
---- a/lib/bb/fetch2/hg.py
-+++ b/lib/bb/fetch2/hg.py
-@@ -64,7 +64,9 @@ class Hg(FetchMethod):
-         elif not ud.revision:
-             ud.revision = self.latest_revision(ud, d)
- 
--        ud.localfile = data.expand('%s_%s_%s_%s.tar.gz' % (ud.module.replace('/', '.'), ud.host, ud.path.replace('/', '.'), ud.revision), d)
-+        ud.localfile = ud.moddir
-+
-+        ud.basecmd = data.getVar("FETCHCMD_hg", d, True) or "/usr/bin/env hg"
- 
-     def need_update(self, ud, d):
-         revTag = ud.parm.get('rev', 'tip')
-@@ -80,8 +82,6 @@ class Hg(FetchMethod):
-         command is "fetch", "update", "info"
-         """
- 
--        basecmd = data.expand('${FETCHCMD_hg}', d)
--
-         proto = ud.parm.get('protocol', 'http')
- 
-         host = ud.host
-@@ -98,7 +98,7 @@ class Hg(FetchMethod):
-                 hgroot = ud.user + "@" + host + ud.path
- 
-         if command == "info":
--            return "%s identify -i %s://%s/%s" % (basecmd, proto, hgroot, ud.module)
-+            return "%s identify -i %s://%s/%s" % (ud.basecmd, proto, hgroot, ud.module)
- 
-         options = [];
- 
-@@ -111,22 +111,22 @@ class Hg(FetchMethod):
- 
-         if command == "fetch":
-             if ud.user and ud.pswd:
--                cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" clone %s %s://%s/%s %s" % (basecmd, ud.user, ud.pswd, proto, " ".join(options), proto, hgroot, ud.module, ud.module)
-+                cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" clone %s %s://%s/%s %s" % (ud.basecmd, ud.user, ud.pswd, proto, " ".join(options), proto, hgroot, ud.module, ud.module)
-             else:
--                cmd = "%s clone %s %s://%s/%s %s" % (basecmd, " ".join(options), proto, hgroot, ud.module, ud.module)	      
-+                cmd = "%s clone %s %s://%s/%s %s" % (ud.basecmd, " ".join(options), proto, hgroot, ud.module, ud.module)
-         elif command == "pull":
-             # do not pass options list; limiting pull to rev causes the local
-             # repo not to contain it and immediately following "update" command
-             # will crash
-             if ud.user and ud.pswd:
--                cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" pull" % (basecmd, ud.user, ud.pswd, proto)
-+                cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" pull" % (ud.basecmd, ud.user, ud.pswd, proto)
-             else:
--                cmd = "%s pull" % (basecmd)
-+                cmd = "%s pull" % (ud.basecmd)
-         elif command == "update":
-             if ud.user and ud.pswd:
--                cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" update -C %s" % (basecmd, ud.user, ud.pswd, proto, " ".join(options))
-+                cmd = "%s --config auth.default.prefix=* --config auth.default.username=%s --config auth.default.password=%s --config \"auth.default.schemes=%s\" update -C %s" % (ud.basecmd, ud.user, ud.pswd, proto, " ".join(options))
-             else:
--                cmd = "%s update -C %s" % (basecmd, " ".join(options))
-+                cmd = "%s update -C %s" % (ud.basecmd, " ".join(options))
-         else:
-             raise FetchError("Invalid hg command %s" % command, ud.url)
- 
-@@ -163,15 +163,6 @@ class Hg(FetchMethod):
-         logger.debug(1, "Running %s", updatecmd)
-         runfetchcmd(updatecmd, d)
- 
--        scmdata = ud.parm.get("scmdata", "")
--        if scmdata == "keep":
--            tar_flags = ""
--        else:
--            tar_flags = "--exclude '.hg' --exclude '.hgrags'"
--
--        os.chdir(ud.pkgdir)
--        runfetchcmd("tar %s -czf %s %s" % (tar_flags, ud.localpath, ud.module), d, cleanup = [ud.localpath])
--
-     def supports_srcrev(self):
-         return True
- 
-@@ -191,3 +182,29 @@ class Hg(FetchMethod):
-         Return a unique key for the url
-         """
-         return "hg:" + ud.moddir
-+
-+    def localpath(self, ud, d):
-+        return ud.moddir
-+
-+    def unpack(self, ud, destdir, d):
-+        """
-+        Make a local clone or export for the url
-+        """
-+
-+        revflag = "-r %s" % ud.revision
-+        subdir = ud.parm.get("destsuffix", ud.module)
-+        codir = "%s/%s" % (destdir, subdir)
-+
-+        scmdata = ud.parm.get("scmdata", "")
-+        if scmdata != "nokeep":
-+            if not os.access(os.path.join(codir, '.hg'), os.R_OK):
-+                logger.debug(2, "Unpack: creating new hg repository in '" + codir + "'")
-+                runfetchcmd("%s init %s" % (ud.basecmd, codir), d)
-+            logger.debug(2, "Unpack: updating source in '" + codir + "'")
-+            os.chdir(codir)
-+            runfetchcmd("%s pull %s" % (ud.basecmd, ud.moddir), d)
-+            runfetchcmd("%s up -C %s" % (ud.basecmd, revflag), d)
-+        else:
-+            logger.debug(2, "Unpack: extracting source to '" + codir + "'")
-+            os.chdir(ud.moddir)
-+            runfetchcmd("%s archive -t files %s %s" % (ud.basecmd, revflag, codir), d)
--- 
-2.4.0
+Richard
 
 
