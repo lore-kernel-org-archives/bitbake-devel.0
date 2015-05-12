@@ -1,35 +1,35 @@
 Return-Path: <danismostlikely@gmail.com>
-Received: from mail-ig0-f177.google.com (mail-ig0-f177.google.com
-	[209.85.213.177])
-	by mail.openembedded.org (Postfix) with ESMTP id 5EF2773EFD
+Received: from mail-ie0-f178.google.com (mail-ie0-f178.google.com
+	[209.85.223.178])
+	by mail.openembedded.org (Postfix) with ESMTP id 84C0273EFD
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 May 2015 01:49:50 +0000 (UTC)
-Received: by iget9 with SMTP id t9so84448732ige.1
+	Tue, 12 May 2015 03:25:20 +0000 (UTC)
+Received: by iepj10 with SMTP id j10so122408301iep.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 May 2015 18:49:51 -0700 (PDT)
+	Mon, 11 May 2015 20:25:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:subject:date:message-id;
-	bh=2gD1wsC3E/VtFG4m+ixk+zZfoG8lEzi5WjV/HFKWQPw=;
-	b=UlFHMFrSGylmPssAOPkEc0hkbL6TjMWb5VoYKn8q6V0oT/dGKCefLyPS81O07iYubW
-	7wyhKMfzPJrKSHkBSD9TYbMt93GluLvDJAOjZocZeZG8gmqpC/32t67B7uzAtoCVanLc
-	K26vkk0Is/GaEfhoTaEuJWS+SILhzhRQ8+wZ7cueUEz+JzRND9Clb1+INGW+GRGqQVay
-	5EfYd/g2DPz+qnTdn8KlI8WOQqv5be7hx0KcksuuEUFZv33zCT0PEvdb0E/1P3SYaCF+
-	jTPyHvyk+iLW0kt6H1SHZDq+tQobjyB2gA9J5j4xuohggKtb++2Uh4s7R6RDtlNZnAHw
-	eIUw==
-X-Received: by 10.107.9.141 with SMTP id 13mr16848919ioj.71.1431395391355;
-	Mon, 11 May 2015 18:49:51 -0700 (PDT)
+	bh=rZUmwl5Z2E/RvOI9sXqi3ePhJfwVvmismfkGKn09Eeo=;
+	b=FunXgW7L6nQE+6Rfzdk4R/1PLbjt3JR6dYsH6UMJQScxlZqRvrMguzy7GwqwGlPoDB
+	zwXRIPx721WBueu4VUJQLBocLv+u6uUa/ONECiU4KUkBnJ/8Q4B9nK004EHFbRGru3Do
+	pxmUjnG8QhgfEnzEU0SshJxfS0C1aVAhJMf1MARkUr5ogxyrr4EQSG/drA1NuX3rztON
+	AW6NfbvJLFx6+LiFxhRRZ9Qq15K+AvvSd2mwMBPNlxURdlYkpIWANUlJtSwwcbH4d5mF
+	xI/b+nqMOwdAN89lAjP2gXo0lJhJ2v/FUqS0lRzdXiUYXcYGWnGoLHmd9ylAjow5HXyA
+	MHsQ==
+X-Received: by 10.50.36.66 with SMTP id o2mr979214igj.16.1431401121817;
+	Mon, 11 May 2015 20:25:21 -0700 (PDT)
 Received: from mediabox.local (71-17-233-74.sktn.hsdb.sasknet.sk.ca.
 	[71.17.233.74]) by mx.google.com with ESMTPSA id
-	k74sm10982720iok.30.2015.05.11.18.49.50
+	z195sm11130851iod.33.2015.05.11.20.25.20
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 11 May 2015 18:49:50 -0700 (PDT)
+	Mon, 11 May 2015 20:25:21 -0700 (PDT)
 From: Dan McGregor <danismostlikely@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 11 May 2015 19:49:47 -0600
-Message-Id: <1431395387-4529-1-git-send-email-danismostlikely@gmail.com>
+Date: Mon, 11 May 2015 21:25:18 -0600
+Message-Id: <1431401118-17064-1-git-send-email-danismostlikely@gmail.com>
 X-Mailer: git-send-email 2.4.0
-Subject: [PATCH v3] fetch/hg: support submodules
+Subject: [PATCH v4] fetch/hg: support submodules
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,7 +42,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 12 May 2015 01:49:52 -0000
+X-List-Received-Date: Tue, 12 May 2015 03:25:21 -0000
 
 From: Daniel McGregor <daniel.mcgregor@vecima.com>
 
@@ -56,11 +56,11 @@ fetcher.
 
 Signed-off-by: Daniel McGregor <daniel.mcgregor@vecima.com>
 ---
- lib/bb/fetch2/hg.py | 56 +++++++++++++++++++++++++++++++++++------------------
- 1 file changed, 37 insertions(+), 19 deletions(-)
+ lib/bb/fetch2/hg.py | 55 +++++++++++++++++++++++++++++++++++------------------
+ 1 file changed, 36 insertions(+), 19 deletions(-)
 
 diff --git a/lib/bb/fetch2/hg.py b/lib/bb/fetch2/hg.py
-index 81592f6..5bc36c0 100644
+index 81592f6..6547cca 100644
 --- a/lib/bb/fetch2/hg.py
 +++ b/lib/bb/fetch2/hg.py
 @@ -64,7 +64,9 @@ class Hg(FetchMethod):
@@ -137,7 +137,7 @@ index 81592f6..5bc36c0 100644
      def supports_srcrev(self):
          return True
  
-@@ -191,3 +182,30 @@ class Hg(FetchMethod):
+@@ -191,3 +182,29 @@ class Hg(FetchMethod):
          Return a unique key for the url
          """
          return "hg:" + ud.moddir
@@ -156,14 +156,13 @@ index 81592f6..5bc36c0 100644
 +
 +        scmdata = ud.parm.get("scmdata", "")
 +        if scmdata != "nokeep":
-+            if os.access(os.path.join(codir, '.hg'), os.R_OK):
-+                logger.debug(2, "Unpack: updating source in '" + codir + "'")
-+                os.chdir(codir)
-+                runfetchcmd("%s pull %s" % (ud.basecmd, ud.moddir), d)
-+                runfetchcmd("%s up -c -C %s" % revflag, d)
-+            else:
-+                logger.debug(2, "Unpack: cloning source to '" + codir + "'")
-+                runfetchcmd("%s clone %s -u %s %s/ %s" % (ud.basecmd, revflag, ud.revision, ud.moddir, codir), d)
++            if not os.access(os.path.join(codir, '.hg'), os.R_OK):
++                logger.debug(2, "Unpack: creating new hg repository in '" + codir + "'")
++                runfetchcmd("%s init %s" % (ud.basecmd, codir), d)
++            logger.debug(2, "Unpack: updating source in '" + codir + "'")
++            os.chdir(codir)
++            runfetchcmd("%s pull %s" % (ud.basecmd, ud.moddir), d)
++            runfetchcmd("%s up -C %s" % (ud.basecmd, revflag), d)
 +        else:
 +            logger.debug(2, "Unpack: extracting source to '" + codir + "'")
 +            os.chdir(ud.moddir)
