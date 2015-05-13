@@ -1,30 +1,30 @@
 Return-Path: <jatedev@gmail.com>
-Received: from mail-pd0-f182.google.com (mail-pd0-f182.google.com
-	[209.85.192.182])
-	by mail.openembedded.org (Postfix) with ESMTP id D77607405D;
-	Wed, 13 May 2015 22:47:07 +0000 (UTC)
-Received: by pdbnk13 with SMTP id nk13so65056046pdb.0;
-	Wed, 13 May 2015 15:47:09 -0700 (PDT)
+Received: from mail-pd0-f179.google.com (mail-pd0-f179.google.com
+	[209.85.192.179])
+	by mail.openembedded.org (Postfix) with ESMTP id 6669773FF0;
+	Wed, 13 May 2015 22:47:09 +0000 (UTC)
+Received: by pdbqd1 with SMTP id qd1so64986261pdb.2;
+	Wed, 13 May 2015 15:47:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=mime-version:date:message-id:subject:from:to:content-type;
-	bh=+KR1QIB2s9IzxUdQvo3Jqt6e6/d6hl5o8jn0HvNg2+0=;
-	b=TL3o55bJe4lFmuwWzgZ0T/Kndvq+B9v6XbADFxUNXJwTSPwxBL+8wZNlv3kXQmO8Gw
-	PbxLAMXM6U/Ru91ZS049H3Jsf60HhiXnEX9Sj/MufnnjTfkzwOq9y7Q+TD9j3yHOGDvk
-	kL/gYoDNaD6yqxaF/fDr8A8voXZEyai6DOrQoY81kyU7mX0xFTkiMoVBdV+tk0+9ONmK
-	y2cQZvRG2IBOlRfHYWCWw5C/qnIErOTY1ZQsIx2XffXteiLuRVeepaVcDUe2Ki3W/65L
-	hjQ0q06FpA27rt6rSUFDFudjWaDdKxvuieq0g/zaJBv+4BGN2xyrbJ2BWuRuMlP2rv6R
-	v3Pg==
+	bh=GdDRLLgSYlwISYp1nVmZjnyWY1uLAcK9RHwQnvaHfCs=;
+	b=e4MbqZ4W+rR6Kuz1BVOS9oUHLCC/yawjS58LnGn9/IIYa92AppI5eApDE2zPVpmECx
+	xOmxhag72DAcr0i2ooZOTBv58ss5Iwy7B1CGvx1g1JM74yItvXKR/LwG57S8tDWOY5Uq
+	wpHtPKlq2Q453OhO7/UwdNyjXpYXwUnnrMtVlz67+yBKPFSt/6nzu49g2jCbiP2ya4qb
+	2B8dbrnWU3ke1n0YiJhO0dZjQ8mPQl8Su+QSUL4yY8sw5LZd2507lOMYlvA6uiLsllDP
+	ATsTI+70PGqWq0d4O7TCq3qjVGTfjKLYbLpsTQwcyHdSWjzM1qyl5xK9mySKmO3L2zNr
+	EaZQ==
 MIME-Version: 1.0
-X-Received: by 10.70.138.38 with SMTP id qn6mr2014246pdb.119.1431557228924;
-	Wed, 13 May 2015 15:47:08 -0700 (PDT)
-Received: by 10.66.142.201 with HTTP; Wed, 13 May 2015 15:47:08 -0700 (PDT)
-Date: Wed, 13 May 2015 18:47:08 -0400
-Message-ID: <CAPphmgazTBK9mTYd2wF6wEu8jQ9-H2WH9uC9=F7--RU8v6i-qw@mail.gmail.com>
+X-Received: by 10.68.65.12 with SMTP id t12mr2169240pbs.118.1431557231591;
+	Wed, 13 May 2015 15:47:11 -0700 (PDT)
+Received: by 10.66.142.201 with HTTP; Wed, 13 May 2015 15:47:11 -0700 (PDT)
+Date: Wed, 13 May 2015 18:47:11 -0400
+Message-ID: <CAPphmgY46h8ajbqL66rynRf2-u28a0duxPFV3MqPjb_iB_RvaA@mail.gmail.com>
 From: Jate Sujjavanich <jatedev@gmail.com>
-To: bitbake-devel@lists.openembedded.org, 
-	openembedded-core@lists.openembedded.org, 
+To: openembedded-core@lists.openembedded.org, 
+	bitbake-devel@lists.openembedded.org, 
 	Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [PATCH v2][1/2] providers.py: Add PREFERRED_RPROVIDER
+Subject: [PATCH v2][2/2] image.bbclass/rootfs.py: use PREFERRED_RPROVIDER to select package
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,102 +38,123 @@ List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 13 May 2015 22:47:10 -0000
-Content-Type: multipart/alternative; boundary=001a113640281b142d0515fe64ca
+Content-Type: multipart/alternative; boundary=001a113802ba43c8420515fe64f5
 
---001a113640281b142d0515fe64ca
+--001a113802ba43c8420515fe64f5
 Content-Type: text/plain; charset=UTF-8
 
-The following changes since commit 7a8f37daa7b42905233c31366915b897886a957a:
-
-  dev-manual: Updates to add Luna support for Eclipse (2015-05-03 11:49:35
-+0100)
-
-are available in the git repository at:
-
-  git://github.com/jatedev/poky.git oe-core-image-rdepend-alt-2
-
-for you to fetch changes up to 55bd8d189f647443b28f988ccfc9eebffaec84d1:
+The following changes since commit 55bd8d189f647443b28f988ccfc9eebffaec84d1:
 
   providers.py: Add PREFERRED_RPROVIDER (2015-05-13 11:29:52 -0400)
 
+are available in the git repository at:
+
+  git://github.com/jatedev/poky.git preferred-provider-runtime-2
+
+for you to fetch changes up to 832a47ff79a06a797ddd39db86c792a43cdf0865:
+
+  image.bbclass/rootfs.py: use PREFERRED_RPROVIDER to select package
+(2015-05-13 12:24:02 -0400)
+
 ----------------------------------------------------------------
 Jate Sujjavanich (1):
-      providers.py: Add PREFERRED_RPROVIDER
+      image.bbclass/rootfs.py: use PREFERRED_RPROVIDER to select package
 
- bitbake/lib/bb/providers.py |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ meta/classes/image.bbclass |   14 ++++++++++++++
+ meta/lib/oe/rootfs.py      |    2 +-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/providers.py b/bitbake/lib/bb/providers.py
-index 637e1fa..910a23e 100644
---- a/bitbake/lib/bb/providers.py
-+++ b/bitbake/lib/bb/providers.py
-@@ -323,11 +323,12 @@ def filterProvidersRunTime(providers, item, cfgData,
-dataCache):
-     for p in eligible:
-         pn = dataCache.pkg_fn[p]
-         provides = dataCache.pn_provides[pn]
-+        provides.append(item)
-         for provide in provides:
--            prefervar = cfgData.getVar('PREFERRED_PROVIDER_%s' % provide,
-True)
--            #logger.debug(1, "checking PREFERRED_PROVIDER_%s (value %s)
-against %s", provide, prefervar, pns.keys())
-+            prefervar = cfgData.getVar('PREFERRED_RPROVIDER_%s' % provide,
-True)
-+            #logger.debug(1, "checking PREFERRED_RPROVIDER_%s (value %s)
-against %s", provide, prefervar, pns.keys())
-             if prefervar in pns and pns[prefervar] not in preferred:
--                var = "PREFERRED_PROVIDER_%s = %s" % (provide, prefervar)
-+                var = "PREFERRED_RPROVIDER_%s = %s" % (provide, prefervar)
-                 logger.verbose("selecting %s to satisfy runtime %s due to
-%s", prefervar, item, var)
-                 preferred_vars.append(var)
-                 pref = pns[prefervar]
+diff --git a/meta/classes/image.bbclass b/meta/classes/image.bbclass
+index 01f8b3f..80484d6 100644
+--- a/meta/classes/image.bbclass
++++ b/meta/classes/image.bbclass
+@@ -283,6 +283,20 @@ python rootfs_process_ignore() {
+ }
+ do_rootfs[prefuncs] += "rootfs_process_ignore"
 
---001a113640281b142d0515fe64ca
++python rootfs_process_preferred_rproviders() {
++    inst_pkgs = d.getVar("PACKAGE_INSTALL", True).split()
++    pref_pkgs = list()
++    for pkg in inst_pkgs:
++        prefervar = d.getVar("PREFERRED_RPROVIDER_%s" % pkg, True)
++        if prefervar:
++            inst_pkgs.remove(pkg)
++            pref_pkgs.append(prefervar)
++            bb.note("Selecting %s to provide %s due to
+PREFERRED_RPROVIDER" % (prefervar, pkg))
++    inst_pkgs.extend(pref_pkgs)
++    d.setVar("PACKAGE_INSTALL", ' '.join(inst_pkgs))
++}
++do_rootfs[prefuncs] += "rootfs_process_preferred_rproviders"
++
+ # We have to delay the runtime_mapping_rename until just before rootfs runs
+ # otherwise, the multilib renaming could step in and squash any fixups that
+ # may have occurred.
+diff --git a/meta/lib/oe/rootfs.py b/meta/lib/oe/rootfs.py
+index 6fb749f..4bad7ef 100644
+--- a/meta/lib/oe/rootfs.py
++++ b/meta/lib/oe/rootfs.py
+@@ -393,7 +393,7 @@ class RpmRootfs(Rootfs):
+         pass
+
+     def _log_check_error(self):
+-        r = re.compile('(unpacking of archive failed|Cannot find
+package|exit 1|ERR|Fail)')
++        r = re.compile('(unpacking of archive failed|Cannot find
+package|exit 1|ERR(?!ED_RPROVIDER)|Fail)')
+         log_path = self.d.expand("${T}/log.do_rootfs")
+         with open(log_path, 'r') as log:
+             found_error = 0
+
+--001a113802ba43c8420515fe64f5
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">The following changes since commit 7a8f37daa7b42905233c313=
-66915b897886a957a:<br><br>=C2=A0 dev-manual: Updates to add Luna support fo=
-r Eclipse (2015-05-03 11:49:35 +0100)<br><br>are available in the git repos=
-itory at:<br><br>=C2=A0 git://<a href=3D"http://github.com/jatedev/poky.git=
-">github.com/jatedev/poky.git</a> oe-core-image-rdepend-alt-2<br><br>for yo=
-u to fetch changes up to 55bd8d189f647443b28f988ccfc9eebffaec84d1:<br><br>=
-=C2=A0 providers.py: Add PREFERRED_RPROVIDER (2015-05-13 11:29:52 -0400)<br=
-><br>----------------------------------------------------------------<br>Ja=
-te Sujjavanich (1):<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 providers.py: Add PRE=
-FERRED_RPROVIDER<br><br>=C2=A0bitbake/lib/bb/providers.py |=C2=A0=C2=A0=C2=
-=A0 7 ++++---<br>=C2=A01 file changed, 4 insertions(+), 3 deletions(-)<br><=
-br>diff --git a/bitbake/lib/bb/providers.py b/bitbake/lib/bb/providers.py<b=
-r>index 637e1fa..910a23e 100644<br>--- a/bitbake/lib/bb/providers.py<br>+++=
- b/bitbake/lib/bb/providers.py<br>@@ -323,11 +323,12 @@ def filterProviders=
-RunTime(providers, item, cfgData, dataCache):<br>=C2=A0=C2=A0=C2=A0=C2=A0 f=
-or p in eligible:<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pn =
-=3D dataCache.pkg_fn[p]<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- provides =3D dataCache.pn_provides[pn]<br>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 provides.append(item)<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 for provide in provides:<br>-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 prefervar =3D cfgData.getVar(&#39;PREFERR=
-ED_PROVIDER_%s&#39; % provide, True)<br>-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #logger.debug(1, &quot;checking PREFERRED=
-_PROVIDER_%s (value %s) against %s&quot;, provide, prefervar, pns.keys())<b=
-r>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 prefe=
-rvar =3D cfgData.getVar(&#39;PREFERRED_RPROVIDER_%s&#39; % provide, True)<b=
-r>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #logg=
-er.debug(1, &quot;checking PREFERRED_RPROVIDER_%s (value %s) against %s&quo=
-t;, provide, prefervar, pns.keys())<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if prefervar in pns and pns[prefervar]=
- not in preferred:<br>-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 var =3D &quot;PREFERRED_PROVIDER_%s=
- =3D %s&quot; % (provide, prefervar)<br>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 var =3D &quot;PRE=
-FERRED_RPROVIDER_%s =3D %s&quot; % (provide, prefervar)<br>=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 logger.verbose(&quot;selecting %s to satisfy runtime %s due to %s&qu=
-ot;, prefervar, item, var)<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 preferred_vars.append(v=
-ar)<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pref =3D pns[prefervar]<br><br></div>
+<div dir=3D"ltr">The following changes since commit 55bd8d189f647443b28f988=
+ccfc9eebffaec84d1:<br><br>=C2=A0 providers.py: Add PREFERRED_RPROVIDER (201=
+5-05-13 11:29:52 -0400)<br><br>are available in the git repository at:<br><=
+br>=C2=A0 git://<a href=3D"http://github.com/jatedev/poky.git">github.com/j=
+atedev/poky.git</a> preferred-provider-runtime-2<br><br>for you to fetch ch=
+anges up to 832a47ff79a06a797ddd39db86c792a43cdf0865:<br><br>=C2=A0 image.b=
+bclass/rootfs.py: use PREFERRED_RPROVIDER to select package (2015-05-13 12:=
+24:02 -0400)<br><br>-------------------------------------------------------=
+---------<br>Jate Sujjavanich (1):<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 image.=
+bbclass/rootfs.py: use PREFERRED_RPROVIDER to select package<br><br>=C2=A0m=
+eta/classes/image.bbclass |=C2=A0=C2=A0 14 ++++++++++++++<br>=C2=A0meta/lib=
+/oe/rootfs.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 2 +-<br>=C2=
+=A02 files changed, 15 insertions(+), 1 deletion(-)<br><br>diff --git a/met=
+a/classes/image.bbclass b/meta/classes/image.bbclass<br>index 01f8b3f..8048=
+4d6 100644<br>--- a/meta/classes/image.bbclass<br>+++ b/meta/classes/image.=
+bbclass<br>@@ -283,6 +283,20 @@ python rootfs_process_ignore() {<br>=C2=A0}=
+<br>=C2=A0do_rootfs[prefuncs] +=3D &quot;rootfs_process_ignore&quot;<br><br=
+>+python rootfs_process_preferred_rproviders() {<br>+=C2=A0=C2=A0=C2=A0 ins=
+t_pkgs =3D d.getVar(&quot;PACKAGE_INSTALL&quot;, True).split()<br>+=C2=A0=
+=C2=A0=C2=A0 pref_pkgs =3D list()<br>+=C2=A0=C2=A0=C2=A0 for pkg in inst_pk=
+gs:<br>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 prefervar =3D d.getVar(&=
+quot;PREFERRED_RPROVIDER_%s&quot; % pkg, True)<br>+=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 if prefervar:<br>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 inst_pkgs.remove(pkg)<br>+=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pref_pkgs.append(prefervar=
+)<br>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bb=
+.note(&quot;Selecting %s to provide %s due to PREFERRED_RPROVIDER&quot; % (=
+prefervar, pkg))<br>+=C2=A0=C2=A0=C2=A0 inst_pkgs.extend(pref_pkgs)<br>+=C2=
+=A0=C2=A0=C2=A0 d.setVar(&quot;PACKAGE_INSTALL&quot;, &#39; &#39;.join(inst=
+_pkgs))<br>+}<br>+do_rootfs[prefuncs] +=3D &quot;rootfs_process_preferred_r=
+providers&quot;<br>+<br>=C2=A0# We have to delay the runtime_mapping_rename=
+ until just before rootfs runs<br>=C2=A0# otherwise, the multilib renaming =
+could step in and squash any fixups that<br>=C2=A0# may have occurred.<br>d=
+iff --git a/meta/lib/oe/rootfs.py b/meta/lib/oe/rootfs.py<br>index 6fb749f.=
+.4bad7ef 100644<br>--- a/meta/lib/oe/rootfs.py<br>+++ b/meta/lib/oe/rootfs.=
+py<br>@@ -393,7 +393,7 @@ class RpmRootfs(Rootfs):<br>=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 pass<br><br>=C2=A0=C2=A0=C2=A0=C2=A0 def _log_c=
+heck_error(self):<br>-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r =3D re.c=
+ompile(&#39;(unpacking of archive failed|Cannot find package|exit 1|ERR|Fai=
+l)&#39;)<br>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r =3D re.compile(&#=
+39;(unpacking of archive failed|Cannot find package|exit 1|ERR(?!ED_RPROVID=
+ER)|Fail)&#39;)<br>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 log_pat=
+h =3D self.d.expand(&quot;${T}/log.do_rootfs&quot;)<br>=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 with open(log_path, &#39;r&#39;) as log:<br>=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fo=
+und_error =3D 0<br><br></div>
 
---001a113640281b142d0515fe64ca--
+--001a113802ba43c8420515fe64f5--
