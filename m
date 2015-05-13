@@ -1,21 +1,30 @@
-Return-Path: <mariano.lopez@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 67C9D6013D
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 13 May 2015 19:30:18 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga101.jf.intel.com with ESMTP; 13 May 2015 12:30:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.13,422,1427785200"; d="scan'208";a="709772485"
-Received: from yctb01.ostc.intel.com (HELO yctb01.otcr.intel.com)
-	([10.23.219.46])
-	by fmsmga001.fm.intel.com with ESMTP; 13 May 2015 12:30:17 -0700
-From: mariano.lopez@linux.intel.com
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 13 May 2015 11:24:57 +0000
-Message-Id: <1431516297-42766-1-git-send-email-mariano.lopez@linux.intel.com>
-X-Mailer: git-send-email 1.8.4.5
-Subject: [PATCH] bitbake: fetch2/git: Add URL when latest_revision generates an exception.
+Return-Path: <jatedev@gmail.com>
+Received: from mail-pa0-f53.google.com (mail-pa0-f53.google.com
+	[209.85.220.53])
+	by mail.openembedded.org (Postfix) with ESMTP id B115874059;
+	Wed, 13 May 2015 22:47:03 +0000 (UTC)
+Received: by pabtp1 with SMTP id tp1so64094556pab.2;
+	Wed, 13 May 2015 15:47:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:date:message-id:subject:from:to:content-type;
+	bh=5N4kzDZC1TRe54/gXpGtJ2LN8ksQhOmZujPsisu9OTk=;
+	b=S0JcucBfg+sLre7W05bIWgXIbGvXkzbRGl/zYp7kEj7UP7jUKayssCzZodCiKYpnci
+	kxK/+nTCv4OB0BtQwmPUoqkNNglBWDMRJGn2kEj/g2HfFVu9QtxPi40fOmn7LriP3635
+	zPynft4V1Vz/sgpZ+fAA1LblOsf9bm7MLkZYyY+s0yr3g8ptqsNsRqfu5kxQyb2dnuf7
+	Y2gicljvuOCJcONqrCAWYHKUxMALapHCeISiYJi9WgSgTUsy9cW8dAs6J2AaOC+bkqrm
+	X6WGpYDdJZI2a/K83yO9V9pK9siyluepTW+YvwuxNAsyiXZImSGwoR1h5dpPX01H/Zy2
+	bLrg==
+MIME-Version: 1.0
+X-Received: by 10.70.95.131 with SMTP id dk3mr2212845pdb.44.1431557224440;
+	Wed, 13 May 2015 15:47:04 -0700 (PDT)
+Received: by 10.66.142.201 with HTTP; Wed, 13 May 2015 15:47:04 -0700 (PDT)
+Date: Wed, 13 May 2015 18:47:04 -0400
+Message-ID: <CAPphmgZ=za2uinJsgrT2nom1rYeKFOnbE-Nr+BndXV+wf6spnw@mail.gmail.com>
+From: Jate Sujjavanich <jatedev@gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>, 
+	bitbake-devel@lists.openembedded.org, 
+	openembedded-core@lists.openembedded.org
+Subject: [PATCH v2][0/2] Yocto Bug #6149
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,37 +37,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 13 May 2015 19:30:18 -0000
+X-List-Received-Date: Wed, 13 May 2015 22:47:09 -0000
+Content-Type: multipart/alternative; boundary=001a11c2ddc6d6a7130515fe637b
 
-From: Mariano Lopez <mariano.lopez@linux.intel.com>
+--001a11c2ddc6d6a7130515fe637b
+Content-Type: text/plain; charset=UTF-8
 
-The URL is not sent when _latest_revision generates and exception.
-When performing the sanity checks it is not possible to know the URI that failed.
+Richard,
 
-This add the URL when latest_revision generates an exception.
+This version uses PREFERRED_RPROVIDER instead of PREFERRED_PROVIDER to
+reduce confusion.
 
-[YOCTO: #7592]
+These patches add PREFERRED_RPROVIDER which specifies a preferred runtime
+provider for a package when multiple RPROVIDER's are available.
 
-Signed-off-by: Mariano Lopez <mariano.lopez@linux.intel.com>
----
- bitbake/lib/bb/fetch2/git.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 0fd9bee..a67033f 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -352,7 +352,8 @@ class Git(FetchMethod):
-             for l in output.split('\n'):
-                 if s in l:
-                     return l.split()[0]
--        raise bb.fetch2.FetchError("Unable to resolve '%s' in upstream git repository in git ls-remote output" % ud.unresolvedrev[name])
-+        raise bb.fetch2.FetchError("Unable to resolve '%s' in upstream git repository in git ls-remote output for %s" % \
-+            (ud.unresolvedrev[name], ud.host+ud.path))
- 
-     def latest_versionstring(self, ud, d):
-         """
--- 
-1.8.4.5
+It selects the preferred recipe to build and installs the preferred
+RPROVIDER during image generation.
 
 
+Jate
+
+--001a11c2ddc6d6a7130515fe637b
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Richard,<br></div><div><br></div><div>This version us=
+es PREFERRED_RPROVIDER instead of PREFERRED_PROVIDER to reduce confusion.<b=
+r></div><div><br>These patches add PREFERRED_RPROVIDER which specifies a pr=
+eferred runtime provider for a package when multiple RPROVIDER&#39;s are av=
+ailable.<br><br></div><div>It selects the preferred recipe to build and ins=
+talls the preferred RPROVIDER during image generation.<br><br></div><div><b=
+r></div><div>Jate<br></div></div>
+
+--001a11c2ddc6d6a7130515fe637b--
