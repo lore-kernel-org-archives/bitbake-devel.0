@@ -1,29 +1,21 @@
-Return-Path: <Liam.Howlett@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 795CE7402D
+Return-Path: <mariano.lopez@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 67C9D6013D
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 12 May 2015 14:28:11 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.9/8.14.9) with ESMTP id t4CESAXN003477
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL);
-	Tue, 12 May 2015 07:28:10 -0700 (PDT)
-Received: from yow-lhowlett-d0.wrs.com (128.224.56.215) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server
-	(TLS) id 14.3.224.2; Tue, 12 May 2015 07:28:10 -0700
-Date: Tue, 12 May 2015 10:28:08 -0400
-From: "Liam R. Howlett" <Liam.Howlett@windriver.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Message-ID: <20150512142807.GB15805@yow-lhowlett-d0.wrs.com>
-References: <1429121824-31200-2-git-send-email-Liam.Howlett@WindRiver.com>
-	<1429204998-29516-1-git-send-email-Liam.Howlett@WindRiver.com>
-	<1431429477.30971.123.camel@linuxfoundation.org>
-MIME-Version: 1.0
-In-Reply-To: <1431429477.30971.123.camel@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Originating-IP: [128.224.56.215]
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH v3] fetch2: Add BB_ALLOWED_NETWORKS support
+	Wed, 13 May 2015 19:30:18 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga101.jf.intel.com with ESMTP; 13 May 2015 12:30:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.13,422,1427785200"; d="scan'208";a="709772485"
+Received: from yctb01.ostc.intel.com (HELO yctb01.otcr.intel.com)
+	([10.23.219.46])
+	by fmsmga001.fm.intel.com with ESMTP; 13 May 2015 12:30:17 -0700
+From: mariano.lopez@linux.intel.com
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 13 May 2015 11:24:57 +0000
+Message-Id: <1431516297-42766-1-git-send-email-mariano.lopez@linux.intel.com>
+X-Mailer: git-send-email 1.8.4.5
+Subject: [PATCH] bitbake: fetch2/git: Add URL when latest_revision generates an exception.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,68 +28,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 12 May 2015 14:28:15 -0000
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+X-List-Received-Date: Wed, 13 May 2015 19:30:18 -0000
 
-* Richard Purdie <richard.purdie@linuxfoundation.org> [150512 07:18]:
-> On Thu, 2015-04-16 at 13:23 -0400, Liam R. Howlett wrote:
-> > BB_ALLOWED_NETWORKS is a list of hosts that the fetcher will be allowed
-> > to use when BB_NO_NETWORK is not set.
-> > 
-> > If BB_NO_NETWORK is set, then networking is still disabled.
-> > 
-> > If BB_ALLOWED_NETWORKS is not set, the behaviour remains the same as
-> > today.
-> > 
-> > If BB_NO_NETWORK is NOT set, and BB_ALLOWED_NETWORKS is configured, then
-> > only the hosts in the list are usable by the fetcher.
-> > 
-> > eg:
-> > BB_ALLOWED_NETWORKS="yoctoproject.org git.gnu.org"
-> > The fetcher will be able to download from yoctoproject.org, git.gnu.org,
-> > but not ftp.gnu.org or any other hostname that is not in the list.
-> > 
-> > There is also limited support for wildcards on the beginning of the
-> > hosts, so BB_ALLOWED_NETWORKS="*.gnu.org" with match git.gnu.org and
-> > ftp.gnu.org as well as foo.git.gnu.org
-> > 
-> > Signed-off-by: Liam R. Howlett <Liam.Howlett@WindRiver.com>
-> > ---
-> >  lib/bb/fetch2/__init__.py | 53 +++++++++++++++++++++++++++++++++++++++++++++++
-> >  lib/bb/tests/fetch.py     | 37 +++++++++++++++++++++++++++++++++
-> >  2 files changed, 90 insertions(+)
-> 
-> I've merged this, however, one of the things we're trying to do is
-> improve the documentation of bitbake. Would you be able to work with
-> Scott (cc'd) to ensure this is documented in the manual please?
-> 
-> Cheers,
-> 
-> Richard
-> 
+From: Mariano Lopez <mariano.lopez@linux.intel.com>
 
-Absolutely, Thanks Richard.
+The URL is not sent when _latest_revision generates and exception.
+When performing the sanity checks it is not possible to know the URI that failed.
 
-Hello Scott,
+This add the URL when latest_revision generates an exception.
 
-If you don't have anything started, we can work from the text below if
-you'd like.
+[YOCTO: #7592]
 
---------
+Signed-off-by: Mariano Lopez <mariano.lopez@linux.intel.com>
+---
+ bitbake/lib/bb/fetch2/git.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-BB_ALLOWED_NETWORKS
-
-Specifies a space delimited list of hosts which are allowed to be used
-by the fetcher to obtain the required source code.  This list is only
-used if BB_NO_NETWORK is not set.  Wildcard matching at the beginning of
-hosts is supported.  Mirrors that are not in the list will be skipped
-and logged in debug.  Attempts to access networks that are not in the
-BB_ALLOWED_NETWORKS will cause a failure.
-
---------
-
-Thanks,
-Liam
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index 0fd9bee..a67033f 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -352,7 +352,8 @@ class Git(FetchMethod):
+             for l in output.split('\n'):
+                 if s in l:
+                     return l.split()[0]
+-        raise bb.fetch2.FetchError("Unable to resolve '%s' in upstream git repository in git ls-remote output" % ud.unresolvedrev[name])
++        raise bb.fetch2.FetchError("Unable to resolve '%s' in upstream git repository in git ls-remote output for %s" % \
++            (ud.unresolvedrev[name], ud.host+ud.path))
+ 
+     def latest_versionstring(self, ud, d):
+         """
+-- 
+1.8.4.5
 
 
