@@ -1,21 +1,25 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 3ADAC73DA5
+	by mail.openembedded.org (Postfix) with ESMTP id 3BB7673FC8
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 May 2015 15:08:43 +0000 (UTC)
+	Mon, 18 May 2015 15:08:46 +0000 (UTC)
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by fmsmga101.fm.intel.com with ESMTP; 18 May 2015 08:08:44 -0700
+	by fmsmga101.fm.intel.com with ESMTP; 18 May 2015 08:08:46 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.13,453,1427785200"; d="scan'208";a="696616653"
+X-IronPort-AV: E=Sophos;i="5.13,453,1427785200"; d="scan'208";a="696616665"
 Received: from jmcmill1-mobl3.ger.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com) ([10.252.0.158])
-	by orsmga001.jf.intel.com with ESMTP; 18 May 2015 08:08:43 -0700
+	by orsmga001.jf.intel.com with ESMTP; 18 May 2015 08:08:45 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 18 May 2015 16:08:33 +0100
-Message-Id: <cover.1431961693.git.paul.eggleton@linux.intel.com>
+Date: Mon, 18 May 2015 16:08:35 +0100
+Message-Id: <5ba472960693ef4fb7f26c938d636bc9a426c07f.1431961693.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 2.1.0
-Subject: [PATCH 0/3] Improvements for utility functions
+In-Reply-To: <cover.1431961693.git.paul.eggleton@linux.intel.com>
+References: <cover.1431961693.git.paul.eggleton@linux.intel.com>
+In-Reply-To: <cover.1431961693.git.paul.eggleton@linux.intel.com>
+References: <cover.1431961693.git.paul.eggleton@linux.intel.com>
+Subject: [PATCH 2/3] lib/bb/utils: fix several bugs in edit_metadata_file()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,31 +34,65 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Mon, 18 May 2015 15:08:49 -0000
 
-A patch adding a utility function for getting the layer a file is
-contained in, plus a couple of patches extending and improving the
-behaviour of edit_metadata_file() (in support of some devtool/recipetool
-enhancements in OE that are about to be posted). I kept the two patches
-separate as the first one may be backportable to previous branches.
+* Fix unchanged assignments being dropped if other lines changed
+* Fix not passing variable name from single-line assignments to the
+  function
+* Fix not trimming the trailing quote from values
 
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+---
+ lib/bb/utils.py | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-The following changes since commit 76f095107a0eaf987a5a6a48eed7b98f87aea121:
-
-  tests/parse: Add file missing from previous commit (2015-05-16 22:40:30 +0100)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib paule/bb-edit-metadata-fixes
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-edit-metadata-fixes
-
-Paul Eggleton (3):
-  lib/bb/utils: add function to get layer containing a file
-  lib/bb/utils: fix several bugs in edit_metadata_file()
-  lib/bb/utils: fix and extend edit_metadata_file()
-
- lib/bb/tests/utils.py | 271 ++++++++++++++++++++++++++++++++++++++++++++++++++
- lib/bb/utils.py       | 256 +++++++++++++++++++++++++++++++++++++----------
- 2 files changed, 472 insertions(+), 55 deletions(-)
-
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 1681efd..0db7e56 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -974,6 +974,7 @@ def edit_metadata_file(meta_file, variables, func):
+ 
+     updated = False
+     varset_start = ''
++    varlines = []
+     newlines = []
+     in_var = None
+     full_value = ''
+@@ -1001,14 +1002,19 @@ def edit_metadata_file(meta_file, variables, func):
+             else:
+                 newlines.append('%s "%s"\n' % (varset_start, newvalue))
+             return True
+-        return False
++        else:
++            # Put the old lines back where they were
++            newlines.extend(varlines)
++            return False
+ 
+     with open(meta_file, 'r') as f:
+         for line in f:
+             if in_var:
+                 value = line.rstrip()
++                varlines.append(line)
+                 full_value += value[:-1]
+                 if value.endswith('"') or value.endswith("'"):
++                    full_value = full_value[:-1]
+                     if handle_var_end():
+                         updated = True
+                     in_var = None
+@@ -1022,11 +1028,13 @@ def edit_metadata_file(meta_file, variables, func):
+                         if value.endswith('\\'):
+                             value = value[:-1]
+                         full_value = value
++                        varlines = [line]
++                        in_var = varname
+                         if value.endswith('"') or value.endswith("'"):
++                            full_value = full_value[:-1]
+                             if handle_var_end():
+                                 updated = True
+-                        else:
+-                            in_var = varname
++                            in_var = None
+                         matched = True
+                         break
+                 if not matched:
 -- 
 2.1.0
 
