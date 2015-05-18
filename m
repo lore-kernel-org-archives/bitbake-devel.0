@@ -1,26 +1,25 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id AC2457403A
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 39F2265C9C
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 May 2015 09:04:07 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.14.9/8.14.9) with ESMTP id t4I948kl026143
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 May 2015 02:04:08 -0700 (PDT)
-Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.224.2;
-	Mon, 18 May 2015 02:04:07 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 18 May 2015 02:04:07 -0700
-Message-ID: <fdb3fd5daedd8287c602a298324dcb255c539e1d.1431939814.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1431939814.git.liezhi.yang@windriver.com>
-References: <cover.1431939814.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/1] fetch2/hg.py: add clean function
+	Mon, 18 May 2015 15:08:44 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by fmsmga101.fm.intel.com with ESMTP; 18 May 2015 08:08:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.13,453,1427785200"; d="scan'208";a="696616661"
+Received: from jmcmill1-mobl3.ger.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.252.0.158])
+	by orsmga001.jf.intel.com with ESMTP; 18 May 2015 08:08:44 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 18 May 2015 16:08:34 +0100
+Message-Id: <7e2b5f6edd9291dca072e872f2a5597d5a1c7e22.1431961693.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <cover.1431961693.git.paul.eggleton@linux.intel.com>
+References: <cover.1431961693.git.paul.eggleton@linux.intel.com>
+In-Reply-To: <cover.1431961693.git.paul.eggleton@linux.intel.com>
+References: <cover.1431961693.git.paul.eggleton@linux.intel.com>
+Subject: [PATCH 1/3] lib/bb/utils: add function to get layer containing a file
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,55 +32,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 18 May 2015 09:04:12 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 18 May 2015 15:08:49 -0000
 
-Fixed when bitbake vim -ccleanall:
+In certain contexts it can be useful to find the layer that a file (e.g.
+a recipe) appears in.
 
-File: '/path/to/bitbake/lib/bb/fetch2/__init__.py', lineno: 1462, function: clean
-     1458:    def clean(self, urldata, d):
-     1459:        """
-     1460:        Clean any existing full or partial download
-     1461:        """
- *** 1462:        bb.utils.remove(urldata.localpath)
-     1463:
-     1464:    def try_premirror(self, urldata, d):
-     1465:        """
-     1466:        Should premirrors be used?
-File: '/path/to/bitbake/lib/bb/utils.py', lineno: 633, function: remove
-     0629:        subprocess.call(['rm', '-rf'] + glob.glob(path))
-     0630:        return
-     0631:    for name in glob.glob(path):
-     0632:        try:
- *** 0633:            os.unlink(name)
-     0634:        except OSError as exc:
-     0635:            if exc.errno != errno.ENOENT:
-     0636:                raise
+Implements [YOCTO #7723].
 
-Exception: OSError: [Errno 21] Is a directory: '/path/to/downloads/hg/vim.googlecode.com/hg/vim'
-
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- bitbake/lib/bb/fetch2/hg.py |    5 +++++
- 1 file changed, 5 insertions(+)
+ lib/bb/utils.py | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/bitbake/lib/bb/fetch2/hg.py b/bitbake/lib/bb/fetch2/hg.py
-index 6547cca..3c80725 100644
---- a/bitbake/lib/bb/fetch2/hg.py
-+++ b/bitbake/lib/bb/fetch2/hg.py
-@@ -163,6 +163,11 @@ class Hg(FetchMethod):
-         logger.debug(1, "Running %s", updatecmd)
-         runfetchcmd(updatecmd, d)
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index c97f3ef..1681efd 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -1097,3 +1097,19 @@ def edit_bblayers_conf(bblayers_conf, add, remove):
  
-+    def clean(self, ud, d):
-+        """ Clean the hg dir """
-+
-+        bb.utils.remove(ud.localpath, True)
-+
-     def supports_srcrev(self):
-         return True
+     return (notadded, notremoved)
  
++
++def get_file_layer(filename, d):
++    """Determine the collection (as defined by a layer's layer.conf file) containing the specified file"""
++    collections = (d.getVar('BBFILE_COLLECTIONS', True) or '').split()
++    collection_res = {}
++    for collection in collections:
++        collection_res[collection] = d.getVar('BBFILE_PATTERN_%s' % collection, True) or ''
++
++    # Use longest path so we handle nested layers
++    matchlen = 0
++    match = None
++    for collection, regex in collection_res.iteritems():
++        if len(regex) > matchlen and re.match(regex, filename):
++            matchlen = len(regex)
++            match = collection
++    return match
 -- 
-1.7.9.5
+2.1.0
 
 
