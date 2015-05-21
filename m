@@ -1,36 +1,24 @@
-Return-Path: <alexandru.damian@intel.com>
-Received: from mail-ig0-f174.google.com (mail-ig0-f174.google.com
-	[209.85.213.174])
-	by mail.openembedded.org (Postfix) with ESMTP id 07446607BB
+Return-Path: <jason.wessel@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 5437160168
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 May 2015 10:39:46 +0000 (UTC)
-Received: by igbpi8 with SMTP id pi8so102241391igb.0
+	Thu, 21 May 2015 01:01:23 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.14.9/8.14.9) with ESMTP id t4L11O22022826
+	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 May 2015 03:39:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-type;
-	bh=z1gOfxe7E4Zu1qAskWSyjDI7ts8PWTGFltUgdVyVa8Y=;
-	b=KqJ7vGIdHaold0LwlxnBkdB+ingzCp/x1Yy0KqBJMXThd4KSbsJV2zPPaLVAPeurNA
-	YB1/7fIRlyxb/dWyTiPW/WtYLB8mtXNUWgE4KMn5yUewBjCuRJGhpnz5FkjGS/2o7ok8
-	uXCAPMLGYqjmS2kAhOlUzS7zSFoq7hsinzLWJ6hdNehvbRI0MlFy6sY842pnTO+hmyTx
-	MfWPZLNJhQO6YOIHHo0Go33XA4qiHm388bNmFqp+KCLRTw4MwDGRDKg39pZJaeY+PWAo
-	dWPtkPcYHo2qKfEpUl+ozyDjI8Hk0FBUQLrxgzoAmtBCh6GXgNrcUIIZNge/BUhCgZSw
-	NpKg==
-X-Gm-Message-State: ALoCoQmO5r3mqIKfmMkTSI0hboVSpifXT2gKcyhJXuBIfikJfVoMA1sTHik2uqIY7W6WRntKQEht
-X-Received: by 10.107.129.133 with SMTP id l5mr712361ioi.32.1432031987067;
-	Tue, 19 May 2015 03:39:47 -0700 (PDT)
+	Wed, 20 May 2015 18:01:24 -0700 (PDT)
+Received: from localhost.localdomain (147.11.119.7) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.40) with Microsoft SMTP Server id 14.3.224.2;
+	Wed, 20 May 2015 18:01:23 -0700
+From: Jason Wessel <jason.wessel@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Wed, 20 May 2015 20:01:02 -0500
+Message-ID: <1432170062-20572-1-git-send-email-jason.wessel@windriver.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Received: by 10.79.10.67 with HTTP; Tue, 19 May 2015 03:39:26 -0700 (PDT)
-In-Reply-To: <1431986772-17395-1-git-send-email-randy.e.witt@linux.intel.com>
-References: <1431986772-17395-1-git-send-email-randy.e.witt@linux.intel.com>
-From: "Damian, Alexandru" <alexandru.damian@intel.com>
-Date: Tue, 19 May 2015 11:39:26 +0100
-Message-ID: <CAJ2CSBthQefQEgNQrxLXfyUBnWersXyLq4nhmUknW2g7jgzc5w@mail.gmail.com>
-To: Randy Witt <randy.e.witt@linux.intel.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 0/2] Remove Toaster dependency on daemon
+Subject: [PATCH] bitbake-worker: Fix regression with unbuffered logs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,118 +31,55 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 19 May 2015 10:39:47 -0000
-Content-Type: multipart/alternative; boundary=001a113fc306e5873805166cede1
+X-List-Received-Date: Thu, 21 May 2015 01:01:25 -0000
+Content-Type: text/plain
 
---001a113fc306e5873805166cede1
-Content-Type: text/plain; charset=UTF-8
+I noticed that I was seeing loss of the log files when hitting
+control-c while debugging a function in bitbake.  In fact if you
+take a recipe and replace its compile function as shown below let
+it run for a few seconds and hit control-c, you will see first
+hand that log data is not there.
 
-Randy, thanks for the patches. They work fine !
+do_compile () {
+        while [ 1 ] ; do
+                echo -n "Output date: "
+                date
+                sleep 1
+        done
+}
 
-Can you please add toaster@yoctoproject.org in CC for future patches ?
+It turns out there was a regression introduced by commit:
+d0f0e5d9e69 which created the bitbake worker.  Since the bitbake
+worker is started in its own process space, it needs the exact
+same code added from commit: 88429f018b where the problem was
+fixed the first time around.
 
-Cheers,
-Alex
+Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
+---
+ bin/bitbake-worker | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-On Mon, May 18, 2015 at 11:06 PM, Randy Witt <randy.e.witt@linux.intel.com>
-wrote:
-
-> The following changes since commit
-> bc162d21dd148252efcf3ed771e04c791ef4d869:
->
->   bitbake: tests/parse: Add file missing from previous commit (2015-05-16
-> 22:40:44 +0100)
->
-> are available in the git repository at:
->
->   git@git.yoctoproject.org:poky-contrib rewitt/toaster
->
-> for you to fetch changes up to e5e8d341edd28007eac22381e336f8362d784530:
->
->   toaster: Remove dependency on daemon application (2015-05-18 15:01:42
-> -0700)
->
-> ----------------------------------------------------------------
-> Randy Witt (2):
->       localhostbecontroller: Fix server search debug message
->       toaster: Remove dependency on daemon application
->
->  bitbake/bin/toaster                                 |  5 -----
->  .../lib/toaster/bldcontrol/localhostbecontroller.py | 21
-> ++++++++++++++-------
->  2 files changed, 14 insertions(+), 12 deletions(-)
->
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
->
-
-
-
+diff --git a/bin/bitbake-worker b/bin/bitbake-worker
+index 8a24161..96a4d4c 100755
+--- a/bin/bitbake-worker
++++ b/bin/bitbake-worker
+@@ -24,6 +24,15 @@ if sys.argv[1] == "decafbadbad":
+     except:
+         import profile
+ 
++# Unbuffer stdout to avoid log truncation in the event
++# of an unorderly exit as well as to provide timely
++# updates to log files for use with tail
++try:
++    if sys.stdout.name == '<stdout>':
++        sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
++except:
++    pass
++
+ logger = logging.getLogger("BitBake")
+ 
+ try:
 -- 
-Alex Damian
-Yocto Project
-SSG / OTC
+1.9.1
 
---001a113fc306e5873805166cede1
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-family:tahoma,s=
-ans-serif">Randy, thanks for the patches. They work fine !</div><div class=
-=3D"gmail_default" style=3D"font-family:tahoma,sans-serif"><br></div><div c=
-lass=3D"gmail_default" style=3D"font-family:tahoma,sans-serif">Can you plea=
-se add <a href=3D"mailto:toaster@yoctoproject.org">toaster@yoctoproject.org=
-</a> in CC for future patches ?</div><div class=3D"gmail_default" style=3D"=
-font-family:tahoma,sans-serif"><br></div><div class=3D"gmail_default" style=
-=3D"font-family:tahoma,sans-serif">Cheers,</div><div class=3D"gmail_default=
-" style=3D"font-family:tahoma,sans-serif">Alex</div></div><div class=3D"gma=
-il_extra"><br><div class=3D"gmail_quote">On Mon, May 18, 2015 at 11:06 PM, =
-Randy Witt <span dir=3D"ltr">&lt;<a href=3D"mailto:randy.e.witt@linux.intel=
-.com" target=3D"_blank">randy.e.witt@linux.intel.com</a>&gt;</span> wrote:<=
-br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left=
-:1px #ccc solid;padding-left:1ex">The following changes since commit bc162d=
-21dd148252efcf3ed771e04c791ef4d869:<br>
-<br>
-=C2=A0 bitbake: tests/parse: Add file missing from previous commit (2015-05=
--16 22:40:44 +0100)<br>
-<br>
-are available in the git repository at:<br>
-<br>
-=C2=A0 git@git.yoctoproject.org:poky-contrib rewitt/toaster<br>
-<br>
-for you to fetch changes up to e5e8d341edd28007eac22381e336f8362d784530:<br=
->
-<br>
-=C2=A0 toaster: Remove dependency on daemon application (2015-05-18 15:01:4=
-2 -0700)<br>
-<br>
-----------------------------------------------------------------<br>
-Randy Witt (2):<br>
-=C2=A0 =C2=A0 =C2=A0 localhostbecontroller: Fix server search debug message=
-<br>
-=C2=A0 =C2=A0 =C2=A0 toaster: Remove dependency on daemon application<br>
-<br>
-=C2=A0bitbake/bin/toaster=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=
-=A0 5 -----<br>
-=C2=A0.../lib/toaster/bldcontrol/localhostbecontroller.py | 21 ++++++++++++=
-++-------<br>
-=C2=A02 files changed, 14 insertions(+), 12 deletions(-)<br>
-<span class=3D"HOEnZb"><font color=3D"#888888"><br>
---<br>
-_______________________________________________<br>
-bitbake-devel mailing list<br>
-<a href=3D"mailto:bitbake-devel@lists.openembedded.org">bitbake-devel@lists=
-.openembedded.org</a><br>
-<a href=3D"http://lists.openembedded.org/mailman/listinfo/bitbake-devel" ta=
-rget=3D"_blank">http://lists.openembedded.org/mailman/listinfo/bitbake-deve=
-l</a><br>
-</font></span></blockquote></div><br><br clear=3D"all"><div><br></div>-- <b=
-r><div class=3D"gmail_signature"><div dir=3D"ltr">Alex Damian<div>Yocto Pro=
-ject<br></div><div>SSG / OTC=C2=A0</div></div></div>
-</div>
-
---001a113fc306e5873805166cede1--
