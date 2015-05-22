@@ -1,25 +1,37 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 11F2074230
+Return-Path: <twoerner@gmail.com>
+Received: from mail-ig0-f172.google.com (mail-ig0-f172.google.com
+	[209.85.213.172])
+	by mail.openembedded.org (Postfix) with ESMTP id 53D2E609B2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 22 May 2015 15:42:38 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by orsmga101.jf.intel.com with ESMTP; 22 May 2015 08:42:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.13,476,1427785200"; d="scan'208";a="575490672"
-Received: from cestaunt-mobl2.ger.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.252.15.40])
-	by orsmga003.jf.intel.com with ESMTP; 22 May 2015 08:42:38 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+	Fri, 22 May 2015 21:57:47 +0000 (UTC)
+Received: by igbpi8 with SMTP id pi8so743277igb.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 22 May 2015 14:57:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=message-id:date:from:user-agent:mime-version:to:subject
+	:content-type:content-transfer-encoding;
+	bh=WJrnRhRzBeMcuAZ5NVxS0E47Jw/RTXVqBpupSz6khHs=;
+	b=YYOe25tzUXTJDQ88FhJ1D31SwqhaeCijy/T7hoaaUUleQhE+hMiJ69Rr5CPNNPKtU0
+	euygC7JKdyqTYoDrVtKWPmZm1zC6lIdfubqVTR7j5vuvB1ROkeTq4RA/oTtuvYya7awB
+	P9OY05qETkLzC8UZsl19l0Aa7gBityTt949HZpuOdSzLeS3L+0ZIZxxPfZCjprMHpapj
+	mlLJmoqB/UAZlKvoIpXWyCASqPghKi4J+2NzHvyARj0UpWCtYD6Dcd8QQr3S4n982NDm
+	YRU1u8P0M9kOFbsZXYJbGyOvcmWKPM0IHRC7V0UrGIevOAyHN7sOgrQq3M9Hvq9IUOzZ
+	b7Pw==
+X-Received: by 10.43.167.137 with SMTP id ne9mr11678881icc.7.1432331868966;
+	Fri, 22 May 2015 14:57:48 -0700 (PDT)
+Received: from [192.168.141.85] (dsl-67-55-28-109.acanac.net. [67.55.28.109])
+	by mx.google.com with ESMTPSA id b2sm92432igf.10.2015.05.22.14.57.48
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Fri, 22 May 2015 14:57:48 -0700 (PDT)
+Message-ID: <555FA65A.1020505@gmail.com>
+Date: Fri, 22 May 2015 17:57:46 -0400
+From: Trevor Woerner <twoerner@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+MIME-Version: 1.0
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 22 May 2015 16:42:22 +0100
-Message-Id: <0c6e8f378d5e8023c5902e3d2d0092e9c936e882.1432309249.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <cover.1432309249.git.paul.eggleton@linux.intel.com>
-References: <cover.1432309249.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1432309249.git.paul.eggleton@linux.intel.com>
-References: <cover.1432309249.git.paul.eggleton@linux.intel.com>
-Subject: [1.26][PATCH 2/2] lib/bb/utils: fix several bugs in edit_metadata_file()
+Subject: bitbake-layers layerindex-fetch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,71 +44,23 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 22 May 2015 15:42:38 -0000
+X-List-Received-Date: Fri, 22 May 2015 21:57:49 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-* Fix unchanged assignments being dropped if other lines changed
-* Fix not passing variable name from single-line assignments to the
-  function
-* Fix not trimming the trailing quote from values
+I'm curious to know what heuristic "bitbake-layers layerindex-fetch"
+uses to determine where to place the fetched layers?
 
-(Bitbake master rev: 0b0c82f49cf2de887967d305768cbd95314bb171)
+I asked my system to:
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
----
- lib/bb/utils.py | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+  $ bitbake-layers layerindex-fetch meta-qt5
 
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 1681efd..0db7e56 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -974,6 +974,7 @@ def edit_metadata_file(meta_file, variables, func):
- 
-     updated = False
-     varset_start = ''
-+    varlines = []
-     newlines = []
-     in_var = None
-     full_value = ''
-@@ -1001,14 +1002,19 @@ def edit_metadata_file(meta_file, variables, func):
-             else:
-                 newlines.append('%s "%s"\n' % (varset_start, newvalue))
-             return True
--        return False
-+        else:
-+            # Put the old lines back where they were
-+            newlines.extend(varlines)
-+            return False
- 
-     with open(meta_file, 'r') as f:
-         for line in f:
-             if in_var:
-                 value = line.rstrip()
-+                varlines.append(line)
-                 full_value += value[:-1]
-                 if value.endswith('"') or value.endswith("'"):
-+                    full_value = full_value[:-1]
-                     if handle_var_end():
-                         updated = True
-                     in_var = None
-@@ -1022,11 +1028,13 @@ def edit_metadata_file(meta_file, variables, func):
-                         if value.endswith('\\'):
-                             value = value[:-1]
-                         full_value = value
-+                        varlines = [line]
-+                        in_var = varname
-                         if value.endswith('"') or value.endswith("'"):
-+                            full_value = full_value[:-1]
-                             if handle_var_end():
-                                 updated = True
--                        else:
--                            in_var = varname
-+                            in_var = None
-                         matched = True
-                         break
-                 if not matched:
--- 
-2.1.0
+and it keeps insisting on installing meta-qt5 and meta-openembedded
+under my openembedded-core layers resulting in:
 
+  /z/master/layers/openembedded-core/meta-openembedded/meta-ruby \
+  /z/master/layers/openembedded-core/meta-qt5 \
+
+Is there a way that I can tell bitbake-layers that my layers are located
+at /z/master/layers and have it work from there?
 
