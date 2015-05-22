@@ -1,38 +1,21 @@
-Return-Path: <ashcharles@gmail.com>
-Received: from mail-ie0-f180.google.com (mail-ie0-f180.google.com
-	[209.85.223.180])
-	by mail.openembedded.org (Postfix) with ESMTP id D4E9A6AC95;
-	Fri, 22 May 2015 15:39:32 +0000 (UTC)
-Received: by iesa3 with SMTP id a3so34060256ies.2;
-	Fri, 22 May 2015 08:39:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type:content-transfer-encoding;
-	bh=FbaxDOpmlj00536lGn911q+JUYzVs86ffvz7txDSNU4=;
-	b=V12rI+N1J7Y6/kL3TfFrZiLPbTtOUnImY2RsDiqfmXWIC+ue0ILAqPdH9H6kC6h2qZ
-	QEw9DxdQS100CF7ahqw+MpcWp8TYMLVzIolPkC3+CS8N8YMcsOuKa6ZN3NmW6lhAyVW+
-	8XgRPJGQKdRhQBQ0uyjisFoCt7L52wFc/wmpx//J4tsK7vPRzTZzaHuhSgBdvORW0di9
-	Pxo0fLvxWCn3iddiYtL/nkYsbrwQjjOVPUyj74cjG1YfDQPBsbDQHudc2clB9mxAB35d
-	oy14mgW06MSAaCAKGkwq8+vdW3wWlpdY5f4ndyrWGwHZQAtrAAYoc9x2h2oqIQ35AHr3
-	Ej2Q==
-X-Received: by 10.42.119.2 with SMTP id z2mr9834051icq.1.1432309173352;
-	Fri, 22 May 2015 08:39:33 -0700 (PDT)
-Received: from gumstux.mystix.com (s206-116-3-180.bc.hsia.telus.net.
-	[206.116.3.180]) by mx.google.com with ESMTPSA id
-	z195sm2014466iod.33.2015.05.22.08.39.31
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 22 May 2015 08:39:32 -0700 (PDT)
-From: Ash Charles <ashcharles@gmail.com>
-To: openembedded-devel@lists.openembedded.org,
-	bitbake-devel@lists.openembedded.org
-Date: Fri, 22 May 2015 08:39:30 -0700
-Message-Id: <1432309170-5575-1-git-send-email-ashcharles@gmail.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <20150427105100.GB2379@jama>
-References: <20150427105100.GB2379@jama>
-MIME-Version: 1.0
-Cc: funman@videolan.org
-Subject: [PATCH] fetch/hg: Disable checksums for archived downloads
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 406057418A
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 22 May 2015 15:42:36 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by orsmga101.jf.intel.com with ESMTP; 22 May 2015 08:42:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.13,476,1427785200"; d="scan'208";a="575490649"
+Received: from cestaunt-mobl2.ger.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.252.15.40])
+	by orsmga003.jf.intel.com with ESMTP; 22 May 2015 08:42:36 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 22 May 2015 16:42:20 +0100
+Message-Id: <cover.1432309249.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 2.1.0
+Subject: [1.26][PATCH 0/2] A couple of backports from master
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,43 +28,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 22 May 2015 15:39:34 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Fri, 22 May 2015 15:42:37 -0000
 
-Like the Git fetcher, the Mercurial fetcher shouldn't expect recipes to
-provide a checksum.  As described [1], recipes using a mercurial
-fetcher that don't provide a checksum will fail in a the repository has
-previously been downloaded and archived.
+Two patches backported from master: a fix for edit_metadata_file() (only
+used by bitbake-layers in 1.26) and an additional utility function.
 
-Credit to Rafaël Carré for figuring out the bug.
 
-[1] https://www.mail-archive.com/openembedded-devel@lists.openembedded.org/msg41328.html
+The following changes since commit 8e0211d121e4cb1124dfe879db751ad00f5c978b:
 
-Signed-off-by: Ash Charles <ashcharles@gmail.com>
----
- bitbake/lib/bb/fetch2/hg.py | 7 +++++++
- 1 file changed, 7 insertions(+)
+  bitbake-layers: ensure non-extended recipe name is preferred (2015-05-15 18:10:49 +0100)
 
-diff --git a/bitbake/lib/bb/fetch2/hg.py b/bitbake/lib/bb/fetch2/hg.py
-index 81592f6..cab371f 100644
---- a/bitbake/lib/bb/fetch2/hg.py
-+++ b/bitbake/lib/bb/fetch2/hg.py
-@@ -43,6 +43,13 @@ class Hg(FetchMethod):
-         """
-         return ud.type in ['hg']
- 
-+    def supports_checksum(self, urldata):
-+        """
-+        Don't require checksums for local archives created from
-+        repository checkouts.
-+        """ 
-+        return False
-+
-     def urldata_init(self, ud, d):
-         """
-         init hg specific variable within url data
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib paule/bbfixes-1.26
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bbfixes-1.26
+
+Paul Eggleton (2):
+  lib/bb/utils: add function to get layer containing a file
+  lib/bb/utils: fix several bugs in edit_metadata_file()
+
+ lib/bb/utils.py | 30 +++++++++++++++++++++++++++---
+ 1 file changed, 27 insertions(+), 3 deletions(-)
+
 -- 
-2.1.4
+2.1.0
 
 
