@@ -1,30 +1,26 @@
-Return-Path: <yogesh.bit2006@gmail.com>
-Received: from mail-ob0-f176.google.com (mail-ob0-f176.google.com
-	[209.85.214.176])
-	by mail.openembedded.org (Postfix) with ESMTP id A7FC075658
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id DEDBB70331
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 26 May 2015 13:10:46 +0000 (UTC)
-Received: by obbnx5 with SMTP id nx5so73719354obb.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 26 May 2015 06:10:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:from:date:message-id:subject:to:content-type;
-	bh=xmaKMfnik2V/vpMm32RShS1m+DJ2xHKDQVizqePiKOk=;
-	b=LyxMONIJBTT88j+guCRtradH4T/EQ1fV47Qd4V/hFDwAaZGjdkdthCjyeboRdCqeek
-	eEXtxe6HeLnpuU/MzMlPNPwBsM26hEd7jC5zcw6rkzxCHUwxDRG7ZBTV26ukacUgVpBt
-	8W7EmHtoTGhhOHm06CClniNei9dc2W/5vDZaccrBQoBLz3sTHPH9VU5uplxe8Dm114Yc
-	8aGSbgOJWCBmsRrLO9aD+POivpwOLxwUG7ZIbLll/qfqjyEsBGsQ4S7Fr+Q3q4RWBIR4
-	DEIHlp3BhmEqji2gzaHdMKcL3tNTXNz0EOmeHDBxzACLFbcBKkWQxvBh5eOhXzaCk0XF
-	T8pA==
-X-Received: by 10.182.130.135 with SMTP id oe7mr21818195obb.78.1432645847326; 
-	Tue, 26 May 2015 06:10:47 -0700 (PDT)
+	Tue, 26 May 2015 13:51:42 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga103.jf.intel.com with ESMTP; 26 May 2015 06:51:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.13,498,1427785200"; d="scan'208";a="700358330"
+Received: from leeshawn-mobl3.gar.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.252.22.214])
+	by orsmga001.jf.intel.com with ESMTP; 26 May 2015 06:51:42 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Trevor Woerner <twoerner@gmail.com>
+Date: Tue, 26 May 2015 14:51:41 +0100
+Message-ID: <7025804.ZvuMXxFa1D@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.14.7 (Linux/3.19.7-200.fc21.x86_64; KDE/4.14.7; x86_64; ; )
+In-Reply-To: <555FA65A.1020505@gmail.com>
+References: <555FA65A.1020505@gmail.com>
 MIME-Version: 1.0
-Received: by 10.202.211.143 with HTTP; Tue, 26 May 2015 06:10:27 -0700 (PDT)
-From: Yogesh Tyagi <yogesh.bit2006@gmail.com>
-Date: Tue, 26 May 2015 18:40:27 +0530
-Message-ID: <CADL-HDgAGgapu7xNC9N0zMutZ8qOytSZv4+zNNUp04j5Bx8dSA@mail.gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: gst-plugin-base libs not going to rootfs
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: bitbake-layers layerindex-fetch
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,61 +33,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 26 May 2015 13:10:49 -0000
-Content-Type: multipart/alternative; boundary=089e012940dad1a66a0516fbda11
+X-List-Received-Date: Tue, 26 May 2015 13:51:43 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
---089e012940dad1a66a0516fbda11
-Content-Type: text/plain; charset=UTF-8
+Hi Trevor,
 
-Hi,
+On Friday 22 May 2015 17:57:46 Trevor Woerner wrote:
+> I'm curious to know what heuristic "bitbake-layers layerindex-fetch"
+> uses to determine where to place the fetched layers?
+> 
+> I asked my system to:
+> 
+>   $ bitbake-layers layerindex-fetch meta-qt5
+> 
+> and it keeps insisting on installing meta-qt5 and meta-openembedded
+> under my openembedded-core layers resulting in:
+> 
+>   /z/master/layers/openembedded-core/meta-openembedded/meta-ruby \
+>   /z/master/layers/openembedded-core/meta-qt5 \
+> 
+> Is there a way that I can tell bitbake-layers that my layers are located
+> at /z/master/layers and have it work from there?
 
-I am using yocto 1.5 in my project. The problem is, gst-plugin-base
-libraries are not going to rootfs in my build.
+This is controlled by BBLAYERS_FETCH_DIR; by default this is set to 
+"${COREBASE}" with ??= so you can set it to your preferred value in local.conf 
+as desired. (We should definitely document this, I acknowledge at the moment it 
+isn't documented anywhere.)
 
-I have tried to write a bbappend file "gst-plugins-base_0.10.36.bbappend"
-with below content:
+Cheers,
+Paul
 
-S = "${WORKDIR}"
+-- 
 
-FILES_${PN} += " ${libdir}/gstreamer-0.10/*.so"
-FILES_${PN}-dev += " ${libdir}/gstreamer-0.10/*.la
-${libdir}/gstreamer-0.10/*.a"
-FILES_${PN}-dbg += " ${libdir}/gstreamer-0.10/.debug/
-${libexecdir}/gstreamer-0.10/.debug/"
+Paul Eggleton
+Intel Open Source Technology Centre
 
-
-do_install_append () {
-         install -m 0755 ${S}/package/usr/lib/gstreamer-0.10/*
-${D}${libdir}/gstreamer-0.10/
-}
-
-and I have also added "gst-plugin-base" to packagegroup bb file of my
-project but still gst-plugins-base libs are not going to rootfs. Please
-help.
-
-
-Thanks,
-Yogesh
-
---089e012940dad1a66a0516fbda11
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hi,<div><br></div><div>I am using yocto 1.5 in my project.=
- The problem is, gst-plugin-base libraries are not going to rootfs in my bu=
-ild.</div><div><br></div><div>I have tried to write a bbappend file &quot;g=
-st-plugins-base_0.10.36.bbappend&quot; with below content:</div><div><br></=
-div><div><div>S =3D &quot;${WORKDIR}&quot;</div><div><br></div><div>FILES_$=
-{PN} +=3D &quot; ${libdir}/gstreamer-0.10/*.so&quot;</div><div>FILES_${PN}-=
-dev +=3D &quot; ${libdir}/gstreamer-0.10/*.la ${libdir}/gstreamer-0.10/*.a&=
-quot;</div><div>FILES_${PN}-dbg +=3D &quot; ${libdir}/gstreamer-0.10/.debug=
-/ ${libexecdir}/gstreamer-0.10/.debug/&quot;</div><div><br></div><div><br><=
-/div><div>do_install_append () {</div><div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0install -m 0755 ${S}/package/usr/lib/gstreamer-0.10/* =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 ${D}${libdir}/gstreamer-0.10/</div><div>}</div></div><div><br></=
-div><div>and I have also added &quot;gst-plugin-base&quot; to=C2=A0packageg=
-roup bb file of my project but still gst-plugins-base libs are not going to=
- rootfs. Please help.</div><div><br></div><div><br></div><div>Thanks,</div>=
-<div>Yogesh</div></div>
-
---089e012940dad1a66a0516fbda11--
