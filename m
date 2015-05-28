@@ -1,41 +1,41 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f50.google.com (mail-wg0-f50.google.com [74.125.82.50])
-	by mail.openembedded.org (Postfix) with ESMTP id B67A575692
+Received: from mail-wg0-f53.google.com (mail-wg0-f53.google.com [74.125.82.53])
+	by mail.openembedded.org (Postfix) with ESMTP id B3F9975692
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 28 May 2015 14:14:51 +0000 (UTC)
-Received: by wgez8 with SMTP id z8so37745577wge.0
+	Thu, 28 May 2015 14:15:03 +0000 (UTC)
+Received: by wgbgq6 with SMTP id gq6so37776187wgb.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 28 May 2015 07:14:52 -0700 (PDT)
+	Thu, 28 May 2015 07:15:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=ZqucW1+iADLFDGvSp/u4WzuYoMBMWV7Gkqk+XrbxmpA=;
-	b=T+sC/LyBYCo+YWt8EgajG6zO4s2gungh8fK1UhK7rP22cpeb5gLSPy7/c1vPCT8vYR
-	x9ecWMBD9zYEDBCPPX4jOPNS5rbzUtWnkWqF57pCIRd5JbOkH6ky+U0UUgY5S4XyI1/W
-	RQZHmUX3y8++2XW+X0frUMqFGLX4dto1CwaVpkzexnfsDJQ/7XOEjwdZHIrvGXF90DIk
-	0ivoNZfPqKTkKSQj+upzDxERuyplComrFQlXcT+RlpsW2SXhFJH+qm0NAAmOWjPVwR4o
-	FAy5/H7YWE7ZQR61zboQZRx5e8vB9ME64ZSBfHLzkr39R0eHyvWBz0nY8TzpPMKpOVRT
-	t0fA==
-X-Gm-Message-State: ALoCoQkqyPa04FvyqIwmoBVaxNiQxZZ+8PQt9EDPAf8TYILjhRP6qYLAAjDcdHpoOLCAILryXk0k
-X-Received: by 10.180.73.236 with SMTP id o12mr61853067wiv.56.1432822492359;
-	Thu, 28 May 2015 07:14:52 -0700 (PDT)
+	bh=ulZ97S9crdZ4hD5ddIqBcVEE3dA8vE3pelEP+u+t28k=;
+	b=VjY+jMzy3vtZutiesPFMaXmbvS6JOnVca7Ij736m+V5l1Fo+ZTnbd+xXmRBwJDuPXg
+	pl21u6jU6CTaxNvez0xSq05Ol1BtLqDsz+pxtGbyrlKJyWI7dM7Z0wTBF4GNdBut7Qb4
+	C9y+geuJW2MDkZXhm3Yfg1SB4qodO4enSQAz5DK/WCIOlzBK3KTs+K+HE1dAQmQ1ruw6
+	gM5xAnTpSjaiTi6f8GBrcfdsnM7Tqc9Me2kzhcUd5hXq44B9W27sdXLRmil3AsWFKIss
+	l268dDI8pJN4deMCTNcgXFAN5PQtQ+IgM8iAFeEZjQ+Zbtksh9cfsGOI64AGvTk2QOYm
+	dVjw==
+X-Gm-Message-State: ALoCoQkags3qEd4DHVofyeragdWjQh4tALEYDYgPC/pi2EgYOwuJwmt6ww0Y1huh2cyZIneQUOs3
+X-Received: by 10.194.120.230 with SMTP id lf6mr5840684wjb.41.1432822504262;
+	Thu, 28 May 2015 07:15:04 -0700 (PDT)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id o6sm8742786wiz.24.2015.05.28.07.14.50
+	by mx.google.com with ESMTPSA id di9sm8755602wib.16.2015.05.28.07.15.02
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 28 May 2015 07:14:51 -0700 (PDT)
+	Thu, 28 May 2015 07:15:03 -0700 (PDT)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id B7F1656120B; Thu, 28 May 2015 15:14:17 +0100 (BST)
+	id BAE9A5601CB; Thu, 28 May 2015 15:14:17 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 28 May 2015 15:13:57 +0100
-Message-Id: <f1d8ef8cdeefeaab68b799f06e04b5e30ebcd1bc.1432822343.git.alexandru.damian@intel.com>
+Date: Thu, 28 May 2015 15:13:58 +0100
+Message-Id: <0bb6f3aac383eac3a67b99e467b5e98abd070b24.1432822343.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <f4c88fd9e39602ab841967166a14593f92576079.1432822343.git.alexandru.damian@intel.com>
 References: <f4c88fd9e39602ab841967166a14593f92576079.1432822343.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1432822343.git.alexandru.damian@intel.com>
 References: <cover.1432822343.git.alexandru.damian@intel.com>
-Subject: [PATCH 03/22] toaster logger: refactor recipe and layer file paths
+Subject: [PATCH 04/22] toaster logger: assign projects to all builds
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,265 +48,129 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 28 May 2015 14:14:54 -0000
+X-List-Received-Date: Thu, 28 May 2015 14:15:07 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-This refactoring brings the "local_path" of the
-layer from the Layer object to the Layer_Version object, which
-is more appropriate as different checkouts of the same
-Layer may live in different directories.
+Bitbake logger now sets a default project if the TOASTER_BRBE
+or TOASTER_PROJECT Bitbake variables are not set.
 
-This enables us to store Recipe file paths relative to a Layer_Version
-at all times, aleviating the need to store full file paths in the
-database. We also turn the prefix of the path (e.g. virtual:native
-path name space) into a pathflag field.
+This a necessary step in getting all builds under a project,
+as to unify the MANAGED and interactive modes.
 
-In turn, this solves the problem of mis-identification of tasks based
-on the recipe file paths, since we can also match the namespace of the
-file paths on the recipe files.
-
-[YOCTO #7594]
+Other small fixes are included, related to the size of the
+fields in the database.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/bb/ui/buildinfohelper.py                       |  47 ++-
- .../tts/toasteruitest/toaster_automation_test.py   |  14 +-
- ...ion_local_path__add_field_recipe_pathflags__.py | 361 +++++++++++++++++++++
- lib/toaster/orm/models.py                          |  23 +-
- lib/toaster/toastergui/templates/bpackage.html     |   4 +-
- .../toastergui/templates/configuration.html        |   2 +-
- .../toastergui/templates/package_detail_base.html  |   2 +-
- lib/toaster/toastergui/templates/recipe.html       |   4 +-
- lib/toaster/toastergui/templates/recipes.html      |   4 +-
- lib/toaster/toastergui/templates/target.html       |   2 +-
- lib/toaster/toastergui/views.py                    |  22 +-
- 11 files changed, 427 insertions(+), 58 deletions(-)
- create mode 100644 lib/toaster/orm/migrations/0020_auto__add_field_layer_version_local_path__add_field_recipe_pathflags__.py
+ lib/bb/ui/buildinfohelper.py                       |  37 ++-
+ ...ect__chg_field_project_bitbake_version__chg_.py | 368 +++++++++++++++++++++
+ lib/toaster/orm/models.py                          |  15 +-
+ lib/toaster/orm/views.py                           |   2 +-
+ 4 files changed, 405 insertions(+), 17 deletions(-)
+ create mode 100644 lib/toaster/orm/migrations/0021_auto__chg_field_build_project__chg_field_project_bitbake_version__chg_.py
 
 diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index 647d663..6812a52 100644
+index 6812a52..3ea842c 100644
 --- a/lib/bb/ui/buildinfohelper.py
 +++ b/lib/bb/ui/buildinfohelper.py
-@@ -221,12 +221,12 @@ class ORMWrapper(object):
-     def get_update_recipe_object(self, recipe_information, must_exist = False):
-         assert 'layer_version' in recipe_information
-         assert 'file_path' in recipe_information
-+        assert 'pathflags' in recipe_information
+@@ -31,6 +31,9 @@ from toaster.orm.models import Variable, VariableHistory
+ from toaster.orm.models import Package, Package_File, Target_Installed_Package, Target_File
+ from toaster.orm.models import Task_Dependency, Package_Dependency
+ from toaster.orm.models import Recipe_Dependency
++
++from toaster.orm.models import Project
++
+ from bb.msg import BBLogFormatter as format
+ from django.db import models
+ from pprint import pformat
+@@ -103,7 +106,7 @@ class ORMWrapper(object):
  
--        if recipe_information['file_path'].startswith(recipe_information['layer_version'].layer.local_path):
--            recipe_information['file_path'] = recipe_information['file_path'][len(recipe_information['layer_version'].layer.local_path):].lstrip("/")
-+        assert not recipe_information['file_path'].startswith("/")      # we should have layer-relative paths at all times
+         return vars(self)[dictname][key]
  
-         recipe_object, created = self._cached_get_or_create(Recipe, layer_version=recipe_information['layer_version'],
--                                     file_path=recipe_information['file_path'])
-+                                     file_path=recipe_information['file_path'], pathflags = recipe_information['pathflags'])
-         if created and must_exist:
-             raise NotExisting("Recipe object created when expected to exist", recipe_information)
+-    def create_build_object(self, build_info, brbe):
++    def create_build_object(self, build_info, brbe, project_id):
+         assert 'machine' in build_info
+         assert 'distro' in build_info
+         assert 'distro_version' in build_info
+@@ -112,7 +115,26 @@ class ORMWrapper(object):
+         assert 'build_name' in build_info
+         assert 'bitbake_version' in build_info
  
-@@ -247,13 +247,15 @@ class ORMWrapper(object):
-         assert 'branch' in layer_version_information
-         assert 'commit' in layer_version_information
-         assert 'priority' in layer_version_information
-+        assert 'local_path' in layer_version_information
- 
-         layer_version_object, created = Layer_Version.objects.get_or_create(
-                                     build = build_obj,
-                                     layer = layer_obj,
-                                     branch = layer_version_information['branch'],
-                                     commit = layer_version_information['commit'],
--                                    priority = layer_version_information['priority']
-+                                    priority = layer_version_information['priority'],
-+                                    local_path = layer_version_information['local_path'],
-                                     )
- 
-         self.layer_version_objects.append(layer_version_object)
-@@ -262,13 +264,11 @@ class ORMWrapper(object):
- 
-     def get_update_layer_object(self, layer_information, brbe):
-         assert 'name' in layer_information
--        assert 'local_path' in layer_information
-         assert 'layer_index_url' in layer_information
- 
-         if brbe is None:
-             layer_object, created = Layer.objects.get_or_create(
-                                 name=layer_information['name'],
--                                local_path=layer_information['local_path'],
-                                 layer_index_url=layer_information['layer_index_url'])
-             return layer_object
-         else:
-@@ -297,7 +297,6 @@ class ORMWrapper(object):
-                     for pl in buildrequest.project.projectlayer_set.filter(layercommit__layer__name = brl.name):
-                         if pl.layercommit.layer.vcs_url == brl.giturl :
-                             layer = pl.layercommit.layer
--                            layer.local_path = layer_information['local_path']
-                             layer.save()
-                             return layer
- 
-@@ -687,12 +686,12 @@ class BuildInfoHelper(object):
-         if self.brbe is None:
-             def _slkey_interactive(layer_version):
-                 assert isinstance(layer_version, Layer_Version)
--                return len(layer_version.layer.local_path)
-+                return len(layer_version.local_path)
- 
-             # Heuristics: we always match recipe to the deepest layer path in the discovered layers
-             for lvo in sorted(self.orm_wrapper.layer_version_objects, reverse=True, key=_slkey_interactive):
-                 # we can match to the recipe file path
--                if path.startswith(lvo.layer.local_path):
-+                if path.startswith(lvo.local_path):
-                     return lvo
- 
-         else:
-@@ -721,7 +720,7 @@ class BuildInfoHelper(object):
-         logger.warn("Could not match layer version for recipe path %s : %s" % (path, self.orm_wrapper.layer_version_objects))
- 
-         #mockup the new layer
--        unknown_layer, created = Layer.objects.get_or_create(name="__FIXME__unidentified_layer", local_path="/", layer_index_url="")
-+        unknown_layer, created = Layer.objects.get_or_create(name="__FIXME__unidentified_layer", layer_index_url="")
-         unknown_layer_version_obj, created = Layer_Version.objects.get_or_create(layer = unknown_layer, build = self.internal_state['build'])
- 
-         # append it so we don't run into this error again and again
-@@ -731,11 +730,20 @@ class BuildInfoHelper(object):
- 
-     def _get_recipe_information_from_taskfile(self, taskfile):
-         localfilepath = taskfile.split(":")[-1]
-+        filepath_flags = ":".join(sorted(taskfile.split(":")[:-1]))
-         layer_version_obj = self._get_layer_version_for_path(localfilepath)
- 
++        prj = None
++        buildrequest = None
++        if brbe is not None:            # this build was triggered by a request from a user
++            logger.debug(1, "buildinfohelper: brbe is %s" % brbe)
++            from bldcontrol.models import BuildEnvironment, BuildRequest
++            br, be = brbe.split(":")
++            buildrequest = BuildRequest.objects.get(pk = br)
++            prj = buildrequest.project
++
++        elif project_id is not None:    # this build was triggered by an external system for a specific project
++            logger.debug(1, "buildinfohelper: project is %s" % prj)
++            prj = Project.objects.get(pk = project_id)
++
++        else:                           # this build was triggered by a legacy system, or command line interactive mode
++            prj, created = Project.objects.get_or_create(pk=0, name="Default Project")
++            logger.debug(1, "buildinfohelper: project is not specified, defaulting to %s" % prj)
 +
 +
-         recipe_info = {}
-         recipe_info['layer_version'] = layer_version_obj
--        recipe_info['file_path'] = taskfile
-+        recipe_info['file_path'] = localfilepath
-+        recipe_info['pathflags'] = filepath_flags
-+
-+        if recipe_info['file_path'].startswith(recipe_info['layer_version'].local_path):
-+            recipe_info['file_path'] = recipe_info['file_path'][len(recipe_info['layer_version'].local_path):].lstrip("/")
-+        else:
-+            raise RuntimeError("Recipe file path %s is not under layer version at %s" % (recipe_info['file_path'], recipe_info['layer_version'].local_path))
+         build = Build.objects.create(
++                                    project = prj,
+                                     machine=build_info['machine'],
+                                     distro=build_info['distro'],
+                                     distro_version=build_info['distro_version'],
+@@ -123,17 +145,11 @@ class ORMWrapper(object):
+                                     bitbake_version=build_info['bitbake_version'])
  
-         return recipe_info
+         logger.debug(1, "buildinfohelper: build is created %s" % build)
+-        if brbe is not None:
+-            logger.debug(1, "buildinfohelper: brbe is %s" % brbe)
+-            from bldcontrol.models import BuildEnvironment, BuildRequest
+-            br, be = brbe.split(":")
  
-@@ -787,6 +795,7 @@ class BuildInfoHelper(object):
-         for layer in layerinfos:
-             try:
-                 self.internal_state['lvs'][self.orm_wrapper.get_update_layer_object(layerinfos[layer], self.brbe)] = layerinfos[layer]['version']
-+                self.internal_state['lvs'][self.orm_wrapper.get_update_layer_object(layerinfos[layer], self.brbe)]['local_path'] = layerinfos[layer]['local_path']
-             except NotExisting as nee:
-                 logger.warn("buildinfohelper: cannot identify layer exception:%s " % nee)
+-            buildrequest = BuildRequest.objects.get(pk = br)
++        if buildrequest is not None:
+             buildrequest.build = build
+             buildrequest.save()
  
-@@ -899,8 +908,8 @@ class BuildInfoHelper(object):
+-            build.project_id = buildrequest.project_id
+-            build.save()
+         return build
  
-             recipe_information = self._get_recipe_information_from_taskfile(taskfile)
-             try:
--                if recipe_information['file_path'].startswith(recipe_information['layer_version'].layer.local_path):
--                    recipe_information['file_path'] = recipe_information['file_path'][len(recipe_information['layer_version'].layer.local_path):].lstrip("/")
-+                if recipe_information['file_path'].startswith(recipe_information['layer_version'].local_path):
-+                    recipe_information['file_path'] = recipe_information['file_path'][len(recipe_information['layer_version'].local_path):].lstrip("/")
+     def create_target_objects(self, target_info):
+@@ -638,6 +654,7 @@ class BuildInfoHelper(object):
+         self.has_build_history = has_build_history
+         self.tmp_dir = self.server.runCommand(["getVariable", "TMPDIR"])[0]
+         self.brbe    = self.server.runCommand(["getVariable", "TOASTER_BRBE"])[0]
++        self.project = self.server.runCommand(["getVariable", "TOASTER_PROJECT"])[0]
+         logger.debug(1, "buildinfohelper: Build info helper inited %s" % vars(self))
  
-                 recipe_object = Recipe.objects.get(layer_version = recipe_information['layer_version'],
-                             file_path__endswith = recipe_information['file_path'],
-@@ -1051,8 +1060,9 @@ class BuildInfoHelper(object):
-         self.internal_state['recipes'] = {}
-         for pn in event._depgraph['pn']:
  
--            file_name = event._depgraph['pn'][pn]['filename']
--            layer_version_obj = self._get_layer_version_for_path(file_name.split(":")[-1])
-+            file_name = event._depgraph['pn'][pn]['filename'].split(":")[-1]
-+            pathflags = ":".join(sorted(event._depgraph['pn'][pn]['filename'].split(":")[:-1]))
-+            layer_version_obj = self._get_layer_version_for_path(file_name)
+@@ -804,7 +821,7 @@ class BuildInfoHelper(object):
+         assert '_pkgs' in vars(event)
+         build_information = self._get_build_information()
  
-             assert layer_version_obj is not None
+-        build_obj = self.orm_wrapper.create_build_object(build_information, self.brbe)
++        build_obj = self.orm_wrapper.create_build_object(build_information, self.brbe, self.project)
  
-@@ -1082,6 +1092,13 @@ class BuildInfoHelper(object):
-                 recipe_info['bugtracker'] = event._depgraph['pn'][pn]['bugtracker']
+         self.internal_state['build'] = build_obj
  
-             recipe_info['file_path'] = file_name
-+            recipe_info['pathflags'] = pathflags
-+
-+            if recipe_info['file_path'].startswith(recipe_info['layer_version'].local_path):
-+                recipe_info['file_path'] = recipe_info['file_path'][len(recipe_info['layer_version'].local_path):].lstrip("/")
-+            else:
-+                raise RuntimeError("Recipe file path %s is not under layer version at %s" % (recipe_info['file_path'], recipe_info['layer_version'].local_path))
-+
-             recipe = self.orm_wrapper.get_update_recipe_object(recipe_info)
-             recipe.is_image = False
-             if 'inherits' in event._depgraph['pn'][pn].keys():
-diff --git a/lib/toaster/contrib/tts/toasteruitest/toaster_automation_test.py b/lib/toaster/contrib/tts/toasteruitest/toaster_automation_test.py
-index c03a937..0cb3934 100755
---- a/lib/toaster/contrib/tts/toasteruitest/toaster_automation_test.py
-+++ b/lib/toaster/contrib/tts/toasteruitest/toaster_automation_test.py
-@@ -926,7 +926,7 @@ class toaster_cases(toaster_cases_base):
-         self.driver.find_element_by_id("depends_on").click()
-         self.driver.find_element_by_id("layer_version__branch").click()
-         self.driver.find_element_by_id("layer_version__layer__commit").click()
--        self.driver.find_element_by_id("layer_version__layer__local_path").click()
-+        self.driver.find_element_by_id("layer_version__local_path").click()
-         self.driver.find_element_by_id("depends_by").click()
-         self.driver.find_element_by_css_selector("button.btn.dropdown-toggle").click()
+@@ -1233,7 +1250,7 @@ class BuildInfoHelper(object):
+                 logger.debug(1, "buildinfohelper: Saving stored event %s " % tempevent)
+                 self.store_log_event(tempevent)
+             else:
+-                logger.error("buildinfohelper: Events not saved: %s" % self.internal_state['backlog'])
++                logger.info("buildinfohelper: All events saved")
+                 del self.internal_state['backlog']
  
-@@ -945,7 +945,7 @@ class toaster_cases(toaster_cases_base):
- 
-         table_head_dict = {'Recipe file':'recipe_file', 'Section':'recipe_section', \
-                 'License':'recipe_license', 'Layer':'layer_version__layer__name', \
--                'Layer branch':'layer_version__branch', 'Layer directory':'layer_version__layer__local_path'}
-+                'Layer branch':'layer_version__branch', 'Layer directory':'layer_version__local_path'}
-         for key in table_head_dict:
-             self.find_element_by_link_text_in_table(self.table_name, key).click()
-             column_list = self.get_table_column_text("class", table_head_dict[key])
-@@ -1066,7 +1066,7 @@ class toaster_cases(toaster_cases_base):
-         self.driver.find_element_by_id("depends_on").click()
-         self.driver.find_element_by_id("layer_version__branch").click()
-         self.driver.find_element_by_id("layer_version__layer__commit").click()
--        self.driver.find_element_by_id("layer_version__layer__local_path").click()
-+        self.driver.find_element_by_id("layer_version__local_path").click()
-         self.driver.find_element_by_id("depends_by").click()
-         self.driver.find_element_by_css_selector("button.btn.dropdown-toggle").click()
-         # check if columns selected above is shown
-@@ -1081,7 +1081,7 @@ class toaster_cases(toaster_cases_base):
-         self.driver.find_element_by_id("depends_on").click()
-         self.driver.find_element_by_id("layer_version__branch").click()
-         self.driver.find_element_by_id("layer_version__layer__commit").click()
--        self.driver.find_element_by_id("layer_version__layer__local_path").click()
-+        self.driver.find_element_by_id("layer_version__local_path").click()
-         self.driver.find_element_by_id("depends_by").click()
-         self.driver.find_element_by_css_selector("button.btn.dropdown-toggle").click()
-         # don't exist any more
-@@ -1425,7 +1425,7 @@ class toaster_cases(toaster_cases_base):
- # Step 4
-         # pulldown menu
-         option_ids = ['recipe__layer_version__layer__name', 'recipe__layer_version__branch', \
--                      'recipe__layer_version__layer__commit', 'recipe__layer_version__layer__local_path', \
-+                      'recipe__layer_version__layer__commit', 'recipe__layer_version__local_path', \
-                       'license', 'recipe__version']
-         self.driver.find_element_by_css_selector("button.btn.dropdown-toggle").click()
-         for item in option_ids:
-@@ -1470,7 +1470,7 @@ class toaster_cases(toaster_cases_base):
-         self.driver.find_element_by_css_selector("button.btn.dropdown-toggle").click()
-         self.driver.find_element_by_id("layer_version__branch").click()
-         self.driver.find_element_by_id("layer_version__layer__commit").click()
--        self.driver.find_element_by_id("layer_version__layer__local_path").click()
-+        self.driver.find_element_by_id("layer_version__local_path").click()
-         self.driver.find_element_by_css_selector("button.btn.dropdown-toggle").click()
-         # otable is the recipes table here
-         otable_head_text = self.get_table_head_text('otable')
-@@ -1488,7 +1488,7 @@ class toaster_cases(toaster_cases_base):
-         self.driver.find_element_by_id("recipe__layer_version__layer__name").click()
-         self.driver.find_element_by_id("recipe__layer_version__branch").click()
-         self.driver.find_element_by_id("recipe__layer_version__layer__commit").click()
--        self.driver.find_element_by_id("recipe__layer_version__layer__local_path").click()
-+        self.driver.find_element_by_id("recipe__layer_version__local_path").click()
-         self.driver.find_element_by_css_selector("button.btn.dropdown-toggle").click()
-         otable_head_text = self.get_table_head_text("otable")
-         for item in ["Layer", "Layer branch", "Layer commit", "Layer directory"]:
-diff --git a/lib/toaster/orm/migrations/0020_auto__add_field_layer_version_local_path__add_field_recipe_pathflags__.py b/lib/toaster/orm/migrations/0020_auto__add_field_layer_version_local_path__add_field_recipe_pathflags__.py
+         log_information = {}
+diff --git a/lib/toaster/orm/migrations/0021_auto__chg_field_build_project__chg_field_project_bitbake_version__chg_.py b/lib/toaster/orm/migrations/0021_auto__chg_field_build_project__chg_field_project_bitbake_version__chg_.py
 new file mode 100644
-index 0000000..0ec5795
+index 0000000..b82cc8d
 --- /dev/null
-+++ b/lib/toaster/orm/migrations/0020_auto__add_field_layer_version_local_path__add_field_recipe_pathflags__.py
-@@ -0,0 +1,361 @@
++++ b/lib/toaster/orm/migrations/0021_auto__chg_field_build_project__chg_field_project_bitbake_version__chg_.py
+@@ -0,0 +1,368 @@
 +# -*- coding: utf-8 -*-
 +from south.utils import datetime_utils as datetime
 +from south.db import db
@@ -317,37 +181,46 @@ index 0000000..0ec5795
 +class Migration(SchemaMigration):
 +
 +    def forwards(self, orm):
-+        # Removing unique constraint on 'Recipe', fields ['layer_version', 'file_path']
-+        db.delete_unique(u'orm_recipe', ['layer_version_id', 'file_path'])
 +
-+        # Adding field 'Layer_Version.local_path'
-+        db.add_column(u'orm_layer_version', 'local_path',
-+                      self.gf('django.db.models.fields.FilePathField')(default="/", max_length=1024),
-+                      keep_default=False)
++        # Changing field 'Build.project'
++        db.alter_column(u'orm_build', 'project_id', self.gf('django.db.models.fields.related.ForeignKey')(default=0, to=orm['orm.Project']))
 +
-+        # Adding field 'Recipe.pathflags'
-+        db.add_column(u'orm_recipe', 'pathflags',
-+                      self.gf('django.db.models.fields.CharField')(default='', max_length=200, blank=True),
-+                      keep_default=False)
++        # Changing field 'Project.bitbake_version'
++        db.alter_column(u'orm_project', 'bitbake_version_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['orm.BitbakeVersion'], null=True))
 +
-+        # Adding unique constraint on 'Recipe', fields ['layer_version', 'file_path', 'pathflags']
-+        db.create_unique(u'orm_recipe', ['layer_version_id', 'file_path', 'pathflags'])
++        # Changing field 'Project.release'
++        db.alter_column(u'orm_project', 'release_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['orm.Release'], null=True))
 +
-+        # Migrate data from Layer.local_path to Layer_Version.local_path
-+        if not db.dry_run:
-+            for lv in orm.Layer_Version.objects.all():
-+                if lv.layer.local_path is not None:
-+                    lv.local_path = lv.layer.local_path
-+                else:
-+                    lv.local_path = "/"
-+                lv.save()
++        # Changing field 'Task.cpu_usage'
++        db.alter_column(u'orm_task', 'cpu_usage', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=8, decimal_places=2))
 +
-+        db.delete_column(u'orm_layer', 'local_path')
-+
++        # Changing field 'Task.elapsed_time'
++        db.alter_column(u'orm_task', 'elapsed_time', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=8, decimal_places=2))
 +
 +    def backwards(self, orm):
-+        raise RuntimeError("Cannot reverse this migration")
 +
++        # Changing field 'Build.project'
++        db.alter_column(u'orm_build', 'project_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['orm.Project'], null=True))
++
++        # User chose to not deal with backwards NULL issues for 'Project.bitbake_version'
++        raise RuntimeError("Cannot reverse this migration. 'Project.bitbake_version' and its values cannot be restored.")
++        
++        # The following code is provided here to aid in writing a correct migration
++        # Changing field 'Project.bitbake_version'
++        db.alter_column(u'orm_project', 'bitbake_version_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['orm.BitbakeVersion']))
++
++        # User chose to not deal with backwards NULL issues for 'Project.release'
++        raise RuntimeError("Cannot reverse this migration. 'Project.release' and its values cannot be restored.")
++        
++        # The following code is provided here to aid in writing a correct migration
++        # Changing field 'Project.release'
++        db.alter_column(u'orm_project', 'release_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['orm.Release']))
++
++        # Changing field 'Task.cpu_usage'
++        db.alter_column(u'orm_task', 'cpu_usage', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=6, decimal_places=2))
++
++        # Changing field 'Task.elapsed_time'
++        db.alter_column(u'orm_task', 'elapsed_time', self.gf('django.db.models.fields.DecimalField')(null=True, max_digits=6, decimal_places=2))
 +
 +    models = {
 +        u'orm.bitbakeversion': {
@@ -424,7 +297,6 @@ index 0000000..0ec5795
 +            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
 +            'layer': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'layer_version_layer'", 'to': u"orm['orm.Layer']"}),
 +            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
-+            'local_path': ('django.db.models.fields.FilePathField', [], {'default': 'None', 'max_length': '255', 'null': 'True'}),
 +            'priority': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
 +            'project': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.Project']", 'null': 'True'}),
 +            'up_branch': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.Branch']", 'null': 'True'}),
@@ -530,7 +402,7 @@ index 0000000..0ec5795
 +            'value': ('django.db.models.fields.TextField', [], {'blank': 'True'})
 +        },
 +        u'orm.recipe': {
-+            'Meta': {'unique_together': "(('layer_version', 'file_path', 'pathflags'), ('file_path', 'pathflags'))", 'object_name': 'Recipe'},
++            'Meta': {'unique_together': "(('layer_version', 'file_path'),)", 'object_name': 'Recipe'},
 +            'bugtracker': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
 +            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
 +            'file_path': ('django.db.models.fields.FilePathField', [], {'max_length': '255'}),
@@ -540,7 +412,6 @@ index 0000000..0ec5795
 +            'layer_version': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'recipe_layer_version'", 'to': u"orm['orm.Layer_Version']"}),
 +            'license': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
 +            'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-+            'pathflags': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
 +            'section': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
 +            'summary': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
 +            'up_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
@@ -668,232 +539,66 @@ index 0000000..0ec5795
 +    }
 +
 +    complete_apps = ['orm']
+\ No newline at end of file
 diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 20b02bb..29ede65 100644
+index 29ede65..0f72576 100644
 --- a/lib/toaster/orm/models.py
 +++ b/lib/toaster/orm/models.py
-@@ -457,7 +457,7 @@ class Task_Dependency(models.Model):
-     depends_on = models.ForeignKey(Task, related_name='task_dependencies_depends')
+@@ -81,15 +81,18 @@ class ProjectManager(models.Manager):
+     def create(self, *args, **kwargs):
+         raise Exception("Invalid call to Project.objects.create. Use Project.objects.create_project() to create a project")
  
- class Package(models.Model):
--    search_allowed_fields = ['name', 'version', 'revision', 'recipe__name', 'recipe__version', 'recipe__license', 'recipe__layer_version__layer__name', 'recipe__layer_version__branch', 'recipe__layer_version__commit', 'recipe__layer_version__layer__local_path', 'installed_name']
-+    search_allowed_fields = ['name', 'version', 'revision', 'recipe__name', 'recipe__version', 'recipe__license', 'recipe__layer_version__layer__name', 'recipe__layer_version__branch', 'recipe__layer_version__commit', 'recipe__layer_version__local_path', 'installed_name']
-     build = models.ForeignKey('Build')
-     recipe = models.ForeignKey('Recipe', null=True)
+-    def get_or_create(self, *args, **kwargs):
++    def get_or_create(self, **kwargs):
++        # allow project creation for default data
++        if 'pk' in kwargs and kwargs['pk'] == 0:
++            return super(ProjectManager, self).get_or_create(**kwargs)
+         raise Exception("Invalid call to Project.objects.get_or_create. Use Project.objects.create_project() to create a project")
+ 
+ class Project(models.Model):
+     search_allowed_fields = ['name', 'short_description', 'release__name', 'release__branch_name']
      name = models.CharField(max_length=100)
-@@ -528,7 +528,7 @@ class Package_File(models.Model):
-     size = models.IntegerField()
+     short_description = models.CharField(max_length=50, blank=True)
+-    bitbake_version = models.ForeignKey('BitbakeVersion')
+-    release     = models.ForeignKey("Release")
++    bitbake_version = models.ForeignKey('BitbakeVersion', null=True)
++    release     = models.ForeignKey("Release", null=True)
+     created     = models.DateTimeField(auto_now_add = True)
+     updated     = models.DateTimeField(auto_now = True)
+     # This is a horrible hack; since Toaster has no "User" model available when
+@@ -223,7 +226,7 @@ class Build(models.Model):
  
- class Recipe(models.Model):
--    search_allowed_fields = ['name', 'version', 'file_path', 'section', 'summary', 'description', 'license', 'layer_version__layer__name', 'layer_version__branch', 'layer_version__commit', 'layer_version__layer__local_path', 'layer_version__layer_source__name']
-+    search_allowed_fields = ['name', 'version', 'file_path', 'section', 'summary', 'description', 'license', 'layer_version__layer__name', 'layer_version__branch', 'layer_version__commit', 'layer_version__local_path', 'layer_version__layer_source__name']
+     search_allowed_fields = ['machine', 'cooker_log_path', "target__target", "target__target_image_file__file_name"]
  
-     layer_source = models.ForeignKey('LayerSource', default = None, null = True)  # from where did we get this recipe
-     up_id = models.IntegerField(null = True, default = None)                    # id of entry in the source
-@@ -544,6 +544,7 @@ class Recipe(models.Model):
-     homepage = models.URLField(blank=True)
-     bugtracker = models.URLField(blank=True)
-     file_path = models.FilePathField(max_length=255)
-+    pathflags = models.CharField(max_length=200, blank=True)
+-    project = models.ForeignKey(Project, null = True)
++    project = models.ForeignKey(Project)            # must have a project
+     machine = models.CharField(max_length=100)
+     distro = models.CharField(max_length=100)
+     distro_version = models.CharField(max_length=100)
+@@ -435,8 +438,8 @@ class Task(models.Model):
+     script_type = models.IntegerField(choices=TASK_CODING, default=CODING_NA)
+     line_number = models.IntegerField(default=0)
+     disk_io = models.IntegerField(null=True)
+-    cpu_usage = models.DecimalField(max_digits=6, decimal_places=2, null=True)
+-    elapsed_time = models.DecimalField(max_digits=6, decimal_places=2, null=True)
++    cpu_usage = models.DecimalField(max_digits=8, decimal_places=2, null=True)
++    elapsed_time = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+     sstate_result = models.IntegerField(choices=SSTATE_RESULT, default=SSTATE_NA)
+     message = models.CharField(max_length=240)
+     logfile = models.FilePathField(max_length=255, blank=True)
+diff --git a/lib/toaster/orm/views.py b/lib/toaster/orm/views.py
+index 61d14f9..f32fa4d 100644
+--- a/lib/toaster/orm/views.py
++++ b/lib/toaster/orm/views.py
+@@ -37,7 +37,7 @@ from django.views.decorators.csrf import csrf_exempt
+ def eventfile(request):
+     """ Receives a file by POST, and runs toaster-eventreply on this file """
+     if request.method != "POST":
+-        return HttpResponseBadRequest("This API only accepts POST requests. Post a file with:\n\ncurl -F eventlog=@bitbake_eventlog.json http[s]://[server-address]/orm/eventfile\n", content_type="text/plain;utf8")
++        return HttpResponseBadRequest("This API only accepts POST requests. Post a file with:\n\ncurl -F eventlog=@bitbake_eventlog.json %s\n" % request.build_absolute_uri(reverse('eventfile')), content_type="text/plain;utf8")
  
-     def get_layersource_view_url(self):
-         if self.layer_source is None:
-@@ -555,18 +556,6 @@ class Recipe(models.Model):
-     def __unicode__(self):
-         return "Recipe " + self.name + ":" + self.version
- 
--    def get_local_path(self):
--        if settings.MANAGED and self.layer_version.build is not None and self.layer_version.build.project is not None:
--            # strip any tag prefixes ('virtual:native:')
--            layer_path=self.layer_version.layer.local_path.split(":")[-1]
--            recipe_path=self.file_path.split(":")[-1]
--            if 0 == recipe_path.find(layer_path):
--                return recipe_path[len(layer_path)+1:]
--            else:
--                return recipe_path
--
--        return self.file_path
--
-     def get_vcs_recipe_file_link_url(self):
-         return self.layer_version.get_vcs_file_link_url(self.file_path)
- 
-@@ -579,7 +568,8 @@ class Recipe(models.Model):
-             return ""
- 
-     class Meta:
--        unique_together = ("layer_version", "file_path")
-+        unique_together = (("layer_version", "file_path", "pathflags"), )
-+
- 
- class Recipe_DependencyManager(models.Manager):
-     use_for_related_fields = True
-@@ -976,7 +966,6 @@ class Layer(models.Model):
-     up_date = models.DateTimeField(null = True, default = None)
- 
-     name = models.CharField(max_length=100)
--    local_path = models.FilePathField(max_length=255, null = True, default = None)
-     layer_index_url = models.URLField()
-     vcs_url = GitURLField(default = None, null = True)
-     vcs_web_url = models.URLField(null = True, default = None)
-@@ -1009,6 +998,8 @@ class Layer_Version(models.Model):
-     dirpath = models.CharField(max_length=255, null = True, default = None)          # LayerBranch.vcs_subdir
-     priority = models.IntegerField(default = 0)         # if -1, this is a default layer
- 
-+    local_path = models.FilePathField(max_length=1024, default = "/")  # where this layer was checked-out
-+
-     project = models.ForeignKey('Project', null = True, default = None)   # Set if this layer is project-specific; always set for imported layers, and project-set branches
- 
-     # code lifted, with adaptations, from the layerindex-web application https://git.yoctoproject.org/cgit/cgit.cgi/layerindex-web/
-diff --git a/lib/toaster/toastergui/templates/bpackage.html b/lib/toaster/toastergui/templates/bpackage.html
-index 6fbdc7b..1c47354 100644
---- a/lib/toaster/toastergui/templates/bpackage.html
-+++ b/lib/toaster/toastergui/templates/bpackage.html
-@@ -89,7 +89,7 @@
-             </td>
-             <!-- Layer directory -->
-             {% if not MANAGED or not build.project %}
--                <td class="recipe__layer_version__layer__local_path">{{package.recipe.layer_version.layer.local_path}}</td>
-+                <td class="recipe__layer_version__local_path">{{package.recipe.layer_version.local_path}}</td>
-             {% endif %}
-         {%else%}
-             <td class="recipe__name"></td>
-@@ -97,7 +97,7 @@
-             <td class="recipe__layer_version__layer__name"></td>
-             <td class="recipe__layer_version__branch"></td>
-             <td class="recipe__layer_version__layer__commit"></td>
--            <td class="recipe__layer_version__layer__local_path"></td>
-+            <td class="recipe__layer_version__local_path"></td>
-         {%endif%}
- 
-     </tr>
-diff --git a/lib/toaster/toastergui/templates/configuration.html b/lib/toaster/toastergui/templates/configuration.html
-index d3b34a2..2aa1ae1 100644
---- a/lib/toaster/toastergui/templates/configuration.html
-+++ b/lib/toaster/toastergui/templates/configuration.html
-@@ -64,7 +64,7 @@
-                     {{lv.commit|truncatechars:13}}
-                 </a></td>
-           {% if not MANAGED or not build.project %}
--            <td>{{lv.layer.local_path}}</td>
-+            <td>{{lv.local_path}}</td>
-           {% endif %}
-         </tr>{% endfor %}
-       </tbody>
-diff --git a/lib/toaster/toastergui/templates/package_detail_base.html b/lib/toaster/toastergui/templates/package_detail_base.html
-index ad75454..e2ec75d 100644
---- a/lib/toaster/toastergui/templates/package_detail_base.html
-+++ b/lib/toaster/toastergui/templates/package_detail_base.html
-@@ -141,7 +141,7 @@
-                 Layer directory
-                 <i class="icon-question-sign get-help" title="Path to the layer providing the recipe that builds this package"></i>
-             </dt>
--            <dd><code>{{package.recipe.layer_version.layer.local_path}}</code></dd>
-+            <dd><code>{{package.recipe.layer_version.local_path}}</code></dd>
-           {% endif %}
-         </dl>
-     </div> <!-- row4 well -->
-diff --git a/lib/toaster/toastergui/templates/recipe.html b/lib/toaster/toastergui/templates/recipe.html
-index a0fe6d7..2da41c3 100644
---- a/lib/toaster/toastergui/templates/recipe.html
-+++ b/lib/toaster/toastergui/templates/recipe.html
-@@ -58,13 +58,13 @@
-                     <i class="icon-question-sign get-help" title="Path to the layer providing the recipe"></i>
-                     Layer directory
-                 </dt>
--                <dd><code>{{layer.local_path}}</code></dd>
-+                <dd><code>{{object.layer_version.local_path}}</code></dd>
-           {% endif %}
-                 <dt>
-                     <i class="icon-question-sign get-help" title="Path to the recipe .bb file"></i>
-                     Recipe file
-                 </dt>
--                <dd><code>{{object.get_local_path}}</code></dd>
-+                <dd><code>{{object.file_path}} {% if object.pathflags %}<i>({{object.pathflags}})</i>{% endif %}</code></dd>
-                 {% if layer_version.branch %}
-                 <dt>
-                     <i class="icon-question-sign get-help" title="The Git branch of the layer providing the recipe"></i>
-diff --git a/lib/toaster/toastergui/templates/recipes.html b/lib/toaster/toastergui/templates/recipes.html
-index dc2d9e8..8d4494e 100644
---- a/lib/toaster/toastergui/templates/recipes.html
-+++ b/lib/toaster/toastergui/templates/recipes.html
-@@ -84,7 +84,7 @@
-             {% endwith %}
-         </td>
-         <!-- Recipe file -->
--        <td class="recipe_file">{{recipe.get_local_path}}</td>
-+        <td class="recipe_file">{{recipe.file_path}} {% if recipe.pathflags %}<i>({{recipe.pathflags}})</i>{% endif %}</td>
-         <!-- Section -->
-         <td class="recipe_section">{{recipe.section}}</td>
-         <!-- License -->
-@@ -105,7 +105,7 @@
- 
-         {% if not MANAGED or not build.project %}
-             <!-- Layer directory -->
--            <td class="layer_version__layer__local_path">{{recipe.layer_version.layer.local_path}}</td>
-+            <td class="layer_version__local_path">{{recipe.layer_version.local_path}}</td>
-         {% endif %}
-     </tr>
- 
-diff --git a/lib/toaster/toastergui/templates/target.html b/lib/toaster/toastergui/templates/target.html
-index 1309b52..e7febaf 100644
---- a/lib/toaster/toastergui/templates/target.html
-+++ b/lib/toaster/toastergui/templates/target.html
-@@ -154,7 +154,7 @@
-         </td>
-         {% if not MANAGED or not build.project %}
-             <td class="layer_directory">
--                {{ package.recipe.layer_version.layer.local_path }}
-+                {{ package.recipe.layer_version.local_path }}
-             </td>
-         {% endif %}
-     </tr>
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index c16fc22..761bf53 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -725,9 +725,9 @@ eans multiple licenses exist that cover different parts of the source',
-         tc_layerDir = {
-             'name':'Layer directory',
-             'qhelp':'Location in disk of the layer providing the recipe that builds the package',
--            'orderfield' : _get_toggle_order( request, "recipe__layer_version__layer__local_path" ),
--            'ordericon'  : _get_toggle_order_icon( request, "recipe__layer_version__layer__local_path" ),
--            'orderkey'   : "recipe__layer_version__layer__local_path",
-+            'orderfield' : _get_toggle_order( request, "recipe__layer_version__local_path" ),
-+            'ordericon'  : _get_toggle_order_icon( request, "recipe__layer_version__local_path" ),
-+            'orderkey'   : "recipe__layer_version__local_path",
-             'clclass'    : 'layer_directory',
-             'hidden'     : 1,
-         }
-@@ -1254,10 +1254,10 @@ def recipes(request, build_id):
-             {
-                 'name':'Layer directory',
-                 'qhelp':'Path to the layer prodiving the recipe',
--                'orderfield': _get_toggle_order(request, "layer_version__layer__local_path"),
--                'ordericon':_get_toggle_order_icon(request, "layer_version__layer__local_path"),
--                'orderkey' : 'layer_version__layer__local_path',
--                'clclass': 'layer_version__layer__local_path', 'hidden': 1,
-+                'orderfield': _get_toggle_order(request, "layer_version__local_path"),
-+                'ordericon':_get_toggle_order_icon(request, "layer_version__local_path"),
-+                'orderkey' : 'layer_version__local_path',
-+                'clclass': 'layer_version__local_path', 'hidden': 1,
-             })
- 
- 
-@@ -1464,10 +1464,10 @@ def bpackage(request, build_id):
-         tc_layerDir = {
-                 'name':'Layer directory',
-                 'qhelp':'Path to the layer providing the recipe that builds the package',
--                'orderfield': _get_toggle_order(request, "recipe__layer_version__layer__local_path"),
--                'ordericon':_get_toggle_order_icon(request, "recipe__layer_version__layer__local_path"),
--                'orderkey' : 'recipe__layer_version__layer__local_path',
--                'clclass': 'recipe__layer_version__layer__local_path', 'hidden': 1,
-+                'orderfield': _get_toggle_order(request, "recipe__layer_version__local_path"),
-+                'ordericon':_get_toggle_order_icon(request, "recipe__layer_version__local_path"),
-+                'orderkey' : 'recipe__layer_version__local_path',
-+                'clclass': 'recipe__layer_version__local_path', 'hidden': 1,
-         }
-         context['tablecols'].append(tc_layerDir)
- 
+     # write temporary file
+     (handle, abstemppath) = tempfile.mkstemp(dir="/tmp/")
 -- 
 1.9.1
 
