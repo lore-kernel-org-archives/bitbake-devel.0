@@ -1,42 +1,42 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f50.google.com (mail-wg0-f50.google.com [74.125.82.50])
-	by mail.openembedded.org (Postfix) with ESMTP id 3A39B7570F
+Received: from mail-wi0-f171.google.com (mail-wi0-f171.google.com
+	[209.85.212.171])
+	by mail.openembedded.org (Postfix) with ESMTP id 012417570F
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 28 May 2015 14:17:36 +0000 (UTC)
-Received: by wgez8 with SMTP id z8so37820141wge.0
+	Thu, 28 May 2015 14:17:48 +0000 (UTC)
+Received: by wizk4 with SMTP id k4so148681942wiz.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 28 May 2015 07:17:38 -0700 (PDT)
+	Thu, 28 May 2015 07:17:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=GSalr5nrBu0baVCs7IeNQDExAZNEUvDKCy7aVnCvp1Q=;
-	b=cGS8ne+pSjapWPDpfwERr6T5CGWsE0j3aqKe+NDUSbhhOdnUmf9gpYxnk0K20XcogJ
-	lYM6YCHzEBotBrtlsOMp0KIDLEcOrw7UlHSDbHcr2w3kZO0CFv3NlyRSSyeteC+2vY3N
-	zFFgsZD5vmUT552+kese+i3uJKft/Gh6uX/niS3TQnDIwFmE1952zJVKAs7tPhak8PIN
-	Q2/JM4JU+RP3mlWGevTv1hPfhoRTRyI7QMnxeOJkkTZvhlJLOexuPpYbVgTG1odNa4oY
-	N0d9mWb8FumFKcLPSvKpimcnhgTJnH2hJ1CNNfoTO3YKKHlU7ilu3PkGpUqHMua81VN9
-	hkXg==
-X-Gm-Message-State: ALoCoQlnBWFdt8a9suZ7yv57uypC1NNOXwaxAM4sh4cZEkbQvU8UJlPYyv2RF5JLlXgB6nvITWS5
-X-Received: by 10.194.184.79 with SMTP id es15mr5558810wjc.112.1432822657973; 
-	Thu, 28 May 2015 07:17:37 -0700 (PDT)
+	bh=ufUpa4d0gT2B7QLbvIrs/oJ0WSRt2ao8L83pYW4fCk4=;
+	b=T0lCqYeY8SU0m6S1U3NR6j+UAKYeqlo35mg6OJU0PoTzTAcWhQK6nvj39jnsbpjGUm
+	elarPuyoby6n7CjiRXwNvr4zTnMupAhMlzZkCjDXn/zKhfeW52Dv1t6A/8blACf5S8iM
+	ksw/MzWGf27fS+85MUdOAA2RjXkPuxrGlaaONEesFYW2UYraQos7Ur0TU7bthRuX47BG
+	7d/EMZi2j9VoGbWm1fnSZbw/peylo5rw/V+cQah57muoVYhQiVb2nA2nN/s+WhEJwVlJ
+	82fXy3geXnuGqsNcFK4eQgAivV1vgCSYKSbXdpmpo/zlTXSMuc1tg95QqjiQsRTCycBP
+	mGnQ==
+X-Gm-Message-State: ALoCoQnyoQZaUM6AagpD7h9MYWmCUW2v3c1YUtIP6mtyiWm8OgymP6nT1qRKhFKDp4loekO/SVIC
+X-Received: by 10.180.91.100 with SMTP id cd4mr61720502wib.57.1432822669791;
+	Thu, 28 May 2015 07:17:49 -0700 (PDT)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id
-	ck16sm3552755wjb.37.2015.05.28.07.17.36
+	by mx.google.com with ESMTPSA id g14sm3544617wjs.47.2015.05.28.07.17.48
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 28 May 2015 07:17:36 -0700 (PDT)
+	Thu, 28 May 2015 07:17:48 -0700 (PDT)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id D1DE0561350; Thu, 28 May 2015 15:14:17 +0100 (BST)
+	id D38E85615AD; Thu, 28 May 2015 15:14:17 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 28 May 2015 15:14:11 +0100
-Message-Id: <0cdca50c7374559deb8530be2e75d311369ecf4a.1432822343.git.alexandru.damian@intel.com>
+Date: Thu, 28 May 2015 15:14:12 +0100
+Message-Id: <d2b9600d3bb26e36f23c132bb7006710813a831e.1432822343.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <f4c88fd9e39602ab841967166a14593f92576079.1432822343.git.alexandru.damian@intel.com>
 References: <f4c88fd9e39602ab841967166a14593f92576079.1432822343.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1432822343.git.alexandru.damian@intel.com>
 References: <cover.1432822343.git.alexandru.damian@intel.com>
-Subject: [PATCH 17/22] bldcontrol: Fix all failing unit tests
+Subject: [PATCH 18/22] orm: Fix all failing unit test
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,229 +49,114 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 28 May 2015 14:17:37 -0000
+X-List-Received-Date: Thu, 28 May 2015 14:17:49 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-This fixes the unit tests for the bldcontrol it requires the
-implementation of a new Exception type so that a known Exception can be
-handled. Also fixed is the path to the toaster conf files so that the
-test doesn't need to be run from the top level directory and the ability
-to specify the values of TTS_SOURCE_DIR and TTS_BUILD_DIR and
-TTS_TEST_ADDRESS used for testing.
-
-Edited by Alex Damian to correct the rebasing of the localhostbecontroller.py
-file.
+This fixes all the unit tests for the orm. Also added is the ability to
+set a custom Layer index if you want to avoid using the public one by
+specifying TTS_LAYER_INDEX
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/bldcontrol/localhostbecontroller.py |  2 +-
- lib/toaster/bldcontrol/sshbecontroller.py       |  5 +-
- lib/toaster/bldcontrol/tests.py                 | 84 ++++++++++++++++---------
- 3 files changed, 61 insertions(+), 30 deletions(-)
+ lib/toaster/orm/models.py |  5 ++++-
+ lib/toaster/orm/tests.py  | 32 ++++++++++++++++++++------------
+ 2 files changed, 24 insertions(+), 13 deletions(-)
 
-diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
-index dfe06f9..bc3566a 100644
---- a/lib/toaster/bldcontrol/localhostbecontroller.py
-+++ b/lib/toaster/bldcontrol/localhostbecontroller.py
-@@ -117,7 +117,7 @@ class LocalhostBEController(BuildEnvironmentController):
-                 f.seek(0, 2)    # jump to the end
-                 toaster_ui_log_filelength = f.tell()
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index 8a9a21e..198c6f5 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -782,8 +782,11 @@ class LayerIndexLayerSource(LayerSource):
+             print "EE: could not connect to %s, skipping update: %s\n%s" % (self.apiurl, e, traceback.format_exc(e))
+             return
  
--        cmd = "bash -c \"source %s/oe-init-build-env %s 2>&1 >toaster_server.log && bitbake --read conf/toaster-pre.conf --postread conf/toaster.conf --server-only -t xmlrpc -B 0.0.0.0:0 2>&1 >>toaster_server.log \"" % (self.pokydirname, self.be.builddir)
-+        cmd = "bash -c \"source %s/oe-init-build-env %s 2>&1 >toaster_server.log && bitbake --read %s/conf/toaster-pre.conf --postread %s/conf/toaster.conf --server-only -t xmlrpc -B 0.0.0.0:0 2>&1 >>toaster_server.log \"" % (self.pokydirname, self.be.builddir, self.be.builddir, self.be.builddir)
+-        # update branches; only those that we already have names listed in the Releases table
++        # update branches; only those that we already have names listed in the
++        # Releases table
+         whitelist_branch_names = map(lambda x: x.branch_name, Release.objects.all())
++        if len(whitelist_branch_names) == 0:
++            raise Exception("Failed to make list of branches to fetch")
  
-         port = "-1"
-         logger.debug("localhostbecontroller: starting builder \n%s\n" % cmd)
-diff --git a/lib/toaster/bldcontrol/sshbecontroller.py b/lib/toaster/bldcontrol/sshbecontroller.py
-index 11ad08d..29ed0a7 100644
---- a/lib/toaster/bldcontrol/sshbecontroller.py
-+++ b/lib/toaster/bldcontrol/sshbecontroller.py
-@@ -31,6 +31,9 @@ from toastermain import settings
+         print "Fetching branches"
+         branches_info = _get_json_response(apilinks['branches']
+diff --git a/lib/toaster/orm/tests.py b/lib/toaster/orm/tests.py
+index 7b1b963..d4d97ee 100644
+--- a/lib/toaster/orm/tests.py
++++ b/lib/toaster/orm/tests.py
+@@ -1,4 +1,4 @@
+-from django.test import TestCase
++from django.test import TestCase, TransactionTestCase
+ from orm.models import LocalLayerSource, LayerIndexLayerSource, ImportedLayerSource, LayerSource
+ from orm.models import Branch
  
- from bbcontroller import BuildEnvironmentController, ShellCmdException, BuildSetupException
+@@ -7,6 +7,10 @@ from orm.models import Release, ReleaseLayerSourcePriority, BitbakeVersion
  
-+class NotImplementedException(Exception):
-+    pass
-+
- def DN(path):
-     return "/".join(path.split("/")[0:-1])
+ from django.utils import timezone
  
-@@ -125,7 +128,7 @@ class SSHBEController(BuildEnvironmentController):
-         # set layers in the layersource
- 
- 
--        raise Exception("Not implemented: SSH setLayers")
-+        raise NotImplementedException("Not implemented: SSH setLayers")
-         # 3. configure the build environment, so we have a conf/bblayers.conf
-         assert self.pokydirname is not None
-         self._setupBE()
-diff --git a/lib/toaster/bldcontrol/tests.py b/lib/toaster/bldcontrol/tests.py
-index 5a9d1df..5dbc77f 100644
---- a/lib/toaster/bldcontrol/tests.py
-+++ b/lib/toaster/bldcontrol/tests.py
-@@ -7,7 +7,7 @@ Replace this with more appropriate tests for your application.
- 
- from django.test import TestCase
- 
--from bldcontrol.bbcontroller import BitbakeController
-+from bldcontrol.bbcontroller import BitbakeController, BuildSetupException
- from bldcontrol.localhostbecontroller import LocalhostBEController
- from bldcontrol.sshbecontroller import SSHBEController
- from bldcontrol.models import BuildEnvironment, BuildRequest
-@@ -15,6 +15,7 @@ from bldcontrol.management.commands.runbuilds import Command
- 
- import socket
- import subprocess
 +import os
- 
- # standard poky data hardcoded for testing
- BITBAKE_LAYERS = [type('bitbake_info', (object,), { "giturl": "git://git.yoctoproject.org/poky.git", "dirpath": "", "commit": "HEAD"})]
-@@ -29,6 +30,17 @@ POKY_LAYERS = [
- # we have an abstract test class designed to ensure that the controllers use a single interface
- # specific controller tests only need to override the _getBuildEnvironment() method
- 
-+test_sourcedir = os.getenv("TTS_SOURCE_DIR")
-+test_builddir = os.getenv("TTS_BUILD_DIR")
-+test_address = os.getenv("TTS_TEST_ADDRESS", "localhost")
 +
-+if test_sourcedir == None or test_builddir == None or test_address == None:
-+    raise Exception("Please set TTTS_SOURCE_DIR, TTS_BUILD_DIR and TTS_TEST_ADDRESS")
++# set TTS_LAYER_INDEX to the base url to use a different instance of the layer index
 +
-+# The bb server will expect a toaster-pre.conf file to exist. If it doesn't exit then we make
-+# an empty one here.
-+open(test_builddir + 'conf/toaster-pre.conf', 'a').close()
+ # tests to verify inheritance for the LayerSource proxy-inheritance classes
+ class LayerSourceVerifyInheritanceSaveLoad(TestCase):
+     def test_object_creation(self):
+@@ -29,17 +33,20 @@ class LayerSourceVerifyInheritanceSaveLoad(TestCase):
+         self.assertRaises(Exception, duplicate)
+ 
+ 
+-# test to verify the layer source update functionality for layerindex. edit to pass the URL to a layerindex application
+-class LILSUpdateTestCase(TestCase):
+-    def test_update(self):
+-        lils = LayerSource.objects.create(name = "b1", sourcetype = LayerSource.TYPE_LAYERINDEX, apiurl = "http://adamian-desk.local:8080/layerindex/api/")
+-        lils.update()
++class LILSUpdateTestCase(TransactionTestCase):
++    def setUp(self):
++        # create release
++        bbv = BitbakeVersion.objects.create(name="master", giturl="git://git.openembedded.org/bitbake")
++        release = Release.objects.create(name="default-release", bitbake_version = bbv, branch_name = "master")
+ 
+-        # run second update
+-        # lils.update()
++    def test_update(self):
++        layer_index_url = os.getenv("TTS_LAYER_INDEX")
++        if layer_index_url == None:
++            print "Using layers.openembedded.org for layer index. override with TTS_LAYER_INDEX enviroment variable"
++            layer_index_url = "http://layers.openembedded.org/"
+ 
+-        # print vars(lils)
+-        #print map(lambda x: vars(x), Branch.objects.all())
++        lils = LayerSource.objects.create(name = "b1", sourcetype = LayerSource.TYPE_LAYERINDEX, apiurl = layer_index_url + "layerindex/api/")
++        lils.update()
+ 
+         # run asserts
+         self.assertTrue(lils.branch_set.all().count() > 0, "update() needs to fetch some branches")
+@@ -59,6 +66,7 @@ class LayerVersionEquivalenceTestCase(TestCase):
+         # attach layer source to release
+         ReleaseLayerSourcePriority.objects.create(release = release, layer_source = ls, priority = 1)
+ 
 +
- class BEControllerTests(object):
+         # create layer attach
+         self.layer = Layer.objects.create(name="meta-testlayer", layer_source = ls)
+         # create branch
+@@ -84,7 +92,7 @@ class LayerVersionEquivalenceTestCase(TestCase):
  
-     def _serverForceStop(self, bc):
-@@ -36,28 +48,53 @@ class BEControllerTests(object):
-         self.assertTrue(err == '', "bitbake server pid %s not stopped" % err)
+     def test_dual_layersource(self):
+         # if we have two layers with the same name, from different layer sources, we expect both layers in, in increasing priority of the layer source
+-        ls2 = LayerSource.objects.create(name = "dummy-layersource2", sourcetype = LayerSource.TYPE_LOCAL)
++        ls2 = LayerSource.objects.create(name = "dummy-layersource2", sourcetype = LayerSource.TYPE_LOCAL, apiurl="test")
  
-     def test_serverStartAndStop(self):
-+        from bldcontrol.sshbecontroller import NotImplementedException
-         obe =  self._getBuildEnvironment()
-         bc = self._getBEController(obe)
--        bc.setLayers(BITBAKE_LAYERS, POKY_LAYERS) # setting layers, skip any layer info
-+        try:
-+            # setting layers, skip any layer info
-+            bc.setLayers(BITBAKE_LAYERS, POKY_LAYERS)
-+        except NotImplementedException,  e:
-+            print "Test skipped due to command not implemented yet"
-+            return True
-+        # We are ok with the exception as we're handling the git already exists
-+        except BuildSetupException:
-+            pass
-+
-+        bc.pokydirname = test_sourcedir
-+        bc.islayerset = True
+         # assign a lower priority for the second layer source
+         Release.objects.get(name="default-release").releaselayersourcepriority_set.create(layer_source = ls2, priority = 2)
+@@ -149,7 +157,7 @@ class ProjectLVSelectionTestCase(TestCase):
  
--        hostname = self.test_address.split("@")[-1]
-+        hostname = test_address.split("@")[-1]
+     def test_dual_layersource(self):
+          # if we have two layers with the same name, from different layer sources, we expect both layers in, in increasing priority of the layer source
+-        ls2 = LayerSource.objects.create(name = "dummy-layersource2", sourcetype = LayerSource.TYPE_LOCAL)
++        ls2 = LayerSource.objects.create(name = "dummy-layersource2", sourcetype = LayerSource.TYPE_LOCAL, apiurl="testing")
  
-         # test start server and stop
--        self.assertTrue(socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect_ex((hostname, 8200)), "Port already occupied")
--        bc.startBBServer("0:0")
--        self.assertFalse(socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect_ex((hostname, 8200)), "Server not answering")
-+        bc.startBBServer()
-+
-+        self.assertFalse(socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect_ex((hostname, int(bc.be.bbport))), "Server not answering")
- 
-         bc.stopBBServer()
--        self.assertTrue(socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect_ex((hostname, 8200)), "Server not stopped")
-+        self.assertTrue(socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect_ex((hostname, int(bc.be.bbport))), "Server not stopped")
- 
-         self._serverForceStop(bc)
- 
-     def test_getBBController(self):
-+        from bldcontrol.sshbecontroller import NotImplementedException
-         obe = self._getBuildEnvironment()
-         bc = self._getBEController(obe)
--        bc.setLayers(BITBAKE_LAYERS, POKY_LAYERS) # setting layers, skip any layer info
--
--        bbc = bc.getBBController("%d:%d" % (-1, obe.pk))
-+        layerSet = False
-+        try:
-+            # setting layers, skip any layer info
-+            layerSet = bc.setLayers(BITBAKE_LAYERS, POKY_LAYERS)
-+        except NotImplementedException:
-+            print "Test skipped due to command not implemented yet"
-+            return True
-+        # We are ok with the exception as we're handling the git already exists
-+        except BuildSetupException:
-+            pass
-+
-+        bc.pokydirname = test_sourcedir
-+        bc.islayerset = True
-+
-+        bbc = bc.getBBController()
-         self.assertTrue(isinstance(bbc, BitbakeController))
-         bc.stopBBServer()
- 
-@@ -66,19 +103,15 @@ class BEControllerTests(object):
- class LocalhostBEControllerTests(TestCase, BEControllerTests):
-     def __init__(self, *args):
-         super(LocalhostBEControllerTests, self).__init__(*args)
--        # hardcoded for Alex's machine; since the localhost BE is machine-dependent,
--        # I found no good way to abstractize this
--        self.test_sourcedir = "/home/ddalex/ssd/yocto"
--        self.test_builddir = "/home/ddalex/ssd/yocto/build"
--        self.test_address = "localhost"
-+
- 
-     def _getBuildEnvironment(self):
-         return BuildEnvironment.objects.create(
-                 lock = BuildEnvironment.LOCK_FREE,
-                 betype = BuildEnvironment.TYPE_LOCAL,
--                address = self.test_address,
--                sourcedir = self.test_sourcedir,
--                builddir = self.test_builddir )
-+                address = test_address,
-+                sourcedir = test_sourcedir,
-+                builddir = test_builddir )
- 
-     def _getBEController(self, obe):
-         return LocalhostBEController(obe)
-@@ -86,25 +119,20 @@ class LocalhostBEControllerTests(TestCase, BEControllerTests):
- class SSHBEControllerTests(TestCase, BEControllerTests):
-     def __init__(self, *args):
-         super(SSHBEControllerTests, self).__init__(*args)
--        self.test_address = "ddalex-desktop.local"
--        # hardcoded for ddalex-desktop.local machine; since the localhost BE is machine-dependent,
--        # I found no good way to abstractize this
--        self.test_sourcedir = "/home/ddalex/ssd/yocto"
--        self.test_builddir = "/home/ddalex/ssd/yocto/build"
- 
-     def _getBuildEnvironment(self):
-         return BuildEnvironment.objects.create(
-                 lock = BuildEnvironment.LOCK_FREE,
-                 betype = BuildEnvironment.TYPE_SSH,
--                address = self.test_address,
--                sourcedir = self.test_sourcedir,
--                builddir = self.test_builddir )
-+                address = test_address,
-+                sourcedir = test_sourcedir,
-+                builddir = test_builddir )
- 
-     def _getBEController(self, obe):
-         return SSHBEController(obe)
- 
-     def test_pathExists(self):
--        obe = BuildEnvironment.objects.create(betype = BuildEnvironment.TYPE_SSH, address= self.test_address)
-+        obe = BuildEnvironment.objects.create(betype = BuildEnvironment.TYPE_SSH, address= test_address)
-         sbc = SSHBEController(obe)
-         self.assertTrue(sbc._pathexists("/"))
-         self.assertFalse(sbc._pathexists("/.deadbeef"))
-@@ -129,7 +157,7 @@ class RunBuildsCommandTests(TestCase):
-         self.assertRaises(IndexError, command._selectBuildEnvironment)
- 
-     def test_br_select(self):
--        from orm.models import Project, Release, BitbakeVersion
-+        from orm.models import Project, Release, BitbakeVersion, Branch
-         p = Project.objects.create_project("test", Release.objects.get_or_create(name = "HEAD", bitbake_version = BitbakeVersion.objects.get_or_create(name="HEAD", branch=Branch.objects.get_or_create(name="HEAD"))[0])[0])
-         obr = BuildRequest.objects.create(state = BuildRequest.REQ_QUEUED, project = p)
-         command = Command()
+         # assign a lower priority for the second layer source
+         Release.objects.get(name="default-release").releaselayersourcepriority_set.create(layer_source = ls2, priority = 2)
 -- 
 1.9.1
 
