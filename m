@@ -1,41 +1,41 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f41.google.com (mail-wg0-f41.google.com [74.125.82.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 19DDE73236
+Received: from mail-wg0-f51.google.com (mail-wg0-f51.google.com [74.125.82.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 0E60773236
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 28 May 2015 14:18:00 +0000 (UTC)
-Received: by wgbgq6 with SMTP id gq6so37855331wgb.3
+	Thu, 28 May 2015 14:18:12 +0000 (UTC)
+Received: by wgbgq6 with SMTP id gq6so37860721wgb.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 28 May 2015 07:18:01 -0700 (PDT)
+	Thu, 28 May 2015 07:18:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=N9HeL1r1cvbJyEx4eIclblbbhcqZW9l5hnIYC5o2p70=;
-	b=mJla/+mpWN2r8uJ9ZKqp5UbrCBHYGRO7+Vz81whuZzY3UxvqZQd3POA4x7KawEISMP
-	EBjcHHN4BL7GWUKCD8OTZx42cVeOBrHCev389E421D1qRU5o6jZAjJ37QzvXk9Q/L6ty
-	H2C1KeqzikTYjJqEpHUoQalyYpbLLcxBB1bW97/FoK69aviSmbVRRnEpNJqJh2yh+9TQ
-	Z3SNIB+kBn/uRU+HTW6+91zDCdohWjng2waYtDVIPnC6o0o2fAH+FROlJh+0zvkcYSre
-	FcdO3JKEdOJ9vZb4ByVfxTgYakQXXUwmVi1j6zXdgyaw+I1d8KJ//Oq60KmyJ6tCtJel
-	A/yg==
-X-Gm-Message-State: ALoCoQlkrH3TxnLmrn5VlOjot/IVOtYel1O+iayWfJaDV/Yx6Fmr14beKy96uzWfJV5/cBcc22KE
-X-Received: by 10.180.101.105 with SMTP id ff9mr16497357wib.64.1432822681630; 
-	Thu, 28 May 2015 07:18:01 -0700 (PDT)
+	bh=AECDWBaY3Fhvvc3wJIStiFG7hApo7b3z2LDtaY78kKs=;
+	b=baATGinX7BFUQnDcw55CNJUclGUksJO1r5d/wEYRN67y6bdQfiqUp9VmkBzr1fwxQ4
+	lY5jF1EfO+eDf2EwBmABZ6OXxHEY3y0sxmwejb1uc2sIsfvusIMsGKJAfavwiKTEA8rR
+	psHNeElXzagAFOsJH3OUMopRSVB2zUvKTK1Ih54P5KSvDYY3eXc8+cwX1uK2FD8y8lNy
+	UzPf+sMpuvVpcCCPiRg6GYeOa5EW1hNytqOqVKbLIntR5Kfn1IFdTNTBUPyO/HI97XVC
+	SFYQ/Nwcvqq6IhmLGNvR7cO4w9myfcYVu7LpTOzIDIJUZQ70svV/UTdC4vP1VTK75EVK
+	5wAA==
+X-Gm-Message-State: ALoCoQlYyQJwVXMOXOqutfQDDASmogLBE1KgLVTlg8m5DxHilx756jnYHLD7lYh8JplKCCGRjK7/
+X-Received: by 10.180.218.108 with SMTP id pf12mr18945491wic.93.1432822693292; 
+	Thu, 28 May 2015 07:18:13 -0700 (PDT)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id um5sm3595084wjc.1.2015.05.28.07.18.00
+	by mx.google.com with ESMTPSA id bm9sm3572738wjc.21.2015.05.28.07.18.12
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 28 May 2015 07:18:00 -0700 (PDT)
+	Thu, 28 May 2015 07:18:12 -0700 (PDT)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id D50C65615C8; Thu, 28 May 2015 15:14:17 +0100 (BST)
+	id D668A56175C; Thu, 28 May 2015 15:14:17 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 28 May 2015 15:14:13 +0100
-Message-Id: <7e95b3a3d44aa8c915e1ecfa3b1e40bf7821fc4b.1432822343.git.alexandru.damian@intel.com>
+Date: Thu, 28 May 2015 15:14:14 +0100
+Message-Id: <105c22e3fb49bfb517e2c55783feec4a0d5ab8b6.1432822343.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <f4c88fd9e39602ab841967166a14593f92576079.1432822343.git.alexandru.damian@intel.com>
 References: <f4c88fd9e39602ab841967166a14593f92576079.1432822343.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1432822343.git.alexandru.damian@intel.com>
 References: <cover.1432822343.git.alexandru.damian@intel.com>
-Subject: [PATCH 19/22] toaster: enable no browser start
+Subject: [PATCH 20/22] bitbake/: toaster tts: fix tests
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,52 +48,66 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 28 May 2015 14:18:01 -0000
+X-List-Received-Date: Thu, 28 May 2015 14:18:15 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-We enable a "nobrowser" parameter that inhibits
-the launch of a browser when toaster starts.
-
-This is useful for integration with automated startup scripts
-and enables headless testing.
-
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bin/toaster | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ lib/toaster/contrib/tts/backlog.txt | 2 --
+ lib/toaster/contrib/tts/launcher.py | 2 +-
+ lib/toaster/contrib/tts/runner.py   | 2 +-
+ lib/toaster/contrib/tts/tests.py    | 2 +-
+ 4 files changed, 3 insertions(+), 5 deletions(-)
+ delete mode 100644 lib/toaster/contrib/tts/backlog.txt
 
-diff --git a/bin/toaster b/bin/toaster
-index 93abcfa..ee19937 100755
---- a/bin/toaster
-+++ b/bin/toaster
-@@ -154,6 +154,7 @@ NOTOASTERUI=0
- WEBSERVER=1
- TOASTER_BRBE=""
- WEB_PORT="8000"
-+NOBROWSER=0
+diff --git a/lib/toaster/contrib/tts/backlog.txt b/lib/toaster/contrib/tts/backlog.txt
+deleted file mode 100644
+index 6f92f7a..0000000
+--- a/lib/toaster/contrib/tts/backlog.txt
++++ /dev/null
+@@ -1,2 +0,0 @@
+-michaelw/toaster-frontend-cleanups|PENDING
+-adamian/test_0|PENDING
+diff --git a/lib/toaster/contrib/tts/launcher.py b/lib/toaster/contrib/tts/launcher.py
+index 5b63bc1..90c6d95 100755
+--- a/lib/toaster/contrib/tts/launcher.py
++++ b/lib/toaster/contrib/tts/launcher.py
+@@ -87,7 +87,7 @@ if __name__ == "__main__":
+         errtext = None
+         out = None
+         try:
+-            out = shellutils.run_shell_cmd("./runner.py %s" % next_task)
++            out = shellutils.run_shell_cmd("%s %s" % (os.path.join(os.path.dirname(__file__), "runner.py"), next_task))
+             pass
+         except ShellCmdException as e:
+             print("Failed while running the test runner: %s", e)
+diff --git a/lib/toaster/contrib/tts/runner.py b/lib/toaster/contrib/tts/runner.py
+index d2a6099..f55c493 100755
+--- a/lib/toaster/contrib/tts/runner.py
++++ b/lib/toaster/contrib/tts/runner.py
+@@ -168,7 +168,7 @@ def read_settings():
+ # cleanup !
+ def clean_up(testdir):
+     # TODO: delete the test dir
+-    #run_shell_cmd("rm -rf -- '%s'" % testdir)
++    run_shell_cmd("rm -rf -- '%s'" % testdir)
+     pass
  
- for param in $*; do
-     case $param in
-@@ -163,6 +164,9 @@ for param in $*; do
-     noweb )
-             WEBSERVER=0
-     ;;
-+    nobrowser )
-+            NOBROWSER=1
-+    ;;
-     brbe=* )
-             TOASTER_BRBE=$'\n'"TOASTER_BRBE=\""${param#*=}"\""
-     ;;
-@@ -227,7 +231,7 @@ if [ `basename \"$0\"` = `basename \"${SRCFILE}\"` ]; then
-         cleanup
-         exit 1
-     fi
--    if [ $WEBSERVER -gt 0 ]; then
-+    if [ $WEBSERVER -gt 0 ] && [ $NOBROWSER -eq 0 ]  ; then
-         echo "Starting browser..."
-         xdg-open http://127.0.0.1:$WEB_PORT/ >/dev/null 2>&1 &
-     fi
+ if __name__ == "__main__":
+diff --git a/lib/toaster/contrib/tts/tests.py b/lib/toaster/contrib/tts/tests.py
+index 3d4cfea..2e630db 100644
+--- a/lib/toaster/contrib/tts/tests.py
++++ b/lib/toaster/contrib/tts/tests.py
+@@ -44,7 +44,7 @@ class TestPySystemStart(unittest.TestCase):
+ 
+     def test_start_interactive_mode(self):
+         try:
+-            run_shell_cmd("bash -c 'source %s/oe-init-build-env && source toaster start && source toaster stop'" % config.testdir, config.testdir)
++            run_shell_cmd("bash -c 'source %s/oe-init-build-env && source toaster start webport=56789 && source toaster stop'" % config.testdir, config.testdir)
+         except ShellCmdException as e:
+             self.fail("Failed starting interactive mode: %s" % (e))
+ 
 -- 
 1.9.1
 
