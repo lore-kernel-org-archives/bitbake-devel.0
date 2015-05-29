@@ -1,29 +1,34 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 06BCF756C1
+Return-Path: <twoerner@gmail.com>
+Received: from mail-ig0-f179.google.com (mail-ig0-f179.google.com
+	[209.85.213.179])
+	by mail.openembedded.org (Postfix) with ESMTP id B1F79756C1
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 29 May 2015 13:07:23 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t4TD7Oo1013688 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 29 May 2015 14:07:24 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id lqcdB7FQVxd5 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 29 May 2015 14:07:24 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t4TD78Hn013682
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	Fri, 29 May 2015 18:16:56 +0000 (UTC)
+Received: by igbpi8 with SMTP id pi8so21103810igb.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 29 May 2015 14:07:20 +0100
-Message-ID: <1432904828.404.135.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Fri, 29 May 2015 14:07:08 +0100
-X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
-Mime-Version: 1.0
-Subject: [PATCH] runqueue: Add message to explain the problem if diffsigs multiple tasks don't exist
+	Fri, 29 May 2015 11:16:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=uHSicFPNtIrdQXOtsi/LjUjBLHlGouGn6EBT+AR5HEM=;
+	b=ngEsl4CCwTWU+vUwBZsu02zz4QWMX3FlRb66x51xPzZedZOoQhDmnisWL2hFGErwDi
+	qNKhsNRDlJH4uYly/NyQIxE3AYKjdvlel5uqqCSrkCncaPsqxq9AlS41FxJSzhqr9qAA
+	sAvl1ib01LLvCimFHfnVagwPIff2oethMx7lCTS8Z5KtM5NOjRbzucGWU5yL+UmaDWq3
+	iWSQwXvecKOBbtm4lkqM51881soFB4V6gLtL2OGwG4Z4GZm3I+v/Va/qiumRjmoQW+Vb
+	9gQCBcT74jUuaiIFPJK+F17mJ9z0M/k4CiDATVA3X6AxdX30d2HNu5unF/h0EhjXIpcQ
+	CvXA==
+X-Received: by 10.50.59.211 with SMTP id b19mr5594212igr.42.1432923417525;
+	Fri, 29 May 2015 11:16:57 -0700 (PDT)
+Received: from openSUSE-i7.site (dsl-67-55-28-109.acanac.net. [67.55.28.109])
+	by mx.google.com with ESMTPSA id
+	o19sm2023762igs.18.2015.05.29.11.16.56
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Fri, 29 May 2015 11:16:57 -0700 (PDT)
+From: Trevor Woerner <twoerner@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 29 May 2015 14:16:41 -0400
+Message-Id: <1432923403-31440-1-git-send-email-twoerner@gmail.com>
+X-Mailer: git-send-email 2.4.0.194.gc518059
+Subject: [PATCH] bitbake-user-manual: add BBLAYERS_FETCH_DIR
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,28 +41,40 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 29 May 2015 13:07:26 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 29 May 2015 18:16:57 -0000
 
-I've run into this and the lack of output when this happens 
-is confusing.
+Add BBLAYERS_FETCH_DIR to the Variables Glossary.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Trevor Woerner <twoerner@gmail.com>
+---
+ .../bitbake-user-manual-ref-variables.xml                   | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 8544f36..52bb12f 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1298,6 +1298,8 @@ class RunQueue:
-                 prevh = __find_md5__.search(latestmatch).group(0)
-                 output = bb.siggen.compare_sigfiles(latestmatch, match, recursecb)
-                 bb.plain("\nTask %s:%s couldn't be used from the cache because:\n  We need hash %s, closest matching task was %s\n  " % (pn, taskname, h, prevh) + '\n  '.join(output))
-+            else:
-+                bb.plain("Error, can't find multiple tasks at divergence point? Was there a previously run task?")
+diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+index 86bf30b..bdbf421 100644
+--- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
++++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+@@ -1016,6 +1016,19 @@
+             </glossdef>
+         </glossentry>
  
- class RunQueueExecute:
- 
-
++        <glossentry id='var-BBLAYERS_FETCH_DIR'><glossterm>BBLAYERS_FETCH_DIR</glossterm>
++            <glossdef>
++                <para>
++                    Sets the base location where the layers are stored. By
++                    default this is set to <filename>${COREBASE}</filename>.
++                    This is used in conjunction with <filename>bitbake-layers
++                    layerindex-fetch</filename> and tells
++                    <filename>bitbake-layers</filename> where to place the
++                    fetched layer(s).
++                </para>
++            </glossdef>
++        </glossentry>
++
+         <glossentry id='var-BBMASK'><glossterm>BBMASK</glossterm>
+             <glossdef>
+                 <para>
+-- 
+2.4.0.194.gc518059
 
 
