@@ -1,26 +1,35 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 4FF36755FA;
-	Fri, 29 May 2015 01:49:37 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.15.1/8.15.1) with ESMTPS id t4T1ndUG024739
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Thu, 28 May 2015 18:49:39 -0700 (PDT)
-Received: from [128.224.162.200] (128.224.162.200) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.3.224.2;
-	Thu, 28 May 2015 18:49:38 -0700
-Message-ID: <5567C5B1.7010901@windriver.com>
-Date: Fri, 29 May 2015 09:49:37 +0800
-From: Robert Yang <liezhi.yang@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
-	rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+Return-Path: <ashcharles@gmail.com>
+Received: from mail-ig0-f181.google.com (mail-ig0-f181.google.com
+	[209.85.213.181])
+	by mail.openembedded.org (Postfix) with ESMTP id 6C64075669;
+	Fri, 29 May 2015 05:46:17 +0000 (UTC)
+Received: by igbyr2 with SMTP id yr2so6364480igb.0;
+	Thu, 28 May 2015 22:46:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	:cc:content-type;
+	bh=0o6iGJ+0LL/kfBoYVYP+xBJt7DBVfvKE78APNDdG/+g=;
+	b=K3kc/YqbJD9te3VqFr8XWEthGyM4U8MhdrZYvD3Y23iZMNI1SXVTkwiJyLBd+g5tGU
+	V3N6oJrdP+ch93MQAcsqOy2WZe62uZdROoJ+ziryd/mjRI805yjiu5SkZuidlkYv7h1r
+	y3bcidN1XByS17GNT0QhJWwFjyukS1BPqgbDnG4jpeLLSH4aNPsDUEYU1UrLotnlxQ8z
+	GGhzzBk/FRbGXoUtvHKg6ok8SkCz4e5c72PhF+ePnDFhYDyPB+Y9gmp8UShkAzN2Tg8i
+	cSZD+AR2804lG8qVsBFwu95xhiCKd6plQEDeD0tRYLUKkGiMQOonXRafg7QnQfkDMnaV
+	rCRA==
 MIME-Version: 1.0
-To: <openembedded-devel@lists.openembedded.org>,
-	<bitbake-devel@lists.openembedded.org>
+X-Received: by 10.107.31.134 with SMTP id f128mr8058135iof.19.1432878378965;
+	Thu, 28 May 2015 22:46:18 -0700 (PDT)
+Received: by 10.107.138.134 with HTTP; Thu, 28 May 2015 22:46:18 -0700 (PDT)
+Received: by 10.107.138.134 with HTTP; Thu, 28 May 2015 22:46:18 -0700 (PDT)
+In-Reply-To: <5567C5B1.7010901@windriver.com>
 References: <20150427105100.GB2379@jama>
 	<1432309170-5575-1-git-send-email-ashcharles@gmail.com>
-In-Reply-To: <1432309170-5575-1-git-send-email-ashcharles@gmail.com>
+	<5567C5B1.7010901@windriver.com>
+Date: Thu, 28 May 2015 22:46:18 -0700
+Message-ID: <CAK8F28mc2C=r4n42xFmNaxNveectuB8esrkt4M2BkSknH-mFxw@mail.gmail.com>
+From: Ash Charles <ashcharles@gmail.com>
+To: Robert Yang <liezhi.yang@windriver.com>
+Cc: bitbake-devel@lists.openembedded.org,
+	openembedded-devel@lists.openembedded.org
 Subject: Re: [oe] [PATCH] fetch/hg: Disable checksums for archived downloads
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -34,57 +43,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 29 May 2015 01:49:39 -0000
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Fri, 29 May 2015 05:46:20 -0000
+Content-Type: multipart/alternative; boundary=001a11403efac8e2fd051731fe09
 
+--001a11403efac8e2fd051731fe09
+Content-Type: text/plain; charset=UTF-8
 
-Hello,
+> I wonder how did you test the patch, please ? Did you revert the patch:
+>  fetch/hg: support submodules ?
+Hi Robert,
+I tested the patch in a Yocto environment which had a prepopulated
+downloads directory. In particular, I had seen the failure described [1]
+for vim.
+My version of bitbake was slightly older so the submodule patch that was
+breaking the mirroring hadn't yet been applied.
 
-I think that the following patch has broken the mirror tarball of hg:
+[1]
+https://www.mail-archive.com/openembedded-devel@lists.openembedded.org/msg41328.html
 
-http://lists.openembedded.org/pipermail/bitbake-devel/2015-May/005725.html
+--Ash
 
-I wonder how did you test the patch, please ? Did you revert the patch:
-  fetch/hg: support submodules ?
+--001a11403efac8e2fd051731fe09
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Or other ways, please ?
+<p>&gt; I wonder how did you test the patch, please ? Did you revert the pa=
+tch:<br>
+&gt; =C2=A0fetch/hg: support submodules ?<br>
+Hi Robert,<br>
+I tested the patch in a Yocto environment which had a prepopulated download=
+s directory. In particular, I had seen the failure described [1] for vim.<b=
+r>
+My version of bitbake was slightly older so the submodule patch that was br=
+eaking the mirroring hadn&#39;t yet been applied.</p>
+<p>[1] <a href=3D"https://www.mail-archive.com/openembedded-devel@lists.ope=
+nembedded.org/msg41328.html">https://www.mail-archive.com/openembedded-deve=
+l@lists.openembedded.org/msg41328.html</a></p>
+<p>--Ash</p>
 
-// Robert
-
-
-On 05/22/2015 11:39 PM, Ash Charles wrote:
-> Like the Git fetcher, the Mercurial fetcher shouldn't expect recipes to
-> provide a checksum.  As described [1], recipes using a mercurial
-> fetcher that don't provide a checksum will fail in a the repository has
-> previously been downloaded and archived.
->
-> Credit to Rafaël Carré for figuring out the bug.
->
-> [1] https://www.mail-archive.com/openembedded-devel@lists.openembedded.org/msg41328.html
->
-> Signed-off-by: Ash Charles <ashcharles@gmail.com>
-> ---
->   bitbake/lib/bb/fetch2/hg.py | 7 +++++++
->   1 file changed, 7 insertions(+)
->
-> diff --git a/bitbake/lib/bb/fetch2/hg.py b/bitbake/lib/bb/fetch2/hg.py
-> index 81592f6..cab371f 100644
-> --- a/bitbake/lib/bb/fetch2/hg.py
-> +++ b/bitbake/lib/bb/fetch2/hg.py
-> @@ -43,6 +43,13 @@ class Hg(FetchMethod):
->           """
->           return ud.type in ['hg']
->
-> +    def supports_checksum(self, urldata):
-> +        """
-> +        Don't require checksums for local archives created from
-> +        repository checkouts.
-> +        """
-> +        return False
-> +
->       def urldata_init(self, ud, d):
->           """
->           init hg specific variable within url data
->
-
+--001a11403efac8e2fd051731fe09--
