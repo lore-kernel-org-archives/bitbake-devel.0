@@ -1,33 +1,26 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id C28B5757B9;
-	Tue,  2 Jun 2015 04:38:18 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail.windriver.com (8.15.1/8.15.1) with ESMTPS id t524cHdb012605
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Mon, 1 Jun 2015 21:38:17 -0700 (PDT)
-Received: from [128.224.162.200] (128.224.162.200) by ALA-HCB.corp.ad.wrs.com
-	(147.11.189.41) with Microsoft SMTP Server id 14.3.224.2;
-	Mon, 1 Jun 2015 21:38:16 -0700
-Message-ID: <556D3337.7020905@windriver.com>
-Date: Tue, 2 Jun 2015 12:38:15 +0800
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 2BADF755CC
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue,  2 Jun 2015 09:04:52 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.15.1/8.15.1) with ESMTPS id t5294reT004708
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 2 Jun 2015 02:04:53 -0700 (PDT)
+Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.224.2;
+	Tue, 2 Jun 2015 02:04:53 -0700
 From: Robert Yang <liezhi.yang@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
-	rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+To: <bitbake-devel@lists.openembedded.org>
+Date: Tue, 2 Jun 2015 02:04:52 -0700
+Message-ID: <9d25d04fa525b37dff0b51c0ea66365f52e5a596.1433235612.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <cover.1433235612.git.liezhi.yang@windriver.com>
+References: <cover.1433235612.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-To: Ash Charles <ashcharles@gmail.com>, Martin Jansa <martin.jansa@gmail.com>, 
-	<danismostlikely@gmail.com>
-References: <20150427105100.GB2379@jama>
-	<1432309170-5575-1-git-send-email-ashcharles@gmail.com>
-	<5567C5B1.7010901@windriver.com>
-	<CAK8F28mc2C=r4n42xFmNaxNveectuB8esrkt4M2BkSknH-mFxw@mail.gmail.com>
-	<CA+chaQe_T9zPjckAm+NZrZpdw5BO81eL-vxrAA-2kYymMRbd1w@mail.gmail.com>
-	<CAK8F28=cu6z2m3hNGkO-qkzDhyfuZwPG-Q-n+2rY95NvmwuStg@mail.gmail.com>
-In-Reply-To: <CAK8F28=cu6z2m3hNGkO-qkzDhyfuZwPG-Q-n+2rY95NvmwuStg@mail.gmail.com>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>,
-	openembedded-devel <openembedded-devel@lists.openembedded.org>
-Subject: Re: [oe] [PATCH] fetch/hg: Disable checksums for archived downloads
+Subject: [PATCH 1/1] bitbake: fetch2/hg.py: fix unpack error and mirror tarball
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,97 +33,144 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 02 Jun 2015 04:38:20 -0000
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 02 Jun 2015 09:04:53 -0000
+Content-Type: text/plain
 
+Fixed:
+* do_unpack error:
+  abort: repository DL_DIR/hg/vim.googlecode.com/hg/vim not found!
 
+* The mirror tarball doesn't work
+  - Add the build_mirror_data to create the tarball
+  - Unpack the mirror tarball when needed
 
-On 06/02/2015 08:08 AM, Ash Charles wrote:
-> Hi,
->
-> I verified that the "fetch/hg: support submodules" [1] patch, in
-> combination with this [2] patch is causing do_unpack failures for me.
-> Based on the logs from the world build, I suspect this is also
-> breaking dvb-apps.  I don't have a fix so perhaps the best plan is
-> reverting [2] now that cleanall for hg packages actually works.
->
-> [1] http://lists.openembedded.org/pipermail/bitbake-devel/2015-May/005725.html
-> [2] http://lists.openembedded.org/pipermail/bitbake-devel/2015-May/005758.html
->
+* The hg files will put in the dir like git: DL_DIR/hg, it was
+  DL_DIR/hg/path/to/src/uri/path in the past.
 
-I'm working on fixing the issues now, will send patches sooner.
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ bitbake/lib/bb/fetch2/hg.py |   70 +++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 57 insertions(+), 13 deletions(-)
 
-// Robert
+diff --git a/bitbake/lib/bb/fetch2/hg.py b/bitbake/lib/bb/fetch2/hg.py
+index cdef4aa..2c8c25d 100644
+--- a/bitbake/lib/bb/fetch2/hg.py
++++ b/bitbake/lib/bb/fetch2/hg.py
+@@ -59,10 +59,12 @@ class Hg(FetchMethod):
+ 
+         ud.module = ud.parm["module"]
+ 
+-        # Create paths to mercurial checkouts
+-        relpath = self._strip_leading_slashes(ud.path)
+-        ud.pkgdir = os.path.join(data.expand('${HGDIR}', d), ud.host, relpath)
+-        ud.moddir = os.path.join(ud.pkgdir, ud.module)
++        if 'protocol' in ud.parm:
++            ud.proto = ud.parm['protocol']
++        elif not ud.host:
++            ud.proto = 'file'
++        else:
++            ud.proto = "hg"
+ 
+         ud.setup_revisons(d)
+ 
+@@ -71,10 +73,20 @@ class Hg(FetchMethod):
+         elif not ud.revision:
+             ud.revision = self.latest_revision(ud, d)
+ 
+-        ud.localfile = ud.moddir
++        # Create paths to mercurial checkouts
++        hgsrcname = '%s_%s_%s' % (ud.module.replace('/', '.'), \
++                            ud.host, ud.path.replace('/', '.'))
++        ud.mirrortarball = 'hg_%s.tar.gz' % hgsrcname
++        ud.fullmirror = os.path.join(d.getVar("DL_DIR", True), ud.mirrortarball)
+ 
++        hgdir = d.getVar("HGDIR", True) or (d.getVar("DL_DIR", True) + "/hg/")
++        ud.pkgdir = os.path.join(hgdir, hgsrcname)
++        ud.moddir = os.path.join(ud.pkgdir, ud.module)
++        ud.localfile = ud.moddir
+         ud.basecmd = data.getVar("FETCHCMD_hg", d, True) or "/usr/bin/env hg"
+ 
++        ud.write_tarballs = d.getVar("BB_GENERATE_MIRROR_TARBALLS", True)
++
+     def need_update(self, ud, d):
+         revTag = ud.parm.get('rev', 'tip')
+         if revTag == "tip":
+@@ -142,18 +154,36 @@ class Hg(FetchMethod):
+     def download(self, ud, d):
+         """Fetch url"""
+ 
++        ud.repochanged = not os.path.exists(ud.fullmirror)
++
+         logger.debug(2, "Fetch: checking for module directory '" + ud.moddir + "'")
+ 
++        # If the checkout doesn't exist and the mirror tarball does, extract it
++        if not os.path.exists(ud.pkgdir) and os.path.exists(ud.fullmirror):
++            bb.utils.mkdirhier(ud.pkgdir)
++            os.chdir(ud.pkgdir)
++            runfetchcmd("tar -xzf %s" % (ud.fullmirror), d)
++
+         if os.access(os.path.join(ud.moddir, '.hg'), os.R_OK):
+-            updatecmd = self._buildhgcommand(ud, d, "pull")
+-            logger.info("Update " + ud.url)
+-            # update sources there
++            # Found the source, check whether need pull
++            updatecmd = self._buildhgcommand(ud, d, "update")
+             os.chdir(ud.moddir)
+             logger.debug(1, "Running %s", updatecmd)
+-            bb.fetch2.check_network_access(d, updatecmd, ud.url)
+-            runfetchcmd(updatecmd, d)
+-
+-        else:
++            try:
++                runfetchcmd(updatecmd, d)
++            except bb.fetch2.FetchError:
++                # Runnning pull in the repo
++                pullcmd = self._buildhgcommand(ud, d, "pull")
++                logger.info("Pulling " + ud.url)
++                # update sources there
++                os.chdir(ud.moddir)
++                logger.debug(1, "Running %s", pullcmd)
++                bb.fetch2.check_network_access(d, pullcmd, ud.url)
++                runfetchcmd(pullcmd, d)
++                ud.repochanged = True
++
++        # No source found, clone it.
++        if not os.path.exists(ud.moddir):
+             fetchcmd = self._buildhgcommand(ud, d, "fetch")
+             logger.info("Fetch " + ud.url)
+             # check out sources there
+@@ -174,6 +204,8 @@ class Hg(FetchMethod):
+         """ Clean the hg dir """
+ 
+         bb.utils.remove(ud.localpath, True)
++        bb.utils.remove(ud.fullmirror)
++        bb.utils.remove(ud.fullmirror + ".done")
+ 
+     def supports_srcrev(self):
+         return True
+@@ -195,8 +227,20 @@ class Hg(FetchMethod):
+         """
+         return "hg:" + ud.moddir
+ 
++    def build_mirror_data(self, ud, d):
++        # Generate a mirror tarball if needed
++        if ud.write_tarballs == "1" and (ud.repochanged or not os.path.exists(ud.fullmirror)):
++            # it's possible that this symlink points to read-only filesystem with PREMIRROR
++            if os.path.islink(ud.fullmirror):
++                os.unlink(ud.fullmirror)
++
++            os.chdir(ud.pkgdir)
++            logger.info("Creating tarball of hg repository")
++            runfetchcmd("tar -czf %s %s" % (ud.fullmirror, ud.module), d)
++            runfetchcmd("touch %s.done" % (ud.fullmirror), d)
++
+     def localpath(self, ud, d):
+-        return ud.moddir
++        return ud.pkgdir
+ 
+     def unpack(self, ud, destdir, d):
+         """
+-- 
+1.7.9.5
 
-> --Ash
->
-> On Fri, May 29, 2015 at 2:18 AM, Martin Jansa <martin.jansa@gmail.com> wrote:
->> FWIW: I see vim unpack failing now in world builds:
->>
->> NOTE: recipe vim-7.4.481-r0: task do_unpack: Started
->> ERROR: Function failed: Fetcher failure: Fetch command failed with exit code
->> 255, output:
->> abort: repository
->> /home/jenkins/oe/world/shr-core/downloads/hg/vim.googlecode.com/hg/vim not
->> found!
->>
->> ERROR: Logfile of failure stored in:
->> /home/jenkins/oe/world/shr-core/tmp-glibc/work/armv5te-oe-linux-gnueabi/vim/7.4.481-r0/temp/log.do_unpack.28505
->> Log data follows:
->> | DEBUG: Executing python function do_unpack
->> | DEBUG: Executing python function base_do_unpack
->> | DEBUG: Unpack: creating new hg repository in
->> '/home/jenkins/oe/world/shr-core/tmp-glibc/work/armv5te-oe-linux-gnueabi/vim/7.4.481-r0/vim'
->> | DEBUG: Running export
->> PATH="/home/jenkins/oe/world/shr-core/openembedded-core/scripts:/home/jenkins/oe/world/shr-core/tmp-glibc/sysroots/x86_64-linux/usr/bin/arm-oe-linux-gnueabi:/home/jenkins/oe/world/shr-core/tmp-glibc/sysroots/qemuarm/usr/bin/crossscripts:/home/jenkins/oe/world/shr-core/tmp-glibc/sysroots/x86_64-linux/usr/sbin:/home/jenkins/oe/world/shr-core/tmp-glibc/sysroots/x86_64-linux/usr/bin:/home/jenkins/oe/world/shr-core/tmp-glibc/sysroots/x86_64-linux/sbin:/home/jenkins/oe/world/shr-core/tmp-glibc/sysroots/x86_64-linux/bin:/home/jenkins/oe/world/shr-core/openembedded-core/scripts:/home/jenkins/oe/world/shr-core/bitbake/bin:/home/jenkins/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games";
->> export HOME="/home/jenkins"; /usr/bin/env hg init
->> /home/jenkins/oe/world/shr-core/tmp-glibc/work/armv5te-oe-linux-gnueabi/vim/7.4.481-r0/vim
->> | DEBUG: Unpack: updating source in
->> '/home/jenkins/oe/world/shr-core/tmp-glibc/work/armv5te-oe-linux-gnueabi/vim/7.4.481-r0/vim'
->> | DEBUG: Running export
->> PATH="/home/jenkins/oe/world/shr-core/openembedded-core/scripts:/home/jenkins/oe/world/shr-core/tmp-glibc/sysroots/x86_64-linux/usr/bin/arm-oe-linux-gnueabi:/home/jenkins/oe/world/shr-core/tmp-glibc/sysroots/qemuarm/usr/bin/crossscripts:/home/jenkins/oe/world/shr-core/tmp-glibc/sysroots/x86_64-linux/usr/sbin:/home/jenkins/oe/world/shr-core/tmp-glibc/sysroots/x86_64-linux/usr/bin:/home/jenkins/oe/world/shr-core/tmp-glibc/sysroots/x86_64-linux/sbin:/home/jenkins/oe/world/shr-core/tmp-glibc/sysroots/x86_64-linux/bin:/home/jenkins/oe/world/shr-core/openembedded-core/scripts:/home/jenkins/oe/world/shr-core/bitbake/bin:/home/jenkins/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games";
->> export HOME="/home/jenkins"; /usr/bin/env hg pull
->> /home/jenkins/oe/world/shr-core/downloads/hg/vim.googlecode.com/hg/vim
->> | DEBUG: Python function base_do_unpack finished
->> | DEBUG: Python function do_unpack finished
->> | ERROR: Function failed: Fetcher failure: Fetch command failed with exit
->> code 255, output:
->> | abort: repository
->> /home/jenkins/oe/world/shr-core/downloads/hg/vim.googlecode.com/hg/vim not
->> found!
->> |
->> NOTE: recipe vim-7.4.481-r0: task do_unpack: Failed
->> ERROR: Task 5789
->> (/home/jenkins/oe/world/shr-core/meta-openembedded/meta-oe/recipes-support/vim/vim_7.4.481.bb,
->> do_unpack) failed with exit code '1'
->>
->>
->>
->> On Fri, May 29, 2015 at 7:46 AM, Ash Charles <ashcharles@gmail.com> wrote:
->>>
->>>> I wonder how did you test the patch, please ? Did you revert the patch:
->>>>   fetch/hg: support submodules ?
->>> Hi Robert,
->>> I tested the patch in a Yocto environment which had a prepopulated
->>> downloads directory. In particular, I had seen the failure described [1] for
->>> vim.
->>> My version of bitbake was slightly older so the submodule patch that was
->>> breaking the mirroring hadn't yet been applied.
->>>
->>> [1]
->>> https://www.mail-archive.com/openembedded-devel@lists.openembedded.org/msg41328.html
->>>
->>> --Ash
->>>
->>>
->>> --
->>> _______________________________________________
->>> bitbake-devel mailing list
->>> bitbake-devel@lists.openembedded.org
->>> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
->>>
->>
->
->
 
