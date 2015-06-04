@@ -1,26 +1,35 @@
-Return-Path: <yogesh.bit2006@gmail.com>
-Received: from mail-oi0-f49.google.com (mail-oi0-f49.google.com
-	[209.85.218.49])
-	by mail.openembedded.org (Postfix) with ESMTP id 024CA73D8C
+Return-Path: <raj.khem@gmail.com>
+Received: from mail-qc0-f170.google.com (mail-qc0-f170.google.com
+	[209.85.216.170])
+	by mail.openembedded.org (Postfix) with ESMTP id A54AD7570D
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  4 Jun 2015 04:09:43 +0000 (UTC)
-Received: by oihb142 with SMTP id b142so22839228oih.3
+	Thu,  4 Jun 2015 06:25:14 +0000 (UTC)
+Received: by qcxw10 with SMTP id w10so14222163qcx.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 03 Jun 2015 21:09:44 -0700 (PDT)
+	Wed, 03 Jun 2015 23:25:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:content-type; bh=Q7pByaCWqAvxACdNIL357H0XgGK4XGfNisvwK38upyI=;
-	b=msd25YXGIHUrPiRxKDn8crOfu9e3Bp4qq43ZUwtHkfFkMLK7TFUmwGrUFbBdxkYxgH
-	nCs14+3Rtbe0ljE+lN2SP1D5SHFWt19wKDsGgtlIIJBW0PHVPLQn445LF1dtuPEk7nzn
-	Lzg7Rrc4MpDTpkgBdR6PK4A8OV6KytXLeBOkXkcXLxmFlyd25EIBZ1M3YyVW+MlR7tqh
-	QsOd6xsEjjDzODme5jqLnA4bpIDFWyYRUjgofjoN42G8hsFFdfCEIo97cWWLMUovreHL
-	sbtfPlLXzFz0KHkhKnrvqSFLEYqI8yLowoDimVoIxvL2YqRIjYkA2hm8+S+RjWM7wroR
-	dSLA==
-X-Received: by 10.202.108.84 with SMTP id h81mr21246120oic.5.1433390984357;
-	Wed, 03 Jun 2015 21:09:44 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.202.211.143 with HTTP; Wed, 3 Jun 2015 21:09:23 -0700 (PDT)
+	h=subject:mime-version:content-type:from:in-reply-to:date:cc
+	:message-id:references:to;
+	bh=T5Bxr4/nlN1dri2FwKcESnByE5zEKBij7Izn4+Gx5do=;
+	b=r6cjYMSoSYZuvn+baTfK22J7Ei3Xgy+C6vf+Z3gr3zFJlCG+4sdkxxlwItoEMhk2xl
+	89npIcRCe77RknXh3bcheMUzabhBJlwwoNJk90Nj4BZ6K4aHzNCcxwS8l3ySUmykwcjK
+	I5CiYf0TNLTr/7kgZF0RPjwLCTmB/gXcV+8PKJ6ILSEsAT7NA4sjgpzUCVD1z2ylPmja
+	QiNY2SZt7URC3uetPEABl1wUkgEhEHGODUgjUtKK65SOAtKsF0lyzx9cK/lIyv/+MzmR
+	efj4dk4bdxkrqml6elMCOepvTMkEhC2XyzToJeb/+ZgzYIRmkhVsVogAcPOG/zX5pclW
+	Cn3A==
+X-Received: by 10.140.144.73 with SMTP id 70mr41969859qhq.91.1433399115381;
+	Wed, 03 Jun 2015 23:25:15 -0700 (PDT)
+Received: from ?IPv6:2601:9:3580:84c:243b:97d2:82f:b7e8?
+	([2601:9:3580:84c:243b:97d2:82f:b7e8])
+	by mx.google.com with ESMTPSA id g6sm1858494qgd.10.2015.06.03.23.25.14
+	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Wed, 03 Jun 2015 23:25:14 -0700 (PDT)
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2098\))
+X-Pgp-Agent: GPGMail 2.5b6
+From: Khem Raj <raj.khem@gmail.com>
 In-Reply-To: <CAJTo0LYwFRrNT9xnjd43c4+_dMTJvMhAsbJTOdW4e6YXKJP3yg@mail.gmail.com>
+Date: Wed, 3 Jun 2015 23:25:08 -0700
+Message-Id: <B8A83673-75A0-4880-97BE-1712A4093058@gmail.com>
 References: <CADL-HDjK_5Z8Ndj8sAK8tt11+xuPQig11fNkQaDCb__19aRo6A@mail.gmail.com>
 	<CAJTo0LZjuTKFwuy1HGm4VeP0gfLHjufRqPd3gXEY3Yoeg4mZ8A@mail.gmail.com>
 	<CADL-HDjApC0qsSDJpZPVDEU21nR+z7fxLg8s+818pfQHY6pgGA@mail.gmail.com>
@@ -29,10 +38,9 @@ References: <CADL-HDjK_5Z8Ndj8sAK8tt11+xuPQig11fNkQaDCb__19aRo6A@mail.gmail.com>
 	<CAJTo0LYHok7aqeq5VG-bBq6L=tge_k40i2urOPp9=KWvLf894w@mail.gmail.com>
 	<CADL-HDiPMeR7zdiW99j10TEAhjzUzaqzQkMLnvOWiqdSfPRMHA@mail.gmail.com>
 	<CAJTo0LYwFRrNT9xnjd43c4+_dMTJvMhAsbJTOdW4e6YXKJP3yg@mail.gmail.com>
-From: Yogesh Tyagi <yogesh.bit2006@gmail.com>
-Date: Thu, 4 Jun 2015 09:39:23 +0530
-Message-ID: <CADL-HDgmuxA-c8akyLge14DKFDC9Z7L1JkvCT19Wf9d9fGwiOw@mail.gmail.com>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+To: "Burton, Ross" <ross.burton@intel.com>
+X-Mailer: Apple Mail (2.2098)
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: Library not getting installed to intended path
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -46,102 +54,73 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 04 Jun 2015 04:09:44 -0000
-Content-Type: multipart/alternative; boundary=001a1142eb76726bb80517a95840
+X-List-Received-Date: Thu, 04 Jun 2015 06:25:18 -0000
+X-Groupsio-MsgNum: 5819
+Content-Type: multipart/signed;
+	boundary="Apple-Mail=_F7312BD0-61EC-45DE-97D5-510887B465DF";
+	protocol="application/pgp-signature"; micalg=pgp-sha1
 
---001a1142eb76726bb80517a95840
-Content-Type: text/plain; charset=UTF-8
+--Apple-Mail=_F7312BD0-61EC-45DE-97D5-510887B465DF
+Content-Type: multipart/alternative;
+	boundary="Apple-Mail=_9AE15857-9E0A-4B54-835E-5B647E92135C"
 
-Hi,
-
-The library for which I passed -module and and -avoid-version in
-Makefile.am is not going to rootfs.
-
-libgstfl_la_LDFLAGS = -module -avoid-version
-
-library is installed if I add this line to Makefile.am
-
-libdir = /lib/gstreamer-0.10
-
-and these to bb file
-
-FILES_${PN} += "/lib/gstreamer-0.10"
-FILES_${PN}-dbg += "/lib/gstreamer-0.10/.debug"
-INSANE_SKIP_${PN} += "dev-so
-
-Is this correct to use INSANE_SKIP or is it not recommended?
-
-Should I consider not to inherit autotools?  I have seen a lot of packages
-doing that. In this case whattever path I assign here in FILES variable ,
-my library is installed to that path but with autotools I have to use
-INSANE_SKIP option.
-
-Thanks,
-Yogesh
-
-
-
-On Thu, Jun 4, 2015 at 3:17 AM, Burton, Ross <ross.burton@intel.com> wrote:
-
->
-> On 3 June 2015 at 20:24, Yogesh Tyagi <yogesh.bit2006@gmail.com> wrote:
->
->> ERROR: QA Issue: non -dev/-dbg/-nativesdk package contains symlink .so:
->> gst-plugin-linux-user path
->> '/work/core2-32-poky-linux/gst-plugin-linux-user/git+master-r0/packages-split/gst-plugin-linux-user/lib/gstreamer-0.10/libgstfl.so'
->> ERROR: QA run found fatal errors. Please consider fixing them.
->>
->
-> That QA test is over-keen and that's a false-positive, but the real fix is
-> in your makefile.  Pass -module -avoid-version to libtool as you're
-> building modules, not libraries.
->
-> Ross
->
-
---001a1142eb76726bb80517a95840
-Content-Type: text/html; charset=UTF-8
+--Apple-Mail=_9AE15857-9E0A-4B54-835E-5B647E92135C
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-<div dir=3D"ltr">Hi,<div><br></div><div>The library for which I passed -mod=
-ule and and -avoid-version in Makefile.am is not going to rootfs.</div><div=
-><br></div><div>libgstfl_la_LDFLAGS =3D -module -avoid-version<br></div><di=
-v><br></div><div>library is installed if I add this line to Makefile.am</di=
-v><div><br></div><div><span class=3D"" style=3D"color:rgb(0,0,0);font-famil=
-y:monospace;font-size:12px;white-space:pre">libdir </span><span class=3D"" =
-style=3D"color:rgb(102,102,0);font-family:monospace;font-size:12px;white-sp=
-ace:pre">=3D</span><span class=3D"" style=3D"color:rgb(0,0,0);font-family:m=
-onospace;font-size:12px;white-space:pre"> </span>/lib/gstreamer-0.10</div><=
-div><br></div><div>and these to bb file</div><div><br>FILES_${PN} +=3D &quo=
-t;/lib/gstreamer-0.10&quot;</div><div>FILES_${PN}-dbg +=3D &quot;/lib/gstre=
-amer-0.10/.debug&quot;<br>INSANE_SKIP_${PN} +=3D &quot;dev-so<br><br>Is thi=
-s correct to use INSANE_SKIP or is it not recommended?</div><div><br></div>=
-<div>Should I consider not to inherit autotools?=C2=A0 I have seen a lot of=
- packages doing that. In this case whattever path I assign here in FILES va=
-riable , my library is installed to that path but with autotools I have to =
-use INSANE_SKIP option.</div><div><br></div><div><span style=3D"color:rgb(0=
-,0,0);font-family:monospace;font-size:12px;white-space:pre">Thanks,</span><=
-/div><div><span style=3D"color:rgb(0,0,0);font-family:monospace;font-size:1=
-2px;white-space:pre">Yogesh</span></div><div><br></div><div><br></div></div=
-><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">On Thu, Jun 4, 2=
-015 at 3:17 AM, Burton, Ross <span dir=3D"ltr">&lt;<a href=3D"mailto:ross.b=
-urton@intel.com" target=3D"_blank">ross.burton@intel.com</a>&gt;</span> wro=
-te:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-=
-left:1px #ccc solid;padding-left:1ex"><div dir=3D"ltr"><div class=3D"gmail_=
-extra"><br><div class=3D"gmail_quote"><span class=3D"">On 3 June 2015 at 20=
-:24, Yogesh Tyagi <span dir=3D"ltr">&lt;<a href=3D"mailto:yogesh.bit2006@gm=
-ail.com" target=3D"_blank">yogesh.bit2006@gmail.com</a>&gt;</span> wrote:<b=
-r><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:=
-1px #ccc solid;padding-left:1ex"><div>ERROR: QA Issue: non -dev/-dbg/-nativ=
-esdk package contains symlink .so: gst-plugin-linux-user path &#39;/work/co=
-re2-32-poky-linux/gst-plugin-linux-user/git+master-r0/packages-split/gst-pl=
-ugin-linux-user/lib/gstreamer-0.10/libgstfl.so&#39;</div><div>ERROR: QA run=
- found fatal errors. Please consider fixing them.</div></blockquote><div><b=
-r></div></span><div>That QA test is over-keen and that&#39;s a false-positi=
-ve, but the real fix is in your makefile.=C2=A0 Pass -module -avoid-version=
- to libtool as you&#39;re building modules, not libraries.</div><span class=
-=3D"HOEnZb"><font color=3D"#888888"><div><br></div><div>Ross=C2=A0<br></div=
-></font></span></div></div></div>
-</blockquote></div><br></div>
 
---001a1142eb76726bb80517a95840--
+> On Jun 3, 2015, at 2:47 PM, Burton, Ross <ross.burton@intel.com> =
+wrote:
+>=20
+> That QA test is over-keen and that's a false-positive, but the real =
+fix is in your makefile.  Pass -module -avoid-version to libtool as =
+you're building modules, not libraries.
+>=20
+
+you will then hit the .so not being symlink QA errors
+
+--Apple-Mail=_9AE15857-9E0A-4B54-835E-5B647E92135C
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=us-ascii
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html =
+charset=3Dus-ascii"></head><body style=3D"word-wrap: break-word; =
+-webkit-nbsp-mode: space; -webkit-line-break: after-white-space;" =
+class=3D""><br class=3D""><div><blockquote type=3D"cite" class=3D""><div =
+class=3D"">On Jun 3, 2015, at 2:47 PM, Burton, Ross &lt;<a =
+href=3D"mailto:ross.burton@intel.com" =
+class=3D"">ross.burton@intel.com</a>&gt; wrote:</div><br =
+class=3D"Apple-interchange-newline"><div class=3D""><div =
+style=3D"font-family: Helvetica; font-size: 13px; font-style: normal; =
+font-variant: normal; font-weight: normal; letter-spacing: normal; =
+line-height: normal; orphans: auto; text-align: start; text-indent: 0px; =
+text-transform: none; white-space: normal; widows: auto; word-spacing: =
+0px; -webkit-text-stroke-width: 0px;" class=3D"">That QA test is =
+over-keen and that's a false-positive, but the real fix is in your =
+makefile.&nbsp; Pass -module -avoid-version to libtool as you're =
+building modules, not libraries.</div><br =
+class=3D"Apple-interchange-newline"></div></blockquote></div><br =
+class=3D""><div class=3D"">you will then hit the .so not being symlink =
+QA errors</div></body></html>=
+
+--Apple-Mail=_9AE15857-9E0A-4B54-835E-5B647E92135C--
+
+--Apple-Mail=_F7312BD0-61EC-45DE-97D5-510887B465DF
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP using GPGMail
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - https://gpgtools.org
+
+iEYEARECAAYFAlVv70gACgkQuwUzVZGdMxQg5ACeO296cCFc2MGyl6bGOFQAmcTe
+/jMAn3rWyvckJ7MQ1Csk/K4Sk1W4N1hG
+=IJ5u
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_F7312BD0-61EC-45DE-97D5-510887B465DF--
