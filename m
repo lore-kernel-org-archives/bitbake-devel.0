@@ -1,44 +1,24 @@
-Return-Path: <dev@codyps.com>
-Received: from mail-vn0-f48.google.com (mail-vn0-f48.google.com
-	[209.85.216.48])
-	by mail.openembedded.org (Postfix) with ESMTP id 3543A757AC
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  1 Jun 2015 17:41:04 +0000 (UTC)
-Received: by vnbg129 with SMTP id g129so17073052vnb.9
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 01 Jun 2015 10:41:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codyps.com; s=google;
-	h=from:to:cc:subject:date:message-id;
-	bh=V6YE8KcXIAUnD2chds88E+i2aarpnyFLcRVKzFf4IOs=;
-	b=R/m4I+xE61VaOrAIB03L9sYp1FUTvEFOiP7szevZ2Q9/GMHVYNdHjmP7ZMhi6ZlkJy
-	JaLs0hZb603EF2vaNovBRuSQt2VFkrlpkfCH/jWhCRYtRBA59eCDpF+bfLlGsZ5EKp7z
-	FVcI4B4UiIdqNT6SQReYcpomK6Fe40BKPA+Xs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=V6YE8KcXIAUnD2chds88E+i2aarpnyFLcRVKzFf4IOs=;
-	b=Sm3d3tLLPLQ8wwkbPUfAIIQEwoBm98tG6dbfgeP2tfmdri8FVc1ntJHt1rK4Fk1PFj
-	gD8h5Q3FS+K/k4i2X57xRHN+7hdENVr+dCdw86M7obAU002K7DCoFMrzoKCoLlAcHE24
-	dYyLrlXHu4sNQ6t2Sly2Ho0xZO96ODwTiF1rUWFRXoStmlsJWUMWyjBfSlRZ1CET/DBj
-	aGGdcWeBit9wu+rRPYFU5bSna4xaJ7+1U3cEnwh1qBjvYr/W+MzparN2LPmYKXNfXPNg
-	QbLmIPYhipxi3YfTKpZo5ElPrOxxFSrDJdRouLSiYdRt6qNu35mUKU4LTr2W5VmCM0jE
-	dhSA==
-X-Gm-Message-State: ALoCoQkVrkepbljhzTauit3ZXves5SjXyn4YTw2PGEydcoGiIPoTtZQmhdhiCS/bCyddZBrd3P86
-X-Received: by 10.52.233.166 with SMTP id tx6mr29930996vdc.91.1433180465664;
-	Mon, 01 Jun 2015 10:41:05 -0700 (PDT)
-Received: from localhost (static-96-237-165-28.bstnma.fios.verizon.net.
-	[96.237.165.28])
-	by mx.google.com with ESMTPSA id h14sm22414617vdj.0.2015.06.01.10.41.04
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 01 Jun 2015 10:41:04 -0700 (PDT)
-From: Cody P Schafer <dev@codyps.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon,  1 Jun 2015 13:41:17 -0400
-Message-Id: <1433180477-14367-1-git-send-email-dev@codyps.com>
-X-Mailer: git-send-email 2.4.1
+Return-Path: <paul.eggleton@intel.com>
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 1765275750;
+	Mon,  8 Jun 2015 10:47:38 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by fmsmga102.fm.intel.com with ESMTP; 08 Jun 2015 03:47:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.13,573,1427785200"; d="scan'208";a="742913162"
+Received: from ewishar1-mobl2.ger.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.252.30.184])
+	by orsmga002.jf.intel.com with ESMTP; 08 Jun 2015 03:47:36 -0700
+From: Paul Eggleton <paul.eggleton@intel.com>
+To: bitbake-devel@lists.openembedded.org,
+	openembedded-core@lists.openembedded.org
+Date: Mon, 08 Jun 2015 11:47:35 +0100
+Message-ID: <8102616.B1dDESrnjI@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.14.7 (Linux/4.0.4-202.fc21.x86_64; KDE/4.14.7; x86_64; ; )
+MIME-Version: 1.0
 X-Mailman-Approved-At: Mon, 08 Jun 2015 11:10:02 +0000
-Cc: Cody P Schafer <dev@codyps.com>
-Subject: [PATCH v2] git: allow use of HEAD
+Subject: RFC: BitBake's tinfoil API
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,30 +31,75 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 01 Jun 2015 17:41:05 -0000
+X-List-Received-Date: Mon, 08 Jun 2015 10:47:45 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Especially useful in the case where one has local git repositories that
-they point bitbake at via bbappends for development purposes.
+Hi there,
 
-Signed-off-by: Cody P Schafer <dev@codyps.com>
----
- lib/bb/fetch2/git.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+As some of you may know, BitBake has a module under lib/bb called "tinfoil" 
+which you can use to create simple Python utilities that can call into BitBake 
+code - for example, you can get variable values and parse recipes. Several 
+utilities shipped with BitBake/OE make use of this (e.g. bitbake-layers, oe-
+pkgdata-util, devtool, etc.). The OE layer index and Recipe Reporting Service 
+update scripts also use it.
 
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 0fd9bee..161a2db 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -342,7 +342,7 @@ class Git(FetchMethod):
-         """
-         output = self._lsremote(ud, d, "")
-         # Tags of the form ^{} may not work, need to fallback to other form
--        if ud.unresolvedrev[name][:5] == "refs/":
-+        if ud.unresolvedrev[name][:5] == "refs/" or ud.unresolvedrev[name] == "HEAD":
-             head = ud.unresolvedrev[name]
-             tag = ud.unresolvedrev[name]
-         else:
+One of tinfoil's limitations up to now is that it bypasses BitBake's client-
+server model - it only starts up the server, and it initialises the server 
+only partially. This is fine for what it needs to do, but it does mean that 
+scripts that use it cannot be run when BitBake is running in memory resident 
+mode - there can be only one server instance per TMPDIR. Recently I've been 
+trying to address that by moving tinfoil to the client side; my WIP branch is 
+here:
+
+  http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=paule/tinfoil2
+
+There are some other benefits to moving to this model:
+
+* We can now connect an actual UI, thus you get things like the recipe parsing 
+progress bar and parse error handling for free
+
+* We can now handle events generated by the server - in the OE layer index for 
+example, I'm pretty certain the lack of this is the source of a bug where we 
+leak memory. (Note - this is still todo on my branch).
+
+* We can potentially extend this to do more stuff, e.g. actually running build 
+operations - that simply wasn't possible with tinfoil before. I haven't 
+actually provided any specific access to this yet but it shouldn't be too hard.
+
+The downside is that tinfoil no longer has direct access to cooker, the global 
+datastore, and the cache. I have extended data_smart to provide remote access 
+capability for the datastore, and created "fake" cooker and cooker.recipecache 
+/ cooker.collection adapter objects in order to avoid breaking too many 
+tinfoil-using scripts that might be out there (we've never officially documented 
+tinfoil or bitbake's internal code, but we can still make accommodations where 
+practical). I've at least gone far enough to support bitbake-layers with some 
+changes, but I know there are scripts such as Chris's "bb" out there that do 
+make other calls into BitBake code that I'm not providing access to through 
+the adapters (yet?).
+
+However, it struck me that we have an opportunity to create a proper API this 
+time rather than simply exposing the internals of BitBake (which do 
+occasionally change, and that has resulted in breakage of tinfoil-using 
+scripts in the past). The datastore is probably fine to expose, but parts of 
+cooker and the cache would probably be better represented as methods on 
+tinfoil, object structures underneath it, or simply as client/server calls 
+that can be accessed through runCommand() (with the current architecture, we 
+need to add the latter anyway). Once we've set up the new API, we can then 
+document it.
+
+Does anyone have any thoughts on this? I'm particularly interested in hearing 
+from people using tinfoil in their own scripts or who would be interested in 
+writing such scripts in the future - what kind of API would you like to have?
+
+Thanks,
+Paul
+
 -- 
-2.4.1
-
+Paul Eggleton
+---------------------------------------------------------------------
+Intel Corporation (UK) Limited
+Registered No. 1134945 (England)
+Registered Office: Pipers Way, Swindon SN3 1RJ
+VAT No: 860 2173 47
 
