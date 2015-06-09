@@ -1,24 +1,30 @@
-Return-Path: <paul.eggleton@intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id 1765275750;
-	Mon,  8 Jun 2015 10:47:38 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by fmsmga102.fm.intel.com with ESMTP; 08 Jun 2015 03:47:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.13,573,1427785200"; d="scan'208";a="742913162"
-Received: from ewishar1-mobl2.ger.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.252.30.184])
-	by orsmga002.jf.intel.com with ESMTP; 08 Jun 2015 03:47:36 -0700
-From: Paul Eggleton <paul.eggleton@intel.com>
-To: bitbake-devel@lists.openembedded.org,
-	openembedded-core@lists.openembedded.org
-Date: Mon, 08 Jun 2015 11:47:35 +0100
-Message-ID: <8102616.B1dDESrnjI@peggleto-mobl.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.14.7 (Linux/4.0.4-202.fc21.x86_64; KDE/4.14.7; x86_64; ; )
+Return-Path: <hcu5555@gmail.com>
+Received: from mail-yh0-f65.google.com (mail-yh0-f65.google.com
+	[209.85.213.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 1F60D73B90
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue,  9 Jun 2015 03:27:51 +0000 (UTC)
+Received: by yhab6 with SMTP id b6so615522yha.3
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 08 Jun 2015 20:27:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:date:message-id:subject:from:to:content-type;
+	bh=D6ZshD/1PRFNbapf4ceX89KZb62KJ7PcD/dxB4txnKE=;
+	b=fvE5t3SjqpXerDG1/elqmrwsj9NzpJYkjFl7YCN2ldzbfy0CJOUaEwryt75NUrAhl7
+	LTN4CC0oWf6IyCbWA2kqKARIrtewVdwCFQrTtxMMwYq6Hhefai8C30bnLLfEIue/qeDp
+	rfRS+YXSZgyUANuNfH55SkSW3cxF3GOkmrkOGcaxXu65yyLWRENQpvbB2R1z6ONj/SAd
+	ONNSuWDNfOCpsQfWTAwTUTNGIQftouN96auaYAmjaYh/XOQ5tmtDEsUKHO6G2/C6eLWp
+	Q7NQ4kdt/L4XrjC+C7DgKZFNvgqjF8VW6m1R/zHLXpIOsD8CZEK6aXu/J8hHJ+zQV+uJ
+	4xQQ==
 MIME-Version: 1.0
-X-Mailman-Approved-At: Mon, 08 Jun 2015 11:10:02 +0000
-Subject: RFC: BitBake's tinfoil API
+X-Received: by 10.129.99.193 with SMTP id x184mr19871117ywb.34.1433820473072; 
+	Mon, 08 Jun 2015 20:27:53 -0700 (PDT)
+Received: by 10.37.224.85 with HTTP; Mon, 8 Jun 2015 20:27:53 -0700 (PDT)
+Date: Tue, 9 Jun 2015 11:27:53 +0800
+Message-ID: <CAD5oO7mM0cuEU9eJ7oyG2ieMy1m5-Vb-KOKnFhpfvwagmmoebQ@mail.gmail.com>
+From: issta Hu <hcu5555@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: build yocto error
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,75 +37,119 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 08 Jun 2015 10:47:45 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Tue, 09 Jun 2015 03:27:53 -0000
+Content-Type: multipart/alternative; boundary=001a1147399af8233e05180d57a3
 
-Hi there,
+--001a1147399af8233e05180d57a3
+Content-Type: text/plain; charset=UTF-8
 
-As some of you may know, BitBake has a module under lib/bb called "tinfoil" 
-which you can use to create simple Python utilities that can call into BitBake 
-code - for example, you can get variable values and parse recipes. Several 
-utilities shipped with BitBake/OE make use of this (e.g. bitbake-layers, oe-
-pkgdata-util, devtool, etc.). The OE layer index and Recipe Reporting Service 
-update scripts also use it.
+chunyun@ubuntu:~/share/yocto/ZC702$ bitbake core-image-minimal
+Loading cache: 100%
+|#################################################################################################|
+ETA:  00:00:00
+Loaded 1303 entries from dependency cache.
+Parsing recipes: 100%
+|###############################################################################################|
+Time: 00:00:00
+Parsing of 896 .bb files complete (894 cached, 2 parsed). 1303 targets, 58
+skipped, 0 masked, 0 errors.
+NOTE: Resolving any missing task queue dependencies
 
-One of tinfoil's limitations up to now is that it bypasses BitBake's client-
-server model - it only starts up the server, and it initialises the server 
-only partially. This is fine for what it needs to do, but it does mean that 
-scripts that use it cannot be run when BitBake is running in memory resident 
-mode - there can be only one server instance per TMPDIR. Recently I've been 
-trying to address that by moving tinfoil to the client side; my WIP branch is 
-here:
+Build Configuration:
+BB_VERSION        = "1.27.0"
+BUILD_SYS         = "x86_64-linux"
+NATIVELSBSTRING   = "Ubuntu-14.04"
+TARGET_SYS        = "arm-poky-linux-gnueabi"
+MACHINE           = "zc702-zynq7"
+DISTRO            = "poky"
+DISTRO_VERSION    = "1.8+snapshot-20150609"
+TUNE_FEATURES     = "arm armv7a vfp neon cortexa9"
+TARGET_FPU        = "vfp-neon"
+meta              = "fido:b5ba70b47fff227e4381fcac93defccb79e3d8f1"
+meta-xilinx       = "fido:5aa58bbbf8ddcc59f8746805d62fd156d7cff461"
+meta-yocto
+meta-yocto-bsp    = "fido:b5ba70b47fff227e4381fcac93defccb79e3d8f1"
 
-  http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=paule/tinfoil2
+NOTE: Preparing RunQueue
+NOTE: Executing SetScene Tasks
+NOTE: Executing RunQueue Tasks
+ERROR: Function failed: write_specfile
+ERROR: Logfile of failure stored in:
+/home/chunyun/share/yocto/ZC702/tmp/work/cortexa9-vfp-neon-poky-linux-gnueabi/init-ifupdown/1.0-r7/temp/log.do_package_write_rpm.8848
+Log data follows:
+| DEBUG: Executing python function sstate_task_prefunc
+| DEBUG: Python function sstate_task_prefunc finished
+| DEBUG: Executing python function do_package_write_rpm
+| DEBUG: Executing python function read_subpackage_metadata
+| DEBUG: Python function read_subpackage_metadata finished
+| DEBUG: Executing python function do_package_rpm
+| DEBUG: Executing python function write_specfile
+| DEBUG: Python function write_specfile finished
+| DEBUG: Python function do_package_rpm finished
+| DEBUG: Python function do_package_write_rpm finished
+| ERROR: Function failed: write_specfile
+ERROR: Task 833
+(/home/chunyun/share/yocto/poky/meta/recipes-core/init-ifupdown/
+init-ifupdown_1.0.bb, do_package_write_rpm) failed with exit code '1'
+NOTE: Tasks Summary: Attempted 1396 tasks of which 1395 didn't need to be
+rerun and 1 failed.
+No currently running tasks (1395 of 1889)
 
-There are some other benefits to moving to this model:
+Summary: 1 task failed:
+  /home/chunyun/share/yocto/poky/meta/recipes-core/init-ifupdown/
+init-ifupdown_1.0.bb, do_package_write_rpm
+Summary: There was 1 ERROR message shown, returning a non-zero exit code.
 
-* We can now connect an actual UI, thus you get things like the recipe parsing 
-progress bar and parse error handling for free
+--001a1147399af8233e05180d57a3
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-* We can now handle events generated by the server - in the OE layer index for 
-example, I'm pretty certain the lack of this is the source of a bug where we 
-leak memory. (Note - this is still todo on my branch).
+<div dir=3D"ltr"><div>chunyun@ubuntu:~/share/yocto/ZC702$ bitbake core-imag=
+e-minimal</div><div>Loading cache: 100% |##################################=
+###############################################################| ETA: =C2=
+=A000:00:00</div><div>Loaded 1303 entries from dependency cache.</div><div>=
+Parsing recipes: 100% |####################################################=
+###########################################| Time: 00:00:00</div><div>Parsi=
+ng of 896 .bb files complete (894 cached, 2 parsed). 1303 targets, 58 skipp=
+ed, 0 masked, 0 errors.</div><div>NOTE: Resolving any missing task queue de=
+pendencies</div><div><br></div><div>Build Configuration:</div><div>BB_VERSI=
+ON =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D &quot;1.27.0&quot;</div><div>BUILD_SYS =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D &quot;x86_64-linux&quot;</div><div>NATIVELS=
+BSTRING =C2=A0 =3D &quot;Ubuntu-14.04&quot;</div><div>TARGET_SYS =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0=3D &quot;arm-poky-linux-gnueabi&quot;</div><div>MACHINE =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D &quot;zc702-zynq7&quot;</div><div>DI=
+STRO =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D &quot;poky&quot;</div><di=
+v>DISTRO_VERSION =C2=A0 =C2=A0=3D &quot;1.8+snapshot-20150609&quot;</div><d=
+iv>TUNE_FEATURES =C2=A0 =C2=A0 =3D &quot;arm armv7a vfp neon cortexa9&quot;=
+</div><div>TARGET_FPU =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D &quot;vfp-neon&quot;</=
+div><div>meta =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D &quot;fid=
+o:b5ba70b47fff227e4381fcac93defccb79e3d8f1&quot;</div><div>meta-xilinx =C2=
+=A0 =C2=A0 =C2=A0 =3D &quot;fido:5aa58bbbf8ddcc59f8746805d62fd156d7cff461&q=
+uot;</div><div>meta-yocto =C2=A0 =C2=A0 =C2=A0 =C2=A0</div><div>meta-yocto-=
+bsp =C2=A0 =C2=A0=3D &quot;fido:b5ba70b47fff227e4381fcac93defccb79e3d8f1&qu=
+ot;</div><div><br></div><div>NOTE: Preparing RunQueue</div><div>NOTE: Execu=
+ting SetScene Tasks</div><div>NOTE: Executing RunQueue Tasks</div><div>ERRO=
+R: Function failed: write_specfile</div><div>ERROR: Logfile of failure stor=
+ed in: /home/chunyun/share/yocto/ZC702/tmp/work/cortexa9-vfp-neon-poky-linu=
+x-gnueabi/init-ifupdown/1.0-r7/temp/log.do_package_write_rpm.8848</div><div=
+>Log data follows:</div><div>| DEBUG: Executing python function sstate_task=
+_prefunc</div><div>| DEBUG: Python function sstate_task_prefunc finished</d=
+iv><div>| DEBUG: Executing python function do_package_write_rpm</div><div>|=
+ DEBUG: Executing python function read_subpackage_metadata</div><div>| DEBU=
+G: Python function read_subpackage_metadata finished</div><div>| DEBUG: Exe=
+cuting python function do_package_rpm</div><div>| DEBUG: Executing python f=
+unction write_specfile</div><div>| DEBUG: Python function write_specfile fi=
+nished</div><div>| DEBUG: Python function do_package_rpm finished</div><div=
+>| DEBUG: Python function do_package_write_rpm finished</div><div>| ERROR: =
+Function failed: write_specfile</div><div>ERROR: Task 833 (/home/chunyun/sh=
+are/yocto/poky/meta/recipes-core/init-ifupdown/<a href=3D"http://init-ifupd=
+own_1.0.bb">init-ifupdown_1.0.bb</a>, do_package_write_rpm) failed with exi=
+t code &#39;1&#39;</div><div>NOTE: Tasks Summary: Attempted 1396 tasks of w=
+hich 1395 didn&#39;t need to be rerun and 1 failed.</div><div>No currently =
+running tasks (1395 of 1889)</div><div><br></div><div>Summary: 1 task faile=
+d:</div><div>=C2=A0 /home/chunyun/share/yocto/poky/meta/recipes-core/init-i=
+fupdown/<a href=3D"http://init-ifupdown_1.0.bb">init-ifupdown_1.0.bb</a>, d=
+o_package_write_rpm</div><div>Summary: There was 1 ERROR message shown, ret=
+urning a non-zero exit code.</div><div><br></div></div>
 
-* We can potentially extend this to do more stuff, e.g. actually running build 
-operations - that simply wasn't possible with tinfoil before. I haven't 
-actually provided any specific access to this yet but it shouldn't be too hard.
-
-The downside is that tinfoil no longer has direct access to cooker, the global 
-datastore, and the cache. I have extended data_smart to provide remote access 
-capability for the datastore, and created "fake" cooker and cooker.recipecache 
-/ cooker.collection adapter objects in order to avoid breaking too many 
-tinfoil-using scripts that might be out there (we've never officially documented 
-tinfoil or bitbake's internal code, but we can still make accommodations where 
-practical). I've at least gone far enough to support bitbake-layers with some 
-changes, but I know there are scripts such as Chris's "bb" out there that do 
-make other calls into BitBake code that I'm not providing access to through 
-the adapters (yet?).
-
-However, it struck me that we have an opportunity to create a proper API this 
-time rather than simply exposing the internals of BitBake (which do 
-occasionally change, and that has resulted in breakage of tinfoil-using 
-scripts in the past). The datastore is probably fine to expose, but parts of 
-cooker and the cache would probably be better represented as methods on 
-tinfoil, object structures underneath it, or simply as client/server calls 
-that can be accessed through runCommand() (with the current architecture, we 
-need to add the latter anyway). Once we've set up the new API, we can then 
-document it.
-
-Does anyone have any thoughts on this? I'm particularly interested in hearing 
-from people using tinfoil in their own scripts or who would be interested in 
-writing such scripts in the future - what kind of API would you like to have?
-
-Thanks,
-Paul
-
--- 
-Paul Eggleton
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
+--001a1147399af8233e05180d57a3--
