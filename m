@@ -1,41 +1,41 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f49.google.com (mail-wg0-f49.google.com [74.125.82.49])
-	by mail.openembedded.org (Postfix) with ESMTP id 276A9758ED
+Received: from mail-wg0-f51.google.com (mail-wg0-f51.google.com [74.125.82.51])
+	by mail.openembedded.org (Postfix) with ESMTP id CE917758FD
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Jun 2015 14:39:57 +0000 (UTC)
-Received: by wgme6 with SMTP id e6so37429373wgm.2
+	Wed, 10 Jun 2015 14:40:01 +0000 (UTC)
+Received: by wgme6 with SMTP id e6so37431049wgm.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Jun 2015 07:39:58 -0700 (PDT)
+	Wed, 10 Jun 2015 07:40:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=6QchaR55pjVeOUZVxnUFnDzsFLP5gxmnhacaoQmhLac=;
-	b=LGVyNp5DBnkWKgwrnMLccresryt94dklsqgh13+jJ51NSeNlKZiyxDK6aYWFKQSwGi
-	z0UTWkGHzFsHNK3NDV41vkd91I4eTtDYx1UtN1ZORc58bWDzk92ZO9fW40msOJKU9hAH
-	BRGKSrD2AibzGtpNtJh0eHn1ck0mMzWHv5zDTWjL5fjcVCx3j5M51QWcMRDQy9PHJtRO
-	grgBC/PhDOdriIhugLuteX/YMlgVpW+HmEIa3Xn+rEvOxqpLD/YWs9aSklq7WCOfCdB6
-	grv4cbulahAk98oKh9fe7iENeXR/jH+ZEJi0z2QIOQTPS866r/UJQwvkfkThW7iZ1Or8
-	Oflg==
-X-Gm-Message-State: ALoCoQmAUUQHDGgB3rr7Gy7TCiFXa+SJNSvvaXvUD/VSfpGkVVSqlvdVMPLzIkbX/2Dw1luEOvzE
-X-Received: by 10.194.200.228 with SMTP id jv4mr6631148wjc.157.1433947198248; 
-	Wed, 10 Jun 2015 07:39:58 -0700 (PDT)
+	bh=h+cJ75sEmza6sur02HNwP28P46oFLMv0max9PEpuL9A=;
+	b=NPiTxsDZwWpkVA3lkWj0SAx/VaObLImZ/vgAJ7XkYT2VpX33ru/qM/rIcjEm9FWS7r
+	68Zrsn0rkyJ+Pst7beHrkt2p8FMEU7EKOOUw9HHjFaoku1LvX6Uj8AIcsVWfXoTwHSHP
+	2EKs7VbNCQwtjyfgF8n3Uo5iamjHOBegFbpxpfqG+raHXFC3CBz5NPOQDnnH6kiMDdCK
+	bL2JkQplhpnRz8xgabq8JutcZMmIgEdmD2zwW9IetqlMk4iMtUgi0swfvcbosSUXVhbX
+	PJ3gZ+l/wLxnmMGcy2bXBsYqg7ZrYAw2AdgkhMqooEcwp0gbBT7VWysbthS2tEYzB2yY
+	pWRg==
+X-Gm-Message-State: ALoCoQluyHCGeimSbNsXMRIV4jR8688yvZRjxRo8u4wicYVeWXHYDuUOVCGONO7fXJi2qCxAbn9z
+X-Received: by 10.180.90.73 with SMTP id bu9mr19717313wib.88.1433947202304;
+	Wed, 10 Jun 2015 07:40:02 -0700 (PDT)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id k2sm8254179wif.3.2015.06.10.07.39.57
+	by mx.google.com with ESMTPSA id u6sm14845547wjy.13.2015.06.10.07.40.01
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 10 Jun 2015 07:39:57 -0700 (PDT)
+	Wed, 10 Jun 2015 07:40:01 -0700 (PDT)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 218A656122E; Wed, 10 Jun 2015 15:39:09 +0100 (BST)
+	id 2396956124B; Wed, 10 Jun 2015 15:39:09 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 10 Jun 2015 15:39:02 +0100
-Message-Id: <bd95425c35c7d8386c57329e425aa7802537b479.1433946742.git.alexandru.damian@intel.com>
+Date: Wed, 10 Jun 2015 15:39:03 +0100
+Message-Id: <febf8bedf8f9d37659831cdde208d14ece2fb322.1433946742.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <15a2274eba13d19b864f337057d61c75ff7849cc.1433946742.git.alexandru.damian@intel.com>
 References: <15a2274eba13d19b864f337057d61c75ff7849cc.1433946742.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1433946742.git.alexandru.damian@intel.com>
 References: <cover.1433946742.git.alexandru.damian@intel.com>
-Subject: [PATCH 14/19] toaster: Code cleanup: bashisms
+Subject: [PATCH 15/19] toaster: Make toaster script to work in dash
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,187 +48,108 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 10 Jun 2015 14:39:57 -0000
+X-List-Received-Date: Wed, 10 Jun 2015 14:40:02 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Fixed the following bashisms:
- replaced echo -e -> printf
- removed 'function' from function definitions
- replaced $(< ${file}) -> `cat ${file}`
+Made it working in dash. Note, that due to dash limitations
+script will not work if sourced.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- bin/toaster | 55 ++++++++++++++++++++++++++++---------------------------
- 1 file changed, 28 insertions(+), 27 deletions(-)
+ bin/toaster | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
 diff --git a/bin/toaster b/bin/toaster
-index ee19937..0fa8b60 100755
+index 0fa8b60..411ce2c 100755
 --- a/bin/toaster
 +++ b/bin/toaster
-@@ -28,23 +28,24 @@
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+ # (c) 2013 Intel Corp.
  
- # Helper function to kill a background toaster development server
+ # This program is free software; you can redistribute it and/or modify
+@@ -54,7 +54,7 @@ webserverStartAll()
+     fi
  
--function webserverKillAll()
-+webserverKillAll()
- {
-     local pidfile
-     for pidfile in ${BUILDDIR}/.toastermain.pid; do
-         if [ -f ${pidfile} ]; then
--        while kill -0 $(< ${pidfile}) 2>/dev/null; do
--            kill -SIGTERM -$(< ${pidfile}) 2>/dev/null
--            sleep 1
--            # Kill processes if they are still running - may happen in interactive shells
--            pkill -U $UID -f "python.*manage.py runserver"
--        done;
--        rm  ${pidfile}
-+            pid=`cat ${pidfile}`
-+            while kill -0 $pid 2>/dev/null; do
-+                kill -SIGTERM -$pid 2>/dev/null
-+                sleep 1
-+                # Kill processes if they are still running - may happen in interactive shells
-+                ps fux | grep "python.*manage.py runserver" | awk '{print $2}' | xargs kill
-+            done
-+            rm  ${pidfile}
-         fi
-     done
- }
- 
--function webserverStartAll()
-+webserverStartAll()
- {
-     # do not start if toastermain points to a valid process
-     if ! cat "${BUILDDIR}/.toastermain.pid" 2>/dev/null | xargs -I{} kill -0 {} ; then
-@@ -62,7 +63,7 @@ function webserverStartAll()
-     if [ $retval -eq 1 ]; then
-         echo "Failed db sync, stopping system start" 1>&2
-     elif [ $retval -eq 2 ]; then
--        echo -e "\nError on migration, trying to recover... \n"
-+        printf "\nError on migration, trying to recover... \n"
-         python $BBBASEDIR/lib/toaster/manage.py migrate orm 0001_initial --fake
+     retval=0
+-    if [ "$TOASTER_MANAGED" '==' '1' ]; then
++    if [ "$TOASTER_MANAGED" '=' '1' ]; then
+         python $BBBASEDIR/lib/toaster/manage.py syncdb || retval=1
+     else
+         python $BBBASEDIR/lib/toaster/manage.py syncdb --noinput || retval=1
+@@ -68,7 +68,7 @@ webserverStartAll()
          retval=0
          python $BBBASEDIR/lib/toaster/manage.py migrate orm || retval=1
-@@ -87,7 +88,7 @@ function webserverStartAll()
- 
- # Helper functions to add a special configuration file
- 
--function addtoConfiguration()
-+addtoConfiguration()
- {
-     file=$1
-     shift
-@@ -98,13 +99,13 @@ function addtoConfiguration()
- INSTOPSYSTEM=0
- 
- # define the stop command
--function stop_system()
-+stop_system()
- {
-     # prevent reentry
-     if [ $INSTOPSYSTEM -eq 1 ]; then return; fi
-     INSTOPSYSTEM=1
-     if [ -f ${BUILDDIR}/.toasterui.pid ]; then
--        kill $(< ${BUILDDIR}/.toasterui.pid ) 2>/dev/null
-+        kill `cat ${BUILDDIR}/.toasterui.pid` 2>/dev/null
-         rm ${BUILDDIR}/.toasterui.pid
      fi
-     BBSERVER=0.0.0.0:-1 bitbake -m
-@@ -117,12 +118,12 @@ function stop_system()
-     INSTOPSYSTEM=0
- }
- 
--function check_pidbyfile() {
--    [ -e $1 ] && kill -0 $(< $1) 2>/dev/null
-+check_pidbyfile() {
-+    [ -e $1 ] && kill -0 `cat $1` 2>/dev/null
- }
- 
- 
--function notify_chldexit() {
-+notify_chldexit() {
-     if [ $NOTOASTERUI -eq 0 ]; then
-         check_pidbyfile ${BUILDDIR}/.toasterui.pid && return
-         stop_system
-@@ -130,16 +131,16 @@ function notify_chldexit() {
- }
- 
- 
--function verify_prereq() {
-+verify_prereq() {
-     # Verify prerequisites
- 
-     if ! echo "import django; print (1,) == django.VERSION[0:1] and django.VERSION[1:2][0] in (6,)" | python 2>/dev/null | grep True >/dev/null; then
--        echo -e "This program needs Django 1.6. Please install with\n\npip install django==1.6\n"
-+        printf "This program needs Django 1.6. Please install with\n\npip install django==1.6\n"
-         return 2
+-    if [ "$TOASTER_MANAGED" '==' '1' ]; then
++    if [ "$TOASTER_MANAGED" = '1' ]; then
+         python $BBBASEDIR/lib/toaster/manage.py migrate bldcontrol || retval=1
+         python $BBBASEDIR/lib/toaster/manage.py checksettings  --traceback || retval=1
      fi
+@@ -148,7 +148,16 @@ verify_prereq() {
  
-     if ! echo "import south; print reduce(lambda x, y: 2 if x==2 else 0 if x == 0 else y, map(lambda x: 1+cmp(x[1]-x[0],0), zip([0,8,4], map(int,south.__version__.split(\".\"))))) > 0" | python 2>/dev/null | grep True >/dev/null; then
--        echo -e "This program needs South 0.8.4. Please install with\n\npip install south==0.8.4\n"
-+        printf "This program needs South 0.8.4. Please install with\n\npip install south==0.8.4\n"
-         return 2
+ 
+ # read command line parameters
+-BBBASEDIR=`dirname ${BASH_SOURCE:-${(%):-%x}}`/..
++if [ -n "$BASH_SOURCE" ] ; then
++    TOASTER=${BASH_SOURCE}
++elif [ -n "$ZSH_NAME" ] ; then
++    TOASTER=${(%):-%x}
++else
++    TOASTER=$0
++fi
++
++BBBASEDIR=`dirname $TOASTER`/..
++
+ RUNNING=0
+ 
+ NOTOASTERUI=0
+@@ -176,7 +185,7 @@ for param in $*; do
+     esac
+ done
+ 
+-[ -z "$ZSH_NAME" ] && SRCFILE=${BASH_SOURCE} || SRCFILE=$_
++[ -n "${BASH_SOURCE}" ] && SRCFILE=${BASH_SOURCE} || SRCFILE=$_
+ 
+ if [ `basename \"$0\"` = `basename \"${SRCFILE}\"` ]; then
+     # We are called as standalone. We refuse to run in a build environment - we need the interactive mode for that.
+@@ -236,7 +245,7 @@ if [ `basename \"$0\"` = `basename \"${SRCFILE}\"` ]; then
+         echo "Starting browser..."
+         xdg-open http://127.0.0.1:$WEB_PORT/ >/dev/null 2>&1 &
      fi
-     return 0
-@@ -182,42 +183,42 @@ if [ `basename \"$0\"` = `basename \"${SRCFILE}\"` ]; then
-     # Start just the web server, point the web browser to the interface, and start any Django services.
- 
-     if ! verify_prereq; then
--        echo -e "Error: Could not verify that the needed dependencies are installed. Please use virtualenv and pip to install dependencies listed in toaster-requirements.txt" 1>&2
-+        echo "Error: Could not verify that the needed dependencies are installed. Please use virtualenv and pip to install dependencies listed in toaster-requirements.txt" 1>&2
-         exit 1
-     fi
- 
-     if [ -n "$BUILDDIR" ]; then
--        echo -e "Error: It looks like you sourced oe-init-build-env. Toaster cannot start in build mode from an oe-core build environment.\n You should be starting Toaster from a new terminal window." 1>&2
-+        printf "Error: It looks like you sourced oe-init-build-env. Toaster cannot start in build mode from an oe-core build environment.\n You should be starting Toaster from a new terminal window." 1>&2
-         exit 1
-     fi
- 
-     # Define a fake builddir where only the pid files are actually created. No real builds will take place here.
-     BUILDDIR=/tmp/toaster_$$
-     if [ -d "$BUILDDIR" ]; then
--        echo -e "Previous toaster run directory $BUILDDIR found, cowardly refusing to start. Please remove the directory when that toaster instance is over" 2>&1
-+        echo "Previous toaster run directory $BUILDDIR found, cowardly refusing to start. Please remove the directory when that toaster instance is over" 2>&1
-         exit 1
-     fi
- 
-     mkdir -p "$BUILDDIR"
- 
-     RUNNING=1
--    function trap_ctrlc() {
-+    trap_ctrlc() {
-         echo "** Stopping system"
-         webserverKillAll
-         RUNNING=0
-     }
- 
--    function do_cleanup() {
-+    do_cleanup() {
-         find "$BUILDDIR" -type f | xargs rm
-         rmdir "$BUILDDIR"
-     }
--    function cleanup() {
-+    cleanup() {
-         if grep -ir error "$BUILDDIR" >/dev/null; then
-             if grep -irn "That port is already in use" "$BUILDDIR"; then
-                 echo "You can use the \"webport=PORTNUMBER\" parameter to start Toaster on a different port (port $WEB_PORT is already in use)"
-                 do_cleanup
-             else
--                echo -e "\nErrors found in the Toaster log files present in '$BUILDDIR'. Directory will not be cleaned.\n Please review the errors and notify toaster@yoctoproject.org or submit a bug https://bugzilla.yoctoproject.org/enter_bug.cgi?product=Toaster"
-+                printf "\nErrors found in the Toaster log files present in '$BUILDDIR'. Directory will not be cleaned.\n Please review the errors and notify toaster@yoctoproject.org or submit a bug https://bugzilla.yoctoproject.org/enter_bug.cgi?product=Toaster"
-             fi
-         else
-             echo "No errors found, removing the run directory '$BUILDDIR'"
-@@ -248,7 +249,7 @@ fi
+-    trap trap_ctrlc SIGINT
++    trap trap_ctrlc 2
+     echo "Toaster is now running. You can stop it with Ctrl-C"
+     while [ $RUNNING -gt 0 ]; do
+         python $BBBASEDIR/lib/toaster/manage.py runbuilds 2>&1 | tee -a "$BUILDDIR/toaster.log"
+@@ -262,7 +271,7 @@ fi
  
  
- if ! verify_prereq; then
--    echo -e "Error: Could not verify that the needed dependencies are installed. Please use virtualenv and pip to install dependencies listed in toaster-requirements.txt" 1>&2
-+    echo "Error: Could not verify that the needed dependencies are installed. Please use virtualenv and pip to install dependencies listed in toaster-requirements.txt" 1>&2
-     return 1
+ # Determine the action. If specified by arguments, fine, if not, toggle it
+-if [ "$1" '==' 'start' ] || [ "$1" '==' 'stop' ]; then
++if [ "$1" = 'start' ] || [ "$1" = 'stop' ]; then
+     CMD="$1"
+ else
+     if [ -z "$BBSERVER" ]; then
+@@ -281,13 +290,13 @@ if [ -e $BUILDDIR/bitbake.lock ]; then
+     python -c "import fcntl; fcntl.flock(open(\"$BUILDDIR/bitbake.lock\"), fcntl.LOCK_EX|fcntl.LOCK_NB)" 2>/dev/null || lock=0
  fi
  
+-if [ ${CMD} '==' 'start' ] && [ $lock -eq 0 ]; then
++if [ ${CMD} = 'start' ] && [ $lock -eq 0 ]; then
+     echo "Error: bitbake lock state error. File locks show that the system is on." 1>&2
+     echo "Please wait for the current build to finish, stop and then start the system again." 1>&2
+     return 3
+ fi
+ 
+-if [ ${CMD} '==' 'start' ] && [ -e $BUILDDIR/.toastermain.pid ] && kill -0 `cat $BUILDDIR/.toastermain.pid`; then
++if [ ${CMD} = 'start' ] && [ -e $BUILDDIR/.toastermain.pid ] && kill -0 `cat $BUILDDIR/.toastermain.pid`; then
+     echo "Warning: bitbake appears to be dead, but the Toaster web server is running. Something fishy is going on." 1>&2
+     echo "Cleaning up the web server to start from a clean slate."
+     webserverKillAll
 -- 
 1.9.1
 
