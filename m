@@ -1,42 +1,41 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f176.google.com (mail-wi0-f176.google.com
-	[209.85.212.176])
-	by mail.openembedded.org (Postfix) with ESMTP id 6C5AA758D6
+Received: from mail-wg0-f47.google.com (mail-wg0-f47.google.com [74.125.82.47])
+	by mail.openembedded.org (Postfix) with ESMTP id A1C23758E4
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Jun 2015 14:39:49 +0000 (UTC)
-Received: by wifx6 with SMTP id x6so49713514wif.0
+	Wed, 10 Jun 2015 14:39:53 +0000 (UTC)
+Received: by wgme6 with SMTP id e6so37427883wgm.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 10 Jun 2015 07:39:51 -0700 (PDT)
+	Wed, 10 Jun 2015 07:39:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=5dqoX1KvS6pS7Ql1B1xkfqiLDpti8gudQ0OZ9C21KN8=;
-	b=MbnHF8tP9pOUTvnMDzUqwBl72k9sK0zftaTbTDZjJo8xehzUXrpJxuDIfetoTZrHLP
-	YTDKfoGKYzop4chZ5c4fWqkbNBDTxPkWphM4MjKurx46JoU7UBfJ6xu9QgCMgslUNJxi
-	mTXAG0h/uHQvw/SpCaDrAwXoP+0I/o7sYEauUYKHnvgvxIucNiKlx/CA3qaPhZg9I3wt
-	lU5sA/UJ7leggVm7UvYrxZwPKfBzZGwYVZBFBkJv1ncOctHm/en44zRiWlHKwGBt7br0
-	Ncisylm0OnwINyzcFtUXWzAqMyeDEruzo+OHaTi22mtLF5pg13vdLO92zPRFNGkF7G0G
-	EzwA==
-X-Gm-Message-State: ALoCoQnrsomsfqWonleOFMGpcj6zaWmne3VnUaJhj8ukpmf15+sZ6fI1VMG8VwaXA85KvnZ3i8no
-X-Received: by 10.180.231.4 with SMTP id tc4mr9246114wic.27.1433947190921;
-	Wed, 10 Jun 2015 07:39:50 -0700 (PDT)
+	bh=XiEXVesnQeV7ag6RWFoB9Y99IHFduOP2LLwBVuyjmxo=;
+	b=CqcnGiXn6JQKpT8q44imU9NLqPzrErT53IlBRHm5FM2sRzhZiFVoNSztpSJki+fYBP
+	Jz0PcB49HoJn2cg3COEPgbXfEhBvMrq8aOdxMGBPqlD4GE8pfVs+2y3XewvBx52Arc4g
+	CZsdHjXvCvE/W8gOER/sNT7AzS7fWru2rne4SsAvIuwqwegJgEBgn2ST1pQNoF4RXi9/
+	ZVAkc0YfHcsc//Pbsm7ClOAvRZMkncdUJLu3DvMIzkR+jhKAqks52rbB5gJs7LFjsHVu
+	k51LJTo2fCQgLhlOGwD1T0Q2uz49ueYMuNTZVxAUkI3rWjqyADAKA7Yu/ADfgggHiE/2
+	T8vw==
+X-Gm-Message-State: ALoCoQm8ha/ZA6guR8lzSvFIJXKWzZBQxrMrItYilADdpE6z0x5lTL3HuHZoul9aaB0vejTEnJgx
+X-Received: by 10.180.106.195 with SMTP id gw3mr9139697wib.25.1433947194728;
+	Wed, 10 Jun 2015 07:39:54 -0700 (PDT)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id ny7sm8295069wic.11.2015.06.10.07.39.49
+	by mx.google.com with ESMTPSA id df1sm8294717wib.12.2015.06.10.07.39.53
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 10 Jun 2015 07:39:49 -0700 (PDT)
+	Wed, 10 Jun 2015 07:39:53 -0700 (PDT)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id 1DA29560FDA; Wed, 10 Jun 2015 15:39:09 +0100 (BST)
+	id 1F781561215; Wed, 10 Jun 2015 15:39:09 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 10 Jun 2015 15:39:00 +0100
-Message-Id: <33d2b87aca667d72262a3928deaf35414b46a7c1.1433946742.git.alexandru.damian@intel.com>
+Date: Wed, 10 Jun 2015 15:39:01 +0100
+Message-Id: <a5bc29083d4f85a5695f3f62d5badb783c6f7224.1433946742.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <15a2274eba13d19b864f337057d61c75ff7849cc.1433946742.git.alexandru.damian@intel.com>
 References: <15a2274eba13d19b864f337057d61c75ff7849cc.1433946742.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1433946742.git.alexandru.damian@intel.com>
 References: <cover.1433946742.git.alexandru.damian@intel.com>
-Subject: [PATCH 12/19] toastergui: remove xhr_datatypeahaed layerdeps call
+Subject: [PATCH 13/19] toaster: fixes after refactoring
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,412 +48,496 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 10 Jun 2015 14:39:50 -0000
+X-List-Received-Date: Wed, 10 Jun 2015 14:39:54 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-This patch removes the url-constructing calls to get the layer details
-in favor of embedding the look-up URL in the JSON data on the
-layer list page.
+This patch fixes issues brought in by refactoring:
 
-This allows further removal of the XHR-specific code for layer dependencies
-in favor of REST calls to layer details data.
+* the New Build button is working with pre-set projects
+* the xhr_datatypeahead is exposed for calls that are not
+mapable to the REST objects
+* a new table returing recipes provided by layers currently
+selected in the project is used to provide recipe suggestions
+* the field names in json are switched from "list" to "rows" as
+to maintain consistency with the ToasterTables
+* the "value" field in xhr_ calls is now named "search" to maintain
+consistency
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/toaster/toastergui/static/js/importlayer.js    |  8 +--
- lib/toaster/toastergui/static/js/layerdetails.js   |  2 +-
- lib/toaster/toastergui/static/js/libtoaster.js     |  9 ++--
- lib/toaster/toastergui/static/js/projectapp.js     | 61 ++++++++++++++++------
- lib/toaster/toastergui/tables.py                   | 23 +++++---
- lib/toaster/toastergui/templates/importlayer.html  |  1 -
- lib/toaster/toastergui/templates/layerdetails.html |  1 -
- lib/toaster/toastergui/templates/project.html      |  1 -
- lib/toaster/toastergui/urls.py                     |  3 --
- lib/toaster/toastergui/views.py                    | 11 +---
- 10 files changed, 73 insertions(+), 47 deletions(-)
+ lib/toaster/orm/models.py                      |   5 +-
+ lib/toaster/toastergui/static/js/base.js       | 104 +++++++++++++++----------
+ lib/toaster/toastergui/static/js/libtoaster.js |   2 +-
+ lib/toaster/toastergui/static/js/projectapp.js |  24 ++++--
+ lib/toaster/toastergui/tables.py               |  10 ++-
+ lib/toaster/toastergui/templates/base.html     |   7 +-
+ lib/toaster/toastergui/templates/project.html  |   3 +-
+ lib/toaster/toastergui/urls.py                 |   8 ++
+ lib/toaster/toastergui/views.py                |  17 ++--
+ 9 files changed, 116 insertions(+), 64 deletions(-)
 
-diff --git a/lib/toaster/toastergui/static/js/importlayer.js b/lib/toaster/toastergui/static/js/importlayer.js
-index e1fc5c5..e9d7ae8 100644
---- a/lib/toaster/toastergui/static/js/importlayer.js
-+++ b/lib/toaster/toastergui/static/js/importlayer.js
-@@ -48,7 +48,7 @@ function importLayerPageInit (ctx) {
-     newLayerDep.children("span").tooltip();
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index 8e73ee1..8819450 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -180,13 +180,12 @@ class Project(models.Model):
+             queryset = queryset.filter(layer__name = layer_name)
  
-     var link = newLayerDep.children("a");
--    link.attr("href", ctx.layerDetailsUrl+String(currentLayerDepSelection.id));
-+    link.attr("href", currentLayerDepSelection.layerDetailsUrl);
-     link.text(currentLayerDepSelection.name);
-     link.tooltip({title: currentLayerDepSelection.tooltip, placement: "right"});
+         # order by layer version priority
+-        queryset = queryset.filter(Q(layer_source=None) | Q(layer_source__releaselayersourcepriority__release = release)).select_related('layer_source', 'layer', 'up_branch').annotate(prio=Avg("layer_source__releaselayersourcepriority__priority")).order_by("-prio")
++        queryset = queryset.filter(Q(layer_source=None) | Q(layer_source__releaselayersourcepriority__release = release)).select_related('layer_source', 'layer', 'up_branch', "layer_source__releaselayersourcepriority__priority").order_by("-layer_source__releaselayersourcepriority__priority")
  
-@@ -63,11 +63,11 @@ function importLayerPageInit (ctx) {
+         return queryset
  
-     $("#layer-deps-list").append(newLayerDep);
+-    # returns a set of layer-equivalent set of layers already in project
+     def projectlayer_equivalent_set(self):
+-        return [j for i in [x.layercommit.get_equivalents_wpriority(self) for x in self.projectlayer_set.all().select_related("up_branch")] for j in i]
++        return self.compatible_layerversions().filter(layer__name__in = [x.layercommit.layer.name for x in self.projectlayer_set.all()]).select_related("up_branch")
  
--    libtoaster.getLayerDepsForProject(libtoaster.ctx.projectId, currentLayerDepSelection.id, function (data){
-+    libtoaster.getLayerDepsForProject(currentLayerDepSelection.layerDetailsUrl, function (data){
-         /* These are the dependencies of the layer added as a dependency */
-         if (data.list.length > 0) {
--          currentLayerDepSelection.url = ctx.layerDetailsUrl+currentLayerDepSelection.id;
--          layerDeps[currentLayerDepSelection.id].deps = data.list
-+          currentLayerDepSelection.url = currentLayerDepSelection.layerDetailsUrl;
-+          layerDeps[currentLayerDepSelection.id].deps = data.list;
-         }
+     def schedule_build(self):
+         from bldcontrol.models import BuildRequest, BRTarget, BRLayer, BRVariable, BRBitbake
+diff --git a/lib/toaster/toastergui/static/js/base.js b/lib/toaster/toastergui/static/js/base.js
+index 747442c..06d0676 100644
+--- a/lib/toaster/toastergui/static/js/base.js
++++ b/lib/toaster/toastergui/static/js/base.js
+@@ -1,100 +1,118 @@
++'use strict';
  
-         /* Clear the current selection */
-diff --git a/lib/toaster/toastergui/static/js/layerdetails.js b/lib/toaster/toastergui/static/js/layerdetails.js
-index ab78182..0accd97 100644
---- a/lib/toaster/toastergui/static/js/layerdetails.js
-+++ b/lib/toaster/toastergui/static/js/layerdetails.js
-@@ -65,7 +65,7 @@ function layerDetailsPageInit (ctx) {
-       newLayerDep.children("span").tooltip();
+-
+-function basePageInit (ctx) {
++function basePageInit(ctx) {
  
-       var link = newLayerDep.children("a");
--      link.attr("href", ctx.layerDetailsUrl+String(currentLayerDepSelection.id));
-+      link.attr("href", currentLayerDepSelection.layerDetailsUrl);
-       link.text(currentLayerDepSelection.name);
-       link.tooltip({title: currentLayerDepSelection.tooltip, placement: "right"});
- 
-diff --git a/lib/toaster/toastergui/static/js/libtoaster.js b/lib/toaster/toastergui/static/js/libtoaster.js
-index 2a9a790..b1038cf 100644
---- a/lib/toaster/toastergui/static/js/libtoaster.js
-+++ b/lib/toaster/toastergui/static/js/libtoaster.js
-@@ -170,10 +170,10 @@ var libtoaster = (function (){
-     });
+   var newBuildButton = $("#new-build-button");
+   /* Hide the button if we're on the project,newproject or importlyaer page
+    * or if there are no projects yet defined
+    */
+-  if (ctx.numProjects == 0 || ctx.currentUrl.search('newproject|project/\\d$|importlayer$') > 0){
+-      newBuildButton.hide();
+-      return;
++  if (ctx.numProjects === 0 || ctx.currentUrl.search('newproject|project/\\d$|importlayer$') > 0) {
++    newBuildButton.hide();
++    return;
    }
  
--  function _getLayerDepsForProject(projectId, layerId, onSuccess, onFail){
-+  function _getLayerDepsForProject(url, onSuccess, onFail){
-     /* Check for dependencies not in the current project */
--    $.getJSON(libtoaster.ctx.projectLayersUrl,
--      { format: 'json', search: layerId },
-+    $.getJSON(url,
-+      { format: 'json' },
-       function(data) {
-         if (data.error != "ok") {
-           console.log(data.error);
-@@ -225,8 +225,7 @@ var libtoaster = (function (){
-   function _addRmLayer(layerObj, add, doneCb){
-     if (add === true) {
-       /* If adding get the deps for this layer */
--      libtoaster.getLayerDepsForProject(libtoaster.ctx.projectId,
--        layerObj.id,
-+      libtoaster.getLayerDepsForProject(layerObj.url,
-         function (layers) {
+   var currentProjectId = libtoaster.ctx.projectId;
  
-         /* got result for dependencies */
+   /* Hide the change project icon when there is only one project */
+-  if (ctx.numProjects == 1){
+-     $('#project .icon-pencil').hide();
++  if (ctx.numProjects === 1) {
++    $('#project .icon-pencil').hide();
+   }
+ 
+   newBuildButton.show().removeAttr("disabled");
+ 
+ 
+-  _checkProjectBuildable()
++  var newBuildProjectInput = $("#new-build-button #project-name-input");
++  var newBuildTargetBuildBtn = $("#new-build-button #build-button");
++  var newBuildTargetInput = $("#new-build-button #build-target-input");
++  var newBuildProjectSaveBtn = $("#new-build-button #save-project-button");
++
++
++  var selectedTarget;
++
++  _checkProjectBuildable();
+   _setupNewBuildButton();
+ 
+ 
+-  function _checkProjectBuildable(){
+-    if (libtoaster.ctx.projectId == undefined)
++  function _checkProjectBuildable() {
++    if (libtoaster.ctx.projectId === undefined) {
+       return;
++    }
+ 
+     libtoaster.getProjectInfo(libtoaster.ctx.projectPageUrl,
+-      function(data){
+-        if (data.machine.name == undefined || data.layers.length == 0) {
++      function (data) {
++        if (data.machine.name === undefined || data.layers.length === 0) {
+           /* we can't build anything with out a machine and some layers */
+           $("#new-build-button #targets-form").hide();
+           $("#new-build-button .alert").show();
+         } else {
+           $("#new-build-button #targets-form").show();
+           $("#new-build-button .alert").hide();
++
++          /* we can build this project; enable input fields */
++          newBuildTargetInput.prop("disabled", false);
++          newBuildTargetBuildBtn.prop("disabled", false);
++
++          libtoaster.makeTypeahead(newBuildTargetInput, libtoaster.ctx.projectTargetsUrl, { format: "json" }, function (item) {
++            /* successfully selected a target */
++            selectedTarget = item;
++          });
++
+         }
+-    }, null);
++      }, null);
+   }
+ 
+   function _setupNewBuildButton() {
+     /* Setup New build button */
+-    var newBuildProjectInput = $("#new-build-button #project-name-input");
+-    var newBuildTargetBuildBtn = $("#new-build-button #build-button");
+-    var newBuildTargetInput = $("#new-build-button #build-target-input");
+-    var newBuildProjectSaveBtn = $("#new-build-button #save-project-button");
+-    var selectedTarget;
+     var selectedProject;
+ 
+     /* If we don't have a current project then present the set project
+      * form.
+      */
+-    if (libtoaster.ctx.projectId == undefined) {
++    if (libtoaster.ctx.projectId === undefined) {
+       $('#change-project-form').show();
+       $('#project .icon-pencil').hide();
+     }
+ 
+ 
+-    libtoaster.makeTypeahead(newBuildProjectInput, libtoaster.ctx.projectsUrl, { format : "json" }, function(item){
+-        /* successfully selected a project */
+-        newBuildProjectSaveBtn.removeAttr("disabled");
+-        selectedProject = item;
++    libtoaster.makeTypeahead(newBuildProjectInput, libtoaster.ctx.projectsUrl, { format : "json" }, function (item) {
++      /* successfully selected a project */
++      newBuildProjectSaveBtn.removeAttr("disabled");
++      selectedProject = item;
+     });
+ 
+     /* Any typing in the input apart from enter key is going to invalidate
+      * the value that has been set by selecting a suggestion from the typeahead
+      */
+-    newBuildProjectInput.on('input', function(event) {
+-        if (event.keyCode == 13)
+-          return;
+-        newBuildProjectSaveBtn.attr("disabled", "disabled");
++    newBuildProjectInput.on('input', function (event) {
++      if (event.keyCode === 13) {
++        return;
++      }
++      newBuildProjectSaveBtn.attr("disabled", "disabled");
+     });
+ 
+-    newBuildTargetInput.on('input', function() {
+-      if ($(this).val().length == 0)
++    newBuildTargetInput.on('input', function () {
++      if ($(this).val().length === 0) {
+         newBuildTargetBuildBtn.attr("disabled", "disabled");
+-      else
++      } else {
+         newBuildTargetBuildBtn.removeAttr("disabled");
++      }
+     });
+ 
+-    newBuildTargetBuildBtn.click(function() {
+-      if (!newBuildTargetInput.val())
++    newBuildTargetBuildBtn.click(function () {
++      if (!newBuildTargetInput.val()) {
+         return;
++      }
+ 
+-      if (!selectedTarget)
++      if (!selectedTarget) {
+         selectedTarget = { name: newBuildTargetInput.val() };
++      }
+       /* fire and forget */
+-      libtoaster.startABuild(ctx.projectBuildsUrl, libtoaster.ctx.projectId, selectedTarget.name, null, null);
++      libtoaster.startABuild(libtoaster.ctx.projectBuildsUrl, libtoaster.ctx.projectId, selectedTarget.name, null, null);
+       window.location.replace(libtoaster.ctx.projectPageUrl);
+     });
+ 
+-    newBuildProjectSaveBtn.click(function() {
+-      libtoaster.ctx.projectId = selectedProject.pk
++    newBuildProjectSaveBtn.click(function () {
++      libtoaster.ctx.projectId = selectedProject.pk;
+       /* Update the typeahead project_id paramater */
+       _checkProjectBuildable();
+ 
+@@ -111,10 +129,10 @@ function basePageInit (ctx) {
+       newBuildTargetInput.prop("disabled", false);
+       newBuildTargetBuildBtn.prop("disabled", false);
+ 
+-      libtoaster.makeTypeahead(newBuildTargetInput, selectedProject.projectTargetsUrl, { format: "json" }, function(item){
++      libtoaster.makeTypeahead(newBuildTargetInput, selectedProject.projectTargetsUrl, { format: "json" }, function (item) {
+         /* successfully selected a target */
+         selectedTarget = item;
+-	    });
++      });
+ 
+       newBuildTargetInput.val("");
+ 
+@@ -123,12 +141,12 @@ function basePageInit (ctx) {
+       $("#new-build-button .alert a").attr('href', libtoaster.ctx.projectPageUrl);
+       $("#project .icon-pencil").show();
+ 
+-      $("#change-project-form").slideUp({ 'complete' : function() {
++      $("#change-project-form").slideUp({ 'complete' : function () {
+           $("#new-build-button #project").show();
+       }});
+     });
+ 
+-    $('#new-build-button #project .icon-pencil').click(function() {
++    $('#new-build-button #project .icon-pencil').click(function () {
+       newBuildProjectSaveBtn.attr("disabled", "disabled");
+       newBuildProjectInput.val($("#new-build-button #project a").text());
+       $("#cancel-change-project").show();
+@@ -136,8 +154,8 @@ function basePageInit (ctx) {
+       $("#change-project-form").slideDown();
+     });
+ 
+-    $("#new-build-button #cancel-change-project").click(function() {
+-      $("#change-project-form").hide(function(){
++    $("#new-build-button #cancel-change-project").click(function () {
++      $("#change-project-form").hide(function () {
+         $('#new-build-button #project').show();
+       });
+ 
+@@ -146,7 +164,7 @@ function basePageInit (ctx) {
+     });
+ 
+     /* Keep the dropdown open even unless we click outside the dropdown area */
+-    $(".new-build").click (function(event) {
++    $(".new-build").click (function (event) {
+       event.stopPropagation();
+     });
+   };
+diff --git a/lib/toaster/toastergui/static/js/libtoaster.js b/lib/toaster/toastergui/static/js/libtoaster.js
+index b1038cf..23755a7 100644
+--- a/lib/toaster/toastergui/static/js/libtoaster.js
++++ b/lib/toaster/toastergui/static/js/libtoaster.js
+@@ -25,7 +25,7 @@ var libtoaster = (function (){
+               return;
+             }
+ 
+-            return process (data.list);
++            return process (data.rows);
+           });
+         },
+         updater: function(item) {
 diff --git a/lib/toaster/toastergui/static/js/projectapp.js b/lib/toaster/toastergui/static/js/projectapp.js
-index 36c942f..a915278 100644
+index a915278..44e244d 100644
 --- a/lib/toaster/toastergui/static/js/projectapp.js
 +++ b/lib/toaster/toastergui/static/js/projectapp.js
-@@ -16,7 +16,9 @@
- //  with this program; if not, write to the Free Software Foundation, Inc.,
- //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- 
--angular_formpost = function($httpProvider) {
-+'use strict';
-+
-+var angular_formpost = function($httpProvider) {
-   // Use x-www-form-urlencoded Content-Type
-   // By Ezekiel Victor, http://victorblog.com/2012/12/20/make-angularjs-http-service-behave-like-jquery-ajax/, no license, with attribution
-   $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
-@@ -127,10 +129,10 @@ projectApp.filter('timediff', function() {
-             if (parseInt(j) < 10) {return "0" + j;}
-             return j;
-         }
--        seconds = parseInt(input);
--        minutes = Math.floor(seconds / 60);
-+        var seconds = parseInt(input);
-+        var minutes = Math.floor(seconds / 60);
-         seconds = seconds - minutes * 60;
--        hours = Math.floor(seconds / 3600);
-+        var hours = Math.floor(seconds / 3600);
-         seconds = seconds - hours * 3600;
-         return pad(hours) + ":" + pad(minutes) + ":" + pad(seconds);
-     };
-@@ -250,6 +252,31 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
-         }
+@@ -217,13 +217,13 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
+     $scope.getAutocompleteSuggestions = function(type, currentValue) {
          var deffered = $q.defer();
  
-+        /* we only talk in JSON to the server */
-+        if (callparams.method == 'GET') {
-+            if (callparams.data === undefined) {
-+                callparams.data = {};
-+            }
-+            callparams.data.format = "json";
-+        } else {
-+            if (callparams.url.indexOf("?") > -1) {
-+              callparams.url = callparams.url.split("?").map(function (element, index) {
-+                if (index == 1) {
-+                    var elements = [];
-+                    if (element.indexOf("&")>-1) {
-+                        elements = element.split("&");
-+                    }
-+                    elements.push("format=json");
-+                    element = elements.join("&");
-+                }
-+                return element;
-+              }).join("?");
-+            } else {
-+              callparams.url += "?format=json";
-+            }
-+        }
-+
-+
-         if (undefined === callparams.headers) { callparams.headers = {}; }
-         callparams.headers['X-CSRFToken'] = $cookies.csrftoken;
+-        $http({method:"GET", url: $scope.urls.xhr_datatypeahead, params : { type: type, value: currentValue}})
++        $http({method:"GET", url: $scope.urls.xhr_datatypeahead, params : { type: type, search: currentValue}})
+             .success(function (_data) {
+                 if (_data.error != "ok") {
+                     console.warn(_data.error);
+                     deffered.reject(_data.error);
+                 }
+-                deffered.resolve(_data.list);
++                deffered.resolve(_data.rows);
+             });
  
-@@ -476,8 +503,9 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
-     };
- 
- 
--    $scope.onLayerSelect = function (item) {
-+    $scope.onLayerSelect = function (item, model, label) {
-         $scope.layerToAdd = item;
-+        $scope.layerAddName = item.layer__name;
-     };
- 
-     $scope.machineSelect = function (machineName) {
-@@ -501,20 +529,22 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
- 
-     $scope.layerAdd = function() {
- 
--        $http({method:"GET", url: $scope.layerToAdd.layerdict.layerdetailurl, params : {}})
-+        $http({method:"GET", url: $scope.layerToAdd.layerDetailsUrl, params : {format: "json"}})
-         .success(function (_data) {
+         return deffered.promise;
+@@ -534,8 +534,17 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
               if (_data.error != "ok") {
                   console.warn(_data.error);
               } else {
--                 if (_data.list.length > 0) {
-+                 console.log("got layer deps", _data.layerdeps.list);
-+                 if (_data.layerdeps.list.length > 0) {
+-                 console.log("got layer deps", _data.layerdeps.list);
+-                 if (_data.layerdeps.list.length > 0) {
++                /* filter out layers that are already in the project */
++                var filtered_list = [];
++                var projectlayers_ids = $scope.layers.map(function (e) { return e.id });
++                for (var i = 0; i < _data.layerdeps.list.length; i++) {
++                    if (projectlayers_ids.indexOf(_data.layerdeps.list[i].id) == -1) {
++                        filtered_list.push( _data.layerdeps.list[i]);
++                    }
++                }
++
++                _data.layerdeps.list = filtered_list;
++                if (_data.layerdeps.list.length > 0) {
                       // activate modal
-+                     console.log("listing modals");
+                      console.log("listing modals");
                       var modalInstance = $modal.open({
-                        templateUrl: 'dependencies_modal',
-                        controller: function ($scope, $modalInstance, items, layerAddName) {
-                          $scope.items =  items;
-                          $scope.layerAddName = layerAddName;
-                          $scope.selectedItems = (function () {
--                                s = {};
-+                                var s = {};
-                                 for (var i = 0; i < items.length; i++)
-                                     { s[items[i].id] = true; }
-                                 return s;
-@@ -535,16 +565,18 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
+@@ -575,7 +584,6 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
+                      console.log("built modal instance", modalInstance);
+ 
+                      modalInstance.result.then(function (selectedArray) {
+-                         console.log("layer to add", $scope.layerToAdd)
+                          selectedArray.push($scope.layerToAdd.id);
+                          console.warn("TRC6: selected", selectedArray);
+ 
+@@ -634,13 +642,13 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
+     $scope.testProjectSettingsChange = function(elementid) {
+         if (elementid != '#change-project-version') throw "Not implemented";
+ 
+-        $http({method:"GET", url: $scope.urls.xhr_datatypeahead, params : { type: "versionlayers", value: $scope.projectVersion }}).
++        $http({method:"GET", url: $scope.urls.xhr_datatypeahead, params : { type: "versionlayers", search: $scope.projectVersion }}).
+         success(function (_data) {
+             if (_data.error != "ok") {
+                 alert (_data.error);
+             }
+             else {
+-                 if (_data.list.length > 0) {
++                 if (_data.rows.length > 0) {
+                      // activate modal
+                      var modalInstance = $modal.open({
+                        templateUrl: 'change_version_modal',
+@@ -660,7 +668,7 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
                         },
                         resolve: {
                           items: function () {
 -                             return _data.list;
-+                             return _data.layerdeps.list;
++                             return _data.rows;
                           },
-                          layerAddName: function () {
-                              return $scope.layerAddName;
-                          },
-                        }
-                      });
-+                     console.log("built modal instance", modalInstance);
- 
-                      modalInstance.result.then(function (selectedArray) {
--                         selectedArray.push($scope.layerToAdd.layerversion.id);
-+                         console.log("layer to add", $scope.layerToAdd)
-+                         selectedArray.push($scope.layerToAdd.id);
-                          console.warn("TRC6: selected", selectedArray);
- 
-                          $scope._makeXHRCall({
-@@ -563,7 +595,7 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
-                          $scope._makeXHRCall({
-                              method: "POST", url: $scope.urls.xhr_edit,
-                              data: {
--                                 layerAdd:  $scope.layerToAdd.layerversion.id,
-+                                 layerAdd:  $scope.layerToAdd.id,
-                              }
-                          }).then(function () {
-                              $scope.layerAddName = undefined;
-@@ -772,8 +804,7 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
-             return;
- 
-           if (imported.deps_added.length === 0) {
--            text = "You have imported <strong><a href=\""+$scope.urls.layer+
--              imported.imported_layer.id+"\">"+imported.imported_layer.name+
-+            text = "You have imported <strong><a href=\""+imported.imported_layer.layerDetailsUrl+"\">"+imported.imported_layer.name+
-               "</a></strong> and added it to your project.";
-           } else {
-             var links = "<a href=\""+$scope.urls.layer+
-@@ -781,7 +812,7 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
-               "</a>, ";
- 
-             imported.deps_added.map (function(item, index){
--              links +="<a href=\""+$scope.urls.layer+item.id+"\" >"+item.name+
-+              links +="<a href=\""+item.layerDetailsUrl+"\" >"+item.name+
-                 "</a>";
-               /*If we're at the last element we don't want the trailing comma */
-               if (imported.deps_added[index+1] !== undefined)
-@@ -832,7 +863,7 @@ projectApp.controller('prjCtrl', function($scope, $modal, $http, $interval, $loc
-         if (zone.maxid === undefined) { zone.maxid = 0; }
-         var crtid = zone.maxid ++;
-         angular.forEach(zone, function (o) { o.close(); });
--        o = {
-+        var o = {
-             id: crtid, text: text, type: type,
-             close: function() {
-                 zone.splice((function(id) {
+                          releaseName: function () {
+                              return $scope.releases.filter(function (e) { if (e.id == $scope.projectVersion) return e;})[0].name;
 diff --git a/lib/toaster/toastergui/tables.py b/lib/toaster/toastergui/tables.py
-index e03aa76..003b924 100644
+index 003b924..b85527e 100644
 --- a/lib/toaster/toastergui/tables.py
 +++ b/lib/toaster/toastergui/tables.py
-@@ -23,6 +23,7 @@ from toastergui.widgets import ToasterTable, ToasterTemplateView
- from orm.models import Recipe, ProjectLayer, Layer_Version, Machine, Project
- from django.db.models import Q, Max
- from django.conf.urls import url
-+from django.core.urlresolvers import reverse
- from django.views.generic import TemplateView
+@@ -287,7 +287,7 @@ class RecipesTable(ToasterTable):
+     def setup_queryset(self, *args, **kwargs):
+         prj = Project.objects.get(pk = kwargs['pid'])
  
- class LayersTable(ToasterTable):
-@@ -35,9 +36,9 @@ class LayersTable(ToasterTable):
-     def get_context_data(self, **kwargs):
-         context = super(LayersTable, self).get_context_data(**kwargs)
+-        self.queryset = Recipe.objects.filter(Q(layer_version__up_branch__name= prj.release.name) | Q(layer_version__build__in = prj.build_set.all())).filter(name__regex=r'.{1,}.*')
++        self.queryset = Recipe.objects.filter(layer_version__in = prj.compatible_layerversions())
  
--        context['project'] = Project.objects.get(pk=kwargs['pid'])
--
--        context['projectlayers'] = map(lambda prjlayer: prjlayer.layercommit.id, ProjectLayer.objects.filter(project=context['project']))
-+        project = Project.objects.get(pk=kwargs['pid'])
-+        context['project'] = project
-+        context['projectlayers'] = map(lambda prjlayer: prjlayer.layercommit.id, ProjectLayer.objects.filter(project=project))
+         search_maxids = map(lambda i: i[0], list(self.queryset.values('name').distinct().annotate(max_id=Max('id')).values_list('max_id')))
  
-         return context
- 
-@@ -142,6 +143,13 @@ class LayersTable(ToasterTable):
+@@ -392,3 +392,11 @@ class LayerRecipesTable(RecipesTable):
+         self.add_column(title="Build recipe",
                          static_data_name="add-del-layers",
-                         static_data_template='{% include "layer_btn.html" %}')
- 
-+        project = Project.objects.get(pk=kwargs['pid'])
-+        self.add_column(title="LayerDetailsUrl",
-+                        displayable = False,
-+                        field_name="layerDetailsUrl",
-+                        computation = lambda x: reverse('layerdetails', args=(project.id, x.id)))
+                         static_data_template=build_recipe_template)
 +
++class ProjectLayersRecipesTable(RecipesTable):
++    """ Table that lists only recipes available for layers added to the project """
 +
- 
- 
- class LayerDetails(ToasterTemplateView):
-@@ -152,7 +160,8 @@ class LayerDetails(ToasterTemplateView):
-         context['project'] = Project.objects.get(pk=kwargs['pid'])
-         context['layerversion'] = Layer_Version.objects.get(pk=kwargs['layerid'])
-         context['layerdict'] = _lv_to_dict(context['project'], context['layerversion'])
--        context['layerdeps'] = {"list": [x.depends_on.get_equivalents_wpriority(context['project'])[0] for x in context['layerversion'].dependencies.all()]}
-+        context['layerdeps'] = {"list": [
-+            [{"id": y.id, "name": y.layer.name} for y in x.depends_on.get_equivalents_wpriority(context['project'])][0] for x in context['layerversion'].dependencies.all()]}
-         context['projectlayers'] = map(lambda prjlayer: prjlayer.layercommit.id, ProjectLayer.objects.filter(project=context['project']))
- 
-         self.context_entries = ['project', 'layerversion', 'projectlayers', 'layerdict', 'layerdeps']
-@@ -265,9 +274,10 @@ class RecipesTable(ToasterTable):
-         self.default_orderby = "name"
- 
-     def get_context_data(self, **kwargs):
-+        project = Project.objects.get(pk=kwargs['pid'])
-         context = super(RecipesTable, self).get_context_data(**kwargs)
- 
--        context['project'] = Project.objects.get(pk=kwargs['pid'])
-+        context['project'] = project
- 
-         context['projectlayers'] = map(lambda prjlayer: prjlayer.layercommit.id, ProjectLayer.objects.filter(project=context['project']))
- 
-@@ -342,10 +352,11 @@ class RecipesTable(ToasterTable):
-                         static_data_name="add-del-layers",
-                         static_data_template='{% include "recipe_btn.html" %}')
- 
-+        project = Project.objects.get(pk=kwargs['pid'])
-         self.add_column(title="Project compatible Layer ID",
-                         displayable = False,
-                         field_name = "projectcompatible_layer",
--                        computation = lambda x: (x.layer_version.get_equivalents_wpriority(Project.objects.get(pk=kwargs['pid']))[0]))
-+                        computation = lambda x: (x.layer_version.get_equivalents_wpriority(project)[0]))
- 
- class LayerRecipesTable(RecipesTable):
-     """ Smaller version of the Recipes table for use in layer details """
-diff --git a/lib/toaster/toastergui/templates/importlayer.html b/lib/toaster/toastergui/templates/importlayer.html
-index af8f4f9..498a204 100644
---- a/lib/toaster/toastergui/templates/importlayer.html
-+++ b/lib/toaster/toastergui/templates/importlayer.html
-@@ -14,7 +14,6 @@
-                   <script>
-                     $(document).ready(function (){
-                       var ctx = {
--                        layerDetailsUrl : "{% url 'base_layerdetails' project.id %}",
-                         xhrImportLayerUrl : "{% url 'xhr_importlayer' %}",
-                       };
- 
-diff --git a/lib/toaster/toastergui/templates/layerdetails.html b/lib/toaster/toastergui/templates/layerdetails.html
-index ef1795c..7d81b14 100644
---- a/lib/toaster/toastergui/templates/layerdetails.html
-+++ b/lib/toaster/toastergui/templates/layerdetails.html
-@@ -34,7 +34,6 @@
-   $(document).ready(function (){
-     var ctx = {
-       projectBuildsUrl : "{% url 'projectbuilds' project.id %}",
--      layerDetailsUrl : "{% url 'base_layerdetails' project.id %}",
-       xhrUpdateLayerUrl : "{% url 'xhr_updatelayer' %}",
-       layerVersion : {
-         name : "{{layerversion.layer.name}}",
++    def setup_queryset(self, *args, **kwargs):
++        super(ProjectLayersRecipesTable, self).setup_queryset(*args, **kwargs)
++        prj = Project.objects.get(pk = kwargs['pid'])
++        self.queryset = self.queryset.filter(layer_version__in = prj.projectlayer_equivalent_set())
+diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
+index 7fee26e..6cdc5e8 100644
+--- a/lib/toaster/toastergui/templates/base.html
++++ b/lib/toaster/toastergui/templates/base.html
+@@ -1,5 +1,6 @@
+ <!DOCTYPE html>
+ {% load static %}
++{% load projecttags %}
+ <html lang="en">
+     <head>
+         <title>{% if objectname %} {{objectname|title}} - {% endif %}Toaster</title>
+@@ -33,8 +34,10 @@
+     htmlUrl : "{% static 'html/' %}",
+     projectsUrl : "{% url 'all-projects' %}",
+     {% if project.id %}
+-      projectPageUrl : "{% url 'project' project.id %}",
+-      projectName : "{{project.name}}",
++      projectPageUrl : {% url 'project' project.id as purl%}{{purl|json}},
++      projectName : {{project.name|json}},
++      projectTargetsUrl: {% url 'projectavailabletargets' project.id as paturl%}{{paturl|json}},
++      projectBuildsUrl: {% url 'projectbuilds' project.id as pburl %}{{pburl|json}},
+       projectId : {{project.id}},
+     {% else %}
+       projectPageUrl : undefined,
 diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
-index 63fbc40..7225363 100644
+index 7225363..bca703a 100644
 --- a/lib/toaster/toastergui/templates/project.html
 +++ b/lib/toaster/toastergui/templates/project.html
-@@ -455,7 +455,6 @@ angular.element(document).ready(function() {
-   scope.urls.targets = "{% url 'projecttargets' project.id %}";
+@@ -452,9 +452,10 @@ angular.element(document).ready(function() {
+   scope.urls.xhr_build = "{% url 'projectbuilds' project.id %}";
+   scope.urls.xhr_edit = "{% url 'project' project.id %}?format=json";
+   scope.urls.layers = "{% url 'projectlayers' project.id %}";
+-  scope.urls.targets = "{% url 'projecttargets' project.id %}";
++  scope.urls.targets = "{% url 'projectavailabletargets' project.id %}";
    scope.urls.machines = "{% url 'projectmachines' project.id %}";
    scope.urls.importlayer = "{% url 'importlayer' project.id %}";
--  scope.urls.layer = "{% url 'base_layerdetails' project.id %}";
++  scope.urls.xhr_datatypeahead = {% url 'xhr_datatypeahead' project.id as xhrdta %}{{xhrdta|json}};
    scope.project = {{prj|json}};
    scope.builds = {{builds|json}};
    scope.layers = {{layers|json}};
 diff --git a/lib/toaster/toastergui/urls.py b/lib/toaster/toastergui/urls.py
-index f1b74cd..5a79f88 100644
+index 5a79f88..bd3eb40 100644
 --- a/lib/toaster/toastergui/urls.py
 +++ b/lib/toaster/toastergui/urls.py
-@@ -80,12 +80,9 @@ urlpatterns = patterns('toastergui.views',
-         url(r'^project/(?P<pid>\d+)/configuration$', 'projectconf', name='projectconf'),
-         url(r'^project/(?P<pid>\d+)/builds/$', 'projectbuilds', name='projectbuilds'),
+@@ -96,6 +96,12 @@ urlpatterns = patterns('toastergui.views',
+               'title' : 'All compatible recipes' },
+             name="projecttargets"),
  
--        url(r'^project/(?P<pid>\d+)/layer/$', lambda x,pid: HttpResponseBadRequest(), name='base_layerdetails'),
--
-         # the import layer is a project-specific functionality;
-         url(r'^project/(?P<pid>\d+)/importlayer$', 'importlayer', name='importlayer'),
++        url(r'^project/(?P<pid>\d+)/availablerecipes/$',
++            tables.ProjectLayersRecipesTable.as_view(template_name="generic-toastertable-page.html"),
++            { 'table_name': tables.ProjectLayersRecipesTable.__name__.lower(),
++              'title' : 'Recipes available for layers in the current project' },
++            name="projectavailabletargets"),
++
+         url(r'^project/(?P<pid>\d+)/layers/$',
+             tables.LayersTable.as_view(template_name="generic-toastertable-page.html"),
+             { 'table_name': tables.LayersTable.__name__.lower(),
+@@ -118,6 +124,8 @@ urlpatterns = patterns('toastergui.views',
+               'title' : 'All machines in layer' },
+             name=tables.LayerMachinesTable.__name__.lower()),
  
--
-         # the table pages that have been converted to ToasterTable widget
-         url(r'^project/(?P<pid>\d+)/machines/$',
-             tables.MachinesTable.as_view(template_name="generic-toastertable-page.html"),
++
++        url(r'^xhr_datatypeahead/(?P<pid>\d+)$', 'xhr_datatypeahead', name='xhr_datatypeahead'),
+         url(r'^xhr_configvaredit/(?P<pid>\d+)$', 'xhr_configvaredit', name='xhr_configvaredit'),
+ 
+         url(r'^xhr_importlayer/$', 'xhr_importlayer', name='xhr_importlayer'),
 diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 5221f1f..b2b263b 100755
+index b2b263b..4dac62c 100755
 --- a/lib/toaster/toastergui/views.py
 +++ b/lib/toaster/toastergui/views.py
-@@ -2238,7 +2238,7 @@ if toastermain.settings.MANAGED:
-         if request.method == "POST":
-             # add layers
-             if 'layerAdd' in request.POST:
--                for lc in Layer_Version.objects.filter(pk__in=request.POST['layerAdd'].split(",")):
-+                for lc in Layer_Version.objects.filter(pk__in=[i for i in request.POST['layerAdd'].split(",") if len(i) > 0]):
-                     ProjectLayer.objects.get_or_create(project = prj, layercommit = lc)
+@@ -129,9 +129,9 @@ def _template_renderer(template):
  
-             # remove layers
-@@ -2328,15 +2328,6 @@ if toastermain.settings.MANAGED:
-         try:
-             prj = Project.objects.get(pk = pid)
+             if request.GET.get('format', None) == 'json':
+                 # objects is a special keyword - it's a Page, but we need the actual objects here
+-                # in XHR, the objects come in the "list" property
++                # in XHR, the objects come in the "rows" property
+                 if "objects" in context:
+-                    context["list"] = context["objects"].object_list
++                    context["rows"] = context["objects"].object_list
+                     del context["objects"]
  
--            # returns layer dependencies for a layer, excluding current project layers
--            if request.GET.get('type', None) == "layerdeps":
--                queryset = prj.compatible_layerversions().exclude(pk__in = [x.id for x in prj.projectlayer_equivalent_set()]).filter(
--                    layer__name__in = [ x.depends_on.layer.name for x in LayerVersionDependency.objects.filter(layer_version_id = request.GET.get('search', None))])
--
--                final_list = set([x.get_equivalents_wpriority(prj)[0] for x in queryset])
--
--                return HttpResponse(jsonfilter( { "error":"ok", "list" : map( _lv_to_dict(prj), sorted(final_list, key = lambda x: x.layer.name)) }), content_type = "application/json")
--
+                 # we're about to return; to keep up with the XHR API, we set the error to OK
+@@ -2340,7 +2340,7 @@ if toastermain.settings.MANAGED:
+                         retval.append(i)
  
-             # returns layer versions that would be deleted on the new release__pk
-             if request.GET.get('type', None) == "versionlayers":
+                 return HttpResponse(jsonfilter( {"error":"ok",
+-                    "list" : map( _lv_to_dict(prj),  map(lambda x: x.layercommit, retval ))
++                    "rows" : map( _lv_to_dict(prj),  map(lambda x: x.layercommit, retval ))
+                     }), content_type = "application/json")
+ 
+ 
+@@ -2358,7 +2358,7 @@ if toastermain.settings.MANAGED:
+                     # and show only the selected layers for this project
+                     final_list = set([x.get_equivalents_wpriority(prj)[0] for x in queryset_all])
+ 
+-                return HttpResponse(jsonfilter( { "error":"ok",  "list" : map( _lv_to_dict(prj), final_list) }), content_type = "application/json")
++                return HttpResponse(jsonfilter( { "error":"ok",  "rows" : map( _lv_to_dict(prj), final_list) }), content_type = "application/json")
+ 
+ 
+             raise Exception("Unknown request! " + request.GET.get('type', "No parameter supplied"))
+@@ -2845,7 +2845,7 @@ if toastermain.settings.MANAGED:
+             p.projectPageUrl = reverse('project', args=(p.id,))
+             p.projectLayersUrl = reverse('projectlayers', args=(p.id,))
+             p.projectBuildsUrl = reverse('projectbuilds', args=(p.id,))
+-            p.projectTargetsUrl = reverse('projecttargets', args=(p.id,))
++            p.projectTargetsUrl = reverse('projectavailabletargets', args=(p.id,))
+ 
+         # build view-specific information; this is rendered specifically in the builds page, at the top of the page (i.e. Recent builds)
+         build_mru = _managed_get_latest_builds()
+@@ -3144,6 +3144,13 @@ else:
+     def project(request, pid):
+         return {}
+ 
++    from django.views.decorators.csrf import csrf_exempt
++    @csrf_exempt
++    @_template_renderer('landing_not_managed.html')
++    def xhr_datatypeahead(request, pid):
++        return {}
++
++
+     @_template_renderer('landing_not_managed.html')
+     def xhr_configvaredit(request, pid):
+         return {}
 -- 
 1.9.1
 
