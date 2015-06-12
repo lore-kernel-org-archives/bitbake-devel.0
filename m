@@ -1,32 +1,41 @@
-Return-Path: <zboszor@pr.hu>
-X-Greylist: delayed 1704 seconds by postgrey-1.34 at layers.openembedded.org;
-	Fri, 12 Jun 2015 10:54:28 UTC
-Received: from mail7.pr.hu (mail7.pr.hu [87.242.0.7])
-	by mail.openembedded.org (Postfix) with ESMTP id 15CFF73FF2
+Return-Path: <pascal.bach@siemens.com>
+X-Greylist: delayed 552 seconds by postgrey-1.34 at layers.openembedded.org;
+	Fri, 12 Jun 2015 12:56:46 UTC
+Received: from goliath.siemens.de (goliath.siemens.de [192.35.17.28])
+	by mail.openembedded.org (Postfix) with ESMTP id D444B74051
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 12 Jun 2015 10:54:28 +0000 (UTC)
-Received: from [2a02:808:3:101::5] (helo=mail.pr.hu)
-	by frontdoor.pr.hu with esmtps (TLS1.2:DHE_RSA_AES_128_CBC_SHA1:128)
-	(Exim 4.80) (envelope-from <zboszor@pr.hu>) id 1Z3MA0-0002AG-Vn
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 12 Jun 2015 12:26:04 +0200
-Received: from host-87-242-63-200.prtelecom.hu ([87.242.63.200]
-	helo=s002.sicom.com)
-	by mail.pr.hu with esmtpsa (TLS1.2:DHE_RSA_AES_128_CBC_SHA1:128)
-	(Exim 4.80) (envelope-from <zboszor@pr.hu>) id 1Z3M9x-0000eQ-6Y
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 12 Jun 2015 12:26:02 +0200
-Message-ID: <557AB3B6.1020606@pr.hu>
-Date: Fri, 12 Jun 2015 12:25:58 +0200
-From: Boszormenyi Zoltan <zboszor@pr.hu>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+	Fri, 12 Jun 2015 12:56:46 +0000 (UTC)
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+	by goliath.siemens.de (8.15.1/8.15.1) with ESMTPS id t5CClTCR021391
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 12 Jun 2015 14:47:29 +0200
+Received: from DEFTHW99ERMMSX.ww902.siemens.net
+	(defthw99ermmsx.ww902.siemens.net [139.22.70.142])
+	by mail2.sbs.de (8.15.1/8.15.1) with ESMTPS id t5CClTEw020749
+	(version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL)
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 12 Jun 2015 14:47:29 +0200
+Received: from DENBGAT9ERRMSX.ww902.siemens.net (139.22.70.197) by
+	DEFTHW99ERMMSX.ww902.siemens.net (139.22.70.142) with Microsoft SMTP
+	Server (TLS) id 14.3.235.1; Fri, 12 Jun 2015 14:47:28 +0200
+Received: from DEFTHW99EH4MSX.ww902.siemens.net ([169.254.2.192]) by
+	DENBGAT9ERRMSX.ww902.siemens.net ([139.22.70.197]) with mapi id
+	14.03.0235.001; Fri, 12 Jun 2015 14:47:28 +0200
+From: "Bach, Pascal" <pascal.bach@siemens.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: Allow access to specific git server while
+	BB_FETCH_PREMIRRORONLY ="1"
+Thread-Index: AdClDZx94akg9l0aSb6IzkPqidxZfQ==
+Date: Fri, 12 Jun 2015 12:47:26 +0000
+Message-ID: <355BE46A91031048906B695426A8D8E616BEA6C0@DEFTHW99EH4MSX.ww902.siemens.net>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [139.22.70.40]
 MIME-Version: 1.0
-To: bitbake-devel@lists.openembedded.org
-X-Spam-Score: 0.7 (/)
-X-Scan-Signature: 00247148ec76130c8a78f769f9282e76
-X-Spam-Tracer: backend.mail.pr.hu 0.7 20150612102602Z
-Subject: Bitbake 1.22 GIT fetcher problem with tags
+Subject: Allow access to specific git server while BB_FETCH_PREMIRRORONLY ="1"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,46 +48,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 12 Jun 2015 10:54:31 -0000
-X-Groupsio-MsgNum: 5854
-Content-Type: multipart/mixed; boundary="------------080606070605000606060100"
+X-List-Received-Date: Fri, 12 Jun 2015 12:56:47 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
---------------080606070605000606060100
-Content-Type: text/plain; charset=iso-8859-2
-Content-Transfer-Encoding: 8bit
+Hi everybody
 
-Hi,
+I was wondering if there is a way to allow access to specific urls even if =
+BB_NO_NETWORK or BB_FETCH_PREMIRRORONLY is set.
 
-when fetching a git:// source using SRCREV="tag_name", do_fetch often fails.
-The attached patch solves it. We still use a Yocto 1.6 based system and it is a necessity.
-Can you get this or the patch from bitbake's master branch backported into old bitbake
-branches?
+The use case I have at hand it that we want to fetch all 3rd party sources =
+from a HTTP premirror we have internally. Except for some packages that are=
+ hosted on a git server where we would like bitbake to always fetch from th=
+ere (no tarball on the pre mirror).
 
-Thanks in advance and best regards,
-Zoltán Böszörményi
-
-
-
---------------080606070605000606060100
-Content-Type: text/x-patch;
- name="bitbake-1.22-git-tag-fix.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="bitbake-1.22-git-tag-fix.patch"
-
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 5d1a358..3897172 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -339,7 +339,7 @@ class Git(FetchMethod):
-         """
-         Compute the HEAD revision for the url
-         """
--        search = "refs/heads/%s refs/tags/%s^{}" % (ud.unresolvedrev[name], ud.unresolvedrev[name])
-+        search = "refs/heads/%s refs/tags/%s refs/tags/%s^{}" % (ud.unresolvedrev[name], ud.unresolvedrev[name], ud.unresolvedrev[name])
-         output = self._lsremote(ud, d, search)
-         return output.split()[0]
- 
+I tried:
+PREMIRROR_prepend =3D "git@local/foo.git git@local/foo.git \n"
 
 
---------------080606070605000606060100--
+But this doesn't seem to work.
+
+Is there way to achieve this with the current PREMIRROR variable? Or is thi=
+s functionality currently missing?
+
+With best regards,
+Pascal Bach
+
+
+
