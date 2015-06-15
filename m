@@ -1,34 +1,28 @@
-Return-Path: <openembedded-devel@urbanec.net>
-X-Greylist: delayed 599 seconds by postgrey-1.34 at layers.openembedded.org;
-	Mon, 15 Jun 2015 13:10:01 UTC
-Received: from mail14.tpgi.com.au (smtp-out14.tpgi.com.au [220.244.226.124])
-	by mail.openembedded.org (Postfix) with ESMTP id 3164D7568B
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 15ADB71144
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Jun 2015 13:10:01 +0000 (UTC)
-X-TPG-Junk-Status: Message not scanned
-X-TPG-Antivirus: Passed
-X-TPG-Abuse: host=60-242-171-118.static.tpgi.com.au; ip=60.242.171.118;
-	date=Mon, 15 Jun 2015 22:53:49 +1000
-Received: from gw.urbanec.net (60-242-171-118.static.tpgi.com.au
-	[60.242.171.118])
-	by mail14.tpgi.com.au (envelope-from openembedded-devel@urbanec.net)
-	(8.14.3/8.14.3) with ESMTP id t5FCrl9b000642
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=NO)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Jun 2015 22:53:49 +1000
-Received: from beep.urbanec.net ([192.168.42.2]) by gw.urbanec.net with esmtpsa
-	(TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128) (Exim 4.85)
-	(envelope-from <openembedded-devel@urbanec.net>) id 1Z4Tta-0004pG-QP
-	for bitbake-devel@lists.openembedded.org;
-	Mon, 15 Jun 2015 22:53:46 +1000
-Message-ID: <557ECADA.8080509@urbanec.net>
-Date: Mon, 15 Jun 2015 22:53:46 +1000
-From: Peter Urbanec <openembedded-devel@urbanec.net>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64;
-	rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+	Mon, 15 Jun 2015 13:28:49 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga103.fm.intel.com with ESMTP; 15 Jun 2015 06:28:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.13,618,1427785200"; d="scan'208";a="743676170"
+Received: from sosalmel-mobl1.ger.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.252.29.110])
+	by fmsmga002.fm.intel.com with ESMTP; 15 Jun 2015 06:28:28 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: "Liam R. Howlett" <Liam.Howlett@windriver.com>
+Date: Mon, 15 Jun 2015 14:28:26 +0100
+Message-ID: <2131793.ifvVUYI7Oy@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.14.7 (Linux/4.0.4-202.fc21.x86_64; KDE/4.14.7; x86_64; ; )
+In-Reply-To: <20150512142807.GB15805@yow-lhowlett-d0.wrs.com>
+References: <1429121824-31200-2-git-send-email-Liam.Howlett@WindRiver.com>
+	<1431429477.30971.123.camel@linuxfoundation.org>
+	<20150512142807.GB15805@yow-lhowlett-d0.wrs.com>
 MIME-Version: 1.0
-To: bitbake-devel@lists.openembedded.org
-Subject: prserv nohist mode is broken - suggested fix included
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH v3] fetch2: Add BB_ALLOWED_NETWORKS support
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,57 +35,79 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 15 Jun 2015 13:10:04 -0000
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Mon, 15 Jun 2015 13:28:57 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-<html>
-  <head>
+On Tuesday 12 May 2015 10:28:08 Liam R. Howlett wrote:
+> * Richard Purdie <richard.purdie@linuxfoundation.org> [150512 07:18]:
+> > On Thu, 2015-04-16 at 13:23 -0400, Liam R. Howlett wrote:
+> > > BB_ALLOWED_NETWORKS is a list of hosts that the fetcher will be allowed
+> > > to use when BB_NO_NETWORK is not set.
+> > > 
+> > > If BB_NO_NETWORK is set, then networking is still disabled.
+> > > 
+> > > If BB_ALLOWED_NETWORKS is not set, the behaviour remains the same as
+> > > today.
+> > > 
+> > > If BB_NO_NETWORK is NOT set, and BB_ALLOWED_NETWORKS is configured, then
+> > > only the hosts in the list are usable by the fetcher.
+> > > 
+> > > eg:
+> > > BB_ALLOWED_NETWORKS="yoctoproject.org git.gnu.org"
+> > > The fetcher will be able to download from yoctoproject.org, git.gnu.org,
+> > > but not ftp.gnu.org or any other hostname that is not in the list.
+> > > 
+> > > There is also limited support for wildcards on the beginning of the
+> > > hosts, so BB_ALLOWED_NETWORKS="*.gnu.org" with match git.gnu.org and
+> > > ftp.gnu.org as well as foo.git.gnu.org
+> > > 
+> > > Signed-off-by: Liam R. Howlett <Liam.Howlett@WindRiver.com>
+> > > ---
+> > > 
+> > >  lib/bb/fetch2/__init__.py | 53
+> > >  +++++++++++++++++++++++++++++++++++++++++++++++ lib/bb/tests/fetch.py 
+> > >     | 37 +++++++++++++++++++++++++++++++++
+> > >  2 files changed, 90 insertions(+)
+> > 
+> > I've merged this, however, one of the things we're trying to do is
+> > improve the documentation of bitbake. Would you be able to work with
+> > Scott (cc'd) to ensure this is documented in the manual please?
+> > 
+> > Cheers,
+> > 
+> > Richard
+> 
+> Absolutely, Thanks Richard.
+> 
+> Hello Scott,
+> 
+> If you don't have anything started, we can work from the text below if
+> you'd like.
+> 
+> --------
+> 
+> BB_ALLOWED_NETWORKS
+> 
+> Specifies a space delimited list of hosts which are allowed to be used
+> by the fetcher to obtain the required source code.  This list is only
+> used if BB_NO_NETWORK is not set.  Wildcard matching at the beginning of
+> hosts is supported.  Mirrors that are not in the list will be skipped
+> and logged in debug.  Attempts to access networks that are not in the
+> BB_ALLOWED_NETWORKS will cause a failure.
+> 
+> --------
+> 
+> Thanks,
+> Liam
 
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    Hi,<br>
-    <br>
-    I've run into a strange problem where in some cases package version
-    numbers would roll back. Eventually I tracked the issue to prserv
-    apparently not doing the right thing when running in the default
-    nohist mode.<br>
-    <br>
-    As a simple example, I have this in PRMAIN_nohist:<br>
-    <br>
-    <code> version</code><code>                 pkgarch   
-      checksum                             value<br>
-------------------------------------------------------------------------------<br>
-    </code><code>"beyonwiz-base-1.3-r0"    "all"   
-      "d87bfea4ce066ec8b6041a8d3188956b"    "43"
-</code><code><br>
-    </code><code>"beyonwiz-base-1.3-r0"    "all"   
-      "bba78fccad5b1b5ec9841a4002bd0252"    "42"
-</code><code><br>
-    </code><br>
-    I think the problem is the primary key used for the nohist table. It
-    should not include the checksum column.<br>
-    <br>
-    <code>PRMAIN_nohist</code> should be created only with  <code>PRIMARY
-      KEY(version,pkgarch)</code><br>
-    <br>
-    To fix up an existing database, the following SQL code can be used:<br>
-    <br>
-    <code>CREATE TABLE PRMAIN_nohist2 (`version`    TEXT NOT NULL,   
-      `pkgarch`    TEXT NOT NULL,    `checksum`    TEXT NOT NULL,   
-      `value`    INTEGER,    PRIMARY KEY(version,pkgarch));</code><code><br>
-    </code><code>insert or replace into PRMAIN_nohist2 (version,
-      pkgarch, checksum, value) select version, pkgarch, checksum, value
-      from PRMAIN_nohist order by value;</code><code><br>
-    </code><code>drop table PRMAIN_nohist ;</code><code><br>
-    </code><code>alter table PRMAIN_nohist2 rename to PRMAIN_nohist ;</code><code><br>
-    </code><br>
-    <br>
-    Cheers,<br>
-    <br>
-        Peter<br>
-    <br>
-  </body>
-</html>
+Replying to add Scott on CC - I think he has something for review.
+
+Cheers,
+Paul
+
+-- 
+
+Paul Eggleton
+Intel Open Source Technology Centre
 
