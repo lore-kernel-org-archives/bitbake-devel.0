@@ -1,39 +1,39 @@
-Return-Path: <scott.m.rifenbark@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 2933873772
+Return-Path: <danismostlikely@gmail.com>
+Received: from mail-pd0-f170.google.com (mail-pd0-f170.google.com
+	[209.85.192.170])
+	by mail.openembedded.org (Postfix) with ESMTP id 393C3608B6
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Jun 2015 14:03:27 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 15 Jun 2015 07:03:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.13,618,1427785200"; d="scan'208";a="746970483"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-	by orsmga002.jf.intel.com with ESMTP; 15 Jun 2015 07:03:12 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.217]) by
-	ORSMSX105.amr.corp.intel.com ([169.254.4.113]) with mapi id
-	14.03.0224.002; Mon, 15 Jun 2015 07:03:11 -0700
-From: "Rifenbark, Scott M" <scott.m.rifenbark@intel.com>
-To: Gary Thomas <gary@mlbassoc.com>, "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH v3] fetch2: Add BB_ALLOWED_NETWORKS
-	support
-Thread-Index: AQHQp3HNGNB67lkReUuAuyPDam9s952tmEfQ
-Date: Mon, 15 Jun 2015 14:03:11 +0000
-Message-ID: <41DEA4B02DBDEF40A0F3B6D0DDB123798D203356@ORSMSX101.amr.corp.intel.com>
-References: <1429121824-31200-2-git-send-email-Liam.Howlett@WindRiver.com>
-	<1431429477.30971.123.camel@linuxfoundation.org>
-	<20150512142807.GB15805@yow-lhowlett-d0.wrs.com>
-	<2131793.ifvVUYI7Oy@peggleto-mobl.ger.corp.intel.com>
-	<557ED558.10502@mlbassoc.com>
-In-Reply-To: <557ED558.10502@mlbassoc.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.22.254.139]
+	Mon, 15 Jun 2015 14:38:13 +0000 (UTC)
+Received: by pdbnf5 with SMTP id nf5so74523728pdb.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 15 Jun 2015 07:38:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	:cc:content-type;
+	bh=YRR6rL1Hpi9vpxMWHINyINf1SluUrZK2Srx1V3tt/E0=;
+	b=ZmZcuRGPMW1v797Xa6doLWB1whClUUP5wjZ+j9LRfzWqoRTw7ZNK3LcrDg+qfTgtMT
+	vVGmHRtNj5TgNMAefLPtPl/QnTd/PceRqQiYVD1XalEScsIINsEHytAi/8sX2sjOAvF1
+	ZTaRmQq7H7JuKdyEpO11/v+EHRU/L2p6Wf2biMRh6HMn9vFMGHte8ez8F9RCzo9zPnnn
+	s3GNJOl3wxCkgpso7YoipKji5iBxDNPxCMIWPPrSqrc5k3272oyGVNm0jY3xd++j+EKc
+	s/vCVXliD9LbeMXNH238QQCT59jmrxZn+8LewL+iWt8yV7kSHMUhdJwy/VfHDp+VaeEe
+	EDDA==
 MIME-Version: 1.0
-Cc: "Howlett, Liam \(Wind River\)" <liam.howlett@windriver.com>,
-	Paul Eggleton <paul.eggleton@linux.intel.com>
-Subject: Re: [PATCH v3] fetch2: Add BB_ALLOWED_NETWORKS	support
+X-Received: by 10.70.135.106 with SMTP id pr10mr48316184pdb.156.1434379095113; 
+	Mon, 15 Jun 2015 07:38:15 -0700 (PDT)
+Received: by 10.70.42.79 with HTTP; Mon, 15 Jun 2015 07:38:15 -0700 (PDT)
+In-Reply-To: <557A35BC.9010801@windriver.com>
+References: <1433260860-4674-1-git-send-email-danismostlikely@gmail.com>
+	<1433260860-4674-2-git-send-email-danismostlikely@gmail.com>
+	<556E4C1B.6080109@windriver.com>
+	<CACS+7ZScXmkPeDJnsNfnkHFQfJc6XSYUbaHYVHe6wQuKs8XouQ@mail.gmail.com>
+	<1434063642.28975.248.camel@linuxfoundation.org>
+	<557A35BC.9010801@windriver.com>
+Date: Mon, 15 Jun 2015 08:38:15 -0600
+Message-ID: <CACS+7ZQhJCf1Y8tekmO0-24KttCzsPn538gE+cHozRkDf35YLA@mail.gmail.com>
+From: Dan McGregor <danismostlikely@gmail.com>
+To: Robert Yang <liezhi.yang@windriver.com>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] fetch2/hg.py: Several fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -46,118 +46,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 15 Jun 2015 14:03:28 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Mon, 15 Jun 2015 14:38:15 -0000
+Content-Type: text/plain; charset=UTF-8
 
-Hi,=20
+Sounds good to me, Robert. Let's merge yours and I'll rebase mine on
+top. I was about to send a v2 of my RFC, but instead my v2 will be
+based on your patch.
 
-Here is a first draft of documenting the BB_ALLOWED_NETWORKS variable in th=
-e BitBake User Manual.  I re-wrote the original text to be active voice and=
- applied some different organization of the facts to help the flow out.  Re=
-garding Gary's input about BB_NO_NETWORK..... I took a half guess at incorp=
-orating it.  Please look this new description over and let me know of any c=
-orrections I need to make.  http://www.yoctoproject.org/docs/1.9/bitbake-us=
-er-manual/bitbake-user-manual.html#var-BB_ALLOWED_NETWORKS.
-
-Thanks,
-Scott
-
->-----Original Message-----
->From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-
->devel-bounces@lists.openembedded.org] On Behalf Of Gary Thomas
->Sent: Monday, June 15, 2015 6:39 AM
->To: bitbake-devel@lists.openembedded.org
->Subject: Re: [bitbake-devel] [PATCH v3] fetch2: Add
->BB_ALLOWED_NETWORKS support
+On 11 June 2015 at 19:28, Robert Yang <liezhi.yang@windriver.com> wrote:
 >
->On 2015-06-15 07:28, Paul Eggleton wrote:
->> On Tuesday 12 May 2015 10:28:08 Liam R. Howlett wrote:
->>> * Richard Purdie <richard.purdie@linuxfoundation.org> [150512 07:18]:
->>>> On Thu, 2015-04-16 at 13:23 -0400, Liam R. Howlett wrote:
->>>>> BB_ALLOWED_NETWORKS is a list of hosts that the fetcher will be
->>>>> allowed to use when BB_NO_NETWORK is not set.
->>>>>
->>>>> If BB_NO_NETWORK is set, then networking is still disabled.
->>>>>
->>>>> If BB_ALLOWED_NETWORKS is not set, the behaviour remains the same
->>>>> as today.
->>>>>
->>>>> If BB_NO_NETWORK is NOT set, and BB_ALLOWED_NETWORKS is
->configured,
->>>>> then only the hosts in the list are usable by the fetcher.
->>>>>
->>>>> eg:
->>>>> BB_ALLOWED_NETWORKS=3D"yoctoproject.org git.gnu.org"
->>>>> The fetcher will be able to download from yoctoproject.org,
->>>>> git.gnu.org, but not ftp.gnu.org or any other hostname that is not in=
- the
->list.
->>>>>
->>>>> There is also limited support for wildcards on the beginning of the
->>>>> hosts, so BB_ALLOWED_NETWORKS=3D"*.gnu.org" with match git.gnu.org
->>>>> and ftp.gnu.org as well as foo.git.gnu.org
->>>>>
->>>>> Signed-off-by: Liam R. Howlett <Liam.Howlett@WindRiver.com>
->>>>> ---
->>>>>
->>>>>   lib/bb/fetch2/__init__.py | 53
->>>>>   +++++++++++++++++++++++++++++++++++++++++++++++
->lib/bb/tests/fetch.py
->>>>>      | 37 +++++++++++++++++++++++++++++++++
->>>>>   2 files changed, 90 insertions(+)
->>>>
->>>> I've merged this, however, one of the things we're trying to do is
->>>> improve the documentation of bitbake. Would you be able to work with
->>>> Scott (cc'd) to ensure this is documented in the manual please?
->>>>
->>>> Cheers,
->>>>
->>>> Richard
->>>
->>> Absolutely, Thanks Richard.
->>>
->>> Hello Scott,
->>>
->>> If you don't have anything started, we can work from the text below
->>> if you'd like.
->>>
->>> --------
->>>
->>> BB_ALLOWED_NETWORKS
->>>
->>> Specifies a space delimited list of hosts which are allowed to be
->>> used by the fetcher to obtain the required source code.  This list is
->>> only used if BB_NO_NETWORK is not set.  Wildcard matching at the
->>> beginning of
->
->Hopefully BB_NO_NETWORK=3D'0' (which is different from 'not set')as well?
->That works for all other uses of BB_NO_NETWORK.
->
->>> hosts is supported.  Mirrors that are not in the list will be skipped
->>> and logged in debug.  Attempts to access networks that are not in the
->>> BB_ALLOWED_NETWORKS will cause a failure.
->>>
->>> --------
->>>
->>> Thanks,
->>> Liam
+> On 06/12/2015 07:00 AM, Richard Purdie wrote:
 >>
->> Replying to add Scott on CC - I think he has something for review.
+>> On Wed, 2015-06-10 at 08:42 -0600, Dan McGregor wrote:
+>>>
+>>> Excellent question; I'll try that soon.
+>>
+>>
+>> Can you both agree on which patch(es) should merge please as I'm a
+>> little confused with what is currently on the list for this?
+>
+>
+> Yes, part of our code are similar.
+>
+> Hi Dan,
+>
+> How about RP merge my patch firstly, it fixes two things:
+> 1) Fix the broken hg:// protocol, it doesn't work atm.
+> 2) Fix hg's MIRROR TARBALL.
+>
+> And then you can rebase your code, I'd like to help testing
+> when you send the formal patch.
+>
+> // Robert
+>
 >>
 >> Cheers,
->> Paul
+>>
+>> Richard
+>>
+>>
 >>
 >
->--
->------------------------------------------------------------
->Gary Thomas                 |  Consulting for the
->MLB Associates              |    Embedded world
->------------------------------------------------------------
->--
->_______________________________________________
->bitbake-devel mailing list
->bitbake-devel@lists.openembedded.org
->http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
