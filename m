@@ -1,39 +1,47 @@
-Return-Path: <danismostlikely@gmail.com>
-Received: from mail-pd0-f170.google.com (mail-pd0-f170.google.com
-	[209.85.192.170])
-	by mail.openembedded.org (Postfix) with ESMTP id 393C3608B6
+Return-Path: <rep.dot.nop@gmail.com>
+Received: from mail-wi0-f176.google.com (mail-wi0-f176.google.com
+	[209.85.212.176])
+	by mail.openembedded.org (Postfix) with ESMTP id 9A4DE759CF
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Jun 2015 14:38:13 +0000 (UTC)
-Received: by pdbnf5 with SMTP id nf5so74523728pdb.2
+	Mon, 15 Jun 2015 21:50:06 +0000 (UTC)
+Received: by wiwd19 with SMTP id d19so87596032wiw.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 15 Jun 2015 07:38:15 -0700 (PDT)
+	Mon, 15 Jun 2015 14:50:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:cc:content-type;
-	bh=YRR6rL1Hpi9vpxMWHINyINf1SluUrZK2Srx1V3tt/E0=;
-	b=ZmZcuRGPMW1v797Xa6doLWB1whClUUP5wjZ+j9LRfzWqoRTw7ZNK3LcrDg+qfTgtMT
-	vVGmHRtNj5TgNMAefLPtPl/QnTd/PceRqQiYVD1XalEScsIINsEHytAi/8sX2sjOAvF1
-	ZTaRmQq7H7JuKdyEpO11/v+EHRU/L2p6Wf2biMRh6HMn9vFMGHte8ez8F9RCzo9zPnnn
-	s3GNJOl3wxCkgpso7YoipKji5iBxDNPxCMIWPPrSqrc5k3272oyGVNm0jY3xd++j+EKc
-	s/vCVXliD9LbeMXNH238QQCT59jmrxZn+8LewL+iWt8yV7kSHMUhdJwy/VfHDp+VaeEe
-	EDDA==
+	h=user-agent:in-reply-to:references:mime-version
+	:content-transfer-encoding:content-type:subject:from:date:to:cc
+	:message-id; bh=YWLptzEDXCc+nRwoq7H27VssIX6j+SI0Nj+w1+wgVdE=;
+	b=E1RA1gRzx1y+MDIxYngs63lOVoIwKyg8iLaDHgmB2eeBQ608Q73+zz87ED03+LBVfu
+	JxtzfKIf7/G7gokiNvMJBQ5GgcICBlZuKb/K1lqyLqyikJ4hOQnSkbaSOXEQBJCU1Lsz
+	zad1a5ucYU32phm0Rl52vLvoiW5IQP21wBD0/4jz2kjOXVfhuqKKhrQMw6/fIYcaGH4f
+	3bpSqKd2Xm6cbfdZZHAA7ARjj7KevO13rHNjXnhvQGluYIsK8vwWxOsTbzV3rgYRjXi6
+	TzFlFF58Lp54hgEyaxldvGe2XdXGe9nKgzKQ6A9JDXeF+RNhtoe/6NBhSFhfAfS52BrS
+	VFAg==
+X-Received: by 10.180.37.230 with SMTP id b6mr35431862wik.14.1434405007029;
+	Mon, 15 Jun 2015 14:50:07 -0700 (PDT)
+Received: from [192.168.100.51] (91-119-107-84.dynamic.xdsl-line.inode.at.
+	[91.119.107.84])
+	by mx.google.com with ESMTPSA id bh7sm20808245wjb.8.2015.06.15.14.50.05
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Mon, 15 Jun 2015 14:50:06 -0700 (PDT)
+User-Agent: K-9 Mail for Android
+In-Reply-To: <41DEA4B02DBDEF40A0F3B6D0DDB123798D203356@ORSMSX101.amr.corp.intel.com>
+References: <1429121824-31200-2-git-send-email-Liam.Howlett@WindRiver.com>
+	<1431429477.30971.123.camel@linuxfoundation.org>
+	<20150512142807.GB15805@yow-lhowlett-d0.wrs.com>
+	<2131793.ifvVUYI7Oy@peggleto-mobl.ger.corp.intel.com>
+	<557ED558.10502@mlbassoc.com>
+	<41DEA4B02DBDEF40A0F3B6D0DDB123798D203356@ORSMSX101.amr.corp.intel.com>
 MIME-Version: 1.0
-X-Received: by 10.70.135.106 with SMTP id pr10mr48316184pdb.156.1434379095113; 
-	Mon, 15 Jun 2015 07:38:15 -0700 (PDT)
-Received: by 10.70.42.79 with HTTP; Mon, 15 Jun 2015 07:38:15 -0700 (PDT)
-In-Reply-To: <557A35BC.9010801@windriver.com>
-References: <1433260860-4674-1-git-send-email-danismostlikely@gmail.com>
-	<1433260860-4674-2-git-send-email-danismostlikely@gmail.com>
-	<556E4C1B.6080109@windriver.com>
-	<CACS+7ZScXmkPeDJnsNfnkHFQfJc6XSYUbaHYVHe6wQuKs8XouQ@mail.gmail.com>
-	<1434063642.28975.248.camel@linuxfoundation.org>
-	<557A35BC.9010801@windriver.com>
-Date: Mon, 15 Jun 2015 08:38:15 -0600
-Message-ID: <CACS+7ZQhJCf1Y8tekmO0-24KttCzsPn538gE+cHozRkDf35YLA@mail.gmail.com>
-From: Dan McGregor <danismostlikely@gmail.com>
-To: Robert Yang <liezhi.yang@windriver.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] fetch2/hg.py: Several fixes
+From: Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
+Date: Mon, 15 Jun 2015 23:47:29 +0200
+To: "Rifenbark, Scott M" <scott.m.rifenbark@intel.com>,
+	Gary Thomas <gary@mlbassoc.com>, "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Message-ID: <1FDE9321-AA20-49D9-A4BE-A4B4514439DB@gmail.com>
+Cc: "Howlett, Liam \(Wind River\)" <liam.howlett@windriver.com>,
+	Paul Eggleton <paul.eggleton@linux.intel.com>
+Subject: Re: [PATCH v3] fetch2: Add	BB_ALLOWED_NETWORKS	support
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -46,45 +54,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 15 Jun 2015 14:38:15 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Mon, 15 Jun 2015 21:50:06 -0000
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=UTF-8
 
-Sounds good to me, Robert. Let's merge yours and I'll rebase mine on
-top. I was about to send a v2 of my RFC, but instead my v2 will be
-based on your patch.
+On June 15, 2015 4:03:11 PM GMT+02:00, "Rifenbark, Scott M" <scott.m.rifenbark@intel.com> wrote:
+>Hi, 
+>
+>Here is a first draft of documenting the BB_ALLOWED_NETWORKS variable
+>in the BitBake User Manual.  I re-wrote the original text to be active
+>voice and applied some different organization of the facts to help the
+>flow out.  Regarding Gary's input about BB_NO_NETWORK..... I took a
+>half guess at incorporating it.  Please look this new description over
+>and let me know of any corrections I need to make. 
+>http://www.yoctoproject.org/docs/1.9/bitbake-user-manual/bitbake-user-manual.html#var-BB_ALLOWED_NETWORKS.
 
-On 11 June 2015 at 19:28, Robert Yang <liezhi.yang@windriver.com> wrote:
->
-> On 06/12/2015 07:00 AM, Richard Purdie wrote:
->>
->> On Wed, 2015-06-10 at 08:42 -0600, Dan McGregor wrote:
->>>
->>> Excellent question; I'll try that soon.
->>
->>
->> Can you both agree on which patch(es) should merge please as I'm a
->> little confused with what is currently on the list for this?
->
->
-> Yes, part of our code are similar.
->
-> Hi Dan,
->
-> How about RP merge my patch firstly, it fixes two things:
-> 1) Fix the broken hg:// protocol, it doesn't work atm.
-> 2) Fix hg's MIRROR TARBALL.
->
-> And then you can rebase your code, I'd like to help testing
-> when you send the formal patch.
->
-> // Robert
->
->>
->> Cheers,
->>
->> Richard
->>
->>
->>
->
+Was the v3 fixed / extended to allow for netmasks, btw?
+Think
+/etc/hosts
+foo.example.com 10.0.0.1
+bar.example.com 10.0.0.254
+baz.example.com ::1
+
+BB_ALLOWED_NETWORKS = 10.0.0.0/24 1.1.1.1/31 ::1/127
+
+Thanks,
+
 
