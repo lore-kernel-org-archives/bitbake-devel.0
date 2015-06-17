@@ -1,46 +1,39 @@
-Return-Path: <scott.m.rifenbark@intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id E7D49608B6
+Return-Path: <twoerner@gmail.com>
+Received: from mail-ig0-f173.google.com (mail-ig0-f173.google.com
+	[209.85.213.173])
+	by mail.openembedded.org (Postfix) with ESMTP id 0262B75886
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 16 Jun 2015 22:16:54 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by fmsmga102.fm.intel.com with ESMTP; 16 Jun 2015 15:16:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.13,628,1427785200"; d="scan'208";a="747956422"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-	by orsmga002.jf.intel.com with ESMTP; 16 Jun 2015 15:16:57 -0700
-Received: from orsmsx153.amr.corp.intel.com (10.22.226.247) by
-	ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server
-	(TLS) id 14.3.224.2; Tue, 16 Jun 2015 15:16:55 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.217]) by
-	ORSMSX153.amr.corp.intel.com ([169.254.12.177]) with mapi id
-	14.03.0224.002; Tue, 16 Jun 2015 15:16:54 -0700
-From: "Rifenbark, Scott M" <scott.m.rifenbark@intel.com>
-To: "Rifenbark, Scott M" <scott.m.rifenbark@intel.com>, "Howlett, Liam (Wind
-	River)" <liam.howlett@windriver.com>
-Thread-Topic: [bitbake-devel] [PATCH v3] fetch2: Add	BB_ALLOWED_NETWORKS
-	support
-Thread-Index: AQHQqDpGfojCq1JbGUCMjb89gsHvrJ2vQKRwgAC4WYD//4rDoIAAL8BQ
-Date: Tue, 16 Jun 2015 22:16:53 +0000
-Message-ID: <41DEA4B02DBDEF40A0F3B6D0DDB123798D203E58@ORSMSX101.amr.corp.intel.com>
-References: <1429121824-31200-2-git-send-email-Liam.Howlett@WindRiver.com>
-	<41DEA4B02DBDEF40A0F3B6D0DDB123798D203356@ORSMSX101.amr.corp.intel.com>
-	<1FDE9321-AA20-49D9-A4BE-A4B4514439DB@gmail.com>
-	<1946263.B0TEDLLAIC@peggleto-mobl.ger.corp.intel.com>
-	<20150616134205.GG26078@yow-lhowlett-d0.wrs.com>
-	<41DEA4B02DBDEF40A0F3B6D0DDB123798D203C80@ORSMSX101.amr.corp.intel.com>
-	<20150616192423.GL26078@yow-lhowlett-d0.wrs.com>
-	<41DEA4B02DBDEF40A0F3B6D0DDB123798D203D7F@ORSMSX101.amr.corp.intel.com>
-In-Reply-To: <41DEA4B02DBDEF40A0F3B6D0DDB123798D203D7F@ORSMSX101.amr.corp.intel.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.22.254.138]
+	Wed, 17 Jun 2015 15:18:06 +0000 (UTC)
+Received: by igbzc4 with SMTP id zc4so105598602igb.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 17 Jun 2015 08:18:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=message-id:date:from:user-agent:mime-version:to:cc:subject
+	:references:in-reply-to:content-type:content-transfer-encoding;
+	bh=PmCm9qPYXAePs4kH9PehKpvPcIiiD9kLf3h9nEt8HUw=;
+	b=c/+VCRh3Q0klS5HSD3ReS8h+jMmXVPY3LdRv3QmZsBcAMZNv2aon2M0MZ5LsvA5u3j
+	v7R8LnTlsAQvJiOz6e1MlKFECWzQuQjsGoyEkSC3SRdDrlFG2WGZKEP2MN1aepcoYPM9
+	5M+wFqKLzuyd/qZpAyFjeL2Iot4iokoSp8756Rdpve2+HJeV6jzC/qbvVFeVsTRYQzYc
+	FlWLiNgQfLllc8sysMjNxapJUnnuIYerno91v+lvBuzYX0kaKgchvBxugf3yFbQkZRmy
+	COfftC8tgX9Io5jY7Z4wV7I6y3ZqQYQmeocJy0wDbm24bVBh6lOYlMqSRJcb7y2sC6qN
+	ZAzg==
+X-Received: by 10.50.59.180 with SMTP id a20mr35818925igr.23.1434554286038;
+	Wed, 17 Jun 2015 08:18:06 -0700 (PDT)
+Received: from [192.168.141.83] (dsl-67-55-28-109.acanac.net. [67.55.28.109])
+	by mx.google.com with ESMTPSA id
+	d4sm2775336iod.17.2015.06.17.08.18.05
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Wed, 17 Jun 2015 08:18:05 -0700 (PDT)
+Message-ID: <55818FB3.6080003@gmail.com>
+Date: Wed, 17 Jun 2015 11:18:11 -0400
+From: Trevor Woerner <twoerner@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:31.0) Gecko/20100101 Thunderbird/31.7.0
 MIME-Version: 1.0
-Cc: Paul Eggleton <paul.eggleton@linux.intel.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>, Gary Thomas <gary@mlbassoc.com>
-Subject: Re: [PATCH v3] fetch2: Add	BB_ALLOWED_NETWORKS support
+To: bitbake-devel@lists.openembedded.org
+References: <1432923403-31440-1-git-send-email-twoerner@gmail.com>
+In-Reply-To: <1432923403-31440-1-git-send-email-twoerner@gmail.com>
+Subject: Re: [PATCH] bitbake-user-manual: add BBLAYERS_FETCH_DIR
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,142 +46,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 16 Jun 2015 22:16:55 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Wed, 17 Jun 2015 15:18:07 -0000
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Ok - I am done with this thread.  The description for BB_ALLOWED_NETWORKS i=
-s now in the BitBake User Manual and the YP Reference Manual.  The commit h=
-as been pushed to my contrib area for bitbake and Richard has been notified=
-.
+ping?
 
-Scott
+On 15-05-29 02:16 PM, Trevor Woerner wrote:
+> Add BBLAYERS_FETCH_DIR to the Variables Glossary.
+>
+> Signed-off-by: Trevor Woerner <twoerner@gmail.com>
+> ---
+>   .../bitbake-user-manual-ref-variables.xml                   | 13 +++++++++++++
+>   1 file changed, 13 insertions(+)
+>
+> diff --git a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+> index 86bf30b..bdbf421 100644
+> --- a/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+> +++ b/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.xml
+> @@ -1016,6 +1016,19 @@
+>               </glossdef>
+>           </glossentry>
+>   
+> +        <glossentry id='var-BBLAYERS_FETCH_DIR'><glossterm>BBLAYERS_FETCH_DIR</glossterm>
+> +            <glossdef>
+> +                <para>
+> +                    Sets the base location where the layers are stored. By
+> +                    default this is set to <filename>${COREBASE}</filename>.
+> +                    This is used in conjunction with <filename>bitbake-layers
+> +                    layerindex-fetch</filename> and tells
+> +                    <filename>bitbake-layers</filename> where to place the
+> +                    fetched layer(s).
+> +                </para>
+> +            </glossdef>
+> +        </glossentry>
+> +
+>           <glossentry id='var-BBMASK'><glossterm>BBMASK</glossterm>
+>               <glossdef>
+>                   <para>
 
->-----Original Message-----
->From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-
->devel-bounces@lists.openembedded.org] On Behalf Of Rifenbark, Scott M
->Sent: Tuesday, June 16, 2015 12:26 PM
->To: Howlett, Liam (Wind River)
->Cc: Paul Eggleton; bitbake-devel@lists.openembedded.org; Gary Thomas
->Subject: Re: [bitbake-devel] [PATCH v3] fetch2: Add
->BB_ALLOWED_NETWORKS support
->
->
->
->>-----Original Message-----
->>From: Liam R. Howlett [mailto:Liam.Howlett@windriver.com]
->>Sent: Tuesday, June 16, 2015 12:24 PM
->>To: Rifenbark, Scott M
->>Cc: Paul Eggleton; Bernhard Reutner-Fischer; Gary Thomas; bitbake-
->>devel@lists.openembedded.org
->>Subject: Re: [bitbake-devel] [PATCH v3] fetch2: Add
->BB_ALLOWED_NETWORKS
->>support
->>
->>* Rifenbark, Scott M <scott.m.rifenbark@intel.com> [150616 11:25]:
->>>
->>>
->>> >-----Original Message-----
->>> >From: Liam R. Howlett [mailto:Liam.Howlett@windriver.com]
->>> >Sent: Tuesday, June 16, 2015 6:42 AM
->>> >To: Paul Eggleton
->>> >Cc: Bernhard Reutner-Fischer; Rifenbark, Scott M; Gary Thomas;
->>> >bitbake- devel@lists.openembedded.org
->>> >Subject: Re: [bitbake-devel] [PATCH v3] fetch2: Add
->>> >BB_ALLOWED_NETWORKS support
->>> >
->>> >* Paul Eggleton <paul.eggleton@linux.intel.com> [150616 04:40]:
->>> >> On Monday 15 June 2015 23:47:29 Bernhard Reutner-Fischer wrote:
->>> >> > On June 15, 2015 4:03:11 PM GMT+02:00, "Rifenbark, Scott M"
->>> >> <scott.m.rifenbark@intel.com> wrote:
->>> >> > >Hi,
->>> >> > >
->>> >> > >Here is a first draft of documenting the BB_ALLOWED_NETWORKS
->>> >> > >variable in the BitBake User Manual.  I re-wrote the original
->>> >> > >text to be active voice and applied some different organization
->>> >> > >of the facts to help the flow out.  Regarding Gary's input
->>> >> > >about BB_NO_NETWORK..... I took a half guess at incorporating it.
->>> >> > >Please look this new description over and let me know of any
->>> >> > >corrections I need
->>> >to make.
->>> >> > >http://www.yoctoproject.org/docs/1.9/bitbake-user-manual/bitbak
->>> >> > >e
->>> >> > >-us
->>> >> > >er-manua
->>> >> > >l.html#var-BB_ALLOWED_NETWORKS.
->>> >
->>> >Hi,
->>> >
->>> >The documentation looks correct, however it might be worth noting
->>> >that adding the host you'd like to use to PREMIRROR will result in
->>> >the source code being fetched from an allowed location and avoid
->>> >raising an error when a host that is not allowed is in a SRC_URI
->>> >because the fetcher will not attempt to use the SRC_URI host after a
->>> >successful fetch from the PREMIRROR.  Using BB_ALLOWED_NETWORK in
->>> >conjunction with PREMIRROR is where this feature is very useful.
->>>
->>> Check the link to the variable description out now Liam.  Let me know
->>> if this
->>addition is okay.
->>
->>This looks good!
->>
->>Thanks,
->>Liam
->
->Awesome... I will get the commit into the Bitbake repo and then duplicate =
-the
->entry in the YP ref-manual.
->
->Thanks,
->Scott
->
->>
->>>
->>> >
->>> >
->>> >> > Was the v3 fixed / extended to allow for netmasks, btw?
->>> >> > Think
->>> >> > /etc/hosts
->>> >> > foo.example.com 10.0.0.1
->>> >> > bar.example.com 10.0.0.254
->>> >> > baz.example.com ::1
->>> >> >
->>> >> > BB_ALLOWED_NETWORKS =3D 10.0.0.0/24 1.1.1.1/31 ::1/127
->>> >>
->>> >> I don't believe so. You can see what actually went in here:
->>> >>
->>> >> http://git.yoctoproject.org/cgit/cgit.cgi/poky/commit/?id=3D59ce7d02
->>> >> a
->>> >> 57e
->>> >> 0a642d839ab48677f6ac1886180f
->>> >>
->>> >> Cheers,
->>> >> Paul
->>> >
->>> >
->>> >There isn't netmask support, but you can achieve the same result in
->>> >your example above by using BB_ALLOWED_NETWORKS =3D
->>"*.example.com"
->>> >
->>> >Version 2 updated the host matching and added a few more tests.
->>> >
->>> >Version 3 changed the name from BB_TRUSTED_NETWORKS to
->>> >BB_ALLOWED_NETWORKS.
->>> >
->>> >
->>> >Thanks,
->>> >Liam R. Howlett
->>> >
->>> >>
->>> >> --
->>> >>
->>> >> Paul Eggleton
->>> >> Intel Open Source Technology Centre
->--
->_______________________________________________
->bitbake-devel mailing list
->bitbake-devel@lists.openembedded.org
->http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
