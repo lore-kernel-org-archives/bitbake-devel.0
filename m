@@ -1,43 +1,41 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wi0-f176.google.com (mail-wi0-f176.google.com
-	[209.85.212.176])
-	by mail.openembedded.org (Postfix) with ESMTP id 8934075AC3
+Received: from mail-wg0-f41.google.com (mail-wg0-f41.google.com [74.125.82.41])
+	by mail.openembedded.org (Postfix) with ESMTP id 2737E7568E
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 25 Jun 2015 10:34:27 +0000 (UTC)
-Received: by wiwl6 with SMTP id l6so13736122wiw.0
+	Thu, 25 Jun 2015 10:34:32 +0000 (UTC)
+Received: by wgbhy7 with SMTP id hy7so58673267wgb.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 25 Jun 2015 03:34:28 -0700 (PDT)
+	Thu, 25 Jun 2015 03:34:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=DGspX20N9I6dmcsJJrR1sntRfrOig4B0J6bkeb+ZBio=;
-	b=AIwXQO/qS2G/Uh7tPx5+3oMKEIRLon2TejMOZ+sjKTvhYP7VLWrx54CSHmtn0nkDbb
-	AtTI42FdJ/hv0n45wyaWPgkL33krplNoGRjwevtDX3id3sgGGQVYpERHA0cxQseWmprY
-	TWQEfaRZ2VjEyd8sbNvMjVdCP177XoEm90ZNJ/c59V7hlaFeozilsj2uNPpbHjDLZhKp
-	VsDuGxfVB2CHSnZFsX/zJcOssj8bMJZBNOVmsBKjMFN82aBOmGfZfzWlEHVGNYeqgyQn
-	E0f85mQMamk4N3nkQCaXnSxxgasPDCy23OIOyo0RcfWEr6nLcHl3GW9YjCdCB1z4ZgbF
-	XJdA==
-X-Gm-Message-State: ALoCoQkDUBkAKcr41x8Fd87XCDTn4GFSKo/zpyAVtcWsBOjRDo88ILIXRAzUmJUDM7uNIfSwuLs6
-X-Received: by 10.180.87.199 with SMTP id ba7mr4515028wib.81.1435228468618;
-	Thu, 25 Jun 2015 03:34:28 -0700 (PDT)
+	bh=mWMJi6oFJDEeDadd3gBN039IsEu3hxhkSsZuPBqcvBw=;
+	b=ejvm1UXt/an4jFsF56ecozkVC5ww5m2Xr5/bzNRxU16Z98Xzj5Pmd4QTOUcc9aqmA4
+	zjMWPE6tjmBFdnMYWo7I8pZv7QBjQU3UU/SgNSw31FDjATGpniNwhUmiAoXepADRiGvp
+	Z1sh9Fm4yvHAvGaxTAdYncAzcIxBm9SEyt1MVwtAYNwYQMGQmcnKv4JW6h+QH5MuiESW
+	2UevuTjWsqLZsLdO6+CL4n03mf/2OzOsuxhg1YApmAj1V5G2wKPeOx3y8MVgdk2ofvil
+	a+XYuq/uU2uVAcjquNIPMOpThxAWDKiMojK3c+2gGVl6feNPgQWz9SEZ6PQfxy04G4zh
+	9j2A==
+X-Gm-Message-State: ALoCoQn4iqZJDmq0JNoOz4aBXeQKEUUvk328gxkHO+LhogZpTuEeE969ni4uPGQncQfx9yY55PsQ
+X-Received: by 10.194.5.74 with SMTP id q10mr78583159wjq.27.1435228472383;
+	Thu, 25 Jun 2015 03:34:32 -0700 (PDT)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id
-	hn7sm45027046wjc.16.2015.06.25.03.34.27
+	by mx.google.com with ESMTPSA id z9sm6935270wiv.9.2015.06.25.03.34.30
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 25 Jun 2015 03:34:27 -0700 (PDT)
+	Thu, 25 Jun 2015 03:34:31 -0700 (PDT)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id CCDED562486; Thu, 25 Jun 2015 11:34:01 +0100 (BST)
+	id CFADC562570; Thu, 25 Jun 2015 11:34:01 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 25 Jun 2015 11:33:46 +0100
-Message-Id: <57f790b0c56297af8c83d5def8461bd5d61fe4af.1435228176.git.alexandru.damian@intel.com>
+Date: Thu, 25 Jun 2015 11:33:47 +0100
+Message-Id: <016b416fd0eaeab648a588053a2ee1f41bc02a84.1435228176.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <77d3f7c6cdc7f06807024896369f8f8ae94263fc.1435228176.git.alexandru.damian@intel.com>
 References: <77d3f7c6cdc7f06807024896369f8f8ae94263fc.1435228176.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1435228175.git.alexandru.damian@intel.com>
 References: <cover.1435228175.git.alexandru.damian@intel.com>
-Subject: [PATCH 09/23] toaster: fixes after replacing BuildRequest with Build
+Subject: [PATCH 10/23] toaster: add django-aggregate-if
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,627 +48,767 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 25 Jun 2015 10:34:28 -0000
+X-List-Received-Date: Thu, 25 Jun 2015 10:34:34 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-This is a set of fixes that repair the interface after
-we switched from displaying BuildRequest data to Build data
-in the formerly "managed" mode.
+Import library that provides conditional aggregates
+in Django. The tests are removed as they conflict
+with the Django startup.
+
+The sources are
+https://github.com/henriquebastos/django-aggregate-if
+
+Licence is MIT
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 ---
- lib/bb/ui/toasterui.py                             |  24 +-
- lib/toaster/bldcontrol/localhostbecontroller.py    |   2 +-
- .../bldcontrol/management/commands/runbuilds.py    |   7 +-
- lib/toaster/bldcontrol/models.py                   |   3 +
- ...ect__chg_field_project_bitbake_version__chg_.py |   5 +-
- ...k__add_field_layer_version_local_path__del_f.py | 343 +++++++++++++++++++++
- lib/toaster/orm/models.py                          |   8 +-
- lib/toaster/toastergui/static/js/projectapp.js     |   4 +-
- lib/toaster/toastergui/templates/project.html      |   4 +-
- lib/toaster/toastergui/views.py                    |   6 +-
- 10 files changed, 378 insertions(+), 28 deletions(-)
- create mode 100644 lib/toaster/orm/migrations/0022_auto__add_field_target_task__add_field_layer_version_local_path__del_f.py
+ .../contrib/django-aggregate-if-master/.gitignore  |  10 ++
+ .../contrib/django-aggregate-if-master/.travis.yml |  50 ++++++
+ .../contrib/django-aggregate-if-master/LICENSE     |  21 +++
+ .../contrib/django-aggregate-if-master/README.rst  | 156 ++++++++++++++++
+ .../django-aggregate-if-master/aggregate_if.py     | 164 +++++++++++++++++
+ .../contrib/django-aggregate-if-master/runtests.py |  48 +++++
+ .../contrib/django-aggregate-if-master/setup.py    |  33 ++++
+ .../contrib/django-aggregate-if-master/tox.ini     | 198 +++++++++++++++++++++
+ 8 files changed, 680 insertions(+)
+ create mode 100644 lib/toaster/contrib/django-aggregate-if-master/.gitignore
+ create mode 100644 lib/toaster/contrib/django-aggregate-if-master/.travis.yml
+ create mode 100644 lib/toaster/contrib/django-aggregate-if-master/LICENSE
+ create mode 100644 lib/toaster/contrib/django-aggregate-if-master/README.rst
+ create mode 100644 lib/toaster/contrib/django-aggregate-if-master/aggregate_if.py
+ create mode 100755 lib/toaster/contrib/django-aggregate-if-master/runtests.py
+ create mode 100644 lib/toaster/contrib/django-aggregate-if-master/setup.py
+ create mode 100644 lib/toaster/contrib/django-aggregate-if-master/tox.ini
 
-diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
-index 3054048..9c59fd0 100644
---- a/lib/bb/ui/toasterui.py
-+++ b/lib/bb/ui/toasterui.py
-@@ -43,7 +43,7 @@ import xmlrpclib
- 
- featureSet = [bb.cooker.CookerFeatures.HOB_EXTRA_CACHES, bb.cooker.CookerFeatures.SEND_DEPENDS_TREE, bb.cooker.CookerFeatures.BASEDATASTORE_TRACKING, bb.cooker.CookerFeatures.SEND_SANITYEVENTS]
- 
--logger = logging.getLogger("BitBake")
-+logger = logging.getLogger("ToasterLogger")
- interactive = sys.stdout.isatty()
- 
- 
-@@ -66,7 +66,6 @@ def _log_settings_from_server(server):
- 
- 
- def main(server, eventHandler, params ):
--
-     helper = uihelper.BBUIHelper()
- 
-     console = logging.StreamHandler(sys.stdout)
-@@ -235,12 +234,18 @@ def main(server, eventHandler, params ):
-             if isinstance(event, (bb.event.TreeDataPreparationStarted, bb.event.TreeDataPreparationCompleted)):
-                 continue
- 
--            if isinstance(event, (bb.event.BuildCompleted)):
-+            if isinstance(event, (bb.event.BuildCompleted, bb.command.CommandFailed)):
-+
-+                if (isinstance(event, bb.command.CommandFailed)):
-+                    errors += 1
-+                    errorcode = 1
-+                    logger.error("Command execution failed: %s", event.error)
-+
-                 # update the build info helper on BuildCompleted, not on CommandXXX
-                 buildinfohelper.update_build_information(event, errors, warnings, taskfailures)
-                 buildinfohelper.close(errorcode)
-                 # mark the log output; controllers may kill the toasterUI after seeing this log
--                logger.info("ToasterUI build done")
-+                logger.info("ToasterUI build done 1, brbe: %s" % buildinfohelper.brbe )
- 
-                 # we start a new build info
-                 if buildinfohelper.brbe is not None:
-@@ -254,22 +259,13 @@ def main(server, eventHandler, params ):
-                     taskfailures = []
-                     buildinfohelper = BuildInfoHelper(server, build_history_enabled)
- 
-+                logger.info("ToasterUI build done 2")
-                 continue
- 
-             if isinstance(event, (bb.command.CommandCompleted,
-                                   bb.command.CommandFailed,
-                                   bb.command.CommandExit)):
-                 errorcode = 0
--                if (isinstance(event, bb.command.CommandFailed)):
--                    event.levelno = format.ERROR
--                    event.msg = "Command Failed " + event.error
--                    event.pathname = ""
--                    event.lineno = 0
--                    buildinfohelper.store_log_event(event)
--                    errors += 1
--                    errorcode = 1
--                    logger.error("Command execution failed: %s", event.error)
--
- 
-                 continue
- 
-diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
-index d0f8632..ad0a561 100644
---- a/lib/toaster/bldcontrol/localhostbecontroller.py
-+++ b/lib/toaster/bldcontrol/localhostbecontroller.py
-@@ -322,7 +322,7 @@ class LocalhostBEController(BuildEnvironmentController):
-     def triggerBuild(self, bitbake, layers, variables, targets):
-         # set up the buid environment with the needed layers
-         self.setLayers(bitbake, layers)
--        self.writeConfFile("conf/toaster-pre.conf", )
-+        self.writeConfFile("conf/toaster-pre.conf", variables)
-         self.writeConfFile("conf/toaster.conf", raw = "INHERIT+=\"toaster buildhistory\"")
- 
-         # get the bb server running with the build req id and build env id
-diff --git a/lib/toaster/bldcontrol/management/commands/runbuilds.py b/lib/toaster/bldcontrol/management/commands/runbuilds.py
-index da7d4af..bcf3b04 100644
---- a/lib/toaster/bldcontrol/management/commands/runbuilds.py
-+++ b/lib/toaster/bldcontrol/management/commands/runbuilds.py
-@@ -6,7 +6,7 @@ from bldcontrol.models import BuildRequest, BuildEnvironment, BRError, BRVariabl
- import os
- import logging
- 
--logger = logging.getLogger("toaster")
-+logger = logging.getLogger("ToasterScheduler")
- 
- class Command(NoArgsCommand):
-     args    = ""
-@@ -35,7 +35,7 @@ class Command(NoArgsCommand):
-                 # select the build environment and the request to build
-                 br = self._selectBuildRequest()
-             except IndexError as e:
--                # logger.debug("runbuilds: No build request")
-+                #logger.debug("runbuilds: No build request")
-                 return
-             try:
-                 bec = self._selectBuildEnvironment()
-@@ -113,10 +113,11 @@ class Command(NoArgsCommand):
- 
-         # update all Builds that failed to start
- 
--        for br in BuildRequest.objects.filter(state = BuildRequest.REQ_FAILED):
-+        for br in BuildRequest.objects.filter(state = BuildRequest.REQ_FAILED, build__outcome = Build.IN_PROGRESS):
-             br.build.outcome = Build.FAILED
-             # transpose the launch errors in ToasterExceptions
-             for brerror in br.brerror_set.all():
-+                logger.debug("Saving error %s" % brerror)
-                 LogMessage.objects.create(build = br.build, level = LogMessage.EXCEPTION, message = brerror.errmsg)
-             br.build.save()
- 
-diff --git a/lib/toaster/bldcontrol/models.py b/lib/toaster/bldcontrol/models.py
-index b789446..6f40866 100644
---- a/lib/toaster/bldcontrol/models.py
-+++ b/lib/toaster/bldcontrol/models.py
-@@ -159,3 +159,6 @@ class BRError(models.Model):
-     errtype     = models.CharField(max_length=100)
-     errmsg      = models.TextField()
-     traceback   = models.TextField()
-+
-+    def __str__(self):
-+        return "%s (%s)" % (self.errmsg, self.req)
-diff --git a/lib/toaster/orm/migrations/0021_auto__chg_field_build_project__chg_field_project_bitbake_version__chg_.py b/lib/toaster/orm/migrations/0021_auto__chg_field_build_project__chg_field_project_bitbake_version__chg_.py
-index b82cc8d..924a5c4 100644
---- a/lib/toaster/orm/migrations/0021_auto__chg_field_build_project__chg_field_project_bitbake_version__chg_.py
-+++ b/lib/toaster/orm/migrations/0021_auto__chg_field_build_project__chg_field_project_bitbake_version__chg_.py
-@@ -105,7 +105,6 @@ class Migration(SchemaMigration):
-             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-             'layer_index_url': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-             'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
--            'local_path': ('django.db.models.fields.FilePathField', [], {'default': 'None', 'max_length': '255', 'null': 'True'}),
-             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-             'summary': ('django.db.models.fields.TextField', [], {'default': 'None', 'null': 'True'}),
-             'up_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
-@@ -124,6 +123,7 @@ class Migration(SchemaMigration):
-             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-             'layer': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'layer_version_layer'", 'to': u"orm['orm.Layer']"}),
-             'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
-+            'local_path': ('django.db.models.fields.FilePathField', [], {'default': "'/'", 'max_length': '1024'}),
-             'priority': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-             'project': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.Project']", 'null': 'True'}),
-             'up_branch': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.Branch']", 'null': 'True'}),
-@@ -229,7 +229,7 @@ class Migration(SchemaMigration):
-             'value': ('django.db.models.fields.TextField', [], {'blank': 'True'})
-         },
-         u'orm.recipe': {
--            'Meta': {'unique_together': "(('layer_version', 'file_path'),)", 'object_name': 'Recipe'},
-+            'Meta': {'unique_together': "(('layer_version', 'file_path', 'pathflags'),)", 'object_name': 'Recipe'},
-             'bugtracker': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
-             'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-             'file_path': ('django.db.models.fields.FilePathField', [], {'max_length': '255'}),
-@@ -239,6 +239,7 @@ class Migration(SchemaMigration):
-             'layer_version': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'recipe_layer_version'", 'to': u"orm['orm.Layer_Version']"}),
-             'license': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
-             'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-+            'pathflags': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
-             'section': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-             'summary': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-             'up_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
-diff --git a/lib/toaster/orm/migrations/0022_auto__add_field_target_task__add_field_layer_version_local_path__del_f.py b/lib/toaster/orm/migrations/0022_auto__add_field_target_task__add_field_layer_version_local_path__del_f.py
+diff --git a/lib/toaster/contrib/django-aggregate-if-master/.gitignore b/lib/toaster/contrib/django-aggregate-if-master/.gitignore
 new file mode 100644
-index 0000000..3dec391
+index 0000000..c45652d
 --- /dev/null
-+++ b/lib/toaster/orm/migrations/0022_auto__add_field_target_task__add_field_layer_version_local_path__del_f.py
-@@ -0,0 +1,343 @@
-+# -*- coding: utf-8 -*-
-+from south.utils import datetime_utils as datetime
-+from south.db import db
-+from south.v2 import SchemaMigration
-+from django.db import models
++++ b/lib/toaster/contrib/django-aggregate-if-master/.gitignore
+@@ -0,0 +1,10 @@
++*.pyc
++*.swp
++*.swo
++*.kpf
++*.egg-info/
++.idea
++.tox
++tmp/
++dist/
++.DS_Store
+diff --git a/lib/toaster/contrib/django-aggregate-if-master/.travis.yml b/lib/toaster/contrib/django-aggregate-if-master/.travis.yml
+new file mode 100644
+index 0000000..a920f39
+--- /dev/null
++++ b/lib/toaster/contrib/django-aggregate-if-master/.travis.yml
+@@ -0,0 +1,50 @@
++language: python
++python:
++  - "2.7"
++  - "3.4"
++services:
++  - mysql
++  - postgresql
++env:
++  - DJANGO=1.4 DB=sqlite
++  - DJANGO=1.4 DB=mysql
++  - DJANGO=1.4 DB=postgres
++  - DJANGO=1.5 DB=sqlite
++  - DJANGO=1.5 DB=mysql
++  - DJANGO=1.5 DB=postgres
++  - DJANGO=1.6 DB=sqlite
++  - DJANGO=1.6 DB=mysql
++  - DJANGO=1.6 DB=postgres
++  - DJANGO=1.7 DB=sqlite
++  - DJANGO=1.7 DB=mysql
++  - DJANGO=1.7 DB=postgres
++
++matrix:
++  exclude:
++    - python: "3.4"
++      env: DJANGO=1.4 DB=sqlite
++    - python: "3.4"
++      env: DJANGO=1.4 DB=mysql
++    - python: "3.4"
++      env: DJANGO=1.4 DB=postgres
++    - python: "3.4"
++      env: DJANGO=1.5 DB=sqlite
++    - python: "3.4"
++      env: DJANGO=1.5 DB=mysql
++    - python: "3.4"
++      env: DJANGO=1.5 DB=postgres
++    - python: "3.4"
++      env: DJANGO=1.6 DB=mysql
++    - python: "3.4"
++      env: DJANGO=1.7 DB=mysql
++
++before_script:
++  - mysql -e 'create database aggregation;'
++  - psql -c 'create database aggregation;' -U postgres
++install:
++  - pip install six
++  - if [ "$DB" == "mysql" ]; then pip install mysql-python; fi
++  - if [ "$DB" == "postgres" ]; then pip install psycopg2; fi
++  - pip install -q Django==$DJANGO --use-mirrors
++script:
++  - ./runtests.py --settings=tests.test_$DB
+diff --git a/lib/toaster/contrib/django-aggregate-if-master/LICENSE b/lib/toaster/contrib/django-aggregate-if-master/LICENSE
+new file mode 100644
+index 0000000..6b7c3b1
+--- /dev/null
++++ b/lib/toaster/contrib/django-aggregate-if-master/LICENSE
+@@ -0,0 +1,21 @@
++The MIT License
++
++Copyright (c) 2012 Henrique Bastos
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in
++all copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
++THE SOFTWARE.
+diff --git a/lib/toaster/contrib/django-aggregate-if-master/README.rst b/lib/toaster/contrib/django-aggregate-if-master/README.rst
+new file mode 100644
+index 0000000..739d4da
+--- /dev/null
++++ b/lib/toaster/contrib/django-aggregate-if-master/README.rst
+@@ -0,0 +1,156 @@
++Django Aggregate If: Condition aggregates for Django
++====================================================
++
++.. image:: https://travis-ci.org/henriquebastos/django-aggregate-if.png?branch=master
++    :target: https://travis-ci.org/henriquebastos/django-aggregate-if
++    :alt: Test Status
++
++.. image:: https://landscape.io/github/henriquebastos/django-aggregate-if/master/landscape.png
++    :target: https://landscape.io/github/henriquebastos/django-aggregate-if/master
++    :alt: Code Helth
++
++.. image:: https://pypip.in/v/django-aggregate-if/badge.png
++    :target: https://crate.io/packages/django-aggregate-if/
++    :alt: Latest PyPI version
++
++.. image:: https://pypip.in/d/django-aggregate-if/badge.png
++    :target: https://crate.io/packages/django-aggregate-if/
++    :alt: Number of PyPI downloads
++
++*Aggregate-if* adds conditional aggregates to Django.
++
++Conditional aggregates can help you reduce the ammount of queries to obtain
++aggregated information, like statistics for example.
++
++Imagine you have a model ``Offer`` like this one:
++
++.. code-block:: python
++
++    class Offer(models.Model):
++        sponsor = models.ForeignKey(User)
++        price = models.DecimalField(max_digits=9, decimal_places=2)
++        status = models.CharField(max_length=30)
++        expire_at = models.DateField(null=True, blank=True)
++        created_at = models.DateTimeField(auto_now_add=True)
++        updated_at = models.DateTimeField(auto_now=True)
++
++        OPEN = "OPEN"
++        REVOKED = "REVOKED"
++        PAID = "PAID"
++
++Let's say you want to know:
++
++#. How many offers exists in total;
++#. How many of them are OPEN, REVOKED or PAID;
++#. How much money was offered in total;
++#. How much money is in OPEN, REVOKED and PAID offers;
++
++To get these informations, you could query:
++
++.. code-block:: python
++
++    from django.db.models import Count, Sum
++
++    Offer.objects.count()
++    Offer.objects.filter(status=Offer.OPEN).aggregate(Count('pk'))
++    Offer.objects.filter(status=Offer.REVOKED).aggregate(Count('pk'))
++    Offer.objects.filter(status=Offer.PAID).aggregate(Count('pk'))
++    Offer.objects.aggregate(Sum('price'))
++    Offer.objects.filter(status=Offer.OPEN).aggregate(Sum('price'))
++    Offer.objects.filter(status=Offer.REVOKED).aggregate(Sum('price'))
++    Offer.objects.filter(status=Offer.PAID).aggregate(Sum('price'))
++
++In this case, **8 queries** were needed to retrieve the desired information.
++
++With conditional aggregates you can get it all with only **1 query**:
++
++.. code-block:: python
++
++    from django.db.models import Q
++    from aggregate_if import Count, Sum
++
++    Offer.objects.aggregate(
++        pk__count=Count('pk'),
++        pk__open__count=Count('pk', only=Q(status=Offer.OPEN)),
++        pk__revoked__count=Count('pk', only=Q(status=Offer.REVOKED)),
++        pk__paid__count=Count('pk', only=Q(status=Offer.PAID)),
++        pk__sum=Sum('price'),
++        pk__open__sum=Sum('price', only=Q(status=Offer.OPEN)),
++        pk__revoked__sum=Sum('price'), only=Q(status=Offer.REVOKED)),
++        pk__paid__sum=Sum('price'), only=Q(status=Offer.PAID))
++    )
++
++Installation
++------------
++
++*Aggregate-if* works with Django 1.4, 1.5, 1.6 and 1.7.
++
++To install it, simply:
++
++.. code-block:: bash
++
++    $ pip install django-aggregate-if
++
++Inspiration
++-----------
++
++There is a 5 years old `ticket 11305`_ that will (*hopefully*) implement this feature into
++Django 1.8.
++
++Using Django 1.6, I still wanted to avoid creating custom queries for very simple
++conditional aggregations. So I've cherry picked those ideas and others from the
++internet and built this library.
++
++This library uses the same API and tests proposed on `ticket 11305`_, so when the
++new feature is available you can easily replace ``django-aggregate-if``.
++
++Limitations
++-----------
++
++Conditions involving joins with aliases are not supported yet. If you want to
++help adding this feature, you're welcome to check the `first issue`_.
++
++Contributors
++------------
++
++* `Henrique Bastos <http://github.com/henriquebastos>`_
++* `Iuri de Silvio <https://github.com/iurisilvio>`_
++* `Hampus Stjernhav <https://github.com/champ>`_
++* `Bradley Martsberger <https://github.com/martsberger>`_
++* `Markus Bertheau <https://github.com/mbertheau>`_
++* `end0 <https://github.com/end0>`_
++* `Scott Sexton <https://github.com/scottsexton>`_
++* `Mauler <https://github.com/mauler>`_
++* `trbs <https://github.com/trbs>`_
++
++Changelog
++---------
++
++0.5
++    - Support for Django 1.7
++
++0.4
++    - Use tox to run tests.
++    - Add support for Django 1.6.
++    - Add support for Python3.
++    - The ``only`` parameter now freely supports joins independent of the main query.
++    - Adds support for alias relabeling permitting excludes and updates with aggregates filtered on remote foreign key relations.
++
++0.3.1
++    - Fix quotation escaping.
++    - Fix boolean casts on Postgres.
++
++0.2
++    - Fix postgres issue with LIKE conditions.
++
++0.1
++    - Initial release.
 +
 +
-+class Migration(SchemaMigration):
++License
++=======
 +
-+    def forwards(self, orm):
-+        # Adding field 'Target.task'
-+        db.add_column(u'orm_target', 'task',
-+                      self.gf('django.db.models.fields.CharField')(max_length=100, null=True),
-+                      keep_default=False)
++The MIT License.
++
++.. _ticket 11305: https://code.djangoproject.com/ticket/11305
++.. _first issue: https://github.com/henriquebastos/django-aggregate-if/issues/1
+diff --git a/lib/toaster/contrib/django-aggregate-if-master/aggregate_if.py b/lib/toaster/contrib/django-aggregate-if-master/aggregate_if.py
+new file mode 100644
+index 0000000..4ea9e8c
+--- /dev/null
++++ b/lib/toaster/contrib/django-aggregate-if-master/aggregate_if.py
+@@ -0,0 +1,164 @@
++# coding: utf-8
++'''
++Implements conditional aggregates.
++
++This code was based on the work of others found on the internet:
++
++1. http://web.archive.org/web/20101115170804/http://www.voteruniverse.com/Members/jlantz/blog/conditional-aggregates-in-django
++2. https://code.djangoproject.com/ticket/11305
++3. https://groups.google.com/forum/?fromgroups=#!topic/django-users/cjzloTUwmS0
++4. https://groups.google.com/forum/?fromgroups=#!topic/django-users/vVprMpsAnPo
++'''
++from __future__ import unicode_literals
++import six
++import django
++from django.db.models.aggregates import Aggregate as DjangoAggregate
++from django.db.models.sql.aggregates import Aggregate as DjangoSqlAggregate
 +
 +
++VERSION = django.VERSION[:2]
 +
 +
++class SqlAggregate(DjangoSqlAggregate):
++    conditional_template = '%(function)s(CASE WHEN %(condition)s THEN %(field)s ELSE null END)'
 +
-+    def backwards(self, orm):
-+        # Deleting field 'Target.task'
-+        db.delete_column(u'orm_target', 'task')
++    def __init__(self, col, source=None, is_summary=False, condition=None, **extra):
++        super(SqlAggregate, self).__init__(col, source, is_summary, **extra)
++        self.condition = condition
++
++    def relabel_aliases(self, change_map):
++        if VERSION < (1, 7):
++            super(SqlAggregate, self).relabel_aliases(change_map)
++        if self.has_condition:
++            condition_change_map = dict((k, v) for k, v in \
++                change_map.items() if k in self.condition.query.alias_map
++            )
++            self.condition.query.change_aliases(condition_change_map)
++
++    def relabeled_clone(self, change_map):
++        self.relabel_aliases(change_map)
++        return super(SqlAggregate, self).relabeled_clone(change_map)
++
++    def as_sql(self, qn, connection):
++        if self.has_condition:
++            self.sql_template = self.conditional_template
++            self.extra['condition'] = self._condition_as_sql(qn, connection)
++
++        return super(SqlAggregate, self).as_sql(qn, connection)
++
++    @property
++    def has_condition(self):
++        # Warning: bool(QuerySet) will hit the database
++        return self.condition is not None
++
++    def _condition_as_sql(self, qn, connection):
++        '''
++        Return sql for condition.
++        '''
++        def escape(value):
++            if isinstance(value, bool):
++                value = str(int(value))
++            if isinstance(value, six.string_types):
++                # Escape params used with LIKE
++                if '%' in value:
++                    value = value.replace('%', '%%')
++                # Escape single quotes
++                if "'" in value:
++                    value = value.replace("'", "''")
++                # Add single quote to text values
++                value = "'" + value + "'"
++            return value
++
++        sql, param = self.condition.query.where.as_sql(qn, connection)
++        param = map(escape, param)
++
++        return sql % tuple(param)
 +
 +
-+    models = {
-+        u'orm.bitbakeversion': {
-+            'Meta': {'object_name': 'BitbakeVersion'},
-+            'branch': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
-+            'dirpath': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-+            'giturl': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '32'})
-+        },
-+        u'orm.branch': {
-+            'Meta': {'unique_together': "(('layer_source', 'name'), ('layer_source', 'up_id'))", 'object_name': 'Branch'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'True', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-+            'short_description': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
-+            'up_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
-+            'up_id': ('django.db.models.fields.IntegerField', [], {'default': 'None', 'null': 'True'})
-+        },
-+        u'orm.build': {
-+            'Meta': {'object_name': 'Build'},
-+            'bitbake_version': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-+            'build_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'completed_on': ('django.db.models.fields.DateTimeField', [], {}),
-+            'cooker_log_path': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-+            'distro': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'distro_version': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'errors_no': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'machine': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'outcome': ('django.db.models.fields.IntegerField', [], {'default': '2'}),
-+            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']"}),
-+            'started_on': ('django.db.models.fields.DateTimeField', [], {}),
-+            'timespent': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'warnings_no': ('django.db.models.fields.IntegerField', [], {'default': '0'})
-+        },
-+        u'orm.buildartifact': {
-+            'Meta': {'object_name': 'BuildArtifact'},
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Build']"}),
-+            'file_name': ('django.db.models.fields.FilePathField', [], {'max_length': '100'}),
-+            'file_size': ('django.db.models.fields.IntegerField', [], {}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
-+        },
-+        u'orm.helptext': {
-+            'Meta': {'object_name': 'HelpText'},
-+            'area': ('django.db.models.fields.IntegerField', [], {}),
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'helptext_build'", 'to': u"orm['orm.Build']"}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'key': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'text': ('django.db.models.fields.TextField', [], {})
-+        },
-+        u'orm.layer': {
-+            'Meta': {'unique_together': "(('layer_source', 'up_id'), ('layer_source', 'name'))", 'object_name': 'Layer'},
-+            'description': ('django.db.models.fields.TextField', [], {'default': 'None', 'null': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layer_index_url': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-+            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'summary': ('django.db.models.fields.TextField', [], {'default': 'None', 'null': 'True'}),
-+            'up_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
-+            'up_id': ('django.db.models.fields.IntegerField', [], {'default': 'None', 'null': 'True'}),
-+            'vcs_url': ('django.db.models.fields.URLField', [], {'default': 'None', 'max_length': '200', 'null': 'True'}),
-+            'vcs_web_file_base_url': ('django.db.models.fields.URLField', [], {'default': 'None', 'max_length': '200', 'null': 'True'}),
-+            'vcs_web_tree_base_url': ('django.db.models.fields.URLField', [], {'default': 'None', 'max_length': '200', 'null': 'True'}),
-+            'vcs_web_url': ('django.db.models.fields.URLField', [], {'default': 'None', 'max_length': '200', 'null': 'True'})
-+        },
-+        u'orm.layer_version': {
-+            'Meta': {'unique_together': "(('layer_source', 'up_id'),)", 'object_name': 'Layer_Version'},
-+            'branch': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'related_name': "'layer_version_build'", 'null': 'True', 'to': u"orm['orm.Build']"}),
-+            'commit': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'dirpath': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '255', 'null': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layer': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'layer_version_layer'", 'to': u"orm['orm.Layer']"}),
-+            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
-+            'local_path': ('django.db.models.fields.FilePathField', [], {'default': "'/'", 'max_length': '1024'}),
-+            'priority': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'project': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.Project']", 'null': 'True'}),
-+            'up_branch': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.Branch']", 'null': 'True'}),
-+            'up_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
-+            'up_id': ('django.db.models.fields.IntegerField', [], {'default': 'None', 'null': 'True'})
-+        },
-+        u'orm.layersource': {
-+            'Meta': {'unique_together': "(('sourcetype', 'apiurl'),)", 'object_name': 'LayerSource'},
-+            'apiurl': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '255', 'null': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '63'}),
-+            'sourcetype': ('django.db.models.fields.IntegerField', [], {})
-+        },
-+        u'orm.layerversiondependency': {
-+            'Meta': {'unique_together': "(('layer_source', 'up_id'),)", 'object_name': 'LayerVersionDependency'},
-+            'depends_on': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'dependees'", 'to': u"orm['orm.Layer_Version']"}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
-+            'layer_version': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'dependencies'", 'to': u"orm['orm.Layer_Version']"}),
-+            'up_id': ('django.db.models.fields.IntegerField', [], {'default': 'None', 'null': 'True'})
-+        },
-+        u'orm.logmessage': {
-+            'Meta': {'object_name': 'LogMessage'},
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Build']"}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'level': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'lineno': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
-+            'message': ('django.db.models.fields.CharField', [], {'max_length': '240'}),
-+            'pathname': ('django.db.models.fields.FilePathField', [], {'max_length': '255', 'blank': 'True'}),
-+            'task': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Task']", 'null': 'True', 'blank': 'True'})
-+        },
-+        u'orm.machine': {
-+            'Meta': {'unique_together': "(('layer_source', 'up_id'),)", 'object_name': 'Machine'},
-+            'description': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
-+            'layer_version': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Layer_Version']"}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-+            'up_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
-+            'up_id': ('django.db.models.fields.IntegerField', [], {'default': 'None', 'null': 'True'})
-+        },
-+        u'orm.package': {
-+            'Meta': {'object_name': 'Package'},
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Build']"}),
-+            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'installed_name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '100'}),
-+            'installed_size': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'license': ('django.db.models.fields.CharField', [], {'max_length': '80', 'blank': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'recipe': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Recipe']", 'null': 'True'}),
-+            'revision': ('django.db.models.fields.CharField', [], {'max_length': '32', 'blank': 'True'}),
-+            'section': ('django.db.models.fields.CharField', [], {'max_length': '80', 'blank': 'True'}),
-+            'size': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'summary': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-+            'version': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'})
-+        },
-+        u'orm.package_dependency': {
-+            'Meta': {'object_name': 'Package_Dependency'},
-+            'dep_type': ('django.db.models.fields.IntegerField', [], {}),
-+            'depends_on': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'package_dependencies_target'", 'to': u"orm['orm.Package']"}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'package': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'package_dependencies_source'", 'to': u"orm['orm.Package']"}),
-+            'target': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Target']", 'null': 'True'})
-+        },
-+        u'orm.package_file': {
-+            'Meta': {'object_name': 'Package_File'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'package': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'buildfilelist_package'", 'to': u"orm['orm.Package']"}),
-+            'path': ('django.db.models.fields.FilePathField', [], {'max_length': '255', 'blank': 'True'}),
-+            'size': ('django.db.models.fields.IntegerField', [], {})
-+        },
-+        u'orm.project': {
-+            'Meta': {'object_name': 'Project'},
-+            'bitbake_version': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.BitbakeVersion']", 'null': 'True'}),
-+            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'release': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Release']", 'null': 'True'}),
-+            'short_description': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
-+            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-+            'user_id': ('django.db.models.fields.IntegerField', [], {'null': 'True'})
-+        },
-+        u'orm.projectlayer': {
-+            'Meta': {'unique_together': "(('project', 'layercommit'),)", 'object_name': 'ProjectLayer'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layercommit': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Layer_Version']", 'null': 'True'}),
-+            'optional': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-+            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']"})
-+        },
-+        u'orm.projecttarget': {
-+            'Meta': {'object_name': 'ProjectTarget'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']"}),
-+            'target': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'task': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'})
-+        },
-+        u'orm.projectvariable': {
-+            'Meta': {'object_name': 'ProjectVariable'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']"}),
-+            'value': ('django.db.models.fields.TextField', [], {'blank': 'True'})
-+        },
-+        u'orm.recipe': {
-+            'Meta': {'unique_together': "(('layer_version', 'file_path', 'pathflags'),)", 'object_name': 'Recipe'},
-+            'bugtracker': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
-+            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-+            'file_path': ('django.db.models.fields.FilePathField', [], {'max_length': '255'}),
-+            'homepage': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
-+            'layer_version': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'recipe_layer_version'", 'to': u"orm['orm.Layer_Version']"}),
-+            'license': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-+            'pathflags': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
-+            'section': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-+            'summary': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-+            'up_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
-+            'up_id': ('django.db.models.fields.IntegerField', [], {'default': 'None', 'null': 'True'}),
-+            'version': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'})
-+        },
-+        u'orm.recipe_dependency': {
-+            'Meta': {'object_name': 'Recipe_Dependency'},
-+            'dep_type': ('django.db.models.fields.IntegerField', [], {}),
-+            'depends_on': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'r_dependencies_depends'", 'to': u"orm['orm.Recipe']"}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'recipe': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'r_dependencies_recipe'", 'to': u"orm['orm.Recipe']"})
-+        },
-+        u'orm.release': {
-+            'Meta': {'object_name': 'Release'},
-+            'bitbake_version': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.BitbakeVersion']"}),
-+            'branch_name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '50'}),
-+            'description': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-+            'helptext': ('django.db.models.fields.TextField', [], {'null': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '32'})
-+        },
-+        u'orm.releasedefaultlayer': {
-+            'Meta': {'object_name': 'ReleaseDefaultLayer'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layer_name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '100'}),
-+            'release': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Release']"})
-+        },
-+        u'orm.releaselayersourcepriority': {
-+            'Meta': {'unique_together': "(('release', 'layer_source'),)", 'object_name': 'ReleaseLayerSourcePriority'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.LayerSource']"}),
-+            'priority': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'release': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Release']"})
-+        },
-+        u'orm.target': {
-+            'Meta': {'object_name': 'Target'},
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Build']"}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'image_size': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'is_image': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-+            'license_manifest_path': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True'}),
-+            'target': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'task': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'})
-+        },
-+        u'orm.target_file': {
-+            'Meta': {'object_name': 'Target_File'},
-+            'directory': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'directory_set'", 'null': 'True', 'to': u"orm['orm.Target_File']"}),
-+            'group': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'inodetype': ('django.db.models.fields.IntegerField', [], {}),
-+            'owner': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-+            'path': ('django.db.models.fields.FilePathField', [], {'max_length': '100'}),
-+            'permission': ('django.db.models.fields.CharField', [], {'max_length': '16'}),
-+            'size': ('django.db.models.fields.IntegerField', [], {}),
-+            'sym_target': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'symlink_set'", 'null': 'True', 'to': u"orm['orm.Target_File']"}),
-+            'target': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Target']"})
-+        },
-+        u'orm.target_image_file': {
-+            'Meta': {'object_name': 'Target_Image_File'},
-+            'file_name': ('django.db.models.fields.FilePathField', [], {'max_length': '254'}),
-+            'file_size': ('django.db.models.fields.IntegerField', [], {}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'target': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Target']"})
-+        },
-+        u'orm.target_installed_package': {
-+            'Meta': {'object_name': 'Target_Installed_Package'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'package': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'buildtargetlist_package'", 'to': u"orm['orm.Package']"}),
-+            'target': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Target']"})
-+        },
-+        u'orm.task': {
-+            'Meta': {'ordering': "('order', 'recipe')", 'unique_together': "(('build', 'recipe', 'task_name'),)", 'object_name': 'Task'},
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'task_build'", 'to': u"orm['orm.Build']"}),
-+            'cpu_usage': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '8', 'decimal_places': '2'}),
-+            'disk_io': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
-+            'elapsed_time': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '8', 'decimal_places': '2'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'line_number': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'logfile': ('django.db.models.fields.FilePathField', [], {'max_length': '255', 'blank': 'True'}),
-+            'message': ('django.db.models.fields.CharField', [], {'max_length': '240'}),
-+            'order': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
-+            'outcome': ('django.db.models.fields.IntegerField', [], {'default': '-1'}),
-+            'path_to_sstate_obj': ('django.db.models.fields.FilePathField', [], {'max_length': '500', 'blank': 'True'}),
-+            'recipe': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'tasks'", 'to': u"orm['orm.Recipe']"}),
-+            'script_type': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'source_url': ('django.db.models.fields.FilePathField', [], {'max_length': '255', 'blank': 'True'}),
-+            'sstate_checksum': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-+            'sstate_result': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'task_executed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-+            'task_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'work_directory': ('django.db.models.fields.FilePathField', [], {'max_length': '255', 'blank': 'True'})
-+        },
-+        u'orm.task_dependency': {
-+            'Meta': {'object_name': 'Task_Dependency'},
-+            'depends_on': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'task_dependencies_depends'", 'to': u"orm['orm.Task']"}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'task': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'task_dependencies_task'", 'to': u"orm['orm.Task']"})
-+        },
-+        u'orm.toastersetting': {
-+            'Meta': {'object_name': 'ToasterSetting'},
-+            'helptext': ('django.db.models.fields.TextField', [], {}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '63'}),
-+            'value': ('django.db.models.fields.CharField', [], {'max_length': '255'})
-+        },
-+        u'orm.variable': {
-+            'Meta': {'object_name': 'Variable'},
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'variable_build'", 'to': u"orm['orm.Build']"}),
-+            'changed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-+            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-+            'human_readable_name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'variable_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'variable_value': ('django.db.models.fields.TextField', [], {'blank': 'True'})
-+        },
-+        u'orm.variablehistory': {
-+            'Meta': {'object_name': 'VariableHistory'},
-+            'file_name': ('django.db.models.fields.FilePathField', [], {'max_length': '255'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'line_number': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
-+            'operation': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
-+            'value': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-+            'variable': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'vhistory'", 'to': u"orm['orm.Variable']"})
-+        }
-+    }
++class SqlSum(SqlAggregate):
++    sql_function = 'SUM'
 +
-+    complete_apps = ['orm']
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index d97eadb..e93629b 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -283,8 +283,9 @@ class Build(models.Model):
- 
- 
-     def get_current_status(self):
--        if self.outcome == Build.IN_PROGRESS and self.build_name == "":
--            return "Queued"
-+        from bldcontrol.models import BuildRequest
-+        if self.outcome == Build.IN_PROGRESS and self.buildrequest.state != BuildRequest.REQ_INPROGRESS:
-+            return self.buildrequest.get_state_display()
-         return self.get_outcome_display()
- 
-     def __str__(self):
-@@ -1168,6 +1169,9 @@ class LogMessage(models.Model):
-     pathname = models.FilePathField(max_length=255, blank=True)
-     lineno = models.IntegerField(null=True)
- 
-+    def __str__(self):
-+        return "%s %s %s" % (self.get_level_display(), self.message, self.build)
 +
- def invalidate_cache(**kwargs):
-     from django.core.cache import cache
-     try:
-diff --git a/lib/toaster/toastergui/static/js/projectapp.js b/lib/toaster/toastergui/static/js/projectapp.js
-index 40e2e1f..ea44bf3 100644
---- a/lib/toaster/toastergui/static/js/projectapp.js
-+++ b/lib/toaster/toastergui/static/js/projectapp.js
-@@ -132,8 +132,8 @@ projectApp.filter('timediff', function() {
-         var seconds = parseInt(input);
-         var minutes = Math.floor(seconds / 60);
-         seconds = seconds - minutes * 60;
--        var hours = Math.floor(seconds / 3600);
--        seconds = seconds - hours * 3600;
-+        var hours = Math.floor(minutes / 60);
-+        minutes = minutes - hours * 60;
-         return pad(hours) + ":" + pad(minutes) + ":" + pad(seconds);
-     };
- });
-diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
-index 1a8991f..b5d97cb 100644
---- a/lib/toaster/toastergui/templates/project.html
-+++ b/lib/toaster/toastergui/templates/project.html
-@@ -145,7 +145,7 @@ vim: expandtab tabstop=2
- 
-   <a id="buildslist"></a>
-   <h2 class="air" data-ng-if="builds.length">Latest builds</h2>
--  <div class="animate-repeat alert"  data-ng-repeat="b in builds track by b.id" data-ng-class="{'Queued':'alert-info', 'In Progress':'alert-info', 'Succeeded':'alert-success', 'Failed':'alert-error'}[b.status]">
-+  <div class="animate-repeat alert"  data-ng-repeat="b in builds track by b.id" data-ng-class="{'queued':'alert-info', 'In Progress':'alert-info', 'Succeeded':'alert-success', 'Failed':'alert-error'}[b.status]">
-     <div class="row-fluid">
-         <switch data-ng-switch="b.status">
- 
-@@ -182,7 +182,7 @@ vim: expandtab tabstop=2
-             </div>
-           </case>
- 
--          <case data-ng-switch-when="Queued">
-+          <case data-ng-switch-when="queued">
-             <div class="lead span5"> <span data-ng-repeat="t in b.targets" data-ng-include src="'target_display'"></span>   </div>
-             <div class="span4 lead" >Build queued
-               <i title="This build will start as soon as a build server is available" class="icon-question-sign get-help get-help-blue heading-help" data-toggle="tooltip"></i>
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 2336ae3..00b1387 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -64,7 +64,9 @@ def _get_latest_builds(prj=None):
-     if prj is not None:
-         queryset = queryset.filter(project = prj)
- 
--    return itertools.chain(queryset.filter(outcome__lt=Build.IN_PROGRESS).order_by("-pk")[:3], queryset.filter(outcome=Build.IN_PROGRESS).order_by("-pk"))
-+    return itertools.chain(
-+        queryset.filter(outcome=Build.IN_PROGRESS).order_by("-pk"),
-+        queryset.filter(outcome__lt=Build.IN_PROGRESS).order_by("-pk")[:3] )
- 
- 
- # a JSON-able dict of recent builds; for use in the Project page, xhr_ updates,  and other places, as needed
-@@ -76,7 +78,7 @@ def _project_recent_build_list(prj):
-             "id":  x.pk,
-             "targets" : map(lambda y: {"target": y.target, "task": y.task }, x.target_set.all()), # TODO: create the task entry in the Target table
-             "status": x.get_current_status(),
--            "errors": map(lambda y: {"type": y.lineno, "msg": y.message, "tb": y.pathname}, x.logmessage_set.filter(level__gte=LogMessage.WARNING)),
-+            "errors": map(lambda y: {"type": y.lineno, "msg": y.message, "tb": y.pathname}, (x.logmessage_set.filter(level__gte=LogMessage.WARNING)|x.logmessage_set.filter(level=LogMessage.EXCEPTION))),
-             "updated": x.completed_on.strftime('%s')+"000",
-             "command_time": (x.completed_on - x.started_on).total_seconds(),
-             "br_page_url": reverse('buildrequestdetails', args=(x.project.id, x.pk) ),
++class SqlCount(SqlAggregate):
++    is_ordinal = True
++    sql_function = 'COUNT'
++    sql_template = '%(function)s(%(distinct)s%(field)s)'
++    conditional_template = '%(function)s(%(distinct)sCASE WHEN %(condition)s THEN %(field)s ELSE null END)'
++
++    def __init__(self, col, distinct=False, **extra):
++        super(SqlCount, self).__init__(col, distinct=distinct and 'DISTINCT ' or '', **extra)
++
++
++class SqlAvg(SqlAggregate):
++    is_computed = True
++    sql_function = 'AVG'
++
++
++class SqlMax(SqlAggregate):
++    sql_function = 'MAX'
++
++
++class SqlMin(SqlAggregate):
++    sql_function = 'MIN'
++
++
++class Aggregate(DjangoAggregate):
++    def __init__(self, lookup, only=None, **extra):
++        super(Aggregate, self).__init__(lookup, **extra)
++        self.only = only
++        self.condition = None
++
++    def _get_fields_from_Q(self, q):
++        fields = []
++        for child in q.children:
++            if hasattr(child, 'children'):
++                fields.extend(self._get_fields_from_Q(child))
++            else:
++                fields.append(child)
++        return fields
++
++    def add_to_query(self, query, alias, col, source, is_summary):
++        if self.only:
++            self.condition = query.model._default_manager.filter(self.only)
++            for child in self._get_fields_from_Q(self.only):
++                field_list = child[0].split('__')
++                # Pop off the last field if it's a query term ('gte', 'contains', 'isnull', etc.)
++                if field_list[-1] in query.query_terms:
++                    field_list.pop()
++                # setup_joins have different returns in Django 1.5 and 1.6, but the order of what we need remains.
++                result = query.setup_joins(field_list, query.model._meta, query.get_initial_alias(), None)
++                join_list = result[3]
++
++                fname = 'promote_alias_chain' if VERSION < (1, 5) else 'promote_joins'
++                args = (join_list, True) if VERSION < (1, 7) else (join_list,)
++
++                promote = getattr(query, fname)
++                promote(*args)
++
++        aggregate = self.sql_klass(col, source=source, is_summary=is_summary, condition=self.condition, **self.extra)
++        query.aggregates[alias] = aggregate
++
++
++class Sum(Aggregate):
++    name = 'Sum'
++    sql_klass = SqlSum
++
++
++class Count(Aggregate):
++    name = 'Count'
++    sql_klass = SqlCount
++
++
++class Avg(Aggregate):
++    name = 'Avg'
++    sql_klass = SqlAvg
++
++
++class Max(Aggregate):
++    name = 'Max'
++    sql_klass = SqlMax
++
++
++class Min(Aggregate):
++    name = 'Min'
++    sql_klass = SqlMin
+diff --git a/lib/toaster/contrib/django-aggregate-if-master/runtests.py b/lib/toaster/contrib/django-aggregate-if-master/runtests.py
+new file mode 100755
+index 0000000..2e55864
+--- /dev/null
++++ b/lib/toaster/contrib/django-aggregate-if-master/runtests.py
+@@ -0,0 +1,48 @@
++#!/usr/bin/env python
++
++import os
++import sys
++from optparse import OptionParser
++
++
++def parse_args():
++    parser = OptionParser()
++    parser.add_option('-s', '--settings', help='Define settings.')
++    parser.add_option('-t', '--unittest', help='Define which test to run. Default all.')
++    options, args = parser.parse_args()
++
++    if not options.settings:
++        parser.print_help()
++        sys.exit(1)
++
++    if not options.unittest:
++        options.unittest = ['aggregation']
++
++    return options
++
++
++def get_runner(settings_module):
++    '''
++    Asks Django for the TestRunner defined in settings or the default one.
++    '''
++    os.environ['DJANGO_SETTINGS_MODULE'] = settings_module
++
++    import django
++    from django.test.utils import get_runner
++    from django.conf import settings
++
++    if hasattr(django, 'setup'):
++        django.setup()
++
++    return get_runner(settings)
++
++
++def runtests():
++    options = parse_args()
++    TestRunner = get_runner(options.settings)
++    runner = TestRunner(verbosity=1, interactive=True, failfast=False)
++    sys.exit(runner.run_tests([]))
++
++
++if __name__ == '__main__':
++    runtests()
+diff --git a/lib/toaster/contrib/django-aggregate-if-master/setup.py b/lib/toaster/contrib/django-aggregate-if-master/setup.py
+new file mode 100644
+index 0000000..aed3db1
+--- /dev/null
++++ b/lib/toaster/contrib/django-aggregate-if-master/setup.py
+@@ -0,0 +1,33 @@
++# coding: utf-8
++from setuptools import setup
++import os
++
++
++setup(name='django-aggregate-if',
++      version='0.5',
++      description='Conditional aggregates for Django, just like the famous SumIf in Excel.',
++      long_description=open(os.path.join(os.path.dirname(__file__), "README.rst")).read(),
++      author="Henrique Bastos", author_email="henrique@bastos.net",
++      license="MIT",
++      py_modules=['aggregate_if'],
++      install_requires=[
++          'six>=1.6.1',
++      ],
++      zip_safe=False,
++      platforms='any',
++      include_package_data=True,
++      classifiers=[
++          'Development Status :: 5 - Production/Stable',
++          'Framework :: Django',
++          'Intended Audience :: Developers',
++          'License :: OSI Approved :: MIT License',
++          'Natural Language :: English',
++          'Operating System :: OS Independent',
++          'Programming Language :: Python',
++          'Programming Language :: Python :: 2.7',
++          'Programming Language :: Python :: 3',
++          'Topic :: Database',
++          'Topic :: Software Development :: Libraries',
++      ],
++      url='http://github.com/henriquebastos/django-aggregate-if/',
++)
+diff --git a/lib/toaster/contrib/django-aggregate-if-master/tox.ini b/lib/toaster/contrib/django-aggregate-if-master/tox.ini
+new file mode 100644
+index 0000000..78beb14
+--- /dev/null
++++ b/lib/toaster/contrib/django-aggregate-if-master/tox.ini
+@@ -0,0 +1,198 @@
++[tox]
++envlist =
++    py27-django1.4-sqlite,
++    py27-django1.4-postgres,
++    py27-django1.4-mysql,
++
++    py27-django1.5-sqlite,
++    py27-django1.5-postgres,
++    py27-django1.5-mysql,
++
++    py27-django1.6-sqlite,
++    py27-django1.6-postgres,
++    py27-django1.6-mysql,
++
++    py27-django1.7-sqlite,
++    py27-django1.7-postgres,
++    py27-django1.7-mysql,
++
++    py34-django1.6-sqlite,
++    py34-django1.6-postgres,
++    #py34-django1.6-mysql
++
++    py34-django1.7-sqlite,
++    py34-django1.7-postgres,
++    #py34-django1.7-mysql
++
++[testenv]
++whitelist_externals=
++    mysql
++    psql
++
++# Python 2.7
++# Django 1.4
++[testenv:py27-django1.4-sqlite]
++basepython = python2.7
++deps =
++    django==1.4
++commands = python runtests.py --settings tests.test_sqlite
++
++[testenv:py27-django1.4-postgres]
++basepython = python2.7
++deps =
++    django==1.4
++    psycopg2
++commands =
++    psql -c 'create database aggregation;' postgres
++    python runtests.py --settings tests.test_postgres
++    psql -c 'drop database aggregation;' postgres
++
++[testenv:py27-django1.4-mysql]
++basepython = python2.7
++deps =
++    django==1.4
++    mysql-python
++commands =
++    mysql -e 'create database aggregation;'
++    python runtests.py --settings tests.test_mysql
++    mysql -e 'drop database aggregation;'
++
++# Django 1.5
++[testenv:py27-django1.5-sqlite]
++basepython = python2.7
++deps =
++    django==1.5
++commands = python runtests.py --settings tests.test_sqlite
++
++[testenv:py27-django1.5-postgres]
++basepython = python2.7
++deps =
++    django==1.5
++    psycopg2
++commands =
++    psql -c 'create database aggregation;' postgres
++    python runtests.py --settings tests.test_postgres
++    psql -c 'drop database aggregation;' postgres
++
++[testenv:py27-django1.5-mysql]
++basepython = python2.7
++deps =
++    django==1.5
++    mysql-python
++commands =
++    mysql -e 'create database aggregation;'
++    python runtests.py --settings tests.test_mysql
++    mysql -e 'drop database aggregation;'
++
++# Django 1.6
++[testenv:py27-django1.6-sqlite]
++basepython = python2.7
++deps =
++    django==1.6
++commands = python runtests.py --settings tests.test_sqlite
++
++[testenv:py27-django1.6-postgres]
++basepython = python2.7
++deps =
++    django==1.6
++    psycopg2
++commands =
++    psql -c 'create database aggregation;' postgres
++    python runtests.py --settings tests.test_postgres
++    psql -c 'drop database aggregation;' postgres
++
++[testenv:py27-django1.6-mysql]
++basepython = python2.7
++deps =
++    django==1.6
++    mysql-python
++commands =
++    mysql -e 'create database aggregation;'
++    python runtests.py --settings tests.test_mysql
++    mysql -e 'drop database aggregation;'
++
++
++# Python 2.7 and Django 1.7
++[testenv:py27-django1.7-sqlite]
++basepython = python2.7
++deps =
++    django==1.7
++commands = python runtests.py --settings tests.test_sqlite
++
++[testenv:py27-django1.7-postgres]
++basepython = python2.7
++deps =
++    django==1.7
++    psycopg2
++commands =
++    psql -c 'create database aggregation;' postgres
++    python runtests.py --settings tests.test_postgres
++    psql -c 'drop database aggregation;' postgres
++
++[testenv:py27-django1.7-mysql]
++basepython = python2.7
++deps =
++    django==1.7
++    mysql-python
++commands =
++    mysql -e 'create database aggregation;'
++    python runtests.py --settings tests.test_mysql
++    mysql -e 'drop database aggregation;'
++
++
++# Python 3.4
++# Django 1.6
++[testenv:py34-django1.6-sqlite]
++basepython = python3.4
++deps =
++    django==1.6
++commands = python runtests.py --settings tests.test_sqlite
++
++[testenv:py34-django1.6-postgres]
++basepython = python3.4
++deps =
++    django==1.6
++    psycopg2
++commands =
++    psql -c 'create database aggregation;' postgres
++    python runtests.py --settings tests.test_postgres
++    psql -c 'drop database aggregation;' postgres
++
++[testenv:py34-django1.6-mysql]
++basepython = python3.4
++deps =
++    django==1.6
++    mysql-python3
++commands =
++    mysql -e 'create database aggregation;'
++    python runtests.py --settings tests.test_mysql
++    mysql -e 'drop database aggregation;'
++
++
++# Python 3.4
++# Django 1.7
++[testenv:py34-django1.7-sqlite]
++basepython = python3.4
++deps =
++    django==1.7
++commands = python runtests.py --settings tests.test_sqlite
++
++[testenv:py34-django1.7-postgres]
++basepython = python3.4
++deps =
++    django==1.7
++    psycopg2
++commands =
++    psql -c 'create database aggregation;' postgres
++    python runtests.py --settings tests.test_postgres
++    psql -c 'drop database aggregation;' postgres
++
++[testenv:py34-django1.7-mysql]
++basepython = python3.4
++deps =
++    django==1.7
++    mysql-python3
++commands =
++    mysql -e 'create database aggregation;'
++    python runtests.py --settings tests.test_mysql
++    mysql -e 'drop database aggregation;'
 -- 
 1.9.1
 
