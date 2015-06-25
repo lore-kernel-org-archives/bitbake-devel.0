@@ -1,23 +1,37 @@
-Return-Path: <anibal.limon@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 9D8AA75A06
+Return-Path: <alexandru.damian@intel.com>
+Received: from mail-wi0-f172.google.com (mail-wi0-f172.google.com
+	[209.85.212.172])
+	by mail.openembedded.org (Postfix) with ESMTP id 69426605D2
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 23 Jun 2015 22:08:03 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by orsmga101.jf.intel.com with ESMTP; 23 Jun 2015 14:56:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.13,668,1427785200"; d="scan'208";a="513184745"
-Received: from alimon-thinkpad-w540.zpn.intel.com ([10.219.4.55])
-	by FMSMGA003.fm.intel.com with ESMTP; 23 Jun 2015 14:56:56 -0700
-From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
+	Thu, 25 Jun 2015 10:33:44 +0000 (UTC)
+Received: by wicnd19 with SMTP id nd19so13647207wic.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 25 Jun 2015 03:33:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=7LeehSI9Ps3FwX3zX9BlCrmJss5rYaX3IdnhginaLqo=;
+	b=QxfyG4W/HUnhdAKE9HIUDz39jPHx9ZOCSPYOW3KIn6IvXpsK3gC0N8w30hYH4JeCdA
+	xWyQrws/MeZW/wjRZVgcP+fKPQV0v/yYDO0buQhKTTHeHaaC5pufLyPWrSKns0xk+DDJ
+	unUAGjeBjExVtWIfIMHPtAxuH2AP6pYT7Bx2jo4Sw4M3/gF91lUSwF2vq8oLyFyKb+mX
+	zhhEAB8kUllVzbJXZBWD5z5a4kIJKcx4X9plEu5LOBE2BLe86a7PEWqVNiq3A6iqf/+Z
+	M6ZwCYnVYi7Mzb/aV5Y0+P6WXU57ApFoKM8/E6va8Wv8DR/pHkMMO+vEapC8gVj1Vnkm
+	Z9bw==
+X-Gm-Message-State: ALoCoQn88MBac7BrrBSovyCV5BthO0qfbwbr7araGHilKOq6pHirLp3As2ramXHTVzT4eT2SDRK5
+X-Received: by 10.194.83.70 with SMTP id o6mr78936287wjy.44.1435228425131;
+	Thu, 25 Jun 2015 03:33:45 -0700 (PDT)
+Received: from adamian-desk.local ([83.217.123.106])
+	by mx.google.com with ESMTPSA id q2sm45022315wjz.15.2015.06.25.03.33.43
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Thu, 25 Jun 2015 03:33:44 -0700 (PDT)
+Received: by adamian-desk.local (Postfix, from userid 1000)
+	id 0B34C56172B; Thu, 25 Jun 2015 11:33:50 +0100 (BST)
+From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 23 Jun 2015 16:58:47 -0500
-Message-Id: <1435096729-14507-3-git-send-email-anibal.limon@linux.intel.com>
+Date: Thu, 25 Jun 2015 11:33:49 +0100
+Message-Id: <cover.1435228175.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1435096729-14507-1-git-send-email-anibal.limon@linux.intel.com>
-References: <1435096729-14507-1-git-send-email-anibal.limon@linux.intel.com>
-MIME-Version: 1.0
-Subject: [PATCH 2/4] fetch2: Add fetch parameter to checkstatus
+Subject: [PATCH 00/23] toaster patchset
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,143 +44,142 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 23 Jun 2015 22:08:03 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 25 Jun 2015 10:33:45 -0000
 
-In order to pass connection cache object to checkstatus function
-add fetch parameter.
+From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
----
- lib/bb/fetch2/__init__.py | 20 ++++++++++----------
- lib/bb/fetch2/git.py      |  2 +-
- lib/bb/fetch2/local.py    |  2 +-
- lib/bb/fetch2/wget.py     |  2 +-
- 4 files changed, 13 insertions(+), 13 deletions(-)
+This toaster patchset brings in filters for new toaster tables, 
+removes the differences between managed and analysis modes
+in favour of project types, and more minor fixes.
 
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
-index 7fd9ec7..8d0221d 100644
---- a/lib/bb/fetch2/__init__.py
-+++ b/lib/bb/fetch2/__init__.py
-@@ -907,12 +907,12 @@ def rename_bad_checksum(ud, suffix):
-     bb.utils.movefile(ud.localpath, new_localpath)
- 
- 
--def try_mirror_url(origud, ud, ld, check = False):
-+def try_mirror_url(fetch, origud, ud, ld, check = False):
-     # Return of None or a value means we're finished
-     # False means try another url
-     try:
-         if check:
--            found = ud.method.checkstatus(ud, ld)
-+            found = ud.method.checkstatus(fetch, ud, ld)
-             if found:
-                 return found
-             return False
-@@ -975,7 +975,7 @@ def try_mirror_url(origud, ud, ld, check = False):
-             pass
-         return False
- 
--def try_mirrors(d, origud, mirrors, check = False):
-+def try_mirrors(fetch, d, origud, mirrors, check = False):
-     """
-     Try to use a mirrored version of the sources.
-     This method will be automatically called before the fetchers go.
-@@ -989,7 +989,7 @@ def try_mirrors(d, origud, mirrors, check = False):
-     uris, uds = build_mirroruris(origud, mirrors, ld)
- 
-     for index, uri in enumerate(uris):
--        ret = try_mirror_url(origud, uds[index], ld, check)
-+        ret = try_mirror_url(fetch, origud, uds[index], ld, check)
-         if ret != False:
-             return ret
-     return None
-@@ -1473,7 +1473,7 @@ class FetchMethod(object):
-         """
-         return True
- 
--    def checkstatus(self, urldata, d):
-+    def checkstatus(self, fetch, urldata, d):
-         """
-         Check the status of a URL
-         Assumes localpath was called first
-@@ -1577,7 +1577,7 @@ class Fetch(object):
-                 elif m.try_premirror(ud, self.d):
-                     logger.debug(1, "Trying PREMIRRORS")
-                     mirrors = mirror_from_string(self.d.getVar('PREMIRRORS', True))
--                    localpath = try_mirrors(self.d, ud, mirrors, False)
-+                    localpath = try_mirrors(self, self.d, ud, mirrors, False)
- 
-                 if premirroronly:
-                     self.d.setVar("BB_NO_NETWORK", "1")
-@@ -1616,7 +1616,7 @@ class Fetch(object):
-                         m.clean(ud, self.d)
-                         logger.debug(1, "Trying MIRRORS")
-                         mirrors = mirror_from_string(self.d.getVar('MIRRORS', True))
--                        localpath = try_mirrors (self.d, ud, mirrors)
-+                        localpath = try_mirrors(self, self.d, ud, mirrors)
- 
-                 if not localpath or ((not os.path.exists(localpath)) and localpath.find("*") == -1):
-                     if firsterr:
-@@ -1648,15 +1648,15 @@ class Fetch(object):
-             logger.debug(1, "Testing URL %s", u)
-             # First try checking uri, u, from PREMIRRORS
-             mirrors = mirror_from_string(self.d.getVar('PREMIRRORS', True))
--            ret = try_mirrors(self.d, ud, mirrors, True)
-+            ret = try_mirrors(self, self.d, ud, mirrors, True)
-             if not ret:
-                 # Next try checking from the original uri, u
-                 try:
--                    ret = m.checkstatus(ud, self.d)
-+                    ret = m.checkstatus(self, ud, self.d)
-                 except:
-                     # Finally, try checking uri, u, from MIRRORS
-                     mirrors = mirror_from_string(self.d.getVar('MIRRORS', True))
--                    ret = try_mirrors(self.d, ud, mirrors, True)
-+                    ret = try_mirrors(self, self.d, ud, mirrors, True)
- 
-             if not ret:
-                 raise FetchError("URL %s doesn't work" % u, u)
-diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-index 2e53882..0abd679 100644
---- a/lib/bb/fetch2/git.py
-+++ b/lib/bb/fetch2/git.py
-@@ -423,7 +423,7 @@ class Git(FetchMethod):
-         else:
-             return True, str(rev)
- 
--    def checkstatus(self, ud, d):
-+    def checkstatus(self, fetch, ud, d):
-         try:
-             self._lsremote(ud, d, "")
-             return True
-diff --git a/lib/bb/fetch2/local.py b/lib/bb/fetch2/local.py
-index 0785236..2d921f7 100644
---- a/lib/bb/fetch2/local.py
-+++ b/lib/bb/fetch2/local.py
-@@ -112,7 +112,7 @@ class Local(FetchMethod):
- 
-         return True
- 
--    def checkstatus(self, urldata, d):
-+    def checkstatus(self, fetch, urldata, d):
-         """
-         Check the status of the url
-         """
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index 162a6bd..abacbcf 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -100,7 +100,7 @@ class Wget(FetchMethod):
- 
-         return True
- 
--    def checkstatus(self, ud, d):
-+    def checkstatus(self, fetch, ud, d):
- 
-         uri = ud.url.split(";")[0]
-         fetchcmd = self.basecmd + " --spider '%s'" % uri
+Can you please cherry-pick ?
+
+Thank you,
+Alex
+
+The following changes since commit 32166ac3c85ff3c04081580ae76bd63590d6ff3e:
+
+  runqueue: Sanity check BB_NUMBER_THREADS (2015-06-19 22:43:48 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib adamian/20150625-submission-bb
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=adamian/20150625-submission-bb
+
+Alexandru DAMIAN (16):
+  toastergui: fix angular error
+  toaster: improve the buildenvironment API
+  toastergui: enable strict variable checking
+  toaster: fixing undefined variables
+  toaster: remove MANAGED references
+  toaster: remove BuildRequest references
+  toaster: refactor the builds pages
+  toaster: fill in build data from buildrequest
+  toaster: fixes after replacing BuildRequest with Build
+  toaster: add django-aggregate-if
+  toaster: bring django-aggregate-if into the project
+  toaster: refactor build model
+  toastergui: select project types
+  toaster: delete multiple builds
+  toasterui: verify variable before usage
+  toasterui: fixes after html5 compliance testing
+
+Michael Wood (7):
+  toaster: Enable toastertable cache
+  toaster: toastertable Pass up the kwargs for setup_filter
+  toaster: table.js fix filter visual indicator and interaction
+  toaster: Restore 'in project' filters to main tables
+  toaster: bldcontrol Ignore toasterconf files in own directories
+  toaster: split orm app into it's own module and app
+  toaster: Add url pattern for backward compatibility
+
+ lib/bb/ui/buildinfohelper.py                       |  73 ++-
+ lib/bb/ui/toasterui.py                             |  27 +-
+ lib/toaster/bldcollector/__init__.py               |   0
+ lib/toaster/{orm => bldcollector}/admin.py         |   3 +-
+ lib/toaster/{orm => bldcollector}/urls.py          |   3 +-
+ lib/toaster/{orm => bldcollector}/views.py         |   0
+ lib/toaster/bldcontrol/bbcontroller.py             |   3 +
+ lib/toaster/bldcontrol/localhostbecontroller.py    |  24 +-
+ .../management/commands/checksettings.py           |   2 +
+ .../bldcontrol/management/commands/runbuilds.py    |  69 ++-
+ lib/toaster/bldcontrol/models.py                   |   3 +
+ lib/toaster/bldcontrol/sshbecontroller.py          |  21 +
+ .../contrib/django-aggregate-if-master/.gitignore  |  10 +
+ .../contrib/django-aggregate-if-master/.travis.yml |  50 ++
+ .../contrib/django-aggregate-if-master/LICENSE     |  21 +
+ .../contrib/django-aggregate-if-master/README.rst  | 156 +++++
+ .../django-aggregate-if-master/aggregate_if.py     | 164 ++++++
+ .../contrib/django-aggregate-if-master/runtests.py |  48 ++
+ .../contrib/django-aggregate-if-master/setup.py    |  33 ++
+ .../contrib/django-aggregate-if-master/tox.ini     | 198 +++++++
+ ...ect__chg_field_project_bitbake_version__chg_.py |   5 +-
+ ...k__add_field_layer_version_local_path__del_f.py | 343 +++++++++++
+ ...ings_no__del_field_build_errors_no__del_fiel.py | 353 ++++++++++++
+ lib/toaster/orm/models.py                          |  67 ++-
+ lib/toaster/toastergui/static/js/base.js           |   2 +-
+ lib/toaster/toastergui/static/js/projectapp.js     |  20 +-
+ lib/toaster/toastergui/static/js/table.js          |  59 +-
+ lib/toaster/toastergui/tables.py                   |  75 ++-
+ lib/toaster/toastergui/templates/base.html         |  20 +-
+ .../toastergui/templates/basebuilddetailpage.html  |   4 +-
+ .../toastergui/templates/basebuildpage.html        |   7 +-
+ .../toastergui/templates/basetable_top.html        |  11 +-
+ .../templates/basetable_top_buildprojects.html     |   2 -
+ .../templates/basetable_top_projectbuilds.html     |   2 -
+ lib/toaster/toastergui/templates/bpackage.html     |   3 -
+ .../toastergui/templates/builddashboard.html       |  39 +-
+ .../templates/{build.html => builds.html}          |  35 +-
+ .../toastergui/templates/configuration.html        |   6 -
+ lib/toaster/toastergui/templates/configvars.html   |   6 +-
+ .../toastergui/templates/detail_search_header.html |   2 +-
+ .../toastergui/templates/detail_sorted_header.html |   2 +-
+ .../toastergui/templates/filtersnippet.html        |   4 +-
+ .../templates/generic-toastertable-page.html       |   2 +
+ lib/toaster/toastergui/templates/importlayer.html  |  15 +-
+ lib/toaster/toastergui/templates/landing.html      |  37 +-
+ .../toastergui/templates/managed_builds.html       | 167 ------
+ .../toastergui/templates/managed_mrb_section.html  | 193 -------
+ lib/toaster/toastergui/templates/mrb_section.html  |  70 ++-
+ lib/toaster/toastergui/templates/newproject.html   |  99 ++--
+ .../toastergui/templates/package_detail_base.html  |   7 -
+ lib/toaster/toastergui/templates/project.html      |  39 +-
+ .../toastergui/templates/projectbuilds.html        |  30 +-
+ lib/toaster/toastergui/templates/projects.html     |  27 +-
+ lib/toaster/toastergui/templates/recipe.html       |   9 +-
+ lib/toaster/toastergui/templates/recipes.html      |   7 +-
+ lib/toaster/toastergui/templates/runagain.html     |   7 -
+ lib/toaster/toastergui/templates/target.html       |   7 +-
+ lib/toaster/toastergui/templates/task.html         |  36 +-
+ lib/toaster/toastergui/templates/tasks.html        |   7 +-
+ .../toastergui/templates/toastertable-simple.html  |   4 +-
+ lib/toaster/toastergui/templates/toastertable.html |   4 +-
+ lib/toaster/toastergui/urls.py                     |   3 -
+ lib/toaster/toastergui/views.py                    | 633 +++++----------------
+ lib/toaster/toastergui/widgets.py                  |  19 +-
+ .../toastermain/management/commands/builddelete.py |  56 +-
+ lib/toaster/toastermain/settings.py                |  18 +-
+ lib/toaster/toastermain/urls.py                    |   4 +
+ 67 files changed, 2191 insertions(+), 1284 deletions(-)
+ create mode 100644 lib/toaster/bldcollector/__init__.py
+ rename lib/toaster/{orm => bldcollector}/admin.py (92%)
+ rename lib/toaster/{orm => bldcollector}/urls.py (95%)
+ rename lib/toaster/{orm => bldcollector}/views.py (100%)
+ create mode 100644 lib/toaster/contrib/django-aggregate-if-master/.gitignore
+ create mode 100644 lib/toaster/contrib/django-aggregate-if-master/.travis.yml
+ create mode 100644 lib/toaster/contrib/django-aggregate-if-master/LICENSE
+ create mode 100644 lib/toaster/contrib/django-aggregate-if-master/README.rst
+ create mode 100644 lib/toaster/contrib/django-aggregate-if-master/aggregate_if.py
+ create mode 100755 lib/toaster/contrib/django-aggregate-if-master/runtests.py
+ create mode 100644 lib/toaster/contrib/django-aggregate-if-master/setup.py
+ create mode 100644 lib/toaster/contrib/django-aggregate-if-master/tox.ini
+ create mode 100644 lib/toaster/orm/migrations/0022_auto__add_field_target_task__add_field_layer_version_local_path__del_f.py
+ create mode 100644 lib/toaster/orm/migrations/0023_auto__del_field_build_warnings_no__del_field_build_errors_no__del_fiel.py
+ rename lib/toaster/toastergui/templates/{build.html => builds.html} (75%)
+ delete mode 100644 lib/toaster/toastergui/templates/managed_builds.html
+ delete mode 100644 lib/toaster/toastergui/templates/managed_mrb_section.html
+ delete mode 100644 lib/toaster/toastergui/templates/runagain.html
+
 -- 
 1.9.1
 
