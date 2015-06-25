@@ -1,41 +1,42 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f43.google.com (mail-wg0-f43.google.com [74.125.82.43])
-	by mail.openembedded.org (Postfix) with ESMTP id D5AC075A1F
+Received: from mail-wi0-f179.google.com (mail-wi0-f179.google.com
+	[209.85.212.179])
+	by mail.openembedded.org (Postfix) with ESMTP id 95DE575A06
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 25 Jun 2015 10:35:02 +0000 (UTC)
-Received: by wgck11 with SMTP id k11so58823468wgc.0
+	Thu, 25 Jun 2015 10:35:06 +0000 (UTC)
+Received: by wicnd19 with SMTP id nd19so13679700wic.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 25 Jun 2015 03:35:03 -0700 (PDT)
+	Thu, 25 Jun 2015 03:35:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=CkJO2fY3S5e7hp/hF5b8eCqh/FtSzNMVavvCJd7rBRE=;
-	b=N1KAh1vzXlA3jkcjDvN+fA+YdveDSBeuA61DjZdPHPkRyd0486eS8HUosnfEGg7mL6
-	ypu5qbYJxrMLsItRP3g62qrmfsrRkalfzNEuETobNRra4HU2m1o1IfVRAIl45FzQ6FDf
-	GrQMkiw+fbY9LmLe7N4aw7CX5oei7h4+WneC33a4JWkpsj+65KnJHBgrkmIFyiucJkM+
-	38UErZ/75tHtD1QR2wcXElyXABOOt42c6/Axn3C6/tYtgCt03CFm0Ze0L/XabZ9E7BjZ
-	N/4/Q1JyssPb83vg0QTMBFpJwQO/fUiUG1o8iaKRdn05S+TE+7m+ecS4I/lhv3uFZIqQ
-	JXeg==
-X-Gm-Message-State: ALoCoQkvVEU8r+PXrbPM9uf+FvhQ4dZSKT1X8wOUsWP8TlfZGIUZBZyVEYKGMoKGXq4fwUqog5V1
-X-Received: by 10.181.29.100 with SMTP id jv4mr4431436wid.4.1435228503771;
-	Thu, 25 Jun 2015 03:35:03 -0700 (PDT)
+	bh=RnoPBytW1nIjMKjO1NFnoIpeSKuU19x6a3P5mGyJbfE=;
+	b=blA3q/XVnnJAqOmYHK+u3piIQSKSd/2qd0yjOwInNMrC0jcbT9QovX7xcbdupy1igH
+	tx2cmXqo0Qba1tUG2f81l16FtBN7lg9cnYIcI4+PSvYmqfW+Xt6a4evakX4JRnp8Ttix
+	bW9FnSQTrGmEhQswzYLIrOZx5rk1WYSVNSIeES0cNA8aSB1fLypkXjkLPz2pkqigHST3
+	5pUPuiQwwjlT5MvI/ppsCeqoYrV3LBkob49XZrXI4jF1OAg1z73GVQInM2msfE5HTamS
+	kc/SRaeCZcGTyd8IZhYVTHLSO3DgoCRF6ZWNPdPLF5jyvq7nvgh6OYEnv/5ZEIZIKJJ/
+	UKLg==
+X-Gm-Message-State: ALoCoQnLbTnVRoQ1iV66tupMxog28Ty4rjJEI3RGPmv43CVy0gkSzaOQpQCVhErtqn6DyK4dZ6W7
+X-Received: by 10.194.238.233 with SMTP id vn9mr80510682wjc.24.1435228507726; 
+	Thu, 25 Jun 2015 03:35:07 -0700 (PDT)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id v3sm6935283wiz.14.2015.06.25.03.35.02
+	by mx.google.com with ESMTPSA id c2sm42106940wjf.18.2015.06.25.03.35.06
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 25 Jun 2015 03:35:03 -0700 (PDT)
+	Thu, 25 Jun 2015 03:35:06 -0700 (PDT)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id E126E5629B2; Thu, 25 Jun 2015 11:34:01 +0100 (BST)
+	id E2F20562963; Thu, 25 Jun 2015 11:34:01 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 25 Jun 2015 11:33:55 +0100
-Message-Id: <e0d59c32a7cff76d732a90cc6d507c7a9b68cb84.1435228176.git.alexandru.damian@intel.com>
+Date: Thu, 25 Jun 2015 11:33:56 +0100
+Message-Id: <a73f08c79077b6ded0c08ea7d36032f4568d12e3.1435228176.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <77d3f7c6cdc7f06807024896369f8f8ae94263fc.1435228176.git.alexandru.damian@intel.com>
 References: <77d3f7c6cdc7f06807024896369f8f8ae94263fc.1435228176.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1435228175.git.alexandru.damian@intel.com>
 References: <cover.1435228175.git.alexandru.damian@intel.com>
-Subject: [PATCH 18/23] toaster: toastertable Pass up the kwargs for setup_filter
+Subject: [PATCH 19/23] toaster: table.js fix filter visual indicator and interaction
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,64 +49,135 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 25 Jun 2015 10:35:03 -0000
+X-List-Received-Date: Thu, 25 Jun 2015 10:35:07 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-This allows us to setup_filter in tables using args such as the current
-project.
+- Fix the id of the filter modal dialog.
+- Fix the visual indicator toggle button
+- Add check to see if the number of items to filter on is !=0 if it is
+  then don't allow applying this filter.
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/toastergui/widgets.py | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ lib/toaster/toastergui/static/js/table.js | 59 +++++++++++++++++++++++--------
+ 1 file changed, 44 insertions(+), 15 deletions(-)
 
-diff --git a/lib/toaster/toastergui/widgets.py b/lib/toaster/toastergui/widgets.py
-index e257c70..5f6b47b 100644
---- a/lib/toaster/toastergui/widgets.py
-+++ b/lib/toaster/toastergui/widgets.py
-@@ -72,7 +72,7 @@ class ToasterTable(TemplateView):
+diff --git a/lib/toaster/toastergui/static/js/table.js b/lib/toaster/toastergui/static/js/table.js
+index 1072c75..d06a3f5 100644
+--- a/lib/toaster/toastergui/static/js/table.js
++++ b/lib/toaster/toastergui/static/js/table.js
+@@ -261,23 +261,14 @@ function tableInit(ctx){
+         var filterBtn = $('<a href="#" role="button" class="pull-right btn btn-mini" data-toggle="modal"><i class="icon-filter filtered"></i></a>');
  
-             cmd = request.GET.get('cmd', None)
-             if cmd and 'filterinfo' in cmd:
--                data = self.get_filter_info(request)
-+                data = self.get_filter_info(request, **kwargs)
-             else:
-                 # If no cmd is specified we give you the table data
-                 data = self.get_data(request, **kwargs)
-@@ -81,10 +81,10 @@ class ToasterTable(TemplateView):
+         filterBtn.data('filter-name', col.filter_name);
++        filterBtn.prop('id', col.filter_name);
+         filterBtn.click(filterOpenClicked);
  
-         return super(ToasterTable, self).get(request, *args, **kwargs)
+         /* If we're currently being filtered setup the visial indicator */
+         if (tableParams.filter &&
+             tableParams.filter.match('^'+col.filter_name)) {
  
--    def get_filter_info(self, request):
-+    def get_filter_info(self, request, **kwargs):
-         data = None
+-            filterBtn.addClass("btn-primary");
+-
+-            filterBtn.tooltip({
+-                html: true,
+-                title: '<button class="btn btn-small btn-primary" onClick=\'$("#clear-filter-btn").click();\'>Clear filter</button>',
+-                placement: 'bottom',
+-                delay: {
+-                  hide: 1500,
+-                  show: 400,
+-                },
+-            });
++            filterBtnActive(filterBtn, true);
+         }
+         header.append(filterBtn);
+       }
+@@ -310,6 +301,26 @@ function tableInit(ctx){
+     tableChromeDone = true;
+   }
  
--        self.setup_filters()
-+        self.setup_filters(**kwargs)
++  /* Toggles the active state of the filter button */
++  function filterBtnActive(filterBtn, active){
++    if (active) {
++      filterBtn.addClass("btn-primary");
++
++      filterBtn.tooltip({
++          html: true,
++          title: '<button class="btn btn-small btn-primary" onClick=\'$("#clear-filter-btn-'+ ctx.tableName +'").click();\'>Clear filter</button>',
++          placement: 'bottom',
++          delay: {
++            hide: 1500,
++            show: 400,
++          },
++      });
++    } else {
++      filterBtn.removeClass("btn-primary");
++      filterBtn.tooltip('destroy');
++    }
++  }
++
+   /* Display or hide table columns based on the cookie preference or defaults */
+   function loadColumnsPreference(){
+     var cookie_data = $.cookie("cols");
+@@ -427,6 +438,10 @@ function tableInit(ctx){
  
-         search = request.GET.get("search", None)
-         if search:
-@@ -194,8 +194,8 @@ class ToasterTable(TemplateView):
+             var radioInput = action.children("input");
  
-         return template.render(context)
++            if (Number(filterAction.count) == 0){
++              radioInput.attr("disabled", "disabled");
++            }
++
+             action.children(".filter-title").text(actionTitle);
  
--    def apply_filter(self, filters):
--        self.setup_filters()
-+    def apply_filter(self, filters, **kwargs):
-+        self.setup_filters(**kwargs)
+             radioInput.val(filterName + ':' + filterAction.name);
+@@ -475,7 +490,13 @@ function tableInit(ctx){
  
-         try:
-             filter_name, filter_action = filters.split(':')
-@@ -264,7 +264,7 @@ class ToasterTable(TemplateView):
-         if search:
-             self.apply_search(search)
-         if filters:
--            self.apply_filter(filters)
-+            self.apply_filter(filters, **kwargs)
-         if orderby:
-             self.apply_orderby(orderby)
+     tableParams.page = 1;
+     tableParams.search = searchTerm;
+-    tableParams.filter = null;
++
++    /* If a filter was active we remove it */
++    if (tableParams.filter) {
++      var filterBtn = $("#" + tableParams.filter.split(":")[0]);
++      filterBtnActive(filterBtn, false);
++      tableParams.filter = null;
++    }
  
+     loadData(tableParams);
+ 
+@@ -504,6 +525,9 @@ function tableInit(ctx){
+   });
+ 
+   $("#clear-filter-btn-"+ctx.tableName).click(function(){
++    var filterBtn = $("#" + tableParams.filter.split(":")[0]);
++    filterBtnActive(filterBtn, false);
++
+     tableParams.filter = null;
+     loadData(tableParams);
+   });
+@@ -513,13 +537,18 @@ function tableInit(ctx){
+ 
+     tableParams.filter = $(this).find("input[type='radio']:checked").val();
+ 
++    var filterBtn = $("#" + tableParams.filter.split(":")[0]);
++
+     /* All === remove filter */
+-    if (tableParams.filter.match(":all$"))
++    if (tableParams.filter.match(":all$")) {
+       tableParams.filter = null;
++      filterBtnActive(filterBtn, false);
++    } else {
++      filterBtnActive(filterBtn, true);
++    }
+ 
+     loadData(tableParams);
+ 
+-
+-    $('#filter-modal').modal('hide');
++    $(this).parent().modal('hide');
+   });
+ }
 -- 
 1.9.1
 
