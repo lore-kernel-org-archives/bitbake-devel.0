@@ -1,41 +1,41 @@
 Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f47.google.com (mail-wg0-f47.google.com [74.125.82.47])
-	by mail.openembedded.org (Postfix) with ESMTP id 929CF758E8
+Received: from mail-wg0-f43.google.com (mail-wg0-f43.google.com [74.125.82.43])
+	by mail.openembedded.org (Postfix) with ESMTP id D5AC075A1F
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 25 Jun 2015 10:34:59 +0000 (UTC)
-Received: by wgck11 with SMTP id k11so58822172wgc.0
+	Thu, 25 Jun 2015 10:35:02 +0000 (UTC)
+Received: by wgck11 with SMTP id k11so58823468wgc.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 25 Jun 2015 03:35:00 -0700 (PDT)
+	Thu, 25 Jun 2015 03:35:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=4+IrW/MjQ9vqWJ5P8VmJT5Oj2XpFhv80Y+aSsa1yVA4=;
-	b=f/57JmVQOQbV5hCyVPjpjLZ04dTbmHJcpGu476RshxJDy7G+bSYEqiqnlQ/NmJ8IV4
-	BDUlmzHlmTft2pqm3UO5aLPS7slCMAf0n9lJOIOiPHcQtWt40l3BAwZUjO0vaMDMUoQf
-	eXaYgZNAtQf1ZPdJE+1Rf0Kw2GxPaQRD2CGuEYT2gE2rOnoeMMs43X8nDbL2JIYUtZOq
-	2hKrwArartkFwM7roAfVxNrGs9AHAkCGscsajgGU1Mpa0jlK5Xlhehp7guZWBTe4WO7+
-	w2pcIY7bxcsjrFsgrdBmWS9tSir8R3dEpYTrHm/lwqKGGyZvMOGHPYeyPfs9ZqFzYY0k
-	ASXQ==
-X-Gm-Message-State: ALoCoQnPDxm+K9NnmJ//fysMJUxR8XHZaD1xMEQhCGORVr32dcdHhySGBXsG50Ajg4Zrcyajeb8y
-X-Received: by 10.180.76.8 with SMTP id g8mr4349582wiw.79.1435228500346;
-	Thu, 25 Jun 2015 03:35:00 -0700 (PDT)
+	bh=CkJO2fY3S5e7hp/hF5b8eCqh/FtSzNMVavvCJd7rBRE=;
+	b=N1KAh1vzXlA3jkcjDvN+fA+YdveDSBeuA61DjZdPHPkRyd0486eS8HUosnfEGg7mL6
+	ypu5qbYJxrMLsItRP3g62qrmfsrRkalfzNEuETobNRra4HU2m1o1IfVRAIl45FzQ6FDf
+	GrQMkiw+fbY9LmLe7N4aw7CX5oei7h4+WneC33a4JWkpsj+65KnJHBgrkmIFyiucJkM+
+	38UErZ/75tHtD1QR2wcXElyXABOOt42c6/Axn3C6/tYtgCt03CFm0Ze0L/XabZ9E7BjZ
+	N/4/Q1JyssPb83vg0QTMBFpJwQO/fUiUG1o8iaKRdn05S+TE+7m+ecS4I/lhv3uFZIqQ
+	JXeg==
+X-Gm-Message-State: ALoCoQkvVEU8r+PXrbPM9uf+FvhQ4dZSKT1X8wOUsWP8TlfZGIUZBZyVEYKGMoKGXq4fwUqog5V1
+X-Received: by 10.181.29.100 with SMTP id jv4mr4431436wid.4.1435228503771;
+	Thu, 25 Jun 2015 03:35:03 -0700 (PDT)
 Received: from adamian-desk.local ([83.217.123.106])
-	by mx.google.com with ESMTPSA id jy6sm40155078wjc.4.2015.06.25.03.34.59
+	by mx.google.com with ESMTPSA id v3sm6935283wiz.14.2015.06.25.03.35.02
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Thu, 25 Jun 2015 03:34:59 -0700 (PDT)
+	Thu, 25 Jun 2015 03:35:03 -0700 (PDT)
 Received: by adamian-desk.local (Postfix, from userid 1000)
-	id DF8B1562A87; Thu, 25 Jun 2015 11:34:01 +0100 (BST)
+	id E126E5629B2; Thu, 25 Jun 2015 11:34:01 +0100 (BST)
 From: Alex DAMIAN <alexandru.damian@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 25 Jun 2015 11:33:54 +0100
-Message-Id: <330692e4e2e4dea59f70caa03001905ffff4860a.1435228176.git.alexandru.damian@intel.com>
+Date: Thu, 25 Jun 2015 11:33:55 +0100
+Message-Id: <e0d59c32a7cff76d732a90cc6d507c7a9b68cb84.1435228176.git.alexandru.damian@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <77d3f7c6cdc7f06807024896369f8f8ae94263fc.1435228176.git.alexandru.damian@intel.com>
 References: <77d3f7c6cdc7f06807024896369f8f8ae94263fc.1435228176.git.alexandru.damian@intel.com>
 In-Reply-To: <cover.1435228175.git.alexandru.damian@intel.com>
 References: <cover.1435228175.git.alexandru.damian@intel.com>
-Subject: [PATCH 17/23] toaster: Enable toastertable cache
+Subject: [PATCH 18/23] toaster: toastertable Pass up the kwargs for setup_filter
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,45 +48,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 25 Jun 2015 10:34:59 -0000
+X-List-Received-Date: Thu, 25 Jun 2015 10:35:03 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-Enable the cache and fix warning on the toastertable cache which happens
-on the memcache backend "CacheKeyWarning: Cache key contains characters that
-will cause errors if used with memcached"
+This allows us to setup_filter in tables using args such as the current
+project.
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/toastergui/widgets.py | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ lib/toaster/toastergui/widgets.py | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/lib/toaster/toastergui/widgets.py b/lib/toaster/toastergui/widgets.py
-index f5a1b3e..e257c70 100644
+index e257c70..5f6b47b 100644
 --- a/lib/toaster/toastergui/widgets.py
 +++ b/lib/toaster/toastergui/widgets.py
-@@ -36,6 +36,7 @@ import types
- import json
- import collections
- import operator
-+import re
+@@ -72,7 +72,7 @@ class ToasterTable(TemplateView):
  
- from toastergui.views import objtojson
+             cmd = request.GET.get('cmd', None)
+             if cmd and 'filterinfo' in cmd:
+-                data = self.get_filter_info(request)
++                data = self.get_filter_info(request, **kwargs)
+             else:
+                 # If no cmd is specified we give you the table data
+                 data = self.get_data(request, **kwargs)
+@@ -81,10 +81,10 @@ class ToasterTable(TemplateView):
  
-@@ -251,10 +252,12 @@ class ToasterTable(TemplateView):
-         for key, val in kwargs.iteritems():
-             cache_name = cache_name + str(key) + str(val)
+         return super(ToasterTable, self).get(request, *args, **kwargs)
  
-+        # No special chars allowed in the cache name
-+        cache_name = re.sub(r'[^A-Za-z0-9]', "", cache_name)
-         data = cache.get(cache_name)
+-    def get_filter_info(self, request):
++    def get_filter_info(self, request, **kwargs):
+         data = None
  
--        #if data:
--        #    return data
-+        if data:
-+            return data
+-        self.setup_filters()
++        self.setup_filters(**kwargs)
  
-         self.setup_columns(**kwargs)
+         search = request.GET.get("search", None)
+         if search:
+@@ -194,8 +194,8 @@ class ToasterTable(TemplateView):
+ 
+         return template.render(context)
+ 
+-    def apply_filter(self, filters):
+-        self.setup_filters()
++    def apply_filter(self, filters, **kwargs):
++        self.setup_filters(**kwargs)
+ 
+         try:
+             filter_name, filter_action = filters.split(':')
+@@ -264,7 +264,7 @@ class ToasterTable(TemplateView):
+         if search:
+             self.apply_search(search)
+         if filters:
+-            self.apply_filter(filters)
++            self.apply_filter(filters, **kwargs)
+         if orderby:
+             self.apply_orderby(orderby)
  
 -- 
 1.9.1
