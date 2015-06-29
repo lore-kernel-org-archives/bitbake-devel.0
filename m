@@ -1,29 +1,43 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id E0C7E607BB
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-wg0-f51.google.com (mail-wg0-f51.google.com [74.125.82.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 858357564B
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 26 Jun 2015 16:41:52 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t5QGfrIX001741 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 26 Jun 2015 17:41:53 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 7PcC0h3MzzZ1 for <bitbake-devel@lists.openembedded.org>;
-	Fri, 26 Jun 2015 17:41:53 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t5QGfe7b001737
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	Mon, 29 Jun 2015 14:22:13 +0000 (UTC)
+Received: by wguu7 with SMTP id u7so142824196wgu.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 26 Jun 2015 17:41:51 +0100
-Message-ID: <1435336900.10583.31.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Fri, 26 Jun 2015 17:41:40 +0100
-X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
-Mime-Version: 1.0
-Subject: [PATCH] fetch/perforce: Fix single file checkouts
+	Mon, 29 Jun 2015 07:22:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:message-id:date:from:user-agent:mime-version:to
+	:subject:references:in-reply-to:content-type
+	:content-transfer-encoding;
+	bh=63rgtHatFFwRmxfUhZprrrJO/l1DiIKBi/QowiXMY0M=;
+	b=Ly2CvKMzhs8uEtNn9Njri1qLSrjYQqFyA/yGcFRKbOB6IXYxP7STBbUiJrH33jCfPE
+	YHaIVX/FvIKYbTFSM5RnhXgLF9luQfZ9AhOFlpWoZzW2szpVGcJvZpKaQuMwZ7EpdQmQ
+	fx0B5+z7W/ihQP2lxkmEpDDKY/9yPQRwesq5q1edOX/IJg6kCbB+kx3RFl4D91auzBbj
+	AZhxebqa13Vm2gqFBQ5voHtXgbddm4d+vYkbKEvga4VwGzo+w5cLwz9rb8csjfg7wPSi
+	3njYdlkzA1V2dzBTaGd05T7icwfJKMv/AjpHc46mYUJTRIeXe+b/Pm8x/+loe3o0LAzY
+	hAcQ==
+X-Gm-Message-State: ALoCoQlw7jFZsZKzmvg03MD1q8jNzj/BAV6biIFWYQeC65J1M9lIm+CnvgfJf/XhfSw+q0C+5DFB
+X-Received: by 10.180.83.135 with SMTP id q7mr22717858wiy.17.1435587734142;
+	Mon, 29 Jun 2015 07:22:14 -0700 (PDT)
+Received: from [192.168.2.170] ([83.217.123.106])
+	by mx.google.com with ESMTPSA id
+	fa8sm12350801wib.14.2015.06.29.07.22.13
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Mon, 29 Jun 2015 07:22:13 -0700 (PDT)
+Message-ID: <55915494.9030206@intel.com>
+Date: Mon, 29 Jun 2015 15:22:12 +0100
+From: Michael Wood <michael.g.wood@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+MIME-Version: 1.0
+To: bitbake-devel@lists.openembedded.org
+References: <cover.1435228175.git.alexandru.damian@intel.com>
+	<7aecb974d44d9bc711ffba5cc65e770811397fba.1435228176.git.alexandru.damian@intel.com>
+In-Reply-To: <7aecb974d44d9bc711ffba5cc65e770811397fba.1435228176.git.alexandru.damian@intel.com>
+Subject: Re: [PATCH 16/23] toasterui: fixes after html5 compliance testing
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,30 +50,256 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 26 Jun 2015 16:41:54 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Mon, 29 Jun 2015 14:22:16 -0000
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Fetching directories with p4 worked but single files did not. This
-patch from Helmut Auer (helmut.auer@harman.com) fixes that issue.
+On 25/06/15 11:33, Alex DAMIAN wrote:
+> From: Alexandru DAMIAN <alexandru.damian@intel.com>
+>
+> This patch brings fixes for issues highlighted by
+> HTML5 compliance testing.
+>
+> Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+> ---
+>   lib/toaster/orm/models.py                                 |  4 +++-
+>   lib/toaster/toastergui/static/js/base.js                  |  2 +-
+>   lib/toaster/toastergui/templates/configvars.html          |  2 +-
+>   .../toastergui/templates/detail_search_header.html        |  2 +-
+>   .../toastergui/templates/detail_sorted_header.html        |  2 +-
+>   .../toastergui/templates/generic-toastertable-page.html   |  2 ++
+>   lib/toaster/toastergui/templates/importlayer.html         | 15 +++++++++++++--
+>   lib/toaster/toastergui/templates/target.html              |  2 +-
+>   lib/toaster/toastergui/templates/toastertable-simple.html |  4 ++--
+>   lib/toaster/toastergui/templates/toastertable.html        |  4 ++--
+>   lib/toaster/toastergui/views.py                           | 11 ++++++-----
+>   11 files changed, 33 insertions(+), 17 deletions(-)
+>
+> diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+> index 8488aa4..7e8ab16 100644
+> --- a/lib/toaster/orm/models.py
+> +++ b/lib/toaster/orm/models.py
+> @@ -180,7 +180,9 @@ class Project(models.Model):
+>           if release == None:
+>               release = self.release
+>           # layers on the same branch or layers specifically set for this project
+> -        queryset = Layer_Version.objects.filter((Q(up_branch__name = release.branch_name) & Q(project = None)) | Q(project = self) | Q(build__project = self))
+> +        queryset = Layer_Version.objects.filter(Q(project = self) | Q(build__project = self))
+> +        if release is not None:
+> +            queryset = queryset.filter(Q(up_branch__name = release.branch_name) & Q(project = None))
+>           if layer_name is not None:
+>               # we select only a layer name
+>               queryset = queryset.filter(layer__name = layer_name)
+> diff --git a/lib/toaster/toastergui/static/js/base.js b/lib/toaster/toastergui/static/js/base.js
+> index d079f23..f1711c1 100644
+> --- a/lib/toaster/toastergui/static/js/base.js
+> +++ b/lib/toaster/toastergui/static/js/base.js
+> @@ -39,7 +39,7 @@ function basePageInit(ctx) {
+>   
+>       libtoaster.getProjectInfo(selectedProject.projectPageUrl,
+>         function (data) {
+> -        if (data.machine.name === undefined || data.layers.length === 0) {
+> +        if (data.machine === null || data.machine.name === undefined || data.layers.length === 0) {
+>             /* we can't build anything with out a machine and some layers */
+>             $("#new-build-button #targets-form").hide();
+>             $("#new-build-button .alert").show();
+> diff --git a/lib/toaster/toastergui/templates/configvars.html b/lib/toaster/toastergui/templates/configvars.html
+> index 8957673..8a572ae 100644
+> --- a/lib/toaster/toastergui/templates/configvars.html
+> +++ b/lib/toaster/toastergui/templates/configvars.html
+> @@ -39,7 +39,7 @@
+>     <div class="row-fluid">
+>         <div class="alert">
+>           <form class="no-results input-append" id="searchform">
+> -            <input id="search" name="search" class="input-xxlarge" type="text" value="{{request.GET.search}}"/>{% if request.GET.search %}<a href="javascript:$('#search').val('');searchform.submit()" class="add-on btn" tabindex="-1"><i class="icon-remove"></i></a>{% endif %}
+> +            <input id="search" name="search" class="input-xxlarge" type="text" value="{% if request.GET.search %}{{request.GET.search}}{% endif %}"/>{% if request.GET.search %}<a href="javascript:$('#search').val('');searchform.submit()" class="add-on btn" tabindex="-1"><i class="icon-remove"></i></a>{% endif %}
+>               <button class="btn" type="submit" value="Search">Search</button>
+>               <button class="btn btn-link" onclick="javascript:$('#search').val('');searchform.submit()">Show all variables</button>
+>           </form>
+> diff --git a/lib/toaster/toastergui/templates/detail_search_header.html b/lib/toaster/toastergui/templates/detail_search_header.html
+> index ca8e158..7bea3f4 100644
+> --- a/lib/toaster/toastergui/templates/detail_search_header.html
+> +++ b/lib/toaster/toastergui/templates/detail_search_header.html
+> @@ -28,7 +28,7 @@ $(document).ready(function() {
+>       <form id="searchform" class="navbar-search input-append pull-left">
+>     {% endif %}
+>   
+> -      <input id="search" class="input-xlarge" type="text" placeholder="Search {{search_what}}" name="search" value="{{request.GET.search}}">
+> +      <input id="search" class="input-xlarge" type="text" placeholder="Search {{search_what}}" name="search" value="{% if request.GET.search %}{{request.GET.search}}{% endif %}">
+>         <input type="hidden" value="name:+" name="orderby">
+>         <input type="hidden" value="l" name="page">
+>     {% if request.GET.search %}
+> diff --git a/lib/toaster/toastergui/templates/detail_sorted_header.html b/lib/toaster/toastergui/templates/detail_sorted_header.html
+> index 5214444..6ce292e 100644
+> --- a/lib/toaster/toastergui/templates/detail_sorted_header.html
+> +++ b/lib/toaster/toastergui/templates/detail_sorted_header.html
+> @@ -9,7 +9,7 @@
+>       <thead>
+>           <!-- Table header row; generated from "tablecols" entry in the context dict -->
+>           <tr>
+> -            {% for tc in tablecols %}<th class="{{tc.dclass}} {{tc.clclass}}">
+> +            {% for tc in tablecols %}<th class="{%if tc.dclass%}{{tc.dclass}}{% endif %} {%if tc.class %}{{tc.clclass}}{% endif %}">
+>                   {%if tc.qhelp%}<i class="icon-question-sign get-help" title="{{tc.qhelp}}"></i>{%endif%}
+>                   {%if tc.orderfield%}<a {%if tc.ordericon%} class="sorted" {%endif%}href="javascript:reload_params({'page': 1, 'orderby' : '{{tc.orderfield}}' })">{{tc.name}}</a>{%else%}<span class="muted">{{tc.name}}</span>{%endif%}
+>                   {%if tc.ordericon%} <i class="icon-caret-{{tc.ordericon}}"></i>{%endif%}
+> diff --git a/lib/toaster/toastergui/templates/generic-toastertable-page.html b/lib/toaster/toastergui/templates/generic-toastertable-page.html
+> index d7ad2e7..78e942c 100644
+> --- a/lib/toaster/toastergui/templates/generic-toastertable-page.html
+> +++ b/lib/toaster/toastergui/templates/generic-toastertable-page.html
+> @@ -11,7 +11,9 @@
+>   {% block projectinfomain %}
+>   <div class="page-header">
+>     <h1>{{title}} (<span class="table-count-{{table_name}}"></span>)
+> +    {% if project.release %}
+>       <i class="icon-question-sign get-help heading-help" title="This page lists {{title}} compatible with the release selected for this project, which is {{project.release.description}}"></i>
+> +    {% endif %}
+>     </h1>
+>   </div>
+>   <div id="zone1alerts" style="display:none">
+> diff --git a/lib/toaster/toastergui/templates/importlayer.html b/lib/toaster/toastergui/templates/importlayer.html
+> index 498a204..6a5d412d 100644
+> --- a/lib/toaster/toastergui/templates/importlayer.html
+> +++ b/lib/toaster/toastergui/templates/importlayer.html
+> @@ -9,6 +9,7 @@
+>   
+>   {% block projectinfomain %}
+>   
+> +        {% if project and project.release %}
+>                     <script src="{% static 'js/layerDepsModal.js' %}"></script>
+>                     <script src="{% static 'js/importlayer.js' %}"></script>
+>                     <script>
+> @@ -31,9 +32,7 @@
+>                   </div>
+>   
+>                   <form>
+> -        {% if project %}
+>                       <span class="help-block" style="padding-left:19px;">The layer you are importing must be compatible with <strong>{{project.release.description}}</strong>, which is the release you are using in this project.</span>
+> -          {% endif %}
+>                      <fieldset class="air">
+>                         <legend>Layer repository information</legend>
+>                         <div class="alert alert-error" id="import-error" style="display:none">
+> @@ -131,4 +130,16 @@
+>                     </div>
+>                     </form>
+>   
+> +          {% else %} {#project and project release#}
+> +                <div class="page-header">
+> +                    <h1>Import layer</h1>
+> +                </div>
+> +                      <div class="alert alert-info" id="import-error" >
+> +                        <h3>Unsupported project type</h3>
+> +                        <p>This project does not support importing layers.</p>
+> +                        <ul></ul>
+> +                      </div>
+> +
+> +          {% endif %}
+> +
+>   {% endblock %}
+> diff --git a/lib/toaster/toastergui/templates/target.html b/lib/toaster/toastergui/templates/target.html
+> index fa59f4e..65e6c4a 100644
+> --- a/lib/toaster/toastergui/templates/target.html
+> +++ b/lib/toaster/toastergui/templates/target.html
+> @@ -53,7 +53,7 @@
+>       <div class="row-fluid">
+>           <div class="alert">
+>               <form class="no-results input-append" id="searchform">
+> -                <input id="search" name="search" class="input-xxlarge" type="text" value="{{request.GET.search}}"/>{% if request.GET.search %}<a href="javascript:$('#search').val('');searchform.submit()" class="add-on btn" tabindex="-1"><i class="icon-remove"></i></a>{% endif %}
+> +                <input id="search" name="search" class="input-xxlarge" type="text" value="{% if request.GET.search %}{{request.GET.search}}{% endif %}"/>{% if request.GET.search %}<a href="javascript:$('#search').val('');searchform.submit()" class="add-on btn" tabindex="-1"><i class="icon-remove"></i></a>{% endif %}
+>                   <button class="btn" type="submit" value="Search">Search</button>
+>                   <button class="btn btn-link" onclick="javascript:$('#search').val('');searchform.submit()">Show all packages</button>
+>               </form>
+> diff --git a/lib/toaster/toastergui/templates/toastertable-simple.html b/lib/toaster/toastergui/templates/toastertable-simple.html
+> index ea7b38e..212318b 100644
+> --- a/lib/toaster/toastergui/templates/toastertable-simple.html
+> +++ b/lib/toaster/toastergui/templates/toastertable-simple.html
+> @@ -29,7 +29,7 @@
+>   <div class="row-fluid" id="no-results-{{table_name}}" style="display:none">
+>     <div class="alert">
+>       <form class="no-results input-append">
+> -      <input class="input-xlarge" id="new-search-input-{{table_name}}" name="search" type="text" placeholder="Search {{title|lower}}" value="{{request.GET.search}}"/>
+> +      <input class="input-xlarge" id="new-search-input-{{table_name}}" name="search" type="text" placeholder="Search {{title|lower}}" value="{% if request.GET.search %}{{request.GET.search}}{% endif %}"/>
+>         <a href="#" class="add-on btn remove-search-btn-{{table_name}}" tabindex="-1">
+>           <i class="icon-remove"></i>
+>         </a>
+> @@ -44,7 +44,7 @@
+>     <div class="row-fluid" id="table-chrome-{{table_name}}">
+>         <div class="navbar-search input-append pull-left">
+>   
+> -        <input class="input-xlarge" id="search-input-{{table_name}}" name="search" type="text" placeholder="Search {{title|lower}}" value="{{request.GET.search}}"/>
+> +        <input class="input-xlarge" id="search-input-{{table_name}}" name="search" type="text" placeholder="Search {{title|lower}}" value="{% if request.GET.search %}{{request.GET.search}}{% endif %}"/>
+>           <a href="#" style="display:none" class="add-on btn remove-search-btn-{{table_name}}" tabindex="-1">
+>             <i class="icon-remove"></i>
+>           </a>
+> diff --git a/lib/toaster/toastergui/templates/toastertable.html b/lib/toaster/toastergui/templates/toastertable.html
+> index c7c7a84..0473116 100644
+> --- a/lib/toaster/toastergui/templates/toastertable.html
+> +++ b/lib/toaster/toastergui/templates/toastertable.html
+> @@ -29,7 +29,7 @@
+>   <div class="row-fluid" id="no-results-{{table_name}}" style="display:none">
+>     <div class="alert">
+>       <form class="no-results input-append">
+> -      <input class="input-xxlarge" id="new-search-input-{{table_name}}" name="search" type="text" placeholder="Search {{title|lower}}" value="{{request.GET.search}}"/>
+> +      <input class="input-xxlarge" id="new-search-input-{{table_name}}" name="search" type="text" placeholder="Search {{title|lower}}" value="{%if request.GET.search %}{{request.GET.search}}{%endif%}"/>
+>         <a href="#" class="add-on btn remove-search-btn-{{table_name}}" tabindex="-1">
+>           <i class="icon-remove"></i>
+>         </a>
+> @@ -46,7 +46,7 @@
+>       <div class="navbar-inner">
+>         <div class="navbar-search input-append pull-left">
+>   
+> -        <input class="input-xxlarge" id="search-input-{{table_name}}" name="search" type="text" placeholder="Search {{title|lower}}" value="{{request.GET.search}}"/>
+> +        <input class="input-xxlarge" id="search-input-{{table_name}}" name="search" type="text" placeholder="Search {{title|lower}}" value="{%if request.GET.search%}{{request.GET.search}}{%endif%}"/>
+>           <a href="#" style="display:none" class="add-on btn remove-search-btn-{{table_name}}" tabindex="-1">
+>             <i class="icon-remove"></i>
+>           </a>
+> diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+> index ec65903..82650d0 100755
+> --- a/lib/toaster/toastergui/views.py
+> +++ b/lib/toaster/toastergui/views.py
+> @@ -165,8 +165,8 @@ def _lv_to_dict(prj, x = None):
+>   
+>       return {"id": x.pk,
+>               "name": x.layer.name,
+> -            "tooltip": x.layer.vcs_url+" | "+x.get_vcs_reference(),
+> -            "detail": "(" + x.layer.vcs_url + (")" if x.up_branch == None else " | "+x.get_vcs_reference()+")"),
+> +            "tooltip": "%s | %s" % (x.layer.vcs_url,x.get_vcs_reference()),
+> +            "detail": "(%s" % x.layer.vcs_url + (")" if x.up_branch == None else " | "+x.get_vcs_reference()+")"),
+>               "giturl": x.layer.vcs_url,
+>               "layerdetailurl" : reverse('layerdetails', args=(prj.id,x.pk)),
+>               "revision" : x.get_vcs_reference(),
+> @@ -559,10 +559,10 @@ def task( request, build_id, task_id ):
+>       uri_list= [ ]
+>       variables = Variable.objects.filter(build=build_id)
+>       v=variables.filter(variable_name='SSTATE_DIR')
+> -    if v.count > 0:
+> +    if v.count() > 0:
+>           uri_list.append(v[0].variable_value)
+>       v=variables.filter(variable_name='SSTATE_MIRRORS')
+> -    if (v.count > 0):
+> +    if (v.count() > 0):
+>           for mirror in v[0].variable_value.split('\\n'):
+>               s=re.sub('.* ','',mirror.strip(' \t\n\r'))
+>               if len(s): uri_list.append(s)
+> @@ -2124,9 +2124,10 @@ if True:
+>                       login(request, user)
+>   
+>                   #  save the project
+> -                release = Release.objects.get(pk = request.POST.get('projectversion', None ))
+>                   if ptype == "analysis":
+>                       release = None
+> +                else:
+> +                    release = Release.objects.get(pk = request.POST.get('projectversion', None ))
+>   
+>                   prj = Project.objects.create_project(name = request.POST['projectname'], release = release)
+>                   prj.user_id = request.user.pk
 
-[YOCTO #7891]
+Note: This patch as far as I can see wasn't submitted for review on the 
+Toaster mailing list. It currently breaks Toaster.
 
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-
-diff --git a/lib/bb/fetch2/perforce.py b/lib/bb/fetch2/perforce.py
-index 5a6631a..3a10c7c 100644
---- a/lib/bb/fetch2/perforce.py
-+++ b/lib/bb/fetch2/perforce.py
-@@ -123,7 +123,7 @@ class Perforce(FetchMethod):
-         if depot.find('/...') != -1:
-             path = depot[:depot.find('/...')]
-         else:
--            path = depot
-+            path = depot[:depot.rfind('/')]
- 
-         module = parm.get('module', os.path.basename(path))
- 
+As this touches things which should not have been in this patch; js, 
+template changes, views and orm/models.py we can't revert it as it will 
+break other things. I will try to roll a patch which reverts part of 
+this patch.
 
 
 
