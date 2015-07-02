@@ -1,37 +1,38 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wg0-f49.google.com (mail-wg0-f49.google.com [74.125.82.49])
-	by mail.openembedded.org (Postfix) with ESMTP id 68EC3607BB
+Received: from mail-wi0-f169.google.com (mail-wi0-f169.google.com
+	[209.85.212.169])
+	by mail.openembedded.org (Postfix) with ESMTP id 9BF2075CB2
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  2 Jul 2015 16:58:28 +0000 (UTC)
-Received: by wgjx7 with SMTP id x7so68314567wgj.2
+	Thu,  2 Jul 2015 16:58:30 +0000 (UTC)
+Received: by wiar9 with SMTP id r9so107386228wia.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 02 Jul 2015 09:58:28 -0700 (PDT)
+	Thu, 02 Jul 2015 09:58:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=fCWyLqywSVtuCmAFzyZe1AdkYAchyqrcKe/1W7AqO9A=;
-	b=DMbHqZSDAm4boEOw6f0TnSFv7q65pbSVhoYg/vI5zuHO5h9eCuC3v5olp5HYaFYiza
-	t5TqG0iN/nLc00gVFZyV4PBEbRYNaXS3x0VEpTysVq8/ewiS+M7uW3KwveOo4f7zwpwb
-	1jz87udG1z5zLlyp0RvR45tFBi6yPhmVAiBgWp7oojeVZ34ExFx3uTliARx39jfnHBFM
-	2j75dWKqxSF+FnvLxwxdbr3mC5HHuw3+G60G52UwGEEWqzxgL0OTXiUmRI+4v2Niho3X
-	HNpvomgHrKEiCPtpKqcySYWWpGjkzL40yueLU/fAYLWuVxycmwNu/msln6JJuO5J879W
-	BI+Q==
-X-Gm-Message-State: ALoCoQmM7yIqh4RzMjQRzoQVAu4D/3Y+2TpUKfCUNWhMgYjdNPJgr+00rFwlEF1gjBnKHP8IJ9SR
-X-Received: by 10.194.78.110 with SMTP id a14mr63802762wjx.87.1435856308895;
-	Thu, 02 Jul 2015 09:58:28 -0700 (PDT)
+	bh=kiuAMo3R9tdH/pmQkQBlOyI0utlQL1InukBaFn84INk=;
+	b=gpmd+aqaI5gVfBSaHiBzpeDzuey7DIH6vR6dvt5GBiZzCurQYzS96yEzRriUaCm9GW
+	tDr1nwNgo6/izUeiZxzSiBMw+jPFy8vpBO0jVElNFIkvY03szBOafwUDHRXXNowL8jeV
+	UxG9rkQFJ8Wh9kdxVtFultS8JuZxbV+JDqkq8I6P93/pCVMO6cAhKTJ144ws/pfGbsOP
+	oLjJ3cfZBXKrbDhm2t8h/RYWTHdcU4YyE6fflXF7UKJlEA9993BAL/a3SH41ewRxq6Tb
+	GPNBmO0QsYWtYn2tFZQkG9gJfJMERJpWzmA9c5gR76evG7zkZZ3Y2gG6LZE54NPVeM0J
+	ebMw==
+X-Gm-Message-State: ALoCoQkaaX7hqaZkWKfI+Xidbt1iEQgxyX3MGGRXMFQ9vNQ3cWGkZX3cvHFEvIqCsXl3b+RAxFbk
+X-Received: by 10.194.77.97 with SMTP id r1mr56702477wjw.98.1435856310319;
+	Thu, 02 Jul 2015 09:58:30 -0700 (PDT)
 Received: from draco.icx.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id ka7sm9007084wjc.36.2015.07.02.09.58.28
+	by mx.google.com with ESMTPSA id ka7sm9007084wjc.36.2015.07.02.09.58.29
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 02 Jul 2015 09:58:28 -0700 (PDT)
+	Thu, 02 Jul 2015 09:58:29 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu,  2 Jul 2015 17:58:14 +0100
-Message-Id: <1435856296-12531-4-git-send-email-michael.g.wood@intel.com>
+Date: Thu,  2 Jul 2015 17:58:15 +0100
+Message-Id: <1435856296-12531-5-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <1435856296-12531-1-git-send-email-michael.g.wood@intel.com>
 References: <1435856296-12531-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 3/5] bitbake: toaster: Remove erroneously committed template include
+Subject: [PATCH 4/5] bitbake: toaster: runbuilds Fix incorrect variable name
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,32 +45,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 02 Jul 2015 16:58:29 -0000
+X-List-Received-Date: Thu, 02 Jul 2015 16:58:32 -0000
 
-Partial revert of bb commit 6e46e1e3882b9770872d8a0bb459bc7d5d6bfed3
-
-The non managed mrb_section defined the title 'All builds' which is already
-defined correctly for the projects page as 'All projects'
+The recent refactoring moved this enum value to BuildRequests table
+rather than Build.
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- bitbake/lib/toaster/toastergui/templates/projects.html | 3 ---
- 1 file changed, 3 deletions(-)
+ bitbake/lib/toaster/bldcontrol/management/commands/runbuilds.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/toaster/toastergui/templates/projects.html b/bitbake/lib/toaster/toastergui/templates/projects.html
-index e651953..efc3349 100644
---- a/bitbake/lib/toaster/toastergui/templates/projects.html
-+++ b/bitbake/lib/toaster/toastergui/templates/projects.html
-@@ -7,9 +7,6 @@
- {% block pagecontent %}
- 
- 
--  {% include "mrb_section.html" %}
--
--
-   <div class="page-header top-air">
-       <h1>
-       {% if request.GET.filter and objects.paginator.count > 0 or request.GET.search and objects.paginator.count > 0 %}
+diff --git a/bitbake/lib/toaster/bldcontrol/management/commands/runbuilds.py b/bitbake/lib/toaster/bldcontrol/management/commands/runbuilds.py
+index 33cc94e..e3a1fdb 100644
+--- a/bitbake/lib/toaster/bldcontrol/management/commands/runbuilds.py
++++ b/bitbake/lib/toaster/bldcontrol/management/commands/runbuilds.py
+@@ -130,7 +130,7 @@ class Command(NoArgsCommand):
+         # update all BuildRequests without a build created
+         for br in BuildRequest.objects.filter(build = None):
+             br.build = Build.objects.create(project = br.project, completed_on = br.updated, started_on = br.created)
+-            br.build.outcome = Build.REQ_FAILED
++            br.build.outcome = BuildRequest.REQ_FAILED
+             try:
+                 br.build.machine = br.brvariable_set.get(name='MACHINE').value
+             except BRVariable.DoesNotExist:
 -- 
 2.1.4
 
