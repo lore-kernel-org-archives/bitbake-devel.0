@@ -1,27 +1,37 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 7CE4065C9D
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-wg0-f48.google.com (mail-wg0-f48.google.com [74.125.82.48])
+	by mail.openembedded.org (Postfix) with ESMTP id D486765C89
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  1 Jul 2015 03:24:35 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail.windriver.com (8.15.1/8.15.1) with ESMTPS id t613OZKM029663
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Thu,  2 Jul 2015 16:58:25 +0000 (UTC)
+Received: by wguu7 with SMTP id u7so68481016wgu.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 30 Jun 2015 20:24:35 -0700 (PDT)
-Received: from [128.224.162.200] (128.224.162.200) by ALA-HCB.corp.ad.wrs.com
-	(147.11.189.41) with Microsoft SMTP Server id 14.3.224.2;
-	Tue, 30 Jun 2015 20:24:36 -0700
-Message-ID: <55935D71.1020105@windriver.com>
-Date: Wed, 1 Jul 2015 11:24:33 +0800
-From: Robert Yang <liezhi.yang@windriver.com>
-User-Agent: Mozilla/5.0 (X11; Linux i686;
-	rv:31.0) Gecko/20100101 Thunderbird/31.7.0
-MIME-Version: 1.0
-To: <bitbake-devel@lists.openembedded.org>
-References: <cover.1428655392.git.liezhi.yang@windriver.com>
-In-Reply-To: <cover.1428655392.git.liezhi.yang@windriver.com>
-Subject: Re: [PATCH 0/1] bitbake: runqueue/cooker: catch hashvalidate error
+	Thu, 02 Jul 2015 09:58:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references;
+	bh=mqRIKUd77VMxp8KR/EAD+FGTGBF9zIKrIRKCrzLTJQU=;
+	b=RZBnrCdDk6Umk9nXrn4iM8sdY0QilIA7bopVAfKZlenIx5k7JwbRZrdNGZaKvLYhYq
+	3Sb7JVk1sKnC+L1S/ZmKav+IFsrO6tWfC/kZUU7GPTLjzkKPWTd+6CI8cjtHswIEkTAR
+	C1wHlrJmvapPIXg9ccAht64Zr23kdPrtiLjnkjsJ8xJMFFOhmGKvn4U19oJ/rqLAkfSG
+	ypR1iUHY+wenBJqMZ1Pem2EtiUSFtQ1pjBK/UyQRJol8FxkFWBA9zeM+por7l1Op9XhV
+	oQoBS6pEAnddP/W88DaqbYGPJ0ClACDXRJGFPjXmovF9R5CDfSwg3Hl2GkcLliQMxEi5
+	B+vQ==
+X-Gm-Message-State: ALoCoQltHJRk9r2wnaqBWUcdS76RVIyGBvWdcB4oUTug4XXK5hwZpLkfPOjAAxsBaeWbKFm4EM01
+X-Received: by 10.194.57.170 with SMTP id j10mr58588931wjq.140.1435856305764; 
+	Thu, 02 Jul 2015 09:58:25 -0700 (PDT)
+Received: from draco.icx.intel.com ([83.217.123.106])
+	by mx.google.com with ESMTPSA id ka7sm9007084wjc.36.2015.07.02.09.58.24
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Thu, 02 Jul 2015 09:58:25 -0700 (PDT)
+From: Michael Wood <michael.g.wood@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu,  2 Jul 2015 17:58:12 +0100
+Message-Id: <1435856296-12531-2-git-send-email-michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.1.4
+In-Reply-To: <1435856296-12531-1-git-send-email-michael.g.wood@intel.com>
+References: <1435856296-12531-1-git-send-email-michael.g.wood@intel.com>
+Subject: [PATCH 1/5] bitbake: toaster: Partial Revert "fixes after html5 compliance testing"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,121 +44,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 01 Jul 2015 03:24:35 -0000
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 02 Jul 2015 16:58:28 -0000
 
+Partial revert of bb commit 7aecb974d44d9bc711ffba5cc65e770811397fba
 
-Hi RP,
+There were changes in this commit which broke the compatible layers
+mechanism meaning that no layers, recipes or machines were showing.
 
-I rebased the code and put on:
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+---
+ bitbake/lib/toaster/orm/models.py | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-git://git.pokylinux.org/poky-contrib rbt/hx
+diff --git a/bitbake/lib/toaster/orm/models.py b/bitbake/lib/toaster/orm/models.py
+index 7e8ab16..4ea75f2 100644
+--- a/bitbake/lib/toaster/orm/models.py
++++ b/bitbake/lib/toaster/orm/models.py
+@@ -180,9 +180,8 @@ class Project(models.Model):
+         if release == None:
+             release = self.release
+         # layers on the same branch or layers specifically set for this project
+-        queryset = Layer_Version.objects.filter(Q(project = self) | Q(build__project = self))
+-        if release is not None:
+-            queryset = queryset.filter(Q(up_branch__name = release.branch_name) & Q(project = None))
++        queryset = Layer_Version.objects.filter((Q(up_branch__name = release.branch_name) & Q(project = None)) | Q(project = self) | Q(build__project = self))
++
+         if layer_name is not None:
+             # we select only a layer name
+             queryset = queryset.filter(layer__name = layer_name)
+-- 
+2.1.4
 
-Do you have any comments, please ?
-
-Author: Hongxu Jia <hongxu.jia@windriver.com>
-Date:   Wed Aug 27 11:32:35 2014 +0800
-
-     bitbake: runqueue/cooker: catch hashvalidate error in RunQueueExecuteScenequeue
-
-     We need to catch the failure of self.rq.hashvalidate which invoked
-     in RunQueueExecuteScenequeue, and exit in a normal build. So we
-     raise bb.BBHandledException for this specific error.
-
-     Tweak execute_runqueue's exception process order. So the build will
-     exit peacefully while the above failure occurs.
-
-     (LOCAL REV: NOT UPSTREAM) -- Sent to bitbake-devel on 20140827
-
-     Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index f31bca6..304cd27 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1298,7 +1298,7 @@ class BBCooker:
-              except runqueue.TaskFailure as exc:
-                  failures += len(exc.args)
-                  retval = False
--            except SystemExit as exc:
-+            except (SystemExit, bb.BBHandledException) as exc:
-                  self.command.finishAsyncCommand()
-                  return False
-
-@@ -1331,7 +1331,7 @@ class BBCooker:
-              except runqueue.TaskFailure as exc:
-                  failures += len(exc.args)
-                  retval = False
--            except SystemExit as exc:
-+            except (SystemExit, bb.BBHandledException) as exc:
-                  self.command.finishAsyncCommand()
-                  return False
-
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 17a55d3..bd9f3b5 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -1103,8 +1103,9 @@ class RunQueue:
-                  pass
-              self.state = runQueueComplete
-              raise
--        except:
--            logger.error("An uncaught exception occured in runqueue, please see 
-the failure below:")
-+        except BaseException as e:
-+            if not isinstance(e, (SystemExit, bb.BBHandledException)):
-+                logger.error("An uncaught exception occured in runqueue, please 
-see the failure below:")
-              try:
-                  self.teardown_workers()
-              except:
-@@ -1841,7 +1842,11 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
-                  sq_task.append(task)
-              call = self.rq.hashvalidate + "(sq_fn, sq_task, sq_hash, 
-sq_hashfn, d)"
-              locs = { "sq_fn" : sq_fn, "sq_task" : sq_taskname, "sq_hash" : 
-sq_hash, "sq_hashfn" : sq_hashfn, "d" : self.cooker.expanded_data }
--            valid = bb.utils.better_eval(call, locs)
-+            try:
-+                valid = bb.utils.better_eval(call, locs)
-+            except Exception as e:
-+                logger.error("Hash validation failed in 
-RunQueueExecuteScenequeue %s" % str(e))
-+                raise bb.BBHandledException()
-
-              valid_new = stamppresent
-              for v in valid:
-@@ -2027,7 +2032,6 @@ class TaskFailure(Exception):
-      def __init__(self, x):
-          self.args = x
-
--
-  class runQueueExitWait(bb.event.Event):
-      """
-      Event when waiting for task processes to exit
-
-
-
-// Robert
-
-On 04/10/2015 04:44 PM, Robert Yang wrote:
-> *** BLURB HERE ***
-> The following changes since commit 6ebeae9b2011050c318a764e980bc47e51cc2d74:
->
->    tiff: remove extra dev and dbg from PACKAGES (2015-04-10 01:24:01 -0700)
->
-> are available in the git repository at:
->
->    git://git.pokylinux.org/poky-contrib rbt/hx
->    http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=rbt/hx
->
-> Hongxu Jia (1):
->    bitbake: runqueue/cooker: catch hashvalidate error in
->      RunQueueExecuteScenequeue
->
->   bitbake/lib/bb/cooker.py   |    4 ++--
->   bitbake/lib/bb/runqueue.py |   14 ++++++++------
->   2 files changed, 10 insertions(+), 8 deletions(-)
->
 
