@@ -1,34 +1,37 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wg0-f53.google.com (mail-wg0-f53.google.com [74.125.82.53])
-	by mail.openembedded.org (Postfix) with ESMTP id B4FA475C49
+Received: from mail-wg0-f49.google.com (mail-wg0-f49.google.com [74.125.82.49])
+	by mail.openembedded.org (Postfix) with ESMTP id 68EC3607BB
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  2 Jul 2015 16:58:24 +0000 (UTC)
-Received: by wgck11 with SMTP id k11so68532016wgc.0
+	Thu,  2 Jul 2015 16:58:28 +0000 (UTC)
+Received: by wgjx7 with SMTP id x7so68314567wgj.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 02 Jul 2015 09:58:24 -0700 (PDT)
+	Thu, 02 Jul 2015 09:58:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=w+HsfYQdijm8QV8rsYFh8L/O07hCXUb2qeynR4M514s=;
-	b=ZpsYs98KrGwW0jSIsNfGFj9kwohmKleTauqIhM9FsgjAw+cHVApakKyayu30EDML3A
-	mYnNvTIMjxFA4dMkBMQhEhbRWRo0KZibn9HJEpkuN0bCIK+5USkeEMtaD5soxH6jNNzM
-	UEAdpTqRkepuVIndTDD9VKqXd80NHeEeK47IWAeXmQjwoHLmds9eCZXT99oimf30MEJJ
-	6bpJeqA/0FfRY6cIQq3cPHwCW54GhWItuPaU06w5ZU3u+K90XFSVQgkVGbDOtfO0+/cJ
-	GUkmZfgj9v9j4AmiHE5gw/EQvZW2IlTwwwVAfbwn1DqkvEFloy+i74xbHqsHayYmzTYF
-	U69w==
-X-Gm-Message-State: ALoCoQnQMgmzPpbQgt2eU8JebdHCxxL+nNJQ1WY3UYTdudiKaXmS+h4zs9jHHBbIy10GAuXnAMep
-X-Received: by 10.180.80.9 with SMTP id n9mr55581262wix.87.1435856304128;
-	Thu, 02 Jul 2015 09:58:24 -0700 (PDT)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references;
+	bh=fCWyLqywSVtuCmAFzyZe1AdkYAchyqrcKe/1W7AqO9A=;
+	b=DMbHqZSDAm4boEOw6f0TnSFv7q65pbSVhoYg/vI5zuHO5h9eCuC3v5olp5HYaFYiza
+	t5TqG0iN/nLc00gVFZyV4PBEbRYNaXS3x0VEpTysVq8/ewiS+M7uW3KwveOo4f7zwpwb
+	1jz87udG1z5zLlyp0RvR45tFBi6yPhmVAiBgWp7oojeVZ34ExFx3uTliARx39jfnHBFM
+	2j75dWKqxSF+FnvLxwxdbr3mC5HHuw3+G60G52UwGEEWqzxgL0OTXiUmRI+4v2Niho3X
+	HNpvomgHrKEiCPtpKqcySYWWpGjkzL40yueLU/fAYLWuVxycmwNu/msln6JJuO5J879W
+	BI+Q==
+X-Gm-Message-State: ALoCoQmM7yIqh4RzMjQRzoQVAu4D/3Y+2TpUKfCUNWhMgYjdNPJgr+00rFwlEF1gjBnKHP8IJ9SR
+X-Received: by 10.194.78.110 with SMTP id a14mr63802762wjx.87.1435856308895;
+	Thu, 02 Jul 2015 09:58:28 -0700 (PDT)
 Received: from draco.icx.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id ka7sm9007084wjc.36.2015.07.02.09.58.23
+	by mx.google.com with ESMTPSA id ka7sm9007084wjc.36.2015.07.02.09.58.28
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 02 Jul 2015 09:58:23 -0700 (PDT)
+	Thu, 02 Jul 2015 09:58:28 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu,  2 Jul 2015 17:58:11 +0100
-Message-Id: <1435856296-12531-1-git-send-email-michael.g.wood@intel.com>
+Date: Thu,  2 Jul 2015 17:58:14 +0100
+Message-Id: <1435856296-12531-4-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.1.4
-Subject: [PATCH 0/5] toaster patchset - fix regressions
+In-Reply-To: <1435856296-12531-1-git-send-email-michael.g.wood@intel.com>
+References: <1435856296-12531-1-git-send-email-michael.g.wood@intel.com>
+Subject: [PATCH 3/5] bitbake: toaster: Remove erroneously committed template include
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,39 +44,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 02 Jul 2015 16:58:28 -0000
+X-List-Received-Date: Thu, 02 Jul 2015 16:58:29 -0000
 
-This Toaster patchset fixes regressions in current master where toaster is
-currently not functional. It includes a small number of partial reverts
-from the previous patch series submitted.
+Partial revert of bb commit 6e46e1e3882b9770872d8a0bb459bc7d5d6bfed3
 
-The commits are at:
+The non managed mrb_section defined the title 'All builds' which is already
+defined correctly for the projects page as 'All projects'
 
-git://git.yoctoproject.org/poky-contrib michaelw/toaster/fix-remove-mgmtmode-regressions
-http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=michaelw/toaster/fix-remove-mgmtmode-regressions
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+---
+ bitbake/lib/toaster/toastergui/templates/projects.html | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Thanks,
-
-Michael
-
-
-Michael Wood (5):
-  bitbake: toaster: Partial Revert "fixes after html5 compliance
-    testing"
-  bitbake: toaster: Revert the addition of analysis project mode
-    selection
-  bitbake: toaster: Remove erroneously committed template include
-  bitbake: toaster: runbuilds Fix incorrect variable name
-  bitbake: toaster: Fix build execution regression
-
- bitbake/lib/bb/ui/toasterui.py                            |  1 +
- bitbake/lib/toaster/bldcontrol/localhostbecontroller.py   |  2 +-
- .../toaster/bldcontrol/management/commands/runbuilds.py   |  2 +-
- bitbake/lib/toaster/orm/models.py                         |  5 ++---
- bitbake/lib/toaster/toastergui/templates/newproject.html  | 15 ++++++++-------
- bitbake/lib/toaster/toastergui/templates/projects.html    |  3 ---
- 6 files changed, 13 insertions(+), 15 deletions(-)
-
+diff --git a/bitbake/lib/toaster/toastergui/templates/projects.html b/bitbake/lib/toaster/toastergui/templates/projects.html
+index e651953..efc3349 100644
+--- a/bitbake/lib/toaster/toastergui/templates/projects.html
++++ b/bitbake/lib/toaster/toastergui/templates/projects.html
+@@ -7,9 +7,6 @@
+ {% block pagecontent %}
+ 
+ 
+-  {% include "mrb_section.html" %}
+-
+-
+   <div class="page-header top-air">
+       <h1>
+       {% if request.GET.filter and objects.paginator.count > 0 or request.GET.search and objects.paginator.count > 0 %}
 -- 
 2.1.4
 
