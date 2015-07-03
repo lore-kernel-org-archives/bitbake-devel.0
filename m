@@ -1,37 +1,22 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wg0-f47.google.com (mail-wg0-f47.google.com [74.125.82.47])
-	by mail.openembedded.org (Postfix) with ESMTP id 48CED75CC7
+Return-Path: <anibal.limon@linux.intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 25B80757F4
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  2 Jul 2015 16:58:31 +0000 (UTC)
-Received: by wgqq4 with SMTP id q4so68476045wgq.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 02 Jul 2015 09:58:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=Bm/P69z8Cii6iec/u+khG6xvxjNefh9Qr7el1xihWZg=;
-	b=NIgAoTP36UnFQB7Ge4cCfdWK5w3zdrgHekdwgzW6Q5lMT8ucJ+U2197ZEh/rmkYd34
-	l/dwuByC+x2rGsRHSKAZfmdeTwZYJU1APOwOsUqGKz0J3RMJm8vTNhOFWemrFBe2O4M/
-	4PEw4cJwXdJTmE+0sybxlOIGwwtXFhZ3Rai6HKQL8lBZen3/NI9D6hmFx1vYkbusTaGx
-	vGBXb/fzPclOlTHpbTi0DEuhfprRV2873pj/8olY5G2ojHk9XGRUKhlHZBc191xzLMD0
-	uYJibSvO7VUN6u4B8zktPuo1pEcBi5AIthL9yxA7TNoYnkE1UvM3X5XHPMDK9pTfO7QJ
-	FeQg==
-X-Gm-Message-State: ALoCoQnIx8gZvmqjxFis2d2l1ZqXNhMOGSA6gvTCuohaQlPEdrwuWkPUqnmfQzhByAf4VYVcjpRa
-X-Received: by 10.194.97.196 with SMTP id ec4mr60811879wjb.3.1435856311884;
-	Thu, 02 Jul 2015 09:58:31 -0700 (PDT)
-Received: from draco.icx.intel.com ([83.217.123.106])
-	by mx.google.com with ESMTPSA id ka7sm9007084wjc.36.2015.07.02.09.58.31
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 02 Jul 2015 09:58:31 -0700 (PDT)
-From: Michael Wood <michael.g.wood@intel.com>
+	Fri,  3 Jul 2015 20:38:22 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga103.fm.intel.com with ESMTP; 03 Jul 2015 13:38:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.15,402,1432623600"; d="scan'208";a="755652965"
+Received: from mctremel-mobl1.amr.corp.intel.com (HELO
+	alimon-ThinkPad-W540.amr.corp.intel.com) ([10.254.180.106])
+	by fmsmga002.fm.intel.com with ESMTP; 03 Jul 2015 13:38:22 -0700
+From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu,  2 Jul 2015 17:58:16 +0100
-Message-Id: <1435856296-12531-6-git-send-email-michael.g.wood@intel.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1435856296-12531-1-git-send-email-michael.g.wood@intel.com>
-References: <1435856296-12531-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 5/5] bitbake: toaster: Fix build execution regression
+Date: Fri,  3 Jul 2015 15:40:26 -0500
+Message-Id: <1435956027-26996-1-git-send-email-anibal.limon@linux.intel.com>
+X-Mailer: git-send-email 1.9.1
+MIME-Version: 1.0
+Subject: [PATCH 1/2] cooker.py: Close lock file and watcher fds when end.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,45 +29,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 02 Jul 2015 16:58:32 -0000
+X-List-Received-Date: Fri, 03 Jul 2015 20:38:24 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Make sure the error value is initialised and update the string match
-that we have to identify bitbake's current startup status.
+When run cooker inside loop it reaches OS max fd's causing
+an exception.
 
-Patch contribution from Eduard Bartosh
-
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
 ---
- bitbake/lib/bb/ui/toasterui.py                          | 1 +
- bitbake/lib/toaster/bldcontrol/localhostbecontroller.py | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ lib/bb/cooker.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/bitbake/lib/bb/ui/toasterui.py b/bitbake/lib/bb/ui/toasterui.py
-index 28fdd82..376ac59 100644
---- a/bitbake/lib/bb/ui/toasterui.py
-+++ b/bitbake/lib/bb/ui/toasterui.py
-@@ -239,6 +239,7 @@ def main(server, eventHandler, params ):
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index f31bca6..abe8a52 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -1432,6 +1432,9 @@ class BBCooker:
+         if self.state in (state.shutdown, state.forceshutdown, state.error):
+             if hasattr(self.parser, 'shutdown'):
+                 self.parser.shutdown(clean=False, force = True)
++            self.configwatcher.close()
++            self.watcher.close()
++            self.lock.close()
+             raise bb.BBHandledException()
  
-             if isinstance(event, (bb.event.BuildCompleted, bb.command.CommandFailed)):
- 
-+		errorcode = 0
-                 if (isinstance(event, bb.command.CommandFailed)):
-                     errors += 1
-                     errorcode = 1
-diff --git a/bitbake/lib/toaster/bldcontrol/localhostbecontroller.py b/bitbake/lib/toaster/bldcontrol/localhostbecontroller.py
-index 3e16837..1d3d1ce 100644
---- a/bitbake/lib/toaster/bldcontrol/localhostbecontroller.py
-+++ b/bitbake/lib/toaster/bldcontrol/localhostbecontroller.py
-@@ -139,7 +139,7 @@ class LocalhostBEController(BuildEnvironmentController):
-             with open(filepath, "r") as f:
-                 f.seek(filepos)
-                 for line in f:
--                    if line.startswith("NOTE: ToasterUI waiting for events"):
-+                    if line.startswith("Bitbake server started on demand"):
-                         return True
-             return False
- 
+         if self.state != state.parsing:
 -- 
-2.1.4
+1.9.1
 
 
