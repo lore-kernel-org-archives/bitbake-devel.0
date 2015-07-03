@@ -1,22 +1,24 @@
 Return-Path: <anibal.limon@linux.intel.com>
 Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 25B80757F4
+	by mail.openembedded.org (Postfix) with ESMTP id 423E8757F9
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  3 Jul 2015 20:38:22 +0000 (UTC)
+	Fri,  3 Jul 2015 20:38:24 +0000 (UTC)
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga103.fm.intel.com with ESMTP; 03 Jul 2015 13:38:24 -0700
+	by fmsmga103.fm.intel.com with ESMTP; 03 Jul 2015 13:38:25 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,402,1432623600"; d="scan'208";a="755652965"
+X-IronPort-AV: E=Sophos;i="5.15,402,1432623600"; d="scan'208";a="755652966"
 Received: from mctremel-mobl1.amr.corp.intel.com (HELO
 	alimon-ThinkPad-W540.amr.corp.intel.com) ([10.254.180.106])
 	by fmsmga002.fm.intel.com with ESMTP; 03 Jul 2015 13:38:22 -0700
 From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  3 Jul 2015 15:40:26 -0500
-Message-Id: <1435956027-26996-1-git-send-email-anibal.limon@linux.intel.com>
+Date: Fri,  3 Jul 2015 15:40:27 -0500
+Message-Id: <1435956027-26996-2-git-send-email-anibal.limon@linux.intel.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1435956027-26996-1-git-send-email-anibal.limon@linux.intel.com>
+References: <1435956027-26996-1-git-send-email-anibal.limon@linux.intel.com>
 MIME-Version: 1.0
-Subject: [PATCH 1/2] cooker.py: Close lock file and watcher fds when end.
+Subject: [PATCH 2/2] tinfoil.py: Add shutdown method.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,28 +35,40 @@ X-List-Received-Date: Fri, 03 Jul 2015 20:38:24 -0000
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-When run cooker inside loop it reaches OS max fd's causing
-an exception.
+When run tinfoil in a loop it causing problems for don't
+free resources like OS max fd exception.
 
 Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
 ---
- lib/bb/cooker.py | 3 +++
- 1 file changed, 3 insertions(+)
+ lib/bb/tinfoil.py | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index f31bca6..abe8a52 100644
---- a/lib/bb/cooker.py
-+++ b/lib/bb/cooker.py
-@@ -1432,6 +1432,9 @@ class BBCooker:
-         if self.state in (state.shutdown, state.forceshutdown, state.error):
-             if hasattr(self.parser, 'shutdown'):
-                 self.parser.shutdown(clean=False, force = True)
-+            self.configwatcher.close()
-+            self.watcher.close()
-+            self.lock.close()
-             raise bb.BBHandledException()
+diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
+index 8fc9be3..5025e62 100644
+--- a/lib/bb/tinfoil.py
++++ b/lib/bb/tinfoil.py
+@@ -28,6 +28,7 @@ import bb.utils
+ from bb.cooker import state, BBCooker, CookerFeatures
+ from bb.cookerdata import CookerConfiguration, ConfigParameters
+ import bb.fetch2
++from bb import BBHandledException
  
-         if self.state != state.parsing:
+ class Tinfoil:
+     def __init__(self, output=sys.stdout, tracking=False):
+@@ -84,6 +85,13 @@ class Tinfoil:
+             else:
+                 self.parseRecipes()
+ 
++    def shutdown(self):
++        try:
++            self.cooker.shutdown()
++            self.cooker.updateCache()
++        except BBHandledException:
++            pass
++
+ class TinfoilConfigParameters(ConfigParameters):
+ 
+     def __init__(self, **options):
 -- 
 1.9.1
 
