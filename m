@@ -1,24 +1,34 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id B5AC673B83
+Return-Path: <kergoth@gmail.com>
+Received: from mail-qg0-f53.google.com (mail-qg0-f53.google.com
+	[209.85.192.53])
+	by mail.openembedded.org (Postfix) with ESMTP id E21FD75D8C
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  6 Jul 2015 15:38:17 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by orsmga103.jf.intel.com with ESMTP; 06 Jul 2015 08:38:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,415,1432623600"; d="scan'208";a="600966514"
-Received: from tgsmith2-mobl5.ger.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.252.6.176])
-	by orsmga003.jf.intel.com with ESMTP; 06 Jul 2015 08:38:16 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: "Felipe F. Tonello" <eu@felipetonello.com>
-Date: Mon, 06 Jul 2015 16:38:14 +0100
-Message-ID: <5748294.71kfXCBSzc@peggleto-mobl.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.14.9 (Linux/4.0.6-200.fc21.x86_64; KDE/4.14.9; x86_64; ; )
+	Mon,  6 Jul 2015 15:38:30 +0000 (UTC)
+Received: by qget71 with SMTP id t71so70761545qge.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 06 Jul 2015 08:38:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=NBj5g3nnJXo3qcrtkXxlanYDTxwlpTul+xMP9TgvmcM=;
+	b=YknCGlNekJ07qr/Pk3SaM+QzJiNJnq4Pj+WGJbzvVh+3Z1oX8WBNsamMbGf5Plkd0S
+	Wjki25gVi8EEeLtgt0aV6WU+BJ2CQM4q4BqkpkoDLyGR7Bo7W/1/pEBuLoORVzrBDk0B
+	Lfij/tBNyLhx1mmd0ArqzeXsrR6ZINko1Va/DRAXV2Jix7lzsNB6O5/mWLw05Y/VHOkX
+	VajV8Br41GGdeujA6NwKp869aDZO/jw2b4rYpisPg9kxqRrwkIypK67gUIHM3hCg65q8
+	Vskead2mz1thgyFFBSTCRyTXL4eX9fCEOL819+QbEeigcXckcvOTN84/FhwtBRfq4RGd
+	UHtQ==
+X-Received: by 10.140.81.135 with SMTP id f7mr50244854qgd.38.1436197110713;
+	Mon, 06 Jul 2015 08:38:30 -0700 (PDT)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.140.108.99 with HTTP; Mon, 6 Jul 2015 08:38:11 -0700 (PDT)
 In-Reply-To: <1436195638-24806-1-git-send-email-eu@felipetonello.com>
 References: <1436195638-24806-1-git-send-email-eu@felipetonello.com>
-MIME-Version: 1.0
+From: Christopher Larson <clarson@kergoth.com>
+Date: Mon, 6 Jul 2015 08:38:11 -0700
+X-Google-Sender-Auth: 5ECsbAvjX2l-Js8XGdh8FXSQMrk
+Message-ID: <CABcZAN=QEu+w5Zv53kXLPgFTFhsFrfQb_jxJbvbCNuymJbKuqA@mail.gmail.com>
+To: eu@felipetonello.com
 Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH] fetch2: Remove unecessary code for git submodules
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -33,145 +43,77 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 06 Jul 2015 15:38:18 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Mon, 06 Jul 2015 15:38:34 -0000
+Content-Type: multipart/alternative; boundary=001a11c12ae69c95a7051a36b2f8
 
-Hi Felipe,
+--001a11c12ae69c95a7051a36b2f8
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Monday 06 July 2015 16:13:58 eu@felipetonello.com wrote:
+On Mon, Jul 6, 2015 at 8:13 AM, <eu@felipetonello.com> wrote:
+
 > From: "Felipe F. Tonello" <eu@felipetonello.com>
-> 
-> Only do git submodule update after upack, otherwise the branch and commit id
+>
+> Only do git submodule update after upack, otherwise the branch and commit
+> id
 > will be ignored, causing to run git submodules on a wrong ref.
-> 
-> Since .gitmodules file is used to check if there is any submodule, we don't
-> need to worry about copying .git/modules directory into the unpacked source
+>
+> Since .gitmodules file is used to check if there is any submodule, we don=
+'t
+> need to worry about copying .git/modules directory into the unpacked sour=
+ce
 > tree.
-> 
+>
 > Signed-off-by: Felipe F. Tonello <eu@felipetonello.com>
-> ---
->  lib/bb/fetch2/gitsm.py | 73
-> -------------------------------------------------- 1 file changed, 73
-> deletions(-)
-> 
-> diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-> index c125cff..405cd87 100644
-> --- a/lib/bb/fetch2/gitsm.py
-> +++ b/lib/bb/fetch2/gitsm.py
-> @@ -31,10 +31,8 @@ NOTE: Switching a SRC_URI from "git://" to "gitsm://"
-> requires a clean of your r
-> 
->  import os
->  import bb
-> -from   bb    import data
->  from   bb.fetch2.git import Git
->  from   bb.fetch2 import runfetchcmd
-> -from   bb.fetch2 import logger
-> 
->  class GitSM(Git):
->      def supports(self, ud, d):
-> @@ -52,85 +50,14 @@ class GitSM(Git):
->                  pass
->          return False
-> 
-> -    def _set_relative_paths(self, repopath):
-> -        """
-> -        Fix submodule paths to be relative instead of absolute,
-> -        so that when we move the repo it doesn't break
-> -        (In Git 1.7.10+ this is done automatically)
-> -        """
-> -        submodules = []
-> -        with open(os.path.join(repopath, '.gitmodules'), 'r') as f:
-> -            for line in f.readlines():
-> -                if line.startswith('[submodule'):
-> -                    submodules.append(line.split('"')[1])
-> -
-> -        for module in submodules:
-> -            repo_conf = os.path.join(repopath, module, '.git')
-> -            if os.path.exists(repo_conf):
-> -                with open(repo_conf, 'r') as f:
-> -                    lines = f.readlines()
-> -                newpath = ''
-> -                for i, line in enumerate(lines):
-> -                    if line.startswith('gitdir:'):
-> -                        oldpath = line.split(': ')[-1].rstrip()
-> -                        if oldpath.startswith('/'):
-> -                            newpath = '../' * (module.count('/') + 1) +
-> '.git/modules/' + module -                            lines[i] = 'gitdir:
-> %s\n' % newpath
-> -                            break
-> -                if newpath:
-> -                    with open(repo_conf, 'w') as f:
-> -                        for line in lines:
-> -                            f.write(line)
-> -
-> -            repo_conf2 = os.path.join(repopath, '.git', 'modules', module,
-> 'config') -            if os.path.exists(repo_conf2):
-> -                with open(repo_conf2, 'r') as f:
-> -                    lines = f.readlines()
-> -                newpath = ''
-> -                for i, line in enumerate(lines):
-> -                    if line.lstrip().startswith('worktree = '):
-> -                        oldpath = line.split(' = ')[-1].rstrip()
-> -                        if oldpath.startswith('/'):
-> -                            newpath = '../' * (module.count('/') + 3) +
-> module -                            lines[i] = '\tworktree = %s\n' %
-> newpath -                            break
-> -                if newpath:
-> -                    with open(repo_conf2, 'w') as f:
-> -                        for line in lines:
-> -                            f.write(line)
-> -
-> -    def update_submodules(self, ud, d):
-> -        # We have to convert bare -> full repo, do the submodule bit, then
-> convert back -        tmpclonedir = ud.clonedir + ".tmp"
-> -        gitdir = tmpclonedir + os.sep + ".git"
-> -        bb.utils.remove(tmpclonedir, True)
-> -        os.mkdir(tmpclonedir)
-> -        os.rename(ud.clonedir, gitdir)
-> -        runfetchcmd("sed " + gitdir + "/config -i -e 's/bare.*=.*true/bare
-> = false/'", d) -        os.chdir(tmpclonedir)
-> -        runfetchcmd(ud.basecmd + " reset --hard", d)
-> -        runfetchcmd(ud.basecmd + " submodule init", d)
-> -        runfetchcmd(ud.basecmd + " submodule update", d)
-> -        self._set_relative_paths(tmpclonedir)
-> -        runfetchcmd("sed " + gitdir + "/config -i -e 's/bare.*=.*false/bare
-> = true/'", d) -        os.rename(gitdir, ud.clonedir,)
-> -        bb.utils.remove(tmpclonedir, True)
-> -
->      def download(self, ud, d):
->          Git.download(self, ud, d)
-> 
-> -        os.chdir(ud.clonedir)
-> -        submodules = self.uses_submodules(ud, d)
-> -        if submodules:
-> -            self.update_submodules(ud, d)
-> -
->      def unpack(self, ud, destdir, d):
->          Git.unpack(self, ud, destdir, d)
-> -
->          os.chdir(ud.destdir)
->          submodules = self.uses_submodules(ud, d)
->          if submodules:
-> -            runfetchcmd("cp -r " + ud.clonedir + "/modules " + ud.destdir +
-> "/.git/", d) runfetchcmd(ud.basecmd + " submodule init", d)
->              runfetchcmd(ud.basecmd + " submodule update", d)
+>
 
-So, I might have been the one that implemented the _set_relative_paths() part 
-of this - I don't remember the full details, however the comment suggests that 
-this is necessary for older versions of git. If we wish to remain compatible 
-with those then we still need this code surely?
+We don=E2=80=99t want to be downloading from remote locations in do_unpack,=
+ only
+do_fetch. This patch will result in the opposite, which means the submodule
+sources won=E2=80=99t be included in the git mirror tarball, and it=E2=80=
+=99ll be
+impossible to build with BB_NO_NETWORK=3D1. Also -c fetchall won=E2=80=99t =
+result in
+all sources having been fetched, which defeats its purpose.
+--=20
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
-Here's the commit that added it:
+--001a11c12ae69c95a7051a36b2f8
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-http://cgit.openembedded.org/bitbake/commit/?id=e700d5a41deed4ee837465af526ed30c8a579933
+<div dir=3D"ltr"><div class=3D"gmail_extra">On Mon, Jul 6, 2015 at 8:13 AM,=
+  <span dir=3D"ltr">&lt;<a href=3D"mailto:eu@felipetonello.com" target=3D"_=
+blank">eu@felipetonello.com</a>&gt;</span> wrote:<br><div class=3D"gmail_qu=
+ote"><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-le=
+ft:1px #ccc solid;padding-left:1ex"><div id=3D":1vq" class=3D"a3s" style=3D=
+"overflow:hidden">From: &quot;Felipe F. Tonello&quot; &lt;<a href=3D"mailto=
+:eu@felipetonello.com">eu@felipetonello.com</a>&gt;<br>
+<br>
+Only do git submodule update after upack, otherwise the branch and commit i=
+d<br>
+will be ignored, causing to run git submodules on a wrong ref.<br>
+<br>
+Since .gitmodules file is used to check if there is any submodule, we don&#=
+39;t<br>
+need to worry about copying .git/modules directory into the unpacked source=
+<br>
+tree.<br>
+<br>
+Signed-off-by: Felipe F. Tonello &lt;<a href=3D"mailto:eu@felipetonello.com=
+">eu@felipetonello.com</a>&gt;</div></blockquote></div><br>We don=E2=80=99t=
+ want to be downloading from remote locations in do_unpack, only do_fetch. =
+This patch will result in the opposite, which means the submodule sources w=
+on=E2=80=99t be included in the git mirror tarball, and it=E2=80=99ll be im=
+possible to build with BB_NO_NETWORK=3D1. Also -c fetchall won=E2=80=99t re=
+sult in all sources having been fetched, which defeats its purpose.<br>-- <=
+br><div class=3D"gmail_signature">Christopher Larson<br>clarson at kergoth =
+dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - Tsli=
+b<br>Senior Software Engineer, Mentor Graphics</div>
+</div></div>
 
-Cheers,
-Paul
-
--- 
-
-Paul Eggleton
-Intel Open Source Technology Centre
-
+--001a11c12ae69c95a7051a36b2f8--
