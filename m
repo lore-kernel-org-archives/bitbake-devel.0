@@ -1,28 +1,21 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 69E3873B10
+Return-Path: <leonardo.sandoval.gonzalez@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id BD02975D16
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  7 Jul 2015 16:57:09 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by fmsmga103.fm.intel.com with ESMTP; 07 Jul 2015 09:57:09 -0700
+	Tue,  7 Jul 2015 17:50:47 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga103.jf.intel.com with ESMTP; 07 Jul 2015 10:50:47 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,424,1432623600"; d="scan'208";a="759969845"
-Received: from wrobbins-mobl.ger.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.252.18.222])
-	by orsmga002.jf.intel.com with ESMTP; 07 Jul 2015 09:56:58 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: Robert Yang <liezhi.yang@windriver.com>
-Date: Tue, 07 Jul 2015 17:56:56 +0100
-Message-ID: <10060998.dTQVzXkhxA@peggleto-mobl.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.14.9 (Linux/4.0.6-200.fc21.x86_64; KDE/4.14.9; x86_64; ; )
-In-Reply-To: <1436282262.27597.183.camel@linuxfoundation.org>
-References: <cover.1436232786.git.liezhi.yang@windriver.com>
-	<fc82e0723a4877cdcd92e97cd2cf19f4a5d0ff70.1436232786.git.liezhi.yang@windriver.com>
-	<1436282262.27597.183.camel@linuxfoundation.org>
-MIME-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] git.py: create a branch when checkout
+X-IronPort-AV: E=Sophos;i="5.15,425,1432623600"; d="scan'208";a="742336488"
+Received: from yctb05.ostc.intel.com (HELO yctb05.otcr.jf.intel.com)
+	([10.23.219.54])
+	by fmsmga001.fm.intel.com with ESMTP; 07 Jul 2015 10:50:47 -0700
+From: leonardo.sandoval.gonzalez@linux.intel.com
+To: bitbake-devel@lists.openembedded.org
+Date: Tue,  7 Jul 2015 09:45:58 +0000
+Message-Id: <cover.1436261758.git.leonardo.sandoval.gonzalez@linux.intel.com>
+X-Mailer: git-send-email 1.8.4.5
+Subject: [PATCH 0/3] On knotty, Make sure bitbake.lock is unlocked before exiting
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,50 +28,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 07 Jul 2015 16:57:13 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Tue, 07 Jul 2015 17:50:47 -0000
 
-On Tuesday 07 July 2015 16:17:42 Richard Purdie wrote:
-> On Mon, 2015-07-06 at 18:33 -0700, Robert Yang wrote:
-> > Create a branch named oebuild_SRCREV when checkout the source, this
-> > makes debug easier than "(no branch)" when look into the source.
-> > 
-> > Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> > ---
-> > 
-> >  bitbake/lib/bb/fetch2/git.py |    3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-> > index 2e53882..12087dd 100644
-> > --- a/bitbake/lib/bb/fetch2/git.py
-> > +++ b/bitbake/lib/bb/fetch2/git.py
-> > 
-> > @@ -280,7 +280,8 @@ class Git(FetchMethod):
-> >                  runfetchcmd("%s read-tree %s%s" % (ud.basecmd,
-> >                  ud.revisions[ud.names[0]], readpathspec), d)
-> >                  runfetchcmd("%s checkout-index -q -f -a" % ud.basecmd,
-> >                  d)
-> >              
-> >              else:
-> > -                runfetchcmd("%s checkout %s" % (ud.basecmd,
-> > ud.revisions[ud.names[0]]), d) +                runfetchcmd("%s checkout
-> > %s -b oebuild_%s" % (ud.basecmd, \ +                           
-> > ud.revisions[ud.names[0]], ud.revisions[ud.names[0]]), d)> 
-> >          return True
-> 
-> Would it not make more sense to set the branch to the upstream branch
-> name here?
+From: Leonardo Sandoval <leonardo.sandoval.gonzalez@linux.intel.com>
 
-I'd go one step further, use the upstream branch name and also set it to track 
-the remote branch as well.
+Solves issues recently found on the AutoBuilder, where between one build and another the
+following log error is seen:
 
-Cheers,
-Paul
+	  ERROR: Only one copy of bitbake should be run against a build directory
+
+More info on https://bugzilla.yoctoproject.org/show_bug.cgi?id=7941
+
+The following changes since commit b78b1a6bb82fb864f1f857bf7259908d0ed930b5:
+
+  tune-i586-nlp: Add new tune file to support Quark/X1000 CPU (2015-07-01 15:40:00 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib lsandov1/PR-Service-selftest-failures-7941
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=lsandov1/PR-Service-selftest-failures-7941
+
+Leonardo Sandoval (3):
+  cooker.py: Lock/Unlock members function into BBCooker
+  command.py: Unlock function included into CommandsSync class
+  knotty.py: Make sure bitbake.lock is unlocked before exiting
+
+ bitbake/lib/bb/command.py   |  6 ++++++
+ bitbake/lib/bb/cooker.py    | 17 ++++++++++++++---
+ bitbake/lib/bb/ui/knotty.py | 20 ++++++++++++++++++++
+ 3 files changed, 40 insertions(+), 3 deletions(-)
 
 -- 
+1.8.4.5
 
-Paul Eggleton
-Intel Open Source Technology Centre
 
