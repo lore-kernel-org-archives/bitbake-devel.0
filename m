@@ -1,30 +1,37 @@
-Return-Path: <brahim.aida@openwide.fr>
-Received: from zimbra3.corp.accelance.fr (zimbra3.corp.accelance.fr
-	[213.162.49.233])
-	by mail.openembedded.org (Postfix) with ESMTP id C556960017
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wi0-f179.google.com (mail-wi0-f179.google.com
+	[209.85.212.179])
+	by mail.openembedded.org (Postfix) with ESMTP id BC6B173B10
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  1 Jul 2015 09:23:30 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra3.corp.accelance.fr (Postfix) with ESMTP id 0D01F7EC00;
-	Wed,  1 Jul 2015 11:23:30 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra3.corp.accelance.fr
-Received: from zimbra3.corp.accelance.fr ([127.0.0.1])
-	by localhost (zimbra3.corp.accelance.fr [127.0.0.1]) (amavisd-new,
-	port 10024)
-	with ESMTP id rbyeU46643QV; Wed,  1 Jul 2015 11:23:29 +0200 (CEST)
-Received: from zimbra2.corp.accelance.fr (zimbra2.corp.accelance.fr
-	[213.162.49.232])
-	by zimbra3.corp.accelance.fr (Postfix) with ESMTP id 7D35C7EB67;
-	Wed,  1 Jul 2015 11:23:29 +0200 (CEST)
-Date: Wed, 1 Jul 2015 11:23:29 +0200 (CEST)
-From: =?utf-8?B?QcOvZGE=?= Brahim <brahim.aida@openwide.fr>
-To: yocto@yoctoproject.org, bitbake-devel@lists.openembedded.org
-Message-ID: <703421811.2393911.1435742609449.JavaMail.root@openwide.fr>
-MIME-Version: 1.0
-X-Originating-IP: [213.162.49.238]
-X-Mailer: Zimbra 7.2.6_GA_2926 (ZimbraWebClient - FF3.0 (Linux)/7.2.6_GA_2926)
-X-Mailman-Approved-At: Tue, 07 Jul 2015 12:25:31 +0000
-Subject: No bb files matched ?
+	Tue,  7 Jul 2015 14:49:58 +0000 (UTC)
+Received: by wiclp1 with SMTP id lp1so53351785wic.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 07 Jul 2015 07:49:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=3Owx3u88Qf1znzoYVKBp6ImF3BPWiLSTBnaNs+sxHxM=;
+	b=mJey+r78u7nJtK0vTZOevjD+BbPzmvNdeAAqoXCOT7hijLtoBcQ1JkcoC97T1mDwKU
+	cfN5H4D/H1LRFuhEy8kif79U8bU8YMDlnwUlnVXku2G4uD65yVZ2mE1KKKoZsjvsJTld
+	VYpYozmBTaq+8bnYXEq1YzW6rPAiUZDd3iiS/ue+tKr0TllZNA/HjYPYhGhpXBp4BlzR
+	Ed4HMFCe6zHWmhNSE0eqiyEH2EUTKkpCxhasWWCNek5r4W5EEB8ycc1qObRrw6JCY87P
+	fTQBxi13Kg145H7GiuHMtnvFbuOv/HcxUHzkrUzLRCCPceolb2WzoX40FgnOYQnfuH7/
+	zOng==
+X-Gm-Message-State: ALoCoQlMzVFeqRPPJGemDvVWyKaLhBNPl+pfVA/CGbplhsnwJQBsCksq5JxLn/+BABDGjK+nA486
+X-Received: by 10.180.187.41 with SMTP id fp9mr66907598wic.67.1436280597908;
+	Tue, 07 Jul 2015 07:49:57 -0700 (PDT)
+Received: from flashheart.burtonini.com (35.106.2.81.in-addr.arpa.
+	[81.2.106.35]) by mx.google.com with ESMTPSA id
+	fb3sm52866992wib.21.2015.07.07.07.49.56
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Tue, 07 Jul 2015 07:49:57 -0700 (PDT)
+From: Ross Burton <ross.burton@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue,  7 Jul 2015 15:44:33 +0100
+Message-Id: <1436280273-5756-1-git-send-email-ross.burton@intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH] main: add skeleton documentation for the recipe:do_task syntax
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,107 +44,30 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 01 Jul 2015 09:23:31 -0000
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_2393910_899692734.1435742609448"
+X-List-Received-Date: Tue, 07 Jul 2015 14:49:59 -0000
 
-------=_Part_2393910_899692734.1435742609448
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+The incredibly useful recipe:do_task syntax on the command line isn't documented
+at all.  This isn't much but it's better than nothing.
 
-Hello, 
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ bitbake/lib/bb/main.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'm trying to generate an embedded linux image with a java oracle 
-meta but here what I get : 
-
-
-
-aida@aida:~/poky/build$ bitbake core-image-minimal 
-Loading cache: 100% |##########################################| ETA: 
-00:00:00 
-Loaded 1292 entries from dependency cache. 
-WARNING: No bb files matched BBFILE_PATTERN_oraclejava 
-'^/home/aida/poky/meta-oracle-java/' 
-NOTE: Resolving any missing task queue dependencies 
-ERROR: Nothing RPROVIDES 'oracle-jse-jdk-i586' (but 
-/home/aida/poky/meta/recipes-core/images/core-image-minimal.bb 
-RDEPENDS on or otherwise requires it) 
-ERROR: oracle-jse-jdk-i586 was skipped: because it has a restricted 
-license not whitelisted in LICENSE_FLAGS_WHITELIST 
-NOTE: Runtime target 'oracle-jse-jdk-i586' is unbuildable, 
-removing... 
-Missing or unbuildable dependency chain was: ['oracle-jse-jdk-i586'] 
-ERROR: Required build target 'core-image-minimal' has no buildable 
-providers. 
-Missing or unbuildable dependency chain was: ['core-image-minimal', 
-'oracle-jse-jdk-i586'] 
-
-Summary: There was 1 WARNING message shown. 
-Summary: There were 2 ERROR messages shown, returning a non-zero exit 
-code. 
+diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
+index 49dc8d5..ee72328 100755
+--- a/bitbake/lib/bb/main.py
++++ b/bitbake/lib/bb/main.py
+@@ -83,7 +83,7 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
+     def parseCommandLine(self, argv=sys.argv):
+         parser = optparse.OptionParser(
+             version = "BitBake Build Tool Core version %s" % bb.__version__,
+-            usage = """%prog [options] [recipename/target ...]
++            usage = """%prog [options] [recipename/target recipe:do_task ...]
+ 
+     Executes the specified task (default is 'build') for a given set of target recipes (.bb files).
+     It is assumed there is a conf/bblayers.conf available in cwd or in BBPATH which
+-- 
+2.1.4
 
 
-Despite my bblayers.conf : 
-
-
-
-
-
-
-<blockquote>
-BBLAYERS ?= " \ 
-/home/aida/poky/meta \ 
-/home/aida/poky/meta-yocto \ 
-/home/aida/poky/meta-oracle-java \ 
-/home/aida/poky/meta-yocto-bsp \ 
-" 
-
-And my local.conf : 
-</blockquote>
-
-
-
-<blockquote>
-LICENSE_FLAGS_WHITELIST += "oracle_java" 
-
-I can't find where this No bb files matched BBFILE_PATTERN warning 
-</blockquote>
-
-came from, neither then the licence problem... 
-
-Thank you ! 
-
-------=_Part_2393910_899692734.1435742609448
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<html><head><style type=3D'text/css'>p { margin: 0; }</style></head><body><=
-div style=3D'font-family: times new roman,new york,times,serif; font-size: =
-12pt; color: #000000'>Hello,<br><br>I'm trying to generate an embedded linu=
-x image with a java oracle<br>meta but here what I get :<br><br><blockquote=
-> aida@aida:~/poky/build$ bitbake core-image-minimal<br>&nbsp;Loading cache=
-: 100% |##########################################| ETA:<br>&nbsp;00:00:00<=
-br>&nbsp;Loaded 1292 entries from dependency cache.<br>&nbsp;<b>WARNING: No=
- bb files matched BBFILE_PATTERN_oraclejava<br>&nbsp;'^/home/aida/poky/meta=
--oracle-java/'</b><br>&nbsp;NOTE: Resolving any missing task queue dependen=
-cies<br>&nbsp;ERROR: Nothing RPROVIDES 'oracle-jse-jdk-i586' (but<br>&nbsp;=
-/home/aida/poky/meta/recipes-core/images/core-image-minimal.bb<br>&nbsp;RDE=
-PENDS on or otherwise requires it)<br>&nbsp;ERROR: oracle-jse-jdk-i586 was =
-skipped: because it has a restricted<br>&nbsp;license not whitelisted in LI=
-CENSE_FLAGS_WHITELIST<br>&nbsp;NOTE: Runtime target 'oracle-jse-jdk-i586' i=
-s unbuildable,<br>&nbsp;removing...<br>&nbsp;Missing or unbuildable depende=
-ncy chain was: ['oracle-jse-jdk-i586']<br>&nbsp;ERROR: Required build targe=
-t 'core-image-minimal' has no buildable<br>&nbsp;providers.<br>&nbsp;Missin=
-g or unbuildable dependency chain was: ['core-image-minimal',<br>&nbsp;'ora=
-cle-jse-jdk-i586']<br><br>&nbsp;Summary: There was 1 WARNING message shown.=
-<br>&nbsp;Summary: There were 2 ERROR messages shown, returning a non-zero =
-exit<br>&nbsp;code.<br><br><br>Despite my bblayers.conf :</blockquote><br><=
-br><br><br><blockquote> BBLAYERS ?=3D " \<br>&nbsp;/home/aida/poky/meta \<b=
-r>&nbsp;/home/aida/poky/meta-yocto \<br>&nbsp;/home/aida/poky/meta-oracle-j=
-ava \<br>&nbsp;/home/aida/poky/meta-yocto-bsp \<br>&nbsp;"<br><br>And my lo=
-cal.conf :</blockquote><br><br><blockquote> LICENSE_FLAGS_WHITELIST +=3D "o=
-racle_java"<br><br>I can't find where this No bb files matched BBFILE_PATTE=
-RN warning</blockquote><br>came from, neither then the licence problem...<b=
-r><br>Thank you !</div></body></html>
-
-------=_Part_2393910_899692734.1435742609448--
