@@ -1,36 +1,24 @@
-Return-Path: <eu@felipetonello.com>
-Received: from mail-wi0-f174.google.com (mail-wi0-f174.google.com
-	[209.85.212.174])
-	by mail.openembedded.org (Postfix) with ESMTP id 49E6275D89
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 034DC65CBD
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  6 Jul 2015 16:05:50 +0000 (UTC)
-Received: by wiga1 with SMTP id a1so233201105wig.0
+	Tue,  7 Jul 2015 01:33:49 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.15.1/8.15.1) with ESMTPS id t671XnT9006740
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 06 Jul 2015 09:05:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=V2iLYwYqU2fDQiLrXORVeIye9AVouD2c8LI7a5FQXLc=;
-	b=k6NTwghxeP3XJF/k/jI7R7tRgBEumSrFJ84/HTjmAhpdwCyvup3q64dDRh4wUAgDMF
-	6jeNExH4daSZXu5yLPaIKiHaW8rpBI8phxWB1wGP6vyh3eHZ41ITI9pYqwadSECkVzCM
-	G7wn/05bs7C6fv9uSsSLJ13YwwKM7lCjgSt/Eh5OmmfBV3mRoAaiZI9sKwlHxREh2iJf
-	1oIOT7wivl8VZqGP/9yLnr4qTXLkFQfZqSMKDH+WY/Mj15eXZ3tnamLxF8aPnPXzSLDN
-	+2A7LSDGeru4amwcN9jNQ2/70Bkr6mq6emjp6nWX5FwHyNBFw5tiLvdU0HBqw0JbmDI7
-	K0Yw==
-X-Gm-Message-State: ALoCoQlRhYZJOwUqWqT4aWg4hh7LxXk0PSh3jfdf9tayvVMF4mLXi6pnWjqCTLjgFmBRXreHRC0N
-X-Received: by 10.180.83.137 with SMTP id q9mr96991118wiy.68.1436198750826;
-	Mon, 06 Jul 2015 09:05:50 -0700 (PDT)
-Received: from felipe-fedora.localdomain ([81.145.202.106])
-	by mx.google.com with ESMTPSA id
-	ju2sm29351745wid.12.2015.07.06.09.05.49
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 06 Jul 2015 09:05:49 -0700 (PDT)
-From: eu@felipetonello.com
-To: bitbake-devel@lists.openembedded.org
-Date: Mon,  6 Jul 2015 17:05:43 +0100
-Message-Id: <1436198743-29337-1-git-send-email-eu@felipetonello.com>
-X-Mailer: git-send-email 2.1.0
-Subject: [PATCH] fetch2: Checkout to correct ref begore init and update submodules
+	Mon, 6 Jul 2015 18:33:50 -0700 (PDT)
+Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.224.2;
+	Mon, 6 Jul 2015 18:33:49 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Mon, 6 Jul 2015 18:33:48 -0700
+Message-ID: <cover.1436232786.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 1.7.9.5
+MIME-Version: 1.0
+Subject: [PATCH 0/1] git.py: create a branch when checkout
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,31 +31,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 06 Jul 2015 16:05:51 -0000
+X-List-Received-Date: Tue, 07 Jul 2015 01:33:50 -0000
+Content-Type: text/plain
 
-From: "Felipe F. Tonello" <eu@felipetonello.com>
+The following changes since commit 7a402301c9c8fa9a5262d6d29b2ea199ff0dc07a:
 
-This is nessary when specified branch with submodules is different then
-default (master) branch.
+  distro/package_regex.inc: Use GNOME_STABLE rule for vala (2015-07-02 23:08:41 +0100)
 
-Signed-off-by: Felipe F. Tonello <eu@felipetonello.com>
----
- lib/bb/fetch2/gitsm.py | 1 +
- 1 file changed, 1 insertion(+)
+are available in the git repository at:
 
-diff --git a/lib/bb/fetch2/gitsm.py b/lib/bb/fetch2/gitsm.py
-index c125cff..0392e48 100644
---- a/lib/bb/fetch2/gitsm.py
-+++ b/lib/bb/fetch2/gitsm.py
-@@ -109,6 +109,7 @@ class GitSM(Git):
-         runfetchcmd("sed " + gitdir + "/config -i -e 's/bare.*=.*true/bare = false/'", d)
-         os.chdir(tmpclonedir)
-         runfetchcmd(ud.basecmd + " reset --hard", d)
-+        runfetchcmd(ud.basecmd + " checkout " + ud.revisions[ud.names[0]], d)
-         runfetchcmd(ud.basecmd + " submodule init", d)
-         runfetchcmd(ud.basecmd + " submodule update", d)
-         self._set_relative_paths(tmpclonedir)
+  git://git.pokylinux.org/poky-contrib rbt/git
+  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=rbt/git
+
+Robert Yang (1):
+  git.py: create a branch when checkout
+
+ bitbake/lib/bb/fetch2/git.py |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
 -- 
-2.1.0
+1.7.9.5
 
 
