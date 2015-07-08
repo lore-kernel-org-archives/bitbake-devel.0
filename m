@@ -1,31 +1,34 @@
 Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id B75B175D8A
+	by mail.openembedded.org (Postfix) with ESMTP id 06ED775D1E
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  8 Jul 2015 14:59:21 +0000 (UTC)
+	Wed,  8 Jul 2015 14:59:25 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t68ExKSi026617; Wed, 8 Jul 2015 15:59:20 +0100
+	t68ExMv2026633; Wed, 8 Jul 2015 15:59:24 +0100
+X-Amavis-Alert: BAD HEADER SECTION, Duplicate header field: "References"
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 8esM13Zv_yx2; Wed,  8 Jul 2015 15:59:20 +0100 (BST)
+	with LMTP id T7WaSUoak2rl; Wed,  8 Jul 2015 15:59:24 +0100 (BST)
 Received: from ted (5751f4a1.skybroadband.com [87.81.244.161])
 	(authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t68ExJrs026589
+	t68ExMaw026601
 	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 8 Jul 2015 15:59:20 +0100
+	Wed, 8 Jul 2015 15:59:23 +0100
 Received: from richard by ted with local (Exim 4.84_RC1)
 	(envelope-from <richard@dan.rpsys.net>)
-	id 1ZCqoc-0004S9-I7; Wed, 08 Jul 2015 15:59:14 +0100
+	id 1ZCqof-0004SO-CV; Wed, 08 Jul 2015 15:59:17 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  8 Jul 2015 15:58:55 +0100
-Message-Id: <f838666705583fb6c9bb9b39623e24b0e5ea2de7.1436367362.git.richard.purdie@linuxfoundation.org>
+Date: Wed,  8 Jul 2015 15:58:58 +0100
+Message-Id: <6cb692584faf1c03f6b175dcc7eac8b46be8a635.1436367362.git.richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.1.0
+In-Reply-To: <f838666705583fb6c9bb9b39623e24b0e5ea2de7.1436367362.git.richard.purdie@linuxfoundation.org>
+References: <f838666705583fb6c9bb9b39623e24b0e5ea2de7.1436367362.git.richard.purdie@linuxfoundation.org>
 In-Reply-To: <cover.1436367362.git.richard.purdie@linuxfoundation.org>
 References: <cover.1436367362.git.richard.purdie@linuxfoundation.org>
-Subject: [PATCH 01/16] data_smart: Defer append/prepend handling
+Subject: [PATCH 04/16] data_smart: Fix cache clearance problems
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,66 +41,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 08 Jul 2015 14:59:25 -0000
+X-List-Received-Date: Wed, 08 Jul 2015 14:59:26 -0000
+
+These write operations should clear the expand cache since they can
+influence returned variable values but currently do not. Fix this.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- lib/bb/data_smart.py | 27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
+ lib/bb/data_smart.py | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 7bb7b4a..b433489 100644
+index aefc0b9..eee5827 100644
 --- a/lib/bb/data_smart.py
 +++ b/lib/bb/data_smart.py
-@@ -429,12 +429,13 @@ class DataSmart(MutableMapping):
-                             continue
+@@ -536,6 +536,7 @@ class DataSmart(MutableMapping):
+                 self._seen_overrides[override].remove(var)
  
-                         if op == "_append":
--                            sval = self.getVar(append, False) or ""
--                            sval += a
--                            self.setVar(append, sval)
-+                            apps = self.getVarFlag(append, "_appendactive", False) or []
-+                            apps.extend([a])
-+                            self.setVarFlag(append, "_appendactive", apps, ignore=True)
-                         elif op == "_prepend":
--                            sval = a + (self.getVar(append, False) or "")
--                            self.setVar(append, sval)
-+                            prepends = self.getVarFlag(append, "_prependactive", False) or []
-+                            prepends.extend([a])
-+                            self.setVarFlag(append, "_prependactive", prepends, ignore=True)
-                         elif op == "_remove":
-                             removes = self.getVarFlag(append, "_removeactive", False) or []
-                             removes.extend(a.split())
-@@ -507,6 +508,11 @@ class DataSmart(MutableMapping):
+     def setVarFlag(self, var, flag, value, **loginfo):
++        self.expand_cache = {}
+         if 'op' not in loginfo:
+             loginfo['op'] = "set"
+         loginfo['flag'] = flag
+@@ -624,6 +625,7 @@ class DataSmart(MutableMapping):
+         return value
+ 
+     def delVarFlag(self, var, flag, **loginfo):
++        self.expand_cache = {}
+         local_var = self._findVar(var)
+         if not local_var:
+             return
+@@ -653,6 +655,7 @@ class DataSmart(MutableMapping):
+         self.setVarFlag(var, flag, newvalue, ignore=True)
+ 
+     def setVarFlags(self, var, flags, **loginfo):
++        self.expand_cache = {}
+         infer_caller_details(loginfo)
+         if not var in self.dict:
+             self._makeShadowCopy(var)
+@@ -682,6 +685,7 @@ class DataSmart(MutableMapping):
+ 
+ 
+     def delVarFlags(self, var, **loginfo):
++        self.expand_cache = {}
          if not var in self.dict:
              self._makeShadowCopy(var)
  
-+        if "_appendactive" in self.dict[var]:
-+            del self.dict[var]["_appendactive"]
-+        if "_prependactive" in self.dict[var]:
-+            del self.dict[var]["_prependactive"]
-+
-         # more cookies for the cookie monster
-         if '_' in var:
-             self._setvar_update_overrides(var)
-@@ -612,6 +618,17 @@ class DataSmart(MutableMapping):
-                 value = copy.copy(local_var[flag])
-             elif flag == "_content" and "_defaultval" in local_var and not noweakdefault:
-                 value = copy.copy(local_var["_defaultval"])
-+
-+        if flag == "_content" and local_var is not None and "_appendactive" in local_var:
-+            if not value:
-+                value = ""
-+            for r in local_var["_appendactive"]:
-+                value = value + r
-+        if flag == "_content" and local_var is not None and "_prependactive" in local_var:
-+            if not value:
-+                value = ""
-+            for r in local_var["_prependactive"]:
-+                value = r + value
-         if expand and value:
-             # Only getvar (flag == _content) hits the expand cache
-             cachename = None
 -- 
 2.1.0
 
