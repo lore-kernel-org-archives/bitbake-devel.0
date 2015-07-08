@@ -1,34 +1,29 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id CA72D73B10
+	by mail.openembedded.org (Postfix) with ESMTP id 121D073B10
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  8 Jul 2015 08:28:24 +0000 (UTC)
+	Wed,  8 Jul 2015 14:59:09 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t688SLaE021899; Wed, 8 Jul 2015 09:28:21 +0100
+	t68Ex8aI026575; Wed, 8 Jul 2015 15:59:08 +0100
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id C4Y7H4fu00AU; Wed,  8 Jul 2015 09:28:20 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	with LMTP id Ddhe8hOIltrZ; Wed,  8 Jul 2015 15:59:08 +0100 (BST)
+Received: from ted (5751f4a1.skybroadband.com [87.81.244.161])
+	(authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t688S5vo021895
+	t68Ex48u026569
 	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 8 Jul 2015 09:28:17 +0100
-Message-ID: <1436344085.27597.207.camel@linuxfoundation.org>
+	Wed, 8 Jul 2015 15:59:05 +0100
+Received: from richard by ted with local (Exim 4.84_RC1)
+	(envelope-from <richard@dan.rpsys.net>)
+	id 1ZCqoM-0004R9-T3; Wed, 08 Jul 2015 15:58:58 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Robert Yang <liezhi.yang@windriver.com>
-Date: Wed, 08 Jul 2015 09:28:05 +0100
-In-Reply-To: <559C7CD3.5080100@windriver.com>
-References: <cover.1436232786.git.liezhi.yang@windriver.com>
-	<fc82e0723a4877cdcd92e97cd2cf19f4a5d0ff70.1436232786.git.liezhi.yang@windriver.com>
-	<1436282262.27597.183.camel@linuxfoundation.org>
-	<10060998.dTQVzXkhxA@peggleto-mobl.ger.corp.intel.com>
-	<559C7CD3.5080100@windriver.com>
-X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
-Mime-Version: 1.0
-Cc: Paul Eggleton <paul.eggleton@linux.intel.com>,
-	bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] git.py: create a branch when checkout
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  8 Jul 2015 15:58:55 +0100
+Message-Id: <cover.1436367362.git.richard.purdie@linuxfoundation.org>
+X-Mailer: git-send-email 2.1.0
+Subject: [PATCH 00/16] update_data() removal patchset
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,66 +36,70 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 08 Jul 2015 08:28:26 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 08 Jul 2015 14:59:10 -0000
 
-On Wed, 2015-07-08 at 09:28 +0800, Robert Yang wrote:
-> 
-> On 07/08/2015 12:56 AM, Paul Eggleton wrote:
-> > On Tuesday 07 July 2015 16:17:42 Richard Purdie wrote:
-> >> On Mon, 2015-07-06 at 18:33 -0700, Robert Yang wrote:
-> >>> Create a branch named oebuild_SRCREV when checkout the source, this
-> >>> makes debug easier than "(no branch)" when look into the source.
-> >>>
-> >>> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> >>> ---
-> >>>
-> >>>   bitbake/lib/bb/fetch2/git.py |    3 ++-
-> >>>   1 file changed, 2 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-> >>> index 2e53882..12087dd 100644
-> >>> --- a/bitbake/lib/bb/fetch2/git.py
-> >>> +++ b/bitbake/lib/bb/fetch2/git.py
-> >>>
-> >>> @@ -280,7 +280,8 @@ class Git(FetchMethod):
-> >>>                   runfetchcmd("%s read-tree %s%s" % (ud.basecmd,
-> >>>                   ud.revisions[ud.names[0]], readpathspec), d)
-> >>>                   runfetchcmd("%s checkout-index -q -f -a" % ud.basecmd,
-> >>>                   d)
-> >>>
-> >>>               else:
-> >>> -                runfetchcmd("%s checkout %s" % (ud.basecmd,
-> >>> ud.revisions[ud.names[0]]), d) +                runfetchcmd("%s checkout
-> >>> %s -b oebuild_%s" % (ud.basecmd, \ +
-> >>> ud.revisions[ud.names[0]], ud.revisions[ud.names[0]]), d)>
-> >>>           return True
-> >>
-> >> Would it not make more sense to set the branch to the upstream branch
-> >> name here?
-> >
-> > I'd go one step further, use the upstream branch name and also set it to track
-> > the remote branch as well.
-> 
-> Hi Paul and RP,
-> 
-> I'm afraid that the ud.revisions[ud.names[0]] which is SRCREV may
-> not point to an upstream branch or tag, please ?
+Removing the need for finalization or update_data is something we've
+idly thought about for a long time. Basically, the whole idea of a
+specific finalization phase to the data store causes a lof of issues and
+horrible corner cases. For example, should bitbake call update_data,
+then expandKeys, or the other way around? Or should we keep calling
+update_data until nothing changes?
 
-ud.revisions might not, but ud.branches should. I think you want
-something like:
+Through careful thought of some operations and working around the corner
+case problems, we've avoided most of the issues however there are some
+things we keep observing:
 
-branchcmd = ""
-if not ud.nobranch:
-    branchcmd = "-b %s" % ud.branches[ud.names[0]]
-runfetchcmd("%s checkout %s %s" % (ud.basecmd, ud.revisions[ud.names[0]], branchcmd), d)
+* We keep needing "expanded" data stores in different parts of the 
+  system alongside their unexpanded versions
+* Few people understand why/when exactly they should call update_data()
+* Its near impossible to set PREFERRED_PROVIDERS of recipes which are 
+  dynamically named (gcc-cross-${TARGET_ARCH}) along with overrides. 
+  This is something meta-darwin/mingw/baremetal could really use.
 
-However as Paul notes, setting it to track the upstream remote branch
-would also be ideal.
+The alternative is a datastore which dynamically adjusts when anything
+changes so that the work is done at getVar time rather than precaching
+things at update_data time.
 
-Cheers,
+What is missing from the branch as yet is removal of the "expanded" data
+stores from use within bitbake and starting to remove the update_data
+calls (which are now just empty calls). This can happen once the code
+is merged/stablising.
 
-Richard
+The following changes since commit f883cf240266ee7be2cbd8971a8164cf4df9e372:
+
+  cooker: Improve DATE/TIME handling (2015-07-08 00:06:01 +0100)
+
+are available in the git repository at:
+
+  git://git.openembedded.org/bitbake noupdatedata
+  http://cgit.openembedded.org/cgit.cgi/bitbake/log/?h=noupdatedata
+
+Richard Purdie (16):
+  data_smart: Defer append/prepend handling
+  data_smart: Remove need for update_data calls
+  data_smart: Improve override handling
+  data_smart: Fix cache clearance problems
+  data_smart: Cache overrides and fix data store
+  data_smart: Move override handling to getVar
+  parse/ast/data_smart: Add parsing flag to getVar/setVar
+  data_smart: VariableHistory: Ignore override duplicates and overlap
+    with CoW functions
+  data_smart: Seperate out the override cache
+  data_smart: Tweak OVERRIDES value cache for performance
+  data_smart: Improve override recursion handling
+  data_smart: Cache set(self.overrides)
+  data_smart: Fix keys() missing overrides
+  data_smart: Fix data expansion cache issues
+  data_smart: Fix appendVar/prependVar
+  tests/data: Add new data tests
+
+ lib/bb/data_smart.py  | 337 ++++++++++++++++++++++++++++++--------------------
+ lib/bb/parse/ast.py   |  14 +--
+ lib/bb/tests/data.py  |  47 +++++++
+ lib/bb/tests/parse.py |  46 +++++++
+ 4 files changed, 306 insertions(+), 138 deletions(-)
+
+-- 
+2.1.0
 
 
