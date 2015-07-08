@@ -1,23 +1,23 @@
 Return-Path: <anibal.limon@linux.intel.com>
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 74A5D65CBD
+	by mail.openembedded.org (Postfix) with ESMTP id C50AF607A5
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed,  8 Jul 2015 23:32:15 +0000 (UTC)
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by orsmga103.jf.intel.com with ESMTP; 08 Jul 2015 16:32:16 -0700
+	by orsmga103.jf.intel.com with ESMTP; 08 Jul 2015 16:32:15 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,435,1432623600"; d="scan'208";a="521077043"
+X-IronPort-AV: E=Sophos;i="5.15,435,1432623600"; d="scan'208";a="521077034"
 Received: from alimon-thinkpad-w540.zpn.intel.com ([10.219.4.155])
-	by FMSMGA003.fm.intel.com with ESMTP; 08 Jul 2015 16:32:15 -0700
+	by FMSMGA003.fm.intel.com with ESMTP; 08 Jul 2015 16:32:14 -0700
 From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  8 Jul 2015 18:34:18 -0500
-Message-Id: <1436398461-26014-5-git-send-email-anibal.limon@linux.intel.com>
+Date: Wed,  8 Jul 2015 18:34:16 -0500
+Message-Id: <1436398461-26014-3-git-send-email-anibal.limon@linux.intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1436398461-26014-1-git-send-email-anibal.limon@linux.intel.com>
 References: <1436398461-26014-1-git-send-email-anibal.limon@linux.intel.com>
 MIME-Version: 1.0
-Subject: [PATCHv4 4/7] tests/fetch.py: Add FetchCheckStatusTest tests.
+Subject: [PATCHv4 2/7] fetch2: Add fetch parameter to checkstatus
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,67 +30,143 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 08 Jul 2015 23:32:16 -0000
+X-List-Received-Date: Wed, 08 Jul 2015 23:32:18 -0000
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add tests for checkstatus method using http with/without
-connection cache.
-
-[YOCTO #7796]
+In order to pass connection cache object to checkstatus function
+add fetch parameter.
 
 Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
 ---
- lib/bb/tests/fetch.py | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ lib/bb/fetch2/__init__.py | 20 ++++++++++----------
+ lib/bb/fetch2/git.py      |  2 +-
+ lib/bb/fetch2/local.py    |  2 +-
+ lib/bb/fetch2/wget.py     |  2 +-
+ 4 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
-index 561650e..1132af5 100644
---- a/lib/bb/tests/fetch.py
-+++ b/lib/bb/tests/fetch.py
-@@ -710,3 +710,42 @@ class FetchMethodTest(FetcherTest):
-                 verstring = ud.method.latest_versionstring(ud, self.d)
-                 r = bb.utils.vercmp_string(v, verstring)
-                 self.assertTrue(r == -1 or r == 0, msg="Package %s, version: %s <= %s" % (k[0], v, verstring))
-+
-+
-+class FetchCheckStatusTest(FetcherTest):
-+    test_wget_uris = ["http://www.cups.org/software/1.7.2/cups-1.7.2-source.tar.bz2",
-+                      "http://www.cups.org/software/ipptool/ipptool-20130731-linux-ubuntu-i686.tar.gz",
-+                      "http://www.cups.org/",
-+                      "http://downloads.yoctoproject.org/releases/sato/sato-engine-0.1.tar.gz",
-+                      "http://downloads.yoctoproject.org/releases/sato/sato-engine-0.2.tar.gz",
-+                      "http://downloads.yoctoproject.org/releases/sato/sato-engine-0.3.tar.gz",
-+                      "http://downloads.yoctoproject.org/releases/opkg/opkg-0.1.7.tar.gz",
-+                      "http://downloads.yoctoproject.org/releases/opkg/opkg-0.3.0.tar.gz"]
-+
-+    if os.environ.get("BB_SKIP_NETTESTS") == "yes":
-+        print("Unset BB_SKIP_NETTESTS to run network tests")
-+    else:
-+
-+        def test_wget_checkstatus(self):
-+            fetch = bb.fetch2.Fetch(self.test_wget_uris, self.d)
-+            for u in self.test_wget_uris:
-+                ud = fetch.ud[u]
-+                m = ud.method
-+                ret = m.checkstatus(fetch, ud, self.d)
-+                self.assertTrue(ret, msg="URI %s, can't check status" % (u))
-+
-+
-+        def test_wget_checkstatus_connection_cache(self):
-+            from bb.fetch2 import FetchConnectionCache
-+
-+            connection_cache = FetchConnectionCache()
-+            fetch = bb.fetch2.Fetch(self.test_wget_uris, self.d,
-+                        connection_cache = connection_cache)
-+
-+            for u in self.test_wget_uris:
-+                ud = fetch.ud[u]
-+                m = ud.method
-+                ret = m.checkstatus(fetch, ud, self.d)
-+                self.assertTrue(ret, msg="URI %s, can't check status" % (u))
-+
-+            connection_cache.close_connections()
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 7fd9ec7..8d0221d 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -907,12 +907,12 @@ def rename_bad_checksum(ud, suffix):
+     bb.utils.movefile(ud.localpath, new_localpath)
+ 
+ 
+-def try_mirror_url(origud, ud, ld, check = False):
++def try_mirror_url(fetch, origud, ud, ld, check = False):
+     # Return of None or a value means we're finished
+     # False means try another url
+     try:
+         if check:
+-            found = ud.method.checkstatus(ud, ld)
++            found = ud.method.checkstatus(fetch, ud, ld)
+             if found:
+                 return found
+             return False
+@@ -975,7 +975,7 @@ def try_mirror_url(origud, ud, ld, check = False):
+             pass
+         return False
+ 
+-def try_mirrors(d, origud, mirrors, check = False):
++def try_mirrors(fetch, d, origud, mirrors, check = False):
+     """
+     Try to use a mirrored version of the sources.
+     This method will be automatically called before the fetchers go.
+@@ -989,7 +989,7 @@ def try_mirrors(d, origud, mirrors, check = False):
+     uris, uds = build_mirroruris(origud, mirrors, ld)
+ 
+     for index, uri in enumerate(uris):
+-        ret = try_mirror_url(origud, uds[index], ld, check)
++        ret = try_mirror_url(fetch, origud, uds[index], ld, check)
+         if ret != False:
+             return ret
+     return None
+@@ -1473,7 +1473,7 @@ class FetchMethod(object):
+         """
+         return True
+ 
+-    def checkstatus(self, urldata, d):
++    def checkstatus(self, fetch, urldata, d):
+         """
+         Check the status of a URL
+         Assumes localpath was called first
+@@ -1577,7 +1577,7 @@ class Fetch(object):
+                 elif m.try_premirror(ud, self.d):
+                     logger.debug(1, "Trying PREMIRRORS")
+                     mirrors = mirror_from_string(self.d.getVar('PREMIRRORS', True))
+-                    localpath = try_mirrors(self.d, ud, mirrors, False)
++                    localpath = try_mirrors(self, self.d, ud, mirrors, False)
+ 
+                 if premirroronly:
+                     self.d.setVar("BB_NO_NETWORK", "1")
+@@ -1616,7 +1616,7 @@ class Fetch(object):
+                         m.clean(ud, self.d)
+                         logger.debug(1, "Trying MIRRORS")
+                         mirrors = mirror_from_string(self.d.getVar('MIRRORS', True))
+-                        localpath = try_mirrors (self.d, ud, mirrors)
++                        localpath = try_mirrors(self, self.d, ud, mirrors)
+ 
+                 if not localpath or ((not os.path.exists(localpath)) and localpath.find("*") == -1):
+                     if firsterr:
+@@ -1648,15 +1648,15 @@ class Fetch(object):
+             logger.debug(1, "Testing URL %s", u)
+             # First try checking uri, u, from PREMIRRORS
+             mirrors = mirror_from_string(self.d.getVar('PREMIRRORS', True))
+-            ret = try_mirrors(self.d, ud, mirrors, True)
++            ret = try_mirrors(self, self.d, ud, mirrors, True)
+             if not ret:
+                 # Next try checking from the original uri, u
+                 try:
+-                    ret = m.checkstatus(ud, self.d)
++                    ret = m.checkstatus(self, ud, self.d)
+                 except:
+                     # Finally, try checking uri, u, from MIRRORS
+                     mirrors = mirror_from_string(self.d.getVar('MIRRORS', True))
+-                    ret = try_mirrors(self.d, ud, mirrors, True)
++                    ret = try_mirrors(self, self.d, ud, mirrors, True)
+ 
+             if not ret:
+                 raise FetchError("URL %s doesn't work" % u, u)
+diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
+index 2e53882..0abd679 100644
+--- a/lib/bb/fetch2/git.py
++++ b/lib/bb/fetch2/git.py
+@@ -423,7 +423,7 @@ class Git(FetchMethod):
+         else:
+             return True, str(rev)
+ 
+-    def checkstatus(self, ud, d):
++    def checkstatus(self, fetch, ud, d):
+         try:
+             self._lsremote(ud, d, "")
+             return True
+diff --git a/lib/bb/fetch2/local.py b/lib/bb/fetch2/local.py
+index 0785236..2d921f7 100644
+--- a/lib/bb/fetch2/local.py
++++ b/lib/bb/fetch2/local.py
+@@ -112,7 +112,7 @@ class Local(FetchMethod):
+ 
+         return True
+ 
+-    def checkstatus(self, urldata, d):
++    def checkstatus(self, fetch, urldata, d):
+         """
+         Check the status of the url
+         """
+diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
+index 162a6bd..abacbcf 100644
+--- a/lib/bb/fetch2/wget.py
++++ b/lib/bb/fetch2/wget.py
+@@ -100,7 +100,7 @@ class Wget(FetchMethod):
+ 
+         return True
+ 
+-    def checkstatus(self, ud, d):
++    def checkstatus(self, fetch, ud, d):
+ 
+         uri = ud.url.split(";")[0]
+         fetchcmd = self.basecmd + " --spider '%s'" % uri
 -- 
 1.9.1
 
