@@ -1,29 +1,30 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id E3B2875D13
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 2A3FC73B10
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  7 Jul 2015 23:12:21 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t67NCIum004408; Wed, 8 Jul 2015 00:12:18 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id RHFFbtZjPCYs; Wed,  8 Jul 2015 00:12:18 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t67NC5n6004403
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 8 Jul 2015 00:12:17 +0100
-Message-ID: <1436310725.27597.200.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: =?ISO-8859-1?Q?An=EDbal_Lim=F3n?= <anibal.limon@linux.intel.com>
-Date: Wed, 08 Jul 2015 00:12:05 +0100
-In-Reply-To: <1435956027-26996-1-git-send-email-anibal.limon@linux.intel.com>
-References: <1435956027-26996-1-git-send-email-anibal.limon@linux.intel.com>
-X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
-Mime-Version: 1.0
+	Wed,  8 Jul 2015 01:28:55 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail1.windriver.com (8.15.1/8.15.1) with ESMTPS id t681SrAv005176
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Tue, 7 Jul 2015 18:28:53 -0700 (PDT)
+Received: from [128.224.162.200] (128.224.162.200) by ALA-HCB.corp.ad.wrs.com
+	(147.11.189.41) with Microsoft SMTP Server id 14.3.224.2;
+	Tue, 7 Jul 2015 18:28:53 -0700
+Message-ID: <559C7CD3.5080100@windriver.com>
+Date: Wed, 8 Jul 2015 09:28:51 +0800
+From: Robert Yang <liezhi.yang@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux i686;
+	rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+MIME-Version: 1.0
+To: Paul Eggleton <paul.eggleton@linux.intel.com>
+References: <cover.1436232786.git.liezhi.yang@windriver.com>
+	<fc82e0723a4877cdcd92e97cd2cf19f4a5d0ff70.1436232786.git.liezhi.yang@windriver.com>
+	<1436282262.27597.183.camel@linuxfoundation.org>
+	<10060998.dTQVzXkhxA@peggleto-mobl.ger.corp.intel.com>
+In-Reply-To: <10060998.dTQVzXkhxA@peggleto-mobl.ger.corp.intel.com>
 Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/2] cooker.py: Close lock file and watcher fds when end.
+Subject: Re: [PATCH 1/1] git.py: create a branch when checkout
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,42 +37,57 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 07 Jul 2015 23:12:24 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Wed, 08 Jul 2015 01:28:56 -0000
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 2015-07-03 at 15:40 -0500, Aníbal Limón wrote:
-> When run cooker inside loop it reaches OS max fd's causing
-> an exception.
-> 
-> Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
-> ---
->  lib/bb/cooker.py | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-> index f31bca6..abe8a52 100644
-> --- a/lib/bb/cooker.py
-> +++ b/lib/bb/cooker.py
-> @@ -1432,6 +1432,9 @@ class BBCooker:
->          if self.state in (state.shutdown, state.forceshutdown, state.error):
->              if hasattr(self.parser, 'shutdown'):
->                  self.parser.shutdown(clean=False, force = True)
-> +            self.configwatcher.close()
-> +            self.watcher.close()
-> +            self.lock.close()
->              raise bb.BBHandledException()
->  
->          if self.state != state.parsing:
 
-Burying this cleanup into the updateCache function seems wrong. The
-updateCache call as you use it in tinfoil highlights how odd that is.
 
-We really need a better shutdown mechanism of cooker. It'll be more
-invasive to the codebase but better in the long run I think...
+On 07/08/2015 12:56 AM, Paul Eggleton wrote:
+> On Tuesday 07 July 2015 16:17:42 Richard Purdie wrote:
+>> On Mon, 2015-07-06 at 18:33 -0700, Robert Yang wrote:
+>>> Create a branch named oebuild_SRCREV when checkout the source, this
+>>> makes debug easier than "(no branch)" when look into the source.
+>>>
+>>> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+>>> ---
+>>>
+>>>   bitbake/lib/bb/fetch2/git.py |    3 ++-
+>>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+>>> index 2e53882..12087dd 100644
+>>> --- a/bitbake/lib/bb/fetch2/git.py
+>>> +++ b/bitbake/lib/bb/fetch2/git.py
+>>>
+>>> @@ -280,7 +280,8 @@ class Git(FetchMethod):
+>>>                   runfetchcmd("%s read-tree %s%s" % (ud.basecmd,
+>>>                   ud.revisions[ud.names[0]], readpathspec), d)
+>>>                   runfetchcmd("%s checkout-index -q -f -a" % ud.basecmd,
+>>>                   d)
+>>>
+>>>               else:
+>>> -                runfetchcmd("%s checkout %s" % (ud.basecmd,
+>>> ud.revisions[ud.names[0]]), d) +                runfetchcmd("%s checkout
+>>> %s -b oebuild_%s" % (ud.basecmd, \ +
+>>> ud.revisions[ud.names[0]], ud.revisions[ud.names[0]]), d)>
+>>>           return True
+>>
+>> Would it not make more sense to set the branch to the upstream branch
+>> name here?
+>
+> I'd go one step further, use the upstream branch name and also set it to track
+> the remote branch as well.
 
-Cheers,
+Hi Paul and RP,
 
-Richard
+I'm afraid that the ud.revisions[ud.names[0]] which is SRCREV may
+not point to an upstream branch or tag, please ?
 
+// Robert
+
+>
+> Cheers,
+> Paul
+>
 
