@@ -1,29 +1,34 @@
 Return-Path: <richard@rpsys.net>
 Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 121D073B10
+	by mail.openembedded.org (Postfix) with ESMTP id B675475D1E
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  8 Jul 2015 14:59:09 +0000 (UTC)
+	Wed,  8 Jul 2015 14:59:23 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t68Ex8aI026575; Wed, 8 Jul 2015 15:59:08 +0100
+	t68ExMv1026633; Wed, 8 Jul 2015 15:59:22 +0100
+X-Amavis-Alert: BAD HEADER SECTION, Duplicate header field: "References"
 Received: from dan.rpsys.net ([127.0.0.1])
 	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id Ddhe8hOIltrZ; Wed,  8 Jul 2015 15:59:08 +0100 (BST)
+	with LMTP id 9tQNCNmMzU2r; Wed,  8 Jul 2015 15:59:22 +0100 (BST)
 Received: from ted (5751f4a1.skybroadband.com [87.81.244.161])
 	(authenticated bits=0)
 	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t68Ex48u026569
+	t68ExKAV026599
 	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 8 Jul 2015 15:59:05 +0100
+	Wed, 8 Jul 2015 15:59:21 +0100
 Received: from richard by ted with local (Exim 4.84_RC1)
 	(envelope-from <richard@dan.rpsys.net>)
-	id 1ZCqoM-0004R9-T3; Wed, 08 Jul 2015 15:58:58 +0100
+	id 1ZCqod-0004SE-NH; Wed, 08 Jul 2015 15:59:15 +0100
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  8 Jul 2015 15:58:55 +0100
-Message-Id: <cover.1436367362.git.richard.purdie@linuxfoundation.org>
+Date: Wed,  8 Jul 2015 15:58:56 +0100
+Message-Id: <0156fb06d6c0e2a1784d768b8295a2914ff6b974.1436367362.git.richard.purdie@linuxfoundation.org>
 X-Mailer: git-send-email 2.1.0
-Subject: [PATCH 00/16] update_data() removal patchset
+In-Reply-To: <f838666705583fb6c9bb9b39623e24b0e5ea2de7.1436367362.git.richard.purdie@linuxfoundation.org>
+References: <f838666705583fb6c9bb9b39623e24b0e5ea2de7.1436367362.git.richard.purdie@linuxfoundation.org>
+In-Reply-To: <cover.1436367362.git.richard.purdie@linuxfoundation.org>
+References: <cover.1436367362.git.richard.purdie@linuxfoundation.org>
+Subject: [PATCH 02/16] data_smart: Remove need for update_data calls
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,69 +41,101 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 08 Jul 2015 14:59:10 -0000
+X-List-Received-Date: Wed, 08 Jul 2015 14:59:25 -0000
 
-Removing the need for finalization or update_data is something we've
-idly thought about for a long time. Basically, the whole idea of a
-specific finalization phase to the data store causes a lof of issues and
-horrible corner cases. For example, should bitbake call update_data,
-then expandKeys, or the other way around? Or should we keep calling
-update_data until nothing changes?
+Move the update_data functionality into internal data store operations
+so the main finalize (update_data) call is a nop.
 
-Through careful thought of some operations and working around the corner
-case problems, we've avoided most of the issues however there are some
-things we keep observing:
+To make this work we need to call the internal finalization function
+whenever OVERRIDES is changed to ensure values get updated correctly.
 
-* We keep needing "expanded" data stores in different parts of the 
-  system alongside their unexpanded versions
-* Few people understand why/when exactly they should call update_data()
-* Its near impossible to set PREFERRED_PROVIDERS of recipes which are 
-  dynamically named (gcc-cross-${TARGET_ARCH}) along with overrides. 
-  This is something meta-darwin/mingw/baremetal could really use.
+This has performance issues but the subsequant patches look into this.
 
-The alternative is a datastore which dynamically adjusts when anything
-changes so that the work is done at getVar time rather than precaching
-things at update_data time.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+---
+ lib/bb/data_smart.py | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-What is missing from the branch as yet is removal of the "expanded" data
-stores from use within bitbake and starting to remove the update_data
-calls (which are now just empty calls). This can happen once the code
-is merged/stablising.
-
-The following changes since commit f883cf240266ee7be2cbd8971a8164cf4df9e372:
-
-  cooker: Improve DATE/TIME handling (2015-07-08 00:06:01 +0100)
-
-are available in the git repository at:
-
-  git://git.openembedded.org/bitbake noupdatedata
-  http://cgit.openembedded.org/cgit.cgi/bitbake/log/?h=noupdatedata
-
-Richard Purdie (16):
-  data_smart: Defer append/prepend handling
-  data_smart: Remove need for update_data calls
-  data_smart: Improve override handling
-  data_smart: Fix cache clearance problems
-  data_smart: Cache overrides and fix data store
-  data_smart: Move override handling to getVar
-  parse/ast/data_smart: Add parsing flag to getVar/setVar
-  data_smart: VariableHistory: Ignore override duplicates and overlap
-    with CoW functions
-  data_smart: Seperate out the override cache
-  data_smart: Tweak OVERRIDES value cache for performance
-  data_smart: Improve override recursion handling
-  data_smart: Cache set(self.overrides)
-  data_smart: Fix keys() missing overrides
-  data_smart: Fix data expansion cache issues
-  data_smart: Fix appendVar/prependVar
-  tests/data: Add new data tests
-
- lib/bb/data_smart.py  | 337 ++++++++++++++++++++++++++++++--------------------
- lib/bb/parse/ast.py   |  14 +--
- lib/bb/tests/data.py  |  47 +++++++
- lib/bb/tests/parse.py |  46 +++++++
- 4 files changed, 306 insertions(+), 138 deletions(-)
-
+diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
+index b433489..77d0c61 100644
+--- a/lib/bb/data_smart.py
++++ b/lib/bb/data_smart.py
+@@ -298,6 +298,7 @@ class VariableHistory(object):
+ class DataSmart(MutableMapping):
+     def __init__(self, special = None, seen = None ):
+         self.dict = {}
++        self.overrides = []
+ 
+         if special is None:
+             special = COWDictBase.copy()
+@@ -354,11 +355,13 @@ class DataSmart(MutableMapping):
+     def expand(self, s, varname = None):
+         return self.expandWithRefs(s, varname).value
+ 
+-
+     def finalize(self, parent = False):
++        return
++
++    def internal_finalize(self, parent = False):
+         """Performs final steps upon the datastore, including application of overrides"""
+ 
+-        overrides = (self.getVar("OVERRIDES", True) or "").split(":") or []
++        self.overrides = (self.getVar("OVERRIDES", True) or "").split(":") or []
+         finalize_caller = {
+             'op': 'finalize',
+         }
+@@ -383,7 +386,7 @@ class DataSmart(MutableMapping):
+         # We only want to report finalization once per variable overridden.
+         finalizes_reported = {}
+ 
+-        for o in overrides:
++        for o in self.overrides:
+             # calculate '_'+override
+             l = len(o) + 1
+ 
+@@ -417,12 +420,15 @@ class DataSmart(MutableMapping):
+             if op in self._special_values:
+                 appends = self._special_values[op] or []
+                 for append in appends:
++                    self.handle_special_values(append, op)
++
++    def handle_special_values(self, append, op):
+                     keep = []
+                     for (a, o) in self.getVarFlag(append, op) or []:
+                         match = True
+                         if o:
+                             for o2 in o.split("_"):
+-                                if not o2 in overrides:
++                                if not o2 in self.overrides:
+                                     match = False
+                         if not match:
+                             keep.append((a ,o))
+@@ -502,6 +508,7 @@ class DataSmart(MutableMapping):
+             except KeyError:
+                 self._special_values[keyword] = set()
+                 self._special_values[keyword].add(base)
++            self.handle_special_values(base, keyword)
+ 
+             return
+ 
+@@ -521,6 +528,9 @@ class DataSmart(MutableMapping):
+         self.dict[var]["_content"] = value
+         self.varhistory.record(**loginfo)
+ 
++        if var == "OVERRIDES":
++            self.internal_finalize(True)
++
+     def _setvar_update_overrides(self, var):
+         # aka pay the cookie monster
+         override = var[var.rfind('_')+1:]
+@@ -733,6 +743,7 @@ class DataSmart(MutableMapping):
+         # we really want this to be a DataSmart...
+         data = DataSmart(seen=self._seen_overrides.copy(), special=self._special_values.copy())
+         data.dict["_data"] = self.dict
++        data.overrides = copy.copy(self.overrides)
+         data.varhistory = self.varhistory.copy()
+         data.varhistory.datasmart = data
+         data.inchistory = self.inchistory.copy()
 -- 
 2.1.0
 
