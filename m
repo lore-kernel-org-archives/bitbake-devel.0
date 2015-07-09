@@ -1,48 +1,27 @@
-Return-Path: <olof.johansson@axis.com>
-X-Greylist: delayed 522 seconds by postgrey-1.34 at layers.openembedded.org;
-	Thu, 09 Jul 2015 10:12:52 UTC
-Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
-	by mail.openembedded.org (Postfix) with ESMTP id 649656017E
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 7FD2675C49
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  9 Jul 2015 10:12:52 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bes.se.axis.com (Postfix) with ESMTP id 554632E452
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  9 Jul 2015 12:04:09 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
-Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id UIjnZhrRqCJ3 for <bitbake-devel@lists.openembedded.org>;
-	Thu,  9 Jul 2015 12:04:07 +0200 (CEST)
-Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by bes.se.axis.com (Postfix) with ESMTP id A84F22E439
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  9 Jul 2015 12:04:07 +0200 (CEST)
-Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id 861A8FB9
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  9 Jul 2015 12:04:07 +0200 (CEST)
-Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
-	by boulder.se.axis.com (Postfix) with ESMTP id 7924EA93
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  9 Jul 2015 12:04:07 +0200 (CEST)
-Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
-	by thoth.se.axis.com (Postfix) with ESMTP id 7733134005
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  9 Jul 2015 12:04:07 +0200 (CEST)
-Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
-	(10.0.5.74) with Microsoft SMTP Server id 8.3.342.0;
-	Thu, 9 Jul 2015 12:04:07 +0200
-Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id 328BC9C68B; 
-	Thu,  9 Jul 2015 12:04:07 +0200 (CEST)
-From: Olof Johansson <olof.johansson@axis.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 9 Jul 2015 12:04:07 +0200
-Message-ID: <1436436247-20509-1-git-send-email-olof.johansson@axis.com>
-X-Mailer: git-send-email 2.1.4
+	Thu,  9 Jul 2015 16:54:49 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga103.jf.intel.com with ESMTP; 09 Jul 2015 09:54:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.15,441,1432623600"; d="scan'208";a="761368124"
+Received: from lkpandey-mobl.gar.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.252.4.112])
+	by orsmga002.jf.intel.com with ESMTP; 09 Jul 2015 09:54:49 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Robert Yang <liezhi.yang@windriver.com>
+Date: Thu, 09 Jul 2015 17:54:48 +0100
+Message-ID: <4577144.KC5lOY8eR9@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.14.9 (Linux/4.0.6-200.fc21.x86_64; KDE/4.14.9; x86_64; ; )
+In-Reply-To: <f4363d0889b1e45cdbde18bd6ae94115f783b82f.1436426161.git.liezhi.yang@windriver.com>
+References: <cover.1436426161.git.liezhi.yang@windriver.com>
+	<f4363d0889b1e45cdbde18bd6ae94115f783b82f.1436426161.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH] fetch2/sftp: Set BatchMode=yes as argument to sftp
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/1] git.py: create a branch when checkout
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -55,32 +34,45 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 09 Jul 2015 10:12:53 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 09 Jul 2015 16:54:52 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Set BatchMode=yes instead of PasswordAuthentication=no. This will make
-sftp fail immediately, not only when SSH requires interactive
-authentication, but also on errors related to host key verifcation.
+On Thursday 09 July 2015 00:18:01 Robert Yang wrote:
+> * Create a branch and named as upstream branch when checkout source
+> * Set the branch to track remote branch.
+> 
+> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+> ---
+>  bitbake/lib/bb/fetch2/git.py |    7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+> index 2e53882..afa3d0a 100644
+> --- a/bitbake/lib/bb/fetch2/git.py
+> +++ b/bitbake/lib/bb/fetch2/git.py
+> @@ -279,8 +279,15 @@ class Git(FetchMethod):
+>              if subdir != "":
+>                  runfetchcmd("%s read-tree %s%s" % (ud.basecmd,
+> ud.revisions[ud.names[0]], readpathspec), d) runfetchcmd("%s checkout-index
+> -q -f -a" % ud.basecmd, d) 
+> +            elif not ud.nobranch:
+> +                branchname =  ud.branches[ud.names[0]]
+> +                runfetchcmd("%s checkout -B %s %s" % (ud.basecmd,
+> branchname, \ 
+> +                            ud.revisions[ud.names[0]]), d)
+> +                runfetchcmd("%s branch --set-upstream %s origin/%s" %
+> (ud.basecmd, branchname, \ 
+> +                            branchname), d)
 
-Signed-off-by: Olof Johansson <olof.johansson@axis.com>
----
- lib/bb/fetch2/sftp.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Doesn't git checkout support a --track option so we could do this in one 
+command rather than two?
 
-diff --git a/lib/bb/fetch2/sftp.py b/lib/bb/fetch2/sftp.py
-index 8ea4ef2..cb2f753 100644
---- a/lib/bb/fetch2/sftp.py
-+++ b/lib/bb/fetch2/sftp.py
-@@ -99,7 +99,7 @@ class SFTP(FetchMethod):
-         """Fetch urls"""
- 
-         urlo = URI(ud.url)
--        basecmd = 'sftp -oPasswordAuthentication=no'
-+        basecmd = 'sftp -oBatchMode=yes'
-         port = ''
-         if urlo.port:
-             port = '-P %d' % urlo.port
+Cheers,
+Paul
+
 -- 
-2.1.4
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
