@@ -1,26 +1,48 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id EAC686017E
+Return-Path: <olof.johansson@axis.com>
+X-Greylist: delayed 522 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 09 Jul 2015 10:12:52 UTC
+Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
+	by mail.openembedded.org (Postfix) with ESMTP id 649656017E
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  9 Jul 2015 07:18:02 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail1.windriver.com (8.15.1/8.15.1) with ESMTPS id t697I211022129
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	Thu,  9 Jul 2015 10:12:52 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bes.se.axis.com (Postfix) with ESMTP id 554632E452
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 9 Jul 2015 00:18:02 -0700 (PDT)
-Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.224.2;
-	Thu, 9 Jul 2015 00:18:02 -0700
-From: Robert Yang <liezhi.yang@windriver.com>
+	Thu,  9 Jul 2015 12:04:09 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id UIjnZhrRqCJ3 for <bitbake-devel@lists.openembedded.org>;
+	Thu,  9 Jul 2015 12:04:07 +0200 (CEST)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by bes.se.axis.com (Postfix) with ESMTP id A84F22E439
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu,  9 Jul 2015 12:04:07 +0200 (CEST)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id 861A8FB9
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu,  9 Jul 2015 12:04:07 +0200 (CEST)
+Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
+	by boulder.se.axis.com (Postfix) with ESMTP id 7924EA93
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu,  9 Jul 2015 12:04:07 +0200 (CEST)
+Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
+	by thoth.se.axis.com (Postfix) with ESMTP id 7733134005
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu,  9 Jul 2015 12:04:07 +0200 (CEST)
+Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
+	(10.0.5.74) with Microsoft SMTP Server id 8.3.342.0;
+	Thu, 9 Jul 2015 12:04:07 +0200
+Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id 328BC9C68B; 
+	Thu,  9 Jul 2015 12:04:07 +0200 (CEST)
+From: Olof Johansson <olof.johansson@axis.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Thu, 9 Jul 2015 00:18:01 -0700
-Message-ID: <f4363d0889b1e45cdbde18bd6ae94115f783b82f.1436426161.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1436426161.git.liezhi.yang@windriver.com>
-References: <cover.1436426161.git.liezhi.yang@windriver.com>
+Date: Thu, 9 Jul 2015 12:04:07 +0200
+Message-ID: <1436436247-20509-1-git-send-email-olof.johansson@axis.com>
+X-Mailer: git-send-email 2.1.4
 MIME-Version: 1.0
-Subject: [PATCH 1/1] git.py: create a branch when checkout
+Subject: [PATCH] fetch2/sftp: Set BatchMode=yes as argument to sftp
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,38 +55,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 09 Jul 2015 07:18:03 -0000
+X-List-Received-Date: Thu, 09 Jul 2015 10:12:53 -0000
 Content-Type: text/plain
 
-* Create a branch and named as upstream branch when checkout source
-* Set the branch to track remote branch.
+Set BatchMode=yes instead of PasswordAuthentication=no. This will make
+sftp fail immediately, not only when SSH requires interactive
+authentication, but also on errors related to host key verifcation.
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Olof Johansson <olof.johansson@axis.com>
 ---
- bitbake/lib/bb/fetch2/git.py |    7 +++++++
- 1 file changed, 7 insertions(+)
+ lib/bb/fetch2/sftp.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 2e53882..afa3d0a 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -279,8 +279,15 @@ class Git(FetchMethod):
-             if subdir != "":
-                 runfetchcmd("%s read-tree %s%s" % (ud.basecmd, ud.revisions[ud.names[0]], readpathspec), d)
-                 runfetchcmd("%s checkout-index -q -f -a" % ud.basecmd, d)
-+            elif not ud.nobranch:
-+                branchname =  ud.branches[ud.names[0]]
-+                runfetchcmd("%s checkout -B %s %s" % (ud.basecmd, branchname, \
-+                            ud.revisions[ud.names[0]]), d)
-+                runfetchcmd("%s branch --set-upstream %s origin/%s" % (ud.basecmd, branchname, \
-+                            branchname), d)
-             else:
-                 runfetchcmd("%s checkout %s" % (ud.basecmd, ud.revisions[ud.names[0]]), d)
-+
-         return True
+diff --git a/lib/bb/fetch2/sftp.py b/lib/bb/fetch2/sftp.py
+index 8ea4ef2..cb2f753 100644
+--- a/lib/bb/fetch2/sftp.py
++++ b/lib/bb/fetch2/sftp.py
+@@ -99,7 +99,7 @@ class SFTP(FetchMethod):
+         """Fetch urls"""
  
-     def clean(self, ud, d):
+         urlo = URI(ud.url)
+-        basecmd = 'sftp -oPasswordAuthentication=no'
++        basecmd = 'sftp -oBatchMode=yes'
+         port = ''
+         if urlo.port:
+             port = '-P %d' % urlo.port
 -- 
-1.7.9.5
+2.1.4
 
 
