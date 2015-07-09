@@ -1,23 +1,33 @@
-Return-Path: <anibal.limon@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 1326D7391D
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id 411CB6E645
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  8 Jul 2015 23:32:17 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by fmsmga103.fm.intel.com with ESMTP; 08 Jul 2015 16:32:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,435,1432623600"; d="scan'208";a="521077055"
-Received: from alimon-thinkpad-w540.zpn.intel.com ([10.219.4.155])
-	by FMSMGA003.fm.intel.com with ESMTP; 08 Jul 2015 16:32:17 -0700
-From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  8 Jul 2015 18:34:21 -0500
-Message-Id: <1436398461-26014-8-git-send-email-anibal.limon@linux.intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1436398461-26014-1-git-send-email-anibal.limon@linux.intel.com>
-References: <1436398461-26014-1-git-send-email-anibal.limon@linux.intel.com>
+	Thu,  9 Jul 2015 05:57:33 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.15.1/8.15.1) with ESMTPS id t695vUlh021397
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Wed, 8 Jul 2015 22:57:30 -0700 (PDT)
+Received: from [128.224.162.200] (128.224.162.200) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.40) with Microsoft SMTP Server id 14.3.224.2;
+	Wed, 8 Jul 2015 22:57:30 -0700
+Message-ID: <559E0D48.8030302@windriver.com>
+Date: Thu, 9 Jul 2015 13:57:28 +0800
+From: Robert Yang <liezhi.yang@windriver.com>
+User-Agent: Mozilla/5.0 (X11; Linux i686;
+	rv:31.0) Gecko/20100101 Thunderbird/31.7.0
 MIME-Version: 1.0
-Subject: [PATCHv4 7/7] fetch2/wget.py: checkstatus disable SSL cert validation.
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+References: <cover.1436232786.git.liezhi.yang@windriver.com>	
+	<fc82e0723a4877cdcd92e97cd2cf19f4a5d0ff70.1436232786.git.liezhi.yang@windriver.com>	
+	<1436282262.27597.183.camel@linuxfoundation.org>	
+	<10060998.dTQVzXkhxA@peggleto-mobl.ger.corp.intel.com>	
+	<559C7CD3.5080100@windriver.com>
+	<1436344085.27597.207.camel@linuxfoundation.org>
+In-Reply-To: <1436344085.27597.207.camel@linuxfoundation.org>
+Cc: Paul Eggleton <paul.eggleton@linux.intel.com>,
+	bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/1] git.py: create a branch when checkout
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,59 +40,74 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 08 Jul 2015 23:32:18 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 09 Jul 2015 05:57:33 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Since Python 2.7.9 ssl cert validation is enabled by default
-see PEP-0476, this causes verification errors on some https
-servers so disable by default.
 
-Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
----
- lib/bb/fetch2/wget.py | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+Thanks, I will send a V2.
 
-diff --git a/lib/bb/fetch2/wget.py b/lib/bb/fetch2/wget.py
-index 7e90efb..545f02d 100644
---- a/lib/bb/fetch2/wget.py
-+++ b/lib/bb/fetch2/wget.py
-@@ -238,7 +238,22 @@ class Wget(FetchMethod):
-             return "HEAD"
- 
-         exported_proxies = export_proxies(d)
--        if exported_proxies == True:
-+
-+        # XXX: Since Python 2.7.9 ssl cert validation is enabled by default
-+        # see PEP-0476, this causes verification errors on some https servers
-+        # so disable by default.
-+        import ssl
-+        ssl_context = None
-+        if hasattr(ssl, '_create_unverified_context'):
-+            ssl_context = ssl._create_unverified_context()
-+
-+        if exported_proxies == True and ssl_context is not None:
-+            opener = urllib2.build_opener(urllib2.ProxyHandler, CacheHTTPHandler,
-+                    urllib2.HTTPSHandler(context=ssl_context))
-+        elif exported_proxies == False and ssl_context is not None:
-+            opener = urllib2.build_opener(CacheHTTPHandler,
-+                    urllib2.HTTPSHandler(context=ssl_context))
-+        elif exported_proxies == True and ssl_context is None:
-             opener = urllib2.build_opener(urllib2.ProxyHandler, CacheHTTPHandler)
-         else:
-             opener = urllib2.build_opener(CacheHTTPHandler)
-@@ -247,8 +262,9 @@ class Wget(FetchMethod):
-         urllib2.install_opener(opener)
- 
-         uri = ud.url.split(";")[0]
-+
-         try:
--            f = urllib2.urlopen(uri)
-+            urllib2.urlopen(uri)
-         except:
-             return False
-         return True
--- 
-1.9.1
+// Robert
 
+On 07/08/2015 04:28 PM, Richard Purdie wrote:
+> On Wed, 2015-07-08 at 09:28 +0800, Robert Yang wrote:
+>>
+>> On 07/08/2015 12:56 AM, Paul Eggleton wrote:
+>>> On Tuesday 07 July 2015 16:17:42 Richard Purdie wrote:
+>>>> On Mon, 2015-07-06 at 18:33 -0700, Robert Yang wrote:
+>>>>> Create a branch named oebuild_SRCREV when checkout the source, this
+>>>>> makes debug easier than "(no branch)" when look into the source.
+>>>>>
+>>>>> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+>>>>> ---
+>>>>>
+>>>>>    bitbake/lib/bb/fetch2/git.py |    3 ++-
+>>>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+>>>>> index 2e53882..12087dd 100644
+>>>>> --- a/bitbake/lib/bb/fetch2/git.py
+>>>>> +++ b/bitbake/lib/bb/fetch2/git.py
+>>>>>
+>>>>> @@ -280,7 +280,8 @@ class Git(FetchMethod):
+>>>>>                    runfetchcmd("%s read-tree %s%s" % (ud.basecmd,
+>>>>>                    ud.revisions[ud.names[0]], readpathspec), d)
+>>>>>                    runfetchcmd("%s checkout-index -q -f -a" % ud.basecmd,
+>>>>>                    d)
+>>>>>
+>>>>>                else:
+>>>>> -                runfetchcmd("%s checkout %s" % (ud.basecmd,
+>>>>> ud.revisions[ud.names[0]]), d) +                runfetchcmd("%s checkout
+>>>>> %s -b oebuild_%s" % (ud.basecmd, \ +
+>>>>> ud.revisions[ud.names[0]], ud.revisions[ud.names[0]]), d)>
+>>>>>            return True
+>>>>
+>>>> Would it not make more sense to set the branch to the upstream branch
+>>>> name here?
+>>>
+>>> I'd go one step further, use the upstream branch name and also set it to track
+>>> the remote branch as well.
+>>
+>> Hi Paul and RP,
+>>
+>> I'm afraid that the ud.revisions[ud.names[0]] which is SRCREV may
+>> not point to an upstream branch or tag, please ?
+>
+> ud.revisions might not, but ud.branches should. I think you want
+> something like:
+>
+> branchcmd = ""
+> if not ud.nobranch:
+>      branchcmd = "-b %s" % ud.branches[ud.names[0]]
+> runfetchcmd("%s checkout %s %s" % (ud.basecmd, ud.revisions[ud.names[0]], branchcmd), d)
+>
+> However as Paul notes, setting it to track the upstream remote branch
+> would also be ideal.
+>
+> Cheers,
+>
+> Richard
+>
+>
+>
 
