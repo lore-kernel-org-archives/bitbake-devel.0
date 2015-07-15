@@ -1,25 +1,35 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id E0F4165C78
+Return-Path: <armccurdy@gmail.com>
+Received: from mail-ie0-f170.google.com (mail-ie0-f170.google.com
+	[209.85.223.170])
+	by mail.openembedded.org (Postfix) with ESMTP id 3871E6E648
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 14 Jul 2015 14:26:50 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by fmsmga102.fm.intel.com with ESMTP; 14 Jul 2015 07:26:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,472,1432623600"; d="scan'208";a="728648425"
-Received: from cbernard-mobl.ger.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.252.31.54])
-	by orsmga001.jf.intel.com with ESMTP; 14 Jul 2015 07:26:51 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
+	Wed, 15 Jul 2015 00:22:23 +0000 (UTC)
+Received: by ieik3 with SMTP id k3so22978436iei.3
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 14 Jul 2015 17:22:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=vC/uIe5XRUEnlGqw60XeYUU10Iee3a4bt0/KGKNqGnw=;
+	b=h+O71lN9ef1zZmsUeJXjSlQlqQGVG2k076plFgf38J3shfLWjMnAEMKIGBOCPo/ID9
+	a5sFJqoOTletrASYQdzgK3a7N85CbWm7KRq5Z13SATQep0URw7ZTRFmAo4wc4Kj5Uzc/
+	agvqRj1i08c2MbyeE3yDnq2f/ar/7xBmdKC24wlpSddMWJEKsMzdlS6SsELNLaIYU/MJ
+	SFPKlOGRgiAREY9VUqWGgWrmI6I/73aseHSwN1r6y179FDvl3d+F86YhRnHrcZntG2qV
+	aCfXYU6v8jWvOSmghTcUDH7UAzGA3cBP9zc8SpNRqCgT5zQTzKIVYIF074mdQtSKzfCH
+	9GzQ==
+X-Received: by 10.107.138.102 with SMTP id m99mr1602368iod.115.1436919743722; 
+	Tue, 14 Jul 2015 17:22:23 -0700 (PDT)
+Received: from e6520.cablelabs.com
+	(50-204-102-64-static.hfc.comcastbusiness.net. [50.204.102.64])
+	by smtp.gmail.com with ESMTPSA id
+	l62sm1668698iol.36.2015.07.14.17.22.22
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Tue, 14 Jul 2015 17:22:23 -0700 (PDT)
+From: Andre McCurdy <armccurdy@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 14 Jul 2015 15:26:42 +0100
-Message-Id: <9e1bc2c543fe8c64f8ba83dbfebca311a1c3fad3.1436883632.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <cover.1436883632.git.paul.eggleton@linux.intel.com>
-References: <cover.1436883632.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1436883632.git.paul.eggleton@linux.intel.com>
-References: <cover.1436883632.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 2/2] lib/bb/process: check output of select() before reading extrafiles
+Date: Tue, 14 Jul 2015 17:22:17 -0700
+Message-Id: <1436919737-5705-1-git-send-email-armccurdy@gmail.com>
+X-Mailer: git-send-email 1.9.1
+Subject: [PATCH] data: Add newline after the last export in emit_func
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,68 +42,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 14 Jul 2015 14:26:51 -0000
+X-List-Received-Date: Wed, 15 Jul 2015 00:22:29 -0000
 
-We're calling select() to find the fds that have data available, so we
-really ought to check the return to see if the extra file is in there
-before trying to read from it. This is part of the fix for the
-performance regression that this code introduced (5-10 minutes extra in
-a reasonable size OE build); the rest is down to an issue in the way
-that pseudo currently handles FIFOs and will need to be addressed there,
-see: https://bugzilla.yoctoproject.org/show_bug.cgi?id=7993
+Minor formatting improvement in generated shell scripts.
 
-Solution suggested by Richard Purdie <richard.purdie@linuxfoundation.org>
+Add a newline after the last export emitted by emit_func. Also, remove
+chance of putting an extra newline in the middle of the exports, since
+we never want to do that.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
 ---
- lib/bb/process.py | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ lib/bb/data.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/lib/bb/process.py b/lib/bb/process.py
-index d95a03d..7c79785 100644
---- a/lib/bb/process.py
-+++ b/lib/bb/process.py
-@@ -83,15 +83,16 @@ def _logged_communicate(pipe, log, input, extrafiles):
-         bb.utils.nonblockingfd(fobj.fileno())
-         rin.append(fobj)
+diff --git a/lib/bb/data.py b/lib/bb/data.py
+index 8b21c46..2f90be6 100644
+--- a/lib/bb/data.py
++++ b/lib/bb/data.py
+@@ -271,8 +271,9 @@ def emit_func(func, o=sys.__stdout__, d = init()):
  
--    def readextras():
-+    def readextras(selected):
-         for fobj, func in extrafiles:
--            try:
--                data = fobj.read()
--            except IOError as err:
--                if err.errno == errno.EAGAIN or err.errno == errno.EWOULDBLOCK:
--                    data = None
--            if data is not None:
--                func(data)
-+            if fobj in selected:
-+                try:
-+                    data = fobj.read()
-+                except IOError as err:
-+                    if err.errno == errno.EAGAIN or err.errno == errno.EWOULDBLOCK:
-+                        data = None
-+                if data is not None:
-+                    func(data)
+     keys = (key for key in d.keys() if not key.startswith("__") and not d.getVarFlag(key, "func"))
+     for key in keys:
+-        emit_var(key, o, d, False) and o.write('\n')
++        emit_var(key, o, d, False)
  
-     try:
-         while pipe.poll() is None:
-@@ -114,12 +115,12 @@ def _logged_communicate(pipe, log, input, extrafiles):
-                     errdata.append(data)
-                     log.write(data)
- 
--            readextras()
-+            readextras(r)
- 
-     finally:    
-         log.flush()
- 
--    readextras()
-+    readextras([fobj for fobj, _ in extrafiles])
- 
-     if pipe.stdout is not None:
-         pipe.stdout.close()
++    o.write('\n')
+     emit_var(func, o, d, False) and o.write('\n')
+     newdeps = bb.codeparser.ShellParser(func, logger).parse_shell(d.getVar(func, True))
+     newdeps |= set((d.getVarFlag(func, "vardeps", True) or "").split())
 -- 
-2.1.0
+1.9.1
 
 
