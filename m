@@ -1,38 +1,26 @@
-Return-Path: <alexandru.damian@intel.com>
-Received: from mail-wg0-f43.google.com (mail-wg0-f43.google.com [74.125.82.43])
-	by mail.openembedded.org (Postfix) with ESMTP id D50F375F7C
+Return-Path: <anibal.limon@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 9AFB665CBD
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Jul 2015 16:23:10 +0000 (UTC)
-Received: by wgav7 with SMTP id v7so69318657wga.2
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 20 Jul 2015 09:23:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=K0gKi1+Hn3YfcYIIUOSrYfIvw73guUqlheu+myN/JjI=;
-	b=Dku2+061oh1Rmt0pa57Yxohk2dSBshsf4tuPxTWcCnFJxaTT4970yNFBqJf5ua4+c4
-	U4vNU48hH67dFpI72FNJJESQuQ2N0ZxT097daG8z++6//ai6j0uGKnS67Lmb839oX/SR
-	Lrju8xlo41i62f9nkyqpwINNxTk6xl3DEHaxvbXNg1CwIm0qSTGVDbECJYrvaDyuJVp0
-	JVtJ7DZCW8VfqbbfYT7Crf8gbTAOuL/861YK6+W5JMchO2ZEBapCyZR0Y/8h8atuocbt
-	pmkypvsFX/INn0QjcPrfRQmw2YefC//eWXLya0BJn5agEAF8jh32xKqiiJlRX7JGEQsq
-	8YSA==
-X-Gm-Message-State: ALoCoQl4riGKOiDPwMNkYrRrJJ2rMTqq70ktgIoZmYoigHNsbt4oplNO330H8fGTvjjFO4avuiDj
-X-Received: by 10.180.95.101 with SMTP id dj5mr23011029wib.16.1437409390046;
-	Mon, 20 Jul 2015 09:23:10 -0700 (PDT)
-Received: from adamian-desk.local ([83.217.123.106])
-	by smtp.gmail.com with ESMTPSA id
-	b13sm12519919wic.15.2015.07.20.09.23.08
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Mon, 20 Jul 2015 09:23:09 -0700 (PDT)
-Received: by adamian-desk.local (Postfix, from userid 1000)
-	id EFCE0561AEA; Mon, 20 Jul 2015 17:23:20 +0100 (BST)
-From: Alex DAMIAN <alexandru.damian@intel.com>
+	Mon, 20 Jul 2015 19:19:21 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by fmsmga101.fm.intel.com with ESMTP; 20 Jul 2015 12:19:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.15,509,1432623600"; d="scan'208";a="732277489"
+Received: from alimon-thinkpad-w540.zpn.intel.com (HELO [10.219.5.54])
+	([10.219.5.54])
+	by orsmga001.jf.intel.com with ESMTP; 20 Jul 2015 12:19:21 -0700
+Message-ID: <55AD49BD.5070703@linux.intel.com>
+Date: Mon, 20 Jul 2015 14:19:25 -0500
+From: =?UTF-8?B?QW7DrWJhbCBMaW3Ds24=?= <anibal.limon@linux.intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64;
+	rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+MIME-Version: 1.0
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 20 Jul 2015 17:23:20 +0100
-Message-Id: <1437409400-23597-1-git-send-email-alexandru.damian@intel.com>
-X-Mailer: git-send-email 1.9.1
-Cc: Brian Avery <brian.avery@intel.com>
-Subject: [PATCH 1/1] toaster: continue processing layer dependencies despite errors
+References: <1436920259-31969-1-git-send-email-anibal.limon@linux.intel.com>
+In-Reply-To: <1436920259-31969-1-git-send-email-anibal.limon@linux.intel.com>
+Cc: alexander.kanavin@linux.intel.com
+Subject: Re: [PATCH 0/4] fetch2 latest_versionstring improvements
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,38 +33,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 20 Jul 2015 16:23:13 -0000
+X-List-Received-Date: Mon, 20 Jul 2015 19:19:24 -0000
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Brian Avery <brian.avery@intel.com>
+ping...
 
-Sometimes, a layer dependency will not exist,
-  or not exist for a particualr branch. In this case
-  we need to continue processing and hope for the best.
-
-[YOCTO #7955]
-
-Signed-off-by: Brian Avery <brian.avery@intel.com>
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
----
- lib/toaster/orm/models.py | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 4ea75f2..2b1a5b7 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -889,9 +889,8 @@ class LayerIndexLayerSource(LayerSource):
-                 dependlist[lv] = []
-             try:
-                 dependlist[lv].append(Layer_Version.objects.get(layer_source = self, layer__up_id = ldi['dependency'], up_branch = lv.up_branch))
--            except Layer_Version.DoesNotExist as e:
-+            except Layer_Version.DoesNotExist:
-                 print "Cannot find layer version ", self, ldi['dependency'], lv.up_branch
--                raise e
- 
-         for lv in dependlist:
-             LayerVersionDependency.objects.filter(layer_version = lv).delete()
--- 
-1.9.1
+On 14/07/15 19:30, Aníbal Limón wrote:
+> Changes return of latest_versionstring method now returns current revision
+> in SCM's like git.
+>
+> [YOCTO #7605]
+>
+> Aníbal Limón (4):
+>    fetch2/git.py: latest_versionstring search in all tags
+>    fetch2/git.py: latest_versionstring now returns (version, revision)
+>    fetch2/wget.py: latest_versionstring now returns (version, revision)
+>    tests/fetch.py: Updated test name FetchMethodTest ->
+>      FetchLatestVersionTest
+>
+>   lib/bb/fetch2/git.py  | 20 +++++++++++++-------
+>   lib/bb/fetch2/wget.py | 12 ++++++------
+>   lib/bb/tests/fetch.py |  8 +++++---
+>   3 files changed, 24 insertions(+), 16 deletions(-)
+>
 
 
