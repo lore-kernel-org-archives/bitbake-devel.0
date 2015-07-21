@@ -1,35 +1,29 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wg0-f43.google.com (mail-wg0-f43.google.com [74.125.82.43])
-	by mail.openembedded.org (Postfix) with ESMTP id C31A7734B8
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 4947B73694
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 Jul 2015 10:58:00 +0000 (UTC)
-Received: by wgav7 with SMTP id v7so87496849wga.2
+	Tue, 21 Jul 2015 11:17:20 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t6LBHKeh018203 for <bitbake-devel@lists.openembedded.org>;
+	Tue, 21 Jul 2015 12:17:20 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id JGSp97LteyzQ for <bitbake-devel@lists.openembedded.org>;
+	Tue, 21 Jul 2015 12:17:20 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t6LBH7H7018177
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 21 Jul 2015 03:58:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=Z2g6vBSwkg9q+TgFyHPRHakkpVQmZtaOzvclniwqQzM=;
-	b=KkKaqORlezWh3fdrUU9OAl8bEnPAB/tOKJOjr4riTFODAFvpBQZSRsnRw3pZdgVU3e
-	cjiSlLFuuwXWoV82AsJ3wNNkZ7wh4MZpF/ffS3rvX5SauhXhnh1ccV3lGOT1uxE4643Y
-	SO4ajoo2FMrxqlLHUdaLddBUFcGK6tHEMr/LiUweONkSsWy0UF76es43ySk/x4sAim3L
-	ziJKm7BcCdZhraw6iRHa7dD1CVDQV84UE3XjXUsyjFv0LV3evE34T98D2FlZa4o96YHM
-	5vFm+KM2usTE0LObG36eU5hCPP8TCzrBztsg+nzgMlPNEz7XHcb5G78MngaZZXT6irG1
-	NAgA==
-X-Gm-Message-State: ALoCoQmawsz4qXbv87FNn4aC42DU0mraJQOEF/zJbWZ+qOIxjqXJ2vlnMQHaf4a2yLyrALhJCim/
-X-Received: by 10.180.78.73 with SMTP id z9mr30252922wiw.64.1437476280266;
-	Tue, 21 Jul 2015 03:58:00 -0700 (PDT)
-Received: from draco.icx.intel.com ([83.217.123.106])
-	by smtp.gmail.com with ESMTPSA id
-	r6sm16228577wiy.13.2015.07.21.03.57.59
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 21 Jul 2015 03:57:59 -0700 (PDT)
-From: Michael Wood <michael.g.wood@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 21 Jul 2015 11:57:36 +0100
-Message-Id: <1437476256-5615-1-git-send-email-michael.g.wood@intel.com>
-X-Mailer: git-send-email 2.1.4
-Subject: [PATCH] bitbake: toastergui: make our tables Chrome-happy
+	Tue, 21 Jul 2015 12:17:19 +0100
+Message-ID: <1437477427.821.70.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Tue, 21 Jul 2015 12:17:07 +0100
+X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
+Mime-Version: 1.0
+Subject: [PATCH] data_smart: Use deepcopy for overridedata
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,34 +36,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 21 Jul 2015 10:58:03 -0000
+X-List-Received-Date: Tue, 21 Jul 2015 11:17:21 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
+dbus sets RDEPENDS_dbus-ptest_class-target = "X". nativesdk as
+BBCLASSEXTEND was expanding and setting various RDEPENDS variables
+which were clearing overrides queued against RDEPENDS. The problem
+was that this was leaking into other data contexts such as the
+target case. This was because overridedata was a shallow copy.
 
-Make sure that Toaster tables adapt nicely to the
-viewport width in Chrome without squashing the
-buttons in the right column (when they are there).
+Replacing the shallow copy with a deep copy avoids this problem of
+leakage between the data stores at a small performance penalty.
 
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
----
- lib/toaster/toastergui/static/css/default.css | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-diff --git a/lib/toaster/toastergui/static/css/default.css b/lib/toaster/toastergui/static/css/default.css
-index 115abc4..9acf1e1 100644
---- a/lib/toaster/toastergui/static/css/default.css
-+++ b/lib/toaster/toastergui/static/css/default.css
-@@ -145,7 +145,7 @@ select { width: auto; }
- .hero-unit img { background-color: #eee; margin-top: 15px; }
+diff --git a/bitbake/lib/bb/data_smart.py b/bitbake/lib/bb/data_smart.py
+index dcf082d..86cdeb5 100644
+--- a/bitbake/lib/bb/data_smart.py
++++ b/bitbake/lib/bb/data_smart.py
+@@ -806,7 +806,7 @@ class DataSmart(MutableMapping):
  
- /* make tables Chrome-happy (me, not so much) */
--#otable { table-layout: fixed; word-wrap: break-word; }
-+table { table-layout: fixed; word-wrap: break-word; }
+         data.overrides = None
+         data.overridevars = copy.copy(self.overridevars)
+-        data.overridedata = copy.copy(self.overridedata)
++        data.overridedata = copy.deepcopy(self.overridedata)
  
- /* styles for the new build button */
- .new-build .btn-primary { padding: 4px 30px; }
--- 
-2.1.4
+         return data
+ 
+
 
 
