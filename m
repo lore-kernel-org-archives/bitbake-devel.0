@@ -1,35 +1,29 @@
-Return-Path: <armccurdy@gmail.com>
-Received: from mail-pd0-f169.google.com (mail-pd0-f169.google.com
-	[209.85.192.169])
-	by mail.openembedded.org (Postfix) with ESMTP id 5863473217
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id ED96175791
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 23 Jul 2015 23:09:14 +0000 (UTC)
-Received: by pdbbh15 with SMTP id bh15so3327718pdb.1
+	Fri, 24 Jul 2015 10:40:13 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t6OAeCJo020828 for <bitbake-devel@lists.openembedded.org>;
+	Fri, 24 Jul 2015 11:40:12 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id LqXYyhmKp0VA for <bitbake-devel@lists.openembedded.org>;
+	Fri, 24 Jul 2015 11:40:12 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t6OAdwmR020776
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 23 Jul 2015 16:09:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id;
-	bh=ojbazpPma8ZvKLQbqE57lzkqUpf9OWw3YoMQArveAdg=;
-	b=dMtpnUTGsBBhJFqGSxJkCEDkZsNKZZRfbPDXLoWy1nvvCsOp4beyPBQs0fLqEy0BD/
-	9f6GLaFi7zlS0KKOwQ3qY6ndGplhbUG96jRIo/CGt+lkBB7lEemPXi68Dxrj0FzS2Kux
-	kdGKHQwvL1Q05frKWTf1lLc6L8BjTKRIXM35BYCc/hlPEwExx357y5NUMZmOz373tdB8
-	AytgVo31P3s99gD0ICoUMnLBpWXTGg1ASxvOJMW5ldxdrITCiFTUgu+T09KoL/xwbwp0
-	DzyzRMlZ5BphxPHlG/MCEYppeboHtGaaY4NU4cYNNgfqkMhH4O+f7GSM4eEyopg16HFj
-	VW9A==
-X-Received: by 10.70.63.37 with SMTP id d5mr23981925pds.162.1437692954521;
-	Thu, 23 Jul 2015 16:09:14 -0700 (PDT)
-Received: from e6520.cablelabs.com
-	(50-204-102-64-static.hfc.comcastbusiness.net. [50.204.102.64])
-	by smtp.gmail.com with ESMTPSA id
-	da3sm10887056pdb.8.2015.07.23.16.09.13
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 23 Jul 2015 16:09:13 -0700 (PDT)
-From: Andre McCurdy <armccurdy@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 23 Jul 2015 16:09:01 -0700
-Message-Id: <1437692941-7139-1-git-send-email-armccurdy@gmail.com>
-X-Mailer: git-send-email 1.9.1
-Subject: [PATCH] build: Exit scripts with result of last shell function
+	Fri, 24 Jul 2015 11:40:10 +0100
+Message-ID: <1437734398.821.150.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Fri, 24 Jul 2015 11:39:58 +0100
+X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
+Mime-Version: 1.0
+Subject: [PATCH] data: Clean up datastore accesses and True/False values
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,33 +36,132 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 23 Jul 2015 23:09:19 -0000
+X-List-Received-Date: Fri, 24 Jul 2015 10:40:20 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Since shell scripts run with 'set -e' the final exit at the end of the
-script can only be returning 0. However, for correctness and to follow
-the original intention of the 'cleanup' commands, let's fix the typo
-and return the success of the last shell function rather than the
-success of unhooking the exit trap handler.
+We should use the d.xxxVar syntax rather than the older function style.
 
-Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
----
- lib/bb/build.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Also replace 0/1 with the more pythonic True/False.
 
-diff --git a/lib/bb/build.py b/lib/bb/build.py
-index 3439964..764163f 100644
---- a/lib/bb/build.py
-+++ b/lib/bb/build.py
-@@ -313,7 +313,7 @@ def exec_func_shell(func, d, runfile, cwd=None):
- # cleanup
- ret=$?
- trap '' 0
--exit $?
-+exit $ret
- ''')
+No functionality changes.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+diff --git a/bitbake/lib/bb/data.py b/bitbake/lib/bb/data.py
+index 8b21c46..59dca0a 100644
+--- a/bitbake/lib/bb/data.py
++++ b/bitbake/lib/bb/data.py
+@@ -84,7 +84,7 @@ def setVar(var, value, d):
+     d.setVar(var, value)
  
-     os.chmod(runfile, 0775)
--- 
-1.9.1
+ 
+-def getVar(var, d, exp = 0):
++def getVar(var, d, exp = False):
+     """Gets the value of a variable"""
+     return d.getVar(var, exp)
+ 
+@@ -161,9 +161,9 @@ def expandKeys(alterdata, readdata = None):
+     # usefulness of the expand cache
+     for key in sorted(todolist):
+         ekey = todolist[key]
+-        newval = alterdata.getVar(ekey, 0)
++        newval = alterdata.getVar(ekey, False)
+         if newval is not None:
+-            val = alterdata.getVar(key, 0)
++            val = alterdata.getVar(key, False)
+             if val is not None:
+                 bb.warn("Variable key %s (%s) replaces original key %s (%s)." % (key, val, ekey, newval))
+         alterdata.renameVar(key, ekey)
+@@ -174,7 +174,7 @@ def inheritFromOS(d, savedenv, permitted):
+     for s in savedenv.keys():
+         if s in permitted:
+             try:
+-                d.setVar(s, getVar(s, savedenv, True), op = 'from env')
++                d.setVar(s, savedenv.getVar(s, True), op = 'from env')
+                 if s in exportlist:
+                     d.setVarFlag(s, "export", True, op = 'auto env export')
+             except TypeError:
+@@ -182,39 +182,39 @@ def inheritFromOS(d, savedenv, permitted):
+ 
+ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
+     """Emit a variable to be sourced by a shell."""
+-    if getVarFlag(var, "python", d):
+-        return 0
++    if d.getVarFlag(var, "python"):
++        return False
+ 
+-    export = getVarFlag(var, "export", d)
+-    unexport = getVarFlag(var, "unexport", d)
+-    func = getVarFlag(var, "func", d)
++    export = d.getVarFlag(var, "export")
++    unexport = d.getVarFlag(var, "unexport")
++    func = d.getVarFlag(var, "func")
+     if not all and not export and not unexport and not func:
+-        return 0
++        return False
+ 
+     try:
+         if all:
+-            oval = getVar(var, d, 0)
+-        val = getVar(var, d, 1)
++            oval = d.getVar(var, False)
++        val = d.getVar(var, True)
+     except (KeyboardInterrupt, bb.build.FuncFailed):
+         raise
+     except Exception as exc:
+         o.write('# expansion of %s threw %s: %s\n' % (var, exc.__class__.__name__, str(exc)))
+-        return 0
++        return False
+ 
+     if all:
+         d.varhistory.emit(var, oval, val, o)
+ 
+     if (var.find("-") != -1 or var.find(".") != -1 or var.find('{') != -1 or var.find('}') != -1 or var.find('+') != -1) and not all:
+-        return 0
++        return False
+ 
+-    varExpanded = expand(var, d)
++    varExpanded = d.expand(var)
+ 
+     if unexport:
+         o.write('unset %s\n' % varExpanded)
+-        return 0
++        return False
+ 
+     if val is None:
+-        return 0
++        return False
+ 
+     val = str(val)
+ 
+@@ -223,7 +223,7 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
+         val = val[3:] # Strip off "() "
+         o.write("%s() %s\n" % (varExpanded, val))
+         o.write("export -f %s\n" % (varExpanded))
+-        return 1
++        return True
+ 
+     if func:
+         # NOTE: should probably check for unbalanced {} within the var
+@@ -239,7 +239,7 @@ def emit_var(var, o=sys.__stdout__, d = init(), all=False):
+     alter = re.sub('\n', ' \\\n', alter)
+     alter = re.sub('\\$', '\\\\$', alter)
+     o.write('%s="%s"\n' % (varExpanded, alter))
+-    return 0
++    return False
+ 
+ def emit_env(o=sys.__stdout__, d = init(), all=False):
+     """Emits all items in the data store in a format such that it can be sourced by a shell."""
+@@ -437,7 +437,7 @@ def generate_dependencies(d):
+     return tasklist, deps, values
+ 
+ def inherits_class(klass, d):
+-    val = getVar('__inherit_cache', d) or []
++    val = d.getVar('__inherit_cache', False) or []
+     needle = os.path.join('classes', '%s.bbclass' % klass)
+     for v in val:
+         if v.endswith(needle):
+
 
 
