@@ -1,36 +1,21 @@
-Return-Path: <alexandru.damian@intel.com>
-Received: from mail-ie0-f179.google.com (mail-ie0-f179.google.com
-	[209.85.223.179])
-	by mail.openembedded.org (Postfix) with ESMTP id A0F35761AB
+Return-Path: <juro.bystricky@intel.com>
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 9DE7075BD3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 24 Jul 2015 17:09:42 +0000 (UTC)
-Received: by ietj16 with SMTP id j16so23270766iet.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 24 Jul 2015 10:09:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-	:content-type;
-	bh=9eQgB5NEK9TOlUYcPCGww54TYPfiZ1qs2ScD+hCgRbg=;
-	b=VrFWNJkLGS1uVqdvOlRaaxBnJ5Q2N82q+A6Hdqh36GRixQZ1DM4051fiMhvk5B77Wi
-	cvG6ep01GUG7cOjoh1gbt41tvaJhZeaOXBubcFSn1DZ51+M6HNwvLOO5eDvV+IPkMALn
-	pOtaBjofXmUqLnc9seFaGmLtYY1f4UobLm5HOmqbNXfOp71cZMpF9ezC6iMc0daSjg3g
-	c6/s4fevmJ1kR/hoDPmZAaS0wA2jlNQecaWTHbO2TNyfTt1qNH3Jj9ptzmwAMDGapcCZ
-	0UJnHvQWOmqnegTYOlP8FAaQGpIFJ8z9uo27PX/uVJwWnx9BkBzvPqbtfO+srXM1zOib
-	pEbA==
-X-Gm-Message-State: ALoCoQlm65v2PnZ4rUH3zx+pRobJOpxSj1jkQmXj+dxWVht49uTe7S8jXHOTqhTnybShfR02LDL2
-X-Received: by 10.50.44.100 with SMTP id d4mr8619619igm.67.1437757782018; Fri,
-	24 Jul 2015 10:09:42 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 10.79.65.207 with HTTP; Fri, 24 Jul 2015 10:09:22 -0700 (PDT)
-From: "Damian, Alexandru" <alexandru.damian@intel.com>
-Date: Fri, 24 Jul 2015 18:09:22 +0100
-Message-ID: <CAJ2CSBt0HMbnhxs3md+TUVs5kgEtZOPZGuCi5u1dyVWympnqSQ@mail.gmail.com>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>, 
-	"toaster@yoctoproject.org" <toaster@yoctoproject.org>
-Cc: Paul Eggleton <paul.eggleton@linux.intel.com>,
-	Brian Avery <brian.avery@intel.com>
-Subject: [META] tools to make sure the code is sane
+	Sat, 25 Jul 2015 18:36:40 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by fmsmga102.fm.intel.com with ESMTP; 25 Jul 2015 11:36:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.15,542,1432623600"; d="scan'208";a="735450700"
+Received: from juro-precision-t5610.jf.intel.com ([10.7.198.145])
+	by orsmga001.jf.intel.com with ESMTP; 25 Jul 2015 11:36:42 -0700
+From: Juro Bystricky <juro.bystricky@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Sat, 25 Jul 2015 11:32:43 -0700
+Message-Id: <1437849163-1577-1-git-send-email-juro.bystricky@intel.com>
+X-Mailer: git-send-email 1.9.1
+Cc: richard.purdie@intel.com
+Subject: [PATCH] wget.py: support for semi-colons in URL
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,78 +28,61 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 24 Jul 2015 17:09:42 -0000
-Content-Type: multipart/alternative; boundary=e89a8f839f91deec04051ba211bf
+X-List-Received-Date: Sat, 25 Jul 2015 18:36:44 -0000
 
---e89a8f839f91deec04051ba211bf
-Content-Type: text/plain; charset=UTF-8
+Some URLs contain semi-colons. For example, some GIT repositories
+support downloading snapshots using URL such as:
 
-Hi guys,
+"http://abc123.com/git/?p=gcc/gcc.git;a=snapshot;h=a5dd47"
 
-Just wanted to share a bit of personal experience using tools to check
-python code.
+Currently there is no way to construct SRC_URI with such URLs.
+Bitbake uses semi-colons in SRC_URI as delimiters for various parameters.
 
-I've started to use pylint to statically check the toaster code. A patchset
-that fixes issues highlighted by pylint up in certain parts of the code, is
-available for review on:
+This patch allows using of semi-colons in URLs: ';;' (double semi-colon)
+in SRC_URI is processed  as a single semi-colon that is a part of a URL name.
+For example, the above URL would become:
 
-https://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=adamian/bug_fixes
+SRC_URI = "http://abc123.com/git/?p=gcc/gcc.git;;a=snapshot;;h=a5dd47"
 
-I've also start using landscape.io which does kind of the same job, and
-it's free for open source projects. I've started checking my patches with
-this tools, and you can follow it here:
+Note that it is not possible to determine the name of the downloaded file
+from URL alone. The onus to specify the proper name is on the user,
+via the parameter 'downloadfilename':
 
-https://landscape.io/github/ddalex/bitbake
+SRC_URI = "http://abc123.com/git/?p=gcc/gcc.git;;a=snapshot;;h=a5dd47;downloadfilename=myfile.tar.gz"
 
-What's hosted as "master" on github is not the bitbake upstream, but my WIP
-code that's posted for review.
+Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
+---
+ bitbake/lib/bb/fetch2/wget.py | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-
-Hope this helps,
-Alex
-
+diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
+index 425b6b9..a623b83 100644
+--- a/bitbake/lib/bb/fetch2/wget.py
++++ b/bitbake/lib/bb/fetch2/wget.py
+@@ -80,7 +80,21 @@ class Wget(FetchMethod):
+             bb.utils.mkdirhier(os.path.dirname(dldir + os.sep + ud.localfile))
+             fetchcmd += " -O " + dldir + os.sep + ud.localfile
+ 
+-        uri = ud.url.split(";")[0]
++        # Process any ";;" in SRC_URI, these are escape sequences for ";" in URL
++        if ';;' in ud.url:
++           # If URL contains ';' the name of the downloaded file cannot be derived reliably
++           # (or derived at all) using URL string alone.
++           # Therefore we insist the file name is specified explicitly by the user.
++           if not 'downloadfilename' in ud.parm:
++               raise FetchError("Could not determine the name of the downloaded file. Please specify explicitly by using SRC_URI option 'downloadfilename'")
++
++           # Convert ";;" into something unique (not containing ';')
++           uri = ud.url.replace(";;","%3B%3B");
++           uri = uri.split(";")[0]
++           uri = uri.replace("%3B%3B",";");
++        else:
++           uri = ud.url.split(";")[0]
++
+         if os.path.exists(ud.localpath):
+             # file exists, but we didnt complete it.. trying again..
+             fetchcmd += d.expand(" -c -P ${DL_DIR} '%s'" % uri)
 -- 
-Alex Damian
-Yocto Project
-SSG / OTC
+1.9.1
 
---e89a8f839f91deec04051ba211bf
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-family:tahoma,s=
-ans-serif">Hi guys,</div><div class=3D"gmail_default" style=3D"font-family:=
-tahoma,sans-serif"><br></div><div class=3D"gmail_default" style=3D"font-fam=
-ily:tahoma,sans-serif">Just wanted to share a bit of personal experience us=
-ing tools to check python code.=C2=A0</div><div class=3D"gmail_default" sty=
-le=3D"font-family:tahoma,sans-serif"><br></div><div class=3D"gmail_default"=
- style=3D"font-family:tahoma,sans-serif">I&#39;ve started to use pylint to =
-statically check the toaster code. A patchset that fixes issues highlighted=
- by pylint up in certain parts of the code, is available for review on:</di=
-v><div class=3D"gmail_default" style=3D"font-family:tahoma,sans-serif"><br>=
-</div><div class=3D"gmail_default" style=3D"font-family:tahoma,sans-serif">=
-<a href=3D"https://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=
-=3Dadamian/bug_fixes">https://git.yoctoproject.org/cgit/cgit.cgi/poky-contr=
-ib/log/?h=3Dadamian/bug_fixes</a></div><div class=3D"gmail_default" style=
-=3D"font-family:tahoma,sans-serif"><br></div><div class=3D"gmail_default" s=
-tyle=3D"font-family:tahoma,sans-serif">I&#39;ve also start using <a href=3D=
-"http://landscape.io">landscape.io</a> which does kind of the same job, and=
- it&#39;s free for open source projects. I&#39;ve started checking my patch=
-es with this tools, and you can follow it here:</div><div class=3D"gmail_de=
-fault" style=3D"font-family:tahoma,sans-serif"><br></div><div class=3D"gmai=
-l_default"><font face=3D"tahoma, sans-serif"><a href=3D"https://landscape.i=
-o/github/ddalex/bitbake">https://landscape.io/github/ddalex/bitbake</a></fo=
-nt><br></div><div class=3D"gmail_default"><font face=3D"tahoma, sans-serif"=
-><br></font></div><div class=3D"gmail_default"><font face=3D"tahoma, sans-s=
-erif">What&#39;s hosted as &quot;master&quot; on github is not the bitbake =
-upstream, but my WIP code that&#39;s posted for review.</font></div><div cl=
-ass=3D"gmail_default"><font face=3D"tahoma, sans-serif"><br></font></div><d=
-iv class=3D"gmail_default"><font face=3D"tahoma, sans-serif"><br></font></d=
-iv><div class=3D"gmail_default"><font face=3D"tahoma, sans-serif">Hope this=
- helps,</font></div><div class=3D"gmail_default"><font face=3D"tahoma, sans=
--serif">Alex</font></div><div><br></div>-- <br><div class=3D"gmail_signatur=
-e"><div dir=3D"ltr">Alex Damian<div>Yocto Project<br></div><div>SSG / OTC=
-=C2=A0</div></div></div>
-</div>
-
---e89a8f839f91deec04051ba211bf--
