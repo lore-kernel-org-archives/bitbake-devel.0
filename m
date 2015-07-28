@@ -1,39 +1,45 @@
-Return-Path: <openembedded-devel@urbanec.net>
-X-Greylist: delayed 597 seconds by postgrey-1.34 at layers.openembedded.org;
-	Tue, 28 Jul 2015 06:10:11 UTC
-Received: from mail15.tpgi.com.au (smtp-out15.tpgi.com.au [220.244.226.125])
-	by mail.openembedded.org (Postfix) with ESMTP id E04BF761A2
+Return-Path: <olof.johansson@axis.com>
+Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
+	by mail.openembedded.org (Postfix) with ESMTP id 64CF0761D3
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 Jul 2015 06:10:11 +0000 (UTC)
-X-TPG-Junk-Status: Message not scanned
-X-TPG-Antivirus: Passed
-X-TPG-Abuse: host=60-242-171-118.static.tpgi.com.au; ip=60.242.171.118;
-	date=Tue, 28 Jul 2015 15:47:21 +1000
-Received: from gw.urbanec.net (60-242-171-118.static.tpgi.com.au
-	[60.242.171.118])
-	by mail15.tpgi.com.au (envelope-from openembedded-devel@urbanec.net)
-	(8.14.3/8.14.3) with ESMTP id t6S5lIxQ001171
-	(version=TLSv1/SSLv3 cipher=AES128-SHA bits=128 verify=NO);
-	Tue, 28 Jul 2015 15:47:21 +1000
-Received: from beep.urbanec.net ([192.168.42.2]) by gw.urbanec.net with esmtpsa
-	(TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128) (Exim 4.85)
-	(envelope-from <openembedded-devel@urbanec.net>)
-	id 1ZJxjR-00053N-Gx; Tue, 28 Jul 2015 15:47:17 +1000
-To: "Bystricky, Juro" <juro.bystricky@intel.com>,
-	Christopher Larson <clarson@kergoth.com>
+	Tue, 28 Jul 2015 10:57:21 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bes.se.axis.com (Postfix) with ESMTP id 4EE602E407;
+	Tue, 28 Jul 2015 12:57:18 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id 8BaPhdeX7iSY; Tue, 28 Jul 2015 12:57:17 +0200 (CEST)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by bes.se.axis.com (Postfix) with ESMTP id 846E72E3D8;
+	Tue, 28 Jul 2015 12:57:17 +0200 (CEST)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id 65D5710FB;
+	Tue, 28 Jul 2015 12:57:17 +0200 (CEST)
+Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
+	by boulder.se.axis.com (Postfix) with ESMTP id 55586EFB;
+	Tue, 28 Jul 2015 12:57:17 +0200 (CEST)
+Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
+	by thoth.se.axis.com (Postfix) with ESMTP id 51FE834005;
+	Tue, 28 Jul 2015 12:57:17 +0200 (CEST)
+Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
+	(10.0.5.74) with Microsoft SMTP Server id 8.3.342.0; Tue, 28 Jul 2015
+	12:57:16 +0200
+Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id E1C169C68B; 
+	Tue, 28 Jul 2015 12:57:16 +0200 (CEST)
+From: Olof Johansson <olof.johansson@axis.com>
+To: Peter Urbanec <openembedded-devel@urbanec.net>,
+	<bitbake-devel@lists.openembedded.org>
+In-Reply-To: <55B71765.6070901@urbanec.net>
 References: <1437849163-1577-1-git-send-email-juro.bystricky@intel.com>
 	<CABcZANkHbT0R6HY5jtuCN+LLnJ2fVJV2nSVa5u_VCcTdzrct9w@mail.gmail.com>
 	<6E51916E4A1F32428260031F4C7CD2B6101D2743@ORSMSX109.amr.corp.intel.com>
-From: Peter Urbanec <openembedded-devel@urbanec.net>
-Message-ID: <55B71765.6070901@urbanec.net>
-Date: Tue, 28 Jul 2015 15:47:17 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
-	Thunderbird/38.0.1
+	<55B71765.6070901@urbanec.net>
+Date: Tue, 28 Jul 2015 12:57:16 +0200
+Message-ID: <1438080227-sup-10@axis.com>
+User-Agent: Sup/0.20.0
 MIME-Version: 1.0
-In-Reply-To: <6E51916E4A1F32428260031F4C7CD2B6101D2743@ORSMSX109.amr.corp.intel.com>
-Cc: "Purdie, Richard" <richard.purdie@intel.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
 Subject: Re: [PATCH] wget.py: support for semi-colons in URL
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -47,105 +53,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 28 Jul 2015 06:10:16 -0000
-Content-Type: text/plain; charset=utf-8; format=flowed
+X-List-Received-Date: Tue, 28 Jul 2015 10:57:23 -0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 
-I have not examined the code, but could the URL use the standard URL 
-encoding mechanism to represent ; as %3B ?
+Excerpts from Peter Urbanec's message of 2015-07-28 07:47:17 +0200:
+> I have not examined the code, but could the URL use the standard URL 
+> encoding mechanism to represent ; as %3B ?
+> 
+> The idea being that the initial "Bitbake URL" is parsed / split using 
+> the original string with semicolons and the URL escaped semicolon is 
+> passed through to a lower layer that uses that part of the string as an 
+> "Internet URL"
 
-The idea being that the initial "Bitbake URL" is parsed / split using 
-the original string with semicolons and the URL escaped semicolon is 
-passed through to a lower layer that uses that part of the string as an 
-"Internet URL"
+URI encoded enitities today are handled correctly in my opinion. If I
+have a filename including a ;, I don't want it to be parsed as part of
+the URL, neither by bitbake nor the remote server --- that's where URI
+encoding comes in.
 
-Cheers,
-	Peter
+By hijacking URI encoding to mean "part of the URI, not parsed by
+bitbake", you will suprise users that expect it to mean "URI data, not
+URI control character" if I understand your proposal correctly.
 
+That could be solved by double encoding, but I don't think that would be
+worth it, all occurences of URI encoding in SRC_URI today would have to
+be updated. E.g. %20 -> %2520.
 
-On 28/07/15 02:10, Bystricky, Juro wrote:
-> I agree that a generic solution is preferable. I also I think it is only
-> prudent to support all valid URLs.
->
-> The situation is complicated by the fact that at present it may not be
-> possible to determine how to interpret the ‘;’ in SRC_URI.
->
-> It can be part of the URL or it can be a SRC_URI delimiter/separator.
->
-> As I don’t suppose changing the delimiter character from semi-colon to
-> something else (i.e. an unsafe URL character)
->
-> is an option, some other changes to the SRC_URI syntax are needed, for
-> example:
->
-> 1.Some form of escape sequence (i.e. ‘;;’ means treat as ‘;’) in URL, i.e.
->
-> SRC_URI =
-> "http://abc123.com/git/?p=gcc/gcc.git;;a=snapshot;;h=a5dd47;downloadfilename=abc.tar"
->
-> 2.Quoted string implementation, using one of the “unsafe” URL characters
-> such as ‘`’, to delimit  the URL
->
-> SRC_URI = "’
-> http://abc123.com/git/?p=gcc/gcc.git;a=snapshot;h=a5dd47`;downloadfilename=abc.tar"
->
-> 3.Something else ?
->
-> Thanks
->
-> Juro
->
-> *From:*kergoth@gmail.com [mailto:kergoth@gmail.com] *On Behalf Of
-> *Christopher Larson
-> *Sent:* Saturday, July 25, 2015 12:15 PM
-> *To:* Bystricky, Juro
-> *Cc:* bitbake-devel@lists.openembedded.org; Purdie, Richard
-> *Subject:* Re: [bitbake-devel] [PATCH] wget.py: support for semi-colons
-> in URL
->
-> On Sat, Jul 25, 2015 at 11:32 AM, Juro Bystricky
-> <juro.bystricky@intel.com <mailto:juro.bystricky@intel.com>> wrote:
->
->     Some URLs contain semi-colons. For example, some GIT repositories
->     support downloading snapshots using URL such as:
->
->     "http://abc123.com/git/?p=gcc/gcc.git;a=snapshot;h=a5dd47"
->
->     Currently there is no way to construct SRC_URI with such URLs.
->     Bitbake uses semi-colons in SRC_URI as delimiters for various
->     parameters.
->
->     This patch allows using of semi-colons in URLs: ';;' (double semi-colon)
->     in SRC_URI is processed  as a single semi-colon that is a part of a
->     URL name.
->     For example, the above URL would become:
->
->     SRC_URI = "http://abc123.com/git/?p=gcc/gcc.git;;a=snapshot;;h=a5dd47"
->
->     Note that it is not possible to determine the name of the downloaded
->     file
->     from URL alone. The onus to specify the proper name is on the user,
->     via the parameter 'downloadfilename':
->
->     SRC_URI =
->     "http://abc123.com/git/?p=gcc/gcc.git;;a=snapshot;;h=a5dd47;downloadfilename=myfile.tar.gz"
->
->     Signed-off-by: Juro Bystricky <juro.bystricky@intel.com
->     <mailto:juro.bystricky@intel.com>>
->
->
-> In my opinion, if we’re going to support this, we should really support
-> it in a generic way, in urldecode/urlencode & the URL class, and if
-> needed leverage that in wget.
-> --
->
-> Christopher Larson
-> clarson at kergoth dot com
-> Founder - BitBake, OpenEmbedded, OpenZaurus
-> Maintainer - Tslib
-> Senior Software Engineer, Mentor Graphics
->
->
->
-
+-- 
+olof johansson
 
