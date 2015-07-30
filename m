@@ -1,21 +1,22 @@
-Return-Path: <juro.bystricky@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id CC9917638A
+Return-Path: <alexander.kanavin@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 86BF17632C
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 29 Jul 2015 18:15:02 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 29 Jul 2015 11:13:49 -0700
+	Thu, 30 Jul 2015 13:19:59 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga101.fm.intel.com with ESMTP; 30 Jul 2015 06:19:54 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,572,1432623600"; d="scan'208";a="773737945"
-Received: from juro-precision-t5610.jf.intel.com ([10.7.198.145])
-	by orsmga002.jf.intel.com with ESMTP; 29 Jul 2015 11:13:47 -0700
-From: Juro Bystricky <juro.bystricky@intel.com>
+X-IronPort-AV: E=Sophos;i="5.15,577,1432623600"; d="scan'208";a="758401089"
+Received: from kanavin-desktop.fi.intel.com ([10.237.68.143])
+	by fmsmga001.fm.intel.com with ESMTP; 30 Jul 2015 06:19:53 -0700
+From: Alexander Kanavin <alexander.kanavin@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 29 Jul 2015 11:09:41 -0700
-Message-Id: <1438193381-29031-1-git-send-email-juro.bystricky@intel.com>
-X-Mailer: git-send-email 1.9.1
-Cc: richard.purdie@intel.com
-Subject: [PATCH] bitbake-user-manual-fetching.xml: note about URLs with semi-colons
+Date: Thu, 30 Jul 2015 16:20:49 +0300
+Message-Id: <3aeeda88e236f3da577adc20597dab38a66157c5.1438262095.git.alexander.kanavin@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+In-Reply-To: <cover.1438262095.git.alexander.kanavin@linux.intel.com>
+References: <cover.1438262095.git.alexander.kanavin@linux.intel.com>
+Subject: [PATCH 1/1] wget.py: fix incorrect regexes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,63 +29,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 29 Jul 2015 18:15:02 -0000
+X-List-Received-Date: Thu, 30 Jul 2015 13:19:59 -0000
 
-Some URLs contain semi-colons. Unfortunatelly, bitbake uses semi-colons in SRC_URI
-as delimiters for various parameters.
-It may still be possible to use such URLs, providing the user replaces semi-colons ';'
-with '&' characters.
+[\.-_] means "any character between . and _"
+What was meant here is certainly "any character from the three characters .-_"
 
-For example:
-
-   http://abc123.com/git/?p=gcc/gcc.git;a=snapshot;h=a5dd47
-
- and
-
-   http://abc123.com/git/?p=gcc/gcc.git&a=snapshot&h=a5dd47
-
-should be equivalent, as W3C recommends treating ';' in queries identically to '&'.
-
-See http://www.w3.org/TR/1999/REC-html401-19991224/appendix/notes.html#h-B.2.2
-
-Kudos to Olof Johansson
-
-Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
+Signed-off-by: Alexander Kanavin <alexander.kanavin@linux.intel.com>
 ---
- .../bitbake-user-manual-fetching.xml                  | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ bitbake/lib/bb/fetch2/wget.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
-index b37b2ae..f168cfa 100644
---- a/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
-+++ b/bitbake/doc/bitbake-user-manual/bitbake-user-manual-fetching.xml
-@@ -325,6 +325,25 @@
-      SRC_URI = "ftp://you@oe.handhelds.org/home/you/secret.plan"
-                 </literallayout>
-             </para>
-+            <note>
-+               Because URL parameters are delimited by semi-colons, this can
-+               introduce ambiguity when parsing URLs that also contain semi-colons,
-+               for example:
-+                <literallayout class='monospaced'>
-+     SRC_URI = "http://abc123.org/git/?p=gcc/gcc.git;a=snapshot;h=a5dd47"
-+                </literallayout>
-+               Such URLs should should be modified by replacing semi-colons with '&amp;' characters:
-+               <literallayout class='monospaced'>
-+     SRC_URI = "http://abc123.org/git/?p=gcc/gcc.git&amp;a=snapshot&amp;h=a5dd47"
-+                </literallayout>
-+                In most cases this should work. Treating semi-colons and '&amp;' in queries
-+                identically is recommended by the World Wide Web Consortium (W3C).
-+                Note that due to the nature of the URL, you may have to specify the name
-+                of the downloaded file as well:
-+              <literallayout class='monospaced'>
-+     SRC_URI = "http://abc123.org/git/?p=gcc/gcc.git&amp;a=snapshot&amp;h=a5dd47;downloadfilename=myfile.bz2"
-+                </literallayout>
-+            </note>
-         </section>
+diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
+index 425b6b9..bd2a897 100644
+--- a/bitbake/lib/bb/fetch2/wget.py
++++ b/bitbake/lib/bb/fetch2/wget.py
+@@ -406,7 +406,7 @@ class Wget(FetchMethod):
+         version_dir = ['', '', '']
+         version = ['', '', '']
  
-         <section id='cvs-fetcher'>
+-        dirver_regex = re.compile("(\D*)((\d+[\.-_])+(\d+))")
++        dirver_regex = re.compile("(\D*)((\d+[\.\-_])+(\d+))")
+         s = dirver_regex.search(dirver)
+         if s:
+             version_dir[1] = s.group(2)
+@@ -465,7 +465,7 @@ class Wget(FetchMethod):
+         pn_regex = "(%s|%s|%s)" % (pn_prefix1, pn_prefix2, pn_prefix3)
+ 
+         # match version
+-        pver_regex = "(([A-Z]*\d+[a-zA-Z]*[\.-_]*)+)"
++        pver_regex = "(([A-Z]*\d+[a-zA-Z]*[\.\-_]*)+)"
+ 
+         # match arch
+         parch_regex = "-source|_all_"
 -- 
-1.9.1
+2.1.4
 
 
