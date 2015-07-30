@@ -1,46 +1,23 @@
-Return-Path: <olof.johansson@axis.com>
-Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
-	by mail.openembedded.org (Postfix) with ESMTP id 6E3D1763F2
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 3F80B60053
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Jul 2015 15:03:54 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bes.se.axis.com (Postfix) with ESMTP id CFC4F2E53D
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Jul 2015 17:03:51 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
-Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id UsQFJ3hILVp9 for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Jul 2015 17:03:51 +0200 (CEST)
-Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by bes.se.axis.com (Postfix) with ESMTP id D8A3B2E536
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Jul 2015 17:03:50 +0200 (CEST)
-Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id BEF481254
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Jul 2015 17:03:50 +0200 (CEST)
-Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
-	by boulder.se.axis.com (Postfix) with ESMTP id ADE70100C
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Jul 2015 17:03:50 +0200 (CEST)
-Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
-	by thoth.se.axis.com (Postfix) with ESMTP id ABD3234005
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Jul 2015 17:03:50 +0200 (CEST)
-Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
-	(10.0.5.74) with Microsoft SMTP Server id 8.3.342.0; Thu, 30 Jul 2015
-	17:03:50 +0200
-Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id 425209C68B; 
-	Thu, 30 Jul 2015 17:03:50 +0200 (CEST)
-From: Olof Johansson <olof.johansson@axis.com>
-To: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Date: Thu, 30 Jul 2015 17:03:50 +0200
-Message-ID: <1438266455-sup-7263@axis.com>
-User-Agent: Sup/0.20.0
-MIME-Version: 1.0
-Subject: Variable key replaces original warnings
+	Thu, 30 Jul 2015 16:25:14 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga103.jf.intel.com with ESMTP; 30 Jul 2015 09:25:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.15,577,1432623600"; d="scan'208";a="758532096"
+Received: from linux.intel.com ([10.23.219.25])
+	by fmsmga001.fm.intel.com with ESMTP; 30 Jul 2015 09:25:15 -0700
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.65])
+	by linux.intel.com (Postfix) with ESMTP id A78A36A4005;
+	Thu, 30 Jul 2015 09:24:28 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 30 Jul 2015 19:25:04 +0300
+Message-Id: <cover.1438271912.git.ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH 00/11] toaster: tts fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,59 +30,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 30 Jul 2015 15:03:57 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Thu, 30 Jul 2015 16:25:16 -0000
 
-Hi all,
+Hi reviewers,
 
-We've started to see issues on master like
+This is a set of fixes for Toaster TTS testing system from Alex.
 
-   WARNING:
-     Variable key          USERADD_PARAM_${PN}             (; --system --home / --no-create-home --comment 'Storage manager daemon' --gid storage storage)
-     replaces original key USERADD_PARAM_recording-indexer (--system --home / --no-create-home --comment 'apache httpd' --gid www www).
+The patchset has been reviewed by me. Please review and accept.
 
-(my alignment...)
+The following changes since commit bef724057f1ea81571dd3ac5a9cf862f818434b5:
 
-The warning happens when doing
+  build: Exit scripts with result of last shell function (2015-07-27 16:29:11 +0100)
 
- WWWUSER_PACKAGE ?= "${PN}"
- USERADD_PARAM_${WWWUSER_PACKAGE} := "--system --home / --no-create-home --gid www www"
+are available in the git repository at:
 
- USERADD_PARAM_${PN}_append = "; --system --home / --no-create-home --gid username username"
+  git://git.yoctoproject.org/poky-contrib ed/toaster/submit/adamian/20150715_testfixes
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=ed/toaster/submit/adamian/20150715_testfixes
 
-(in reality, the first two lines are inherited from a class, and the third in
-the recipe itself.)
+Alexandru DAMIAN (11):
+  toaster: tts: fix pylint warnings
+  toaster: tts: clean up HTML5 compatible url list
+  toaster tests: gitignore and use absolute path for log file
+  toaster: tts: improve debugging information
+  toaster: tts: improve logging in urlcheck.py
+  toaster: tts: fix startup and cleanup for managed mode
+  toaster: tts: delete pyc files before the tests start
+  toaster: tts: delete the database only if created
+  toaster: tts: make sure to import data
+  toaster: tts: execute tests in numeric order
+  toaster: toastergui: run pylint on the toaster files
 
-With bitbake -e I see what looks like the expected value, with both users being
-created. If I change USERADD_PARAM_${WWWUSER_PACKAGE} (second line) to
-USERADD_PARAM_${PN} no warning is printed, so this only seems to be a problem
-in cases where multiple unique non-expanded vars expand to the same expanded
-var.
+ .gitignore                            |   3 +
+ lib/toaster/contrib/tts/config.py     |  37 +++++++-----
+ lib/toaster/contrib/tts/launcher.py   |  35 +++++------
+ lib/toaster/contrib/tts/recv.py       |  17 ++++--
+ lib/toaster/contrib/tts/runner.py     | 110 ++++++++++++++++++++--------------
+ lib/toaster/contrib/tts/scratchpad.py |  20 -------
+ lib/toaster/contrib/tts/shellutils.py |  64 ++++++++++----------
+ lib/toaster/contrib/tts/tests.py      |  63 ++++++++++---------
+ lib/toaster/contrib/tts/urlcheck.py   |  38 ++++++++----
+ lib/toaster/contrib/tts/urllist.py    |  83 ++++++++++++-------------
+ 10 files changed, 250 insertions(+), 220 deletions(-)
+ delete mode 100644 lib/toaster/contrib/tts/scratchpad.py
 
-I made a unit test that should demonstrate the problem (I think), and it fails
-because of the warnings:
-
-diff --git a/bitbake/lib/bb/tests/data.py b/bitbake/lib/bb/tests/data.py
-index e9aab57..e7716cc 100644
---- a/bitbake/lib/bb/tests/data.py
-+++ b/bitbake/lib/bb/tests/data.py
-@@ -386,6 +386,15 @@ class TestKeyExpansion(unittest.TestCase):
-             self.assertTrue(logContains("Variable key VAL_${FOO} (A) replaces original key VAL_foo (B)", logs))
-         self.assertEqual(self.d.getVar("VAL_foo", True), "A")
- 
-+    def test_append(self):
-+        self.d.setVar("TEST_${BAR}", "Bar")
-+        self.d.setVar("TEST_${FOO}_append", "Foo")
-+        with LogRecord() as logs:
-+            bb.data.expandKeys(self.d)
-+            self.assertFalse(logContains("Variable key TEST_${FOO} (Foo) replaces original key TEST_foo (Bar)", logs))
-+        self.assertEqual(self.d.getVar("TEST_${FOO}", True), "BarFoo")
-
-
-If you have any ideas on what this issue can be or how to fix it, please
-let me know :)
-
--- 
-olof johansson
+--
+Regards,
+Ed
 
