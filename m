@@ -1,27 +1,27 @@
 Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id CDFC4764A0
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 346B37649D
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Jul 2015 16:25:32 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 30 Jul 2015 09:25:34 -0700
+	Thu, 30 Jul 2015 16:25:34 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by orsmga103.jf.intel.com with ESMTP; 30 Jul 2015 09:25:34 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,577,1432623600"; d="scan'208";a="738931517"
+X-IronPort-AV: E=Sophos;i="5.15,577,1432623600"; d="scan'208";a="773367926"
 Received: from linux.intel.com ([10.23.219.25])
-	by orsmga001.jf.intel.com with ESMTP; 30 Jul 2015 09:25:33 -0700
+	by fmsmga002.fm.intel.com with ESMTP; 30 Jul 2015 09:25:34 -0700
 Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.65])
-	by linux.intel.com (Postfix) with ESMTP id 55E3B6A4005;
-	Thu, 30 Jul 2015 09:24:47 -0700 (PDT)
+	by linux.intel.com (Postfix) with ESMTP id DD4836A4005;
+	Thu, 30 Jul 2015 09:24:48 -0700 (PDT)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 30 Jul 2015 19:25:11 +0300
-Message-Id: <d2929c8264a347ea4b468a28c260ba908cdda258.1438271912.git.ed.bartosh@linux.intel.com>
+Date: Thu, 30 Jul 2015 19:25:12 +0300
+Message-Id: <e619c35313ef9101091bd7ac3ed629dd0479933b.1438271912.git.ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <89ab50af017d1c1d78b263b16ee50be955db2cb2.1438271912.git.ed.bartosh@linux.intel.com>
 References: <89ab50af017d1c1d78b263b16ee50be955db2cb2.1438271912.git.ed.bartosh@linux.intel.com>
 In-Reply-To: <cover.1438271912.git.ed.bartosh@linux.intel.com>
 References: <cover.1438271912.git.ed.bartosh@linux.intel.com>
-Subject: [PATCH 03/11] toaster tests: gitignore and use absolute path for log file
+Subject: [PATCH 04/11] toaster: tts: improve debugging information
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,51 +38,53 @@ X-List-Received-Date: Thu, 30 Jul 2015 16:25:34 -0000
 
 From: Alexandru DAMIAN <alexandru.damian@intel.com>
 
-gitignore the cache directory created by the http client
-
-the log file for tests is already set up as an absolute path,
-so no need to recompute the path
+We add debug information, and exception handling as to make
+it easy to figure out what is going on when tests fail on
+automatic start.
 
 Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- .gitignore                      | 3 +++
- lib/toaster/contrib/tts/recv.py | 4 ++--
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ lib/toaster/contrib/tts/runner.py | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/.gitignore b/.gitignore
-index 5adf4d1..8ca4b5d 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -12,3 +12,6 @@ venv/
- doc/bitbake-user-manual/bitbake-user-manual.html
- doc/bitbake-user-manual/bitbake-user-manual.pdf
- doc/bitbake-user-manual/bitbake-user-manual.tgz
-+lib/toaster/contrib/tts/backlog.txt
-+lib/toaster/contrib/tts/log/*
-+lib/toaster/contrib/tts/.cache/*
-diff --git a/lib/toaster/contrib/tts/recv.py b/lib/toaster/contrib/tts/recv.py
-index 2faf8d0..07efdac 100755
---- a/lib/toaster/contrib/tts/recv.py
-+++ b/lib/toaster/contrib/tts/recv.py
-@@ -25,7 +25,7 @@
- # |[full/path]/recv.py
+diff --git a/lib/toaster/contrib/tts/runner.py b/lib/toaster/contrib/tts/runner.py
+index 809fb35..dac632c 100755
+--- a/lib/toaster/contrib/tts/runner.py
++++ b/lib/toaster/contrib/tts/runner.py
+@@ -62,7 +62,10 @@ def set_up_test_branch(settings, branch_name):
+     # creates the host dir
+     if os.path.exists(testdir):
+         raise Exception("Test dir '%s'is already there, aborting" % testdir)
+-    os.mkdir(testdir)
++
++    # may raise OSError, is to be handled by the caller
++    os.makedirs(testdir)
++
  
- from __future__ import print_function
--import sys, os, config, shellutils
-+import sys, config, shellutils
+     # copies over the .git from the localclone
+     run_shell_cmd("cp -a '%s'/.git '%s'" % (settings['localclone'], testdir))
+@@ -171,12 +174,20 @@ def read_settings():
+ def clean_up(testdir):
+     run_shell_cmd("rm -rf -- '%s'" % testdir)
  
- from email.parser import Parser
++def dump_info(settings, options, args):
++    """ detailed information about current run configuration, for debugging purposes.
++    """
++    config.logger.debug("Settings:\n%s\nOptions:\n%s\nArguments:\n%s\n", settings, options, args)
++
+ def main():
+     (options, args) = validate_args()
  
-@@ -46,7 +46,7 @@ def main():
-     subject_parts = subject.split()
-     if "[review-request]" in subject_parts:
-         task_name = subject_parts[subject_parts.index("[review-request]") + 1]
--        with open(os.path.join(os.path.dirname(__file__), config.BACKLOGFILE), "a") as fout:
-+        with open(config.BACKLOGFILE, "a") as fout:
-             line = "%s|%s\n" % (task_name, config.TASKS.PENDING)
-             fout.write(line)
+     settings = read_settings()
+     need_cleanup = False
  
++    # dump debug info
++    dump_info(settings, options, args)
++
+     testdir = None
+     no_failures = 1
+     try:
 -- 
 2.1.4
 
