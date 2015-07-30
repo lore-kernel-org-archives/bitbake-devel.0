@@ -1,22 +1,46 @@
-Return-Path: <alexander.kanavin@linux.intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 86BF17632C
+Return-Path: <olof.johansson@axis.com>
+Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
+	by mail.openembedded.org (Postfix) with ESMTP id 6E3D1763F2
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Jul 2015 13:19:59 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga101.fm.intel.com with ESMTP; 30 Jul 2015 06:19:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,577,1432623600"; d="scan'208";a="758401089"
-Received: from kanavin-desktop.fi.intel.com ([10.237.68.143])
-	by fmsmga001.fm.intel.com with ESMTP; 30 Jul 2015 06:19:53 -0700
-From: Alexander Kanavin <alexander.kanavin@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 30 Jul 2015 16:20:49 +0300
-Message-Id: <3aeeda88e236f3da577adc20597dab38a66157c5.1438262095.git.alexander.kanavin@linux.intel.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <cover.1438262095.git.alexander.kanavin@linux.intel.com>
-References: <cover.1438262095.git.alexander.kanavin@linux.intel.com>
-Subject: [PATCH 1/1] wget.py: fix incorrect regexes
+	Thu, 30 Jul 2015 15:03:54 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bes.se.axis.com (Postfix) with ESMTP id CFC4F2E53D
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 30 Jul 2015 17:03:51 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id UsQFJ3hILVp9 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 30 Jul 2015 17:03:51 +0200 (CEST)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by bes.se.axis.com (Postfix) with ESMTP id D8A3B2E536
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 30 Jul 2015 17:03:50 +0200 (CEST)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id BEF481254
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 30 Jul 2015 17:03:50 +0200 (CEST)
+Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
+	by boulder.se.axis.com (Postfix) with ESMTP id ADE70100C
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 30 Jul 2015 17:03:50 +0200 (CEST)
+Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
+	by thoth.se.axis.com (Postfix) with ESMTP id ABD3234005
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 30 Jul 2015 17:03:50 +0200 (CEST)
+Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
+	(10.0.5.74) with Microsoft SMTP Server id 8.3.342.0; Thu, 30 Jul 2015
+	17:03:50 +0200
+Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id 425209C68B; 
+	Thu, 30 Jul 2015 17:03:50 +0200 (CEST)
+From: Olof Johansson <olof.johansson@axis.com>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 30 Jul 2015 17:03:50 +0200
+Message-ID: <1438266455-sup-7263@axis.com>
+User-Agent: Sup/0.20.0
+MIME-Version: 1.0
+Subject: Variable key replaces original warnings
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,39 +53,59 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 30 Jul 2015 13:19:59 -0000
+X-List-Received-Date: Thu, 30 Jul 2015 15:03:57 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-[\.-_] means "any character between . and _"
-What was meant here is certainly "any character from the three characters .-_"
+Hi all,
 
-Signed-off-by: Alexander Kanavin <alexander.kanavin@linux.intel.com>
----
- bitbake/lib/bb/fetch2/wget.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+We've started to see issues on master like
 
-diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index 425b6b9..bd2a897 100644
---- a/bitbake/lib/bb/fetch2/wget.py
-+++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -406,7 +406,7 @@ class Wget(FetchMethod):
-         version_dir = ['', '', '']
-         version = ['', '', '']
+   WARNING:
+     Variable key          USERADD_PARAM_${PN}             (; --system --home / --no-create-home --comment 'Storage manager daemon' --gid storage storage)
+     replaces original key USERADD_PARAM_recording-indexer (--system --home / --no-create-home --comment 'apache httpd' --gid www www).
+
+(my alignment...)
+
+The warning happens when doing
+
+ WWWUSER_PACKAGE ?= "${PN}"
+ USERADD_PARAM_${WWWUSER_PACKAGE} := "--system --home / --no-create-home --gid www www"
+
+ USERADD_PARAM_${PN}_append = "; --system --home / --no-create-home --gid username username"
+
+(in reality, the first two lines are inherited from a class, and the third in
+the recipe itself.)
+
+With bitbake -e I see what looks like the expected value, with both users being
+created. If I change USERADD_PARAM_${WWWUSER_PACKAGE} (second line) to
+USERADD_PARAM_${PN} no warning is printed, so this only seems to be a problem
+in cases where multiple unique non-expanded vars expand to the same expanded
+var.
+
+I made a unit test that should demonstrate the problem (I think), and it fails
+because of the warnings:
+
+diff --git a/bitbake/lib/bb/tests/data.py b/bitbake/lib/bb/tests/data.py
+index e9aab57..e7716cc 100644
+--- a/bitbake/lib/bb/tests/data.py
++++ b/bitbake/lib/bb/tests/data.py
+@@ -386,6 +386,15 @@ class TestKeyExpansion(unittest.TestCase):
+             self.assertTrue(logContains("Variable key VAL_${FOO} (A) replaces original key VAL_foo (B)", logs))
+         self.assertEqual(self.d.getVar("VAL_foo", True), "A")
  
--        dirver_regex = re.compile("(\D*)((\d+[\.-_])+(\d+))")
-+        dirver_regex = re.compile("(\D*)((\d+[\.\-_])+(\d+))")
-         s = dirver_regex.search(dirver)
-         if s:
-             version_dir[1] = s.group(2)
-@@ -465,7 +465,7 @@ class Wget(FetchMethod):
-         pn_regex = "(%s|%s|%s)" % (pn_prefix1, pn_prefix2, pn_prefix3)
- 
-         # match version
--        pver_regex = "(([A-Z]*\d+[a-zA-Z]*[\.-_]*)+)"
-+        pver_regex = "(([A-Z]*\d+[a-zA-Z]*[\.\-_]*)+)"
- 
-         # match arch
-         parch_regex = "-source|_all_"
++    def test_append(self):
++        self.d.setVar("TEST_${BAR}", "Bar")
++        self.d.setVar("TEST_${FOO}_append", "Foo")
++        with LogRecord() as logs:
++            bb.data.expandKeys(self.d)
++            self.assertFalse(logContains("Variable key TEST_${FOO} (Foo) replaces original key TEST_foo (Bar)", logs))
++        self.assertEqual(self.d.getVar("TEST_${FOO}", True), "BarFoo")
+
+
+If you have any ideas on what this issue can be or how to fix it, please
+let me know :)
+
 -- 
-2.1.4
-
+olof johansson
 
