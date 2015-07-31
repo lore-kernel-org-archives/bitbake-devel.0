@@ -1,28 +1,32 @@
-Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 7D38F7660E
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id E21E976537
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Jul 2015 12:09:58 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by fmsmga103.fm.intel.com with ESMTP; 31 Jul 2015 05:09:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,584,1432623600"; d="scan'208";a="739515599"
-Received: from linux.intel.com ([10.23.219.25])
-	by orsmga001.jf.intel.com with ESMTP; 31 Jul 2015 05:09:58 -0700
-Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.65])
-	by linux.intel.com (Postfix) with ESMTP id 7D05A6A4083
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Jul 2015 05:09:13 -0700 (PDT)
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 31 Jul 2015 15:09:23 +0300
-Message-Id: <d9e5330375aa02aff3484043dd2b681aebbd89dd.1438343854.git.ed.bartosh@linux.intel.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <cover.1438343854.git.ed.bartosh@linux.intel.com>
-References: <cover.1438343854.git.ed.bartosh@linux.intel.com>
-In-Reply-To: <cover.1438343854.git.ed.bartosh@linux.intel.com>
-References: <cover.1438343854.git.ed.bartosh@linux.intel.com>
-Subject: [PATCH 22/22] bitbake: toastergui: project page Add inline project name change feature
+	Fri, 31 Jul 2015 15:42:58 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t6VFgsOq014246; Fri, 31 Jul 2015 16:42:54 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id UCIXJwoZijhO; Fri, 31 Jul 2015 16:42:54 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t6VFgdZr014241
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 31 Jul 2015 16:42:50 +0100
+Message-ID: <1438357359.22462.89.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Olof Johansson <olof.johansson@axis.com>
+Date: Fri, 31 Jul 2015 16:42:39 +0100
+In-Reply-To: <1438343225-sup-6774@axis.com>
+References: <1438266455-sup-7263@axis.com>
+	<1438336442.22462.2.camel@linuxfoundation.org>
+	<1438336806.22462.3.camel@linuxfoundation.org>
+	<1438343225-sup-6774@axis.com>
+X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
+Mime-Version: 1.0
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: Variable key replaces original warnings
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,92 +39,65 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 31 Jul 2015 12:09:58 -0000
+X-List-Received-Date: Fri, 31 Jul 2015 15:43:00 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Michael Wood <michael.g.wood@intel.com>
+On Fri, 2015-07-31 at 13:48 +0200, Olof Johansson wrote:
+> Excerpts from Richard Purdie's message of 2015-07-31 12:00:06 +0200:
+> > The OE-Core change I made for a similar case was:
+> > 
+> > http://git.yoctoproject.org/cgit.cgi/poky/commit/meta/classes/update-rc.d.bbclass?id=3b627bb28c4ea2ea33050ad4884c6351e2d6ebad
+> > 
+> > i.e. moved to anonymous python. Not ideal, but more explicit.
+> 
+> Ah, thanks. Didn't see this before replying to your other mail. But I
+> agree, not ideal at all. It's very surprising. What I would expect is
+> that the _append is postponed and only done on the expanded vars, but
+> that's not the case? Why not?
 
-This feature allows the project name to be changed from where ever it is
-displayed in the project pages.
+Its all about the timing of the override expansion (_append is
+effectively an override) and the key expansion. Taking:
 
-[YOCTO #7329]
+PN = A
+RRECOMMENDS_${PN} = "X" 
+UPDATERCPN = "${PN}" 
+RRECOMMENDS_${UPDATERCPN}_append = "Y"
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
----
- lib/toaster/toastergui/static/js/base.js           | 29 ++++++++++++++++++++++
- .../toastergui/templates/projecttopbar.html        | 11 +++++++-
- 2 files changed, 39 insertions(+), 1 deletion(-)
+if you expand overrides first it changes to:
 
-diff --git a/lib/toaster/toastergui/static/js/base.js b/lib/toaster/toastergui/static/js/base.js
-index 09c3ef1..f253361 100644
---- a/lib/toaster/toastergui/static/js/base.js
-+++ b/lib/toaster/toastergui/static/js/base.js
-@@ -5,6 +5,10 @@ function basePageInit(ctx) {
-   var newBuildButton = $("#new-build-button");
-   var newBuildTargetInput;
-   var newBuildTargetBuildBtn;
-+  var projectNameForm = $("#project-name-change-form");
-+  var projectName = $("#project-name");
-+  var projectNameFormToggle = $("#project-change-form-toggle");
-+  var projectNameChangeCancel = $("#project-name-change-cancel");
- 
-   /* initially the current project is used unless overridden by the new build
-    * button in top right nav
-@@ -16,6 +20,31 @@ function basePageInit(ctx) {
-   var newBuildProjectInput = $("#new-build-button #project-name-input");
-   var newBuildProjectSaveBtn = $("#new-build-button #save-project-button");
- 
-+  /* Project name change functionality */
-+  projectNameFormToggle.click(function(e){
-+    e.preventDefault();
-+
-+    $(this).add(projectName).hide();
-+    projectNameForm.fadeIn();
-+  });
-+
-+  projectNameChangeCancel.click(function(e){
-+    e.preventDefault();
-+
-+    projectNameForm.hide();
-+    projectName.add(projectNameFormToggle).fadeIn();
-+  });
-+
-+  $("#project-name-change-btn").click(function(e){
-+    var newProjectName = $("#project-name-change-input").val();
-+
-+    libtoaster.editCurrentProject({ projectName: newProjectName },function (){
-+
-+      projectName.text(newProjectName);
-+      libtoaster.ctx.projectName = newProjectName;
-+      projectNameChangeCancel.click();
-+    });
-+  });
- 
-   _checkProjectBuildable();
- 
-diff --git a/lib/toaster/toastergui/templates/projecttopbar.html b/lib/toaster/toastergui/templates/projecttopbar.html
-index d4d1951..79f6d1e 100644
---- a/lib/toaster/toastergui/templates/projecttopbar.html
-+++ b/lib/toaster/toastergui/templates/projecttopbar.html
-@@ -5,7 +5,16 @@
- 
- <!-- project name -->
- <div class="row-fluid page-header">
--  <h1>{{project.name}}</h1>
-+  <h1><span id="project-name">{{project.name}}</span>
-+    <i class="icon-pencil" data-original-title="" id="project-change-form-toggle" title=""></i>
-+  </h1>
-+  <form id="project-name-change-form" style="margin-bottom: 0px; display: none;">
-+    <div class="input-append">
-+      <input class="huge input-xxlarge" type="text" id="project-name-change-input" autocomplete="off" value="{{project.name}}">
-+        <button id="project-name-change-btn" class="btn btn-large" type="button">Save</button>
-+        <a href="#" id="project-name-change-cancel" class="btn btn-large btn-link">Cancel</a>
-+    </div>
-+  </form>
- </div>
- 
- <div class="row-fluid" id="project-topbar">
--- 
-2.1.4
+RRECOMMENDS_${PN} = "X" 
+UPDATERCPN = "${PN}" 
+RRECOMMENDS_${UPDATERCPN} = "Y"
+
+and it then becomes:
+
+RRECOMMENDS_A = "Y"
+
+however if you do key expansion first it becomes:
+
+RRECOMMENDS_A = "X" 
+RRECOMMENDS_A_append = "Y"
+
+so RRECOMMENDS_A = "XY" 
+
+We're now using the former rather than the latter in bitbake however it
+will generate warnings where it sees variables conflict since users tend
+not to realise and mean something different.
+
+Worst case we could make the warnings configurable or whitelist them but
+simply changing the code not to be ambiguous is likely the best all
+around solution.
+
+Cheers,
+
+Richard
+
+
+
+
+
+
+
 
 
