@@ -1,27 +1,21 @@
-Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 2E1D3764C8
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 0A7C860444
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 30 Jul 2015 16:25:59 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga103.fm.intel.com with ESMTP; 30 Jul 2015 09:25:45 -0700
+	Fri, 31 Jul 2015 09:17:02 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by fmsmga101.fm.intel.com with ESMTP; 31 Jul 2015 02:16:43 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,577,1432623600"; d="scan'208";a="773368038"
-Received: from linux.intel.com ([10.23.219.25])
-	by fmsmga002.fm.intel.com with ESMTP; 30 Jul 2015 09:25:45 -0700
-Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.65])
-	by linux.intel.com (Postfix) with ESMTP id D80B16A4005;
-	Thu, 30 Jul 2015 09:24:59 -0700 (PDT)
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+X-IronPort-AV: E=Sophos;i="5.15,583,1432623600"; d="scan'208";a="533594749"
+Received: from unknown (HELO peggleto-mobl.ger.corp.intel.com)
+	([10.252.23.101])
+	by FMSMGA003.fm.intel.com with ESMTP; 31 Jul 2015 02:16:42 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 30 Jul 2015 19:25:19 +0300
-Message-Id: <07f5e9f8da6ec05c32b6aabb13d0aa0d13ca972d.1438271912.git.ed.bartosh@linux.intel.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <89ab50af017d1c1d78b263b16ee50be955db2cb2.1438271912.git.ed.bartosh@linux.intel.com>
-References: <89ab50af017d1c1d78b263b16ee50be955db2cb2.1438271912.git.ed.bartosh@linux.intel.com>
-In-Reply-To: <cover.1438271912.git.ed.bartosh@linux.intel.com>
-References: <cover.1438271912.git.ed.bartosh@linux.intel.com>
-Subject: [PATCH 11/11] toaster: toastergui: run pylint on the toaster files
+Date: Fri, 31 Jul 2015 10:16:32 +0100
+Message-Id: <cover.1438334127.git.paul.eggleton@linux.intel.com>
+X-Mailer: git-send-email 2.1.0
+Subject: [PATCH 0/1] Fix for bitbake.lock handling
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,38 +28,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 30 Jul 2015 16:25:59 -0000
+X-List-Received-Date: Fri, 31 Jul 2015 09:17:05 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+A patch from Richard and myself to try to fix bitbake.lock handling
+properly this time.
 
-This patch enables pylint running on the toaster files, showing
-only the errors. This enables spotting common mistakes in the
-toaster python files.
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
----
- lib/toaster/contrib/tts/tests.py | 6 ++++++
- 1 file changed, 6 insertions(+)
+The following changes since commit bef724057f1ea81571dd3ac5a9cf862f818434b5:
 
-diff --git a/lib/toaster/contrib/tts/tests.py b/lib/toaster/contrib/tts/tests.py
-index 3a4eed1..c510ebb 100644
---- a/lib/toaster/contrib/tts/tests.py
-+++ b/lib/toaster/contrib/tts/tests.py
-@@ -38,6 +38,12 @@ class Test00PyCompilable(unittest.TestCase):
-         except ShellCmdException as exc:
-             self.fail("Error compiling python files: %s" % (exc))
- 
-+    def test_pylint_file(self):
-+        try:
-+            run_shell_cmd(r"find . -iname \"*\.py\" -type f -print0 | PYTHONPATH=${PYTHONPATH}:. xargs -r -0 -n1 pylint --load-plugins pylint_django -E --reports=n 2>&1", cwd=config.TESTDIR + "/bitbake/lib/toaster")
-+        except ShellCmdException as exc:
-+            self.fail("Pylint fails: %s\n" % exc)
-+
- class Test01PySystemStart(unittest.TestCase):
-     ''' Attempts to start Toaster, verify that it is succesfull, and stop it '''
-     def setUp(self):
+  build: Exit scripts with result of last shell function (2015-07-27 16:29:11 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib paule/bitbake-lock-fix
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bitbake-lock-fix
+
+Richard Purdie (1):
+  cooker: properly fix bitbake.lock handling
+
+ lib/bb/command.py   |  6 ------
+ lib/bb/cooker.py    | 30 ++++++++++++++++++++++++++++++
+ lib/bb/main.py      |  1 +
+ lib/bb/tinfoil.py   |  1 +
+ lib/bb/ui/knotty.py | 20 --------------------
+ lib/bb/utils.py     | 29 +++++++++++++++++++++++++----
+ 6 files changed, 57 insertions(+), 30 deletions(-)
+
 -- 
-2.1.4
+2.1.0
 
 
