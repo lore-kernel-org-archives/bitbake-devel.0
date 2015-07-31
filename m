@@ -1,24 +1,28 @@
 Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 9BD34765B6
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 9768C765CC
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Jul 2015 12:09:40 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 31 Jul 2015 05:09:31 -0700
+	Fri, 31 Jul 2015 12:09:41 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by fmsmga103.fm.intel.com with ESMTP; 31 Jul 2015 05:09:42 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,584,1432623600"; d="scan'208";a="739515390"
+X-IronPort-AV: E=Sophos;i="5.15,584,1432623600"; d="scan'208";a="775177470"
 Received: from linux.intel.com ([10.23.219.25])
-	by orsmga001.jf.intel.com with ESMTP; 31 Jul 2015 05:09:31 -0700
+	by orsmga002.jf.intel.com with ESMTP; 31 Jul 2015 05:09:42 -0700
 Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.65])
-	by linux.intel.com (Postfix) with ESMTP id 528696A4083
+	by linux.intel.com (Postfix) with ESMTP id A02616A4083
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Jul 2015 05:08:46 -0700 (PDT)
+	Fri, 31 Jul 2015 05:08:56 -0700 (PDT)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 31 Jul 2015 15:09:01 +0300
-Message-Id: <cover.1438343854.git.ed.bartosh@linux.intel.com>
+Date: Fri, 31 Jul 2015 15:09:10 +0300
+Message-Id: <0512b56a2dbd146b217e8d5cb2fbef6ae5d4e813.1438343854.git.ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
-Subject: [PATCH 00/22] Toaster UI changes
+In-Reply-To: <cover.1438343854.git.ed.bartosh@linux.intel.com>
+References: <cover.1438343854.git.ed.bartosh@linux.intel.com>
+In-Reply-To: <cover.1438343854.git.ed.bartosh@linux.intel.com>
+References: <cover.1438343854.git.ed.bartosh@linux.intel.com>
+Subject: [PATCH 09/22] bitbake: toastergui: http api Add guard against incomplete change requests
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,106 +35,64 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 31 Jul 2015 12:09:40 -0000
+X-List-Received-Date: Fri, 31 Jul 2015 12:09:43 -0000
 
-Hi reviewers,
+From: Michael Wood <michael.g.wood@intel.com>
 
-This is a set of fixes for Toaster UI from Michael:
-- The new project page [YOCTO #7329]
-- The navigation changes needed for the new project page [YOCTO #7329]
-- Fixes needed for the new project page
-- Fixes needed to test the new project page (import layers, new build button)
-- Removes dependency on angular
+If we get a request to the project change api which either contains the
+current configuration (i.e no change) or empty configuration handle this
+gracefully.
 
-The patchset has been reviewed by me. Please review and accept.
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+---
+ lib/toaster/toastergui/views.py | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-The following changes since commit eb1c88c13f0490fa42fbe1681ac712ee883061a3:
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 9e89714..688a4c2 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -2160,12 +2160,12 @@ if True:
+         # execute POST requests
+         if request.method == "POST":
+             # add layers
+-            if 'layerAdd' in request.POST:
++            if 'layerAdd' in request.POST and len(request.POST['layerAdd']) > 0:
+                 for lc in Layer_Version.objects.filter(pk__in=[i for i in request.POST['layerAdd'].split(",") if len(i) > 0]):
+                     ProjectLayer.objects.get_or_create(project = prj, layercommit = lc)
+ 
+             # remove layers
+-            if 'layerDel' in request.POST:
++            if 'layerDel' in request.POST and len(request.POST['layerDel']) > 0:
+                 for t in request.POST['layerDel'].strip().split(" "):
+                     pt = ProjectLayer.objects.filter(project = prj, layercommit_id = int(t)).delete()
+ 
+@@ -2174,6 +2174,10 @@ if True:
+                 prj.save();
+ 
+             if 'projectVersion' in request.POST:
++                # If the release is the current project then return now
++                if prj.release.pk == int(request.POST.get('projectVersion',-1)):
++                    return {}
++
+                 prj.release = Release.objects.get(pk = request.POST['projectVersion'])
+                 # we need to change the bitbake version
+                 prj.bitbake_version = prj.release.bitbake_version
+@@ -2257,8 +2261,12 @@ if True:
+ 
+             # returns layer versions that would be deleted on the new release__pk
+             if request.GET.get('type', None) == "versionlayers":
++                # If we're already on this project do nothing
++                if prj.release.pk == int(request.GET.get('search', -1)):
++                    return HttpResponse(jsonfilter({"error": "ok", "rows": []}), content_type="application/json")
+ 
+                 retval = []
++
+                 for i in prj.projectlayer_set.all():
+                     lv = prj.compatible_layerversions(release = Release.objects.get(pk=request.GET.get('search', None))).filter(layer__name = i.layercommit.layer.name)
+                     # there is no layer_version with the new release id, and the same name
+-- 
+2.1.4
 
-  distro/maintainers.inc: Fix parsing error due to lack of " at end. (2015-07-29 20:27:51 +0100)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib ed/toaster/submit/michaelw/toaster/import-project-navigation-work
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=ed/toaster/submit/michaelw/toaster/import-project-navigation-work
-
-Michael Wood (22):
-  bitbake: toastergui: Implement new top navigation design
-  bitbake: toastergui: Implement new project navigation
-  bitbake: toastergui: base Fix html indentation
-  bitbake: toastergui: importlayer Add format type to JSON calls
-  bitbake: toastergui: Remove erroneous CSS property
-  bitbake: toastergui: Standardise the layer object property
-    layerdetailurl
-  bitbake: toastergui: libtoaster Add show change notification function
-  bitbake: toastergui: tables Add name field to layers table
-  bitbake: toastergui: http api Add guard against incomplete change
-    requests
-  bitbake: toastergui: css Add new rules for new project page
-  bitbake: toastergui: Add new project page and navigation
-  bitbake: toastergui: css Remove redundant css rules
-  bitbake: toastergui: libtoaster Make sure we always pass format=json
-  bitbake: toastergui: libtoaster: Add guard against missing name
-    property
-  bitbake: toastergui: Fix Duplicate layer importlayer api calls
-  bitbake: toastergui: base Use removeAttr / attr
-  bitbake: toastergui: Change build button popover to a build-button
-  bitbake: toastergui: newbuildbutton Fix typo on project save function
-  bitbake: toastergui: newbuildbutton Fix removed elements
-  bitbake: toastergui: Remove angularJS and projectapp based on angular
-  bitbake: toastergui: layerBtn use libtoaster for change notification
-  bitbake: toastergui: project page Add inline project name change
-    feature
-
- lib/toaster/toastergui/static/css/default.css      |  33 +-
- .../toastergui/static/js/angular-animate.min.js    |  28 -
- .../toastergui/static/js/angular-cookies.min.js    |   8 -
- .../toastergui/static/js/angular-route.min.js      |  14 -
- .../toastergui/static/js/angular-sanitize.min.js   |  15 -
- lib/toaster/toastergui/static/js/angular.min.js    | 215 -----
- .../toastergui/static/js/angular.min.js.map        |   8 -
- lib/toaster/toastergui/static/js/base.js           | 165 ++--
- lib/toaster/toastergui/static/js/importlayer.js    |  42 +-
- lib/toaster/toastergui/static/js/layerBtn.js       |   4 +-
- lib/toaster/toastergui/static/js/layerdetails.js   |  16 +-
- lib/toaster/toastergui/static/js/libtoaster.js     |  37 +-
- lib/toaster/toastergui/static/js/projectapp.js     | 985 ---------------------
- lib/toaster/toastergui/static/js/projectpage.js    | 429 +++++++++
- lib/toaster/toastergui/tables.py                   |  12 +-
- lib/toaster/toastergui/templates/base.html         | 236 ++---
- .../templates/baseprojectbuildspage.html           |  15 +
- .../toastergui/templates/baseprojectpage.html      |  62 +-
- .../toastergui/templates/basetable_top.html        |   1 -
- .../templates/basetable_top_buildprojects.html     |  14 -
- .../templates/basetable_top_projectbuilds.html     |  14 -
- .../toastergui/templates/buildrequestdetails.html  |   3 -
- lib/toaster/toastergui/templates/builds.html       |   2 +-
- .../templates/generic-toastertable-page.html       |  24 +-
- lib/toaster/toastergui/templates/importlayer.html  |  19 +-
- lib/toaster/toastergui/templates/layer_btn.html    |   4 +-
- lib/toaster/toastergui/templates/layerdetails.html |  29 +-
- lib/toaster/toastergui/templates/machine_btn.html  |   4 +-
- lib/toaster/toastergui/templates/project.html      | 518 ++---------
- .../toastergui/templates/projectbuilds.html        |   5 +-
- lib/toaster/toastergui/templates/projectconf.html  |   8 +-
- lib/toaster/toastergui/templates/projects.html     |   2 +-
- .../toastergui/templates/projecttopbar.html        |  57 ++
- lib/toaster/toastergui/templates/recipe_btn.html   |   2 +-
- lib/toaster/toastergui/urls.py                     |   6 +-
- lib/toaster/toastergui/views.py                    |  32 +-
- 36 files changed, 1036 insertions(+), 2032 deletions(-)
- delete mode 100644 bitbake/lib/toaster/toastergui/static/js/angular-animate.min.js
- delete mode 100644 bitbake/lib/toaster/toastergui/static/js/angular-cookies.min.js
- delete mode 100644 bitbake/lib/toaster/toastergui/static/js/angular-route.min.js
- delete mode 100644 bitbake/lib/toaster/toastergui/static/js/angular-sanitize.min.js
- delete mode 100644 bitbake/lib/toaster/toastergui/static/js/angular.min.js
- delete mode 100644 bitbake/lib/toaster/toastergui/static/js/angular.min.js.map
- delete mode 100644 bitbake/lib/toaster/toastergui/static/js/projectapp.js
- create mode 100644 bitbake/lib/toaster/toastergui/static/js/projectpage.js
- create mode 100644 bitbake/lib/toaster/toastergui/templates/baseprojectbuildspage.html
- delete mode 100644 bitbake/lib/toaster/toastergui/templates/basetable_top_buildprojects.html
- delete mode 100644 bitbake/lib/toaster/toastergui/templates/basetable_top_projectbuilds.html
- create mode 100644 bitbake/lib/toaster/toastergui/templates/projecttopbar.html
-
---
-Ed
 
