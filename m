@@ -1,28 +1,28 @@
 Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id AE40A765D3
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id A26C8765E3
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Jul 2015 12:09:48 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by fmsmga103.fm.intel.com with ESMTP; 31 Jul 2015 05:09:48 -0700
+	Fri, 31 Jul 2015 12:09:49 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by orsmga101.jf.intel.com with ESMTP; 31 Jul 2015 05:09:50 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,584,1432623600"; d="scan'208";a="739515522"
+X-IronPort-AV: E=Sophos;i="5.15,584,1432623600"; d="scan'208";a="774000146"
 Received: from linux.intel.com ([10.23.219.25])
-	by orsmga001.jf.intel.com with ESMTP; 31 Jul 2015 05:09:48 -0700
+	by fmsmga002.fm.intel.com with ESMTP; 31 Jul 2015 05:09:50 -0700
 Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.65])
-	by linux.intel.com (Postfix) with ESMTP id 863EC6A4083
+	by linux.intel.com (Postfix) with ESMTP id A72376A4083
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Jul 2015 05:09:03 -0700 (PDT)
+	Fri, 31 Jul 2015 05:09:04 -0700 (PDT)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 31 Jul 2015 15:09:16 +0300
-Message-Id: <6fb70a53d3247dcae65e2f78c0b02c74f4c0f427.1438343854.git.ed.bartosh@linux.intel.com>
+Date: Fri, 31 Jul 2015 15:09:17 +0300
+Message-Id: <088898412cae6922d2e8b519d7fe6b706473853a.1438343854.git.ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <cover.1438343854.git.ed.bartosh@linux.intel.com>
 References: <cover.1438343854.git.ed.bartosh@linux.intel.com>
 In-Reply-To: <cover.1438343854.git.ed.bartosh@linux.intel.com>
 References: <cover.1438343854.git.ed.bartosh@linux.intel.com>
-Subject: [PATCH 15/22] bitbake: toastergui: Fix Duplicate layer importlayer api calls
+Subject: [PATCH 16/22] bitbake: toastergui: base Use removeAttr / attr
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,52 +35,61 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 31 Jul 2015 12:09:48 -0000
+X-List-Received-Date: Fri, 31 Jul 2015 12:09:49 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-As the JSON response changed the duplicate layer functionality wasn't
-wasn't working as the field names in the returned data changed. This
-patch brings the field names back in sync with the response.
+Use removeAttr and attr calls to enable and disable the build button and
+build input field.
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- lib/toaster/toastergui/static/js/importlayer.js | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ lib/toaster/toastergui/static/js/base.js | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/lib/toaster/toastergui/static/js/importlayer.js b/lib/toaster/toastergui/static/js/importlayer.js
-index 03274c0..50bc4dd 100644
---- a/lib/toaster/toastergui/static/js/importlayer.js
-+++ b/lib/toaster/toastergui/static/js/importlayer.js
-@@ -195,8 +195,8 @@ function importLayerPageInit (ctx) {
-     var dupLayerInfo = $("#duplicate-layer-info");
-     dupLayerInfo.find(".dup-layer-name").text(layer.name);
-     dupLayerInfo.find(".dup-layer-link").attr("href", layer.layerdetailurl);
--    dupLayerInfo.find("#dup-layer-vcs-url").text(layer.giturl);
--    dupLayerInfo.find("#dup-layer-revision").text(layer.revision);
-+    dupLayerInfo.find("#dup-layer-vcs-url").text(layer.layer__vcs_url);
-+    dupLayerInfo.find("#dup-layer-revision").text(layer.revision.commit);
+diff --git a/lib/toaster/toastergui/static/js/base.js b/lib/toaster/toastergui/static/js/base.js
+index 0fb1f8b..c99f8cd 100644
+--- a/lib/toaster/toastergui/static/js/base.js
++++ b/lib/toaster/toastergui/static/js/base.js
+@@ -62,7 +62,9 @@ function basePageInit(ctx) {
+   libtoaster.makeTypeahead(newBuildTargetInput, selectedProject.projectTargetsUrl, { format: "json" }, function (item) {
+         /* successfully selected a target */
+       selectedTarget = item;
+-  });
++      newBuildTargetBuildBtn.removeAttr("disabled");
++    });
++  }
  
-     $(".fields-apart-from-layer-name").fadeOut(function(){
+   newBuildTargetInput.on('input', function () {
+     if ($(this).val().length === 0) {
+@@ -105,8 +107,8 @@ function basePageInit(ctx) {
+           $("#new-build-button .alert").hide();
  
-@@ -214,11 +214,11 @@ function importLayerPageInit (ctx) {
-       $.getJSON(libtoaster.ctx.projectLayersUrl,
-         { include_added: "true" , search: name, format: "json" },
-         function(layer) {
--          if (layer.list.length > 0) {
--            for (var i in layer.list){
--              if (layer.list[i].name == name) {
--                console.log(layer.list[i])
--                layerExistsError(layer.list[i]);
-+          if (layer.rows.length > 0) {
-+            for (var i in layer.rows){
-+              if (layer.rows[i].name == name) {
-+                console.log(layer.rows[i])
-+                layerExistsError(layer.rows[i]);
-               }
-             }
-           }
+           /* we can build this project; enable input fields */
+-          newBuildTargetInput.prop("disabled", false);
+-          newBuildTargetBuildBtn.prop("disabled", false);
++          newBuildTargetInput.removeAttr("disabled");
++          newBuildTargetBuildBtn.removeAttr("disabled");
+        }
+       }, null);
+   }
+@@ -144,13 +146,13 @@ function basePageInit(ctx) {
+       /* Update the typeahead project_id paramater */
+       _checkProjectBuildable();
+ 
+-      newBuildTargetInput.prop("disabled", false);
+-      newBuildTargetBuildBtn.prop("disabled", false);
++      newBuildTargetInput.removeAttr("disabled");
+ 
+       /* Update the typeahead to use the new selectedProject */
+       libtoaster.makeTypeahead(newBuildTargetInput, selectedProject.projectTargetsUrl, { format: "json" }, function (item) {
+         /* successfully selected a target */
+         selectedTarget = item;
++        newBuildTargetBuildBtn.removeAttr("disabled");
+       });
+ 
+       newBuildTargetInput.val("");
 -- 
 2.1.4
 
