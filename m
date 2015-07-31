@@ -1,45 +1,28 @@
-Return-Path: <olof.johansson@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 3DD62764A3
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 9E39573D13
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Jul 2015 11:48:35 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id 65E53180C4;
-	Fri, 31 Jul 2015 13:48:35 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id E5KxysvY3-1u; Fri, 31 Jul 2015 13:48:34 +0200 (CEST)
-Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by bastet.se.axis.com (Postfix) with ESMTP id B2BE51807D;
-	Fri, 31 Jul 2015 13:48:34 +0200 (CEST)
-Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id 9BC5E1302;
-	Fri, 31 Jul 2015 13:48:34 +0200 (CEST)
-Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
-	by boulder.se.axis.com (Postfix) with ESMTP id 8F72410F6;
-	Fri, 31 Jul 2015 13:48:34 +0200 (CEST)
-Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
-	by seth.se.axis.com (Postfix) with ESMTP id 8D0973E049;
-	Fri, 31 Jul 2015 13:48:34 +0200 (CEST)
-Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
-	(10.0.5.74) with Microsoft SMTP Server id 8.3.342.0; Fri, 31 Jul 2015
-	13:48:34 +0200
-Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id 3DC009C68B; 
-	Fri, 31 Jul 2015 13:48:34 +0200 (CEST)
-From: Olof Johansson <olof.johansson@axis.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-In-Reply-To: <1438336806.22462.3.camel@linuxfoundation.org>
-References: <1438266455-sup-7263@axis.com>
-	<1438336442.22462.2.camel@linuxfoundation.org>
-	<1438336806.22462.3.camel@linuxfoundation.org>
-Date: Fri, 31 Jul 2015 13:48:34 +0200
-Message-ID: <1438343225-sup-6774@axis.com>
-User-Agent: Sup/0.20.0
-MIME-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: Variable key replaces original warnings
+	Fri, 31 Jul 2015 12:09:32 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by orsmga103.jf.intel.com with ESMTP; 31 Jul 2015 05:09:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.15,584,1432623600"; d="scan'208";a="773999946"
+Received: from linux.intel.com ([10.23.219.25])
+	by fmsmga002.fm.intel.com with ESMTP; 31 Jul 2015 05:09:32 -0700
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.65])
+	by linux.intel.com (Postfix) with ESMTP id 759986A4083
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 31 Jul 2015 05:08:47 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 31 Jul 2015 15:09:02 +0300
+Message-Id: <98ee3faca3fc39be91912267c633a7a2830e6ce5.1438343854.git.ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+In-Reply-To: <cover.1438343854.git.ed.bartosh@linux.intel.com>
+References: <cover.1438343854.git.ed.bartosh@linux.intel.com>
+In-Reply-To: <cover.1438343854.git.ed.bartosh@linux.intel.com>
+References: <cover.1438343854.git.ed.bartosh@linux.intel.com>
+Subject: [PATCH 01/22] bitbake: toastergui: Implement new top navigation design
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,22 +35,147 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 31 Jul 2015 11:48:40 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Fri, 31 Jul 2015 12:09:33 -0000
 
-Excerpts from Richard Purdie's message of 2015-07-31 12:00:06 +0200:
-> The OE-Core change I made for a similar case was:
-> 
-> http://git.yoctoproject.org/cgit.cgi/poky/commit/meta/classes/update-rc.d.bbclass?id=3b627bb28c4ea2ea33050ad4884c6351e2d6ebad
-> 
-> i.e. moved to anonymous python. Not ideal, but more explicit.
+From: Michael Wood <michael.g.wood@intel.com>
 
-Ah, thanks. Didn't see this before replying to your other mail. But I
-agree, not ideal at all. It's very surprising. What I would expect is
-that the _append is postponed and only done on the expanded vars, but
-that's not the case? Why not?
+Additional items for top level navigation. This is part of a wider
+navigation redesign.
 
+[YOCTO #7329]
+
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+---
+ lib/toaster/toastergui/static/css/default.css      |  8 +++++--
+ lib/toaster/toastergui/templates/base.html         | 28 +++++++++++++++++++---
+ .../templates/basetable_top_projectbuilds.html     | 14 -----------
+ lib/toaster/toastergui/templates/projects.html     |  2 +-
+ 4 files changed, 32 insertions(+), 20 deletions(-)
+ delete mode 100644 bitbake/lib/toaster/toastergui/templates/basetable_top_projectbuilds.html
+
+diff --git a/lib/toaster/toastergui/static/css/default.css b/lib/toaster/toastergui/static/css/default.css
+index 9acf1e1..da78f47 100644
+--- a/lib/toaster/toastergui/static/css/default.css
++++ b/lib/toaster/toastergui/static/css/default.css
+@@ -22,7 +22,7 @@
+ .get-help-red { color: #B94A48; font-size: 16px; padding-left: 2px; }
+ .get-help-red:hover { color: #943A38; cursor: pointer; }
+ .build-form>i:first-of-type { margin-left: 5px; }
+-.manual { margin: 11px 15px;}
++.manual { margin: 11px 15px 0 11px;}
+ .heading-help { font-size: 14px; }
+ 
+ /* Styles for the external link */
+@@ -163,7 +163,7 @@ table { table-layout: fixed; word-wrap: break-word; }
+ /* Configuration styles */
+ .icon-trash { color: #B94A48; font-size: 16px; padding-left: 5px; }
+ .icon-trash:hover { color: #943A38; text-decoration: none; cursor: pointer; }
+-.icon-pencil, .icon-download-alt, .icon-refresh, .icon-star-empty, .icon-star, .icon-tasks { font-size: 16px; color: #0088CC; padding-left: 2px; }
++.icon-pencil, .icon-download-alt, .icon-refresh, .icon-star-empty, .icon-star  { font-size: 16px; color: #0088CC; padding-left: 2px; }
+ .icon-pencil:hover, .icon-download-alt:hover, .icon-refresh:hover, .icon-star-empty:hover, .icon-star:hover, .icon-tasks:hover { color: #005580; text-decoration: none; cursor: pointer; }
+ .icon-share { padding-left: 2px; }
+ .alert-success .icon-refresh, .alert-success .icon-tasks { color: #468847; }
+@@ -308,3 +308,7 @@ thead .add-del-layers { width: 124px; }
+   }
+ }
+ /* End copied in from newer version of Font-Awesome 4.3.0 */
++
++.top-padded {
++  padding-top: 60px;
++}
+diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
+index 7430338..b34e6c3 100644
+--- a/lib/toaster/toastergui/templates/base.html
++++ b/lib/toaster/toastergui/templates/base.html
+@@ -69,8 +69,9 @@
+     Loading <i class="fa-pulse icon-spinner"></i>
+   </div>
+ 
+-<div class="navbar navbar-static-top">
+-    <div class="navbar-inner">
++<div class="navbar navbar-fixed-top">
++ <div class="navbar-inner">
++   <div class="container-fluid">
+             <a class="brand logo" href="#"><img src="{% static 'img/logo.png' %}" class="" alt="Yocto logo project"/></a>
+             <span class="brand">
+                 <a href="/">Toaster</a>
+@@ -78,6 +79,24 @@
+                     <i class="icon-info-sign" title="<strong>Toaster version information</strong>" data-content="<dl><dt>Branch</dt><dd>{{TOASTER_BRANCH}}</dd><dt>Revision</dt><dd>{{TOASTER_REVISION}}</dd></dl>"></i>
+                 {% endif %}
+             </span>
++<ul class="nav">
++
++  <li {% if "builds" in  request.path  %}
++       class="active"
++      {% endif %}>
++    <a href="{% url 'all-builds' %}">
++      <i class="icon-tasks"></i>
++      All builds
++    </a>
++  </li>
++  <li {% if "projects" in  request.path  %}
++       class="active"
++      {% endif %}>
++    <a href="{% url 'all-projects' %}">
++      <i class="icon-folder-open"></i>
++      All projects
++    </a>
++  </li>                                                                         </ul>
+             <a class="pull-right manual" target="_blank" href="http://www.yoctoproject.org/docs/latest/toaster-manual/toaster-manual.html">
+                 <i class="icon-book"></i>
+                 Toaster manual
+@@ -128,12 +147,15 @@
+ 
+ 
+     </div>
++ </div>
+ </div>
+ 
+-<div class="container-fluid">
++<div class="container-fluid top-padded">
++<div class="row-fluid">
+ {% block pagecontent %}
+ {% endblock %}
+ </div>
++</div>
+ </body>
+ </html>
+ 
+diff --git a/lib/toaster/toastergui/templates/basetable_top_projectbuilds.html b/lib/toaster/toastergui/templates/basetable_top_projectbuilds.html
+deleted file mode 100644
+index f5b01c8..0000000
+--- a/lib/toaster/toastergui/templates/basetable_top_projectbuilds.html
++++ /dev/null
+@@ -1,14 +0,0 @@
+-{% extends "basetable_top.html" %}
+-
+-{%block custombuttons %}
+-  <div class="btn-group builds-projects">
+-    <button class="btn dropdown-toggle" data-toggle="dropdown">
+-        <span class="selection">Show all projects</span>
+-        <i class="icon-caret-down"></i>
+-    </button>
+-    <ul class="dropdown-menu">
+-        <li><a href="{% url 'all-builds'%}">Show all builds</a></li>
+-        <li><a href="{% url 'all-projects'%}">Show all projects</a></li>
+-    </ul>
+-  </div>
+-{%endblock%}
+diff --git a/lib/toaster/toastergui/templates/projects.html b/lib/toaster/toastergui/templates/projects.html
+index efc3349..c2d77b5 100644
+--- a/lib/toaster/toastergui/templates/projects.html
++++ b/lib/toaster/toastergui/templates/projects.html
+@@ -34,7 +34,7 @@
+     </div>
+ 
+   {% else %} {# We have builds to display #}
+-  {% include "basetable_top_projectbuilds.html" %}
++  {% include "basetable_top.html" %}
+   {% for o in objects %}
+     <tr class="data">
+       <td><a href="{% url 'project' o.id %}">{{o.name}}</a></td>
 -- 
-olof johansson
+2.1.4
+
 
