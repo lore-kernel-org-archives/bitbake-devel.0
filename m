@@ -1,32 +1,35 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id E21E976537
+Return-Path: <kergoth@gmail.com>
+Received: from mail-pa0-f51.google.com (mail-pa0-f51.google.com
+	[209.85.220.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 91FEE765AB
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 31 Jul 2015 15:42:58 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t6VFgsOq014246; Fri, 31 Jul 2015 16:42:54 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id UCIXJwoZijhO; Fri, 31 Jul 2015 16:42:54 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t6VFgdZr014241
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 31 Jul 2015 16:42:50 +0100
-Message-ID: <1438357359.22462.89.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Olof Johansson <olof.johansson@axis.com>
-Date: Fri, 31 Jul 2015 16:42:39 +0100
-In-Reply-To: <1438343225-sup-6774@axis.com>
-References: <1438266455-sup-7263@axis.com>
-	<1438336442.22462.2.camel@linuxfoundation.org>
-	<1438336806.22462.3.camel@linuxfoundation.org>
-	<1438343225-sup-6774@axis.com>
-X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
-Mime-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: Variable key replaces original warnings
+	Fri, 31 Jul 2015 17:31:50 +0000 (UTC)
+Received: by pabkd10 with SMTP id kd10so44110835pab.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 31 Jul 2015 10:31:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=qMsIaGFu/A2jB7NrhwBztPexRkzHI/U5UrN79eo5TPM=;
+	b=Cjkp8wC6PQL58jvhHI8UpWb9hX/NmFAo3CcpYoyyIagKRuoQy/xCXDtdAECINywbWs
+	Xwj8sQc1GDqHiKkelgsIfmufHNkbhpb0JQktYgo12ADWHypAMZqwAgSb4nxKFbFfkUhf
+	clxRdbygd41paPb/OfHp5iqqvp7r4HaL+59X5J2xs3Zsx+Jn5Ot/9pKz/uQoWD9Kv1rH
+	WFj5qY24bcNVU0uz/sHT525mC4uzNVtCtnvCYEQf8QARu9hVN59LlwC20N4b8QsCF/ml
+	cnL6ZSYhwM4o1CY/nkG0qwRCCZWv2eDyJA9gp0b4dSXZML96/jfwbKy6v3eh0bsQ+OYu
+	OygQ==
+X-Received: by 10.66.197.234 with SMTP id ix10mr9060388pac.152.1438363911274; 
+	Fri, 31 Jul 2015 10:31:51 -0700 (PDT)
+Received: from amyr.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
+	by smtp.gmail.com with ESMTPSA id
+	de2sm8805005pdb.15.2015.07.31.10.31.49
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Fri, 31 Jul 2015 10:31:50 -0700 (PDT)
+From: Christopher Larson <kergoth@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 31 Jul 2015 10:31:33 -0700
+Message-Id: <1438363893-11812-1-git-send-email-kergoth@gmail.com>
+X-Mailer: git-send-email 2.2.1
+Cc: Christopher Larson <chris_larson@mentor.com>
+Subject: [PATCH] bb.build: let addtask undo a deltask
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,65 +42,48 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 31 Jul 2015 15:43:00 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 31 Jul 2015 17:31:54 -0000
 
-On Fri, 2015-07-31 at 13:48 +0200, Olof Johansson wrote:
-> Excerpts from Richard Purdie's message of 2015-07-31 12:00:06 +0200:
-> > The OE-Core change I made for a similar case was:
-> > 
-> > http://git.yoctoproject.org/cgit.cgi/poky/commit/meta/classes/update-rc.d.bbclass?id=3b627bb28c4ea2ea33050ad4884c6351e2d6ebad
-> > 
-> > i.e. moved to anonymous python. Not ideal, but more explicit.
-> 
-> Ah, thanks. Didn't see this before replying to your other mail. But I
-> agree, not ideal at all. It's very surprising. What I would expect is
-> that the _append is postponed and only done on the expanded vars, but
-> that's not the case? Why not?
+From: Christopher Larson <chris_larson@mentor.com>
 
-Its all about the timing of the override expansion (_append is
-effectively an override) and the key expansion. Taking:
+While we're in that part of the code, also fix 'not foo in bar' to 'foo not in
+bar', as is preferred in python.
 
-PN = A
-RRECOMMENDS_${PN} = "X" 
-UPDATERCPN = "${PN}" 
-RRECOMMENDS_${UPDATERCPN}_append = "Y"
+Signed-off-by: Christopher Larson <chris_larson@mentor.com>
+---
+ lib/bb/build.py | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-if you expand overrides first it changes to:
-
-RRECOMMENDS_${PN} = "X" 
-UPDATERCPN = "${PN}" 
-RRECOMMENDS_${UPDATERCPN} = "Y"
-
-and it then becomes:
-
-RRECOMMENDS_A = "Y"
-
-however if you do key expansion first it becomes:
-
-RRECOMMENDS_A = "X" 
-RRECOMMENDS_A_append = "Y"
-
-so RRECOMMENDS_A = "XY" 
-
-We're now using the former rather than the latter in bitbake however it
-will generate warnings where it sees variables conflict since users tend
-not to realise and mean something different.
-
-Worst case we could make the warnings configurable or whitelist them but
-simply changing the code not to be ambiguous is likely the best all
-around solution.
-
-Cheers,
-
-Richard
-
-
-
-
-
-
-
+diff --git a/lib/bb/build.py b/lib/bb/build.py
+index 764163f..866056b 100644
+--- a/lib/bb/build.py
++++ b/lib/bb/build.py
+@@ -736,9 +736,14 @@ def addtask(task, before, after, d):
+     if task[:3] != "do_":
+         task = "do_" + task
+ 
++    deltasks = d.getVar('__BBDELTASKS', False)
++    if deltasks and task in deltasks:
++        deltasks.remove(task)
++        d.setVar('__BBDELTASKS', deltasks)
++
+     d.setVarFlag(task, "task", 1)
+     bbtasks = d.getVar('__BBTASKS', False) or []
+-    if not task in bbtasks:
++    if task not in bbtasks:
+         bbtasks.append(task)
+     d.setVar('__BBTASKS', bbtasks)
+ 
+@@ -761,7 +766,7 @@ def deltask(task, d):
+         task = "do_" + task
+ 
+     bbtasks = d.getVar('__BBDELTASKS', False) or []
+-    if not task in bbtasks:
++    if task not in bbtasks:
+         bbtasks.append(task)
+     d.setVar('__BBDELTASKS', bbtasks)
+ 
+-- 
+2.2.1
 
 
