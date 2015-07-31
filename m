@@ -1,18 +1,29 @@
-Return-Path: <fabien.proriol@jdsu.com>
-X-Greylist: delayed 461 seconds by postgrey-1.34 at layers.openembedded.org;
-	Tue, 28 Jul 2015 15:22:01 UTC
-Received: from ks.kazoe.org (ks.kazoe.org [91.121.82.209])
-	by mail.openembedded.org (Postfix) with ESMTP id 4910476312
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 2E477763A0
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 28 Jul 2015 15:22:01 +0000 (UTC)
-From: fabien.proriol@jdsu.com
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 28 Jul 2015 17:10:11 +0200
-Message-Id: <1438096211-13663-1-git-send-email-fabien.proriol@jdsu.com>
-X-Mailer: git-send-email 2.3.6
-X-Mailman-Approved-At: Fri, 31 Jul 2015 09:42:10 +0000
-Cc: Fabien Proriol <fabien.proriol@jdsu.com>
-Subject: [PATCH] Display Runned Task in verbose mode
+	Fri, 31 Jul 2015 09:54:18 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t6V9sGCs017700; Fri, 31 Jul 2015 10:54:16 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id PMlZL9444XNc; Fri, 31 Jul 2015 10:54:16 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t6V9s2Xh017693
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 31 Jul 2015 10:54:14 +0100
+Message-ID: <1438336442.22462.2.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Olof Johansson <olof.johansson@axis.com>
+Date: Fri, 31 Jul 2015 10:54:02 +0100
+In-Reply-To: <1438266455-sup-7263@axis.com>
+References: <1438266455-sup-7263@axis.com>
+X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
+Mime-Version: 1.0
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: Variable key replaces original warnings
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -25,28 +36,75 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 28 Jul 2015 15:22:01 -0000
+X-List-Received-Date: Fri, 31 Jul 2015 09:54:21 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Fabien Proriol <fabien.proriol@jdsu.com>
+On Thu, 2015-07-30 at 17:03 +0200, Olof Johansson wrote:
+> Hi all,
+> 
+> We've started to see issues on master like
+> 
+>    WARNING:
+>      Variable key          USERADD_PARAM_${PN}             (; --system --home / --no-create-home --comment 'Storage manager daemon' --gid storage storage)
+>      replaces original key USERADD_PARAM_recording-indexer (--system --home / --no-create-home --comment 'apache httpd' --gid www www).
+> 
+> (my alignment...)
+> 
+> The warning happens when doing
+> 
+>  WWWUSER_PACKAGE ?= "${PN}"
+>  USERADD_PARAM_${WWWUSER_PACKAGE} := "--system --home / --no-create-home --gid www www"
+> 
+>  USERADD_PARAM_${PN}_append = "; --system --home / --no-create-home --gid username username"
+> 
+> (in reality, the first two lines are inherited from a class, and the third in
+> the recipe itself.)
+> 
+> With bitbake -e I see what looks like the expected value, with both users being
+> created. If I change USERADD_PARAM_${WWWUSER_PACKAGE} (second line) to
+> USERADD_PARAM_${PN} no warning is printed, so this only seems to be a problem
+> in cases where multiple unique non-expanded vars expand to the same expanded
+> var.
+> 
+> I made a unit test that should demonstrate the problem (I think), and it fails
+> because of the warnings:
+> 
+> diff --git a/bitbake/lib/bb/tests/data.py b/bitbake/lib/bb/tests/data.py
+> index e9aab57..e7716cc 100644
+> --- a/bitbake/lib/bb/tests/data.py
+> +++ b/bitbake/lib/bb/tests/data.py
+> @@ -386,6 +386,15 @@ class TestKeyExpansion(unittest.TestCase):
+>              self.assertTrue(logContains("Variable key VAL_${FOO} (A) replaces original key VAL_foo (B)", logs))
+>          self.assertEqual(self.d.getVar("VAL_foo", True), "A")
+>  
+> +    def test_append(self):
+> +        self.d.setVar("TEST_${BAR}", "Bar")
+> +        self.d.setVar("TEST_${FOO}_append", "Foo")
+> +        with LogRecord() as logs:
+> +            bb.data.expandKeys(self.d)
+> +            self.assertFalse(logContains("Variable key TEST_${FOO} (Foo) replaces original key TEST_foo (Bar)", logs))
+> +        self.assertEqual(self.d.getVar("TEST_${FOO}", True), "BarFoo")
+> 
+> 
+> If you have any ideas on what this issue can be or how to fix it, please
+> let me know :)
 
-It can be usefull to list task order with
-bitbake -n -v <recipe>
----
- bitbake/lib/bb/ui/knotty.py | 1 +
- 1 file changed, 1 insertion(+)
+The data store changes recently caused a number of these to appear. The
+issue has always been there, as has this warning, the new datastore code
+just exposes it a bit more consistently than previously.
 
-diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
-index 2bee242..2a6f175 100644
---- a/bitbake/lib/bb/ui/knotty.py
-+++ b/bitbake/lib/bb/ui/knotty.py
-@@ -467,6 +467,7 @@ def main(server, eventHandler, params, tf = TerminalFilter):
-                     tasktype = 'noexec task'
-                 else:
-                     tasktype = 'task'
-+                logger.verbose("Task: %s %s"%(event.taskfile.split("/")[-1], event.taskname))
-                 logger.info("Running %s %s of %s (ID: %s, %s)",
-                             tasktype,
-                             event.stats.completed + event.stats.active +
--- 
-2.3.6
+The reason we do this is that users with conflicting (different values)
+of the same variable name usually have a metadata issue they're unaware
+of.
+
+The fix is to ensure you only set a variable in one canonical way.
+OE-Core did show a few of these but I fixed them before merging the data
+store changes.
+
+Cheers,
+
+Richard
+
+
 
