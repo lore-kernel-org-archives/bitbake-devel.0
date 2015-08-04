@@ -1,39 +1,23 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wi0-f182.google.com (mail-wi0-f182.google.com
-	[209.85.212.182])
-	by mail.openembedded.org (Postfix) with ESMTP id AE57F76618
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 4AFEF73231
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  4 Aug 2015 15:07:42 +0000 (UTC)
-Received: by wibud3 with SMTP id ud3so28091541wib.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 04 Aug 2015 08:07:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=Pkao/laxSL1tBvyF2qyBYAFQHd6PJzhPTvVH60gf4qE=;
-	b=UwJQAVVe5ja1TF5NjQuppvGF3v0E47s9bPNpyNasBtV8uoOzOoQpSfu7mpX7SgRF4/
-	B8XqcTZHs3Z0Ud0VHFlIoOnj3kn42VXXIo0vT7n21nfkfZj8uwWl54RLY6fnulqNx3tg
-	KPaRFrxpnyrgercC+VMPse5GXIUhIT6bWkYQxi+cM6G2FUyEgGD3QJAzUSq5sAdKLsfa
-	YKYRK1KImrcnlzDyQ/p3jWGSXtx2nfm3oObSs7h5mXndXcDHiBAHOL59Tx1/ebYZE0dG
-	euMsYUjdyUmINxm5dgdXBfkkHB/1dqsKB+B3iY7qYEM1dVH6D8Tec94LTJuHarc8Qmef
-	MS7w==
-X-Gm-Message-State: ALoCoQnTKFfGHm+VEYMe/vwmqSkxMkMvV8g4vfVNZjpVm34kWeMMzFiuhOiJ5CYgNNZpwhTpoXGV
-X-Received: by 10.180.90.81 with SMTP id bu17mr46326076wib.35.1438700862564;
-	Tue, 04 Aug 2015 08:07:42 -0700 (PDT)
-Received: from draco.icx.intel.com ([83.217.123.106])
-	by smtp.gmail.com with ESMTPSA id
-	gm20sm2314260wjc.17.2015.08.04.08.07.41
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 04 Aug 2015 08:07:41 -0700 (PDT)
-From: Michael Wood <michael.g.wood@intel.com>
+	Tue,  4 Aug 2015 19:45:11 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by fmsmga103.fm.intel.com with ESMTP; 04 Aug 2015 12:45:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.15,610,1432623600"; d="scan'208";a="777765886"
+Received: from linux.intel.com ([10.23.219.25])
+	by orsmga002.jf.intel.com with ESMTP; 04 Aug 2015 12:45:12 -0700
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.65])
+	by linux.intel.com (Postfix) with ESMTP id 779756A4083;
+	Tue,  4 Aug 2015 12:44:25 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  4 Aug 2015 16:07:11 +0100
-Message-Id: <1438700831-26829-6-git-send-email-michael.g.wood@intel.com>
+Date: Tue,  4 Aug 2015 22:45:02 +0300
+Message-Id: <cover.1438717072.git.ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1438700831-26829-1-git-send-email-michael.g.wood@intel.com>
-References: <1438700831-26829-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 6/6] bitbake: toastergui: add action to empty "most built" recipes
+Subject: [PATCH 00/12] toaster: bring back the correct typeahead behaviour as a modular widget
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -46,35 +30,65 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 04 Aug 2015 15:07:44 -0000
+X-List-Received-Date: Tue, 04 Aug 2015 19:45:13 -0000
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
+Hi,
 
-It is not very good to just tell people: "this is empty because you
-haven't done anything". We should politely invite them to do something
-about it. Thus adding a "Choose a recipe to build" link to the all
-compatible recipes page whenever the 'most built recipes' section is
-empty.
+This is a set of patches from Michael reviewed by me.
 
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
----
- lib/toaster/toastergui/templates/project.html | 1 +
- 1 file changed, 1 insertion(+)
+List of changes in this patchset:
 
-diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
-index aad79b4..d21f4bd 100644
---- a/lib/toaster/toastergui/templates/project.html
-+++ b/lib/toaster/toastergui/templates/project.html
-@@ -68,6 +68,7 @@
- 
-       <div class="alert alert-info" style="display:none" id="no-most-built">
-         <span class="lead">You haven't built any recipes yet</span>
-+        <p style="margin-top: 10px;"><a href="{% url 'projecttargets' project.id %}">Choose a recipe to build</a></p>
-       </div>
- 
-       <ul class="unstyled configuration-list" id="freq-build-list">
--- 
-2.1.4
+- New typeahead widget
+- Switch to Implementation of widget in frontend
+- Utility functions in the models so that the querysets which are used
+  for the ToasterTables are the same queries that are used for the
+  typeaheads.
+- Added/Fixed typeahead widget unit tests
+
+Please, review.
+
+The following changes since commit a8b723498c9a7106210db140452886894494b4d6:
+
+  bitbake: cooker: Resolve file monitoring race issues when using memres bitbake (2015-08-03 07:36:25 +0100)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib ed/toaster/submit/michaelw/toaster/fix-typeahead-behaviour
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=ed/toaster/submit/michaelw/toaster/fix-typeahead-behaviour
+
+Michael Wood (12):
+  bitbake: toaster: orm Add util function to return the url to layerversion
+  bitbake: toaster: orm Add util functions to return common querysets
+  bitbake: toastergui: tables Use util functions for the common querysets
+  bitbake: toastergui: widgets Add a typeahead widget
+  bitbake: toastergui: Add typeaheads layers, machines, projects, recipes
+  bitbake: toastergui: Switch to using the new toaster typeahead widget
+  bitbake: toastergui: libtoaster Throw an exception no url is specified
+  bitbake: toasterui: views Remove unused xhr_typeahead view definition
+  bitbake: toastergui: views Standardise the fields project layer response
+  bitbake: toastergui: tests Fix and more comprehensive typeahead unittest
+  bitbake: toastergui: libtoaster: typeahead resiliency for slow server
+  bitbake: toastergui: libtoaster typeahead Add in results highlighter
+
+ lib/toaster/orm/models.py                        |  45 ++++++-
+ lib/toaster/toastergui/static/js/base.js         |  26 ++--
+ lib/toaster/toastergui/static/js/importlayer.js  |  12 +-
+ lib/toaster/toastergui/static/js/layerdetails.js |   2 +-
+ lib/toaster/toastergui/static/js/libtoaster.js   |  37 ++++--
+ lib/toaster/toastergui/static/js/projectpage.js  |   8 +-
+ lib/toaster/toastergui/tables.py                 |  11 +-
+ lib/toaster/toastergui/templates/base.html       |   8 +-
+ lib/toaster/toastergui/templates/project.html    |   3 +-
+ lib/toaster/toastergui/tests.py                  |  88 +++++++++++---
+ lib/toaster/toastergui/typeaheads.py             | 145 +++++++++++++++++++++++
+ lib/toaster/toastergui/urls.py                   |  19 ++-
+ lib/toaster/toastergui/views.py                  |  71 +++++------
+ lib/toaster/toastergui/widgets.py                |  52 ++++++++
+ 14 files changed, 423 insertions(+), 104 deletions(-)
+ create mode 100644 bitbake/lib/toaster/toastergui/typeaheads.py
+
+--
+Regards,
+Ed
 
 
