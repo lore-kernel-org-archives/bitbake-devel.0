@@ -1,37 +1,36 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-io0-f182.google.com (mail-io0-f182.google.com
-	[209.85.223.182])
-	by mail.openembedded.org (Postfix) with ESMTP id 6A0A273D13
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-wi0-f182.google.com (mail-wi0-f182.google.com
+	[209.85.212.182])
+	by mail.openembedded.org (Postfix) with ESMTP id 3CB45759C7
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  3 Aug 2015 19:22:07 +0000 (UTC)
-Received: by ioii16 with SMTP id i16so154481945ioi.0
+	Tue,  4 Aug 2015 15:07:28 +0000 (UTC)
+Received: by wibxm9 with SMTP id xm9so170699258wib.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 03 Aug 2015 12:22:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=cj/uT8d6TVu9Ub1J2t4bTDrh6VnDGkAR+vLkgHS/RzI=;
-	b=iIgtrnjdoGFPMVGxNoSYc7klDQSgYsXYDdn5ToG/4w8EoexFy2ZOqO37ipumNxKEhe
-	BBevwdo6BB3DmiB/tLdVkUkntSfGLk+TL5Me+QEA+P4tffS9l5xJaz0xrL84Tqe9qRh/
-	sfQcZAENsA/FNXdn+DRc9RyFgzb09zP1Gpl1xTSiNAoLG5lExCOocZEfFkpFgD4fprkB
-	dxH2WA8MUsD9hCkNvIaL9pkw3DU0GN2esZuKTUq6j0hhmo1Ep2yaXzrRcGx++iABBcmH
-	Sh30TeU5oPn8HNQNFMDeXvM4GuW35krpE5KVKoN+/VcyWVjE5WUePsvVbmoaLlnVsK4D
-	xYEA==
-X-Received: by 10.107.15.210 with SMTP id 79mr21288556iop.192.1438629727040;
-	Mon, 03 Aug 2015 12:22:07 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.79.100.199 with HTTP; Mon, 3 Aug 2015 12:21:47 -0700 (PDT)
-In-Reply-To: <1438629643-28786-1-git-send-email-kergoth@gmail.com>
-References: <1438629643-28786-1-git-send-email-kergoth@gmail.com>
-From: Christopher Larson <chris_larson@mentor.com>
-Date: Mon, 3 Aug 2015 12:21:47 -0700
-X-Google-Sender-Auth: qpKneZCxHm4zfDR32KkfEvIiYQs
-Message-ID: <CABcZANnRPgVmdnE8Bn6iPn2Vm7KbyExw+ejY1aqkJ+ZZj5hGQw@mail.gmail.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: Re: [PATCH] bb.build: delete tasks thoroughly
+	Tue, 04 Aug 2015 08:07:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=5Ugj+YpX9fRDZLFjVe9ShDGEfmcQQgt9qlhQfRn/Bl4=;
+	b=erS/FXDfW9qsqP1GZaCgdDA7aALNOTcqBGlhELvqiQ8fMEn9Pd6N0zMoexhWOxFVdU
+	fyRsdnaDIlyMoVoHSRINq+VhJIRkEoaMZzAbB7+5qzH4KOapcn5ltqSpjCFfYQ/BgvN+
+	/1F6VLmQlZ74E53+E+foUPJHcrbUK6eWne+4MQew+svO+6fNuUjCVAnIo5ekTp4GzGdq
+	9+bLrYEJ4Sg8WCAt86NRK2kr2XLbtUgFMEf4E5QK5yye3DzLoEQwq1chQn1gp6FM4VWd
+	rYEXrGBo9fL8Y4erGuQAPkyFR0YaqWKYz1DMiLwYw9mIRoiyZTCSMWw0lDo41xQfBvmy
+	oS7Q==
+X-Gm-Message-State: ALoCoQn5S8KzEzK/+MD5rqt3crSVK7Qmmxu9NXzQv2niPdj75nIbkwvVlhBdVMnSetd/K+y70cRf
+X-Received: by 10.181.13.169 with SMTP id ez9mr8400411wid.92.1438700848460;
+	Tue, 04 Aug 2015 08:07:28 -0700 (PDT)
+Received: from draco.icx.intel.com ([83.217.123.106])
+	by smtp.gmail.com with ESMTPSA id
+	gm20sm2314260wjc.17.2015.08.04.08.07.27
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Tue, 04 Aug 2015 08:07:27 -0700 (PDT)
+From: Michael Wood <michael.g.wood@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue,  4 Aug 2015 16:07:06 +0100
+Message-Id: <1438700831-26829-1-git-send-email-michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH 1/6] bitbake: toastergui: spacing and top nav style change
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,70 +43,79 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 03 Aug 2015 19:22:09 -0000
-Content-Type: multipart/alternative; boundary=001a113fe63ad7f867051c6d152a
+X-List-Received-Date: Tue, 04 Aug 2015 15:07:30 -0000
 
---001a113fe63ad7f867051c6d152a
-Content-Type: text/plain; charset=UTF-8
+From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-On Mon, Aug 3, 2015 at 12:20 PM, Christopher Larson <kergoth@gmail.com>
-wrote:
+Remove the margin for the .section class and the
+.row-fluid class in the page header div to
+reduce the vertical white space a little
+bit in the project pages.
 
-> From: Christopher Larson <chris_larson@mentor.com>
->
-> We want addtask to be able to bring back a deleted task, but we don't want
-> its
-> previous dependencies to come back with it, so rather than marking a task
-> as
-> deleted and then skipping tasks marked as such, actually delete the task
-> and
-> its dependency information in deltask.
->
-> While we're in that part of the code, also fix a couple 'not foo in bar'
-> instances to 'foo not in bar', which is preferred in python.
->
-> Signed-off-by: Christopher Larson <chris_larson@mentor.com>
->
+Also, change the style of the Toaster manual
+link to make it look like the main navigation.
 
-This supercedes `[PATCH] bb.build: let addtask undo a deltask`.
+Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+---
+ lib/toaster/toastergui/static/css/default.css       |  1 -
+ lib/toaster/toastergui/templates/base.html          | 16 +++++++++++-----
+ lib/toaster/toastergui/templates/projecttopbar.html |  2 +-
+ 3 files changed, 12 insertions(+), 7 deletions(-)
+
+diff --git a/lib/toaster/toastergui/static/css/default.css b/lib/toaster/toastergui/static/css/default.css
+index 638c6dd..dbe2307 100644
+--- a/lib/toaster/toastergui/static/css/default.css
++++ b/lib/toaster/toastergui/static/css/default.css
+@@ -10,7 +10,6 @@
+ 
+ /* Style the breadcrumb */
+ .breadcrumb { display: inline-block; background-color: transparent; }
+-.section { margin: 20px 0; }
+ 
+ /* Styles for the help information */
+ .get-help { color: #CCCCCC; }
+diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
+index c16fd65..65367e2 100644
+--- a/lib/toaster/toastergui/templates/base.html
++++ b/lib/toaster/toastergui/templates/base.html
+@@ -102,11 +102,17 @@
+                 <i class="icon-folder-open"></i>
+                 All projects
+               </a>
+-            </li>                                                                         </ul>
+-          <a class="pull-right manual" target="_blank" href="http://www.yoctoproject.org/docs/latest/toaster-manual/toaster-manual.html">
+-            <i class="icon-book"></i>
+-            Toaster manual
+-          </a>
++            </li>
++          </ul>
++          <ul class="nav pull-right">
++            <li>
++              <a target="_blank" href="http://www.yoctoproject.org/docs/latest/toaster-manual/toaster-manual.html">
++                <i class="icon-book"></i>
++                Manual
++              </a>
++            </li>
++          </ul>
++          <span class="pull-right divider-vertical"></span>
+           <div class="btn-group pull-right">
+             <a class="btn" id="new-project-button" href="{% url 'newproject' %}">New project</a>
+           </div>
+diff --git a/lib/toaster/toastergui/templates/projecttopbar.html b/lib/toaster/toastergui/templates/projecttopbar.html
+index 79f6d1e..220ca72 100644
+--- a/lib/toaster/toastergui/templates/projecttopbar.html
++++ b/lib/toaster/toastergui/templates/projecttopbar.html
+@@ -4,7 +4,7 @@
+ </div>
+ 
+ <!-- project name -->
+-<div class="row-fluid page-header">
++<div class="page-header">
+   <h1><span id="project-name">{{project.name}}</span>
+     <i class="icon-pencil" data-original-title="" id="project-change-form-toggle" title=""></i>
+   </h1>
 -- 
-Christopher Larson
-kergoth at gmail dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+2.1.4
 
---001a113fe63ad7f867051c6d152a
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">On Mon, Aug 3, 2015 at 12:20 PM, Christopher Larson <span =
-dir=3D"ltr">&lt;<a href=3D"mailto:kergoth@gmail.com" target=3D"_blank">kerg=
-oth@gmail.com</a>&gt;</span> wrote:<br><div class=3D"gmail_extra"><div clas=
-s=3D"gmail_quote"><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .=
-8ex;border-left:1px #ccc solid;padding-left:1ex">From: Christopher Larson &=
-lt;<a href=3D"mailto:chris_larson@mentor.com">chris_larson@mentor.com</a>&g=
-t;<br>
-<br>
-We want addtask to be able to bring back a deleted task, but we don&#39;t w=
-ant its<br>
-previous dependencies to come back with it, so rather than marking a task a=
-s<br>
-deleted and then skipping tasks marked as such, actually delete the task an=
-d<br>
-its dependency information in deltask.<br>
-<br>
-While we&#39;re in that part of the code, also fix a couple &#39;not foo in=
- bar&#39;<br>
-instances to &#39;foo not in bar&#39;, which is preferred in python.<br>
-<br>
-Signed-off-by: Christopher Larson &lt;<a href=3D"mailto:chris_larson@mentor=
-.com">chris_larson@mentor.com</a>&gt;<br></blockquote><div><br></div><div>T=
-his supercedes `[PATCH] bb.build: let addtask undo a deltask`.</div></div>-=
-- <br><div class=3D"gmail_signature"><div dir=3D"ltr">Christopher Larson<br=
->kergoth at gmail dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br=
->Maintainer - Tslib<br>Senior Software Engineer, Mentor Graphics</div></div=
->
-</div></div>
-
---001a113fe63ad7f867051c6d152a--
