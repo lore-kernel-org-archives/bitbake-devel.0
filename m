@@ -1,23 +1,27 @@
 Return-Path: <ed.bartosh@linux.intel.com>
 Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 4AFEF73231
+	by mail.openembedded.org (Postfix) with ESMTP id D4CCB73231
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  4 Aug 2015 19:45:11 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by fmsmga103.fm.intel.com with ESMTP; 04 Aug 2015 12:45:12 -0700
+	Tue,  4 Aug 2015 19:46:46 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga103.fm.intel.com with ESMTP; 04 Aug 2015 12:46:47 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,610,1432623600"; d="scan'208";a="777765886"
+X-IronPort-AV: E=Sophos;i="5.15,611,1432623600"; d="scan'208";a="761912938"
 Received: from linux.intel.com ([10.23.219.25])
-	by orsmga002.jf.intel.com with ESMTP; 04 Aug 2015 12:45:12 -0700
+	by fmsmga001.fm.intel.com with ESMTP; 04 Aug 2015 12:46:47 -0700
 Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.65])
-	by linux.intel.com (Postfix) with ESMTP id 779756A4083;
-	Tue,  4 Aug 2015 12:44:25 -0700 (PDT)
+	by linux.intel.com (Postfix) with ESMTP id 591CD6A4083;
+	Tue,  4 Aug 2015 12:46:00 -0700 (PDT)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  4 Aug 2015 22:45:02 +0300
-Message-Id: <cover.1438717072.git.ed.bartosh@linux.intel.com>
+Date: Tue,  4 Aug 2015 22:46:30 +0300
+Message-Id: <3af50d06b1f56cc8d64bc69bb26de075bd388dd5.1438717072.git.ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
-Subject: [PATCH 00/12] toaster: bring back the correct typeahead behaviour as a modular widget
+In-Reply-To: <691696f2b87d41540b14b10ef08762f8529b4909.1438717072.git.ed.bartosh@linux.intel.com>
+References: <691696f2b87d41540b14b10ef08762f8529b4909.1438717072.git.ed.bartosh@linux.intel.com>
+In-Reply-To: <cover.1438717072.git.ed.bartosh@linux.intel.com>
+References: <cover.1438717072.git.ed.bartosh@linux.intel.com>
+Subject: [PATCH 02/12] bitbake: toaster: orm Add util functions to return common querysets
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,65 +34,80 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 04 Aug 2015 19:45:13 -0000
+X-List-Received-Date: Tue, 04 Aug 2015 19:46:47 -0000
 
-Hi,
+From: Michael Wood <michael.g.wood@intel.com>
 
-This is a set of patches from Michael reviewed by me.
+We use these querysets when creating tables of results and also when we
+want to have a typeahead search. These can also form the basis of future
+API endpoints.
 
-List of changes in this patchset:
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+---
+ lib/toaster/orm/models.py | 41 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 40 insertions(+), 1 deletion(-)
 
-- New typeahead widget
-- Switch to Implementation of widget in frontend
-- Utility functions in the models so that the querysets which are used
-  for the ToasterTables are the same queries that are used for the
-  typeaheads.
-- Added/Fixed typeahead widget unit tests
-
-Please, review.
-
-The following changes since commit a8b723498c9a7106210db140452886894494b4d6:
-
-  bitbake: cooker: Resolve file monitoring race issues when using memres bitbake (2015-08-03 07:36:25 +0100)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib ed/toaster/submit/michaelw/toaster/fix-typeahead-behaviour
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=ed/toaster/submit/michaelw/toaster/fix-typeahead-behaviour
-
-Michael Wood (12):
-  bitbake: toaster: orm Add util function to return the url to layerversion
-  bitbake: toaster: orm Add util functions to return common querysets
-  bitbake: toastergui: tables Use util functions for the common querysets
-  bitbake: toastergui: widgets Add a typeahead widget
-  bitbake: toastergui: Add typeaheads layers, machines, projects, recipes
-  bitbake: toastergui: Switch to using the new toaster typeahead widget
-  bitbake: toastergui: libtoaster Throw an exception no url is specified
-  bitbake: toasterui: views Remove unused xhr_typeahead view definition
-  bitbake: toastergui: views Standardise the fields project layer response
-  bitbake: toastergui: tests Fix and more comprehensive typeahead unittest
-  bitbake: toastergui: libtoaster: typeahead resiliency for slow server
-  bitbake: toastergui: libtoaster typeahead Add in results highlighter
-
- lib/toaster/orm/models.py                        |  45 ++++++-
- lib/toaster/toastergui/static/js/base.js         |  26 ++--
- lib/toaster/toastergui/static/js/importlayer.js  |  12 +-
- lib/toaster/toastergui/static/js/layerdetails.js |   2 +-
- lib/toaster/toastergui/static/js/libtoaster.js   |  37 ++++--
- lib/toaster/toastergui/static/js/projectpage.js  |   8 +-
- lib/toaster/toastergui/tables.py                 |  11 +-
- lib/toaster/toastergui/templates/base.html       |   8 +-
- lib/toaster/toastergui/templates/project.html    |   3 +-
- lib/toaster/toastergui/tests.py                  |  88 +++++++++++---
- lib/toaster/toastergui/typeaheads.py             | 145 +++++++++++++++++++++++
- lib/toaster/toastergui/urls.py                   |  19 ++-
- lib/toaster/toastergui/views.py                  |  71 +++++------
- lib/toaster/toastergui/widgets.py                |  52 ++++++++
- 14 files changed, 423 insertions(+), 104 deletions(-)
- create mode 100644 bitbake/lib/toaster/toastergui/typeaheads.py
-
---
-Regards,
-Ed
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index 3b72f80..4f07e37 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -20,7 +20,7 @@
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+ from django.db import models
+-from django.db.models import F, Q, Avg
++from django.db.models import F, Q, Avg, Max
+ from django.utils import timezone
+ 
+ from django.core.urlresolvers import reverse
+@@ -195,6 +195,45 @@ class Project(models.Model):
+     def projectlayer_equivalent_set(self):
+         return self.compatible_layerversions().filter(layer__name__in = [x.layercommit.layer.name for x in self.projectlayer_set.all()]).select_related("up_branch")
+ 
++    def get_available_machines(self):
++        """ Returns QuerySet of all Machines which are provided by the
++        Layers currently added to the Project """
++        queryset = Machine.objects.filter(layer_version__in=self.projectlayer_equivalent_set)
++        return queryset
++
++    def get_all_compatible_machines(self):
++        """ Returns QuerySet of all the compatible machines available to the
++        project including ones from Layers not currently added """
++        compatible_layers = self.compatible_layerversions()
++
++        queryset = Machine.objects.filter(layer_version__in=compatible_layers)
++        return queryset
++
++    def get_available_recipes(self):
++        """ Returns QuerySet of all Recipes which are provided by the Layers
++        currently added to the Project """
++        project_layers = self.projectlayer_equivalent_set()
++        queryset = Recipe.objects.filter(layer_version__in = project_layers)
++
++        # Copied from get_all_compatible_recipes
++        search_maxids = map(lambda i: i[0], list(queryset.values('name').distinct().annotate(max_id=Max('id')).values_list('max_id')))
++        queryset = queryset.filter(id__in=search_maxids).select_related('layer_version', 'layer_version__layer', 'layer_version__up_branch', 'layer_source')
++        # End copy
++
++        return queryset
++
++    def get_all_compatible_recipes(self):
++        """ Returns QuerySet of all the compatible Recipes available to the
++        project including ones from Layers not currently added """
++        compatible_layerversions = self.compatible_layerversions()
++        queryset = Recipe.objects.filter(layer_version__in = compatible_layerversions)
++
++        search_maxids = map(lambda i: i[0], list(queryset.values('name').distinct().annotate(max_id=Max('id')).values_list('max_id')))
++
++        queryset = queryset.filter(id__in=search_maxids).select_related('layer_version', 'layer_version__layer', 'layer_version__up_branch', 'layer_source')
++        return queryset
++
++
+     def schedule_build(self):
+         from bldcontrol.models import BuildRequest, BRTarget, BRLayer, BRVariable, BRBitbake
+         br = BuildRequest.objects.create(project = self)
+-- 
+2.1.4
 
 
