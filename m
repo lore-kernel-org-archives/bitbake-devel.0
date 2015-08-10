@@ -1,41 +1,41 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wi0-f175.google.com (mail-wi0-f175.google.com
-	[209.85.212.175])
-	by mail.openembedded.org (Postfix) with ESMTP id 9814E768F4
+Received: from mail-wi0-f170.google.com (mail-wi0-f170.google.com
+	[209.85.212.170])
+	by mail.openembedded.org (Postfix) with ESMTP id DB46A768C8
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Aug 2015 17:27:29 +0000 (UTC)
-Received: by wicja10 with SMTP id ja10so35113947wic.1
+	Mon, 10 Aug 2015 17:27:32 +0000 (UTC)
+Received: by wicne3 with SMTP id ne3so144914467wic.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Aug 2015 10:27:29 -0700 (PDT)
+	Mon, 10 Aug 2015 10:27:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=pDXSzfd1cuogNjZMni/kYGypw12aJ1EfWqaBiM5/w0I=;
-	b=iHMxpQiK9zAaq6svQKlLdaFGLFQpm/sry8+F37MyVjEncNPgjIjsoxnBzv5wcOxult
-	eYhDOg2uRQkLAR8WvfswE8WG3QOYi/SnNyO2h+JHuHCsMrmknkrlGNdNIZOGwK2Ig47O
-	lIwlnCoPVvqHcdcUlbdAP5yXM2eiIW2R+MO0ibNOQVakpeOKAHXFswHxarfPxH+jR880
-	ZSZzdUEbu2IunS366g9PkKutfjyn07N3F/maUAIjBA0zjvFNHB2qm6ZMRp02RXaDPZOp
-	NK8gUyM9c9GzE+nOifslR6UlGamMGZBT42VAwkHdWviVsdBuDFT3tiX+nRCGsv9x6v4f
-	9lMw==
-X-Gm-Message-State: ALoCoQl7FIyUXPE44nPcfuX3dnUM4oROh+Qlw1y5wb0HzPf4IHRoEHWAfZOIPRneaxd2WSo4JNpo
-X-Received: by 10.194.110.132 with SMTP id ia4mr35662491wjb.103.1439227649443; 
-	Mon, 10 Aug 2015 10:27:29 -0700 (PDT)
+	bh=KFGCSCYzEMGbQag+72WjqJdQAGjz7V4FQNWl2Wlh0yY=;
+	b=JnZVvBX1O4v1a649hVw/kVj0eeayag4wyAsvPZ6wVObyvYKwK78ycmvWqtqn+IBFav
+	f0h83lJ/SOMWXFzX3k1lDjMaLGpm+LFUQnXnpDyCWe7SUxAnkp5G24Nv5HotnKlhkAOD
+	g5BjGLI/k6t5FtRahcahytdGNafknB8Gp81mlMBNGfJTrv/HDsoSouqxE90NIvUhAZ4T
+	vkp9zZ9Mi+f8eOhdhvW14ZcbXvXfQwCz02apomnCVu5v9P8W6t31ms1Y2mDY4DXoa6f3
+	4TO3LbysYU2lysSOjStVbHXYMTQCVXiSgU3hib7Vxxdh723ufqkLx6Z8lotseW6/+6m7
+	06aQ==
+X-Gm-Message-State: ALoCoQnY2ktHc28hNCMgIOK5vZT0s1Akl9s3YbmgXIqID5ZL4yh94I7KiPPWRu0SVqDt3fzU78/G
+X-Received: by 10.194.23.36 with SMTP id j4mr45867146wjf.105.1439227652393;
+	Mon, 10 Aug 2015 10:27:32 -0700 (PDT)
 Received: from dorado.Home ([90.200.212.221]) by smtp.gmail.com with ESMTPSA id
-	cw8sm30396731wjb.49.2015.08.10.10.27.28
+	cw8sm30396731wjb.49.2015.08.10.10.27.31
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 10 Aug 2015 10:27:28 -0700 (PDT)
+	Mon, 10 Aug 2015 10:27:31 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 10 Aug 2015 18:27:15 +0100
-Message-Id: <708fbd8f94a0f66ea03c782505a7e71070dd2433.1439226591.git.michael.g.wood@intel.com>
+Date: Mon, 10 Aug 2015 18:27:18 +0100
+Message-Id: <c9274dff8d66225fcc5a371357309ce0427f4db6.1439226591.git.michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <dd3a557b5759abe26b64c22379333c25d83b8708.1439226591.git.michael.g.wood@intel.com>
 References: <cover.1439226591.git.michael.g.wood@intel.com>
 	<dd3a557b5759abe26b64c22379333c25d83b8708.1439226591.git.michael.g.wood@intel.com>
 In-Reply-To: <cover.1439226591.git.michael.g.wood@intel.com>
 References: <cover.1439226591.git.michael.g.wood@intel.com>
-Subject: [PATCH 08/11] toaster: don't catch json.load exceptions
+Subject: [PATCH 11/11] toaster: reduced amount of instance attributes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,49 +48,88 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 10 Aug 2015 17:27:32 -0000
+X-List-Received-Date: Mon, 10 Aug 2015 17:27:33 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-It doesn't make sense to catch json.load exceptions in the
-testing code. If API throws traceback it's better to see
-it instead of error message.
+Used local variables instead of instance attributes in ViewTests.setUp
+
+Fixed pylint warning:
+    Too many instance attributes (9/7) (too-many-instance-attributes)
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/toastergui/tests.py | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ lib/toaster/toastergui/tests.py | 55 ++++++++++++++++++-----------------------
+ 1 file changed, 24 insertions(+), 31 deletions(-)
 
 diff --git a/lib/toaster/toastergui/tests.py b/lib/toaster/toastergui/tests.py
-index 1ed83dc..723348d 100644
+index bc10801..93a85ac 100644
 --- a/lib/toaster/toastergui/tests.py
 +++ b/lib/toaster/toastergui/tests.py
-@@ -82,10 +82,7 @@ class ViewTests(TestCase):
-         self.assertEqual(response.status_code, 200)
-         self.assertTrue(response['Content-Type'].startswith('application/json'))
+@@ -34,38 +34,31 @@ class ViewTests(TestCase):
+     """Tests to verify view APIs."""
  
--        try:
--            data = json.loads(response.content)
--        except:
--            self.fail("Response %s is not json-loadable" % response.content)
-+        data = json.loads(response.content)
- 
-         self.assertTrue("error" in data)
-         self.assertEqual(data["error"], "ok")
-@@ -113,10 +110,8 @@ class ViewTests(TestCase):
-             self.assertEqual(response.status_code, 200)
-             self.assertTrue(response['Content-Type'].startswith('application/json'))
- 
--            try:
--                data = json.loads(response.content)
--            except:
--                self.fail("Response %s is not json-loadable" % response.content)
-+            data = json.loads(response.content)
+     def setUp(self):
+-        self.bbv = BitbakeVersion.objects.create(\
+-                       name="test bbv", giturl="/tmp/",
+-                       branch="master", dirpath="")
+-        self.release = Release.objects.create(\
+-                           name="test release", bitbake_version=self.bbv)
++        bbv = BitbakeVersion.objects.create(name="test bbv", giturl="/tmp/",
++                                            branch="master", dirpath="")
++        release = Release.objects.create(name="test release",
++                                         bitbake_version=bbv)
+         self.project = Project.objects.create_project(name=PROJECT_NAME,
+-                                                      release=self.release)
+-        self.layersrc = LayerSource.objects.create(\
+-                               sourcetype=LayerSource.TYPE_IMPORTED)
+-        self.priority = ReleaseLayerSourcePriority.objects.create(\
+-                               release=self.release,
+-                               layer_source=self.layersrc)
+-        self.layer = Layer.objects.create(\
+-                         name="base-layer",
+-                         layer_source=self.layersrc, vcs_url="/tmp/")
+-        self.lver = Layer_Version.objects.create(\
+-                        layer=self.layer, project=self.project,
+-                        layer_source=self.layersrc, commit="master")
+-
+-        self.recipe = Recipe.objects.create(\
+-                          layer_source=self.layersrc, name="base-recipe",
+-                          version="1.2", summary="one recipe",
+-                          description="recipe", layer_version=self.lver)
+-
+-        self.machine = Machine.objects.create(\
+-                          layer_version=self.lver, name="wisk",
+-                          description="wisking machine")
+-
+-        ProjectLayer.objects.create(project=self.project,
+-                                    layercommit=self.lver)
+-
+-        self.assertTrue(self.lver in self.project.compatible_layerversions())
++                                                      release=release)
++        layersrc = LayerSource.objects.create(sourcetype=LayerSource.TYPE_IMPORTED)
++        self.priority = ReleaseLayerSourcePriority.objects.create(release=release,
++                                                                  layer_source=layersrc)
++        layer = Layer.objects.create(name="base-layer", layer_source=layersrc,
++                                     vcs_url="/tmp/")
 +
-             self.assertTrue("error" in data)
-             self.assertEqual(data["error"], "ok")
-             self.assertTrue("results" in data)
++        lver = Layer_Version.objects.create(layer=layer, project=self.project,
++                                            layer_source=layersrc, commit="master")
++
++        Recipe.objects.create(layer_source=layersrc, name="base-recipe",
++                              version="1.2", summary="one recipe",
++                              description="recipe", layer_version=lver)
++
++        Machine.objects.create(layer_version=lver, name="wisk",
++                               description="wisking machine")
++
++        ProjectLayer.objects.create(project=self.project, layercommit=lver)
++
++        self.assertTrue(lver in self.project.compatible_layerversions())
+ 
+     def test_get_base_call_returns_html(self):
+         """Basic test for all-projects view"""
 -- 
 2.1.4
 
