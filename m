@@ -1,41 +1,41 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wi0-f178.google.com (mail-wi0-f178.google.com
-	[209.85.212.178])
-	by mail.openembedded.org (Postfix) with ESMTP id 56E44768CE
+Received: from mail-wi0-f179.google.com (mail-wi0-f179.google.com
+	[209.85.212.179])
+	by mail.openembedded.org (Postfix) with ESMTP id 5626D768C8
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Aug 2015 17:27:25 +0000 (UTC)
-Received: by wibhh20 with SMTP id hh20so160532611wib.0
+	Mon, 10 Aug 2015 17:27:26 +0000 (UTC)
+Received: by wibhh20 with SMTP id hh20so160533561wib.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 10 Aug 2015 10:27:25 -0700 (PDT)
+	Mon, 10 Aug 2015 10:27:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=M0OW7vS7whv/B7VNWB2IyEIswHglzgW2sIDYXxAYS+s=;
-	b=YppEl5RHmmiQrJfN4TUVgdxURousrdz1bCnVYdPdKVE3mDkmYynFyNIeii08ab8jjj
-	DhNi1L+GluOraYO3VBf4sj/UxTVUH51wZLc8Jcj0/Q403kQvVsLPLBONFftDfJWpJF0o
-	VKUcVDSxgmZPytUUZUz1Knj+3ByINdSvKwarEaJEYXKLJ70li6kaxe3mTHhPHTJrs50+
-	zPUrcREFST05q6qZVbuxpcsoGAPLn47Jifs6HQWBqGqZyBKor6noe5ASR9ipoJCkjhDx
-	CPHM6OgSvYQ98blt92UqYnR2apFgcz+L+qHPcHMEIq8UZgwT4YS5OahKOcpH/9aVsO6x
-	0RKg==
-X-Gm-Message-State: ALoCoQkupfVPFWfRbsxSMy8fhOS257p9H+L578WnyCDpgtHvi13uV1ChcmWkuzenH8ukyX4QU6xX
-X-Received: by 10.180.8.234 with SMTP id u10mr26279859wia.4.1439227645106;
-	Mon, 10 Aug 2015 10:27:25 -0700 (PDT)
+	bh=4uAg9wiRqQmVQE4ix43Yv+dznfuyW8OjzOJ9k/jdiq4=;
+	b=TPXnrE61ULho5PIGd65QrKgOmICr5VQWQpOaOdK+Hhc9OJ2rrKsLibaEl9lFuB1JNV
+	0KAmfZA1BNZ1NNvXoAK5120EmZognD517+qTz+T/iF5QIgPjwi3juCipktM9AAkPJQwx
+	xjp+P1OgfRwd1M3IEz5ngj9VFhsdlhbPrjcG9TzvLReSpUzSnSLpqMW1V6va3g8t+5BC
+	fJLeJzruYO1Hp3ynk5qTnil0Vgq7SWQ7MSQip2iL9lfDa7eLbJmOhLnEjWLZ3YJw7wwh
+	N6j0PTSVfKR/3fW2aFs1LEXWSSuXMU+Sb975UUMv7/kEC3jwrvaU2Erbh30b1YY6LOts
+	bgXg==
+X-Gm-Message-State: ALoCoQlnJXF+PmsROaln/pWDVR4R/DHjnquKLOzZjElvJiR9u8CyiKA8RYCEoKpK7z/jz9BLVXhE
+X-Received: by 10.180.85.74 with SMTP id f10mr25682026wiz.45.1439227646822;
+	Mon, 10 Aug 2015 10:27:26 -0700 (PDT)
 Received: from dorado.Home ([90.200.212.221]) by smtp.gmail.com with ESMTPSA id
-	cw8sm30396731wjb.49.2015.08.10.10.27.24
+	cw8sm30396731wjb.49.2015.08.10.10.27.26
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 10 Aug 2015 10:27:24 -0700 (PDT)
+	Mon, 10 Aug 2015 10:27:26 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 10 Aug 2015 18:27:10 +0100
-Message-Id: <cbbda5d8a7a308226522379128b5d4fe41855e28.1439226591.git.michael.g.wood@intel.com>
+Date: Mon, 10 Aug 2015 18:27:12 +0100
+Message-Id: <b70d0417d4a7bc071d7921a8ab670d5ce9b5c380.1439226591.git.michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <dd3a557b5759abe26b64c22379333c25d83b8708.1439226591.git.michael.g.wood@intel.com>
 References: <cover.1439226591.git.michael.g.wood@intel.com>
 	<dd3a557b5759abe26b64c22379333c25d83b8708.1439226591.git.michael.g.wood@intel.com>
 In-Reply-To: <cover.1439226591.git.michael.g.wood@intel.com>
 References: <cover.1439226591.git.michael.g.wood@intel.com>
-Subject: [PATCH 03/11] toaster: get rid of AllProjectsViewTestCase
+Subject: [PATCH 05/11] toaster: get rid of class attributes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,40 +52,45 @@ X-List-Received-Date: Mon, 10 Aug 2015 17:27:27 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Removed AllProjectsViewTestCase class as it had one method 'setUp'
-and used as a parent for another class AllProjectsViewTestCase.
-
-Moved setUp method to AllProjectsViewTestCase.
+LAYER_NAME and RECIPE_NAME attributes don't make sense as
+they're used only once.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/toastergui/tests.py | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ lib/toaster/toastergui/tests.py | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/lib/toaster/toastergui/tests.py b/lib/toaster/toastergui/tests.py
-index a9edd54..6f3930d 100644
+index 986e6a5..9755a88 100644
 --- a/lib/toaster/toastergui/tests.py
 +++ b/lib/toaster/toastergui/tests.py
-@@ -7,7 +7,7 @@ import json
+@@ -9,8 +9,6 @@ PROJECT_NAME = "test project"
  
- PROJECT_NAME = "test project"
- 
--class ProvisionedProjectTestCase(TestCase):
-+class AllProjectsViewTestCase(TestCase):
+ class ViewTests(TestCase):
+     """Tests to verify view APIs."""
+-    LAYER_NAME = "base-layer"
+-    RECIPE_NAME = "base-recipe"
  
      def setUp(self):
          self.bbv = BitbakeVersion.objects.create(\
-@@ -18,9 +18,6 @@ class ProvisionedProjectTestCase(TestCase):
-         self.project = Project.objects.create_project(name=PROJECT_NAME,
-                                                       release=self.release)
+@@ -26,14 +24,14 @@ class ViewTests(TestCase):
+                                release=self.release,
+                                layer_source=self.layersrc)
+         self.layer = Layer.objects.create(\
+-                         name=self.LAYER_NAME,
++                         name="base-layer",
+                          layer_source=self.layersrc, vcs_url="/tmp/")
+         self.lver = Layer_Version.objects.create(\
+                         layer=self.layer, project=self.project,
+                         layer_source=self.layersrc, commit="master")
  
--
--class AllProjectsViewTestCase(ProvisionedProjectTestCase):
--
-     def test_get_base_call_returns_html(self):
-         response = self.client.get(reverse('all-projects'), follow=True)
-         self.assertEqual(response.status_code, 200)
+         self.recipe = Recipe.objects.create(\
+-                          layer_source=self.layersrc, name=self.RECIPE_NAME,
++                          layer_source=self.layersrc, name="base-recipe",
+                           version="1.2", summary="one recipe",
+                           description="recipe", layer_version=self.lver)
+ 
 -- 
 2.1.4
 
