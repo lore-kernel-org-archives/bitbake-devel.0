@@ -1,42 +1,40 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wi0-f177.google.com (mail-wi0-f177.google.com
-	[209.85.212.177])
-	by mail.openembedded.org (Postfix) with ESMTP id 909037677C
+Received: from mail-wi0-f182.google.com (mail-wi0-f182.google.com
+	[209.85.212.182])
+	by mail.openembedded.org (Postfix) with ESMTP id 895EE76777
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed, 12 Aug 2015 10:33:49 +0000 (UTC)
-Received: by wicja10 with SMTP id ja10so107663648wic.1
+Received: by wijp15 with SMTP id p15so211720448wij.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 12 Aug 2015 03:33:50 -0700 (PDT)
+	Wed, 12 Aug 2015 03:33:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=dsA8/8/0JvPFVoCa80hCRI0p9dot2Q0ghmJvhOF1y9M=;
-	b=Yu7zeEAw4c5qf+BrcWAF+7O9cl9sGinJCROv174A5Yupn3eIJCnqVAu5CkB4XyG95z
-	PB6D3wE5VR4nzdOlZMj3rsxiOcZfph2DKF84ZzxUs+q1yksGcOUZPfRlB2pkjCn0kZ/K
-	SKFMxG+EUr90+kTf0VzqNQwqVhOxIO5oDNZ9N/xQBj4VjbjztaN1S/UYw4Q5noDMpEFl
-	pNfLWV9JC1kYcTxJgDu0uHLdjAvJrh7yGBqff8nTz0zr1oR92OBF3GhgVJIk4G2Ya2Lj
-	0RLRValFxUr6k/XnQdTHvlgk15aN/qm7BQijRC3+jBgmqGRHQhDfjaioyBWiv6ZGRpIV
-	OSZA==
-X-Gm-Message-State: ALoCoQnix3RQgHxnjmUYucD7VFJSG0s7hroNBz8pW4QFbGxS4OW1ip7Aew0br4PEWr6nhXAJq+5H
-X-Received: by 10.180.86.137 with SMTP id p9mr24843719wiz.38.1439375629933;
+	bh=Tl0VZQUDmOaHlRBSRSHannHVoxBiboRamtcAoUzfXeM=;
+	b=Bt1jF1ZHnanaX3iGF4ZXIkM/LTwJy2KBJ411uiddvyyP6VqG3VugbWXYpR0NsJOX2N
+	QE2lYCqwbmD9tj0fVAeJCBtaAeoXWeBhsCOZ15nrRxTNzbGEMGFlqV9AOnxzHeKFVoNh
+	t+3Mz6d9xH5B7851D7hotPla7JexWmaMu2KJwST+XFGcPULXeXxQo0VNCPcQ4R2XIqJG
+	me8R+dvUz+V5ximqSkr00CVDyLtuDSZCI5PrBYnBGWamyck0cg0bwVU/Q/nBUs1s+uIU
+	pHduO5G+NhntvIzm03JmSb6Ul8/5SWb6JFCvPgzK3Q9efp9Hdnt4qZ4WE9PaVZESU7mr
+	CpdQ==
+X-Gm-Message-State: ALoCoQkYhlOWRSJ0OSp12jDqx2OWWly8N3zz02HwIL7mgefiyCWStzx1Tc9H3c10Ry3xjXctpiDr
+X-Received: by 10.180.221.140 with SMTP id qe12mr5877290wic.54.1439375629224; 
 	Wed, 12 Aug 2015 03:33:49 -0700 (PDT)
 Received: from draco.icx.intel.com ([83.217.123.106])
-	by smtp.gmail.com with ESMTPSA id wx9sm7262934wjb.6.2015.08.12.03.33.49
+	by smtp.gmail.com with ESMTPSA id wx9sm7262934wjb.6.2015.08.12.03.33.48
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 12 Aug 2015 03:33:49 -0700 (PDT)
+	Wed, 12 Aug 2015 03:33:48 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 12 Aug 2015 11:33:43 +0100
-Message-Id: <d6d2f3d5d4d6fefe9eb76db215ae0f2123b976d8.1439375393.git.michael.g.wood@intel.com>
+Date: Wed, 12 Aug 2015 11:33:42 +0100
+Message-Id: <a77a9b3c3d6a971349ce6068fb7f91115e70bdcf.1439375393.git.michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.1.4
-In-Reply-To: <a77a9b3c3d6a971349ce6068fb7f91115e70bdcf.1439375393.git.michael.g.wood@intel.com>
-References: <cover.1439375393.git.michael.g.wood@intel.com>
-	<a77a9b3c3d6a971349ce6068fb7f91115e70bdcf.1439375393.git.michael.g.wood@intel.com>
 In-Reply-To: <cover.1439375393.git.michael.g.wood@intel.com>
 References: <cover.1439375393.git.michael.g.wood@intel.com>
-Cc: Belen Barros Pena <belen.barros.pena@linux.intel.com>
-Subject: [PATCH 2/2] bitbake: toaster: fix invalid fields in the package details page
+In-Reply-To: <cover.1439375393.git.michael.g.wood@intel.com>
+References: <cover.1439375393.git.michael.g.wood@intel.com>
+Subject: [PATCH 1/2] Fix typo in set up script output
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,56 +49,31 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Wed, 12 Aug 2015 10:33:51 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-This patch safeguards referencing invalid fields in the
-project details template, and fixes errors thrown in the
-page.
+Removing an spurious 'it' when setting the
+build directory. Thanks to Scott Rifenbark for
+finding the typo!
 
-[YOCTO #7992]
-
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
-Signed-off-by: Belen Barros Pena <belen.barros.pena@linux.intel.com>
+Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- .../toastergui/templates/package_included_reverse_dependencies.html   | 2 +-
- lib/toaster/toastergui/templates/tablesort.html                       | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ lib/toaster/bldcontrol/management/commands/checksettings.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/toaster/toastergui/templates/package_included_reverse_dependencies.html b/lib/toaster/toastergui/templates/package_included_reverse_dependencies.html
-index 4ba472f..5cc8b47 100644
---- a/lib/toaster/toastergui/templates/package_included_reverse_dependencies.html
-+++ b/lib/toaster/toastergui/templates/package_included_reverse_dependencies.html
-@@ -23,7 +23,7 @@
-             {% include "tablesort.html" %}
-                 <tbody>
- 					{% for reverse_dep in objects %}
--                        <tr {{reverse_dep.size|format_vpackage_rowclass}} >
-+                        <tr {% if reverse_dep.size %}{{reverse_dep.size|format_vpackage_rowclass}}{%endif%} >
-                         {% if reverse_dep.size != -1 %}
-                             <td>
-                                 <a href="{% url 'package_included_detail' build.id target.id reverse_dep.package_id %}">
-diff --git a/lib/toaster/toastergui/templates/tablesort.html b/lib/toaster/toastergui/templates/tablesort.html
-index bf311b6..3624742 100644
---- a/lib/toaster/toastergui/templates/tablesort.html
-+++ b/lib/toaster/toastergui/templates/tablesort.html
-@@ -5,7 +5,7 @@
-     <thead>
-         <tr>
-             {% for tc in tablecols %}
--            <th class="{{tc.dclass}} {{tc.clclass}}">
-+            <th class="{%if tc.dclass%}{{tc.dclass}}{%endif%} {%if tc.clclass%}{{tc.clclass}}{%endif%}">
-                 {%if tc.qhelp%}<i class="icon-question-sign get-help" title="{{tc.qhelp}}"></i>{%endif%}
-                 {{tc.name}}
-             </th>
-@@ -18,7 +18,7 @@
-         <!-- Table header row; generated from "tablecols" entry in the context dict -->
-         <tr>
-             {% for tc in tablecols %}
--            <th class="{{tc.dclass}} {{tc.clclass}}">
-+            <th class="{%if tc.dclass%}{{tc.dclass}}{%endif%} {%if tc.clclass%}{{tc.clclass}}{%endif%}">
-                 {%if tc.qhelp%}<i class="icon-question-sign get-help" title="{{tc.qhelp}}"></i>{%endif%}
-                 {%if tc.orderfield%}
-                     <a {%if tc.ordericon%} class="sorted" {%endif%}
+diff --git a/lib/toaster/bldcontrol/management/commands/checksettings.py b/lib/toaster/bldcontrol/management/commands/checksettings.py
+index 3002e4c..9a508b4 100644
+--- a/lib/toaster/bldcontrol/management/commands/checksettings.py
++++ b/lib/toaster/bldcontrol/management/commands/checksettings.py
+@@ -133,7 +133,7 @@ class Command(NoArgsCommand):
+                 def _update_builddir():
+                     suggesteddir = self._get_suggested_builddir(be)
+                     if len(suggesteddir) > 0:
+-                        be.builddir = raw_input("Toaster needs to know where it your build directory is located.\n The build directory is where all the artifacts created by your builds will be stored. Toaster suggests \"%s\".\n Press Enter to select \"%s\" or type the full path to a different directory: " % (suggesteddir, suggesteddir))
++                        be.builddir = raw_input("Toaster needs to know where your build directory is located.\n The build directory is where all the artifacts created by your builds will be stored. Toaster suggests \"%s\".\n Press Enter to select \"%s\" or type the full path to a different directory: " % (suggesteddir, suggesteddir))
+                     else:
+                         be.builddir = raw_input("Toaster needs to know where is your build directory.\n The build directory is where all the artifacts created by your builds will be stored. Type the full path to the directory (for example: \" %s/build\")" % os.environ.get('HOME','/tmp/'))
+                     if len(be.builddir) == 0 and len(suggesteddir) > 0:
 -- 
 2.1.4
 
