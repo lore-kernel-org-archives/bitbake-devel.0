@@ -1,40 +1,37 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wi0-f182.google.com (mail-wi0-f182.google.com
-	[209.85.212.182])
-	by mail.openembedded.org (Postfix) with ESMTP id 895EE76777
+Received: from mail-wi0-f170.google.com (mail-wi0-f170.google.com
+	[209.85.212.170])
+	by mail.openembedded.org (Postfix) with ESMTP id F2A5E766E8
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 12 Aug 2015 10:33:49 +0000 (UTC)
-Received: by wijp15 with SMTP id p15so211720448wij.0
+	Wed, 12 Aug 2015 11:15:25 +0000 (UTC)
+Received: by wicja10 with SMTP id ja10so23031056wic.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 12 Aug 2015 03:33:49 -0700 (PDT)
+	Wed, 12 Aug 2015 04:15:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=Tl0VZQUDmOaHlRBSRSHannHVoxBiboRamtcAoUzfXeM=;
-	b=Bt1jF1ZHnanaX3iGF4ZXIkM/LTwJy2KBJ411uiddvyyP6VqG3VugbWXYpR0NsJOX2N
-	QE2lYCqwbmD9tj0fVAeJCBtaAeoXWeBhsCOZ15nrRxTNzbGEMGFlqV9AOnxzHeKFVoNh
-	t+3Mz6d9xH5B7851D7hotPla7JexWmaMu2KJwST+XFGcPULXeXxQo0VNCPcQ4R2XIqJG
-	me8R+dvUz+V5ximqSkr00CVDyLtuDSZCI5PrBYnBGWamyck0cg0bwVU/Q/nBUs1s+uIU
-	pHduO5G+NhntvIzm03JmSb6Ul8/5SWb6JFCvPgzK3Q9efp9Hdnt4qZ4WE9PaVZESU7mr
-	CpdQ==
-X-Gm-Message-State: ALoCoQkYhlOWRSJ0OSp12jDqx2OWWly8N3zz02HwIL7mgefiyCWStzx1Tc9H3c10Ry3xjXctpiDr
-X-Received: by 10.180.221.140 with SMTP id qe12mr5877290wic.54.1439375629224; 
-	Wed, 12 Aug 2015 03:33:49 -0700 (PDT)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=7nvl4ncP9RPedJdne1eEJ2VRfvskgbJqVBt54IsCy0k=;
+	b=Y94a62sAOpR5EdIjRA7j3irc7r3njEk6nLFv2Em5VrimzI52KKVUnO8O7ZJA/FC8ai
+	ncCHwsFA+hrnAAj6Vr4Dlrn6NHCpaaxHjYgLCp1NQGoe7HL+hRXuhl94KbNm5X8+7GcB
+	O1s6d0TsyCKYuVhuKJFikM6XRg3WY9GLMjYBZ2E0d470ggdQAvgGkUQAaRnoJub4Vphf
+	4QiVA217yPWBKC/HNss3OBcd3YNadOIgDA8qzoWuKjRTq7ihmKyMjSRWOZT2Prq+liHI
+	4GiyoGxvLO2MnBAM01Mv199V7xiah5f7bBqNKvenRFtb92cEz1if/kYCRr3NDdBByQp4
+	hp8w==
+X-Gm-Message-State: ALoCoQk7UocJCaCdjYhMFy6kN+GNjfyHd7HEDVMZonMcgY55Xa2qvYJNuRuTLMEyj7h5gmHrEtBR
+X-Received: by 10.194.59.237 with SMTP id c13mr71415812wjr.24.1439378123973;
+	Wed, 12 Aug 2015 04:15:23 -0700 (PDT)
 Received: from draco.icx.intel.com ([83.217.123.106])
-	by smtp.gmail.com with ESMTPSA id wx9sm7262934wjb.6.2015.08.12.03.33.48
+	by smtp.gmail.com with ESMTPSA id
+	by17sm23354229wib.18.2015.08.12.04.15.22
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 12 Aug 2015 03:33:48 -0700 (PDT)
+	Wed, 12 Aug 2015 04:15:23 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 12 Aug 2015 11:33:42 +0100
-Message-Id: <a77a9b3c3d6a971349ce6068fb7f91115e70bdcf.1439375393.git.michael.g.wood@intel.com>
+Date: Wed, 12 Aug 2015 12:15:11 +0100
+Message-Id: <1439378111-7973-1-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.1.4
-In-Reply-To: <cover.1439375393.git.michael.g.wood@intel.com>
-References: <cover.1439375393.git.michael.g.wood@intel.com>
-In-Reply-To: <cover.1439375393.git.michael.g.wood@intel.com>
-References: <cover.1439375393.git.michael.g.wood@intel.com>
-Subject: [PATCH 1/2] Fix typo in set up script output
+Cc: Sujith Haridasan <Sujith_Haridasan@mentor.com>
+Subject: [PATCH] toastergui: Add tests for xhr_importlayer
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,33 +44,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 12 Aug 2015 10:33:51 -0000
+X-List-Received-Date: Wed, 12 Aug 2015 11:15:27 -0000
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
+From: Sujith H <sujith.h@gmail.com>
 
-Removing an spurious 'it' when setting the
-build directory. Thanks to Scott Rifenbark for
-finding the typo!
+Inorder to make sure if layer name which we import is already
+available in toaster database, a test case has been included.
+This would help user to identify if layer name which has been
+provided in the import layer web page already exists or not.
 
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
+Signed-off-by: Sujith Haridasan <sujith.h@gmail.com>
+Signed-off-by: Sujith Haridasan <Sujith_Haridasan@mentor.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/bldcontrol/management/commands/checksettings.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/toaster/toastergui/tests.py | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/lib/toaster/bldcontrol/management/commands/checksettings.py b/lib/toaster/bldcontrol/management/commands/checksettings.py
-index 3002e4c..9a508b4 100644
---- a/lib/toaster/bldcontrol/management/commands/checksettings.py
-+++ b/lib/toaster/bldcontrol/management/commands/checksettings.py
-@@ -133,7 +133,7 @@ class Command(NoArgsCommand):
-                 def _update_builddir():
-                     suggesteddir = self._get_suggested_builddir(be)
-                     if len(suggesteddir) > 0:
--                        be.builddir = raw_input("Toaster needs to know where it your build directory is located.\n The build directory is where all the artifacts created by your builds will be stored. Toaster suggests \"%s\".\n Press Enter to select \"%s\" or type the full path to a different directory: " % (suggesteddir, suggesteddir))
-+                        be.builddir = raw_input("Toaster needs to know where your build directory is located.\n The build directory is where all the artifacts created by your builds will be stored. Toaster suggests \"%s\".\n Press Enter to select \"%s\" or type the full path to a different directory: " % (suggesteddir, suggesteddir))
-                     else:
-                         be.builddir = raw_input("Toaster needs to know where is your build directory.\n The build directory is where all the artifacts created by your builds will be stored. Type the full path to the directory (for example: \" %s/build\")" % os.environ.get('HOME','/tmp/'))
-                     if len(be.builddir) == 0 and len(suggesteddir) > 0:
+diff --git a/lib/toaster/toastergui/tests.py b/lib/toaster/toastergui/tests.py
+index 93a85ac..85e27fe 100644
+--- a/lib/toaster/toastergui/tests.py
++++ b/lib/toaster/toastergui/tests.py
+@@ -148,3 +148,33 @@ class ViewTests(TestCase):
+             # After "typeing" the alpabet we should have result true
+             # from each of the urls
+             self.assertTrue(results)
++
++    def test_xhr_import_layer(self):
++        """Test xhr_importlayer API"""
++        #Test for importing an already existing layer
++        args = {'vcs_url' : "git://git.example.com/test",
++                'name' : "base-layer",
++                'git_ref': "c12b9596afd236116b25ce26dbe0d793de9dc7ce",
++                'project_id': 1, 'dir_path' : "/path/in/repository"}
++        response = self.client.post(reverse('xhr_importlayer'), args)
++        data = json.loads(response.content)
++        self.assertEqual(response.status_code, 200)
++        self.assertNotEqual(data["error"], "ok")
++
++        #Test to verify import of a layer successful
++        args['name'] = "meta-oe"
++        response = self.client.post(reverse('xhr_importlayer'), args)
++        data = json.loads(response.content)
++        self.assertTrue(data["error"], "ok")
++
++        #Test for html tag in the data
++        args['<'] = "testing html tag"
++        response = self.client.post(reverse('xhr_importlayer'), args)
++        data = json.loads(response.content)
++        self.assertNotEqual(data["error"], "ok")
++
++        #Empty data passed
++        args = {}
++        response = self.client.post(reverse('xhr_importlayer'), args)
++        data = json.loads(response.content)
++        self.assertNotEqual(data["error"], "ok")
 -- 
 2.1.4
 
