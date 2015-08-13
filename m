@@ -1,37 +1,26 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wi0-f176.google.com (mail-wi0-f176.google.com
-	[209.85.212.176])
-	by mail.openembedded.org (Postfix) with ESMTP id 5DBDD767D5
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id E583D76486
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 12 Aug 2015 14:38:06 +0000 (UTC)
-Received: by wicne3 with SMTP id ne3so221252764wic.1
+	Thu, 13 Aug 2015 07:08:48 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail1.windriver.com (8.15.1/8.15.1) with ESMTPS id t7D78n04021963
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 12 Aug 2015 07:38:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=9kGA1oJM7NP29P5JNiPSioBGedYNot/pQcpz/q/fH5g=;
-	b=eQxOW0z3VQEkGN4pLzTOKwd1lbK9XMVzSo+ceD8psEZzVTJYTqFnjIqM8hyLk3y9Bn
-	933gBv+SiGV+bVJvOOC53EGzgGo/nJ0V2qJTNVrY5gLIxz5N5pTgwyMjF2WIEczaySoP
-	GBCflxQs4fTqkJkW+qJBENANsaxcLBp/OLF6DXHuj7By9wc+0X/jn9AyKhIvJFlrJoVO
-	TxTddOJ7o14L9lIG0Qez0wX4alx+Yd+DVsROxPnj4WR0wxWZc2V0FTGsBuRdO7hbfYfA
-	psOLKThWgJxqJKNd1rtj9plwVAbC2Tyszvj6B95qRxbtNzC5SZkuAyZLGdW+abm3lM57
-	HXhg==
-X-Gm-Message-State: ALoCoQkr3hqW1qtq+qsGy8jtwAyup9c2LT+nb1QfHrzf/1AFMt/PP+stM0Of68Xv688E7cCGOt5V
-X-Received: by 10.180.160.210 with SMTP id xm18mr46131177wib.93.1439390286609; 
-	Wed, 12 Aug 2015 07:38:06 -0700 (PDT)
-Received: from draco.icx.intel.com ([83.217.123.106])
-	by smtp.gmail.com with ESMTPSA id
-	g13sm8266965wjs.21.2015.08.12.07.38.05
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 12 Aug 2015 07:38:05 -0700 (PDT)
-From: Michael Wood <michael.g.wood@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 12 Aug 2015 15:37:55 +0100
-Message-Id: <1439390275-10396-1-git-send-email-michael.g.wood@intel.com>
-X-Mailer: git-send-email 2.1.4
-Cc: Mihail Stanciu <stanciux.mihail@intel.com>
-Subject: [PATCH] toastergui: Added IDs to elements used in testing
+	Thu, 13 Aug 2015 00:08:49 -0700 (PDT)
+Received: from ala-blade48.wrs.com (147.11.105.68) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.50) with Microsoft SMTP Server id 14.3.235.1;
+	Thu, 13 Aug 2015 00:08:49 -0700
+From: Robert Yang <liezhi.yang@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Thu, 13 Aug 2015 00:08:48 -0700
+Message-ID: <629f01246969a76254c26d5e614ebef5c1ed4270.1439449677.git.liezhi.yang@windriver.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <cover.1439449677.git.liezhi.yang@windriver.com>
+References: <cover.1439449677.git.liezhi.yang@windriver.com>
+MIME-Version: 1.0
+Subject: [PATCH 1/1] fetch2/git.py: fix _latest_revision for local PREMIRROR
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,71 +33,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 12 Aug 2015 14:38:09 -0000
+X-List-Received-Date: Thu, 13 Aug 2015 07:08:49 -0000
+Content-Type: text/plain
 
-From: Mihail Stanciu <stanciux.mihail@intel.com>
+- Fixed when SRCREV = "${AUTOREV}", and set BB_NO_NETWORK = "1":
+$ bitbake <recipe> -ccleanall
+| DEBUG: Executing python function do_cleanall
+| DEBUG: Python function do_cleanall finished
+| ERROR: Function failed: Network access disabled through BB_NO_NETWORK ...
 
-Added static IDs to elements commonly used in the testing process so
-that future UI modifications would not break tests as easily.
+- Fixed when SRCREV = "${AUTOREV}", set BB_NO_NETWORK = "1"  and use
+  local PREMIRROR:
+$ bitbake <recipe> -cfetchall
+| DEBUG: Python function do_fetch finished
+| ERROR: Function failed: Network access disabled through BB_NO_NETWORK ...
 
-[YOCTO #7380]
+Stop running "git ls-remote" when BB_NO_NETWORK would fix the problem.
 
-Signed-off-by: Mihail Stanciu <stanciux.mihail@intel.com>
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- lib/toaster/toastergui/templates/basetable_top.html | 4 ++--
- lib/toaster/toastergui/templates/newproject.html    | 2 +-
- lib/toaster/toastergui/templates/projecttopbar.html | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ bitbake/lib/bb/fetch2/git.py |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/lib/toaster/toastergui/templates/basetable_top.html b/lib/toaster/toastergui/templates/basetable_top.html
-index d4bac36..33ede66 100644
---- a/lib/toaster/toastergui/templates/basetable_top.html
-+++ b/lib/toaster/toastergui/templates/basetable_top.html
-@@ -165,12 +165,12 @@
-             <input class="input-xxlarge" id="search" name="search" type="text" placeholder="Search {%if object_search_display %}{{object_search_display}}{%else%}{{objectname}}{%endif%}" value="{%if request.GET.search %}{{request.GET.search}}{% endif %}"/>{% if request.GET.search %}<a href="javascript:$('#search').val('');searchform.submit()" class="add-on btn" tabindex="-1"><i class="icon-remove"></i></a>{%endif%}
-             <input type="hidden" name="orderby" value="{{request.GET.orderby}}">
-             <input type="hidden" name="page" value="1">
--            <button class="btn" type="submit" value="Search">Search</button>
-+            <button class="btn" id="search-button" type="submit" value="Search">Search</button>
-         </form>
-         <div class="pull-right">
- {% if tablecols %}
-             <div class="btn-group">
--                <button class="btn dropdown-toggle" data-toggle="dropdown">Edit columns
-+                <button id="edit-columns-button" class="btn dropdown-toggle" data-toggle="dropdown">Edit columns
-                     <span class="caret"></span>
-                 </button>
- <!--
-diff --git a/lib/toaster/toastergui/templates/newproject.html b/lib/toaster/toastergui/templates/newproject.html
-index 745b79b..997390b 100644
---- a/lib/toaster/toastergui/templates/newproject.html
-+++ b/lib/toaster/toastergui/templates/newproject.html
-@@ -59,7 +59,7 @@
-         {% endif %}
- 
-             <div class="form-actions">
--              <input type="submit" class="btn btn-primary btn-large" value="Create project"/>
-+              <input type="submit" id="create-project-button" class="btn btn-primary btn-large" value="Create project"/>
-               <span class="help-inline" style="vertical-align:middle;">To create a project, you need to enter a project name</span>
-             </div>
-         </form>
-diff --git a/lib/toaster/toastergui/templates/projecttopbar.html b/lib/toaster/toastergui/templates/projecttopbar.html
-index 220ca72..7412e4c 100644
---- a/lib/toaster/toastergui/templates/projecttopbar.html
-+++ b/lib/toaster/toastergui/templates/projecttopbar.html
-@@ -47,8 +47,8 @@
-         </i>
-         <div class="input-append">
-           <form class="form-inline" style="margin-bottom: 0">
--            <input type="text" class="input-xlarge input-lg build-target-input" placeholder="Type the recipe you want to build" autocomplete="off" disabled>
--              <button class="btn btn-primary btn-large build-button" data-project-id="{{project.id}}" disabled>Build
-+            <input id="build-input" type="text" class="input-xlarge input-lg build-target-input" placeholder="Type the recipe you want to build" autocomplete="off" disabled>
-+              <button id="build-button" class="btn btn-primary btn-large build-button" data-project-id="{{project.id}}" disabled>Build
-               </button>
-             </form>
-           </div>
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index 374d846..67ee107 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -350,7 +350,6 @@ class Git(FetchMethod):
+         """
+         Compute the HEAD revision for the url
+         """
+-        output = self._lsremote(ud, d, "")
+         # Tags of the form ^{} may not work, need to fallback to other form
+         if ud.unresolvedrev[name][:5] == "refs/":
+             head = ud.unresolvedrev[name]
+@@ -358,6 +357,12 @@ class Git(FetchMethod):
+         else:
+             head = "refs/heads/%s" % ud.unresolvedrev[name]
+             tag = "refs/tags/%s" % ud.unresolvedrev[name]
++        # Only ls-remote when url is "file://" or BB_NO_NETWORK != "1",
++        # this makes local mirror works.
++        if ud.proto.lower() == 'file' or d.getVar("BB_NO_NETWORK", True) != "1":
++            output = self._lsremote(ud, d, "")
++        else:
++            output = "%s %s" % (name, head)
+         for s in [head, tag + "^{}", tag]:
+             for l in output.split('\n'):
+                 if s in l:
 -- 
-2.1.4
+1.7.9.5
 
 
