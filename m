@@ -1,25 +1,25 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id A3FB1767BD
+	by mail.openembedded.org (Postfix) with ESMTP id 90A81767EA
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Aug 2015 11:12:38 +0000 (UTC)
+	Mon, 17 Aug 2015 11:12:39 +0000 (UTC)
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 17 Aug 2015 04:12:39 -0700
+	by orsmga101.jf.intel.com with ESMTP; 17 Aug 2015 04:12:40 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,694,1432623600"; d="scan'208";a="785564783"
+X-IronPort-AV: E=Sophos;i="5.15,694,1432623600"; d="scan'208";a="785564786"
 Received: from jwanrooi-mobl.ger.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com) ([10.252.11.216])
-	by orsmga002.jf.intel.com with ESMTP; 17 Aug 2015 04:12:38 -0700
+	by orsmga002.jf.intel.com with ESMTP; 17 Aug 2015 04:12:39 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 17 Aug 2015 12:12:19 +0100
-Message-Id: <e48e095f07c16a2b8f20c7f4f3b71eaa04fb5340.1439809654.git.paul.eggleton@linux.intel.com>
+Date: Mon, 17 Aug 2015 12:12:20 +0100
+Message-Id: <51bd12738020e06471201d73267a3f618aa29e84.1439809654.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <cover.1439809654.git.paul.eggleton@linux.intel.com>
 References: <cover.1439809654.git.paul.eggleton@linux.intel.com>
 In-Reply-To: <cover.1439809654.git.paul.eggleton@linux.intel.com>
 References: <cover.1439809654.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 04/13] command: ensure sync commands that read configuration see updates
+Subject: [PATCH 05/13] cooker: ensure prefile/postfile can work in memory resident mode
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,157 +32,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 17 Aug 2015 11:12:38 -0000
+X-List-Received-Date: Mon, 17 Aug 2015 11:12:39 -0000
 
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
+The prefile/postfile options weren't working in memory resident mode
+because they weren't being passed through to the server, so ensure that
+they do get passed through and that the server is reset when the values
+come through.
 
-Add a means of ensuring that synchronous commands that read the results
-of the configuration trigger a reparse of the configuration if any
-underlying files have changed.
-
-Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- lib/bb/command.py | 13 ++++++++++++-
- lib/bb/cooker.py  | 27 ++++++++++++++++-----------
- 2 files changed, 28 insertions(+), 12 deletions(-)
+ lib/bb/cooker.py     | 4 +++-
+ lib/bb/cookerdata.py | 3 ++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/lib/bb/command.py b/lib/bb/command.py
-index a7cac97..398c1d6 100644
---- a/lib/bb/command.py
-+++ b/lib/bb/command.py
-@@ -68,6 +68,8 @@ class Command:
-                 if not hasattr(command_method, 'readonly') or False == getattr(command_method, 'readonly'):
-                     return None, "Not able to execute not readonly commands in readonly mode"
-             try:
-+                if getattr(command_method, 'needconfig', False):
-+                    self.cooker.updateCacheSync()
-                 result = command_method(self, commandline)
-             except CommandError as exc:
-                 return None, exc.args[0]
-@@ -204,6 +206,7 @@ class CommandsSync:
-         postfiles = params[1].split()
-         command.cooker.configuration.prefile = prefiles
-         command.cooker.configuration.postfile = postfiles
-+    setPrePostConfFiles.needconfig = False
- 
-     def getCpuCount(self, command, params):
-         """
-@@ -211,10 +214,12 @@ class CommandsSync:
-         """
-         return bb.utils.cpu_count()
-     getCpuCount.readonly = True
-+    getCpuCount.needconfig = False
- 
-     def matchFile(self, command, params):
-         fMatch = params[0]
-         return command.cooker.matchFile(fMatch)
-+    matchFile.needconfig = False
- 
-     def generateNewImage(self, command, params):
-         image = params[0]
-@@ -228,6 +233,7 @@ class CommandsSync:
-     def ensureDir(self, command, params):
-         directory = params[0]
-         bb.utils.mkdirhier(directory)
-+    ensureDir.needconfig = False
- 
-     def setVarFile(self, command, params):
-         """
-@@ -238,6 +244,7 @@ class CommandsSync:
-         default_file = params[2]
-         op = params[3]
-         command.cooker.modifyConfigurationVar(var, val, default_file, op)
-+    setVarFile.needconfig = False
- 
-     def removeVarFile(self, command, params):
-         """
-@@ -245,6 +252,7 @@ class CommandsSync:
-         """
-         var = params[0]
-         command.cooker.removeConfigurationVar(var)
-+    removeVarFile.needconfig = False
- 
-     def createConfigFile(self, command, params):
-         """
-@@ -252,6 +260,7 @@ class CommandsSync:
-         """
-         name = params[0]
-         command.cooker.createConfigFile(name)
-+    createConfigFile.needconfig = False
- 
-     def setEventMask(self, command, params):
-         handlerNum = params[0]
-@@ -259,6 +268,7 @@ class CommandsSync:
-         debug_domains = params[2]
-         mask = params[3]
-         return bb.event.set_UIHmask(handlerNum, llevel, debug_domains, mask)
-+    setEventMask.needconfig = False
- 
-     def setFeatures(self, command, params):
-         """
-@@ -266,7 +276,7 @@ class CommandsSync:
-         """
-         features = params[0]
-         command.cooker.setFeatures(features)
--
-+    setFeatures.needconfig = False
-     # although we change the internal state of the cooker, this is transparent since
-     # we always take and leave the cooker in state.initial
-     setFeatures.readonly = True
-@@ -275,6 +285,7 @@ class CommandsSync:
-         options = params[0]
-         environment = params[1]
-         command.cooker.updateConfigOpts(options, environment)
-+    updateConfig.needconfig = False
- 
- class CommandsAsync:
-     """
 diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index f0f9c66..fb38289 100644
+index fb38289..a2b0bb5 100644
 --- a/lib/bb/cooker.py
 +++ b/lib/bb/cooker.py
-@@ -1445,6 +1445,21 @@ class BBCooker:
-         if timestamp:
-             return timestr
+@@ -527,9 +527,11 @@ class BBCooker:
+         self.handleCollections( self.data.getVar("BBFILE_COLLECTIONS", True) )
  
-+    def updateCacheSync(self):
-+        if self.state == state.running:
-+            return
-+
-+        # reload files for which we got notifications
-+        for p in self.inotify_modified_files:
-+            bb.parse.update_cache(p)
-+        self.inotify_modified_files = []
-+
-+        if not self.baseconfig_valid:
-+            logger.debug(1, "Reloading base configuration data")
-+            self.initConfigurationData()
-+            self.baseconfig_valid = True
-+            self.parsecache_valid = False
-+
-     # This is called for all async commands when self.state != running
-     def updateCache(self):
-         if self.state == state.running:
-@@ -1456,17 +1471,7 @@ class BBCooker:
-             raise bb.BBHandledException()
+     def updateConfigOpts(self, options, environment):
++        clean = True
+         for o in options:
++            if o in ['prefile', 'postfile']:
++                clean = False
+             setattr(self.configuration, o, options[o])
+-        clean = True
+         for k in bb.utils.approved_variables():
+             if k in environment and k not in self.configuration.env:
+                 logger.debug(1, "Updating environment variable %s to %s" % (k, environment[k]))
+diff --git a/lib/bb/cookerdata.py b/lib/bb/cookerdata.py
+index 57fc6bb..b20040c 100644
+--- a/lib/bb/cookerdata.py
++++ b/lib/bb/cookerdata.py
+@@ -73,7 +73,8 @@ class ConfigParameters(object):
+         options = {}
+         for o in ["abort", "tryaltconfigs", "force", "invalidate_stamp", 
+                   "verbose", "debug", "dry_run", "dump_signatures", 
+-                  "debug_domains", "extra_assume_provided", "profile"]:
++                  "debug_domains", "extra_assume_provided", "profile",
++                  "prefile", "postfile"]:
+             options[o] = getattr(self.options, o)
  
-         if self.state != state.parsing:
--
--            # reload files for which we got notifications
--            for p in self.inotify_modified_files:
--                bb.parse.update_cache(p)
--            self.inotify_modified_files = []
--
--            if not self.baseconfig_valid:
--                logger.debug(1, "Reloading base configuration data")
--                self.initConfigurationData()
--                self.baseconfig_valid = True
--                self.parsecache_valid = False
-+            self.updateCacheSync()
- 
-         if self.state != state.parsing and not self.parsecache_valid:
-             self.parseConfiguration ()
+         ret, error = server.runCommand(["updateConfig", options, environment])
 -- 
 2.1.0
 
