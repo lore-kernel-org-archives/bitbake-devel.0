@@ -1,25 +1,25 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 8988D767E5
+	by mail.openembedded.org (Postfix) with ESMTP id 72C2C767E5
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Aug 2015 11:12:45 +0000 (UTC)
+	Mon, 17 Aug 2015 11:12:46 +0000 (UTC)
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 17 Aug 2015 04:12:46 -0700
+	by orsmga101.jf.intel.com with ESMTP; 17 Aug 2015 04:12:47 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,694,1432623600"; d="scan'208";a="785564812"
+X-IronPort-AV: E=Sophos;i="5.15,694,1432623600"; d="scan'208";a="785564817"
 Received: from jwanrooi-mobl.ger.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com) ([10.252.11.216])
-	by orsmga002.jf.intel.com with ESMTP; 17 Aug 2015 04:12:45 -0700
+	by orsmga002.jf.intel.com with ESMTP; 17 Aug 2015 04:12:46 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 17 Aug 2015 12:12:26 +0100
-Message-Id: <a6d209e9795d73d0959396672552d39fa9a344b1.1439809654.git.paul.eggleton@linux.intel.com>
+Date: Mon, 17 Aug 2015 12:12:27 +0100
+Message-Id: <664a7e59248a24197a0b262a0fa37a36f2d2a353.1439809654.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <cover.1439809654.git.paul.eggleton@linux.intel.com>
 References: <cover.1439809654.git.paul.eggleton@linux.intel.com>
 In-Reply-To: <cover.1439809654.git.paul.eggleton@linux.intel.com>
 References: <cover.1439809654.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 11/13] bitbake-layers: refactor show-appends to stop using cooker bbappends list
+Subject: [PATCH 12/13] bitbake-layers: use "with open" consistently
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,70 +32,105 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 17 Aug 2015 11:12:45 -0000
+X-List-Received-Date: Mon, 17 Aug 2015 11:12:46 -0000
+
+It's best practice to use "with open..." rather than open & close where
+practical.
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- bin/bitbake-layers | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ bin/bitbake-layers | 62 +++++++++++++++++++++++++-----------------------------
+ 1 file changed, 29 insertions(+), 33 deletions(-)
 
 diff --git a/bin/bitbake-layers b/bin/bitbake-layers
-index 62b51b0..8cf7196 100755
+index 8cf7196..5518c63 100755
 --- a/bin/bitbake-layers
 +++ b/bin/bitbake-layers
-@@ -719,18 +719,21 @@ build results (as the layer priority order has effectively changed).
- Lists recipes with the bbappends that apply to them as subitems.
- """
-         self.init_bbhandler()
--        if not self.bbhandler.cooker.collection.bbappends:
--            logger.plain('No append files found')
--            return 0
+@@ -705,13 +705,11 @@ build results (as the layer priority order has effectively changed).
+         return os.path.basename(layerdir.rstrip(os.sep))
  
-         logger.plain('=== Appended recipes ===')
+     def apply_append(self, appendname, recipename):
+-        appendfile = open(appendname, 'r')
+-        recipefile = open(recipename, 'a')
+-        recipefile.write('\n')
+-        recipefile.write('##### bbappended from %s #####\n' % self.get_file_layer(appendname))
+-        recipefile.writelines(appendfile.readlines())
+-        recipefile.close()
+-        appendfile.close()
++        with open(appendname, 'r') as appendfile:
++            with open(recipename, 'a') as recipefile:
++                recipefile.write('\n')
++                recipefile.write('##### bbappended from %s #####\n' % self.get_file_layer(appendname))
++                recipefile.writelines(appendfile.readlines())
  
-         pnlist = list(self.bbhandler.cooker_data.pkg_pn.keys())
-         pnlist.sort()
-+        appends = False
-         for pn in pnlist:
--            self.show_appends_for_pn(pn)
-+            if self.show_appends_for_pn(pn):
-+                appends = True
-+
-+        if self.show_appends_for_skipped():
-+            appends = True
+     def do_show_appends(self, args):
+         """list bbappend files and recipe files they apply to
+@@ -879,20 +877,19 @@ NOTE: .bbappend files can impact the dependencies.
  
--        self.show_appends_for_skipped()
-+        if not appends:
-+            logger.plain('No append files found')
+             # The 'require/include xxx' in the bb file
+             pv_re = re.compile(r"\${PV}")
+-            fnfile = open(f, 'r')
+-            line = fnfile.readline()
+-            while line:
+-                m, keyword = self.match_require_include(line)
+-                # Found the 'require/include xxxx'
+-                if m:
+-                    needed_file = m.group(1)
+-                    # Replace the ${PV} with the real PV
+-                    if pv_re.search(needed_file) and f in self.bbhandler.cooker_data.pkg_pepvpr:
+-                        pv = self.bbhandler.cooker_data.pkg_pepvpr[f][1]
+-                        needed_file = re.sub(r"\${PV}", pv, needed_file)
+-                    self.print_cross_files(bbpath, keyword, layername, f, needed_file, args.filenames, ignore_layers)
++            with open(f, 'r') as fnfile:
+                 line = fnfile.readline()
+-            fnfile.close()
++                while line:
++                    m, keyword = self.match_require_include(line)
++                    # Found the 'require/include xxxx'
++                    if m:
++                        needed_file = m.group(1)
++                        # Replace the ${PV} with the real PV
++                        if pv_re.search(needed_file) and f in self.bbhandler.cooker_data.pkg_pepvpr:
++                            pv = self.bbhandler.cooker_data.pkg_pepvpr[f][1]
++                            needed_file = re.sub(r"\${PV}", pv, needed_file)
++                        self.print_cross_files(bbpath, keyword, layername, f, needed_file, args.filenames, ignore_layers)
++                    line = fnfile.readline()
  
-     def show_appends_for_pn(self, pn):
-         filenames = self.bbhandler.cooker_data.pkg_pn[pn]
-@@ -741,12 +744,12 @@ Lists recipes with the bbappends that apply to them as subitems.
-                                              self.bbhandler.cooker_data.pkg_pn)
-         best_filename = os.path.basename(best[3])
+         # The "require/include xxx" in conf/machine/*.conf, .inc and .bbclass
+         conf_re = re.compile(".*/conf/machine/[^\/]*\.conf$")
+@@ -906,20 +903,19 @@ NOTE: .bbappend files can impact the dependencies.
+                     f = os.path.join(dirpath, name)
+                     s = conf_re.match(f) or inc_re.match(f) or bbclass_re.match(f)
+                     if s:
+-                        ffile = open(f, 'r')
+-                        line = ffile.readline()
+-                        while line:
+-                            m, keyword = self.match_require_include(line)
+-                            # Only bbclass has the "inherit xxx" here.
+-                            bbclass=""
+-                            if not m and f.endswith(".bbclass"):
+-                                m, keyword = self.match_inherit(line)
+-                                bbclass=".bbclass"
+-                            # Find a 'require/include xxxx'
+-                            if m:
+-                                self.print_cross_files(bbpath, keyword, layername, f, m.group(1) + bbclass, args.filenames, ignore_layers)
++                        with open(f, 'r') as ffile:
+                             line = ffile.readline()
+-                        ffile.close()
++                            while line:
++                                m, keyword = self.match_require_include(line)
++                                # Only bbclass has the "inherit xxx" here.
++                                bbclass=""
++                                if not m and f.endswith(".bbclass"):
++                                    m, keyword = self.match_inherit(line)
++                                    bbclass=".bbclass"
++                                # Find a 'require/include xxxx'
++                                if m:
++                                    self.print_cross_files(bbpath, keyword, layername, f, m.group(1) + bbclass, args.filenames, ignore_layers)
++                                line = ffile.readline()
  
--        self.show_appends_output(filenames, best_filename)
-+        return self.show_appends_output(filenames, best_filename)
- 
-     def show_appends_for_skipped(self):
-         filenames = [os.path.basename(f)
-                     for f in self.bbhandler.cooker.skiplist.iterkeys()]
--        self.show_appends_output(filenames, None, " (skipped)")
-+        return self.show_appends_output(filenames, None, " (skipped)")
- 
-     def show_appends_output(self, filenames, best_filename, name_suffix = ''):
-         appended, missing = self.get_appends_for_files(filenames)
-@@ -760,7 +763,9 @@ Lists recipes with the bbappends that apply to them as subitems.
-                 if best_filename in missing:
-                     logger.warn('%s: missing append for preferred version',
-                                 best_filename)
--
-+            return True
-+        else:
-+            return False
- 
-     def get_appends_for_files(self, filenames):
-         appended, notappended = [], []
+     def print_cross_files(self, bbpath, keyword, layername, f, needed_filename, show_filenames, ignore_layers):
+         """Print the depends that crosses a layer boundary"""
 -- 
 2.1.0
 
