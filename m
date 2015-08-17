@@ -1,25 +1,25 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id DC7CB75F2A
+	by mail.openembedded.org (Postfix) with ESMTP id A3FB1767BD
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Aug 2015 11:12:37 +0000 (UTC)
+	Mon, 17 Aug 2015 11:12:38 +0000 (UTC)
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 17 Aug 2015 04:12:38 -0700
+	by orsmga101.jf.intel.com with ESMTP; 17 Aug 2015 04:12:39 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,694,1432623600"; d="scan'208";a="785564780"
+X-IronPort-AV: E=Sophos;i="5.15,694,1432623600"; d="scan'208";a="785564783"
 Received: from jwanrooi-mobl.ger.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com) ([10.252.11.216])
-	by orsmga002.jf.intel.com with ESMTP; 17 Aug 2015 04:12:37 -0700
+	by orsmga002.jf.intel.com with ESMTP; 17 Aug 2015 04:12:38 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 17 Aug 2015 12:12:18 +0100
-Message-Id: <04672714fa808eb292c4073ec22a43f76580f30b.1439809654.git.paul.eggleton@linux.intel.com>
+Date: Mon, 17 Aug 2015 12:12:19 +0100
+Message-Id: <e48e095f07c16a2b8f20c7f4f3b71eaa04fb5340.1439809654.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <cover.1439809654.git.paul.eggleton@linux.intel.com>
 References: <cover.1439809654.git.paul.eggleton@linux.intel.com>
 In-Reply-To: <cover.1439809654.git.paul.eggleton@linux.intel.com>
 References: <cover.1439809654.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 03/13] cooker: further limit inotify watches
+Subject: [PATCH 04/13] command: ensure sync commands that read configuration see updates
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,82 +34,155 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Mon, 17 Aug 2015 11:12:38 -0000
 
-Unfortunately we were acting on inotify notifications about any files
-changing within the watched directories, not just the ones we actually
-care about. In OE the build directory is in BBPATH and hence it gets
-watched, and we write things like bitbake.lock and
-bitbake-cookerdaemon.log to that directory, hence effectively
-notifications were being tripped on every bitbake invocation. To avoid
-this, record which file/subdirectory we're interested in against each
-watched directory so we can ignore any events for files/subdirectories
-we don't care about.
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Additionally, if we move up to the parent dir, ensure we haven't already
-seen it before adding a watch on it (we were previously calling
-watcher.add_watch() on the same directory multiple times before in a
-typical OE configuration).
+Add a means of ensuring that synchronous commands that read the results
+of the configuration trigger a reparse of the configuration if any
+underlying files have changed.
 
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- lib/bb/cooker.py | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ lib/bb/command.py | 13 ++++++++++++-
+ lib/bb/cooker.py  | 27 ++++++++++++++++-----------
+ 2 files changed, 28 insertions(+), 12 deletions(-)
 
+diff --git a/lib/bb/command.py b/lib/bb/command.py
+index a7cac97..398c1d6 100644
+--- a/lib/bb/command.py
++++ b/lib/bb/command.py
+@@ -68,6 +68,8 @@ class Command:
+                 if not hasattr(command_method, 'readonly') or False == getattr(command_method, 'readonly'):
+                     return None, "Not able to execute not readonly commands in readonly mode"
+             try:
++                if getattr(command_method, 'needconfig', False):
++                    self.cooker.updateCacheSync()
+                 result = command_method(self, commandline)
+             except CommandError as exc:
+                 return None, exc.args[0]
+@@ -204,6 +206,7 @@ class CommandsSync:
+         postfiles = params[1].split()
+         command.cooker.configuration.prefile = prefiles
+         command.cooker.configuration.postfile = postfiles
++    setPrePostConfFiles.needconfig = False
+ 
+     def getCpuCount(self, command, params):
+         """
+@@ -211,10 +214,12 @@ class CommandsSync:
+         """
+         return bb.utils.cpu_count()
+     getCpuCount.readonly = True
++    getCpuCount.needconfig = False
+ 
+     def matchFile(self, command, params):
+         fMatch = params[0]
+         return command.cooker.matchFile(fMatch)
++    matchFile.needconfig = False
+ 
+     def generateNewImage(self, command, params):
+         image = params[0]
+@@ -228,6 +233,7 @@ class CommandsSync:
+     def ensureDir(self, command, params):
+         directory = params[0]
+         bb.utils.mkdirhier(directory)
++    ensureDir.needconfig = False
+ 
+     def setVarFile(self, command, params):
+         """
+@@ -238,6 +244,7 @@ class CommandsSync:
+         default_file = params[2]
+         op = params[3]
+         command.cooker.modifyConfigurationVar(var, val, default_file, op)
++    setVarFile.needconfig = False
+ 
+     def removeVarFile(self, command, params):
+         """
+@@ -245,6 +252,7 @@ class CommandsSync:
+         """
+         var = params[0]
+         command.cooker.removeConfigurationVar(var)
++    removeVarFile.needconfig = False
+ 
+     def createConfigFile(self, command, params):
+         """
+@@ -252,6 +260,7 @@ class CommandsSync:
+         """
+         name = params[0]
+         command.cooker.createConfigFile(name)
++    createConfigFile.needconfig = False
+ 
+     def setEventMask(self, command, params):
+         handlerNum = params[0]
+@@ -259,6 +268,7 @@ class CommandsSync:
+         debug_domains = params[2]
+         mask = params[3]
+         return bb.event.set_UIHmask(handlerNum, llevel, debug_domains, mask)
++    setEventMask.needconfig = False
+ 
+     def setFeatures(self, command, params):
+         """
+@@ -266,7 +276,7 @@ class CommandsSync:
+         """
+         features = params[0]
+         command.cooker.setFeatures(features)
+-
++    setFeatures.needconfig = False
+     # although we change the internal state of the cooker, this is transparent since
+     # we always take and leave the cooker in state.initial
+     setFeatures.readonly = True
+@@ -275,6 +285,7 @@ class CommandsSync:
+         options = params[0]
+         environment = params[1]
+         command.cooker.updateConfigOpts(options, environment)
++    updateConfig.needconfig = False
+ 
+ class CommandsAsync:
+     """
 diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
-index 84bf46b..f0f9c66 100644
+index f0f9c66..fb38289 100644
 --- a/lib/bb/cooker.py
 +++ b/lib/bb/cooker.py
-@@ -126,12 +126,14 @@ class BBCooker:
+@@ -1445,6 +1445,21 @@ class BBCooker:
+         if timestamp:
+             return timestr
  
-         self.configwatcher = pyinotify.WatchManager()
-         self.configwatcher.bbseen = []
-+        self.configwatcher.bbwatchedfiles = []
-         self.confignotifier = pyinotify.Notifier(self.configwatcher, self.config_notifications)
-         self.watchmask = pyinotify.IN_CLOSE_WRITE | pyinotify.IN_CREATE | pyinotify.IN_DELETE | \
-                          pyinotify.IN_DELETE_SELF | pyinotify.IN_MODIFY | pyinotify.IN_MOVE_SELF | \
-                          pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO 
-         self.watcher = pyinotify.WatchManager()
-         self.watcher.bbseen = []
-+        self.watcher.bbwatchedfiles = []
-         self.notifier = pyinotify.Notifier(self.watcher, self.notifications)
- 
- 
-@@ -185,6 +187,8 @@ class BBCooker:
-         signal.signal(signal.SIGHUP, self.sigterm_exception)
- 
-     def config_notifications(self, event):
-+        if not event.pathname in self.configwatcher.bbwatchedfiles:
++    def updateCacheSync(self):
++        if self.state == state.running:
 +            return
-         if not event.path in self.inotify_modified_files:
-             self.inotify_modified_files.append(event.path)
-         self.baseconfig_valid = False
-@@ -198,20 +202,27 @@ class BBCooker:
-         if not watcher:
-             watcher = self.watcher
-         for i in deps:
-+            watcher.bbwatchedfiles.append(i[0])
-             f = os.path.dirname(i[0])
-             if f in watcher.bbseen:
-                 continue
-             watcher.bbseen.append(f)
-+            watchtarget = None
-             while True:
-                 # We try and add watches for files that don't exist but if they did, would influence
-                 # the parser. The parent directory of these files may not exist, in which case we need 
-                 # to watch any parent that does exist for changes.
-                 try:
-                     watcher.add_watch(f, self.watchmask, quiet=False)
-+                    if watchtarget:
-+                        watcher.bbwatchedfiles.append(watchtarget)
-                     break
-                 except pyinotify.WatchManagerError as e:
-                     if 'ENOENT' in str(e):
-+                        watchtarget = f
-                         f = os.path.dirname(f)
-+                        if f in watcher.bbseen:
-+                            break
-                         watcher.bbseen.append(f)
-                         continue
-                     if 'ENOSPC' in str(e):
++
++        # reload files for which we got notifications
++        for p in self.inotify_modified_files:
++            bb.parse.update_cache(p)
++        self.inotify_modified_files = []
++
++        if not self.baseconfig_valid:
++            logger.debug(1, "Reloading base configuration data")
++            self.initConfigurationData()
++            self.baseconfig_valid = True
++            self.parsecache_valid = False
++
+     # This is called for all async commands when self.state != running
+     def updateCache(self):
+         if self.state == state.running:
+@@ -1456,17 +1471,7 @@ class BBCooker:
+             raise bb.BBHandledException()
+ 
+         if self.state != state.parsing:
+-
+-            # reload files for which we got notifications
+-            for p in self.inotify_modified_files:
+-                bb.parse.update_cache(p)
+-            self.inotify_modified_files = []
+-
+-            if not self.baseconfig_valid:
+-                logger.debug(1, "Reloading base configuration data")
+-                self.initConfigurationData()
+-                self.baseconfig_valid = True
+-                self.parsecache_valid = False
++            self.updateCacheSync()
+ 
+         if self.state != state.parsing and not self.parsecache_valid:
+             self.parseConfiguration ()
 -- 
 2.1.0
 
