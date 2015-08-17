@@ -1,36 +1,29 @@
-Return-Path: <remi.peuvergne@openwide.fr>
-X-Greylist: delayed 301 seconds by postgrey-1.34 at layers.openembedded.org;
-	Wed, 12 Aug 2015 09:29:01 UTC
-Received: from zimbra3.corp.accelance.fr (zimbra3.corp.accelance.fr
-	[213.162.49.233])
-	by mail.openembedded.org (Postfix) with ESMTP id 73B78766E5
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id E051665CBC
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 12 Aug 2015 09:29:01 +0000 (UTC)
+	Mon, 17 Aug 2015 07:44:11 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by zimbra3.corp.accelance.fr (Postfix) with ESMTP id 06CC27F125
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 12 Aug 2015 11:24:00 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra3.corp.accelance.fr
-Received: from zimbra3.corp.accelance.fr ([127.0.0.1])
-	by localhost (zimbra3.corp.accelance.fr [127.0.0.1]) (amavisd-new,
-	port 10024)
-	with ESMTP id Yx0YKg95rkOI for <bitbake-devel@lists.openembedded.org>; 
-	Wed, 12 Aug 2015 11:23:55 +0200 (CEST)
-Received: from zimbra2.corp.accelance.fr (zimbra2.corp.accelance.fr
-	[213.162.49.232])
-	by zimbra3.corp.accelance.fr (Postfix) with ESMTP id 2E8427F151
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 12 Aug 2015 11:23:55 +0200 (CEST)
-Date: Wed, 12 Aug 2015 11:23:55 +0200 (CEST)
-From: =?utf-8?B?UsOpbWk=?= Peuvergne <remi.peuvergne@openwide.fr>
-To: bitbake-devel@lists.openembedded.org
-Message-ID: <2007448077.5597509.1439371435023.JavaMail.root@openwide.fr>
-In-Reply-To: <461580693.5596129.1439370747631.JavaMail.root@openwide.fr>
-MIME-Version: 1.0
-X-Originating-IP: [213.244.2.19]
-X-Mailer: Zimbra 7.2.6_GA_2926 (ZimbraWebClient - FF3.0 (Linux)/7.2.6_GA_2926)
-X-Mailman-Approved-At: Mon, 17 Aug 2015 07:36:05 +0000
-Subject: Question about python interpreter in methods embedded in recipes
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t7H7iBId023753; Mon, 17 Aug 2015 08:44:11 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 7F_g7e6-lRfO; Mon, 17 Aug 2015 08:44:11 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t7H7hwnX023749
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 17 Aug 2015 08:44:09 +0100
+Message-ID: <1439797438.1218.35.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: =?ISO-8859-1?Q?R=E9mi?= Peuvergne <remi.peuvergne@openwide.fr>
+Date: Mon, 17 Aug 2015 08:43:58 +0100
+In-Reply-To: <2007448077.5597509.1439371435023.JavaMail.root@openwide.fr>
+References: <2007448077.5597509.1439371435023.JavaMail.root@openwide.fr>
+X-Mailer: Evolution 3.12.10-0ubuntu1~14.10.1 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: Question about python interpreter in methods embedded in recipes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,60 +36,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 12 Aug 2015 09:29:03 -0000
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_5597508_101443564.1439371435023"
+X-List-Received-Date: Mon, 17 Aug 2015 07:44:15 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-------=_Part_5597508_101443564.1439371435023
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+On Wed, 2015-08-12 at 11:23 +0200, Rémi Peuvergne wrote:
+> I've been investigating on an issue when building an image, and I gave
+> up doing what I first wanted.
+> I'd like to know more about the issue, and possibly suggest an
+> improvement to bitbake...
+>
+> The issue is related to "embedded python methods" in recipes.
+>
+> In my image recipe, I'm modifying the rootfs (basically to add a
+> hashed password to /etc/shadow), with something like :
+>
+> python set_password() {
+> <some piece of python script here>
+> }
+>
+> The thing is, this piece of code is executed by the *host*
+> interpreter, so it depends on the dev machine (in my case I ran into
+> an issue with crypt.mksalt() not being available).
+> It would be nice to allow executing this with the *native*
+> interpreter, the one built during the whole image build process.
+>
+> I tried inheriting pythonnative, which sets the PYTHON variable the
+> correct way, but it's not used for those methods...
+> I guess it's not easy, since it would need to pass the datastore, but
+> I wonder if there's any smart solution to this ?
 
-Hi everyone ! 
+The system is only setup such that we run the host interpreter. We don't
+know when the native python version would become available (or even if
+it would get built) and even if we did, we'd then have to switch
+interpreters half way through execution.
 
-I've been investigating on an issue when building an image, and I gave up doing what I first wanted. 
-I'd like to know more about the issue, and possibly suggest an improvement to bitbake... 
+Such an approach would add a lot of complexity for not a lot of gain. If
+you really need pythonnative, you could execute a separate script using
+it?
 
-The issue is related to "embedded python methods" in recipes. 
+Cheers,
 
-In my image recipe, I'm modifying the rootfs (basically to add a hashed password to /etc/shadow), with something like : 
-
-python set_password() { 
-<some piece of python script here> 
-} 
-
-The thing is, this piece of code is executed by the *host* interpreter, so it depends on the dev machine (in my case I ran into an issue with crypt.mksalt() not being available). 
-It would be nice to allow executing this with the *native* interpreter, the one built during the whole image build process. 
-
-I tried inheriting pythonnative, which sets the PYTHON variable the correct way, but it's not used for those methods... 
-I guess it's not easy, since it would need to pass the datastore, but I wonder if there's any smart solution to this ? 
-
-Thanks for your help ! 
+Richard
 
 
-Remi 
-
-
-------=_Part_5597508_101443564.1439371435023
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<html><head><style type=3D'text/css'>p { margin: 0; }</style></head><body><=
-div style=3D'font-family: arial,helvetica,sans-serif; font-size: 12pt; colo=
-r: #000000'>Hi everyone !<br><br>I've been investigating on an issue when b=
-uilding an image, and I gave up doing what I first wanted.<br>I'd like to k=
-now more about the issue, and possibly suggest an improvement to bitbake...=
-<br><br>The issue is related to "embedded python methods" in recipes.<br><b=
-r>In my image recipe, I'm modifying the rootfs (basically to add a hashed p=
-assword to /etc/shadow), with something like :<br><br>python set_password()=
- {<br><span style=3D"white-space:pre">=09</span>&lt;some piece of python sc=
-ript here&gt;<br>}<br><br>The thing is, this piece of code is executed by t=
-he *host* interpreter, so it depends on the dev machine (in my case I ran i=
-nto an issue with crypt.mksalt() not being available).<br>It would be nice =
-to allow executing this with the *native* interpreter, the one built during=
- the whole image build process.<br><br>I tried inheriting pythonnative, whi=
-ch sets the PYTHON variable the correct way, but it's not used for those me=
-thods...<br>I guess it's not easy, since it would need to pass the datastor=
-e, but I wonder if there's any smart solution to this ?<br><br>Thanks for y=
-our help !<br><br><br>Remi<br><br></div></body></html>
-
-------=_Part_5597508_101443564.1439371435023--
