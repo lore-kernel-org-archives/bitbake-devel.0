@@ -1,37 +1,42 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-io0-f172.google.com (mail-io0-f172.google.com
-	[209.85.223.172])
-	by mail.openembedded.org (Postfix) with ESMTP id 3515E60125
+Return-Path: <martin.jansa@gmail.com>
+Received: from mail-wi0-f179.google.com (mail-wi0-f179.google.com
+	[209.85.212.179])
+	by mail.openembedded.org (Postfix) with ESMTP id 01E0960043
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Aug 2015 17:15:01 +0000 (UTC)
-Received: by iodv127 with SMTP id v127so143271771iod.3
+	Tue, 18 Aug 2015 08:45:16 +0000 (UTC)
+Received: by wicja10 with SMTP id ja10so88737512wic.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 17 Aug 2015 10:15:01 -0700 (PDT)
+	Tue, 18 Aug 2015 01:45:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=6eUQiB5wOOhrZaOi/FvEr675w2d3aR/+wi8rVtgo/z4=;
-	b=xD4e8RR3RsCZSsh9bCm9QNI4zWyNSdTFY+wDa1PIgPcw4LFj7ajT1Kd979foLA8pQX
-	ZvHyS9mCj/Yu0DmA4GRF8B+K+Babb22OXa7TgwPETpn5I4NL4M9aG1Eszt33XWOPOZUf
-	Vw/rGgP6bNclOJb0jNwq72vqo7Dg1nby2BNMRR7PLJy0BiFbsVw/sTOsTu4SmCSeftfc
-	xr4W+jizfZhlKSwjq7n8l59gdPQlJb8BiQAJY98kOksFzPyPvW0oG5PYZaQitBGvAMY+
-	FrklBhzisy1SqVHYySS86Yo2iFHxx0JflCAzGlKr3EcftCI+yIAVpAb0NqFbzCB1qgqi
-	8U0w==
-X-Received: by 10.107.128.152 with SMTP id k24mr2357761ioi.74.1439831701539;
-	Mon, 17 Aug 2015 10:15:01 -0700 (PDT)
+	h=from:date:to:cc:subject:message-id:references:mime-version
+	:content-type:content-disposition:in-reply-to:user-agent;
+	bh=zDBi70WkRTWpeBNj/WVYGlOSAxNwqWQpzq8mCtz/Puw=;
+	b=F55yOXmUsYX6j8z+BE8hIDmc9iVzJapRkqEfcQn48PrmZgVtJPM885D6ZJzwTXuSUr
+	3RJz25Yn/DKzBPdJ+UYp4G3lyi1d2xIjd55X5jfjTtB5w1YzOCQqxw4GLgM9Mjm3pyl3
+	NXy1eM95z0GqK4OiRKi7vnHww3FAuAaMZP7zZq+CQYoBUQqpTe1nTjeo+frcieF120Ds
+	ROS0bAdKVPaWAvlwih5CFZ98MrZJS/5JBpoucNNKotrMXy3MAc2eN8FWHQE3fgw/ZSzx
+	wEWHtzE609wgDlb146x00pnAbaYhevVBy6FsI+SJsGk7wvYG0hfCfgZSI9vK/osUFHWs
+	Mk6g==
+X-Received: by 10.180.75.40 with SMTP id z8mr42677084wiv.84.1439887516781;
+	Tue, 18 Aug 2015 01:45:16 -0700 (PDT)
+Received: from localhost (ip-86-49-34-37.net.upcbroadband.cz. [86.49.34.37])
+	by smtp.gmail.com with ESMTPSA id
+	cd16sm20337941wib.19.2015.08.18.01.45.15
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Tue, 18 Aug 2015 01:45:15 -0700 (PDT)
+From: Martin Jansa <martin.jansa@gmail.com>
+X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
+Date: Tue, 18 Aug 2015 10:45:20 +0200
+To: Christopher Larson <kergoth@gmail.com>
+Message-ID: <20150818084520.GF2458@jama>
+References: <cover.1439509247.git.chris_larson@mentor.com>
+	<CABcZAN=qS5Hc2KMr2bazenmfoPDdU2fL_3TqAYedGWr=jnH17A@mail.gmail.com>
 MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.79.118.150 with HTTP; Mon, 17 Aug 2015 10:14:42 -0700 (PDT)
-In-Reply-To: <cover.1439809654.git.paul.eggleton@linux.intel.com>
-References: <cover.1439809654.git.paul.eggleton@linux.intel.com>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Mon, 17 Aug 2015 10:14:42 -0700
-X-Google-Sender-Auth: lP6B6Xfa-hom0I2zcSChetJA3dE
-Message-ID: <CABcZANmRiwsaJkKMorX9eyBup2g2q=0bjdfnZ8OrEN9bwQMBLQ@mail.gmail.com>
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
+In-Reply-To: <CABcZAN=qS5Hc2KMr2bazenmfoPDdU2fL_3TqAYedGWr=jnH17A@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Cc: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 00/13] Fixes and refactoring
+Subject: Re: [RFC PATCH 0/5] Implement git shallow mirror tarball support
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,121 +49,97 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 17 Aug 2015 17:15:03 -0000
-Content-Type: multipart/alternative; boundary=001a113f8efa1b525a051d84f18b
+X-List-Received-Date: Tue, 18 Aug 2015 08:45:21 -0000
+X-Groupsio-MsgNum: 6200
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6v9BRtpmy+umdQlo"
+Content-Disposition: inline
 
---001a113f8efa1b525a051d84f18b
-Content-Type: text/plain; charset=UTF-8
-
-On Mon, Aug 17, 2015 at 4:12 AM, Paul Eggleton <
-paul.eggleton@linux.intel.com> wrote:
-
-> Here are a bunch of bugfixes and refactoring patches that I was going to
-> send as part of reworking tinfoil. Unfortunately that reworking isn't
-> complete and I don't have time to finish it right now; here is what I do
-> have that can stand on its own. Most of it relates to memory resident
-> mode or tidying up code that calls into cooker.
->
->
-> The following changes since commit
-> 04e896d7fb170271fb09dae5c2a42acb4b68f513:
->
->   toastergui: Added IDs to elements used in testing (2015-08-17 08:47:51
-> +0100)
->
-> are available in the git repository at:
->
->   git://git.yoctoproject.org/poky-contrib paule/tinfoil2-pre
->
-> http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/tinfoil2-pre
->
-> Paul Eggleton (11):
->   Fix default function parameter assignment to a list
->   command: intercept SystemExit to avoid trashing the server
->   cooker: further limit inotify watches
->   cooker: ensure prefile/postfile can work in memory resident mode
->   Fix -m handling if cannot connect to server
->   lib/bb/main: consolidate UI/server extension listing and loading
->   cooker: drop appliedappendlist
->   cooker: drop appendlist
->   bitbake-layers: refactor show-appends to stop using cooker bbappends list
->   bitbake-layers: use "with open" consistently
->   lib/bb/parse: properly handle OSError when updating mtime cache
->
-> Richard Purdie (2):
->   command: ensure sync commands that read configuration see updates
->   bitbake-layers: Convert flatten to use collections.bbappends
->
-
-For what it's worth, these all look sane to me.
-
-Acked-by: Christopher Larson <chris_larson@mentor.com>
--- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
-
---001a113f8efa1b525a051d84f18b
-Content-Type: text/html; charset=UTF-8
+--6v9BRtpmy+umdQlo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Mon, Aug 17, 2015 at 4:12 AM, Paul Eggleton <span dir=3D"ltr">&lt;<a hre=
-f=3D"mailto:paul.eggleton@linux.intel.com" target=3D"_blank">paul.eggleton@=
-linux.intel.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" =
-style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><di=
-v id=3D":47r" class=3D"a3s" style=3D"overflow:hidden">Here are a bunch of b=
-ugfixes and refactoring patches that I was going to<br>
-send as part of reworking tinfoil. Unfortunately that reworking isn&#39;t<b=
-r>
-complete and I don&#39;t have time to finish it right now; here is what I d=
-o<br>
-have that can stand on its own. Most of it relates to memory resident<br>
-mode or tidying up code that calls into cooker.<br>
-<br>
-<br>
-The following changes since commit 04e896d7fb170271fb09dae5c2a42acb4b68f513=
-:<br>
-<br>
-=C2=A0 toastergui: Added IDs to elements used in testing (2015-08-17 08:47:=
-51 +0100)<br>
-<br>
-are available in the git repository at:<br>
-<br>
-=C2=A0 git://<a href=3D"http://git.yoctoproject.org/poky-contrib" rel=3D"no=
-referrer" target=3D"_blank">git.yoctoproject.org/poky-contrib</a> paule/tin=
-foil2-pre<br>
-=C2=A0 <a href=3D"http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=
-=3Dpaule/tinfoil2-pre" rel=3D"noreferrer" target=3D"_blank">http://git.yoct=
-oproject.org/cgit.cgi/poky-contrib/log/?h=3Dpaule/tinfoil2-pre</a><br>
-<br>
-Paul Eggleton (11):<br>
-=C2=A0 Fix default function parameter assignment to a list<br>
-=C2=A0 command: intercept SystemExit to avoid trashing the server<br>
-=C2=A0 cooker: further limit inotify watches<br>
-=C2=A0 cooker: ensure prefile/postfile can work in memory resident mode<br>
-=C2=A0 Fix -m handling if cannot connect to server<br>
-=C2=A0 lib/bb/main: consolidate UI/server extension listing and loading<br>
-=C2=A0 cooker: drop appliedappendlist<br>
-=C2=A0 cooker: drop appendlist<br>
-=C2=A0 bitbake-layers: refactor show-appends to stop using cooker bbappends=
- list<br>
-=C2=A0 bitbake-layers: use &quot;with open&quot; consistently<br>
-=C2=A0 lib/bb/parse: properly handle OSError when updating mtime cache<br>
-<br>
-Richard Purdie (2):<br>
-=C2=A0 command: ensure sync commands that read configuration see updates<br=
->
-=C2=A0 bitbake-layers: Convert flatten to use collections.bbappends</div></=
-blockquote></div><br>For what it&#39;s worth, these all look sane to me.</d=
-iv><div class=3D"gmail_extra"><br></div><div class=3D"gmail_extra">Acked-by=
-: Christopher Larson &lt;<a href=3D"mailto:chris_larson@mentor.com">chris_l=
-arson@mentor.com</a>&gt;<br>-- <br><div class=3D"gmail_signature">Christoph=
-er Larson<br>clarson at kergoth dot com<br>Founder - BitBake, OpenEmbedded,=
- OpenZaurus<br>Maintainer - Tslib<br>Senior Software Engineer, Mentor Graph=
-ics</div>
-</div></div>
+On Fri, Aug 14, 2015 at 08:57:17AM -0700, Christopher Larson wrote:
+> On Thu, Aug 13, 2015 at 4:46 PM, Christopher Larson <kergoth@gmail.com>
+> wrote:
+>=20
+> > From: Christopher Larson <chris_larson@mentor.com>
+> >
+> > Please review the following changes for suitability for inclusion. If y=
+ou
+> > have
+> > any objections or suggestions for improvement, please respond to the
+> > patches. If
+> > you agree with the changes, please provide your Acked-by.
+> >
+> > This only implements support for shallow mirror tarballs, not shallow
+> > clones.
+> >
+> > The mirror tarball filename includes branch, revision, and depth. To
+> > enable,
+> > use the `BB_GIT_SHALLOW` variable, or `BB_GIT_SHALLOW_<name>` for speci=
+fic
+> > URLs. This variable can hold either a clone depth (e.g. `1` to just get
+> > SRCREV), or a ref or commit, in which case we keep history up to that
+> > commit.
+> >
+> > The shallow support will not, at this time, function correctly for
+> > linux-yocto, due to its branching scheme & validation.
+> >
+> > Example:
+> >
+> >     BB_GIT_SHALLOW ?=3D "1"
+> >     BB_GIT_SHALLOW_pn-linux-yocto =3D ""
+> >     BB_GIT_SHALLOW_pn-linux-mel_mx6 =3D "v3.14"
+> >     BB_GIT_SHALLOW_pn-testrepo =3D "testbranch"
+> >
+> > This implementation will attempt to fetch a full mirror tarball if it w=
+as
+> > unable to fetch a shallow tarball. If `BB_GIT_SHALLOW` and
+> > `BB_GENERATE_MIRROR_TARBALLS` are enabled for a given recipe, a shallow
+> > tarball will be emitted.
 
---001a113f8efa1b525a051d84f18b--
+It would be nice to describe what this implementation does when there is
+some local git clone already (will it first try to update it with "git fetc=
+h"
+or download shallow tarball?)
+
+> >
+>=20
+> I forgot to mention, this implements [YOCTO #7958](
+> https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D7958).
+
+it also looks like more proper fix for [YOCTO #1511](
+https://bugzilla.yoctoproject.org/show_bug.cgi?id=3D1511).
+
+> --=20
+> Christopher Larson
+> kergoth at gmail dot com
+> Founder - BitBake, OpenEmbedded, OpenZaurus
+> Maintainer - Tslib
+> Senior Software Engineer, Mentor Graphics
+
+> --=20
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+
+
+--=20
+Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
+
+--6v9BRtpmy+umdQlo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iEYEARECAAYFAlXS8J8ACgkQN1Ujt2V2gBwv8gCfTnSECBbBL0jMVTJL7Lr80Pgf
+8XAAn1U4h3kRJLd2I8BnXoYjp19+y64b
+=Fu6k
+-----END PGP SIGNATURE-----
+
+--6v9BRtpmy+umdQlo--
