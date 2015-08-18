@@ -1,41 +1,41 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wi0-f181.google.com (mail-wi0-f181.google.com
-	[209.85.212.181])
-	by mail.openembedded.org (Postfix) with ESMTP id 7201A76A69
+Received: from mail-wi0-f174.google.com (mail-wi0-f174.google.com
+	[209.85.212.174])
+	by mail.openembedded.org (Postfix) with ESMTP id 69AB176A5D
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Aug 2015 16:29:13 +0000 (UTC)
-Received: by wicne3 with SMTP id ne3so105266328wic.1
+	Tue, 18 Aug 2015 16:29:15 +0000 (UTC)
+Received: by wicja10 with SMTP id ja10so113361597wic.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 18 Aug 2015 09:29:13 -0700 (PDT)
+	Tue, 18 Aug 2015 09:29:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=zJ0AC9UYIk2TC0b3RJEuUl65eSJNg/BHLDfwy2eLZu8=;
-	b=He1CWBeyWnGMgiudU4HUi57ZFRWI4a3uY9WFnoVYuYyvftWT/+JPyNaMiPhIprZCv9
-	844MCXtpG1GxuEjoMfKZLioOua1Z/bvCESq+tO/JsGp1SwoKbD6m3Vfbi5ZrbanE434J
-	x1oVe4iF6RUcNnNMz6Ce49telA74ZfZjc10AyqEqJ+AP0Ee/kwVZadihXH+D/zb4mM5H
-	2CFM/sMIGYRh93ddXDm2ReEkEVpt1rvCX5ABXxkMXDiI1PfYnYq7kqcRUuuyYjOJrav+
-	ryUfoVQip+mJi8LJFLon5Mzyp5UWW+cB9WsP3xVMSicaJ85/x87PKmAKLB5CCmBn04La
-	MW5Q==
-X-Gm-Message-State: ALoCoQm6R9C8BO/6QpKZEFMrQSWasWLghVqvQquaYFD+MObARkngM7rU+7EBLx1tQ+ndPFedqbLY
-X-Received: by 10.180.73.13 with SMTP id h13mr44017546wiv.79.1439915353181;
-	Tue, 18 Aug 2015 09:29:13 -0700 (PDT)
+	bh=AuqTQgMb3YuAxM5t1gEA5f02rwB9xJFXT4hA/p72DRA=;
+	b=M05PUnpKafwKw5lfbUDEiOKOseM+ynkD5ocNjV8NcjVZv92XM3I9I8E7v18pQk9Qln
+	VF63AMtyONDNqv2IfFQJYyBCUYL3uLDmD5WenhKRoujUErHCOdO38/LsLE4JWidKIA4M
+	nB2HbYK8VXw2ukzevXxmueopYy9nYLufLMdLAKFtBgxKFAryeGHNiA3oYcqiJbrTNQn8
+	WGEIaSd6nTY0O4Qv45mNheQ50tX6MKf2JAE831lxpLl1hs5NCgb4TFqK8k6u2W5awgf3
+	2ueBqJwzgflHbQqt7t02b4VojZQn2ZJ+MwDgj0LmZAFQoclQICU6wVqPIxVIxWcM5dQs
+	lclg==
+X-Gm-Message-State: ALoCoQmFdiwvGdgxMiUPtKO8yfZaM5DysERfgGoUERRArJVnTEm/QbIv0ZxoM/i+lCfsZk8Rleod
+X-Received: by 10.180.103.34 with SMTP id ft2mr44961558wib.62.1439915355547;
+	Tue, 18 Aug 2015 09:29:15 -0700 (PDT)
 Received: from dorado.Home ([90.200.212.221]) by smtp.gmail.com with ESMTPSA id
-	m4sm27105267wjb.37.2015.08.18.09.29.12
+	m4sm27105267wjb.37.2015.08.18.09.29.14
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 18 Aug 2015 09:29:12 -0700 (PDT)
+	Tue, 18 Aug 2015 09:29:14 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 18 Aug 2015 17:28:55 +0100
-Message-Id: <7cd3c01dd97d4e6e9a67b074aa99e011043b4bf0.1439915029.git.michael.g.wood@intel.com>
+Date: Tue, 18 Aug 2015 17:28:57 +0100
+Message-Id: <04942f5e6fdcbc24a66f7481ac7d8ae33b70fb80.1439915029.git.michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <1fe62e1463b715f7631e925ddea135a7b8dd2f6b.1439915029.git.michael.g.wood@intel.com>
 References: <cover.1439915029.git.michael.g.wood@intel.com>
 	<1fe62e1463b715f7631e925ddea135a7b8dd2f6b.1439915029.git.michael.g.wood@intel.com>
 In-Reply-To: <cover.1439915029.git.michael.g.wood@intel.com>
 References: <cover.1439915029.git.michael.g.wood@intel.com>
-Subject: [PATCH 09/14] bitbake: toaster: replace raising Exceptions in loadconf
+Subject: [PATCH 11/14] bitbake: toaster: fix pylint errors
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -50,123 +50,129 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 18 Aug 2015 16:29:15 -0000
 
-From: Alexandru DAMIAN <alexandru.damian@intel.com>
+From: Alexandru Damian <alexandru.damian@intel.com>
 
-This patch replaces throwing Exceptions in toaster loadconf
-command with proper explicit error messages. This allows
-the user to properly understand and debug what went wrong when
-loading a config file.
+Prompted by issues discovered during running pylint on
+the toaster sources, this patch fixes:
 
-Additionally we change a bit the logic around auto-detecting relative
-giturl handling so the user gets proper error messages when
-trying to load an invalid toasterconf.json file.
+* missing import in toaster ui
+* improper call of function in toaster ui (logger.debug)
+* improper function definitions in bbcontroller
+* invalid references to objects in bldcontrol.models
+* proper initialization of object fields in ToasterTables
 
-[YOCTO #7945]
+Also inhibiting specific pylint errors in files where
+the problems are mis-identified.
 
-Signed-off-by: Alexandru DAMIAN <alexandru.damian@intel.com>
+Signed-off-by: Alexandru Damian <alexandru.damian@intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- .../bldcontrol/management/commands/loadconf.py     | 37 ++++++++++++++--------
- 1 file changed, 23 insertions(+), 14 deletions(-)
+ lib/bb/ui/toasterui.py                              | 5 +++--
+ lib/toaster/bldcontrol/bbcontroller.py              | 2 +-
+ lib/toaster/orm/models.py                           | 2 +-
+ lib/toaster/toastergui/views.py                     | 4 ++++
+ lib/toaster/toastergui/widgets.py                   | 3 +++
+ lib/toaster/toastermain/management/commands/perf.py | 7 ++++++-
+ 6 files changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/lib/toaster/bldcontrol/management/commands/loadconf.py b/lib/toaster/bldcontrol/management/commands/loadconf.py
-index 9163e9b..5022b59 100644
---- a/lib/toaster/bldcontrol/management/commands/loadconf.py
-+++ b/lib/toaster/bldcontrol/management/commands/loadconf.py
-@@ -1,10 +1,14 @@
- from django.core.management.base import BaseCommand, CommandError
- from orm.models import LayerSource, ToasterSetting, Branch, Layer, Layer_Version
- from orm.models import BitbakeVersion, Release, ReleaseDefaultLayer, ReleaseLayerSourcePriority
-+from django.db import IntegrityError
- import os
+diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
+index f30f89e..767bfab 100644
+--- a/lib/bb/ui/toasterui.py
++++ b/lib/bb/ui/toasterui.py
+@@ -21,6 +21,7 @@
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  
- from checksettings import DN
+ from __future__ import division
++import sys
+ try:
+     import bb
+ except RuntimeError as exc:
+@@ -255,10 +256,10 @@ def main(server, eventHandler, params ):
+                 # we start a new build info
+                 if buildinfohelper.brbe is not None:
  
-+import logging
-+logger = logging.getLogger("toaster")
-+
- def _reduce_canon_path(path):
-     components = []
-     for c in path.split("/"):
-@@ -34,7 +38,7 @@ class Command(BaseCommand):
-         if not os.path.exists(filepath) or not os.path.isfile(filepath):
-             raise Exception("Failed to find toaster config file %s ." % filepath)
+-                    logger.debug(1, "ToasterUI under BuildEnvironment management - exiting after the build")
++                    logger.debug("ToasterUI under BuildEnvironment management - exiting after the build")
+                     server.terminateServer()
+                 else:
+-                    logger.debug(1, "ToasterUI prepared for new build")
++                    logger.debug("ToasterUI prepared for new build")
+                     errors = 0
+                     warnings = 0
+                     taskfailures = []
+diff --git a/lib/toaster/bldcontrol/bbcontroller.py b/lib/toaster/bldcontrol/bbcontroller.py
+index 9dd01e0..ad70ac8 100644
+--- a/lib/toaster/bldcontrol/bbcontroller.py
++++ b/lib/toaster/bldcontrol/bbcontroller.py
+@@ -177,7 +177,7 @@ class BuildEnvironmentController(object):
  
--        import json, pprint
-+        import json
-         data = json.loads(open(filepath, "r").read())
+         return BitbakeController(self.connection)
  
-         # verify config file validity before updating settings
-@@ -49,7 +53,7 @@ class Command(BaseCommand):
-             cmd = subprocess.Popen("git remote -v", shell=True, cwd = os.path.dirname(filepath), stdout=subprocess.PIPE, stderr = subprocess.PIPE)
-             (out,err) = cmd.communicate()
-             if cmd.returncode != 0:
--                raise Exception("Error while importing layer vcs_url: git error: %s" % err)
-+                logging.warning("Error while importing layer vcs_url: git error: %s" % err)
-             for line in out.split("\n"):
-                 try:
-                     (name, path) = line.split("\t", 1)
-@@ -59,16 +63,20 @@ class Command(BaseCommand):
-                 except ValueError:
-                     pass
-             if url == None:
--                raise Exception("Error while looking for remote \"%s\" in \"%s\"" % (remote_name, out))
-+                logging.warning("Error while looking for remote \"%s\" in \"%s\"" % (remote_name, out))
-             return url
+-    def getArtifact(path):
++    def getArtifact(self, path):
+         """ This call returns an artifact identified by the 'path'. How 'path' is interpreted as
+             up to the implementing BEC. The return MUST be a REST URL where a GET will actually return
+             the content of the artifact, e.g. for use as a "download link" in a web UI.
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index de00702..92fcaa7 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -81,7 +81,7 @@ class ProjectManager(models.Manager):
  
- 
-         # import bitbake data
-         for bvi in data['bitbake']:
-             bvo, created = BitbakeVersion.objects.get_or_create(name=bvi['name'])
--            bvo.giturl = bvi['giturl']
-             if bvi['giturl'].startswith("remote:"):
-                 bvo.giturl = _read_git_url_from_local_repository(bvi['giturl'])
-+                if bvo.giturl is None:
-+                    logger.error("The toaster config file references the local git repo, but Toaster cannot detect it.\nYour local configuration for bitbake version %s is invalid. Make sure that the toasterconf.json file is correct." % bvi['name'])
-+
-+            if bvo.giturl is None:
-+                bvo.giturl = bvi['giturl']
-             bvo.branch = bvi['branch']
-             bvo.dirpath = bvi['dirpath']
-             bvo.save()
-@@ -89,13 +97,12 @@ class Command(BaseCommand):
-             assert ((_get_id_for_sourcetype(lsi['sourcetype']) == LayerSource.TYPE_LAYERINDEX) or apiurl.startswith("/")), (lsi['sourcetype'],apiurl)
- 
+         for rdl in release.releasedefaultlayer_set.all():
              try:
--                ls = LayerSource.objects.get(sourcetype = _get_id_for_sourcetype(lsi['sourcetype']), apiurl = apiurl)
--            except LayerSource.DoesNotExist:
--                ls = LayerSource.objects.create(
--                    name = lsi['name'],
--                    sourcetype = _get_id_for_sourcetype(lsi['sourcetype']),
--                    apiurl = apiurl
--                )
-+                ls, created = LayerSource.objects.get_or_create(sourcetype = _get_id_for_sourcetype(lsi['sourcetype']), apiurl = apiurl)
-+                ls.name = lsi['name']
-+                ls.save()
-+            except IntegrityError as e:
-+                logger.warning("IntegrityError %s \nWhile setting name %s for layer source %s " % (e, lsi['name'], ls))
+-                lv =Layer_Version.objects.filter(layer__name = rdl.layer_name, up_branch__name = release.branch_name)[0].get_equivalents_wpriority(prj)[0]
++                lv = Layer_Version.objects.filter(layer__name = rdl.layer_name, up_branch__name = release.branch_name)[0].get_equivalents_wpriority(prj)[0]
+                 ProjectLayer.objects.create( project = prj,
+                         layercommit = lv,
+                         optional = False )
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index e9c246f..20f7cb3 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -19,6 +19,10 @@
+ # with this program; if not, write to the Free Software Foundation, Inc.,
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
++# pylint: disable=method-hidden
++# Gives E:848, 4: An attribute defined in json.encoder line 162 hides this method (method-hidden)
++# which is an invalid warning
++
+ import operator,re
+ 
+ from django.db.models import F, Q, Sum, Count, Max
+diff --git a/lib/toaster/toastergui/widgets.py b/lib/toaster/toastergui/widgets.py
+index 2adf574..eb2914d 100644
+--- a/lib/toaster/toastergui/widgets.py
++++ b/lib/toaster/toastergui/widgets.py
+@@ -334,6 +334,9 @@ class ToasterTemplateView(TemplateView):
+     # renders a instance in a template, or returns the context as json
+     # the class-equivalent of the _template_renderer decorator for views
+ 
++    def __init__(self, *args, **kwargs):
++        super(ToasterTemplateView, self).__init__(*args, **kwargs)
++        self.context_entries = []
+ 
+     def get(self, *args, **kwargs):
+         if self.request.GET.get('format', None) == 'json':
+diff --git a/lib/toaster/toastermain/management/commands/perf.py b/lib/toaster/toastermain/management/commands/perf.py
+index d28f26a..71a48e9 100644
+--- a/lib/toaster/toastermain/management/commands/perf.py
++++ b/lib/toaster/toastermain/management/commands/perf.py
+@@ -2,7 +2,12 @@ from django.core.management.base import BaseCommand
+ from django.test.client import Client
+ import os, sys, re
+ import requests
+-import toastermain.settings as settings
++from django.conf import settings
++
++# pylint: disable=E1103
++# Instance of 'WSGIRequest' has no 'status_code' member
++# (but some types could not be inferred) (maybe-no-member)
 +
  
-             layerbranches = []
-             for branchname in lsi['branches']:
-@@ -111,12 +118,14 @@ class Command(BaseCommand):
-                         lo.local_path = _reduce_canon_path(os.path.join(ls.apiurl, layerinfo['local_path']))
- 
-                     if not os.path.exists(lo.local_path):
--                        raise Exception("Local layer path %s must exists." % lo.local_path)
-+                        logger.error("Local layer path %s must exists. Are you trying to import a layer that does not exist ? Check your local toasterconf.json" % lo.local_path)
- 
--                    lo.vcs_url = layerinfo['vcs_url']
-                     if layerinfo['vcs_url'].startswith("remote:"):
-                         lo.vcs_url = _read_git_url_from_local_repository(layerinfo['vcs_url'])
--                    else:
-+                        if lo.vcs_url is None:
-+                            logger.error("The toaster config file references the local git repo, but Toaster cannot detect it.\nYour local configuration for layer %s is invalid. Make sure that the toasterconf.json file is correct." % layerinfo['name'])
-+
-+                    if lo.vcs_url is None:
-                         lo.vcs_url = layerinfo['vcs_url']
- 
-                     if 'layer_index_url' in layerinfo:
+ class Command(BaseCommand):
+     help    = "Test the response time for all toaster urls"
 -- 
 2.1.4
 
