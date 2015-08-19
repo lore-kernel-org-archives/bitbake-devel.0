@@ -1,38 +1,38 @@
 Return-Path: <kergoth@gmail.com>
-Received: from mail-ig0-f180.google.com (mail-ig0-f180.google.com
-	[209.85.213.180])
-	by mail.openembedded.org (Postfix) with ESMTP id 63CB475E81
+Received: from mail-ig0-f172.google.com (mail-ig0-f172.google.com
+	[209.85.213.172])
+	by mail.openembedded.org (Postfix) with ESMTP id 534DE76A66
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Aug 2015 17:51:54 +0000 (UTC)
-Received: by igfj19 with SMTP id j19so12113857igf.1
+	Wed, 19 Aug 2015 18:06:40 +0000 (UTC)
+Received: by igxp17 with SMTP id p17so111623749igx.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Aug 2015 10:51:54 -0700 (PDT)
+	Wed, 19 Aug 2015 11:06:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=mime-version:sender:in-reply-to:references:from:date:message-id
 	:subject:to:cc:content-type;
-	bh=+UwwzM8hKDP5daH7dVoZ65Fs+7i5A48Ydy69ovol4dk=;
-	b=ifQuNr+N860pk0xDx78xOt52W0cSgWsF6xMfOiJs+2kBrC8yWD5xGHhKndrBbT7aHx
-	wufBFLWBXi7qEOh90RMIKJpXQbcZx7qLArS6BPpu7KDjdXMyyhjyqNneixLCr2NlBOnV
-	77ThQSR7tMj3lyVp/Mf9JPJjzlriNAXb7e74iJ2lBffr1p1cJ+b+Xou9zwuxvKZwCegd
-	t0rR/p+7zCVRLgsafklf42lBQkcvoEP2dqarZYEwTi7xpVtAeEitsa+7Oqpoh9W0iExF
-	S9/881Xh+ccHnlE+aObgLRe5ASQevRSVwPwXr0fU7jX+AVpiikNYvvmt3qK1+uSF+bL1
-	wU1w==
-X-Received: by 10.50.50.69 with SMTP id a5mr28526511igo.68.1440006714299; Wed,
-	19 Aug 2015 10:51:54 -0700 (PDT)
+	bh=eI5OobegMBzHR53AN75g28+97NY/Y+euwLFhuJIOM7Y=;
+	b=ClLQYdOvC76Aeqjic/62xFGJQ/NVQYfAXoHdx3c8TbYP7BLMgemNsFyBdQyg+PeRxh
+	gwWHVcdSCbz4qE85rdszKtuJn1PWhRbGxLUSCynX+R0eLTl7StqhlQeNLHW0aM6buzDL
+	hYW16aaflyZFnNFQJ08MBVBR+odKvgsX1c+L2NX902Jk6jcgwo8Ui/G9J4Rj24zZJmWw
+	lBqL4pnb3pq02l9Ppi4C5lJtZbDBDzmdLZ2NtUARhUKzBq1zl5t8STLFnWakVbr+ZCur
+	LJ9Q1RbQwXBuSxZMsRA+BuxWRjKdWfvZP2QzV4v0Tut+Ut6/qrpyrp//ATF7uUhLSOAo
+	Wxcw==
+X-Received: by 10.50.103.71 with SMTP id fu7mr31014009igb.38.1440007600927;
+	Wed, 19 Aug 2015 11:06:40 -0700 (PDT)
 MIME-Version: 1.0
 Sender: kergoth@gmail.com
-Received: by 10.79.118.150 with HTTP; Wed, 19 Aug 2015 10:51:35 -0700 (PDT)
-In-Reply-To: <9c6e61aab76b3cfad015aab68864bd1f920d9732.1439990327.git.paul.eggleton@linux.intel.com>
-References: <cover.1439990327.git.paul.eggleton@linux.intel.com>
-	<9c6e61aab76b3cfad015aab68864bd1f920d9732.1439990327.git.paul.eggleton@linux.intel.com>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Wed, 19 Aug 2015 10:51:35 -0700
-X-Google-Sender-Auth: xyrBeQgHjSQIf4esOHBAutNn4lg
-Message-ID: <CABcZANk5hNk0_gWucHdoHWe7m5h0O_tdZ0swJgNhtUGGBy1tNg@mail.gmail.com>
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
-Cc: "bitbake-devel@lists.openembedded.org"
+Received: by 10.79.118.150 with HTTP; Wed, 19 Aug 2015 11:06:21 -0700 (PDT)
+In-Reply-To: <CABcZANnRPgVmdnE8Bn6iPn2Vm7KbyExw+ejY1aqkJ+ZZj5hGQw@mail.gmail.com>
+References: <1438629643-28786-1-git-send-email-kergoth@gmail.com>
+	<CABcZANnRPgVmdnE8Bn6iPn2Vm7KbyExw+ejY1aqkJ+ZZj5hGQw@mail.gmail.com>
+From: Christopher Larson <chris_larson@mentor.com>
+Date: Wed, 19 Aug 2015 11:06:21 -0700
+X-Google-Sender-Auth: C0h76q12lSGWtSmXrItbSxwlaIw
+Message-ID: <CABcZANns=AwBB=bVyL7jfLC6YahDoX5sfxLB+Z76=kNUk2p1MA@mail.gmail.com>
+To: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 2/4] bitbake-layers: remove-layer: accept just layer directory
+Cc: Christopher Larson <chris_larson@mentor.com>
+Subject: Re: [PATCH] bb.build: delete tasks thoroughly
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,93 +45,81 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 19 Aug 2015 17:51:58 -0000
-Content-Type: multipart/alternative; boundary=089e010d9e9eae27c6051dadb07a
+X-List-Received-Date: Wed, 19 Aug 2015 18:06:42 -0000
+Content-Type: multipart/alternative; boundary=047d7b2e11e786fd5d051dade551
 
---089e010d9e9eae27c6051dadb07a
+--047d7b2e11e786fd5d051dade551
 Content-Type: text/plain; charset=UTF-8
 
-On Wed, Aug 19, 2015 at 6:20 AM, Paul Eggleton <
-paul.eggleton@linux.intel.com> wrote:
+On Mon, Aug 3, 2015 at 12:21 PM, Christopher Larson <chris_larson@mentor.com
+> wrote:
 
-> If the specified layer isn't a path, then just match on the directory.
+> On Mon, Aug 3, 2015 at 12:20 PM, Christopher Larson <kergoth@gmail.com>
+> wrote:
 >
-> Fixes [YOCTO #7839].
+>> From: Christopher Larson <chris_larson@mentor.com>
+>>
+>> We want addtask to be able to bring back a deleted task, but we don't
+>> want its
+>> previous dependencies to come back with it, so rather than marking a task
+>> as
+>> deleted and then skipping tasks marked as such, actually delete the task
+>> and
+>> its dependency information in deltask.
+>>
+>> While we're in that part of the code, also fix a couple 'not foo in bar'
+>> instances to 'foo not in bar', which is preferred in python.
+>>
+>> Signed-off-by: Christopher Larson <chris_larson@mentor.com>
+>>
 >
-> Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
-> ---
->  bin/bitbake-layers | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/bin/bitbake-layers b/bin/bitbake-layers
-> index a0227d4..1b4694b 100755
-> --- a/bin/bitbake-layers
-> +++ b/bin/bitbake-layers
-> @@ -120,6 +120,8 @@ Removes the specified layer from bblayers.conf
->
->          if args.layerdir.startswith('*'):
->              layerdir = args.layerdir
-> +        elif not '/' in args.layerdir:
-> +            layerdir = '*/%s' % args.layerdir
->          else:
->              layerdir = os.path.abspath(args.layerdir)
->          (_, notremoved) = bb.utils.edit_bblayers_conf(bblayers_conf,
-> None, layerdir)
+> This supercedes `[PATCH] bb.build: let addtask undo a deltask`.
 >
 
-Shouldn't this check to see if args.layerdir is an existing path, instead?
+Ping :)
 -- 
 Christopher Larson
-clarson at kergoth dot com
+kergoth at gmail dot com
 Founder - BitBake, OpenEmbedded, OpenZaurus
 Maintainer - Tslib
 Senior Software Engineer, Mentor Graphics
 
---089e010d9e9eae27c6051dadb07a
+--047d7b2e11e786fd5d051dade551
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Wed, Aug 19, 2015 at 6:20 AM, Paul Eggleton <span dir=3D"ltr">&lt;<a hre=
-f=3D"mailto:paul.eggleton@linux.intel.com" target=3D"_blank">paul.eggleton@=
-linux.intel.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" =
-style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><di=
-v id=3D":12y" class=3D"a3s" style=3D"overflow:hidden">If the specified laye=
-r isn&#39;t a path, then just match on the directory.<br>
+<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On M=
+on, Aug 3, 2015 at 12:21 PM, Christopher Larson <span dir=3D"ltr">&lt;<a hr=
+ef=3D"mailto:chris_larson@mentor.com" target=3D"_blank">chris_larson@mentor=
+.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"ma=
+rgin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><span class=3D=
+"">On Mon, Aug 3, 2015 at 12:20 PM, Christopher Larson <span dir=3D"ltr">&l=
+t;<a href=3D"mailto:kergoth@gmail.com" target=3D"_blank">kergoth@gmail.com<=
+/a>&gt;</span> wrote:<br></span><div class=3D"gmail_extra"><div class=3D"gm=
+ail_quote"><span class=3D""><blockquote class=3D"gmail_quote" style=3D"marg=
+in:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">From: Christophe=
+r Larson &lt;<a href=3D"mailto:chris_larson@mentor.com" target=3D"_blank">c=
+hris_larson@mentor.com</a>&gt;<br>
 <br>
-Fixes [YOCTO #7839].<br>
+We want addtask to be able to bring back a deleted task, but we don&#39;t w=
+ant its<br>
+previous dependencies to come back with it, so rather than marking a task a=
+s<br>
+deleted and then skipping tasks marked as such, actually delete the task an=
+d<br>
+its dependency information in deltask.<br>
 <br>
-Signed-off-by: Paul Eggleton &lt;<a href=3D"mailto:paul.eggleton@linux.inte=
-l.com">paul.eggleton@linux.intel.com</a>&gt;<br>
----<br>
-=C2=A0bin/<span class=3D"il">bitbake</span>-layers | 2 ++<br>
-=C2=A01 file changed, 2 insertions(+)<br>
+While we&#39;re in that part of the code, also fix a couple &#39;not foo in=
+ bar&#39;<br>
+instances to &#39;foo not in bar&#39;, which is preferred in python.<br>
 <br>
-diff --git a/bin/<span class=3D"il">bitbake</span>-layers b/bin/<span class=
-=3D"il">bitbake</span>-layers<br>
-index a0227d4..1b4694b 100755<br>
---- a/bin/<span class=3D"il">bitbake</span>-layers<br>
-+++ b/bin/<span class=3D"il">bitbake</span>-layers<br>
-@@ -120,6 +120,8 @@ Removes the specified layer from bblayers.<span class=
-=3D"il">conf</span><br>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if args.layerdir.startswith(&#39;*&#39;):=
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0layerdir =3D args.layerdir<=
-br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 elif not &#39;/&#39; in args.layerdir:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 layerdir =3D &#39;*/%s&#39; % ar=
-gs.layerdir<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0else:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0layerdir =3D os.path.abspat=
-h(args.layerdir)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0(_, notremoved) =3D <span class=3D"il">bb=
-</span>.utils.edit_bblayers_conf(bblayers_conf, None, layerdir)</div></bloc=
-kquote></div><br>Shouldn&#39;t this check to see if args.layerdir is an exi=
-sting path, instead?<br>-- <br><div class=3D"gmail_signature">Christopher L=
-arson<br>clarson at kergoth dot com<br>Founder - BitBake, OpenEmbedded, Ope=
-nZaurus<br>Maintainer - Tslib<br>Senior Software Engineer, Mentor Graphics<=
-/div>
+Signed-off-by: Christopher Larson &lt;<a href=3D"mailto:chris_larson@mentor=
+.com" target=3D"_blank">chris_larson@mentor.com</a>&gt;<br></blockquote><di=
+v><br></div></span><div>This supercedes `[PATCH] bb.build: let addtask undo=
+ a deltask`.</div></div></div></blockquote></div><br>Ping :)<br>-- <br><div=
+ class=3D"gmail_signature"><div dir=3D"ltr">Christopher Larson<br>kergoth a=
+t gmail dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Maintaine=
+r - Tslib<br>Senior Software Engineer, Mentor Graphics</div></div>
 </div></div>
 
---089e010d9e9eae27c6051dadb07a--
+--047d7b2e11e786fd5d051dade551--
