@@ -1,25 +1,25 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 26CDB76A5F
+	by mail.openembedded.org (Postfix) with ESMTP id 4037D73E11
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 19 Aug 2015 13:20:29 +0000 (UTC)
+	Wed, 19 Aug 2015 13:20:30 +0000 (UTC)
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by fmsmga101.fm.intel.com with ESMTP; 19 Aug 2015 06:20:31 -0700
+	by fmsmga101.fm.intel.com with ESMTP; 19 Aug 2015 06:20:32 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,709,1432623600"; d="scan'208";a="751523666"
+X-IronPort-AV: E=Sophos;i="5.15,709,1432623600"; d="scan'208";a="751523685"
 Received: from mclawlor-mobl5.ger.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com) ([10.252.12.193])
-	by orsmga001.jf.intel.com with ESMTP; 19 Aug 2015 06:20:28 -0700
+	by orsmga001.jf.intel.com with ESMTP; 19 Aug 2015 06:20:29 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 19 Aug 2015 14:20:10 +0100
-Message-Id: <f16c02c81fe76b172405e3a6c67e18e735bf4b84.1439990327.git.paul.eggleton@linux.intel.com>
+Date: Wed, 19 Aug 2015 14:20:11 +0100
+Message-Id: <76441671d5ee0638e0fcf6fc945cab604dff2e28.1439990327.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <cover.1439990327.git.paul.eggleton@linux.intel.com>
 References: <cover.1439990327.git.paul.eggleton@linux.intel.com>
 In-Reply-To: <cover.1439990327.git.paul.eggleton@linux.intel.com>
 References: <cover.1439990327.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 3/4] bitbake-layers: fix mapping files to layers
+Subject: [PATCH 4/4] bitbake-layers: show-recipes: allow filtering by class inheritance
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,192 +32,126 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 19 Aug 2015 13:20:29 -0000
+X-List-Received-Date: Wed, 19 Aug 2015 13:20:31 -0000
 
-bitbake-layers needs to map recipe and class files to the layer they
-came from within the show-recipes and show-overlayed commands. However,
-it turns out that mapping a file to the layer it came from is not as
-trivial as it might seem. To do it properly we need to match the path to
-an entry in BBFILES then map that to the collection name using
-BBFILE_PATTERN, then map that to the actual layer using variable
-history. If it doesn't match any entry in BBFILES, then we can fall back
-to BBFILE_PATTERN (to handle classes and conf files).
+Add a -i/--inherits option to filter the output to include only recipes
+inheriting the specified class(es).
 
-This fixes the layer name not showing up properly in the output of the
-show-recipes and show-overlayed commands for recipes in layers such as
-meta-intel that have subdirectories in BBFILE_PATTERN. It also fixes the
-priority not showing up in show-layers for such layers.
-
-As part of this I've added a function to VariableHistory which for a
-space-separated list variable gives you a dict mapping the items added
-to the files in which they were added. I've also fixed
-bb.utils.get_file_layer() and reduced some of the duplication by using
-this function in bitbake-layers. Also fixes the priority not showing up
-for layers such as meta-intel
-
-Fixes [YOCTO #8160].
+Implements [YOCTO #7475].
 
 Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
 ---
- bin/bitbake-layers   | 37 ++++++++++++++++---------------------
- lib/bb/data_smart.py | 25 +++++++++++++++++++++++++
- lib/bb/utils.py      | 32 ++++++++++++++++++++++++--------
- 3 files changed, 65 insertions(+), 29 deletions(-)
+ bin/bitbake-layers | 48 +++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 43 insertions(+), 5 deletions(-)
 
 diff --git a/bin/bitbake-layers b/bin/bitbake-layers
-index 1b4694b..df22781 100755
+index df22781..72db232 100755
 --- a/bin/bitbake-layers
 +++ b/bin/bitbake-layers
-@@ -62,24 +62,22 @@ class Commands():
+@@ -54,6 +54,8 @@ def logger_create(name, output=sys.stderr):
  
-     def init_bbhandler(self, config_only = False):
-         if not self.bbhandler:
--            self.bbhandler = bb.tinfoil.Tinfoil()
-+            self.bbhandler = bb.tinfoil.Tinfoil(tracking=True)
-             self.bblayers = (self.bbhandler.config_data.getVar('BBLAYERS', True) or "").split()
-             self.bbhandler.prepare(config_only)
-+            layerconfs = self.bbhandler.config_data.varhistory.get_variable_items_files('BBFILE_COLLECTIONS', self.bbhandler.config_data)
-+            self.bbfile_collections = {layer: os.path.dirname(os.path.dirname(path)) for layer, path in layerconfs.iteritems()}
-+
+ logger = logger_create('bitbake-layers', sys.stdout)
  
-     def do_show_layers(self, args):
-         """show current configured layers"""
-         self.init_bbhandler(config_only = True)
-         logger.plain("%s  %s  %s" % ("layer".ljust(20), "path".ljust(40), "priority"))
-         logger.plain('=' * 74)
--        for layerdir in self.bblayers:
-+        for layer, _, regex, pri in self.bbhandler.cooker.recipecache.bbfile_config_priorities:
-+            layerdir = self.bbfile_collections.get(layer, None)
-             layername = self.get_layer_name(layerdir)
--            layerpri = 0
--            for layer, _, regex, pri in self.bbhandler.cooker.recipecache.bbfile_config_priorities:
--                if regex.match(os.path.join(layerdir, 'test')):
--                    layerpri = pri
--                    break
--
--            logger.plain("%s  %s  %d" % (layername.ljust(20), layerdir.ljust(40), layerpri))
-+            logger.plain("%s  %s  %d" % (layername.ljust(20), layerdir.ljust(40), pri))
++class UserError(Exception):
++    pass
  
+ class Commands():
+     def __init__(self):
+@@ -388,7 +390,7 @@ are overlayed will also be listed, with a " (skipped)" suffix.
+ """
+         self.init_bbhandler()
  
-     def do_add_layer(self, args):
-@@ -686,25 +684,22 @@ build results (as the layer priority order has effectively changed).
-                                 logger.warning("File %s does not match the flattened layer's BBFILES setting, you may need to edit conf/layer.conf or move the file elsewhere" % f1full)
+-        items_listed = self.list_recipes('Overlayed recipes', None, True, args.same_version, args.filenames, True)
++        items_listed = self.list_recipes('Overlayed recipes', None, True, args.same_version, args.filenames, True, None)
  
-     def get_file_layer(self, filename):
--        for layer, _, regex, _ in self.bbhandler.cooker.recipecache.bbfile_config_priorities:
--            if regex.match(filename):
--                for layerdir in self.bblayers:
--                    if regex.match(os.path.join(layerdir, 'test')) and re.match(layerdir, filename):
--                        return self.get_layer_name(layerdir)
--        return "?"
-+        layerdir = self.get_file_layerdir(filename)
-+        if layerdir:
-+            return self.get_layer_name(layerdir)
+         # Check for overlayed .bbclass files
+         classes = defaultdict(list)
+@@ -451,11 +453,22 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
+ """
+         self.init_bbhandler()
+ 
+-        title = 'Available recipes:'
+-        self.list_recipes(title, args.pnspec, False, False, args.filenames, args.multiple)
++        inheritlist = args.inherits.split(',') if args.inherits else []
++        if inheritlist or args.pnspec or args.multiple:
++            title = 'Matching recipes:'
 +        else:
-+            return '?'
- 
-     def get_file_layerdir(self, filename):
--        for layer, _, regex, _ in self.bbhandler.cooker.recipecache.bbfile_config_priorities:
--            if regex.match(filename):
--                for layerdir in self.bblayers:
--                    if regex.match(os.path.join(layerdir, 'test')) and re.match(layerdir, filename):
--                        return layerdir
--        return "?"
-+        layer = bb.utils.get_file_layer(filename, self.bbhandler.config_data)
-+        return self.bbfile_collections.get(layer, None)
- 
-     def remove_layer_prefix(self, f):
-         """Remove the layer_dir prefix, e.g., f = /path/to/layer_dir/foo/blah, the
-            return value will be: layer_dir/foo/blah"""
-         f_layerdir = self.get_file_layerdir(f)
-+        if not f_layerdir:
-+            return f
-         prefix = os.path.join(os.path.dirname(f_layerdir), '')
-         return f[len(prefix):] if f.startswith(prefix) else f
- 
-diff --git a/lib/bb/data_smart.py b/lib/bb/data_smart.py
-index 26f69d1..75e22f9 100644
---- a/lib/bb/data_smart.py
-+++ b/lib/bb/data_smart.py
-@@ -312,6 +312,31 @@ class VariableHistory(object):
-                 lines.append(line)
-         return lines
- 
-+    def get_variable_items_files(self, var, d):
-+        """
-+        Use variable history to map items added to a list variable and
-+        the files in which they were added.
-+        """
-+        history = self.variable(var)
-+        finalitems = (d.getVar(var, True) or '').split()
-+        filemap = {}
-+        isset = False
-+        for event in history:
-+            if 'flag' in event:
-+                continue
-+            if event['op'] == '_remove':
-+                continue
-+            if isset and event['op'] == 'set?':
-+                continue
-+            isset = True
-+            items = d.expand(event['detail']).split()
-+            for item in items:
-+                # This is a little crude but is belt-and-braces to avoid us
-+                # having to handle every possible operation type specifically
-+                if item in finalitems and not item in filemap:
-+                    filemap[item] = event['file']
-+        return filemap
++            title = 'Available recipes:'
++        self.list_recipes(title, args.pnspec, False, False, args.filenames, args.multiple, inheritlist)
 +
-     def del_var_history(self, var, f=None, line=None):
-         """If file f and line are not given, the entire history of var is deleted"""
-         if var in self.variables:
-diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-index 607ffc5..5b94432 100644
---- a/lib/bb/utils.py
-+++ b/lib/bb/utils.py
-@@ -29,6 +29,7 @@ import multiprocessing
- import fcntl
- import subprocess
- import glob
-+import fnmatch
- import traceback
- import errno
- import signal
-@@ -1262,11 +1263,26 @@ def get_file_layer(filename, d):
-     for collection in collections:
-         collection_res[collection] = d.getVar('BBFILE_PATTERN_%s' % collection, True) or ''
  
--    # Use longest path so we handle nested layers
--    matchlen = 0
--    match = None
--    for collection, regex in collection_res.iteritems():
--        if len(regex) > matchlen and re.match(regex, filename):
--            matchlen = len(regex)
--            match = collection
--    return match
-+    def path_to_layer(path):
-+        # Use longest path so we handle nested layers
-+        matchlen = 0
-+        match = None
-+        for collection, regex in collection_res.iteritems():
-+            if len(regex) > matchlen and re.match(regex, path):
-+                matchlen = len(regex)
-+                match = collection
-+        return match
++    def list_recipes(self, title, pnspec, show_overlayed_only, show_same_ver_only, show_filenames, show_multi_provider_only, inherits):
++        if inherits:
++            bbpath = str(self.bbhandler.config_data.getVar('BBPATH', True))
++            for classname in inherits:
++                classfile = 'classes/%s.bbclass' % classname
++                if not bb.utils.which(bbpath, classfile, history=False):
++                    raise UserError('No class named %s found in BBPATH' % classfile)
+ 
+-    def list_recipes(self, title, pnspec, show_overlayed_only, show_same_ver_only, show_filenames, show_multi_provider_only):
+         pkg_pn = self.bbhandler.cooker.recipecache.pkg_pn
+         (latest_versions, preferred_versions) = bb.providers.findProviders(self.bbhandler.config_data, self.bbhandler.cooker.recipecache, pkg_pn)
+         allproviders = bb.providers.allProviders(self.bbhandler.cooker.recipecache)
+@@ -493,6 +506,9 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
+                     logger.plain("%s:", pn)
+                 logger.plain("  %s %s%s", layer.ljust(20), ver, skipped)
+ 
++        global_inherit = (self.bbhandler.config_data.getVar('INHERIT', True) or "").split()
++        cls_re = re.compile('classes/')
 +
-+    result = None
-+    bbfiles = (d.getVar('BBFILES', True) or '').split()
-+    bbfilesmatch = False
-+    for bbfilesentry in bbfiles:
-+        if fnmatch.fnmatch(filename, bbfilesentry):
-+            bbfilesmatch = True
-+            result = path_to_layer(bbfilesentry)
+         preffiles = []
+         items_listed = False
+         for p in sorted(pkg_pn):
+@@ -504,11 +520,28 @@ skipped recipes will also be listed, with a " (skipped)" suffix.
+                 pref = preferred_versions[p]
+                 realfn = bb.cache.Cache.virtualfn2realfn(pref[1])
+                 preffile = realfn[0]
 +
-+    if not bbfilesmatch:
-+        # Probably a bbclass
-+        result = path_to_layer(filename)
+                 # We only display once per recipe, we should prefer non extended versions of the
+                 # recipe if present (so e.g. in OpenEmbedded, openssl rather than nativesdk-openssl
+                 # which would otherwise sort first).
+                 if realfn[1] and realfn[0] in self.bbhandler.cooker.recipecache.pkg_fn:
+                     continue
 +
-+    return result
++                if inherits:
++                    matchcount = 0
++                    recipe_inherits = self.bbhandler.cooker_data.inherits.get(preffile, [])
++                    for cls in recipe_inherits:
++                        if cls_re.match(cls):
++                            continue
++                        classname = os.path.splitext(os.path.basename(cls))[0]
++                        if classname in global_inherit:
++                            continue
++                        elif classname in inherits:
++                            matchcount += 1
++                    if matchcount != len(inherits):
++                        # No match - skip this recipe
++                        continue
++
+                 if preffile not in preffiles:
+                     preflayer = self.get_file_layer(preffile)
+                     multilayer = False
+@@ -993,6 +1026,7 @@ def main():
+     parser_show_recipes = add_command('show-recipes', cmds.do_show_recipes)
+     parser_show_recipes.add_argument('-f', '--filenames', help='instead of the default formatting, list filenames of higher priority recipes with the ones they overlay indented underneath', action='store_true')
+     parser_show_recipes.add_argument('-m', '--multiple', help='only list where multiple recipes (in the same layer or different layers) exist for the same recipe name', action='store_true')
++    parser_show_recipes.add_argument('-i', '--inherits', help='only list recipes that inherit the named class', metavar='CLASS', default='')
+     parser_show_recipes.add_argument('pnspec', nargs='?', help='optional recipe name specification (wildcards allowed, enclose in quotes to avoid shell expansion)')
+ 
+     parser_show_appends = add_command('show-appends', cmds.do_show_appends)
+@@ -1022,7 +1056,11 @@ def main():
+     elif args.quiet:
+         logger.setLevel(logging.ERROR)
+ 
+-    ret = args.func(args)
++    try:
++        ret = args.func(args)
++    except UserError as err:
++        logger.error(str(err))
++        ret = 1
+ 
+     return ret
+ 
 -- 
 2.1.0
 
