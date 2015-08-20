@@ -1,32 +1,43 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 3A5F565CBC
+Return-Path: <olof.johansson@axis.com>
+Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 715B37689C
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 20 Aug 2015 21:06:55 +0000 (UTC)
+	Thu, 20 Aug 2015 22:51:46 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t7KL6jDO007230; Thu, 20 Aug 2015 22:06:45 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id DK-e2PokUV_u; Thu, 20 Aug 2015 22:06:45 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t7KL6SFM007215
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 20 Aug 2015 22:06:40 +0100
-Message-ID: <1440104788.12105.161.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Olof Johansson <olof.johansson@axis.com>, "Eggleton, Paul"
-	<paul.eggleton@intel.com>
-Date: Thu, 20 Aug 2015 22:06:28 +0100
-In-Reply-To: <1440074510-sup-9447@axis.com>
-References: <cover.1439915029.git.michael.g.wood@intel.com>
-	<6327c2465f573e6332219c62c1a9b3d8323cfb50.1439915029.git.michael.g.wood@intel.com>
-	<1440074510-sup-9447@axis.com>
-X-Mailer: Evolution 3.12.11-0ubuntu3 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 12/14] bitbake: toaster logger: fix pylint issues
+	by bastet.se.axis.com (Postfix) with ESMTP id A26A1180AF;
+	Fri, 21 Aug 2015 00:51:45 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
+Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id Au-jzxkF3zJ4; Fri, 21 Aug 2015 00:51:45 +0200 (CEST)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by bastet.se.axis.com (Postfix) with ESMTP id 18ED6180B4;
+	Fri, 21 Aug 2015 00:51:44 +0200 (CEST)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id C9A1D12EE;
+	Fri, 21 Aug 2015 00:51:44 +0200 (CEST)
+Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
+	by boulder.se.axis.com (Postfix) with ESMTP id BDEC1E82;
+	Fri, 21 Aug 2015 00:51:44 +0200 (CEST)
+Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
+	by thoth.se.axis.com (Postfix) with ESMTP id BAA6C34005;
+	Fri, 21 Aug 2015 00:51:44 +0200 (CEST)
+Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
+	(10.0.5.74) with Microsoft SMTP Server id 8.3.342.0; Fri, 21 Aug 2015
+	00:51:44 +0200
+Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id 835159C68B; 
+	Fri, 21 Aug 2015 00:51:44 +0200 (CEST)
+Date: Fri, 21 Aug 2015 00:51:44 +0200
+From: Olof Johansson <olof.johansson@axis.com>
+To: Randy Witt <randy.e.witt@linux.intel.com>,
+	<bitbake-devel@lists.openembedded.org>
+Message-ID: <20150820225144.GB12937@axis.com>
+References: <1440104436-12491-1-git-send-email-randy.e.witt@linux.intel.com>
+MIME-Version: 1.0
+In-Reply-To: <1440104436-12491-1-git-send-email-randy.e.witt@linux.intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+Subject: Re: [PATCH] bitbake:main.py: Handle RuntimeError exception in list_extension_modules
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,67 +50,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 20 Aug 2015 21:06:58 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 20 Aug 2015 22:51:49 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-On Thu, 2015-08-20 at 14:55 +0200, Olof Johansson wrote:
-> Excerpts from Michael Wood's message of 2015-08-18 18:28:58 +0200:
-> > From: Alexandru DAMIAN <alexandru.damian@intel.com>
-> > 
-> > This patch fixes pylint issues in the toaster build data logger,
-> > toasterui. The following types of warnings are touched here:
-> > 
-> > * fixing imports
-> > * unused variables are set to _
-> > * logger calls now use lazy evaluation instead of formatting
-> > the string
-> > * correct whitespace identation
-> > * removes unneeded "pass" statements, and extra parantheses
-> > * disable specific pylint warnings when decideing to override
-> > them
-> 
-> This change causes the following RuntimeError exception, when running bitbake
-> (any bitbake command):
-> 
-> $ python --version
-> Python 2.7.9
-> $ bitbake
-> Traceback (most recent call last):
->   File ".../poky/bitbake/bin/bitbake", line 44, in <module>
->     sys.exit(bitbake_main(BitBakeConfigParameters(sys.argv),
->   File ".../poky/bitbake/lib/bb/cookerdata.py", line 37, in __init__
->     self.options, targets = self.parseCommandLine(argv)
->   File ".../poky/bitbake/lib/bb/main.py", line 178, in parseCommandLine
->     valid_uis = list_extension_modules(bb.ui, 'main')
->   File ".../poky/bitbake/lib/bb/main.py", line 62, in list_extension_modules
->     module = __import__(pkg.__name__, fromlist=[modulename])
->   File ".../poky/bitbake/lib/bb/ui/buildinfohelper.py", line 44, in <module>
->     from bldcontrol.models import BuildEnvironment, BuildRequest
->   File ".../poky/bitbake/lib/toaster/bldcontrol/models.py", line 3, in <module>
->     from orm.models import Project, ProjectLayer, ProjectVariable, ProjectTarget, Build
->   File ".../poky/bitbake/lib/toaster/orm/models.py", line 56, in <module>
->     class ToasterSetting(models.Model):
->   File "/usr/lib/python2.7/dist-packages/django/db/models/base.py", line 283, in __new__
->     new_class._meta.apps.register_model(new_class._meta.app_label, new_class)
->   File "/usr/lib/python2.7/dist-packages/django/apps/registry.py", line 221, in register_model
->     (model_name, app_label, app_models[model_name], model))
-> RuntimeError: Conflicting 'toastersetting' models in application 'orm': <class 'toaster.orm.models.ToasterSetting'> and <class 'orm.models.ToasterSetting'>.
-> 
-> Even though .../poky/bitbake/lib is already in the sys.path,
-> .../poky/bitbake/lib/toaster is also added, which seem to be the cause of this
-> issue.
-> 
-> I'm a bit surprised that this kind of change causes issues for use of bitbake
-> not related to toaster.
+On 15-08-20 23:00 +0200, Randy Witt wrote:
+> --- a/bitbake/lib/bb/main.py
+> +++ b/bitbake/lib/bb/main.py
+> @@ -60,7 +60,7 @@ def list_extension_modules(pkg, checkattr):
+>              continue
+>          try:
+>              module = __import__(pkg.__name__, fromlist=[modulename])
+> -        except (ImportError, SystemExit):
+> +        except (ImportError, SystemExit, RuntimeError):
+>              # If we can't import it, it's not valid
+>              continue
+>          module_if = getattr(module, modulename)
 
-We're all a bit surprised. Its a nasty effect of Pauls recent "list all
-the modules in bitbake --help" change :(.
+Wouldn't it be better to just skip naming the exceptions you want
+to catch in this case? I.e.:
 
-Randy's sent I patch I've merged which at least bandaids this issue...
+   try:
+     module = __import__(...
+   except:
+     continue
 
-Cheers,
+"If we can't import it" ...
 
-Richard
-
+-- 
+olofjn
 
