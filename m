@@ -1,42 +1,26 @@
-Return-Path: <olof.johansson@axis.com>
-Received: from bastet.se.axis.com (bastet.se.axis.com [195.60.68.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 715B37689C
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id D9F0F60557
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 20 Aug 2015 22:51:46 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bastet.se.axis.com (Postfix) with ESMTP id A26A1180AF;
-	Fri, 21 Aug 2015 00:51:45 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bastet.se.axis.com
-Received: from bastet.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bastet.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id Au-jzxkF3zJ4; Fri, 21 Aug 2015 00:51:45 +0200 (CEST)
-Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by bastet.se.axis.com (Postfix) with ESMTP id 18ED6180B4;
-	Fri, 21 Aug 2015 00:51:44 +0200 (CEST)
-Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id C9A1D12EE;
-	Fri, 21 Aug 2015 00:51:44 +0200 (CEST)
-Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
-	by boulder.se.axis.com (Postfix) with ESMTP id BDEC1E82;
-	Fri, 21 Aug 2015 00:51:44 +0200 (CEST)
-Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
-	by thoth.se.axis.com (Postfix) with ESMTP id BAA6C34005;
-	Fri, 21 Aug 2015 00:51:44 +0200 (CEST)
-Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
-	(10.0.5.74) with Microsoft SMTP Server id 8.3.342.0; Fri, 21 Aug 2015
-	00:51:44 +0200
-Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id 835159C68B; 
-	Fri, 21 Aug 2015 00:51:44 +0200 (CEST)
-Date: Fri, 21 Aug 2015 00:51:44 +0200
-From: Olof Johansson <olof.johansson@axis.com>
-To: Randy Witt <randy.e.witt@linux.intel.com>,
-	<bitbake-devel@lists.openembedded.org>
-Message-ID: <20150820225144.GB12937@axis.com>
+	Fri, 21 Aug 2015 08:07:52 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by fmsmga103.fm.intel.com with ESMTP; 21 Aug 2015 01:07:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.15,720,1432623600"; d="scan'208";a="752747144"
+Received: from vyevtous-mobl2.ccr.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.252.21.15])
+	by orsmga001.jf.intel.com with ESMTP; 21 Aug 2015 01:07:51 -0700
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Olof Johansson <olof.johansson@axis.com>
+Date: Fri, 21 Aug 2015 09:07:50 +0100
+Message-ID: <240026922.piU8TeAAyb@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.14.9 (Linux/4.1.5-100.fc21.x86_64; KDE/4.14.9; x86_64; ; )
+In-Reply-To: <20150820225144.GB12937@axis.com>
 References: <1440104436-12491-1-git-send-email-randy.e.witt@linux.intel.com>
+	<20150820225144.GB12937@axis.com>
 MIME-Version: 1.0
-In-Reply-To: <1440104436-12491-1-git-send-email-randy.e.witt@linux.intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH] bitbake:main.py: Handle RuntimeError exception in list_extension_modules
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -50,33 +34,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 20 Aug 2015 22:51:49 -0000
+X-List-Received-Date: Fri, 21 Aug 2015 08:07:54 -0000
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
 
-On 15-08-20 23:00 +0200, Randy Witt wrote:
-> --- a/bitbake/lib/bb/main.py
-> +++ b/bitbake/lib/bb/main.py
-> @@ -60,7 +60,7 @@ def list_extension_modules(pkg, checkattr):
->              continue
->          try:
->              module = __import__(pkg.__name__, fromlist=[modulename])
-> -        except (ImportError, SystemExit):
-> +        except (ImportError, SystemExit, RuntimeError):
->              # If we can't import it, it's not valid
->              continue
->          module_if = getattr(module, modulename)
+On Friday 21 August 2015 00:51:44 Olof Johansson wrote:
+> On 15-08-20 23:00 +0200, Randy Witt wrote:
+> > --- a/bitbake/lib/bb/main.py
+> > +++ b/bitbake/lib/bb/main.py
+> > 
+> > @@ -60,7 +60,7 @@ def list_extension_modules(pkg, checkattr):
+> >              continue
+> >          
+> >          try:
+> >              module = __import__(pkg.__name__, fromlist=[modulename])
+> > 
+> > -        except (ImportError, SystemExit):
+> > 
+> > +        except (ImportError, SystemExit, RuntimeError):
+> >              # If we can't import it, it's not valid
+> >              continue
+> >          
+> >          module_if = getattr(module, modulename)
+> 
+> Wouldn't it be better to just skip naming the exceptions you want
+> to catch in this case? I.e.:
+> 
+>    try:
+>      module = __import__(...
+>    except:
+>      continue
+> 
+> "If we can't import it" ...
 
-Wouldn't it be better to just skip naming the exceptions you want
-to catch in this case? I.e.:
+As a matter of good practice I try to avoid eating all exceptions that way in 
+case one of them is a genuine error rather than something we want to ignore. 
+Maybe this is a reasonable exception (heh) though.
 
-   try:
-     module = __import__(...
-   except:
-     continue
+FWIW we might consider just reverting my change if it's causing too much 
+greif.
 
-"If we can't import it" ...
+Cheers,
+Paul
 
 -- 
-olofjn
+
+Paul Eggleton
+Intel Open Source Technology Centre
 
