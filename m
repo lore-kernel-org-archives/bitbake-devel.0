@@ -1,25 +1,27 @@
 Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id A3EDB76A33
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 8BBA26AC1E
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 24 Aug 2015 14:00:38 +0000 (UTC)
+	Mon, 24 Aug 2015 14:59:44 +0000 (UTC)
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 24 Aug 2015 07:00:39 -0700
+	by fmsmga101.fm.intel.com with ESMTP; 24 Aug 2015 07:59:44 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.15,738,1432623600"; d="scan'208";a="754364524"
+X-IronPort-AV: E=Sophos;i="5.15,738,1432623600"; d="scan'208";a="754397270"
 Received: from achalot-mobl1.ger.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com) ([10.252.20.62])
-	by orsmga001.jf.intel.com with ESMTP; 24 Aug 2015 07:00:34 -0700
+	by orsmga001.jf.intel.com with ESMTP; 24 Aug 2015 07:59:42 -0700
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 24 Aug 2015 15:00:22 +0100
-Message-Id: <640bcd6bc518bfac03c3c3c4a45717d61ef05bfb.1440424765.git.paul.eggleton@linux.intel.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <cover.1440424765.git.paul.eggleton@linux.intel.com>
-References: <cover.1440424765.git.paul.eggleton@linux.intel.com>
-In-Reply-To: <cover.1440424765.git.paul.eggleton@linux.intel.com>
-References: <cover.1440424765.git.paul.eggleton@linux.intel.com>
-Subject: [PATCH 1/1] lib/bb/main: avoid importing all server/UI modules on every execution
+To: Saul Wold <sgw@linux.intel.com>
+Date: Mon, 24 Aug 2015 15:59:40 +0100
+Message-ID: <9669711.LimNJde33H@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.14.9 (Linux/4.1.5-100.fc21.x86_64; KDE/4.14.9; x86_64; ; )
+In-Reply-To: <1440238280.12105.284.camel@linuxfoundation.org>
+References: <1440092897-6518-1-git-send-email-sgw@linux.intel.com>
+	<1440238280.12105.284.camel@linuxfoundation.org>
+MIME-Version: 1.0
+Cc: akuster808@gmail.com, bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH][1.24/Dizzy] cooker: properly fix bitbake.lock handling
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,141 +34,104 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 24 Aug 2015 14:00:39 -0000
+X-List-Received-Date: Mon, 24 Aug 2015 14:59:46 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-We're importing the server and UI modules in order to check they are
-valid, but it turns out that that has some nasty side-effects. We don't
-actually need to do this except when --help is passed or the module
-doesn't exist, so rearrange the code so that we only do the module
-listing in those two cases.
+On Saturday 22 August 2015 11:11:20 Richard Purdie wrote:
+> On Thu, 2015-08-20 at 10:48 -0700, Saul Wold wrote:
+> > From: Richard Purdie <richard.purdie@linuxfoundation.org>
+> > 
+> > If the PR server or indeed any other child process takes some time to
+> > exit (which it sometimes does when saving its database), it can end up
+> > holding bitbake.lock after the UI exits, which led to errors if you ran
+> > bitbake commands successively - we saw this when running the PR server
+> > oe-selftest tests in OE-Core. The recent attempt to fix this wasn't
+> > quite right and ended up breaking memory resident bitbake. This time we
+> > close the lock file when cooker shuts down (inside the UI process)
+> > instead of unlocking it, and this is done in the cooker code rather than
+> > the actual UI code so it doesn't matter which UI is in use. Additionally
+> > we report that we're waiting for the lock to be released, using lsof or
+> > fuser if available to list the processes with the lock open.
+> > 
+> > The 'magic' in the locking is due to all spawned subprocesses of bitbake
+> > holding an open file descriptor to the bitbake.lock. It is automatically
+> > unlocked when all those fds close the file (as all the processes
+> > terminate). We close the UI copy of the lock explicitly, then close the
+> > server process copy, any remaining open copy is therefore some proess
+> > exiting.
+> > 
+> > (The reproducer for the problem is to set PRSERV_HOST = "localhost:0"
+> > and add a call to time.sleep(20) after self.server_close() in
+> > lib/prserv/serv.py, then run "bitbake -p; bitbake -p" ).
+> > 
+> > Cleanup work done by Paul Eggleton <paul.eggleton@linux.intel.com>.
+> > 
+> > This reverts bitbake commit 69ecd15aece54753154950c55d7af42f85ad8606 and
+> > e97a9f1528d77503b5c93e48e3de9933fbb9f3cd.
+> > 
+> > Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> > 
+> > [sgw - merged changes from new main.py to bin/bitbake, dizzy will continue
+> > to use bin/bitbake and not use the new main.py (which is removed)]
+> > Signed-off-by: Saul Wold <sgw@linux.intel.com>
+> > 
+> > Conflicts:
+> > 	lib/bb/cooker.py
+> > 	lib/bb/main.py
+> > 	lib/bb/tinfoil.py
+> > 	lib/bb/ui/knotty.py
+> > 
+> > ---
+> > 
+> >  bin/bitbake         |  7 ++++++-
+> >  lib/bb/cooker.py    | 31 ++++++++++++++++++++++++++++++-
+> >  lib/bb/tinfoil.py   |  5 +++++
+> >  lib/bb/ui/knotty.py | 43 ++++++++++++++++++++++++-------------------
+> >  lib/bb/utils.py     | 29 +++++++++++++++++++++++++----
+> >  5 files changed, 90 insertions(+), 25 deletions(-)
+> > 
+> > diff --git a/bin/bitbake b/bin/bitbake
+> > index a2e8cc1..d3055fb 100755
+> > --- a/bin/bitbake
+> > +++ b/bin/bitbake
+> > 
+> > @@ -263,13 +263,18 @@ def start_server(servermodule, configParams, 
+configuration, features):
+> >                  logger.handle(event)
+> >          
+> >          raise exc_info[1], None, exc_info[2]
+> >      
+> >      server.detach()
+> > 
+> > +    cooker.lock.close()
+> > 
+> >      return server
+> >  
+> >  def main():
+> > -    configParams = BitBakeConfigParameters()
+> > +    # Python multiprocessing requires /dev/shm on Linux
+> > +    if sys.platform.startswith('linux') and not os.access('/dev/shm',
+> > os.W_OK | os.X_OK): +        raise sys.exit("FATAL: /dev/shm does not
+> > exist or is not writable") +
+> > +    conaigParams = BitBakeConfigParameters()
+> > 
+> >      configuration = cookerdata.CookerConfiguration()
+> >      configuration.setConfigParameters(configParams)
+> 
+> conaigParams ?
+> 
+> I think the above hunk shouldn't be there...
 
-Additionally, let's just go ahead and catch all errors on import; we
-really don't care to have them cause a failure now.
+Not to mention this needs to be in 1.26 (i.e. corresponding to fido) first, and 
+properly tested.
 
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
----
- lib/bb/main.py | 60 +++++++++++++++++++++++++++++++++++++---------------------
- 1 file changed, 38 insertions(+), 22 deletions(-)
+Cheers,
+Paul
 
-diff --git a/lib/bb/main.py b/lib/bb/main.py
-index 910cd64..8762f72 100755
---- a/lib/bb/main.py
-+++ b/lib/bb/main.py
-@@ -41,10 +41,35 @@ logger = logging.getLogger("BitBake")
- class BBMainException(Exception):
-     pass
- 
-+def present_options(optionlist):
-+    if len(optionlist) > 1:
-+        return ' or '.join([', '.join(optionlist[:-1]), optionlist[-1]])
-+    else:
-+        return optionlist[0]
-+
-+class BitbakeHelpFormatter(optparse.IndentedHelpFormatter):
-+    def format_option(self, option):
-+        # We need to do this here rather than in the text we supply to
-+        # add_option() because we don't want to call list_extension_modules()
-+        # on every execution (since it imports all of the modules)
-+        # Note also that we modify option.help rather than the returned text
-+        # - this is so that we don't have to re-format the text ourselves
-+        if option.dest == 'ui':
-+            valid_uis = list_extension_modules(bb.ui, 'main')
-+            option.help = option.help.replace('@CHOICES@', present_options(valid_uis))
-+        elif option.dest == 'servertype':
-+            valid_server_types = list_extension_modules(bb.server, 'BitBakeServer')
-+            option.help = option.help.replace('@CHOICES@', present_options(valid_server_types))
-+
-+        return optparse.IndentedHelpFormatter.format_option(self, option)
-+
- def list_extension_modules(pkg, checkattr):
-     """
-     Lists extension modules in a specific Python package
--    (e.g. UIs, servers)
-+    (e.g. UIs, servers). NOTE: Calling this function will import all of the
-+    submodules of the specified module in order to check for the specified
-+    attribute; this can have unusual side-effects. As a result, this should
-+    only be called when displaying help text or error messages.
-     Parameters:
-         pkg: previously imported Python package to list
-         checkattr: attribute to look for in module to determine if it's valid
-@@ -60,7 +85,7 @@ def list_extension_modules(pkg, checkattr):
-             continue
-         try:
-             module = __import__(pkg.__name__, fromlist=[modulename])
--        except (ImportError, SystemExit, RuntimeError):
-+        except:
-             # If we can't import it, it's not valid
-             continue
-         module_if = getattr(module, modulename)
-@@ -70,7 +95,7 @@ def list_extension_modules(pkg, checkattr):
-             modules.append(modulename)
-     return modules
- 
--def import_extension_module(pkg, modulename):
-+def import_extension_module(pkg, modulename, checkattr):
-     try:
-         # Dynamically load the UI based on the ui name. Although we
-         # suggest a fixed set this allows you to have flexibility in which
-@@ -78,7 +103,7 @@ def import_extension_module(pkg, modulename):
-         module = __import__(pkg.__name__, fromlist = [modulename])
-         return getattr(module, modulename)
-     except AttributeError:
--        raise BBMainException("FATAL: Unable to import extension module %s from %s" % (modulename, pkg.__name__))
-+        raise BBMainException('FATAL: Unable to import extension module "%s" from %s. Valid extension modules: %s' % (modulename, pkg.__name__, present_options(list_extension_modules(pkg, checkattr))))
- 
- 
- # Display bitbake/OE warnings via the BitBake.Warnings logger, ignoring others"""
-@@ -104,6 +129,7 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
- 
-     def parseCommandLine(self, argv=sys.argv):
-         parser = optparse.OptionParser(
-+            formatter = BitbakeHelpFormatter(),
-             version = "BitBake Build Tool Core version %s" % bb.__version__,
-             usage = """%prog [options] [recipename/target recipe:do_task ...]
- 
-@@ -168,24 +194,14 @@ class BitBakeConfigParameters(cookerdata.ConfigParameters):
-         parser.add_option("-P", "--profile", help = "Profile the command and save reports.",
-                    action = "store_true", dest = "profile", default = False)
- 
--        def present_options(optionlist):
--            if len(optionlist) > 1:
--                return ' or '.join([', '.join(optionlist[:-1]), optionlist[-1]])
--            else:
--                return optionlist[0]
--
-         env_ui = os.environ.get('BITBAKE_UI', None)
--        valid_uis = list_extension_modules(bb.ui, 'main')
-         default_ui = env_ui or 'knotty'
--        if env_ui and not env_ui in valid_uis:
--            raise BBMainException('Invalid UI "%s" specified in BITBAKE_UI environment variable - valid choices: %s' % (env_ui, present_options(valid_uis)))
--        elif not default_ui in valid_uis:
--            raise BBMainException('Default UI "%s" could not be found')
--        parser.add_option("-u", "--ui", help = "The user interface to use (%s - default %%default)." % present_options(valid_uis),
--                   action="store", dest="ui", type="choice", choices=valid_uis, default=default_ui)
--
--        valid_server_types = list_extension_modules(bb.server, 'BitBakeServer')
--        parser.add_option("-t", "--servertype", help = "Choose which server type to use (%s - default %%default)." % present_options(valid_server_types),
-+        # @CHOICES@ is substituted out by BitbakeHelpFormatter above
-+        parser.add_option("-u", "--ui", help = "The user interface to use (@CHOICES@ - default %default).",
-+                   action="store", dest="ui", default=default_ui)
-+
-+        # @CHOICES@ is substituted out by BitbakeHelpFormatter above
-+        parser.add_option("-t", "--servertype", help = "Choose which server type to use (@CHOICES@ - default %default).",
-                    action = "store", dest = "servertype", default = "process")
- 
-         parser.add_option("", "--token", help = "Specify the connection token to be used when connecting to a remote server.",
-@@ -315,8 +331,8 @@ def bitbake_main(configParams, configuration):
- 
-     configuration.setConfigParameters(configParams)
- 
--    ui_module = import_extension_module(bb.ui, configParams.ui)
--    servermodule = import_extension_module(bb.server, configParams.servertype)
-+    ui_module = import_extension_module(bb.ui, configParams.ui, 'main')
-+    servermodule = import_extension_module(bb.server, configParams.servertype, 'BitBakeServer')
- 
-     if configParams.server_only:
-         if configParams.servertype != "xmlrpc":
 -- 
-2.1.0
 
+Paul Eggleton
+Intel Open Source Technology Centre
 
