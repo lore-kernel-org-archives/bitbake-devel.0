@@ -1,33 +1,37 @@
 Return-Path: <kergoth@gmail.com>
-Received: from mail-ig0-f179.google.com (mail-ig0-f179.google.com
-	[209.85.213.179])
-	by mail.openembedded.org (Postfix) with ESMTP id B44C4760FB
+Received: from mail-io0-f178.google.com (mail-io0-f178.google.com
+	[209.85.223.178])
+	by mail.openembedded.org (Postfix) with ESMTP id F179C734B8
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 26 Aug 2015 16:39:09 +0000 (UTC)
-Received: by igui7 with SMTP id i7so41468259igu.1
+	Wed, 26 Aug 2015 23:15:49 +0000 (UTC)
+Received: by iodv127 with SMTP id v127so37936056iod.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 26 Aug 2015 09:39:09 -0700 (PDT)
+	Wed, 26 Aug 2015 16:15:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:content-type; bh=vzt5DFVJ6H8CHOgJ1qW7aEOAs1nJZ2wWLrqC85zU/ig=;
-	b=ZW4dRv40gPyZC0LL2EoZ+HXyKuCf+sGHkC+RKPWopCPNx7Aj3qvaIt6MWS4bsMY4pj
-	X71wYTlVnOQxyJ0+SYxB8VTOKkGbP85/RORxYmsUftHz05hZAmhqCbo+WurXjp+ByyQN
-	3InF2BiP7M0IsaDsbCcNVf8wkP2xH0xnpZRWOwozSk2C49i74QQ2ZvGWkF/iSdbPR+ZM
-	XGXIP96BeoDqNFJiNYY2i1j1VGFUoqKUchyeiHaFK1okUViHGT+YjPKh8xnq1UMjAhYq
-	88NFkcve1quq+aFimJ8JR3Qi/4s70CuMb1JCOxn0AnZ+pggQ7hmZg4ovVdp+BNj9f3uq
-	RpFA==
-X-Received: by 10.50.108.37 with SMTP id hh5mr836423igb.10.1440607149235; Wed,
-	26 Aug 2015 09:39:09 -0700 (PDT)
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=hS4pvxU3ToEYTIN3LfWYugO/mxI5kqe1FKhc/J6QiSI=;
+	b=1J7ERTFCtcy2OOYJT6Lu+XfpiissZ7xQ7mtyFY7LRDvb3CHndwUTFlS1mi32CO0CCJ
+	jvSUp8+PXCBwSYoXYD1/FlJfdeZJrVw6PgzDjF4PTLanahGfw/xmDgZMkh/VKMq4BFBs
+	GhD8g2ZqZRYJQ/RZo3/j7nLSW2ZfgO4p8ikdaFfqtL11+cJSqjQvFl2rlN+msFASnLBh
+	O8VSMGuIYX1pPIyCXpMmKZ7iIaV/7sn8d4kr2HXVs+fRxD4t1hw1Dw4tUuBLqJHYZC+S
+	IPnaiGHmhJmGSmRw4aZngq8JSdsVPccHq/ZDR49s81NQVcC2pX4xtblWdGNrrCMkuEeH
+	JUJw==
+X-Received: by 10.107.40.200 with SMTP id o191mr6971020ioo.83.1440630949583;
+	Wed, 26 Aug 2015 16:15:49 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 10.79.100.71 with HTTP; Wed, 26 Aug 2015 09:38:49 -0700 (PDT)
-In-Reply-To: <cover.1439509247.git.chris_larson@mentor.com>
-References: <cover.1439509247.git.chris_larson@mentor.com>
-From: Christopher Larson <kergoth@gmail.com>
-Date: Wed, 26 Aug 2015 09:38:49 -0700
-Message-ID: <CABcZANn-3Jegv9k1Ut9mYQXnmc5bjv6LWDevpCX0N=_c7vUV8Q@mail.gmail.com>
+Sender: kergoth@gmail.com
+Received: by 10.79.100.71 with HTTP; Wed, 26 Aug 2015 16:15:30 -0700 (PDT)
+In-Reply-To: <1440607088-14563-1-git-send-email-kergoth@gmail.com>
+References: <1440607088-14563-1-git-send-email-kergoth@gmail.com>
+From: Christopher Larson <chris_larson@mentor.com>
+Date: Wed, 26 Aug 2015 16:15:30 -0700
+X-Google-Sender-Auth: gWG3LoKgmzm77s4KuKn_FySoVmQ
+Message-ID: <CABcZAN=kRiGhuVt4rHNzVDB-WH1QnN64zz9gz=6o9xv2PAU6YA@mail.gmail.com>
 To: "bitbake-devel@lists.openembedded.org"
 	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [RFC PATCH 0/5] Implement git shallow mirror tarball support
+Cc: Christopher Larson <chris_larson@mentor.com>
+Subject: Re: [PATCH 0/4] Implement git shallow mirror tarball support
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,35 +44,26 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 26 Aug 2015 16:39:11 -0000
-Content-Type: multipart/alternative; boundary=089e01493b5a64553d051e397d85
+X-List-Received-Date: Wed, 26 Aug 2015 23:15:50 -0000
+Content-Type: multipart/alternative; boundary=001a1141cf8c00a1c7051e3f0804
 
---089e01493b5a64553d051e397d85
+--001a1141cf8c00a1c7051e3f0804
 Content-Type: text/plain; charset=UTF-8
 
-On Thu, Aug 13, 2015 at 4:46 PM, Christopher Larson <kergoth@gmail.com>
+On Wed, Aug 26, 2015 at 9:38 AM, Christopher Larson <kergoth@gmail.com>
 wrote:
 
 > From: Christopher Larson <chris_larson@mentor.com>
 >
-> Please review the following changes for suitability for inclusion. If you
-> have
-> any objections or suggestions for improvement, please respond to the
-> patches. If
-> you agree with the changes, please provide your Acked-by.
+> Supercedes `[RFC PATCH 0/5] Implement git shallow mirror tarball support`.
 >
-> This only implements support for shallow mirror tarballs, not shallow
-> clones.
->
-> The mirror tarball filename includes branch, revision, and depth. To
-> enable,
-> use the `BB_GIT_SHALLOW` variable, or `BB_GIT_SHALLOW_<name>` for specific
-> URLs. This variable can hold either a clone depth (e.g. `1` to just get
-> SRCREV), or a ref or commit, in which case we keep history up to that
-> commit.
->
-> The shallow support will not, at this time, function correctly for
-> linux-yocto, due to its branching scheme & validation.
+> The shallow mirror tarball filename includes branch, revision, and depth.
+> To
+> enable, use the BB_GIT_SHALLOW variable, or BB_GIT_SHALLOW_<name> for
+> specific
+> URLs. This variable can hold either a clone depth (e.g. 1 to just get
+> SRCREV),
+> or a ref or commit, in which case we keep history up to that commit.
 >
 > Example:
 >
@@ -77,16 +72,39 @@ wrote:
 >     BB_GIT_SHALLOW_pn-linux-mel_mx6 = "v3.14"
 >     BB_GIT_SHALLOW_pn-testrepo = "testbranch"
 >
-> This implementation will attempt to fetch a full mirror tarball if it was
-> unable to fetch a shallow tarball. If `BB_GIT_SHALLOW` and
-> `BB_GENERATE_MIRROR_TARBALLS` are enabled for a given recipe, a shallow
-> tarball will be emitted.
+> Example in a recipe with multiple named uris, or multiple named branches
+> in a
+> single git URI:
+>
+>     BB_GIT_SHALLOW_main = "1"
+>     BB_GIT_SHALLOW_doc = ""
+>
+> BB_GIT_SHALLOW affects both the tarballs being fetched and the mirror
+> tarball
+> which is created when BB_GENERATE_MIRROR_TARBALLS is enabled. If the
+> shallow
+> mirror tarball cannot be fetched, it will try to fetch the full mirror
+> tarball
+> and use that.
+>
+> Limitations:
+>
+> The shallow support will not, at this time, function correctly for
+> linux-yocto, due to its branching scheme & validation.
+>
+> This implements support for shallow mirror tarballs, not shallow clones.
+> Supporting shallow clones directly would be rather more problematic, as
+> we'd
+> need to hardcode the depth between branch HEAD and the SRCREV, and that
+> depth
+> would change as the branch is updated.
 >
 
-Two new patch series have been submitted, one with general fetch fixes, one
-a simplified and cleaned up version of this. I'd greatly appreciate any
-review or testers of this, as there are many corner cases to consider in
-the fetch code, so the more testers, the better.
+One point of clarification, as it was asked with the RFC version of this
+series. This is in a comment, but I forgot to add it in the commit message:
+
+A current clone is preferred to either tarball, a shallow tarball is preferred
+to an out of date clone, and a missing clone will use either tarball.
 -- 
 Christopher Larson
 kergoth at gmail dot com
@@ -94,37 +112,29 @@ Founder - BitBake, OpenEmbedded, OpenZaurus
 Maintainer - Tslib
 Senior Software Engineer, Mentor Graphics
 
---089e01493b5a64553d051e397d85
+--001a1141cf8c00a1c7051e3f0804
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
 <div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Thu, Aug 13, 2015 at 4:46 PM, Christopher Larson <span dir=3D"ltr">&lt;<=
+On Wed, Aug 26, 2015 at 9:38 AM, Christopher Larson <span dir=3D"ltr">&lt;<=
 a href=3D"mailto:kergoth@gmail.com" target=3D"_blank">kergoth@gmail.com</a>=
-&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0=
- 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":4k0" class=
-=3D"a3s" style=3D"overflow:hidden">From: Christopher Larson &lt;<a href=3D"=
-mailto:chris_larson@mentor.com">chris_larson@mentor.com</a>&gt;<br>
+&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px=
+ 0px 0px 0.8ex;border-left-width:1px;border-left-color:rgb(204,204,204);bor=
+der-left-style:solid;padding-left:1ex"><div id=3D":1l1" class=3D"" style=3D=
+"overflow:hidden">From: Christopher Larson &lt;<a href=3D"mailto:chris_lars=
+on@mentor.com">chris_larson@mentor.com</a>&gt;<br>
 <br>
-Please review the following changes for suitability for inclusion. If you h=
-ave<br>
-any objections or suggestions for improvement, please respond to the patche=
-s. If<br>
-you agree with the changes, please provide your Acked-by.<br>
+Supercedes `[RFC PATCH 0/5] Implement git shallow mirror tarball support`.<=
+br>
 <br>
-This only implements support for shallow mirror tarballs, not shallow clone=
-s.<br>
-<br>
-The mirror tarball filename includes branch, revision, and depth. To enable=
-,<br>
-use the `BB_GIT_SHALLOW` variable, or `BB_GIT_SHALLOW_&lt;name&gt;` for spe=
-cific<br>
-URLs. This variable can hold either a clone depth (e.g. `1` to just get<br>
-SRCREV), or a ref or commit, in which case we keep history up to that commi=
-t.<br>
-<br>
-The shallow support will not, at this time, function correctly for<br>
-linux-yocto, due to its branching scheme &amp; validation.<br>
+The shallow mirror tarball filename includes branch, revision, and depth. T=
+o<br>
+enable, use the BB_GIT_SHALLOW variable, or BB_GIT_SHALLOW_&lt;name&gt; for=
+ specific<br>
+URLs. This variable can hold either a clone depth (e.g. 1 to just get SRCRE=
+V),<br>
+or a ref or commit, in which case we keep history up to that commit.<br>
 <br>
 Example:<br>
 <br>
@@ -133,18 +143,43 @@ Example:<br>
 =C2=A0 =C2=A0 BB_GIT_SHALLOW_pn-linux-mel_mx6 =3D &quot;v3.14&quot;<br>
 =C2=A0 =C2=A0 BB_GIT_SHALLOW_pn-testrepo =3D &quot;testbranch&quot;<br>
 <br>
-This implementation will attempt to fetch a full mirror tarball if it was<b=
-r>
-unable to fetch a shallow tarball. If `BB_GIT_SHALLOW` and<br>
-`BB_GENERATE_MIRROR_TARBALLS` are enabled for a given recipe, a shallow<br>
-tarball will be emitted.</div></blockquote></div><br>Two new patch series h=
-ave been submitted, one with general fetch fixes, one a simplified and clea=
-ned up version of this. I&#39;d greatly appreciate any review or testers of=
- this, as there are many corner cases to consider in the fetch code, so the=
- more testers, the better.</div><div class=3D"gmail_extra">-- <br><div clas=
-s=3D"gmail_signature"><div dir=3D"ltr">Christopher Larson<br>kergoth at gma=
-il dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - T=
-slib<br>Senior Software Engineer, Mentor Graphics</div></div>
+Example in a recipe with multiple named uris, or multiple named branches in=
+ a<br>
+single git URI:<br>
+<br>
+=C2=A0 =C2=A0 BB_GIT_SHALLOW_main =3D &quot;1&quot;<br>
+=C2=A0 =C2=A0 BB_GIT_SHALLOW_doc =3D &quot;&quot;<br>
+<br>
+BB_GIT_SHALLOW affects both the tarballs being fetched and the mirror tarba=
+ll<br>
+which is created when BB_GENERATE_MIRROR_TARBALLS is enabled. If the shallo=
+w<br>
+mirror tarball cannot be fetched, it will try to fetch the full mirror tarb=
+all<br>
+and use that.<br>
+<br>
+Limitations:<br>
+<br>
+The shallow support will not, at this time, function correctly for<br>
+linux-yocto, due to its branching scheme &amp; validation.<br>
+<br>
+This implements support for shallow mirror tarballs, not shallow clones.<br=
+>
+Supporting shallow clones directly would be rather more problematic, as we&=
+#39;d<br>
+need to hardcode the depth between branch HEAD and the SRCREV, and that dep=
+th<br>
+would change as the branch is updated.</div></blockquote></div><br>One poin=
+t of clarification, as it was asked with the RFC version of this series. Th=
+is is in a comment, but I forgot to add it in the commit message:</div><div=
+ class=3D"gmail_extra"><br></div><div class=3D"gmail_extra"><span style=3D"=
+font-size:13px">A current clone is preferred to either tarball, a shallow t=
+arball is=C2=A0</span><span style=3D"font-size:13px">preferred to an out of=
+ date clone, and a missing clone will use=C2=A0</span><span style=3D"font-s=
+ize:13px">either tarball.<br></span>-- <br><div class=3D"gmail_signature"><=
+div dir=3D"ltr">Christopher Larson<br>kergoth at gmail dot com<br>Founder -=
+ BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br>Senior Software=
+ Engineer, Mentor Graphics</div></div>
 </div></div>
 
---089e01493b5a64553d051e397d85--
+--001a1141cf8c00a1c7051e3f0804--
