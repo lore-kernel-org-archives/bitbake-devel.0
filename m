@@ -1,22 +1,29 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 7CFB571633
+Return-Path: <sam.thursfield@codethink.co.uk>
+Received: from ducie-dc1.codethink.co.uk (ducie-dc1.codethink.co.uk
+	[185.25.241.215])
+	by mail.openembedded.org (Postfix) with ESMTP id F0FC376DA6
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 28 Aug 2015 15:38:34 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 28 Aug 2015 08:38:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,425,1437462000"; d="scan'208";a="792908594"
-Received: from abityuts-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.11.19])
-	by fmsmga002.fm.intel.com with ESMTP; 28 Aug 2015 08:38:18 -0700
-From: Elliot Smith <elliot.smith@intel.com>
+	Fri, 28 Aug 2015 15:55:49 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by ducie-dc1.codethink.co.uk (Postfix) with ESMTP id 93961461C06
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 28 Aug 2015 16:45:48 +0100 (BST)
+X-Virus-Scanned: Debian amavisd-new at ducie-dc1.codethink.co.uk
+Received: from ducie-dc1.codethink.co.uk ([127.0.0.1])
+	by localhost (ducie-dc1.codethink.co.uk [127.0.0.1]) (amavisd-new,
+	port 10024)
+	with ESMTP id GBWZwZHopCTs for <bitbake-devel@lists.openembedded.org>; 
+	Fri, 28 Aug 2015 16:45:46 +0100 (BST)
+Received: from droopy.dyn.ducie.codethink.co.uk (unknown [10.24.1.220])
+	by ducie-dc1.codethink.co.uk (Postfix) with ESMTPSA id 741EC4607B0
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 28 Aug 2015 16:45:46 +0100 (BST)
+From: Sam Thursfield <sam.thursfield@codethink.co.uk>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 28 Aug 2015 16:37:38 +0100
-Message-Id: <1440776258-21681-1-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-Cc: Bian Naimeng <biannm@cn.fujitsu.com>
-Subject: [PATCH] toaster: Support environments which have proxies set
+Date: Fri, 28 Aug 2015 16:45:39 +0100
+Message-Id: <1440776740-26875-1-git-send-email-sam.thursfield@codethink.co.uk>
+X-Mailer: git-send-email 2.4.3
+Subject: Research into exporting BitBake recipes for consumption elsewhere
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,95 +36,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 28 Aug 2015 15:38:34 -0000
+X-List-Received-Date: Fri, 28 Aug 2015 15:55:50 -0000
 
-From: Bian Naimeng <biannm@cn.fujitsu.com>
+Hi
 
-In an environment with a proxy which requires authentication, e.g. with
-$http_proxy = 'http://user:password@ip:port', the following error
-occurs when running Toaster:
+I wrote a proof-of-concept patch which lets you export all the tasks
+from a BitBake project, as actual executable shell and Python scripts.
+I'm sharing it here to see if anyone is interested in this sort of
+thing, and to see if anyone reading can point out obvious improvements
+that I haven't spotted.
 
-  EE: Using proxy http://user:password@ip:port
-  EE: could not connect to 'url', skipping update: 'error message'
+This is the first time I've hacked on BitBake's internals, so this code
+has quite a lot of room for improvement :-) Exporting is slow (~10
+mins), blocks the 'cooker' process completely while it runs, and causes
+BitBake to hang once it's finished. But, the generated scripts do
+actually work, which is what motived me to share the results.
 
-This prevents Toaster from fetching layer, recipe and machine information
-from remote repositories.
+The goal of this is to have a tool for 'flattening' a set of recipes,
+which I think is useful when reasoning about what they actually do.
 
-This patch allows Toaster to use the proxy settings from the
-environment for HTTP/HTTPS requests.
+Right now it produces almost 3GB of output for my test project. This is
+mostly because the entire data dict is dumped for each .py file. I've
+looked at deduplicating, but my naive implementation was incredibly slow
+(checking each variable in the dict for each task dump), and I've not
+thought of a more clever approach.
 
-Signed-off-by: Bian Naimeng <biannm@cn.fujitsu.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
----
- bitbake/lib/toaster/orm/models.py | 36 +++++++-----------------------------
- 1 file changed, 7 insertions(+), 29 deletions(-)
+Anyway, I hope this is interesting to someone; I may be able to spend
+some time turning it into a viable patch, if there is interest.
 
-diff --git a/bitbake/lib/toaster/orm/models.py b/bitbake/lib/toaster/orm/models.py
-index 92fcaa7..58f76a8 100644
---- a/bitbake/lib/toaster/orm/models.py
-+++ b/bitbake/lib/toaster/orm/models.py
-@@ -817,42 +817,20 @@ class LayerIndexLayerSource(LayerSource):
-         assert self.apiurl is not None
-         from django.db import transaction, connection
- 
--        import httplib, urlparse, json
-+        import urllib2, urlparse, json
-         import os
-         proxy_settings = os.environ.get("http_proxy", None)
- 
-         def _get_json_response(apiurl = self.apiurl):
--            conn = None
-             _parsedurl = urlparse.urlparse(apiurl)
-             path = _parsedurl.path
--            query = _parsedurl.query
--            def parse_url(url):
--                parsedurl = urlparse.urlparse(url)
--                try:
--                    (host, port) = parsedurl.netloc.split(":")
--                except ValueError:
--                    host = parsedurl.netloc
--                    port = None
--
--                if port is None:
--                    port = 80
--                else:
--                    port = int(port)
--                return (host, port)
- 
--            if proxy_settings is None:
--                host, port = parse_url(apiurl)
--                conn = httplib.HTTPConnection(host, port)
--                conn.request("GET", path + "?" + query)
--            else:
--                host, port = parse_url(proxy_settings)
--                conn = httplib.HTTPConnection(host, port)
--                conn.request("GET", apiurl)
--
--            r = conn.getresponse()
--            if r.status != 200:
--                raise Exception("Failed to read " + path + ": %d %s" % (r.status, r.reason))
--            return json.loads(r.read())
-+            try:
-+                res = urllib2.urlopen(apiurl)
-+            except urllib2.URLError as e:
-+                raise Exception("Failed to read %s: %s" % (path, e.reason))
-+
-+            return json.loads(res.read())
- 
-         # verify we can get the basic api
-         try:
+Sam
+
+Sam Thursfield (1):
+  Make an '--export-tasks' option
+
+ bitbake/lib/bb/cooker.py     |  15 +-
+ bitbake/lib/bb/cookerdata.py |   9 +
+ bitbake/lib/bb/data.py       |   9 +-
+ bitbake/lib/bb/export.py     | 426 +++++++++++++++++++++++++++++++++++++++++++
+ bitbake/lib/bb/main.py       |   3 +
+ bitbake/lib/bb/runqueue.py   |  11 ++
+ 6 files changed, 471 insertions(+), 2 deletions(-)
+ create mode 100644 bitbake/lib/bb/export.py
+
 -- 
-1.9.3
-
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
+2.4.3
 
 
