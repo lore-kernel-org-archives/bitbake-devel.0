@@ -1,21 +1,23 @@
 Return-Path: <alejandro.franco@linux.intel.com>
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id E601474197
+	by mail.openembedded.org (Postfix) with ESMTP id 5FEC474197
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 31 Aug 2015 20:55:43 +0000 (UTC)
+	Mon, 31 Aug 2015 20:55:44 +0000 (UTC)
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga103.jf.intel.com with ESMTP; 31 Aug 2015 13:55:43 -0700
+	by orsmga103.jf.intel.com with ESMTP; 31 Aug 2015 13:55:44 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,443,1437462000"; d="scan'208";a="794884553"
+X-IronPort-AV: E=Sophos;i="5.17,443,1437462000"; d="scan'208";a="794884559"
 Received: from afshjern.zpn.intel.com ([10.219.128.45])
-	by orsmga002.jf.intel.com with ESMTP; 31 Aug 2015 13:55:43 -0700
+	by orsmga002.jf.intel.com with ESMTP; 31 Aug 2015 13:55:44 -0700
 From: Alex Franco <alejandro.franco@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 31 Aug 2015 15:56:08 -0500
-Message-Id: <1441054569-1661-1-git-send-email-alejandro.franco@linux.intel.com>
+Date: Mon, 31 Aug 2015 15:56:09 -0500
+Message-Id: <1441054569-1661-2-git-send-email-alejandro.franco@linux.intel.com>
 X-Mailer: git-send-email 2.5.1
+In-Reply-To: <1441054569-1661-1-git-send-email-alejandro.franco@linux.intel.com>
+References: <1441054569-1661-1-git-send-email-alejandro.franco@linux.intel.com>
 Cc: david.nystrom@enea.com, clarson@kergoth.com
-Subject: [PATCHv3 0/1] Allow bitbake commands starting with do_
+Subject: [PATCHv3 1/1] Allow bitbake commands starting with do_
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,17 +40,26 @@ is being constructed.
 
 [YOCTO #7818]
 
-Changes since v1: removed regex, using string.replace
-Changes since v2: removed string.replace, using slice
-
 Signed-off-by: Alex Franco <alejandro.franco@linux.intel.com>
-
-Alex Franco (1):
-  Allow bitbake commands starting with do_
-
+---
  bitbake/lib/bb/runqueue.py | 4 ++++
  1 file changed, 4 insertions(+)
 
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 0f99e5a..7b25e31 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -634,6 +634,10 @@ class RunQueueData:
+ 
+             fnid = taskData.build_targets[targetid][0]
+             fn = taskData.fn_index[fnid]
++
++            if target[1].startswith("do_"):
++                target[1] = target[1][3:]
++
+             self.target_pairs.append((fn, target[1]))
+ 
+             if fnid in taskData.failed_fnids:
 -- 
 2.5.1
 
