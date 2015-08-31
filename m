@@ -1,21 +1,29 @@
-Return-Path: <alejandro.franco@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 22DA074197
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 6C3DA74197
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 31 Aug 2015 20:00:03 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by fmsmga103.fm.intel.com with ESMTP; 31 Aug 2015 13:00:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,443,1437462000"; d="scan'208";a="794845036"
-Received: from afshjern.zpn.intel.com ([10.219.128.45])
-	by orsmga002.jf.intel.com with ESMTP; 31 Aug 2015 13:00:03 -0700
-From: Alex Franco <alejandro.franco@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 31 Aug 2015 15:00:32 -0500
-Message-Id: <1441051232-30028-1-git-send-email-alejandro.franco@linux.intel.com>
-X-Mailer: git-send-email 2.5.1
+	Mon, 31 Aug 2015 20:16:56 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id t7VKGlrT024303
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Mon, 31 Aug 2015 13:16:47 -0700 (PDT)
+Received: from Marks-MacBook-Pro-2.local (172.25.36.228) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
+	14.3.235.1; Mon, 31 Aug 2015 13:16:47 -0700
+To: Alex Franco <alejandro.franco@linux.intel.com>,
+	<bitbake-devel@lists.openembedded.org>
+References: <1441051232-30028-1-git-send-email-alejandro.franco@linux.intel.com>
+From: Mark Hatle <mark.hatle@windriver.com>
+Organization: Wind River Systems
+Message-ID: <55E4B62E.7070400@windriver.com>
+Date: Mon, 31 Aug 2015 15:16:46 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:38.0)
+	Gecko/20100101 Thunderbird/38.2.0
+MIME-Version: 1.0
+In-Reply-To: <1441051232-30028-1-git-send-email-alejandro.franco@linux.intel.com>
 Cc: david.nystrom@enea.com, clarson@kergoth.com
-Subject: [PATCH] Allow bitbake commands starting with do_ v2
+Subject: Re: [PATCH] Allow bitbake commands starting with do_ v2
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,37 +36,48 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 31 Aug 2015 20:00:07 -0000
+X-List-Received-Date: Mon, 31 Aug 2015 20:16:57 -0000
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 
-The output of "bitbake, -c listtasks pkg" lists tasks with their real names
-(starting with "do_"), but then "bitbake -c do_task" fails, as "do_" always
-gets unconditionally prepended to task names. This patch handles this error
-by always removing "do_" from the beginning of task names when the runqueue
-is being constructed.
+On 8/31/15 3:00 PM, Alex Franco wrote:
+> The output of "bitbake, -c listtasks pkg" lists tasks with their real names
+> (starting with "do_"), but then "bitbake -c do_task" fails, as "do_" always
+> gets unconditionally prepended to task names. This patch handles this error
+> by always removing "do_" from the beginning of task names when the runqueue
+> is being constructed.
+> 
+> [YOCTO #7818]
+> 
+> Signed-off-by: Alex Franco <alejandro.franco@linux.intel.com>
+> ---
+>  bitbake/lib/bb/runqueue.py | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+> index 0f99e5a..834992f 100644
+> --- a/bitbake/lib/bb/runqueue.py
+> +++ b/bitbake/lib/bb/runqueue.py
+> @@ -634,6 +634,10 @@ class RunQueueData:
+>  
+>              fnid = taskData.build_targets[targetid][0]
+>              fn = taskData.fn_index[fnid]
+> +
+> +            if target[1].startswith("do_"):
+> +                target[1] = target[1].replace("do_", "", 1)
+> +
 
-[YOCTO #7818]
+not sure if it's faster and/or more obvious...
 
-Signed-off-by: Alex Franco <alejandro.franco@linux.intel.com>
----
- bitbake/lib/bb/runqueue.py | 4 ++++
- 1 file changed, 4 insertions(+)
+target[1] = target[1][3:]
 
-diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-index 0f99e5a..834992f 100644
---- a/bitbake/lib/bb/runqueue.py
-+++ b/bitbake/lib/bb/runqueue.py
-@@ -634,6 +634,10 @@ class RunQueueData:
- 
-             fnid = taskData.build_targets[targetid][0]
-             fn = taskData.fn_index[fnid]
-+
-+            if target[1].startswith("do_"):
-+                target[1] = target[1].replace("do_", "", 1)
-+
-             self.target_pairs.append((fn, target[1]))
- 
-             if fnid in taskData.failed_fnids:
--- 
-2.5.1
+(since we know the first three characters are 'do_' since we did a 'startswith'...)
+
+--Mark
+
+>              self.target_pairs.append((fn, target[1]))
+>  
+>              if fnid in taskData.failed_fnids:
+> 
 
 
