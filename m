@@ -1,39 +1,21 @@
-Return-Path: <martin.jansa@gmail.com>
-Received: from mail-wi0-f176.google.com (mail-wi0-f176.google.com
-	[209.85.212.176])
-	by mail.openembedded.org (Postfix) with ESMTP id 9A5BF7700B
+Return-Path: <alejandro.franco@linux.intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id D39C17702A
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  2 Sep 2015 17:27:16 +0000 (UTC)
-Received: by wiclp12 with SMTP id lp12so26639732wic.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 02 Sep 2015 10:27:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:date:to:cc:subject:message-id:references:mime-version
-	:content-type:content-disposition:in-reply-to:user-agent;
-	bh=jHLEfaY9YtiKJKUIPiEYmcMoBts1/NfNrMh5hIS47qA=;
-	b=CGMCMNSrnabj4s7XiUOQpXTQYmtILlrv+uRAOfKsyUzysl7ASTgS+EteKKuuID9Lvz
-	K+eQMUQxixcInoULHvPLqgsSfxnSLb3nES3u0ETgOW3zJ2cmYnG0W4TB64mMuLvRDu/T
-	gqn/IfZI5NqcdmnyJaHKHYW/aGXqgIjQL7WKYy7BMHPSxABKBfP5KZZd8fKK6aKk1KXb
-	+RusleBY+uae/F88W4W4CdUM0C/b39UwYfiHsw6A4e6nRIARP258zDGwndlE/G2JGMEC
-	4k1nlsc9J7dZkySztzDL762ARn95E3iDmjukrsFWiCqlysddQPnH6tbdTiStmHsFJ0zx
-	KvAA==
-X-Received: by 10.180.21.137 with SMTP id v9mr5454806wie.8.1441214835837;
-	Wed, 02 Sep 2015 10:27:15 -0700 (PDT)
-Received: from localhost (ip-86-49-34-37.net.upcbroadband.cz. [86.49.34.37])
-	by smtp.gmail.com with ESMTPSA id w8sm4627960wiy.10.2015.09.02.10.27.15
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 02 Sep 2015 10:27:15 -0700 (PDT)
-From: Martin Jansa <martin.jansa@gmail.com>
-X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
-Date: Wed, 2 Sep 2015 19:27:36 +0200
-To: Saul Wold <sgw@linux.intel.com>
-Message-ID: <20150902172736.GF2470@jama>
-References: <1441214406-11183-1-git-send-email-sgw@linux.intel.com>
-MIME-Version: 1.0
-In-Reply-To: <1441214406-11183-1-git-send-email-sgw@linux.intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-Cc: akuster808@gmail.com, bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] prserv/serv: Improve exit handling
+	Wed,  2 Sep 2015 20:11:01 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by fmsmga103.fm.intel.com with ESMTP; 02 Sep 2015 13:11:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.17,456,1437462000"; d="scan'208";a="554062612"
+Received: from afshjern.zpn.intel.com ([10.219.128.48])
+	by FMSMGA003.fm.intel.com with ESMTP; 02 Sep 2015 13:11:01 -0700
+From: Alex Franco <alejandro.franco@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  2 Sep 2015 15:11:30 -0500
+Message-Id: <1441224690-17798-1-git-send-email-alejandro.franco@linux.intel.com>
+X-Mailer: git-send-email 2.5.1
+Cc: clarson@kergoth.com
+Subject: [PATCHv2] Allow bitbake commands starting with do_
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -46,111 +28,91 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 02 Sep 2015 17:27:21 -0000
-X-Groupsio-MsgNum: 6300
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="sDKAb4OeUBrWWL6P"
-Content-Disposition: inline
+X-List-Received-Date: Wed, 02 Sep 2015 20:11:03 -0000
 
---sDKAb4OeUBrWWL6P
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The output of "bitbake, -c listtasks pkg" lists tasks with their real names
+(starting with "do_"), but then "bitbake -c do_task" fails, as "do_" always
+gets unconditionally prepended to task names. This patch handles this error
+by checking whether a task starts with "do_" prior to prepending it with it
+when the task runlist is being constructed (and a few other corner cases).
 
-On Wed, Sep 02, 2015 at 10:20:06AM -0700, Saul Wold wrote:
-> From: Richard Purdie <richard.purdie@linuxfoundation.org>
+[YOCTO #7818]
 
-The subject doesn't say for which branch this is intended.
+Signed-off-by: Alex Franco <alejandro.franco@linux.intel.com>
+---
+ bitbake/lib/bb/cooker.py   | 12 +++++++++---
+ bitbake/lib/bb/runqueue.py |  4 +++-
+ bitbake/lib/bb/shell.py    |  4 +++-
+ 3 files changed, 15 insertions(+), 5 deletions(-)
 
-I guess 1.24, because it's already in 1.26 and master, but it should be
-specified in Subject.
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 99c4785..a0d7d59 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -663,7 +663,9 @@ class BBCooker:
+                 ktask = k2[1]
+             taskdata.add_provider(localdata, self.recipecache, k)
+             current += 1
+-            runlist.append([k, "do_%s" % ktask])
++            if not ktask.startswith("do_"):
++                ktask = "do_%s" % ktask
++            runlist.append([k, ktask])
+             bb.event.fire(bb.event.TreeDataPreparationProgress(current, len(fulltargetlist)), self.data)
+         taskdata.add_unresolved(localdata, self.recipecache)
+         bb.event.fire(bb.event.TreeDataPreparationCompleted(len(fulltargetlist)), self.data)
+@@ -1302,7 +1304,9 @@ class BBCooker:
+         # Invalidate task for target if force mode active
+         if self.configuration.force:
+             logger.verbose("Invalidate task %s, %s", task, fn)
+-            bb.parse.siggen.invalidate_task('do_%s' % task, self.recipecache, fn)
++            if not task.startswith("do_"):
++                task = "do_%s" % task
++            bb.parse.siggen.invalidate_task(task, self.recipecache, fn)
+ 
+         # Setup taskdata structure
+         taskdata = bb.taskdata.TaskData(self.configuration.abort)
+@@ -1312,7 +1316,9 @@ class BBCooker:
+         bb.event.fire(bb.event.BuildStarted(buildname, [item]), self.expanded_data)
+ 
+         # Execute the runqueue
+-        runlist = [[item, "do_%s" % task]]
++        if not task.startswith("do_"):
++            task = "do_%s" % task
++        runlist = [[item, task]]
+ 
+         rq = bb.runqueue.RunQueue(self, self.data, self.recipecache, taskdata, runlist)
+ 
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 0f99e5a..2b71eed 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -793,7 +793,9 @@ class RunQueueData:
+         if self.cooker.configuration.invalidate_stamp:
+             for (fn, target) in self.target_pairs:
+                 for st in self.cooker.configuration.invalidate_stamp.split(','):
+-                    invalidate_task(fn, "do_%s" % st, True)
++                    if not st.startswith("do_"):
++                        st = "do_%s" % st
++                    invalidate_task(fn, st, True)
+ 
+         # Iterate over the task list and call into the siggen code
+         dealtwith = set()
+diff --git a/bitbake/lib/bb/shell.py b/bitbake/lib/bb/shell.py
+index 1dd8d54..ffc87bb 100644
+--- a/bitbake/lib/bb/shell.py
++++ b/bitbake/lib/bb/shell.py
+@@ -167,7 +167,9 @@ class BitBakeShellCommands:
+                 if len(providers) == 0:
+                     raise Providers.NoProvider
+ 
+-                tasks.append([name, "do_%s" % cmd])
++                if not cmd.startswith("do_"):
++                    cmd = "do_%s" % cmd
++                tasks.append([name, cmd])
+ 
+             td.add_unresolved(localdata, cooker.status)
+ 
+-- 
+2.5.1
 
->=20
-> Currently, I'm not sure how the prserver managed to shut down cleanly. Th=
-ese
-> issues may explain some of the hangs people have reported.
->=20
-> This change:
->=20
-> * Ensures the connection acceptance thread monitors self.quit
-> * We wait for the thread to exit before exitting
-> * We sync the database when the thread exits
-> * We do what the comment mentions, timeout after 30s and sync the database
->   if needed. Previously, there was no timeout (the 0.5 applies to sockets,
->   not the Queue object)
->=20
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> (cherry picked from commit 0926492295d485813d8a4f6b77c7b152e4c5b4c4)
-> Signed-off-by: Saul Wold <sgw@linux.intel.com>
-> ---
->  lib/prserv/serv.py | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
->=20
-> diff --git a/lib/prserv/serv.py b/lib/prserv/serv.py
-> index 25eb46a..a7639c8 100644
-> --- a/lib/prserv/serv.py
-> +++ b/lib/prserv/serv.py
-> @@ -77,12 +77,15 @@ class PRServer(SimpleXMLRPCServer):
-> =20
->          """
->          iter_count =3D 1
-> -        # With 60 iterations between syncs and a 0.5 second timeout betw=
-een
-> -        # iterations, this will sync if dirty every ~30 seconds.
-> +        # 60 iterations between syncs or sync if dirty every ~30 seconds
->          iterations_between_sync =3D 60
-> =20
-> -        while True:
-> -            (request, client_address) =3D self.requestqueue.get()
-> +        while not self.quit:
-> +            try:
-> +                (request, client_address) =3D self.requestqueue.get(True=
-, 30)
-> +            except Queue.Empty:
-> +                self.table.sync_if_dirty()
-> +                continue
->              try:
->                  self.finish_request(request, client_address)
->                  self.shutdown_request(request)
-> @@ -93,6 +96,7 @@ class PRServer(SimpleXMLRPCServer):
->                  self.handle_error(request, client_address)
->                  self.shutdown_request(request)
->                  self.table.sync()
-> +            self.table.sync_if_dirty()
-> =20
->      def process_request(self, request, client_address):
->          self.requestqueue.put((request, client_address))
-> @@ -137,7 +141,7 @@ class PRServer(SimpleXMLRPCServer):
->          self.handlerthread.start()
->          while not self.quit:
->              self.handle_request()
-> -
-> +        self.handlerthread.join()
->          self.table.sync()
->          logger.info("PRServer: stopping...")
->          self.server_close()
-> --=20
-> 2.1.0
->=20
-> --=20
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
---=20
-Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
-
---sDKAb4OeUBrWWL6P
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEARECAAYFAlXnMYcACgkQN1Ujt2V2gBw4HgCdHVSc9g1GT8/jZDlv8PwMEME8
-RlcAn1FcQ+k6X8ZeslGeAzKHKiT/hjUJ
-=2rsY
------END PGP SIGNATURE-----
-
---sDKAb4OeUBrWWL6P--
