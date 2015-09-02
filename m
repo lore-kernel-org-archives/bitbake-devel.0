@@ -1,31 +1,21 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 48AE076B7C
+Return-Path: <elliot.smith@intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 7A56276FE2
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  1 Sep 2015 21:44:43 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t81LiZjV017352; Tue, 1 Sep 2015 22:44:35 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id yQUYOv8IoMmn; Tue,  1 Sep 2015 22:44:35 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t81LiMTd017345
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 1 Sep 2015 22:44:34 +0100
-Message-ID: <1441143862.24871.24.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alex Franco <alejandro.franco@linux.intel.com>
-Date: Tue, 01 Sep 2015 22:44:22 +0100
-In-Reply-To: <1441054569-1661-2-git-send-email-alejandro.franco@linux.intel.com>
-References: <1441054569-1661-1-git-send-email-alejandro.franco@linux.intel.com>
-	<1441054569-1661-2-git-send-email-alejandro.franco@linux.intel.com>
-X-Mailer: Evolution 3.12.11-0ubuntu3 
-Mime-Version: 1.0
-Cc: david.nystrom@enea.com, clarson@kergoth.com,
-	bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCHv3 1/1] Allow bitbake commands starting with do_
+	Wed,  2 Sep 2015 09:56:43 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 02 Sep 2015 02:56:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.17,452,1437462000"; d="scan'208";a="796558883"
+Received: from gionescx-mobl1.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
+	([10.252.26.81])
+	by fmsmga002.fm.intel.com with ESMTP; 02 Sep 2015 02:56:43 -0700
+From: Elliot Smith <elliot.smith@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  2 Sep 2015 10:56:15 +0100
+Message-Id: <1441187775-28018-1-git-send-email-elliot.smith@intel.com>
+X-Mailer: git-send-email 1.9.3
+Subject: [PATCH] toaster: improve explanation of checkout dir
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -38,49 +28,140 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 01 Sep 2015 21:44:50 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 02 Sep 2015 09:56:46 -0000
 
-On Mon, 2015-08-31 at 15:56 -0500, Alex Franco wrote:
-> The output of "bitbake, -c listtasks pkg" lists tasks with their real names
-> (starting with "do_"), but then "bitbake -c do_task" fails, as "do_" always
-> gets unconditionally prepended to task names. This patch handles this error
-> by always removing "do_" from the beginning of task names when the runqueue
-> is being constructed.
-> 
-> [YOCTO #7818]
-> 
-> Signed-off-by: Alex Franco <alejandro.franco@linux.intel.com>
-> ---
->  bitbake/lib/bb/runqueue.py | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
-> index 0f99e5a..7b25e31 100644
-> --- a/bitbake/lib/bb/runqueue.py
-> +++ b/bitbake/lib/bb/runqueue.py
-> @@ -634,6 +634,10 @@ class RunQueueData:
->  
->              fnid = taskData.build_targets[targetid][0]
->              fn = taskData.fn_index[fnid]
-> +
-> +            if target[1].startswith("do_"):
-> +                target[1] = target[1][3:]
-> +
->              self.target_pairs.append((fn, target[1]))
->  
->              if fnid in taskData.failed_fnids:
+From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-I tried this on the autobuilder and we saw cascades of failures, e.g:
+Improve the explanation we show to users during set up
+when asking them to set the layers checkout directory.
 
-https://autobuilder.yoctoproject.org/main/builders/build-appliance/builds/468/steps/BuildImages/logs/stdio 
+The patch also makes minor changes in text formatting to
+improve legibility.
 
-so clearly we need more thought on this. I prefer the .startswith over
-the regex as in general its much faster code than loading the re engine.
+[YOCTO #7740]
 
-Cheers,
+Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+---
+ .../management/commands/checksettings.py           | 32 +++++++++++-----------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-Richard
+diff --git a/bitbake/lib/toaster/bldcontrol/management/commands/checksettings.py b/bitbake/lib/toaster/bldcontrol/management/commands/checksettings.py
+index 83b4f28..3ccc7c6 100644
+--- a/bitbake/lib/toaster/bldcontrol/management/commands/checksettings.py
++++ b/bitbake/lib/toaster/bldcontrol/management/commands/checksettings.py
+@@ -69,8 +69,8 @@ class Command(NoArgsCommand):
+         # verify that we have a settings for downloading artifacts
+         while ToasterSetting.objects.filter(name="ARTIFACTS_STORAGE_DIR").count() == 0:
+             guessedpath = os.getcwd() + "/toaster_build_artifacts/"
+-            print("Toaster needs to know in which directory it can download build log files and other artifacts.\n Toaster suggests \"%s\"." % guessedpath)
+-            artifacts_storage_dir = raw_input(" Press Enter to select \"%s\" or type the full path to a different directory: " % guessedpath)
++            print("\nToaster needs to know in which directory it can download build log files and other artifacts.\nToaster suggests \"%s\"." % guessedpath)
++            artifacts_storage_dir = raw_input("Press Enter to select \"%s\" or type the full path to a different directory: " % guessedpath)
+             if len(artifacts_storage_dir) == 0:
+                 artifacts_storage_dir = guessedpath
+             if len(artifacts_storage_dir) > 0 and artifacts_storage_dir.startswith("/"):
+@@ -104,28 +104,28 @@ class Command(NoArgsCommand):
+             be.needs_import = False
+             def _verify_be():
+                 is_changed = False
+-                print("Verifying the Build Environment. If the local Build Environment is not properly configured, you will be asked to configure it.")
++                print("\nVerifying the build environment. If the local build environment is not properly configured, you will be asked to configure it.")
+ 
+                 def _update_sourcedir():
+                     suggesteddir = self._get_suggested_sourcedir(be)
+                     if len(suggesteddir) > 0:
+-                        be.sourcedir = raw_input("Toaster needs to know in which directory it should check out the layers that will be needed for your builds.\n Toaster suggests \"%s\". If you select this directory, a layer like \"meta-intel\" will end up in \"%s/meta-intel\".\n Press Enter to select \"%s\" or type the full path to a different directory (must be a parent of current checkout directory): " % (suggesteddir, suggesteddir, suggesteddir))
++                        be.sourcedir = raw_input("This is the directory Toaster uses to check out the source code of the layers you will build. Toaster will create new clones of the layers, so existing content in the chosen directory will not be changed.\nToaster suggests you use \"%s\" as your layers checkout directory. If you select this directory, a layer like \"meta-intel\" will end up in \"%s/meta-intel\".\nPress Enter to select \"%s\" or type the full path to a different directory. If you provide your own directory, it must be a parent of the cloned directory for the sources you are using to run Toaster: " % (suggesteddir, suggesteddir, suggesteddir))
+                     else:
+-                        be.sourcedir = raw_input("Toaster needs to know in which directory it should check out the layers that will be needed for your builds. Type the full path to the directory (for example: \"%s\": " % os.environ.get('HOME', '/tmp/'))
++                        be.sourcedir = raw_input("Toaster needs to know in which directory it should check out the source code of the layers you will build. The directory should be a parent of the cloned directory for the sources you are using to run Toaster. Toaster will create new clones of the layers, so existing content in the chosen directory will not be changed.\nType the full path to the directory (for example: \"%s\": " % os.environ.get('HOME', '/tmp/'))
+                     if len(be.sourcedir) == 0 and len(suggesteddir) > 0:
+                         be.sourcedir = suggesteddir
+                     return True
+ 
+                 if len(be.sourcedir) == 0:
+-                    print "\n -- Validation: The checkout directory must be set."
++                    print "\n -- Validation: The layers checkout directory must be set."
+                     is_changed = _update_sourcedir()
+ 
+                 if not be.sourcedir.startswith("/"):
+-                    print "\n -- Validation: The checkout directory must be set to an absolute path."
++                    print "\n -- Validation: The layers checkout directory must be set to an absolute path."
+                     is_changed = _update_sourcedir()
+ 
+                 if not be.sourcedir in DN(__file__):
+-                    print "\n -- Validation: The checkout directory must be a parent of the current checkout."
++                    print "\n -- Validation: The layers checkout directory must be a parent of the current checkout."
+                     is_changed = _update_sourcedir()
+ 
+                 if is_changed:
+@@ -136,9 +136,9 @@ class Command(NoArgsCommand):
+                 def _update_builddir():
+                     suggesteddir = self._get_suggested_builddir(be)
+                     if len(suggesteddir) > 0:
+-                        be.builddir = raw_input("Toaster needs to know where your build directory is located.\n The build directory is where all the artifacts created by your builds will be stored. Toaster suggests \"%s\".\n Press Enter to select \"%s\" or type the full path to a different directory: " % (suggesteddir, suggesteddir))
++                        be.builddir = raw_input("Toaster needs to know where your build directory is located.\nThe build directory is where all the artifacts created by your builds will be stored. Toaster suggests \"%s\".\nPress Enter to select \"%s\" or type the full path to a different directory: " % (suggesteddir, suggesteddir))
+                     else:
+-                        be.builddir = raw_input("Toaster needs to know where is your build directory.\n The build directory is where all the artifacts created by your builds will be stored. Type the full path to the directory (for example: \" %s/build\")" % os.environ.get('HOME','/tmp/'))
++                        be.builddir = raw_input("Toaster needs to know where is your build directory.\nThe build directory is where all the artifacts created by your builds will be stored. Type the full path to the directory (for example: \" %s/build\")" % os.environ.get('HOME','/tmp/'))
+                     if len(be.builddir) == 0 and len(suggesteddir) > 0:
+                         be.builddir = suggesteddir
+                     return True
+@@ -153,7 +153,7 @@ class Command(NoArgsCommand):
+ 
+ 
+                 if is_changed:
+-                    print "Build configuration saved"
++                    print "\nBuild configuration saved"
+                     be.save()
+                     return True
+ 
+@@ -180,19 +180,19 @@ class Command(NoArgsCommand):
+                                 config_files.append(candidatefilepath)
+ 
+                     if len(config_files) > 0:
+-                        print " Toaster will list now the configuration files that it found. Select the number to use the desired configuration file."
++                        print "Toaster will list now the configuration files that it found. Select the number to use the desired configuration file."
+                         for cf in config_files:
+                             print "  [%d] - %s" % (config_files.index(cf) + 1, cf)
+                         print "\n  [0] - Exit without importing any file"
+                         try:
+-                                i = raw_input("\n Enter your option: ")
++                                i = raw_input("\nEnter your option: ")
+                                 if len(i) and (int(i) - 1 >= 0 and int(i) - 1 < len(config_files)):
+-                                    print "Importing file: %s" % config_files[int(i)-1]
++                                    print "\nImporting file: %s" % config_files[int(i)-1]
+                                     from loadconf import Command as LoadConfigCommand
+ 
+                                     LoadConfigCommand()._import_layer_config(config_files[int(i)-1])
+                                     # we run lsupdates after config update
+-                                    print "Layer configuration imported. Updating information from the layer sources, please wait.\n You can re-update any time later by running bitbake/lib/toaster/manage.py lsupdates"
++                                    print "\nLayer configuration imported. Updating information from the layer sources, please wait.\nYou can re-update any time later by running bitbake/lib/toaster/manage.py lsupdates"
+                                     from django.core.management import call_command
+                                     call_command("lsupdates")
+ 
+@@ -202,7 +202,7 @@ class Command(NoArgsCommand):
+                             print "Failure while trying to import the toaster config file: %s" % e
+                             traceback.print_exc(e)
+                     else:
+-                        print "\n Toaster could not find a configuration file. You need to configure Toaster manually using the web interface, or create a configuration file and use\n  bitbake/lib/toaster/managepy.py loadconf [filename]\n command to load it. You can use https://wiki.yoctoproject.org/wiki/File:Toasterconf.json.txt.patch as a starting point."
++                        print "\nToaster could not find a configuration file. You need to configure Toaster manually using the web interface, or create a configuration file and use\n  bitbake/lib/toaster/managepy.py loadconf [filename]\n command to load it. You can use https://wiki.yoctoproject.org/wiki/File:Toasterconf.json.txt.patch as a starting point."
+ 
+ 
+ 
+-- 
+1.9.3
+
+---------------------------------------------------------------------
+Intel Corporation (UK) Limited
+Registered No. 1134945 (England)
+Registered Office: Pipers Way, Swindon SN3 1RJ
+VAT No: 860 2173 47
+
+This e-mail and any attachments may contain confidential material for
+the sole use of the intended recipient(s). Any review or distribution
+by others is strictly prohibited. If you are not the intended
+recipient, please contact the sender and delete all copies.
 
 
