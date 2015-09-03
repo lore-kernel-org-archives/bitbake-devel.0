@@ -1,22 +1,30 @@
-Return-Path: <alexander.kanavin@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 3750C77009
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id DE41577009
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  3 Sep 2015 15:35:39 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by orsmga102.jf.intel.com with ESMTP; 03 Sep 2015 08:35:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,462,1437462000"; d="scan'208";a="797541481"
-Received: from kanavin-desktop.fi.intel.com ([10.237.68.161])
-	by fmsmga002.fm.intel.com with ESMTP; 03 Sep 2015 08:35:34 -0700
-From: Alexander Kanavin <alexander.kanavin@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu,  3 Sep 2015 18:37:07 +0300
-Message-Id: <6cc60f518992d5c20164cde35a3862edebdab385.1441294533.git.alexander.kanavin@linux.intel.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <cover.1441294533.git.alexander.kanavin@linux.intel.com>
+	Thu,  3 Sep 2015 15:48:58 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t83FmsnL007059; Thu, 3 Sep 2015 16:48:54 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 3U_I3jusngJd; Thu,  3 Sep 2015 16:48:54 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t83FmgHG007040
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 3 Sep 2015 16:48:53 +0100
+Message-ID: <1441295322.24871.122.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Alexander Kanavin <alexander.kanavin@linux.intel.com>
+Date: Thu, 03 Sep 2015 16:48:42 +0100
+In-Reply-To: <6cc60f518992d5c20164cde35a3862edebdab385.1441294533.git.alexander.kanavin@linux.intel.com>
 References: <cover.1441294533.git.alexander.kanavin@linux.intel.com>
-Subject: [PATCH 1/1] wget.py: use BPN when parsing upstream directory paths
+	<6cc60f518992d5c20164cde35a3862edebdab385.1441294533.git.alexander.kanavin@linux.intel.com>
+X-Mailer: Evolution 3.12.11-0ubuntu3 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 1/1] wget.py: use BPN when parsing upstream directory paths
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,34 +37,21 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 03 Sep 2015 15:35:40 -0000
+X-List-Received-Date: Thu, 03 Sep 2015 15:49:00 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-PN in this context may contain bogus suffixes like -native etc.
+On Thu, 2015-09-03 at 18:37 +0300, Alexander Kanavin wrote:
+> PN in this context may contain bogus suffixes like -native etc.
 
-Signed-off-by: Alexander Kanavin <alexander.kanavin@linux.intel.com>
----
- bitbake/lib/bb/fetch2/wget.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This is not that simple sadly. Bitbake has no knowledge of BPN, not
+should it have really :/. This suggests we have a bit of an API
+problem...
 
-diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index bd2a897..d32f5d0 100644
---- a/bitbake/lib/bb/fetch2/wget.py
-+++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -521,11 +521,11 @@ class Wget(FetchMethod):
-             path = ud.path.split(package)[0]
- 
-             # search for version matches on folders inside the path, like:
--            # "5.7" in http://download.gnome.org/sources/${PN}/5.7/${PN}-${PV}.tar.gz
-+            # "5.7" in http://download.gnome.org/sources/${BPN}/5.7/${BPN}-${PV}.tar.gz
-             dirver_regex = re.compile("(?P<dirver>[^/]*(\d+\.)*\d+([-_]r\d+)*)/")
-             m = dirver_regex.search(path)
-             if m:
--                pn = d.getVar('PN', True)
-+                pn = d.getVar('BPN', True)
-                 dirver = m.group('dirver')
- 
-                 dirver_pn_regex = re.compile("%s\d?" % (re.escape(pn)))
--- 
-2.1.4
+At the very least we should fallback to PN here is BPN isn't set.
+
+Cheers,
+
+Richard
 
 
