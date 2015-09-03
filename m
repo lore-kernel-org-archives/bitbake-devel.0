@@ -1,35 +1,37 @@
 Return-Path: <avery.brian@gmail.com>
 Received: from mail-pa0-f49.google.com (mail-pa0-f49.google.com
 	[209.85.220.49])
-	by mail.openembedded.org (Postfix) with ESMTP id 9F60F7702D
+	by mail.openembedded.org (Postfix) with ESMTP id 20C2877040
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  3 Sep 2015 00:23:51 +0000 (UTC)
-Received: by pacfv12 with SMTP id fv12so27620264pac.2
+	Thu,  3 Sep 2015 00:24:22 +0000 (UTC)
+Received: by pacex6 with SMTP id ex6so22107632pac.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 02 Sep 2015 17:23:51 -0700 (PDT)
+	Wed, 02 Sep 2015 17:24:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id;
-	bh=LFgNhJpm8Pb/CtbMeftesiBJCoS5+FRB4xoN/27tttE=;
-	b=fdqLE0qv0vYRMc7pczZSs97wai9xTv14KDnggBpTYZZLleRwh99YqS/jyJWxDwTEEZ
-	DVmNIiQdlychSlawLUX6HcaabS5aTFTXk/XEwCs9roUgyouphwvMlkO5Oilp5pF3U1sA
-	0hLwpb168RAGftKyvx6O3hZXnZrxeweC0dQuZqLsD0kYW4qqoP4rJFdNwBROAwoV5b9O
-	R73gxmlo2Cwc1g64zJM+8w7Ti4klMfp/RocjMivPS+lrEyK6g/noe382iplrICZM3A0T
-	njvy6KgqjiOCrdRL1FH9eXOBuMjMjDIMOs/t5/trnsF/aiB3h3FcBtTdjwuMmPPzZl8J
-	XsrQ==
-X-Received: by 10.68.249.36 with SMTP id yr4mr61180387pbc.18.1441239831407;
-	Wed, 02 Sep 2015 17:23:51 -0700 (PDT)
+	h=from:to:cc:subject:date:message-id:in-reply-to:references;
+	bh=3032qbJRPUVI40cgfEtDt6qv0OEXezTFsuCu66G9F7U=;
+	b=tsdUwcfDdmH/HyGiDckcbDQl5AkshIe0iLDfgJwZMufJqdjVMdR24weS6WNpuo8ZVn
+	OYhy4ZSGiObT1Udx3rZuq1AA5WvejB/plHadVI943eBhJ6vvQMLnRs8AgvscwgEbs4gT
+	mmadh/DHbW9hAM6DZ4RpDG7oDGc/DNxginpaHOe2EFF4MgDq+fl9qegrL9HgAQnJ8O7R
+	RUuNm1O+bBsbTsOMTpgyeIVnW0DTk1++Wss4YRhRQN7Xm01/SZIRMEusHMEeLMJfmAbF
+	jbdRinIQJW9ZMnX7GvMyBoPp7NgOCMwcerFAPDvKl5S+LBRmQVjuYPa+Qsu1S8gT/nob
+	U31A==
+X-Received: by 10.66.145.195 with SMTP id sw3mr61724693pab.72.1441239862572;
+	Wed, 02 Sep 2015 17:24:22 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	x11sm23224941pas.46.2015.09.02.17.23.50
+	kw3sm22972308pbc.30.2015.09.02.17.24.21
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 02 Sep 2015 17:23:50 -0700 (PDT)
+	Wed, 02 Sep 2015 17:24:22 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  2 Sep 2015 17:24:38 -0700
-Message-Id: <cover.1441239229.git.avery.brian@gmail.com>
+Date: Wed,  2 Sep 2015 17:25:07 -0700
+Message-Id: <c474f47a4d9b69729936d70aa5d9b98c02e52da5.1441239229.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
-Subject: [PATCH 0/6] Fix handling of "default" project
+In-Reply-To: <cover.1441239229.git.avery.brian@gmail.com>
+References: <cover.1441239229.git.avery.brian@gmail.com>
+Subject: [PATCH 1/6] toaster: Make 0021 migration compatible with MySQL
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,44 +44,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 03 Sep 2015 00:23:53 -0000
+X-List-Received-Date: Thu, 03 Sep 2015 00:24:22 -0000
 
-This fixes how we handle the default project used to house command
-line builds. It originally started from a bug encountered when
-using MySQL for the db back-end, but fixing that revealed some
-other issues which needed to be resolved on top.
+From: Elliot Smith <elliot.smith@intel.com>
 
-[YOCTO#7932]
+Two issues prevent this migration from working correctly
+with a MySQL back-end:
 
+1. MySQL won't allow a default value to be set for an
+AutoField, which is what the migration tries to do
+for project_id ("ValueError: The database backend does not accept
+0 as a value for AutoField.")
 
-The following changes since commit 71b0568fa43285f0946fae93fb43cea5f3bbecec:
+2. When migrations are applied to a MySQL back-end, Django
+(via South) attempts a dry run of the migration first: it
+applies the forward migration then rolls it back. However, this
+migration raises an exception on roll back, which causes the
+whole series of migrations to fail.
 
-  rt-tests: drop unnecessary added-missing-dependencies.patch (2015-09-01 11:44:04 +0100)
+This commit fixes both issues.
 
-are available in the git repository at:
+[YOCTO #7932]
 
-  git://git.yoctoproject.org/poky-contrib bavery/submit/elliot/20150830_default_project_flag_v2
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/elliot/20150830_default_project_flag_v2
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+Signed-off-by: brian avery <avery.brian@gmail.com>
+---
+ ...hg_field_build_project__chg_field_project_bitbake_version__chg_.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Elliot Smith (6):
-  toaster: Make 0021 migration compatible with MySQL
-  toaster: Improve how default project is identified and fetched
-  toaster: Only redirect to projects page if user has added projects
-  toaster: Exclude default project unless it has builds
-  toaster: Fix test for projects page JSON
-  toaster: Add tests for pages which show the default project
-
- lib/bb/ui/buildinfohelper.py                       |   3 +-
- ...ect__chg_field_project_bitbake_version__chg_.py |   4 +-
- .../0025_auto__add_field_project_is_default.py     | 346 +++++++++++++++++++
- .../orm/migrations/0026_set_default_project.py     | 374 +++++++++++++++++++++
- lib/toaster/orm/models.py                          |  18 +-
- lib/toaster/toastergui/tests.py                    | 124 ++++++-
- lib/toaster/toastergui/views.py                    |  14 +-
- 7 files changed, 870 insertions(+), 13 deletions(-)
- create mode 100644 bitbake/lib/toaster/orm/migrations/0025_auto__add_field_project_is_default.py
- create mode 100644 bitbake/lib/toaster/orm/migrations/0026_set_default_project.py
-
+diff --git a/lib/toaster/orm/migrations/0021_auto__chg_field_build_project__chg_field_project_bitbake_version__chg_.py b/lib/toaster/orm/migrations/0021_auto__chg_field_build_project__chg_field_project_bitbake_version__chg_.py
+index 924a5c4..a62ddb7 100644
+--- a/lib/toaster/orm/migrations/0021_auto__chg_field_build_project__chg_field_project_bitbake_version__chg_.py
++++ b/lib/toaster/orm/migrations/0021_auto__chg_field_build_project__chg_field_project_bitbake_version__chg_.py
+@@ -7,10 +7,12 @@ from django.db import models
+ 
+ class Migration(SchemaMigration):
+ 
++    no_dry_run = True
++
+     def forwards(self, orm):
+ 
+         # Changing field 'Build.project'
+-        db.alter_column(u'orm_build', 'project_id', self.gf('django.db.models.fields.related.ForeignKey')(default=0, to=orm['orm.Project']))
++        db.alter_column(u'orm_build', 'project_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['orm.Project']))
+ 
+         # Changing field 'Project.bitbake_version'
+         db.alter_column(u'orm_project', 'bitbake_version_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['orm.BitbakeVersion'], null=True))
 -- 
 1.9.1
 
