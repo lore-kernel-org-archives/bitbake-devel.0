@@ -1,40 +1,29 @@
-Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f47.google.com (mail-pa0-f47.google.com
-	[209.85.220.47])
-	by mail.openembedded.org (Postfix) with ESMTP id B2D1477049
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id DAEC177002
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  3 Sep 2015 00:24:33 +0000 (UTC)
-Received: by pacwi10 with SMTP id wi10so27089231pac.3
+	Thu,  3 Sep 2015 14:20:17 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t83EKHUK031677 for <bitbake-devel@lists.openembedded.org>;
+	Thu, 3 Sep 2015 15:20:17 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 0mDEaskcqh4b for <bitbake-devel@lists.openembedded.org>;
+	Thu,  3 Sep 2015 15:20:17 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t83EK5O5031661
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 02 Sep 2015 17:24:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:in-reply-to:references;
-	bh=H8UvvRnQZkI7mVahV5cttHcMxuFBndoAwtwD9OhkJ20=;
-	b=PKAK5R9YRWaRgButPoM8NnQbZErA4tU1JSbQz1xwnx2AoyxmxmuKBIQX7LDxdopFwr
-	SYnHYbJ4xeN8MWffnq22l+EAwBMiHMS8qXclYf3RReZOpRgl1g50evQw7Sv+B8JZVF8S
-	rHcADJx+x0A+M87VJJ520ZNoOaQ8CWaTkz3roTVECnYP+M7lrxwJXzYwasnNqLLMSxWc
-	GCHUkohOWsr6QTNdM6bG2ABskNf+mITlDJAxa1Nidl7RoYCI8ebXGbAnHfsZKvs/GIw1
-	FUvmHQ2s/eXtw3/mQNzhMYGXXT0hyztGsDkVoHeRg+F8dprs3WUGRX3iEl61v+/4kgZW
-	zEOQ==
-X-Received: by 10.68.195.231 with SMTP id ih7mr62136193pbc.26.1441239873434;
-	Wed, 02 Sep 2015 17:24:33 -0700 (PDT)
-Received: from whisper.hsd1.or.comcast.net
-	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
-	by smtp.gmail.com with ESMTPSA id
-	kw3sm22972308pbc.30.2015.09.02.17.24.32
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 02 Sep 2015 17:24:32 -0700 (PDT)
-From: brian avery <avery.brian@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  2 Sep 2015 17:25:11 -0700
-Message-Id: <a226f99ceb186f8959db55e1f4bc916bc5a02235.1441239229.git.avery.brian@gmail.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <c474f47a4d9b69729936d70aa5d9b98c02e52da5.1441239229.git.avery.brian@gmail.com>
-References: <c474f47a4d9b69729936d70aa5d9b98c02e52da5.1441239229.git.avery.brian@gmail.com>
-In-Reply-To: <cover.1441239229.git.avery.brian@gmail.com>
-References: <cover.1441239229.git.avery.brian@gmail.com>
-Subject: [PATCH 5/6] toaster: Fix test for projects page JSON
+	Thu, 3 Sep 2015 15:20:16 +0100
+Message-ID: <1441290005.24871.116.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 03 Sep 2015 15:20:05 +0100
+X-Mailer: Evolution 3.12.11-0ubuntu3 
+Mime-Version: 1.0
+Subject: [PATCH] event/server: Add _uiready flag to handle missing error messages
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,52 +36,94 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 03 Sep 2015 00:24:36 -0000
+X-List-Received-Date: Thu, 03 Sep 2015 14:20:19 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Elliot Smith <elliot.smith@intel.com>
+If you start and suspend a bitbake execution so the bitbake lock is held,
+then try and run "bitbake -w '' X", you will see bitbake return an error exit
+code but print no message about what happened at all.
 
-The tests expect data to be returned in a particular format,
-which doesn't include is_default or the num_builds fields
-added to support default project improvements.
+The reason is that the -w option creates a "UI" which swallows the messages. The
+code which handles this exit failure mode thinks a UI has printed the messages
+and therefore doesn't do so.
 
-Add the extra fields so the tests pass again.
+This adds in an extra parameter to the UI registration code so that we
+can figure out whether its a primary UI or not and base decisions on whether
+to display information on that instead. This fixes the error shown above and
+some bizarre failures on the Yocto Project Autobuilder.
 
-[YOCTO #7932]
+[YOCTO #8239]
 
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-Signed-off-by: brian avery <avery.brian@gmail.com>
----
- lib/toaster/toastergui/tests.py | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-diff --git a/lib/toaster/toastergui/tests.py b/lib/toaster/toastergui/tests.py
-index 85e27fe..7acf4bc 100644
---- a/lib/toaster/toastergui/tests.py
-+++ b/lib/toaster/toastergui/tests.py
-@@ -40,6 +40,7 @@ class ViewTests(TestCase):
-                                          bitbake_version=bbv)
-         self.project = Project.objects.create_project(name=PROJECT_NAME,
-                                                       release=release)
-+
-         layersrc = LayerSource.objects.create(sourcetype=LayerSource.TYPE_IMPORTED)
-         self.priority = ReleaseLayerSourcePriority.objects.create(release=release,
-                                                                   layer_source=layersrc)
-@@ -86,10 +87,10 @@ class ViewTests(TestCase):
+diff --git a/bitbake/lib/bb/event.py b/bitbake/lib/bb/event.py
+index da20fbf..059229e 100644
+--- a/bitbake/lib/bb/event.py
++++ b/bitbake/lib/bb/event.py
+@@ -69,6 +69,7 @@ _ui_handler_seq = 0
+ _event_handler_map = {}
+ _catchall_handlers = {}
+ _eventfilter = None
++_uiready = False
  
-         self.assertEqual(sorted(data["rows"][0]),
-                          ['bitbake_version_id', 'created', 'id',
--                          'layersTypeAheadUrl', 'name', 'projectBuildsUrl',
--                          'projectPageUrl', 'recipesTypeAheadUrl',
--                          'release_id', 'short_description', 'updated',
--                          'user_id'])
-+                          'is_default', 'layersTypeAheadUrl', 'name',
-+                          'num_builds', 'projectBuildsUrl', 'projectPageUrl',
-+                          'recipesTypeAheadUrl', 'release_id',
-+                          'short_description', 'updated', 'user_id'])
+ def execute_handler(name, handler, event, d):
+     event.data = d
+@@ -113,7 +117,7 @@ def print_ui_queue():
+     """If we're exiting before a UI has been spawned, display any queued
+     LogRecords to the console."""
+     logger = logging.getLogger("BitBake")
+-    if not _ui_handlers:
++    if not _uiready:
+         from bb.msg import BBLogFormatter
+         console = logging.StreamHandler(sys.stdout)
+         console.setFormatter(BBLogFormatter("%(levelname)s: %(message)s"))
+@@ -135,7 +139,7 @@ def print_ui_queue():
+                 logger.handle(event)
  
-     def test_typeaheads(self):
-         """Test typeahead ReST API"""
--- 
-1.9.1
+ def fire_ui_handlers(event, d):
+-    if not _ui_handlers:
++    if not _uiready:
+         # No UI handlers registered yet, queue up the messages
+         ui_queue.append(event)
+         return
+@@ -219,7 +223,9 @@ def set_eventfilter(func):
+     global _eventfilter
+     _eventfilter = func
+ 
+-def register_UIHhandler(handler):
++def register_UIHhandler(handler, mainui=False):
++    if mainui:
++        _uiready = True
+     bb.event._ui_handler_seq = bb.event._ui_handler_seq + 1
+     _ui_handlers[_ui_handler_seq] = handler
+     level, debug_domains = bb.msg.constructLogOptions()
+diff --git a/bitbake/lib/bb/server/process.py b/bitbake/lib/bb/server/process.py
+index 3198635..f022b86 100644
+--- a/bitbake/lib/bb/server/process.py
++++ b/bitbake/lib/bb/server/process.py
+@@ -97,7 +97,7 @@ class ProcessServer(Process, BaseImplServer):
+     def run(self):
+         for event in bb.event.ui_queue:
+             self.event_queue.put(event)
+-        self.event_handle.value = bb.event.register_UIHhandler(self)
++        self.event_handle.value = bb.event.register_UIHhandler(self, True)
+ 
+         bb.cooker.server_main(self.cooker, self.main)
+ 
+diff --git a/bitbake/lib/bb/server/xmlrpc.py b/bitbake/lib/bb/server/xmlrpc.py
+index f1a2067..b7647c1 100644
+--- a/bitbake/lib/bb/server/xmlrpc.py
++++ b/bitbake/lib/bb/server/xmlrpc.py
+@@ -99,7 +99,7 @@ class BitBakeServerCommands():
+         if (self.cooker.state in [bb.cooker.state.parsing, bb.cooker.state.running]):
+             return None
+ 
+-        self.event_handle = bb.event.register_UIHhandler(s)
++        self.event_handle = bb.event.register_UIHhandler(s, True)
+         return self.event_handle
+ 
+     def unregisterEventHandler(self, handlerNum):
+
 
 
