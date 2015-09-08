@@ -1,23 +1,25 @@
 Return-Path: <elliot.smith@intel.com>
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 4E86E65C8A
+	by mail.openembedded.org (Postfix) with ESMTP id CA5A0767FB
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  8 Sep 2015 09:47:48 +0000 (UTC)
+	Tue,  8 Sep 2015 09:47:50 +0000 (UTC)
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 08 Sep 2015 02:47:48 -0700
+	by orsmga101.jf.intel.com with ESMTP; 08 Sep 2015 02:47:49 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,489,1437462000"; d="scan'208";a="799926046"
+X-IronPort-AV: E=Sophos;i="5.17,489,1437462000"; d="scan'208";a="799926057"
 Received: from almacarr-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.11.248])
-	by orsmga002.jf.intel.com with ESMTP; 08 Sep 2015 02:47:46 -0700
+	by orsmga002.jf.intel.com with ESMTP; 08 Sep 2015 02:47:47 -0700
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  8 Sep 2015 10:47:42 +0100
-Message-Id: <ece096baee34616e3ae887e729a97c487fcc5613.1441705360.git.elliot.smith@intel.com>
+Date: Tue,  8 Sep 2015 10:47:43 +0100
+Message-Id: <137c423052931faa0496b1b1ef39315d296ffe50.1441705360.git.elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
+In-Reply-To: <ece096baee34616e3ae887e729a97c487fcc5613.1441705360.git.elliot.smith@intel.com>
+References: <ece096baee34616e3ae887e729a97c487fcc5613.1441705360.git.elliot.smith@intel.com>
 In-Reply-To: <cover.1441705360.git.elliot.smith@intel.com>
 References: <cover.1441705360.git.elliot.smith@intel.com>
-Subject: [PATCH 1/3] toaster: remove unnecessary white space
+Subject: [PATCH 2/3] toaster: fix project names in latest builds
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,29 +36,37 @@ X-List-Received-Date: Tue, 08 Sep 2015 09:47:51 -0000
 
 From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-There was too much white space above the first
-heading in the all builds page. This patch removes
-the class that was adding the extra space.
+Make sure that the project name we show for each build
+in the latest builds section of the all builds page:
+
+* Has the same styles as the build, depending on the
+build status (in progress, failed or success)
+
+* Links to the project page
 
 Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- lib/toaster/toastergui/templates/mrb_section.html | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/toaster/toastergui/templates/mrb_section.html | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/lib/toaster/toastergui/templates/mrb_section.html b/lib/toaster/toastergui/templates/mrb_section.html
-index d37b694..903635d 100644
+index 903635d..57a6f9b 100644
 --- a/lib/toaster/toastergui/templates/mrb_section.html
 +++ b/lib/toaster/toastergui/templates/mrb_section.html
-@@ -5,7 +5,7 @@
+@@ -13,7 +13,11 @@
+   <div id="latest-builds">
+   {% for build in mru %}
+     <div class="alert {%if build.outcome == build.SUCCEEDED%}alert-success{%elif build.outcome == build.FAILED%}alert-error{%else%}alert-info{%endif%} project-name ">
+-       <span class="label {%if build.outcome == build.SUCCEEDED%}label-success{%elif build.outcome == build.FAILED%}label-danger{%else%}label-info{%endif%}"> {{build.project.name}} </span>
++       <span class="label {%if build.outcome == build.SUCCEEDED%}label-success{%elif build.outcome == build.FAILED%}label-important{%else%}label-info{%endif%}">
++         <a href={% url 'project' build.project.pk %}>
++           {{build.project.name}}
++         </a>
++       </span>
  
- {%if mru.count > 0%}
- 
--  <div class="page-header top-air">
-+  <div class="page-header">
-       <h1>
-           Latest builds
-        </h1>
+         <div class="row-fluid">
+             <div class="span3 lead">
 -- 
 1.9.3
 
