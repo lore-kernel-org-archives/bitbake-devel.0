@@ -1,36 +1,28 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-ig0-f176.google.com (mail-ig0-f176.google.com
-	[209.85.213.176])
-	by mail.openembedded.org (Postfix) with ESMTP id 4042F60017
+Return-Path: <s.christ@phytec.de>
+X-Greylist: delayed 361 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 08 Sep 2015 08:10:53 UTC
+Received: from root.phytec.de (mail.x-arc.de [217.6.246.34])
+	by mail.openembedded.org (Postfix) with ESMTP id E7CA774197
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  7 Sep 2015 20:17:44 +0000 (UTC)
-Received: by igbkq10 with SMTP id kq10so59390402igb.0
+	Tue,  8 Sep 2015 08:10:53 +0000 (UTC)
+Received: from idefix.phytec.de (idefix.phytec.de [172.16.0.10])
+	by root.phytec.de (Postfix) with ESMTP id D043EA0023D
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 07 Sep 2015 13:17:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=3Ye4OeWiXX/Bg2NGE3ohiG3DbI0NXz4fuqZ4Hf6Gb5c=;
-	b=m32KbJsYb3bPS26O59j05lY3o8FBLXb8N+JO9s3RHqye9qHZR8Ulx2sGB8+R2D5r/B
-	roYU+2xv0iiKtwmTBC9REyhTpuOZjykE3cGqTmcgUzh/M7LGVVXhczKac3o1H8ecahLg
-	apsz3t3aYh9q/+0O0Ni2mUuEMj6K7puSBigKuKgOcf5xa103HN5klo6BQA+DFL+9mgxa
-	3D+tTOTGSFSteF5AvSoJJkEiOoaoEPkpt1rJ5p8sEOoeE7ZShek7OqkPKp1PpQpzIqgo
-	2Co7tY5imaugyQKtYbbmQm2CEIofD3JmKwDAbCRsBrYo0gW3D/17fYc3Qn1uypAzdu7C
-	2O6A==
-X-Received: by 10.50.43.170 with SMTP id x10mr31885868igl.68.1441657064956;
-	Mon, 07 Sep 2015 13:17:44 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.79.100.71 with HTTP; Mon, 7 Sep 2015 13:17:25 -0700 (PDT)
-In-Reply-To: <1441641334.24871.255.camel@linuxfoundation.org>
-References: <1441641334.24871.255.camel@linuxfoundation.org>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Mon, 7 Sep 2015 13:17:25 -0700
-X-Google-Sender-Auth: uVO4pYQVP2my-dVOEEdGXl5X4us
-Message-ID: <CABcZANnE0SCyeRFfGHHQ-SmGJC+-UX0NmnRD2gEzkYXWSJZXfw@mail.gmail.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] server/process: Handle SIGTERM more gracefully
+	Tue,  8 Sep 2015 10:04:53 +0200 (CEST)
+Received: from augenblix.phytec.de ([172.16.0.56])
+	by idefix.phytec.de (IBM Domino Release 9.0.1FP2 HF590)
+	with ESMTP id 2015090810045257-2964 ; Tue, 8 Sep 2015 10:04:52 +0200 
+From: Stefan Christ <s.christ@phytec.de>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 8 Sep 2015 10:04:38 +0200
+Message-Id: <1441699478-30724-1-git-send-email-s.christ@phytec.de>
+X-Mailer: git-send-email 1.9.1
+X-MIMETrack: Itemize by SMTP Server on Idefix/Phytec(Release 9.0.1FP2
+	HF590|December 11, 2014) at 08.09.2015 10:04:52,
+	Serialize by Router on Idefix/Phytec(Release 9.0.1FP2 HF590|December 11,
+	2014) at 08.09.2015 10:04:52,
+	Serialize complete at 08.09.2015 10:04:52
+Subject: [PATCH] bitbake: cooker: sort file pn-buildlist
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,106 +35,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 07 Sep 2015 20:17:45 -0000
-Content-Type: multipart/alternative; boundary=089e01176cad3eadea051f2df1e8
+X-List-Received-Date: Tue, 08 Sep 2015 08:10:55 -0000
 
---089e01176cad3eadea051f2df1e8
-Content-Type: text/plain; charset=UTF-8
+The list of recipe names in the file pn-buildlist should be
+sorted/deterministic. This makes it easier to compare multiple files,
+e.g. with vimdiff.
 
-On Mon, Sep 7, 2015 at 8:55 AM, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+Signed-off-by: Stefan Christ <s.christ@phytec.de>
+---
+ lib/bb/cooker.py | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-> Currently if you send a SIGTERM to the bitbake UI process, the system
-> basically
-> hangs if tasks are executing. This is because the server process doesn't
-> actually try any kind of shutdown before exiting.
->
-> This patch trys executing a stateForceShutdown command first, which is
-> enough to stop any active tasks before the system exits.
->
-> I also noticed that terminate can execute multiple times, once at SIGTERM
-> from the handler and once from the real exit. Double execution leads to
-> stack traces and potential hangs (writes to dead pipes), so ensure
-> the code only can run once.
->
-> With these fixes, bitbake much more correctly deals with SIGTERM to the
-> UI process.
->
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
->
-
-Just as an FYI for consideration in the longer term, you can raise an
-exception from a signal handler, to handle sigterm the same way as sigint
-for consistency. Ex.:
-
-https://github.com/kergoth/oe-test-scripts/blob/master/bb_test.py#L12-L17 +
-https://github.com/kergoth/oe-test-scripts/blob/master/bb_test.py#L171-L180
-
-Which reminds me, we don't exit with the correct exit code for
-sigint/sigterm, so the calling shell doesn't know the cause of the exit.
-See also http://www.cons.org/cracauer/sigint.html -- fantastic article
-there, highly recommended.
-
-https://docs.python.org/3/library/signal.html#example has an example of
-raising an exception from another signal handler, so it seems to be kosher.
+diff --git a/lib/bb/cooker.py b/lib/bb/cooker.py
+index a0d7d59..b2fc1ed 100644
+--- a/lib/bb/cooker.py
++++ b/lib/bb/cooker.py
+@@ -869,16 +869,17 @@ class BBCooker:
+         depgraph = self.generateTaskDepTreeData(pkgs_to_build, task)
+ 
+         # Prints a flattened form of package-depends below where subpackages of a package are merged into the main pn
++        with open('pn-buildlist', 'w') as buildlist_file:
++            for pn in sorted(depgraph["pn"]):  # be deterministic
++                buildlist_file.write(pn + "\n")
++        logger.info("PN build list saved to 'pn-buildlist'")
++
+         depends_file = file('pn-depends.dot', 'w' )
+-        buildlist_file = file('pn-buildlist', 'w' )
+         print("digraph depends {", file=depends_file)
+         for pn in depgraph["pn"]:
+             fn = depgraph["pn"][pn]["filename"]
+             version = depgraph["pn"][pn]["version"]
+             print('"%s" [label="%s %s\\n%s"]' % (pn, pn, version, fn), file=depends_file)
+-            print("%s" % pn, file=buildlist_file)
+-        buildlist_file.close()
+-        logger.info("PN build list saved to 'pn-buildlist'")
+         for pn in depgraph["depends"]:
+             for depend in depgraph["depends"][pn]:
+                 print('"%s" -> "%s"' % (pn, depend), file=depends_file)
 -- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+1.9.1
 
---089e01176cad3eadea051f2df1e8
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On M=
-on, Sep 7, 2015 at 8:55 AM, Richard Purdie <span dir=3D"ltr">&lt;<a href=3D=
-"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.purdi=
-e@linuxfoundation.org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_q=
-uote" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-left-c=
-olor:rgb(204,204,204);border-left-style:solid;padding-left:1ex"><div id=3D"=
-:10q" class=3D"" style=3D"overflow:hidden">Currently if you send a SIGTERM =
-to the <span class=3D"">bitbake</span> UI process, the system basically<br>
-hangs if tasks are executing. This is because the server process doesn&#39;=
-t<br>
-actually try any kind of shutdown before exiting.<br>
-<br>
-This patch trys executing a stateForceShutdown command first, which is<br>
-enough to stop any active tasks before the system exits.<br>
-<br>
-I also noticed that terminate can execute multiple times, once at SIGTERM<b=
-r>
-from the handler and once from the real exit. Double execution leads to<br>
-stack traces and potential hangs (writes to dead pipes), so ensure<br>
-the code only can run once.<br>
-<br>
-With these fixes, <span class=3D"">bitbake</span> much more correctly deals=
- with SIGTERM to the<br>
-UI process.<br>
-<br>
-Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
-ndation.org">richard.purdie@linuxfoundation.org</a>&gt;</div></blockquote><=
-/div><br>Just as an FYI for consideration in the longer term, you can raise=
- an exception from a signal handler, to handle sigterm the same way as sigi=
-nt for consistency. Ex.:</div><div class=3D"gmail_extra"><br></div><div cla=
-ss=3D"gmail_extra"><a href=3D"https://github.com/kergoth/oe-test-scripts/bl=
-ob/master/bb_test.py#L12-L17">https://github.com/kergoth/oe-test-scripts/bl=
-ob/master/bb_test.py#L12-L17</a> +=C2=A0<a href=3D"https://github.com/kergo=
-th/oe-test-scripts/blob/master/bb_test.py#L171-L180">https://github.com/ker=
-goth/oe-test-scripts/blob/master/bb_test.py#L171-L180</a></div><div class=
-=3D"gmail_extra"><br></div><div class=3D"gmail_extra">Which reminds me, we =
-don&#39;t exit with the correct exit code for sigint/sigterm, so the callin=
-g shell doesn&#39;t know the cause of the exit. See also=C2=A0<a href=3D"ht=
-tp://www.cons.org/cracauer/sigint.html">http://www.cons.org/cracauer/sigint=
-.html</a> -- fantastic article there, highly recommended.</div><div class=
-=3D"gmail_extra"><br></div><div class=3D"gmail_extra"><a href=3D"https://do=
-cs.python.org/3/library/signal.html#example">https://docs.python.org/3/libr=
-ary/signal.html#example</a> has an example of raising an exception from ano=
-ther signal handler, so it seems to be kosher.<br></div><div class=3D"gmail=
-_extra">-- <br><div class=3D"gmail_signature">Christopher Larson<br>clarson=
- at kergoth dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Maint=
-ainer - Tslib<br>Senior Software Engineer, Mentor Graphics</div>
-</div></div>
-
---089e01176cad3eadea051f2df1e8--
