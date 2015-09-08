@@ -1,25 +1,25 @@
 Return-Path: <elliot.smith@intel.com>
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 52C4E7422C
+	by mail.openembedded.org (Postfix) with ESMTP id 7026276E7C
 	for <bitbake-devel@lists.openembedded.org>;
 	Tue,  8 Sep 2015 09:40:26 +0000 (UTC)
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
 	by fmsmga101.fm.intel.com with ESMTP; 08 Sep 2015 02:40:26 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,489,1437462000"; d="scan'208";a="557427798"
+X-IronPort-AV: E=Sophos;i="5.17,489,1437462000"; d="scan'208";a="557427811"
 Received: from almacarr-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.11.248])
-	by FMSMGA003.fm.intel.com with ESMTP; 08 Sep 2015 02:40:23 -0700
+	by FMSMGA003.fm.intel.com with ESMTP; 08 Sep 2015 02:40:25 -0700
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  8 Sep 2015 10:40:19 +0100
-Message-Id: <bd677b2f71699bb5e1acc43a904e805fc64bc877.1441705002.git.elliot.smith@intel.com>
+Date: Tue,  8 Sep 2015 10:40:20 +0100
+Message-Id: <b6b55c4ec22e12553e70a39339fdae0cdfc4757f.1441705002.git.elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
 In-Reply-To: <f5290147ed6e226f39004b18c867e1ed2042c354.1441705002.git.elliot.smith@intel.com>
 References: <f5290147ed6e226f39004b18c867e1ed2042c354.1441705002.git.elliot.smith@intel.com>
 In-Reply-To: <cover.1441705002.git.elliot.smith@intel.com>
 References: <cover.1441705002.git.elliot.smith@intel.com>
-Subject: [PATCH 2/3] toaster: fix project names in latest builds
+Subject: [PATCH 3/3] toaster: replace ETA with % of tasks done
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,36 +36,29 @@ X-List-Received-Date: Tue, 08 Sep 2015 09:40:26 -0000
 
 From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-Make sure that the project name we show for each build
-in the latest builds section of the all builds page:
-
-* Has the same styles as the build, depending on the
-build status (in progress, failed or success)
-
-* Links to the project page
+The ETA we show for builds in progress is woefully
+inaccurate. In the 1.8 release we replaced it with
+the % of tasks completed. Somehow, we regressed to
+the ETA, so bringing the task % back.
 
 Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
 ---
- lib/toaster/toastergui/templates/mrb_section.html | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ lib/toaster/toastergui/templates/mrb_section.html | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/toaster/toastergui/templates/mrb_section.html b/lib/toaster/toastergui/templates/mrb_section.html
-index 903635d..57a6f9b 100644
+index 57a6f9b..396fb8e 100644
 --- a/lib/toaster/toastergui/templates/mrb_section.html
 +++ b/lib/toaster/toastergui/templates/mrb_section.html
-@@ -13,7 +13,11 @@
-   <div id="latest-builds">
-   {% for build in mru %}
-     <div class="alert {%if build.outcome == build.SUCCEEDED%}alert-success{%elif build.outcome == build.FAILED%}alert-error{%else%}alert-info{%endif%} project-name ">
--       <span class="label {%if build.outcome == build.SUCCEEDED%}label-success{%elif build.outcome == build.FAILED%}label-danger{%else%}label-info{%endif%}"> {{build.project.name}} </span>
-+       <span class="label {%if build.outcome == build.SUCCEEDED%}label-success{%elif build.outcome == build.FAILED%}label-important{%else%}label-info{%endif%}">
-+         <a href={% url 'project' build.project.pk %}>
-+           {{build.project.name}}
-+         </a>
-+       </span>
- 
-         <div class="row-fluid">
-             <div class="span3 lead">
+@@ -84,7 +84,7 @@
+                     <div style="width: {{build.completeper}}%;" class="bar"></div>
+                 </div>
+             </div>
+-            <div class="lead pull-right">ETA: in {{build.eta|naturaltime}}</div>
++            <div class="lead pull-right">{{build.completeper}}% of tasks complete</div>
+     {%endif%}
+         </div>
+     </div>
 -- 
 1.9.3
 
