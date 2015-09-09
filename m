@@ -1,34 +1,29 @@
-Return-Path: <avery.brian@gmail.com>
-Received: from mail-ig0-f174.google.com (mail-ig0-f174.google.com
-	[209.85.213.174])
-	by mail.openembedded.org (Postfix) with ESMTP id 07D6073D27
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id BB85373243
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  9 Sep 2015 02:39:40 +0000 (UTC)
-Received: by igcrk20 with SMTP id rk20so89878289igc.1
+	Wed,  9 Sep 2015 21:44:51 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t89Lipu2011925 for <bitbake-devel@lists.openembedded.org>;
+	Wed, 9 Sep 2015 22:44:51 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id e7zUoeme8zLt for <bitbake-devel@lists.openembedded.org>;
+	Wed,  9 Sep 2015 22:44:51 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t89LibMS011908
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 08 Sep 2015 19:39:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:cc:content-type;
-	bh=guX6U9hOy4AXuwXzUmZrtsvIRN67CvY8OIDWpQvCcWs=;
-	b=zpBoDyBcJuJZ3PvFbXKCKTo5gUmxU5rmtOPtJlCUvyWpIWpQt8NZhLgy5fRUGDcKDV
-	IR5i40gb8f53gbOtCCLERT2z28f7yg/GWIBTg/ohz3N5pF6q1oUKWyH5KvNEVb4+4Y5z
-	5b6kOMrdVB4Paw6ZQ48SycUnn21IfgoxhALbv/IG1YgGcVi2sGtGluqqcTFu5QgG8Brc
-	xJLmUYPd+/O9GJRIC7n6+vyPB3JxmOeZr+OdUfZxRkYjKjfo55Nr5sOVWmD8ZKd2OSZU
-	XP5Hd/YLmRLrOyr44PN/Ix7GjzFCaeKE5SCh2oN80GXBIqfUeXDlpUfdLmzKR+GTYF9s
-	XATw==
-MIME-Version: 1.0
-X-Received: by 10.50.30.65 with SMTP id q1mr46548777igh.28.1441766380486; Tue,
-	08 Sep 2015 19:39:40 -0700 (PDT)
-Received: by 10.64.55.39 with HTTP; Tue, 8 Sep 2015 19:39:40 -0700 (PDT)
-In-Reply-To: <ca14f0260d3fbf82b35c631d2e6da52fc62d3397.1441766166.git.avery.brian@gmail.com>
-References: <cover.1441766166.git.avery.brian@gmail.com>
-	<ca14f0260d3fbf82b35c631d2e6da52fc62d3397.1441766166.git.avery.brian@gmail.com>
-Date: Tue, 8 Sep 2015 19:39:40 -0700
-Message-ID: <CAKV_0ei7LpmKXxPm-aqLwfPWmY78HT1Y3myu4B_+bYZ6Z6VvCQ@mail.gmail.com>
-From: Brian Avery <avery.brian@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/1] toaster: increase waiting time
+	Wed, 9 Sep 2015 22:44:48 +0100
+Message-ID: <1441835077.24871.313.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Wed, 09 Sep 2015 22:44:37 +0100
+X-Mailer: Evolution 3.12.11-0ubuntu3 
+Mime-Version: 1.0
+Subject: [PATCH] bitbake-worker: Ensure pipe closure doesn't crash before killpg()
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,49 +36,33 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 09 Sep 2015 02:39:41 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Wed, 09 Sep 2015 21:44:54 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-submitted upstream.
--b
+If the pipe is closed, we want to ensure that we kill any child processes
+by triggering the sigterm handler before we exit. This code does that,
+hopefully avoiding the remaining process left behind issues on the autobuilder.
 
-On Tue, Sep 8, 2015 at 7:39 PM, brian avery <avery.brian@gmail.com> wrote:
-> From: Ed Bartosh <ed.bartosh@linux.intel.com>
->
-> Increased waiting time for toasterUI from 10 to 25 seconds. Bitbake
-> takes longer time to start, so toaster should wait longer.
->
-> [YOCTO #8240]
->
-> Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
-> Signed-off-by: brian avery <avery.brian@gmail.com>
-> ---
->  lib/toaster/bldcontrol/localhostbecontroller.py | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
-> index 231a7d3..a9909b8 100644
-> --- a/lib/toaster/bldcontrol/localhostbecontroller.py
-> +++ b/lib/toaster/bldcontrol/localhostbecontroller.py
-> @@ -140,7 +140,7 @@ class LocalhostBEController(BuildEnvironmentController):
->
->          retries = 0
->          started = False
-> -        while not started and retries < 10:
-> +        while not started and retries < 50:
->              started = _toaster_ui_started(toaster_ui_log_filepath, toaster_ui_log_filelength)
->              import time
->              logger.debug("localhostbecontroller: Waiting bitbake server to start")
-> @@ -150,7 +150,7 @@ class LocalhostBEController(BuildEnvironmentController):
->          if not started:
->              toaster_ui_log = open(os.path.join(self.be.builddir, "toaster_ui.log"), "r").read()
->              toaster_server_log = open(os.path.join(self.be.builddir, "toaster_server.log"), "r").read()
-> -            raise BuildSetupException("localhostbecontroller: Bitbake server did not start in 5 seconds, aborting (Error: '%s' '%s')" % (toaster_ui_log, toaster_server_log))
-> +            raise BuildSetupException("localhostbecontroller: Bitbake server did not start in 25 seconds, aborting (Error: '%s' '%s')" % (toaster_ui_log, toaster_server_log))
->
->          logger.debug("localhostbecontroller: Started bitbake server")
->
-> --
-> 1.9.1
->
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
+index 0551d02..9a6b467 100755
+--- a/bitbake/bin/bitbake-worker
++++ b/bitbake/bin/bitbake-worker
+@@ -87,7 +87,11 @@ def worker_child_fire(event, d):
+     global worker_pipe
+ 
+     data = "<event>" + pickle.dumps(event) + "</event>"
+-    worker_pipe.write(data)
++    try:
++        worker_pipe.write(data)
++    except IOError:
++        sigterm_handler(None, None)
++        raise
+ 
+ bb.event.worker_fire = worker_fire
+ 
+
+
 
