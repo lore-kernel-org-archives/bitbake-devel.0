@@ -1,33 +1,24 @@
-Return-Path: <avery.brian@gmail.com>
-Received: from mail-ig0-f177.google.com (mail-ig0-f177.google.com
-	[209.85.213.177])
-	by mail.openembedded.org (Postfix) with ESMTP id 8AE1F60053
+Return-Path: <mark.hatle@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 6BC3673232
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Sep 2015 17:05:02 +0000 (UTC)
-Received: by igcpb10 with SMTP id pb10so25131006igc.1
+	Thu, 10 Sep 2015 22:02:11 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id t8AM2B7T016964
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Sep 2015 10:05:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:cc:content-type;
-	bh=CRTo/Z8P/XZ+IzlVnA8t+XOynCRqUqMitC1rM0dTWQQ=;
-	b=K8XeabXJ/w6ARw4o05ikvhCPplVBHPTikmkaqcBRvwt0ZnmUm5Ysz/gvXvMMh4gFZb
-	Dp0kDmWTTC9IzS+fRhtWCnvEZy7TY3OHZ+0fMGJSkJ0OQqOyn1f0/oWe940kb/HwSD8i
-	M5yGIXg3jg9G3qvWgFrmqFbIrkkhj6UQiOUIaGVKmCKu4iABfvqbeTm4oIxus4c0H+LJ
-	YFRlfvqWAgOlEwZwnBmLgvp38nkGQhVOqPLQPxjJ3nvwOx29nShTIBG9lBms0y0D7UdS
-	27dmTFXdBflvqDNACAmB01+oaI6kr5MKIOhDYxVXxUT9gW++b8qzegWBaf8zkrRezQLS
-	htAw==
+	Thu, 10 Sep 2015 15:02:11 -0700 (PDT)
+Received: from msp-dhcp23.wrs.com (172.25.34.23) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.40) with Microsoft SMTP Server id 14.3.235.1;
+	Thu, 10 Sep 2015 15:02:11 -0700
+From: Mark Hatle <mark.hatle@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Thu, 10 Sep 2015 17:02:10 -0500
+Message-ID: <1441922530-133753-1-git-send-email-mark.hatle@windriver.com>
+X-Mailer: git-send-email 1.9.3
 MIME-Version: 1.0
-X-Received: by 10.50.27.102 with SMTP id s6mr7984487igg.23.1441904702973; Thu,
-	10 Sep 2015 10:05:02 -0700 (PDT)
-Received: by 10.64.55.39 with HTTP; Thu, 10 Sep 2015 10:05:02 -0700 (PDT)
-In-Reply-To: <cover.1441904599.git.avery.brian@gmail.com>
-References: <cover.1441904599.git.avery.brian@gmail.com>
-Date: Thu, 10 Sep 2015 10:05:02 -0700
-Message-ID: <CAKV_0eiR791w4ZVC4hG1p14X5WmiaoRZuRjSFU+NCtu+den3jg@mail.gmail.com>
-From: Brian Avery <avery.brian@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 0/5] Hide irrelevant builds
+Subject: [PATCH] fetch2/__init__.py: uri_replace regex handling
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,42 +31,62 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 10 Sep 2015 17:05:05 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Thu, 10 Sep 2015 22:02:14 -0000
+Content-Type: text/plain
 
-submitted upstream.
--b
+We should only substitute one time.  If we do it without a max count, we can
+end up matching over and over.
 
-On Thu, Sep 10, 2015 at 10:05 AM, brian avery <avery.brian@gmail.com> wrote:
-> This patch fixes the project builds view so it doesn't show
-> "in progress" builds or builds for other projects.
->
-> The following changes since commit db92bc23880794be77373b0f2d8c26279dcecb84:
->
->   bitbake: toaster: replace ETA with % of tasks done (2015-09-08 23:54:15 +0100)
->
-> are available in the git repository at:
->
->   git://git.yoctoproject.org/poky-contrib bavery/submit/elliot/20150902_hide_irrelevant_builds_v2
->   http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/elliot/20150902_hide_irrelevant_builds_v2
->
-> Alexandru DAMIAN (1):
->   toaster: hide irrelevant builds in the project builds view
->
-> Elliot Smith (4):
->   toaster: Add tests for /project/X/builds page
->   toaster: Show correct builds count on project pages
->   toaster: Fix date range pickers on the project builds page
->   toaster: Simplify redirects when build page parameters are missing
->
->  lib/toaster/toastergui/static/js/base.js           |   4 +-
->  .../toastergui/templates/projectbuilds.html        |   4 +-
->  lib/toaster/toastergui/tests.py                    |  91 ++++++++++++++++-
->  lib/toaster/toastergui/views.py                    | 108 +++++++++++++++------
->  toaster-requirements.txt                           |   1 +
->  5 files changed, 169 insertions(+), 39 deletions(-)
->
-> --
-> 1.9.1
->
+Before this change:
+
+https://downloads.yoctoproject.org/releases/bitbake/bitbake-1.0.tar.gz
+
+with a mirror of
+
+https://.*/[^/]*    http://AAAA/A/A/A/
+
+would end up either recursing indefinitely or result in:
+
+http://AAAA/A/A/A/A/A/A/A/A/A/bitbake-1.0.tar.gz
+
+Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+---
+ lib/bb/fetch2/__init__.py | 2 +-
+ lib/bb/tests/fetch.py     | 7 +++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 3d53b63..569007f 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -464,7 +464,7 @@ def uri_replace(ud, uri_find, uri_replace, replacements, d):
+                 for k in replacements:
+                     uri_replace_decoded[loc] = uri_replace_decoded[loc].replace(k, replacements[k])
+                 #bb.note("%s %s %s" % (regexp, uri_replace_decoded[loc], uri_decoded[loc]))
+-                result_decoded[loc] = re.sub(regexp, uri_replace_decoded[loc], uri_decoded[loc])
++                result_decoded[loc] = re.sub(regexp, uri_replace_decoded[loc], uri_decoded[loc], 1)
+             if loc == 2:
+                 # Handle path manipulations
+                 basename = None
+diff --git a/lib/bb/tests/fetch.py b/lib/bb/tests/fetch.py
+index 1e61f3a..8486224 100644
+--- a/lib/bb/tests/fetch.py
++++ b/lib/bb/tests/fetch.py
+@@ -405,6 +405,13 @@ class MirrorUriTest(FetcherTest):
+                                 'http://otherdownloads.yoctoproject.org/downloads/bitbake-1.0.tar.gz',
+                                 'http://downloads2.yoctoproject.org/downloads/bitbake-1.0.tar.gz'])
+ 
++    recmirrorvar = "https://.*/[^/]*    http://AAAA/A/A/A/ \n"
++
++    def test_recursive(self):
++        fetcher = bb.fetch.FetchData("https://downloads.yoctoproject.org/releases/bitbake/bitbake-1.0.tar.gz", self.d)
++        mirrors = bb.fetch2.mirror_from_string(self.recmirrorvar)
++        uris, uds = bb.fetch2.build_mirroruris(fetcher, mirrors, self.d)
++        self.assertEqual(uris, ['http://AAAA/A/A/A/bitbake/bitbake-1.0.tar.gz'])
+ 
+ class FetcherLocalTest(FetcherTest):
+     def setUp(self):
+-- 
+1.9.3
+
 
