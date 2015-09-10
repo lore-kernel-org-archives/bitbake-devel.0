@@ -1,40 +1,33 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f44.google.com (mail-pa0-f44.google.com
-	[209.85.220.44])
-	by mail.openembedded.org (Postfix) with ESMTP id CE6D976FFA
+Received: from mail-ig0-f177.google.com (mail-ig0-f177.google.com
+	[209.85.213.177])
+	by mail.openembedded.org (Postfix) with ESMTP id 8AE1F60053
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Sep 2015 17:04:29 +0000 (UTC)
-Received: by pacfv12 with SMTP id fv12so49009332pac.2
+	Thu, 10 Sep 2015 17:05:02 +0000 (UTC)
+Received: by igcpb10 with SMTP id pb10so25131006igc.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Sep 2015 10:04:30 -0700 (PDT)
+	Thu, 10 Sep 2015 10:05:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:in-reply-to:references;
-	bh=GAjjSWmejvWiLOHZ+px1Y1MOwDI3e2kaFKKzoa40Kf0=;
-	b=HLrIAIkTqmDWcjk0Oylyaa2qMnA+OTPCn5hBzyNoIZJu4IFz22y//3+wTbWhvXiB3p
-	FAcQbdvFp0bNXuZ4Pw/yq2Qe9ICkvay8zFHCSQm1+P9rGSY9D3GI7B92nlCKjQ6Ahpba
-	6X7U2TEFE8w0wESdxjPwxhQJnYPNMf4Cqj5KsJaCx/UE14VqeIYrLFP07K8o2XIl2oBP
-	/sm/g81eVUvFhBhoU5wii3HVu+WXGNcSmvz0QhJ8aTVGo20cV7qrKMeiCqfW2ErJmDNr
-	riNLhen7oj57H0xCWblFZOrzi+jtEaL4WcKEmuETgGeAWJ+G2PGPOMcxjvvqcaWugDFP
-	SgKQ==
-X-Received: by 10.66.184.197 with SMTP id ew5mr76548873pac.54.1441904670016;
-	Thu, 10 Sep 2015 10:04:30 -0700 (PDT)
-Received: from whisper.hsd1.or.comcast.net
-	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
-	by smtp.gmail.com with ESMTPSA id
-	by1sm13099494pab.6.2015.09.10.10.04.29
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 10 Sep 2015 10:04:29 -0700 (PDT)
-From: brian avery <avery.brian@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 10 Sep 2015 10:05:19 -0700
-Message-Id: <4dde7bbd2e6bf6c51790a8c644cfba81c32af143.1441904599.git.avery.brian@gmail.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1390b2ab0a882e6f11ef295ada26edcf226ba8dc.1441904599.git.avery.brian@gmail.com>
-References: <1390b2ab0a882e6f11ef295ada26edcf226ba8dc.1441904599.git.avery.brian@gmail.com>
+	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	:cc:content-type;
+	bh=CRTo/Z8P/XZ+IzlVnA8t+XOynCRqUqMitC1rM0dTWQQ=;
+	b=K8XeabXJ/w6ARw4o05ikvhCPplVBHPTikmkaqcBRvwt0ZnmUm5Ysz/gvXvMMh4gFZb
+	Dp0kDmWTTC9IzS+fRhtWCnvEZy7TY3OHZ+0fMGJSkJ0OQqOyn1f0/oWe940kb/HwSD8i
+	M5yGIXg3jg9G3qvWgFrmqFbIrkkhj6UQiOUIaGVKmCKu4iABfvqbeTm4oIxus4c0H+LJ
+	YFRlfvqWAgOlEwZwnBmLgvp38nkGQhVOqPLQPxjJ3nvwOx29nShTIBG9lBms0y0D7UdS
+	27dmTFXdBflvqDNACAmB01+oaI6kr5MKIOhDYxVXxUT9gW++b8qzegWBaf8zkrRezQLS
+	htAw==
+MIME-Version: 1.0
+X-Received: by 10.50.27.102 with SMTP id s6mr7984487igg.23.1441904702973; Thu,
+	10 Sep 2015 10:05:02 -0700 (PDT)
+Received: by 10.64.55.39 with HTTP; Thu, 10 Sep 2015 10:05:02 -0700 (PDT)
 In-Reply-To: <cover.1441904599.git.avery.brian@gmail.com>
 References: <cover.1441904599.git.avery.brian@gmail.com>
-Subject: [PATCH 5/5] toaster: Simplify redirects when build page parameters are missing
+Date: Thu, 10 Sep 2015 10:05:02 -0700
+Message-ID: <CAKV_0eiR791w4ZVC4hG1p14X5WmiaoRZuRjSFU+NCtu+den3jg@mail.gmail.com>
+From: Brian Avery <avery.brian@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 0/5] Hide irrelevant builds
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,122 +40,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 10 Sep 2015 17:04:29 -0000
+X-List-Received-Date: Thu, 10 Sep 2015 17:05:05 -0000
+Content-Type: text/plain; charset=UTF-8
 
-From: Elliot Smith <elliot.smith@intel.com>
+submitted upstream.
+-b
 
-A RedirectException is used to redirect the client to the
-correct page when their original request is missing the
-required parameters (page, orderby etc.). However, the code
-is difficult to follow.
-
-Rather than catching RedirectExceptions and rethrowing them with
-different view URLs, ensure that the RedirectException has the
-correct URL in it when thrown by passing the original page
-name to the _build_list_helper() method.
-
-Modified from an original patch by
-David Reyna <david.reyna@windriver.com>.
-
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-Signed-off-by: brian avery <avery.brian@gmail.com>
----
- lib/toaster/toastergui/views.py | 49 +++++++++++++++++++++++++++--------------
- 1 file changed, 32 insertions(+), 17 deletions(-)
-
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 631d619..adfebab 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -1889,6 +1889,10 @@ if True:
-         pass
- 
-     # shows the "all builds" page for managed mode; it displays build requests (at least started!) instead of actual builds
-+    # WARNING _build_list_helper() may raise a RedirectException, which
-+    # will set the GET parameters and redirect back to the
-+    # all-builds or projectbuilds page as appropriate;
-+    # TODO don't use exceptions to control program flow
-     @_template_renderer("builds.html")
-     def builds(request):
-         # define here what parameters the view needs in the GET portion in order to
-@@ -1897,27 +1901,35 @@ if True:
- 
-         queryset = Build.objects.all()
- 
--        try:
--            context, pagesize, orderby = _build_list_helper(request, queryset)
--            # all builds page as a Project column
--            context['tablecols'].append({'name': 'Project', 'clcalss': 'project_column', })
--        except RedirectException as re:
--            # rewrite the RedirectException
--            re.view = resolve(request.path_info).url_name
--            raise re
-+        redirect_page = resolve(request.path_info).url_name
-+
-+        context, pagesize, orderby = _build_list_helper(request,
-+                                                        queryset,
-+                                                        redirect_page)
-+        # all builds page as a Project column
-+        context['tablecols'].append({
-+            'name': 'Project',
-+            'clclass': 'project_column'
-+        })
- 
-         _set_parameters_values(pagesize, orderby, request)
-         return context
- 
- 
-     # helper function, to be used on "all builds" and "project builds" pages
--    def _build_list_helper(request, queryset_all):
-+    def _build_list_helper(request, queryset_all, redirect_page, pid=None):
-         default_orderby = 'completed_on:-'
-         (pagesize, orderby) = _get_parameters_values(request, 10, default_orderby)
-         mandatory_parameters = { 'count': pagesize,  'page' : 1, 'orderby' : orderby }
-         retval = _verify_parameters( request.GET, mandatory_parameters )
-         if retval:
--            raise RedirectException( None, request.GET, mandatory_parameters)
-+            params = {}
-+            if pid:
-+                params = {'pid': pid}
-+            raise RedirectException(redirect_page,
-+                                    request.GET,
-+                                    mandatory_parameters,
-+                                    **params)
- 
-         # boilerplate code that takes a request for an object type and returns a queryset
-         # for that object type. copypasta for all needed table searches
-@@ -2661,6 +2673,10 @@ if True:
- 
-         return context
- 
-+    # WARNING _build_list_helper() may raise a RedirectException, which
-+    # will set the GET parameters and redirect back to the
-+    # all-builds or projectbuilds page as appropriate;
-+    # TODO don't use exceptions to control program flow
-     @_template_renderer('projectbuilds.html')
-     def projectbuilds(request, pid):
-         prj = Project.objects.get(id = pid)
-@@ -2700,13 +2716,12 @@ if True:
- 
-         queryset = Build.objects.filter(project_id = pid)
- 
--        try:
--            context, pagesize, orderby = _build_list_helper(request, queryset)
--        except RedirectException as re:
--            # rewrite the RedirectException with our current url information
--            re.view = resolve(request.path_info).url_name
--            re.okwargs = {"pid" : pid}
--            raise re
-+        redirect_page = resolve(request.path_info).url_name
-+
-+        context, pagesize, orderby = _build_list_helper(request,
-+                                                        queryset,
-+                                                        redirect_page,
-+                                                        pid)
- 
-         context['project'] = prj
-         _set_parameters_values(pagesize, orderby, request)
--- 
-1.9.1
-
+On Thu, Sep 10, 2015 at 10:05 AM, brian avery <avery.brian@gmail.com> wrote:
+> This patch fixes the project builds view so it doesn't show
+> "in progress" builds or builds for other projects.
+>
+> The following changes since commit db92bc23880794be77373b0f2d8c26279dcecb84:
+>
+>   bitbake: toaster: replace ETA with % of tasks done (2015-09-08 23:54:15 +0100)
+>
+> are available in the git repository at:
+>
+>   git://git.yoctoproject.org/poky-contrib bavery/submit/elliot/20150902_hide_irrelevant_builds_v2
+>   http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/elliot/20150902_hide_irrelevant_builds_v2
+>
+> Alexandru DAMIAN (1):
+>   toaster: hide irrelevant builds in the project builds view
+>
+> Elliot Smith (4):
+>   toaster: Add tests for /project/X/builds page
+>   toaster: Show correct builds count on project pages
+>   toaster: Fix date range pickers on the project builds page
+>   toaster: Simplify redirects when build page parameters are missing
+>
+>  lib/toaster/toastergui/static/js/base.js           |   4 +-
+>  .../toastergui/templates/projectbuilds.html        |   4 +-
+>  lib/toaster/toastergui/tests.py                    |  91 ++++++++++++++++-
+>  lib/toaster/toastergui/views.py                    | 108 +++++++++++++++------
+>  toaster-requirements.txt                           |   1 +
+>  5 files changed, 169 insertions(+), 39 deletions(-)
+>
+> --
+> 1.9.1
+>
 
