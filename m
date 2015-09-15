@@ -1,35 +1,35 @@
 Return-Path: <kergoth@gmail.com>
-Received: from mail-pa0-f44.google.com (mail-pa0-f44.google.com
-	[209.85.220.44])
-	by mail.openembedded.org (Postfix) with ESMTP id 07F016E630
+Received: from mail-pa0-f42.google.com (mail-pa0-f42.google.com
+	[209.85.220.42])
+	by mail.openembedded.org (Postfix) with ESMTP id 687C16E630
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 15 Sep 2015 20:54:13 +0000 (UTC)
-Received: by padhy16 with SMTP id hy16so186462791pad.1
+	Tue, 15 Sep 2015 21:20:57 +0000 (UTC)
+Received: by pacex6 with SMTP id ex6so187387306pac.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 15 Sep 2015 13:54:13 -0700 (PDT)
+	Tue, 15 Sep 2015 14:20:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id;
-	bh=FLEP2smSz18Lec5mb5jFso1CoCG5sY5P3xxxTGW/j8s=;
-	b=tyqkpNRxPbLLs5fy00IcwFDB6rjw++m+VCGO88XryWht8yZFUl0xAaevzQPy32kYGN
-	fKxQop/+5+20FB4RSni7LuM7/48CjpoG4+9AqqukuZWchBH0mulwL0bWYtDiYNyP2h/0
-	uuUAsSzH9Awr7pikPxWMgvdl/4UJxZcTqeK/tnqlonllIj+Dwj4Xj1HDvaNqCtJrEBBW
-	WkdKGScXynUBdkYNqdUjxCMGcbxlwh7cm08UrNXhGvq/QoCFphTzQxs63Bni6ENxexeT
-	t4wDSNm8T9Iv7GRa5VSFwdP+7l2qaPc510f+C3/pQodcUYVr/7Os9ZCcVkbRVWMURpvD
-	7FEA==
-X-Received: by 10.69.0.166 with SMTP id az6mr50644073pbd.168.1442350453366;
-	Tue, 15 Sep 2015 13:54:13 -0700 (PDT)
+	bh=H1LJf0KrOcU3JGofnkSzzENlzf2OR+UkTDWd022hk+I=;
+	b=g6ruryWzfpZs4KklaC0KBWSwadn8MXQB2W9xd5pQQktqmhQ7vIMAcWgozg31CEBvY1
+	i9xUBNsgtNAmI6V6Ro3vWVC9Cp/MbEj8JYTRNY9DHY6rSow5pcwUlzrloZstH7Q2wLOx
+	4ZsjAy1DbbyBgHQdQ5Nsfn/N4pyt3K3dY0wwf7CDKf4JmjFosDQEkmUzV3HWMoeSp0sV
+	6yCaJIFbBPS+8zAgECMOyL8HE6w3FoWUzgfzI3f4NqRRFD+81t1MJN2oo1vV6oulbmj5
+	gAvfDt2yXvMjrbRKXuXmgpP/Og9z4KV8zKY+VyAt8tFbHgyLRA2LU6WQx7eTYNausKhT
+	HNpw==
+X-Received: by 10.67.15.66 with SMTP id fm2mr51604268pad.82.1442352057561;
+	Tue, 15 Sep 2015 14:20:57 -0700 (PDT)
 Received: from quark.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
 	by smtp.gmail.com with ESMTPSA id
-	la4sm23698254pbc.76.2015.09.15.13.54.10
+	xv12sm23893091pac.38.2015.09.15.14.20.55
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 15 Sep 2015 13:54:11 -0700 (PDT)
+	Tue, 15 Sep 2015 14:20:55 -0700 (PDT)
 From: Christopher Larson <kergoth@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 15 Sep 2015 13:56:06 -0700
-Message-Id: <1442350566-5583-1-git-send-email-kergoth@gmail.com>
+Date: Tue, 15 Sep 2015 14:23:01 -0700
+Message-Id: <1442352181-9304-1-git-send-email-kergoth@gmail.com>
 X-Mailer: git-send-email 2.2.1
 Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: [PATCH] bb.fetch2.{git, hg}: remove tarball if it needs updating
+Subject: [PATCHv2] bb.fetch2.{git, hg}: remove tarball if it needs updating
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,7 +42,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 15 Sep 2015 20:54:14 -0000
+X-List-Received-Date: Tue, 15 Sep 2015 21:20:59 -0000
 
 From: Christopher Larson <chris_larson@mentor.com>
 
@@ -60,12 +60,12 @@ build_mirror_data.
 
 Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 ---
- bitbake/lib/bb/fetch2/git.py | 10 ++++++----
- bitbake/lib/bb/fetch2/hg.py  | 10 ++++++----
- 2 files changed, 12 insertions(+), 8 deletions(-)
+ bitbake/lib/bb/fetch2/git.py | 11 +++++++----
+ bitbake/lib/bb/fetch2/hg.py  | 11 +++++++----
+ 2 files changed, 14 insertions(+), 8 deletions(-)
 
 diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 40658ff..4a32a31 100644
+index 40658ff..9727041 100644
 --- a/bitbake/lib/bb/fetch2/git.py
 +++ b/bitbake/lib/bb/fetch2/git.py
 @@ -181,8 +181,6 @@ class Git(FetchMethod):
@@ -77,20 +77,21 @@ index 40658ff..4a32a31 100644
          # If the checkout doesn't exist and the mirror tarball does, extract it
          if not os.path.exists(ud.clonedir) and os.path.exists(ud.fullmirror):
              bb.utils.mkdirhier(ud.clonedir)
-@@ -220,7 +218,11 @@ class Git(FetchMethod):
+@@ -220,7 +218,12 @@ class Git(FetchMethod):
              runfetchcmd(fetch_cmd, d)
              runfetchcmd("%s prune-packed" % ud.basecmd, d)
              runfetchcmd("%s pack-redundant --all | xargs -r rm" % ud.basecmd, d)
 -            ud.repochanged = True
-+            try:
-+                os.unlink(ud.fullmirror)
-+            except OSError as exc:
-+                if exc.errno != errno.ENOENT:
-+                    raise
++            if ud.write_tarballs:
++                try:
++                    os.unlink(ud.fullmirror)
++                except OSError as exc:
++                    if exc.errno != errno.ENOENT:
++                        raise
          os.chdir(ud.clonedir)
          for name in ud.names:
              if not self._contains_ref(ud, d, name):
-@@ -228,7 +230,7 @@ class Git(FetchMethod):
+@@ -228,7 +231,7 @@ class Git(FetchMethod):
  
      def build_mirror_data(self, ud, d):
          # Generate a mirror tarball if needed
@@ -100,7 +101,7 @@ index 40658ff..4a32a31 100644
              if os.path.islink(ud.fullmirror):
                  os.unlink(ud.fullmirror)
 diff --git a/bitbake/lib/bb/fetch2/hg.py b/bitbake/lib/bb/fetch2/hg.py
-index d978630..bbb4ed9 100644
+index d978630..c880db2 100644
 --- a/bitbake/lib/bb/fetch2/hg.py
 +++ b/bitbake/lib/bb/fetch2/hg.py
 @@ -163,8 +163,6 @@ class Hg(FetchMethod):
@@ -112,20 +113,21 @@ index d978630..bbb4ed9 100644
          logger.debug(2, "Fetch: checking for module directory '" + ud.moddir + "'")
  
          # If the checkout doesn't exist and the mirror tarball does, extract it
-@@ -189,7 +187,11 @@ class Hg(FetchMethod):
+@@ -189,7 +187,12 @@ class Hg(FetchMethod):
                  logger.debug(1, "Running %s", pullcmd)
                  bb.fetch2.check_network_access(d, pullcmd, ud.url)
                  runfetchcmd(pullcmd, d)
 -                ud.repochanged = True
-+                try:
-+                    os.unlink(ud.fullmirror)
-+                except OSError as exc:
-+                    if exc.errno != errno.ENOENT:
-+                        raise
++                if ud.write_tarballs == "1":
++                    try:
++                        os.unlink(ud.fullmirror)
++                    except OSError as exc:
++                        if exc.errno != errno.ENOENT:
++                            raise
  
          # No source found, clone it.
          if not os.path.exists(ud.moddir):
-@@ -238,7 +240,7 @@ class Hg(FetchMethod):
+@@ -238,7 +241,7 @@ class Hg(FetchMethod):
  
      def build_mirror_data(self, ud, d):
          # Generate a mirror tarball if needed
