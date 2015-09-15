@@ -1,35 +1,37 @@
 Return-Path: <kergoth@gmail.com>
-Received: from mail-pa0-f42.google.com (mail-pa0-f42.google.com
-	[209.85.220.42])
-	by mail.openembedded.org (Postfix) with ESMTP id 687C16E630
+Received: from mail-vk0-f54.google.com (mail-vk0-f54.google.com
+	[209.85.213.54])
+	by mail.openembedded.org (Postfix) with ESMTP id C2D5475CF1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 15 Sep 2015 21:20:57 +0000 (UTC)
-Received: by pacex6 with SMTP id ex6so187387306pac.0
+	Tue, 15 Sep 2015 21:23:05 +0000 (UTC)
+Received: by vkhf67 with SMTP id f67so89035774vkh.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 15 Sep 2015 14:20:57 -0700 (PDT)
+	Tue, 15 Sep 2015 14:23:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id;
-	bh=H1LJf0KrOcU3JGofnkSzzENlzf2OR+UkTDWd022hk+I=;
-	b=g6ruryWzfpZs4KklaC0KBWSwadn8MXQB2W9xd5pQQktqmhQ7vIMAcWgozg31CEBvY1
-	i9xUBNsgtNAmI6V6Ro3vWVC9Cp/MbEj8JYTRNY9DHY6rSow5pcwUlzrloZstH7Q2wLOx
-	4ZsjAy1DbbyBgHQdQ5Nsfn/N4pyt3K3dY0wwf7CDKf4JmjFosDQEkmUzV3HWMoeSp0sV
-	6yCaJIFbBPS+8zAgECMOyL8HE6w3FoWUzgfzI3f4NqRRFD+81t1MJN2oo1vV6oulbmj5
-	gAvfDt2yXvMjrbRKXuXmgpP/Og9z4KV8zKY+VyAt8tFbHgyLRA2LU6WQx7eTYNausKhT
-	HNpw==
-X-Received: by 10.67.15.66 with SMTP id fm2mr51604268pad.82.1442352057561;
-	Tue, 15 Sep 2015 14:20:57 -0700 (PDT)
-Received: from quark.alm.mentorg.com (nat-lmt.mentorg.com. [139.181.28.34])
-	by smtp.gmail.com with ESMTPSA id
-	xv12sm23893091pac.38.2015.09.15.14.20.55
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 15 Sep 2015 14:20:55 -0700 (PDT)
-From: Christopher Larson <kergoth@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 15 Sep 2015 14:23:01 -0700
-Message-Id: <1442352181-9304-1-git-send-email-kergoth@gmail.com>
-X-Mailer: git-send-email 2.2.1
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=EdLtkgW+6bdOcXhk4dlyrUoLRBkMvR9vylJ9vRLxTTI=;
+	b=iESvEooZuz2Y8MWCvtR5BrbCZ/OF1UdbCrBZMNxnyGRXqavIU/cwrYq+v9LimJc1bM
+	fEWq6cyN32/DMamsxKg73lvEFMXOtYV/WApxkIQlylNw5qiEcKltmqpqiDY8k113aMM6
+	oAb+dtoHJysV9scs1Jw7PDQCu2h3nu0onDxbkuPiM+JvLiouhg/zOxwxoSbLdhVF2kvX
+	DMoLG3Z98RUS8oQbZR4yBL0IP+G6QzSk+hjW0LVVyyJtB9vuq3gJynPpMz79gAada2wZ
+	1Qr5RhQAgQd5Yo2RDEZrbzCSUD+yeQaRyX9jiEVPC/zPKUf4jmZnmM4c+tpr9lcRYB+6
+	9jfA==
+X-Received: by 10.31.5.205 with SMTP id 196mr23831796vkf.88.1442352185346;
+	Tue, 15 Sep 2015 14:23:05 -0700 (PDT)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.31.203.2 with HTTP; Tue, 15 Sep 2015 14:22:45 -0700 (PDT)
+In-Reply-To: <1442352181-9304-1-git-send-email-kergoth@gmail.com>
+References: <1442352181-9304-1-git-send-email-kergoth@gmail.com>
+From: Christopher Larson <chris_larson@mentor.com>
+Date: Tue, 15 Sep 2015 14:22:45 -0700
+X-Google-Sender-Auth: aRrVrOWhj0BM7u4uoSTPU0tI3hA
+Message-ID: <CABcZANkQjiPwSWgnZDUpvN0vitcLpdiE+HPWsmGtYrZhqMAwJg@mail.gmail.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
 Cc: Christopher Larson <chris_larson@mentor.com>
-Subject: [PATCHv2] bb.fetch2.{git, hg}: remove tarball if it needs updating
+Subject: Re: [PATCHv2] bb.fetch2.{git, hg}: remove tarball if it needs updating
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,101 +44,83 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 15 Sep 2015 21:20:59 -0000
+X-List-Received-Date: Tue, 15 Sep 2015 21:23:06 -0000
+Content-Type: multipart/alternative; boundary=001a1143dda0a611ca051fcfc93c
 
-From: Christopher Larson <chris_larson@mentor.com>
+--001a1143dda0a611ca051fcfc93c
+Content-Type: text/plain; charset=UTF-8
 
-We were maintaining state in the form of ud.repochanged to determine whether
-we need to write the tarball in the case where the tarball already exists, but
-this state is maintained only in memory. If we need to update the git repo,
-set ud.repochanged to True, and then are interrupted or killed, the tarball
-will then be out of date.
+On Tue, Sep 15, 2015 at 2:23 PM, Christopher Larson <kergoth@gmail.com>
+wrote:
 
-Rather than maintaining this state, simply remove the out of date tarball when
-we update the git repo, and it will be re-created with updated content in
-build_mirror_data.
+> From: Christopher Larson <chris_larson@mentor.com>
+>
+> We were maintaining state in the form of ud.repochanged to determine
+> whether
+> we need to write the tarball in the case where the tarball already exists,
+> but
+> this state is maintained only in memory. If we need to update the git repo,
+> set ud.repochanged to True, and then are interrupted or killed, the tarball
+> will then be out of date.
+>
+> Rather than maintaining this state, simply remove the out of date tarball
+> when
+> we update the git repo, and it will be re-created with updated content in
+> build_mirror_data.
+>
+> [YOCTO #6366]
+>
+> Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 
-[YOCTO #6366]
 
-Signed-off-by: Christopher Larson <chris_larson@mentor.com>
----
- bitbake/lib/bb/fetch2/git.py | 11 +++++++----
- bitbake/lib/bb/fetch2/hg.py  | 11 +++++++----
- 2 files changed, 14 insertions(+), 8 deletions(-)
-
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 40658ff..9727041 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -181,8 +181,6 @@ class Git(FetchMethod):
-     def download(self, ud, d):
-         """Fetch url"""
- 
--        ud.repochanged = not os.path.exists(ud.fullmirror)
--
-         # If the checkout doesn't exist and the mirror tarball does, extract it
-         if not os.path.exists(ud.clonedir) and os.path.exists(ud.fullmirror):
-             bb.utils.mkdirhier(ud.clonedir)
-@@ -220,7 +218,12 @@ class Git(FetchMethod):
-             runfetchcmd(fetch_cmd, d)
-             runfetchcmd("%s prune-packed" % ud.basecmd, d)
-             runfetchcmd("%s pack-redundant --all | xargs -r rm" % ud.basecmd, d)
--            ud.repochanged = True
-+            if ud.write_tarballs:
-+                try:
-+                    os.unlink(ud.fullmirror)
-+                except OSError as exc:
-+                    if exc.errno != errno.ENOENT:
-+                        raise
-         os.chdir(ud.clonedir)
-         for name in ud.names:
-             if not self._contains_ref(ud, d, name):
-@@ -228,7 +231,7 @@ class Git(FetchMethod):
- 
-     def build_mirror_data(self, ud, d):
-         # Generate a mirror tarball if needed
--        if ud.write_tarballs and (ud.repochanged or not os.path.exists(ud.fullmirror)):
-+        if ud.write_tarballs and not os.path.exists(ud.fullmirror):
-             # it's possible that this symlink points to read-only filesystem with PREMIRROR
-             if os.path.islink(ud.fullmirror):
-                 os.unlink(ud.fullmirror)
-diff --git a/bitbake/lib/bb/fetch2/hg.py b/bitbake/lib/bb/fetch2/hg.py
-index d978630..c880db2 100644
---- a/bitbake/lib/bb/fetch2/hg.py
-+++ b/bitbake/lib/bb/fetch2/hg.py
-@@ -163,8 +163,6 @@ class Hg(FetchMethod):
-     def download(self, ud, d):
-         """Fetch url"""
- 
--        ud.repochanged = not os.path.exists(ud.fullmirror)
--
-         logger.debug(2, "Fetch: checking for module directory '" + ud.moddir + "'")
- 
-         # If the checkout doesn't exist and the mirror tarball does, extract it
-@@ -189,7 +187,12 @@ class Hg(FetchMethod):
-                 logger.debug(1, "Running %s", pullcmd)
-                 bb.fetch2.check_network_access(d, pullcmd, ud.url)
-                 runfetchcmd(pullcmd, d)
--                ud.repochanged = True
-+                if ud.write_tarballs == "1":
-+                    try:
-+                        os.unlink(ud.fullmirror)
-+                    except OSError as exc:
-+                        if exc.errno != errno.ENOENT:
-+                            raise
- 
-         # No source found, clone it.
-         if not os.path.exists(ud.moddir):
-@@ -238,7 +241,7 @@ class Hg(FetchMethod):
- 
-     def build_mirror_data(self, ud, d):
-         # Generate a mirror tarball if needed
--        if ud.write_tarballs == "1" and (ud.repochanged or not os.path.exists(ud.fullmirror)):
-+        if ud.write_tarballs == "1" and not os.path.exists(ud.fullmirror):
-             # it's possible that this symlink points to read-only filesystem with PREMIRROR
-             if os.path.islink(ud.fullmirror):
-                 os.unlink(ud.fullmirror)
+Ignore the v2, only removing it when write_tarballs is set could be
+problematic if the repo is updated with write_tarballs not set, then it's
+set afterward.
 -- 
-2.2.1
+Christopher Larson
+kergoth at gmail dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
+--001a1143dda0a611ca051fcfc93c
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Tue, Sep 15, 2015 at 2:23 PM, Christopher Larson <span dir=3D"ltr">&lt;<=
+a href=3D"mailto:kergoth@gmail.com" target=3D"_blank">kergoth@gmail.com</a>=
+&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0=
+ 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><span class=3D"">From:=
+ Christopher Larson &lt;<a href=3D"mailto:chris_larson@mentor.com">chris_la=
+rson@mentor.com</a>&gt;<br>
+<br>
+We were maintaining state in the form of ud.repochanged to determine whethe=
+r<br>
+we need to write the tarball in the case where the tarball already exists, =
+but<br>
+this state is maintained only in memory. If we need to update the git repo,=
+<br>
+set ud.repochanged to True, and then are interrupted or killed, the tarball=
+<br>
+will then be out of date.<br>
+<br>
+Rather than maintaining this state, simply remove the out of date tarball w=
+hen<br>
+we update the git repo, and it will be re-created with updated content in<b=
+r>
+build_mirror_data.<br>
+<br>
+[YOCTO #6366]<br>
+<br>
+Signed-off-by: Christopher Larson &lt;<a href=3D"mailto:chris_larson@mentor=
+.com">chris_larson@mentor.com</a>&gt;</span></blockquote></div><br>Ignore t=
+he v2, only removing it when write_tarballs is set could be problematic if =
+the repo is updated with write_tarballs not set, then it&#39;s set afterwar=
+d.<br>-- <br><div class=3D"gmail_signature"><div dir=3D"ltr">Christopher La=
+rson<br>kergoth at gmail dot com<br>Founder - BitBake, OpenEmbedded, OpenZa=
+urus<br>Maintainer - Tslib<br>Senior Software Engineer, Mentor Graphics</di=
+v></div>
+</div></div>
+
+--001a1143dda0a611ca051fcfc93c--
