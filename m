@@ -1,36 +1,38 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-vk0-f51.google.com (mail-vk0-f51.google.com
-	[209.85.213.51])
-	by mail.openembedded.org (Postfix) with ESMTP id 90BBD76104
+Return-Path: <elliot.smith@intel.com>
+Received: from mail-io0-f170.google.com (mail-io0-f170.google.com
+	[209.85.223.170])
+	by mail.openembedded.org (Postfix) with ESMTP id AD0CC75772
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 16 Sep 2015 21:11:37 +0000 (UTC)
-Received: by vkhf67 with SMTP id f67so110039535vkh.1
+	Thu, 17 Sep 2015 08:09:19 +0000 (UTC)
+Received: by iofh134 with SMTP id h134so13899414iof.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 16 Sep 2015 14:11:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=Uxo+5uJU8xVGK54Axx893WYuPTzKVSzHIWpSOyRB9IM=;
-	b=lYtG6QkP4oENWB8FVyk7vRStfhemwNVXABToUgUlWP8IAGaBPtcddS4RRwYLXwOz4J
-	NkOXvFO/53f0kq2hoPnTqrlOGay8rMopHXzXPs49TwwtxrRJKAQI75hxjYnI94q5BFjg
-	CSHYAo7aRsJvBNXm79l74Fi/4CrTr70MXls5JDhq7Y1YuWhYgQIoe21eG/xvg2IEFRlI
-	JwGdTr1EIZiEDL/vmBDfbfey+c5FDc4onGB3ySOtljM695dhFd2YCt13IrsyYsrmD2jI
-	/CogCBUqmXz+v0BH49vphIeqN2+hSRzsoQiie8r9+giSmNe3QV4BfxIFwseCcH16Jal8
-	uh5w==
-X-Received: by 10.31.58.68 with SMTP id h65mr23111588vka.139.1442437897226;
-	Wed, 16 Sep 2015 14:11:37 -0700 (PDT)
+	Thu, 17 Sep 2015 01:09:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:in-reply-to:references:date
+	:message-id:subject:from:to:cc:content-type;
+	bh=9Cd/wB/zRuIidTvnBfi/LVbjrL7Z7e0A0HyMjQ6Otdg=;
+	b=JsO38d5D6cEYvnZADldnqTeLWsLW8V+qlxen9FeFC4UlM3//mpDWdbCmKWqxR2SCDp
+	ZdJ9nXGxanIc2uKHRdNszSY9iTwdhzeW+7MKnznJhhgt2az7G7rqcQuXlFFvyZyJhxeb
+	+Th+hxk30Qej+RaKfDXy67C4sGZW5wFW79dCDG/pGziiehjFj/wsU7jbXiq7SOiEA0os
+	eZ3//7Xfm7o6gRXErpz/Dxgou+2PJsOfPg9RhtdRCgNZyH92Ua80h2Q/oIag5eqKNeEV
+	oGjV6pQiZz+95jxxCT9uCpsJaf8bVzeJoqA1BAYu/JsfSKeD9cJ+dgjDCaGIIozl7m1c
+	pzuw==
+X-Gm-Message-State: ALoCoQk70kDWG0FjzF5GMWkZIHAUFefsPMbqdXB6A2ujTJfkRhTaG6JijO61HuyN9Vz5uXvu7O/J
 MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.31.203.2 with HTTP; Wed, 16 Sep 2015 14:11:17 -0700 (PDT)
-In-Reply-To: <1442437075.26666.172.camel@linuxfoundation.org>
-References: <1442437075.26666.172.camel@linuxfoundation.org>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Wed, 16 Sep 2015 14:11:17 -0700
-X-Google-Sender-Auth: a3YgTC9ucfVutv_3pNoDqLBRAZA
-Message-ID: <CABcZANnwO2oSzOocFSgAOGMUKbkmU86wtCaa_YsiUBA2RW9RTw@mail.gmail.com>
+X-Received: by 10.107.137.92 with SMTP id l89mr3703821iod.38.1442477359663;
+	Thu, 17 Sep 2015 01:09:19 -0700 (PDT)
+Received: by 10.64.7.77 with HTTP; Thu, 17 Sep 2015 01:09:19 -0700 (PDT)
+In-Reply-To: <1442437842.26666.179.camel@linuxfoundation.org>
+References: <1390b2ab0a882e6f11ef295ada26edcf226ba8dc.1441904599.git.avery.brian@gmail.com>
+	<fa4a3965a75c8b3c659d7bdce1f5949a2f6f046b.1441904599.git.avery.brian@gmail.com>
+	<1442437842.26666.179.camel@linuxfoundation.org>
+Date: Thu, 17 Sep 2015 09:09:19 +0100
+Message-ID: <CA+1hgUhMZAr9F0Kv-8v3d5g7XDeT16sTtxrjFuXr5jGAbK=EiQ@mail.gmail.com>
+From: "Smith, Elliot" <elliot.smith@intel.com>
 To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] data_smart: Expand overrides cache recursively
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 2/5] toaster: Add tests for /project/X/builds page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,98 +45,121 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 16 Sep 2015 21:11:38 -0000
-Content-Type: multipart/alternative; boundary=001a1143e6a27991c8051fe3bed8
+X-List-Received-Date: Thu, 17 Sep 2015 08:09:22 -0000
+Content-Type: multipart/alternative; boundary=001a113ebdb49eca31051fecee8d
 
---001a1143e6a27991c8051fe3bed8
+--001a113ebdb49eca31051fecee8d
 Content-Type: text/plain; charset=UTF-8
 
-On Wed, Sep 16, 2015 at 1:57 PM, Richard Purdie <
+Hello Richard,
+
+The branch is:
+elliot/toaster/hide_builds-8236
+
+I just rebased it on poky master.
+
+Thanks.
+Elliot
+
+On 16 September 2015 at 22:10, Richard Purdie <
 richard.purdie@linuxfoundation.org> wrote:
 
-> +        while changed:
->              self.inoverride = True
->              # Can end up here recursively so setup dummy values
->              self.overrides = []
-> @@ -431,6 +435,14 @@ class DataSmart(MutableMapping):
->              self.overridesset = set(self.overrides)
->              self.inoverride = False
->              self.expand_cache = {}
-> +            newoverrides = (self.getVar("OVERRIDES", True) or
-> "").split(":") or []
-> +            if newoverrides == self.overrides:
-> +                changed = False
-> +            self.overrides = newoverrides
-> +            self.overridesset = set(self.overrides)
-> +            count += 1
-> +            if count > 5:
-> +                bb.fatal("Overrides could not be expanded into a stable
-> state after 5 iterations, overrides must be being referenced by other
-> overridden variables in some recursive fashion. Please provide your
-> configuration to bitbake-devel so we can laugh, er, I mean try and
-> understand how to make it work.")
+> On Thu, 2015-09-10 at 10:05 -0700, brian avery wrote:
+> > From: Elliot Smith <elliot.smith@intel.com>
+> >
+> > Add tests to check whether "in progress" builds are filtered
+> > out correctly, and that only builds for the current project
+> > are shown.
+> >
+> > Adds a dependency on BeautifulSoup 4, which is used to simplify
+> > writing tests which verify the HTML.
+> >
+> > Also requires a fix to how a date was converted in the view
+> > which only manifested when I wrote the tests.
+> >
+> > [YOCTO #8236]
+> > [YOCTO #8187]
+> >
+> > Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+> > Signed-off-by: brian avery <avery.brian@gmail.com>
+>
+> Could you rebase this patch and point me at a branch please. I can't
+> seem to get it to apply cleanly. I did get the others to work with line
+> offset warnings.
+>
+> Cheers,
+>
+> Richard
+>
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 >
 
-We know the maximum number of iterations here, so it might be worth doing a
-for count in range(5): .. if newoverrides == self.overrides: break, and the
-else block on the loop would indicate it never broke and therefore we hit
-the count > 5 case. That'd eliminate the manual count bits.
--- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
 
---001a1143e6a27991c8051fe3bed8
+
+-- 
+Elliot Smith
+Software Engineer
+Intel Open Source Technology Centre
+
+--001a113ebdb49eca31051fecee8d
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Wed, Sep 16, 2015 at 1:57 PM, Richard Purdie <span dir=3D"ltr">&lt;<a hr=
-ef=3D"mailto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.=
-purdie@linuxfoundation.org</a>&gt;</span> wrote:<br><blockquote class=3D"gm=
-ail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-le=
-ft:1ex"><div id=3D":4oc" class=3D"a3s" style=3D"overflow:hidden">+=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 while changed:<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.inoverride =3D True<br=
+<div dir=3D"ltr">Hello Richard,<div><br></div><div>The branch is:</div><div=
+>elliot/toaster/hide_builds-8236<br></div><div><br></div><div>I just rebase=
+d it on poky master.</div><div><br></div><div>Thanks.</div><div>Elliot</div=
+></div><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">On 16 Sept=
+ember 2015 at 22:10, Richard Purdie <span dir=3D"ltr">&lt;<a href=3D"mailto=
+:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.purdie@linux=
+foundation.org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" s=
+tyle=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">On T=
+hu, 2015-09-10 at 10:05 -0700, brian avery wrote:<br>
+&gt; From: Elliot Smith &lt;<a href=3D"mailto:elliot.smith@intel.com">ellio=
+t.smith@intel.com</a>&gt;<br>
+&gt;<br>
+&gt; Add tests to check whether &quot;in progress&quot; builds are filtered=
+<br>
+&gt; out correctly, and that only builds for the current project<br>
+&gt; are shown.<br>
+&gt;<br>
+&gt; Adds a dependency on BeautifulSoup 4, which is used to simplify<br>
+&gt; writing tests which verify the HTML.<br>
+&gt;<br>
+&gt; Also requires a fix to how a date was converted in the view<br>
+&gt; which only manifested when I wrote the tests.<br>
+&gt;<br>
+&gt; [YOCTO #8236]<br>
+&gt; [YOCTO #8187]<br>
+&gt;<br>
+&gt; Signed-off-by: Elliot Smith &lt;<a href=3D"mailto:elliot.smith@intel.c=
+om">elliot.smith@intel.com</a>&gt;<br>
+&gt; Signed-off-by: brian avery &lt;<a href=3D"mailto:avery.brian@gmail.com=
+">avery.brian@gmail.com</a>&gt;<br>
+<br>
+Could you rebase this patch and point me at a branch please. I can&#39;t<br=
 >
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0# Can end up here recursive=
-ly so setup dummy values<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.overrides =3D []<br>
-@@ -431,6 +435,14 @@ <span class=3D"il">class</span> DataSmart(MutableMappi=
-ng):<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.overridesset =3D set(s=
-elf.overrides)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.inoverride =3D False<b=
-r>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0self.expand_cache =3D {}<br=
->
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 newoverrides =3D (self.getVar(&q=
-uot;OVERRIDES&quot;, True) or &quot;&quot;).split(&quot;:&quot;) or []<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if newoverrides =3D=3D self.over=
-rides:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 changed =3D False<=
-br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.overrides =3D newoverrides<=
-br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 self.overridesset =3D set(self.o=
-verrides)<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 count +=3D 1<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if count &gt; 5:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 <span class=3D"il"=
->bb</span>.fatal(&quot;Overrides could not be expanded into a stable state =
-after 5 iterations, overrides must be being referenced by other overridden =
-variables in some recursive fashion. Please provide your configuration to <=
-span class=3D"il">bitbake</span>-devel so we can laugh, er, I mean try and =
-understand how to make it work.&quot;)</div></blockquote></div><br>We know =
-the maximum number of iterations here, so it might be worth doing a for cou=
-nt in range(5): .. if newoverrides =3D=3D self.overrides: break, and the el=
-se block on the loop would indicate it never broke and therefore we hit the=
- count &gt; 5 case. That&#39;d eliminate the manual count bits.<br>-- <br><=
-div class=3D"gmail_signature">Christopher Larson<br>clarson at kergoth dot =
-com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - Tslib<br=
->Senior Software Engineer, Mentor Graphics</div>
-</div></div>
+seem to get it to apply cleanly. I did get the others to work with line<br>
+offset warnings.<br>
+<br>
+Cheers,<br>
+<br>
+Richard<br>
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+--<br>
+_______________________________________________<br>
+bitbake-devel mailing list<br>
+<a href=3D"mailto:bitbake-devel@lists.openembedded.org">bitbake-devel@lists=
+.openembedded.org</a><br>
+<a href=3D"http://lists.openembedded.org/mailman/listinfo/bitbake-devel" re=
+l=3D"noreferrer" target=3D"_blank">http://lists.openembedded.org/mailman/li=
+stinfo/bitbake-devel</a><br>
+</font></span></blockquote></div><br><br clear=3D"all"><div><br></div>-- <b=
+r><div class=3D"gmail_signature"><div dir=3D"ltr"><div>Elliot Smith<br>Soft=
+ware Engineer<br>Intel Open Source Technology Centre</div></div></div>
+</div>
 
---001a1143e6a27991c8051fe3bed8--
+--001a113ebdb49eca31051fecee8d--
