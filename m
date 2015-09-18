@@ -1,35 +1,36 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wi0-f176.google.com (mail-wi0-f176.google.com
-	[209.85.212.176])
-	by mail.openembedded.org (Postfix) with ESMTP id 6B5AE73243
+Return-Path: <romain.perier@gmail.com>
+Received: from mail-wi0-f169.google.com (mail-wi0-f169.google.com
+	[209.85.212.169])
+	by mail.openembedded.org (Postfix) with ESMTP id 1BE1973D13
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Sep 2015 14:46:41 +0000 (UTC)
-Received: by wiclk2 with SMTP id lk2so34151225wic.1
+	Fri, 18 Sep 2015 16:35:24 +0000 (UTC)
+Received: by wicge5 with SMTP id ge5so40149189wic.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Sep 2015 07:46:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=ITTxNJvzrSpSfm+T2FUhQMQ4EWZBgoU/v/Idbr5WyR4=;
-	b=ffLEcXzgyFM6G9zkFFd2TuQTdk77JpN9F8xjSN/MOjlCIipnNq0XluZeBPP3McugFE
-	ztHZPEGwuYreS1WE/NsdMiPoO0nz6IlJWCUxU0XFbEB8Lo0a2mWT99tBX9CmG1OKB0a8
-	yk5aewJ99O+pf7GWervzENw8fO0SrqoYh8m0m5f9AckyPSMXRtGvlRXeKyY6yRSJM2GC
-	xhC3iERhkUgl20q9bxYVnb2e+ngiQ9Oz52+Ld6XaYD/2YrsUm3ed5tTJXaQaSRcB2AL3
-	6elZQ90lrrRW6ih7Zx91w7AVFKRDQpW0ySgE0Orwlv1vA3/j7PAKi/PQNFphx4c7NnLZ
-	N3tg==
-X-Gm-Message-State: ALoCoQkDfBpRyxI3I6KPI44K96Q4W93no6CKzXffdywm9EMPbxNz4KaJRZM26DrEBAePn5eJ/+NP
-X-Received: by 10.194.21.199 with SMTP id x7mr8207259wje.63.1442587601714;
-	Fri, 18 Sep 2015 07:46:41 -0700 (PDT)
-Received: from dorado.Home ([90.212.179.178]) by smtp.gmail.com with ESMTPSA id
-	qq4sm9225676wjc.14.2015.09.18.07.46.40
+	Fri, 18 Sep 2015 09:35:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:subject:date:message-id;
+	bh=sXgOAo5V2kRV2YJZOFPwXLLHD3zYlSD8jE3F+rHzbgc=;
+	b=DjDZdISnrkViPHwBoTQNV+R8MhegrR5nlXiyVPJkNwWTloYtvLr42ep1jfd4xF3eeu
+	6ZwflYQUyJtxT16djnKVbPxQlgmrMkuN3JEfYpLzskg86dWpv1D6/2Sb0Y4qaN5Vb73U
+	wHse9QBBRr9/uX6ST+4FG8ZLR3IrLeeMZU1VEeXYBq34v7aDTEPFL8VGJWmVOoZlXSOl
+	HLwmZ13itebdYnSenf3ijUgoKaIIw/du3lfv3Q62RalNbcrXc9s1BZeQWSmNhX//crxE
+	8IixeaKKYTXDVibdAdKmkEYfM2GXfjzCNS0GaXr1/aICQ3Y20OygquSKT1O8DnJ8bC5d
+	Xq3Q==
+X-Received: by 10.194.122.200 with SMTP id lu8mr7916940wjb.83.1442594124599;
+	Fri, 18 Sep 2015 09:35:24 -0700 (PDT)
+Received: from localhost.localdomain
+	(i19-les01-ntr-176-186-2-137.sfr.lns.abo.bbox.fr. [176.186.2.137])
+	by smtp.gmail.com with ESMTPSA id
+	ry1sm9682298wjb.24.2015.09.18.09.35.23
+	for <bitbake-devel@lists.openembedded.org>
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 18 Sep 2015 07:46:40 -0700 (PDT)
-From: Michael Wood <michael.g.wood@intel.com>
+	Fri, 18 Sep 2015 09:35:24 -0700 (PDT)
+From: Romain Perier <romain.perier@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 18 Sep 2015 15:46:28 +0100
-Message-Id: <1442587588-5720-1-git-send-email-michael.g.wood@intel.com>
+Date: Fri, 18 Sep 2015 18:35:22 +0200
+Message-Id: <1442594122-20623-1-git-send-email-romain.perier@gmail.com>
 X-Mailer: git-send-email 2.1.4
-Subject: [PATCH] toaster: start script warning text formatting small improvement
+Subject: [PATCH] bitbake: bb.fetch2.git: Import errno module
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,32 +43,28 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 18 Sep 2015 14:46:43 -0000
+X-List-Received-Date: Fri, 18 Sep 2015 16:35:26 -0000
 
-From: Cristian Iorga <cristian.iorga@intel.com>
+Currently this module is dereferencing errno.ENOENT but the python module "errno"
+is not imported, which causes a crash when fetching from a git repository.
 
-Add a carriage return to build environment warning message to
-avoid it being  mixed up with shell prompt.
-
-Signed-off-by: Cristian Iorga <cristian.iorga@intel.com>
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: Romain Perier <romain.perier@gmail.com>
 ---
- bin/toaster | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bitbake/lib/bb/fetch2/git.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/bin/toaster b/bin/toaster
-index 411ce2c..ac27826 100755
---- a/bin/toaster
-+++ b/bin/toaster
-@@ -197,7 +197,7 @@ if [ `basename \"$0\"` = `basename \"${SRCFILE}\"` ]; then
-     fi
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index 4a32a31..9bd87ad 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -66,6 +66,7 @@ Supported SRC_URI options are:
+ # with this program; if not, write to the Free Software Foundation, Inc.,
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  
-     if [ -n "$BUILDDIR" ]; then
--        printf "Error: It looks like you sourced oe-init-build-env. Toaster cannot start in build mode from an oe-core build environment.\n You should be starting Toaster from a new terminal window." 1>&2
-+        printf "Error: It looks like you sourced oe-init-build-env. Toaster cannot start in build mode from an oe-core build environment.\n You should be starting Toaster from a new terminal window.\n" 1>&2
-         exit 1
-     fi
- 
++import errno
+ import os
+ import re
+ import bb
 -- 
 2.1.4
 
