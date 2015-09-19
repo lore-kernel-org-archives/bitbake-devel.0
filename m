@@ -1,37 +1,32 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-io0-f171.google.com (mail-io0-f171.google.com
-	[209.85.223.171])
-	by mail.openembedded.org (Postfix) with ESMTP id 00F8B7669F
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id D0A0D72A78
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Sep 2015 17:34:34 +0000 (UTC)
-Received: by ioiz6 with SMTP id z6so63637895ioi.2
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 18 Sep 2015 10:34:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=yj+vCzX6momfA3XOYmmMDdxgyycXTl/Ifl5Bs24HSFI=;
-	b=zgTpLH77ogkyVv5lK/R/MsqyeSzHOOIOhmvoCtMtA25r4fhziyJWxCqZJwERNhepRq
-	chLzrHq/4sjnaJ7FGBXlyKA2XX2UtcSnEdLm7ut+w5epVWO9bEjy44iAfkava7iMrbS1
-	5gtr6J6p5iDWsHu3AfBoG68bNg7JMrF38+5wxvmHvVB7KOk4ZnTdwTI30ygAK5sz49CE
-	9kUYFiolshLvkyjuzfJZtFhA/gGQDr3ab87aLI5yviEB4VQFD3lH6Fvw5SbJSoEKnLrc
-	SfngxqKRggB/FkvSS1r5t7lif3ZLVhOjMBuITaj7qOJ+dHGo3LyGji06t9L0XIW9Oi0N
-	6L2g==
-X-Received: by 10.107.128.41 with SMTP id b41mr14940561iod.74.1442597674770;
-	Fri, 18 Sep 2015 10:34:34 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.79.100.71 with HTTP; Fri, 18 Sep 2015 10:34:15 -0700 (PDT)
-In-Reply-To: <1442594122-20623-1-git-send-email-romain.perier@gmail.com>
-References: <1442594122-20623-1-git-send-email-romain.perier@gmail.com>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Fri, 18 Sep 2015 10:34:15 -0700
-X-Google-Sender-Auth: KR7wiOtw9yj9QjtCKgh5jWvGTLE
-Message-ID: <CABcZANnxfH8BcdeeRryba56sybpXxeUKQDKBz_ZjFZ5jiU6=+A@mail.gmail.com>
-To: Romain Perier <romain.perier@gmail.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] bitbake: bb.fetch2.git: Import errno module
+	Sat, 19 Sep 2015 10:33:31 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t8JAXR5h008462; Sat, 19 Sep 2015 11:33:27 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id DhlYK_O99oLw; Sat, 19 Sep 2015 11:33:27 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t8JAXGGF008445
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Sat, 19 Sep 2015 11:33:27 +0100
+Message-ID: <1442658796.12435.119.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: "Smith, Elliot" <elliot.smith@intel.com>
+Date: Sat, 19 Sep 2015 11:33:16 +0100
+In-Reply-To: <CA+1hgUhMZAr9F0Kv-8v3d5g7XDeT16sTtxrjFuXr5jGAbK=EiQ@mail.gmail.com>
+References: <1390b2ab0a882e6f11ef295ada26edcf226ba8dc.1441904599.git.avery.brian@gmail.com>
+	<fa4a3965a75c8b3c659d7bdce1f5949a2f6f046b.1441904599.git.avery.brian@gmail.com>
+	<1442437842.26666.179.camel@linuxfoundation.org>
+	<CA+1hgUhMZAr9F0Kv-8v3d5g7XDeT16sTtxrjFuXr5jGAbK=EiQ@mail.gmail.com>
+X-Mailer: Evolution 3.12.11-0ubuntu3 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 2/5] toaster: Add tests for /project/X/builds page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,54 +39,25 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 18 Sep 2015 17:34:36 -0000
-Content-Type: multipart/alternative; boundary=001a113f8bf0f568b2052008f1c7
+X-List-Received-Date: Sat, 19 Sep 2015 10:33:35 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
---001a113f8bf0f568b2052008f1c7
-Content-Type: text/plain; charset=UTF-8
+On Thu, 2015-09-17 at 09:09 +0100, Smith, Elliot wrote:
 
-On Fri, Sep 18, 2015 at 9:35 AM, Romain Perier <romain.perier@gmail.com>
-wrote:
-
-> Currently this module is dereferencing errno.ENOENT but the python module
-> "errno"
-> is not imported, which causes a crash when fetching from a git repository.
+> The branch is:
+> elliot/toaster/hide_builds-8236
 >
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
->
+> I just rebased it on poky master.
 
-Eep, that would be my fault, sorry about that.
+I'm guessing the problematic patch was in master-next at the time so the
+rebase didn't help, I still hit the merge issue.
 
-Acked-by: Christopher Larson <chris_larson@mentor.com>
--- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+Anyhow, it was a simple enough fix so I resolved and merged it, thanks.
 
---001a113f8bf0f568b2052008f1c7
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Cheers,
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Fri, Sep 18, 2015 at 9:35 AM, Romain Perier <span dir=3D"ltr">&lt;<a hre=
-f=3D"mailto:romain.perier@gmail.com" target=3D"_blank">romain.perier@gmail.=
-com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"mar=
-gin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":1lm=
-" class=3D"a3s" style=3D"overflow:hidden">Currently this module is derefere=
-ncing errno.ENOENT but the python module &quot;errno&quot;<br>
-is not imported, which causes a crash when fetching from a git repository.<=
-br>
-<br>
-Signed-off-by: Romain Perier &lt;<a href=3D"mailto:romain.perier@gmail.com"=
->romain.perier@gmail.com</a>&gt;</div></blockquote></div><br>Eep, that woul=
-d be my fault, sorry about that.</div><div class=3D"gmail_extra"><br></div>=
-<div class=3D"gmail_extra">Acked-by: Christopher Larson &lt;<a href=3D"mail=
-to:chris_larson@mentor.com">chris_larson@mentor.com</a>&gt;</div><div class=
-=3D"gmail_extra">-- <br><div class=3D"gmail_signature">Christopher Larson<b=
-r>clarson at kergoth dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus=
-<br>Maintainer - Tslib<br>Senior Software Engineer, Mentor Graphics</div>
-</div></div>
+Richard
 
---001a113f8bf0f568b2052008f1c7--
+
+
