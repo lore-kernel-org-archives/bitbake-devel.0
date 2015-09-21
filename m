@@ -1,34 +1,20 @@
-Return-Path: <romain.perier@gmail.com>
-Received: from mail-lb0-f180.google.com (mail-lb0-f180.google.com
-	[209.85.217.180])
-	by mail.openembedded.org (Postfix) with ESMTP id E003D72A78
+Return-Path: <markus.lehtonen@linux.intel.com>
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 5AE9260053
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 20 Sep 2015 17:06:35 +0000 (UTC)
-Received: by lbbmp1 with SMTP id mp1so41928530lbb.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 20 Sep 2015 10:06:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=references:from:mime-version:in-reply-to:date:message-id:subject:to
-	:cc:content-type:content-transfer-encoding;
-	bh=sZLeouSA+Ma9PRt4qIRIpflHbtNsmQw2hQzbpzCAwwE=;
-	b=vP3C0Dd72VY0Zi2lCP/4EsRKd7fpRzhCH0gOy2baw8D8neJPwLOLJkCqYGuQIsLeCA
-	V7zJYlYWy2+OiZw/3rfD52TKPw2WJYgOglrAA47lVN3uAfmh40K1rsZR/430qPFSqVik
-	wZ39ODsXGQXo0obKuMCCZvHzKwDY9atFPS8pHzCJaSISN4q8B+B9j39WEnCMmG39Skb8
-	EVERXqRsLUYg+fCgKzLXWSfLlOPl2KjJf2M8KBIQnKV3HcWwY/bwevYgV13SdLoq40dT
-	u3guIbsrqto5nNV7EwD13CEwZhTFCmz6bEqEW1PNciMBYhGyzSm+sN8RMa7tUxX+5qBC
-	R22g==
-X-Received: by 10.112.12.165 with SMTP id z5mr6171680lbb.33.1442768793603;
-	Sun, 20 Sep 2015 10:06:33 -0700 (PDT)
-References: <1442697816-11303-1-git-send-email-raj.khem@gmail.com>
-From: Romain Perier <romain.perier@gmail.com>
-Mime-Version: 1.0 (1.0)
-In-Reply-To: <1442697816-11303-1-git-send-email-raj.khem@gmail.com>
-Date: Sun, 20 Sep 2015 19:06:33 +0200
-Message-ID: <4572846161197673833@unknownmsgid>
-To: Khem Raj <raj.khem@gmail.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH V2] bitbake: bb.fetch2.git: Import errno module
+	Mon, 21 Sep 2015 13:07:58 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by fmsmga102.fm.intel.com with ESMTP; 21 Sep 2015 06:07:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.17,567,1437462000"; d="scan'208";a="794152676"
+Received: from marquiz.fi.intel.com ([10.237.72.155])
+	by fmsmga001.fm.intel.com with ESMTP; 21 Sep 2015 06:07:58 -0700
+From: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon, 21 Sep 2015 16:07:57 +0300
+Message-Id: <1442840877-32475-1-git-send-email-markus.lehtonen@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH] tinfoil: remove logging handler at shutdown
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,47 +27,48 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 20 Sep 2015 17:06:36 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Mon, 21 Sep 2015 13:07:59 -0000
 
-Hi,
+Otherwise the logger gets multiple handers (and the user get duplicate
+logging output) if another tinfoil instance is initialized after one is
+shut down().
 
-If this is the patch rebased on the bibake repo, thanks you. I am on
-vacations these days ;)
+Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
+---
+ lib/bb/tinfoil.py | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-Romain
+diff --git a/lib/bb/tinfoil.py b/lib/bb/tinfoil.py
+index 1ea46d8..7aa653f 100644
+--- a/lib/bb/tinfoil.py
++++ b/lib/bb/tinfoil.py
+@@ -36,13 +36,13 @@ class Tinfoil:
+ 
+         # Set up logging
+         self.logger = logging.getLogger('BitBake')
+-        console = logging.StreamHandler(output)
+-        bb.msg.addDefaultlogFilter(console)
++        self._log_hdlr = logging.StreamHandler(output)
++        bb.msg.addDefaultlogFilter(self._log_hdlr)
+         format = bb.msg.BBLogFormatter("%(levelname)s: %(message)s")
+         if output.isatty():
+             format.enable_color()
+-        console.setFormatter(format)
+-        self.logger.addHandler(console)
++        self._log_hdlr.setFormatter(format)
++        self.logger.addHandler(self._log_hdlr)
+ 
+         self.config = CookerConfiguration()
+         configparams = TinfoilConfigParameters(parse_only=True)
+@@ -88,6 +88,7 @@ class Tinfoil:
+         self.cooker.shutdown(force=True)
+         self.cooker.post_serve()
+         self.cooker.unlockBitbake()
++        self.logger.removeHandler(self._log_hdlr)
+ 
+ class TinfoilConfigParameters(ConfigParameters):
+ 
+-- 
+2.1.4
 
-> Le 19 sept. 2015 =C3=A0 23:14, Khem Raj <raj.khem@gmail.com> a =C3=A9crit=
- :
->
-> From: Romain Perier <romain.perier@gmail.com>
->
-> Currently this module is dereferencing errno.ENOENT but the python module=
- "errno"
-> is not imported, which causes a crash when fetching from a git repository=
-.
->
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> Acked-by: Christopher Larson <chris_larson@mentor.com>
-> Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ---
-> lib/bb/fetch2/git.py | 1 +
-> 1 file changed, 1 insertion(+)
->
-> diff --git a/lib/bb/fetch2/git.py b/lib/bb/fetch2/git.py
-> index 4a32a31..9c04da0 100644
-> --- a/lib/bb/fetch2/git.py
-> +++ b/lib/bb/fetch2/git.py
-> @@ -69,6 +69,7 @@ Supported SRC_URI options are:
-> import os
-> import re
-> import bb
-> +import errno
-> from   bb    import data
-> from   bb.fetch2 import FetchMethod
-> from   bb.fetch2 import runfetchcmd
-> --
-> 2.5.2
->
 
