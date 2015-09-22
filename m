@@ -1,21 +1,23 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id D96C173CF2
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 8B44173CF2
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 22 Sep 2015 09:34:34 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by fmsmga103.fm.intel.com with ESMTP; 22 Sep 2015 02:34:34 -0700
+	Tue, 22 Sep 2015 09:35:04 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 22 Sep 2015 02:35:05 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,572,1437462000"; d="scan'208";a="566120050"
+X-IronPort-AV: E=Sophos;i="5.17,572,1437462000"; d="scan'208";a="810261458"
 Received: from martinbu-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.21.229])
-	by FMSMGA003.fm.intel.com with ESMTP; 22 Sep 2015 02:34:34 -0700
+	by fmsmga002.fm.intel.com with ESMTP; 22 Sep 2015 02:35:05 -0700
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 22 Sep 2015 10:34:30 +0100
-Message-Id: <cover.1442914166.git.elliot.smith@intel.com>
+Date: Tue, 22 Sep 2015 10:34:52 +0100
+Message-Id: <adee73e311b4f4c21718045b2720affb5de61342.1442914166.git.elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
-Subject: [PATCH 0/4] Fix for YOCTO #7442
+In-Reply-To: <cover.1442914166.git.elliot.smith@intel.com>
+References: <cover.1442914166.git.elliot.smith@intel.com>
+Subject: [PATCH 1/4] toaster: store task name in Target objects
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,42 +30,51 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 22 Sep 2015 09:34:35 -0000
+X-List-Received-Date: Tue, 22 Sep 2015 09:35:06 -0000
 
-This set of changes brings back functionality to specify a task for a
-build and properly restart builds with non-default tasks.
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-This functionality has been broken in toaster since June (builds
-specifying a non-default task could not be run correctly).
+Information about a task is not stored in Target objects.
+This makes it impossible to correctly operate with the builds
+where task is specified.
 
-The patchset includes fixes for backend and frontend. It also adds 2 test cases
-for frontend to prevent this functionality from being broken again.
+Storing taks name is an enabler for other fixes in UI and backend
+related to restarting builds.
 
-The following changes since commit 7b86c771c80d0759c2ca0e57c46c4c966f89c49e:
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+---
+ lib/toaster/bldcontrol/management/commands/runbuilds.py | 2 +-
+ lib/toaster/orm/models.py                               | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-  bitbake: bitbake: bb.fetch2.git: Import errno module (2015-09-19 22:38:44 +0100)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib elliot/submit/ed/toaster/7442
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=elliot/submit/ed/toaster/7442
-
-Ed Bartosh (4):
-  toaster: store task name in Target objects
-  toaster: don't re-create Target objects
-  toaster: change UI to show tasks
-  toaster: add 2 UI tests
-
- lib/bb/ui/buildinfohelper.py                       | 17 +--------------
- .../bldcontrol/management/commands/runbuilds.py    |  2 +-
- lib/toaster/orm/models.py                          |  2 +-
- lib/toaster/toastergui/templates/builds.html       | 12 ++++++++++-
- lib/toaster/toastergui/templates/mrb_section.html  | 23 ++++++++++++++++-----
- .../toastergui/templates/projectbuilds.html        | 12 ++++++++++-
- lib/toaster/toastergui/tests.py                    | 24 ++++++++++++++++++++--
- 7 files changed, 65 insertions(+), 27 deletions(-)
-
---
+diff --git a/lib/toaster/bldcontrol/management/commands/runbuilds.py b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+index 718e144..5243a50 100644
+--- a/lib/toaster/bldcontrol/management/commands/runbuilds.py
++++ b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+@@ -118,7 +118,7 @@ class Command(NoArgsCommand):
+             br.save()
+             # transpose target information
+             for brtarget in br.brtarget_set.all():
+-                Target.objects.create(build = br.build, target= brtarget.target)
++                Target.objects.create(build=br.build, target=brtarget.target, task=brtarget.task)
+             # transpose the launch errors in ToasterExceptions
+             for brerror in br.brerror_set.all():
+                 LogMessage.objects.create(build = br.build, level = LogMessage.EXCEPTION, message = brerror.errmsg)
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index e4d2e87..883ecf4 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -270,7 +270,7 @@ class Project(models.Model):
+                                 )
+             for t in self.projecttarget_set.all():
+                 BRTarget.objects.create(req = br, target = t.target, task = t.task)
+-                Target.objects.create(build = br.build, target = t.target)
++                Target.objects.create(build = br.build, target = t.target, task = t.task)
+ 
+             for v in self.projectvariable_set.all():
+                 BRVariable.objects.create(req = br, name = v.name, value = v.value)
+-- 
 1.9.3
 
 ---------------------------------------------------------------------
