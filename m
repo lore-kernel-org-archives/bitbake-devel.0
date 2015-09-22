@@ -1,21 +1,35 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 32E0560053
+Return-Path: <avery.brian@gmail.com>
+Received: from mail-pa0-f47.google.com (mail-pa0-f47.google.com
+	[209.85.220.47])
+	by mail.openembedded.org (Postfix) with ESMTP id 0F28773D17
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 21 Sep 2015 18:18:27 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by orsmga102.jf.intel.com with ESMTP; 21 Sep 2015 11:03:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,568,1437462000"; d="scan'208";a="649377346"
-Received: from routhe-mobl1.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.18.247])
-	by orsmga003.jf.intel.com with ESMTP; 21 Sep 2015 11:02:05 -0700
-From: Elliot Smith <elliot.smith@intel.com>
+	Tue, 22 Sep 2015 02:41:02 +0000 (UTC)
+Received: by pacfv12 with SMTP id fv12so136336970pac.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 21 Sep 2015 19:41:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=EIhoFPrdVPjukzTB1aUPDegQlwnFaTa6Y14Rt9mlX3o=;
+	b=yX7u2Qk7hrmiufMT3EHU+x+3fIllXFiMDG+wRsvJOpUSYaE7aLkfxMhZPgPZBb02Bf
+	Gs/b5EjHvOUt2BEK9fTZvAqWVimfy2f8jyJ1v2wBuf93F5sJ/czhdljDa79BHaolGR3T
+	jU9I1kwt4pMeUwcyxBRGdsTsmHuA7izQSLdgHqjopO4gDlv+tGkSiOxVS0ts90gqJcns
+	JEPZA5BJPhLBPgYSar9FyZGUZCySn9mrnh1oVOrT4/2G+NVL8n01wClAs4A21+y90Xf4
+	HIctrWXydl9RKc/2doGVhyiMW01jUnlyI1PRcUc432S7UyctILEaQQ6iPUJa6V3x18SQ
+	BpcQ==
+X-Received: by 10.66.121.163 with SMTP id ll3mr28424852pab.146.1442889662666; 
+	Mon, 21 Sep 2015 19:41:02 -0700 (PDT)
+Received: from whisper.hsd1.or.comcast.net
+	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
+	by smtp.gmail.com with ESMTPSA id
+	fk8sm27289218pab.33.2015.09.21.19.41.01
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Mon, 21 Sep 2015 19:41:02 -0700 (PDT)
+From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 21 Sep 2015 19:01:09 +0100
-Message-Id: <1442858469-8737-1-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-Subject: [PATCH] toaster: remove time from builds in progress
+Date: Mon, 21 Sep 2015 19:42:27 -0700
+Message-Id: <cover.1442889648.git.avery.brian@gmail.com>
+X-Mailer: git-send-email 1.9.1
+Subject: [PATCH 0/1] Add fake entry to Target_File for filesystem root
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,65 +42,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 21 Sep 2015 18:18:29 -0000
+X-List-Received-Date: Tue, 22 Sep 2015 02:41:03 -0000
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
+The files-in-image.txt file is produced by bitbake after an
+image is created, listing all the files in the image.
+However, this list doesn't include the root directory ('/').
 
-In the 'latest builds' section of the all builds page,
-completed builds show the time they completed at. Builds
-in progress should not display such time, since they
-haven't completed yet.
+Fix this by creating a fake entry for the root directory
+in the Target_File table, so that the direct subdirectories
+of / can be assigned a parent. Note that it doesn't matter
+that the root is faked, as its properties are never shown
+in the directory structure tree.
 
-This patch removes the time information that was showing
-for builds in progress, whatever that time actually was.
+The following changes since commit 7b86c771c80d0759c2ca0e57c46c4c966f89c49e:
 
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
----
- bitbake/lib/toaster/toastergui/templates/mrb_section.html | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+  bitbake: bitbake: bb.fetch2.git: Import errno module (2015-09-19 22:38:44 +0100)
 
-diff --git a/bitbake/lib/toaster/toastergui/templates/mrb_section.html b/bitbake/lib/toaster/toastergui/templates/mrb_section.html
-index 396fb8e..c5e9c87 100644
---- a/bitbake/lib/toaster/toastergui/templates/mrb_section.html
-+++ b/bitbake/lib/toaster/toastergui/templates/mrb_section.html
-@@ -38,6 +38,7 @@
-                 </a>
-     {% endif %}
-             </div>
-+    {% if build.outcome == build.SUCCEEDED or build.outcome == build.FAILED %}
-             <div class="span2 lead">
-                 {% if build.completed_on|format_build_date  %}
-                     {{ build.completed_on|date:'d/m/y H:i' }}
-@@ -45,6 +46,7 @@
-                     {{ build.completed_on|date:'H:i' }}
-                 {% endif %}
-             </div>
-+    {% endif %}
-     {%if build.outcome == build.SUCCEEDED or build.outcome == build.FAILED %}
-             <div class="span2 lead">
-       {% if  build.errors.count %}
-@@ -79,7 +81,7 @@
-             </div>
-     {%endif%}
-     {%if build.outcome == build.IN_PROGRESS %}
--            <div class="span4">
-+            <div class="span4 offset1">
-                 <div class="progress" style="margin-top:5px;" data-toggle="tooltip" title="{{build.completeper}}% of tasks complete">
-                     <div style="width: {{build.completeper}}%;" class="bar"></div>
-                 </div>
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib bavery/submit/elliot/20150921_add-fake-root-to-Target-File
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/elliot/20150921_add-fake-root-to-Target-File
+
+Elliot Smith (1):
+  toaster: Add fake entry to Target_File for filesystem root
+
+ lib/bb/ui/buildinfohelper.py | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
+
 -- 
-1.9.3
-
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
+1.9.1
 
 
