@@ -1,35 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f45.google.com (mail-pa0-f45.google.com
-	[209.85.220.45])
-	by mail.openembedded.org (Postfix) with ESMTP id 00570608B7
+Received: from mail-pa0-f54.google.com (mail-pa0-f54.google.com
+	[209.85.220.54])
+	by mail.openembedded.org (Postfix) with ESMTP id 57B0676AC5
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 23 Sep 2015 22:33:18 +0000 (UTC)
-Received: by pacfv12 with SMTP id fv12so53255549pac.2
+	Wed, 23 Sep 2015 22:33:31 +0000 (UTC)
+Received: by pacfv12 with SMTP id fv12so53259913pac.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 23 Sep 2015 15:33:19 -0700 (PDT)
+	Wed, 23 Sep 2015 15:33:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id;
-	bh=6q3+sPMHO4+VUBRCjNPqsCd3jONkDXzyr0GrDv9amiE=;
-	b=HKbFEZJuyRAVsgATv77CT192csJSTmJ7f6zMNgt6J8xSJ/VB6aNguMIcc9KJT1TP3c
-	W0ZID41A+0bMHtGqrlgbsKGiToM/a7YJUggiFpHzxENfTaBjkE28KxWalVCn0S13NAWu
-	7TkVJgtGZ2B3hUalLF7FDe5TsSBuSJ0dLgTzYQsFUD80ibKaa4aVzq5F2AzSUj7mWSes
-	pwSHnuM9wuIkp9iR+Qnr+jxpkgjvRAl4ra46BDGpvCkXu2glvY00XHq+s70XiLWPjqo+
-	Hdr5t10Nn1+ffpgo0iu/BMpD6oGoSX/rkR0z9z5vr2QSWmmkPvCZElLCyuDZ6VYBdflR
-	NYTA==
-X-Received: by 10.68.65.104 with SMTP id w8mr40520240pbs.48.1443047599231;
-	Wed, 23 Sep 2015 15:33:19 -0700 (PDT)
+	h=from:to:cc:subject:date:message-id:in-reply-to:references
+	:in-reply-to:references;
+	bh=B2xHTs00nxT5PJ6ICSwzAfZbQZaOfGo+dYfPBPlXPc0=;
+	b=NiJ7JkEoMyPMneOVQBAh9QpSbMxD0MqGwsdjeJJBmtv60wvc70oMSMa3d8ONtRoC/v
+	n2xAPks+Q/+a+Zlb2Sq00bIhSlKedTWB6Tnkh8AhvPbglEXDnp6WhDelUpaQKZ5qFu5r
+	/tdHDy63Z1riVRCupvhYvj7oRFHPEjWZ4Q5dnYfX2/Ssgh8IfdYh8xAiiaq00l+/ZYtV
+	rjthZddXFRuQm4hEAkfWKkiiy7knF8lRY5yR+vGJPiqkEweFSnXpM+Jb4p6E5vq5fgV0
+	eO/o+e6am5kLPSVC9x8Isy0JLbdd/TT85YO6gCbGMGwbfdNH+9vrHYzh97RW/QrFjcoU
+	Gmcg==
+X-Received: by 10.66.221.170 with SMTP id qf10mr39204174pac.134.1443047611936; 
+	Wed, 23 Sep 2015 15:33:31 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	vw7sm9893518pab.15.2015.09.23.15.33.18
+	qg2sm9796764pbb.80.2015.09.23.15.33.31
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 23 Sep 2015 15:33:18 -0700 (PDT)
+	Wed, 23 Sep 2015 15:33:31 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 23 Sep 2015 15:34:46 -0700
-Message-Id: <cover.1443047547.git.avery.brian@gmail.com>
+Date: Wed, 23 Sep 2015 15:34:55 -0700
+Message-Id: <b4d1c8357a64c0086bcbe91d572d3c7893711323.1443047547.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
-Subject: [PATCH 0/6] fixes and improvements for layers cloning
+In-Reply-To: <de438abaff89a94027ae465a62dd4c0ce79ee208.1443047547.git.avery.brian@gmail.com>
+References: <de438abaff89a94027ae465a62dd4c0ce79ee208.1443047547.git.avery.brian@gmail.com>
+In-Reply-To: <cover.1443047547.git.avery.brian@gmail.com>
+References: <cover.1443047547.git.avery.brian@gmail.com>
+Subject: [PATCH 3/6] toaster: fix bug in resetting git repository
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,34 +47,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 23 Sep 2015 22:33:20 -0000
+X-List-Received-Date: Wed, 23 Sep 2015 22:33:32 -0000
 
-This patchset includes changes for Toaster cloning functionality:
- - used more appropriate git commands: git reset --hard instead of
-   git checkout && git rebase.
- - changed naming of clone directories, made them unique
- - moved clones to subdirectory
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-The following changes since commit 524ddd86c305af1b029c1773affe5cebffc62b28:
+git reset --hard should be given either commit id or
+origin/<ref name> to work properly. Without this fix git will
+complain that origin/<commit id> does not exist.
 
-  oeqa/utils/qemurunner.py: Remove duplicate message on LoggingThread start (2015-09-23 09:53:21 +0100)
+[YOCTO #7505]
 
-are available in the git repository at:
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+Signed-off-by: brian avery <avery.brian@gmail.com>
+---
+ lib/toaster/bldcontrol/localhostbecontroller.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-  git://git.yoctoproject.org/poky-contrib bavery/submit/ed/20150923-better-git-layers
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/ed/20150923-better-git-layers
-
-Ed Bartosh (6):
-  toaster: don't use --single-branch when cloning
-  toaster: use git reset --hard instead of rebase
-  toaster: fix bug in resetting git repository
-  toaster: fix reimporting module
-  toaster: make clone directory name unique
-  toaster: move clones into subdirectory
-
- lib/toaster/bldcontrol/localhostbecontroller.py | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
-
+diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
+index 42be4af..0c34957 100644
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py
++++ b/lib/toaster/bldcontrol/localhostbecontroller.py
+@@ -266,7 +266,8 @@ class LocalhostBEController(BuildEnvironmentController):
+             # branch magic name "HEAD" will inhibit checkout
+             if commit != "HEAD":
+                 logger.debug("localhostbecontroller: checking out commit %s to %s " % (commit, localdirname))
+-                self._shellcmd('git fetch --all && git reset --hard "origin/%s"' % commit, localdirname)
++                ref = commit if re.match('^[a-fA-F0-9]+$', commit) else 'origin/%s' % commit
++                self._shellcmd('git fetch --all && git reset --hard "%s"' % ref, localdirname)
+ 
+             # take the localdirname as poky dir if we can find the oe-init-build-env
+             if self.pokydirname is None and os.path.exists(os.path.join(localdirname, "oe-init-build-env")):
 -- 
 1.9.1
 
