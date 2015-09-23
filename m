@@ -1,51 +1,35 @@
-Return-Path: <otavio.salvador@ossystems.com.br>
-Received: from mail-io0-f181.google.com (mail-io0-f181.google.com
-	[209.85.223.181])
-	by mail.openembedded.org (Postfix) with ESMTP id 6117776E70
+Return-Path: <avery.brian@gmail.com>
+Received: from mail-pa0-f45.google.com (mail-pa0-f45.google.com
+	[209.85.220.45])
+	by mail.openembedded.org (Postfix) with ESMTP id 00570608B7
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 22 Sep 2015 17:53:15 +0000 (UTC)
-Received: by iofb144 with SMTP id b144so22258692iof.1
+	Wed, 23 Sep 2015 22:33:18 +0000 (UTC)
+Received: by pacfv12 with SMTP id fv12so53255549pac.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 22 Sep 2015 10:53:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:mime-version:in-reply-to:references:date
-	:message-id:subject:to:cc:content-type;
-	bh=6tYg3cFBabCoaEV1f+aPaJsHJWFuUdvc1SvnLLnQYxk=;
-	b=REedQHGw5GFdsasbhmdQo77svbJGBFOLweU1iVanKb+5rboVa1iVSeSJEr7GDgmDae
-	cizjOxm18FuI6adIzPIk2ALiSU/I2CabYMQY00M6uVZS8BwWV6oNXM7wBZIikA7uIG5/
-	+q71ARyNBsrm1hsQnL8K+//4Be6lFG6E4Ps/swDloL2RYYHdnZdbt1ho2BradQ18zAfz
-	FTNbHvFxYmuvd9VWpbUZ0+60ALn8ZGuC0+OyX5Zb0KqS5CkEGbpBaaivd10Cg3xG0SMm
-	KIBkuXvgh3PV5PTEZJOaSETACMdT1F/Q0Z2EfgxocfGA3H9u6AhSuGUfk9pHozs5ZE2L
-	Rmow==
-X-Gm-Message-State: ALoCoQnLx9VjETPLu77E+LxlewN75M7AgrZQHcnnKT14z+52yR7h33cbFSuLoLW+k7tdrCxWANCH
-X-Received: by 10.107.10.11 with SMTP id u11mr36232014ioi.36.1442944395758;
-	Tue, 22 Sep 2015 10:53:15 -0700 (PDT)
-Received: from mail-ig0-f169.google.com (mail-ig0-f169.google.com.
-	[209.85.213.169]) by smtp.gmail.com with ESMTPSA id
-	189sm1647411ioe.40.2015.09.22.10.53.14
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 22 Sep 2015 10:53:14 -0700 (PDT)
-From: Otavio Salvador <otavio.salvador@ossystems.com.br>
-X-Google-Original-From: Otavio Salvador <otavio@ossystems.com.br>
-Received: by igcpb10 with SMTP id pb10so104447101igc.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 22 Sep 2015 10:53:14 -0700 (PDT)
-MIME-Version: 1.0
-X-Received: by 10.50.77.15 with SMTP id o15mr19758457igw.5.1442944394038; Tue,
-	22 Sep 2015 10:53:14 -0700 (PDT)
-Received: by 10.36.218.7 with HTTP; Tue, 22 Sep 2015 10:53:13 -0700 (PDT)
-In-Reply-To: <3187731.pmWd6aiVkT@peggleto-mobl.ger.corp.intel.com>
-References: <32EA6B79577EEF4C84CB32305D45A059289DF453@SRV24.hamburg.garz-fricke.de>
-	<3187731.pmWd6aiVkT@peggleto-mobl.ger.corp.intel.com>
-Date: Tue, 22 Sep 2015 14:53:13 -0300
-Message-ID: <CAP9ODKo4yZJ8mqoZJX9pAcja=Cy6YPZo87V=hzhuwm+Xpc0Jyw@mail.gmail.com>
-To: Paul Eggleton <paul.eggleton@linux.intel.com>
-X-Mailman-Approved-At: Wed, 23 Sep 2015 21:40:32 +0000
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: Override a "_remove" operator in bbappend file
+	Wed, 23 Sep 2015 15:33:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=6q3+sPMHO4+VUBRCjNPqsCd3jONkDXzyr0GrDv9amiE=;
+	b=HKbFEZJuyRAVsgATv77CT192csJSTmJ7f6zMNgt6J8xSJ/VB6aNguMIcc9KJT1TP3c
+	W0ZID41A+0bMHtGqrlgbsKGiToM/a7YJUggiFpHzxENfTaBjkE28KxWalVCn0S13NAWu
+	7TkVJgtGZ2B3hUalLF7FDe5TsSBuSJ0dLgTzYQsFUD80ibKaa4aVzq5F2AzSUj7mWSes
+	pwSHnuM9wuIkp9iR+Qnr+jxpkgjvRAl4ra46BDGpvCkXu2glvY00XHq+s70XiLWPjqo+
+	Hdr5t10Nn1+ffpgo0iu/BMpD6oGoSX/rkR0z9z5vr2QSWmmkPvCZElLCyuDZ6VYBdflR
+	NYTA==
+X-Received: by 10.68.65.104 with SMTP id w8mr40520240pbs.48.1443047599231;
+	Wed, 23 Sep 2015 15:33:19 -0700 (PDT)
+Received: from whisper.hsd1.or.comcast.net
+	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
+	by smtp.gmail.com with ESMTPSA id
+	vw7sm9893518pab.15.2015.09.23.15.33.18
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Wed, 23 Sep 2015 15:33:18 -0700 (PDT)
+From: brian avery <avery.brian@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed, 23 Sep 2015 15:34:46 -0700
+Message-Id: <cover.1443047547.git.avery.brian@gmail.com>
+X-Mailer: git-send-email 1.9.1
+Subject: [PATCH 0/6] fixes and improvements for layers cloning
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -58,33 +42,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 22 Sep 2015 17:53:18 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Wed, 23 Sep 2015 22:33:20 -0000
 
-Hello Tim,
+This patchset includes changes for Toaster cloning functionality:
+ - used more appropriate git commands: git reset --hard instead of
+   git checkout && git rebase.
+ - changed naming of clone directories, made them unique
+ - moved clones to subdirectory
 
-On Tue, Sep 22, 2015 at 1:12 PM, Paul Eggleton
-<paul.eggleton@linux.intel.com> wrote:
-> On Tuesday 22 September 2015 14:35:39 Tim Jaacks wrote:
->> https://github.com/Freescale/meta-fsl-arm/blob/3336ef362109eef14f9e73cdededb
->> 43caefedb2f/recipes-graphics/mesa/mesa_%25.bbappend
->>
->> I would like to undo the first two lines.
->
-> Adding Otavio (the committer & maintainer of meta-fsl-arm) to CC - Tim perhaps
-> you can explain what you're attempting to do here in concrete terms?
+The following changes since commit 524ddd86c305af1b029c1773affe5cebffc62b28:
 
-It seems you are intending to use mesa for i.MX5 SoC, the way I would
-do it would be removing the mx5 from the overrides completely.
+  oeqa/utils/qemurunner.py: Remove duplicate message on LoggingThread start (2015-09-23 09:53:21 +0100)
 
-If you move to master, the mx5, now uses Linux FSLC which is based on
-mainline and got those bits removed[1]. This might be a good trick
-since it gives you more Freedom to handle whatever setting is need.
+are available in the git repository at:
 
-1. https://github.com/Freescale/meta-fsl-arm/commit/3b698004698742130f87dd4d9edaabdf58c4e079
+  git://git.yoctoproject.org/poky-contrib bavery/submit/ed/20150923-better-git-layers
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/ed/20150923-better-git-layers
+
+Ed Bartosh (6):
+  toaster: don't use --single-branch when cloning
+  toaster: use git reset --hard instead of rebase
+  toaster: fix bug in resetting git repository
+  toaster: fix reimporting module
+  toaster: make clone directory name unique
+  toaster: move clones into subdirectory
+
+ lib/toaster/bldcontrol/localhostbecontroller.py | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
 -- 
-Otavio Salvador                             O.S. Systems
-http://www.ossystems.com.br        http://code.ossystems.com.br
-Mobile: +55 (53) 9981-7854            Mobile: +1 (347) 903-9750
+1.9.1
+
 
