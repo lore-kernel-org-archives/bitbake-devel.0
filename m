@@ -1,29 +1,36 @@
-Return-Path: <tim.jaacks@garz-fricke.com>
-Received: from mailout.artfiles.de (mailout.artfiles.de [80.252.97.80])
-	by mail.openembedded.org (Postfix) with ESMTP id 1CAE47570D
+Return-Path: <kergoth@gmail.com>
+Received: from mail-io0-f175.google.com (mail-io0-f175.google.com
+	[209.85.223.175])
+	by mail.openembedded.org (Postfix) with ESMTP id B1C3D73D13
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Sep 2015 08:53:24 +0000 (UTC)
-Received: from [89.27.136.47] (helo=mail.garz-fricke.com)
-	auth=mx@garz-fricke.com
-	by mailout.artfiles.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA256:256)
-	(Exim 4.80.1) id 1ZgUBX-0005n6-2j
-	for bitbake-devel@lists.openembedded.org;
-	Mon, 28 Sep 2015 10:53:23 +0200
-Received: from SRV24.hamburg.garz-fricke.de ([fe80::b591:975a:1787:bdd7]) by
-	SRV24.hamburg.garz-fricke.de ([fe80::b591:975a:1787:bdd7%12]) with mapi
-	id 14.03.0248.002; Mon, 28 Sep 2015 10:53:21 +0200
-From: Tim Jaacks <tim.jaacks@garz-fricke.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] Override a "_remove" operator in bbappend file
-Thread-Index: AdD5yvv0Hi7mek9LSb+JSmAsm2Uesw==
-Date: Mon, 28 Sep 2015 08:53:20 +0000
-Message-ID: <32EA6B79577EEF4C84CB32305D45A059289EB14B@SRV24.hamburg.garz-fricke.de>
-Accept-Language: de-DE, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.20.3.9]
+	Mon, 28 Sep 2015 15:13:00 +0000 (UTC)
+Received: by ioiz6 with SMTP id z6so177891826ioi.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 28 Sep 2015 08:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=sd27JYBec3qMVXD4zhJh42xtUb2rHs8UdTvHrJKDpvI=;
+	b=Qq6G/2YcnMRtwfpchBblpO8CTkSitq+f74HbflbMZkE2isAQZsnr2Xai6juQGrcFyQ
+	Bvw/IH6fz4eYFqBtw+aefhuA+FhG8aU2zDsSh2HzkmBLFDvfzj10hmPKcAly5DD5SbpC
+	Z0amfW86rZ1gk6N85Aabn6oGU0L0o68RHTbVI3mNPPcX6qeuxZZuJ4jzo1ywRUl35f1+
+	AasgMargYftDSYbIMkrR/EshagB8DaQNwOIZ49ok/cjSicJd1WCRF6uSYkusy2ZraPqG
+	XZIilAmcafM6hNZpskteBscaBJ22kCb/P9suNoiMBbK3OdyQnoOzN1PHF933+R88+URr
+	IYuQ==
+X-Received: by 10.107.38.210 with SMTP id m201mr22653094iom.98.1443453180328; 
+	Mon, 28 Sep 2015 08:13:00 -0700 (PDT)
 MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.79.100.71 with HTTP; Mon, 28 Sep 2015 08:12:40 -0700 (PDT)
+In-Reply-To: <32EA6B79577EEF4C84CB32305D45A059289EB14B@SRV24.hamburg.garz-fricke.de>
+References: <32EA6B79577EEF4C84CB32305D45A059289EB14B@SRV24.hamburg.garz-fricke.de>
+From: Christopher Larson <clarson@kergoth.com>
+Date: Mon, 28 Sep 2015 08:12:40 -0700
+X-Google-Sender-Auth: cnGJRylrclz7KhRBZ7VMhNvQCNw
+Message-ID: <CABcZANkw6MZm4HnQKQErPdbtXZ1ZZt3+vyEOmyBucTiHDgJkSg@mail.gmail.com>
+To: Tim Jaacks <tim.jaacks@garz-fricke.com>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
 Subject: Re: Override a "_remove" operator in bbappend file
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
@@ -37,49 +44,131 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 28 Sep 2015 08:53:25 -0000
-Content-Language: de-DE
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+X-List-Received-Date: Mon, 28 Sep 2015 15:13:02 -0000
+Content-Type: multipart/alternative; boundary=001a114028181046380520d022af
 
-SGVsbG8gT3RhdmlvICYgUGF1bCwNCg0KdGhhbmtzIGZvciB5b3VyIHJlcGxpZXMuDQoNCj4gSXQg
-c2VlbXMgeW91IGFyZSBpbnRlbmRpbmcgdG8gdXNlIG1lc2EgZm9yIGkuTVg1IFNvQywgdGhlIHdh
-eSBJIHdvdWxkIGRvIGl0DQo+IHdvdWxkIGJlIHJlbW92aW5nIHRoZSBteDUgZnJvbSB0aGUgb3Zl
-cnJpZGVzIGNvbXBsZXRlbHkuDQoNClllcywgdGhhdCBpcyBleGFjdGx5IHdoYXQgSSB3YW50IHRv
-IGRvLiBXZSBkbyBub3Qgd2FudCB0byBtb3ZlIHRvIG1hc3RlciwgYXMgd2UgdXNlIHRoZSAzLjAu
-MzUga2VybmVsIGFuZCBoYXZlIHRlc3RlZCBvdXIgc3lzdGVtcyBvbiB0aGlzIHZlcnNpb24sIGFu
-ZCBjaGFuZ2luZyB0aGlzIHdvdWxkIHJlc3VsdCBpbiBhIGxvdCBvZiBuZXcgd29yay4NCllvdSBt
-ZWFuLCBJIHNob3VsZCByZW1vdmUgIm14NSIgZnJvbSBTT0NfRkFNSUxZPyBXZWxsLCB0aGF0IHdv
-dWxkIHdvcmsgb2YgY291cnNlLCBoYXZlbid0IHRob3VnaHQgb2YgdGhhdC4gSG93ZXZlciwgSSB3
-b3VsZCBoYXZlIHRvIHJld3JpdGUgbG90cyBvZiBvdGhlciB2YXJpYWJsZSBhc3NpZ25tZW50cyB3
-aXRoIG92ZXJyaWRlcyBmb3IgbXkgc3BlY2lmaWMgaGFyZHdhcmUuIEFuZCB0aGlzIHdvdWxkbid0
-IGJlIHZlcnkgaW50dWl0aXZlIGF0IGFsbCwgYmVjYXVzZSBteSBoYXJkd2FyZSBJUyBiYXNlZCBv
-biBhbiBteDUsIGFuZCB0aHVzIGxvb2tpbmcgaW50byB0aGUgcmVjaXBlcyBJIHdvdWxkIGFzc3Vt
-ZSB0aGF0IF9teDUgb3ZlcnJpZGVzIGFyZSBhcHBsaWVkIG9uIG15IGhhcmR3YXJlLg0KDQo+IFdl
-IHdlbnQgYmFjayBhbmQgZm9ydGggb24gdGhlIHdheSBpdCB3YXMgaW1wbGVtZW50ZWQsIGJ1dCB0
-aGUgY29uY2x1c2lvbiB3ZQ0KPiByZWFjaGVkIHdhcyB0aGF0IHdoYXQgbW9zdCBwZW9wbGUgd2Fu
-dCBpcyBhIHJlbW92ZSBvcGVyYXRvciB0aGF0IHJlbW92ZXMgdGhlDQo+IHZhbHVlIG5vIG1hdHRl
-ciBob3cgaXQgY29tZXMgaW4uIElmIHdlIHN0YXJ0IGdldHRpbmcgaW50byBvcmRlcmluZyBvZg0K
-PiBvcGVyYXRvcnMgdGhlbiBpdCdzIGhhcmRlciBmb3IgdGhlIHVzZXIgdG8gdW5kZXJzdGFuZCB3
-aGF0J3MgZ29pbmcgb24sDQo+IHBhcnRpY3VsYXJseSBhcyBfYXBwZW5kLCBfcHJlcGVuZCBhbmQg
-X3JlbW92ZSBhcmUgZGVmZXJyZWQgb3BlcmF0aW9ucyAodW5saWtlIA0KPiArPSBvciA9KyB3aGlj
-aCBhcmUgaW1tZWRpYXRlKS4NCj4gDQo+IFdoYXQgdGhpcyBkb2VzIG1lYW4gaXMgdGhhdCBfcmVt
-b3ZlIHNob3VsZCBiZSB1c2VkIHNwYXJpbmdseSBhbmQgcmVhbGx5IG91Z2h0DQo+IHRvIGJlIHVz
-ZWQgb25seSB3aGVyZSBpdCdzIHZlcnkgdW5saWtlbHkgdGhhdCBhbnlvbmUgd291bGQgd2FudCB0
-byBvdmVycmlkZSBpdC4NCg0KV2VsbCwgSSB3b3VsZCBzYXkgdGhhdCB0aGlzIGlzIHNvbWV3aGF0
-IGNvdW50ZXItaW50dWl0aXZlLiBUaGUgbGF5ZXJzIGFyZSBvbmUgb2YgdGhlIG1haW4gY29uY2Vw
-dHMgb2YgQml0YmFrZS4gSWYgSSBjcmVhdGUgYSBsYXllciBhbmQgYXNzaWduIHRoZSBoaWdoZXN0
-IHByaW9yaXR5IHRvIGl0LCBpdCBpcyBoYXJkIHRvIHVuZGVyc3RhbmQgdGhhdCBjaGFuZ2VzIEkg
-bWFrZSB0byBhIHZhcmlhYmxlIGluIG15IGxheWVyIGFyZSBub3QgYXBwbGllZCBiZWNhdXNlIG9m
-IGEgbG93ZXIgcHJpb3JpdHkgbGF5ZXIgYmVpbmcgcHJvY2Vzc2VkIGFmdGVyIG15IGxheWVyLiBI
-b3cgY2FuIHlvdSBldmVyIHRlbGwgdGhhdCBpdCBpcyAidW5saWtlbHkiIHRoYXQgc29tZW9uZSB3
-YW50cyB0byBvdmVycmlkZSBhIF9yZW1vdmUgb3BlcmF0b3I/IFNob3VsZG4ndCBBTEwgdmFyaWFi
-bGVzIGJlIGNoYW5nZWFibGUgaW4gQUxMIHdheXM/IFRoaXMgc2VlbXMgYSB2ZXJ5IHN0cmljdCAo
-YW5kIHVuZG9jdW1lbnRlZCkgbGltaXRhdGlvbiB0byBtZS4NCg0KwqANCk1pdCBmcmV1bmRsaWNo
-ZW4gR3LDvMOfZW4gLyBCZXN0IHJlZ2FyZHMNCmkuQS4gVGltIEphYWNrcw0KDQpTb2Z0d2FyZSBF
-bmdpbmVlcmluZw0KR2FyeiAmIEZyaWNrZSBHbWJIDQpUZW1wb3dlcmtyaW5nIDIsIDIxMDc5IEhh
-bWJ1cmcgLSBHZXJtYW55DQpBbXRzZ2VyaWNodCBIYW1idXJnIEhSQiA2MDUxNA0KR2VzY2jDpGZ0
-c2bDvGhyZXI6IE1hbmZyZWQgR2FyeiwgTWF0dGhpYXMgRnJpY2tlDQpQaG9uZTogKzQ5IDQwIDc5
-MTg5OSAtIDU1DQpGYXg6wqDCoMKgwqAgKzQ5IDQwIDc5MTg5OSDigJMgMzkNCnRpbS5qYWFja3NA
-Z2Fyei1mcmlja2UuY29tDQp3d3cuZ2Fyei1mcmlja2UuY29tDQo=
+--001a114028181046380520d022af
+Content-Type: text/plain; charset=UTF-8
 
+On Mon, Sep 28, 2015 at 1:53 AM, Tim Jaacks <tim.jaacks@garz-fricke.com>
+wrote:
+
+> Hello Otavio & Paul,
+>
+> thanks for your replies.
+>
+> > It seems you are intending to use mesa for i.MX5 SoC, the way I would do
+> it
+> > would be removing the mx5 from the overrides completely.
+>
+> Yes, that is exactly what I want to do. We do not want to move to master,
+> as we use the 3.0.35 kernel and have tested our systems on this version,
+> and changing this would result in a lot of new work.
+> You mean, I should remove "mx5" from SOC_FAMILY? Well, that would work of
+> course, haven't thought of that. However, I would have to rewrite lots of
+> other variable assignments with overrides for my specific hardware. And
+> this wouldn't be very intuitive at all, because my hardware IS based on an
+> mx5, and thus looking into the recipes I would assume that _mx5 overrides
+> are applied on my hardware.
+>
+> > We went back and forth on the way it was implemented, but the conclusion
+> we
+> > reached was that what most people want is a remove operator that removes
+> the
+> > value no matter how it comes in. If we start getting into ordering of
+> > operators then it's harder for the user to understand what's going on,
+> > particularly as _append, _prepend and _remove are deferred operations
+> (unlike
+> > += or =+ which are immediate).
+> >
+> > What this does mean is that _remove should be used sparingly and really
+> ought
+> > to be used only where it's very unlikely that anyone would want to
+> override it.
+>
+> Well, I would say that this is somewhat counter-intuitive. The layers are
+> one of the main concepts of Bitbake. If I create a layer and assign the
+> highest priority to it, it is hard to understand that changes I make to a
+> variable in my layer are not applied because of a lower priority layer
+> being processed after my layer. How can you ever tell that it is "unlikely"
+> that someone wants to override a _remove operator? Shouldn't ALL variables
+> be changeable in ALL ways? This seems a very strict (and undocumented)
+> limitation to me.
+>
+
+Remember that _remove is usable in global configuration context as well. We
+need the user to be able to remove something from local.conf which added in
+a recipe, but if we blindly follow the order of append/prepend/remove
+operations, it wouldn't work as expected, as the configuration metadata is
+parsed long before the recipes.
+-- 
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
+
+--001a114028181046380520d022af
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
+On Mon, Sep 28, 2015 at 1:53 AM, Tim Jaacks <span dir=3D"ltr">&lt;<a href=
+=3D"mailto:tim.jaacks@garz-fricke.com" target=3D"_blank">tim.jaacks@garz-fr=
+icke.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=
+=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=
+=3D":22w" class=3D"a3s" style=3D"overflow:hidden">Hello Otavio &amp; Paul,<=
+br>
+<br>
+thanks for your replies.<br>
+<span class=3D""><br>
+&gt; It seems you are intending to use mesa for i.MX5 SoC, the way I would =
+do it<br>
+&gt; would be removing the mx5 from the overrides completely.<br>
+<br>
+</span>Yes, that is exactly what I want to do. We do not want to move to ma=
+ster, as we use the 3.0.35 kernel and have tested our systems on this versi=
+on, and changing this would result in a lot of new work.<br>
+You mean, I should remove &quot;mx5&quot; from SOC_FAMILY? Well, that would=
+ work of course, haven&#39;t thought of that. However, I would have to rewr=
+ite lots of other variable assignments with overrides for my specific hardw=
+are. And this wouldn&#39;t be very intuitive at all, because my hardware IS=
+ based on an mx5, and thus looking into the recipes I would assume that _mx=
+5 overrides are applied on my hardware.<br>
+<span class=3D""><br>
+&gt; We went back and forth on the way it was implemented, but the conclusi=
+on we<br>
+&gt; reached was that what most people want is a remove operator that remov=
+es the<br>
+&gt; value no matter how it comes in. If we start getting into ordering of<=
+br>
+&gt; operators then it&#39;s harder for the user to understand what&#39;s g=
+oing on,<br>
+&gt; particularly as _append, _prepend and _remove are deferred operations =
+(unlike<br>
+&gt; +=3D or =3D+ which are immediate).<br>
+&gt;<br>
+&gt; What this does mean is that _remove should be used sparingly and reall=
+y ought<br>
+&gt; to be used only where it&#39;s very unlikely that anyone would want to=
+ override it.<br>
+<br>
+</span>Well, I would say that this is somewhat counter-intuitive. The layer=
+s are one of the main concepts of Bitbake. If I create a layer and assign t=
+he highest priority to it, it is hard to understand that changes I make to =
+a variable in my layer are not applied because of a lower priority layer be=
+ing processed after my layer. How can you ever tell that it is &quot;unlike=
+ly&quot; that someone wants to override a _remove operator? Shouldn&#39;t A=
+LL variables be changeable in ALL ways? This seems a very strict (and undoc=
+umented) limitation to me.<br></div></blockquote></div><br>Remember that _r=
+emove is usable in global configuration context as well. We need the user t=
+o be able to remove something from local.conf which added in a recipe, but =
+if we blindly follow the order of append/prepend/remove operations, it woul=
+dn&#39;t work as expected, as the configuration metadata is parsed long bef=
+ore the recipes.<br>-- <br><div class=3D"gmail_signature">Christopher Larso=
+n<br>clarson at kergoth dot com<br>Founder - BitBake, OpenEmbedded, OpenZau=
+rus<br>Maintainer - Tslib<br>Senior Software Engineer, Mentor Graphics</div=
+>
+</div></div>
+
+--001a114028181046380520d022af--
