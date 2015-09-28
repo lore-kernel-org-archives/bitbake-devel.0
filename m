@@ -1,25 +1,30 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 69E4276DEB
+Return-Path: <tim.jaacks@garz-fricke.com>
+Received: from mailout.artfiles.de (mailout.artfiles.de [80.252.97.80])
+	by mail.openembedded.org (Postfix) with ESMTP id 1CAE47570D
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 25 Sep 2015 13:23:18 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by orsmga101.jf.intel.com with ESMTP; 25 Sep 2015 06:23:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,587,1437462000"; d="scan'208";a="812819536"
-Received: from jjkivilu-mobl2.ger.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.252.20.126])
-	by fmsmga002.fm.intel.com with ESMTP; 25 Sep 2015 06:23:16 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 25 Sep 2015 14:23:16 +0100
-Message-ID: <1482465.yFbZt7i8TL@peggleto-mobl.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.14.9 (Linux/4.1.6-100.fc21.x86_64; KDE/4.14.9; x86_64; ; )
-In-Reply-To: <1443099743-17231-1-git-send-email-markus.lehtonen@linux.intel.com>
-References: <1443099743-17231-1-git-send-email-markus.lehtonen@linux.intel.com>
+	Mon, 28 Sep 2015 08:53:24 +0000 (UTC)
+Received: from [89.27.136.47] (helo=mail.garz-fricke.com)
+	auth=mx@garz-fricke.com
+	by mailout.artfiles.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA256:256)
+	(Exim 4.80.1) id 1ZgUBX-0005n6-2j
+	for bitbake-devel@lists.openembedded.org;
+	Mon, 28 Sep 2015 10:53:23 +0200
+Received: from SRV24.hamburg.garz-fricke.de ([fe80::b591:975a:1787:bdd7]) by
+	SRV24.hamburg.garz-fricke.de ([fe80::b591:975a:1787:bdd7%12]) with mapi
+	id 14.03.0248.002; Mon, 28 Sep 2015 10:53:21 +0200
+From: Tim Jaacks <tim.jaacks@garz-fricke.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: [bitbake-devel] Override a "_remove" operator in bbappend file
+Thread-Index: AdD5yvv0Hi7mek9LSb+JSmAsm2Uesw==
+Date: Mon, 28 Sep 2015 08:53:20 +0000
+Message-ID: <32EA6B79577EEF4C84CB32305D45A059289EB14B@SRV24.hamburg.garz-fricke.de>
+Accept-Language: de-DE, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.20.3.9]
 MIME-Version: 1.0
-Subject: Re: [PATCH] utils: only add layer once in edit_bblayers_conf()
+Subject: Re: Override a "_remove" operator in bbappend file
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,43 +37,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 25 Sep 2015 13:23:21 -0000
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-List-Received-Date: Mon, 28 Sep 2015 08:53:25 -0000
+Content-Language: de-DE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On Thursday 24 September 2015 16:02:23 Markus Lehtonen wrote:
-> Prevent edit_bblayers_conf() from adding layer(s) multiple times. This
-> happened when BBLAYERS variable was "listed" multiple times in
-> bblayer.conf - i.e. the configuration was split into multiple separate
-> assignments.
-> 
-> [YOCTO #8316]
-> 
-> Signed-off-by: Markus Lehtonen <markus.lehtonen@linux.intel.com>
-> ---
->  lib/bb/utils.py | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/lib/bb/utils.py b/lib/bb/utils.py
-> index 91faa49..9b550ef 100644
-> --- a/lib/bb/utils.py
-> +++ b/lib/bb/utils.py
-> @@ -1249,6 +1249,7 @@ def edit_bblayers_conf(bblayers_conf, add, remove):
->                      bblayers.append(addlayer)
->                  else:
->                      notadded.append(addlayer)
-> +            del addlayers[:]
-> 
->          if updated:
->              return (bblayers, None, 2, False)
-
-Nice, a much simpler fix than I'd immediately assumed it would be when I read 
-the bug :)
-
-Acked-by: Paul Eggleton <paul.eggleton@linux.intel.com>
-
--- 
-
-Paul Eggleton
-Intel Open Source Technology Centre
+SGVsbG8gT3RhdmlvICYgUGF1bCwNCg0KdGhhbmtzIGZvciB5b3VyIHJlcGxpZXMuDQoNCj4gSXQg
+c2VlbXMgeW91IGFyZSBpbnRlbmRpbmcgdG8gdXNlIG1lc2EgZm9yIGkuTVg1IFNvQywgdGhlIHdh
+eSBJIHdvdWxkIGRvIGl0DQo+IHdvdWxkIGJlIHJlbW92aW5nIHRoZSBteDUgZnJvbSB0aGUgb3Zl
+cnJpZGVzIGNvbXBsZXRlbHkuDQoNClllcywgdGhhdCBpcyBleGFjdGx5IHdoYXQgSSB3YW50IHRv
+IGRvLiBXZSBkbyBub3Qgd2FudCB0byBtb3ZlIHRvIG1hc3RlciwgYXMgd2UgdXNlIHRoZSAzLjAu
+MzUga2VybmVsIGFuZCBoYXZlIHRlc3RlZCBvdXIgc3lzdGVtcyBvbiB0aGlzIHZlcnNpb24sIGFu
+ZCBjaGFuZ2luZyB0aGlzIHdvdWxkIHJlc3VsdCBpbiBhIGxvdCBvZiBuZXcgd29yay4NCllvdSBt
+ZWFuLCBJIHNob3VsZCByZW1vdmUgIm14NSIgZnJvbSBTT0NfRkFNSUxZPyBXZWxsLCB0aGF0IHdv
+dWxkIHdvcmsgb2YgY291cnNlLCBoYXZlbid0IHRob3VnaHQgb2YgdGhhdC4gSG93ZXZlciwgSSB3
+b3VsZCBoYXZlIHRvIHJld3JpdGUgbG90cyBvZiBvdGhlciB2YXJpYWJsZSBhc3NpZ25tZW50cyB3
+aXRoIG92ZXJyaWRlcyBmb3IgbXkgc3BlY2lmaWMgaGFyZHdhcmUuIEFuZCB0aGlzIHdvdWxkbid0
+IGJlIHZlcnkgaW50dWl0aXZlIGF0IGFsbCwgYmVjYXVzZSBteSBoYXJkd2FyZSBJUyBiYXNlZCBv
+biBhbiBteDUsIGFuZCB0aHVzIGxvb2tpbmcgaW50byB0aGUgcmVjaXBlcyBJIHdvdWxkIGFzc3Vt
+ZSB0aGF0IF9teDUgb3ZlcnJpZGVzIGFyZSBhcHBsaWVkIG9uIG15IGhhcmR3YXJlLg0KDQo+IFdl
+IHdlbnQgYmFjayBhbmQgZm9ydGggb24gdGhlIHdheSBpdCB3YXMgaW1wbGVtZW50ZWQsIGJ1dCB0
+aGUgY29uY2x1c2lvbiB3ZQ0KPiByZWFjaGVkIHdhcyB0aGF0IHdoYXQgbW9zdCBwZW9wbGUgd2Fu
+dCBpcyBhIHJlbW92ZSBvcGVyYXRvciB0aGF0IHJlbW92ZXMgdGhlDQo+IHZhbHVlIG5vIG1hdHRl
+ciBob3cgaXQgY29tZXMgaW4uIElmIHdlIHN0YXJ0IGdldHRpbmcgaW50byBvcmRlcmluZyBvZg0K
+PiBvcGVyYXRvcnMgdGhlbiBpdCdzIGhhcmRlciBmb3IgdGhlIHVzZXIgdG8gdW5kZXJzdGFuZCB3
+aGF0J3MgZ29pbmcgb24sDQo+IHBhcnRpY3VsYXJseSBhcyBfYXBwZW5kLCBfcHJlcGVuZCBhbmQg
+X3JlbW92ZSBhcmUgZGVmZXJyZWQgb3BlcmF0aW9ucyAodW5saWtlIA0KPiArPSBvciA9KyB3aGlj
+aCBhcmUgaW1tZWRpYXRlKS4NCj4gDQo+IFdoYXQgdGhpcyBkb2VzIG1lYW4gaXMgdGhhdCBfcmVt
+b3ZlIHNob3VsZCBiZSB1c2VkIHNwYXJpbmdseSBhbmQgcmVhbGx5IG91Z2h0DQo+IHRvIGJlIHVz
+ZWQgb25seSB3aGVyZSBpdCdzIHZlcnkgdW5saWtlbHkgdGhhdCBhbnlvbmUgd291bGQgd2FudCB0
+byBvdmVycmlkZSBpdC4NCg0KV2VsbCwgSSB3b3VsZCBzYXkgdGhhdCB0aGlzIGlzIHNvbWV3aGF0
+IGNvdW50ZXItaW50dWl0aXZlLiBUaGUgbGF5ZXJzIGFyZSBvbmUgb2YgdGhlIG1haW4gY29uY2Vw
+dHMgb2YgQml0YmFrZS4gSWYgSSBjcmVhdGUgYSBsYXllciBhbmQgYXNzaWduIHRoZSBoaWdoZXN0
+IHByaW9yaXR5IHRvIGl0LCBpdCBpcyBoYXJkIHRvIHVuZGVyc3RhbmQgdGhhdCBjaGFuZ2VzIEkg
+bWFrZSB0byBhIHZhcmlhYmxlIGluIG15IGxheWVyIGFyZSBub3QgYXBwbGllZCBiZWNhdXNlIG9m
+IGEgbG93ZXIgcHJpb3JpdHkgbGF5ZXIgYmVpbmcgcHJvY2Vzc2VkIGFmdGVyIG15IGxheWVyLiBI
+b3cgY2FuIHlvdSBldmVyIHRlbGwgdGhhdCBpdCBpcyAidW5saWtlbHkiIHRoYXQgc29tZW9uZSB3
+YW50cyB0byBvdmVycmlkZSBhIF9yZW1vdmUgb3BlcmF0b3I/IFNob3VsZG4ndCBBTEwgdmFyaWFi
+bGVzIGJlIGNoYW5nZWFibGUgaW4gQUxMIHdheXM/IFRoaXMgc2VlbXMgYSB2ZXJ5IHN0cmljdCAo
+YW5kIHVuZG9jdW1lbnRlZCkgbGltaXRhdGlvbiB0byBtZS4NCg0KwqANCk1pdCBmcmV1bmRsaWNo
+ZW4gR3LDvMOfZW4gLyBCZXN0IHJlZ2FyZHMNCmkuQS4gVGltIEphYWNrcw0KDQpTb2Z0d2FyZSBF
+bmdpbmVlcmluZw0KR2FyeiAmIEZyaWNrZSBHbWJIDQpUZW1wb3dlcmtyaW5nIDIsIDIxMDc5IEhh
+bWJ1cmcgLSBHZXJtYW55DQpBbXRzZ2VyaWNodCBIYW1idXJnIEhSQiA2MDUxNA0KR2VzY2jDpGZ0
+c2bDvGhyZXI6IE1hbmZyZWQgR2FyeiwgTWF0dGhpYXMgRnJpY2tlDQpQaG9uZTogKzQ5IDQwIDc5
+MTg5OSAtIDU1DQpGYXg6wqDCoMKgwqAgKzQ5IDQwIDc5MTg5OSDigJMgMzkNCnRpbS5qYWFja3NA
+Z2Fyei1mcmlja2UuY29tDQp3d3cuZ2Fyei1mcmlja2UuY29tDQo=
 
