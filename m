@@ -1,40 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f50.google.com (mail-pa0-f50.google.com
-	[209.85.220.50])
-	by mail.openembedded.org (Postfix) with ESMTP id 00B6576F9D
+Received: from mail-pa0-f45.google.com (mail-pa0-f45.google.com
+	[209.85.220.45])
+	by mail.openembedded.org (Postfix) with ESMTP id 994BC7701C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 29 Sep 2015 04:44:01 +0000 (UTC)
-Received: by pablk4 with SMTP id lk4so97503361pab.3
+	Tue, 29 Sep 2015 04:44:02 +0000 (UTC)
+Received: by pablk4 with SMTP id lk4so97503718pab.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Sep 2015 21:44:01 -0700 (PDT)
+	Mon, 28 Sep 2015 21:44:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=NiP6iSpIZ2gkVETdY+qBdBT9D/tUYIM5DkZlmQ2kUPk=;
-	b=IHknXQOUimJoBOu78OgCareZBduFEsXUxP2i8TzN054Ij/+CVvewhVglSKMffhqlV8
-	ZbodxFp2SfF0nFBxUmb8G/tjpa4z43xc81rrW/Po1tp8HSoO9OdZkmnuxRe+fQKM2oKS
-	AlaCWIQJ7TnxUKgyzMH6dhUkZag8gZL8LlBWLMGWVYYFc4HB1TiMs2Rc2ACy96LZetME
-	QFWle+UXNGiQpQTkMqAgLwA9i+ZglfhXk4SzNJKJm2ArqNIZBuD/qD5Ngpi9gVWsMy10
-	XUKdQ/GyRfy6J/XklJ/IN4eF88RqfmJ4D0LEiH7Wryax47Mxh6MwazrspFP4OKVqPmof
-	nGCQ==
-X-Received: by 10.68.65.2 with SMTP id t2mr30081045pbs.75.1443501841862;
-	Mon, 28 Sep 2015 21:44:01 -0700 (PDT)
+	bh=VcDowU9Ke4WaDsYV2NQW77hI6V7pO/k2fb91RZ7J7pM=;
+	b=hCk0027jQUpwG9PqzvvjSxnGl2htguRovP4ES/GPY6ZIVkMClebodToL8le0Gtf1DD
+	ywoA1VkGSrRuKner8OBzVAlGAWBxtvCFS6Lp17DE+ji0DwsfSfRg1fDuLkAVFzOlaUK6
+	A0N5BNohb9pVOztT/7Ar2wR+BrykHHuWQr7aYi+j42rMQZTTsxmG5BUaoFmyDuRRMmVJ
+	XNgPo9YYa7GextVzjuSRtbZOqHgUpMcw4e94+m0egUs8qbfN0KK1iqutL4kFWMIrI8Hv
+	a0GxacrayV+W9DuaexH7aOaVJ6MfqhyO7VqlvEM3nlB3bxoF8gA0cqhhLzyit4u5JT2X
+	AT7A==
+X-Received: by 10.67.22.196 with SMTP id hu4mr30416982pad.20.1443501842723;
+	Mon, 28 Sep 2015 21:44:02 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
 	g5sm22686368pat.21.2015.09.28.21.44.01
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 28 Sep 2015 21:44:01 -0700 (PDT)
+	Mon, 28 Sep 2015 21:44:02 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 28 Sep 2015 21:45:18 -0700
-Message-Id: <8b957f0346002189d98302f07b8db2eb7e4461df.1443497922.git.avery.brian@gmail.com>
+Date: Mon, 28 Sep 2015 21:45:19 -0700
+Message-Id: <d56f819335a53f8270cd81c297820d1d94e24d03.1443497922.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <8b0eb0f272c0658ba98db30c17a688f87c75d134.1443497922.git.avery.brian@gmail.com>
 References: <8b0eb0f272c0658ba98db30c17a688f87c75d134.1443497922.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1443497922.git.avery.brian@gmail.com>
 References: <cover.1443497922.git.avery.brian@gmail.com>
-Subject: [PATCH 08/22] toaster: Add CustomImageRecipe model
+Subject: [PATCH 09/22] toaster: add toggle for enabling image customisation feeature
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,436 +51,44 @@ X-List-Received-Date: Tue, 29 Sep 2015 04:44:02 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-This model lists custom image recipes for the project.
-It is populated when new custom image is created.
-It holds reference to the base recipe and list of packages
-included into custom image.
-
-For CustomImageRecipes the packages will be copied in and
-therefore not associated with a build so Remove the requirement
-for the package to have a Build.
-
-co-author: Ed Bartosh <ed.bartosh@linux.intel.com>
+This feature is currently under heavy development and should be used
+with caution.
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- ...e__add_unique_customimagerecipe_name_project.py | 375 +++++++++++++++++++++
- lib/toaster/orm/models.py                          |  11 +-
- 2 files changed, 385 insertions(+), 1 deletion(-)
- create mode 100644 bitbake/lib/toaster/orm/migrations/0027_auto__add_customimagerecipe__add_unique_customimagerecipe_name_project.py
+ lib/toaster/toastergui/views.py     | 1 +
+ lib/toaster/toastermain/settings.py | 5 +++++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/lib/toaster/orm/migrations/0027_auto__add_customimagerecipe__add_unique_customimagerecipe_name_project.py b/lib/toaster/orm/migrations/0027_auto__add_customimagerecipe__add_unique_customimagerecipe_name_project.py
-new file mode 100644
-index 0000000..6030605
---- /dev/null
-+++ b/lib/toaster/orm/migrations/0027_auto__add_customimagerecipe__add_unique_customimagerecipe_name_project.py
-@@ -0,0 +1,375 @@
-+# -*- coding: utf-8 -*-
-+from south.utils import datetime_utils as datetime
-+from south.db import db
-+from south.v2 import SchemaMigration
-+from django.db import models
-+
-+
-+class Migration(SchemaMigration):
-+
-+    def forwards(self, orm):
-+        # Adding model 'CustomImageRecipe'
-+        db.create_table(u'orm_customimagerecipe', (
-+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-+            ('base_recipe', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['orm.Recipe'])),
-+            ('project', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['orm.Project'])),
-+        ))
-+        db.send_create_signal(u'orm', ['CustomImageRecipe'])
-+
-+        # Adding M2M table for field packages on 'CustomImageRecipe'
-+        m2m_table_name = db.shorten_name(u'orm_customimagerecipe_packages')
-+        db.create_table(m2m_table_name, (
-+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-+            ('customimagerecipe', models.ForeignKey(orm[u'orm.customimagerecipe'], null=False)),
-+            ('package', models.ForeignKey(orm[u'orm.package'], null=False))
-+        ))
-+        db.create_unique(m2m_table_name, ['customimagerecipe_id', 'package_id'])
-+
-+        # Adding unique constraint on 'CustomImageRecipe', fields ['name', 'project']
-+        db.create_unique(u'orm_customimagerecipe', ['name', 'project_id'])
-+
-+
-+        # Changing field 'Package.build'
-+        db.alter_column(u'orm_package', 'build_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['orm.Build'], null=True))
-+
-+    def backwards(self, orm):
-+        # Removing unique constraint on 'CustomImageRecipe', fields ['name', 'project']
-+        db.delete_unique(u'orm_customimagerecipe', ['name', 'project_id'])
-+
-+        # Deleting model 'CustomImageRecipe'
-+        db.delete_table(u'orm_customimagerecipe')
-+
-+        # Removing M2M table for field packages on 'CustomImageRecipe'
-+        db.delete_table(db.shorten_name(u'orm_customimagerecipe_packages'))
-+
-+
-+        # Changing field 'Package.build'
-+        db.alter_column(u'orm_package', 'build_id', self.gf('django.db.models.fields.related.ForeignKey')(default=None, to=orm['orm.Build']))
-+
-+    models = {
-+        u'orm.bitbakeversion': {
-+            'Meta': {'object_name': 'BitbakeVersion'},
-+            'branch': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
-+            'dirpath': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-+            'giturl': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '32'})
-+        },
-+        u'orm.branch': {
-+            'Meta': {'unique_together': "(('layer_source', 'name'), ('layer_source', 'up_id'))", 'object_name': 'Branch'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'True', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-+            'short_description': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
-+            'up_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
-+            'up_id': ('django.db.models.fields.IntegerField', [], {'default': 'None', 'null': 'True'})
-+        },
-+        u'orm.build': {
-+            'Meta': {'object_name': 'Build'},
-+            'bitbake_version': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-+            'build_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'completed_on': ('django.db.models.fields.DateTimeField', [], {}),
-+            'cooker_log_path': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-+            'distro': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'distro_version': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'machine': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'outcome': ('django.db.models.fields.IntegerField', [], {'default': '2'}),
-+            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']"}),
-+            'started_on': ('django.db.models.fields.DateTimeField', [], {})
-+        },
-+        u'orm.buildartifact': {
-+            'Meta': {'object_name': 'BuildArtifact'},
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Build']"}),
-+            'file_name': ('django.db.models.fields.FilePathField', [], {'max_length': '100'}),
-+            'file_size': ('django.db.models.fields.IntegerField', [], {}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
-+        },
-+        u'orm.customimagerecipe': {
-+            'Meta': {'unique_together': "(('name', 'project'),)", 'object_name': 'CustomImageRecipe'},
-+            'base_recipe': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Recipe']"}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'packages': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['orm.Package']", 'symmetrical': 'False'}),
-+            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']"})
-+        },
-+        u'orm.helptext': {
-+            'Meta': {'object_name': 'HelpText'},
-+            'area': ('django.db.models.fields.IntegerField', [], {}),
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'helptext_build'", 'to': u"orm['orm.Build']"}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'key': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'text': ('django.db.models.fields.TextField', [], {})
-+        },
-+        u'orm.layer': {
-+            'Meta': {'unique_together': "(('layer_source', 'up_id'), ('layer_source', 'name'))", 'object_name': 'Layer'},
-+            'description': ('django.db.models.fields.TextField', [], {'default': 'None', 'null': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layer_index_url': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
-+            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'summary': ('django.db.models.fields.TextField', [], {'default': 'None', 'null': 'True'}),
-+            'up_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
-+            'up_id': ('django.db.models.fields.IntegerField', [], {'default': 'None', 'null': 'True'}),
-+            'vcs_url': ('django.db.models.fields.URLField', [], {'default': 'None', 'max_length': '200', 'null': 'True'}),
-+            'vcs_web_file_base_url': ('django.db.models.fields.URLField', [], {'default': 'None', 'max_length': '200', 'null': 'True'}),
-+            'vcs_web_tree_base_url': ('django.db.models.fields.URLField', [], {'default': 'None', 'max_length': '200', 'null': 'True'}),
-+            'vcs_web_url': ('django.db.models.fields.URLField', [], {'default': 'None', 'max_length': '200', 'null': 'True'})
-+        },
-+        u'orm.layer_version': {
-+            'Meta': {'unique_together': "(('layer_source', 'up_id'),)", 'object_name': 'Layer_Version'},
-+            'branch': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'related_name': "'layer_version_build'", 'null': 'True', 'to': u"orm['orm.Build']"}),
-+            'commit': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'dirpath': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '255', 'null': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layer': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'layer_version_layer'", 'to': u"orm['orm.Layer']"}),
-+            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
-+            'local_path': ('django.db.models.fields.FilePathField', [], {'default': "'/'", 'max_length': '1024'}),
-+            'priority': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'project': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.Project']", 'null': 'True'}),
-+            'up_branch': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.Branch']", 'null': 'True'}),
-+            'up_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
-+            'up_id': ('django.db.models.fields.IntegerField', [], {'default': 'None', 'null': 'True'})
-+        },
-+        u'orm.layersource': {
-+            'Meta': {'unique_together': "(('sourcetype', 'apiurl'),)", 'object_name': 'LayerSource'},
-+            'apiurl': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '255', 'null': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '63'}),
-+            'sourcetype': ('django.db.models.fields.IntegerField', [], {})
-+        },
-+        u'orm.layerversiondependency': {
-+            'Meta': {'unique_together': "(('layer_source', 'up_id'),)", 'object_name': 'LayerVersionDependency'},
-+            'depends_on': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'dependees'", 'to': u"orm['orm.Layer_Version']"}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
-+            'layer_version': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'dependencies'", 'to': u"orm['orm.Layer_Version']"}),
-+            'up_id': ('django.db.models.fields.IntegerField', [], {'default': 'None', 'null': 'True'})
-+        },
-+        u'orm.logmessage': {
-+            'Meta': {'object_name': 'LogMessage'},
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Build']"}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'level': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'lineno': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
-+            'message': ('django.db.models.fields.CharField', [], {'max_length': '240'}),
-+            'pathname': ('django.db.models.fields.FilePathField', [], {'max_length': '255', 'blank': 'True'}),
-+            'task': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Task']", 'null': 'True', 'blank': 'True'})
-+        },
-+        u'orm.machine': {
-+            'Meta': {'unique_together': "(('layer_source', 'up_id'),)", 'object_name': 'Machine'},
-+            'description': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
-+            'layer_version': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Layer_Version']"}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-+            'up_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
-+            'up_id': ('django.db.models.fields.IntegerField', [], {'default': 'None', 'null': 'True'})
-+        },
-+        u'orm.package': {
-+            'Meta': {'object_name': 'Package'},
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Build']", 'null': 'True'}),
-+            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'installed_name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '100'}),
-+            'installed_size': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'license': ('django.db.models.fields.CharField', [], {'max_length': '80', 'blank': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'recipe': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Recipe']", 'null': 'True'}),
-+            'revision': ('django.db.models.fields.CharField', [], {'max_length': '32', 'blank': 'True'}),
-+            'section': ('django.db.models.fields.CharField', [], {'max_length': '80', 'blank': 'True'}),
-+            'size': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'summary': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-+            'version': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'})
-+        },
-+        u'orm.package_dependency': {
-+            'Meta': {'object_name': 'Package_Dependency'},
-+            'dep_type': ('django.db.models.fields.IntegerField', [], {}),
-+            'depends_on': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'package_dependencies_target'", 'to': u"orm['orm.Package']"}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'package': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'package_dependencies_source'", 'to': u"orm['orm.Package']"}),
-+            'target': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Target']", 'null': 'True'})
-+        },
-+        u'orm.package_file': {
-+            'Meta': {'object_name': 'Package_File'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'package': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'buildfilelist_package'", 'to': u"orm['orm.Package']"}),
-+            'path': ('django.db.models.fields.FilePathField', [], {'max_length': '255', 'blank': 'True'}),
-+            'size': ('django.db.models.fields.IntegerField', [], {})
-+        },
-+        u'orm.project': {
-+            'Meta': {'object_name': 'Project'},
-+            'bitbake_version': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.BitbakeVersion']", 'null': 'True'}),
-+            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'is_default': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'release': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Release']", 'null': 'True'}),
-+            'short_description': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
-+            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-+            'user_id': ('django.db.models.fields.IntegerField', [], {'null': 'True'})
-+        },
-+        u'orm.projectlayer': {
-+            'Meta': {'unique_together': "(('project', 'layercommit'),)", 'object_name': 'ProjectLayer'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layercommit': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Layer_Version']", 'null': 'True'}),
-+            'optional': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-+            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']"})
-+        },
-+        u'orm.projecttarget': {
-+            'Meta': {'object_name': 'ProjectTarget'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']"}),
-+            'target': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'task': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'})
-+        },
-+        u'orm.projectvariable': {
-+            'Meta': {'object_name': 'ProjectVariable'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']"}),
-+            'value': ('django.db.models.fields.TextField', [], {'blank': 'True'})
-+        },
-+        u'orm.recipe': {
-+            'Meta': {'unique_together': "(('layer_version', 'file_path', 'pathflags'),)", 'object_name': 'Recipe'},
-+            'bugtracker': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
-+            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-+            'file_path': ('django.db.models.fields.FilePathField', [], {'max_length': '255'}),
-+            'homepage': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'is_image': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-+            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
-+            'layer_version': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'recipe_layer_version'", 'to': u"orm['orm.Layer_Version']"}),
-+            'license': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-+            'pathflags': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'}),
-+            'section': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-+            'summary': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-+            'up_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
-+            'up_id': ('django.db.models.fields.IntegerField', [], {'default': 'None', 'null': 'True'}),
-+            'version': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'})
-+        },
-+        u'orm.recipe_dependency': {
-+            'Meta': {'object_name': 'Recipe_Dependency'},
-+            'dep_type': ('django.db.models.fields.IntegerField', [], {}),
-+            'depends_on': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'r_dependencies_depends'", 'to': u"orm['orm.Recipe']"}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'recipe': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'r_dependencies_recipe'", 'to': u"orm['orm.Recipe']"})
-+        },
-+        u'orm.release': {
-+            'Meta': {'object_name': 'Release'},
-+            'bitbake_version': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.BitbakeVersion']"}),
-+            'branch_name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '50'}),
-+            'description': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-+            'helptext': ('django.db.models.fields.TextField', [], {'null': 'True'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '32'})
-+        },
-+        u'orm.releasedefaultlayer': {
-+            'Meta': {'object_name': 'ReleaseDefaultLayer'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layer_name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '100'}),
-+            'release': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Release']"})
-+        },
-+        u'orm.releaselayersourcepriority': {
-+            'Meta': {'unique_together': "(('release', 'layer_source'),)", 'object_name': 'ReleaseLayerSourcePriority'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.LayerSource']"}),
-+            'priority': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'release': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Release']"})
-+        },
-+        u'orm.target': {
-+            'Meta': {'object_name': 'Target'},
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Build']"}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'image_size': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'is_image': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-+            'license_manifest_path': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True'}),
-+            'target': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'task': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'})
-+        },
-+        u'orm.target_file': {
-+            'Meta': {'object_name': 'Target_File'},
-+            'directory': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'directory_set'", 'null': 'True', 'to': u"orm['orm.Target_File']"}),
-+            'group': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'inodetype': ('django.db.models.fields.IntegerField', [], {}),
-+            'owner': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-+            'path': ('django.db.models.fields.FilePathField', [], {'max_length': '100'}),
-+            'permission': ('django.db.models.fields.CharField', [], {'max_length': '16'}),
-+            'size': ('django.db.models.fields.IntegerField', [], {}),
-+            'sym_target': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'symlink_set'", 'null': 'True', 'to': u"orm['orm.Target_File']"}),
-+            'target': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Target']"})
-+        },
-+        u'orm.target_image_file': {
-+            'Meta': {'object_name': 'Target_Image_File'},
-+            'file_name': ('django.db.models.fields.FilePathField', [], {'max_length': '254'}),
-+            'file_size': ('django.db.models.fields.IntegerField', [], {}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'target': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Target']"})
-+        },
-+        u'orm.target_installed_package': {
-+            'Meta': {'object_name': 'Target_Installed_Package'},
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'package': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'buildtargetlist_package'", 'to': u"orm['orm.Package']"}),
-+            'target': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Target']"})
-+        },
-+        u'orm.task': {
-+            'Meta': {'ordering': "('order', 'recipe')", 'unique_together': "(('build', 'recipe', 'task_name'),)", 'object_name': 'Task'},
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'task_build'", 'to': u"orm['orm.Build']"}),
-+            'cpu_usage': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '8', 'decimal_places': '2'}),
-+            'disk_io': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
-+            'elapsed_time': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '8', 'decimal_places': '2'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'line_number': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'logfile': ('django.db.models.fields.FilePathField', [], {'max_length': '255', 'blank': 'True'}),
-+            'message': ('django.db.models.fields.CharField', [], {'max_length': '240'}),
-+            'order': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
-+            'outcome': ('django.db.models.fields.IntegerField', [], {'default': '-1'}),
-+            'path_to_sstate_obj': ('django.db.models.fields.FilePathField', [], {'max_length': '500', 'blank': 'True'}),
-+            'recipe': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'tasks'", 'to': u"orm['orm.Recipe']"}),
-+            'script_type': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'source_url': ('django.db.models.fields.FilePathField', [], {'max_length': '255', 'blank': 'True'}),
-+            'sstate_checksum': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-+            'sstate_result': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-+            'task_executed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-+            'task_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'work_directory': ('django.db.models.fields.FilePathField', [], {'max_length': '255', 'blank': 'True'})
-+        },
-+        u'orm.task_dependency': {
-+            'Meta': {'object_name': 'Task_Dependency'},
-+            'depends_on': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'task_dependencies_depends'", 'to': u"orm['orm.Task']"}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'task': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'task_dependencies_task'", 'to': u"orm['orm.Task']"})
-+        },
-+        u'orm.toastersetting': {
-+            'Meta': {'object_name': 'ToasterSetting'},
-+            'helptext': ('django.db.models.fields.TextField', [], {}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'name': ('django.db.models.fields.CharField', [], {'max_length': '63'}),
-+            'value': ('django.db.models.fields.CharField', [], {'max_length': '255'})
-+        },
-+        u'orm.variable': {
-+            'Meta': {'object_name': 'Variable'},
-+            'build': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'variable_build'", 'to': u"orm['orm.Build']"}),
-+            'changed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-+            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-+            'human_readable_name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'variable_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-+            'variable_value': ('django.db.models.fields.TextField', [], {'blank': 'True'})
-+        },
-+        u'orm.variablehistory': {
-+            'Meta': {'object_name': 'VariableHistory'},
-+            'file_name': ('django.db.models.fields.FilePathField', [], {'max_length': '255'}),
-+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-+            'line_number': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
-+            'operation': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
-+            'value': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-+            'variable': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'vhistory'", 'to': u"orm['orm.Variable']"})
-+        }
-+    }
-+
-+    complete_apps = ['orm']
-\ No newline at end of file
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index b5c8643..9790630 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -551,7 +551,7 @@ class Task_Dependency(models.Model):
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 8689a12..2e3b822 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -1867,6 +1867,7 @@ def managedcontextprocessor(request):
+     ret = {
+         "projects": Project.objects.all(),
+         "DEBUG" : toastermain.settings.DEBUG,
++        "CUSTOM_IMAGE" : toastermain.settings.CUSTOM_IMAGE,
+         "TOASTER_BRANCH": toastermain.settings.TOASTER_BRANCH,
+         "TOASTER_REVISION" : toastermain.settings.TOASTER_REVISION,
+     }
+diff --git a/lib/toaster/toastermain/settings.py b/lib/toaster/toastermain/settings.py
+index b149a5e..6439d68 100644
+--- a/lib/toaster/toastermain/settings.py
++++ b/lib/toaster/toastermain/settings.py
+@@ -23,6 +23,11 @@
  
- class Package(models.Model):
-     search_allowed_fields = ['name', 'version', 'revision', 'recipe__name', 'recipe__version', 'recipe__license', 'recipe__layer_version__layer__name', 'recipe__layer_version__branch', 'recipe__layer_version__commit', 'recipe__layer_version__local_path', 'installed_name']
--    build = models.ForeignKey('Build')
-+    build = models.ForeignKey('Build', null=True)
-     recipe = models.ForeignKey('Recipe', null=True)
-     name = models.CharField(max_length=100)
-     installed_name = models.CharField(max_length=100, default='')
-@@ -1172,6 +1172,15 @@ class ProjectLayer(models.Model):
-     class Meta:
-         unique_together = (("project", "layercommit"),)
+ import os, re
  
-+class CustomImageRecipe(models.Model):
-+    name = models.CharField(max_length=100)
-+    base_recipe = models.ForeignKey(Recipe)
-+    packages = models.ManyToManyField(Package)
-+    project = models.ForeignKey(Project)
++# Temporary toggle for Image customisation
++CUSTOM_IMAGE = False
++if os.environ.get("CUSTOM_IMAGE", None) is not None:
++    CUSTOM_IMAGE = True
 +
-+    class Meta:
-+        unique_together = ("name", "project")
-+
- class ProjectVariable(models.Model):
-     project = models.ForeignKey(Project)
-     name = models.CharField(max_length=100)
+ DEBUG = True
+ TEMPLATE_DEBUG = DEBUG
+ 
 -- 
 1.9.1
 
