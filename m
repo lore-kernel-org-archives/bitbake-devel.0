@@ -1,22 +1,29 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id DE15A76FDE
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 097A076903
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 29 Sep 2015 07:15:44 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 29 Sep 2015 00:15:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,606,1437462000"; d="scan'208";a="815244993"
-Received: from bdrobeso-mobl3.amr.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.3.197])
-	by orsmga002.jf.intel.com with ESMTP; 29 Sep 2015 00:15:29 -0700
-From: Elliot Smith <elliot.smith@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 29 Sep 2015 08:15:19 +0100
-Message-Id: <1443510919-9224-1-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-Cc: David Reyna <David.Reyna@windriver.com>
-Subject: [PATCH] bitbake: toaster: display most recent builds for projects
+	Tue, 29 Sep 2015 08:28:38 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t8T8SbvF022239 for <bitbake-devel@lists.openembedded.org>;
+	Tue, 29 Sep 2015 09:28:37 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id rVlNb6vmA1ry for <bitbake-devel@lists.openembedded.org>;
+	Tue, 29 Sep 2015 09:28:37 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t8T8SOEX022192
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 29 Sep 2015 09:28:36 +0100
+Message-ID: <1443515304.5162.12.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Tue, 29 Sep 2015 09:28:24 +0100
+X-Mailer: Evolution 3.12.11-0ubuntu3 
+Mime-Version: 1.0
+Subject: [PATCH] bitbake-worker: Guard against multiprocessing corruption of event data
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -29,102 +36,78 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 29 Sep 2015 07:15:48 -0000
+X-List-Received-Date: Tue, 29 Sep 2015 08:28:40 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: David Reyna <David.Reyna@windriver.com>
+In the forked child, we may use multiprocessing. There is only one event
+pipe to the worker controlling process and if we're unlucky, multiple
+processes can write to it at once corrupting the data by intermixing it.
 
-Display the most recent builds in the given project's build page.
+We don't see this often but when we do, its quite puzzling. I suspect it
+only happens in tasks which use multiprocessng (do_rootfs, do_package)
+and is much more likely to happen when we have long messages, usually many
+times PAGE_SIZE since PAGE_SIZE writes are atomic. This makes it much more
+likely within do_roofs, when for example a subprocess lists the contents
+of a rootfs.
 
-[YOCTO #8186]
+To fix this, we give each child a Lock() object and use this to serialise
+writes to the controlling worker.
 
-Signed-off-by: David Reyna <David.Reyna@windriver.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
----
- .../lib/toaster/toastergui/templates/mrb_section.html    | 16 +++++++++++-----
- .../lib/toaster/toastergui/templates/projectbuilds.html  | 10 +++++++---
- bitbake/lib/toaster/toastergui/views.py                  |  3 +++
- 3 files changed, 21 insertions(+), 8 deletions(-)
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-diff --git a/bitbake/lib/toaster/toastergui/templates/mrb_section.html b/bitbake/lib/toaster/toastergui/templates/mrb_section.html
-index b2c49fe..2fefe4b 100644
---- a/bitbake/lib/toaster/toastergui/templates/mrb_section.html
-+++ b/bitbake/lib/toaster/toastergui/templates/mrb_section.html
-@@ -3,13 +3,19 @@
- {% load humanize %}
+diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
+index 45a78ec..1dcd590 100755
+--- a/bitbake/bin/bitbake-worker
++++ b/bitbake/bin/bitbake-worker
+@@ -10,6 +10,7 @@ import bb
+ import select
+ import errno
+ import signal
++from multiprocessing import Lock
  
+ # Users shouldn't be running this code directly
+ if len(sys.argv) != 2 or not sys.argv[1].startswith("decafbad"):
+@@ -44,6 +45,9 @@ except ImportError:
  
--{%if mru.count > 0%}
-+{%if mru and mru.count > 0%}
+ worker_pipe = sys.stdout.fileno()
+ bb.utils.nonblockingfd(worker_pipe)
++# Need to guard against multiprocessing being used in child processes
++# and multiple processes trying to write to the parent at the same time
++worker_pipe_lock = None
  
--  <div class="page-header">
-+  {%if mrb_type == 'project' %}
-+      <h2>
-+      Latest project builds
-+      </h2>
-+  {% else %}
-+    <div class="page-header">
-       <h1>
--          Latest builds
--       </h1>
--  </div>
-+      Latest builds
-+      </h1>
-+    </div>
-+  {% endif %}
-   <div id="latest-builds">
-   {% for build in mru %}
-     <div class="alert {%if build.outcome == build.SUCCEEDED%}alert-success{%elif build.outcome == build.FAILED%}alert-error{%else%}alert-info{%endif%} project-name ">
-diff --git a/bitbake/lib/toaster/toastergui/templates/projectbuilds.html b/bitbake/lib/toaster/toastergui/templates/projectbuilds.html
-index fc659a0..fde7e3b 100644
---- a/bitbake/lib/toaster/toastergui/templates/projectbuilds.html
-+++ b/bitbake/lib/toaster/toastergui/templates/projectbuilds.html
-@@ -21,13 +21,17 @@
-     });
- </script>
+ handler = bb.event.LogHandler()
+ logger.addHandler(handler)
+@@ -85,10 +89,13 @@ def worker_flush():
  
-+ {% with mrb_type='project' %}
-+     {% include "mrb_section.html" %}
-+ {% endwith %}
-+
-       <h2>
-         {% if request.GET.filter and objects.paginator.count > 0 or request.GET.search and objects.paginator.count > 0 %}
--            {{objects.paginator.count}} build{{objects.paginator.count|pluralize}} found
-+            {{objects.paginator.count}} project build{{objects.paginator.count|pluralize}} found
-         {%elif request.GET.filter and objects.paginator.count == 0 or request.GET.search and objects.paginator.count == 0 %}
--            No builds found
-+            No project builds found
-         {%else%}
--            Project builds
-+            All project builds
-         {%endif%}
-         <i class="icon-question-sign get-help heading-help" title="This page lists all the builds for the current project"></i>
-       </h2>
-diff --git a/bitbake/lib/toaster/toastergui/views.py b/bitbake/lib/toaster/toastergui/views.py
-index 8689a12..beaa096 100755
---- a/bitbake/lib/toaster/toastergui/views.py
-+++ b/bitbake/lib/toaster/toastergui/views.py
-@@ -2733,6 +2733,9 @@ if True:
-         context['project'] = prj
-         _set_parameters_values(pagesize, orderby, request)
+ def worker_child_fire(event, d):
+     global worker_pipe
++    global worker_pipe_lock
  
-+        # add the most recent builds for this project
-+        context['mru'] = _get_latest_builds(prj)
-+
-         return context
+     data = "<event>" + pickle.dumps(event) + "</event>"
+     try:
++        worker_pipe_lock.acquire()
+         worker_pipe.write(data)
++        worker_pipe_lock.release()
+     except IOError:
+         sigterm_handler(None, None)
+         raise
+@@ -157,6 +164,7 @@ def fork_off_task(cfg, data, workerdata, fn, task, taskname, appends, taskdepdat
+     if pid == 0:
+         def child():
+             global worker_pipe
++            global worker_pipe_lock
+             pipein.close()
  
+             signal.signal(signal.SIGTERM, sigterm_handler)
+@@ -169,6 +177,7 @@ def fork_off_task(cfg, data, workerdata, fn, task, taskname, appends, taskdepdat
+             bb.event.worker_pid = os.getpid()
+             bb.event.worker_fire = worker_child_fire
+             worker_pipe = pipeout
++            worker_pipe_lock = Lock()
  
--- 
-1.9.3
+             # Make the child the process group leader and ensure no
+             # child process will be controlled by the current terminal
 
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
 
 
