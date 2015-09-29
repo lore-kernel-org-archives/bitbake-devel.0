@@ -1,40 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f53.google.com (mail-pa0-f53.google.com
-	[209.85.220.53])
-	by mail.openembedded.org (Postfix) with ESMTP id 0562877030
+Received: from mail-pa0-f44.google.com (mail-pa0-f44.google.com
+	[209.85.220.44])
+	by mail.openembedded.org (Postfix) with ESMTP id 00CF576F9D
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 29 Sep 2015 04:43:59 +0000 (UTC)
-Received: by pacfv12 with SMTP id fv12so198601835pac.2
+	Tue, 29 Sep 2015 04:44:00 +0000 (UTC)
+Received: by pacex6 with SMTP id ex6so194493169pac.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Sep 2015 21:44:00 -0700 (PDT)
+	Mon, 28 Sep 2015 21:44:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=O2HzYvCMLn8YKvueQOxQ1xCuTI9N0lSoNO98/AHKIfc=;
-	b=e+JXDQQPuewAdhnXEshTSEJ2dqHuMWVbLdUttXENDWAobIow4+QfYWH/vqy0Lv9BBc
-	XqzwXvVLshZ9z67lZ6B+05vR8ssROnlB0WpuGi+y+NjCkNEgexx0IpAwPJ/oWO9rV8EL
-	6exDyyDg0XAwe2gwJVnpHoPcY391G3Kgt/9wvesQ46KUfeZdLgykAFjacL0eTX2qym+f
-	eiC3dMBYjeCLvSZWLVr/kMx0PugZH3xltxIxdJtH2PZ1zrdVmRhbEhzul/QUyjOoIUU+
-	C/KTpGQ021YzlA339+vXowCiAc+bzworyY8LgQR3cdqDeJ2TmcyNPeJ/BvfRatL1RMiP
-	Vo8A==
-X-Received: by 10.69.3.228 with SMTP id bz4mr31119690pbd.79.1443501840130;
+	bh=XlP0dZEHcu8nqMyJGV+2sXQjBvqwdEzsJq6QLzseTd8=;
+	b=knfvGMcneFtt30kCV7LTdjQgwl7NBLvwpG+V/mlzdDr+Lihi24/xr5Rd5VzOREj6Do
+	ZAA7loNhpnoGUfQbMxLpez5kKAnpCWbu2nfD3KVUw7oRYDwSXOV3QI8Tk6SPr0bXq7Ht
+	ha2bZ+keyiP6vygFieS0tGKir8uVX3imjF4VOnRPrjwGZVARFI1pzkyI2UKVsvPjV//r
+	loiUC8SqX1qCjGcY0bzPOs8QmWOcc8DOSjJuu6WDMvhKJFhzDx760cgxdskTqC3VLgLn
+	+vMu/wJDLDtY49dpO20TcPNLB52DbBj4dgeeYO8jjQii/5DLAYWmdbTu0IYxIwumBsR2
+	xVxg==
+X-Received: by 10.69.2.227 with SMTP id br3mr31217320pbd.9.1443501840984;
 	Mon, 28 Sep 2015 21:44:00 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	g5sm22686368pat.21.2015.09.28.21.43.59
+	g5sm22686368pat.21.2015.09.28.21.44.00
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 28 Sep 2015 21:43:59 -0700 (PDT)
+	Mon, 28 Sep 2015 21:44:00 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 28 Sep 2015 21:45:16 -0700
-Message-Id: <5daee42dcb5899b07565b912b4c5f20f8e99f0ad.1443497922.git.avery.brian@gmail.com>
+Date: Mon, 28 Sep 2015 21:45:17 -0700
+Message-Id: <b6822f181cde1e022b49116b1b86e194b615000e.1443497922.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <8b0eb0f272c0658ba98db30c17a688f87c75d134.1443497922.git.avery.brian@gmail.com>
 References: <8b0eb0f272c0658ba98db30c17a688f87c75d134.1443497922.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1443497922.git.avery.brian@gmail.com>
 References: <cover.1443497922.git.avery.brian@gmail.com>
-Subject: [PATCH 06/22] toaster: add nocache option to the ToasterTable widget
+Subject: [PATCH 07/22] toaster: ToasterTable remove unused class definition
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,51 +47,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 29 Sep 2015 04:44:00 -0000
+X-List-Received-Date: Tue, 29 Sep 2015 04:44:01 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-Useful for skipping the cache mechanism when debugging.
-Simply append nocache=true to the end of the url with the table in
-it.
-Also adds a debug message if the table is using cached data.
+Remove ToasterTemplateView as this isn't used by anything.
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/toaster/toastergui/widgets.py | 7 +++++++
- 1 file changed, 7 insertions(+)
+ lib/toaster/toastergui/widgets.py | 27 ---------------------------
+ 1 file changed, 27 deletions(-)
 
 diff --git a/lib/toaster/toastergui/widgets.py b/lib/toaster/toastergui/widgets.py
-index aaa59c0..d7d5efd 100644
+index d7d5efd..e58dd7c 100644
 --- a/lib/toaster/toastergui/widgets.py
 +++ b/lib/toaster/toastergui/widgets.py
-@@ -253,11 +253,14 @@ class ToasterTable(TemplateView):
-         search = request.GET.get("search", None)
-         filters = request.GET.get("filter", None)
-         orderby = request.GET.get("orderby", None)
-+        nocache = request.GET.get("nocache", None)
+@@ -349,33 +349,6 @@ class ToasterTable(TemplateView):
+         return data
  
-         # Make a unique cache name
-         cache_name = self.__class__.__name__
  
-         for key, val in request.GET.iteritems():
-+            if key == 'nocache':
-+                continue
-             cache_name = cache_name + str(key) + str(val)
+-class ToasterTemplateView(TemplateView):
+-    # renders a instance in a template, or returns the context as json
+-    # the class-equivalent of the _template_renderer decorator for views
+-
+-    def __init__(self, *args, **kwargs):
+-        super(ToasterTemplateView, self).__init__(*args, **kwargs)
+-        self.context_entries = []
+-
+-    def get(self, *args, **kwargs):
+-        if self.request.GET.get('format', None) == 'json':
+-            from django.core.urlresolvers import reverse
+-            from django.shortcuts import HttpResponse
+-            from views import objtojson
+-            from toastergui.templatetags.projecttags import json as jsonfilter
+-
+-            context = self.get_context_data(**kwargs)
+-
+-            for x in context.keys():
+-                if x not in self.context_entries:
+-                    del context[x]
+-
+-            context["error"] = "ok"
+-
+-            return HttpResponse(jsonfilter(context,  default=objtojson ),
+-                            content_type = "application/json; charset=utf-8")
+-
+-        return super(ToasterTemplateView, self).get(*args, **kwargs)
  
-         for key, val in kwargs.iteritems():
-@@ -265,6 +268,10 @@ class ToasterTable(TemplateView):
- 
-         # No special chars allowed in the cache name apart from dash
-         cache_name = re.sub(r'[^A-Za-z0-9-]', "", cache_name)
-+
-+        if nocache:
-+            cache.delete(cache_name)
-+
-         data = cache.get(cache_name)
- 
-         if data:
+ class ToasterTypeAhead(View):
+     """ A typeahead mechanism to support the front end typeahead widgets """
 -- 
 1.9.1
 
