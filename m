@@ -1,40 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f52.google.com (mail-pa0-f52.google.com
-	[209.85.220.52])
-	by mail.openembedded.org (Postfix) with ESMTP id 3E18E76903
+Received: from mail-pa0-f45.google.com (mail-pa0-f45.google.com
+	[209.85.220.45])
+	by mail.openembedded.org (Postfix) with ESMTP id B478E76903
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 29 Sep 2015 04:44:02 +0000 (UTC)
-Received: by pablk4 with SMTP id lk4so97504077pab.3
+	Tue, 29 Sep 2015 04:44:03 +0000 (UTC)
+Received: by pablk4 with SMTP id lk4so97504368pab.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Sep 2015 21:44:03 -0700 (PDT)
+	Mon, 28 Sep 2015 21:44:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=DqPd+9uIgficrU7Kyl0mXsHrhsWE0ivnVLFT+tR5pDg=;
-	b=SaKdrPFxRb71AMMj4/AyxjVjoR9GQbiEsTJF4kTtJLGh7lidpiFm0glRaLR2MEs3ee
-	kSqcQYshh7ivzD066iu9g2LcobNnYvAeBgT7BVZbVZodLKAqTTk4UXhWI02hF5LDmY43
-	+xSbtqXE+DQPGlwZdGiLMa2Mh4IAnVH6swJk1G8WplRbbk/d86vzOP6sQ2zR9WpCcR5F
-	qlNUSkArvjDJjAobXRG+vjXm7wu2he8D4ywhe8cPPgOTQ02RcY8eJUJ7eUxnhfguoQyv
-	aasiVn1EOcG9ubZ02GLvg7+TsP5O3+26ANPtfuNinXBY3Q7h61KFZCEZAhJ8usCKYC60
-	biyg==
-X-Received: by 10.67.15.100 with SMTP id fn4mr30891765pad.120.1443501843524;
-	Mon, 28 Sep 2015 21:44:03 -0700 (PDT)
+	bh=qC7WvMDJiz3x29kSIHTCpeMjvQjJLyiHXmhQ2xtrp3o=;
+	b=eW5YmAD5vUR07SerVz0Pe52HuAlSmDfO9Q2wus+frd2am57kV7oHwEERlKKwhNhzBj
+	WvbvadqbyPYNG3psnr0LCPeuMGd7wwu91xosqOt11hDHQ7q3dpdSOJzZl81aiDmYXJhi
+	LYg1eiNR/QwpSUc1mzvV5udQPr1HKwbPloc0oOIzpYQBWTiM77YZ6rw0P3GXTsFa9CfC
+	dUaDCuijTIlX6ritZ5v2Az6hPPL0u7gP+HmLl/NkQ08nE2fOSfC+gxeHxGvUrDsMlH12
+	rUjibxKTpXqGu9VZGW41jYwt4ppW6rKX8IXvqt6Vm5A0Z+CKb1KOz9VpBz9x8h532LrQ
+	OEOg==
+X-Received: by 10.68.69.8 with SMTP id a8mr30323230pbu.144.1443501844244;
+	Mon, 28 Sep 2015 21:44:04 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	g5sm22686368pat.21.2015.09.28.21.44.02
+	g5sm22686368pat.21.2015.09.28.21.44.03
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 28 Sep 2015 21:44:02 -0700 (PDT)
+	Mon, 28 Sep 2015 21:44:03 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 28 Sep 2015 21:45:20 -0700
-Message-Id: <8feb4622961622194ce8f3b3f6c1c44c52eff84a.1443497922.git.avery.brian@gmail.com>
+Date: Mon, 28 Sep 2015 21:45:21 -0700
+Message-Id: <a99548c3eda5c614a3394705b9a7076fea769cd1.1443497922.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <8b0eb0f272c0658ba98db30c17a688f87c75d134.1443497922.git.avery.brian@gmail.com>
 References: <8b0eb0f272c0658ba98db30c17a688f87c75d134.1443497922.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1443497922.git.avery.brian@gmail.com>
 References: <cover.1443497922.git.avery.brian@gmail.com>
-Subject: [PATCH 10/22] toaster: implement decorator for REST responses
+Subject: [PATCH 11/22] toaster: Fix indentation of jsunittests view
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,51 +49,51 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 29 Sep 2015 04:44:03 -0000
 
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+From: Michael Wood <michael.g.wood@intel.com>
 
-Implemented xhr_response decorator to decorate responses
-from REST methods into Django HttpResponse objects.
+Fix indentation to 4 spaces
 
-This decorator should reduce amount of repeated code in
-REST methods and make them more readable.
-
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/toaster/toastergui/views.py | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ lib/toaster/toastergui/views.py | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 2e3b822..95df60e 100755
+index 95df60e..5ea6122 100755
 --- a/lib/toaster/toastergui/views.py
 +++ b/lib/toaster/toastergui/views.py
-@@ -45,6 +45,7 @@ from django.utils import formats
- from toastergui.templatetags.projecttags import json as jsonfilter
- import json
- from os.path import dirname
-+from functools import wraps
- import itertools
+@@ -2328,20 +2328,20 @@ if True:
+         return wrapper
  
- import magic
-@@ -2314,6 +2315,18 @@ if True:
- 
-         return context
- 
-+    def xhr_response(fun):
-+        """
-+        Decorator for REST methods.
-+        calls jsonfilter on the returned dictionary and returns result
-+        as HttpResponse object of content_type application/json
-+        """
-+        @wraps(fun)
-+        def wrapper(*args, **kwds):
-+            return HttpResponse(jsonfilter(fun(*args, **kwds)),
-+                                content_type="application/json")
-+        return wrapper
-+
      def jsunittests(request):
-       """ Provides a page for the js unit tests """
-       bbv = BitbakeVersion.objects.filter(branch="master").first()
+-      """ Provides a page for the js unit tests """
+-      bbv = BitbakeVersion.objects.filter(branch="master").first()
+-      release = Release.objects.filter(bitbake_version=bbv).first()
++        """ Provides a page for the js unit tests """
++        bbv = BitbakeVersion.objects.filter(branch="master").first()
++        release = Release.objects.filter(bitbake_version=bbv).first()
+ 
+-      name = "_js_unit_test_prj_"
++        name = "_js_unit_test_prj_"
+ 
+-      # If there is an existing project by this name delete it. We don't want
+-      # Lots of duplicates cluttering up the projects.
+-      Project.objects.filter(name=name).delete()
++        # If there is an existing project by this name delete it. We don't want
++        # Lots of duplicates cluttering up the projects.
++        Project.objects.filter(name=name).delete()
+ 
+-      new_project = Project.objects.create_project(name=name, release=release)
++        new_project = Project.objects.create_project(name=name, release=release)
+ 
+-      context = { 'project' : new_project }
+-      return render(request, "js-unit-tests.html", context)
++        context = { 'project' : new_project }
++        return render(request, "js-unit-tests.html", context)
+ 
+     from django.views.decorators.csrf import csrf_exempt
+     @csrf_exempt
 -- 
 1.9.1
 
