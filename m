@@ -1,37 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f52.google.com (mail-pa0-f52.google.com
-	[209.85.220.52])
-	by mail.openembedded.org (Postfix) with ESMTP id 6370F76F9D
+Received: from mail-pa0-f47.google.com (mail-pa0-f47.google.com
+	[209.85.220.47])
+	by mail.openembedded.org (Postfix) with ESMTP id 470F077032
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 29 Sep 2015 04:43:56 +0000 (UTC)
-Received: by pacfv12 with SMTP id fv12so198600147pac.2
+	Tue, 29 Sep 2015 04:43:58 +0000 (UTC)
+Received: by padhy16 with SMTP id hy16so194362858pad.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Sep 2015 21:43:55 -0700 (PDT)
+	Mon, 28 Sep 2015 21:43:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=/f8uzMWPrhsbZY5/lUXOfDfMQuoyDx+DxZkpQ/Bvh4o=;
-	b=tppeQM3do6Ls0ZVQTmXWE97tHLlfNjfcowo21Rmtvv095QQeGFtxgYKxVm6tBpcJNP
-	A3nzq9/CVq6s1bGW/iC22jKorBxaYtFauC6agKIHuHFQz7pLZ/PvsSsnFuO7VrzqzqmR
-	hrTzCv2UQdKKJvze5S2hGGiM4X22Qtt5TIW8b4CUDaTMtXa+XjWgHCf6t2v/QzE4IM+B
-	MabYMiahTAAOsoT8f8WdxxCJ6VyYDFPmNh5EisZ8O4IZosk3ha1zjMLYoHE/GYSRX77h
-	9xSXO8fsvY82rt5CkGMXxxaks7FxdsmLjXJjsh1ul6FRoXkwdLvU8M24lLw7z+sEVjn8
-	Y56A==
-X-Received: by 10.66.219.195 with SMTP id pq3mr30396397pac.98.1443501835936;
-	Mon, 28 Sep 2015 21:43:55 -0700 (PDT)
+	h=from:to:cc:subject:date:message-id:in-reply-to:references
+	:in-reply-to:references;
+	bh=Qd4cEpehnXdXtdXPuBi8Sml1h78Z1x0qzzd08JtKvIU=;
+	b=pKpruKJc08k5oawZDr0z9Wrp4rYFk8SKHPv4/v6M9Iw/jlxcI2vIeNzdYdSWoa+BYe
+	hF1VdojqK7ZmzLKcV0nxB6qYfZKgQLjDxTW/eTaVwRRmG5c/3F7y/ys+aAces0ihOsrk
+	Xa/d3tkVlhYYBvJ0kZ+ksieN5fO5ronj0qxsoT1AIDRRppRBLoRg/QtAPqzEGDTvSJEX
+	sGBjnr+IFQxOoDkxyA8TzVlJu0QufvrqvrVgjBjSah99SyGj/jXVM/DNV4VRMHxUbUyx
+	zUClT2OLVFliCzOThXO4P8w2Cuz6kLDv5SERYpfwq40Xhim6pNDDnKTVWQCM38aIsVb0
+	ZTKg==
+X-Received: by 10.66.193.230 with SMTP id hr6mr30794494pac.39.1443501839301;
+	Mon, 28 Sep 2015 21:43:59 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	g5sm22686368pat.21.2015.09.28.21.43.54
+	g5sm22686368pat.21.2015.09.28.21.43.58
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 28 Sep 2015 21:43:55 -0700 (PDT)
+	Mon, 28 Sep 2015 21:43:58 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 28 Sep 2015 21:45:11 -0700
-Message-Id: <8b0eb0f272c0658ba98db30c17a688f87c75d134.1443497922.git.avery.brian@gmail.com>
+Date: Mon, 28 Sep 2015 21:45:15 -0700
+Message-Id: <30ca9bfbb705b7297283dad64fd00c8577295a75.1443497922.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <8b0eb0f272c0658ba98db30c17a688f87c75d134.1443497922.git.avery.brian@gmail.com>
+References: <8b0eb0f272c0658ba98db30c17a688f87c75d134.1443497922.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1443497922.git.avery.brian@gmail.com>
 References: <cover.1443497922.git.avery.brian@gmail.com>
-Subject: [PATCH 01/22] toaster: make a workaround for old style index
+Subject: [PATCH 05/22] toaster: widgets ToasterTable Add more info to search field exception
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,36 +47,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 29 Sep 2015 04:43:58 -0000
+X-List-Received-Date: Tue, 29 Sep 2015 04:43:59 -0000
 
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+From: Michael Wood <michael.g.wood@intel.com>
 
-For a new style indexes 'inherits' field is used to determine if
-recipe is an image recipe.
+If we get a search fields exception then also print out the model name
 
-As old style indexes don't have 'inherits' field this can be
-guessed from recipe name. Let's consider recipe an image recipe
-if recipe name contains '-image-'.
-
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/toaster/orm/models.py | 2 ++
- 1 file changed, 2 insertions(+)
+ lib/toaster/toastergui/widgets.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 883ecf4..b5c8643 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -974,6 +974,8 @@ class LayerIndexLayerSource(LayerSource):
-                 ro.file_path = ri['filepath'] + "/" + ri['filename']
-                 if 'inherits' in ri:
-                     ro.is_image = 'image' in ri['inherits'].split()
-+                else: # workaround for old style layer index
-+                    ro.is_image = "-image-" in ri['pn']
-                 ro.save()
-             except IntegrityError as e:
-                 logger.debug("Failed saving recipe, ignoring: %s (%s:%s)" % (e, ro.layer_version, ri['filepath']+"/"+ri['filename']))
+diff --git a/lib/toaster/toastergui/widgets.py b/lib/toaster/toastergui/widgets.py
+index 7f96370..aaa59c0 100644
+--- a/lib/toaster/toastergui/widgets.py
++++ b/lib/toaster/toastergui/widgets.py
+@@ -229,7 +229,8 @@ class ToasterTable(TemplateView):
+         """Creates a query based on the model's search_allowed_fields"""
+ 
+         if not hasattr(self.queryset.model, 'search_allowed_fields'):
+-            raise Exception("Err Search fields aren't defined in the model")
++            raise Exception("Search fields aren't defined in the model %s"
++                           % self.queryset.model)
+ 
+         search_queries = []
+         for st in search_term.split(" "):
 -- 
 1.9.1
 
