@@ -1,40 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f46.google.com (mail-pa0-f46.google.com
-	[209.85.220.46])
-	by mail.openembedded.org (Postfix) with ESMTP id 7F5C177043
+Received: from mail-pa0-f51.google.com (mail-pa0-f51.google.com
+	[209.85.220.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 8982577077
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 29 Sep 2015 04:44:12 +0000 (UTC)
-Received: by pablk4 with SMTP id lk4so97507982pab.3
+	Tue, 29 Sep 2015 04:44:11 +0000 (UTC)
+Received: by pacex6 with SMTP id ex6so194497918pac.0
 	for <bitbake-devel@lists.openembedded.org>;
 	Mon, 28 Sep 2015 21:44:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=V09ZxJaAFLZUQFIgHQBtNdcBkF0wLMKQryEJGcfCAOc=;
-	b=p8lzGVM6ml55FAhjqR3mmB0gbih2Xb/9C4LZbT40rg1DGer5aZuToERJi51gApcid7
-	MoCNnPmrdTvdniJ4d5B5CDvYX1yb8ySLRA1PH0ueQIlwiwnOrTeAE4HMACd+I9MJK3UE
-	og9HWnWEDSgQhQGOf0FUWZZng4k1Jw6bdNcbKtFIFQA2Yr6Q/g3UysTG2he+stIx8/tO
-	cBOmKcJWpBCopxS0I+MMFEPgLb4HQzGppBmtfm8bayUQamabl7AUNGumeb8AspFlJyDc
-	aTzypPD/WVWY5R0ctIZH6ItJKDo8y/GY8s6h1fkQNZ/bABMUTQ9WKyJt5OortuVIDhHX
-	faYA==
-X-Received: by 10.68.254.99 with SMTP id ah3mr30521081pbd.15.1443501852789;
-	Mon, 28 Sep 2015 21:44:12 -0700 (PDT)
+	bh=d+7UWekmY4xLadHy8zvHHTSJgTH6yMsVzsGTMwvK5bM=;
+	b=tbM1QLl06daXmzzP5AYgCQ+7yCvmMXmSPzZoVBi0jPZZf6PZQBGj3zFvIol8G3cNfJ
+	/4f0W7PTAJQ+KB5qcRvsJ+d9Ab/hnt3rkSnjziW5Qtz5+ZaQFFiNptk9yLGXot3CJTf2
+	nTn6vgi3utPEm3GHIrKqngQWROHa6IYjDtZBgIutY5HvXDwWwFV7eUHEp9XsP3qon0VY
+	mmkl998jvOlvEffHOZzOaCw2AnOmZB0JmAXLv0RizLmcVClh5Q0XzpNxuLcMVmQU0OYz
+	SDGBeOQ2kDv7+q2FUDDcDQhxWaaUucxiYbHrjFm8v4EijHwG+KGNK8Cza+9R7lNw650N
+	rgMg==
+X-Received: by 10.66.193.230 with SMTP id hr6mr30795539pac.39.1443501851935;
+	Mon, 28 Sep 2015 21:44:11 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
 	g5sm22686368pat.21.2015.09.28.21.44.11
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 28 Sep 2015 21:44:12 -0700 (PDT)
+	Mon, 28 Sep 2015 21:44:11 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 28 Sep 2015 21:45:31 -0700
-Message-Id: <b002d5fe6b0f343507af0447833bd2f166bcb57a.1443497922.git.avery.brian@gmail.com>
+Date: Mon, 28 Sep 2015 21:45:30 -0700
+Message-Id: <d8044d7477ac1279f22c911a20790544607d4cb8.1443497922.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <8b0eb0f272c0658ba98db30c17a688f87c75d134.1443497922.git.avery.brian@gmail.com>
 References: <8b0eb0f272c0658ba98db30c17a688f87c75d134.1443497922.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1443497922.git.avery.brian@gmail.com>
 References: <cover.1443497922.git.avery.brian@gmail.com>
-Subject: [PATCH 21/22] Revert "bitbake: toaster: don't re-create Target objects"
+Subject: [PATCH 20/22] toaster: buildinfohelper Create a copy of the built layer and recipe
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,59 +51,116 @@ X-List-Received-Date: Tue, 29 Sep 2015 04:44:13 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-This delete followed up the foreign keys and deleted things that were
-not expected to be deleted.
-
-This reverts commit 08000eb27eb8413686fb2c8daf14d234a8bff83a.
+Create a copy of the built layer and the recipes associated with it.
+This is so that the user can view the historical information about a
+build. i.e. a snapshot of the layer version and artifacts produced at
+that build.
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/bb/ui/buildinfohelper.py | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ lib/bb/ui/buildinfohelper.py | 54 +++++++++++++++++++++++++++++++++-----------
+ lib/toaster/orm/models.py    |  2 +-
+ 2 files changed, 42 insertions(+), 14 deletions(-)
 
 diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index e036ef6..9fdde29 100644
+index d0efaa9..e036ef6 100644
 --- a/lib/bb/ui/buildinfohelper.py
 +++ b/lib/bb/ui/buildinfohelper.py
-@@ -162,6 +162,8 @@ class ORMWrapper(object):
-             build.bitbake_version=build_info['bitbake_version']
-             build.save()
+@@ -66,6 +66,7 @@ class ORMWrapper(object):
  
-+            Target.objects.filter(build = build).delete()
+     def __init__(self):
+         self.layer_version_objects = []
++        self.layer_version_built = []
+         self.task_objects = {}
+         self.recipe_objects = {}
+ 
+@@ -254,32 +255,59 @@ class ORMWrapper(object):
+ 
+         assert not recipe_information['file_path'].startswith("/")      # we should have layer-relative paths at all times
+ 
+-        recipe_object, created = self._cached_get_or_create(Recipe, layer_version=recipe_information['layer_version'],
 +
-         else:
-             build = Build.objects.create(
-                                     project = prj,
-@@ -182,6 +184,19 @@ class ORMWrapper(object):
- 
-         return build
- 
-+    def create_target_objects(self, target_info):
-+        assert 'build' in target_info
-+        assert 'targets' in target_info
++        def update_recipe_obj(recipe_object):
++            object_changed = False
++            for v in vars(recipe_object):
++                if v in recipe_information.keys():
++                    object_changed = True
++                    vars(recipe_object)[v] = recipe_information[v]
 +
-+        targets = []
-+        for tgt_name in target_info['targets']:
-+            tgt_object = Target.objects.create( build = target_info['build'],
-+                                    target = tgt_name,
-+                                    is_image = False,
-+                                    )
-+            targets.append(tgt_object)
-+        return targets
++            if object_changed:
++                recipe_object.save()
 +
-     def update_build_object(self, build, errors, warnings, taskfailures):
-         assert isinstance(build,Build)
-         assert isinstance(errors, int)
-@@ -911,7 +926,7 @@ class BuildInfoHelper(object):
-         target_information['targets'] = event._pkgs
-         target_information['build'] = build_obj
++        recipe, created = self._cached_get_or_create(Recipe, layer_version=recipe_information['layer_version'],
+                                      file_path=recipe_information['file_path'], pathflags = recipe_information['pathflags'])
+-        if created and must_exist:
+-            raise NotExisting("Recipe object created when expected to exist", recipe_information)
  
--        self.internal_state['targets'] = Target.objects.filter(build=target_information['build'])
-+        self.internal_state['targets'] = self.orm_wrapper.create_target_objects(target_information)
+-        object_changed = False
+-        for v in vars(recipe_object):
+-            if v in recipe_information.keys():
+-                object_changed = True
+-                vars(recipe_object)[v] = recipe_information[v]
++        update_recipe_obj(recipe)
  
-         # Save build configuration
-         data = self.server.runCommand(["getAllKeysWithFlags", ["doc", "func"]])[0]
+-        if object_changed:
+-            recipe_object.save()
++        # Create a copy of the recipe for historical puposes and update it
++        for built_layer in self.layer_version_built:
++            if built_layer.layer == recipe_information['layer_version'].layer:
++                built_recipe, c = self._cached_get_or_create(Recipe,
++                        layer_version=built_layer,
++                        file_path=recipe_information['file_path'],
++                        pathflags = recipe_information['pathflags'])
++                update_recipe_obj(built_recipe)
++                break
+ 
+-        return recipe_object
++
++
++        if created and must_exist:
++            raise NotExisting("Recipe object created when expected to exist", recipe_information)
++
++        return recipe
+ 
+     def get_update_layer_version_object(self, build_obj, layer_obj, layer_version_information):
+         if isinstance(layer_obj, Layer_Version):
+             # We already found our layer version for this build so just
+             # update it with the new build information
+             logger.debug("We found our layer from toaster")
+-            layer_obj.build = build_obj
+             layer_obj.local_path = layer_version_information['local_path']
+-            layer_obj.commit = layer_version_information['commit']
+             layer_obj.save()
+             self.layer_version_objects.append(layer_obj)
++
++            # create a new copy of this layer version as a snapshot for
++            # historical purposes
++            layer_copy, c = Layer_Version.objects.get_or_create(build=build_obj,
++                            layer=layer_obj.layer,
++                            commit=layer_version_information['commit'],
++                            local_path = layer_version_information['local_path'],
++                            )
++            logger.warning("created new historical layer version %d", layer_copy.pk)
++
++            self.layer_version_built.append(layer_copy)
++
+             return layer_obj
+ 
+         assert isinstance(build_obj, Build)
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index e0b31a9..9a052bf 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -194,7 +194,7 @@ class Project(models.Model):
+         if release == None:
+             release = self.release
+         # layers on the same branch or layers specifically set for this project
+-        queryset = Layer_Version.objects.filter((Q(up_branch__name = release.branch_name) & Q(project = None)) | Q(project = self) | Q(build__project = self))
++        queryset = Layer_Version.objects.filter(((Q(up_branch__name = release.branch_name) & Q(project = None)) | Q(project = self)) & Q(build__isnull=True))
+ 
+         if layer_name is not None:
+             # we select only a layer name
 -- 
 1.9.1
 
