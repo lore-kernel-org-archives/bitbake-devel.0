@@ -1,35 +1,22 @@
-Return-Path: <avery.brian@gmail.com>
-Received: from mail-io0-f179.google.com (mail-io0-f179.google.com
-	[209.85.223.179])
-	by mail.openembedded.org (Postfix) with ESMTP id A2EB076F9D
+Return-Path: <elliot.smith@intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id DE15A76FDE
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 29 Sep 2015 05:29:19 +0000 (UTC)
-Received: by iofh134 with SMTP id h134so199577403iof.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Sep 2015 22:29:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:cc:content-type;
-	bh=eN0ICqMtWzX+G+pMVSfVGqpLPcy3JSCuLKdd6mAOHHI=;
-	b=RRIJx3gD4PtPxnHAl0sqlqs4hikz55qO/HUa0zkPjlGZRmbgAMaCrSc3n1N8ek+Hcc
-	l4Vl03DjnXtn5jAeXmtTQ4Xhy+JEkooNY8RnPIn1VC0Cm189rTsNEgUko5ZwHDhYG7Qw
-	9vzMLtV8rnGS8CYkTeU4F5tUqJlTzyFWBry2lTGCTsQmr2THK8aUlTcp7SYsEd+tvYXU
-	QSzXRc18UW26r7SZsiXG0/kf/2pZnOk6wTRDvm8FNfTkJl45FwwDBaM7Qpat58zXIhIb
-	9/n9xflMvdiODOk3BfeGSatqAS3+L4vQ08qfZJuD7yR/l+DGGQoFUDlpEr5PfPBvo6O9
-	p8Lw==
-MIME-Version: 1.0
-X-Received: by 10.107.32.80 with SMTP id g77mr23584773iog.14.1443504559297;
-	Mon, 28 Sep 2015 22:29:19 -0700 (PDT)
-Received: by 10.64.155.36 with HTTP; Mon, 28 Sep 2015 22:29:19 -0700 (PDT)
-In-Reply-To: <92bef2c338fd79ad607f25b8062e8c71eef2a31e.1443090607.git.elliot.smith@intel.com>
-References: <cover.1443090607.git.elliot.smith@intel.com>
-	<92bef2c338fd79ad607f25b8062e8c71eef2a31e.1443090607.git.elliot.smith@intel.com>
-Date: Mon, 28 Sep 2015 22:29:19 -0700
-Message-ID: <CAKV_0egbpt2H7P5xHvO48yV3tAtxpKMgR=LJ02p0_j5YkTEzzQ@mail.gmail.com>
-From: Brian Avery <avery.brian@gmail.com>
-To: Elliot Smith <elliot.smith@intel.com>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 1/2] toaster: small improvements to the startup script
+	Tue, 29 Sep 2015 07:15:44 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 29 Sep 2015 00:15:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.17,606,1437462000"; d="scan'208";a="815244993"
+Received: from bdrobeso-mobl3.amr.corp.intel.com (HELO lp.ger.corp.intel.com)
+	([10.252.3.197])
+	by orsmga002.jf.intel.com with ESMTP; 29 Sep 2015 00:15:29 -0700
+From: Elliot Smith <elliot.smith@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue, 29 Sep 2015 08:15:19 +0100
+Message-Id: <1443510919-9224-1-git-send-email-elliot.smith@intel.com>
+X-Mailer: git-send-email 1.9.3
+Cc: David Reyna <David.Reyna@windriver.com>
+Subject: [PATCH] bitbake: toaster: display most recent builds for projects
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,67 +29,102 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 29 Sep 2015 05:29:19 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Tue, 29 Sep 2015 07:15:48 -0000
 
-this patch contains a typo. I'll resubmit.
--b
+From: David Reyna <David.Reyna@windriver.com>
 
-On Thu, Sep 24, 2015 at 3:31 AM, Elliot Smith <elliot.smith@intel.com> wrote:
-> From: brian avery <avery.brian@gmail.com>
->
-> Do not ask the user to create a superuser on running in managed mode
->
-> Correctly inherit the env variable WEB_PORT if set in analysis mode
->
-> Signed-off-by: brian avery <avery.brian@gmail.com>
-> Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-> ---
->  bin/toaster | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/bin/toaster b/bin/toaster
-> index ac27826..2153282 100755
-> --- a/bin/toaster
-> +++ b/bin/toaster
-> @@ -54,11 +54,9 @@ webserverStartAll()
->      fi
->
->      retval=0
-> -    if [ "$TOASTER_MANAGED" '=' '1' ]; then
-> -        python $BBBASEDIR/lib/toaster/manage.py syncdb || retval=1
-> -    else
-> -        python $BBBASEDIR/lib/toaster/manage.py syncdb --noinput || retval=1
-> -    fi
-> +    # you can always add a superuser later via
-> +    # python bitbake/lib/toaster/manage.py python manage.py createsuperuser --username=<ME>
-> +    python $BBBASEDIR/lib/toaster/manage.py syncdb --noinput || retval=1
->      python $BBBASEDIR/lib/toaster/manage.py migrate orm || retval=2
->      if [ $retval -eq 1 ]; then
->          echo "Failed db sync, stopping system start" 1>&2
-> @@ -163,7 +161,9 @@ RUNNING=0
->  NOTOASTERUI=0
->  WEBSERVER=1
->  TOASTER_BRBE=""
-> -WEB_PORT="8000"
-> +if [ "WEB_PORT" == "" ]; then
-> +    WEB_PORT="8000"
-> +fi
->  NOBROWSER=0
->
->  for param in $*; do
-> --
-> 1.9.3
->
-> ---------------------------------------------------------------------
-> Intel Corporation (UK) Limited
-> Registered No. 1134945 (England)
-> Registered Office: Pipers Way, Swindon SN3 1RJ
-> VAT No: 860 2173 47
->
-> This e-mail and any attachments may contain confidential material for
-> the sole use of the intended recipient(s). Any review or distribution
-> by others is strictly prohibited. If you are not the intended
-> recipient, please contact the sender and delete all copies.
->
+Display the most recent builds in the given project's build page.
+
+[YOCTO #8186]
+
+Signed-off-by: David Reyna <David.Reyna@windriver.com>
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+---
+ .../lib/toaster/toastergui/templates/mrb_section.html    | 16 +++++++++++-----
+ .../lib/toaster/toastergui/templates/projectbuilds.html  | 10 +++++++---
+ bitbake/lib/toaster/toastergui/views.py                  |  3 +++
+ 3 files changed, 21 insertions(+), 8 deletions(-)
+
+diff --git a/bitbake/lib/toaster/toastergui/templates/mrb_section.html b/bitbake/lib/toaster/toastergui/templates/mrb_section.html
+index b2c49fe..2fefe4b 100644
+--- a/bitbake/lib/toaster/toastergui/templates/mrb_section.html
++++ b/bitbake/lib/toaster/toastergui/templates/mrb_section.html
+@@ -3,13 +3,19 @@
+ {% load humanize %}
+ 
+ 
+-{%if mru.count > 0%}
++{%if mru and mru.count > 0%}
+ 
+-  <div class="page-header">
++  {%if mrb_type == 'project' %}
++      <h2>
++      Latest project builds
++      </h2>
++  {% else %}
++    <div class="page-header">
+       <h1>
+-          Latest builds
+-       </h1>
+-  </div>
++      Latest builds
++      </h1>
++    </div>
++  {% endif %}
+   <div id="latest-builds">
+   {% for build in mru %}
+     <div class="alert {%if build.outcome == build.SUCCEEDED%}alert-success{%elif build.outcome == build.FAILED%}alert-error{%else%}alert-info{%endif%} project-name ">
+diff --git a/bitbake/lib/toaster/toastergui/templates/projectbuilds.html b/bitbake/lib/toaster/toastergui/templates/projectbuilds.html
+index fc659a0..fde7e3b 100644
+--- a/bitbake/lib/toaster/toastergui/templates/projectbuilds.html
++++ b/bitbake/lib/toaster/toastergui/templates/projectbuilds.html
+@@ -21,13 +21,17 @@
+     });
+ </script>
+ 
++ {% with mrb_type='project' %}
++     {% include "mrb_section.html" %}
++ {% endwith %}
++
+       <h2>
+         {% if request.GET.filter and objects.paginator.count > 0 or request.GET.search and objects.paginator.count > 0 %}
+-            {{objects.paginator.count}} build{{objects.paginator.count|pluralize}} found
++            {{objects.paginator.count}} project build{{objects.paginator.count|pluralize}} found
+         {%elif request.GET.filter and objects.paginator.count == 0 or request.GET.search and objects.paginator.count == 0 %}
+-            No builds found
++            No project builds found
+         {%else%}
+-            Project builds
++            All project builds
+         {%endif%}
+         <i class="icon-question-sign get-help heading-help" title="This page lists all the builds for the current project"></i>
+       </h2>
+diff --git a/bitbake/lib/toaster/toastergui/views.py b/bitbake/lib/toaster/toastergui/views.py
+index 8689a12..beaa096 100755
+--- a/bitbake/lib/toaster/toastergui/views.py
++++ b/bitbake/lib/toaster/toastergui/views.py
+@@ -2733,6 +2733,9 @@ if True:
+         context['project'] = prj
+         _set_parameters_values(pagesize, orderby, request)
+ 
++        # add the most recent builds for this project
++        context['mru'] = _get_latest_builds(prj)
++
+         return context
+ 
+ 
+-- 
+1.9.3
+
+---------------------------------------------------------------------
+Intel Corporation (UK) Limited
+Registered No. 1134945 (England)
+Registered Office: Pipers Way, Swindon SN3 1RJ
+VAT No: 860 2173 47
+
+This e-mail and any attachments may contain confidential material for
+the sole use of the intended recipient(s). Any review or distribution
+by others is strictly prohibited. If you are not the intended
+recipient, please contact the sender and delete all copies.
+
 
