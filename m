@@ -1,40 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f45.google.com (mail-pa0-f45.google.com
-	[209.85.220.45])
-	by mail.openembedded.org (Postfix) with ESMTP id 4386076903
+Received: from mail-pa0-f44.google.com (mail-pa0-f44.google.com
+	[209.85.220.44])
+	by mail.openembedded.org (Postfix) with ESMTP id 9C6B576903
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 29 Sep 2015 04:44:07 +0000 (UTC)
-Received: by pacex6 with SMTP id ex6so194496121pac.0
+	Tue, 29 Sep 2015 04:44:09 +0000 (UTC)
+Received: by pacfv12 with SMTP id fv12so198605917pac.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Sep 2015 21:44:07 -0700 (PDT)
+	Mon, 28 Sep 2015 21:44:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=Af4vp73n3jGooS8sURMMtqNajZzZpg1mZcc5XuVzz1I=;
-	b=g5NDiIx1Yyvj9c7vIUxb8KY3OWUxiQt3oD56DKQSc8+dC52XIfPe3cM3Zxb/kJXaPs
-	SMlg3pIs+JlwcA9tDcxfUnrtvXOXYjSwZxv+OYct8Xqhf2AemWjRlkAqZdZLR1h/W7aO
-	XOJJuKmX6ozqVIC57oM3M81Z5ITKenr7qXtmHp+ucmBxUUmmtFFBsnsEPhbVpsazeXkM
-	n6o9lC9ab0UYxS4zqOnLzZngGpfue7E/XR9d3tabw4tkYYjslWdk+W+MC+aCmcsNcwk2
-	jZKT+3DS7uHRULdG4O0sltoIMTH8CVbEsc0CeRWozr67qddpsCoEn1PHf7nPDvSD4yRH
-	5UAA==
-X-Received: by 10.68.111.3 with SMTP id ie3mr30877191pbb.63.1443501847751;
-	Mon, 28 Sep 2015 21:44:07 -0700 (PDT)
+	bh=XxKgtDjwvAtHfOwotcv3B5gQCJYIGbM+IDLXOWn9hGI=;
+	b=vfh4BOCcLP0Em1y5Sjtnc78fmDF15WYlU1GYwya/PBy615/6JNgzjxkzI+WuynZVxW
+	z/2Y9a7EVTdH+3AW4+Xj/SeYC0K9axo5LasA+Nsyw3KEWyFx9tMS8Hm5F9+5/KeoiFKm
+	K5oloK/ZoHrj4fBvDOAOZZT9vdBoF/5WYT4XLYCJY3+Q+BmBmiHdwxNbXSVbA030CsAF
+	+dcOiNtEmw9h49lz2ZO3bOW+H60UVq6c0q86VvSGfRO2kxwYoJwaDtnCbOw1PZo3H1MY
+	1P93WPm6IFP0JvrNzTAe+VNwXHpHZ+1kC35Ht9/as/RsrX8ENVzgjsOv2rf4qfWizg2s
+	zIeQ==
+X-Received: by 10.66.220.2 with SMTP id ps2mr30320332pac.128.1443501849487;
+	Mon, 28 Sep 2015 21:44:09 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	g5sm22686368pat.21.2015.09.28.21.44.06
+	g5sm22686368pat.21.2015.09.28.21.44.08
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 28 Sep 2015 21:44:07 -0700 (PDT)
+	Mon, 28 Sep 2015 21:44:08 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 28 Sep 2015 21:45:25 -0700
-Message-Id: <b2ed3978d493168140a596f284c24f74c0865db8.1443497922.git.avery.brian@gmail.com>
+Date: Mon, 28 Sep 2015 21:45:27 -0700
+Message-Id: <1b457415737fa46e029c7d797631da6aa2e4041e.1443497922.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <8b0eb0f272c0658ba98db30c17a688f87c75d134.1443497922.git.avery.brian@gmail.com>
 References: <8b0eb0f272c0658ba98db30c17a688f87c75d134.1443497922.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1443497922.git.avery.brian@gmail.com>
 References: <cover.1443497922.git.avery.brian@gmail.com>
-Subject: [PATCH 15/22] toaster: Add test cases for new Image customisation features
+Subject: [PATCH 17/22] toaster: Create a relationship between build information and toaster layers
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,257 +49,315 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Tue, 29 Sep 2015 04:44:09 -0000
 
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+From: Michael Wood <michael.g.wood@intel.com>
 
-- Adds tests for new ToasterTables
-- Adds tests for new ReST API
+Previously this layer relationship was done by trying to match path
+information that came back to the buildinfohelper with trying to query for
+data in toaster's layers table. This rarely matched due to the lose coupling.
 
-co-author: Elliot Smith <elliot.smith@intel.com>
-           Michael Wood <michael.g.wood@intel.com>
-
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/toaster/toastergui/tests.py | 187 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 182 insertions(+), 5 deletions(-)
+ lib/bb/ui/buildinfohelper.py                       |  30 +++-
+ .../0009_auto__add_field_brlayer_layer_version.py  | 180 +++++++++++++++++++++
+ lib/toaster/bldcontrol/models.py                   |   3 +-
+ lib/toaster/orm/models.py                          |   2 +-
+ 4 files changed, 211 insertions(+), 4 deletions(-)
+ create mode 100644 bitbake/lib/toaster/bldcontrol/migrations/0009_auto__add_field_brlayer_layer_version.py
 
-diff --git a/lib/toaster/toastergui/tests.py b/lib/toaster/toastergui/tests.py
-index 53012b4..5d15ac9 100644
---- a/lib/toaster/toastergui/tests.py
-+++ b/lib/toaster/toastergui/tests.py
-@@ -24,13 +24,21 @@
- import re
+diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
+index 5098448..d0efaa9 100644
+--- a/lib/bb/ui/buildinfohelper.py
++++ b/lib/bb/ui/buildinfohelper.py
+@@ -94,8 +94,8 @@ class ORMWrapper(object):
  
- from django.test import TestCase
-+from django.test.client import RequestFactory
- from django.core.urlresolvers import reverse
- from django.utils import timezone
--from orm.models import Project, Release, BitbakeVersion, ProjectTarget
-+
-+from orm.models import Project, Release, BitbakeVersion, Build, Package
- from orm.models import ReleaseLayerSourcePriority, LayerSource, Layer, Build
- from orm.models import Layer_Version, Recipe, Machine, ProjectLayer, Target
-+from orm.models import CustomImageRecipe
-+from orm.models import Branch
-+
-+from toastergui.tables import SoftwareRecipesTable
-+from django.utils import timezone
- import json
- from bs4 import BeautifulSoup
-+import re
+         created = False
+         if not key in vars(self)[dictname].keys():
+-            vars(self)[dictname][key] = clazz.objects.create(**kwargs)
+-            created = True
++            vars(self)[dictname][key], created = \
++                clazz.objects.get_or_create(**kwargs)
  
- PROJECT_NAME = "test project"
+         return (vars(self)[dictname][key], created)
  
-@@ -41,27 +49,58 @@ class ViewTests(TestCase):
-         bbv = BitbakeVersion.objects.create(name="test bbv", giturl="/tmp/",
-                                             branch="master", dirpath="")
-         release = Release.objects.create(name="test release",
-+                                         branch_name="master",
-                                          bitbake_version=bbv)
-         self.project = Project.objects.create_project(name=PROJECT_NAME,
-                                                       release=release)
-+        now = timezone.now()
-+
-+        build = Build.objects.create(project=self.project,
-+                                     started_on=now,
-+                                     completed_on=now)
-+
-         layersrc = LayerSource.objects.create(sourcetype=LayerSource.TYPE_IMPORTED)
-         self.priority = ReleaseLayerSourcePriority.objects.create(release=release,
-                                                                   layer_source=layersrc)
-         layer = Layer.objects.create(name="base-layer", layer_source=layersrc,
-                                      vcs_url="/tmp/")
+@@ -271,6 +271,17 @@ class ORMWrapper(object):
+         return recipe_object
  
-+        branch = Branch.objects.create(name="master", layer_source=layersrc)
+     def get_update_layer_version_object(self, build_obj, layer_obj, layer_version_information):
++        if isinstance(layer_obj, Layer_Version):
++            # We already found our layer version for this build so just
++            # update it with the new build information
++            logger.debug("We found our layer from toaster")
++            layer_obj.build = build_obj
++            layer_obj.local_path = layer_version_information['local_path']
++            layer_obj.commit = layer_version_information['commit']
++            layer_obj.save()
++            self.layer_version_objects.append(layer_obj)
++            return layer_obj
 +
-         lver = Layer_Version.objects.create(layer=layer, project=self.project,
--                                            layer_source=layersrc, commit="master")
-+                                            layer_source=layersrc, commit="master",
-+                                            up_branch=branch)
+         assert isinstance(build_obj, Build)
+         assert isinstance(layer_obj, Layer)
+         assert 'branch' in layer_version_information
+@@ -320,8 +331,15 @@ class ORMWrapper(object):
+                     localdirname = os.path.join(bc.be.sourcedir, localdirname)
+                 #logger.debug(1, "Localdirname %s lcal_path %s" % (localdirname, layer_information['local_path']))
+                 if localdirname.startswith(layer_information['local_path']):
++                  # If the build request came from toaster this field
++                  # should contain the information from the layer_version
++                  # That created this build request.
++                    if brl.layer_version:
++                        return brl.layer_version
++
+                     # we matched the BRLayer, but we need the layer_version that generated this BR; reverse of the Project.schedule_build()
+                     #logger.debug(1, "Matched %s to BRlayer %s" % (pformat(layer_information["local_path"]), localdirname))
++
+                     for pl in buildrequest.project.projectlayer_set.filter(layercommit__layer__name = brl.name):
+                         if pl.layercommit.layer.vcs_url == brl.giturl :
+                             layer = pl.layercommit.layer
+@@ -674,6 +692,7 @@ class BuildInfoHelper(object):
+     def __init__(self, server, has_build_history = False):
+         self.internal_state = {}
+         self.internal_state['taskdata'] = {}
++        self.internal_state['targets'] = []
+         self.task_order = 0
+         self.autocommit_step = 1
+         self.server = server
+@@ -752,8 +771,15 @@ class BuildInfoHelper(object):
+                 if not localdirname.startswith("/"):
+                     localdirname = os.path.join(bc.be.sourcedir, localdirname)
+                 if path.startswith(localdirname):
++                    # If the build request came from toaster this field
++                    # should contain the information from the layer_version
++                    # That created this build request.
++                    if brl.layer_version:
++                        return brl.layer_version
++
+                     #logger.warn("-- managed: matched path %s with layer %s " % (path, localdirname))
+                     # we matched the BRLayer, but we need the layer_version that generated this br
++
+                     for lvo in self.orm_wrapper.layer_version_objects:
+                         if brl.name == lvo.layer.name:
+                             return lvo
+diff --git a/lib/toaster/bldcontrol/migrations/0009_auto__add_field_brlayer_layer_version.py b/lib/toaster/bldcontrol/migrations/0009_auto__add_field_brlayer_layer_version.py
+new file mode 100644
+index 0000000..9b50bc1
+--- /dev/null
++++ b/lib/toaster/bldcontrol/migrations/0009_auto__add_field_brlayer_layer_version.py
+@@ -0,0 +1,180 @@
++# -*- coding: utf-8 -*-
++from south.utils import datetime_utils as datetime
++from south.db import db
++from south.v2 import SchemaMigration
++from django.db import models
++
++
++class Migration(SchemaMigration):
++
++    def forwards(self, orm):
++        # Adding field 'BRLayer.layer_version'
++        db.add_column(u'bldcontrol_brlayer', 'layer_version',
++                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['orm.Layer_Version'], null=True),
++                      keep_default=False)
++
++
++    def backwards(self, orm):
++        # Deleting field 'BRLayer.layer_version'
++        db.delete_column(u'bldcontrol_brlayer', 'layer_version_id')
++
++
++    models = {
++        u'bldcontrol.brbitbake': {
++            'Meta': {'object_name': 'BRBitbake'},
++            'commit': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
++            'dirpath': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
++            'giturl': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'req': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildRequest']", 'unique': 'True'})
++        },
++        u'bldcontrol.brerror': {
++            'Meta': {'object_name': 'BRError'},
++            'errmsg': ('django.db.models.fields.TextField', [], {}),
++            'errtype': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'req': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildRequest']"}),
++            'traceback': ('django.db.models.fields.TextField', [], {})
++        },
++        u'bldcontrol.brlayer': {
++            'Meta': {'object_name': 'BRLayer'},
++            'commit': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
++            'dirpath': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
++            'giturl': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'layer_version': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Layer_Version']", 'null': 'True'}),
++            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'req': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildRequest']"})
++        },
++        u'bldcontrol.brtarget': {
++            'Meta': {'object_name': 'BRTarget'},
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'req': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildRequest']"}),
++            'target': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'task': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'})
++        },
++        u'bldcontrol.brvariable': {
++            'Meta': {'object_name': 'BRVariable'},
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'req': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildRequest']"}),
++            'value': ('django.db.models.fields.TextField', [], {'blank': 'True'})
++        },
++        u'bldcontrol.buildenvironment': {
++            'Meta': {'object_name': 'BuildEnvironment'},
++            'address': ('django.db.models.fields.CharField', [], {'max_length': '254'}),
++            'bbaddress': ('django.db.models.fields.CharField', [], {'max_length': '254', 'blank': 'True'}),
++            'bbport': ('django.db.models.fields.IntegerField', [], {'default': '-1'}),
++            'bbstate': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
++            'bbtoken': ('django.db.models.fields.CharField', [], {'max_length': '126', 'blank': 'True'}),
++            'betype': ('django.db.models.fields.IntegerField', [], {}),
++            'builddir': ('django.db.models.fields.CharField', [], {'max_length': '512', 'blank': 'True'}),
++            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'lock': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
++            'sourcedir': ('django.db.models.fields.CharField', [], {'max_length': '512', 'blank': 'True'}),
++            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
++        },
++        u'bldcontrol.buildrequest': {
++            'Meta': {'object_name': 'BuildRequest'},
++            'build': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['orm.Build']", 'unique': 'True', 'null': 'True'}),
++            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
++            'environment': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bldcontrol.BuildEnvironment']", 'null': 'True'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']"}),
++            'state': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
++            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
++        },
++        u'orm.bitbakeversion': {
++            'Meta': {'object_name': 'BitbakeVersion'},
++            'branch': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
++            'dirpath': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
++            'giturl': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '32'})
++        },
++        u'orm.branch': {
++            'Meta': {'unique_together': "(('layer_source', 'name'), ('layer_source', 'up_id'))", 'object_name': 'Branch'},
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'True', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
++            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
++            'short_description': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
++            'up_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
++            'up_id': ('django.db.models.fields.IntegerField', [], {'default': 'None', 'null': 'True'})
++        },
++        u'orm.build': {
++            'Meta': {'object_name': 'Build'},
++            'bitbake_version': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
++            'build_name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'completed_on': ('django.db.models.fields.DateTimeField', [], {}),
++            'cooker_log_path': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
++            'distro': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'distro_version': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'machine': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'outcome': ('django.db.models.fields.IntegerField', [], {'default': '2'}),
++            'project': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Project']"}),
++            'started_on': ('django.db.models.fields.DateTimeField', [], {})
++        },
++        u'orm.layer': {
++            'Meta': {'unique_together': "(('layer_source', 'up_id'), ('layer_source', 'name'))", 'object_name': 'Layer'},
++            'description': ('django.db.models.fields.TextField', [], {'default': 'None', 'null': 'True'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'layer_index_url': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
++            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
++            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'summary': ('django.db.models.fields.TextField', [], {'default': 'None', 'null': 'True'}),
++            'up_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
++            'up_id': ('django.db.models.fields.IntegerField', [], {'default': 'None', 'null': 'True'}),
++            'vcs_url': ('django.db.models.fields.URLField', [], {'default': 'None', 'max_length': '200', 'null': 'True'}),
++            'vcs_web_file_base_url': ('django.db.models.fields.URLField', [], {'default': 'None', 'max_length': '200', 'null': 'True'}),
++            'vcs_web_tree_base_url': ('django.db.models.fields.URLField', [], {'default': 'None', 'max_length': '200', 'null': 'True'}),
++            'vcs_web_url': ('django.db.models.fields.URLField', [], {'default': 'None', 'max_length': '200', 'null': 'True'})
++        },
++        u'orm.layer_version': {
++            'Meta': {'unique_together': "(('layer_source', 'up_id'),)", 'object_name': 'Layer_Version'},
++            'branch': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
++            'build': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'related_name': "'layer_version_build'", 'null': 'True', 'to': u"orm['orm.Build']"}),
++            'commit': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'dirpath': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '255', 'null': 'True'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'layer': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'layer_version_layer'", 'to': u"orm['orm.Layer']"}),
++            'layer_source': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.LayerSource']", 'null': 'True'}),
++            'local_path': ('django.db.models.fields.FilePathField', [], {'default': "'/'", 'max_length': '1024'}),
++            'priority': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
++            'project': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.Project']", 'null': 'True'}),
++            'up_branch': ('django.db.models.fields.related.ForeignKey', [], {'default': 'None', 'to': u"orm['orm.Branch']", 'null': 'True'}),
++            'up_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True'}),
++            'up_id': ('django.db.models.fields.IntegerField', [], {'default': 'None', 'null': 'True'})
++        },
++        u'orm.layersource': {
++            'Meta': {'unique_together': "(('sourcetype', 'apiurl'),)", 'object_name': 'LayerSource'},
++            'apiurl': ('django.db.models.fields.CharField', [], {'default': 'None', 'max_length': '255', 'null': 'True'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '63'}),
++            'sourcetype': ('django.db.models.fields.IntegerField', [], {})
++        },
++        u'orm.project': {
++            'Meta': {'object_name': 'Project'},
++            'bitbake_version': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.BitbakeVersion']", 'null': 'True'}),
++            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'is_default': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
++            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
++            'release': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.Release']", 'null': 'True'}),
++            'short_description': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
++            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
++            'user_id': ('django.db.models.fields.IntegerField', [], {'null': 'True'})
++        },
++        u'orm.release': {
++            'Meta': {'object_name': 'Release'},
++            'bitbake_version': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['orm.BitbakeVersion']"}),
++            'branch_name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '50'}),
++            'description': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
++            'helptext': ('django.db.models.fields.TextField', [], {'null': 'True'}),
++            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
++            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '32'})
++        }
++    }
++
++    complete_apps = ['bldcontrol']
+\ No newline at end of file
+diff --git a/lib/toaster/bldcontrol/models.py b/lib/toaster/bldcontrol/models.py
+index b61de58..f2493a8 100644
+--- a/lib/toaster/bldcontrol/models.py
++++ b/lib/toaster/bldcontrol/models.py
+@@ -1,6 +1,6 @@
+ from django.db import models
+ from django.core.validators import MaxValueValidator, MinValueValidator
+-from orm.models import Project, ProjectLayer, ProjectVariable, ProjectTarget, Build
++from orm.models import Project, ProjectLayer, ProjectVariable, ProjectTarget, Build, Layer_Version
  
--        Recipe.objects.create(layer_source=layersrc, name="base-recipe",
--                              version="1.2", summary="one recipe",
--                              description="recipe", layer_version=lver)
-+        self.recipe1 = Recipe.objects.create(layer_source=layersrc,
-+                                       name="base-recipe",
-+                                       version="1.2",
-+                                       summary="one recipe",
-+                                       description="recipe",
-+                                       layer_version=lver)
+ # a BuildEnvironment is the equivalent of the "build/" directory on the localhost
+ class BuildEnvironment(models.Model):
+@@ -137,6 +137,7 @@ class BRLayer(models.Model):
+     giturl      = models.CharField(max_length = 254)
+     commit      = models.CharField(max_length = 254)
+     dirpath     = models.CharField(max_length = 254)
++    layer_version = models.ForeignKey(Layer_Version, null=True)
  
-         Machine.objects.create(layer_version=lver, name="wisk",
-                                description="wisking machine")
+ class BRBitbake(models.Model):
+     req         = models.ForeignKey(BuildRequest, unique = True)    # only one bitbake for a request
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index 4025702..8d7388e 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -260,7 +260,7 @@ class Project(models.Model):
+             for l in self.projectlayer_set.all().order_by("pk"):
+                 commit = l.layercommit.get_vcs_reference()
+                 print("ii Building layer ", l.layercommit.layer.name, " at vcs point ", commit)
+-                BRLayer.objects.create(req = br, name = l.layercommit.layer.name, giturl = l.layercommit.layer.vcs_url, commit = commit, dirpath = l.layercommit.dirpath)
++                BRLayer.objects.create(req = br, name = l.layercommit.layer.name, giturl = l.layercommit.layer.vcs_url, commit = commit, dirpath = l.layercommit.dirpath, layer_version=l.layercommit)
  
-         ProjectLayer.objects.create(project=self.project, layercommit=lver)
- 
-+
-+        self.customr = CustomImageRecipe.objects.create(\
-+                           name="custom recipe", project=self.project,
-+                           base_recipe=self.recipe1)
-+
-+        self.package = Package.objects.create(name='pkg1', recipe=self.recipe1,
-+                                              build=build)
-+
-+
-+        # recipe with project for testing AvailableRecipe table
-+        self.recipe2 = Recipe.objects.create(layer_source=layersrc,
-+                                             name="fancy-recipe",
-+                                             version="1.4",
-+                                             summary="a fancy recipe",
-+                                             description="fancy recipe",
-+                                             layer_version=lver,
-+                                             file_path='/home/foo')
-+
-         self.assertTrue(lver in self.project.compatible_layerversions())
- 
-     def test_get_base_call_returns_html(self):
-@@ -183,6 +222,144 @@ class ViewTests(TestCase):
-         data = json.loads(response.content)
-         self.assertNotEqual(data["error"], "ok")
- 
-+    def test_custom_ok(self):
-+        """Test successful return from ReST API xhr_customrecipe"""
-+        url = reverse('xhr_customrecipe')
-+        params = {'name': 'custom', 'project': self.project.id,
-+                  'base': self.recipe1.id}
-+        response = self.client.post(url, params)
-+        self.assertEqual(response.status_code, 200)
-+        data = json.loads(response.content)
-+        self.assertEqual(data['error'], 'ok')
-+        self.assertTrue('url' in data)
-+        # get recipe from the database
-+        recipe = CustomImageRecipe.objects.get(project=self.project,
-+                                               name=params['name'])
-+        args = (self.project.id, recipe.id,)
-+        self.assertEqual(reverse('customrecipe', args=args), data['url'])
-+
-+    def test_custom_incomplete_params(self):
-+        """Test not passing all required parameters to xhr_customrecipe"""
-+        url = reverse('xhr_customrecipe')
-+        for params in [{}, {'name': 'custom'},
-+                       {'name': 'custom', 'project': self.project.id}]:
-+            response = self.client.post(url, params)
-+            self.assertEqual(response.status_code, 200)
-+            data = json.loads(response.content)
-+            self.assertNotEqual(data["error"], "ok")
-+
-+    def test_xhr_custom_wrong_project(self):
-+        """Test passing wrong project id to xhr_customrecipe"""
-+        url = reverse('xhr_customrecipe')
-+        params = {'name': 'custom', 'project': 0, "base": self.recipe1.id}
-+        response = self.client.post(url, params)
-+        self.assertEqual(response.status_code, 200)
-+        data = json.loads(response.content)
-+        self.assertNotEqual(data["error"], "ok")
-+
-+    def test_xhr_custom_wrong_base(self):
-+        """Test passing wrong base recipe id to xhr_customrecipe"""
-+        url = reverse('xhr_customrecipe')
-+        params = {'name': 'custom', 'project': self.project.id, "base": 0}
-+        response = self.client.post(url, params)
-+        self.assertEqual(response.status_code, 200)
-+        data = json.loads(response.content)
-+        self.assertNotEqual(data["error"], "ok")
-+
-+    def test_xhr_custom_details(self):
-+        """Test getting custom recipe details"""
-+        name = "custom recipe"
-+        url = reverse('xhr_customrecipe_id', args=(self.customr.id,))
-+        response = self.client.get(url)
-+        self.assertEqual(response.status_code, 200)
-+        expected = {"error": "ok",
-+                    "info": {'id': self.customr.id,
-+                             'name': name,
-+                             'base_recipe_id': self.recipe1.id,
-+                             'project_id': self.project.id,
-+                            }
-+                   }
-+        self.assertEqual(json.loads(response.content), expected)
-+
-+    def test_xhr_custom_del(self):
-+        """Test deleting custom recipe"""
-+        name = "to be deleted"
-+        recipe = CustomImageRecipe.objects.create(\
-+                     name=name, project=self.project,
-+                     base_recipe=self.recipe1)
-+        url = reverse('xhr_customrecipe_id', args=(recipe.id,))
-+        response = self.client.delete(url)
-+        self.assertEqual(response.status_code, 200)
-+        self.assertEqual(json.loads(response.content), {"error": "ok"})
-+        # try to delete not-existent recipe
-+        url = reverse('xhr_customrecipe_id', args=(recipe.id,))
-+        response = self.client.delete(url)
-+        self.assertEqual(response.status_code, 200)
-+        self.assertNotEqual(json.loads(response.content)["error"], "ok")
-+
-+    def test_xhr_custom_packages(self):
-+        """Test adding and deleting package to a custom recipe"""
-+        url = reverse('xhr_customrecipe_packages',
-+                      args=(self.customr.id, self.package.id))
-+        # add self.package1 to recipe
-+        response = self.client.put(url)
-+        self.assertEqual(response.status_code, 200)
-+        self.assertEqual(json.loads(response.content), {"error": "ok"})
-+        self.assertEqual(self.customr.packages.all()[0].id, self.package.id)
-+        # delete it
-+        response = self.client.delete(url)
-+        self.assertEqual(response.status_code, 200)
-+        self.assertEqual(json.loads(response.content), {"error": "ok"})
-+        self.assertFalse(self.customr.packages.all())
-+        # delete it again to test error condition
-+        response = self.client.delete(url)
-+        self.assertEqual(response.status_code, 200)
-+        self.assertNotEqual(json.loads(response.content)["error"], "ok")
-+
-+    def test_xhr_custom_packages_err(self):
-+        """Test error conditions of xhr_customrecipe_packages"""
-+        # test calls with wrong recipe id and wrong package id
-+        for args in [(0, self.package.id), (self.customr.id, 0)]:
-+            url = reverse('xhr_customrecipe_packages', args=args)
-+            # test put and delete methods
-+            for method in (self.client.put, self.client.delete):
-+                response = method(url)
-+                self.assertEqual(response.status_code, 200)
-+                self.assertNotEqual(json.loads(response.content),
-+                                    {"error": "ok"})
-+
-+    def test_software_recipes_table(self):
-+        """Test structure returned for Software RecipesTable"""
-+        table = SoftwareRecipesTable()
-+        request = RequestFactory().get('/foo/', {'format': 'json'})
-+        response = table.get(request, pid=self.project.id)
-+        data = json.loads(response.content)
-+
-+        rows = data['rows']
-+        row1 = next(x for x in rows if x['name'] == self.recipe1.name)
-+        row1_btns = row1['static:add-del-layers']
-+        row1_btns_data = row1['add-del-layers']
-+        row2 = next(x for x in rows if x['name'] == self.recipe2.name)
-+        row2_btns = row2['static:add-del-layers']
-+        row2_btns_data = row2['add-del-layers']
-+
-+        self.assertEqual(response.status_code, 200, 'should be 200 OK status')
-+        self.assertEqual(len(rows), 2, 'should be 2 recipes')
-+
-+        # check other columns have been populated correctly
-+        self.assertEqual(row1['name'], self.recipe1.name)
-+        self.assertEqual(row1['version'], self.recipe1.version)
-+        self.assertEqual(row1['get_description_or_summary'],
-+                         self.recipe1.description)
-+        self.assertEqual(row1['layer_version__layer__name'],
-+                         self.recipe1.layer_version.layer.name)
-+        self.assertEqual(row2['name'], self.recipe2.name)
-+        self.assertEqual(row2['version'], self.recipe2.version)
-+        self.assertEqual(row2['get_description_or_summary'],
-+                         self.recipe2.description)
-+        self.assertEqual(row2['layer_version__layer__name'],
-+                         self.recipe2.layer_version.layer.name)
-+
- class LandingPageTests(TestCase):
-     """ Tests for redirects on the landing page """
-     # disable bogus pylint message error:
+             br.state = BuildRequest.REQ_QUEUED
+             now = timezone.now()
 -- 
 1.9.1
 
