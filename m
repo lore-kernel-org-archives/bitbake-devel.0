@@ -1,40 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f42.google.com (mail-pa0-f42.google.com
-	[209.85.220.42])
-	by mail.openembedded.org (Postfix) with ESMTP id 4E2C877054
+Received: from mail-pa0-f52.google.com (mail-pa0-f52.google.com
+	[209.85.220.52])
+	by mail.openembedded.org (Postfix) with ESMTP id E586C77056
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 29 Sep 2015 04:44:04 +0000 (UTC)
-Received: by pacex6 with SMTP id ex6so194495019pac.0
+	Tue, 29 Sep 2015 04:44:05 +0000 (UTC)
+Received: by pacex6 with SMTP id ex6so194495381pac.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 28 Sep 2015 21:44:05 -0700 (PDT)
+	Mon, 28 Sep 2015 21:44:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=xcWJI7IG/RITBex1EhlOWf+rEta/QyjwcOlNKVdlLXg=;
-	b=TFStNKvJZveRnYZtj7NDUXMtqVMP2HDa2DrkHP1CA55TQlj1YWMI8kk1YklBgmh2Zi
-	skQinCzt5Wls/QlSisFwcoOM0nmGx+m2g8aTZ5d7p32JVwZYrM81oVC1YnCQCKOLPo/X
-	vyMfzaTY3fhweyZSfvc3S23LU5LKd4VrFpWNUdnTejLSfDUugdIsRLsCmi8rbCfGU71m
-	3M8xdUBV48wNS0ckqpCsQC2a/xZCG2cPZ04eMjYHt+uyKNgzABvWX8Kv9TgMP4ETwLJb
-	eopFWmBaCNpVlOtD1xc3LtyHYAnRYRqL/gQ6KfebNFdNlZX5iB4TzNhY1bnP2z1ucBsm
-	7QmQ==
-X-Received: by 10.68.185.132 with SMTP id fc4mr30322693pbc.96.1443501845097;
-	Mon, 28 Sep 2015 21:44:05 -0700 (PDT)
+	bh=dCPERk8Cpg8YgoI9gbiq4zBNlT86FwgCfDqG0k8Wuys=;
+	b=hXGEOTTAby6YITDldNwWL7yvyF7qI455KRMwLwNSAkUPiIRP2GFbWL9GPanT9gwXO9
+	m2Rx8x2jtgJKq8/S/8J5Edx+HlBE4SKTpSBhlVsuAEoJCAvG9oXcdcbi3AIpIhOFk6Me
+	kVvdTiq3+/s2XYAYAXykybc4igr2xETRMikemHq82ZkFzZqfugvGNbD+b+AGm6SD8gE3
+	8yqnggKOjkuvvIjIh6a0LUoRYTdHwlMTAyVy8XVbP8fjD/1n1FavNTGXSIciJYHLjDDc
+	aRSvZ0d1yiR/j2X4yeSRgAHyAhr51wySCNsm6ZK/JqMXQ+r/nB3xqEQpYyjC5uo4KI4Q
+	yqAQ==
+X-Received: by 10.68.137.161 with SMTP id qj1mr30842868pbb.14.1443501846015;
+	Mon, 28 Sep 2015 21:44:06 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	g5sm22686368pat.21.2015.09.28.21.44.04
+	g5sm22686368pat.21.2015.09.28.21.44.05
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 28 Sep 2015 21:44:04 -0700 (PDT)
+	Mon, 28 Sep 2015 21:44:05 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon, 28 Sep 2015 21:45:22 -0700
-Message-Id: <465f651211102c78916d7c138597493244876f77.1443497922.git.avery.brian@gmail.com>
+Date: Mon, 28 Sep 2015 21:45:23 -0700
+Message-Id: <924ee2b247169ac42aa0a6c58673fe5fb37239ff.1443497922.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <8b0eb0f272c0658ba98db30c17a688f87c75d134.1443497922.git.avery.brian@gmail.com>
 References: <8b0eb0f272c0658ba98db30c17a688f87c75d134.1443497922.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1443497922.git.avery.brian@gmail.com>
 References: <cover.1443497922.git.avery.brian@gmail.com>
-Subject: [PATCH 12/22] toaster: Add new ReST API for Image Customisation feature
+Subject: [PATCH 13/22] toaster: Add ToasterTables for Image customisation feature
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,221 +47,295 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 29 Sep 2015 04:44:05 -0000
+X-List-Received-Date: Tue, 29 Sep 2015 04:44:06 -0000
 
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+From: Michael Wood <michael.g.wood@intel.com>
 
-Implemented xhr_customrecipe API. To create a custom recipe from a
-base recipe.
-Implemented xhr_customrecipe_packages API to add/remove packages
-to/from custom recipe.
+- Split up the recipes tables into Image recipes and Software Recipes
+- Add CustomImageRecipe table
+- Add SelectPackagesTable table
+- Add NewCustomImagesTable table
 
-co-authored see Signed-off-by
-
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/toaster/toastergui/urls.py  |  10 ++-
- lib/toaster/toastergui/views.py | 152 +++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 159 insertions(+), 3 deletions(-)
+ lib/toaster/toastergui/tables.py | 222 +++++++++++++++++++++++++++++++++------
+ 1 file changed, 188 insertions(+), 34 deletions(-)
 
-diff --git a/lib/toaster/toastergui/urls.py b/lib/toaster/toastergui/urls.py
-index 55f325d..b47a161 100644
---- a/lib/toaster/toastergui/urls.py
-+++ b/lib/toaster/toastergui/urls.py
-@@ -152,6 +152,14 @@ urlpatterns = patterns('toastergui.views',
-         # JS Unit tests
-         url(r'^js-unit-tests/$', 'jsunittests', name='js-unit-tests'),
+diff --git a/lib/toaster/toastergui/tables.py b/lib/toaster/toastergui/tables.py
+index 70e4b6d..1526d59 100644
+--- a/lib/toaster/toastergui/tables.py
++++ b/lib/toaster/toastergui/tables.py
+@@ -21,6 +21,7 @@
  
--        # default redirection
-+        # image customisation functionality
-+        url(r'^xhr_customrecipe/(?P<recipe_id>\d+)/packages/(?P<package_id>\d+|)$',
-+            'xhr_customrecipe_packages', name='xhr_customrecipe_packages'),
-+        url(r'^xhr_customrecipe/(?P<recipe_id>\d+)$', 'xhr_customrecipe_id',
-+            name='xhr_customrecipe_id'),
-+        url(r'^xhr_customrecipe/', 'xhr_customrecipe',
-+            name='xhr_customrecipe'),
-+
-+          # default redirection
-         url(r'^$', RedirectView.as_view( url= 'landing')),
- )
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 5ea6122..392e56d 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -26,12 +26,12 @@
- import operator,re
+ from toastergui.widgets import ToasterTable
+ from orm.models import Recipe, ProjectLayer, Layer_Version, Machine, Project
++from orm.models import CustomImageRecipe, Package
+ from django.db.models import Q, Max
+ from django.conf.urls import url
+ from django.core.urlresolvers import reverse
+@@ -310,13 +311,20 @@ class LayerMachinesTable(MachinesTable):
  
- from django.db.models import F, Q, Sum, Count, Max
--from django.db import IntegrityError
-+from django.db import IntegrityError, Error
- from django.shortcuts import render, redirect
- from orm.models import Build, Target, Task, Layer, Layer_Version, Recipe, LogMessage, Variable
- from orm.models import Task_Dependency, Recipe_Dependency, Package, Package_File, Package_Dependency
- from orm.models import Target_Installed_Package, Target_File, Target_Image_File, BuildArtifact
--from orm.models import BitbakeVersion
-+from orm.models import BitbakeVersion, CustomImageRecipe
- from bldcontrol import bbcontroller
- from django.views.decorators.cache import cache_control
- from django.core.urlresolvers import reverse, resolve
-@@ -2596,7 +2596,155 @@ if True:
  
-         return HttpResponse(jsonfilter({"error": "ok",}), content_type = "application/json")
+ class RecipesTable(ToasterTable, ProjectFiltersMixin):
+-    """Table of Recipes in Toaster"""
++    """Table of All Recipes in Toaster"""
  
-+    @xhr_response
-+    def xhr_customrecipe(request):
-+        """
-+        Custom image recipe REST API
-+
-+        Entry point: /xhr_customrecipe/
-+        Method: POST
-+
-+        Args:
-+            name: name of custom recipe to create
-+            project: target project id of orm.models.Project
-+            base: base recipe id of orm.models.Recipe
-+
-+        Returns:
-+            {"error": "ok",
-+             "url": <url of the created recipe>}
-+            or
-+            {"error": <error message>}
-+        """
-+        # check if request has all required parameters
-+        for param in ('name', 'project', 'base'):
-+            if param not in request.POST:
-+                return {"error": "Missing parameter '%s'" % param}
-+
-+        # get project and baserecipe objects
-+        params = {}
-+        for name, model in [("project", Project),
-+                            ("base", Recipe)]:
-+            value = request.POST[name]
-+            try:
-+                params[name] = model.objects.get(id=value)
-+            except model.DoesNotExist:
-+                return {"error": "Invalid %s id %s" % (name, value)}
-+
-+        # create custom recipe
-+        try:
-+            recipe = CustomImageRecipe.objects.create(
-+                         name=request.POST["name"],
-+                         base_recipe=params["base"],
-+                         project=params["project"])
-+        except Error as err:
-+            return {"error": "Can't create custom recipe: %s" % err}
-+
-+        # Find the package list from the last build of this recipe/target
-+        build = Build.objects.filter(target__target=params['base'].name,
-+                    project=params['project']).last()
-+
-+        if build:
-+            # Copy in every package
-+            # We don't want these packages to be linked to anything because
-+            # that underlying data may change e.g. delete a build
-+            for package in build.package_set.all():
-+                # Create the duplicate
-+                package.pk = None
-+                package.save()
-+                # Disassociate the package from the build
-+                package.build = None
-+                package.save()
-+                recipe.packages.add(package)
-+        else:
-+            logger.warn("No packages found for this base recipe")
-+
-+        return {"error": "ok",
-+                "url": reverse('customrecipe', args=(params['project'].pk,
-+                                                     recipe.id))}
-+
-+    @xhr_response
-+    def xhr_customrecipe_id(request, recipe_id):
-+        """
-+        Set of ReST API processors working with recipe id.
-+
-+        Entry point: /xhr_customrecipe/<recipe_id>
-+
-+        Methods:
-+            GET - Get details of custom image recipe
-+            DELETE - Delete custom image recipe
-+
-+        Returns:
-+            GET:
-+            {"error": "ok",
-+             "info": dictionary of field name -> value pairs
-+                     of the CustomImageRecipe model}
-+            DELETE:
-+            {"error": "ok"}
-+            or
-+            {"error": <error message>}
-+        """
-+        objects = CustomImageRecipe.objects.filter(id=recipe_id)
-+        if not objects:
-+            return {"error": "Custom recipe with id=%s "
-+                             "not found" % recipe_id}
-+        if request.method == 'GET':
-+            values = CustomImageRecipe.objects.filter(id=recipe_id).values()
-+            if values:
-+                return {"error": "ok", "info": values[0]}
-+            else:
-+                return {"error": "Custom recipe with id=%s "
-+                                 "not found" % recipe_id}
-+            return {"error": "ok", "info": objects.values()[0]}
-+        elif request.method == 'DELETE':
-+            objects.delete()
-+            return {"error": "ok"}
-+        else:
-+            return {"error": "Method %s is not supported" % request.method}
-+
-+    @xhr_response
-+    def xhr_customrecipe_packages(request, recipe_id, package_id):
-+        """
-+        ReST API to add/remove packages to/from custom recipe.
+     def __init__(self, *args, **kwargs):
+         super(RecipesTable, self).__init__(*args, **kwargs)
+         self.empty_state = "Toaster has no recipe information. To generate recipe information you can configure a layer source then run a build."
+         self.default_orderby = "name"
  
-+        Entry point: /xhr_customrecipe/<recipe_id>/packages/
++    build_col = { 'title' : "Build",
++            'help_text' : "Add or delete recipes to and from your project",
++            'hideable' : False,
++            'filter_name' : "in_current_project",
++            'static_data_name' : "add-del-layers",
++            'static_data_template' : '{% include "recipe_btn.html" %}'}
 +
-+        Methods:
-+            PUT - Add package to the recipe
-+            DELETE - Delete package from the recipe
-+
-+        Returns:
-+            {"error": "ok"}
-+            or
-+            {"error": <error message>}
-+        """
-+        try:
-+            recipe = CustomImageRecipe.objects.get(id=recipe_id)
-+        except CustomImageRecipe.DoesNotExist:
-+            return {"error": "Custom recipe with id=%s "
-+                             "not found" % recipe_id}
-+
-+        if request.method == 'GET' and not package_id:
-+            return {"error": "ok",
-+                    "packages": list(recipe.packages.values_list('id'))}
-+
-+        try:
-+            package = Package.objects.get(id=package_id)
-+        except Package.DoesNotExist:
-+            return {"error": "Package with id=%s "
-+                             "not found" % package_id}
-+
-+        if request.method == 'PUT':
-+            recipe.packages.add(package)
-+            return {"error": "ok"}
-+        elif request.method == 'DELETE':
-+            if package in recipe.packages.all():
-+                recipe.packages.remove(package)
-+                return {"error": "ok"}
-+            else:
-+                return {"error": "Package '%s' is not in the recipe '%s'" % \
-+                                 (package.name, recipe.name)}
-+        else:
-+            return {"error": "Method %s is not supported" % request.method}
+     def get_context_data(self, **kwargs):
+         project = Project.objects.get(pk=kwargs['pid'])
+         context = super(RecipesTable, self).get_context_data(**kwargs)
+@@ -327,17 +335,6 @@ class RecipesTable(ToasterTable, ProjectFiltersMixin):
  
-     def importlayer(request, pid):
-         template = "importlayer.html"
+         return context
+ 
+-    def setup_filters(self, *args, **kwargs):
+-        project = Project.objects.get(pk=kwargs['pid'])
+-        self.project_layers = project.projectlayer_equivalent_set()
+-
+-        self.add_filter(title="Filter by project recipes",
+-                        name="in_current_project",
+-                        filter_actions=[
+-                            self.make_filter_action("in_project", "Recipes provided by layers added to this project", self.filter_in_project),
+-                            self.make_filter_action("not_in_project", "Recipes provided by layers not added to this project", self.filter_not_in_project)
+-                        ])
+-
+ 
+     def setup_queryset(self, *args, **kwargs):
+         prj = Project.objects.get(pk = kwargs['pid'])
+@@ -348,12 +345,6 @@ class RecipesTable(ToasterTable, ProjectFiltersMixin):
+ 
+     def setup_columns(self, *args, **kwargs):
+ 
+-        self.add_column(title="Recipe",
+-                        help_text="Information about a single piece of software, including where to download the source, configuration options, how to compile the source files and how to package the compiled output",
+-                        hideable=False,
+-                        orderable=True,
+-                        field_name="name")
+-
+         self.add_column(title="Recipe Version",
+                         hidden=True,
+                         field_name="version")
+@@ -398,18 +389,6 @@ class RecipesTable(ToasterTable, ProjectFiltersMixin):
+         self.add_column(title="Revision",
+                         field_name="layer_version__get_vcs_reference")
+ 
+-        self.add_column(title="Build",
+-                        help_text="Add or delete recipes to and from your project",
+-                        hideable=False,
+-                        filter_name="in_current_project",
+-                        static_data_name="add-del-layers",
+-                        static_data_template='{% include "recipe_btn.html" %}')
+-
+-        project = Project.objects.get(pk=kwargs['pid'])
+-        self.add_column(title="Project compatible Layer ID",
+-                        displayable = False,
+-                        field_name = "projectcompatible_layer",
+-                        computation = lambda x: (x.layer_version.get_equivalents_wpriority(project)[0]))
+ 
+ class LayerRecipesTable(RecipesTable):
+     """ Smaller version of the Recipes table for use in layer details """
+@@ -446,10 +425,185 @@ class LayerRecipesTable(RecipesTable):
+                         static_data_name="add-del-layers",
+                         static_data_template=build_recipe_template)
+ 
+-class ProjectLayersRecipesTable(RecipesTable):
+-    """ Table that lists only recipes available for layers added to the project """
++class CustomImagesTable(ToasterTable):
++    """ Table to display your custom images """
++    def __init__(self, *args, **kwargs):
++        super(CustomImagesTable, self).__init__(*args, **kwargs)
++        self.title = "Custom images"
++
++    def get_context_data(self, **kwargs):
++        context = super(CustomImagesTable, self).get_context_data(**kwargs)
++        project = Project.objects.get(pk=kwargs['pid'])
++        context['project'] = project
++        context['projectlayers'] = map(lambda prjlayer: prjlayer.layercommit.id, ProjectLayer.objects.filter(project=context['project']))
++        return context
++
++    def setup_queryset(self, *args, **kwargs):
++        prj = Project.objects.get(pk = kwargs['pid'])
++        self.queryset = CustomImageRecipe.objects.filter(project=prj)
++        self.queryset = self.queryset.order_by('name')
++
++    def setup_columns(self, *args, **kwargs):
++
++        name_link_template = '''
++        <a href="{% url 'customrecipe' extra.pid data.id %}">
++          {{data.name}}
++        </a>
++        '''
++
++        self.add_column(title="Custom image",
++                        hideable=False,
++                        static_data_name="name",
++                        static_data_template=name_link_template)
++
++        self.add_column(title="Recipe file",
++                        static_data_name='recipe_file',
++                        static_data_template='')
++
++        approx_packages_template = '<a href="#imagedetails">{{data.packages.all|length}}</a>'
++        self.add_column(title="Approx packages",
++                        static_data_name='approx_packages',
++                        static_data_template=approx_packages_template)
++
++
++        build_btn_template = '''<button data-recipe-name="{{data.name}}"
++        class="btn btn-block build-recipe-btn" style="margin-top: 5px;" >
++        Build</button>'''
++
++        self.add_column(title="Build",
++                        hideable=False,
++                        static_data_name='build_custom_img',
++                        static_data_template=build_btn_template)
++
++class ImageRecipesTable(RecipesTable):
++    """ A subset of the recipes table which displayed just image recipes """
++
++    def __init__(self, *args, **kwargs):
++        super(ImageRecipesTable, self).__init__(*args, **kwargs)
++        self.title = "Compatible image recipes"
++
++    def setup_queryset(self, *args, **kwargs):
++        super(ImageRecipesTable, self).setup_queryset(*args, **kwargs)
++
++        self.queryset = self.queryset.filter(is_image=True)
++
++
++    def setup_columns(self, *args, **kwargs):
++        self.add_column(title="Image recipe",
++                        help_text="When you build an image recipe, you get an "
++                                  "image: a root file system you can"
++                                  "deploy to a machine",
++                        hideable=False,
++                        orderable=True,
++                        field_name="name")
++
++        super(ImageRecipesTable, self).setup_columns(*args, **kwargs)
++
++        self.add_column(**RecipesTable.build_col)
++
++
++class NewCustomImagesTable(ImageRecipesTable):
++    """ Table which displays Images recipes which can be customised """
++    def __init__(self, *args, **kwargs):
++        super(NewCustomImagesTable, self).__init__(*args, **kwargs)
++        self.title = "Select the image recipe you want to customise"
+ 
+     def setup_queryset(self, *args, **kwargs):
+-        super(ProjectLayersRecipesTable, self).setup_queryset(*args, **kwargs)
++        super(ImageRecipesTable, self).setup_queryset(*args, **kwargs)
++
++        self.queryset = self.queryset.filter(is_image=True)
++
++    def setup_columns(self, *args, **kwargs):
++        self.add_column(title="Image recipe",
++                        help_text="When you build an image recipe, you get an "
++                                  "image: a root file system you can"
++                                  "deploy to a machine",
++                        hideable=False,
++                        orderable=True,
++                        field_name="recipe__name")
++
++        super(ImageRecipesTable, self).setup_columns(*args, **kwargs)
++
++        self.add_column(title="Customise",
++                        hideable=False,
++                        filter_name="in_current_project",
++                        static_data_name="customise-or-add-recipe",
++                        static_data_template='{% include "customise_btn.html" %}')
++
++
++class SoftwareRecipesTable(RecipesTable):
++    """ Displays just the software recipes """
++    def __init__(self, *args, **kwargs):
++        super(SoftwareRecipesTable, self).__init__(*args, **kwargs)
++        self.title = "Compatible software recipes"
++
++    def setup_queryset(self, *args, **kwargs):
++        super(SoftwareRecipesTable, self).setup_queryset(*args, **kwargs)
++
++        self.queryset = self.queryset.filter(is_image=False)
++
++
++    def setup_columns(self, *args, **kwargs):
++        self.add_column(title="Software recipe",
++                        help_text="Information about a single piece of "
++                        "software, including where to download the source, "
++                        "configuration options, how to compile the source "
++                        "files and how to package the compiled output",
++                        hideable=False,
++                        orderable=True,
++                        field_name="name")
++
++        super(SoftwareRecipesTable, self).setup_columns(*args, **kwargs)
++
++        self.add_column(**RecipesTable.build_col)
++
++
++class SelectPackagesTable(ToasterTable):
++    """ Table to display the packages to add and remove from an image """
++
++    def __init__(self, *args, **kwargs):
++        super(SelectPackagesTable, self).__init__(*args, **kwargs)
++        self.title = "Add | Remove packages"
++
++    def setup_queryset(self, *args, **kwargs):
++        cust_recipe = CustomImageRecipe.objects.get(pk=kwargs['recipeid'])
+         prj = Project.objects.get(pk = kwargs['pid'])
+-        self.queryset = self.queryset.filter(layer_version__in = prj.projectlayer_equivalent_set())
++
++        current_packages = cust_recipe.packages.all()
++
++        # Get all the packages that are in the custom image
++        # Get all the packages built by builds in the current project
++        # but not those ones that are already in the custom image
++        self.queryset = Package.objects.filter(
++                            Q(pk__in=current_packages) |
++                            (Q(build__project=prj) &
++                            ~Q(name__in=current_packages.values_list('name'))))
++
++        self.queryset = self.queryset.order_by('name')
++
++        self.static_context_extra['recipe_id'] = kwargs['recipeid']
++        self.static_context_extra['current_packages'] = \
++                cust_recipe.packages.values_list('pk', flat=True)
++
++    def setup_columns(self, *args, **kwargs):
++        self.add_column(title="Package",
++                        hideable=False,
++                        orderable=True,
++                        field_name="name")
++
++        self.add_column(title="Package Version",
++                        field_name="version")
++
++        self.add_column(title="Approx Size",
++                        orderable=True,
++                        static_data_name="size",
++                        static_data_template="{% load projecttags %} \
++                        {{data.size|filtered_filesizeformat}}")
++        self.add_column(title="summary",
++                        field_name="summary")
++
++        self.add_column(title="Add | Remove",
++                        help_text="Use the add and remove buttons to modify "
++                        "the package content of you custom image",
++                        static_data_name="add_rm_pkg_btn",
++                        static_data_template='{% include "pkg_add_rm_btn.html" %}')
 -- 
 1.9.1
 
