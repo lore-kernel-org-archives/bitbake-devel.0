@@ -1,21 +1,35 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id A9E557700B
+Return-Path: <avery.brian@gmail.com>
+Received: from mail-pa0-f41.google.com (mail-pa0-f41.google.com
+	[209.85.220.41])
+	by mail.openembedded.org (Postfix) with ESMTP id A80E6770B2
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  1 Oct 2015 09:41:49 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga101.jf.intel.com with ESMTP; 01 Oct 2015 02:41:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,616,1437462000"; d="scan'208";a="817039364"
-Received: from mhalasin-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.25.78])
-	by orsmga002.jf.intel.com with ESMTP; 01 Oct 2015 02:41:47 -0700
-From: Elliot Smith <elliot.smith@intel.com>
+	Thu,  1 Oct 2015 21:18:07 +0000 (UTC)
+Received: by pacfv12 with SMTP id fv12so87164371pac.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Thu, 01 Oct 2015 14:18:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=LOoSQ3VqL8aMP22kKfo18KFNe93RlwFCriSX5y1S3FU=;
+	b=ZwPvDoH+n8ZBYMNjWqI4uCsuMrgr4YKMSnRguABXfrDj6Zj03doKMcmJZQi55mTRkJ
+	3A2hBs5r3k31FQ2AkGqTtcyRlugvksB9n/dVtHtQq4985HRTJ93q0GyQg+dVqM9TLlM4
+	y/zIbHJEfoptvyHvSmUwiT+r/yKfeetjVC/8h5z5O1NNRemdGar/cEZmZa+OeKvVvdHY
+	4ZaDzgQF69DRpu2WlIZb0zqDE3g38QM/FHl2C28p8P63EGXbjKtQLUjiU18JOMbHUkLN
+	GkxC5RJg4K63/QfO//6IgLR6mAwYD4Q18n1+ILLVjrNjIt2WdTuc/TwaIKFqc1PaJGta
+	blxA==
+X-Received: by 10.66.228.97 with SMTP id sh1mr14758390pac.91.1443734287883;
+	Thu, 01 Oct 2015 14:18:07 -0700 (PDT)
+Received: from whisper.hsd1.or.comcast.net
+	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
+	by smtp.gmail.com with ESMTPSA id
+	xd10sm8513493pab.25.2015.10.01.14.18.06
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Thu, 01 Oct 2015 14:18:07 -0700 (PDT)
+From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu,  1 Oct 2015 10:41:26 +0100
-Message-Id: <1443692486-15472-1-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-Subject: [PATCH] toaster: Fix broken test case
+Date: Thu,  1 Oct 2015 14:19:49 -0700
+Message-Id: <cover.1443734209.git.avery.brian@gmail.com>
+X-Mailer: git-send-email 1.9.1
+Subject: [PATCH 0/2] remove empty recipe names #7969
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,44 +42,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 01 Oct 2015 09:41:50 -0000
+X-List-Received-Date: Thu, 01 Oct 2015 21:18:09 -0000
 
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+This removes the receipes with empty names from toaster.
 
-Fixed test_show_tasks_in_projectbuilds broken by latest changes in
-project build view.
+The following changes since commit 7b10ae122d46891c734e786358ea5f36760e8d5e:
 
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
----
- bitbake/lib/toaster/toastergui/tests.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  toaster: Fix broken test case (2015-10-01 10:42:16 +0100)
 
-diff --git a/bitbake/lib/toaster/toastergui/tests.py b/bitbake/lib/toaster/toastergui/tests.py
-index 5d15ac9..95790a2 100644
---- a/bitbake/lib/toaster/toastergui/tests.py
-+++ b/bitbake/lib/toaster/toastergui/tests.py
-@@ -564,7 +564,7 @@ class ProjectBuildsDisplayTest(TestCase):
-         url = reverse("projectbuilds", args=(self.project1.id,))
-         response = self.client.get(url, follow=True)
-         result = re.findall('^ +bash:clean$', response.content, re.MULTILINE)
--        self.assertEqual(len(result), 1)
-+        self.assertEqual(len(result), 2)
- 
-     def test_show_tasks_in_allbuilds(self):
-         build = Build.objects.create(**self.project1_build_success)
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib bavery/submit/ed/2015-10-1_nameless-recipes-7969
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/ed/2015-10-1_nameless-recipes-7969
+
+Ed Bartosh (2):
+  toaster: delete recipe if it can't be saved
+  toaster: exclude recipes with empty names
+
+ lib/toaster/orm/models.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
 -- 
-1.9.3
-
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
+1.9.1
 
 
