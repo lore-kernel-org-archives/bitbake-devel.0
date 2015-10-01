@@ -1,37 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f50.google.com (mail-pa0-f50.google.com
-	[209.85.220.50])
-	by mail.openembedded.org (Postfix) with ESMTP id 5E4BA770B5
+Received: from mail-pa0-f53.google.com (mail-pa0-f53.google.com
+	[209.85.220.53])
+	by mail.openembedded.org (Postfix) with ESMTP id D5DE8770B9
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  1 Oct 2015 21:18:14 +0000 (UTC)
-Received: by pacfv12 with SMTP id fv12so87166829pac.2
+	Thu,  1 Oct 2015 21:18:15 +0000 (UTC)
+Received: by pacfv12 with SMTP id fv12so87167133pac.2
 	for <bitbake-devel@lists.openembedded.org>;
 	Thu, 01 Oct 2015 14:18:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=Zb7tZOJM4KP+F6fCny5JNUWzwpBYhfomRu6FfX/Dcr0=;
-	b=HzRwsZsXxnOJANZF7SlQpp0pKCECSMmEzB/e01H7mWlCkpti/jRmvXsOT++ttC7X0J
-	Az/J5nLh7hkK1m3C9MrHNJg7H6FQEs6nNPfDXR0ZKrPXkkOTjKJGkFm/Qd3mxB4CdfQy
-	SqgJp2GCOegSa8EikVOvPZYr+cvOzAA6uqLAQlMUvfcJ/IlTHSujjxH9gFMh7rJAgmUe
-	8r24ddN2t9TbGwBfnX6Uv1wtPvYs+CLKYV/IQR5tbzfngPjwHNIIl071mEeDsn2f0hrx
-	Xc/NGTl06bkCLhRZfWagTEyrwZHasNL6gi7qfsk11FXKEy6G0IeDFJWFu5S/rTQJnK6a
-	xrRQ==
-X-Received: by 10.67.1.105 with SMTP id bf9mr15221793pad.64.1443734295022;
+	h=from:to:cc:subject:date:message-id:in-reply-to:references
+	:in-reply-to:references;
+	bh=hdt1EdaLLZgGfdeoL+lVBp4wgSBav0Gz/QaxBsMo3B4=;
+	b=kIi1MNyuisjIADibsvmfsMsnslFDYhcpiqtoDZb2TN1brG4uwx04k8Zc5xOPCjWqnw
+	qWhpk3OcY+DT5ngmAykkracvCNQ7+wghGoc78WePYjcx1Y5eIXiktCiwiKUqNv0vLLPp
+	byEgGL5y9bAJEMMn/Km3H/flpbtcoMpOfUx+S2F9gvuGH12oo05sipGCXyMebKXIb67g
+	TGKoEw5RKiO+1t3aWQxSYPrE1J07U8W+Gmvc5OJAi27n/h56rJF9+Z4P6qLR3Qtxpm3h
+	ZFum9PlzM8RfoKKycvmUxb9Cd/ZsiwwFPDZz5Ci5kF5qpqZNc5jZ6ORoMmyQaJKF22PD
+	W5OA==
+X-Received: by 10.66.190.6 with SMTP id gm6mr14935790pac.27.1443734295897;
 	Thu, 01 Oct 2015 14:18:15 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	ej3sm8513411pbd.13.2015.10.01.14.18.14
+	ej3sm8513411pbd.13.2015.10.01.14.18.15
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 01 Oct 2015 14:18:14 -0700 (PDT)
+	Thu, 01 Oct 2015 14:18:15 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu,  1 Oct 2015 14:19:56 -0700
-Message-Id: <4e02220a11fd454fc46c90d287ae3f3e847751b3.1443734209.git.avery.brian@gmail.com>
+Date: Thu,  1 Oct 2015 14:19:57 -0700
+Message-Id: <3143235ff04998bad4a2af3e8fe0361664f65aa2.1443734209.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <4e02220a11fd454fc46c90d287ae3f3e847751b3.1443734209.git.avery.brian@gmail.com>
+References: <4e02220a11fd454fc46c90d287ae3f3e847751b3.1443734209.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1443734209.git.avery.brian@gmail.com>
 References: <cover.1443734209.git.avery.brian@gmail.com>
-Subject: [PATCH 1/2] toaster: delete recipe if it can't be saved
+Subject: [PATCH 2/2] toaster: exclude recipes with empty names
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,35 +47,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 01 Oct 2015 21:18:15 -0000
+X-List-Received-Date: Thu, 01 Oct 2015 21:18:16 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Due to Recipe model constraints some recipes can't be
-saved. However, they still can create incomplete records in
-the database. This causes all sorts of errors when Toaster
-operates with those objects. Removing them should fix those
-issues.
+Modified get_all_compatible_recipes function to exclude recipes
+with empty names from the result queryset. This should stop UI
+to show recipes with empty names in compatible recipes page.
 
 [YOCTO #7969]
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/toaster/orm/models.py | 1 +
- 1 file changed, 1 insertion(+)
+ lib/toaster/orm/models.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 5aed158..89343f2 100644
+index 89343f2..ad12dd4 100644
 --- a/lib/toaster/orm/models.py
 +++ b/lib/toaster/orm/models.py
-@@ -1011,6 +1011,7 @@ class LayerIndexLayerSource(LayerSource):
-                 ro.save()
-             except IntegrityError as e:
-                 logger.debug("Failed saving recipe, ignoring: %s (%s:%s)" % (e, ro.layer_version, ri['filepath']+"/"+ri['filename']))
-+                ro.delete()
-         if not connection.features.autocommits_when_autocommit_is_off:
-             transaction.set_autocommit(True)
+@@ -253,7 +253,7 @@ class Project(models.Model):
+         """ Returns QuerySet of all the compatible Recipes available to the
+         project including ones from Layers not currently added """
+         queryset = Recipe.objects.filter(
+-            layer_version__in=self.get_all_compatible_layer_versions())
++            layer_version__in=self.get_all_compatible_layer_versions()).exclude(name__exact='')
+ 
+         return queryset
  
 -- 
 1.9.1
