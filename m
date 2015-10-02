@@ -1,21 +1,35 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 75359766F3
+Return-Path: <avery.brian@gmail.com>
+Received: from mail-pa0-f50.google.com (mail-pa0-f50.google.com
+	[209.85.220.50])
+	by mail.openembedded.org (Postfix) with ESMTP id ACF9D770C2
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  2 Oct 2015 13:43:38 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga101.jf.intel.com with ESMTP; 02 Oct 2015 06:43:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,623,1437462000"; d="scan'208";a="802180869"
-Received: from mhalasin-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.25.78])
-	by fmsmga001.fm.intel.com with ESMTP; 02 Oct 2015 06:43:36 -0700
-From: Elliot Smith <elliot.smith@intel.com>
+	Fri,  2 Oct 2015 18:03:26 +0000 (UTC)
+Received: by padhy16 with SMTP id hy16so112573303pad.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 02 Oct 2015 11:03:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=Wencq9QCs0ldx5owZeHrc99YwN76KRSjA4AN1IkinTU=;
+	b=cae/Xv4ddEx14FtoR5+XBA4VM6uSM/8ngLN/CMxisrXjQzVVlwPXQkchwmolM3GYpB
+	NMY86ZHNaGj2Ekfrz9GpAMCsOphjbskQLr1aQlohZyKE84BiAhmUcXEZpb47S8Elhzrb
+	DImGrhCxKo75ZJxoLa3GEvkHXndNkW36P3+cvSeWq86sI03fTiamLXC0yjtmA3gAiNVQ
+	o5wZWCvRYQDMcouxpd6BP6G2Shicvxf4g5VjGTgXu0kkyvmeGDN0IoGPo8Oavm2unHxn
+	AcsmLCCeyB0n7E6GiKmlbh/NMYq+ead64jwjPXF5Lgfm8RspirGJsm90WNDoqBjqB3ey
+	Ek7A==
+X-Received: by 10.68.137.202 with SMTP id qk10mr21639862pbb.30.1443809007141; 
+	Fri, 02 Oct 2015 11:03:27 -0700 (PDT)
+Received: from whisper.hsd1.or.comcast.net
+	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
+	by smtp.gmail.com with ESMTPSA id
+	eu2sm13113718pbc.48.2015.10.02.11.03.26
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Fri, 02 Oct 2015 11:03:26 -0700 (PDT)
+From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  2 Oct 2015 14:43:26 +0100
-Message-Id: <1443793406-24349-1-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-Subject: [PATCH] toaster: Remove project name from latest project builds
+Date: Fri,  2 Oct 2015 11:05:09 -0700
+Message-Id: <cover.1443809021.git.avery.brian@gmail.com>
+X-Mailer: git-send-email 1.9.1
+Subject: [PATCH 0/5] toaster:Add layer dependencies recursively #8004
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,56 +42,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 02 Oct 2015 13:43:45 -0000
+X-List-Received-Date: Fri, 02 Oct 2015 18:03:32 -0000
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
+This lets a layer that has 2nd level dependencies (depends on x that depends on y)        
+have all the dependent layers added to your project, not just the 1st level deps.                                                                                                                                                  
 
-The 'latest builds' list in the project builds page does not
-need to show the project name, since it lists only builds
-for the selected project.
+-b                                                                                                                                                                                                                                 
+The following changes since commit af1e3160922a30b8a538959335a5f8945f2f3549:
 
-This patch removes the redundant project name.
+  toaster: Remove project name from latest project builds (2015-10-02 14:44:14 +0100)
 
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
----
- bitbake/lib/toaster/toastergui/templates/mrb_section.html | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+are available in the git repository at:
 
-diff --git a/bitbake/lib/toaster/toastergui/templates/mrb_section.html b/bitbake/lib/toaster/toastergui/templates/mrb_section.html
-index 2fefe4b..ad90e82 100644
---- a/bitbake/lib/toaster/toastergui/templates/mrb_section.html
-+++ b/bitbake/lib/toaster/toastergui/templates/mrb_section.html
-@@ -18,13 +18,15 @@
-   {% endif %}
-   <div id="latest-builds">
-   {% for build in mru %}
--    <div class="alert {%if build.outcome == build.SUCCEEDED%}alert-success{%elif build.outcome == build.FAILED%}alert-error{%else%}alert-info{%endif%} project-name ">
-+  <div class="alert {%if build.outcome == build.SUCCEEDED%}alert-success{%elif build.outcome == build.FAILED%}alert-error{%else%}alert-info{%endif%}
-+    {% if mrb_type != 'project' %}
-+    project-name">
-        <span class="label {%if build.outcome == build.SUCCEEDED%}label-success{%elif build.outcome == build.FAILED%}label-important{%else%}label-info{%endif%}">
-          <a href={% url 'project' build.project.pk %}>
-            {{build.project.name}}
-          </a>
-        </span>
--
-+    {% endif %}
-         <div class="row-fluid">
-             <div class="span3 lead">
-     {%if build.outcome == build.SUCCEEDED or build.outcome == build.FAILED %}
+  git://git.yoctoproject.org/poky-contrib bavery/submit/ed/2015-10-02_layerdeps-8004
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/ed/2015-10-02_layerdeps-8004
+
+Ed Bartosh (5):
+  toaster: implement API to get full list of deps
+  toaster: use get_alldeps in layerdetails renderer
+  toaster: fix NameError
+  toaster: fix orm tests
+  toaster: test get_alldeps API
+
+ lib/toaster/orm/models.py       | 21 +++++++++++++++-
+ lib/toaster/orm/tests.py        | 53 ++++++++++++++++++-----------------------
+ lib/toaster/toastergui/views.py |  4 ++--
+ 3 files changed, 45 insertions(+), 33 deletions(-)
+
 -- 
-1.9.3
-
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
+1.9.1
 
 
