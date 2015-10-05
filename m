@@ -1,38 +1,21 @@
-Return-Path: <kergoth@gmail.com>
-Received: from mail-io0-f179.google.com (mail-io0-f179.google.com
-	[209.85.223.179])
-	by mail.openembedded.org (Postfix) with ESMTP id DACE4766F3
+Return-Path: <elliot.smith@intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 8EFEB75A2F
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  3 Oct 2015 18:35:30 +0000 (UTC)
-Received: by iofh134 with SMTP id h134so150774656iof.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 03 Oct 2015 11:35:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:sender:in-reply-to:references:from:date:message-id
-	:subject:to:cc:content-type;
-	bh=UPGGbAdQtyQ/ASIvHoGU5+t39lHZusqRgkAY0qGheaY=;
-	b=rPYPQ7WuoYu3y0d06+PxBnLFW6DEW8Vtx5dFeEA5h5CyjCeLYi7cKbMQhXqCSuLqwA
-	OUKOskqx9KM87CGvGtX/rrMfjXS7cdFN3iTEywPZwOEDgsIWeD6mIZwK3NEdphnkpghW
-	hUEXpgBE4p8rxk99zNy9ezh5lAo+QZn+aU8AEMC9A7SeSEfdguKELbxIAFtdEa0f2HOm
-	wp9omg3xTZaaA+wKCENNNgXEm0bhXs53BYhjsYqZjXG7W1jKbeL5MdjBc6uJtriPylAi
-	tRyK97BXRxVPoNtXxmtiuUUfm4dXV57K2/m+DMW3wquKERWwxycCA+GcMfKvlsWRwb9w
-	raMQ==
-X-Received: by 10.107.40.201 with SMTP id o192mr21600698ioo.83.1443897330954; 
-	Sat, 03 Oct 2015 11:35:30 -0700 (PDT)
-MIME-Version: 1.0
-Sender: kergoth@gmail.com
-Received: by 10.79.100.71 with HTTP; Sat, 3 Oct 2015 11:35:11 -0700 (PDT)
-In-Reply-To: <1443445902-32608-1-git-send-email-liu.ming50@gmail.com>
-References: <1443445902-32608-1-git-send-email-liu.ming50@gmail.com>
-From: Christopher Larson <clarson@kergoth.com>
-Date: Sat, 3 Oct 2015 11:35:11 -0700
-X-Google-Sender-Auth: Ah603y2TGJRvXotEy_rcSZKc7EQ
-Message-ID: <CABcZANkWo=s5VDpO0nAs42q8Cv+sfhNeu7qsv+XBckEQFQZy7Q@mail.gmail.com>
-To: Ming Liu <liu.ming50@gmail.com>
-Cc: Peter Liu <peter.x.liu@external.atlascopco.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [OE-core] [PATCH] bitbake: fetch: Extend subdir unpack parameter to local folder
+	Mon,  5 Oct 2015 09:43:12 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga102.jf.intel.com with ESMTP; 05 Oct 2015 02:43:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.17,637,1437462000"; d="scan'208";a="803809601"
+Received: from blynch-mobl1.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
+	([10.252.3.31])
+	by fmsmga001.fm.intel.com with ESMTP; 05 Oct 2015 02:43:11 -0700
+From: Elliot Smith <elliot.smith@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  5 Oct 2015 10:43:06 +0100
+Message-Id: <cover.1444038048.git.elliot.smith@intel.com>
+X-Mailer: git-send-email 1.9.3
+Subject: [PATCH 0/6] Fixes for toastergui
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,53 +28,46 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 03 Oct 2015 18:35:33 -0000
-Content-Type: multipart/alternative; boundary=001a1141f41080f8fb0521378b4d
+X-List-Received-Date: Mon, 05 Oct 2015 09:43:14 -0000
 
---001a1141f41080f8fb0521378b4d
-Content-Type: text/plain; charset=UTF-8
+This patchset fixes creation of Target objects for command line builds
+and provides a couple of usability fixes for toastergui module.
 
-On Mon, Sep 28, 2015 at 6:11 AM, Ming Liu <liu.ming50@gmail.com> wrote:
+The following changes since commit 78b7cfc2d29209354a1ed3a3a787c651efd31f28:
 
-> +                    if urldata.parm.get('subdir') != None:
-> +                        destdir = urldata.parm.get('subdir') + "/" +
-> destdir
->
+  toaster: test get_alldeps API (2015-10-05 10:37:47 +0100)
 
-If you really care about the difference between None and the empty string,
-then this should be 'is not None', not '!= None', but most likely you
-don't, in which case 'if urldata.parm.get('subdir')' is sufficient, and
-cleaner. Also you do the parm.get() twice, it may be better to store that
-in a variable.
--- 
-Christopher Larson
-clarson at kergoth dot com
-Founder - BitBake, OpenEmbedded, OpenZaurus
-Maintainer - Tslib
-Senior Software Engineer, Mentor Graphics
+are available in the git repository at:
 
---001a1141f41080f8fb0521378b4d
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+  git://git.yoctoproject.org/poky-contrib elliot/submit/ed/toaster/target-task
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=elliot/submit/ed/toaster/target-task
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">=
-On Mon, Sep 28, 2015 at 6:11 AM, Ming Liu <span dir=3D"ltr">&lt;<a href=3D"=
-mailto:liu.ming50@gmail.com" target=3D"_blank">liu.ming50@gmail.com</a>&gt;=
-</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .=
-8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":vt" class=3D"a=
-3s" style=3D"overflow:hidden">+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 if urldata.parm.get(&#39;subdir&#39;) !=3D None=
-:<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 destdir =3D urldata.parm.get(&#39;subdir&#39;) + &quot;/&quot; +=
- destdir</div></blockquote></div><br>If you really care about the differenc=
-e between None and the empty string, then this should be &#39;is not None&#=
-39;, not &#39;!=3D None&#39;, but most likely you don&#39;t, in which case =
-&#39;if urldata.parm.get(&#39;subdir&#39;)&#39; is sufficient, and cleaner.=
- Also you do the parm.get() twice, it may be better to store that in a vari=
-able.<br>-- <br><div class=3D"gmail_signature">Christopher Larson<br>clarso=
-n at kergoth dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Main=
-tainer - Tslib<br>Senior Software Engineer, Mentor Graphics</div>
-</div></div>
+Ed Bartosh (6):
+  event: add new property to BuildBase class
+  event: add new parameter to Build* event APIs
+  toaster: add task to the target_information
+  toaster: add get_or_create_targets API
+  toaster: ignore ReachableStamps event
+  toaster: use meaningful logging levels
 
---001a1141f41080f8fb0521378b4d--
+ lib/bb/cooker.py             |  8 ++++----
+ lib/bb/event.py              | 18 +++++++++++++-----
+ lib/bb/ui/buildinfohelper.py | 37 +++++++++++++++++++++----------------
+ lib/bb/ui/toasterui.py       | 11 ++++++-----
+ 4 files changed, 44 insertions(+), 30 deletions(-)
+
+--
+1.9.3
+
+---------------------------------------------------------------------
+Intel Corporation (UK) Limited
+Registered No. 1134945 (England)
+Registered Office: Pipers Way, Swindon SN3 1RJ
+VAT No: 860 2173 47
+
+This e-mail and any attachments may contain confidential material for
+the sole use of the intended recipient(s). Any review or distribution
+by others is strictly prohibited. If you are not the intended
+recipient, please contact the sender and delete all copies.
+
+
