@@ -1,25 +1,33 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id 737DF770A1
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 795FD77002
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  5 Oct 2015 09:43:36 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by fmsmga102.fm.intel.com with ESMTP; 05 Oct 2015 02:43:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,637,1437462000"; d="scan'208";a="784630550"
-Received: from blynch-mobl1.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.3.31])
-	by orsmga001.jf.intel.com with ESMTP; 05 Oct 2015 02:43:35 -0700
-From: Elliot Smith <elliot.smith@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon,  5 Oct 2015 10:43:18 +0100
-Message-Id: <7a7307e567cce5e4828b845dcdfe6e5867b2a985.1444038048.git.elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-In-Reply-To: <04c22e69056969f61173107062a4eec82a4bc3ed.1444038048.git.elliot.smith@intel.com>
-References: <04c22e69056969f61173107062a4eec82a4bc3ed.1444038048.git.elliot.smith@intel.com>
-In-Reply-To: <cover.1444038048.git.elliot.smith@intel.com>
-References: <cover.1444038048.git.elliot.smith@intel.com>
-Subject: [PATCH 6/6] toaster: use meaningful logging levels
+	Mon,  5 Oct 2015 10:15:56 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t95AFXGZ010489; Mon, 5 Oct 2015 11:15:51 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id DSf7Xcs2shw3; Mon,  5 Oct 2015 11:15:51 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t95AFSDH010425
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 5 Oct 2015 11:15:45 +0100
+Message-ID: <1444032447.5118.2.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Christopher Larson <clarson@kergoth.com>
+In-Reply-To: <CABcZANkWo=s5VDpO0nAs42q8Cv+sfhNeu7qsv+XBckEQFQZy7Q@mail.gmail.com>
+References: <1443445902-32608-1-git-send-email-liu.ming50@gmail.com>
+	<CABcZANkWo=s5VDpO0nAs42q8Cv+sfhNeu7qsv+XBckEQFQZy7Q@mail.gmail.com>
+Date: Mon, 05 Oct 2015 09:07:27 +0100
+Mime-Version: 1.0
+X-Mailer: Evolution 3.12.11-0ubuntu3 
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>,
+	Peter Liu <peter.x.liu@external.atlascopco.com>,
+	Ming Liu <liu.ming50@gmail.com>
+Subject: Re: [OE-core] [PATCH] bitbake: fetch: Extend subdir unpack parameter to local folder
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,69 +40,32 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 05 Oct 2015 09:43:36 -0000
+X-List-Received-Date: Mon, 05 Oct 2015 10:15:58 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+On Sat, 2015-10-03 at 11:35 -0700, Christopher Larson wrote:
+> 
+> On Mon, Sep 28, 2015 at 6:11 AM, Ming Liu <liu.ming50@gmail.com>
+> wrote:
+>         +                    if urldata.parm.get('subdir') != None:
+>         +                        destdir = urldata.parm.get('subdir')
+>         + "/" + destdir
+> 
+> If you really care about the difference between None and the empty
+> string, then this should be 'is not None', not '!= None', but most
+> likely you don't, in which case 'if urldata.parm.get('subdir')' is
+> sufficient, and cleaner. Also you do the parm.get() twice, it may be
+> better to store that in a variable.
 
-Changed logging levels to more appropriate ones.
+Chris is correct, this patch needs tweaking. This area of the code also
+keeps seeing various issues so I'd like to ask that we add a test case
+for this in lib/bb/tests/ so we can ensure this doesn't regress in the
+future please.
 
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
----
- lib/bb/ui/toasterui.py | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Cheers,
 
-diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
-index 3891e63..dbe0d09 100644
---- a/lib/bb/ui/toasterui.py
-+++ b/lib/bb/ui/toasterui.py
-@@ -130,14 +130,14 @@ def main(server, eventHandler, params ):
- 
-             if isinstance(event, (bb.build.TaskStarted, bb.build.TaskSucceeded, bb.build.TaskFailedSilent)):
-                 buildinfohelper.update_and_store_task(event)
--                logger.warn("Logfile for task %s", event.logfile)
-+                logger.info("Logfile for task %s", event.logfile)
-                 continue
- 
-             if isinstance(event, bb.build.TaskBase):
-                 logger.info(event._message)
- 
-             if isinstance(event, bb.event.LogExecTTY):
--                logger.warn(event.msg)
-+                logger.info(event.msg)
-                 continue
- 
-             if isinstance(event, logging.LogRecord):
-@@ -316,7 +316,7 @@ def main(server, eventHandler, params ):
-                 buildinfohelper.store_dependency_information(event)
-                 continue
- 
--            logger.error("Unknown event: %s", event)
-+            logger.warn("Unknown event: %s", event)
-             return_value += 1
- 
-         except EnvironmentError as ioerror:
-@@ -336,7 +336,7 @@ def main(server, eventHandler, params ):
-             if tb is not None:
-                 curr = tb
-                 while curr is not None:
--                    logger.warn("Error data dump %s\n%s\n" , traceback.format_tb(curr,1), pformat(curr.tb_frame.f_locals))
-+                    logger.error("Error data dump %s\n%s\n" , traceback.format_tb(curr,1), pformat(curr.tb_frame.f_locals))
-                     curr = curr.tb_next
- 
-             # save them to database, if possible; if it fails, we already logged to console.
--- 
-1.9.3
+Richard
 
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
 
 
