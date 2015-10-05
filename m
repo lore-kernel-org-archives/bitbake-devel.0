@@ -1,33 +1,36 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 795FD77002
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-wi0-f173.google.com (mail-wi0-f173.google.com
+	[209.85.212.173])
+	by mail.openembedded.org (Postfix) with ESMTP id 5D6B1755F4
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  5 Oct 2015 10:15:56 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t95AFXGZ010489; Mon, 5 Oct 2015 11:15:51 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id DSf7Xcs2shw3; Mon,  5 Oct 2015 11:15:51 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t95AFSDH010425
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 5 Oct 2015 11:15:45 +0100
-Message-ID: <1444032447.5118.2.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Christopher Larson <clarson@kergoth.com>
-In-Reply-To: <CABcZANkWo=s5VDpO0nAs42q8Cv+sfhNeu7qsv+XBckEQFQZy7Q@mail.gmail.com>
-References: <1443445902-32608-1-git-send-email-liu.ming50@gmail.com>
-	<CABcZANkWo=s5VDpO0nAs42q8Cv+sfhNeu7qsv+XBckEQFQZy7Q@mail.gmail.com>
-Date: Mon, 05 Oct 2015 09:07:27 +0100
-Mime-Version: 1.0
-X-Mailer: Evolution 3.12.11-0ubuntu3 
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>,
-	Peter Liu <peter.x.liu@external.atlascopco.com>,
-	Ming Liu <liu.ming50@gmail.com>
-Subject: Re: [OE-core] [PATCH] bitbake: fetch: Extend subdir unpack parameter to local folder
+	Mon,  5 Oct 2015 11:08:51 +0000 (UTC)
+Received: by wicfx3 with SMTP id fx3so114164802wic.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 05 Oct 2015 04:08:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=uO6q4E0/7LeUihc0Agi+jtovC/HJettW79xG06tT9WQ=;
+	b=fLfewktHhdWf55vTkKB4NOqzv3xxzVLwiguI5lcg/CytSG9a8FkhtvjBxQEKxSfS1d
+	GGNhhWRJQ3z2MULxlskExNzrKr9LppGACz1eXLQaUmzh8w2etdeRLAXn6QInsXYwmz7G
+	ahteoOEAIZn1vAXDI2kWGnEQ5h7HKvv+OGipiqUU4loz8Kn+lPLtb/+IU/mTYJwih6Cm
+	7lft4Ke85u/f9CyVH7xjaHvZ/MTfO/X0eEMLehZ3Q4EPLIu68f+fQwWduzlF7Q0Akx5v
+	0WuQo0CKvBz9JPQIMAE4E7lJubmibXb6aP6JlcTT62Zd8RO3PXMPbdtXZu/SFQv9M+ny
+	Q6OA==
+X-Gm-Message-State: ALoCoQmh5bS13Vpa8g1wPNBQh4QPl2qIMHnTbTIJOfHIOdEOuhqvQFe74n/1KsHVIkJc70hMb5G8
+X-Received: by 10.194.187.17 with SMTP id fo17mr27819204wjc.130.1444043331435; 
+	Mon, 05 Oct 2015 04:08:51 -0700 (PDT)
+Received: from localhost.localdomain ([2.218.205.118])
+	by smtp.gmail.com with ESMTPSA id
+	jf3sm14040527wic.8.2015.10.05.04.08.50
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Mon, 05 Oct 2015 04:08:50 -0700 (PDT)
+From: Michael Wood <michael.g.wood@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  5 Oct 2015 12:08:31 +0100
+Message-Id: <1444043312-7618-1-git-send-email-michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH 1/2] toaster: Don't add new history entries when table data loads
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,32 +43,59 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 05 Oct 2015 10:15:58 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 05 Oct 2015 11:08:55 -0000
 
-On Sat, 2015-10-03 at 11:35 -0700, Christopher Larson wrote:
-> 
-> On Mon, Sep 28, 2015 at 6:11 AM, Ming Liu <liu.ming50@gmail.com>
-> wrote:
->         +                    if urldata.parm.get('subdir') != None:
->         +                        destdir = urldata.parm.get('subdir')
->         + "/" + destdir
-> 
-> If you really care about the difference between None and the empty
-> string, then this should be 'is not None', not '!= None', but most
-> likely you don't, in which case 'if urldata.parm.get('subdir')' is
-> sufficient, and cleaner. Also you do the parm.get() twice, it may be
-> better to store that in a variable.
+From: Elliot Smith <elliot.smith@intel.com>
 
-Chris is correct, this patch needs tweaking. This area of the code also
-keeps seeing various issues so I'd like to ask that we add a test case
-for this in lib/bb/tests/ so we can ensure this doesn't regress in the
-future please.
+When ToasterTable data is loaded into the UI, a new entry is
+added to the browser history. This means that pressing the back
+button appears to have no effect, as you end up at the same page,
+possibly with slightly different data.
 
-Cheers,
+Instead, use replaceState(), so that the browser history doesn't
+grow, but the page context still gets updated.
 
-Richard
+[YOCTO #7660]
 
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+---
+ lib/toaster/toastergui/static/js/table.js | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
+
+diff --git a/lib/toaster/toastergui/static/js/table.js b/lib/toaster/toastergui/static/js/table.js
+index f18034d..bc81e67 100644
+--- a/lib/toaster/toastergui/static/js/table.js
++++ b/lib/toaster/toastergui/static/js/table.js
+@@ -33,14 +33,6 @@ function tableInit(ctx){
+ 
+   loadData(tableParams);
+ 
+-  window.onpopstate = function(event){
+-    if (event.state){
+-      tableParams = event.state.tableParams;
+-      /* We skip loadData and just update the table */
+-      updateTable(event.state.tableData);
+-    }
+-  };
+-
+   function loadData(tableParams){
+     $.ajax({
+         type: "GET",
+@@ -49,10 +41,8 @@ function tableInit(ctx){
+         headers: { 'X-CSRFToken' : $.cookie('csrftoken')},
+         success: function(tableData) {
+           updateTable(tableData);
+-          window.history.pushState({
+-              tableData: tableData,
+-              tableParams: tableParams
+-          }, null, libtoaster.dumpsUrlParams(tableParams));
++          window.history.replaceState(null, null,
++            libtoaster.dumpsUrlParams(tableParams));
+         }
+     });
+   }
+-- 
+2.1.4
 
 
