@@ -1,21 +1,23 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 8EFEB75A2F
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 709897704F
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  5 Oct 2015 09:43:12 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga102.jf.intel.com with ESMTP; 05 Oct 2015 02:43:12 -0700
+	Mon,  5 Oct 2015 09:43:23 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by fmsmga102.fm.intel.com with ESMTP; 05 Oct 2015 02:43:23 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,637,1437462000"; d="scan'208";a="803809601"
+X-IronPort-AV: E=Sophos;i="5.17,637,1437462000"; d="scan'208";a="784630398"
 Received: from blynch-mobl1.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.3.31])
-	by fmsmga001.fm.intel.com with ESMTP; 05 Oct 2015 02:43:11 -0700
+	by orsmga001.jf.intel.com with ESMTP; 05 Oct 2015 02:43:23 -0700
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Mon,  5 Oct 2015 10:43:06 +0100
-Message-Id: <cover.1444038048.git.elliot.smith@intel.com>
+Date: Mon,  5 Oct 2015 10:43:13 +0100
+Message-Id: <04c22e69056969f61173107062a4eec82a4bc3ed.1444038048.git.elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
-Subject: [PATCH 0/6] Fixes for toastergui
+In-Reply-To: <cover.1444038048.git.elliot.smith@intel.com>
+References: <cover.1444038048.git.elliot.smith@intel.com>
+Subject: [PATCH 1/6] event: add new property to BuildBase class
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,35 +30,57 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 05 Oct 2015 09:43:14 -0000
+X-List-Received-Date: Mon, 05 Oct 2015 09:43:24 -0000
 
-This patchset fixes creation of Target objects for command line builds
-and provides a couple of usability fixes for toastergui module.
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-The following changes since commit 78b7cfc2d29209354a1ed3a3a787c651efd31f28:
+Added 'task' property to the base class of BuildStarted and
+BuildCompleted classes to store bitbake task if it's specified.
 
-  toaster: test get_alldeps API (2015-10-05 10:37:47 +0100)
+This is done as without task Build* events can't fully represent
+bitbake build. Task information is needed by UI classes to properly
+show or process Build* events.
 
-are available in the git repository at:
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+---
+ lib/bb/event.py | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-  git://git.yoctoproject.org/poky-contrib elliot/submit/ed/toaster/target-task
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=elliot/submit/ed/toaster/target-task
-
-Ed Bartosh (6):
-  event: add new property to BuildBase class
-  event: add new parameter to Build* event APIs
-  toaster: add task to the target_information
-  toaster: add get_or_create_targets API
-  toaster: ignore ReachableStamps event
-  toaster: use meaningful logging levels
-
- lib/bb/cooker.py             |  8 ++++----
- lib/bb/event.py              | 18 +++++++++++++-----
- lib/bb/ui/buildinfohelper.py | 37 +++++++++++++++++++++----------------
- lib/bb/ui/toasterui.py       | 11 ++++++-----
- 4 files changed, 44 insertions(+), 30 deletions(-)
-
---
+diff --git a/lib/bb/event.py b/lib/bb/event.py
+index 366bc41..68496e5 100644
+--- a/lib/bb/event.py
++++ b/lib/bb/event.py
+@@ -331,6 +331,7 @@ class BuildBase(Event):
+     def __init__(self, n, p, failures = 0):
+         self._name = n
+         self._pkgs = p
++        self._task = None
+         Event.__init__(self)
+         self._failures = failures
+ 
+@@ -352,6 +353,12 @@ class BuildBase(Event):
+     def setCfg(self, cfg):
+         self.data = cfg
+ 
++    def getTask(self):
++        return self._task
++
++    def setTask(self, task):
++        self._task = task
++
+     def getFailures(self):
+         """
+         Return the number of failed packages
+@@ -361,6 +368,7 @@ class BuildBase(Event):
+     pkgs = property(getPkgs, setPkgs, None, "pkgs property")
+     name = property(getName, setName, None, "name property")
+     cfg = property(getCfg, setCfg, None, "cfg property")
++    task = property(getTask, setTask, None, "task property")
+ 
+ 
+ 
+-- 
 1.9.3
 
 ---------------------------------------------------------------------
