@@ -1,21 +1,37 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 0B676767FB
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-wi0-f177.google.com (mail-wi0-f177.google.com
+	[209.85.212.177])
+	by mail.openembedded.org (Postfix) with ESMTP id C82A1766E9
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  6 Oct 2015 13:31:54 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga101.fm.intel.com with ESMTP; 06 Oct 2015 06:31:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,644,1437462000"; d="scan'208";a="820553377"
-Received: from blynch-mobl1.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.3.31])
-	by fmsmga002.fm.intel.com with ESMTP; 06 Oct 2015 06:31:53 -0700
-From: Elliot Smith <elliot.smith@intel.com>
+	Tue,  6 Oct 2015 15:43:39 +0000 (UTC)
+Received: by wiclk2 with SMTP id lk2so165460154wic.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 06 Oct 2015 08:43:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=xRSGSBxIfOVEAdVKhJPR28CB2STJA3OXIfLG71Rp0kk=;
+	b=RSB1K1WhkXtQQMHTtYKzTxtSMPuDVzXdk0OZlpaMUXo6+ZUfJNHRYkNIE3GByUC9Ls
+	+hynyMTLHNl7hlZ+E3VAx5cZQR1SGifrNB6zziGpOqO5zxKR4uvg2S3lXBxsB1nrV0eL
+	8nCeGyZI2lBjCLFSAl2TeQdl65FLTHdtRCI5Q6xPDcMxIPAtkrC49eOR8QQQG4nNoROb
+	juzRncnBhC1/8Sv8yng9jWKJ+KsxP2itznChlJN36O19mkc9v7p5Zlwmc+AQFzSrpdIk
+	/l3ofr0xeieehCBNMjzHVJDDf4zV9wsAZ2eQICIWeMSeQ/g+uflsY8n1you0aGZajsG4
+	dYlg==
+X-Gm-Message-State: ALoCoQliLNpzjRpUF2m9ZZN66RQLod3KoYasmnuZqoU4iqV+4sv6pYSzukrIIYFrgIl8ostz91jL
+X-Received: by 10.180.188.169 with SMTP id gb9mr17069166wic.44.1444146219291; 
+	Tue, 06 Oct 2015 08:43:39 -0700 (PDT)
+Received: from localhost.localdomain ([2.218.205.118])
+	by smtp.gmail.com with ESMTPSA id
+	jd7sm11451008wjb.19.2015.10.06.08.43.38
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Tue, 06 Oct 2015 08:43:38 -0700 (PDT)
+From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  6 Oct 2015 14:31:50 +0100
-Message-Id: <1444138310-5219-1-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-Subject: [PATCH] toaster: Set default columns in recipes tables
+Date: Tue,  6 Oct 2015 16:43:30 +0100
+Message-Id: <1444146210-27564-1-git-send-email-michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.1.4
+Cc: David Reyna <David.Reyna@windriver.com>
+Subject: [PATCH] toaster: display warnings for bad "IMAGE_FSTYPES" values
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,75 +44,98 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 06 Oct 2015 13:31:56 -0000
+X-List-Received-Date: Tue, 06 Oct 2015 15:43:40 -0000
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
+From: David Reyna <David.Reyna@windriver.com>
 
-The compatible image recipes and software recipes tables
-show pretty much all their columns by default. That's a few
-too many columns. The default columns in both tables should
-be: recipe, version, description, layer and build.
+Display warning message for IMAGE_FSTYPES when no value is selected or
+when the filter does not have any matches
 
-This patch sets the above as the default columns. It also
-changes the table heading 'Recipe Version' to just 'Version',
-which is shorter and self-explanatory.
+[YOCTO #8126]
 
-[YOCTO #8421]
-
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+Signed-off-by: David Reyna <David.Reyna@windriver.com>
 ---
- bitbake/lib/toaster/toastergui/tables.py | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ lib/toaster/toastergui/templates/projectconf.html | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/bitbake/lib/toaster/toastergui/tables.py b/bitbake/lib/toaster/toastergui/tables.py
-index 5cc04a2..a676ffa 100644
---- a/bitbake/lib/toaster/toastergui/tables.py
-+++ b/bitbake/lib/toaster/toastergui/tables.py
-@@ -345,8 +345,8 @@ class RecipesTable(ToasterTable, ProjectFiltersMixin):
+diff --git a/lib/toaster/toastergui/templates/projectconf.html b/lib/toaster/toastergui/templates/projectconf.html
+index 4c5a188..5333ec5 100644
+--- a/lib/toaster/toastergui/templates/projectconf.html
++++ b/lib/toaster/toastergui/templates/projectconf.html
+@@ -43,6 +43,7 @@
+                     <input id="filter-image_fstypes" type="text" placeholder="Search image types" class="span4">
+                     <div id="all-image_fstypes" class="scrolling">
+                     </div>
++                    <span class="help-block" id="fstypes-error-message">You must select at least one image type</span>
+                     <button id="apply-change-image_fstypes" type="button" class="btn">Save</button>
+                     <button id="cancel-change-image_fstypes" type="button" class="btn btn-link">Cancel</button>
+                 </form>
+@@ -312,9 +313,11 @@
+             });
+             if ( 0 == any_checked ) {
+                 $("#apply-change-image_fstypes").attr("disabled","disabled");
++                $('#fstypes-error-message').show();
+             }
+             else {
+                 $("#apply-change-image_fstypes").removeAttr("disabled");
++                $('#fstypes-error-message').hide();
+             }
+         }
  
-     def setup_columns(self, *args, **kwargs):
+@@ -546,10 +549,14 @@
+                 // Add the un-checked boxes second
+                 for (var i = 0, length = fstypes_list.length; i < length; i++) {
+                     if (0  > fstypes.indexOf(" "+fstypes_list[i].value+" ")) {
+-                            html += '<label class="checkbox"><input type="checkbox" class="fs-checkbox-fstypes" value="'+fstypes_list[i].value+'">'+fstypes_list[i].value+'</label>\n';
++                        html += '<label class="checkbox"><input type="checkbox" class="fs-checkbox-fstypes" value="'+fstypes_list[i].value+'">'+fstypes_list[i].value+'</label>\n';
+                     }
+                 }
++                // Add the 'no search matches' line last
++                html += '<label id="no-match-fstypes">No image types found</label>\n';
++                // Display the list
+                 document.getElementById("all-image_fstypes").innerHTML = html;
++                $('#no-match-fstypes').hide();
  
--        self.add_column(title="Recipe Version",
--                        hidden=True,
-+        self.add_column(title="Version",
-+                        hidden=False,
-                         field_name="version")
+                 // Watch elements to disable Save when none are checked
+                 $(".fs-checkbox-fstypes").each(function(){
+@@ -558,8 +565,9 @@
+                     });
+                 });
  
-         self.add_column(title="Description",
-@@ -367,6 +367,7 @@ class RecipesTable(ToasterTable, ProjectFiltersMixin):
+-                // clear the previous filter values
++                // clear the previous filter values and warning messages
+                 $("input#filter-image_fstypes").val("");
++                $('#fstypes-error-message').hide();
+             });
  
-         self.add_column(title="Section",
-                         help_text="The section in which recipes should be categorized",
-+                        hidden=True,
-                         orderable=True,
-                         field_name="section")
+             $('#cancel-change-image_fstypes').click(function(){
+@@ -569,17 +577,24 @@
+             });
  
-@@ -383,10 +384,12 @@ class RecipesTable(ToasterTable, ProjectFiltersMixin):
+             $('#filter-image_fstypes').on('input', function(){
+-                   var valThis = $(this).val().toLowerCase();
++                var valThis = $(this).val().toLowerCase();
++                var matchCount=0;
+                 $('#all-image_fstypes label').each(function(){
+                     var text = $(this).text().toLowerCase();
+                     var match = text.indexOf(valThis);
+                     if (match >= 0) {
+                         $(this).show();
++                        matchCount += 1;
+                     }
+                     else {
+                         $(this).hide();
+                     }
+                 });
++                if (matchCount === 0) {
++                   $('#no-match-fstypes').show();
++                } else {
++                   $('#no-match-fstypes').hide();
++                }
+             });
  
-         self.add_column(title="License",
-                         help_text="The list of source licenses for the recipe. Multiple license names separated by the pipe character indicates a choice between licenses. Multiple license names separated by the ampersand character indicates multiple licenses exist that cover different parts of the source",
-+                        hidden=True,
-                         orderable=True,
-                         field_name="license")
- 
-         self.add_column(title="Revision",
-+                        hidden=True,
-                         field_name="layer_version__get_vcs_reference")
- 
- 
+             $('#apply-change-image_fstypes').click(function(){
 -- 
-1.9.3
-
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
+2.1.4
 
 
