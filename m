@@ -1,21 +1,21 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id C75B176660
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 0B676767FB
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  6 Oct 2015 13:21:07 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by orsmga101.jf.intel.com with ESMTP; 06 Oct 2015 06:21:06 -0700
+	Tue,  6 Oct 2015 13:31:54 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 06 Oct 2015 06:31:54 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,644,1437462000"; d="scan'208";a="575125685"
+X-IronPort-AV: E=Sophos;i="5.17,644,1437462000"; d="scan'208";a="820553377"
 Received: from blynch-mobl1.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.3.31])
-	by FMSMGA003.fm.intel.com with ESMTP; 06 Oct 2015 06:21:03 -0700
+	by fmsmga002.fm.intel.com with ESMTP; 06 Oct 2015 06:31:53 -0700
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  6 Oct 2015 14:20:44 +0100
-Message-Id: <1444137644-31748-1-git-send-email-elliot.smith@intel.com>
+Date: Tue,  6 Oct 2015 14:31:50 +0100
+Message-Id: <1444138310-5219-1-git-send-email-elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
-Subject: [PATCH] toaster: Comment out broken sorting and filters
+Subject: [PATCH] toaster: Set default columns in recipes tables
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,90 +28,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 06 Oct 2015 13:21:09 -0000
+X-List-Received-Date: Tue, 06 Oct 2015 13:31:56 -0000
 
 From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-YOCTO #8131 records that the sorting by 'errors', 'warnings'
-and 'time', and the filtering by 'errors' and 'warnings',
-are broken in the 'all builds' and 'project builds' pages.
+The compatible image recipes and software recipes tables
+show pretty much all their columns by default. That's a few
+too many columns. The default columns in both tables should
+be: recipe, version, description, layer and build.
 
-To avoid exposing broken functionality to users, comment
-out the sorting and filtering in those columns until we
-we have a fix for YOCTO #8131.
+This patch sets the above as the default columns. It also
+changes the table heading 'Recipe Version' to just 'Version',
+which is shorter and self-explanatory.
+
+[YOCTO #8421]
 
 Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- bitbake/lib/toaster/toastergui/views.py | 49 +++++++++++++++++----------------
- 1 file changed, 26 insertions(+), 23 deletions(-)
+ bitbake/lib/toaster/toastergui/tables.py | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/bitbake/lib/toaster/toastergui/views.py b/bitbake/lib/toaster/toastergui/views.py
-index 3168cfa..e07f0e2 100755
---- a/bitbake/lib/toaster/toastergui/views.py
-+++ b/bitbake/lib/toaster/toastergui/views.py
-@@ -2103,35 +2103,38 @@ if True:
-                     },
-                     {'name': 'Errors', 'clclass': 'errors_no',
-                      'qhelp': "How many errors were encountered during the build (if any)",
--                     'orderfield': _get_toggle_order(request, "errors_no", True),
--                     'ordericon':_get_toggle_order_icon(request, "errors_no"),
--                     'orderkey' : 'errors_no',
--                     'filter' : {'class' : 'errors_no',
--                                 'label': 'Show:',
--                                 'options' : [
--                                             ('Builds with errors', 'errors_no__gte:1', queryset_with_search.filter(errors_no__gte=1).count()),
--                                             ('Builds without errors', 'errors_no:0', queryset_with_search.filter(errors_no=0).count()),
--                                             ]
--                                }
-+                     # Comment out sorting and filter until YOCTO #8131 is fixed
-+                     #'orderfield': _get_toggle_order(request, "errors_no", True),
-+                     #'ordericon':_get_toggle_order_icon(request, "errors_no"),
-+                     #'orderkey' : 'errors_no',
-+                     #'filter' : {'class' : 'errors_no',
-+                     #            'label': 'Show:',
-+                     #            'options' : [
-+                     #                        ('Builds with errors', 'errors_no__gte:1', queryset_with_search.filter(errors_no__gte=1).count()),
-+                     #                        ('Builds without errors', 'errors_no:0', queryset_with_search.filter(errors_no=0).count()),
-+                     #                        ]
-+                     #           }
-                     },
-                     {'name': 'Warnings', 'clclass': 'warnings_no',
-                      'qhelp': "How many warnings were encountered during the build (if any)",
--                     'orderfield': _get_toggle_order(request, "warnings_no", True),
--                     'ordericon':_get_toggle_order_icon(request, "warnings_no"),
--                     'orderkey' : 'warnings_no',
--                     'filter' : {'class' : 'warnings_no',
--                                 'label': 'Show:',
--                                 'options' : [
--                                             ('Builds with warnings','warnings_no__gte:1', queryset_with_search.filter(warnings_no__gte=1).count()),
--                                             ('Builds without warnings','warnings_no:0', queryset_with_search.filter(warnings_no=0).count()),
--                                             ]
--                                }
-+                     # Comment out sorting and filter until YOCTO #8131 is fixed
-+                     #'orderfield': _get_toggle_order(request, "warnings_no", True),
-+                     #'ordericon':_get_toggle_order_icon(request, "warnings_no"),
-+                     #'orderkey' : 'warnings_no',
-+                     #'filter' : {'class' : 'warnings_no',
-+                     #            'label': 'Show:',
-+                     #            'options' : [
-+                     #                        ('Builds with warnings','warnings_no__gte:1', queryset_with_search.filter(warnings_no__gte=1).count()),
-+                     #                        ('Builds without warnings','warnings_no:0', queryset_with_search.filter(warnings_no=0).count()),
-+                     #                        ]
-+                     #           }
-                     },
-                     {'name': 'Time', 'clclass': 'time', 'hidden' : 1,
-                      'qhelp': "How long it took the build to finish",
--                     'orderfield': _get_toggle_order(request, "timespent", True),
--                     'ordericon':_get_toggle_order_icon(request, "timespent"),
--                     'orderkey' : 'timespent',
-+                     # Comment out sorting until YOCTO #8131 is fixed
-+                     #'orderfield': _get_toggle_order(request, "timespent", True),
-+                     #'ordericon':_get_toggle_order_icon(request, "timespent"),
-+                     #'orderkey' : 'timespent',
-                     },
-                     {'name': 'Image files', 'clclass': 'output',
-                      'qhelp': "The root file system types produced by the build. You can find them in your <code>/build/tmp/deploy/images/</code> directory",
+diff --git a/bitbake/lib/toaster/toastergui/tables.py b/bitbake/lib/toaster/toastergui/tables.py
+index 5cc04a2..a676ffa 100644
+--- a/bitbake/lib/toaster/toastergui/tables.py
++++ b/bitbake/lib/toaster/toastergui/tables.py
+@@ -345,8 +345,8 @@ class RecipesTable(ToasterTable, ProjectFiltersMixin):
+ 
+     def setup_columns(self, *args, **kwargs):
+ 
+-        self.add_column(title="Recipe Version",
+-                        hidden=True,
++        self.add_column(title="Version",
++                        hidden=False,
+                         field_name="version")
+ 
+         self.add_column(title="Description",
+@@ -367,6 +367,7 @@ class RecipesTable(ToasterTable, ProjectFiltersMixin):
+ 
+         self.add_column(title="Section",
+                         help_text="The section in which recipes should be categorized",
++                        hidden=True,
+                         orderable=True,
+                         field_name="section")
+ 
+@@ -383,10 +384,12 @@ class RecipesTable(ToasterTable, ProjectFiltersMixin):
+ 
+         self.add_column(title="License",
+                         help_text="The list of source licenses for the recipe. Multiple license names separated by the pipe character indicates a choice between licenses. Multiple license names separated by the ampersand character indicates multiple licenses exist that cover different parts of the source",
++                        hidden=True,
+                         orderable=True,
+                         field_name="license")
+ 
+         self.add_column(title="Revision",
++                        hidden=True,
+                         field_name="layer_version__get_vcs_reference")
+ 
+ 
 -- 
 1.9.3
 
