@@ -1,23 +1,25 @@
 Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id E274660125
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id F21D876AC5
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  7 Oct 2015 13:20:55 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by fmsmga103.fm.intel.com with ESMTP; 07 Oct 2015 06:20:55 -0700
+	Wed,  7 Oct 2015 13:21:18 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by fmsmga102.fm.intel.com with ESMTP; 07 Oct 2015 06:21:18 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,649,1437462000"; d="scan'208";a="659587337"
+X-IronPort-AV: E=Sophos;i="5.17,649,1437462000"; d="scan'208";a="821305544"
 Received: from linux.intel.com ([10.23.219.25])
-	by orsmga003.jf.intel.com with ESMTP; 07 Oct 2015 06:20:55 -0700
+	by orsmga002.jf.intel.com with ESMTP; 07 Oct 2015 06:21:12 -0700
 Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id 745B76A4083;
-	Wed,  7 Oct 2015 06:19:57 -0700 (PDT)
+	by linux.intel.com (Postfix) with ESMTP id 188D56A4083;
+	Wed,  7 Oct 2015 06:20:12 -0700 (PDT)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  7 Oct 2015 16:20:49 +0300
-Message-Id: <cover.1444223946.git.ed.bartosh@linux.intel.com>
+Date: Wed,  7 Oct 2015 16:20:46 +0300
+Message-Id: <b8bbed3da4991f25019c6e0319fb5880b7f403bd.1444223946.git.ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
-Subject: [PATCH 00/10] toaster: Implement UI changes for "command line builds" project
+In-Reply-To: <cover.1444223946.git.ed.bartosh@linux.intel.com>
+References: <cover.1444223946.git.ed.bartosh@linux.intel.com>
+Subject: [PATCH 01/10] toaster: Reorganise and lint tests
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,84 +32,188 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 07 Oct 2015 13:20:56 -0000
+X-List-Received-Date: Wed, 07 Oct 2015 13:21:19 -0000
 
-Hi,
+From: Elliot Smith <elliot.smith@intel.com>
 
-This implements changes across the UI to hide irrelevant options
-for command-line builds, and show additional help icons explaining
-why those options are hidden.
+Get test suite ready to accommodate new tests for how command line
+builds are shown on various pages.
 
-It also modifies the behaviour of the "New build" button to take
-account of the special status of the command-line builds project.
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+---
+ lib/toaster/toastergui/tests.py | 83 ++++++++++++++++++++++++-----------------
+ 1 file changed, 49 insertions(+), 34 deletions(-)
 
-For UI details, see the document attached to bug 8231
-at https://bugzilla.yoctoproject.org/attachment.cgi?id=2760.
-
-v2 (in response to Belen's review):
-
-* Modify how the form for changing the project name is shown, so
-that the edit buttons aren't lost after saving the new project name.
-Also verify that project name changes take without requiring a page refresh.
-
-* Never select the command-line builds project in the "New build"
-drop-down form.
-
-* Only show the "New build" button if there are one or more user-created
-projects (i.e. not if there is only the command-line builds project).
-
-v1:
-
-* One of the changes in the design document has not been implemented:
-it's not possible to hide the "customise image recipe" links and
-buttons (page 9) as these are not in the templates yet.
-
-* The visual design differs slightly from the design document, as it
-incorporates a new layout for the build dashboard which is not
-implemented yet.
-
-* The "New build" button is displayed on the command line
-builds project page, as we came to the conclusion that the logic
-in the JavaScript (i.e. show the new build button if there is no
-build input form on the page) should apply in the case of the
-builds page for the "command line builds" project.
-
-The following changes since commit 64680eb3a2eef5e6cf46c18f712b319edb1fc78a:
-
-  toaster: remove bashisms so script works in dash as well (2015-10-07 15:06:40 +0300)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib ed/toaster/submit/elliot/toaster/cli_builds_ui-8231
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=ed/toaster/submit/elliot/toaster/cli_builds_ui-8231
-
-Elliot Smith (10):
-  toaster: Reorganise and lint tests
-  toaster: Replace "Run again" button with help text for cli builds
-  toaster: Show 'not applicable' for default project machine and release
-  toaster: Make the builds view the project page for "command line
-    builds"
-  toaster: Hide tabs and add info popups for command line builds
-  toaster: Show tooltip next to cli builds project name in all builds
-  toaster: More linting of tests
-  toaster: Clean up template code
-  toaster: Exclude "command line builds" project from projects typeahead
-  toaster: Modify "New build" button behaviour for cli builds project
-
- lib/toaster/toastergui/static/css/default.css      |   5 +
- lib/toaster/toastergui/static/js/base.js           |  18 +-
- lib/toaster/toastergui/templates/base.html         |  98 ++++---
- lib/toaster/toastergui/templates/builds.html       |  19 +-
- lib/toaster/toastergui/templates/mrb_section.html  |  66 +++--
- lib/toaster/toastergui/templates/projects.html     |  23 +-
- .../toastergui/templates/projecttopbar.html        |  80 ++---
- .../toastergui/templatetags/project_url_tag.py     |  34 +++
- lib/toaster/toastergui/tests.py                    | 322 ++++++++++++++++++---
- lib/toaster/toastergui/typeaheads.py               |   4 +-
- lib/toaster/toastergui/views.py                    |   9 +-
- 11 files changed, 494 insertions(+), 184 deletions(-)
- create mode 100644 bitbake/lib/toaster/toastergui/templatetags/project_url_tag.py
-
+diff --git a/lib/toaster/toastergui/tests.py b/lib/toaster/toastergui/tests.py
+index 95790a2..7b1f9b5 100644
+--- a/lib/toaster/toastergui/tests.py
++++ b/lib/toaster/toastergui/tests.py
+@@ -21,23 +21,20 @@
+ 
+ """Test cases for Toaster GUI and ReST."""
+ 
+-import re
+-
+ from django.test import TestCase
+ from django.test.client import RequestFactory
+ from django.core.urlresolvers import reverse
+ from django.utils import timezone
+ 
+-from orm.models import Project, Release, BitbakeVersion, Build, Package
++from orm.models import Project, Release, BitbakeVersion, Package
+ from orm.models import ReleaseLayerSourcePriority, LayerSource, Layer, Build
+ from orm.models import Layer_Version, Recipe, Machine, ProjectLayer, Target
+ from orm.models import CustomImageRecipe
+ from orm.models import Branch
+ 
+ from toastergui.tables import SoftwareRecipesTable
+-from django.utils import timezone
+-import json
+ from bs4 import BeautifulSoup
++import json
+ import re
+ 
+ PROJECT_NAME = "test project"
+@@ -72,11 +69,11 @@ class ViewTests(TestCase):
+                                             up_branch=branch)
+ 
+         self.recipe1 = Recipe.objects.create(layer_source=layersrc,
+-                                       name="base-recipe",
+-                                       version="1.2",
+-                                       summary="one recipe",
+-                                       description="recipe",
+-                                       layer_version=lver)
++                                             name="base-recipe",
++                                             version="1.2",
++                                             summary="one recipe",
++                                             description="recipe",
++                                             layer_version=lver)
+ 
+         Machine.objects.create(layer_version=lver, name="wisk",
+                                description="wisking machine")
+@@ -337,11 +334,7 @@ class ViewTests(TestCase):
+ 
+         rows = data['rows']
+         row1 = next(x for x in rows if x['name'] == self.recipe1.name)
+-        row1_btns = row1['static:add-del-layers']
+-        row1_btns_data = row1['add-del-layers']
+         row2 = next(x for x in rows if x['name'] == self.recipe2.name)
+-        row2_btns = row2['static:add-del-layers']
+-        row2_btns_data = row2['add-del-layers']
+ 
+         self.assertEqual(response.status_code, 200, 'should be 200 OK status')
+         self.assertEqual(len(rows), 2, 'should be 2 recipes')
+@@ -472,7 +465,7 @@ class ProjectsPageTests(TestCase):
+         self.assertTrue(self.PROJECT_NAME in response.content,
+                         'default project "cli builds" should be in page')
+ 
+-class ProjectBuildsDisplayTest(TestCase):
++class ProjectBuildsPageTests(TestCase):
+     """ Test data at /project/X/builds is displayed correctly """
+ 
+     def setUp(self):
+@@ -517,6 +510,7 @@ class ProjectBuildsDisplayTest(TestCase):
+         }
+ 
+     def _get_rows_for_project(self, project_id):
++        """ Helper to retrieve HTML rows for a project """
+         url = reverse("projectbuilds", args=(project_id,))
+         response = self.client.get(url, follow=True)
+         soup = BeautifulSoup(response.content)
+@@ -524,52 +518,73 @@ class ProjectBuildsDisplayTest(TestCase):
+ 
+     def test_show_builds_for_project(self):
+         """ Builds for a project should be displayed """
+-        build1a = Build.objects.create(**self.project1_build_success)
+-        build1b = Build.objects.create(**self.project1_build_success)
++        Build.objects.create(**self.project1_build_success)
++        Build.objects.create(**self.project1_build_success)
+         build_rows = self._get_rows_for_project(self.project1.id)
+         self.assertEqual(len(build_rows), 2)
+ 
+-    def test_show_builds_for_project_only(self):
++    def test_show_builds_project_only(self):
+         """ Builds for other projects should be excluded """
+-        build1a = Build.objects.create(**self.project1_build_success)
+-        build1b = Build.objects.create(**self.project1_build_success)
+-        build1c = Build.objects.create(**self.project1_build_success)
++        Build.objects.create(**self.project1_build_success)
++        Build.objects.create(**self.project1_build_success)
++        Build.objects.create(**self.project1_build_success)
+ 
+         # shouldn't see these two
+-        build2a = Build.objects.create(**self.project2_build_success)
+-        build2b = Build.objects.create(**self.project2_build_in_progress)
++        Build.objects.create(**self.project2_build_success)
++        Build.objects.create(**self.project2_build_in_progress)
+ 
+         build_rows = self._get_rows_for_project(self.project1.id)
+         self.assertEqual(len(build_rows), 3)
+ 
+-    def test_show_builds_exclude_in_progress(self):
++    def test_builds_exclude_in_progress(self):
+         """ "in progress" builds should not be shown """
+-        build1a = Build.objects.create(**self.project1_build_success)
+-        build1b = Build.objects.create(**self.project1_build_success)
++        Build.objects.create(**self.project1_build_success)
++        Build.objects.create(**self.project1_build_success)
+ 
+         # shouldn't see this one
+-        build1c = Build.objects.create(**self.project1_build_in_progress)
++        Build.objects.create(**self.project1_build_in_progress)
+ 
+         # shouldn't see these two either, as they belong to a different project
+-        build2a = Build.objects.create(**self.project2_build_success)
+-        build2b = Build.objects.create(**self.project2_build_in_progress)
++        Build.objects.create(**self.project2_build_success)
++        Build.objects.create(**self.project2_build_in_progress)
+ 
+         build_rows = self._get_rows_for_project(self.project1.id)
+         self.assertEqual(len(build_rows), 2)
+ 
+-    def test_show_tasks_in_projectbuilds(self):
++    def test_tasks_in_projectbuilds(self):
++        """ Task should be shown as suffix on build name """
+         build = Build.objects.create(**self.project1_build_success)
+-        target = Target.objects.create(build=build, target='bash',
+-                                       task='clean')
++        Target.objects.create(build=build, target='bash', task='clean')
+         url = reverse("projectbuilds", args=(self.project1.id,))
+         response = self.client.get(url, follow=True)
+         result = re.findall('^ +bash:clean$', response.content, re.MULTILINE)
+         self.assertEqual(len(result), 2)
+ 
++class AllBuildsPageTests(TestCase):
++    """ Tests for all builds page """
++
++    def setUp(self):
++        bbv = BitbakeVersion.objects.create(name="bbv1", giturl="/tmp/",
++                                            branch="master", dirpath="")
++        release = Release.objects.create(name="release1",
++                                         bitbake_version=bbv)
++        self.project1 = Project.objects.create_project(name=PROJECT_NAME,
++                                                       release=release)
++
++        # parameters for builds to associate with the projects
++        now = timezone.now()
++
++        self.project1_build_success = {
++            "project": self.project1,
++            "started_on": now,
++            "completed_on": now,
++            "outcome": Build.SUCCEEDED
++        }
++
+     def test_show_tasks_in_allbuilds(self):
++        """ Task should be shown as suffix on build name """
+         build = Build.objects.create(**self.project1_build_success)
+-        target = Target.objects.create(build=build, target='bash',
+-                                       task='clean')
++        Target.objects.create(build=build, target='bash', task='clean')
+         url = reverse("all-builds")
+         response = self.client.get(url, follow=True)
+         result = re.findall('bash:clean', response.content, re.MULTILINE)
 -- 
 2.1.4
 
