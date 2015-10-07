@@ -1,21 +1,25 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 3252C60125
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 2FD7C60125
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  7 Oct 2015 13:55:01 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by fmsmga103.fm.intel.com with ESMTP; 07 Oct 2015 06:55:02 -0700
+	Wed,  7 Oct 2015 13:55:26 +0000 (UTC)
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga103.jf.intel.com with ESMTP; 07 Oct 2015 06:55:25 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,649,1437462000"; d="scan'208";a="575860831"
+X-IronPort-AV: E=Sophos;i="5.17,649,1437462000"; d="scan'208";a="786677544"
 Received: from cdoyle2-mobl2.amr.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.3.38])
-	by FMSMGA003.fm.intel.com with ESMTP; 07 Oct 2015 06:55:00 -0700
+	by orsmga001.jf.intel.com with ESMTP; 07 Oct 2015 06:55:19 -0700
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  7 Oct 2015 14:54:52 +0100
-Message-Id: <cover.1444225939.git.elliot.smith@intel.com>
+Date: Wed,  7 Oct 2015 14:55:08 +0100
+Message-Id: <eb79129121bacccd9ba6d5cc6dbf78c9749b6509.1444225939.git.elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
-Subject: [PATCH 0/2] toaster: buildinfohelper fixes
+In-Reply-To: <1870fdfb0c4c5abd8b562b1839f1696bca380b8f.1444225939.git.elliot.smith@intel.com>
+References: <1870fdfb0c4c5abd8b562b1839f1696bca380b8f.1444225939.git.elliot.smith@intel.com>
+In-Reply-To: <cover.1444225939.git.elliot.smith@intel.com>
+References: <cover.1444225939.git.elliot.smith@intel.com>
+Subject: [PATCH 2/2] toaster: buildinfohelper Skip packages we have no build info about
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,46 +32,104 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 07 Oct 2015 13:55:03 -0000
+X-List-Received-Date: Wed, 07 Oct 2015 13:55:27 -0000
 
-Two patches which fix regressions in the build -> toaster.
+From: Michael Wood <michael.g.wood@intel.com>
 
-1. The first is where the recipe in the build history is linking to the
-recipe that is Toaster's data rather than the build's data.
+If there are more packages listed as installed than we know about from
+bitbake, and therefore have insufficient information to be able to
+create a Toaster Package object then skip it. Also handle the case where
+a dependency references such a package.
 
-This fixes an issue identified by Belen:
+Also clarify the error logging.
 
-"The recipes table in the build history is linking to the wrong recipe
-id. The recipe details page appears empty but if you access the same
-recipe from the package details page, you get to a recipe with the same
-name and version, but different recipe id, that has all the information
-from the build. To reproduce, build core-image-minimal. When the build
-completes, go to the recipes page and search for busybox: click through to
-the recipe details page. It's empty. Now click the image name on the left
-nav to see the list of packages installed. Search for 'busybox'. Click
-through to the package details page. Then, on the right hand side
-information about the package, click the busybox recipe name. The page is
-no longer empty: in fact, it's a different recipe id."
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+---
+ lib/bb/ui/buildinfohelper.py | 42 +++++++++++++++++++++++++++++++-----------
+ 1 file changed, 31 insertions(+), 11 deletions(-)
 
-2. The second patch avoids the buildinfo helper bailing out when there are more packages reported by the ImagePkgs event data than have currently been provided by the all packages list. We get the meta data for a package - including its dependencies from this "all packages". Also improved the error logging to make it clearer what is actually happening.
-
-The following changes since commit 18decad837a86b220bc549eec432f94f55510fcb:
-
-  toaster: Modify "New build" button behaviour for cli builds project (2015-10-07 16:14:03 +0300)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib elliot/submit/michaelw/toaster/buildinfo-fixes
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=elliot/submit/michaelw/toaster/buildinfo-fixes
-
-Michael Wood (2):
-  toaster: buildinfohelper associate build data with built_recipe
-  toaster: buildinfohelper Skip packages we have no build info about
-
- lib/bb/ui/buildinfohelper.py | 45 ++++++++++++++++++++++++++++++++------------
- 1 file changed, 33 insertions(+), 12 deletions(-)
-
---
+diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
+index 9195584..67c239e 100644
+--- a/lib/bb/ui/buildinfohelper.py
++++ b/lib/bb/ui/buildinfohelper.py
+@@ -319,7 +319,7 @@ class ORMWrapper(object):
+                             commit=layer_version_information['commit'],
+                             local_path = layer_version_information['local_path'],
+                             )
+-            logger.warning("created new historical layer version %d", layer_copy.pk)
++            logger.info("created new historical layer version %d", layer_copy.pk)
+ 
+             self.layer_version_built.append(layer_copy)
+ 
+@@ -510,6 +510,12 @@ class ORMWrapper(object):
+         errormsg = ""
+         for p in packagedict:
+             searchname = p
++            if p not in pkgpnmap:
++                logger.warning("Image packages list contains %p, but is"
++                               " missing from all packages list where the"
++                               " metadata comes from. Skipping...", p)
++                continue
++
+             if 'OPKGN' in pkgpnmap[p].keys():
+                 searchname = pkgpnmap[p]['OPKGN']
+ 
+@@ -553,13 +559,20 @@ class ORMWrapper(object):
+                 elif deptype == 'recommends':
+                     tdeptype = Package_Dependency.TYPE_TRECOMMENDS
+ 
+-                packagedeps_objs.append(Package_Dependency( package = packagedict[p]['object'],
+-                                        depends_on = packagedict[px]['object'],
+-                                        dep_type = tdeptype,
+-                                        target = target_obj))
++                try:
++                    packagedeps_objs.append(Package_Dependency(
++                        package = packagedict[p]['object'],
++                        depends_on = packagedict[px]['object'],
++                        dep_type = tdeptype,
++                        target = target_obj))
++                except KeyError as e:
++                    logger.warn("Could not add dependency to the package %s "
++                                "because %s is an unknown package", p, px)
+ 
+         if len(packagedeps_objs) > 0:
+             Package_Dependency.objects.bulk_create(packagedeps_objs)
++        else:
++            logger.info("No package dependencies created")
+ 
+         if len(errormsg) > 0:
+             logger.warn("buildinfohelper: target_package_info could not identify recipes: \n%s", errormsg)
+@@ -1160,15 +1173,22 @@ class BuildInfoHelper(object):
+         # for all image targets
+         for target in self.internal_state['targets']:
+             if target.is_image:
++                pkgdata = BuildInfoHelper._get_data_from_event(event)['pkgdata']
++                imgdata = BuildInfoHelper._get_data_from_event(event)['imgdata'][target.target]
++                filedata = BuildInfoHelper._get_data_from_event(event)['filedata'][target.target]
++
+                 try:
+-                    pkgdata = BuildInfoHelper._get_data_from_event(event)['pkgdata']
+-                    imgdata = BuildInfoHelper._get_data_from_event(event)['imgdata'][target.target]
+                     self.orm_wrapper.save_target_package_information(self.internal_state['build'], target, imgdata, pkgdata, self.internal_state['recipes'])
+-                    filedata = BuildInfoHelper._get_data_from_event(event)['filedata'][target.target]
++                except KeyError as e:
++                    logger.warn("KeyError in save_target_package_information"
++                                "%s ", e)
++
++                try:
+                     self.orm_wrapper.save_target_file_information(self.internal_state['build'], target, filedata)
+-                except KeyError:
+-                    # we must have not got the data for this image, nothing to save
+-                    pass
++                except KeyError as e:
++                    logger.warn("KeyError in save_target_file_information"
++                                "%s ", e)
++
+ 
+ 
+ 
+-- 
 1.9.3
 
 ---------------------------------------------------------------------
