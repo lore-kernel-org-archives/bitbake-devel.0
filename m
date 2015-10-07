@@ -1,28 +1,27 @@
 Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 8649076AC5
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 058F276AC5
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  7 Oct 2015 13:21:59 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by orsmga103.jf.intel.com with ESMTP; 07 Oct 2015 06:22:00 -0700
+	Wed,  7 Oct 2015 13:22:09 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by orsmga101.jf.intel.com with ESMTP; 07 Oct 2015 06:22:11 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,649,1437462000"; 
-	d="scan'208,217";a="659587991"
+X-IronPort-AV: E=Sophos;i="5.17,649,1437462000"; d="scan'208";a="821409068"
 Received: from linux.intel.com ([10.23.219.25])
-	by orsmga003.jf.intel.com with ESMTP; 07 Oct 2015 06:22:01 -0700
+	by fmsmga002.fm.intel.com with ESMTP; 07 Oct 2015 06:22:09 -0700
 Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id 8EDEB6A4087;
-	Wed,  7 Oct 2015 06:21:02 -0700 (PDT)
+	by linux.intel.com (Postfix) with ESMTP id CFDC46A4083;
+	Wed,  7 Oct 2015 06:21:11 -0700 (PDT)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  7 Oct 2015 16:20:49 +0300
-Message-Id: <a6bd0684f84bd04cc6fe05dd4bb16cc032e0c073.1444223946.git.ed.bartosh@linux.intel.com>
+Date: Wed,  7 Oct 2015 16:20:50 +0300
+Message-Id: <ef5c6194ac5d7c67c7840fb43a23ef93f4f8f28b.1444223946.git.ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <b8bbed3da4991f25019c6e0319fb5880b7f403bd.1444223946.git.ed.bartosh@linux.intel.com>
 References: <b8bbed3da4991f25019c6e0319fb5880b7f403bd.1444223946.git.ed.bartosh@linux.intel.com>
 In-Reply-To: <cover.1444223946.git.ed.bartosh@linux.intel.com>
 References: <cover.1444223946.git.ed.bartosh@linux.intel.com>
-Subject: [PATCH 04/10] toaster: Make the builds view the project page for "command line builds"
+Subject: [PATCH 05/10] toaster: Hide tabs and add info popups for command line builds
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,249 +34,248 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 07 Oct 2015 13:22:02 -0000
+X-List-Received-Date: Wed, 07 Oct 2015 13:22:10 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-Command line builds don't have configuration or layers which can
-be manipulated in Toaster, so these pages shouldn't be visible.
-However, the configuration page is the default page for the
-project view (/project/X/), which isn't correct for the
-command line builds project.
+Command line builds don't have a configuration or
+layers which can be modified through Toaster.
 
-Modify all project page links across the application so that
-the command line builds project (aka the "default" project)
-always displays the builds tab.
-
-Add a project_url tag for templates which contains the logic
-determining where the URL for a project links to, based on
-whether it is the default project or not.
+Change the project builds page for the command line builds project,
+to hide the tabs and add some info popups in appropriate places on
+that page.
 
 [YOCTO #8231]
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- lib/toaster/toastergui/templates/base.html         |  5 +--
- lib/toaster/toastergui/templates/builds.html       |  3 +-
- lib/toaster/toastergui/templates/mrb_section.html  |  6 ++--
- lib/toaster/toastergui/templates/projects.html     |  7 ++--
- .../toastergui/templatetags/project_url_tag.py     | 34 +++++++++++++++++++
- lib/toaster/toastergui/tests.py                    | 38 ++++++++++++++++++++--
- 6 files changed, 82 insertions(+), 11 deletions(-)
- create mode 100644 bitbake/lib/toaster/toastergui/templatetags/project_url_tag.py
+ lib/toaster/toastergui/static/js/base.js           | 12 ++--
+ lib/toaster/toastergui/templates/mrb_section.html  |  4 ++
+ .../toastergui/templates/projecttopbar.html        | 80 ++++++++++++----------
+ lib/toaster/toastergui/tests.py                    | 41 +++++++++++
+ 4 files changed, 94 insertions(+), 43 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
-index 640bc47..3f27790 100644
---- a/lib/toaster/toastergui/templates/base.html
-+++ b/lib/toaster/toastergui/templates/base.html
-@@ -1,6 +1,7 @@
- <!DOCTYPE html>
- {% load static %}
- {% load projecttags %}
-+{% load project_url_tag %}
- <html lang="en">
-     <head>
-         <title>{% if objectname %} {{objectname|title}} - {% endif %}Toaster</title>
-@@ -35,7 +36,7 @@
-         projectsTypeAheadUrl: {% url 'xhr_projectstypeahead' as prjurl%}{{prjurl|json}},
-         {% if project.id %}
-         projectId : {{project.id}},
--        projectPageUrl : {% url 'project' project.id as purl%}{{purl|json}},
-+        projectPageUrl : {% url 'project' project.id as purl %}{{purl|json}},
-         projectName : {{project.name|json}},
-         recipesTypeAheadUrl: {% url 'xhr_recipestypeahead' project.id as paturl%}{{paturl|json}},
-         layersTypeAheadUrl: {% url 'xhr_layerstypeahead' project.id as paturl%}{{paturl|json}},
-@@ -133,7 +134,7 @@
-                 <h6>Project:</h6>
-                 <span id="project">
-                   {% if project.id %}
--                  <a class="lead" href="{% url 'project' project.id %}">{{project.name}}</a>
-+                  <a class="lead" href="{% project_url project %}">{{project.name}}</a>
-                   {% else %}
-                   <a class="lead" href="#"></a>
-                   {% endif %}
-diff --git a/lib/toaster/toastergui/templates/builds.html b/lib/toaster/toastergui/templates/builds.html
-index 2b35b01..6fbaf98 100644
---- a/lib/toaster/toastergui/templates/builds.html
-+++ b/lib/toaster/toastergui/templates/builds.html
-@@ -2,6 +2,7 @@
+diff --git a/lib/toaster/toastergui/static/js/base.js b/lib/toaster/toastergui/static/js/base.js
+index 895e61b..6042a96 100644
+--- a/lib/toaster/toastergui/static/js/base.js
++++ b/lib/toaster/toastergui/static/js/base.js
+@@ -6,6 +6,7 @@ function basePageInit(ctx) {
+   var newBuildTargetInput;
+   var newBuildTargetBuildBtn;
+   var projectNameForm = $("#project-name-change-form");
++  var projectNameContainer = $("#project-name-container");
+   var projectName = $("#project-name");
+   var projectNameFormToggle = $("#project-change-form-toggle");
+   var projectNameChangeCancel = $("#project-name-change-cancel");
+@@ -23,24 +24,21 @@ function basePageInit(ctx) {
+   /* Project name change functionality */
+   projectNameFormToggle.click(function(e){
+     e.preventDefault();
+-
+-    $(this).add(projectName).hide();
++    projectNameContainer.hide();
+     projectNameForm.fadeIn();
+   });
  
- {% load static %}
- {% load projecttags %}
-+{% load project_url_tag %}
- {% load humanize %}
+   projectNameChangeCancel.click(function(e){
+     e.preventDefault();
+-
+     projectNameForm.hide();
+-    projectName.add(projectNameFormToggle).fadeIn();
++    projectNameContainer.fadeIn();
+   });
  
- {% block extraheadcontent %}
-@@ -104,7 +105,7 @@
-               {% endif %}
-             </td>
-         <td>
--                <a href="{% url 'project' build.project.id %}">{{build.project.name}}</a>
-+                <a href="{% project_url build.project %}">{{build.project.name}}</a>
-             </td>
-         </tr>
+   $("#project-name-change-btn").click(function(e){
+     var newProjectName = $("#project-name-change-input").val();
  
+-    libtoaster.editCurrentProject({ projectName: newProjectName },function (){
+-
+-      projectName.text(newProjectName);
++    libtoaster.editCurrentProject({ projectName: newProjectName }, function (){
++      projectName.html(newProjectName);
+       libtoaster.ctx.projectName = newProjectName;
+       projectNameChangeCancel.click();
+     });
 diff --git a/lib/toaster/toastergui/templates/mrb_section.html b/lib/toaster/toastergui/templates/mrb_section.html
-index 5e96b39..b29f650 100644
+index b29f650..53f40d0 100644
 --- a/lib/toaster/toastergui/templates/mrb_section.html
 +++ b/lib/toaster/toastergui/templates/mrb_section.html
-@@ -1,8 +1,8 @@
- {% load static %}
- {% load projecttags %}
-+{% load project_url_tag %}
- {% load humanize %}
- 
--
- {%if mru and mru.count > 0%}
- 
+@@ -8,6 +8,10 @@
    {%if mrb_type == 'project' %}
-@@ -22,7 +22,7 @@
-     {% if mrb_type != 'project' %}
-     project-name">
-        <span class="label {%if build.outcome == build.SUCCEEDED%}label-success{%elif build.outcome == build.FAILED%}label-important{%else%}label-info{%endif%}">
--         <a href={% url 'project' build.project.pk %}>
-+         <a href={% project_url build.project %}>
-            {{build.project.name}}
-          </a>
-        </span>
-@@ -106,7 +106,7 @@
-                       pull-right"
-                       onclick='scheduleBuild({% url 'projectbuilds' build.project.id as bpi %}{{bpi|json}},
-                         {{build.project.name|json}},
--                        {% url 'project' build.project.id as bpurl %}{{bpurl|json}},
-+                        {% url 'project' build.project.id as purl %}{{purl|json}},
-                         {{build.target_set.all|get_tasks|json}})'>
+       <h2>
+       Latest project builds
++
++      {% if project.is_default %}
++          <i class="icon-question-sign get-help heading-help" title="" data-original-title="Builds in this project cannot be started from Toaster: they are started from the command line"></i>
++      {% endif %}
+       </h2>
+   {% else %}
+     <div class="page-header">
+diff --git a/lib/toaster/toastergui/templates/projecttopbar.html b/lib/toaster/toastergui/templates/projecttopbar.html
+index a3d1b88..ee86b54 100644
+--- a/lib/toaster/toastergui/templates/projecttopbar.html
++++ b/lib/toaster/toastergui/templates/projecttopbar.html
+@@ -5,8 +5,14 @@
  
-                         Run again
-diff --git a/lib/toaster/toastergui/templates/projects.html b/lib/toaster/toastergui/templates/projects.html
-index a7192c2..7c612e8 100644
---- a/lib/toaster/toastergui/templates/projects.html
-+++ b/lib/toaster/toastergui/templates/projects.html
-@@ -2,6 +2,7 @@
+ <!-- project name -->
+ <div class="page-header">
+-  <h1><span id="project-name">{{project.name}}</span>
++  <h1 id="project-name-container">
++    <span id="project-name">{{project.name}}</span>
++
+     <i class="icon-pencil" data-original-title="" id="project-change-form-toggle" title=""></i>
++
++    {% if project.is_default %}
++        <i class="icon-question-sign get-help heading-help" title="" data-original-title="This project shows information about the builds you start from the command line while Toaster is running"></i>
++    {% endif %}
+   </h1>
+   <form id="project-name-change-form" style="margin-bottom: 0px; display: none;">
+     <div class="input-append">
+@@ -17,38 +23,40 @@
+   </form>
+ </div>
  
- {% load static %}
- {% load projecttags %}
-+{% load project_url_tag %}
- {% load humanize %}
- 
- {% block pagecontent %}
-@@ -37,8 +38,10 @@
-   {% include "basetable_top.html" %}
-   {% for o in objects %}
-     <tr class="data" data-project="{{ o.id }}">
--      <td><a href="{% url 'project' o.id %}">{{o.name}}</a></td>
--      <td class="updated"><a href="{% url 'project' o.id %}">{{o.updated|date:"d/m/y H:i"}}</a></td>
-+      <td data-project-field="name">
-+          <a href="{% project_url o %}">{{o.name}}</a>
-+      </td>
-+      <td class="updated"><a href="{% project_url o %}">{{o.updated|date:"d/m/y H:i"}}</a></td>
-       <td data-project-field="release">
-         {% if o.release %}
-             <a href="{% url 'project' o.id %}#project-details">{{o.release.name}}</a>
-diff --git a/lib/toaster/toastergui/templatetags/project_url_tag.py b/lib/toaster/toastergui/templatetags/project_url_tag.py
-new file mode 100644
-index 0000000..04770ac
---- /dev/null
-+++ b/lib/toaster/toastergui/templatetags/project_url_tag.py
-@@ -0,0 +1,34 @@
-+from django import template
-+from django.core.urlresolvers import reverse
-+
-+register = template.Library()
-+
-+def project_url(parser, token):
-+    """
-+    Create a URL for a project's main page;
-+    for non-default projects, this is the configuration page;
-+    for the default project, this is the project builds page
-+    """
-+    try:
-+        tag_name, project = token.split_contents()
-+    except ValueError:
-+        raise template.TemplateSyntaxError(
-+            "%s tag requires exactly one argument" % tag_name
-+        )
-+    return ProjectUrlNode(project)
-+
-+class ProjectUrlNode(template.Node):
-+    def __init__(self, project):
-+        self.project = template.Variable(project)
-+
-+    def render(self, context):
-+        try:
-+            project = self.project.resolve(context)
-+            if project.is_default:
-+                return reverse('projectbuilds', args=(project.id,))
-+            else:
-+                return reverse('project', args=(project.id,))
-+        except template.VariableDoesNotExist:
-+            return ''
-+
-+register.tag('project_url', project_url)
+-<div id="project-topbar">
+-  <ul class="nav nav-pills">
+-    <li>
+-      <a href="{% url 'projectbuilds' project.id %}">
+-        Builds (<span class="total-builds">0</span>)
+-      </a>
+-    </li>
+-    <li id="topbar-configuration-tab">
+-      <a href="{% url 'project' project.id %}">
+-        Configuration
+-      </a>
+-    </li>
+-    <li>
+-      <a href="{% url 'importlayer' project.id %}">
+-        Import layer
+-      </a>
+-    </li>
+-    {% if CUSTOM_IMAGE %}
+-    <li>
+-      <a href="{% url 'newcustomimage' project.id %}">
+-        New custom image
+-      </a>
+-    </li>
+-    {% endif %}
+-    <li class="pull-right">
+-      <form class="form-inline" style="margin-bottom:0px;">
+-        <i class="icon-question-sign get-help heading-help" data-placement="left" title="" data-original-title="Type the name of one or more recipes you want to build, separated by a space. You can also specify a task by appending a semicolon and a task name to the recipe name, like so: <code>busybox:clean</code>"></i>
+-        <div class="input-append">
+-          <input id="build-input" type="text" class="input-xlarge input-lg build-target-input" placeholder="Type the recipe you want to build" autocomplete="off" disabled>
+-          <button id="build-button" class="btn btn-primary btn-large build-button" data-project-id="{{project.id}}" disabled>Build</button>
+-        </div>
+-      </form>
+-    </li>
+-  </ul>
+-</div>
++{% if not project.is_default %}
++  <div id="project-topbar">
++    <ul class="nav nav-pills">
++      <li>
++        <a href="{% url 'projectbuilds' project.id %}">
++          Builds (<span class="total-builds">0</span>)
++        </a>
++      </li>
++      <li id="topbar-configuration-tab">
++        <a href="{% url 'project' project.id %}">
++          Configuration
++        </a>
++      </li>
++      <li>
++        <a href="{% url 'importlayer' project.id %}">
++          Import layer
++        </a>
++      </li>
++      {% if CUSTOM_IMAGE %}
++      <li>
++        <a href="{% url 'newcustomimage' project.id %}">
++          New custom image
++        </a>
++      </li>
++      {% endif %}
++      <li class="pull-right">
++        <form class="form-inline" style="margin-bottom:0px;">
++          <i class="icon-question-sign get-help heading-help" data-placement="left" title="" data-original-title="Type the name of one or more recipes you want to build, separated by a space. You can also specify a task by appending a semicolon and a task name to the recipe name, like so: <code>busybox:clean</code>"></i>
++          <div class="input-append">
++            <input id="build-input" type="text" class="input-xlarge input-lg build-target-input" placeholder="Type the recipe you want to build" autocomplete="off" disabled>
++            <button id="build-button" class="btn btn-primary btn-large build-button" data-project-id="{{project.id}}" disabled>Build</button>
++          </div>
++        </form>
++      </li>
++    </ul>
++  </div>
++{% endif %}
 diff --git a/lib/toaster/toastergui/tests.py b/lib/toaster/toastergui/tests.py
-index 0b85d4f..12a91c3 100644
+index 12a91c3..0d56ab2 100644
 --- a/lib/toaster/toastergui/tests.py
 +++ b/lib/toaster/toastergui/tests.py
-@@ -428,8 +428,8 @@ class LandingPageTests(TestCase):
-         self.assertTrue('/builds' in response.url,
-                         'should redirect to builds')
+@@ -596,8 +596,18 @@ class ProjectBuildsPageTests(TestCase):
+                                          bitbake_version=bbv)
+         self.project1 = Project.objects.create_project(name=PROJECT_NAME,
+                                                        release=release)
++        self.project1.save()
++
+         self.project2 = Project.objects.create_project(name=PROJECT_NAME,
+                                                        release=release)
++        self.project2.save()
++
++        self.default_project = Project.objects.create_project(
++            name=CLI_BUILDS_PROJECT_NAME,
++            release=release
++        )
++        self.default_project.is_default = True
++        self.default_project.save()
  
--class ProjectsPageTests(TestCase):
--    """ Tests for projects page """
-+class AllProjectsPageTests(TestCase):
-+    """ Tests for projects page /projects/ """
+         # parameters for builds to associate with the projects
+         now = timezone.now()
+@@ -630,6 +640,13 @@ class ProjectBuildsPageTests(TestCase):
+             "outcome": Build.IN_PROGRESS
+         }
  
-     MACHINE_NAME = 'delorean'
- 
-@@ -554,6 +554,38 @@ class ProjectsPageTests(TestCase):
-         self.assertEqual(text, self.MACHINE_NAME,
-                          'machine name should be shown for non-default project')
- 
-+    def test_project_page_links(self):
-+        """
-+        Test that links for the default project point to the builds
-+        page /projects/X/builds for that project, and that links for
-+        other projects point to their configuration pages /projects/X/
-+        """
++        self.default_project_build_success = {
++            "project": self.default_project,
++            "started_on": now,
++            "completed_on": now,
++            "outcome": Build.SUCCEEDED
++        }
 +
-+        # need a build, otherwise project doesn't display at all
-+        self._add_build_to_default_project()
-+
-+        # another project to test, which should show machine
-+        self._add_non_default_project()
-+
-+        response = self.client.get(reverse('all-projects'), follow=True)
-+        soup = BeautifulSoup(response.content)
-+
-+        # link for default project
-+        row = soup.find('tr', attrs={'data-project': self.default_project.id})
-+        cell = row.find('td', attrs={'data-project-field': 'name'})
-+        url = cell.find('a')['href']
-+        expected_url = reverse('projectbuilds', args=(self.default_project.id,))
-+        self.assertEqual(url, expected_url,
-+                         'link on default project name should point to builds')
-+
-+        # link for other project
-+        row = soup.find('tr', attrs={'data-project': self.project.id})
-+        cell = row.find('td', attrs={'data-project-field': 'name'})
-+        url = cell.find('a')['href']
-+        expected_url = reverse('project', args=(self.project.id,))
-+        self.assertEqual(url, expected_url,
-+                         'link on project name should point to configuration')
-+
- class ProjectBuildsPageTests(TestCase):
-     """ Test data at /project/X/builds is displayed correctly """
- 
-@@ -650,7 +682,7 @@ class ProjectBuildsPageTests(TestCase):
+     def _get_rows_for_project(self, project_id):
+         """ Helper to retrieve HTML rows for a project """
+         url = reverse("projectbuilds", args=(project_id,))
+@@ -681,6 +698,30 @@ class ProjectBuildsPageTests(TestCase):
+         result = re.findall('^ +bash:clean$', response.content, re.MULTILINE)
          self.assertEqual(len(result), 2)
  
++    def test_cli_builds_hides_tabs(self):
++        """
++        Display for command line builds should hide tabs;
++        note that the latest builds section is already tested in
++        AllBuildsPageTests, as the template is the same
++        """
++        url = reverse("projectbuilds", args=(self.default_project.id,))
++        response = self.client.get(url, follow=True)
++        soup = BeautifulSoup(response.content)
++        tabs = soup.select('#project-topbar')
++        self.assertEqual(len(tabs), 0,
++                         'should be no top bar shown for command line builds')
++
++    def test_non_cli_builds_has_tabs(self):
++        """
++        Non-command-line builds projects should show the tabs
++        """
++        url = reverse("projectbuilds", args=(self.project1.id,))
++        response = self.client.get(url, follow=True)
++        soup = BeautifulSoup(response.content)
++        tabs = soup.select('#project-topbar')
++        self.assertEqual(len(tabs), 1,
++                         'should be a top bar shown for non-command-line builds')
++
  class AllBuildsPageTests(TestCase):
--    """ Tests for all builds page """
-+    """ Tests for all builds page /builds/ """
+     """ Tests for all builds page /builds/ """
  
-     def setUp(self):
-         bbv = BitbakeVersion.objects.create(name="bbv1", giturl="/tmp/",
 -- 
 2.1.4
 
