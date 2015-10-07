@@ -1,37 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f51.google.com (mail-pa0-f51.google.com
-	[209.85.220.51])
-	by mail.openembedded.org (Postfix) with ESMTP id 70C7373D26
+Received: from mail-pa0-f54.google.com (mail-pa0-f54.google.com
+	[209.85.220.54])
+	by mail.openembedded.org (Postfix) with ESMTP id 8563573CF2
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  7 Oct 2015 03:03:30 +0000 (UTC)
-Received: by pacfv12 with SMTP id fv12so6282676pac.2
+	Wed,  7 Oct 2015 03:03:31 +0000 (UTC)
+Received: by pablk4 with SMTP id lk4so6111972pab.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 06 Oct 2015 20:03:31 -0700 (PDT)
+	Tue, 06 Oct 2015 20:03:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=hCV7B9hsjsS8WWK5t1u5gu/mFO+yvOLlb0VdKqp2z+o=;
-	b=W+Z27mrQwVvOURGpiq5MMcvilgqrir+L5t1XlrcYYrolD3sqmDxZOyEo+YbuoNOYIE
-	/DBI/d9Nnr/0ZKaEQC1eSqX1dz+jLkhlp0c0btoNj7Txp6oC09OJZpwQ9fNMcCHZPJ66
-	GdXWBOyrIr8XG+kSIIhkIlmLUM7kh0+l+C6BC9RielANmJ+HDHN7qIDELRE4JLKFwZG0
-	CGh44K4lAIejjBEdsG5rdcL13qkjCwm/d6mCpi+NJtR7VRcS15cphD3Tb+mRFB5Sax9A
-	ZAeZe+iOHaiAi4dhOyqd4nmKnxsX7d9G5ct59EZ4ibZcXHSuzQflfgsae2bBVqyWUjW+
-	lgAA==
-X-Received: by 10.66.235.4 with SMTP id ui4mr5969047pac.129.1444187011155;
+	h=from:to:cc:subject:date:message-id:in-reply-to:references
+	:in-reply-to:references;
+	bh=wELUZ0puSgW7szF2PM1Ro3EabAqWNtUJkXlMWy+Es8A=;
+	b=VauGvDXOqqXJFHCLK2mfuqZGnhbz+Zz3gje0JGc2TXM5DwbQvZKuoNERWuxevFRltU
+	TUN0tYmdhYcHq2L5e3OFrPEpHERB9di1xboO86qg8RyXFcKIM8gFjDveh3qD8PTugSg0
+	qhj2SMhjxRBehaX7dHFnupbiXQMxn196+oOyZ40Xac/Qthfp6zNBB2FYd235HBGAE4DP
+	sp1LIewOSpI5o14gxNLn9w9NFNpT91QrMD6PvHiyVPd19uE0Nq8yOCbTnUkpAPw0cqc+
+	nVffjggnnyR39MGBeyOmT6KTEN08dB8j3KC8Spy8U2PoQ4RxxvwrYqKnFw86DJTnH06q
+	1JPw==
+X-Received: by 10.66.251.35 with SMTP id zh3mr51253945pac.121.1444187011957;
 	Tue, 06 Oct 2015 20:03:31 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	pk2sm36154214pbb.21.2015.10.06.20.03.30
+	pk2sm36154214pbb.21.2015.10.06.20.03.31
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 06 Oct 2015 20:03:30 -0700 (PDT)
+	Tue, 06 Oct 2015 20:03:31 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  6 Oct 2015 20:05:21 -0700
-Message-Id: <3030554491f72bca7e6256b2af8602780e180177.1444187051.git.avery.brian@gmail.com>
+Date: Tue,  6 Oct 2015 20:05:22 -0700
+Message-Id: <b0833604e6b67c93abee7eb8a791c1ea298f4da9.1444187051.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <3030554491f72bca7e6256b2af8602780e180177.1444187051.git.avery.brian@gmail.com>
+References: <3030554491f72bca7e6256b2af8602780e180177.1444187051.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1444187051.git.avery.brian@gmail.com>
 References: <cover.1444187051.git.avery.brian@gmail.com>
-Subject: [PATCH 1/2] toaster: Use Python's mimetypes module
+Subject: [PATCH 2/2] toaster: Rationalise mimetype guessing to fix artifact downloads
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,74 +47,87 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 07 Oct 2015 03:03:31 -0000
+X-List-Received-Date: Wed, 07 Oct 2015 03:03:32 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-filemagic is used to guess the mimetype of files when a user
-requests a download. However, this adds a dependency on an
-external library.
+Artifact download links were broken because the function to
+get the mimetype for the artifact was incorrectly using the
+underlying mimetype library. The function was also attached
+to the build environment controller, which was unnecessary, as
+we only support local controllers anyway.
 
-Python does have a mimetypes module, though this guesses the
-mimetype rather than doing anything clever with the actual
-file content. But for our purposes, it's more than adequate.
-(NB Django also uses this module when serving static files.)
+Remove the mimetype getter on the build environment and
+use the one in the view code instead. This works correctly
+and prevents the download error from occurring.
 
-Use this instead of relying on any external code, and remove
-the filemagic dependency.
+[YOCTO #8369]
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/toaster/toastergui/views.py | 15 +++++++++++----
- toaster-requirements.txt        |  1 -
- 2 files changed, 11 insertions(+), 5 deletions(-)
+ lib/toaster/bldcontrol/models.py | 34 ----------------------------------
+ lib/toaster/toastergui/views.py  |  2 +-
+ 2 files changed, 1 insertion(+), 35 deletions(-)
 
+diff --git a/lib/toaster/bldcontrol/models.py b/lib/toaster/bldcontrol/models.py
+index f2493a8..ab41105 100644
+--- a/lib/toaster/bldcontrol/models.py
++++ b/lib/toaster/bldcontrol/models.py
+@@ -39,40 +39,6 @@ class BuildEnvironment(models.Model):
+     created     = models.DateTimeField(auto_now_add = True)
+     updated     = models.DateTimeField(auto_now = True)
+ 
+-
+-    def get_artifact_type(self, path):
+-        if self.betype == BuildEnvironment.TYPE_LOCAL:
+-            try:
+-                import magic
+-
+-                # fair warning: this is a mess; there are multiple competeing and incompatible
+-                # magic modules floating around, so we try some of the most common combinations
+-
+-                try:    # we try ubuntu's python-magic 5.4
+-                    m = magic.open(magic.MAGIC_MIME_TYPE)
+-                    m.load()
+-                    return m.file(path)
+-                except AttributeError:
+-                    pass
+-
+-                try:    # we try python-magic 0.4.6
+-                    m = magic.Magic(magic.MAGIC_MIME)
+-                    return m.from_file(path)
+-                except AttributeError:
+-                    pass
+-
+-                try:    # we try pip filemagic 1.6
+-                    m = magic.Magic(flags=magic.MAGIC_MIME_TYPE)
+-                    return m.id_filename(path)
+-                except AttributeError:
+-                    pass
+-
+-                return "binary/octet-stream"
+-            except ImportError:
+-                return "binary/octet-stream"
+-        raise Exception("FIXME: artifact type not implemented for build environment type %s" % self.get_betype_display())
+-
+-
+     def get_artifact(self, path):
+         if self.betype == BuildEnvironment.TYPE_LOCAL:
+             return open(path, "r")
 diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index e07f0e2..9e4cf55 100755
+index 9e4cf55..468cce3 100755
 --- a/lib/toaster/toastergui/views.py
 +++ b/lib/toaster/toastergui/views.py
-@@ -47,19 +47,26 @@ import json
- from os.path import dirname
- from functools import wraps
- import itertools
-+import mimetypes
+@@ -2981,7 +2981,7 @@ if True:
+             if file_name is None:
+                 raise Exception("Could not handle artifact %s id %s" % (artifact_type, artifact_id))
+             else:
+-                content_type = b.buildrequest.environment.get_artifact_type(file_name)
++                content_type = MimeTypeFinder.get_mimetype(file_name)
+                 fsock = b.buildrequest.environment.get_artifact(file_name)
+                 file_name = os.path.basename(file_name) # we assume that the build environment system has the same path conventions as host
  
--import magic
- import logging
- 
- logger = logging.getLogger("toaster")
- 
- class MimeTypeFinder(object):
--    _magic = magic.Magic(flags = magic.MAGIC_MIME_TYPE)
-+    # setting this to False enables additional non-standard mimetypes
-+    # to be included in the guess
-+    _strict = False
- 
--    # returns the mimetype for a file path
-+    # returns the mimetype for a file path as a string,
-+    # or 'application/octet-stream' if the type couldn't be guessed
-     @classmethod
-     def get_mimetype(self, path):
--        return self._magic.id_filename(path)
-+        guess = mimetypes.guess_type(path, self._strict)
-+        guessed_type = guess[0]
-+        if guessed_type == None:
-+            guessed_type = 'application/octet-stream'
-+        return guessed_type
- 
- # all new sessions should come through the landing page;
- # determine in which mode we are running in, and redirect appropriately
-diff --git a/toaster-requirements.txt b/toaster-requirements.txt
-index c4a2221..1d7d21b 100644
---- a/toaster-requirements.txt
-+++ b/toaster-requirements.txt
-@@ -2,5 +2,4 @@ Django==1.6
- South==0.8.4
- argparse==1.2.1
- wsgiref==0.1.2
--filemagic==1.6
- beautifulsoup4>=4.4.0
 -- 
 1.9.1
 
