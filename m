@@ -1,37 +1,24 @@
-Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f51.google.com (mail-pa0-f51.google.com
-	[209.85.220.51])
-	by mail.openembedded.org (Postfix) with ESMTP id AE2F9755F4
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id E3C9160125
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  7 Oct 2015 03:19:37 +0000 (UTC)
-Received: by padhy16 with SMTP id hy16so6608996pad.1
+	Wed,  7 Oct 2015 10:20:22 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 07 Oct 2015 03:20:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.17,648,1437462000"; d="scan'208";a="821294149"
+Received: from linux.intel.com ([10.23.219.25])
+	by fmsmga002.fm.intel.com with ESMTP; 07 Oct 2015 03:20:22 -0700
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
+	by linux.intel.com (Postfix) with ESMTP id DC8346A4087
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 06 Oct 2015 20:19:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=aGc+Sna9AXT9AxahbN0oCI5pmdp9qH9+tDZ4lPKJFlg=;
-	b=Mee5bnfdpyMFogZkV01jmLtxa9ggk3TXjccliI6uoulxyCgGr1VQBKPfaEHrQ6GFlA
-	2OrN6cX3ZE2+GD3XAWnGOw1dlTTzWrxJXhZVd9xCC0td9T90cFPMQJQBRdsWtvHNjHJ3
-	rko3KdibZaPObnHfoa0KMg94KJWohNRjVWvRDKEz+MlyNfNgg7Z2+655/Ko0v9m0FRjt
-	LgI826cKxc+Ki/2+ZKGc9PBzeMBCZ9g1mNQG/ntDys3KPl4PgrY1Vt2cRHumxh10B+rd
-	cEE2wZdU21X38XptPG+S3iEcA3VM3c3owG2O/E/E4HJ378q7IKVc8qUPAp2a2RdldGxn
-	Abwg==
-X-Received: by 10.68.164.98 with SMTP id yp2mr8260540pbb.125.1444187977758;
-	Tue, 06 Oct 2015 20:19:37 -0700 (PDT)
-Received: from whisper.hsd1.or.comcast.net
-	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
-	by smtp.gmail.com with ESMTPSA id
-	qy5sm36230685pbb.16.2015.10.06.20.19.36
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 06 Oct 2015 20:19:37 -0700 (PDT)
-From: brian avery <avery.brian@gmail.com>
+	Wed,  7 Oct 2015 03:19:24 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  6 Oct 2015 20:21:25 -0700
-Message-Id: <34399e5950509ffe978d9e6a31e91193d1bdcf0a.1444187945.git.avery.brian@gmail.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1444187945.git.avery.brian@gmail.com>
-References: <cover.1444187945.git.avery.brian@gmail.com>
-Subject: [PATCH 1/1] toaster: orm Machines filter don't pass self in as parameter
+Date: Wed,  7 Oct 2015 13:20:13 +0300
+Message-Id: <cover.1444213003.git.ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH 0/2] Fix cooker log download button
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,34 +31,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 07 Oct 2015 03:19:38 -0000
+X-List-Received-Date: Wed, 07 Oct 2015 10:20:23 -0000
 
-From: Michael Wood <michael.g.wood@intel.com>
 
-Fix typo don't pass self in as a parameter, this evaluated to true
-giving the wrong results meaning the machines typeahead did not return
-valid results.
+* Retrieve a build's log file location directly from the file system,
+as the one which is available at the time of the BuildStarted event
+is incorrect.
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-Signed-off-by: brian avery <avery.brian@gmail.com>
----
- lib/toaster/orm/models.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+* Hide the "Download build log" button for builds which fail early
+(e.g. due to recipe parsing) and consequently have no cooker_log_path.
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 670ec78..375985e 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -229,7 +229,7 @@ class Project(models.Model):
-         """ Returns QuerySet of all Machines which are provided by the
-         Layers currently added to the Project """
-         queryset = Machine.objects.filter(
--            layer_version__in=self.get_project_layer_versions(self))
-+            layer_version__in=self.get_project_layer_versions())
- 
-         return queryset
- 
--- 
-1.9.1
+
+The following changes since commit 34399e5950509ffe978d9e6a31e91193d1bdcf0a:
+
+  toaster: orm Machines filter don't pass self in as parameter (2015-10-06 20:08:50 -0700)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib ed/toaster/submit/elliot/toaster/wrong_log-8373
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=ed/toaster/submit/elliot/toaster/wrong_log-8373
+
+Elliot Smith (2):
+  toaster: Manually retrieve log file location from filesystem
+  toaster: Hide "Download build log" button if log doesn't exist
+
+ bitbake/lib/bb/ui/toasterui.py                     | 31 +++++++++++++++++++++-
+ .../toastergui/templates/builddashboard.html       |  4 ++-
+ 2 files changed, 33 insertions(+), 2 deletions(-)
+
+--
+Ed
 
 
