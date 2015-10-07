@@ -1,35 +1,37 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f43.google.com (mail-pa0-f43.google.com
-	[209.85.220.43])
-	by mail.openembedded.org (Postfix) with ESMTP id AF5AC605D2
+Received: from mail-pa0-f51.google.com (mail-pa0-f51.google.com
+	[209.85.220.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 70C7373D26
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  7 Oct 2015 03:03:24 +0000 (UTC)
-Received: by pacex6 with SMTP id ex6so6229565pac.0
+	Wed,  7 Oct 2015 03:03:30 +0000 (UTC)
+Received: by pacfv12 with SMTP id fv12so6282676pac.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 06 Oct 2015 20:03:24 -0700 (PDT)
+	Tue, 06 Oct 2015 20:03:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id;
-	bh=8yn/XFp0/gY6CfG5zq0StjfPHjdNwX5+D+eNTBfpxFM=;
-	b=D2D5VTn2mlty6Pf/BOydVcheot9HXFzohnrU0/qAZZDKIn5t5y8B6sau8kJPrI0ebb
-	sB9EnhimIjhHc46ZgeztRe4qfTl+1BFs+O//ognAMn+Clk6hj3FOiDrVjg/GV5S7PoQY
-	+n3ehrcpbF4q67BQ53pU/rQlM9z4SShT+Fk5Y7ufxiJbqjKIyOvcXGVAlfnT7+UzQaiF
-	qTJMLMVjKABTAPOsKTNHpIS56mNu9nRDb5k4vsXlqMoqqjMBpqMzechW9/+iVP+wG5wJ
-	ULxOHRRfXQgDWlNn+WRqHPzHfwfquooR8+YjemBwF1OybgA0ysudn2CgHdREZuLsRE+Z
-	U1/Q==
-X-Received: by 10.66.120.80 with SMTP id la16mr50863981pab.1.1444187004337;
-	Tue, 06 Oct 2015 20:03:24 -0700 (PDT)
+	h=from:to:cc:subject:date:message-id:in-reply-to:references;
+	bh=hCV7B9hsjsS8WWK5t1u5gu/mFO+yvOLlb0VdKqp2z+o=;
+	b=W+Z27mrQwVvOURGpiq5MMcvilgqrir+L5t1XlrcYYrolD3sqmDxZOyEo+YbuoNOYIE
+	/DBI/d9Nnr/0ZKaEQC1eSqX1dz+jLkhlp0c0btoNj7Txp6oC09OJZpwQ9fNMcCHZPJ66
+	GdXWBOyrIr8XG+kSIIhkIlmLUM7kh0+l+C6BC9RielANmJ+HDHN7qIDELRE4JLKFwZG0
+	CGh44K4lAIejjBEdsG5rdcL13qkjCwm/d6mCpi+NJtR7VRcS15cphD3Tb+mRFB5Sax9A
+	ZAeZe+iOHaiAi4dhOyqd4nmKnxsX7d9G5ct59EZ4ibZcXHSuzQflfgsae2bBVqyWUjW+
+	lgAA==
+X-Received: by 10.66.235.4 with SMTP id ui4mr5969047pac.129.1444187011155;
+	Tue, 06 Oct 2015 20:03:31 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	oo2sm17191607pbb.86.2015.10.06.20.03.23
+	pk2sm36154214pbb.21.2015.10.06.20.03.30
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 06 Oct 2015 20:03:23 -0700 (PDT)
+	Tue, 06 Oct 2015 20:03:30 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  6 Oct 2015 20:05:14 -0700
-Message-Id: <cover.1444187051.git.avery.brian@gmail.com>
+Date: Tue,  6 Oct 2015 20:05:21 -0700
+Message-Id: <3030554491f72bca7e6256b2af8602780e180177.1444187051.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
-Subject: [PATCH 0/2] rationalise mime type guessing in toaster
+In-Reply-To: <cover.1444187051.git.avery.brian@gmail.com>
+References: <cover.1444187051.git.avery.brian@gmail.com>
+Subject: [PATCH 1/2] toaster: Use Python's mimetypes module
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -42,31 +44,75 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 07 Oct 2015 03:03:25 -0000
+X-List-Received-Date: Wed, 07 Oct 2015 03:03:31 -0000
 
-This eliminates the filemagic external requirement and fixes the
-image download links.
+From: Elliot Smith <elliot.smith@intel.com>
 
--b
+filemagic is used to guess the mimetype of files when a user
+requests a download. However, this adds a dependency on an
+external library.
 
-The following changes since commit 19e5f3378e7f6dad9696ef97c074c738dbcef157:
+Python does have a mimetypes module, though this guesses the
+mimetype rather than doing anything clever with the actual
+file content. But for our purposes, it's more than adequate.
+(NB Django also uses this module when serving static files.)
 
-  bitbake: toaster: display warnings for bad "IMAGE_FSTYPES" values (2015-10-06 19:50:29 -0700)
+Use this instead of relying on any external code, and remove
+the filemagic dependency.
 
-are available in the git repository at:
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+Signed-off-by: brian avery <avery.brian@gmail.com>
+---
+ lib/toaster/toastergui/views.py | 15 +++++++++++----
+ toaster-requirements.txt        |  1 -
+ 2 files changed, 11 insertions(+), 5 deletions(-)
 
-  git://git.yoctoproject.org/poky-contrib bavery/submit/elliot/2015-09-24_rationalise-mime-type-8369_t2
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/elliot/2015-09-24_rationalise-mime-type-8369_t2
-
-Elliot Smith (2):
-  toaster: Use Python's mimetypes module
-  toaster: Rationalise mimetype guessing to fix artifact downloads
-
- lib/toaster/bldcontrol/models.py | 34 ----------------------------------
- lib/toaster/toastergui/views.py  | 17 ++++++++++++-----
- toaster-requirements.txt         |  1 -
- 3 files changed, 12 insertions(+), 40 deletions(-)
-
---
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index e07f0e2..9e4cf55 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -47,19 +47,26 @@ import json
+ from os.path import dirname
+ from functools import wraps
+ import itertools
++import mimetypes
+ 
+-import magic
+ import logging
+ 
+ logger = logging.getLogger("toaster")
+ 
+ class MimeTypeFinder(object):
+-    _magic = magic.Magic(flags = magic.MAGIC_MIME_TYPE)
++    # setting this to False enables additional non-standard mimetypes
++    # to be included in the guess
++    _strict = False
+ 
+-    # returns the mimetype for a file path
++    # returns the mimetype for a file path as a string,
++    # or 'application/octet-stream' if the type couldn't be guessed
+     @classmethod
+     def get_mimetype(self, path):
+-        return self._magic.id_filename(path)
++        guess = mimetypes.guess_type(path, self._strict)
++        guessed_type = guess[0]
++        if guessed_type == None:
++            guessed_type = 'application/octet-stream'
++        return guessed_type
+ 
+ # all new sessions should come through the landing page;
+ # determine in which mode we are running in, and redirect appropriately
+diff --git a/toaster-requirements.txt b/toaster-requirements.txt
+index c4a2221..1d7d21b 100644
+--- a/toaster-requirements.txt
++++ b/toaster-requirements.txt
+@@ -2,5 +2,4 @@ Django==1.6
+ South==0.8.4
+ argparse==1.2.1
+ wsgiref==0.1.2
+-filemagic==1.6
+ beautifulsoup4>=4.4.0
+-- 
 1.9.1
+
 
