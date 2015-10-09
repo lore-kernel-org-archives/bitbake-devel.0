@@ -1,25 +1,25 @@
 Return-Path: <elliot.smith@intel.com>
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id F08247702A
+	by mail.openembedded.org (Postfix) with ESMTP id 7AC6D7704A
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  9 Oct 2015 09:32:54 +0000 (UTC)
+	Fri,  9 Oct 2015 09:32:57 +0000 (UTC)
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by orsmga101.jf.intel.com with ESMTP; 09 Oct 2015 02:32:56 -0700
+	by orsmga101.jf.intel.com with ESMTP; 09 Oct 2015 02:32:58 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,657,1437462000"; d="scan'208";a="788373710"
+X-IronPort-AV: E=Sophos;i="5.17,657,1437462000"; d="scan'208";a="788373729"
 Received: from sarallen-mobl1.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.18.21])
-	by orsmga001.jf.intel.com with ESMTP; 09 Oct 2015 02:32:55 -0700
+	by orsmga001.jf.intel.com with ESMTP; 09 Oct 2015 02:32:58 -0700
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  9 Oct 2015 10:32:42 +0100
-Message-Id: <407673b7783835902abf3f65e91ef7283a3a44a7.1444383025.git.elliot.smith@intel.com>
+Date: Fri,  9 Oct 2015 10:32:43 +0100
+Message-Id: <184222c76e19b95840a89d4c0957e6dcc2c82c71.1444383025.git.elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
 In-Reply-To: <fe0aee177626c475a3a863fa0a482f0319e341e5.1444383025.git.elliot.smith@intel.com>
 References: <fe0aee177626c475a3a863fa0a482f0319e341e5.1444383025.git.elliot.smith@intel.com>
 In-Reply-To: <cover.1444383025.git.elliot.smith@intel.com>
 References: <cover.1444383025.git.elliot.smith@intel.com>
-Subject: [PATCH 4/5] toaster: Fix stale layer state buttons
+Subject: [PATCH 5/5] toaster: Update JS unit tests
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,163 +32,128 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 09 Oct 2015 09:32:55 -0000
+X-List-Received-Date: Fri, 09 Oct 2015 09:32:57 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-Move the "is available to the project" state computation to the template
-for the Layer add/remove buttons, Recipe build/Add layer as done for the
-Package add/remove. This is more reliable as we can get an inconsistent
-state on the front end JS as there are many opportunities for hitting
-out of date project information.
-
-[YOCTO #8294]
+Update JS unit tests.
+- Expand the add remove layer check to make sure that the layer is
+  actually added to the project.
+- Remove some unused vars
+- Make sure that the layers/project ids will always exist at the point
+  of running the test.
+- Add the missing typeahead input fields to the dom to fix the failing
+  typeahead test.
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- lib/toaster/toastergui/static/js/layerBtn.js       |  9 +--------
- lib/toaster/toastergui/static/js/table.js          |  2 +-
- lib/toaster/toastergui/static/js/tests/test.js     |  2 +-
- lib/toaster/toastergui/tables.py                   |  7 ++++---
- lib/toaster/toastergui/templates/layer_btn.html    | 12 ++++++++++--
- lib/toaster/toastergui/templates/recipe_btn.html   | 12 ++++++++++--
- lib/toaster/toastergui/templates/toastertable.html |  1 -
- 7 files changed, 27 insertions(+), 18 deletions(-)
+ lib/toaster/toastergui/static/js/tests/test.js     | 32 +++++++++++-----------
+ .../toastergui/templates/js-unit-tests.html        | 16 ++++++++---
+ 2 files changed, 28 insertions(+), 20 deletions(-)
 
-diff --git a/lib/toaster/toastergui/static/js/layerBtn.js b/lib/toaster/toastergui/static/js/layerBtn.js
-index da0241c..7318b3f 100644
---- a/lib/toaster/toastergui/static/js/layerBtn.js
-+++ b/lib/toaster/toastergui/static/js/layerBtn.js
-@@ -1,6 +1,6 @@
- "use strict";
- 
--function layerBtnsInit(ctx) {
-+function layerBtnsInit() {
- 
-   /* Remove any current bindings to avoid duplicated binds */
-   $(".layerbtn").unbind('click');
-@@ -80,11 +80,4 @@ function layerBtnsInit(ctx) {
-     imgCustomModal.data('recipe', $(this).data('recipe'));
-     imgCustomModal.modal('show');
-   });
--
--  /* Setup the initial state of the buttons */
--
--  for (var i in ctx.projectLayers){
--      $(".layer-exists-" + ctx.projectLayers[i]).show();
--      $(".layer-add-" + ctx.projectLayers[i]).hide();
--  }
- }
-diff --git a/lib/toaster/toastergui/static/js/table.js b/lib/toaster/toastergui/static/js/table.js
-index bc81e67..40b5022 100644
---- a/lib/toaster/toastergui/static/js/table.js
-+++ b/lib/toaster/toastergui/static/js/table.js
-@@ -130,7 +130,7 @@ function tableInit(ctx){
-       tableBody.append(row);
- 
-       /* If we have layerbtns then initialise them */
--      layerBtnsInit(ctx);
-+      layerBtnsInit();
- 
-       /* If we have popovers initialise them now */
-       $('td > a.btn').popover({
 diff --git a/lib/toaster/toastergui/static/js/tests/test.js b/lib/toaster/toastergui/static/js/tests/test.js
-index d610113..f0df6e4 100644
+index f0df6e4..aac0ba6 100644
 --- a/lib/toaster/toastergui/static/js/tests/test.js
 +++ b/lib/toaster/toastergui/static/js/tests/test.js
-@@ -152,7 +152,7 @@ QUnit.test("Layer details page init", function(assert){
+@@ -13,8 +13,6 @@ QUnit.test("Layer alert notification", function(assert) {
+     "name":"meta-example"
+   };
+ 
+-  var correctResponse = "You have added <strong>3</strong> layers to your project: <a id=\"layer-affected-name\" href=\"/toastergui/project/1/layer/22\">meta-example</a> and its dependencies <a href=\"/toastergui/project/1/layer/9\" data-original-title=\"\" title=\"\">meta-example-two</a>, <a href=\"/toastergui/project/1/layer/9\" data-original-title=\"\" title=\"\">meta-example-three</a>";
+-
+   var layerDepsList = [
+     {
+     "layerdetailurl":"/toastergui/project/1/layer/9",
+@@ -68,9 +66,9 @@ QUnit.test("Show notification", function(assert){
  });
  
- QUnit.test("Layer btns init", function(assert){
--  assert.throws(layerBtnsInit({ projectLayers : [] }));
-+  assert.throws(layerBtnsInit());
+ var layer = {
+-  "id": 91,
+-  "name":  "meta-crystalforest",
+-  "layerdetailurl": "/toastergui/project/4/layer/91"
++  "id": 1,
++  "name":  "meta-testing",
++  "layerdetailurl": "/toastergui/project/1/layer/1"
+ };
+ 
+ QUnit.test("Add layer", function(assert){
+@@ -84,11 +82,19 @@ QUnit.test("Add layer", function(assert){
+     }
+   }, 200);
+ 
+-  libtoaster.addRmLayer(layer, true, function(deps){
+-    assert.equal(deps.length, 1);
+-    done();
++  /* Compare the number of layers before and after the add in the project */
++  libtoaster.getProjectInfo(libtoaster.ctx.projectPageUrl, function(prjInfo){
++    var origNumLayers = prjInfo.layers.length;
++
++    libtoaster.addRmLayer(layer, true, function(deps){
++      libtoaster.getProjectInfo(libtoaster.ctx.projectPageUrl,
++        function(prjInfo){
++        assert.ok(prjInfo.layers.length > origNumLayers,
++          "Layer not added to project");
++        done();
++      });
++    });
+   });
+-
+ });
+ 
+ QUnit.test("Rm layer", function(assert){
+@@ -156,7 +162,7 @@ QUnit.test("Layer btns init", function(assert){
  });
  
  QUnit.test("Table init", function(assert){
-diff --git a/lib/toaster/toastergui/tables.py b/lib/toaster/toastergui/tables.py
-index 4f24772..b10445b 100644
---- a/lib/toaster/toastergui/tables.py
-+++ b/lib/toaster/toastergui/tables.py
-@@ -57,9 +57,7 @@ class LayersTable(ToasterTable):
-         context = super(LayersTable, self).get_context_data(**kwargs)
+-  assert.throws(tableInit({ url : tableUrl }));
++  assert.throws(tableInit({ url : ctx.tableUrl }));
+ });
  
-         project = Project.objects.get(pk=kwargs['pid'])
+ $(document).ajaxError(function(event, jqxhr, settings, errMsg){
+@@ -167,9 +173,3 @@ $(document).ajaxError(function(event, jqxhr, settings, errMsg){
+     assert.notOk(jqxhr.responseText);
+   });
+ });
 -
-         context['project'] = project
--        context['projectlayers'] = map(lambda prjlayer: prjlayer.layercommit.id, ProjectLayer.objects.filter(project=project))
+-
+-
+-
+-
+-
+diff --git a/lib/toaster/toastergui/templates/js-unit-tests.html b/lib/toaster/toastergui/templates/js-unit-tests.html
+index 5b8fd84..8d65f33 100644
+--- a/lib/toaster/toastergui/templates/js-unit-tests.html
++++ b/lib/toaster/toastergui/templates/js-unit-tests.html
+@@ -22,9 +22,11 @@
+ <script src="{% static 'js/table.js' %}"></script>
  
-         return context
+ <script>
+-  var tableUrl = '{% url 'projectlayers' project.pk %}';
++  var ctx = {
++    tableUrl : '{% url 'projectlayers' project.pk %}',
++    projectId : {{project.pk}},
++  }
+ </script>
+-
+ <script src="{% static 'js/tests/test.js' %}"></script>
  
-@@ -93,7 +91,10 @@ class LayersTable(ToasterTable):
+ <div id="qunit"></div>
+@@ -34,6 +36,12 @@
+ <input type="text" id="projects" placeholder="projects"></input>
+ <input type="text" id="machines" placeholder="machines"></input>
  
-     def setup_queryset(self, *args, **kwargs):
-         prj = Project.objects.get(pk = kwargs['pid'])
--        compatible_layers = prj.compatible_layerversions()
-+        compatible_layers = prj.get_all_compatible_layer_versions()
-+
-+        self.static_context_extra['current_layers'] = \
-+                prj.get_project_layer_versions(pk=True)
+-{% endblock %}
+-
++<!-- import layer dependency input typeahead -->
++<input type="text" id="layer-dependency" style="display:none"></input>
++<!-- project page input typeaheads -->
++<input type="text" id="layer-add-input" style="display:none"></input>
++<input type="text" id="machine-change-input" style="display:none"></input>
++<!-- import layer dependency input typeahead on layer details edit layer -->
++<input type="text" id="layer-dep-input" style="display:none"></input>
  
-         self.queryset = compatible_layers.order_by(self.default_orderby)
- 
-diff --git a/lib/toaster/toastergui/templates/layer_btn.html b/lib/toaster/toastergui/templates/layer_btn.html
-index a2e9393..314eec7 100644
---- a/lib/toaster/toastergui/templates/layer_btn.html
-+++ b/lib/toaster/toastergui/templates/layer_btn.html
-@@ -1,8 +1,16 @@
--<button class="btn btn-danger btn-block layer-exists-{{data.pk}} layerbtn" style="display:none;" data-layer='{ "id": {{data.pk}}, "name":  "{{data.layer.name}}", "layerdetailurl": "{%url 'layerdetails' extra.pid data.pk%}"}' data-directive="remove" >
-+<button class="btn btn-danger btn-block layer-exists-{{data.pk}} layerbtn"  data-layer='{ "id": {{data.pk}}, "name":  "{{data.layer.name}}", "layerdetailurl": "{%url 'layerdetails' extra.pid data.pk%}"}' data-directive="remove"
-+    {% if data.pk not in extra.current_layers %}
-+    style="display:none;"
-+    {% endif %}
-+  >
-   <i class="icon-trash"></i>
-   Delete layer
- </button>
--<button class="btn btn-block layer-add-{{data.pk}} layerbtn" data-layer='{ "id": {{data.pk}}, "name":  "{{data.layer.name}}", "layerdetailurl": "{%url 'layerdetails' extra.pid data.pk%}"}' data-directive="add">
-+<button class="btn btn-block layer-add-{{data.pk}} layerbtn" data-layer='{ "id": {{data.pk}}, "name":  "{{data.layer.name}}", "layerdetailurl": "{%url 'layerdetails' extra.pid data.pk%}"}' data-directive="add"
-+    {% if data.pk in extra.current_layers %}
-+    style="display:none;"
-+    {% endif %}
-+  >
-   <i class="icon-plus"></i>
-   Add layer
- </button>
-diff --git a/lib/toaster/toastergui/templates/recipe_btn.html b/lib/toaster/toastergui/templates/recipe_btn.html
-index 77c1b23..baab06e 100644
---- a/lib/toaster/toastergui/templates/recipe_btn.html
-+++ b/lib/toaster/toastergui/templates/recipe_btn.html
-@@ -1,7 +1,15 @@
--<button data-recipe-name="{{data.name}}" class="btn btn-block layer-exists-{{data.layer_version.pk}} build-recipe-btn" style="display:none; margin-top: 5px;" >
-+<button data-recipe-name="{{data.name}}" class="btn btn-block layer-exists-{{data.layer_version.pk}} build-recipe-btn" style="margin-top: 5px;
-+  {% if data.layer_version.pk not in extra.current_layers %}
-+    display:none;
-+  {% endif %}"
-+ >
-   Build recipe
- </button>
--<button class="btn btn-block layerbtn layer-add-{{data.layer_version.pk}}" data-layer='{ "id": {{data.layer_version.pk}}, "name":  "{{data.layer_version.layer.name}}", "layerdetailurl": "{%url 'layerdetails' extra.pid data.layer_version.pk%}"}' data-directive="add">
-+<button class="btn btn-block layerbtn layer-add-{{data.layer_version.pk}}" data-layer='{ "id": {{data.layer_version.pk}}, "name":  "{{data.layer_version.layer.name}}", "layerdetailurl": "{%url 'layerdetails' extra.pid data.layer_version.pk%}"}' data-directive="add"
-+    {% if data.layer_version.pk in extra.current_layers %}
-+     style="display:none;"
-+    {% endif %}
-+>
-   <i class="icon-plus"></i>
-   Add layer
-   <i title="" class="icon-question-sign get-help" data-original-title="To build this target, you must first add the {{data.layer_version.layer.name}} layer to your project"></i>
-diff --git a/lib/toaster/toastergui/templates/toastertable.html b/lib/toaster/toastergui/templates/toastertable.html
-index 9ef4c6f..98a715f 100644
---- a/lib/toaster/toastergui/templates/toastertable.html
-+++ b/lib/toaster/toastergui/templates/toastertable.html
-@@ -12,7 +12,6 @@
-       tableName : "{{table_name}}",
-       url : "{{ xhr_table_url }}?format=json",
-       title : "{{title}}",
--      projectLayers : {{projectlayers|json}},
-     };
- 
-     try {
++{% endblock %}
 -- 
 1.9.3
 
