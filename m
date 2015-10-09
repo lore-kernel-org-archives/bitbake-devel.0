@@ -1,21 +1,23 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id DFBDD73CBD
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 93DB9766DD
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  9 Oct 2015 09:32:39 +0000 (UTC)
+	Fri,  9 Oct 2015 09:32:46 +0000 (UTC)
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by fmsmga101.fm.intel.com with ESMTP; 09 Oct 2015 02:32:39 -0700
+	by orsmga101.jf.intel.com with ESMTP; 09 Oct 2015 02:32:47 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,657,1437462000"; d="scan'208";a="788373582"
+X-IronPort-AV: E=Sophos;i="5.17,657,1437462000"; d="scan'208";a="788373642"
 Received: from sarallen-mobl1.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.18.21])
-	by orsmga001.jf.intel.com with ESMTP; 09 Oct 2015 02:32:36 -0700
+	by orsmga001.jf.intel.com with ESMTP; 09 Oct 2015 02:32:46 -0700
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  9 Oct 2015 10:32:31 +0100
-Message-Id: <cover.1444383025.git.elliot.smith@intel.com>
+Date: Fri,  9 Oct 2015 10:32:39 +0100
+Message-Id: <fe0aee177626c475a3a863fa0a482f0319e341e5.1444383025.git.elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
-Subject: [PATCH 0/5] toaster UI fixes
+In-Reply-To: <cover.1444383025.git.elliot.smith@intel.com>
+References: <cover.1444383025.git.elliot.smith@intel.com>
+Subject: [PATCH 1/5] toaster: layerdetails update build recipe button class name
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,49 +30,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 09 Oct 2015 09:32:42 -0000
+X-List-Received-Date: Fri, 09 Oct 2015 09:32:47 -0000
 
-A number of UI fixes:
+From: Michael Wood <michael.g.wood@intel.com>
 
-* Add/Rm layer button not updated in some cases [YOCTO #8294]
-* Updates to the JS unit tests
-* A fix for the project layers returned
-* Fix a bug noticed in the layer details page where the button class names were
-incorrect meaning the toggle of the add/remove layer didn't enable/disable
-the buttons to trigger recipe builds.
+Update the class name which we are using for the recipe build button.
+This fixes a regression in the buttons being enabled/disabled when
+adding and removing the layer being viewed from the project.
 
-[YOCTO #8294]
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+---
+ lib/toaster/toastergui/static/js/layerdetails.js | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The following changes since commit 06cdf52fec2f46e3e063ec64ee4cba6c79bfebe5:
-
-  toaster: fix naming for clone directory (2015-10-07 15:35:13 +0100)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib elliot/submit/michaelw/toaster/table-ui-fixes
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=elliot/submit/michaelw/toaster/table-ui-fixes
-
-Michael Wood (5):
-  toaster: layerdetails update build recipe button class name
-  toaster: Fix typo in returning pk list of layer versions in current
-    project
-  toaster: tables Add the recipe filter back into the Recipe table
-  toaster: Fix stale layer state buttons
-  toaster: Update JS unit tests
-
- lib/toaster/orm/models.py                          |  2 +-
- lib/toaster/toastergui/static/js/layerBtn.js       |  9 +-----
- lib/toaster/toastergui/static/js/layerdetails.js   |  4 +--
- lib/toaster/toastergui/static/js/table.js          |  2 +-
- lib/toaster/toastergui/static/js/tests/test.js     | 34 +++++++++++-----------
- lib/toaster/toastergui/tables.py                   | 20 +++++++++++--
- .../toastergui/templates/js-unit-tests.html        | 16 +++++++---
- lib/toaster/toastergui/templates/layer_btn.html    | 12 ++++++--
- lib/toaster/toastergui/templates/recipe_btn.html   | 12 ++++++--
- lib/toaster/toastergui/templates/toastertable.html |  1 -
- 10 files changed, 71 insertions(+), 41 deletions(-)
-
---
+diff --git a/lib/toaster/toastergui/static/js/layerdetails.js b/lib/toaster/toastergui/static/js/layerdetails.js
+index 8817b47..8c2ec4c 100644
+--- a/lib/toaster/toastergui/static/js/layerdetails.js
++++ b/lib/toaster/toastergui/static/js/layerdetails.js
+@@ -254,7 +254,7 @@ function layerDetailsPageInit (ctx) {
+ 
+     if (added){
+       /* enable and switch all the button states */
+-      $(".build-target-btn").removeAttr("disabled");
++      $(".build-recipe-btn").removeAttr("disabled");
+       $(".select-machine-btn").removeAttr("disabled");
+       addRmLayerBtn.addClass("btn-danger");
+       addRmLayerBtn.data('directive', "remove");
+@@ -263,7 +263,7 @@ function layerDetailsPageInit (ctx) {
+ 
+     } else {
+       /* disable and switch all the button states */
+-      $(".build-target-btn").attr("disabled","disabled");
++      $(".build-recipe-btn").attr("disabled","disabled");
+       $(".select-machine-btn").attr("disabled", "disabled");
+       addRmLayerBtn.removeClass("btn-danger");
+       addRmLayerBtn.data('directive', "add");
+-- 
 1.9.3
 
 ---------------------------------------------------------------------
