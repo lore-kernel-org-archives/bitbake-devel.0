@@ -1,33 +1,37 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 8BD7C760F4
+Return-Path: <elliot.smith@intel.com>
+Received: from mail-io0-f174.google.com (mail-io0-f174.google.com
+	[209.85.223.174])
+	by mail.openembedded.org (Postfix) with ESMTP id 891F165D6E
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 12 Oct 2015 04:55:23 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t9C4tHZS016280; Mon, 12 Oct 2015 05:55:17 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 9HDbNk768hJc; Mon, 12 Oct 2015 05:55:17 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t9C4sxht016274
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 12 Oct 2015 05:55:12 +0100
-Message-ID: <1444625699.29375.12.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: ed.bartosh@linux.intel.com
-Date: Mon, 12 Oct 2015 05:54:59 +0100
-In-Reply-To: <20151011200231.GA25841@linux.intel.com>
-References: <cover.1444038048.git.elliot.smith@intel.com>
-	<04c22e69056969f61173107062a4eec82a4bc3ed.1444038048.git.elliot.smith@intel.com>
-	<1444537330.14364.5.camel@linuxfoundation.org>
-	<20151011200231.GA25841@linux.intel.com>
-X-Mailer: Evolution 3.12.11-0ubuntu3 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org, "Bartosh,
-	Eduard" <eduard.bartosh@intel.com>
-Subject: Re: [PATCH 1/6] event: add new property to BuildBase class
+	Mon, 12 Oct 2015 08:32:06 +0000 (UTC)
+Received: by iodv82 with SMTP id v82so44532807iod.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Mon, 12 Oct 2015 01:32:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:in-reply-to:references:date
+	:message-id:subject:from:to:cc:content-type;
+	bh=ckVW7MrZRy5k0KYaBXG9/sDvlrL1VqRrJ6mP8IUsx3k=;
+	b=eNKuDIdB7giYA3rMbtAMzFSXuR2yLV50cIZcK9Of7z+DFt/vhGidTu+pdvhdYkJOJL
+	CqU8usB0lW269DVBwE1PDBnhjNq0HEgjPeRzz0mnVisrQGcJogp3q0X3q+q0dZLEk1dT
+	T39g35pa/l1hY9nmDCdRChIhW02dMBnxYCBmThPP9wVROtS5sGTWZmi+16WTSHfMWV5+
+	v96WtQmWIqw1COf/Fi2KF8xLllOgvq3VB05JLUsMBGdy58IQdHIvZ4/e7eVM0BbMfM+L
+	rQIx4NqDxHuFcxIMjvvPT+P5iS6CPr39WDeQ7cEIVG4GO5zm3HoJh0nx1e/WtiyDk2gg
+	AkZA==
+X-Gm-Message-State: ALoCoQk/EccLggQIijYQk8IS0yQIWupwR/PlOJrjqsjryusFhh60vPyTt8X6YuX/6j2TvYVcxmQN
+MIME-Version: 1.0
+X-Received: by 10.107.137.92 with SMTP id l89mr24114059iod.38.1444638726065;
+	Mon, 12 Oct 2015 01:32:06 -0700 (PDT)
+Received: by 10.64.7.77 with HTTP; Mon, 12 Oct 2015 01:32:06 -0700 (PDT)
+In-Reply-To: <1444547527.14364.8.camel@linuxfoundation.org>
+References: <1444383523-23550-1-git-send-email-elliot.smith@intel.com>
+	<1444547527.14364.8.camel@linuxfoundation.org>
+Date: Mon, 12 Oct 2015 09:32:06 +0100
+Message-ID: <CA+1hgUiHhUMCXz9rxOWcGmzryyOxR_0_oCyhRimvP9Fo_MptJA@mail.gmail.com>
+From: "Smith, Elliot" <elliot.smith@intel.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH] toaster: update meta-yocto to jethro and drop dizzy
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,46 +44,76 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 12 Oct 2015 04:55:28 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 12 Oct 2015 08:32:07 -0000
+Content-Type: multipart/alternative; boundary=001a113ebdb418d0230521e42a74
 
-On Sun, 2015-10-11 at 23:02 +0300, Ed Bartosh wrote:
-> On Sun, Oct 11, 2015 at 05:22:10AM +0100, Richard Purdie wrote:
-> > On Mon, 2015-10-05 at 10:43 +0100, Elliot Smith wrote:
-> > > From: Ed Bartosh <ed.bartosh@linux.intel.com>
-> > > 
-> > > Added 'task' property to the base class of BuildStarted and
-> > > BuildCompleted classes to store bitbake task if it's specified.
-> > > 
-> > > This is done as without task Build* events can't fully represent
-> > > bitbake build. Task information is needed by UI classes to properly
-> > > show or process Build* events.
-> > 
-> > This doesn't make sense I'm afraid. There is no one "task" which a build
-> > start/complete event can correspond to. Consider something like:
-> > 
-> > "bitbake A:do_fetch B:do_rootfs"
-> > 
-> > There would be one BuildStarted event but task doesn't have a singular
-> > value. We therefore don't want to add task information to these events
-> > as it will ultimately mislead anything building on top of this
-> > information.
-> > 
-> > I appreciate there is the -c option, but that just means "if there is no
-> > specific task specified, use this", i.e. its a default.
+--001a113ebdb418d0230521e42a74
+Content-Type: text/plain; charset=UTF-8
+
+On 11 October 2015 at 08:12, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
+
+> On Fri, 2015-10-09 at 10:38 +0100, Elliot Smith wrote:
+> > From: brian avery <avery.brian@gmail.com>
 > >
-> 
-> OK. can we call it 'default_task' then?
-> You spotted it's purpose right - it's done to represent the task
-> specified by -c option.
+> > Toaster only supports building 2 branches back. This
+> > updates the conf file for meta-yocto to support
+> > master, jethro, and fido.
+> >
+> > Signed-off-by: brian avery <avery.brian@gmail.com>
+> > Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+> > ---
+> >  meta-yocto/conf/toasterconf.json | 30 +++++++++++++++---------------
+> >  1 file changed, 15 insertions(+), 15 deletions(-)
+>
+> This should actually go to the poky list and say something like
+> "toasterconf:" in the subject rather than "toaster:" however I've sorted
+> this out in this case.
+>
 
-That would certainly be better. I am a little worried how this would be
-used in the UI though. Can you explain where and why the UI needs this
-piece of information?
+Thanks Richard. I'll be more attentive to the commit subject line in future.
 
-Cheers,
+Elliot
 
-Richard
+-- 
+Elliot Smith
+Software Engineer
+Intel Open Source Technology Centre
 
+--001a113ebdb418d0230521e42a74
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On 1=
+1 October 2015 at 08:12, Richard Purdie <span dir=3D"ltr">&lt;<a href=3D"ma=
+ilto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.purdie@l=
+inuxfoundation.org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quot=
+e" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">=
+On Fri, 2015-10-09 at 10:38 +0100, Elliot Smith wrote:<br>
+&gt; From: brian avery &lt;<a href=3D"mailto:avery.brian@gmail.com">avery.b=
+rian@gmail.com</a>&gt;<br>
+&gt;<br>
+&gt; Toaster only supports building 2 branches back. This<br>
+&gt; updates the conf file for meta-yocto to support<br>
+&gt; master, jethro, and fido.<br>
+&gt;<br>
+&gt; Signed-off-by: brian avery &lt;<a href=3D"mailto:avery.brian@gmail.com=
+">avery.brian@gmail.com</a>&gt;<br>
+&gt; Signed-off-by: Elliot Smith &lt;<a href=3D"mailto:elliot.smith@intel.c=
+om">elliot.smith@intel.com</a>&gt;<br>
+&gt; ---<br>
+&gt;=C2=A0 meta-yocto/conf/toasterconf.json | 30 +++++++++++++++-----------=
+----<br>
+&gt;=C2=A0 1 file changed, 15 insertions(+), 15 deletions(-)<br>
+<br>
+This should actually go to the poky list and say something like<br>
+&quot;toasterconf:&quot; in the subject rather than &quot;toaster:&quot; ho=
+wever I&#39;ve sorted<br>
+this out in this case.<br></blockquote><div><br></div><div>Thanks Richard. =
+I&#39;ll be more attentive to the commit subject line in future.</div><div>=
+<br></div><div>Elliot</div></div><div><br></div>-- <br><div class=3D"gmail_=
+signature"><div dir=3D"ltr"><div>Elliot Smith<br>Software Engineer<br>Intel=
+ Open Source Technology Centre</div></div></div>
+</div></div>
+
+--001a113ebdb418d0230521e42a74--
