@@ -1,40 +1,39 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mail-io0-f174.google.com (mail-io0-f174.google.com
-	[209.85.223.174])
-	by mail.openembedded.org (Postfix) with ESMTP id 891F165D6E
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 2EC1F7701C
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 12 Oct 2015 08:32:06 +0000 (UTC)
-Received: by iodv82 with SMTP id v82so44532807iod.0
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 12 Oct 2015 01:32:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:date
-	:message-id:subject:from:to:cc:content-type;
-	bh=ckVW7MrZRy5k0KYaBXG9/sDvlrL1VqRrJ6mP8IUsx3k=;
-	b=eNKuDIdB7giYA3rMbtAMzFSXuR2yLV50cIZcK9Of7z+DFt/vhGidTu+pdvhdYkJOJL
-	CqU8usB0lW269DVBwE1PDBnhjNq0HEgjPeRzz0mnVisrQGcJogp3q0X3q+q0dZLEk1dT
-	T39g35pa/l1hY9nmDCdRChIhW02dMBnxYCBmThPP9wVROtS5sGTWZmi+16WTSHfMWV5+
-	v96WtQmWIqw1COf/Fi2KF8xLllOgvq3VB05JLUsMBGdy58IQdHIvZ4/e7eVM0BbMfM+L
-	rQIx4NqDxHuFcxIMjvvPT+P5iS6CPr39WDeQ7cEIVG4GO5zm3HoJh0nx1e/WtiyDk2gg
-	AkZA==
-X-Gm-Message-State: ALoCoQk/EccLggQIijYQk8IS0yQIWupwR/PlOJrjqsjryusFhh60vPyTt8X6YuX/6j2TvYVcxmQN
-MIME-Version: 1.0
-X-Received: by 10.107.137.92 with SMTP id l89mr24114059iod.38.1444638726065;
-	Mon, 12 Oct 2015 01:32:06 -0700 (PDT)
-Received: by 10.64.7.77 with HTTP; Mon, 12 Oct 2015 01:32:06 -0700 (PDT)
-In-Reply-To: <1444547527.14364.8.camel@linuxfoundation.org>
-References: <1444383523-23550-1-git-send-email-elliot.smith@intel.com>
-	<1444547527.14364.8.camel@linuxfoundation.org>
-Date: Mon, 12 Oct 2015 09:32:06 +0100
-Message-ID: <CA+1hgUiHhUMCXz9rxOWcGmzryyOxR_0_oCyhRimvP9Fo_MptJA@mail.gmail.com>
-From: "Smith, Elliot" <elliot.smith@intel.com>
+	Tue, 13 Oct 2015 08:33:27 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by orsmga103.jf.intel.com with ESMTP; 13 Oct 2015 01:33:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.17,677,1437462000"; d="scan'208";a="663242955"
+Received: from linux.intel.com ([10.23.219.25])
+	by orsmga003.jf.intel.com with ESMTP; 13 Oct 2015 01:33:28 -0700
+Received: from linux.intel.com (vmed.fi.intel.com [10.237.72.51])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTP id 9C5F16A4083;
+	Tue, 13 Oct 2015 01:32:28 -0700 (PDT)
+Date: Tue, 13 Oct 2015 11:33:22 +0300
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] toaster: update meta-yocto to jethro and drop dizzy
+Message-ID: <20151013083322.GA15680@linux.intel.com>
+References: <cover.1444038048.git.elliot.smith@intel.com>
+	<04c22e69056969f61173107062a4eec82a4bc3ed.1444038048.git.elliot.smith@intel.com>
+	<1444537330.14364.5.camel@linuxfoundation.org>
+	<20151011200231.GA25841@linux.intel.com>
+	<1444625699.29375.12.camel@linuxfoundation.org>
+MIME-Version: 1.0
+In-Reply-To: <1444625699.29375.12.camel@linuxfoundation.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.5.21 (2010-09-15)
+Cc: bitbake-devel@lists.openembedded.org, "Bartosh,
+	Eduard" <eduard.bartosh@intel.com>
+Subject: Re: [PATCH 1/6] event: add new property to BuildBase class
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
+Reply-To: ed.bartosh@linux.intel.com
 List-Id: Patches and discussion that advance bitbake development
 	<bitbake-devel.lists.openembedded.org>
 List-Unsubscribe: <http://lists.openembedded.org/mailman/options/bitbake-devel>, 
@@ -44,76 +43,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 12 Oct 2015 08:32:07 -0000
-Content-Type: multipart/alternative; boundary=001a113ebdb418d0230521e42a74
+X-List-Received-Date: Tue, 13 Oct 2015 08:33:28 -0000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---001a113ebdb418d0230521e42a74
-Content-Type: text/plain; charset=UTF-8
+On Mon, Oct 12, 2015 at 05:54:59AM +0100, Richard Purdie wrote:
+> On Sun, 2015-10-11 at 23:02 +0300, Ed Bartosh wrote:
+> > On Sun, Oct 11, 2015 at 05:22:10AM +0100, Richard Purdie wrote:
+> > > On Mon, 2015-10-05 at 10:43 +0100, Elliot Smith wrote:
+> > > > From: Ed Bartosh <ed.bartosh@linux.intel.com>
+> > > > 
+> > > > Added 'task' property to the base class of BuildStarted and
+> > > > BuildCompleted classes to store bitbake task if it's specified.
+> > > > 
+> > > > This is done as without task Build* events can't fully represent
+> > > > bitbake build. Task information is needed by UI classes to properly
+> > > > show or process Build* events.
+> > > 
+> > > This doesn't make sense I'm afraid. There is no one "task" which a build
+> > > start/complete event can correspond to. Consider something like:
+> > > 
+> > > "bitbake A:do_fetch B:do_rootfs"
+> > > 
+> > > There would be one BuildStarted event but task doesn't have a singular
+> > > value. We therefore don't want to add task information to these events
+> > > as it will ultimately mislead anything building on top of this
+> > > information.
+> > > 
+> > > I appreciate there is the -c option, but that just means "if there is no
+> > > specific task specified, use this", i.e. its a default.
+> > >
+> > 
+> > OK. can we call it 'default_task' then?
+> > You spotted it's purpose right - it's done to represent the task
+> > specified by -c option.
+> 
+> That would certainly be better. I am a little worried how this would be
+> used in the UI though. Can you explain where and why the UI needs this
+> piece of information?
 
-On 11 October 2015 at 08:12, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+After looking at UI code I think I can implement this functionality
+differently. Thank you for pointing out to this.
 
-> On Fri, 2015-10-09 at 10:38 +0100, Elliot Smith wrote:
-> > From: brian avery <avery.brian@gmail.com>
-> >
-> > Toaster only supports building 2 branches back. This
-> > updates the conf file for meta-yocto to support
-> > master, jethro, and fido.
-> >
-> > Signed-off-by: brian avery <avery.brian@gmail.com>
-> > Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-> > ---
-> >  meta-yocto/conf/toasterconf.json | 30 +++++++++++++++---------------
-> >  1 file changed, 15 insertions(+), 15 deletions(-)
->
-> This should actually go to the poky list and say something like
-> "toasterconf:" in the subject rather than "toaster:" however I've sorted
-> this out in this case.
->
+Please merge patches 5 and 6 from this patchset. They're not directly
+related to 'task' property and can be merged independently.
 
-Thanks Richard. I'll be more attentive to the commit subject line in future.
+--
+Regards,
+Ed
 
-Elliot
-
--- 
-Elliot Smith
-Software Engineer
-Intel Open Source Technology Centre
-
---001a113ebdb418d0230521e42a74
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On 1=
-1 October 2015 at 08:12, Richard Purdie <span dir=3D"ltr">&lt;<a href=3D"ma=
-ilto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.purdie@l=
-inuxfoundation.org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quot=
-e" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">=
-On Fri, 2015-10-09 at 10:38 +0100, Elliot Smith wrote:<br>
-&gt; From: brian avery &lt;<a href=3D"mailto:avery.brian@gmail.com">avery.b=
-rian@gmail.com</a>&gt;<br>
-&gt;<br>
-&gt; Toaster only supports building 2 branches back. This<br>
-&gt; updates the conf file for meta-yocto to support<br>
-&gt; master, jethro, and fido.<br>
-&gt;<br>
-&gt; Signed-off-by: brian avery &lt;<a href=3D"mailto:avery.brian@gmail.com=
-">avery.brian@gmail.com</a>&gt;<br>
-&gt; Signed-off-by: Elliot Smith &lt;<a href=3D"mailto:elliot.smith@intel.c=
-om">elliot.smith@intel.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 meta-yocto/conf/toasterconf.json | 30 +++++++++++++++-----------=
-----<br>
-&gt;=C2=A0 1 file changed, 15 insertions(+), 15 deletions(-)<br>
-<br>
-This should actually go to the poky list and say something like<br>
-&quot;toasterconf:&quot; in the subject rather than &quot;toaster:&quot; ho=
-wever I&#39;ve sorted<br>
-this out in this case.<br></blockquote><div><br></div><div>Thanks Richard. =
-I&#39;ll be more attentive to the commit subject line in future.</div><div>=
-<br></div><div>Elliot</div></div><div><br></div>-- <br><div class=3D"gmail_=
-signature"><div dir=3D"ltr"><div>Elliot Smith<br>Software Engineer<br>Intel=
- Open Source Technology Centre</div></div></div>
-</div></div>
-
---001a113ebdb418d0230521e42a74--
