@@ -1,21 +1,25 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id EC38077043
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id BF394759D5
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 13 Oct 2015 08:58:53 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by orsmga101.jf.intel.com with ESMTP; 13 Oct 2015 01:58:53 -0700
+	Wed, 14 Oct 2015 08:41:19 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by orsmga103.jf.intel.com with ESMTP; 14 Oct 2015 01:41:19 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,677,1437462000"; d="scan'208";a="825677169"
-Received: from mjbowe-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.18.22])
-	by fmsmga002.fm.intel.com with ESMTP; 13 Oct 2015 01:58:51 -0700
-From: Elliot Smith <elliot.smith@intel.com>
+X-IronPort-AV: E=Sophos;i="5.17,681,1437462000"; d="scan'208";a="580439237"
+Received: from linux.intel.com ([10.23.219.25])
+	by FMSMGA003.fm.intel.com with ESMTP; 14 Oct 2015 01:41:20 -0700
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
+	by linux.intel.com (Postfix) with ESMTP id 13B2A6A4005;
+	Wed, 14 Oct 2015 01:40:19 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 13 Oct 2015 09:58:49 +0100
-Message-Id: <1444726729-27872-1-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-Subject: [PATCH] toaster: Fix missing tooltips from layers on project configuration page
+Date: Wed, 14 Oct 2015 11:41:13 +0300
+Message-Id: <1444812073-9024-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+In-Reply-To: <1444625699.29375.12.camel@linuxfoundation.org>
+References: <1444625699.29375.12.camel@linuxfoundation.org>
+Subject: [PATCH] bitbake: normalize build targets
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,82 +32,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 13 Oct 2015 08:58:58 -0000
+X-List-Received-Date: Wed, 14 Oct 2015 08:41:25 -0000
 
-From: Michael Wood <michael.g.wood@intel.com>
+BuildStarted event not fully represents build tasks for
+the targets. If -c option is used to specify default task
+it's not included into the event.
 
-Re-enable the layer tooltips on the project configuration page.
-This adds the required fields to the API used for the layer dependencies
-to be able to show the metadata needed.
+Made build targets to always look as <target>:do_<task>.
+Consider default task (do_build or specified by -c command
+line option) when normalizing.
 
-Also fixes link hrefs which were missing in the add layers confirmation
-dialog (bug 8251).
-
-[YOCTO #8295]
-[YOCTO #8251]
-
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- bitbake/lib/toaster/toastergui/static/js/projectpage.js |  5 +----
- bitbake/lib/toaster/toastergui/views.py                 | 16 ++++++++++------
- 2 files changed, 11 insertions(+), 10 deletions(-)
+ bitbake/lib/bb/cooker.py | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/bitbake/lib/toaster/toastergui/static/js/projectpage.js b/bitbake/lib/toaster/toastergui/static/js/projectpage.js
-index d367047..30989a0 100644
---- a/bitbake/lib/toaster/toastergui/static/js/projectpage.js
-+++ b/bitbake/lib/toaster/toastergui/static/js/projectpage.js
-@@ -146,10 +146,7 @@ function projectPageInit(ctx) {
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index a0d7d59..7e84a7c 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -1391,10 +1391,28 @@ class BBCooker:
+         build.reset_cache()
+         self.buildSetVars()
  
-       link.attr("href", layerObj.layerdetailurl);
-       link.text(layerObj.name);
--      /* YOCTO #8024
--        link.tooltip({title: layerObj.giturl + " | "+ layerObj.branch.name, placement: "right"});
--        branch name not accessible sometimes it is revision instead
--      */
-+      link.tooltip({title: layerObj.vcs_url + " | "+ layerObj.vcs_reference, placement: "right"});
++        # If we are told to do the None task then query the default task
++        if (task == None):
++            task = self.configuration.cmd
++
++        if not task.startswith("do_"):
++            task = "do_%s" % task
++
+         taskdata, runlist, fulltargetlist = self.buildTaskData(targets, task, self.configuration.abort)
  
-       var trashItem = projectLayer.children("span");
-       trashItem.click(function (e) {
-diff --git a/bitbake/lib/toaster/toastergui/views.py b/bitbake/lib/toaster/toastergui/views.py
-index 468cce3..c4264a1 100755
---- a/bitbake/lib/toaster/toastergui/views.py
-+++ b/bitbake/lib/toaster/toastergui/views.py
-@@ -2768,12 +2768,16 @@ if True:
-         project = Project.objects.get(pk=pid)
-         layer_version = Layer_Version.objects.get(pk=layerid)
+         buildname = self.data.getVar("BUILDNAME", False)
+-        bb.event.fire(bb.event.BuildStarted(buildname, fulltargetlist), self.data)
++
++        # make targets to always look as <target>:do_<task>
++        ntargets = []
++        for target in fulltargetlist:
++            if ":" in target:
++                if ":do_" not in target:
++                    target = "%s:do_%s" % tuple(target.split(":"))
++            else:
++                target = "%s:%s" % (target, task)
++            ntargets.append(target)
++
++        bb.event.fire(bb.event.BuildStarted(buildname, ntargets), self.data)
  
--        context = { 'project' : project,
--                   'layerversion' : layer_version,
--                   'layerdeps' : {"list": [{"id": dep.id, "name": dep.layer.name} \
--                                              for dep in layer_version.get_alldeps(project.id)]},
--                   'projectlayers': map(lambda prjlayer: prjlayer.layercommit.id, ProjectLayer.objects.filter(project=project))
--                  }
-+        context = {'project' : project,
-+            'layerversion' : layer_version,
-+            'layerdeps' : {"list": [{"id": dep.id,
-+                "name": dep.layer.name,
-+                "layerdetailurl": reverse('layerdetails', args=(pid, dep.pk)),
-+                "vcs_url": dep.layer.vcs_url,
-+                "vcs_reference": dep.get_vcs_reference()} \
-+                for dep in layer_version.get_alldeps(project.id)]},
-+            'projectlayers': map(lambda prjlayer: prjlayer.layercommit.id, ProjectLayer.objects.filter(project=project))
-+        }
- 
-         return context
- 
+         rq = bb.runqueue.RunQueue(self, self.data, self.recipecache, taskdata, runlist)
+         if 'universe' in targets:
 -- 
-1.9.3
-
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
+2.1.4
 
 
