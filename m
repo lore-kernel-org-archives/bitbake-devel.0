@@ -1,42 +1,42 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wi0-f174.google.com (mail-wi0-f174.google.com
-	[209.85.212.174])
-	by mail.openembedded.org (Postfix) with ESMTP id 2B6FA770AB
+Received: from mail-wi0-f178.google.com (mail-wi0-f178.google.com
+	[209.85.212.178])
+	by mail.openembedded.org (Postfix) with ESMTP id 869A277087
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Oct 2015 14:43:57 +0000 (UTC)
-Received: by wicll6 with SMTP id ll6so616047wic.0
+	Wed, 14 Oct 2015 14:44:19 +0000 (UTC)
+Received: by wijq8 with SMTP id q8so85084123wij.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Oct 2015 07:43:57 -0700 (PDT)
+	Wed, 14 Oct 2015 07:44:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references:in-reply-to:references;
-	bh=jNaWqR4tY4cfugQTa2vlGkPOAMTqzG5ql/+YpNaXc2A=;
-	b=Jm/VHeRvc9+j0ID+2roMJrj2aHlp8SeK1e4/QQZxFpYj+1bvuxXlrYCCyIQi9UnljW
-	Ejnz/RWm2ASGJMmU4xjvI7JDkGxMWSXwukSRqq82eyHr35ALD71X8agdN2/bwzb6WYGE
-	W3DXWlhYYGDlNtYxp5cHmrowvXsl1thSlH+ZhCYIJ72qRQfTbidlk4Xc538KxT6MDtFH
-	oCXQb2nYFMpQtjHJheRAK0DzBzO6+VL6oTVM7i3/AoY/JJfmDXQwVa8NrTASY26lPDqx
-	L/KmDpajFeDXYZynfGsvDj2MUgFflFO5yk1DJcpEFN6yP1zM+KFpfYhGFlliSWpBjQ2A
-	wG7w==
-X-Gm-Message-State: ALoCoQnFTcaqpyrDIJZgsxxTx721igQ1XkSEs1ww8dcaE8ocpmtLVrQMK8ziVPnr5qC0thd82TOb
-X-Received: by 10.194.123.193 with SMTP id mc1mr4608376wjb.154.1444833835347; 
-	Wed, 14 Oct 2015 07:43:55 -0700 (PDT)
+	bh=NtFCZmqjlD5sMi8UWXmDTxYFDc0v9Giko5o5atEFlEM=;
+	b=Fv4gCYTpQvj5M++c1C+xVSOmJRIDjxTcdOPEONYixhXfdrn6/bNX+dEUlE0DXUbvww
+	8soN2E3KxewnWOVGd57egVM96vAM7I2FbHfOVZNSy5hc+Ipl/9NHaTD10BzDSHO4j8lB
+	FAzA4un+phdWVmUJvYFZx83VV49dsJoXX5XfyFzkwTyLuVKVvQg4uhLBfsUiEcHM1vON
+	wfTsSvhoMZX62pCmYF1HMuDXwBdc0QbFZsEQeUBHyfOTBDVMXG8zKO+zzKanE+EcfbiB
+	ophZSQhfDr1HiI1TIVf6RaC9WTZroJbk1dlJqruQ/kQZE/uKRsu2tmH1PQRpG8ea/c8C
+	vfHA==
+X-Gm-Message-State: ALoCoQldkOdj3pf/DPYHsOsW0eo+ig5V5yBsvQ7R/exMuZOWyh4hK7h7FlhZRd/M3nmYB3PpcSaI
+X-Received: by 10.194.239.167 with SMTP id vt7mr4367361wjc.110.1444833836141; 
+	Wed, 14 Oct 2015 07:43:56 -0700 (PDT)
 Received: from draco.icx.intel.com ([83.217.123.106])
 	by smtp.gmail.com with ESMTPSA id
-	p7sm10466970wjf.26.2015.10.14.07.43.54
+	p7sm10466970wjf.26.2015.10.14.07.43.55
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 14 Oct 2015 07:43:54 -0700 (PDT)
+	Wed, 14 Oct 2015 07:43:55 -0700 (PDT)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 14 Oct 2015 15:43:44 +0100
-Message-Id: <98534c29dbaabc742bd106265abe6f3cde17be0f.1444830820.git.michael.g.wood@intel.com>
+Date: Wed, 14 Oct 2015 15:43:45 +0100
+Message-Id: <b0c83d6ff1f019eeffc0c2add5b721daa28c091e.1444830820.git.michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <b6b577253c245392800ea5e78391d11cef8eb8c8.1444830820.git.michael.g.wood@intel.com>
 References: <cover.1444830820.git.michael.g.wood@intel.com>
 	<b6b577253c245392800ea5e78391d11cef8eb8c8.1444830820.git.michael.g.wood@intel.com>
 In-Reply-To: <cover.1444830820.git.michael.g.wood@intel.com>
 References: <cover.1444830820.git.michael.g.wood@intel.com>
-Subject: [PATCH 2/3] toaster: Check whether buildrequest exists before using it
+Subject: [PATCH 3/3] toaster: Test that exception isn't thrown by project page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -49,68 +49,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 14 Oct 2015 14:44:00 -0000
+X-List-Received-Date: Wed, 14 Oct 2015 14:44:21 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-Builds initiated from the command line don't have a buildrequest
-associated with them. The build.buildrequest association is
-only added if a build is triggered from toaster.
+Add a test which checks that an exception is no longer thrown
+for the /toastergui/project/X page for the default project.
 
-Some of the code for displaying the status of a build refers
-to build.buildrequest without checking whether it has been set,
-which causes an error to be thrown.
-
-Add a guard to check whether the buildrequest has been set.
+Note that we still get a spinning dialogue box on this page
+because the default project has no configuration to display,
+but at least it doesn't fail altogether.
 
 [YOCTO #8277]
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/orm/models.py | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ lib/toaster/toastergui/tests.py | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 1cbf480..44a453a 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -344,6 +344,9 @@ class Build(models.Model):
-         tgts = Target.objects.filter(build_id = self.id).order_by( 'target' );
-         return( tgts );
- 
-+    def get_outcome_text(self):
-+        return Build.BUILD_OUTCOME[int(self.outcome)][1]
+diff --git a/lib/toaster/toastergui/tests.py b/lib/toaster/toastergui/tests.py
+index 95790a2..e652b98 100644
+--- a/lib/toaster/toastergui/tests.py
++++ b/lib/toaster/toastergui/tests.py
+@@ -574,3 +574,33 @@ class ProjectBuildsDisplayTest(TestCase):
+         response = self.client.get(url, follow=True)
+         result = re.findall('bash:clean', response.content, re.MULTILINE)
+         self.assertEqual(len(result), 3)
 +
-     @property
-     def toaster_exceptions(self):
-         return self.logmessage_set.filter(level=LogMessage.EXCEPTION)
-@@ -361,10 +364,23 @@ class Build(models.Model):
-         return (self.completed_on - self.started_on).total_seconds()
- 
-     def get_current_status(self):
++class ProjectPageTests(TestCase):
++    """ Test project data at /project/X/ is displayed correctly """
++    CLI_BUILDS_PROJECT_NAME = 'Command line builds'
++
++    def test_command_line_builds_in_progress(self):
 +        """
-+        get the status string from the build request if the build
-+        has one, or the text for the build outcome if it doesn't
++        In progress builds should not cause an error to be thrown
++        when navigating to "command line builds" project page;
++        see https://bugzilla.yoctoproject.org/show_bug.cgi?id=8277
 +        """
 +
-         from bldcontrol.models import BuildRequest
--        if self.outcome == Build.IN_PROGRESS and self.buildrequest.state != BuildRequest.REQ_INPROGRESS:
++        # add the "command line builds" default project; this mirrors what
++        # we do in migration 0026_set_default_project.py
++        default_project = Project.objects.create_project(self.CLI_BUILDS_PROJECT_NAME, None)
++        default_project.is_default = True
++        default_project.save()
 +
-+        build_request = None
-+        if hasattr(self, 'buildrequest'):
-+            build_request = self.buildrequest
++        # add an "in progress" build for the default project
++        now = timezone.now()
++        build = Build.objects.create(project=default_project,
++                                     started_on=now,
++                                     completed_on=now,
++                                     outcome=Build.IN_PROGRESS)
 +
-+        if (build_request
-+                and build_request.state != BuildRequest.REQ_INPROGRESS
-+                and self.outcome == Build.IN_PROGRESS):
-             return self.buildrequest.get_state_display()
--        return self.get_outcome_display()
-+        else:
-+            return self.get_outcome_text()
- 
-     def __str__(self):
-         return "%d %s %s" % (self.id, self.project, ",".join([t.target for t in self.target_set.all()]))
++        # navigate to the project page for the default project
++        url = reverse("project", args=(default_project.id,))
++        response = self.client.get(url, follow=True)
++
++        self.assertEqual(response.status_code, 200)
 -- 
 2.1.4
 
