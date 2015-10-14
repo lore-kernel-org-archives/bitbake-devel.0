@@ -1,40 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f41.google.com (mail-pa0-f41.google.com
-	[209.85.220.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 81FBA77114
+Received: from mail-pa0-f50.google.com (mail-pa0-f50.google.com
+	[209.85.220.50])
+	by mail.openembedded.org (Postfix) with ESMTP id 3EEE977108
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Oct 2015 20:27:22 +0000 (UTC)
-Received: by padcn9 with SMTP id cn9so32586895pad.2
+	Wed, 14 Oct 2015 20:27:23 +0000 (UTC)
+Received: by padcn9 with SMTP id cn9so32587252pad.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Oct 2015 13:27:22 -0700 (PDT)
+	Wed, 14 Oct 2015 13:27:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=WnJ4ysdaaFPyd/smzw4tMz/fuDLb7zA0gAW5xe69PrM=;
-	b=C+u7SZ4apnDzj0Z0pmZlxty8+aUtFTH6uXtyemU6/DRjOg5H1EMyD9ComF+l9Nyizi
-	0VzlChmRhItQXvXSm/idPPTMHBPRH22J6un+F0/VUCdehMJFq291BI8V5LzTKA5xNO5K
-	Vhv8qqripE8EsDyXYTQJjGPGJxoBIqEeAVS7PeyAj7C0bWf2mzO0qGPScLqY+OjXe1/B
-	6CruNi0P7yDtB3c1DJWF4Qon0VU2/uYo5plrpiWfgWvwA+73U+J0Xgqh0bpZkZwq2NsA
-	wCh12ycZiOW4wCoXcH5/Sc5QVO5SAlA5SqOGnhhx/HaHDP6VGcKR63B5BwoTqnSs6dwX
-	wT4A==
-X-Received: by 10.66.147.74 with SMTP id ti10mr5664830pab.88.1444854442592;
-	Wed, 14 Oct 2015 13:27:22 -0700 (PDT)
+	bh=HA6C01yBsVRtdMQkMtbnKxwB0lux3bV2ZwNofPhpq1Y=;
+	b=DKR4mZzZvlys+SYtKLuSQUKLA0yTQLzwvUF353XtqhQ8GBfMNFt5UJ4XsCgF00ge6h
+	7x4D/iGylMLRmMmhzd7rEJO88vEJiPa+icqkrvFpGxbU/092PMoM5HtXYCFBXdmB2cGh
+	dnefFTsN69PoQiCcCcsL0GDnqARr+4ZAUq2oF9fSnagTNekEDkaumXRhE+3voVyfLFRN
+	+Ojvcin8qsCf99rg+ce1qtM0VvFEQXlef1Lzntnca9h6c325/siLQ1bKlZgeZlCr/0R7
+	fUAw0HT2X31hUEwrpbdoKtvBpN25KqM8ltP2LOBmyOmtp1qvZ6Ns+DB5WllzV1LQ2kwa
+	lQAw==
+X-Received: by 10.66.147.104 with SMTP id tj8mr5532661pab.125.1444854443664;
+	Wed, 14 Oct 2015 13:27:23 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	ce3sm11236656pbb.35.2015.10.14.13.27.21
+	ce3sm11236656pbb.35.2015.10.14.13.27.22
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 14 Oct 2015 13:27:21 -0700 (PDT)
+	Wed, 14 Oct 2015 13:27:22 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 14 Oct 2015 13:29:17 -0700
-Message-Id: <f08b7a75c711bbb9cd59d4343c871fd499ec9a17.1444854417.git.avery.brian@gmail.com>
+Date: Wed, 14 Oct 2015 13:29:18 -0700
+Message-Id: <e3eed785437bb7be9bd9117dd6618517cfef63fa.1444854417.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <20dd08f325d8ef8c81e951a92979cf98b0a2b905.1444854417.git.avery.brian@gmail.com>
 References: <20dd08f325d8ef8c81e951a92979cf98b0a2b905.1444854417.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1444854417.git.avery.brian@gmail.com>
 References: <cover.1444854417.git.avery.brian@gmail.com>
-Subject: [PATCH 09/10] toaster: Exclude "command line builds" project from projects typeahead
+Subject: [PATCH 10/10] toaster: Modify "New build" button behaviour for cli builds project
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,15 +47,24 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 14 Oct 2015 20:27:22 -0000
+X-List-Received-Date: Wed, 14 Oct 2015 20:27:23 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-The "New build" drop-down provides autocomplete for Toaster projects.
+The "New build" button should only be displayed if there are
+user-generated projects, not if there is only the command-line
+builds project. (Toaster can't run builds on behalf of the
+command-line builds project.)
 
-However, it should not include the default project (for command
-line builds), as it should not be possible for the user to
-select this project as the container for a Toaster build.
+The "New build" form should also display as if no project has
+been set (i.e. show the project and recipe text entries).
+
+Add a variable which tracks the number of non-command-line projects,
+then use this to hide the button when appropriate.
+
+Also track whether the current project is the default one, and
+use this to add extra conditions to when the "New build" text
+entries are shown.
 
 [YOCTO #8231]
 
@@ -63,28 +72,184 @@ Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/toaster/toastergui/typeaheads.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/toaster/toastergui/static/js/base.js   |  6 +-
+ lib/toaster/toastergui/templates/base.html | 95 +++++++++++++++---------------
+ lib/toaster/toastergui/views.py            |  9 ++-
+ 3 files changed, 59 insertions(+), 51 deletions(-)
 
-diff --git a/lib/toaster/toastergui/typeaheads.py b/lib/toaster/toastergui/typeaheads.py
-index 9db3182..dd4b7f5 100644
---- a/lib/toaster/toastergui/typeaheads.py
-+++ b/lib/toaster/toastergui/typeaheads.py
-@@ -121,12 +121,12 @@ class RecipesTypeAhead(ToasterTypeAhead):
-         return results
+diff --git a/lib/toaster/toastergui/static/js/base.js b/lib/toaster/toastergui/static/js/base.js
+index 6042a96..ed22a4e 100644
+--- a/lib/toaster/toastergui/static/js/base.js
++++ b/lib/toaster/toastergui/static/js/base.js
+@@ -121,14 +121,14 @@ function basePageInit(ctx) {
+   });
  
- class ProjectsTypeAhead(ToasterTypeAhead):
--    """ Typeahead for all the projects """
-+    """ Typeahead for all the projects, except for command line builds """
-     def __init__(self):
-         super(ProjectsTypeAhead, self).__init__()
+   function _checkProjectBuildable() {
+-    if (selectedProject.projectId === undefined) {
++    if (selectedProject.projectId === undefined || selectedProject.projectIsDefault) {
+       return;
+     }
  
-     def apply_search(self, search_term, prj, request):
--        projects = Project.objects.all().order_by("name")
-+        projects = Project.objects.exclude(is_default=True).order_by("name")
+     libtoaster.getProjectInfo(selectedProject.projectPageUrl,
+       function (data) {
+         if (data.machine === null || data.machine.name === undefined || data.layers.length === 0) {
+-          /* we can't build anything with out a machine and some layers */
++          /* we can't build anything without a machine and some layers */
+           $("#new-build-button #targets-form").hide();
+           $("#new-build-button .alert").show();
+         } else {
+@@ -147,7 +147,7 @@ function basePageInit(ctx) {
+     /* If we don't have a current project then present the set project
+      * form.
+      */
+-    if (selectedProject.projectId === undefined) {
++    if (selectedProject.projectId === undefined || selectedProject.projectIsDefault) {
+       $('#change-project-form').show();
+       $('#project .icon-pencil').hide();
+     }
+diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
+index 3f27790..c1d0693 100644
+--- a/lib/toaster/toastergui/templates/base.html
++++ b/lib/toaster/toastergui/templates/base.html
+@@ -38,6 +38,7 @@
+         projectId : {{project.id}},
+         projectPageUrl : {% url 'project' project.id as purl %}{{purl|json}},
+         projectName : {{project.name|json}},
++        projectIsDefault: {% if project.is_default %}true{% else %}false{% endif %},
+         recipesTypeAheadUrl: {% url 'xhr_recipestypeahead' project.id as paturl%}{{paturl|json}},
+         layersTypeAheadUrl: {% url 'xhr_layerstypeahead' project.id as paturl%}{{paturl|json}},
+         machinesTypeAheadUrl: {% url 'xhr_machinestypeahead' project.id as paturl%}{{paturl|json}},
+@@ -48,7 +49,7 @@
+         projectId : undefined,
+         projectPageUrl : undefined,
+         projectName : undefined,
+-        projectId : undefined,
++        projectIsDefault: false,
+         {% endif %}
+       };
+     </script>
+@@ -122,52 +123,54 @@
+           <div class="btn-group pull-right">
+             <a class="btn" id="new-project-button" href="{% url 'newproject' %}">New project</a>
+           </div>
+-          <!-- New build popover -->
+-          <div class="btn-group pull-right" id="new-build-button" style="display:none">
+-            <button class="btn dropdown-toggle" data-toggle="dropdown">
+-              New build
+-              <i class="icon-caret-down"></i>
+-            </button>
+-            <ul class="dropdown-menu new-build multi-select">
+-              <li>
+-                <h3>New build</h3>
+-                <h6>Project:</h6>
+-                <span id="project">
+-                  {% if project.id %}
+-                  <a class="lead" href="{% project_url project %}">{{project.name}}</a>
+-                  {% else %}
+-                  <a class="lead" href="#"></a>
+-                  {% endif %}
+-                  <i class="icon-pencil"></i>
+-                </span>
+-                <form id="change-project-form" style="display:none;">
+-                  <div class="input-append">
+-                    <input type="text" class="input-medium" id="project-name-input" placeholder="Type a project name" autocomplete="off" data-minLength="1" data-autocomplete="off" data-provide="typeahead"/>
+-                    <button id="save-project-button" class="btn" type="button">Save</button>
+-                    <a href="#" id="cancel-change-project" class="btn btn-link" style="display: none">Cancel</a>
+-                  </div>
+-                  <p><a id="view-all-projects" href="{% url 'all-projects' %}">View all projects</a></p>
+-                </form>
+-              </li>
+-              <li>
+-                <div class="alert" style="display:none;">
+-                  <p>This project configuration is incomplete, so you cannot run builds.</p>
+-                  <p><a href="{% if project.id %}{% url 'project' project.id %}{% endif %}">View project configuration</a></p>
+-                </div>
+-              </li>
+-              <li id="targets-form">
+-                <h6>Recipe(s):</h6>
+-                <form>
+-                  <input type="text" class="input-xlarge build-target-input" placeholder="Type a recipe name" autocomplete="off" data-minLength="1" data-autocomplete="off" data-provide="typeahead" disabled/>
+-                  <div class="row-fluid">
+-                    <button class="btn btn-primary build-button" disabled>Build</button>
++          <!-- New build popover; only shown if there is at least one user-created project -->
++          {% if non_cli_projects.count > 0 %}
++            <div class="btn-group pull-right" id="new-build-button" style="display:none">
++              <button class="btn dropdown-toggle" data-toggle="dropdown">
++                New build
++                <i class="icon-caret-down"></i>
++              </button>
++              <ul class="dropdown-menu new-build multi-select">
++                <li>
++                  <h3>New build</h3>
++                  <h6>
++                    Project:
++                    <span id="project">
++                      {% if project.id and not project.is_default %}
++                        <a class="lead" href="{% project_url project %}">{{project.name}}</a>
++                      {% else %}
++                        <a class="lead" href="#"></a>
++                      {% endif %}
++                      <i class="icon-pencil"></i>
++                    </span>
++                  </h6>
++                  <form id="change-project-form" style="display:none;">
++                    <div class="input-append">
++                      <input type="text" class="input-medium" id="project-name-input" placeholder="Type a project name" autocomplete="off" data-minLength="1" data-autocomplete="off" data-provide="typeahead"/>
++                      <button id="save-project-button" class="btn" type="button">Save</button>
++                      <a href="#" id="cancel-change-project" class="btn btn-link" style="display: none">Cancel</a>
++                    </div>
++                    <p><a id="view-all-projects" href="{% url 'all-projects' %}">View all projects</a></p>
++                  </form>
++                </li>
++                <li>
++                  <div class="alert" style="display:none;">
++                    <p>This project configuration is incomplete, so you cannot run builds.</p>
++                    <p><a href="{% if project.id %}{% url 'project' project.id %}{% endif %}">View project configuration</a></p>
+                   </div>
+-                </form>
+-              </li>
+-            </ul>
+-          </div>
+-
+-
++                </li>
++                <li id="targets-form">
++                  <h6>Recipe(s):</h6>
++                  <form>
++                    <input type="text" class="input-xlarge build-target-input" placeholder="Type a recipe name" autocomplete="off" data-minLength="1" data-autocomplete="off" data-provide="typeahead" disabled/>
++                    <div class="row-fluid">
++                      <button class="btn btn-primary build-button" disabled>Build</button>
++                    </div>
++                  </form>
++                </li>
++              </ul>
++            </div>
++          {% endif %}
+     </div>
+  </div>
+ </div>
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index c4264a1..e2f2874 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -1870,10 +1870,15 @@ def image_information_dir(request, build_id, target_id, packagefile_id):
+     return redirect(builds)
+     # the context processor that supplies data used across all the pages
  
-         primary_results = projects.filter(name__istartswith=search_term)
-         secondary_results = projects.filter(name__icontains=search_term).exclude(pk__in=primary_results)
+-
++# a context processor which runs on every request; this provides the
++# projects and non_cli_projects (i.e. projects created by the user)
++# variables referred to in templates, which used to determine the
++# visibility of UI elements like the "New build" button
+ def managedcontextprocessor(request):
++    projects = Project.objects.all()
+     ret = {
+-        "projects": Project.objects.all(),
++        "projects": projects,
++        "non_cli_projects": projects.exclude(is_default=True),
+         "DEBUG" : toastermain.settings.DEBUG,
+         "CUSTOM_IMAGE" : toastermain.settings.CUSTOM_IMAGE,
+         "TOASTER_BRANCH": toastermain.settings.TOASTER_BRANCH,
 -- 
 1.9.1
 
