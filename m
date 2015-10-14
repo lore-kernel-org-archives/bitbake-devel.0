@@ -1,41 +1,35 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wi0-f173.google.com (mail-wi0-f173.google.com
-	[209.85.212.173])
-	by mail.openembedded.org (Postfix) with ESMTP id ECFD777093
+Return-Path: <avery.brian@gmail.com>
+Received: from mail-pa0-f48.google.com (mail-pa0-f48.google.com
+	[209.85.220.48])
+	by mail.openembedded.org (Postfix) with ESMTP id 1E92965C8A
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Oct 2015 14:49:54 +0000 (UTC)
-Received: by wicll6 with SMTP id ll6so887686wic.0
+	Wed, 14 Oct 2015 20:27:06 +0000 (UTC)
+Received: by pabur7 with SMTP id ur7so14705879pab.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Oct 2015 07:49:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references:in-reply-to:references;
-	bh=jFTe3th9utqZ8jrgqUkY9Etxl7/koyegem5Zft028Yc=;
-	b=DdCWvcCrtNFjzWIQv8SnYPwsse1foJMJj/55WYAzjWyRfR2P5N29NXMxe3k6Oi51gs
-	LOjalalxfhaT+B24YANB6S2hYWY49UEWk14d/OsCspu3ndzny26RzthSQ05lmT9r0TyA
-	n8Op893yBEkOwtVNESUPt6ZiSCYpja0a3w3bHov/wm6y+8W1JaY2FUKD8FFPwF8I6oOU
-	8sBN9R9OWT2BithjzGOdV1yO2CaVBMU55Q75W3vItnDjIgeBr1YK4NqTWvu9qX0lKmkK
-	eiHFrGAuInXh95siTc0GKKnH9wyzhyREGEatyeaMbeFcLTcxHDdJSVylKzdNF9y3+qax
-	zGog==
-X-Gm-Message-State: ALoCoQknxrJD8BlwV4fmDKkg/G9OQZPVEAU5lOGgqp7Wg/Kn1/5cqcekt39s5ubDY2mJM94FFGWs
-X-Received: by 10.194.234.97 with SMTP id ud1mr4580998wjc.133.1444833834370;
-	Wed, 14 Oct 2015 07:43:54 -0700 (PDT)
-Received: from draco.icx.intel.com ([83.217.123.106])
+	Wed, 14 Oct 2015 13:27:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=ObxcaYFiuunaFOxHZemw9wZOfXwDRCm+JQbEJBRPf5E=;
+	b=qzQpP0lJAHrUFanbmAijwuiCZQAV+zn4bguodZYrHaM2S79BlJrlChmLMmaxcnCyUE
+	2/lnTBEVYu9dQC518MluISF1zr3X371zM4ezmpBFwFerq6LzZTMVMEb55lkieXjKlUm1
+	KDvtYeBEj+l1rFnDpr89qzZh6cNMjRaWAzHIQbb5/J0wjcImnsnbXIe8oKtcYPDhUmRP
+	+ZMeqZ7MjWZm5DtLjOdWO5ILVBg3M8u4WN44GYletogkrSOxkOCI1b1Eztxyk0pv54t4
+	ETnHJyuJ0thn3sfzfYPu4+ZCMvxm84eapsWM5PBSQMbXKtpvdNIW9S29czuu/KY3QuUK
+	p5NQ==
+X-Received: by 10.68.69.17 with SMTP id a17mr5618780pbu.10.1444854426561;
+	Wed, 14 Oct 2015 13:27:06 -0700 (PDT)
+Received: from whisper.hsd1.or.comcast.net
+	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	p7sm10466970wjf.26.2015.10.14.07.43.53
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 14 Oct 2015 07:43:53 -0700 (PDT)
-From: Michael Wood <michael.g.wood@intel.com>
+	fa14sm11307714pac.8.2015.10.14.13.27.05
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Wed, 14 Oct 2015 13:27:06 -0700 (PDT)
+From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 14 Oct 2015 15:43:43 +0100
-Message-Id: <b6b577253c245392800ea5e78391d11cef8eb8c8.1444830820.git.michael.g.wood@intel.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <cover.1444830820.git.michael.g.wood@intel.com>
-References: <cover.1444830820.git.michael.g.wood@intel.com>
-In-Reply-To: <cover.1444830820.git.michael.g.wood@intel.com>
-References: <cover.1444830820.git.michael.g.wood@intel.com>
-Subject: [PATCH 1/3] toaster: Always run bldcontrol migrations
+Date: Wed, 14 Oct 2015 13:29:10 -0700
+Message-Id: <cover.1444854417.git.avery.brian@gmail.com>
+X-Mailer: git-send-email 1.9.1
+Subject: [PATCH 00/10] toaster:Implement UI changesfor command line builds project
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,112 +42,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 14 Oct 2015 14:49:57 -0000
+X-List-Received-Date: Wed, 14 Oct 2015 20:27:08 -0000
 
-From: Elliot Smith <elliot.smith@intel.com>
+This implements changes across the UI to hide irrelevant options
+for command-line builds, and show additional help icons explaining
+why those options are hidden.
 
-The toaster startup script conditionally migrates the database
-tables depending on whether you are in managed mode or not. This
-means that if you are in analysis mode, some of the bldcontrol*
-database tables used by managed mode are not available.
+It also modifies the behaviour of the "New build" button to take
+account of the special status of the command-line builds project.
 
-As a consequence, some of the code in toaster which refers to
-those tables can break in analysis mode, as there's no clean
-isolation of the two modes.
+For UI details, see the document attached to bug 8231
+at https://bugzilla.yoctoproject.org/attachment.cgi?id=2760.
 
-To prevent this from happening, always run the migrations for
-managed mode and create the bldcontrol* tables, even if in
-analysis mode.
+-bavery
 
-Also clean up the function which starts up toaster so the
-logic is easier to follow.
+The following changes since commit 4d49aae0ca64d3d42295484ba1d80b6442c1ade6:
 
-[YOCTO #8277]
+  toaster: Test that exception isn't thrown by project page (2015-10-14 14:45:29 +0100)
 
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
----
- bin/toaster | 56 +++++++++++++++++++++++++++++++++++++++-----------------
- 1 file changed, 39 insertions(+), 17 deletions(-)
+are available in the git repository at:
 
-diff --git a/bin/toaster b/bin/toaster
-index bc439e6..e976604 100755
---- a/bin/toaster
-+++ b/bin/toaster
-@@ -59,29 +59,50 @@ webserverStartAll()
-     python $BBBASEDIR/lib/toaster/manage.py syncdb --noinput || retval=1
- 
-     python $BBBASEDIR/lib/toaster/manage.py migrate orm || retval=2
-+
-     if [ $retval -eq 1 ]; then
--        echo "Failed db sync, stopping system start" 1>&2
--    elif [ $retval -eq 2 ]; then
--        printf "\nError on migration, trying to recover... \n"
-+        echo "Failed db sync, aborting system start" 1>&2
-+        return $retval
-+    fi
-+
-+    python $BBBASEDIR/lib/toaster/manage.py migrate orm || retval=1
-+
-+    if [ $retval -eq 1 ]; then
-+        printf "\nError on orm migration, rolling back...\n"
-         python $BBBASEDIR/lib/toaster/manage.py migrate orm 0001_initial --fake
--        retval=0
--        python $BBBASEDIR/lib/toaster/manage.py migrate orm || retval=1
-+        return $retval
-     fi
-+
-+    python $BBBASEDIR/lib/toaster/manage.py migrate bldcontrol || retval=1
-+
-+    if [ $retval -eq 1 ]; then
-+        printf "\nError on bldcontrol migration, rolling back...\n"
-+        python $BBBASEDIR/lib/toaster/manage.py migrate bldcontrol 0001_initial --fake
-+        return $retval
-+    fi
-+
-     if [ "$TOASTER_MANAGED" = '1' ]; then
--        python $BBBASEDIR/lib/toaster/manage.py migrate bldcontrol || retval=1
--        python $BBBASEDIR/lib/toaster/manage.py checksettings  --traceback || retval=1
-+        python $BBBASEDIR/lib/toaster/manage.py checksettings --traceback || retval=1
-     fi
--    if [ $retval -eq 0 ]; then
--        echo "Starting webserver..."
--        python $BBBASEDIR/lib/toaster/manage.py runserver "0.0.0.0:$WEB_PORT" </dev/null >>${BUILDDIR}/toaster_web.log 2>&1 & echo $! >${BUILDDIR}/.toastermain.pid
--        sleep 1
--        if ! cat "${BUILDDIR}/.toastermain.pid" | xargs -I{} kill -0 {} ; then
--            retval=1
--            rm "${BUILDDIR}/.toastermain.pid"
--        else
--            echo "Webserver address:  http://0.0.0.0:$WEB_PORT/"
--        fi
-+
-+    if [ $retval -eq 1 ]; then
-+        printf "\nError while checking settings; aborting\n"
-+        return $retval
-+    fi
-+
-+    echo "Starting webserver..."
-+
-+    python $BBBASEDIR/lib/toaster/manage.py runserver "0.0.0.0:$WEB_PORT" </dev/null >>${BUILDDIR}/toaster_web.log 2>&1 & echo $! >${BUILDDIR}/.toastermain.pid
-+
-+    sleep 1
-+
-+    if ! cat "${BUILDDIR}/.toastermain.pid" | xargs -I{} kill -0 {} ; then
-+        retval=1
-+        rm "${BUILDDIR}/.toastermain.pid"
-+    else
-+        echo "Webserver address:  http://0.0.0.0:$WEB_PORT/"
-     fi
-+
-     return $retval
- }
- 
-@@ -375,3 +396,4 @@ case $CMD in
-         echo "Successful ${CMD}."
-     ;;
- esac
-+
--- 
-2.1.4
+  git://git.yoctoproject.org/poky-contrib bavery/submit/elliot/2015-10-14_cli-builds-ui-8231
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/elliot/2015-10-14_cli-builds-ui-8231
 
+Elliot Smith (10):
+  toaster: Reorganise and lint tests
+  toaster: Replace "Run again" button with help text for cli builds
+  toaster: Show 'not applicable' for default project machine and release
+  toaster: Make the builds view the project page for "command line
+    builds"
+  toaster: Hide tabs and add info popups for command line builds
+  toaster: Show tooltip next to cli builds project name in all builds
+  toaster: More linting of tests
+  toaster: Clean up template code
+  toaster: Exclude "command line builds" project from projects typeahead
+  toaster: Modify "New build" button behaviour for cli builds project
+
+ lib/toaster/toastergui/static/css/default.css      |   5 +
+ lib/toaster/toastergui/static/js/base.js           |  18 +-
+ lib/toaster/toastergui/templates/base.html         |  98 ++++---
+ lib/toaster/toastergui/templates/builds.html       |  19 +-
+ lib/toaster/toastergui/templates/mrb_section.html  |  66 +++--
+ lib/toaster/toastergui/templates/projects.html     |  23 +-
+ .../toastergui/templates/projecttopbar.html        |  80 ++---
+ .../toastergui/templatetags/project_url_tag.py     |  34 +++
+ lib/toaster/toastergui/tests.py                    | 322 ++++++++++++++++++---
+ lib/toaster/toastergui/typeaheads.py               |   4 +-
+ lib/toaster/toastergui/views.py                    |   9 +-
+ 11 files changed, 494 insertions(+), 184 deletions(-)
+ create mode 100644 bitbake/lib/toaster/toastergui/templatetags/project_url_tag.py
+
+--
+1.9.1
 
