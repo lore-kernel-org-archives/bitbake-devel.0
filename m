@@ -1,21 +1,36 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id BEEF475E2D
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-wi0-f173.google.com (mail-wi0-f173.google.com
+	[209.85.212.173])
+	by mail.openembedded.org (Postfix) with ESMTP id 6585877089
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 14 Oct 2015 12:43:52 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga101.jf.intel.com with ESMTP; 14 Oct 2015 05:43:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,681,1437462000"; d="scan'208";a="810776550"
-Received: from marcinko-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.22.75])
-	by fmsmga001.fm.intel.com with ESMTP; 14 Oct 2015 05:43:50 -0700
-From: Elliot Smith <elliot.smith@intel.com>
+	Wed, 14 Oct 2015 13:59:51 +0000 (UTC)
+Received: by wieq12 with SMTP id q12so84761708wie.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 14 Oct 2015 06:59:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=F4lVAIOZFiKjG9+Gw2sWLDEV8RpGHr9Oyc5BhbIDtjQ=;
+	b=BXjq73FGfu507ym3RH+8D+B5mgqW75DKY22vzjP2vGbCaLbLAawExmHZEb+OkcPoSS
+	UXM/vKjQjCRzqQpnnkSFq2wzBmx+rV15Ii+mDMg+WGsg2nflItIwr5t6huGeGrOQL08F
+	NZMfahpPzJbzPUdAQYa9oPclOKKfQ+rrEXWmbAAKkmeAQewAXiDtjPPei2R0M9NsMUS+
+	iLbpO0Z79pVKclmngByC8RBVS00PE15JvHYW0zqXrhAwg4Z9UWDGzgLQ1e7u1qYJ7zsI
+	hJowtl20KhDbYsldVTSIkyFltMZJQohJmBu5/LN09MzhWuoz+jcb1ruSAMVIspTQ9rVG
+	ndqw==
+X-Gm-Message-State: ALoCoQlf8P1HrVj43LaDO51YjcKV/azI0sft5RpjI6bu76V3Hnz+nBQ5hgZOafAsBJrVn0WryyMQ
+X-Received: by 10.194.192.6 with SMTP id hc6mr4109193wjc.33.1444831171641;
+	Wed, 14 Oct 2015 06:59:31 -0700 (PDT)
+Received: from draco.icx.intel.com ([83.217.123.106])
+	by smtp.gmail.com with ESMTPSA id
+	p2sm10241826wjb.21.2015.10.14.06.59.30
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Wed, 14 Oct 2015 06:59:30 -0700 (PDT)
+From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 14 Oct 2015 13:43:18 +0100
-Message-Id: <1444826598-2511-1-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-Subject: [PATCH] toaster: Disable add layer button when input is empty
+Date: Wed, 14 Oct 2015 14:59:13 +0100
+Message-Id: <cover.1444830820.git.michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH 0/3] toaster: Fix error thrown by command line builds project page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,57 +43,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 14 Oct 2015 12:43:55 -0000
+X-List-Received-Date: Wed, 14 Oct 2015 13:59:54 -0000
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-The 'add layer' button in the project configuration page
-is enabled when you select a layer from the type ahead.
-However, if you delete the layer name, the 'add layer'
-button remains enabled, and if you click it, the last
-selected layer from the type ahead will be added to the
-project.
+This patch series fixes an exception being thrown when viewing
+the default "command line builds" project while a bitbake command line
+build is running.
 
-It is probably better to disable the 'add layer' button
-when the input field is empty.
+It also modifies and cleans up the toaster startup script so that
+the bldcontrol migrations are applied in analysis mode, as well as
+in managed mode. This should help prevent other errors which may
+occur in analysis mode due to missing database tables.
 
-[YOCTO #8449]
 
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
----
- bitbake/lib/toaster/toastergui/static/js/projectpage.js | 6 ++++++
- 1 file changed, 6 insertions(+)
+Available in the git repository at:
 
-diff --git a/bitbake/lib/toaster/toastergui/static/js/projectpage.js b/bitbake/lib/toaster/toastergui/static/js/projectpage.js
-index 30989a0..b0fe451 100644
---- a/bitbake/lib/toaster/toastergui/static/js/projectpage.js
-+++ b/bitbake/lib/toaster/toastergui/static/js/projectpage.js
-@@ -103,6 +103,12 @@ function projectPageInit(ctx) {
-     layerAddBtn.removeAttr("disabled");
-   });
- 
-+  layerAddInput.keyup(function() {
-+    if ($(this).val().length == 0) {
-+      layerAddBtn.attr("disabled", "disabled")
-+    }
-+  });
-+
-   layerAddBtn.click(function(e){
-     e.preventDefault();
-     var layerObj = currentLayerAddSelection;
+  git://git.yoctoproject.org/poky-contrib michaelw/submit/elliot/toaster/cli_builds_error-8277
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=michaelw/submit/elliot/toaster/cli_builds_error-8277
+
+Elliot Smith (3):
+  toaster: Always run bldcontrol migrations
+  toaster: Check whether buildrequest exists before using it
+  toaster: Test that exception isn't thrown by project page
+
+ bin/toaster                     | 56 ++++++++++++++++++++++++++++-------------
+ lib/toaster/orm/models.py       | 20 +++++++++++++--
+ lib/toaster/toastergui/tests.py | 30 ++++++++++++++++++++++
+ 3 files changed, 87 insertions(+), 19 deletions(-)
+
 -- 
-1.9.3
-
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
+2.1.4
 
 
