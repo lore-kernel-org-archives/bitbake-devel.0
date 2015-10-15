@@ -1,37 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f54.google.com (mail-pa0-f54.google.com
-	[209.85.220.54])
-	by mail.openembedded.org (Postfix) with ESMTP id B05677710D
+Received: from mail-pa0-f52.google.com (mail-pa0-f52.google.com
+	[209.85.220.52])
+	by mail.openembedded.org (Postfix) with ESMTP id 19BBF7711F
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 15 Oct 2015 16:32:10 +0000 (UTC)
-Received: by payp3 with SMTP id p3so44534818pay.1
+	Thu, 15 Oct 2015 16:32:11 +0000 (UTC)
+Received: by pabur7 with SMTP id ur7so9871215pab.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 15 Oct 2015 09:32:11 -0700 (PDT)
+	Thu, 15 Oct 2015 09:32:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=1dlWyU1cL2Z6UAQzmn886f53eNyB4YbLX78f4/he7yA=;
-	b=NTV+7QbALLVx8kWcE2B+3pCMYKM46SIxWR9C8Q+xTO/Au8Z7NJZhKBQk1rTMqIx3qh
-	oK2m31n2mAIHaqb48FBd7Tv/fKEbPJPjcyfdCTCNL+K9zkl8kOsc6cW/lWnNiQOoJwnt
-	IQjBw+8k+tc5vKTn0SjmdOJKavumNhRqE1cL9JkSMuc6FlqKGd9/uJfCC3OiQMpsRTuU
-	UjtuLeZJL+WO8qxmoK83khibFaqtqilOKD5l1UjEVqycY5B9zD6lUgqpWPOLcqxguS02
-	YNuK4PNqy3YnoyHlT1dvJhXKKM+61IePdmObfTpGDwYtSGFLGkxMyG0l7YwbxBB9GRVG
-	leLA==
-X-Received: by 10.68.240.2 with SMTP id vw2mr10905758pbc.41.1444926731201;
-	Thu, 15 Oct 2015 09:32:11 -0700 (PDT)
+	h=from:to:cc:subject:date:message-id:in-reply-to:references
+	:in-reply-to:references;
+	bh=n7U83GJGHzwjYxs67G3dLTUlCFASdIm25q3/i0rF+sw=;
+	b=YBGn0d5QnwnpyczC6pBBDxHlpXRxjfPfApKp20ut+sPkd26xfBVDwmIakAteQmco6t
+	bJUchhS+Y7TAYMkUjc/Yk+0RB43XOQ9qxrsA1ep/nX4lbahr6HeNC+h1UKJVWNoJf+u2
+	tqUGLMdmD0MmXfyFi/BR1OzAaO/uW8oEbH3eepHeyZ9hg7FFeAWb4LgtjAXObNW1HDki
+	Rzb3szA3w30N4wTHHhrotsrej94nhojK7wSEpOPlPAaGeg2AljedHf48Yj6GDlzSn++5
+	soWAk4G9yqTsa6AtZXM6qf47xO4C6QMvRBSs1Zqsl1sJaGN9xa94VuZHZ4usZLNop4vG
+	zodQ==
+X-Received: by 10.68.197.97 with SMTP id it1mr11096862pbc.4.1444926732186;
+	Thu, 15 Oct 2015 09:32:12 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	ih4sm16312960pbc.28.2015.10.15.09.32.10
+	ih4sm16312960pbc.28.2015.10.15.09.32.11
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 15 Oct 2015 09:32:10 -0700 (PDT)
+	Thu, 15 Oct 2015 09:32:11 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 15 Oct 2015 09:34:14 -0700
-Message-Id: <48d240461508600763a287d95ef3a94d885a5b57.1444926648.git.avery.brian@gmail.com>
+Date: Thu, 15 Oct 2015 09:34:15 -0700
+Message-Id: <3d5cfe639bb50a751ea8e546d6dc8d0d41b02e8a.1444926648.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <48d240461508600763a287d95ef3a94d885a5b57.1444926648.git.avery.brian@gmail.com>
+References: <48d240461508600763a287d95ef3a94d885a5b57.1444926648.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1444926648.git.avery.brian@gmail.com>
 References: <cover.1444926648.git.avery.brian@gmail.com>
-Subject: [PATCH 1/4] toaster: use path to the script to guess config path
+Subject: [PATCH 2/4] toaster: get rid of SRCFILE
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,37 +51,30 @@ X-List-Received-Date: Thu, 15 Oct 2015 16:32:12 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Used $TOASTER variable(path to the toaster script) instead of
-current directory name to get path to the toasterconf.json
-
-This way script should work in both modes and it doesn't depend
-on the current directory.
+Used TOASTER variable instead of SRCFILE as they're
+essentially the same.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- bin/toaster | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ bin/toaster | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/bin/toaster b/bin/toaster
-index e976604..75d3390 100755
+index 75d3390..d7c5a84 100755
 --- a/bin/toaster
 +++ b/bin/toaster
-@@ -194,11 +194,11 @@ fi
- # in the local layers that currently prevent using an arbitrary
- # toasterconf.json
- if [ "$TOASTER_CONF" = "" ]; then
--    BIN_DIR=$(dirname -- "$0")
--    export TOASTER_CONF="$BIN_DIR/../../meta-yocto/conf/toasterconf.json"
-+    TOASTER_CONF="$(dirname $TOASTER)/../../meta-yocto/conf/toasterconf.json"
-+    export TOASTER_CONF=$(python -c "import os; print os.path.realpath('$TOASTER_CONF')")
- fi
- if [ ! -f $TOASTER_CONF ]; then
--    echo "$TOASTER_CONF configuration file not found, exiting..."
-+    echo "$TOASTER_CONF configuration file not found. set TOASTER_CONF to specify a path"
-     exit 1;
- fi
- # this defines the dir toaster will use for
+@@ -232,9 +232,7 @@ for param in $*; do
+     esac
+ done
+ 
+-[ -n "${BASH_SOURCE}" ] && SRCFILE=${BASH_SOURCE} || SRCFILE=$_
+-
+-if [ `basename \"$0\"` = `basename \"${SRCFILE}\"` ]; then
++if [ `basename \"$0\"` = `basename \"${TOASTER}\"` ]; then
+     # We are called as standalone. We refuse to run in a build environment - we need the interactive mode for that.
+     # Start just the web server, point the web browser to the interface, and start any Django services.
+ 
 -- 
 1.9.1
 
