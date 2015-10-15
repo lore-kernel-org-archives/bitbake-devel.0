@@ -1,40 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f45.google.com (mail-pa0-f45.google.com
-	[209.85.220.45])
-	by mail.openembedded.org (Postfix) with ESMTP id 2EF697710C
+Received: from mail-pa0-f50.google.com (mail-pa0-f50.google.com
+	[209.85.220.50])
+	by mail.openembedded.org (Postfix) with ESMTP id CEBA97710C
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 15 Oct 2015 16:32:12 +0000 (UTC)
-Received: by payp3 with SMTP id p3so44535483pay.1
+	Thu, 15 Oct 2015 16:32:13 +0000 (UTC)
+Received: by payp3 with SMTP id p3so44535735pay.1
 	for <bitbake-devel@lists.openembedded.org>;
 	Thu, 15 Oct 2015 09:32:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=ZaKtiry02oLSY0wU5tWZ/bIUfbYT9xIwKyyZnwo+DGQ=;
-	b=ELBtnJg4VT3N0KMVrQoOuAA/bkGr8nCK8F7+J5y7+tLD//0V63HCwT4f+uFWR0+2vR
-	JMESowUnX0NPxBv352TxocJ+Co0RQIo7kCJhRVFW8xfxNiT0k9sSTW4MB424sjJl1UiT
-	ziTynxPvOeE3+BzRmZ2lMHVryEGYrqPQUqMj6I7WKKfupWsmbUbl5LidXs9rFP61S/7S
-	/BX2EXhCkOYYXsbWqn5n6896eS7w2YMYOZj4Rs0UAD2YBTjf+VpVgOwGCBbB417SI3Jo
-	1F1eGJWCz4tpxCALd5A7E0YZv2sHcg6yZ/nMjhxCeCloa3ufpplydxMkTRzMsa1uOmNV
-	kn0Q==
-X-Received: by 10.66.101.68 with SMTP id fe4mr11159904pab.30.1444926732983;
-	Thu, 15 Oct 2015 09:32:12 -0700 (PDT)
+	bh=dGED+S9ZM71it00Z7kcbV2Oo5gSs2Jt7XtIoElBNFfg=;
+	b=FZZ4iRV6CUURH8BwiNnwSC/WdciXlD6RuIkk/e0asrA1rHyGMGS6a5PwB8nITkPoVn
+	TkMGdH5ndCIiZtD8TKT1eUQDLWhkfRaAh7NMU8b43R8QVx/xOEXDF8TgrhHdvCnJ+wny
+	1O4Afw0meyZI+5YmzHiaGHwzIYnzjmBJDd38JAHNdFKBOo8ZVke4ZDONxAslnepKB+Gb
+	iIbBQGfH/HTCXK80J39lHFsh3HH4TVws4lFND5HNhoG/h6K5C4zyO2ybr9jJ5+VUPAZy
+	JhBRPOgX1/40fe5KgvjK1Qpr47iN7E/2DIWerIDO2CcCy6Ew46OLSk+7vti0bNpnI4nh
+	oKWw==
+X-Received: by 10.66.163.228 with SMTP id yl4mr10990279pab.112.1444926733740; 
+	Thu, 15 Oct 2015 09:32:13 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	ih4sm16312960pbc.28.2015.10.15.09.32.12
+	ih4sm16312960pbc.28.2015.10.15.09.32.13
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 15 Oct 2015 09:32:12 -0700 (PDT)
+	Thu, 15 Oct 2015 09:32:13 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 15 Oct 2015 09:34:16 -0700
-Message-Id: <a70f8ccce55633952052f8333f80d807b0958a99.1444926648.git.avery.brian@gmail.com>
+Date: Thu, 15 Oct 2015 09:34:17 -0700
+Message-Id: <44fc582143892ef2dddd37c2bd72948f41be82e3.1444926648.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <48d240461508600763a287d95ef3a94d885a5b57.1444926648.git.avery.brian@gmail.com>
 References: <48d240461508600763a287d95ef3a94d885a5b57.1444926648.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1444926648.git.avery.brian@gmail.com>
 References: <cover.1444926648.git.avery.brian@gmail.com>
-Subject: [PATCH 3/4] toaster: set TOASTER_MANAGED variable
+Subject: [PATCH 4/4] toaster: exit or return depending on the mode
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,44 +51,34 @@ X-List-Received-Date: Thu, 15 Oct 2015 16:32:13 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Set TOASTER_MANAGED to 1 if toaster is run as a script.
+When toaster script is sourced 'return' should be used as
+using 'exit' will cause script to exit the shell and close terminal
+window. If script is called 'exit' should be used. Otherwise shell
+will throw and error:
+  return: can only `return' from a function or sourced script
+
+Used 'return' or 'exit' depending on the toaster mode using
+TOASTER_MANAGED variable.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- bin/toaster | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ bin/toaster | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/bin/toaster b/bin/toaster
-index d7c5a84..cf93e9f 100755
+index cf93e9f..2c3432c 100755
 --- a/bin/toaster
 +++ b/bin/toaster
-@@ -176,6 +176,8 @@ else
-     TOASTER=$0
+@@ -201,7 +201,7 @@ if [ "$TOASTER_CONF" = "" ]; then
  fi
- 
-+[ `basename \"$0\"` = `basename \"${TOASTER}\"` ] && TOASTER_MANAGED=1
-+
- BBBASEDIR=`dirname $TOASTER`/..
- 
- RUNNING=0
-@@ -232,7 +234,7 @@ for param in $*; do
-     esac
- done
- 
--if [ `basename \"$0\"` = `basename \"${TOASTER}\"` ]; then
-+if [ "$TOASTER_MANAGED" = '1' ]; then
-     # We are called as standalone. We refuse to run in a build environment - we need the interactive mode for that.
-     # Start just the web server, point the web browser to the interface, and start any Django services.
- 
-@@ -279,7 +281,6 @@ if [ `basename \"$0\"` = `basename \"${TOASTER}\"` ]; then
-             do_cleanup
-         fi
-     }
--    TOASTER_MANAGED=1
-     export TOASTER_MANAGED=1
-     if [ $WEBSERVER -gt 0 ] && ! webserverStartAll; then
-         echo "Failed to start the web server, stopping" 1>&2
+ if [ ! -f $TOASTER_CONF ]; then
+     echo "$TOASTER_CONF configuration file not found. set TOASTER_CONF to specify a path"
+-    exit 1;
++    [ "$TOASTER_MANAGED" = '1' ] && exit 1 || return 1
+ fi
+ # this defines the dir toaster will use for
+ # 1) clones of layers (in _toaster_clones )
 -- 
 1.9.1
 
