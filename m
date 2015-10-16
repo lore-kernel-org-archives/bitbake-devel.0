@@ -1,30 +1,33 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id BADE9770E7
+Return-Path: <elliot.smith@intel.com>
+Received: from mail-io0-f169.google.com (mail-io0-f169.google.com
+	[209.85.223.169])
+	by mail.openembedded.org (Postfix) with ESMTP id 50CFB7714F
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Oct 2015 13:18:04 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t9GDI2OL008710; Fri, 16 Oct 2015 14:18:02 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id PjCkLgRz0Shc; Fri, 16 Oct 2015 14:18:02 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t9GDHlRv008655
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 16 Oct 2015 14:17:58 +0100
-Message-ID: <1445001467.17974.18.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Ed Bartosh <ed.bartosh@linux.intel.com>
-Date: Fri, 16 Oct 2015 14:17:47 +0100
-In-Reply-To: <355ebfff2a5145d117aa8122cb7efdf6917eeeeb.1444910218.git.ed.bartosh@linux.intel.com>
-References: <cover.1444910218.git.ed.bartosh@linux.intel.com>
-	<355ebfff2a5145d117aa8122cb7efdf6917eeeeb.1444910218.git.ed.bartosh@linux.intel.com>
-X-Mailer: Evolution 3.12.11-0ubuntu3 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH 4/4] toaster: Add tests for error message display on the build dashboard
+	Fri, 16 Oct 2015 13:59:03 +0000 (UTC)
+Received: by iofl186 with SMTP id l186so124779154iof.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 16 Oct 2015 06:59:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:date:message-id:subject:from:to
+	:content-type;
+	bh=d3s2E3Y3fjIzN1m5JjCDhUmxbituyEzX19ClUizbMPc=;
+	b=Zdo/PsC+sCkiOrMQt2A0Y8MHUU6rr5FjtOJ5h7MJEhz+BlhYfOhBATeahScLuqP2Fz
+	gwBn/C5fvzZLGyijMRuQn2+M8Bo2u2QrRxd0JWOWi1iSY/CsCXm/OEuiqXrFLsRnLBeS
+	MHFZJX77aekJUwAGUkjXz8NViHRgtoJRP71P2ej8Nesg5Qyysq2NnhE04r2xfeLBp/TT
+	pnc0CXfm7lgozqiaDqdDhVcuUoFtuY3TGhupU2BgL0lfhPOED5vDgB/OJ/C1ac+CN0IS
+	Q1fJTJorTi5jgR95R/IgtOxMqlchMZeD05bv3l3mqldiUlFED8zxfJuJP1RsUg3A2C8i
+	Fhhw==
+X-Gm-Message-State: ALoCoQm3UtgTvBY/GiLEmZ7JDlPgULqbBbTvSU6SDqi1nu5f2NHAFzu8+2kz/evCjO5QF+ZLw0Al
+MIME-Version: 1.0
+X-Received: by 10.107.41.194 with SMTP id p185mr19964356iop.109.1445003943969; 
+	Fri, 16 Oct 2015 06:59:03 -0700 (PDT)
+Received: by 10.64.7.77 with HTTP; Fri, 16 Oct 2015 06:59:03 -0700 (PDT)
+Date: Fri, 16 Oct 2015 14:59:03 +0100
+Message-ID: <CA+1hgUgYKybYHBot6xxzDOJO4BM_8MBaSRm7niN4AO5gWbik5g@mail.gmail.com>
+From: "Smith, Elliot" <elliot.smith@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Subject: [PATCH] Patches for toaster which didn't apply to master 2015-10-16
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,51 +40,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Oct 2015 13:18:05 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 16 Oct 2015 13:59:04 -0000
+Content-Type: multipart/alternative; boundary=001a1141bfc2c7a002052239329e
 
-On Thu, 2015-10-15 at 15:45 +0300, Ed Bartosh wrote:
-> From: Elliot Smith <elliot.smith@intel.com>
-> 
-> Add tests to ensure that log messages with CRITICAL level and
-> with EXCEPTION level are shown in the main errors display
-> on the build dashboard.
-> 
-> [YOCTO #8320]
-> 
-> Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-> Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
-> ---
->  lib/toaster/toastergui/tests.py | 91 ++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 89 insertions(+), 2 deletions(-)
-> 
-> diff --git a/lib/toaster/toastergui/tests.py b/lib/toaster/toastergui/tests.py
-> index 7c4bd39..29dd7fd 100644
-> --- a/lib/toaster/toastergui/tests.py
-> +++ b/lib/toaster/toastergui/tests.py
-> @@ -26,15 +26,15 @@ from django.test.client import RequestFactory
->  from django.core.urlresolvers import reverse
->  from django.utils import timezone
->  
-> -from orm.models import Project, Release, BitbakeVersion, Package
-> +from orm.models import Project, Release, BitbakeVersion, Package, LogMessage
->  from orm.models import ReleaseLayerSourcePriority, LayerSource, Layer, Build
->  from orm.models import Layer_Version, Recipe, Machine, ProjectLayer, Target
->  from orm.models import CustomImageRecipe, ProjectVariable
->  from orm.models import Branch
->  
->  from toastergui.tables import SoftwareRecipesTable
-> -from bs4 import BeautifulSoup
->  import json
-> +from bs4 import BeautifulSoup
->  import re
- 
-Sadly this failed to apply to master, please send a version which
-does...
+--001a1141bfc2c7a002052239329e
+Content-Type: text/plain; charset=UTF-8
 
-Cheers,
+Several of the patches for toaster didn't apply to master.
 
-Richard
+I have now rebased our toaster-next branch on master and pushed it to:
 
+toaster-next-outstanding
+http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/?h=toaster-next-outstanding
 
+There are no commits on that branch which haven't been sent to
+bitbake-devel before.
+
+Thanks.
+Elliot
+-- 
+Elliot Smith
+Software Engineer
+Intel Open Source Technology Centre
+
+--001a1141bfc2c7a002052239329e
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Several of the patches for toaster didn&#39;t apply to mas=
+ter.<div><br></div><div>I have now rebased our toaster-next branch on maste=
+r and pushed it to:</div><div><br></div><div>toaster-next-outstanding</div>=
+<div><a href=3D"http://git.yoctoproject.org/cgit/cgit.cgi/poky-contrib/log/=
+?h=3Dtoaster-next-outstanding">http://git.yoctoproject.org/cgit/cgit.cgi/po=
+ky-contrib/log/?h=3Dtoaster-next-outstanding</a><br></div><div><br></div><d=
+iv>There are no commits on that branch which haven&#39;t been sent to bitba=
+ke-devel before.</div><div><br></div><div>Thanks.</div><div>Elliot</div><di=
+v><div>--=C2=A0<br></div><div><div class=3D"gmail_signature"><div dir=3D"lt=
+r"><div>Elliot Smith<br>Software Engineer<br>Intel Open Source Technology C=
+entre</div></div></div>
+</div></div></div>
+
+--001a1141bfc2c7a002052239329e--
