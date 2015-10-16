@@ -1,21 +1,31 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id C98C577126
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 35416770E7
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Oct 2015 09:20:03 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga103.fm.intel.com with ESMTP; 16 Oct 2015 02:20:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,688,1437462000"; d="scan'208";a="828379998"
-Received: from bbryczek-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.3.107])
-	by fmsmga002.fm.intel.com with ESMTP; 16 Oct 2015 02:18:47 -0700
-From: Elliot Smith <elliot.smith@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 16 Oct 2015 10:18:29 +0100
-Message-Id: <1444987109-22763-1-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-Subject: [PATCH] toaster: Allow any text input to machine configuration variable
+	Fri, 16 Oct 2015 13:10:11 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t9GDA86U008374; Fri, 16 Oct 2015 14:10:08 +0100
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id fK7XYfQ0mSg0; Fri, 16 Oct 2015 14:10:08 +0100 (BST)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	t9GD9uPa008360
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 16 Oct 2015 14:10:07 +0100
+Message-ID: <1445000996.17974.15.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Ed Bartosh <ed.bartosh@linux.intel.com>, "toaster@yoctoproject.org"
+	<toaster@yoctoproject.org>
+Date: Fri, 16 Oct 2015 14:09:56 +0100
+In-Reply-To: <1444898260-19877-1-git-send-email-ed.bartosh@linux.intel.com>
+References: <CABcZANmHoWBvfF0JKMt4SCVef5-qgGvF+OJ+or6-Pu5pgpz46w@mail.gmail.com>
+	<1444898260-19877-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: Evolution 3.12.11-0ubuntu3 
+Mime-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH v2] bitbake: normalize build targets
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,95 +38,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Oct 2015 09:20:06 -0000
+X-List-Received-Date: Fri, 16 Oct 2015 13:10:13 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Michael Wood <michael.g.wood@intel.com>
+On Thu, 2015-10-15 at 11:37 +0300, Ed Bartosh wrote:
+> BuildStarted event not fully represents build tasks for
+> the targets. If -c option is used to specify default task
+> it's not included into the event.
+> 
+> Made build targets to always look as <target>:do_<task>.
+> Consider default task (do_build or specified by -c command
+> line option) when normalizing.
+> 
+> Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Allow any text input to the machine variable; as we may not have discovered
-all the available machines until after a build.
+The correct prefix for the commit shortlog is "cooker:". I'd really like
+to see toaster becoming a little more specific too such as
+"toaster/xxxx:" instead of the usual "toaster:".
 
-[YOCTO #8418]
+Cheers,
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
----
- .../lib/toaster/toastergui/static/js/projectpage.js  | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
-
-diff --git a/bitbake/lib/toaster/toastergui/static/js/projectpage.js b/bitbake/lib/toaster/toastergui/static/js/projectpage.js
-index b0fe451..e742ef2 100644
---- a/bitbake/lib/toaster/toastergui/static/js/projectpage.js
-+++ b/bitbake/lib/toaster/toastergui/static/js/projectpage.js
-@@ -23,7 +23,7 @@ function projectPageInit(ctx) {
-   var cancelReleaseChange = $("#cancel-release-change");
- 
-   var currentLayerAddSelection;
--  var currentMachineAddSelection = {};
-+  var currentMachineAddSelection = "";
- 
-   var urlParams = libtoaster.parseUrlParams();
- 
-@@ -38,7 +38,7 @@ function projectPageInit(ctx) {
-      */
-     if (urlParams.hasOwnProperty('setMachine') &&
-         urlParams.setMachine !== prjInfo.machine.name){
--        currentMachineAddSelection.name = urlParams.setMachine;
-+        machineChangeInput.val(urlParams.setMachine);
-         machineChangeBtn.click();
-     } else {
-       updateMachineName(prjInfo.machine.name);
-@@ -254,29 +254,33 @@ function projectPageInit(ctx) {
-   }
- 
-   libtoaster.makeTypeahead(machineChangeInput, libtoaster.ctx.machinesTypeAheadUrl, { }, function(item){
--    currentMachineAddSelection = item;
-+    currentMachineAddSelection = item.name;
-     machineChangeBtn.removeAttr("disabled");
-   });
- 
-   machineChangeBtn.click(function(e){
-     e.preventDefault();
--    if (currentMachineAddSelection.name === undefined)
-+    /* We accept any value regardless of typeahead selection or not */
-+    if (machineChangeInput.val().length === 0)
-       return;
- 
--    libtoaster.editCurrentProject({ machineName : currentMachineAddSelection.name },
-+    currentMachineAddSelection = machineChangeInput.val();
-+
-+    libtoaster.editCurrentProject(
-+      { machineName : currentMachineAddSelection },
-       function(){
-         /* Success machine changed */
--        updateMachineName(currentMachineAddSelection.name);
-+        updateMachineName(currentMachineAddSelection);
-         machineChangeCancel.click();
- 
-         /* Show the alert message */
-         var message = $('<span class="lead">You have changed the machine to: <strong><span id="notify-machine-name"></span></strong></span>');
--        message.find("#notify-machine-name").text(currentMachineAddSelection.name);
-+        message.find("#notify-machine-name").text(currentMachineAddSelection);
-         libtoaster.showChangeNotification(message);
-     },
-       function(){
-         /* Failed machine changed */
--        console.log("failed to change machine");
-+        console.warn("Failed to change machine");
-     });
-   });
- 
--- 
-1.9.3
-
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
+Richard
 
 
