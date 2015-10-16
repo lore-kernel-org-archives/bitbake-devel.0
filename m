@@ -1,30 +1,23 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 7F41F77168
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 64AD377153
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Oct 2015 16:00:06 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t9GG04l3023510; Fri, 16 Oct 2015 17:00:04 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id LOwOYcAmbU11; Fri, 16 Oct 2015 17:00:04 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t9GFxqHe023452
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 16 Oct 2015 17:00:03 +0100
-Message-ID: <1445011191.17974.34.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Smith, Elliot" <elliot.smith@intel.com>
-Date: Fri, 16 Oct 2015 16:59:51 +0100
-In-Reply-To: <CA+1hgUj5Lty=V_jSWE1YA2CPJuaY5-PAoj+P8gEtzSKDN5gVjA@mail.gmail.com>
-References: <1444555346.14364.24.camel@linuxfoundation.org>
-	<CA+1hgUj5Lty=V_jSWE1YA2CPJuaY5-PAoj+P8gEtzSKDN5gVjA@mail.gmail.com>
-X-Mailer: Evolution 3.12.11-0ubuntu3 
-Mime-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] cooker: Ensure BB_CONSOLE remains correct over server resets
+	Fri, 16 Oct 2015 16:24:17 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by fmsmga102.fm.intel.com with ESMTP; 16 Oct 2015 09:24:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.17,689,1437462000"; d="scan'208";a="582258592"
+Received: from linux.intel.com ([10.23.219.25])
+	by FMSMGA003.fm.intel.com with ESMTP; 16 Oct 2015 09:24:09 -0700
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
+	by linux.intel.com (Postfix) with ESMTP id 3907E6A4087;
+	Fri, 16 Oct 2015 09:23:10 -0700 (PDT)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 16 Oct 2015 19:23:58 +0300
+Message-Id: <1445012638-18497-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH v2] cooker: preserve pre and post configs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,37 +30,75 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Oct 2015 16:00:07 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 16 Oct 2015 16:24:20 -0000
 
-On Fri, 2015-10-16 at 16:57 +0100, Smith, Elliot wrote:
-> Thanks for these, Richard.
->
-> On 11 October 2015 at 10:22, Richard Purdie
-> <richard.purdie@linuxfoundation.org> wrote:
->         The console log data is written to is created at console
->         initialisation
->         time and does not change over reset events. This ensures the
->         BB_CONSOLELOG value is correct over such resets by preserving
->         it.
->
-> I've put your three patches on top of master and ran a few builds. The
-> result is that all of the logs for those builds are going into a
-> single timestamped file. Before, they went to separate files. Is this
-> intentional, or was the old behaviour incorrect? (Ideally, toaster
-> needs a separate log file for each build.)
-> 
-It should generate one log file for each "session". A session would be
-one logfile for all bitbake memory resident transactions and a log file
-for each commandline transaction.
+Additional config files passed to bitbake server with --read and
+--postread options are rewritten by client bitbake even if
+it doesn't use those options.
 
-It is a "console log", not an individual build log.
+This is a show stopper for toaster as toaster command line
+builds are based on the assumption that server is aware of
+toster configs, provided by --postread option.
 
-Cheers,
+This behaviour is fixed by preserving values of --read and
+--postread options when bitbake server starts and restoring
+them if client bitbake doesn't explicitly specify them.
 
-Richard
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+---
+ bitbake/lib/bb/cooker.py     | 5 +++++
+ bitbake/lib/bb/cookerdata.py | 2 ++
+ bitbake/lib/bb/main.py       | 7 +++++++
+ 3 files changed, 14 insertions(+)
 
-
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index a416d2e..276e42e 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -531,6 +531,11 @@ class BBCooker:
+         for o in options:
+             if o in ['prefile', 'postfile']:
+                 clean = False
++                server_val = getattr(self.configuration, "%s_server" % o)
++                if not options[o] and server_val:
++                    # restore value provided on server start
++                    setattr(self.configuration, o, server_val)
++                    continue
+             setattr(self.configuration, o, options[o])
+         for k in bb.utils.approved_variables():
+             if k in environment and k not in self.configuration.env:
+diff --git a/bitbake/lib/bb/cookerdata.py b/bitbake/lib/bb/cookerdata.py
+index a3fa552..671c0cb 100644
+--- a/bitbake/lib/bb/cookerdata.py
++++ b/bitbake/lib/bb/cookerdata.py
+@@ -129,6 +129,8 @@ class CookerConfiguration(object):
+         self.extra_assume_provided = []
+         self.prefile = []
+         self.postfile = []
++        self.prefile_server = []
++        self.postfile_server = []
+         self.debug = 0
+         self.cmd = None
+         self.abort = True
+diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
+index 8762f72..c8530fc 100755
+--- a/bitbake/lib/bb/main.py
++++ b/bitbake/lib/bb/main.py
+@@ -383,6 +383,13 @@ def bitbake_main(configParams, configuration):
+         # Collect the feature set for the UI
+         featureset = getattr(ui_module, "featureSet", [])
+ 
++    if configParams.server_only:
++        for param in ('prefile', 'postfile'):
++            value = getattr(configParams, param)
++            if value:
++                setattr(configuration, "%s_server" % param, value)
++                param = "%s_server" % param
++
+     if not configParams.remote_server:
+         # we start a server with a given configuration
+         server = start_server(servermodule, configParams, configuration, featureset)
+-- 
+2.1.4
 
 
