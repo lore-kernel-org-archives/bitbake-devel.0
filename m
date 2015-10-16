@@ -1,23 +1,23 @@
 Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id 64AD377153
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 2CDA077144
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 16 Oct 2015 16:24:17 +0000 (UTC)
+	Fri, 16 Oct 2015 16:37:29 +0000 (UTC)
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by fmsmga102.fm.intel.com with ESMTP; 16 Oct 2015 09:24:10 -0700
+	by fmsmga101.fm.intel.com with ESMTP; 16 Oct 2015 09:12:06 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.17,689,1437462000"; d="scan'208";a="582258592"
+X-IronPort-AV: E=Sophos;i="5.17,689,1437462000"; d="scan'208";a="582249861"
 Received: from linux.intel.com ([10.23.219.25])
-	by FMSMGA003.fm.intel.com with ESMTP; 16 Oct 2015 09:24:09 -0700
+	by FMSMGA003.fm.intel.com with ESMTP; 16 Oct 2015 09:11:53 -0700
 Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id 3907E6A4087;
-	Fri, 16 Oct 2015 09:23:10 -0700 (PDT)
+	by linux.intel.com (Postfix) with ESMTP id 76AAD6A4005;
+	Fri, 16 Oct 2015 09:10:53 -0700 (PDT)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 16 Oct 2015 19:23:58 +0300
-Message-Id: <1445012638-18497-1-git-send-email-ed.bartosh@linux.intel.com>
+Date: Fri, 16 Oct 2015 19:11:49 +0300
+Message-Id: <1445011909-18371-1-git-send-email-ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
-Subject: [PATCH v2] cooker: preserve pre and post configs
+Subject: [PATCH] cooker: preserve pre-post configs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,7 +30,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 16 Oct 2015 16:24:20 -0000
+X-List-Received-Date: Fri, 16 Oct 2015 16:37:32 -0000
 
 Additional config files passed to bitbake server with --read and
 --postread options are rewritten by client bitbake even if
