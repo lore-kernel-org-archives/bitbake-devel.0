@@ -1,37 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f48.google.com (mail-pa0-f48.google.com
-	[209.85.220.48])
-	by mail.openembedded.org (Postfix) with ESMTP id 5F9C07712B
+Received: from mail-pa0-f53.google.com (mail-pa0-f53.google.com
+	[209.85.220.53])
+	by mail.openembedded.org (Postfix) with ESMTP id 4FF3077187
 	for <bitbake-devel@lists.openembedded.org>;
 	Sat, 17 Oct 2015 17:43:43 +0000 (UTC)
-Received: by padfb7 with SMTP id fb7so6712769pad.2
+Received: by pabrc13 with SMTP id rc13so149569283pab.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 17 Oct 2015 10:43:43 -0700 (PDT)
+	Sat, 17 Oct 2015 10:43:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=AabC0cEgiHiK2aGJa0XrFFFyOWXqsor2gkG2chTItjA=;
-	b=a1IVf2F15tnKojGZRAmkcqGozJJ32gNRRSrVxx1xkMCuqlHLaNKMM/3lUIraLKofaG
-	bs7MQ98IMbmHCeKVmhw7u1W7jhDwRdYK0lkKXoUuYVhvcesJ4MlKWyFqe9rzfownsdOD
-	sbYTh878/ftOJLdWj1eEdyYezg9DhRkWwdfWmqI22+qvC9OK6+VNMo0/UFuD/lDHZwnX
-	P6QPYntHwXQ5xdXfBQeIzKfcXs/B2H/BHhOTgNj5DqEnIIycSakCWwTlrMKOzmSRH+Ic
-	w+O3twWCyttc6TT2HZLplyabb9Sg3+RC3CKICS3x1YTw+VR/yJJaiXkq8E4jQyLs4tH6
-	tGmA==
-X-Received: by 10.66.141.199 with SMTP id rq7mr24344246pab.140.1445103823498; 
-	Sat, 17 Oct 2015 10:43:43 -0700 (PDT)
+	h=from:to:cc:subject:date:message-id:in-reply-to:references
+	:in-reply-to:references;
+	bh=l1NMYqKb99SvFh5IApDNLXGp0oY6JIys+SLPLhSwddc=;
+	b=sUD1vL3NLmDEy39hihXqWSLgPTQvjmZ3OYvmzttq5YYK8uO7/krQqb360VCV5a0P/A
+	hQ4kUm+Wi0ApYlBFOzyumVGs2cMxbSEHvSL1U+r55LrL2FA3XnZBx0790SERjLnRo209
+	hmH9zGFdbQcgczYYOdOAmkT96BNLA/nvb7hJYrmaidTzbGSHNEMs7XKhtQFcTes/tgku
+	WOEQCrmn/XnRwdlzjX5+Wx05buFjnJk7eRWeBD+/K87uFQBEmLZ0sy65/h2WDwOzmAcB
+	VlYN2fU/tW84xhxr5xJ9cCZ4Z55eISIJzSrTH0cRyMRUJwXHUvWbeKbrdH0kvvBQQJ/W
+	cF2A==
+X-Received: by 10.66.155.231 with SMTP id vz7mr23739713pab.58.1445103824393;
+	Sat, 17 Oct 2015 10:43:44 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	bn1sm27888794pad.17.2015.10.17.10.43.42
+	bn1sm27888794pad.17.2015.10.17.10.43.43
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Sat, 17 Oct 2015 10:43:42 -0700 (PDT)
+	Sat, 17 Oct 2015 10:43:43 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 17 Oct 2015 10:45:48 -0700
-Message-Id: <27aab0077a5ef4f49d5b1f3a94f7872836054ad4.1445103849.git.avery.brian@gmail.com>
+Date: Sat, 17 Oct 2015 10:45:49 -0700
+Message-Id: <00a636cf84b1f680f622380b016699d09cd46f71.1445103849.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <27aab0077a5ef4f49d5b1f3a94f7872836054ad4.1445103849.git.avery.brian@gmail.com>
+References: <27aab0077a5ef4f49d5b1f3a94f7872836054ad4.1445103849.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1445103849.git.avery.brian@gmail.com>
 References: <cover.1445103849.git.avery.brian@gmail.com>
-Subject: [PATCH 1/6] toaster: Add BUILD_MODE flag to context
+Subject: [PATCH 2/6] toaster: Show mode-appropriate landing page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,76 +47,144 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 17 Oct 2015 17:43:43 -0000
+X-List-Received-Date: Sat, 17 Oct 2015 17:43:45 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-We set a TOASTER_MANAGED env variable in the startup script,
-which has a value of "1" if Toaster should run in build mode.
+The same landing page is shown for both analysis and
+build modes. This means that users in analysis mode can see
+options which are not available or broken in that mode.
 
-Add a BUILD_MODE variable to settings.py which is True if
-TOASTER_MANAGED is set to "1", False otherwise.
+Modify the landing page template to show a simple "run a build"
+message if the user is in analysis mode and has no builds yet.
 
-Add this to the context for every template, so we can use this
-information to conditionally alter the content of pages
-according to the mode we're in.
+Also clean up the landing page HTML, because the indentation was
+a mess and the HTML was invalid.
 
 [YOCTO #8514]
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/toaster/toastergui/views.py     | 4 ++++
- lib/toaster/toastermain/settings.py | 6 ++----
- lib/toaster/toastermain/urls.py     | 2 +-
- 3 files changed, 7 insertions(+), 5 deletions(-)
+ lib/toaster/toastergui/templates/landing.html | 103 +++++++++++++++-----------
+ 1 file changed, 58 insertions(+), 45 deletions(-)
 
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index e2f2874..10bbef5 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -1880,6 +1880,10 @@ def managedcontextprocessor(request):
-         "projects": projects,
-         "non_cli_projects": projects.exclude(is_default=True),
-         "DEBUG" : toastermain.settings.DEBUG,
-+
-+        # True if Toaster is in build mode, False otherwise
-+        "BUILD_MODE": toastermain.settings.BUILD_MODE,
-+
-         "CUSTOM_IMAGE" : toastermain.settings.CUSTOM_IMAGE,
-         "TOASTER_BRANCH": toastermain.settings.TOASTER_BRANCH,
-         "TOASTER_REVISION" : toastermain.settings.TOASTER_REVISION,
-diff --git a/lib/toaster/toastermain/settings.py b/lib/toaster/toastermain/settings.py
-index 6439d68..b28ddb2 100644
---- a/lib/toaster/toastermain/settings.py
-+++ b/lib/toaster/toastermain/settings.py
-@@ -92,11 +92,9 @@ if 'DATABASE_URL' in os.environ:
-     else:
-         raise Exception("FIXME: Please implement missing database url schema for url: %s" % dburl)
+diff --git a/lib/toaster/toastergui/templates/landing.html b/lib/toaster/toastergui/templates/landing.html
+index 45e9532..65d8c3c 100644
+--- a/lib/toaster/toastergui/templates/landing.html
++++ b/lib/toaster/toastergui/templates/landing.html
+@@ -6,53 +6,66 @@
  
+ {% block pagecontent %}
+ 
+-  <div class="container-fluid">
+-   <div class="row-fluid">
+-    <!-- Empty - no data in database -->
+-    <div class="hero-unit span12 well-transparent">
+-     <div class="row-fluid">
+-      <div class="span6">
+-       <h1>
+-        This is Toaster
+-       </h1>
+-       <p>A web interface to <a href="http://www.openembedded.org">OpenEmbedded</a> and <a href="http://www.yoctoproject.org/tools-resources/projects/bitbake">BitBake</a>, the <a href="http://www.yoctoproject.org">Yocto Project</a> build system.</p>
 -
-+BUILD_MODE = False
- if 'TOASTER_MANAGED' in os.environ and os.environ['TOASTER_MANAGED'] == "1":
--    MANAGED = True
--else:
--    MANAGED = False
-+    BUILD_MODE = True
+-
+-		{% if lvs_nos %}
+-		    <p class="hero-actions">
+-			    <a class="btn btn-primary btn-large" href="{% url 'newproject' %}">
+-				    To start building, create your first Toaster project
+-			    </a>
+-		    </p>
+-		{% else %}
+-		    <div class="alert alert-info lead air">
+-			    Toaster has no layer information. Without layer information, you cannot run builds. To generate layer information you can:
+-			    <ul>
+-			        <li>
+-			            <a href="http://www.yoctoproject.org/docs/latest/toaster-manual/toaster-manual.html#layer-source">Configure a layer source</a>
+-			        </li>
+-			        <li>
+-			            <a href="{% url 'newproject' %}">Create a project</a>, then import layers
+-			        </li>
+-			    </ul>
+-		    </div>
+-	        {% endif %}
+-
+-        <ul class="unstyled">
+-            <li>
+-                <a href="http://www.yoctoproject.org/docs/latest/toaster-manual/toaster-manual.html">Read the Toaster manual</a>
+-            </li>
+-            <li>
+-                <a href="https://wiki.yoctoproject.org/wiki/Contribute_to_Toaster">Contribute to Toaster</a>
+-            </li>
+-        </ul>
++  {% if BUILD_MODE %}
++    <!-- build mode -->
++    <div class="container-fluid">
++      <div class="row-fluid">
++        <div class="hero-unit span12 well-transparent">
++          <div class="row-fluid">
  
- # Allows current database settings to be exported as a DATABASE_URL environment variable value
++            <div class="span6">
++              <h1>This is Toaster</h1>
++
++              <p>A web interface to <a href="http://www.openembedded.org">OpenEmbedded</a> and <a href="http://www.yoctoproject.org/tools-resources/projects/bitbake">BitBake</a>, the <a href="http://www.yoctoproject.org">Yocto Project</a> build system.</p>
++
++		          {% if lvs_nos %}
++		            <p class="hero-actions">
++		              <a class="btn btn-primary btn-large" href="{% url 'newproject' %}">
++			              To start building, create your first Toaster project
++		              </a>
++		            </p>
++		          {% else %}
++                <div class="alert alert-info lead air">
++                  Toaster has no layer information. Without layer information, you cannot run builds. To generate layer information you can:
++                  <ul>
++                    <li>
++                      <a href="http://www.yoctoproject.org/docs/latest/toaster-manual/toaster-manual.html#layer-source">Configure a layer source</a>
++                    </li>
++                    <li>
++			                <a href="{% url 'newproject' %}">Create a project</a>, then import layers
++                    </li>
++                  </ul>
++                </div>
++              {% endif %}
++
++              <ul class="unstyled">
++                <li>
++                  <a href="http://www.yoctoproject.org/docs/latest/toaster-manual/toaster-manual.html">
++                    Read the Toaster manual
++                  </a>
++                </li>
++
++                <li>
++                  <a href="https://wiki.yoctoproject.org/wiki/Contribute_to_Toaster">
++                    Contribute to Toaster
++                  </a>
++                </li>
++              </ul>
++            </div>
++
++            <div class="span6">
++              <img alt="Yocto Project" class="thumbnail" src="{% static 'img/toaster_bw.png' %}"/>
++            </div>
++
++          </div>
++        </div>
+       </div>
+-      <div class="span6">
+-          <img alt="Yocto Project" class="thumbnail" src="{% static 'img/toaster_bw.png' %}"/>
+-      </div>
+-     </div>
+     </div>
+-   </div>
++  {% else %}
++    <!-- analysis mode -->
++    <div class="alert alert-info lead top-air">
++      Toaster has not recorded any builds yet. Run a build from the command line to see it here.
++    </div>
++  {% endif %}
  
-diff --git a/lib/toaster/toastermain/urls.py b/lib/toaster/toastermain/urls.py
-index 521588a..6c4a953 100644
---- a/lib/toaster/toastermain/urls.py
-+++ b/lib/toaster/toastermain/urls.py
-@@ -60,7 +60,7 @@ if toastermain.settings.DEBUG_PANEL_ENABLED:
-     #logger.info("Enabled django_toolbar extension")
- 
- 
--if toastermain.settings.MANAGED:
-+if toastermain.settings.BUILD_MODE:
-     urlpatterns = [
-         # Uncomment the next line to enable the admin:
-         url(r'^admin/', include(admin.site.urls)),
+ {% endblock %}
 -- 
 1.9.1
 
