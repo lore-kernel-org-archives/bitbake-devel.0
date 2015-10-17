@@ -1,40 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f42.google.com (mail-pa0-f42.google.com
-	[209.85.220.42])
-	by mail.openembedded.org (Postfix) with ESMTP id 70B6E77195
+Received: from mail-pa0-f50.google.com (mail-pa0-f50.google.com
+	[209.85.220.50])
+	by mail.openembedded.org (Postfix) with ESMTP id C244377133
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 17 Oct 2015 17:43:46 +0000 (UTC)
-Received: by pacfv9 with SMTP id fv9so52243693pac.3
+	Sat, 17 Oct 2015 17:43:47 +0000 (UTC)
+Received: by padfb7 with SMTP id fb7so6713631pad.2
 	for <bitbake-devel@lists.openembedded.org>;
 	Sat, 17 Oct 2015 10:43:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=qCzXA01cA752S9t/hBO/i5ttX4KKogmNO7ghjgcExII=;
-	b=P5zLZoRYUtLPT35ldULqrxXk7NpsOwqJN2bWoFCajq5hb7P2OMvy5o6rD7Jt1tY01e
-	pQYJrBeHNhdjbQtwebWzVQKio+B/JdchfnQMqGdA0UE57nXII6EhJRd03BSDiu3z3gVl
-	VaOWOGETlqvmI43isTYUvR+mvwoRO9YxrehtNTNj3d3Bxg0XklQhggeHwM4pjv2+myLA
-	Wa99+f9gLCXkexKCiYjX7YskWqacrs54elldXPzLa3crvG/EdTSnGm239ow+2ACQ9ype
-	API+9f/WWGZJ3BSCIk5X+2HK8t4At50TRG8P8FP/Rxk5yYGjAKOiNFzid23lVLlYdSu0
-	31EA==
-X-Received: by 10.68.137.202 with SMTP id qk10mr24212953pbb.30.1445103827032; 
+	bh=m5azyo1XzFRQD3UHUT81xvbsq/2jMG3sN9sIg2mHC5M=;
+	b=IDaWkFXF23BqJQegPkfvKIVRYnuoUa8obrBrnx2aFOfDqCNVn+lhc95fP8YHgrljRZ
+	4+v2V+8NinPAmpaToevUX+3q5YBNxtpEPSEoEkZIPsGEH2g9SzonpD5yiLP9eRfUQoct
+	NNVxx9OW/ZsQVDF6hNz7MtgoJDmr9WIfLEgXE0ZSpF3AtSPE5aGjr9StXeBwIRB8vhzD
+	0XrUwSClXZEYJsjpRfaPK9tjm5bpalz9n2NC7tU4VVlepaUeZNDeFD0D2cacxG7YbzEE
+	vT2+zctmbORfKWFgQyCpF+v5pY8WKASxJMISO4fHGjEB+GtxrSLiZRQvFfEHiypX1aEK
+	VE8A==
+X-Received: by 10.68.219.4 with SMTP id pk4mr24530279pbc.138.1445103827855;
 	Sat, 17 Oct 2015 10:43:47 -0700 (PDT)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	bn1sm27888794pad.17.2015.10.17.10.43.46
+	bn1sm27888794pad.17.2015.10.17.10.43.47
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Sat, 17 Oct 2015 10:43:46 -0700 (PDT)
+	Sat, 17 Oct 2015 10:43:47 -0700 (PDT)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Sat, 17 Oct 2015 10:45:52 -0700
-Message-Id: <071584e9032d50ba4f0090623150220c85a5b7b1.1445103849.git.avery.brian@gmail.com>
+Date: Sat, 17 Oct 2015 10:45:53 -0700
+Message-Id: <fc3d0f0346d2e7929edbefbfa6d1efc9999e5a15.1445103849.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <27aab0077a5ef4f49d5b1f3a94f7872836054ad4.1445103849.git.avery.brian@gmail.com>
 References: <27aab0077a5ef4f49d5b1f3a94f7872836054ad4.1445103849.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1445103849.git.avery.brian@gmail.com>
 References: <cover.1445103849.git.avery.brian@gmail.com>
-Subject: [PATCH 5/6] toaster: Run tests in build mode
+Subject: [PATCH 6/6] toaster: Remove all navigation when not in build mode
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,46 +47,78 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 17 Oct 2015 17:43:46 -0000
+X-List-Received-Date: Sat, 17 Oct 2015 17:43:47 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-Now that the UI content is conditional on whether BUILD_MODE
-is active, modify the existing tests so that they run in
-this mode by default.
+The user is redirected to the all builds page or all projects
+page from the landing page, regardless of mode.
+
+In build mode, this makes sense; but in analysis mode, we are
+restricting the view to just the cli builds project. This means
+that "all projects" and "all builds" only contains items relating
+to this one project.
+
+Modify the landing page so it redirects to the project builds page
+for the cli builds project when not in build mode. Also remove
+navigation elements which are irrelevant when not in build mode.
 
 [YOCTO #8514]
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/toaster/toastergui/tests.py | 6 ++++++
- 1 file changed, 6 insertions(+)
+ lib/toaster/toastergui/templates/base.html |  4 ++--
+ lib/toaster/toastergui/views.py            | 14 ++++++++++++--
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/lib/toaster/toastergui/tests.py b/lib/toaster/toastergui/tests.py
-index 29dd7fd..9e6c46a 100644
---- a/lib/toaster/toastergui/tests.py
-+++ b/lib/toaster/toastergui/tests.py
-@@ -32,6 +32,8 @@ from orm.models import Layer_Version, Recipe, Machine, ProjectLayer, Target
- from orm.models import CustomImageRecipe, ProjectVariable
- from orm.models import Branch
- 
-+import toastermain
+diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
+index 073c342..dfa6bba 100644
+--- a/lib/toaster/toastergui/templates/base.html
++++ b/lib/toaster/toastergui/templates/base.html
+@@ -91,9 +91,9 @@
+             <i class="icon-info-sign" title="<strong>Toaster version information</strong>" data-content="<dl><dt>Branch</dt><dd>{{TOASTER_BRANCH}}</dd><dt>Revision</dt><dd>{{TOASTER_REVISION}}</dd></dl>"></i>
+             {% endif %}
+           </span>
+-          {% if request.resolver_match.url_name != 'landing' and request.resolver_match.url_name != 'newproject' %}
++          {% if BUILD_MODE and request.resolver_match.url_name != 'landing' and request.resolver_match.url_name != 'newproject' %}
+           <ul class="nav">
+-            <li  {% if request.resolver_match.url_name == 'all-builds' %}
++            <li {% if request.resolver_match.url_name == 'all-builds' %}
+                 class="active"
+                 {% endif %}>
+               <a href="{% url 'all-builds' %}">
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index d675f4f..6ebb6a9 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -71,14 +71,24 @@ class MimeTypeFinder(object):
+ # all new sessions should come through the landing page;
+ # determine in which mode we are running in, and redirect appropriately
+ def landing(request):
++    # in build mode, we redirect to the command-line builds page
++    # if there are any builds for the default (cli builds) project
++    default_project = Project.objects.get_default_project()
++    default_project_builds = Build.objects.filter(project = default_project)
 +
- from toastergui.tables import SoftwareRecipesTable
- import json
- from bs4 import BeautifulSoup
-@@ -40,6 +42,10 @@ import re
- PROJECT_NAME = "test project"
- CLI_BUILDS_PROJECT_NAME = 'Command line builds'
- 
-+# by default, tests are run in build mode; to run in analysis mode,
-+# set this to False in individual test cases
-+toastermain.settings.BUILD_MODE = True
++    if (not toastermain.settings.BUILD_MODE) and default_project_builds.count() > 0:
++        args = (default_project.id,)
++        return redirect(reverse('projectbuilds', args = args), permanent = False)
 +
- class ViewTests(TestCase):
-     """Tests to verify view APIs."""
+     # we only redirect to projects page if there is a user-generated project
++    num_builds = Build.objects.all().count()
+     user_projects = Project.objects.filter(is_default = False)
+     has_user_project = user_projects.count() > 0
  
+-    if Build.objects.count() == 0 and has_user_project:
++    if num_builds == 0 and has_user_project:
+         return redirect(reverse('all-projects'), permanent = False)
+ 
+-    if Build.objects.all().count() > 0:
++    if num_builds > 0:
+         return redirect(reverse('all-builds'), permanent = False)
+ 
+     context = {'lvs_nos' : Layer_Version.objects.all().count()}
 -- 
 1.9.1
 
