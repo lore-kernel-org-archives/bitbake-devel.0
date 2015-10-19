@@ -1,40 +1,37 @@
-Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f50.google.com (mail-pa0-f50.google.com
-	[209.85.220.50])
-	by mail.openembedded.org (Postfix) with ESMTP id C244377133
+Return-Path: <belen.barros.pena@intel.com>
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 7C08C7708E
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 17 Oct 2015 17:43:47 +0000 (UTC)
-Received: by padfb7 with SMTP id fb7so6713631pad.2
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 17 Oct 2015 10:43:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:in-reply-to:references;
-	bh=m5azyo1XzFRQD3UHUT81xvbsq/2jMG3sN9sIg2mHC5M=;
-	b=IDaWkFXF23BqJQegPkfvKIVRYnuoUa8obrBrnx2aFOfDqCNVn+lhc95fP8YHgrljRZ
-	4+v2V+8NinPAmpaToevUX+3q5YBNxtpEPSEoEkZIPsGEH2g9SzonpD5yiLP9eRfUQoct
-	NNVxx9OW/ZsQVDF6hNz7MtgoJDmr9WIfLEgXE0ZSpF3AtSPE5aGjr9StXeBwIRB8vhzD
-	0XrUwSClXZEYJsjpRfaPK9tjm5bpalz9n2NC7tU4VVlepaUeZNDeFD0D2cacxG7YbzEE
-	vT2+zctmbORfKWFgQyCpF+v5pY8WKASxJMISO4fHGjEB+GtxrSLiZRQvFfEHiypX1aEK
-	VE8A==
-X-Received: by 10.68.219.4 with SMTP id pk4mr24530279pbc.138.1445103827855;
-	Sat, 17 Oct 2015 10:43:47 -0700 (PDT)
-Received: from whisper.hsd1.or.comcast.net
-	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
-	by smtp.gmail.com with ESMTPSA id
-	bn1sm27888794pad.17.2015.10.17.10.43.47
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Sat, 17 Oct 2015 10:43:47 -0700 (PDT)
-From: brian avery <avery.brian@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Sat, 17 Oct 2015 10:45:53 -0700
-Message-Id: <fc3d0f0346d2e7929edbefbfa6d1efc9999e5a15.1445103849.git.avery.brian@gmail.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <27aab0077a5ef4f49d5b1f3a94f7872836054ad4.1445103849.git.avery.brian@gmail.com>
-References: <27aab0077a5ef4f49d5b1f3a94f7872836054ad4.1445103849.git.avery.brian@gmail.com>
-In-Reply-To: <cover.1445103849.git.avery.brian@gmail.com>
-References: <cover.1445103849.git.avery.brian@gmail.com>
-Subject: [PATCH 6/6] toaster: Remove all navigation when not in build mode
+	Mon, 19 Oct 2015 10:32:24 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by fmsmga102.fm.intel.com with ESMTP; 19 Oct 2015 03:32:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.17,701,1437462000"; d="scan'208";a="667167795"
+Received: from irsmsx152.ger.corp.intel.com ([163.33.192.66])
+	by orsmga003.jf.intel.com with ESMTP; 19 Oct 2015 03:32:23 -0700
+Received: from irsmsx110.ger.corp.intel.com ([169.254.15.151]) by
+	IRSMSX152.ger.corp.intel.com ([169.254.6.38]) with mapi id
+	14.03.0248.002; Mon, 19 Oct 2015 11:32:21 +0100
+From: "Barros Pena, Belen" <belen.barros.pena@intel.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>, "Smith, Elliot"
+	<elliot.smith@intel.com>
+Thread-Topic: [bitbake-devel] [PATCH] cooker: Ensure BB_CONSOLE remains
+	correct over server resets
+Thread-Index: AQHRCllvEuOGO4/ywU2iv0f73NTTvQ==
+Date: Mon, 19 Oct 2015 10:32:20 +0000
+Message-ID: <D24A84FE.68625%belen.barros.pena@intel.com>
+References: <1444555346.14364.24.camel@linuxfoundation.org>
+	<CA+1hgUj5Lty=V_jSWE1YA2CPJuaY5-PAoj+P8gEtzSKDN5gVjA@mail.gmail.com>
+	<1445011191.17974.34.camel@linuxfoundation.org>
+In-Reply-To: <1445011191.17974.34.camel@linuxfoundation.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Microsoft-MacOutlook/14.5.6.150930
+x-originating-ip: [10.237.224.32]
+MIME-Version: 1.0
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] cooker: Ensure BB_CONSOLE remains correct over server resets
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,79 +44,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 17 Oct 2015 17:43:47 -0000
+X-List-Received-Date: Mon, 19 Oct 2015 10:32:28 -0000
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D5AA3BB33715394C8557EAFA4CA9E287@intel.com>
+Content-Transfer-Encoding: quoted-printable
 
-From: Elliot Smith <elliot.smith@intel.com>
 
-The user is redirected to the all builds page or all projects
-page from the landing page, regardless of mode.
 
-In build mode, this makes sense; but in analysis mode, we are
-restricting the view to just the cli builds project. This means
-that "all projects" and "all builds" only contains items relating
-to this one project.
+On 16/10/2015 16:59, "bitbake-devel-bounces@lists.openembedded.org on
+behalf of Richard Purdie" <bitbake-devel-bounces@lists.openembedded.org on
+behalf of richard.purdie@linuxfoundation.org> wrote:
 
-Modify the landing page so it redirects to the project builds page
-for the cli builds project when not in build mode. Also remove
-navigation elements which are irrelevant when not in build mode.
+>On Fri, 2015-10-16 at 16:57 +0100, Smith, Elliot wrote:
+>> Thanks for these, Richard.
+>>
+>> On 11 October 2015 at 10:22, Richard Purdie
+>> <richard.purdie@linuxfoundation.org> wrote:
+>>         The console log data is written to is created at console
+>>         initialisation
+>>         time and does not change over reset events. This ensures the
+>>         BB_CONSOLELOG value is correct over such resets by preserving
+>>         it.
+>>
+>> I've put your three patches on top of master and ran a few builds. The
+>> result is that all of the logs for those builds are going into a
+>> single timestamped file. Before, they went to separate files. Is this
+>> intentional, or was the old behaviour incorrect? (Ideally, toaster
+>> needs a separate log file for each build.)
+>>=20
+>It should generate one log file for each "session". A session would be
+>one logfile for all bitbake memory resident transactions and a log file
+>for each commandline transaction.
+>
+>It is a "console log", not an individual build log.
 
-[YOCTO #8514]
+Mmmm, for Toaster we need an individual build log, not a console log :/
 
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-Signed-off-by: brian avery <avery.brian@gmail.com>
----
- lib/toaster/toastergui/templates/base.html |  4 ++--
- lib/toaster/toastergui/views.py            | 14 ++++++++++++--
- 2 files changed, 14 insertions(+), 4 deletions(-)
-
-diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
-index 073c342..dfa6bba 100644
---- a/lib/toaster/toastergui/templates/base.html
-+++ b/lib/toaster/toastergui/templates/base.html
-@@ -91,9 +91,9 @@
-             <i class="icon-info-sign" title="<strong>Toaster version information</strong>" data-content="<dl><dt>Branch</dt><dd>{{TOASTER_BRANCH}}</dd><dt>Revision</dt><dd>{{TOASTER_REVISION}}</dd></dl>"></i>
-             {% endif %}
-           </span>
--          {% if request.resolver_match.url_name != 'landing' and request.resolver_match.url_name != 'newproject' %}
-+          {% if BUILD_MODE and request.resolver_match.url_name != 'landing' and request.resolver_match.url_name != 'newproject' %}
-           <ul class="nav">
--            <li  {% if request.resolver_match.url_name == 'all-builds' %}
-+            <li {% if request.resolver_match.url_name == 'all-builds' %}
-                 class="active"
-                 {% endif %}>
-               <a href="{% url 'all-builds' %}">
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index d675f4f..6ebb6a9 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -71,14 +71,24 @@ class MimeTypeFinder(object):
- # all new sessions should come through the landing page;
- # determine in which mode we are running in, and redirect appropriately
- def landing(request):
-+    # in build mode, we redirect to the command-line builds page
-+    # if there are any builds for the default (cli builds) project
-+    default_project = Project.objects.get_default_project()
-+    default_project_builds = Build.objects.filter(project = default_project)
-+
-+    if (not toastermain.settings.BUILD_MODE) and default_project_builds.count() > 0:
-+        args = (default_project.id,)
-+        return redirect(reverse('projectbuilds', args = args), permanent = False)
-+
-     # we only redirect to projects page if there is a user-generated project
-+    num_builds = Build.objects.all().count()
-     user_projects = Project.objects.filter(is_default = False)
-     has_user_project = user_projects.count() > 0
- 
--    if Build.objects.count() == 0 and has_user_project:
-+    if num_builds == 0 and has_user_project:
-         return redirect(reverse('all-projects'), permanent = False)
- 
--    if Build.objects.all().count() > 0:
-+    if num_builds > 0:
-         return redirect(reverse('all-builds'), permanent = False)
- 
-     context = {'lvs_nos' : Layer_Version.objects.all().count()}
--- 
-1.9.1
+>
+>Cheers,
+>
+>Richard
+>
+>
+>
+>--=20
+>_______________________________________________
+>bitbake-devel mailing list
+>bitbake-devel@lists.openembedded.org
+>http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
 
