@@ -1,32 +1,34 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 7A17B75D48
+Return-Path: <raj.khem@gmail.com>
+Received: from mail-pa0-f43.google.com (mail-pa0-f43.google.com
+	[209.85.220.43])
+	by mail.openembedded.org (Postfix) with ESMTP id 0852860657
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 24 Oct 2015 11:26:23 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t9OBQLjT029249; Sat, 24 Oct 2015 12:26:21 +0100
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id k4Vy4JCT8ALj; Sat, 24 Oct 2015 12:26:21 +0100 (BST)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t9OBQ6Ob029246
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Sat, 24 Oct 2015 12:26:17 +0100
-Message-ID: <1445685965.21913.58.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Smith, Elliot" <elliot.smith@intel.com>
-Date: Sat, 24 Oct 2015 12:26:05 +0100
-In-Reply-To: <CA+1hgUg7=OhPXV=fHrXzLpSeWKZekx0BkYpu1BC8zaA1H7gG2w@mail.gmail.com>
-References: <1444555346.14364.24.camel@linuxfoundation.org>
-	<CA+1hgUj5Lty=V_jSWE1YA2CPJuaY5-PAoj+P8gEtzSKDN5gVjA@mail.gmail.com>
-	<1445011191.17974.34.camel@linuxfoundation.org>
-	<CA+1hgUg7=OhPXV=fHrXzLpSeWKZekx0BkYpu1BC8zaA1H7gG2w@mail.gmail.com>
-X-Mailer: Evolution 3.12.11-0ubuntu3 
-Mime-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] cooker: Ensure BB_CONSOLE remains correct over server resets
+	Sat, 24 Oct 2015 21:56:37 +0000 (UTC)
+Received: by pasz6 with SMTP id z6so149165684pas.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Sat, 24 Oct 2015 14:56:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=K+zkl59CFR9GmGv+yMWs67DDZbuNt/y7hAVJ1M+MZrU=;
+	b=R5HeP6XPkTdm67FQZtGHiMNqZUok99lDZcXURN4vdimUZlXZyymDa97N+bk46Rdxbo
+	z9sXPmJaO7Tpg4EDOcewiLwq8cSNmgh21mwpmKXLH4WdHKgWIyvPqu9FbxVxrw5y1rVM
+	sYcib7oiJYpZJ/bZNUK7+z/cm2gRgGLTKoV5ssAWuPms52APbtRjSfnrSPrfdUk17ycn
+	+kkpO7uuTj6YfiASbeYO7m7YcjHa5pw3YML6s/JBxMlA6f0Uk0wOGgRoZvgZS/o3JX8Q
+	4ktXLAjisOoUFld0MH17z58bko5oEIO6rl9uaSYe3ZIhksklJuppnBoBkYilNGucGS1h
+	RalA==
+X-Received: by 10.68.182.161 with SMTP id ef1mr13297095pbc.79.1445723797449;
+	Sat, 24 Oct 2015 14:56:37 -0700 (PDT)
+Received: from arch.hsd1.ca.comcast.net (c-76-103-142-85.hsd1.ca.comcast.net.
+	[76.103.142.85]) by smtp.gmail.com with ESMTPSA id
+	zi1sm25827955pbc.10.2015.10.24.14.56.35
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Sat, 24 Oct 2015 14:56:36 -0700 (PDT)
+From: Khem Raj <raj.khem@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Sat, 24 Oct 2015 14:56:29 -0700
+Message-Id: <1445723789-7493-1-git-send-email-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.6.2
+Subject: [PATCH] toaster: Point to meta/conf for default toasterconf.json
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,32 +41,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 24 Oct 2015 11:26:31 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Sat, 24 Oct 2015 21:56:40 -0000
 
-On Mon, 2015-10-19 at 13:27 +0100, Smith, Elliot wrote:
-> Thanks for clarifying.
->
-> Will these patches be in 2.0? From the toaster point of view, it would
-> be better if the current behaviour remained for now, even though it is
-> broken.
->
-> We are working on a solution which will write separate build logs from
-> within Toaster itself, which will mean we can keep our log download
-> working when your patches do go in.
->
-> However, we may not get this finished for 2.0, and it would be good if
-> we could keep the Toaster log download feature working in the
-> meantime.
-> 
-Given the other discussion I've seen, I'm assuming it would be ok to
-merge these now?
+meta-yocto may not exist in nodistro env
 
-Cheers,
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ bin/toaster | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Richard
-
-
+diff --git a/bin/toaster b/bin/toaster
+index 2c3432c..c1a01f0 100755
+--- a/bin/toaster
++++ b/bin/toaster
+@@ -196,7 +196,7 @@ fi
+ # in the local layers that currently prevent using an arbitrary
+ # toasterconf.json
+ if [ "$TOASTER_CONF" = "" ]; then
+-    TOASTER_CONF="$(dirname $TOASTER)/../../meta-yocto/conf/toasterconf.json"
++    TOASTER_CONF="$(dirname $TOASTER)/../../meta/conf/toasterconf.json"
+     export TOASTER_CONF=$(python -c "import os; print os.path.realpath('$TOASTER_CONF')")
+ fi
+ if [ ! -f $TOASTER_CONF ]; then
+-- 
+2.6.2
 
 
