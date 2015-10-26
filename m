@@ -1,32 +1,40 @@
-Return-Path: <avery.brian@gmail.com>
-Received: from mail-ig0-f173.google.com (mail-ig0-f173.google.com
-	[209.85.213.173])
-	by mail.openembedded.org (Postfix) with ESMTP id 1B92960657
+Return-Path: <raj.khem@gmail.com>
+Received: from mail-pa0-f51.google.com (mail-pa0-f51.google.com
+	[209.85.220.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 6CF2773D27
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 26 Oct 2015 16:05:55 +0000 (UTC)
-Received: by igbhv6 with SMTP id hv6so59710317igb.0
+	Mon, 26 Oct 2015 16:19:11 +0000 (UTC)
+Received: by padhk11 with SMTP id hk11so192825652pad.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 26 Oct 2015 09:05:55 -0700 (PDT)
+	Mon, 26 Oct 2015 09:19:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:cc:content-type;
-	bh=wnzp1td+FAWiEuSI5dLQTrpowrf1ZqeR+w38K2/sdXE=;
-	b=rlu953NGGiO1IO0I5IsDWA3DqmAdG6tirupk/BWll5/KWzpHuUsMCKR02jgrB9ZLBK
-	Zh/Kdhpgd+INJZ+mT9rkNpIZVA0kOpLw+tf4KWrQB3kVIKNHsKyka7OHGgwBwDv4QTxt
-	CBvnjx8NmeQ24EH675I4FlXONi2N/kt3JGN4XUsyE677lOjITOusDH18+C5uaLWyqLdn
-	blnJ/EJvBGBVF02+R8Z/1wjM5293/+0Ik8NlhYUa4Rk76DeY6ZcK/6Xs1jrXRqMJ7677
-	L+4OZeA1wJ6L8FRxnt4aJ9zl3gRzBx4Fmn3KdJZmxGpkxnwcO+WSYwCv//psRqCod/pX
-	rctA==
-MIME-Version: 1.0
-X-Received: by 10.50.27.9 with SMTP id p9mr19463972igg.28.1445875555415; Mon,
-	26 Oct 2015 09:05:55 -0700 (PDT)
-Received: by 10.64.221.74 with HTTP; Mon, 26 Oct 2015 09:05:55 -0700 (PDT)
-In-Reply-To: <1445723789-7493-1-git-send-email-raj.khem@gmail.com>
+	h=subject:mime-version:content-type:from:in-reply-to:date:cc
+	:message-id:references:to;
+	bh=7vEabmItpIYTqx1vb5207WcbkSlDa851u5etkif54FI=;
+	b=BkG5epBJZj97bwhXxeJWZ4ciH2bO9OVoUkKHFNSpn+kZ7MLUGIsrr7k+8QRH8b4orl
+	9RrAvIMTkRVwGshSXPpPCpaK4JeDMbFSduETDxJlb3uhVKY3fgvjuouTPCCFL4Ld5sN6
+	i4onf0PdTIJ1ypU66NAhciX/nABLa78Jg+wLV0P04H/bdjNVdi4BMqZIKUuQeC0IOSDe
+	Ve0Zmg10X+Rh3IMW91KGIkqC+io/OMWCg/hSfkSz/KPD820nLv2J9JgtRqSe/+5ZNA7Y
+	MW7f4ZNast4sGY5W4ovQFjsBk8yJpPBVmaBEJ4YY8lCmfec/eSbO8fATIpvaQyZX0Icz
+	Bztw==
+X-Received: by 10.66.123.72 with SMTP id ly8mr22671490pab.92.1445876352110;
+	Mon, 26 Oct 2015 09:19:12 -0700 (PDT)
+Received: from ?IPv6:2601:647:4c02:370d:34a0:c0:a34c:c36c?
+	([2601:647:4c02:370d:34a0:c0:a34c:c36c])
+	by smtp.gmail.com with ESMTPSA id
+	zk3sm34786418pbb.41.2015.10.26.09.19.11
+	(version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+	Mon, 26 Oct 2015 09:19:11 -0700 (PDT)
+Mime-Version: 1.0 (Mac OS X Mail 9.1 \(3096.5\))
+X-Pgp-Agent: GPGMail 2.6b2
+From: Khem Raj <raj.khem@gmail.com>
+In-Reply-To: <CAKV_0egMyNQ2bzbO+gydU+vDsc_xwGgKgwmh9YW8vynVhShQ8Q@mail.gmail.com>
+Date: Mon, 26 Oct 2015 09:19:02 -0700
+Message-Id: <40CEB3B1-8820-4D38-91B6-5A41DACC4AED@gmail.com>
 References: <1445723789-7493-1-git-send-email-raj.khem@gmail.com>
-Date: Mon, 26 Oct 2015 09:05:55 -0700
-Message-ID: <CAKV_0egMyNQ2bzbO+gydU+vDsc_xwGgKgwmh9YW8vynVhShQ8Q@mail.gmail.com>
-From: Brian Avery <avery.brian@gmail.com>
-To: Khem Raj <raj.khem@gmail.com>
+	<CAKV_0egMyNQ2bzbO+gydU+vDsc_xwGgKgwmh9YW8vynVhShQ8Q@mail.gmail.com>
+To: Brian Avery <avery.brian@gmail.com>
+X-Mailer: Apple Mail (2.3096.5)
 Cc: bitbake-devel@lists.openembedded.org
 Subject: Re: [PATCH] toaster: Point to meta/conf for default toasterconf.json
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -41,66 +49,108 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 26 Oct 2015 16:06:00 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Mon, 26 Oct 2015 16:19:12 -0000
+X-Groupsio-MsgNum: 6597
+Content-Type: multipart/signed;
+	boundary="Apple-Mail=_B2F2AD22-2892-4DBC-80D9-5A4EE303342C";
+	protocol="application/pgp-signature"; micalg=pgp-sha1
 
-True,
+--Apple-Mail=_B2F2AD22-2892-4DBC-80D9-5A4EE303342C
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
 
-but then builds for poky would fail :(
 
-How about something like (posted from gmail so just for discussion not
-to be used!!):
-
-if [ "$TOASTER_CONF" = "" ]; then
-
--    TOASTER_CONF="$(dirname $TOASTER)/../../meta-yocto/conf/toasterconf.json"
-
-+    if [ -e "$(dirname
-$TOASTER)/../../meta-yocto/conf/toasterconf.json" ] ; then
-
-+       TOASTER_CONF="$(dirname
+> On Oct 26, 2015, at 9:05 AM, Brian Avery <avery.brian@gmail.com> =
+wrote:
+>=20
+> True,
+>=20
+> but then builds for poky would fail :(
+>=20
+> How about something like (posted from gmail so just for discussion not
+> to be used!!):
+>=20
+> if [ "$TOASTER_CONF" =3D "" ]; then
+>=20
+> -    TOASTER_CONF=3D"$(dirname =
 $TOASTER)/../../meta-yocto/conf/toasterconf.json"
+>=20
+> +    if [ -e "$(dirname
+> $TOASTER)/../../meta-yocto/conf/toasterconf.json" ] ; then
+>=20
+> +       TOASTER_CONF=3D"$(dirname
+> $TOASTER)/../../meta-yocto/conf/toasterconf.json"
+>=20
+> +    elif [ -e "$(dirname $TOASTER)/../../meta/conf/toasterconf.json" =
+] ; then
+>=20
+> +       TOASTER_CONF=3D"$(dirname =
+$TOASTER)/../../meta/conf/toasterconf.json"
+>=20
+> +    fi
+>=20
+>     export TOASTER_CONF=3D$(python -c "import os; print
+> os.path.realpath('$TOASTER_CONF')=E2=80=9D)
 
-+    elif [ -e "$(dirname $TOASTER)/../../meta/conf/toasterconf.json" ] ; then
+I think checking meta-yocto and meta is just doing it for two distro=E2=80=
+=99s
+IMO OE-Core should just default to meta/ and meta-yocto/poky should then
+set TOASTER_CONF in its distro.conf
 
-+       TOASTER_CONF="$(dirname $TOASTER)/../../meta/conf/toasterconf.json"
-
-+    fi
-
-     export TOASTER_CONF=$(python -c "import os; print
+>=20
+> fi
+>=20
+> -b
+>=20
+> On Sat, Oct 24, 2015 at 2:56 PM, Khem Raj <raj.khem@gmail.com> wrote:
+>> meta-yocto may not exist in nodistro env
+>>=20
+>> Signed-off-by: Khem Raj <raj.khem@gmail.com>
+>> ---
+>> bin/toaster | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>> diff --git a/bin/toaster b/bin/toaster
+>> index 2c3432c..c1a01f0 100755
+>> --- a/bin/toaster
+>> +++ b/bin/toaster
+>> @@ -196,7 +196,7 @@ fi
+>> # in the local layers that currently prevent using an arbitrary
+>> # toasterconf.json
+>> if [ "$TOASTER_CONF" =3D "" ]; then
+>> -    TOASTER_CONF=3D"$(dirname =
+$TOASTER)/../../meta-yocto/conf/toasterconf.json"
+>> +    TOASTER_CONF=3D"$(dirname =
+$TOASTER)/../../meta/conf/toasterconf.json"
+>>     export TOASTER_CONF=3D$(python -c "import os; print =
 os.path.realpath('$TOASTER_CONF')")
+>> fi
+>> if [ ! -f $TOASTER_CONF ]; then
+>> --
+>> 2.6.2
+>>=20
+>> --
+>> _______________________________________________
+>> bitbake-devel mailing list
+>> bitbake-devel@lists.openembedded.org
+>> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
- fi
 
--b
+--Apple-Mail=_B2F2AD22-2892-4DBC-80D9-5A4EE303342C
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP using GPGMail
 
-On Sat, Oct 24, 2015 at 2:56 PM, Khem Raj <raj.khem@gmail.com> wrote:
-> meta-yocto may not exist in nodistro env
->
-> Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ---
->  bin/toaster | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/bin/toaster b/bin/toaster
-> index 2c3432c..c1a01f0 100755
-> --- a/bin/toaster
-> +++ b/bin/toaster
-> @@ -196,7 +196,7 @@ fi
->  # in the local layers that currently prevent using an arbitrary
->  # toasterconf.json
->  if [ "$TOASTER_CONF" = "" ]; then
-> -    TOASTER_CONF="$(dirname $TOASTER)/../../meta-yocto/conf/toasterconf.json"
-> +    TOASTER_CONF="$(dirname $TOASTER)/../../meta/conf/toasterconf.json"
->      export TOASTER_CONF=$(python -c "import os; print os.path.realpath('$TOASTER_CONF')")
->  fi
->  if [ ! -f $TOASTER_CONF ]; then
-> --
-> 2.6.2
->
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - https://gpgtools.org
 
+iEYEARECAAYFAlYuUn0ACgkQuwUzVZGdMxSBEwCfZn71Zj5dozZZn16antth/wf/
+ZyQAn0YRflECmj1waO1002rnIPqglWEi
+=y/q8
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_B2F2AD22-2892-4DBC-80D9-5A4EE303342C--
