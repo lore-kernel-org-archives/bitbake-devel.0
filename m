@@ -1,47 +1,48 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from mail-io0-f180.google.com (mail-io0-f180.google.com
-	[209.85.223.180])
-	by mail.openembedded.org (Postfix) with ESMTP id 9BA9E755F4
+Received: from mail-io0-f178.google.com (mail-io0-f178.google.com
+	[209.85.223.178])
+	by mail.openembedded.org (Postfix) with ESMTP id 2F45575D4A
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Oct 2015 11:21:09 +0000 (UTC)
-Received: by iofz202 with SMTP id z202so216613178iof.2
+	Tue, 27 Oct 2015 12:32:57 +0000 (UTC)
+Received: by ioll68 with SMTP id l68so220404041iol.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Oct 2015 04:21:10 -0700 (PDT)
+	Tue, 27 Oct 2015 05:32:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel_com.20150623.gappssmtp.com; s=20150623;
 	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
 	:cc:content-type;
-	bh=g094LoCkdXWUCN61uTJrxTlLQMWseBk04sIwI3xmN/g=;
-	b=dkPME5IQQSm2lzhJuUv901o5GOXHY5QKroiixC8CqNQmzY7bcd/0apPe1Fw2W9J8HS
-	xXo30yusr9G1hNwTzjKtKFdUgXNPL7PAB8wVlSHLkWR89X4L4JgyiksqN8Mh9qXWuwX5
-	sRE9wRdtYcfTwPHKbOF95vscR9e+/dRhFwDb4vIMlegCef1M2W/TrN2YdXPG0KfT3s83
-	XqL6mbOMB3NASzQB4fj2v++BWTZ7QAY31rXINozBoJ73aSHZ/Q9I/bGcQxdRDLoDiR1e
-	BXMi/ZM4laoq+3hPUIzQ03Ndaj+AcjwlZU+kahIjkAWme7IpgXA5joX6FBx6lAIbSB1U
-	4j/w==
+	bh=tcy9mnn9hoSQNJwiTnfjHQc8YnP77EEjm3wANChuPWk=;
+	b=HTMT+7rR/eaGIIa7EDg9mhxG8qpqxMlBp7O6MgpoThQa0AsrAA15CZCROk4kZ24+ap
+	1y4DpuAwGt3+V0z7pHuLS7BS3Opx5PMjncediVQsDNkfAvZfPxlk5TzEfozo9jJjR1J6
+	cv9tN6wKH74vq/OhAvva0/YjZWlmGU8RUCYQc0wc9m07tq1geadQCMEG6Ucb6OdDrf5x
+	+z8TJvH0HHU1Ris/PSkpqgeQ4471JMNwkkeLMF5g+e6vS1n7taNslCRZisEMLNy2XgqV
+	vcZKYazDKsueBHuT2fVdHCnZOAvqha6/jrQOtcu5fFebnG2dDSpnFkd76J2nvBSiPJfF
+	pN6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:mime-version:in-reply-to:references:date
 	:message-id:subject:from:to:cc:content-type;
-	bh=g094LoCkdXWUCN61uTJrxTlLQMWseBk04sIwI3xmN/g=;
-	b=fATWjtbWr+6KRJ9cHGC3senp6szk/iLWkfYed3alQToBC1wmnrl2lGSeAiCEZTZ9gm
-	hqWWPVPbap6eZBDy11Ya2AhYCbObCpuFt/S1R2gN8aYgRfJ3RWFJs+9RpvAaolBiPh2b
-	jbay0MjHW79KynniVMcf4vv2ny56Edk90lWHCiT55OH2gz2ouuf6bsUMYOtIFiKmm2D5
-	bbUBH3uqjwhx9afG5OHvxNDN++zoMe2ha6PBihbqzWgXjVfh6COAy0N6aokOFbitslrs
-	VlnTMw/bhsRG/Hl8ptFLYSpSASL7n1/Ud5uFVZKM5jOEFXsEkrYRGWPvwIHkxxBtSZOS
-	tVhw==
-X-Gm-Message-State: ALoCoQlz5T1BZC0A3dZXWSnSSejBK94mw0xZw5LSYJyh5a4GymIKxGB4EZTI22KcOJ49dkADTYCB
+	bh=tcy9mnn9hoSQNJwiTnfjHQc8YnP77EEjm3wANChuPWk=;
+	b=KOYli+PPMesV1Nrha/v/TQJ3H+Ziy+VetQUrcAT/masau3TMZ7I0lbBJ841cqJQxWx
+	6Rwj/PuWNhpZECtYteXyX2w1dksNXIh93Np994AQ/slf2PRkTKSIi9Qsf+hJQ65NDvyw
+	8OGxOFtdT2TSTZgXOzwq0EFxGVC6AsW5Fvg/K6dy9ZdFEhEMC2+fCQRg1N3fblA1CL6V
+	rVrL0qAhQF8nAbrint/czDt9vt98s3q0WY0HwyBP2v38Nxzv1hUytJ90QZEaffRolwNm
+	rErqCVgGHbc8igM3VN85DhodLQWEC/iWwTe/gf6h5R/YDAtmYBq4BQ5UJJDV1M2zWS+W
+	vRbw==
+X-Gm-Message-State: ALoCoQmjNLiLf1fUjZdLFwK69+l5C8ZlqdYkkBdI4eOBhWfaNX5DeXc6o8XXgVfTaoR+VY7hSo97
 MIME-Version: 1.0
-X-Received: by 10.107.167.197 with SMTP id q188mr39974218ioe.141.1445944870199;
-	Tue, 27 Oct 2015 04:21:10 -0700 (PDT)
-Received: by 10.64.7.67 with HTTP; Tue, 27 Oct 2015 04:21:10 -0700 (PDT)
-In-Reply-To: <1445685965.21913.58.camel@linuxfoundation.org>
+X-Received: by 10.107.133.22 with SMTP id h22mr45904596iod.109.1445949177368; 
+	Tue, 27 Oct 2015 05:32:57 -0700 (PDT)
+Received: by 10.64.7.67 with HTTP; Tue, 27 Oct 2015 05:32:57 -0700 (PDT)
+In-Reply-To: <CA+1hgUi-zvaEe+gQd8VaCa=6miMk9-ceSTdMCczwbSSZ5D5ANg@mail.gmail.com>
 References: <1444555346.14364.24.camel@linuxfoundation.org>
 	<CA+1hgUj5Lty=V_jSWE1YA2CPJuaY5-PAoj+P8gEtzSKDN5gVjA@mail.gmail.com>
 	<1445011191.17974.34.camel@linuxfoundation.org>
 	<CA+1hgUg7=OhPXV=fHrXzLpSeWKZekx0BkYpu1BC8zaA1H7gG2w@mail.gmail.com>
 	<1445685965.21913.58.camel@linuxfoundation.org>
-Date: Tue, 27 Oct 2015 11:21:10 +0000
-Message-ID: <CA+1hgUi-zvaEe+gQd8VaCa=6miMk9-ceSTdMCczwbSSZ5D5ANg@mail.gmail.com>
+	<CA+1hgUi-zvaEe+gQd8VaCa=6miMk9-ceSTdMCczwbSSZ5D5ANg@mail.gmail.com>
+Date: Tue, 27 Oct 2015 12:32:57 +0000
+Message-ID: <CA+1hgUhCPXYZLGq0r-HjDhhwpOxvkwvW7XMfnZs=6YEg5_xGng@mail.gmail.com>
 From: "Smith, Elliot" <elliot.smith@intel.com>
 To: Richard Purdie <richard.purdie@linuxfoundation.org>
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
@@ -58,48 +59,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 27 Oct 2015 11:21:11 -0000
-Content-Type: multipart/alternative; boundary=001a1141ca945a89230523144627
+X-List-Received-Date: Tue, 27 Oct 2015 12:32:58 -0000
+Content-Type: multipart/alternative; boundary=001a113fb1fe14b3c10523154745
 
---001a1141ca945a89230523144627
+--001a113fb1fe14b3c10523154745
 Content-Type: text/plain; charset=UTF-8
 
-On 24 October 2015 at 12:26, Richard Purdie <
-richard.purdie@linuxfoundation.org> wrote:
+On 27 October 2015 at 11:21, Smith, Elliot <elliot.smith@intel.com> wrote:
 
-> On Mon, 2015-10-19 at 13:27 +0100, Smith, Elliot wrote:
-> > Thanks for clarifying.
-> >
-> > Will these patches be in 2.0? From the toaster point of view, it would
-> > be better if the current behaviour remained for now, even though it is
-> > broken.
-> >
-> > We are working on a solution which will write separate build logs from
-> > within Toaster itself, which will mean we can keep our log download
-> > working when your patches do go in.
-> >
-> > However, we may not get this finished for 2.0, and it would be good if
-> > we could keep the Toaster log download feature working in the
-> > meantime.
-> >
-> Given the other discussion I've seen, I'm assuming it would be ok to
-> merge these now?
+> On 24 October 2015 at 12:26, Richard Purdie <
+> richard.purdie@linuxfoundation.org> wrote:
+>
+>> On Mon, 2015-10-19 at 13:27 +0100, Smith, Elliot wrote:
+>> Given the other discussion I've seen, I'm assuming it would be ok to
+>> merge these now?
+>>
+>
+> Yes, as we're now writing our own logs for Toaster.
+>
+> Thanks for merging.
 >
 
-Yes, as we're now writing our own logs for Toaster.
+Richard, apologies, I just realised we have one patch outstanding:
+https://lists.yoctoproject.org/pipermail/toaster/2015-October/003196.html
 
-Thanks for merging.
+(This is the patch which actually does the work on the Toaster side.)
 
+I thought this had been reviewed and submitted to bitbake-devel, but it
+still hasn't. I will try to get this done today.
+
+If we can get this in, as well as your patches to how bitbake sets
+BB_CONSOLELOG, we won't lose any functionality in Toaster.
+
+Thanks.
 Elliot
 
 
-> Cheers,
->
-> Richard
+> Elliot
 >
 >
+>> Cheers,
+>>
+>> Richard
+>>
+>>
+>>
+>>
 >
 >
+> --
+> Elliot Smith
+> Software Engineer
+> Intel Open Source Technology Centre
+>
+
 
 
 -- 
@@ -107,43 +120,43 @@ Elliot Smith
 Software Engineer
 Intel Open Source Technology Centre
 
---001a1141ca945a89230523144627
+--001a113fb1fe14b3c10523154745
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
 <div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On 2=
-4 October 2015 at 12:26, Richard Purdie <span dir=3D"ltr">&lt;<a href=3D"ma=
-ilto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.purdie@l=
-inuxfoundation.org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quot=
-e" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">=
-<span class=3D"">On Mon, 2015-10-19 at 13:27 +0100, Smith, Elliot wrote:<br=
->
-&gt; Thanks for clarifying.<br>
-&gt;<br>
-&gt; Will these patches be in 2.0? From the toaster point of view, it would=
-<br>
-&gt; be better if the current behaviour remained for now, even though it is=
-<br>
-&gt; broken.<br>
-&gt;<br>
-&gt; We are working on a solution which will write separate build logs from=
-<br>
-&gt; within Toaster itself, which will mean we can keep our log download<br=
->
-&gt; working when your patches do go in.<br>
-&gt;<br>
-&gt; However, we may not get this finished for 2.0, and it would be good if=
-<br>
-&gt; we could keep the Toaster log download feature working in the<br>
-&gt; meantime.<br>
-&gt;<br>
-</span>Given the other discussion I&#39;ve seen, I&#39;m assuming it would =
-be ok to<br>
-merge these now?<br></blockquote><div><br></div><div>Yes, as we&#39;re now =
-writing our own logs for Toaster.</div><div><br></div><div>Thanks for mergi=
-ng.</div><div><br></div><div>Elliot<br></div><div><br></div><blockquote cla=
-ss=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;pa=
-dding-left:1ex">
+7 October 2015 at 11:21, Smith, Elliot <span dir=3D"ltr">&lt;<a href=3D"mai=
+lto:elliot.smith@intel.com" target=3D"_blank">elliot.smith@intel.com</a>&gt=
+;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px 0p=
+x 0px 0.8ex;border-left-width:1px;border-left-color:rgb(204,204,204);border=
+-left-style:solid;padding-left:1ex"><div dir=3D"ltr"><div class=3D"gmail_ex=
+tra"><div class=3D"gmail_quote"><span class=3D"">On 24 October 2015 at 12:2=
+6, Richard Purdie <span dir=3D"ltr">&lt;<a href=3D"mailto:richard.purdie@li=
+nuxfoundation.org" target=3D"_blank">richard.purdie@linuxfoundation.org</a>=
+&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px=
+ 0px 0px 0.8ex;border-left-width:1px;border-left-color:rgb(204,204,204);bor=
+der-left-style:solid;padding-left:1ex"><span>On Mon, 2015-10-19 at 13:27 +0=
+100, Smith, Elliot wrote:<br></span>Given the other discussion I&#39;ve see=
+n, I&#39;m assuming it would be ok to<br>
+merge these now?<br></blockquote><div><br></div></span><div>Yes, as we&#39;=
+re now writing our own logs for Toaster.</div><div><br></div><div>Thanks fo=
+r merging.</div></div></div></div></blockquote><div><br></div><div>Richard,=
+ apologies, I just realised we have one patch outstanding:</div><div><a hre=
+f=3D"https://lists.yoctoproject.org/pipermail/toaster/2015-October/003196.h=
+tml">https://lists.yoctoproject.org/pipermail/toaster/2015-October/003196.h=
+tml</a><br></div><div><br></div><div>(This is the patch which actually does=
+ the work on the Toaster side.)<br></div><div><br></div><div>I thought this=
+ had been reviewed and submitted to bitbake-devel, but it still hasn&#39;t.=
+ I will try to get this done today.</div><div><br></div><div>If we can get =
+this in, as well as your patches to how bitbake sets BB_CONSOLELOG, we won&=
+#39;t lose any functionality in Toaster.</div><div><br></div><div>Thanks.</=
+div><div>Elliot</div><div><br></div><blockquote class=3D"gmail_quote" style=
+=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-left-color:rgb(20=
+4,204,204);border-left-style:solid;padding-left:1ex"><div dir=3D"ltr"><div =
+class=3D"gmail_extra"><div class=3D"gmail_quote"><div><br></div><div>Elliot=
+<br></div><div><br></div><blockquote class=3D"gmail_quote" style=3D"margin:=
+0px 0px 0px 0.8ex;border-left-width:1px;border-left-color:rgb(204,204,204);=
+border-left-style:solid;padding-left:1ex">
 <br>
 Cheers,<br>
 <br>
@@ -151,9 +164,13 @@ Richard<br>
 <br>
 <br>
 <br>
+</blockquote></div><span class=3D""><br><br clear=3D"all"><div><br></div>--=
+ <br><div><div dir=3D"ltr"><div>Elliot Smith<br>Software Engineer<br>Intel =
+Open Source Technology Centre</div></div></div>
+</span></div></div>
 </blockquote></div><br><br clear=3D"all"><div><br></div>-- <br><div class=
 =3D"gmail_signature"><div dir=3D"ltr"><div>Elliot Smith<br>Software Enginee=
 r<br>Intel Open Source Technology Centre</div></div></div>
 </div></div>
 
---001a1141ca945a89230523144627--
+--001a113fb1fe14b3c10523154745--
