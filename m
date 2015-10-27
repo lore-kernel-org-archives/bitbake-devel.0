@@ -1,54 +1,38 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wi0-f182.google.com (mail-wi0-f182.google.com
-	[209.85.212.182])
-	by mail.openembedded.org (Postfix) with ESMTP id 73F1D770D1
+Return-Path: <srifenbark@gmail.com>
+Received: from mail-oi0-f53.google.com (mail-oi0-f53.google.com
+	[209.85.218.53])
+	by mail.openembedded.org (Postfix) with ESMTP id 26D3275D4A
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 28 Oct 2015 14:31:41 +0000 (UTC)
-Received: by wicfx6 with SMTP id fx6so200530534wic.1
+	Tue, 27 Oct 2015 13:34:06 +0000 (UTC)
+Received: by oies66 with SMTP id s66so119633929oie.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 28 Oct 2015 07:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel_com.20150623.gappssmtp.com; s=20150623;
-	h=subject:to:references:cc:from:message-id:date:user-agent
-	:mime-version:in-reply-to:content-type:content-transfer-encoding;
-	bh=k1jgRu3XUg3zrhfcMZWHzwduQ1xl7sGT7hOjFmzIigo=;
-	b=M0M+NeUzxsvYsyxN2En66vAIYI9Kw6pqS5P6fIUZFyRd6sqsU54eqwQuDeYX738/m4
-	MhwLeTCBsGsjbJI98QIxni9iyM+YjKXiJxVwCIP6YwimbLAS1C/VG6LCrqdkdysx3U+A
-	QWtJNaZCYRn5SH7eaSYx6VYfV198R7zCLPAtOILJH5pe8RtjmJZ82b0xftbXCzxmqr65
-	u3gZoQRkMEXIof7a+aSiMRBDhIooe0YFLLZanpQIB+lLG45otP6geahu/uCKDvb45QNt
-	RIDZwOH+F+2b2zfDbIKPBGIB1syyn/NwZlWtMqaPMR3Y0qfntkagSE1wiM6QbqbyeUcR
-	5ZpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-	:user-agent:mime-version:in-reply-to:content-type
-	:content-transfer-encoding;
-	bh=k1jgRu3XUg3zrhfcMZWHzwduQ1xl7sGT7hOjFmzIigo=;
-	b=J+kyD7IOsJK3kKWOb5EqGu4yNisImFHn9PaME09Mg+xf0bTt2aVWbHGliuGcB1hvOS
-	diadVRy1SHeVA6EUc5mNcB5kzxehNfyOfsj/VYVDB9/oiDgegQjoNVr36ahK7SGFEv4g
-	gT8hWp0imab991smz2QIyE2xl2SB/i3PexhMqiNiLGTeFsojTGzHEPxe4STcH35t/kOF
-	9yTp4Z5r+KIjSBtdouzfX1af2AfOgRYIMbVsCBXk3/9tobZCtgexD7QZgcd1jsu7nGWK
-	KhNerryDp1fJHexqVLREpS0rTDtNlzzJwDahYhg/fMEYN1UTiW/pFg0jE3msv7r1s7aV
-	wQ+g==
-X-Gm-Message-State: ALoCoQnydm/RHpBVNe4q9CPMYB0gmykpOsh+NH4p5/z1+DoNYn1r176YlxL9TPZBlJCCnGsy8rhw
-X-Received: by 10.180.211.101 with SMTP id nb5mr3302013wic.0.1446042701368;
-	Wed, 28 Oct 2015 07:31:41 -0700 (PDT)
-Received: from [192.168.2.10] ([83.217.123.106])
-	by smtp.googlemail.com with ESMTPSA id
-	h4sm30343922wjx.41.2015.10.28.07.31.40
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Wed, 28 Oct 2015 07:31:40 -0700 (PDT)
-To: bitbake-devel@lists.openembedded.org
-References: <1445963156-18084-1-git-send-email-michael.g.wood@intel.com>
-	<1445963156-18084-2-git-send-email-michael.g.wood@intel.com>
-From: Michael Wood <michael.g.wood@intel.com>
-Message-ID: <5630DC47.5080708@intel.com>
-Date: Wed, 28 Oct 2015 14:31:35 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
-	Thunderbird/38.3.0
+	Tue, 27 Oct 2015 06:34:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	:cc:content-type;
+	bh=CwsUwpE2KezOrJUHWl9JXu5KBnCqt2+mmHqvOFaHjos=;
+	b=zYvQeFD4kiB88YumlLNk9ZLoiBehJYhR7PRkIApHO5eZF9FpZbZ7LwjYrbC/9yJJDX
+	JIV5uIm/PmqIePq/d9ot5gjqwyYD4BFMhhw+U8WOpzAho8q5F4BwVOvsUzYFEwZxnKW1
+	yFZqTQkAtlMzEQMSDNfvdP/q0mnop07LDp6LikPhYU88hp/sM9m3NQMCsb+F++6Jx6Lt
+	gDyse1mYJ9QZQXQn+w1Tz2hS104T+pOJa/hfO477U39zeldRtxQnisKOjNQXFpmtl91t
+	YyhnVTOIjIi3q7PYa8WoWDzHx1R10sp+9HHDAfJYrv65fuT6xeipRBQCriSMgwcJDK05
+	FR3Q==
 MIME-Version: 1.0
-In-Reply-To: <1445963156-18084-2-git-send-email-michael.g.wood@intel.com>
-Subject: Re: [PATCH] toasterui: Create per-build logs
+X-Received: by 10.202.105.84 with SMTP id e81mr6183715oic.30.1445952846897;
+	Tue, 27 Oct 2015 06:34:06 -0700 (PDT)
+Received: by 10.60.142.231 with HTTP; Tue, 27 Oct 2015 06:34:06 -0700 (PDT)
+In-Reply-To: <1445681946.21913.52.camel@linuxfoundation.org>
+References: <1445681946.21913.52.camel@linuxfoundation.org>
+Date: Tue, 27 Oct 2015 06:34:06 -0700
+Message-ID: <CAFNP8Ou+cT0_-AHbwOf2s-HgZgL8TWbx-_JpdxNLqJZ+n2HYQw@mail.gmail.com>
+From: Scott Rifenbark <srifenbark@gmail.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+X-Mailman-Approved-At: Wed, 28 Oct 2015 20:40:56 +0000
+Cc: "Avery, Brian" <brian.avery@intel.com>,
+	Tracy Graydon <tracy.graydon@intel.com>, "Witt,
+	Randy E" <randy.e.witt@intel.com>,
+	bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] build/utils: Add BB_TASK_IONICE_LEVEL support
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -61,282 +45,248 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 28 Oct 2015 14:31:48 -0000
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 27 Oct 2015 13:34:07 -0000
+Content-Type: multipart/alternative; boundary=001a1141b624cd27860523162166
 
-On 27/10/15 16:25, Michael Wood wrote:
-> From: Elliot Smith <elliot.smith@intel.com>
+--001a1141b624cd27860523162166
+Content-Type: text/plain; charset=UTF-8
+
+Hi,
+
+See
+http://www.yoctoproject.org/docs/2.0/bitbake-user-manual/bitbake-user-manual.html#var-BB_TASK_IONICE_LEVEL
+for the new variable description in the BitBake User Manual.  Note that I
+did not include the future implementation information at the bottom of
+Richard's explanation.  Also, there is a bit about the 'cfq scheduler' near
+the end.  I did not know how to properly format this string (e.g. CFG
+Scheduler).
+
+Let me know of any changes or fixes.
+
+Thanks,
+Scott
+
+On Sat, Oct 24, 2015 at 3:19 AM, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
+
+> Similarly to BB_TASK_NICE_LEVEL, add BB_TASK_IONICE_LEVEL which allows the
+> ioprio
+> of tasks to be adjusted. This is in response to various qemu runtime
+> timeouts
+> which have been witnessed on the autobuilder, seemingly due to IO
+> starvation (we
+> already use NICE_LEVEL to adjust tasks). This has a fairly urgent need to
+> deal
+> with certain 'random' failures we're seeing on the autobuilders in testing.
 >
-> Rather than relying on bug 8411, which is conveniently creating
-> separate log files for each of our builds, create our own
-> log file for each build.
+> The format of the data in the variable is BB_TASK_IONICE_LEVEL =
+> "<class>.<prio>".
 >
-> The log files are created in the same tmp directories that
-> bitbake users, but are timestamped to the millisecond to avoid
-> name collisions.
+> For <class>, 2 is best effort (the default), 1 is real time and 3 is idle.
+> You'd
+> need superuser privileges to use realtime. The <prio> value is a default
+> of 4,
+> and can be set between 0 and 7 with 7 being lowest priority and 0 the
+> highest.
+> The user can set this freely with normal privileges
 >
-> Each log file is opened on the ParseStarted event and closed
-> on the BuildCompleted event (or if when the build fails).
+> Note that in order for this to take effect, you need the cfq scheduler
+> selected
+> for the backing block device.
 >
-> Because we start logging on ParseStarted, we're able to capture
-> the "Build Configuration" section output by bitbake.
+> We could use nice wrapper functions for ioprio from modules like psutil
+> however
+> that would complicate bitbake dependencies. This version has some magic
+> numbers
+> but works on the main 32 and 64 bit x86 build architectures and can easily
+> be
+> extended if ever needed. When we move to python 3.x, we can likely replace
+> this
+> with standard calls.
 >
-> [YOCTO #8373]
+> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 >
-> Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-> Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-> ---
->   lib/bb/ui/buildinfohelper.py |   8 ++--
->   lib/bb/ui/toasterui.py       | 105 ++++++++++++++++++++++++++++++++-----------
->   2 files changed, 84 insertions(+), 29 deletions(-)
+> diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+> index 948c395..22428a6 100644
+> --- a/bitbake/lib/bb/build.py
+> +++ b/bitbake/lib/bb/build.py
+> @@ -413,6 +413,13 @@ def _exec_task(fn, task, d, quieterr):
+>          nice = int(nice) - curnice
+>          newnice = os.nice(nice)
+>          logger.debug(1, "Renice to %s " % newnice)
+> +    ionice = localdata.getVar("BB_TASK_IONICE_LEVEL", True)
+> +    if ionice:
+> +        try:
+> +            cls, prio = ionice.split(".", 1)
+> +            bb.utils.ioprio_set(os.getpid(), int(cls), int(prio))
+> +        except:
+> +            bb.warn("Invalid ionice level %s" % ionice)
 >
-> diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-> index 286fb6a..41e4643 100644
-> --- a/lib/bb/ui/buildinfohelper.py
-> +++ b/lib/bb/ui/buildinfohelper.py
-> @@ -778,7 +778,7 @@ class BuildInfoHelper(object):
->       ## methods to convert event/external info into objects that the ORM layer uses
->   
->   
-> -    def _get_build_information(self, consolelogfile):
-> +    def _get_build_information(self, build_log_path):
->           build_info = {}
->           # Generate an identifier for each new build
->   
-> @@ -787,7 +787,7 @@ class BuildInfoHelper(object):
->           build_info['distro_version'] = self.server.runCommand(["getVariable", "DISTRO_VERSION"])[0]
->           build_info['started_on'] = timezone.now()
->           build_info['completed_on'] = timezone.now()
-> -        build_info['cooker_log_path'] = consolelogfile
-> +        build_info['cooker_log_path'] = build_log_path
->           build_info['build_name'] = self.server.runCommand(["getVariable", "BUILDNAME"])[0]
->           build_info['bitbake_version'] = self.server.runCommand(["getVariable", "BB_VERSION"])[0]
->   
-> @@ -928,9 +928,9 @@ class BuildInfoHelper(object):
->                   logger.warn("buildinfohelper: cannot identify layer exception:%s ", nee)
->   
->   
-> -    def store_started_build(self, event, consolelogfile):
-> +    def store_started_build(self, event, build_log_path):
->           assert '_pkgs' in vars(event)
-> -        build_information = self._get_build_information(consolelogfile)
-> +        build_information = self._get_build_information(build_log_path)
->   
->           build_obj = self.orm_wrapper.create_build_object(build_information, self.brbe, self.project)
->   
-> diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
-> index 0ed774e..e594196 100644
-> --- a/lib/bb/ui/toasterui.py
-> +++ b/lib/bb/ui/toasterui.py
-> @@ -21,6 +21,7 @@
->   # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
->   
->   from __future__ import division
-> +import time
->   import sys
->   try:
->       import bb
-> @@ -43,8 +44,6 @@ featureSet = [bb.cooker.CookerFeatures.HOB_EXTRA_CACHES, bb.cooker.CookerFeature
->   logger = logging.getLogger("ToasterLogger")
->   interactive = sys.stdout.isatty()
->   
-> -
-> -
->   def _log_settings_from_server(server):
->       # Get values of variables which control our output
->       includelogs, error = server.runCommand(["getVariable", "BBINCLUDELOGS"])
-> @@ -59,12 +58,53 @@ def _log_settings_from_server(server):
->       if error:
->           logger.error("Unable to get the value of BB_CONSOLELOG variable: %s", error)
->           raise BaseException(error)
-> -    return includelogs, loglines, consolelogfile
-> +    return consolelogfile
+>      bb.utils.mkdirhier(tempdir)
+>
+> diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+> index eb219c1..86a5328 100644
+> --- a/bitbake/lib/bb/utils.py
+> +++ b/bitbake/lib/bb/utils.py
+> @@ -1310,3 +1310,27 @@ def signal_on_parent_exit(signame):
+>      result = cdll['libc.so.6'].prctl(PR_SET_PDEATHSIG, signum)
+>      if result != 0:
+>          raise PrCtlError('prctl failed with error code %s' % result)
 > +
-> +# create a log file for a single build and direct the logger at it;
-> +# log file name is timestamped to the millisecond (depending
-> +# on system clock accuracy) to ensure it doesn't overlap with
-> +# other log file names
 > +#
-> +# returns (log file, path to log file) for a build
-> +def _open_build_log(log_dir):
-> +    format_str = "%(levelname)s: %(message)s"
+> +# Manually call the ioprio syscall. We could depend on other libs like
+> psutil
+> +# however this gets us enough of what we need to bitbake for now without
+> the
+> +# dependency
+> +#
+> +_unamearch = os.uname()[4]
+> +IOPRIO_WHO_PROCESS = 1
+> +IOPRIO_CLASS_SHIFT = 13
 > +
-> +    now = time.time()
-> +    now_ms = int((now - int(now)) * 1000)
-> +    time_str = time.strftime('build_%Y%m%d_%H%M%S', time.localtime(now))
-> +    log_file_name = time_str + ('.%d.log' % now_ms)
-> +    build_log_file_path = os.path.join(log_dir, log_file_name)
+> +def ioprio_set(who, cls, value):
+> +    NR_ioprio_set = None
+> +    if _unamearch == "x86_64":
+> +      NR_ioprio_set = 251
+> +    elif _unamearch[0] == "i" and _unamearch[2:3] == "86":
+> +      NR_ioprio_set = 289
 > +
-> +    build_log = logging.FileHandler(build_log_file_path)
->   
-> +    logformat = bb.msg.BBLogFormatter(format_str)
-> +    build_log.setFormatter(logformat)
-> +
-> +    bb.msg.addDefaultlogFilter(build_log)
-> +    logger.addHandler(build_log)
-> +
-> +    return (build_log, build_log_file_path)
-> +
-> +# stop logging to the build log if it exists
-> +def _close_build_log(build_log):
-> +    if build_log:
-> +        build_log.flush()
-> +        build_log.close()
-> +        logger.removeHandler(build_log)
-> +
-> +def main(server, eventHandler, params):
-> +    # set to a logging.FileHandler instance when a build starts;
-> +    # see _open_build_log()
-> +    build_log = None
->   
-> -def main(server, eventHandler, params ):
->       helper = uihelper.BBUIHelper()
->   
-> +    # TODO don't use log output to determine when bitbake has started
-> +    #
-> +    # WARNING: this log handler cannot be removed, as localhostbecontroller
-> +    # relies on output in the toaster_ui.log file to determine whether
-> +    # the bitbake server has started, which only happens if
-> +    # this logger is setup here (see the TODO in the loop below)
->       console = logging.StreamHandler(sys.stdout)
->       format_str = "%(levelname)s: %(message)s"
->       formatter = bb.msg.BBLogFormatter(format_str)
-> @@ -73,8 +113,6 @@ def main(server, eventHandler, params ):
->       logger.addHandler(console)
->       logger.setLevel(logging.INFO)
->   
-> -    _, _, consolelogfile = _log_settings_from_server(server)
-> -
->       # verify and warn
->       build_history_enabled = True
->       inheritlist, _ = server.runCommand(["getVariable", "INHERIT"])
-> @@ -87,8 +125,9 @@ def main(server, eventHandler, params ):
->           logger.error("ToasterUI can only work in observer mode")
->           return 1
->   
-> -
-> +    # set to 1 when toasterui needs to shut down
->       main.shutdown = 0
-> +
->       interrupted = False
->       return_value = 0
->       errors = 0
-> @@ -98,25 +137,31 @@ def main(server, eventHandler, params ):
->   
->       buildinfohelper = BuildInfoHelper(server, build_history_enabled)
->   
-> -    if buildinfohelper.brbe is not None and consolelogfile:
-> -        # if we are under managed mode we have no other UI and we need to write our own file
-> -        bb.utils.mkdirhier(os.path.dirname(consolelogfile))
-> -        conlogformat = bb.msg.BBLogFormatter(format_str)
-> -        consolelog = logging.FileHandler(consolelogfile)
-> -        bb.msg.addDefaultlogFilter(consolelog)
-> -        consolelog.setFormatter(conlogformat)
-> -        logger.addHandler(consolelog)
-> -
-> +    # write our own log files into bitbake's log directory;
-> +    # we're only interested in the path to the parent directory of
-> +    # this file, as we're writing our own logs into the same directory
-> +    consolelogfile = _log_settings_from_server(server)
-> +    log_dir = os.path.dirname(consolelogfile)
-> +    bb.utils.mkdirhier(log_dir)
->   
->       while True:
->           try:
->               event = eventHandler.waitEvent(0.25)
->               if first:
->                   first = False
-> +
-> +                # TODO don't use log output to determine when bitbake has started
-> +                #
-> +                # this is the line localhostbecontroller needs to
-> +                # see in toaster_ui.log which it uses to decide whether
-> +                # the bitbake server has started...
->                   logger.info("ToasterUI waiting for events")
->   
->               if event is None:
->                   if main.shutdown > 0:
-> +                    # if shutting down, close any open build log first
-> +                    _close_build_log(build_log)
-> +
->                       break
->                   continue
->   
-> @@ -125,8 +170,15 @@ def main(server, eventHandler, params ):
->               # pylint: disable=protected-access
->               # the code will look into the protected variables of the event; no easy way around this
->   
-> +            # we treat ParseStarted as the first event of the build;
-> +            # that way we get the Build Configuration included in the log
-> +            # and any errors that occur before BuildStarted is fired
-> +            if isinstance(event, bb.event.ParseStarted):
-> +                build_log, build_log_file_path = _open_build_log(log_dir)
-> +                continue
-> +
->               if isinstance(event, bb.event.BuildStarted):
-> -                buildinfohelper.store_started_build(event, consolelogfile)
-> +                buildinfohelper.store_started_build(event, build_log_file_path)
->   
->               if isinstance(event, (bb.build.TaskStarted, bb.build.TaskSucceeded, bb.build.TaskFailedSilent)):
->                   buildinfohelper.update_and_store_task(event)
-> @@ -171,8 +223,6 @@ def main(server, eventHandler, params ):
->               # timing and error informations from the parsing phase in Toaster
->               if isinstance(event, (bb.event.SanityCheckPassed, bb.event.SanityCheck)):
->                   continue
-> -            if isinstance(event, bb.event.ParseStarted):
-> -                continue
->               if isinstance(event, bb.event.ParseProgress):
->                   continue
->               if isinstance(event, bb.event.ParseCompleted):
-> @@ -248,6 +298,12 @@ def main(server, eventHandler, params ):
->                       errorcode = 1
->                       logger.error("Command execution failed: %s", event.error)
->   
-> +                # turn off logging to the current build log
-> +                _close_build_log(build_log)
-> +
-> +                # reset ready for next BuildStarted
-> +                build_log = None
-> +
->                   # update the build info helper on BuildCompleted, not on CommandXXX
->                   buildinfohelper.update_build_information(event, errors, warnings, taskfailures)
->                   buildinfohelper.close(errorcode)
-> @@ -256,7 +312,6 @@ def main(server, eventHandler, params ):
->   
->                   # we start a new build info
->                   if buildinfohelper.brbe is not None:
-> -
->                       logger.debug("ToasterUI under BuildEnvironment management - exiting after the build")
->                       server.terminateServer()
->                   else:
-> @@ -298,8 +353,9 @@ def main(server, eventHandler, params ):
->                   continue
->   
->               if isinstance(event, bb.cooker.CookerExit):
-> -                # exit when the server exits
-> -                break
-> +                # shutdown when bitbake server shuts down
-> +                main.shutdown = 1
-> +                continue
->   
->               # ignore
->               if isinstance(event, (bb.event.BuildBase,
-> @@ -350,9 +406,8 @@ def main(server, eventHandler, params ):
->               # make sure we return with an error
->               return_value += 1
->   
-> -    if interrupted:
-> -        if return_value == 0:
-> -            return_value += 1
-> +    if interrupted and return_value == 0:
-> +        return_value += 1
->   
->       logger.warn("Return value is %d", return_value)
->       return return_value
+> +    if NR_ioprio_set:
+> +        ioprio = value | (cls << IOPRIO_CLASS_SHIFT)
+> +        rc = cdll['libc.so.6'].syscall(NR_ioprio_set, IOPRIO_WHO_PROCESS,
+> who, ioprio)
+> +        if rc != 0:
+> +            raise ValueError("Unable to set ioprio, syscall returned %s"
+> % rc)
+> +    else:
+> +        bb.warn("Unable to set IO Prio for arch %s" % _unamearch)
+>
+>
+>
 
-Elliot is currently working on a new revision of this patch to account 
-for some proposed changes that are in master-next.
+--001a1141b624cd27860523162166
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Michael
+<div dir=3D"ltr"><div><div><div><div>Hi, <br><br></div>See <a href=3D"http:=
+//www.yoctoproject.org/docs/2.0/bitbake-user-manual/bitbake-user-manual.htm=
+l#var-BB_TASK_IONICE_LEVEL">http://www.yoctoproject.org/docs/2.0/bitbake-us=
+er-manual/bitbake-user-manual.html#var-BB_TASK_IONICE_LEVEL</a> for the new=
+ variable description in the BitBake User Manual.=C2=A0 Note that I did not=
+ include the future implementation information at the bottom of Richard&#39=
+;s explanation.=C2=A0 Also, there is a bit about the &#39;cfq scheduler&#39=
+; near the end.=C2=A0 I did not know how to properly format this string (e.=
+g. CFG Scheduler).<br><br></div>Let me know of any changes or fixes. <br><b=
+r></div>Thanks, <br></div>Scott<br></div><div class=3D"gmail_extra"><br><di=
+v class=3D"gmail_quote">On Sat, Oct 24, 2015 at 3:19 AM, Richard Purdie <sp=
+an dir=3D"ltr">&lt;<a href=3D"mailto:richard.purdie@linuxfoundation.org" ta=
+rget=3D"_blank">richard.purdie@linuxfoundation.org</a>&gt;</span> wrote:<br=
+><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1=
+px #ccc solid;padding-left:1ex">Similarly to BB_TASK_NICE_LEVEL, add BB_TAS=
+K_IONICE_LEVEL which allows the ioprio<br>
+of tasks to be adjusted. This is in response to various qemu runtime timeou=
+ts<br>
+which have been witnessed on the autobuilder, seemingly due to IO starvatio=
+n (we<br>
+already use NICE_LEVEL to adjust tasks). This has a fairly urgent need to d=
+eal<br>
+with certain &#39;random&#39; failures we&#39;re seeing on the autobuilders=
+ in testing.<br>
+<br>
+The format of the data in the variable is BB_TASK_IONICE_LEVEL =3D &quot;&l=
+t;class&gt;.&lt;prio&gt;&quot;.<br>
+<br>
+For &lt;class&gt;, 2 is best effort (the default), 1 is real time and 3 is =
+idle. You&#39;d<br>
+need superuser privileges to use realtime. The &lt;prio&gt; value is a defa=
+ult of 4,<br>
+and can be set between 0 and 7 with 7 being lowest priority and 0 the highe=
+st.<br>
+The user can set this freely with normal privileges<br>
+<br>
+Note that in order for this to take effect, you need the cfq scheduler sele=
+cted<br>
+for the backing block device.<br>
+<br>
+We could use nice wrapper functions for ioprio from modules like psutil how=
+ever<br>
+that would complicate bitbake dependencies. This version has some magic num=
+bers<br>
+but works on the main 32 and 64 bit x86 build architectures and can easily =
+be<br>
+extended if ever needed. When we move to python 3.x, we can likely replace =
+this<br>
+with standard calls.<br>
+<br>
+Signed-off-by: Richard Purdie &lt;<a href=3D"mailto:richard.purdie@linuxfou=
+ndation.org">richard.purdie@linuxfoundation.org</a>&gt;<br>
+<br>
+diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py<br>
+index 948c395..22428a6 100644<br>
+--- a/bitbake/lib/bb/build.py<br>
++++ b/bitbake/lib/bb/build.py<br>
+@@ -413,6 +413,13 @@ def _exec_task(fn, task, d, quieterr):<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0nice =3D int(nice) - curnice<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0newnice =3D os.nice(nice)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0logger.debug(1, &quot;Renice to %s &quot;=
+ % newnice)<br>
++=C2=A0 =C2=A0 ionice =3D localdata.getVar(&quot;BB_TASK_IONICE_LEVEL&quot;=
+, True)<br>
++=C2=A0 =C2=A0 if ionice:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 try:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 cls, prio =3D ionice.split(&quot=
+;.&quot;, 1)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.utils.ioprio_set(os.getpid(),=
+ int(cls), int(prio))<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 except:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.warn(&quot;Invalid ionice lev=
+el %s&quot; % ionice)<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0bb.utils.mkdirhier(tempdir)<br>
+<br>
+diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py<br>
+index eb219c1..86a5328 100644<br>
+--- a/bitbake/lib/bb/utils.py<br>
++++ b/bitbake/lib/bb/utils.py<br>
+@@ -1310,3 +1310,27 @@ def signal_on_parent_exit(signame):<br>
+=C2=A0 =C2=A0 =C2=A0result =3D cdll[&#39;libc.so.6&#39;].prctl(PR_SET_PDEAT=
+HSIG, signum)<br>
+=C2=A0 =C2=A0 =C2=A0if result !=3D 0:<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0raise PrCtlError(&#39;prctl failed with e=
+rror code %s&#39; % result)<br>
++<br>
++#<br>
++# Manually call the ioprio syscall. We could depend on other libs like psu=
+til<br>
++# however this gets us enough of what we need to bitbake for now without t=
+he<br>
++# dependency<br>
++#<br>
++_unamearch =3D os.uname()[4]<br>
++IOPRIO_WHO_PROCESS =3D 1<br>
++IOPRIO_CLASS_SHIFT =3D 13<br>
++<br>
++def ioprio_set(who, cls, value):<br>
++=C2=A0 =C2=A0 NR_ioprio_set =3D None<br>
++=C2=A0 =C2=A0 if _unamearch =3D=3D &quot;x86_64&quot;:<br>
++=C2=A0 =C2=A0 =C2=A0 NR_ioprio_set =3D 251<br>
++=C2=A0 =C2=A0 elif _unamearch[0] =3D=3D &quot;i&quot; and _unamearch[2:3] =
+=3D=3D &quot;86&quot;:<br>
++=C2=A0 =C2=A0 =C2=A0 NR_ioprio_set =3D 289<br>
++<br>
++=C2=A0 =C2=A0 if NR_ioprio_set:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 ioprio =3D value | (cls &lt;&lt; IOPRIO_CLASS_=
+SHIFT)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 rc =3D cdll[&#39;libc.so.6&#39;].syscall(NR_io=
+prio_set, IOPRIO_WHO_PROCESS, who, ioprio)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 if rc !=3D 0:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 raise ValueError(&quot;Unable to=
+ set ioprio, syscall returned %s&quot; % rc)<br>
++=C2=A0 =C2=A0 else:<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 bb.warn(&quot;Unable to set IO Prio for arch %=
+s&quot; % _unamearch)<br>
+<br>
+<br>
+</blockquote></div><br></div>
 
+--001a1141b624cd27860523162166--
