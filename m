@@ -1,27 +1,51 @@
-Return-Path: <paul.eggleton@linux.intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 4FA717570D
+Return-Path: <elliot.smith@intel.com>
+Received: from mail-io0-f180.google.com (mail-io0-f180.google.com
+	[209.85.223.180])
+	by mail.openembedded.org (Postfix) with ESMTP id 9BA9E755F4
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 27 Oct 2015 08:43:41 +0000 (UTC)
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by orsmga103.jf.intel.com with ESMTP; 27 Oct 2015 01:43:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.20,204,1444719600"; d="scan'208";a="836380844"
-Received: from fcheverx-mobl.ger.corp.intel.com (HELO
-	peggleto-mobl.ger.corp.intel.com) ([10.252.10.27])
-	by fmsmga002.fm.intel.com with ESMTP; 27 Oct 2015 01:43:40 -0700
-From: Paul Eggleton <paul.eggleton@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org, Brian Avery <avery.brian@gmail.com>
-Date: Tue, 27 Oct 2015 08:43:39 +0000
-Message-ID: <32134538.nEPZhokZdl@peggleto-mobl.ger.corp.intel.com>
-Organization: Intel Corporation
-User-Agent: KMail/4.14.9 (Linux/4.1.8-100.fc21.x86_64; KDE/4.14.9; x86_64; ; )
-In-Reply-To: <40CEB3B1-8820-4D38-91B6-5A41DACC4AED@gmail.com>
-References: <1445723789-7493-1-git-send-email-raj.khem@gmail.com>
-	<CAKV_0egMyNQ2bzbO+gydU+vDsc_xwGgKgwmh9YW8vynVhShQ8Q@mail.gmail.com>
-	<40CEB3B1-8820-4D38-91B6-5A41DACC4AED@gmail.com>
+	Tue, 27 Oct 2015 11:21:09 +0000 (UTC)
+Received: by iofz202 with SMTP id z202so216613178iof.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 27 Oct 2015 04:21:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel_com.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	:cc:content-type;
+	bh=g094LoCkdXWUCN61uTJrxTlLQMWseBk04sIwI3xmN/g=;
+	b=dkPME5IQQSm2lzhJuUv901o5GOXHY5QKroiixC8CqNQmzY7bcd/0apPe1Fw2W9J8HS
+	xXo30yusr9G1hNwTzjKtKFdUgXNPL7PAB8wVlSHLkWR89X4L4JgyiksqN8Mh9qXWuwX5
+	sRE9wRdtYcfTwPHKbOF95vscR9e+/dRhFwDb4vIMlegCef1M2W/TrN2YdXPG0KfT3s83
+	XqL6mbOMB3NASzQB4fj2v++BWTZ7QAY31rXINozBoJ73aSHZ/Q9I/bGcQxdRDLoDiR1e
+	BXMi/ZM4laoq+3hPUIzQ03Ndaj+AcjwlZU+kahIjkAWme7IpgXA5joX6FBx6lAIbSB1U
+	4j/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:mime-version:in-reply-to:references:date
+	:message-id:subject:from:to:cc:content-type;
+	bh=g094LoCkdXWUCN61uTJrxTlLQMWseBk04sIwI3xmN/g=;
+	b=fATWjtbWr+6KRJ9cHGC3senp6szk/iLWkfYed3alQToBC1wmnrl2lGSeAiCEZTZ9gm
+	hqWWPVPbap6eZBDy11Ya2AhYCbObCpuFt/S1R2gN8aYgRfJ3RWFJs+9RpvAaolBiPh2b
+	jbay0MjHW79KynniVMcf4vv2ny56Edk90lWHCiT55OH2gz2ouuf6bsUMYOtIFiKmm2D5
+	bbUBH3uqjwhx9afG5OHvxNDN++zoMe2ha6PBihbqzWgXjVfh6COAy0N6aokOFbitslrs
+	VlnTMw/bhsRG/Hl8ptFLYSpSASL7n1/Ud5uFVZKM5jOEFXsEkrYRGWPvwIHkxxBtSZOS
+	tVhw==
+X-Gm-Message-State: ALoCoQlz5T1BZC0A3dZXWSnSSejBK94mw0xZw5LSYJyh5a4GymIKxGB4EZTI22KcOJ49dkADTYCB
 MIME-Version: 1.0
-Subject: Re: [PATCH] toaster: Point to meta/conf for default toasterconf.json
+X-Received: by 10.107.167.197 with SMTP id q188mr39974218ioe.141.1445944870199;
+	Tue, 27 Oct 2015 04:21:10 -0700 (PDT)
+Received: by 10.64.7.67 with HTTP; Tue, 27 Oct 2015 04:21:10 -0700 (PDT)
+In-Reply-To: <1445685965.21913.58.camel@linuxfoundation.org>
+References: <1444555346.14364.24.camel@linuxfoundation.org>
+	<CA+1hgUj5Lty=V_jSWE1YA2CPJuaY5-PAoj+P8gEtzSKDN5gVjA@mail.gmail.com>
+	<1445011191.17974.34.camel@linuxfoundation.org>
+	<CA+1hgUg7=OhPXV=fHrXzLpSeWKZekx0BkYpu1BC8zaA1H7gG2w@mail.gmail.com>
+	<1445685965.21913.58.camel@linuxfoundation.org>
+Date: Tue, 27 Oct 2015 11:21:10 +0000
+Message-ID: <CA+1hgUi-zvaEe+gQd8VaCa=6miMk9-ceSTdMCczwbSSZ5D5ANg@mail.gmail.com>
+From: "Smith, Elliot" <elliot.smith@intel.com>
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] cooker: Ensure BB_CONSOLE remains correct over server resets
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -34,77 +58,102 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 27 Oct 2015 08:43:42 -0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+X-List-Received-Date: Tue, 27 Oct 2015 11:21:11 -0000
+Content-Type: multipart/alternative; boundary=001a1141ca945a89230523144627
 
-On Monday 26 October 2015 09:19:02 Khem Raj wrote:
-> > On Oct 26, 2015, at 9:05 AM, Brian Avery <avery.brian@gmail.com> wr=
-ote:
-> >=20
-> > True,
-> >=20
-> > but then builds for poky would fail :(
-> >=20
-> > How about something like (posted from gmail so just for discussion =
-not
-> > to be used!!):
-> >=20
-> > if [ "$TOASTER_CONF" =3D "" ]; then
-> >=20
-> > -    TOASTER_CONF=3D"$(dirname
-> > $TOASTER)/../../meta-yocto/conf/toasterconf.json"
-> >=20
-> > +    if [ -e "$(dirname
-> > $TOASTER)/../../meta-yocto/conf/toasterconf.json" ] ; then
-> >=20
-> > +       TOASTER_CONF=3D"$(dirname
-> > $TOASTER)/../../meta-yocto/conf/toasterconf.json"
-> >=20
-> > +    elif [ -e "$(dirname $TOASTER)/../../meta/conf/toasterconf.jso=
-n" ] ;
-> > then
-> >=20
-> > +       TOASTER_CONF=3D"$(dirname
-> > $TOASTER)/../../meta/conf/toasterconf.json"
-> >=20
-> > +    fi
-> >=20
-> >     export TOASTER_CONF=3D$(python -c "import os; print
-> >=20
-> > os.path.realpath('$TOASTER_CONF')=E2=80=9D)
->=20
-> I think checking meta-yocto and meta is just doing it for two distro=E2=
-=80=99s
-> IMO OE-Core should just default to meta/ and meta-yocto/poky should t=
-hen
-> set TOASTER_CONF in its distro.conf
+--001a1141ca945a89230523144627
+Content-Type: text/plain; charset=UTF-8
 
-The original design that I specified was to check every layer in the=20=
+On 24 October 2015 at 12:26, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-configuration. Somehow what got implemented was to hardcode the path in=
- bitbake=20
-which is pretty much exactly the wrong thing to have done :/
+> On Mon, 2015-10-19 at 13:27 +0100, Smith, Elliot wrote:
+> > Thanks for clarifying.
+> >
+> > Will these patches be in 2.0? From the toaster point of view, it would
+> > be better if the current behaviour remained for now, even though it is
+> > broken.
+> >
+> > We are working on a solution which will write separate build logs from
+> > within Toaster itself, which will mean we can keep our log download
+> > working when your patches do go in.
+> >
+> > However, we may not get this finished for 2.0, and it would be good if
+> > we could keep the Toaster log download feature working in the
+> > meantime.
+> >
+> Given the other discussion I've seen, I'm assuming it would be ok to
+> merge these now?
+>
 
-If we're able to rely on DISTRO being set to the right thing then I'd g=
-o with=20
-Khem's approach, but the important thing to note is that this json file=
- is=20
-simply initialising the database; changing that path afterwards is goin=
-g to do=20
-absolutely nothing. It's more akin to TEMPLATECONF (and possibly even h=
-igher=20
-level than that, since you're likely to create new build directories mo=
-re=20
-often than you'll create a new toaster database). Maybe we could use=20=
+Yes, as we're now writing our own logs for Toaster.
 
-TEMPLATECONF?
+Thanks for merging.
 
-Cheers,
-Paul
+Elliot
 
---=20
 
-Paul Eggleton
+> Cheers,
+>
+> Richard
+>
+>
+>
+>
+
+
+-- 
+Elliot Smith
+Software Engineer
 Intel Open Source Technology Centre
 
+--001a1141ca945a89230523144627
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On 2=
+4 October 2015 at 12:26, Richard Purdie <span dir=3D"ltr">&lt;<a href=3D"ma=
+ilto:richard.purdie@linuxfoundation.org" target=3D"_blank">richard.purdie@l=
+inuxfoundation.org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quot=
+e" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">=
+<span class=3D"">On Mon, 2015-10-19 at 13:27 +0100, Smith, Elliot wrote:<br=
+>
+&gt; Thanks for clarifying.<br>
+&gt;<br>
+&gt; Will these patches be in 2.0? From the toaster point of view, it would=
+<br>
+&gt; be better if the current behaviour remained for now, even though it is=
+<br>
+&gt; broken.<br>
+&gt;<br>
+&gt; We are working on a solution which will write separate build logs from=
+<br>
+&gt; within Toaster itself, which will mean we can keep our log download<br=
+>
+&gt; working when your patches do go in.<br>
+&gt;<br>
+&gt; However, we may not get this finished for 2.0, and it would be good if=
+<br>
+&gt; we could keep the Toaster log download feature working in the<br>
+&gt; meantime.<br>
+&gt;<br>
+</span>Given the other discussion I&#39;ve seen, I&#39;m assuming it would =
+be ok to<br>
+merge these now?<br></blockquote><div><br></div><div>Yes, as we&#39;re now =
+writing our own logs for Toaster.</div><div><br></div><div>Thanks for mergi=
+ng.</div><div><br></div><div>Elliot<br></div><div><br></div><blockquote cla=
+ss=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;pa=
+dding-left:1ex">
+<br>
+Cheers,<br>
+<br>
+Richard<br>
+<br>
+<br>
+<br>
+</blockquote></div><br><br clear=3D"all"><div><br></div>-- <br><div class=
+=3D"gmail_signature"><div dir=3D"ltr"><div>Elliot Smith<br>Software Enginee=
+r<br>Intel Open Source Technology Centre</div></div></div>
+</div></div>
+
+--001a1141ca945a89230523144627--
