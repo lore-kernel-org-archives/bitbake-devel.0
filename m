@@ -1,46 +1,54 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wi0-f170.google.com (mail-wi0-f170.google.com
-	[209.85.212.170])
-	by mail.openembedded.org (Postfix) with ESMTP id D638B76E04
+Received: from mail-wi0-f182.google.com (mail-wi0-f182.google.com
+	[209.85.212.182])
+	by mail.openembedded.org (Postfix) with ESMTP id 73F1D770D1
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 28 Oct 2015 14:22:16 +0000 (UTC)
-Received: by wikq8 with SMTP id q8so254834879wik.1
+	Wed, 28 Oct 2015 14:31:41 +0000 (UTC)
+Received: by wicfx6 with SMTP id fx6so200530534wic.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 28 Oct 2015 07:22:16 -0700 (PDT)
+	Wed, 28 Oct 2015 07:31:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel_com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id;
-	bh=qN/K7FoCJcPUMVNkGzHENxCfTX0DIEoxrTgqVkoyoMA=;
-	b=bv/sjXqHjZ4kDSapvKvyVMsgHF7Bft9Rc5iCMCYmrbYgZ60B1ZCR6AEfXdDnvxeht0
-	I3YCr4klQUW4/yciOMjKG8WjkLKhzYJ4wA7SDUmle02CMezhuGsC4KKwWvVpMUSdT7iC
-	rpWtqE0xzXCoqsPr+Y2aQiMdKGiutydtwIR3rRLJvzx9Q1OfHS+XVKORqyvdZ1UUnu4r
-	5iGi3JWwxNKlTnYczOfgXyuKLtQaqmm1lu2pXOS73a8yVM4ygCXO1oyOfCDprtRS21eI
-	ZtDwbbWhuvV9UK//e037WsQ3VpuEQqpKE6qSlFYrD3HWLouM50Pos6lwLIx+nSvGN3BY
-	85Kw==
+	h=subject:to:references:cc:from:message-id:date:user-agent
+	:mime-version:in-reply-to:content-type:content-transfer-encoding;
+	bh=k1jgRu3XUg3zrhfcMZWHzwduQ1xl7sGT7hOjFmzIigo=;
+	b=M0M+NeUzxsvYsyxN2En66vAIYI9Kw6pqS5P6fIUZFyRd6sqsU54eqwQuDeYX738/m4
+	MhwLeTCBsGsjbJI98QIxni9iyM+YjKXiJxVwCIP6YwimbLAS1C/VG6LCrqdkdysx3U+A
+	QWtJNaZCYRn5SH7eaSYx6VYfV198R7zCLPAtOILJH5pe8RtjmJZ82b0xftbXCzxmqr65
+	u3gZoQRkMEXIof7a+aSiMRBDhIooe0YFLLZanpQIB+lLG45otP6geahu/uCKDvb45QNt
+	RIDZwOH+F+2b2zfDbIKPBGIB1syyn/NwZlWtMqaPMR3Y0qfntkagSE1wiM6QbqbyeUcR
+	5ZpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=qN/K7FoCJcPUMVNkGzHENxCfTX0DIEoxrTgqVkoyoMA=;
-	b=fp+aikBfw9uanau7q7q/H0379+CJKz1ajP26/lX56Vvg61i4Du8i42ozQ8NpYydRqc
-	zXVhDPk03240iCKvI4XuUd+vH5GhrkiK7F0yRLLgZmhGHDpplpCI4HsQ7Hcp+IiOYxUm
-	b74K5kJMimmCvgfSYIY7gFeE4L5cJ0OAiucmA2PRJqYpLGHeZVlGmIAK+2XHDdUv641L
-	qib8Z/K60TTSB3SlciCzNGA1ULO8eRvGaZXJ2K7R2tCc8M36ta4X11thzSVqj2uPYZcd
-	JK9Ua7X1oFw+861y9Pctf7EzzPv6IS8iiltX0GgXJIkjplh1YhLg0ZVEVtiBf71PmRFb
-	qlyg==
-X-Gm-Message-State: ALoCoQlox2bzNY3KPErO4nT2zXcvI/nfXjTmOA9luOAUcdmIgC/RMyw0EZPqqxfYyxscqahg5Pui
-X-Received: by 10.194.116.42 with SMTP id jt10mr33521528wjb.117.1446042136771; 
-	Wed, 28 Oct 2015 07:22:16 -0700 (PDT)
-Received: from draco.icx.intel.com ([83.217.123.106])
-	by smtp.gmail.com with ESMTPSA id
-	d10sm17862545wje.14.2015.10.28.07.22.15
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 28 Oct 2015 07:22:16 -0700 (PDT)
-From: Michael Wood <michael.g.wood@intel.com>
+	h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+	:user-agent:mime-version:in-reply-to:content-type
+	:content-transfer-encoding;
+	bh=k1jgRu3XUg3zrhfcMZWHzwduQ1xl7sGT7hOjFmzIigo=;
+	b=J+kyD7IOsJK3kKWOb5EqGu4yNisImFHn9PaME09Mg+xf0bTt2aVWbHGliuGcB1hvOS
+	diadVRy1SHeVA6EUc5mNcB5kzxehNfyOfsj/VYVDB9/oiDgegQjoNVr36ahK7SGFEv4g
+	gT8hWp0imab991smz2QIyE2xl2SB/i3PexhMqiNiLGTeFsojTGzHEPxe4STcH35t/kOF
+	9yTp4Z5r+KIjSBtdouzfX1af2AfOgRYIMbVsCBXk3/9tobZCtgexD7QZgcd1jsu7nGWK
+	KhNerryDp1fJHexqVLREpS0rTDtNlzzJwDahYhg/fMEYN1UTiW/pFg0jE3msv7r1s7aV
+	wQ+g==
+X-Gm-Message-State: ALoCoQnydm/RHpBVNe4q9CPMYB0gmykpOsh+NH4p5/z1+DoNYn1r176YlxL9TPZBlJCCnGsy8rhw
+X-Received: by 10.180.211.101 with SMTP id nb5mr3302013wic.0.1446042701368;
+	Wed, 28 Oct 2015 07:31:41 -0700 (PDT)
+Received: from [192.168.2.10] ([83.217.123.106])
+	by smtp.googlemail.com with ESMTPSA id
+	h4sm30343922wjx.41.2015.10.28.07.31.40
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+	Wed, 28 Oct 2015 07:31:40 -0700 (PDT)
 To: bitbake-devel@lists.openembedded.org
-Date: Wed, 28 Oct 2015 14:22:05 +0000
-Message-Id: <1446042126-13719-1-git-send-email-michael.g.wood@intel.com>
-X-Mailer: git-send-email 2.1.4
-Subject: [PATCH] toaster: templates Add meaningful title tags
+References: <1445963156-18084-1-git-send-email-michael.g.wood@intel.com>
+	<1445963156-18084-2-git-send-email-michael.g.wood@intel.com>
+From: Michael Wood <michael.g.wood@intel.com>
+Message-ID: <5630DC47.5080708@intel.com>
+Date: Wed, 28 Oct 2015 14:31:35 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+	Thunderbird/38.3.0
+MIME-Version: 1.0
+In-Reply-To: <1445963156-18084-2-git-send-email-michael.g.wood@intel.com>
+Subject: Re: [PATCH] toasterui: Create per-build logs
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,486 +61,282 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 28 Oct 2015 14:22:18 -0000
+X-List-Received-Date: Wed, 28 Oct 2015 14:31:48 -0000
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
+On 27/10/15 16:25, Michael Wood wrote:
+> From: Elliot Smith <elliot.smith@intel.com>
+>
+> Rather than relying on bug 8411, which is conveniently creating
+> separate log files for each of our builds, create our own
+> log file for each build.
+>
+> The log files are created in the same tmp directories that
+> bitbake users, but are timestamped to the millisecond to avoid
+> name collisions.
+>
+> Each log file is opened on the ParseStarted event and closed
+> on the BuildCompleted event (or if when the build fails).
+>
+> Because we start logging on ParseStarted, we're able to capture
+> the "Build Configuration" section output by bitbake.
+>
+> [YOCTO #8373]
+>
+> Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+> Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+> ---
+>   lib/bb/ui/buildinfohelper.py |   8 ++--
+>   lib/bb/ui/toasterui.py       | 105 ++++++++++++++++++++++++++++++++-----------
+>   2 files changed, 84 insertions(+), 29 deletions(-)
+>
+> diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
+> index 286fb6a..41e4643 100644
+> --- a/lib/bb/ui/buildinfohelper.py
+> +++ b/lib/bb/ui/buildinfohelper.py
+> @@ -778,7 +778,7 @@ class BuildInfoHelper(object):
+>       ## methods to convert event/external info into objects that the ORM layer uses
+>   
+>   
+> -    def _get_build_information(self, consolelogfile):
+> +    def _get_build_information(self, build_log_path):
+>           build_info = {}
+>           # Generate an identifier for each new build
+>   
+> @@ -787,7 +787,7 @@ class BuildInfoHelper(object):
+>           build_info['distro_version'] = self.server.runCommand(["getVariable", "DISTRO_VERSION"])[0]
+>           build_info['started_on'] = timezone.now()
+>           build_info['completed_on'] = timezone.now()
+> -        build_info['cooker_log_path'] = consolelogfile
+> +        build_info['cooker_log_path'] = build_log_path
+>           build_info['build_name'] = self.server.runCommand(["getVariable", "BUILDNAME"])[0]
+>           build_info['bitbake_version'] = self.server.runCommand(["getVariable", "BB_VERSION"])[0]
+>   
+> @@ -928,9 +928,9 @@ class BuildInfoHelper(object):
+>                   logger.warn("buildinfohelper: cannot identify layer exception:%s ", nee)
+>   
+>   
+> -    def store_started_build(self, event, consolelogfile):
+> +    def store_started_build(self, event, build_log_path):
+>           assert '_pkgs' in vars(event)
+> -        build_information = self._get_build_information(consolelogfile)
+> +        build_information = self._get_build_information(build_log_path)
+>   
+>           build_obj = self.orm_wrapper.create_build_object(build_information, self.brbe, self.project)
+>   
+> diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
+> index 0ed774e..e594196 100644
+> --- a/lib/bb/ui/toasterui.py
+> +++ b/lib/bb/ui/toasterui.py
+> @@ -21,6 +21,7 @@
+>   # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+>   
+>   from __future__ import division
+> +import time
+>   import sys
+>   try:
+>       import bb
+> @@ -43,8 +44,6 @@ featureSet = [bb.cooker.CookerFeatures.HOB_EXTRA_CACHES, bb.cooker.CookerFeature
+>   logger = logging.getLogger("ToasterLogger")
+>   interactive = sys.stdout.isatty()
+>   
+> -
+> -
+>   def _log_settings_from_server(server):
+>       # Get values of variables which control our output
+>       includelogs, error = server.runCommand(["getVariable", "BBINCLUDELOGS"])
+> @@ -59,12 +58,53 @@ def _log_settings_from_server(server):
+>       if error:
+>           logger.error("Unable to get the value of BB_CONSOLELOG variable: %s", error)
+>           raise BaseException(error)
+> -    return includelogs, loglines, consolelogfile
+> +    return consolelogfile
+> +
+> +# create a log file for a single build and direct the logger at it;
+> +# log file name is timestamped to the millisecond (depending
+> +# on system clock accuracy) to ensure it doesn't overlap with
+> +# other log file names
+> +#
+> +# returns (log file, path to log file) for a build
+> +def _open_build_log(log_dir):
+> +    format_str = "%(levelname)s: %(message)s"
+> +
+> +    now = time.time()
+> +    now_ms = int((now - int(now)) * 1000)
+> +    time_str = time.strftime('build_%Y%m%d_%H%M%S', time.localtime(now))
+> +    log_file_name = time_str + ('.%d.log' % now_ms)
+> +    build_log_file_path = os.path.join(log_dir, log_file_name)
+> +
+> +    build_log = logging.FileHandler(build_log_file_path)
+>   
+> +    logformat = bb.msg.BBLogFormatter(format_str)
+> +    build_log.setFormatter(logformat)
+> +
+> +    bb.msg.addDefaultlogFilter(build_log)
+> +    logger.addHandler(build_log)
+> +
+> +    return (build_log, build_log_file_path)
+> +
+> +# stop logging to the build log if it exists
+> +def _close_build_log(build_log):
+> +    if build_log:
+> +        build_log.flush()
+> +        build_log.close()
+> +        logger.removeHandler(build_log)
+> +
+> +def main(server, eventHandler, params):
+> +    # set to a logging.FileHandler instance when a build starts;
+> +    # see _open_build_log()
+> +    build_log = None
+>   
+> -def main(server, eventHandler, params ):
+>       helper = uihelper.BBUIHelper()
+>   
+> +    # TODO don't use log output to determine when bitbake has started
+> +    #
+> +    # WARNING: this log handler cannot be removed, as localhostbecontroller
+> +    # relies on output in the toaster_ui.log file to determine whether
+> +    # the bitbake server has started, which only happens if
+> +    # this logger is setup here (see the TODO in the loop below)
+>       console = logging.StreamHandler(sys.stdout)
+>       format_str = "%(levelname)s: %(message)s"
+>       formatter = bb.msg.BBLogFormatter(format_str)
+> @@ -73,8 +113,6 @@ def main(server, eventHandler, params ):
+>       logger.addHandler(console)
+>       logger.setLevel(logging.INFO)
+>   
+> -    _, _, consolelogfile = _log_settings_from_server(server)
+> -
+>       # verify and warn
+>       build_history_enabled = True
+>       inheritlist, _ = server.runCommand(["getVariable", "INHERIT"])
+> @@ -87,8 +125,9 @@ def main(server, eventHandler, params ):
+>           logger.error("ToasterUI can only work in observer mode")
+>           return 1
+>   
+> -
+> +    # set to 1 when toasterui needs to shut down
+>       main.shutdown = 0
+> +
+>       interrupted = False
+>       return_value = 0
+>       errors = 0
+> @@ -98,25 +137,31 @@ def main(server, eventHandler, params ):
+>   
+>       buildinfohelper = BuildInfoHelper(server, build_history_enabled)
+>   
+> -    if buildinfohelper.brbe is not None and consolelogfile:
+> -        # if we are under managed mode we have no other UI and we need to write our own file
+> -        bb.utils.mkdirhier(os.path.dirname(consolelogfile))
+> -        conlogformat = bb.msg.BBLogFormatter(format_str)
+> -        consolelog = logging.FileHandler(consolelogfile)
+> -        bb.msg.addDefaultlogFilter(consolelog)
+> -        consolelog.setFormatter(conlogformat)
+> -        logger.addHandler(consolelog)
+> -
+> +    # write our own log files into bitbake's log directory;
+> +    # we're only interested in the path to the parent directory of
+> +    # this file, as we're writing our own logs into the same directory
+> +    consolelogfile = _log_settings_from_server(server)
+> +    log_dir = os.path.dirname(consolelogfile)
+> +    bb.utils.mkdirhier(log_dir)
+>   
+>       while True:
+>           try:
+>               event = eventHandler.waitEvent(0.25)
+>               if first:
+>                   first = False
+> +
+> +                # TODO don't use log output to determine when bitbake has started
+> +                #
+> +                # this is the line localhostbecontroller needs to
+> +                # see in toaster_ui.log which it uses to decide whether
+> +                # the bitbake server has started...
+>                   logger.info("ToasterUI waiting for events")
+>   
+>               if event is None:
+>                   if main.shutdown > 0:
+> +                    # if shutting down, close any open build log first
+> +                    _close_build_log(build_log)
+> +
+>                       break
+>                   continue
+>   
+> @@ -125,8 +170,15 @@ def main(server, eventHandler, params ):
+>               # pylint: disable=protected-access
+>               # the code will look into the protected variables of the event; no easy way around this
+>   
+> +            # we treat ParseStarted as the first event of the build;
+> +            # that way we get the Build Configuration included in the log
+> +            # and any errors that occur before BuildStarted is fired
+> +            if isinstance(event, bb.event.ParseStarted):
+> +                build_log, build_log_file_path = _open_build_log(log_dir)
+> +                continue
+> +
+>               if isinstance(event, bb.event.BuildStarted):
+> -                buildinfohelper.store_started_build(event, consolelogfile)
+> +                buildinfohelper.store_started_build(event, build_log_file_path)
+>   
+>               if isinstance(event, (bb.build.TaskStarted, bb.build.TaskSucceeded, bb.build.TaskFailedSilent)):
+>                   buildinfohelper.update_and_store_task(event)
+> @@ -171,8 +223,6 @@ def main(server, eventHandler, params ):
+>               # timing and error informations from the parsing phase in Toaster
+>               if isinstance(event, (bb.event.SanityCheckPassed, bb.event.SanityCheck)):
+>                   continue
+> -            if isinstance(event, bb.event.ParseStarted):
+> -                continue
+>               if isinstance(event, bb.event.ParseProgress):
+>                   continue
+>               if isinstance(event, bb.event.ParseCompleted):
+> @@ -248,6 +298,12 @@ def main(server, eventHandler, params ):
+>                       errorcode = 1
+>                       logger.error("Command execution failed: %s", event.error)
+>   
+> +                # turn off logging to the current build log
+> +                _close_build_log(build_log)
+> +
+> +                # reset ready for next BuildStarted
+> +                build_log = None
+> +
+>                   # update the build info helper on BuildCompleted, not on CommandXXX
+>                   buildinfohelper.update_build_information(event, errors, warnings, taskfailures)
+>                   buildinfohelper.close(errorcode)
+> @@ -256,7 +312,6 @@ def main(server, eventHandler, params ):
+>   
+>                   # we start a new build info
+>                   if buildinfohelper.brbe is not None:
+> -
+>                       logger.debug("ToasterUI under BuildEnvironment management - exiting after the build")
+>                       server.terminateServer()
+>                   else:
+> @@ -298,8 +353,9 @@ def main(server, eventHandler, params ):
+>                   continue
+>   
+>               if isinstance(event, bb.cooker.CookerExit):
+> -                # exit when the server exits
+> -                break
+> +                # shutdown when bitbake server shuts down
+> +                main.shutdown = 1
+> +                continue
+>   
+>               # ignore
+>               if isinstance(event, (bb.event.BuildBase,
+> @@ -350,9 +406,8 @@ def main(server, eventHandler, params ):
+>               # make sure we return with an error
+>               return_value += 1
+>   
+> -    if interrupted:
+> -        if return_value == 0:
+> -            return_value += 1
+> +    if interrupted and return_value == 0:
+> +        return_value += 1
+>   
+>       logger.warn("Return value is %d", return_value)
+>       return return_value
 
-Our title tags are all over the place, and have no relation to the page
-content. This commit adds a meaningful title tag to each Toaster page.
+Elliot is currently working on a new revision of this patch to account 
+for some proposed changes that are in master-next.
 
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
----
- lib/toaster/toastergui/templates/base.html                |  4 +++-
- lib/toaster/toastergui/templates/baseprojectpage.html     |  3 +++
- lib/toaster/toastergui/templates/bpackage.html            |  1 +
- lib/toaster/toastergui/templates/builddashboard.html      |  1 +
- lib/toaster/toastergui/templates/builds.html              |  1 +
- lib/toaster/toastergui/templates/configuration.html       |  1 +
- lib/toaster/toastergui/templates/configvars.html          |  1 +
- lib/toaster/toastergui/templates/dirinfo.html             |  1 +
- lib/toaster/toastergui/templates/importlayer.html         |  1 +
- lib/toaster/toastergui/templates/landing.html             |  1 +
- lib/toaster/toastergui/templates/landing_not_managed.html |  2 ++
- lib/toaster/toastergui/templates/layerdetails.html        |  1 +
- lib/toaster/toastergui/templates/newproject.html          |  3 +++
- lib/toaster/toastergui/templates/package_detail_base.html | 11 +++++++++--
- .../templates/package_included_dependencies.html          |  4 ++--
- .../toastergui/templates/package_included_detail.html     |  4 ++--
- .../templates/package_included_reverse_dependencies.html  |  4 ++--
- lib/toaster/toastergui/templates/project.html             |  1 +
- lib/toaster/toastergui/templates/projectbuilds.html       |  2 +-
- lib/toaster/toastergui/templates/projectconf.html         |  2 +-
- lib/toaster/toastergui/templates/projects.html            |  2 ++
- lib/toaster/toastergui/templates/recipe.html              |  1 +
- lib/toaster/toastergui/templates/recipes.html             |  1 +
- lib/toaster/toastergui/templates/target.html              |  1 +
- lib/toaster/toastergui/templates/task.html                |  1 +
- lib/toaster/toastergui/templates/tasks.html               | 15 ++++++++-------
- .../toastergui/templates/unavailable_artifact.html        |  2 ++
- lib/toaster/toastergui/views.py                           |  2 +-
- 28 files changed, 55 insertions(+), 19 deletions(-)
-
-diff --git a/lib/toaster/toastergui/templates/base.html b/lib/toaster/toastergui/templates/base.html
-index dfa6bba..11ac2a0 100644
---- a/lib/toaster/toastergui/templates/base.html
-+++ b/lib/toaster/toastergui/templates/base.html
-@@ -4,7 +4,9 @@
- {% load project_url_tag %}
- <html lang="en">
-     <head>
--        <title>{% if objectname %} {{objectname|title}} - {% endif %}Toaster</title>
-+        <title>
-+          {% block title %} Toaster {% endblock %}
-+        </title>
- <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css"/>
- <link rel="stylesheet" href="{% static 'css/bootstrap-responsive.min.css' %}" type='text/css'/>
- <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type='text/css'/>
-diff --git a/lib/toaster/toastergui/templates/baseprojectpage.html b/lib/toaster/toastergui/templates/baseprojectpage.html
-index 88bf859..1f45be4 100644
---- a/lib/toaster/toastergui/templates/baseprojectpage.html
-+++ b/lib/toaster/toastergui/templates/baseprojectpage.html
-@@ -1,6 +1,9 @@
- {% extends "base.html" %}
- {% load projecttags %}
- {% load humanize %}
-+
-+{% block title %} {{title}} - {{project.name}} - Toaster {% endblock %}
-+
- {% block pagecontent %}
- 
- {% include "projecttopbar.html" %}
-diff --git a/lib/toaster/toastergui/templates/bpackage.html b/lib/toaster/toastergui/templates/bpackage.html
-index d775fec..81973cb 100644
---- a/lib/toaster/toastergui/templates/bpackage.html
-+++ b/lib/toaster/toastergui/templates/bpackage.html
-@@ -2,6 +2,7 @@
- 
- {% load projecttags %}
- 
-+{% block title %} Packages built - {{build.target_set.all|dictsort:"target"|join:", "}} {{build.machine}} - {{build.project.name}} - Toaster {% endblock %}
- {% block localbreadcrumb %}
- <li>Packages</li>
- {% endblock %}
-diff --git a/lib/toaster/toastergui/templates/builddashboard.html b/lib/toaster/toastergui/templates/builddashboard.html
-index c39fe34..323bbbb 100644
---- a/lib/toaster/toastergui/templates/builddashboard.html
-+++ b/lib/toaster/toastergui/templates/builddashboard.html
-@@ -2,6 +2,7 @@
- {% load humanize %}
- {% load projecttags %}
- 
-+{% block title %} {{build.target_set.all|dictsort:"target"|join:", "}} {{build.machine}} - {{build.project.name}} - Toaster {% endblock %}
- {% block parentbreadcrumb %}
- {% if build.get_sorted_target_list.count > 0 %}
-   {{build.get_sorted_target_list.0.target}}
-diff --git a/lib/toaster/toastergui/templates/builds.html b/lib/toaster/toastergui/templates/builds.html
-index 459fcb0..a27a121 100644
---- a/lib/toaster/toastergui/templates/builds.html
-+++ b/lib/toaster/toastergui/templates/builds.html
-@@ -5,6 +5,7 @@
- {% load project_url_tag %}
- {% load humanize %}
- 
-+{% block title %} All builds - Toaster {% endblock %}
- {% block extraheadcontent %}
- <link rel="stylesheet" href="/static/css/jquery-ui.min.css" type='text/css'>
- <link rel="stylesheet" href="/static/css/jquery-ui.structure.min.css" type='text/css'>
-diff --git a/lib/toaster/toastergui/templates/configuration.html b/lib/toaster/toastergui/templates/configuration.html
-index 3e48991..85d6a62 100644
---- a/lib/toaster/toastergui/templates/configuration.html
-+++ b/lib/toaster/toastergui/templates/configuration.html
-@@ -1,6 +1,7 @@
- {% extends "basebuildpage.html" %}
- {% load projecttags %}
- 
-+{% block title %} Configuration summary - {{build.target_set.all|dictsort:"target"|join:", "}} {{build.machine}} - {{build.project.name}} - Toaster {% endblock %}
- {% block localbreadcrumb %}
- <li>Configuration</li>
- {% endblock %}
-diff --git a/lib/toaster/toastergui/templates/configvars.html b/lib/toaster/toastergui/templates/configvars.html
-index 8a572ae..e40c225 100644
---- a/lib/toaster/toastergui/templates/configvars.html
-+++ b/lib/toaster/toastergui/templates/configvars.html
-@@ -1,6 +1,7 @@
- {% extends "basebuildpage.html" %}
- {% load projecttags %}
- 
-+{% block title %} BitBake variables - {{build.target_set.all|dictsort:"target"|join:", "}} {{build.machine}} - {{build.project.name}} - Toaster {% endblock %}
- {% block localbreadcrumb %}
- <li>Configuration</li>
- {% endblock %}
-diff --git a/lib/toaster/toastergui/templates/dirinfo.html b/lib/toaster/toastergui/templates/dirinfo.html
-index 7819894..ecb46bf 100644
---- a/lib/toaster/toastergui/templates/dirinfo.html
-+++ b/lib/toaster/toastergui/templates/dirinfo.html
-@@ -1,4 +1,5 @@
- {% extends "basebuildpage.html" %}
-+{% block title %} Directory structure - {{ target.target }} {{ build.machine }} - {{ build.project.name }} - Toaster {% endblock %}
- {% block extraheadcontent %}
- {% load static %}
- <link rel="stylesheet" href="{% static 'css/jquery.treetable.css' %}" type="text/css">
-diff --git a/lib/toaster/toastergui/templates/importlayer.html b/lib/toaster/toastergui/templates/importlayer.html
-index ce3d724..033f0ae 100644
---- a/lib/toaster/toastergui/templates/importlayer.html
-+++ b/lib/toaster/toastergui/templates/importlayer.html
-@@ -2,6 +2,7 @@
- {% load projecttags %}
- {% load humanize %}
- {% load static %}
-+{% block title %} Import layer - {{project.name}} - Toaster {% endblock %}
- {% block pagecontent %}
- 
- {% include "projecttopbar.html" %}
-diff --git a/lib/toaster/toastergui/templates/landing.html b/lib/toaster/toastergui/templates/landing.html
-index 65d8c3c..cafaa1a 100644
---- a/lib/toaster/toastergui/templates/landing.html
-+++ b/lib/toaster/toastergui/templates/landing.html
-@@ -4,6 +4,7 @@
- {% load projecttags %}
- {% load humanize %}
- 
-+{% block title %} Welcome to Toaster {% endblock %}
- {% block pagecontent %}
- 
-   {% if BUILD_MODE %}
-diff --git a/lib/toaster/toastergui/templates/landing_not_managed.html b/lib/toaster/toastergui/templates/landing_not_managed.html
-index 5bc435d..9b37f55 100644
---- a/lib/toaster/toastergui/templates/landing_not_managed.html
-+++ b/lib/toaster/toastergui/templates/landing_not_managed.html
-@@ -4,6 +4,8 @@
- {% load projecttags %}
- {% load humanize %}
- 
-+{% block title %} Welcome to Toaster {% endblock %}
-+
- {% block pagecontent %}
- 
-   <div class="container-fluid">
-diff --git a/lib/toaster/toastergui/templates/layerdetails.html b/lib/toaster/toastergui/templates/layerdetails.html
-index 7dd3db2..7fe365d 100644
---- a/lib/toaster/toastergui/templates/layerdetails.html
-+++ b/lib/toaster/toastergui/templates/layerdetails.html
-@@ -3,6 +3,7 @@
- {% load humanize %}
- {% load static %}
- 
-+{% block title %} {{layerversion.layer.name}} - {{project.name}} - Toaster {% endblock %}
- {% block pagecontent %}
- 
- <div class="section">
-diff --git a/lib/toaster/toastergui/templates/newproject.html b/lib/toaster/toastergui/templates/newproject.html
-index 997390b..e83b2be 100644
---- a/lib/toaster/toastergui/templates/newproject.html
-+++ b/lib/toaster/toastergui/templates/newproject.html
-@@ -1,6 +1,9 @@
- {% extends "base.html" %}
- {% load projecttags %}
- {% load humanize %}
-+
-+{% block title %} Create a new project - Toaster {% endblock %}
-+
- {% block pagecontent %}
- <div class="row-fluid">
-     <div class="page-header">
-diff --git a/lib/toaster/toastergui/templates/package_detail_base.html b/lib/toaster/toastergui/templates/package_detail_base.html
-index a24bc8e..9fa28a8 100644
---- a/lib/toaster/toastergui/templates/package_detail_base.html
-+++ b/lib/toaster/toastergui/templates/package_detail_base.html
-@@ -1,6 +1,13 @@
- {% extends "basebuilddetailpage.html" %}
- {% load projecttags %}
- 
-+{% block title %}
-+  {% if target %}
-+    {{package.fullpackagespec}} - {{ target.target }} {{ build.machine }} - {{ build.project.name }} - Toaster
-+  {% else %}
-+    {{package.fullpackagespec}} - {{ build.target_set.all|dictsort:"target"|join:", " }} {{ build.machine }} - {{ build.project.name }} - Toaster
-+  {% endif %}
-+{% endblock %}
- {% block extraheadcontent %}
-     <!-- functions to format package 'installed_package' alias -->
-     <script>
-@@ -38,9 +45,9 @@
- {% block pagedetailinfomain %}
-     <div class="row span11">
-         <div class="page-header">
--            {% block title %}
-+            {% block mainheading %}
-             <h1>{{package.fullpackagespec}}</h1>
--            {% endblock title %}
-+            {% endblock %}
-         </div> <!-- page-header -->
-     </div> <!-- row span11 page-header -->
- 
-diff --git a/lib/toaster/toastergui/templates/package_included_dependencies.html b/lib/toaster/toastergui/templates/package_included_dependencies.html
-index 642ca69..8a0508e 100644
---- a/lib/toaster/toastergui/templates/package_included_dependencies.html
-+++ b/lib/toaster/toastergui/templates/package_included_dependencies.html
-@@ -1,13 +1,13 @@
- {% extends "package_detail_base.html" %}
- {% load projecttags %}
- 
--{% block title %}
-+{% block mainheading %}
-     <h1>
-         {{package.fullpackagespec}}
-         <script> fmtAliasHelp("{{package.name}}", "{{package.alias}}", false) </script>
-         <small>({{target.target}})</small>
-     </h1>
--{% endblock title %}
-+{% endblock %}
- 
- {% block tabcontent %}
-     {% with packageFileCount=package.buildfilelist_package.count %}
-diff --git a/lib/toaster/toastergui/templates/package_included_detail.html b/lib/toaster/toastergui/templates/package_included_detail.html
-index d2aa26e..568e2f2 100644
---- a/lib/toaster/toastergui/templates/package_included_detail.html
-+++ b/lib/toaster/toastergui/templates/package_included_detail.html
-@@ -1,7 +1,7 @@
- {% extends "package_detail_base.html" %}
- {% load projecttags %}
- 
--{% block title %}
-+{% block mainheading %}
-         <h1>
-             {{package.fullpackagespec}}
-             <script>
-@@ -9,7 +9,7 @@
-             </script>
-             <small>({{target.target}})</small>
-         </h1>
--{% endblock title %}
-+{% endblock %}
- 
- {% block tabcontent %}
- {% with packageFileCount=package.buildfilelist_package.count %}
-diff --git a/lib/toaster/toastergui/templates/package_included_reverse_dependencies.html b/lib/toaster/toastergui/templates/package_included_reverse_dependencies.html
-index 5cc8b47..fb310c7 100644
---- a/lib/toaster/toastergui/templates/package_included_reverse_dependencies.html
-+++ b/lib/toaster/toastergui/templates/package_included_reverse_dependencies.html
-@@ -1,13 +1,13 @@
- {% extends "package_detail_base.html" %}
- {% load projecttags %}
- 
--{% block title %}
-+{% block mainheading %}
-         <h1>
-             {{package.fullpackagespec}}
-             <script> fmtAliasHelp("{{package.name}}", "{{package.alias}}", false) </script>
-             <small>({{target.target}})</small>
-         </h1>
--{% endblock title %}
-+{% endblock %}
- 
- {% block tabcontent %}
-     {% with packageFileCount=package.buildfilelist_package.count %}
-diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
-index 2f978bc..4e83981 100644
---- a/lib/toaster/toastergui/templates/project.html
-+++ b/lib/toaster/toastergui/templates/project.html
-@@ -4,6 +4,7 @@
- {% load humanize %}
- {% load static %}
- 
-+{% block title %} Configuration - {{project.name}} - Toaster {% endblock %}
- {% block projectinfomain %}
- 
- <script src="{% static 'js/layerDepsModal.js' %}"></script>
-diff --git a/lib/toaster/toastergui/templates/projectbuilds.html b/lib/toaster/toastergui/templates/projectbuilds.html
-index fde7e3b..bb38284 100644
---- a/lib/toaster/toastergui/templates/projectbuilds.html
-+++ b/lib/toaster/toastergui/templates/projectbuilds.html
-@@ -2,7 +2,7 @@
- {% load projecttags %}
- {% load humanize %}
- 
--
-+{% block title %} Builds - {{project.name}} - Toaster {% endblock %}
- {% block extraheadcontent %}
- <link rel="stylesheet" href="/static/css/jquery-ui.min.css" type='text/css'>
- <link rel="stylesheet" href="/static/css/jquery-ui.structure.min.css" type='text/css'>
-diff --git a/lib/toaster/toastergui/templates/projectconf.html b/lib/toaster/toastergui/templates/projectconf.html
-index 5333ec5..30fd03e 100644
---- a/lib/toaster/toastergui/templates/projectconf.html
-+++ b/lib/toaster/toastergui/templates/projectconf.html
-@@ -2,7 +2,7 @@
- {% load projecttags %}
- {% load humanize %}
- 
--
-+{% block title %} BitBake variables - {{project.name}} - Toaster {% endblock %}
- {% block projectinfomain %}
- 
- <h2>Bitbake variables</h2>
-diff --git a/lib/toaster/toastergui/templates/projects.html b/lib/toaster/toastergui/templates/projects.html
-index 7c612e8..678a796 100644
---- a/lib/toaster/toastergui/templates/projects.html
-+++ b/lib/toaster/toastergui/templates/projects.html
-@@ -5,6 +5,8 @@
- {% load project_url_tag %}
- {% load humanize %}
- 
-+{% block title %} All projects - Toaster {% endblock %}
-+
- {% block pagecontent %}
- 
- 
-diff --git a/lib/toaster/toastergui/templates/recipe.html b/lib/toaster/toastergui/templates/recipe.html
-index b5e4192..c6ae2f3 100644
---- a/lib/toaster/toastergui/templates/recipe.html
-+++ b/lib/toaster/toastergui/templates/recipe.html
-@@ -2,6 +2,7 @@
- 
- {% load projecttags %}
- 
-+{% block title %} {{object.name}}_{{object.version}} - {{build.target_set.all|dictsort:"target"|join:", "}} {{build.machine}} - {{build.project.name}} - Toaster {% endblock %}
- {% block localbreadcrumb %}
- <li><a href="{% url 'recipes' build.pk %}">Recipes</a></li>
- <li>{{object.name}}_{{object.version}} </li>
-diff --git a/lib/toaster/toastergui/templates/recipes.html b/lib/toaster/toastergui/templates/recipes.html
-index 5cdac43..d144893 100644
---- a/lib/toaster/toastergui/templates/recipes.html
-+++ b/lib/toaster/toastergui/templates/recipes.html
-@@ -2,6 +2,7 @@
- 
- {% load projecttags %}
- 
-+{% block title %} Recipes - {{build.target_set.all|dictsort:"target"|join:", "}} {{build.machine}} - {{build.project.name}} - Toaster {% endblock %}
- {% block localbreadcrumb %}
- <li>Recipes</li>
- {% endblock %}
-diff --git a/lib/toaster/toastergui/templates/target.html b/lib/toaster/toastergui/templates/target.html
-index 65e6c4a..4c33eaa 100644
---- a/lib/toaster/toastergui/templates/target.html
-+++ b/lib/toaster/toastergui/templates/target.html
-@@ -1,4 +1,5 @@
- {% extends "basebuildpage.html" %}
-+{% block title %} Packages included - {{ target.target }} {{ target.build.machine }} - {{ target.build.project.name }} - Toaster {% endblock %}
- {% block localbreadcrumb %}
- <li>{{target.target}}</li>
- {% endblock localbreadcrumb%}
-diff --git a/lib/toaster/toastergui/templates/task.html b/lib/toaster/toastergui/templates/task.html
-index 635098a..ef628d9 100644
---- a/lib/toaster/toastergui/templates/task.html
-+++ b/lib/toaster/toastergui/templates/task.html
-@@ -3,6 +3,7 @@
- {% load projecttags %}
- {% load humanize %}
- 
-+{% block title %} {{task.recipe.name}}_{{task.recipe.version}} {{task.task_name}} - {{build.target_set.all|dictsort:"target"|join:", "}} {{build.machine}} - {{build.project.name}} - Toaster {% endblock %}
- {% block localbreadcrumb %}
- <li><a href="{% url 'tasks' build.pk %}">Tasks</a></li>
- <li>{{task.recipe.name}}_{{task.recipe.version}} {{task.task_name}}</li>
-diff --git a/lib/toaster/toastergui/templates/tasks.html b/lib/toaster/toastergui/templates/tasks.html
-index b18b5c7..353410f 100644
---- a/lib/toaster/toastergui/templates/tasks.html
-+++ b/lib/toaster/toastergui/templates/tasks.html
-@@ -1,33 +1,34 @@
- {% extends "basebuildpage.html" %}
- {% load projecttags %}
- 
-+{% block title %} {{mainheading}} - {{build.target_set.all|dictsort:"target"|join:", "}} {{build.machine}} - {{build.project.name}} - Toaster{% endblock %}
- {% block localbreadcrumb %}
--<li>{{title}}</li>
-+<li>{{mainheading}}</li>
- {% endblock %}
- 
- {% block nav-tasks %}
--  {% if 'Tasks' == title %}
-+  {% if 'Tasks' == mainheading %}
-     <li class="active"><a href="{% url 'tasks' build.pk %}">Tasks</a></li>
-   {% else %}
-     <li><a href="{% url 'tasks' build.pk %}">Tasks</a></li>
-   {% endif %}
- {% endblock %}
- {% block nav-buildtime %}
--  {% if 'Time' == title %}
-+  {% if 'Time' == mainheading %}
-     <li class="active"><a href="{% url 'buildtime' build.pk %}">Time</a></li>
-   {% else %}
-     <li><a href="{% url 'buildtime' build.pk %}">Time</a></li>
-   {% endif %}
- {% endblock %}
- {% block nav-cpuusage %}
--  {% if 'CPU usage' == title %}
-+  {% if 'CPU usage' == mainheading %}
-     <li class="active"><a href="{% url 'cpuusage' build.pk %}">CPU usage</a></li>
-   {% else %}
-     <li><a href="{% url 'cpuusage' build.pk %}">CPU usage</a></li>
-   {% endif %}
- {% endblock %}
- {% block nav-diskio %}
--  {% if 'Disk I/O' == title %}
-+  {% if 'Disk I/O' == mainheading %}
-     <li class="active"><a href="{% url 'diskio' build.pk %}">Disk I/O</a></li>
-   {% else %}
-     <li><a href="{% url 'diskio' build.pk %}">Disk I/O</a></li>
-@@ -39,7 +40,7 @@
- {% if not request.GET.filter and not request.GET.search and not objects.paginator.count %}
-   <!-- Empty - no data in database -->
-   <div class="page-header">
--  <h1>{{title}}</h1>
-+  <h1>{{mainheading}}</h1>
-   </div>
-   <div class="alert alert-info lead">
-   No data was recorded for this build.
-@@ -54,7 +55,7 @@
-   {%elif request.GET.filter and objects.paginator.count == 0 or request.GET.search and objects.paginator.count == 0 %}
-       No tasks found
-   {%else%}
--      {{title}}
-+      {{mainheading}}
-   {%endif%}
-   </h1>
-   </div>
-diff --git a/lib/toaster/toastergui/templates/unavailable_artifact.html b/lib/toaster/toastergui/templates/unavailable_artifact.html
-index b9f8fee..0301a6c 100644
---- a/lib/toaster/toastergui/templates/unavailable_artifact.html
-+++ b/lib/toaster/toastergui/templates/unavailable_artifact.html
-@@ -3,6 +3,8 @@
- {% load humanize %}
- {% load static %}
- 
-+{% block title %} Build artifact no longer exists - Toaster {% endblock %}
-+
- {% block pagecontent %}
- 
- <div class="row-fluid air">
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 6ebb6a9..0e255f1 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -1236,7 +1236,7 @@ def tasks_common(request, build_id, variant, task_anchor):
-     context = { 'objectname': variant,
-                 'object_search_display': object_search_display,
-                 'filter_search_display': filter_search_display,
--                'title': title_variant,
-+                'mainheading': title_variant,
-                 'build': build,
-                 'objects': task_objects,
-                 'default_orderby' : orderby,
--- 
-2.1.4
-
+Michael
 
