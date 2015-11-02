@@ -1,30 +1,40 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 517E0755F4
+Return-Path: <Gabriel.Almeida@harman.com>
+X-Greylist: delayed 428 seconds by postgrey-1.34 at layers.openembedded.org;
+	Mon, 02 Nov 2015 08:30:00 UTC
+Received: from mail1.bemta14.messagelabs.com (mail1.bemta14.messagelabs.com
+	[193.109.254.110])
+	by mail.openembedded.org (Postfix) with ESMTP id 9133360232
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 29 Oct 2015 22:03:09 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t9TM34gW022048; Thu, 29 Oct 2015 22:03:04 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id gBzD0_Au0AGD; Thu, 29 Oct 2015 22:03:04 +0000 (GMT)
-Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	t9TM2o5E022036
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 29 Oct 2015 22:03:01 GMT
-Message-ID: <1446156170.4521.38.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Jens Rehsack <rehsack@gmail.com>
-Date: Thu, 29 Oct 2015 22:02:50 +0000
-In-Reply-To: <1E04A439-8ACF-42D3-A910-086C750001E2@gmail.com>
-References: <2BE45156-5280-4DFC-9773-F761B9F4B48B@gmail.com>
-	<1E04A439-8ACF-42D3-A910-086C750001E2@gmail.com>
-X-Mailer: Evolution 3.12.11-0ubuntu3 
-Mime-Version: 1.0
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] fetcher: svn: Add support for checkout to a custom path
+	Mon,  2 Nov 2015 08:30:00 +0000 (UTC)
+Received: from [85.158.140.195] by server-6.bemta-14.messagelabs.com id
+	92/B4-16618-A5D17365; Mon, 02 Nov 2015 08:22:50 +0000
+X-Env-Sender: Gabriel.Almeida@harman.com
+X-Msg-Ref: server-2.tower-193.messagelabs.com!1446452569!1286663!1
+X-Originating-IP: [194.121.90.173]
+X-StarScan-Received: 
+X-StarScan-Version: 7.19.2; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 20209 invoked from network); 2 Nov 2015 08:22:49 -0000
+Received: from unassigned (HELO HIKAWSEXHC03.ad.harman.com) (194.121.90.173)
+	by server-2.tower-193.messagelabs.com with AES128-SHA encrypted SMTP;
+	2 Nov 2015 08:22:49 -0000
+Received: from HIKAWSEXMB01.ad.harman.com ([169.254.1.95]) by
+	HIKAWSEXHC03.ad.harman.com ([172.16.1.113]) with mapi id 14.03.0235.001;
+	Mon, 2 Nov 2015 09:22:48 +0100
+From: "Almeida, Gabriel" <Gabriel.Almeida@harman.com>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: Help 
+Thread-Index: AdEVR6f2uUCfJWJMSfmVrvktDcpYZQ==
+Date: Mon, 2 Nov 2015 08:22:47 +0000
+Message-ID: <B267CE46C9DC3C4BB251EC9C004EA5661A6925C3@HIKAWSEXMB01.ad.harman.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.16.57.151]
+MIME-Version: 1.0
+X-Mailman-Approved-At: Mon, 02 Nov 2015 16:59:59 +0000
+Subject: Help
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,68 +47,246 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 29 Oct 2015 22:03:13 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Mon, 02 Nov 2015 08:30:03 -0000
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_B267CE46C9DC3C4BB251EC9C004EA5661A6925C3HIKAWSEXMB01adh_"
 
-On Thu, 2015-10-29 at 14:00 +0100, Jens Rehsack wrote:
-> > Am 16.10.2015 um 19:14 schrieb Jens Rehsack <rehsack@gmail.com>:
-> > 
-> > 
-> > Add support for the Subversion fetcher to checkout modules to a custom path
-> > than the module name to avoid checkout is always module - svn is path
-> > based and tag/branch-checkout might break builds because of invaid path specs.
-> > 
-> > Signed-off-by: Jens Rehsack <sno@netbsd.org>
-> > ---
-> > bitbake/lib/bb/fetch2/svn.py | 9 +++++++--
-> > 1 file changed, 7 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/bitbake/lib/bb/fetch2/svn.py b/bitbake/lib/bb/fetch2/svn.py
-> > index 1733c2b..8a29193 100644
-> > --- a/bitbake/lib/bb/fetch2/svn.py
-> > +++ b/bitbake/lib/bb/fetch2/svn.py
-> > @@ -54,6 +54,11 @@ class Svn(FetchMethod):
-> > 
-> >         ud.module = ud.parm["module"]
-> > 
-> > +        if not "path_spec" in ud.parm:
-> > +            ud.path_spec = ud.module
-> > +        else:
-> > +            ud.path_spec = ud.parm["path_spec"]
-> > +
-> >         # Create paths to svn checkouts
-> >         relpath = self._strip_leading_slashes(ud.path)
-> >         ud.pkgdir = os.path.join(data.expand('${SVNDIR}', d), ud.host, relpath)
-> > @@ -102,7 +107,7 @@ class Svn(FetchMethod):
-> > 
-> >             if command == "fetch":
-> >                 transportuser = ud.parm.get("transportuser", "")
-> > -                svncmd = "%s co %s %s://%s%s/%s%s %s" % (ud.basecmd, " ".join(options), proto, transportuser, svnroot, ud.module, suffix, ud.module)
-> > +                svncmd = "%s co %s %s://%s%s/%s%s %s" % (ud.basecmd, " ".join(options), proto, transportuser, svnroot, ud.module, suffix, ud.path_spec)
-> >             elif command == "update":
-> >                 svncmd = "%s update %s" % (ud.basecmd, " ".join(options))
-> >             else:
-> > @@ -149,7 +154,7 @@ class Svn(FetchMethod):
-> > 
-> >         os.chdir(ud.pkgdir)
-> >         # tar them up to a defined filename
-> > -        runfetchcmd("tar %s -czf %s %s" % (tar_flags, ud.localpath, ud.module), d, cleanup = [ud.localpath])
-> > +        runfetchcmd("tar %s -czf %s %s" % (tar_flags, ud.localpath, ud.path_spec), d, cleanup = [ud.localpath])
-> > 
-> >     def clean(self, ud, d):
-> >         """ Clean SVN specific files and dirs """
-> > -- 
-> > 2.4.3
-> 
-> Ping :)
+--_000_B267CE46C9DC3C4BB251EC9C004EA5661A6925C3HIKAWSEXMB01adh_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-It merged 3 days ago:
+Hello there,
 
-http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=dcd9cd0f9e117d5cc1440ddbf7582e3440d0cc66
+I want to setup toaster on my VM and I have followed the steps up to (3.1.1=
+ - Step 5):
+https://www.yoctoproject.org/docs/1.9/toaster-manual/toaster-manual.html#se=
+tting-up-locally-and-running-in-analysis-mode
 
-Cheers,
+Where I got the following error...
 
-Richard
+Toaster is already running and I am able to access it over the web (localho=
+st:8000), however while bitbaking, I am getting the following error:
+
+```
+(venv)yoctoadm@kickseed:~/poky/build (fido)*$ bitbake core-image-minimal
+Traceback (most recent call last):
+  File "/home/yoctoadm/poky/bitbake/bin/bitbake", line 41, in <module>
+    cookerdata.CookerConfiguration())
+  File "/home/yoctoadm/poky/bitbake/lib/bb/main.py", line 383, in bitbake_m=
+ain
+    return ui_module.main(server_connection.connection, server_connection.e=
+vents, configParams)
+  File "/home/yoctoadm/poky/bitbake/lib/bb/ui/knotty.py", line 287, in main
+    params.updateToServer(server, os.environ.copy())
+  File "/home/yoctoadm/poky/bitbake/lib/bb/cookerdata.py", line 79, in upda=
+teToServer
+    ret, error =3D server.runCommand(["updateConfig", options, environment]=
+)
+  File "/usr/lib/python2.7/xmlrpclib.py", line 1233, in __call__
+    return self.__send(self.__name, args)
+  File "/usr/lib/python2.7/xmlrpclib.py", line 1587, in __request
+    verbose=3Dself.__verbose
+  File "/usr/lib/python2.7/xmlrpclib.py", line 1273, in request
+    return self.single_request(host, handler, request_body, verbose)
+  File "/usr/lib/python2.7/xmlrpclib.py", line 1306, in single_request
+    return self.parse_response(response)
+  File "/usr/lib/python2.7/xmlrpclib.py", line 1482, in parse_response
+    return u.close()
+  File "/usr/lib/python2.7/xmlrpclib.py", line 794, in close
+    raise Fault(**self._stack[0])
+Fault: <Fault 1: "<class 'xml.parsers.expat.ExpatError'>:not well-formed (i=
+nvalid token): line 115, column 120">
+```
+
+```
+(venv)yoctoadm@kickseed:~/poky/build (fido)*$
+
+BitBake Build Tool Core version 1.26.0, bitbake version 1.26.0
+```
+
+BR
+Gabriel
 
 
+
+
+--_000_B267CE46C9DC3C4BB251EC9C004EA5661A6925C3HIKAWSEXMB01adh_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
+>
+<meta name=3D"Generator" content=3D"Microsoft Word 12 (filtered medium)">
+<style><!--
+/* Font Definitions */
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+	{mso-style-priority:99;
+	mso-style-link:"Balloon Text Char";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:8.0pt;
+	font-family:"Tahoma","sans-serif";}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri","sans-serif";
+	color:#1F497D;}
+span.BalloonTextChar
+	{mso-style-name:"Balloon Text Char";
+	mso-style-priority:99;
+	mso-style-link:"Balloon Text";
+	font-family:"Tahoma","sans-serif";}
+.MsoChpDefault
+	{mso-style-type:export-only;}
+@page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]-->
+</head>
+<body lang=3D"EN-US" link=3D"blue" vlink=3D"purple">
+<div class=3D"WordSection1">
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">Hello there,<o:p></o:p=
+></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">I want to setup toaste=
+r on my VM and I have followed the steps up to (3.1.1 - Step 5):<o:p></o:p>=
+</span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">https://www.yoctoproje=
+ct.org/docs/1.9/toaster-manual/toaster-manual.html#setting-up-locally-and-r=
+unning-in-analysis-mode<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">Where I got the follow=
+ing error...<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">Toaster is already run=
+ning and I am able to access it over the web (localhost:8000), however whil=
+e bitbaking, I am getting the following error:<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">```<o:p></o:p></span><=
+/p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">(venv)yoctoadm@kicksee=
+d:~/poky/build (fido)*$ bitbake core-image-minimal<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">Traceback (most recent=
+ call last):<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp; File &quot;/hom=
+e/yoctoadm/poky/bitbake/bin/bitbake&quot;, line 41, in &lt;module&gt;<o:p><=
+/o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp;&nbsp;&nbsp; coo=
+kerdata.CookerConfiguration())<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp; File &quot;/hom=
+e/yoctoadm/poky/bitbake/lib/bb/main.py&quot;, line 383, in bitbake_main<o:p=
+></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp;&nbsp;&nbsp; ret=
+urn ui_module.main(server_connection.connection, server_connection.events, =
+configParams)<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp; File &quot;/hom=
+e/yoctoadm/poky/bitbake/lib/bb/ui/knotty.py&quot;, line 287, in main<o:p></=
+o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp;&nbsp;&nbsp; par=
+ams.updateToServer(server, os.environ.copy())<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp; File &quot;/hom=
+e/yoctoadm/poky/bitbake/lib/bb/cookerdata.py&quot;, line 79, in updateToSer=
+ver<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp;&nbsp;&nbsp; ret=
+, error =3D server.runCommand([&quot;updateConfig&quot;, options, environme=
+nt])<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp; File &quot;/usr=
+/lib/python2.7/xmlrpclib.py&quot;, line 1233, in __call__<o:p></o:p></span>=
+</p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp;&nbsp;&nbsp; ret=
+urn self.__send(self.__name, args)<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp; File &quot;/usr=
+/lib/python2.7/xmlrpclib.py&quot;, line 1587, in __request<o:p></o:p></span=
+></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp;&nbsp;&nbsp; ver=
+bose=3Dself.__verbose<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp; File &quot;/usr=
+/lib/python2.7/xmlrpclib.py&quot;, line 1273, in request<o:p></o:p></span><=
+/p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp;&nbsp;&nbsp; ret=
+urn self.single_request(host, handler, request_body, verbose)<o:p></o:p></s=
+pan></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp; File &quot;/usr=
+/lib/python2.7/xmlrpclib.py&quot;, line 1306, in single_request<o:p></o:p><=
+/span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp;&nbsp;&nbsp; ret=
+urn self.parse_response(response)<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp; File &quot;/usr=
+/lib/python2.7/xmlrpclib.py&quot;, line 1482, in parse_response<o:p></o:p><=
+/span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp;&nbsp;&nbsp; ret=
+urn u.close()<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp; File &quot;/usr=
+/lib/python2.7/xmlrpclib.py&quot;, line 794, in close<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">&nbsp;&nbsp;&nbsp; rai=
+se Fault(**self._stack[0])<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">Fault: &lt;Fault 1: &q=
+uot;&lt;class 'xml.parsers.expat.ExpatError'&gt;:not well-formed (invalid t=
+oken): line 115, column 120&quot;&gt;<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">```<o:p></o:p></span><=
+/p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">```<o:p></o:p></span><=
+/p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">(venv)yoctoadm@kicksee=
+d:~/poky/build (fido)*$
+<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">BitBake Build Tool Cor=
+e version 1.26.0, bitbake version 1.26.0<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">```<o:p></o:p></span><=
+/p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">BR<o:p></o:p></span></=
+p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">Gabriel<o:p></o:p></sp=
+an></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+</div>
+</body>
+</html>
+
+--_000_B267CE46C9DC3C4BB251EC9C004EA5661A6925C3HIKAWSEXMB01adh_--
