@@ -1,45 +1,18 @@
-Return-Path: <zoltan.kuscsik@linaro.org>
-Received: from mail-qk0-f179.google.com (mail-qk0-f179.google.com
-	[209.85.220.179])
-	by mail.openembedded.org (Postfix) with ESMTP id C474176104
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  3 Nov 2015 16:14:45 +0000 (UTC)
-Received: by qkcn129 with SMTP id n129so8537384qkc.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 03 Nov 2015 08:14:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linaro_org.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id;
-	bh=gitz/A4AXSikm4V5/8G3uZUI1S8Bukv8Dio35fS6K/Q=;
-	b=xAwGIWCPG9EVfXhAawmEC8QQMw/bV27lhbev27tCsuulRJfPaC506pQmFXF7WmXuNc
-	6Wuh0Uc28h0w741fHGHuVtXZQ++2Bkt7MxFZHVLlFQ+xXVCHroheRbc7/VVMmRu/Ccow
-	tAJdtx28O1dO0kFqVyr64jKDNG8zfYP26MgeV2IBS0r5aGAGHQmDMqcXWCmzEfW+5RpS
-	JJVay2tvDG6Ew3kwdFgxafkg/y6yHbjGPL63sRdidZYfvb+4rp4MMhobr3hLIjyZg4vw
-	hJ8YEeB+pVVPZGblBkv4DfONadI5KnsX/iJYyF7IunSBmtkfMGOJHOj/a+bv/BM48Y8g
-	9FpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=gitz/A4AXSikm4V5/8G3uZUI1S8Bukv8Dio35fS6K/Q=;
-	b=V+OaVydyfeVCab0GrHrKNzMjsf+vCOD8AHU3+kwVV+4CQRFapEi9Lii0tszxrZ4k9u
-	+baZsgM2qtqzR+Ix2H1G6/VoA2Vki/z5a3U0TYn/tHd3HUE4bliN6LIObZLSKXIrNhhz
-	pF1bV7JMIL0vkBfRkVaMlNCfntXzHQDpuFjfBE84n7v4KWgfVkVtYp80YGPZJ/t+x4P3
-	7ThIJKjAHSeHhDMb6/q+zKHu1xRfn1ajeNaPIykrG6RqdqEf1jtE20sCzT+lP8u1dWUa
-	sFb0B+obnSVwxpXTx+ykmepYcnzlSkE1zLuYkvUbbs1Ovvgpg1ShfvjvN0fHAqPGOCor
-	cMLA==
-X-Gm-Message-State: ALoCoQkL6p6z1wjc8mlP4uHZQ/UwXGaA1R4m6OhsyT5D2vIuEhRnam6pknQ8lJcaFUbV4o1ql5nW
-X-Received: by 10.55.18.40 with SMTP id c40mr36938473qkh.99.1446567285035;
-	Tue, 03 Nov 2015 08:14:45 -0800 (PST)
+Return-Path: <zoltan.kuscsik@static.71.106.40.188.clients.your-server.de>
+X-Greylist: delayed 415 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 03 Nov 2015 16:17:47 UTC
 Received: from static.71.106.40.188.clients.your-server.de
-	(static.71.106.40.188.clients.your-server.de. [188.40.106.71])
-	by smtp.gmail.com with ESMTPSA id
-	o77sm4533269qgd.15.2015.11.03.08.14.43
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 03 Nov 2015 08:14:44 -0800 (PST)
+	(static.71.106.40.188.clients.your-server.de [188.40.106.71])
+	by mail.openembedded.org (Postfix) with ESMTP id 9F91C763F2
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue,  3 Nov 2015 16:17:47 +0000 (UTC)
+Received: by static.71.106.40.188.clients.your-server.de (Postfix,
+	from userid 1002)
+	id C4EAA6E08140; Tue,  3 Nov 2015 17:10:51 +0100 (CET)
 From: Zoltan Kuscsik <zoltan.kuscsik@linaro.org>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  3 Nov 2015 17:14:34 +0100
-Message-Id: <1446567274-32344-1-git-send-email-zoltan.kuscsik@linaro.org>
+Date: Tue,  3 Nov 2015 17:10:45 +0100
+Message-Id: <1446567045-31179-1-git-send-email-zoltan.kuscsik@linaro.org>
 X-Mailer: git-send-email 1.9.1
 Subject: [PATCH] bb.fetch2: added support for gclient
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -54,7 +27,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 03 Nov 2015 16:14:45 -0000
+X-List-Received-Date: Tue, 03 Nov 2015 16:17:48 -0000
 
 Gclient is tool for updating source code from
 multiple SCM repository locations.
