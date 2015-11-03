@@ -1,39 +1,35 @@
-Return-Path: <martin.jansa@gmail.com>
-Received: from mail-wm0-f44.google.com (mail-wm0-f44.google.com [74.125.82.44])
-	by mail.openembedded.org (Postfix) with ESMTP id A62E773D46
+Return-Path: <joel.esponde@gmail.com>
+Received: from mail-wm0-f51.google.com (mail-wm0-f51.google.com [74.125.82.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 4B21071633
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  3 Nov 2015 17:31:09 +0000 (UTC)
-Received: by wmeg8 with SMTP id g8so21061039wme.1
+	Tue,  3 Nov 2015 22:09:55 +0000 (UTC)
+Received: by wmll128 with SMTP id l128so99284730wml.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 03 Nov 2015 09:31:09 -0800 (PST)
+	Tue, 03 Nov 2015 14:09:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:date:to:cc:subject:message-id:references:mime-version
-	:content-type:content-disposition:in-reply-to:user-agent;
-	bh=MqG4sirKXM5gCdyoWscP7TfRDQeO9DTmRlJTHN4VYC8=;
-	b=zeQoqrgA+r7fioqB88rNMQot0HDPYAjrcuTIXPv1hliF1JGJ6VPcVmjlT92w0aNN3Q
-	9Tv6WDCbseq78638LRSVEEfR+xartmqTp6JM0mnX+xEpRy0+Lcm1xVZ8QyfLsVkqaXCj
-	8Wlt2IUtknNkK9ozGrZOe74lHNkmHJxDcZFz4qI9iOcBZ5P+60pt2qDP7+uV5shtbe8Q
-	5L3y6mAQZJGUT04cU9eaU7IrrIPdgJKZSxIExCn/bOo23iEXZiXEbhXiYq9s0PQXI1uz
-	dIW4TyHmNhj2Y16KtRk5ElocFx2yaI0wai4nNbrDFIsNGo3qFFrN+Ph6X8N+5kJgZ+gY
-	XZ7g==
-X-Received: by 10.28.23.206 with SMTP id 197mr22515575wmx.88.1446571869369;
-	Tue, 03 Nov 2015 09:31:09 -0800 (PST)
-Received: from localhost (ip-86-49-34-37.net.upcbroadband.cz. [86.49.34.37])
+	h=from:to:cc:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding;
+	bh=TTP/rc8q6ZeGTE5hFKgNDm7UcGZd8twW/0/NQ/AnsY8=;
+	b=j5FBEhDagwAb3rJMFRs28wCmLqespHN2O+BLRolBr0CxLqbG8CjXdYFK1UNfqXedU9
+	P4Ncmx014r09oJBp8knkyuaXQeAU0rqoZQauagB9XpMNvG/pSLLGP/IzCmFpXlIdS5Wf
+	u6q/OglmzsGRn7xioe80Ub3qXdKoknrIZqwpknhyuhu7ujIIx4PshZY9Bkqp3YXQgflt
+	7U+bi/BgSStDbdWfCBlCgq+YCNSuRCF7hPYxunbqUMvH23XUsg7JqxSOj8M067n4bAFS
+	3U+cEYKehUhHrmdyiNCcRafyXqPX4tjP/HSsKONKLFstp7uqsiemosxAfTSXhQ3MwUKp
+	fT7A==
+X-Received: by 10.28.6.206 with SMTP id 197mr23814782wmg.102.1446588595206;
+	Tue, 03 Nov 2015 14:09:55 -0800 (PST)
+Received: from localhost.localdomain ([78.245.105.188])
 	by smtp.gmail.com with ESMTPSA id
-	e63sm24398522wma.7.2015.11.03.09.31.07
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-	Tue, 03 Nov 2015 09:31:08 -0800 (PST)
-From: Martin Jansa <martin.jansa@gmail.com>
-X-Google-Original-From: Martin Jansa <Martin.Jansa@gmail.com>
-Date: Tue, 3 Nov 2015 18:31:13 +0100
-To: Ed Bartosh <ed.bartosh@linux.intel.com>
-Message-ID: <20151103173113.GB2556@jama>
-References: <1446570229-7700-1-git-send-email-ed.bartosh@linux.intel.com>
+	kr10sm29656059wjc.25.2015.11.03.14.09.53
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Tue, 03 Nov 2015 14:09:54 -0800 (PST)
+From: =?UTF-8?q?Jo=C3=ABl=20Esponde?= <joel.esponde@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Tue,  3 Nov 2015 23:08:31 +0100
+Message-Id: <1446588511-16158-1-git-send-email-joel.esponde@gmail.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-In-Reply-To: <1446570229-7700-1-git-send-email-ed.bartosh@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-Cc: bitbake-devel@lists.openembedded.org
-Subject: Re: [PATCH] qemu-native: fix build on Ubuntu 15.10
+Subject: [PATCH] Bitbake hob's image detail page should be able to display big logs with display resolution like 1600x900. Freescale yocto project is producing big logs for example.
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -46,84 +42,60 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 03 Nov 2015 17:31:11 -0000
-X-Groupsio-MsgNum: 6620
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eJnRUKwClWJh1Khz"
-Content-Disposition: inline
+X-List-Received-Date: Tue, 03 Nov 2015 22:09:56 -0000
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
---eJnRUKwClWJh1Khz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Moved log boxes into ScrolledWindows to keep them with a small size while being able to display big logs.
+Changed buttons alignment from y centered to top for them to be visible directly on first show.
 
-On Tue, Nov 03, 2015 at 07:03:49PM +0200, Ed Bartosh wrote:
-> Build of qemu-native on Ubuntu 15.10 fails on configure step.
-> The reason for this is that system dbus version is higher than
-> oe dbus version and system pulseaudio libraries require newer dbus.
->=20
-> It causes configure to break with a lot of errors similar to this:
->   libpulsecommon-6.0.so: undefined reference to dbus_watch_get_enabled@LI=
-BDBUS_1_3
->=20
-> Fixed by building qemu-native with the system dbus on Ubuntu 15.10
->=20
-> Note: This is a workaround. It must be removed when oe dbus is upgraded
-> to the version >=3D system dbus version (1.10.0 at the moment).
->=20
-> [YOCTO #8553]
->=20
-> Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+Signed-off-by: Joël Esponde <joel.esponde@gmail.com>
+---
+ lib/bb/ui/crumbs/imagedetailspage.py | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-wrong ML
+diff --git a/lib/bb/ui/crumbs/imagedetailspage.py b/lib/bb/ui/crumbs/imagedetailspage.py
+index 352e948..0d8ae81 100755
+--- a/lib/bb/ui/crumbs/imagedetailspage.py
++++ b/lib/bb/ui/crumbs/imagedetailspage.py
+@@ -75,11 +75,11 @@ class ImageDetailsPage (HobPage):
+             # pack the button on the right
+             if button:
+                 self.bbox = gtk.VBox()
+-                self.bbox.pack_start(button, expand=True, fill=False)
++                self.bbox.pack_start(button, expand=False, fill=False)
+                 if button2:
+-                    self.bbox.pack_start(button2, expand=True, fill=False)
++                    self.bbox.pack_start(button2, expand=False, fill=False)
+                 self.bbox.set_size_request(150,-1)
+-                self.row.attach(self.bbox, 1, 2, 0, 1, xoptions=gtk.FILL, yoptions=gtk.EXPAND)
++                self.row.attach(self.bbox, 1, 2, 0, 1, xoptions=0, yoptions=gtk.EXPAND|gtk.FILL)
+                 
+         def update_line_widgets(self, variable, value):
+             if len(self.line_widgets) == 0:
+@@ -374,7 +374,9 @@ class ImageDetailsPage (HobPage):
+             edit_config_button.set_tooltip_text("Edit machine and image recipe")
+             edit_config_button.connect("clicked", self.edit_config_button_clicked_cb)
+             self.setting_detail = self.DetailBox(varlist=varlist, vallist=vallist, button=edit_config_button)
+-            self.box_group_area.pack_start(self.setting_detail, expand=True, fill=True)
++            self.setting_detail_swin = gtk.ScrolledWindow()
++            self.setting_detail_swin.add_with_viewport(self.setting_detail)
++            self.box_group_area.pack_start(self.setting_detail_swin, expand=True, fill=True)
+ 
+         # Packages included, and Total image size
+         varlist = ["Packages included: ", "Total image size: "]
+@@ -390,7 +392,9 @@ class ImageDetailsPage (HobPage):
+         else: # get to this page from "My images"
+             edit_packages_button = None
+         self.package_detail = self.DetailBox(varlist=varlist, vallist=vallist, button=edit_packages_button)
+-        self.box_group_area.pack_start(self.package_detail, expand=True, fill=True)
++        self.package_detail_swin = gtk.ScrolledWindow()
++        self.package_detail_swin.add_with_viewport(self.package_detail)
++        self.box_group_area.pack_start(self.package_detail_swin, expand=True, fill=True)
+ 
+         # pack the buttons at the bottom, at this time they are already created.
+         if self.build_succeeded:
+-- 
+1.9.1
 
-> ---
->  meta/recipes-devtools/qemu/qemu.inc | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/meta/recipes-devtools/qemu/qemu.inc b/meta/recipes-devtools/=
-qemu/qemu.inc
-> index abbace8..b17da2f 100644
-> --- a/meta/recipes-devtools/qemu/qemu.inc
-> +++ b/meta/recipes-devtools/qemu/qemu.inc
-> @@ -40,6 +40,12 @@ do_configure_prepend_class-native() {
->  	BHOST_PKGCONFIG_PATH=3D$(PATH=3D/usr/bin:/bin pkg-config --variable pc_=
-path pkg-config || echo "")
->  	if [ ! -z "$BHOST_PKGCONFIG_PATH" ]; then
->  		export PKG_CONFIG_PATH=3D$PKG_CONFIG_PATH:$BHOST_PKGCONFIG_PATH
-> +		# link with system dbus on Ubuntu 15.10
-> +		# FIXME: remove below 4 lines when oe dbus is upgraded
-> +		if [ -r /etc/lsb-release -a "$(lsb_release -is)$(lsb_release -rs)" =3D=
- "Ubuntu15.10" ] ; then
-> +			libs=3D$(PKG_CONFIG_ALLOW_SYSTEM_LIBS=3D1 PKG_CONFIG_PATH=3D$BHOST_PK=
-GCONFIG_PATH PATH=3D/usr/bin:/bin pkg-config --libs dbus-1 || echo "")
-> +			[ -n "$libs" ] && export LDFLAGS=3D"$libs $LDFLAGS"
-> +		fi
->  	fi
->  }
-> =20
-> --=20
-> 2.1.4
->=20
-> --=20
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
---=20
-Martin 'JaMa' Jansa     jabber: Martin.Jansa@gmail.com
-
---eJnRUKwClWJh1Khz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iEYEARECAAYFAlY472AACgkQN1Ujt2V2gBz+YACfRsoNSlBa7wa2B9F5I1DwH11R
-yw8AoI772XJUjxXPKETx5vwsrF0JAvTI
-=5JHZ
------END PGP SIGNATURE-----
-
---eJnRUKwClWJh1Khz--
