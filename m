@@ -1,47 +1,47 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wm0-f46.google.com (mail-wm0-f46.google.com [74.125.82.46])
-	by mail.openembedded.org (Postfix) with ESMTP id 73C5165CBC
+Received: from mail-wm0-f51.google.com (mail-wm0-f51.google.com [74.125.82.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 9BB1365CBC
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Nov 2015 17:08:16 +0000 (UTC)
-Received: by wmdw130 with SMTP id w130so80115623wmd.0
+	Tue, 10 Nov 2015 17:08:17 +0000 (UTC)
+Received: by wmww144 with SMTP id w144so126850726wmw.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Nov 2015 09:08:16 -0800 (PST)
+	Tue, 10 Nov 2015 09:08:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel_com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id:mime-version:content-type
-	:content-transfer-encoding;
-	bh=piRMSP9u2dF0Q4d16QDFDfOXOD6rZv3SAj7KnhkEIKE=;
-	b=c8eByXo24Kw1q5MCDNUHOxKtKnSzeb30QkkXlQi28Rk+5zvXX1gFUXeWsS9WMfhWdQ
-	6/rjTaPyJDXCS5M05YTx9QGM0dNqFEPnzZKEbxV2S8Hvu77G/IVMoA4JrQwSy6Z/LfIx
-	KbDt2uvIP2jxygrl59LXs4huwaimjmW/5rNAzpJkprbzI8OSkj/p+VcSUY8XJqxKcstY
-	cRlcG2x39B5przDLWN8E3MF29/hNSF9rZLc6yl2NoBpBvzsA+cmqSfdemifccGfeGwzk
-	xgkH3SU5naEIthQ3CaVm1qYlHueJ9SQ0tzvEZJUU10RsCDHDrsb7O4hqYpOi81SQUCS6
-	2+cA==
+	h=from:to:cc:subject:date:message-id:in-reply-to:references;
+	bh=mNcotYC76piLN8PxukOGt2oiEdC+lxZG4tIYgIoq798=;
+	b=flDQaLfDXJ5jEJHzOkiYDgxVn5D5uwYiVv4K/QQyLzLMxaZoy6B/o0yZy4yI7HI6j5
+	t4L6sqIu4MvJvlO3iJl251VRdcErnfDyxKzBpL3nBy/7pF2tTJr0KhnYZ0GaST/kbqxj
+	K8VAljD7NVBf4J9IMhLGz5tqUaGtQCUxMnB0mMLOyrGreSy6CeDqggDJp5a2YY67MFd8
+	dcxAImg1tuiMkr4nrQISH0Bda5Yy/7WTSDnauc0Yz/o/4Cmh/JEGcBozquAOJlSj4XUj
+	gsPiskPU21xTvBKKWrmf0hrz6KYTGxoMmGNlf3cXSfiabxkUmxcA38DpH5ViII/rX+LS
+	cDfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-	:content-type:content-transfer-encoding;
-	bh=piRMSP9u2dF0Q4d16QDFDfOXOD6rZv3SAj7KnhkEIKE=;
-	b=gcMk7t8kG68MmKWweOGsgtER/eubpmdJrFMdPXX1DzovEXJuAwtPE5R1esHhepR1KG
-	bbGZ2MWwiuf3uHwjwsbuI9bipbaR8a6QlUhu6qPt6RcM/qiknQVQ4Mqp5eqyw+kNBP+w
-	sm/3RVG78M8xXait/J0osOC6cBhfBA8H4t9lSBjATLqj747WsCibJzdldhCx+P59DMxI
-	yvQkfu7fJDCuBxF63EYiQtkPGR6qfoL383WmQ7lbd5h9NxjaYdOUjbzAd9V+gFTvNwQw
-	kZ3Yk298sbMlWrImGbLngA9PsDX0v55NQH/8NvjdCyJi367KJUZ8mM0+WRciAOcLuhDH
-	dCWQ==
-X-Gm-Message-State: ALoCoQnc2ofzTQUl74Ir6E7ot2Z6qDMtKDspP1fh75+TzTPoqnMXMszcddH8W3eS9oN2/39D0qDV
-X-Received: by 10.194.134.199 with SMTP id pm7mr5183883wjb.46.1447175296098;
-	Tue, 10 Nov 2015 09:08:16 -0800 (PST)
+	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+	:references;
+	bh=mNcotYC76piLN8PxukOGt2oiEdC+lxZG4tIYgIoq798=;
+	b=gadeQcGcWPjHHaLhhDAvtd4UrgJA2F/zEgPT0x7GPc46Gh4/IgFoxbOMYxZh9gL1wE
+	jXpUA4U+hHgGci+GVWeMQFWq9LZ8oogeURXz6TFRRbfPyN5KHz9fBkDyoX3OXPE2MIGc
+	QtlfnytXN2YXblNvD4Yn2GIBZUllvgCU8G0sY7fD7P69g8FQlHegxxZkAR1YcXzzSZdZ
+	iNXNo/sGAYFMqZ4ZxYCCWYt8jKPudRA7OeOY/dh8xN2dkHYQ/BePGET6JPT3UcShPdGe
+	fviOnHeisjXC4Hltp79akVdVbUIcivN8wB793/peTXmzATrATgSaeZHmNgStcPxl28F/
+	ELkw==
+X-Gm-Message-State: ALoCoQmCl36AtTsI81rRNnW5F7OCgVjThrvSSfsi1wTjUS5YNv6kXYhHMldOzhwdVIVqGHd4eQCj
+X-Received: by 10.28.143.144 with SMTP id r138mr6423692wmd.100.1447175297004; 
+	Tue, 10 Nov 2015 09:08:17 -0800 (PST)
 Received: from dorado.Home ([90.199.203.61])
-	by smtp.gmail.com with ESMTPSA id w4sm4465345wje.49.2015.11.10.09.08.14
+	by smtp.gmail.com with ESMTPSA id w4sm4465345wje.49.2015.11.10.09.08.16
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 10 Nov 2015 09:08:15 -0800 (PST)
+	Tue, 10 Nov 2015 09:08:16 -0800 (PST)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue, 10 Nov 2015 17:08:02 +0000
-Message-Id: <1447175283-24245-1-git-send-email-michael.g.wood@intel.com>
+Date: Tue, 10 Nov 2015 17:08:03 +0000
+Message-Id: <1447175283-24245-2-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.5.0
-MIME-Version: 1.0
-Subject: [PATCH 1/2] toaster: project pages Link to image recipes table in notifications
+In-Reply-To: <1447175283-24245-1-git-send-email-michael.g.wood@intel.com>
+References: <1447175283-24245-1-git-send-email-michael.g.wood@intel.com>
+Subject: [PATCH 2/2] toaster: builds pages Fix the download cooker log link
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,48 +54,66 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Nov 2015 17:08:16 -0000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-List-Received-Date: Tue, 10 Nov 2015 17:08:17 -0000
 
 From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-The project created notifications and the 'Choosea recipe to build' link in
-the project page are linking to the software recipes table. Changes them to
-link to the image recipes table instead, which is bound to be more useful.
+The 'all builds' page was missing the download icon next to the outcome
+icon, which allows you to download a build log from the 'all builds' page.
+
+This patch brings it back. It also adds a check in the project builds page
+to make sure the download icon only appears if the build generates a cooker
+log, since builds that fail at the build request stage do not generate a
+cooker log.
 
 Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/toastergui/templates/project.html       | 2 +-
- lib/toaster/toastergui/templates/projecttopbar.html | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ lib/toaster/toastergui/templates/builds.html        |  8 +++++++-
+ lib/toaster/toastergui/templates/projectbuilds.html | 11 ++++++-----
+ 2 files changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/project.html b/lib/toaster/toastergui/templates/project.html
-index 4e83981..cc4745b 100644
---- a/lib/toaster/toastergui/templates/project.html
-+++ b/lib/toaster/toastergui/templates/project.html
-@@ -68,7 +68,7 @@
+diff --git a/lib/toaster/toastergui/templates/builds.html b/lib/toaster/toastergui/templates/builds.html
+index a27a121..c3cc266 100644
+--- a/lib/toaster/toastergui/templates/builds.html
++++ b/lib/toaster/toastergui/templates/builds.html
+@@ -62,7 +62,13 @@
+         {% for build in objects %}
+         <tr class="data" data-table-build-result="{{ build.id }}">
+             <td class="outcome">
+-                <a href="{% url "builddashboard" build.id %}">{%if build.outcome == build.SUCCEEDED%}<i class="icon-ok-sign success"></i>{%elif build.outcome == build.FAILED%}<i class="icon-minus-sign error"></i>{%else%}{%endif%}</a> &nbsp;
++                <a href="{% url "builddashboard" build.id %}">{%if build.outcome == build.SUCCEEDED%}<i class="icon-ok-sign success"></i>{%elif build.outcome == build.FAILED%}<i class="icon-minus-sign error"></i>{%else%}{%endif%}</a>
++                {% if build.cooker_log_path %}
++                  &nbsp;
++                  <a href="{% url 'build_artifact' build.id "cookerlog" build.id %}">
++                    <i class="icon-download-alt" title="Download build log"></i>
++                  </a>
++                {% endif %}
+             </td>
+             <td class="target">
+                 {% for t in build.target_set.all %}
+diff --git a/lib/toaster/toastergui/templates/projectbuilds.html b/lib/toaster/toastergui/templates/projectbuilds.html
+index bb38284..3402fc4 100644
+--- a/lib/toaster/toastergui/templates/projectbuilds.html
++++ b/lib/toaster/toastergui/templates/projectbuilds.html
+@@ -63,11 +63,12 @@
+         {% for build in objects %} {# if we have a build, just display it #}
+         <tr class="data">
+             <td class="outcome"><a href="{% url "builddashboard" build.id %}">{%if build.outcome == build.SUCCEEDED%}<i class="icon-ok-sign success"></i>{%elif build.outcome == build.FAILED%}<i class="icon-minus-sign error"></i>{%else%}{%endif%}</a>
+-                   {% if build.project %}
+-                        &nbsp; <a href="{% url 'build_artifact' build.id "cookerlog" build.id %}">
+-                            <i class="icon-download-alt" title="" data-original-title="Download build log"></i>
+-                        </a>
+-                    {% endif %}
++              {% if build.cooker_log_path %}
++                &nbsp;
++                <a href="{% url 'build_artifact' build.id "cookerlog" build.id %}">
++                  <i class="icon-download-alt" title="Download build log"></i>
++                </a>
++              {% endif %}
+             </td>
  
-       <div class="alert alert-info" style="display:none" id="no-most-built">
-         <span class="lead">You haven't built any recipes yet</span>
--        <p style="margin-top: 10px;"><a href="{% url 'projectsoftwarerecipes' project.id %}">Choose a recipe to build</a></p>
-+        <p style="margin-top: 10px;"><a href="{% url 'projectimagerecipes' project.id %}">Choose a recipe to build</a></p>
-       </div>
- 
-       <ul class="unstyled configuration-list" id="freq-build-list">
-diff --git a/lib/toaster/toastergui/templates/projecttopbar.html b/lib/toaster/toastergui/templates/projecttopbar.html
-index ee86b54..7a6bfef 100644
---- a/lib/toaster/toastergui/templates/projecttopbar.html
-+++ b/lib/toaster/toastergui/templates/projecttopbar.html
-@@ -1,6 +1,6 @@
- <div class="alert alert-success lead" id="project-created-notification" style="margin-top:15px; display:none">
-   <button type="button" class="close" data-dismiss="alert">×</button>
--  Your project <strong>{{project.name}}</strong> has been created. You can now <a href="{% url 'projectmachines' project.id %}">select your target machine</a> and <a href="{% url 'projectsoftwarerecipes' project.id %}">choose image recipes</a> to build.
-+  Your project <strong>{{project.name}}</strong> has been created. You can now <a href="{% url 'projectmachines' project.id %}">select your target machine</a> and <a href="{% url 'projectimagerecipes' project.id %}">choose image recipes</a> to build.
- </div>
- 
- <!-- project name -->
+             <td class="target">
 -- 
 2.5.0
 
