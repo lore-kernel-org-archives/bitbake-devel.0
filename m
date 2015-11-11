@@ -1,47 +1,29 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wm0-f51.google.com (mail-wm0-f51.google.com [74.125.82.51])
-	by mail.openembedded.org (Postfix) with ESMTP id 9BB1365CBC
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 06312762B3
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Nov 2015 17:08:17 +0000 (UTC)
-Received: by wmww144 with SMTP id w144so126850726wmw.1
+	Wed, 11 Nov 2015 16:56:50 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	tABGumkk014444 for <bitbake-devel@lists.openembedded.org>;
+	Wed, 11 Nov 2015 16:56:48 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 76-OTu7r_YsZ for <bitbake-devel@lists.openembedded.org>;
+	Wed, 11 Nov 2015 16:56:48 +0000 (GMT)
+Received: from [192.168.3.10] ([192.168.3.10]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	tABGuXXh014439
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 10 Nov 2015 09:08:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel_com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=mNcotYC76piLN8PxukOGt2oiEdC+lxZG4tIYgIoq798=;
-	b=flDQaLfDXJ5jEJHzOkiYDgxVn5D5uwYiVv4K/QQyLzLMxaZoy6B/o0yZy4yI7HI6j5
-	t4L6sqIu4MvJvlO3iJl251VRdcErnfDyxKzBpL3nBy/7pF2tTJr0KhnYZ0GaST/kbqxj
-	K8VAljD7NVBf4J9IMhLGz5tqUaGtQCUxMnB0mMLOyrGreSy6CeDqggDJp5a2YY67MFd8
-	dcxAImg1tuiMkr4nrQISH0Bda5Yy/7WTSDnauc0Yz/o/4Cmh/JEGcBozquAOJlSj4XUj
-	gsPiskPU21xTvBKKWrmf0hrz6KYTGxoMmGNlf3cXSfiabxkUmxcA38DpH5ViII/rX+LS
-	cDfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=mNcotYC76piLN8PxukOGt2oiEdC+lxZG4tIYgIoq798=;
-	b=gadeQcGcWPjHHaLhhDAvtd4UrgJA2F/zEgPT0x7GPc46Gh4/IgFoxbOMYxZh9gL1wE
-	jXpUA4U+hHgGci+GVWeMQFWq9LZ8oogeURXz6TFRRbfPyN5KHz9fBkDyoX3OXPE2MIGc
-	QtlfnytXN2YXblNvD4Yn2GIBZUllvgCU8G0sY7fD7P69g8FQlHegxxZkAR1YcXzzSZdZ
-	iNXNo/sGAYFMqZ4ZxYCCWYt8jKPudRA7OeOY/dh8xN2dkHYQ/BePGET6JPT3UcShPdGe
-	fviOnHeisjXC4Hltp79akVdVbUIcivN8wB793/peTXmzATrATgSaeZHmNgStcPxl28F/
-	ELkw==
-X-Gm-Message-State: ALoCoQmCl36AtTsI81rRNnW5F7OCgVjThrvSSfsi1wTjUS5YNv6kXYhHMldOzhwdVIVqGHd4eQCj
-X-Received: by 10.28.143.144 with SMTP id r138mr6423692wmd.100.1447175297004; 
-	Tue, 10 Nov 2015 09:08:17 -0800 (PST)
-Received: from dorado.Home ([90.199.203.61])
-	by smtp.gmail.com with ESMTPSA id w4sm4465345wje.49.2015.11.10.09.08.16
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 10 Nov 2015 09:08:16 -0800 (PST)
-From: Michael Wood <michael.g.wood@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 10 Nov 2015 17:08:03 +0000
-Message-Id: <1447175283-24245-2-git-send-email-michael.g.wood@intel.com>
-X-Mailer: git-send-email 2.5.0
-In-Reply-To: <1447175283-24245-1-git-send-email-michael.g.wood@intel.com>
-References: <1447175283-24245-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 2/2] toaster: builds pages Fix the download cooker log link
+	Wed, 11 Nov 2015 16:56:46 GMT
+Message-ID: <1447260992.3559.244.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Wed, 11 Nov 2015 08:56:32 -0800
+X-Mailer: Evolution 3.12.11-0ubuntu3 
+Mime-Version: 1.0
+Subject: [PATCH] codeparser: Only load the codeparser chace once
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -54,67 +36,31 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 10 Nov 2015 17:08:17 -0000
+X-List-Received-Date: Wed, 11 Nov 2015 16:56:52 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
+The server state gets reset multiple times during startup and currently
+we reload the codeparser cache each time. This is pointless and causes
+unnecessary interaction time with bitbake.
 
-The 'all builds' page was missing the download icon next to the outcome
-icon, which allows you to download a build log from the 'all builds' page.
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-This patch brings it back. It also adds a check in the project builds page
-to make sure the download icon only appears if the build generates a cooker
-log, since builds that fail at the build request stage do not generate a
-cooker log.
-
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
----
- lib/toaster/toastergui/templates/builds.html        |  8 +++++++-
- lib/toaster/toastergui/templates/projectbuilds.html | 11 ++++++-----
- 2 files changed, 13 insertions(+), 6 deletions(-)
-
-diff --git a/lib/toaster/toastergui/templates/builds.html b/lib/toaster/toastergui/templates/builds.html
-index a27a121..c3cc266 100644
---- a/lib/toaster/toastergui/templates/builds.html
-+++ b/lib/toaster/toastergui/templates/builds.html
-@@ -62,7 +62,13 @@
-         {% for build in objects %}
-         <tr class="data" data-table-build-result="{{ build.id }}">
-             <td class="outcome">
--                <a href="{% url "builddashboard" build.id %}">{%if build.outcome == build.SUCCEEDED%}<i class="icon-ok-sign success"></i>{%elif build.outcome == build.FAILED%}<i class="icon-minus-sign error"></i>{%else%}{%endif%}</a> &nbsp;
-+                <a href="{% url "builddashboard" build.id %}">{%if build.outcome == build.SUCCEEDED%}<i class="icon-ok-sign success"></i>{%elif build.outcome == build.FAILED%}<i class="icon-minus-sign error"></i>{%else%}{%endif%}</a>
-+                {% if build.cooker_log_path %}
-+                  &nbsp;
-+                  <a href="{% url 'build_artifact' build.id "cookerlog" build.id %}">
-+                    <i class="icon-download-alt" title="Download build log"></i>
-+                  </a>
-+                {% endif %}
-             </td>
-             <td class="target">
-                 {% for t in build.target_set.all %}
-diff --git a/lib/toaster/toastergui/templates/projectbuilds.html b/lib/toaster/toastergui/templates/projectbuilds.html
-index bb38284..3402fc4 100644
---- a/lib/toaster/toastergui/templates/projectbuilds.html
-+++ b/lib/toaster/toastergui/templates/projectbuilds.html
-@@ -63,11 +63,12 @@
-         {% for build in objects %} {# if we have a build, just display it #}
-         <tr class="data">
-             <td class="outcome"><a href="{% url "builddashboard" build.id %}">{%if build.outcome == build.SUCCEEDED%}<i class="icon-ok-sign success"></i>{%elif build.outcome == build.FAILED%}<i class="icon-minus-sign error"></i>{%else%}{%endif%}</a>
--                   {% if build.project %}
--                        &nbsp; <a href="{% url 'build_artifact' build.id "cookerlog" build.id %}">
--                            <i class="icon-download-alt" title="" data-original-title="Download build log"></i>
--                        </a>
--                    {% endif %}
-+              {% if build.cooker_log_path %}
-+                &nbsp;
-+                <a href="{% url 'build_artifact' build.id "cookerlog" build.id %}">
-+                  <i class="icon-download-alt" title="Download build log"></i>
-+                </a>
-+              {% endif %}
-             </td>
+diff --git a/bitbake/lib/bb/codeparser.py b/bitbake/lib/bb/codeparser.py
+index 82a3af4..6c9a42d 100644
+--- a/bitbake/lib/bb/codeparser.py
++++ b/bitbake/lib/bb/codeparser.py
+@@ -144,6 +144,10 @@ class CodeParserCache(MultiProcessCache):
+         return cacheline
  
-             <td class="target">
--- 
-2.5.0
+     def init_cache(self, d):
++        # Check if we already have the caches
++        if self.pythoncache:
++            return
++
+         MultiProcessCache.init_cache(self, d)
+ 
+         # cachedata gets re-assigned in the parent
+
 
 
