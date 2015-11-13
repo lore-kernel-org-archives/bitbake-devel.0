@@ -1,21 +1,35 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 6C57577109
+Return-Path: <liu.ming50@gmail.com>
+Received: from mail-lf0-f53.google.com (mail-lf0-f53.google.com
+	[209.85.215.53])
+	by mail.openembedded.org (Postfix) with ESMTP id 72464771E0
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 13 Nov 2015 15:29:08 +0000 (UTC)
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-	by fmsmga101.fm.intel.com with ESMTP; 13 Nov 2015 07:28:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.20,287,1444719600"; d="scan'208";a="819215836"
-Received: from lquinn-mobl2.amr.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.6.239])
-	by orsmga001.jf.intel.com with ESMTP; 13 Nov 2015 07:28:40 -0800
-From: Elliot Smith <elliot.smith@intel.com>
+	Fri, 13 Nov 2015 18:15:46 +0000 (UTC)
+Received: by lfs39 with SMTP id 39so57188400lfs.3
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 13 Nov 2015 10:15:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=aSwNCHhlnz1RtM1MLfcF8VwIPGiF5rdCSaTf0GNA3hI=;
+	b=YBGSaN5DsKRh5Kpay3McAxihmQ+rlkCKN8yOCgV8CB0El4r1cAjAgBROnjjT2hoYAp
+	DGvOqn8J4WKo4A2hazyKS7uVDJnSDFBafyBxmeubYV+hFj8b5wiAWAKLChlP1Wg1LOKJ
+	jAwttbyVCiN2K36i5sYWEmoD9FyILioE/zKJwJ21/UWDmgSuE/XCUECv4XQ0EzwLfh8D
+	zbXHfF5KKXVmdh3aoqniM0V1n6wb+SI5hESaez8lMCZXevYpCsGhIVggRP8M8WZBErWH
+	7Wi0t5InW1lIPvTp1Ja2yYOB5DJ70czQSwiPGB6BnF8sL9c2+au7WhJNsnPqW58SzClz
+	5faw==
+X-Received: by 10.25.151.199 with SMTP id z190mr11222050lfd.122.1447438546608; 
+	Fri, 13 Nov 2015 10:15:46 -0800 (PST)
+Received: from localhost.localdomain (m77-218-247-203.cust.tele2.se.
+	[77.218.247.203]) by smtp.gmail.com with ESMTPSA id
+	au8sm3290941lbc.31.2015.11.13.10.15.45
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Fri, 13 Nov 2015 10:15:46 -0800 (PST)
+From: Ming Liu <liu.ming50@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 13 Nov 2015 15:28:07 +0000
-Message-Id: <1447428487-11554-1-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-Subject: [PATCH] toaster: localhostbectrl Pass DATABASE_URL in via the process environment
+Date: Fri, 13 Nov 2015 19:15:31 +0100
+Message-Id: <1447438532-9595-1-git-send-email-liu.ming50@gmail.com>
+X-Mailer: git-send-email 1.9.1
+Cc: Ming Liu <peter.x.liu@external.atlascopco.com>
+Subject: [OE-core] [PATCH 1/2] fetch2/__init__.py: Extend subdir unpack parameter to local folder
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,67 +42,59 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 13 Nov 2015 15:29:12 -0000
+X-List-Received-Date: Fri, 13 Nov 2015 18:15:52 -0000
 
-Instead of putting the DATABASE_URL as part of the command for launching
-the bitbake observer process set it as part of environment.
+From: Ming Liu <peter.x.liu@external.atlascopco.com>
 
-This fixes two issues 1. Where the value isn't quoted and therefore will be
-interpreted in the shell and 2. Anyone being able to see the value of
-DATABASE_URL in the process tree.
+This fixes urls of the form file://some/path/file;subdir=b. When
+the file is a folder.
 
-[YOCTO #8669]
+Also tweaks the way to get subdir parameter, storing it into a variable
+instead of calling urldata.parm.get() multiple times.
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+Signed-off-by: Ming Liu <peter.x.liu@external.atlascopco.com>
 ---
- bitbake/lib/toaster/bldcontrol/localhostbecontroller.py | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ lib/bb/fetch2/__init__.py | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/bitbake/lib/toaster/bldcontrol/localhostbecontroller.py b/bitbake/lib/toaster/bldcontrol/localhostbecontroller.py
-index b5cf559..854a6bb 100644
---- a/bitbake/lib/toaster/bldcontrol/localhostbecontroller.py
-+++ b/bitbake/lib/toaster/bldcontrol/localhostbecontroller.py
-@@ -48,7 +48,6 @@ class LocalhostBEController(BuildEnvironmentController):
- 
-     def __init__(self, be):
-         super(LocalhostBEController, self).__init__(be)
--        self.dburl = settings.getDATABASE_URL()
-         self.pokydirname = None
-         self.islayerset = False
- 
-@@ -126,9 +125,17 @@ class LocalhostBEController(BuildEnvironmentController):
-                     port = i.split(" ")[-1]
-                     logger.debug("localhostbecontroller: Found bitbake server port %s" % port)
- 
--        cmd = "bash -c \"source %s/oe-init-build-env-memres -1 %s && DATABASE_URL=%s %s --observe-only -u toasterui --remote-server=0.0.0.0:-1 -t xmlrpc\"" % (self.pokydirname, self.be.builddir, self.dburl, own_bitbake)
-+        cmd = "bash -c \"source %s/oe-init-build-env-memres -1 %s && %s --observe-only -u toasterui --remote-server=0.0.0.0:-1 -t xmlrpc\"" % \
-+                (self.pokydirname, self.be.builddir, own_bitbake)
-+
-+        # Use a copy of the current environment and add the DATABASE_URL
-+        # for the bitbake observer process.
-+        env = os.environ.copy()
-+        env['DATABASE_URL'] = settings.getDATABASE_URL()
-+
-         with open(toaster_ui_log_filepath, "a+") as f:
--            p = subprocess.Popen(cmd, cwd = self.be.builddir, shell=True, stdout=f, stderr=f)
-+            p = subprocess.Popen(cmd, cwd = self.be.builddir, shell=True,
-+                                 stdout=f, stderr=f, env=env)
- 
-         def _toaster_ui_started(filepath, filepos = 0):
-             if not os.path.exists(filepath):
+diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py
+index 288a1c8..d7439fa 100644
+--- a/lib/bb/fetch2/__init__.py
++++ b/lib/bb/fetch2/__init__.py
+@@ -1412,6 +1412,7 @@ class FetchMethod(object):
+             # If file == dest, then avoid any copies, as we already put the file into dest!
+             dest = os.path.join(rootdir, os.path.basename(file))
+             if (file != dest) and not (os.path.exists(dest) and os.path.samefile(file, dest)):
++                subdir = urldata.parm.get('subdir')
+                 if os.path.isdir(file):
+                     # If for example we're asked to copy file://foo/bar, we need to unpack the result into foo/bar
+                     basepath = getattr(urldata, "basepath", None)
+@@ -1423,6 +1424,8 @@ class FetchMethod(object):
+                     if basepath and basepath.find("/") != -1:
+                         destdir = basepath[:basepath.rfind('/')]
+                         destdir = destdir.strip('/')
++                    if subdir:
++                        destdir = subdir + "/" + destdir
+                     if destdir != "." and not os.access("%s/%s" % (rootdir, destdir), os.F_OK):
+                         os.makedirs("%s/%s" % (rootdir, destdir))
+                     cmd = 'cp -fpPR %s %s/%s/' % (file, rootdir, destdir)
+@@ -1432,11 +1435,11 @@ class FetchMethod(object):
+                     # items.  So, only do so for file:// entries.
+                     if urldata.type == "file" and urldata.path.find("/") != -1:
+                        destdir = urldata.path.rsplit("/", 1)[0]
+-                       if urldata.parm.get('subdir') != None:
+-                          destdir = urldata.parm.get('subdir') + "/" + destdir
++                       if subdir:
++                          destdir = subdir + "/" + destdir
+                     else:
+-                       if urldata.parm.get('subdir') != None:
+-                          destdir = urldata.parm.get('subdir')
++                       if subdir:
++                          destdir = subdir
+                        else:
+                           destdir = "."
+                     bb.utils.mkdirhier("%s/%s" % (rootdir, destdir))
 -- 
-1.9.3
-
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
+1.9.1
 
 
