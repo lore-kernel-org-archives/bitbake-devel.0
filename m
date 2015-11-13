@@ -1,28 +1,21 @@
-Return-Path: <mark.hatle@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 082D277146
+Return-Path: <elliot.smith@intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 78F3677306
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Nov 2015 21:10:26 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id tABLAQ58015248
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 11 Nov 2015 13:10:26 -0800 (PST)
-Received: from Marks-MacBook-Pro.local (172.25.36.227) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.50) with Microsoft SMTP Server id
-	14.3.248.2; Wed, 11 Nov 2015 13:10:25 -0800
-To: <bitbake-devel@lists.openembedded.org>
-References: <1447260992.3559.244.camel@linuxfoundation.org>
-From: Mark Hatle <mark.hatle@windriver.com>
-Organization: Wind River Systems
-Message-ID: <5643AEC1.1020307@windriver.com>
-Date: Wed, 11 Nov 2015 15:10:25 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:38.0)
-	Gecko/20100101 Thunderbird/38.3.0
-MIME-Version: 1.0
-In-Reply-To: <1447260992.3559.244.camel@linuxfoundation.org>
-Subject: Re: [PATCH] codeparser: Only load the codeparser chace once
+	Fri, 13 Nov 2015 13:48:31 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga103.jf.intel.com with ESMTP; 13 Nov 2015 05:48:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.20,287,1444719600"; d="scan'208";a="836998314"
+Received: from lquinn-mobl2.amr.corp.intel.com (HELO lp.ger.corp.intel.com)
+	([10.252.6.239])
+	by fmsmga001.fm.intel.com with ESMTP; 13 Nov 2015 05:48:31 -0800
+From: Elliot Smith <elliot.smith@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 13 Nov 2015 13:48:18 +0000
+Message-Id: <cover.1447422301.git.elliot.smith@intel.com>
+X-Mailer: git-send-email 1.9.3
+Subject: [PATCH 0/4] Remove the new build input
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,35 +28,50 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 11 Nov 2015 21:10:30 -0000
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 13 Nov 2015 13:48:34 -0000
 
-Is that a typo in the symmary "chace"?
+Remove the new build input from the templates, and all supporting
+code which maintained its state.
 
-On 11/11/15 10:56 AM, Richard Purdie wrote:
-> The server state gets reset multiple times during startup and currently
-> we reload the codeparser cache each time. This is pointless and causes
-> unnecessary interaction time with bitbake.
-> 
-> Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> 
-> diff --git a/bitbake/lib/bb/codeparser.py b/bitbake/lib/bb/codeparser.py
-> index 82a3af4..6c9a42d 100644
-> --- a/bitbake/lib/bb/codeparser.py
-> +++ b/bitbake/lib/bb/codeparser.py
-> @@ -144,6 +144,10 @@ class CodeParserCache(MultiProcessCache):
->          return cacheline
->  
->      def init_cache(self, d):
-> +        # Check if we already have the caches
-> +        if self.pythoncache:
-> +            return
-> +
->          MultiProcessCache.init_cache(self, d)
->  
->          # cachedata gets re-assigned in the parent
-> 
-> 
+The following changes since commit aa7690e182c9c307785e6e9679f3490583176421
+(contrib/toaster-next):
+
+  toaster: builds pages Fix the download cooker log link (2015-11-10 17:04:19 +0000)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib elliot/submit/michaelw/toaster/remove-new-build-form
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=elliot/submit/michaelw/toaster/remove-new-build-form
+
+Michael Wood (4):
+  toaster: orm Fix get_number_of_builds to count all apart from
+    IN_PROGRESS
+  toaster: projectpage Disable/Enable build input if we have 0 layers
+  toaster: projecttopbar Use the project in context to get num builds
+  toaster: Remove the new-build-input button widget
+
+ lib/toaster/orm/models.py                          |   9 +-
+ lib/toaster/toastergui/static/js/base.js           | 229 ---------------------
+ lib/toaster/toastergui/static/js/projectpage.js    |  13 +-
+ lib/toaster/toastergui/static/js/projecttopbar.js  |  81 ++++++++
+ lib/toaster/toastergui/templates/base.html         | 133 +++---------
+ .../toastergui/templates/projecttopbar.html        |  20 +-
+ 6 files changed, 147 insertions(+), 338 deletions(-)
+ delete mode 100644 bitbake/lib/toaster/toastergui/static/js/base.js
+ create mode 100644 bitbake/lib/toaster/toastergui/static/js/projecttopbar.js
+
+--
+1.9.3
+
+---------------------------------------------------------------------
+Intel Corporation (UK) Limited
+Registered No. 1134945 (England)
+Registered Office: Pipers Way, Swindon SN3 1RJ
+VAT No: 860 2173 47
+
+This e-mail and any attachments may contain confidential material for
+the sole use of the intended recipient(s). Any review or distribution
+by others is strictly prohibited. If you are not the intended
+recipient, please contact the sender and delete all copies.
 
 
