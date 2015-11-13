@@ -1,21 +1,23 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 78F3677306
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id B45AD7731F
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 13 Nov 2015 13:48:31 +0000 (UTC)
+	Fri, 13 Nov 2015 13:48:42 +0000 (UTC)
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga103.jf.intel.com with ESMTP; 13 Nov 2015 05:48:32 -0800
+	by orsmga101.jf.intel.com with ESMTP; 13 Nov 2015 05:48:41 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.20,287,1444719600"; d="scan'208";a="836998314"
+X-IronPort-AV: E=Sophos;i="5.20,287,1444719600"; d="scan'208";a="836998400"
 Received: from lquinn-mobl2.amr.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.6.239])
-	by fmsmga001.fm.intel.com with ESMTP; 13 Nov 2015 05:48:31 -0800
+	by fmsmga001.fm.intel.com with ESMTP; 13 Nov 2015 05:48:42 -0800
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 13 Nov 2015 13:48:18 +0000
-Message-Id: <cover.1447422301.git.elliot.smith@intel.com>
+Date: Fri, 13 Nov 2015 13:48:34 +0000
+Message-Id: <8088ff54a9e386f47c332fa71d5db59efe2d5d34.1447422301.git.elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
-Subject: [PATCH 0/4] Remove the new build input
+In-Reply-To: <cover.1447422301.git.elliot.smith@intel.com>
+References: <cover.1447422301.git.elliot.smith@intel.com>
+Subject: [PATCH 1/4] toaster: orm Fix get_number_of_builds to count all apart from IN_PROGRESS
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,39 +30,42 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 13 Nov 2015 13:48:34 -0000
+X-List-Received-Date: Fri, 13 Nov 2015 13:48:43 -0000
 
-Remove the new build input from the templates, and all supporting
-code which maintained its state.
+From: Michael Wood <michael.g.wood@intel.com>
 
-The following changes since commit aa7690e182c9c307785e6e9679f3490583176421
-(contrib/toaster-next):
+The count of a project's builds should not include those which are
+currently in progress.
 
-  toaster: builds pages Fix the download cooker log link (2015-11-10 17:04:19 +0000)
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+---
+ lib/toaster/orm/models.py | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib elliot/submit/michaelw/toaster/remove-new-build-form
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=elliot/submit/michaelw/toaster/remove-new-build-form
-
-Michael Wood (4):
-  toaster: orm Fix get_number_of_builds to count all apart from
-    IN_PROGRESS
-  toaster: projectpage Disable/Enable build input if we have 0 layers
-  toaster: projecttopbar Use the project in context to get num builds
-  toaster: Remove the new-build-input button widget
-
- lib/toaster/orm/models.py                          |   9 +-
- lib/toaster/toastergui/static/js/base.js           | 229 ---------------------
- lib/toaster/toastergui/static/js/projectpage.js    |  13 +-
- lib/toaster/toastergui/static/js/projecttopbar.js  |  81 ++++++++
- lib/toaster/toastergui/templates/base.html         | 133 +++---------
- .../toastergui/templates/projecttopbar.html        |  20 +-
- 6 files changed, 147 insertions(+), 338 deletions(-)
- delete mode 100644 bitbake/lib/toaster/toastergui/static/js/base.js
- create mode 100644 bitbake/lib/toaster/toastergui/static/js/projecttopbar.js
-
---
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index 3832905..0ac94b9 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -130,13 +130,12 @@ class Project(models.Model):
+         try:
+             return self.projectvariable_set.get(name="MACHINE").value
+         except (ProjectVariable.DoesNotExist,IndexError):
+-            return( "None" );
++            return None;
+ 
+     def get_number_of_builds(self):
+-        try:
+-            return len(Build.objects.filter( project = self.id ))
+-        except (Build.DoesNotExist,IndexError):
+-            return( 0 )
++        """Return the number of builds which have ended"""
++
++        return self.build_set.filter(~Q(outcome=Build.IN_PROGRESS)).count()
+ 
+     def get_last_build_id(self):
+         try:
+-- 
 1.9.3
 
 ---------------------------------------------------------------------
