@@ -1,50 +1,50 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wm0-f45.google.com (mail-wm0-f45.google.com [74.125.82.45])
-	by mail.openembedded.org (Postfix) with ESMTP id ED7D16010D
+Received: from mail-wm0-f49.google.com (mail-wm0-f49.google.com [74.125.82.49])
+	by mail.openembedded.org (Postfix) with ESMTP id 96B036010B
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Nov 2015 12:26:29 +0000 (UTC)
-Received: by wmec201 with SMTP id c201so115451049wme.1
+	Thu, 19 Nov 2015 12:41:16 +0000 (UTC)
+Received: by wmww144 with SMTP id w144so114727426wmw.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Nov 2015 04:26:29 -0800 (PST)
+	Thu, 19 Nov 2015 04:41:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:subject:to:message-id:date:user-agent:mime-version
+	h=to:from:subject:message-id:date:user-agent:mime-version
 	:content-type:content-transfer-encoding;
-	bh=/HzwLb/QscIF+dZbC5v+yYwmPpLkcJIj0D6yyfNGhqU=;
-	b=WDVraux405nEk4rmG+6GntDc4DQ7j4LEzxcp0Mh6lU/6xNcboC5WNmGbxBbRbX77Mm
-	TTudk+mDQTdzNoxde4x5baIw2SLAGzDqy6U8pzWGtk8wBBzrKMmgw75JsiRkl6Dc3iTC
-	LsbfaPmw0w+smD6xh621RRdj72IMHmb1A81P6yUGN8GLsX+MMyJh5/cgW322wJrG0tIM
-	t27jYWW+WziNe9sAQmz9Xg3S+il/8oNanzwZ5Jhl5CtmFXvGTeVO3gG07dGFC15oF2+H
-	zb51oxMqdw5G7z8sOyS+0MofjMPxvl3N8rPhAewMZzMdzDDHnvTsDIpQNSp/xCNuU+Ux
-	64yQ==
+	bh=fxg6ZM/XrctVUaGaKIytCmza/MXuoamDNxWB0D0Z8hY=;
+	b=BgOwLkF8XILVI8uqsHcnEqQUT4NLjM0NbsxwPMAZQOH31ZjfKDQzStIM8LkV5Gwy0f
+	cDwQucr60CWpWbrMb2pccZDhZd4xr4Qcm/9YZK8NkVvAEPRAO3JsSMdGPV/Ufbq13ipO
+	F4AiLMN0O3HF7G3EVVVYujwMz6b1UqU/imGx1P/+3HdBjr1sENz/JOUEa5sVwwPJ8fqm
+	slb7GgUY29KQglpN1FPSfeQidjsO+fW0+RSqZHFEtjs6e779h2I/vW8wIryVwDII6HqB
+	tHMwn+PAr1wdb51L1ipIHZxFs8odXlCRO4x5EY/Tb92JsPUd0eL1rGOiJXFmfa0RUVN/
+	lQMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:subject:to:message-id:date:user-agent
+	h=x-gm-message-state:to:from:subject:message-id:date:user-agent
 	:mime-version:content-type:content-transfer-encoding;
-	bh=/HzwLb/QscIF+dZbC5v+yYwmPpLkcJIj0D6yyfNGhqU=;
-	b=J5qK6TV0g7pHZmYjNvzNV0Ojx9g9bDGCxTifBVZ66PIM6caYi+NzAX3ifjionUamhZ
-	XUuT7kJiokgcQat8af3q2Ze1zZ7fOzL7ioRGOx0+plkafCQI/UJR8O2hdwyUi0oLxje/
-	61owmbP2Q9upEN7oFmzZKZFnK08+z0NOHFQRgZSVDp08geJ19DY8H3rq8w0wxhoLCAMX
-	hC5BXWLYfTOE1IHK7NTssV4fylKrCvPpSQgGxWD85wzxcugzxWC/Q0VXvC/e9UkINR4q
-	OOQcPZfPjINqfvZkfaZ5dYZePEi3E/CjhiaJW1Oonq8McmeF07OaE7osXAz9yt2oOkkc
-	GKBg==
-X-Gm-Message-State: ALoCoQmXElEb9tr74SDraOZASD1eHO+HgSqKofxreQJyPGqvmpb1QimgtpQM/L8PGgV9xXRQSF1a
-X-Received: by 10.28.61.4 with SMTP id k4mr10718079wma.34.1447935989744;
-	Thu, 19 Nov 2015 04:26:29 -0800 (PST)
+	bh=fxg6ZM/XrctVUaGaKIytCmza/MXuoamDNxWB0D0Z8hY=;
+	b=JfIJsaYNKHmFM8oxhaj0WFG/YBKpkOcuENAhtnO29o9ji7AEDaPOWtjuFH9s1I+fYf
+	QusrrqgHy9sjMCEuEQIUugKBBhQQMYZZxapl6bGJpaC0rZI9Co9AVxYyo49fsiDXg8aq
+	M1RpD3jWexgGO3m4zw5Ta1oN/5mW1rlPRkn+TieKDGTaBW/lwB6/yJ+uukvelN/Tep0O
+	C5bzTZ57bUChYXJOMmIAq+g1Lo+09Ls4nWYcezpZqUwMCuz3oF5kSMx8ZwarTsBy0+y8
+	jfdNKeMueHOnSY01ZJonQKeI4yvSdYDyoAvwRNUuplT1n8L5yXA6jhU2mc3eJNXcVYWR
+	46mQ==
+X-Gm-Message-State: ALoCoQlAsNvDttwmVQTdC7L3CFG14NGiuEMF844cvdM+6uu9zGy+JZ1ZKjEsn41zcqI5gp3E5EcL
+X-Received: by 10.194.110.35 with SMTP id hx3mr9486267wjb.0.1447936876793;
+	Thu, 19 Nov 2015 04:41:16 -0800 (PST)
 Received: from [192.168.2.10] ([83.217.123.106])
 	by smtp.googlemail.com with ESMTPSA id
-	cv3sm7689563wjc.20.2015.11.19.04.26.28
+	h7sm7757275wjz.7.2015.11.19.04.41.15
 	for <bitbake-devel@lists.openembedded.org>
 	(version=TLSv1/SSLv3 cipher=OTHER);
-	Thu, 19 Nov 2015 04:26:28 -0800 (PST)
-From: Michael Wood <michael.g.wood@intel.com>
+	Thu, 19 Nov 2015 04:41:15 -0800 (PST)
 To: bitbake-devel@lists.openembedded.org
-Message-ID: <564DBFF3.9090003@intel.com>
-Date: Thu, 19 Nov 2015 12:26:27 +0000
+From: Michael Wood <michael.g.wood@intel.com>
+Message-ID: <564DC36B.3030900@intel.com>
+Date: Thu, 19 Nov 2015 12:41:15 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
 	Thunderbird/38.3.0
 MIME-Version: 1.0
-Subject: Retrieving values for project configuration
+Subject: Release and versions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -57,25 +57,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 19 Nov 2015 12:26:30 -0000
+X-List-Received-Date: Thu, 19 Nov 2015 12:41:18 -0000
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-In Toaster we present users with a list of 'valid' values for 
-IMAGE_FSTYPES, currently this is manually copied from the image_types 
-class[1] and often gets out of date because of this. Is there any way 
-for Toaster to programmatically retrieve the list?
+We're currently manually maintaining a file[1] that maps metadata 
+release names e.g. 'fido' to the corresponding Bitbake version in 
+'toasterconf'. This is time consuming and confusing for people who are 
+running Bitbake/Toaster or Poky to work out which toasterconf is suited 
+for their setup.
 
-We will have a similar issue with getting correct values for 
-PACKAGE_CLASSES, IMAGE_FEATURES and MACHINE_FEATURES
+Currently the only real need for these files is to know which Bitbake 
+versions are supported with which metadata versions, without someone 
+reading https://wiki.yoctoproject.org/wiki/Releases and editing a file 
+and submitting it. Would it make sense to make Bitbake versions match 
+those of it's metadata?
+If departing from the current numbering scheme wouldn't be welcomed, 
+would there be room for a compromise where the Bitbake versions also 
+contain the release name e.g. 1.26_fido?
 
 Thanks,
 
 Michael
 
 [1] 
-http://cgit.openembedded.org/openembedded-core/tree/meta/classes/image_types.bbclass#n214 
+http://cgit.openembedded.org/openembedded-core/tree/meta/conf/toasterconf.json
+
+
+
 
 
