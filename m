@@ -1,46 +1,20 @@
-Return-Path: <zoltan.kuscsik@linaro.org>
-Received: from mail-wm0-f52.google.com (mail-wm0-f52.google.com [74.125.82.52])
-	by mail.openembedded.org (Postfix) with ESMTP id 48A536011A
+Return-Path: <elliot.smith@intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id 7C44560107
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Nov 2015 05:37:44 +0000 (UTC)
-Received: by wmvv187 with SMTP id v187so56477243wmv.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 19 Nov 2015 21:37:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linaro-org.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id;
-	bh=kCJ4dhutRS6Sd+eK4A8NwpjknLbLhOFSiUL0m2/CGBM=;
-	b=MoqGQ5KOEFFJSqXlHWJBdbYCQ8We87tc3/QFcOXXepbuU2Vt8B32KkdwPHkgfR+bd7
-	z4sYroTSDOZNrR+/M7SgG71dhxSlDqwwocGna3xrpQo5iv2PuTeQzkvIkCVszsNe5xMR
-	7jwuCL53KgNpZpX3law3MXzLrrt4mW8Z/rf5I1B8I0WQ75UXUsYnRG8xCmB9Uwq335TV
-	qZVd3aZUI9fDLBS7NXHjVoWPCRUpWE101iPwY80QeqOfQ38qYQOhapQ+AFrRINChfyvv
-	5B7rFgyS+srxDkQTMlpPdGkxAZ/PMiXs4CRg54GQPksebCu2JLp/1G94www+z5/WDQpn
-	woXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=kCJ4dhutRS6Sd+eK4A8NwpjknLbLhOFSiUL0m2/CGBM=;
-	b=ZwHDsb1IsDv6vrf4dBZrQZ5SAJoltDmWfJEPeUDKxGbLPKY90C4h/Gw5dNvm7yamta
-	SLIcGUUVp9hbbST86ly/RJwHS7oHX2IxQO0eiXCox7nsHjEgwxNZZ3Q3Md8g4YwY+lze
-	/ErpVmP6d/jfqVn/KapSzU0RDebqP9gDoZ/OlVkntf27W436oUDy/7gKk+xLRzyKPgb8
-	YtvXEswWYdaBVRpac10DX7c0EK49QMYssrRT+emNNYwdCLNaIdIn0DE/ww9eun9LNMBe
-	X91BUrnqK5xWM6t6V4M+ysdt9WlgE5xYpt91ciAk81NhfjX4XmdShkc4rsGDTpxWJaBG
-	ATSQ==
-X-Gm-Message-State: ALoCoQlcKwyyvdVxN3AzaVVl7d5yPKT56hHAWBuA3U/U/szwZeWGaqFMEz7VBJkKFdU27AzrH5Iz
-X-Received: by 10.28.102.8 with SMTP id a8mr95087wmc.67.1447997865207;
-	Thu, 19 Nov 2015 21:37:45 -0800 (PST)
-Received: from static.71.106.40.188.clients.your-server.de
-	(static.71.106.40.188.clients.your-server.de. [188.40.106.71])
-	by smtp.gmail.com with ESMTPSA id
-	jt9sm10998810wjc.24.2015.11.19.21.37.44
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Thu, 19 Nov 2015 21:37:44 -0800 (PST)
-From: Zoltan Kuscsik <zoltan.kuscsik@linaro.org>
+	Fri, 20 Nov 2015 18:29:48 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga103.jf.intel.com with ESMTP; 20 Nov 2015 10:29:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.20,323,1444719600"; d="scan'208";a="855928292"
+Received: from unknown (HELO lp.ger.corp.intel.com) ([10.252.30.68])
+	by orsmga002.jf.intel.com with ESMTP; 20 Nov 2015 10:29:43 -0800
+From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 20 Nov 2015 06:37:34 +0100
-Message-Id: <1447997854-20029-1-git-send-email-zoltan.kuscsik@linaro.org>
-X-Mailer: git-send-email 1.9.1
-Subject: [bitbake][PATCH] fetcher/svn : Warning on SSL verifaction failure
+Date: Fri, 20 Nov 2015 18:29:34 +0000
+Message-Id: <1448044174-10810-1-git-send-email-elliot.smith@intel.com>
+X-Mailer: git-send-email 1.9.3
+Subject: [PATCH] toaster: change toasterconf.json logic to use TEMPLATECONF, like oe-setup-builddir
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,53 +27,91 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 20 Nov 2015 05:37:48 -0000
+X-List-Received-Date: Fri, 20 Nov 2015 18:29:50 -0000
 
-OE core appends --trust-server-cert argument to
-the svn command by default.  This change adds a
-warning on invalid SSL server certificate.
+From: brian avery <avery.brian@gmail.com>
 
-We use wget to verify the certification as it
-is more reliable than Python methods for SSL certificate
-check.
+This changes the way we pick a toasterconf.json file so that it
+matches the way oe-setup-builddir does it. We now base it on TEMPLATECONF
+found in the .templateconf file.
+
+Signed-off-by: brian avery <avery.brian@gmail.com>
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- lib/bb/fetch2/svn.py | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ bitbake/bin/toaster | 33 ++++++++++++++++++++++++---------
+ 1 file changed, 24 insertions(+), 9 deletions(-)
 
-diff --git a/lib/bb/fetch2/svn.py b/lib/bb/fetch2/svn.py
-index 1733c2b..d3a7cac 100644
---- a/lib/bb/fetch2/svn.py
-+++ b/lib/bb/fetch2/svn.py
-@@ -28,6 +28,7 @@ import sys
- import logging
- import bb
- import re
-+import subprocess
- from   bb import data
- from   bb.fetch2 import FetchMethod
- from   bb.fetch2 import FetchError
-@@ -173,6 +174,20 @@ class Svn(FetchMethod):
-         """
-         bb.fetch2.check_network_access(d, self._buildsvncommand(ud, d, "log1"))
+diff --git a/bitbake/bin/toaster b/bitbake/bin/toaster
+index 2c3432c..432756c 100755
+--- a/bitbake/bin/toaster
++++ b/bitbake/bin/toaster
+@@ -179,6 +179,7 @@ fi
+ [ `basename \"$0\"` = `basename \"${TOASTER}\"` ] && TOASTER_MANAGED=1
  
-+        if(ud.parm.get('protocol', 'svn') == 'https'):
-+            svn_url = "https://%s%s" % (ud.host, ud.path)
-+            try:
-+                # Use wget to check the SSL certificate.
-+                # The --spider argument ensures that we don't actually
-+                # download anything.
-+                wget_ssl_check_command = " wget --spider --timeout=30 %s" % svn_url
-+                (output, errors) = bb.process.run(wget_ssl_check_command , shell=True, stderr=subprocess.PIPE)
-+            except  bb.process.ExecutionError as e:
-+                # wget returns 5 exit code on SSL verification failure
-+                if(e.exitcode == 5):
-+                    logger.warning("SVN repository %s has invalid SSL certificate." % svn_url)
-+
-+
-         output = runfetchcmd("LANG=C LC_ALL=C " + self._buildsvncommand(ud, d, "log1"), d, True)
+ BBBASEDIR=`dirname $TOASTER`/..
++OEROOT=`dirname $TOASTER`/../..
  
-         # skip the first line, as per output of svn log
+ RUNNING=0
+ 
+@@ -189,18 +190,33 @@ if [ "$WEB_PORT" = "" ]; then
+     WEB_PORT="8000"
+ fi
+ # this is the configuraton file we are using for toaster
+-# note default is assuming yocto. Override this if you are
+-# running in a pure OE environment and use the toasterconf.json
+-# in meta/conf/toasterconf.json
+-# note: for future there are a number of relative path assumptions
+-# in the local layers that currently prevent using an arbitrary
+-# toasterconf.json
++# we are using the same logic that oe-setup-builddir uses
++# (based on TEMPLATECONF and .templateconf) to determine
++# which toasterconf.json to use.
++# note: There are a number of relative path assumptions
++# in the local layers that currently make using an arbitrary
++# toasterconf.json difficult.
++
++. $OEROOT/.templateconf
++if [ -n "$TEMPLATECONF" ]; then
++    if [ ! -d "$TEMPLATECONF" ]; then
++        # Allow TEMPLATECONF=meta-xyz/conf as a shortcut
++        if [ -d "$OEROOT/$TEMPLATECONF" ]; then
++            TEMPLATECONF="$OEROOT/$TEMPLATECONF"
++        fi
++        if [ ! -d "$TEMPLATECONF" ]; then
++            echo >&2 "Error: '$TEMPLATECONF' must be a directory containing toasterconf.json"
++	    [ "$TOASTER_MANAGED" = '1' ] && exit 1 || return 1
++        fi
++    fi
++fi
++
+ if [ "$TOASTER_CONF" = "" ]; then
+-    TOASTER_CONF="$(dirname $TOASTER)/../../meta-yocto/conf/toasterconf.json"
++    TOASTER_CONF="$TEMPLATECONF/toasterconf.json"
+     export TOASTER_CONF=$(python -c "import os; print os.path.realpath('$TOASTER_CONF')")
+ fi
+ if [ ! -f $TOASTER_CONF ]; then
+-    echo "$TOASTER_CONF configuration file not found. set TOASTER_CONF to specify a path"
++    echo "$TOASTER_CONF configuration file not found. Set TOASTER_CONF to specify file or fix .templateconf"
+     [ "$TOASTER_MANAGED" = '1' ] && exit 1 || return 1
+ fi
+ # this defines the dir toaster will use for
+@@ -395,4 +411,3 @@ case $CMD in
+         echo "Successful ${CMD}."
+     ;;
+ esac
+-
 -- 
-1.9.1
+1.9.3
+
+---------------------------------------------------------------------
+Intel Corporation (UK) Limited
+Registered No. 1134945 (England)
+Registered Office: Pipers Way, Swindon SN3 1RJ
+VAT No: 860 2173 47
+
+This e-mail and any attachments may contain confidential material for
+the sole use of the intended recipient(s). Any review or distribution
+by others is strictly prohibited. If you are not the intended
+recipient, please contact the sender and delete all copies.
 
 
