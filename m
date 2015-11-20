@@ -1,21 +1,25 @@
 Return-Path: <paul.eggleton@linux.intel.com>
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 1A72B6011C
+	by mail.openembedded.org (Postfix) with ESMTP id 8ECFB6011C
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 20 Nov 2015 04:11:38 +0000 (UTC)
+	Fri, 20 Nov 2015 04:11:40 +0000 (UTC)
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by orsmga101.jf.intel.com with ESMTP; 19 Nov 2015 20:11:38 -0800
+	by orsmga101.jf.intel.com with ESMTP; 19 Nov 2015 20:11:41 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.20,320,1444719600"; d="scan'208";a="690115961"
+X-IronPort-AV: E=Sophos;i="5.20,320,1444719600"; d="scan'208";a="690115971"
 Received: from ywong15-mobl2.amr.corp.intel.com (HELO
 	peggleto-mobl.ger.corp.intel.com) ([10.255.131.114])
-	by orsmga003.jf.intel.com with ESMTP; 19 Nov 2015 20:11:36 -0800
+	by orsmga003.jf.intel.com with ESMTP; 19 Nov 2015 20:11:39 -0800
 From: Paul Eggleton <paul.eggleton@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 20 Nov 2015 17:11:14 +1300
-Message-Id: <cover.1447992540.git.paul.eggleton@linux.intel.com>
+Date: Fri, 20 Nov 2015 17:11:15 +1300
+Message-Id: <b3eb9a8c73162f83ad927fcd4302e1757e74fa41.1447992540.git.paul.eggleton@linux.intel.com>
 X-Mailer: git-send-email 2.1.0
-Subject: [PATCH v2 0/2] A couple of fixes for metadata editing functions
+In-Reply-To: <cover.1447992540.git.paul.eggleton@linux.intel.com>
+References: <cover.1447992540.git.paul.eggleton@linux.intel.com>
+In-Reply-To: <cover.1447992540.git.paul.eggleton@linux.intel.com>
+References: <cover.1447992540.git.paul.eggleton@linux.intel.com>
+Subject: [PATCH v2 1/2] lib/bb/utils: fix error in edit_metadata() when deleting first line
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,30 +34,29 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Fri, 20 Nov 2015 04:11:40 -0000
 
-Since v1, fixed edit_bblayers_conf() changes for a regression which
-meant that removing and adding the same path in a single call (which
-devtool in OE does, perhaps unnecessarily) resulted in the layer being
-removed.
+If you tried to delete the variable on the first line passed to
+edit_metadata() this failed because the logic for trimming extra blank
+lines didn't expect the list to be empty at that point - fix that bad
+assumption.
 
+Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
+---
+ lib/bb/utils.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The following changes since commit 50d7ffa697764d84d96f26a3ae58a9dacde7b31e:
-
-  toaster: builds pages Fix the download cooker log link (2015-11-16 11:51:24 +0000)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib paule/bb-utils-fixes
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=paule/bb-utils-fixes
-
-Paul Eggleton (2):
-  lib/bb/utils: fix error in edit_metadata() when deleting first line
-  lib/bb/utils: improve edit_bblayers_conf() handling of bblayers.conf
-    formatting
-
- lib/bb/tests/utils.py | 203 ++++++++++++++++++++++++++++++++++++++++++++++++++
- lib/bb/utils.py       |  80 ++++++++++++++++----
- 2 files changed, 268 insertions(+), 15 deletions(-)
-
+diff --git a/lib/bb/utils.py b/lib/bb/utils.py
+index 7f82687..9b28952 100644
+--- a/lib/bb/utils.py
++++ b/lib/bb/utils.py
+@@ -1177,7 +1177,7 @@ def edit_metadata(meta_lines, variables, varfunc, match_overrides=False):
+             if not skip:
+                 if checkspc:
+                     checkspc = False
+-                    if newlines[-1] == '\n' and line == '\n':
++                    if newlines and newlines[-1] == '\n' and line == '\n':
+                         # Squash blank line if there are two consecutive blanks after a removal
+                         continue
+                 newlines.append(line)
 -- 
 2.1.0
 
