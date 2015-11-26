@@ -1,21 +1,21 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 90B20612E5
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 540996011D
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 26 Nov 2015 14:54:45 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by orsmga101.jf.intel.com with ESMTP; 26 Nov 2015 06:54:46 -0800
+	Thu, 26 Nov 2015 15:59:20 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by fmsmga102.fm.intel.com with ESMTP; 26 Nov 2015 07:59:21 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.20,347,1444719600"; d="scan'208";a="607563659"
+X-IronPort-AV: E=Sophos;i="5.20,347,1444719600"; d="scan'208";a="694948424"
 Received: from snwijaya-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.16.69])
-	by FMSMGA003.fm.intel.com with ESMTP; 26 Nov 2015 06:54:45 -0800
+	by orsmga003.jf.intel.com with ESMTP; 26 Nov 2015 07:59:19 -0800
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 26 Nov 2015 14:54:29 +0000
-Message-Id: <1448549669-12306-1-git-send-email-elliot.smith@intel.com>
+Date: Thu, 26 Nov 2015 15:59:01 +0000
+Message-Id: <1448553541-1835-1-git-send-email-elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
-Subject: [PATCH] toaster: projectpage Make sure build targets are space separated
+Subject: [PATCH] toaster: tablejs Make sure click handlers consume click event
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,55 +28,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 26 Nov 2015 14:54:48 -0000
+X-List-Received-Date: Thu, 26 Nov 2015 15:59:21 -0000
 
 From: Michael Wood <michael.g.wood@intel.com>
 
-Make sure the build targets are space separated when building multiple
-targets. Also fix error path now that YOCTO #7995 is resolved.
+Avoid the click event from propagating and causing strange side effects
+in toaster tables.
 
-[YOCTO #8450]
+[YOCTO #8527]
+[YOCTO #8148]
 
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- .../toaster/toastergui/static/js/projectpage.js    | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ bitbake/lib/toaster/toastergui/static/js/table.js | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/bitbake/lib/toaster/toastergui/static/js/projectpage.js b/bitbake/lib/toaster/toastergui/static/js/projectpage.js
-index ae08d9a..4a482d7 100644
---- a/bitbake/lib/toaster/toastergui/static/js/projectpage.js
-+++ b/bitbake/lib/toaster/toastergui/static/js/projectpage.js
-@@ -225,17 +225,21 @@ function projectPageInit(ctx) {
+diff --git a/bitbake/lib/toaster/toastergui/static/js/table.js b/bitbake/lib/toaster/toastergui/static/js/table.js
+index 40b5022..c69c205 100644
+--- a/bitbake/lib/toaster/toastergui/static/js/table.js
++++ b/bitbake/lib/toaster/toastergui/static/js/table.js
+@@ -340,7 +340,8 @@ function tableInit(ctx){
+     }
+   }
  
-     var toBuild = "";
-     freqBuildList.find(":checked").each(function(){
--      toBuild += $(this).val();
-+      toBuild += $(this).val() + ' ';
-     });
+-  function sortColumnClicked(){
++  function sortColumnClicked(e){
++    e.preventDefault();
  
--    libtoaster.startABuild(libtoaster.ctx.projectBuildsUrl, libtoaster.ctx.projectId, toBuild, function(){
--      /* Build started */
--      window.location.replace(libtoaster.ctx.projectBuildsUrl);
--    },
--    function(){
--      /* Build start failed */
--      /* [YOCTO #7995] */
--      window.location.replace(libtoaster.ctx.projectBuildsUrl);
-+    toBuild = toBuild.trim();
-+
-+    libtoaster.startABuild(libtoaster.ctx.projectBuildsUrl,
-+      libtoaster.ctx.projectId,
-+      toBuild,
-+      function(){
-+        /* Build request started */
-+        window.location.replace(libtoaster.ctx.projectBuildsUrl);
-+      },
-+      function(){
-+        /* Build request failed */
-+        console.warn("Build request failed to be created");
-     });
+     /* We only have one sort at a time so remove any existing sort indicators */
+     $("#"+ctx.tableName+" th .icon-caret-down").hide();
+@@ -476,6 +477,7 @@ function tableInit(ctx){
    });
+ 
+   $("#search-submit-"+ctx.tableName).click(function(e){
++    e.preventDefault();
+     var searchTerm = $("#search-input-"+ctx.tableName).val();
+ 
+     tableParams.page = 1;
+@@ -489,8 +491,6 @@ function tableInit(ctx){
+     }
+ 
+     loadData(tableParams);
+-
+-    e.preventDefault();
+   });
+ 
+   $('.remove-search-btn-'+ctx.tableName).click(function(e){
+@@ -514,7 +514,9 @@ function tableInit(ctx){
+     e.preventDefault();
+   });
+ 
+-  $("#clear-filter-btn-"+ctx.tableName).click(function(){
++  $("#clear-filter-btn-"+ctx.tableName).click(function(e){
++    e.preventDefault();
++
+     var filterBtn = $("#" + tableParams.filter.split(":")[0]);
+     filterBtnActive(filterBtn, false);
  
 -- 
 1.9.3
