@@ -1,21 +1,22 @@
 Return-Path: <elliot.smith@intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id 540996011D
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 116826011F
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 26 Nov 2015 15:59:20 +0000 (UTC)
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by fmsmga102.fm.intel.com with ESMTP; 26 Nov 2015 07:59:21 -0800
+	Thu, 26 Nov 2015 16:44:25 +0000 (UTC)
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+	by fmsmga101.fm.intel.com with ESMTP; 26 Nov 2015 08:44:26 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.20,347,1444719600"; d="scan'208";a="694948424"
+X-IronPort-AV: E=Sophos;i="5.20,347,1444719600"; 
+   d="scan'208";a="2719211"
 Received: from snwijaya-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.16.69])
-	by orsmga003.jf.intel.com with ESMTP; 26 Nov 2015 07:59:19 -0800
+	by fmsmga004.fm.intel.com with ESMTP; 26 Nov 2015 08:44:25 -0800
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 26 Nov 2015 15:59:01 +0000
-Message-Id: <1448553541-1835-1-git-send-email-elliot.smith@intel.com>
+Date: Thu, 26 Nov 2015 16:44:18 +0000
+Message-Id: <cover.1448556172.git.elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
-Subject: [PATCH] toaster: tablejs Make sure click handlers consume click event
+Subject: [PATCH 0/5] toaster: ToasterTable fixes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,65 +29,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 26 Nov 2015 15:59:21 -0000
+X-List-Received-Date: Thu, 26 Nov 2015 16:44:27 -0000
 
-From: Michael Wood <michael.g.wood@intel.com>
+A number of fixes for toaster tables, identified while writing a generic
+unit test for this widget.
 
-Avoid the click event from propagating and causing strange side effects
-in toaster tables.
+The following changes since commit 0dc54dbc61d1a24f5cfcb07c3f288b1042ab091a
+(poky-contrib, toaster-next branch):
 
-[YOCTO #8527]
-[YOCTO #8148]
+  toaster: tablejs Make sure click handlers consume click event (2015-11-26 15:55:40 +0000)
 
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
----
- bitbake/lib/toaster/toastergui/static/js/table.js | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+are available in the git repository at:
 
-diff --git a/bitbake/lib/toaster/toastergui/static/js/table.js b/bitbake/lib/toaster/toastergui/static/js/table.js
-index 40b5022..c69c205 100644
---- a/bitbake/lib/toaster/toastergui/static/js/table.js
-+++ b/bitbake/lib/toaster/toastergui/static/js/table.js
-@@ -340,7 +340,8 @@ function tableInit(ctx){
-     }
-   }
- 
--  function sortColumnClicked(){
-+  function sortColumnClicked(e){
-+    e.preventDefault();
- 
-     /* We only have one sort at a time so remove any existing sort indicators */
-     $("#"+ctx.tableName+" th .icon-caret-down").hide();
-@@ -476,6 +477,7 @@ function tableInit(ctx){
-   });
- 
-   $("#search-submit-"+ctx.tableName).click(function(e){
-+    e.preventDefault();
-     var searchTerm = $("#search-input-"+ctx.tableName).val();
- 
-     tableParams.page = 1;
-@@ -489,8 +491,6 @@ function tableInit(ctx){
-     }
- 
-     loadData(tableParams);
--
--    e.preventDefault();
-   });
- 
-   $('.remove-search-btn-'+ctx.tableName).click(function(e){
-@@ -514,7 +514,9 @@ function tableInit(ctx){
-     e.preventDefault();
-   });
- 
--  $("#clear-filter-btn-"+ctx.tableName).click(function(){
-+  $("#clear-filter-btn-"+ctx.tableName).click(function(e){
-+    e.preventDefault();
-+
-     var filterBtn = $("#" + tableParams.filter.split(":")[0]);
-     filterBtnActive(filterBtn, false);
- 
--- 
+  git://git.yoctoproject.org/poky-contrib elliot/submit/michaelw/toaster/tables-misc
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=elliot/submit/michaelw/toaster/tables-misc
+
+Michael Wood (5):
+  toaster: machines table Fix missing layers information needed for
+    filter
+  toaster: CustomImageRecipe add search_allowed_fields to this model
+  toaster: tables Add default_orderby field where it was missing or
+    unset
+  toaster: tables Fix invalid field name on NewCustomImagesTable
+  toaster: toastergui tests Add generic test for ToasterTables widget
+
+ lib/toaster/orm/models.py                         |   1 +
+ lib/toaster/toastergui/tables.py                  |  18 +-
+ lib/toaster/toastergui/templates/machine_btn.html |  12 +-
+ lib/toaster/toastergui/tests.py                   | 223 ++++++++++++++++++++--
+ 4 files changed, 235 insertions(+), 19 deletions(-)
+
+--
 1.9.3
 
 ---------------------------------------------------------------------
