@@ -1,40 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pf0-f177.google.com (mail-pf0-f177.google.com
-	[209.85.192.177])
-	by mail.openembedded.org (Postfix) with ESMTP id 98BE06FFAB
+Received: from mail-pa0-f41.google.com (mail-pa0-f41.google.com
+	[209.85.220.41])
+	by mail.openembedded.org (Postfix) with ESMTP id A8A246FFD2
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  2 Dec 2015 17:59:59 +0000 (UTC)
-Received: by pfdd184 with SMTP id d184so1144295pfd.3
+	Wed,  2 Dec 2015 17:59:58 +0000 (UTC)
+Received: by pacdm15 with SMTP id dm15so47012771pac.3
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 02 Dec 2015 10:00:00 -0800 (PST)
+	Wed, 02 Dec 2015 09:59:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=1NkATYXxou0i/vW8WjoRtEAw+EYMX5c1uwe1JRzxtyg=;
-	b=HUOpAqZ8cU054Bz97tNa/8uRyHjvjrCV239542Cs6hHfnylugdE5rvLNAqCsuDnsgr
-	xZiLRkaSx1wuYiS/vPYx2h18xwyUctYxnpFPSn3mIZm7QfYQHgCNXsJ6pVHkkcOeu9jG
-	/tW09aA5ZTwSRj4g9u6WIch58hZHIBxin9kMlbJsfwy9LZ1/J2ECiaMGDcTreoPbkyEl
-	azyiGvQHxYlsxn9GeSLZicfbWBTJDpBLW3Ewp3ntTjIZbrOa7lomWGbQN3qynCWxWLsp
-	EF5ces4upJEio8fw5bS9vCqAyK+pCkMXmVhdz4YJ54rv1rWEoQiV60ZWta9jVF6PnoUf
-	pJ+Q==
-X-Received: by 10.98.14.207 with SMTP id 76mr6567168pfo.86.1449079200311;
-	Wed, 02 Dec 2015 10:00:00 -0800 (PST)
+	bh=gf1q2V/k9sE88MK3bT+FbExOqs/ffTxxHFr+dmI0sQg=;
+	b=Fv+5rOB+UAStNnMUZLhafbuqeUQn2q86zDw0XABKTmREqWwnhoZThEGbQjd0EkI5l/
+	px9ob/UkyWOJSs4pxRsM9NxQ4BTcl4rNcLi0XAIZ67lSzW5QN2YMGrzEq9nQxoWwDNkt
+	qo1T4bih0jB1g/3txpXk0EBpJBUFpIlWY38u3CCU7ZJNn45y8ZPUVOwBtzVn6kBn2Z1u
+	uXT5t+v81N4zwzglNYf/5yyeXGxFSFLKZV6wsan33gWL5PlDroPaXq9lCR963TpLqXli
+	TsF5SJXkfmSgpMN4A4FwksDATH4VSfI+yC0VD886omZPX53xcdw9S5qM1Bce+4xIOMxQ
+	2Yhg==
+X-Received: by 10.98.14.15 with SMTP id w15mr6464001pfi.145.1449079199415;
+	Wed, 02 Dec 2015 09:59:59 -0800 (PST)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	e25sm5657267pfb.64.2015.12.02.09.59.59
+	e25sm5657267pfb.64.2015.12.02.09.59.58
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 02 Dec 2015 09:59:59 -0800 (PST)
+	Wed, 02 Dec 2015 09:59:58 -0800 (PST)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  2 Dec 2015 10:02:57 -0800
-Message-Id: <2e4fa82e97a0c3b9b67eb0a7fcd344c32c6fffd1.1449078919.git.avery.brian@gmail.com>
+Date: Wed,  2 Dec 2015 10:02:56 -0800
+Message-Id: <a4d0ecda2f5af8d684a7c83465de6b188f0110f9.1449078919.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <757ad75509219d7ce5afe9db3bb7524fde4a3809.1449078919.git.avery.brian@gmail.com>
 References: <757ad75509219d7ce5afe9db3bb7524fde4a3809.1449078919.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1449078919.git.avery.brian@gmail.com>
 References: <cover.1449078919.git.avery.brian@gmail.com>
-Subject: [PATCH 25/30] toaster: remove SDKMACHINE from project variables
+Subject: [PATCH 24/30] toaster: stop using toaster-pre.conf
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,146 +51,37 @@ X-List-Received-Date: Wed, 02 Dec 2015 17:59:59 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Removed SDKMACHINE from predefined set of variables
-for the project as it causes bitbake build error:
-   SDKMACHINE is set, but SDK_ARCH has not been changed as a result
-
-This variable does not need to be predefined as it's not used by
-toaster.
-
-It's still possible to specify it in project configuration
-if needed. SDK_ARCH variable should be set too to avoid above
-mentioned build failure.
+This file is not needed anymore as toaster UI doesn't
+write variables to it. It sets them directly on bitbake
+server.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/toaster/toastergui/templates/projectconf.html | 70 +----------------------
- lib/toaster/toastergui/views.py                   |  9 ---
- 2 files changed, 1 insertion(+), 78 deletions(-)
+ bin/toaster | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/lib/toaster/toastergui/templates/projectconf.html b/lib/toaster/toastergui/templates/projectconf.html
-index 30fd03e..08223da 100644
---- a/lib/toaster/toastergui/templates/projectconf.html
-+++ b/lib/toaster/toastergui/templates/projectconf.html
-@@ -107,32 +107,6 @@
-                 </form>
-             </dd>
-             {% endif %}
--
--            {% if sdk_machine_defined %}
--            <dt>
--                <span class="js-config-var-name js-config-var-managed-name">SDKMACHINE</span>
--                <i class="icon-question-sign get-help" title="Specifies the architecture (i.e. i686 or x86_64) for which to build SDK and ADT items <br /><a href='http://www.yoctoproject.org/docs/1.6.1/ref-manual/ref-manual.html#var-SDKMACHINE' target='_blank'>Read more in the manual</a>"></i>
--            </dt>
--            <dd class="lead">
--                <span id="sdkmachine">{{sdk_machine}}</span>
--                <i id="change-sdkmachine-icon" class="icon-pencil"></i>
--                <form id="change-sdkmachine-form" style="display:none;">
--                    <label class="radio">
--                        <input type="radio" name="sdkmachine" value="i686">
--                        i686
--                    </label>
--                    <label class="radio">
--                        <input type="radio" name="sdkmachine" value="x86_64">
--                        x86_64
--                    </label>
--                    <div style="padding-top:10px;">
--                        <button id="apply-change-sdkmachine" type="button" class="btn">Save</button>
--                        <button id="cancel-change-sdkmachine" type="button" class="btn btn-link">Cancel</button>
--                    </div>
--                </form>
--            </dd>
--            {% endif %}
--
-         </dl>
+diff --git a/bin/toaster b/bin/toaster
+index c89e015..3b5b7f8 100755
+--- a/bin/toaster
++++ b/bin/toaster
+@@ -135,7 +135,7 @@ stop_system()
  
-         <!-- <ul class="unstyled configuration-list" id="configvar-list"> -->
-@@ -774,48 +748,6 @@
-             });
-             {% endif %}
- 
--
--            {% if sdk_machine_defined %}
--            // change SDKMACHINE variable
--            $('#change-sdkmachine-icon').click(function() {
--                var current_value = document.getElementById("sdkmachine").innerHTML;
--                var radios = document.getElementsByName('sdkmachine');
--                for (var i = 0, length = radios.length; i < length; i++) {
--                    radios[i].checked = false;
--                    if (radios[i].value == current_value) {
--                        radios[i].checked = true;
--                    }
--                }
--                $('#change-sdkmachine-icon, #sdkmachine').hide();
--                $("#change-sdkmachine-form").slideDown();
--            });
--
--            $('#cancel-change-sdkmachine').click(function(){
--                $("#change-sdkmachine-form").slideUp(function() {
--                    $('#sdkmachine, #change-sdkmachine-icon').show();
--                });
--            });
--
--            $('#apply-change-sdkmachine').click(function(){
--                var value="";
--                var radios = document.getElementsByName('sdkmachine');
--                for (var i = 0, length = radios.length; i < length; i++) {
--                    if (radios[i].checked) {
--                        // do whatever you want with the checked radio
--                        value=radios[i].value;
--                        break;
--                    }
--                }
--                postEditAjaxRequest({"configvarChange" : 'SDKMACHINE:'+value});
--                $('#sdkmachine').text(value);
--                $("#change-sdkmachine-form").slideUp(function() {
--                    $('#sdkmachine, #change-sdkmachine-icon').show();
--                });
--
--            });
--            {% endif %}
--
--
-             // add new variable
-             $("button#add-configvar-button").click( function (evt) {
-                 var variable = $("input#variable").val();
-@@ -830,7 +762,7 @@
-                 $(".save").attr("disabled","disabled");
- 
-                 // Reload page if admin-removed core managed value is manually added back in
--                if (0 <= " DISTRO IMAGE_FSTYPES IMAGE_INSTALL_append PACKAGE_CLASSES SDKMACHINE ".indexOf( " "+variable+" " )) {
-+                if (0 <= " DISTRO IMAGE_FSTYPES IMAGE_INSTALL_append PACKAGE_CLASSES ".indexOf( " "+variable+" " )) {
-                     // delayed reload to avoid race condition with postEditAjaxRequest
-                     do_reload=true;
-                 }
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 69f5af0..243bb09 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -2456,10 +2456,6 @@ if True:
-                 return_data['package_classes'] = ProjectVariable.objects.get(project = prj, name = "PACKAGE_CLASSES").value,
-             except ProjectVariable.DoesNotExist:
-                 pass
--            try:
--                return_data['sdk_machine'] = ProjectVariable.objects.get(project = prj, name = "SDKMACHINE").value,
--            except ProjectVariable.DoesNotExist:
--                pass
- 
-             return HttpResponse(json.dumps( return_data ), content_type = "application/json")
- 
-@@ -2868,11 +2864,6 @@ if True:
-             context['package_classes_defined'] = "1"
-         except ProjectVariable.DoesNotExist:
-             pass
--        try:
--            context['sdk_machine'] =  ProjectVariable.objects.get(project = prj, name = "SDKMACHINE").value
--            context['sdk_machine_defined'] = "1"
--        except ProjectVariable.DoesNotExist:
--            pass
- 
-         return context
- 
+ start_bitbake() {
+     unset BBSERVER
+-    bitbake --read conf/toaster-pre.conf --postread conf/toaster.conf --server-only -t xmlrpc -B 0.0.0.0:0
++    bitbake --postread conf/toaster.conf --server-only -t xmlrpc -B 0.0.0.0:0
+     if [ $? -ne 0 ]; then
+         echo "Bitbake server start failed"
+         return 1
+@@ -350,7 +350,6 @@ fi
+ case $CMD in
+     start )
+         addtoConfiguration toaster.conf "INHERIT+=\"toaster buildhistory\"" $TOASTER_BRBE
+-        echo > ${BUILDDIR}/conf/toaster-pre.conf
+         if [ $WEBSERVER -gt 0 ] && ! webserverStartAll; then
+             echo "Failed ${CMD}."
+             return 4
 -- 
 1.9.1
 
