@@ -1,33 +1,34 @@
-Return-Path: <atimof@mera.ru>
-X-Greylist: delayed 1053 seconds by postgrey-1.34 at layers.openembedded.org;
-	Thu, 26 Nov 2015 13:02:57 UTC
-Received: from mail.mera.ru (mail.mera.ru [195.98.57.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 378F56012A
+Return-Path: <avery.brian@gmail.com>
+Received: from mail-pa0-f47.google.com (mail-pa0-f47.google.com
+	[209.85.220.47])
+	by mail.openembedded.org (Postfix) with ESMTP id 5030B60616
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 26 Nov 2015 13:02:57 +0000 (UTC)
-Received: from [192.168.50.122] (helo=cmail.merann.ru)
-	by mail.mera.ru with esmtps (TLSv1:AES256-SHA:256)
-	(Exim 4.71 (FreeBSD)) (envelope-from <atimof@mera.ru>)
-	id 1a1vtS-0003p0-C4 for bitbake-devel@lists.openembedded.org;
-	Thu, 26 Nov 2015 15:43:22 +0300
-Received: from mbx03.merann.ru ([192.168.49.73]) by cmail.merann.ru ([::1])
-	with mapi id 14.03.0266.001; Thu, 26 Nov 2015 15:45:20 +0300
-From: "Timofeev, Andrey" <atimof@mera.ru>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: bitbake functions
-Thread-Index: AdEoRgJ92tEfr2GhQ6OLF7ZVJ/glQA==
-Date: Thu, 26 Nov 2015 12:45:20 +0000
-Message-ID: <41E0F44D2CEBB148A7200081BAACCFCF97676766@mbx03.merann.ru>
-Accept-Language: ru-RU, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [192.168.220.24]
-x-inside-org: True
-MIME-Version: 1.0
-X-Mailman-Approved-At: Wed, 02 Dec 2015 10:50:19 +0000
-Cc: "Fevralskikh, Sergey" <sfevral@mera.ru>
-Subject: bitbake functions
+	Wed,  2 Dec 2015 17:59:21 +0000 (UTC)
+Received: by pabfh17 with SMTP id fh17so48531958pab.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 02 Dec 2015 09:59:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=Mr+lGPzY8m5r9mWF6HAmlDhq+v5IfKIZroj96iW+kRc=;
+	b=K6vACcOh4OidhXnTAHIx/evqg9m1xgOUlEVTQ54+jPPmsBkvq4gdwfUvkpAOkfGB1G
+	KkmkUipJecXnY6yuvm7S/BQV2HnauHb3DcyPylmMQ0ZF8MR6zh3U2xx/C+jXpnqQ4+dE
+	32Wrq7Py2YtmUJY6NaY7y9Pbc8DQrqXiKPeT5NBdi5Rm/mfCmmbcBQ0TjvDUP2OlY7ZM
+	TuFwg2PjOHNAb1ALN2vF7E3sF23OTmJXMP4x9rwncss4PrCsrhiUd3A699aJBxma4/TK
+	dTtJV9X7McQMhAmsCVkdgyxbzG0nyWCS3ECIihiSbTdGdNcAsDfqBsbzI+0nUdL1Wg7t
+	Ykrg==
+X-Received: by 10.66.236.162 with SMTP id uv2mr6459237pac.101.1449079162256;
+	Wed, 02 Dec 2015 09:59:22 -0800 (PST)
+Received: from whisper.hsd1.or.comcast.net
+	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
+	by smtp.gmail.com with ESMTPSA id g8sm5668983pfd.40.2015.12.02.09.59.21
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Wed, 02 Dec 2015 09:59:21 -0800 (PST)
+From: brian avery <avery.brian@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  2 Dec 2015 10:02:53 -0800
+Message-Id: <cover.1449078919.git.avery.brian@gmail.com>
+X-Mailer: git-send-email 1.9.1
+Subject: [PATCH 00/30] toaster: Merge analysis and managed modes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,253 +41,78 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 26 Nov 2015 13:03:03 -0000
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_41E0F44D2CEBB148A7200081BAACCFCF97676766mbx03merannru_"
+X-List-Received-Date: Wed, 02 Dec 2015 17:59:22 -0000
 
---_000_41E0F44D2CEBB148A7200081BAACCFCF97676766mbx03merannru_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+This large patchset merges the analysis (cli) and managed (toaster ui) modes so that
+toaster can be started in one way (sourced just like oe-init-build-env) and can then
+handle builds of both types.
+-brian
 
-Hello, guys,
+The following changes since commit f09bf40d0d1a6fbaf2251f903d41d970c8a66e3a:
 
-We are using bitbake for our project, but we have faced with an issue.
+  toaster: toastergui tests Add generic test for ToasterTables widget (2015-12-02 10:41:34 +0000)
 
-We have a large amount of files and modules and we have a problem with larg=
-e amount of bb files and we would like to reduce it.
+are available in the git repository at:
 
-I try to explain our issue:
+  git://git.yoctoproject.org/poky-contrib bavery/submit/ed/2015-12-2_runOneWay-8279
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/ed/2015-12-2_runOneWay-8279
 
-Imagine that you have more than 10 target load modules that include more th=
-an 100 code modules.
-And this target load modules have the same code modules.
+Ed Bartosh (29):
+  toaster: don't allow to run toaster as a script
+  toaster: implement get-dburl command
+  toaster: set DATABASE_URL in toaster script
+  toaster: run bitbake the same way
+  toaster: remove unused variable
+  toaster: check for toaster configuration later
+  toaster: use parent of the build dir
+  toaster: make runbuilds to loop
+  toaster: start 'manage.py runbuilds' in the script
+  toaster: update brbe and project attributes
+  toaster: implement stop_bitbake function
+  toaster: implement start_bitbake function
+  toaster: implement 'toaster restart-bitbake'
+  toaster: remove _setupBE function
+  toaster: reimplemented startBBServer method
+  toaster: remove stopBBServer API
+  toaster: do not terminate bb server
+  toaster: remove usage of BUILD_MODE variable
+  toaster: do not create duplicate HelpText objects
+  toaster: implement BitbakeController.getVariable
+  toaster: set varibales on bitbake server
+  toaster: remove writeConfFile API
+  toaster: stop using toaster-pre.conf
+  toaster: remove SDKMACHINE from project variables
+  toaster: get rid of complicated heuristics
+  toaster: unset environment variables
+  command: add CommandStarted event
+  bb/ui: ignore CommandStarted event
+  toasterui: process CommandStarted event
 
-I try to show it in example:
+Michael Wood (1):
+  toaster: buildinfohelper Broaden the toaster created recipe data case
 
+ bin/toaster                                        | 166 +++++++++------------
+ lib/bb/command.py                                  |   6 +
+ lib/bb/ui/buildinfohelper.py                       |  68 +++------
+ lib/bb/ui/crumbs/runningbuild.py                   |   3 +-
+ lib/bb/ui/knotty.py                                |   3 +-
+ lib/bb/ui/toasterui.py                             |  21 +--
+ lib/toaster/bldcontrol/bbcontroller.py             |  15 +-
+ lib/toaster/bldcontrol/localhostbecontroller.py    | 140 ++++-------------
+ .../bldcontrol/management/commands/runbuilds.py    |  13 +-
+ lib/toaster/bldcontrol/sshbecontroller.py          |  10 --
+ lib/toaster/bldcontrol/tests.py                    |   4 -
+ lib/toaster/toastergui/templates/base.html         |   9 +-
+ lib/toaster/toastergui/templates/landing.html      |  10 --
+ lib/toaster/toastergui/templates/projectconf.html  |  70 +--------
+ lib/toaster/toastergui/tests.py                    |   4 -
+ lib/toaster/toastergui/views.py                    |  29 ----
+ .../toastermain/management/commands/get-dburl.py   |   9 ++
+ lib/toaster/toastermain/settings.py                |   3 -
+ lib/toaster/toastermain/urls.py                    |   9 +-
+ 19 files changed, 167 insertions(+), 425 deletions(-)
+ create mode 100644 bitbake/lib/toaster/toastermain/management/commands/get-dburl.py
 
-1)      We have 2 .bb files (tests.bb and product.bb)
+--
+1.9.1
 
-2)      They include the same dependencies:
-DEPENDS +=3D a
-DEPENDS +=3D b
-DEPENDS +=3D c
-
-But for product we want that a,b,c use TEST flag for building when we are b=
-uilding tests.bb and TARGET when building product.bb
-
-So, we want that a,b,c to be able to inherit FLAGS from target bitbake (pro=
-duce or tests).
-I mean we want that all bitbakes which are participants in building know wh=
-at is main bitbake.
-
-Now, we are using *.inc files to decide this issue but it requires many bit=
-bake files.
-
-If you do not understand what I mean, please send me letter. I will try to =
-explain in details.
-
-Thank you!
-
-Best regards,
-Andrey Timofeev
-
-
-
-
---_000_41E0F44D2CEBB148A7200081BAACCFCF97676766mbx03merannru_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
-osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
-//www.w3.org/TR/REC-html40">
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-<meta name=3D"Generator" content=3D"Microsoft Word 14 (filtered medium)">
-<style><!--
-/* Font Definitions */
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;}
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
-/* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0cm;
-	margin-bottom:.0001pt;
-	font-size:11.0pt;
-	font-family:"Calibri","sans-serif";
-	mso-fareast-language:EN-US;}
-a:link, span.MsoHyperlink
-	{mso-style-priority:99;
-	color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{mso-style-priority:99;
-	color:purple;
-	text-decoration:underline;}
-p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
-	{mso-style-priority:34;
-	margin-top:0cm;
-	margin-right:0cm;
-	margin-bottom:0cm;
-	margin-left:36.0pt;
-	margin-bottom:.0001pt;
-	font-size:11.0pt;
-	font-family:"Calibri","sans-serif";
-	mso-fareast-language:EN-US;}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	font-family:"Calibri","sans-serif";
-	color:windowtext;}
-.MsoChpDefault
-	{mso-style-type:export-only;
-	font-family:"Calibri","sans-serif";
-	mso-fareast-language:EN-US;}
-@page WordSection1
-	{size:612.0pt 792.0pt;
-	margin:2.0cm 42.5pt 2.0cm 3.0cm;}
-div.WordSection1
-	{page:WordSection1;}
-/* List Definitions */
-@list l0
-	{mso-list-id:1180117514;
-	mso-list-type:hybrid;
-	mso-list-template-ids:-35885456 68747281 68747289 68747291 68747279 687472=
-89 68747291 68747279 68747289 68747291;}
-@list l0:level1
-	{mso-level-text:"%1\)";
-	mso-level-tab-stop:none;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l0:level2
-	{mso-level-number-format:alpha-lower;
-	mso-level-tab-stop:none;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l0:level3
-	{mso-level-number-format:roman-lower;
-	mso-level-tab-stop:none;
-	mso-level-number-position:right;
-	text-indent:-9.0pt;}
-@list l0:level4
-	{mso-level-tab-stop:none;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l0:level5
-	{mso-level-number-format:alpha-lower;
-	mso-level-tab-stop:none;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l0:level6
-	{mso-level-number-format:roman-lower;
-	mso-level-tab-stop:none;
-	mso-level-number-position:right;
-	text-indent:-9.0pt;}
-@list l0:level7
-	{mso-level-tab-stop:none;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l0:level8
-	{mso-level-number-format:alpha-lower;
-	mso-level-tab-stop:none;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l0:level9
-	{mso-level-number-format:roman-lower;
-	mso-level-tab-stop:none;
-	mso-level-number-position:right;
-	text-indent:-9.0pt;}
-ol
-	{margin-bottom:0cm;}
-ul
-	{margin-bottom:0cm;}
---></style><!--[if gte mso 9]><xml>
-<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
-</xml><![endif]--><!--[if gte mso 9]><xml>
-<o:shapelayout v:ext=3D"edit">
-<o:idmap v:ext=3D"edit" data=3D"1" />
-</o:shapelayout></xml><![endif]-->
-</head>
-<body lang=3D"RU" link=3D"blue" vlink=3D"purple">
-<div class=3D"WordSection1">
-<p class=3D"MsoNormal"><span lang=3D"EN-US">Hello, guys,<o:p></o:p></span><=
-/p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">We are using bitbake for our pr=
-oject, but we have faced with an issue.<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">We have a large amount of files=
- and modules and we have a problem with large amount of bb files and we wou=
-ld like to reduce it.<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">I try to explain our issue:<o:p=
-></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">Imagine that you have more than=
- 10 target load modules that include more than 100 code modules.<o:p></o:p>=
-</span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">And this target load modules ha=
-ve the same code modules.<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">I try to show it in example:<o:=
-p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoListParagraph" style=3D"text-indent:-18.0pt;mso-list:l0 leve=
-l1 lfo1"><![if !supportLists]><span lang=3D"EN-US"><span style=3D"mso-list:=
-Ignore">1)<span style=3D"font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]><span lang=3D"EN-US">We have 2 .bb files (te=
-sts.bb and product.bb)<o:p></o:p></span></p>
-<p class=3D"MsoListParagraph" style=3D"text-indent:-18.0pt;mso-list:l0 leve=
-l1 lfo1"><![if !supportLists]><span lang=3D"EN-US"><span style=3D"mso-list:=
-Ignore">2)<span style=3D"font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]><span lang=3D"EN-US">They include the same d=
-ependencies:<o:p></o:p></span></p>
-<p class=3D"MsoNormal" style=3D"margin-left:35.4pt"><span lang=3D"EN-US">DE=
-PENDS &#43;=3D a<o:p></o:p></span></p>
-<p class=3D"MsoNormal" style=3D"margin-left:35.4pt"><span lang=3D"EN-US">DE=
-PENDS &#43;=3D b<o:p></o:p></span></p>
-<p class=3D"MsoNormal" style=3D"margin-left:35.4pt"><span lang=3D"EN-US">DE=
-PENDS &#43;=3D c<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">But for product we want that a,=
-b,c use TEST flag for building when we are building tests.bb and TARGET whe=
-n building product.bb<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">So, we want that a,b,c to be ab=
-le to inherit FLAGS from target bitbake (produce or tests).<o:p></o:p></spa=
-n></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">I mean we want that all bitbake=
-s which are participants in building know what is main bitbake.<o:p></o:p><=
-/span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">Now, we are using *.inc files t=
-o decide this issue but it requires many bitbake files.<o:p></o:p></span></=
-p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">If you do not understand what I=
- mean, please send me letter. I will try to explain in details.<o:p></o:p><=
-/span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">Thank you!<o:p></o:p></span></p=
->
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"mso-fareast-language:R=
-U">Best regards,<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"mso-fareast-language:R=
-U">Andrey Timofeev<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal" style=3D"margin-left:35.4pt"><span lang=3D"EN-US"><o=
-:p>&nbsp;</o:p></span></p>
-</div>
-</body>
-</html>
-
---_000_41E0F44D2CEBB148A7200081BAACCFCF97676766mbx03merannru_--
