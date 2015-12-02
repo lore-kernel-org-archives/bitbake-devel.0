@@ -1,40 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f44.google.com (mail-pa0-f44.google.com
-	[209.85.220.44])
-	by mail.openembedded.org (Postfix) with ESMTP id 1E7E760616
+Received: from mail-pa0-f42.google.com (mail-pa0-f42.google.com
+	[209.85.220.42])
+	by mail.openembedded.org (Postfix) with ESMTP id 95E7E60667
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  2 Dec 2015 17:59:37 +0000 (UTC)
-Received: by padhx2 with SMTP id hx2so47137883pad.1
+	Wed,  2 Dec 2015 17:59:39 +0000 (UTC)
+Received: by padhx2 with SMTP id hx2so47138367pad.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 02 Dec 2015 09:59:38 -0800 (PST)
+	Wed, 02 Dec 2015 09:59:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=h5KBJGRSnV/hqXiGf/SL0PXfGqBN3HBY5uMQNNby8g4=;
-	b=tWF2LXrf2EvZXciD583Hm+QN8BnDRRXtvgite+/cEOME2YPlkJ2itLPApdSNTX421/
-	dfMdA1XK21C8Ed7fjr8QZR9N5XYiNPmdFGMlSRCv0yLH/wvYGGVR7iY5Xcf5T3PETcuz
-	qpqqbEDf4rkCHw7ghLHhnFx1HhqdVkiRkTiYjKyVE2UCrzWfrU92Asg0OplI/nuEVM1x
-	3S0mJal4YNHzbw57MhK921q6sVtTTwtaFCdd0eCNZY379qrYn3sTce4o2lNkqmXwdiWI
-	P2eASBsJ+KISOwmgUMFo+EYfqzE3bG1J9/clSn5aJNPwAyBlKFZ6qBsCpiWeyImKSuo8
-	n3hQ==
-X-Received: by 10.98.72.133 with SMTP id q5mr6440006pfi.157.1449079178792;
-	Wed, 02 Dec 2015 09:59:38 -0800 (PST)
+	bh=a7Ly4MvzeZUqqYWN8zzrFPpLjxnLKllcystkWalJHKM=;
+	b=goocngxapa3lb9NWp7rEJQuW3+AT+39kARobHYUJzhGtCgG5+3JzKMSG9Y3ICgJ28g
+	u4ID+PjLrzNo4v5SEj76ntJ3SMn7vMex6/wiWkJhfNSUZkEHuSD34IW42CtXRHFDG+ms
+	KQLLV8Xo27M54JBFWSnC0OqtZDK7H20VgsyXoYQHO8yxNId6iTfabkyc+e7wyjzYbJVt
+	Xu6CS4WRYyhkbNXMC+xLRVQEw5YkJxuXKsJi01nTrrXLVj45ovLpRFXtv7xjR2puZ3UO
+	gungTS7c/PHK+eJs6n66zbRmWbluTeafnEQ3FjW6sm6IvOEHWcH1f0/+4nWYviP6VcKc
+	PuFQ==
+X-Received: by 10.98.80.20 with SMTP id e20mr6442666pfb.23.1449079180071;
+	Wed, 02 Dec 2015 09:59:40 -0800 (PST)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	e25sm5657267pfb.64.2015.12.02.09.59.37
+	e25sm5657267pfb.64.2015.12.02.09.59.38
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 02 Dec 2015 09:59:38 -0800 (PST)
+	Wed, 02 Dec 2015 09:59:39 -0800 (PST)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  2 Dec 2015 10:02:39 -0800
-Message-Id: <07d5a6796f838a1996cec976e513ef4cca2e6962.1449078919.git.avery.brian@gmail.com>
+Date: Wed,  2 Dec 2015 10:02:40 -0800
+Message-Id: <5451e0ae7a91b5cc40b567af5ad092b89a296af3.1449078919.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <757ad75509219d7ce5afe9db3bb7524fde4a3809.1449078919.git.avery.brian@gmail.com>
 References: <757ad75509219d7ce5afe9db3bb7524fde4a3809.1449078919.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1449078919.git.avery.brian@gmail.com>
 References: <cover.1449078919.git.avery.brian@gmail.com>
-Subject: [PATCH 07/30] toaster: use parent of the build dir
+Subject: [PATCH 08/30] toaster: make runbuilds to loop
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,33 +47,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 02 Dec 2015 17:59:38 -0000
+X-List-Received-Date: Wed, 02 Dec 2015 17:59:39 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Assigned TOASTER_DIR to the parent of the build directory.
-This should fix local controller crash as it assumes that
-TOASTER_DIR is a root of local poky and tries to clone it.
+Made runbuilds to loop to avoid having a loop in shell code and
+initialize heavy Django init machinery every second.
+
+Ignored exceptions to prevent exiting a loop.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- bin/toaster | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/toaster/bldcontrol/management/commands/runbuilds.py | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/bin/toaster b/bin/toaster
-index 359b23d..de03099 100755
---- a/bin/toaster
-+++ b/bin/toaster
-@@ -281,7 +281,7 @@ fi
- # 4) pid's we need to clean up on exit/shutdown
- # note: for future. in order to make this an arbitrary directory, we need to
- # make sure that the toaster.sqlite file doesn't default to `pwd` like it currently does.
--export TOASTER_DIR=`pwd`
-+export TOASTER_DIR=`dirname $BUILDDIR`
+diff --git a/lib/toaster/bldcontrol/management/commands/runbuilds.py b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+index 5243a50..48dc618 100644
+--- a/lib/toaster/bldcontrol/management/commands/runbuilds.py
++++ b/lib/toaster/bldcontrol/management/commands/runbuilds.py
+@@ -5,6 +5,7 @@ from bldcontrol.bbcontroller import getBuildEnvironmentController, ShellCmdExcep
+ from bldcontrol.models import BuildRequest, BuildEnvironment, BRError, BRVariable
+ import os
+ import logging
++import time
  
- # Determine the action. If specified by arguments, fine, if not, toggle it
- if [ "$1" = 'start' ] || [ "$1" = 'stop' ]; then
+ logger = logging.getLogger("ToasterScheduler")
+ 
+@@ -128,6 +129,12 @@ class Command(NoArgsCommand):
+ 
+ 
+     def handle_noargs(self, **options):
+-        self.cleanup()
+-        self.archive()
+-        self.schedule()
++        while True:
++            try:
++                self.cleanup()
++                self.archive()
++                self.schedule()
++            except:
++                pass
++
++            time.sleep(1)
 -- 
 1.9.1
 
