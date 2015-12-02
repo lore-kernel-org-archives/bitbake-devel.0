@@ -1,40 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pf0-f178.google.com (mail-pf0-f178.google.com
-	[209.85.192.178])
-	by mail.openembedded.org (Postfix) with ESMTP id 6A9A460616
+Received: from mail-pa0-f54.google.com (mail-pa0-f54.google.com
+	[209.85.220.54])
+	by mail.openembedded.org (Postfix) with ESMTP id 65C0660616
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  2 Dec 2015 17:59:51 +0000 (UTC)
-Received: by pfnn128 with SMTP id n128so1138285pfn.0
+	Wed,  2 Dec 2015 17:59:53 +0000 (UTC)
+Received: by pabfh17 with SMTP id fh17so48543886pab.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 02 Dec 2015 09:59:53 -0800 (PST)
+	Wed, 02 Dec 2015 09:59:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=fzLga+jfzYJeDj8oy6t9bIlLlMZuppIZ6NWTv9zPmvA=;
-	b=Yz9zBWSJnx6AGKMijZzQ2T4YTxOZUljUr7cp8tVMnSnMIsev3KOQQa7BYMzpIYcihB
-	t/KZE5fCw90pt2IdXlpJwdts1EmAZrPkK+JPKX5OEj/5jXLby1+iEOw0rIywi7pwQwWJ
-	0z5SaXnM9EvPDL/tE8fsF+l1M+hKF69pzSXkYZ1+orlx73m8KYAla2LzLJqipaV9hq4S
-	ycoHCEqjjL1bbQd7vAcvttBpd9oQwBp6xjXi5m9SlP5aj1Ws6sV8VuhZHfEVmPUO/vBX
-	p9VAwQDPGvQWGs/+HFnvd0dIRQT4+BD/qIlXll+VME6CMtNSCBCy+mCh3V4v1gpDAo6k
-	Jyig==
-X-Received: by 10.98.2.18 with SMTP id 18mr6513661pfc.5.1449079192971;
-	Wed, 02 Dec 2015 09:59:52 -0800 (PST)
+	bh=YAoMw/a+TUHFNlIZJ5J4Th3Du0NH/sgD66id6oOzfdE=;
+	b=MixqseOJVxkDMx3DfiL/ckxnidUZxISZX3G8JVI3j80n5hUSTiFHmElaSt2xbGi4Ud
+	3DI9aceCGm+FGcg3B6jJYSrJcWIVj1UlDwyBF9IbQouw9h3iOvEB5+ti3cubNHutDhPK
+	Euq5MaluYQF+1IRTQHgb+pcbRUou69+rf2mkkcHKm5dk6lBvXsxAjl182RMBcUq6oCSc
+	62VOqU9h3xq7cY30SwuEVUBLqJyBef+7hBv7fH/sBorp5DQlmdftE1AL5DW/piSuKmD2
+	cadv9bP4ILZzUOisHOm3/xWA3IEAdjpNBiK/KRHJYVtfPWoNDzEHxhT8qdauYOXfeYAP
+	frAA==
+X-Received: by 10.98.76.1 with SMTP id z1mr6499895pfa.115.1449079194474;
+	Wed, 02 Dec 2015 09:59:54 -0800 (PST)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	e25sm5657267pfb.64.2015.12.02.09.59.51
+	e25sm5657267pfb.64.2015.12.02.09.59.53
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 02 Dec 2015 09:59:51 -0800 (PST)
+	Wed, 02 Dec 2015 09:59:53 -0800 (PST)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  2 Dec 2015 10:02:51 -0800
-Message-Id: <3f8c2e7a5553c4d1f59ee200f8aa7e79ef665f4e.1449078919.git.avery.brian@gmail.com>
+Date: Wed,  2 Dec 2015 10:02:52 -0800
+Message-Id: <3f15ae9025cf8e06807172c9c70fe3ef531e278f.1449078919.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <757ad75509219d7ce5afe9db3bb7524fde4a3809.1449078919.git.avery.brian@gmail.com>
 References: <757ad75509219d7ce5afe9db3bb7524fde4a3809.1449078919.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1449078919.git.avery.brian@gmail.com>
 References: <cover.1449078919.git.avery.brian@gmail.com>
-Subject: [PATCH 19/30] toaster: do not create duplicate HelpText objects
+Subject: [PATCH 20/30] toaster: buildinfohelper Broaden the toaster created recipe data case
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,60 +47,44 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 02 Dec 2015 17:59:52 -0000
+X-List-Received-Date: Wed, 02 Dec 2015 17:59:53 -0000
 
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+From: Michael Wood <michael.g.wood@intel.com>
 
-buildinfohelper code expects only one HelpText object per
-build/variable/description.
-Current code creates more than one such an object, which causes
-toastergui to crash with this exception:
- MultipleObjectsReturned: get() returned more than one HelpText -- it returned 2!
+When build information is the 'original' source of the information we
+need to return the recipe that was created rather than the copy of the
+recipe that is taken for keeping build history. We do this already for
+command line triggered builds, but we also have this case for custom
+images. We can simply check if the built_recipe exists instead of
+special casing this.
 
-Used git_or_create API to ensure that only one HelpText object is
-created.
-
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/bb/ui/buildinfohelper.py | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ lib/bb/ui/buildinfohelper.py | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index 43c243e..2b9302d 100644
+index 2b9302d..5ea9284 100644
 --- a/lib/bb/ui/buildinfohelper.py
 +++ b/lib/bb/ui/buildinfohelper.py
-@@ -700,7 +700,6 @@ class ORMWrapper(object):
-     def save_build_variables(self, build_obj, vardump):
-         assert isinstance(build_obj, Build)
+@@ -304,12 +304,11 @@ class ORMWrapper(object):
+                 break
  
--        helptext_objects = []
-         for k in vardump:
-             desc = vardump[k]['doc']
-             if desc is None:
-@@ -711,10 +710,9 @@ class ORMWrapper(object):
-             if desc is None:
-                 desc = ''
-             if len(desc):
--                helptext_objects.append(HelpText(build=build_obj,
--                    area=HelpText.VARIABLE,
--                    key=k,
--                    text=desc))
-+                HelpText.objects.get_or_create(build=build_obj,
-+                                               area=HelpText.VARIABLE,
-+                                               key=k, text=desc)
-             if not bool(vardump[k]['func']):
-                 value = vardump[k]['v']
-                 if value is None:
-@@ -734,8 +732,6 @@ class ORMWrapper(object):
-                 if len(varhist_objects):
-                     VariableHistory.objects.bulk_create(varhist_objects)
  
--        HelpText.objects.bulk_create(helptext_objects)
--
+-        # If we're in analysis mode then we are wholly responsible for the data
++        # If we're in analysis mode or if this is a custom recipe
++        # then we are wholly responsible for the data
+         # and therefore we return the 'real' recipe rather than the build
+         # history copy of the recipe.
+-        if  recipe_information['layer_version'].build is not None and \
+-            recipe_information['layer_version'].build.project == \
+-                Project.objects.get_default_project():
++        if built_recipe is None:
+             return recipe
  
- class MockEvent(object):
-     """ This object is used to create event, for which normal event-processing methods can
+         return built_recipe
 -- 
 1.9.1
 
