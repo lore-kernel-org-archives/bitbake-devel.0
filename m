@@ -1,37 +1,22 @@
-Return-Path: <avery.brian@gmail.com>
-Received: from mail-ig0-f173.google.com (mail-ig0-f173.google.com
-	[209.85.213.173])
-	by mail.openembedded.org (Postfix) with ESMTP id E561560745
+Return-Path: <elliot.smith@intel.com>
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	by mail.openembedded.org (Postfix) with ESMTP id D9D6360124
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat,  5 Dec 2015 18:35:56 +0000 (UTC)
-Received: by igbxm8 with SMTP id xm8so58307357igb.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 05 Dec 2015 10:35:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
-	:cc:content-type;
-	bh=ifjnOCHXLiP0zTW+amkRyialKyU7xHPZr/mRm/K9Ipo=;
-	b=n6DFCK1iqYo3Jz/m9l8LJ+rdZjZ06XqB5ux+pNybNVWgnyxS4LpIIe1nJUmuzPIO7G
-	aRQDrDPATKx84t60tQUyW+1mzcaE2Je5Ep8RpEeApC49jy1KW976h+aspVej2OxKgYML
-	FN0OeyFPDOjXS67zOPuoIU/AekQyGFXOYGkPFCUxIk2oPoFy8UTooh4BG7l5wH6Zy/Zd
-	tu52d9CNd3SfbVu0QAgkKajpjb4ymi1AlB8B0YtO5/kEVxC4vD84zfxvY1U/VusC51Bo
-	LuXKKxlyfAM7pTIskheh2qTIMLgCXaVMo6NUYdAMXGjiOfSHagb1FN7d/hHdYccs3z0j
-	t0+Q==
-MIME-Version: 1.0
-X-Received: by 10.50.61.230 with SMTP id t6mr9792978igr.28.1449340556985; Sat,
-	05 Dec 2015 10:35:56 -0800 (PST)
-Received: by 10.64.76.80 with HTTP; Sat, 5 Dec 2015 10:35:56 -0800 (PST)
-In-Reply-To: <A612847CFE53224C91B23E3A5B48BAC7C6F09F4B24@xmail3.se.axis.com>
-References: <cover.1449078919.git.avery.brian@gmail.com>
-	<43de04cb1abe40187d42e2bc0f20ba9ee200f3b3.1449078919.git.avery.brian@gmail.com>
-	<A612847CFE53224C91B23E3A5B48BAC7C6F09F4B24@xmail3.se.axis.com>
-Date: Sat, 5 Dec 2015 10:35:56 -0800
-Message-ID: <CAKV_0egVMuN_+gw=omsvb4pk+Fy7UUxuy+--yFo9_g_wQx_iHg@mail.gmail.com>
-From: Brian Avery <avery.brian@gmail.com>
-To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-Cc: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH 05/30] toaster: remove unused variable
+	Mon,  7 Dec 2015 15:52:52 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga103.jf.intel.com with ESMTP; 07 Dec 2015 07:52:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.20,395,1444719600"; d="scan'208";a="855691239"
+Received: from jamullin-mobl.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
+	([10.252.16.98])
+	by fmsmga001.fm.intel.com with ESMTP; 07 Dec 2015 07:52:51 -0800
+From: Elliot Smith <elliot.smith@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  7 Dec 2015 15:52:47 +0000
+Message-Id: <cover.1449503378.git.elliot.smith@intel.com>
+X-Mailer: git-send-email 1.9.3
+Cc: Mihail Stanciu <stanciux.mihail@intel.com>
+Subject: [PATCH 0/2] Update UI tests to work with changes in Toaster 2.0
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -44,61 +29,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sat, 05 Dec 2015 18:35:57 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Mon, 07 Dec 2015 15:52:53 -0000
 
-true :/
+Add additional back-end tests and update all tests to work for Toaster 2.0.
 
-It was removed from the places in the script where it was used but not
-the initialization .
+The following changes since commit d27c3c279025a7c4bd1c0851ad40195cad318937
+(poky-contrib, toaster-next):
 
-Good catch,
--b
+  toasterui: process CommandStarted event (2015-12-02 09:40:21 -0800)
 
-On Thu, Dec 3, 2015 at 5:49 AM, Peter Kjellerstedt
-<peter.kjellerstedt@axis.com> wrote:
->> -----Original Message-----
->> From: bitbake-devel-bounces@lists.openembedded.org [mailto:bitbake-
->> devel-bounces@lists.openembedded.org] On Behalf Of brian avery
->> Sent: den 2 december 2015 19:03
->> To: bitbake-devel@lists.openembedded.org
->> Subject: [bitbake-devel] [PATCH 05/30] toaster: remove unused variable
->>
->> From: Ed Bartosh <ed.bartosh@linux.intel.com>
->>
->> Removed variable RUNNING as it's not used anymore
->> in the toaster script.
->>
->> Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
->> Signed-off-by: brian avery <avery.brian@gmail.com>
->> ---
->>  bin/toaster | 2 --
->>  1 file changed, 2 deletions(-)
->>
->> diff --git a/bin/toaster b/bin/toaster
->> index abc8737..1ce4af7 100755
->> --- a/bin/toaster
->> +++ b/bin/toaster
->> @@ -176,9 +176,7 @@ fi
->>
->>  BBBASEDIR=`dirname $TOASTER`/..
->>  OEROOT=`dirname $TOASTER`/../..
->> -
->>  RUNNING=0
->
-> The commit message says that it removes the RUNNING variable, but
-> the commit only seems to remove some whitespace and not the actual
-> variable...
->
->> -
->>  NOTOASTERUI=0
->>  WEBSERVER=1
->>  TOASTER_BRBE=""
->> --
->> 1.9.1
->>
->> --
->
-> //Peter
->
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib elliot/submit/mihai/ui-tests-update
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=elliot/submit/mihai/ui-tests-update
+
+Mihail Stanciu (2):
+  toaster: tests Automated build-mode backend tests
+  toaster: tests Update UI tests to work with 2.0 changes
+
+ .../contrib/tts/toasteruitest/toaster.sqlite       |   1 +
+ .../tts/toasteruitest/toaster_automation_test.py   | 702 ++++++++++++++++++---
+ .../contrib/tts/toasteruitest/toasterconf.json     |   1 +
+ 3 files changed, 623 insertions(+), 81 deletions(-)
+ create mode 120000 bitbake/lib/toaster/contrib/tts/toasteruitest/toaster.sqlite
+ create mode 120000 bitbake/lib/toaster/contrib/tts/toasteruitest/toasterconf.json
+
+--
+1.9.3
+
+---------------------------------------------------------------------
+Intel Corporation (UK) Limited
+Registered No. 1134945 (England)
+Registered Office: Pipers Way, Swindon SN3 1RJ
+VAT No: 860 2173 47
+
+This e-mail and any attachments may contain confidential material for
+the sole use of the intended recipient(s). Any review or distribution
+by others is strictly prohibited. If you are not the intended
+recipient, please contact the sender and delete all copies.
+
 
