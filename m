@@ -1,44 +1,34 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-wm0-f52.google.com (mail-wm0-f52.google.com [74.125.82.52])
-	by mail.openembedded.org (Postfix) with ESMTP id 275D060796
+Return-Path: <sfevral@mera.ru>
+X-Greylist: delayed 1333 seconds by postgrey-1.34 at layers.openembedded.org;
+	Tue, 08 Dec 2015 09:23:22 UTC
+Received: from mail.mera.ru (mail.mera.ru [195.98.57.161])
+	by mail.openembedded.org (Postfix) with ESMTP id EEB5860589
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 14 Dec 2015 22:51:03 +0000 (UTC)
-Received: by mail-wm0-f52.google.com with SMTP id p66so85027638wmp.1
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 14 Dec 2015 14:51:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id;
-	bh=jgBgHKFwJgOLrRm3QkL+JPWFbFCqjqvi58oEgryTYPE=;
-	b=Q62sINBWC0+ymlJ9WFY7/vkN+SKNSXdJAOMWcd1emHPiaJP2owaWlD2MVtYsCRIpqc
-	q7NBBq8ltDvgEyFCz5uhfryWjimgJXQhEKHb5qcuVPej7Jdnw3IlxJFi8nnED0Spux15
-	o6xUNlw3plD8e8NatSgjiVSzUuj1JQKeOSB2MYPUpNsUhsGF9WEZm/OZwpOyNW4YgCFb
-	aWhvK+ERNRghsuYKCExEarwFgq1x3SO+++G0zHA7z0gi3oKSkD6aIhzxWWq28yOg/ypo
-	lJg9O/qAeTXN2Cl6uQB8YA1yrneKPIrTFtL7C97iBED8FbFYN06SDMTigyOuUMjL2xVB
-	Q+rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=jgBgHKFwJgOLrRm3QkL+JPWFbFCqjqvi58oEgryTYPE=;
-	b=eYdRTtnC5mj2tJCCJFgYhbdg8ej0Ll2zB5qe4g1eoV3sXpV7n6kmBqJJ25dmamXh+3
-	2FQd/tdfd2jnYeTqbzMTX9r58CLTYSE0fBqNztqJCNEQ4SSPel3elqGZRPhX7Av/u0Y0
-	qYlWSE99WnYEJy5/qMWVqbBYXYnVCoqjDVXwuClkKRxZ9z/zON4jixhTkYck3Nhn3CrU
-	PuhkYbpPDRPm3RbcM0WdqsVWlrLGDjx4wLCAITs0y2CZiz7LhpdpB2KiaEDnwzuzKPge
-	lTE78RzY3X9WYXyFurkph5pQ0jZvknoaqgoY68ovaZENMvYH77SJR72f3Ro4MYWs2Ybw
-	Mm2A==
-X-Gm-Message-State: ALoCoQlrmNJfQdlixkv+a+Wsftg0F2tx+NxYnby5HZW3FUyn+WB5pnLkf9lnRGbBOrrYk486GX5w0/hELXBtfH9li24uII5Kog==
-X-Received: by 10.195.18.6 with SMTP id gi6mr43719260wjd.83.1450133464340;
-	Mon, 14 Dec 2015 14:51:04 -0800 (PST)
-Received: from localhost.localdomain ([90.217.53.67])
-	by smtp.gmail.com with ESMTPSA id x125sm46697wmg.1.2015.12.14.14.51.02
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Mon, 14 Dec 2015 14:51:03 -0800 (PST)
-From: Michael Wood <michael.g.wood@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 14 Dec 2015 22:50:47 +0000
-Message-Id: <1450133447-9946-1-git-send-email-michael.g.wood@intel.com>
-X-Mailer: git-send-email 2.5.0
-Subject: [PATCH] toaster: tables Set a default order for the software recipes table
+	Tue,  8 Dec 2015 09:23:22 +0000 (UTC)
+Received: from [192.168.50.122] (helo=cmail.merann.ru)
+	by mail.mera.ru with esmtps (TLSv1:AES256-SHA:256)
+	(Exim 4.71 (FreeBSD)) (envelope-from <sfevral@mera.ru>)
+	id 1a6E6g-0009hN-UL for bitbake-devel@lists.openembedded.org;
+	Tue, 08 Dec 2015 11:58:46 +0300
+Received: from mbx03.merann.ru ([192.168.49.73]) by cmail.merann.ru ([::1])
+	with mapi id 14.03.0266.001; Tue, 8 Dec 2015 12:01:05 +0300
+From: "Fevralskikh, Sergey" <sfevral@mera.ru>
+To: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Thread-Topic: bitbake functions
+Thread-Index: AdEoRgJ92tEfr2GhQ6OLF7ZVJ/glQAJS//6g
+Date: Tue, 8 Dec 2015 09:01:04 +0000
+Message-ID: <6489DBA277E4824B8441DF596CFC9024B938F606@mbx03.merann.ru>
+References: <41E0F44D2CEBB148A7200081BAACCFCF97676766@mbx03.merann.ru>
+In-Reply-To: <41E0F44D2CEBB148A7200081BAACCFCF97676766@mbx03.merann.ru>
+Accept-Language: ru-RU, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [192.168.220.26]
+x-inside-org: True
+MIME-Version: 1.0
+X-Mailman-Approved-At: Mon, 14 Dec 2015 23:08:38 +0000
+Subject: Re: bitbake functions
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,34 +41,318 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 14 Dec 2015 22:51:05 -0000
+X-List-Received-Date: Tue, 08 Dec 2015 09:23:24 -0000
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_6489DBA277E4824B8441DF596CFC9024B938F606mbx03merannru_"
 
-From: Belen Barros Pena <belen.barros.pena@intel.com>
+--_000_6489DBA277E4824B8441DF596CFC9024B938F606mbx03merannru_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Add default order by recipe name, so that the table content is sorted
-when the page loads.
+Hello, all.
 
-[YOCTO #8791]
-
-Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
----
- lib/toaster/toastergui/tables.py | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/lib/toaster/toastergui/tables.py b/lib/toaster/toastergui/tables.py
-index 74af507..3808820 100644
---- a/lib/toaster/toastergui/tables.py
-+++ b/lib/toaster/toastergui/tables.py
-@@ -561,6 +561,7 @@ class SoftwareRecipesTable(RecipesTable):
-     def __init__(self, *args, **kwargs):
-         super(SoftwareRecipesTable, self).__init__(*args, **kwargs)
-         self.title = "Compatible software recipes"
-+        self.default_orderby = "name"
- 
-     def setup_queryset(self, *args, **kwargs):
-         super(SoftwareRecipesTable, self).setup_queryset(*args, **kwargs)
--- 
-2.5.0
+Two weeks ago my colleague wrote mail to you with the question (his mail be=
+low).
+He is not working any more with us, but it will be great if you will try he=
+lp us with the question that he asked.
 
 
+Best regards
+Sergey Fevralsky
+
+From: Timofeev, Andrey
+Sent: Thursday, November 26, 2015 3:45 PM
+To: bitbake-devel@lists.openembedded.org
+Cc: Fevralskikh, Sergey
+Subject: bitbake functions
+
+Hello, guys,
+
+We are using bitbake for our project, but we have faced with an issue.
+
+We have a large amount of files and modules and we have a problem with larg=
+e amount of bb files and we would like to reduce it.
+
+I try to explain our issue:
+
+Imagine that you have more than 10 target load modules that include more th=
+an 100 code modules.
+And this target load modules have the same code modules.
+
+I try to show it in example:
+
+
+1)      We have 2 .bb files (tests.bb and product.bb)
+
+2)      They include the same dependencies:
+DEPENDS +=3D a
+DEPENDS +=3D b
+DEPENDS +=3D c
+
+But for product we want that a,b,c use TEST flag for building when we are b=
+uilding tests.bb and TARGET when building product.bb
+
+So, we want that a,b,c to be able to inherit FLAGS from target bitbake (pro=
+duce or tests).
+I mean we want that all bitbakes which are participants in building know wh=
+at is main bitbake.
+
+Now, we are using *.inc files to decide this issue but it requires many bit=
+bake files.
+
+If you do not understand what I mean, please send me letter. I will try to =
+explain in details.
+
+Thank you!
+
+Best regards,
+Andrey Timofeev
+
+
+
+
+--_000_6489DBA277E4824B8441DF596CFC9024B938F606mbx03merannru_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
+>
+<meta name=3D"Generator" content=3D"Microsoft Word 14 (filtered medium)">
+<style><!--
+/* Font Definitions */
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";
+	mso-fareast-language:EN-US;}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{mso-style-priority:34;
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";
+	mso-fareast-language:EN-US;}
+span.EmailStyle18
+	{mso-style-type:personal;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+span.EmailStyle19
+	{mso-style-type:personal-reply;
+	font-family:"Calibri","sans-serif";
+	color:#1F497D;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-size:10.0pt;}
+@page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:2.0cm 42.5pt 2.0cm 3.0cm;}
+div.WordSection1
+	{page:WordSection1;}
+/* List Definitions */
+@list l0
+	{mso-list-id:1180117514;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-35885456 68747281 68747289 68747291 68747279 687472=
+89 68747291 68747279 68747289 68747291;}
+@list l0:level1
+	{mso-level-text:"%1\)";
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level2
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level3
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:none;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+@list l0:level4
+	{mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level5
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level6
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:none;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+@list l0:level7
+	{mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level8
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level9
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:none;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]-->
+</head>
+<body lang=3D"RU" link=3D"blue" vlink=3D"purple">
+<div class=3D"WordSection1">
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#1F497D">Hello, =
+all.<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#1F497D"><o:p>&n=
+bsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#1F497D">Two wee=
+ks ago my colleague wrote mail to you with the question (his mail below).<o=
+:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#1F497D">He is n=
+ot working any more with us, but it will be great if you will try help us w=
+ith the question that he asked.<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#1F497D"><o:p>&n=
+bsp;</o:p></span></p>
+<div>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:10.0pt;font-=
+family:&quot;Arial&quot;,&quot;sans-serif&quot;;color:blue;mso-fareast-lang=
+uage:RU"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:10.0pt;font-=
+family:&quot;Arial&quot;,&quot;sans-serif&quot;;color:blue;mso-fareast-lang=
+uage:RU">Best regards</span><span lang=3D"EN-US" style=3D"color:#1F497D;mso=
+-fareast-language:RU"><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:10.0pt;font-=
+family:&quot;Arial&quot;,&quot;sans-serif&quot;;color:blue;mso-fareast-lang=
+uage:RU">Sergey Fevralsky</span><span lang=3D"EN-US" style=3D"color:#1F497D=
+;mso-fareast-language:RU"><o:p></o:p></span></p>
+</div>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<div>
+<div style=3D"border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0cm =
+0cm 0cm">
+<p class=3D"MsoNormal"><b><span lang=3D"EN-US" style=3D"font-size:10.0pt;fo=
+nt-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;;mso-fareast-language:RU=
+">From:</span></b><span lang=3D"EN-US" style=3D"font-size:10.0pt;font-famil=
+y:&quot;Tahoma&quot;,&quot;sans-serif&quot;;mso-fareast-language:RU"> Timof=
+eev, Andrey
+<br>
+<b>Sent:</b> Thursday, November 26, 2015 3:45 PM<br>
+<b>To:</b> bitbake-devel@lists.openembedded.org<br>
+<b>Cc:</b> Fevralskikh, Sergey<br>
+<b>Subject:</b> bitbake functions<o:p></o:p></span></p>
+</div>
+</div>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">Hello, guys,<o:p></o:p></span><=
+/p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">We are using bitbake for our pr=
+oject, but we have faced with an issue.<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">We have a large amount of files=
+ and modules and we have a problem with large amount of bb files and we wou=
+ld like to reduce it.<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">I try to explain our issue:<o:p=
+></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">Imagine that you have more than=
+ 10 target load modules that include more than 100 code modules.<o:p></o:p>=
+</span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">And this target load modules ha=
+ve the same code modules.<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">I try to show it in example:<o:=
+p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-18.0pt;mso-list:l0 leve=
+l1 lfo2"><![if !supportLists]><span lang=3D"EN-US"><span style=3D"mso-list:=
+Ignore">1)<span style=3D"font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span lang=3D"EN-US">We have 2 .bb files (te=
+sts.bb and product.bb)<o:p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-18.0pt;mso-list:l0 leve=
+l1 lfo2"><![if !supportLists]><span lang=3D"EN-US"><span style=3D"mso-list:=
+Ignore">2)<span style=3D"font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span lang=3D"EN-US">They include the same d=
+ependencies:<o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-left:35.4pt"><span lang=3D"EN-US">DE=
+PENDS &#43;=3D a<o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-left:35.4pt"><span lang=3D"EN-US">DE=
+PENDS &#43;=3D b<o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-left:35.4pt"><span lang=3D"EN-US">DE=
+PENDS &#43;=3D c<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">But for product we want that a,=
+b,c use TEST flag for building when we are building tests.bb and TARGET whe=
+n building product.bb<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">So, we want that a,b,c to be ab=
+le to inherit FLAGS from target bitbake (produce or tests).<o:p></o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">I mean we want that all bitbake=
+s which are participants in building know what is main bitbake.<o:p></o:p><=
+/span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">Now, we are using *.inc files t=
+o decide this issue but it requires many bitbake files.<o:p></o:p></span></=
+p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">If you do not understand what I=
+ mean, please send me letter. I will try to explain in details.<o:p></o:p><=
+/span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US">Thank you!<o:p></o:p></span></p=
+>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"mso-fareast-language:R=
+U">Best regards,<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"mso-fareast-language:R=
+U">Andrey Timofeev<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-left:35.4pt"><span lang=3D"EN-US"><o=
+:p>&nbsp;</o:p></span></p>
+</div>
+</body>
+</html>
+
+--_000_6489DBA277E4824B8441DF596CFC9024B938F606mbx03merannru_--
