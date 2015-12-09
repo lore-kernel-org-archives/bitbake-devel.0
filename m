@@ -1,49 +1,46 @@
-Return-Path: <michael.g.wood@intel.com>
-Received: from mail-pa0-f47.google.com (mail-pa0-f47.google.com
-	[209.85.220.47])
-	by mail.openembedded.org (Postfix) with ESMTP id A57496FFDD
+Return-Path: <nicolas.dechesne@linaro.org>
+Received: from mail-wm0-f46.google.com (mail-wm0-f46.google.com [74.125.82.46])
+	by mail.openembedded.org (Postfix) with ESMTP id 7A1EF607AB
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  9 Dec 2015 14:26:07 +0000 (UTC)
-Received: by pacdm15 with SMTP id dm15so30661306pac.3
+	Wed,  9 Dec 2015 23:27:55 +0000 (UTC)
+Received: by mail-wm0-f46.google.com with SMTP id w144so2207775wmw.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 09 Dec 2015 06:26:08 -0800 (PST)
+	Wed, 09 Dec 2015 15:27:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=ElyFa+xGpqouZeL4V8DmXYnhjLiA/rTXnGg1N0lwn4M=;
-	b=JcMDQCEGojWwmWSqF8Q99ky2bPxBDRgb5MXNO4DUXUxGDi3SiXNYcq7vhfXjM4KIwu
-	Hq78xuO+OCTSile9FnISpB5AFbOm2uaoRuLfF/dois4lfdK5uDCQhgljBOPUoOJ4S+mn
-	aLdjwBJRCAa6GT5PEwNIGCAcZasPv/sz7vt9VZt5dHL/AOHyn6bpytIXjWnGniwbgXMx
-	hPZGmLyxXUI13XF9rLuF/4oaZ1+4tX8eBSohn1FZF02tTYdwZSJwUvEXkyXlrBPcsWfE
-	nf8wnP/kGuQLh0ldBQukKIWbgbDTKElz7AdTHS8RD3rPPvTb/6wVV6I2dWjazoyUk+B5
-	xDOA==
+	d=linaro-org.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+	:cc:content-type;
+	bh=uRP3ezzgFeA6PA9L6hGU+PFYnhIg6psbXQL+LLwSnqQ=;
+	b=bTE7Q7al9uirc9c2Dwtk289blts3rmhTJNj00/TWPhtP/Xd7RcBDML4s1R2IM7yBZW
+	1F6nuW7PUmzITYGIpdQkrelrl9DNnRD6XHywuxlx872XZg0AUc2PsDK20yqlmWRpqT3M
+	SZpy/TtlVoQ7RLp7w3sZZKdmJVih6/5EHhl30Sm1drkuuGC5DFrxmiVq7qdr2C3HS1ES
+	Rh5JFUmco9vPUc7ROnpbbR6NluoheGrANcfWc00Nn9r9D9WaEms3tDyTLXK//pQK/v36
+	9d/aiP7TUxDs5I4Zicmx2VdeYX1B7mxIcSRPHPRVcBNBkvqCgLCZvL1dkZ1/94UQ9zzz
+	2ENQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-	:references;
-	bh=ElyFa+xGpqouZeL4V8DmXYnhjLiA/rTXnGg1N0lwn4M=;
-	b=X8DTxgIlhJ/n3oqoEpDGaoHJAPUbgmHqWUIdzu33H2iye2R7EvtE1Jyi4p9Yc84ckc
-	fvuqboYfDsuTqXLED5+AVe5z6njYTFddwd2YcBZEQCpD9WKqXCSjSUxD1kAyzstyrlhS
-	odgjhc+XhoGOKQsJJ7hUw04AePtmibTqlUwCa54XAbTBIiYd48WtQ448uMv6X4N+j9d8
-	4bcpOpc7ZG/jkzq30V17pr3n/Wen0NGVCf0KsFg1jkBgFWDLiZ/W4wz1tpT5KYI5NW51
-	sREtIZIXpywPGkquIY9fibK/Erh0Q1fsNPbUFW3AUBv0tuhgT9Xx+UaSRgxlVrGIZyfe
-	vevQ==
-X-Gm-Message-State: ALoCoQnJ19NUJMFXiFDdFUJAbxHeZHyLJ5CypXBaOCa2NvZjrEYmXIyrQ+gXoTTnvQSBEF9c1pPfkPXScovZcU6FvUualbEJhA==
-X-Received: by 10.66.141.41 with SMTP id rl9mr8233547pab.139.1449671168196;
-	Wed, 09 Dec 2015 06:26:08 -0800 (PST)
-Received: from draco.icx.intel.com (fmdmzpr01-ext.fm.intel.com. [192.55.54.36])
-	by smtp.gmail.com with ESMTPSA id
-	k2sm12095175pfj.25.2015.12.09.06.26.05
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 09 Dec 2015 06:26:06 -0800 (PST)
-From: Michael Wood <michael.g.wood@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  9 Dec 2015 14:25:49 +0000
-Message-Id: <1449671149-9455-4-git-send-email-michael.g.wood@intel.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1449671149-9455-1-git-send-email-michael.g.wood@intel.com>
-References: <1449671149-9455-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 3/3] toasterui: process SetBRBE event
+	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+	:message-id:subject:to:cc:content-type;
+	bh=uRP3ezzgFeA6PA9L6hGU+PFYnhIg6psbXQL+LLwSnqQ=;
+	b=WsW+tVQgYfvL14H56lHrUBL4qNT4nU06Cc5vj3dldtj4cpAnUXbcvQswfkQzlAr6qJ
+	KEJkK2vBau5JNSqO/wxky9nS9imRZgf3MB0xO+rvFVuAYVEjF+FUuCZWs2MW9B2UU0BF
+	JvNZYfMWpb4fhmVzBgWODn+yiSNJ2HZdnHr7Pzs+zU5vbgjLVrJkfIU18dqjnpmNZw4X
+	2yezdeqb+pxUcgekNxKosW+2ffuSALXdDpzOQc+p1zifJJgkExfKIaNIOYimeMygRpCK
+	hQxN3i8rJXxCqzLr+I1rikLQgbkkbW6WOh81kc8pmT3k9REbmGg6/07Iv/JAX6csHLRA
+	Pn6w==
+X-Gm-Message-State: ALoCoQk8bz5mzt3jT/N3dKlcrgiF7U+yt/lrMOWBqj6Rz7By5BoSUn2Rcez4+SZMP1Ot1F6BjaKsJF4tCvmPiYMVX+knTeKUMhKnk9wJC58GFhAKjeseuYU=
+X-Received: by 10.28.57.65 with SMTP id g62mr34927851wma.65.1449703676003;
+	Wed, 09 Dec 2015 15:27:56 -0800 (PST)
+MIME-Version: 1.0
+Received: by 10.194.184.110 with HTTP; Wed, 9 Dec 2015 15:27:36 -0800 (PST)
+In-Reply-To: <CAJ86T=U_qRVDbJZbCOT5XCwRP=Scs0g1+EYeg+HhjLZ-J7zwhw@mail.gmail.com>
+References: <CAJ86T=U_qRVDbJZbCOT5XCwRP=Scs0g1+EYeg+HhjLZ-J7zwhw@mail.gmail.com>
+From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Date: Thu, 10 Dec 2015 00:27:36 +0100
+Message-ID: <CAP71WjwVKYvTqChH++LygHnRkshDWbTUpnRpuptcoRxBpFw9HQ@mail.gmail.com>
+To: Andre McCurdy <armccurdy@gmail.com>
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: PREFERRED_VERSION with % wildcard picking unexpected version
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,39 +53,37 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 09 Dec 2015 14:26:07 -0000
+X-List-Received-Date: Wed, 09 Dec 2015 23:27:59 -0000
+Content-Type: text/plain; charset=UTF-8
 
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+On Tue, Dec 1, 2015 at 6:13 AM, Andre McCurdy <armccurdy@gmail.com> wrote:
+> I have two recipes within a single layer:
+>
+>   stblinux_3.14-1.7.bb
+>   stblinux_3.14-1.8.bb
+>
+> If PREFERRED_VERSION_stblinux is set to "3.14%", then I would expect
+> the version 3.14-1.8 recipe to be selected, however 3.14-1.7 gets
+> selected instead.
+>
+> Reversing the order of files stored in pkg_pn[pn] seems to help. Is it
+> a reasonable solution?
 
-Currently BRBE is known to toasterui only when build is
-started. It's passed to it with BuildStarted event. This is
-too late as if build fails earilier than build starts toasterui
-can not inform Toaster about the failure.
 
-Set BRBE as soon as it's provided by Toaster.
-This should make toasterui to be able to inform Toaster
-about early build failures, e.g. failures during recipe parsing.
+I have a somewhat similar issue..
 
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
-Signed-off-by: Michael Wood <michael.g.wood@intel.com>
----
- lib/bb/ui/toasterui.py | 2 ++
- 1 file changed, 2 insertions(+)
+in oe-core we have GCCVERSION set to 5.%, if I add meta-linaro layer
+which has gcc_5.1.bb (while OE has gcc_5.2.bb), I am seeing this:
 
-diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
-index 435cc2b..0265df7 100644
---- a/lib/bb/ui/toasterui.py
-+++ b/lib/bb/ui/toasterui.py
-@@ -363,6 +363,8 @@ def main(server, eventHandler, params):
-                     buildinfohelper.update_artifact_image_file(event)
-                 elif event.type == "LicenseManifestPath":
-                     buildinfohelper.store_license_manifest_path(event)
-+                elif event.type == "SetBRBE":
-+                    buildinfohelper.brbe = buildinfohelper._get_data_from_event(event)
-                 else:
-                     logger.error("Unprocessed MetadataEvent %s ", str(event))
-                 continue
--- 
-2.1.4
+$ bitbake -e gcc | grep ^PV
+PV="5.1.0"
 
+While I would expect 5.2.0 to be picked up.
+
+This patch does not fix this issue, btw.
+
+If I remove gcc_5.1.bb from my layers, then I can see:
+
+$ bitbake -e gcc | grep ^PV
+PV="5.2.0"
 
