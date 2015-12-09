@@ -1,49 +1,49 @@
 Return-Path: <michael.g.wood@intel.com>
-Received: from mail-pa0-f42.google.com (mail-pa0-f42.google.com
-	[209.85.220.42])
-	by mail.openembedded.org (Postfix) with ESMTP id 95A7E6FF7D
+Received: from mail-pa0-f41.google.com (mail-pa0-f41.google.com
+	[209.85.220.41])
+	by mail.openembedded.org (Postfix) with ESMTP id CA4666FFC8
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  9 Dec 2015 14:26:01 +0000 (UTC)
-Received: by pacwq6 with SMTP id wq6so30479004pac.1
+	Wed,  9 Dec 2015 14:26:05 +0000 (UTC)
+Received: by pacwq6 with SMTP id wq6so30479494pac.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 09 Dec 2015 06:26:02 -0800 (PST)
+	Wed, 09 Dec 2015 06:26:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references;
-	bh=hii0uaKiM8ptp2fMxRnHBlWxndcPFkhKucLIuyIYz3U=;
-	b=p528jSDb1+8Ku2zAqO7+GRKKPQquoGkvDUQ9/9VcJw0qWvgxhhZ8px+YQFqFhAQzED
-	ljFUhHWeVDclg1ggCGQYeGD2KSU9QPwjQuKEUvltNOa6ZySbJU/kT5ZOYWp8XXSlSIq8
-	VnwJbgsGvyU3kDHlbYU4FGXYpSnodBB5mmv5SoBI8c+rRu0u4/E7R8BJIuolLttX9mgM
-	9feoBToOCTpOEc+JE92MmP45LyHbyNoaYvxUhQI8SIOQlLSiEGgi4oAdwtFrVad5QcLe
-	ttN283ig5lSiOQMIAc2lCCHMNuzOIZbOOjcbT+p2HanFcEf9MArqSR7zRlpQKdqkCn/t
-	lzTA==
+	bh=GEo9UD02m0LK4trLHryCLJVqnK75UWLCNZU0P8nhDQ8=;
+	b=ISO++jGTmuKAdUFEatMSSSKf/oj4/l6DcRrdo1l7+9soM6RtpJ8mpdsF+vuuju7lzM
+	pqnB+5rrTigNIwTqyqh+KM0COEpxoWFaO2bTn9ULRKlPtsSimmIgHvuTFzklMQdp9k+X
+	A94PVcdnnWCZBzN60UqO2l4+T0EVIDXF3GKaGjxYfjAyzdN16Mth7RHcio9BgDG9nbM6
+	I/o5CuPflqactmCiVnAaCC1Ihy7ykkWJqWMtp9JA5YOGgc5G2yumNTQoMQvZ6g5+IC7v
+	rQHWxCKOBlG/tWQ+p7z6UyZfv1Ste58cv+tdybFFucISnfontDMoC+WIt+PNmPiOwadQ
+	u0kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
 	:references;
-	bh=hii0uaKiM8ptp2fMxRnHBlWxndcPFkhKucLIuyIYz3U=;
-	b=Ee44FToe9WiFeFTRU9TRamrwxvME4euHAm1FcRTLnVcx2r/zOUpqVY9xfTe/h3KmYT
-	yzjfFmyXaQm+JQfkNRd7NAbhv8RSQ9pU96kAxJDBRe8CPW7/RUFaDpqlPrfo75rHCPxR
-	AnoVIYJavQCC2h05WblczolsqfZCJLI2af/ikYwFXNJZbjtHzefLhPUJyC/wzY8/jz2q
-	DtxSpQKgUT1Fw74WBXGMbY63Fym5KlKA57JsZjL43gw4e2WMQJA6+hzVGd/AGoZ7FsYQ
-	LogDt6d0h6SrpXYJ3xx/rQtHfVJwBX5L6+x+QDOM9+fLWRpLmPBvTdsSJLWgvYDmejp/
-	ZrEw==
-X-Gm-Message-State: ALoCoQnDT1QPK7STeSDhwzLzqQw1JS6byuCDa82RP9w5QL2eRGWGnisYJ2hQuAdj0OhtF8yppsgAGczibF76jTzfBCvy0xe69Q==
-X-Received: by 10.66.100.163 with SMTP id ez3mr8413908pab.5.1449671162510;
-	Wed, 09 Dec 2015 06:26:02 -0800 (PST)
+	bh=GEo9UD02m0LK4trLHryCLJVqnK75UWLCNZU0P8nhDQ8=;
+	b=Mjf49/0M5mvL5nlRFz9U1RYgmsTUTqfCPbDbzn6onXBjrdCsi+0H90ZFGPViErbSYZ
+	ZS8HY9ZEJe44OgiDvDzEYSrCJF54JcP9+m4Poa9aWkAmBX0o4TlZP+Ui+5lNKMFeEW9N
+	jPHIlaajBM+RZoSOZtSHqA0wXI7wF6V1nhjli2aHs9l7K62/mLmwVTKF2pgTjerVKbhG
+	XDUhwkTrJuGIjRDsCjrBh+NQXp4XQoELl6zYOe/mZ1H1bKH/BcSafsHXZQvncMfofGgP
+	QUpQ7KFkb/aEMS8d1ZPZwDXd6N7xUu+AePYdlC43pvHJSQVw3aEUlEFbg1x0tLiEDRR7
+	CLoQ==
+X-Gm-Message-State: ALoCoQlUtoaeaV2ZJwJZ1RYdV6K6PvzMzptJx3q0v4bn0F4xjWNE+OXp2Ofqo756bIqWZqdOcRTO5qDTQ5JWKIrfKO1sTNYM5A==
+X-Received: by 10.66.122.105 with SMTP id lr9mr8445181pab.8.1449671165263;
+	Wed, 09 Dec 2015 06:26:05 -0800 (PST)
 Received: from draco.icx.intel.com (fmdmzpr01-ext.fm.intel.com. [192.55.54.36])
 	by smtp.gmail.com with ESMTPSA id
-	k2sm12095175pfj.25.2015.12.09.06.26.00
+	k2sm12095175pfj.25.2015.12.09.06.26.02
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 09 Dec 2015 06:26:01 -0800 (PST)
+	Wed, 09 Dec 2015 06:26:04 -0800 (PST)
 From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  9 Dec 2015 14:25:47 +0000
-Message-Id: <1449671149-9455-2-git-send-email-michael.g.wood@intel.com>
+Date: Wed,  9 Dec 2015 14:25:48 +0000
+Message-Id: <1449671149-9455-3-git-send-email-michael.g.wood@intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <1449671149-9455-1-git-send-email-michael.g.wood@intel.com>
 References: <1449671149-9455-1-git-send-email-michael.g.wood@intel.com>
-Subject: [PATCH 1/3] toaster: implement BitbakeController.triggerEvent
+Subject: [PATCH 2/3] toaster: trigger SetBRBE event
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -56,33 +56,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 09 Dec 2015 14:26:04 -0000
+X-List-Received-Date: Wed, 09 Dec 2015 14:26:05 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-This API will be used to pass data from Toaster to
-toaster_ui and buildinfohelper.
+Triggered MetadataEvent "SetBRBE" when TOASTER_BRBE variable
+is set on bitbake server. This should make buildinfohelper
+aware of the build request id, which is used to properly
+report build status and failures back to Toaster.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- lib/toaster/bldcontrol/bbcontroller.py | 3 +++
+ lib/toaster/bldcontrol/localhostbecontroller.py | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/lib/toaster/bldcontrol/bbcontroller.py b/lib/toaster/bldcontrol/bbcontroller.py
-index 8b99318..781ff73 100644
---- a/lib/toaster/bldcontrol/bbcontroller.py
-+++ b/lib/toaster/bldcontrol/bbcontroller.py
-@@ -55,6 +55,9 @@ class BitbakeController(object):
-     def getVariable(self, name):
-         return self._runCommand(["getVariable", name])
+diff --git a/lib/toaster/bldcontrol/localhostbecontroller.py b/lib/toaster/bldcontrol/localhostbecontroller.py
+index 92d9ac5..00228e9 100644
+--- a/lib/toaster/bldcontrol/localhostbecontroller.py
++++ b/lib/toaster/bldcontrol/localhostbecontroller.py
+@@ -287,6 +287,9 @@ class LocalhostBEController(BuildEnvironmentController):
+         # set variables
+         for var in variables:
+             bbctrl.setVariable(var.name, var.value)
++            if var.name == 'TOASTER_BRBE':
++                bbctrl.triggerEvent('bb.event.MetadataEvent("SetBRBE", "%s")' \
++                                     % var.value)
  
-+    def triggerEvent(self, event):
-+        return self._runCommand(["triggerEvent", event])
-+
-     def build(self, targets, task = None):
-         if task is None:
-             task = "build"
+         # Add 'toaster' and 'buildhistory' to INHERIT variable
+         inherit = {item.strip() for item in bbctrl.getVariable('INHERIT').split()}
 -- 
 2.1.4
 
