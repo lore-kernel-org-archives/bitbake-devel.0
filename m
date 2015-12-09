@@ -1,44 +1,39 @@
-Return-Path: <nicolas.dechesne@linaro.org>
-Received: from mail-wm0-f46.google.com (mail-wm0-f46.google.com [74.125.82.46])
-	by mail.openembedded.org (Postfix) with ESMTP id 7A1EF607AB
+Return-Path: <raj.khem@gmail.com>
+Received: from mail-pf0-f180.google.com (mail-pf0-f180.google.com
+	[209.85.192.180])
+	by mail.openembedded.org (Postfix) with ESMTP id F0AA56FFA6
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  9 Dec 2015 23:27:55 +0000 (UTC)
-Received: by mail-wm0-f46.google.com with SMTP id w144so2207775wmw.1
+	Wed,  9 Dec 2015 23:32:50 +0000 (UTC)
+Received: by pfu207 with SMTP id 207so37471119pfu.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 09 Dec 2015 15:27:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linaro-org.20150623.gappssmtp.com; s=20150623;
-	h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-	:cc:content-type;
-	bh=uRP3ezzgFeA6PA9L6hGU+PFYnhIg6psbXQL+LLwSnqQ=;
-	b=bTE7Q7al9uirc9c2Dwtk289blts3rmhTJNj00/TWPhtP/Xd7RcBDML4s1R2IM7yBZW
-	1F6nuW7PUmzITYGIpdQkrelrl9DNnRD6XHywuxlx872XZg0AUc2PsDK20yqlmWRpqT3M
-	SZpy/TtlVoQ7RLp7w3sZZKdmJVih6/5EHhl30Sm1drkuuGC5DFrxmiVq7qdr2C3HS1ES
-	Rh5JFUmco9vPUc7ROnpbbR6NluoheGrANcfWc00Nn9r9D9WaEms3tDyTLXK//pQK/v36
-	9d/aiP7TUxDs5I4Zicmx2VdeYX1B7mxIcSRPHPRVcBNBkvqCgLCZvL1dkZ1/94UQ9zzz
-	2ENQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-	:message-id:subject:to:cc:content-type;
-	bh=uRP3ezzgFeA6PA9L6hGU+PFYnhIg6psbXQL+LLwSnqQ=;
-	b=WsW+tVQgYfvL14H56lHrUBL4qNT4nU06Cc5vj3dldtj4cpAnUXbcvQswfkQzlAr6qJ
-	KEJkK2vBau5JNSqO/wxky9nS9imRZgf3MB0xO+rvFVuAYVEjF+FUuCZWs2MW9B2UU0BF
-	JvNZYfMWpb4fhmVzBgWODn+yiSNJ2HZdnHr7Pzs+zU5vbgjLVrJkfIU18dqjnpmNZw4X
-	2yezdeqb+pxUcgekNxKosW+2ffuSALXdDpzOQc+p1zifJJgkExfKIaNIOYimeMygRpCK
-	hQxN3i8rJXxCqzLr+I1rikLQgbkkbW6WOh81kc8pmT3k9REbmGg6/07Iv/JAX6csHLRA
-	Pn6w==
-X-Gm-Message-State: ALoCoQk8bz5mzt3jT/N3dKlcrgiF7U+yt/lrMOWBqj6Rz7By5BoSUn2Rcez4+SZMP1Ot1F6BjaKsJF4tCvmPiYMVX+knTeKUMhKnk9wJC58GFhAKjeseuYU=
-X-Received: by 10.28.57.65 with SMTP id g62mr34927851wma.65.1449703676003;
-	Wed, 09 Dec 2015 15:27:56 -0800 (PST)
-MIME-Version: 1.0
-Received: by 10.194.184.110 with HTTP; Wed, 9 Dec 2015 15:27:36 -0800 (PST)
-In-Reply-To: <CAJ86T=U_qRVDbJZbCOT5XCwRP=Scs0g1+EYeg+HhjLZ-J7zwhw@mail.gmail.com>
+	Wed, 09 Dec 2015 15:32:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=subject:mime-version:content-type:from:in-reply-to:date:cc
+	:message-id:references:to;
+	bh=rLkqQrEQYwnYkrxWU27YKO9YRD35QQyc1hld+jHLSWQ=;
+	b=bJ6Plitd0AwxsGljkLXNpKYwwxKG7BsGSCIJV7+PCySE5CaeqeCsNrcALKmv0FfxX+
+	WiEBDlOVuKu9Ke0D66L59O70K1a9diZDX2K2/i2mDqA+roLwaLcX2BIW/1cM7W/W62Wy
+	Qiw//u73jI0tfS/noiRXGAEhlKJgnfg5eU49DAwy/cC9kEivI6SVqpcH1Ke7A/QWPBgE
+	zCNx1ev0mix01cG8N7yGeN90CKkR/UMZ0mwB3+o95Duih+h3eNAbffGfoh9E3Ub3SD8S
+	xtiyFAAcsAwbzgFrme9uhFvWlh7MEfhzp8b59V6cY3PoLc9qRqV57xUqLEvhemn8JFkf
+	66HA==
+X-Received: by 10.98.19.12 with SMTP id b12mr2308748pfj.78.1449703970568;
+	Wed, 09 Dec 2015 15:32:50 -0800 (PST)
+Received: from ?IPv6:2601:646:8802:5d5c:24a3:d421:cfe2:88b3?
+	([2601:646:8802:5d5c:24a3:d421:cfe2:88b3])
+	by smtp.gmail.com with ESMTPSA id 1sm14014256pfc.3.2015.12.09.15.32.48
+	(version=TLSv1/SSLv3 cipher=OTHER);
+	Wed, 09 Dec 2015 15:32:49 -0800 (PST)
+Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3112\))
+X-Pgp-Agent: GPGMail 2.6b2
+From: Khem Raj <raj.khem@gmail.com>
+In-Reply-To: <CAP71WjwVKYvTqChH++LygHnRkshDWbTUpnRpuptcoRxBpFw9HQ@mail.gmail.com>
+Date: Wed, 9 Dec 2015 15:32:44 -0800
+Message-Id: <39C63A78-9861-4FFE-A6F7-0A7183312908@gmail.com>
 References: <CAJ86T=U_qRVDbJZbCOT5XCwRP=Scs0g1+EYeg+HhjLZ-J7zwhw@mail.gmail.com>
-From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Date: Thu, 10 Dec 2015 00:27:36 +0100
-Message-ID: <CAP71WjwVKYvTqChH++LygHnRkshDWbTUpnRpuptcoRxBpFw9HQ@mail.gmail.com>
-To: Andre McCurdy <armccurdy@gmail.com>
+	<CAP71WjwVKYvTqChH++LygHnRkshDWbTUpnRpuptcoRxBpFw9HQ@mail.gmail.com>
+To: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+X-Mailer: Apple Mail (2.3112)
 Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
 Subject: Re: PREFERRED_VERSION with % wildcard picking unexpected version
 X-BeenThere: bitbake-devel@lists.openembedded.org
@@ -53,37 +48,81 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 09 Dec 2015 23:27:59 -0000
-Content-Type: text/plain; charset=UTF-8
+X-List-Received-Date: Wed, 09 Dec 2015 23:32:53 -0000
+X-Groupsio-MsgNum: 6724
+Content-Type: multipart/signed;
+	boundary="Apple-Mail=_5A747A4F-F57E-4B46-965A-076159B0AAB5";
+	protocol="application/pgp-signature"; micalg=pgp-sha1
 
-On Tue, Dec 1, 2015 at 6:13 AM, Andre McCurdy <armccurdy@gmail.com> wrote:
-> I have two recipes within a single layer:
->
->   stblinux_3.14-1.7.bb
->   stblinux_3.14-1.8.bb
->
-> If PREFERRED_VERSION_stblinux is set to "3.14%", then I would expect
-> the version 3.14-1.8 recipe to be selected, however 3.14-1.7 gets
-> selected instead.
->
-> Reversing the order of files stored in pkg_pn[pn] seems to help. Is it
-> a reasonable solution?
+--Apple-Mail=_5A747A4F-F57E-4B46-965A-076159B0AAB5
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
 
 
-I have a somewhat similar issue..
+> On Dec 9, 2015, at 3:27 PM, Nicolas Dechesne =
+<nicolas.dechesne@linaro.org> wrote:
+>=20
+> On Tue, Dec 1, 2015 at 6:13 AM, Andre McCurdy <armccurdy@gmail.com> =
+wrote:
+>> I have two recipes within a single layer:
+>>=20
+>>  stblinux_3.14-1.7.bb
+>>  stblinux_3.14-1.8.bb
+>>=20
+>> If PREFERRED_VERSION_stblinux is set to "3.14%", then I would expect
+>> the version 3.14-1.8 recipe to be selected, however 3.14-1.7 gets
+>> selected instead.
+>>=20
+>> Reversing the order of files stored in pkg_pn[pn] seems to help. Is =
+it
+>> a reasonable solution?
+>=20
+>=20
+> I have a somewhat similar issue..
+>=20
+> in oe-core we have GCCVERSION set to 5.%, if I add meta-linaro layer
+> which has gcc_5.1.bb (while OE has gcc_5.2.bb), I am seeing this:
+>=20
+> $ bitbake -e gcc | grep ^PV
+> PV=3D"5.1.0"
+>=20
+> While I would expect 5.2.0 to be picked up.
+>=20
+> This patch does not fix this issue, btw.
+>=20
+> If I remove gcc_5.1.bb from my layers, then I can see:
+>=20
+> $ bitbake -e gcc | grep ^PV
+> PV=3D=E2=80=9C5.2.0"
 
-in oe-core we have GCCVERSION set to 5.%, if I add meta-linaro layer
-which has gcc_5.1.bb (while OE has gcc_5.2.bb), I am seeing this:
+whats the order of your layer in bitbake search path. Secondly whats the =
+LAYER_PRIORITY
+if they are higher than oe-core then it will always choose the provider =
+from the higher order layer
+versions don=E2=80=99t matter.
 
-$ bitbake -e gcc | grep ^PV
-PV="5.1.0"
+> --
+> _______________________________________________
+> bitbake-devel mailing list
+> bitbake-devel@lists.openembedded.org
+> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
 
-While I would expect 5.2.0 to be picked up.
 
-This patch does not fix this issue, btw.
+--Apple-Mail=_5A747A4F-F57E-4B46-965A-076159B0AAB5
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP using GPGMail
 
-If I remove gcc_5.1.bb from my layers, then I can see:
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - https://gpgtools.org
 
-$ bitbake -e gcc | grep ^PV
-PV="5.2.0"
+iEYEARECAAYFAlZouiAACgkQuwUzVZGdMxSjLQCgkzCuHbt77mMzNBPUnWzevGXp
+hgMAnRnBeSt8kS/gddLD5mOLqxSmoEem
+=yKkJ
+-----END PGP SIGNATURE-----
 
+--Apple-Mail=_5A747A4F-F57E-4B46-965A-076159B0AAB5--
