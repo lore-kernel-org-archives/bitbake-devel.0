@@ -1,40 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pf0-f176.google.com (mail-pf0-f176.google.com
-	[209.85.192.176])
-	by mail.openembedded.org (Postfix) with ESMTP id 7127673179
+Received: from mail-pa0-f49.google.com (mail-pa0-f49.google.com
+	[209.85.220.49])
+	by mail.openembedded.org (Postfix) with ESMTP id DFE716FF56
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Dec 2015 03:53:13 +0000 (UTC)
-Received: by pfbg73 with SMTP id g73so41647947pfb.1
+	Thu, 10 Dec 2015 03:53:14 +0000 (UTC)
+Received: by pabur14 with SMTP id ur14so40487557pab.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 09 Dec 2015 19:53:14 -0800 (PST)
+	Wed, 09 Dec 2015 19:53:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=DtPLw1Qj2GT4aWlO/GS2P6kEF9AJV4gk04ZpmcNYfFs=;
-	b=hRvyE2VZRrd7vXuK/sIWLJsB5qOOTjwXJf6OVBDV/Eu1iyV7etspExUh9qpJL6Xn9Z
-	xNSX2jEHSLC1MhUDB1GHIiLUtrAHviu0MdLr0dfXpoaoDSPJv2Iq5xMxavpQCHaFriTX
-	3dVa7GgZ+8ghOSqRLKQMi7ujXnd6tic7ZdXHh+M1Jqf6vwfEhpmx5OqAI2htjLr8u+kv
-	UuJ3bKfCHYvSEGBdTcLQ6HosuPqGyZqbKyli6TTSJDZDyV5VfKgYqEVZkuEd28xqzpVw
-	qKZnODG24+QVqUiwnfUVJ/Q7Wp7r06rJ6CS8yL45L7nzqcbZwHkODvkhSdph7K5uDCOR
-	ML9g==
-X-Received: by 10.98.7.91 with SMTP id b88mr3596216pfd.48.1449719594523;
-	Wed, 09 Dec 2015 19:53:14 -0800 (PST)
+	bh=1OcCxEhYZ2s5vOaOHCjlusW5PGjHx+q2okxKcUpW290=;
+	b=Kqrj24ArepHZHolO1XSBNvgs7YPtEWcGC4fIHdDfuTTvU119ogsq9Zn1nIT13m8sRI
+	jjyD6fTGY/gFZoWetWaXEGsftkHpY0MIs6P52uVKax1FXyZ5gn1FmtkdMqMx5B9CYRC8
+	n/jjZo2qG1rQcf9EVQ8FmZ3xAjkXK/Q6zvQXHqmw48oEYlDl81Eyo+gFqxX67guLsWa0
+	VbE6NLkzJaR2q1OAEJVNToAfj0EGWrCsR4Z3TVoaxhLp6eocv5rlDR5Tj2rE6lcPcxRh
+	hlBNrKCEcBt+sx4rKCDiwTjdVAeP6lcFiBDxVDBeaU7gr9yl/MUCkMz4IMnjnluyhP9S
+	bO6Q==
+X-Received: by 10.67.7.101 with SMTP id db5mr13221988pad.53.1449719595436;
+	Wed, 09 Dec 2015 19:53:15 -0800 (PST)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	c20sm14761349pfd.17.2015.12.09.19.53.13
+	c20sm14761349pfd.17.2015.12.09.19.53.14
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 09 Dec 2015 19:53:13 -0800 (PST)
+	Wed, 09 Dec 2015 19:53:14 -0800 (PST)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  9 Dec 2015 19:56:42 -0800
-Message-Id: <63a165305e678df3b6f73cac989c128b27ac60f3.1449719707.git.avery.brian@gmail.com>
+Date: Wed,  9 Dec 2015 19:56:43 -0800
+Message-Id: <889da33cd1a5bfd121a0f03bce685f6032f3c32c.1449719707.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <f49f7e1b41ee18a9959be3f3e12856980d58a18b.1449719707.git.avery.brian@gmail.com>
 References: <f49f7e1b41ee18a9959be3f3e12856980d58a18b.1449719707.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1449719707.git.avery.brian@gmail.com>
 References: <cover.1449719707.git.avery.brian@gmail.com>
-Subject: [PATCH 17/18] toaster: monkey patch Queryset
+Subject: [PATCH 18/18] toaster: rework checking of Django version
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -47,65 +47,74 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 10 Dec 2015 03:53:13 -0000
+X-List-Received-Date: Thu, 10 Dec 2015 03:53:15 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Fixed 'database is locked' issue by monkey patching django QuerySet
-methods.
-
-The actual patching places were found by bisecting Django codebase.
-
-This commit should be removed after Django is fixed if it's fixed
-at all.
+Checked django version considering information from
+toaster-requirements.txt, e.g. if requirements file contains
+line "Django>1.8,<1.9" toaster should be able to check that
+requirement correctly.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/toaster/orm/models.py | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ bin/toaster              | 24 ++++++++++--------------
+ toaster-requirements.txt |  2 +-
+ 2 files changed, 11 insertions(+), 15 deletions(-)
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 0d598ac..6e87c54 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -52,6 +52,36 @@ if 'sqlite' in settings.DATABASES['default']['ENGINE']:
+diff --git a/bin/toaster b/bin/toaster
+index 7645c56..1c1e029 100755
+--- a/bin/toaster
++++ b/bin/toaster
+@@ -156,16 +156,15 @@ notify_chldexit() {
  
-     models.Model.save = save
  
-+    # HACK: Monkey patch Django to fix 'database is locked' issue
-+
-+    from django.db.models.query import QuerySet
-+    _base_insert = QuerySet._insert
-+    def _insert(self,  *args, **kwargs):
-+        with transaction.atomic(using=self.db, savepoint=False):
-+            return _base_insert(self, *args, **kwargs)
-+    QuerySet._insert = _insert
-+
-+    from django.utils import six
-+    def _create_object_from_params(self, lookup, params):
-+        """
-+        Tries to create an object using passed params.
-+        Used by get_or_create and update_or_create
-+        """
-+        try:
-+            obj = self.create(**params)
-+            return obj, True
-+        except IntegrityError:
-+            exc_info = sys.exc_info()
-+            try:
-+                return self.get(**lookup), False
-+            except self.model.DoesNotExist:
-+                pass
-+            six.reraise(*exc_info)
-+
-+    QuerySet._create_object_from_params = _create_object_from_params
-+
-+    # end of HACK
-+
- class GitURLValidator(validators.URLValidator):
-     import re
-     regex = re.compile(
+ verify_prereq() {
+-    # Verify prerequisites
+-    regex="([0-9])\.([0-9])"
+-    for line in `cat $BBBASEDIR/toaster-requirements.txt | grep Django` ; do
+-        [[ `echo $line` =~ $regex ]]
+-        required_major_version="${BASH_REMATCH[1]}"
+-        required_minor_version="${BASH_REMATCH[2]}"
+-    done
+-
+-    if ! echo "import django; print ($required_major_version,) == django.VERSION[0:1] and django.VERSION[1:2][0] in ($required_minor_version,)" | python 2>/dev/null | grep True >/dev/null; then
+-        printf "This program needs Django $required_major_version.$required_minor_version. Please install with\n\npip install -r $BBBASEDIR/toaster-requirements.txt\n"
++    # Verify Django version
++    reqfile=$(python -c "import os; print os.path.realpath('$BBBASEDIR/toaster-requirements.txt')")
++    exp='s/Django\([><=]\+\)\([^,]\+\),\([><=]\+\)\(.\+\)/'
++    exp=$exp'import sys,django;version=django.get_version().split(".");'
++    exp=$exp'sys.exit(not (version \1 "\2".split(".") and version \3 "\4".split(".")))/p'
++    if ! sed -n "$exp" $reqfile | python - ; then
++        req=`grep ^Django $reqfile`
++        echo "This program needs $req"
++        echo "Please install with pip install -r $reqfile"
+         return 2
+     fi
+ 
+@@ -265,10 +264,7 @@ if [ "$1" = 'restart-bitbake' ] ; then
+     return $rc
+ fi
+ 
+-if ! verify_prereq; then
+-    echo "Error: Could not verify that the needed dependencies are installed. Please use virtualenv and pip to install dependencies listed in toaster-requirements.txt" 1>&2
+-    return 1
+-fi
++verify_prereq || return 1
+ 
+ # We make sure we're running in the current shell and in a good environment
+ if [ -z "$BUILDDIR" ] ||  ! which bitbake >/dev/null 2>&1 ; then
+diff --git a/toaster-requirements.txt b/toaster-requirements.txt
+index 5d34494..0e8c742 100644
+--- a/toaster-requirements.txt
++++ b/toaster-requirements.txt
+@@ -1,4 +1,4 @@
+-Django==1.8.6
++Django>1.8,<1.9
+ argparse==1.2.1
+ wsgiref==0.1.2
+ beautifulsoup4>=4.4.0
 -- 
 1.9.1
 
