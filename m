@@ -1,40 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pf0-f176.google.com (mail-pf0-f176.google.com
-	[209.85.192.176])
-	by mail.openembedded.org (Postfix) with ESMTP id D4783606A8
+Received: from mail-pf0-f173.google.com (mail-pf0-f173.google.com
+	[209.85.192.173])
+	by mail.openembedded.org (Postfix) with ESMTP id B56B56FFA6
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Dec 2015 03:53:05 +0000 (UTC)
-Received: by pfu207 with SMTP id 207so40747316pfu.2
+	Thu, 10 Dec 2015 03:53:06 +0000 (UTC)
+Received: by pfbg73 with SMTP id g73so41646416pfb.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 09 Dec 2015 19:53:06 -0800 (PST)
+	Wed, 09 Dec 2015 19:53:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=rZYwx9/SLdX+zA9H7Vb3b+0KvgssePf+MMGO5qYYf/c=;
-	b=NE38NNqi9/HkppVrjFGWsFT83kg2QhaoAQ5OxSMb8wdN4VSmrWkhIsvdNYPKbdf6x9
-	oTG5Aiy+RaEuRGF3UflZ4b1J1lwLrnDy1EpKfSr9jhyA55NypHuH31tQ8PsnPUCgfpCv
-	NHJdcppkiZ6ZM3HXohQj79qIO3ZSLvIEAi3qwMkiVyPQN4TajOSvgT79u+TotC1kdaHN
-	045VYKLMJ8N/ZD9E7f8JsZlWL7HZaNX/6TbbAyRg6M45CxVZB5Rxqd7PutxpIn0FrMZp
-	YjAcb0IiWp8WsLNveETHtiqeo+/nq2SAkIiT0GZAGuPb/QP6hwiEO+ejdyPdqRDhzZ66
-	3yuA==
-X-Received: by 10.98.74.221 with SMTP id c90mr3495735pfj.127.1449719586454;
-	Wed, 09 Dec 2015 19:53:06 -0800 (PST)
+	bh=snEEP+lw4SrqdVeUKxsZf2CSrsvLoQw3A6mnlGPA+18=;
+	b=aV4wrxG02oRtxbPKt6SzZD1GKrN8qVNDQdJAFBkzX9V8CzFcBJO2V1IZAefQNvqX9X
+	khqvcc4pO6zBgNZIj7qoQ5eiTwJrMwaiAiWsDGOdXpu2+j4zw0lqaY4+UIjcfS0TvJGr
+	yNMq4oGvN4wX2OwIDeGCvmmO7eHRPPBoCWz+PPhI2rG5eZJKj10FexAZAZzQLzx/vuBx
+	f98dMOhV1zIUfq3dxQQuaUgbgtzXUFhTQpvP6IWutVVchL/Uj9B+6+lJu5ZJB45SCGHz
+	4/uD3p1l7eXEQKbt3uSaOZglQJsPE86WEDivOuDwcugTR+A2mt2dioNb+b0WY8y1VB2H
+	bSRQ==
+X-Received: by 10.98.73.10 with SMTP id w10mr3556972pfa.164.1449719587331;
+	Wed, 09 Dec 2015 19:53:07 -0800 (PST)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
-	c20sm14761349pfd.17.2015.12.09.19.53.05
+	c20sm14761349pfd.17.2015.12.09.19.53.06
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 09 Dec 2015 19:53:05 -0800 (PST)
+	Wed, 09 Dec 2015 19:53:06 -0800 (PST)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  9 Dec 2015 19:56:33 -0800
-Message-Id: <739346667ef01f308c99b198bac0ef056d296818.1449719707.git.avery.brian@gmail.com>
+Date: Wed,  9 Dec 2015 19:56:34 -0800
+Message-Id: <49f7318236cc2de14d7342ccb22592a141625efc.1449719707.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <f49f7e1b41ee18a9959be3f3e12856980d58a18b.1449719707.git.avery.brian@gmail.com>
 References: <f49f7e1b41ee18a9959be3f3e12856980d58a18b.1449719707.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1449719707.git.avery.brian@gmail.com>
 References: <cover.1449719707.git.avery.brian@gmail.com>
-Subject: [PATCH 08/18] toaster: Prevent deprecation warnings for RedirectView
+Subject: [PATCH 09/18] toaster: Update deprecated manage.py command
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,11 +51,10 @@ X-List-Received-Date: Thu, 10 Dec 2015 03:53:06 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-The API for RedirectView is due to change in Django 1.9, which
-means that Toaster generates deprecation warnings.
+syncdb is deprecated in favour of migrate in Django 1.7:
+https://docs.djangoproject.com/en/1.8/releases/1.7/#schema-migrations
 
-Set the "permanent" flag when constructing RedirectView instances
-to prevent this warning.
+Update to the "migrate" command in Toaster's start script.
 
 [YOCTO #8364]
 
@@ -63,47 +62,22 @@ Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/toaster/bldcollector/urls.py | 1 -
- lib/toaster/toastergui/urls.py   | 2 +-
- lib/toaster/toastermain/urls.py  | 2 +-
- 3 files changed, 2 insertions(+), 3 deletions(-)
+ bin/toaster | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/toaster/bldcollector/urls.py b/lib/toaster/bldcollector/urls.py
-index 144387b..64722f2 100644
---- a/lib/toaster/bldcollector/urls.py
-+++ b/lib/toaster/bldcollector/urls.py
-@@ -18,7 +18,6 @@
+diff --git a/bin/toaster b/bin/toaster
+index 528e17e..e3c7867 100755
+--- a/bin/toaster
++++ b/bin/toaster
+@@ -56,7 +56,7 @@ webserverStartAll()
+     retval=0
+     # you can always add a superuser later via
+     # python bitbake/lib/toaster/manage.py python manage.py createsuperuser --username=<ME>
+-    python $BBBASEDIR/lib/toaster/manage.py syncdb --noinput || retval=1
++    python $BBBASEDIR/lib/toaster/manage.py migrate --noinput || retval=1
  
+     python $BBBASEDIR/lib/toaster/manage.py migrate orm || retval=2
  
- from django.conf.urls import patterns, include, url
--from django.views.generic import RedirectView
- 
- urlpatterns = patterns('bldcollector.views',
-         # landing point for pushing a bitbake_eventlog.json file to this toaster instace
-diff --git a/lib/toaster/toastergui/urls.py b/lib/toaster/toastergui/urls.py
-index a1adbb7..2bf2d99 100644
---- a/lib/toaster/toastergui/urls.py
-+++ b/lib/toaster/toastergui/urls.py
-@@ -168,5 +168,5 @@ urlpatterns = patterns('toastergui.views',
-             name='xhr_customrecipe'),
- 
-           # default redirection
--        url(r'^$', RedirectView.as_view( url= 'landing')),
-+        url(r'^$', RedirectView.as_view(url='landing', permanent=True)),
- )
-diff --git a/lib/toaster/toastermain/urls.py b/lib/toaster/toastermain/urls.py
-index 5ce5a92..534679d 100644
---- a/lib/toaster/toastermain/urls.py
-+++ b/lib/toaster/toastermain/urls.py
-@@ -45,7 +45,7 @@ urlpatterns = patterns('',
-     url(r'^orm/eventfile$', 'bldcollector.views.eventfile'),
- 
-     # if no application is selected, we have the magic toastergui app here
--    url(r'^$', never_cache(RedirectView.as_view(url='/toastergui/'))),
-+    url(r'^$', never_cache(RedirectView.as_view(url='/toastergui/', permanent=True))),
- )
- 
- import toastermain.settings
 -- 
 1.9.1
 
