@@ -1,40 +1,40 @@
 Return-Path: <avery.brian@gmail.com>
-Received: from mail-pa0-f45.google.com (mail-pa0-f45.google.com
-	[209.85.220.45])
-	by mail.openembedded.org (Postfix) with ESMTP id 8F30370057
+Received: from mail-pf0-f173.google.com (mail-pf0-f173.google.com
+	[209.85.192.173])
+	by mail.openembedded.org (Postfix) with ESMTP id C77F87316A
 	for <bitbake-devel@lists.openembedded.org>;
 	Thu, 10 Dec 2015 03:53:11 +0000 (UTC)
-Received: by pabur14 with SMTP id ur14so40486883pab.0
+Received: by pfbg73 with SMTP id g73so41647553pfb.1
 	for <bitbake-devel@lists.openembedded.org>;
 	Wed, 09 Dec 2015 19:53:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
 	h=from:to:cc:subject:date:message-id:in-reply-to:references
 	:in-reply-to:references;
-	bh=FNlSiwPwLOCVb7firtdLyvdfbO5Gb1FRDiiVlKvRyqI=;
-	b=REqFUF6io9koqnEL15mat84KxdvK3NeBUmTfP/bh1kQcdIfLxeQadv2kYvJmKAG2a+
-	edfFCqUxSTMJoDYCD9dZjqzNvbp4PZxBdOXxE5dMaQ+rnJ7IKtLYb0C3ItsxAaFt5F/j
-	DPCa0iOz48z1vwUbDbwEzr5fi7sysRvyhCvP77PK4ojUOsEKrtwpYY+tfZKYLSJm6aK2
-	VLsROZ+A2/GF2HKp8aTeCbOn2yv2dqdwH85DWxNavEWiv9kevrhsKQU+9eLrh3Ij4KKN
-	LQOvOgNn3yYD4oRbZQycD19Ycmydy+rlTUwgp8/ImXRUeDEZh0dT9Y3QNiQNm96K8vpb
-	ydBw==
-X-Received: by 10.66.216.200 with SMTP id os8mr13339493pac.143.1449719591881; 
-	Wed, 09 Dec 2015 19:53:11 -0800 (PST)
+	bh=htxrL4YcNmSuOG+bavoDwRpn9wNPfXgR77SzV9KZlbQ=;
+	b=slWzg+1Du56NGlgHkpY/cnqjE/dnhHCGEQKzcP87IQu0C7jVr/OF3h3An4oeyJ4qeY
+	zG1Jt2nYY7eWEBseVCS9k82G91I0vW2a5XOSuT6YftflYjDcFRXmgzseZWEB2TcnaP3Y
+	5zdXONHWsZfeU5Ye6YrsehTFb5HQvweXZWYkxB6cO2ZTH8UU4cCEitgn50wixuhALWy/
+	fEInF3qrgBuPcCqQGEhcjrrvRDP1i2O+9/g4oRRHGK3eLc31Ud1qoG188Ix69e4BSb8C
+	7TzsmzIiRsWJRKBtpiVTLmFhSPUhxwo8KD0Vgx9o3ljEhfiu0C7tPj9sgXIhOXMlkqn5
+	ldRw==
+X-Received: by 10.98.8.3 with SMTP id c3mr3554900pfd.89.1449719592693;
+	Wed, 09 Dec 2015 19:53:12 -0800 (PST)
 Received: from whisper.hsd1.or.comcast.net
 	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
 	by smtp.gmail.com with ESMTPSA id
 	c20sm14761349pfd.17.2015.12.09.19.53.11
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 09 Dec 2015 19:53:11 -0800 (PST)
+	Wed, 09 Dec 2015 19:53:12 -0800 (PST)
 From: brian avery <avery.brian@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Wed,  9 Dec 2015 19:56:39 -0800
-Message-Id: <f08f0a3df4358d1da23f6d5469db17d48c42fbfe.1449719707.git.avery.brian@gmail.com>
+Date: Wed,  9 Dec 2015 19:56:40 -0800
+Message-Id: <0650aca645b5f681442bc3d91d3d0294d323d210.1449719707.git.avery.brian@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <f49f7e1b41ee18a9959be3f3e12856980d58a18b.1449719707.git.avery.brian@gmail.com>
 References: <f49f7e1b41ee18a9959be3f3e12856980d58a18b.1449719707.git.avery.brian@gmail.com>
 In-Reply-To: <cover.1449719707.git.avery.brian@gmail.com>
 References: <cover.1449719707.git.avery.brian@gmail.com>
-Subject: [PATCH 14/18] toaster: fixed format strings
+Subject: [PATCH 15/18] toaster: work around 'database is locked' error
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,49 +51,52 @@ X-List-Received-Date: Thu, 10 Dec 2015 03:53:12 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Printing id as a number breaks toaster if object is not saved
-yet as id/pk is None in this case.
+When sqlite can not cope with a stream of 'insert' queries it throws
+'database is locked' exception.
 
-Changed format spec to print id as a string in __str__
-and __unicode__ methods of Build, Task and LayerVersion models.
+Wrapping model.save in transaction.atomic context and repeating the call
+should solve this issue.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: brian avery <avery.brian@gmail.com>
 ---
- lib/toaster/orm/models.py | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ lib/toaster/orm/models.py | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
 diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index f07feda..3c51c6f 100644
+index 3c51c6f..0d598ac 100644
 --- a/lib/toaster/orm/models.py
 +++ b/lib/toaster/orm/models.py
-@@ -370,7 +370,7 @@ class Build(models.Model):
-             return self.get_outcome_text()
+@@ -29,10 +29,28 @@ from django.core import validators
+ from django.conf import settings
+ import django.db.models.signals
  
-     def __str__(self):
--        return "%d %s %s" % (self.id, self.project, ",".join([t.target for t in self.target_set.all()]))
-+        return "%s %s %s" % (self.id, self.project, ",".join([t.target for t in self.target_set.all()]))
+-
+ import logging
+ logger = logging.getLogger("toaster")
  
++if 'sqlite' in settings.DATABASES['default']['ENGINE']:
++    from django.db import transaction, OperationalError
++    from time import sleep
++
++    _base_save = models.Model.save
++    def save(self, *args, **kwargs):
++        while True:
++            try:
++                with transaction.atomic():
++                    return _base_save(self, *args, **kwargs)
++            except OperationalError as err:
++                if 'database is locked' in str(err):
++                    logger.warning("%s, model: %s, args: %s, kwargs: %s",
++                                   err, self.__class__, args, kwargs)
++                    sleep(0.5)
++                    continue
++                raise
++
++    models.Model.save = save
  
- # an Artifact is anything that results from a Build, and may be of interest to the user, and is not stored elsewhere
-@@ -552,7 +552,7 @@ class Task(models.Model):
-     sstate_text  = property(get_sstate_text)
- 
-     def __unicode__(self):
--        return "%d(%d) %s:%s" % (self.pk, self.build.pk, self.recipe.name, self.task_name)
-+        return "%s(%s) %s:%s" % (self.pk, self.build.pk, self.recipe.name, self.task_name)
- 
-     class Meta:
-         ordering = ('order', 'recipe' ,)
-@@ -1203,7 +1203,7 @@ class Layer_Version(models.Model):
-         return sorted(result, key=lambda x: x.layer.name)
- 
-     def __unicode__(self):
--        return "%d %s (VCS %s, Project %s)" % (self.pk, str(self.layer), self.get_vcs_reference(), self.build.project if self.build is not None else "No project")
-+        return "%s %s (VCS %s, Project %s)" % (self.pk, str(self.layer), self.get_vcs_reference(), self.build.project if self.build is not None else "No project")
- 
-     class Meta:
-         unique_together = ("layer_source", "up_id")
+ class GitURLValidator(validators.URLValidator):
+     import re
 -- 
 1.9.1
 
