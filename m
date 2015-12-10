@@ -1,41 +1,35 @@
-Return-Path: <raj.khem@gmail.com>
-Received: from mail-pf0-f180.google.com (mail-pf0-f180.google.com
-	[209.85.192.180])
-	by mail.openembedded.org (Postfix) with ESMTP id F0AA56FFA6
+Return-Path: <avery.brian@gmail.com>
+Received: from mail-pa0-f50.google.com (mail-pa0-f50.google.com
+	[209.85.220.50])
+	by mail.openembedded.org (Postfix) with ESMTP id 9E187606A8
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  9 Dec 2015 23:32:50 +0000 (UTC)
-Received: by pfu207 with SMTP id 207so37471119pfu.2
+	Thu, 10 Dec 2015 03:52:50 +0000 (UTC)
+Received: by padhk6 with SMTP id hk6so238978pad.2
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 09 Dec 2015 15:32:50 -0800 (PST)
+	Wed, 09 Dec 2015 19:52:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=subject:mime-version:content-type:from:in-reply-to:date:cc
-	:message-id:references:to;
-	bh=rLkqQrEQYwnYkrxWU27YKO9YRD35QQyc1hld+jHLSWQ=;
-	b=bJ6Plitd0AwxsGljkLXNpKYwwxKG7BsGSCIJV7+PCySE5CaeqeCsNrcALKmv0FfxX+
-	WiEBDlOVuKu9Ke0D66L59O70K1a9diZDX2K2/i2mDqA+roLwaLcX2BIW/1cM7W/W62Wy
-	Qiw//u73jI0tfS/noiRXGAEhlKJgnfg5eU49DAwy/cC9kEivI6SVqpcH1Ke7A/QWPBgE
-	zCNx1ev0mix01cG8N7yGeN90CKkR/UMZ0mwB3+o95Duih+h3eNAbffGfoh9E3Ub3SD8S
-	xtiyFAAcsAwbzgFrme9uhFvWlh7MEfhzp8b59V6cY3PoLc9qRqV57xUqLEvhemn8JFkf
-	66HA==
-X-Received: by 10.98.19.12 with SMTP id b12mr2308748pfj.78.1449703970568;
-	Wed, 09 Dec 2015 15:32:50 -0800 (PST)
-Received: from ?IPv6:2601:646:8802:5d5c:24a3:d421:cfe2:88b3?
-	([2601:646:8802:5d5c:24a3:d421:cfe2:88b3])
-	by smtp.gmail.com with ESMTPSA id 1sm14014256pfc.3.2015.12.09.15.32.48
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Wed, 09 Dec 2015 15:32:49 -0800 (PST)
-Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3112\))
-X-Pgp-Agent: GPGMail 2.6b2
-From: Khem Raj <raj.khem@gmail.com>
-In-Reply-To: <CAP71WjwVKYvTqChH++LygHnRkshDWbTUpnRpuptcoRxBpFw9HQ@mail.gmail.com>
-Date: Wed, 9 Dec 2015 15:32:44 -0800
-Message-Id: <39C63A78-9861-4FFE-A6F7-0A7183312908@gmail.com>
-References: <CAJ86T=U_qRVDbJZbCOT5XCwRP=Scs0g1+EYeg+HhjLZ-J7zwhw@mail.gmail.com>
-	<CAP71WjwVKYvTqChH++LygHnRkshDWbTUpnRpuptcoRxBpFw9HQ@mail.gmail.com>
-To: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-X-Mailer: Apple Mail (2.3112)
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: PREFERRED_VERSION with % wildcard picking unexpected version
+	h=from:to:cc:subject:date:message-id;
+	bh=NbEjimQdylq2unkhC7jKxMzl79omZlalDkzDmWrnf40=;
+	b=O7Zx6WGJvNLoUzXeCNiXWVwbaZMwrkm3ELR8y2aQT92Bo7UQfokAMdWjnXTWdU5Mc0
+	XzvsNuOOjnBifR5XHlSAzxufQ0TZrRJHIlQ4K5yqMHK5AGkWEovq77UZPjMWmOOSEA3u
+	ni7/bmyoiL9069/f7YePrBoiYSbG43DCfNjaazCdl/AfJeSzCpDwbIiBAs43BM/JLxuH
+	nHAaHzB9SRdlw2SsA0Yzg/tWQuKRQRG7L6ShqJQkmUZsX7JrPI4LQki5RocKSHWnoqak
+	PXw9VPbcCP30O3oFR+8dpUrGpHpobdCgoEhzg/VtVj+awsqDmM7lR6FSe3Ozer1oxzD+
+	JO4w==
+X-Received: by 10.66.178.225 with SMTP id db1mr13215829pac.46.1449719570896;
+	Wed, 09 Dec 2015 19:52:50 -0800 (PST)
+Received: from whisper.hsd1.or.comcast.net
+	(c-98-232-142-195.hsd1.or.comcast.net. [98.232.142.195])
+	by smtp.gmail.com with ESMTPSA id
+	sg4sm14980624pac.48.2015.12.09.19.52.49
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Wed, 09 Dec 2015 19:52:50 -0800 (PST)
+From: brian avery <avery.brian@gmail.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  9 Dec 2015 19:56:31 -0800
+Message-Id: <cover.1449719707.git.avery.brian@gmail.com>
+X-Mailer: git-send-email 1.9.1
+Subject: [PATCH 00/18] toaster: upgrade to Django 1.8
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,81 +42,133 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 09 Dec 2015 23:32:53 -0000
-X-Groupsio-MsgNum: 6724
-Content-Type: multipart/signed;
-	boundary="Apple-Mail=_5A747A4F-F57E-4B46-965A-076159B0AAB5";
-	protocol="application/pgp-signature"; micalg=pgp-sha1
+X-List-Received-Date: Thu, 10 Dec 2015 03:52:51 -0000
 
---Apple-Mail=_5A747A4F-F57E-4B46-965A-076159B0AAB5
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=utf-8
+This rather large patchset upgrades toaster to work with Django 1.8.
+It was tested with Django 1.8.6 and 1.8.7.
 
+yay for LTS!
+-b
 
-> On Dec 9, 2015, at 3:27 PM, Nicolas Dechesne =
-<nicolas.dechesne@linaro.org> wrote:
->=20
-> On Tue, Dec 1, 2015 at 6:13 AM, Andre McCurdy <armccurdy@gmail.com> =
-wrote:
->> I have two recipes within a single layer:
->>=20
->>  stblinux_3.14-1.7.bb
->>  stblinux_3.14-1.8.bb
->>=20
->> If PREFERRED_VERSION_stblinux is set to "3.14%", then I would expect
->> the version 3.14-1.8 recipe to be selected, however 3.14-1.7 gets
->> selected instead.
->>=20
->> Reversing the order of files stored in pkg_pn[pn] seems to help. Is =
-it
->> a reasonable solution?
->=20
->=20
-> I have a somewhat similar issue..
->=20
-> in oe-core we have GCCVERSION set to 5.%, if I add meta-linaro layer
-> which has gcc_5.1.bb (while OE has gcc_5.2.bb), I am seeing this:
->=20
-> $ bitbake -e gcc | grep ^PV
-> PV=3D"5.1.0"
->=20
-> While I would expect 5.2.0 to be picked up.
->=20
-> This patch does not fix this issue, btw.
->=20
-> If I remove gcc_5.1.bb from my layers, then I can see:
->=20
-> $ bitbake -e gcc | grep ^PV
-> PV=3D=E2=80=9C5.2.0"
+The following changes since commit 2cb81fb08395ec9cd68b02bc48391c9610eac9d9:
 
-whats the order of your layer in bitbake search path. Secondly whats the =
-LAYER_PRIORITY
-if they are higher than oe-core then it will always choose the provider =
-from the higher order layer
-versions don=E2=80=99t matter.
+  toasterui: process SetBRBE event (2015-12-09 19:45:13 -0800)
 
-> --
-> _______________________________________________
-> bitbake-devel mailing list
-> bitbake-devel@lists.openembedded.org
-> http://lists.openembedded.org/mailman/listinfo/bitbake-devel
+are available in the git repository at:
 
+  git://git.yoctoproject.org/poky-contrib bavery/submit/ed/toaster/django_upgrade-8364
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=bavery/submit/ed/toaster/django_upgrade-8364
 
---Apple-Mail=_5A747A4F-F57E-4B46-965A-076159B0AAB5
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP using GPGMail
+Ed Bartosh (9):
+  toaster: Remove South migrations
+  toaster: Fix references to app paths
+  toaster: rename get_query_set -> get_queryset
+  toaster: use OneToOneField instead of ForeignKey
+  toaster: fixed format strings
+  toaster: work around 'database is locked' error
+  toaster: removed extra calls of migrate
+  toaster: monkey patch Queryset
+  toaster: rework checking of Django version
 
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - https://gpgtools.org
+Elliot Smith (9):
+  toaster: Upgrade to Django 1.8.6 and remove South
+  toaster: Create default project with get_or_create* method
+  toaster: Start Django machinery for database access
+  toaster: Update API used to make runbuilds methods run in transactions
+  toaster: Prevent deprecation warnings for RedirectView
+  toaster: Update deprecated manage.py command
+  toaster: Check Django version against toaster-requirements.txt
+  toaster: Remove compatible_layerversions() method
+  toaster: Amend regex for MySQL database URLs
 
-iEYEARECAAYFAlZouiAACgkQuwUzVZGdMxSjLQCgkzCuHbt77mMzNBPUnWzevGXp
-hgMAnRnBeSt8kS/gddLD5mOLqxSmoEem
-=yKkJ
------END PGP SIGNATURE-----
+ bin/toaster                                        |  44 +-
+ lib/bb/ui/buildinfohelper.py                       |  26 +-
+ lib/toaster/bldcollector/urls.py                   |   1 -
+ lib/toaster/bldcontrol/bbcontroller.py             |   4 +-
+ lib/toaster/bldcontrol/localhostbecontroller.py    |  13 +-
+ .../bldcontrol/management/commands/runbuilds.py    |   6 +-
+ lib/toaster/bldcontrol/migrations/0001_initial.py  | 265 +++---
+ ...onment_sourcedir__add_field_buildenvironment.py | 106 ---
+ .../0003_auto__add_field_brlayer_dirpath.py        |  99 ---
+ .../bldcontrol/migrations/0004_loadinitialdata.py  | 104 ---
+ .../migrations/0005_auto__add_brerror.py           | 112 ---
+ .../migrations/0006_auto__add_brbitbake.py         | 128 ---
+ ...st_environment__chg_field_buildrequest_build.py | 145 ----
+ .../bldcontrol/migrations/0008_brarchive.py        | 138 ---
+ .../0009_auto__add_field_brlayer_layer_version.py  | 180 ----
+ lib/toaster/bldcontrol/models.py                   |   2 +-
+ lib/toaster/bldcontrol/tests.py                    |   6 +-
+ lib/toaster/orm/migrations/0001_initial.py         | 928 ++++++++++++---------
+ .../0002_auto__add_field_build_timespent.py        | 180 ----
+ lib/toaster/orm/migrations/0003_timespent.py       | 182 ----
+ .../0004_auto__add_field_package_installed_name.py | 181 ----
+ ...e__add_target_file__add_field_variablehistor.py | 281 -------
+ ...ge_size__add_field_target_license_manifest_p.py | 235 ------
+ .../orm/migrations/0007_auto__add_helptext.py      | 214 -----
+ ...story_operation__chg_field_recipe_descriptio.py | 225 -----
+ ..._add_projectlayer__add_projecttarget__add_pr.py | 286 -------
+ ...anch__add_field_project_short_description__a.py | 257 ------
+ .../0011_auto__add_field_projectlayer_dirpath.py   | 242 ------
+ ...layer_optional__add_field_projecttarget_task.py | 252 ------
+ ...erversiondependency__add_unique_layerversion.py | 710 ----------------
+ ...mmary__chg_field_layer_summary__chg_field_re.py | 336 --------
+ ...web_url__add_field_layer_vcs_web_tree_base_u.py | 336 --------
+ ...lptext__chg_field_release_branch__add_index_.py | 359 --------
+ ...faultlayer__add_releaselayersourcepriority__.py | 396 ---------
+ .../0018_auto__add_field_layer_version_project.py  | 331 --------
+ .../orm/migrations/0019_auto__add_buildartifact.py | 342 --------
+ ...ion_local_path__add_field_recipe_pathflags__.py | 361 --------
+ ...ect__chg_field_project_bitbake_version__chg_.py | 371 --------
+ ...k__add_field_layer_version_local_path__del_f.py | 343 --------
+ ...ings_no__del_field_build_errors_no__del_fiel.py | 353 --------
+ .../0024_auto__add_field_recipe_is_image.py        | 338 --------
+ .../0025_auto__add_field_project_is_default.py     | 346 --------
+ .../orm/migrations/0026_set_default_project.py     | 374 ---------
+ ...e__add_unique_customimagerecipe_name_project.py | 375 ---------
+ .../0028_auto__chg_field_logmessage_message.py     | 345 --------
+ lib/toaster/orm/models.py                          | 108 ++-
+ lib/toaster/toastergui/urls.py                     |   2 +-
+ lib/toaster/toastergui/views.py                    |  24 +-
+ lib/toaster/toastermain/settings.py                |   4 +-
+ lib/toaster/toastermain/urls.py                    |   2 +-
+ toaster-requirements.txt                           |   3 +-
+ 51 files changed, 779 insertions(+), 10222 deletions(-)
+ delete mode 100644 bitbake/lib/toaster/bldcontrol/migrations/0002_auto__add_field_buildenvironment_sourcedir__add_field_buildenvironment.py
+ delete mode 100644 bitbake/lib/toaster/bldcontrol/migrations/0003_auto__add_field_brlayer_dirpath.py
+ delete mode 100644 bitbake/lib/toaster/bldcontrol/migrations/0004_loadinitialdata.py
+ delete mode 100644 bitbake/lib/toaster/bldcontrol/migrations/0005_auto__add_brerror.py
+ delete mode 100644 bitbake/lib/toaster/bldcontrol/migrations/0006_auto__add_brbitbake.py
+ delete mode 100644 bitbake/lib/toaster/bldcontrol/migrations/0007_auto__add_field_buildrequest_environment__chg_field_buildrequest_build.py
+ delete mode 100644 bitbake/lib/toaster/bldcontrol/migrations/0008_brarchive.py
+ delete mode 100644 bitbake/lib/toaster/bldcontrol/migrations/0009_auto__add_field_brlayer_layer_version.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0002_auto__add_field_build_timespent.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0003_timespent.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0004_auto__add_field_package_installed_name.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0005_auto__add_target_image_file__add_target_file__add_field_variablehistor.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0006_auto__add_field_target_image_size__add_field_target_license_manifest_p.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0007_auto__add_helptext.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0008_auto__chg_field_variablehistory_operation__chg_field_recipe_descriptio.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0009_auto__add_projectvariable__add_projectlayer__add_projecttarget__add_pr.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0010_auto__add_field_project_branch__add_field_project_short_description__a.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0011_auto__add_field_projectlayer_dirpath.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0012_auto__add_field_projectlayer_optional__add_field_projecttarget_task.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0013_auto__add_release__add_layerversiondependency__add_unique_layerversion.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0014_auto__chg_field_package_summary__chg_field_layer_summary__chg_field_re.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0015_auto__add_field_layer_vcs_web_url__add_field_layer_vcs_web_tree_base_u.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0016_auto__add_field_release_helptext__chg_field_release_branch__add_index_.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0017_auto__del_toastersettingdefaultlayer__add_releaselayersourcepriority__.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0018_auto__add_field_layer_version_project.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0019_auto__add_buildartifact.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0020_auto__add_field_layer_version_local_path__add_field_recipe_pathflags__.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0021_auto__chg_field_build_project__chg_field_project_bitbake_version__chg_.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0022_auto__add_field_target_task__add_field_layer_version_local_path__del_f.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0023_auto__del_field_build_warnings_no__del_field_build_errors_no__del_fiel.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0024_auto__add_field_recipe_is_image.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0025_auto__add_field_project_is_default.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0026_set_default_project.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0027_auto__add_customimagerecipe__add_unique_customimagerecipe_name_project.py
+ delete mode 100644 bitbake/lib/toaster/orm/migrations/0028_auto__chg_field_logmessage_message.py
 
---Apple-Mail=_5A747A4F-F57E-4B46-965A-076159B0AAB5--
+--
+1.9.1
+
