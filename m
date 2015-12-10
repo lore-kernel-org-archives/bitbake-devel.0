@@ -1,34 +1,24 @@
-Return-Path: <sfevral@mera.ru>
-X-Greylist: delayed 1333 seconds by postgrey-1.34 at layers.openembedded.org;
-	Tue, 08 Dec 2015 09:23:22 UTC
-Received: from mail.mera.ru (mail.mera.ru [195.98.57.161])
-	by mail.openembedded.org (Postfix) with ESMTP id EEB5860589
+Return-Path: <contact@stefanchrist.eu>
+X-Greylist: delayed 1225 seconds by postgrey-1.34 at layers.openembedded.org;
+	Thu, 10 Dec 2015 21:18:05 UTC
+Received: from stcim.de (stcim.de [78.46.73.102])
+	by mail.openembedded.org (Postfix) with ESMTP id EBB456012C
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  8 Dec 2015 09:23:22 +0000 (UTC)
-Received: from [192.168.50.122] (helo=cmail.merann.ru)
-	by mail.mera.ru with esmtps (TLSv1:AES256-SHA:256)
-	(Exim 4.71 (FreeBSD)) (envelope-from <sfevral@mera.ru>)
-	id 1a6E6g-0009hN-UL for bitbake-devel@lists.openembedded.org;
-	Tue, 08 Dec 2015 11:58:46 +0300
-Received: from mbx03.merann.ru ([192.168.49.73]) by cmail.merann.ru ([::1])
-	with mapi id 14.03.0266.001; Tue, 8 Dec 2015 12:01:05 +0300
-From: "Fevralskikh, Sergey" <sfevral@mera.ru>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: bitbake functions
-Thread-Index: AdEoRgJ92tEfr2GhQ6OLF7ZVJ/glQAJS//6g
-Date: Tue, 8 Dec 2015 09:01:04 +0000
-Message-ID: <6489DBA277E4824B8441DF596CFC9024B938F606@mbx03.merann.ru>
-References: <41E0F44D2CEBB148A7200081BAACCFCF97676766@mbx03.merann.ru>
-In-Reply-To: <41E0F44D2CEBB148A7200081BAACCFCF97676766@mbx03.merann.ru>
-Accept-Language: ru-RU, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [192.168.220.26]
-x-inside-org: True
+	Thu, 10 Dec 2015 21:18:05 +0000 (UTC)
+Received: from [2a01:4f8:120:4065:2::2] (helo=sill.h.stcim.de)
+	by stcim.de with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
+	(Exim 4.84) (envelope-from <contact@stefanchrist.eu>)
+	id 1a78HU-0005jC-TW for bitbake-devel@lists.openembedded.org;
+	Thu, 10 Dec 2015 21:57:41 +0100
+Date: Thu, 10 Dec 2015 21:57:39 +0100
+From: Christ Stefan <contact@stefanchrist.eu>
+To: bitbake-devel@lists.openembedded.org
+Message-ID: <20151210205739.GB622@sill.h.stcim.de>
 MIME-Version: 1.0
+X-PGP-Key: http://stefanchrist.eu/personal/Stefan%20Christ.asc
+User-Agent: Mutt/1.5.23 (2014-03-12)
 X-Mailman-Approved-At: Mon, 14 Dec 2015 23:08:38 +0000
-Subject: Re: bitbake functions
+Subject: Missing tags in the bitbake repository
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,318 +31,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 08 Dec 2015 09:23:24 -0000
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_6489DBA277E4824B8441DF596CFC9024B938F606mbx03merannru_"
+X-List-Received-Date: Thu, 10 Dec 2015 21:18:06 -0000
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
---_000_6489DBA277E4824B8441DF596CFC9024B938F606mbx03merannru_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hello, all.
+I cannot find tags for all bitbake versions (__version__ in file
+bin/bitbake) in the repository
 
-Two weeks ago my colleague wrote mail to you with the question (his mail be=
-low).
-He is not working any more with us, but it will be great if you will try he=
-lp us with the question that he asked.
+    git://git.openembedded.org/bitbake
 
+For example tags for
 
-Best regards
-Sergey Fevralsky
+    1.17.1 1.25.0 and 1.27.1 
 
-From: Timofeev, Andrey
-Sent: Thursday, November 26, 2015 3:45 PM
-To: bitbake-devel@lists.openembedded.org
-Cc: Fevralskikh, Sergey
-Subject: bitbake functions
+are missing and much more are missing, too. Is there a reason for that?
 
-Hello, guys,
+Kind regards,
+Stefan Christ
 
-We are using bitbake for our project, but we have faced with an issue.
+-- 
+pgp-key id:  0x117C3CFA
+fingerprint: 1245 44A4 9DCB 4A70 1E21  8A46 7B9E 49D4 117C 3CFA
+download:    https://www.stefanchrist.eu/personal/Stefan%20Christ.asc
 
-We have a large amount of files and modules and we have a problem with larg=
-e amount of bb files and we would like to reduce it.
+https certificate for www.stefanchrist.eu (until Dec 10 18:04:58 2016 GMT):
+SHA256 Fingerprint=2D:B9:70:7B:F6:B4:24:5D:C2:5D:96:70:4B:33:93:C6:1C:0B:81:B5:
+                   15:6F:98:15:33:67:9A:89:A6:26:3B:5C
+SHA1 Fingerprint  =A1:27:51:21:49:6C:C9:C7:EE:B7:BA:F0:B2:B7:9C:D6:66:22:20:5F
+MD5 Fingerprint   =C9:FE:A4:7D:9D:0D:6B:B6:09:BE:88:2C:F3:C3:A7:07
 
-I try to explain our issue:
-
-Imagine that you have more than 10 target load modules that include more th=
-an 100 code modules.
-And this target load modules have the same code modules.
-
-I try to show it in example:
-
-
-1)      We have 2 .bb files (tests.bb and product.bb)
-
-2)      They include the same dependencies:
-DEPENDS +=3D a
-DEPENDS +=3D b
-DEPENDS +=3D c
-
-But for product we want that a,b,c use TEST flag for building when we are b=
-uilding tests.bb and TARGET when building product.bb
-
-So, we want that a,b,c to be able to inherit FLAGS from target bitbake (pro=
-duce or tests).
-I mean we want that all bitbakes which are participants in building know wh=
-at is main bitbake.
-
-Now, we are using *.inc files to decide this issue but it requires many bit=
-bake files.
-
-If you do not understand what I mean, please send me letter. I will try to =
-explain in details.
-
-Thank you!
-
-Best regards,
-Andrey Timofeev
-
-
-
-
---_000_6489DBA277E4824B8441DF596CFC9024B938F606mbx03merannru_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
-osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
-//www.w3.org/TR/REC-html40">
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-<meta name=3D"Generator" content=3D"Microsoft Word 14 (filtered medium)">
-<style><!--
-/* Font Definitions */
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;}
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
-@font-face
-	{font-family:Tahoma;
-	panose-1:2 11 6 4 3 5 4 4 2 4;}
-/* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0cm;
-	margin-bottom:.0001pt;
-	font-size:11.0pt;
-	font-family:"Calibri","sans-serif";
-	mso-fareast-language:EN-US;}
-a:link, span.MsoHyperlink
-	{mso-style-priority:99;
-	color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{mso-style-priority:99;
-	color:purple;
-	text-decoration:underline;}
-p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
-	{mso-style-priority:34;
-	margin-top:0cm;
-	margin-right:0cm;
-	margin-bottom:0cm;
-	margin-left:36.0pt;
-	margin-bottom:.0001pt;
-	font-size:11.0pt;
-	font-family:"Calibri","sans-serif";
-	mso-fareast-language:EN-US;}
-span.EmailStyle18
-	{mso-style-type:personal;
-	font-family:"Calibri","sans-serif";
-	color:windowtext;}
-span.EmailStyle19
-	{mso-style-type:personal-reply;
-	font-family:"Calibri","sans-serif";
-	color:#1F497D;}
-.MsoChpDefault
-	{mso-style-type:export-only;
-	font-size:10.0pt;}
-@page WordSection1
-	{size:612.0pt 792.0pt;
-	margin:2.0cm 42.5pt 2.0cm 3.0cm;}
-div.WordSection1
-	{page:WordSection1;}
-/* List Definitions */
-@list l0
-	{mso-list-id:1180117514;
-	mso-list-type:hybrid;
-	mso-list-template-ids:-35885456 68747281 68747289 68747291 68747279 687472=
-89 68747291 68747279 68747289 68747291;}
-@list l0:level1
-	{mso-level-text:"%1\)";
-	mso-level-tab-stop:none;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l0:level2
-	{mso-level-number-format:alpha-lower;
-	mso-level-tab-stop:none;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l0:level3
-	{mso-level-number-format:roman-lower;
-	mso-level-tab-stop:none;
-	mso-level-number-position:right;
-	text-indent:-9.0pt;}
-@list l0:level4
-	{mso-level-tab-stop:none;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l0:level5
-	{mso-level-number-format:alpha-lower;
-	mso-level-tab-stop:none;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l0:level6
-	{mso-level-number-format:roman-lower;
-	mso-level-tab-stop:none;
-	mso-level-number-position:right;
-	text-indent:-9.0pt;}
-@list l0:level7
-	{mso-level-tab-stop:none;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l0:level8
-	{mso-level-number-format:alpha-lower;
-	mso-level-tab-stop:none;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l0:level9
-	{mso-level-number-format:roman-lower;
-	mso-level-tab-stop:none;
-	mso-level-number-position:right;
-	text-indent:-9.0pt;}
-ol
-	{margin-bottom:0cm;}
-ul
-	{margin-bottom:0cm;}
---></style><!--[if gte mso 9]><xml>
-<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
-</xml><![endif]--><!--[if gte mso 9]><xml>
-<o:shapelayout v:ext=3D"edit">
-<o:idmap v:ext=3D"edit" data=3D"1" />
-</o:shapelayout></xml><![endif]-->
-</head>
-<body lang=3D"RU" link=3D"blue" vlink=3D"purple">
-<div class=3D"WordSection1">
-<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#1F497D">Hello, =
-all.<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#1F497D"><o:p>&n=
-bsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#1F497D">Two wee=
-ks ago my colleague wrote mail to you with the question (his mail below).<o=
-:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#1F497D">He is n=
-ot working any more with us, but it will be great if you will try help us w=
-ith the question that he asked.<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"color:#1F497D"><o:p>&n=
-bsp;</o:p></span></p>
-<div>
-<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:10.0pt;font-=
-family:&quot;Arial&quot;,&quot;sans-serif&quot;;color:blue;mso-fareast-lang=
-uage:RU"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:10.0pt;font-=
-family:&quot;Arial&quot;,&quot;sans-serif&quot;;color:blue;mso-fareast-lang=
-uage:RU">Best regards</span><span lang=3D"EN-US" style=3D"color:#1F497D;mso=
--fareast-language:RU"><o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"font-size:10.0pt;font-=
-family:&quot;Arial&quot;,&quot;sans-serif&quot;;color:blue;mso-fareast-lang=
-uage:RU">Sergey Fevralsky</span><span lang=3D"EN-US" style=3D"color:#1F497D=
-;mso-fareast-language:RU"><o:p></o:p></span></p>
-</div>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<div>
-<div style=3D"border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0cm =
-0cm 0cm">
-<p class=3D"MsoNormal"><b><span lang=3D"EN-US" style=3D"font-size:10.0pt;fo=
-nt-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;;mso-fareast-language:RU=
-">From:</span></b><span lang=3D"EN-US" style=3D"font-size:10.0pt;font-famil=
-y:&quot;Tahoma&quot;,&quot;sans-serif&quot;;mso-fareast-language:RU"> Timof=
-eev, Andrey
-<br>
-<b>Sent:</b> Thursday, November 26, 2015 3:45 PM<br>
-<b>To:</b> bitbake-devel@lists.openembedded.org<br>
-<b>Cc:</b> Fevralskikh, Sergey<br>
-<b>Subject:</b> bitbake functions<o:p></o:p></span></p>
-</div>
-</div>
-<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">Hello, guys,<o:p></o:p></span><=
-/p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">We are using bitbake for our pr=
-oject, but we have faced with an issue.<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">We have a large amount of files=
- and modules and we have a problem with large amount of bb files and we wou=
-ld like to reduce it.<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">I try to explain our issue:<o:p=
-></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">Imagine that you have more than=
- 10 target load modules that include more than 100 code modules.<o:p></o:p>=
-</span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">And this target load modules ha=
-ve the same code modules.<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">I try to show it in example:<o:=
-p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoListParagraph" style=3D"text-indent:-18.0pt;mso-list:l0 leve=
-l1 lfo2"><![if !supportLists]><span lang=3D"EN-US"><span style=3D"mso-list:=
-Ignore">1)<span style=3D"font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]><span lang=3D"EN-US">We have 2 .bb files (te=
-sts.bb and product.bb)<o:p></o:p></span></p>
-<p class=3D"MsoListParagraph" style=3D"text-indent:-18.0pt;mso-list:l0 leve=
-l1 lfo2"><![if !supportLists]><span lang=3D"EN-US"><span style=3D"mso-list:=
-Ignore">2)<span style=3D"font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]><span lang=3D"EN-US">They include the same d=
-ependencies:<o:p></o:p></span></p>
-<p class=3D"MsoNormal" style=3D"margin-left:35.4pt"><span lang=3D"EN-US">DE=
-PENDS &#43;=3D a<o:p></o:p></span></p>
-<p class=3D"MsoNormal" style=3D"margin-left:35.4pt"><span lang=3D"EN-US">DE=
-PENDS &#43;=3D b<o:p></o:p></span></p>
-<p class=3D"MsoNormal" style=3D"margin-left:35.4pt"><span lang=3D"EN-US">DE=
-PENDS &#43;=3D c<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">But for product we want that a,=
-b,c use TEST flag for building when we are building tests.bb and TARGET whe=
-n building product.bb<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">So, we want that a,b,c to be ab=
-le to inherit FLAGS from target bitbake (produce or tests).<o:p></o:p></spa=
-n></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">I mean we want that all bitbake=
-s which are participants in building know what is main bitbake.<o:p></o:p><=
-/span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">Now, we are using *.inc files t=
-o decide this issue but it requires many bitbake files.<o:p></o:p></span></=
-p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">If you do not understand what I=
- mean, please send me letter. I will try to explain in details.<o:p></o:p><=
-/span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US">Thank you!<o:p></o:p></span></p=
->
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"mso-fareast-language:R=
-U">Best regards,<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US" style=3D"mso-fareast-language:R=
-U">Andrey Timofeev<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal" style=3D"margin-left:35.4pt"><span lang=3D"EN-US"><o=
-:p>&nbsp;</o:p></span></p>
-</div>
-</body>
-</html>
-
---_000_6489DBA277E4824B8441DF596CFC9024B938F606mbx03merannru_--
