@@ -1,33 +1,46 @@
-Return-Path: <Awais_Belal@mentor.com>
-Received: from relay1.mentorg.com (relay1.mentorg.com [192.94.38.131])
-	by mail.openembedded.org (Postfix) with ESMTP id 36D956FFA6
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wm0-f41.google.com (mail-wm0-f41.google.com [74.125.82.41])
+	by mail.openembedded.org (Postfix) with ESMTP id 98462607A5
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 11 Dec 2015 10:56:58 +0000 (UTC)
-Received: from nat-ies.mentorg.com ([192.94.31.2]
-	helo=SVR-IES-FEM-02.mgc.mentorg.com)
-	by relay1.mentorg.com with esmtp 
-	id 1a7LNi-00057w-UX from Awais_Belal@mentor.com 
-	for bitbake-devel@lists.openembedded.org;
-	Fri, 11 Dec 2015 02:56:59 -0800
-Received: from EU-MBX-02.mgc.mentorg.com ([169.254.3.69]) by
-	SVR-IES-FEM-02.mgc.mentorg.com ([137.202.0.106]) with mapi id
-	14.03.0224.002; Fri, 11 Dec 2015 10:56:58 +0000
-From: "Belal, Awais" <Awais_Belal@mentor.com>
-To: "bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH] bitbake: fetch: use orig localpath
-	when	calling orig method
-Thread-Index: AQHRM3y08+4MlEYbfkOT+uu7MQrMUp7FnhLh
-Date: Fri, 11 Dec 2015 10:56:57 +0000
-Message-ID: <2021B186DC632746BD5A3CE32F12BD280119AA60C3@EU-MBX-02.mgc.mentorg.com>
-References: <1449773843-23411-1-git-send-email-awais_belal@mentor.com>
-In-Reply-To: <1449773843-23411-1-git-send-email-awais_belal@mentor.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.202.0.68]
-MIME-Version: 1.0
-Subject: Re: [PATCH] bitbake: fetch: use orig localpath when	calling orig method
+	Fri, 11 Dec 2015 12:27:58 +0000 (UTC)
+Received: by mail-wm0-f41.google.com with SMTP id c201so73275569wme.0
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 11 Dec 2015 04:27:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:subject:date:message-id;
+	bh=0+VfHZwsy9sbfEr1T16JUbt4+2qid7V4hvXH/V3N8nM=;
+	b=0QRTLZqLsZzflMP3NWCzjoBrHez4n7gD2tDfJIr51ohVImiWsuWoXZ9UeVwHynwfFg
+	sEy9aq4Ehwc/Zn5Y7NUgUxR5YeGKPJjdk9J3nsHH2iad0LNIGuKeLeEmY3F5ecq7r5zk
+	26Iss6aN55Qbw3GmgB2IzqbGj2osdero6G+HKEOHT+izxs/gxJfFwRkSov0mqfDvJNbv
+	CjUjuGQJ4nkNf/9egH6wjCqo2Ikw1xA6eiZyzNW6kGOapmd4jRY9WV2Trq/z9uAcGVYP
+	fCnTjYjHmAVQwLRy1n9dfyTB+fXWRX8KXn48vwUw7kA44YrN8nukPgeAB/ZtPTqE02lI
+	uaVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=0+VfHZwsy9sbfEr1T16JUbt4+2qid7V4hvXH/V3N8nM=;
+	b=Fz93OdQoUHhc5cYAMyj8m0t87nfkPh52BWbhhJeBvVGru1bahU50GP+lIIHZ1xJ91K
+	ZJ5nyvF2UhdRJSRO4F/lO3iOm1x4kCabn60100joHxgDXJzIt2UE09fVsUjREWD8jjNL
+	kMyp5cYAcefrKT1BHgbURWtZb64StRgyrQkeYIeSnPyoPHVmdKpal7ei7xKHQ7xpxDRz
+	3l3UP0LbcFUbdtmBCINn/E6lrfE89xETSxdm8slcqA9W3nlmrIHxnTdVhi2AcyPkwpCQ
+	0UQY4jIWavAVhSDXHquUEk027q9Y8UO9hymUx4Y98CAiMP70kwAyL1LDyJBzftgDcp1t
+	bUrQ==
+X-Gm-Message-State: ALoCoQnCVRlzpIOCXqrqbDyn/+4vVdekUj6FXWqYZ6cXxldljco7EJiB2zb55te82uj3236DEktZpeRM39MTxc1W9RM/jHi4Ww==
+X-Received: by 10.28.60.84 with SMTP id j81mr5295743wma.15.1449836878342;
+	Fri, 11 Dec 2015 04:27:58 -0800 (PST)
+Received: from flashheart.burtonini.com (35.106.2.81.in-addr.arpa.
+	[81.2.106.35]) by smtp.gmail.com with ESMTPSA id
+	l7sm16808728wjx.14.2015.12.11.04.27.57
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Fri, 11 Dec 2015 04:27:57 -0800 (PST)
+From: Ross Burton <ross.burton@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 11 Dec 2015 12:27:54 +0000
+Message-Id: <1449836874-17390-1-git-send-email-ross.burton@intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH] cooker: use in instead of count
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,67 +53,29 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 11 Dec 2015 10:56:59 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Fri, 11 Dec 2015 12:28:00 -0000
 
-This applies to 1.28 as well and otherwise broken builds are seen where the=
- git tarball from source mirror is outdated.=0A=
-=0A=
-BR,=0A=
-Awais=0A=
-=0A=
-________________________________________=0A=
-From: bitbake-devel-bounces@lists.openembedded.org [bitbake-devel-bounces@l=
-ists.openembedded.org] on behalf of Belal, Awais=0A=
-Sent: Thursday, December 10, 2015 11:57 PM=0A=
-To: bitbake-devel@lists.openembedded.org=0A=
-Subject: [bitbake-devel] [PATCH] bitbake: fetch: use orig localpath when   =
-     calling orig method=0A=
-=0A=
-From: Christopher Larson <chris_larson@mentor.com>=0A=
-=0A=
-When a mirror tarball is fetched, the original fetch method is called, whic=
-h=0A=
-unpacks the mirror tarball. After the original method is called, it checks =
-the=0A=
-localpath of the mirror tarball rather than the clone path, which isn't ide=
-al,=0A=
-particularly if the mirror tarball was removed due to being out of date. We=
-=0A=
-know the original fetch method will do what it needs to do to get its conte=
-nt=0A=
-in the form it needs from the mirror tarball, so we can use its localpath=
-=0A=
-instead.=0A=
-=0A=
-Signed-off-by: Christopher Larson <chris_larson@mentor.com>=0A=
-Signed-off-by: Awais Belal <awais_belal@mentor.com>=0A=
----=0A=
- lib/bb/fetch2/__init__.py | 2 +-=0A=
- 1 file changed, 1 insertion(+), 1 deletion(-)=0A=
-=0A=
-diff --git a/lib/bb/fetch2/__init__.py b/lib/bb/fetch2/__init__.py=0A=
-index d66a212..68ebf8b 100644=0A=
---- a/lib/bb/fetch2/__init__.py=0A=
-+++ b/lib/bb/fetch2/__init__.py=0A=
-@@ -955,7 +955,7 @@ def try_mirror_url(fetch, origud, ud, ld, check =3D Fal=
-se):=0A=
-                 origud.method.download(origud, ld)=0A=
-                 if hasattr(origud.method,"build_mirror_data"):=0A=
-                     origud.method.build_mirror_data(origud, ld)=0A=
--            return ud.localpath=0A=
-+            return origud.localpath=0A=
-         # Otherwise the result is a local file:// and we symlink to it=0A=
-         if not os.path.exists(origud.localpath):=0A=
-             if os.path.islink(origud.localpath):=0A=
---=0A=
-1.9.1=0A=
-=0A=
---=0A=
-_______________________________________________=0A=
-bitbake-devel mailing list=0A=
-bitbake-devel@lists.openembedded.org=0A=
-http://lists.openembedded.org/mailman/listinfo/bitbake-devel=0A=
+No point counting all instances when we just want to know if there's any or not.
+
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ bitbake/lib/bb/cooker.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
+index 4df8881..d39c64b 100644
+--- a/bitbake/lib/bb/cooker.py
++++ b/bitbake/lib/bb/cooker.py
+@@ -1072,7 +1072,7 @@ class BBCooker:
+ 
+         for pfn in self.recipecache.pkg_fn:
+             inherits = self.recipecache.inherits.get(pfn, None)
+-            if inherits and inherits.count(klass) > 0:
++            if inherits and klass in inherits:
+                 pkg_list.append(self.recipecache.pkg_fn[pfn])
+ 
+         return pkg_list
+-- 
+2.1.4
+
 
