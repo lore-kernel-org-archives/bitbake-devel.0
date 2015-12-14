@@ -1,46 +1,44 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-wm0-f41.google.com (mail-wm0-f41.google.com [74.125.82.41])
-	by mail.openembedded.org (Postfix) with ESMTP id 98462607A5
+Return-Path: <michael.g.wood@intel.com>
+Received: from mail-wm0-f52.google.com (mail-wm0-f52.google.com [74.125.82.52])
+	by mail.openembedded.org (Postfix) with ESMTP id 275D060796
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 11 Dec 2015 12:27:58 +0000 (UTC)
-Received: by mail-wm0-f41.google.com with SMTP id c201so73275569wme.0
+	Mon, 14 Dec 2015 22:51:03 +0000 (UTC)
+Received: by mail-wm0-f52.google.com with SMTP id p66so85027638wmp.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 11 Dec 2015 04:27:59 -0800 (PST)
+	Mon, 14 Dec 2015 14:51:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:subject:date:message-id;
-	bh=0+VfHZwsy9sbfEr1T16JUbt4+2qid7V4hvXH/V3N8nM=;
-	b=0QRTLZqLsZzflMP3NWCzjoBrHez4n7gD2tDfJIr51ohVImiWsuWoXZ9UeVwHynwfFg
-	sEy9aq4Ehwc/Zn5Y7NUgUxR5YeGKPJjdk9J3nsHH2iad0LNIGuKeLeEmY3F5ecq7r5zk
-	26Iss6aN55Qbw3GmgB2IzqbGj2osdero6G+HKEOHT+izxs/gxJfFwRkSov0mqfDvJNbv
-	CjUjuGQJ4nkNf/9egH6wjCqo2Ikw1xA6eiZyzNW6kGOapmd4jRY9WV2Trq/z9uAcGVYP
-	fCnTjYjHmAVQwLRy1n9dfyTB+fXWRX8KXn48vwUw7kA44YrN8nukPgeAB/ZtPTqE02lI
-	uaVA==
+	h=from:to:cc:subject:date:message-id;
+	bh=jgBgHKFwJgOLrRm3QkL+JPWFbFCqjqvi58oEgryTYPE=;
+	b=Q62sINBWC0+ymlJ9WFY7/vkN+SKNSXdJAOMWcd1emHPiaJP2owaWlD2MVtYsCRIpqc
+	q7NBBq8ltDvgEyFCz5uhfryWjimgJXQhEKHb5qcuVPej7Jdnw3IlxJFi8nnED0Spux15
+	o6xUNlw3plD8e8NatSgjiVSzUuj1JQKeOSB2MYPUpNsUhsGF9WEZm/OZwpOyNW4YgCFb
+	aWhvK+ERNRghsuYKCExEarwFgq1x3SO+++G0zHA7z0gi3oKSkD6aIhzxWWq28yOg/ypo
+	lJg9O/qAeTXN2Cl6uQB8YA1yrneKPIrTFtL7C97iBED8FbFYN06SDMTigyOuUMjL2xVB
+	Q+rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=0+VfHZwsy9sbfEr1T16JUbt4+2qid7V4hvXH/V3N8nM=;
-	b=Fz93OdQoUHhc5cYAMyj8m0t87nfkPh52BWbhhJeBvVGru1bahU50GP+lIIHZ1xJ91K
-	ZJ5nyvF2UhdRJSRO4F/lO3iOm1x4kCabn60100joHxgDXJzIt2UE09fVsUjREWD8jjNL
-	kMyp5cYAcefrKT1BHgbURWtZb64StRgyrQkeYIeSnPyoPHVmdKpal7ei7xKHQ7xpxDRz
-	3l3UP0LbcFUbdtmBCINn/E6lrfE89xETSxdm8slcqA9W3nlmrIHxnTdVhi2AcyPkwpCQ
-	0UQY4jIWavAVhSDXHquUEk027q9Y8UO9hymUx4Y98CAiMP70kwAyL1LDyJBzftgDcp1t
-	bUrQ==
-X-Gm-Message-State: ALoCoQnCVRlzpIOCXqrqbDyn/+4vVdekUj6FXWqYZ6cXxldljco7EJiB2zb55te82uj3236DEktZpeRM39MTxc1W9RM/jHi4Ww==
-X-Received: by 10.28.60.84 with SMTP id j81mr5295743wma.15.1449836878342;
-	Fri, 11 Dec 2015 04:27:58 -0800 (PST)
-Received: from flashheart.burtonini.com (35.106.2.81.in-addr.arpa.
-	[81.2.106.35]) by smtp.gmail.com with ESMTPSA id
-	l7sm16808728wjx.14.2015.12.11.04.27.57
-	for <bitbake-devel@lists.openembedded.org>
+	h=x-gm-message-state:from:to:cc:subject:date:message-id;
+	bh=jgBgHKFwJgOLrRm3QkL+JPWFbFCqjqvi58oEgryTYPE=;
+	b=eYdRTtnC5mj2tJCCJFgYhbdg8ej0Ll2zB5qe4g1eoV3sXpV7n6kmBqJJ25dmamXh+3
+	2FQd/tdfd2jnYeTqbzMTX9r58CLTYSE0fBqNztqJCNEQ4SSPel3elqGZRPhX7Av/u0Y0
+	qYlWSE99WnYEJy5/qMWVqbBYXYnVCoqjDVXwuClkKRxZ9z/zON4jixhTkYck3Nhn3CrU
+	PuhkYbpPDRPm3RbcM0WdqsVWlrLGDjx4wLCAITs0y2CZiz7LhpdpB2KiaEDnwzuzKPge
+	lTE78RzY3X9WYXyFurkph5pQ0jZvknoaqgoY68ovaZENMvYH77SJR72f3Ro4MYWs2Ybw
+	Mm2A==
+X-Gm-Message-State: ALoCoQlrmNJfQdlixkv+a+Wsftg0F2tx+NxYnby5HZW3FUyn+WB5pnLkf9lnRGbBOrrYk486GX5w0/hELXBtfH9li24uII5Kog==
+X-Received: by 10.195.18.6 with SMTP id gi6mr43719260wjd.83.1450133464340;
+	Mon, 14 Dec 2015 14:51:04 -0800 (PST)
+Received: from localhost.localdomain ([90.217.53.67])
+	by smtp.gmail.com with ESMTPSA id x125sm46697wmg.1.2015.12.14.14.51.02
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Fri, 11 Dec 2015 04:27:57 -0800 (PST)
-From: Ross Burton <ross.burton@intel.com>
+	Mon, 14 Dec 2015 14:51:03 -0800 (PST)
+From: Michael Wood <michael.g.wood@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 11 Dec 2015 12:27:54 +0000
-Message-Id: <1449836874-17390-1-git-send-email-ross.burton@intel.com>
-X-Mailer: git-send-email 2.1.4
-Subject: [PATCH] cooker: use in instead of count
+Date: Mon, 14 Dec 2015 22:50:47 +0000
+Message-Id: <1450133447-9946-1-git-send-email-michael.g.wood@intel.com>
+X-Mailer: git-send-email 2.5.0
+Subject: [PATCH] toaster: tables Set a default order for the software recipes table
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,29 +51,34 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 11 Dec 2015 12:28:00 -0000
+X-List-Received-Date: Mon, 14 Dec 2015 22:51:05 -0000
 
-No point counting all instances when we just want to know if there's any or not.
+From: Belen Barros Pena <belen.barros.pena@intel.com>
 
-Signed-off-by: Ross Burton <ross.burton@intel.com>
+Add default order by recipe name, so that the table content is sorted
+when the page loads.
+
+[YOCTO #8791]
+
+Signed-off-by: Belen Barros Pena <belen.barros.pena@intel.com>
+Signed-off-by: Michael Wood <michael.g.wood@intel.com>
 ---
- bitbake/lib/bb/cooker.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/toaster/toastergui/tables.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/bitbake/lib/bb/cooker.py b/bitbake/lib/bb/cooker.py
-index 4df8881..d39c64b 100644
---- a/bitbake/lib/bb/cooker.py
-+++ b/bitbake/lib/bb/cooker.py
-@@ -1072,7 +1072,7 @@ class BBCooker:
+diff --git a/lib/toaster/toastergui/tables.py b/lib/toaster/toastergui/tables.py
+index 74af507..3808820 100644
+--- a/lib/toaster/toastergui/tables.py
++++ b/lib/toaster/toastergui/tables.py
+@@ -561,6 +561,7 @@ class SoftwareRecipesTable(RecipesTable):
+     def __init__(self, *args, **kwargs):
+         super(SoftwareRecipesTable, self).__init__(*args, **kwargs)
+         self.title = "Compatible software recipes"
++        self.default_orderby = "name"
  
-         for pfn in self.recipecache.pkg_fn:
-             inherits = self.recipecache.inherits.get(pfn, None)
--            if inherits and inherits.count(klass) > 0:
-+            if inherits and klass in inherits:
-                 pkg_list.append(self.recipecache.pkg_fn[pfn])
- 
-         return pkg_list
+     def setup_queryset(self, *args, **kwargs):
+         super(SoftwareRecipesTable, self).setup_queryset(*args, **kwargs)
 -- 
-2.1.4
+2.5.0
 
 
