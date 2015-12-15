@@ -1,24 +1,29 @@
-Return-Path: <contact@stefanchrist.eu>
-X-Greylist: delayed 1225 seconds by postgrey-1.34 at layers.openembedded.org;
-	Thu, 10 Dec 2015 21:18:05 UTC
-Received: from stcim.de (stcim.de [78.46.73.102])
-	by mail.openembedded.org (Postfix) with ESMTP id EBB456012C
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 666D873195
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 10 Dec 2015 21:18:05 +0000 (UTC)
-Received: from [2a01:4f8:120:4065:2::2] (helo=sill.h.stcim.de)
-	by stcim.de with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
-	(Exim 4.84) (envelope-from <contact@stefanchrist.eu>)
-	id 1a78HU-0005jC-TW for bitbake-devel@lists.openembedded.org;
-	Thu, 10 Dec 2015 21:57:41 +0100
-Date: Thu, 10 Dec 2015 21:57:39 +0100
-From: Christ Stefan <contact@stefanchrist.eu>
-To: bitbake-devel@lists.openembedded.org
-Message-ID: <20151210205739.GB622@sill.h.stcim.de>
-MIME-Version: 1.0
-X-PGP-Key: http://stefanchrist.eu/personal/Stefan%20Christ.asc
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Mailman-Approved-At: Mon, 14 Dec 2015 23:08:38 +0000
-Subject: Missing tags in the bitbake repository
+	Tue, 15 Dec 2015 16:42:21 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	tBFGgL3v005009 for <bitbake-devel@lists.openembedded.org>;
+	Tue, 15 Dec 2015 16:42:21 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id xPPwv_aPbKnj for <bitbake-devel@lists.openembedded.org>;
+	Tue, 15 Dec 2015 16:42:21 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	tBFGgIms005004
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 15 Dec 2015 16:42:19 GMT
+Message-ID: <1450197738.13505.76.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Tue, 15 Dec 2015 16:42:18 +0000
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: runqueue: Add support for <task>- syntax
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,34 +36,63 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 10 Dec 2015 21:18:06 -0000
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-List-Received-Date: Tue, 15 Dec 2015 16:42:23 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Hi,
+It can be useful to run all tasks up to but not including a specific task. The
+main reason this was never added was the lack of a good syntax. This patch
+uses the syntax <taskname>- to denote this behaviour which is simple, not 
+invasive and fits what we need from good syntax IMO, hence we can add this.
 
-I cannot find tags for all bitbake versions (__version__ in file
-bin/bitbake) in the repository
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-    git://git.openembedded.org/bitbake
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index 878028a..ee06f0e 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -634,23 +634,33 @@ class RunQueueData:
+ 
+             fnid = taskData.build_targets[targetid][0]
+             fn = taskData.fn_index[fnid]
+-            self.target_pairs.append((fn, target[1]))
++            task = target[1]
++            parents = False
++            if task.endswith('-'):
++                parents = True
++                task = task[:-1]
++
++            self.target_pairs.append((fn, task))
+ 
+             if fnid in taskData.failed_fnids:
+                 continue
+ 
+-            if target[1] not in taskData.tasks_lookup[fnid]:
++            if task not in taskData.tasks_lookup[fnid]:
+                 import difflib
+-                close_matches = difflib.get_close_matches(target[1], taskData.tasks_lookup[fnid], cutoff=0.7)
++                close_matches = difflib.get_close_matches(task, taskData.tasks_lookup[fnid], cutoff=0.7)
+                 if close_matches:
+                     extra = ". Close matches:\n  %s" % "\n  ".join(close_matches)
+                 else:
+                     extra = ""
+-                bb.msg.fatal("RunQueue", "Task %s does not exist for target %s%s" % (target[1], target[0], extra))
+-
+-            listid = taskData.tasks_lookup[fnid][target[1]]
+-
+-            mark_active(listid, 1)
++                bb.msg.fatal("RunQueue", "Task %s does not exist for target %s%s" % (task, target[0], extra))
++  
++            # For tasks called "XXXX-", ony run their dependencies
++            listid = taskData.tasks_lookup[fnid][task]
++            if parents:
++                for i in self.runq_depends[listid]:
++                    mark_active(i, 1)
++            else:
++                mark_active(listid, 1)
+ 
+         # Step C - Prune all inactive tasks
+         #
 
-For example tags for
 
-    1.17.1 1.25.0 and 1.27.1 
-
-are missing and much more are missing, too. Is there a reason for that?
-
-Kind regards,
-Stefan Christ
-
--- 
-pgp-key id:  0x117C3CFA
-fingerprint: 1245 44A4 9DCB 4A70 1E21  8A46 7B9E 49D4 117C 3CFA
-download:    https://www.stefanchrist.eu/personal/Stefan%20Christ.asc
-
-https certificate for www.stefanchrist.eu (until Dec 10 18:04:58 2016 GMT):
-SHA256 Fingerprint=2D:B9:70:7B:F6:B4:24:5D:C2:5D:96:70:4B:33:93:C6:1C:0B:81:B5:
-                   15:6F:98:15:33:67:9A:89:A6:26:3B:5C
-SHA1 Fingerprint  =A1:27:51:21:49:6C:C9:C7:EE:B7:BA:F0:B2:B7:9C:D6:66:22:20:5F
-MD5 Fingerprint   =C9:FE:A4:7D:9D:0D:6B:B6:09:BE:88:2C:F3:C3:A7:07
 
