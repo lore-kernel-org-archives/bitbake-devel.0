@@ -1,33 +1,21 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 4BCC9731A2
+Return-Path: <elliot.smith@intel.com>
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+	by mail.openembedded.org (Postfix) with ESMTP id 79E3F73191
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 17 Dec 2015 15:05:57 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	tBHF5w4Y000877; Thu, 17 Dec 2015 15:05:58 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id StFp4JMgJTND; Thu, 17 Dec 2015 15:05:58 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	tBHF5uuC000874
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 17 Dec 2015 15:05:57 GMT
-Message-ID: <1450364755.13505.214.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: "Belal, Awais" <Awais_Belal@mentor.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Date: Thu, 17 Dec 2015 15:05:55 +0000
-In-Reply-To: <2021B186DC632746BD5A3CE32F12BD280119AB7286@EU-MBX-03.mgc.mentorg.com>
-References: <1449773843-23411-1-git-send-email-awais_belal@mentor.com>
-	<2021B186DC632746BD5A3CE32F12BD280119AA60C3@EU-MBX-02.mgc.mentorg.com>
-	, <CABcZANm0FxRqAfJdjLS1nq9JQ3fJeQNBAd3zWYqiWmZKhLR0cw@mail.gmail.com>
-	<2021B186DC632746BD5A3CE32F12BD280119AB7286@EU-MBX-03.mgc.mentorg.com>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: Re: [PATCH] bitbake: fetch: use orig localpath when calling orig method
+	Thu, 17 Dec 2015 16:49:02 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by fmsmga103.fm.intel.com with ESMTP; 17 Dec 2015 08:49:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.20,441,1444719600"; d="scan'208";a="619664246"
+Received: from agusev-mobl2.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
+	([10.252.27.121])
+	by FMSMGA003.fm.intel.com with ESMTP; 17 Dec 2015 08:48:51 -0800
+From: Elliot Smith <elliot.smith@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Thu, 17 Dec 2015 16:48:44 +0000
+Message-Id: <cover.1450370782.git.elliot.smith@intel.com>
+X-Mailer: git-send-email 1.9.3
+Subject: [PATCH 00/11] Toaster startup script improvements
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -40,17 +28,52 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 17 Dec 2015 15:06:01 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Thu, 17 Dec 2015 16:49:06 -0000
 
-On Thu, 2015-12-17 at 13:02 +0000, Belal, Awais wrote:
-> Ping! Is there a reservation against this?
+This patchset includes a bunch of readability, usability and code style
+fixes for toaster script. It was started as a fix for #8775 and then
+I just couldn't stop and decided to make the script a bit better.
 
-No reservation, it just came in at the end of the last round of patches
-I batched/tested/merged and is therefore going into the next one.
+The following changes since commit d65cf4fe9d239169e2474b59bdce7fc59194de67
+(poky-contrib, toaster-next):
 
-Cheers,
+  toaster-manual: describe the way to start Toaster (2015-12-15 14:03:20 +0200)
 
-Richard
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib elliot/submit/ed/toaster/improve-toaster-script
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=elliot/submit/ed/toaster/improve-toaster-script
+
+Ed Bartosh (11):
+  toaster: implement checksocket command
+  toaster: check if address:port is in use
+  toaster: split long lines, add/remove whitespace
+  toaster: remove unused variable
+  toaster: add MANAGE variable
+  toaster: updated header of the toaster script
+  toaster: remove addtoConfiguration function
+  toaster: remove 2 unused functions
+  toaster: move startup checks to a better place
+  toaster: move setting of default values
+  toaster: remove 2 confusing parameters
+
+ bin/toaster                                        | 144 +++++++++------------
+ .../toastermain/management/commands/checksocket.py |  69 ++++++++++
+ 2 files changed, 129 insertions(+), 84 deletions(-)
+ create mode 100644 bitbake/lib/toaster/toastermain/management/commands/checksocket.py
+
+--
+1.9.3
+
+---------------------------------------------------------------------
+Intel Corporation (UK) Limited
+Registered No. 1134945 (England)
+Registered Office: Pipers Way, Swindon SN3 1RJ
+VAT No: 860 2173 47
+
+This e-mail and any attachments may contain confidential material for
+the sole use of the intended recipient(s). Any review or distribution
+by others is strictly prohibited. If you are not the intended
+recipient, please contact the sender and delete all copies.
+
 
