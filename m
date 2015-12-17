@@ -1,25 +1,25 @@
 Return-Path: <elliot.smith@intel.com>
 Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 6D9346FFE2
+	by mail.openembedded.org (Postfix) with ESMTP id CA1AC731B6
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 17 Dec 2015 16:49:07 +0000 (UTC)
+	Thu, 17 Dec 2015 16:49:08 +0000 (UTC)
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by fmsmga103.fm.intel.com with ESMTP; 17 Dec 2015 08:49:08 -0800
+	by fmsmga103.fm.intel.com with ESMTP; 17 Dec 2015 08:49:09 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.20,441,1444719600"; d="scan'208";a="15002711"
+X-IronPort-AV: E=Sophos;i="5.20,441,1444719600"; d="scan'208";a="15002724"
 Received: from agusev-mobl2.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.27.121])
-	by fmsmga004.fm.intel.com with ESMTP; 17 Dec 2015 08:49:07 -0800
+	by fmsmga004.fm.intel.com with ESMTP; 17 Dec 2015 08:49:08 -0800
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 17 Dec 2015 16:48:51 +0000
-Message-Id: <beedb977101917644948ac1b4775a0ec4eafc53f.1450370782.git.elliot.smith@intel.com>
+Date: Thu, 17 Dec 2015 16:48:52 +0000
+Message-Id: <f3a0207e9a68e8200ff00ec51b7a9ac12e6887c5.1450370782.git.elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
 In-Reply-To: <36bd18a963c5ba2849b5420f81b97b8a8ce57481.1450370782.git.elliot.smith@intel.com>
 References: <36bd18a963c5ba2849b5420f81b97b8a8ce57481.1450370782.git.elliot.smith@intel.com>
 In-Reply-To: <cover.1450370782.git.elliot.smith@intel.com>
 References: <cover.1450370782.git.elliot.smith@intel.com>
-Subject: [PATCH 06/11] toaster: updated header of the toaster script
+Subject: [PATCH 07/11] toaster: remove addtoConfiguration function
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,57 +32,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 17 Dec 2015 16:49:07 -0000
+X-List-Received-Date: Thu, 17 Dec 2015 16:49:09 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Updated GPL information, years of development and
-usage information. Removed outdated information about
-2 ways of starting Toaster.
+This function is useless as it's called just once
+and makes code less readable.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- bin/toaster | 20 +++++++-------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+ bin/toaster | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
 diff --git a/bin/toaster b/bin/toaster
-index 087e3f9..40c3c35 100755
+index 40c3c35..97ca177 100755
 --- a/bin/toaster
 +++ b/bin/toaster
-@@ -1,5 +1,8 @@
- #!/bin/echo ERROR: This script needs to be sourced. Please run as .
--# (c) 2013 Intel Corp.
+@@ -83,16 +83,6 @@ webserverStartAll()
+     return $retval
+ }
+ 
+-# Helper functions to add a special configuration file
+-
+-addtoConfiguration()
+-{
+-    file=$1
+-    shift
+-    echo "#Created by toaster start script" > ${BUILDDIR}/conf/$file
+-    for var in "$@"; do echo $var >> ${BUILDDIR}/conf/$file; done
+-}
+-
+ INSTOPSYSTEM=0
+ 
+ # define the stop command
+@@ -339,7 +329,12 @@ fi
+ 
+ case $CMD in
+     start )
+-        addtoConfiguration toaster.conf "INHERIT+=\"toaster buildhistory\"" $TOASTER_BRBE
++        # Create configuration file
++        conf=${BUILDDIR}/conf/toaster.conf
++        echo "# Created by toaster start script" > $conf
++        echo "INHERIT+=\"toaster buildhistory\"" >> $conf
++        [ -n "$TOASTER_BRBE" ] && echo $TOASTER_BRBE >> $conf
 +
-+# toaster - shell script to start Toaster
-+
-+# Copyright (C) 2013-2015 Intel Corp.
- 
- # This program is free software; you can redistribute it and/or modify
- # it under the terms of the GNU General Public License as published by
-@@ -12,19 +15,10 @@
- # GNU General Public License for more details.
- #
- # You should have received a copy of the GNU General Public License
--# along with this program; if not, write to the Free Software
--# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
--
--
--# This script can be run in two modes.
--
--# When used with "source", from a build directory,
--# it enables toaster event logging and starts the bitbake resident server.
--# use as:  source toaster [start|stop] [noweb] [noui]
-+# along with this program. If not, see http://www.gnu.org/licenses/.
- 
--# When it is called as a stand-alone script, it starts just the
--# web server, and the building shall be done through the web interface.
--# As script, it will not return to the command prompt. Stop with Ctrl-C.
-+# Usage: source toaster [start|stop|restart-bitbake] [webport=<port>]
-+#                       [noui] [noweb] [nobrowser] [brbe=<BRBE>]
- 
- # Helper function to kill a background toaster development server
- 
+         if [ $WEBSERVER -gt 0 ] && ! webserverStartAll; then
+             echo "Failed ${CMD}."
+             return 4
 -- 
 1.9.3
 
