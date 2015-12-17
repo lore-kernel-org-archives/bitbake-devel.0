@@ -1,21 +1,25 @@
 Return-Path: <elliot.smith@intel.com>
 Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 79E3F73191
+	by mail.openembedded.org (Postfix) with ESMTP id 78FDF6FFE2
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 17 Dec 2015 16:49:02 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by fmsmga103.fm.intel.com with ESMTP; 17 Dec 2015 08:49:03 -0800
+	Thu, 17 Dec 2015 16:49:03 +0000 (UTC)
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+	by fmsmga103.fm.intel.com with ESMTP; 17 Dec 2015 08:49:04 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.20,441,1444719600"; d="scan'208";a="619664246"
+X-IronPort-AV: E=Sophos;i="5.20,441,1444719600"; d="scan'208";a="15002622"
 Received: from agusev-mobl2.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.27.121])
-	by FMSMGA003.fm.intel.com with ESMTP; 17 Dec 2015 08:48:51 -0800
+	by fmsmga004.fm.intel.com with ESMTP; 17 Dec 2015 08:49:01 -0800
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Thu, 17 Dec 2015 16:48:44 +0000
-Message-Id: <cover.1450370782.git.elliot.smith@intel.com>
+Date: Thu, 17 Dec 2015 16:48:47 +0000
+Message-Id: <86b700be0d58929d4432e8faa0439ad9e36f9875.1450370782.git.elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
-Subject: [PATCH 00/11] Toaster startup script improvements
+In-Reply-To: <36bd18a963c5ba2849b5420f81b97b8a8ce57481.1450370782.git.elliot.smith@intel.com>
+References: <36bd18a963c5ba2849b5420f81b97b8a8ce57481.1450370782.git.elliot.smith@intel.com>
+In-Reply-To: <cover.1450370782.git.elliot.smith@intel.com>
+References: <cover.1450370782.git.elliot.smith@intel.com>
+Subject: [PATCH 02/11] toaster: check if address:port is in use
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -30,39 +34,36 @@ List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>,
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
 X-List-Received-Date: Thu, 17 Dec 2015 16:49:06 -0000
 
-This patchset includes a bunch of readability, usability and code style
-fixes for toaster script. It was started as a fix for #8775 and then
-I just couldn't stop and decided to make the script a bit better.
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-The following changes since commit d65cf4fe9d239169e2474b59bdce7fc59194de67
-(poky-contrib, toaster-next):
+Used new management command checksocket to check if
+Toaster can listen on address:port.
 
-  toaster-manual: describe the way to start Toaster (2015-12-15 14:03:20 +0200)
+[YOCTO #8775]
 
-are available in the git repository at:
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+---
+ bin/toaster | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-  git://git.yoctoproject.org/poky-contrib elliot/submit/ed/toaster/improve-toaster-script
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=elliot/submit/ed/toaster/improve-toaster-script
-
-Ed Bartosh (11):
-  toaster: implement checksocket command
-  toaster: check if address:port is in use
-  toaster: split long lines, add/remove whitespace
-  toaster: remove unused variable
-  toaster: add MANAGE variable
-  toaster: updated header of the toaster script
-  toaster: remove addtoConfiguration function
-  toaster: remove 2 unused functions
-  toaster: move startup checks to a better place
-  toaster: move setting of default values
-  toaster: remove 2 confusing parameters
-
- bin/toaster                                        | 144 +++++++++------------
- .../toastermain/management/commands/checksocket.py |  69 ++++++++++
- 2 files changed, 129 insertions(+), 84 deletions(-)
- create mode 100644 bitbake/lib/toaster/toastermain/management/commands/checksocket.py
-
---
+diff --git a/bin/toaster b/bin/toaster
+index 1c1e029..f43bcb1 100755
+--- a/bin/toaster
++++ b/bin/toaster
+@@ -309,6 +309,11 @@ fi
+ 
+ echo "The system will $CMD."
+ 
++# check if addr:port is not in use
++if [ "$CMD" == 'start' ]; then
++    python $BBBASEDIR/lib/toaster/manage.py checksocket "0.0.0.0:$WEB_PORT" || return 1
++fi
++
+ # Make sure it's safe to run by checking bitbake lock
+ 
+ lock=1
+-- 
 1.9.3
 
 ---------------------------------------------------------------------
