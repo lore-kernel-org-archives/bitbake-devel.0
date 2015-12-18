@@ -1,25 +1,34 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id 7719A73191
-	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 17 Dec 2015 16:49:14 +0000 (UTC)
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by fmsmga103.fm.intel.com with ESMTP; 17 Dec 2015 08:49:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.20,441,1444719600"; d="scan'208";a="15002760"
-Received: from agusev-mobl2.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.27.121])
-	by fmsmga004.fm.intel.com with ESMTP; 17 Dec 2015 08:49:14 -0800
-From: Elliot Smith <elliot.smith@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Thu, 17 Dec 2015 16:48:56 +0000
-Message-Id: <3fd968aa576abf4e6ddc12b7b14c6afe206393ec.1450370782.git.elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-In-Reply-To: <36bd18a963c5ba2849b5420f81b97b8a8ce57481.1450370782.git.elliot.smith@intel.com>
-References: <36bd18a963c5ba2849b5420f81b97b8a8ce57481.1450370782.git.elliot.smith@intel.com>
-In-Reply-To: <cover.1450370782.git.elliot.smith@intel.com>
-References: <cover.1450370782.git.elliot.smith@intel.com>
-Subject: [PATCH 11/11] toaster: remove 2 confusing parameters
+Return-Path: <just4tech83@gmail.com>
+Received: from mail-oi0-f53.google.com (mail-oi0-f53.google.com
+	[209.85.218.53])
+	by mail.openembedded.org (Postfix) with ESMTP id 8C7DF731B7;
+	Fri, 18 Dec 2015 07:40:05 +0000 (UTC)
+Received: by mail-oi0-f53.google.com with SMTP id o124so55730174oia.1;
+	Thu, 17 Dec 2015 23:40:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	:content-type; bh=evyG0jPUnWJUgWLa0Yf3BLk8G18iJ5kNOISs7fW8xAg=;
+	b=m68CqeeRU6qeqxWHrl7TZfZFLB2bgMDNvxprO7BqpWH4vy0ehgbpNZ9T72oQsnIvqF
+	J0GLrr34K7Z9jeUCeVr7dwphwocQZObG4G0+fyeNLtYeRQrvAko4Yv4XB7xA/8yn+2pD
+	eOYY992q0wc+pR7nhffSMbifuFaRLSGWO4qa5RtWYMUDytSm2PT/ruutSjDK/aBokjDt
+	hDkrYt/zCcOSfanRbsXagEuhJyBymRYFpPqt/x0von+NgNof5ByfiBq1X+SdK/WPgnsP
+	28uklb+6m+Twk0giyHrEckLs5ItcpAT09MAZu4Hc/pHQ6S88AywsNJvWVJY+4n9oPuTc
+	1qjQ==
+MIME-Version: 1.0
+X-Received: by 10.202.49.9 with SMTP id x9mr896086oix.75.1450424406440; Thu,
+	17 Dec 2015 23:40:06 -0800 (PST)
+Received: by 10.202.0.204 with HTTP; Thu, 17 Dec 2015 23:40:06 -0800 (PST)
+Received: by 10.202.0.204 with HTTP; Thu, 17 Dec 2015 23:40:06 -0800 (PST)
+In-Reply-To: <CAD2C2VSOXLTPM-yu6JFajf0LMHoE1t3utWG0vLFUzERcZs+7HA@mail.gmail.com>
+References: <CAD2C2VSOXLTPM-yu6JFajf0LMHoE1t3utWG0vLFUzERcZs+7HA@mail.gmail.com>
+Date: Fri, 18 Dec 2015 13:10:06 +0530
+Message-ID: <CAD2C2VQYkHC_ZOj-EjXe+x+AqEqeB-ZXbPkaM-76=Owb4bqpVg@mail.gmail.com>
+From: Bryan <just4tech83@gmail.com>
+To: linux-yocto@yoctoproject.org, poky@yoctoproject.org, 
+	bitbake-devel@lists.openembedded.org, 
+	openembedded-devel@lists.openembedded.org, 
+	openembedded-core@lists.openembedded.org
+Subject: korean/chinese keyboard layout support on yocto
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,82 +41,57 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 17 Dec 2015 16:49:14 -0000
+X-List-Received-Date: Fri, 18 Dec 2015 07:40:06 -0000
+Content-Type: multipart/alternative; boundary=001a113ca3268502220527273f88
 
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+--001a113ca3268502220527273f88
+Content-Type: text/plain; charset=UTF-8
 
-Removed nobrowser and brbe script parameters as both
-are confusing and nobrowser is not used anywhere.
+---------- Forwarded message ----------
+From: "Bryan" <just4tech83@gmail.com>
+Date: Dec 18, 2015 1:03 PM
+Subject: korean/chinese keyboard layout support on yocto
+To: <openembedded-core@lists.openembedded.org>
+Cc:
 
-brbe parameter usage can only be justified if toaster
-doesn't work properly and user has to manually connect
-toaster to running bitbake server. Even in this scenario
-it's very unlikely to achieve as toaster script is not
-designed for this kind of usage.
+Hi,
+>     I am working on yocto poky-dizzy 1.7.1 and have developed some
+> application on top of customized os image. I have a reqirement to support
+> korean/chinese keyboard layout for application.
+> I have added cross complied libraries for  ibus-hangul pckages. Can
+> somebody suggest me how can i add support for keyboart layout and how to
+> enable automatically.
+>
+> Is there any bitbake recipe available to support these keyboard layout.
+>
+>
+> regards
+> Bryan
+>
 
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
----
- bin/toaster | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+--001a113ca3268502220527273f88
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/bin/toaster b/bin/toaster
-index 7cecc7b..1f98490 100755
---- a/bin/toaster
-+++ b/bin/toaster
-@@ -17,8 +17,8 @@
- # You should have received a copy of the GNU General Public License
- # along with this program. If not, see http://www.gnu.org/licenses/.
- 
--# Usage: source toaster [start|stop|restart-bitbake] [webport=<port>]
--#                       [noui] [noweb] [nobrowser] [brbe=<BRBE>]
-+# Usage: source toaster [start|stop|restart-bitbake]
-+#                       [webport=<port>] [noui] [noweb]
- 
- # Helper function to kill a background toaster development server
- 
-@@ -203,8 +203,6 @@ export TOASTER_DIR=`pwd`
- 
- NOTOASTERUI=0
- WEBSERVER=1
--NOBROWSER=0
--TOASTER_BRBE=""
- WEB_PORT="8000"
- 
- for param in $*; do
-@@ -215,12 +213,6 @@ for param in $*; do
-     noweb )
-             WEBSERVER=0
-     ;;
--    nobrowser )
--            NOBROWSER=1
--    ;;
--    brbe=* )
--            TOASTER_BRBE=$'\n'"TOASTER_BRBE=\""${param#*=}"\""
--    ;;
-     webport=*)
-             WEB_PORT="${param#*=}"
-     esac
-@@ -318,7 +310,6 @@ case $CMD in
-         conf=${BUILDDIR}/conf/toaster.conf
-         echo "# Created by toaster start script" > $conf
-         echo "INHERIT+=\"toaster buildhistory\"" >> $conf
--        [ -n "$TOASTER_BRBE" ] && echo $TOASTER_BRBE >> $conf
- 
-         if [ $WEBSERVER -gt 0 ] && ! webserverStartAll; then
-             echo "Failed ${CMD}."
--- 
-1.9.3
+<div class=3D"gmail_quote">---------- Forwarded message ----------<br>From:=
+ &quot;Bryan&quot; &lt;<a href=3D"mailto:just4tech83@gmail.com">just4tech83=
+@gmail.com</a>&gt;<br>Date: Dec 18, 2015 1:03 PM<br>Subject: korean/chinese=
+ keyboard layout support on yocto<br>To:  &lt;<a href=3D"mailto:openembedde=
+d-core@lists.openembedded.org">openembedded-core@lists.openembedded.org</a>=
+&gt;<br>Cc: <br><br type=3D"attribution"><blockquote class=3D"gmail_quote" =
+style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><p =
+dir=3D"ltr">Hi, <br>
+=C2=A0=C2=A0=C2=A0 I am working on yocto poky-dizzy 1.7.1 and have develope=
+d some application on top of customized os image. I have a reqirement to su=
+pport korean/chinese keyboard layout for application. <br>
+I have added cross complied libraries for=C2=A0 ibus-hangul pckages. Can so=
+mebody suggest me how can i add support for keyboart layout and how to enab=
+le automatically. </p>
+<p dir=3D"ltr">Is there any bitbake recipe available to support these keybo=
+ard layout. </p>
+<p dir=3D"ltr"> <br>
+regards<br>
+Bryan</p>
+</blockquote></div>
 
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
-
-
+--001a113ca3268502220527273f88--
