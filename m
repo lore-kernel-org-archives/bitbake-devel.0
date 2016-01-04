@@ -1,36 +1,30 @@
-Return-Path: <juro.bystricky@intel.com>
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	by mail.openembedded.org (Postfix) with ESMTP id 1E720731CC
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 8D6E7600B3
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  4 Jan 2016 20:50:34 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by fmsmga101.fm.intel.com with ESMTP; 04 Jan 2016 12:50:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.20,522,1444719600"; d="scan'208";a="883680643"
-Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
-	by orsmga002.jf.intel.com with ESMTP; 04 Jan 2016 12:50:35 -0800
-Received: from orsmsx112.amr.corp.intel.com ([169.254.3.83]) by
-	ORSMSX109.amr.corp.intel.com ([169.254.11.31]) with mapi id
-	14.03.0248.002; Mon, 4 Jan 2016 12:50:35 -0800
-From: "Bystricky, Juro" <juro.bystricky@intel.com>
-To: "Hatle, Mark G (Wind River)" <mark.hatle@windriver.com>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH 0/1] Add support for 7-Zip compressed
-	files
-Thread-Index: AQHRRy99633GtSRNa0iahUhY4pIoCJ7r0xBg
-Date: Mon, 4 Jan 2016 20:50:34 +0000
-Message-ID: <6E51916E4A1F32428260031F4C7CD2B6117CD38E@ORSMSX112.amr.corp.intel.com>
-References: <1451933503-25881-1-git-send-email-juro.bystricky@intel.com>
-	<568AD79D.80307@windriver.com>
-In-Reply-To: <568AD79D.80307@windriver.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.22.254.140]
-MIME-Version: 1.0
-Cc: "Purdie, Richard" <richard.purdie@intel.com>
-Subject: Re: [PATCH 0/1] Add support for 7-Zip compressed files
+	Mon,  4 Jan 2016 23:59:27 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u04NxQ2O028194; Mon, 4 Jan 2016 23:59:26 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id hJ0jRGlN1m7l; Mon,  4 Jan 2016 23:59:26 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u04NxMig028188
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 4 Jan 2016 23:59:23 GMT
+Message-ID: <1451951962.7598.26.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Christopher Larson <clarson@kergoth.com>
+Date: Mon, 04 Jan 2016 23:59:22 +0000
+In-Reply-To: <CABcZANn67KvtNe8PUtdVJX_z5bOGmEjEztEcfK5Rr9LmVO=e_Q@mail.gmail.com>
+References: <1451928842.7598.16.camel@linuxfoundation.org>
+	<CABcZANn67KvtNe8PUtdVJX_z5bOGmEjEztEcfK5Rr9LmVO=e_Q@mail.gmail.com>
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH] utils: Remove double compile from better_compile
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -43,71 +37,65 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 04 Jan 2016 20:50:35 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Mon, 04 Jan 2016 23:59:30 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-I agree.
-I compressed the same tree with tar.xz, the compressed size is:
+On Mon, 2016-01-04 at 11:06 -0700, Christopher Larson wrote:
+> 
+> On Mon, Jan 4, 2016 at 10:34 AM, Richard Purdie <
+> richard.purdie@linuxfoundation.org> wrote:
+> > Poking around the ast to correct linenumbers works well for runtime
+> > failures
+> > but not for parsing ones. We can use blank linefeeds to correct the
+> > line
+> > numbers instead, with the advantage that we don't need to double
+> > compile.
+> > 
+> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+> > 
+> > diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
+> > index cd5fced..9a3efb2 100644
+> > --- a/bitbake/lib/bb/utils.py
+> > +++ b/bitbake/lib/bb/utils.py
+> > @@ -292,7 +292,7 @@ def _print_trace(body, line):
+> >              error.append('     %.4d:%s' % (i, body[i-1].rstrip()))
+> >      return error
+> > 
+> > -def better_compile(text, file, realfile, mode = "exec", lineno =
+> > None):
+> > +def better_compile(text, file, realfile, mode = "exec", lineno =
+> > 0):
+> >      """
+> >      A better compile method. This method
+> >      will print the offending lines.
+> > @@ -301,10 +301,9 @@ def better_compile(text, file, realfile, mode
+> > = "exec", lineno = None):
+> >          cache = bb.methodpool.compile_cache(text)
+> >          if cache:
+> >              return cache
+> > -        code = compile(text, realfile, mode, ast.PyCF_ONLY_AST)
+> > -        if lineno is not None:
+> > -            ast.increment_lineno(code, lineno)
+> > -        code = compile(code, realfile, mode)
+> > +        # We can't add to the linenumbers for compile, we can pad
+> > to the correct number of blank lines though
+> > +        text2 = "\n" * int(lineno) + text
+> > +        code = compile(text2, realfile, mode)
+> > 
+> A SyntaxError can have its line numbers adjusted fairly easily, if
+> that's your concern. Afaik that's the usual case which
+> ast.increment_lineno isn't  sufficient to handle. See 
+> https://gist.github.com/kergoth/743677#file-compile-py-L67-L86.
 
-tar.xz: 88.9 MB
+I did start to wonder about catching specific exceptions and then
+adjusting the line numbers. It seemed unlikely that we'd catch all the
+right cases and adjust them correctly though and when there is a much
+easier workaround with a few blank lines that likely performs better
+than the existing double compile, I concluded that whilst not that
+architecturally pleasing, it is simple and effective...
 
-which is quite respectable and markedly better than tar.bz2.
-To add bitbake support for this compression format should be quite straight=
-forward.
+Cheers,
 
-Juro
-
-
-> -----Original Message-----
-> From: Mark Hatle [mailto:mark.hatle@windriver.com]
-> Sent: Monday, January 4, 2016 12:36 PM
-> To: Bystricky, Juro; bitbake-devel@lists.openembedded.org
-> Cc: Purdie, Richard
-> Subject: Re: [bitbake-devel] [PATCH 0/1] Add support for 7-Zip compressed
-> files
->=20
-> On 1/4/16 12:51 PM, Juro Bystricky wrote:
-> > 7-Zip offers substantially better compression than other compression
-> > formats. In fact, 7-Zip explicitly claims it provides the best compress=
-ion
-> ratio.
-> > To quickly test the claim, I compressed a gcc 5.2 538.8 MB tree snapsho=
-t in
-> various ways:
-> >
-> > tar.bz2: 114.0 MB
-> > tar.gz:  112.4 MB
-> > tar.7z:   70.3 MB
->=20
-> I thought 7z was an archive format, that included compression information=
-.
->=20
-> Since the compression that makes 7z better then bz2 is lzma, and 'xz' use=
-s
-> lzma as it's compression format.  (In my experience, .xz is really common=
- on
-> Linux -- 7z is only common on Windows.)
->=20
-> I'm not saying don't support .7z, but adding support for .tar.xz and othe=
-rs
-> would make equal sense to me.  (There are a number of formats out there
-> that could and likely should be added.)
->=20
-> --Mark
->=20
-> > At present, there is no support for 7-Zip compressed files in Bitbake.
-> > Various public Git repositories only allow pushing files of certain
-> > max size, AFAIK Github only allows 100MB, so there are cases where it
-> > is desirable to use maximum compression possible.
-> >
-> >
-> > Juro Bystricky (1):
-> >   bitbake:fetch2/__init__.py: Add support for 7-Zip
-> >
-> >  bitbake/lib/bb/fetch2/__init__.py | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-
+Richard
 
