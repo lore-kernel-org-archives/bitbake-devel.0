@@ -1,26 +1,25 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 99F6F6FF72
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	by mail.openembedded.org (Postfix) with ESMTP id 4B0376011F
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  4 Jan 2016 10:15:40 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id u04AFerA019844
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 4 Jan 2016 02:15:40 -0800
-Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.248.2;
-	Mon, 4 Jan 2016 02:15:39 -0800
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 4 Jan 2016 02:15:39 -0800
-Message-ID: <11cf5052016496de57d2253aff35c20c62d90703.1451902509.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1451902509.git.liezhi.yang@windriver.com>
-References: <cover.1451902509.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/1] fetch2/local.py: avoid using PREMIRROR
+	Mon,  4 Jan 2016 11:23:07 +0000 (UTC)
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+	by fmsmga104.fm.intel.com with ESMTP; 04 Jan 2016 03:23:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.20,520,1444719600"; d="scan'208";a="627697714"
+Received: from linux.intel.com ([10.23.219.25])
+	by FMSMGA003.fm.intel.com with ESMTP; 04 Jan 2016 03:23:07 -0800
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
+	by linux.intel.com (Postfix) with ESMTP id 7FD266A4006;
+	Mon,  4 Jan 2016 04:11:05 -0800 (PST)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Mon,  4 Jan 2016 11:26:34 +0200
+Message-Id: <1451899594-16564-1-git-send-email-ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+In-Reply-To: <1451895278-14099-1-git-send-email-ed.bartosh@linux.intel.com>
+References: <1451895278-14099-1-git-send-email-ed.bartosh@linux.intel.com>
+Subject: [PATCH 4/4 v3] uievent: refactor retry loop
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,31 +32,56 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 04 Jan 2016 10:15:40 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 04 Jan 2016 11:23:08 -0000
 
-The PREMIRROR isn't useful for "file://", so avoid using it, this is
-good for searching speed and can reduce useless lines in log.do_fetch.
+Replaced 'while' loop with 'for' loop.
+Made the code more compact and hopefully more understandable.
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- bitbake/lib/bb/fetch2/local.py |    5 +++++
- 1 file changed, 5 insertions(+)
+ bitbake/lib/bb/ui/uievent.py | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/bitbake/lib/bb/fetch2/local.py b/bitbake/lib/bb/fetch2/local.py
-index 2d921f7..7245651 100644
---- a/bitbake/lib/bb/fetch2/local.py
-+++ b/bitbake/lib/bb/fetch2/local.py
-@@ -126,3 +126,8 @@ class Local(FetchMethod):
-     def clean(self, urldata, d):
-         return
+diff --git a/bitbake/lib/bb/ui/uievent.py b/bitbake/lib/bb/ui/uievent.py
+index 19a9301..4670cdb 100644
+--- a/bitbake/lib/bb/ui/uievent.py
++++ b/bitbake/lib/bb/ui/uievent.py
+@@ -45,27 +45,25 @@ class BBUIEventQueue:
+         server.socket.settimeout(1)
  
-+    def try_premirror(self, urldata, d):
-+        """
-+        Should premirrors be used?
-+        """
-+        return False
+         self.EventHandle = None
+-        count_tries = 0
+ 
+         # the event handler registration may fail here due to cooker being in invalid state
+         # this is a transient situation, and we should retry a couple of times before
+         # giving up
+ 
+-        while self.EventHandle == None and count_tries < 5:
++        for count_tries in range(5):
++
+             self.EventHandle, error = self.BBServer.registerEventHandler(self.host, self.port)
+ 
+-            if (self.EventHandle != None):
++            if self.EventHandle != None:
+                 break
+ 
+-            errmsg = "Could not register UI event handler. Error: %s, host %s, "
+-                     "port %d" % (error, self.host, self.port))
++            errmsg = "Could not register UI event handler. Error: %s, host %s, "\
++                     "port %d" % (error, self.host, self.port)
+             bb.warn("%s, retry" % errmsg)
+-            count_tries += 1
++
+             import time
+             time.sleep(1)
+-
+-
+-        if self.EventHandle == None:
++        else:
+             raise Exception(errmsg)
+ 
+         self.server = server
 -- 
-1.7.9.5
+2.1.4
 
 
