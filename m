@@ -1,25 +1,34 @@
-Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 3E2936E666
+Return-Path: <sujith.h@gmail.com>
+Received: from mail-qg0-f51.google.com (mail-qg0-f51.google.com
+	[209.85.192.51])
+	by mail.openembedded.org (Postfix) with ESMTP id 78AD2605FE
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  5 Jan 2016 10:45:55 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga102.jf.intel.com with ESMTP; 05 Jan 2016 02:45:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.20,524,1444719600"; d="scan'208";a="884067995"
-Received: from linux.intel.com ([10.23.219.25])
-	by orsmga002.jf.intel.com with ESMTP; 05 Jan 2016 02:45:55 -0800
-Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id 3EA606A4004;
-	Tue,  5 Jan 2016 03:33:53 -0800 (PST)
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+	Tue,  5 Jan 2016 13:00:22 +0000 (UTC)
+Received: by mail-qg0-f51.google.com with SMTP id o11so277158262qge.2
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 05 Jan 2016 05:00:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=from:to:cc:subject:date:message-id;
+	bh=njIDXhcpJ2Ai98jViDeBImkjBbCj7EwF8epcTkb2pdo=;
+	b=N3DVo0x2E253i2jpQZ7N8oIjbW29whm86LYa0GUx4XIZvQhshtJBaOD73kIMtYWnqc
+	oL7x8BcCdOMb9EtB6yXJGeLwR+CD++BgdmDQnog+TRvSk9HnHbxxgZsCth8hjVW0JBs/
+	Z439MEOwC6av8cSMmuTj3KK+EB2oDUskHbxFVTYQlASTrN9RltH505EanxiB30FI11p6
+	rXBmGTQZFkbXia9MBNLZQNuYZI2xxAXZ21JFaSYV7gHSr8hiP/2i1RRS/CaHn2kjQ1KV
+	VELMbj2TD6DsP5i3G1IubLI6qtQTMEvr03E5hoXvMqMMbl815lozcUMQJDXUtfjpM+o3
+	Ifjw==
+X-Received: by 10.140.242.147 with SMTP id n141mr81692662qhc.2.1451998823441; 
+	Tue, 05 Jan 2016 05:00:23 -0800 (PST)
+Received: from kdekidd0.inp-wifi.mentorg.com ([139.181.35.34])
+	by smtp.gmail.com with ESMTPSA id
+	d188sm39347333qkb.9.2016.01.05.05.00.21
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Tue, 05 Jan 2016 05:00:23 -0800 (PST)
+From: Sujith H <sujith.h@gmail.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Tue,  5 Jan 2016 10:48:11 +0200
-Message-Id: <1451983692-14842-3-git-send-email-ed.bartosh@linux.intel.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1451983692-14842-1-git-send-email-ed.bartosh@linux.intel.com>
-References: <1451983692-14842-1-git-send-email-ed.bartosh@linux.intel.com>
-Subject: [PATCH 2/2] bitbake: main: kill server without queue setup
+Date: Tue,  5 Jan 2016 18:30:15 +0530
+Message-Id: <1451998815-4536-1-git-send-email-sujith.h@gmail.com>
+X-Mailer: git-send-email 1.9.1
+Subject: [PATCH] bitbake: BBUIHelper: Remove function findServerDetails
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,60 +41,67 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Jan 2016 10:45:55 -0000
+X-List-Received-Date: Tue, 05 Jan 2016 13:00:26 -0000
 
-Setup of event queue includes registering of UI handler.
-This operation can fail when cooker is busy. However, there is
-no need in registering UI handler for terminating the server.
+findServerDetails function can be removed safely
+from the source tree. Couldn't find any files
+calling this function.
 
-Moved the call of connection.terminateServer before setting up
-of the event queue. This should make terminating server to work
-more reliably as it doesn't depend on setting up the event queue
-and registering UI handler anymore.
+Signed-off-by: Sujith H <sujith.h@gmail.com>
+---
+ lib/bb/ui/uihelper.py | 41 -----------------------------------------
+ 1 file changed, 41 deletions(-)
 
-This should also help Toaster backend to restart bitbake server
-and observer without getting "Could not register UI event handler"
-errors.
-
-[YOCTO #8776]
-
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
-
-diff --git a/bitbake/lib/bb/main.py b/bitbake/lib/bb/main.py
-index dd04393..c0ae38a 100755
---- a/bitbake/lib/bb/main.py
-+++ b/bitbake/lib/bb/main.py
-@@ -403,10 +403,16 @@ def bitbake_main(configParams, configuration):
-     if not configParams.server_only:
-         try:
-             server_connection = server.establishConnection(featureset)
--            server_connection.setupEventQueue()
-         except Exception as e:
-             bb.fatal("Could not connect to server %s: %s" % (configParams.remote_server, str(e)))
+diff --git a/lib/bb/ui/uihelper.py b/lib/bb/ui/uihelper.py
+index a703387..db70b76 100644
+--- a/lib/bb/ui/uihelper.py
++++ b/lib/bb/ui/uihelper.py
+@@ -57,44 +57,3 @@ class BBUIHelper:
+         self.needUpdate = False
+         return (self.running_tasks, self.failed_tasks)
  
-+        if configParams.kill_server:
-+            server_connection.connection.terminateServer()
-+            bb.event.ui_queue = []
-+            return 0
-+
-+        server_connection.setupEventQueue()
-+
-         # Restore the environment in case the UI needs it
-         for k in cleanedvars:
-             os.environ[k] = cleanedvars[k]
-@@ -418,11 +424,6 @@ def bitbake_main(configParams, configuration):
-             server_connection.terminate()
-             return 0
- 
--        if configParams.kill_server:
--            server_connection.connection.terminateServer()
--            bb.event.ui_queue = []
--            return 0
+-    def findServerDetails(self):
+-        import sys
+-        import optparse
+-        from bb.server.xmlrpc import BitbakeServerInfo, BitBakeServerConnection
+-        host = ""
+-        port = 0
+-        bind = ""
+-        parser = optparse.OptionParser(
+-            usage = """%prog -H host -P port -B bindaddr""")
 -
-         try:
-             return ui_module.main(server_connection.connection, server_connection.events, configParams)
-         finally:
+-        parser.add_option("-H", "--host", help = "Bitbake server's IP address",
+-                   action = "store", dest = "host", default = None)
+-
+-        parser.add_option("-P", "--port", help = "Bitbake server's Port number",
+-                   action = "store", dest = "port", default = None)
+-
+-        parser.add_option("-B", "--bind", help = "Hob2 local bind address",
+-                   action = "store", dest = "bind", default = None)
+-
+-        options, args = parser.parse_args(sys.argv)
+-        for key, val in options.__dict__.items():
+-            if key == 'host' and val:
+-                host = val
+-            elif key == 'port' and val:
+-                port = int(val)
+-            elif key == 'bind' and val:
+-                bind = val
+-
+-        if not host or not port or not bind:
+-            parser.print_usage()
+-            sys.exit(1)
+-
+-        serverinfo = BitbakeServerInfo(host, port)
+-        clientinfo = (bind, 0)
+-        connection = BitBakeServerConnection(serverinfo, clientinfo)
+-
+-        server = connection.connection
+-        eventHandler = connection.events
+-
+-        return server, eventHandler, host, bind
+-
 -- 
-2.1.4
+2.4.3
 
 
