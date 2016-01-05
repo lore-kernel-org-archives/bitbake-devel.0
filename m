@@ -1,30 +1,28 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 8D6E7600B3
+Return-Path: <paul.eggleton@linux.intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 4E3CF6AC4B
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon,  4 Jan 2016 23:59:27 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u04NxQ2O028194; Mon, 4 Jan 2016 23:59:26 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id hJ0jRGlN1m7l; Mon,  4 Jan 2016 23:59:26 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u04NxMig028188
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 4 Jan 2016 23:59:23 GMT
-Message-ID: <1451951962.7598.26.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Christopher Larson <clarson@kergoth.com>
-Date: Mon, 04 Jan 2016 23:59:22 +0000
-In-Reply-To: <CABcZANn67KvtNe8PUtdVJX_z5bOGmEjEztEcfK5Rr9LmVO=e_Q@mail.gmail.com>
-References: <1451928842.7598.16.camel@linuxfoundation.org>
-	<CABcZANn67KvtNe8PUtdVJX_z5bOGmEjEztEcfK5Rr9LmVO=e_Q@mail.gmail.com>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Cc: bitbake-devel <bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH] utils: Remove double compile from better_compile
+	Tue,  5 Jan 2016 00:09:04 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga102.jf.intel.com with ESMTP; 04 Jan 2016 16:09:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.20,522,1444719600"; d="scan'208";a="883780356"
+Received: from hlee31-mobl2.gar.corp.intel.com (HELO
+	peggleto-mobl.ger.corp.intel.com) ([10.255.171.9])
+	by orsmga002.jf.intel.com with ESMTP; 04 Jan 2016 16:09:03 -0800
+From: Paul Eggleton <paul.eggleton@linux.intel.com>
+To: Mark Hatle <mark.hatle@windriver.com>
+Date: Tue, 05 Jan 2016 13:08:59 +1300
+Message-ID: <7335424.sZSo7NCKgN@peggleto-mobl.ger.corp.intel.com>
+Organization: Intel Corporation
+User-Agent: KMail/4.14.10 (Linux/4.2.8-300.fc23.x86_64; KDE/4.14.14; x86_64; ;
+	)
+In-Reply-To: <568AD79D.80307@windriver.com>
+References: <1451933503-25881-1-git-send-email-juro.bystricky@intel.com>
+	<568AD79D.80307@windriver.com>
+MIME-Version: 1.0
+Cc: bitbake-devel@lists.openembedded.org
+Subject: Re: [PATCH 0/1] Add support for 7-Zip compressed files
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,65 +35,38 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 04 Jan 2016 23:59:30 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 05 Jan 2016 00:09:05 -0000
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, 2016-01-04 at 11:06 -0700, Christopher Larson wrote:
+On Mon, 04 Jan 2016 14:35:41 Mark Hatle wrote:
+> On 1/4/16 12:51 PM, Juro Bystricky wrote:
+> > 7-Zip offers substantially better compression than other compression
+> > formats. In fact, 7-Zip explicitly claims it provides the best compression
+> > ratio. To quickly test the claim, I compressed a gcc 5.2 538.8 MB tree
+> > snapshot in various ways:
+> > 
+> > tar.bz2: 114.0 MB
+> > tar.gz:  112.4 MB
+> > tar.7z:   70.3 MB
 > 
-> On Mon, Jan 4, 2016 at 10:34 AM, Richard Purdie <
-> richard.purdie@linuxfoundation.org> wrote:
-> > Poking around the ast to correct linenumbers works well for runtime
-> > failures
-> > but not for parsing ones. We can use blank linefeeds to correct the
-> > line
-> > numbers instead, with the advantage that we don't need to double
-> > compile.
-> > 
-> > Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > 
-> > diff --git a/bitbake/lib/bb/utils.py b/bitbake/lib/bb/utils.py
-> > index cd5fced..9a3efb2 100644
-> > --- a/bitbake/lib/bb/utils.py
-> > +++ b/bitbake/lib/bb/utils.py
-> > @@ -292,7 +292,7 @@ def _print_trace(body, line):
-> >              error.append('     %.4d:%s' % (i, body[i-1].rstrip()))
-> >      return error
-> > 
-> > -def better_compile(text, file, realfile, mode = "exec", lineno =
-> > None):
-> > +def better_compile(text, file, realfile, mode = "exec", lineno =
-> > 0):
-> >      """
-> >      A better compile method. This method
-> >      will print the offending lines.
-> > @@ -301,10 +301,9 @@ def better_compile(text, file, realfile, mode
-> > = "exec", lineno = None):
-> >          cache = bb.methodpool.compile_cache(text)
-> >          if cache:
-> >              return cache
-> > -        code = compile(text, realfile, mode, ast.PyCF_ONLY_AST)
-> > -        if lineno is not None:
-> > -            ast.increment_lineno(code, lineno)
-> > -        code = compile(code, realfile, mode)
-> > +        # We can't add to the linenumbers for compile, we can pad
-> > to the correct number of blank lines though
-> > +        text2 = "\n" * int(lineno) + text
-> > +        code = compile(text2, realfile, mode)
-> > 
-> A SyntaxError can have its line numbers adjusted fairly easily, if
-> that's your concern. Afaik that's the usual case which
-> ast.increment_lineno isn't  sufficient to handle. See 
-> https://gist.github.com/kergoth/743677#file-compile-py-L67-L86.
+> I thought 7z was an archive format, that included compression information.
+> 
+> Since the compression that makes 7z better then bz2 is lzma, and 'xz' uses
+> lzma as it's compression format.  (In my experience, .xz is really common
+> on Linux -- 7z is only common on Windows.)
+> 
+> I'm not saying don't support .7z, but adding support for .tar.xz and others
+> would make equal sense to me.  (There are a number of formats out there that
+> could and likely should be added.)
 
-I did start to wonder about catching specific exceptions and then
-adjusting the line numbers. It seemed unlikely that we'd catch all the
-right cases and adjust them correctly though and when there is a much
-easier workaround with a few blank lines that likely performs better
-than the existing double compile, I concluded that whilst not that
-architecturally pleasing, it is simple and effective...
+We already support tar.xz FYI (and use it within the metadata quite a lot).
 
 Cheers,
+Paul
 
-Richard
+-- 
+
+Paul Eggleton
+Intel Open Source Technology Centre
 
