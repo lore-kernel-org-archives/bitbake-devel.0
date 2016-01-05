@@ -1,34 +1,37 @@
-Return-Path: <sujith.h@gmail.com>
-Received: from mail-qg0-f51.google.com (mail-qg0-f51.google.com
-	[209.85.192.51])
-	by mail.openembedded.org (Postfix) with ESMTP id 78AD2605FE
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue,  5 Jan 2016 13:00:22 +0000 (UTC)
-Received: by mail-qg0-f51.google.com with SMTP id o11so277158262qge.2
-	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 05 Jan 2016 05:00:23 -0800 (PST)
+Return-Path: <just4tech83@gmail.com>
+Received: from mail-oi0-f47.google.com (mail-oi0-f47.google.com
+	[209.85.218.47])
+	by mail.openembedded.org (Postfix) with ESMTP id 145A26FFF2;
+	Tue,  5 Jan 2016 13:07:35 +0000 (UTC)
+Received: by mail-oi0-f47.google.com with SMTP id l9so245735511oia.2;
+	Tue, 05 Jan 2016 05:07:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
-	h=from:to:cc:subject:date:message-id;
-	bh=njIDXhcpJ2Ai98jViDeBImkjBbCj7EwF8epcTkb2pdo=;
-	b=N3DVo0x2E253i2jpQZ7N8oIjbW29whm86LYa0GUx4XIZvQhshtJBaOD73kIMtYWnqc
-	oL7x8BcCdOMb9EtB6yXJGeLwR+CD++BgdmDQnog+TRvSk9HnHbxxgZsCth8hjVW0JBs/
-	Z439MEOwC6av8cSMmuTj3KK+EB2oDUskHbxFVTYQlASTrN9RltH505EanxiB30FI11p6
-	rXBmGTQZFkbXia9MBNLZQNuYZI2xxAXZ21JFaSYV7gHSr8hiP/2i1RRS/CaHn2kjQ1KV
-	VELMbj2TD6DsP5i3G1IubLI6qtQTMEvr03E5hoXvMqMMbl815lozcUMQJDXUtfjpM+o3
-	Ifjw==
-X-Received: by 10.140.242.147 with SMTP id n141mr81692662qhc.2.1451998823441; 
-	Tue, 05 Jan 2016 05:00:23 -0800 (PST)
-Received: from kdekidd0.inp-wifi.mentorg.com ([139.181.35.34])
-	by smtp.gmail.com with ESMTPSA id
-	d188sm39347333qkb.9.2016.01.05.05.00.21
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Tue, 05 Jan 2016 05:00:23 -0800 (PST)
-From: Sujith H <sujith.h@gmail.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue,  5 Jan 2016 18:30:15 +0530
-Message-Id: <1451998815-4536-1-git-send-email-sujith.h@gmail.com>
-X-Mailer: git-send-email 1.9.1
-Subject: [PATCH] bitbake: BBUIHelper: Remove function findServerDetails
+	h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+	:cc:content-type;
+	bh=YH49h5OKpaHBeOexI2no2gnvj+NDgg6gXtVUzevunqU=;
+	b=m6NVrZkDDQle6c1Qp+VaLL+P0+G+Grc2+GU0v4Y6jq+TDFD18U96c6+wsG6l3gahK8
+	hvCx/E4aKeDgfu9/6ttAjfgL2Vfoef9nnOZAtXtVyXxFbk38IX4mpx9EpWbhPKdZDsPx
+	FWroZW6LgSX16LtrB8eyymS5vrXAFfTxg+0X41niIhtcYuwkNsKa1ldKddlhKRNCaXXr
+	05Gbi4auE8CWAPGog+FkH8XBi67YHex3Uv+RkvIbXq5Z2+GdYp3xCdnzd4uob55gZcQE
+	zJax6PnVBu+3/mRFu2fObEajVctPGzXqEX4J6mXPJYlSKhJRYbry3EWqE9qhmCMXz/GC
+	+Ejg==
+MIME-Version: 1.0
+X-Received: by 10.202.48.6 with SMTP id w6mr59662149oiw.97.1451999256340; Tue,
+	05 Jan 2016 05:07:36 -0800 (PST)
+Received: by 10.202.71.10 with HTTP; Tue, 5 Jan 2016 05:07:36 -0800 (PST)
+Received: by 10.202.71.10 with HTTP; Tue, 5 Jan 2016 05:07:36 -0800 (PST)
+In-Reply-To: <CAD2C2VTmyKj=T_F-DHrxNzW4d4gEDJ3=EaZFtQnF4m0in6C2Yg@mail.gmail.com>
+References: <CAD2C2VSOXLTPM-yu6JFajf0LMHoE1t3utWG0vLFUzERcZs+7HA@mail.gmail.com>
+	<CAD2C2VTmyKj=T_F-DHrxNzW4d4gEDJ3=EaZFtQnF4m0in6C2Yg@mail.gmail.com>
+Date: Tue, 5 Jan 2016 18:37:36 +0530
+Message-ID: <CAD2C2VRO2QwXk6i-SXJU6Rk7EoBaHgdEyLdAKR__9+CG=i57_Q@mail.gmail.com>
+From: Bryan <just4tech83@gmail.com>
+To: openembedded-core@lists.openembedded.org, 
+	openembedded-issues@lists.openembedded.org
+Cc: linux-yocto@yoctoproject.org, poky@yoctoproject.org,
+	bitbake-devel@lists.openembedded.org,
+	openembedded-devel@lists.openembedded.org
+Subject: Re: korean/chinese keyboard layout support on yocto
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -41,67 +44,58 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 05 Jan 2016 13:00:26 -0000
+X-List-Received-Date: Tue, 05 Jan 2016 13:07:36 -0000
+Content-Type: multipart/alternative; boundary=001a113cd986e36e6a052895eb36
 
-findServerDetails function can be removed safely
-from the source tree. Couldn't find any files
-calling this function.
+--001a113cd986e36e6a052895eb36
+Content-Type: text/plain; charset=UTF-8
 
-Signed-off-by: Sujith H <sujith.h@gmail.com>
----
- lib/bb/ui/uihelper.py | 41 -----------------------------------------
- 1 file changed, 41 deletions(-)
+On Dec 24, 2015 1:40 PM, "Bryan" <just4tech83@gmail.com> wrote:
 
-diff --git a/lib/bb/ui/uihelper.py b/lib/bb/ui/uihelper.py
-index a703387..db70b76 100644
---- a/lib/bb/ui/uihelper.py
-+++ b/lib/bb/ui/uihelper.py
-@@ -57,44 +57,3 @@ class BBUIHelper:
-         self.needUpdate = False
-         return (self.running_tasks, self.failed_tasks)
- 
--    def findServerDetails(self):
--        import sys
--        import optparse
--        from bb.server.xmlrpc import BitbakeServerInfo, BitBakeServerConnection
--        host = ""
--        port = 0
--        bind = ""
--        parser = optparse.OptionParser(
--            usage = """%prog -H host -P port -B bindaddr""")
--
--        parser.add_option("-H", "--host", help = "Bitbake server's IP address",
--                   action = "store", dest = "host", default = None)
--
--        parser.add_option("-P", "--port", help = "Bitbake server's Port number",
--                   action = "store", dest = "port", default = None)
--
--        parser.add_option("-B", "--bind", help = "Hob2 local bind address",
--                   action = "store", dest = "bind", default = None)
--
--        options, args = parser.parse_args(sys.argv)
--        for key, val in options.__dict__.items():
--            if key == 'host' and val:
--                host = val
--            elif key == 'port' and val:
--                port = int(val)
--            elif key == 'bind' and val:
--                bind = val
--
--        if not host or not port or not bind:
--            parser.print_usage()
--            sys.exit(1)
--
--        serverinfo = BitbakeServerInfo(host, port)
--        clientinfo = (bind, 0)
--        connection = BitBakeServerConnection(serverinfo, clientinfo)
--
--        server = connection.connection
--        eventHandler = connection.events
--
--        return server, eventHandler, host, bind
--
--- 
-2.4.3
+>
+> On Dec 18, 2015 1:03 PM, "Bryan" <just4tech83@gmail.com> wrote:
+> >
+> > Hi,
+> >     I am working on yocto poky-dizzy 1.7.1 and have developed some
+> application on top of customized os image. I have a reqirement to support
+> korean/chinese keyboard layout for application.
+> > I have added cross complied libraries for  ibus-hangul pckages. Can
+> somebody suggest me how can i add support for keyboart layout and how to
+> enable automatically.
+> >
+> > Is there any bitbake recipe available to support these keyboard layout.
+> >
+> >
+> > regards
+> > Bryan
+>
 
+--001a113cd986e36e6a052895eb36
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div class=3D"gmail_quote">On Dec 24, 2015 1:40 PM, &quot;Bryan&quot; &lt;<=
+a href=3D"mailto:just4tech83@gmail.com">just4tech83@gmail.com</a>&gt; wrote=
+:<br type=3D"attribution"><blockquote class=3D"gmail_quote" style=3D"margin=
+:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><p dir=3D"ltr"><br=
+>
+On Dec 18, 2015 1:03 PM, &quot;Bryan&quot; &lt;<a href=3D"mailto:just4tech8=
+3@gmail.com" target=3D"_blank">just4tech83@gmail.com</a>&gt; wrote:<br>
+&gt;<br>
+&gt; Hi, <br>
+&gt; =C2=A0=C2=A0=C2=A0 I am working on yocto poky-dizzy 1.7.1 and have dev=
+eloped some application on top of customized os image. I have a reqirement =
+to support korean/chinese keyboard layout for application. <br>
+&gt; I have added cross complied libraries for=C2=A0 ibus-hangul pckages. C=
+an somebody suggest me how can i add support for keyboart layout and how to=
+ enable automatically.<br>
+&gt;<br>
+&gt; Is there any bitbake recipe available to support these keyboard layout=
+.<br>
+&gt;<br>
+&gt;<br>
+&gt; regards<br>
+&gt; Bryan</p>
+</blockquote></div>
+
+--001a113cd986e36e6a052895eb36--
