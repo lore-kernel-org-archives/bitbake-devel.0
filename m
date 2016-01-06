@@ -1,46 +1,48 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-wm0-f52.google.com (mail-wm0-f52.google.com [74.125.82.52])
-	by mail.openembedded.org (Postfix) with ESMTP id 28C4C60017
+Return-Path: <kergoth@gmail.com>
+Received: from mail-ig0-f182.google.com (mail-ig0-f182.google.com
+	[209.85.213.182])
+	by mail.openembedded.org (Postfix) with ESMTP id 8D72660667
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  6 Jan 2016 16:25:07 +0000 (UTC)
-Received: by mail-wm0-f52.google.com with SMTP id b14so83068135wmb.1
+	Wed,  6 Jan 2016 21:42:52 +0000 (UTC)
+Received: by mail-ig0-f182.google.com with SMTP id ik10so41498801igb.1
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 06 Jan 2016 08:25:08 -0800 (PST)
+	Wed, 06 Jan 2016 13:42:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20120113;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=5YUBvmjxg8eRGtA5+VzwE8yC9cOwudkdZ2m/hXRUFuY=;
+	b=BuWR+/GpxhBjM9JV8KdvMkU3B183AfhFbegeBIpD0/Rxxl1k6jnF1ZjWGiKmJX1UcK
+	80zBugVlRGrVR9ksYRyoLQ3ec2kOk2C1eqpjRMYZXFZODYw2Arygg+6VcF6wr/9FjzCr
+	EF79SXb5t2H/xoWtsHruZHYqUZCYAwALVpAi/m62tAoC8JpGPC2LziESThtkE9ml0NhU
+	yXlWQluvsRipg9imahssSTWu6qFwJYrL7HqU2Z9E1TpSuM8Nm8wCnUEGj1CSngKzSLNq
+	UQw8WByayy+AGiDtWszisLzk+AAteXILSw8OTP035IolstCWHKn7LI98DHmrK13sDSeV
+	g4YA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:subject:date:message-id;
-	bh=T5SiBJMK/Bvg0ClFvis438Vt8YxiwHuBXVrXhc0elhg=;
-	b=ylF+qjyi1w8obuVaeNOI7ZZywUwDC4WeOKgeh8I7Ru51KWXV6psb7Ho6LiYprA7XPC
-	qiKE72iMRKE+1wuQ/PyEnCOtSphmXajpNV6vJ98HBf4pHPHBs8JMjNh70MzzD+KNplKP
-	Phi1VdEBoGupBigECjZ0m4tW7NNatz5bMvbXUJBUeb1R8KQYk/ro9CX32AoinD+xLz+L
-	Cx0JdrFRiGcKWsc9PqT7SkInVOT4uqvMeEF5C+ChxmuPTsWVrXay+Sy3PNQZ6gw4+y5v
-	yam/z+MDGQ1GFlSySl5EVOWNkeCDyf9Z7ZETnuGTMsNHYQ+kcVzDyHpzvuGNvGeFl5ke
-	cpCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:subject:date:message-id;
-	bh=T5SiBJMK/Bvg0ClFvis438Vt8YxiwHuBXVrXhc0elhg=;
-	b=S5mw5Wi1RT9Xdfe12cCdajfZnSDb81t9qQqB7v7yEh2bXn90cLf+4ev95DEUhOK1Ub
-	a2bUlE9X+/ag23dfCz3q+lHZUt7Z6kMnEWzfDxOXURcUcwfmEiEOXYFiKQqJReVk0Pvj
-	5Xk/zqXhaO1ilhuoJDJi6dY4Z1NoTD+WzsrVX4yKCr5LANjOTnea4jYLUAWfFRtAaNbf
-	GM6nsRyRm/gdOD0PfMHKKEFMMbKyboAIomJ1vEMoIRu+O3N7Ce7HFtuyioKBAxyH8iYc
-	aR9OXdVmTk/DBqCktL6RY3rQ7sDUjpb/0Lzsjj2e9TkiTlShuY4VCFQ1hbcrnLenZao+
-	+sBA==
-X-Gm-Message-State: ALoCoQkRS3zu2sybZJbx+tT3/NVBMZTLGcCoXfbJyzezzX4s3vQTdJgdcCHhy5MWFE4aWHOtqkvkyZI4+CZNBWfhznPzRadEXA==
-X-Received: by 10.194.86.166 with SMTP id q6mr85772351wjz.69.1452097507185;
-	Wed, 06 Jan 2016 08:25:07 -0800 (PST)
-Received: from flashheart.burtonini.com (35.106.2.81.in-addr.arpa.
-	[81.2.106.35]) by smtp.gmail.com with ESMTPSA id
-	x10sm62475514wjx.8.2016.01.06.08.25.06
-	for <bitbake-devel@lists.openembedded.org>
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 06 Jan 2016 08:25:06 -0800 (PST)
-From: Ross Burton <ross.burton@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed,  6 Jan 2016 16:25:00 +0000
-Message-Id: <1452097500-18426-1-git-send-email-ross.burton@intel.com>
-X-Mailer: git-send-email 2.6.4
-Subject: [PATCH][RFC] bitbake-worker: set the process name when starting a task
+	d=kergoth-com.20150623.gappssmtp.com; s=20150623;
+	h=mime-version:sender:in-reply-to:references:from:date:message-id
+	:subject:to:cc:content-type;
+	bh=5YUBvmjxg8eRGtA5+VzwE8yC9cOwudkdZ2m/hXRUFuY=;
+	b=xRNHQ2uXnab05Cx2hzsbgOtu8wznd0K6u5BbCvK1O/iuyjizCSP3Gnxk+W6L5KM4io
+	4u/OPsLAEVFLNPAeW2yIMDogGb5TgwqYMoTY9ewuN53umjFuGTTVjVj78IHVUz+SHI+o
+	3bf0J99jwEigLuDR9AKru461AgASBsV9sdgNdJpHE2yCoiH3fA1xNvEL6nXZra7UMefw
+	vzRiPEoO46lubvyTOL2CVN1J6E9o2AUU46fkrlR09Eb2T7OejcILfq8O2rezxQOOeSF4
+	80+OYcUHfy22EE9L8ao9tioraWqqygq1IhIuNV4BeF2boPbJKPt3FuzyBjJeOmyNzG9O
+	cUVQ==
+X-Received: by 10.50.79.165 with SMTP id k5mr12064064igx.10.1452116572956;
+	Wed, 06 Jan 2016 13:42:52 -0800 (PST)
+MIME-Version: 1.0
+Sender: kergoth@gmail.com
+Received: by 10.79.104.194 with HTTP; Wed, 6 Jan 2016 13:42:33 -0800 (PST)
+In-Reply-To: <1452097500-18426-1-git-send-email-ross.burton@intel.com>
+References: <1452097500-18426-1-git-send-email-ross.burton@intel.com>
+From: Christopher Larson <clarson@kergoth.com>
+Date: Wed, 6 Jan 2016 14:42:33 -0700
+X-Google-Sender-Auth: B7OuBBcvFGDh4V3alAdIl7yU6GE
+Message-ID: <CABcZANnO9qiA0-7+tcz8Y03pa5gNEb4EcdKa1MQ6O_hkjgLsvA@mail.gmail.com>
+To: Ross Burton <ross.burton@intel.com>
+Cc: "bitbake-devel@lists.openembedded.org"
+	<bitbake-devel@lists.openembedded.org>
+Subject: Re: [PATCH][RFC] bitbake-worker: set the process name when starting a task
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -53,35 +55,64 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Jan 2016 16:25:09 -0000
+X-List-Received-Date: Wed, 06 Jan 2016 21:42:54 -0000
+Content-Type: multipart/alternative; boundary=089e013a032e80ee7b0528b13ce3
 
-If the setproctitle module is present then use it to change the process name
-when the worker starts a task.  This results in each worker showing what task it
-is executing in a process listing.
+--089e013a032e80ee7b0528b13ce3
+Content-Type: text/plain; charset=UTF-8
 
-Signed-off-by: Ross Burton <ross.burton@intel.com>
----
- bitbake/bin/bitbake-worker | 6 ++++++
- 1 file changed, 6 insertions(+)
+On Wed, Jan 6, 2016 at 9:25 AM, Ross Burton <ross.burton@intel.com> wrote:
 
-diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
-index 3390f63..15b0f10 100755
---- a/bitbake/bin/bitbake-worker
-+++ b/bitbake/bin/bitbake-worker
-@@ -371,6 +371,12 @@ class BitbakeWorker(object):
-         fn, task, taskname, quieterrors, appends, taskdepdata = pickle.loads(data)
-         workerlog_write("Handling runtask %s %s %s\n" % (task, fn, taskname))
- 
-+        try:
-+            import setproctitle
-+            setproctitle.setproctitle("bitbake-worker: %s:%s" % (os.path.basename(fn), taskname))
-+        except ImportError:
-+            pass
-+
-         pid, pipein, pipeout = fork_off_task(self.cookercfg, self.data, self.workerdata, fn, task, taskname, appends, taskdepdata, quieterrors)
- 
-         self.build_pids[pid] = task
+> If the setproctitle module is present then use it to change the process
+> name
+> when the worker starts a task.  This results in each worker showing what
+> task it
+> is executing in a process listing.
+>
+> Signed-off-by: Ross Burton <ross.burton@intel.com>
+>
+
+Very nice. Do you know if it's overwriting just the process name or the
+entire commandline? I'm wondering if pkill bitbake-worker would do what you
+want, or if you'd still need to use pkill -f, for example. I'd like to see
+the toplevel bitbake processes named nicely without the python path and
+whatnot too eventually. We could also name the parallel parsing processes
+(though admittedly they're not long lived). Perhaps this should go into a
+helper function in bb.utils or bb.process?
 -- 
-2.6.4
+Christopher Larson
+clarson at kergoth dot com
+Founder - BitBake, OpenEmbedded, OpenZaurus
+Maintainer - Tslib
+Senior Software Engineer, Mentor Graphics
 
+--089e013a032e80ee7b0528b13ce3
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><div class=3D"gmail_extra">On Wed, Jan 6, 2016 at 9:25 AM,=
+ Ross Burton <span dir=3D"ltr">&lt;<a href=3D"mailto:ross.burton@intel.com"=
+ target=3D"_blank">ross.burton@intel.com</a>&gt;</span> wrote:<br><div clas=
+s=3D"gmail_quote"><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .=
+8ex;border-left:1px #ccc solid;padding-left:1ex"><div id=3D":ux" class=3D"a=
+3s" style=3D"overflow:hidden">If the setproctitle module is present then us=
+e it to change the process name<br>
+when the worker starts a task.=C2=A0 This results in each worker showing wh=
+at task it<br>
+is executing in a process listing.<br>
+<br>
+Signed-off-by: Ross Burton &lt;<a href=3D"mailto:ross.burton@intel.com">ros=
+s.burton@intel.com</a>&gt;</div></blockquote></div><br></div><div class=3D"=
+gmail_extra">Very nice. Do you know if it&#39;s overwriting just the proces=
+s name or the entire commandline? I&#39;m wondering if pkill bitbake-worker=
+ would do what you want, or if you&#39;d still need to use pkill -f, for ex=
+ample. I&#39;d like to see the toplevel bitbake processes named nicely with=
+out the python path and whatnot too eventually. We could also name the para=
+llel parsing processes (though admittedly they&#39;re not long lived). Perh=
+aps this should go into a helper function in bb.utils or bb.process?<br>-- =
+<br><div class=3D"gmail_signature">Christopher Larson<br>clarson at kergoth=
+ dot com<br>Founder - BitBake, OpenEmbedded, OpenZaurus<br>Maintainer - Tsl=
+ib<br>Senior Software Engineer, Mentor Graphics</div>
+</div></div>
+
+--089e013a032e80ee7b0528b13ce3--
