@@ -1,38 +1,28 @@
-Return-Path: <Awais_Belal@mentor.com>
-Received: from relay1.mentorg.com (relay1.mentorg.com [192.94.38.131])
-	by mail.openembedded.org (Postfix) with ESMTP id CE97265CC3
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 690B560588
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  6 Jan 2016 09:43:06 +0000 (UTC)
-Received: from nat-ies.mentorg.com ([192.94.31.2]
-	helo=SVR-IES-FEM-05.mgc.mentorg.com)
-	by relay1.mentorg.com with esmtp 
-	id 1aGkcU-0002OW-BC from Awais_Belal@mentor.com ;
-	Wed, 06 Jan 2016 01:43:06 -0800
-Received: from EU-MBX-02.mgc.mentorg.com ([169.254.3.44]) by
-	SVR-IES-FEM-05.mgc.mentorg.com ([137.202.0.112]) with mapi id
-	14.03.0224.002; Wed, 6 Jan 2016 09:40:53 +0000
-From: "Belal, Awais" <Awais_Belal@mentor.com>
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	"bitbake-devel@lists.openembedded.org"
-	<bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH] bitbake: fetch: use orig localpath
-	when calling orig method
-Thread-Index: AQHRN7WTLy9Y594dpke9G+YewV0Yzp7PJsVQgAAiqoCAB1lGGYAXuoI1
-Date: Wed, 6 Jan 2016 09:40:52 +0000
-Message-ID: <2021B186DC632746BD5A3CE32F12BD28011FB7A425@EU-MBX-02.mgc.mentorg.com>
-References: <1449773843-23411-1-git-send-email-awais_belal@mentor.com>
-	<2021B186DC632746BD5A3CE32F12BD280119AA60C3@EU-MBX-02.mgc.mentorg.com>	,
-	<CABcZANm0FxRqAfJdjLS1nq9JQ3fJeQNBAd3zWYqiWmZKhLR0cw@mail.gmail.com>
-	<2021B186DC632746BD5A3CE32F12BD280119AB7286@EU-MBX-03.mgc.mentorg.com>, 
-	<1450364755.13505.214.camel@linuxfoundation.org>,
-	<2021B186DC632746BD5A3CE32F12BD280119AC0AF0@EU-MBX-03.mgc.mentorg.com>
-In-Reply-To: <2021B186DC632746BD5A3CE32F12BD280119AC0AF0@EU-MBX-03.mgc.mentorg.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.202.0.69]
-MIME-Version: 1.0
-Subject: Re: [PATCH] bitbake: fetch: use orig localpath when calling orig method
+	Wed,  6 Jan 2016 11:22:44 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u06BMj25019184; Wed, 6 Jan 2016 11:22:45 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id SY1GXqUESJ_G; Wed,  6 Jan 2016 11:22:45 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u06BMg1D019171
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Wed, 6 Jan 2016 11:22:44 GMT
+Message-ID: <1452079362.7598.67.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Chen Qi <Qi.Chen@windriver.com>, bitbake-devel@lists.openembedded.org
+Date: Wed, 06 Jan 2016 11:22:42 +0000
+In-Reply-To: <1452069127-13245-1-git-send-email-Qi.Chen@windriver.com>
+References: <1452069127-13245-1-git-send-email-Qi.Chen@windriver.com>
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: Re: [PATCH] bitbake: clean up stamp-base related codes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -45,52 +35,85 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Jan 2016 09:43:07 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Wed, 06 Jan 2016 11:22:45 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Ping!=0A=
-=0A=
-BR,=0A=
-Awais=0A=
-=0A=
-________________________________________=0A=
-From: bitbake-devel-bounces@lists.openembedded.org [bitbake-devel-bounces@l=
-ists.openembedded.org] on behalf of Belal, Awais=0A=
-Sent: Tuesday, December 22, 2015 12:20 PM=0A=
-To: Richard Purdie; bitbake-devel@lists.openembedded.org=0A=
-Subject: Re: [bitbake-devel] [PATCH] bitbake: fetch: use orig localpath whe=
-n calling orig method=0A=
-=0A=
-Hi Richard,=0A=
-=0A=
-This applies to 1.28 as well as I stated earlier but I see that it only got=
- its way into master. Is someone else maintaining 1.28 or is this just queu=
-ed for later?=0A=
-=0A=
-BR,=0A=
-Awais=0A=
-=0A=
-________________________________________=0A=
-From: Richard Purdie [richard.purdie@linuxfoundation.org]=0A=
-Sent: Thursday, December 17, 2015 8:05 PM=0A=
-To: Belal, Awais; bitbake-devel@lists.openembedded.org=0A=
-Subject: Re: [bitbake-devel] [PATCH] bitbake: fetch: use orig localpath whe=
-n calling orig method=0A=
-=0A=
-On Thu, 2015-12-17 at 13:02 +0000, Belal, Awais wrote:=0A=
-> Ping! Is there a reservation against this?=0A=
-=0A=
-No reservation, it just came in at the end of the last round of patches=0A=
-I batched/tested/merged and is therefore going into the next one.=0A=
-=0A=
-Cheers,=0A=
-=0A=
-Richard=0A=
---=0A=
-_______________________________________________=0A=
-bitbake-devel mailing list=0A=
-bitbake-devel@lists.openembedded.org=0A=
-http://lists.openembedded.org/mailman/listinfo/bitbake-devel=0A=
+On Wed, 2016-01-06 at 16:32 +0800, Chen Qi wrote:
+> The 'stamp-base' related codes are no longer useful, clean them up.
+> 
+> [YOCTO #8468]
+> 
+> Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+> ---
+>  bitbake/lib/bb/build.py | 4 ++--
+>  bitbake/lib/bb/cache.py | 3 ---
+>  2 files changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+> index 22428a6..b84338b 100644
+> --- a/bitbake/lib/bb/build.py
+> +++ b/bitbake/lib/bb/build.py
+> @@ -582,10 +582,10 @@ def stamp_internal(taskname, d, file_name,
+> baseonly=False):
+>          taskflagname = taskname.replace("_setscene", "")
+>  
+>      if file_name:
+> -        stamp = d.stamp_base[file_name].get(taskflagname) or
+> d.stamp[file_name]
+> +        stamp = d.stamp[file_name]
+>          extrainfo = d.stamp_extrainfo[file_name].get(taskflagname)
+> or ""
+>      else:
+> -        stamp = d.getVarFlag(taskflagname, 'stamp-base', True) or
+> d.getVar('STAMP', True)
+> +        stamp = d.getVar('STAMP', True)
+>          file_name = d.getVar('BB_FILENAME', True)
+>          extrainfo = d.getVarFlag(taskflagname, 'stamp-extra-info',
+> True) or ""
+>  
+> diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
+> index 521f758..0ec4057 100644
+> --- a/bitbake/lib/bb/cache.py
+> +++ b/bitbake/lib/bb/cache.py
+> @@ -129,7 +129,6 @@ class CoreRecipeInfo(RecipeInfoCommon):
+>          self.not_world = self.getvar('EXCLUDE_FROM_WORLD', metadata)
+>          self.stamp = self.getvar('STAMP', metadata)
+>          self.stampclean = self.getvar('STAMPCLEAN', metadata)       
+> -        self.stamp_base = self.flaglist('stamp-base', self.tasks,
+> metadata)
+>          self.stamp_base_clean = self.flaglist('stamp-base-clean',
+
+
+Ok, but what about stamp_base_clean?
+
+Cheers,
+
+Richard
+
+
+> self.tasks, metadata)
+>          self.stamp_extrainfo = self.flaglist('stamp-extra-info',
+> self.tasks, metadata)
+>          self.file_checksums = self.flaglist('file-checksums',
+> self.tasks, metadata, True)
+> @@ -158,7 +157,6 @@ class CoreRecipeInfo(RecipeInfoCommon):
+>  
+>          cachedata.stamp = {}
+>          cachedata.stampclean = {}
+> -        cachedata.stamp_base = {}
+>          cachedata.stamp_base_clean = {}
+>          cachedata.stamp_extrainfo = {}
+>          cachedata.file_checksums = {}
+> @@ -192,7 +190,6 @@ class CoreRecipeInfo(RecipeInfoCommon):
+>          cachedata.pkg_dp[fn] = self.defaultpref
+>          cachedata.stamp[fn] = self.stamp
+>          cachedata.stampclean[fn] = self.stampclean
+> -        cachedata.stamp_base[fn] = self.stamp_base
+>          cachedata.stamp_base_clean[fn] = self.stamp_base_clean
+>          cachedata.stamp_extrainfo[fn] = self.stamp_extrainfo
+>          cachedata.file_checksums[fn] = self.file_checksums
+> -- 
+> 1.9.1
+> 
 
