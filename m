@@ -1,28 +1,46 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 690B560588
+Return-Path: <ross.burton@intel.com>
+Received: from mail-wm0-f52.google.com (mail-wm0-f52.google.com [74.125.82.52])
+	by mail.openembedded.org (Postfix) with ESMTP id 28C4C60017
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed,  6 Jan 2016 11:22:44 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u06BMj25019184; Wed, 6 Jan 2016 11:22:45 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id SY1GXqUESJ_G; Wed,  6 Jan 2016 11:22:45 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u06BMg1D019171
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 6 Jan 2016 11:22:44 GMT
-Message-ID: <1452079362.7598.67.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Chen Qi <Qi.Chen@windriver.com>, bitbake-devel@lists.openembedded.org
-Date: Wed, 06 Jan 2016 11:22:42 +0000
-In-Reply-To: <1452069127-13245-1-git-send-email-Qi.Chen@windriver.com>
-References: <1452069127-13245-1-git-send-email-Qi.Chen@windriver.com>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Subject: Re: [PATCH] bitbake: clean up stamp-base related codes
+	Wed,  6 Jan 2016 16:25:07 +0000 (UTC)
+Received: by mail-wm0-f52.google.com with SMTP id b14so83068135wmb.1
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 06 Jan 2016 08:25:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=intel-com.20150623.gappssmtp.com; s=20150623;
+	h=from:to:subject:date:message-id;
+	bh=T5SiBJMK/Bvg0ClFvis438Vt8YxiwHuBXVrXhc0elhg=;
+	b=ylF+qjyi1w8obuVaeNOI7ZZywUwDC4WeOKgeh8I7Ru51KWXV6psb7Ho6LiYprA7XPC
+	qiKE72iMRKE+1wuQ/PyEnCOtSphmXajpNV6vJ98HBf4pHPHBs8JMjNh70MzzD+KNplKP
+	Phi1VdEBoGupBigECjZ0m4tW7NNatz5bMvbXUJBUeb1R8KQYk/ro9CX32AoinD+xLz+L
+	Cx0JdrFRiGcKWsc9PqT7SkInVOT4uqvMeEF5C+ChxmuPTsWVrXay+Sy3PNQZ6gw4+y5v
+	yam/z+MDGQ1GFlSySl5EVOWNkeCDyf9Z7ZETnuGTMsNHYQ+kcVzDyHpzvuGNvGeFl5ke
+	cpCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=1e100.net; s=20130820;
+	h=x-gm-message-state:from:to:subject:date:message-id;
+	bh=T5SiBJMK/Bvg0ClFvis438Vt8YxiwHuBXVrXhc0elhg=;
+	b=S5mw5Wi1RT9Xdfe12cCdajfZnSDb81t9qQqB7v7yEh2bXn90cLf+4ev95DEUhOK1Ub
+	a2bUlE9X+/ag23dfCz3q+lHZUt7Z6kMnEWzfDxOXURcUcwfmEiEOXYFiKQqJReVk0Pvj
+	5Xk/zqXhaO1ilhuoJDJi6dY4Z1NoTD+WzsrVX4yKCr5LANjOTnea4jYLUAWfFRtAaNbf
+	GM6nsRyRm/gdOD0PfMHKKEFMMbKyboAIomJ1vEMoIRu+O3N7Ce7HFtuyioKBAxyH8iYc
+	aR9OXdVmTk/DBqCktL6RY3rQ7sDUjpb/0Lzsjj2e9TkiTlShuY4VCFQ1hbcrnLenZao+
+	+sBA==
+X-Gm-Message-State: ALoCoQkRS3zu2sybZJbx+tT3/NVBMZTLGcCoXfbJyzezzX4s3vQTdJgdcCHhy5MWFE4aWHOtqkvkyZI4+CZNBWfhznPzRadEXA==
+X-Received: by 10.194.86.166 with SMTP id q6mr85772351wjz.69.1452097507185;
+	Wed, 06 Jan 2016 08:25:07 -0800 (PST)
+Received: from flashheart.burtonini.com (35.106.2.81.in-addr.arpa.
+	[81.2.106.35]) by smtp.gmail.com with ESMTPSA id
+	x10sm62475514wjx.8.2016.01.06.08.25.06
+	for <bitbake-devel@lists.openembedded.org>
+	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+	Wed, 06 Jan 2016 08:25:06 -0800 (PST)
+From: Ross Burton <ross.burton@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Wed,  6 Jan 2016 16:25:00 +0000
+Message-Id: <1452097500-18426-1-git-send-email-ross.burton@intel.com>
+X-Mailer: git-send-email 2.6.4
+Subject: [PATCH][RFC] bitbake-worker: set the process name when starting a task
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,85 +53,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 06 Jan 2016 11:22:45 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Wed, 06 Jan 2016 16:25:09 -0000
 
-On Wed, 2016-01-06 at 16:32 +0800, Chen Qi wrote:
-> The 'stamp-base' related codes are no longer useful, clean them up.
-> 
-> [YOCTO #8468]
-> 
-> Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
-> ---
->  bitbake/lib/bb/build.py | 4 ++--
->  bitbake/lib/bb/cache.py | 3 ---
->  2 files changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-> index 22428a6..b84338b 100644
-> --- a/bitbake/lib/bb/build.py
-> +++ b/bitbake/lib/bb/build.py
-> @@ -582,10 +582,10 @@ def stamp_internal(taskname, d, file_name,
-> baseonly=False):
->          taskflagname = taskname.replace("_setscene", "")
->  
->      if file_name:
-> -        stamp = d.stamp_base[file_name].get(taskflagname) or
-> d.stamp[file_name]
-> +        stamp = d.stamp[file_name]
->          extrainfo = d.stamp_extrainfo[file_name].get(taskflagname)
-> or ""
->      else:
-> -        stamp = d.getVarFlag(taskflagname, 'stamp-base', True) or
-> d.getVar('STAMP', True)
-> +        stamp = d.getVar('STAMP', True)
->          file_name = d.getVar('BB_FILENAME', True)
->          extrainfo = d.getVarFlag(taskflagname, 'stamp-extra-info',
-> True) or ""
->  
-> diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
-> index 521f758..0ec4057 100644
-> --- a/bitbake/lib/bb/cache.py
-> +++ b/bitbake/lib/bb/cache.py
-> @@ -129,7 +129,6 @@ class CoreRecipeInfo(RecipeInfoCommon):
->          self.not_world = self.getvar('EXCLUDE_FROM_WORLD', metadata)
->          self.stamp = self.getvar('STAMP', metadata)
->          self.stampclean = self.getvar('STAMPCLEAN', metadata)       
-> -        self.stamp_base = self.flaglist('stamp-base', self.tasks,
-> metadata)
->          self.stamp_base_clean = self.flaglist('stamp-base-clean',
+If the setproctitle module is present then use it to change the process name
+when the worker starts a task.  This results in each worker showing what task it
+is executing in a process listing.
 
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ bitbake/bin/bitbake-worker | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Ok, but what about stamp_base_clean?
+diff --git a/bitbake/bin/bitbake-worker b/bitbake/bin/bitbake-worker
+index 3390f63..15b0f10 100755
+--- a/bitbake/bin/bitbake-worker
++++ b/bitbake/bin/bitbake-worker
+@@ -371,6 +371,12 @@ class BitbakeWorker(object):
+         fn, task, taskname, quieterrors, appends, taskdepdata = pickle.loads(data)
+         workerlog_write("Handling runtask %s %s %s\n" % (task, fn, taskname))
+ 
++        try:
++            import setproctitle
++            setproctitle.setproctitle("bitbake-worker: %s:%s" % (os.path.basename(fn), taskname))
++        except ImportError:
++            pass
++
+         pid, pipein, pipeout = fork_off_task(self.cookercfg, self.data, self.workerdata, fn, task, taskname, appends, taskdepdata, quieterrors)
+ 
+         self.build_pids[pid] = task
+-- 
+2.6.4
 
-Cheers,
-
-Richard
-
-
-> self.tasks, metadata)
->          self.stamp_extrainfo = self.flaglist('stamp-extra-info',
-> self.tasks, metadata)
->          self.file_checksums = self.flaglist('file-checksums',
-> self.tasks, metadata, True)
-> @@ -158,7 +157,6 @@ class CoreRecipeInfo(RecipeInfoCommon):
->  
->          cachedata.stamp = {}
->          cachedata.stampclean = {}
-> -        cachedata.stamp_base = {}
->          cachedata.stamp_base_clean = {}
->          cachedata.stamp_extrainfo = {}
->          cachedata.file_checksums = {}
-> @@ -192,7 +190,6 @@ class CoreRecipeInfo(RecipeInfoCommon):
->          cachedata.pkg_dp[fn] = self.defaultpref
->          cachedata.stamp[fn] = self.stamp
->          cachedata.stampclean[fn] = self.stampclean
-> -        cachedata.stamp_base[fn] = self.stamp_base
->          cachedata.stamp_base_clean[fn] = self.stamp_base_clean
->          cachedata.stamp_extrainfo[fn] = self.stamp_extrainfo
->          cachedata.file_checksums[fn] = self.file_checksums
-> -- 
-> 1.9.1
-> 
 
