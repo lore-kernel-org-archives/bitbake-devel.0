@@ -1,24 +1,26 @@
 Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id 1C4276FF64
+Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
+	by mail.openembedded.org (Postfix) with ESMTP id E00C2731E7
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Jan 2016 07:38:51 +0000 (UTC)
+	Thu,  7 Jan 2016 07:38:52 +0000 (UTC)
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
 	[147.11.189.40])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id u077cqjI013436
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
+	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id u077cqg9024448
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 6 Jan 2016 23:38:52 -0800 (PST)
+	Wed, 6 Jan 2016 23:38:53 -0800
 Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
 	(147.11.189.50) with Microsoft SMTP Server id 14.3.248.2;
-	Wed, 6 Jan 2016 23:38:51 -0800
+	Wed, 6 Jan 2016 23:38:52 -0800
 From: Robert Yang <liezhi.yang@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 6 Jan 2016 23:38:50 -0800
-Message-ID: <cover.1452152302.git.liezhi.yang@windriver.com>
+Date: Wed, 6 Jan 2016 23:38:51 -0800
+Message-ID: <60b4483fa1dfbd45dc1835dca1759ee5f6a27f4f.1452152302.git.liezhi.yang@windriver.com>
 X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <cover.1452152302.git.liezhi.yang@windriver.com>
+References: <cover.1452152302.git.liezhi.yang@windriver.com>
 MIME-Version: 1.0
-Subject: [PATCH 0/1] fetch2/git.py:_latest_revision: respect BB_FETCH_PREMIRRORONLY
+Subject: [PATCH 1/1] fetch2/git.py:_latest_revision: respect BB_FETCH_PREMIRRORONLY
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,24 +33,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 07 Jan 2016 07:38:53 -0000
+X-List-Received-Date: Thu, 07 Jan 2016 07:38:54 -0000
 Content-Type: text/plain
 
-The following changes since commit f8185ff9f8ac697733b41f023cb3a4b98b2f823f:
+Fixed when use a local BB_FETCH_PREMIRRORONLY for AUTOREV recipes:
+SRCREV = "${AUTOREV}"
+BB_NO_NETWORK = "1"
+For example, the refpolicy-mls from meta-selinux:
+$ bitbake refpolicy-mls -ccleanall/fetch
 
-  bitbake: ast: Add filename/lineno to mapped functions (2016-01-06 15:27:35 +0000)
+Log data follows:
+| DEBUG: Executing python function do_cleanall
+| DEBUG: Python function do_cleanall finished
+| ERROR: Function failed: Network access disabled through BB_NO_NETWORK (or set indirectly due to use of BB_FETCH_PREMIRRORONLY) but access requested with command git -c core.fsyncobjectfiles=0 ls-remote git://github.com/TresysTechnology/refpolicy.git  (for url None)
+ERROR: Task 3 (/path/to/meta-selinux/recipes-security/refpolicy/refpolicy-mls_git.bb, do_cleanall) failed with exit code '1'
+NOTE: Tasks Summary: Attempted 4 tasks of which 0 didn't need to be rerun and 1 failed.
 
-are available in the git repository at:
+Check BB_FETCH_PREMIRRORONLY before ls-remote will fix the problem.
 
-  git://git.pokylinux.org/poky-contrib rbt/fetcher
-  http://git.pokylinux.org/cgit.cgi/poky-contrib/log/?h=rbt/fetcher
+[YOCTO #8893]
 
-Robert Yang (1):
-  fetch2/git.py:_latest_revision: respect BB_FETCH_PREMIRRORONLY
-
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
  bitbake/lib/bb/fetch2/git.py |    5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
+index 5ffab22..7f7296f 100644
+--- a/bitbake/lib/bb/fetch2/git.py
++++ b/bitbake/lib/bb/fetch2/git.py
+@@ -356,7 +356,10 @@ class Git(FetchMethod):
+         """
+         Compute the HEAD revision for the url
+         """
+-        output = self._lsremote(ud, d, "")
++        if d.getVar("BB_FETCH_PREMIRRORONLY", True) and ud.proto != "file":
++            return "HEAD"
++        else:
++            output = self._lsremote(ud, d, "")
+         # Tags of the form ^{} may not work, need to fallback to other form
+         if ud.unresolvedrev[name][:5] == "refs/":
+             head = ud.unresolvedrev[name]
 -- 
 1.7.9.5
 
