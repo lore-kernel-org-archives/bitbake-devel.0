@@ -1,26 +1,27 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail5.wrs.com (mail5.windriver.com [192.103.53.11])
-	by mail.openembedded.org (Postfix) with ESMTP id E00C2731E7
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 6F8096FFCD
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Jan 2016 07:38:52 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id u077cqg9024448
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=OK)
-	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 6 Jan 2016 23:38:53 -0800
-Received: from ala-blade47.wrs.com (147.11.105.67) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.50) with Microsoft SMTP Server id 14.3.248.2;
-	Wed, 6 Jan 2016 23:38:52 -0800
-From: Robert Yang <liezhi.yang@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Wed, 6 Jan 2016 23:38:51 -0800
-Message-ID: <60b4483fa1dfbd45dc1835dca1759ee5f6a27f4f.1452152302.git.liezhi.yang@windriver.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1452152302.git.liezhi.yang@windriver.com>
-References: <cover.1452152302.git.liezhi.yang@windriver.com>
-MIME-Version: 1.0
-Subject: [PATCH 1/1] fetch2/git.py:_latest_revision: respect BB_FETCH_PREMIRRORONLY
+	Thu,  7 Jan 2016 11:06:15 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u07B6Eew017153; Thu, 7 Jan 2016 11:06:14 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id wko5EfzOLi5A; Thu,  7 Jan 2016 11:06:14 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u07B69S6017147
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 7 Jan 2016 11:06:10 GMT
+Message-ID: <1452164769.7598.109.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Thu, 07 Jan 2016 11:06:09 +0000
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Cc: ulfalizer@gmail.com
+Subject: [PATCH] knotty: Use non-interactive mode as fallback for dumb terminals
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -33,48 +34,36 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 07 Jan 2016 07:38:54 -0000
-Content-Type: text/plain
+X-List-Received-Date: Thu, 07 Jan 2016 11:06:16 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-Fixed when use a local BB_FETCH_PREMIRRORONLY for AUTOREV recipes:
-SRCREV = "${AUTOREV}"
-BB_NO_NETWORK = "1"
-For example, the refpolicy-mls from meta-selinux:
-$ bitbake refpolicy-mls -ccleanall/fetch
+TERM=dumb bitbake X
 
-Log data follows:
-| DEBUG: Executing python function do_cleanall
-| DEBUG: Python function do_cleanall finished
-| ERROR: Function failed: Network access disabled through BB_NO_NETWORK (or set indirectly due to use of BB_FETCH_PREMIRRORONLY) but access requested with command git -c core.fsyncobjectfiles=0 ls-remote git://github.com/TresysTechnology/refpolicy.git  (for url None)
-ERROR: Task 3 (/path/to/meta-selinux/recipes-security/refpolicy/refpolicy-mls_git.bb, do_cleanall) failed with exit code '1'
-NOTE: Tasks Summary: Attempted 4 tasks of which 0 didn't need to be rerun and 1 failed.
+shows no output fot task status which is suboptimal. Use the non-interactive
+mode if the terminal doesn't support what we need for interactive mode giving
+a better user experience. Also print a note to the console to say this has
+happened.
 
-Check BB_FETCH_PREMIRRORONLY before ls-remote will fix the problem.
+[YOCTO #8768]
 
-[YOCTO #8893]
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- bitbake/lib/bb/fetch2/git.py |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+diff --git a/bitbake/lib/bb/ui/knotty.py b/bitbake/lib/bb/ui/knotty.py
+index 053d1e9..b42f8eb 100644
+--- a/bitbake/lib/bb/ui/knotty.py
++++ b/bitbake/lib/bb/ui/knotty.py
+@@ -174,6 +174,10 @@ class TerminalFilter(object):
+             self.rows, self.columns = self.getTerminalColumns()
+         except:
+             self.cuu = None
++        if not self.cuu:
++            self.interactive = False
++            bb.note("Unable to use interactive mode for this terminal, using fallback")
++            return
+         console.addFilter(InteractConsoleLogFilter(self, format))
+         errconsole.addFilter(InteractConsoleLogFilter(self, format))
+ 
 
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 5ffab22..7f7296f 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -356,7 +356,10 @@ class Git(FetchMethod):
-         """
-         Compute the HEAD revision for the url
-         """
--        output = self._lsremote(ud, d, "")
-+        if d.getVar("BB_FETCH_PREMIRRORONLY", True) and ud.proto != "file":
-+            return "HEAD"
-+        else:
-+            output = self._lsremote(ud, d, "")
-         # Tags of the form ^{} may not work, need to fallback to other form
-         if ud.unresolvedrev[name][:5] == "refs/":
-             head = ud.unresolvedrev[name]
--- 
-1.7.9.5
 
 
