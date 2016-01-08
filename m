@@ -1,25 +1,25 @@
 Return-Path: <elliot.smith@intel.com>
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id 5FD8A731EB
+	by mail.openembedded.org (Postfix) with ESMTP id D710E731EB
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  8 Jan 2016 11:17:30 +0000 (UTC)
+	Fri,  8 Jan 2016 11:17:31 +0000 (UTC)
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-	by fmsmga104.fm.intel.com with ESMTP; 08 Jan 2016 03:17:31 -0800
+	by fmsmga104.fm.intel.com with ESMTP; 08 Jan 2016 03:17:33 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.20,538,1444719600"; d="scan'208";a="722947335"
+X-IronPort-AV: E=Sophos;i="5.20,538,1444719600"; d="scan'208";a="722947356"
 Received: from deryaeke-mobl2.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
 	([10.252.25.84])
-	by orsmga003.jf.intel.com with ESMTP; 08 Jan 2016 03:17:30 -0800
+	by orsmga003.jf.intel.com with ESMTP; 08 Jan 2016 03:17:31 -0800
 From: Elliot Smith <elliot.smith@intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri,  8 Jan 2016 11:17:19 +0000
-Message-Id: <9f84dc48e02b4f84ea1dff1d6a7093c17b164bc5.1452251694.git.elliot.smith@intel.com>
+Date: Fri,  8 Jan 2016 11:17:20 +0000
+Message-Id: <7c7bd6ba6b5091c618b25004585a96e38cffc440.1452251694.git.elliot.smith@intel.com>
 X-Mailer: git-send-email 1.9.3
 In-Reply-To: <d4ae58e68ced0a70b88430fca9aad786b113953b.1452251694.git.elliot.smith@intel.com>
 References: <d4ae58e68ced0a70b88430fca9aad786b113953b.1452251694.git.elliot.smith@intel.com>
 In-Reply-To: <cover.1452251694.git.elliot.smith@intel.com>
 References: <cover.1452251694.git.elliot.smith@intel.com>
-Subject: [PATCH 5/8] buildinfohelper: add provides info to the db
+Subject: [PATCH 6/8] toaster: show list of provides for the recipe
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -32,60 +32,39 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 08 Jan 2016 11:17:30 -0000
+X-List-Received-Date: Fri, 08 Jan 2016 11:17:32 -0000
 
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 
-Added new entries to Provides model and link them to
-Recipe_Dependency using 'via' field.
-
-This data will be used by Toaster UI to show 'Provides:'
-information for the recipes.
-
-[YOCTO #6169]
+Showed list of names that recipe provides.
 
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 ---
- lib/bb/ui/buildinfohelper.py | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ lib/toaster/toastergui/templates/recipe.html | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/lib/bb/ui/buildinfohelper.py b/lib/bb/ui/buildinfohelper.py
-index cba0165..0cb6f68 100644
---- a/lib/bb/ui/buildinfohelper.py
-+++ b/lib/bb/ui/buildinfohelper.py
-@@ -41,7 +41,7 @@ from orm.models import Target_Image_File, BuildArtifact
- from orm.models import Variable, VariableHistory
- from orm.models import Package, Package_File, Target_Installed_Package, Target_File
- from orm.models import Task_Dependency, Package_Dependency
--from orm.models import Recipe_Dependency
-+from orm.models import Recipe_Dependency, Provides
+diff --git a/lib/toaster/toastergui/templates/recipe.html b/lib/toaster/toastergui/templates/recipe.html
+index c6ae2f3..bbe7475 100644
+--- a/lib/toaster/toastergui/templates/recipe.html
++++ b/lib/toaster/toastergui/templates/recipe.html
+@@ -71,6 +71,16 @@
+                     Layer commit
+                 </dt>
+                 <dd class="iscommit">{{layer_version.commit}}</dd>
++                {% if object.provides_set.all %}
++                <dt>
++                    <i class="icon-question-sign get-help"
++                     title="A list of aliases by which a particular recipe can be known. The additional aliases are
++                           synonyms for the recipe and can be useful satisfying dependencies of other recipes during
++                           the build"></i>
++                    PROVIDES
++                </dt>
++                 <dd><code>{% for provider in object.provides_set.all %}{{ provider.name }}&nbsp;{% endfor %}</code></dd>
++                {% endif %}
+             </dl>
  
- from orm.models import Project
- from bldcontrol.models import BuildEnvironment, BuildRequest
-@@ -1268,15 +1268,20 @@ class BuildInfoHelper(object):
-            for dep in event._depgraph['depends'][recipe]:
-                 if dep in assume_provided:
-                     continue
-+                via = None
-                 if dep in event._depgraph['providermap']:
--                    dep = event._depgraph['providermap'][dep][0]
--                if dep in self.internal_state['recipes']:
-+                    deprecipe = event._depgraph['providermap'][dep][0]
-+                    dependency = self.internal_state['recipes'][deprecipe]
-+                    via = Provides.objects.get_or_create(name=dep,
-+                                                         recipe=dependency)[0]
-+                elif dep in self.internal_state['recipes']:
-                     dependency = self.internal_state['recipes'][dep]
-                 else:
-                     errormsg += "  stpd: KeyError saving recipe dependency for %s, %s \n" % (recipe, dep)
-                     continue
-                 recipe_dep = Recipe_Dependency(recipe=target,
-                                                depends_on=dependency,
-+                                               via=via,
-                                                dep_type=Recipe_Dependency.TYPE_DEPENDS)
-                 recipedeps_objects.append(recipe_dep)
- 
+             <h2 class="details">Tasks</h2>
 -- 
 1.9.3
 
