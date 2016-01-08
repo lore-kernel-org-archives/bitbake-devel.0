@@ -1,29 +1,21 @@
-Return-Path: <Liezhi.Yang@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id 929BC60017
+Return-Path: <elliot.smith@intel.com>
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id 87C6A731EE
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri,  8 Jan 2016 06:14:13 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id u086EDMC002477
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-	Thu, 7 Jan 2016 22:14:13 -0800 (PST)
-Received: from [128.224.162.155] (128.224.162.155) by ALA-HCA.corp.ad.wrs.com
-	(147.11.189.40) with Microsoft SMTP Server id 14.3.248.2;
-	Thu, 7 Jan 2016 22:14:13 -0800
-To: Richard Purdie <richard.purdie@linuxfoundation.org>,
-	<bitbake-devel@lists.openembedded.org>
-References: <cover.1452152302.git.liezhi.yang@windriver.com>
-	<60b4483fa1dfbd45dc1835dca1759ee5f6a27f4f.1452152302.git.liezhi.yang@windriver.com>
-	<1452175001.7598.117.camel@linuxfoundation.org>
-From: Robert Yang <liezhi.yang@windriver.com>
-Message-ID: <568F53B3.4060001@windriver.com>
-Date: Fri, 8 Jan 2016 14:14:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
-	Thunderbird/38.4.0
-MIME-Version: 1.0
-In-Reply-To: <1452175001.7598.117.camel@linuxfoundation.org>
-Subject: Re: [PATCH 1/1] fetch2/git.py:_latest_revision: respect BB_FETCH_PREMIRRORONLY
+	Fri,  8 Jan 2016 11:17:19 +0000 (UTC)
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+	by orsmga102.jf.intel.com with ESMTP; 08 Jan 2016 03:17:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.20,538,1444719600"; d="scan'208";a="722947260"
+Received: from deryaeke-mobl2.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
+	([10.252.25.84])
+	by orsmga003.jf.intel.com with ESMTP; 08 Jan 2016 03:17:18 -0800
+From: Elliot Smith <elliot.smith@intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri,  8 Jan 2016 11:17:15 +0000
+Message-Id: <cover.1452251694.git.elliot.smith@intel.com>
+X-Mailer: git-send-email 1.9.3
+Subject: [PATCH 0/8] Add support for PROVIDES to Toaster
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -36,35 +28,54 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 08 Jan 2016 06:14:13 -0000
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Fri, 08 Jan 2016 11:17:22 -0000
 
+Add support of PROVIDES to Toaster backend and frontend.
 
+Please see https://bugzilla.yoctoproject.org/show_bug.cgi?id=6169 for
+more details.
 
-On 01/07/2016 09:56 PM, Richard Purdie wrote:
-> On Wed, 2016-01-06 at 23:38 -0800, Robert Yang wrote:
->> Fixed when use a local BB_FETCH_PREMIRRORONLY for AUTOREV recipes:
->> SRCREV = "${AUTOREV}"
->> BB_NO_NETWORK = "1"
->> For example, the refpolicy-mls from meta-selinux:
->> $ bitbake refpolicy-mls -ccleanall/fetch
->
->
-> This test case is incorrect, you shouldn't set BB_NO_NETWORK if you
-> want to BB_FETCH_PREMIRRORONLY...
+The following changes since commit 3e0c0fb8eaf9b764c19f2c25fe50c4eccbd4a9bd:
 
-Sorry, I'm a little confused about this, the PREMIRROR can be on local
-disk, so I think that we can set both BB_NO_NETWORK and BB_FETCH_PREMIRRORONLY ?
+  toaster-manual: describe the way to start Toaster (2016-01-08 11:09:50 +0000)
 
-The commit message isn't correct enough, it should be:
-"Fixed when use a local PREMIRROR for AUTOREV recipes"
+are available in the git repository at:
 
-// Robert
+  git://git.yoctoproject.org/poky-contrib elliot/submit/ed/toaster/provides-6169
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=elliot/submit/ed/toaster/provides-6169
 
->
-> Cheers,
->
-> Richard
->
+Ed Bartosh (8):
+  taskdata: refactor get_providermap
+  cooker: add providermap to dep_tree
+  buildinfohelper: use providermap
+  toaster: add Provider model
+  buildinfohelper: add provides info to the db
+  toaster: show list of provides for the recipe
+  toaster: show 'satisfied via' text for build deps
+  toaster: show 'satisfied via' text for reverse deps
+
+ lib/bb/cooker.py                                   |  7 +++++
+ lib/bb/runqueue.py                                 |  2 +-
+ lib/bb/taskdata.py                                 | 17 +++++-------
+ lib/bb/ui/buildinfohelper.py                       | 31 +++++++++++++++-------
+ .../orm/migrations/0002_auto_20151223_1528.py      | 27 +++++++++++++++++++
+ lib/toaster/orm/models.py                          |  5 ++++
+ lib/toaster/toastergui/templates/recipe.html       | 28 +++++++++++++++++--
+ 7 files changed, 95 insertions(+), 22 deletions(-)
+ create mode 100644 bitbake/lib/toaster/orm/migrations/0002_auto_20151223_1528.py
+
+--
+1.9.3
+
+---------------------------------------------------------------------
+Intel Corporation (UK) Limited
+Registered No. 1134945 (England)
+Registered Office: Pipers Way, Swindon SN3 1RJ
+VAT No: 860 2173 47
+
+This e-mail and any attachments may contain confidential material for
+the sole use of the intended recipient(s). Any review or distribution
+by others is strictly prohibited. If you are not the intended
+recipient, please contact the sender and delete all copies.
+
 
