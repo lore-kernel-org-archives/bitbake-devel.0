@@ -1,32 +1,29 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id 913956B6EA
+Return-Path: <Liezhi.Yang@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id 929BC60017
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu,  7 Jan 2016 14:00:13 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u07E0AjP027644; Thu, 7 Jan 2016 14:00:10 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id 7MrtNOk_cm3G; Thu,  7 Jan 2016 14:00:10 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u07E080o027639
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 7 Jan 2016 14:00:10 GMT
-Message-ID: <1452175208.7598.120.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Christopher Larson <clarson@kergoth.com>, Ross Burton
-	<ross.burton@intel.com>
-Date: Thu, 07 Jan 2016 14:00:08 +0000
-In-Reply-To: <CABcZANnO9qiA0-7+tcz8Y03pa5gNEb4EcdKa1MQ6O_hkjgLsvA@mail.gmail.com>
-References: <1452097500-18426-1-git-send-email-ross.burton@intel.com>
-	<CABcZANnO9qiA0-7+tcz8Y03pa5gNEb4EcdKa1MQ6O_hkjgLsvA@mail.gmail.com>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Cc: "bitbake-devel@lists.openembedded.org"
+	Fri,  8 Jan 2016 06:14:13 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id u086EDMC002477
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+	Thu, 7 Jan 2016 22:14:13 -0800 (PST)
+Received: from [128.224.162.155] (128.224.162.155) by ALA-HCA.corp.ad.wrs.com
+	(147.11.189.40) with Microsoft SMTP Server id 14.3.248.2;
+	Thu, 7 Jan 2016 22:14:13 -0800
+To: Richard Purdie <richard.purdie@linuxfoundation.org>,
 	<bitbake-devel@lists.openembedded.org>
-Subject: Re: [PATCH][RFC] bitbake-worker: set the process name when starting a task
+References: <cover.1452152302.git.liezhi.yang@windriver.com>
+	<60b4483fa1dfbd45dc1835dca1759ee5f6a27f4f.1452152302.git.liezhi.yang@windriver.com>
+	<1452175001.7598.117.camel@linuxfoundation.org>
+From: Robert Yang <liezhi.yang@windriver.com>
+Message-ID: <568F53B3.4060001@windriver.com>
+Date: Fri, 8 Jan 2016 14:14:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+	Thunderbird/38.4.0
+MIME-Version: 1.0
+In-Reply-To: <1452175001.7598.117.camel@linuxfoundation.org>
+Subject: Re: [PATCH 1/1] fetch2/git.py:_latest_revision: respect BB_FETCH_PREMIRRORONLY
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -39,46 +36,35 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 07 Jan 2016 14:00:16 -0000
-Content-Type: text/plain; charset="UTF-8"
+X-List-Received-Date: Fri, 08 Jan 2016 06:14:13 -0000
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Wed, 2016-01-06 at 14:42 -0700, Christopher Larson wrote:
-> On Wed, Jan 6, 2016 at 9:25 AM, Ross Burton <ross.burton@intel.com>
-> wrote:
-> > If the setproctitle module is present then use it to change the
-> > process name
-> > when the worker starts a task.  This results in each worker showing
-> > what task it
-> > is executing in a process listing.
-> > 
-> > Signed-off-by: Ross Burton <ross.burton@intel.com>
-> > 
-> Very nice. Do you know if it's overwriting just the process name or
-> the entire commandline? I'm wondering if pkill bitbake-worker would
-> do what you want, or if you'd still need to use pkill -f, for
-> example. I'd like to see the toplevel bitbake processes named nicely
-> without the python path and whatnot too eventually. We could also
-> name the parallel parsing processes (though admittedly they're not
-> long lived). Perhaps this should go into a helper function in
-> bb.utils or bb.process?
 
-There is a slightly more ugly version of this we could use:
 
-def set_process_title(name):
-    from ctypes import cdll, byref, create_string_buffer
-    libc = cdll.LoadLibrary('libc.so.6')
-    buff = create_string_buffer(len(name)+1)
-    buff.value = name
-    libc.prctl(15, byref(buff), 0, 0, 0)
+On 01/07/2016 09:56 PM, Richard Purdie wrote:
+> On Wed, 2016-01-06 at 23:38 -0800, Robert Yang wrote:
+>> Fixed when use a local BB_FETCH_PREMIRRORONLY for AUTOREV recipes:
+>> SRCREV = "${AUTOREV}"
+>> BB_NO_NETWORK = "1"
+>> For example, the refpolicy-mls from meta-selinux:
+>> $ bitbake refpolicy-mls -ccleanall/fetch
+>
+>
+> This test case is incorrect, you shouldn't set BB_NO_NETWORK if you
+> want to BB_FETCH_PREMIRRORONLY...
 
-which would then mean we don't have a dependency on the external
-module. Obviously using ctypes is a bit nasty though.
+Sorry, I'm a little confused about this, the PREMIRROR can be on local
+disk, so I think that we can set both BB_NO_NETWORK and BB_FETCH_PREMIRRORONLY ?
 
-I would like to see this markup the worker/cooker/UI threads and so
-on...
+The commit message isn't correct enough, it should be:
+"Fixed when use a local PREMIRROR for AUTOREV recipes"
 
-Cheers,
+// Robert
 
-Richard
+>
+> Cheers,
+>
+> Richard
+>
 
