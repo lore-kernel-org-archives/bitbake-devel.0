@@ -1,24 +1,24 @@
 Return-Path: <Qi.Chen@windriver.com>
-Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
-	by mail.openembedded.org (Postfix) with ESMTP id B9C2D6080F
+Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
+	by mail.openembedded.org (Postfix) with ESMTP id DC79265CC2
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Jan 2016 10:26:29 +0000 (UTC)
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
-	[147.11.189.40])
-	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id u0BAQTRh017516
+	Mon, 11 Jan 2016 10:27:19 +0000 (UTC)
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
+	[147.11.189.41])
+	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id u0BARGpV028239
 	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Jan 2016 02:26:30 -0800 (PST)
+	Mon, 11 Jan 2016 02:27:17 -0800 (PST)
 Received: from pek-qchen1-d1.corp.ad.wrs.com (128.224.162.246) by
-	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
-	14.3.248.2; Mon, 11 Jan 2016 02:26:29 -0800
+	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+	14.3.248.2; Mon, 11 Jan 2016 02:27:16 -0800
 From: Chen Qi <Qi.Chen@windriver.com>
 To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 11 Jan 2016 18:26:39 +0800
-Message-ID: <1452507999-32084-1-git-send-email-Qi.Chen@windriver.com>
+Date: Mon, 11 Jan 2016 18:27:26 +0800
+Message-ID: <1452508046-32135-1-git-send-email-Qi.Chen@windriver.com>
 X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Subject: [PATCH V2 1/2] bitbake: clean up stamp-base related codes
+Subject: [PATCH V2] bitbake: clean up stamp-base related codes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,7 +31,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 11 Jan 2016 10:26:30 -0000
+X-List-Received-Date: Mon, 11 Jan 2016 10:27:20 -0000
 Content-Type: text/plain
 
 The 'stamp-base' and 'stamp-base-clean' related codes are no longer useful,
