@@ -1,44 +1,24 @@
-Return-Path: <kristian.amlie@cfengine.com>
-Received: from mail-wm0-f52.google.com (mail-wm0-f52.google.com [74.125.82.52])
-	by mail.openembedded.org (Postfix) with ESMTP id 50DB06FFD8
+Return-Path: <Qi.Chen@windriver.com>
+Received: from mail.windriver.com (mail.windriver.com [147.11.1.11])
+	by mail.openembedded.org (Postfix) with ESMTP id B9C2D6080F
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Jan 2016 09:40:32 +0000 (UTC)
-Received: by mail-wm0-f52.google.com with SMTP id f206so203645274wmf.0
+	Mon, 11 Jan 2016 10:26:29 +0000 (UTC)
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com
+	[147.11.189.40])
+	by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id u0BAQTRh017516
+	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Jan 2016 01:40:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cfengine.com; s=google;
-	h=to:from:subject:message-id:date:user-agent:mime-version
-	:content-type; bh=WZhFT2nV09rpVjKs1enoAtJFnG+cieWfS0TPAuhTvOo=;
-	b=h3sgJO4nRCWsfRoS41lQPIzFC+6egW1AGmv5b3rAhxOgaLmwKz307K+0tddxU+rwvK
-	6/FLSGqE+W55ItELWz5x8bNklSAkIL/4Tn+ZUEKL0pIiLDhi9A/kIZcFTez6fvDmG+BF
-	PKAbULCwiQbclwcEj9AARRFlsLbv2COXf2D40=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-	:mime-version:content-type;
-	bh=WZhFT2nV09rpVjKs1enoAtJFnG+cieWfS0TPAuhTvOo=;
-	b=c7+M7pFfVGcM/YhDKB/eUfIEIHFn3WRXMPU++9kaBZ9kq5/ooY8zJPVPjRnN1QYAZ2
-	Zx9F3wKybo3diFP/rt7OyazZUIVhb6xMihviraD0GCASr6Pkwdoq5PsBhM11/gGashof
-	qg3kMU45bzZWJplwjIG81ZAMbvbGnKocfWuOeyoNU7GFNZCbPmLe13ZlBtyTKunnuRx+
-	FS/hj2lIo7iQZmC0LlGFiw4AZi69ZvTvOmceAPwQ3Xuqjl71Q0Yqd4K0NcGwcDp8TsoX
-	G4PGc/drSBlAKrmV/7F8T+Aa/JrGvmQjnRwBZAEhU0vxGRtaFBajvaO6XkPtWzuG2Fdo
-	wQwg==
-X-Gm-Message-State: ALoCoQl1+LxmUaPofIkbliCa0hinuod5GhoDNdQA7nxFBgebml//Pusw8L6SrOjlU6hSiiwvutcg28AxN+A1SlFWSirmp3kPFg==
-X-Received: by 10.28.125.147 with SMTP id y141mr11790004wmc.18.1452505232947; 
-	Mon, 11 Jan 2016 01:40:32 -0800 (PST)
-Received: from [10.25.0.170] ([195.159.140.90])
-	by smtp.googlemail.com with ESMTPSA id
-	z65sm11920033wmg.10.2016.01.11.01.40.31
-	(version=TLSv1/SSLv3 cipher=OTHER);
-	Mon, 11 Jan 2016 01:40:32 -0800 (PST)
-To: bitbake-devel@lists.openembedded.org
-From: Kristian Amlie <kristian.amlie@cfengine.com>
-Message-ID: <5693788E.3060007@cfengine.com>
-Date: Mon, 11 Jan 2016 10:40:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
-	Thunderbird/38.4.0
+	Mon, 11 Jan 2016 02:26:30 -0800 (PST)
+Received: from pek-qchen1-d1.corp.ad.wrs.com (128.224.162.246) by
+	ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+	14.3.248.2; Mon, 11 Jan 2016 02:26:29 -0800
+From: Chen Qi <Qi.Chen@windriver.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Mon, 11 Jan 2016 18:26:39 +0800
+Message-ID: <1452507999-32084-1-git-send-email-Qi.Chen@windriver.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Subject: Patch to add missing "errno" module import.
+Subject: [PATCH V2 1/2] bitbake: clean up stamp-base related codes
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -51,56 +31,82 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 11 Jan 2016 09:40:33 -0000
-X-Groupsio-MsgNum: 6847
-Content-Type: multipart/mixed; boundary="------------040200070006050206070907"
+X-List-Received-Date: Mon, 11 Jan 2016 10:26:30 -0000
+Content-Type: text/plain
 
---------------040200070006050206070907
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+The 'stamp-base' and 'stamp-base-clean' related codes are no longer useful,
+clean them up.
 
-The patch should be self explanatory.
+[YOCTO #8468]
 
--- 
-Kristian
-
---------------040200070006050206070907
-Content-Type: text/x-patch;
- name="0001-lib-bb-fetch2-git.py-Add-missing-errno-module-import.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename*0="0001-lib-bb-fetch2-git.py-Add-missing-errno-module-import.pa";
- filename*1="tch"
-
-From 0be670809c610469ad0d9f4e1975b46dd7bb7023 Mon Sep 17 00:00:00 2001
-From: Kristian Amlie <kristian.amlie@mender.io>
-Date: Mon, 11 Jan 2016 10:32:28 +0100
-Subject: [PATCH] lib/bb/fetch2/git.py: Add missing "errno" module import.
-
-This goes undetected most of the time, but when updating a repository,
-if the ud.fullmirror file is not present, you end up getting an
-exception instead of carrying on because the errno module is not
-loaded (specifically "if exc.errno != errno.ENOENT").
-
-Signed-off-by: Kristian Amlie <kristian.amlie@mender.io>
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 ---
- bitbake/lib/bb/fetch2/git.py |    1 +
- 1 file changed, 1 insertion(+)
+ bitbake/lib/bb/build.py | 8 ++++----
+ bitbake/lib/bb/cache.py | 6 ------
+ 2 files changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/bitbake/lib/bb/fetch2/git.py b/bitbake/lib/bb/fetch2/git.py
-index 4a32a31..9c04da0 100644
---- a/bitbake/lib/bb/fetch2/git.py
-+++ b/bitbake/lib/bb/fetch2/git.py
-@@ -69,6 +69,7 @@ Supported SRC_URI options are:
- import os
- import re
- import bb
-+import errno
- from   bb    import data
- from   bb.fetch2 import FetchMethod
- from   bb.fetch2 import runfetchcmd
+diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
+index 22428a6..8852209 100644
+--- a/bitbake/lib/bb/build.py
++++ b/bitbake/lib/bb/build.py
+@@ -582,10 +582,10 @@ def stamp_internal(taskname, d, file_name, baseonly=False):
+         taskflagname = taskname.replace("_setscene", "")
+ 
+     if file_name:
+-        stamp = d.stamp_base[file_name].get(taskflagname) or d.stamp[file_name]
++        stamp = d.stamp[file_name]
+         extrainfo = d.stamp_extrainfo[file_name].get(taskflagname) or ""
+     else:
+-        stamp = d.getVarFlag(taskflagname, 'stamp-base', True) or d.getVar('STAMP', True)
++        stamp = d.getVar('STAMP', True)
+         file_name = d.getVar('BB_FILENAME', True)
+         extrainfo = d.getVarFlag(taskflagname, 'stamp-extra-info', True) or ""
+ 
+@@ -616,10 +616,10 @@ def stamp_cleanmask_internal(taskname, d, file_name):
+         taskflagname = taskname.replace("_setscene", "")
+ 
+     if file_name:
+-        stamp = d.stamp_base_clean[file_name].get(taskflagname) or d.stampclean[file_name]
++        stamp = d.stampclean[file_name]
+         extrainfo = d.stamp_extrainfo[file_name].get(taskflagname) or ""
+     else:
+-        stamp = d.getVarFlag(taskflagname, 'stamp-base-clean', True) or d.getVar('STAMPCLEAN', True)
++        stamp = d.getVar('STAMPCLEAN', True)
+         file_name = d.getVar('BB_FILENAME', True)
+         extrainfo = d.getVarFlag(taskflagname, 'stamp-extra-info', True) or ""
+ 
+diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
+index 521f758..10b0853 100644
+--- a/bitbake/lib/bb/cache.py
++++ b/bitbake/lib/bb/cache.py
+@@ -129,8 +129,6 @@ class CoreRecipeInfo(RecipeInfoCommon):
+         self.not_world = self.getvar('EXCLUDE_FROM_WORLD', metadata)
+         self.stamp = self.getvar('STAMP', metadata)
+         self.stampclean = self.getvar('STAMPCLEAN', metadata)        
+-        self.stamp_base = self.flaglist('stamp-base', self.tasks, metadata)
+-        self.stamp_base_clean = self.flaglist('stamp-base-clean', self.tasks, metadata)
+         self.stamp_extrainfo = self.flaglist('stamp-extra-info', self.tasks, metadata)
+         self.file_checksums = self.flaglist('file-checksums', self.tasks, metadata, True)
+         self.packages_dynamic = self.listvar('PACKAGES_DYNAMIC', metadata)
+@@ -158,8 +156,6 @@ class CoreRecipeInfo(RecipeInfoCommon):
+ 
+         cachedata.stamp = {}
+         cachedata.stampclean = {}
+-        cachedata.stamp_base = {}
+-        cachedata.stamp_base_clean = {}
+         cachedata.stamp_extrainfo = {}
+         cachedata.file_checksums = {}
+         cachedata.fn_provides = {}
+@@ -192,8 +188,6 @@ class CoreRecipeInfo(RecipeInfoCommon):
+         cachedata.pkg_dp[fn] = self.defaultpref
+         cachedata.stamp[fn] = self.stamp
+         cachedata.stampclean[fn] = self.stampclean
+-        cachedata.stamp_base[fn] = self.stamp_base
+-        cachedata.stamp_base_clean[fn] = self.stamp_base_clean
+         cachedata.stamp_extrainfo[fn] = self.stamp_extrainfo
+         cachedata.file_checksums[fn] = self.file_checksums
+ 
 -- 
-1.7.9.5
+1.9.1
 
 
---------------040200070006050206070907--
