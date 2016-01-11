@@ -1,24 +1,30 @@
-Return-Path: <Qi.Chen@windriver.com>
-Received: from mail1.windriver.com (mail1.windriver.com [147.11.146.13])
-	by mail.openembedded.org (Postfix) with ESMTP id DC79265CC2
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id A701C731E5
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Jan 2016 10:27:19 +0000 (UTC)
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com
-	[147.11.189.41])
-	by mail1.windriver.com (8.15.2/8.15.1) with ESMTPS id u0BARGpV028239
-	(version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL)
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 11 Jan 2016 02:27:17 -0800 (PST)
-Received: from pek-qchen1-d1.corp.ad.wrs.com (128.224.162.246) by
-	ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
-	14.3.248.2; Mon, 11 Jan 2016 02:27:16 -0800
-From: Chen Qi <Qi.Chen@windriver.com>
-To: <bitbake-devel@lists.openembedded.org>
-Date: Mon, 11 Jan 2016 18:27:26 +0800
-Message-ID: <1452508046-32135-1-git-send-email-Qi.Chen@windriver.com>
-X-Mailer: git-send-email 1.9.1
-MIME-Version: 1.0
-Subject: [PATCH V2] bitbake: clean up stamp-base related codes
+	Mon, 11 Jan 2016 13:23:22 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u0BDNLVn027918; Mon, 11 Jan 2016 13:23:21 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id F3g7nWMrSnsj; Mon, 11 Jan 2016 13:23:21 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u0BDNGg0027912
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 11 Jan 2016 13:23:18 GMT
+Message-ID: <1452518596.7598.173.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Robert Yang <liezhi.yang@windriver.com>,
+	bitbake-devel@lists.openembedded.org
+Date: Mon, 11 Jan 2016 13:23:16 +0000
+In-Reply-To: <11cf5052016496de57d2253aff35c20c62d90703.1451902509.git.liezhi.yang@windriver.com>
+References: <cover.1451902509.git.liezhi.yang@windriver.com>
+	<11cf5052016496de57d2253aff35c20c62d90703.1451902509.git.liezhi.yang@windriver.com>
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: Re: [PATCH 1/1] fetch2/local.py: avoid using PREMIRROR
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,82 +37,47 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 11 Jan 2016 10:27:20 -0000
-Content-Type: text/plain
+X-List-Received-Date: Mon, 11 Jan 2016 13:23:24 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-The 'stamp-base' and 'stamp-base-clean' related codes are no longer useful,
-clean them up.
+On Mon, 2016-01-04 at 02:15 -0800, Robert Yang wrote:
+> The PREMIRROR isn't useful for "file://", so avoid using it, this is
+> good for searching speed and can reduce useless lines in
+> log.do_fetch.
+> 
+> Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+> ---
+>  bitbake/lib/bb/fetch2/local.py |    5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/bitbake/lib/bb/fetch2/local.py
+> b/bitbake/lib/bb/fetch2/local.py
+> index 2d921f7..7245651 100644
+> --- a/bitbake/lib/bb/fetch2/local.py
+> +++ b/bitbake/lib/bb/fetch2/local.py
+> @@ -126,3 +126,8 @@ class Local(FetchMethod):
+>      def clean(self, urldata, d):
+>          return
+>  
+> +    def try_premirror(self, urldata, d):
+> +        """
+> +        Should premirrors be used?
+> +        """
+> +        return False
 
-[YOCTO #8468]
+Hi Robert,
 
-Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
----
- bitbake/lib/bb/build.py | 8 ++++----
- bitbake/lib/bb/cache.py | 6 ------
- 2 files changed, 4 insertions(+), 10 deletions(-)
+I applied this but I think I'm going to have to revert this since it is
+in fact a valid use case.
 
-diff --git a/bitbake/lib/bb/build.py b/bitbake/lib/bb/build.py
-index 22428a6..8852209 100644
---- a/bitbake/lib/bb/build.py
-+++ b/bitbake/lib/bb/build.py
-@@ -582,10 +582,10 @@ def stamp_internal(taskname, d, file_name, baseonly=False):
-         taskflagname = taskname.replace("_setscene", "")
- 
-     if file_name:
--        stamp = d.stamp_base[file_name].get(taskflagname) or d.stamp[file_name]
-+        stamp = d.stamp[file_name]
-         extrainfo = d.stamp_extrainfo[file_name].get(taskflagname) or ""
-     else:
--        stamp = d.getVarFlag(taskflagname, 'stamp-base', True) or d.getVar('STAMP', True)
-+        stamp = d.getVar('STAMP', True)
-         file_name = d.getVar('BB_FILENAME', True)
-         extrainfo = d.getVarFlag(taskflagname, 'stamp-extra-info', True) or ""
- 
-@@ -616,10 +616,10 @@ def stamp_cleanmask_internal(taskname, d, file_name):
-         taskflagname = taskname.replace("_setscene", "")
- 
-     if file_name:
--        stamp = d.stamp_base_clean[file_name].get(taskflagname) or d.stampclean[file_name]
-+        stamp = d.stampclean[file_name]
-         extrainfo = d.stamp_extrainfo[file_name].get(taskflagname) or ""
-     else:
--        stamp = d.getVarFlag(taskflagname, 'stamp-base-clean', True) or d.getVar('STAMPCLEAN', True)
-+        stamp = d.getVar('STAMPCLEAN', True)
-         file_name = d.getVar('BB_FILENAME', True)
-         extrainfo = d.getVarFlag(taskflagname, 'stamp-extra-info', True) or ""
- 
-diff --git a/bitbake/lib/bb/cache.py b/bitbake/lib/bb/cache.py
-index 521f758..10b0853 100644
---- a/bitbake/lib/bb/cache.py
-+++ b/bitbake/lib/bb/cache.py
-@@ -129,8 +129,6 @@ class CoreRecipeInfo(RecipeInfoCommon):
-         self.not_world = self.getvar('EXCLUDE_FROM_WORLD', metadata)
-         self.stamp = self.getvar('STAMP', metadata)
-         self.stampclean = self.getvar('STAMPCLEAN', metadata)        
--        self.stamp_base = self.flaglist('stamp-base', self.tasks, metadata)
--        self.stamp_base_clean = self.flaglist('stamp-base-clean', self.tasks, metadata)
-         self.stamp_extrainfo = self.flaglist('stamp-extra-info', self.tasks, metadata)
-         self.file_checksums = self.flaglist('file-checksums', self.tasks, metadata, True)
-         self.packages_dynamic = self.listvar('PACKAGES_DYNAMIC', metadata)
-@@ -158,8 +156,6 @@ class CoreRecipeInfo(RecipeInfoCommon):
- 
-         cachedata.stamp = {}
-         cachedata.stampclean = {}
--        cachedata.stamp_base = {}
--        cachedata.stamp_base_clean = {}
-         cachedata.stamp_extrainfo = {}
-         cachedata.file_checksums = {}
-         cachedata.fn_provides = {}
-@@ -192,8 +188,6 @@ class CoreRecipeInfo(RecipeInfoCommon):
-         cachedata.pkg_dp[fn] = self.defaultpref
-         cachedata.stamp[fn] = self.stamp
-         cachedata.stampclean[fn] = self.stampclean
--        cachedata.stamp_base[fn] = self.stamp_base
--        cachedata.stamp_base_clean[fn] = self.stamp_base_clean
-         cachedata.stamp_extrainfo[fn] = self.stamp_extrainfo
-         cachedata.file_checksums[fn] = self.file_checksums
- 
--- 
-1.9.1
+The sstate.bbclass code sets up SSTATE_MIRRORS as PREMIRRORS. Its quite
+common to map those file:// urls to remote http:// urls and with the
+above change, this no longer works.
+
+Cheers,
+
+Richard
+
 
 
