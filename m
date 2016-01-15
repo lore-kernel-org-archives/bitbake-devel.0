@@ -1,28 +1,28 @@
 Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	by mail.openembedded.org (Postfix) with ESMTP id 0C75476486
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 2198F766EB
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 12:58:28 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga102.jf.intel.com with ESMTP; 15 Jan 2016 04:58:30 -0800
+	Fri, 15 Jan 2016 12:58:29 +0000 (UTC)
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+	by orsmga101.jf.intel.com with ESMTP; 15 Jan 2016 04:58:30 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="881987220"
+X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="891109474"
 Received: from linux.intel.com ([10.23.219.25])
-	by fmsmga001.fm.intel.com with ESMTP; 15 Jan 2016 04:58:29 -0800
+	by orsmga002.jf.intel.com with ESMTP; 15 Jan 2016 04:58:30 -0800
 Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id 3460A6A4004
+	by linux.intel.com (Postfix) with ESMTP id 4E5766A4004
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 05:46:24 -0800 (PST)
+	Fri, 15 Jan 2016 05:46:26 -0800 (PST)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 15 Jan 2016 13:00:59 +0200
-Message-Id: <4fb8fadba3b65951c3c26cce2da53b5db8fd53ec.1452855461.git.ed.bartosh@linux.intel.com>
+Date: Fri, 15 Jan 2016 13:01:00 +0200
+Message-Id: <03ad18513ce3061cab766ef999bb74da116c231d.1452855461.git.ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
-Subject: [PATCH 16/23] toaster: toastergui: serialise decimals correctly
+Subject: [PATCH 17/23] toaster: toastergui: set default visible and hideable columns
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,45 +35,137 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Jan 2016 12:58:28 -0000
+X-List-Received-Date: Fri, 15 Jan 2016 12:58:29 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-The conversion of some ToasterTable Build object querysets to
-JSON caused a serialisation error. This is because one of the
-fields in the queryset was of type decimal.Decimal, and our
-serialiser didn't know what to do with it.
+Incorrect columns were shown by default in the "all builds",
+"project builds" and "all projects" pages.
 
-Add a clause to check for decimal fields and serialise them
-so that correct JSON can be generated.
+Set the "hidden" property on columns in these tables to hide the
+correct columns.
+
+Add a set_column_hidden() method to ToasterTable so that the
+"hidden" property can be overridden for the machines column
+in the project builds page (it shares a superclass with
+all builds).
+
+Make the time column on all builds page hideable.
+
+[YOCTO #8738]
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- lib/toaster/toastergui/views.py | 3 +++
- 1 file changed, 3 insertions(+)
+ lib/toaster/toastergui/tables.py  | 23 ++++++++++++++++++++---
+ lib/toaster/toastergui/widgets.py | 18 ++++++++++++++++++
+ 2 files changed, 38 insertions(+), 3 deletions(-)
 
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index fbae36c..3e8a66b 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -43,6 +43,7 @@ from django.utils.html import escape
- from datetime import timedelta, datetime
- from django.utils import formats
- from toastergui.templatetags.projecttags import json as jsonfilter
-+from decimal import Decimal
- import json
- from os.path import dirname
- from functools import wraps
-@@ -145,6 +146,8 @@ def objtojson(obj):
-         return obj.total_seconds()
-     elif isinstance(obj, QuerySet) or isinstance(obj, set):
-         return list(obj)
-+    elif isinstance(obj, Decimal):
-+        return str(obj)
-     elif type(obj).__name__ == "RelatedManager":
-         return [x.pk for x in obj.all()]
-     elif hasattr( obj, '__dict__') and isinstance(obj, Model):
+diff --git a/lib/toaster/toastergui/tables.py b/lib/toaster/toastergui/tables.py
+index b7d977e..14077e1 100644
+--- a/lib/toaster/toastergui/tables.py
++++ b/lib/toaster/toastergui/tables.py
+@@ -812,7 +812,7 @@ class ProjectsTable(ToasterTable):
+                                    last project build. If the project has no \
+                                    builds, this shows the date the project was \
+                                    created.',
+-                        hideable=True,
++                        hideable=False,
+                         orderable=True,
+                         static_data_name='updated',
+                         static_data_template=last_activity_on_template)
+@@ -836,7 +836,7 @@ class ProjectsTable(ToasterTable):
+         self.add_column(title='Number of builds',
+                         help_text='The number of builds which have been run \
+                                    for the project',
+-                        hideable=True,
++                        hideable=False,
+                         orderable=False,
+                         static_data_name='number_of_builds',
+                         static_data_template=number_of_builds_template)
+@@ -869,6 +869,7 @@ class ProjectsTable(ToasterTable):
+                         help_text='The number of warnings encountered during \
+                                    the last project build (if any)',
+                         hideable=True,
++                        hidden=True,
+                         orderable=False,
+                         static_data_name='warnings',
+                         static_data_template=warnings_template)
+@@ -877,6 +878,7 @@ class ProjectsTable(ToasterTable):
+                         help_text='The root file system types produced by \
+                                    the last project build',
+                         hideable=True,
++                        hidden=True,
+                         orderable=False,
+                         static_data_name='image_files',
+                         static_data_template=image_files_template)
+@@ -1076,6 +1078,7 @@ class BuildsTable(ToasterTable):
+         self.add_column(title='Started on',
+                         help_text='The date and time when the build started',
+                         hideable=True,
++                        hidden=True,
+                         orderable=True,
+                         filter_name='started_on_filter',
+                         static_data_name='started_on',
+@@ -1116,7 +1119,8 @@ class BuildsTable(ToasterTable):
+ 
+         self.add_column(title='Time',
+                         help_text='How long the build took to finish',
+-                        hideable=False,
++                        hideable=True,
++                        hidden=True,
+                         orderable=False,
+                         static_data_name='time',
+                         static_data_template=time_template)
+@@ -1328,6 +1332,19 @@ class ProjectBuildsTable(BuildsTable):
+         # set from the querystring
+         self.project_id = None
+ 
++    def setup_columns(self, *args, **kwargs):
++        """
++        Project builds table doesn't show the machines column by default
++        """
++
++        super(ProjectBuildsTable, self).setup_columns(*args, **kwargs)
++
++        # hide the machine column
++        self.set_column_hidden('Machine', True)
++
++        # allow the machine column to be hidden by the user
++        self.set_column_hideable('Machine', True)
++
+     def setup_queryset(self, *args, **kwargs):
+         """
+         NOTE: self.project_id must be set before calling super(),
+diff --git a/lib/toaster/toastergui/widgets.py b/lib/toaster/toastergui/widgets.py
+index d9328d4..d2ef5d3 100644
+--- a/lib/toaster/toastergui/widgets.py
++++ b/lib/toaster/toastergui/widgets.py
+@@ -168,6 +168,24 @@ class ToasterTable(TemplateView):
+                              'computation': computation,
+                             })
+ 
++    def set_column_hidden(self, title, hidden):
++        """
++        Set the hidden state of the column to the value of hidden
++        """
++        for col in self.columns:
++            if col['title'] == title:
++                col['hidden'] = hidden
++                break
++
++    def set_column_hideable(self, title, hideable):
++        """
++        Set the hideable state of the column to the value of hideable
++        """
++        for col in self.columns:
++            if col['title'] == title:
++                col['hideable'] = hideable
++                break
++
+     def render_static_data(self, template, row):
+         """Utility function to render the static data template"""
+ 
 -- 
 2.1.4
 
