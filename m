@@ -1,24 +1,28 @@
 Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id 199CA731FC
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	by mail.openembedded.org (Postfix) with ESMTP id 7CA1373212
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 12:57:41 +0000 (UTC)
+	Fri, 15 Jan 2016 12:58:11 +0000 (UTC)
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by orsmga101.jf.intel.com with ESMTP; 15 Jan 2016 04:57:42 -0800
+	by fmsmga102.fm.intel.com with ESMTP; 15 Jan 2016 04:58:11 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="881986919"
+X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="881987091"
 Received: from linux.intel.com ([10.23.219.25])
-	by fmsmga001.fm.intel.com with ESMTP; 15 Jan 2016 04:57:42 -0800
+	by fmsmga001.fm.intel.com with ESMTP; 15 Jan 2016 04:58:12 -0800
 Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id 6CBB86A4004
+	by linux.intel.com (Postfix) with ESMTP id 151C16A4004
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 05:45:38 -0800 (PST)
+	Fri, 15 Jan 2016 05:46:07 -0800 (PST)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 15 Jan 2016 13:00:43 +0200
-Message-Id: <cover.1452855461.git.ed.bartosh@linux.intel.com>
+Date: Fri, 15 Jan 2016 13:00:44 +0200
+Message-Id: <8ad398a5ea04aaa8ef8a90b125c5f3b288e58a76.1452855461.git.ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
-Subject: [PATCH 00/23] toaster: Convert projects and builds pages to ToasterTable
+In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
+References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
+In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
+References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
+Subject: [PATCH 01/23] toaster: toastergui: use ToasterTable for projects page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -31,111 +35,337 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Jan 2016 12:57:42 -0000
+X-List-Received-Date: Fri, 15 Jan 2016 12:58:11 -0000
 
-Hi,
+From: Elliot Smith <elliot.smith@intel.com>
 
-Many of the tables displayed by Toaster are backed by ToasterTable, but some
-of the key ones (like "projects", "all builds", and "project builds") aren't.
+The projects page uses the old approach for showing tables,
+which means a template for each table. This means that applying
+changes to ToasterTable (which is used for most tables) has
+no effect on the layout, styling and behaviour for these older
+tables, and requires additional duplicated effort.
 
-This makes it difficult to keep styling consistent between tables, as some
-are styled by making changes to ToasterTable, while others are styled
-by modifying Django templates.
+Move the projects page to use ToasterTable instead, to remove
+the duplication of effort.
 
-Improve the consistency and maintainability of these tables by converting
-them to use ToasterTable.
+[YOCTO #8738]
 
-Note that this patchset also reworks the ToasterTable API so that we can easily
-support different column filter types.
-
-To test:
-
-1. Open the "projects", "all builds" and "project builds" pages in Toaster.
-2. Check that the column filtering and sorting works correctly, and projects/builds
-   display correctly.
-
-Related bug: https://bugzilla.yoctoproject.org/show_bug.cgi?id=8738
-
-The following changes since commit ea666f60d2ddf492d146330fe69b474a0f9796d5:
-
-  toaster-manual: describe the way to start Toaster (2016-01-15 09:56:25 +0200)
-
-are available in the git repository at:
-
-  git://git.yoctoproject.org/poky-contrib ed/toaster/submit/elliot/toaster/tables-8738
-  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=ed/toaster/submit/elliot/toaster/tables-8738
-
-Elliot Smith (23):
-  toaster: toastergui: use ToasterTable for projects page
-  toaster: move image file suffix list to model
-  toaster: check inferred file suffixes against list of known types
-  toaster: toastergui: switch projects/ view to ToasterTable
-  toaster: toastergui: use event delegates for hover help elements
-  toaster: toastergui: convert all builds page to ToasterTable
-  toaster: toastergui: refactor ToasterTable filtering
-  toaster: toastergui: switch off filter highlights when inactive
-  toaster: toastergui: show recent builds on all builds page
-  toaster: toastergui: implement date range filters for builds
-  toaster: toastergui: implement "today" and "yesterday" filters
-  toaster: toastergui: convert project builds page to ToasterTable
-  toaster: toastergui: don't hide all elements with .col class
-  toaster: toastergui: ensure filter_value updates
-  toaster: toastergui: streamline construction of filter objects
-  toaster: toastergui: serialise decimals correctly
-  toaster: toastergui: set default visible and hideable columns
-  toaster: toastergui: mute label for filter actions with no records
-  toaster: toastergui: make "Apply" button state depend on filter range
-  toaster: toastergui: fix error and warning counts for builds
-  toaster: toastergui: remove unused views and template code
-  toaster: tests: fix Django tests for new ToasterTable pages
-  toaster: toastergui: code formatting and clean-up
-
- .../contrib/django-aggregate-if-master/.gitignore  |  10 -
- .../contrib/django-aggregate-if-master/.travis.yml |  50 --
- .../contrib/django-aggregate-if-master/LICENSE     |  21 -
- .../contrib/django-aggregate-if-master/README.rst  | 156 ----
- .../django-aggregate-if-master/aggregate_if.py     | 164 ----
- .../contrib/django-aggregate-if-master/runtests.py |  48 --
- .../contrib/django-aggregate-if-master/setup.py    |  33 -
- .../contrib/django-aggregate-if-master/tox.ini     | 198 -----
- lib/toaster/orm/models.py                          | 103 ++-
- lib/toaster/toastergui/static/js/libtoaster.js     |   6 +-
- lib/toaster/toastergui/static/js/projecttopbar.js  |   9 +
- lib/toaster/toastergui/static/js/table.js          | 325 ++++++--
- lib/toaster/toastergui/tablefilter.py              | 292 +++++++
- lib/toaster/toastergui/tables.py                   | 858 +++++++++++++++++++--
- .../toastergui/templates/baseprojectpage.html      |   1 +
- .../toastergui/templates/builds-toastertable.html  |  48 ++
- lib/toaster/toastergui/templates/builds.html       | 125 ---
- lib/toaster/toastergui/templates/mrb_section.html  |   4 +-
- .../templates/projectbuilds-toastertable.html      |  56 ++
- .../templates/projects-toastertable.html           |  36 +
- lib/toaster/toastergui/templates/projects.html     |  92 ---
- .../toastergui/templates/toastertable-filter.html  |   4 +-
- lib/toaster/toastergui/templates/toastertable.html |   7 +-
- lib/toaster/toastergui/tests.py                    | 265 +++++--
- lib/toaster/toastergui/urls.py                     |  14 +-
- lib/toaster/toastergui/views.py                    | 491 +-----------
- lib/toaster/toastergui/widgets.py                  | 112 +--
- lib/toaster/toastermain/settings.py                |   9 -
- 28 files changed, 1898 insertions(+), 1639 deletions(-)
- delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/.gitignore
- delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/.travis.yml
- delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/LICENSE
- delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/README.rst
- delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/aggregate_if.py
- delete mode 100755 bitbake/lib/toaster/contrib/django-aggregate-if-master/runtests.py
- delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/setup.py
- delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/tox.ini
- create mode 100644 bitbake/lib/toaster/toastergui/tablefilter.py
- create mode 100644 bitbake/lib/toaster/toastergui/templates/builds-toastertable.html
- delete mode 100644 bitbake/lib/toaster/toastergui/templates/builds.html
- create mode 100644 bitbake/lib/toaster/toastergui/templates/projectbuilds-toastertable.html
+Signed-off-by: Elliot Smith <elliot.smith@intel.com>
+Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
+---
+ lib/toaster/toastergui/tables.py                   | 226 ++++++++++++++++++++-
+ .../templates/projects-toastertable.html           |  36 ++++
+ lib/toaster/toastergui/urls.py                     |   6 +
+ 3 files changed, 265 insertions(+), 3 deletions(-)
  create mode 100644 bitbake/lib/toaster/toastergui/templates/projects-toastertable.html
- delete mode 100644 bitbake/lib/toaster/toastergui/templates/projects.html
 
---
-Regards,
-Ed
+diff --git a/lib/toaster/toastergui/tables.py b/lib/toaster/toastergui/tables.py
+index 3808820..e5cab48 100644
+--- a/lib/toaster/toastergui/tables.py
++++ b/lib/toaster/toastergui/tables.py
+@@ -21,13 +21,12 @@
+ 
+ from toastergui.widgets import ToasterTable
+ from orm.models import Recipe, ProjectLayer, Layer_Version, Machine, Project
+-from orm.models import CustomImageRecipe, Package
+-from django.db.models import Q, Max
++from orm.models import CustomImageRecipe, Package, Build
++from django.db.models import Q, Max, Count
+ from django.conf.urls import url
+ from django.core.urlresolvers import reverse
+ from django.views.generic import TemplateView
+ 
+-
+ class ProjectFiltersMixin(object):
+     """Common mixin for recipe, machine in project filters"""
+ 
+@@ -633,3 +632,224 @@ class SelectPackagesTable(ToasterTable):
+                         "the package content of you custom image",
+                         static_data_name="add_rm_pkg_btn",
+                         static_data_template='{% include "pkg_add_rm_btn.html" %}')
++
++class ProjectsTable(ToasterTable):
++    """Table of projects in Toaster"""
++
++    def __init__(self, *args, **kwargs):
++        super(ProjectsTable, self).__init__(*args, **kwargs)
++        self.default_orderby = 'updated'
++        self.title = 'All projects'
++        self.static_context_extra['Build'] = Build
++
++    def get_context_data(self, **kwargs):
++        return super(ProjectsTable, self).get_context_data(**kwargs)
++
++    def setup_queryset(self, *args, **kwargs):
++        queryset = Project.objects.all()
++
++        # annotate each project with its number of builds
++        queryset = queryset.annotate(num_builds=Count('build'))
++
++        # exclude the command line builds project if it has no builds
++        q_default_with_builds = Q(is_default=True) & Q(num_builds__gt=0)
++        queryset = queryset.filter(Q(is_default=False) |
++                                   q_default_with_builds)
++
++        # order rows
++        queryset = queryset.order_by(self.default_orderby)
++
++        self.queryset = queryset
++
++    # columns: last activity on (updated) - DEFAULT, project (name), release, machine, number of builds, last build outcome, recipe (name), errors, warnings, image files
++    def setup_columns(self, *args, **kwargs):
++        name_template = '''
++        {% load project_url_tag %}
++        <span data-project-field="name">
++          <a href="{% project_url data %}">
++            {{data.name}}
++          </a>
++        </span>
++        '''
++
++        last_activity_on_template = '''
++        {% load project_url_tag %}
++        <span data-project-field="updated">
++          <a href="{% project_url data %}">
++            {{data.updated | date:"d/m/y H:i"}}
++          </a>
++        </span>
++        '''
++
++        release_template = '''
++        <span data-project-field="release">
++          {% if data.release %}
++            <a href="{% url 'project' data.id %}#project-details">
++                {{data.release.name}}
++            </a>
++          {% elif data.is_default %}
++            <span class="muted">Not applicable</span>
++            <i class="icon-question-sign get-help hover-help"
++               data-original-title="This project does not have a release set.
++               It simply collects information about the builds you start from
++               the command line while Toaster is running"
++               style="visibility: hidden;">
++            </i>
++          {% else %}
++            No release available
++          {% endif %}
++        </span>
++        '''
++
++        machine_template = '''
++        <span data-project-field="machine">
++          {% if data.is_default %}
++            <span class="muted">Not applicable</span>
++            <i class="icon-question-sign get-help hover-help"
++               data-original-title="This project does not have a machine
++               set. It simply collects information about the builds you
++               start from the command line while Toaster is running"
++               style="visibility: hidden;"></i>
++          {% else %}
++            <a href="{% url 'project' data.id %}#machine-distro">
++              {{data.get_current_machine_name}}
++            </a>
++          {% endif %}
++        </span>
++        '''
++
++        number_of_builds_template = '''
++        {% if data.get_number_of_builds > 0 %}
++          <a href="{% url 'projectbuilds' data.id %}">
++            {{data.get_number_of_builds}}
++          </a>
++        {% else %}
++          <span class="muted">0</span>
++        {% endif %}
++        '''
++
++        last_build_outcome_template = '''
++        {% if data.get_number_of_builds > 0 %}
++          <a href="{% url 'builddashboard' data.get_last_build_id %}">
++            {% if data.get_last_outcome == extra.Build.SUCCEEDED %}
++              <i class="icon-ok-sign success"></i>
++            {% elif data.get_last_outcome == extra.Build.FAILED %}
++              <i class="icon-minus-sign error"></i>
++            {% endif %}
++          </a>
++        {% endif %}
++        '''
++
++        recipe_template = '''
++        {% if data.get_number_of_builds > 0 %}
++          <a href="{% url "builddashboard" data.get_last_build_id %}">
++            {{data.get_last_target}}
++          </a>
++        {% endif %}
++        '''
++
++        errors_template = '''
++        {% if data.get_number_of_builds > 0 %}
++          <a class="errors.count error"
++             href="{% url "builddashboard" data.get_last_build_id %}#errors">
++            {{data.get_last_errors}} error{{data.get_last_errors | pluralize}}
++          </a>
++        {% endif %}
++        '''
++
++        warnings_template = '''
++        {% if data.get_number_of_builds > 0 %}
++          <a class="warnings.count warning"
++             href="{% url "builddashboard" data.get_last_build_id %}#warnings">
++            {{data.get_last_warnings}} warning{{data.get_last_warnings | pluralize}}
++          </a>
++        {% endif %}
++        '''
++
++        image_files_template = '''
++        {% load projecttags %}
++        {% if data.get_number_of_builds > 0 and data.get_last_outcome == extra.Build.SUCCEEDED %}
++          <a href="{% url "builddashboard" data.get_last_build_id %}#images">
++            {{fstypes | get_dict_value:data.id}}
++          </a>
++        {% endif %}
++        '''
++
++        self.add_column(title='Project',
++                        hideable=False,
++                        orderable=True,
++                        static_data_name='name',
++                        static_data_template=name_template)
++
++        self.add_column(title='Last activity on',
++                        help_text='Starting date and time of the \
++                                   last project build. If the project has no \
++                                   builds, this shows the date the project was \
++                                   created.',
++                        hideable=True,
++                        orderable=True,
++                        static_data_name='updated',
++                        static_data_template=last_activity_on_template)
++
++        self.add_column(title='Release',
++                        help_text='The version of the build system used by \
++                                   the project',
++                        hideable=False,
++                        orderable=True,
++                        static_data_name='release',
++                        static_data_template=release_template)
++
++        self.add_column(title='Machine',
++                        help_text='The hardware currently selected for the \
++                                   project',
++                        hideable=False,
++                        orderable=False,
++                        static_data_name='machine',
++                        static_data_template=machine_template)
++
++        self.add_column(title='Number of builds',
++                        help_text='The number of builds which have been run \
++                                   for the project',
++                        hideable=True,
++                        orderable=False,
++                        static_data_name='number_of_builds',
++                        static_data_template=number_of_builds_template)
++
++        self.add_column(title='Last build outcome',
++                        help_text='Indicates whether the last project build \
++                                   completed successfully or failed',
++                        hideable=True,
++                        orderable=False,
++                        static_data_name='last_build_outcome',
++                        static_data_template=last_build_outcome_template)
++
++        self.add_column(title='Recipe',
++                        help_text='The last recipe which was built in this \
++                                   project',
++                        hideable=True,
++                        orderable=False,
++                        static_data_name='recipe_name',
++                        static_data_template=recipe_template)
++
++        self.add_column(title='Errors',
++                        help_text='The number of errors encountered during \
++                                   the last project build (if any)',
++                        hideable=True,
++                        orderable=False,
++                        static_data_name='errors',
++                        static_data_template=errors_template)
++
++        self.add_column(title='Warnings',
++                        help_text='The number of warnings encountered during \
++                                   the last project build (if any)',
++                        hideable=True,
++                        orderable=False,
++                        static_data_name='warnings',
++                        static_data_template=warnings_template)
++
++        self.add_column(title='Image files',
++                        help_text='',
++                        hideable=True,
++                        orderable=False,
++                        static_data_name='image_files',
++                        static_data_template=image_files_template)
+diff --git a/lib/toaster/toastergui/templates/projects-toastertable.html b/lib/toaster/toastergui/templates/projects-toastertable.html
+new file mode 100644
+index 0000000..5814f32
+--- /dev/null
++++ b/lib/toaster/toastergui/templates/projects-toastertable.html
+@@ -0,0 +1,36 @@
++{% extends 'base.html' %}
++
++{% block title %} All projects - Toaster {% endblock %}
++
++{% block pagecontent %}
++
++  <div class="page-header top-air">
++    <h1 data-role="page-title"></h1>
++  </div>
++
++  {% url 'projects' as xhr_table_url %}
++  {% include 'toastertable.html' %}
++
++  <script>
++    $(document).ready(function () {
++      var tableElt = $("#{{table_name}}");
++      var titleElt = $("[data-role='page-title']");
++
++      tableElt.on("table-done", function (e, total, tableParams) {
++        var title = "All projects";
++
++        if (tableParams.search || tableParams.filter) {
++          if (total === 0) {
++            title = "No projects found";
++          }
++          else if (total > 0) {
++            title = total + " project" + (total > 1 ? 's' : '') + " found";
++          }
++        }
++
++        titleElt.text(title);
++      });
++    });
++  </script>
++
++{% endblock %}
+diff --git a/lib/toaster/toastergui/urls.py b/lib/toaster/toastergui/urls.py
+index 2bf2d99..da97a31 100644
+--- a/lib/toaster/toastergui/urls.py
++++ b/lib/toaster/toastergui/urls.py
+@@ -75,8 +75,14 @@ urlpatterns = patterns('toastergui.views',
+         url(r'^newproject/$', 'newproject', name='newproject'),
+ 
+ 
++        # TODO remove when new toaster table is ready
+         url(r'^projects/$', 'projects', name='all-projects'),
+ 
++        # TODO move to /projects/ when new toaster table is ready
++        url(r'^projects-new/$',
++            tables.ProjectsTable.as_view(template_name="projects-toastertable.html"),
++            name='all-projects-new'),
++
+         url(r'^project/(?P<pid>\d+)/$', 'project', name='project'),
+         url(r'^project/(?P<pid>\d+)/configuration$', 'projectconf', name='projectconf'),
+         url(r'^project/(?P<pid>\d+)/builds/$', 'projectbuilds', name='projectbuilds'),
+-- 
+2.1.4
 
 
