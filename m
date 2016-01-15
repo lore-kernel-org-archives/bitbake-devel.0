@@ -1,28 +1,28 @@
 Return-Path: <ed.bartosh@linux.intel.com>
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id 577EE7327E
+	by mail.openembedded.org (Postfix) with ESMTP id 4A02273232
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 12:58:14 +0000 (UTC)
+	Fri, 15 Jan 2016 12:58:15 +0000 (UTC)
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 15 Jan 2016 04:58:15 -0800
+	by fmsmga102.fm.intel.com with ESMTP; 15 Jan 2016 04:58:16 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="881987102"
+X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="881987107"
 Received: from linux.intel.com ([10.23.219.25])
-	by fmsmga001.fm.intel.com with ESMTP; 15 Jan 2016 04:58:15 -0800
+	by fmsmga001.fm.intel.com with ESMTP; 15 Jan 2016 04:58:16 -0800
 Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id 6F59F6A4004
+	by linux.intel.com (Postfix) with ESMTP id 8B45A6A4004
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 05:46:11 -0800 (PST)
+	Fri, 15 Jan 2016 05:46:12 -0800 (PST)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 15 Jan 2016 13:00:47 +0200
-Message-Id: <b1c05d93d5619a5776410ea3e6a8d972cc852967.1452855461.git.ed.bartosh@linux.intel.com>
+Date: Fri, 15 Jan 2016 13:00:48 +0200
+Message-Id: <0d8f83a2d13a8c1dccb9b16eaaeee2a6c8acfd69.1452855461.git.ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
-Subject: [PATCH 04/23] toaster: toastergui: switch projects/ view to ToasterTable
+Subject: [PATCH 05/23] toaster: toastergui: use event delegates for hover help elements
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,111 +35,49 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Jan 2016 12:58:14 -0000
+X-List-Received-Date: Fri, 15 Jan 2016 12:58:15 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-Remove the old projects page and replace with the new
-ToasterTable-based version.
+libtoaster.js binds to hover help elements via their hover() and
+mouseout() methods. However, any elements added to the DOM after
+libtoaster has initialised will not have these bindings added.
+This causes a problem for ToasterTables which have hover-help
+elements (e.g. the builds/ table).
 
-NB although the projects.html template is no longer required,
-it's been left in as there will be changes applied to it for
-the new theme. These changes will have to then be transferred
-from the projects.html template to projects-toastertable.html.
-
-Similarly, the code for the projects page in views.py has been
-retained.
+Use the on() method instead. This uses event delegation to bind
+a handler to any th or td elements already in the DOM, or
+which will be added to the DOM in future. ToasterTables can
+now reconstruct the table DOM and still have the correct handlers
+attached once the table is done.
 
 [YOCTO #8738]
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- lib/toaster/toastergui/tables.py |  2 +-
- lib/toaster/toastergui/urls.py   |  9 ++-------
- lib/toaster/toastergui/views.py  | 24 ++++++++++++++++++++----
- 3 files changed, 23 insertions(+), 12 deletions(-)
+ lib/toaster/toastergui/static/js/libtoaster.js | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/lib/toaster/toastergui/tables.py b/lib/toaster/toastergui/tables.py
-index cc9b5ae..2e3c8a6 100644
---- a/lib/toaster/toastergui/tables.py
-+++ b/lib/toaster/toastergui/tables.py
-@@ -638,7 +638,7 @@ class ProjectsTable(ToasterTable):
+diff --git a/lib/toaster/toastergui/static/js/libtoaster.js b/lib/toaster/toastergui/static/js/libtoaster.js
+index c04f7ab..1012034 100644
+--- a/lib/toaster/toastergui/static/js/libtoaster.js
++++ b/lib/toaster/toastergui/static/js/libtoaster.js
+@@ -448,10 +448,12 @@ $(document).ready(function() {
  
-     def __init__(self, *args, **kwargs):
-         super(ProjectsTable, self).__init__(*args, **kwargs)
--        self.default_orderby = 'updated'
-+        self.default_orderby = '-updated'
-         self.title = 'All projects'
-         self.static_context_extra['Build'] = Build
+     // show help bubble only on hover inside tables
+     $(".hover-help").css("visibility","hidden");
+-    $("th, td").hover(function () {
++
++    $("table").on("mouseover", "th, td", function () {
+         $(this).find(".hover-help").css("visibility","visible");
+     });
+-    $("th, td").mouseleave(function () {
++
++    $("table").on("mouseleave", "th, td", function () {
+         $(this).find(".hover-help").css("visibility","hidden");
+     });
  
-diff --git a/lib/toaster/toastergui/urls.py b/lib/toaster/toastergui/urls.py
-index da97a31..b5e9a05 100644
---- a/lib/toaster/toastergui/urls.py
-+++ b/lib/toaster/toastergui/urls.py
-@@ -74,14 +74,9 @@ urlpatterns = patterns('toastergui.views',
-         # project URLs
-         url(r'^newproject/$', 'newproject', name='newproject'),
- 
--
--        # TODO remove when new toaster table is ready
--        url(r'^projects/$', 'projects', name='all-projects'),
--
--        # TODO move to /projects/ when new toaster table is ready
--        url(r'^projects-new/$',
-+        url(r'^projects/$',
-             tables.ProjectsTable.as_view(template_name="projects-toastertable.html"),
--            name='all-projects-new'),
-+            name='all-projects'),
- 
-         url(r'^project/(?P<pid>\d+)/$', 'project', name='project'),
-         url(r'^project/(?P<pid>\d+)/configuration$', 'projectconf', name='projectconf'),
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 8148623..a79261d 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -2990,9 +2990,7 @@ if True:
-             }
-             return render(request, "unavailable_artifact.html", context)
- 
--
--
--
-+    """
-     @_template_renderer("projects.html")
-     def projects(request):
-         (pagesize, orderby) = _get_parameters_values(request, 10, 'updated:-')
-@@ -3034,7 +3032,24 @@ if True:
-         # translate the project's build target strings
-         fstypes_map = {};
-         for project in project_info:
--            fstypes_map[project.id] = project.get_last_build_extensions()
-+            try:
-+                targets = Target.objects.filter( build_id = project.get_last_build_id() )
-+                comma = "";
-+                extensions = "";
-+                for t in targets:
-+                    if ( not t.is_image ):
-+                        continue
-+                    tif = Target_Image_File.objects.filter( target_id = t.id )
-+                    for i in tif:
-+                        s=re.sub('.*tar.bz2', 'tar.bz2', i.file_name)
-+                        if s == i.file_name:
-+                            s=re.sub('.*\.', '', i.file_name)
-+                        if None == re.search(s,extensions):
-+                            extensions += comma + s
-+                            comma = ", "
-+                fstypes_map[project.id]=extensions
-+            except (Target.DoesNotExist,IndexError):
-+                fstypes_map[project.id]=project.get_last_imgfiles
- 
-         context = {
-                 'mru' : build_mru,
-@@ -3092,3 +3107,4 @@ if True:
- 
-         _set_parameters_values(pagesize, orderby, request)
-         return context
-+    """
 -- 
 2.1.4
 
