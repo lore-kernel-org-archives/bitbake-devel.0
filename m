@@ -1,28 +1,29 @@
 Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id B30F3731FD
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+	by mail.openembedded.org (Postfix) with ESMTP id 517DA76803
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 12:58:32 +0000 (UTC)
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by fmsmga104.fm.intel.com with ESMTP; 15 Jan 2016 04:58:33 -0800
+	Fri, 15 Jan 2016 12:58:33 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga101.fm.intel.com with ESMTP; 15 Jan 2016 04:58:34 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="29894755"
+X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; 
+	d="scan'208,217";a="893808909"
 Received: from linux.intel.com ([10.23.219.25])
-	by fmsmga004.fm.intel.com with ESMTP; 15 Jan 2016 04:58:33 -0800
+	by fmsmga002.fm.intel.com with ESMTP; 15 Jan 2016 04:58:34 -0800
 Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id AC65F6A4004
+	by linux.intel.com (Postfix) with ESMTP id DEF0D6A4004
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 05:46:29 -0800 (PST)
+	Fri, 15 Jan 2016 05:46:30 -0800 (PST)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 15 Jan 2016 13:01:03 +0200
-Message-Id: <bb3192f818fba687c955e6add3813c0460deb999.1452855461.git.ed.bartosh@linux.intel.com>
+Date: Fri, 15 Jan 2016 13:01:04 +0200
+Message-Id: <adba2b3442a41309fb4bd0eaaa73ff80f86f500b.1452855461.git.ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
-Subject: [PATCH 20/23] toaster: toastergui: fix error and warning counts for builds
+Subject: [PATCH 21/23] toaster: toastergui: remove unused views and template code
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,884 +36,716 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Jan 2016 12:58:32 -0000
+X-List-Received-Date: Fri, 15 Jan 2016 12:58:34 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-The error and warning counts displayed for builds were counts of
-the errors and warnings objects associated with a build. Because these
-values were being derived on the fly, it was not possible to sort by
-them.
+The code in views.py for setting up the template context for
+old non-ToasterTable views is no longer necessary, as this
+is now implemented in tables.py.
 
-Previously, the 3rd party django-aggregate-if library was used to
-add aggregate fields to Build objects and should then have been
-used to populate the "all builds" and "project builds" tables. However,
-at some point the templates had changed so that the error and warning
-counts were coming from the properties on the Build model and not from
-these aggregates. This meant that it was not possible to sort by these
-fields.
-
-Django 1.8 supports conditional aggregates in annotation fields on
-querysets. This means we can remove django-aggregate-if, use the new Django
-1.8 feature to derive errors_no and warnings_no fields as annotations,
-then use those annotation fields in the templates. This makes the "builds"
-tables sortable again.
+The template files for these views have also been removed.
 
 [YOCTO #8738]
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- .../contrib/django-aggregate-if-master/.gitignore  |  10 --
- .../contrib/django-aggregate-if-master/.travis.yml |  50 ------
- .../contrib/django-aggregate-if-master/LICENSE     |  21 ---
- .../contrib/django-aggregate-if-master/README.rst  | 156 ----------------
- .../django-aggregate-if-master/aggregate_if.py     | 164 -----------------
- .../contrib/django-aggregate-if-master/runtests.py |  48 -----
- .../contrib/django-aggregate-if-master/setup.py    |  33 ----
- .../contrib/django-aggregate-if-master/tox.ini     | 198 ---------------------
- lib/toaster/toastergui/tables.py                   |  40 +++--
- lib/toaster/toastermain/settings.py                |   9 -
- 10 files changed, 27 insertions(+), 702 deletions(-)
- delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/.gitignore
- delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/.travis.yml
- delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/LICENSE
- delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/README.rst
- delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/aggregate_if.py
- delete mode 100755 bitbake/lib/toaster/contrib/django-aggregate-if-master/runtests.py
- delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/setup.py
- delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/tox.ini
+ lib/toaster/toastergui/templates/builds.html   | 125 -------
+ lib/toaster/toastergui/templates/projects.html |  92 ------
+ lib/toaster/toastergui/views.py                | 430 -------------------------
+ 3 files changed, 647 deletions(-)
+ delete mode 100644 bitbake/lib/toaster/toastergui/templates/builds.html
+ delete mode 100644 bitbake/lib/toaster/toastergui/templates/projects.html
 
-diff --git a/lib/toaster/contrib/django-aggregate-if-master/.gitignore b/lib/toaster/contrib/django-aggregate-if-master/.gitignore
+diff --git a/lib/toaster/toastergui/templates/builds.html b/lib/toaster/toastergui/templates/builds.html
 deleted file mode 100644
-index c45652d..0000000
---- a/lib/toaster/contrib/django-aggregate-if-master/.gitignore
+index c3cc266..0000000
+--- a/lib/toaster/toastergui/templates/builds.html
 +++ /dev/null
-@@ -1,10 +0,0 @@
--*.pyc
--*.swp
--*.swo
--*.kpf
--*.egg-info/
--.idea
--.tox
--tmp/
--dist/
--.DS_Store
-diff --git a/lib/toaster/contrib/django-aggregate-if-master/.travis.yml b/lib/toaster/contrib/django-aggregate-if-master/.travis.yml
+@@ -1,125 +0,0 @@
+-{% extends "base.html" %}
+-
+-{% load static %}
+-{% load projecttags %}
+-{% load project_url_tag %}
+-{% load humanize %}
+-
+-{% block title %} All builds - Toaster {% endblock %}
+-{% block extraheadcontent %}
+-<link rel="stylesheet" href="/static/css/jquery-ui.min.css" type='text/css'>
+-<link rel="stylesheet" href="/static/css/jquery-ui.structure.min.css" type='text/css'>
+-<link rel="stylesheet" href="/static/css/jquery-ui.theme.min.css" type='text/css'>
+-<script src="/static/js/jquery-ui.min.js"></script>
+-<script src="/static/js/filtersnippet.js"></script>
+-{% endblock %}
+-
+-{% block pagecontent %}
+-
+-{% if last_date_from and last_date_to %}
+-<script>
+-    // initialize the date range controls
+-    $(document).ready(function () {
+-        date_init('started_on','{{last_date_from}}','{{last_date_to}}','{{dateMin_started_on}}','{{dateMax_started_on}}','{{daterange_selected}}');
+-        date_init('completed_on','{{last_date_from}}','{{last_date_to}}','{{dateMin_completed_on}}','{{dateMax_completed_on}}','{{daterange_selected}}');
+-    });
+-</script>
+-{%endif%} {# last_date_from and last_date_to #}
+-
+-<div class="row-fluid">
+-
+-  {% include "mrb_section.html" %}
+-
+-  <div class="page-header top-air">
+-     <h1>
+-      {% if request.GET.filter and objects.paginator.count > 0 or request.GET.search and objects.paginator.count > 0 %}
+-          {{objects.paginator.count}} build{{objects.paginator.count|pluralize}} found
+-      {%elif request.GET.filter and objects.paginator.count == 0 or request.GET.search and objects.paginator.count == 0 %}
+-          No builds found
+-      {%else%}
+-          All builds
+-      {%endif%}
+-     </h1>
+-  </div>
+-
+-  {% if objects.paginator.count == 0 %}
+-    <div class="row-fluid">
+-      <div class="alert">
+-        <form class="no-results input-append" id="searchform">
+-            <input id="search" name="search" class="input-xxlarge" type="text" value="
+-            {% if request.GET.search %}
+-                {{request.GET.search}}
+-        {% endif %}"/>
+-            {% if request.GET.search %}<a href="javascript:$('#search').val('');searchform.submit()" class="add-on btn" tabindex="-1"><i class="icon-remove"></i></a>{% endif %}
+-            <button class="btn" type="submit" value="Search">Search</button>
+-            <button class="btn btn-link" onclick="javascript:$('#search').val('');searchform.submit()">Show all builds</button>
+-        </form>
+-      </div>
+-    </div>
+-  {% else %}
+-  {% include "basetable_top.html" %}
+-        <!-- Table data rows; the order needs to match the order of "tablecols" definitions; and the <td class value needs to match the tablecols clclass value for show/hide buttons to work -->
+-        {% for build in objects %}
+-        <tr class="data" data-table-build-result="{{ build.id }}">
+-            <td class="outcome">
+-                <a href="{% url "builddashboard" build.id %}">{%if build.outcome == build.SUCCEEDED%}<i class="icon-ok-sign success"></i>{%elif build.outcome == build.FAILED%}<i class="icon-minus-sign error"></i>{%else%}{%endif%}</a>
+-                {% if build.cooker_log_path %}
+-                  &nbsp;
+-                  <a href="{% url 'build_artifact' build.id "cookerlog" build.id %}">
+-                    <i class="icon-download-alt" title="Download build log"></i>
+-                  </a>
+-                {% endif %}
+-            </td>
+-            <td class="target">
+-                {% for t in build.target_set.all %}
+-                    <a href="{% url "builddashboard" build.id %}">
+-                        {% if t.task %}
+-                            {{t.target}}:{{t.task}}
+-                        {% else %}
+-                            {{t.target}}
+-                        {% endif %}
+-                    </a> <br />
+-                {% endfor %}
+-            </td>
+-            <td class="machine"><a href="{% url "builddashboard" build.id %}">{{build.machine}}</a></td>
+-            <td class="started_on"><a href="{% url "builddashboard" build.id %}">{{build.started_on|date:"d/m/y H:i"}}</a></td>
+-            <td class="completed_on"><a href="{% url "builddashboard" build.id %}">{{build.completed_on|date:"d/m/y H:i"}}</a></td>
+-            <td class="failed_tasks error">
+-                {% query build.task_build outcome=4 order__gt=0 as exectask%}
+-                    {% if exectask.count == 1 %}
+-                        <a href="{% url "task" build.id exectask.0.id %}">{{exectask.0.recipe.name}}.{{exectask.0.task_name}}</a>
+-                        <a href="{% url 'build_artifact' build.id "tasklogfile" exectask.0.id %}">
+-                            <i class="icon-download-alt" title="" data-original-title="Download task log file"></i>
+-                        </a>
+-                    {% elif exectask.count > 1%}
+-                        <a href="{% url "tasks" build.id %}?filter=outcome%3A4">{{exectask.count}} task{{exectask.count|pluralize}}</a>
+-                    {%endif%}
+-            </td>
+-            <td class="errors.count errors_no">
+-                {% if  build.errors.count %}
+-                    <a class="errors.count error" href="{% url "builddashboard" build.id %}#errors">{{build.errors.count}} error{{build.errors.count|pluralize}}</a>
+-                {%endif%}
+-            </td>
+-            <td class="warnings.count warnings_no">{% if  build.warnings.count %}<a class="warnings.count warning" href="{% url "builddashboard" build.id %}#warnings">{{build.warnings.count}} warning{{build.warnings.count|pluralize}}</a>{%endif%}</td>
+-            <td class="time"><a href="{% url "buildtime" build.id %}">{{build.timespent_seconds|sectohms}}</a></td>
+-            <td class="output">
+-              {% if build.outcome == build.SUCCEEDED %}
+-              <a href="{%url "builddashboard" build.id%}#images">{{fstypes|get_dict_value:build.id}}</a>
+-              {% endif %}
+-            </td>
+-            <td class="project-name">
+-                <a href="{% project_url build.project %}">{{build.project.name}}</a>
+-                {% if build.project.is_default %}
+-                    <i class="icon-question-sign get-help hover-help" title="" data-original-title="This project shows information about the builds you start from the command line while Toaster is running" style="visibility: hidden;"></i>
+-                {% endif %}
+-            </td>
+-        </tr>
+-
+-        {% endfor %}
+-
+-
+-  {% include "basetable_bottom.html" %}
+-  {% endif %} {# objects.paginator.count #}
+-</div><!-- end row-fluid-->
+-
+-{% endblock %}
+diff --git a/lib/toaster/toastergui/templates/projects.html b/lib/toaster/toastergui/templates/projects.html
 deleted file mode 100644
-index a920f39..0000000
---- a/lib/toaster/contrib/django-aggregate-if-master/.travis.yml
+index 678a796..0000000
+--- a/lib/toaster/toastergui/templates/projects.html
 +++ /dev/null
-@@ -1,50 +0,0 @@
--language: python
--python:
--  - "2.7"
--  - "3.4"
--services:
--  - mysql
--  - postgresql
--env:
--  - DJANGO=1.4 DB=sqlite
--  - DJANGO=1.4 DB=mysql
--  - DJANGO=1.4 DB=postgres
--  - DJANGO=1.5 DB=sqlite
--  - DJANGO=1.5 DB=mysql
--  - DJANGO=1.5 DB=postgres
--  - DJANGO=1.6 DB=sqlite
--  - DJANGO=1.6 DB=mysql
--  - DJANGO=1.6 DB=postgres
--  - DJANGO=1.7 DB=sqlite
--  - DJANGO=1.7 DB=mysql
--  - DJANGO=1.7 DB=postgres
--
--matrix:
--  exclude:
--    - python: "3.4"
--      env: DJANGO=1.4 DB=sqlite
--    - python: "3.4"
--      env: DJANGO=1.4 DB=mysql
--    - python: "3.4"
--      env: DJANGO=1.4 DB=postgres
--    - python: "3.4"
--      env: DJANGO=1.5 DB=sqlite
--    - python: "3.4"
--      env: DJANGO=1.5 DB=mysql
--    - python: "3.4"
--      env: DJANGO=1.5 DB=postgres
--    - python: "3.4"
--      env: DJANGO=1.6 DB=mysql
--    - python: "3.4"
--      env: DJANGO=1.7 DB=mysql
--
--before_script:
--  - mysql -e 'create database aggregation;'
--  - psql -c 'create database aggregation;' -U postgres
--install:
--  - pip install six
--  - if [ "$DB" == "mysql" ]; then pip install mysql-python; fi
--  - if [ "$DB" == "postgres" ]; then pip install psycopg2; fi
--  - pip install -q Django==$DJANGO --use-mirrors
--script:
--  - ./runtests.py --settings=tests.test_$DB
-diff --git a/lib/toaster/contrib/django-aggregate-if-master/LICENSE b/lib/toaster/contrib/django-aggregate-if-master/LICENSE
-deleted file mode 100644
-index 6b7c3b1..0000000
---- a/lib/toaster/contrib/django-aggregate-if-master/LICENSE
-+++ /dev/null
-@@ -1,21 +0,0 @@
--The MIT License
--
--Copyright (c) 2012 Henrique Bastos
--
--Permission is hereby granted, free of charge, to any person obtaining a copy
--of this software and associated documentation files (the "Software"), to deal
--in the Software without restriction, including without limitation the rights
--to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
--copies of the Software, and to permit persons to whom the Software is
--furnished to do so, subject to the following conditions:
--
--The above copyright notice and this permission notice shall be included in
--all copies or substantial portions of the Software.
--
--THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
--IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
--FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
--AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
--LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
--OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
--THE SOFTWARE.
-diff --git a/lib/toaster/contrib/django-aggregate-if-master/README.rst b/lib/toaster/contrib/django-aggregate-if-master/README.rst
-deleted file mode 100644
-index 739d4da..0000000
---- a/lib/toaster/contrib/django-aggregate-if-master/README.rst
-+++ /dev/null
-@@ -1,156 +0,0 @@
--Django Aggregate If: Condition aggregates for Django
--====================================================
--
--.. image:: https://travis-ci.org/henriquebastos/django-aggregate-if.png?branch=master
--    :target: https://travis-ci.org/henriquebastos/django-aggregate-if
--    :alt: Test Status
--
--.. image:: https://landscape.io/github/henriquebastos/django-aggregate-if/master/landscape.png
--    :target: https://landscape.io/github/henriquebastos/django-aggregate-if/master
--    :alt: Code Helth
--
--.. image:: https://pypip.in/v/django-aggregate-if/badge.png
--    :target: https://crate.io/packages/django-aggregate-if/
--    :alt: Latest PyPI version
--
--.. image:: https://pypip.in/d/django-aggregate-if/badge.png
--    :target: https://crate.io/packages/django-aggregate-if/
--    :alt: Number of PyPI downloads
--
--*Aggregate-if* adds conditional aggregates to Django.
--
--Conditional aggregates can help you reduce the ammount of queries to obtain
--aggregated information, like statistics for example.
--
--Imagine you have a model ``Offer`` like this one:
--
--.. code-block:: python
--
--    class Offer(models.Model):
--        sponsor = models.ForeignKey(User)
--        price = models.DecimalField(max_digits=9, decimal_places=2)
--        status = models.CharField(max_length=30)
--        expire_at = models.DateField(null=True, blank=True)
--        created_at = models.DateTimeField(auto_now_add=True)
--        updated_at = models.DateTimeField(auto_now=True)
--
--        OPEN = "OPEN"
--        REVOKED = "REVOKED"
--        PAID = "PAID"
--
--Let's say you want to know:
--
--#. How many offers exists in total;
--#. How many of them are OPEN, REVOKED or PAID;
--#. How much money was offered in total;
--#. How much money is in OPEN, REVOKED and PAID offers;
--
--To get these informations, you could query:
--
--.. code-block:: python
--
--    from django.db.models import Count, Sum
--
--    Offer.objects.count()
--    Offer.objects.filter(status=Offer.OPEN).aggregate(Count('pk'))
--    Offer.objects.filter(status=Offer.REVOKED).aggregate(Count('pk'))
--    Offer.objects.filter(status=Offer.PAID).aggregate(Count('pk'))
--    Offer.objects.aggregate(Sum('price'))
--    Offer.objects.filter(status=Offer.OPEN).aggregate(Sum('price'))
--    Offer.objects.filter(status=Offer.REVOKED).aggregate(Sum('price'))
--    Offer.objects.filter(status=Offer.PAID).aggregate(Sum('price'))
--
--In this case, **8 queries** were needed to retrieve the desired information.
--
--With conditional aggregates you can get it all with only **1 query**:
--
--.. code-block:: python
--
--    from django.db.models import Q
--    from aggregate_if import Count, Sum
--
--    Offer.objects.aggregate(
--        pk__count=Count('pk'),
--        pk__open__count=Count('pk', only=Q(status=Offer.OPEN)),
--        pk__revoked__count=Count('pk', only=Q(status=Offer.REVOKED)),
--        pk__paid__count=Count('pk', only=Q(status=Offer.PAID)),
--        pk__sum=Sum('price'),
--        pk__open__sum=Sum('price', only=Q(status=Offer.OPEN)),
--        pk__revoked__sum=Sum('price'), only=Q(status=Offer.REVOKED)),
--        pk__paid__sum=Sum('price'), only=Q(status=Offer.PAID))
--    )
--
--Installation
--------------
--
--*Aggregate-if* works with Django 1.4, 1.5, 1.6 and 1.7.
--
--To install it, simply:
--
--.. code-block:: bash
--
--    $ pip install django-aggregate-if
--
--Inspiration
-------------
--
--There is a 5 years old `ticket 11305`_ that will (*hopefully*) implement this feature into
--Django 1.8.
--
--Using Django 1.6, I still wanted to avoid creating custom queries for very simple
--conditional aggregations. So I've cherry picked those ideas and others from the
--internet and built this library.
--
--This library uses the same API and tests proposed on `ticket 11305`_, so when the
--new feature is available you can easily replace ``django-aggregate-if``.
--
--Limitations
-------------
--
--Conditions involving joins with aliases are not supported yet. If you want to
--help adding this feature, you're welcome to check the `first issue`_.
--
--Contributors
--------------
--
--* `Henrique Bastos <http://github.com/henriquebastos>`_
--* `Iuri de Silvio <https://github.com/iurisilvio>`_
--* `Hampus Stjernhav <https://github.com/champ>`_
--* `Bradley Martsberger <https://github.com/martsberger>`_
--* `Markus Bertheau <https://github.com/mbertheau>`_
--* `end0 <https://github.com/end0>`_
--* `Scott Sexton <https://github.com/scottsexton>`_
--* `Mauler <https://github.com/mauler>`_
--* `trbs <https://github.com/trbs>`_
--
--Changelog
-----------
--
--0.5
--    - Support for Django 1.7
--
--0.4
--    - Use tox to run tests.
--    - Add support for Django 1.6.
--    - Add support for Python3.
--    - The ``only`` parameter now freely supports joins independent of the main query.
--    - Adds support for alias relabeling permitting excludes and updates with aggregates filtered on remote foreign key relations.
--
--0.3.1
--    - Fix quotation escaping.
--    - Fix boolean casts on Postgres.
--
--0.2
--    - Fix postgres issue with LIKE conditions.
--
--0.1
--    - Initial release.
--
--
--License
--=======
--
--The MIT License.
--
--.. _ticket 11305: https://code.djangoproject.com/ticket/11305
--.. _first issue: https://github.com/henriquebastos/django-aggregate-if/issues/1
-diff --git a/lib/toaster/contrib/django-aggregate-if-master/aggregate_if.py b/lib/toaster/contrib/django-aggregate-if-master/aggregate_if.py
-deleted file mode 100644
-index d5f3427..0000000
---- a/lib/toaster/contrib/django-aggregate-if-master/aggregate_if.py
-+++ /dev/null
-@@ -1,164 +0,0 @@
--# coding: utf-8
--'''
--Implements conditional aggregates.
--
--This code was based on the work of others found on the internet:
--
--1. http://web.archive.org/web/20101115170804/http://www.voteruniverse.com/Members/jlantz/blog/conditional-aggregates-in-django
--2. https://code.djangoproject.com/ticket/11305
--3. https://groups.google.com/forum/?fromgroups=#!topic/django-users/cjzloTUwmS0
--4. https://groups.google.com/forum/?fromgroups=#!topic/django-users/vVprMpsAnPo
--'''
--from __future__ import unicode_literals
--from django.utils import six
--import django
--from django.db.models.aggregates import Aggregate as DjangoAggregate
--from django.db.models.sql.aggregates import Aggregate as DjangoSqlAggregate
--
--
--VERSION = django.VERSION[:2]
--
--
--class SqlAggregate(DjangoSqlAggregate):
--    conditional_template = '%(function)s(CASE WHEN %(condition)s THEN %(field)s ELSE null END)'
--
--    def __init__(self, col, source=None, is_summary=False, condition=None, **extra):
--        super(SqlAggregate, self).__init__(col, source, is_summary, **extra)
--        self.condition = condition
--
--    def relabel_aliases(self, change_map):
--        if VERSION < (1, 7):
--            super(SqlAggregate, self).relabel_aliases(change_map)
--        if self.has_condition:
--            condition_change_map = dict((k, v) for k, v in \
--                change_map.items() if k in self.condition.query.alias_map
--            )
--            self.condition.query.change_aliases(condition_change_map)
--
--    def relabeled_clone(self, change_map):
--        self.relabel_aliases(change_map)
--        return super(SqlAggregate, self).relabeled_clone(change_map)
--
--    def as_sql(self, qn, connection):
--        if self.has_condition:
--            self.sql_template = self.conditional_template
--            self.extra['condition'] = self._condition_as_sql(qn, connection)
--
--        return super(SqlAggregate, self).as_sql(qn, connection)
--
--    @property
--    def has_condition(self):
--        # Warning: bool(QuerySet) will hit the database
--        return self.condition is not None
--
--    def _condition_as_sql(self, qn, connection):
--        '''
--        Return sql for condition.
--        '''
--        def escape(value):
--            if isinstance(value, bool):
--                value = str(int(value))
--            if isinstance(value, six.string_types):
--                # Escape params used with LIKE
--                if '%' in value:
--                    value = value.replace('%', '%%')
--                # Escape single quotes
--                if "'" in value:
--                    value = value.replace("'", "''")
--                # Add single quote to text values
--                value = "'" + value + "'"
--            return value
--
--        sql, param = self.condition.query.where.as_sql(qn, connection)
--        param = map(escape, param)
--
--        return sql % tuple(param)
--
--
--class SqlSum(SqlAggregate):
--    sql_function = 'SUM'
--
--
--class SqlCount(SqlAggregate):
--    is_ordinal = True
--    sql_function = 'COUNT'
--    sql_template = '%(function)s(%(distinct)s%(field)s)'
--    conditional_template = '%(function)s(%(distinct)sCASE WHEN %(condition)s THEN %(field)s ELSE null END)'
--
--    def __init__(self, col, distinct=False, **extra):
--        super(SqlCount, self).__init__(col, distinct=distinct and 'DISTINCT ' or '', **extra)
--
--
--class SqlAvg(SqlAggregate):
--    is_computed = True
--    sql_function = 'AVG'
--
--
--class SqlMax(SqlAggregate):
--    sql_function = 'MAX'
--
--
--class SqlMin(SqlAggregate):
--    sql_function = 'MIN'
--
--
--class Aggregate(DjangoAggregate):
--    def __init__(self, lookup, only=None, **extra):
--        super(Aggregate, self).__init__(lookup, **extra)
--        self.only = only
--        self.condition = None
--
--    def _get_fields_from_Q(self, q):
--        fields = []
--        for child in q.children:
--            if hasattr(child, 'children'):
--                fields.extend(self._get_fields_from_Q(child))
--            else:
--                fields.append(child)
--        return fields
--
--    def add_to_query(self, query, alias, col, source, is_summary):
--        if self.only:
--            self.condition = query.model._default_manager.filter(self.only)
--            for child in self._get_fields_from_Q(self.only):
--                field_list = child[0].split('__')
--                # Pop off the last field if it's a query term ('gte', 'contains', 'isnull', etc.)
--                if field_list[-1] in query.query_terms:
--                    field_list.pop()
--                # setup_joins have different returns in Django 1.5 and 1.6, but the order of what we need remains.
--                result = query.setup_joins(field_list, query.model._meta, query.get_initial_alias(), None)
--                join_list = result[3]
--
--                fname = 'promote_alias_chain' if VERSION < (1, 5) else 'promote_joins'
--                args = (join_list, True) if VERSION < (1, 7) else (join_list,)
--
--                promote = getattr(query, fname)
--                promote(*args)
--
--        aggregate = self.sql_klass(col, source=source, is_summary=is_summary, condition=self.condition, **self.extra)
--        query.aggregates[alias] = aggregate
--
--
--class Sum(Aggregate):
--    name = 'Sum'
--    sql_klass = SqlSum
--
--
--class Count(Aggregate):
--    name = 'Count'
--    sql_klass = SqlCount
--
--
--class Avg(Aggregate):
--    name = 'Avg'
--    sql_klass = SqlAvg
--
--
--class Max(Aggregate):
--    name = 'Max'
--    sql_klass = SqlMax
--
--
--class Min(Aggregate):
--    name = 'Min'
--    sql_klass = SqlMin
-diff --git a/lib/toaster/contrib/django-aggregate-if-master/runtests.py b/lib/toaster/contrib/django-aggregate-if-master/runtests.py
-deleted file mode 100755
-index 2e55864..0000000
---- a/lib/toaster/contrib/django-aggregate-if-master/runtests.py
-+++ /dev/null
-@@ -1,48 +0,0 @@
--#!/usr/bin/env python
--
--import os
--import sys
--from optparse import OptionParser
--
--
--def parse_args():
--    parser = OptionParser()
--    parser.add_option('-s', '--settings', help='Define settings.')
--    parser.add_option('-t', '--unittest', help='Define which test to run. Default all.')
--    options, args = parser.parse_args()
--
--    if not options.settings:
--        parser.print_help()
--        sys.exit(1)
--
--    if not options.unittest:
--        options.unittest = ['aggregation']
--
--    return options
--
--
--def get_runner(settings_module):
--    '''
--    Asks Django for the TestRunner defined in settings or the default one.
--    '''
--    os.environ['DJANGO_SETTINGS_MODULE'] = settings_module
--
--    import django
--    from django.test.utils import get_runner
--    from django.conf import settings
--
--    if hasattr(django, 'setup'):
--        django.setup()
--
--    return get_runner(settings)
--
--
--def runtests():
--    options = parse_args()
--    TestRunner = get_runner(options.settings)
--    runner = TestRunner(verbosity=1, interactive=True, failfast=False)
--    sys.exit(runner.run_tests([]))
--
--
--if __name__ == '__main__':
--    runtests()
-diff --git a/lib/toaster/contrib/django-aggregate-if-master/setup.py b/lib/toaster/contrib/django-aggregate-if-master/setup.py
-deleted file mode 100644
-index aed3db1..0000000
---- a/lib/toaster/contrib/django-aggregate-if-master/setup.py
-+++ /dev/null
-@@ -1,33 +0,0 @@
--# coding: utf-8
--from setuptools import setup
--import os
--
--
--setup(name='django-aggregate-if',
--      version='0.5',
--      description='Conditional aggregates for Django, just like the famous SumIf in Excel.',
--      long_description=open(os.path.join(os.path.dirname(__file__), "README.rst")).read(),
--      author="Henrique Bastos", author_email="henrique@bastos.net",
--      license="MIT",
--      py_modules=['aggregate_if'],
--      install_requires=[
--          'six>=1.6.1',
--      ],
--      zip_safe=False,
--      platforms='any',
--      include_package_data=True,
--      classifiers=[
--          'Development Status :: 5 - Production/Stable',
--          'Framework :: Django',
--          'Intended Audience :: Developers',
--          'License :: OSI Approved :: MIT License',
--          'Natural Language :: English',
--          'Operating System :: OS Independent',
--          'Programming Language :: Python',
--          'Programming Language :: Python :: 2.7',
--          'Programming Language :: Python :: 3',
--          'Topic :: Database',
--          'Topic :: Software Development :: Libraries',
--      ],
--      url='http://github.com/henriquebastos/django-aggregate-if/',
--)
-diff --git a/lib/toaster/contrib/django-aggregate-if-master/tox.ini b/lib/toaster/contrib/django-aggregate-if-master/tox.ini
-deleted file mode 100644
-index 78beb14..0000000
---- a/lib/toaster/contrib/django-aggregate-if-master/tox.ini
-+++ /dev/null
-@@ -1,198 +0,0 @@
--[tox]
--envlist =
--    py27-django1.4-sqlite,
--    py27-django1.4-postgres,
--    py27-django1.4-mysql,
--
--    py27-django1.5-sqlite,
--    py27-django1.5-postgres,
--    py27-django1.5-mysql,
--
--    py27-django1.6-sqlite,
--    py27-django1.6-postgres,
--    py27-django1.6-mysql,
--
--    py27-django1.7-sqlite,
--    py27-django1.7-postgres,
--    py27-django1.7-mysql,
--
--    py34-django1.6-sqlite,
--    py34-django1.6-postgres,
--    #py34-django1.6-mysql
--
--    py34-django1.7-sqlite,
--    py34-django1.7-postgres,
--    #py34-django1.7-mysql
--
--[testenv]
--whitelist_externals=
--    mysql
--    psql
--
--# Python 2.7
--# Django 1.4
--[testenv:py27-django1.4-sqlite]
--basepython = python2.7
--deps =
--    django==1.4
--commands = python runtests.py --settings tests.test_sqlite
--
--[testenv:py27-django1.4-postgres]
--basepython = python2.7
--deps =
--    django==1.4
--    psycopg2
--commands =
--    psql -c 'create database aggregation;' postgres
--    python runtests.py --settings tests.test_postgres
--    psql -c 'drop database aggregation;' postgres
--
--[testenv:py27-django1.4-mysql]
--basepython = python2.7
--deps =
--    django==1.4
--    mysql-python
--commands =
--    mysql -e 'create database aggregation;'
--    python runtests.py --settings tests.test_mysql
--    mysql -e 'drop database aggregation;'
--
--# Django 1.5
--[testenv:py27-django1.5-sqlite]
--basepython = python2.7
--deps =
--    django==1.5
--commands = python runtests.py --settings tests.test_sqlite
--
--[testenv:py27-django1.5-postgres]
--basepython = python2.7
--deps =
--    django==1.5
--    psycopg2
--commands =
--    psql -c 'create database aggregation;' postgres
--    python runtests.py --settings tests.test_postgres
--    psql -c 'drop database aggregation;' postgres
--
--[testenv:py27-django1.5-mysql]
--basepython = python2.7
--deps =
--    django==1.5
--    mysql-python
--commands =
--    mysql -e 'create database aggregation;'
--    python runtests.py --settings tests.test_mysql
--    mysql -e 'drop database aggregation;'
--
--# Django 1.6
--[testenv:py27-django1.6-sqlite]
--basepython = python2.7
--deps =
--    django==1.6
--commands = python runtests.py --settings tests.test_sqlite
--
--[testenv:py27-django1.6-postgres]
--basepython = python2.7
--deps =
--    django==1.6
--    psycopg2
--commands =
--    psql -c 'create database aggregation;' postgres
--    python runtests.py --settings tests.test_postgres
--    psql -c 'drop database aggregation;' postgres
--
--[testenv:py27-django1.6-mysql]
--basepython = python2.7
--deps =
--    django==1.6
--    mysql-python
--commands =
--    mysql -e 'create database aggregation;'
--    python runtests.py --settings tests.test_mysql
--    mysql -e 'drop database aggregation;'
--
--
--# Python 2.7 and Django 1.7
--[testenv:py27-django1.7-sqlite]
--basepython = python2.7
--deps =
--    django==1.7
--commands = python runtests.py --settings tests.test_sqlite
--
--[testenv:py27-django1.7-postgres]
--basepython = python2.7
--deps =
--    django==1.7
--    psycopg2
--commands =
--    psql -c 'create database aggregation;' postgres
--    python runtests.py --settings tests.test_postgres
--    psql -c 'drop database aggregation;' postgres
--
--[testenv:py27-django1.7-mysql]
--basepython = python2.7
--deps =
--    django==1.7
--    mysql-python
--commands =
--    mysql -e 'create database aggregation;'
--    python runtests.py --settings tests.test_mysql
--    mysql -e 'drop database aggregation;'
--
--
--# Python 3.4
--# Django 1.6
--[testenv:py34-django1.6-sqlite]
--basepython = python3.4
--deps =
--    django==1.6
--commands = python runtests.py --settings tests.test_sqlite
--
--[testenv:py34-django1.6-postgres]
--basepython = python3.4
--deps =
--    django==1.6
--    psycopg2
--commands =
--    psql -c 'create database aggregation;' postgres
--    python runtests.py --settings tests.test_postgres
--    psql -c 'drop database aggregation;' postgres
--
--[testenv:py34-django1.6-mysql]
--basepython = python3.4
--deps =
--    django==1.6
--    mysql-python3
--commands =
--    mysql -e 'create database aggregation;'
--    python runtests.py --settings tests.test_mysql
--    mysql -e 'drop database aggregation;'
--
--
--# Python 3.4
--# Django 1.7
--[testenv:py34-django1.7-sqlite]
--basepython = python3.4
--deps =
--    django==1.7
--commands = python runtests.py --settings tests.test_sqlite
--
--[testenv:py34-django1.7-postgres]
--basepython = python3.4
--deps =
--    django==1.7
--    psycopg2
--commands =
--    psql -c 'create database aggregation;' postgres
--    python runtests.py --settings tests.test_postgres
--    psql -c 'drop database aggregation;' postgres
--
--[testenv:py34-django1.7-mysql]
--basepython = python3.4
--deps =
--    django==1.7
--    mysql-python3
--commands =
--    mysql -e 'create database aggregation;'
--    python runtests.py --settings tests.test_mysql
--    mysql -e 'drop database aggregation;'
-diff --git a/lib/toaster/toastergui/tables.py b/lib/toaster/toastergui/tables.py
-index 14077e1..2279731 100644
---- a/lib/toaster/toastergui/tables.py
-+++ b/lib/toaster/toastergui/tables.py
-@@ -23,7 +23,7 @@ from toastergui.widgets import ToasterTable
- from orm.models import Recipe, ProjectLayer, Layer_Version, Machine, Project
- from orm.models import CustomImageRecipe, Package, Build, LogMessage, Task
- from orm.models import ProjectTarget
--from django.db.models import Q, Max, Count
-+from django.db.models import Q, Max, Count, When, Case, Value, IntegerField
- from django.conf.urls import url
- from django.core.urlresolvers import reverse, resolve
- from django.http import HttpResponse
-@@ -927,6 +927,13 @@ class BuildsTable(ToasterTable):
-         return context
+@@ -1,92 +0,0 @@
+-{% extends "base.html" %}
+-
+-{% load static %}
+-{% load projecttags %}
+-{% load project_url_tag %}
+-{% load humanize %}
+-
+-{% block title %} All projects - Toaster {% endblock %}
+-
+-{% block pagecontent %}
+-
+-
+-  <div class="page-header top-air">
+-      <h1>
+-      {% if request.GET.filter and objects.paginator.count > 0 or request.GET.search and objects.paginator.count > 0 %}
+-          {{objects.paginator.count}} project{{objects.paginator.count|pluralize}} found
+-      {%elif request.GET.filter and objects.paginator.count == 0 or request.GET.search and objects.paginator.count == 0 %}
+-          No projects found
+-      {%else%}
+-          All projects
+-      {%endif%}
+-       </h1>
+-  </div>
+-
+-  {% if objects.paginator.count == 0 %}
+-    <div class="row-fluid">
+-      <div class="alert">
+-        <form class="no-results input-append" id="searchform">
+-            <input id="search" name="search" class="input-xxlarge" type="text" value="
+-                {% if request.GET.search %}
+-                    {{request.GET.search}}
+-                {% endif %}"/>{% if request.GET.search %}<a href="javascript:$('#search').val('');searchform.submit()" class="add-on btn" tabindex="-1"><i class="icon-remove"></i></a>{% endif %}
+-            <button class="btn" type="submit" value="Search">Search</button>
+-            <button class="btn btn-link" onclick="javascript:$('#search').val('');searchform.submit()">Show all projects</button>
+-        </form>
+-      </div>
+-    </div>
+-
+-  {% else %} {# We have builds to display #}
+-  {% include "basetable_top.html" %}
+-  {% for o in objects %}
+-    <tr class="data" data-project="{{ o.id }}">
+-      <td data-project-field="name">
+-          <a href="{% project_url o %}">{{o.name}}</a>
+-      </td>
+-      <td class="updated"><a href="{% project_url o %}">{{o.updated|date:"d/m/y H:i"}}</a></td>
+-      <td data-project-field="release">
+-        {% if o.release %}
+-            <a href="{% url 'project' o.id %}#project-details">{{o.release.name}}</a>
+-        {% elif o.is_default %}
+-            <span class="muted">Not applicable</span>
+-            <i class="icon-question-sign get-help hover-help" title="" data-original-title="This project does not have a release set. It simply collects information about the builds you start from the command line while Toaster is running" style="visibility: hidden;"></i>
+-        {% else %}
+-            No release available
+-        {% endif %}
+-      </td>
+-      <td data-project-field="machine">
+-        {% if o.is_default %}
+-            <span class="muted">Not applicable</span>
+-            <i class="icon-question-sign get-help hover-help" title="" data-original-title="This project does not have a machine set. It simply collects information about the builds you start from the command line while Toaster is running" style="visibility: hidden;"></i>
+-        {% else %}
+-            <a href="{% url 'project' o.id %}#machine-distro">{{o.get_current_machine_name}}</a>
+-        {% endif %}
+-      </td>
+-      {% if o.get_number_of_builds == 0 %}
+-      <td class="muted">{{o.get_number_of_builds}}</td>
+-      <td class="loutcome"></td>
+-      <td class="ltarget"></td>
+-      <td class="lerrors"></td>
+-      <td class="lwarnings"></td>
+-      <td class="limagefiles"></td>
+-      {% else %}
+-      <td><a href="{% url 'projectbuilds' o.id %}">{{o.get_number_of_builds}}</a></td>
+-      <td class="loutcome"><a href="{% url "builddashboard" o.get_last_build_id %}">{%if o.get_last_outcome == build_SUCCEEDED%}<i class="icon-ok-sign success"></i>{%elif o.get_last_outcome == build_FAILED%}<i class="icon-minus-sign error"></i>{%else%}{%endif%}</a></td>
+-      <td class="ltarget"><a href="{% url "builddashboard" o.get_last_build_id %}">{{o.get_last_target}} </a></td>
+-      <td class="lerrors">{% if o.get_last_errors %}<a class="errors.count error" href="{% url "builddashboard" o.get_last_build_id %}#errors">{{o.get_last_errors}} error{{o.get_last_errors|pluralize}}</a>{%endif%}</td>
+-      <td class="lwarnings">{% if o.get_last_warnings %}<a class="warnings.count warning" href="{% url "builddashboard" o.get_last_build_id %}#warnings">{{o.get_last_warnings}} warning{{o.get_last_warnings|pluralize}}</a>{%endif%}</td>
+-      <td class="limagefiles">
+-        {% if o.get_last_outcome == build_SUCCEEDED %}
+-        <a href="{%url "builddashboard" o.get_last_build_id %}#images">{{fstypes|get_dict_value:o.id}}</a>
+-        {% endif %}
+-      </td>
+-
+-      {% endif %}
+-    </tr>
+-  {% endfor %}
+-  {% include "basetable_bottom.html" %}
+-  {% endif %} {# empty #}
+-
+-{% endblock %}
+-
+-
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 3e8a66b..4f7b50f 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -92,50 +92,6 @@ def landing(request):
  
-     def setup_queryset(self, *args, **kwargs):
-+        """
-+        The queryset is annotated so that it can be sorted by number of
-+        errors and number of warnings; but note that the criteria for
-+        finding the log messages to populate these fields should match those
-+        used in the Build model (orm/models.py) to populate the errors and
-+        warnings properties
-+        """
-         queryset = self.get_builds()
+     return render(request, 'landing.html', context)
  
-         # don't include in progress builds
-@@ -935,20 +942,27 @@ class BuildsTable(ToasterTable):
-         # sort
-         queryset = queryset.order_by(self.default_orderby)
+-"""
+-# returns a list for most recent builds;
+-def _get_latest_builds(prj=None):
+-    queryset = Build.objects.all()
+-
+-    if prj is not None:
+-        queryset = queryset.filter(project = prj)
+-
+-    return list(itertools.chain(
+-        queryset.filter(outcome=Build.IN_PROGRESS).order_by("-started_on"),
+-        queryset.filter(outcome__lt=Build.IN_PROGRESS).order_by("-started_on")[:3] ))
+-"""
+-
+-"""
+-# a JSON-able dict of recent builds; for use in the Project page, xhr_ updates,  and other places, as needed
+-def _project_recent_build_list(prj):
+-    data = []
+-    # take the most recent 3 completed builds, plus any builds in progress
+-    for x in _get_latest_builds(prj):
+-        d = {
+-            "id":  x.pk,
+-            "targets" : map(lambda y: {"target": y.target, "task": y.task }, x.target_set.all()), # TODO: create the task entry in the Target table
+-            "status": x.get_current_status(),
+-            "errors": map(lambda y: {"type": y.lineno, "msg": y.message, "tb": y.pathname}, (x.logmessage_set.filter(level__gte=LogMessage.WARNING)|x.logmessage_set.filter(level=LogMessage.EXCEPTION))),
+-            "updated": x.completed_on.strftime('%s')+"000",
+-            "command_time": (x.completed_on - x.started_on).total_seconds(),
+-            "br_page_url": reverse('builddashboard', args=(x.pk,) ),
+-            "build" : map( lambda y: {"id": y.pk,
+-                        "status": y.get_outcome_display(),
+-                        "completed_on" : y.completed_on.strftime('%s')+"000",
+-                        "build_time" : (y.completed_on - y.started_on).total_seconds(),
+-                        "build_page_url" : reverse('builddashboard', args=(y.pk,)),
+-                        'build_time_page_url': reverse('buildtime', args=(y.pk,)),
+-                        "errors": y.errors.count(),
+-                        "warnings": y.warnings.count(),
+-                        "completeper": y.completeper() if y.outcome == Build.IN_PROGRESS else "0",
+-                        "eta": y.eta().strftime('%s')+"000" if y.outcome == Build.IN_PROGRESS else "0",
+-                        }, [x]),
+-            }
+-        data.append(d)
+-
+-    return data
+-"""
+-
+ def objtojson(obj):
+     from django.db.models.query import QuerySet
+     from django.db.models import Model
+@@ -1919,215 +1875,6 @@ if True:
+         ''' The exception raised on invalid POST requests '''
+         pass
  
+-    """
+-    # helper function, to be used on "all builds" and "project builds" pages
+-    def _build_list_helper(request, queryset_all, redirect_page, pid=None):
+-        default_orderby = 'completed_on:-'
+-        (pagesize, orderby) = _get_parameters_values(request, 10, default_orderby)
+-        mandatory_parameters = { 'count': pagesize,  'page' : 1, 'orderby' : orderby }
+-        retval = _verify_parameters( request.GET, mandatory_parameters )
+-        if retval:
+-            params = {}
+-            if pid:
+-                params = {'pid': pid}
+-            raise RedirectException(redirect_page,
+-                                    request.GET,
+-                                    mandatory_parameters,
+-                                    **params)
+-
+-        # boilerplate code that takes a request for an object type and returns a queryset
+-        # for that object type. copypasta for all needed table searches
+-        (filter_string, search_term, ordering_string) = _search_tuple(request, Build)
+-
+-        # post-process any date range filters
+-        filter_string, daterange_selected = _modify_date_range_filter(filter_string)
+-
+-        # don't show "in progress" builds in "all builds" or "project builds"
+-        queryset_all = queryset_all.exclude(outcome = Build.IN_PROGRESS)
+-
+-        # append project info
+-        queryset_all = queryset_all.select_related("project")
+-
 -        # annotate with number of ERROR and EXCEPTION log messages
-+        # annotate with number of ERROR, EXCEPTION and CRITICAL log messages
-+        criteria = (Q(logmessage__level=LogMessage.ERROR) |
-+                    Q(logmessage__level=LogMessage.EXCEPTION) |
-+                    Q(logmessage__level=LogMessage.CRITICAL))
-+
-         queryset = queryset.annotate(
+-        queryset_all = queryset_all.annotate(
 -            errors_no = Count(
 -                'logmessage',
--                only = Q(logmessage__level=LogMessage.ERROR) |
--                       Q(logmessage__level=LogMessage.EXCEPTION)
-+            errors_no=Count(
-+                Case(
-+                    When(criteria, then=Value(1)),
-+                    output_field=IntegerField()
-+                )
-             )
-         )
- 
-         # annotate with number of WARNING log messages
-         queryset = queryset.annotate(
--            warnings_no = Count(
--                'logmessage',
--                only = Q(logmessage__level=LogMessage.WARNING)
-+            warnings_no=Count(
-+                Case(
-+                    When(logmessage__level=LogMessage.WARNING, then=Value(1)),
-+                    output_field=IntegerField()
-+                )
-             )
-         )
- 
-@@ -1020,17 +1034,17 @@ class BuildsTable(ToasterTable):
-         '''
- 
-         errors_template = '''
--        {% if data.errors.count %}
-+        {% if data.errors_no %}
-             <a class="errors.count error" href="{% url "builddashboard" data.id %}#errors">
--                {{data.errors.count}} error{{data.errors.count|pluralize}}
-+                {{data.errors_no}} error{{data.errors_no|pluralize}}
-             </a>
-         {% endif %}
-         '''
- 
-         warnings_template = '''
--        {% if data.warnings.count %}
-+        {% if data.warnings_no %}
-             <a class="warnings.count warning" href="{% url "builddashboard" data.id %}#warnings">
--                {{data.warnings.count}} warning{{data.warnings.count|pluralize}}
-+                {{data.warnings_no}} warning{{data.warnings_no|pluralize}}
-             </a>
-         {% endif %}
-         '''
-diff --git a/lib/toaster/toastermain/settings.py b/lib/toaster/toastermain/settings.py
-index 74103f3..c4f3d6b 100644
---- a/lib/toaster/toastermain/settings.py
-+++ b/lib/toaster/toastermain/settings.py
-@@ -399,12 +399,3 @@ class InvalidString(str):
-             "Undefined variable or unknown value for: \"%s\"" % other)
- 
- TEMPLATE_STRING_IF_INVALID = InvalidString("%s")
+-                only=Q(logmessage__level=LogMessage.ERROR) |
+-                     Q(logmessage__level=LogMessage.EXCEPTION)
+-            )
+-        )
 -
--import sys
--sys.path.append(
--    os.path.join(
--    os.path.join(
--        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
--            "contrib"),
--            "django-aggregate-if-master")
--    )
+-        # annotate with number of warnings
+-        q_warnings = Q(logmessage__level=LogMessage.WARNING)
+-        queryset_all = queryset_all.annotate(
+-            warnings_no = Count('logmessage', only=q_warnings)
+-        )
+-
+-        queryset_with_search = _get_queryset(Build, queryset_all,
+-                                             None, search_term,
+-                                             ordering_string, '-completed_on')
+-
+-        queryset = _get_queryset(Build, queryset_all,
+-                                 filter_string, search_term,
+-                                 ordering_string, '-completed_on')
+-
+-        # retrieve the objects that will be displayed in the table; builds a paginator and gets a page range to display
+-        build_info = _build_page_range(Paginator(queryset, pagesize), request.GET.get('page', 1))
+-
+-        # build view-specific information; this is rendered specifically in the builds page, at the top of the page (i.e. Recent builds)
+-        build_mru = _get_latest_builds()[:3]
+-
+-        # calculate the exact begining of local today and yesterday, append context
+-        context_date,today_begin,yesterday_begin = _add_daterange_context(queryset_all, request, {'started_on','completed_on'})
+-
+-        # set up list of fstypes for each build
+-        fstypes_map = {}
+-
+-        for build in build_info:
+-            fstypes_map[build.id] = build.get_image_file_extensions()
+-
+-        # send the data to the template
+-        context = {
+-                # specific info for
+-                    'mru' : build_mru,
+-                # TODO: common objects for all table views, adapt as needed
+-                    'objects' : build_info,
+-                    'objectname' : "builds",
+-                    'default_orderby' : default_orderby,
+-                    'fstypes' : fstypes_map,
+-                    'search_term' : search_term,
+-                    'total_count' : queryset_with_search.count(),
+-                    'daterange_selected' : daterange_selected,
+-                # Specifies the display of columns for the table, appearance in "Edit columns" box, toggling default show/hide, and specifying filters for columns
+-                    'tablecols' : [
+-                    {'name': 'Outcome',                                                # column with a single filter
+-                     'qhelp' : "The outcome tells you if a build successfully completed or failed",     # the help button content
+-                     'dclass' : "span2",                                                # indication about column width; comes from the design
+-                     'orderfield': _get_toggle_order(request, "outcome"),               # adds ordering by the field value; default ascending unless clicked from ascending into descending
+-                     'ordericon':_get_toggle_order_icon(request, "outcome"),
+-                      # filter field will set a filter on that column with the specs in the filter description
+-                      # the class field in the filter has no relation with clclass; the control different aspects of the UI
+-                      # still, it is recommended for the values to be identical for easy tracking in the generated HTML
+-                     'filter' : {'class' : 'outcome',
+-                                 'label': 'Show:',
+-                                 'options' : [
+-                                             ('Successful builds', 'outcome:' + str(Build.SUCCEEDED), queryset_with_search.filter(outcome=str(Build.SUCCEEDED)).count()),  # this is the field search expression
+-                                             ('Failed builds', 'outcome:'+ str(Build.FAILED), queryset_with_search.filter(outcome=str(Build.FAILED)).count()),
+-                                             ]
+-                                }
+-                    },
+-                    {'name': 'Recipe',                                                 # default column, disabled box, with just the name in the list
+-                     'qhelp': "What you built (i.e. one or more recipes or image recipes)",
+-                     'orderfield': _get_toggle_order(request, "target__target"),
+-                     'ordericon':_get_toggle_order_icon(request, "target__target"),
+-                    },
+-                    {'name': 'Machine',
+-                     'qhelp': "The machine is the hardware for which you are building a recipe or image recipe",
+-                     'orderfield': _get_toggle_order(request, "machine"),
+-                     'ordericon':_get_toggle_order_icon(request, "machine"),
+-                     'dclass': 'span3'
+-                    },                           # a slightly wider column
+-                    {'name': 'Started on', 'clclass': 'started_on', 'hidden' : 1,      # this is an unchecked box, which hides the column
+-                     'qhelp': "The date and time you started the build",
+-                     'orderfield': _get_toggle_order(request, "started_on", True),
+-                     'ordericon':_get_toggle_order_icon(request, "started_on"),
+-                     'orderkey' : "started_on",
+-                     'filter' : {'class' : 'started_on',
+-                                 'label': 'Show:',
+-                                 'options' : [
+-                                             ("Today's builds" , 'started_on__gte:'+today_begin.strftime("%Y-%m-%d"), queryset_all.filter(started_on__gte=today_begin).count()),
+-                                             ("Yesterday's builds",
+-                                                 'started_on__gte!started_on__lt:'
+-                                                     +yesterday_begin.strftime("%Y-%m-%d")+'!'
+-                                                     +today_begin.strftime("%Y-%m-%d"),
+-                                                 queryset_all.filter(
+-                                                     started_on__gte=yesterday_begin,
+-                                                     started_on__lt=today_begin
+-                                                     ).count()),
+-                                             ("Build date range", 'daterange', 1, '', 'started_on'),
+-                                             ]
+-                                }
+-                     },
+-                    {'name': 'Completed on',
+-                     'qhelp': "The date and time the build finished",
+-                     'orderfield': _get_toggle_order(request, "completed_on", True),
+-                     'ordericon':_get_toggle_order_icon(request, "completed_on"),
+-                     'orderkey' : 'completed_on',
+-                     'filter' : {'class' : 'completed_on',
+-                                 'label': 'Show:',
+-                                 'options' : [
+-                                             ("Today's builds" , 'completed_on__gte:'+today_begin.strftime("%Y-%m-%d"), queryset_all.filter(completed_on__gte=today_begin).count()),
+-                                             ("Yesterday's builds",
+-                                                 'completed_on__gte!completed_on__lt:'
+-                                                     +yesterday_begin.strftime("%Y-%m-%d")+'!'
+-                                                     +today_begin.strftime("%Y-%m-%d"),
+-                                                 queryset_all.filter(
+-                                                     completed_on__gte=yesterday_begin,
+-                                                     completed_on__lt=today_begin
+-                                                     ).count()),
+-                                             ("Build date range", 'daterange', 1, '', 'completed_on'),
+-                                             ]
+-                                }
+-                    },
+-                    {'name': 'Failed tasks', 'clclass': 'failed_tasks',                # specifing a clclass will enable the checkbox
+-                     'qhelp': "How many tasks failed during the build",
+-                     'filter' : {'class' : 'failed_tasks',
+-                                 'label': 'Show:',
+-                                 'options' : [
+-                                             ('Builds with failed tasks', 'task_build__outcome:4', queryset_with_search.filter(task_build__outcome=4).count()),
+-                                             ('Builds without failed tasks', 'task_build__outcome:NOT4', queryset_with_search.filter(~Q(task_build__outcome=4)).count()),
+-                                             ]
+-                                }
+-                    },
+-                    {'name': 'Errors', 'clclass': 'errors_no',
+-                     'qhelp': "How many errors were encountered during the build (if any)",
+-                     # Comment out sorting and filter until YOCTO #8131 is fixed
+-                     #'orderfield': _get_toggle_order(request, "errors_no", True),
+-                     #'ordericon':_get_toggle_order_icon(request, "errors_no"),
+-                     #'orderkey' : 'errors_no',
+-                     #'filter' : {'class' : 'errors_no',
+-                     #            'label': 'Show:',
+-                     #            'options' : [
+-                     #                        ('Builds with errors', 'errors_no__gte:1', queryset_with_search.filter(errors_no__gte=1).count()),
+-                     #                        ('Builds without errors', 'errors_no:0', queryset_with_search.filter(errors_no=0).count()),
+-                     #                        ]
+-                     #           }
+-                    },
+-                    {'name': 'Warnings', 'clclass': 'warnings_no',
+-                     'qhelp': "How many warnings were encountered during the build (if any)",
+-                     # Comment out sorting and filter until YOCTO #8131 is fixed
+-                     #'orderfield': _get_toggle_order(request, "warnings_no", True),
+-                     #'ordericon':_get_toggle_order_icon(request, "warnings_no"),
+-                     #'orderkey' : 'warnings_no',
+-                     #'filter' : {'class' : 'warnings_no',
+-                     #            'label': 'Show:',
+-                     #            'options' : [
+-                     #                        ('Builds with warnings','warnings_no__gte:1', queryset_with_search.filter(warnings_no__gte=1).count()),
+-                     #                        ('Builds without warnings','warnings_no:0', queryset_with_search.filter(warnings_no=0).count()),
+-                     #                        ]
+-                     #           }
+-                    },
+-                    {'name': 'Time', 'clclass': 'time', 'hidden' : 1,
+-                     'qhelp': "How long it took the build to finish",
+-                     # Comment out sorting until YOCTO #8131 is fixed
+-                     #'orderfield': _get_toggle_order(request, "timespent", True),
+-                     #'ordericon':_get_toggle_order_icon(request, "timespent"),
+-                     #'orderkey' : 'timespent',
+-                    },
+-                    {'name': 'Image files', 'clclass': 'output',
+-                     'qhelp': "The root file system types produced by the build. You can find them in your <code>/build/tmp/deploy/images/</code> directory",
+-                        # TODO: compute image fstypes from Target_Image_File
+-                    }
+-                    ]
+-                }
+-
+-        # merge daterange values
+-        context.update(context_date)
+-        return context, pagesize, orderby
+-    """
+-
+-
+-
+     # new project
+     def newproject(request):
+         template = "newproject.html"
+@@ -2829,64 +2576,6 @@ if True:
+ 
+         return context
+ 
+-    # WARNING _build_list_helper() may raise a RedirectException, which
+-    # will set the GET parameters and redirect back to the
+-    # all-builds or projectbuilds page as appropriate;
+-    # TODO don't use exceptions to control program flow
+-    """
+-    def projectbuilds(request, pid):
+-        if request.method == "POST":
+-            # process any build request
+-
+-            if 'buildCancel' in request.POST:
+-                for i in request.POST['buildCancel'].strip().split(" "):
+-                    try:
+-                        br = BuildRequest.objects.select_for_update().get(project = prj, pk = i, state__lte = BuildRequest.REQ_QUEUED)
+-                        br.state = BuildRequest.REQ_DELETED
+-                        br.save()
+-                    except BuildRequest.DoesNotExist:
+-                        pass
+-
+-            if 'buildDelete' in request.POST:
+-                for i in request.POST['buildDelete'].strip().split(" "):
+-                    try:
+-                        BuildRequest.objects.select_for_update().get(project = prj, pk = i, state__lte = BuildRequest.REQ_DELETED).delete()
+-                    except BuildRequest.DoesNotExist:
+-                        pass
+-
+-            if 'targets' in request.POST:
+-                ProjectTarget.objects.filter(project = prj).delete()
+-                s = str(request.POST['targets'])
+-                for t in s.translate(None, ";%|\"").split(" "):
+-                    if ":" in t:
+-                        target, task = t.split(":")
+-                    else:
+-                        target = t
+-                        task = ""
+-                    ProjectTarget.objects.create(project = prj,
+-                                                 target = target,
+-                                                 task = task)
+-                prj.schedule_build()
+-
+-        queryset = Build.objects.filter(project_id = pid)
+-
+-        redirect_page = resolve(request.path_info).url_name
+-
+-        context, pagesize, orderby = _build_list_helper(request,
+-                                                        queryset,
+-                                                        redirect_page,
+-                                                        pid)
+-
+-        context['project'] = prj
+-        _set_parameters_values(pagesize, orderby, request)
+-
+-        # add the most recent builds for this project
+-        context['mru'] = _get_latest_builds(prj)
+-
+-        return context
+-    """
+-
+-
+     def _file_name_for_artifact(b, artifact_type, artifact_id):
+         file_name = None
+         # Target_Image_File file_name
+@@ -2962,122 +2651,3 @@ if True:
+                 'build' : Build.objects.get(pk = build_id),
+             }
+             return render(request, "unavailable_artifact.html", context)
+-
+-    """
+-    @_template_renderer("projects.html")
+-    def projects(request):
+-        (pagesize, orderby) = _get_parameters_values(request, 10, 'updated:-')
+-        mandatory_parameters = { 'count': pagesize,  'page' : 1, 'orderby' : orderby }
+-        retval = _verify_parameters( request.GET, mandatory_parameters )
+-        if retval:
+-            raise RedirectException( 'all-projects', request.GET, mandatory_parameters )
+-
+-        queryset_all = Project.objects.all()
+-
+-        # annotate each project with its number of builds
+-        queryset_all = queryset_all.annotate(num_builds=Count('build'))
+-
+-        # exclude the command line builds project if it has no builds
+-        q_default_with_builds = Q(is_default=True) & Q(num_builds__gt=0)
+-        queryset_all = queryset_all.filter(Q(is_default=False) |
+-                                           q_default_with_builds)
+-
+-        # boilerplate code that takes a request for an object type and returns a queryset
+-        # for that object type. copypasta for all needed table searches
+-        (filter_string, search_term, ordering_string) = _search_tuple(request, Project)
+-        queryset_with_search = _get_queryset(Project, queryset_all, None, search_term, ordering_string, '-updated')
+-        queryset = _get_queryset(Project, queryset_all, filter_string, search_term, ordering_string, '-updated')
+-
+-        # retrieve the objects that will be displayed in the table; projects a paginator and gets a page range to display
+-        project_info = _build_page_range(Paginator(queryset, pagesize), request.GET.get('page', 1))
+-
+-        # add fields needed in JSON dumps for API call support
+-        for p in project_info.object_list:
+-            p.id = p.pk
+-            p.projectPageUrl = reverse('project', args=(p.id,))
+-            p.layersTypeAheadUrl = reverse('xhr_layerstypeahead', args=(p.id,))
+-            p.recipesTypeAheadUrl = reverse('xhr_recipestypeahead', args=(p.id,))
+-            p.projectBuildsUrl = reverse('projectbuilds', args=(p.id,))
+-
+-        # build view-specific information; this is rendered specifically in the builds page, at the top of the page (i.e. Recent builds)
+-        build_mru = _get_latest_builds()
+-
+-        # translate the project's build target strings
+-        fstypes_map = {};
+-        for project in project_info:
+-            try:
+-                targets = Target.objects.filter( build_id = project.get_last_build_id() )
+-                comma = "";
+-                extensions = "";
+-                for t in targets:
+-                    if ( not t.is_image ):
+-                        continue
+-                    tif = Target_Image_File.objects.filter( target_id = t.id )
+-                    for i in tif:
+-                        s=re.sub('.*tar.bz2', 'tar.bz2', i.file_name)
+-                        if s == i.file_name:
+-                            s=re.sub('.*\.', '', i.file_name)
+-                        if None == re.search(s,extensions):
+-                            extensions += comma + s
+-                            comma = ", "
+-                fstypes_map[project.id]=extensions
+-            except (Target.DoesNotExist,IndexError):
+-                fstypes_map[project.id]=project.get_last_imgfiles
+-
+-        context = {
+-                'mru' : build_mru,
+-
+-                'objects' : project_info,
+-                'objectname' : "projects",
+-                'default_orderby' : 'id:-',
+-                'search_term' : search_term,
+-                'total_count' : queryset_with_search.count(),
+-                'fstypes' : fstypes_map,
+-                'build_FAILED' : Build.FAILED,
+-                'build_SUCCEEDED' : Build.SUCCEEDED,
+-                'tablecols': [
+-                    {'name': 'Project',
+-                    'orderfield': _get_toggle_order(request, "name"),
+-                    'ordericon':_get_toggle_order_icon(request, "name"),
+-                    'orderkey' : 'name',
+-                    },
+-                    {'name': 'Last activity on',
+-                    'clclass': 'updated',
+-                    'qhelp': "Shows the starting date and time of the last project build. If the project has no builds, it shows the date the project was created",
+-                    'orderfield': _get_toggle_order(request, "updated", True),
+-                    'ordericon':_get_toggle_order_icon(request, "updated"),
+-                    'orderkey' : 'updated',
+-                    },
+-                    {'name': 'Release',
+-                    'qhelp' : "The version of the build system used by the project",
+-                    'orderfield': _get_toggle_order(request, "release__name"),
+-                    'ordericon':_get_toggle_order_icon(request, "release__name"),
+-                    'orderkey' : 'release__name',
+-                    },
+-                    {'name': 'Machine',
+-                    'qhelp': "The hardware currently selected for the project",
+-                    },
+-                    {'name': 'Number of builds',
+-                    'qhelp': "How many builds have been run for the project",
+-                    },
+-                    {'name': 'Last build outcome', 'clclass': 'loutcome',
+-                    'qhelp': "Tells you if the last project build completed successfully or failed",
+-                    },
+-                    {'name': 'Recipe', 'clclass': 'ltarget',
+-                    'qhelp': "The last recipe that was built in this project",
+-                    },
+-                    {'name': 'Errors', 'clclass': 'lerrors',
+-                    'qhelp': "How many errors were encountered during the last project build (if any)",
+-                    },
+-                    {'name': 'Warnings', 'clclass': 'lwarnings',
+-                    'qhelp': "How many warnigns were encountered during the last project build (if any)",
+-                    },
+-                    {'name': 'Image files', 'clclass': 'limagefiles', 'hidden': 1,
+-                    'qhelp': "The root file system types produced by the last project build",
+-                    },
+-                    ]
+-            }
+-
+-        _set_parameters_values(pagesize, orderby, request)
+-        return context
+-    """
 -- 
 2.1.4
 
