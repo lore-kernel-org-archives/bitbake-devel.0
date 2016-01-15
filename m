@@ -1,28 +1,28 @@
 Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-	by mail.openembedded.org (Postfix) with ESMTP id BB10375CC2
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id D125D75C60
 	for <bitbake-devel@lists.openembedded.org>;
 	Fri, 15 Jan 2016 12:58:19 +0000 (UTC)
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-	by orsmga101.jf.intel.com with ESMTP; 15 Jan 2016 04:58:13 -0800
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+	by orsmga102.jf.intel.com with ESMTP; 15 Jan 2016 04:58:22 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="633907020"
+X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="861139075"
 Received: from linux.intel.com ([10.23.219.25])
-	by FMSMGA003.fm.intel.com with ESMTP; 15 Jan 2016 04:58:13 -0800
+	by orsmga001.jf.intel.com with ESMTP; 15 Jan 2016 04:58:22 -0800
 Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id 2F9736A4004
+	by linux.intel.com (Postfix) with ESMTP id 22AE86A4004
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 05:46:08 -0800 (PST)
+	Fri, 15 Jan 2016 05:46:16 -0800 (PST)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 15 Jan 2016 13:00:45 +0200
-Message-Id: <c68a352d5eb8ec52d323c3bf7c4a79361823c645.1452855461.git.ed.bartosh@linux.intel.com>
+Date: Fri, 15 Jan 2016 13:00:52 +0200
+Message-Id: <c287a9ef6e92482a64d4bb8bb225a6e26376c997.1452855461.git.ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
-Subject: [PATCH 02/23] toaster: move image file suffix list to model
+Subject: [PATCH 09/23] toaster: toastergui: show recent builds on all builds page
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,68 +35,98 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Jan 2016 12:58:19 -0000
+X-List-Received-Date: Fri, 15 Jan 2016 12:58:20 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-Image file suffixes are used in the project configuration page to
-show a list of available image file types. This list is stored
-as a function in the views code.
+The recent builds section was disabled while converting the
+all builds page to ToasterTable.
 
-However, this list is also needed when parsing image file paths,
-so that the suffixes can be shown in the "all builds" and "project
-builds" tables.
-
-Move the list of valid image file suffixes to the Target_Image_File
-class to make is accessible in other places where it may be needed.
+Re-enable the recent builds area and add the data it requires
+to the ToasterTable context.
 
 [YOCTO #8738]
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- lib/toaster/orm/models.py       | 9 +++++++++
- lib/toaster/toastergui/views.py | 7 +------
- 2 files changed, 10 insertions(+), 6 deletions(-)
+ lib/toaster/toastergui/tables.py                       | 18 +++++++++++++++++-
+ .../toastergui/templates/builds-toastertable.html      | 10 +++++-----
+ lib/toaster/toastergui/templates/mrb_section.html      |  2 +-
+ 3 files changed, 23 insertions(+), 7 deletions(-)
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index e4ab0bb..7e0cf96 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -461,6 +461,15 @@ class Target(models.Model):
-         return self.target
+diff --git a/lib/toaster/toastergui/tables.py b/lib/toaster/toastergui/tables.py
+index a0991ec..0941637 100644
+--- a/lib/toaster/toastergui/tables.py
++++ b/lib/toaster/toastergui/tables.py
+@@ -27,6 +27,7 @@ from django.db.models import Q, Max, Count
+ from django.conf.urls import url
+ from django.core.urlresolvers import reverse
+ from django.views.generic import TemplateView
++import itertools
  
- class Target_Image_File(models.Model):
-+    # valid suffixes for image files produced by a build
-+    SUFFIXES = {
-+        'btrfs', 'cpio', 'cpio.gz', 'cpio.lz4', 'cpio.lzma', 'cpio.xz',
-+        'cramfs', 'elf', 'ext2', 'ext2.bz2', 'ext2.gz', 'ext2.lzma', 'ext4',
-+        'ext4.gz', 'ext3', 'ext3.gz', 'hddimg', 'iso', 'jffs2', 'jffs2.sum',
-+        'squashfs', 'squashfs-lzo', 'squashfs-xz', 'tar.bz2', 'tar.lz4',
-+        'tar.xz', 'tartar.gz', 'ubi', 'ubifs', 'vmdk'
-+    }
+ from toastergui.tablefilter import TableFilter, TableFilterActionToggle
+ 
+@@ -887,7 +888,22 @@ class BuildsTable(ToasterTable):
+         self.static_context_extra['Task'] = Task
+ 
+     def get_context_data(self, **kwargs):
+-        return super(BuildsTable, self).get_context_data(**kwargs)
++        context = super(BuildsTable, self).get_context_data(**kwargs)
 +
-     target = models.ForeignKey(Target)
-     file_name = models.FilePathField(max_length=254)
-     file_size = models.IntegerField()
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index bd334b9..4cd7afd 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -2808,12 +2808,7 @@ if True:
-             'all_proxy','ftp_proxy','http_proxy ','https_proxy'
-             }
++        # for the latest builds section
++        queryset = Build.objects.all()
++
++        finished_criteria = Q(outcome=Build.SUCCEEDED) | Q(outcome=Build.FAILED)
++
++        latest_builds = itertools.chain(
++            queryset.filter(outcome=Build.IN_PROGRESS).order_by("-started_on"),
++            queryset.filter(finished_criteria).order_by("-completed_on")[:3]
++        )
++
++        context['mru'] = list(latest_builds)
++        context['mrb_type'] = 'all'
++
++        return context
  
--        vars_fstypes  = {
--            'btrfs','cpio','cpio.gz','cpio.lz4','cpio.lzma','cpio.xz','cramfs',
--            'elf','ext2','ext2.bz2','ext2.gz','ext2.lzma', 'ext4', 'ext4.gz', 'ext3','ext3.gz','hddimg',
--            'iso','jffs2','jffs2.sum','squashfs','squashfs-lzo','squashfs-xz','tar.bz2',
--            'tar.lz4','tar.xz','tartar.gz','ubi','ubifs','vmdk'
--        }
-+        vars_fstypes = Target_Image_File.SUFFIXES
+     def setup_queryset(self, *args, **kwargs):
+         queryset = Build.objects.all()
+diff --git a/lib/toaster/toastergui/templates/builds-toastertable.html b/lib/toaster/toastergui/templates/builds-toastertable.html
+index 419d2b5..f7604fd 100644
+--- a/lib/toaster/toastergui/templates/builds-toastertable.html
++++ b/lib/toaster/toastergui/templates/builds-toastertable.html
+@@ -3,13 +3,13 @@
+ {% block title %} All builds - Toaster {% endblock %}
  
-         return(vars_managed,sorted(vars_fstypes),vars_blacklist)
+ {% block pagecontent %}
+-  <div class="page-header top-air">
+-    <h1 data-role="page-title"></h1>
+-  </div>
  
+   <div class="row-fluid">
+-    {# TODO need to pass this data to context #}
+-    {#% include 'mrb_section.html' %#}
++    {% with mru=mru mrb_type=mrb_type %}
++      {% include 'mrb_section.html' %}
++    {% endwith %}
++
++    <h1  class="page-header top-air" data-role="page-title"></h1>
+ 
+     {% url 'builds' as xhr_table_url %}
+     {% include 'toastertable.html' %}
+diff --git a/lib/toaster/toastergui/templates/mrb_section.html b/lib/toaster/toastergui/templates/mrb_section.html
+index bd8f991..52b3f1a 100644
+--- a/lib/toaster/toastergui/templates/mrb_section.html
++++ b/lib/toaster/toastergui/templates/mrb_section.html
+@@ -14,7 +14,7 @@
+       {% endif %}
+       </h2>
+   {% else %}
+-    <div class="page-header">
++    <div class="page-header top-air">
+       <h1>
+       Latest builds
+       </h1>
 -- 
 2.1.4
 
