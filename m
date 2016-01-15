@@ -1,28 +1,37 @@
-Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id 0B21876988
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 21EAD60767
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 12:58:36 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga104.fm.intel.com with ESMTP; 15 Jan 2016 04:58:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="881987256"
-Received: from linux.intel.com ([10.23.219.25])
-	by fmsmga001.fm.intel.com with ESMTP; 15 Jan 2016 04:58:37 -0800
-Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id 321CD6A4004
-	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 05:46:32 -0800 (PST)
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Fri, 15 Jan 2016 13:01:06 +0200
-Message-Id: <b53df3ca03c0679117c070c5251cbe6426d23a35.1452855461.git.ed.bartosh@linux.intel.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
-References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
-In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
-References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
-Subject: [PATCH 23/23] toaster: toastergui: code formatting and clean-up
+	Fri, 15 Jan 2016 15:05:01 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u0FF4x2l028321; Fri, 15 Jan 2016 15:04:59 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id wVP_UGRQ5JNQ; Fri, 15 Jan 2016 15:04:59 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u0FF4sQV028317
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 15 Jan 2016 15:04:56 GMT
+Message-ID: <1452870294.28375.167.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Peter Kjellerstedt <peter.kjellerstedt@axis.com>, Olof Johansson
+	<olofjn@axis.com>, Andre McCurdy <armccurdy@gmail.com>, bitbake-devel
+	<bitbake-devel@lists.openembedded.org>
+Date: Fri, 15 Jan 2016 15:04:54 +0000
+In-Reply-To: <36fc0893749647d8aeef0cc8cfd68435@XBOX02.axis.com>
+References: <1452172732.7598.114.camel@linuxfoundation.org>
+	<CAJ86T=Xb6HHZm0BaqtGeCUknP1_dTy6t1L7LtZru9F+=j-BmSg@mail.gmail.com>
+	<1452723582.28375.118.camel@linuxfoundation.org>
+	<90f0d7cacc2743e58535b16f6fe316bd@XBOX02.axis.com>
+	<1452785159.28375.135.camel@linuxfoundation.org>
+	<CAJ86T=X9LU04NhjnaLtq+G7WSE6=9t2yiNF2MiuDrnn+M5exLQ@mail.gmail.com>
+	<20160114170752.GH31212@axis.com>
+	<36fc0893749647d8aeef0cc8cfd68435@XBOX02.axis.com>
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: Re: [PATCH] fetch/git: Change to use clearer ssh url syntax for broken servers
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,83 +44,86 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Jan 2016 12:58:36 -0000
+X-List-Received-Date: Fri, 15 Jan 2016 15:05:04 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Elliot Smith <elliot.smith@intel.com>
+On Thu, 2016-01-14 at 17:50 +0000, Peter Kjellerstedt wrote:
+> > -----Original Message-----
+> > From: Olof Johansson
+> > Sent: den 14 januari 2016 18:08
+> > To: Andre McCurdy; Richard Purdie; bitbake-devel
+> > Cc: Peter Kjellerstedt
+> > Subject: Re: [bitbake-devel] [PATCH] fetch/git: Change to use
+> > clearer
+> > ssh url syntax for broken servers
+> > 
+> > On 16-01-14 08:51 -0800, Andre McCurdy wrote:
+> > > > I'm not sure there is one other than special casing bitbucket
+> > > > urls
+> > in
+> > > > the fetcher.
+> > > 
+> > > But I don't think there is any problem with BitBucket. The
+> > > original
+> > > bug report was caused by trying to use a URL with a ':' between
+> > > the
+> > > host and the repo path. A URL like that does not work when
+> > > prefixed
+> > by
+> > > ssh://, it's the same for GitHub URLs too.
+> > 
+> > Indeed, the reported URL is not an RFC 3986 comformant URI. While
+> > 
+> >   ssh://example.com:/username/project.git
+> > 
+> > would be a kind of valid URI (the RFC doesn't forbid having an
+> > empty port, see section 3.2.3), not having a path delimiter at
+> > all however is not allowed. And fixing this by breaking RFC
+> > comformant use cases is very suprising to me.
+> > 
+> > --
+> > olofjn
+> 
+> I have now looked at the ticket [YOCTO #8864] and actually created an
+> account on bitbucket.org to actually verify what is happening, and I 
+> can only come to the conclusion that the ticket is gibberish. I have 
+> tried the following two URL:s with bitbucket.org, and they both work 
+> as expected:
+> 
+> git@bitbucket.org:Saur2000/test1.git
+> ssh://git@bitbucket.org/Saur2000/test1.git
+> 
+> The real error to the SRC_URI given in the ticket:
+> 
+> SRC_URI = "git
+> ://git@bitbucket.org:<username>/<repository>.git;rev=foo"
+> 
+> is that it is missing the protocol argument. Changing it to:
+> 
+> SRC_URI = "git
+> ://git@bitbucket.org/<username>/<repository>.git;protocol=ssh;rev=foo
+> "
+> 
+> should make everything work as expected.
+> 
+> The ticket author obviously did not realize that the git:// scheme 
+> used in the SRC_URI is for BitBake and not for Git, and that when 
+> the protocol=ssh argument is added, then the rest of the URI must 
+> be changed to match the syntax expected by an ssh:// URI even though 
+> the scheme in SRC_URI is git://.
 
-Minor fixes to code formatting and small improvements from
-code review.
+I have also double checked this and I agree, the bitbucket servers do
+now seem to work as you'd expect.
 
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
----
- lib/toaster/orm/models.py        | 12 +++---------
- lib/toaster/toastergui/tables.py |  4 +++-
- lib/toaster/toastergui/views.py  |  5 ++---
- 3 files changed, 8 insertions(+), 13 deletions(-)
+I swear I had problems originally but I can't figure out what those
+were so I will revert the patch.
 
-diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
-index 3dc4d6d..ac2aa9e 100644
---- a/lib/toaster/orm/models.py
-+++ b/lib/toaster/orm/models.py
-@@ -477,15 +477,9 @@ class Build(models.Model):
-         targets in this build
-         """
-         targets = self.target_set.all()
--        target_labels = []
--        target_label = None
--
--        for target in targets:
--            target_label = target.target
--            if target.task:
--                target_label = target_label + ':' + target.task
--            target_labels.append(target_label)
--
-+        target_labels = [target.target +
-+                         (':' + target.task if target.task else '')
-+                         for target in targets]
-         target_labels.sort()
- 
-         return target_labels
-diff --git a/lib/toaster/toastergui/tables.py b/lib/toaster/toastergui/tables.py
-index 2279731..e9f1fdc 100644
---- a/lib/toaster/toastergui/tables.py
-+++ b/lib/toaster/toastergui/tables.py
-@@ -688,7 +688,9 @@ class ProjectsTable(ToasterTable):
- 
-         self.queryset = queryset
- 
--    # columns: last activity on (updated) - DEFAULT, project (name), release, machine, number of builds, last build outcome, recipe (name),  errors, warnings, image files
-+    # columns: last activity on (updated) - DEFAULT, project (name), release,
-+    # machine, number of builds, last build outcome, recipe (name),  errors,
-+    # warnings, image files
-     def setup_columns(self, *args, **kwargs):
-         name_template = '''
-         {% load project_url_tag %}
-diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
-index 4f7b50f..59e16b2 100755
---- a/lib/toaster/toastergui/views.py
-+++ b/lib/toaster/toastergui/views.py
-@@ -462,7 +462,7 @@ def builddashboard( request, build_id ):
-     for t in tgts:
-         elem = { }
-         elem[ 'target' ] = t
--        if ( t.is_image ):
-+        if t.is_image:
-             hasImages = True
-         npkg = 0
-         pkgsz = 0
-@@ -481,8 +481,7 @@ def builddashboard( request, build_id ):
-                 ndx = 0;
-             f = i.file_name[ ndx + 1: ]
-             imageFiles.append({ 'id': i.id, 'path': f, 'size' : i.file_size })
--        if ( t.is_image and
--             (( len( imageFiles ) <= 0 ) or ( len( t.license_manifest_path ) <= 0 ))):
-+        if t.is_image and (len(imageFiles) <= 0 or len(t.license_manifest_path) <= 0):
-             targetHasNoImages = True
-         elem[ 'imageFiles' ] = imageFiles
-         elem[ 'targetHasNoImages' ] = targetHasNoImages
--- 
-2.1.4
+My point about improving the selftests if there are url formats you
+depend upon stands though.
+
+Cheers,
+
+Richard
 
 
