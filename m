@@ -1,28 +1,28 @@
 Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-	by mail.openembedded.org (Postfix) with ESMTP id 7CA1373212
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	by mail.openembedded.org (Postfix) with ESMTP id AB5747327E
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 12:58:11 +0000 (UTC)
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-	by fmsmga102.fm.intel.com with ESMTP; 15 Jan 2016 04:58:11 -0800
+	Fri, 15 Jan 2016 12:58:13 +0000 (UTC)
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+	by fmsmga104.fm.intel.com with ESMTP; 15 Jan 2016 04:58:14 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="881987091"
+X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="893808808"
 Received: from linux.intel.com ([10.23.219.25])
-	by fmsmga001.fm.intel.com with ESMTP; 15 Jan 2016 04:58:12 -0800
+	by fmsmga002.fm.intel.com with ESMTP; 15 Jan 2016 04:58:14 -0800
 Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id 151C16A4004
+	by linux.intel.com (Postfix) with ESMTP id 5373D6A4004
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 05:46:07 -0800 (PST)
+	Fri, 15 Jan 2016 05:46:10 -0800 (PST)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 15 Jan 2016 13:00:44 +0200
-Message-Id: <8ad398a5ea04aaa8ef8a90b125c5f3b288e58a76.1452855461.git.ed.bartosh@linux.intel.com>
+Date: Fri, 15 Jan 2016 13:00:46 +0200
+Message-Id: <0afddadd4685cdcb83aefde0669931f612634630.1452855461.git.ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
-Subject: [PATCH 01/23] toaster: toastergui: use ToasterTable for projects page
+Subject: [PATCH 03/23] toaster: check inferred file suffixes against list of known types
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,336 +35,240 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Jan 2016 12:58:11 -0000
+X-List-Received-Date: Fri, 15 Jan 2016 12:58:13 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-The projects page uses the old approach for showing tables,
-which means a template for each table. This means that applying
-changes to ToasterTable (which is used for most tables) has
-no effect on the layout, styling and behaviour for these older
-tables, and requires additional duplicated effort.
+The algorithm for finding the suffix for image files produced by
+the build doesn't reference a list of known file suffixes, so
+could be prone to error.
 
-Move the projects page to use ToasterTable instead, to remove
-the duplication of effort.
+Modify how file suffixes are parsed from the file path so that
+they are compared against a list of known types; if this fails,
+use the part of the basename of the file path after the first
+'.' character.
 
-[YOCTO #8738]
+Also rationalise the places in the views code where we
+extract the file name extensions for builds, so they both use
+the same algorithm (before, the same code was duplicated in
+two places).
+
+[YOCTO #8417]
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- lib/toaster/toastergui/tables.py                   | 226 ++++++++++++++++++++-
- .../templates/projects-toastertable.html           |  36 ++++
- lib/toaster/toastergui/urls.py                     |   6 +
- 3 files changed, 265 insertions(+), 3 deletions(-)
- create mode 100644 bitbake/lib/toaster/toastergui/templates/projects-toastertable.html
+ lib/toaster/orm/models.py        | 68 ++++++++++++++++++++++++++++++++++++++--
+ lib/toaster/toastergui/tables.py |  8 ++---
+ lib/toaster/toastergui/views.py  | 38 +++-------------------
+ 3 files changed, 73 insertions(+), 41 deletions(-)
 
+diff --git a/lib/toaster/orm/models.py b/lib/toaster/orm/models.py
+index 7e0cf96..b7975ef 100644
+--- a/lib/toaster/orm/models.py
++++ b/lib/toaster/orm/models.py
+@@ -29,6 +29,9 @@ from django.core import validators
+ from django.conf import settings
+ import django.db.models.signals
+ 
++import os.path
++import re
++
+ import logging
+ logger = logging.getLogger("toaster")
+ 
+@@ -234,6 +237,14 @@ class Project(models.Model):
+         except (Build.DoesNotExist,IndexError):
+             return( "not_found" )
+ 
++    def get_last_build_extensions(self):
++        """
++        Get list of file name extensions for images produced by the most
++        recent build
++        """
++        last_build = Build.objects.get(pk = self.get_last_build_id())
++        return last_build.get_image_file_extensions()
++
+     def get_last_imgfiles(self):
+         build_id = self.get_last_build_id
+         if (-1 == build_id):
+@@ -376,6 +387,57 @@ class Build(models.Model):
+             eta += ((eta - self.started_on)*(100-completeper))/completeper
+         return eta
+ 
++    def get_image_file_extensions(self):
++        """
++        Get list of file name extensions for images produced by this build
++        """
++        targets = Target.objects.filter(build_id = self.id)
++        extensions = []
++
++        # pattern to match against file path for building extension string
++        pattern = re.compile('\.([^\.]+?)$')
++
++        for target in targets:
++            if (not target.is_image):
++                continue
++
++            target_image_files = Target_Image_File.objects.filter(target_id = target.id)
++
++            for target_image_file in target_image_files:
++                file_name = os.path.basename(target_image_file.file_name)
++                suffix = ''
++
++                continue_matching = True
++
++                # incrementally extract the suffix from the file path,
++                # checking it against the list of valid suffixes at each
++                # step; if the path is stripped of all potential suffix
++                # parts without matching a valid suffix, this returns all
++                # characters after the first '.' in the file name
++                while continue_matching:
++                    matches = pattern.search(file_name)
++
++                    if None == matches:
++                        continue_matching = False
++                        suffix = re.sub('^\.', '', suffix)
++                        continue
++                    else:
++                        suffix = matches.group(1) + suffix
++
++                    if suffix in Target_Image_File.SUFFIXES:
++                        continue_matching = False
++                        continue
++                    else:
++                        # reduce the file name and try to find the next
++                        # segment from the path which might be part
++                        # of the suffix
++                        file_name = re.sub('.' + matches.group(1), '', file_name)
++                        suffix = '.' + suffix
++
++                if not suffix in extensions:
++                    extensions.append(suffix)
++
++        return ', '.join(extensions)
+ 
+     def get_sorted_target_list(self):
+         tgts = Target.objects.filter(build_id = self.id).order_by( 'target' );
+@@ -418,7 +480,7 @@ class Build(models.Model):
+             return self.get_outcome_text()
+ 
+     def __str__(self):
+-        return "%s %s %s" % (self.id, self.project, ",".join([t.target for t in self.target_set.all()]))
++        return "%d %s %s" % (self.id, self.project, ",".join([t.target for t in self.target_set.all()]))
+ 
+ 
+ # an Artifact is anything that results from a Build, and may be of interest to the user, and is not stored elsewhere
+@@ -609,7 +671,7 @@ class Task(models.Model):
+     sstate_text  = property(get_sstate_text)
+ 
+     def __unicode__(self):
+-        return "%s(%s) %s:%s" % (self.pk, self.build.pk, self.recipe.name, self.task_name)
++        return "%d(%d) %s:%s" % (self.pk, self.build.pk, self.recipe.name, self.task_name)
+ 
+     class Meta:
+         ordering = ('order', 'recipe' ,)
+@@ -1265,7 +1327,7 @@ class Layer_Version(models.Model):
+         return sorted(result, key=lambda x: x.layer.name)
+ 
+     def __unicode__(self):
+-        return "%s %s (VCS %s, Project %s)" % (self.pk, str(self.layer), self.get_vcs_reference(), self.build.project if self.build is not None else "No project")
++        return "%d %s (VCS %s, Project %s)" % (self.pk, str(self.layer), self.get_vcs_reference(), self.build.project if self.build is not None else "No project")
+ 
+     class Meta:
+         unique_together = ("layer_source", "up_id")
 diff --git a/lib/toaster/toastergui/tables.py b/lib/toaster/toastergui/tables.py
-index 3808820..e5cab48 100644
+index e5cab48..cc9b5ae 100644
 --- a/lib/toaster/toastergui/tables.py
 +++ b/lib/toaster/toastergui/tables.py
-@@ -21,13 +21,12 @@
+@@ -661,7 +661,7 @@ class ProjectsTable(ToasterTable):
  
- from toastergui.widgets import ToasterTable
- from orm.models import Recipe, ProjectLayer, Layer_Version, Machine, Project
--from orm.models import CustomImageRecipe, Package
--from django.db.models import Q, Max
-+from orm.models import CustomImageRecipe, Package, Build
-+from django.db.models import Q, Max, Count
- from django.conf.urls import url
- from django.core.urlresolvers import reverse
- from django.views.generic import TemplateView
+         self.queryset = queryset
  
--
- class ProjectFiltersMixin(object):
-     """Common mixin for recipe, machine in project filters"""
+-    # columns: last activity on (updated) - DEFAULT, project (name), release, machine, number of builds, last build outcome, recipe (name), errors, warnings, image files
++    # columns: last activity on (updated) - DEFAULT, project (name), release, machine, number of builds, last build outcome, recipe (name),  errors, warnings, image files
+     def setup_columns(self, *args, **kwargs):
+         name_template = '''
+         {% load project_url_tag %}
+@@ -767,10 +767,9 @@ class ProjectsTable(ToasterTable):
+         '''
  
-@@ -633,3 +632,224 @@ class SelectPackagesTable(ToasterTable):
-                         "the package content of you custom image",
-                         static_data_name="add_rm_pkg_btn",
-                         static_data_template='{% include "pkg_add_rm_btn.html" %}')
-+
-+class ProjectsTable(ToasterTable):
-+    """Table of projects in Toaster"""
-+
-+    def __init__(self, *args, **kwargs):
-+        super(ProjectsTable, self).__init__(*args, **kwargs)
-+        self.default_orderby = 'updated'
-+        self.title = 'All projects'
-+        self.static_context_extra['Build'] = Build
-+
-+    def get_context_data(self, **kwargs):
-+        return super(ProjectsTable, self).get_context_data(**kwargs)
-+
-+    def setup_queryset(self, *args, **kwargs):
-+        queryset = Project.objects.all()
-+
-+        # annotate each project with its number of builds
-+        queryset = queryset.annotate(num_builds=Count('build'))
-+
-+        # exclude the command line builds project if it has no builds
-+        q_default_with_builds = Q(is_default=True) & Q(num_builds__gt=0)
-+        queryset = queryset.filter(Q(is_default=False) |
-+                                   q_default_with_builds)
-+
-+        # order rows
-+        queryset = queryset.order_by(self.default_orderby)
-+
-+        self.queryset = queryset
-+
-+    # columns: last activity on (updated) - DEFAULT, project (name), release, machine, number of builds, last build outcome, recipe (name), errors, warnings, image files
-+    def setup_columns(self, *args, **kwargs):
-+        name_template = '''
-+        {% load project_url_tag %}
-+        <span data-project-field="name">
-+          <a href="{% project_url data %}">
-+            {{data.name}}
-+          </a>
-+        </span>
-+        '''
-+
-+        last_activity_on_template = '''
-+        {% load project_url_tag %}
-+        <span data-project-field="updated">
-+          <a href="{% project_url data %}">
-+            {{data.updated | date:"d/m/y H:i"}}
-+          </a>
-+        </span>
-+        '''
-+
-+        release_template = '''
-+        <span data-project-field="release">
-+          {% if data.release %}
-+            <a href="{% url 'project' data.id %}#project-details">
-+                {{data.release.name}}
-+            </a>
-+          {% elif data.is_default %}
-+            <span class="muted">Not applicable</span>
-+            <i class="icon-question-sign get-help hover-help"
-+               data-original-title="This project does not have a release set.
-+               It simply collects information about the builds you start from
-+               the command line while Toaster is running"
-+               style="visibility: hidden;">
-+            </i>
-+          {% else %}
-+            No release available
-+          {% endif %}
-+        </span>
-+        '''
-+
-+        machine_template = '''
-+        <span data-project-field="machine">
-+          {% if data.is_default %}
-+            <span class="muted">Not applicable</span>
-+            <i class="icon-question-sign get-help hover-help"
-+               data-original-title="This project does not have a machine
-+               set. It simply collects information about the builds you
-+               start from the command line while Toaster is running"
-+               style="visibility: hidden;"></i>
-+          {% else %}
-+            <a href="{% url 'project' data.id %}#machine-distro">
-+              {{data.get_current_machine_name}}
-+            </a>
-+          {% endif %}
-+        </span>
-+        '''
-+
-+        number_of_builds_template = '''
-+        {% if data.get_number_of_builds > 0 %}
-+          <a href="{% url 'projectbuilds' data.id %}">
-+            {{data.get_number_of_builds}}
-+          </a>
-+        {% else %}
-+          <span class="muted">0</span>
-+        {% endif %}
-+        '''
-+
-+        last_build_outcome_template = '''
-+        {% if data.get_number_of_builds > 0 %}
-+          <a href="{% url 'builddashboard' data.get_last_build_id %}">
-+            {% if data.get_last_outcome == extra.Build.SUCCEEDED %}
-+              <i class="icon-ok-sign success"></i>
-+            {% elif data.get_last_outcome == extra.Build.FAILED %}
-+              <i class="icon-minus-sign error"></i>
-+            {% endif %}
-+          </a>
-+        {% endif %}
-+        '''
-+
-+        recipe_template = '''
-+        {% if data.get_number_of_builds > 0 %}
-+          <a href="{% url "builddashboard" data.get_last_build_id %}">
-+            {{data.get_last_target}}
-+          </a>
-+        {% endif %}
-+        '''
-+
-+        errors_template = '''
-+        {% if data.get_number_of_builds > 0 %}
-+          <a class="errors.count error"
-+             href="{% url "builddashboard" data.get_last_build_id %}#errors">
-+            {{data.get_last_errors}} error{{data.get_last_errors | pluralize}}
-+          </a>
-+        {% endif %}
-+        '''
-+
-+        warnings_template = '''
-+        {% if data.get_number_of_builds > 0 %}
-+          <a class="warnings.count warning"
-+             href="{% url "builddashboard" data.get_last_build_id %}#warnings">
-+            {{data.get_last_warnings}} warning{{data.get_last_warnings | pluralize}}
-+          </a>
-+        {% endif %}
-+        '''
-+
-+        image_files_template = '''
-+        {% load projecttags %}
-+        {% if data.get_number_of_builds > 0 and data.get_last_outcome == extra.Build.SUCCEEDED %}
-+          <a href="{% url "builddashboard" data.get_last_build_id %}#images">
-+            {{fstypes | get_dict_value:data.id}}
-+          </a>
-+        {% endif %}
-+        '''
-+
-+        self.add_column(title='Project',
-+                        hideable=False,
-+                        orderable=True,
-+                        static_data_name='name',
-+                        static_data_template=name_template)
-+
-+        self.add_column(title='Last activity on',
-+                        help_text='Starting date and time of the \
-+                                   last project build. If the project has no \
-+                                   builds, this shows the date the project was \
-+                                   created.',
-+                        hideable=True,
-+                        orderable=True,
-+                        static_data_name='updated',
-+                        static_data_template=last_activity_on_template)
-+
-+        self.add_column(title='Release',
-+                        help_text='The version of the build system used by \
-+                                   the project',
-+                        hideable=False,
-+                        orderable=True,
-+                        static_data_name='release',
-+                        static_data_template=release_template)
-+
-+        self.add_column(title='Machine',
-+                        help_text='The hardware currently selected for the \
-+                                   project',
-+                        hideable=False,
-+                        orderable=False,
-+                        static_data_name='machine',
-+                        static_data_template=machine_template)
-+
-+        self.add_column(title='Number of builds',
-+                        help_text='The number of builds which have been run \
-+                                   for the project',
-+                        hideable=True,
-+                        orderable=False,
-+                        static_data_name='number_of_builds',
-+                        static_data_template=number_of_builds_template)
-+
-+        self.add_column(title='Last build outcome',
-+                        help_text='Indicates whether the last project build \
-+                                   completed successfully or failed',
-+                        hideable=True,
-+                        orderable=False,
-+                        static_data_name='last_build_outcome',
-+                        static_data_template=last_build_outcome_template)
-+
-+        self.add_column(title='Recipe',
-+                        help_text='The last recipe which was built in this \
-+                                   project',
-+                        hideable=True,
-+                        orderable=False,
-+                        static_data_name='recipe_name',
-+                        static_data_template=recipe_template)
-+
-+        self.add_column(title='Errors',
-+                        help_text='The number of errors encountered during \
-+                                   the last project build (if any)',
-+                        hideable=True,
-+                        orderable=False,
-+                        static_data_name='errors',
-+                        static_data_template=errors_template)
-+
-+        self.add_column(title='Warnings',
-+                        help_text='The number of warnings encountered during \
-+                                   the last project build (if any)',
-+                        hideable=True,
-+                        orderable=False,
-+                        static_data_name='warnings',
-+                        static_data_template=warnings_template)
-+
-+        self.add_column(title='Image files',
-+                        help_text='',
-+                        hideable=True,
-+                        orderable=False,
-+                        static_data_name='image_files',
-+                        static_data_template=image_files_template)
-diff --git a/lib/toaster/toastergui/templates/projects-toastertable.html b/lib/toaster/toastergui/templates/projects-toastertable.html
-new file mode 100644
-index 0000000..5814f32
---- /dev/null
-+++ b/lib/toaster/toastergui/templates/projects-toastertable.html
-@@ -0,0 +1,36 @@
-+{% extends 'base.html' %}
-+
-+{% block title %} All projects - Toaster {% endblock %}
-+
-+{% block pagecontent %}
-+
-+  <div class="page-header top-air">
-+    <h1 data-role="page-title"></h1>
-+  </div>
-+
-+  {% url 'projects' as xhr_table_url %}
-+  {% include 'toastertable.html' %}
-+
-+  <script>
-+    $(document).ready(function () {
-+      var tableElt = $("#{{table_name}}");
-+      var titleElt = $("[data-role='page-title']");
-+
-+      tableElt.on("table-done", function (e, total, tableParams) {
-+        var title = "All projects";
-+
-+        if (tableParams.search || tableParams.filter) {
-+          if (total === 0) {
-+            title = "No projects found";
-+          }
-+          else if (total > 0) {
-+            title = total + " project" + (total > 1 ? 's' : '') + " found";
-+          }
-+        }
-+
-+        titleElt.text(title);
-+      });
-+    });
-+  </script>
-+
-+{% endblock %}
-diff --git a/lib/toaster/toastergui/urls.py b/lib/toaster/toastergui/urls.py
-index 2bf2d99..da97a31 100644
---- a/lib/toaster/toastergui/urls.py
-+++ b/lib/toaster/toastergui/urls.py
-@@ -75,8 +75,14 @@ urlpatterns = patterns('toastergui.views',
-         url(r'^newproject/$', 'newproject', name='newproject'),
+         image_files_template = '''
+-        {% load projecttags %}
+         {% if data.get_number_of_builds > 0 and data.get_last_outcome == extra.Build.SUCCEEDED %}
+           <a href="{% url "builddashboard" data.get_last_build_id %}#images">
+-            {{fstypes | get_dict_value:data.id}}
++            {{data.get_last_build_extensions}}
+           </a>
+         {% endif %}
+         '''
+@@ -848,7 +847,8 @@ class ProjectsTable(ToasterTable):
+                         static_data_template=warnings_template)
  
+         self.add_column(title='Image files',
+-                        help_text='',
++                        help_text='The root file system types produced by \
++                                   the last project build',
+                         hideable=True,
+                         orderable=False,
+                         static_data_name='image_files',
+diff --git a/lib/toaster/toastergui/views.py b/lib/toaster/toastergui/views.py
+index 4cd7afd..8148623 100755
+--- a/lib/toaster/toastergui/views.py
++++ b/lib/toaster/toastergui/views.py
+@@ -2008,23 +2008,10 @@ if True:
+         context_date,today_begin,yesterday_begin = _add_daterange_context(queryset_all, request, {'started_on','completed_on'})
  
-+        # TODO remove when new toaster table is ready
-         url(r'^projects/$', 'projects', name='all-projects'),
- 
-+        # TODO move to /projects/ when new toaster table is ready
-+        url(r'^projects-new/$',
-+            tables.ProjectsTable.as_view(template_name="projects-toastertable.html"),
-+            name='all-projects-new'),
+         # set up list of fstypes for each build
+-        fstypes_map = {};
++        fstypes_map = {}
 +
-         url(r'^project/(?P<pid>\d+)/$', 'project', name='project'),
-         url(r'^project/(?P<pid>\d+)/configuration$', 'projectconf', name='projectconf'),
-         url(r'^project/(?P<pid>\d+)/builds/$', 'projectbuilds', name='projectbuilds'),
+         for build in build_info:
+-            targets = Target.objects.filter( build_id = build.id )
+-            comma = "";
+-            extensions = "";
+-            for t in targets:
+-                if ( not t.is_image ):
+-                    continue
+-                tif = Target_Image_File.objects.filter( target_id = t.id )
+-                for i in tif:
+-                    s=re.sub('.*tar.bz2', 'tar.bz2', i.file_name)
+-                    if s == i.file_name:
+-                        s=re.sub('.*\.', '', i.file_name)
+-                    if None == re.search(s,extensions):
+-                        extensions += comma + s
+-                        comma = ", "
+-            fstypes_map[build.id]=extensions
++            fstypes_map[build.id] = build.get_image_file_extensions()
+ 
+         # send the data to the template
+         context = {
+@@ -3047,24 +3034,7 @@ if True:
+         # translate the project's build target strings
+         fstypes_map = {};
+         for project in project_info:
+-            try:
+-                targets = Target.objects.filter( build_id = project.get_last_build_id() )
+-                comma = "";
+-                extensions = "";
+-                for t in targets:
+-                    if ( not t.is_image ):
+-                        continue
+-                    tif = Target_Image_File.objects.filter( target_id = t.id )
+-                    for i in tif:
+-                        s=re.sub('.*tar.bz2', 'tar.bz2', i.file_name)
+-                        if s == i.file_name:
+-                            s=re.sub('.*\.', '', i.file_name)
+-                        if None == re.search(s,extensions):
+-                            extensions += comma + s
+-                            comma = ", "
+-                fstypes_map[project.id]=extensions
+-            except (Target.DoesNotExist,IndexError):
+-                fstypes_map[project.id]=project.get_last_imgfiles
++            fstypes_map[project.id] = project.get_last_build_extensions()
+ 
+         context = {
+                 'mru' : build_mru,
 -- 
 2.1.4
 
