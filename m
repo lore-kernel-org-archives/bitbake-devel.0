@@ -1,28 +1,28 @@
 Return-Path: <ed.bartosh@linux.intel.com>
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	by mail.openembedded.org (Postfix) with ESMTP id 3DE82760A3
+	by mail.openembedded.org (Postfix) with ESMTP id 488C275CF1
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 12:58:21 +0000 (UTC)
+	Fri, 15 Jan 2016 12:58:22 +0000 (UTC)
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-	by fmsmga104.fm.intel.com with ESMTP; 15 Jan 2016 04:58:22 -0800
+	by fmsmga104.fm.intel.com with ESMTP; 15 Jan 2016 04:58:23 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="893808858"
+X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="893808862"
 Received: from linux.intel.com ([10.23.219.25])
-	by fmsmga002.fm.intel.com with ESMTP; 15 Jan 2016 04:58:22 -0800
+	by fmsmga002.fm.intel.com with ESMTP; 15 Jan 2016 04:58:23 -0800
 Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id 4881C6A4004
+	by linux.intel.com (Postfix) with ESMTP id 702CD6A4004
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 05:46:18 -0800 (PST)
+	Fri, 15 Jan 2016 05:46:19 -0800 (PST)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 15 Jan 2016 13:00:53 +0200
-Message-Id: <248297174046f96dd9e532e8e6badb3888dd26e6.1452855461.git.ed.bartosh@linux.intel.com>
+Date: Fri, 15 Jan 2016 13:00:54 +0200
+Message-Id: <170f63a5d847febd2461faaba7c2f3c54569cd18.1452855461.git.ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
-Subject: [PATCH 10/23] toaster: toastergui: implement date range filters for builds
+Subject: [PATCH 11/23] toaster: toastergui: implement "today" and "yesterday" filters
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,644 +35,655 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Jan 2016 12:58:21 -0000
+X-List-Received-Date: Fri, 15 Jan 2016 12:58:22 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-Implement the completed_on and started_on filtering for
-builds.
+Add the "today" and "yesterday" filters to the started_on
+and completed_on columns in the builds table.
 
-Also separate the name of a filter ("filter" in the querystring)
-from its value ("filter_value" in the querystring). This enables
-filtering to be defined in the querystring more intuitively,
-and also makes it easier to add other types of filter (e.g.
-by day).
+During this work, some minor adjustments were made to the
+behaviour of the builds table:
+
+* Amend filter action variable names so they're more succinct.
+* Retain order in which actions are added to a filter, as this
+ordering is used in the UI when displaying the filter actions.
+* Always show the table chrome, otherwise it's not possible
+to edit the columns shown until there are 10 or more results.
+* Because date range searches may return no results, make sure
+that the search bar and "show all results" link are visible
+when the query returns no results.
 
 [YOCTO #8738]
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- lib/toaster/toastergui/querysetfilter.py           |   3 +-
- lib/toaster/toastergui/static/js/table.js          | 196 +++++++++++++++++----
- lib/toaster/toastergui/tablefilter.py              | 113 ++++++++++--
- lib/toaster/toastergui/tables.py                   |  38 +++-
- .../toastergui/templates/builds-toastertable.html  |  32 +---
- lib/toaster/toastergui/widgets.py                  |  32 ++--
- 6 files changed, 330 insertions(+), 84 deletions(-)
+ lib/toaster/toastergui/querysetfilter.py           |   4 -
+ lib/toaster/toastergui/static/js/table.js          |  56 +++++----
+ lib/toaster/toastergui/tablefilter.py              | 140 +++++++++++++++++----
+ lib/toaster/toastergui/tables.py                   |  87 ++++++++-----
+ .../toastergui/templates/builds-toastertable.html  |   2 +-
+ lib/toaster/toastergui/templates/toastertable.html |   7 +-
+ 6 files changed, 212 insertions(+), 84 deletions(-)
 
 diff --git a/lib/toaster/toastergui/querysetfilter.py b/lib/toaster/toastergui/querysetfilter.py
-index dbae239..efa8507 100644
+index efa8507..10cc988 100644
 --- a/lib/toaster/toastergui/querysetfilter.py
 +++ b/lib/toaster/toastergui/querysetfilter.py
-@@ -2,10 +2,11 @@ class QuerysetFilter(object):
-     """ Filter for a queryset """
- 
-     def __init__(self, criteria=None):
-+        self.criteria = None
-         if criteria:
-             self.set_criteria(criteria)
- 
--    def set_criteria(self, criteria = None):
-+    def set_criteria(self, criteria):
-         """
-         criteria is an instance of django.db.models.Q;
-         see https://docs.djangoproject.com/en/1.9/ref/models/querysets/#q-objects
+@@ -22,7 +22,3 @@ class QuerysetFilter(object):
+             return queryset.filter(self.criteria)
+         else:
+             return queryset
+-
+-    def count(self, queryset):
+-        """ Returns a count of the elements in the filtered queryset """
+-        return self.filter(queryset).count()
 diff --git a/lib/toaster/toastergui/static/js/table.js b/lib/toaster/toastergui/static/js/table.js
-index 63f8a1f..b0a8ffb 100644
+index b0a8ffb..afe16b5 100644
 --- a/lib/toaster/toastergui/static/js/table.js
 +++ b/lib/toaster/toastergui/static/js/table.js
-@@ -397,11 +397,140 @@ function tableInit(ctx){
-     $.cookie("cols", JSON.stringify(disabled_cols));
-   }
+@@ -71,22 +71,11 @@ function tableInit(ctx){
  
-+  /**
-+   * Create the DOM/JS for the client side of a TableFilterActionToggle
-+   *
-+   * filterName: (string) internal name for the filter action
-+   * filterActionData: (object)
-+   * filterActionData.count: (number) The number of items this filter will
-+   * show when selected
-+   */
-+  function createActionToggle(filterName, filterActionData) {
-+    var actionStr = '<div class="radio">' +
-+                    '<input type="radio" name="filter"' +
-+                    '       value="' + filterName + '"';
+     if (tableData.total === 0){
+       tableContainer.hide();
+-      /* If we were searching show the new search bar and return */
+-      if (tableParams.search){
+-        $("#new-search-input-"+ctx.tableName).val(tableParams.search);
+-        $("#no-results-"+ctx.tableName).show();
+-      }
++      $("#new-search-input-"+ctx.tableName).val(tableParams.search);
++      $("#no-results-"+ctx.tableName).show();
+       table.trigger("table-done", [tableData.total, tableParams]);
+ 
+       return;
+-
+-    /* We don't want to clutter the place with the table chrome if there
+-     * are only a few results */
+-    } else if (tableData.total <= 10 &&
+-               !tableParams.filter &&
+-               !tableParams.search){
+-      $("#table-chrome-"+ctx.tableName).hide();
+-      pagination.hide();
+     } else {
+       tableContainer.show();
+       $("#no-results-"+ctx.tableName).hide();
+@@ -399,13 +388,14 @@ function tableInit(ctx){
+ 
+   /**
+    * Create the DOM/JS for the client side of a TableFilterActionToggle
++   * or TableFilterActionDay
+    *
+    * filterName: (string) internal name for the filter action
+    * filterActionData: (object)
+    * filterActionData.count: (number) The number of items this filter will
+    * show when selected
+    */
+-  function createActionToggle(filterName, filterActionData) {
++  function createActionRadio(filterName, filterActionData) {
+     var actionStr = '<div class="radio">' +
+                     '<input type="radio" name="filter"' +
+                     '       value="' + filterName + '"';
+@@ -471,8 +461,7 @@ function tableInit(ctx){
+       minDate: new Date(filterActionData.min)
+     };
+ 
+-    // create date pickers, setting currently-selected from and to
+-    // dates
++    // create date pickers, setting currently-selected from and to dates
+     var selectedFrom = null;
+     var selectedTo = null;
+ 
+@@ -496,6 +485,20 @@ function tableInit(ctx){
+       action.find('[data-date-to-for]').datepicker(options);
+     inputTo.val(selectedTo);
+ 
++    // if the radio button is checked and one or both of the datepickers are
++    // empty, populate them with today's date
++    radio.change(function () {
++      var now = new Date();
 +
-+    if (Number(filterActionData.count) == 0) {
-+      actionStr += ' disabled="disabled"';
-+    }
++      if (inputFrom.val() === '') {
++        inputFrom.datepicker('setDate', now);
++      }
 +
-+    actionStr += ' id="' + filterName + '">' +
-+                 '<input type="hidden" name="filter_value" value="on"' +
-+                 '       data-value-for="' + filterName + '">' +
-+                 '<label class="filter-title"' +
-+                 '       for="' + filterName + '">' +
-+                 filterActionData.title +
-+                 ' (' + filterActionData.count + ')' +
-+                 '</label>' +
-+                 '</div>';
-+
-+    return $(actionStr);
-+  }
-+
-+  /**
-+   * Create the DOM/JS for the client side of a TableFilterActionDateRange
-+   *
-+   * filterName: (string) internal name for the filter action
-+   * filterValue: (string) from,to date range in format yyyy-mm-dd,yyyy-mm-dd;
-+   * used to select the current values for the from/to datepickers;
-+   * if this is partial (e.g. "yyyy-mm-dd,") only the applicable datepicker
-+   * will have a date pre-selected; if empty, neither will
-+   * filterActionData: (object) data for generating the action's HTML
-+   * filterActionData.title: label for the radio button
-+   * filterActionData.max: (string) maximum date for the pickers, in ISO 8601
-+   * datetime format
-+   * filterActionData.min: (string) minimum date for the pickers, ISO 8601
-+   * datetime
-+   */
-+  function createActionDateRange(filterName, filterValue, filterActionData) {
-+    var action = $('<div class="radio">' +
-+                   '<input type="radio" name="filter"' +
-+                   '       value="' + filterName + '" ' +
-+                   '       id="' + filterName + '">' +
-+                   '<input type="hidden" name="filter_value" value=""' +
-+                   '       data-value-for="' + filterName + '">' +
-+                   '<label class="filter-title"' +
-+                   '       for="' + filterName + '">' +
-+                   filterActionData.title +
-+                   '</label>' +
-+                   '<input type="text" maxlength="10" class="input-small"' +
-+                   '       data-date-from-for="' + filterName + '">' +
-+                   '<span class="help-inline">to</span>' +
-+                   '<input type="text" maxlength="10" class="input-small"' +
-+                   '       data-date-to-for="' + filterName + '">' +
-+                   '<span class="help-inline get-help">(yyyy-mm-dd)</span>' +
-+                   '</div>');
-+
-+    var radio = action.find('[type="radio"]');
-+    var value = action.find('[data-value-for]');
-+
-+    // make the datepickers for the range
-+    var options = {
-+      dateFormat: 'yy-mm-dd',
-+      maxDate: new Date(filterActionData.max),
-+      minDate: new Date(filterActionData.min)
-+    };
-+
-+    // create date pickers, setting currently-selected from and to
-+    // dates
-+    var selectedFrom = null;
-+    var selectedTo = null;
-+
-+    var selectedFromAndTo = [];
-+    if (filterValue) {
-+      selectedFromAndTo = filterValue.split(',');
-+    }
-+
-+    if (selectedFromAndTo.length == 2) {
-+      selectedFrom = selectedFromAndTo[0];
-+      selectedTo = selectedFromAndTo[1];
-+    }
-+
-+    options.defaultDate = selectedFrom;
-+    var inputFrom =
-+      action.find('[data-date-from-for]').datepicker(options);
-+    inputFrom.val(selectedFrom);
-+
-+    options.defaultDate = selectedTo;
-+    var inputTo =
-+      action.find('[data-date-to-for]').datepicker(options);
-+    inputTo.val(selectedTo);
-+
-+    // set filter_value based on date pickers when
-+    // one of their values changes
-+    var changeHandler = function () {
-+      value.val(inputFrom.val() + ',' + inputTo.val());
-+    };
-+
-+    inputFrom.change(changeHandler);
-+    inputTo.change(changeHandler);
-+
-+    // check the associated radio button on clicking a date picker
-+    var checkRadio = function () {
-+      radio.prop('checked', 'checked');
-+    };
-+
-+    inputFrom.focus(checkRadio);
-+    inputTo.focus(checkRadio);
-+
-+    // selecting a date in a picker constrains the date you can
-+    // set in the other picker
-+    inputFrom.change(function () {
-+      inputTo.datepicker('option', 'minDate', inputFrom.val());
++      if (inputTo.val() === '') {
++        inputTo.datepicker('setDate', now);
++      }
 +    });
 +
-+    inputTo.change(function () {
-+      inputFrom.datepicker('option', 'maxDate', inputTo.val());
-+    });
-+
-+    return action;
-+  }
-+
-   function filterOpenClicked(){
-     var filterName = $(this).data('filter-name');
+     // set filter_value based on date pickers when
+     // one of their values changes
+     var changeHandler = function () {
+@@ -553,7 +556,8 @@ function tableInit(ctx){
+                 {
+                   title: '<label for radio button inside the popup>',
+                   name: '<name of the filter action>',
+-                  count: <number of items this filter will show>
++                  count: <number of items this filter will show>,
++                  ... additional data for the action ...
+                 }
+               ]
+             }
+@@ -567,11 +571,12 @@ function tableInit(ctx){
+             filter
  
--    /* We need to pass in the curren search so that the filter counts take
--     * into account the current search filter
-+    /* We need to pass in the current search so that the filter counts take
-+     * into account the current search term
-      */
-     var params = {
-       'name' : filterName,
-@@ -443,46 +572,44 @@ function tableInit(ctx){
+             the filterName is set on the column filter icon, and corresponds
+-            to a value in the table's filters property
++            to a value in the table's filter map
+ 
              when the filter popup's "Apply" button is clicked, the
              value for the radio button which is checked is passed in the
-             querystring and applied to the queryset on the table
--           */
-+          */
-+          var filterActionRadios = $('#filter-actions-' + ctx.tableName);
+-            querystring and applied to the queryset on the table
++            querystring, along with a filter_value, and applied to the
++            queryset on the table
+           */
+           var filterActionRadios = $('#filter-actions-' + ctx.tableName);
  
--          var filterActionRadios = $('#filter-actions-'+ctx.tableName);
-+          $('#filter-modal-title-' + ctx.tableName).text(filterData.title);
+@@ -587,10 +592,12 @@ function tableInit(ctx){
+             var filterName = filterData.name + ':' +
+                              filterActionData.action_name;
  
--          $('#filter-modal-title-'+ctx.tableName).text(filterData.title);
--
--          filterActionRadios.text("");
-+          filterActionRadios.empty();
- 
-+          // create a radio button + form elements for each action associated
-+          // with the filter on this column of the table
-           for (var i in filterData.filter_actions) {
--            var filterAction = filterData.filter_actions[i];
-             var action = null;
-+            var filterActionData = filterData.filter_actions[i];
-+            var filterName = filterData.name + ':' +
-+                             filterActionData.action_name;
- 
--            if (filterAction.type === 'toggle') {
--              var actionTitle = filterAction.title + ' (' + filterAction.count + ')';
--
--              action = $('<label class="radio">' +
--                         '<input type="radio" name="filter" value="">' +
--                         '<span class="filter-title">' +
--                         actionTitle +
--                         '</span>' +
--                         '</label>');
--
--              var radioInput = action.children("input");
--              if (Number(filterAction.count) == 0) {
--                radioInput.attr("disabled", "disabled");
--              }
--
--              radioInput.val(filterData.name + ':' + filterAction.action_name);
-+            if (filterActionData.type === 'toggle') {
-+              action = createActionToggle(filterName, filterActionData);
-+            }
-+            else if (filterActionData.type === 'daterange') {
-+              var filterValue = tableParams.filter_value;
-+
-+              action = createActionDateRange(
-+                filterName,
-+                filterValue,
-+                filterActionData
-+              );
-+            }
- 
--              /* Setup the current selected filter, default to 'all' if
--               * no current filter selected.
--               */
-+            if (action) {
-+              // Setup the current selected filter, default to 'all' if
-+              // no current filter selected
-+              var radioInput = action.children('input[name="filter"]');
-               if ((tableParams.filter &&
-                   tableParams.filter === radioInput.val()) ||
--                  filterAction.action_name == 'all') {
-+                  filterActionData.action_name == 'all') {
-                   radioInput.attr("checked", "checked");
-               }
--            }
- 
--            if (action) {
-               filterActionRadios.append(action);
+-            if (filterActionData.type === 'toggle') {
+-              action = createActionToggle(filterName, filterActionData);
++            if (filterActionData.type === 'toggle' ||
++                filterActionData.type === 'day') {
++              action = createActionRadio(filterName, filterActionData);
              }
-           }
-@@ -571,7 +698,14 @@ function tableInit(ctx){
-       filterBtnActive($(filterBtn), false);
-     });
+             else if (filterActionData.type === 'daterange') {
++              // current values for the from/to dates
+               var filterValue = tableParams.filter_value;
  
--    tableParams.filter = $(this).find("input[type='radio']:checked").val();
-+    // checked radio button
-+    var checkedFilter = $(this).find("input[name='filter']:checked");
-+    tableParams.filter = checkedFilter.val();
-+
-+    // hidden field holding the value for the checked filter
-+    var checkedFilterValue = $(this).find("input[data-value-for='" +
-+                                          tableParams.filter + "']");
-+    tableParams.filter_value = checkedFilterValue.val();
+               action = createActionDateRange(
+@@ -601,7 +608,7 @@ function tableInit(ctx){
+             }
  
-     var filterBtn = $("#" + tableParams.filter.split(":")[0]);
+             if (action) {
+-              // Setup the current selected filter, default to 'all' if
++              // Setup the current selected filter; default to 'all' if
+               // no current filter selected
+               var radioInput = action.children('input[name="filter"]');
+               if ((tableParams.filter &&
+@@ -707,13 +714,12 @@ function tableInit(ctx){
+                                           tableParams.filter + "']");
+     tableParams.filter_value = checkedFilterValue.val();
+ 
+-    var filterBtn = $("#" + tableParams.filter.split(":")[0]);
+-
+     /* All === remove filter */
+     if (tableParams.filter.match(":all$")) {
+       tableParams.filter = null;
+-      filterBtnActive(filterBtn, false);
++      tableParams.filter_value = null;
+     } else {
++      var filterBtn = $("#" + tableParams.filter.split(":")[0]);
+       filterBtnActive(filterBtn, true);
+     }
  
 diff --git a/lib/toaster/toastergui/tablefilter.py b/lib/toaster/toastergui/tablefilter.py
-index b42fd52..1ea30da 100644
+index 1ea30da..bd8decd 100644
 --- a/lib/toaster/toastergui/tablefilter.py
 +++ b/lib/toaster/toastergui/tablefilter.py
-@@ -18,12 +18,15 @@
+@@ -18,13 +18,18 @@
  # You should have received a copy of the GNU General Public License along
  # with this program; if not, write to the Free Software Foundation, Inc.,
  # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+from django.db.models import Q, Max, Min
-+from django.utils import dateparse, timezone
++
+ from django.db.models import Q, Max, Min
+ from django.utils import dateparse, timezone
++from datetime import timedelta
++from querysetfilter import QuerysetFilter
  
  class TableFilter(object):
      """
      Stores a filter for a named field, and can retrieve the action
--    requested for that filter
-+    requested from the set of actions for that filter
+-    requested from the set of actions for that filter
++    requested from the set of actions for that filter;
++    the order in which actions are added governs the order in which they
++    are returned in the JSON for the filter
      """
-+
+ 
      def __init__(self, name, title):
-         self.name = name
+@@ -32,7 +37,11 @@ class TableFilter(object):
          self.title = title
-@@ -64,42 +67,128 @@ class TableFilter(object):
+         self.__filter_action_map = {}
+ 
++        # retains the ordering of actions
++        self.__filter_action_keys = []
++
+     def add_action(self, action):
++        self.__filter_action_keys.append(action.name)
+         self.__filter_action_map[action.name] = action
+ 
+     def get_action(self, action_name):
+@@ -56,7 +65,8 @@ class TableFilter(object):
+         })
+ 
+         # add other filter actions
+-        for action_name, filter_action in self.__filter_action_map.iteritems():
++        for action_name in self.__filter_action_keys:
++            filter_action = self.__filter_action_map[action_name]
+             obj = filter_action.to_json(queryset)
+             obj['action_name'] = action_name
+             filter_actions.append(obj)
+@@ -67,6 +77,40 @@ class TableFilter(object):
              'filter_actions': filter_actions
          }
  
--class TableFilterActionToggle(object):
-+class TableFilterAction(object):
-     """
--    Stores a single filter action which will populate one radio button of
--    a ToasterTable filter popup; this filter can either be on or off and
--    has no other parameters
-+    A filter action which displays in the filter popup for a ToasterTable
-+    and uses an associated QuerysetFilter to filter the queryset for that
-+    ToasterTable
-     """
- 
-     def __init__(self, name, title, queryset_filter):
-         self.name = name
-         self.title = title
--        self.__queryset_filter = queryset_filter
--        self.type = 'toggle'
-+        self.queryset_filter = queryset_filter
-+
-+        # set in subclasses
-+        self.type = None
- 
--    def set_params(self, params):
-+    def set_filter_params(self, params):
-         """
-         params: (str) a string of extra parameters for the action;
-         the structure of this string depends on the type of action;
-         it's ignored for a toggle filter action, which is just on or off
-         """
--        pass
-+        if not params:
-+            return
- 
-     def filter(self, queryset):
--        return self.__queryset_filter.filter(queryset)
-+        return self.queryset_filter.filter(queryset)
- 
-     def to_json(self, queryset):
-         """ Dump as a JSON object """
-         return {
-             'title': self.title,
-             'type': self.type,
--            'count': self.__queryset_filter.count(queryset)
-+            'count': self.queryset_filter.count(queryset)
-         }
- 
-+class TableFilterActionToggle(TableFilterAction):
-+    """
-+    A single filter action which will populate one radio button of
-+    a ToasterTable filter popup; this filter can either be on or off and
-+    has no other parameters
-+    """
-+
-+    def __init__(self, *args):
-+        super(TableFilterActionToggle, self).__init__(*args)
-+        self.type = 'toggle'
-+
-+class TableFilterActionDateRange(TableFilterAction):
-+    """
-+    A filter action which will filter the queryset by a date range.
-+    The date range can be set via set_params()
-+    """
-+
-+    def __init__(self, name, title, field, queryset_filter):
++class TableFilterQueryHelper(object):
++    def dateStringsToQ(self, field_name, date_from_str, date_to_str):
 +        """
-+        field: the field to find the max/min range from in the queryset
-+        """
-+        super(TableFilterActionDateRange, self).__init__(
-+            name,
-+            title,
-+            queryset_filter
-+        )
++        Convert the date strings from_date_str and to_date_str into a
++        set of args in the form
 +
-+        self.type = 'daterange'
-+        self.field = field
++          {'<field_name>__gte': <date from>, '<field_name>__lte': <date to>}
 +
-+    def set_filter_params(self, params):
-+        """
-+        params: (str) a string of extra parameters for the filtering
-+        in the format "2015-12-09,2015-12-11" (from,to); this is passed in the
-+        querystring and used to set the criteria on the QuerysetFilter
-+        associated with this action
-+        """
++        where date_from and date_to are Django-timezone-aware dates; then
++        convert that into a Django Q object
 +
-+        # if params are invalid, return immediately, resetting criteria
-+        # on the QuerysetFilter
-+        try:
-+            from_date_str, to_date_str = params.split(',')
-+        except ValueError:
-+            self.queryset_filter.set_criteria(None)
-+            return
++        Returns the Q object based on those criteria
++        """
 +
 +        # one of the values required for the filter is missing, so set
 +        # it to the one which was supplied
-+        if from_date_str == '':
-+            from_date_str = to_date_str
-+        elif to_date_str == '':
-+            to_date_str = from_date_str
++        if date_from_str == '':
++            date_from_str = date_to_str
++        elif date_to_str == '':
++            date_to_str = date_from_str
 +
-+        date_from_naive = dateparse.parse_datetime(from_date_str + ' 00:00:00')
-+        date_to_naive = dateparse.parse_datetime(to_date_str + ' 23:59:59')
++        date_from_naive = dateparse.parse_datetime(date_from_str + ' 00:00:00')
++        date_to_naive = dateparse.parse_datetime(date_to_str + ' 23:59:59')
 +
 +        tz = timezone.get_default_timezone()
 +        date_from = timezone.make_aware(date_from_naive, tz)
 +        date_to = timezone.make_aware(date_to_naive, tz)
 +
 +        args = {}
-+        args[self.field + '__gte'] = date_from
-+        args[self.field + '__lte'] = date_to
++        args[field_name + '__gte'] = date_from
++        args[field_name + '__lte'] = date_to
 +
-+        criteria = Q(**args)
++        return Q(**args)
++
+ class TableFilterAction(object):
+     """
+     A filter action which displays in the filter popup for a ToasterTable
+@@ -99,7 +143,7 @@ class TableFilterAction(object):
+         return {
+             'title': self.title,
+             'type': self.type,
+-            'count': self.queryset_filter.count(queryset)
++            'count': self.filter(queryset).count()
+         }
+ 
+ class TableFilterActionToggle(TableFilterAction):
+@@ -113,15 +157,70 @@ class TableFilterActionToggle(TableFilterAction):
+         super(TableFilterActionToggle, self).__init__(*args)
+         self.type = 'toggle'
+ 
++class TableFilterActionDay(TableFilterAction):
++    """
++    A filter action which filters according to the named datetime field and a
++    string representing a day ("today" or "yesterday")
++    """
++
++    TODAY = 'today'
++    YESTERDAY = 'yesterday'
++
++    def __init__(self, name, title, field, day,
++    queryset_filter = QuerysetFilter(), query_helper = TableFilterQueryHelper()):
++        """
++        field: (string) the datetime field to filter by
++        day: (string) "today" or "yesterday"
++        """
++        super(TableFilterActionDay, self).__init__(
++            name,
++            title,
++            queryset_filter
++        )
++        self.type = 'day'
++        self.field = field
++        self.day = day
++        self.query_helper = query_helper
++
++    def filter(self, queryset):
++        """
++        Apply the day filtering before returning the queryset;
++        this is done here as the value of the filter criteria changes
++        depending on when the filtering is applied
++        """
++
++        criteria = None
++        date_str = None
++        now = timezone.now()
++
++        if self.day == self.YESTERDAY:
++            increment = timedelta(days=1)
++            wanted_date = now - increment
++        else:
++            wanted_date = now
++
++        wanted_date_str = wanted_date.strftime('%Y-%m-%d')
++
++        criteria = self.query_helper.dateStringsToQ(
++            self.field,
++            wanted_date_str,
++            wanted_date_str
++        )
++
 +        self.queryset_filter.set_criteria(criteria)
 +
-+    def to_json(self, queryset):
-+        """ Dump as a JSON object """
-+        data = super(TableFilterActionDateRange, self).to_json(queryset)
++        return self.queryset_filter.filter(queryset)
 +
-+        # additional data about the date range covered by the queryset's
-+        # records, retrieved from its <field> column
-+        data['min'] = queryset.aggregate(Min(self.field))[self.field + '__min']
-+        data['max'] = queryset.aggregate(Max(self.field))[self.field + '__max']
-+
-+        # a range filter has a count of None, as the number of records it
-+        # will select depends on the date range entered
-+        data['count'] = None
-+
-+        return data
-+
- class TableFilterMap(object):
+ class TableFilterActionDateRange(TableFilterAction):
      """
--    Map from field names to Filter objects for those fields
-+    Map from field names to TableFilter objects for those fields
+     A filter action which will filter the queryset by a date range.
+     The date range can be set via set_params()
      """
-+
-     def __init__(self):
-         self.__filters = {}
  
+-    def __init__(self, name, title, field, queryset_filter):
++    def __init__(self, name, title, field,
++    queryset_filter = QuerysetFilter(), query_helper = TableFilterQueryHelper()):
+         """
+-        field: the field to find the max/min range from in the queryset
++        field: (string) the field to find the max/min range from in the queryset
+         """
+         super(TableFilterActionDateRange, self).__init__(
+             name,
+@@ -131,9 +230,13 @@ class TableFilterActionDateRange(TableFilterAction):
+ 
+         self.type = 'daterange'
+         self.field = field
++        self.query_helper = query_helper
+ 
+     def set_filter_params(self, params):
+         """
++        This filter depends on the user selecting some input, so it needs
++        to have its parameters set before its queryset is filtered
++
+         params: (str) a string of extra parameters for the filtering
+         in the format "2015-12-09,2015-12-11" (from,to); this is passed in the
+         querystring and used to set the criteria on the QuerysetFilter
+@@ -143,30 +246,18 @@ class TableFilterActionDateRange(TableFilterAction):
+         # if params are invalid, return immediately, resetting criteria
+         # on the QuerysetFilter
+         try:
+-            from_date_str, to_date_str = params.split(',')
++            date_from_str, date_to_str = params.split(',')
+         except ValueError:
+             self.queryset_filter.set_criteria(None)
+             return
+ 
+         # one of the values required for the filter is missing, so set
+         # it to the one which was supplied
+-        if from_date_str == '':
+-            from_date_str = to_date_str
+-        elif to_date_str == '':
+-            to_date_str = from_date_str
+-
+-        date_from_naive = dateparse.parse_datetime(from_date_str + ' 00:00:00')
+-        date_to_naive = dateparse.parse_datetime(to_date_str + ' 23:59:59')
+-
+-        tz = timezone.get_default_timezone()
+-        date_from = timezone.make_aware(date_from_naive, tz)
+-        date_to = timezone.make_aware(date_to_naive, tz)
+-
+-        args = {}
+-        args[self.field + '__gte'] = date_from
+-        args[self.field + '__lte'] = date_to
+-
+-        criteria = Q(**args)
++        criteria = self.query_helper.dateStringsToQ(
++            self.field,
++            date_from_str,
++            date_to_str
++        )
+         self.queryset_filter.set_criteria(criteria)
+ 
+     def to_json(self, queryset):
+@@ -179,7 +270,8 @@ class TableFilterActionDateRange(TableFilterAction):
+         data['max'] = queryset.aggregate(Max(self.field))[self.field + '__max']
+ 
+         # a range filter has a count of None, as the number of records it
+-        # will select depends on the date range entered
++        # will select depends on the date range entered and we don't know
++        # that ahead of time
+         data['count'] = None
+ 
+         return data
 diff --git a/lib/toaster/toastergui/tables.py b/lib/toaster/toastergui/tables.py
-index 0941637..06ced52 100644
+index 06ced52..58abe36 100644
 --- a/lib/toaster/toastergui/tables.py
 +++ b/lib/toaster/toastergui/tables.py
-@@ -29,7 +29,9 @@ from django.core.urlresolvers import reverse
- from django.views.generic import TemplateView
- import itertools
- 
--from toastergui.tablefilter import TableFilter, TableFilterActionToggle
-+from toastergui.tablefilter import TableFilter
-+from toastergui.tablefilter import TableFilterActionToggle
-+from toastergui.tablefilter import TableFilterActionDateRange
+@@ -32,6 +32,7 @@ import itertools
+ from toastergui.tablefilter import TableFilter
+ from toastergui.tablefilter import TableFilterActionToggle
+ from toastergui.tablefilter import TableFilterActionDateRange
++from toastergui.tablefilter import TableFilterActionDay
  
  class ProjectFilters(object):
      def __init__(self, project_layers):
-@@ -1070,6 +1072,7 @@ class BuildsTable(ToasterTable):
-                         help_text='The date and time when the build started',
-                         hideable=True,
-                         orderable=True,
-+                        filter_name='started_on_filter',
-                         static_data_name='started_on',
-                         static_data_template=started_on_template)
+@@ -65,20 +66,20 @@ class LayersTable(ToasterTable):
  
-@@ -1077,6 +1080,7 @@ class BuildsTable(ToasterTable):
-                         help_text='The date and time when the build finished',
-                         hideable=False,
-                         orderable=True,
-+                        filter_name='completed_on_filter',
-                         static_data_name='completed_on',
-                         static_data_template=completed_on_template)
+         criteria = Q(projectlayer__in=self.project_layers)
  
-@@ -1149,6 +1153,38 @@ class BuildsTable(ToasterTable):
-         outcome_filter.add_action(failed_builds_filter_action)
+-        in_project_filter_action = TableFilterActionToggle(
++        in_project_action = TableFilterActionToggle(
+             "in_project",
+             "Layers added to this project",
+             QuerysetFilter(criteria)
+         )
+ 
+-        not_in_project_filter_action = TableFilterActionToggle(
++        not_in_project_action = TableFilterActionToggle(
+             "not_in_project",
+             "Layers not added to this project",
+             QuerysetFilter(~criteria)
+         )
+ 
+-        in_current_project_filter.add_action(in_project_filter_action)
+-        in_current_project_filter.add_action(not_in_project_filter_action)
++        in_current_project_filter.add_action(in_project_action)
++        in_current_project_filter.add_action(not_in_project_action)
+         self.add_filter(in_current_project_filter)
+ 
+     def setup_queryset(self, *args, **kwargs):
+@@ -221,20 +222,20 @@ class MachinesTable(ToasterTable):
+             "Filter by project machines"
+         )
+ 
+-        in_project_filter_action = TableFilterActionToggle(
++        in_project_action = TableFilterActionToggle(
+             "in_project",
+             "Machines provided by layers added to this project",
+             project_filters.in_project
+         )
+ 
+-        not_in_project_filter_action = TableFilterActionToggle(
++        not_in_project_action = TableFilterActionToggle(
+             "not_in_project",
+             "Machines provided by layers not added to this project",
+             project_filters.not_in_project
+         )
+ 
+-        in_current_project_filter.add_action(in_project_filter_action)
+-        in_current_project_filter.add_action(not_in_project_filter_action)
++        in_current_project_filter.add_action(in_project_action)
++        in_current_project_filter.add_action(not_in_project_action)
+         self.add_filter(in_current_project_filter)
+ 
+     def setup_queryset(self, *args, **kwargs):
+@@ -354,20 +355,20 @@ class RecipesTable(ToasterTable):
+             'Filter by project recipes'
+         )
+ 
+-        in_project_filter_action = TableFilterActionToggle(
++        in_project_action = TableFilterActionToggle(
+             'in_project',
+             'Recipes provided by layers added to this project',
+             project_filters.in_project
+         )
+ 
+-        not_in_project_filter_action = TableFilterActionToggle(
++        not_in_project_action = TableFilterActionToggle(
+             'not_in_project',
+             'Recipes provided by layers not added to this project',
+             project_filters.not_in_project
+         )
+ 
+-        table_filter.add_action(in_project_filter_action)
+-        table_filter.add_action(not_in_project_filter_action)
++        table_filter.add_action(in_project_action)
++        table_filter.add_action(not_in_project_action)
+         self.add_filter(table_filter)
+ 
+     def setup_queryset(self, *args, **kwargs):
+@@ -1137,20 +1138,20 @@ class BuildsTable(ToasterTable):
+             'Filter builds by outcome'
+         )
+ 
+-        successful_builds_filter_action = TableFilterActionToggle(
++        successful_builds_action = TableFilterActionToggle(
+             'successful_builds',
+             'Successful builds',
+             QuerysetFilter(Q(outcome=Build.SUCCEEDED))
+         )
+ 
+-        failed_builds_filter_action = TableFilterActionToggle(
++        failed_builds_action = TableFilterActionToggle(
+             'failed_builds',
+             'Failed builds',
+             QuerysetFilter(Q(outcome=Build.FAILED))
+         )
+ 
+-        outcome_filter.add_action(successful_builds_filter_action)
+-        outcome_filter.add_action(failed_builds_filter_action)
++        outcome_filter.add_action(successful_builds_action)
++        outcome_filter.add_action(failed_builds_action)
          self.add_filter(outcome_filter)
  
-+        # started on
-+        started_on_filter = TableFilter(
-+            'started_on_filter',
-+            'Filter by date when build was started'
-+        )
-+
-+        by_started_date_range_filter_action = TableFilterActionDateRange(
-+            'date_range',
-+            'Build date range',
+         # started on
+@@ -1159,14 +1160,29 @@ class BuildsTable(ToasterTable):
+             'Filter by date when build was started'
+         )
+ 
+-        by_started_date_range_filter_action = TableFilterActionDateRange(
++        started_today_action = TableFilterActionDay(
++            'today',
++            'Today\'s builds',
 +            'started_on',
-+            QuerysetFilter()
++            'today'
 +        )
 +
-+        started_on_filter.add_action(by_started_date_range_filter_action)
-+        self.add_filter(started_on_filter)
-+
-+        # completed on
-+        completed_on_filter = TableFilter(
-+            'completed_on_filter',
-+            'Filter by date when build was completed'
++        started_yesterday_action = TableFilterActionDay(
++            'yesterday',
++            'Yesterday\'s builds',
++            'started_on',
++            'yesterday'
 +        )
 +
-+        by_completed_date_range_filter_action = TableFilterActionDateRange(
-+            'date_range',
-+            'Build date range',
++        by_started_date_range_action = TableFilterActionDateRange(
+             'date_range',
+             'Build date range',
+-            'started_on',
+-            QuerysetFilter()
++            'started_on'
+         )
+ 
+-        started_on_filter.add_action(by_started_date_range_filter_action)
++        started_on_filter.add_action(started_today_action)
++        started_on_filter.add_action(started_yesterday_action)
++        started_on_filter.add_action(by_started_date_range_action)
+         self.add_filter(started_on_filter)
+ 
+         # completed on
+@@ -1175,14 +1191,29 @@ class BuildsTable(ToasterTable):
+             'Filter by date when build was completed'
+         )
+ 
+-        by_completed_date_range_filter_action = TableFilterActionDateRange(
++        completed_today_action = TableFilterActionDay(
++            'today',
++            'Today\'s builds',
 +            'completed_on',
-+            QuerysetFilter()
++            'today'
 +        )
 +
-+        completed_on_filter.add_action(by_completed_date_range_filter_action)
-+        self.add_filter(completed_on_filter)
++        completed_yesterday_action = TableFilterActionDay(
++            'yesterday',
++            'Yesterday\'s builds',
++            'completed_on',
++            'yesterday'
++        )
 +
++        by_completed_date_range_action = TableFilterActionDateRange(
+             'date_range',
+             'Build date range',
+-            'completed_on',
+-            QuerysetFilter()
++            'completed_on'
+         )
+ 
+-        completed_on_filter.add_action(by_completed_date_range_filter_action)
++        completed_on_filter.add_action(completed_today_action)
++        completed_on_filter.add_action(completed_yesterday_action)
++        completed_on_filter.add_action(by_completed_date_range_action)
+         self.add_filter(completed_on_filter)
+ 
          # failed tasks
-         failed_tasks_filter = TableFilter(
-             'failed_tasks_filter',
+@@ -1193,18 +1224,18 @@ class BuildsTable(ToasterTable):
+ 
+         criteria = Q(task_build__outcome=Task.OUTCOME_FAILED)
+ 
+-        with_failed_tasks_filter_action = TableFilterActionToggle(
++        with_failed_tasks_action = TableFilterActionToggle(
+             'with_failed_tasks',
+             'Builds with failed tasks',
+             QuerysetFilter(criteria)
+         )
+ 
+-        without_failed_tasks_filter_action = TableFilterActionToggle(
++        without_failed_tasks_action = TableFilterActionToggle(
+             'without_failed_tasks',
+             'Builds without failed tasks',
+             QuerysetFilter(~criteria)
+         )
+ 
+-        failed_tasks_filter.add_action(with_failed_tasks_filter_action)
+-        failed_tasks_filter.add_action(without_failed_tasks_filter_action)
++        failed_tasks_filter.add_action(with_failed_tasks_action)
++        failed_tasks_filter.add_action(without_failed_tasks_action)
+         self.add_filter(failed_tasks_filter)
 diff --git a/lib/toaster/toastergui/templates/builds-toastertable.html b/lib/toaster/toastergui/templates/builds-toastertable.html
-index f7604fd..2e32edb 100644
+index 2e32edb..bf13a66 100644
 --- a/lib/toaster/toastergui/templates/builds-toastertable.html
 +++ b/lib/toaster/toastergui/templates/builds-toastertable.html
-@@ -1,4 +1,13 @@
- {% extends 'base.html' %}
-+{% load static %}
-+
-+{% block extraheadcontent %}
-+  <link rel="stylesheet" href="{% static 'css/jquery-ui.min.css' %}" type='text/css'>
-+  <link rel="stylesheet" href="{% static 'css/jquery-ui.structure.min.css' %}" type='text/css'>
-+  <link rel="stylesheet" href="{% static 'css/jquery-ui.theme.min.css' %}" type='text/css'>
-+  <script src="{% static 'js/jquery-ui.min.js' %}">
-+  </script>
-+{% endblock %}
+@@ -18,7 +18,7 @@
+       {% include 'mrb_section.html' %}
+     {% endwith %}
  
- {% block title %} All builds - Toaster {% endblock %}
+-    <h1  class="page-header top-air" data-role="page-title"></h1>
++    <h1 class="page-header top-air" data-role="page-title"></h1>
  
-@@ -34,29 +43,6 @@
- 
-         titleElt.text(title);
-       });
--
--      /* {% if last_date_from and last_date_to %}
--      // TODO initialize the date range controls;
--      // this will need to be added via ToasterTable
--      date_init(
--        "started_on",
--        "{{last_date_from}}",
--        "{{last_date_to}}",
--        "{{dateMin_started_on}}",
--        "{{dateMax_started_on}}",
--        "{{daterange_selected}}"
--      );
--
--      date_init(
--        "completed_on",
--        "{{last_date_from}}",
--        "{{last_date_to}}",
--        "{{dateMin_completed_on}}",
--        "{{dateMax_completed_on}}",
--        "{{daterange_selected}}"
--      );
--      {% endif %}
--      */
-     });
-   </script>
- {% endblock %}
-diff --git a/lib/toaster/toastergui/widgets.py b/lib/toaster/toastergui/widgets.py
-index 8790340..47de30d 100644
---- a/lib/toaster/toastergui/widgets.py
-+++ b/lib/toaster/toastergui/widgets.py
-@@ -183,13 +183,13 @@ class ToasterTable(TemplateView):
- 
-         return template.render(context)
- 
--    def apply_filter(self, filters, **kwargs):
-+    def apply_filter(self, filters, filter_value, **kwargs):
-         """
-         Apply a filter submitted in the querystring to the ToasterTable
- 
-         filters: (str) in the format:
--          '<filter name>:<action name>!<action params>'
--        where <action params> is optional
-+          '<filter name>:<action name>'
-+        filter_value: (str) parameters to pass to the named filter
- 
-         <filter name> and <action name> are used to look up the correct filter
-         in the ToasterTable's filter map; the <action params> are set on
-@@ -199,15 +199,8 @@ class ToasterTable(TemplateView):
-         self.setup_filters(**kwargs)
- 
-         try:
--            filter_name, action_name_and_params = filters.split(':')
--
--            action_name = None
--            action_params = None
--            if re.search('!', action_name_and_params):
--                action_name, action_params = action_name_and_params.split('!')
--                action_params = urllib.unquote_plus(action_params)
--            else:
--                action_name = action_name_and_params
-+            filter_name, action_name = filters.split(':')
-+            action_params = urllib.unquote_plus(filter_value)
-         except ValueError:
-             return
- 
-@@ -217,7 +210,7 @@ class ToasterTable(TemplateView):
-         try:
-             table_filter = self.filter_map.get_filter(filter_name)
-             action = table_filter.get_action(action_name)
--            action.set_params(action_params)
-+            action.set_filter_params(action_params)
-             self.queryset = action.filter(self.queryset)
-         except KeyError:
-             # pass it to the user - programming error here
-@@ -247,13 +240,20 @@ class ToasterTable(TemplateView):
- 
- 
-     def get_data(self, request, **kwargs):
--        """Returns the data for the page requested with the specified
--        parameters applied"""
-+        """
-+        Returns the data for the page requested with the specified
-+        parameters applied
-+
-+        filters: filter and action name, e.g. "outcome:build_succeeded"
-+        filter_value: value to pass to the named filter+action, e.g. "on"
-+        (for a toggle filter) or "2015-12-11,2015-12-12" (for a date range filter)
-+        """
- 
-         page_num = request.GET.get("page", 1)
-         limit = request.GET.get("limit", 10)
-         search = request.GET.get("search", None)
-         filters = request.GET.get("filter", None)
-+        filter_value = request.GET.get("filter_value", "on")
-         orderby = request.GET.get("orderby", None)
-         nocache = request.GET.get("nocache", None)
- 
-@@ -285,7 +285,7 @@ class ToasterTable(TemplateView):
-         if search:
-             self.apply_search(search)
-         if filters:
--            self.apply_filter(filters, **kwargs)
-+            self.apply_filter(filters, filter_value, **kwargs)
-         if orderby:
-             self.apply_orderby(orderby)
- 
+     {% url 'builds' as xhr_table_url %}
+     {% include 'toastertable.html' %}
+diff --git a/lib/toaster/toastergui/templates/toastertable.html b/lib/toaster/toastergui/templates/toastertable.html
+index 98a715f..f0a3aed 100644
+--- a/lib/toaster/toastergui/templates/toastertable.html
++++ b/lib/toaster/toastergui/templates/toastertable.html
+@@ -32,8 +32,11 @@
+       <a href="#" class="add-on btn remove-search-btn-{{table_name}}" tabindex="-1">
+         <i class="icon-remove"></i>
+       </a>
+-      <button class="btn search-submit-{{table_name}}" >Search</button>
+-      <button class="btn btn-link remove-search-btn-{{table_name}}">Show {{title|lower}}
++      <button class="btn search-submit-{{table_name}}">
++        Search
++      </button>
++      <button class="btn btn-link show-all-{{table_name}}">
++        Show {{title|lower}}
+       </button>
+     </form>
+   </div>
 -- 
 2.1.4
 
