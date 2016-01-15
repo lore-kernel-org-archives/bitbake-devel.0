@@ -1,28 +1,28 @@
 Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id 536C27422C
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	by mail.openembedded.org (Postfix) with ESMTP id A65CF7665F
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 12:58:25 +0000 (UTC)
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-	by orsmga103.jf.intel.com with ESMTP; 15 Jan 2016 04:58:27 -0800
+	Fri, 15 Jan 2016 12:58:27 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga102.jf.intel.com with ESMTP; 15 Jan 2016 04:58:30 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="29894723"
+X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="881987213"
 Received: from linux.intel.com ([10.23.219.25])
-	by fmsmga004.fm.intel.com with ESMTP; 15 Jan 2016 04:58:26 -0800
+	by fmsmga001.fm.intel.com with ESMTP; 15 Jan 2016 04:58:28 -0800
 Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id D94886A4004
+	by linux.intel.com (Postfix) with ESMTP id 0B9486A4004
 	for <bitbake-devel@lists.openembedded.org>;
-	Fri, 15 Jan 2016 05:46:22 -0800 (PST)
+	Fri, 15 Jan 2016 05:46:23 -0800 (PST)
 From: Ed Bartosh <ed.bartosh@linux.intel.com>
 To: bitbake-devel@lists.openembedded.org
-Date: Fri, 15 Jan 2016 13:00:57 +0200
-Message-Id: <79982a4b8f8a1c5cacc09522d7e0f1aeff01dce7.1452855461.git.ed.bartosh@linux.intel.com>
+Date: Fri, 15 Jan 2016 13:00:58 +0200
+Message-Id: <39c56d946a077c7029ad8c4a188a4237a3d68bd5.1452855461.git.ed.bartosh@linux.intel.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 In-Reply-To: <cover.1452855461.git.ed.bartosh@linux.intel.com>
 References: <cover.1452855461.git.ed.bartosh@linux.intel.com>
-Subject: [PATCH 14/23] toaster: toastergui: ensure filter_value updates
+Subject: [PATCH 15/23] toaster: toastergui: streamline construction of filter objects
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,79 +35,320 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Fri, 15 Jan 2016 12:58:26 -0000
+X-List-Received-Date: Fri, 15 Jan 2016 12:58:27 -0000
 
 From: Elliot Smith <elliot.smith@intel.com>
 
-Clicking on the radio button for a date range filter action
-populates the from and to fields for that action if they are empty.
-
-However, because this doesn't fire "change" events, clicking on
-the radio button doesn't update the filter_value hidden field. This
-means that the date range action's filter_value parameter isn't
-set correctly when the filter popup is submitted.
-
-Manually call the changeHandler() to set the filter_value whenever
-the radio for a date range filter is clicked.
+In line with comments from review, remove the QuerysetFilter
+class (redundant) and convert ProjectFilters into a class
+with static methods.
 
 [YOCTO #8738]
 
 Signed-off-by: Elliot Smith <elliot.smith@intel.com>
 Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
 ---
- lib/toaster/toastergui/static/js/table.js | 32 +++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+ lib/toaster/toastergui/querysetfilter.py | 24 --------------------
+ lib/toaster/toastergui/tablefilter.py    | 38 +++++++++++++-------------------
+ lib/toaster/toastergui/tables.py         | 35 ++++++++++++++---------------
+ lib/toaster/toastergui/widgets.py        |  1 -
+ 4 files changed, 32 insertions(+), 66 deletions(-)
+ delete mode 100644 bitbake/lib/toaster/toastergui/querysetfilter.py
 
-diff --git a/lib/toaster/toastergui/static/js/table.js b/lib/toaster/toastergui/static/js/table.js
-index c154844..a253917 100644
---- a/lib/toaster/toastergui/static/js/table.js
-+++ b/lib/toaster/toastergui/static/js/table.js
-@@ -488,20 +488,6 @@ function tableInit(ctx){
-       action.find('[data-date-to-for]').datepicker(options);
-     inputTo.val(selectedTo);
- 
--    // if the radio button is checked and one or both of the datepickers are
--    // empty, populate them with today's date
--    radio.change(function () {
--      var now = new Date();
+diff --git a/lib/toaster/toastergui/querysetfilter.py b/lib/toaster/toastergui/querysetfilter.py
+deleted file mode 100644
+index 10cc988..0000000
+--- a/lib/toaster/toastergui/querysetfilter.py
++++ /dev/null
+@@ -1,24 +0,0 @@
+-class QuerysetFilter(object):
+-    """ Filter for a queryset """
 -
--      if (inputFrom.val() === '') {
--        inputFrom.datepicker('setDate', now);
--      }
+-    def __init__(self, criteria=None):
+-        self.criteria = None
+-        if criteria:
+-            self.set_criteria(criteria)
 -
--      if (inputTo.val() === '') {
--        inputTo.datepicker('setDate', now);
--      }
--    });
+-    def set_criteria(self, criteria):
+-        """
+-        criteria is an instance of django.db.models.Q;
+-        see https://docs.djangoproject.com/en/1.9/ref/models/querysets/#q-objects
+-        """
+-        self.criteria = criteria
 -
-     // set filter_value based on date pickers when
-     // one of their values changes
-     var changeHandler = function () {
-@@ -529,6 +515,24 @@ function tableInit(ctx){
-       inputFrom.datepicker('option', 'maxDate', inputTo.val());
-     });
+-    def filter(self, queryset):
+-        """
+-        Filter queryset according to the criteria for this filter,
+-        returning the filtered queryset
+-        """
+-        if self.criteria:
+-            return queryset.filter(self.criteria)
+-        else:
+-            return queryset
+diff --git a/lib/toaster/toastergui/tablefilter.py b/lib/toaster/toastergui/tablefilter.py
+index bd8decd..9d15bcf 100644
+--- a/lib/toaster/toastergui/tablefilter.py
++++ b/lib/toaster/toastergui/tablefilter.py
+@@ -22,7 +22,6 @@
+ from django.db.models import Q, Max, Min
+ from django.utils import dateparse, timezone
+ from datetime import timedelta
+-from querysetfilter import QuerysetFilter
  
-+    // if the radio button is checked and one or both of the datepickers are
-+    // empty, populate them with today's date
-+    radio.change(function () {
-+      var now = new Date();
-+
-+      if (inputFrom.val() === '') {
-+        inputFrom.datepicker('setDate', now);
-+      }
-+
-+      if (inputTo.val() === '') {
-+        inputTo.datepicker('setDate', now);
-+      }
-+
-+      // setting the date like this doesn't fire the changeHandler to
-+      // update the filter_value, so do that manually instead
-+      changeHandler()
-+    });
-+
-     return action;
-   }
+ class TableFilter(object):
+     """
+@@ -118,10 +117,10 @@ class TableFilterAction(object):
+     ToasterTable
+     """
  
+-    def __init__(self, name, title, queryset_filter):
++    def __init__(self, name, title, criteria):
+         self.name = name
+         self.title = title
+-        self.queryset_filter = queryset_filter
++        self.criteria = criteria
+ 
+         # set in subclasses
+         self.type = None
+@@ -132,11 +131,13 @@ class TableFilterAction(object):
+         the structure of this string depends on the type of action;
+         it's ignored for a toggle filter action, which is just on or off
+         """
+-        if not params:
+-            return
++        pass
+ 
+     def filter(self, queryset):
+-        return self.queryset_filter.filter(queryset)
++        if self.criteria:
++            return queryset.filter(self.criteria)
++        else:
++            return queryset
+ 
+     def to_json(self, queryset):
+         """ Dump as a JSON object """
+@@ -167,16 +168,12 @@ class TableFilterActionDay(TableFilterAction):
+     YESTERDAY = 'yesterday'
+ 
+     def __init__(self, name, title, field, day,
+-    queryset_filter = QuerysetFilter(), query_helper = TableFilterQueryHelper()):
++    query_helper = TableFilterQueryHelper()):
+         """
+         field: (string) the datetime field to filter by
+         day: (string) "today" or "yesterday"
+         """
+-        super(TableFilterActionDay, self).__init__(
+-            name,
+-            title,
+-            queryset_filter
+-        )
++        super(TableFilterActionDay, self).__init__(name, title, None)
+         self.type = 'day'
+         self.field = field
+         self.day = day
+@@ -189,8 +186,6 @@ class TableFilterActionDay(TableFilterAction):
+         depending on when the filtering is applied
+         """
+ 
+-        criteria = None
+-        date_str = None
+         now = timezone.now()
+ 
+         if self.day == self.YESTERDAY:
+@@ -201,15 +196,13 @@ class TableFilterActionDay(TableFilterAction):
+ 
+         wanted_date_str = wanted_date.strftime('%Y-%m-%d')
+ 
+-        criteria = self.query_helper.dateStringsToQ(
++        self.criteria = self.query_helper.dateStringsToQ(
+             self.field,
+             wanted_date_str,
+             wanted_date_str
+         )
+ 
+-        self.queryset_filter.set_criteria(criteria)
+-
+-        return self.queryset_filter.filter(queryset)
++        return queryset.filter(self.criteria)
+ 
+ class TableFilterActionDateRange(TableFilterAction):
+     """
+@@ -218,14 +211,14 @@ class TableFilterActionDateRange(TableFilterAction):
+     """
+ 
+     def __init__(self, name, title, field,
+-    queryset_filter = QuerysetFilter(), query_helper = TableFilterQueryHelper()):
++    query_helper = TableFilterQueryHelper()):
+         """
+         field: (string) the field to find the max/min range from in the queryset
+         """
+         super(TableFilterActionDateRange, self).__init__(
+             name,
+             title,
+-            queryset_filter
++            None
+         )
+ 
+         self.type = 'daterange'
+@@ -248,17 +241,16 @@ class TableFilterActionDateRange(TableFilterAction):
+         try:
+             date_from_str, date_to_str = params.split(',')
+         except ValueError:
+-            self.queryset_filter.set_criteria(None)
++            self.criteria = None
+             return
+ 
+         # one of the values required for the filter is missing, so set
+         # it to the one which was supplied
+-        criteria = self.query_helper.dateStringsToQ(
++        self.criteria = self.query_helper.dateStringsToQ(
+             self.field,
+             date_from_str,
+             date_to_str
+         )
+-        self.queryset_filter.set_criteria(criteria)
+ 
+     def to_json(self, queryset):
+         """ Dump as a JSON object """
+diff --git a/lib/toaster/toastergui/tables.py b/lib/toaster/toastergui/tables.py
+index d0ed496..b7d977e 100644
+--- a/lib/toaster/toastergui/tables.py
++++ b/lib/toaster/toastergui/tables.py
+@@ -20,7 +20,6 @@
+ # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ 
+ from toastergui.widgets import ToasterTable
+-from toastergui.querysetfilter import QuerysetFilter
+ from orm.models import Recipe, ProjectLayer, Layer_Version, Machine, Project
+ from orm.models import CustomImageRecipe, Package, Build, LogMessage, Task
+ from orm.models import ProjectTarget
+@@ -37,9 +36,13 @@ from toastergui.tablefilter import TableFilterActionDateRange
+ from toastergui.tablefilter import TableFilterActionDay
+ 
+ class ProjectFilters(object):
+-    def __init__(self, project_layers):
+-        self.in_project = QuerysetFilter(Q(layer_version__in=project_layers))
+-        self.not_in_project = QuerysetFilter(~Q(layer_version__in=project_layers))
++    @staticmethod
++    def in_project(project_layers):
++        return Q(layer_version__in=project_layers)
++
++    @staticmethod
++    def not_in_project(project_layers):
++        return ~(ProjectFilters.in_project(project_layers))
+ 
+ class LayersTable(ToasterTable):
+     """Table of layers in Toaster"""
+@@ -71,13 +74,13 @@ class LayersTable(ToasterTable):
+         in_project_action = TableFilterActionToggle(
+             "in_project",
+             "Layers added to this project",
+-            QuerysetFilter(criteria)
++            criteria
+         )
+ 
+         not_in_project_action = TableFilterActionToggle(
+             "not_in_project",
+             "Layers not added to this project",
+-            QuerysetFilter(~criteria)
++            ~criteria
+         )
+ 
+         in_current_project_filter.add_action(in_project_action)
+@@ -217,8 +220,6 @@ class MachinesTable(ToasterTable):
+     def setup_filters(self, *args, **kwargs):
+         project = Project.objects.get(pk=kwargs['pid'])
+ 
+-        project_filters = ProjectFilters(self.project_layers)
+-
+         in_current_project_filter = TableFilter(
+             "in_current_project",
+             "Filter by project machines"
+@@ -227,13 +228,13 @@ class MachinesTable(ToasterTable):
+         in_project_action = TableFilterActionToggle(
+             "in_project",
+             "Machines provided by layers added to this project",
+-            project_filters.in_project
++            ProjectFilters.in_project(self.project_layers)
+         )
+ 
+         not_in_project_action = TableFilterActionToggle(
+             "not_in_project",
+             "Machines provided by layers not added to this project",
+-            project_filters.not_in_project
++            ProjectFilters.not_in_project(self.project_layers)
+         )
+ 
+         in_current_project_filter.add_action(in_project_action)
+@@ -350,8 +351,6 @@ class RecipesTable(ToasterTable):
+         return context
+ 
+     def setup_filters(self, *args, **kwargs):
+-        project_filters = ProjectFilters(self.project_layers)
+-
+         table_filter = TableFilter(
+             'in_current_project',
+             'Filter by project recipes'
+@@ -360,13 +359,13 @@ class RecipesTable(ToasterTable):
+         in_project_action = TableFilterActionToggle(
+             'in_project',
+             'Recipes provided by layers added to this project',
+-            project_filters.in_project
++            ProjectFilters.in_project(self.project_layers)
+         )
+ 
+         not_in_project_action = TableFilterActionToggle(
+             'not_in_project',
+             'Recipes provided by layers not added to this project',
+-            project_filters.not_in_project
++            ProjectFilters.not_in_project(self.project_layers)
+         )
+ 
+         table_filter.add_action(in_project_action)
+@@ -1140,13 +1139,13 @@ class BuildsTable(ToasterTable):
+         successful_builds_action = TableFilterActionToggle(
+             'successful_builds',
+             'Successful builds',
+-            QuerysetFilter(Q(outcome=Build.SUCCEEDED))
++            Q(outcome=Build.SUCCEEDED)
+         )
+ 
+         failed_builds_action = TableFilterActionToggle(
+             'failed_builds',
+             'Failed builds',
+-            QuerysetFilter(Q(outcome=Build.FAILED))
++            Q(outcome=Build.FAILED)
+         )
+ 
+         outcome_filter.add_action(successful_builds_action)
+@@ -1226,13 +1225,13 @@ class BuildsTable(ToasterTable):
+         with_failed_tasks_action = TableFilterActionToggle(
+             'with_failed_tasks',
+             'Builds with failed tasks',
+-            QuerysetFilter(criteria)
++            criteria
+         )
+ 
+         without_failed_tasks_action = TableFilterActionToggle(
+             'without_failed_tasks',
+             'Builds without failed tasks',
+-            QuerysetFilter(~criteria)
++            ~criteria
+         )
+ 
+         failed_tasks_filter.add_action(with_failed_tasks_action)
+diff --git a/lib/toaster/toastergui/widgets.py b/lib/toaster/toastergui/widgets.py
+index bc081b8..d9328d4 100644
+--- a/lib/toaster/toastergui/widgets.py
++++ b/lib/toaster/toastergui/widgets.py
+@@ -32,7 +32,6 @@ from django.template import Context, Template
+ from django.core.serializers.json import DjangoJSONEncoder
+ from django.core.exceptions import FieldError
+ from django.conf.urls import url, patterns
+-from toastergui.querysetfilter import QuerysetFilter
+ 
+ import types
+ import json
 -- 
 2.1.4
 
