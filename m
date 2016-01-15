@@ -1,58 +1,24 @@
-Return-Path: <peter.kjellerstedt@axis.com>
-Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
-	by mail.openembedded.org (Postfix) with ESMTP id F0673731DB
+Return-Path: <ed.bartosh@linux.intel.com>
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+	by mail.openembedded.org (Postfix) with ESMTP id 199CA731FC
 	for <bitbake-devel@lists.openembedded.org>;
-	Thu, 14 Jan 2016 17:50:04 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by bes.se.axis.com (Postfix) with ESMTP id 76E042E0B5;
-	Thu, 14 Jan 2016 18:50:04 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
-Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
-	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
-	port 10024)
-	with LMTP id cVnYDqDaxPNX; Thu, 14 Jan 2016 18:50:02 +0100 (CET)
-Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
-	by bes.se.axis.com (Postfix) with ESMTP id 79E2B2E110;
-	Thu, 14 Jan 2016 18:50:02 +0100 (CET)
-Received: from boulder.se.axis.com (localhost [127.0.0.1])
-	by postfix.imss71 (Postfix) with ESMTP id 5B1FD15E7;
-	Thu, 14 Jan 2016 18:50:02 +0100 (CET)
-Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
-	by boulder.se.axis.com (Postfix) with ESMTP id 4F8941446;
-	Thu, 14 Jan 2016 18:50:02 +0100 (CET)
-Received: from XBOX01.axis.com (xbox01.axis.com [10.0.5.15])
-	by seth.se.axis.com (Postfix) with ESMTP id 3DA673E3CD;
-	Thu, 14 Jan 2016 18:50:02 +0100 (CET)
-Received: from XBOX02.axis.com (10.0.5.16) by XBOX01.axis.com (10.0.5.15) with
-	Microsoft SMTP Server (TLS) id 15.0.1104.5;
-	Thu, 14 Jan 2016 18:50:02 +0100
-Received: from XBOX02.axis.com ([fe80::bcea:88d5:e1ff:8e04]) by
-	XBOX02.axis.com ([fe80::bcea:88d5:e1ff:8e04%12]) with mapi id
-	15.00.1104.000; Thu, 14 Jan 2016 18:50:02 +0100
-From: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-To: Olof Johansson <olofjn@axis.com>, Andre McCurdy <armccurdy@gmail.com>,
-	Richard Purdie <richard.purdie@linuxfoundation.org>,
-	bitbake-devel <bitbake-devel@lists.openembedded.org>
-Thread-Topic: [bitbake-devel] [PATCH] fetch/git: Change to use clearer ssh url
-	syntax for broken servers
-Thread-Index: AQHRSU3451UemDen+Uabr9iI8HBObp758d0AgAALwwCAASMOIP//+6+AgAAYB4CAAARxAIAAGaeQ
-Date: Thu, 14 Jan 2016 17:50:02 +0000
-Message-ID: <36fc0893749647d8aeef0cc8cfd68435@XBOX02.axis.com>
-References: <1452172732.7598.114.camel@linuxfoundation.org>
-	<CAJ86T=Xb6HHZm0BaqtGeCUknP1_dTy6t1L7LtZru9F+=j-BmSg@mail.gmail.com>
-	<1452723582.28375.118.camel@linuxfoundation.org>
-	<90f0d7cacc2743e58535b16f6fe316bd@XBOX02.axis.com>
-	<1452785159.28375.135.camel@linuxfoundation.org>
-	<CAJ86T=X9LU04NhjnaLtq+G7WSE6=9t2yiNF2MiuDrnn+M5exLQ@mail.gmail.com>
-	<20160114170752.GH31212@axis.com>
-In-Reply-To: <20160114170752.GH31212@axis.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.0.5.55]
-MIME-Version: 1.0
-Subject: Re: [PATCH] fetch/git: Change to use clearer ssh url syntax for broken servers
+	Fri, 15 Jan 2016 12:57:41 +0000 (UTC)
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+	by orsmga101.jf.intel.com with ESMTP; 15 Jan 2016 04:57:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.22,299,1449561600"; d="scan'208";a="881986919"
+Received: from linux.intel.com ([10.23.219.25])
+	by fmsmga001.fm.intel.com with ESMTP; 15 Jan 2016 04:57:42 -0800
+Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
+	by linux.intel.com (Postfix) with ESMTP id 6CBB86A4004
+	for <bitbake-devel@lists.openembedded.org>;
+	Fri, 15 Jan 2016 05:45:38 -0800 (PST)
+From: Ed Bartosh <ed.bartosh@linux.intel.com>
+To: bitbake-devel@lists.openembedded.org
+Date: Fri, 15 Jan 2016 13:00:43 +0200
+Message-Id: <cover.1452855461.git.ed.bartosh@linux.intel.com>
+X-Mailer: git-send-email 2.1.4
+Subject: [PATCH 00/23] toaster: Convert projects and builds pages to ToasterTable
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -65,68 +31,111 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Thu, 14 Jan 2016 17:50:05 -0000
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+X-List-Received-Date: Fri, 15 Jan 2016 12:57:42 -0000
 
-> -----Original Message-----
-> From: Olof Johansson
-> Sent: den 14 januari 2016 18:08
-> To: Andre McCurdy; Richard Purdie; bitbake-devel
-> Cc: Peter Kjellerstedt
-> Subject: Re: [bitbake-devel] [PATCH] fetch/git: Change to use clearer
-> ssh url syntax for broken servers
->=20
-> On 16-01-14 08:51 -0800, Andre McCurdy wrote:
-> > > I'm not sure there is one other than special casing bitbucket urls
-> in
-> > > the fetcher.
-> >
-> > But I don't think there is any problem with BitBucket. The original
-> > bug report was caused by trying to use a URL with a ':' between the
-> > host and the repo path. A URL like that does not work when prefixed
-> by
-> > ssh://, it's the same for GitHub URLs too.
->=20
-> Indeed, the reported URL is not an RFC 3986 comformant URI. While
->=20
->   ssh://example.com:/username/project.git
->=20
-> would be a kind of valid URI (the RFC doesn't forbid having an
-> empty port, see section 3.2.3), not having a path delimiter at
-> all however is not allowed. And fixing this by breaking RFC
-> comformant use cases is very suprising to me.
->=20
-> --
-> olofjn
+Hi,
 
-I have now looked at the ticket [YOCTO #8864] and actually created an=20
-account on bitbucket.org to actually verify what is happening, and I=20
-can only come to the conclusion that the ticket is gibberish. I have=20
-tried the following two URL:s with bitbucket.org, and they both work=20
-as expected:
+Many of the tables displayed by Toaster are backed by ToasterTable, but some
+of the key ones (like "projects", "all builds", and "project builds") aren't.
 
-git@bitbucket.org:Saur2000/test1.git
-ssh://git@bitbucket.org/Saur2000/test1.git
+This makes it difficult to keep styling consistent between tables, as some
+are styled by making changes to ToasterTable, while others are styled
+by modifying Django templates.
 
-The real error to the SRC_URI given in the ticket:
+Improve the consistency and maintainability of these tables by converting
+them to use ToasterTable.
 
-SRC_URI =3D "git://git@bitbucket.org:<username>/<repository>.git;rev=3Dfoo"
+Note that this patchset also reworks the ToasterTable API so that we can easily
+support different column filter types.
 
-is that it is missing the protocol argument. Changing it to:
+To test:
 
-SRC_URI =3D "git://git@bitbucket.org/<username>/<repository>.git;protocol=
-=3Dssh;rev=3Dfoo"
+1. Open the "projects", "all builds" and "project builds" pages in Toaster.
+2. Check that the column filtering and sorting works correctly, and projects/builds
+   display correctly.
 
-should make everything work as expected.
+Related bug: https://bugzilla.yoctoproject.org/show_bug.cgi?id=8738
 
-The ticket author obviously did not realize that the git:// scheme=20
-used in the SRC_URI is for BitBake and not for Git, and that when=20
-the protocol=3Dssh argument is added, then the rest of the URI must=20
-be changed to match the syntax expected by an ssh:// URI even though=20
-the scheme in SRC_URI is git://.
+The following changes since commit ea666f60d2ddf492d146330fe69b474a0f9796d5:
 
-//Peter
+  toaster-manual: describe the way to start Toaster (2016-01-15 09:56:25 +0200)
+
+are available in the git repository at:
+
+  git://git.yoctoproject.org/poky-contrib ed/toaster/submit/elliot/toaster/tables-8738
+  http://git.yoctoproject.org/cgit.cgi/poky-contrib/log/?h=ed/toaster/submit/elliot/toaster/tables-8738
+
+Elliot Smith (23):
+  toaster: toastergui: use ToasterTable for projects page
+  toaster: move image file suffix list to model
+  toaster: check inferred file suffixes against list of known types
+  toaster: toastergui: switch projects/ view to ToasterTable
+  toaster: toastergui: use event delegates for hover help elements
+  toaster: toastergui: convert all builds page to ToasterTable
+  toaster: toastergui: refactor ToasterTable filtering
+  toaster: toastergui: switch off filter highlights when inactive
+  toaster: toastergui: show recent builds on all builds page
+  toaster: toastergui: implement date range filters for builds
+  toaster: toastergui: implement "today" and "yesterday" filters
+  toaster: toastergui: convert project builds page to ToasterTable
+  toaster: toastergui: don't hide all elements with .col class
+  toaster: toastergui: ensure filter_value updates
+  toaster: toastergui: streamline construction of filter objects
+  toaster: toastergui: serialise decimals correctly
+  toaster: toastergui: set default visible and hideable columns
+  toaster: toastergui: mute label for filter actions with no records
+  toaster: toastergui: make "Apply" button state depend on filter range
+  toaster: toastergui: fix error and warning counts for builds
+  toaster: toastergui: remove unused views and template code
+  toaster: tests: fix Django tests for new ToasterTable pages
+  toaster: toastergui: code formatting and clean-up
+
+ .../contrib/django-aggregate-if-master/.gitignore  |  10 -
+ .../contrib/django-aggregate-if-master/.travis.yml |  50 --
+ .../contrib/django-aggregate-if-master/LICENSE     |  21 -
+ .../contrib/django-aggregate-if-master/README.rst  | 156 ----
+ .../django-aggregate-if-master/aggregate_if.py     | 164 ----
+ .../contrib/django-aggregate-if-master/runtests.py |  48 --
+ .../contrib/django-aggregate-if-master/setup.py    |  33 -
+ .../contrib/django-aggregate-if-master/tox.ini     | 198 -----
+ lib/toaster/orm/models.py                          | 103 ++-
+ lib/toaster/toastergui/static/js/libtoaster.js     |   6 +-
+ lib/toaster/toastergui/static/js/projecttopbar.js  |   9 +
+ lib/toaster/toastergui/static/js/table.js          | 325 ++++++--
+ lib/toaster/toastergui/tablefilter.py              | 292 +++++++
+ lib/toaster/toastergui/tables.py                   | 858 +++++++++++++++++++--
+ .../toastergui/templates/baseprojectpage.html      |   1 +
+ .../toastergui/templates/builds-toastertable.html  |  48 ++
+ lib/toaster/toastergui/templates/builds.html       | 125 ---
+ lib/toaster/toastergui/templates/mrb_section.html  |   4 +-
+ .../templates/projectbuilds-toastertable.html      |  56 ++
+ .../templates/projects-toastertable.html           |  36 +
+ lib/toaster/toastergui/templates/projects.html     |  92 ---
+ .../toastergui/templates/toastertable-filter.html  |   4 +-
+ lib/toaster/toastergui/templates/toastertable.html |   7 +-
+ lib/toaster/toastergui/tests.py                    | 265 +++++--
+ lib/toaster/toastergui/urls.py                     |  14 +-
+ lib/toaster/toastergui/views.py                    | 491 +-----------
+ lib/toaster/toastergui/widgets.py                  | 112 +--
+ lib/toaster/toastermain/settings.py                |   9 -
+ 28 files changed, 1898 insertions(+), 1639 deletions(-)
+ delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/.gitignore
+ delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/.travis.yml
+ delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/LICENSE
+ delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/README.rst
+ delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/aggregate_if.py
+ delete mode 100755 bitbake/lib/toaster/contrib/django-aggregate-if-master/runtests.py
+ delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/setup.py
+ delete mode 100644 bitbake/lib/toaster/contrib/django-aggregate-if-master/tox.ini
+ create mode 100644 bitbake/lib/toaster/toastergui/tablefilter.py
+ create mode 100644 bitbake/lib/toaster/toastergui/templates/builds-toastertable.html
+ delete mode 100644 bitbake/lib/toaster/toastergui/templates/builds.html
+ create mode 100644 bitbake/lib/toaster/toastergui/templates/projectbuilds-toastertable.html
+ create mode 100644 bitbake/lib/toaster/toastergui/templates/projects-toastertable.html
+ delete mode 100644 bitbake/lib/toaster/toastergui/templates/projects.html
+
+--
+Regards,
+Ed
 
 
