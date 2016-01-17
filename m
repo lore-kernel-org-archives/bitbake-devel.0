@@ -1,41 +1,41 @@
 Return-Path: <florin@resin.io>
-Received: from mail-wm0-f47.google.com (mail-wm0-f47.google.com [74.125.82.47])
-	by mail.openembedded.org (Postfix) with ESMTP id 30A6860116
+Received: from mail-wm0-f45.google.com (mail-wm0-f45.google.com [74.125.82.45])
+	by mail.openembedded.org (Postfix) with ESMTP id 3343E6FFC8
 	for <bitbake-devel@lists.openembedded.org>;
-	Sun, 17 Jan 2016 06:49:20 +0000 (UTC)
-Received: by mail-wm0-f47.google.com with SMTP id b14so79382724wmb.1
+	Sun, 17 Jan 2016 07:02:35 +0000 (UTC)
+Received: by mail-wm0-f45.google.com with SMTP id r129so16386181wmr.0
 	for <bitbake-devel@lists.openembedded.org>;
-	Sat, 16 Jan 2016 22:49:21 -0800 (PST)
+	Sat, 16 Jan 2016 23:02:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=resin.io; s=googledkim;
 	h=from:to:cc:subject:date:message-id;
 	bh=ylD3fNrg3XqD2xbTOtrEPUbJ5fALcyQb6BxraeOmJvU=;
-	b=BYSjfJIaQM46M/6yLWuoR1fFGNkHWc0zI2mlpHrTmYtlSQzc2k4H8WSdZJKh2zBoyi
-	KcZOgLuvxplBrUnK6zUdMLQ2Bv9geuAmT2xgVkE9It9/d0WN+JzHytiSuMVCy1O+uiri
-	F2V3lUrAbbHmB1q76wNTXgZSd3JENNpt5dX30=
+	b=kpQ78OhX/WWEWMWqS7pM/Qy7BPi7JxesSlZh9nacVN/OhjqZVObDi9SO4joxO9LbZy
+	JmULy2OtUQdRtp60OF7WHs4pK8RgpNzocM23qUcv7yP3SLMO9GOAxEUTuQSBrgi/9uzP
+	nFR3cfzZiYTlG8T8hFqlf+/mbeW4jZEKKJ8Is=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=1e100.net; s=20130820;
 	h=x-gm-message-state:from:to:cc:subject:date:message-id;
 	bh=ylD3fNrg3XqD2xbTOtrEPUbJ5fALcyQb6BxraeOmJvU=;
-	b=Ox8kR5jsBdo+dhGBGS9BSIbydPZSm/OOLM9udwDL9KKiBxm55PcLcc5NfebN3o+UvF
-	EZUNP7dpWWfOz4hrWW9x1jxY8qjT1umucVJJ4Wn/V5k8tT56k9Bkg6KxHNTrk7x7HYTY
-	wC3MlDwJTe6tkKjxABfNUvd5yucHOGh42+gGs8JzDXnxZSjAkJkdnChRzrXvR8QadwbF
-	mrY0UIEjEN+oxNvnY2hPzIFhXlkA4wpVF9ut1J3u2fadOR874oEl/ooVEWpswQU62RSb
-	9n/7GTKr/PczWPd7DcYny+H/596HRX+AEu2Bat/ct0z2/rQG+7q3F5U2qPw2RlvRJ8n7
-	aE6A==
-X-Gm-Message-State: ALoCoQmjQiAzzGnzifaD40PLCy6XFcDGWA9mYUPWhzlEx6BaJUZ1keiDxD0R0KRVOIGmj6qjmSnfRxKCyCyYRnmKHum1pakgzQ==
-X-Received: by 10.194.114.1 with SMTP id jc1mr17592514wjb.78.1453013360943;
-	Sat, 16 Jan 2016 22:49:20 -0800 (PST)
+	b=hn+WOJ4btDkrnCWKBmmn/g8NtCeAIDhGSC1tR3j8E8b4Qsmbs2S9eKVvzkgiwA7Vxn
+	f/9NhWtnUcxnxAchs71Xsof868UzOFTFVmv2d5IwTuyKhFz+d2CBKMpjjN29c6pyCETD
+	U1vp5VT7hgPGIRNdTnwWxs+WUOtzzYkex5rreAXQyyKmxES4jUaFqsHFSQUMuX+dKuyq
+	puEKY5YlXyZfvLbYQz5oz2nY9ObZrtAMNouh8NZkzJWMWEtaNYy09cZD+fcumddk07LC
+	fdyQc3cqSDOaTE82H/8IVUaJO7PSn7Dl7GrJI33bmhVQb/ZxDsheeAMvEP2QN2h9W8et
+	C/pA==
+X-Gm-Message-State: ALoCoQnCSH0bpViYtnf9RPtGwDUWSQvblRFMyLuiJWxb9zqCjAkogMIwYswoyuJ9/Sh6fP1JCdPPEuBaekuqdn81bTgOsH7rzQ==
+X-Received: by 10.194.240.67 with SMTP id vy3mr18348715wjc.168.1453014156425; 
+	Sat, 16 Jan 2016 23:02:36 -0800 (PST)
 Received: from localhost.localdomain (5-13-225-67.residential.rdsnet.ro.
 	[5.13.225.67]) by smtp.gmail.com with ESMTPSA id
-	w73sm9854687wmw.21.2016.01.16.22.49.19
+	c26sm9934066wmi.21.2016.01.16.23.02.35
 	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Sat, 16 Jan 2016 22:49:20 -0800 (PST)
+	Sat, 16 Jan 2016 23:02:35 -0800 (PST)
 From: Florin Sarbu <florin@resin.io>
 To: bitbake-devel@lists.openembedded.org
-Date: Sun, 17 Jan 2016 08:49:04 +0200
-Message-Id: <1453013345-4776-1-git-send-email-florin@resin.io>
+Date: Sun, 17 Jan 2016 09:02:27 +0200
+Message-Id: <1453014147-5233-1-git-send-email-florin@resin.io>
 X-Mailer: git-send-email 2.7.0.rc3
-Subject: [PATCH] bitbake: cooker: Ensure bbappend files are processed in a determistic order
+Subject: [DAISY backport] bitbake: cooker: Ensure bbappend files are processed in a determistic order
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -48,7 +48,7 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Sun, 17 Jan 2016 06:49:23 -0000
+X-List-Received-Date: Sun, 17 Jan 2016 07:02:39 -0000
 
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 
