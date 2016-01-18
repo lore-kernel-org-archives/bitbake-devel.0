@@ -1,28 +1,27 @@
-Return-Path: <ed.bartosh@linux.intel.com>
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	by mail.openembedded.org (Postfix) with ESMTP id E16C66FFD8
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 395056FFFE
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 Jan 2016 15:42:54 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by orsmga103.jf.intel.com with ESMTP; 18 Jan 2016 07:42:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,312,1449561600"; d="scan'208";a="893055596"
-Received: from linux.intel.com ([10.23.219.25])
-	by orsmga002.jf.intel.com with ESMTP; 18 Jan 2016 07:42:54 -0800
-Received: from vmed.fi.intel.com (vmed.fi.intel.com [10.237.72.51])
-	by linux.intel.com (Postfix) with ESMTP id EC6742C8001
-	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 Jan 2016 08:30:49 -0800 (PST)
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Mon, 18 Jan 2016 15:45:09 +0200
-Message-Id: <9abd5fe436a154ba39b4810ed85cd809b2912d49.1453124453.git.ed.bartosh@linux.intel.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <cover.1453124453.git.ed.bartosh@linux.intel.com>
-References: <cover.1453124453.git.ed.bartosh@linux.intel.com>
-In-Reply-To: <cover.1453124453.git.ed.bartosh@linux.intel.com>
-References: <cover.1453124453.git.ed.bartosh@linux.intel.com>
-Subject: [PATCH 2/3] toaster: toasterui: log OSErrorException metadata events
+	Mon, 18 Jan 2016 18:05:25 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u0II5Nj1000968; Mon, 18 Jan 2016 18:05:23 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id vDEj3XcKXcuI; Mon, 18 Jan 2016 18:05:23 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u0II5Ln9000958
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 18 Jan 2016 18:05:22 GMT
+Message-ID: <1453140321.27999.85.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: bitbake-devel <bitbake-devel@lists.openembedded.org>
+Date: Mon, 18 Jan 2016 18:05:21 +0000
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Cc: "Eggleton, Paul" <paul.eggleton@intel.com>
+Subject: [PATCH] Revert "runqueue.py: Ensure one setscene function doesn't mask out another which needs to run"
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -35,38 +34,64 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 18 Jan 2016 15:42:55 -0000
+X-List-Received-Date: Mon, 18 Jan 2016 18:05:25 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Elliot Smith <elliot.smith@intel.com>
+This reverts commit b22592af8145a8c7c4ada2fa7c1dee2e753eca46.
 
-OSErrors occurring in toaster.bbclass are converted to
-OSErrorException metadata events. They were then being swallowed
-as unprocessed events by toasterui, which made them difficult
-to spot.
+That commit isn't entirely clear about why this change is needed but
+I do have a usecase where this breaks things. If for example you run
+"bitbake X -c packagedata" and that packagedata is in sstate, you'd 
+expect this to work. 
 
-Explicitly catch OSErrorException events and log them so they
-are easier to spot and debug.
+If sstate doesn't contain a do_populate_sysroot for a dependency, you
+would still expect the command above to succeed and you would not
+expect
+it to rebuild that dependency. With the current code, this isn't what 
+happens. The code finds the sstate for do_populate_sysroot missing, 
+this makes the task "uncovered" and this in turn makes it unskippable.
 
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
----
- lib/bb/ui/toasterui.py | 2 ++
- 1 file changed, 2 insertions(+)
+The example I found with this was avahi-ui, where it would trigger 
+a build of libdaemon to obtain its populate_sysroot.
 
-diff --git a/lib/bb/ui/toasterui.py b/lib/bb/ui/toasterui.py
-index 19be623..32b1889 100644
---- a/lib/bb/ui/toasterui.py
-+++ b/lib/bb/ui/toasterui.py
-@@ -366,6 +366,8 @@ def main(server, eventHandler, params):
-                     buildinfohelper.store_license_manifest_path(event)
-                 elif event.type == "SetBRBE":
-                     buildinfohelper.brbe = buildinfohelper._get_data_from_event(event)
-+                elif event.type == "OSErrorException":
-+                    logger.error(event)
-                 else:
-                     logger.error("Unprocessed MetadataEvent %s ", str(event))
-                 continue
--- 
-2.1.4
+Since this behaviour seems completely incorrect, revert the older patch
+and we'll address any issues that crop up as a result.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+diff --git a/bitbake/lib/bb/runqueue.py b/bitbake/lib/bb/runqueue.py
+index a647e7e..763952a 100644
+--- a/bitbake/lib/bb/runqueue.py
++++ b/bitbake/lib/bb/runqueue.py
+@@ -1402,7 +1402,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
+                 self.runq_buildable.append(1)
+             else:
+                 self.runq_buildable.append(0)
+-            if len(self.rqdata.runq_revdeps[task]) > 0 and self.rqdata.runq_revdeps[task].issubset(self.rq.scenequeue_covered) and task not in self.rq.scenequeue_notcovered:
++            if len(self.rqdata.runq_revdeps[task]) > 0 and self.rqdata.runq_revdeps[task].issubset(self.rq.scenequeue_covered):
+                 self.rq.scenequeue_covered.add(task)
+ 
+         found = True
+@@ -1413,7 +1413,7 @@ class RunQueueExecuteTasks(RunQueueExecute):
+                     continue
+                 logger.debug(1, 'Considering %s (%s): %s' % (task, self.rqdata.get_user_idstring(task), str(self.rqdata.runq_revdeps[task])))
+ 
+-                if len(self.rqdata.runq_revdeps[task]) > 0 and self.rqdata.runq_revdeps[task].issubset(self.rq.scenequeue_covered) and task not in self.rq.scenequeue_notcovered:
++                if len(self.rqdata.runq_revdeps[task]) > 0 and self.rqdata.runq_revdeps[task].issubset(self.rq.scenequeue_covered):
+                     found = True
+                     self.rq.scenequeue_covered.add(task)
+ 
+@@ -2055,9 +2055,6 @@ class RunQueueExecuteScenequeue(RunQueueExecute):
+         self.rq.scenequeue_covered = set()
+         for task in oldcovered:
+             self.rq.scenequeue_covered.add(self.rqdata.runq_setscene[task])
+-        self.rq.scenequeue_notcovered = set()
+-        for task in self.scenequeue_notcovered:
+-            self.rq.scenequeue_notcovered.add(self.rqdata.runq_setscene[task])
+ 
+         logger.debug(1, 'We can skip tasks %s', sorted(self.rq.scenequeue_covered))
+ 
+
 
 
