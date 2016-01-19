@@ -1,21 +1,29 @@
-Return-Path: <elliot.smith@intel.com>
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-	by mail.openembedded.org (Postfix) with ESMTP id B26B173190
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
+	by mail.openembedded.org (Postfix) with ESMTP id 1E71473174
 	for <bitbake-devel@lists.openembedded.org>;
-	Tue, 19 Jan 2016 16:13:54 +0000 (UTC)
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-	by fmsmga103.fm.intel.com with ESMTP; 19 Jan 2016 08:13:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.22,317,1449561600"; d="scan'208";a="893876495"
-Received: from kosulliv-mobl2.ger.corp.intel.com (HELO lp.ger.corp.intel.com)
-	([10.252.31.224])
-	by orsmga002.jf.intel.com with ESMTP; 19 Jan 2016 08:13:53 -0800
-From: Elliot Smith <elliot.smith@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Tue, 19 Jan 2016 16:13:28 +0000
-Message-Id: <1453220008-25718-1-git-send-email-elliot.smith@intel.com>
-X-Mailer: git-send-email 1.9.3
-Subject: [PATCH] toaster: write variables to toaster.conf
+	Tue, 19 Jan 2016 17:48:36 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u0JHmY7K001874; Tue, 19 Jan 2016 17:48:34 GMT
+Received: from dan.rpsys.net ([127.0.0.1])
+	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id CBHYhNLpjgRF; Tue, 19 Jan 2016 17:48:34 +0000 (GMT)
+Received: from hex ([192.168.3.34]) (authenticated bits=0)
+	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
+	u0JHmTZE001870
+	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 19 Jan 2016 17:48:32 GMT
+Message-ID: <1453225709.27999.132.camel@linuxfoundation.org>
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+To: Olof Johansson <olof.johansson@axis.com>,
+	bitbake-devel@lists.openembedded.org
+Date: Tue, 19 Jan 2016 17:48:29 +0000
+In-Reply-To: <1453215851-19422-1-git-send-email-olof.johansson@axis.com>
+References: <1453215851-19422-1-git-send-email-olof.johansson@axis.com>
+X-Mailer: Evolution 3.16.5-1ubuntu3.1 
+Mime-Version: 1.0
+Subject: Re: [PATCH] tests/codeparser.py: Add filename/lineno flags to test variable
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -28,53 +36,27 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Tue, 19 Jan 2016 16:13:54 -0000
+X-List-Received-Date: Tue, 19 Jan 2016 17:48:37 -0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-From: Ed Bartosh <ed.bartosh@linux.intel.com>
+On Tue, 2016-01-19 at 16:04 +0100, Olof Johansson wrote:
+> A recent change in bitbake added filename/lineno information to the
+> parameters of bb.data.build_dependencies(). The codeparser tests
+> required a little adaption to the changes, adding the flags to the
+> FOO
+> variable used in the tests.
+> 
+> The error seen when running the tests is a TypeError exception raised
+> in bb.codeparser:
+> 
+>   TypeError: int() argument must be a string or a number, not
+> 'NoneType'
 
-With the resent change in rootfs creation code setVariable
-rpc calls don't set variables for bitbake workers anymore.
+Thanks. I'm asking awkward questions about why we didn't find that
+sooner too (if I didn't spot it, our QA infrastructure should have)...
 
-Writen variables to toaster.conf should solve this issue.
+Cheers,
 
-[YOCTO #8910]
-
-Signed-off-by: Ed Bartosh <ed.bartosh@linux.intel.com>
-Signed-off-by: Elliot Smith <elliot.smith@intel.com>
----
- bitbake/lib/toaster/bldcontrol/localhostbecontroller.py | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/bitbake/lib/toaster/bldcontrol/localhostbecontroller.py b/bitbake/lib/toaster/bldcontrol/localhostbecontroller.py
-index 4f6f15c..2215d7af2 100644
---- a/bitbake/lib/toaster/bldcontrol/localhostbecontroller.py
-+++ b/bitbake/lib/toaster/bldcontrol/localhostbecontroller.py
-@@ -280,6 +280,13 @@ class LocalhostBEController(BuildEnvironmentController):
-         # set up the build environment with the needed layers
-         self.setLayers(bitbake, layers, targets)
- 
-+        # write configuration file
-+        filepath = os.path.join(self.be.builddir, "conf/toaster.conf")
-+        with open(filepath, 'w') as conf:
-+            for var in variables:
-+                conf.write('%s="%s"\n' % (var.name, var.value))
-+            conf.write('INHERIT+="toaster buildhistory"')
-+
-         # get the bb server running with the build req id and build env id
-         bbctrl = self.getBBController()
- 
--- 
-1.9.3
-
----------------------------------------------------------------------
-Intel Corporation (UK) Limited
-Registered No. 1134945 (England)
-Registered Office: Pipers Way, Swindon SN3 1RJ
-VAT No: 860 2173 47
-
-This e-mail and any attachments may contain confidential material for
-the sole use of the intended recipient(s). Any review or distribution
-by others is strictly prohibited. If you are not the intended
-recipient, please contact the sender and delete all copies.
-
+Richard
 
