@@ -1,30 +1,46 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from dan.rpsys.net (5751f4a1.skybroadband.com [87.81.244.161])
-	by mail.openembedded.org (Postfix) with ESMTP id EEFEF60588
+Return-Path: <olof.johansson@axis.com>
+Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
+	by mail.openembedded.org (Postfix) with ESMTP id 4DA9260043
 	for <bitbake-devel@lists.openembedded.org>;
-	Mon, 18 Jan 2016 22:09:33 +0000 (UTC)
+	Tue, 19 Jan 2016 15:04:19 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u0IM9ViY010890; Mon, 18 Jan 2016 22:09:31 GMT
-Received: from dan.rpsys.net ([127.0.0.1])
-	by localhost (dan.rpsys.net [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id mxKrIxyuYtl3; Mon, 18 Jan 2016 22:09:31 +0000 (GMT)
-Received: from hex ([192.168.3.34]) (authenticated bits=0)
-	by dan.rpsys.net (8.14.4/8.14.4/Debian-4.1ubuntu1) with ESMTP id
-	u0IM9Rae010886
-	(version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 18 Jan 2016 22:09:28 GMT
-Message-ID: <1453154967.27999.93.camel@linuxfoundation.org>
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Ed Bartosh <ed.bartosh@linux.intel.com>,
-	bitbake-devel@lists.openembedded.org
-Date: Mon, 18 Jan 2016 22:09:27 +0000
-In-Reply-To: <cover.1453124453.git.ed.bartosh@linux.intel.com>
-References: <cover.1453124453.git.ed.bartosh@linux.intel.com>
-X-Mailer: Evolution 3.16.5-1ubuntu3.1 
-Mime-Version: 1.0
-Cc: "toaster@yoctoproject.org" <toaster@yoctoproject.org>
-Subject: Re: [PATCH 0/3] Fix SDK downloads forbuilds
+	by bes.se.axis.com (Postfix) with ESMTP id 57FD42E141
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 19 Jan 2016 16:04:20 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id Q2uIPd3cIrRc for <bitbake-devel@lists.openembedded.org>;
+	Tue, 19 Jan 2016 16:04:12 +0100 (CET)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by bes.se.axis.com (Postfix) with ESMTP id 88A1C2E125
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 19 Jan 2016 16:04:12 +0100 (CET)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id 63CD2F7E
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 19 Jan 2016 16:04:12 +0100 (CET)
+Received: from seth.se.axis.com (seth.se.axis.com [10.0.2.172])
+	by boulder.se.axis.com (Postfix) with ESMTP id 55EF9117
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 19 Jan 2016 16:04:12 +0100 (CET)
+Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
+	by seth.se.axis.com (Postfix) with ESMTP id 50C463E12F
+	for <bitbake-devel@lists.openembedded.org>;
+	Tue, 19 Jan 2016 16:04:12 +0100 (CET)
+Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
+	(10.0.5.74) with Microsoft SMTP Server id 8.3.342.0; Tue, 19 Jan 2016
+	16:04:11 +0100
+Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id F1DAC9C724; 
+	Tue, 19 Jan 2016 16:04:11 +0100 (CET)
+From: Olof Johansson <olof.johansson@axis.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Tue, 19 Jan 2016 16:04:11 +0100
+Message-ID: <1453215851-19422-1-git-send-email-olof.johansson@axis.com>
+X-Mailer: git-send-email 2.1.4
+MIME-Version: 1.0
+Subject: [PATCH] tests/codeparser.py: Add filename/lineno flags to test variable
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -37,26 +53,43 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Mon, 18 Jan 2016 22:09:34 -0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+X-List-Received-Date: Tue, 19 Jan 2016 15:04:20 -0000
+Content-Type: text/plain
 
-On Mon, 2016-01-18 at 15:45 +0200, Ed Bartosh wrote:
-> Elliot Smith (3):
->   toaster: toasterui: listen for bb.event.MetadataEvent
->   toaster: toasterui: log OSErrorException metadata events
->   toaster: toastergui: make artifact download more robust
+A recent change in bitbake added filename/lineno information to the
+parameters of bb.data.build_dependencies(). The codeparser tests
+required a little adaption to the changes, adding the flags to the FOO
+variable used in the tests.
 
-Its a small detail but when sending patches, "toasterui:" is fine in
-the shortlog, we don't need "toaster: toasterui:". The idea is to
-highlight which bit of the system is being changed and "toasterui"
-conveys that fine.
+The error seen when running the tests is a TypeError exception raised
+in bb.codeparser:
 
-[cc'd to the toaster list so everyone sees this]
+  TypeError: int() argument must be a string or a number, not 'NoneType'
 
-No need to resend these, I just tweaked the lines.
+Signed-off-by: Olof Johansson <olof.johansson@axis.com>
+---
+ bitbake/lib/bb/tests/codeparser.py | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Cheers,
+diff --git a/bitbake/lib/bb/tests/codeparser.py b/bitbake/lib/bb/tests/codeparser.py
+index 4454bc5..bb820e4 100644
+--- a/bitbake/lib/bb/tests/codeparser.py
++++ b/bitbake/lib/bb/tests/codeparser.py
+@@ -293,7 +293,12 @@ bb.data.getVar(a(), d, False)
+     def test_python(self):
+         self.d.setVar("FOO", self.pydata)
+         self.setEmptyVars(["inexpand", "a", "test2", "test"])
+-        self.d.setVarFlags("FOO", {"func": True, "python": True})
++        self.d.setVarFlags("FOO", {
++            "func": True,
++            "python": True,
++            "lineno": 1,
++            "filename": "example.bb",
++        })
+ 
+         deps, values = bb.data.build_dependencies("FOO", set(self.d.keys()), set(), set(), self.d)
+ 
+-- 
+2.1.4
 
-Richard
 
