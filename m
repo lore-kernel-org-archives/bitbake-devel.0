@@ -1,45 +1,46 @@
-Return-Path: <ross.burton@intel.com>
-Received: from mail-wm0-f51.google.com (mail-wm0-f51.google.com [74.125.82.51])
-	by mail.openembedded.org (Postfix) with ESMTP id 53E4B6072C
+Return-Path: <olof.johansson@axis.com>
+Received: from bes.se.axis.com (bes.se.axis.com [195.60.68.10])
+	by mail.openembedded.org (Postfix) with ESMTP id 012E86E668
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 20 Jan 2016 13:14:25 +0000 (UTC)
-Received: by mail-wm0-f51.google.com with SMTP id 123so132241792wmz.0
+	Wed, 20 Jan 2016 13:58:00 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by bes.se.axis.com (Postfix) with ESMTP id B50A12E15A
 	for <bitbake-devel@lists.openembedded.org>;
-	Wed, 20 Jan 2016 05:14:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=intel-com.20150623.gappssmtp.com; s=20150623;
-	h=from:to:cc:subject:date:message-id;
-	bh=thm8l+xtofNQ5s6Hd5XZ9r13XbVFVfcRT6oh8k1jzWY=;
-	b=qCKNt1f4k9cyNvhKtAjokSLEK3TrAA2eSDbTVTaJTy/TcdaKZooQlXlXHqxBVG0lhi
-	f3HXjMxmVjQdO0kFAhTytIbqjxAgtrk5JD0i5Xz8bkiCxIfV+iT8a4JICUc4aXzzrXAI
-	4ix4u3q5pL2TX++4FoySFGNPKcJVV87xXzJJq4K+Z9C0AJ0MVB07CaIxWeZEewq6c6kq
-	Y7+3eYcS/wXoxpGWmEDSMzR74YEa1HmFjWCCixsPJgqgPzkRf43pw9Yl31v7WBfudo0s
-	sq3WBZn8R21HY8ORjb0IqqDLZT0J6iRTXTqbaORgAQ93idwsz/ZFEshckHkvpfrG32YG
-	Fc0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=1e100.net; s=20130820;
-	h=x-gm-message-state:from:to:cc:subject:date:message-id;
-	bh=thm8l+xtofNQ5s6Hd5XZ9r13XbVFVfcRT6oh8k1jzWY=;
-	b=ZqAoAbr0vkvGLw3VYZTbtuzXKPXD67qFtqEr6QHNXivmYX4NnT++K2yAzjkuA61gei
-	bj+IoMOCRfPrARmP9NOK0UYWzPGiarVO9YYN5lqsEz6DNgcKXFGxcivBxSCBSzsMfAxt
-	1bOQqe6CPrb7LGgpIdeOCnj4qdm5KJ9p/vv/Mb4tzkquZrtiyVne7FHuh/kfopUTTwru
-	3hbFpJII5qGr0n3W8mZu6r3UWHeuKFUEWDKo4259TDAg2ojwP0sNeBQBpNOBB6JJjXUm
-	OJYIAD2nFVZ7HP/QxuZyqheG+YysG7aph4UhVfrZXa1BljKl1ydExZADUaPziY3pisiJ
-	kVOQ==
-X-Gm-Message-State: ALoCoQkAZJkQh69YCSpkPh1nBy75jhT+L+KABVrQgdZ+Jrp3+0cgO12WE1cXiL/hP+wjRhvOaa+pQOA8TsZ/3G2N8B29T+THqg==
-X-Received: by 10.194.22.132 with SMTP id d4mr36276990wjf.174.1453295666395;
-	Wed, 20 Jan 2016 05:14:26 -0800 (PST)
-Received: from flashheart.burtonini.com (35.106.2.81.in-addr.arpa.
-	[81.2.106.35]) by smtp.gmail.com with ESMTPSA id
-	cb2sm1142671wjc.16.2016.01.20.05.14.25
-	(version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-	Wed, 20 Jan 2016 05:14:25 -0800 (PST)
-From: Ross Burton <ross.burton@intel.com>
-To: bitbake-devel@lists.openembedded.org
-Date: Wed, 20 Jan 2016 13:14:22 +0000
-Message-Id: <1453295662-13333-1-git-send-email-ross.burton@intel.com>
-X-Mailer: git-send-email 2.6.4
-Subject: [PATCH] fetch2/wget: fallback to GET if HEAD is rejected in checkstatus()
+	Wed, 20 Jan 2016 14:58:00 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+Received: from bes.se.axis.com ([IPv6:::ffff:127.0.0.1])
+	by localhost (bes.se.axis.com [::ffff:127.0.0.1]) (amavisd-new,
+	port 10024)
+	with LMTP id 8fMQFn8t8O+4 for <bitbake-devel@lists.openembedded.org>;
+	Wed, 20 Jan 2016 14:57:59 +0100 (CET)
+Received: from boulder.se.axis.com (boulder.se.axis.com [10.0.2.104])
+	by bes.se.axis.com (Postfix) with ESMTP id A28712E0CA
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 20 Jan 2016 14:57:59 +0100 (CET)
+Received: from boulder.se.axis.com (localhost [127.0.0.1])
+	by postfix.imss71 (Postfix) with ESMTP id 873E9157E
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 20 Jan 2016 14:57:59 +0100 (CET)
+Received: from thoth.se.axis.com (thoth.se.axis.com [10.0.2.173])
+	by boulder.se.axis.com (Postfix) with ESMTP id 79850A5E
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 20 Jan 2016 14:57:59 +0100 (CET)
+Received: from xmail2.se.axis.com (xmail2.se.axis.com [10.0.5.74])
+	by thoth.se.axis.com (Postfix) with ESMTP id 768BD3426B
+	for <bitbake-devel@lists.openembedded.org>;
+	Wed, 20 Jan 2016 14:57:59 +0100 (CET)
+Received: from lnxolofjn.se.axis.com (10.92.17.1) by xmail2.se.axis.com
+	(10.0.5.74) with Microsoft SMTP Server id 8.3.342.0; Wed, 20 Jan 2016
+	14:57:59 +0100
+Received: by lnxolofjn.se.axis.com (Postfix, from userid 20466)	id 2FDB99C724; 
+	Wed, 20 Jan 2016 14:57:59 +0100 (CET)
+From: Olof Johansson <olof.johansson@axis.com>
+To: <bitbake-devel@lists.openembedded.org>
+Date: Wed, 20 Jan 2016 14:57:59 +0100
+Message-ID: <1453298279-12141-1-git-send-email-olof.johansson@axis.com>
+X-Mailer: git-send-email 2.1.4
+MIME-Version: 1.0
+Subject: [PATCH] tests/fetch.py: add simple git fetcher specific tests
 X-BeenThere: bitbake-devel@lists.openembedded.org
 X-Mailman-Version: 2.1.12
 Precedence: list
@@ -52,107 +53,68 @@ List-Post: <mailto:bitbake-devel@lists.openembedded.org>
 List-Help: <mailto:bitbake-devel-request@lists.openembedded.org?subject=help>
 List-Subscribe: <http://lists.openembedded.org/mailman/listinfo/bitbake-devel>, 
 	<mailto:bitbake-devel-request@lists.openembedded.org?subject=subscribe>
-X-List-Received-Date: Wed, 20 Jan 2016 13:14:28 -0000
+X-List-Received-Date: Wed, 20 Jan 2016 13:58:01 -0000
+Content-Type: text/plain
 
-The core change here is to fall back to GET requests if HEAD is rejected in the
-checkstatus() method, as you can't do a HEAD on Amazon S3 (used by Github
-archives).  This meant removing the monkey patch that the default method was GET
-and adding a fixed redirect handler that doesn't reset to GET.
+Currently, only Git._get_repo_url is tested to make sure that the URLs
+used in the git fetcher isn't mangled in a non-compatible way.
 
-Also, change the way the opener is constructed from an if/elif cluster to a
-conditionally constructed list.
-
-Signed-off-by: Ross Burton <ross.burton@intel.com>
+Signed-off-by: Olof Johansson <olof.johansson@axis.com>
 ---
- bitbake/lib/bb/fetch2/wget.py | 65 ++++++++++++++++++++++++++++---------------
- 1 file changed, 42 insertions(+), 23 deletions(-)
+ bitbake/lib/bb/tests/fetch.py | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/bitbake/lib/bb/fetch2/wget.py b/bitbake/lib/bb/fetch2/wget.py
-index c8c6d5c..dafa068 100644
---- a/bitbake/lib/bb/fetch2/wget.py
-+++ b/bitbake/lib/bb/fetch2/wget.py
-@@ -235,38 +235,57 @@ class Wget(FetchMethod):
+diff --git a/bitbake/lib/bb/tests/fetch.py b/bitbake/lib/bb/tests/fetch.py
+index b175a43..c9d9e9f 100644
+--- a/bitbake/lib/bb/tests/fetch.py
++++ b/bitbake/lib/bb/tests/fetch.py
+@@ -23,8 +23,10 @@ import unittest
+ import tempfile
+ import subprocess
+ import os
++from urlparse import urlparse
+ from bb.fetch2 import URI
+ from bb.fetch2 import FetchMethod
++from bb.fetch2.git import Git
+ import bb
  
-             return exported
+ class URITest(unittest.TestCase):
+@@ -640,6 +642,34 @@ class URLHandle(unittest.TestCase):
+             result = bb.fetch.encodeurl(v)
+             self.assertEqual(result, k)
  
--        def head_method(self):
--            return "HEAD"
--
-+        class HTTPMethodFallback(urllib2.BaseHandler):
-+            """
-+            Fallback to GET if HEAD is not allowed (405 HTTP error)
-+            """
-+            def http_error_405(self, req, fp, code, msg, headers):
-+                fp.read()
-+                fp.close()
++class GitFetchTests(unittest.TestCase):
++    class TestFetchData(object):
++        """
++        Ad-Hoc mocked FetchData for the purpose of testing Git()
++        """
++        def __init__(self, url):
++            urlp = urlparse(url)
++            if '@' in urlp.netloc:
++                self.user, self.host = urlp.netloc.split('@', 1) + [None,]
++            else:
++                self.user, self.host = None, urlp.netloc
++            self.proto = urlp.scheme
++            self.path = urlp.path
 +
-+                newheaders = dict((k,v) for k,v in req.headers.items()
-+                                  if k.lower() not in ("content-length", "content-type"))
-+                return self.parent.open(urllib2.Request(req.get_full_url(),
-+                                                        headers=newheaders,
-+                                                        origin_req_host=req.get_origin_req_host(),
-+                                                        unverifiable=True))
++    tests = [
++       'http://git.example.com/repo.git',
++       'https://git.example.com:1234/repo.git',
++       'git://git.example.com/repo',
++    ]
 +
-+            """
-+            Some servers (e.g. GitHub archives, hosted on Amazon S3) return 403
-+            Forbidden when they actually mean 405 Method Not Allowed.
-+            """
-+            http_error_403 = http_error_405
++    def setUp(self):
++        self.git = Git(None)
++        pass
 +
-+        class FixedHTTPRedirectHandler(urllib2.HTTPRedirectHandler):
-+            """
-+            urllib2.HTTPRedirectHandler resets the method to GET on redirect,
-+            when we want to follow redirects using the original method.
-+            """
-+            def redirect_request(self, req, fp, code, msg, headers, newurl):
-+                newreq = urllib2.HTTPRedirectHandler.redirect_request(self, req, fp, code, msg, headers, newurl)
-+                newreq.get_method = lambda: req.get_method()
-+                return newreq
-         exported_proxies = export_proxies(d)
++    def test_get_repo_url(self):
++        for url in self.tests:
++            self.assertEqual(self.git._get_repo_url(self.TestFetchData(url)), url)
++
+ class FetchLatestVersionTest(FetcherTest):
  
-+        handlers = [FixedHTTPRedirectHandler, HTTPMethodFallback]
-+        if export_proxies:
-+            handlers.append(urllib2.ProxyHandler())
-+        handlers.append(CacheHTTPHandler())
-         # XXX: Since Python 2.7.9 ssl cert validation is enabled by default
-         # see PEP-0476, this causes verification errors on some https servers
-         # so disable by default.
-         import ssl
--        ssl_context = None
-         if hasattr(ssl, '_create_unverified_context'):
--            ssl_context = ssl._create_unverified_context()
--
--        if exported_proxies == True and ssl_context is not None:
--            opener = urllib2.build_opener(urllib2.ProxyHandler, CacheHTTPHandler,
--                    urllib2.HTTPSHandler(context=ssl_context))
--        elif exported_proxies == False and ssl_context is not None:
--            opener = urllib2.build_opener(CacheHTTPHandler,
--                    urllib2.HTTPSHandler(context=ssl_context))
--        elif exported_proxies == True and ssl_context is None:
--            opener = urllib2.build_opener(urllib2.ProxyHandler, CacheHTTPHandler)
--        else:
--            opener = urllib2.build_opener(CacheHTTPHandler)
--
--        urllib2.Request.get_method = head_method
--        urllib2.install_opener(opener)
--
--        uri = ud.url.split(";")[0]
-+            handlers.append(urllib2.HTTPSHandler(context=ssl._create_unverified_context()))
-+        opener = urllib2.build_opener(*handlers)
- 
-         try:
--            urllib2.urlopen(uri)
--        except:
-+            uri = ud.url.split(";")[0]
-+            r = urllib2.Request(uri)
-+            r.get_method = lambda: "HEAD"
-+            opener.open(r)
-+        except urllib2.URLError as e:
-+            bb.warn("checkstatus() urlopen failed: %s" % e)
-             return False
-         return True
- 
+     test_git_uris = {
 -- 
-2.6.4
+2.1.4
 
 
